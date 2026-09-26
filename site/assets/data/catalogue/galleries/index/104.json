@@ -1,0 +1,33 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-df1b58183025c2c69eb1de111a381a2d",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "104",
+    "count": 3
+  },
+  "gallery": {
+    "gallery_id": "104",
+    "title": "mouse story"
+  },
+  "member_works": [
+    {
+      "work_id": "00160",
+      "title": "mouse story",
+      "year": 1991,
+      "year_display": "1991"
+    },
+    {
+      "work_id": "00161",
+      "title": "mouse story (extended version)",
+      "year": 1993,
+      "year_display": "1993"
+    },
+    {
+      "work_id": "00162",
+      "title": "mouse story (fragment)",
+      "year": 1993,
+      "year_display": "c. 1993?"
+    }
+  ]
+}

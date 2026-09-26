@@ -1,0 +1,39 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-e067784479607e78be4f667113a98325",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "293",
+    "count": 4
+  },
+  "gallery": {
+    "gallery_id": "293",
+    "title": "tulips 1 (details)"
+  },
+  "member_works": [
+    {
+      "work_id": "04567",
+      "title": "tulips 1 - detail 1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04568",
+      "title": "tulips 1 - detail 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04569",
+      "title": "tulips 1 - detail 3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04570",
+      "title": "tulips 1 - detail 4",
+      "year": 2023,
+      "year_display": "2023"
+    }
+  ]
+}

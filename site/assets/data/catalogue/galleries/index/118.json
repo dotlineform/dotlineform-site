@@ -1,0 +1,57 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-bfc2ad2da71ad47722d35278f76e5a94",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "118",
+    "count": 7
+  },
+  "gallery": {
+    "gallery_id": "118",
+    "title": "quantum random number theory"
+  },
+  "member_works": [
+    {
+      "work_id": "00383",
+      "title": "qrnt",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00629",
+      "title": "quantum random number theory",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00630",
+      "title": "quantum random number theory (version)",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "00631",
+      "title": "quantum random number theory (form)",
+      "year": 2015,
+      "year_display": "2015"
+    },
+    {
+      "work_id": "00632",
+      "title": "quantum random number theory (circle)",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00633",
+      "title": "quantum random number theory (4 circles)",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00634",
+      "title": "bits symbols 1",
+      "year": 2009,
+      "year_display": "2009"
+    }
+  ]
+}

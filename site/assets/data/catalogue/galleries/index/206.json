@@ -1,0 +1,147 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-592177e1c2a48703bd4580dfa8912295",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "206",
+    "count": 22
+  },
+  "gallery": {
+    "gallery_id": "206",
+    "title": "3 symbols (source)"
+  },
+  "member_works": [
+    {
+      "work_id": "03198",
+      "title": "source - bandage",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03199",
+      "title": "source - before",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03200",
+      "title": "source - blessing",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03201",
+      "title": "source - blindness",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03202",
+      "title": "source - bridge",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03203",
+      "title": "source - burma",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03204",
+      "title": "source - burn",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03205",
+      "title": "source - genocide",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03206",
+      "title": "source - gesture",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03207",
+      "title": "source - give",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03208",
+      "title": "source - grave",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03209",
+      "title": "source - grieve",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03210",
+      "title": "source - grow",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03211",
+      "title": "source - guilt",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03212",
+      "title": "source - radius",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03213",
+      "title": "source - rarefied",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03214",
+      "title": "source - reincarnation",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03215",
+      "title": "source - replenish",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03216",
+      "title": "source - restrict",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03217",
+      "title": "source - ruin",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03218",
+      "title": "source - rwanda",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03219",
+      "title": "source grid",
+      "year": 2007,
+      "year_display": "2007"
+    }
+  ]
+}

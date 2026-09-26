@@ -1,0 +1,39 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-a207614c1f21e165976e5b0a3d724f17",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "197",
+    "count": 4
+  },
+  "gallery": {
+    "gallery_id": "197",
+    "title": "quantum random number theory (form) (details)"
+  },
+  "member_works": [
+    {
+      "work_id": "03150",
+      "title": "qrnt form (2015-06-06)",
+      "year": 2015,
+      "year_display": "2015"
+    },
+    {
+      "work_id": "03151",
+      "title": "qrnt form (2015-06-06) detail 1",
+      "year": 2015,
+      "year_display": "2015"
+    },
+    {
+      "work_id": "03152",
+      "title": "qrnt form (2015-06-06) detail 2",
+      "year": 2015,
+      "year_display": "2015"
+    },
+    {
+      "work_id": "03153",
+      "title": "qrnt form (2015-06-06) detail 3",
+      "year": 2015,
+      "year_display": "2015"
+    }
+  ]
+}

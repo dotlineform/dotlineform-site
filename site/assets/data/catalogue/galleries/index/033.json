@@ -1,0 +1,87 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-21ae9c9e27feb0507fac3cc2474c8a3c",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "033",
+    "count": 12
+  },
+  "gallery": {
+    "gallery_id": "033",
+    "title": "cube structure"
+  },
+  "member_works": [
+    {
+      "work_id": "00838",
+      "title": "structure a",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "00839",
+      "title": "structure b",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "00840",
+      "title": "structure c",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "00841",
+      "title": "structure d",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "00842",
+      "title": "structure i",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "00843",
+      "title": "structure ii ~",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "00844",
+      "title": "structure ii",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "00845",
+      "title": "structure iii",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "00846",
+      "title": "structure iv",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "00847",
+      "title": "structure v composite",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "00848",
+      "title": "structure v",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "00849",
+      "title": "structure vi",
+      "year": 2011,
+      "year_display": "2011"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-fa50cfb653959dea53aacea80c87ca91",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "012",
+    "count": 2
+  },
+  "gallery": {
+    "gallery_id": "012",
+    "title": "all the little cracks"
+  },
+  "member_works": [
+    {
+      "work_id": "00751",
+      "title": "all the little cracks",
+      "year": 2010,
+      "year_display": "2010"
+    },
+    {
+      "work_id": "00752",
+      "title": "all the little cracks again",
+      "year": 2016,
+      "year_display": "2016"
+    }
+  ]
+}

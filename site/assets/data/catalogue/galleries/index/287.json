@@ -1,0 +1,441 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-469faeea8b29fa1e3b7e632c10a37308",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "287",
+    "count": 71
+  },
+  "gallery": {
+    "gallery_id": "287",
+    "title": "spine symbols (symbols)"
+  },
+  "member_works": [
+    {
+      "work_id": "04365",
+      "title": "bounce silly nosey messy",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04366",
+      "title": "bounce silly",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04367",
+      "title": "bounce silly'",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04368",
+      "title": "bounce",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04369",
+      "title": "chatterbox (lower)",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04370",
+      "title": "chatterbox (upper)",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04371",
+      "title": "chatterbox greedy",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04372",
+      "title": "chatterbox greedy'",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04373",
+      "title": "chatterbox",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04374",
+      "title": "chatterbox'",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04375",
+      "title": "clever funny wrong",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04376",
+      "title": "clever funny wrong'",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04377",
+      "title": "daydream skinny forgetful",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04378",
+      "title": "daydream skinny",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04379",
+      "title": "daydream",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04380",
+      "title": "dizzy (clever) funny",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04381",
+      "title": "dizzy",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04382",
+      "title": "forgetful",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04383",
+      "title": "funny (wrong rude) impossible",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04384",
+      "title": "funny",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04385",
+      "title": "funny'",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04386",
+      "title": "fussy (lower)",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04387",
+      "title": "fussy (unknown)",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04388",
+      "title": "fussy (upper)",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04389",
+      "title": "fussy",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04390",
+      "title": "fussy'",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04391",
+      "title": "grumpy bump",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04392",
+      "title": "grumpy half-bounce",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04393",
+      "title": "grumpy",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04394",
+      "title": "grumpy'",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04395",
+      "title": "half-bounce silly nosey messy",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04396",
+      "title": "happy snow",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04397",
+      "title": "happy snow'",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04398",
+      "title": "impossible sneeze fussy",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04399",
+      "title": "impossible sneeze fussy'",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04400",
+      "title": "impossible",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04401",
+      "title": "lazy forgetful",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04402",
+      "title": "lazy forgetful'",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04403",
+      "title": "lazy rush (cheerful) slow",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04404",
+      "title": "lazy rush",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04405",
+      "title": "lazy",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04406",
+      "title": "mean lazy",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04407",
+      "title": "mean quiet busy mischief",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04408",
+      "title": "mean rush",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04409",
+      "title": "mean",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04410",
+      "title": "messy daydream",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04411",
+      "title": "messy small chatterbox",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04412",
+      "title": "muddle [1]",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04413",
+      "title": "muddle [2]",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04414",
+      "title": "muddle [3]",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04415",
+      "title": "muddle tickle",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04416",
+      "title": "muddle",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04417",
+      "title": "muddle'",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04418",
+      "title": "noisy jelly mean [version]",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04419",
+      "title": "noisy jelly mean rush",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04420",
+      "title": "noisy jelly mean",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04421",
+      "title": "noisy jelly mean'",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04422",
+      "title": "quiet",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04423",
+      "title": "quiet'",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04424",
+      "title": "rush (cheerful) slow",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04425",
+      "title": "slow bump",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04426",
+      "title": "small chatterbox",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04427",
+      "title": "strong clumsy nonsense",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04428",
+      "title": "strong clumsy nonsense'",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04429",
+      "title": "strong clumsy",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04430",
+      "title": "strong clumsy'",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04431",
+      "title": "tickle quiet busy mischief",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04432",
+      "title": "worry topsy-turvy [1']",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04433",
+      "title": "worry topsy-turvy [1]",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04434",
+      "title": "worry topsy-turvy",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04435",
+      "title": "worry topsy-turvy'",
+      "year": 2008,
+      "year_display": "2008"
+    }
+  ]
+}

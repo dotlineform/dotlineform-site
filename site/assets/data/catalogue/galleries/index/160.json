@@ -1,0 +1,39 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-d07c9ec6f4b150412583e35001bc261b",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "160",
+    "count": 4
+  },
+  "gallery": {
+    "gallery_id": "160",
+    "title": "molecules (versions)"
+  },
+  "member_works": [
+    {
+      "work_id": "02859",
+      "title": "molecules (positive)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02860",
+      "title": "molecules (negative)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02861",
+      "title": "molecules mist (positive)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02862",
+      "title": "molecules mist (negative)",
+      "year": 2013,
+      "year_display": "2013"
+    }
+  ]
+}

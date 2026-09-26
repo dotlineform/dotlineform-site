@@ -1,0 +1,33 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-072c7788d14228a3624a4279baba6663",
+    "generated_at_utc": "2026-09-26T07:24:01Z",
+    "gallery_id": "105",
+    "count": 3
+  },
+  "gallery": {
+    "gallery_id": "105",
+    "title": "nerve"
+  },
+  "member_works": [
+    {
+      "work_id": "00008",
+      "title": "nerve",
+      "year": 1995,
+      "year_display": "July 1990 – January 1995"
+    },
+    {
+      "work_id": "00163",
+      "title": "nerve (abattoir)",
+      "year": 1995,
+      "year_display": "1990-95"
+    },
+    {
+      "work_id": "00166",
+      "title": "nerve (formaldehyde form)",
+      "year": 1993,
+      "year_display": "1993"
+    }
+  ]
+}

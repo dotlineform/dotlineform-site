@@ -1,0 +1,39 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-8c2a314e9c71d2024ad7db61f0a98721",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "164",
+    "count": 4
+  },
+  "gallery": {
+    "gallery_id": "164",
+    "title": "forest memories 1-48 (moments)"
+  },
+  "member_works": [
+    {
+      "work_id": "02886",
+      "title": "memories of the forest 1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02887",
+      "title": "memories of the forest 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02888",
+      "title": "memories of the forest 3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02889",
+      "title": "3 moments",
+      "year": 2023,
+      "year_display": "2023"
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-3d55f4f96d2753fe0c2eb61f01874eef",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "239",
+    "count": 7
+  },
+  "gallery": {
+    "gallery_id": "239",
+    "title": "egg forms (details)"
+  },
+  "member_works": [
+    {
+      "work_id": "03588",
+      "title": "egg forms - detail 1",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03589",
+      "title": "egg forms - detail 2",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03590",
+      "title": "egg forms - detail 3",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03591",
+      "title": "egg forms - detail 4",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03592",
+      "title": "egg forms - detail 5",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03593",
+      "title": "egg forms - detail 6",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03594",
+      "title": "egg forms - detail 7",
+      "year": 2024,
+      "year_display": "2024"
+    }
+  ]
+}

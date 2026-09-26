@@ -1,0 +1,93 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-5aefa26d831058ad6b9f8d8e587dde37",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "128",
+    "count": 13
+  },
+  "gallery": {
+    "gallery_id": "128",
+    "title": "still life"
+  },
+  "member_works": [
+    {
+      "work_id": "01722",
+      "title": "still life",
+      "year": 2014,
+      "year_display": "2014"
+    },
+    {
+      "work_id": "01723",
+      "title": "still life",
+      "year": 2014,
+      "year_display": "2014"
+    },
+    {
+      "work_id": "01724",
+      "title": "still life",
+      "year": 2014,
+      "year_display": "2014"
+    },
+    {
+      "work_id": "01725",
+      "title": "still life",
+      "year": 2014,
+      "year_display": "2014"
+    },
+    {
+      "work_id": "01726",
+      "title": "still life",
+      "year": 2014,
+      "year_display": "2014"
+    },
+    {
+      "work_id": "01727",
+      "title": "still life",
+      "year": 2014,
+      "year_display": "2014"
+    },
+    {
+      "work_id": "01728",
+      "title": "still life",
+      "year": 2014,
+      "year_display": "2014"
+    },
+    {
+      "work_id": "01729",
+      "title": "still life",
+      "year": 2014,
+      "year_display": "2014"
+    },
+    {
+      "work_id": "01730",
+      "title": "still life",
+      "year": 2014,
+      "year_display": "2014"
+    },
+    {
+      "work_id": "01731",
+      "title": "still life",
+      "year": 2014,
+      "year_display": "2014"
+    },
+    {
+      "work_id": "01732",
+      "title": "still life",
+      "year": 2014,
+      "year_display": "2014"
+    },
+    {
+      "work_id": "01733",
+      "title": "still life",
+      "year": 2014,
+      "year_display": "2014"
+    },
+    {
+      "work_id": "01734",
+      "title": "still life",
+      "year": 2014,
+      "year_display": "2014"
+    }
+  ]
+}

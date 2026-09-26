@@ -1,0 +1,21 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-f0fb353ba32948004bda3a86bf254c27",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "189",
+    "count": 1
+  },
+  "gallery": {
+    "gallery_id": "189",
+    "title": "model 2 (details)"
+  },
+  "member_works": [
+    {
+      "work_id": "03110",
+      "title": "model 2 - 001",
+      "year": 1994,
+      "year_display": "1994"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-3cf09d9f5d74b871f0b26cf6217bda46",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "218",
+    "count": 4
+  },
+  "gallery": {
+    "gallery_id": "218",
+    "title": "birth of healing forms (details)"
+  },
+  "member_works": [
+    {
+      "work_id": "03376",
+      "title": "birth of forms - detail 1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03377",
+      "title": "birth of forms - detail 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03378",
+      "title": "birth of forms - detail 3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03379",
+      "title": "birth of forms - detail 4",
+      "year": 2023,
+      "year_display": "2023"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-f748887a3b04ab387577224549fa805c",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "190",
+    "count": 1
+  },
+  "gallery": {
+    "gallery_id": "190",
+    "title": "forms scan 5 (working)"
+  },
+  "member_works": [
+    {
+      "work_id": "03111",
+      "title": "2012-01-06 - 12-30-44",
+      "year": 2005,
+      "year_display": "2005"
+    }
+  ]
+}

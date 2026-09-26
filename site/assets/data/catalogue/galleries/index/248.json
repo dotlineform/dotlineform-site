@@ -1,0 +1,51 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-b1ee89c64859c85c0c83b8912b8b9ee4",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "248",
+    "count": 6
+  },
+  "gallery": {
+    "gallery_id": "248",
+    "title": "fireworks particles version (details)"
+  },
+  "member_works": [
+    {
+      "work_id": "04033",
+      "title": "fireworks particles version - detail 1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04034",
+      "title": "fireworks particles version - detail 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04035",
+      "title": "fireworks particles version - detail 3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04036",
+      "title": "fireworks particles version - detail 4",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04037",
+      "title": "fireworks particles version - detail 5",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04038",
+      "title": "fireworks particles version - detail 6",
+      "year": 2023,
+      "year_display": "2023"
+    }
+  ]
+}

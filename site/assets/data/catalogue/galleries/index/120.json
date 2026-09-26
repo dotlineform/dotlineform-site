@@ -1,0 +1,75 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-bbf451fda932be3e108b20380104e6c4",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "120",
+    "count": 10
+  },
+  "gallery": {
+    "gallery_id": "120",
+    "title": "reduce and return"
+  },
+  "member_works": [
+    {
+      "work_id": "01596",
+      "title": "reduce 1",
+      "year": 2005,
+      "year_display": "2005-07"
+    },
+    {
+      "work_id": "01597",
+      "title": "reduce 2",
+      "year": 2005,
+      "year_display": "2005-07"
+    },
+    {
+      "work_id": "01598",
+      "title": "reduce 3",
+      "year": 2005,
+      "year_display": "2005-07"
+    },
+    {
+      "work_id": "01599",
+      "title": "reduce 4",
+      "year": 2005,
+      "year_display": "2005-07"
+    },
+    {
+      "work_id": "01600",
+      "title": "reduce 5",
+      "year": 2005,
+      "year_display": "2005-07"
+    },
+    {
+      "work_id": "01601",
+      "title": "return 1",
+      "year": 2005,
+      "year_display": "2005-07"
+    },
+    {
+      "work_id": "01602",
+      "title": "return 2",
+      "year": 2005,
+      "year_display": "2005-07"
+    },
+    {
+      "work_id": "01603",
+      "title": "return 3",
+      "year": 2005,
+      "year_display": "2005-07"
+    },
+    {
+      "work_id": "01604",
+      "title": "return 4",
+      "year": 2005,
+      "year_display": "2005-07"
+    },
+    {
+      "work_id": "01605",
+      "title": "return 5",
+      "year": 2005,
+      "year_display": "2005-07"
+    }
+  ]
+}

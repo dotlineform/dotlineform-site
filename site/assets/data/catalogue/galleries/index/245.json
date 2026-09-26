@@ -1,0 +1,51 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-ab0780336658e3d56b08af1495008712",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "245",
+    "count": 6
+  },
+  "gallery": {
+    "gallery_id": "245",
+    "title": "fireworks form (details)"
+  },
+  "member_works": [
+    {
+      "work_id": "03660",
+      "title": "fireworks form - detail 1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03661",
+      "title": "fireworks form - detail 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03662",
+      "title": "fireworks form - detail 3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03663",
+      "title": "fireworks form - detail 4",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03664",
+      "title": "fireworks form - detail 5",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03665",
+      "title": "fireworks form - detail 6",
+      "year": 2023,
+      "year_display": "2023"
+    }
+  ]
+}

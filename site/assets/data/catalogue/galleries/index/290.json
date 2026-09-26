@@ -1,0 +1,693 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-ab6ac435d5743262b0f1551b1e122a71",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "290",
+    "count": 113
+  },
+  "gallery": {
+    "gallery_id": "290",
+    "title": "state of mind (source)"
+  },
+  "member_works": [
+    {
+      "work_id": "04444",
+      "title": "state of mind - source 1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04445",
+      "title": "state of mind - source 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04446",
+      "title": "state of mind - source 3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04447",
+      "title": "state of mind - source 4",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04448",
+      "title": "state of mind - source 5",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04449",
+      "title": "state of mind - source 6",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04450",
+      "title": "state of mind - source 7",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04451",
+      "title": "state of mind - source 8",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04452",
+      "title": "state of mind - source 9",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04453",
+      "title": "state of mind - source 10",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04454",
+      "title": "state of mind - source 11",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04455",
+      "title": "state of mind - source 12",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04456",
+      "title": "state of mind - source 13",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04457",
+      "title": "state of mind - source 14",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04458",
+      "title": "state of mind - source 15",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04459",
+      "title": "state of mind - source 16",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04460",
+      "title": "state of mind - source 17",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04461",
+      "title": "state of mind - source 18",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04462",
+      "title": "state of mind - source 19",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04463",
+      "title": "state of mind - source 20",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04464",
+      "title": "state of mind - source 21",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04465",
+      "title": "state of mind - source 22",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04466",
+      "title": "state of mind - source 23",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04467",
+      "title": "state of mind - source 24",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04468",
+      "title": "state of mind - source 25",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04469",
+      "title": "state of mind - source 26",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04470",
+      "title": "state of mind - source 27",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04471",
+      "title": "state of mind - source 28",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04472",
+      "title": "state of mind - source 29",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04473",
+      "title": "state of mind - source 30",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04474",
+      "title": "state of mind - source 31",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04475",
+      "title": "state of mind - source 32",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04476",
+      "title": "state of mind - source 33",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04477",
+      "title": "state of mind - source 34",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04478",
+      "title": "state of mind - source 35",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04479",
+      "title": "state of mind - source 36",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04480",
+      "title": "state of mind - source 37",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04481",
+      "title": "state of mind - source 38",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04482",
+      "title": "state of mind - source 39",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04483",
+      "title": "state of mind - source 40",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04484",
+      "title": "state of mind - source 41",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04485",
+      "title": "state of mind - source 42",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04486",
+      "title": "state of mind - source 43",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04487",
+      "title": "state of mind - source 44",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04488",
+      "title": "state of mind - source 45",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04489",
+      "title": "state of mind - source 46",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04490",
+      "title": "state of mind - source 47",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04491",
+      "title": "state of mind - source 48",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04492",
+      "title": "state of mind - source 49",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04493",
+      "title": "state of mind - source 50",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04494",
+      "title": "state of mind - source 51",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04495",
+      "title": "state of mind - source 52",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04496",
+      "title": "state of mind - source 53",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04497",
+      "title": "state of mind - source 54",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04498",
+      "title": "state of mind - source 55",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04499",
+      "title": "state of mind - source 56",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04500",
+      "title": "state of mind - source 57",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04501",
+      "title": "state of mind - source 58",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04502",
+      "title": "state of mind - source 59",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04503",
+      "title": "state of mind - source 60",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04504",
+      "title": "state of mind - source 61",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04505",
+      "title": "state of mind - source 62",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04506",
+      "title": "state of mind - source 63",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04507",
+      "title": "state of mind - source 64",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04508",
+      "title": "state of mind - source 65",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04509",
+      "title": "state of mind - source 66",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04510",
+      "title": "state of mind - source 67",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04511",
+      "title": "state of mind - source 68",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04512",
+      "title": "state of mind - source 69",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04513",
+      "title": "state of mind - source 70",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04514",
+      "title": "state of mind - source 71",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04515",
+      "title": "state of mind - source 72",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04516",
+      "title": "state of mind - source 73",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04517",
+      "title": "state of mind - source 74",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04518",
+      "title": "state of mind - source 75",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04519",
+      "title": "state of mind - source 76",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04520",
+      "title": "state of mind - source 77",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04521",
+      "title": "state of mind - source 78",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04522",
+      "title": "state of mind - source 79",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04523",
+      "title": "state of mind - source 80",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04524",
+      "title": "state of mind - source 81",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04525",
+      "title": "state of mind - source 82",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04526",
+      "title": "state of mind - source 83",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04527",
+      "title": "state of mind - source 84",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04528",
+      "title": "state of mind - source 85",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04529",
+      "title": "state of mind - source 86",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04530",
+      "title": "state of mind - source 87",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04531",
+      "title": "state of mind - source 88",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04532",
+      "title": "state of mind - source 89",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04533",
+      "title": "state of mind - source 90",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04534",
+      "title": "state of mind - source 91",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04535",
+      "title": "state of mind - source 92",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04536",
+      "title": "state of mind - source 93",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04537",
+      "title": "state of mind - source 94",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04538",
+      "title": "state of mind - source 95",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04539",
+      "title": "state of mind - source 96",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04540",
+      "title": "state of mind - source 97",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04541",
+      "title": "state of mind - source 98",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04542",
+      "title": "state of mind - source 99",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04543",
+      "title": "state of mind - source 100",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04544",
+      "title": "state of mind - source 101",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04545",
+      "title": "state of mind - source 102",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04546",
+      "title": "state of mind - source 103",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04547",
+      "title": "state of mind - source 104",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04548",
+      "title": "state of mind - source 105",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04549",
+      "title": "state of mind - source 106",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04550",
+      "title": "state of mind - source 107",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04551",
+      "title": "state of mind - source 108",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04552",
+      "title": "state of mind - source 109",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04553",
+      "title": "state of mind - source 110",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04554",
+      "title": "state of mind - source 111",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04555",
+      "title": "state of mind - source 112",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04556",
+      "title": "state of mind - source 113",
+      "year": 2023,
+      "year_display": "2023"
+    }
+  ]
+}

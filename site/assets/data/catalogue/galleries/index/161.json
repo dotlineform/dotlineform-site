@@ -1,0 +1,111 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-aaee7b91937a38d0b3bd05bc73ff3c6a",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "161",
+    "count": 16
+  },
+  "gallery": {
+    "gallery_id": "161",
+    "title": "molecules (details)"
+  },
+  "member_works": [
+    {
+      "work_id": "02863",
+      "title": "molecules (detail 1)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02864",
+      "title": "molecules (detail 2)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02865",
+      "title": "molecules (detail 3)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02866",
+      "title": "molecules (detail 4)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02867",
+      "title": "molecules (detail 5)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02868",
+      "title": "molecules (detail 6)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02869",
+      "title": "molecules (detail 7)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02870",
+      "title": "molecules (detail 8)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02871",
+      "title": "molecules (detail 9)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02872",
+      "title": "molecules (detail 10)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02873",
+      "title": "molecules (detail 11)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02874",
+      "title": "molecules (detail 12)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02875",
+      "title": "molecules (detail 13)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02876",
+      "title": "molecules (detail 14)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02877",
+      "title": "molecules (detail 15)",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "02878",
+      "title": "molecules (detail 16)",
+      "year": 2013,
+      "year_display": "2013"
+    }
+  ]
+}

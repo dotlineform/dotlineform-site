@@ -1,0 +1,39 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-3fca04f369c388848a94f888402d3a77",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "198",
+    "count": 4
+  },
+  "gallery": {
+    "gallery_id": "198",
+    "title": "bits symbols 1 (versions)"
+  },
+  "member_works": [
+    {
+      "work_id": "03154",
+      "title": "bits symbols 1",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03155",
+      "title": "bits symbols 2",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03156",
+      "title": "bits symbols 3",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03157",
+      "title": "bits symbols 4",
+      "year": 2009,
+      "year_display": "2009"
+    }
+  ]
+}

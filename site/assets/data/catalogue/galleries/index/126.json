@@ -1,0 +1,21 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-7cd76bab3e9fc06875335b50cd741efb",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "126",
+    "count": 1
+  },
+  "gallery": {
+    "gallery_id": "126",
+    "title": "spine symbols"
+  },
+  "member_works": [
+    {
+      "work_id": "01720",
+      "title": "spine symbols",
+      "year": 2008,
+      "year_display": "2008"
+    }
+  ]
+}

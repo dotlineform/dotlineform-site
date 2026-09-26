@@ -1,0 +1,51 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-63c386fa4c5a4cdb988459a5052e710c",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "085",
+    "count": 6
+  },
+  "gallery": {
+    "gallery_id": "085",
+    "title": "kylie wax model"
+  },
+  "member_works": [
+    {
+      "work_id": "01394",
+      "title": "kylie wax model 1.0",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "01395",
+      "title": "kylie wax model 2.0",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "01396",
+      "title": "kylie wax model 3.0",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "01397",
+      "title": "kylie wax model 4.0",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "01398",
+      "title": "kylie wax model 5.0",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "01399",
+      "title": "kylie wax model 6.0",
+      "year": 2024,
+      "year_display": "2024"
+    }
+  ]
+}

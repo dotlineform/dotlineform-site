@@ -1,0 +1,45 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-f277557b5c4842575f9278959b77ab99",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "110",
+    "count": 5
+  },
+  "gallery": {
+    "gallery_id": "110",
+    "title": "particle theory"
+  },
+  "member_works": [
+    {
+      "work_id": "00549",
+      "title": "particle theory (1 layer - partial)",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "00550",
+      "title": "particle theory (1 layer)",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "00551",
+      "title": "particle theory (3 layers)",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "00552",
+      "title": "particle theory (2 layers)",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "00553",
+      "title": "particle theory (4 layers)",
+      "year": 2008,
+      "year_display": "2008"
+    }
+  ]
+}

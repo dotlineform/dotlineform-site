@@ -1,0 +1,111 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-0802836bb13d3ab710d2ab61fd668592",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "210",
+    "count": 16
+  },
+  "gallery": {
+    "gallery_id": "210",
+    "title": "16 forms (transformed forms)"
+  },
+  "member_works": [
+    {
+      "work_id": "03273",
+      "title": "transformed form 1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03274",
+      "title": "transformed form 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03275",
+      "title": "transformed form 3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03276",
+      "title": "transformed form 4",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03277",
+      "title": "transformed form 5",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03278",
+      "title": "transformed form 6",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03279",
+      "title": "transformed form 7",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03280",
+      "title": "transformed form 8",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03281",
+      "title": "transformed form 9",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03282",
+      "title": "transformed form 10",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03283",
+      "title": "transformed form 11",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03284",
+      "title": "transformed form 12",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03285",
+      "title": "transformed form 13",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03286",
+      "title": "transformed form 14",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03287",
+      "title": "transformed form 15",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03288",
+      "title": "transformed form 16",
+      "year": 2023,
+      "year_display": "2023"
+    }
+  ]
+}

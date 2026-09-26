@@ -1,0 +1,81 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-eaa3f9fc27d4969be4f7f70dcba1cd59",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "099",
+    "count": 11
+  },
+  "gallery": {
+    "gallery_id": "099",
+    "title": "models"
+  },
+  "member_works": [
+    {
+      "work_id": "00130",
+      "title": "model 1",
+      "year": 1994,
+      "year_display": "1994"
+    },
+    {
+      "work_id": "00536",
+      "title": "model 2",
+      "year": 1994,
+      "year_display": "1994"
+    },
+    {
+      "work_id": "00537",
+      "title": "model 3",
+      "year": 1994,
+      "year_display": "1994"
+    },
+    {
+      "work_id": "00538",
+      "title": "model 4",
+      "year": 1994,
+      "year_display": "1994"
+    },
+    {
+      "work_id": "00539",
+      "title": "model 5",
+      "year": 1994,
+      "year_display": "1994"
+    },
+    {
+      "work_id": "00540",
+      "title": "model 6",
+      "year": 1994,
+      "year_display": "1994"
+    },
+    {
+      "work_id": "00541",
+      "title": "model 7",
+      "year": 1994,
+      "year_display": "1994"
+    },
+    {
+      "work_id": "00542",
+      "title": "model 8",
+      "year": 1994,
+      "year_display": "1994"
+    },
+    {
+      "work_id": "00543",
+      "title": "model 9",
+      "year": 1994,
+      "year_display": "1994"
+    },
+    {
+      "work_id": "00544",
+      "title": "model 10",
+      "year": 1994,
+      "year_display": "1994"
+    },
+    {
+      "work_id": "00545",
+      "title": "model 11",
+      "year": 1994,
+      "year_display": "1994"
+    }
+  ]
+}

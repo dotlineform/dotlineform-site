@@ -1,0 +1,33 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-a82ca33fa08aa6f80f1b49e150ef2f93",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "001",
+    "count": 3
+  },
+  "gallery": {
+    "gallery_id": "001",
+    "title": "10,000"
+  },
+  "member_works": [
+    {
+      "work_id": "00635",
+      "title": "10,000 (1)",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00636",
+      "title": "10,000 (2)",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "00637",
+      "title": "10,000 (3)",
+      "year": 2009,
+      "year_display": "2009"
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-93b1183f6a75a3fb10ada8067bfe57ec",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "032",
+    "count": 6
+  },
+  "gallery": {
+    "gallery_id": "032",
+    "title": "creases"
+  },
+  "member_works": [
+    {
+      "work_id": "00832",
+      "title": "creases 1",
+      "year": 2016,
+      "year_display": "2016"
+    },
+    {
+      "work_id": "00833",
+      "title": "creases 1 (version)",
+      "year": 2016,
+      "year_display": "2016"
+    },
+    {
+      "work_id": "00834",
+      "title": "creases 2",
+      "year": 2016,
+      "year_display": "2016"
+    },
+    {
+      "work_id": "00835",
+      "title": "creases 2 (version)",
+      "year": 2016,
+      "year_display": "2016"
+    },
+    {
+      "work_id": "00836",
+      "title": "creases 3",
+      "year": 2016,
+      "year_display": "2016"
+    },
+    {
+      "work_id": "00837",
+      "title": "creases 3 (version)",
+      "year": 2016,
+      "year_display": "2016"
+    }
+  ]
+}

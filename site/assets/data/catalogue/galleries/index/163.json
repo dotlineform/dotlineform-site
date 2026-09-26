@@ -1,0 +1,51 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-65ee9017cd5274a7896acd768c8491d6",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "163",
+    "count": 6
+  },
+  "gallery": {
+    "gallery_id": "163",
+    "title": "living surface hand form (versions)"
+  },
+  "member_works": [
+    {
+      "work_id": "02880",
+      "title": "living surface (version 1)",
+      "year": 2004,
+      "year_display": "1989, 2004"
+    },
+    {
+      "work_id": "02881",
+      "title": "living surface (version 2)",
+      "year": 2004,
+      "year_display": "1989, 2004"
+    },
+    {
+      "work_id": "02882",
+      "title": "living surface (version 3)",
+      "year": 2004,
+      "year_display": "1989, 2004"
+    },
+    {
+      "work_id": "02883",
+      "title": "living surface (version 3) detail",
+      "year": 2004,
+      "year_display": "1989, 2004"
+    },
+    {
+      "work_id": "02884",
+      "title": "living surface (version 4)",
+      "year": 2004,
+      "year_display": "1989, 2004"
+    },
+    {
+      "work_id": "02885",
+      "title": "living surface (version 4) detail",
+      "year": 2004,
+      "year_display": "1989, 2004"
+    }
+  ]
+}

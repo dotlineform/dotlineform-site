@@ -1,0 +1,33 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-9da58994cfe23c4098e53a50808effc4",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "217",
+    "count": 3
+  },
+  "gallery": {
+    "gallery_id": "217",
+    "title": "assembly code 3 (details)"
+  },
+  "member_works": [
+    {
+      "work_id": "03373",
+      "title": "assembly code 3 (detail 1)",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03374",
+      "title": "assembly code 3 (detail 2)",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03375",
+      "title": "assembly code 3 (detail 3)",
+      "year": 2023,
+      "year_display": "2023"
+    }
+  ]
+}

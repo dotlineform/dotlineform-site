@@ -1,0 +1,33 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-0b77826daad2a600a0213aa6afd0535e",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "285",
+    "count": 3
+  },
+  "gallery": {
+    "gallery_id": "285",
+    "title": "room 3 (details)"
+  },
+  "member_works": [
+    {
+      "work_id": "04359",
+      "title": "room 3 - detail 1",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04360",
+      "title": "room 3 - detail 2",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04361",
+      "title": "room 3 - detail 3",
+      "year": 2008,
+      "year_display": "2008"
+    }
+  ]
+}

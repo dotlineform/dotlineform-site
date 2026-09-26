@@ -1,0 +1,45 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-49123ba71dadca21bae24fec3c95d596",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "059",
+    "count": 5
+  },
+  "gallery": {
+    "gallery_id": "059",
+    "title": "forest"
+  },
+  "member_works": [
+    {
+      "work_id": "00390",
+      "title": "forest 3",
+      "year": 2003,
+      "year_display": "2003"
+    },
+    {
+      "work_id": "00392",
+      "title": "forest 1",
+      "year": 2003,
+      "year_display": "2003"
+    },
+    {
+      "work_id": "00393",
+      "title": "model 500",
+      "year": 2003,
+      "year_display": "2003"
+    },
+    {
+      "work_id": "00618",
+      "title": "forest 2",
+      "year": 2003,
+      "year_display": "2003"
+    },
+    {
+      "work_id": "00619",
+      "title": "body 1",
+      "year": 2003,
+      "year_display": "2003"
+    }
+  ]
+}

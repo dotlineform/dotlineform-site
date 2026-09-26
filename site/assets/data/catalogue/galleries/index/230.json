@@ -1,0 +1,39 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-8ed31ad37d846e13e13ca8d85dded800",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "230",
+    "count": 4
+  },
+  "gallery": {
+    "gallery_id": "230",
+    "title": "doll moiré reduced (versions (2022))"
+  },
+  "member_works": [
+    {
+      "work_id": "03552",
+      "title": "doll moiré reduced (version 1)",
+      "year": 2008,
+      "year_display": "c. 2008"
+    },
+    {
+      "work_id": "03553",
+      "title": "doll moiré reduced (version 2)",
+      "year": 2008,
+      "year_display": "c. 2008"
+    },
+    {
+      "work_id": "03554",
+      "title": "doll moiré reduced (version 3)",
+      "year": 2008,
+      "year_display": "c. 2008"
+    },
+    {
+      "work_id": "03555",
+      "title": "doll moiré reduced (version 4)",
+      "year": 2008,
+      "year_display": "c. 2008"
+    }
+  ]
+}

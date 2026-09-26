@@ -1,0 +1,111 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-42371cb7708c1f4eef9e046b0eb4240f",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "090",
+    "count": 16
+  },
+  "gallery": {
+    "gallery_id": "090",
+    "title": "lights"
+  },
+  "member_works": [
+    {
+      "work_id": "01401",
+      "title": "lights 1",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "01402",
+      "title": "lights 2",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "01403",
+      "title": "lights 3",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "01404",
+      "title": "lights 4",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "01405",
+      "title": "lights 5",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "01406",
+      "title": "lights 6",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "01407",
+      "title": "lights 7",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "01408",
+      "title": "lights 8",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "01409",
+      "title": "lights 9",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "01410",
+      "title": "lights 10",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "01411",
+      "title": "lights 11",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "01412",
+      "title": "lights 12",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "01413",
+      "title": "lights 13",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "01414",
+      "title": "lights 14",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "01415",
+      "title": "lights 15",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "01416",
+      "title": "lights 16",
+      "year": 2013,
+      "year_display": "2013"
+    }
+  ]
+}

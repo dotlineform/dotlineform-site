@@ -1,0 +1,39 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-2645c825c3c64a09bbace5b680eb1a45",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "188",
+    "count": 4
+  },
+  "gallery": {
+    "gallery_id": "188",
+    "title": "2 bodies monoprint (details)"
+  },
+  "member_works": [
+    {
+      "work_id": "03106",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03107",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03108",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "03109",
+      "title": "body detail",
+      "year": 2025,
+      "year_display": "2025"
+    }
+  ]
+}

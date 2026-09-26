@@ -1,0 +1,27 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-9a8308f8ad6b61f8813a7059a2376253",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "178",
+    "count": 2
+  },
+  "gallery": {
+    "gallery_id": "178",
+    "title": "kylie structure 3 (details)"
+  },
+  "member_works": [
+    {
+      "work_id": "03070",
+      "title": "kylie structure 3.1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "03071",
+      "title": "kylie structure 3.2",
+      "year": 2023,
+      "year_display": "2023"
+    }
+  ]
+}

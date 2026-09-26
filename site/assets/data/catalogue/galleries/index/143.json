@@ -1,0 +1,27 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-7b4cb5cc1fe257fcc07c4e205a3a259e",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "143",
+    "count": 2
+  },
+  "gallery": {
+    "gallery_id": "143",
+    "title": "simultaneous equations"
+  },
+  "member_works": [
+    {
+      "work_id": "01941",
+      "title": "se1",
+      "year": 2026,
+      "year_display": "2026"
+    },
+    {
+      "work_id": "01942",
+      "title": "se2",
+      "year": 2026,
+      "year_display": "2026"
+    }
+  ]
+}

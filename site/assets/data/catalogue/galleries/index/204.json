@@ -1,0 +1,27 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-28da859d9fa1ecb4ad7d7ea9fbe7ee39",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "204",
+    "count": 2
+  },
+  "gallery": {
+    "gallery_id": "204",
+    "title": "3 symbols (versions)"
+  },
+  "member_works": [
+    {
+      "work_id": "03188",
+      "title": "3 symbols (composite)",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03189",
+      "title": "3 symbols (untreated)",
+      "year": 2007,
+      "year_display": "2007"
+    }
+  ]
+}

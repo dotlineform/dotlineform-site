@@ -1,0 +1,141 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-2732cc3d6a97a512973f52ed6e43c52a",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "207",
+    "count": 21
+  },
+  "gallery": {
+    "gallery_id": "207",
+    "title": "3 symbols (composites)"
+  },
+  "member_works": [
+    {
+      "work_id": "03220",
+      "title": "composite - bandage",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03221",
+      "title": "composite - before",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03222",
+      "title": "composite - blessing",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03223",
+      "title": "composite - blindness",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03224",
+      "title": "composite - bridge",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03225",
+      "title": "composite - burma",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03226",
+      "title": "composite - burn",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03227",
+      "title": "composite - genocide",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03228",
+      "title": "composite - gesture",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03229",
+      "title": "composite - give",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03230",
+      "title": "composite - grave",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03231",
+      "title": "composite - grieve",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03232",
+      "title": "composite - grow",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03233",
+      "title": "composite - guilt",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03234",
+      "title": "composite - radius",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03235",
+      "title": "composite - rarefied",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03236",
+      "title": "composite - reincarnation",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03237",
+      "title": "composite - replenish",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03238",
+      "title": "composite - restrict",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03239",
+      "title": "composite - ruin",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03240",
+      "title": "composite - rwanda",
+      "year": 2007,
+      "year_display": "2007"
+    }
+  ]
+}

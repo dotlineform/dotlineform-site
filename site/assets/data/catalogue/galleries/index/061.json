@@ -1,0 +1,21 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-7b133473ebfcf362f910b3a416f0da19",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "061",
+    "count": 1
+  },
+  "gallery": {
+    "gallery_id": "061",
+    "title": "forest memories 1-48"
+  },
+  "member_works": [
+    {
+      "work_id": "00464",
+      "title": "forest memories 1-48",
+      "year": 2023,
+      "year_display": "2023"
+    }
+  ]
+}

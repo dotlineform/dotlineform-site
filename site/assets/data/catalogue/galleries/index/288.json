@@ -1,0 +1,27 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-4caed50102c551b410777393b6fcc43e",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "288",
+    "count": 2
+  },
+  "gallery": {
+    "gallery_id": "288",
+    "title": "spine symbols (source)"
+  },
+  "member_works": [
+    {
+      "work_id": "04436",
+      "title": "spine names",
+      "year": 2008,
+      "year_display": "2008"
+    },
+    {
+      "work_id": "04437",
+      "title": "symbols decoded",
+      "year": 2008,
+      "year_display": "2008"
+    }
+  ]
+}

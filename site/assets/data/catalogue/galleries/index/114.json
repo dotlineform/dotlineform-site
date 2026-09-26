@@ -1,0 +1,57 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-929126749cb33946c01abaa0d0d03699",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "114",
+    "count": 7
+  },
+  "gallery": {
+    "gallery_id": "114",
+    "title": "plant forms"
+  },
+  "member_works": [
+    {
+      "work_id": "01527",
+      "title": "plant form 1",
+      "year": 2022,
+      "year_display": "2022"
+    },
+    {
+      "work_id": "01528",
+      "title": "plant form 2",
+      "year": 2022,
+      "year_display": "2022"
+    },
+    {
+      "work_id": "01529",
+      "title": "plant form 3",
+      "year": 2022,
+      "year_display": "2022"
+    },
+    {
+      "work_id": "01530",
+      "title": "plant form 4",
+      "year": 2022,
+      "year_display": "2022"
+    },
+    {
+      "work_id": "01531",
+      "title": "plant form 5",
+      "year": 2022,
+      "year_display": "2022"
+    },
+    {
+      "work_id": "01532",
+      "title": "plant form 6",
+      "year": 2022,
+      "year_display": "2022"
+    },
+    {
+      "work_id": "01533",
+      "title": "plant form 7",
+      "year": 2022,
+      "year_display": "2022"
+    }
+  ]
+}

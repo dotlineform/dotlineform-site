@@ -1,0 +1,51 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-5db4a3c560148e1963790274b51b3f79",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "192",
+    "count": 6
+  },
+  "gallery": {
+    "gallery_id": "192",
+    "title": "k crystals (derivation)"
+  },
+  "member_works": [
+    {
+      "work_id": "03125",
+      "title": "k source",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03126",
+      "title": "k crystals bits - detail",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03127",
+      "title": "k crystals bits - screenshot - detail",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03128",
+      "title": "k crystals bits - screenshot",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03129",
+      "title": "k crystals bits",
+      "year": 2009,
+      "year_display": "2009"
+    },
+    {
+      "work_id": "03130",
+      "title": "k crystals colours",
+      "year": 2009,
+      "year_display": "2009"
+    }
+  ]
+}

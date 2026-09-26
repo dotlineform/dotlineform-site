@@ -1,0 +1,39 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-758deda33b583288d1d928a1edb0e5c7",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "062",
+    "count": 4
+  },
+  "gallery": {
+    "gallery_id": "062",
+    "title": "forests (2023)"
+  },
+  "member_works": [
+    {
+      "work_id": "00465",
+      "title": "forest 1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00466",
+      "title": "forest 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00467",
+      "title": "forest 3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "00468",
+      "title": "forest 4",
+      "year": 2023,
+      "year_display": "2023"
+    }
+  ]
+}

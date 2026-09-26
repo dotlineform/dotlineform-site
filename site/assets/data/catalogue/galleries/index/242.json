@@ -1,0 +1,165 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-34c828127d114e18fb54b5449b3fa8d2",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "242",
+    "count": 25
+  },
+  "gallery": {
+    "gallery_id": "242",
+    "title": "espresso (espressos)"
+  },
+  "member_works": [
+    {
+      "work_id": "03629",
+      "title": "espresso 1",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "03630",
+      "title": "espresso 2",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "03631",
+      "title": "espresso 3",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "03632",
+      "title": "espresso 4",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "03633",
+      "title": "espresso 5",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "03634",
+      "title": "espresso 6",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "03635",
+      "title": "espresso 7",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "03636",
+      "title": "espresso 8",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "03637",
+      "title": "espresso 9",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "03638",
+      "title": "espresso 10",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "03639",
+      "title": "espresso 11",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "03640",
+      "title": "espresso 12",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "03641",
+      "title": "espresso 13",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "03642",
+      "title": "espresso 14",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "03643",
+      "title": "espresso 15",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "03644",
+      "title": "espresso 16",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "03645",
+      "title": "espresso 17",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "03646",
+      "title": "espresso 18",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "03647",
+      "title": "espresso 19",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "03648",
+      "title": "espresso 20",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "03649",
+      "title": "espresso 21",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "03650",
+      "title": "espresso 22",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "03651",
+      "title": "espresso 23",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "03652",
+      "title": "espresso 24",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "03653",
+      "title": "espresso 25",
+      "year": 2012,
+      "year_display": "2012"
+    }
+  ]
+}

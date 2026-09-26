@@ -1,0 +1,63 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-0829ee669cbaf3716ba867c0fca8faea",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "016",
+    "count": 8
+  },
+  "gallery": {
+    "gallery_id": "016",
+    "title": "birds"
+  },
+  "member_works": [
+    {
+      "work_id": "00774",
+      "title": "birds [1]",
+      "year": 2020,
+      "year_display": "2020"
+    },
+    {
+      "work_id": "00775",
+      "title": "birds [2]",
+      "year": 2020,
+      "year_display": "2020"
+    },
+    {
+      "work_id": "00776",
+      "title": "birds [3]",
+      "year": 2020,
+      "year_display": "2020"
+    },
+    {
+      "work_id": "00777",
+      "title": "birds [4]",
+      "year": 2020,
+      "year_display": "2020"
+    },
+    {
+      "work_id": "00778",
+      "title": "birds [5]",
+      "year": 2020,
+      "year_display": "2020"
+    },
+    {
+      "work_id": "00779",
+      "title": "birds [6]",
+      "year": 2020,
+      "year_display": "2020"
+    },
+    {
+      "work_id": "00780",
+      "title": "birds [7]",
+      "year": 2020,
+      "year_display": "2020"
+    },
+    {
+      "work_id": "00781",
+      "title": "birds [8]",
+      "year": 2020,
+      "year_display": "2020"
+    }
+  ]
+}

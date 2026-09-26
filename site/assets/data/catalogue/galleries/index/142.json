@@ -1,0 +1,33 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-738ce64f4d91b18d3a9adbdb5ab5ec57",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "142",
+    "count": 3
+  },
+  "gallery": {
+    "gallery_id": "142",
+    "title": "water sea pond"
+  },
+  "member_works": [
+    {
+      "work_id": "01938",
+      "title": "water",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "01939",
+      "title": "sea",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "01940",
+      "title": "pond",
+      "year": 2023,
+      "year_display": "2023"
+    }
+  ]
+}

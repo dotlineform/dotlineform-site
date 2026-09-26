@@ -1,0 +1,399 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-777bffefc7eeb5159b1c4fb340eda094",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "255",
+    "count": 64
+  },
+  "gallery": {
+    "gallery_id": "255",
+    "title": "forms (forms)"
+  },
+  "member_works": [
+    {
+      "work_id": "04109",
+      "title": "form 01",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04110",
+      "title": "form 02",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04111",
+      "title": "form 03",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04112",
+      "title": "form 04",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04113",
+      "title": "form 05",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04114",
+      "title": "form 06",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04115",
+      "title": "form 07",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04116",
+      "title": "form 08",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04117",
+      "title": "form 09",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04118",
+      "title": "form 10",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04119",
+      "title": "form 11",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04120",
+      "title": "form 12",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04121",
+      "title": "form 13",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04122",
+      "title": "form 14",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04123",
+      "title": "form 15",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04124",
+      "title": "form 16",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04125",
+      "title": "form 17",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04126",
+      "title": "form 18",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04127",
+      "title": "form 19",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04128",
+      "title": "form 20",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04129",
+      "title": "form 21",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04130",
+      "title": "form 22",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04131",
+      "title": "form 23",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04132",
+      "title": "form 24",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04133",
+      "title": "form 25",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04134",
+      "title": "form 26",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04135",
+      "title": "form 27",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04136",
+      "title": "form 28",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04137",
+      "title": "form 29",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04138",
+      "title": "form 30",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04139",
+      "title": "form 31",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04140",
+      "title": "form 32",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04141",
+      "title": "form 33",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04142",
+      "title": "form 34",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04143",
+      "title": "form 35",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04144",
+      "title": "form 36",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04145",
+      "title": "form 37",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04146",
+      "title": "form 38",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04147",
+      "title": "form 39",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04148",
+      "title": "form 40",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04149",
+      "title": "form 41",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04150",
+      "title": "form 42",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04151",
+      "title": "form 43",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04152",
+      "title": "form 44",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04153",
+      "title": "form 45",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04154",
+      "title": "form 46",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04155",
+      "title": "form 47",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04156",
+      "title": "form 48",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04157",
+      "title": "form 49",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04158",
+      "title": "form 50",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04159",
+      "title": "form 51",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04160",
+      "title": "form 52",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04161",
+      "title": "form 53",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04162",
+      "title": "form 54",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04163",
+      "title": "form 55",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04164",
+      "title": "form 56",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04165",
+      "title": "form 57",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04166",
+      "title": "form 58",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04167",
+      "title": "form 59",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04168",
+      "title": "form 60",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04169",
+      "title": "form 61",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04170",
+      "title": "form 62",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04171",
+      "title": "form 63",
+      "year": 2011,
+      "year_display": "2011"
+    },
+    {
+      "work_id": "04172",
+      "title": "form 64",
+      "year": 2011,
+      "year_display": "2011"
+    }
+  ]
+}

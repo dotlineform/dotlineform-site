@@ -1,0 +1,93 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-e056757022c2983903afef8208a72742",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "117",
+    "count": 13
+  },
+  "gallery": {
+    "gallery_id": "117",
+    "title": "porto santo"
+  },
+  "member_works": [
+    {
+      "work_id": "01583",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "01584",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "01585",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "01586",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "01587",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "01588",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "01589",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "01590",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "01591",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "01592",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "01593",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "01594",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "01595",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025"
+    }
+  ]
+}

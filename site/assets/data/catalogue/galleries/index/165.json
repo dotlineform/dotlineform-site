@@ -1,0 +1,303 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-0898ad77d4bdfeff290b8daaba31aa0b",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "165",
+    "count": 48
+  },
+  "gallery": {
+    "gallery_id": "165",
+    "title": "forest memories 1-48 (memories)"
+  },
+  "member_works": [
+    {
+      "work_id": "02890",
+      "title": "memory - 1.1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02891",
+      "title": "memory - 1.2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02892",
+      "title": "memory - 1.3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02893",
+      "title": "memory - 2.1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02894",
+      "title": "memory - 2.2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02895",
+      "title": "memory - 2.3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02896",
+      "title": "memory - 3.1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02897",
+      "title": "memory - 3.2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02898",
+      "title": "memory - 3.3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02899",
+      "title": "memory - 4.1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02900",
+      "title": "memory - 4.2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02901",
+      "title": "memory - 4.3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02902",
+      "title": "memory - 5.1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02903",
+      "title": "memory - 5.2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02904",
+      "title": "memory - 5.3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02905",
+      "title": "memory - 6.1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02906",
+      "title": "memory - 6.2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02907",
+      "title": "memory - 6.3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02908",
+      "title": "memory - 7.1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02909",
+      "title": "memory - 7.2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02910",
+      "title": "memory - 7.3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02911",
+      "title": "memory - 8.1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02912",
+      "title": "memory - 8.2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02913",
+      "title": "memory - 8.3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02914",
+      "title": "memory - 9.1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02915",
+      "title": "memory - 9.2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02916",
+      "title": "memory - 9.3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02917",
+      "title": "memory - 10.1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02918",
+      "title": "memory - 10.2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02919",
+      "title": "memory - 10.3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02920",
+      "title": "memory - 11.1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02921",
+      "title": "memory - 11.2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02922",
+      "title": "memory - 11.3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02923",
+      "title": "memory - 12.1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02924",
+      "title": "memory - 12.2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02925",
+      "title": "memory - 12.3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02926",
+      "title": "memory - 13.1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02927",
+      "title": "memory - 13.2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02928",
+      "title": "memory - 13.3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02929",
+      "title": "memory - 14.1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02930",
+      "title": "memory - 14.2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02931",
+      "title": "memory - 14.3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02932",
+      "title": "memory - 15.1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02933",
+      "title": "memory - 15.2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02934",
+      "title": "memory - 15.3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02935",
+      "title": "memory - 16.1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02936",
+      "title": "memory - 16.2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02937",
+      "title": "memory - 16.3",
+      "year": 2023,
+      "year_display": "2023"
+    }
+  ]
+}

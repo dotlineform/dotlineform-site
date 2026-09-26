@@ -1,0 +1,21 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-4cd1d2f8855ef348a1ffe113b4bac6c4",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "058",
+    "count": 1
+  },
+  "gallery": {
+    "gallery_id": "058",
+    "title": "for David Lynch (2025)"
+  },
+  "member_works": [
+    {
+      "work_id": "00346",
+      "title": "for David Lynch",
+      "year": 2025,
+      "year_display": "2025"
+    }
+  ]
+}

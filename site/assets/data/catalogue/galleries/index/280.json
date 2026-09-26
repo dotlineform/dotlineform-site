@@ -1,0 +1,33 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-afd9b7b10e1fda7e5c5eb6592f15f66c",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "280",
+    "count": 3
+  },
+  "gallery": {
+    "gallery_id": "280",
+    "title": "pi circle (details)"
+  },
+  "member_works": [
+    {
+      "work_id": "04329",
+      "title": "pi circle - detail 1",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "04330",
+      "title": "pi circle - detail 2",
+      "year": 2012,
+      "year_display": "2012"
+    },
+    {
+      "work_id": "04331",
+      "title": "pi circle - detail 3",
+      "year": 2012,
+      "year_display": "2012"
+    }
+  ]
+}

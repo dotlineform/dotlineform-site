@@ -1,0 +1,33 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-7be05810cdc00f37f01bf91e68f1971c",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "266",
+    "count": 3
+  },
+  "gallery": {
+    "gallery_id": "266",
+    "title": "interior design 1 (details)"
+  },
+  "member_works": [
+    {
+      "work_id": "04254",
+      "title": "interior design 1 - detail 1",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "04255",
+      "title": "interior design 1 - detail 2",
+      "year": 2005,
+      "year_display": "2005"
+    },
+    {
+      "work_id": "04256",
+      "title": "interior design 1 - detail 3",
+      "year": 2005,
+      "year_display": "2005"
+    }
+  ]
+}

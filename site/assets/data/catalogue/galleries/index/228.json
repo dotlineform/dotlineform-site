@@ -1,0 +1,39 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-9738efce4c6e35cc6a6f1460e844e4a9",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "228",
+    "count": 4
+  },
+  "gallery": {
+    "gallery_id": "228",
+    "title": "doll cell (cell)"
+  },
+  "member_works": [
+    {
+      "work_id": "03540",
+      "title": "doll cell - 2007-04-03 - 14-17-59",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03541",
+      "title": "doll cell - 2007-04-08 - 22-13-45",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03542",
+      "title": "doll cell - 2007-04-08 - 22-14-01",
+      "year": 2007,
+      "year_display": "2007"
+    },
+    {
+      "work_id": "03543",
+      "title": "doll cell - 2007-04-08 - 22-14-13",
+      "year": 2007,
+      "year_display": "2007"
+    }
+  ]
+}

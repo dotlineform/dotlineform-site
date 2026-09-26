@@ -1,0 +1,69 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-f4c2e8bf938b51148c4bc40ce5651b13",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "274",
+    "count": 9
+  },
+  "gallery": {
+    "gallery_id": "274",
+    "title": "matter (details)"
+  },
+  "member_works": [
+    {
+      "work_id": "04300",
+      "title": "matter - detail 1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04301",
+      "title": "matter - detail 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04302",
+      "title": "matter - detail 3",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04303",
+      "title": "matter - detail 4",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04304",
+      "title": "matter - detail 5",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04305",
+      "title": "matter - detail 6",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04306",
+      "title": "matter - detail 7",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04307",
+      "title": "matter - detail 8",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "04308",
+      "title": "matter - detail 9",
+      "year": 2023,
+      "year_display": "2023"
+    }
+  ]
+}

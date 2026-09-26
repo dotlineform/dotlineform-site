@@ -1,0 +1,21 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-48d59c79af14125d78b0eff2eaaaa0b5",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "091",
+    "count": 1
+  },
+  "gallery": {
+    "gallery_id": "091",
+    "title": "lipseyes"
+  },
+  "member_works": [
+    {
+      "work_id": "00388",
+      "title": "lipseyes",
+      "year": 2003,
+      "year_display": "2003"
+    }
+  ]
+}

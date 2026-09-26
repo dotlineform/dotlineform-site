@@ -1,0 +1,33 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-9355d0f5ae544a1d05d7fdb0b6daafa8",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "172",
+    "count": 3
+  },
+  "gallery": {
+    "gallery_id": "172",
+    "title": "landscape 1 (details)"
+  },
+  "member_works": [
+    {
+      "work_id": "02974",
+      "title": "landscape 1 - detail 1",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02975",
+      "title": "landscape 1 - detail 2",
+      "year": 2023,
+      "year_display": "2023"
+    },
+    {
+      "work_id": "02976",
+      "title": "landscape 1 - detail 3",
+      "year": 2023,
+      "year_display": "2023"
+    }
+  ]
+}

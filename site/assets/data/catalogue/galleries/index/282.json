@@ -1,0 +1,117 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-77df954e5c0be6bf8a89641940d4dd6c",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "282",
+    "count": 17
+  },
+  "gallery": {
+    "gallery_id": "282",
+    "title": "poa 1 (map 1-500) (selected source)"
+  },
+  "member_works": [
+    {
+      "work_id": "04336",
+      "title": "poa 1 - 0001",
+      "year": 2001,
+      "year_display": "2001-04"
+    },
+    {
+      "work_id": "04337",
+      "title": "poa 1 - 0043",
+      "year": 2001,
+      "year_display": "2001-04"
+    },
+    {
+      "work_id": "04338",
+      "title": "poa 1 - 0446",
+      "year": 2001,
+      "year_display": "2001-04"
+    },
+    {
+      "work_id": "04339",
+      "title": "poa 1 - 0519",
+      "year": 2001,
+      "year_display": "2001-04"
+    },
+    {
+      "work_id": "04340",
+      "title": "poa 1 - 0684",
+      "year": 2001,
+      "year_display": "2001-04"
+    },
+    {
+      "work_id": "04341",
+      "title": "poa 1 - 0757",
+      "year": 2001,
+      "year_display": "2001-04"
+    },
+    {
+      "work_id": "04342",
+      "title": "poa 1 - 0877",
+      "year": 2001,
+      "year_display": "2001-04"
+    },
+    {
+      "work_id": "04343",
+      "title": "poa 1 - 1076",
+      "year": 2001,
+      "year_display": "2001-04"
+    },
+    {
+      "work_id": "04344",
+      "title": "poa 1 - 1297",
+      "year": 2001,
+      "year_display": "2001-04"
+    },
+    {
+      "work_id": "04345",
+      "title": "poa 1 - 1457",
+      "year": 2001,
+      "year_display": "2001-04"
+    },
+    {
+      "work_id": "04346",
+      "title": "poa 1 - 1527",
+      "year": 2001,
+      "year_display": "2001-04"
+    },
+    {
+      "work_id": "04347",
+      "title": "poa 1 - 1700",
+      "year": 2001,
+      "year_display": "2001-04"
+    },
+    {
+      "work_id": "04348",
+      "title": "poa 1 - 1803",
+      "year": 2001,
+      "year_display": "2001-04"
+    },
+    {
+      "work_id": "04349",
+      "title": "poa 1 - 1814",
+      "year": 2001,
+      "year_display": "2001-04"
+    },
+    {
+      "work_id": "04350",
+      "title": "poa 1 - 1862",
+      "year": 2001,
+      "year_display": "2001-04"
+    },
+    {
+      "work_id": "04351",
+      "title": "poa 1 - 1935",
+      "year": 2001,
+      "year_display": "2001-04"
+    },
+    {
+      "work_id": "04352",
+      "title": "poa 1 - 1975",
+      "year": 2001,
+      "year_display": "2001-04"
+    }
+  ]
+}

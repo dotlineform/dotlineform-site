@@ -1,0 +1,69 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-7d7585b7cb80e9bc1c7800164f5f00d5",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "004",
+    "count": 9
+  },
+  "gallery": {
+    "gallery_id": "004",
+    "title": "2 bodies"
+  },
+  "member_works": [
+    {
+      "work_id": "00526",
+      "title": "body",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00527",
+      "title": "body",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00528",
+      "title": "body",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00529",
+      "title": "body residue",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00530",
+      "title": "body curves",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00531",
+      "title": "body monoprint",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00532",
+      "title": "body monoprint petals",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00533",
+      "title": "2 bodies monoprint",
+      "year": 2025,
+      "year_display": "2025"
+    },
+    {
+      "work_id": "00534",
+      "title": "2 bodies monoprint",
+      "year": 2025,
+      "year_display": "2025"
+    }
+  ]
+}

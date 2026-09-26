@@ -1,0 +1,93 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-ac35737c9ea5e3f74ac5a271143ab5bb",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "057",
+    "count": 13
+  },
+  "gallery": {
+    "gallery_id": "057",
+    "title": "folding structure"
+  },
+  "member_works": [
+    {
+      "work_id": "01161",
+      "title": "folding structure 1",
+      "year": 2016,
+      "year_display": "2016"
+    },
+    {
+      "work_id": "01162",
+      "title": "folding structure 2",
+      "year": 2016,
+      "year_display": "2016"
+    },
+    {
+      "work_id": "01163",
+      "title": "folding structure 3",
+      "year": 2016,
+      "year_display": "2016"
+    },
+    {
+      "work_id": "01164",
+      "title": "folding structure 4",
+      "year": 2016,
+      "year_display": "2016"
+    },
+    {
+      "work_id": "01165",
+      "title": "folding structure 5",
+      "year": 2016,
+      "year_display": "2016"
+    },
+    {
+      "work_id": "01166",
+      "title": "folding structure 6",
+      "year": 2016,
+      "year_display": "2016"
+    },
+    {
+      "work_id": "01167",
+      "title": "folding structure 7",
+      "year": 2016,
+      "year_display": "2016"
+    },
+    {
+      "work_id": "01169",
+      "title": "folding structure 8",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "01170",
+      "title": "folding structure 9",
+      "year": 2013,
+      "year_display": "2013"
+    },
+    {
+      "work_id": "01171",
+      "title": "folding structure - version 1",
+      "year": 2020,
+      "year_display": "2020"
+    },
+    {
+      "work_id": "01172",
+      "title": "folding structure - version 2",
+      "year": 2020,
+      "year_display": "2020"
+    },
+    {
+      "work_id": "01173",
+      "title": "folding structure - version 2 (detail)",
+      "year": 2020,
+      "year_display": "2020"
+    },
+    {
+      "work_id": "01174",
+      "title": "folding structure - version 3",
+      "year": 2020,
+      "year_display": "2020"
+    }
+  ]
+}

@@ -1,0 +1,207 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-36e0d6c71d3690ef5e29cb153743e409",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "240",
+    "count": 32
+  },
+  "gallery": {
+    "gallery_id": "240",
+    "title": "egg forms (work in progress)"
+  },
+  "member_works": [
+    {
+      "work_id": "03595",
+      "title": "2024-05-30 17-32",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03596",
+      "title": "2024-05-30 17-32 2",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03597",
+      "title": "2024-05-30 17-32 3",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03598",
+      "title": "2024-05-30 17-32 4",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03599",
+      "title": "2024-05-30 17-32 5",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03600",
+      "title": "2024-05-30 17-32 6",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03601",
+      "title": "2024-05-30 17-32 7",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03602",
+      "title": "2024-05-30 17-32 8",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03603",
+      "title": "2024-05-30 17-33",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03604",
+      "title": "2024-05-30 19-11",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03605",
+      "title": "2024-05-30 22-38",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03606",
+      "title": "2024-05-31 00-12",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03607",
+      "title": "2024-05-31 00-12 2",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03608",
+      "title": "2024-05-31 00-12 3",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03609",
+      "title": "2024-05-31 00-12 4",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03610",
+      "title": "2024-05-31 00-12 5",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03611",
+      "title": "2024-05-31 00-13",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03612",
+      "title": "2024-05-31 22-57",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03613",
+      "title": "2024-05-31 22-58",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03614",
+      "title": "2024-05-31 22-58 2",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03615",
+      "title": "2024-06-02 22-06",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03616",
+      "title": "2024-06-02 22-06 2",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03617",
+      "title": "2024-06-02 22-06 3",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03618",
+      "title": "2024-06-02 22-34",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03619",
+      "title": "2024-06-02 22-44",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03620",
+      "title": "2024-06-02 22-44 2",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03621",
+      "title": "2024-06-02 23-29",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03622",
+      "title": "2024-06-02 23-29 2",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03623",
+      "title": "2024-06-02 23-30",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03624",
+      "title": "2024-06-02 23-30 2",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03625",
+      "title": "2024-06-02 23-30 3",
+      "year": 2024,
+      "year_display": "2024"
+    },
+    {
+      "work_id": "03626",
+      "title": "2024-06-03 00-45",
+      "year": 2024,
+      "year_display": "2024"
+    }
+  ]
+}

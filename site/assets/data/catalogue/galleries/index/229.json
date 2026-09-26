@@ -1,0 +1,63 @@
+{
+  "header": {
+    "schema": "gallery_record_v1",
+    "version": "blake2b-1724a533db556921ce39f5636343f2e0",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "gallery_id": "229",
+    "count": 8
+  },
+  "gallery": {
+    "gallery_id": "229",
+    "title": "doll moiré (versions (2022))"
+  },
+  "member_works": [
+    {
+      "work_id": "03544",
+      "title": "doll moiré (version 1)",
+      "year": 2008,
+      "year_display": "c. 2008"
+    },
+    {
+      "work_id": "03545",
+      "title": "doll moiré (version 2)",
+      "year": 2008,
+      "year_display": "c. 2008"
+    },
+    {
+      "work_id": "03546",
+      "title": "doll moiré (version 3)",
+      "year": 2008,
+      "year_display": "c. 2008"
+    },
+    {
+      "work_id": "03547",
+      "title": "doll moiré (version 4)",
+      "year": 2008,
+      "year_display": "c. 2008"
+    },
+    {
+      "work_id": "03548",
+      "title": "doll moiré (version 4.1)",
+      "year": 2008,
+      "year_display": "c. 2008"
+    },
+    {
+      "work_id": "03549",
+      "title": "doll moiré (version 4.2)",
+      "year": 2008,
+      "year_display": "c. 2008"
+    },
+    {
+      "work_id": "03550",
+      "title": "doll moiré (version 4.3)",
+      "year": 2008,
+      "year_display": "c. 2008"
+    },
+    {
+      "work_id": "03551",
+      "title": "doll moiré (version 4.4)",
+      "year": 2008,
+      "year_display": "c. 2008"
+    }
+  ]
+}
