@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-3bbec98b9ee574bc8735b01aca47b90a",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "00545",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00545",
+    "title": "model 11",
+    "year": 1994,
+    "year_display": "1994",
+    "medium_type": "collage",
+    "medium_caption": "photo collage",
+    "height_cm": 30.3,
+    "width_cm": 24.7,
+    "width_px": 2917,
+    "height_px": 3579,
+    "media_version": 1,
+    "series_id": "099",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "099",
+        "title": "models"
+      }
+    ]
+  },
+  "sections": []
+}

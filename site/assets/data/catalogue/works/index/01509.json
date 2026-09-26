@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-e0ac7a512ba827b591472fdb68666ce2",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "01509",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01509",
+    "title": "petri 9",
+    "year": 2004,
+    "year_display": "2004",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 3543,
+    "media_version": 1,
+    "series_id": "112",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "112",
+        "title": "petri"
+      }
+    ]
+  },
+  "sections": []
+}

@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-d6d4de9415467a35fc265eb3ed6d0411",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "01720",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01720",
+    "title": "spine symbols",
+    "year": 2008,
+    "year_display": "2008",
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "height_cm": 30.0,
+    "width_cm": 60.0,
+    "width_px": 7087,
+    "height_px": 3543,
+    "media_version": 1,
+    "series_id": "126",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "126",
+        "title": "spine symbols"
+      }
+    ]
+  },
+  "sections": []
+}

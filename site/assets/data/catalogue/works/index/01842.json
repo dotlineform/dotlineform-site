@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-78ec7b36364130ca1265b1b2d51b2a38",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "01842",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01842",
+    "title": "2018-03-18 10꞉47꞉20",
+    "year": 2018,
+    "year_display": "2018",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 40.0,
+    "width_px": 4724,
+    "height_px": 3543,
+    "media_version": 1,
+    "series_id": "135",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "135",
+        "title": "train moments"
+      }
+    ]
+  },
+  "sections": []
+}

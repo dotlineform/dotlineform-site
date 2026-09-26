@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-70ed4cc87d922076a93da8eb0a2e6a73",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "00463",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00463",
+    "title": "living surface hand form",
+    "year": 2004,
+    "year_display": "1989, 2004",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 68.0,
+    "width_cm": 50.0,
+    "width_px": 5906,
+    "height_px": 8031,
+    "media_version": 1,
+    "series_id": "092",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "092",
+        "title": "living surface hand form"
+      }
+    ]
+  },
+  "sections": []
+}

@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-eefad3737b5731a7d22d90e282e249b8",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "01359",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01359",
+    "title": "grid theory 1.1",
+    "year": 2008,
+    "year_display": "2008",
+    "medium_type": "drawing",
+    "medium_caption": "pencil, dots on paper",
+    "height_cm": 29.7,
+    "width_cm": 42.0,
+    "width_px": 4961,
+    "height_px": 3509,
+    "media_version": 1,
+    "series_id": "074",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "074",
+        "title": "grid theory"
+      }
+    ]
+  },
+  "sections": []
+}

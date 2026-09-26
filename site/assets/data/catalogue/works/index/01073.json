@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-14464bfbbb41d33113eeafa22482c1da",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "01073",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01073",
+    "title": "fog 3",
+    "year": 2010,
+    "year_display": "2010",
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "height_cm": 60.0,
+    "width_cm": 45.0,
+    "width_px": 5315,
+    "height_px": 7087,
+    "media_version": 1,
+    "series_id": "055",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "055",
+        "title": "fog"
+      }
+    ]
+  },
+  "sections": []
+}

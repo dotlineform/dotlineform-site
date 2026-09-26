@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-91a6c4e66fe8ac4229cd1baebf961a6d",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "00517",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00517",
+    "title": "landscape 2",
+    "year": 2023,
+    "year_display": "2023",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 50.0,
+    "width_cm": 120.0,
+    "width_px": 14173,
+    "height_px": 5906,
+    "media_version": 1,
+    "series_id": "087",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "087",
+        "title": "landscapes"
+      }
+    ]
+  },
+  "sections": []
+}

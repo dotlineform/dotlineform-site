@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-8fa8adbd4e903fb70586217bfb9939e1",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "00738",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00738",
+    "title": "an act of kindness [3]",
+    "year": 2024,
+    "year_display": "2024",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 64.0,
+    "width_cm": 36.0,
+    "width_px": 4252,
+    "height_px": 7559,
+    "media_version": 1,
+    "series_id": "013",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "013",
+        "title": "an act of kindness"
+      }
+    ]
+  },
+  "sections": []
+}

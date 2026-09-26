@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-98c99e6cdebbbd8711e534fb78f49cf7",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "00467",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00467",
+    "title": "forest 3",
+    "year": 2023,
+    "year_display": "2023",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 50.0,
+    "width_cm": 120.0,
+    "width_px": 14173,
+    "height_px": 5906,
+    "media_version": 1,
+    "series_id": "062",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "062",
+        "title": "forests (2023)"
+      }
+    ]
+  },
+  "sections": []
+}

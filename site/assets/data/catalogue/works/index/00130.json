@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-f9757ffbe808f2c34a875de5ebe0874e",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "00130",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00130",
+    "title": "model 1",
+    "year": 1994,
+    "year_display": "1994",
+    "medium_type": "photocopy",
+    "medium_caption": "photocopy",
+    "height_cm": 29.7,
+    "width_cm": 21.0,
+    "width_px": 2436,
+    "height_px": 3384,
+    "media_version": 1,
+    "series_id": "099",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "099",
+        "title": "models"
+      }
+    ]
+  },
+  "sections": []
+}

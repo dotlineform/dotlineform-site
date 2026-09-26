@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-db65d00afb10a9c7b6d6f1cecf1f43da",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "00469",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00469",
+    "title": "heaven and earth",
+    "year": 2011,
+    "year_display": "2011",
+    "medium_type": "photograph",
+    "medium_caption": "giclée print",
+    "height_cm": 75.0,
+    "width_cm": 50.0,
+    "width_px": 5906,
+    "height_px": 8859,
+    "media_version": 1,
+    "series_id": "076",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "076",
+        "title": "heaven and earth"
+      }
+    ]
+  },
+  "sections": []
+}

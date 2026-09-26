@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-df5e8a2cd49bbee8334b6799d55d3de7",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "01065",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01065",
+    "title": "fluid form 11",
+    "year": 2012,
+    "year_display": "2012",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 24.0,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 2834,
+    "media_version": 1,
+    "series_id": "053",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "053",
+        "title": "fluid forms"
+      }
+    ]
+  },
+  "sections": []
+}

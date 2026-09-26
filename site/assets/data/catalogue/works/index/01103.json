@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-d18d23b4f9dba46661c3203e16bb250e",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "01103",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01103",
+    "title": "fog 33",
+    "year": 2015,
+    "year_display": "2015",
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "height_cm": 30.0,
+    "width_cm": 60.0,
+    "width_px": 7087,
+    "height_px": 3543,
+    "media_version": 1,
+    "series_id": "055",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "055",
+        "title": "fog"
+      }
+    ]
+  },
+  "sections": []
+}

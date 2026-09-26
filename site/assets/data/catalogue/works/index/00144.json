@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-c47953bbf99901e7024605fa2aaa5994",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "00144",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00144",
+    "title": "r 13",
+    "year": 2001,
+    "year_display": "2001",
+    "medium_type": "photocopy",
+    "medium_caption": "photocopy",
+    "height_cm": 29.7,
+    "width_cm": 21.0,
+    "width_px": 2428,
+    "height_px": 3474,
+    "media_version": 1,
+    "series_id": "119",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "119",
+        "title": "r"
+      }
+    ]
+  },
+  "sections": []
+}

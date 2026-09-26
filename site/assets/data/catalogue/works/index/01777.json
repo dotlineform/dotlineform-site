@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-3c35ccc15f109b7a3a1d61a5e661a69b",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "01777",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01777",
+    "title": "2009-07-06 19꞉53꞉35",
+    "year": 2009,
+    "year_display": "2009",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 40.0,
+    "width_px": 4724,
+    "height_px": 3543,
+    "media_version": 1,
+    "series_id": "135",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "135",
+        "title": "train moments"
+      }
+    ]
+  },
+  "sections": []
+}

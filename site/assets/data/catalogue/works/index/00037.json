@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-8cee4b8cc56eb3c727e141430366e6bc",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "00037",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00037",
+    "title": "slaughter (nerve 3)",
+    "year": 1989,
+    "year_display": "c. 1989-98",
+    "medium_type": "photocopy",
+    "medium_caption": "photocopy",
+    "height_cm": 29.7,
+    "width_cm": 21.0,
+    "width_px": 4961,
+    "height_px": 7021,
+    "media_version": 1,
+    "series_id": "026",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "026",
+        "title": "collected 1989-1998"
+      }
+    ]
+  },
+  "sections": []
+}

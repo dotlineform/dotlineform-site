@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-7e03efb7dd85fcaba7544f82d6d2204e",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "00242",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00242",
+    "title": "untitled [242]",
+    "year": 1998,
+    "year_display": "c. 1998",
+    "medium_type": "digital print",
+    "medium_caption": "laserjet print",
+    "height_cm": 29.7,
+    "width_cm": 21.0,
+    "width_px": 3508,
+    "height_px": 2480,
+    "media_version": 1,
+    "series_id": "027",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "027",
+        "title": "collected digital c. 1998"
+      }
+    ]
+  },
+  "sections": []
+}

@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-30b9d112fd80d6868f7dc92c08f54312",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "01690",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01690",
+    "title": "spider webs 16",
+    "year": 2023,
+    "year_display": "2023-24",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 3543,
+    "media_version": 1,
+    "series_id": "124",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "124",
+        "title": "spider webs"
+      }
+    ]
+  },
+  "sections": []
+}

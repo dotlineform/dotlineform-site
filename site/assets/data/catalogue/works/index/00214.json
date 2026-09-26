@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-f88743b58127240195394eb4c59829ad",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "00214",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00214",
+    "title": "mother and child",
+    "year": 1995,
+    "year_display": "c. 1995?",
+    "medium_type": "drawing",
+    "medium_caption": "pencil and pen on paper",
+    "height_cm": 29.7,
+    "width_cm": 21.0,
+    "width_px": 2362,
+    "height_px": 3543,
+    "media_version": 1,
+    "series_id": "103",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "103",
+        "title": "mother and child"
+      }
+    ]
+  },
+  "sections": []
+}

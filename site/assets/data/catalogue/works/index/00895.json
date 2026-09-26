@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-113f37b3584197eb7ef0bb13d5b56e90",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "00895",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00895",
+    "title": "doll moiré structures",
+    "year": 2008,
+    "year_display": "c. 2008",
+    "medium_type": "drawing",
+    "medium_caption": "pencil on paper",
+    "height_cm": 42.0,
+    "width_cm": 59.4,
+    "width_px": 1200,
+    "height_px": 1685,
+    "media_version": 1,
+    "series_id": "037",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "037",
+        "title": "doll"
+      }
+    ]
+  },
+  "sections": []
+}

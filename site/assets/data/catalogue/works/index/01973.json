@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-aab94347865ba7ad9f849abb0da3f99d",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "01973",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01973",
+    "title": "mouse story - 3",
+    "year": 1991,
+    "year_display": "1991",
+    "medium_type": "writing",
+    "medium_caption": "typed text, 5 pages",
+    "width_px": 2472,
+    "height_px": 3498,
+    "media_version": 1,
+    "series_id": "104",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "147",
+        "title": "mouse story (pages)"
+      }
+    ]
+  },
+  "sections": []
+}

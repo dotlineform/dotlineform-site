@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-4e31398e6f9b916812b2e6ff93bd133f",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "00544",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00544",
+    "title": "model 10",
+    "year": 1994,
+    "year_display": "1994",
+    "medium_type": "ink on paper",
+    "medium_caption": "ink on photo",
+    "height_cm": 19.7,
+    "width_cm": 24.0,
+    "width_px": 2835,
+    "height_px": 2327,
+    "media_version": 1,
+    "series_id": "099",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "099",
+        "title": "models"
+      }
+    ]
+  },
+  "sections": []
+}

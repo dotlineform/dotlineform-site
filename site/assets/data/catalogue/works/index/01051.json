@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-f0c7db709016e9be11d7ea4294ae8d1e",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "01051",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01051",
+    "title": "fireworks particles version",
+    "year": 2023,
+    "year_display": "2023",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 76.0,
+    "width_cm": 76.0,
+    "width_px": 8976,
+    "height_px": 8976,
+    "media_version": 1,
+    "series_id": "051",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "051",
+        "title": "fireworks form"
+      }
+    ]
+  },
+  "sections": []
+}

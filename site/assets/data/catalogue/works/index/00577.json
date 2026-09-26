@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-56649e1e70b8069c7eeefdbc94babacc",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "00577",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00577",
+    "title": "path form 5",
+    "year": 2012,
+    "year_display": "2012",
+    "medium_type": "digital composite",
+    "medium_caption": "digital c-type print",
+    "height_cm": 20.0,
+    "width_cm": 20.0,
+    "width_px": 2362,
+    "height_px": 2362,
+    "media_version": 1,
+    "series_id": "129",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "129",
+        "title": "string theory"
+      }
+    ]
+  },
+  "sections": []
+}

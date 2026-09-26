@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-b6c792538135f4c37ba3a29f100db4cd",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "00546",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00546",
+    "title": "tree",
+    "year": 2024,
+    "year_display": "2024",
+    "medium_type": "photograph",
+    "medium_caption": "platinum palladium print",
+    "height_cm": 20.9,
+    "width_cm": 30.2,
+    "width_px": 3570,
+    "height_px": 2472,
+    "media_version": 1,
+    "series_id": "136",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "136",
+        "title": "tree"
+      }
+    ]
+  },
+  "sections": []
+}

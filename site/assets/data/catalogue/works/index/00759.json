@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-232abe65c1fda42cc166ce817883f62c",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "00759",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00759",
+    "title": "base k (2) dissected 1",
+    "year": 2007,
+    "year_display": "2007",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 42.0,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 4961,
+    "media_version": 1,
+    "series_id": "015",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "015",
+        "title": "base series"
+      }
+    ]
+  },
+  "sections": []
+}

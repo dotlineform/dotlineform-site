@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-8613a46d4ecd3f8cc2851954f985adde",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "01049",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01049",
+    "title": "fireworks form",
+    "year": 2023,
+    "year_display": "2023",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 80.0,
+    "width_cm": 80.0,
+    "width_px": 9449,
+    "height_px": 9449,
+    "media_version": 1,
+    "series_id": "051",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "051",
+        "title": "fireworks form"
+      }
+    ]
+  },
+  "sections": []
+}

@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-7fe537278a6f778dc0607e15c049e1ef",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "00431",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00431",
+    "title": "found form 16",
+    "year": 2021,
+    "year_display": "2021",
+    "medium_type": "photograph",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 3543,
+    "media_version": 1,
+    "series_id": "067",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "067",
+        "title": "found forms"
+      }
+    ]
+  },
+  "sections": []
+}

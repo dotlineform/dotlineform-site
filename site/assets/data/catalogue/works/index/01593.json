@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-81f5a4a76008976033f244a648bf762b",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "01593",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01593",
+    "title": "untitled",
+    "year": 2025,
+    "year_display": "2025",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 27.0,
+    "width_cm": 27.0,
+    "width_px": 3189,
+    "height_px": 3189,
+    "media_version": 1,
+    "series_id": "117",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "117",
+        "title": "porto santo"
+      }
+    ]
+  },
+  "sections": []
+}

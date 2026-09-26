@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-c18b117ec1292169d4ec223fca56a0f3",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "01734",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01734",
+    "title": "still life",
+    "year": 2014,
+    "year_display": "2014",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 3543,
+    "media_version": 1,
+    "series_id": "128",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "128",
+        "title": "still life"
+      }
+    ]
+  },
+  "sections": []
+}

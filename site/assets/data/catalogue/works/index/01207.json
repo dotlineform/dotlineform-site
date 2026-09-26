@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-e3e23c5d4216a3c840daac3ecda0718a",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "01207",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01207",
+    "title": "fragment 06",
+    "year": 1990,
+    "year_display": "1990",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 3543,
+    "media_version": 1,
+    "series_id": "068",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "068",
+        "title": "fragments"
+      }
+    ]
+  },
+  "sections": []
+}

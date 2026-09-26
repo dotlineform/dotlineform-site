@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-83c685b5b2a33be3ca299b4e7d56ecc7",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "00198",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00198",
+    "title": "book of curves 1",
+    "year": 1994,
+    "year_display": "1994",
+    "medium_type": "photocopy",
+    "medium_caption": "photocopy",
+    "height_cm": 29.7,
+    "width_cm": 21.0,
+    "width_px": 2432,
+    "height_px": 3436,
+    "media_version": 1,
+    "series_id": "026",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "026",
+        "title": "collected 1989-1998"
+      }
+    ]
+  },
+  "sections": []
+}

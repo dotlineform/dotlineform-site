@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-caf6d94c65551427594a6d07c595eaa2",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "00003",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00003",
+    "title": "a poem divided into 4 parts (\"we are not lost\")",
+    "year": 2025,
+    "year_display": "2025",
+    "medium_type": "drawing",
+    "medium_caption": "pencil on tracing paper",
+    "height_cm": 21.0,
+    "width_cm": 29.7,
+    "width_px": 3508,
+    "height_px": 2480,
+    "media_version": 1,
+    "series_id": "009",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "009",
+        "title": "a poem divided into 4 parts"
+      }
+    ]
+  },
+  "sections": []
+}

@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-dcc2be334d72bb22fc1e7a0e2c9b813c",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "00761",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00761",
+    "title": "base k (2) edit",
+    "year": 2007,
+    "year_display": "2007",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 3543,
+    "media_version": 1,
+    "series_id": "015",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "015",
+        "title": "base series"
+      }
+    ]
+  },
+  "sections": []
+}

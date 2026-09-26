@@ -1,0 +1,37 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-900176661f99f64992ad988c7d8b9fbf",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "01250",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01250",
+    "title": "genetic",
+    "year": 2020,
+    "year_display": "c. 2001-11",
+    "medium_type": "music",
+    "medium_caption": "audio files (mp3/FLAC/wav)",
+    "height_cm": 30.0,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 3543,
+    "media_version": 1,
+    "series_id": "069",
+    "links": [
+      {
+        "url": "https://dotlineform.bandcamp.com/album/genetic",
+        "label": "Bandcamp"
+      }
+    ],
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "069",
+        "title": "genetic (2020)"
+      }
+    ]
+  },
+  "sections": []
+}

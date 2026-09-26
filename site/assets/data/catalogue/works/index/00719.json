@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-d100d337697bff98de39f286ae046c02",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "00719",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00719",
+    "title": "a feeling that we are part of a structure - 04",
+    "year": 2024,
+    "year_display": "2024",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 39.0,
+    "width_cm": 52.0,
+    "width_px": 6142,
+    "height_px": 4606,
+    "media_version": 1,
+    "series_id": "007",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "007",
+        "title": "a feeling that we are part of a structure"
+      }
+    ]
+  },
+  "sections": []
+}

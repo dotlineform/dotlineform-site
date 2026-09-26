@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-a7f51b48532bb51f37b516b37b3885fa",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "01524",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01524",
+    "title": "pi molecule grid",
+    "year": 2012,
+    "year_display": "2012",
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "height_cm": 75.0,
+    "width_cm": 75.0,
+    "width_px": 8858,
+    "height_px": 8858,
+    "media_version": 1,
+    "series_id": "113",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "113",
+        "title": "pi particles"
+      }
+    ]
+  },
+  "sections": []
+}

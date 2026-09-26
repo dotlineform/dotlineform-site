@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-2714f918a5ea20325974bc829918ef06",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "01427",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01427",
+    "title": "melancholy hope cell (2017-01-02 12-33-42)",
+    "year": 2017,
+    "year_display": "2017",
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "height_cm": 70.0,
+    "width_cm": 70.0,
+    "width_px": 8268,
+    "height_px": 8268,
+    "media_version": 1,
+    "series_id": "095",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "095",
+        "title": "melancholy hope cell"
+      }
+    ]
+  },
+  "sections": []
+}

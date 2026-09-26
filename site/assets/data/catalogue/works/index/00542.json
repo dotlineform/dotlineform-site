@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-cdd8f0688be860f59d542a9bab022279",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "00542",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00542",
+    "title": "model 8",
+    "year": 1994,
+    "year_display": "1994",
+    "medium_type": "mixed media",
+    "medium_caption": "paint on photo",
+    "height_cm": 27.9,
+    "width_cm": 22.6,
+    "width_px": 2669,
+    "height_px": 3295,
+    "media_version": 1,
+    "series_id": "099",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "099",
+        "title": "models"
+      }
+    ]
+  },
+  "sections": []
+}

@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-bac63a029ab08d1cdfbbbc783358a3f3",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "00537",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00537",
+    "title": "model 3",
+    "year": 1994,
+    "year_display": "1994",
+    "medium_type": "photocopy",
+    "medium_caption": "paper collage",
+    "height_cm": 40.2,
+    "width_cm": 27.9,
+    "width_px": 3077,
+    "height_px": 4433,
+    "media_version": 1,
+    "series_id": "099",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "099",
+        "title": "models"
+      }
+    ]
+  },
+  "sections": []
+}

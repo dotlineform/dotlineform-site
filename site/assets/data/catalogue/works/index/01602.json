@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-8ad3d9d390e51b49a6bd855c8e3f223d",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "01602",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01602",
+    "title": "return 2",
+    "year": 2005,
+    "year_display": "2005-07",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 40.0,
+    "width_cm": 40.0,
+    "width_px": 4724,
+    "height_px": 4724,
+    "media_version": 1,
+    "series_id": "120",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "120",
+        "title": "reduce and return"
+      }
+    ]
+  },
+  "sections": []
+}

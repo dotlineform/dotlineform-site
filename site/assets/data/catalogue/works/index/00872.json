@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-06312be9e64419d5adebba03c71adcc3",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "00872",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00872",
+    "title": "doll bandage",
+    "year": 1989,
+    "year_display": "c. 1989",
+    "medium_type": "mixed media",
+    "medium_caption": "mixed media (photocopy)",
+    "height_cm": 40.0,
+    "width_cm": 29.0,
+    "width_px": 3429,
+    "height_px": 4658,
+    "media_version": 1,
+    "series_id": "037",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "037",
+        "title": "doll"
+      }
+    ]
+  },
+  "sections": []
+}

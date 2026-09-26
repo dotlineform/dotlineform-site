@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-624acb017ac58fc6271f58869f126246",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "00220",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00220",
+    "title": "colouring book 4",
+    "year": 1996,
+    "year_display": "1996",
+    "medium_type": "drawing",
+    "medium_caption": "pen on paper",
+    "height_cm": 29.7,
+    "width_cm": 21.0,
+    "width_px": 1200,
+    "height_px": 1707,
+    "media_version": 1,
+    "series_id": "028",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "028",
+        "title": "colouring book"
+      }
+    ]
+  },
+  "sections": []
+}

@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-04f6416fd608c31a8d86cde71a4cdb8c",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "00856",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00856",
+    "title": "curl",
+    "year": 2017,
+    "year_display": "2017",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 28.0,
+    "width_cm": 28.0,
+    "width_px": 3307,
+    "height_px": 3307,
+    "media_version": 1,
+    "series_id": "034",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "034",
+        "title": "curl"
+      }
+    ]
+  },
+  "sections": []
+}

@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-c5d4eaf4f1877a196b14a9258c6b9518",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "01414",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01414",
+    "title": "lights 14",
+    "year": 2013,
+    "year_display": "2013",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 3543,
+    "media_version": 1,
+    "series_id": "090",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "090",
+        "title": "lights"
+      }
+    ]
+  },
+  "sections": []
+}

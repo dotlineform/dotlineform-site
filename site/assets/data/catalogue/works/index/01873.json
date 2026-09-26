@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-b2bb7e4e30b7bacdcec5ce173b5beaff",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "01873",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01873",
+    "title": "tulips 5",
+    "year": 2023,
+    "year_display": "2023",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 70.0,
+    "width_cm": 70.0,
+    "width_px": 8268,
+    "height_px": 8268,
+    "media_version": 1,
+    "series_id": "137",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "137",
+        "title": "tulips"
+      }
+    ]
+  },
+  "sections": []
+}

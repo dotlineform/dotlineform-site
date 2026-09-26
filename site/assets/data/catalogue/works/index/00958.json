@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-83e4563170ca1a6069daabf6eaaf82ce",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "00958",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00958",
+    "title": "dotlineform surface (9)",
+    "year": 2021,
+    "year_display": "2021",
+    "medium_type": "painting",
+    "medium_caption": "acrylic on canvas",
+    "height_cm": 64.0,
+    "width_cm": 36.0,
+    "width_px": 4252,
+    "height_px": 7559,
+    "media_version": 1,
+    "series_id": "042",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "042",
+        "title": "dotlineform (2021)"
+      }
+    ]
+  },
+  "sections": []
+}

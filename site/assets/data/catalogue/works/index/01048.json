@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-06142a8e4da8f618ac246b7f74a25a5b",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "01048",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01048",
+    "title": "field II",
+    "year": 2025,
+    "year_display": "2025",
+    "medium_type": "painting",
+    "medium_caption": "acrylic on board",
+    "height_cm": 50.0,
+    "width_cm": 59.0,
+    "width_px": 6969,
+    "height_px": 5906,
+    "media_version": 1,
+    "series_id": "050",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "050",
+        "title": "field"
+      }
+    ]
+  },
+  "sections": []
+}

@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-2c6f77311f63e79141506327582f89df",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "01091",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01091",
+    "title": "fog 21",
+    "year": 2014,
+    "year_display": "2014",
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "height_cm": 30.0,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 3543,
+    "media_version": 1,
+    "series_id": "055",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "055",
+        "title": "fog"
+      }
+    ]
+  },
+  "sections": []
+}

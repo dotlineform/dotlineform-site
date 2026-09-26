@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-24c357bf96591572edbc172050bf1c00",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "00578",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00578",
+    "title": "path form 6",
+    "year": 2012,
+    "year_display": "2012",
+    "medium_type": "digital composite",
+    "medium_caption": "digital c-type print",
+    "height_cm": 20.0,
+    "width_cm": 20.0,
+    "width_px": 2362,
+    "height_px": 2362,
+    "media_version": 1,
+    "series_id": "129",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "129",
+        "title": "string theory"
+      }
+    ]
+  },
+  "sections": []
+}

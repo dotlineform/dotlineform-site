@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-9b5de899b63e1bf1c01127338a2f860b",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "01447",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01447",
+    "title": "mother and child",
+    "year": 1995,
+    "year_display": "1995",
+    "medium_type": "painting",
+    "medium_caption": "acrylic on board",
+    "height_cm": 60.0,
+    "width_cm": 48.0,
+    "width_px": 5669,
+    "height_px": 7087,
+    "media_version": 1,
+    "series_id": "103",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "103",
+        "title": "mother and child"
+      }
+    ]
+  },
+  "sections": []
+}

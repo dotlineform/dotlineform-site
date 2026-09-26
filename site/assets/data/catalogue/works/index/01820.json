@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-fa43563261a58ea50c58ac34da4b7f8d",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "01820",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01820",
+    "title": "2012-12-22 15꞉39꞉48",
+    "year": 2012,
+    "year_display": "2012",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 40.0,
+    "width_px": 4724,
+    "height_px": 3543,
+    "media_version": 1,
+    "series_id": "135",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "135",
+        "title": "train moments"
+      }
+    ]
+  },
+  "sections": []
+}

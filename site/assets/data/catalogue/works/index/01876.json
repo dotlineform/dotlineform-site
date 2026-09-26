@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-a19f723568a53af0fa3fbf2fbcc97036",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "01876",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01876",
+    "title": "untitled composite 2",
+    "year": 2023,
+    "year_display": "2023",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 70.0,
+    "width_cm": 70.0,
+    "width_px": 8268,
+    "height_px": 8268,
+    "media_version": 1,
+    "series_id": "138",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "138",
+        "title": "untitled composites"
+      }
+    ]
+  },
+  "sections": []
+}

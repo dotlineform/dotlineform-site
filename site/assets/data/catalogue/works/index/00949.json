@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-a8e9dc4e9eafeb114b7151c730f95391",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "00949",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00949",
+    "title": "dotlineform",
+    "year": 2021,
+    "year_display": "2021",
+    "medium_type": "painting",
+    "medium_caption": "acrylic on canvas",
+    "height_cm": 50.0,
+    "width_cm": 120.0,
+    "width_px": 8268,
+    "height_px": 3401,
+    "media_version": 1,
+    "series_id": "042",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "042",
+        "title": "dotlineform (2021)"
+      }
+    ]
+  },
+  "sections": []
+}

@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-99169b68d622caa04e02c1934b40001e",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "00177",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00177",
+    "title": "all chemical 4",
+    "year": 1989,
+    "year_display": "c. 1989-98",
+    "medium_type": "mixed media",
+    "medium_caption": "dried leaf mounted on canvas",
+    "height_cm": 25.5,
+    "width_cm": 20.4,
+    "width_px": 4742,
+    "height_px": 5928,
+    "media_version": 1,
+    "series_id": "026",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "026",
+        "title": "collected 1989-1998"
+      }
+    ]
+  },
+  "sections": []
+}

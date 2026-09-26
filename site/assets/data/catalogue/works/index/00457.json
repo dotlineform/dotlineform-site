@@ -1,0 +1,37 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-630c74e6ff559ecbbfe583ddeb904ac9",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "00457",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00457",
+    "title": "intuition (2020)",
+    "year": 2020,
+    "year_display": "c. 2001-11",
+    "medium_type": "music",
+    "medium_caption": "audio files (mp3/FLAC/wav)",
+    "height_cm": 11.8,
+    "width_cm": 11.8,
+    "width_px": 3543,
+    "height_px": 3543,
+    "media_version": 1,
+    "series_id": "081",
+    "links": [
+      {
+        "url": "https://dotlineform.bandcamp.com/album/intuition",
+        "label": "Bandcamp"
+      }
+    ],
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "081",
+        "title": "intuition (2020)"
+      }
+    ]
+  },
+  "sections": []
+}

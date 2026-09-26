@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-3f1a5b3993b2d4265dceb005213778f1",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "00788",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00788",
+    "title": "body space (boundary condition 1)",
+    "year": 2007,
+    "year_display": "2007",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 40.0,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 4724,
+    "media_version": 1,
+    "series_id": "019",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "019",
+        "title": "body space"
+      }
+    ]
+  },
+  "sections": []
+}

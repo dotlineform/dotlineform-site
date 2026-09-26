@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-ea4d21b1c947801ed792100637ee844e",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "01530",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01530",
+    "title": "plant form 4",
+    "year": 2022,
+    "year_display": "2022",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 3543,
+    "media_version": 1,
+    "series_id": "114",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "114",
+        "title": "plant forms"
+      }
+    ]
+  },
+  "sections": []
+}

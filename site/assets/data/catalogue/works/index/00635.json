@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-21a45f7720b66513b6f14205580e0bd3",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "00635",
+    "count": 0
+  },
+  "work": {
+    "work_id": "00635",
+    "title": "10,000 (1)",
+    "year": 2009,
+    "year_display": "2009",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 50.0,
+    "width_cm": 50.0,
+    "width_px": 5906,
+    "height_px": 5906,
+    "media_version": 1,
+    "series_id": "001",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "001",
+        "title": "10,000"
+      }
+    ]
+  },
+  "sections": []
+}
