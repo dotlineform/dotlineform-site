@@ -11,6 +11,12 @@
       "content_url": "/assets/data/docs/by-id/d-20260426-164043-e14f49.json"
     },
     {
+      "doc_id": "d-20260916-161504-f8c947",
+      "title": "Catalogue",
+      "content_url": "/assets/data/docs/by-id/d-20260916-161504-f8c947.json",
+      "report_id": "docs_collection"
+    },
+    {
       "doc_id": "d-20260624-213316-478639",
       "title": "Concepts",
       "content_url": "/assets/data/docs/by-id/d-20260624-213316-478639.json",
@@ -29,5 +35,5 @@
       "report_id": "docs_collection"
     }
   ],
-  "generated_at": "2026-09-16T13:39:49Z"
+  "generated_at": "2026-09-26T08:05:12Z"
 }
