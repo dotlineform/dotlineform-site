@@ -44,6 +44,7 @@
         "docs-viewer-document-index-state.js",
         "docs-viewer-document-view-coordinator.js",
         "docs-viewer-favourites.js",
+        "docs-viewer-focus-mode.js",
         "docs-viewer-generated-data-runtime.js",
         "docs-viewer-hosted-view-capabilities.js",
         "docs-viewer-index-panel-renderer.js",

@@ -27,6 +27,8 @@ import {
  * Detail toolbars are mounted once per detail shell; generated-content refresh
  * retains them. They receive `commitDocumentDraft(target, draft)` to project a
  * confirmed save into the report's list and detail records without I/O.
+ * Published action context keeps the configured `collectionLabel` for identity
+ * display and supplies `returnToListLabel` alongside its Back action.
  *
  * @typedef {Object} DocsCollectionReportContribution
  * @property {function(Object): void} [notify]
@@ -207,6 +209,10 @@ function collectionTitle(record, fallback) {
   return cleanString(record && record.title) || humanize(fallback);
 }
 
+function collectionItemsLabel(collection) {
+  return collectionId(collection) === "works" ? "documents" : collectionTitle(collection, collectionId(collection));
+}
+
 function manifestUrl(record) {
   return cleanString(record && (record.manifestUrl || record.manifest_url));
 }
@@ -334,15 +340,12 @@ function writeSubdocUrl(state, docId, mode) {
   window.history.pushState(nextState, "", url.pathname + url.search + url.hash);
 }
 
-function stateCollectionTitle(state) {
-  return collectionTitle(state.collection, state.collectionId);
-}
-
 function renderStatus(state, visibleCount) {
   var totalCount = state.docs.length;
-  if (state.collectionId === "catalogue") {
+  if (["catalogue", "works"].includes(state.collectionId)) {
+    var noun = state.collectionId === "catalogue" ? "work" : "document";
     state.statusNode.textContent = (visibleCount === totalCount ? String(totalCount) : visibleCount + " of " + totalCount)
-      + (totalCount === 1 ? " work" : " works");
+      + " " + noun + (totalCount === 1 ? "" : "s");
     return;
   }
   var scopeTitle = collectionTitle(state.collection, state.collectionId);
@@ -431,10 +434,8 @@ function renderFilterShell(context, collection) {
   var searchLabel = document.createElement("label");
   searchLabel.className = "docsViewerReport__selectLabel visually-hidden";
   searchLabel.htmlFor = searchId;
-  searchLabel.textContent = "Filter " + collectionTitle(
-    collection,
-    collectionId(collection)
-  ) + (collectionId(collection) === "catalogue" ? " by title or Work ID" : " by title");
+  searchLabel.textContent = "Filter " + collectionItemsLabel(collection)
+    + (collectionId(collection) === "catalogue" ? " by title or Work ID" : " by title");
 
   var search = document.createElement("span");
   search.className = "docsViewerReport__search";
@@ -490,7 +491,7 @@ function renderShell(context, collection) {
 
   var rows = document.createElement("ul");
   rows.className = "docsViewerReport__rows";
-  rows.setAttribute("aria-label", collectionTitle(collection, collectionId(collection)));
+  rows.setAttribute("aria-label", collectionItemsLabel(collection));
 
   table.appendChild(head);
   table.appendChild(rows);
@@ -580,7 +581,8 @@ function updateFilterControls(state) {
   state.filterClearNode.hidden = !normalizedQuery;
   state.filterClearNode.setAttribute(
     "aria-label",
-    "Clear " + stateCollectionTitle(state) + (state.pagedBrowsing ? " search" : " title filter")
+    state.collectionId === "works" ? "Clear document search"
+      : "Clear " + collectionItemsLabel(state.collection) + (state.pagedBrowsing ? " search" : " title filter")
   );
   state.filterClearNode.title = state.filterClearNode.getAttribute("aria-label");
   renderContributionFilters(state);
@@ -845,8 +847,9 @@ function renderRows(state, docs) {
     var empty = document.createElement("li");
     empty.className = "docsViewerReport__empty";
     empty.textContent = state.docs.length
-      ? "No " + stateCollectionTitle(state).toLowerCase() + " match the current filters."
-      : "No documents are available in " + stateCollectionTitle(state) + ".";
+      ? "No " + collectionItemsLabel(state.collection).toLowerCase() + " match the current filters."
+      : state.collectionId === "works" ? "No documents are available."
+        : "No documents are available in " + collectionItemsLabel(state.collection) + ".";
     state.rowsNode.appendChild(empty);
     return;
   }
@@ -890,6 +893,7 @@ function publishState(state, reportState, target, reason, detail) {
     actionHost: reportState === "detail" ? state.detailActionHost
       : (reportState === "list" ? state.listActionHost : null),
     returnToList: reportState === "detail" ? function () { returnToList(state); } : null,
+    returnToListLabel: "Back to all " + collectionItemsLabel(state.collection).toLowerCase(),
     refreshDocument: function (documentTarget) { return refreshAndOpenDocument(state, documentTarget); },
     refreshDisplayedDocument: function (documentTarget, isCurrent) {
       return refreshDisplayedDocument(state, documentTarget, isCurrent);
@@ -1458,7 +1462,7 @@ function mountResolvedDocsCollectionReport(context, contribution) {
   }
 
   var refs = renderShell(context, collection);
-  refs.statusNode.textContent = "Loading " + collectionTitle(collection, collectionIdValue) + "...";
+  refs.statusNode.textContent = "Loading " + collectionItemsLabel(collection) + "...";
   var state = {
     root: root,
     mountDocumentContent: context.mountCollectionDocumentContent,
@@ -1512,7 +1516,8 @@ function mountResolvedDocsCollectionReport(context, contribution) {
   state.listActionHost.className = "docsViewer__collectionActions";
   if (state.pagedBrowsing) {
     state.filterInputNode.disabled = true;
-    state.pager = createCollectionPager(root.ownerDocument, stateCollectionTitle(state), function (pageIndex) {
+    state.pager = createCollectionPager(root.ownerDocument,
+      state.collectionId === "works" ? "document" : collectionItemsLabel(state.collection), function (pageIndex) {
       if (!state.mounted || state.searchTimer !== null || pageIndex < 0
         || pageIndex * COLLECTION_PAGE_SIZE >= state.matches.length) return;
       state.pageIndex = pageIndex;

@@ -38,7 +38,7 @@
       "collections": [
         {
           "collection": "works",
-          "title": "Works",
+          "title": "Context",
           "manifest_url": "/docs/generated/external/working/works/manage-manifest.json",
           "by_id_url_base": "/docs/generated/external/working/works/by-id",
           "collection_customisation": {
@@ -120,7 +120,7 @@
       "collections": [
         {
           "collection": "works",
-          "title": "Works",
+          "title": "Context",
           "manifest_url": "/docs/preview/external/works/manifest.json",
           "by_id_url_base": "/docs/preview/external/works/by-id"
         },

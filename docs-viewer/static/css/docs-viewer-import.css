@@ -49,7 +49,7 @@
   cursor: not-allowed;
 }
 
-.docsViewerImport__input:focus{
+:where(.docsViewer[data-keyboard-navigation="true"]) .docsViewerImport__input:focus{
   outline: 2px solid var(--docs-viewer-focus-ring);
   outline-offset: 2px;
   border-color: var(--docs-viewer-focus-ring);
@@ -502,7 +502,7 @@
   min-height: 14rem;
 }
 
-.docsViewer__importBody .docsViewerImport__candidateTable:focus-within{
+:where(.docsViewer[data-keyboard-navigation="true"]) .docsViewer__importBody .docsViewerImport__candidateTable:focus-within{
   outline: 2px solid var(--docs-viewer-focus-ring);
   outline-offset: 2px;
 }

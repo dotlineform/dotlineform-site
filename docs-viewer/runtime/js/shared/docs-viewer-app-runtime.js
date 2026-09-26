@@ -56,6 +56,9 @@ import {
 import {
   createDocsViewerControlSurfaceHost
 } from "./docs-viewer-control-surface-host.js";
+import {
+  initDocsViewerFocusMode
+} from "./docs-viewer-focus-mode.js";
 
 export function startDocsViewerRuntime(options) {
   var settings = options || {};
@@ -68,6 +71,8 @@ export function startDocsViewerRuntime(options) {
   var appShellReady = settings.appShellReady || Promise.resolve(null);
   var appShellRefs = settings.appShellRefs || {};
   if (!root || !document || !window || !routeContext) return null;
+
+  initDocsViewerFocusMode(root, document);
 
   var indexPanelRefs = appShellRefs.indexPanel;
   var nav = indexPanelRefs.nav;
@@ -825,7 +830,7 @@ export function startDocsViewerRuntime(options) {
     if (mainViewRefs.collectionBack) {
       mainViewRefs.collectionBack.hidden = !rendered || typeof report.returnToList !== "function";
       mainViewRefs.collectionBack.disabled = root.dataset.managementBusy === "true";
-      var label = "Back to all " + String(report.collectionLabel || "").toLowerCase();
+      var label = typeof report.returnToList === "function" ? report.returnToListLabel : "";
       mainViewRefs.collectionBack.title = label;
       mainViewRefs.collectionBack.setAttribute("aria-label", label);
     }

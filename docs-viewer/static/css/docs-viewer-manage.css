@@ -1091,23 +1091,7 @@ select.docsViewer__fieldInput{
   cursor: not-allowed;
 }
 
-.docsViewer__modalActions :is(
-  .docsViewer__actionButton,
-  .docsViewerImport__button
-):focus{
-  outline: 2px solid var(--docs-viewer-focus-ring);
-  outline-offset: 2px;
-}
-
-.docsViewer__modal :is(
-  button:not([disabled]),
-  input:not([disabled]),
-  select:not([disabled]),
-  textarea:not([disabled]),
-  a[href],
-  [tabindex]:not([tabindex="-1"])
-):focus-visible,
-.docsViewer__modal[data-keyboard-navigation="true"] :is(
+:where(.docsViewer[data-keyboard-navigation="true"]) .docsViewer__modal :is(
   button:not([disabled]),
   input:not([disabled]),
   select:not([disabled]),
@@ -1117,11 +1101,6 @@ select.docsViewer__fieldInput{
 ):focus{
   outline: 2px solid var(--docs-viewer-focus-ring);
   outline-offset: 2px;
-}
-
-/* Automatic radio focus should not inherit the browser's previous input mode. */
-.docsViewer__modal:not([data-keyboard-navigation="true"]) [data-project-subject-options] .docsViewer__checkboxInput:focus{
-  outline: none;
 }
 
 .docsViewer__manageRow{

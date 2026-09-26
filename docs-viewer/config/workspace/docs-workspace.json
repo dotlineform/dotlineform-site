@@ -105,7 +105,7 @@
         {
           "collection": "works",
           "include_in_site_search": true,
-          "title": "Works",
+          "title": "Context",
           "report_host_doc_id": "d-20260801-073826-8865a8",
           "collection_customisation": {
             "id": "working_works",

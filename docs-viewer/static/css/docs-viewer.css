@@ -84,6 +84,11 @@
   align-items: start;
 }
 
+/* Shared input-mode policy overrides component and browser focus outlines. */
+.docsViewer:not([data-keyboard-navigation="true"]) :focus{
+  outline: none !important;
+}
+
 body.docs-viewer-shell,
 body.docs-viewer-service{
   font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif);
@@ -578,7 +583,7 @@ main.container:has(> .docsViewer){
   background: var(--docs-viewer-panel);
 }
 
-.docsViewer__searchInput:focus{
+:where(.docsViewer[data-keyboard-navigation="true"]) .docsViewer__searchInput:focus{
   outline: none;
   border-color: var(--docs-viewer-focus-ring);
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--docs-viewer-focus-ring) 28%, transparent);

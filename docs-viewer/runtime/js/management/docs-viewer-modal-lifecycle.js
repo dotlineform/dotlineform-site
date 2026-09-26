@@ -122,21 +122,8 @@ export function createDocsViewerModalLifecycle(options = {}) {
     if (event.target === modal) requestClose("backdrop", event);
   }
 
-  function onPointerDown() {
-    delete modal.dataset.keyboardNavigation;
-  }
-
   function onKeydown(event) {
     if (!active) return;
-    if (
-      event.key === "Tab" ||
-      event.key === "ArrowDown" ||
-      event.key === "ArrowRight" ||
-      event.key === "ArrowUp" ||
-      event.key === "ArrowLeft"
-    ) {
-      modal.dataset.keyboardNavigation = "true";
-    }
     if (navigateDocsViewerModalRadioGroup(event, modal)) return;
     if (trapDocsViewerModalFocus(event, modal)) return;
     if (event.key !== "Escape") return;
@@ -147,7 +134,6 @@ export function createDocsViewerModalLifecycle(options = {}) {
 
   function addListeners() {
     documentRef.addEventListener("keydown", onKeydown);
-    modal.addEventListener("pointerdown", onPointerDown);
     modal.addEventListener("click", onModalClick);
     cancelElements.forEach(function (node) {
       node.addEventListener("click", onCancelClick);
@@ -156,7 +142,6 @@ export function createDocsViewerModalLifecycle(options = {}) {
 
   function removeListeners() {
     documentRef.removeEventListener("keydown", onKeydown);
-    modal.removeEventListener("pointerdown", onPointerDown);
     modal.removeEventListener("click", onModalClick);
     cancelElements.forEach(function (node) {
       node.removeEventListener("click", onCancelClick);
@@ -194,7 +179,6 @@ export function createDocsViewerModalLifecycle(options = {}) {
       resolveNode(options.restoreFocus) ||
       documentRef.activeElement;
     active = true;
-    delete modal.dataset.keyboardNavigation;
     lockScroll();
     addListeners();
     initialFocusTimer = windowRef.setTimeout(function () {
@@ -216,7 +200,6 @@ export function createDocsViewerModalLifecycle(options = {}) {
     }
     removeListeners();
     restoreScroll();
-    delete modal.dataset.keyboardNavigation;
     var returnTarget = closeOptions.restoreFocus === false ? null : restoreFocus;
     restoreFocus = null;
     restoreFocusTimer = windowRef.setTimeout(function () {
