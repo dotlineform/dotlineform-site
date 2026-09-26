@@ -29,8 +29,11 @@
 .docsViewerReport__detailControlRow{
   --docs-viewer-control-height: 2rem;
   display: flex;
-  justify-content: flex-end;
-  margin: var(--docs-viewer-space-3) 0 calc(-1 * var(--docs-viewer-space-2));
+  align-items: center;
+}
+
+.docsViewerReport__expandedViewport .docsViewerReport__detailControlRow{
+  display: none;
 }
 
 .docsViewerReport__expandedViewport:focus-visible{
@@ -175,6 +178,23 @@
 
 .catalogueWorksReport__cellMeta{
   color: var(--docs-viewer-muted);
+}
+
+.catalogueWorksReport__pagination{
+  --docs-viewer-control-height: var(--docs-viewer-report-control-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--docs-viewer-space-2);
+}
+
+.catalogueWorksReport__pagination[hidden]{
+  display: none;
+}
+
+.catalogueWorksReport__pageLabel{
+  color: var(--docs-viewer-muted);
+  font-variant-numeric: tabular-nums;
 }
 
 .docsViewerReport[data-report-id="project_state"] .docsViewerReport__sortButton{

@@ -2,10 +2,12 @@ import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.
 import { mountDocsViewerMediaLinks } from "../shared/docs-viewer-media-detail.js";
 import { loadWorkingCatalogueDocumentLinks } from "../management/docs-viewer-management-catalogue-document-links.js";
 
-const WORKS_SCHEMA = "catalogue_source_works_v2";
-const SERIES_SCHEMA = "catalogue_source_series_v2";
+const METADATA_SCHEMA = "catalogue_works_report_metadata_v1";
 const WORK_ID_PATTERN = /^[0-9]{5}$/;
 const SERIES_ID_PATTERN = /^[0-9]{3}$/;
+const PAGE_SIZE = 20;
+const SEARCH_DELAY_MS = 180;
+const SORT_COLLATOR = new Intl.Collator("en", { numeric: true, sensitivity: "base" });
 const COLUMN_MODEL = Object.freeze([
   { id: "work", label: "Work", visibility: "both", sortable: true, copy: "both" },
   { id: "year", label: "Year", visibility: "both", sortable: true, copy: "both" },
@@ -48,144 +50,87 @@ function clearNode(node) {
   while (node.firstChild) node.removeChild(node.firstChild);
 }
 
-function normalizeObjectMap(payload, options) {
-  const settings = options || {};
-  const mapKey = settings.mapKey;
+/** Validate generated metadata and prepare per-field search/sort values once per load. */
+export function normalizeCatalogueWorksMetadata(payload) {
   if (
-    !exactKeys(payload, ["header", mapKey])
-    || !exactKeys(payload.header, settings.headerKeys)
-    || payload.header.schema !== settings.schema
+    !exactKeys(payload, ["header", "works"])
+    || !exactKeys(payload.header, ["schema", "count", "version"])
+    || payload.header.schema !== METADATA_SCHEMA
     || !Number.isInteger(payload.header.count)
     || payload.header.count < 0
-    || !payload[mapKey]
-    || typeof payload[mapKey] !== "object"
-    || Array.isArray(payload[mapKey])
-    || payload.header.count !== Object.keys(payload[mapKey]).length
+    || typeof payload.header.version !== "string"
+    || !/^[0-9a-f]{64}$/.test(payload.header.version)
+    || !payload.works
+    || typeof payload.works !== "object"
+    || Array.isArray(payload.works)
+    || payload.header.count !== Object.keys(payload.works).length
   ) {
-    throw new Error(settings.errorMessage);
+    throw new Error("Catalogue Works metadata is invalid.");
   }
-  return Object.entries(payload[mapKey]).map(([key, value]) => {
-    return settings.normalizeRecord(key, value);
-  });
+  return Object.entries(payload.works).map(([key, value]) => normalizeWorkRecord(key, value));
 }
 
 function normalizeWorkRecord(key, value) {
+  if (!exactKeys(value, ["work_id", "title", "year", "year_display", "storage_location", "medium_type", "medium_caption", "series"])) {
+    throw new Error("Catalogue Works metadata row is invalid.");
+  }
   const workId = cleanString(value && value.work_id);
   const title = visibleString(value && value.title);
-  const year = Number(value && value.year);
+  const year = value.year;
   const yearDisplay = visibleString(value && value.year_display);
-  const seriesIds = value.series_id ? [value.series_id] : [];
   const storage = visibleString(value && value.storage_location);
   const mediumType = visibleString(value && value.medium_type);
   const mediumCaption = visibleString(value && value.medium_caption);
   if (
     !WORK_ID_PATTERN.test(key)
-    || workId !== key
+    || value.work_id !== key
+    || typeof value.title !== "string"
     || !title
     || !Number.isInteger(year)
+    || typeof value.year_display !== "string"
     || !yearDisplay
-    || (Object.prototype.hasOwnProperty.call(value, "series_id") && !SERIES_ID_PATTERN.test(value.series_id))
-    || !Object.prototype.hasOwnProperty.call(value, "storage_location")
     || (value.storage_location !== null && typeof value.storage_location !== "string")
-    || !Object.prototype.hasOwnProperty.call(value, "medium_type")
     || (value.medium_type !== null && typeof value.medium_type !== "string")
-    || !Object.prototype.hasOwnProperty.call(value, "medium_caption")
     || (value.medium_caption !== null && typeof value.medium_caption !== "string")
-    || seriesIds.some((seriesId) => {
-      return typeof seriesId !== "string" || !SERIES_ID_PATTERN.test(seriesId);
-    })
-    || new Set(seriesIds).size !== seriesIds.length
+    || !Array.isArray(value.series)
+    || value.series.length > 1
   ) {
-    throw new Error("Catalogue Works input is invalid.");
+    throw new Error("Catalogue Works metadata row is invalid.");
   }
-  return { mediumCaption, mediumType, seriesIds, storage, title, workId, year, yearDisplay };
-}
-
-function normalizeSeriesRecord(key, value) {
-  const seriesId = cleanString(value && value.series_id);
-  const title = visibleString(value && value.title);
-  if (
-    !SERIES_ID_PATTERN.test(key)
-    || seriesId !== key
-    || !title
-  ) {
-    throw new Error("Catalogue Series input is invalid.");
-  }
-  return { seriesId, status, title };
-}
-
-export function normalizeCatalogueWorksInputs(worksPayload, seriesPayload) {
-  const works = normalizeObjectMap(worksPayload, {
-    errorMessage: "Catalogue Works input is invalid.",
-    headerKeys: ["count", "schema"],
-    mapKey: "works",
-    normalizeRecord: normalizeWorkRecord,
-    schema: WORKS_SCHEMA
+  const series = value.series.map((record) => {
+    if (!exactKeys(record, ["series_id", "title"])
+      || typeof record.series_id !== "string" || !SERIES_ID_PATTERN.test(record.series_id)
+      || typeof record.title !== "string" || !visibleString(record.title)) {
+      throw new Error("Catalogue Works metadata Series is invalid.");
+    }
+    return { seriesId: record.series_id, title: visibleString(record.title) };
   });
-  const series = normalizeObjectMap(seriesPayload, {
-    errorMessage: "Catalogue Series input is invalid.",
-    headerKeys: ["count", "schema"],
-    mapKey: "series",
-    normalizeRecord: normalizeSeriesRecord,
-    schema: SERIES_SCHEMA
-  });
-  const seriesById = new Map(series.map((record) => [record.seriesId, record]));
-
-  return works.map((work) => {
-    const memberships = work.seriesIds.map((seriesId) => {
-      const record = seriesById.get(seriesId);
-      if (!record) throw new Error("Catalogue Works Series membership is invalid.");
-      return { seriesId: record.seriesId, title: record.title };
-    });
-    return {
-      mediumCaption: work.mediumCaption,
-      mediumType: work.mediumType,
-      series: memberships,
-      storage: work.storage,
-      title: work.title,
-      workId: work.workId,
-      year: work.year,
-      yearDisplay: work.yearDisplay
-    };
-  });
+  const searchValues = [workId, title, ...series.flatMap((record) => [record.seriesId, record.title])].map(searchString);
+  const seriesSortValue = series.map((record) => record.title + " " + record.seriesId).join(" ");
+  return { mediumCaption, mediumType, searchValues, series, seriesSortValue, storage, title, workId, year, yearDisplay };
 }
 
 function rowMatches(row, query) {
-  if (!query) return false;
-  return [
-    row.workId,
-    row.title,
-    ...row.series.flatMap((record) => [record.seriesId, record.title])
-  ].some((value) => searchString(value).includes(query));
+  return row.searchValues.some((value) => value.includes(query));
 }
 
-function seriesSortValue(row) {
-  return row.series.map((record) => record.title + " " + record.seriesId).join(" ");
-}
-
-function compareRows(collator, left, right, key) {
+function compareRows(left, right, key) {
   if (key === "year") return left.year - right.year;
-  const values = {
-    work: [left.workId, right.workId],
-    title: [left.title, right.title],
-    series: [seriesSortValue(left), seriesSortValue(right)],
-    storage: [left.storage, right.storage]
-  };
-  const pair = values[key] || values.work;
-  return collator.compare(pair[0], pair[1]);
+  const field = key === "work" ? "workId" : key === "series" ? "seriesSortValue" : key;
+  return SORT_COLLATOR.compare(left[field], right[field]);
 }
 
+/** Filter prepared rows across the whole dataset; retain all sorted matches for paging and Copy table. */
 export function buildCatalogueWorksProjection(rows, options) {
   const settings = options || {};
   const query = searchString(settings.searchText);
   const sortKey = SORTABLE_COLUMN_IDS.includes(settings.sortKey) ? settings.sortKey : "work";
   const sortDir = settings.sortDir === "desc" ? "desc" : "asc";
-  const collator = new Intl.Collator("en", { numeric: true, sensitivity: "base" });
   const matching = query ? rows.filter((row) => rowMatches(row, query)) : [];
   matching.sort((left, right) => {
-    const primary = compareRows(collator, left, right, sortKey);
+    const primary = compareRows(left, right, sortKey);
     if (primary !== 0) return sortDir === "asc" ? primary : -primary;
-    return collator.compare(left.workId, right.workId);
+    return SORT_COLLATOR.compare(left.workId, right.workId);
   });
   return {
     columns: COPY_COLUMNS.map((column) => column.id),
@@ -254,12 +199,6 @@ function studioOrigin(context) {
   return studio.origin;
 }
 
-function studioReadUrl(context, key) {
-  const url = new URL("/studio/api/catalogue/read", studioOrigin(context));
-  url.searchParams.set("key", key);
-  return url.toString();
-}
-
 function fetchJson(url, message) {
   return fetch(url, {
     cache: "no-store",
@@ -273,13 +212,13 @@ function fetchJson(url, message) {
 }
 
 function loadCatalogueWorks(context) {
+  const url = new URL("/studio/catalogue-output/reports/catalogue-works/metadata.json", studioOrigin(context));
   return Promise.all([
-    fetchJson(studioReadUrl(context, "catalogue_works"), "Failed to load Catalogue Works."),
-    fetchJson(studioReadUrl(context, "catalogue_series"), "Failed to load Catalogue Series."),
+    fetchJson(url.toString(), "Failed to load Catalogue Works metadata."),
     loadWorkingCatalogueDocumentLinks({ stageConfigs: context.stageConfigs, document: context.content.ownerDocument })
   ]).then((inputs) => ({
-    rows: normalizeCatalogueWorksInputs(inputs[0], inputs[1]),
-    documentLinks: inputs[2]
+    rows: normalizeCatalogueWorksMetadata(inputs[0]),
+    documentLinks: inputs[1]
   }));
 }
 
@@ -404,34 +343,40 @@ function renderHead(state) {
   });
 }
 
-function currentProjection(state) {
-  return buildCatalogueWorksProjection(state.sourceRows, {
+function refreshProjection(state) {
+  state.projection = buildCatalogueWorksProjection(state.sourceRows, {
     searchText: state.searchText,
     sortDir: state.sortDir,
     sortKey: state.sortKey
   });
+  state.pageIndex = 0;
+  renderCurrent(state);
 }
 
 function renderCurrent(state) {
   if (state.failed) return;
-  const projection = currentProjection(state);
-  state.projection = projection;
+  const projection = state.projection;
+  const pageCount = Math.max(1, Math.ceil(projection.rows.length / PAGE_SIZE));
+  state.pageIndex = Math.min(state.pageIndex, pageCount - 1);
+  state.pageLabelNode.textContent = (state.pageIndex + 1) + "/" + pageCount;
+  state.pageLabelNode.setAttribute("aria-label", "Page " + (state.pageIndex + 1) + " of " + pageCount);
   renderHead(state);
   clearNode(state.rowsNode);
   if (!projection.searchText) {
     state.tableNode.hidden = true;
-    state.emptyNode.hidden = false;
-    state.emptyNode.textContent = "Search by Work or Series to show Catalogue Works.";
+    state.emptyNode.hidden = true;
+    state.emptyNode.textContent = "";
     state.statusNode.textContent = projection.totalCount === 1
-      ? "1 Work loaded."
-      : projection.totalCount + " Works loaded.";
+      ? "1 work"
+      : projection.totalCount + " works";
   } else if (!projection.rows.length) {
     state.tableNode.hidden = true;
     state.emptyNode.hidden = false;
     state.emptyNode.textContent = "No Catalogue Works match the current search.";
     state.statusNode.textContent = "0 of " + projection.totalCount + " Works";
   } else {
-    projection.rows.forEach((row) => appendRow(state, row));
+    const start = state.pageIndex * PAGE_SIZE;
+    projection.rows.slice(start, start + PAGE_SIZE).forEach((row) => appendRow(state, row));
     mountDocsViewerMediaLinks({
       content: state.rowsNode,
       documentTarget: { stage: state.context.viewerStage, collection: "", docId: state.context.doc.doc_id },
@@ -449,12 +394,16 @@ function renderCurrent(state) {
 }
 
 function updateControls(state) {
+  const resultsUnavailable = state.busy || state.failed || state.searchTimer !== null;
   state.searchInputNode.disabled = state.busy || state.failed;
   state.searchClearNode.hidden = !state.searchText;
   state.searchClearNode.disabled = state.busy || state.failed || !state.searchText;
-  state.copyButton.disabled = state.busy || state.failed || !state.projection.rows.length;
+  state.copyButton.disabled = resultsUnavailable || !state.projection.rows.length;
+  state.paginationNode.hidden = !state.projection.rows.length;
+  state.previousPageButton.disabled = resultsUnavailable || state.pageIndex === 0;
+  state.nextPageButton.disabled = resultsUnavailable || (state.pageIndex + 1) * PAGE_SIZE >= state.projection.rows.length;
   state.headRowNode.querySelectorAll("[data-report-sort]").forEach((button) => {
-    button.disabled = state.busy || state.failed;
+    button.disabled = resultsUnavailable;
   });
 }
 
@@ -469,7 +418,7 @@ function copyCurrentTable(state) {
     state.statusNode.textContent = "Copy table failed.";
     return Promise.resolve();
   }
-  const projection = currentProjection(state);
+  const projection = state.projection;
   const expanded = Boolean(state.tableNode.closest(".docsViewerReport__expandedViewport"));
   const copyProjection = Object.assign({}, projection, {
     columns: COLUMN_MODEL.filter((column) => {
@@ -486,21 +435,34 @@ function copyCurrentTable(state) {
 }
 
 function attachEvents(state) {
+  function applySearch() {
+    clearTimeout(state.searchTimer);
+    state.searchTimer = null;
+    if (!state.context.reportRoot.isConnected) return;
+    refreshProjection(state);
+  }
+
   state.searchInputNode.addEventListener("input", () => {
     state.searchText = state.searchInputNode.value;
-    renderCurrent(state);
+    clearTimeout(state.searchTimer);
+    if (!state.searchText.trim()) {
+      applySearch();
+      return;
+    }
+    state.searchTimer = setTimeout(applySearch, SEARCH_DELAY_MS);
+    updateControls(state);
   });
   state.searchClearNode.addEventListener("click", () => {
     state.searchText = "";
     state.searchInputNode.value = "";
-    renderCurrent(state);
+    applySearch();
     state.searchInputNode.focus();
   });
   state.headRowNode.addEventListener("click", (event) => {
     const button = event.target && typeof event.target.closest === "function"
       ? event.target.closest("[data-report-sort]")
       : null;
-    if (!button || state.busy || state.failed) return;
+    if (!button || state.busy || state.failed || state.searchTimer !== null) return;
     const key = cleanString(button.getAttribute("data-report-sort")).toLowerCase();
     if (!SORTABLE_COLUMN_IDS.includes(key)) return;
     if (state.sortKey === key) state.sortDir = state.sortDir === "asc" ? "desc" : "asc";
@@ -508,8 +470,17 @@ function attachEvents(state) {
       state.sortKey = key;
       state.sortDir = "asc";
     }
-    renderCurrent(state);
+    refreshProjection(state);
   });
+  function changePage(step) {
+    if (state.busy || state.failed || state.searchTimer !== null) return;
+    const pageIndex = state.pageIndex + step;
+    if (pageIndex < 0 || pageIndex * PAGE_SIZE >= state.projection.rows.length) return;
+    state.pageIndex = pageIndex;
+    renderCurrent(state);
+  }
+  state.previousPageButton.addEventListener("click", () => changePage(-1));
+  state.nextPageButton.addEventListener("click", () => changePage(1));
   state.copyButton.addEventListener("click", () => copyCurrentTable(state));
 }
 
@@ -526,7 +497,7 @@ function renderShell(root) {
   searchInput.id = "docsCatalogueWorksReportSearch";
   searchInput.className = "docsViewerReport__searchInput";
   searchInput.type = "search";
-  searchInput.placeholder = "Search";
+  searchInput.placeholder = "work";
   searchInput.setAttribute("aria-label", "Search Catalogue Works");
   const searchClear = root.ownerDocument.createElement("button");
   searchClear.id = "docsCatalogueWorksReportClear";
@@ -561,19 +532,46 @@ function renderShell(root) {
   const empty = root.ownerDocument.createElement("p");
   empty.className = "docsViewerReport__empty";
 
+  const pagination = root.ownerDocument.createElement("nav");
+  pagination.className = "catalogueWorksReport__pagination";
+  pagination.setAttribute("aria-label", "Catalogue Works pages");
+  const previousPageButton = root.ownerDocument.createElement("button");
+  previousPageButton.type = "button";
+  previousPageButton.className = "docsViewer__toolbarIconButton";
+  previousPageButton.setAttribute("aria-label", "Previous page");
+  previousPageButton.title = "Previous page";
+  previousPageButton.appendChild(createDocsViewerToolbarIcon(root.ownerDocument, "docsViewer__icon--chevron-left"));
+  const pageLabel = root.ownerDocument.createElement("span");
+  pageLabel.className = "catalogueWorksReport__pageLabel";
+  pageLabel.setAttribute("aria-live", "polite");
+  pageLabel.setAttribute("aria-atomic", "true");
+  const nextPageButton = root.ownerDocument.createElement("button");
+  nextPageButton.type = "button";
+  nextPageButton.className = "docsViewer__toolbarIconButton";
+  nextPageButton.setAttribute("aria-label", "Next page");
+  nextPageButton.title = "Next page";
+  nextPageButton.appendChild(createDocsViewerToolbarIcon(root.ownerDocument, "docsViewer__icon--chevron-right"));
+  pagination.append(previousPageButton, pageLabel, nextPageButton);
+
   root.appendChild(toolbar);
   root.appendChild(status);
   root.appendChild(table);
   root.appendChild(empty);
+  root.appendChild(pagination);
   return {
     copyButton,
     emptyNode: empty,
     headRowNode: headRow,
+    nextPageButton,
+    pageLabelNode: pageLabel,
+    paginationNode: pagination,
+    previousPageButton,
     rowsNode: body,
     searchClearNode: searchClear,
     searchInputNode: searchInput,
     statusNode: status,
-    tableNode: table
+    tableNode: table,
+    toolbarNode: toolbar
   };
 }
 
@@ -584,9 +582,11 @@ export function mountCatalogueWorksReport(context) {
     context,
     documentLinks: new Map(),
     failed: false,
+    pageIndex: 0,
     presentationListeners: new Set(),
     projection: { columns: COPY_COLUMNS.map((column) => column.id), rows: [] },
     searchText: "",
+    searchTimer: null,
     sortDir: "asc",
     sortKey: "work",
     sourceRows: []
@@ -601,12 +601,13 @@ export function mountCatalogueWorksReport(context) {
     state.sourceRows = data.rows;
     state.documentLinks = data.documentLinks;
     state.busy = false;
-    renderCurrent(state);
+    refreshProjection(state);
     return {
       expandedPresentation: {
         columns: PRESENTATION_COLUMNS,
         kind: "semantic-table",
         label: "Catalogue Works",
+        toolbar: state.toolbarNode,
         subscribe: (listener) => {
           if (typeof listener !== "function") {
             throw new Error("Catalogue Works presentation refresh requires a listener.");

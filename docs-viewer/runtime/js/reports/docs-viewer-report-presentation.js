@@ -77,6 +77,10 @@ function normalizePresentation(rawPresentation, reportRoot) {
     throw new Error("Expanded report presentation kind must be flow or semantic-table.");
   }
   if (!label) throw new Error("Expanded report presentation requires a label.");
+  var toolbar = rawPresentation.toolbar;
+  if (!toolbar || toolbar.nodeType !== 1 || toolbar === reportRoot || !reportRoot.contains(toolbar)) {
+    throw new Error("Expanded report presentation requires its exact toolbar within the report.");
+  }
 
   if (kind === "flow") {
     ["table", "columns", "subscribe"].forEach(function (key) {
@@ -84,7 +88,7 @@ function normalizePresentation(rawPresentation, reportRoot) {
         throw new Error("Flow presentation must omit semantic-table fields.");
       }
     });
-    return Object.freeze({ kind: kind, label: label });
+    return Object.freeze({ kind: kind, label: label, toolbar: toolbar });
   }
 
   var table = rawPresentation.table;
@@ -104,7 +108,8 @@ function normalizePresentation(rawPresentation, reportRoot) {
     kind: kind,
     label: label,
     subscribe: function (listener) { return rawPresentation.subscribe(listener); },
-    table: table
+    table: table,
+    toolbar: toolbar
   });
 }
 
@@ -122,6 +127,14 @@ function createOpenControl(documentRef, label) {
   button.appendChild(createDocsViewerToolbarIcon(documentRef, "docsViewer__icon--square-arrow-out-up-right"));
   row.appendChild(button);
   return { button: button, row: row };
+}
+
+function updateOpenControl(state) {
+  var presentation = state.presentationHandle;
+  state.button.disabled = presentation.kind === "semantic-table"
+    && (presentation.table.hidden || !Array.from(presentation.table.tBodies).some(function (body) {
+      return body.rows.length > 0;
+    }));
 }
 
 /** Create one report-presentation adapter with no management or service authority. */
@@ -159,6 +172,7 @@ export function createDocsViewerReportPresentationAdapter(options) {
       requestReason: "document-navigation",
       restoreDocumentContext: false
     });
+    if (state.unsubscribeControl) state.unsubscribeControl();
     state.button.removeEventListener("click", state.handleClick);
     state.controlRow.remove();
     stateByRoot.delete(root);
@@ -213,6 +227,7 @@ export function createDocsViewerReportPresentationAdapter(options) {
       presentation: null,
       presentationHandle: presentation,
       reportRoot: reportRoot,
+      unsubscribeControl: null,
       reportTarget: {
         preset: cleanString(reportMeta.preset),
         reportId: cleanString(reportMeta.reportId),
@@ -239,11 +254,15 @@ export function createDocsViewerReportPresentationAdapter(options) {
     state.button = control.button;
     state.controlRow = control.row;
     state.handleClick = function () {
-      if (!resolveState(root, immutableTargetContext(state))) return;
+      if (state.button.disabled || !resolveState(root, immutableTargetContext(state))) return;
       state.requestContentDetail(immutableTargetContext(state));
     };
+    if (presentation.kind === "semantic-table") {
+      state.unsubscribeControl = presentation.subscribe(function () { updateOpenControl(state); });
+    }
+    updateOpenControl(state);
     state.button.addEventListener("click", state.handleClick);
-    reportRoot.before(state.controlRow);
+    presentation.toolbar.appendChild(state.controlRow);
     stateByRoot.set(root, state);
     return { registered: true, targetContext: immutableTargetContext(state) };
   }

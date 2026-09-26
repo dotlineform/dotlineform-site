@@ -44,6 +44,7 @@ from catalogue.catalogue_output_paths import (  # noqa: E402
     CATALOGUE_OUTPUT_ROUTE_PREFIX,
     catalogue_output_workspace, catalogue_workspace_config, output_path,
 )
+from catalogue.catalogue_works_metadata import METADATA_PATH  # noqa: E402
 
 
 STATIC_PREFIXES = (
@@ -292,6 +293,14 @@ class StudioAppRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def send_catalogue_media(self, request_path: str) -> None:
+        report_path = CATALOGUE_OUTPUT_ROUTE_PREFIX + METADATA_PATH
+        if request_path.startswith(CATALOGUE_OUTPUT_ROUTE_PREFIX + "reports/"):
+            if request_path != report_path:
+                self.send_error(HTTPStatus.NOT_FOUND, "Catalogue report not found")
+                return
+            if not self.origin_allowed_for_local_api():
+                self.send_error(HTTPStatus.FORBIDDEN, "Origin not allowed")
+                return
         try:
             assets = catalogue_workspace_config(self.repo_root).assets
             prefix = assets.served_path_prefix.rstrip("/") + "/"
@@ -315,6 +324,8 @@ class StudioAppRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
         content_type = mimetypes.guess_type(path.name)[0] or "application/octet-stream"
         body = path.read_bytes()
         self.send_response(HTTPStatus.OK)
+        if request_path == report_path:
+            self.send_cors_headers()
         self.send_header("Content-Type", content_type)
         self.send_header("Cache-Control", "no-store")
         self.send_header("Content-Length", str(len(body)))

@@ -9,6 +9,7 @@ from catalogue.catalogue_revisions import record_hash
 from catalogue.catalogue_service_context import CatalogueWriteContext, refresh_lookup_payloads
 from catalogue.catalogue_source import CatalogueSourceRecords, records_from_json_source
 from catalogue.generate_work_pages import generate_catalogue_json
+from catalogue.catalogue_works_metadata import update_catalogue_works_metadata
 
 
 def changed_output_ids(previous: CatalogueSourceRecords, current: CatalogueSourceRecords) -> tuple[list[str], list[str]]:
@@ -18,6 +19,26 @@ def changed_output_ids(previous: CatalogueSourceRecords, current: CatalogueSourc
     for wid in works:
         series.update(record["series_id"] for record in (previous.works.get(wid), current.works.get(wid)) if record and record.get("series_id"))
     return sorted(works), sorted(series)
+
+
+def _update_report_metadata(context: CatalogueWriteContext, response: dict[str, Any], records: CatalogueSourceRecords) -> None:
+    """Use mutation identities, independent of wider media/Gallery invalidation."""
+    work_ids: set[str] = set()
+    deleted_work_ids: list[str] = []
+    if "work_id" in response:
+        work_ids.add(response["work_id"])
+    elif response.get("kind") == "works":
+        work_ids.update(response["selected_ids"])
+    elif "series_id" in response:
+        work_ids.update(response["changed_work_ids"])
+        # Series titles are embedded in member rows, including unchanged Save retries.
+        work_ids.update(wid for wid, record in records.works.items() if record.get("series_id") == response["series_id"])
+    elif response.get("deleted") and response["kind"] == "work":
+        deleted_work_ids.append(response["id"])
+    if work_ids or deleted_work_ids:
+        response["report_metadata"] = update_catalogue_works_metadata(
+            context.repo_root, records, work_ids=sorted(work_ids), deleted_work_ids=deleted_work_ids, write=True,
+        )
 
 
 def complete_saved_catalogue_output(
@@ -49,6 +70,7 @@ def complete_saved_catalogue_output(
             context.repo_root, context.source_dir, write=True, work_ids=output_work_ids, series_ids=series_ids,
             gallery_ids=gallery_ids,
         )
+        _update_report_metadata(context, response, current)
     except (Exception, SystemExit) as error:
         response["output"] = {"status": "failed", "error": str(error), "message": "Data saved, but output generation did not complete."}
     try:
