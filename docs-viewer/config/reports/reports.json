@@ -23,30 +23,6 @@
       "presets": []
     },
     {
-      "report_id": "docs_index_table",
-      "title": "Docs Index Table",
-      "description": "Displays a sortable Docs Viewer index table for the selected stage.",
-      "loader_id": "docs_index_table",
-      "presets": [
-        {
-          "preset_id": "workspace_documents_admin",
-          "title": "Workspace Documents Admin",
-          "description": "Management report for reviewing documents by title and doc_id.",
-          "columns": ["title", "doc_id"],
-          "filters": [],
-          "sortable": ["title", "doc_id"]
-        },
-        {
-          "preset_id": "az_index",
-          "title": "A-Z Index",
-          "description": "Single-column alphabetical title index.",
-          "columns": ["title"],
-          "filters": [],
-          "sortable": ["title"]
-        }
-      ]
-    },
-    {
       "report_id": "reports_list",
       "title": "Reports List",
       "description": "Displays the configured Docs Viewer report metadata from the report registry.",

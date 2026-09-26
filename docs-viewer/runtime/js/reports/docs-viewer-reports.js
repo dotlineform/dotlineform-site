@@ -25,13 +25,6 @@ const REPORT_LOADERS = {
       });
     }
   },
-  docs_index_table: {
-    load: function () {
-      return import("./docs-index-table-report.js").then(function (module) {
-        return module.mountDocsIndexTableReport;
-      });
-    }
-  },
   reports_list: {
     load: function () {
       return import("./reports-list-report.js").then(function (module) {

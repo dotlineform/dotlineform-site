@@ -279,11 +279,8 @@ def _descriptor(
         raise _invalid(f"unknown report id: {report_id}", "unknown_report", source_name, source_range)
 
     preset, collection = (attributes.get(key) for key in ("preset", "collection"))
-    if preset is not None:
-        if report_id != "docs_index_table":
-            raise _invalid(f"preset is not allowed for report: {report_id}", "invalid_preset", source_name, source_range)
-        if preset not in definition.preset_ids:
-            raise _invalid(f"preset is not registered for {report_id}: {preset}", "invalid_preset", source_name, source_range)
+    if preset is not None and preset not in definition.preset_ids:
+        raise _invalid(f"preset is not registered for {report_id}: {preset}", "invalid_preset", source_name, source_range)
     if report_id == "docs_collection":
         if collection is None:
             raise _invalid("docs_collection requires collection", "invalid_collection", source_name, source_range)

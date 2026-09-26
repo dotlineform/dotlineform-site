@@ -26,20 +26,9 @@ function reportServiceOptions(baseUrl) {
   };
 }
 
-function currentViewerStage(context) {
-  return cleanString(context && context.viewerStage);
-}
-
 function stageConfigs(context) {
   var workspaceConfig = context && context.workspaceConfigState ? context.workspaceConfigState : {};
   return Array.isArray(workspaceConfig.stageConfigs) ? workspaceConfig.stageConfigs : [];
-}
-
-function fetchDocsIndexTreeForStage(context, stage) {
-  var targetStage = cleanString(stage || currentViewerStage(context));
-  return context.collectionProvider.readIndex({
-    stage: targetStage
-  });
 }
 
 function payloadHasReport(payload) {
@@ -301,9 +290,6 @@ export function mountDocsViewerManageDocumentExtras(context) {
       content: settings.content,
       doc: settings.doc,
       documentMountGeneration: settings.documentMountGeneration,
-      fetchDocsIndexTree: function (stage) {
-        return fetchDocsIndexTreeForStage(settings, stage);
-      },
       managementContext: Boolean(settings.managementContext),
       managementService: managementService,
       payload: payload,
@@ -353,9 +339,6 @@ export function mountDocsViewerManageDocumentExtras(context) {
     content: settings.content,
     doc: settings.doc,
     documentMountGeneration: settings.documentMountGeneration,
-    fetchDocsIndexTree: function (stage) {
-      return fetchDocsIndexTreeForStage(settings, stage);
-    },
     managementContext: Boolean(settings.managementContext),
     managementService: managementService,
     payload: payload,

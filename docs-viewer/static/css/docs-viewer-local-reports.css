@@ -246,10 +246,6 @@
   overflow-wrap: anywhere;
 }
 
-.docsViewerReport__treeTitle{
-  padding-left: var(--docs-report-tree-indent, 0);
-}
-
 .docsViewerReport__reportName{
   display: grid;
   gap: 0.12rem;
