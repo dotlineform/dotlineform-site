@@ -57,6 +57,12 @@
         "title": "Moments",
         "manifest_url": "/assets/data/docs/moments/manifest.json",
         "by_id_url_base": "/assets/data/docs/moments/by-id"
+      },
+      {
+        "collection": "catalogue",
+        "title": "catalogue",
+        "manifest_url": "/assets/data/docs/catalogue/manifest.json",
+        "by_id_url_base": "/assets/data/docs/catalogue/by-id"
       }
     ]
   }

@@ -105,9 +105,10 @@ def publication_media_bindings(repo_root: Path, config: DocsStageConfig) -> dict
     }
     workspace = load_docs_workspace_config(repo_root)
     settings = json.loads((repo_root / "site-tools/config/site-tools.json").read_bytes())["media"]
+    # Catalogue families must not collide with <collection>/<media_type> bindings.
     for key, source, prefix_key in (
-        ("works/primary", workspace.assets.work_primary, "image_works"),
-        ("works/files", workspace.assets.work_files, "files_works"),
+        ("catalogue/works/primary", workspace.assets.work_primary, "image_works"),
+        ("catalogue/works/files", workspace.assets.work_files, "files_works"),
     ):
         prefix = safe_relative_path(settings[prefix_key].strip("/"), field=f"media.{prefix_key}")
         if prefix.parts[0] == "archive":
@@ -117,8 +118,8 @@ def publication_media_bindings(repo_root: Path, config: DocsStageConfig) -> dict
             settings["base"].rstrip("/") + "/" + prefix.as_posix(),
         ))
     destination = workspace.catalogue.public_projection.location
-    bindings["works/thumbs"] = (workspace.assets.work_thumbnails, DocsPublicMediaConfig(
-        "works/thumbs", Path("works/thumbs"),
+    bindings["catalogue/works/thumbs"] = (workspace.assets.work_thumbnails, DocsPublicMediaConfig(
+        "catalogue/works/thumbs", Path("works/thumbs"),
         ArtifactLocation(destination.provider, destination.path / "works/thumbs"),
         "/" + (destination.path / "works/thumbs").relative_to("site").as_posix(),
     ))

@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "catalogue_media_config_v1",
+    "version": "blake2b-15cfb3e95f82dba1f59fe9dbe5605700",
+    "generated_at_utc": "2026-09-25T21:11:17Z"
+  },
+  "format": "webp",
+  "primary": {
+    "base_urls": {
+      "works": "https://media.dotlineform.com/works/img/"
+    },
+    "widths": [
+      800,
+      1200,
+      1600
+    ],
+    "suffix": "primary",
+    "version_query_parameter": "v"
+  },
+  "thumbnails": {
+    "sizes": [
+      96
+    ],
+    "suffix": "thumb"
+  }
+}
