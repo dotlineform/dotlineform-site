@@ -560,6 +560,18 @@ def plan_delete_preview(repo_root: Path, doc_ids: list[str], *, stage: str) -> D
     }
 
 
+def selected_delete_writes(config: Any, doc_ids: list[str], collection: str = "") -> tuple[SourceWrite, ...]:
+    from docs_selected_documents import read_selected, selected_path, selected_text
+
+    path = selected_path(config)
+    original = path.read_bytes()
+    payload = read_selected(config)
+    rows = [row for row in payload["docs"] if not (row.get("collection", "") == collection and row["doc_id"] in doc_ids)]
+    if rows == payload["docs"]:
+        return ()
+    return (SourceWrite(path, selected_text({**payload, "docs": rows}), original_bytes=original),)
+
+
 def plan_delete_apply(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
     if "scope" in body:
         raise ValueError("scope is retired; supply stage")
@@ -603,7 +615,7 @@ def plan_delete_apply(repo_root: Path, body: Dict[str, Any]) -> ManagementMutati
         source_writes=(SourceWrite(
             document_source_path(config) / INDEX_ORDER_FILENAME,
             index_order_text(exclude_nodes(read_index_order(document_source_path(config)), set(delete_doc_ids))),
-        ),),
+        ), *selected_delete_writes(config, delete_doc_ids)),
         suppression_reason="docs-delete",
         build_doc_ids=delete_doc_ids,
         log_event_name="docs-delete",
@@ -786,6 +798,7 @@ def plan_collection_delete_apply(
             "summary_text": f"Deleted {document.doc_id}.",
         },
         source_deletes=(SourceDelete(document.path, original_bytes=source_bytes),),
+        source_writes=selected_delete_writes(resolved.parent_config, [document.doc_id], resolved.collection),
         suppression_reason="docs-collection-document-delete",
         revision_conflict_operation="apply",
         revision_conflict_error="collection document source changed after delete preview",

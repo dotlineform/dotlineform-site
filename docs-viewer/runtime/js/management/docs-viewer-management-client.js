@@ -59,6 +59,15 @@ export function readManagementCapabilities(options) {
   return fetchManagementJson("/capabilities", "GET", undefined, options);
 }
 
+export function readSelectedDocuments(options) {
+  return fetchManagementJson("/docs/selected?stage=working", "GET", undefined,
+    Object.assign({}, options, { cache: "no-store" }));
+}
+
+export function setManagedDocSelected(target, selected, options) {
+  return fetchManagementJson("/docs/set-selected", "POST", targetPayload(target, { selected: selected }), options);
+}
+
 /** Read authoring targets in one exact stage; the response supplies ordinary hrefs. */
 export function readDocumentLinkTargets(target, options) {
   var collection = normalizeManagedDocumentCollectionTarget(target);

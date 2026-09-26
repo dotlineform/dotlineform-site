@@ -365,8 +365,9 @@ def accepted_document_collections(
     parent_prefix = collection_public_url_prefix(config)
     index_path = Path("documents/index-tree.json")
     recent_path = Path("documents/recent.json")
+    selected_path = Path("documents/selected.json")
     search_path = Path("search/index.json")
-    for required in (index_path, recent_path, search_path):
+    for required in (index_path, recent_path, selected_path, search_path):
         if required not in published_files:
             raise FileNotFoundError(f"accepted Preview snapshot is missing {required.as_posix()}")
 
@@ -378,6 +379,8 @@ def accepted_document_collections(
     )
     _validate_prepared_index(recent_path, published_files[recent_path], "preview")
     parent_files[Path("recent.json")] = published_files[recent_path]
+    _validate_prepared_index(selected_path, published_files[selected_path], "preview")
+    parent_files[Path("selected.json")] = published_files[selected_path]
     for relative_path, data in published_files.items():
         if (
             len(relative_path.parts) == 3

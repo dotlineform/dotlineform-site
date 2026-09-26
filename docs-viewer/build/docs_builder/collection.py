@@ -34,6 +34,7 @@ from docs_document_subjects import (
     subject_key_is_canonical,
 )
 from docs_document_identity import is_doc_timestamp
+from docs_selected_documents import read_selected, refresh_selected_documents
 
 
 class CollectionDocsBuilder(DocsDataBuilder):
@@ -228,6 +229,8 @@ class CollectionDocsBuilder(DocsDataBuilder):
     def run(self, *, write: bool, emit_diagnostics: bool = False) -> dict[str, Any]:
         """Build all source documents or merge selected sources into saved metadata."""
         started_at = monotonic_time()
+        if self.config.stage == "working":
+            read_selected(self.config)
         previous_manifest, previous_manage = self.saved_collection_metadata() if self.targeted_build else (None, None)
         docs = self.load_docs(self.only_doc_ids)
         self.validate_canonical_doc_ids(docs)
@@ -302,6 +305,8 @@ class CollectionDocsBuilder(DocsDataBuilder):
         else:
             self.print_collection_summary(write_plan, mode="dry-run", docs_total=len(summaries))
         links_build = build_document_links(self, links_plan, write=write)
+        if self.config.stage == "working":
+            refresh_selected_documents(self.config, self.collection_config, docs, write=write)
         diagnostics["warning_count"] = len(self.warnings)
         if emit_diagnostics:
             self.print_diagnostics(diagnostics)

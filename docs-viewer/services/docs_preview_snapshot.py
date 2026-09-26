@@ -18,6 +18,7 @@ from docs_build_manifest import (
 )
 from docs_publication_payloads import project_preview_view
 from docs_recent_payload import validate_recent_payload
+from docs_selected_documents import validate_selected_payload
 from docs_public_mermaid_payload import public_mermaid_payload_requires_projection
 from docs_workspace_config import (
     DocsStageConfig,
@@ -31,7 +32,7 @@ from docs_workspace_config import (
 PREVIEW_MANIFEST_FILENAME = "preview-manifest.json"
 PREVIEW_MANIFEST_SCHEMA_VERSION = "docs_preview_manifest_v2"
 IGNORED_FILENAMES = frozenset({".DS_Store", ".gitkeep"})
-COPIED_WORKING_PAYLOAD_PATHS = frozenset({Path("search/index.json"), Path("documents/recent.json")})
+COPIED_WORKING_PAYLOAD_PATHS = frozenset({Path("search/index.json"), Path("documents/recent.json"), Path("documents/selected.json")})
 HTML_START_TAG_PATTERN = re.compile(
     r"<(?P<body>[A-Za-z][A-Za-z0-9:-]*(?:[^>\"']|\"[^\"]*\"|'[^']*')*)>",
     re.DOTALL,
@@ -259,6 +260,8 @@ def _validate_prepared_index(path: Path, data: bytes, stage: str) -> None:
                 raise RuntimeError("generated Search postings must be arrays")
     elif path == Path("documents/recent.json"):
         validate_recent_payload(_read_json_bytes(data, "saved Recents payload"))
+    elif path == Path("documents/selected.json"):
+        validate_selected_payload(_read_json_bytes(data, "Selected Documents payload"))
     else:
         key = ""
         if child_index and path.name == "manifest.json":
@@ -388,6 +391,15 @@ def build_preview_snapshot_files(
     ordinary_ids = {path.stem for path in files if len(path.parts) == 3 and path.parts[:2] == ("documents", "by-id") and path.suffix == ".json"}
     if tree_ids != ordinary_ids:
         raise ValueError("Prepared index tree and ordinary document set do not match")
+    selected = _read_json_bytes(files[Path("documents/selected.json")], "prepared Selected Documents")
+    hosts = {child.collection: child.report_host_doc_id for child in config.collections}
+    for row in selected["docs"]:
+        child = row.get("collection", "")
+        prefix = Path("collections") / child / "documents" if child else Path("documents")
+        if prefix / "by-id" / f"{row['doc_id']}.json" not in files:
+            raise ValueError("Selected Documents references a document outside the prepared set")
+        if child and (hosts.get(child) != row["report_doc_id"] or row["report_doc_id"] not in ordinary_ids):
+            raise ValueError("Selected Documents requires its exact prepared collection host")
 
     media_references = _referenced_media(config, files)
     bindings = _preview_media_bindings(config)

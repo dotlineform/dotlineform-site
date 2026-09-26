@@ -28,6 +28,7 @@
       },
       "index_tree_url": "/docs/index-tree?stage=working",
       "recent_url": "/docs/recent?stage=working",
+      "selected_url": "/docs/selected?stage=working",
       "search_index_url": "/docs/search?stage=working",
       "search": {
         "domain": "docs_viewer",
@@ -110,6 +111,7 @@
       },
       "index_tree_url": "/docs/preview/index-tree",
       "recent_url": "/docs/preview/recent",
+      "selected_url": "/docs/preview/selected",
       "search_index_url": "/docs/preview/search",
       "search": {
         "domain": "docs_viewer",

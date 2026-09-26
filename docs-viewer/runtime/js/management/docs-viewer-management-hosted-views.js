@@ -154,6 +154,18 @@ export function createDocsViewerManagementViewDefinitions() {
         renderer: "manage-draft"
       },
       {
+        id: "selected",
+        actionId: "set-selected",
+        label: "Select document",
+        ownerType: "view",
+        ownerViewId: "rendered-document",
+        modeIds: ["rendered-document"],
+        surfaceId: "main-view",
+        appKinds: ["manage"],
+        features: ["management"],
+        renderer: "manage-selected"
+      },
+      {
         id: "edit",
         actionId: DOCS_VIEWER_ACTION_IDS.EDIT_DOCUMENT,
         label: "Edit document",

@@ -2,6 +2,13 @@
   "schema": "docs_viewer_reports_v1",
   "reports": [
     {
+      "report_id": "selected_documents",
+      "title": "Selected Documents",
+      "description": "Lists starred documents by last updated date, newest first.",
+      "loader_id": "selected_documents",
+      "presets": []
+    },
+    {
       "report_id": "docs_collection",
       "title": "Docs Collection",
       "description": "Displays a report-owned list over a configured Docs Viewer collection.",

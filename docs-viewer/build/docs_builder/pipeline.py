@@ -26,6 +26,7 @@ from .semantic_token_registry import load_semantic_token_registry
 from .semantic_tokens import SemanticTokensMixin
 from .source import SourceLoadingMixin
 from .write_plan import WritePlanMixin
+from docs_selected_documents import read_selected, refresh_selected_documents, selected_path
 
 
 class DocsDataBuilder(
@@ -79,6 +80,7 @@ class DocsDataBuilder(
         docs = self.load_docs()
         self.validate_canonical_doc_ids(docs)
         self.validate_docs(docs)
+        read_selected(self.config)
         media_snapshot = (
             None
             if self.skip_media_builds
@@ -155,6 +157,10 @@ class DocsDataBuilder(
                 write_plan,
             )
         links_build = build_document_links(self, links_plan, write=write)
+        if self.config.stage == "working":
+            refresh_selected_documents(self.config, self.config, docs_for_item_build, write=write)
+        elif write:
+            (self.output_dir / "selected.json").write_bytes(selected_path(self.config).read_bytes())
         diagnostics["warning_count"] = len(self.warnings)
         if emit_diagnostics:
             self.print_diagnostics(diagnostics)

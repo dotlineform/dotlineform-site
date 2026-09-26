@@ -1354,3 +1354,11 @@ select.docsViewer__positionTargets{
 .docsViewer__actionMenuItem:disabled:hover{
   background: transparent;
 }
+.docsViewer__icon--star{
+  mask-image: url("../icons/star.svg");
+}
+
+.docsViewer__toolbarIcon.docsViewer__icon--star-filled{
+  mask-image: url("../icons/star-filled.svg");
+  background-color: #f4c430;
+}

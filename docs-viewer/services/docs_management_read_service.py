@@ -13,6 +13,8 @@ import docs_preview_reads
 import docs_media_reads
 import docs_series_works_report
 import docs_unpublishable_report
+from docs_selected_documents import read_selected
+from docs_workspace_config import load_docs_stage
 import docs_source_config_settings
 import docs_staged_media_service
 from docs_management_capabilities_service import capabilities_payload
@@ -81,6 +83,8 @@ def docs_preview_read_payload(
         return docs_preview_reads.read_preview_docs_index_tree(repo_root)
     if path == routes.PREVIEW_RECENT_PATH:
         return docs_preview_reads.read_preview_recent(repo_root)
+    if path == routes.PREVIEW_SELECTED_PATH:
+        return docs_preview_reads.read_preview_selected(repo_root)
     if path == routes.PREVIEW_BACKLINKS_PATH:
         return docs_preview_reads.read_preview_backlinks(repo_root)
     if path == routes.PREVIEW_SEARCH_PATH:
@@ -107,6 +111,10 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         return {"ok": True, "service": "docs_management", "dry_run": dry_run}
     if path == routes.CAPABILITIES_PATH:
         return capabilities_payload(repo_root)
+    if path == routes.SELECTED_PATH:
+        if set(params) != {"stage"} or docs_api_query_value(params, "stage") != "working":
+            raise ValueError("Selected Documents authoring reads require stage working")
+        return read_selected(load_docs_stage(repo_root, "working"))
     if path in {routes.MEDIA_FILES_PATH, routes.MEDIA_REFERENCES_PATH}:
         if set(params) not in ({"stage"}, {"stage", "collection"}):
             raise ValueError("Docs media reads require stage and optional collection only")
@@ -155,6 +163,7 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
     if path in {
         routes.PREVIEW_INDEX_TREE_PATH,
         routes.PREVIEW_RECENT_PATH,
+        routes.PREVIEW_SELECTED_PATH,
         routes.PREVIEW_BACKLINKS_PATH,
         routes.PREVIEW_PAYLOAD_PATH,
         routes.PREVIEW_SEARCH_PATH,

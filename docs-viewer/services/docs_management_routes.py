@@ -6,6 +6,7 @@ CAPABILITIES_PATH = "/capabilities"
 
 GENERATED_INDEX_TREE_PATH = "/docs/index-tree"
 GENERATED_RECENT_PATH = "/docs/recent"
+SELECTED_PATH = "/docs/selected"
 GENERATED_BACKLINKS_PATH = "/docs/backlinks"
 GENERATED_PAYLOAD_PATH = "/docs/doc"
 GENERATED_LINKS_PATH = "/docs/links"
@@ -14,6 +15,7 @@ GENERATED_SEARCH_PATH = "/docs/search"
 GENERATED_SEMANTIC_TOKENS_PATH = "/docs/semantic-tokens"
 PREVIEW_INDEX_TREE_PATH = "/docs/preview/index-tree"
 PREVIEW_RECENT_PATH = "/docs/preview/recent"
+PREVIEW_SELECTED_PATH = "/docs/preview/selected"
 PREVIEW_BACKLINKS_PATH = "/docs/preview/backlinks"
 PREVIEW_PAYLOAD_PATH = "/docs/preview/doc"
 PREVIEW_SEARCH_PATH = "/docs/preview/search"
@@ -53,6 +55,7 @@ IMPORT_SOURCE_PATH = "/docs/import-source"
 STAGED_MEDIA_PREVIEW_PATH = "/docs/staged-media-preview"
 STAGED_MEDIA_APPLY_PATH = "/docs/staged-media-apply"
 SET_DRAFT_PATH = "/docs/set-draft"
+SET_SELECTED_PATH = "/docs/set-selected"
 ASSIGN_FIELD_GROUP_PATH = "/docs/assign-field-group"
 CREATE_PATH = "/docs/create"
 REBUILD_PATH = "/docs/rebuild"
@@ -75,6 +78,7 @@ GET_PATHS = (
     CAPABILITIES_PATH,
     GENERATED_INDEX_TREE_PATH,
     GENERATED_RECENT_PATH,
+    SELECTED_PATH,
     GENERATED_BACKLINKS_PATH,
     GENERATED_PAYLOAD_PATH,
     GENERATED_LINKS_PATH,
@@ -83,6 +87,7 @@ GET_PATHS = (
     GENERATED_SEMANTIC_TOKENS_PATH,
     PREVIEW_INDEX_TREE_PATH,
     PREVIEW_RECENT_PATH,
+    PREVIEW_SELECTED_PATH,
     PREVIEW_BACKLINKS_PATH,
     PREVIEW_PAYLOAD_PATH,
     PREVIEW_SEARCH_PATH,
@@ -125,6 +130,7 @@ POST_PATHS = (
     STAGED_MEDIA_PREVIEW_PATH,
     STAGED_MEDIA_APPLY_PATH,
     SET_DRAFT_PATH,
+    SET_SELECTED_PATH,
     ASSIGN_FIELD_GROUP_PATH,
     CREATE_PATH,
     REBUILD_PATH,

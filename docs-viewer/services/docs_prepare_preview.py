@@ -20,6 +20,7 @@ from docs_source_model import SourceDoc, format_source, load_document_collection
 from docs_index_order import INDEX_ORDER_FILENAME, exclude_nodes, index_order_text, read_index_order
 from docs_collection_customisations import prepare_collection_publication
 from docs_publication_ignore import read_publication_ignore_ids
+from docs_selected_documents import read_selected, selected_row, selected_text
 from docs_catalogue_artifacts import (
     CONFIG_REL_PATH as CATALOGUE_CONFIG_REL_PATH, load_catalogue_artifact_inventory,
     read_catalogue_artifacts, catalogue_asset_references,
@@ -79,6 +80,9 @@ def _plan(repo_root: Path, body: dict[str, Any]) -> tuple[dict[str, Any], dict[P
     }
     counts: dict[str, int] = {}
     eligible: list[str] = []
+    selected = read_selected(working)
+    selected_targets = {(row.get("collection", ""), row["doc_id"]) for row in selected["docs"]}
+    selected_rows = []
     for collection in (working, *working.collections):
         child = str(getattr(collection, "collection", ""))
         docs = ordinary if not child else load_document_collection_docs_for_config(repo_root, working, collection)
@@ -91,9 +95,12 @@ def _plan(repo_root: Path, body: dict[str, Any]) -> tuple[dict[str, Any], dict[P
         eligible.extend(doc.doc_id for doc in accepted)
         for doc in accepted:
             desired[doc.path.relative_to(source_root)] = promoted_source(doc, collection)
+            if (child, doc.doc_id) in selected_targets:
+                selected_rows.append(selected_row(doc, collection))
         prefix = Path("collections") / child / "media" if child else Path("media")
         if accepted:
             desired.update({path: data for path, data in source_files.items() if path.is_relative_to(prefix / "build-source") or path == prefix / "media-source-evidence.json"})
+    desired[Path("documents/selected.json")] = selected_text({**selected, "docs": selected_rows}).encode("utf-8")
     if files_revision(_files_from_root(source_root)) != source_revision:
         raise ValueError("Working changed during Preview planning; try again")
     preview_root = working.workspace_root.path / "preview"

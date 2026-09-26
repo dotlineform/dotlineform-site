@@ -20,6 +20,7 @@
         "docs-collection-customisation-registry.js",
         "docs-collection-report-filter.js",
         "docs-collection-report.js",
+        "docs-selected-documents.js",
         "docs-viewer-access.js",
         "docs-viewer-app-boot.js",
         "docs-viewer-app-composition.js",
@@ -92,7 +93,8 @@
       "source_root": "docs-viewer/runtime/js/reports",
       "destination_root": "site/docs-viewer/runtime/js/reports",
       "files": [
-        "docs-viewer-public-reports.js"
+        "docs-viewer-public-reports.js",
+        "selected-documents-report.js"
       ]
     },
     {

@@ -26,6 +26,7 @@
     },
     "index_tree_url": "/assets/data/docs/index-tree.json",
     "recent_url": "/assets/data/docs/recent.json",
+    "selected_url": "/assets/data/docs/selected.json",
     "search_index_url": "/assets/data/search/analysis/index.json",
     "search": {
       "domain": "docs_viewer",

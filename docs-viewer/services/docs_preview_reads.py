@@ -10,6 +10,7 @@ from typing import Any
 from docs_document_identity import is_immutable_doc_id
 from docs_workspace_config import load_docs_stage
 from docs_preview_snapshot import validate_preview_snapshot
+from docs_selected_documents import validate_selected_payload
 
 
 EXTERNAL_COLLECTION_PREVIEW_PREFIX = "/docs/preview/external/"
@@ -48,6 +49,12 @@ def read_preview_recent(repo_root: Path) -> dict[str, Any]:
         _snapshot_file(repo_root, Path("documents/recent.json")),
         "preview Recent docs in the workspace",
     )
+
+
+def read_preview_selected(repo_root: Path) -> dict[str, Any]:
+    payload = _read_json(_snapshot_file(repo_root, Path("documents/selected.json")), "preview Selected Documents")
+    validate_selected_payload(payload)
+    return payload
 
 
 def read_preview_backlinks(repo_root: Path) -> dict[str, Any]:

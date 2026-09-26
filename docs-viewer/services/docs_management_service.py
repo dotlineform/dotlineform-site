@@ -24,6 +24,7 @@ import docs_diagram_source_service  # noqa: E402
 import docs_deploy_repo  # noqa: E402
 import docs_management_document_target  # noqa: E402
 import docs_management_draft  # noqa: E402
+import docs_selected_documents  # noqa: E402
 import docs_import_source_service as import_source_service  # noqa: E402
 import docs_local_links  # noqa: E402
 import docs_media_actions  # noqa: E402
@@ -125,6 +126,8 @@ def docs_management_post_response(
             return HTTPStatus.OK, docs_management_draft.set_draft(repo_root, body, dry_run=dry_run)
         except mutations.ManagedDocumentRevisionConflict as error:
             return HTTPStatus.CONFLICT, error.payload
+    if path == routes.SET_SELECTED_PATH:
+        return HTTPStatus.OK, docs_selected_documents.set_selected(repo_root, body, dry_run=dry_run)
     if path == routes.SOURCE_SAVE_PATH:
         return HTTPStatus.OK, save_source_document(repo_root, body, dry_run)
     if path == routes.OPEN_SOURCE_PATH:

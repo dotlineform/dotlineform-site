@@ -115,6 +115,7 @@ GENERATED_READ_PATHS = {
 PREVIEW_READ_PATHS = {
     routes.PREVIEW_INDEX_TREE_PATH,
     routes.PREVIEW_RECENT_PATH,
+    routes.PREVIEW_SELECTED_PATH,
     routes.PREVIEW_BACKLINKS_PATH,
     routes.PREVIEW_PAYLOAD_PATH,
     routes.PREVIEW_SEARCH_PATH,
@@ -471,7 +472,7 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
         if path in GENERATED_READ_PATHS | PREVIEW_READ_PATHS and not self.config.generated_reads_enabled:
             self.send_json({"ok": False, "error": "Generated reads are disabled"}, HTTPStatus.FORBIDDEN)
             return
-        if path in {routes.SOURCE_BODY_PATH, routes.METADATA_PATH, routes.DOCUMENT_LINK_TARGETS_PATH}:
+        if path in {routes.SOURCE_BODY_PATH, routes.METADATA_PATH, routes.DOCUMENT_LINK_TARGETS_PATH, routes.SELECTED_PATH}:
             if not self.config.management_enabled:
                 self.send_json({"ok": False, "error": "Docs Viewer management is disabled"}, HTTPStatus.FORBIDDEN)
                 return

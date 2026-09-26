@@ -40,7 +40,10 @@ import {
   projectDocsViewerReportControlState
 } from "./docs-viewer-management-report-controls.js";
 import {
+  readSelectedDocuments,
+  setManagedDocSelected
 } from "./docs-viewer-management-client.js";
+import { selectedDocumentRows } from "../shared/docs-selected-documents.js";
 import {
   DOCS_VIEWER_ACTION_IDS,
   createDocsViewerActionContext,
@@ -202,6 +205,7 @@ export function initDocsViewerManagement(context) {
   var resolveAction = null;
   var projectedReportControls = null;
   var collectionReportState = null;
+  var selectedState = null;
   var indexController = createDocsViewerManagementIndexController({
     root: root,
     nav: nav,
@@ -432,6 +436,7 @@ export function initDocsViewerManagement(context) {
         pressed: Boolean(draftRecord && draftRecord.draft === true),
         label: draftRecord && draftRecord.draft === true ? "Draft — mark ready" : "Ready — mark as draft"
       });
+      projectSelectedControl(draftTarget, actionsHidden || markdownMode, actionsDisabled);
       context.projectMainViewControlState("open-vscode", projectedReportControls.openVsCode.state);
       context.projectMainViewControlState("return-to-doc", projectedReportControls.returnToDoc.state);
       context.projectMainViewControlState("save-markdown-source", {
@@ -491,6 +496,63 @@ export function initDocsViewerManagement(context) {
     });
   }
 
+  function projectSelectedControl(target, hidden, disabled) {
+    if (hidden || !target || target.stage !== "working") {
+      selectedState = null;
+      context.projectMainViewControlState("selected", { hidden: true, disabled: true });
+      return;
+    }
+    if (!selectedState || !managedDocumentTargetsEqual(selectedState.target, target)) {
+      var pending = { target: normalizeManagedDocumentTarget(target), ready: false, selected: false, error: "" };
+      selectedState = pending;
+      readSelectedDocuments(managementClientOptions()).then(function (payload) {
+        if (selectedState !== pending) return;
+        pending.selected = selectedDocumentRows(payload).some(function (row) {
+          return row.doc_id === target.doc_id && (row.collection || "") === (target.collection || "");
+        });
+        pending.ready = true;
+        renderManagementUi();
+      }).catch(function (error) {
+        if (selectedState !== pending) return;
+        pending.error = error.message || "Selected Documents could not be loaded.";
+        setManagementMessage(pending.error, true);
+        renderManagementUi();
+      });
+    }
+    context.projectMainViewControlState("selected", {
+      hidden: false,
+      disabled: disabled || !selectedState.ready,
+      pressed: selectedState.selected,
+      label: selectedState.error || (!selectedState.ready ? "Loading document selection…"
+        : selectedState.selected ? "Starred — remove from Selected Documents" : "Star — add to Selected Documents")
+    });
+  }
+
+  async function runSelectedToggle() {
+    var state = selectedState;
+    var actionContext = context.documentActionContext();
+    var control = projectedReportControls && projectedReportControls.editDocument;
+    if (!state || !state.ready || !control || control.state.hidden || control.state.disabled
+      || management.managementBusy || viewerStage() !== "working"
+      || !managedDocumentTargetsEqual(state.target, actionContext.documentTarget)) return;
+    var selected = !state.selected;
+    setManagementBusy(true);
+    setManagementMessage("", false);
+    renderManagementUi();
+    try {
+      var response = await setManagedDocSelected(state.target, selected, managementClientOptions());
+      if (response.ok !== true || !managedDocumentTargetsEqual(response.target, state.target) || response.selected !== selected) {
+        throw new Error("Selected Documents response did not match the requested document.");
+      }
+      if (selectedState === state) state.selected = selected;
+    } catch (error) {
+      setManagementMessage(error.message || "Document selection could not be saved.", true);
+    } finally {
+      setManagementBusy(false);
+      renderManagementUi();
+    }
+  }
+
   function toggleCollectionDocumentDraft(target, draft) {
     if (management.managementBusy || viewerStage() !== "working"
       || collectionReportState?.state !== "detail"
@@ -504,6 +566,7 @@ export function initDocsViewerManagement(context) {
   function handleMainViewControl(detail) {
     var controlId = String(detail && detail.controlId || "").trim();
     var actionId = String(detail && detail.actionId || "").trim();
+    if (controlId === "selected") return runSelectedToggle();
     if (controlId === "draft") {
       var draftControl = projectedReportControls && projectedReportControls.editDocument;
       if (!draftControl || draftControl.state.hidden || draftControl.state.disabled

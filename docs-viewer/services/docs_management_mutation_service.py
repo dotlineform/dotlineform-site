@@ -13,6 +13,7 @@ import docs_source_model as source_model
 import docs_write_rebuild as write_rebuild
 from docs_workspace_config import normalize_collection_id
 from docs_management_context import log_event
+from docs_selected_documents import selected_path
 
 
 class CollectionDocumentDeleteApplyError(RuntimeError):
@@ -88,6 +89,9 @@ def recover_collection_document_delete(
             source_delete.path,
             original_bytes,
         )
+        for source_write in plan.source_writes:
+            if source_write.original_bytes is not None:
+                source_model.write_bytes_atomic(source_write.path, source_write.original_bytes)
 
     def source_matches_original() -> bool:
         try:
@@ -197,10 +201,13 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
 
         try:
             if plan.collection:
+                # The shared selection file is written with the mutation, but
+                # only collection-owned sources belong to its watcher/build.
+                selection_file = selected_path(load_docs_stage(repo_root, plan.stage))
                 rebuild = write_rebuild.perform_collection_source_write_and_rebuild(
                     repo_root,
                     plan.collection,
-                    plan.changed_paths,
+                    [path for path in plan.changed_paths if path != selection_file],
                     write_operation,
                     suppression_reason=plan.suppression_reason or "docs-management",
                     stage=plan.stage,

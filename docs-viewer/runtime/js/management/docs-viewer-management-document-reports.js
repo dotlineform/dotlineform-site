@@ -310,6 +310,7 @@ export function mountDocsViewerManageDocumentExtras(context) {
       loadMediaTarget: settings.loadMediaTarget,
       onCollectionDocumentState: settings.onCollectionDocumentState,
       publicPreviewBase: cleanString(routeContext.publicPreviewBase),
+      selectedUrl: settings.workspaceConfigState.activeConfig.selectedUrl,
       studioBaseUrl: cleanString(routeContext.studioBaseUrl),
       reportRegistryUrl: cleanString(routeContext.reportRegistryUrl),
       reportService: reportManagementBaseUrl
@@ -359,6 +360,7 @@ export function mountDocsViewerManageDocumentExtras(context) {
     loadMediaTarget: settings.loadMediaTarget,
     onCollectionDocumentState: settings.onCollectionDocumentState,
     publicPreviewBase: cleanString(routeContext.publicPreviewBase),
+    selectedUrl: settings.workspaceConfigState.activeConfig.selectedUrl,
     studioBaseUrl: cleanString(routeContext.studioBaseUrl),
     reportRegistryUrl: cleanString(routeContext.reportRegistryUrl),
     reportService: reportManagementBaseUrl

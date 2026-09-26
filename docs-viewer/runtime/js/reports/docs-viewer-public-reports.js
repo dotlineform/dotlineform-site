@@ -4,6 +4,13 @@ import {
 import { mountDocsViewerMediaLinks } from "../shared/docs-viewer-media-detail.js";
 
 const PUBLIC_REPORT_LOADERS = {
+  selected_documents: {
+    load: function () {
+      return import("./selected-documents-report.js").then(function (module) {
+        return module.mountSelectedDocumentsReport;
+      });
+    }
+  },
   docs_collection: {
     load: function () {
       return import("../shared/docs-collection-report.js").then(function (module) {

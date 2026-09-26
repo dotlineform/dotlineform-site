@@ -78,6 +78,7 @@ def browser_stage_record(repo_root: Path, config: DocsStageConfig, *, public_vie
                   for kind, item in sorted(media.items())},
         "index_tree_url": browser_docs_index_tree_url(config, published=published),
         "recent_url": browser_docs_recent_url(config, published=published),
+        "selected_url": f"{public_document_base(config)}/selected.json" if published else f"/docs/selected?stage={quote(config.stage)}",
         "search_index_url": browser_search_index_url(config, published=published),
         "search": browser_search_policy_payload(config, published=published),
         "collections": browser_collection_records(repo_root, config, published=published),
@@ -92,7 +93,7 @@ def browser_preview_record(repo_root: Path, workspace: DocsWorkspaceConfig) -> d
     prepared = select_workspace_stage(workspace, "preview")
     record = browser_stage_record(repo_root, prepared)
     record.update(stage="preview", links_enabled=False)
-    for key, route in (("index_tree_url", "index-tree"), ("recent_url", "recent"), ("backlinks_url", "backlinks"), ("search_index_url", "search")):
+    for key, route in (("index_tree_url", "index-tree"), ("recent_url", "recent"), ("selected_url", "selected"), ("backlinks_url", "backlinks"), ("search_index_url", "search")):
         record[key] = f"/docs/preview/{route}"
     record["search"] = {**record["search"], "index_url": record["search_index_url"]}
     record["collections"] = browser_collection_records(repo_root, prepared, published=True)
