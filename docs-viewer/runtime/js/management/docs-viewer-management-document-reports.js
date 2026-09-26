@@ -185,6 +185,7 @@ export function loadDocsViewerCollectionContribution(settings, parent, collectio
             }
           : null,
         clientOptions: clientOptions,
+        catalogueProvider: settings.collectionProvider,
         collection: { ...(parent.stage ? { stage: parent.stage } : {}), collection: collection },
         content: settings.content,
         documentTarget: { stage: parent.stage, collection: "", docId: parent.doc_id },

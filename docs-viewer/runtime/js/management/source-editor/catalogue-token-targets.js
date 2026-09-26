@@ -1,9 +1,8 @@
 import {
-  loadSemanticTokenRegistry
-} from "./semantic-token-registry.js";
+  loadCatalogueMediaSupport
+} from "./catalogue-media-support.js";
 import {
-  collectSemanticTokenTargetMatches,
-  loadSemanticTokenTargets
+  collectSemanticTokenTargetMatches
 } from "./semantic-token-targets.js";
 
 var CATALOGUE_TARGET_TYPES = new Set(["work", "series"]);
@@ -17,40 +16,31 @@ function allowedTargetTypes(raw) {
   }));
 }
 
-function catalogueTarget(row, targetTypes, requireImage) {
-  var image = row && row.image && typeof row.image === "object" && row.image.src
-    ? { src: String(row.image.src).trim() }
-    : null;
+function catalogueTarget(row, targetTypes) {
   if (
     !row
     || row.family !== "catalogue"
     || !targetTypes.has(row.targetType)
-    || !row.href
-    || (requireImage && !image)
   ) return null;
-  var target = {
+  return {
     family: row.family,
     targetType: row.targetType,
     targetId: row.targetId,
     title: row.title,
-    href: row.href,
     meta: row.meta.slice()
   };
-  if (image) target.image = image;
-  return target;
 }
 
+/** Select Work/Series subject identities; image availability and links do not define a subject. */
 export function createCatalogueTargetSupport(registry, targets, options = {}) {
   var targetTypes = allowedTargetTypes(options.allowedTargetTypes);
-  var requireImage = options.requireImage === true;
   var searchableTargets = (Array.isArray(targets) ? targets : []).filter(function (row) {
-    return Boolean(catalogueTarget(row, targetTypes, requireImage));
+    return Boolean(catalogueTarget(row, targetTypes));
   });
   return {
     registry: registry,
     searchableTargets: searchableTargets,
-    targetTypes: targetTypes,
-    requireImage: requireImage
+    targetTypes: targetTypes
   };
 }
 
@@ -64,8 +54,7 @@ export function collectCatalogueTargetMatches(support, query, limit) {
   ).map(function (row) {
     return catalogueTarget(
       row,
-      source.targetTypes || CATALOGUE_TARGET_TYPES,
-      source.requireImage === true
+      source.targetTypes || CATALOGUE_TARGET_TYPES
     );
   }).filter(Boolean);
 }
@@ -87,20 +76,14 @@ export function findCatalogueTargetByIdentity(support, identity) {
   });
   return catalogueTarget(
     matched,
-    source.targetTypes || CATALOGUE_TARGET_TYPES,
-    source.requireImage === true
+    source.targetTypes || CATALOGUE_TARGET_TYPES
   );
 }
 
-export function loadCatalogueTargetSupport(options = {}) {
-  return loadSemanticTokenRegistry({ fetch: options.fetch })
-    .then(function (registry) {
-      return loadSemanticTokenTargets(registry, { fetch: options.fetch })
-        .then(function (targets) {
-          return createCatalogueTargetSupport(registry, targets, {
-            allowedTargetTypes: options.allowedTargetTypes,
-            requireImage: options.requireImage
-          });
-        });
-    });
+/** Read saved subject choices through the stage-bound Catalogue provider, without a private lookup read. */
+export async function loadCatalogueTargetSupport(adapter, options = {}) {
+  var support = await loadCatalogueMediaSupport(adapter, { fetch: options.fetch });
+  return createCatalogueTargetSupport(support.registry, support.targets, {
+    allowedTargetTypes: options.allowedTargetTypes
+  });
 }

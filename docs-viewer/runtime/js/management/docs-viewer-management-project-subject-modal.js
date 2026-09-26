@@ -273,7 +273,7 @@ function openSubjectModal(options, target, loaded) {
           searchStatus.textContent = "Loading Catalogue…";
           searchStatus.hidden = false;
         }
-        state.supportPromise = loadCatalogueTargetSupport({
+        state.supportPromise = loadCatalogueTargetSupport(options.catalogueProvider, {
           fetch: options.fetch,
           allowedTargetTypes: ["work", "series"]
         }).then(function (support) {

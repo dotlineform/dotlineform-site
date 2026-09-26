@@ -75,7 +75,7 @@ function subjectTargetTitles(support) {
 }
 
 function loadSubjectTargetTitles(options) {
-  return loadCatalogueTargetSupport({
+  return loadCatalogueTargetSupport(options.catalogueProvider, {
     fetch: options.fetch,
     allowedTargetTypes: ["work", "series"]
   }).then(function (support) {
@@ -371,6 +371,7 @@ function renderAssignSubject(context, options, assignSubjectAvailable) {
     handler: function (target, actionContext) {
       return openDocsViewerProjectSubjectModal({
         assignFieldGroup: options.assignFieldGroup,
+        catalogueProvider: options.catalogueProvider,
         fetch: options.fetch,
         readMetadata: options.readMetadata,
         restoreFocus: button,
