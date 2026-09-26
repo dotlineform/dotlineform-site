@@ -472,7 +472,7 @@ def _validate_hierarchy(
         record = state.normalized
         if record is None:
             continue
-        if state.collision is not None and "parent_id" not in record.front_matter:
+        if state.collision is not None:
             parent_map[record.doc_id] = state.collision.parent_id
         else:
             parent_map[record.doc_id] = record.parent_id

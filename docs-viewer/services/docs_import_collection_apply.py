@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Synchronous package-order mutation and generation for Docs Import collections."""
+"""Synchronous document mutation and generation for Docs Import collections."""
 
 from __future__ import annotations
 
@@ -215,7 +215,7 @@ def apply_import_content_collection(
     log_event: LogEvent,
     perform_source_write_and_rebuild: PerformSourceWriteAndRebuild,
 ) -> dict[str, Any]:
-    """Revalidate one confirmed whole-package plan, apply in order, rebuild, and report."""
+    """Apply a confirmed package with parents before children and stable sibling order."""
 
     _actions, refreshed = _resolve_collection_apply_request(plan, body)
     if refreshed is not None:
@@ -232,16 +232,34 @@ def apply_import_content_collection(
         result_by_index[index] = result
 
     changed_paths = [
-        document_plan.target_path
-        for index, document_plan in enumerate(plan.document_plans)
+        path
+        for document_plan in plan.document_plans
         if document_plan is not None
+        for path in document_plan.changed_paths
     ]
+    created_parents = {
+        document_plan.doc_id: document_plan.parent_id
+        for document_plan in plan.document_plans
+        if document_plan is not None and not document_plan.collection
+        and document_plan.operation == IMPORT_DOCUMENT_CREATE
+    }
+
+    def parent_depth(item: tuple[int, Any]) -> int:
+        document_plan = item[1]
+        parent_id = document_plan.parent_id if document_plan is not None else ""
+        depth = 0
+        while parent_id in created_parents:
+            depth += 1
+            parent_id = created_parents[parent_id]
+        return depth
+
+    write_order = sorted(enumerate(plan.document_plans), key=parent_depth)
     docs_doc_ids: list[str] = []
     written_paths: list[Path] = []
     source_failed = False
     def write_collection_documents() -> None:
         nonlocal source_failed
-        for index, document_plan in enumerate(plan.document_plans):
+        for index, document_plan in write_order:
             result = result_by_index[index]
             if document_plan is None:
                 result["status"] = "failed"

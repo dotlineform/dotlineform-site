@@ -78,7 +78,6 @@
         "docs-viewer-theme.js",
         "docs-viewer-toolbar-icon.js",
         "docs-viewer-top-bar-renderer.js",
-        "docs-viewer-tree-move-projection.js",
         "docs-viewer-tree-payload-adapter.js",
         "docs-viewer-tree.js",
         "docs-viewer-view-context.js",

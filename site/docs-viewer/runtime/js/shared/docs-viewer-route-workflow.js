@@ -1,5 +1,4 @@
 import {
-  compareDocs,
   normalizeDocIdSet
 } from "./docs-viewer-tree.js";
 import {
@@ -267,7 +266,7 @@ export function initDocsViewerRouteWorkflow(context) {
       : {};
     state.nonLoadableDocIds = normalizeDocIdSet(viewerOptions.non_loadable_doc_ids, []);
     state.manageOnlyTreeRootIds = normalizeDocIdSet(viewerOptions.manage_only_tree_root_ids, []);
-    state.allDocs = Array.isArray(payload.docs) ? payload.docs.slice().sort(compareDocs) : [];
+    state.allDocs = Array.isArray(payload.docs) ? payload.docs.slice() : [];
     context.applyDocVisibility();
     if (typeof context.onIndexReplaced === "function") {
       context.onIndexReplaced({

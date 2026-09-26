@@ -36,14 +36,6 @@ class DocumentCreateCommittedError(RuntimeError):
         self.payload = payload
 
 
-class DocumentPlacementCommittedError(RuntimeError):
-    """Placement wrote source but did not complete every required result."""
-
-    def __init__(self, payload: Dict[str, Any]) -> None:
-        super().__init__(str(payload["error"]))
-        self.payload = payload
-
-
 def create_committed_error_payload(
     plan: mutations.ManagementMutationPlan,
     error: Exception,
@@ -187,16 +179,6 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
                                 error=plan.revision_conflict_error,
                             )
                         )
-            for copy in plan.media_copies:
-                if copy.source.read_bytes() != copy.content:
-                    raise ValueError("Source media changed before placement")
-                if copy.destination.is_symlink() or (copy.destination.exists() and copy.destination.read_bytes() != copy.content):
-                    raise ValueError("Destination media changed before placement")
-            for copy in plan.media_copies:
-                if not copy.destination.exists():
-                    copy.destination.parent.mkdir(parents=True, exist_ok=True)
-                    with copy.destination.open("xb") as output:
-                        output.write(copy.content)
             for source_write in plan.source_writes:
                 if source_write.create_only:
                     source_model.write_text_atomic_new(
@@ -214,22 +196,7 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
             source_changes_applied = True
 
         try:
-            if plan.rebuilds:
-                rebuild = write_rebuild.perform_multi_collection_source_write_and_rebuild(
-                    repo_root,
-                    [
-                        {
-                            "stage": rebuild_plan.stage,
-                            "collection": rebuild_plan.collection,
-                            "changed_paths": list(rebuild_plan.changed_paths),
-                            "docs_doc_ids": rebuild_plan.build_doc_ids,
-                        }
-                        for rebuild_plan in plan.rebuilds
-                    ],
-                    write_operation,
-                    suppression_reason=plan.suppression_reason or "docs-management",
-                )
-            elif plan.collection:
+            if plan.collection:
                 rebuild = write_rebuild.perform_collection_source_write_and_rebuild(
                     repo_root,
                     plan.collection,
@@ -250,11 +217,6 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
         except mutations.ManagedDocumentRevisionConflict:
             raise
         except Exception as error:
-            if source_changes_applied and plan.response.get("placement", {}).get("collection_changed"):
-                raise DocumentPlacementCommittedError({
-                    **plan.response, "ok": False, "committed": True,
-                    "error": f"Document placement changed source, but its required results are incomplete: {error}",
-                }) from error
             if plan.restore_deletes_on_rebuild_failure:
                 recover_collection_document_delete(repo_root, plan, error)
             if (

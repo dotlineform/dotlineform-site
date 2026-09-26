@@ -109,7 +109,7 @@ def changed_source_document_ids(paths: list[Path]) -> list[str]:
     """
     identities = set()
     for path in paths:
-        if path.is_file():
+        if path.suffix == ".md" and path.is_file():
             metadata = parse_source(path)[0]
             identities.add(str(metadata.get("doc_id") or ""))
     return sorted(identities - {""})

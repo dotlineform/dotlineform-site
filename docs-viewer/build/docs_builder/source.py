@@ -17,6 +17,7 @@ from .common import (
     read_json,
 )
 from docs_document_identity import is_immutable_doc_id
+from docs_index_order import read_index_order, tree_parent_ids
 from docs_report_source import ReportDescriptor, ReportSourceContractRequired
 from docs_source_model import (
     parse_document_report,
@@ -135,7 +136,19 @@ class SourceLoadingMixin:
         """Read all sources or only exact canonical filenames selected by ID."""
         if not self.source_dir.is_dir():
             raise FileNotFoundError(f"Docs source directory is unavailable: {self.source_dir}")
-        if doc_ids is None:
+        ordinary = getattr(self, "collection_config", None) is None
+        parent_ids = tree_parent_ids(read_index_order(self.source_dir)) if ordinary else {}
+        if ordinary:
+            paths = []
+            for doc_id in parent_ids:
+                if not is_immutable_doc_id(doc_id):
+                    raise InvalidDocIdError(f"Invalid document ID in index-order.json: {doc_id}")
+                if doc_ids is None or doc_id in doc_ids:
+                    path = self.source_dir / f"{doc_id}.md"
+                    if path.is_symlink():
+                        raise ValueError(f"Document source must not be a symlink: {path.name}")
+                    paths.append(path)
+        elif doc_ids is None:
             paths = sorted(self.source_dir.glob("**/*.md"))
         else:
             paths = []
@@ -165,10 +178,10 @@ class SourceLoadingMixin:
             doc_id = str(front_matter.get("doc_id") or "").strip()
             if not doc_id:
                 raise MissingDocIdError(f"Missing required doc_id in {relative_path}")
-            if doc_ids is not None and doc_id != path.stem:
+            if (ordinary or doc_ids is not None) and doc_id != path.stem:
                 raise InvalidDocIdError(f"Selected source identity does not match its filename: {relative_path}")
             title = str(front_matter.get("title") or extract_title(body_markdown) or humanize(stem)).strip()
-            parent_id = str(front_matter.get("parent_id") if "parent_id" in front_matter else "").strip()
+            parent_id = parent_ids[doc_id] if ordinary else ""
             date = str(front_matter.get("date") or "").strip()
             date_display = str(front_matter.get("date_display") or "").strip()
             last_updated = str(front_matter.get("last_updated") or "").strip()

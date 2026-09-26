@@ -259,7 +259,7 @@ def source_doc_from_path(
         doc_id=existing_doc_id,
         title=title or existing_doc_id,
         ui_status=source_model.normalize_ui_status(front_matter.get("ui_status")),
-        parent_id=str(front_matter.get("parent_id") or "").strip(),
+        parent_id="",
         report=report,
     )
 
@@ -292,22 +292,8 @@ def resolve_managed_document_target(
             source_name=path.name,
         )
     else:
-        parent_documents = [
-            source_doc_from_path(
-                path=confined_source_path(collection.source_root, candidate),
-                report_contract=report_contract,
-            )
-            for candidate in source_model.document_markdown_paths(collection.source_root)
-        ]
-        for candidate in parent_documents:
-            source_model.validate_document_status_front_matter(
-                candidate.front_matter,
-                collection_config=collection.document_config,
-                source_name=candidate.path.name,
-            )
-        source_model.validate_collection_docs(
-            parent_documents,
-            allow_unknown_parent_ids=collection.parent_config.allow_unresolved_parent_ids,
+        parent_documents = source_model.load_stage_docs_for_config(
+            repo_root, collection.parent_config,
         )
         document = next(
             (

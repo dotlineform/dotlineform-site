@@ -119,24 +119,7 @@ def _validate_default_doc_id(repo_root: Path, config: Any, value: str) -> list[s
         raise ValueError(
             f"missing source root for stage {config.stage}: {document_source_path(config).as_posix()}"
         )
-    docs = []
-    for path in sorted(root.glob("*.md")):
-        front_matter, _body = source_model.parse_source(path)
-        doc_id = str(front_matter.get("doc_id") or "").strip()
-        if not doc_id:
-            raise ValueError(f"missing required doc_id in {path.relative_to(root).as_posix()}")
-        docs.append(
-            source_model.SourceDoc(
-                path=path,
-                source_text=path.read_text(encoding="utf-8"),
-                front_matter=dict(front_matter),
-                body="",
-                doc_id=doc_id,
-                title=str(front_matter.get("title") or path.stem).strip(),
-                ui_status=source_model.normalize_ui_status(front_matter.get("ui_status")),
-                parent_id=str(front_matter.get("parent_id") or "").strip(),
-            )
-        )
+    docs = source_model.load_stage_docs_for_config(repo_root, config)
     docs_by_id = {doc.doc_id: doc for doc in docs}
     doc = docs_by_id.get(value)
     if doc is None:

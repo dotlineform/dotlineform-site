@@ -133,6 +133,12 @@ export function createDocsViewerManagementControlRenderers() {
   return {
     "manage-index-selection": renderIndexSelectionControl,
     "manage-index-actions": renderIndexActionsControl,
+    "manage-index-position": function (context) {
+      return renderDocumentActionButton(context, {
+        id: "docsViewerIndexPositionButton",
+        artwork: "docsViewer__icon--arrow-up-down"
+      });
+    },
     "manage-edit": function (context) {
       return renderDocumentActionButton(context, {
         id: "docsViewerManageEditButton",

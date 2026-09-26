@@ -210,6 +210,12 @@ export function initDocsViewerManagement(context) {
     routeSession: routeSession,
     searchRecent: searchRecent,
     callbacks: {
+      canPositionDoc: function () {
+        return Boolean(currentActiveDoc()) && selectedDocument.displayMode !== "markdown-source";
+      },
+      handlePositionDoc: function () {
+        if (actionController) return actionController.handlePositionDoc();
+      },
       activeDocId: function () {
         return selectedDocument.selectedDocId;
       },
@@ -320,6 +326,7 @@ export function initDocsViewerManagement(context) {
   }
 
   function currentActiveDoc() {
+    if (collectionReportState?.state === "detail") return null;
     return documentIndex.docsById.get(selectedDocument.selectedDocId) || null;
   }
 
@@ -381,14 +388,6 @@ export function initDocsViewerManagement(context) {
     return interactionController ? interactionController.currentContextMenuDoc() : null;
   }
 
-  function canDragCurrentDoc(doc) {
-    return Boolean(interactionController && interactionController.canDragCurrentDoc(doc));
-  }
-
-  function clearDragState() {
-    if (interactionController) interactionController.clearDragState();
-  }
-
   function hideContextMenu() {
     if (interactionController) interactionController.hideContextMenu();
   }
@@ -398,10 +397,6 @@ export function initDocsViewerManagement(context) {
     if (root) {
       root.dataset.managementBusy = management.managementBusy ? "true" : "false";
     }
-  }
-
-  function updateNavDragState() {
-    if (interactionController) interactionController.updateNavDragState();
   }
 
   function syncManagementStatus(noteText, isError) {
@@ -859,9 +854,6 @@ export function initDocsViewerManagement(context) {
       onIndexSelectionChange: function () {
         indexController.projectSelection();
       },
-      onMoveDoc: function (movingDocId, parentId) {
-        if (actionController) actionController.handleMoveDoc(movingDocId, parentId);
-      }
     }
   });
 
@@ -875,7 +867,6 @@ export function initDocsViewerManagement(context) {
     refs: {},
     resolveAction: resolveAction,
     callbacks: {
-      clearDragState: clearDragState,
       currentActiveDoc: currentActiveDoc,
       currentContextMenuDoc: currentContextMenuDoc,
       getSettingsWorkflow: function () {
@@ -883,18 +874,8 @@ export function initDocsViewerManagement(context) {
       },
       hideContextMenu: hideContextMenu,
       managementClientOptions: managementClientOptions,
-      projectCommittedMove: function (record) {
-        if (typeof context.projectCommittedMove !== "function") {
-          throw new Error("Docs Viewer local move projection is unavailable.");
-        }
-        return context.projectCommittedMove(record);
-      },
       openCreatedDocumentSource: openCreatedDocumentSource,
       reloadDocsIndex: reloadDocsIndex,
-      reloadPlacedDocument: function (target, viewerUrl) {
-        var url = new URL(viewerUrl, "https://docs.invalid");
-        return reloadDocsIndex(url.searchParams.get("doc"), "", target.collection ? { subdoc: target.doc_id } : {});
-      },
       reloadViewerConfiguration: reloadViewerConfiguration,
       refreshManagementCapabilities: refreshManagementCapabilities,
       renderManagementUi: renderManagementUi,
@@ -990,7 +971,6 @@ export function initDocsViewerManagement(context) {
 
   return {
     applyConfig: applyConfig,
-    canDragCurrentDoc: canDragCurrentDoc,
     createCollectionDocument: actionController.handleCreateCollectionDocument,
     regenerateCatalogue: actionController.handleRegenerateCatalogue,
     toggleCollectionDocumentDraft: toggleCollectionDocumentDraft,
@@ -1008,6 +988,5 @@ export function initDocsViewerManagement(context) {
     reconcileIndexSelectionReload: indexController.reconcileReload,
     render: renderManagementUi,
     renderIndexSelectionGutter: indexController.renderSelectionGutter,
-    updateNavDragState: updateNavDragState
   };
 }

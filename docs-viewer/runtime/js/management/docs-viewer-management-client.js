@@ -381,10 +381,11 @@ export function applyCollectionDelete(collection, options) {
   }, options);
 }
 
-export function moveManagedDoc(docId, parentId, options) {
+export function moveManagedDoc(docId, targetDocId, placement, options) {
   return fetchManagementJson("/docs/move", "POST", stagedPayload({
     doc_id: docId,
-    parent_id: parentId
+    target_doc_id: targetDocId,
+    placement: placement
   }, options), options);
 }
 

@@ -1,3 +1,4 @@
+import { openDocsViewerPositionModal } from "./docs-viewer-position-modal.js";
 import {
   applyManagedDocDelete,
   prepareManagedDocsPreview,
@@ -13,7 +14,6 @@ import {
   DOCS_VIEWER_ACTION_IDS
 } from "./docs-viewer-action-definitions.js";
 import {
-  managedDocumentTargetsEqual,
   normalizeManagedDocumentCollectionTarget,
   normalizeManagedDocumentTarget
 } from "./docs-viewer-management-document-target.js";
@@ -66,42 +66,6 @@ export function committedDocumentCreateTarget(payload) {
     throw new Error("Create service record does not match its committed target.");
   }
   return target;
-}
-
-/** Validate a placement result while retaining the requested stage and document identity. */
-export function committedDocumentPlacement(response, source) {
-  var target = normalizeManagedDocumentTarget(response && response.target);
-  if (target.doc_id !== source.doc_id || target.stage !== source.stage) {
-    throw new Error("Placement service returned a different document identity.");
-  }
-  var placement = response && response.placement;
-  var collectionChanged = String(target.collection || "") !== String(source.collection || "");
-  if (!placement || placement.collection_changed !== collectionChanged || typeof placement.ignored !== "boolean" || typeof placement.changed !== "boolean"
-    || (placement.ignored && placement.changed) || (collectionChanged && !placement.changed)) {
-    throw new Error("Placement service returned an invalid placement outcome.");
-  }
-  if (collectionChanged) {
-    var url = new URL(placement.viewer_url, "https://docs.invalid");
-    if (url.origin !== "https://docs.invalid" || url.pathname !== "/docs/"
-      || url.searchParams.has("scope") || url.searchParams.get("stage") !== target.stage
-      || (target.collection ? url.searchParams.get("subdoc") !== target.doc_id || !url.searchParams.get("doc")
-        : url.searchParams.get("doc") !== target.doc_id || url.searchParams.has("subdoc"))) {
-      throw new Error("Placement service returned an invalid destination URL.");
-    }
-  }
-  return { ...placement, target: target };
-}
-
-export function committedDocumentMoveRecord(response, expectedTarget) {
-  if (!managedDocumentTargetsEqual(response && response.target, expectedTarget)) {
-    throw new Error("Move service returned a different document target.");
-  }
-  var record = response && response.record && typeof response.record === "object" ? response.record : null;
-  var docId = String(record && record.doc_id || "").trim();
-  if (!record || !Object.prototype.hasOwnProperty.call(record, "parent_id") || docId !== expectedTarget.doc_id) {
-    throw new Error("Move service returned an invalid committed move record.");
-  }
-  return record;
 }
 
 export function committedDocumentCreatePayload(error) {
@@ -303,7 +267,6 @@ export function createDocsViewerManagementActionController(options) {
   var root = options.root;
   var documentIndex = options.documentIndex || {};
   var management = options.management || {};
-  var searchRecent = options.searchRecent || {};
   var selectedDocument = options.selectedDocument || {};
   var context = options.context;
   var callbacks = options.callbacks || {};
@@ -339,10 +302,6 @@ export function createDocsViewerManagementActionController(options) {
 
   function hideContextMenu() {
     if (callbacks.hideContextMenu) callbacks.hideContextMenu();
-  }
-
-  function clearDragState() {
-    if (callbacks.clearDragState) callbacks.clearDragState();
   }
 
   function setManagementBusy(busy) {
@@ -416,35 +375,6 @@ export function createDocsViewerManagementActionController(options) {
     });
   }
 
-  function invalidateCommittedMoveCaches(record) {
-    var docId = String(record && record.doc_id || "").trim();
-    if (docId && selectedDocument.payloadCache && typeof selectedDocument.payloadCache.delete === "function") {
-      selectedDocument.payloadCache.delete(docId);
-    }
-    searchRecent.searchIndex = null;
-    searchRecent.searchLoaded = false;
-    searchRecent.searchRequestPromise = null;
-    searchRecent.recentEntries = [];
-    searchRecent.recentLoaded = false;
-    searchRecent.recentRequestPromise = null;
-  }
-
-  function recoverCommittedMoveProjection(error) {
-    var detail = error && error.message ? error.message : "unknown local projection failure";
-    if (window.console && typeof window.console.error === "function") {
-      window.console.error("docs_viewer: committed move projection failed", error);
-    }
-    setManagementMessage("Move committed, but the local index update failed. Reloading the index...", true);
-    return reloadDocsIndex(selectedDocument.selectedDocId, "")
-      .then(function () {
-        setManagementMessage("Move committed. The index was reloaded after a local update failed.", true);
-      })
-      .catch(function (recoveryError) {
-        var recoveryDetail = recoveryError && recoveryError.message ? recoveryError.message : "index reload failed";
-        throw new Error("Move committed, but local projection failed (" + detail + ") and recovery failed (" + recoveryDetail + ").");
-      });
-  }
-
   function writeClipboardText(text) {
     if (window.navigator && window.navigator.clipboard && window.isSecureContext) {
       return window.navigator.clipboard.writeText(text);
@@ -485,7 +415,8 @@ export function createDocsViewerManagementActionController(options) {
 
     return createDocumentAndOpenSource({
       title: title,
-      parent_id: currentDoc ? String(currentDoc.parent_id || "").trim() : ""
+      target_doc_id: currentDoc ? currentDoc.doc_id : "",
+      placement: currentDoc ? "after" : "inside"
     });
   }
 
@@ -506,11 +437,8 @@ export function createDocsViewerManagementActionController(options) {
     var payload = {
       title: title
     };
-    if (kind === "child") {
-      payload.parent_id = baseDoc.doc_id;
-    } else {
-      payload.parent_id = String(baseDoc.parent_id || "").trim();
-    }
+    payload.target_doc_id = baseDoc.doc_id;
+    payload.placement = kind === "child" ? "inside" : "after";
 
     setManagementBusy(true);
     hideContextMenu();
@@ -813,52 +741,25 @@ export function createDocsViewerManagementActionController(options) {
       });
   }
 
-  function handleMoveDoc(docId, parentId) {
-    var movingDocId = String(docId || "").trim();
-    if (!movingDocId) return;
-    var movingDoc = documentIndex.docsById.get(movingDocId) || null;
-    var nextParentId = String(parentId || "").trim();
-    if (!movingDoc) return;
-    if (nextParentId && !documentIndex.docsById.has(nextParentId)) return;
-    var clientOptions = managementClientOptions();
-    var target = normalizeManagedDocumentTarget({
-      ...(clientOptions.stage ? { stage: clientOptions.stage } : {}),
-      doc_id: movingDocId
-    });
-
-    setManagementBusy(true);
-    clearDragState();
-    setManagementMessage("", false);
-    renderManagementUi();
-
-    return moveManagedDoc(movingDoc.doc_id, nextParentId, clientOptions)
-      .then(function (response) {
-        var record;
+  async function handlePositionDoc() {
+    var doc = currentActiveDoc();
+    if (!doc || management.managementBusy) return;
+    hideContextMenu();
+    return openDocsViewerPositionModal({
+      root: root,
+      doc: doc,
+      docs: documentIndex.allDocs,
+      onSave: async function (targetDocId, placement) {
+        setManagementBusy(true);
         try {
-          var placement = committedDocumentPlacement(response, target);
-          if (placement.collection_changed) {
-            return callbacks.reloadPlacedDocument(placement.target, placement.viewer_url);
-          }
-          if (placement.ignored || !placement.changed) return;
-          record = committedDocumentMoveRecord(response, target);
-          if (typeof callbacks.projectCommittedMove !== "function") {
-            throw new Error("Docs Viewer local move projection is unavailable.");
-          }
-          callbacks.projectCommittedMove(record);
-          invalidateCommittedMoveCaches(record);
-        } catch (error) {
-          setManagementBusy(true);
-          return recoverCommittedMoveProjection(error);
+          await moveManagedDoc(doc.doc_id, targetDocId, placement, managementClientOptions());
+          await reloadDocsIndex(doc.doc_id, "");
+        } finally {
+          setManagementBusy(false);
+          renderManagementUi();
         }
-        setManagementMessage("", false);
-      })
-      .catch(function (error) {
-        setManagementMessage(error.message || "Move failed.", true);
-      })
-      .finally(function () {
-        setManagementBusy(false);
-        renderManagementUi();
-      });
+      }
+    });
   }
 
   function handleOpenSource(editor, target, title) {
@@ -906,7 +807,7 @@ export function createDocsViewerManagementActionController(options) {
     handleDeleteDoc: handleDeleteDoc,
     handleMarkdownSave: handleMarkdownSave,
     handleReturnToDoc: handleReturnToDoc,
-    handleMoveDoc: handleMoveDoc,
+    handlePositionDoc: handlePositionDoc,
     handleOpenSource: handleOpenSource,
     handleDeployRepo: handleDeployRepo,
     handlePreparePreview: handlePreparePreview,

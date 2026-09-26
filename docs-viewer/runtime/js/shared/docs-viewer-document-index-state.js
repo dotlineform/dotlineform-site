@@ -1,10 +1,6 @@
 import {
-  buildChildrenMap,
-  compareDocs
+  buildChildrenMap
 } from "./docs-viewer-tree.js";
-import {
-  projectCommittedTreeMoveModel
-} from "./docs-viewer-tree-move-projection.js";
 
 export function createDocsViewerDocumentIndexState(options) {
   var settings = options || {};
@@ -33,7 +29,7 @@ export function createDocsViewerDocumentIndexState(options) {
         return [doc.doc_id, doc];
       })
     );
-    state.docs = state.allDocs.filter(shouldIncludeDoc).slice().sort(compareDocs);
+    state.docs = state.allDocs.filter(shouldIncludeDoc).slice();
     state.docsById = new Map(
       state.docs.map(function (doc) {
         return [doc.doc_id, doc];
@@ -85,7 +81,7 @@ export function createDocsViewerDocumentIndexState(options) {
   function flattenRoots() {
     var roots = state.childrenByParent.get("") || [];
     if (roots.length > 0) return roots;
-    return state.docs.slice().sort(compareDocs);
+    return state.docs.slice();
   }
 
   function defaultDocId() {
@@ -111,17 +107,12 @@ export function createDocsViewerDocumentIndexState(options) {
     return docId;
   }
 
-  function projectCommittedMove(record) {
-    return projectCommittedTreeMoveModel(state, record);
-  }
-
   return {
     applyDocVisibility: applyDocVisibility,
     defaultDocId: defaultDocId,
     findAllDocById: findAllDocById,
     isManageOnlyTreeDoc: isManageOnlyTreeDoc,
     isNonLoadableDoc: isNonLoadableDoc,
-    projectCommittedMove: projectCommittedMove,
     resolveLoadableDocId: resolveLoadableDocId,
     statusForIndexDoc: statusForIndexDoc,
     viewerTargetDocId: viewerTargetDocId

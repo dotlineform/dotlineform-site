@@ -56,7 +56,6 @@ from docs_management_context import (  # noqa: E402
 from docs_management_import_service import handle_import_source, import_source_dependencies  # noqa: E402
 from docs_management_mutation_service import (  # noqa: E402
     DocumentCreateCommittedError,
-    DocumentPlacementCommittedError,
     CollectionDocumentDeleteApplyError,
     execute_management_mutation_plan,
     handle_assign_field_group,
@@ -226,12 +225,7 @@ def docs_management_post_response(
         payload["summary_text"] = f"Docs and docs search rebuilt for {body['stage']}."
         return HTTPStatus.OK, payload
     if path == routes.MOVE_PATH:
-        try:
-            return HTTPStatus.OK, handle_move(repo_root, body, dry_run)
-        except DocumentPlacementCommittedError as error:
-            return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
-        except mutations.ManagedDocumentRevisionConflict as error:
-            return HTTPStatus.CONFLICT, error.payload
+        return HTTPStatus.OK, handle_move(repo_root, body, dry_run)
     if path == routes.DELETE_PREVIEW_PATH:
         if "collection" in body:
             return (

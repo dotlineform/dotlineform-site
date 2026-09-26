@@ -233,6 +233,10 @@ export function createDocsViewerManagementIndexController(options = {}) {
       }
     };
     callbacks.projectIndexViewControlState("index-actions", state);
+    callbacks.projectIndexViewControlState("index-position", {
+      hidden: !visible,
+      disabled: !management.managementAvailable || management.managementBusy || !callbacks.canPositionDoc()
+    });
     if (!visible) hideIndexActionsMenu();
     return state;
   }
@@ -399,6 +403,12 @@ export function createDocsViewerManagementIndexController(options = {}) {
         return false;
       }
       projectSelection();
+      return true;
+    }
+    if (controlId === "index-position" && String(detail && detail.eventType || "") === "click") {
+      if (!management.managementAvailable || management.managementBusy || !callbacks.canPositionDoc()) return false;
+      hideIndexActionsMenu();
+      callbacks.handlePositionDoc();
       return true;
     }
     if (controlId !== "index-actions" || String(detail && detail.eventType || "") !== "click") {

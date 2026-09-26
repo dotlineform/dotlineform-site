@@ -1,7 +1,3 @@
-import {
-  projectCommittedTreeMoveDom
-} from "./docs-viewer-tree-move-projection.js";
-
 export function initDocsViewerSidebarRenderer(context) {
   var documentIndex = context.documentIndex;
   var selectedDocument = context.selectedDocument;
@@ -37,7 +33,6 @@ export function initDocsViewerSidebarRenderer(context) {
     }
 
     nav.appendChild(renderNavList(""));
-    context.updateNavDragState();
   }
 
   function renderNavList(parentId) {
@@ -79,10 +74,7 @@ export function initDocsViewerSidebarRenderer(context) {
       }
       link.href = context.viewerUrl(context.viewerTargetDocId(doc.doc_id));
       link.dataset.docId = doc.doc_id;
-      if (context.canDragCurrentDoc(doc)) {
-        link.draggable = true;
-        link.dataset.dragDocId = doc.doc_id;
-      }
+      link.draggable = false;
       link.textContent = "";
       var uiStatus = context.statusForIndexDoc(doc);
       if (uiStatus) {
@@ -134,23 +126,9 @@ export function initDocsViewerSidebarRenderer(context) {
     context.renderBookmarkToggle();
   }
 
-  function projectCommittedMove(projection) {
-    if (!projection || !projection.changed) return null;
-    expandTrail(projection.parentId);
-    return projectCommittedTreeMoveDom({
-      cssEscape: context.cssEscape,
-      document: nav.ownerDocument,
-      documentIndex: documentIndex,
-      nav: nav,
-      projection: projection,
-      renderNavList: renderNavList
-    });
-  }
-
   return {
     buildTrail: buildTrail,
     expandTrail: expandTrail,
-    projectCommittedMove: projectCommittedMove,
     renderMeta: renderMeta,
     renderSidebar: renderSidebar
   };

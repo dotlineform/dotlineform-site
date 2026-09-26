@@ -37,9 +37,6 @@ import {
   createDocsViewerManagementRuntimeAdapter
 } from "./docs-viewer-runtime-lazy-controller.js";
 import {
-  createDocsViewerTreeMoveProjection
-} from "./docs-viewer-tree-move-projection.js";
-import {
   DOCS_VIEWER_RUNTIME_DEFAULTS,
   createDocsViewerAppComposition,
   startDocsViewerStartupPhases
@@ -332,7 +329,6 @@ export function startDocsViewerRuntime(options) {
     status: appShellRefs.status
   });
   var sidebarRenderer = initDocsViewerSidebarRenderer({
-    canDragCurrentDoc: canDragCurrentDoc,
     documentIndex: appSession.domains.documentIndex,
     toolbar: mainViewToolbar,
     nav: nav,
@@ -346,7 +342,6 @@ export function startDocsViewerRuntime(options) {
     workspaceConfig: appSession.domains.workspaceConfig,
     selectedDocument: appSession.domains.selectedDocument,
     statusForIndexDoc: documentIndex.statusForIndexDoc,
-    updateNavDragState: updateNavDragState,
     viewerTargetDocId: documentIndex.viewerTargetDocId,
     viewerUrl: viewerUrl
   });
@@ -594,15 +589,6 @@ export function startDocsViewerRuntime(options) {
     viewerStage: function () { return viewerStage; },
   });
 
-  var treeMoveProjection = managementEnabled ? createDocsViewerTreeMoveProjection({
-    documentIndex: documentIndex,
-    documentIndexState: appSession.domains.documentIndex,
-    renderMeta: renderMeta,
-    selectedDocument: appSession.domains.selectedDocument,
-    sidebar: sidebarRenderer,
-    updateInfoPanel: documentViewCoordinator.updateInfoPanel
-  }) : null;
-
   managementRuntime = managementEnabled ? createDocsViewerManagementRuntimeAdapter({
     managementUi: managementUiEnabled,
     appShellReady: appShellReady,
@@ -655,7 +641,6 @@ export function startDocsViewerRuntime(options) {
       projectMainViewControlState: function (controlId, controlState) {
         projectMainViewControlState("management", controlId, controlState);
       },
-      projectCommittedMove: treeMoveProjection.project,
       nav: nav,
       renderBookmarkUi: renderBookmarkUi,
       renderRecentMode: renderRecentMode,
@@ -1017,18 +1002,6 @@ export function startDocsViewerRuntime(options) {
     if (controller) {
       controller.hideContextMenu();
     }
-  }
-
-  function updateNavDragState() {
-    var controller = managementRuntime ? managementRuntime.controller() : null;
-    if (controller) {
-      controller.updateNavDragState();
-    }
-  }
-
-  function canDragCurrentDoc(doc) {
-    var controller = managementRuntime ? managementRuntime.controller() : null;
-    return Boolean(controller && controller.canDragCurrentDoc(doc));
   }
 
   function renderManagementUi() {

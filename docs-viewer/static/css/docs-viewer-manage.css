@@ -22,6 +22,10 @@
   margin-left: auto;
 }
 
+.docsViewer__icon--arrow-up-down{
+  mask-image: url("../icons/arrow-up-down.svg");
+}
+
 .docsViewer__icon--copy{
   mask-image: url("../icons/copy.svg");
 }
@@ -522,46 +526,6 @@
   display: none;
 }
 
-.docsViewer__navLink[draggable="true"]{
-  cursor: grab;
-}
-
-.docsViewer__navRow.is-dragging{
-  opacity: 0.55;
-}
-
-.docsViewer__navRow.is-drop-after{
-  box-shadow: none;
-}
-
-.docsViewer__navRow.is-drop-after::after,
-.docsViewer__navRow.is-drop-inside-start::after{
-  content: "";
-  position: absolute;
-  left: 1.85rem;
-  right: 0.2rem;
-  bottom: -0.2rem;
-  height: 3px;
-  border-radius: 999px;
-  background: var(--docs-viewer-focus-ring);
-  box-shadow: 0 0 0 2px var(--docs-viewer-bg);
-  pointer-events: none;
-}
-
-.docsViewer__navRow.is-drop-inside-start::after{
-  left: 2.8rem;
-}
-
-.docsViewer__navRow.is-drop-inside{
-  background: var(--docs-viewer-selection-bg);
-  color: var(--docs-viewer-selection-text);
-  box-shadow: inset 0 0 0 1px var(--docs-viewer-border-strong);
-}
-
-.docsViewer__nav.is-drop-root{
-  box-shadow: inset 0 0 0 2px var(--docs-viewer-focus-ring);
-}
-
 .docsViewer__contextMenu{
   position: fixed;
   z-index: 30;
@@ -853,6 +817,11 @@ select.docsViewer__fieldInput{
   min-height: 2rem;
   padding-top: 0;
   padding-bottom: 0;
+}
+
+select.docsViewer__positionTargets{
+  height: auto;
+  min-height: 12rem;
 }
 
 .docsViewer__fieldInput--textarea{

@@ -46,6 +46,7 @@ from docs_source_model import (  # noqa: E402
 )
 from docs_workspace_config import require_document_authoring  # noqa: E402
 from docs_import_media import bind_import_media_owner  # noqa: E402
+from docs_index_order import INDEX_ORDER_FILENAME, index_order_text, insert_node, read_index_order  # noqa: E402
 from markdown_renderer import normalize_markdown_blank_lines  # noqa: E402
 from docs_report_source import RETIRED_REPORT_KEYS, parse_report_source  # noqa: E402
 
@@ -100,7 +101,10 @@ class ImportDocumentPlan:
 
     @property
     def changed_paths(self) -> list[Path]:
-        return [self.target_path]
+        paths = [self.target_path]
+        if not self.collection and self.operation == IMPORT_DOCUMENT_CREATE:
+            paths.append(self.target_path.parent / INDEX_ORDER_FILENAME)
+        return paths
 
 
 @dataclass(frozen=True)
@@ -156,8 +160,6 @@ def _apply_explicit_front_matter(
             front_matter["summary"] = summary
         else:
             front_matter.pop("summary", None)
-    if "parent_id" in explicit_front_matter:
-        front_matter["parent_id"] = _clean_text(explicit_front_matter.get("parent_id"))
 
 
 def _create_source(
@@ -179,8 +181,6 @@ def _create_source(
     if collection:
         if parent_id or "parent_id" in explicit_front_matter:
             raise ValueError("parent_id is not accepted for a collection import")
-    else:
-        front_matter_seed["parent_id"] = parent_id
     front_matter = advance_doc_front_matter(
         front_matter_seed,
         timestamp=added_date,
@@ -212,11 +212,10 @@ def _overwrite_source(
 
     if record.content_intent == CONTENT_INTENT_REPLACE and not preserve_collection_metadata:
         # Retain the ordinary single-source overwrite cleanup contract.
-        front_matter["parent_id"] = target.parent_id
         front_matter.pop("sort_order", None)
 
     _apply_explicit_front_matter(front_matter, explicit_front_matter)
-    parent_id = _clean_text(front_matter.get("parent_id"))
+    parent_id = target.parent_id
     body = (
         _replacement_body(import_preview, record.title)
         if record.content_intent == CONTENT_INTENT_REPLACE
@@ -432,10 +431,16 @@ def materialize_import_document_media(
 
 
 def apply_import_document_source(plan: ImportDocumentPlan) -> None:
-    """Atomically write only one already-validated planned source."""
+    """Write the source and append newly imported ordinary documents to their parent."""
 
     if plan.operation == IMPORT_DOCUMENT_CREATE:
+        tree = None
+        if not plan.collection:
+            tree = read_index_order(plan.target_path.parent)
+            insert_node(tree, {"doc_id": plan.doc_id, "children": []}, plan.parent_id, "inside")
         write_text_atomic_new(plan.target_path, plan.source_text)
+        if tree is not None:
+            write_text_atomic(plan.target_path.parent / INDEX_ORDER_FILENAME, index_order_text(tree))
     elif plan.target is not None and plan.source_text != plan.target.source_text:
         write_text_atomic(plan.target_path, plan.source_text)
 

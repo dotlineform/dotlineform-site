@@ -51,28 +51,10 @@ class PayloadBuilderMixin:
         return (doc.title.lower(), doc.doc_id)
 
     def ordered_docs_for_index(self, docs: list[DocRecord]) -> list[DocRecord]:
-        children_by_parent: dict[str, list[DocRecord]] = {}
-        for doc in docs:
-            children_by_parent.setdefault(self.effective_parent_id(doc, docs), []).append(doc)
-        for children in children_by_parent.values():
-            children.sort(key=self.doc_sort_key)
-        ordered: list[DocRecord] = []
-        seen: set[str] = set()
-
-        def append_children(parent_id: str) -> None:
-            for child in children_by_parent.get(parent_id, []):
-                if child.doc_id in seen:
-                    continue
-                seen.add(child.doc_id)
-                ordered.append(child)
-                append_children(child.doc_id)
-
-        append_children("")
-        for doc in sorted(docs, key=self.doc_sort_key):
-            if doc.doc_id not in seen:
-                seen.add(doc.doc_id)
-                ordered.append(doc)
-        return ordered
+        """Preserve authored ordinary order and the separate flat collection sort."""
+        if getattr(self, "collection_config", None) is not None:
+            return sorted(docs, key=self.doc_sort_key)
+        return docs
 
     def effective_generated_at_for_payload(self, path: Path, comparable_payload: dict[str, Any]) -> str:
         existing = read_json(path)

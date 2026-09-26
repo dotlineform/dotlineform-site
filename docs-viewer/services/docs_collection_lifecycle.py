@@ -6,6 +6,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Callable
 
+from docs_index_order import INDEX_ORDER_FILENAME, index_order_text, insert_node, read_index_order
+
 
 from docs_lifecycle_paths import (
     load_json_object,
@@ -319,6 +321,8 @@ def apply_create_collection(
     host_text = report_host_source(parent_config, collection, str(preview["title"]), identity)
     host_path = resolve_workspace_path(repo_root, document_source_path(parent_config)) / f"{identity['doc_id']}.md"
     workspace_config = plan_collection_registration(repo_root, preview["planned_collection_config"])
+    tree = read_index_order(host_path.parent)
+    insert_node(tree, {"doc_id": identity["doc_id"], "children": []}, "", "inside")
     host_created = False
     try:
         source_model.write_text_atomic_new(host_path, host_text)
@@ -330,6 +334,7 @@ def apply_create_collection(
         raise apply_error(result, error, committed=False, stage="config_commit") from error
 
     result.update({"committed": True, "retry_create": False})
+    source_model.write_text_atomic(host_path.parent / INDEX_ORDER_FILENAME, index_order_text(tree))
     source_root = resolve_workspace_path(
         repo_root,
         parent_config.source.location.path / parent_config.source.collections_path / collection,

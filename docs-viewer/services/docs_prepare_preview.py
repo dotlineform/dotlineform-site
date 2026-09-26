@@ -17,6 +17,7 @@ from docs_preview_snapshot import (
     build_preview_snapshot_files, write_preview_snapshot,
 )
 from docs_source_model import SourceDoc, format_source, load_document_collection_docs_for_config
+from docs_index_order import INDEX_ORDER_FILENAME, exclude_nodes, index_order_text, read_index_order
 from docs_collection_customisations import prepare_collection_publication
 from docs_publication_ignore import read_publication_ignore_ids
 from docs_catalogue_artifacts import (
@@ -70,7 +71,12 @@ def _plan(repo_root: Path, body: dict[str, Any]) -> tuple[dict[str, Any], dict[P
     ordinary = load_document_collection_docs_for_config(repo_root, working, working)
     ordinary_excluded = excluded_documents(ordinary, ignored_ids=read_publication_ignore_ids(repo_root))
     excluded = set(ordinary_excluded)
-    desired: dict[Path, bytes] = {}
+    order_path = document_source_path(working) / INDEX_ORDER_FILENAME
+    desired: dict[Path, bytes] = {
+        order_path.relative_to(source_root): index_order_text(
+            exclude_nodes(read_index_order(order_path.parent), ordinary_excluded)
+        ).encode("utf-8"),
+    }
     counts: dict[str, int] = {}
     eligible: list[str] = []
     for collection in (working, *working.collections):

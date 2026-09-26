@@ -5,33 +5,30 @@ from __future__ import annotations
 
 import hashlib
 import re
-from dataclasses import dataclass, field, replace
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, Optional
 
 import docs_source_model as source_model
 from docs_document_subjects import subject_key_is_canonical
-from docs_document_placement import DocumentPlacement, resolve_document_placement
-from docs_document_placement_references import MediaCopy, placement_reference_changes
+from docs_index_order import INDEX_ORDER_FILENAME, exclude_nodes, index_order_text, insert_node, move_node, read_index_order, tree_parent_ids
 from docs_management_document_target import (
     ManagedDocumentTarget,
-    confined_source_path,
     managed_document_target_request,
     resolve_managed_document_collection,
     resolve_managed_document_target,
-    source_doc_from_path,
 )
 from docs_workspace_config import (
     load_docs_stage,
     require_document_authoring,
     generated_documents_path,
+    document_source_path,
     resolve_external_data_root,
     resolve_workspace_path,
 )
 from docs_collection_customisations import (
     normalize_collection_customisation_metadata_update,
     collection_customisation_assignable_field_groups,
-    collection_customisation_metadata_record,
 )
 
 
@@ -174,24 +171,14 @@ class SourceDelete:
 
 
 @dataclass(frozen=True)
-class CollectionRebuild:
-    stage: str
-    changed_paths: tuple[Path, ...]
-    build_doc_ids: Optional[list[str]] = None
-    collection: str = ""
-
-
-@dataclass(frozen=True)
 class ManagementMutationPlan:
     stage: str
     response: Dict[str, Any]
     collection: str = ""
     source_writes: tuple[SourceWrite, ...] = ()
     source_deletes: tuple[SourceDelete, ...] = ()
-    media_copies: tuple[MediaCopy, ...] = ()
     suppression_reason: Optional[str] = None
     build_doc_ids: Optional[list[str]] = None
-    rebuilds: tuple[CollectionRebuild, ...] = ()
     log_event_name: Optional[str] = None
     log_details: Dict[str, Any] = field(default_factory=dict)
     include_write_result_keys: bool = False
@@ -216,7 +203,7 @@ def plan_create(
 ) -> ManagementMutationPlan:
     """Plan one create-only write without reading existing named-collection docs.
 
-    Ordinary documents retain their source inventory for parent resolution.
+    Ordinary documents add their ID to the authored tree.
     Catalogue records start ready; other documents start as drafts. Catalogue
     fields are present before the creation build. Internal generators may supply
     body_markdown; the HTTP create request does not expose it.
@@ -249,42 +236,21 @@ def plan_create(
     elif "work_id" in body:
         raise ValueError("work_id is only accepted when creating a Catalogue collection document")
     target_root = resolved_collection.source_root
-    if collection and "parent_id" in body:
-        raise ValueError("parent_id is not accepted for a collection document")
-    parent_id = str(body.get("parent_id") or "").strip()
-    docs: list[source_model.SourceDoc] = []
-    if not collection:
-        report_contract = source_model.report_source_contract_for_collection(
-            repo_root,
-            resolved_collection.parent_config,
-            resolved_collection.document_config,
-        )
-        for candidate in source_model.document_markdown_paths(target_root):
-            confined = confined_source_path(target_root, candidate)
-            document = source_doc_from_path(
-                path=confined,
-                report_contract=report_contract,
-            )
-            source_model.validate_document_status_front_matter(
-                document.front_matter,
-                collection_config=resolved_collection.document_config,
-                source_name=candidate.name,
-            )
-            docs.append(document)
-        source_model.validate_collection_docs(
-            docs,
-            allow_unknown_parent_ids=resolved_collection.parent_config.allow_unresolved_parent_ids,
-        )
-        docs_by_id = {doc.doc_id: doc for doc in docs}
-
-        if parent_id and parent_id not in docs_by_id:
-            raise ValueError(f"Unknown parent_id {parent_id!r} in stage {stage}")
+    if "parent_id" in body:
+        raise ValueError("Create uses target_doc_id and placement, not parent_id")
+    tree = read_index_order(target_root) if not collection else []
 
     timestamp = source_model.current_doc_timestamp()
     doc_id = source_model.allocate_doc_id(
         timestamp,
-        {identity for doc in docs for identity in (doc.doc_id, doc.path.stem)},
+        set(tree_parent_ids(tree)),
     )
+    parent_id = ""
+    if not collection:
+        parent_id = insert_node(
+            tree, {"doc_id": doc_id, "children": []},
+            str(body.get("target_doc_id") or ""), str(body.get("placement") or "inside"),
+        )
     target_path = target_root / f"{doc_id}.md"
     front_matter_seed: Dict[str, Any] = {
         "doc_id": doc_id,
@@ -294,8 +260,6 @@ def plan_create(
     }
     if source_model.collection_supports_draft(resolved_collection.document_config):
         front_matter_seed["draft"] = collection != "catalogue"
-    if not collection:
-        front_matter_seed["parent_id"] = parent_id
     front_matter = source_model.advance_doc_front_matter(
         front_matter_seed,
         timestamp=timestamp,
@@ -345,6 +309,7 @@ def plan_create(
                 source_text,
                 create_only=True,
             ),
+            *((SourceWrite(target_root / INDEX_ORDER_FILENAME, index_order_text(tree)),) if not collection else ()),
         ),
         suppression_reason="docs-create",
         build_doc_ids=[] if collection else [doc_id],
@@ -532,112 +497,26 @@ def plan_assign_field_group(
 
 
 def plan_move(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
-    resolved = resolve_managed_document_target(repo_root, managed_document_target_request(body))
-    config = resolved.parent_config
-    parent_id = str(body.get("parent_id") or "").strip()
-    placement = resolve_document_placement(repo_root, resolved, parent_id)
-    parent_id = placement.parent_id
-    moving_doc = resolved.document
-    changed = placement.changed
-    target = resolved.request_target()
-    return with_document_placement(repo_root, ManagementMutationPlan(
+    """Move one ordinary subtree by editing only index-order.json."""
+    config = load_docs_stage(repo_root, body.get("stage"))
+    require_document_authoring(config)
+    if body.get("collection") or "parent_id" in body or "scope" in body:
+        raise ValueError("Position requires an ordinary document, target_doc_id and placement")
+    doc_id = str(body.get("doc_id") or "")
+    root = document_source_path(config)
+    tree = read_index_order(root)
+    parent_id = move_node(tree, doc_id, str(body.get("target_doc_id") or ""), str(body.get("placement") or ""))
+    return ManagementMutationPlan(
         stage=config.stage,
-        collection=resolved.collection,
         response={
-            "ok": True,
-            **target,
-            "target": target,
-            "record": {
-                "doc_id": moving_doc.doc_id,
-                "parent_id": parent_id,
-            },
-            "changed_doc_ids": [moving_doc.doc_id] if changed else [],
-            "summary_text": f"Moved {moving_doc.doc_id}." if changed else f"No move needed for {moving_doc.doc_id}.",
+            "ok": True, "stage": config.stage, "doc_id": doc_id,
+            "record": {"doc_id": doc_id, "parent_id": parent_id},
+            "summary_text": f"Positioned {doc_id}.",
         },
-        source_writes=(SourceWrite(moving_doc.path, source_model.rewrite_doc_placement_source(moving_doc, parent_id), original_bytes=moving_doc.source_text.encode("utf-8")),) if changed else (),
-        suppression_reason="docs-move",
-        revision_conflict_operation="move",
-        revision_conflict_error="document source changed before move",
-        build_doc_ids=[moving_doc.doc_id] if changed else [],
-        log_event_name="docs-move" if changed else None,
-        log_details={
-            **target,
-            "from_parent_id": moving_doc.parent_id,
-            "to_parent_id": parent_id,
-            "changed_count": 1 if changed else 0,
-        },
+        source_writes=(SourceWrite(root / INDEX_ORDER_FILENAME, index_order_text(tree)),),
+        suppression_reason="docs-position",
+        build_doc_ids=[doc_id],
         include_write_result_keys=True,
-    ), placement)
-
-
-def with_document_placement(
-    repo_root: Path, plan: ManagementMutationPlan, placement: DocumentPlacement,
-) -> ManagementMutationPlan:
-    """Attach one committed placement and plan collection-owned source changes."""
-    target = placement.target()
-    response = {**plan.response, "target": target, "placement": placement.response(repo_root)}
-    response.pop("collection", None)
-    response.update(target)
-    if not placement.collection_changed:
-        return replace(plan, response=response)
-    source = placement.source
-    destination = placement.destination
-    destination_path = destination.source_root / f"{source.doc_id}.md"
-    if destination_path.exists() or destination_path.is_symlink():
-        raise ValueError("Placement destination already contains this document")
-    front_matter, body = source_model.parse_source_text(plan.source_writes[0].text)
-    body, reference_changes, media_copies = placement_reference_changes(repo_root, placement, body)
-    if destination.collection:
-        front_matter.pop("parent_id", None)
-    else:
-        front_matter["parent_id"] = placement.parent_id
-    source_text = source_model.format_source(front_matter, body, collection=destination.collection)
-    source_model.validate_document_status_front_matter(
-        front_matter, collection_config=destination.document_config,
-        source_name=destination_path.name,
-    )
-    customisation_record = None
-    if destination.collection:
-        customisation_record = collection_customisation_metadata_record(
-            destination.document_config.collection_customisation,
-            front_matter, doc_id=source.doc_id,
-        )
-    source_model.parse_collection_document_report(
-        repo_root, destination.parent_config, destination.document_config,
-        source_text, source_name=destination_path.name,
-    )
-    writes = [SourceWrite(destination_path, source_text, create_only=True)]
-    affected: dict[str, list[Path]] = {
-        source.collection: [source.document.path],
-        destination.collection: [destination_path],
-    }
-    for change in reference_changes:
-        doc = change.document
-        metadata = source_model.advance_front_matter_for_recent_edit(doc.front_matter, doc.body, doc.front_matter, change.body)
-        writes.append(SourceWrite(
-            doc.path, source_model.format_source(metadata, change.body, collection=change.collection),
-            original_bytes=doc.source_text.encode("utf-8"),
-            revision_target={
-                "stage": source.stage, "doc_id": doc.doc_id,
-                **({"collection": change.collection} if change.collection else {}),
-            },
-        ))
-        affected.setdefault(change.collection, []).append(doc.path)
-    record = {**response["record"]}
-    record.pop("customisation", None)
-    if customisation_record is not None:
-        record["customisation"] = customisation_record
-    if destination.collection:
-        record.pop("parent_id", None)
-    else:
-        record["parent_id"] = placement.parent_id
-    response.update({"record": record, "path": relative_path(repo_root, destination_path), "source_revision": source_revision(source_text.encode("utf-8"))})
-    return replace(
-        plan, response=response, source_writes=tuple(writes),
-        source_deletes=(SourceDelete(source.document.path, source.document.source_text.encode("utf-8")),),
-        media_copies=tuple(media_copies),
-        rebuilds=tuple(CollectionRebuild(source.stage, tuple(affected[name]), collection=name)
-                       for name in sorted(affected, key=lambda name: (not bool(name), name))),
     )
 
 
@@ -721,6 +600,10 @@ def plan_delete_apply(repo_root: Path, body: Dict[str, Any]) -> ManagementMutati
             "summary_text": summary_text,
         },
         source_deletes=tuple(SourceDelete(doc.path) for doc in delete_docs),
+        source_writes=(SourceWrite(
+            document_source_path(config) / INDEX_ORDER_FILENAME,
+            index_order_text(exclude_nodes(read_index_order(document_source_path(config)), set(delete_doc_ids))),
+        ),),
         suppression_reason="docs-delete",
         build_doc_ids=delete_doc_ids,
         log_event_name="docs-delete",

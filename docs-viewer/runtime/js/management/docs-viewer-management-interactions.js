@@ -2,13 +2,6 @@ import {
   DOCS_VIEWER_ACTION_IDS
 } from "./docs-viewer-action-definitions.js";
 import {
-  canDragDoc,
-  canDropOnParent,
-  currentDropTargetFromEvent,
-  rowDropParentIdFromEvent,
-  terminalRootDropTargetFromEvent
-} from "./docs-viewer-drag-drop.js";
-import {
   visibleDocsViewerIndexSelectionDocIds
 } from "./docs-viewer-index-selection.js";
 
@@ -20,7 +13,6 @@ export function createDocsViewerManagementInteractionController(options) {
   var searchRecent = options.searchRecent || {};
   var selectedDocument = options.selectedDocument || {};
   var indexSelection = options.indexSelection || null;
-  var context = options.context;
   var refs = options.refs || {};
   var callbacks = options.callbacks || {};
   var contextMenu = refs.contextMenu || document.getElementById("docsViewerContextMenu");
@@ -28,24 +20,9 @@ export function createDocsViewerManagementInteractionController(options) {
     ? contextMenu.querySelector('[data-docs-viewer-action="' + DOCS_VIEWER_ACTION_IDS.COPY_LINK + '"]')
     : null;
   var contextMenuDocId = "";
-  var dragDocId = "";
-  var dropTargetParentId = "";
-  var hasDropTarget = false;
   var suppressNextClick = false;
   var lastEditRequestDocId = "";
   var lastEditRequestTime = 0;
-
-  function docChildren(docId) {
-    return documentIndex.childrenByParent.get(docId) || [];
-  }
-
-  function docHasChildren(docId) {
-    return docChildren(docId).length > 0;
-  }
-
-  function dragEnabled() {
-    return routeSession.managementContext && management.managementAvailable && !management.managementBusy && !searchRecent.searchRouteActive;
-  }
 
   function contextMenuEnabled() {
     return routeSession.managementContext && management.managementAvailable && !management.managementBusy && !searchRecent.searchRouteActive;
@@ -65,29 +42,8 @@ export function createDocsViewerManagementInteractionController(options) {
     );
   }
 
-  function dragDropOptions() {
-    return {
-      dragDocId: dragDocId,
-      dragEnabled: dragEnabled(),
-      docsById: documentIndex.docsById,
-      hasChildren: docHasChildren,
-      nav: nav
-    };
-  }
-
-  function canDragCurrentDoc(doc) {
-    return canDragDoc(doc, dragDropOptions());
-  }
-
   function currentContextMenuDoc() {
     return documentIndex.docsById.get(contextMenuDocId) || null;
-  }
-
-  function clearDragState() {
-    dragDocId = "";
-    dropTargetParentId = "";
-    hasDropTarget = false;
-    updateNavDragState();
   }
 
   function hideContextMenu() {
@@ -110,30 +66,6 @@ export function createDocsViewerManagementInteractionController(options) {
     var maxTop = Math.max(8, window.innerHeight - menuRect.height - 8);
     contextMenu.style.left = Math.min(clientX, maxLeft) + "px";
     contextMenu.style.top = Math.min(clientY, maxTop) + "px";
-  }
-
-  function updateNavDragState() {
-    if (!nav) return;
-    nav.classList.remove("is-drop-root");
-    nav.querySelectorAll(".docsViewer__navRow").forEach(function (row) {
-      row.classList.remove("is-dragging", "is-drop-after", "is-drop-inside", "is-drop-inside-start");
-    });
-    if (dragDocId) {
-      var dragRow = nav.querySelector('[data-doc-row-id="' + context.cssEscape(dragDocId) + '"]');
-      if (dragRow) {
-        dragRow.classList.add("is-dragging");
-      }
-    }
-    if (hasDropTarget) {
-      if (!dropTargetParentId) {
-        nav.classList.add("is-drop-root");
-        return;
-      }
-      var dropRow = nav.querySelector('[data-doc-row-id="' + context.cssEscape(dropTargetParentId) + '"]');
-      if (dropRow) {
-        dropRow.classList.add("is-drop-inside");
-      }
-    }
   }
 
   function clearSelection() {
@@ -243,85 +175,6 @@ export function createDocsViewerManagementInteractionController(options) {
       requestEditSelectedDoc();
     });
 
-    nav.addEventListener("dragstart", function (event) {
-      var dragHandle = event.target.closest("[data-drag-doc-id]");
-      if (!dragHandle || !dragEnabled()) return;
-      hideContextMenu();
-      dragDocId = dragHandle.dataset.dragDocId || "";
-      dropTargetParentId = "";
-      hasDropTarget = false;
-      if (event.dataTransfer) {
-        event.dataTransfer.effectAllowed = "move";
-        event.dataTransfer.setData("text/plain", dragDocId);
-      }
-      updateNavDragState();
-    });
-
-    nav.addEventListener("dragover", function (event) {
-      var row = event.target.closest("[data-doc-row-id]");
-      if (!row) {
-        var terminalTarget = terminalRootDropTargetFromEvent(event, dragDropOptions());
-        if (terminalTarget && canDropOnParent(terminalTarget.parentId, dragDropOptions())) {
-          event.preventDefault();
-          if (event.dataTransfer) {
-            event.dataTransfer.dropEffect = "move";
-          }
-          if (!hasDropTarget || dropTargetParentId !== terminalTarget.parentId) {
-            dropTargetParentId = terminalTarget.parentId;
-            hasDropTarget = true;
-            updateNavDragState();
-          }
-          return;
-        }
-        if (hasDropTarget) {
-          dropTargetParentId = "";
-          hasDropTarget = false;
-          updateNavDragState();
-        }
-        return;
-      }
-
-      var dropOptions = dragDropOptions();
-      var nextParentId = rowDropParentIdFromEvent(row, event, dropOptions);
-      if (!canDropOnParent(nextParentId, dropOptions)) {
-        if (hasDropTarget) {
-          dropTargetParentId = "";
-          hasDropTarget = false;
-          updateNavDragState();
-        }
-        return;
-      }
-
-      event.preventDefault();
-      if (event.dataTransfer) {
-        event.dataTransfer.dropEffect = "move";
-      }
-      if (!hasDropTarget || dropTargetParentId !== nextParentId) {
-        dropTargetParentId = nextParentId;
-        hasDropTarget = true;
-        updateNavDragState();
-      }
-    });
-
-    nav.addEventListener("drop", function (event) {
-      event.preventDefault();
-      var dropOptions = dragDropOptions();
-      var dropTarget = currentDropTargetFromEvent(event, {
-        parentId: dropTargetParentId
-      }, dropOptions);
-      var parentId = dropTarget.parentId;
-      if (!canDropOnParent(parentId, dropOptions)) {
-        clearDragState();
-        return;
-      }
-      var movingDocId = dragDocId;
-      clearDragState();
-      if (callbacks.onMoveDoc) callbacks.onMoveDoc(movingDocId, parentId);
-    });
-
-    nav.addEventListener("dragend", function () {
-      clearDragState();
-    });
   }
 
   function wireContextMenuEvents() {
@@ -340,8 +193,6 @@ export function createDocsViewerManagementInteractionController(options) {
   }
 
   return {
-    canDragCurrentDoc: canDragCurrentDoc,
-    clearDragState: clearDragState,
     currentContextMenuDoc: currentContextMenuDoc,
     handleDocumentKeydown: handleDocumentKeydown,
     handleRootClick: handleRootClick,
@@ -349,7 +200,6 @@ export function createDocsViewerManagementInteractionController(options) {
     refs: {
       contextCopyLinkButton: contextCopyLinkButton
     },
-    updateNavDragState: updateNavDragState,
     wireEvents: wireEvents
   };
 }

@@ -13,6 +13,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Mapping, Optional
 
+from docs_index_order import read_index_order, tree_parent_ids
+
 from docs_document_identity import (
     DOC_TIMESTAMP_FORMAT,
     IMMUTABLE_DOC_ID_PATTERN,
@@ -519,9 +521,20 @@ def load_document_collection_docs_for_config(
         resolved_collection = collection or "ordinary documents"
         raise ValueError(f"missing source root for {document_config.stage}/{resolved_collection}: {root}")
 
+    parent_ids = tree_parent_ids(read_index_order(root)) if not collection else {}
     report_contract: ReportSourceContract | None = None
     docs: list[SourceDoc] = []
-    if filenames is None:
+    if not collection:
+        paths = []
+        for doc_id in parent_ids:
+            if not is_immutable_doc_id(doc_id):
+                raise ValueError(f"Invalid document ID in index-order.json: {doc_id}")
+            path = root / f"{doc_id}.md"
+            if path.is_symlink():
+                raise ValueError(f"Document source must not be a symlink: {path.name}")
+            if filenames is None or path.name in filenames:
+                paths.append(path)
+    elif filenames is None:
         paths = document_markdown_paths(root)
     else:
         paths = []
@@ -540,11 +553,11 @@ def load_document_collection_docs_for_config(
         doc_id = str(front_matter.get("doc_id") or "").strip()
         if not doc_id:
             raise ValueError(f"missing required doc_id in {path.relative_to(root).as_posix()}")
-        if filenames is not None and doc_id != path.stem:
+        if (not collection or filenames is not None) and doc_id != path.stem:
             raise ValueError(f"Selected source identity does not match its filename: {path.name}")
         title = str(front_matter.get("title") or humanize(doc_id or path.stem)).strip() or doc_id
         ui_status = normalize_ui_status(front_matter.get("ui_status"))
-        parent_id = str(front_matter.get("parent_id") or "").strip()
+        parent_id = parent_ids[doc_id] if not collection else ""
         validate_document_status_front_matter(
             front_matter,
             collection_config=document_config,
@@ -649,10 +662,6 @@ def document_sort_key(doc: SourceDoc) -> tuple[Any, ...]:
     )
 
 
-def sorted_siblings(docs: list[SourceDoc], parent_id: str) -> list[SourceDoc]:
-    return sorted((doc for doc in docs if doc.parent_id == parent_id), key=document_sort_key)
-
-
 def subtree_docs_in_tree_order(docs: list[SourceDoc], root_doc_id: str) -> list[SourceDoc]:
     docs_by_id = {doc.doc_id: doc for doc in docs}
     root = docs_by_id.get(root_doc_id)
@@ -662,9 +671,6 @@ def subtree_docs_in_tree_order(docs: list[SourceDoc], root_doc_id: str) -> list[
     children_by_parent: dict[str, list[SourceDoc]] = {}
     for doc in docs:
         children_by_parent.setdefault(doc.parent_id, []).append(doc)
-    for children in children_by_parent.values():
-        children.sort(key=document_sort_key)
-
     ordered: list[SourceDoc] = []
     seen: set[str] = set()
 
@@ -697,10 +703,6 @@ def descendant_doc_ids(docs: list[SourceDoc], doc_id: str) -> set[str]:
     return seen
 
 
-def direct_child_doc_ids(docs: list[SourceDoc], doc_id: str) -> list[str]:
-    return [doc.doc_id for doc in sorted(docs, key=document_sort_key) if doc.parent_id == doc_id]
-
-
 def rewrite_doc_source(doc: SourceDoc, front_matter_updates: Dict[str, Any]) -> str:
     updated_front_matter = dict(doc.front_matter)
     for key, value in front_matter_updates.items():
@@ -716,7 +718,3 @@ def rewrite_doc_source(doc: SourceDoc, front_matter_updates: Dict[str, Any]) -> 
         doc.body,
     )
     return format_source(updated_front_matter, doc.body)
-
-
-def rewrite_doc_placement_source(doc: SourceDoc, parent_id: str) -> str:
-    return rewrite_doc_source(doc, {"parent_id": parent_id})
