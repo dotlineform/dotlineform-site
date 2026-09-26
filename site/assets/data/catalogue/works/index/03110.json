@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-a0616e9f926cfbb2d9d760979fb91f48",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "03110",
+    "count": 0
+  },
+  "work": {
+    "work_id": "03110",
+    "title": "model 2 - 001",
+    "year": 1994,
+    "year_display": "1994",
+    "medium_type": "collage",
+    "medium_caption": "magazine collage, tracing paper",
+    "width_px": 3031,
+    "height_px": 4629,
+    "media_version": 1,
+    "series_id": "099",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "189",
+        "title": "model 2 (details)"
+      }
+    ]
+  },
+  "sections": []
+}

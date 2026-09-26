@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-f21fec9a3a522f39a4d8092c63966dce",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "03610",
+    "count": 0
+  },
+  "work": {
+    "work_id": "03610",
+    "title": "2024-05-31 00-12 5",
+    "year": 2024,
+    "year_display": "2024",
+    "medium_type": "painting",
+    "medium_caption": "ink on paper",
+    "width_px": 3024,
+    "height_px": 3024,
+    "media_version": 1,
+    "series_id": "046",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "240",
+        "title": "egg forms (work in progress)"
+      }
+    ]
+  },
+  "sections": []
+}

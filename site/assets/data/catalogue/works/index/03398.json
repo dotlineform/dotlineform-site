@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-d8e61014b5ac4d847e481c36ed849c50",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "03398",
+    "count": 0
+  },
+  "work": {
+    "work_id": "03398",
+    "title": "birth of healing forms - 2.12",
+    "year": 2023,
+    "year_display": "2023",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "width_px": 1181,
+    "height_px": 1181,
+    "media_version": 1,
+    "series_id": "017",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "219",
+        "title": "birth of healing forms (versions)"
+      }
+    ]
+  },
+  "sections": []
+}

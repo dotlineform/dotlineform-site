@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-98c73d002e2f03fb6ae5fe783257e68b",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "03234",
+    "count": 0
+  },
+  "work": {
+    "work_id": "03234",
+    "title": "composite - radius",
+    "year": 2007,
+    "year_display": "2007",
+    "medium_type": "mixed media",
+    "medium_caption": "enamel paint on c-type print, aluminium mount",
+    "width_px": 3000,
+    "height_px": 3000,
+    "media_version": 1,
+    "series_id": "005",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "207",
+        "title": "3 symbols (composites)"
+      }
+    ]
+  },
+  "sections": []
+}

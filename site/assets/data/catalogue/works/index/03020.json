@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-24188c5f0de2fd1d442a3f22f4eb9931",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "03020",
+    "count": 0
+  },
+  "work": {
+    "work_id": "03020",
+    "title": "version dall-e - 8.2",
+    "year": 2022,
+    "year_display": "c. 2022?",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "width_px": 3543,
+    "height_px": 3543,
+    "media_version": 1,
+    "series_id": "089",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "175",
+        "title": "learning to draw landscapes (versions) (versions)"
+      }
+    ]
+  },
+  "sections": []
+}

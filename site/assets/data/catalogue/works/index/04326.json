@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-668c593fd4b7659cfdcf266daa7ce421",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "04326",
+    "count": 0
+  },
+  "work": {
+    "work_id": "04326",
+    "title": "pi molecule grid - detail 1",
+    "year": 2012,
+    "year_display": "2012",
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "width_px": 3000,
+    "height_px": 3000,
+    "media_version": 1,
+    "series_id": "113",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "279",
+        "title": "pi molecule grid (details)"
+      }
+    ]
+  },
+  "sections": []
+}

@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-83ab00abd7aded70b94f91cb4f939489",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "04414",
+    "count": 0
+  },
+  "work": {
+    "work_id": "04414",
+    "title": "muddle [3]",
+    "year": 2008,
+    "year_display": "2008",
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "width_px": 1600,
+    "height_px": 1553,
+    "media_version": 1,
+    "series_id": "126",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "287",
+        "title": "spine symbols (symbols)"
+      }
+    ]
+  },
+  "sections": []
+}

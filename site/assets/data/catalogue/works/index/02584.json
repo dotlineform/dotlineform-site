@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-4514793e822a78fefda942cffe8e475f",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "02584",
+    "count": 0
+  },
+  "work": {
+    "work_id": "02584",
+    "title": "2023-10-06 23꞉49",
+    "year": 2023,
+    "year_display": "2023",
+    "medium_type": "mixed media",
+    "medium_caption": "mixed media on board",
+    "width_px": 2953,
+    "height_px": 5249,
+    "media_version": 1,
+    "series_id": "043",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "157",
+        "title": "dotlineform (work in progress)"
+      }
+    ]
+  },
+  "sections": []
+}

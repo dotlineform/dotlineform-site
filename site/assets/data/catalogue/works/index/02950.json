@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-d2f9cb1e8e23fc1445ac4ba23271e962",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "02950",
+    "count": 0
+  },
+  "work": {
+    "work_id": "02950",
+    "title": "forest 2 - detail 2",
+    "year": 2023,
+    "year_display": "2023",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "width_px": 4000,
+    "height_px": 4000,
+    "media_version": 1,
+    "series_id": "062",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "168",
+        "title": "forest 2 (details)"
+      }
+    ]
+  },
+  "sections": []
+}

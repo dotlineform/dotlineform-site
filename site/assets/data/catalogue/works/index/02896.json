@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-c07dca89741b983164ea64f4d9123a8a",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "02896",
+    "count": 0
+  },
+  "work": {
+    "work_id": "02896",
+    "title": "memory - 3.1",
+    "year": 2023,
+    "year_display": "2023",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "width_px": 2362,
+    "height_px": 2362,
+    "media_version": 1,
+    "series_id": "061",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "165",
+        "title": "forest memories 1-48 (memories)"
+      }
+    ]
+  },
+  "sections": []
+}

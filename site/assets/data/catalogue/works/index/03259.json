@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-ccc2c3e8514b3ff361d676cd09f2b224",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "03259",
+    "count": 0
+  },
+  "work": {
+    "work_id": "03259",
+    "title": "form 18",
+    "year": 2023,
+    "year_display": "2023",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "width_px": 2362,
+    "height_px": 2362,
+    "media_version": 1,
+    "series_id": "003",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "209",
+        "title": "16 forms (forms)"
+      }
+    ]
+  },
+  "sections": []
+}

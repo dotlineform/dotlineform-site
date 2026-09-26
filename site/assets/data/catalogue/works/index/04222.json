@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-835d4bbe5fe38bac471bfcfee3cd000e",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "04222",
+    "count": 0
+  },
+  "work": {
+    "work_id": "04222",
+    "title": "particle (water)",
+    "year": 2011,
+    "year_display": "2011",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "width_px": 3543,
+    "height_px": 3543,
+    "media_version": 1,
+    "series_id": "065",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "257",
+        "title": "form particles (particles)"
+      }
+    ]
+  },
+  "sections": []
+}

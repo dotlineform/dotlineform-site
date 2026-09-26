@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-ba51e369896af499360b0f1d618a54ef",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "02882",
+    "count": 0
+  },
+  "work": {
+    "work_id": "02882",
+    "title": "living surface (version 3)",
+    "year": 2004,
+    "year_display": "1989, 2004",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "width_px": 7087,
+    "height_px": 7087,
+    "media_version": 1,
+    "series_id": "092",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "163",
+        "title": "living surface hand form (versions)"
+      }
+    ]
+  },
+  "sections": []
+}

@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-08c7195d0ca080c69ec4ad97c02fafd3",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "03542",
+    "count": 0
+  },
+  "work": {
+    "work_id": "03542",
+    "title": "doll cell - 2007-04-08 - 22-14-01",
+    "year": 2007,
+    "year_display": "2007",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "width_px": 3780,
+    "height_px": 2837,
+    "media_version": 1,
+    "series_id": "037",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "228",
+        "title": "doll cell (cell)"
+      }
+    ]
+  },
+  "sections": []
+}

@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-012811666b43b89b50ba2831d12c4f24",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "02719",
+    "count": 0
+  },
+  "work": {
+    "work_id": "02719",
+    "title": "molecule form 117 (2012-07-13)",
+    "year": 2013,
+    "year_display": "2013",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "width_px": 4724,
+    "height_px": 4724,
+    "media_version": 1,
+    "series_id": "100",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "159",
+        "title": "molecule forms (molecules)"
+      }
+    ]
+  },
+  "sections": []
+}

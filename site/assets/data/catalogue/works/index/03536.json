@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-72f1ac5ac650010ec904378df41b0e19",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "03536",
+    "count": 0
+  },
+  "work": {
+    "work_id": "03536",
+    "title": "dots 6",
+    "year": 2020,
+    "year_display": "2020",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "width_px": 3024,
+    "height_px": 3024,
+    "media_version": 1,
+    "series_id": "035",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "227",
+        "title": "holes (details)"
+      }
+    ]
+  },
+  "sections": []
+}

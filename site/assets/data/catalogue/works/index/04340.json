@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-85a2ce242bd8a4d2dcc2b3ead27fd466",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "04340",
+    "count": 0
+  },
+  "work": {
+    "work_id": "04340",
+    "title": "poa 1 - 0684",
+    "year": 2001,
+    "year_display": "2001-04",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "width_px": 3000,
+    "height_px": 2398,
+    "media_version": 1,
+    "series_id": "115",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "282",
+        "title": "poa 1 (map 1-500) (selected source)"
+      }
+    ]
+  },
+  "sections": []
+}

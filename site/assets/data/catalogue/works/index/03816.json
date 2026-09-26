@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-0530eb1117a7ee25cdcf593d848f379f",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "03816",
+    "count": 0
+  },
+  "work": {
+    "work_id": "03816",
+    "title": "particle 145",
+    "year": 2023,
+    "year_display": "2023",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "width_px": 1890,
+    "height_px": 1890,
+    "media_version": 1,
+    "series_id": "051",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "247",
+        "title": "fireworks particles (particles)"
+      }
+    ]
+  },
+  "sections": []
+}

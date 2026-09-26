@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-4f6488400b32008f926b524c7eb075fe",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "03111",
+    "count": 0
+  },
+  "work": {
+    "work_id": "03111",
+    "title": "2012-01-06 - 12-30-44",
+    "year": 2005,
+    "year_display": "2005",
+    "medium_type": "digital composite",
+    "medium_caption": "digital c-type print",
+    "width_px": 3264,
+    "height_px": 2448,
+    "media_version": 1,
+    "series_id": "129",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "190",
+        "title": "forms scan 5 (working)"
+      }
+    ]
+  },
+  "sections": []
+}

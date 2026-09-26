@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-d391f246b8873548d6da47348beaea4c",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "04333",
+    "count": 0
+  },
+  "work": {
+    "work_id": "04333",
+    "title": "all the particles are connected - detail 2",
+    "year": 2012,
+    "year_display": "2012",
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "width_px": 3000,
+    "height_px": 3000,
+    "media_version": 1,
+    "series_id": "113",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "281",
+        "title": "all the particles are connected (details)"
+      }
+    ]
+  },
+  "sections": []
+}

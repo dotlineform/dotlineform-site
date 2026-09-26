@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-c5cbdb28725b2d8b70ba95787e29b297",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "03241",
+    "count": 0
+  },
+  "work": {
+    "work_id": "03241",
+    "title": "16 forms - source photo",
+    "year": 2023,
+    "year_display": "2023",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "width_px": 4453,
+    "height_px": 4453,
+    "media_version": 1,
+    "series_id": "003",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "208",
+        "title": "16 forms (source)"
+      }
+    ]
+  },
+  "sections": []
+}

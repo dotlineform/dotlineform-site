@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-42a2a141d43795f57378b4bcda4ae407",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "03343",
+    "count": 0
+  },
+  "work": {
+    "work_id": "03343",
+    "title": "happiness 49°",
+    "year": 2010,
+    "year_display": "2010",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "width_px": 2362,
+    "height_px": 2362,
+    "media_version": 1,
+    "series_id": "010",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "212",
+        "title": "a theory of happiness is a theory of everything (64°) (64 degrees)"
+      }
+    ]
+  },
+  "sections": []
+}

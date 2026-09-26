@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-a525c0c81309149c08585f7cd7022a37",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "02012",
+    "count": 0
+  },
+  "work": {
+    "work_id": "02012",
+    "title": "the eye - detail 2",
+    "year": 2025,
+    "year_display": "2025",
+    "medium_type": "drawing",
+    "medium_caption": "ink and pencil on paper",
+    "width_px": 3024,
+    "height_px": 3024,
+    "media_version": 1,
+    "series_id": "036",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "152",
+        "title": "the eye (details)"
+      }
+    ]
+  },
+  "sections": []
+}

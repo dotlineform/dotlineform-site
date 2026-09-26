@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-91ae1a6c53d69493ac4c1e7025450e98",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "03371",
+    "count": 0
+  },
+  "work": {
+    "work_id": "03371",
+    "title": "assembly code 2 (detail 2)",
+    "year": 2023,
+    "year_display": "2023",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "width_px": 2000,
+    "height_px": 2000,
+    "media_version": 1,
+    "series_id": "014",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "216",
+        "title": "assembly code 2 (details)"
+      }
+    ]
+  },
+  "sections": []
+}

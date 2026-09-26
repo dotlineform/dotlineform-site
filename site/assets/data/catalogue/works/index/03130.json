@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-011f3e0bf70f507fe304312565467304",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "03130",
+    "count": 0
+  },
+  "work": {
+    "work_id": "03130",
+    "title": "k crystals colours",
+    "year": 2009,
+    "year_display": "2009",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "width_px": 4341,
+    "height_px": 3150,
+    "media_version": 1,
+    "series_id": "082",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "192",
+        "title": "k crystals (derivation)"
+      }
+    ]
+  },
+  "sections": []
+}

@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-1256cfbfd14643011f0c3e0c44b1f4f4",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "02539",
+    "count": 0
+  },
+  "work": {
+    "work_id": "02539",
+    "title": "2024-09-25 20꞉00",
+    "year": 2026,
+    "year_display": "2001-26",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "width_px": 4032,
+    "height_px": 2268,
+    "media_version": 1,
+    "series_id": "023",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "154",
+        "title": "certainty (photos)"
+      }
+    ]
+  },
+  "sections": []
+}

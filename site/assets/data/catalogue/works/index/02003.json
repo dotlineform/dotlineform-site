@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-c5736f15a42ff14168d98fd342c90151",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "02003",
+    "count": 0
+  },
+  "work": {
+    "work_id": "02003",
+    "title": "nerve (formaldehyde form) - 12",
+    "year": 1993,
+    "year_display": "1993",
+    "medium_type": "writing",
+    "medium_caption": "bound printed pages, edition 9 [extant]",
+    "width_px": 3566,
+    "height_px": 2594,
+    "media_version": 1,
+    "series_id": "105",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "150",
+        "title": "nerve (formaldehyde form) (pages)"
+      }
+    ]
+  },
+  "sections": []
+}

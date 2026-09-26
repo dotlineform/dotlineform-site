@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-c928e3be1e7a803036ac37c697cf0f2f",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "04268",
+    "count": 0
+  },
+  "work": {
+    "work_id": "04268",
+    "title": "kylie wax model - iteration 1.5",
+    "year": 2024,
+    "year_display": "2024",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "width_px": 4724,
+    "height_px": 4724,
+    "media_version": 1,
+    "series_id": "085",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "269",
+        "title": "kylie wax model 1.0 (iterations)"
+      }
+    ]
+  },
+  "sections": []
+}

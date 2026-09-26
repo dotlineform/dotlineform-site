@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-2bce6758907408e2ef90514b30b794e7",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "03567",
+    "count": 0
+  },
+  "work": {
+    "work_id": "03567",
+    "title": "003 - 2021-08-27 20꞉07",
+    "year": 2021,
+    "year_display": "2021",
+    "medium_type": "painting",
+    "medium_caption": "acrylic on canvas",
+    "width_px": 4032,
+    "height_px": 2268,
+    "media_version": 1,
+    "series_id": "042",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "233",
+        "title": "dotlineform (details)"
+      }
+    ]
+  },
+  "sections": []
+}

@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-5d92218711590380694fd4405649d61e",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "02817",
+    "count": 0
+  },
+  "work": {
+    "work_id": "02817",
+    "title": "molecule form 215 (2013-05-10)",
+    "year": 2013,
+    "year_display": "2013",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "width_px": 4724,
+    "height_px": 4724,
+    "media_version": 1,
+    "series_id": "100",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "159",
+        "title": "molecule forms (molecules)"
+      }
+    ]
+  },
+  "sections": []
+}

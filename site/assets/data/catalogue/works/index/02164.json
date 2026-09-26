@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-133ca41de9adeb6599aa8b8ff83187b9",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "02164",
+    "count": 0
+  },
+  "work": {
+    "work_id": "02164",
+    "title": "2012-02-20 - 19-57-19",
+    "year": 2026,
+    "year_display": "2001-26",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "width_px": 1536,
+    "height_px": 2048,
+    "media_version": 1,
+    "series_id": "023",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "154",
+        "title": "certainty (photos)"
+      }
+    ]
+  },
+  "sections": []
+}

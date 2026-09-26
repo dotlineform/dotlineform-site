@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-d325b893fa761202f7a43d017f553c38",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "03192",
+    "count": 0
+  },
+  "work": {
+    "work_id": "03192",
+    "title": "3 symbols (detail 3)",
+    "year": 2007,
+    "year_display": "2007",
+    "medium_type": "mixed media",
+    "medium_caption": "enamel paint on c-type print, aluminium mount",
+    "width_px": 2816,
+    "height_px": 2112,
+    "media_version": 1,
+    "series_id": "005",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "205",
+        "title": "3 symbols (details)"
+      }
+    ]
+  },
+  "sections": []
+}

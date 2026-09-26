@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-fa44cedb23219b95e8790be1ac8c9915",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "04452",
+    "count": 0
+  },
+  "work": {
+    "work_id": "04452",
+    "title": "state of mind - source 9",
+    "year": 2023,
+    "year_display": "2023",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "width_px": 1600,
+    "height_px": 1600,
+    "media_version": 1,
+    "series_id": "127",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "290",
+        "title": "state of mind (source)"
+      }
+    ]
+  },
+  "sections": []
+}

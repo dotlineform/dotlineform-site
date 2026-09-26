@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-7111c3819851b403e9115579ae285887",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "04073",
+    "count": 0
+  },
+  "work": {
+    "work_id": "04073",
+    "title": "form space noise 10",
+    "year": 2007,
+    "year_display": "2007",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "width_px": 4880,
+    "height_px": 3660,
+    "media_version": 1,
+    "series_id": "064",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "253",
+        "title": "form space 1 (noise particles)"
+      }
+    ]
+  },
+  "sections": []
+}

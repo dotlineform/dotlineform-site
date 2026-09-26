@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-a3ae6daf055b79460da24a9e6c6a9466",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "04113",
+    "count": 0
+  },
+  "work": {
+    "work_id": "04113",
+    "title": "form 05",
+    "year": 2011,
+    "year_display": "2011",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "width_px": 2000,
+    "height_px": 2000,
+    "media_version": 1,
+    "series_id": "065",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "255",
+        "title": "forms (forms)"
+      }
+    ]
+  },
+  "sections": []
+}

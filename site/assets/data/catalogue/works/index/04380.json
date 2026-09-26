@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-5504be3607353076a54d3f829e38724f",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "04380",
+    "count": 0
+  },
+  "work": {
+    "work_id": "04380",
+    "title": "dizzy (clever) funny",
+    "year": 2008,
+    "year_display": "2008",
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "width_px": 1600,
+    "height_px": 1448,
+    "media_version": 1,
+    "series_id": "126",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "287",
+        "title": "spine symbols (symbols)"
+      }
+    ]
+  },
+  "sections": []
+}

@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-9ad84bc61a7c8f5d574c172226a9030d",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "02861",
+    "count": 0
+  },
+  "work": {
+    "work_id": "02861",
+    "title": "molecules mist (positive)",
+    "year": 2013,
+    "year_display": "2013",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "width_px": 9000,
+    "height_px": 9000,
+    "media_version": 1,
+    "series_id": "101",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "160",
+        "title": "molecules (versions)"
+      }
+    ]
+  },
+  "sections": []
+}

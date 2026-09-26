@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-a4ec97b76eb89661ac0df23cc0713ef6",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "04242",
+    "count": 0
+  },
+  "work": {
+    "work_id": "04242",
+    "title": "home 3 - detail 1",
+    "year": 2023,
+    "year_display": "2023",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "width_px": 2000,
+    "height_px": 2000,
+    "media_version": 1,
+    "series_id": "077",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "263",
+        "title": "home 3 (details)"
+      }
+    ]
+  },
+  "sections": []
+}

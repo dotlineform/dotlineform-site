@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v8",
+    "version": "blake2b-334b9b543db9331155f666bc975a934d",
+    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "work_id": "02664",
+    "count": 0
+  },
+  "work": {
+    "work_id": "02664",
+    "title": "molecule form 62 (2010-01-23)",
+    "year": 2013,
+    "year_display": "2013",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "width_px": 4724,
+    "height_px": 4724,
+    "media_version": 1,
+    "series_id": "100",
+    "documents": [],
+    "galleries": [
+      {
+        "gallery_id": "159",
+        "title": "molecule forms (molecules)"
+      }
+    ]
+  },
+  "sections": []
+}
