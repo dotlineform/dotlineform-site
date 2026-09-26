@@ -31,7 +31,9 @@ from docs_document_subjects import (
     project_reader_subject,
     project_subject_associations,
     subject_projection_generation,
+    subject_key_is_canonical,
 )
+from docs_document_identity import is_doc_timestamp
 
 
 class CollectionDocsBuilder(DocsDataBuilder):
@@ -86,15 +88,22 @@ class CollectionDocsBuilder(DocsDataBuilder):
         return entry
 
     def manifest_payload(self, ordered_docs: list[DocRecord]) -> dict[str, Any]:
+        """Project public list data; Catalogue rows always carry an exact Work ID."""
+        rows: list[dict[str, Any]] = []
+        for doc in ordered_docs:
+            row: dict[str, Any] = {"doc_id": doc.doc_id, "title": doc.title}
+            subject = project_reader_subject(doc.front_matter)
+            if self.collection_id == "catalogue":
+                if subject is None or subject["kind"] != "work":
+                    raise ValueError(f"Catalogue document {doc.doc_id} requires one valid work_id")
+                if not is_doc_timestamp(doc.last_updated):
+                    raise ValueError(f"Catalogue document {doc.doc_id} requires a valid last_updated timestamp")
+                row.update(work_id=subject["key"], last_updated=doc.last_updated)
+            else:
+                row["subject"] = subject
+            rows.append(row)
         payload: dict[str, Any] = {
-            "docs": [
-                {
-                    "doc_id": doc.doc_id,
-                    "title": doc.title,
-                    "subject": project_reader_subject(doc.front_matter),
-                }
-                for doc in ordered_docs
-            ]
+            "docs": rows
         }
         projected = project_collection_customisation_manifest(
             self.collection_config.collection_customisation,
@@ -194,6 +203,16 @@ class CollectionDocsBuilder(DocsDataBuilder):
         """Load the prior list metadata required for a targeted update."""
         manifest = read_collection_manifest(self.output_dir / "manifest.json")
         manage_manifest = read_collection_manifest(self.output_dir / "manage-manifest.json")
+        if self.collection_id == "catalogue":
+            for row in manifest["docs"]:
+                if (
+                    "subject" in row
+                    or not isinstance(row.get("work_id"), str)
+                    or not subject_key_is_canonical("work", row["work_id"])
+                    or not isinstance(row.get("last_updated"), str)
+                    or not is_doc_timestamp(row["last_updated"])
+                ):
+                    raise ValueError("Catalogue manifest requires work_id and last_updated; run a complete Catalogue Build first")
         if {row["doc_id"] for row in manifest["docs"]} != {row["doc_id"] for row in manage_manifest["docs"]}:
             raise ValueError("Collection manifests disagree on document membership; run a complete Build first")
         if not (self.semantic_tokens_dir / "index.json").is_file():

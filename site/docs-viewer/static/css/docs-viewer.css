@@ -769,6 +769,10 @@ main.container:has(> .docsViewer){
   mask-image: url("../icons/arrow-left.svg");
 }
 
+.docsViewer__icon--arrow-down-a-z{
+  mask-image: url("../icons/arrow-down-a-z.svg");
+}
+
 .docsViewer__icon--dlf-home{
   mask-image: url("../icons/dlf-home.svg");
 }
@@ -791,6 +795,10 @@ main.container:has(> .docsViewer){
 
 .docsViewer__icon--clock-9{
   mask-image: url("../icons/clock-9.svg");
+}
+
+.docsViewer__icon--clock-3{
+  mask-image: url("../icons/clock-3.svg");
 }
 
 .docsViewer__icon--expand{

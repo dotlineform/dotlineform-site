@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "catalogue_works_index_v1",
-    "version": "blake2b-51869fb383ea39356e910fa0c4638207",
-    "generated_at_utc": "2026-09-26T07:24:01Z",
+    "version": "blake2b-25635dde597d4912c15db23f5b921c45",
+    "generated_at_utc": "2026-09-26T13:09:38Z",
     "count": 4616
   },
   "works": {
@@ -57,7 +57,7 @@
     },
     "00008": {
       "work_id": "00008",
-      "title": "nerve",
+      "title": "nerve test",
       "year": 1995,
       "year_display": "July 1990 – January 1995",
       "series_id": "105"

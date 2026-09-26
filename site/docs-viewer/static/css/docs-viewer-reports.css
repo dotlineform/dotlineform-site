@@ -192,6 +192,41 @@
   text-align: left;
 }
 
+.docsViewerReport[data-report-collection="catalogue"] .docsViewerReport__collectionButton{
+  display: flex;
+  align-items: center;
+  gap: var(--docs-viewer-space-3);
+}
+
+.docsViewerReport__catalogueThumbnail{
+  flex: 0 0 64px;
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+.docsViewerReport[data-report-collection="catalogue"] .docsViewerReport__title{
+  min-width: 0;
+}
+
+.docsViewerReport__collectionPagination{
+  --docs-viewer-control-height: var(--docs-viewer-report-control-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--docs-viewer-space-2);
+}
+
+.docsViewerReport__collectionPagination[hidden]{
+  display: none;
+}
+
+.docsViewerReport__collectionPageLabel{
+  color: var(--docs-viewer-muted);
+  font-variant-numeric: tabular-nums;
+}
+
 .docsViewerReport__title{
   font-weight: 700;
 }

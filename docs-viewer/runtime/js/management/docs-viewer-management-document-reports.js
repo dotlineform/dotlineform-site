@@ -15,6 +15,16 @@ import {
 import {
   hasDocsViewerAssignableFieldGroup
 } from "../shared/docs-viewer-config-controller.js";
+import { normalizeDocsViewerAuthoringSubject } from "./docs-viewer-management-document-subject.js";
+
+/** Adapt the Working manifest's declared authoring field to public-safe browsing input. */
+function catalogueWorkIdForDocument(record) {
+  var subject = normalizeDocsViewerAuthoringSubject(record.authoring_subject);
+  if (subject.state !== "valid" || subject.kind !== "work") {
+    throw new Error("Catalogue list document requires one valid Work subject.");
+  }
+  return subject.key;
+}
 
 function cleanString(value) {
   return String(value || "").trim();
@@ -358,6 +368,10 @@ export function mountDocsViewerManageDocumentExtras(context) {
     setStatus: settings.setStatus,
     stageConfigs: stageConfigs(settings).slice(),
     collectionReportContributionPromise: contribution,
+    collectionProvider: settings.collectionProvider,
+    routeContext: routeContext,
+    catalogueWorkIdForDocument: collection === "catalogue" && routeContext.viewerStage === "working"
+      ? catalogueWorkIdForDocument : undefined,
     viewerStage: cleanString(settings.routeContext && settings.routeContext.viewerStage),
     viewerUrlForDocument: settings.viewerUrlForDocument
   });

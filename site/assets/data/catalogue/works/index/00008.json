@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v8",
-    "version": "blake2b-9f4df4837a852e79e11d72a3716bf651",
-    "generated_at_utc": "2026-09-26T08:03:28Z",
+    "version": "blake2b-73a810fcb3ce0f98e1fe57b9f795ab74",
+    "generated_at_utc": "2026-09-26T13:09:38Z",
     "work_id": "00008",
     "count": 0
   },
   "work": {
     "work_id": "00008",
-    "title": "nerve",
+    "title": "nerve test",
     "year": 1995,
     "year_display": "July 1990 – January 1995",
     "medium_type": "writing",

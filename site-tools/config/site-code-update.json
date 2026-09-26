@@ -16,6 +16,7 @@
       "source_root": "docs-viewer/runtime/js/shared",
       "destination_root": "site/docs-viewer/runtime/js/shared",
       "files": [
+        "docs-catalogue-collection.js",
         "docs-collection-customisation-registry.js",
         "docs-collection-report-filter.js",
         "docs-collection-report.js",
@@ -109,6 +110,7 @@
       "source_root": "docs-viewer/static/icons",
       "destination_root": "site/docs-viewer/static/icons",
       "files": [
+        "arrow-down-a-z.svg",
         "arrow-left.svg",
         "bookmark-filled.svg",
         "bookmark.svg",
@@ -116,6 +118,7 @@
         "chevron-left.svg",
         "chevron-right.svg",
         "circle-dashed-check.svg",
+        "clock-3.svg",
         "clock-9.svg",
         "dlf-home.svg",
         "expand.svg",

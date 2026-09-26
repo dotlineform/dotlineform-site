@@ -22,14 +22,6 @@
   margin-left: auto;
 }
 
-.docsViewer__icon--arrow-down-a-z{
-  mask-image: url("../icons/arrow-down-a-z.svg");
-}
-
-.docsViewer__icon--clock-3{
-  mask-image: url("../icons/clock-3.svg");
-}
-
 .docsViewer__icon--copy{
   mask-image: url("../icons/copy.svg");
 }
