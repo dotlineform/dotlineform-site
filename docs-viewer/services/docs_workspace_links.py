@@ -3,7 +3,7 @@
 from pathlib import Path
 from typing import Any
 
-from docs_lifecycle_paths import load_json_object, render_json, write_text_atomic
+from docs_json_files import load_json_object, render_json, write_text_atomic
 from docs_document_identity import is_immutable_doc_id
 from docs_workspace_config import DocsStageConfig, generated_documents_path, resolve_workspace_path
 

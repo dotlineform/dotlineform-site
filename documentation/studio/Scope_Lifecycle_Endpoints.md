@@ -3,10 +3,12 @@ draft: false
 doc_id: d-20260607-222033-3e391b
 title: Scope Lifecycle Endpoints
 added_date: 2026-06-07 22:20:33
-last_updated: "2026-07-19 22:33:42"
+last_updated: "2026-09-27 15:47:30"
 parent_id: d-20260607-222033-647b52
 ---
 # Docs Viewer Scope Lifecycle Endpoints
+
+This is a historical endpoint reference. Scope lifecycle and generic whole-collection lifecycle endpoints are retired without aliases. The payloads below describe the former design; [Source Organisation](Source_Organisation.md#collection-deliveries) owns current collection creation and retirement through deliveries.
 
 Scope lifecycle endpoints create, rename, and delete user-created Docs Viewer scopes. Ownership is recorded in `docs-viewer/config/scopes/docs_scope_manifest.json`; system-owned scopes are blocked from lifecycle rename and deletion.
 

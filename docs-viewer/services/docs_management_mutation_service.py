@@ -8,10 +8,8 @@ from typing import Any, Dict
 import docs_management_mutations as mutations
 from docs_workspace_config import load_docs_working_config, require_document_authoring
 import docs_source_config_settings
-import docs_collection_lifecycle
 import docs_source_model as source_model
 import docs_write_rebuild as write_rebuild
-from docs_workspace_config import normalize_collection_id
 from docs_management_context import log_event
 from docs_selected_documents import selected_path
 
@@ -279,49 +277,3 @@ def handle_delete_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
             {"default_doc_id": ""},
         )
     return execute_management_mutation_plan(repo_root, plan, dry_run)
-
-
-def handle_collection_create_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    collection = normalize_collection_id(body.get("collection"), field="collection")
-    docs_collection_lifecycle.require_confirmed(body)
-    payload = docs_collection_lifecycle.apply_create_collection(
-        repo_root,
-        body,
-        dry_run=dry_run,
-        rebuild_collection_outputs=write_rebuild.rebuild_collection_outputs,
-        rebuild_working_outputs=write_rebuild.rebuild_working_outputs,
-    )
-    if not dry_run:
-        log_event(
-            repo_root,
-            "docs_collection_create_apply",
-            {
-                "collection": collection,
-                "created_count": len(payload.get("created_files", [])),
-                "changed_count": len(payload.get("changed_files", [])),
-            },
-        )
-    return payload
-
-
-def handle_collection_delete_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    collection = normalize_collection_id(body.get("collection"), field="collection")
-    docs_collection_lifecycle.require_confirmed(body)
-    payload = docs_collection_lifecycle.apply_delete_collection(
-        repo_root,
-        body,
-        dry_run=dry_run,
-        rebuild_working_outputs=write_rebuild.rebuild_working_outputs,
-    )
-    if not dry_run:
-        log_event(
-            repo_root,
-            "docs_collection_delete_apply",
-            {
-                "collection": collection,
-                "deleted_count": len(payload.get("deleted_files", [])),
-                "missing_count": len(payload.get("missing_files", [])),
-                "changed_count": len(payload.get("changed_files", [])),
-            },
-        )
-    return payload

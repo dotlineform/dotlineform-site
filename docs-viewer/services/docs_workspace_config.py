@@ -43,10 +43,6 @@ MEDIA_REFERENCE_ROOT = Path("docs")
 MANAGED_MEDIA_TYPES = frozenset({"files", "html", "img", "svg"})
 BUILD_MEDIA_TYPES = frozenset({"mermaid"})
 COLLECTION_ID_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9_-]*\Z")
-SOURCE_REVISION_PATTERN = re.compile(r"\Asha256:[0-9a-f]{64}\Z")
-COLLECTION_LIFECYCLE_TOOL_ID = "docs-viewer-collection-lifecycle"
-# Read only as historical creation provenance, never as an active tool alias.
-HISTORICAL_COLLECTION_LIFECYCLE_TOOL_ID = "docs-viewer-scope-lifecycle"
 SEARCH_FIELDS = frozenset({"body", "code", "heading", "identity", "last_updated", "parent_title", "summary", "title"})
 DEFAULT_DOCS_SEARCH_FIELDS = ("title", "heading", "summary", "body", "code")
 
@@ -115,13 +111,6 @@ class DocsPublicProjectionConfig:
 
 
 @dataclass(frozen=True)
-class DocsCollectionLifecycleConfig:
-    tool_id: str
-    report_host_doc_id: str
-    report_host_source_revision: str
-
-
-@dataclass(frozen=True)
 class DocsCollectionConfig:
     collection: str
     title: str
@@ -130,7 +119,6 @@ class DocsCollectionConfig:
     public_title: str
     supports_return_import: bool
     collection_customisation: DocsCollectionCustomisationConfig | None
-    lifecycle: DocsCollectionLifecycleConfig | None
     stage: str
     source: DocsSourceConfig
     media: DocsMediaConfig
@@ -461,19 +449,6 @@ def _generated(root: ArtifactLocation) -> DocsGeneratedConfig:
                                DocsArtifactConfig(location_child(root, Path("search/index.json"))))
 
 
-def _lifecycle(raw: Any, *, field: str) -> DocsCollectionLifecycleConfig | None:
-    if raw is None:
-        return None
-    item = _object(raw, field=field, required={"tool_id", "report_host_doc_id", "report_host_source_revision"})
-    if item["tool_id"] not in {COLLECTION_LIFECYCLE_TOOL_ID, HISTORICAL_COLLECTION_LIFECYCLE_TOOL_ID}:
-        raise ValueError(f"{field}.tool_id is not a recognised collection creation receipt")
-    doc_id = _doc_id(item["report_host_doc_id"], field=f"{field}.report_host_doc_id")
-    revision = item["report_host_source_revision"]
-    if not isinstance(revision, str) or not SOURCE_REVISION_PATTERN.fullmatch(revision):
-        raise ValueError(f"{field}.report_host_source_revision must be a sha256 receipt")
-    return DocsCollectionLifecycleConfig(item["tool_id"], doc_id, revision)
-
-
 def _collections(raw: Any, *, workspace_root: ArtifactLocation, stage: str,
                 media_settings: Any, assets: DocsAssetsConfig,
                 projection: DocsPublicProjectionConfig | None) -> tuple[DocsCollectionConfig, ...]:
@@ -484,11 +459,11 @@ def _collections(raw: Any, *, workspace_root: ArtifactLocation, stage: str,
     for index, raw_item in enumerate(raw):
         field = f"stages.{stage}.collections[{index}]"
         item = _object(raw_item, field=field, required={"collection", "title", "report_host_doc_id", "include_in_site_search"}, optional={
-            "public_title", "supports_return_import", "collection_customisation", "lifecycle",
+            "public_title", "supports_return_import", "collection_customisation",
         })
         if stage == "preview":
             customisation = item.get("collection_customisation")
-            item = {**item, "supports_return_import": False, "lifecycle": None,
+            item = {**item, "supports_return_import": False,
                     "collection_customisation": (
                         {"id": PREVIEW_WORKS_CUSTOMISATION_ID, "settings": {}}
                         if customisation and customisation.get("id") == WORKING_WORKS_CUSTOMISATION_ID else None
@@ -522,7 +497,7 @@ def _collections(raw: Any, *, workspace_root: ArtifactLocation, stage: str,
             include_in_site_search=_boolean(item["include_in_site_search"], field=f"{field}.include_in_site_search"),
             supports_return_import=_boolean(item.get("supports_return_import", False), field=f"{field}.supports_return_import"),
             collection_customisation=normalize_docs_collection_customisation(item.get("collection_customisation"), field=f"{field}.collection_customisation"),
-            lifecycle=_lifecycle(item.get("lifecycle"), field=f"{field}.lifecycle"), stage=stage,
+            stage=stage,
             source=DocsSourceConfig(source_root), generated=_generated(generated_root), preview=_preview(preview_root),
             media=_media(media_settings, source_root=source_root, assets=assets, stage=stage, collection=child),
             public_projection=child_projection,

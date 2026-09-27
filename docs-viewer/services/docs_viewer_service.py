@@ -394,19 +394,11 @@ def apply_capability_flags(payload: dict[str, object], config: DocsViewerService
             document_delete["preview"] = False
             document_delete["apply"] = False
             document_delete["collection_detail"] = False
-        lifecycle = capabilities.get("collection_lifecycle")
-        if isinstance(lifecycle, dict):
-            for key in (
-                "create_apply",
-                "delete_apply",
-            ):
-                lifecycle[key] = False
         capabilities["publish"] = {"available": False, "reason": "Management is disabled."}
         workspace = capabilities.get("workspace")
         if isinstance(workspace, dict):
             workspace["document_authoring"] = False
             workspace["static_html_export"] = {"preview": False, "apply": False}
-            workspace["collection_lifecycle"].update(create_eligible=False, delete_eligible=False)
     if not config.generated_reads_enabled:
         workspace = capabilities.get("workspace")
         if isinstance(workspace, dict):

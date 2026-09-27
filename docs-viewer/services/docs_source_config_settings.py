@@ -44,7 +44,7 @@ BLOCKED_WORKSPACE_FIELDS = {
     "non_loadable_doc_ids": "Tree loading behavior depends on published docs structure.",
     "manage_only_tree_root_ids": "Manage-only tree behavior depends on published docs structure.",
     "allow_unresolved_parent_ids": "Parent validation policy affects source validation.",
-    "collections": "Collection roles and locations are managed through the collection lifecycle workflow.",
+    "collections": "Collection registration and retirement require an explicitly scoped development delivery.",
 }
 
 DEFERRED_GLOBAL_FIELDS = {

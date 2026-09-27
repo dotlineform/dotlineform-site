@@ -319,29 +319,6 @@ export function applyManagedCollectionDocDelete(target, sourceRevision, options)
   );
 }
 
-export function previewCollectionCreate(payload, options) {
-  return fetchManagementJson("/docs/collections/create-preview", "POST", Object.assign({  }, payload || {}), options);
-}
-
-export function applyCollectionCreate(payload, options) {
-  return fetchManagementJson("/docs/collections/create-apply", "POST", Object.assign({  }, payload || {}, {
-    confirm: true
-  }), options);
-}
-
-export function previewCollectionDelete(collection, options) {
-  return fetchManagementJson("/docs/collections/delete-preview", "POST", {
-    collection: collection
-  }, options);
-}
-
-export function applyCollectionDelete(collection, options) {
-  return fetchManagementJson("/docs/collections/delete-apply", "POST", {
-    collection: collection,
-    confirm: true
-  }, options);
-}
-
 export function moveManagedDoc(docId, targetDocId, placement, options) {
   return fetchManagementJson("/docs/move", "POST", collectionPayload({
     doc_id: docId,

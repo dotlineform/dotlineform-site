@@ -52,11 +52,7 @@
     "rebuild": "/docs/rebuild",
     "move": "/docs/move",
     "delete_preview": "/docs/delete-preview",
-    "delete_apply": "/docs/delete-apply",
-    "collection_create_preview": "/docs/collections/create-preview",
-    "collection_create_apply": "/docs/collections/create-apply",
-    "collection_delete_preview": "/docs/collections/delete-preview",
-    "collection_delete_apply": "/docs/collections/delete-apply"
+    "delete_apply": "/docs/delete-apply"
   },
   "local_state": {
     "backups": "var/docs/backups",

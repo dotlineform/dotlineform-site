@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260523-190651-7157ec
 title: Development Checklist
 added_date: "2026-05-23 19:06:51"
-last_updated: "2026-09-27 11:52:05"
+last_updated: "2026-09-27 15:47:30"
 parent_id: d-20260419-000000-d2e47b
 
 ---
@@ -50,6 +50,7 @@ This checklist and the durable Studio development documentation are maintained d
 
 - [ ] Working publication policy belongs to its configured ordinary `working/source/documents/unpublishable.json` and document `draft` state. Every ordinary and collection source document requires an explicit boolean `draft`; source reads and saves reject invalid readiness. Prepare Preview excludes ignored ordinary roots and their descendants, draft subtrees, and collections whose host is excluded. Deploy Repo distributes that complete prepared set. Do not restore `publishable`, per-report `access`, inferred report exclusions or downstream eligibility filters.
 - [ ] The single Docs workspace has Working source/generated storage and a read-only `preview/` artifact directly beneath the existing `DOTLINEFORM_DOCS_BASE_DIR`. Working registers collections and media once; Preview derives preparation configuration. One empty-body `/docs/publish` action captures current inputs, builds in temporary storage, validates and replaces Preview, records completion after byte verification and passes that completed snapshot directly to distribution. Keep the UI busy until both phases finish. No separate preparation/distribution endpoints, stage selector, Preview browsing or intermediate confirmation remain. Review through site-preview; Git/public deployment remains separate. Works owns Subject specialisation; ordinary documents retain authored fields unchanged.
+- [ ] Collection creation, registration changes and retirement are explicitly scoped deliveries. Define the exact owner, report host, source/generated/media boundaries, producers/customisations, configuration/public projections and cleanup/recovery for each collection. Do not add generic collection create/delete UI actions, service endpoints or creation receipts. [Source Organisation](Source_Organisation.md#collection-deliveries) owns this boundary.
 - [ ] Local document targets are `{doc_id}` or `{collection, doc_id}`; collection targets are `{}` or `{collection}`. Local readers/authoring resolve Working at their storage owner, public readers resolve repository/public output, and neither accepts publishing-stage context. Build/storage/completion provenance may retain internal stage roles. Reject retired request fields without defaults or aliases.
 - [ ] Publish preparation failure prevents distribution. Distribution failure retains completed Preview and reports incomplete publication; repository and R2 effects are not atomic. Fix the owning input/destination and run a fresh Publish. Do not add automatic backup trees, rollback, retry ledgers or shared/remote asset deletion.
 - [ ] Deploy Repo counts accepted by-ID documents directly. Public document-location JSON, its unused picker and legacy Catalogue document-URL refresh are retired; do not restore the UAC-1 pause or old Catalogue schema writer. Current Catalogue deployment copies only inventory-selected Preview Catalogue bytes into `site/assets/data/catalogue/` through the existing Publish owner.
@@ -98,7 +99,7 @@ This checklist and the durable Studio development documentation are maintained d
 - [ ] Treat `site-tools/config/site-code-update.json` as the sole canonical-to-site runtime inventory. Change it explicitly when a represented file is added, removed, or changes public status; do not add local-only code from mixed runtime or stylesheet directories.
 - [ ] Identify app context, provider, service adapter, state domain, controller, hosted view, and backend/generated contract involved.
 - [ ] Public installs remain read-only and receive no management assets, services, local generated-read URLs, or write-capable handles.
-- [ ] Management writes/import/settings/collection lifecycle/rebuild/source-open operations go through the management client and validated server endpoints.
+- [ ] Management writes/import/settings/rebuild/source-open operations go through the management client and validated server endpoints.
 - [ ] Route features are allowlisted; disabled features do not construct controllers, bind events, or require payloads.
 - [ ] Generated collection reads use a named provider and the generated-data runtime; do not spread transport/retry logic.
 - [ ] Ordinary local/public reads open the requested file within their configured owner. Do not inspect a completion manifest, scan/hash a snapshot or read an index to permit a by-ID read. Publication owns snapshot/output verification; retain request identity, path confinement and requested-payload validation. Preview browsing routes remain retired.

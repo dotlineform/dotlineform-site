@@ -3,12 +3,6 @@ import {
   readManagementCapabilities
 } from "./docs-viewer-management-client.js";
 
-function collectionLifecycleCapabilities(capabilities) {
-  return capabilities && capabilities.collection_lifecycle && typeof capabilities.collection_lifecycle === "object"
-    ? capabilities.collection_lifecycle
-    : null;
-}
-
 export function documentPackagePrepareCapability(capabilities) {
   var documentPackages = capabilities && capabilities.document_packages;
   if (!documentPackages || typeof documentPackages !== "object") {
@@ -35,37 +29,6 @@ export function documentPackagePrepareCapability(capabilities) {
 /** Read capabilities for the configured authoring workspace. */
 export function workspaceManagementCapabilities(capabilities) {
   return capabilities && capabilities.workspace || null;
-}
-
-export function collectionCreateSupported(capabilities) {
-  var lifecycle = collectionLifecycleCapabilities(capabilities);
-  var workspaceCaps = workspaceManagementCapabilities(capabilities);
-  var collectionLifecycle = workspaceCaps && workspaceCaps.collection_lifecycle && typeof workspaceCaps.collection_lifecycle === "object"
-    ? workspaceCaps.collection_lifecycle
-    : null;
-  return Boolean(
-    lifecycle &&
-    lifecycle.create_preview &&
-    lifecycle.create_apply &&
-    workspaceCaps &&
-    workspaceCaps.available &&
-    collectionLifecycle &&
-    collectionLifecycle.create_eligible
-  );
-}
-
-export function collectionDeleteSupported(capabilities) {
-  var lifecycle = collectionLifecycleCapabilities(capabilities);
-  var workspaceCaps = workspaceManagementCapabilities(capabilities);
-  return Boolean(
-    lifecycle &&
-    lifecycle.delete_preview &&
-    lifecycle.delete_apply &&
-    workspaceCaps &&
-    workspaceCaps.available &&
-    workspaceCaps.collection_lifecycle &&
-    workspaceCaps.collection_lifecycle.delete_eligible
-  );
 }
 
 export function publishCapability(capabilities) {
@@ -101,24 +64,6 @@ export function staticHtmlExportCapability(capabilities) {
     };
   }
   return { available: true, reason: "" };
-}
-
-export function collectionLifecycleDeleteTargets(capabilities) {
-  var workspaceCaps = workspaceManagementCapabilities(capabilities);
-  var lifecycle = workspaceCaps && workspaceCaps.collection_lifecycle && typeof workspaceCaps.collection_lifecycle === "object"
-    ? workspaceCaps.collection_lifecycle
-    : null;
-  var records = lifecycle && Array.isArray(lifecycle.collections) ? lifecycle.collections : [];
-  return records.map(function (record) {
-    var collection = String(record && record.collection || "").trim();
-    return {
-      collection: collection,
-      title: String(record && record.title || "").trim(),
-      source: String(record && record.source || "").trim()
-    };
-  }).filter(function (record) {
-    return Boolean(record.collection);
-  });
 }
 
 export function createDocsViewerManagementCapabilityController(options) {

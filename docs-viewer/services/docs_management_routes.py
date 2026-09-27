@@ -56,10 +56,6 @@ PUBLISH_PATH = "/docs/publish"
 MOVE_PATH = "/docs/move"
 DELETE_PREVIEW_PATH = "/docs/delete-preview"
 DELETE_APPLY_PATH = "/docs/delete-apply"
-COLLECTION_CREATE_PREVIEW_PATH = "/docs/collections/create-preview"
-COLLECTION_CREATE_APPLY_PATH = "/docs/collections/create-apply"
-COLLECTION_DELETE_PREVIEW_PATH = "/docs/collections/delete-preview"
-COLLECTION_DELETE_APPLY_PATH = "/docs/collections/delete-apply"
 STATIC_HTML_EXPORT_PREVIEW_PATH = "/docs/export/static-html/preview"
 STATIC_HTML_EXPORT_APPLY_PATH = "/docs/export/static-html/apply"
 
@@ -121,10 +117,6 @@ POST_PATHS = (
     MOVE_PATH,
     DELETE_PREVIEW_PATH,
     DELETE_APPLY_PATH,
-    COLLECTION_CREATE_PREVIEW_PATH,
-    COLLECTION_CREATE_APPLY_PATH,
-    COLLECTION_DELETE_PREVIEW_PATH,
-    COLLECTION_DELETE_APPLY_PATH,
     STATIC_HTML_EXPORT_PREVIEW_PATH,
     STATIC_HTML_EXPORT_APPLY_PATH,
 )

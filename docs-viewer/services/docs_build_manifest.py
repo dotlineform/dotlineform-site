@@ -9,7 +9,7 @@ import json
 from pathlib import Path
 from typing import Any, Iterable
 
-from docs_lifecycle_paths import render_json, write_text_atomic
+from docs_json_files import render_json, write_text_atomic
 from docs_workspace_config import DocsStageConfig, load_docs_workspace_config, resolve_location_path
 
 

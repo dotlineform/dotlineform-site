@@ -3,13 +3,13 @@ draft: false
 doc_id: d-20260602-160839-6d3cbb
 title: Docs Viewer Search
 added_date: "2026-06-02 16:08:39"
-last_updated: "2026-09-24 22:11:17"
+last_updated: "2026-09-27 15:47:30"
 parent_id: d-20260331-000000-5dcf32
 
 ---
 # Docs Viewer Search
 
-Docs Viewer Search provides one static inverted-index format and one browser query path for the Docs workspace. Working builds eligible ordinary documents plus eligible Works and Processing subdocs into one index. Preview and the public reader consume unchanged copies through their existing lifecycle.
+Docs Viewer Search provides one static inverted-index format and one browser query path for the Docs workspace. Working builds eligible ordinary documents plus eligible Works subdocs into one index. Preview and the public reader consume unchanged copies through their existing lifecycle.
 
 ## Durable Contracts
 
@@ -28,7 +28,7 @@ Working tree metadata selects ordinary documents, pruning draft and unpublishabl
 
 ## Site-Search Corpus
 
-Ordinary documents, Works and Processing share one index, query and relevance order. Catalogue, Concepts and Moments subdocs are excluded by explicit collection policy; their eligible ordinary landing pages remain searchable. New collection registration records exclusion until explicitly selected. Recents shares the collection policy and metadata eligibility without reading the Search index. Report-local title search remains a list filter, not another full-text engine.
+Ordinary documents and Works share one index, query and relevance order. Catalogue, Concepts and Moments subdocs are excluded by explicit collection policy; their eligible ordinary landing pages remain searchable. A collection delivery explicitly sets `include_in_site_search`; registration does not imply inclusion. Recents shares the collection policy and metadata eligibility without reading the Search index. Report-local title search remains a list filter, not another full-text engine.
 
 Collection results retain exact `{collection, doc_id}` identity plus explicit `report_doc_id` placement. The shared route workflow uses that structured target to create the active Manage or public parent URL and preserve the child as `subdoc`. Configured collection/report title is display-only context beneath the result title and emits no postings.
 

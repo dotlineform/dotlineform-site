@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260512-142027-54b354
 title: Configuration And Extension Points
 added_date: "2026-05-12 14:20:27"
-last_updated: "2026-09-27 11:52:05"
+last_updated: "2026-09-27 15:47:30"
 summary: Map of the configuration, registries, generated projections, code definitions, and capability checks that drive Docs Viewer workflows.
 parent_id: d-20260424-000000-50b63f
 
@@ -64,7 +64,7 @@ Each managed media type has one `asset_location`; its owner retains `asset_root`
 
 Managed document targets use immutable `doc_id` and optional exact registered `collection`; collection targets are empty objects or contain only `collection`. Retired `stage`, `scope` and `sub_scope` selectors are rejected. Source records require boolean `draft`; collection documents are flat and do not inherit ordinary hierarchy. Reports use `id: docs_collection` with an exact collection selector.
 
-Working registers each collection once, with its ID, title and exact `report_host_doc_id`; Preview derives that registration. The host ID is configuration authority, not inferred from documents, titles or a receipt. New collection creates its Working source/generated roots and report host. Whole-collection deletion remains unavailable. Historical lifecycle receipt values remain provenance rather than compatibility selectors.
+Working registers each collection once, with its ID, title and exact `report_host_doc_id`; Preview derives that registration. The host ID is configuration authority, not inferred from documents, titles or a receipt. Collection creation, registration changes and retirement are explicitly scoped deliveries; [Source Organisation](Source_Organisation.md#collection-deliveries) owns the boundary. Generic collection create/delete UI actions, endpoints, capabilities and historical creation receipts are removed.
 
 New document in the exact Working `catalogue` collection requires a five-digit quoted `work_id` and non-blank title. Its targeted build preserves that association in the generated Links subject. Canonical Catalogue records remain Studio-owned; configuration consolidation does not move them or Projects-owned original images.
 
@@ -83,7 +83,6 @@ Document Build accepts `--stage working`. Optional `--collection` selects one re
 | Shared current media | `/docs/assets/<configured-family>/<identity>`, independent of stage |
 | Working aggregate Links | `/docs/workspace-links` |
 | Publish | `POST /docs/publish` with `{}` |
-| Collection lifecycle | `/docs/collections/create-preview`, `create-apply`, `delete-preview`, `delete-apply`; deletion remains blocked |
 
 Source/Create/metadata/placement/Delete/Draft operations resolve Working and require exact identity. Working Delete does not prune Preview or public output. Source-only Draft updates return readiness to the mounted reader while watcher generation remains independent. Media insertion writes shared local assets through the exact Working collection/type owner; the standalone tool uses `--scope docs` with optional `--docs-collection`, without a Docs stage flag.
 
@@ -105,7 +104,7 @@ Publication lineage requires exact configured Working collection owners. No line
 
 The local and public route registries use `docs_viewer_route_config_v5`. Neither route selects a publishing stage. Stage/scope-bearing URLs fail with a current-link message. `docs-viewer-workspace-provider.js` uses the composition's one configured workspace. `workspace-configuration` controls configuration discovery; there are no stage controls. The public composition retains read-only authority and does not probe local management services.
 
-Management capability responses expose `workspace` plus `publish` availability. Settings use `docs_source_config_settings_v2` for that fixed local owner; the Source Config Report and its dedicated read endpoint are retired. Docs Media assembles `docs_media_files_v1` and `docs_media_references_v1` reads in the browser; its reveal action sends exact collection, role, media type and identity to `/docs/open-media-source`, which resolves an existing file through the configured Docs artifact owner and shared Finder helper. See [Media And Asset Handling](Media_And_Asset_Handling.md) for its inventory and file-opening boundary. Top-level scope lifecycle remains retired. Retained collection lifecycle uses its existing controller and service. Ordinary workspace export reads the Working ordinary document index and retains its own preview/confirmation/apply workflow.
+Management capability responses expose `workspace` plus `publish` availability. Settings use `docs_source_config_settings_v2` for that fixed local owner; the Source Config Report and its dedicated read endpoint are retired. Docs Media assembles `docs_media_files_v1` and `docs_media_references_v1` reads in the browser; its reveal action sends exact collection, role, media type and identity to `/docs/open-media-source`, which resolves an existing file through the configured Docs artifact owner and shared Finder helper. See [Media And Asset Handling](Media_And_Asset_Handling.md) for its inventory and file-opening boundary. Scope and whole-collection lifecycle UI/service workflows are retired. Ordinary workspace export reads the Working ordinary document index and retains its own preview/confirmation/apply workflow.
 
 Document-package services and browser callers resolve Working with optional exact `collection`. Trusted metadata uses `data_sharing_export_meta_v4` and validated Review manifests use `docs_review_validated_package_v4`, without source-stage provenance; the package-list envelope remains `docs_review_packages_v3`. Retired stage/scope fields are rejected without migration or fallback. No existing packages required conversion at cutover. Static export reads selected Working generated content, records `docs_static_html_snapshot_v3` and preserves its own revision-bound preview/apply, assets and exact selection; its API remains v2. Stage-bearing local links are invalid and collection links are not folded into an ordinary snapshot. Notes Archive remains retired.
 

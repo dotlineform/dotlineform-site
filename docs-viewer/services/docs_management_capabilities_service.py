@@ -15,7 +15,6 @@ from docs_workspace_config import (
     path_label,
     generated_documents_path,
     generated_search_path,
-    preview_documents_path,
     resolve_workspace_path,
 )
 from docs_document_packages.workspace import workspace_status
@@ -30,21 +29,6 @@ def workspace_capabilities(repo_root: Path, config: Any, static_html_export: dic
         "root": path_label(repo_root, document_source_path(config)),
         "generated_data_reads": generated_data_path.exists(),
         "generated_search_reads": resolve_workspace_path(repo_root, generated_search_path(config)).exists(),
-        "collection_lifecycle": {
-            "create_eligible": True,
-            "delete_eligible": False,
-            "collections": [
-                {
-                    "collection": collection.collection,
-                    "title": collection.title,
-                    "source": path_label(repo_root, document_source_path(collection)),
-                    "output": path_label(repo_root, generated_documents_path(collection)),
-                    "publish_output": path_label(repo_root, preview_documents_path(collection)),
-                }
-                for collection in config.collections
-                if collection.lifecycle is not None
-            ],
-        },
         "static_html_export": docs_static_html_export.workspace_static_html_export_capability(
             repo_root,
             config,
@@ -105,12 +89,6 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                 "available": data_sharing_workspace["available"],
                 "message": data_sharing_workspace["message"],
                 "workspace_root": data_sharing_workspace["root"],
-            },
-            "collection_lifecycle": {
-                "create_preview": True,
-                "create_apply": True,
-                "delete_preview": True,
-                "delete_apply": True,
             },
             "publish": publication,
             "static_html_export": static_html_export,

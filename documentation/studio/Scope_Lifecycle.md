@@ -3,12 +3,14 @@ draft: false
 doc_id: d-20260515-000000-f43740
 title: Scope Lifecycle
 added_date: "2026-05-15 00:00:00"
-last_updated: "2026-08-12 17:51:20"
-summary: Create, rename, and delete Docs Viewer scopes through previewed server plans, explicit ownership, and public-isolation safeguards.
+last_updated: "2026-09-27 15:47:30"
+summary: Historical scope lifecycle design; scope and whole-collection lifecycle UI and services are retired.
 parent_id: d-20260424-000000-50b63f
 
 ---
 # Docs Viewer Scope Lifecycle
+
+This document is historical. Scope lifecycle was retired with the single-workspace model, and generic whole-collection creation/deletion UI, services and creation receipts were removed on 27 September 2026. The descriptions below record the former design. [Source Organisation](Source_Organisation.md#collection-deliveries) owns the current delivery boundary.
 
 Scope lifecycle is the local-management boundary for creating, narrowly renaming, and deleting Docs Viewer scopes. It coordinates canonical source, published workspaces, configuration, route assets, media ownership, and rebuilds; it is not a browser-side file helper.
 

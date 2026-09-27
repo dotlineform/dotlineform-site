@@ -2,7 +2,7 @@
 doc_id: d-20260919-100234-038395
 title: "Shared Icons: Toolbar Mapping"
 added_date: "2026-09-19 10:02:34"
-last_updated: "2026-09-27 15:28:26"
+last_updated: "2026-09-27 15:47:30"
 summary: Editable mappings for Docs Viewer toolbars, report toolbars and report list icons, including code identifiers, state variants and replacement artwork choices.
 ui_status: planned
 parent_id: d-20260910-223116-9a1011
@@ -82,8 +82,6 @@ Code identifiers below are exact **renderer keys**, except entries explicitly ma
 | Actions menu: New | action `new` | Creates a document | 📄 and text | file.svg and text | — | Implemented; review pending |
 | Actions menu: Import | action `import` | Opens Import | 📥 and text | import.svg and text | — | Implemented; review pending |
 | Actions menu: Export | action `export-workspace` | Exports workspace | ⬇️ and text | square-arrow-right-exit.svg and text | — | Implemented; review pending |
-| Actions menu: New collection | action `new-collection` | Creates a collection when available | 📁 and text | folder.svg and text | — | Implemented; review pending |
-| Actions menu: Delete collection | action `delete-collection` | Deletes a collection when available | 🗑️ and text | folder-x.svg and text | — | Implemented; review pending |
 | Actions menu: Settings | action `settings` | Opens Settings | ⚙️ and text | settings.svg and text | — | Implemented; review pending |
 | Index header: collapse | DOM `docsViewerSidebarToggle` | Normal panel; click collapses it | ‹ | chevron-left.svg | — | Implemented; review pending |
 | Index header: restore | DOM `docsViewerSidebarToggle` | Collapsed panel; click restores it | › | chevron-right.svg | — | Implemented; review pending |
@@ -249,7 +247,6 @@ file-plus-corner.svg
 file-text.svg
 file.svg
 folder-open.svg
-folder-x.svg
 folder.svg
 funnel.svg
 globe.svg

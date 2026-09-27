@@ -110,11 +110,6 @@
           "collection_customisation": {
             "id": "working_works",
             "settings": {}
-          },
-          "lifecycle": {
-            "tool_id": "docs-viewer-scope-lifecycle",
-            "report_host_doc_id": "d-20260801-073826-8865a8",
-            "report_host_source_revision": "sha256:97a3ee6e3db1ff1a3251ed0a49e7a0c248a8dc9897b3d661abd08630cd94b722"
           }
         },
         {
@@ -128,23 +123,13 @@
           "collection": "moments",
           "include_in_site_search": false,
           "title": "Moments",
-          "report_host_doc_id": "d-20260907-180859-c425b2",
-          "lifecycle": {
-            "tool_id": "docs-viewer-scope-lifecycle",
-            "report_host_doc_id": "d-20260907-180859-c425b2",
-            "report_host_source_revision": "sha256:fd60d983cff466dda2f39143ecdded2317e1227f2e8b8c6fc60cfffa76e18ebd"
-          }
+          "report_host_doc_id": "d-20260907-180859-c425b2"
         },
         {
           "collection": "catalogue",
           "include_in_site_search": false,
           "title": "catalogue",
-          "report_host_doc_id": "d-20260916-161504-f8c947",
-          "lifecycle": {
-            "tool_id": "docs-viewer-collection-lifecycle",
-            "report_host_doc_id": "d-20260916-161504-f8c947",
-            "report_host_source_revision": "sha256:6c737e0336eb21427d0e7bd856bbbe9d20112b7c8d9e73c924bdda7077c722de"
-          }
+          "report_host_doc_id": "d-20260916-161504-f8c947"
         }
       ]
     }

@@ -36,7 +36,6 @@ import docs_uncataloged_files  # noqa: E402
 import docs_source_config_settings  # noqa: E402
 import docs_static_html_export  # noqa: E402
 import docs_staged_media_service  # noqa: E402
-import docs_collection_lifecycle  # noqa: E402
 import docs_catalogue_regeneration  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
 import docs_write_rebuild as write_rebuild  # noqa: E402
@@ -62,8 +61,6 @@ from docs_management_mutation_service import (  # noqa: E402
     handle_create,
     handle_delete_apply,
     handle_move,
-    handle_collection_create_apply,
-    handle_collection_delete_apply,
 )
 from docs_management_read_service import (  # noqa: E402
     docs_api_query_value,
@@ -233,24 +230,6 @@ def docs_management_post_response(
         except mutations.ManagedDocumentRevisionConflict as error:
             return HTTPStatus.CONFLICT, error.payload
         except CollectionDocumentDeleteApplyError as error:
-            return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
-    if path == routes.COLLECTION_CREATE_PREVIEW_PATH:
-        payload = docs_collection_lifecycle.plan_create_collection_preview(repo_root, body)
-        payload["dry_run"] = True
-        return HTTPStatus.OK, payload
-    if path == routes.COLLECTION_CREATE_APPLY_PATH:
-        try:
-            return HTTPStatus.OK, handle_collection_create_apply(repo_root, body, dry_run)
-        except docs_collection_lifecycle.CollectionLifecycleApplyError as error:
-            return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
-    if path == routes.COLLECTION_DELETE_PREVIEW_PATH:
-        payload = docs_collection_lifecycle.plan_delete_collection_preview(repo_root, body)
-        payload["dry_run"] = True
-        return HTTPStatus.OK, payload
-    if path == routes.COLLECTION_DELETE_APPLY_PATH:
-        try:
-            return HTTPStatus.OK, handle_collection_delete_apply(repo_root, body, dry_run)
-        except docs_collection_lifecycle.CollectionLifecycleApplyError as error:
             return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
     if path == routes.STATIC_HTML_EXPORT_PREVIEW_PATH:
         return HTTPStatus.OK, docs_static_html_export.preview_static_html_export(repo_root, body)

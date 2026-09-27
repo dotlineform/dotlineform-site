@@ -91,10 +91,6 @@
   mask-image: url("../icons/folder.svg");
 }
 
-.docsViewer__icon--folder-x{
-  mask-image: url("../icons/folder-x.svg");
-}
-
 .docsViewer__icon--globe{
   mask-image: url("../icons/globe.svg");
 }

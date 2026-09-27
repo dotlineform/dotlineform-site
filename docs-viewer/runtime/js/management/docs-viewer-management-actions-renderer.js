@@ -25,20 +25,6 @@ var MANAGEMENT_ACTION_MENU_ITEMS = [
     label: "Export"
   },
   {
-    id: "docsViewerManageNewCollectionButton",
-    actionId: ACTION_IDS.NEW_COLLECTION,
-    artwork: "docsViewer__icon--folder",
-    label: "New collection",
-    hidden: true
-  },
-  {
-    id: "docsViewerManageDeleteCollectionButton",
-    actionId: ACTION_IDS.DELETE_COLLECTION,
-    artwork: "docsViewer__icon--folder-x",
-    label: "Delete collection",
-    hidden: true
-  },
-  {
     id: "docsViewerManageSettingsButton",
     actionId: ACTION_IDS.SETTINGS,
     artwork: "docsViewer__icon--settings",

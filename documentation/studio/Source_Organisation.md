@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260423-000000-8fd731
 title: Source Organisation
 added_date: "2026-04-23 00:00:00"
-last_updated: "2026-09-27 11:52:05"
+last_updated: "2026-09-27 15:47:30"
 summary: Working source and generated storage, one read-only Preview snapshot, and exact collection and media ownership.
 parent_id: d-20260424-000000-50b63f
 ---
@@ -52,7 +52,7 @@ $DOTLINEFORM_DOCS_BASE_DIR/
 | Public projection | Downstream repository/R2 output served by the website. |
 | Rendered view | Presentation of document payloads and media; it is not source. |
 
-Working registers ordinary documents, collection hosts, collection customisations and media once. Preview derives the same collection/media owners for preparation. Current named collections are Works, Concepts, Processing, Moments and Catalogue. Preview has no persistent source/generated tree or Docs Viewer browsing route. The preparation phase of Publish uses temporary input/output and removes it when the operation finishes.
+Working registers ordinary documents, collection hosts, collection customisations and media once. Preview derives the same collection/media owners for preparation. Current named collections are Works, Concepts, Moments and Catalogue. Preview has no persistent source/generated tree or Docs Viewer browsing route. The preparation phase of Publish uses temporary input/output and removes it when the operation finishes.
 
 Durable Studio development documentation is maintained in repository `documentation/studio/`, independently of these external document collections. The native App and Processing projects retain their own build and release boundaries.
 
@@ -64,7 +64,7 @@ Configured storage supplies collection membership. Source front matter uses `col
 
 Authored Markdown is flat beneath each owner's `documents/`. Ordinary hierarchy and sibling order come from `working/source/documents/index-order.json`: a nested array of records containing `doc_id` and `children`. Nesting supplies the parent and literal array position supplies order. Ordinary Markdown no longer authors `parent_id`; runtime parent lookups are derived from this tree. Build joins the exact IDs with source metadata and writes `index-tree.json` in the same order. Named collection documents remain flat and retain their own sorting.
 
-Each collection has an exact ordinary report host. Positioning that host retains its immutable association; it does not choose a different collection or turn collection rows into tree children. Collection creation registers the owner once in Working and appends its new host to the ordinary root. Preparation later includes its eligible output in Preview.
+Each collection has an exact ordinary report host. Positioning that host retains its immutable association; it does not choose a different collection or turn collection rows into tree children. A delivery registers the owner once in Working and explicitly places its host in the ordinary tree. Preparation later includes its eligible output in Preview.
 
 Concepts and Moments are document collections rather than separate Concept/Moment entities. Works owns Subject specialisation. Ordinary documents retain their authored fields through common preparation, while collection customisations project their own authoring fields into reader data. Catalogue has its own canonical Work identity and regeneration owner.
 
@@ -72,13 +72,21 @@ The Position button beside Index Actions uses `arrow-up-down.svg`. Its synchrono
 
 New inserts after the displayed ordinary document as its sibling. With no ordinary anchor it appends at root. New child and New sibling retain their explicit destinations. Import appends new documents inside the selected parent and preserves existing placement on overwrite; batch creation writes parents before their children while retaining sibling sequence. Delete removes the complete subtree from JSON and source. Renaming or editing content does not reposition documents. Hand edits to the JSON take effect on the next Build; the Markdown watcher does not watch that file.
 
+## Collection Deliveries
+
+Collections can own specialised subject data, media producers, customisations, canonical records and public projections as well as documents. Creation, registration changes and whole-collection retirement are development deliveries under [Development Workflow](Development_Workflow.md), with a defined owner and outcome. Docs Viewer has no generic New Collection or Delete Collection action, capability, service endpoint or lifecycle creation receipt. `report_host_doc_id` remains mandatory configuration authority.
+
+For each delivery, identify the collection ID and host, source/generated/shared-media locations, producers and readers, document and subject associations, selected-document membership, Search inclusion, browser/report registration and public destinations. Creation defines and validates the required configuration and source, builds the owning outputs when needed, and updates the relevant browser projections. Retirement explicitly removes or preserves each owned resource and reference, including host tree placement, generated payloads, selected-document entries and deployed artifacts; invalidate a Preview completion receipt if its snapshot is changed outside Publish. Shared assets and other projects retain their own owners. Publish and Git/public deployment remain separately authorised operations.
+
+Document-level New, Edit and Delete operate within an existing configured collection. Collection browsing, Regenerate and package workflows retain their own owners. Removing a document or report host does not deregister the collection or perform a whole-collection cleanup.
+
 ## Authoring And Publish
 
 ### Selected Documents
 
 `working/source/documents/selected.json` owns star membership for ordinary documents and collection sub-documents. Its `docs_selected_v1` payload contains `docs` rows with exact `doc_id`, `title` and `last_updated`; collection rows also carry their configured `collection` and `report_doc_id`. Missing or malformed selection data fails visibly. Membership is the flag; there is no second editable front-matter value. The Working star control uses an outline when unset and a filled yellow star when set, and writes through `/docs/set-selected` without changing document Markdown or its modification date.
 
-Ordinary and targeted collection builds update title/date metadata only for selected documents they build. Delete removes all selected targets actually deleted, including ordinary descendants; collection-document delete recovery restores the selection alongside the source. Whole-collection retirement remains unavailable under its own lifecycle contract. The list is independent of Search/Recents inclusion policy.
+Ordinary and targeted collection builds update title/date metadata only for selected documents they build. Delete removes all selected targets actually deleted, including ordinary descendants; collection-document delete recovery restores the selection alongside the source. A whole-collection retirement delivery handles that collection's selected-document entries explicitly. The list is independent of Search/Recents inclusion policy.
 
 The shared `selected_documents` report on dotlineform (`d-20260426-164043-e14f49`) reads the current list when opened and displays linked titles ordered by `last_updated DESC`, then collection and immutable document ID for ties. Local links use `/docs/`; collection links open the exact configured host with the sub-document ID. Public links use the public viewer route. Working reads all selections, including draft/unpublishable documents.
 

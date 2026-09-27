@@ -21,9 +21,6 @@ import {
   createDocsViewerManagementModalComposition
 } from "./docs-viewer-management-modal-composition.js";
 import {
-  createDocsViewerManagementCollectionLifecycleController
-} from "./docs-viewer-management-collection-lifecycle-controller.js";
-import {
   createDocsViewerManagementActionController,
   requestCommittedDocumentSource
 } from "./docs-viewer-management-actions.js";
@@ -183,7 +180,6 @@ export function initDocsViewerManagement(context) {
   var importController = null;
   var interactionController = null;
   var modalController = null;
-  var collectionLifecycleController = null;
   var workspaceExportActive = false;
   var workspaceExportButton = document.getElementById("docsViewerManageExportWorkspaceButton");
   var settingsWorkflow = null;
@@ -706,7 +702,6 @@ export function initDocsViewerManagement(context) {
         eventRouter.hideManageActionsMenu();
       }
     }
-    if (collectionLifecycleController) collectionLifecycleController.render();
     if (workspaceExportButton) {
       var exportCapability = staticHtmlExportCapability(management.managementCapabilities);
       workspaceExportButton.disabled = management.managementBusy || workspaceExportActive || !exportCapability.available;
@@ -921,9 +916,7 @@ export function initDocsViewerManagement(context) {
     commands: {
       createDoc: function () { actionController.handleCreateDoc(); },
       exportWorkspace: openExportWorkspace,
-      createCollection: function () { collectionLifecycleController.createCollection(); },
       deleteDoc: function () { actionController.handleDeleteDoc(); },
-      deleteCollection: function () { collectionLifecycleController.deleteCollection(); },
       openImport: openAppImport,
       openSettings: function () { settingsWorkflow.open(); },
       publish: function () { actionController.handlePublish(); },
@@ -952,22 +945,6 @@ export function initDocsViewerManagement(context) {
       hideContextMenu: hideContextMenu,
       hideManageActionsMenu: eventRouter.hideManageActionsMenu,
       onImportComplete: displayImportedDocument,
-    }
-  });
-
-  collectionLifecycleController = createDocsViewerManagementCollectionLifecycleController({
-    root: root,
-    management: management,
-    callbacks: {
-      hideContextMenu: hideContextMenu,
-      hideManageActionsMenu: eventRouter.hideManageActionsMenu,
-      managementClientOptions: managementClientOptions,
-      refreshManagementCapabilities: refreshManagementCapabilities,
-      reloadDocsIndex: reloadDocsIndex,
-      reloadViewerConfiguration: reloadViewerConfiguration,
-      render: renderManagementUi,
-      setBusy: setManagementBusy,
-      setMessage: setManagementMessage,
     }
   });
 
