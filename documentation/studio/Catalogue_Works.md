@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260401-000000-ebf14a
 title: Catalogue Works
 added_date: "2026-04-01 00:00:00"
-last_updated: "2026-09-26 15:03:12"
+last_updated: "2026-09-27 19:35:41"
 parent_id: d-20260423-000000-d015e6
 
 ---
@@ -11,7 +11,7 @@ parent_id: d-20260423-000000-d015e6
 
 ## Live Report
 
-Open [Catalogue Works in Working](/docs/?stage=working&doc=d-20260810-222148-99daec). The report is a local Docs Viewer document in the `working` stage. This Studio page owns its implementation and extension guidance; Catalogue data and editing remain Studio-owned.
+Open [Catalogue Works](/docs/?doc=d-20260810-222148-99daec). The report is a local Docs Viewer document backed by Working output. This Studio page owns its implementation and extension guidance; Catalogue data and editing remain Studio-owned.
 
 Use Working document navigation or the link above to open the report. Editing remains in Studio's Work editor and its shared Series controls.
 
@@ -31,7 +31,7 @@ Typing waits for a 180 ms pause before filtering and sorting; clearing search ap
 
 The report module owns input validation, Work/Series search, five sortable columns, pagination, Work/Series link construction, one seven-column render, presentation-aware clipboard projection and unavailable or invalid states. Pager layout belongs to the existing local report stylesheet and reuses shared icon buttons. Editing remains in the [Catalogue Work Editor](Catalogue_Work_Editor.md) and its shared Series controls. There is no separate Catalogue Drafts workflow.
 
-Work ID and title open the matching subdocument in Working Catalogue. On each report mount, one read of the configured Catalogue collection's generated `subject-associations.json` supplies exact Work-to-document associations and Manage URLs. The report preserves those URLs, including their configured report host and immutable subdocument identity; it does not match titles or reconstruct document destinations. Works without an association remain visible as plain text. Invalid locations or multiple Catalogue documents for one Work fail visibly rather than choosing a destination.
+Work ID and title open the matching subdocument in Working Catalogue. On each report mount, one read of Catalogue's configured `manage-manifest.json` supplies normalized `authoring_subject` rows and immutable document identities. The shared Catalogue link reader derives valid Work mappings in memory and composes exact Manage URLs with the configured report host and existing route helper. It never matches titles or infers a host from route context. Works without a mapping remain visible as plain text. Invalid manifest identities or multiple Catalogue documents for one Work fail visibly rather than choosing a destination. No association lookup file is generated or read.
 
 Linked Catalogue documents have a separate freshness boundary: Regenerate writes literal title, caption and summary values into their source. A Work Save updates this report's metadata but does not rewrite those documents. Collection caption behavior belongs to the separate collections review.
 

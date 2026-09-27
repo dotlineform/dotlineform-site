@@ -36,7 +36,7 @@ def external_collection_payload_path(repo_root: Path, request_path: str) -> Path
     selected = next((child for child in config.collections if child.collection == collection), None)
     if selected is None:
         raise FileNotFoundError(f"Docs collection not found: {collection}")
-    if len(artifact) == 1 and artifact[0] in {"manifest.json", "manage-manifest.json", "subject-associations.json"}:
+    if len(artifact) == 1 and artifact[0] in {"manifest.json", "manage-manifest.json"}:
         relative_path = Path(artifact[0])
     elif len(artifact) == 2 and artifact[0] == "by-id" and artifact[1].endswith(".json") and is_immutable_doc_id(artifact[1][:-5]):
         relative_path = Path(*artifact)

@@ -26,6 +26,7 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths 
 ensure_studio_python_paths(__file__)
 
 from docs_document_identity import is_immutable_doc_id  # noqa: E402
+from docs_document_location import canonical_document_viewer_url, management_document_viewer_url  # noqa: E402
 from docs_local_links import encode_relative_target  # noqa: E402
 from docs_workspace_config import generated_documents_path, load_docs_working_config, resolve_workspace_path  # noqa: E402
 from catalogue.catalogue_source import (  # noqa: E402
@@ -42,7 +43,6 @@ from studio.shared.python.projects_directories import (  # noqa: E402
 )
 
 REPORT_SCHEMA_VERSION = "docs_project_state_report_v4"
-SUBJECT_ASSOCIATIONS_SCHEMA_VERSION = "docs_subject_associations_v2"
 WORKS_COLLECTION = "works"
 GENERATION_PATTERN = re.compile(r"\Asha256:[0-9a-f]{64}\Z")
 WORK_ID_PATTERN = re.compile(r"\A[0-9]{5}\Z")
@@ -52,7 +52,7 @@ WORK_ID_PATTERN = re.compile(r"\A[0-9]{5}\Z")
 class ProjectStatePaths:
     projects_base_dir: Path
     manage_manifest_path: Path
-    subject_associations_path: Path
+    collection_viewer_url: str
     catalogue_source_dir: Path
 
 
@@ -71,7 +71,7 @@ def default_project_state_paths(repo_root: Path) -> ProjectStatePaths:
     return ProjectStatePaths(
         projects_base_dir=configured_projects_base(),
         manage_manifest_path=generated_root / "manage-manifest.json",
-        subject_associations_path=generated_root / "subject-associations.json",
+        collection_viewer_url=canonical_document_viewer_url(collection.report_host_doc_id),
         catalogue_source_dir=root / DEFAULT_SOURCE_DIR,
     )
 
@@ -110,22 +110,27 @@ def _folder_keys(projects_base_dir: Path) -> list[str]:
 
 
 def _subject_documents(
-    manifest: Mapping[str, Any], associations: Mapping[str, Any]
+    manifest: Mapping[str, Any], collection_viewer_url: str
 ) -> tuple[str, dict[tuple[str, str], list[dict[str, Any]]], int]:
+    """Group valid Works subjects directly from private rows with configured links.
+
+    Keep every document for a subject; invalid declarations remain in the manifest
+    and contribute only to its document count, not report placement.
+    """
     generation = str(manifest.get("subject_generation") or "").strip()
     manifest_rows = manifest.get("docs")
     if not GENERATION_PATTERN.fullmatch(generation) or not isinstance(manifest_rows, list):
         raise ValueError("Projects Manage manifest has an invalid subject projection")
-    manifest_by_id: dict[str, dict[str, Any]] = {}
-    expected: set[tuple[str, str, str]] = set()
+    seen_doc_ids: set[str] = set()
+    by_subject: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
     for raw_row in manifest_rows:
         if not isinstance(raw_row, dict):
             raise ValueError("Projects Manage manifest contains an invalid document record")
         row = dict(raw_row)
         doc_id = str(row.get("doc_id") or "").strip()
-        if not is_immutable_doc_id(doc_id) or doc_id in manifest_by_id:
+        if not is_immutable_doc_id(doc_id) or doc_id in seen_doc_ids:
             raise ValueError("Projects Manage manifest contains an invalid or duplicate doc_id")
-        manifest_by_id[doc_id] = row
+        seen_doc_ids.add(doc_id)
         subject = row.get("authoring_subject")
         if not isinstance(subject, dict) or subject.get("state") != "valid":
             continue
@@ -133,77 +138,21 @@ def _subject_documents(
         key = str(subject.get("key") or "").strip()
         if kind not in {"folder", "work", "series"} or not key:
             raise ValueError("Projects Manage manifest contains an invalid valid subject")
-        expected.add((kind, key, doc_id))
-
-    if (
-        associations.get("schema_version") != SUBJECT_ASSOCIATIONS_SCHEMA_VERSION
-        or "scope" in associations
-        or "stage" in associations
-        or associations.get("collection") != WORKS_COLLECTION
-    ):
-        raise ValueError("Projects subject associations identify the wrong collection")
-    if associations.get("subject_generation") != generation:
-        raise ValueError("Projects subject generation receipts do not match")
-    association_rows = associations.get("associations")
-    if not isinstance(association_rows, list):
-        raise ValueError("Projects subject associations are missing their collection")
-
-    actual: set[tuple[str, str, str]] = set()
-    subject_groups: set[tuple[str, str]] = set()
-    by_subject: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
-    for association in association_rows:
-        subject = association.get("subject") if isinstance(association, dict) else None
-        documents = association.get("documents") if isinstance(association, dict) else None
-        if not isinstance(subject, dict) or not isinstance(documents, list) or not documents:
-            raise ValueError("Projects subject associations contain an invalid association")
-        kind = str(subject.get("kind") or "").strip()
-        key = str(subject.get("key") or "").strip()
-        if kind not in {"folder", "work", "series"} or not key or (kind, key) in subject_groups:
-            raise ValueError("Projects subject associations contain an invalid or duplicate subject")
-        subject_groups.add((kind, key))
-        for document in documents:
-            target = document.get("target") if isinstance(document, dict) else None
-            locations = document.get("locations") if isinstance(document, dict) else None
-            doc_id = str(target.get("doc_id") or "").strip() if isinstance(target, dict) else ""
-            identity = (kind, key, doc_id)
-            if (
-                not isinstance(target, dict)
-                or "scope" in target
-                or "stage" in target
-                or target.get("collection") != WORKS_COLLECTION
-                or doc_id not in manifest_by_id
-                or identity in actual
-            ):
-                raise ValueError("Projects subject association contains a mismatched document target")
-            actual.add(identity)
-            if not isinstance(locations, list) or len(locations) != 1:
-                raise ValueError("Project document association must contain one exact Manage location")
-            location = locations[0]
-            title = str(manifest_by_id[doc_id].get("title") or "").strip()
-            if (
-                not isinstance(location, dict)
-                or location.get("access") != "manage"
-                or not str(location.get("url") or "").strip()
-                or not title
-            ):
-                raise ValueError("Project document association has invalid presentation")
-            by_subject[(kind, key)].append(
-                {
-                    "target": {
-                        "collection": WORKS_COLLECTION,
-                        "doc_id": doc_id,
-                    },
-                    "title": title,
-                    "last_updated": str(manifest_by_id[doc_id].get("last_updated") or "").strip(),
-                    "href": str(location["url"]).strip(),
-                    "declared_subject": {"kind": kind, "key": key},
-                }
-            )
-    if actual != expected:
-        raise ValueError("Projects Manage manifest and subject associations contain different collections")
+        title = str(row.get("title") or "").strip()
+        if not title:
+            raise ValueError("Project document has invalid presentation")
+        by_subject[(kind, key)].append(
+            {
+                "target": {"collection": WORKS_COLLECTION, "doc_id": doc_id},
+                "title": title,
+                "last_updated": str(row.get("last_updated") or "").strip(),
+                "href": management_document_viewer_url(collection_viewer_url, doc_id, collection=True),
+                "declared_subject": {"kind": kind, "key": key},
+            }
+        )
     for values in by_subject.values():
         values.sort(key=lambda value: (value["title"].casefold(), value["title"], value["target"]["doc_id"]))
-    return generation, dict(by_subject), len(manifest_by_id)
+    return generation, dict(by_subject), len(seen_doc_ids)
 
 
 def _catalogue_indexes(source_dir: Path) -> tuple[
@@ -522,7 +471,7 @@ class ProjectStateProducer:
         folder_keys = _folder_keys(self.paths.projects_base_dir)
         subject_generation, documents_by_subject, manifest_count = _subject_documents(
             _read_json(self.paths.manage_manifest_path, "Projects Manage manifest"),
-            _read_json(self.paths.subject_associations_path, "Projects subject associations"),
+            self.paths.collection_viewer_url,
         )
         (
             series_by_id,

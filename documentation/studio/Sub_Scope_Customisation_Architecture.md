@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260731-155053-3929e2
 title: Sub-Scope Customisation Architecture
 added_date: "2026-07-31 15:50:53"
-last_updated: "2026-09-23 15:06:26"
+last_updated: "2026-09-27 19:35:41"
 summary: define the default docs_subscope report, unified registered aspects, access-safe projection, exact targets, browser composition, and extension checks
 parent_id: d-20260801-084127-752d7e
 ---
@@ -181,15 +181,15 @@ The public manifest contains publishable `{doc_id, title}` rows. The Manage mani
 
 The descriptor and manifest IDs agree exactly. Custom row data targets supplied manifest members and remains namespaced from builder-owned fields. Browser routes consume the configured manifest and by-ID URLs rather than constructing storage paths.
 
-### Authoring Subjects And Private Associations
+### Authoring Subjects And Manifest Associations
 
 Current subject scope after the Gallery conversion: the `authoring_subject` field group contains only `folder_path`, `work_id` and `series_id`. On 2026-09-23 Detail assignment, `detail_uid` subject projection and Detail report cues were removed after the user deleted the disposable references. The exact collection capability controls Folder availability; Work and Series retain their existing identity rules. Project State accepts only Folder, Work and Series associations. Uncataloged Files compares represented directories against canonical Work source files, including converted Works, without a former Detail-directory exclusion. Gallery remains a media token target, not a document Subject.
 
 The shared source reader normalizes the exact raw `folder_path`, `work_id`, and `series_id` declarations into one `authoring_subject` object. Its states are `none`, valid Folder, valid Work, valid Series, `malformed`, or `conflicting`. A valid Work ID is an exact five-digit string; a valid Series ID is an exact lowercase alphanumeric-or-hyphen string. Folder is valid only when the exact collection registers `folder_path` in an assignable field group. Work and Series reading is collection-independent. Invalid declarations retain their raw field/value evidence as private observational state and remain ordinary source.
 
-Private Manage sub-scope manifests carry `authoring_subject` on every row participating in this projection and one top-level `subject_generation` receipt. The matching `subject-associations.json` uses `docs_subject_associations_v1`, repeats the exact collection and receipt, and groups each valid `{kind, key}` subject to a deterministically ordered list of documents. Every document entry contains the exact `{scope, sub_scope, doc_id}` target and its current composed Manage location. Several documents may share one subject. Association generation reads only canonical front matter and already-composed document locations; current folder existence, Catalogue membership, titles, filenames, body text, route selection, and UI state remain separate owners.
+Private collection management manifests carry normalized `authoring_subject` rows and top-level `subject_generation` when subject projection is enabled. Catalogue and Works require this projection independently of existing generated files. Reports derive associations in memory: Project State retains every valid Works row for each `{kind, key}`, while Catalogue navigation requires a single exact document per Work. Links use the configured collection report host and immutable `doc_id`; titles, filenames and current route selection never supply identity. [Subject Associations](data/subject-associations.md) owns the current inventory and update boundaries.
 
-The builder writes the Manage manifest and private association product from one normalized generation. Later exact rebuilds remove retired declarations and leave an empty association set when the final declaration is cleared. A consumer that reads both products must require matching `subject_generation` values. Public-readonly building retains its public-safe manifest, internal Manage manifest, and by-ID schemas, while private subject state, invalid evidence, local paths, assignment capability, and `subject-associations.json` stay with local Manage delivery.
+The builder maintains subjects and generation in the management manifest; targeted builds merge selected rows with saved metadata and preserve unselected rows. The separate association product and cross-file receipt comparison are retired. Reader manifests and by-ID schemas retain their existing public-safe projection; private subject state, invalid evidence, local paths and assignment capability remain with Manage. Completed Preview and public distribution exclude management manifests.
 
 ## Browser Contribution Contract
 

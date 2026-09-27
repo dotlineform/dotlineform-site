@@ -188,74 +188,11 @@ def _flatten_tree(rows: Any, *, parent_id: str = "") -> list[dict[str, Any]]:
     return flattened
 
 
-def _validate_subject_associations(
-    payload: dict[str, Any],
-    *,
-    stage: str,
-    collection: str,
-) -> None:
-    if payload.get("schema_version") != "docs_subject_associations_v2":
-        raise RuntimeError(
-            f"generated subject associations for {stage}/{collection} have an unsupported schema"
-        )
-    if "scope" in payload or "stage" in payload or payload.get("collection") != collection:
-        raise RuntimeError(
-            f"generated subject associations for {stage}/{collection} have the wrong collection identity"
-        )
-    raw_associations = payload.get("associations")
-    if not isinstance(raw_associations, list):
-        raise RuntimeError(
-            f"generated subject associations for {stage}/{collection} are missing associations"
-        )
-
-    seen_doc_ids: set[str] = set()
-    for raw_association in raw_associations:
-        if not isinstance(raw_association, dict):
-            raise RuntimeError(
-                f"generated subject associations for {stage}/{collection} contain an invalid association"
-            )
-        raw_documents = raw_association.get("documents")
-        if not isinstance(raw_documents, list):
-            raise RuntimeError(
-                f"generated subject associations for {stage}/{collection} contain invalid documents"
-            )
-        for raw_document in raw_documents:
-            if not isinstance(raw_document, dict):
-                raise RuntimeError(
-                    f"generated subject associations for {stage}/{collection} contain an invalid document"
-                )
-            target = raw_document.get("target")
-            if not isinstance(target, dict):
-                raise RuntimeError(
-                    f"generated subject associations for {stage}/{collection} contain a document without a target"
-                )
-            doc_id = str(target.get("doc_id") or "").strip()
-            if (
-                "scope" in target
-                or "stage" in target
-                or target.get("collection") != collection
-                or not doc_id
-            ):
-                raise RuntimeError(
-                    f"generated subject associations for {stage}/{collection} contain the wrong target identity"
-                )
-            if doc_id in seen_doc_ids:
-                raise RuntimeError(
-                    f"generated subject associations for {stage}/{collection} duplicate {doc_id}"
-                )
-            seen_doc_ids.add(doc_id)
-
-
-def _validate_prepared_index(path: Path, data: bytes, stage: str) -> None:
+def _validate_prepared_index(path: Path, data: bytes) -> None:
     """Retain index shape and identity checks without altering the prepared set."""
     parts = path.parts
     child_index = len(parts) == 4 and parts[0] == "collections" and parts[2] == "documents"
-    if child_index and path.name == "subject-associations.json":
-        _validate_subject_associations(
-            _read_json_bytes(data, "generated subject associations"),
-            stage=stage, collection=parts[1],
-        )
-    elif path == Path("search/index.json") or (
+    if path == Path("search/index.json") or (
         len(parts) == 4 and parts[0] == "collections" and parts[2:] == ("search", "index.json")
     ):
         payload = _read_json_bytes(data, "generated Search payload")
@@ -372,7 +309,7 @@ def build_preview_snapshot_files(
     files: dict[Path, bytes] = {}
     for relative_path, data in generated_files.items():
         parts = relative_path.parts
-        _validate_prepared_index(relative_path, data, "preview")
+        _validate_prepared_index(relative_path, data)
         if parts and (parts[0] == "media" or (
             len(parts) >= 4 and parts[0] == "collections" and parts[2] == "media"
         )):
@@ -393,7 +330,7 @@ def build_preview_snapshot_files(
             files[relative_path] = data
 
     for path, data in files.items():
-        _validate_prepared_index(path, data, "preview")
+        _validate_prepared_index(path, data)
 
     tree_ids = {row["doc_id"] for row in _flatten_tree(index_tree.get("docs"))}
     ordinary_ids = {path.stem for path in files if len(path.parts) == 3 and path.parts[:2] == ("documents", "by-id") and path.suffix == ".json"}

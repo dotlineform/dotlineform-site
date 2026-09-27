@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Normalized document authoring subjects and private association projections."""
+"""Normalized document subjects for private manifests and public reader rows."""
 
 from __future__ import annotations
 
 import hashlib
 import json
 import re
-from typing import Any, Mapping, Sequence
+from typing import Any, Mapping
 
 from docs_local_links import normalize_decoded_relative_target
 
@@ -24,7 +24,6 @@ SUBJECT_KIND_BY_FIELD = {
     WORK_ID_FIELD: "work",
     SERIES_ID_FIELD: "series",
 }
-SUBJECT_ASSOCIATIONS_SCHEMA_VERSION = "docs_subject_associations_v2"
 WORK_ID_PATTERN = re.compile(r"\A\d{5}\Z")
 SERIES_ID_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9-]*\Z")
 
@@ -135,76 +134,13 @@ def subject_projection_generation(
     return "sha256:" + hashlib.sha256(encoded).hexdigest()
 
 
-def project_subject_associations(
-    *,
-    collection: str,
-    documents: Sequence[Any],
-    subjects_by_doc_id: Mapping[str, Mapping[str, Any]],
-    subject_generation: str,
-) -> dict[str, Any]:
-    """Group valid exact declarations into a deterministic private product."""
-
-    documents_by_subject: dict[tuple[str, str], list[dict[str, Any]]] = {}
-    for document in documents:
-        doc_id = str(getattr(document, "doc_id", "") or "")
-        subject = subjects_by_doc_id.get(doc_id, {})
-        if subject.get("state") != "valid":
-            continue
-        kind = str(subject.get("kind") or "")
-        key = str(subject.get("key") or "")
-        viewer_url = str(getattr(document, "viewer_url", "") or "")
-        if kind not in SUBJECT_KIND_BY_FIELD.values() or not key or not viewer_url:
-            raise ValueError(
-                f"valid authoring subject has no exact private location for {doc_id!r}"
-            )
-        documents_by_subject.setdefault((kind, key), []).append(
-            {
-                "target": {
-                    "collection": collection,
-                    "doc_id": doc_id,
-                },
-                "locations": [
-                    {
-                        "access": "manage",
-                        "url": viewer_url,
-                    }
-                ],
-            }
-        )
-
-    associations: list[dict[str, Any]] = []
-    for kind, key in sorted(documents_by_subject):
-        association_documents = sorted(
-            documents_by_subject[(kind, key)],
-            key=lambda record: (
-                record["target"]["collection"],
-                record["target"]["doc_id"],
-            ),
-        )
-        associations.append(
-            {
-                "subject": {"kind": kind, "key": key},
-                "documents": association_documents,
-            }
-        )
-
-    return {
-        "schema_version": SUBJECT_ASSOCIATIONS_SCHEMA_VERSION,
-        "collection": collection,
-        "subject_generation": subject_generation,
-        "associations": associations,
-    }
-
-
 __all__ = [
     "AUTHORING_SUBJECT_FIELDS",
     "FOLDER_PATH_FIELD",
     "SERIES_ID_FIELD",
-    "SUBJECT_ASSOCIATIONS_SCHEMA_VERSION",
     "WORK_ID_FIELD",
     "subject_key_is_canonical",
     "normalize_authoring_subject",
     "project_reader_subject",
-    "project_subject_associations",
     "subject_projection_generation",
 ]

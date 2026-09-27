@@ -60,6 +60,8 @@ def browser_collection_records(repo_root: Path, config: DocsStageConfig, *, publ
             "manifest_url": f"{base}/manifest.json" if published else f"{base}/manage-manifest.json",
             "by_id_url_base": f"{base}/by-id",
         }
+        if not published:
+            record["report_host_doc_id"] = child.report_host_doc_id
         customisation = browser_collection_customisation_payload(child.collection_customisation, published=published)
         if customisation is not None:
             record["collection_customisation"] = customisation

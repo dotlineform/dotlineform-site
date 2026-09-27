@@ -132,13 +132,21 @@ export function initDocsViewerConfigController(context) {
         rawCollection.collection_customisation
       );
     }
-    return {
+    var record = {
       collection: collection,
       title: String(rawCollection.title || "").trim(),
       manifestUrl: manifestUrl,
       byIdUrlBase: byIdUrlBase,
       collectionCustomisation: collectionCustomisation
     };
+    if (context.featurePolicy.management) {
+      var reportHostDocId = rawCollection.report_host_doc_id;
+      if (typeof reportHostDocId !== "string" || !/^d-[0-9]{8}-[0-9]{6}-[0-9a-f]{6}$/.test(reportHostDocId)) {
+        throw new Error("Manage collections require a configured immutable report host ID.");
+      }
+      record.reportHostDocId = reportHostDocId;
+    }
+    return record;
   }
 
   function normalizeBrowserConfig(raw) {

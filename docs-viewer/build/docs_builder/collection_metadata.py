@@ -12,11 +12,10 @@ from docs_document_identity import is_immutable_doc_id
 
 @dataclass(frozen=True)
 class CollectionDocumentSummary:
-    """Saved identity and location needed by rendering and subject projection."""
+    """Saved document identity and title needed by collection rendering."""
 
     doc_id: str
     title: str
-    viewer_url: str
 
 
 def read_collection_manifest(path: Path) -> dict[str, Any]:

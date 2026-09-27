@@ -378,9 +378,9 @@ def accepted_document_collections(
             parent_prefix,
         )
     )
-    _validate_prepared_index(recent_path, published_files[recent_path], "preview")
+    _validate_prepared_index(recent_path, published_files[recent_path])
     parent_files[Path("recent.json")] = published_files[recent_path]
-    _validate_prepared_index(selected_path, published_files[selected_path], "preview")
+    _validate_prepared_index(selected_path, published_files[selected_path])
     parent_files[Path("selected.json")] = published_files[selected_path]
     for relative_path, data in published_files.items():
         if (
@@ -411,9 +411,6 @@ def accepted_document_collections(
                 collection_relative = relative_path.relative_to(prefix)
             except ValueError:
                 continue
-            if collection_relative == Path("subject-associations.json"):
-                # The local association index has no public reader.
-                continue
             if (
                 len(collection_relative.parts) == 2
                 and collection_relative.parts[0] == "by-id"
@@ -440,7 +437,7 @@ def accepted_document_collections(
             f"accepted collection manifest {collection.collection}",
         )
     search_index = published_files[search_path]
-    _validate_prepared_index(search_path, search_index, "preview")
+    _validate_prepared_index(search_path, search_index)
     document_ids = _validate_complete_document_set(
         parent_doc_ids,
         collection_files,

@@ -75,12 +75,12 @@ def _capture_inputs(repo_root: Path) -> PreparationInputs:
     if search_path.is_symlink() or not search_path.is_file():
         raise FileNotFoundError("Working Search index is unavailable; rebuild Search in Working before preparing Preview")
     search_index = search_path.read_bytes()
-    _validate_prepared_index(Path("search/index.json"), search_index, "working")
+    _validate_prepared_index(Path("search/index.json"), search_index)
     recent_path = generated_documents_path(working) / "recent.json"
     if recent_path.is_symlink() or not recent_path.is_file():
         raise FileNotFoundError("Working Recents is unavailable; run a full Working Build before preparing Preview")
     recent_payload = recent_path.read_bytes()
-    _validate_prepared_index(Path("documents/recent.json"), recent_payload, "working")
+    _validate_prepared_index(Path("documents/recent.json"), recent_payload)
     workspace = load_docs_workspace_config(repo_root)
     catalogue = read_catalogue_artifacts(workspace.catalogue, load_catalogue_artifact_inventory(repo_root), stage="working")
     source_root = _lifecycle_root(repo_root, working, "source")

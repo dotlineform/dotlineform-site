@@ -29,7 +29,6 @@ from docs_document_subjects import (
     FOLDER_PATH_FIELD,
     normalize_authoring_subject,
     project_reader_subject,
-    project_subject_associations,
     subject_projection_generation,
     subject_key_is_canonical,
 )
@@ -186,10 +185,10 @@ class CollectionDocsBuilder(DocsDataBuilder):
         configured_fields = collection_customisation_authoring_subject_fields(
             self.collection_config.collection_customisation
         )
-        if not configured_fields and not any(
+        if self.collection_id not in {"catalogue", "works"} and not configured_fields and not any(
             any(field_name in doc.front_matter for field_name in AUTHORING_SUBJECT_FIELDS)
             for doc in ordered_docs
-        ) and not (self.output_dir / "subject-associations.json").is_file():
+        ):
             return None
         return {
             doc.doc_id: normalize_authoring_subject(
@@ -244,7 +243,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
             manifest_payload = merge_collection_manifest(previous_manifest, manifest_payload, self.only_doc_ids)
             manage_manifest_payload = merge_collection_manifest(previous_manage, manage_manifest_payload, self.only_doc_ids)
         summaries = [
-            CollectionDocumentSummary(row["doc_id"], row["title"], self.viewer_url_for(row["doc_id"]))
+            CollectionDocumentSummary(row["doc_id"], row["title"])
             for row in manifest_payload["docs"]
         ]
         known_ids = {row.doc_id for row in summaries}
@@ -260,7 +259,6 @@ class CollectionDocsBuilder(DocsDataBuilder):
             doc.doc_id: self.item_entry(doc, summaries, semantic_tokens_by_doc)
             for doc in ordered_docs
         }
-        subject_associations_payload: dict[str, Any] | None = None
         if subjects_by_doc_id is not None or "subject_generation" in manage_manifest_payload:
             subjects_by_doc_id = {
                 row["doc_id"]: row.setdefault(
@@ -272,17 +270,10 @@ class CollectionDocsBuilder(DocsDataBuilder):
                 collection=self.collection_id,
                 subjects_by_doc_id=subjects_by_doc_id,
             )
-            subject_associations_payload = project_subject_associations(
-                collection=self.collection_id,
-                documents=summaries,
-                subjects_by_doc_id=subjects_by_doc_id,
-                subject_generation=subject_generation,
-            )
             manage_manifest_payload["subject_generation"] = subject_generation
         write_plan = self.build_collection_write_plan(
             manifest_payload,
             manage_manifest_payload,
-            subject_associations_payload,
             item_payloads,
             target_doc_ids=self.only_doc_ids,
         )
@@ -308,7 +299,6 @@ class CollectionDocsBuilder(DocsDataBuilder):
         return {
             "manifest_payload": manifest_payload,
             "manage_manifest_payload": manage_manifest_payload,
-            "subject_associations_payload": subject_associations_payload,
             "item_payloads": item_payloads,
             "semantic_token_payloads": semantic_token_payloads,
             "media_snapshot": media_snapshot,
@@ -321,7 +311,6 @@ class CollectionDocsBuilder(DocsDataBuilder):
         self,
         manifest_payload: dict[str, Any],
         manage_manifest_payload: dict[str, Any],
-        subject_associations_payload: dict[str, Any] | None,
         item_payloads: dict[str, dict[str, Any]],
         *,
         target_doc_ids: list[str] | None = None,
@@ -329,11 +318,6 @@ class CollectionDocsBuilder(DocsDataBuilder):
         """Compare selected payloads and confine targeted removals to selected IDs."""
         manifest_text = json_text(manifest_payload)
         manage_manifest_text = json_text(manage_manifest_payload)
-        subject_associations_text = (
-            json_text(subject_associations_payload)
-            if subject_associations_payload is not None
-            else ""
-        )
         item_text_by_id: dict[str, str] = {}
         changed_item_ids: list[str] = []
         for doc_id, payload in item_payloads.items():
@@ -357,12 +341,6 @@ class CollectionDocsBuilder(DocsDataBuilder):
                 != manage_manifest_text
             ),
             "manage_manifest_text": manage_manifest_text,
-            "subject_associations_write": (
-                subject_associations_payload is not None
-                and read_text(self.output_dir / "subject-associations.json")
-                != subject_associations_text
-            ),
-            "subject_associations_text": subject_associations_text,
             "changed_item_ids": sorted(changed_item_ids),
             "stale_item_ids": sorted(stale_item_ids),
             "item_text_by_id": item_text_by_id,
@@ -377,11 +355,6 @@ class CollectionDocsBuilder(DocsDataBuilder):
             write_text(
                 self.output_dir / "manage-manifest.json",
                 write_plan["manage_manifest_text"],
-            )
-        if write_plan["subject_associations_write"]:
-            write_text(
-                self.output_dir / "subject-associations.json",
-                write_plan["subject_associations_text"],
             )
         for doc_id in write_plan["changed_item_ids"]:
             write_text(self.items_dir / f"{doc_id}.json", write_plan["item_text_by_id"][doc_id])
@@ -402,10 +375,6 @@ class CollectionDocsBuilder(DocsDataBuilder):
         print(
             "  manage manifest "
             f"{verb}: {1 if write_plan['manage_manifest_write'] else 0}"
-        )
-        print(
-            "  subject associations "
-            f"{verb}: {1 if write_plan['subject_associations_write'] else 0}"
         )
         print(f"  semantic tokens {verb}: {1 if write_plan['semantic_token_index_write'] else 0}")
         print(f"  warnings: {len(self.warnings)}")
@@ -431,9 +400,6 @@ class CollectionDocsBuilder(DocsDataBuilder):
             "manifest_changed": 1 if write_plan["manifest_write"] else 0,
             "manage_manifest_changed": (
                 1 if write_plan["manage_manifest_write"] else 0
-            ),
-            "subject_associations_changed": (
-                1 if write_plan["subject_associations_write"] else 0
             ),
             "semantic_token_index_changed": 1 if write_plan["semantic_token_index_write"] else 0,
             "warning_count": len(self.warnings),

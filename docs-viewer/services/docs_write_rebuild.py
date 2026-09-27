@@ -271,8 +271,8 @@ def rebuild_stage_outputs(
             raise ValueError("Only Preview copies an existing Search index")
         from docs_preview_snapshot import _validate_prepared_index
 
-        _validate_prepared_index(Path("search/index.json"), copied_search_index, "working")
-        _validate_prepared_index(Path("documents/recent.json"), copied_recent_payload, "working")
+        _validate_prepared_index(Path("search/index.json"), copied_search_index)
+        _validate_prepared_index(Path("documents/recent.json"), copied_recent_payload)
     try:
         stage_config = load_docs_stage(repo_root, stage)
     except KeyError as exc:
