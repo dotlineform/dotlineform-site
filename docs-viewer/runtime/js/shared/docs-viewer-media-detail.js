@@ -4,7 +4,7 @@ import {
   normalizeDocsViewerCatalogueGroupTarget
 } from "./docs-viewer-media-presentation.js";
 import { CONTENT_DETAIL_LABEL_CONTROL_ID } from "./docs-viewer-content-detail-view.js";
-import { catalogueMediaTargetWorkId, catalogueWorkMediaPresentation } from "./docs-viewer-catalogue-media.js";
+import { catalogueMediaTargetWorkId, readCatalogueWorkMediaPresentation } from "./docs-viewer-catalogue-media.js";
 import { mountDocsViewerResponsiveImage } from "./docs-viewer-responsive-image.js";
 import {
   DOCS_VIEWER_MEDIA_GALLERY_LAYOUT,
@@ -388,10 +388,11 @@ export function createDocsViewerMediaDetailAdapter() {
   function readWork(state, workId) {
     if (!state.workReads.has(workId)) {
       var provider = state.collectionProvider;
-      if (!provider || typeof provider.readCatalogueWork !== "function" || typeof provider.readCatalogueMediaConfig !== "function") {
+      if (!provider || typeof provider.readCatalogueWork !== "function" || typeof provider.readCatalogueMediaConfig !== "function"
+        || typeof provider.readCatalogueSeries !== "function") {
         throw new Error("Catalogue media is unavailable in this view.");
       }
-      var read = Promise.all([provider.readCatalogueWork(workId), provider.readCatalogueMediaConfig()])
+      var read = readCatalogueWorkMediaPresentation(provider, workId)
         .finally(function () { state.workReads.delete(workId); });
       state.workReads.set(workId, read);
     }
@@ -425,9 +426,9 @@ export function createDocsViewerMediaDetailAdapter() {
       return group;
     }
     var workId = catalogueMediaTargetWorkId(context.mediaTarget);
-    var [payload, policy] = await readWork(state, workId);
+    var work = await readWork(state, workId);
     if (currentTargetState(context) !== state) return null;
-    return catalogueWorkMediaPresentation(payload, workId, policy);
+    return work;
   }
 
   /** Resolve current Catalogue data only for the latest request in this document mount. */
@@ -584,7 +585,7 @@ export function createDocsViewerMediaDetailAdapter() {
       caption.className = "docsViewer__mediaDetailCaption";
       caption.appendChild(titleElement(work.label));
       var metadata = appendMetadata(documentRef, caption, work.metadata);
-      var groups = work.galleries.slice();
+      var groups = (work.series ? [work.series] : []).concat(work.galleries);
       if (supplied.gallery && !groups.some(function (entry) { return sameMediaTarget(entry.target, supplied.gallery.target); })) {
         groups.unshift({ target: supplied.gallery.target, label: supplied.gallery.label });
       }
@@ -709,21 +710,22 @@ export function createDocsViewerMediaDetailAdapter() {
       var member = supplied.gallery && supplied.gallery.members.find(function (entry) {
         return sameMediaTarget(entry.target, target);
       });
-      var galleryLink = current.galleries && current.galleries.find(function (entry) { return sameMediaTarget(entry.target, target); });
-      if (!member && !galleryLink) throw new Error("Media View target is not a supplied member or Gallery link.");
+      var groups = (current.series ? [current.series] : []).concat(current.galleries || []);
+      var groupLink = groups.find(function (entry) { return sameMediaTarget(entry.target, target); });
+      if (!member && !groupLink) throw new Error("Media View target is not a supplied member or group link.");
       section.setAttribute("aria-busy", "true");
-      message("Loading " + (member || galleryLink).label + "…");
+      message("Loading " + (member || groupLink).label + "…");
       try {
-        if (galleryLink) {
-          var group = normalizeDocsViewerMediaPresentation(await readGroup(state, galleryLink.target));
+        if (groupLink) {
+          var group = normalizeDocsViewerMediaPresentation(await readGroup(state, groupLink.target));
           if (!isCurrent() || request !== selectionRequest) return;
           supplied = group;
           galleryPage = 0;
           renderPresentation(group.gallery);
         } else {
-          var [payload, policy] = await readWork(state, member.target.id);
+          var presentation = await readWork(state, member.target.id);
           if (!isCurrent() || request !== selectionRequest) return;
-          var work = normalizeDocsViewerMediaPresentation(catalogueWorkMediaPresentation(payload, member.target.id, policy));
+          var work = normalizeDocsViewerMediaPresentation(presentation);
           renderPresentation(work);
         }
         message("");

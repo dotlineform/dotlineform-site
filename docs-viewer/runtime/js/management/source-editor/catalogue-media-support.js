@@ -1,7 +1,7 @@
 import { loadSemanticTokenRegistry } from "./semantic-token-registry.js";
 import { normalizeSemanticTokenTargets } from "./semantic-token-targets.js";
 import { normalizeDocsViewerMediaPresentation } from "../../shared/docs-viewer-media-presentation.js";
-import { catalogueWorkMediaPresentation } from "../../shared/docs-viewer-catalogue-media.js";
+import { readCatalogueWorkMediaPresentation } from "../../shared/docs-viewer-catalogue-media.js";
 
 /** Map the source document's Catalogue subject to the existing picker identity. */
 export function catalogueDocumentSubjectTarget(subject) {
@@ -39,8 +39,7 @@ export async function loadCatalogueMediaSupport(adapter, options = {}) {
 
 /** Validate the exact generated Work image before insertion or token inspection. */
 export async function readCatalogueMediaPresentation(adapter, workId) {
-  var [response, policy] = await Promise.all([adapter.readCatalogueWork(workId), adapter.readCatalogueMediaConfig()]);
-  return normalizeDocsViewerMediaPresentation(catalogueWorkMediaPresentation(response, workId, policy));
+  return normalizeDocsViewerMediaPresentation(await readCatalogueWorkMediaPresentation(adapter, workId));
 }
 
 /** Resolve a token target through its existing provider, with no document or image fallback. */

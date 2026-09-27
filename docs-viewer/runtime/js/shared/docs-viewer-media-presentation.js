@@ -92,6 +92,12 @@ function normalizeWorkPresentation(value) {
   }
 
   var metadata = normalizedMetadata(value.metadata);
+  var series = null;
+  if (value.series !== undefined) {
+    var seriesTarget = normalizeDocsViewerCatalogueGroupTarget(value.series && value.series.target);
+    if (seriesTarget.kind !== "catalogue-series") throw new Error("Media View Series link is invalid.");
+    series = Object.freeze({ target: seriesTarget, label: normalizedTextField(value.series.label, "a Series label") });
+  }
   var galleryIds = new Set();
   var galleries = value.galleries === undefined ? [] : value.galleries;
   if (!Array.isArray(galleries)) throw new Error("Media View requires an array of Gallery links.");
@@ -117,6 +123,7 @@ function normalizeWorkPresentation(value) {
       heightPx: imageHeight
     }),
     metadata: metadata,
+    series: series,
     galleries: Object.freeze(galleries),
     newTabTarget: newTabTarget
   });

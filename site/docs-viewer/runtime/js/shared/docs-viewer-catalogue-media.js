@@ -106,9 +106,10 @@ function groupMediaPresentation(payload, target, title, metadata, mediaPolicy, t
 }
 
 /** Build a presentation from the exact current Catalogue consumer record, locally or publicly. */
-export function catalogueWorkMediaPresentation(payload, workId, mediaPolicy) {
+export function catalogueWorkMediaPresentation(payload, workId, mediaPolicy, seriesPayload) {
   var work = workRecord(payload, workId);
   var target = catalogueMediaTarget(workId);
+  var series = seriesRecord(seriesPayload, work.series_id);
   if (!Number.isInteger(work.width_px) || work.width_px <= 0
     || !Number.isInteger(work.height_px) || work.height_px <= 0) {
     throw new Error("Catalogue image dimensions are unavailable.");
@@ -134,6 +135,7 @@ export function catalogueWorkMediaPresentation(payload, workId, mediaPolicy) {
     image: { src: image.candidates[0].src, candidates: image.candidates,
       alt: work.title, width_px: work.width_px, height_px: work.height_px },
     metadata: metadata,
+    series: { target: catalogueSeriesTarget(work.series_id), label: series.title },
     galleries: work.galleries.map(function (gallery) {
       if (!gallery || typeof gallery.title !== "string" || !gallery.title.trim()) throw new Error("Catalogue Gallery title is unavailable.");
       return { target: catalogueGalleryTarget(gallery && gallery.gallery_id), label: gallery.title };
@@ -142,6 +144,15 @@ export function catalogueWorkMediaPresentation(payload, workId, mediaPolicy) {
   };
   normalizeDocsViewerMediaPresentation(presentation);
   return presentation;
+}
+
+/** Read the Work's declared Series for its title, without establishing a browsing sequence. */
+export async function readCatalogueWorkMediaPresentation(provider, workId) {
+  var [payload, policy] = await Promise.all([provider.readCatalogueWork(workId), provider.readCatalogueMediaConfig()]);
+  var work = workRecord(payload, workId);
+  catalogueSeriesTarget(work.series_id);
+  var series = await provider.readCatalogueSeries(work.series_id);
+  return catalogueWorkMediaPresentation(payload, workId, policy, series);
 }
 
 /** Revalidate public consumer JSON on every activation; retain no document-lifetime cache. */

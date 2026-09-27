@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260903-154141-7c9e4b
 title: Catalogue Media View
 added_date: "2026-09-03 15:41:41"
-last_updated: "2026-09-23 15:06:26"
+last_updated: "2026-09-27 20:51:20"
 summary: Exact Work, Series and Gallery links, Gallery search and membership navigation, responsive Work images and paginated Media View, with static-consumer and public-data limits.
 ui_status: done
 parent_id: d-20260903-222617-28475e
@@ -82,7 +82,9 @@ The implementation owners are `docs-viewer/services/docs_catalogue_media.py`, `d
 
 Exact Gallery entry uses `galleries/index/<gallery_id>.json`, read locally through `/docs/catalogue-gallery?gallery_id=<gallery_id>`. Its metadata and ordered Work references use the same grid, pagination and selected-Work loading as Series. Empty Galleries display an empty state without pagination. The reader validates matching header/body IDs, member count, distinct exact Work IDs and ascending Work-ID order. Public readers use the explicit `catalogue_paths.gallery_records_base_url`, currently `/assets/data/catalogue/galleries/index/`; public Catalogue distribution remains paused.
 
-Work presentations expose links from their generated `work.galleries` array. Selecting one reads that exact Gallery in the same Content Detail mount and changes the active browsing group after a successful response. Previous/next then follows that group's complete Work order. A Work entered from a Series also retains its explicit Series return control; the matching numeric Gallery ID is never substituted. Returning to the active group restores the page containing the selected Work. Failed or superseded Gallery reads preserve the current image and group; Back to document retains its existing owner.
+Current Work presentations expose their Series link alongside links from the generated `work.galleries` array, including direct Work entry. The Work's required `series_id` selects one exact generated Series record for its current title; the shared Work reader supplies that link to Media View and Source media inspection. Series and Gallery targets remain distinct even when both their IDs and titles match. Supplied immutable demonstration presentations retain their explicitly supplied relationships.
+
+Selecting a Series or Gallery link reads that exact group's presentation in the same Content Detail mount and changes the active browsing group after a successful response. Previous/next then follows that group's complete Work order. A Work entered from a group also retains its explicit return control without duplicating a matching membership link. Returning to the active group restores the page containing the selected Work. Failed or superseded group reads preserve the current image and group; Back to document retains its existing owner.
 
 Ordinary Series entry reads `series/index/<series_id>.json` from existing generated Catalogue data. The shared projector retains ordered member Work identities and labels and resolves existing Work thumbnail filenames through route configuration. Gallery entry does not read the complete Work index or every Work record. Selecting a member loads only that Work's complete presentation; its Series control returns to the gallery in the same Media View. Empty Series are valid. Failures are visible and retryable, and superseded or released requests cannot replace the current presentation. Any Series thumbnail derives from its first ordered Work; no Series primary Work or primary image is stored.
 
@@ -94,7 +96,7 @@ Series galleries display up to eight columns and six rows per page: 48 Work thum
 
 Only the active page's thumbnail elements are created. Selecting a Work reads that exact record through the existing provider. Work previous/next follows the complete supplied Series order, with position/total. Pages and Works cycle from last to first and first to last. A single page or single Work keeps its navigation arrows disabled; empty Series have no pagination. Successful selection, including a wrapped selection, updates the gallery return page to contain that Work. Failed or superseded reads preserve the current selection and page. Returning within the same Media View retains Series context; Back to document remains owned by Content Detail. Shared browser history and page-session caching are still separately planned, and no Media-specific implementation replaces them.
 
-A caller must supply collection context explicitly; direct Work entry never infers a gallery sequence from Series membership. Work Gallery links use explicit generated memberships and load a sequence only when selected. Associated-document lists and shareable Media View routes remain separate design questions.
+A caller must supply collection context explicitly; direct Work entry never establishes a browsing sequence from Series membership. Its Series-title read supplies a link only. Series and Gallery links establish their group's sequence only when selected. Associated-document lists and shareable Media View routes remain separate design questions.
 
 ## Consumer Limits
 
