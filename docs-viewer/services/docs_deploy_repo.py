@@ -16,6 +16,7 @@ from urllib.parse import quote
 
 import docs_document_publication_lineage as publication_lineage
 from docs_public_media_reconciliation import (
+    PublicMediaPlan,
     apply_public_media_reconciliation,
     plan_public_media_reconciliation,
     referenced_public_media,
@@ -62,7 +63,7 @@ class DeployRepoPlan:
     config: DocsStageConfig
     desired_repository_files: Mapping[Path, bytes]
     current_repository_files: Mapping[Path, bytes]
-    media_references: Mapping[tuple[str, str], tuple[str, ...]]
+    media_plan: PublicMediaPlan
     lineage_workflows: tuple[publication_lineage.DocumentLineageWorkflow, ...]
     current_lineages: Mapping[str, publication_lineage.DocumentLineageTable | None]
     desired_lineages: Mapping[str, publication_lineage.DocumentLineageTable | None]
@@ -775,7 +776,7 @@ def build_deploy_repo_plan(
     media_references = captured_references
     current = current_repository_projection(repo_root, config)
     repository = repository_diff(repo_root, current, desired)
-    media = plan_public_media_reconciliation(
+    media_plan = plan_public_media_reconciliation(
         repo_root,
         config,
         media_references,
@@ -783,6 +784,7 @@ def build_deploy_repo_plan(
         env_files=env_files,
         environ=environ,
     )
+    media = media_plan.report
     lineage_workflows = publication_lineage.configured_workflows(repo_root)
     current_lineages = publication_lineage.load_tables(repo_root)
     desired_lineages = lineage_projections(
@@ -841,7 +843,7 @@ def build_deploy_repo_plan(
         config=config,
         desired_repository_files=desired,
         current_repository_files=current,
-        media_references=media_references,
+        media_plan=media_plan,
         lineage_workflows=lineage_workflows,
         current_lineages=current_lineages,
         desired_lineages=desired_lineages,
@@ -913,39 +915,24 @@ def apply_deploy_repo(
         raise ValueError("accepted Preview revision does not match the reviewed Publish preview")
     if body.get("plan_revision") != preview["plan_revision"]:
         raise ValueError("Publish preview is stale; preview again")
-    return apply_deploy_repo_plan(
-        repo_root, plan, client=client, env_files=env_files, environ=environ,
-    )
+    return apply_deploy_repo_plan(repo_root, plan)
 
 
 def apply_deploy_repo_plan(
     repo_root: Path,
     plan: DeployRepoPlan,
-    *,
-    client: object | None = None,
-    env_files: Iterable[Path] | None = None,
-    environ: Mapping[str, str] | None = None,
 ) -> dict[str, Any]:
     """Distribute one operation-local plan and await repository/media completion.
 
-    Revalidate the physical snapshot before writes. Repository and remote writes
-    are not atomic; the caller must retain and report failures or incomplete results.
+    The synchronous operation retains the completed snapshot and destination
+    comparisons. Repository and remote writes are not atomic; the caller must
+    retain and report failures or incomplete results.
     """
     preview = plan.preview
-    manifest, _root, _files = validate_preview_snapshot(repo_root)
-    if manifest["preview_revision"] != preview["preview_revision"]:
-        raise ValueError("Prepared Preview changed before distribution; publish again")
     if preview["error_count"]:
         raise ValueError("Publication cannot start: " + "; ".join(preview["media"]["errors"]))
     apply_repository_projection(repo_root.resolve(), plan)
-    media = apply_public_media_reconciliation(
-        repo_root.resolve(),
-        plan.config,
-        plan.media_references,
-        client=client,
-        env_files=env_files,
-        environ=environ,
-    )
+    media = apply_public_media_reconciliation(plan.media_plan)
 
     lineage_results = []
     for workflow in plan.lineage_workflows:

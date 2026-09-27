@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 import subprocess
@@ -9,7 +10,7 @@ import sys
 import tempfile
 
 from docs_workspace_config import (
-    CONFIG_REL_PATH, load_docs_stage, load_docs_workspace_config, select_workspace_stage,
+    CONFIG_REL_PATH, DocsStageConfig, load_docs_stage, load_docs_workspace_config, select_workspace_stage,
     document_source_path, generated_documents_path, generated_search_path,
 )
 from docs_preview_snapshot import (
@@ -26,6 +27,19 @@ from docs_catalogue_artifacts import (
     CONFIG_REL_PATH as CATALOGUE_CONFIG_REL_PATH, load_catalogue_artifact_inventory,
     read_catalogue_artifacts, catalogue_asset_references,
 )
+
+
+@dataclass(frozen=True)
+class PreparationInputs:
+    """Inputs captured once for the synchronous preparation operation."""
+
+    working: DocsStageConfig
+    source_files: dict[Path, bytes]
+    search_index: bytes
+    recent_payload: bytes
+    catalogue: dict[str, bytes]
+    preview_files: dict[Path, bytes]
+    revision_basis: dict[Path, bytes]
 
 
 def excluded_documents(docs: list[SourceDoc], *, ignored_ids: frozenset[str] = frozenset()) -> set[str]:
@@ -47,11 +61,15 @@ def promoted_source(doc: SourceDoc, collection: Any) -> bytes:
         getattr(collection, "collection_customisation", None), doc.front_matter,
     )
     if front_matter == doc.front_matter:
-        return doc.path.read_bytes()
+        return doc.source_text.encode("utf-8")
     return format_source(front_matter, doc.body).encode("utf-8")
 
 
-def _plan(repo_root: Path) -> tuple[dict[str, Any], dict[Path, bytes], bytes, bytes, dict[str, bytes]]:
+def _capture_inputs(repo_root: Path) -> PreparationInputs:
+    configuration = {
+        Path("configuration"): (repo_root / CONFIG_REL_PATH).read_bytes(),
+        Path("catalogue-inventory"): (repo_root / CATALOGUE_CONFIG_REL_PATH).read_bytes(),
+    }
     working = load_docs_stage(repo_root, "working")
     search_path = generated_search_path(working)
     if search_path.is_symlink() or not search_path.is_file():
@@ -67,7 +85,26 @@ def _plan(repo_root: Path) -> tuple[dict[str, Any], dict[Path, bytes], bytes, by
     catalogue = read_catalogue_artifacts(workspace.catalogue, load_catalogue_artifact_inventory(repo_root), stage="working")
     source_root = _lifecycle_root(repo_root, working, "source")
     source_files = _files_from_root(source_root)
-    source_revision = files_revision(source_files)
+    preview_root = working.workspace_root.path / "preview"
+    if preview_root.is_symlink() or (preview_root.exists() and not preview_root.is_dir()):
+        raise ValueError("Preview root must be a directory without symlinks")
+    current = _files_from_root(preview_root) if preview_root.is_dir() else {}
+    basis = {
+        **configuration,
+        Path("working"): files_revision(source_files).encode(),
+        Path("preview"): files_revision(current).encode(),
+        Path("working-search"): search_index,
+        Path("working-recent"): recent_payload,
+        **{Path("catalogue") / path: data for path, data in catalogue.items()},
+    }
+    return PreparationInputs(working, source_files, search_index, recent_payload, catalogue, current, basis)
+
+
+def _plan(repo_root: Path) -> tuple[dict[str, Any], dict[Path, bytes], PreparationInputs]:
+    inputs = _capture_inputs(repo_root)
+    working, source_files = inputs.working, inputs.source_files
+    source_revision = inputs.revision_basis[Path("working")].decode()
+    source_root = _lifecycle_root(repo_root, working, "source")
     ordinary = load_document_collection_docs_for_config(repo_root, working, working)
     ordinary_excluded = excluded_documents(ordinary, ignored_ids=read_publication_ignore_ids(repo_root))
     excluded = set(ordinary_excluded)
@@ -100,37 +137,25 @@ def _plan(repo_root: Path) -> tuple[dict[str, Any], dict[Path, bytes], bytes, by
         if accepted:
             desired.update({path: data for path, data in source_files.items() if path.is_relative_to(prefix / "build-source") or path == prefix / "media-source-evidence.json"})
     desired[Path("documents/selected.json")] = selected_text({**selected, "docs": selected_rows}).encode("utf-8")
-    if files_revision(_files_from_root(source_root)) != source_revision:
-        raise ValueError("Working changed during Preview planning; try again")
-    preview_root = working.workspace_root.path / "preview"
-    if preview_root.is_symlink() or (preview_root.exists() and not preview_root.is_dir()):
-        raise ValueError("Preview root must be a directory without symlinks")
-    current = _files_from_root(preview_root) if preview_root.is_dir() else {}
     plan_revision = files_revision({
-        Path("working"): source_revision.encode(),
-        Path("preview"): files_revision(current).encode(),
-        Path("configuration"): (repo_root / CONFIG_REL_PATH).read_bytes(),
+        **inputs.revision_basis,
         Path("prepared-source"): files_revision(desired).encode(),
-        Path("working-search"): search_index,
-        Path("working-recent"): recent_payload,
-        Path("catalogue-inventory"): (repo_root / CATALOGUE_CONFIG_REL_PATH).read_bytes(),
-        **{Path("catalogue") / path: data for path, data in catalogue.items()},
     })
     return {
         "ok": True, "stage": "working", "plan_revision": plan_revision,
         "source_revision": source_revision, "document_count": len(eligible),
         "excluded_document_count": len(excluded), "collections": counts,
         "eligible_doc_ids": sorted(eligible), "excluded_doc_ids": sorted(excluded),
-        "catalogue_file_count": len(catalogue),
-        "summary_text": f"Prepare Preview with {len(eligible)} documents and {len(catalogue)} Catalogue JSON files.",
-    }, desired, search_index, recent_payload, catalogue
+        "catalogue_file_count": len(inputs.catalogue),
+        "summary_text": f"Prepare Preview with {len(eligible)} documents and {len(inputs.catalogue)} Catalogue JSON files.",
+    }, desired, inputs
 
 
 def plan_prepare_preview(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     """Bind confirmation to source, saved Search/Recents and current Preview."""
     if body.get("stage") != "working" or "scope" in body:
         raise ValueError("Prepare Preview requires stage working")
-    preview, _files, _search_index, _recent_payload, _catalogue = _plan(repo_root)
+    preview, _files, _inputs = _plan(repo_root)
     return preview
 
 
@@ -180,23 +205,23 @@ def build_captured_preview(
 
 def _complete_preview(
     repo_root: Path, plan: dict[str, Any], desired: dict[Path, bytes],
-    search_index: bytes, recent_payload: bytes, catalogue: dict[str, bytes],
+    inputs: PreparationInputs,
 ) -> CompletedPreview:
-    files, build_manifest = build_captured_preview(repo_root, desired, search_index, recent_payload, catalogue)
-    current, _files, _search_index, _recent_payload, _catalogue = _plan(repo_root)
-    if current["plan_revision"] != plan["plan_revision"]:
-        raise ValueError("Working source, Catalogue, Search, Recents, configuration or Preview changed during preparation; prepare again")
+    files, build_manifest = build_captured_preview(
+        repo_root, desired, inputs.search_index, inputs.recent_payload, inputs.catalogue,
+    )
     return write_preview_snapshot(
         repo_root, files=files, generated_revision=build_manifest["generated_revision"],
         source_revision=plan["source_revision"], asset_references=build_manifest["asset_references"],
+        current_files=inputs.preview_files,
     )
 
 
 def prepare_preview(repo_root: Path) -> CompletedPreview:
     """Capture fresh eligible Working inputs and complete Preview synchronously.
 
-    Source and saved-artifact freshness is checked before replacement. Failure
-    prevents distribution; snapshot replacement retains its receipt semantics.
+    The synchronous workflow prevents edits while captured inputs are consumed.
+    Failure prevents distribution; snapshot replacement retains its receipt semantics.
     """
     return _complete_preview(repo_root, *_plan(repo_root))
 
@@ -207,10 +232,10 @@ def apply_prepare_preview(repo_root: Path, body: dict[str, Any]) -> dict[str, An
         raise ValueError("confirm must be true to prepare Preview")
     if body.get("stage") != "working" or "scope" in body:
         raise ValueError("Prepare Preview requires stage working")
-    plan, desired, search_index, recent_payload, catalogue = _plan(repo_root)
+    plan, desired, inputs = _plan(repo_root)
     if body.get("plan_revision") != plan["plan_revision"]:
         raise ValueError("Prepare Preview plan is stale; preview again")
-    snapshot = _complete_preview(repo_root, plan, desired, search_index, recent_payload, catalogue)
+    snapshot = _complete_preview(repo_root, plan, desired, inputs)
     return {
         **plan, "applied": True, "preview_manifest": snapshot.manifest,
         "summary_text": f"Preview prepared: {plan['document_count']} documents, Catalogue, Search and Recents. Review Preview before Publish.",

@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+from copy import deepcopy
+from dataclasses import dataclass
 import hashlib
 import html
 import json
@@ -37,6 +39,24 @@ MEDIA_URL_ATTRIBUTE_PATTERN = re.compile(
     r"(?:(?P<quote>[\"'])(?P<quoted_value>.*?)(?P=quote)|(?P<unquoted_value>[^\s\"'=<>`]+))",
     re.IGNORECASE,
 )
+
+
+@dataclass(frozen=True)
+class MediaTransfer:
+    """One changed asset's exact source/destination binding within this operation."""
+
+    media_type: str
+    identity: str
+    source: ArtifactLocationAdapter
+    destination: ArtifactLocationAdapter
+
+
+@dataclass(frozen=True)
+class PublicMediaPlan:
+    """One operation's comparison report and private transfer bindings; never persisted."""
+
+    report: dict[str, Any]
+    transfers: tuple[MediaTransfer, ...]
 
 
 def _media_identity_from_url(value: str, prefix: str) -> str:
@@ -151,11 +171,16 @@ def _matches_public(adapter: ArtifactLocationAdapter, identity: str, data: bytes
     return adapter.read(identity) == data
 
 
-def _reconcile(
+def plan_public_media_reconciliation(
     repo_root: Path, config: DocsStageConfig, references: Mapping[tuple[str, str], tuple[str, ...]],
-    *, write: bool, client: object | None, env_files: Iterable[Path] | None, environ: Mapping[str, str] | None,
-) -> dict[str, Any]:
-    """Transfer only captured references. Listings compare metadata, never select or delete assets."""
+    *, client: object | None = None, env_files: Iterable[Path] | None = None, environ: Mapping[str, str] | None = None,
+) -> PublicMediaPlan:
+    """Compare each referenced asset once and retain the required transfer bindings.
+
+    Remote families use one metadata listing. No source bodies are retained and
+    listings never select or delete assets. The synchronous workflow prevents
+    edits while apply consumes this operation's plan.
+    """
     bindings = publication_media_bindings(repo_root, config)
     selected = sorted({key for key, _identity in references})
     if set(selected) - bindings.keys():
@@ -168,12 +193,12 @@ def _reconcile(
         )
     except Exception as exc:
         remote_client, remote_error = None, str(exc)
-    types = []
+    types, transfers = [], []
     for key in selected:
         source, public = bindings[key]
         remote = public.location.provider == R2_PROVIDER
         rows = sorted((identity, labels) for (family, identity), labels in references.items() if family == key)
-        items, errors = [], []
+        items = []
         try:
             source_adapter = artifact_location_adapter(repo_root, source)
             if remote and remote_error:
@@ -187,7 +212,6 @@ def _reconcile(
         except Exception as exc:
             source_adapter = destination = None
             stats, setup_error = {}, str(exc)
-            errors.append(setup_error)
         for identity, labels in rows:
             item = {
                 "media_type": key, "identity": identity, "provider": public.location.provider,
@@ -206,65 +230,69 @@ def _reconcile(
                     item.update(action="unchanged", status="unchanged", public_status="current")
                 else:
                     item.update(action="copy", status="pending", public_status="different" if stat else "missing")
-                    if write:
-                        destination.replace(identity, data, content_type=mimetypes.guess_type(identity)[0] or "application/octet-stream")
-                        if not _matches_public(destination, identity, data, destination.stat(identity), remote=remote):
-                            raise RuntimeError(f"Published asset did not verify: {key}/{identity}")
-                        item.update(status="copied", public_status="current")
+                    transfers.append(MediaTransfer(key, identity, source_adapter, destination))
             except FileNotFoundError:
                 item.update(action="missing", status="error", source_status="missing",
                             error=f"Required shared asset is missing: {key}/{identity}")
-                errors.append(item["error"])
             except Exception as exc:
                 item.update(status="error", error=str(exc))
-                errors.append(str(exc))
             items.append(item)
-        errors = sorted(set(errors))
-        types.append({
-            "media_type": key, "provider": public.location.provider, "referenced_count": len(rows),
+        types.append({"media_type": key, "provider": public.location.provider, "items": items})
+    return PublicMediaPlan(report=_media_result(types, operation="status"), transfers=tuple(transfers))
+
+
+def _media_result(types: list[dict[str, Any]], *, operation: str) -> dict[str, Any]:
+    for record in types:
+        items = record["items"]
+        errors = sorted({item["error"] for item in items if item["status"] == "error"})
+        record.update({
+            "referenced_count": len(items),
             "available_count": sum(item["source_status"] == "available" for item in items),
             "copy_count": sum(item["action"] == "copy" for item in items),
             "copied_count": sum(item["status"] == "copied" for item in items),
             "unchanged_count": sum(item["action"] == "unchanged" for item in items),
             "missing_count": sum(item["source_status"] in {"missing", "unavailable"} for item in items),
             "retained_count": 0, "remove_count": 0, "removed_count": 0,
-            "error_count": len(errors), "errors": errors, "items": items,
+            "error_count": len(errors), "errors": errors,
         })
     errors = sorted({f"{item['media_type']}: {error}" for item in types for error in item["errors"]})
     counts = ("available_count", "copy_count", "copied_count", "unchanged_count", "missing_count",
               "retained_count", "remove_count", "removed_count")
     return {
         "schema_version": PUBLIC_MEDIA_RECONCILIATION_SCHEMA_VERSION,
-        "operation": "apply" if write else "status", "stage": "preview", "referenced_count": len(references),
+        "operation": operation, "stage": "preview", "referenced_count": sum(item["referenced_count"] for item in types),
         **{key: sum(item[key] for item in types) for key in counts},
         "error_count": len(errors), "errors": errors, "types": types,
     }
 
 
-def plan_public_media_reconciliation(
-    repo_root: Path, config: DocsStageConfig, references: Mapping[tuple[str, str], tuple[str, ...]],
-    *, client: object | None = None, env_files: Iterable[Path] | None = None, environ: Mapping[str, str] | None = None,
-) -> dict[str, Any]:
-    """Describe referenced current transfers and missing files without writes."""
-    return _reconcile(repo_root, config, references, write=False, client=client, env_files=env_files, environ=environ)
+def apply_public_media_reconciliation(plan: PublicMediaPlan) -> dict[str, Any]:
+    """Apply the recorded comparison, verifying transfers without relisting destinations.
 
-
-def apply_public_media_reconciliation(
-    repo_root: Path, config: DocsStageConfig, references: Mapping[tuple[str, str], tuple[str, ...]],
-    *, client: object | None = None, env_files: Iterable[Path] | None = None, environ: Mapping[str, str] | None = None,
-) -> dict[str, Any]:
-    """Copy referenced current bytes after preflight; asset cleanup is never implicit."""
-    preflight = plan_public_media_reconciliation(repo_root, config, references, client=client, env_files=env_files, environ=environ)
-    if preflight["error_count"]:
-        return failed_public_media_reconciliation("apply", RuntimeError("; ".join(preflight["errors"])))
-    return _reconcile(repo_root, config, references, write=True, client=client, env_files=env_files, environ=environ)
-
-
-def failed_public_media_reconciliation(operation: str, error: Exception) -> dict[str, Any]:
-    """Keep partial distribution failures in the owning completion/error flow."""
-    return {
-        "schema_version": PUBLIC_MEDIA_RECONCILIATION_SCHEMA_VERSION, "operation": operation, "stage": "preview",
-        "referenced_count": 0, "available_count": 0, "copy_count": 0, "copied_count": 0, "unchanged_count": 0,
-        "retained_count": 0, "missing_count": 0, "remove_count": 0, "removed_count": 0,
-        "error_count": 1, "errors": [str(error)], "types": [],
+    Unchanged assets require no further work. Read only planned transfers,
+    without retaining all asset bytes in memory, and verify the written output.
+    Failures remain explicit per asset; cleanup is never implicit.
+    """
+    if plan.report["error_count"]:
+        raise ValueError("Publication cannot start: " + "; ".join(plan.report["errors"]))
+    types = deepcopy(plan.report["types"])
+    items = {
+        (record["media_type"], item["identity"]): item
+        for record in types for item in record["items"]
     }
+    for asset in plan.transfers:
+        item = items[(asset.media_type, asset.identity)]
+        try:
+            data = asset.source.read(asset.identity)
+            stat = asset.destination.replace(
+                asset.identity, data, content_type=mimetypes.guess_type(asset.identity)[0] or "application/octet-stream",
+            )
+            if not _matches_public(asset.destination, asset.identity, data, stat, remote=item["provider"] == R2_PROVIDER):
+                raise RuntimeError(f"Published asset did not verify: {asset.media_type}/{asset.identity}")
+            item.update(status="copied", public_status="current")
+        except FileNotFoundError:
+            item.update(status="error", source_status="missing",
+                        error=f"Required shared asset is missing: {asset.media_type}/{asset.identity}")
+        except Exception as exc:
+            item.update(status="error", error=str(exc))
+    return _media_result(types, operation="apply")

@@ -521,12 +521,13 @@ def validate_preview_snapshot(
 
 def write_preview_snapshot(
     repo_root: Path, *, files: Mapping[Path, bytes], generated_revision: str, source_revision: str,
-    asset_references: list[str],
+    asset_references: list[str], current_files: Mapping[Path, bytes],
 ) -> CompletedPreview:
     """Replace the prepared snapshot and record completion only after byte verification.
 
-    Preparation supplies the complete projected file set. Failure after mutation
-    leaves no valid completion receipt; Prepare Preview is the recovery operation.
+    Preparation supplies the complete projected file set and captured
+    current Preview bytes. Verify written files once, then verify the receipt
+    separately. Failure after mutation leaves no valid completion receipt.
     """
     config = load_docs_workspace_config(repo_root)
     _validate_asset_references(config, asset_references)
@@ -534,7 +535,7 @@ def write_preview_snapshot(
     if preview_root.is_symlink():
         raise ValueError("Preview root must not be a symlink")
     preview_root.mkdir(exist_ok=True)
-    current = _files_from_root(preview_root, excluded=(PREVIEW_MANIFEST_FILENAME,))
+    current = {path: data for path, data in current_files.items() if path != Path(PREVIEW_MANIFEST_FILENAME)}
     completion = preview_root / PREVIEW_MANIFEST_FILENAME
     if completion.is_symlink():
         raise ValueError("Preview completion must not be a symlink")
@@ -552,8 +553,8 @@ def write_preview_snapshot(
     if actual != files:
         raise RuntimeError("Preview snapshot bytes did not verify")
     manifest = _preview_manifest_payload(generated_revision, files, source_revision=source_revision, asset_references=asset_references)
-    completion.write_bytes(json_bytes(manifest))
-    verified_manifest, _root, verified_files = validate_preview_snapshot(repo_root)
-    if verified_manifest != manifest or verified_files != files:
-        raise RuntimeError("Preview changed during snapshot completion")
-    return CompletedPreview(manifest=verified_manifest, files=verified_files)
+    receipt = json_bytes(manifest)
+    completion.write_bytes(receipt)
+    if completion.is_symlink() or completion.read_bytes() != receipt:
+        raise RuntimeError("Preview completion receipt did not verify")
+    return CompletedPreview(manifest=manifest, files=actual)

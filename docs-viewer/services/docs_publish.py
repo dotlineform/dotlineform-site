@@ -43,9 +43,7 @@ def publish_docs(
             repo_root, snapshot, deployment_timestamp=utc_now(),
             client=client, env_files=env_files, environ=environ,
         )
-        distribution = apply_deploy_repo_plan(
-            repo_root, plan, client=client, env_files=env_files, environ=environ,
-        )
+        distribution = apply_deploy_repo_plan(repo_root, plan)
         result["distribution"] = distribution
         if not distribution["complete"]:
             errors = [
