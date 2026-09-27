@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260513-105343-6de36b
 title: Reports
 added_date: "2026-05-13 10:53:43"
-last_updated: "2026-09-27 11:52:05"
+last_updated: "2026-09-27 15:28:26"
 parent_id: d-20260424-000000-50b63f
 ---
 # Docs Viewer Reports
@@ -160,7 +160,7 @@ The shared report accepts an optional caller-owned contribution with detached le
 
 The local sub-scope Actions menu remains available in every configured collection, including empty lists. Copy and Prepare package remain visible when unavailable, with disabled controls and explanatory tooltips. Set Publishable and its sub-scope callbacks, request handling and service support are removed. Missing workflow support takes precedence over selection prompts; exposing the menu does not enable an unsupported operation.
 
-A registered Manage contribution also receives the validated customisation root data from the loaded manifest. `dotlineform/processing` uses that existing list-toolbar seam to show only the direct project folders supplied by its confined `processing/` inventory, independently of the collection's document rows; it does not add another report ID or scan a browser-visible filesystem root.
+A registered Manage contribution also receives the validated customisation root data from the loaded manifest. The Working Works contribution owns Subject display and actions. The empty Processing Docs collection was retired on 2026-09-27: its registration, report host, dedicated customisation and collection storage were removed. The separate repository `processing/` project and Projects-owned Processing media remain independent owners.
 
 The shared report does not perform writes or package service calls. The
 management host projects

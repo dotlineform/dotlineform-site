@@ -20,12 +20,8 @@ import {
 import {
   appendProjectSubjectIcon
 } from "../reports/project-subject-icons.js";
-import {
-  loadCatalogueTargetSupport
-} from "./source-editor/catalogue-token-targets.js";
 
 const WORKS_CUSTOMISATION_ID = "working_works";
-const PROCESSING_CUSTOMISATION_ID = "working_processing";
 const AUTHORING_SUBJECT_GROUP_ID = "authoring_subject";
 const PROJECT_SORT_MODES = Object.freeze([
   "title-asc",
@@ -57,38 +53,6 @@ function authoringSubject(documentRecord) {
 
 function subjectTargetIdentity(kind, key) {
   return cleanString(kind) + ":" + cleanString(key);
-}
-
-function subjectTargetTitles(support) {
-  var titles = new Map();
-  var targets = support && Array.isArray(support.searchableTargets)
-    ? support.searchableTargets
-    : [];
-  targets.forEach(function (target) {
-    var kind = cleanString(target && target.targetType);
-    var key = cleanString(target && target.targetId);
-    var title = cleanString(target && target.title);
-    if (!["work", "series"].includes(kind) || !key || !title) return;
-    titles.set(subjectTargetIdentity(kind, key), title);
-  });
-  return titles;
-}
-
-function loadSubjectTargetTitles(options) {
-  return loadCatalogueTargetSupport(options.catalogueProvider, {
-    fetch: options.fetch,
-    allowedTargetTypes: ["work", "series"]
-  }).then(function (support) {
-    return {
-      available: true,
-      titles: subjectTargetTitles(support)
-    };
-  }).catch(function () {
-    return {
-      available: false,
-      titles: new Map()
-    };
-  });
 }
 
 export function projectDocsViewerWorkingSubject(documentRecord, targetLookup) {
@@ -128,15 +92,6 @@ export function projectDocsViewerWorkingSubject(documentRecord, targetLookup) {
     state: "none",
     targetTitle: ""
   };
-}
-
-function previewSubjectHref(options, subject) {
-  var base = cleanString(options.publicPreviewBase).replace(/\/+$/, "");
-  if (!base) throw new Error("Working subject preview is not configured.");
-  var path = subject.kind === "work"
-    ? "/works/?work=" + encodeURIComponent(subject.key)
-    : "/series/?series=" + encodeURIComponent(subject.key);
-  return new URL(path, base + "/").toString();
 }
 
 function subjectAccessibleLabel(subject) {
@@ -183,11 +138,10 @@ function renderSubjectCell(context, options, targetLookup, catalogueLinks) {
     host.appendChild(cell);
     return;
   }
-  var catalogueNavigation = catalogueLinks instanceof Map;
-  var workHref = catalogueNavigation && subject.kind === "work" ? catalogueLinks.get(subject.key) : "";
-  var mediaSeries = catalogueNavigation && subject.kind === "series";
+  var workHref = subject.kind === "work" ? catalogueLinks.get(subject.key) : "";
+  var mediaSeries = subject.kind === "series";
   var linkedSubject = ["folder", "series"].includes(subject.kind)
-    || subject.kind === "work" && (!catalogueNavigation || Boolean(workHref));
+    || subject.kind === "work" && Boolean(workHref);
   var link = host.ownerDocument.createElement(mediaSeries ? "button" : linkedSubject ? "a" : "span");
   link.className = linkedSubject
     ? "docsViewerReport__cellLink docsViewerReport__projectSubjectLink"
@@ -216,9 +170,6 @@ function renderSubjectCell(context, options, targetLookup, catalogueLinks) {
   } else if (workHref) {
     link.href = workHref;
     link.title = "Open " + subjectAccessibleLabel(subject) + " in Catalogue";
-  } else if (linkedSubject) {
-    link.href = previewSubjectHref(options, subject);
-    link.title = "Open " + subjectAccessibleLabel(subject) + " in local preview";
   }
   cell.appendChild(link);
   host.appendChild(cell);
@@ -471,28 +422,25 @@ function workingSubjectDetailInfo(context, assignSubjectAvailable) {
   });
 }
 
-function createDocsViewerManagementWorkingSubjects(options, definition) {
+export function createDocsViewerManagementCollectionWorkingWorks(options = {}) {
   var descriptorId = cleanString(options.descriptor && options.descriptor.id);
-  if (descriptorId !== definition.customisationId) {
+  if (descriptorId !== WORKS_CUSTOMISATION_ID) {
     throw new Error("Working subject customisation identity did not match its registry entry.");
   }
-  var collection = exactCollection(options.collection);
-  var generatedWorks = collection.collection === "works";
+  exactCollection(options.collection);
   var assignSubjectAvailable = hasDocsViewerAssignableFieldGroup(options.descriptor, AUTHORING_SUBJECT_GROUP_ID);
   var collator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
   return Promise.all([
-    generatedWorks ? loadWorksCollectionSubjectTitles(options) : loadSubjectTargetTitles(options),
-    generatedWorks
-      ? loadWorkingCatalogueDocumentLinks({
-         document: options.content.ownerDocument, fetch: options.fetch,
-         workspaceConfig: options.workspaceConfig
-      })
-      : null
+    loadWorksCollectionSubjectTitles(options),
+    loadWorkingCatalogueDocumentLinks({
+      document: options.content.ownerDocument, fetch: options.fetch,
+      workspaceConfig: options.workspaceConfig
+    })
   ]).then(function (results) {
     var targetLookup = results[0];
     var catalogueLinks = results[1];
     var contribution = {
-      id: definition.customisationId,
+      id: WORKS_CUSTOMISATION_ID,
       notify: function (event) {
         if (!event || event.type !== "mount") return;
         var reportRoot = event.root;
@@ -527,17 +475,5 @@ function createDocsViewerManagementWorkingSubjects(options, definition) {
       }
     };
     return contribution;
-  });
-}
-
-export function createDocsViewerManagementCollectionWorkingWorks(options = {}) {
-  return createDocsViewerManagementWorkingSubjects(options, {
-    customisationId: WORKS_CUSTOMISATION_ID
-  });
-}
-
-export function createDocsViewerManagementCollectionWorkingProcessing(options = {}) {
-  return createDocsViewerManagementWorkingSubjects(options, {
-    customisationId: PROCESSING_CUSTOMISATION_ID
   });
 }

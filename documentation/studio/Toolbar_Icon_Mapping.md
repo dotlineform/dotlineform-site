@@ -2,7 +2,7 @@
 doc_id: d-20260919-100234-038395
 title: "Shared Icons: Toolbar Mapping"
 added_date: "2026-09-19 10:02:34"
-last_updated: "2026-09-24 12:06:57"
+last_updated: "2026-09-27 15:28:26"
 summary: Editable mappings for Docs Viewer toolbars, report toolbars and report list icons, including code identifiers, state variants and replacement artwork choices.
 ui_status: planned
 parent_id: d-20260910-223116-9a1011
@@ -102,7 +102,7 @@ Code identifiers below are exact **renderer keys**, except entries explicitly ma
 
 Implemented on 19 September 2026 from the selected mappings below. Converted controls use the shared toolbar button and mask styles, with accessible names, tooltips and existing capability rules retained. The **Previous icon or text** column records the migration baseline. Visual review remains pending. Search-clear controls keep their smaller `1rem` artwork and `1.35rem` button.
 
-Identifiers marked `DOM` are element IDs; `selector` entries are exact attributes/classes scoped to the named report or collection control. `action` and `renderer` entries are registered code identifiers. Where a control has no dedicated ID or selector, its exact report ID, mounting function and local variable identify it. A shared collection row covers every collection using that contribution, subject to existing stage/capability rules. Collections with a custom sortable header, including the subject-aware Works and Processing lists, omit the generic title/recent sort toggle; their header indicators are in the Report List Icons table.
+Identifiers marked `DOM` are element IDs; `selector` entries are exact attributes/classes scoped to the named report or collection control. `action` and `renderer` entries are registered code identifiers. Where a control has no dedicated ID or selector, its exact report ID, mounting function and local variable identify it. A shared collection row covers every collection using that contribution, subject to existing capability rules. Collections with a custom sortable header, including the subject-aware Works list, omit the generic title/recent sort toggle; their header indicators are in the Report List Icons table.
 
 | Area / control | Code identifier | State / meaning | Previous icon or text | Replacement SVG | Appearance | Decision / gap |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -309,7 +309,7 @@ Report inventory owners:
 
 - Report identities and loader membership: `docs-viewer/config/reports/reports.json`; local/public loaders in `docs-viewer/runtime/js/reports/docs-viewer-reports.js` and `docs-viewer-public-reports.js`.
 - Shared collection search-clear and detail-return controls: `docs-viewer/runtime/js/shared/docs-collection-report.js`. Collection New, Regenerate, Actions, package menu, sort toggle, selection commands, Draft/Ready, Copy link, Delete and row status/draft cues: `docs-viewer/runtime/js/management/docs-viewer-management-collection-default-contribution.js`.
-- Subject-aware collection header sorts, Subject cells, assignment and Finder controls: `docs-viewer/runtime/js/management/docs-viewer-management-collection-working-subjects.js`. Exact registered customisations are `working_works`, `pre_publish_works` and `working_processing`; their current capabilities decide which controls appear.
+- Subject-aware collection header sorts, Subject cells, assignment and Finder controls: `docs-viewer/runtime/js/management/docs-viewer-management-collection-working-subjects.js`. The registered Manage customisation is `working_works`; its current capabilities decide which controls appear. The Processing collection and `working_processing` contribution were retired on 2026-09-27.
 - Subject artwork shared across collection lists, Project State and Works: `docs-viewer/runtime/js/reports/project-subject-icons.js`. Ordinary-document status artwork: `docs-viewer/runtime/js/shared/docs-viewer-code-config.js`. The mapping does not validate front-matter values.
 - Report-owned toolbar controls: the corresponding `workspace-links-report.js`, `unpublishable-report.js`, `series-works-report.js`, `docs-broken-links-report.js`, `project-state-report.js`, `docs-media-report.js`, `works-report.js`, `catalogue-works-report.js`, `uncataloged-files-report.js` and `missing-source-files-report.js` under `docs-viewer/runtime/js/reports/`.
 - Expanded report invocation: `docs-viewer/runtime/js/reports/docs-viewer-report-presentation.js`. Managed expanded-table Copy/Reset controls: `docs-viewer/runtime/js/management/docs-viewer-managed-table-tools.js`.

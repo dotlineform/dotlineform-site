@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260605-125108-c68916
 title: Generated Data Contracts
 added_date: "2026-06-05 12:51:08"
-last_updated: "2026-09-27 11:52:05"
+last_updated: "2026-09-27 15:28:26"
 summary: Public and manage Docs Viewer payload schemas, registered publication roots, read authority, publishing, and builder ownership contracts.
 parent_id: d-20260331-000000-c313fd
 ---
@@ -111,7 +111,7 @@ Recents uses one `docs_recent_v1` artifact with `schema`, `basis`, `limit`, `gen
 
 Each row carries exact `doc_id`, title, one neutral `timestamp` and optional parent context. Collection rows additionally carry `collection`, `report_doc_id` and `collection_title`. Rows contain no stage, result URL or `content_url`. The existing schema and identity fields remain; the reader no longer requires or consumes a stored content URL. The active route resolves navigation from exact document/collection/host identity. Recents and Search share result navigation but load independent artifacts.
 
-Search and Recents use [the shared metadata selector](../../docs-viewer/services/docs_discovery_selection.py): ordinary documents plus explicitly included Works and Processing collections, with draft/unpublishable ordinary branches excluded, included collection hosts required to survive, and flat collection drafts filtered individually. Eligible Catalogue, Concepts and Moments landing pages remain ordinary candidates; their subdocs are excluded. Recents applies all selection before date sorting and limiting.
+Search and Recents use [the shared metadata selector](../../docs-viewer/services/docs_discovery_selection.py): ordinary documents plus the explicitly included Works collection, with draft/unpublishable ordinary branches excluded, the included collection host required to survive, and flat collection drafts filtered individually. Eligible Catalogue, Concepts and Moments landing pages remain ordinary candidates; their subdocs are excluded. Processing's empty Docs collection was retired on 2026-09-27. Recents applies all selection before date sorting and limiting.
 
 The [Recents builder](../../docs-viewer/build/docs_builder/payloads.py) reuses current ordinary records and their in-memory tree. Included collections supply compact Working `manage-manifest.json` metadata: identity, title, explicit draft state, `last_updated` and effective `added_date`. Full and targeted collection builds maintain the date fields. Recents does not open collection Markdown or by-ID bodies, read Search, or fall back to a source scan. Missing/invalid required metadata fails clearly. Manage Rebuild refreshes included collection metadata before the ordinary build generates Recents once; direct full Working document builds require current saved collection metadata.
 

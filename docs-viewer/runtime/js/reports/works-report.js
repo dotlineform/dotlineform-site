@@ -52,7 +52,17 @@ function normalizeSeriesItem(value) {
 }
 
 function normalizeWorkItem(value) {
-  if (!exactKeys(value, ["record_hash", "series_id", "title", "work_id", "year_display"]) || !WORK_ID_PATTERN.test(value.work_id) || !cleanString(value.title) || (value.series_id !== null && typeof value.series_id !== "string") || (value.series_id && !SERIES_ID_PATTERN.test(value.series_id)) || typeof value.year_display !== "string" || !cleanString(value.record_hash)) throw new Error("Works Work lookup is invalid.");
+  if (
+    !exactKeys(value, ["gallery_ids", "record_hash", "series_id", "title", "work_id", "year_display"])
+    || !Array.isArray(value.gallery_ids)
+    || value.gallery_ids.some((id) => typeof id !== "string" || !id)
+    || !WORK_ID_PATTERN.test(value.work_id)
+    || !cleanString(value.title)
+    || (value.series_id !== null && typeof value.series_id !== "string")
+    || (value.series_id && !SERIES_ID_PATTERN.test(value.series_id))
+    || typeof value.year_display !== "string"
+    || !cleanString(value.record_hash)
+  ) throw new Error("Works Work lookup is invalid.");
   return {seriesId: value.series_id, title: value.title, workId: value.work_id};
 }
 
@@ -80,8 +90,8 @@ function normalizeWorkDocument(value) {
     : "";
   if (
     ![
-      "authoring_subject,doc_id,last_updated,title",
-      "authoring_subject,customisation,doc_id,last_updated,title"
+      "added_date,authoring_subject,doc_id,last_updated,title",
+      "added_date,authoring_subject,customisation,doc_id,last_updated,title"
     ].includes(keys)
     || (
       Object.prototype.hasOwnProperty.call(value, "customisation")
@@ -102,6 +112,7 @@ function normalizeWorkDocument(value) {
   if (
     !DOC_ID_PATTERN.test(docId)
     || !title
+    || typeof value.added_date !== "string"
     || typeof value.last_updated !== "string"
   ) {
     throw new Error("Working Works manifest is invalid.");

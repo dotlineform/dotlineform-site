@@ -48,12 +48,6 @@
         "by_id_url_base": "/assets/data/docs/concepts/by-id"
       },
       {
-        "collection": "processing",
-        "title": "Processing",
-        "manifest_url": "/assets/data/docs/processing/manifest.json",
-        "by_id_url_base": "/assets/data/docs/processing/by-id"
-      },
-      {
         "collection": "moments",
         "title": "Moments",
         "manifest_url": "/assets/data/docs/moments/manifest.json",

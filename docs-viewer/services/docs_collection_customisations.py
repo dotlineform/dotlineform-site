@@ -9,14 +9,12 @@ import re
 from typing import Any, Callable, Mapping, Sequence
 
 import docs_working_works_customisation as working_works
-import docs_working_processing_customisation as working_processing
 from docs_document_subjects import AUTHORING_SUBJECT_FIELDS, FOLDER_PATH_FIELD
 
 
 CUSTOMISATION_ID_PATTERN = re.compile(r"\A[a-z][a-z0-9_]*\Z")
 PREVIEW_WORKS_CUSTOMISATION_ID = "preview_works"
 WORKING_WORKS_CUSTOMISATION_ID = working_works.CUSTOMISATION_ID
-WORKING_PROCESSING_CUSTOMISATION_ID = working_processing.CUSTOMISATION_ID
 PUBLIC_ACCESS = "public"
 MANAGE_ACCESS = "manage"
 SUPPORTED_BROWSER_ACCESSES = frozenset({PUBLIC_ACCESS, MANAGE_ACCESS})
@@ -152,32 +150,6 @@ COLLECTION_CUSTOMISATION_DEFINITIONS = {
         ),
         import_front_matter=DocsCollectionImportFrontMatterAspect(
             normalize=working_works.normalize_import_front_matter,
-        ),
-        browser_composition=DocsCollectionBrowserCompositionAspect(
-            accesses=frozenset({MANAGE_ACCESS}),
-        ),
-        assignable_field_groups=(
-            DocsCollectionAssignableFieldGroup(
-                group_id="authoring_subject",
-                field_names=AUTHORING_SUBJECT_FIELDS,
-            ),
-        ),
-        authoring_subject=DocsCollectionAuthoringSubjectAspect(
-            field_names=AUTHORING_SUBJECT_FIELDS,
-        ),
-    ),
-    WORKING_PROCESSING_CUSTOMISATION_ID: DocsCollectionCustomisationDefinition(
-        customisation_id=WORKING_PROCESSING_CUSTOMISATION_ID,
-        normalize_settings=working_processing.normalize_settings,
-        manifest_projection=DocsCollectionManifestProjectionAspect(
-            project=working_processing.project_manifest,
-        ),
-        metadata=DocsCollectionMetadataAspect(
-            read_record=working_processing.metadata_record,
-            normalize_update=working_processing.normalize_metadata_update,
-        ),
-        import_front_matter=DocsCollectionImportFrontMatterAspect(
-            normalize=working_processing.normalize_import_front_matter,
         ),
         browser_composition=DocsCollectionBrowserCompositionAspect(
             accesses=frozenset({MANAGE_ACCESS}),
@@ -577,7 +549,6 @@ def registered_collection_customisation_access() -> dict[str, tuple[str, ...]]:
 __all__ = [
     "PREVIEW_WORKS_CUSTOMISATION_ID",
     "WORKING_WORKS_CUSTOMISATION_ID",
-    "WORKING_PROCESSING_CUSTOMISATION_ID",
     "DocsCollectionAssignableFieldGroup",
     "DocsCollectionAuthoringSubjectAspect",
     "DocsCollectionBrowserCompositionAspect",

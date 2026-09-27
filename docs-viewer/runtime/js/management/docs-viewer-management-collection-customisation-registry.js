@@ -7,11 +7,6 @@ const MANAGEMENT_CUSTOMISATION_LOADERS = Object.freeze({
     return import("./docs-viewer-management-collection-working-subjects.js").then(function (module) {
       return module.createDocsViewerManagementCollectionWorkingWorks;
     });
-  },
-  working_processing: function () {
-    return import("./docs-viewer-management-collection-working-subjects.js").then(function (module) {
-      return module.createDocsViewerManagementCollectionWorkingProcessing;
-    });
   }
 });
 

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260927-135604-05446e
 title: Subject Associations
 added_date: "2026-09-27 13:56:04"
-last_updated: "2026-09-27 13:56:04"
+last_updated: "2026-09-27 15:28:26"
 summary: Current subject-association data, its UI actions and consumers, and its generation and publication rules.
 parent_id: d-20260423-000000-d015e6
 ---
@@ -80,7 +80,7 @@ The configured Works publication owner removes authoring subject fields and reta
 
 ## Observed Workspace State
 
-These counts were read from the configured files on 2026-09-27. They are a dated observation, not required collection membership or an acceptance target. Counts below are document associations, not distinct subjects.
+These counts were read from the configured files during the initial inventory on 2026-09-27, before Processing's retirement later that day. They are a dated observation, not required collection membership or an acceptance target. Counts below are document associations, not distinct subjects.
 
 | Collection | Working | Preview |
 | --- | --- | --- |
@@ -91,6 +91,8 @@ These counts were read from the configured files on 2026-09-27. They are a dated
 | Concepts | Association file absent | Association file absent; reader manifest contains 246 documents |
 
 The different presence and counts follow conditional generation, source eligibility, Works' subject projection, and the fresh temporary build boundary. They are not evidence that public distribution missed required association files: distribution deliberately omits them.
+
+The empty Processing Docs collection was subsequently retired: its configuration, report host, dedicated Python/browser contribution and Working/Preview/public collection folders were removed. Its old Working association count was stale generated data; no source documents remained. The Preview completion receipt was cleared because deleting the prepared collection folder invalidated it; the next Publish rebuilds and verifies a completed snapshot. The separate Processing project and its project-owned media were outside this retirement.
 
 ## Questions For The Relationship Review
 
