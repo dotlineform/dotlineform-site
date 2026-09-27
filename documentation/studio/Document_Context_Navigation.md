@@ -1,0 +1,79 @@
+---
+draft: false
+doc_id: d-20260903-160226-5c6a3e
+title: Context Navigation
+added_date: "2026-09-03 16:02:26"
+last_updated: "2026-09-26 20:49:58"
+summary: Propose previous/next navigation through the scope-level document hierarchy; sub-scope and Catalogue navigation are separate and deferred.
+parent_id: d-20260903-220300-694ee5
+---
+# Context Navigation
+
+## Purpose
+
+Add previous/next navigation through a scope's document hierarchy as part of [Doc Navigation](Doc_Navigation.md). Together with [Reorder docs](Reorder_Docs.md), this supports a book-like reading experience with chapters and pages.
+
+This proposal applies only to scope-level documents. It is a general Docs Viewer improvement, not a Catalogue migration dependency. Catalogue Series and Works documents will live in a sub-scope, so their previous/next navigation needs a separate implementation.
+
+## Scope Boundary
+
+Scope-level means documents belonging to the scope's own index hierarchy, including nested descendants; it does not mean only root documents.
+
+Sub-scope documents, report rows, Catalogue Series and Works, and Content Detail presentations are outside this proposal. A scope-level document hosting a sub-scope report can participate as a document in the tree, but navigation must not descend into its report rows. Showing a sub-scope child through that host must not present the host's scope-level previous/next controls as navigation for the child.
+
+Search, backlinks and authored links remain independent ways to reach documents. Their result order does not define this navigation sequence.
+
+## Ordering And Traversal
+
+[Reorder docs](Reorder_Docs.md) owns canonical ordinary hierarchy and literal array order in nested `index-order.json`, edited through one Position modal with Before/After/Inside and Save/Cancel. Authored ordinary `parent_id` is removed by that delivery. Context Navigation consumes the generated tree and must not introduce another curation surface or hierarchy/order authority.
+
+The upstream generation/loading path supplies the tree in its resolved, saved order. Both the ordinary index panel and previous/next consume that same tree. Neither re-sorts titles or treats expanded/collapsed branches as editorial ordering data. Working organisation retains draft and unpublishable records; Prepare Preview omits excluded branches and preserves the relative order of survivors for downstream readers.
+
+Previous/next must traverse across hierarchy levels. The exact parent/descendant traversal rule, whole-scope versus book/subtree boundaries, and start/end behaviour still need agreement. Public consumers use the accepted tree supplied through the existing publication boundary, not live curation data.
+
+## Toolbar Presentation
+
+Use one projection in the existing Docs Viewer main-view toolbar: document path or scope context on the left, previous/next on the right, with position/total where useful. Exact labels, counter visibility and any path/return action remain design decisions.
+
+Do not add a second permanent toolbar or require authored previous/next markup in document content. A bottom-of-document projection may be considered later if long-document review demonstrates a need; it must reuse the same navigation owner and sequence.
+
+Document destinations use real anchors with exact document URLs, preserving normal browser behaviours and history. Controls need clear accessible names and an appropriate unavailable state at sequence boundaries. Global left/right-arrow shortcuts and swipe navigation are not part of the baseline.
+
+## Navigation State And Identity
+
+The hierarchy navigation owner derives its ordered destinations and current position from the supplied tree, the agreed traversal rule and the exact current document ID. Previous, next and any counter are derived together, not accepted as unrelated values.
+
+Directly opened scope documents can participate without carrying an originating gallery or Search context. Titles, filenames and thumbnail positions are not identity fallbacks. Exact route, return and browser-history details remain to be designed; this proposal does not freeze a new route-state schema.
+
+If the current target cannot be validated as a member of the supplied scope tree, withhold navigation rather than fabricate neighbours. Loading a sub-scope document or another out-of-scope presentation releases or suspends the scope navigator; it must not leave misleading controls active.
+
+## Ownership
+
+| owner | responsibility |
+| --- | --- |
+| Reorder docs | canonical ordinary hierarchy and array order, document-operation maintenance and Position editing |
+| index generation/loading | joining canonical structure with document metadata to supply the ordered consumer tree |
+| index panel | rendering that tree without an independent ordering rule |
+| hierarchy navigation owner | traversal, exact membership, current position, neighbours and agreed boundary behaviour |
+| main-view toolbar | accessible controls and optional orientation using that navigation state |
+| document router | exact document navigation and ordinary browser history |
+
+Public and Manage hosts may compose the same shared navigation. Docs Review remains text-oriented and has no interactive navigation parity requirement. Native integration is outside this proposal's delivery boundary.
+
+## Verification And Open Decisions
+
+Use an ordinary hierarchy with chapters and pages to verify that saved array order reaches both the index and previous/next consistently. Include a sequence different from title order, direct document links, the eligible Preview tree after branch exclusion, and a report host whose collection rows remain outside the sequence. Expand/collapse state must not change editorial traversal.
+
+Deterministic checks should protect traversal, exact membership, derived neighbours/counters and boundary behaviour. Toolbar fit, labels and interaction feel remain manual-review decisions.
+
+Before implementation, agree:
+
+- the traversal rule across parents and descendants, including whole-scope versus subtree boundaries;
+- first/last behaviour, including whether navigation stops or wraps;
+- path, optional return action, counter and accessible control presentation;
+- route/history behaviour and handling of a changed or unavailable supplied tree;
+- how the navigator is removed or suspended when the active presentation is not a scope-level document.
+
+## Status
+
+Proposed scope-level document navigation within Doc Navigation. Reorder supplies its ordered tree; this document does not authorize implementation or settle the remaining traversal and presentation choices. Catalogue and other sub-scope previous/next navigation are excluded and deferred.

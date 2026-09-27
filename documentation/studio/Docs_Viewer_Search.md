@@ -1,0 +1,51 @@
+---
+draft: false
+doc_id: d-20260602-160839-6d3cbb
+title: Docs Viewer Search
+added_date: "2026-06-02 16:08:39"
+last_updated: "2026-09-24 22:11:17"
+parent_id: d-20260331-000000-5dcf32
+
+---
+# Docs Viewer Search
+
+Docs Viewer Search provides one static inverted-index format and one browser query path for the Docs workspace. Working builds eligible ordinary documents plus eligible Works and Processing subdocs into one index. Preview and the public reader consume unchanged copies through their existing lifecycle.
+
+## Durable Contracts
+
+- [Docs Viewer Search Index](Docs_Search_Index.md) owns payload structure, workspace field and coverage policy, source extraction, ranking inputs, complete rebuilds, and the extension boundary.
+- [Docs Viewer Search Tokenizer](Docs_Search_Tokenizer.md) owns normalization, technical-term derivation, exclusions, stop words, query prefix semantics, and Python/JavaScript parity.
+
+`docs-viewer/build/build_search.py`, `docs-viewer/config/workspace/docs-workspace.json`, `docs-viewer/runtime/js/shared/docs-viewer-search.js`, and the generated JSON remain exact code/config authority. The current `docs_viewer_search_index_v4` payload contains no stage or stored result URLs. The configured consumer owns index location and navigation; snapshot manifests own provenance.
+
+## Workspace Policies
+
+The workspace enables `title`, `heading`, `summary`, `body`, and `code`. Ordinary and collection documents contribute their canonical front-matter summary through the shared text tokenizer; missing or blank summaries emit no postings. Summary text is indexed without adding snippets or a new result display.
+
+Parent title, identity and update time remain document-table metadata for display, navigation and deterministic ordering but emit no postings. Shared source extraction includes visible authored headings, prose, inline code, fenced code, image alt text, and visible raw-HTML text; it excludes front matter other than title and summary, report declarations, link destinations, media paths, attributes, scripts, styles, document IDs, date fragments, and 64-character hexadecimal digests.
+
+Working tree metadata selects ordinary documents, pruning draft and unpublishable roots with their descendants. Included collections contribute flat non-draft entries from their management manifests only when their configured ordinary hosts survive. All metadata selection precedes selected Markdown and collection by-ID reads. Search requires current Working document projections and fails clearly on selected inconsistencies.
+
+## Site-Search Corpus
+
+Ordinary documents, Works and Processing share one index, query and relevance order. Catalogue, Concepts and Moments subdocs are excluded by explicit collection policy; their eligible ordinary landing pages remain searchable. New collection registration records exclusion until explicitly selected. Recents shares the collection policy and metadata eligibility without reading the Search index. Report-local title search remains a list filter, not another full-text engine.
+
+Collection results retain exact `{collection, doc_id}` identity plus explicit `report_doc_id` placement. The shared route workflow uses that structured target to create the active Manage or public parent URL and preserve the child as `subdoc`. Configured collection/report title is display-only context beneath the result title and emits no postings.
+
+## Build And Publication
+
+The builder reconstructs the complete Working index. Ordinary source saves and watcher passes rebuild document projections only. Manage Rebuild builds document outputs before Search; `build_search.py --stage working --write` uses those existing outputs directly. No path patches postings or maintains a separate collection index. The content version excludes generation time, so an identical rebuild skips its write.
+
+The Working index lives at its configured generated-search location. Prepare Preview captures the saved file and copies its exact bytes into Preview; Deploy Repo copies that file to the public repository destination. Neither rebuilds Search nor applies a second coverage filter. Ordinary source edits may leave Search stale, and prepared document membership need not equal Search membership. Field and coverage policy changes take effect on the next complete Working Search build; rebuilding does not prepare or deploy them.
+
+## Browser Query Path
+
+Generated browser config declares the Docs Viewer domain, v4 schema, index URL, and `whole_index` rebuild policy. The collection provider reads its configured index URL without requiring stage identity inside that JSON. `docs-viewer-search-controller.js` validates v4 and owns query/history/loading/paging state, and `docs-viewer-search.js` is the sole tokenizer, postings-intersection, ranking, and tie-breaking owner.
+
+A multi-term query requires one matching posting set per normalized term. Prefix matching begins at three characters. Generic ranking prefers exact identity, exact title, title, heading, summary, parent title, body/code, and update metadata; only enabled fields participate. The workspace therefore ranks exact title, title, heading, summary, then body/code. Ties sort by title and identity, and each exact ordinary or collection target appears at most once.
+
+## Extension Boundary
+
+Site-search collection inclusion is configuration policy, independent of collection registration and publication eligibility. Included collections reuse the shared schema, tokenizer, reader and query engine. Collection-scoped full-text search remains a separately specified feature.
+
+The practical ceiling remains one client-loaded static index. Short prefixes can return broad result sets after full-text adoption; snippets, highlighting, stemming, synonyms, spelling correction, phrase positions, and section results remain outside the current contract.

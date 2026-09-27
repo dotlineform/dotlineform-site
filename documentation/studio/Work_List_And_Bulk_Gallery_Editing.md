@@ -1,0 +1,96 @@
+---
+draft: false
+doc_id: d-20260923-202307-7aaded
+title: Work List And Bulk Gallery Editing
+added_date: "2026-09-23 20:23:07"
+last_updated: "2026-09-24 11:16:11"
+summary: Completed Work-list multi-selection, expanded Galleries column and bulk membership replacement with current Save completion retained.
+ui_status: done
+parent_id: d-20260428-000000-f5ff18
+---
+# Work List And Bulk Gallery Editing
+
+Completed on 2026-09-24 with user acceptance after implementation, refinements and code review. The [Work editor](Catalogue_Work_Editor.md) owns the shipped interaction; [Catalogue Build And Lookup Refresh](Catalogue_Build_And_Lookup_Refresh.md) owns Save completion and the bulk membership boundary. Current combined Save completion is retained.
+
+## Requirements
+
+- Select one Work with a click, a continuous range with Shift-click, and add or remove individual Works with Command-click.
+- Display consecutive selected Work IDs as ranges in the selection field, retaining separate IDs/ranges for gaps, for example `01981-01983, 01985`.
+- Show a waiting pointer throughout the Work editor while Save runs, returning to the normal pointer when Save completes or fails.
+- Show a Galleries column only in expanded-list view. Display Gallery titles separated by commas, with wrapping and vertical centring. Two lines fit within the normal row height; additional lines increase the row height. Most Works are expected to belong to at most two or three Galleries.
+- Use one row dataset in both layouts. Extend the existing Work search API projection with Gallery IDs and resolve titles through the already-loaded Gallery registry; no persisted lookup JSON change is needed. Expanding or collapsing changes presentation only.
+- Let the list component update individual Galleries cells without rebuilding rows or thumbnails. Preserve selection and the visible scroll anchor when wrapping changes row heights. These are updates to displayed values after Save; membership editing remains in the editor panel.
+- Initially, Gallery membership is the only bulk-editable field. Other Work fields are read-only in bulk mode, including selections opened through the existing ID/range search; single-Work editing retains its current fields. A full list refresh is acceptable if Series membership changes; general row reconciliation is unnecessary.
+- Keep selection, range/toggle behavior, membership intersection, draft intent/discard, column presentation and cell updates in the front end. Extend existing server operations only where canonical data reads, validation and one combined write require it.
+
+## Retained Save Completion
+
+[Save completes canonical persistence, Catalogue output, required media and private Studio lookup refresh](Catalogue_Build_And_Lookup_Refresh.md). Retain that completion boundary for this delivery, including its busy state and distinction between canonical data saved and later output/lookup failure. Bulk membership replacement uses one bulk request and one existing completion pass, rather than a sequence of single-Work Saves.
+
+The separate [Catalogue Save And Targeted Publish](Catalogue_Save_And_Targeted_Publish.md) delivery is deferred and is no longer a prerequisite. Its pending-publication record, Publish control, incremental generator changes, lookup-refresh removal and media decoupling are outside this delivery. Existing Save latency and media/output side effects remain; this delivery does not promise faster Save or an absence of remote checks for Gallery-only edits.
+
+Deploy remains separate. The proposed changes affect local Studio and its shared list component; they do not change Docs Viewer readers, the public site or native hosting.
+
+## Deliverables
+
+- Multi-selection and targeted cell updates in the shared list component.
+- One enriched Work-list dataset and the wrapping Galleries column.
+- Bulk Gallery replacement through the existing editor Save, bulk-save route and canonical membership owner, retaining conflict validation and one coherent multi-Work transaction. Return saved memberships with current Work revisions for front-end refresh through the existing completion response.
+
+## Process
+
+1. Select Works. The editor shows only the intersection of their Gallery memberships; an empty intersection shows no Gallery pills.
+2. Edit that shared set using Gallery pills. For example, Works in `{A, B}` and `{B, C}` initially show `{B}`. Adding `D` and saving gives both Works exactly `{B, D}`: some memberships are removed and others added. Works in `{A}` and `{B}` initially show no pills; adding `D` and saving gives both Works exactly `{D}`.
+3. Click **Save** to replace every selected Work's memberships with the final edited set, then update its Galleries cell in place from the saved result. Removing all displayed Gallery pills and saving removes all memberships. Merely selecting Works without editing must not normalize their different memberships or enable a membership-changing Save. An untouched Save omits Gallery replacement and retains the existing output-refresh/retry behavior. Do not add a dedicated clear-all action in this delivery.
+4. Changing the Work selection discards unsaved bulk changes without saving. Expanding or collapsing the list preserves the selection and draft.
+
+## Delivery Steps
+
+| Step | Outcome and gate | Evidence | Record |
+| --- | --- | --- | --- |
+| 0 — Readiness | Confirm the retained Save boundary, front-end-first scope and bulk replacement rules. | Read-only owner review; documentation diff and whitespace check. | Passed 2026-09-24; record below. |
+| 1 — Implementation | Deliver selection, column, cell updates and bulk Save together; present for manual review. | Changed-source lint, bounded source review and user interaction review; select any necessary existing service check separately. | Implemented 2026-09-24; user approved continuation after interaction review and the range-display/waiting-pointer refinements. |
+| 2 — Code review | Review list identity, draft discard, membership conflicts and data ownership; resolve findings. | Bounded source/diff review. | Passed 2026-09-24; two findings resolved, affected lint and whitespace check passed. |
+| 3 — Closeout | Record user acceptance, update the Work editor's durable documentation and recommend retaining or retiring this proposal. | Reuse accepted evidence. | Complete 2026-09-24; durable owners updated and retirement recommendation recorded below. |
+
+Tests remain untouched pending the separately requested full review. Any test changes require their own agreed scope.
+
+### Readiness Record
+
+**Owners and necessary service work.** The shared record list and Work editor own selection, draft behavior and presentation. Add opt-in multiple selection and focused cell updates while preserving other list consumers' single-selection behavior. Extend the existing live Work search response with Gallery IDs, resolve titles through the loaded registry, and reuse focused Work reads for metadata revisions and membership baselines. No new endpoint or persisted lookup format is needed.
+
+The existing bulk-save route needs Gallery replacement through the current validation and transaction owners. Validate every selected Work, its metadata revision, its independent membership baseline and the replacement Gallery IDs before any write; a conflict rejects the whole selection. Write the membership map once, pass former/current Gallery IDs into existing output completion, and preserve saved memberships alongside refreshed revisions in the final response. Intersection calculation and edit intent remain in the front end; no server selection/session model or generic batch framework is needed.
+
+**Interaction decisions.** One Work uses normal single editing; multiple Works use the Gallery-only bulk form, narrowing the current bulk metadata controls. Explicit pill editing distinguishes an untouched empty intersection from a membership replacement. Adding a Gallery to an empty intersection makes it the sole membership for every selected Work on Save; a dedicated clear-all action is deferred unless actual use demonstrates a need. A changed selection discards the bulk draft; existing single-Work unsaved-change protection remains. Expansion and focus within the editor preserve selection/draft, and Gallery updates preserve mounted rows/thumbnails and the visible scroll anchor.
+
+**Validation budget.** Readiness requires source and documentation-diff review only. Implementation requires changed-source lint, bounded review of shared-list consumers and the bulk write/response path, and user manual acceptance. Manual review covers selection modifiers, replacement from shared and empty intersections, untouched selection, removing displayed pills, draft discard, expansion, wrapping/scroll behavior and a representative Save. Lint/review are local, low-cost checks. Manual review is a focused session; its Saves write the user's chosen records and retain current generated/media/network effects and unmeasured duration.
+
+Review partial-write prevention, stale membership rejection, returned memberships and former-Gallery output updates directly. Select an existing service check only if a concrete unresolved risk needs execution, after inspecting its coverage, effects and cost. No automated test work, browser automation, broad suites, benchmarks or extra rebuilds are required by default; the full test review remains separate. Source review/lint do not prove runtime conflict rejection or failure recovery, so report those limits unless an accepted check or observed manual case exercises them.
+
+**Gate and evidence.** Read-only owner inspection found no readiness blocker. The worktree was clean before the two readiness proposal edits; their diff was reviewed and `git diff --check` passed. Readiness made no runtime, test, canonical/generated data, service or media changes. Implementation was subsequently approved. Publication/media redesign, a new API framework or broader list reconciliation would require a scope decision; the deferred delivery must not be absorbed to resolve Save cost.
+
+### Implementation Record
+
+**Result.** The shared list now supports opt-in multiple selection, exact-ID selection synchronization and focused text-cell updates with a visible scroll anchor. The Work editor supplies click/Shift/Command selection, one row dataset, an expanded-only wrapping Galleries column, intersection-based pill editing and read-only bulk metadata. Selection changes discard bulk drafts; layout changes preserve them. No clear-all control was added.
+
+**Persistence.** The existing Work search API adds Gallery IDs without changing persisted lookup JSON. The existing bulk route validates all metadata revisions and membership baselines before one canonical transaction, writes the membership file once, carries former/current Gallery dependencies and returns all selected Works with saved memberships. Save completion refreshes metadata revisions without discarding those memberships. The Gallery helper now validates replacements together and serves single/New Work callers too. Gallery-only mutations do not normalize or rewrite Work metadata; current Save media/output/lookup completion remains intact.
+
+**Evidence and gate.** `bin/lint-js` passed for the eleven changed JavaScript files, including the requested compact selection-range display; `bin/lint-python` passed for the five changed Python files; `git diff --check` passed. Focused source review covered the other shared-list consumer, request/response wiring, membership validation before writes, previous/current Gallery dependencies and retained output failure handling. No tests were created, changed or run. Codex performed no service restart, browser interaction, real Save, canonical/generated writes, R2 activity or publication. The user subsequently approved continuation after interaction review and refinements; no scenario-by-scenario runtime verification was claimed.
+
+### Code Review Record
+
+**Scope and findings.** Reviewed the shared list's single/multiple selection behavior, exact-ID cell updates and scroll preservation; the editor's intersection, edit intent, read-only bulk fields, draft discard, range display and Save state; and the existing read/mutation/output owners. Removed the bulk-only hint because its message priority masked unsaved changes and successful Save outcomes. Disabled Work search/New and closed search suggestions during the existing Save/build/delete busy state so those controls cannot switch the current selection during Save. No new operation framework or API was introduced.
+
+**Evidence and limits.** `bin/lint-js studio/app/frontend/js/catalogue-work-editor.js` and `git diff --check` passed after the fixes. Prior lint evidence remains applicable to untouched code. Source review confirmed metadata and independent membership checks precede the one canonical write, former/current Gallery dependencies reach completion, and returned memberships survive revision refresh. No remaining findings in this bounded review; live stale-revision rejection, partial-output failure and the two UI corrections were not exercised by Codex. Existing user changes to canonical Works and private lookup files were left untouched. No tests, browser automation or extra rebuilds were needed or run.
+
+### Closeout Record
+
+The user accepted the result and approved closeout after the review fixes. Durable interaction, selection, saved-cell updates, bulk replacement and Save feedback are recorded in [Catalogue Work Editor](Catalogue_Work_Editor.md); the necessary bulk service/response details are recorded in [Catalogue Build And Lookup Refresh](Catalogue_Build_And_Lookup_Refresh.md). Closeout changes documentation only and reuses the accepted lint, source-review and user-acceptance evidence. Live conflict/failure-path verification remains unclaimed. No tests or rebuilds were added, and no publication, deployment, commit or push was performed.
+
+Recommend retiring this completed delivery through the normal manual archive process; it remains in place pending that action. Retain [Planned Features](Planned_Features.md) as the workflow authority and retain the separate [Save And Targeted Publish](Catalogue_Save_And_Targeted_Publish.md) proposal as deferred. No concept, architecture or temporary verification siblings were created for this delivery.
+
+## Follow-on
+
+Additional bulk-editable fields, such as medium, may follow; fields absent from the list need no list-cell update. Bulk Work creation remains separate.
+
+Potential later refinements are distinct styling for intended Gallery edits in selected rows and a clear-all action if actual use shows a need. Neither is part of the completed behavior.

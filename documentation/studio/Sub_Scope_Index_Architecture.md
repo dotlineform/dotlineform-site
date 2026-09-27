@@ -1,0 +1,409 @@
+---
+draft: false
+doc_id: d-20260728-113139-763354
+title: Sub-Scope Index Architecture
+added_date: "2026-07-28 11:31:39"
+last_updated: "2026-09-26 19:47:13"
+summary: define collection identity, the docs_subscope default, registered customisations, selection lifecycle, and explicit function adoption
+parent_id: d-20260801-084127-752d7e
+---
+# Sub-Scope Index Architecture
+
+## Architecture Outcome
+
+`docs_subscope` is the generic collection index and default report for a
+configured one-level sub-scope. It retains one shared public-safe list/detail
+reader. Manage composes standard controls and workflows plus at most one
+registered collection customisation without loading management modules on
+public routes.
+
+The report remains the owner of collection rendering and navigation.
+Management workflows remain owned by the management host and validated local
+services. This is a focused extension contract for `docs_subscope`, not a
+general conversion of reports into dashboards or write surfaces.
+
+## Collection Identity
+
+The browser and services share one normalized collection model:
+
+```text
+parent collection:    { scope }
+sub-scope collection: { scope, sub_scope }
+
+document target:      { scope, doc_id }
+                  or  { scope, sub_scope, doc_id }
+
+selection target:     collection + checked doc_ids
+```
+
+`sub_scope` identifies one configured child collection. It is not a top-level
+scope alias, an arbitrary source path, or a route-selected namespace.
+
+Raw child `doc_id` values are unique only inside their owning
+`{ scope, sub_scope }`. Every cache key, request, operation log, package
+metadata record, or action handoff that crosses the report boundary must retain
+that collection identity.
+
+## Shared Report Ownership
+
+The shared `docs_subscope` report owns:
+
+- validating the configured sub-scope;
+- loading the public manifest or supplied local inventory;
+- title search, deterministic list ordering, and row/detail rendering;
+- `subdoc` URL state and Back/Forward behavior;
+- membership and by-ID payload identity validation;
+- the currently validated detail target;
+- contained unavailable and failure states; and
+- isolated filter, list-row, list-toolbar, selection-toolbar, detail-toolbar,
+  and lifecycle contribution positions.
+
+The shared report does not own:
+
+- management capability checks;
+- checkbox selection state;
+- management action definitions or dispatch;
+- preview/apply mutation workflows;
+- package preparation;
+- public promotion of management data.
+
+An extension host exists only when the caller supplies a contribution.
+Public mode therefore receives neither an empty management toolbar nor an
+import path to its implementation.
+
+## Default And Registered Customisations
+
+A configured sub-scope record with its ordinary fields selects the default. The shared engine always supplies title search, title-ascending initial order, normal empty/error states, and list/detail navigation. Manage adds status and, only for a publish-capable collection, publishability row treatment, plus the title/recency sort toggle, New, selection, Prepare Package, validated-detail Copy Link, and validated-detail Delete.
+
+An optional strict `sub_scope_customisation: {id, settings}` selects one known registry entry. The builder may project only a namespaced `customisation` root and per-row `customisation` data; the access-specific browser registry resolves its module. Unknown, unavailable, or mismatched identities fail as contained report errors and retain the selected collection's error state.
+
+Manage composes the default first and the selected customisation second in separate hosts. The engine and dispatcher consume registered definitions and exact supplied targets. The current `concepts` customisation adds ordered group filtering and optional Concept ID metadata, and `dotlineform_projects` adds folder presentation, metadata, and its exact-detail action. Both are Manage-only; their public routes retain the shared reader.
+
+## Reachability Is Not Ownership
+
+A configured sub-scope, a parent document that loads `docs_subscope`, and the
+registered report module are independent records:
+
+- a sub-scope may exist without any document surfacing it;
+- a report module may remain registered without any document loading it; and
+- deleting a parent document that loads the report deletes that parent
+  document under the ordinary parent hierarchy contract, but does not delete
+  the report module, configured sub-scope, or child documents.
+
+No lifecycle or cascade relationship is inferred from a parent document's report block or its `sub_scope` attribute.
+
+## Public And Manage Projections
+
+Public mode keeps the existing minimal collection contract:
+
+```json
+{"doc_id": "<id>", "title": "<title>"}
+```
+
+Manage mode supplies one compact inventory containing:
+
+```json
+{
+  "doc_id": "<id>",
+  "title": "<title>",
+  "ui_status": "<status>",
+  "publishable": false,
+  "last_updated": "YYYY-MM-DD HH:MM:SS"
+}
+```
+
+`publishable` is false-only and appears only for an excluded row in a publish-capable collection. Included rows and every local collection row omit it.
+
+The compact inventory supports collection rendering and the Manage recency
+sort. Missing or unusable `last_updated` values sort after dated rows, then by
+title and `doc_id`. Full source metadata and body content remain exact-document
+reads. The report must not issue one full record request per row.
+
+A registered projector may add only namespaced root and row data:
+
+```json
+{
+  "customisation": {"id": "concepts", "data": {"groups": ["subject"]}},
+  "docs": [{"doc_id": "<id>", "title": "<title>", "customisation": {"group": "subject"}}]
+}
+```
+
+The current Analysis/Concepts projector is Manage-only, so its public manifest
+remains the minimal `{doc_id, title}` projection.
+
+Status and non-publishable icons remain private projections from a publish-capable Manage
+inventory. Local collections show no publication-exclusion icon. A missing `ui_status` remains a valid no-icon state unless a later
+UI decision introduces an explicit unclassified icon.
+
+Rows and actions use `doc_id` as identity. Title remains display data; this
+feature introduces no title-uniqueness, collision, or deduplication contract.
+
+## Row Presentation
+
+Status and the optional non-publishable icon prefix the title text inside the title cell,
+matching the main Index. They are part of the displayed title treatment, not
+separate columns or canonical `title` data. Their icons remain hidden from
+assistive technology while the title control's accessible name includes the
+corresponding status labels.
+
+Checkboxes occupy a dedicated first cell or column before the title. Each
+checkbox remains a sibling of the title navigation control so selection cannot
+also navigate or create nested interactive controls. The checkbox cell is
+contributed only in manage selection mode and is omitted or collapsed
+otherwise; public rows remain title-only and load no selection module.
+
+```text
+selection mode:  [checkbox] [status icon + optional Excluded from next Publish icon + title]
+ordinary Manage:            [status icon + optional exclusion icon + title]
+public:                     [title]
+```
+
+## Manage-Only Contribution
+
+A focused manage-owned composition contributes the standard default and at
+most one registered customisation. The default owns:
+
+- a detail toolbar mounted only for a validated detail target;
+- a list toolbar for deterministic sorting, New, collection actions, and
+  selection commands;
+- a dedicated sibling checkbox cell before each list-row title;
+- collection-local selection projection and event handling;
+- capability-aware action state;
+- lazy workflow loading; and
+- refresh/reconciliation after a committed collection mutation.
+
+The shared report passes explicit hosts, records, and validated targets.
+Management code does not infer targets from `subdoc`, scrape private report
+markup, or fall back to the selected parent document.
+
+Presentation for these controls belongs in the manage stylesheet. Public CSS
+may retain only the shared report layout required for public reading.
+
+The shared report loads the configured manifest and accepts one composed
+`subscopeReportContribution`. Each owner receives separate filter, leading,
+title-prefix, trailing, list, selection, and detail positions plus
+collection-scoped mount, state, refresh, and unmount events. The default also
+publishes the mounted collection plus exact document and collection refresh
+callbacks to the app-level Import owner. Empty hosts are not mounted, and the
+detail host is offered only after by-ID identity validation. Registered
+actions consume only an explicit collection, checked IDs, or validated detail
+target and declare their empty-state and refresh effects.
+
+## Selection Lifecycle
+
+Index and sub-scope selection reuse the same pure transition rules but have
+separate owners.
+
+The sub-scope owner is keyed by `{ scope, sub_scope }` and owns:
+
+- selection mode;
+- checked IDs;
+- range anchor;
+- Select all, Clear, and Done;
+- pruning after inventory refresh or deletion; and
+- exit when the report unmounts, the collection changes, or management mode is
+  left.
+
+Opening a detail retains the mounted list rows, headings and toolbar. The report's Back button reveals that list without fetching the manifest or recreating unchanged rows, restores the window scroll position saved when the row was opened, and returns focus to the original row control when it is still connected. Filters, sort and selection remain with the mounted list. Manifest replacement, committed draft changes and deletion invalidate its rendering so the next return rebuilds current data; filters and sorting still rebuild immediately. Initial direct-to-detail navigation builds the list on its first return. Browser Back continues to use the route-loading path.
+
+Only checked IDs are supplied to selection actions. The displayed detail, focused row, URL `subdoc`, and selected parent index document are never fallback targets.
+
+Select all replaces the checked set with the caller-supplied currently visible
+eligible IDs. The unfiltered main Index and unfiltered sub-scope list therefore
+retain their whole-collection behavior, while SSI-4 filtering naturally limits
+Select all to matching rows. Clear still empties the complete checked set.
+
+Checkboxes remain siblings of row navigation controls. Selecting a document
+for an action must not also navigate to its detail.
+
+## Function Adoption
+
+Existing functions adopt sub-scope collections only when their complete
+contract can carry the collection identity:
+
+| function | target | stance |
+| --- | --- | --- |
+| list and detail read | collection/document | shipped baseline |
+| source and metadata editing | exact document | shipped baseline |
+| detail Delete | exact validated document | shipped |
+| New | explicit collection other than Catalogue | shared create-only action |
+| Regenerate | Working Catalogue collection | shipped; creates/replaces documents from generated Work data |
+| app-level ordinary Import | explicit displayed collection | shipped create-only |
+| Prepare Package | checked selection | shipped export-only |
+| overall search | collection | deferred; later adoption uses the overall search surface, not a child-specific index |
+| app-level returned-package and edited-folder Import | trusted package/collection | shipped through manifest-owned routing |
+| scope settings, rename, lifecycle, publish | top-level scope | remain scope-only |
+
+This is a positive adoption model. The presence of `sub_scope` in one resolver
+does not make every scope action collection-aware.
+
+## Context Collection Browsing And Working Subjects
+
+The `works` collection host `d-20260801-073826-8865a8` is displayed as **Context**. Its immutable document identity, internal collection ID, paths and `working_works` customisation remain unchanged. It uses the [shared browsing module](../../docs-viewer/runtime/js/shared/docs-collection-browsing.js) for 20-row pages, normalized case-insensitive title-fragment search after a 180 ms typing pause, immediate clear, and cached full-result filtering/sorting before pagination. Context opens in title A–Z order with the existing numeric-aware collation; a shared toolbar button switches to document `last_updated` descending, with title and exact document ID ties. Manage retains its title/subject heading sorts under the same active sort state. Pending search disables sort/page controls. Search/sort resets page 1; detail return preserves query, sort, page and return position. Select all still covers the complete eligible filtered set across pages. Context retains mixed subjects and has no row thumbnails.
+
+The configured collection display title is `Context`, used by Search/Recent result metadata and the Manage Import destination. Browsing copy uses `documents`: Back says “Back to all documents”, search and paging refer to documents, and empty-state messages refer to documents without treating Context as a plural noun. The report supplies Back wording separately from `collectionLabel`, which retains the configured identity label. Total/filtered count messages remain visually hidden, with document counts available to screen readers. The search placeholder is `title`, and Manage's title-column heading is `Title`. Other collections retain their existing wording. Browser configuration and Working Search/Recents generation project the configured title; Preview and Site Preview receive snapshot data through their normal lifecycle.
+
+Docs generation owns document membership, titles, dates, readiness and exact subject declarations. Working reads `manage-manifest.json`; Preview/public read `manifest.json`, whose Works rows now require `doc_id`, `title`, `subject` and `last_updated`. Folder declarations stay private. Complete and targeted builds preserve source timestamps; old-shape saved metadata fails visibly. Snapshot adoption remains owned by Prepare Preview and Deploy Repo, separately from Catalogue Save.
+
+Manage's [private title reader](../../docs-viewer/runtime/js/management/docs-viewer-management-works-metadata.js) loads `reports/works/manifest.json` from configured Working Catalogue output through the existing private local report-asset route with `cache: no-store`. This compact file contains every Work and Series ID/title, including empty Series. [Studio Save completion](Catalogue_Build_And_Lookup_Refresh.md) maintains affected entries before reporting complete success. The normal list load consumes saved data; it performs no canonical reads, Catalogue-target lookup request or report generation, and needs no separate Works Build after a Catalogue Save. Missing/invalid files fail visibly; a missing subject identity retains its existing unavailable presentation. Docs builds neither generate nor overwrite this Catalogue-owned file. Public runtime/data exclude it. Subject assignment pickers retain their separately owned generated Catalogue provider.
+
+The Working Works list opens Series subjects in Media View using the exact Series ID. Work subjects open the corresponding Working Catalogue document through the generated Catalogue `subject-associations.json`, using the same exact Work-to-document reader as the Catalogue Works report. A Work without an association remains plain text; ambiguous or invalid association data fails visibly. Folder subjects retain their existing local-folder action. These destinations apply to Working Works; other collections retain their existing subject navigation.
+
+Local folder links and the detail toolbar's Open in Finder action open silently on success; failures still display an error.
+
+Implementation/static review, initial metadata generation, a targeted no-change preview and direct HTTP serving checks passed on 2026-09-26. The user confirmed review through Site Preview, accepted the final count/placeholder/heading changes, confirmed Studio Save testing and authorized closeout. Current Preview/site manifests include the required timestamps. This establishes user manual acceptance; it does not claim browser automation, measured performance, failure injection or exhaustive mutation/selection/subject-action coverage. [Catalogue Build And Lookup Refresh](Catalogue_Build_And_Lookup_Refresh.md) owns Save freshness and recovery.
+
+## Catalogue Work Records
+
+Working Catalogue's management contribution replaces New with Regenerate. Studio Works editor owns Work creation, metadata and generated JSON. [Regeneration service](../../docs-viewer/services/docs_catalogue_regeneration.py) reads the generated Work index and selected `works/index/<work_id>.json` records through the configured Catalogue output reader. It inventories Catalogue documents once per preview/apply operation and matches them by exact five-digit `work_id`, preserving leading zeroes. Shared creation supplies new immutable document IDs; replacement retains existing document identity, filename, added date, draft state and Links.
+
+New Catalogue documents default to `draft: false` because they represent published Works with generated content and need no separate authored-draft stage. Existing Catalogue documents were set to `draft: false` when this default was adopted. Other document collections retain their draft default.
+
+The existing collection action registration supplies the exact Working Catalogue target and report-refresh callback. The management host opens the dedicated workflow/modal. Preview lists selected Works and create/regenerate/skip counts, with Only create new docs initially checked: checked skips existing documents entirely, while unchecked updates their title and body. There is no document cap. Apply verifies the selected IDs and content/source revision receipt, then awaits source writes, document builds, new-document Links initialization and report refresh. Busy state covers those operations, while input and result display remain ready. Successful results stay in the modal with one Close button. Failures report committed sources and incomplete work without automatically retrying creation or the build.
+
+[Work-record generator](../../docs-viewer/services/docs_catalogue_work_record.py) defines the body in code. Each body is one ordinary `catalogue:image:work` token containing the explicit Work ID, `alt` and `caption` from the Work title, `placement=left` and `fill_width=true`. The front-matter title also comes from the Work title. The literal summary uses this order:
+
+```text
+<year_display>
+<medium_caption>
+<height × width × optional depth cm>
+cat. <work_id>
+```
+
+Empty optional summary lines are omitted. Dimensions use positive numeric `height_cm`, `width_cm` and optional `depth_cm`; the whole dimensions line is omitted if height or width is missing, and whole numbers omit `.0`. The existing image-token serializer encodes values and newlines. There are no Markdown templates or JSON field definitions, and token field values are literal: `summary=metadata` is not a lookup instruction. To change the structure, amend the generator and Regenerate with Only create new docs unchecked. To refresh Work metadata, save/generate it in Studio first, then Regenerate. Ordinary Docs Build renders the saved token values.
+
+### Catalogue Collection Browsing
+
+The [collection builder](../../docs-viewer/build/docs_builder/collection.py) projects Catalogue public-reader list rows as `doc_id`, `title`, `last_updated` and required five-digit string `work_id`. It validates the source Work subject and document timestamp; public Catalogue list rows have no generic `subject` object. Targeted generation requires the current saved manifest shape and otherwise fails with a complete Catalogue Build instruction. Other collections and selected-document payloads retain their subject contracts. Working reads `manage-manifest.json`, with its authoring subject explicitly adapted by the [management report host](../../docs-viewer/runtime/js/management/docs-viewer-management-document-reports.js); Preview and public readers consume `manifest.json` directly. Neither public reader nor builder reconstructs missing Work identity from titles or document IDs.
+
+The [shared browsing module](../../docs-viewer/runtime/js/shared/docs-collection-browsing.js) prepares normalized title search values, timestamps and Catalogue thumbnail descriptors once per loaded manifest. [The shared collection reader](../../docs-viewer/runtime/js/shared/docs-collection-report.js) opens Catalogue with 20 documents ordered by `last_updated` descending, then title and document ID. Its sort control switches between latest-updated and title order. Search uses normalized case-insensitive substring matching over document titles and exact Work-ID fields across the complete collection. Typing waits for a 180 ms pause; clearing applies immediately. Sorting and paging are disabled while a query is pending, and deferred work is cancelled on detail navigation, refresh, errors or unmount. Search/sort changes reset to page 1; page turns reuse cached matches. There is no persistent search index or change to site Search/Recents.
+
+Only the current page's rows and thumbnail elements are mounted. The pager shows current/total pages with chevrons disabled at the ends; no matches hide it. Counts describe the complete match set. Working selection and Select all continue to use the complete filtered result set across pages, while checkboxes exist only on rendered rows. Opening a document fetches its generated `by-id/<doc_id>.json`; the report's Back action reuses an unchanged list and restores page, query, sort, scroll and row focus. Manifest replacement rebuilds prepared values and reconciles the page with the current match count. Works shares the pager/search timing and return behavior with its separately described ordering, inputs and presentation.
+
+Each row displays the existing 96px Work thumbnail at 64px beside its title. The existing media provider supplies selected-stage generated media policy, using static files on public routes and the existing generated-data read locally; the shared media helper combines it with the route-owned thumbnail base. There are no runtime server changes or per-row Work JSON reads. Thumbnails use lazy loading and reserved dimensions. The image and title share one document navigation control; an unavailable image leaves title navigation usable. Public code projection and static site validation are required when these shared modules/styles change.
+
+The Catalogue count uses `work`/`works`, including filtered counts such as `20 of 4616 works`; the search placeholder is `work`. Row thumbnails have 6px rounded corners.
+
+Implementation and static review are complete, and the user confirmed review through Site Preview on 2026-09-26. The subsequent count/placeholder copy and rounded-thumbnail adjustments await final visual confirmation. Snapshot data adopts the required manifest through the normal Prepare Preview and Publish operations; old-shape manifests fail visibly. Static checks and the reported manual review do not establish measured browser performance, automated failure-path coverage or a public deployment.
+
+## App-Level Import
+
+The report publishes its mounted `{ scope, sub_scope }` collection to the
+management host. It has no list-toolbar Import action and remains independent
+of selection mode and checked IDs.
+
+The one app-level Import modal uses that collection as the frozen destination
+for ordinary Word, HTML, Markdown, text, and one-document Markdown-folder
+sources. Returned packages and edited review-source folders ignore display
+context and retain their exact manifest-owned target, including when it is a
+different collection. No browser destination or source-type selector exists.
+
+An ordinary child request retains `sub_scope`. Every successful response
+returns an exact target and validated `viewer_url`. When the returned child
+collection is mounted, the host calls the report's exact document- or
+collection-refresh callback; a cross-context result leaves the current report
+unchanged and exposes its explicit destination link. Public reports have no
+Import control or management-module reachability.
+
+## Detail Delete
+
+Delete is a rendered-detail control over one validated
+`{ scope, sub_scope, doc_id }` target.
+
+The shipped management workflow:
+
+1. requests a write-free preview;
+2. shows the exact source and generated consequences;
+3. requires explicit confirmation;
+4. re-resolves and deletes only the confined source document;
+5. rebuilds the affected sub-scope outputs;
+6. clears the deleted `subdoc` with replacement history;
+7. removes the exact row from the mounted inventory and returns to list state,
+   refetching only the child management inventory if that projection cannot be
+   applied; and
+8. retains only blocker, unavailable-data, stale-state, and error feedback.
+
+The mutation does not inspect or update Studio canonical data. Deleting a Concept document removes that definition on the next collection build. Missing-document fallbacks for the future relationship model remain separate work.
+
+Normal success must not reload the parent `index-tree`, select another parent
+document, or redraw unrelated sidebar state.
+
+## Package Export
+
+The existing Prepare Package workflow remains the modal and export owner with
+an explicit collection boundary.
+
+Sub-scope adoption requires:
+
+- document-list reads scoped by `{ scope, sub_scope }`;
+- request and server validation that preserve `sub_scope`;
+- source loading from the configured child collection;
+- package metadata that records the complete collection identity;
+- checked-ID eligibility against that exact collection;
+- flat-collection profile behavior rather than assumed parent hierarchy; and
+- operation records that retain the collection target.
+
+The shipped checked-ID adoption is export-only. App-level Import is a separate
+selection-independent workflow. Returned-package and edited-review-folder
+Import retain the complete trusted collection identity and never consume the
+report's checked IDs.
+
+## Independent Canonical Ownership
+
+Sub-scope management acts only on Docs Viewer sources and projections.
+
+- It does not synchronize fields with Studio records.
+- It does not cascade Studio edits or deletes.
+- It does not prevent document deletion because an external record refers to
+  the document.
+- It does not repair or infer external associations.
+- It may display or diagnose stale relationships through a separately owned
+  feature.
+
+This applies the
+[Independent Canonical Documents](Independent_Canonical_Documents.md)
+concept without adding cross-application coupling to the report or Docs
+management service.
+
+## Risks And Pressure Points
+
+- A large flat collection uses default title search plus any registered
+  collection filters over its supplied list. This is loaded-list filtering,
+  not overall Docs Viewer search and not a parallel search index.
+- Checkbox gutters and toolbars need explicit review at representative laptop/desktop widths.
+- Direct detail Delete and future selection-backed bulk Delete are different
+  interaction contracts and should not be conflated.
+- Collection reconciliation must preserve valid local selection without reloading the
+  parent index.
+- Public import-graph coverage must continue to reject manage-owned controllers,
+  clients, workflows, and package modules.
+
+## Likely Authorities To Inspect
+
+- shared report:
+  `site/docs-viewer/runtime/js/shared/docs-subscope-report.js`
+- config/projector registry: `docs-viewer/services/docs_subscope_customisations.py`
+- public and Manage registries:
+  `site/docs-viewer/runtime/js/shared/docs-subscope-customisation-registry.js`
+  and
+  `docs-viewer/runtime/js/management/docs-viewer-management-subscope-customisation-registry.js`
+- manage bridge, default, and composition:
+  `docs-viewer-management-document-reports.js`,
+  `docs-viewer-management-subscope-default-contribution.js`, and
+  `docs-viewer-management-subscope-composition.js`
+- managed target normalization and resolution:
+  `docs-viewer-management-document-target.js` and
+  `docs_management_document_target.py`
+- existing selection model and controller:
+  `docs-viewer-index-selection.js` and
+  `docs-viewer-management-index-controller.js`
+- package browser and service:
+  `docs-viewer/runtime/js/packages/` and
+  `docs-viewer/services/docs_document_packages/`
+- local management routes, capability projection, mutation planning, and
+  targeted rebuild services; and
+- focused public import-boundary, report-module, management-service, selection,
+  and package tests.
+
+These are inspection starting points. A delivery should confirm current
+ownership before naming exact changed files.

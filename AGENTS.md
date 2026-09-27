@@ -2,8 +2,8 @@
 
 - Ask for confirmation before edits unless the request is trivial or the user has explicitly asked for the edit.
 - For code changes, summarize the intended change set and ask for confirmation before editing unless the request is trivial.
-- Use `documentation/studio/d-20260523-190651-7157ec.md` as the project implementation checklist. Keep durable repo guardrails there.
-- Use `documentation/studio/d-20260523-000000-bf7161.md` when lifecycle decisions, roadmap deliveries, task trackers, or closeout state need more context.
+- Use `documentation/studio/Development_Checklist.md` as the project implementation checklist. Keep durable repo guardrails there.
+- Use `documentation/studio/Development_Workflow.md` when lifecycle decisions, roadmap deliveries, task trackers, or closeout state need more context.
 - Compatibility aliases are prohibited unless justified before implementation with removal criteria.
 - If you find compatibility layers during new feature development, report. Fix them immediately when non-trivial.
 - Tests and documents are not contracts for deciding how to implement code. They should follow current development objectives unless a constraint has been called out and agreed.
@@ -14,7 +14,7 @@
 ## Key development factors
 - The public site has no deploy-time build step: `site/` is the tracked GitHub Pages artifact. Shared/public Docs Viewer JavaScript and stylesheets are canonical under `docs-viewer/` and have an explicit tracked projection under `site/docs-viewer/`; local apps serve the canonical files while public preview and GitHub Pages serve the projection.
 - For long multi-batch work, or before a long thread reaches context limits, produce a handoff with changed files, decisions made, remaining tasks, commands run, and known risks. Keep the delivery document to current/next state, checkboxes, decisions, and completion gates.
-- Non-trivial new features, requirements, or refactors are generally documented and parented to [Planned Features](documentation/studio/d-20260428-000000-f5ff18.md), which contains delivery planning guidance.
+- Non-trivial new features, requirements, or refactors are generally documented and parented to [Planned Features](documentation/studio/Planned_Features.md), which contains delivery planning guidance.
 - Local servers do not need to support multiple concurrent users. Modal workflows always complete before another one starts.
 
 ## Processing Project Boundary
@@ -32,7 +32,7 @@
 
 ## Documentation And Generated Payloads
 
-- Durable Studio development and maintenance documentation is maintained in repository `documentation/studio/`. The full Studio source Markdown copy retains its existing filenames and immutable document IDs; use these repository files as the maintained authority.
+- Durable Studio development and maintenance documentation is maintained in repository `documentation/studio/`. Studio Markdown filenames use concise readable titles with underscores; retain each existing `doc_id` and `title` in front matter and update file links when renaming. Use these repository files as the maintained authority.
 - For `documentation/studio/` edits, read the current file and edit it directly with `apply_patch`. Repository documentation does not use the Docs source service, watcher, or Docs/Search rebuilds.
 - When writing or updating Markdown source documents, do not apply a fixed-column source wrap. Each paragraph is one source line, each list item is one source line. Code blocks, tables, headings, and front matter retain their required structure.
 - The single Docs Viewer workspace stores canonical input in `$DOTLINEFORM_DOCS_BASE_DIR/working/source/`, replaceable Working output in `working/generated/`, and one read-only prepared snapshot in `preview/`. Pre-publish, local Published, external `scopes/analysis/` nesting and repository `docs-viewer/scopes/` storage are retired and must not be recreated or used as fallbacks.
@@ -61,8 +61,8 @@
 
 ## Checks And Test Policy
 
-- Use `documentation/studio/d-20260501-174746-efd581.md`, `documentation/studio/d-20260514-135716-c70591.md`, and `documentation/studio/d-20260501-000000-49b626.md` as the maintained test policy.
-- `documentation/studio/d-20260627-212121-7cf7de.md` determines approach for subsequent testing and review of existing tests.
+- Use `documentation/studio/Testing.md`, `documentation/studio/Pytest.md`, and `documentation/studio/Browser_Smoke_Testing.md` as the maintained test policy.
+- `documentation/studio/Test_Contract_Discipline.md` determines approach for subsequent testing and review of existing tests.
 - Test work is a delivery with its own agreed specification. Approval to implement a feature or fix does not authorize creating, updating, refactoring, deleting, or expanding tests, fixtures, harnesses, or profile membership. Specify the proposed test work and obtain approval before implementing it; an already approved test specification is sufficient authorization within its scope.
 - This applies to every test layer, including temporary regression scripts. Do not bypass the rule by calling new test code a probe, smoke, or one-off check.
 - Maintain each test or coherent collection's specification and current coverage description outside delivery documents, under Testing or its durable app/domain owner. Document exact test paths/selectors and collection membership, scenarios and inputs, asserted outcomes, fixtures and mocks, real systems exercised, write/network effects, exclusions, run commands/triggers, and costs. A profile name, test count, pass result, or source listing alone does not explain coverage. Deliveries link to this record and keep only selected run evidence and outcomes.
@@ -116,7 +116,7 @@
 
 ## Security And Sanitization
 
-- Use `documentation/studio/d-20260523-190651-7157ec.md` for sanitization triggers and local write-service safety.
+- Use `documentation/studio/Development_Checklist.md` for sanitization triggers and local write-service safety.
 - When a focused scan is needed for changed files, use:
   - `rg -n "/Users/|/home/|C:\\\\|miniconda|rbenv|api[_-]?key|token|secret|password|PRIVATE KEY" <changed-files>`
 

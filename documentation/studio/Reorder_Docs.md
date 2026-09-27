@@ -1,0 +1,100 @@
+---
+draft: false
+doc_id: d-20260903-195713-4c8f2a
+title: Reorder docs
+added_date: "2026-09-03 19:57:13"
+last_updated: "2026-09-26 21:36:29"
+summary: Use one canonical nested index-order.json for ordinary document hierarchy and order, edited through a combined Position modal with Before, After and Inside placement.
+ui_status: done
+parent_id: d-20260903-220300-694ee5
+---
+# Reorder docs
+
+## Purpose
+
+Give ordinary documents an explicit hierarchy and editorial sequence that can be changed through one Position modal. A canonical nested `index-order.json` owns both parentage and sibling order. Build produces `index-tree.json` in that literal order, and readers preserve it. There are no numeric ordering fields or cascading renumbering of document files.
+
+This is the agreed approach for normal documents, previously described as scope documents. It replaces the earlier drag-and-drop proposal and the split between authored `parent_id` and sibling-only ordering data. [Context Navigation](Document_Context_Navigation.md) consumes the resulting tree; its previous/next controls are a separate delivery.
+
+## Boundary
+
+The tree contains ordinary Working documents, including nested documents and ordinary collection report hosts. Named collection subdocuments, report rows and Catalogue records remain outside it and retain their own sorting and membership owners. A collection host participates as an ordinary document; its flat collection rows do not become tree children.
+
+Draft and unpublishable ordinary documents remain in the complete editable tree. Publication eligibility does not determine whether a document can be positioned or chosen as a parent. The structure editor owns organisation; Prepare Preview owns branch exclusion.
+
+## Canonical Structure And Generated Output
+
+`index-order.json` belongs with canonical ordinary document source under the configured Working source boundary, not under generated output. Its nested records contain exact `doc_id` references and child arrays. Nesting determines parentage; array position determines order, including at root. The following uses illustrative IDs:
+
+```json
+[
+  {
+    "doc_id": "chapter-a",
+    "children": [
+      { "doc_id": "page-two", "children": [] },
+      { "doc_id": "page-one", "children": [] }
+    ]
+  },
+  { "doc_id": "chapter-b", "children": [] }
+]
+```
+
+Document sources continue to own identity, title, body, explicit boolean `draft` and their other descriptive metadata. `unpublishable.json` retains publication intent. Organisation stores exact identity references and nesting; descriptive metadata and publication state are not copied into it.
+
+Authored `parent_id` is removed from ordinary Working document sources during the cutover. Services that need a parent lookup derive it from the tree. There is one editable hierarchy authority, with no front-matter parent fallback, mirrored parent writes or numeric `sort_order` field. This is a bounded organisation change; the wider [Separate Document Content And Metadata](Document_Content_And_Metadata.md) proposal remains separate.
+
+Build walks the canonical structure and joins metadata by exact ID to produce the consumer-ready `index-tree.json`. The ordinary index panel and any later hierarchy navigator consume its root and child arrays without alphabetising them. Renaming a document does not reposition it. Rewriting one JSON structure does not entail modifying the other documents' metadata or content.
+
+## Position Modal
+
+Open Position using the `arrow-up-down.svg` button beside Index Actions for the displayed ordinary document. Choose a placement and a target through one searchable document picker, then Save or Cancel. The picker displays indented titles in the current hierarchy/order, without document IDs. The busy indicator runs during Save, not while choosing a destination.
+
+| placement | result |
+| --- | --- |
+| Before | Insert the moved record immediately before the target in the target's sibling array. |
+| After | Insert it immediately after the target in the target's sibling array. |
+| Inside | Append it as the target's last child. |
+
+Every move carries the complete subtree and preserves its internal hierarchy and order. Before/After can reorder siblings or move a subtree between parents. Inside reparents it. An explicit Root destination with Inside appends it to the root array; Root is a destination control, not a fabricated document ID. Before/After another root document gives a precise root position.
+
+The picker includes all ordinary documents regardless of draft or unpublishable state, except the moved document and its descendants. The server enforces the same exclusions, so a document cannot become its own ancestor. Collection subdocuments are not valid targets.
+
+The modal replaces separate ordering/reparenting interactions for this tree, including the existing drag-to-change-parent route. It is synchronous: no browsing occurs while it is open. Save moves the subtree in the JSON, writes the file and updates the displayed tree before closing. Cancel closes without writing changes. Unaffected records retain their relative order.
+
+## Document Operations
+
+| operation | canonical tree change |
+| --- | --- |
+| Create while an ordinary document is displayed | Insert the new document immediately after that exact document, as its sibling. In an expanded tree this places it after the displayed document's subtree. |
+| Create in an empty tree | Insert the first document at root. |
+| Delete | Remove the selected document and all descendants from the tree alongside the existing deletion of those documents. |
+| Position or reparent | Move the entire subtree using Before, After or Inside, including the explicit Root destination. |
+| Rename or edit content/metadata | Preserve placement and order. |
+
+New uses the displayed ordinary document's ID as its insertion anchor. A collection subdocument is not an ordinary insertion anchor. Without a displayed ordinary anchor, New appends at root. Existing New child and New sibling actions use Inside and After respectively.
+
+Import appends newly created ordinary documents inside the selected parent and preserves placement on overwrite. Batch creation writes new parents before their children, retaining sibling sequence. Ordinary content edits, including external-editor changes handled by the watcher, preserve tree placement.
+
+## Preview And Publication
+
+The canonical tree and Position modal do not filter by `draft` or `unpublishable.json`, and Position does not change either status. A draft or unpublishable parent can contain any ordinary children in Working.
+
+Prepare Preview reads the tree alongside the ordinary document source and applies its existing eligibility rules: exclude a draft document or an unpublishable ordinary root and its complete descendant branch, even when individual descendants are ready. Excluding a collection host also excludes its collection through the existing collection selection owner. Children of an excluded parent are omitted, not promoted to another level.
+
+Preparation preserves the relative order and nesting of retained records. Its temporary build input must represent that same eligible tree so generation cannot reintroduce excluded records or alphabetise the survivors. Temporary input is removed after preparation; Preview remains a read-only snapshot with no persistent source tree.
+
+Publish/Deploy Repo consumes the reviewed Preview tree and does not read live ordering data or apply another filter. Public readers use the prepared order without editing capability. Search and Recents keep their existing independent selection/build and byte-copy lifecycle; this change does not make Position Save rebuild either artifact.
+
+## Simple Implementation
+
+Initial setup writes `index-order.json` from the current ordinary hierarchy and order, including draft and unpublishable documents. Switch the hierarchy readers to this file and remove authored ordinary `parent_id`. The JSON remains directly editable by hand.
+
+Position is a small read–edit–write operation: find the selected node, remove its subtree from its current array, insert it at the chosen destination, write the JSON and refresh the tree. Keep checks local to that operation: the selected node and destination must exist, and the destination cannot be the selected node or one of its descendants. Report ordinary read, parse, write or refresh errors and stop.
+
+This is a synchronous single-user editor. Do not add revision tokens, stale-modal handling, concurrency controls, whole-workspace membership audits on Save, automatic repair, rollback or a new validation/recovery framework. Reuse the existing JSON/file and refresh helpers.
+
+## Delivery And Status
+
+The approach above is implemented under [Reorder docs delivery](Reorder_Docs_Delivery.md). It covers canonical structure, existing mutation consumers, the Position modal, generation and preparation integration, code review and documentation. [Source Organisation](Source_Organisation.md) records the maintained behaviour.
+
+The initial tree retained all 47 ordinary documents and their existing order. Focused lint, Working Build and public projection/site validation passed. On 2026-09-26 the user confirmed successful testing through site-preview, accepting the final modal and closing the delivery. This proposal and its delivery are ready for manual archival; [Source Organisation](Source_Organisation.md) remains the durable owner.

@@ -1,0 +1,83 @@
+---
+draft: false
+doc_id: d-20260522-080600-a2b102
+title: Local Studio App
+added_date: "2026-05-22 08:06:00"
+last_updated: "2026-09-23 18:47:31"
+summary: Operational boundary of the loopback Studio app server, runtime config, static serving, and catalogue API adapter.
+parent_id: d-20260423-000000-d015e6
+
+---
+# Local Studio App
+
+## Server Boundary
+
+The Local Studio app is a loopback Python server. It owns:
+
+- the Work editor shell at `/studio/catalogue-work/`
+- `/studio/runtime-config.json`
+- catalogue APIs under `/studio/api/catalogue/...`
+- tag APIs under `/studio/api/tags/...`
+- confined Studio-owned static and project-media reads
+
+It does not serve the deployed public site or proxy Docs Viewer or retired
+Analytics/Data Sharing routes.
+
+Start it through `bin/local-studio`. Direct execution is useful for focused service work:
+
+```bash
+$HOME/miniconda3/bin/python3 studio/app/server/studio/studio_app_server.py --port 8765
+```
+
+`STUDIO_APP_PORT` changes the runner port, `STUDIO_APP_ENABLED=0` suppresses the server, and `STUDIO_APP_ACCESS_LOG=1` enables ordinary access logs.
+
+Open `/studio/catalogue-work/` on the configured server. Both startup messages show that direct entry URL. The former `/studio/` home and `/studio/catalogue-field-registry/` page are no longer mounted.
+
+## Runtime Config
+
+The server reads and validates `studio/app/frontend/config/studio-config.json`, then builds `/studio/runtime-config.json` from:
+
+- checked-in `app.routes` and `paths.data.studio`
+- Python-owned service endpoint, media, modal, and production-site constants
+- environment-backed public preview configuration
+- pipeline variants and encoding from `_data/pipeline.json`
+- derived asset version and runtime view records
+
+The source JSON is therefore not the complete runtime payload. [Studio Config JSON](Studio_Config_JSON.md) owns the source and projection contract.
+
+## Request Dispatch
+
+- `studio_app_server.py` owns HTTP parsing, shell/static responses, runtime-config dispatch, catalogue prefix dispatch, containment, limits, and process startup.
+- `studio_app_config.py` owns config loading, route validation, runtime projection, and asset versioning.
+- `studio_catalogue_api.py` owns the HTTP-to-catalogue adapter and delegates mutations to focused services under `studio/services/catalogue/`.
+- `studio_tags_api.py` and `studio_tag_api/` own the HTTP-to-tag adapter and
+  delegate validation, planning, and writes to `studio/services/tags/`.
+
+The server entrypoint should remain a dispatcher. New catalogue behavior belongs in a domain service before it is exposed through the adapter.
+
+## Sibling Services
+
+- Docs Viewer serves `/docs/`, document-package routes, and its own management APIs.
+- `bin/site-preview` serves tracked `site/` output without Studio authority.
+
+Retired `/analytics/...`, `/studio/analytics/...`,
+`/studio/data-sharing/...`, and related API paths have no aliases or proxies.
+
+## Safety And Failure
+
+- The service is loopback-only and accepts explicit request shapes.
+- Static and project-media paths are resolved beneath allowlisted roots.
+- JSON bodies have a size limit and must be objects.
+- Catalogue and tag writes remain behind server-side validation and atomic
+  source transactions.
+- When the service is unavailable, Studio routes expose unavailable state; there is no offline write mode.
+
+## Code And Test Authority
+
+- server: `studio/app/server/studio/`
+- catalogue domain: `studio/services/catalogue/`
+- tag domain: `studio/services/tags/`
+- server/config tests: `studio/tests/python/test_studio_app_runtime_config.py` and route/API tests under `studio/tests/python/`
+- route integration: focused checks under `studio/tests/smoke/`
+
+[Local Studio Routes](Local_Studio_Routes.md) and [Local Studio APIs](Local_Studio_APIs.md) hold the exact current inventories.

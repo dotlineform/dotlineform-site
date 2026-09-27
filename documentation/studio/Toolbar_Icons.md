@@ -1,0 +1,127 @@
+---
+doc_id: d-20260919-102340-25979d
+title: Toolbar Icons
+added_date: "2026-09-19 10:23:40"
+last_updated: "2026-09-20 09:46:57"
+summary: Maintained Docs Viewer toolbar and list icon sizing, shared mask styles, rendering helpers, artwork ownership and extension method.
+parent_id: d-20260331-000000-c313fd
+draft: false
+---
+# Toolbar Icons
+
+Docs Viewer toolbar icons separate the control's behaviour, the button's interaction styling, the icon's size and the chosen artwork. This document owns the implemented presentation and extension method under [Runtime](Docs_Viewer_Runtime.md). [Shared Icons: Toolbar Mapping](Toolbar_Icon_Mapping.md) records the artwork choices and outstanding gaps; it is edited by a person and is not parsed by the application.
+
+The selected reader, management, source-editor, content-detail and report-toolbar controls, toolbar menus, collection list/detail controls, index header and Info close control use this foundation. Report-list Subject/Draft and index Draft/status artwork also use saved SVGs with independent 16px sizing. The mapping records exact consumers and state choices. Document/source, Unpublishable report and Docs Review VS Code controls use the 20px theme-tinted `file-code-corner.svg` mask, retaining their existing button styles, actions and accessible names. Its artwork class is declared in both local Manage and Review stylesheets because Review does not load management styles; the SVG remains one canonical local asset. The former branded asset and its dedicated attribution file have been removed. Unselected artwork remains unchanged.
+
+## Pieces And Owners
+
+All paths are relative to the repository root. Canonical styles live in `docs-viewer/static/css/docs-viewer.css` unless another owner is named.
+
+| Piece | Identifier / owner | Responsibility |
+| --- | --- | --- |
+| Artwork size | `--docs-viewer-toolbar-icon-size` on `.docsViewer` | One square icon size, currently `20px`. Both width and height use this value. |
+| Button size | Existing `--docs-viewer-control-height`, supplied by the toolbar's layout owner | Button width, minimum width and height, normally `2rem` (32px at a 16px root font). Independent of artwork size. Report toolbar/header scopes use `--docs-viewer-report-control-height`. |
+| Hover background | `--docs-viewer-toolbar-icon-hover-bg` on `.docsViewer` | Shared hover colour: the panel colour mixed with 8% theme text colour. |
+| Button presentation | `.docsViewer__toolbarIconButton` | Centring, zero padding, circular shape, transparent/borderless rest state, hover, keyboard focus, explicit active styling, disabled styling and hidden state. |
+| Mask presentation | `.docsViewer__toolbarIcon` | Square dimensions, no flex shrinking, `currentColor` tint, centred contained mask and no mask repetition. |
+| List artwork | `.docsViewer__listIcon` | Independent `1rem` dimensions, inline alignment and the same mask/tint presentation; no button styling. |
+| Artwork selection | A named class such as `.docsViewer__icon--pen` | Supplies only `mask-image: url(...)`. Shared reader mappings live in `docs-viewer.css`; management-only mappings live in `docs-viewer-manage.css`. |
+| Span creation | `createDocsViewerToolbarIcon(documentRef, artworkClass)` in `docs-viewer/runtime/js/shared/docs-viewer-toolbar-icon.js` | Creates a decorative span with the generic class, exact artwork class and `aria-hidden="true"`. |
+| Control meaning and state | Existing control definitions, renderers, report owners and `docs-viewer-control-surface-host.js` | Own the action, accessible name, tooltip, enabled/hidden state and any pressed/expanded semantics. |
+
+The artwork helper takes an exact maintained CSS class, such as `docsViewer__icon--pen`. It does not construct an asset path, infer artwork from a label, load SVG markup or supply a fallback drawing. Its caller must select a class defined in a stylesheet loaded by that surface. The control identifier remains independent of the artwork class, so changing the pen drawing does not change the edit action.
+
+## Changing Size Or Hover
+
+The current 20px trial is set by one declaration in the `.docsViewer` rule of `docs-viewer/static/css/docs-viewer.css`. Change this value to resize all converted toolbar icons and menu artwork:
+
+```css
+--docs-viewer-toolbar-icon-size: 20px;
+```
+
+The buttons remain 32px at the normal root font size because they consume `--docs-viewer-control-height`, not the artwork-size token. Changing the root default affects every icon using `.docsViewer__toolbarIcon`; it does not resize existing emoji or independently rendered images.
+
+An agreed per-control exception can override `--docs-viewer-toolbar-icon-size` on that control. The Info close control uses `1rem` artwork inside its existing `1.8rem` button. Report and collection search-clear controls use `1rem` artwork inside their existing `1.35rem` button, with the shared hover, focus, disabled and hidden presentation. Record exceptions in the mapping's Appearance column. Keep dimensions out of artwork classes so one drawing remains reusable at different sizes. Menu items retain their text; their icon column uses the same artwork-size token.
+
+The Public/Manage home link uses `dlf-home.svg`, traced from the site's `apple-touch-icon.png` with its dot, vertical line and tapered curve preserved on a transparent background. Its mask is twice the toolbar artwork size (currently 40px); the SVG's internal margin lets the painted mark fit the existing 32px row. The link retains its route/stage destination, theme text colour, focus ring, accessible name and tooltip. Its visual size remains subject to manual review.
+
+The button-height token is supplied by layout scopes: `.docsViewer__topRow`, `.docsViewer__mainViewToolbarActions` and `.docsViewer__sidebarHeader` use `2rem`; `.docsViewerReport__toolbar` and `.docsReportDetail__header` consume the report's existing `--docs-viewer-report-control-height`; the expanded-report invocation row `.docsViewerReport__detailControlRow`, outside the report root, supplies `2rem`. This keeps unrelated controls' dimensions independent. The main-view scope also sizes shared document controls in Review and the managed expanded-table controls. Info close and search-clear controls supply their local overrides. Any future toolbar outside those scopes must explicitly provide `--docs-viewer-control-height` through its layout owner before using the button class.
+
+To tune hover contrast, change `--docs-viewer-toolbar-icon-hover-bg` once. Its default expression is:
+
+```css
+color-mix(in srgb, var(--docs-viewer-panel) 92%, var(--docs-viewer-text))
+```
+
+This gives a darker hover surface in the light theme and a lighter, more visible surface in the dark theme. Hover applies only to enabled icon buttons; disabled buttons retain their resting background. The enabled condition uses `:where()` so explicit active styling retains its existing priority. The existing shared theme tokens continue to own normal, selected and disabled text colours, selected background and the focus ring; the icon layer does not duplicate their palette values.
+
+## Rendering A Control
+
+The current management renderer imports the shared helper:
+
+```js
+import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
+```
+
+After obtaining the control's existing button, it assigns the shared presentation and replaces the decorative content:
+
+```js
+button.className = "docsViewer__toolbarIconButton";
+button.replaceChildren(
+  createDocsViewerToolbarIcon(context.document, "docsViewer__icon--pen")
+);
+```
+
+The existing renderer retains `docsViewerManageEditButton` and its registered control/action identity. `docs-viewer-control-surface-host.js` continues to project the accessible name, tooltip and control state. The span is hidden from assistive technology because the button supplies the meaning. The helper does not create another button, attach event listeners, add a tab stop or own control state.
+
+The matching artwork rule is only:
+
+```css
+.docsViewer__icon--pen{
+  mask-image: url("../icons/pen.svg");
+}
+```
+
+The SVG URL resolves relative to the stylesheet containing that rule. Keep the actual drawing in its SVG file; do not copy its paths into the renderer. The pen's old `.docsViewer__editMetadataIcon` and `.docsViewer__documentActionButton--svg` rules have been removed rather than retained as aliases.
+
+## Changing Artwork Or State
+
+For a static control, replace the exact artwork class supplied by its renderer. For an artwork-changing control such as Draft/Ready, let the existing state logic select one of the explicitly agreed classes, then render that span. The helper does not interpret document state.
+
+Recent and Bookmark retain explicit `.is-active` styling, which supplies the existing selected background and text colour. Info deliberately keeps the same drawing and appearance when open or closed, while retaining `aria-expanded`. Pressed/expanded accessibility attributes remain controlled by the existing state owner. `.is-active` is deliberate: `aria-pressed="true"` does not universally imply selected styling, because a control such as Draft/Ready may use that value to describe its current document state.
+
+`currentColor` tints the mask's painted silhouette. This supports theme and disabled colours, but does not fill the hollow centre of an outline. The selected Bookmark therefore uses `bookmark-filled.svg`, a local derivative of the downloaded Lucide `bookmark.svg` with the same path and a filled interior. Its CSS tint follows the theme: near-black in light mode and near-white in dark mode. Deliberately multicolour assets require appropriate image rendering instead of a monochrome mask.
+
+Theme artwork describes the current theme: sun for light, moon for dark. Draft/Ready uses `circle-dashed-check.svg`/`circle-check.svg`. Stage buttons map Working to `circle-ellipsis.svg`, Pre-publish to `circle-check.svg`, and Published to `circle-arrow-up.svg`; inactive stages use the disabled-text grey, while the selected stage uses normal text colour. Icon-only controls retain their accessible names and tooltips.
+
+Report state owners apply the same approach. Project State displays `folder.svg` while grouped by Folder and `dlf-series.svg` while grouped by Series; its accessible name describes the current grouping and next action, and `data-group-target` continues to identify the next group. Collection detail Subject assignment displays `dlf-subject-assigned.svg` for a valid authoring Subject declaration and `dlf-subject.svg` for missing, malformed or conflicting declarations. An unavailable referenced target does not erase a valid declaration. The existing assignment action refreshes and reopens the exact detail after a confirmed change, updating the icon and its Assign/Change Subject label.
+
+Broken Links uses `refresh-cw.svg` when idle and plain disabled `Running...` text with no border or background while busy; its owner supplies `aria-busy` and an accessible running label. Project State's Copy Markdown control and serializer are retired; Copy table retains the existing TSV output. List artwork remains independently sized as described below. Broken Links now uses the same ascending/descending triangles as the other sortable reports, retaining empty inactive indicators.
+
+The shared button class retains an explicit hidden rule so flex layout does not reveal hidden controls, a keyboard focus ring, and disabled text/cursor styling. Keep these states when adding consumers.
+
+## Adding An Icon
+
+1. Choose the control/state's drawing in the Toolbar Mapping, including any active appearance or size exception.
+2. Reuse or add the canonical SVG under `docs-viewer/static/icons/`, retaining the asset's origin and required attribution with the artwork collection.
+3. Define one artwork class supplying its SVG URL in the stylesheet owned by its consumers. Management-only mappings stay in `docs-viewer-manage.css`; an icon used by public and management controls needs a shared/public mapping and asset projection.
+4. Update the existing renderer to use the shared button class and helper. Preserve its exact identity, action and accessibility/state ownership.
+5. Check the affected code and review the control visually in its normal, hover, focused, disabled and applicable active/artwork states. Mark its adoption in the mapping after review.
+
+Downloaded files are available choices, not an automatic runtime registry. Adding an SVG alone does not create a control mapping or change any interface.
+
+## Report Lists And Index Cues
+
+Index documents hosting `docs_collection` use a 16px `menu.svg` mask with the existing muted colour and visually hidden `Collection report:` label. This replaces the former `≡` text character.
+
+`.docsViewer__listIcon` renders at `1rem` (16px at the normal root font size), independently of the toolbar size token. It shares monochrome mask styling with `.docsViewer__toolbarIcon`, without acquiring button dimensions, hover or interaction. The artwork class supplies a saved SVG URL. `appendProjectSubjectIcon()` maps exact Folder, Work, Series and Detail kinds to `folder.svg`, `dlf-work.svg`, `dlf-series.svg` and `dlf-detail.svg`, creating a single decorative span. The parent retains the Subject's meaning, identity, links and unavailable styling. A missing Subject produces a blank cell with its `No subject` accessible name; warning text remains unchanged.
+
+Collection rows and the index panel use `circle-dashed-check.svg` for boolean Draft readiness at the same 16px size. Collection rows have no `ui_status` cue. Ordinary documents retain free-text `ui_status`, with `planned` mapped to a theme-tinted `sprout.svg` mask and `report` mapped to `chart-column-colour.svg` as a background image preserving its supplied colours. The latter clears the mask layer's solid background colour and does not use a mask image. Other status values have no icon; text metadata remains available. `DOCS_VIEWER_CODE_CONFIG.uiStatuses` describes these two visual matches, not an input enumeration. [Builder](Builder.md) owns source-field and generated-metadata rules.
+
+## Public Projection And Maintenance
+
+`site-tools/config/site-code-update.json` explicitly projects shared runtime, CSS and 18 reader SVG assets into `site/docs-viewer/`. Its `docs-viewer-shared-icons` inventory contains `arrow-left.svg`, `bookmark-filled.svg`, `bookmark.svg`, `chart-column-colour.svg`, `chevron-left.svg`, `chevron-right.svg`, `circle-dashed-check.svg`, `clock-9.svg`, `dlf-home.svg`, `expand.svg`, `external-link.svg`, `info.svg`, `menu.svg`, `moon.svg`, `sprout.svg`, `sun.svg`, `waypoints.svg`, and `x.svg`. `site-tools/site_code_update.py` permits this explicit SVG subset. Management-only mappings and the remaining downloaded assets stay local.
+
+When a public control adopts an icon, add its asset to the explicit projection inventory and place its mapping in a stylesheet shipped to that surface. Do not introduce a shared CSS URL for an asset absent from the public projection. A shared helper being projected does not itself migrate or activate a public control. The shared collection report uses the already-projected `x.svg` and `arrow-left.svg` for clear search and detail return; its module and report stylesheet are projected. Remaining report-toolbar mappings live in `docs-viewer-manage.css`, and their existing assets stay local.
+
+Edit canonical files only. For represented shared changes, run `bin/site-code-update`, inspect its exact `site/` delta, then run `bin/site-code-update --check` and `bin/site-validate`. Run `bin/lint-js` with the explicit changed JavaScript paths. `git diff --check` checks whitespace; visual interaction remains a manual review. Artwork-only runtime/style changes and repository-document edits require no Docs or Search rebuild. A generated-data contract change, such as removing collection status fields, requires the owning collection build independently of the artwork update.

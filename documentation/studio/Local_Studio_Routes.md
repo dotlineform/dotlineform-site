@@ -1,0 +1,51 @@
+---
+draft: false
+doc_id: d-20260602-111803-6d22ef
+title: Local Studio Routes
+added_date: "2026-06-02 11:18:03"
+last_updated: "2026-09-23 18:47:31"
+summary: Exact mounted Local Studio route, template, and route-script inventory from the checked-in registry.
+parent_id: d-20260424-000000-15b6f2
+
+---
+# Local Studio Routes
+
+## Authority
+
+`studio/app/frontend/config/studio-config.json` `app.routes` is the source registry. `studio_app_config.py` validates it before the server mounts any shell path or publishes runtime config.
+
+## Mounted Routes
+
+| route id | path | template | script | purpose |
+| --- | --- | --- | --- | --- |
+| `catalogue_work_editor` | `/studio/catalogue-work/` | `catalogue-work.html` | `catalogue-work-editor.js` | Work editing, resources, media selection, Series browsing and title/create/delete controls |
+
+Template paths are rooted under `studio/app/frontend/routes/`; scripts are under `studio/app/frontend/js/`.
+
+There are no standalone Series, Work Detail or Moment editor routes in the current registry. Series management belongs to the Work editor. The embedded Detail browser and section-entry workflow are retired, and there is no current public Moment route.
+
+The Work editor is Studio's only page and direct entry point. The Studio home and read-only field-registry page are retired without redirects or aliases. The field registry remains a maintained JSON file with its Python loader and verifier. Document browsing happens in Docs Viewer. Gallery editing and bulk Work creation from selected images remain separate future work.
+
+## Route Contract
+
+All mounted routes use the shared template shell:
+
+```text
+registered path
+  -> studio-shell.html
+  -> studio-app.js
+  -> configured route template
+  -> configured route script
+```
+
+Templates own stable DOM; scripts own behavior, dynamic rendering, local API calls, and route ready/busy state. The shared header contains a title link to the Work editor and the theme toggle; there is no primary navigation menu.
+
+## Changing The Inventory
+
+- update the registry, template, and script together
+- keep route paths beneath `/studio/`
+- remove retired routes rather than leaving aliases or template stubs
+- verify server config validation; choose any route-boot check separately under the testing policy
+- update this inventory only when the mounted route set or ownership actually changes
+
+[Studio Runtime](Studio_Runtime.md) owns the reusable shell architecture. Sibling app routes belong to their own entry documents.

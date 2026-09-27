@@ -1,24 +1,22 @@
 ---
 draft: false
-doc_id: d-20260902-143007-05a794
-title: Roadmap
-added_date: "2026-09-02 14:30:07"
-last_updated: "2026-09-03 10:44:46"
-summary: This explains the roadmap model and workflows to implement new repo and application features.
+doc_id: d-20260428-000000-f5ff18
+title: Planned Features
+added_date: "2026-04-28 00:00:00"
+last_updated: "2026-09-15 10:43:05"
+summary: This explains the delivery model and workflows to implement new repo and application features.
+ui_status: planned
 parent_id: ""
 ---
-# Roadmap
-
-Roadmap features are where ideas become understandable, comparable, and eventually deliverable. They do not grant permission to work and they are not backlogs of implied obligations.
+# Planned Features
 
 ## Structure
 
 ```text
-Roadmap
-  -> Feature (one short snapshot or parent)
-      -> Concept (optional)
-      -> Architecture (optional)
-      -> Delivery (optional, one or more)
+Feature (one short snapshot or parent)
+   -> Concept (optional)
+   -> Architecture (optional)
+   -> Delivery (optional, one or more)
 ```
 
 | layer | owns | does not own |
@@ -30,7 +28,7 @@ Roadmap
 | durable document | shipped behavior, current architecture, extension method, and known weak spots | proposal history |
 | maintenance index | curated links to actionable gaps in durable documentation | design, priority, or implementation tracking |
 
-- **durable** means outside this Roadmap parent-child document hierarchy.
+- **durable** means outside this planned features document hierarchy.
 - A feature may be half a page and need no children. It may be completed immediately or parked for later. Add concept, architecture, or delivery documents only when separating those responsibilities makes the feature easier to understand or deliver.
 
 ## Feature Rule
@@ -38,9 +36,8 @@ Roadmap
 - If a change is complicated enough to need its own documentation, it is a feature.
 - A feature snapshots one coherent result from free-flowing discussion; it does not preserve the whole discussion.
 - A feature may be an internal refactor, maintenance improvement, workflow change, or visible capability. Size and visibility do not create different planning levels.
-- Parking a feature does not turn it into a container for later ideas. Snapshot another feature instead of appending a second coherent result.
 - A genuinely complex feature may have several delivery documents or phases. Each delivery must still be independently complete, and the feature parent owns their navigation and internal order.
-- Do not introduce initiatives, epics, enablers, stories, or improvement tiers. The roadmap-to-feature boundary is enough.
+- Do not introduce initiatives, epics, enablers, stories, or improvement tiers. The feature boundary is enough.
 - Small direct changes that do not need feature documentation continue through the normal development workflow.
 
 Before implementation is safe, a feature may have no delivery document or a clearly **proposed delivery** used to test whether the feature is implementable, worthwhile, and coherently bounded. A proposed delivery is not permission or readiness to start. Promote it to planned only when any dependencies are satisfied and it is safe to implement; mark it active only when work starts.
@@ -88,15 +85,17 @@ Readiness is **not** a file-by-file audit, frozen implementation design, line-co
 
 ### Verification Budget
 
-After inspecting the owners for an implementation step, but before adding tests or running broad checks, record only the evidence justified by that step:
+After inspecting the owners for an implementation step, record only the existing evidence justified by that step and its cost. A short note is sufficient for a small selection; use a table when it makes several checks easier to understand:
 
-| contract or credible risk | lowest adequate evidence | permanent test change? | why this evidence is needed |
+| contract or credible risk | existing evidence and coverage record | expected cost and side effects | why this evidence is needed |
 | --- | --- | --- | --- |
-| example changed contract | focused pure, service, generator, or browser evidence | extend, add, or none | the specific regression it can catch |
+| example changed contract | exact existing selection or source/manual review | setup, runtime, resources, token/diagnosis effort, writes/network, or unknowns | the specific regression it can catch |
 
 Use the table proportionally. Documentation-only or trivial steps may state that no executable evidence is warranted. Do not add a row merely to make the table look complete.
 
-Evidence outside the accepted budget requires updating the step and explaining the newly discovered risk before proceeding. Broad profiles and permanent browser tests are never automatic. Exact commands and results belong in the step record after owner inspection, not in readiness planning.
+Test creation, updates, refactoring, deletion, fixtures, harnesses, and collection changes are separately specified and approved delivery work. Product delivery approval and a verification-budget row do not authorize them. A small test needs a proportionately small specification; do not build test code before agreeing its purpose, coverage, cost, and acceptance. [Test Contract Discipline](Test_Contract_Discipline.md) owns that specification and its maintained coverage record, which lives under Testing or a durable app/domain owner outside this feature hierarchy. Link it from the delivery.
+
+Evidence outside the accepted budget requires explaining the newly discovered risk before proceeding. No test layer or profile is automatic. Test commands and coverage descriptions belong in the durable test record; the delivery records only the selected command, result, and material omissions. An unapproved test proposal does not hold up an otherwise complete fix unless the user has made it an acceptance requirement. Stop when sufficient evidence is available; rerun only for a relevant change, failure, or unresolved risk.
 
 ### Code Review Step
 
@@ -124,20 +123,20 @@ After the complete feature ships:
 - Complete the durable documentation transfer. New durable documents may need to be created - do not try to compress all information into the closest matching document.
 - Present a closeout list covering the feature parent, concept, proposed architecture, deliveries, and any temporary working or verification siblings. For each document, name its durable destination.
 - Do not delete any documents without approval.
-- A review hold does not need a new lifecycle status. The feature may point to the shipped durable owner while the source documents remain available for comparison or reuse. The feature parent may be kept if unresolved concept, architecture, or delivery children still need navigation to it. Or simply because recent decisions can acceptably remain in the roadmap.
+- A review hold does not need a new lifecycle status. The feature may point to the shipped durable owner while the source documents remain available for comparison or reuse. The feature parent may be kept if immediately useful for subsequent features to refer to.
 - When needing to retain the concept, rewrite in current-state language and remove resolved options or proposal history.
 
 Delivery closeout uses evidence proportional to the change. A status-only documentation closeout may need only source review and confirmation that expected watcher output landed. Rebuilds, generated-record audits, broad test profiles, lint sweeps, and repository-wide diff checks belong only when the changed contract or uncertain generated state gives them a concrete failure to catch.
 
 ## Working Rules
 
-- Studio Development guidance in [Development Checklist](../studio/Development_Checklist.md) still needs to be followed where appropriate.
+- Studio Development guidance in [Development Checklist](Development_Checklist.md) needs to be followed.
 - Keep one complete outcome per delivery.
 - Let a complex feature contain several deliveries or phases.
 - Feature documents assume their required environment exists, and state where possible what this means in practice.
 - Split work before starting when a partly finished result would be a plausible stopping point.
 - If implementation exposes another useful result, add it to the feature parent rather than silently widening the current delivery.
-- Update one durable documentation owner by default. *durable* means outside this Roadmap parent-child document hierarchy.
+- Update one durable documentation owner by default. *durable* means outside this Planned parent hierarchy.
 - Create a new durable document if a suitable one does not already exist. Do not overload an existing document just because it seems to be the appropriate place.
 - Feature documents are **not** durable documents. They enter the explicit closeout list when their routing or decision value is exhausted.
 - Close a delivery when the complete result works and its durable owner is current.

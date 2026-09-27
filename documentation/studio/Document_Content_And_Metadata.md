@@ -1,0 +1,72 @@
+---
+draft: false
+doc_id: d-20260915-094811-447f11
+title: Separate Document Content And Metadata
+added_date: "2026-09-15 09:48:11"
+last_updated: "2026-09-26 21:36:29"
+summary: Separate Markdown content from canonical JSON metadata, with explicit ownership of document properties, collection organisation, visual annotations and maintained relationship records.
+ui_status: proposed
+parent_id: d-20260428-000000-f5ff18
+---
+# Separate Document Content And Metadata
+
+## Direction
+
+Separate structured metadata from document content. Markdown holds the authored body; canonical JSON holds metadata, with explicit ownership for common document properties, collection-specific properties, organisation and presentation. Establish a coherent data model first, then choose efficient ways to read, update and project it.
+
+This is a proposed feature for further discussion. The ownership direction is agreed; file layout, schemas, persistence rules and implementation scope remain open. No migration or implementation is authorised by this document.
+
+## Why Change
+
+Front matter currently combines different responsibilities in the same Markdown file. It holds descriptive document metadata, collection-specific fields, parent placement and visual status. Reading content files to construct navigation couples the index to document parsing. Updating metadata or its schema rewrites files that also contain document bodies, even when the prose is unchanged.
+
+The discussion identified the same motivation as the earlier website move from YAML to JSON: make structured data explicit and independently maintainable. JSON still needs validation and may need schema migrations. The benefit is that metadata evolution can operate on structured records without rewriting Markdown content; changing the serialization format inside front matter alone would retain the coupling.
+
+## Ownership Model
+
+| Data | Intended owner and meaning |
+| --- | --- |
+| Document body | Markdown authored content. |
+| Common document metadata | Canonical JSON describing the document, including its immutable identity and agreed shared descriptive fields such as title and summary. |
+| Collection-specific metadata | Explicit JSON schemas owned by the configured collection. Discussion examples are `date` and `date_display` for Analysis Moments, and `work_id` for Analysis Works. Exact current field forms and consumers need checking before schema design. |
+| Parent placement | Canonical organisation. For ordinary documents, [Reorder docs](Reorder_Docs.md) now owns the agreed nested `index-order.json` approach: nesting supplies parentage and arrays supply order, replacing authored `parent_id` in its bounded delivery. |
+| Visual status | Persisted presentation metadata. `ui_status` is only a visual cue and has no document-management or lifecycle role. |
+| Relationship records | Explicitly owned, persistently maintained Links data, with authored references distinguished from derived relationship information. |
+| Viewer payloads | Generated renderings and indexes assembled from the authoritative inputs. |
+
+These are logical responsibilities, not a chosen directory structure or number of JSON files. Document content and metadata remain joined through exact immutable `doc_id`; titles, filenames outside the agreed identity contract, tree position and selected UI context must not become identity substitutes.
+
+Ordinary reparenting within a collection should update organisation and affected navigation while leaving the document body, identity and authored links unchanged. A visual-status edit should update presentation data. A content edit should update Markdown. Each operation may update its necessary derivatives without becoming a rewrite of unrelated source data.
+
+## Canonical Structure And Generated Views
+
+The current `index-tree.json` is generated and contains viewer-ready information. [Source Organisation](Source_Organisation.md) owns ordinary organisation as nested `index-order.json`, with hierarchy and order owned together. Build joins that structure with document metadata to produce the viewer tree. Reorder docs is complete and accepted through site-preview: authored ordinary `parent_id` is removed, while remaining descriptive metadata and visual status stay in Markdown. This does not complete the wider metadata migration proposed here.
+
+Moving only `parent_id` and `ui_status` would address those fields, but a complete navigation index also needs identity, titles and other display metadata. To build it without opening Markdown bodies, all required structured inputs must be available from their JSON owners. Generated values such as rendered HTML and viewer URLs must remain distinguishable from authored facts.
+
+There is a related persistence inconsistency today: ordinary `generated/documents/by-id` payloads include replaceable rendered output, while `generated/documents/links-by-id` records are retained as the prior state for incremental relationship maintenance. Missing existing Links records are skipped rather than recreated. Authored links originate in Markdown, but their maintained relationship records have different disposal and reconstruction rules from ordinary viewer payloads. The feature must make that distinction explicit; declaring the complete existing `by-id` payload canonical would also declare its derived rendering canonical.
+
+## Implications
+
+- **Collection schemas:** define shared descriptive fields and collection-owned extensions. Moving a document into another collection must validate its destination metadata without silently dropping or inventing values. Physical collection membership and ordinary parent placement need separate treatment.
+- **Authoring:** metadata editing and visual-status controls would write JSON; body editing would write Markdown. Direct filesystem editing remains an authoring route whose validation and watcher behaviour must be defined.
+- **Document operations:** creation, deletion, Archive, Import and collection movement must preserve or remove the correct content, metadata and relationship records together. A standalone Markdown file would need its associated metadata to represent the complete document in transfer or export.
+- **Lifecycle and hierarchy:** Working, Pre-publish, Published and deployment must carry the appropriate metadata snapshots and generated projections. Publication `draft` is separate from visual status. Existing hierarchy-dependent behaviour, including descendant selection and publication eligibility, must be considered explicitly; separating storage does not itself change those rules.
+- **Persistence and recovery:** identify which records are authored, maintained from other sources, or safely replaceable. Establish their create, update, delete and explicit reconstruction rules. This proposal does not introduce automatic Links repair or full-scope refresh on an ordinary save.
+- **Migration:** preserve exact IDs, document bodies, authored links and existing metadata meaning. Define one authority for each field and an explicit cutover; retaining competing editable front-matter and JSON values is not the intended outcome.
+- **Performance:** separate storage ownership from maintenance strategy. Structured reads, metadata-only updates and targeted projection work may reduce unnecessary parsing and rendering. They do not guarantee faster actions without an appropriate implementation, and no performance benefit has been measured for this proposal.
+
+## Decisions Still Open
+
+1. Which fields belong to common document metadata, each collection's schema, organisation, presentation and lifecycle configuration?
+2. What is the smallest coherent canonical JSON structure: records per document, records per collection, or a combination? Where do content identity and collection membership live?
+3. How does the broader metadata model compose with the ordinary nested structure owned by Reorder docs, while retaining exact collection ownership and derived viewer fields?
+4. How should maintained Links records be classified and stored, and what would explicit reconstruction mean while preserving current scoped-update behaviour?
+5. How do direct edits, imports, exports and lifecycle snapshots preserve the relationship between Markdown and JSON?
+6. What bounded migration and delivery sequence preserves current behaviour while establishing the new owners?
+
+Continue refining these choices before creating an implementation delivery. Efficiency remains a design consideration, but the first gate is a model whose responsibilities and operation boundaries make sense.
+
+## Existing Context
+
+[Source Organisation](Source_Organisation.md) describes current storage and document-placement boundaries. [Document Build](Builder.md) describes current generated output and Links maintenance. [Save/Build optimisations](Save_Build_Optimisations.md) records earlier performance opportunities; use it as investigation context and recheck current code before selecting optimisation work. These documents remain current-state or investigation references; this feature proposes a future structure.

@@ -1,0 +1,69 @@
+---
+draft: false
+doc_id: d-20260916-195211-4a3203
+title: Catalogue Subject Selection Shortcut
+added_date: "2026-09-16 19:52:11"
+last_updated: "2026-09-23 15:06:26"
+ui_status: active
+parent_id: d-20260428-000000-f5ff18
+---
+# Catalogue Subject Selection Shortcut
+
+## Requirements
+
+Add an optional Use document subject checkbox to Add Catalogue image and Add Media View link. Selecting it displays the document's exact Catalogue identity in the existing modal and inserts the normal token with that explicit identity. The checkbox is an authoring shortcut; Build, Info and audits read the token's stored identity. Authored labels and image presentation remain literal source.
+
+Add Catalogue image enables the checkbox only for a Work subject from `work_id`; otherwise it is disabled and manual selection remains available. Add Media View link supports Work and Series subjects. Detail subjects and the image Detail selector were retired with the Gallery conversion on 2026-09-23. This delivery adds no speculative subject-error handling or validation workflows. On 2026-09-16 the user revised the initial omitted-identity design and explicitly selected normal explicit identities for both actions.
+
+## Deliverables
+
+- Shared modal checkbox, exact subject selection and normal explicit token serialization.
+- Source editor subject context; removal of omitted-identity parser, Build, Info and audit branches.
+- Convert the two existing Working abbreviated image tokens using their own exact `work_id` values.
+- Current behavior documented in [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md).
+
+## Process
+
+Open either authoring modal, select Use document subject, retain or edit the label/image presentation, and insert. Media links capture the exact selected Work or Series; images capture the Work. Save/Build uses the identity already present in Markdown. Subsequent subject changes do not retarget the token.
+
+## Delivery Steps
+
+### CST-0 — Readiness
+
+- [x] Confirm the shared modal, source response, token parser, Build and audit owners; locate the two abbreviated source occurrences before retirement.
+- [x] Preserve the existing dirty worktree and single-workspace ownership.
+- [x] Record the approved scope and validation limit.
+
+Gate: implementation authorized by the conversation. No additional product decision is required.
+
+### CST-1 — Implementation
+
+- [x] Keep subject selection and insert explicit identities in both actions.
+- [x] Remove Build-time subject resolution and convert the two affected source tokens.
+- [x] Update the durable owner and run proportionate existing checks.
+
+Verification budget: explicit changed-file Python/JavaScript lint and whitespace checks; inspect the existing Catalogue grammar selection before running it to check explicit-token preservation. These use local CPU and temporary/cache files, with expected runtime of seconds and no publication or workspace rebuild. Existing scope-bearing integration tests are unreviewed after workspace cutover. New or changed tests are separately scoped under [Test Contract Discipline](Test_Contract_Discipline.md); none are authorized here. Modal presentation remains manual review.
+
+Record: the source-read response and source editor adapter retain the subject only for modal selection. Omitted-identity serialization, parsing and resolution have been removed. Working Catalogue document `d-20260916-182813-39ce80` now stores Work `01942`; Working Works document `d-20260911-100212-71100f` now stores Work `00520`. Their other token fields are preserved. Changed-file lint passed for two Python and four JavaScript files, whitespace checks passed, and the two existing grammar checks passed in 0.08 seconds. The watcher rebuilt both edited documents; their generated token records contain the explicit identities. No abbreviated Catalogue tokens remain in Working or Pre-publish source. No tests or public projection files changed, and no manual modal check was performed. Existing grammar coverage and the exact command are recorded in [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md#focused-grammar-evidence).
+
+Gate: implementation and focused evidence ready for code review.
+
+### CST-2 — Code Review
+
+- [x] Review the bounded diff, source identity preservation, generated output and editing behavior.
+- [x] Resolve findings within the approved scope.
+
+Record: reviewed the checkbox selection, explicit serializers, parser and consumer cleanup, and the two source conversions with their generated records. Document IDs and other token fields are preserved. No inherited-identity parser or resolver branches remain in the affected owners. No findings remain in this boundary; modal interaction has not been manually reviewed.
+
+Gate: no outstanding findings in the inspected boundary. Modal confirmation remains manual; existing parser checks cover token grammar.
+
+### CST-3 — Closeout
+
+- [x] Present the result, evidence and remaining manual review.
+- [ ] Record user acceptance.
+
+Gate: restart Local Studio to load the Python changes, reload the browser, then review explicit insertion through both subject shortcuts. Retain this document for review; manual archival follows acceptance. No commit, publication or deployment is part of this delivery.
+
+## Follow-on
+
+Catalogue collection regeneration and a JSON-driven Catalogue template remain separate design work. They do not change the normal image or Media View token forms.

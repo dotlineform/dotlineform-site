@@ -1,0 +1,68 @@
+---
+draft: false
+doc_id: d-20260331-154730-b019e0
+title: Catalogue Media Pipeline Config
+added_date: "2026-03-31 15:47:30"
+last_updated: "2026-09-26 10:16:08"
+parent_id: d-20260423-000000-d015e6
+
+---
+# Catalogue Media Pipeline Config
+
+## What It Owns
+
+`_data/pipeline.json` is the shared checked configuration for logical Catalogue Work-media source roots, external staging subpaths, image variant naming, and encoding defaults.
+
+It exists because source discovery, derivative generation, generated media references, R2 transport and consistency checks must agree on the same path and variant policy.
+
+Main consumers load it through `studio/shared/python/pipeline_config.py`. Work input paths then use `studio/shared/python/catalogue_work_media_sources.py`; catalogue generation/build media, project-media selection and source-coverage reports must not reconstruct those roots independently.
+
+## Configuration Flow
+
+```text
+_data/pipeline.json
+  -> pipeline_config.py validates and exposes named values
+  -> source and staging tools resolve paths below DOTLINEFORM_PROJECTS_BASE_DIR
+  -> docs-workspace.json supplies shared reader-asset destinations
+  -> generated references and Studio previews use matching variant conventions
+```
+
+The external source roots and `catalogue/media-staging` staging root have no repo-local fallback. Environment variables provide machine-specific base locations and secrets; pipeline JSON provides checked relative policy.
+
+## Work Media Sources
+
+`paths.source_roots.work_media` registers the exact logical identities `projects` and `processing` and maps them to `projects/` and `processing/` beneath `DOTLINEFORM_PROJECTS_BASE_DIR`. `projects` is the configured default. A canonical Work omits `media_source_id` for that default and stores the field only for a non-default identity such as `processing`; unknown identities are rejected.
+
+The shared resolver verifies the configured external root, rejects symlinked or escaping path segments, and never falls through from one identity to another. The selected root changes only canonical local input lookup; generated asset names and primary identities remain stable. Ready-media destinations are independently configured under the existing Docs workspace. Converted Details are ordinary Works; no active Detail staging or output path remains in pipeline configuration.
+
+## Change Boundary
+
+Keep here:
+
+- relative source/staging/output subpaths shared across tools;
+- primary and thumbnail widths, suffixes, and output directories;
+- encoding format, codec, quality, preset, and compression defaults;
+- environment variable names shared by pipeline helpers;
+- logical source-root paths used by catalogue operations.
+
+Do not put browser routes, UI text, credentials, or generated payload paths here when another registry owns them.
+
+## Derivative Builder
+
+Normal Save uses `catalogue_build_media.py` to resolve the exact original, plan complete configured rendition sets and convert into operation-owned temporary files. `catalogue_media_version.py` commits those bytes to shared `assets/works/primary/` and `assets/works/thumbs/` with measured dimensions and the local content version, before Working JSON generation. Save does not upload or delete R2 objects. Unchanged bytes and missing-rendition repair retain the version; a difference in an existing rendition advances it once.
+
+The standalone `studio/services/media/make_srcset_images.py` remains a staged-input derivative utility for explicit maintenance/debugging. It does not implement the normal Save transaction or populate current reader assets by itself:
+
+```bash
+python3 studio/services/media/make_srcset_images.py INPUT_DIR OUTPUT_DIR JOBS
+```
+
+Omitting the directories uses the configured Work staging and output roots. `--dry-run` previews derivative writes and staged-source cleanup. Optional selected-ID and success-ID manifests plus the default worker count use names defined in `_data/pipeline.json`; run `--help` for the exact current argument and environment contract.
+
+The builder owns image decoding, scaling and cropping, encoding, variant filenames, parallel execution, and staged-source cleanup. It does not read or write canonical catalogue records, select publication scope, generate public JSON or search, copy final assets to R2, or advance canonical media versions. [Catalogue Build And Lookup Refresh](Catalogue_Build_And_Lookup_Refresh.md) owns local completion/versioning; [Catalogue Deployment](Catalogue_Deployment.md) owns normal public distribution. [Publish Media To R2](Publish_Media_To_R2.md) describes the separate maintenance transport. Full JSON maintenance does not invoke this derivative builder.
+
+## Why Changes Are Broad
+
+A variant-policy change can affect source staging, derivative filenames, public HTML attributes, R2 object expectations, cache behavior, audits, and regeneration requirements. Treat it as a pipeline contract change and verify all active consumers instead of updating only the image builder.
+
+The config file and `pipeline_config.py` are the exact authority for current values; this page deliberately does not copy the full JSON inventory.

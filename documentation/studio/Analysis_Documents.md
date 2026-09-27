@@ -1,0 +1,11 @@
+---
+draft: false
+doc_id: d-20260507-123607-fd7cff
+title: Analysis Documents
+added_date: "2026-05-07 12:36:07"
+last_updated: "2026-09-26 15:19:38"
+parent_id: d-20260424-000000-50b63f
+---
+# Analysis Documents
+
+Retired on 2026-09-26 because the report no longer serves a useful purpose. The implementation and Working host document have been deleted. This document retains its identity for historical references; [Reports](Reports.md) owns the current report inventory.

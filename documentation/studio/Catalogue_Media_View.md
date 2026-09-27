@@ -1,0 +1,113 @@
+---
+draft: false
+doc_id: d-20260903-154141-7c9e4b
+title: Catalogue Media View
+added_date: "2026-09-03 15:41:41"
+last_updated: "2026-09-23 15:06:26"
+summary: Exact Work, Series and Gallery links, Gallery search and membership navigation, responsive Work images and paginated Media View, with static-consumer and public-data limits.
+ui_status: done
+parent_id: d-20260903-222617-28475e
+---
+# Catalogue Media View
+
+## Purpose
+
+Media View presents an exact Catalogue Work, Series or Gallery inside the Docs Viewer main pane. Authors can open these through a text link or insert a Work image that opens the same view. Catalogue owns identity and media; the invoking document supplies browsing context. A corresponding document or document Subject is not required, and these references create no doc-to-doc relationship. Series and Gallery identities remain distinct even when their numeric IDs match.
+
+The Gallery conversion retired canonical Details. On 2026-09-23 the user removed the disposable Detail subjects and tokens and authorised retirement of their remaining Docs Viewer consumers. Detail subject assignment, token syntax, image selection, Info fields, report support and media readers are removed, with no old-to-new aliases. Work images and Work, Series and Gallery text links are the supported Catalogue media forms.
+
+## Authoring
+
+**Add Media View link** is the eye icon in Markdown Source, with the action name retained as its tooltip and accessible label. It shares the Catalogue image modal's selection design and searches generated Catalogue Work, Series and Gallery titles or identities. Gallery results come from `galleries/galleries_index.json` and show their Work count. Selecting a Work resolves that Work's image directly; a Series or Gallery resolves its membership. Selected or edited text remains the editable label; an untouched default follows the chosen record title. The source forms are:
+
+```text
+[[catalogue:media:work:00523|kylie structure 4]]
+[[catalogue:media:series:143|simultaneous equations]]
+[[catalogue:media:gallery:179|kylie structure 4 (details)]]
+```
+
+The authored label remains literal text and does not change when the Catalogue title changes. The rendered opener is a keyboard-accessible button styled as inline link text, with no invented navigation URL. Work text links retain their existing form; unqualified Catalogue text and Series-image forms are retired without aliases.
+
+Gallery IDs use the exact canonical spelling: three digits, or at least four digits without a leading zero. Gallery tokens allow no image presentation. The picker inserts `catalogue:media:gallery`; token Info reads the current Gallery title, and Broken Links checks the exact generated Gallery record. Subject assignment offers None, Work, Series and, where the collection supports it, Folder. Gallery tokens do not imply a new document Subject kind.
+
+**Add Catalogue Image** searches Catalogue Works and uses the selected Work's image. It retains authored alt text, caption, summary, placement and width settings:
+
+```text
+[[catalogue:image:work:03072|alt=kylie%20structure%204.1&caption=Selected%20Work&placement=full&fill_width=true]]
+```
+
+Insertion and token Info edits validate current selected media before changing the captured Source range. Token edits join the existing combined Source session; Save ends at canonical source persistence and the watcher refreshes document output independently. Closing Source releases its token Info ownership; delayed lookups cannot reopen or overwrite a released panel.
+
+## Document Build And Presentation
+
+Document Build preserves exact Catalogue references and authored presentation. It embeds no Catalogue record, image URL or Catalogue metadata. A Work has `catalogue-work` identity and its five-digit ID. A Series has `catalogue-series` identity and its exact three-digit ID; a Gallery has `catalogue-gallery` identity and its exact canonical Gallery ID. Series and Gallery entry remain text links in document content; thumbnail grids exist only inside Media View.
+
+Text links and uncaptioned images preserve surrounding Markdown even at the start of a paragraph or list item. Authored labels remain escaped literal text. Captioned images are block-level figures, with their caption and summary retained.
+
+Opening a document resolves inline images through current Catalogue consumer data. Selecting a text link reads the exact Work, Series or Gallery and opens Media View. Selecting an image reads its Work again, updates the inline image and opens Media View from that record. Retired Detail markers cannot resolve through the Work reader or substitute a parent image.
+
+Media View shows the selected image, title and ordered metadata as real text. Work presentation includes available year, medium and dimensions plus Catalogue number. Open in new tab targets the supplied selected image. Back to document restores the invoking document, scroll and focus through Content Detail, preserving stage and child-document context.
+
+Build retains valid references when Catalogue data is unavailable, allowing later recovery without a document rebuild. Runtime loading and failure feedback appears beside the opener and permits retry. Replaced documents, released mounts, changed child selections and superseded requests cannot apply a late response.
+
+## Current Catalogue Data
+
+The source of consumer records is `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/generated/works/index/<work_id>.json`, as described by [Catalogue Indexes And Payloads](Catalogue_Indexes_And_Payloads.md). Work records supply identity, `media_version`, `width_px` and `height_px`. The separate generated `media-config.json` supplies shared rendition policy; per-record media arrays are retired. Docs consumers require only the Work image base and do not read Detail sections or resolve Detail image paths. Identity is never inferred from a filename, title, document or selected UI row.
+
+Local Docs reads the current generated record through `/docs/catalogue-work?work_id=<work_id>` and the shared policy through `/docs/catalogue-media-config`. Public Docs uses `catalogue_paths.work_records_base_url`, currently `/assets/data/catalogue/works/index/`, and `catalogue_paths.media_config_url`, currently `/assets/data/catalogue/media-config.json`. Both resolve image URLs from that policy and exact identity/version, currently using R2. Local generated thumbnails do not replace those image sources.
+
+Each activation reads again: local requests use `no-store`, and public requests use HTTP revalidation with `no-cache`. Concurrent Work and policy requests share only in-flight reads; there is no document-lifetime cache. Public freshness is limited to the latest deployed Catalogue output, and the reader makes no local-service or archive fallback request.
+
+The shared projector validates exact identity, titles, positive dimensions/version and safe media policy, then prepares `docs_media_view_v1` with responsive image candidates, metadata and a separate largest-rendition new-tab target. Root-relative and credential-free HTTPS media targets are supported. Canonical Studio JSON and guessed media paths are not reader inputs.
+
+`docs-viewer-catalogue-media-policy.js` resolves configured candidates and thumbnail naming. Width descriptors reflect actual output dimensions, including sources below a configured target, and duplicate widths are removed. `docs-viewer-responsive-image.js` sets `srcset` and a pixel `sizes` value measured from the displayed image slot before loading; a ResizeObserver updates it as layout changes. In-document images retain their authored placement and width. Media View constrains width by its image column, source dimensions, viewport height and aspect ratio. The browser chooses a candidate for the measured slot and display density. Open in new tab and token Info image links always use the largest configured rendition, currently 1600, independently of that choice. Supplied demonstration presentations with a single explicit image remain separate supported callers.
+
+## Ownership
+
+| owner | responsibility |
+| --- | --- |
+| Catalogue generated consumer output | supply exact Work records, Series/Gallery membership, the Gallery search lookup and existing Work thumbnails independently of documents |
+| Source authoring and Document Build | preserve selected identity, literal labels and authored image presentation |
+| local management client or public provider | read exact current generated or deployed Work/Series/Gallery records and apply configured thumbnail paths |
+| shared Catalogue projector | validate records and prepare a selected `docs_media_view_v1` image or ordered `docs_media_gallery_v1` references |
+| shared gallery helper | own density, page membership, complete-order neighbours and wrapping |
+| Media View adapter | register the current occurrence, load selected Works, render the active gallery page or image, preserve the return page, reject late results and release state |
+| Docs Viewer Content Detail | main-pane lifecycle, Back and Open in new tab controls, scroll and focus restoration |
+| public and Manage entrypoints | compose the same shared adapter |
+| Broken Links | read source tokens and diagnose current generated media availability without mutating content |
+
+The implementation owners are `docs-viewer/services/docs_catalogue_media.py`, `docs-viewer/build/docs_builder/semantic_tokens.py`, the Source editor's `catalogue-media-modal.js` and `catalogue-media-support.js`, and the shared runtime modules `docs-viewer-catalogue-media.js`, `docs-viewer-media-presentation.js`, `docs-viewer-media-gallery.js` and `docs-viewer-media-detail.js`. Route policy is in `docs-viewer/config/routes/docs-viewer-routes.json`; `site-tools/config/site-code-update.json` owns public runtime projection. Focused contracts include `test_catalogue_media_links.py`, `test_catalogue_series_media.py`, `docs_viewer_catalogue_media_link_contract.mjs`, `docs_viewer_catalogue_series_contract.mjs` and `docs_viewer_media_detail_contract.mjs`. [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md) owns source grammar, usage and audit behavior.
+
+## Series Galleries And Supplied Presentations
+
+Exact Gallery entry uses `galleries/index/<gallery_id>.json`, read locally through `/docs/catalogue-gallery?gallery_id=<gallery_id>`. Its metadata and ordered Work references use the same grid, pagination and selected-Work loading as Series. Empty Galleries display an empty state without pagination. The reader validates matching header/body IDs, member count, distinct exact Work IDs and ascending Work-ID order. Public readers use the explicit `catalogue_paths.gallery_records_base_url`, currently `/assets/data/catalogue/galleries/index/`; public Catalogue distribution remains paused.
+
+Work presentations expose links from their generated `work.galleries` array. Selecting one reads that exact Gallery in the same Content Detail mount and changes the active browsing group after a successful response. Previous/next then follows that group's complete Work order. A Work entered from a Series also retains its explicit Series return control; the matching numeric Gallery ID is never substituted. Returning to the active group restores the page containing the selected Work. Failed or superseded Gallery reads preserve the current image and group; Back to document retains its existing owner.
+
+Ordinary Series entry reads `series/index/<series_id>.json` from existing generated Catalogue data. The shared projector retains ordered member Work identities and labels and resolves existing Work thumbnail filenames through route configuration. Gallery entry does not read the complete Work index or every Work record. Selecting a member loads only that Work's complete presentation; its Series control returns to the gallery in the same Media View. Empty Series are valid. Failures are visible and retryable, and superseded or released requests cannot replace the current presentation. Any Series thumbnail derives from its first ordered Work; no Series primary Work or primary image is stored.
+
+Local reads use `/docs/catalogue-series?series_id=<series_id>` and the confined `/docs/catalogue-thumbnails/` route. Public reads use configured `/assets/data/catalogue/series/index/` and `/assets/data/catalogue/works/thumbs/` paths; public distribution remains separately owned by Catalogue Deployment. Thumbnail bases are route-owned; size, suffix and format come from shared generated policy. Selected Work images use that same policy's primary-image resolver.
+
+Supplied immutable Work presentations and the small Series gallery remain distinct callers of the same adapter. The local gallery proof supplies Series 143 and Works 01941 and 01942 in one `docs_media_gallery_v1` payload with an explicit entry target. Its thumbnails open complete Work presentations, and each Work's Series link returns to the gallery inside the same Content Detail mount. Ordinary fallback anchors belong to these supplied demonstrations; newly authored references have no frozen image fallback.
+
+Series galleries display up to eight columns and six rows per page: 48 Work thumbnails at 64px with 8px gaps. The configured source is the existing 96px WebP Work thumbnail. The grid occupies the left presentation area; the existing right information column holds Series title, available year, Series identity, total Works and pagination. Page and Work navigation use a left-aligned row of compact position/total text (`1/4`) and arrow-only previous/next buttons with descriptive accessible labels, without an additional Work-range caption. Thumbnails have accessible names and hover titles without visible captions. Density and page membership share one gallery helper. Narrow public layouts reflow the grid while retaining the same page membership; desktop layouts retain the chosen columns with bounded horizontal overflow when needed.
+
+Only the active page's thumbnail elements are created. Selecting a Work reads that exact record through the existing provider. Work previous/next follows the complete supplied Series order, with position/total. Pages and Works cycle from last to first and first to last. A single page or single Work keeps its navigation arrows disabled; empty Series have no pagination. Successful selection, including a wrapped selection, updates the gallery return page to contain that Work. Failed or superseded reads preserve the current selection and page. Returning within the same Media View retains Series context; Back to document remains owned by Content Detail. Shared browser history and page-session caching are still separately planned, and no Media-specific implementation replaces them.
+
+A caller must supply collection context explicitly; direct Work entry never infers a gallery sequence from Series membership. Work Gallery links use explicit generated memberships and load a sequence only when selected. Associated-document lists and shareable Media View routes remain separate design questions.
+
+## Consumer Limits
+
+Interactive local and public Docs share the implemented reader. Public Catalogue JSON distribution remains pending separately, so a projected runtime does not establish that the required public records are deployed. Document publication and current Catalogue distribution retain separate owners.
+
+The representative 165-Work Series has four pages of 48/48/48/21 members. Focused checks establish ordered membership, bounded rendering and selected-record loading; they do not establish network-performance budgets. Neighbour prefetch, persistent caches and measurements on constrained connections are not implemented or claimed. The existing 96px thumbnail rendition is displayed at 64px; higher-resolution display policy remains a separate measured improvement if needed.
+
+[Export](Export.md) and [Docs Review](Docs_Review.md) do not yet resolve authored Work image references. Document Build emits a hidden image without `src`, so these static consumers need a preparation step before those images can display. The proposed export policy downloads selected R2 images into the export folder; the proposed Review policy resolves ordinary R2 URLs while preparing or explicitly rebuilding the preview. Both must first read generated Catalogue JSON, and neither policy is implemented yet. Existing text-first portable export remains text-first.
+
+## Status
+
+Step 4 adds exact Gallery tokens, generated-index search in Add Media View link, the local Gallery reader, shared Gallery presentation and Work membership links. Direct diagnostics use the current generated corpus: Gallery 084 has four members, Gallery 179 has two, and Gallery 154 has 523 members across eleven pages with 48 on the first page. Work 03072 exposes Gallery 179, while Series 084 remains a distinct 20-member sequence. These are direct reader/projector results, not browser interaction evidence. Focused Python/JavaScript lint, public runtime projection, static-site validation and two existing pure grammar checks passed. The watcher rendered the delivery's three Gallery markers; the browser parser recognized the same authored tokens. No tests were added or changed; visual behavior, search insertion/editing and navigation remain manual review gates.
+
+The trimmed media-record and responsive-image implementation was added on 2026-09-23. Source lint, complete local JSON generation, representative live endpoint/resolver reads, public code projection and static-site validation passed. Code review covered reader wiring, exact identities, thumbnail reconciliation, policy validation, small-source candidate widths, raw-image separation and observer release. Browser layout and rendition selection at different display densities remain manual review gates. Existing media tests that encode per-record rendition arrays, `work_record_v6` or route-owned rendition settings do not establish coverage of this contract and require separately approved test work before adaptation; they were not changed or claimed as passing evidence.
+
+Work text links, Work/Detail image authoring and the shared current-data Media View were accepted on 2026-09-10. Work/Detail/Series link authoring and Catalogue-backed Series galleries, including compact pagination and cycling Work navigation, are complete, accepted and closed on 2026-09-12. Code review has no outstanding findings. Exact identity, literal labels, Markdown parsing, page membership, selected media, stale-response protection and public-reader isolation have focused executable evidence. Static image preparation, shared caching/history and public Catalogue distribution retain their separate owners.
