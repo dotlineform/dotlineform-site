@@ -8,6 +8,7 @@ import hashlib
 import html
 import json
 import re
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable, Mapping
 from urllib.parse import unquote
@@ -42,6 +43,18 @@ MEDIA_URL_ATTRIBUTE_PATTERN = re.compile(
     r"(?:(?P<quote>[\"'])(?P<quoted_value>.*?)(?P=quote)|(?P<unquoted_value>[^\s\"'=<>`]+))",
     re.IGNORECASE,
 )
+
+
+@dataclass(frozen=True)
+class CompletedPreview:
+    """Operation-local snapshot bytes and their verified completion receipt.
+
+    Construct only after writing or validating the physical Preview. Distribution
+    consumes these exact bytes; the receipt retains publication provenance.
+    """
+
+    manifest: Mapping[str, Any]
+    files: Mapping[Path, bytes]
 
 
 def utc_now() -> str:
@@ -509,7 +522,7 @@ def validate_preview_snapshot(
 def write_preview_snapshot(
     repo_root: Path, *, files: Mapping[Path, bytes], generated_revision: str, source_revision: str,
     asset_references: list[str],
-) -> dict[str, Any]:
+) -> CompletedPreview:
     """Replace the prepared snapshot and record completion only after byte verification.
 
     Preparation supplies the complete projected file set. Failure after mutation
@@ -540,5 +553,7 @@ def write_preview_snapshot(
         raise RuntimeError("Preview snapshot bytes did not verify")
     manifest = _preview_manifest_payload(generated_revision, files, source_revision=source_revision, asset_references=asset_references)
     completion.write_bytes(json_bytes(manifest))
-    validate_preview_snapshot(repo_root)
-    return manifest
+    verified_manifest, _root, verified_files = validate_preview_snapshot(repo_root)
+    if verified_manifest != manifest or verified_files != files:
+        raise RuntimeError("Preview changed during snapshot completion")
+    return CompletedPreview(manifest=verified_manifest, files=verified_files)

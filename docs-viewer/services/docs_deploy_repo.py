@@ -34,7 +34,7 @@ from docs_workspace_config import (
     public_search_path,
     public_media_bindings,
 )
-from docs_preview_snapshot import COPIED_WORKING_PAYLOAD_PATHS, _validate_prepared_index, validate_preview_snapshot
+from docs_preview_snapshot import CompletedPreview, COPIED_WORKING_PAYLOAD_PATHS, _validate_prepared_index, validate_preview_snapshot
 from docs_publication_payloads import project_public_view
 from docs_catalogue_artifacts import load_catalogue_artifact_inventory, select_catalogue_artifacts
 
@@ -725,7 +725,7 @@ def lineage_preview(
     }
 
 
-def build_deploy_repo_plan(
+def _reviewed_deploy_repo_plan(
     repo_root: Path,
     body: Mapping[str, Any],
     *,
@@ -736,11 +736,34 @@ def build_deploy_repo_plan(
     repo_root = repo_root.resolve()
     if "scope" in body or body.get("stage") != "preview":
         raise ValueError("Publish requires the Preview stage without scope")
-    config = deployable_config(repo_root)
     manifest, _preview_root, published_files = validate_preview_snapshot(
         repo_root,
     )
     timestamp = str(body.get("deployment_timestamp") or "").strip() or utc_now()
+    return build_deploy_repo_plan(
+        repo_root, CompletedPreview(manifest=manifest, files=published_files),
+        deployment_timestamp=timestamp, client=client, env_files=env_files, environ=environ,
+    )
+
+
+def build_deploy_repo_plan(
+    repo_root: Path,
+    snapshot: CompletedPreview,
+    *,
+    deployment_timestamp: str,
+    client: object | None = None,
+    env_files: Iterable[Path] | None = None,
+    environ: Mapping[str, str] | None = None,
+) -> DeployRepoPlan:
+    """Compare destinations for the exact completed snapshot supplied by its owner.
+
+    This operation reads configured destinations and referenced shared assets,
+    never current document source/generated output or a replacement snapshot.
+    """
+    repo_root = repo_root.resolve()
+    config = deployable_config(repo_root)
+    manifest, published_files = snapshot.manifest, snapshot.files
+    timestamp = deployment_timestamp
     desired, media_references, document_ids = (
         desired_repository_projection(repo_root, config, published_files)
     )
@@ -833,7 +856,7 @@ def preview_deploy_repo(
     env_files: Iterable[Path] | None = None,
     environ: Mapping[str, str] | None = None,
 ) -> dict[str, Any]:
-    return build_deploy_repo_plan(
+    return _reviewed_deploy_repo_plan(
         repo_root,
         body,
         client=client,
@@ -878,7 +901,7 @@ def apply_deploy_repo(
     timestamp = str(body.get("deployment_timestamp") or "").strip()
     if not timestamp:
         raise ValueError("deployment_timestamp must match the reviewed Publish preview")
-    plan = build_deploy_repo_plan(
+    plan = _reviewed_deploy_repo_plan(
         repo_root,
         body,
         client=client,
@@ -890,9 +913,30 @@ def apply_deploy_repo(
         raise ValueError("accepted Preview revision does not match the reviewed Publish preview")
     if body.get("plan_revision") != preview["plan_revision"]:
         raise ValueError("Publish preview is stale; preview again")
+    return apply_deploy_repo_plan(
+        repo_root, plan, client=client, env_files=env_files, environ=environ,
+    )
 
+
+def apply_deploy_repo_plan(
+    repo_root: Path,
+    plan: DeployRepoPlan,
+    *,
+    client: object | None = None,
+    env_files: Iterable[Path] | None = None,
+    environ: Mapping[str, str] | None = None,
+) -> dict[str, Any]:
+    """Distribute one operation-local plan and await repository/media completion.
+
+    Revalidate the physical snapshot before writes. Repository and remote writes
+    are not atomic; the caller must retain and report failures or incomplete results.
+    """
+    preview = plan.preview
+    manifest, _root, _files = validate_preview_snapshot(repo_root)
+    if manifest["preview_revision"] != preview["preview_revision"]:
+        raise ValueError("Prepared Preview changed before distribution; publish again")
     if preview["error_count"]:
-        raise ValueError("Publish plan has destination or missing-asset errors; fix them and review again")
+        raise ValueError("Publication cannot start: " + "; ".join(preview["media"]["errors"]))
     apply_repository_projection(repo_root.resolve(), plan)
     media = apply_public_media_reconciliation(
         repo_root.resolve(),
@@ -982,6 +1026,7 @@ def apply_deploy_repo(
 __all__ = [
     "DEPLOY_REPO_PREVIEW_SCHEMA_VERSION",
     "apply_deploy_repo",
+    "apply_deploy_repo_plan",
     "build_deploy_repo_plan",
     "deploy_repo_capability",
     "preview_deploy_repo",

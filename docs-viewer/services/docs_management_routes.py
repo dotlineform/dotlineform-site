@@ -59,6 +59,7 @@ SET_SELECTED_PATH = "/docs/set-selected"
 ASSIGN_FIELD_GROUP_PATH = "/docs/assign-field-group"
 CREATE_PATH = "/docs/create"
 REBUILD_PATH = "/docs/rebuild"
+PUBLISH_PATH = "/docs/publish"
 PREPARE_PREVIEW_PLAN_PATH = "/docs/prepare-preview/plan"
 PREPARE_PREVIEW_APPLY_PATH = "/docs/prepare-preview/apply"
 MOVE_PATH = "/docs/move"
@@ -134,6 +135,7 @@ POST_PATHS = (
     ASSIGN_FIELD_GROUP_PATH,
     CREATE_PATH,
     REBUILD_PATH,
+    PUBLISH_PATH,
     PREPARE_PREVIEW_PLAN_PATH,
     PREPARE_PREVIEW_APPLY_PATH,
     MOVE_PATH,

@@ -13,6 +13,7 @@ from docs_workspace_config import (
     document_source_path, generated_documents_path, generated_search_path,
 )
 from docs_preview_snapshot import (
+    CompletedPreview,
     _files_from_root, _lifecycle_root, _validate_generated_manifest, _validate_prepared_index, files_revision,
     build_preview_snapshot_files, write_preview_snapshot,
 )
@@ -50,9 +51,7 @@ def promoted_source(doc: SourceDoc, collection: Any) -> bytes:
     return format_source(front_matter, doc.body).encode("utf-8")
 
 
-def _plan(repo_root: Path, body: dict[str, Any]) -> tuple[dict[str, Any], dict[Path, bytes], bytes, bytes, dict[str, bytes]]:
-    if body.get("stage") != "working" or "scope" in body:
-        raise ValueError("Prepare Preview requires stage working")
+def _plan(repo_root: Path) -> tuple[dict[str, Any], dict[Path, bytes], bytes, bytes, dict[str, bytes]]:
     working = load_docs_stage(repo_root, "working")
     search_path = generated_search_path(working)
     if search_path.is_symlink() or not search_path.is_file():
@@ -129,7 +128,9 @@ def _plan(repo_root: Path, body: dict[str, Any]) -> tuple[dict[str, Any], dict[P
 
 def plan_prepare_preview(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     """Bind confirmation to source, saved Search/Recents and current Preview."""
-    preview, _files, _search_index, _recent_payload, _catalogue = _plan(repo_root, body)
+    if body.get("stage") != "working" or "scope" in body:
+        raise ValueError("Prepare Preview requires stage working")
+    preview, _files, _search_index, _recent_payload, _catalogue = _plan(repo_root)
     return preview
 
 
@@ -177,22 +178,40 @@ def build_captured_preview(
     return files, {**build_manifest, "asset_references": references}
 
 
-def apply_prepare_preview(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
-    """Build temporary inputs synchronously, then replace the complete Preview."""
-    if body.get("confirm") is not True:
-        raise ValueError("confirm must be true to prepare Preview")
-    plan, desired, search_index, recent_payload, catalogue = _plan(repo_root, body)
-    if body.get("plan_revision") != plan["plan_revision"]:
-        raise ValueError("Prepare Preview plan is stale; preview again")
+def _complete_preview(
+    repo_root: Path, plan: dict[str, Any], desired: dict[Path, bytes],
+    search_index: bytes, recent_payload: bytes, catalogue: dict[str, bytes],
+) -> CompletedPreview:
     files, build_manifest = build_captured_preview(repo_root, desired, search_index, recent_payload, catalogue)
-    current = plan_prepare_preview(repo_root, {"stage": "working"})
+    current, _files, _search_index, _recent_payload, _catalogue = _plan(repo_root)
     if current["plan_revision"] != plan["plan_revision"]:
         raise ValueError("Working source, Catalogue, Search, Recents, configuration or Preview changed during preparation; prepare again")
-    manifest = write_preview_snapshot(
+    return write_preview_snapshot(
         repo_root, files=files, generated_revision=build_manifest["generated_revision"],
         source_revision=plan["source_revision"], asset_references=build_manifest["asset_references"],
     )
+
+
+def prepare_preview(repo_root: Path) -> CompletedPreview:
+    """Capture fresh eligible Working inputs and complete Preview synchronously.
+
+    Source and saved-artifact freshness is checked before replacement. Failure
+    prevents distribution; snapshot replacement retains its receipt semantics.
+    """
+    return _complete_preview(repo_root, *_plan(repo_root))
+
+
+def apply_prepare_preview(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
+    """Build the reviewed inputs synchronously, then replace complete Preview."""
+    if body.get("confirm") is not True:
+        raise ValueError("confirm must be true to prepare Preview")
+    if body.get("stage") != "working" or "scope" in body:
+        raise ValueError("Prepare Preview requires stage working")
+    plan, desired, search_index, recent_payload, catalogue = _plan(repo_root)
+    if body.get("plan_revision") != plan["plan_revision"]:
+        raise ValueError("Prepare Preview plan is stale; preview again")
+    snapshot = _complete_preview(repo_root, plan, desired, search_index, recent_payload, catalogue)
     return {
-        **plan, "applied": True, "preview_manifest": manifest,
+        **plan, "applied": True, "preview_manifest": snapshot.manifest,
         "summary_text": f"Preview prepared: {plan['document_count']} documents, Catalogue, Search and Recents. Review Preview before Publish.",
     }

@@ -31,6 +31,7 @@ import docs_media_actions  # noqa: E402
 import docs_management_mutations as mutations  # noqa: E402
 import docs_management_routes as routes  # noqa: E402
 import docs_prepare_preview  # noqa: E402
+import docs_publish  # noqa: E402
 import docs_project_state  # noqa: E402
 import docs_missing_source_files  # noqa: E402
 import docs_uncataloged_files  # noqa: E402
@@ -94,6 +95,11 @@ def docs_management_post_response(
     *,
     dry_run: bool = False,
 ) -> tuple[HTTPStatus, dict[str, object]]:
+    if path == routes.PUBLISH_PATH:
+        if dry_run:
+            raise ValueError("Publish does not support dry_run")
+        payload = docs_publish.publish_docs(repo_root, body)
+        return (HTTPStatus.OK if payload["complete"] else HTTPStatus.INTERNAL_SERVER_ERROR), payload
     if "scope" in body or "parent_scope" in body:
         raise ValueError("scope is retired; supply an explicit stage and optional collection")
     if "sub_scope" in body:
