@@ -1,6 +1,5 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
 import { mountDocsViewerMediaLinks } from "../shared/docs-viewer-media-detail.js";
-import { loadWorkingCatalogueDocumentLinks } from "./docs-viewer-management-catalogue-document-links.js";
 import { loadWorksCollectionSubjectTitles } from "./docs-viewer-management-works-metadata.js";
 import {
   encodeDecodedLocalTarget
@@ -104,7 +103,7 @@ function subjectAccessibleLabel(subject) {
     + (subject.state === "unavailable" ? ", unavailable" : "");
 }
 
-function renderSubjectCell(context, options, targetLookup, catalogueLinks) {
+function renderSubjectCell(context, options, targetLookup) {
   var settings = context || {};
   var host = settings.trailingHost;
   if (!host) return;
@@ -138,11 +137,9 @@ function renderSubjectCell(context, options, targetLookup, catalogueLinks) {
     host.appendChild(cell);
     return;
   }
-  var workHref = subject.kind === "work" ? catalogueLinks.get(subject.key) : "";
-  var mediaSeries = subject.kind === "series";
-  var linkedSubject = ["folder", "series"].includes(subject.kind)
-    || subject.kind === "work" && Boolean(workHref);
-  var link = host.ownerDocument.createElement(mediaSeries ? "button" : linkedSubject ? "a" : "span");
+  var mediaSubject = ["work", "series"].includes(subject.kind);
+  var linkedSubject = subject.kind === "folder" || mediaSubject;
+  var link = host.ownerDocument.createElement(mediaSubject ? "button" : linkedSubject ? "a" : "span");
   link.className = linkedSubject
     ? "docsViewerReport__cellLink docsViewerReport__projectSubjectLink"
     : "docsViewerReport__projectSubjectLink";
@@ -159,21 +156,18 @@ function renderSubjectCell(context, options, targetLookup, catalogueLinks) {
     link.href = "#";
     link.dataset.docsViewerLocalTarget = encodedPath;
     link.title = "Open " + subject.key + " in Finder";
-  } else if (mediaSeries) {
+  } else if (mediaSubject) {
     cell.dataset.docsContentDetail = "media";
-    cell.dataset.docsMediaKind = "catalogue-series";
+    cell.dataset.docsMediaKind = "catalogue-" + subject.kind;
     cell.dataset.docsMediaId = subject.key;
     link.type = "button";
     link.classList.add("docsViewer__mediaTextLink");
     link.dataset.docsMediaOpen = "true";
     link.title = "Open " + subjectAccessibleLabel(subject) + " in Media View";
-  } else if (workHref) {
-    link.href = workHref;
-    link.title = "Open " + subjectAccessibleLabel(subject) + " in Catalogue";
   }
   cell.appendChild(link);
   host.appendChild(cell);
-  if (mediaSeries) {
+  if (mediaSubject) {
     mountDocsViewerMediaLinks({
       content: host,
       documentTarget: options.documentTarget,
@@ -262,8 +256,8 @@ function folderPath(documentRecord) {
   return subject.state === "valid" && subject.kind === "folder" ? subject.key : "";
 }
 
-function renderWorkingSubjectRow(context, options, targetLookup, catalogueLinks) {
-  renderSubjectCell(context, options, targetLookup, catalogueLinks);
+function renderWorkingSubjectRow(context, options, targetLookup) {
+  renderSubjectCell(context, options, targetLookup);
   return { accessibleLabels: [] };
 }
 
@@ -430,15 +424,7 @@ export function createDocsViewerManagementCollectionWorkingWorks(options = {}) {
   exactCollection(options.collection);
   var assignSubjectAvailable = hasDocsViewerAssignableFieldGroup(options.descriptor, AUTHORING_SUBJECT_GROUP_ID);
   var collator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
-  return Promise.all([
-    loadWorksCollectionSubjectTitles(options),
-    loadWorkingCatalogueDocumentLinks({
-      document: options.content.ownerDocument, fetch: options.fetch,
-      workspaceConfig: options.workspaceConfig
-    })
-  ]).then(function (results) {
-    var targetLookup = results[0];
-    var catalogueLinks = results[1];
+  return loadWorksCollectionSubjectTitles(options).then(function (targetLookup) {
     var contribution = {
       id: WORKS_CUSTOMISATION_ID,
       notify: function (event) {
@@ -469,8 +455,7 @@ export function createDocsViewerManagementCollectionWorkingWorks(options = {}) {
         return renderWorkingSubjectRow(
           context,
           options,
-          targetLookup,
-          catalogueLinks
+          targetLookup
         );
       }
     };

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260731-155053-3929e2
 title: Sub-Scope Customisation Architecture
 added_date: "2026-07-31 15:50:53"
-last_updated: "2026-09-27 19:35:41"
+last_updated: "2026-09-27 20:20:16"
 summary: define the default docs_subscope report, unified registered aspects, access-safe projection, exact targets, browser composition, and extension checks
 parent_id: d-20260801-084127-752d7e
 ---
@@ -187,7 +187,7 @@ Current subject scope after the Gallery conversion: the `authoring_subject` fiel
 
 The shared source reader normalizes the exact raw `folder_path`, `work_id`, and `series_id` declarations into one `authoring_subject` object. Its states are `none`, valid Folder, valid Work, valid Series, `malformed`, or `conflicting`. A valid Work ID is an exact five-digit string; a valid Series ID is an exact lowercase alphanumeric-or-hyphen string. Folder is valid only when the exact collection registers `folder_path` in an assignable field group. Work and Series reading is collection-independent. Invalid declarations retain their raw field/value evidence as private observational state and remain ordinary source.
 
-Private collection management manifests carry normalized `authoring_subject` rows and top-level `subject_generation` when subject projection is enabled. Catalogue and Works require this projection independently of existing generated files. Reports derive associations in memory: Project State retains every valid Works row for each `{kind, key}`, while Catalogue navigation requires a single exact document per Work. Links use the configured collection report host and immutable `doc_id`; titles, filenames and current route selection never supply identity. [Subject Associations](data/subject-associations.md) owns the current inventory and update boundaries.
+Private collection management manifests carry normalized `authoring_subject` rows and top-level `subject_generation` when subject projection is enabled. Catalogue and Works require this projection independently of existing generated files. Reports derive associations in memory: Project State retains every valid Works row for each `{kind, key}`, while Catalogue Works navigation requires a single exact document per Work. Document links use the configured collection report host and immutable `doc_id`; titles, filenames and current route selection never supply identity. Context's Work and Series Subject controls instead open Media View by exact Catalogue identity, without reading Catalogue's document manifest. [Subject Associations](data/subject-associations.md) owns the current inventory and update boundaries.
 
 The builder maintains subjects and generation in the management manifest; targeted builds merge selected rows with saved metadata and preserve unselected rows. The separate association product and cross-file receipt comparison are retired. Reader manifests and by-ID schemas retain their existing public-safe projection; private subject state, invalid evidence, local paths and assignment capability remain with Manage. Completed Preview and public distribution exclude management manifests.
 

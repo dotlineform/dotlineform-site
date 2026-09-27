@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260927-135604-05446e
 title: Subject Associations
 added_date: "2026-09-27 13:56:04"
-last_updated: "2026-09-27 19:35:41"
+last_updated: "2026-09-27 20:20:16"
 summary: Manifest-owned subjects, in-memory report associations, exact navigation, and private/public generation boundaries.
 parent_id: d-20260423-000000-d015e6
 ---
@@ -26,6 +26,7 @@ All workspace paths below are relative to the configured `$DOTLINEFORM_DOCS_BASE
 | `working/source/collections/<collection>/documents/*.md` | Canonical document identities and subject declarations in front matter. | Assign/Change Subject writes the configured subject field group. Open Source permits direct file editing. Collection Regenerate can replace generated document source, including Catalogue Work declarations. | Source changes feed collection document builds. Publish captures eligible source and builds temporary Preview output. Canonical Working source is not distributed as reader data. |
 | `working/generated/collections/<collection>/documents/manage-manifest.json` | Private document list with normalized `authoring_subject` per row when subject projection is enabled, plus `subject_generation`. Retains missing, malformed, and conflicting subject states for management. | Collection Subject display and assignment context; Catalogue Work-to-document navigation; Project State's Works grouping. | Collection builds maintain the rows and generation. Targeted builds merge selected rows with saved rows, preserving unselected metadata. Excluded from the completed Preview snapshot and public distribution. |
 | `working/generated/collections/<collection>/documents/manifest.json` | Reader document list. Catalogue rows carry `work_id`; other collection rows carry a public-safe Work/Series `subject` or `null`. | Collection readers use their existing public-safe representation. | Written by the collection builder. Preview rebuilds its reader list from the prepared document set, and distribution projects that list into `site/assets/data/docs/<collection>/manifest.json`. Folder subjects and authoring diagnostics are not reader subject data. |
+| `working/generated/catalogue/reports/works/manifest.json` | Private exact Work/Series title maps, separate from document manifests. | Context's Subject column displays current titles and opens Work/Series subjects in Media View by exact Catalogue identity. | Maintained by Studio Save. Context does not need Catalogue document mappings to open media. |
 
 Catalogue Works' private `working/generated/catalogue/reports/catalogue-works/metadata.json` supplies Work/Series display and search data. Catalogue's management manifest supplies document identities; the link reader composes their destinations using the configured report host and the existing route helper. Studio Work Save updates the report metadata but does not regenerate or rewrite linked Catalogue documents. [Catalogue Works](../Catalogue_Works.md) owns that distinction. The local browser configuration projects each collection's existing `report_host_doc_id`; Manage requires that exact identity rather than inferring a host from the current route or document tree.
 
@@ -51,7 +52,7 @@ Several documents may share a subject. That is valid for Project State. Catalogu
 | Document create, import, or delete with collection rebuild follow-through | Adds or removes exact manifest rows. | The source operation's collection build owns reconciliation. |
 | Publish | Captures eligible source, builds temporary document output, validates/replaces Preview and distributes the completed snapshot. | One awaited Publish action. Management manifests remain private; no association artifact is generated. Git commit, push and Deploy Public are separate actions. |
 | Open Catalogue Works | Reads Catalogue's management manifest alongside private report metadata to construct Work ID/title links. | One manifest read per report mount; the read blocks report readiness. |
-| Open Working Works collection | Reads Catalogue's management manifest for exact Work Subject navigation. | Loaded with the collection subject contribution. Series Media View and local Folder actions retain their existing owners. |
+| Open Context (Working Works collection) | Uses its own normalized document subjects and private Work/Series title metadata. Both Work and Series subjects open Media View by exact Catalogue identity. | Loaded with the collection subject contribution; no Catalogue document-manifest read is required. Folder subjects retain their local-folder action. |
 | Project State Run/Refresh | Reads Works' management manifest, groups valid subjects and places documents against project folders and canonical Catalogue data. | Returns a newly assembled report without rebuilding or repairing its inputs. |
 | Follow a document link or open a Series gallery | Uses the exact destination or the separate Media View owner. | Navigation only. |
 
@@ -71,9 +72,9 @@ The configured Works publication owner removes authoring subject fields and reta
 
 | Owner | Input And Responsibility |
 | --- | --- |
-| [Catalogue document link reader](../../../docs-viewer/runtime/js/management/docs-viewer-management-catalogue-document-links.js) | Loads Catalogue's configured management manifest, validates exact Work-to-document mappings and composes links using its configured host. Shared by the two navigation consumers below. |
+| [Catalogue document link reader](../../../docs-viewer/runtime/js/management/docs-viewer-management-catalogue-document-links.js) | Loads Catalogue's configured management manifest, validates exact Work-to-document mappings and composes links using its configured host for Catalogue Works. |
 | [Catalogue Works report](../../../docs-viewer/runtime/js/reports/catalogue-works-report.js) | Combines those mappings with separately generated Work/Series report metadata; Work IDs and titles link to Catalogue documents. |
-| [Working collection subjects](../../../docs-viewer/runtime/js/management/docs-viewer-management-collection-working-subjects.js) | Working Works uses Catalogue mappings for Work Subject navigation. Subject display and icons continue to use document management metadata. |
+| [Working collection subjects](../../../docs-viewer/runtime/js/management/docs-viewer-management-collection-working-subjects.js) | Context uses normalized subjects and private title metadata. Work and Series subjects open the existing Media View; Folder opens Finder. It does not consume Catalogue document associations. |
 | [Project State producer](../../../docs-viewer/services/docs_project_state.py) | Groups valid Works management rows, then places documents against project folders using Folder, Work and Series relationships. Invoked by Run/Refresh through `/docs/project-state`. |
 
 ## Artifact Retirement

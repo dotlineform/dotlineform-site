@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260927-191938-974cc3
 title: Subject Associations To Manifests - Delivery
 added_date: "2026-09-27 19:19:38"
-last_updated: "2026-09-27 19:49:33"
+last_updated: "2026-09-27 20:20:16"
 summary: Retire subject-associations.json from all collections and derive existing report associations and navigation from management manifests without changing front matter or collection ownership.
 ui_status: done
 parent_id: d-20260428-000000-f5ff18
@@ -75,5 +75,7 @@ Evidence: bounded production/configuration/documentation/projection diff and cal
 Evidence: reuse accepted SM-1 and SM-2 results; the closeout edit requires only `git diff --check`. Record: accepted. Consumers work without association files, with user-confirmed navigation and Project State behavior. Maintained behavior is transferred to [Subject Associations](data/subject-associations.md), [Catalogue Works](Catalogue_Works.md) and the directly affected subject section of [Sub-Scope Customisation Architecture](Sub_Scope_Customisation_Architecture.md). No document-source or manifest reconciliation was required; only the local browser configuration and one tracked shared-runtime projection were refreshed. The five obsolete external artifacts are removed and Preview has no completion receipt. Existing tests that depend on retired association products or Project State path inputs need separately specified and authorized review; this is separate from the accepted product cutover. Publish and its live distribution evidence remain separate, as do Search rebuilds and Git/public deployment. Recommend manually archiving this completed delivery after closeout review; retain it until that action or deletion is explicitly authorized. Gate: passed; Publish, commit, push and document deletion were not performed.
 
 ## Follow-on
+
+After closeout, the user corrected Context's navigation requirement: Work subjects open Media View like Series subjects. Context's Catalogue document lookup was removed; Catalogue Works and Project State retain their manifest-based readers. Focused JavaScript lint and whitespace checks passed for this small UI correction; its revised Work interaction awaits manual confirmation. The completed delivery evidence above records the behavior accepted at its closeout.
 
 Catalogue retirement, receipt/schema simplification, smaller lookups and Related Links remain separate decisions.
