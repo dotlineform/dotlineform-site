@@ -307,7 +307,6 @@ function openPrepareOptions(options) {
       }
       try {
         const request = createDocumentPackagePrepareRequest({
-          stage: options.stage,
           collection: options.collection,
           profile,
           documents: options.documents,
@@ -359,7 +358,6 @@ function showPrepareResult(options) {
 
 export async function openDocumentPackagePrepareWorkflow(options = {}) {
   const root = options.root || document.body;
-  const stage = packageText(options.stage).toLowerCase();
   const collection = packageText(options.collection).toLowerCase();
   const checkedDocIds = normalizeCheckedDocIds(options.checkedDocIds);
   const callbacks = options.callbacks || {};
@@ -377,8 +375,8 @@ export async function openDocumentPackagePrepareWorkflow(options = {}) {
   };
 
   if (typeof callbacks.hideManageActionsMenu === "function") callbacks.hideManageActionsMenu();
-  if (!stage || !checkedDocIds.length) {
-    const error = new Error(!stage ? "A Docs Viewer stage is required." : "Select one or more documents.");
+  if (!checkedDocIds.length) {
+    const error = new Error("Select one or more documents.");
     setMessage(error.message, true);
     return { confirmed: false, error };
   }
@@ -390,8 +388,8 @@ export async function openDocumentPackagePrepareWorkflow(options = {}) {
     setBusy(true);
     setMessage("Loading package options...", false);
     [configPayload, documentsPayload] = await Promise.all([
-      client.getConfig(stage, collection),
-      client.getDocuments(stage, collection)
+      client.getConfig(collection),
+      client.getDocuments(collection)
     ]);
   } catch (error) {
     loadError = error;
@@ -410,19 +408,14 @@ export async function openDocumentPackagePrepareWorkflow(options = {}) {
     if (!workspace || workspace.available !== true) {
       throw new Error(packageText(workspace && workspace.message) || "The document-package workspace is unavailable.");
     }
-    if (packageText(configPayload.stage) !== stage || packageText(documentsPayload.stage) !== stage) {
-      throw new Error("Package response does not match the selected stage.");
-    }
     if (collection) {
       if (
-        packageText(configPayload && configPayload.stage).toLowerCase() !== stage
-        || packageText(configPayload && configPayload.collection).toLowerCase() !== collection
+        packageText(configPayload && configPayload.collection).toLowerCase() !== collection
       ) {
         throw new Error("Package configuration did not match the active collection.");
       }
       if (
-        packageText(documentsPayload && documentsPayload.stage).toLowerCase() !== stage
-        || packageText(documentsPayload && documentsPayload.collection).toLowerCase() !== collection
+        packageText(documentsPayload && documentsPayload.collection).toLowerCase() !== collection
         || documentsPayload.flat_collection !== true
       ) {
         throw new Error("Package documents did not match the active flat collection.");
@@ -444,7 +437,6 @@ export async function openDocumentPackagePrepareWorkflow(options = {}) {
     const result = await openPrepareOptions({
       root,
       restoreFocus: options.restoreFocus,
-      stage,
       collection,
       checkedDocIds,
       profiles,

@@ -42,7 +42,6 @@ def export_metadata(
         "adapter_id": "documents",
         "config_id": config_id,
         "profile_id": config_id,
-        "stage": context.stage,
         "target_format": target_format,
         "record_shape": record_shape,
         "generated_at": generated_at,

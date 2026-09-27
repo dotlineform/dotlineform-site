@@ -1,5 +1,3 @@
-import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
-
 import {
   routeConfigWorkspaceProjection
 } from "./docs-viewer-route-config.js";
@@ -119,8 +117,6 @@ export function initDocsViewerConfigController(context) {
   var configService = context.configService || {};
   var routeCommands = context.routeCommands || {};
   var root = context.root;
-  if (!Array.isArray(workspaceConfig.stageConfigs)) workspaceConfig.stageConfigs = [];
-  if (!workspaceConfig.stageConfigsById) workspaceConfig.stageConfigsById = new Map();
   if (!Array.isArray(documentIndex.docs)) documentIndex.docs = [];
 
   function normalizeCollectionConfig(rawCollection) {
@@ -152,7 +148,6 @@ export function initDocsViewerConfigController(context) {
       throw new Error("Docs Viewer collections require unique configured identities and payload URLs.");
     }
     var config = {
-      stage: String(raw.stage || ""),
       viewerBaseUrl: String(raw.viewer_base_url || ""),
       defaultDocId: String(raw.default_doc_id || ""),
       indexTreeUrl: String(raw.index_tree_url || ""),
@@ -173,28 +168,14 @@ export function initDocsViewerConfigController(context) {
   }
 
   function normalizeConfigEnvelope(payload) {
-    if (!payload || payload.schema_version !== "docs_viewer_config_v3") {
+    if (!payload || payload.schema_version !== "docs_viewer_config_v4") {
       throw new Error("Docs Viewer config has an unsupported schema.");
     }
     return {
       publicViewerBaseUrl: String(payload.public_viewer_base_url || ""),
-      rawStages: payload.stages,
       rawWorkspace: payload.workspace,
       docsViewerSettings: payload.docs_viewer || {}
     };
-  }
-
-  function routeStageFromUrl() {
-    var route = context.routeSession.routeContext.routeConfig;
-    var params = new URLSearchParams(window.location.search);
-    if (params.has("scope")) throw new Error("Scope URLs are retired; use a current document link.");
-    if (route.appKind !== "manage") {
-      if (params.has("stage")) throw new Error("Public Docs cannot select an authoring stage.");
-      return "";
-    }
-    var stage = params.get("stage") || route.defaultStage;
-    if (!["working", "preview"].includes(stage)) throw new Error("Unknown Docs stage: " + stage);
-    return stage;
   }
 
   function applyWorkspaceConfig(config) {
@@ -203,35 +184,6 @@ export function initDocsViewerConfigController(context) {
       routeViewerBaseUrl: context.routeViewerBaseUrl, window: window
     });
     routeCommands.applyRouteGlobals(projection);
-    root.dataset.viewerStage = config.stage;
-    var stageControls = root.querySelector("[data-docs-viewer-stages]");
-    if (stageControls) {
-      stageControls.replaceChildren();
-      stageControls.hidden = !workspaceConfig.stageConfigs.length;
-      workspaceConfig.stageConfigs.forEach(function (record) {
-        var button = document.createElement("button");
-        button.type = "button";
-        var label = { working: "Working", preview: "Preview" }[record.stage];
-        var artwork = { working: "circle-ellipsis", preview: "circle-check" }[record.stage];
-        button.className = "docsViewer__toolbarIconButton";
-        button.title = label;
-        button.setAttribute("aria-label", label);
-        button.appendChild(createDocsViewerToolbarIcon(document, "docsViewer__icon--" + artwork));
-        button.setAttribute("aria-pressed", String(config.stage === record.stage));
-        button.addEventListener("click", function () {
-          if (record.stage === config.stage) return;
-          var url = new URL(context.routeViewerBaseUrl, window.location.origin);
-          url.searchParams.set("stage", record.stage);
-          window.location.assign(url.pathname + url.search);
-        });
-        stageControls.append(button);
-      });
-    }
-    if (config.stage && !new URLSearchParams(window.location.search).has("stage")) {
-      var url = new URL(window.location.href);
-      url.searchParams.set("stage", config.stage);
-      window.history.replaceState(window.history.state, "", url.pathname + url.search + url.hash);
-    }
     root.dataset.indexTreeUrl = config.indexTreeUrl;
     root.dataset.recentUrl = config.recentUrl;
     root.dataset.searchIndexUrl = config.searchIndexUrl;
@@ -277,25 +229,10 @@ export function initDocsViewerConfigController(context) {
     workspaceConfig.workspaceRequestPromise = loadConfigEnvelope(settings)
       .then(function (envelope) {
         workspaceConfig.publicViewerBaseUrl = envelope.publicViewerBaseUrl;
-        var stage = routeStageFromUrl();
-        var config;
-        if (stage) {
-          if (!Array.isArray(envelope.rawStages) || envelope.rawWorkspace) throw new Error("Local Docs requires an explicit stages array.");
-          var stages = envelope.rawStages.map(normalizeBrowserConfig);
-          if (stages.length !== 2 || new Set(stages.map(function (item) { return item.stage; })).size !== 2
-              || stages.some(function (item) { return !["working", "preview"].includes(item.stage); })) {
-            throw new Error("Local Docs requires Working and Preview configurations.");
-          }
-          workspaceConfig.stageConfigs = stages;
-          workspaceConfig.stageConfigsById = new Map(stages.map(function (item) { return [item.stage, item]; }));
-          config = workspaceConfig.stageConfigsById.get(stage);
-        } else {
-          if (envelope.rawStages || !envelope.rawWorkspace) throw new Error("Public Docs requires one workspace configuration.");
-          config = normalizeBrowserConfig(envelope.rawWorkspace);
-          if (config.stage) throw new Error("Public Docs cannot select an authoring stage.");
-          workspaceConfig.stageConfigs = [];
-          workspaceConfig.stageConfigsById = new Map();
-        }
+        var params = new URLSearchParams(window.location.search);
+        if (params.has("scope") || params.has("stage")) throw new Error("This Docs URL uses retired context; use a current document link.");
+        if (!envelope.rawWorkspace) throw new Error("Docs requires one workspace configuration.");
+        var config = normalizeBrowserConfig(envelope.rawWorkspace);
         applyWorkspaceConfig(config);
         workspaceConfig.workspaceLoaded = true;
         return config;
@@ -400,7 +337,6 @@ export function initDocsViewerConfigController(context) {
   return {
     loadWorkspaceConfiguration: loadWorkspaceConfiguration,
     loadViewerSettings: loadViewerSettings,
-    reloadViewerConfiguration: reloadViewerConfiguration,
-    routeStageFromUrl: routeStageFromUrl
+    reloadViewerConfiguration: reloadViewerConfiguration
   };
 }

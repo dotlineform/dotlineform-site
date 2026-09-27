@@ -76,7 +76,6 @@ class ImportDocumentMediaContext:
 class ImportDocumentPlan:
     """Validated source and asset plan for one normalized import record."""
 
-    stage: str
     operation: str
     record: ImportContent
     target_path: Path
@@ -235,7 +234,6 @@ def _overwrite_source(
 
 def plan_import_document(
     repo_root: Path,
-    stage: str,
     record: ImportContent,
     *,
     operation: str,
@@ -250,11 +248,8 @@ def plan_import_document(
 ) -> ImportDocumentPlan:
     """Validate and plan one create or overwrite without writing."""
 
-    normalized_stage = str(stage or "").strip().lower()
     if collection is None:
-        raise ValueError("Import requires an exact stage collection")
-    if collection.stage != normalized_stage:
-        raise ValueError("import collection target does not match the requested stage")
+        raise ValueError("Import requires an exact configured collection")
     collection_id = collection.collection
     create_root = collection.source_root
     document_config = collection.document_config
@@ -365,7 +360,6 @@ def plan_import_document(
         front_matter, collection_config=document_config, source_name=target_path.name,
     )
     return ImportDocumentPlan(
-        stage=normalized_stage,
         operation=operation,
         record=record,
         target_path=target_path,
@@ -415,7 +409,6 @@ def materialize_import_document_media(
             include_prompt_meta=media_context.include_prompt_meta,
             source_markdown=media_context.source_markdown,
             source_svg_markup=media_context.source_svg_markup,
-            stage=plan.stage,
             collection=plan.collection,
         )
         interactive_html_written = materialize_interactive_html_assets(
@@ -457,7 +450,6 @@ def import_document_event(
     return (
         plan.suppression_reason,
         {
-            "stage": plan.stage,
             "staged_filename": source_label,
             "source_format": plan.import_preview.get("source_format"),
             "inline_media_count": len(plan.import_preview.get("media_plans") or []),
@@ -485,7 +477,7 @@ def import_document_result(
 
     inline_media_written = list(apply_result.inline_media_written)
     interactive_html_written = list(apply_result.interactive_html_written)
-    target = {"stage": plan.stage, "doc_id": plan.doc_id}
+    target = {"doc_id": plan.doc_id}
     if plan.collection:
         target["collection"] = plan.collection
     record: dict[str, Any] = {
@@ -515,7 +507,7 @@ def import_document_result(
     if plan.collection:
         result["collection"] = plan.collection
     else:
-        result["viewer_url"] = viewer_url_for(plan.doc_id, stage=plan.stage)
+        result["viewer_url"] = viewer_url_for(plan.doc_id)
     return result
 
 

@@ -48,7 +48,6 @@ export function createDocsViewerDocumentViewCoordinator(options) {
       appContext: typeof settings.appContext === "function" ? settings.appContext() : settings.appContext,
       selectedDocId: settings.selectedDocument.selectedDocId,
       uiStatusByValue: settings.workspaceConfig.uiStatusByValue,
-      viewerStage: typeof settings.viewerStage === "function" ? settings.viewerStage() : settings.viewerStage,
       viewerTargetDocId: settings.viewerTargetDocId,
       viewerUrl: settings.viewerUrl
     };
@@ -127,7 +126,6 @@ export function createDocsViewerDocumentViewCoordinator(options) {
       return infoPanelDefaultViewId(settings, documentDisplayModeHost.activeModeId()) || "metadata-info";
     },
     sourceEditorServices: settings.sourceEditorServices,
-    viewerStage: settings.viewerStage,
     viewerTargetDocId: settings.viewerTargetDocId,
     viewerUrl: settings.viewerUrl
   });

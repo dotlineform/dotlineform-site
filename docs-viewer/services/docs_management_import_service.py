@@ -29,9 +29,9 @@ def import_source_dependencies() -> import_source_service.ImportSourceDependenci
 
 
 def ordinary_import_target_request(body: Dict[str, Any]) -> Dict[str, Any]:
-    target = {"stage": body.get("stage")}
+    target = {}
     if "scope" in body:
-        raise ValueError("scope is retired; use stage and optional collection")
+        raise ValueError("scope is retired; use an optional collection")
     if "sub_scope" in body:
         raise ValueError("sub_scope is retired; use collection")
     if "collection" in body:
@@ -66,7 +66,7 @@ def handle_import_source(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
     source_body.pop("source_directory", None)
     return import_source_service.handle_import_source(
         repo_root,
-        {**source_body, "stage": target.stage},
+        {**source_body},
         dry_run,
         import_source_dependencies(),
         staging_root=source.path,

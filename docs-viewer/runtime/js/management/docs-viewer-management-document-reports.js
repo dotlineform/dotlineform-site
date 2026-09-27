@@ -36,11 +36,6 @@ function reportServiceOptions(baseUrl) {
   };
 }
 
-function stageConfigs(context) {
-  var workspaceConfig = context && context.workspaceConfigState ? context.workspaceConfigState : {};
-  return Array.isArray(workspaceConfig.stageConfigs) ? workspaceConfig.stageConfigs : [];
-}
-
 function payloadHasReport(payload) {
   return Boolean(payload && payload.report && cleanString(payload.report.id));
 }
@@ -53,7 +48,6 @@ function reportCollection(payload) {
 
 function parentTarget(settings) {
   return normalizeManagedDocumentTarget({
-    ...(settings.routeContext && settings.routeContext.viewerStage ? { stage: settings.routeContext.viewerStage } : {}),
     doc_id: cleanString(settings && settings.doc && settings.doc.doc_id)
   });
 }
@@ -61,8 +55,7 @@ function parentTarget(settings) {
 function managementClientOptions(settings) {
   var managementService = settings.managementService || null;
   return {
-    baseUrl: cleanString(managementService && managementService.baseUrl),
-    stage: cleanString(settings.routeContext && settings.routeContext.viewerStage)
+    baseUrl: cleanString(managementService && managementService.baseUrl)
   };
 }
 
@@ -80,13 +73,9 @@ function createCollectionDocumentAction(settings) {
     : null;
 }
 
-function configuredCollection(settings, stage, collection) {
-  var selectedStage = cleanString(stage);
+function configuredCollection(settings,  collection) {
   var normalizedCollection = cleanString(collection).toLowerCase();
-  var parentConfig = stageConfigs(settings).find(function (config) {
-    return cleanString(config && config.stage).toLowerCase()
-      === selectedStage;
-  });
+  var parentConfig = settings.workspaceConfigState.activeConfig;
   var children = parentConfig && Array.isArray(parentConfig.collections)
     ? parentConfig.collections
     : [];
@@ -107,8 +96,7 @@ function escapeMarkdownLinkText(value) {
 function markdownLinkForCollectionDocument(settings, parent, collection, target, documentRecord) {
   var normalized = normalizeManagedDocumentTarget(target);
   if (
-    cleanString(normalized.stage) !== cleanString(parent.stage)
-    || normalized.collection !== collection
+    normalized.collection !== collection
     || typeof settings.viewerUrlForDocument !== "function"
   ) {
     throw new Error("Copy Link target did not match the mounted collection report.");
@@ -126,17 +114,17 @@ function markdownLinkForCollectionDocument(settings, parent, collection, target,
 export function loadDocsViewerCollectionContribution(settings, parent, collection, options) {
   var contributionOptions = options || {};
   var clientOptions = managementClientOptions(settings);
-  var collectionConfig = configuredCollection(settings, parent.stage, collection);
+  var collectionConfig = configuredCollection(settings,  collection);
   if (!collectionConfig) {
     return Promise.reject(new Error(
-      "Docs collection is not configured: " + parent.stage + "/" + collection
+      "Docs collection is not configured: " + collection
     ));
   }
   var descriptor = collectionConfig.collectionCustomisation;
-  var workingCustomisationAvailable = parent.stage === "working"
+  var workingCustomisationAvailable = settings.managementContext
     && hasDocsViewerAssignableFieldGroup(descriptor, "authoring_subject");
   var mutationAvailable = Boolean(
-    (!parent.stage || workingCustomisationAvailable)
+    workingCustomisationAvailable
     && settings.managementContext
     && cleanString(clientOptions.baseUrl)
   );
@@ -158,11 +146,11 @@ export function loadDocsViewerCollectionContribution(settings, parent, collectio
         );
       },
       onCreateDocument: contributionOptions.onCreateDocument,
-      onRegenerateCatalogue: settings.managementContext && parent.stage === "working"
+      onRegenerateCatalogue: settings.managementContext
         && collection === "catalogue" && cleanString(clientOptions.baseUrl)
         ? settings.managementDocumentActions?.regenerateCatalogue
         : null,
-      onToggleDraft: settings.managementContext && parent.stage === "working"
+      onToggleDraft: settings.managementContext
         && cleanString(clientOptions.baseUrl)
         ? settings.managementDocumentActions?.toggleCollectionDocumentDraft
         : null,
@@ -170,7 +158,7 @@ export function loadDocsViewerCollectionContribution(settings, parent, collectio
       root: managementModalRoot(settings),
       setStatus: settings.setStatus
     });
-    if (parent.stage && !workingCustomisationAvailable) {
+    if (!workingCustomisationAvailable) {
       return modules[1].composeDocsViewerManagementCollectionContributions({
         defaultContribution: defaultContribution
       });
@@ -185,14 +173,14 @@ export function loadDocsViewerCollectionContribution(settings, parent, collectio
           : null,
         clientOptions: clientOptions,
         catalogueProvider: settings.collectionProvider,
-        collection: { ...(parent.stage ? { stage: parent.stage } : {}), collection: collection },
+        collection: {  collection: collection },
         content: settings.content,
-        documentTarget: { stage: parent.stage, collection: "", docId: parent.doc_id },
+        documentTarget: {  collection: "", docId: parent.doc_id },
         openMediaTarget: settings.openMediaTarget,
         openLocalTarget: openLocalTarget,
         publicPreviewBase: cleanString(settings.routeContext && settings.routeContext.publicPreviewBase),
         studioBaseUrl: cleanString(settings.routeContext && settings.routeContext.studioBaseUrl),
-        stageConfigs: stageConfigs(settings).slice(),
+        workspaceConfig: settings.workspaceConfigState.activeConfig,
         readMetadata: mutationAvailable
           ? function (target) {
               return readManagedDocMetadata(target, clientOptions);
@@ -214,11 +202,9 @@ function openCollectionCreate(settings, parent, collectionId, request, context) 
   var target = request && typeof request === "object" ? request : {};
   var keys = Object.keys(target).sort();
   if (
-    keys.length !== 2
+    keys.length !== 1
     || keys[0] !== "collection"
-    || keys[1] !== "stage"
     || cleanString(target.collection).toLowerCase() !== collectionId
-    || cleanString(target.stage) !== cleanString(parent.stage)
   ) {
     return Promise.reject(new Error(
       "Collection create target did not match the mounted report."
@@ -239,7 +225,6 @@ function openCollectionCreate(settings, parent, collectionId, request, context) 
   }
   return action(
     {
-      ...(parent.stage ? { stage: parent.stage } : {}),
       collection: collectionId
     },
     {
@@ -271,7 +256,6 @@ function openCollectionPreparePackage(settings, request, context) {
   return loadPreparePackageWorkflow().then(function (module) {
     return module.openDocumentPackagePrepareWorkflow({
       root: managementModalRoot(settings),
-      stage: cleanString(request && request.stage),
       collection: cleanString(request && request.collection).toLowerCase(),
       checkedDocIds: Array.isArray(request && request.doc_ids)
         ? request.doc_ids.slice()
@@ -296,6 +280,7 @@ export function mountDocsViewerManageDocumentExtras(context) {
   if (!collection) {
     return mountDocsViewerReport({
       appContext: settings.appContext,
+    workspaceConfig: settings.workspaceConfigState.activeConfig,
       checkGeneratedDataReadCapability: settings.checkGeneratedDataReadCapability,
       content: settings.content,
       doc: settings.doc,
@@ -318,8 +303,6 @@ export function mountDocsViewerManageDocumentExtras(context) {
         : null,
       requestContentDetail: settings.requestContentDetail,
       setStatus: settings.setStatus,
-      stageConfigs: stageConfigs(settings).slice(),
-      viewerStage: cleanString(settings.routeContext && settings.routeContext.viewerStage),
       viewerUrlForDocument: settings.viewerUrlForDocument
     });
   }
@@ -330,7 +313,6 @@ export function mountDocsViewerManageDocumentExtras(context) {
     onCreateDocument: (
       settings.managementContext
       && collection !== "catalogue"
-      && (!parent.stage || parent.stage === "working")
       && reportManagementBaseUrl
       && createAction
     )
@@ -338,7 +320,7 @@ export function mountDocsViewerManageDocumentExtras(context) {
           return openCollectionCreate(settings, parent, collection, request, context);
         }
       : null,
-    onPreparePackage: !parent.stage && reportManagementBaseUrl
+    onPreparePackage: settings.managementContext && reportManagementBaseUrl
       ? function (request, context) {
           return openCollectionPreparePackage(settings, request, context);
         }
@@ -346,6 +328,7 @@ export function mountDocsViewerManageDocumentExtras(context) {
   });
   return mountDocsViewerReport({
     appContext: settings.appContext,
+    workspaceConfig: settings.workspaceConfigState.activeConfig,
     checkGeneratedDataReadCapability: settings.checkGeneratedDataReadCapability,
     content: settings.content,
     doc: settings.doc,
@@ -368,13 +351,11 @@ export function mountDocsViewerManageDocumentExtras(context) {
       : null,
     requestContentDetail: settings.requestContentDetail,
     setStatus: settings.setStatus,
-    stageConfigs: stageConfigs(settings).slice(),
     collectionReportContributionPromise: contribution,
     collectionProvider: settings.collectionProvider,
     routeContext: routeContext,
-    catalogueWorkIdForDocument: collection === "catalogue" && routeContext.viewerStage === "working"
+    catalogueWorkIdForDocument: collection === "catalogue" && settings.managementContext
       ? catalogueWorkIdForDocument : undefined,
-    viewerStage: cleanString(settings.routeContext && settings.routeContext.viewerStage),
     viewerUrlForDocument: settings.viewerUrlForDocument
   });
 }

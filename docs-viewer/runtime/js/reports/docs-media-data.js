@@ -31,9 +31,9 @@ function mediaKey(value) {
 }
 
 function validateRead(payload, request, schema, fields) {
-  if (!exactKeys(payload, ["ok", "schema_version", "stage", "collection", ...fields])
+  if (!exactKeys(payload, ["ok", "schema_version", "collection", ...fields])
     || payload.ok !== true || payload.schema_version !== schema
-    || payload.stage !== request.stage || payload.collection !== request.collection) {
+    || payload.collection !== request.collection) {
     throw new Error("Docs media data does not match the requested owner.");
   }
 }
@@ -53,11 +53,11 @@ function collectionHosts(records) {
   return hosts;
 }
 
-function documentSummary(record, stage, hosts, context) {
+function documentSummary(record,  hosts, context) {
   const target = record && record.target;
   if (!exactKeys(record, ["target", "title", "references"])
-    || !exactKeys(target, ["stage", "collection", "doc_id"])
-    || target.stage !== stage || !collectionId(target.collection)
+    || !exactKeys(target, ["collection", "doc_id"])
+    || !collectionId(target.collection)
     || !exactString(target.doc_id) || !DOC_ID.test(target.doc_id)
     || !exactString(record.title) || !record.title || !Array.isArray(record.references)) {
     throw new Error("Docs media document reference is invalid.");
@@ -66,14 +66,14 @@ function documentSummary(record, stage, hosts, context) {
   if (!hostId || typeof context.viewerUrlForDocument !== "function") {
     throw new Error("Docs media document location is unavailable.");
   }
-  const url = new URL(context.viewerUrlForDocument(hostId, { manage: true, stage }), "http://docs.local");
-  if (url.pathname !== "/docs/" || url.searchParams.get("stage") !== stage
+  const url = new URL(context.viewerUrlForDocument(hostId, { manage: true }), "http://docs.local");
+  if (url.pathname !== "/docs/"
     || url.searchParams.get("doc") !== hostId || url.searchParams.has("subdoc")) {
     throw new Error("Docs media document location does not match its exact target.");
   }
   if (target.collection) url.searchParams.set("subdoc", target.doc_id);
   return {
-    target: { stage, collection: target.collection, docId: target.doc_id },
+    target: {  collection: target.collection, docId: target.doc_id },
     title: record.title,
     href: url.pathname + url.search
   };
@@ -84,7 +84,7 @@ function documentSummary(record, stage, hosts, context) {
  * File exclusions, document deduplication and title ordering are report presentation policy.
  */
 export function buildDocsMediaRows(filesPayload, referencesPayload, request, context) {
-  if (!exactKeys(request, ["stage", "collection"]) || request.stage !== "working"
+  if (!exactKeys(request, ["collection"])
     || !collectionId(request.collection)) {
     throw new Error("Docs media requires an exact Working media owner.");
   }
@@ -97,8 +97,8 @@ export function buildDocsMediaRows(filesPayload, referencesPayload, request, con
   const documentsByMedia = new Map();
   const documentIds = new Set();
   referencesPayload.documents.forEach((record) => {
-    const document = documentSummary(record, request.stage, hosts, context);
-    const documentKey = JSON.stringify([document.target.stage, document.target.collection, document.target.docId]);
+    const document = documentSummary(record,  hosts, context);
+    const documentKey = JSON.stringify([document.target.collection, document.target.docId]);
     if (documentIds.has(documentKey)) throw new Error("Docs media contains a duplicate document identity.");
     documentIds.add(documentKey);
     record.references.forEach((reference) => {
@@ -114,8 +114,8 @@ export function buildDocsMediaRows(filesPayload, referencesPayload, request, con
   const fileIds = new Set();
   const rows = [];
   filesPayload.files.forEach((file) => {
-    if (!exactKeys(file, ["stage", "collection", "role", "media_type", "identity"])
-      || file.stage !== request.stage || file.collection !== request.collection) {
+    if (!exactKeys(file, ["collection", "role", "media_type", "identity"])
+      || file.collection !== request.collection) {
       throw new Error("Docs media file does not match its owner.");
     }
     const key = mediaKey(file);
@@ -126,7 +126,6 @@ export function buildDocsMediaRows(filesPayload, referencesPayload, request, con
     documents.sort((left, right) => collator.compare(left.title, right.title)
       || left.title.localeCompare(right.title) || left.href.localeCompare(right.href));
     rows.push({
-      stage: file.stage,
       collection: file.collection,
       mediaType: file.media_type,
       identity: file.identity,

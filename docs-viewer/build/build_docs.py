@@ -14,7 +14,7 @@ from docs_builder.browser_config import (
     browser_docs_index_tree_url,
     browser_docs_recent_url,
     browser_workspace_config_payload,
-    browser_stage_record,
+    browser_workspace_record,
     browser_search_index_url,
     browser_search_policy_payload,
     write_browser_config,

@@ -35,7 +35,7 @@ from docs_workspace_config import (
     public_search_path,
     public_media_bindings,
 )
-from docs_preview_snapshot import CompletedPreview, COPIED_WORKING_PAYLOAD_PATHS, _validate_prepared_index, validate_preview_snapshot
+from docs_preview_snapshot import CompletedPreview, COPIED_WORKING_PAYLOAD_PATHS, _validate_prepared_index
 from docs_publication_payloads import project_public_view
 from docs_catalogue_artifacts import load_catalogue_artifact_inventory, select_catalogue_artifacts
 
@@ -726,27 +726,6 @@ def lineage_preview(
     }
 
 
-def _reviewed_deploy_repo_plan(
-    repo_root: Path,
-    body: Mapping[str, Any],
-    *,
-    client: object | None = None,
-    env_files: Iterable[Path] | None = None,
-    environ: Mapping[str, str] | None = None,
-) -> DeployRepoPlan:
-    repo_root = repo_root.resolve()
-    if "scope" in body or body.get("stage") != "preview":
-        raise ValueError("Publish requires the Preview stage without scope")
-    manifest, _preview_root, published_files = validate_preview_snapshot(
-        repo_root,
-    )
-    timestamp = str(body.get("deployment_timestamp") or "").strip() or utc_now()
-    return build_deploy_repo_plan(
-        repo_root, CompletedPreview(manifest=manifest, files=published_files),
-        deployment_timestamp=timestamp, client=client, env_files=env_files, environ=environ,
-    )
-
-
 def build_deploy_repo_plan(
     repo_root: Path,
     snapshot: CompletedPreview,
@@ -850,23 +829,6 @@ def build_deploy_repo_plan(
     )
 
 
-def preview_deploy_repo(
-    repo_root: Path,
-    body: dict[str, Any],
-    *,
-    client: object | None = None,
-    env_files: Iterable[Path] | None = None,
-    environ: Mapping[str, str] | None = None,
-) -> dict[str, Any]:
-    return _reviewed_deploy_repo_plan(
-        repo_root,
-        body,
-        client=client,
-        env_files=env_files,
-        environ=environ,
-    ).preview
-
-
 def apply_repository_projection(repo_root: Path, plan: DeployRepoPlan) -> None:
     desired = plan.desired_repository_files
     current = plan.current_repository_files
@@ -888,34 +850,6 @@ def apply_repository_projection(repo_root: Path, plan: DeployRepoPlan) -> None:
     for path, expected in desired.items():
         if actual[path] != expected:
             raise RuntimeError(f"repository deployment bytes did not verify: {repo_relative(repo_root, path)}")
-
-
-def apply_deploy_repo(
-    repo_root: Path,
-    body: dict[str, Any],
-    *,
-    client: object | None = None,
-    env_files: Iterable[Path] | None = None,
-    environ: Mapping[str, str] | None = None,
-) -> dict[str, Any]:
-    if body.get("confirm") is not True:
-        raise ValueError("confirm must be true to Publish")
-    timestamp = str(body.get("deployment_timestamp") or "").strip()
-    if not timestamp:
-        raise ValueError("deployment_timestamp must match the reviewed Publish preview")
-    plan = _reviewed_deploy_repo_plan(
-        repo_root,
-        body,
-        client=client,
-        env_files=env_files,
-        environ=environ,
-    )
-    preview = plan.preview
-    if body.get("preview_revision") != preview["preview_revision"]:
-        raise ValueError("accepted Preview revision does not match the reviewed Publish preview")
-    if body.get("plan_revision") != preview["plan_revision"]:
-        raise ValueError("Publish preview is stale; preview again")
-    return apply_deploy_repo_plan(repo_root, plan)
 
 
 def apply_deploy_repo_plan(
@@ -1012,10 +946,8 @@ def apply_deploy_repo_plan(
 
 __all__ = [
     "DEPLOY_REPO_PREVIEW_SCHEMA_VERSION",
-    "apply_deploy_repo",
     "apply_deploy_repo_plan",
     "build_deploy_repo_plan",
     "deploy_repo_capability",
-    "preview_deploy_repo",
     "project_document_payload",
 ]

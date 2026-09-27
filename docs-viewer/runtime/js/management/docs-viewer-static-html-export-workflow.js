@@ -69,9 +69,6 @@ export function validateStaticHtmlSnapshotPreview(preview, options = {}) {
   ) {
     throw new Error("Snapshot preview response is invalid.");
   }
-  if (!options.stage || payload.stage !== options.stage || Object.prototype.hasOwnProperty.call(payload, "scope")) {
-    throw new Error("Snapshot preview stage no longer matches the active stage.");
-  }
   if (
     !requestedDocIds.length
     || rawPreviewDocIds.length !== previewDocIds.length
@@ -180,7 +177,6 @@ export async function openStaticHtmlSnapshotExportWorkflow(options = {}) {
   var previewSnapshot = options.previewSnapshot || previewManagedDocsStaticHtmlExport;
   var applySnapshot = options.applySnapshot || applyManagedDocsStaticHtmlExport;
   var confirmSnapshot = options.confirmSnapshot || openDocsViewerConfirmModal;
-  if (!clientOptions.stage) throw new Error("Snapshot Export requires an explicit stage.");
   if (!checkedDocIds.length) throw new Error("Select one or more documents.");
 
   var preview;
@@ -192,7 +188,6 @@ export async function openStaticHtmlSnapshotExportWorkflow(options = {}) {
     setBusy(callbacks, false);
   }
   preview = validateStaticHtmlSnapshotPreview(preview, {
-    stage: clientOptions.stage,
     checkedDocIds: checkedDocIds
   });
   setMessage(callbacks, "", false);

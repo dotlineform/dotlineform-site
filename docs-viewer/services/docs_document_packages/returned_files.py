@@ -15,7 +15,7 @@ from docs_document_packages.returned_common import (
     issue,
     normalize_text,
 )
-from docs_document_packages.provenance import REEXPORT_MESSAGE, package_provenance_error
+from docs_document_packages.provenance import INVALID_PROVENANCE_MESSAGE, package_provenance_error
 from docs_document_packages.workspace import configured_workspace_paths
 
 def parse_json_file(path: Path) -> tuple[Any, list[dict[str, Any]]]:
@@ -51,7 +51,7 @@ def export_id_from_jsonl_header(path: Path) -> tuple[str, list[dict[str, Any]]]:
                     )
                 ]
             if "scope" in row or "source_scope" in row:
-                return "", [issue("error", "invalid_package_provenance", REEXPORT_MESSAGE)]
+                return "", [issue("error", "invalid_package_provenance", INVALID_PROVENANCE_MESSAGE)]
             export_id = normalize_text(row.get("export_id"))
             if not export_id:
                 return "", [issue("error", "missing_export_id", "JSONL header is missing export_id", line=line_number)]
@@ -160,7 +160,7 @@ def export_id_from_json_payload(payload: Any) -> tuple[str, list[dict[str, Any]]
     if not isinstance(payload, dict):
         return "", [issue("error", "missing_export_id", "JSON staged file must be an object with export_id")]
     if "scope" in payload or "source_scope" in payload:
-        return "", [issue("error", "invalid_package_provenance", REEXPORT_MESSAGE)]
+        return "", [issue("error", "invalid_package_provenance", INVALID_PROVENANCE_MESSAGE)]
     export_id = normalize_text(payload.get("export_id"))
     if not export_id:
         return "", [issue("error", "missing_export_id", "JSON staged file is missing export_id")]

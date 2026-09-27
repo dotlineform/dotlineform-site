@@ -282,13 +282,12 @@ class SourceLoadingMixin:
 
     def viewer_url_for(self, doc_id: str, anchor: str = "") -> str:
         pairs: list[str] = []
-        pairs.append(f"stage={quote(self.config.stage)}")
         pairs.append(f"doc={quote(str(doc_id))}")
         url = f"{self.viewer_base_url}?{'&'.join(pairs)}"
         return f"{url}#{anchor}" if anchor else url
 
     def content_url_for(self, doc_id: str) -> str:
-        return f"/docs/doc?stage={quote(self.config.stage)}&doc_id={quote(str(doc_id))}"
+        return f"/docs/doc?doc_id={quote(str(doc_id))}"
 
     def output_url_dir(self) -> Path:
         return self.output_dir
@@ -296,7 +295,7 @@ class SourceLoadingMixin:
     def output_url_base_for(self, output_dir: Path) -> str:
         child = getattr(self, "collection_config", None)
         suffix = f"/{quote(child.collection)}" if child is not None else ""
-        return f"/docs/generated/external/{quote(self.config.stage)}{suffix}"
+        return f"/docs/generated/external{suffix}"
 
     def effective_parent_id(self, doc: DocRecord, docs: Sequence[DocumentIdentity]) -> str:
         if not doc.parent_id:

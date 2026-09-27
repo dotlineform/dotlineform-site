@@ -1,13 +1,10 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
-
 import { docsViewerLinksDocumentSummary } from "../shared/docs-viewer-links-presentation.js";
-
 const COLUMNS = ["from", "to"];
 const TITLE_ORDER = new Intl.Collator("en", { sensitivity: "base", numeric: true });
-
 function documentKey(document) {
   const target = document.target;
-  return JSON.stringify([target.stage, target.collection, target.doc_id]);
+  return JSON.stringify([target.collection, target.doc_id]);
 }
 
 /** Project directed pairs from the saved aggregate; incoming mirrors add no rows.
@@ -15,7 +12,7 @@ function documentKey(document) {
  */
 export function readWorkspaceLinksRows(payload) {
   if (!payload || payload.schema_version !== 2 || Object.prototype.hasOwnProperty.call(payload, "scope")
-    || payload.stage !== "working" || !Array.isArray(payload.documents)) {
+    || Object.prototype.hasOwnProperty.call(payload, "stage") || !Array.isArray(payload.documents)) {
     throw new Error("Unsupported workspace Links data.");
   }
   const rows = [];
@@ -23,15 +20,15 @@ export function readWorkspaceLinksRows(payload) {
   payload.documents.forEach(function (record) {
     if (!record || record.schema_version !== 2 || !Array.isArray(record.outgoing)
       || !Array.isArray(record.incoming)) throw new Error("Invalid document Links record.");
-    const from = docsViewerLinksDocumentSummary(record.self, payload);
+    const from = docsViewerLinksDocumentSummary(record.self);
     const sourceKey = documentKey(from);
-    if (from.target.stage !== payload.stage || sources.has(sourceKey)) {
+    if (sources.has(sourceKey)) {
       throw new Error("Workspace Links contains an invalid source identity.");
     }
     sources.add(sourceKey);
     const targets = new Set();
     record.outgoing.forEach(function (entry) {
-      const to = docsViewerLinksDocumentSummary(entry && entry.document, payload);
+      const to = docsViewerLinksDocumentSummary(entry && entry.document);
       const targetKey = documentKey(to);
       if (targets.has(targetKey)) throw new Error("Workspace Links contains a duplicate directed pair.");
       targets.add(targetKey);
@@ -74,7 +71,7 @@ function documentCell(documentRef, summary) {
  * Refresh only rereads links.json. Late responses cannot update a departed host.
  */
 export function mountWorkspaceLinksReport(context) {
-  if (context.viewerStage !== "working") {
+  if (!context.managementContext) {
     throw new Error("Links is available only in Working.");
   }
   const service = context.reportService;
@@ -156,7 +153,7 @@ export function mountWorkspaceLinksReport(context) {
     body.replaceChildren();
     status.textContent = "Loading links…";
     try {
-      const payload = await service.readWorkspaceLinks({ stage: context.viewerStage });
+      const payload = await service.readWorkspaceLinks({  });
       if (!current(version)) return;
       rows = readWorkspaceLinksRows(payload);
       render();

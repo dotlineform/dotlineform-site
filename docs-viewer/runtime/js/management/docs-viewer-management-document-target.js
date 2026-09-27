@@ -17,21 +17,19 @@ export function normalizeManagedDocumentTarget(value) {
     throw new Error("Managed document target must be an object.");
   }
   var keys = targetKeys(value);
-  var parentKeys = ["doc_id", "stage"];
-  var collectionKeys = ["collection", "doc_id", "stage"];
+  var parentKeys = ["doc_id"];
+  var collectionKeys = ["collection", "doc_id"];
   if (!sameKeys(keys, parentKeys) && !sameKeys(keys, collectionKeys)) {
     throw new Error(
-      "Managed document target must contain exactly stage and doc_id, "
+      "Managed document target must contain doc_id, "
       + "with collection only for a collection document."
     );
   }
 
   var docId = cleanString(value.doc_id);
-  if (!["working", "preview"].includes(value.stage)) throw new Error("Managed target stage is required.");
   if (!docId) throw new Error("Managed document target doc_id is required.");
 
   var target = {
-    stage: value.stage,
     doc_id: docId
   };
   if (Object.prototype.hasOwnProperty.call(value, "collection")) {
@@ -47,18 +45,16 @@ export function normalizeManagedDocumentCollectionTarget(value) {
     throw new Error("Managed document collection target must be an object.");
   }
   var keys = targetKeys(value);
-  var parentKeys = ["stage"];
-  var collectionKeys = ["collection", "stage"];
+  var parentKeys = [];
+  var collectionKeys = ["collection"];
   if (!sameKeys(keys, parentKeys) && !sameKeys(keys, collectionKeys)) {
     throw new Error(
-      "Managed document collection target must contain exactly stage, "
+      "Managed document collection target must contain only an optional collection, "
       + "with collection only for a configured child collection."
     );
   }
 
-  if (!["working", "preview"].includes(value.stage)) throw new Error("Managed collection stage is required.");
-
-  var target = { stage: value.stage };
+  var target = {  };
   if (Object.prototype.hasOwnProperty.call(value, "collection")) {
     var collection = cleanString(value.collection).toLowerCase();
     if (!collection) {
@@ -73,8 +69,7 @@ export function managedDocumentTargetsEqual(left, right) {
   var normalizedLeft = normalizeManagedDocumentTarget(left);
   var normalizedRight = normalizeManagedDocumentTarget(right);
   return (
-    cleanString(normalizedLeft.stage) === cleanString(normalizedRight.stage)
-    && normalizedLeft.doc_id === normalizedRight.doc_id
+    normalizedLeft.doc_id === normalizedRight.doc_id
     && cleanString(normalizedLeft.collection) === cleanString(normalizedRight.collection)
   );
 }

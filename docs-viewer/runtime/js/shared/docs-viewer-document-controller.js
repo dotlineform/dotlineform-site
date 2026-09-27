@@ -44,8 +44,8 @@ export function initDocsViewerDocumentController(context) {
       context.publishCollectionReportState({
         state: "loading",
         documentMountGeneration: mountGeneration,
-        parentTarget: { ...(context.viewerStage() ? { stage: context.viewerStage() } : {}), doc_id: doc.doc_id },
-        collectionTarget: { ...(context.viewerStage() ? { stage: context.viewerStage() } : {}), collection: payload.report.collection },
+        parentTarget: {  doc_id: doc.doc_id },
+        collectionTarget: {  collection: payload.report.collection },
         collectionLabel: payload.report.collection,
         documentTarget: null
       });
@@ -89,22 +89,19 @@ export function initDocsViewerDocumentController(context) {
       onCollectionDocumentState: function (state) {
         if (mountGeneration !== documentMountGeneration) return;
         if (state.parentTarget && state.parentTarget.doc_id !== doc.doc_id) return;
-        if (state.collectionTarget && (state.collectionTarget.collection !== payload.report.collection
-          || String(state.collectionTarget.stage || "") !== String(context.viewerStage() || ""))) return;
+        if (state.collectionTarget && (state.collectionTarget.collection !== payload.report.collection)) return;
         context.publishCollectionReportState(Object.assign({}, state, {
           documentMountGeneration: mountGeneration
         }));
         var adapter = context.linksDetailAdapter;
         if (!adapter) return;
         var target = state.state === "detail" ? state.documentTarget : null;
-        if (target && (target.collection !== payload.report.collection
-          || String(target.stage || "") !== String(context.viewerStage() || ""))) return;
+        if (target && (target.collection !== payload.report.collection)) return;
         adapter.setDocument({ content: content, target: target, title: state.documentRecord && state.documentRecord.title });
       },
       routeContext: typeof context.routeContext === "function" ? context.routeContext() : context.routeContext,
       workspaceConfigState: workspaceConfigState,
       setStatus: setStatus,
-      viewerStage: context.viewerStage(),
       viewerUrlForDocument: context.viewerUrlForDocument
     })).catch(function (error) {
       console.warn("docs_viewer: document extras unavailable", error);
@@ -122,7 +119,6 @@ export function initDocsViewerDocumentController(context) {
         documentMountGeneration: mountGeneration,
         payload: payload,
         requestContentDetail: context.requestContentDetail,
-        viewerStage: context.viewerStage(),
         window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
       });
     } catch (error) {
@@ -141,7 +137,6 @@ export function initDocsViewerDocumentController(context) {
         documentMountGeneration: mountGeneration,
         payload: payload,
         requestContentDetail: context.requestContentDetail,
-        viewerStage: context.viewerStage(),
         window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
       });
     } catch (error) {
@@ -153,7 +148,6 @@ export function initDocsViewerDocumentController(context) {
     var adapter = context.mediaDetailAdapter;
     if (!adapter || typeof adapter.mountDocument !== "function") return;
     try {
-      var route = typeof context.routeContext === "function" ? context.routeContext() : context.routeContext;
       adapter.mountDocument({
         collectionProvider: context.collectionProvider,
         content: content,
@@ -162,7 +156,6 @@ export function initDocsViewerDocumentController(context) {
         documentMountGeneration: mountGeneration,
         payload: payload,
         requestContentDetail: context.requestContentDetail,
-        viewerStage: route && route.viewerStage,
         window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
       });
     } catch (error) {
@@ -259,7 +252,6 @@ export function initDocsViewerDocumentController(context) {
         doc: doc,
         document: content ? content.ownerDocument : null,
         payload: payload,
-        viewerStage: context.viewerStage(),
         window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
       });
     } catch (error) {
@@ -269,7 +261,7 @@ export function initDocsViewerDocumentController(context) {
 
   function mountInlineMermaid(doc, payload, mountGeneration) {
     var adapter = context.inlineMermaidAdapter;
-    var inlineRenderingEnabled = managementContextActive() && context.viewerStage() === "working";
+    var inlineRenderingEnabled = managementContextActive();
     if (!inlineRenderingEnabled || !adapter || typeof adapter.mountDocument !== "function") return;
     Promise.resolve(adapter.mountDocument({
       content: content,
@@ -281,7 +273,6 @@ export function initDocsViewerDocumentController(context) {
       },
       mountGeneration: mountGeneration,
       payload: payload,
-      viewerStage: context.viewerStage(),
       window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
     })).catch(function (error) {
       console.warn("docs_viewer: inline Mermaid adapter unavailable", error);
@@ -392,7 +383,7 @@ export function initDocsViewerDocumentController(context) {
       context.linksDetailAdapter.mountDocument({
         content: content,
         target: payload.report ? null : {
-          stage: context.viewerStage(), collection: "", doc_id: payload.doc_id
+           collection: "", doc_id: payload.doc_id
         },
         title: payload.title,
         collectionProvider: context.collectionProvider,

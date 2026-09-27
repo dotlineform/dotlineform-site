@@ -39,12 +39,6 @@ export function docsImportResultDestination(payload, options = {}) {
   }
 
   let expectedKeys = [];
-  if (target.stage) {
-    if (url.searchParams.get("stage") !== target.stage) {
-      throw new Error("Docs Import result destination stage does not match its target.");
-    }
-    expectedKeys.push("stage");
-  }
   if (target.collection) {
     const reportDocId = cleanText(url.searchParams.get("doc"));
     if (!reportDocId) {

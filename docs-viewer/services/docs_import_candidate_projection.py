@@ -163,7 +163,7 @@ def _source_record(
 
 
 def _collection_label(collection: ManagedDocumentCollection) -> str:
-    scope_label = source_model.humanize(collection.stage)
+    scope_label = "Documents"
     if not collection.collection:
         return scope_label
     collection_label = (
@@ -251,16 +251,13 @@ def _returned_package_candidate(
             target_mode=MANIFEST_COLLECTION_TARGET_MODE,
         )
 
-    stage = _clean_text(record.get("stage")).lower()
     collection = _clean_text(record.get("collection")).lower()
     declared_target = {
-        "stage": stage,
         **({"collection": collection} if collection else {}),
     }
     try:
         resolved_collection = resolve_managed_document_collection(
             repo_root,
-            stage=stage,
             collection=collection or None,
         )
     except (FileNotFoundError, OSError, ValueError):
@@ -291,7 +288,6 @@ def _returned_package_candidate(
     review_payload = (
         parse_staged_import(
             repo_root=repo_root,
-            stage=resolved_collection.stage,
             collection=resolved_collection.collection or None,
             staged_file=path.name,
             staging_root=path.parent,
@@ -304,7 +300,6 @@ def _returned_package_candidate(
     import_payload = (
         parse_staged_import(
             repo_root=repo_root,
-            stage=resolved_collection.stage,
             collection=resolved_collection.collection or None,
             staged_file=path.name,
             staging_root=path.parent,
@@ -481,7 +476,6 @@ def list_import_candidates(
                         )
                     collection = resolve_managed_document_collection(
                         repo_root,
-                        stage=edited.source_stage,
                         collection=edited.source_collection or None,
                     )
                 except (FileNotFoundError, OSError, RuntimeError, ValueError) as exc:

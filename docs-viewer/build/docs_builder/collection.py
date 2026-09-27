@@ -75,7 +75,6 @@ class CollectionDocsBuilder(DocsDataBuilder):
     def viewer_url_for(self, doc_id: str, anchor: str = "") -> str:
         parent_doc_id = self.collection_config.report_host_doc_id
         pairs: list[str] = []
-        pairs.append(f"stage={quote(self.config.stage)}")
         pairs.append(f"doc={quote(parent_doc_id)}")
         pairs.append(f"subdoc={quote(str(doc_id))}")
         url = f"{self.viewer_base_url}?{'&'.join(pairs)}"
@@ -114,7 +113,6 @@ class CollectionDocsBuilder(DocsDataBuilder):
             published=True,
             repo_root=self.repo_root,
             collection=self.collection_id,
-            stage=self.config.stage,
         )
         if projected is not None:
             payload["customisation"] = projected["root"]
@@ -154,7 +152,6 @@ class CollectionDocsBuilder(DocsDataBuilder):
             published=False,
             repo_root=self.repo_root,
             collection=self.collection_id,
-            stage=self.config.stage,
         )
         if projected is not None:
             payload["customisation"] = projected["root"]
@@ -272,12 +269,10 @@ class CollectionDocsBuilder(DocsDataBuilder):
                 for row in manage_manifest_payload["docs"]
             }
             subject_generation = subject_projection_generation(
-                stage=self.config.stage,
                 collection=self.collection_id,
                 subjects_by_doc_id=subjects_by_doc_id,
             )
             subject_associations_payload = project_subject_associations(
-                stage=self.config.stage,
                 collection=self.collection_id,
                 documents=summaries,
                 subjects_by_doc_id=subjects_by_doc_id,

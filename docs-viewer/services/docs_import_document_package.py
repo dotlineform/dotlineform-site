@@ -152,7 +152,6 @@ def document_package_source_format(
 def load_document_package(
     repo_root: Path,
     *,
-    stage: str,
     staged_filename: str,
     staging_root: Path,
     metadata_root: Path,
@@ -226,7 +225,6 @@ def load_document_package(
                     raw_rows,
                     trusted_metadata,
                     repo_root=repo_root,
-                    stage=stage,
                     collection=collection,
                     required_capability=RETURN_IMPORT_CAPABILITY,
                 )

@@ -88,7 +88,6 @@ def list_diagram_sources(repo_root: Path, params: dict[str, list[str]]) -> dict[
     target = resolve_managed_document_target(repo_root, request)
     payload: dict[str, object] = {
         "ok": True,
-        "stage": target.stage,
         "doc_id": target.doc_id,
         "sources": _verified_diagram_sources(repo_root, target),
     }
@@ -137,7 +136,6 @@ def open_diagram_source(
         if completed.returncode != 0:
             raise RuntimeError("VS Code could not open the verified Mermaid source")
         event = {
-            "stage": target.stage,
             "doc_id": target.doc_id,
             "media_identity": target_record["media_identity"],
             "source_identity": target_record["source_identity"],
@@ -149,7 +147,6 @@ def open_diagram_source(
 
     payload: dict[str, object] = {
         "ok": True,
-        "stage": target.stage,
         "doc_id": target.doc_id,
         "media_identity": target_record["media_identity"],
         "source_identity": target_record["source_identity"],

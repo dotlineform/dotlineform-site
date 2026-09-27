@@ -133,7 +133,6 @@ var MANAGEMENT_SHELL_MARKUP = [
   '    <div class="docsViewer__modalHeader">',
   '      <div class="docsViewer__modalHeaderCopy">',
   '        <h2 class="docsViewer__modalTitle" id="docsViewerSettingsHeading">Settings</h2>',
-  '        <p class="docsViewer__modalMeta muted small" id="docsViewerSettingsStage"></p>',
   '      </div>',
   '    </div>',
   '    <form class="docsViewer__modalForm" id="docsViewerSettingsForm">',
@@ -156,7 +155,6 @@ var MANAGEMENT_SHELL_MARKUP = [
   '  </div>',
   '</div>'
 ].join("");
-
 function nodeById(documentRef, id) {
   return documentRef.getElementById(id);
 }
@@ -204,7 +202,6 @@ export function findDocsViewerManagementShellRefs(options) {
     importCollectionCloseButton: nodeById(documentRef, "docsImportCollectionClose"),
     settingsModal: nodeById(documentRef, "docsViewerSettingsModal"),
     settingsForm: nodeById(documentRef, "docsViewerSettingsForm"),
-    settingsStage: nodeById(documentRef, "docsViewerSettingsStage"),
     settingsBooleanField: nodeById(documentRef, "docsViewerSettingsBooleanField"),
     settingsBooleanInput: nodeById(documentRef, "docsViewerSettingsBooleanInput"),
     settingsBooleanLabel: nodeById(documentRef, "docsViewerSettingsBooleanLabel"),

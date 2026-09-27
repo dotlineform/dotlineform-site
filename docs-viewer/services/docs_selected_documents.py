@@ -94,8 +94,8 @@ def set_selected(repo_root: Path, body: dict[str, Any], *, dry_run: bool = False
     from docs_management_document_target import resolve_managed_document_target
     from docs_workspace_config import require_document_authoring
 
-    if set(body) - {"collection"} != {"stage", "doc_id", "selected"} or type(body.get("selected")) is not bool:
-        raise ValueError("Set Selected requires stage, doc_id and boolean selected, with optional collection")
+    if set(body) - {"collection"} != { "doc_id", "selected"} or type(body.get("selected")) is not bool:
+        raise ValueError("Set Selected requires doc_id and boolean selected, with optional collection")
     resolved = resolve_managed_document_target(repo_root, {key: value for key, value in body.items() if key != "selected"})
     require_document_authoring(resolved.parent_config)
     payload = read_selected(resolved.parent_config)

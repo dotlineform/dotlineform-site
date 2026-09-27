@@ -18,7 +18,6 @@ export function followCreatedCollectionReport(payload, options = {}) {
       || payload.action !== "create_collection"
       || payload.committed !== true
       || Object.prototype.hasOwnProperty.call(target, "collection")
-      || target.stage !== options.activeStage
     ) {
       throw new Error("Created collection report target is invalid.");
     }
@@ -65,10 +64,6 @@ export function createDocsViewerManagementCollectionLifecycleController(options 
   };
   var lifecycleRequestPromise = null;
 
-  function viewerStage() {
-    return typeof callbacks.viewerStage === "function" ? callbacks.viewerStage() : "";
-  }
-
   function lifecycleCallbacks() {
     return {
       onApplied: function (payload) {
@@ -85,7 +80,6 @@ export function createDocsViewerManagementCollectionLifecycleController(options 
       },
       followCreatedCollectionReport: function (payload) {
         return followCreatedCollectionReport(payload, {
-          activeStage: typeof callbacks.managementClientOptions === "function" ? callbacks.managementClientOptions().stage : undefined,
           reloadViewerConfiguration: callbacks.reloadViewerConfiguration,
           refreshManagementCapabilities: callbacks.refreshManagementCapabilities,
           reloadDocsIndex: callbacks.reloadDocsIndex
@@ -148,13 +142,13 @@ export function createDocsViewerManagementCollectionLifecycleController(options 
 
   function render() {
     if (refs.createCollectionButton) {
-      var createCollectionAvailable = management.managementAvailable && collectionCreateSupported(management.managementCapabilities, viewerStage());
+      var createCollectionAvailable = management.managementAvailable && collectionCreateSupported(management.managementCapabilities);
       refs.createCollectionButton.hidden = !createCollectionAvailable;
       refs.createCollectionButton.disabled = management.managementBusy || !createCollectionAvailable;
     }
     if (refs.deleteCollectionButton) {
-      var deleteCollectionAvailable = management.managementAvailable && collectionDeleteSupported(management.managementCapabilities, viewerStage());
-      var deleteCollectionTargets = collectionLifecycleDeleteTargets(management.managementCapabilities, viewerStage());
+      var deleteCollectionAvailable = management.managementAvailable && collectionDeleteSupported(management.managementCapabilities);
+      var deleteCollectionTargets = collectionLifecycleDeleteTargets(management.managementCapabilities);
       refs.deleteCollectionButton.hidden = !deleteCollectionAvailable;
       refs.deleteCollectionButton.disabled = management.managementBusy || !deleteCollectionAvailable || deleteCollectionTargets.length === 0;
     }

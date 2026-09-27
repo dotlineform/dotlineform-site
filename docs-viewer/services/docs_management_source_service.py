@@ -112,7 +112,7 @@ def save_source_document(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
     Summary are editable here; the exact resolved target owns identity and collection.
     The watcher observes the ordinary source write independently.
     """
-    required = {"stage", "doc_id", "source_front_matter", "source_body", "metadata"}
+    required = { "doc_id", "source_front_matter", "source_body", "metadata"}
     if not required.issubset(body) or set(body) - required - {"collection"}:
         raise ValueError("Source Save requires an exact target, loaded front matter, body and metadata")
     if not isinstance(body["source_body"], str) or not isinstance(body["source_front_matter"], str):
@@ -177,13 +177,13 @@ def save_source_document(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
 
 def open_publication_ignore(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
     """Open only the configured Working ignore file in VS Code, including invalid JSON for repair."""
-    if set(body) != {"stage"} or body.get("stage") != "working":
-        raise ValueError("Opening the publication ignore file requires only Working stage identity")
+    if body:
+        raise ValueError("Opening the publication ignore file requires an empty request")
     path = publication_ignore_path(repo_root)
     if not path.is_file():
         raise FileNotFoundError("Working unpublishable.json is unavailable")
     open_source_path(repo_root, path, editor="vscode", dry_run=dry_run)
-    return {"ok": True, "stage": "working", "editor": "vscode", "dry_run": dry_run}
+    return {"ok": True, "editor": "vscode", "dry_run": dry_run}
 
 
 def detect_preferred_markdown_app() -> Optional[str]:
@@ -246,7 +246,6 @@ def open_source_doc(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dic
 
     if not dry_run:
         event_details = {
-            "stage": resolved.stage,
             "doc_id": target.doc_id,
             "editor": editor,
             "preferred_app": preferred_app if editor == "default" else "",

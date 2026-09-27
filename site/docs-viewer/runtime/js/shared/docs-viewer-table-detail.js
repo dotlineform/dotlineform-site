@@ -1,7 +1,6 @@
 const TABLE_DETAIL_SELECTOR = 'table[data-docs-content-detail="table"]';
 const TABLE_DETAIL_MARKER = "data-docs-content-detail";
 const REFERENCE_ATTRIBUTES = ["headers", "aria-labelledby", "aria-describedby", "aria-controls", "aria-owns"];
-
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
 }
@@ -14,8 +13,7 @@ function positiveInteger(value) {
 function sameDocumentTarget(left, right) {
   var first = left || {};
   var second = right || {};
-  return cleanString(first.stage) === cleanString(second.stage)
-    && cleanString(first.collection) === cleanString(second.collection)
+  return cleanString(first.collection) === cleanString(second.collection)
     && cleanString(first.docId) === cleanString(second.docId);
 }
 
@@ -33,7 +31,6 @@ function createOpenControl(documentRef, label) {
   var row = documentRef.createElement("div");
   row.className = "docsViewer__tableDetailControlRow";
   row.setAttribute("data-docs-content-detail-control", "table");
-
   var button = documentRef.createElement("button");
   button.className = "docsViewer__tableDetailOpen";
   button.type = "button";
@@ -163,7 +160,6 @@ export function createDocsViewerTableDetailAdapter(options) {
     var doc = context.doc || {};
     var documentMountGeneration = positiveInteger(context.documentMountGeneration);
     var documentTarget = {
-      stage: cleanString(context.viewerStage),
       collection: "",
       docId: cleanString(doc.doc_id)
     };

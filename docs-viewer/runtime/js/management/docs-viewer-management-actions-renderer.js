@@ -1,5 +1,4 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
-
 import {
   DOCS_VIEWER_ACTION_IDS
 } from "./docs-viewer-action-definitions.js";
@@ -118,24 +117,11 @@ export function createDocsViewerManagementAppControlRenderers() {
         artwork: "docsViewer__icon--refresh-cw"
       });
     },
-    "manage-toolbar-deploy-repo": function (context) {
+    "manage-toolbar-publish": function (context) {
       return renderActionButton(context, {
-        id: "docsViewerManageToolbarDeployRepoButton",
+        id: "docsViewerManageToolbarPublishButton",
         artwork: "docsViewer__icon--globe"
       });
-    },
-    "manage-toolbar-prepare-preview": function (context) {
-      return renderActionButton(context, {
-        id: "docsViewerManagePreparePreviewButton",
-        artwork: "docsViewer__icon--book-up"
-      });
-    },
-    "manage-stage-select": function (context) {
-      var root = context.existingRoot || context.document.createElement("div");
-      root.className = "docsViewer__stageButtons";
-      root.dataset.docsViewerStages = "true";
-      root.setAttribute("role", "group");
-      return root;
     }
   };
 }

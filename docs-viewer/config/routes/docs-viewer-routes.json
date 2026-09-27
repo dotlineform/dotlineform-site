@@ -88,9 +88,9 @@
         }
       },
       "docs_paths": {
-        "index_tree_url": "/docs/index-tree?stage=working",
-        "recent_url": "/docs/recent?stage=working",
-        "search_index_url": "/docs/search?stage=working"
+        "index_tree_url": "/docs/index-tree",
+        "recent_url": "/docs/recent",
+        "search_index_url": "/docs/search"
       },
       "config_urls": {
         "docs_viewer": "/docs-viewer/config/defaults/docs-viewer-config.json",
@@ -109,8 +109,7 @@
           "enabled": true,
           "default_view": "metadata-info"
         }
-      },
-      "default_stage": "working"
+      }
     },
     {
       "schema_version": "docs_viewer_route_config_v5",

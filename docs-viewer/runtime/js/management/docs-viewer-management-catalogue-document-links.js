@@ -1,7 +1,7 @@
 /** Read exact Working Catalogue locations; never choose among multiple Work documents. */
 function catalogueDocumentLinks(payload) {
   if (!payload || payload.schema_version !== "docs_subject_associations_v2"
-    || payload.stage !== "working" || payload.collection !== "catalogue"
+    || Object.prototype.hasOwnProperty.call(payload, "stage") || payload.collection !== "catalogue"
     || !Array.isArray(payload.associations)) {
     throw new Error("Working Catalogue document associations are invalid.");
   }
@@ -19,13 +19,13 @@ function catalogueDocumentLinks(payload) {
     const locations = document && Array.isArray(document.locations)
       ? document.locations.filter((location) => location && location.access === "manage") : [];
     const href = locations.length === 1 && locations[0].url;
-    if (!target || target.stage !== "working" || target.collection !== "catalogue"
+    if (!target || target.collection !== "catalogue"
       || typeof target.doc_id !== "string" || !target.doc_id
       || typeof href !== "string" || !href.startsWith("/") || href.startsWith("//") || /[\\\s]/.test(href)) {
       throw new Error("Catalogue document location is invalid.");
     }
     const params = new URL(href, "https://docs.invalid").searchParams;
-    if (params.get("stage") !== target.stage || params.get("subdoc") !== target.doc_id
+    if (params.has("stage") || params.get("subdoc") !== target.doc_id
       || !params.get("doc") || params.has("scope")) {
       throw new Error("Catalogue document location does not match its identity.");
     }
@@ -38,7 +38,7 @@ function catalogueDocumentLinks(payload) {
  * Missing Work entries remain absent; configuration, read and ambiguous identity errors propagate.
  */
 export async function loadWorkingCatalogueDocumentLinks(options) {
-  const working = options.stageConfigs.find((config) => config.stage === "working");
+  const working = options.workspaceConfig;
   const catalogue = working && working.collections.find((collection) => collection.collection === "catalogue");
   if (!catalogue || !catalogue.manifestUrl) {
     throw new Error("Working Catalogue is not configured.");

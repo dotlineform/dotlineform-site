@@ -80,7 +80,7 @@ export function findCatalogueTargetByIdentity(support, identity) {
   );
 }
 
-/** Read saved subject choices through the stage-bound Catalogue provider, without a private lookup read. */
+/** Read saved subject choices through the Catalogue provider, without a private lookup read. */
 export async function loadCatalogueTargetSupport(adapter, options = {}) {
   var support = await loadCatalogueMediaSupport(adapter, { fetch: options.fetch });
   return createCatalogueTargetSupport(support.registry, support.targets, {

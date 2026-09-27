@@ -100,10 +100,6 @@ export function createDocsViewerManagementModalController(options = {}) {
     onRequestClose: function () { closeSettingsModal(); }
   }) : null;
 
-  function viewerStage() {
-    return typeof callbacks.viewerStage === "function" ? callbacks.viewerStage() : "";
-  }
-
   function settingsModalOpen() {
     return Boolean(refs.settingsModal && !refs.settingsModal.hidden);
   }
@@ -478,7 +474,6 @@ export function createDocsViewerManagementModalController(options = {}) {
   function openImportModal(options) {
     if (!refs.importModal || !refs.importRoot) return Promise.resolve();
     var settings = options || {};
-    var stage = viewerStage();
     importEntryFocusTarget = null;
     var lifecycle = ensureImportModalLifecycle();
     refs.importModal.hidden = false;
@@ -494,7 +489,7 @@ export function createDocsViewerManagementModalController(options = {}) {
         restoreFocus: importRestoreFocusTarget
       });
     }
-    var initResult = typeof callbacks.onImportOpen === "function" ? callbacks.onImportOpen(stage) : null;
+    var initResult = typeof callbacks.onImportOpen === "function" ? callbacks.onImportOpen() : null;
     if (initResult && typeof initResult.then === "function") {
       return initResult.then(function () {
         focusImportModalEntry();
@@ -583,7 +578,6 @@ export function createDocsViewerManagementModalController(options = {}) {
     if (typeof callbacks.hideManageActionsMenu === "function") callbacks.hideManageActionsMenu();
     settingsFieldState = null;
     if (refs.settingsSaveButton) refs.settingsSaveButton.disabled = true;
-    if (refs.settingsStage) refs.settingsStage.textContent = "stage: " + viewerStage();
     renderSettingsField(null);
     setSettingsStatus(MODAL_TEXT.settingsLoading, "busy");
     renderSettingsWarnings([]);

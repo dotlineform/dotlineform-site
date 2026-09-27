@@ -1,4 +1,4 @@
-"""Stage and URL projection for accepted document payloads."""
+"""Public URL projection for prepared document payloads."""
 
 from __future__ import annotations
 
@@ -37,74 +37,25 @@ def project_public_view(config: DocsWorkspaceConfig, payload: dict[str, Any]) ->
         pairs = parse_qsl(parsed.query, keep_blank_values=True)
         query = dict(pairs)
         if parsed.path in {"/docs/", config.public_viewer_base_url}:
-            if "scope" in query:
-                raise ValueError("Accepted document URL contains retired scope identity")
-            if query.get("stage", "preview") == "preview" and is_immutable_doc_id(query.get("doc", "")):
-                return parsed._replace(path=config.public_viewer_base_url, query=urlencode([(key, item) for key, item in pairs if key != "stage"])).geturl()
-        external = "/docs/preview/external/"
+            if "stage" in query or "scope" in query:
+                raise ValueError("Accepted document URL contains retired stage or scope identity")
+            if is_immutable_doc_id(query.get("doc", "")):
+                return parsed._replace(path=config.public_viewer_base_url, query=urlencode(pairs)).geturl()
+        external = "/docs/generated/external/"
         if parsed.path.startswith(external):
             child, separator, relative = parsed.path.removeprefix(external).partition("/")
             if not separator or child not in child_prefixes:
                 raise ValueError("Accepted URL identifies an unconfigured public collection")
             return parsed._replace(path=f"{child_prefixes[child]}/{relative}").geturl()
         paths = {
-            "/docs/preview/index-tree": f"{parent_prefix}/index-tree.json",
-            "/docs/preview/recent": f"{parent_prefix}/recent.json",
-            "/docs/preview/search": asset_url(public_search_path(config)),
+            "/docs/index-tree": f"{parent_prefix}/index-tree.json",
+            "/docs/recent": f"{parent_prefix}/recent.json",
+            "/docs/search": asset_url(public_search_path(config)),
         }
-        if parsed.path == "/docs/preview/doc" and is_immutable_doc_id(query.get("doc_id", "")):
+        if parsed.path == "/docs/doc" and is_immutable_doc_id(query.get("doc_id", "")):
             return parsed._replace(path=f"{parent_prefix}/by-id/{query['doc_id']}.json", query="").geturl()
         if parsed.path in paths:
             return parsed._replace(path=paths[parsed.path], query="").geturl()
-        return value
-
-    def project(value: Any) -> Any:
-        if isinstance(value, dict):
-            header = value.get("header")
-            if isinstance(header, dict) and header.get("schema") == "docs_viewer_search_index_v4":
-                return value
-            return {key: "published" if key in {"stage", "source_stage"} and item == "preview" else project(item) for key, item in value.items()}
-        if isinstance(value, list):
-            return [project(item) for item in value]
-        if not isinstance(value, str):
-            return value
-        if value.startswith("/"):
-            return project_url(value)
-        if "<" not in value:
-            return value
-
-        def tag(match: re.Match[str]) -> str:
-            def attribute(item: re.Match[str]) -> str:
-                original = html.unescape(item[3])
-                projected = project_url(original)
-                return item[0] if projected == original else item[1] + item[2] + html.escape(projected, quote=True) + item[2]
-            return re.sub(r"(\b(?:href|src)\s*=\s*)([\"'])(.*?)\2", attribute, match[0], flags=re.IGNORECASE | re.DOTALL)
-        return re.sub(r"<[^>]+>", tag, value)
-
-    return project(payload)
-
-
-def project_preview_view(config: DocsWorkspaceConfig, payload: dict[str, Any]) -> dict[str, Any]:
-    """Project prepared document routes into Preview, leaving Search data unchanged."""
-    def project_url(value: str) -> str:
-        parsed = urlsplit(html.unescape(value))
-        if parsed.scheme or parsed.netloc or not parsed.path.startswith("/"):
-            return value
-        pairs = parse_qsl(parsed.query, keep_blank_values=True)
-        query = dict(pairs)
-        owns_document = parsed.path in {"/docs/", config.public_viewer_base_url}
-        owns_api = parsed.path in {"/docs/doc", "/docs/index-tree", "/docs/recent", "/docs/search", "/docs/backlinks"}
-        if (owns_document or owns_api) and "scope" in query:
-            raise ValueError("Preview contains a retired scope target; prepare a fresh snapshot before activation")
-        if query.get("stage", "preview") == "preview":
-            if owns_document and is_immutable_doc_id(query.get("doc", "")):
-                pairs = [(key, value) for key, value in pairs if key != "stage"]
-                return parsed._replace(path="/docs/", query=urlencode([("stage", "preview"), *pairs])).geturl()
-            if owns_api:
-                return parsed._replace(path=parsed.path.replace("/docs/", "/docs/preview/", 1), query=urlencode([(key, value) for key, value in pairs if key != "stage"])).geturl()
-        prefix = "/docs/generated/external/preview/"
-        if parsed.path.startswith(prefix):
-            return parsed._replace(path="/docs/preview/external/" + parsed.path.removeprefix(prefix)).geturl()
         return value
 
     def project(value: Any) -> Any:

@@ -1,6 +1,6 @@
 import {
   documentPackagePrepareCapability,
-  stageStaticHtmlExportCapability
+  staticHtmlExportCapability
 } from "./docs-viewer-management-capabilities.js";
 import {
   DOCS_VIEWER_ACTION_IDS
@@ -46,7 +46,7 @@ export function docsViewerStaticHtmlExportActionControlState(options = {}) {
   } else if (options.managementBusy || options.workflowActive) {
     disabledReason = "Docs management is busy.";
   } else {
-    var capability = stageStaticHtmlExportCapability(options.capabilities, options.stage);
+    var capability = staticHtmlExportCapability(options.capabilities);
     if (!capability.available) disabledReason = capability.reason;
     else if (!resolution || !resolution.enabled) {
       disabledReason = resolution && resolution.disabledReason
@@ -71,14 +71,9 @@ export function createDocsViewerManagementIndexController(options = {}) {
   var documentRef = options.document || document;
   var openSnapshotExportWorkflow = options.openSnapshotExportWorkflow || openStaticHtmlSnapshotExportWorkflow;
   var indexSelection = options.indexSelection || createDocsViewerIndexSelectionOwner({
-    initialStage: viewerStage()
   });
   var preparePackageWorkflowRequest = null;
   var snapshotExportWorkflowActive = false;
-
-  function viewerStage() {
-    return typeof callbacks.viewerStage === "function" ? callbacks.viewerStage() : "";
-  }
 
   function activeDocId() {
     return typeof callbacks.activeDocId === "function"
@@ -108,7 +103,6 @@ export function createDocsViewerManagementIndexController(options = {}) {
 
   function lifecycleContext(indexViewId) {
     return {
-      stage: viewerStage(),
       managementContext: routeSession.managementContext,
       indexViewId: arguments.length ? String(indexViewId || "").trim() : activeIndexViewId()
     };
@@ -147,9 +141,8 @@ export function createDocsViewerManagementIndexController(options = {}) {
   }
 
   function indexSelectionAvailable() {
-    var snapshotCapability = stageStaticHtmlExportCapability(
-      management.managementCapabilities,
-      viewerStage()
+    var snapshotCapability = staticHtmlExportCapability(
+      management.managementCapabilities
     );
     return Boolean(
       routeSession.managementContext
@@ -208,7 +201,6 @@ export function createDocsViewerManagementIndexController(options = {}) {
   function snapshotExportActionControlState() {
     return docsViewerStaticHtmlExportActionControlState({
       capabilities: management.managementCapabilities,
-      stage: viewerStage(),
       managementBusy: management.managementBusy,
       managementChecked: management.managementChecked,
       resolution: resolveAction(DOCS_VIEWER_ACTION_IDS.EXPORT_DOCS),
@@ -220,7 +212,7 @@ export function createDocsViewerManagementIndexController(options = {}) {
     if (typeof callbacks.projectIndexViewControlState !== "function") return null;
     var visible = Boolean(
       routeSession.managementContext
-      && viewerStage() === "working"
+
       && activeIndexViewId() === "index-tree"
     );
     var state = {
@@ -316,7 +308,6 @@ export function createDocsViewerManagementIndexController(options = {}) {
       .then(function (module) {
         return module.openDocumentPackagePrepareWorkflow({
           root: root,
-          stage: viewerStage(),
           checkedDocIds: checkedDocIds,
           restoreFocus: restoreFocus,
           callbacks: {

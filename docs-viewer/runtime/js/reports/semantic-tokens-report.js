@@ -1,7 +1,6 @@
 const DEFAULT_SORT_KEY = "title";
 const DEFAULT_SORT_DIR = "asc";
 const SORT_KEYS = Object.freeze(["title", "identity", "document"]);
-
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
 }
@@ -10,8 +9,8 @@ function clearNode(node) {
   while (node.firstChild) node.removeChild(node.firstChild);
 }
 
-function requireWorking(context) {
-  if (context.viewerStage !== "working") {
+function requireManagement(context) {
+  if (!context.managementContext) {
     throw new Error("Semantic Tokens is available only in Working.");
   }
 }
@@ -46,14 +45,14 @@ function persistSort(state) {
 
 /** Pair occurrences with response-owned source locations without guessing collection identity. */
 export function readSemanticTokenRows(payload) {
-  if (!payload || payload.stage !== "working"
+  if (!payload || Object.prototype.hasOwnProperty.call(payload, "stage")
     || !Array.isArray(payload.occurrences) || !Array.isArray(payload.source_documents)) {
-    throw new Error("Semantic-token report data does not match its stage.");
+    throw new Error("Semantic-token report data has an invalid reader contract.");
   }
-  const key = (target) => JSON.stringify([target.stage, target.collection, target.doc_id]);
+  const key = (target) => JSON.stringify([target.collection, target.doc_id]);
   const documents = new Map(payload.source_documents.map((document) => [key(document.target), document]));
   return payload.occurrences.map((row) => {
-    const source = documents.get(key({ stage: payload.stage, collection: row.source_collection || "", doc_id: row.source_doc_id }));
+    const source = documents.get(key({  collection: row.source_collection || "", doc_id: row.source_doc_id }));
     if (!source) throw new Error("Semantic-token source document is unavailable.");
     return {
       family: cleanString(row.family),
@@ -71,8 +70,8 @@ export function readSemanticTokenRows(payload) {
 
 /** Read the Working inventory through the existing local report service. */
 export async function loadSemanticTokenRows(context) {
-  requireWorking(context);
-  const payload = await reportService(context).readSemanticTokens({ stage: "working" });
+  requireManagement(context);
+  const payload = await reportService(context).readSemanticTokens({  });
   return readSemanticTokenRows(payload);
 }
 
@@ -195,7 +194,7 @@ function loadScope(state) {
       ? error.message
       : "Failed to load semantic tokens.";
     state.emptyNode.hidden = false;
-    state.emptyNode.textContent = "Semantic-token usage data is unavailable for this stage.";
+    state.emptyNode.textContent = "Semantic-token usage data is unavailable in this workspace.";
   });
 }
 
@@ -249,7 +248,7 @@ function renderShell(root) {
 }
 
 export function mountSemanticTokensReport(context) {
-  requireWorking(context);
+  requireManagement(context);
   const routeSort = readRouteSort();
   const nodes = renderShell(context.reportRoot);
   const state = Object.assign({

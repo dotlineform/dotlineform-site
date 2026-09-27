@@ -151,14 +151,6 @@ def _plan(repo_root: Path) -> tuple[dict[str, Any], dict[Path, bytes], Preparati
     }, desired, inputs
 
 
-def plan_prepare_preview(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
-    """Bind confirmation to source, saved Search/Recents and current Preview."""
-    if body.get("stage") != "working" or "scope" in body:
-        raise ValueError("Prepare Preview requires stage working")
-    preview, _files, _inputs = _plan(repo_root)
-    return preview
-
-
 def build_captured_preview(
     repo_root: Path, source_files: dict[Path, bytes], search_index: bytes, recent_payload: bytes,
     catalogue: dict[str, bytes],
@@ -224,19 +216,3 @@ def prepare_preview(repo_root: Path) -> CompletedPreview:
     Failure prevents distribution; snapshot replacement retains its receipt semantics.
     """
     return _complete_preview(repo_root, *_plan(repo_root))
-
-
-def apply_prepare_preview(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
-    """Build the reviewed inputs synchronously, then replace complete Preview."""
-    if body.get("confirm") is not True:
-        raise ValueError("confirm must be true to prepare Preview")
-    if body.get("stage") != "working" or "scope" in body:
-        raise ValueError("Prepare Preview requires stage working")
-    plan, desired, inputs = _plan(repo_root)
-    if body.get("plan_revision") != plan["plan_revision"]:
-        raise ValueError("Prepare Preview plan is stale; preview again")
-    snapshot = _complete_preview(repo_root, plan, desired, inputs)
-    return {
-        **plan, "applied": True, "preview_manifest": snapshot.manifest,
-        "summary_text": f"Preview prepared: {plan['document_count']} documents, Catalogue, Search and Recents. Review Preview before Publish.",
-    }

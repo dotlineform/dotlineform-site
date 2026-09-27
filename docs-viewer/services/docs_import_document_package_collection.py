@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-from docs_import_common import require_import_stage
 
 import copy
 from dataclasses import replace
@@ -204,7 +203,6 @@ def _confine_collection_records(
 def plan_document_package_collection(
     repo_root: Path,
     *,
-    stage: str,
     staged_filename: str,
     staging_root: Path,
     workspace_root: Path,
@@ -214,15 +212,11 @@ def plan_document_package_collection(
 ) -> DocumentsCollectionPlan:
     """Read and completely plan one trusted package without applying any writes."""
 
-    normalized_stage = require_import_stage(stage)
     if collection is None:
-        raise ValueError("Package Import requires an exact stage collection")
-    if collection.stage != normalized_stage:
-        raise ValueError("managed collection does not match requested package stage")
+        raise ValueError("Package Import requires an exact configured collection")
     collection_id = collection.collection if collection is not None else ""
     package, blockers = load_document_package(
         repo_root,
-        stage=normalized_stage,
         staged_filename=staged_filename,
         staging_root=staging_root,
         metadata_root=metadata_root,
@@ -231,7 +225,6 @@ def plan_document_package_collection(
     if package is None:
         return blocked_collection_plan(
             source_format=COLLECTION_SOURCE_FORMAT,
-            stage=normalized_stage,
             staged_filename=staged_filename,
             blockers=blockers,
             workspace_root=workspace_root,
@@ -277,7 +270,6 @@ def plan_document_package_collection(
             or package.package_metadata.get("config_id")
         ),
         "schema_version": _clean_text(package.package_metadata.get("schema_version")),
-        "source_stage": _clean_text(package.package_metadata.get("stage")),
         "content_format": _clean_text(package.package_metadata.get("content_format")),
         "staged_path": marker_path(package.path, workspace_root=workspace_root),
         "source_sha256": package.source_sha256,
@@ -300,7 +292,6 @@ def plan_document_package_collection(
     return plan_import_content_collection(
         repo_root,
         source_format=COLLECTION_SOURCE_FORMAT,
-        stage=normalized_stage,
         staged_filename=staged_filename,
         states=states,
         docs=docs,
@@ -317,7 +308,6 @@ def plan_document_package_collection(
 def apply_document_package_collection(
     repo_root: Path,
     *,
-    stage: str,
     staged_filename: str,
     body: dict[str, Any],
     staging_root: Path,
@@ -337,7 +327,6 @@ def apply_document_package_collection(
         raise ValueError("collection apply requires planned_identities from the confirmed preview")
     plan = plan_document_package_collection(
         repo_root,
-        stage=stage,
         staged_filename=staged_filename,
         staging_root=staging_root,
         workspace_root=workspace_root,

@@ -32,94 +32,61 @@ export function documentPackagePrepareCapability(capabilities) {
   return { available: true, reason: "" };
 }
 
-/** Read capabilities for one explicit lifecycle stage. */
-export function stageManagementCapabilities(capabilities, stage) {
-  return capabilities && capabilities.stages && capabilities.stages[stage] || null;
+/** Read capabilities for the configured authoring workspace. */
+export function workspaceManagementCapabilities(capabilities) {
+  return capabilities && capabilities.workspace || null;
 }
 
-export function stagePreparePreviewSupported(capabilities, stage) {
-  var stageCaps = stageManagementCapabilities(capabilities, stage);
-  var operation = stageCaps && stageCaps.prepare_preview;
-  return Boolean(capabilities && capabilities.docs_management && stageCaps && stageCaps.available
-    && operation && operation.preview && operation.apply);
-}
-
-export function collectionCreateSupported(capabilities, stage) {
+export function collectionCreateSupported(capabilities) {
   var lifecycle = collectionLifecycleCapabilities(capabilities);
-  var stageCaps = stageManagementCapabilities(capabilities, stage);
-  var collectionLifecycle = stageCaps && stageCaps.collection_lifecycle && typeof stageCaps.collection_lifecycle === "object"
-    ? stageCaps.collection_lifecycle
+  var workspaceCaps = workspaceManagementCapabilities(capabilities);
+  var collectionLifecycle = workspaceCaps && workspaceCaps.collection_lifecycle && typeof workspaceCaps.collection_lifecycle === "object"
+    ? workspaceCaps.collection_lifecycle
     : null;
   return Boolean(
     lifecycle &&
     lifecycle.create_preview &&
     lifecycle.create_apply &&
-    stageCaps &&
-    stageCaps.available &&
+    workspaceCaps &&
+    workspaceCaps.available &&
     collectionLifecycle &&
     collectionLifecycle.create_eligible
   );
 }
 
-export function collectionDeleteSupported(capabilities, stage) {
+export function collectionDeleteSupported(capabilities) {
   var lifecycle = collectionLifecycleCapabilities(capabilities);
-  var stageCaps = stageManagementCapabilities(capabilities, stage);
+  var workspaceCaps = workspaceManagementCapabilities(capabilities);
   return Boolean(
     lifecycle &&
     lifecycle.delete_preview &&
     lifecycle.delete_apply &&
-    stageCaps &&
-    stageCaps.available &&
-    stageCaps.collection_lifecycle &&
-    stageCaps.collection_lifecycle.delete_eligible
+    workspaceCaps &&
+    workspaceCaps.available &&
+    workspaceCaps.collection_lifecycle &&
+    workspaceCaps.collection_lifecycle.delete_eligible
   );
 }
 
-export function stageDeployRepoCapability(capabilities, stage) {
-  var stageCaps = stageManagementCapabilities(capabilities, stage);
-  var service = capabilities && capabilities.deploy_repo && typeof capabilities.deploy_repo === "object"
-    ? capabilities.deploy_repo
-    : null;
-  var stageCapability = stageCaps && stageCaps.deploy_repo && typeof stageCaps.deploy_repo === "object"
-    ? stageCaps.deploy_repo
-    : null;
-  if (!service || service.preview !== true || service.apply !== true) {
-    return {
-      available: false,
-      reason: "Publish requires a writable local management service."
-    };
-  }
-  if (
-    !stageCaps
-    || stageCaps.available !== true
-    || !stageCapability
-    || stageCapability.available !== true
-    || stageCapability.preview !== true
-    || stageCapability.apply !== true
-  ) {
-    return {
-      available: false,
-      reason: String(
-        stageCapability && stageCapability.reason
-        || "Publish is unavailable for this stage."
-      ).trim()
-    };
+export function publishCapability(capabilities) {
+  var publication = capabilities && capabilities.publish;
+  if (!capabilities || !capabilities.docs_management || !publication || !publication.available) {
+    return { available: false, reason: publication && publication.reason || "Publish is unavailable." };
   }
   return { available: true, reason: "" };
 }
 
-export function stageDeployRepoSupported(capabilities, stage) {
-  return stageDeployRepoCapability(capabilities, stage).available;
+export function publishSupported(capabilities) {
+  return publishCapability(capabilities).available;
 }
 
-export function stageStaticHtmlExportCapability(capabilities, stage) {
-  var stageCaps = stageManagementCapabilities(capabilities, stage);
-  if (stage !== undefined && stageCaps && String(stageCaps.stage || "") !== String(stage || "")) stageCaps = null;
+export function staticHtmlExportCapability(capabilities) {
+  var workspaceCaps = workspaceManagementCapabilities(capabilities);
   var exportCapabilities = capabilities && capabilities.static_html_export && typeof capabilities.static_html_export === "object"
     ? capabilities.static_html_export
     : null;
-  var stageExport = stageCaps && stageCaps.static_html_export && typeof stageCaps.static_html_export === "object"
-    ? stageCaps.static_html_export
+  var workspaceExport = workspaceCaps && workspaceCaps.static_html_export && typeof workspaceCaps.static_html_export === "object"
+    ? workspaceCaps.static_html_export
     : null;
   if (!exportCapabilities || exportCapabilities.preview !== true || exportCapabilities.apply !== true) {
     return {
@@ -127,19 +94,19 @@ export function stageStaticHtmlExportCapability(capabilities, stage) {
       reason: String(exportCapabilities && exportCapabilities.error || "Snapshot Export is unavailable.").trim()
     };
   }
-  if (!stageExport || stageExport.preview !== true || stageExport.apply !== true) {
+  if (!workspaceExport || workspaceExport.preview !== true || workspaceExport.apply !== true) {
     return {
       available: false,
-      reason: String(stageExport && stageExport.error || "Snapshot Export is unavailable for this stage.").trim()
+      reason: String(workspaceExport && workspaceExport.error || "Snapshot Export is unavailable in this workspace.").trim()
     };
   }
   return { available: true, reason: "" };
 }
 
-export function collectionLifecycleDeleteTargets(capabilities, stage) {
-  var stageCaps = stageManagementCapabilities(capabilities, stage);
-  var lifecycle = stageCaps && stageCaps.collection_lifecycle && typeof stageCaps.collection_lifecycle === "object"
-    ? stageCaps.collection_lifecycle
+export function collectionLifecycleDeleteTargets(capabilities) {
+  var workspaceCaps = workspaceManagementCapabilities(capabilities);
+  var lifecycle = workspaceCaps && workspaceCaps.collection_lifecycle && typeof workspaceCaps.collection_lifecycle === "object"
+    ? workspaceCaps.collection_lifecycle
     : null;
   var records = lifecycle && Array.isArray(lifecycle.collections) ? lifecycle.collections : [];
   return records.map(function (record) {
@@ -160,7 +127,7 @@ export function createDocsViewerManagementCapabilityController(options) {
   var context = options.context;
   var callbacks = options.callbacks || {};
 
-    function managementClientOptions() {
+  function managementClientOptions() {
     return callbacks.managementClientOptions ? callbacks.managementClientOptions() : {};
   }
 
@@ -192,11 +159,11 @@ export function createDocsViewerManagementCapabilityController(options) {
 
   function applyCapabilities(payload) {
     var capabilities = payload && payload.capabilities ? payload.capabilities : null;
-    var stageCaps = stageManagementCapabilities(capabilities, managementClientOptions().stage);
+    var workspaceCaps = workspaceManagementCapabilities(capabilities);
     management.managementCapabilities = capabilities;
     management.managementCapabilityError = "";
     management.managementChecked = true;
-    management.managementAvailable = Boolean(capabilities && capabilities.docs_management && stageCaps && stageCaps.available);
+    management.managementAvailable = Boolean(capabilities && capabilities.docs_management && workspaceCaps && workspaceCaps.available);
     renderManagementUi();
     renderSidebar();
   }

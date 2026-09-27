@@ -42,7 +42,6 @@ def _clean_text(value: Any) -> str:
 
 
 COLLECTION_APPLY_BODY_FIELDS = {
-    "stage",
     "collection",
     "staged_filename",
     "preview_only",
@@ -333,7 +332,6 @@ def apply_import_content_collection(
                 suppression_reason="docs-import-collection-apply",
                 docs_doc_ids=docs_doc_ids,
                 written_paths=written_paths,
-                stage=plan.response.get("target", {}).get("stage") or None,
             )
             generation = {"status": "completed", "rebuild": rebuild, "error": ""}
         except NoAppliedCollectionWrites:
@@ -351,7 +349,6 @@ def apply_import_content_collection(
         warnings.extend(copy.deepcopy(result.get("warnings") or []))
     result_payload = shape_collection_result(
         source_format=plan.response["source_format"],
-        stage=plan.response["stage"],
         staged_filename=plan.response["staged_filename"],
         package=plan.response.get("package") or {},
         records=results,
@@ -360,12 +357,11 @@ def apply_import_content_collection(
         manual_copy_instructions=list(dict.fromkeys(manual_copy)),
         timestamp=timestamp,
     )
-    result_payload["target"] = {"stage": plan.response["stage"]}
+    result_payload["target"] = {}
     log_event(
         repo_root,
         "docs-import-collection-apply",
         {
-            "stage": plan.response["stage"],
             "staged_filename": plan.response["staged_filename"],
             "outcome": result_payload["outcome"],
             "counts": result_payload["counts"],
@@ -391,7 +387,6 @@ def _atomic_collection_result(
         warnings.extend(copy.deepcopy(record.get("warnings") or []))
     result_payload = shape_collection_result(
         source_format=plan.response["source_format"],
-        stage=plan.response["stage"],
         staged_filename=plan.response["staged_filename"],
         package=plan.response.get("package") or {},
         records=records,
@@ -405,7 +400,6 @@ def _atomic_collection_result(
         result_payload["collection"] = collection.collection
     result_payload["rollback"] = copy.deepcopy(rollback)
     event_details = {
-        "stage": collection.stage,
         "staged_filename": plan.response["staged_filename"],
         "outcome": result_payload["outcome"],
         "counts": result_payload["counts"],
@@ -621,7 +615,6 @@ def apply_import_content_collection_atomic(
             write_operation,
             suppression_reason="docs-import-collection-collection-apply",
             source_snapshots=snapshots,
-            stage=collection.stage or None,
         )
 
     return _apply_import_content_collection_atomic(
@@ -672,7 +665,6 @@ def apply_import_content_collection_document_atomic(
             write_operation,
             suppression_reason="docs-import-reviewed-stage-collection-apply",
             source_snapshots=snapshots,
-            stage=collection.stage or None,
             docs_doc_ids=docs_doc_ids,
         )
 

@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any, Dict
 
 import docs_management_mutations as mutations
-from docs_workspace_config import load_docs_stage, require_document_authoring
+from docs_workspace_config import load_docs_working_config, require_document_authoring
 import docs_source_config_settings
 import docs_collection_lifecycle
 import docs_source_model as source_model
@@ -106,8 +106,7 @@ def recover_collection_document_delete(
             [source_delete.path],
             restore_operation,
             suppression_reason="docs-collection-document-delete-recovery",
-            stage=plan.stage,
-            **({"links_created_doc_ids": []} if plan.stage == "working" else {}),
+            links_created_doc_ids=[],
         )
     except Exception as recovery_error:
         source_restored = source_matches_original()
@@ -125,7 +124,6 @@ def recover_collection_document_delete(
             "ok": False,
             "operation": "apply",
             "target": target,
-            "stage": plan.stage,
             "collection": plan.collection,
             "doc_id": plan.response.get("doc_id", ""),
             "source_revision": plan.response.get("source_revision", ""),
@@ -140,10 +138,8 @@ def recover_collection_document_delete(
 
 
 def execute_management_mutation_plan(repo_root: Path, plan: mutations.ManagementMutationPlan, dry_run: bool) -> Dict[str, Any]:
-    require_document_authoring(load_docs_stage(repo_root, plan.stage))
+    require_document_authoring(load_docs_working_config(repo_root))
     payload = dict(plan.response)
-    if plan.stage:
-        payload["stage"] = plan.stage
     rebuild = None
     source_changes_applied = False
 
@@ -161,7 +157,6 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
                         current_bytes = b""
                     if current_bytes != source_write.original_bytes:
                         target = {
-                            "stage": plan.stage,
                             "doc_id": str(plan.response.get("doc_id") or ""),
                         }
                         if plan.collection:
@@ -203,14 +198,13 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
             if plan.collection:
                 # The shared selection file is written with the mutation, but
                 # only collection-owned sources belong to its watcher/build.
-                selection_file = selected_path(load_docs_stage(repo_root, plan.stage))
+                selection_file = selected_path(load_docs_working_config(repo_root))
                 rebuild = write_rebuild.perform_collection_source_write_and_rebuild(
                     repo_root,
                     plan.collection,
                     [path for path in plan.changed_paths if path != selection_file],
                     write_operation,
                     suppression_reason=plan.suppression_reason or "docs-management",
-                    stage=plan.stage,
                 )
             else:
                 rebuild = write_rebuild.perform_source_write_and_rebuild(
@@ -218,7 +212,6 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
                     plan.changed_paths,
                     write_operation,
                     suppression_reason=plan.suppression_reason or "docs-management",
-                    stage=plan.stage,
                     docs_doc_ids=plan.build_doc_ids,
                 )
         except mutations.ManagedDocumentRevisionConflict:
@@ -281,10 +274,9 @@ def handle_delete_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
         )
     plan = mutations.plan_delete_apply(repo_root, body)
     if plan.response.get("default_doc_id_changed") and not dry_run:
-        docs_source_config_settings.apply_stage_settings_change(
+        docs_source_config_settings.apply_settings_change(
             repo_root,
             {"default_doc_id": ""},
-            stage=plan.stage,
         )
     return execute_management_mutation_plan(repo_root, plan, dry_run)
 
@@ -297,14 +289,13 @@ def handle_collection_create_apply(repo_root: Path, body: Dict[str, Any], dry_ru
         body,
         dry_run=dry_run,
         rebuild_collection_outputs=write_rebuild.rebuild_collection_outputs,
-        rebuild_stage_outputs=write_rebuild.rebuild_stage_outputs,
+        rebuild_working_outputs=write_rebuild.rebuild_working_outputs,
     )
     if not dry_run:
         log_event(
             repo_root,
             "docs_collection_create_apply",
             {
-                "stage": body["stage"],
                 "collection": collection,
                 "created_count": len(payload.get("created_files", [])),
                 "changed_count": len(payload.get("changed_files", [])),
@@ -320,14 +311,13 @@ def handle_collection_delete_apply(repo_root: Path, body: Dict[str, Any], dry_ru
         repo_root,
         body,
         dry_run=dry_run,
-        rebuild_stage_outputs=write_rebuild.rebuild_stage_outputs,
+        rebuild_working_outputs=write_rebuild.rebuild_working_outputs,
     )
     if not dry_run:
         log_event(
             repo_root,
             "docs_collection_delete_apply",
             {
-                "stage": body["stage"],
                 "collection": collection,
                 "deleted_count": len(payload.get("deleted_files", [])),
                 "missing_count": len(payload.get("missing_files", [])),

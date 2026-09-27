@@ -11,5 +11,5 @@ def document_location_parent_id(repo_root: Path, source: ManagedDocumentTarget) 
     if not source.collection:
         return source.document.parent_id
     return collection_report_placement(
-        repo_root, source.collection, stage=source.stage,
+        repo_root, source.collection,
     )[2]

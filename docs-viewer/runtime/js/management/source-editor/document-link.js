@@ -1,5 +1,4 @@
 const DOC_ID = /^d-\d{8}-\d{6}-[a-f0-9]{6}$/;
-
 /** Validate a supplied document location against its exact identity, without reconstructing it. */
 function validLocation(record) {
   var target = record.target;
@@ -18,12 +17,11 @@ function validLocation(record) {
     : params.get("doc") === target.doc_id && !params.has("subdoc");
 }
 
-/** Accept only the mounted editor's stage response and complete exact targets. */
-export function normalizeDocumentLinkTargets(payload, context) {
+/** Validate document locations and complete exact targets. */
+export function normalizeDocumentLinkTargets(payload) {
   if (!payload || payload.schema_version !== "docs_document_link_targets_v2"
-    || payload.stage !== (context.stage || "")
     || !Array.isArray(payload.collections) || !Array.isArray(payload.documents)) {
-    throw new Error("Document targets do not match the current authoring stage.");
+    throw new Error("Document targets are invalid.");
   }
   var collections = payload.collections;
   if (new Set(collections).size !== collections.length || collections.some(function (name) {
@@ -32,8 +30,8 @@ export function normalizeDocumentLinkTargets(payload, context) {
   var seen = new Set();
   var documents = payload.documents.map(function (record) {
     var target = record && record.target;
-    if (!target || Object.keys(target).sort().join(",") !== "collection,doc_id,stage"
-      || target.stage !== context.stage || !DOC_ID.test(target.doc_id)
+    if (!target || Object.keys(target).sort().join(",") !== "collection,doc_id"
+      || !DOC_ID.test(target.doc_id)
       || (target.collection !== "" && !collections.includes(target.collection))
       || typeof record.title !== "string" || !record.title.trim() || !validLocation(record)) {
       throw new Error("A document target or location is invalid.");

@@ -1,5 +1,5 @@
 {
-  "schema_version": "docs_viewer_config_v3",
+  "schema_version": "docs_viewer_config_v4",
   "docs_viewer": {
     "recent_limit": 20
   },
@@ -37,7 +37,7 @@
     "collections": [
       {
         "collection": "works",
-        "title": "Works",
+        "title": "Context",
         "manifest_url": "/assets/data/docs/works/manifest.json",
         "by_id_url_base": "/assets/data/docs/works/by-id"
       },

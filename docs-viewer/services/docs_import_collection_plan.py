@@ -282,7 +282,6 @@ def _declared_asset_plans(
 
 def _plan_document_candidates(
     repo_root: Path,
-    stage: str,
     states: list[CollectionRecordState],
     docs: list[SourceDoc],
     *,
@@ -319,7 +318,6 @@ def _plan_document_candidates(
                 preview = generate_normalized_import_content_preview(
                     record,
                     repo_root=repo_root,
-                    stage=stage,
                     staging_root=staging_root,
                     workspace_root=workspace_root,
                 )
@@ -363,7 +361,6 @@ def _plan_document_candidates(
         try:
             state.document_plan = plan_import_document(
                 repo_root,
-                stage,
                 record,
                 operation=operation,
                 docs=docs,
@@ -543,7 +540,6 @@ def _record_response(repo_root: Path, state: CollectionRecordState) -> dict[str,
 def blocked_collection_plan(
     *,
     source_format: str,
-    stage: str,
     staged_filename: str,
     blockers: list[dict[str, Any]],
     workspace_root: Path,
@@ -555,7 +551,6 @@ def blocked_collection_plan(
         "plan_valid": False,
         "collection": True,
         "source_format": source_format,
-        "stage": stage,
         "staged_filename": staged_filename,
         "preview_only": True,
         "ready_for_confirmation": False,
@@ -577,7 +572,6 @@ def blocked_collection_plan(
         },
     }
     response["target"] = {
-        "stage": stage,
         **({"collection": collection} if collection else {}),
     }
     if collection:
@@ -589,7 +583,6 @@ def plan_import_content_collection(
     repo_root: Path,
     *,
     source_format: str,
-    stage: str,
     staged_filename: str,
     states: list[CollectionRecordState],
     docs: list[SourceDoc],
@@ -604,8 +597,6 @@ def plan_import_content_collection(
 ) -> DocumentsCollectionPlan:
     """Complete a body-free collection plan from wrapper-normalized states."""
 
-    if collection is not None and collection.stage != stage:
-        raise ValueError("managed collection does not match collection plan stage")
     if overwrite_only:
         for state in states:
             record = state.normalized
@@ -626,7 +617,6 @@ def plan_import_content_collection(
     blockers.extend(
         _plan_document_candidates(
             repo_root,
-            stage,
             states,
             docs,
             staging_root=staging_root,
@@ -679,7 +669,6 @@ def plan_import_content_collection(
         "plan_valid": not blockers,
         "collection": True,
         "source_format": source_format,
-        "stage": stage,
         "staged_filename": staged_filename,
         "preview_only": True,
         "ready_for_confirmation": not blockers,
@@ -701,7 +690,6 @@ def plan_import_content_collection(
         },
     }
     response["target"] = {
-        "stage": stage,
         **(
             {"collection": collection.collection}
             if collection is not None and collection.collection

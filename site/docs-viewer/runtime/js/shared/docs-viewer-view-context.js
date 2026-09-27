@@ -42,16 +42,13 @@ function activeManagedDocument(value, appContext) {
   var target = objectRecord(context && context.documentTarget);
   var record = objectRecord(context && context.documentRecord);
   var targetKeys = Object.keys(target || {}).sort();
-  var stage = cleanString(target && target.stage);
   var collection = cleanString(target && target.collection).toLowerCase();
   var docId = cleanString(target && target.doc_id);
   if (
     cleanString(context && context.state).toLowerCase() !== "detail"
-    || targetKeys.length !== 3
+    || targetKeys.length !== 2
     || targetKeys[0] !== "collection"
     || targetKeys[1] !== "doc_id"
-    || targetKeys[2] !== "stage"
-    || !["working", "preview"].includes(stage)
     || !collection
     || !docId
     || cleanString(record && record.doc_id) !== docId
@@ -59,7 +56,7 @@ function activeManagedDocument(value, appContext) {
   return Object.freeze({
     info: normalizeMetadataInfo(context.documentInfo),
     record: Object.freeze(Object.assign({}, record, { doc_id: docId })),
-    target: Object.freeze({ stage: stage, collection: collection, doc_id: docId })
+    target: Object.freeze({  collection: collection, doc_id: docId })
   });
 }
 
@@ -146,8 +143,7 @@ export function createDocsViewerHostedViewContext(options = {}) {
     sourceEditorServices: appContext.serviceAvailability && appContext.serviceAvailability.source && appContext.serviceAvailability.source.available
       ? options.sourceEditorServices || null
       : null,
-    statusLabel: docsViewerStatusLabel(selectedMetadata && selectedMetadata.ui_status, options.uiStatusByValue),
-    viewerStage: cleanString(options.viewerStage)
+    statusLabel: docsViewerStatusLabel(selectedMetadata && selectedMetadata.ui_status, options.uiStatusByValue)
   };
 }
 

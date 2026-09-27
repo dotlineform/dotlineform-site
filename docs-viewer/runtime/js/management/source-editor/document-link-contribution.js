@@ -10,7 +10,6 @@ export const DOCUMENT_LINK_CONTROL_ID = "source-insert-doc-link";
 /** Select one exact document using existing modal/list presentation and the mounted source adapter. */
 export function openDocumentLinkModal(options) {
   var adapter = options.adapter;
-  var target = adapter.getDocumentTarget();
   var state = { disposed: false, list: null, support: null, selected: null };
   return openDocsViewerManagementModal({
     root: options.root,
@@ -72,7 +71,7 @@ export function openDocumentLinkModal(options) {
       Promise.resolve().then(function () { return adapter.readDocumentLinkTargets(); }).then(function (payload) {
         if (state.disposed) return;
         if (!options.isCurrent()) throw new Error("The source document is no longer active. Cancel and try again.");
-        state.support = normalizeDocumentLinkTargets(payload, target);
+        state.support = normalizeDocumentLinkTargets(payload);
         state.support.collections.forEach(function (name) {
           collection.insertAdjacentHTML("beforeend", '<option value="sub:' + escapeHtml(name) + '">' + escapeHtml(name) + "</option>");
         });

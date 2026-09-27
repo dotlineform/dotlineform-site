@@ -56,7 +56,6 @@ def safe_generation_result(generation: dict[str, Any]) -> dict[str, Any]:
 def shape_collection_result(
     *,
     source_format: str,
-    stage: str,
     staged_filename: str,
     package: dict[str, Any],
     records: list[dict[str, Any]],
@@ -86,7 +85,6 @@ def shape_collection_result(
         "ok": True,
         "collection": True,
         "source_format": source_format,
-        "stage": stage,
         "staged_filename": staged_filename,
         "preview_only": False,
         "confirmed": True,

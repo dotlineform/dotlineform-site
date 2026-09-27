@@ -1,6 +1,5 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
 import { mountDocsViewerMediaLinks } from "../shared/docs-viewer-media-detail.js";
-
 import {
   appendProjectSubjectIcon
 } from "./project-subject-icons.js";
@@ -61,8 +60,7 @@ function normalizeDocument(value) {
     "document applicable Series"
   ).map(cleanString);
   if (
-    cleanString(target && target.stage) !== "working"
-    || cleanString(target && target.collection) !== "works"
+    cleanString(target && target.collection) !== "works"
     || !docId
     || !title
     || !href
@@ -151,7 +149,6 @@ export function normalizeProjectStateResponse(payload) {
     || payload.ok !== true
     || !report
     || report.schema_version !== REPORT_SCHEMA
-    || cleanString(inputs && inputs.stage) !== "working"
     || cleanString(inputs && inputs.collection) !== "works"
     || !generation
     || !generatedAt
@@ -325,7 +322,6 @@ function appendDocumentsCell(rowNode, row) {
       documentRecord.title,
       SUBJECT_LABELS[documentRecord.declaredSubject.kind] + " subject " + documentRecord.declaredSubject.key
     ].join(", "));
-    link.dataset.docsViewerStage = cleanString(documentRecord.target && documentRecord.target.stage);
     link.dataset.docsViewerCollection = cleanString(documentRecord.target && documentRecord.target.collection);
     link.dataset.docsViewerDocId = cleanString(documentRecord.target && documentRecord.target.doc_id);
   });
@@ -400,7 +396,7 @@ function renderRows(state) {
   });
   mountDocsViewerMediaLinks({
     content: state.rowsNode,
-    documentTarget: { stage: state.context.viewerStage, collection: "", docId: state.context.doc.doc_id },
+    documentTarget: {  collection: "", docId: state.context.doc.doc_id },
     isCurrentDocument: () => state.context.content.contains(state.rowsNode),
     openMediaTarget: state.context.openMediaTarget
   });

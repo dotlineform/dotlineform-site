@@ -7,15 +7,13 @@ from pathlib import Path
 
 import docs_source_model as source_model
 from docs_media_inventory import list_collection_media, source_media_references
-from docs_workspace_config import DocsCollectionConfig, DocsStageConfig, load_docs_stage
+from docs_workspace_config import DocsCollectionConfig, DocsStageConfig, load_docs_working_config
 
 
 def _working_owner(
-    repo_root: Path, stage: str, collection: str,
+    repo_root: Path, collection: str,
 ) -> tuple[DocsStageConfig, DocsStageConfig | DocsCollectionConfig]:
-    if stage != "working":
-        raise ValueError("Live Docs media reads require Working")
-    config = load_docs_stage(repo_root, stage)
+    config = load_docs_working_config(repo_root)
     if not collection:
         return config, config
     for child in config.collections:
@@ -24,19 +22,18 @@ def _working_owner(
     raise ValueError(f"unconfigured collection: {collection}")
 
 
-def read_media_files(repo_root: Path, *, stage: str, collection: str = "") -> dict[str, object]:
+def read_media_files(repo_root: Path, *, collection: str = "") -> dict[str, object]:
     """List one Working owner's files without document scans or presentation policy."""
-    _config, owner = _working_owner(repo_root, stage, collection)
+    _config, owner = _working_owner(repo_root, collection)
     return {
         "ok": True,
         "schema_version": "docs_media_files_v1",
-        "stage": stage,
         "collection": collection,
         "files": [asdict(item) for item in list_collection_media(repo_root, owner)],
     }
 
 
-def read_media_references(repo_root: Path, *, stage: str, collection: str = "") -> dict[str, object]:
+def read_media_references(repo_root: Path, *, collection: str = "") -> dict[str, object]:
     """Read live references to one media owner across all Working document collections.
 
     Only documents with references to this owner are returned, including missing
@@ -44,7 +41,7 @@ def read_media_references(repo_root: Path, *, stage: str, collection: str = "") 
     Callers construct links and file associations; build sources have no inferred
     relationship to same-basename output assets.
     """
-    config, owner = _working_owner(repo_root, stage, collection)
+    config, owner = _working_owner(repo_root, collection)
     documents: list[dict[str, object]] = []
     hosts: list[dict[str, str]] = []
     collections = (("", config), *((child.collection, child) for child in config.collections))
@@ -62,7 +59,7 @@ def read_media_references(repo_root: Path, *, stage: str, collection: str = "") 
             if not references:
                 continue
             documents.append({
-                "target": {"stage": stage, "collection": document_collection, "doc_id": document.doc_id},
+                "target": {"collection": document_collection, "doc_id": document.doc_id},
                 "title": document.title,
                 "references": [
                     {"role": "source", "media_type": reference.media_type, "identity": reference.identity}
@@ -72,7 +69,6 @@ def read_media_references(repo_root: Path, *, stage: str, collection: str = "") 
     return {
         "ok": True,
         "schema_version": "docs_media_references_v1",
-        "stage": stage,
         "collection": collection,
         "collection_hosts": hosts,
         "documents": documents,

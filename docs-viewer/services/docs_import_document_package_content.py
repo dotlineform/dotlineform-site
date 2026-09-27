@@ -59,7 +59,6 @@ COMPACT_MAPPED_FIELDS = {
 FULL_SOURCE_MAPPED_FIELDS = {
     "record_type",
     "doc_id",
-    "stage",
     "source_path",
     "source_sha256",
     "source_bytes",
@@ -246,7 +245,6 @@ def normalize_documents_import_content(
         "export_id": export_id,
         "profile_id": profile_id,
         "schema_version": schema_version,
-        "stage": clean_text(package_metadata.get("stage")),
         "staged_filename": clean_text(staged_filename),
     }
     records: list[ImportContent] = []

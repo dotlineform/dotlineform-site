@@ -1,159 +1,89 @@
 {
-  "schema_version": "docs_viewer_config_v3",
+  "schema_version": "docs_viewer_config_v4",
   "docs_viewer": {
     "recent_limit": 20
   },
   "public_viewer_base_url": "/analysis/",
-  "stages": [
-    {
-      "viewer_base_url": "/docs/",
-      "default_doc_id": "d-20260426-164043-e14f49",
-      "media": {
-        "files": {
-          "reference_prefix": "docs/files",
-          "served_path_prefix": "/docs/assets/media/workspace/files"
-        },
-        "html": {
-          "reference_prefix": "docs/html",
-          "served_path_prefix": "/docs/assets/media/workspace/html"
-        },
-        "img": {
-          "reference_prefix": "docs/img",
-          "served_path_prefix": "/docs/assets/media/workspace/img"
-        },
-        "svg": {
-          "reference_prefix": "docs/svg",
-          "served_path_prefix": "/docs/assets/media/workspace/svg"
-        }
+  "workspace": {
+    "viewer_base_url": "/docs/",
+    "default_doc_id": "d-20260426-164043-e14f49",
+    "media": {
+      "files": {
+        "reference_prefix": "docs/files",
+        "served_path_prefix": "/docs/assets/media/workspace/files"
       },
-      "index_tree_url": "/docs/index-tree?stage=working",
-      "recent_url": "/docs/recent?stage=working",
-      "selected_url": "/docs/selected?stage=working",
-      "search_index_url": "/docs/search?stage=working",
-      "search": {
-        "domain": "docs_viewer",
-        "schema": "docs_viewer_search_index_v4",
-        "index_url": "/docs/search?stage=working",
-        "rebuild_policy": "whole_index"
+      "html": {
+        "reference_prefix": "docs/html",
+        "served_path_prefix": "/docs/assets/media/workspace/html"
       },
-      "collections": [
-        {
-          "collection": "works",
-          "title": "Context",
-          "manifest_url": "/docs/generated/external/working/works/manage-manifest.json",
-          "by_id_url_base": "/docs/generated/external/working/works/by-id",
-          "collection_customisation": {
-            "id": "working_works",
-            "capabilities": {
-              "assignable_field_groups": [
-                "authoring_subject"
-              ]
-            }
-          }
-        },
-        {
-          "collection": "concepts",
-          "title": "Concepts",
-          "manifest_url": "/docs/generated/external/working/concepts/manage-manifest.json",
-          "by_id_url_base": "/docs/generated/external/working/concepts/by-id"
-        },
-        {
-          "collection": "processing",
-          "title": "Processing",
-          "manifest_url": "/docs/generated/external/working/processing/manage-manifest.json",
-          "by_id_url_base": "/docs/generated/external/working/processing/by-id",
-          "collection_customisation": {
-            "id": "working_processing",
-            "capabilities": {
-              "assignable_field_groups": [
-                "authoring_subject"
-              ]
-            }
-          }
-        },
-        {
-          "collection": "moments",
-          "title": "Moments",
-          "manifest_url": "/docs/generated/external/working/moments/manage-manifest.json",
-          "by_id_url_base": "/docs/generated/external/working/moments/by-id"
-        },
-        {
-          "collection": "catalogue",
-          "title": "catalogue",
-          "manifest_url": "/docs/generated/external/working/catalogue/manage-manifest.json",
-          "by_id_url_base": "/docs/generated/external/working/catalogue/by-id"
-        }
-      ],
-      "stage": "working",
-      "links_enabled": true,
-      "backlinks_url": "/docs/backlinks?stage=working"
+      "img": {
+        "reference_prefix": "docs/img",
+        "served_path_prefix": "/docs/assets/media/workspace/img"
+      },
+      "svg": {
+        "reference_prefix": "docs/svg",
+        "served_path_prefix": "/docs/assets/media/workspace/svg"
+      }
     },
-    {
-      "viewer_base_url": "/docs/",
-      "default_doc_id": "d-20260426-164043-e14f49",
-      "media": {
-        "files": {
-          "reference_prefix": "docs/files",
-          "served_path_prefix": "/docs/assets/media/workspace/files"
-        },
-        "html": {
-          "reference_prefix": "docs/html",
-          "served_path_prefix": "/docs/assets/media/workspace/html"
-        },
-        "img": {
-          "reference_prefix": "docs/img",
-          "served_path_prefix": "/docs/assets/media/workspace/img"
-        },
-        "svg": {
-          "reference_prefix": "docs/svg",
-          "served_path_prefix": "/docs/assets/media/workspace/svg"
+    "index_tree_url": "/docs/index-tree",
+    "recent_url": "/docs/recent",
+    "selected_url": "/docs/selected",
+    "search_index_url": "/docs/search",
+    "search": {
+      "domain": "docs_viewer",
+      "schema": "docs_viewer_search_index_v4",
+      "index_url": "/docs/search",
+      "rebuild_policy": "whole_index"
+    },
+    "collections": [
+      {
+        "collection": "works",
+        "title": "Context",
+        "manifest_url": "/docs/generated/external/works/manage-manifest.json",
+        "by_id_url_base": "/docs/generated/external/works/by-id",
+        "collection_customisation": {
+          "id": "working_works",
+          "capabilities": {
+            "assignable_field_groups": [
+              "authoring_subject"
+            ]
+          }
         }
       },
-      "index_tree_url": "/docs/preview/index-tree",
-      "recent_url": "/docs/preview/recent",
-      "selected_url": "/docs/preview/selected",
-      "search_index_url": "/docs/preview/search",
-      "search": {
-        "domain": "docs_viewer",
-        "schema": "docs_viewer_search_index_v4",
-        "index_url": "/docs/preview/search",
-        "rebuild_policy": "whole_index"
+      {
+        "collection": "concepts",
+        "title": "Concepts",
+        "manifest_url": "/docs/generated/external/concepts/manage-manifest.json",
+        "by_id_url_base": "/docs/generated/external/concepts/by-id"
       },
-      "collections": [
-        {
-          "collection": "works",
-          "title": "Context",
-          "manifest_url": "/docs/preview/external/works/manifest.json",
-          "by_id_url_base": "/docs/preview/external/works/by-id"
-        },
-        {
-          "collection": "concepts",
-          "title": "Concepts",
-          "manifest_url": "/docs/preview/external/concepts/manifest.json",
-          "by_id_url_base": "/docs/preview/external/concepts/by-id"
-        },
-        {
-          "collection": "processing",
-          "title": "Processing",
-          "manifest_url": "/docs/preview/external/processing/manifest.json",
-          "by_id_url_base": "/docs/preview/external/processing/by-id"
-        },
-        {
-          "collection": "moments",
-          "title": "Moments",
-          "manifest_url": "/docs/preview/external/moments/manifest.json",
-          "by_id_url_base": "/docs/preview/external/moments/by-id"
-        },
-        {
-          "collection": "catalogue",
-          "title": "catalogue",
-          "manifest_url": "/docs/preview/external/catalogue/manifest.json",
-          "by_id_url_base": "/docs/preview/external/catalogue/by-id"
+      {
+        "collection": "processing",
+        "title": "Processing",
+        "manifest_url": "/docs/generated/external/processing/manage-manifest.json",
+        "by_id_url_base": "/docs/generated/external/processing/by-id",
+        "collection_customisation": {
+          "id": "working_processing",
+          "capabilities": {
+            "assignable_field_groups": [
+              "authoring_subject"
+            ]
+          }
         }
-      ],
-      "stage": "preview",
-      "links_enabled": false,
-      "backlinks_url": "/docs/preview/backlinks"
-    }
-  ]
+      },
+      {
+        "collection": "moments",
+        "title": "Moments",
+        "manifest_url": "/docs/generated/external/moments/manage-manifest.json",
+        "by_id_url_base": "/docs/generated/external/moments/by-id"
+      },
+      {
+        "collection": "catalogue",
+        "title": "catalogue",
+        "manifest_url": "/docs/generated/external/catalogue/manage-manifest.json",
+        "by_id_url_base": "/docs/generated/external/catalogue/by-id"
+      }
+    ],
+    "links_enabled": true,
+    "backlinks_url": "/docs/backlinks"
+  }
 }

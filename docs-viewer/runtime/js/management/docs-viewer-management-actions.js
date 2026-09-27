@@ -1,12 +1,11 @@
+import { publishManagedDocs } from "./docs-viewer-management-client.js";
 import { openDocsViewerPositionModal } from "./docs-viewer-position-modal.js";
 import {
   applyManagedDocDelete,
-  prepareManagedDocsPreview,
   createManagedDoc,
   moveManagedDoc,
   openManagedDocSource,
   previewManagedDocDelete,
-  planManagedDocsPreview,
   rebuildManagedDocs,
   updateSourceConfigSettings
 } from "./docs-viewer-management-client.js";
@@ -23,11 +22,6 @@ import {
   openDocsViewerConfirmModal,
   openDocsViewerTextInputModal
 } from "./docs-viewer-management-modals.js";
-import {
-  docsViewerDeployRepoWorkflowHasFailure,
-  docsViewerDeployRepoWorkflowMessage,
-  runManagedDocsDeployRepoWorkflow
-} from "./docs-viewer-management-deploy-workflow.js";
 
 var ACTION_TEXT = {
   cancelButton: "Cancel",
@@ -56,9 +50,6 @@ export function committedDocumentCreateTarget(payload) {
   if (docId !== target.doc_id) {
     throw new Error("Create service target does not match its committed document.");
   }
-  if (String(response.stage || "") !== String(target.stage || "")) {
-    throw new Error("Create service target does not match its committed stage.");
-  }
   if (collection !== String(target.collection || "")) {
     throw new Error("Create service target does not match its committed collection.");
   }
@@ -83,19 +74,14 @@ export function normalizeManagedCollectionCreateTarget(value) {
   }
   var keys = Object.keys(value).sort();
   if (
-    keys.length !== 2
+    keys.length !== 1
     || keys[0] !== "collection"
-    || keys[1] !== "stage"
   ) {
-    throw new Error("Managed collection create target must contain exactly stage and collection.");
+    throw new Error("Managed collection create target must contain only collection.");
   }
   var collection = String(value.collection || "").trim().toLowerCase();
   if (!collection) throw new Error("Managed collection create target requires a collection ID.");
-  if (!["working", "preview"].includes(value.stage)) {
-    throw new Error("Managed collection create target stage is invalid.");
-  }
   return Object.freeze({
-    ...(value.stage ? { stage: value.stage } : {}),
     collection: collection
   });
 }
@@ -283,7 +269,6 @@ export function createDocsViewerManagementActionController(options) {
     return callbacks.currentContextMenuDoc ? callbacks.currentContextMenuDoc() : null;
   }
 
-
   function actionTargetDoc(actionId, targetDocId) {
     var resolution = arguments.length > 1
       ? resolveAction(actionId, targetDocId)
@@ -450,9 +435,6 @@ export function createDocsViewerManagementActionController(options) {
   async function handleCreateCollectionDocument(collection, optionsForCreate) {
     var targetCollection = normalizeManagedCollectionCreateTarget(collection);
     var createSettings = optionsForCreate || {};
-    if (String(managementClientOptions().stage || "") !== String(targetCollection.stage || "")) {
-      throw new Error("Mounted collection target does not match the active stage.");
-    }
     if (typeof createSettings.refreshAndSelect !== "function") {
       throw new Error("Collection document creation requires report refresh ownership.");
     }
@@ -483,7 +465,6 @@ export function createDocsViewerManagementActionController(options) {
   async function handleRegenerateCatalogue(collection, optionsForRegenerate = {}) {
     var target = normalizeManagedDocumentCollectionTarget(collection);
     if (management.managementBusy) throw new Error("Docs management is busy.");
-    if (target.stage !== managementClientOptions().stage) throw new Error("Catalogue stage has changed.");
     setManagementBusy(true);
     renderManagementUi();
     try {
@@ -505,7 +486,6 @@ export function createDocsViewerManagementActionController(options) {
     }
   }
 
-
   function handleRebuildDocs() {
     setManagementBusy(true);
     setManagementMessage("Rebuilding docs and Search...", false);
@@ -525,78 +505,20 @@ export function createDocsViewerManagementActionController(options) {
       });
   }
 
-  function handleDeployRepo() {
-    return runManagedDocsDeployRepoWorkflow({
-      root: root,
-      capabilities: management.managementCapabilities,
-      clientOptions: managementClientOptions(),
-      onPhase: function (phase) {
-        setManagementBusy(phase.busy === true);
-        setManagementMessage(phase.message || "", false);
-        renderManagementUi();
-      }
-    })
-      .then(function (result) {
-        if (
-          !result
-          || (result.cancelled === true && !docsViewerDeployRepoWorkflowMessage(result))
-        ) {
-          setManagementMessage("", false);
-          return result;
-        }
-        setManagementMessage(
-          docsViewerDeployRepoWorkflowMessage(result),
-          docsViewerDeployRepoWorkflowHasFailure(result)
-        );
-        if (
-          callbacks.refreshManagementCapabilities
-          && [result.deploy_repo].some(function (outcome) {
-            return outcome && (outcome.status === "applied" || outcome.status === "partial");
-          })
-        ) {
-          callbacks.refreshManagementCapabilities();
-        }
-        return result;
-      })
-      .catch(function (error) {
-        setManagementMessage(error.message || ACTION_TEXT.deployFailed, true);
-        return null;
-      })
-      .finally(function () {
-        setManagementBusy(false);
-        renderManagementUi();
-      });
-  }
-
-  async function handlePreparePreview() {
-    var clientOptions = managementClientOptions();
+  async function handlePublish() {
+    setManagementBusy(true);
+    setManagementMessage("Publishing documents and referenced assets...", false);
+    renderManagementUi();
     try {
-      setManagementBusy(true);
-      setManagementMessage("", false);
-      renderManagementUi();
-      var preview = await planManagedDocsPreview(clientOptions);
-      setManagementBusy(false);
-      setManagementMessage("", false);
-      renderManagementUi();
-      var confirmed = await openDocsViewerConfirmModal({
-        root: root,
-        title: "Prepare Preview",
-        body: preview.document_count + " documents",
-        primaryLabel: "Prepare Preview",
-        cancelLabel: ACTION_TEXT.cancelButton
-      });
-      if (!confirmed) {
-        setManagementMessage("", false);
-        return;
-      }
-      setManagementBusy(true);
-      setManagementMessage("Preparing Preview...", false);
-      renderManagementUi();
-      var result = await prepareManagedDocsPreview(preview, clientOptions);
-      setManagementMessage(result.summary_text, false);
-      if (callbacks.refreshManagementCapabilities) await callbacks.refreshManagementCapabilities();
+      var result = await publishManagedDocs(managementClientOptions());
+      if (result.complete !== true) throw new Error(result.summary_text || "Publish is incomplete.");
+      setManagementMessage(result.summary_text || "Publish complete.", false);
+      if (callbacks.refreshManagementCapabilities) callbacks.refreshManagementCapabilities();
+      return result;
     } catch (error) {
-      setManagementMessage(error.message || "Prepare Preview failed.", true);
+      var payload = error && error.payload;
+      setManagementMessage(payload && payload.summary_text || error.message || "Publish failed.", true);
+      return null;
     } finally {
       setManagementBusy(false);
       renderManagementUi();
@@ -809,8 +731,7 @@ export function createDocsViewerManagementActionController(options) {
     handleReturnToDoc: handleReturnToDoc,
     handlePositionDoc: handlePositionDoc,
     handleOpenSource: handleOpenSource,
-    handleDeployRepo: handleDeployRepo,
-    handlePreparePreview: handlePreparePreview,
+    handlePublish: handlePublish,
     handleRebuildDocs: handleRebuildDocs,
     handleSettingsSubmit: handleSettingsSubmit
   };

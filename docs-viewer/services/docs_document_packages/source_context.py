@@ -18,10 +18,9 @@ from docs_management_document_target import resolve_managed_document_collection 
 from docs_workspace_config import (  # noqa: E402
     DocsStageConfig,
     document_source_path,
-    load_docs_stage,
+    load_docs_working_config,
     resolve_workspace_path,
 )
-from docs_document_packages.provenance import require_package_stage  # noqa: E402
 from docs_document_packages.rendered_content import doc_content_text  # noqa: E402
 from docs_document_packages.source_records import (  # noqa: E402
     DocumentPackageSourceRecord,
@@ -32,10 +31,9 @@ from docs_document_packages.source_records import (  # noqa: E402
 @dataclass
 class DocumentPackageSourceContext:
     repo_root: Path
-    stage: str
     collection: str
     return_import_enabled: bool
-    stage_config: DocsStageConfig
+    workspace_config: DocsStageConfig
     source_root: Path
     builder: DocsDataBuilder | CollectionDocsBuilder
     source_docs: list[DocRecord]
@@ -51,31 +49,22 @@ def source_file_path(context: DocumentPackageSourceContext, doc: DocRecord) -> P
     try:
         path.relative_to(context.source_root.resolve())
     except ValueError as exc:
-        raise RuntimeError(f"docs source path escapes stage source root: {path}") from exc
+        raise RuntimeError(f"docs source path escapes configured source root: {path}") from exc
     return path
-
-
-def package_source_stage_config(repo_root: Path, stage: str) -> DocsStageConfig:
-    """Resolve the explicitly selected authoring stage for a package."""
-    return load_docs_stage(repo_root, require_package_stage(stage))
 
 
 def load_document_package_source_context(
     repo_root: Path,
-    stage: str,
     collection: str = "",
 ) -> DocumentPackageSourceContext:
     root = repo_root.resolve()
-    normalized_stage = str(stage or "").strip().lower()
-    config = package_source_stage_config(root, normalized_stage)
+    config = load_docs_working_config(root)
     normalized_collection = str(collection or "").strip().lower()
     if normalized_collection:
         resolved_collection = resolve_managed_document_collection(
             root,
-            stage=stage,
             collection=normalized_collection,
         )
-        normalized_stage = resolved_collection.stage
         config = resolved_collection.parent_config
         source_root = resolved_collection.source_root
         return_import_enabled = resolved_collection.document_config.supports_return_import
@@ -88,7 +77,7 @@ def load_document_package_source_context(
         source_root = resolve_workspace_path(root, document_source_path(config))
         if not source_root.exists() or not source_root.is_dir():
             raise RuntimeError(
-                f"missing source root for stage {normalized_stage}: "
+                "missing source root: "
                 f"{document_source_path(config).as_posix()}"
             )
         return_import_enabled = True
@@ -100,10 +89,9 @@ def load_document_package_source_context(
     records: list[DocumentPackageSourceRecord] = []
     context = DocumentPackageSourceContext(
         repo_root=root,
-        stage=normalized_stage,
         collection=normalized_collection,
         return_import_enabled=return_import_enabled,
-        stage_config=config,
+        workspace_config=config,
         source_root=source_root,
         builder=builder,
         source_docs=source_docs,
@@ -121,7 +109,6 @@ def load_document_package_source_context(
             source_record_from_doc(
                 repo_root=root,
                 source_root=source_root,
-                stage=normalized_stage,
                 doc=doc,
                 parent_title=parent.title if parent else "",
                 content_text_length=len(content_text),
@@ -139,7 +126,6 @@ def load_document_package_source_context(
 
 def load_document_package_source_records(
     repo_root: Path,
-    stage: str,
     collection: str = "",
 ) -> list[DocumentPackageSourceRecord]:
-    return load_document_package_source_context(repo_root, stage, collection).records
+    return load_document_package_source_context(repo_root, collection).records

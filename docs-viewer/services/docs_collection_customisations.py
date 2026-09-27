@@ -34,7 +34,7 @@ class DocsCollectionCustomisationConfig:
 @dataclass(frozen=True)
 class DocsCollectionManifestProjectionAspect:
     project: Callable[
-        [Mapping[str, Any], Sequence[Any], Path, str, str],
+        [Mapping[str, Any], Sequence[Any], Path, str],
         dict[str, Any],
     ]
 
@@ -105,7 +105,7 @@ def _strict_object(raw: Any, *, field: str, keys: set[str]) -> dict[str, Any]:
 
 
 def _project_preview_works_manifest(
-    settings: Mapping[str, Any], documents: Sequence[Any], repo_root: Path, collection: str, stage: str,
+    settings: Mapping[str, Any], documents: Sequence[Any], repo_root: Path, collection: str,
 ) -> dict[str, Any]:
     """Identify the Manage subject contribution; shared subject projection owns its rows."""
     return {"root": {"id": PREVIEW_WORKS_CUSTOMISATION_ID, "data": {}}, "rows": {}}
@@ -474,7 +474,6 @@ def project_collection_customisation_manifest(
     published: bool,
     repo_root: Path,
     collection: str,
-    stage: str,
 ) -> dict[str, Any] | None:
     if customisation is None:
         return None
@@ -494,7 +493,6 @@ def project_collection_customisation_manifest(
         documents,
         repo_root,
         collection,
-        stage,
     )
 
 

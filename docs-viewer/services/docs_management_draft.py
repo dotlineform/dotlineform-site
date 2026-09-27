@@ -14,12 +14,12 @@ from docs_watch_suppression import clear_watch_suppressions, watch_suppression_o
 
 def set_draft(repo_root: Path, body: dict[str, Any], *, dry_run: bool = False) -> dict[str, Any]:
     """Save one revision-checked boolean; the normal watcher owns its build."""
-    required = {"stage", "doc_id", "draft", "source_revision"}
+    required = { "doc_id", "draft", "source_revision"}
     if set(body) - {"collection"} != required:
-        raise ValueError("Set Draft requires stage, doc_id, draft and source_revision, with optional collection")
+        raise ValueError("Set Draft requires doc_id, draft and source_revision, with optional collection")
     if not isinstance(body["draft"], bool):
         raise ValueError("draft must be true or false")
-    target = {key: body[key] for key in ("stage", "collection", "doc_id") if key in body}
+    target = {key: body[key] for key in ( "collection", "doc_id") if key in body}
     resolved = resolve_managed_document_target(repo_root, target)
     if not source_model.collection_supports_draft(resolved.document_config):
         raise ValueError("Set Draft is available only in Working")
@@ -38,7 +38,7 @@ def set_draft(repo_root: Path, body: dict[str, Any], *, dry_run: bool = False) -
     if changed and not dry_run:
         # A completed earlier management save must not hide this new watcher write.
         clear_watch_suppressions(repo_root, watch_suppression_owner(
-            resolved.collection, stage=resolved.stage,
+            resolved.collection,
         ), [document.path.relative_to(resolved.source_root).as_posix()])
         source_model.write_text_atomic(document.path, source)
     return {

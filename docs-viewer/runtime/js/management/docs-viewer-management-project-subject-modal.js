@@ -29,7 +29,6 @@ function cleanString(value) {
 
 function exactResponseTarget(response, target) {
   var candidate = {
-    ...(Object.prototype.hasOwnProperty.call(response, "stage") ? { stage: response.stage } : {}),
     collection: response && response.collection,
     doc_id: response && response.doc_id
   };
@@ -186,7 +185,6 @@ function openSubjectModal(options, target, loaded) {
       var searchInput = api.host.querySelector("#" + SEARCH_INPUT_ID);
       var results = api.host.querySelector("[data-project-subject-results]");
       var searchStatus = api.host.querySelector("[data-project-subject-search-status]");
-
       function chosenKind() {
         var chosen = api.host.querySelector('input[name="docs-project-subject"]:checked');
         return chosen ? chosen.value : "";

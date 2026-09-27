@@ -13,8 +13,7 @@ from docs_workspace_config import (
     DocsCollectionConfig,
     COLLECTION_ID_PATTERN,
     document_source_path,
-    load_docs_stage,
-    STAGES,
+    load_docs_working_config,
     resolve_workspace_path,
 )
 from docs_collection_customisations import (
@@ -29,10 +28,10 @@ from docs_document_subjects import (
 from docs_report_source import ReportSourceContract
 
 
-PARENT_TARGET_KEYS = frozenset({"stage", "doc_id"})
-NAMED_DOCUMENT_TARGET_KEYS = frozenset({"stage", "collection", "doc_id"})
-PARENT_COLLECTION_TARGET_KEYS = frozenset({"stage"})
-NAMED_COLLECTION_TARGET_KEYS = frozenset({"stage", "collection"})
+PARENT_TARGET_KEYS = frozenset({"doc_id"})
+NAMED_DOCUMENT_TARGET_KEYS = frozenset({"collection", "doc_id"})
+PARENT_COLLECTION_TARGET_KEYS = frozenset()
+NAMED_COLLECTION_TARGET_KEYS = frozenset({"collection"})
 
 
 @dataclass(frozen=True)
@@ -43,10 +42,9 @@ class ManagedDocumentTarget:
     document_config: DocsStageConfig | DocsCollectionConfig
     source_root: Path
     document: source_model.SourceDoc
-    stage: str
 
     def request_target(self) -> dict[str, str]:
-        target = {"stage": self.stage, "doc_id": self.doc_id}
+        target = {"doc_id": self.doc_id}
         if self.collection:
             target["collection"] = self.collection
         return target
@@ -58,10 +56,9 @@ class ManagedDocumentCollection:
     parent_config: DocsStageConfig
     document_config: DocsStageConfig | DocsCollectionConfig
     source_root: Path
-    stage: str
 
     def request_target(self) -> dict[str, str]:
-        target = {"stage": self.stage}
+        target = {}
         if self.collection:
             target["collection"] = self.collection
         return target
@@ -76,24 +73,16 @@ def required_target_text(value: Any, *, field: str, lowercase: bool = False) -> 
     return normalized.lower() if lowercase else normalized
 
 
-def required_target_stage(value: Any) -> str:
-    stage = required_target_text(value, field="stage")
-    if stage not in STAGES:
-        raise ValueError("stage must be working or preview")
-    return stage
-
-
 def normalize_managed_document_target(target: Mapping[str, Any]) -> dict[str, str]:
     if not isinstance(target, Mapping):
         raise ValueError("managed document target must be an object")
     keys = frozenset(target)
     if keys not in {PARENT_TARGET_KEYS, NAMED_DOCUMENT_TARGET_KEYS}:
         raise ValueError(
-            "managed document target must contain exactly stage and doc_id, "
+            "managed document target must contain doc_id, "
             "with collection only for a collection document"
         )
     normalized = {
-        "stage": required_target_stage(target.get("stage")),
         "doc_id": required_target_text(target.get("doc_id"), field="doc_id"),
     }
     if not source_model.is_immutable_doc_id(normalized["doc_id"]):
@@ -118,10 +107,9 @@ def normalize_managed_document_collection_target(
         NAMED_COLLECTION_TARGET_KEYS,
     }:
         raise ValueError(
-            "managed document collection target must contain exactly stage, "
-            "with collection only for a configured child collection"
+            "managed document collection target must be empty or contain only collection"
         )
-    normalized = {"stage": required_target_stage(target.get("stage"))}
+    normalized = {}
     if "collection" in target:
         normalized["collection"] = required_target_text(
             target.get("collection"),
@@ -132,12 +120,13 @@ def normalize_managed_document_collection_target(
 
 
 def managed_document_target_request(request: Mapping[str, Any]) -> dict[str, Any]:
+    if "stage" in request:
+        raise ValueError("stage is retired from document requests")
     if "scope" in request:
-        raise ValueError("scope is retired; document requests require stage and doc_id")
+        raise ValueError("scope is retired; document requests require doc_id and optional collection")
     if "sub_scope" in request:
         raise ValueError("sub_scope is retired; use collection")
     target = {
-        "stage": request.get("stage"),
         "doc_id": request.get("doc_id"),
     }
     if "collection" in request:
@@ -149,11 +138,10 @@ def resolve_managed_document_collection(
     repo_root: Path,
     *,
     collection: Any | None = None,
-    stage: str,
     require_existing_source_root: bool = True,
 ) -> ManagedDocumentCollection:
     """Resolve the configured destination; creation skips directory preflight."""
-    parent_config = load_docs_stage(repo_root, stage)
+    parent_config = load_docs_working_config(repo_root)
 
     normalized_collection = ""
     document_config: DocsStageConfig | DocsCollectionConfig = parent_config
@@ -180,14 +168,13 @@ def resolve_managed_document_collection(
     if not source_root.is_relative_to(parent_config.workspace_root.path):
         raise ValueError("source root escapes the configured Docs workspace")
     if require_existing_source_root and not source_root.is_dir():
-        target_label = f"{stage}/{normalized_collection or 'ordinary documents'}"
+        target_label = normalized_collection or 'ordinary documents'
         raise FileNotFoundError(f"source root not found for managed document target {target_label}")
     return ManagedDocumentCollection(
         collection=normalized_collection,
         parent_config=parent_config,
         document_config=document_config,
         source_root=source_root,
-        stage=parent_config.stage,
     )
 
 
@@ -199,7 +186,6 @@ def resolve_managed_document_collection_target(
     return resolve_managed_document_collection(
         repo_root,
         collection=normalized.get("collection"),
-        stage=normalized["stage"],
     )
 
 
@@ -272,7 +258,6 @@ def resolve_managed_document_target(
     collection = resolve_managed_document_collection(
         repo_root,
         collection=normalized.get("collection"),
-        stage=normalized["stage"],
     )
     report_contract = source_model.report_source_contract_for_collection(
         repo_root,
@@ -319,7 +304,6 @@ def resolve_managed_document_target(
         document_config=collection.document_config,
         source_root=collection.source_root,
         document=document,
-        stage=collection.stage,
     )
 
 
@@ -350,15 +334,14 @@ def managed_document_metadata(
         "record": record,
         "source_revision": payload_revision,
     }
-    if resolved.stage == "working":
-        from docs_document_placement import document_location_parent_id
+    from docs_document_placement import document_location_parent_id
 
-        payload["location_parent_id"] = document_location_parent_id(repo_root, resolved)
+    payload["location_parent_id"] = document_location_parent_id(repo_root, resolved)
     if resolved.collection:
         subject_fields = collection_customisation_authoring_subject_fields(
             resolved.document_config.collection_customisation
         )
-        folder_supported = resolved.stage == "working" and FOLDER_PATH_FIELD in subject_fields
+        folder_supported = FOLDER_PATH_FIELD in subject_fields
         payload["folder_subject_supported"] = folder_supported
         if subject_fields or any(
             field_name in front_matter for field_name in AUTHORING_SUBJECT_FIELDS

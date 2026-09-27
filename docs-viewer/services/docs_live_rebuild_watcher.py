@@ -1110,7 +1110,6 @@ def main() -> int:
                 changed_files = list(state["changed_files"])
                 suppression_owner = watch_suppression_owner(
                     str(state.get("collection") or ""),
-                    stage=state.get("stage") or None,
                 )
                 active_suppressions = load_active_watch_suppressions(
                     repo_root,

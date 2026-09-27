@@ -21,7 +21,6 @@ LEXICAL_ID_PATTERN = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*")
 FENCE_PATTERN = re.compile(r"\A {0,3}(`{3,}|~{3,})")
 
 
-
 @dataclass(frozen=True)
 class SemanticTokenOccurrence:
     raw: str
@@ -505,7 +504,7 @@ class SemanticTokensMixin:
             if not token.supported:
                 return token.raw
             occurrences.append({
-                "source_stage": self.config.stage, "source_doc_id": doc.doc_id,
+                "source_doc_id": doc.doc_id,
                 "source_range": token.source_range, "raw": token.raw, "title": token.title,
                 "family": token.family, "target_type": token.target_type, "target_id": token.target_id,
                 "href": "",

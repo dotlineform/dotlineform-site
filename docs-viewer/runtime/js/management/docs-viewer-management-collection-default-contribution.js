@@ -1,5 +1,4 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
-
 import {
   DOCS_VIEWER_ACTION_IDS,
   createDocsViewerActionContext,
@@ -385,7 +384,6 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
 
     var actionsHost = documentRef.createElement("div");
     actionsHost.className = "docsViewer__actionsMenuHost docsViewerReport__collectionActionsHost";
-    actionsHost.hidden = selectionOwner.collection().stage !== "working";
     var actionsButton = documentRef.createElement("button");
     actionsButton.className = "docsViewer__toolbarIconButton";
     actionsButton.type = "button";
@@ -549,7 +547,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     var target = settings.target;
     if (!host || !target) return;
 
-    if (managementContext && target.stage === "working"
+    if (managementContext
       && onToggleDraft && typeof settings.registerAction === "function"
       && typeof settings.commitDocumentDraft === "function") {
       var draft = settings.document?.draft === true;

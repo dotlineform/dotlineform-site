@@ -13,7 +13,6 @@ from docs_workspace_config import path_label
 @dataclass(frozen=True)
 class DocumentPackageSourceRecord:
     doc_id: str
-    stage: str
     title: str
     summary: str
     added_date: str
@@ -35,14 +34,12 @@ def source_record_from_doc(
     *,
     repo_root: Path,
     source_root: Path,
-    stage: str,
     doc: Any,
     parent_title: str,
     content_text_length: int,
 ) -> DocumentPackageSourceRecord:
     return DocumentPackageSourceRecord(
         doc_id=doc.doc_id,
-        stage=stage,
         title=doc.title,
         summary=doc.summary,
         added_date=doc.added_date,

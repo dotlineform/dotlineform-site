@@ -16,15 +16,14 @@ function normalizeCollectionId(value) {
 function normalizeCollection(collection) {
   var record = collection && typeof collection === "object" ? collection : {};
   return Object.freeze({
-    ...(record.stage ? { stage: record.stage } : {}),
     collection: normalizeCollectionId(record.collection)
   });
 }
 
 function collectionKey(collection) {
   var normalized = normalizeCollection(collection);
-  return normalized.stage && normalized.collection
-    ? normalized.stage + "\n" + normalized.collection
+  return normalized.collection
+    ? normalized.collection
     : "";
 }
 

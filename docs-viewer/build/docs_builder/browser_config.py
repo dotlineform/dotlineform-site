@@ -1,4 +1,4 @@
-"""Project the single workspace into local stage and public reader settings."""
+"""Project the single workspace into local and public reader settings."""
 from __future__ import annotations
 
 from pathlib import Path
@@ -19,20 +19,20 @@ def public_document_base(config: DocsStageConfig | DocsCollectionConfig) -> str:
 
 
 def browser_docs_index_tree_url(config: DocsStageConfig, *, published: bool = False) -> str:
-    return f"{public_document_base(config)}/index-tree.json" if published else f"/docs/index-tree?stage={quote(config.stage)}"
+    return f"{public_document_base(config)}/index-tree.json" if published else "/docs/index-tree"
 
 
 def browser_docs_recent_url(config: DocsStageConfig, *, published: bool = False) -> str:
-    return f"{public_document_base(config)}/recent.json" if published else f"/docs/recent?stage={quote(config.stage)}"
+    return f"{public_document_base(config)}/recent.json" if published else "/docs/recent"
 
 
 def browser_docs_backlinks_url(config: DocsStageConfig, *, published: bool = False) -> str:
-    return "" if published else f"/docs/backlinks?stage={quote(config.stage)}"
+    return "" if published else "/docs/backlinks"
 
 
 def browser_search_index_url(config: DocsStageConfig, *, published: bool = False) -> str:
     if not published:
-        return f"/docs/search?stage={quote(config.stage)}"
+        return "/docs/search"
     output = public_search_path(config)
     if output is None:
         raise ValueError("public Search projection requires a configured destination")
@@ -47,7 +47,7 @@ def browser_search_policy_payload(config: DocsStageConfig, *, published: bool = 
 def browser_collection_output_url_base(config: DocsStageConfig, collection: DocsCollectionConfig, *, published: bool = False) -> str:
     if published:
         return public_document_base(collection)
-    return f"/docs/generated/external/{quote(config.stage)}/{quote(collection.collection)}"
+    return f"/docs/generated/external/{quote(collection.collection)}"
 
 
 def browser_collection_records(repo_root: Path, config: DocsStageConfig, *, published: bool = False) -> list[dict[str, Any]]:
@@ -67,7 +67,7 @@ def browser_collection_records(repo_root: Path, config: DocsStageConfig, *, publ
     return records
 
 
-def browser_stage_record(repo_root: Path, config: DocsStageConfig, *, public_viewer_base_url: str = "", published: bool = False) -> dict[str, Any]:
+def browser_workspace_record(repo_root: Path, config: DocsStageConfig, *, public_viewer_base_url: str = "", published: bool = False) -> dict[str, Any]:
     if published and config.public_projection is None:
         raise ValueError("public reader settings require Preview configuration")
     media = config.public_projection.media if published else config.media.types
@@ -78,39 +78,24 @@ def browser_stage_record(repo_root: Path, config: DocsStageConfig, *, public_vie
                   for kind, item in sorted(media.items())},
         "index_tree_url": browser_docs_index_tree_url(config, published=published),
         "recent_url": browser_docs_recent_url(config, published=published),
-        "selected_url": f"{public_document_base(config)}/selected.json" if published else f"/docs/selected?stage={quote(config.stage)}",
+        "selected_url": f"{public_document_base(config)}/selected.json" if published else "/docs/selected",
         "search_index_url": browser_search_index_url(config, published=published),
         "search": browser_search_policy_payload(config, published=published),
         "collections": browser_collection_records(repo_root, config, published=published),
     }
     if not published:
-        record.update(stage=config.stage, links_enabled=links_enabled(repo_root, config), backlinks_url=browser_docs_backlinks_url(config))
-    return record
-
-
-def browser_preview_record(repo_root: Path, workspace: DocsWorkspaceConfig) -> dict[str, Any]:
-    """Expose the accepted local snapshot without source/generated write authority."""
-    prepared = select_workspace_stage(workspace, "preview")
-    record = browser_stage_record(repo_root, prepared)
-    record.update(stage="preview", links_enabled=False)
-    for key, route in (("index_tree_url", "index-tree"), ("recent_url", "recent"), ("selected_url", "selected"), ("backlinks_url", "backlinks"), ("search_index_url", "search")):
-        record[key] = f"/docs/preview/{route}"
-    record["search"] = {**record["search"], "index_url": record["search_index_url"]}
-    record["collections"] = browser_collection_records(repo_root, prepared, published=True)
-    for child in record["collections"]:
-        base = f"/docs/preview/external/{quote(child['collection'])}"
-        child.update(manifest_url=f"{base}/manifest.json", by_id_url_base=f"{base}/by-id")
+        record.update(links_enabled=links_enabled(repo_root, config), backlinks_url=browser_docs_backlinks_url(config))
     return record
 
 
 def browser_workspace_config_payload(repo_root: Path, workspace: DocsWorkspaceConfig, *, published: bool = False) -> dict[str, Any]:
     payload = {"schema_version": DOCS_VIEWER_BROWSER_CONFIG_SCHEMA_VERSION, "docs_viewer": {"recent_limit": workspace.recent_limit}}
     if published:
-        payload["workspace"] = browser_stage_record(repo_root, select_workspace_stage(workspace, "preview"),
+        payload["workspace"] = browser_workspace_record(repo_root, select_workspace_stage(workspace, "preview"),
                                                     published=True, public_viewer_base_url=workspace.public_viewer_base_url)
     else:
         payload["public_viewer_base_url"] = workspace.public_viewer_base_url
-        payload["stages"] = [browser_stage_record(repo_root, select_workspace_stage(workspace, "working")), browser_preview_record(repo_root, workspace)]
+        payload["workspace"] = browser_workspace_record(repo_root, select_workspace_stage(workspace, "working"))
     return payload
 
 

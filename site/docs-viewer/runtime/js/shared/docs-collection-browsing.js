@@ -2,7 +2,6 @@ import { normalizeDocsCollectionFilterValue } from "./docs-collection-report-fil
 import { catalogueWorkThumbnail } from "./docs-viewer-catalogue-media.js";
 import { catalogueThumbnailSettings } from "./docs-viewer-catalogue-media-policy.js";
 import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
-
 export const COLLECTION_PAGE_SIZE = 20;
 export const COLLECTION_SEARCH_DELAY_MS = 180;
 
@@ -95,7 +94,7 @@ export function createCollectionBrowsingData(options) {
 }
 
 /**
- * Read one stage's existing media policy. Public transport remains static-file-only.
+ * Read the configured media policy. Public transport remains static-file-only.
  * @param {Object} context Report context with collectionProvider and routeContext.
  */
 export async function loadCatalogueCollectionThumbnailSettings(context) {

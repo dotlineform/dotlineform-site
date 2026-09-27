@@ -169,7 +169,7 @@ export function mountDocsViewerPublicReport(context) {
           var target = child.documentTarget;
           mountDocsViewerMediaLinks({
             content: child.content,
-            documentTarget: { ...(target.stage ? { stage: target.stage } : {}),
+            documentTarget: {
               collection: target.collection, docId: target.doc_id },
             isCurrentDocument: child.isCurrentDocument,
             openMediaTarget: context.openMediaTarget,

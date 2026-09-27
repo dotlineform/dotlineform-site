@@ -1,7 +1,6 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
 import { mountDocsViewerMediaLinks } from "../shared/docs-viewer-media-detail.js";
 import { loadWorkingCatalogueDocumentLinks } from "../management/docs-viewer-management-catalogue-document-links.js";
-
 const METADATA_SCHEMA = "catalogue_works_report_metadata_v1";
 const WORK_ID_PATTERN = /^[0-9]{5}$/;
 const SERIES_ID_PATTERN = /^[0-9]{3}$/;
@@ -215,7 +214,7 @@ function loadCatalogueWorks(context) {
   const url = new URL("/studio/catalogue-output/reports/catalogue-works/metadata.json", studioOrigin(context));
   return Promise.all([
     fetchJson(url.toString(), "Failed to load Catalogue Works metadata."),
-    loadWorkingCatalogueDocumentLinks({ stageConfigs: context.stageConfigs, document: context.content.ownerDocument })
+    loadWorkingCatalogueDocumentLinks({ document: context.content.ownerDocument, workspaceConfig: context.workspaceConfig })
   ]).then((inputs) => ({
     rows: normalizeCatalogueWorksMetadata(inputs[0]),
     documentLinks: inputs[1]
@@ -379,7 +378,7 @@ function renderCurrent(state) {
     projection.rows.slice(start, start + PAGE_SIZE).forEach((row) => appendRow(state, row));
     mountDocsViewerMediaLinks({
       content: state.rowsNode,
-      documentTarget: { stage: state.context.viewerStage, collection: "", docId: state.context.doc.doc_id },
+      documentTarget: {  collection: "", docId: state.context.doc.doc_id },
       isCurrentDocument: () => state.context.content.contains(state.rowsNode),
       openMediaTarget: state.context.openMediaTarget
     });

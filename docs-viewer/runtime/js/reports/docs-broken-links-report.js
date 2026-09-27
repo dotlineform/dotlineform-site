@@ -1,9 +1,7 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
-
 const DEFAULT_SORT_KEY = "fromPage";
 const DEFAULT_SORT_DIR = "asc";
 const SORT_KEYS = Object.freeze(["fromPage", "link"]);
-
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
 }
@@ -25,7 +23,6 @@ function postBrokenLinks(state) {
     return Promise.reject(new Error("Local docs-management server is not configured."));
   }
   return service.runBrokenLinksAudit({
-    ...(state.reportContext.stage ? { stage: state.reportContext.stage } : {}),
     report_context: state.reportContext
   });
 }
@@ -114,7 +111,7 @@ function renderRows(state) {
   }
   state.emptyNode.hidden = entries.length > 0 || state.unavailableSources.length > 0;
   if (!entries.length && !state.unavailableSources.length) {
-    state.emptyNode.textContent = "No broken links found in " + state.stage;
+    state.emptyNode.textContent = "No broken links found.";
     return;
   }
   entries.forEach((entry) => {
@@ -138,7 +135,7 @@ function renderRows(state) {
 
 function setBusy(state, busy) {
   state.isBusy = Boolean(busy);
-  state.runButton.disabled = state.isBusy || !state.stage;
+  state.runButton.disabled = state.isBusy;
   state.runButton.classList.toggle("docsViewerReport__runText", state.isBusy);
   state.runButton.setAttribute("aria-busy", String(state.isBusy));
   state.runButton.setAttribute("aria-label", state.isBusy ? "Running audit" : "Run audit");
@@ -148,16 +145,13 @@ function setBusy(state, busy) {
 }
 
 function runAudit(state) {
-  if (!state.stage || state.isBusy) return Promise.resolve();
+  if (state.isBusy) return Promise.resolve();
   setBusy(state, true);
   state.statusNode.textContent = "Running broken-links audit...";
   clearNode(state.rowsNode);
   state.emptyNode.hidden = true;
   return postBrokenLinks(state)
     .then((payload) => {
-      if (cleanString(payload.stage) !== cleanString(state.reportContext.stage)) {
-        throw new Error("Broken Links response does not match the selected source context.");
-      }
       state.entries = Array.isArray(payload && payload.entries) ? payload.entries : [];
       state.unavailableSources = Array.isArray(payload && payload.unavailable_sources) ? payload.unavailable_sources : [];
       state.sortKey = DEFAULT_SORT_KEY;
@@ -249,13 +243,11 @@ function renderShell(root) {
 }
 
 export function mountDocsBrokenLinksReport(context) {
-  const stage = cleanString(context.viewerStage);
-  if (stage !== "working") throw new Error("Broken Links is available in Working.");
-  const reportContext = { stage };
+  if (!context.managementContext) throw new Error("Broken Links requires local management.");
+  const reportContext = {  };
   const nodes = renderShell(context.reportRoot);
   const state = Object.assign({
     context,
-    stage,
     reportContext,
     entries: [],
     unavailableSources: [],

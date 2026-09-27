@@ -32,12 +32,12 @@ def open_media_source(
     repo_root: Path, body: dict[str, Any], *, dry_run: bool = False,
 ) -> dict[str, object]:
     """Reveal one exact configured Docs media file without accepting a filesystem path."""
-    if set(body) != {"stage", "collection", "role", "media_type", "identity"} or any(
+    if set(body) != { "collection", "role", "media_type", "identity"} or any(
         not isinstance(value, str) or value != value.strip() or (not value and key != "collection")
         for key, value in body.items()
     ):
-        raise ValueError("Docs media requires an exact stage, collection, role, media type and identity")
-    config = load_docs_media_owner(repo_root, body["stage"], body["collection"])
+        raise ValueError("Docs media requires an exact collection, role, media type and identity")
+    config = load_docs_media_owner(repo_root, body["collection"])
     path = _source_path(repo_root, config, body["role"], body["media_type"], body["identity"])
     open_in_finder(
         repo_root, path, reveal=True, dry_run=dry_run,

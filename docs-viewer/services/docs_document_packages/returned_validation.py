@@ -17,7 +17,7 @@ from docs_document_packages.returned_common import (
     normalize_text,
 )
 import docs_source_model as source_model
-from docs_document_packages.provenance import package_provenance_error, require_package_stage
+from docs_document_packages.provenance import EXPORT_META_SCHEMA_VERSION, package_provenance_error
 
 
 def validate_whole_returned_package(
@@ -25,7 +25,6 @@ def validate_whole_returned_package(
     trusted_metadata: dict[str, Any],
     *,
     repo_root: Path,
-    stage: str,
     collection: str | None = None,
     required_capability: str,
 ) -> list[dict[str, Any]]:
@@ -36,13 +35,12 @@ def validate_whole_returned_package(
         RETURN_IMPORT_CAPABILITY,
     }:
         raise ValueError(f"unsupported returned-package capability: {required_capability}")
-    require_package_stage(stage)
     provenance_error = package_provenance_error(trusted_metadata)
     if provenance_error:
         return [issue("error", "invalid_package_provenance", provenance_error)]
     issues: list[dict[str, Any]] = []
     expected_identity = {
-        "schema_version": "data_sharing_export_meta_v3",
+        "schema_version": EXPORT_META_SCHEMA_VERSION,
         "app": "docs-viewer",
         "adapter_id": "documents",
         "data_domain": "documents",
@@ -75,19 +73,6 @@ def validate_whole_returned_package(
                 "error",
                 "profile_id_mismatch",
                 f"trusted package metadata config_id {config_id!r} does not match profile_id {profile_id!r}",
-            )
-        )
-
-    metadata_stage = normalize_text(trusted_metadata.get("stage")).lower()
-    expected_stage = normalize_text(stage).lower()
-    if not metadata_stage:
-        issues.append(issue("error", "missing_stage", "trusted package metadata stage is required"))
-    elif metadata_stage != expected_stage:
-        issues.append(
-            issue(
-                "error",
-                "stage_mismatch",
-                f"trusted package stage {metadata_stage!r} does not match requested stage {expected_stage!r}",
             )
         )
 
@@ -172,7 +157,7 @@ def validate_whole_returned_package(
                 "export_only_collection" if metadata_collection else "export_only_profile",
                 (
                     "trusted collection package does not support Docs Import: "
-                    f"{metadata_stage}/{metadata_collection}"
+                    f"{metadata_collection}"
                     if metadata_collection
                     else f"profile does not support returned-package import: {profile_id or '<missing>'}"
                 ),
@@ -235,14 +220,12 @@ def validate_whole_returned_package(
 
     if (
         metadata_collection
-        and metadata_stage == expected_stage
         and collection_matches_request
         and expected_seen
     ):
         try:
             resolved_collection = resolve_managed_document_collection(
                 repo_root,
-                stage=expected_stage,
                 collection=metadata_collection,
             )
             collection_docs = [
@@ -278,7 +261,7 @@ def validate_whole_returned_package(
                     "cross_collection_selected_documents",
                     (
                         "trusted selected_doc_ids contains documents outside "
-                        f"{expected_stage}/{metadata_collection}: "
+                        f"{metadata_collection}: "
                         + ", ".join(cross_collection)
                     ),
                 )

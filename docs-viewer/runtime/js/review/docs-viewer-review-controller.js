@@ -1,5 +1,4 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
-
 function createButton(documentRef, label) {
   var button = documentRef.createElement("button");
   button.type = "button";
@@ -64,11 +63,10 @@ export function createDocsViewerReviewControlRenderers() {
 }
 
 export function reviewCanonicalDocumentHref(packageManifest, docId) {
-  var sourceStage = String(packageManifest && packageManifest.source_stage || "").trim();
   var sourceCollection = String(packageManifest && packageManifest.source_collection || "").trim();
   var selectedDocId = String(docId || "").trim();
-  return sourceStage === "working" && selectedDocId && !sourceCollection
-    ? "/docs/?stage=" + encodeURIComponent(sourceStage) + "&doc=" + encodeURIComponent(selectedDocId)
+  return selectedDocId && !sourceCollection
+    ? "/docs/?doc=" + encodeURIComponent(selectedDocId)
     : "";
 }
 

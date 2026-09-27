@@ -22,7 +22,6 @@ export {
   collectionLifecycleDeleteTargets
 };
 
-
 var SCOPE_LIFECYCLE_TEXT = {
   cancelButton: "Cancel",
   scopePreviewButton: "Preview",
@@ -40,10 +39,10 @@ var SCOPE_LIFECYCLE_TEXT = {
   collectionCreateFailed: "New collection failed.",
   collectionCreateResultTitle: "Collection created",
   collectionDeleteTitle: "Delete collection",
-  collectionDeleteIntro: "Select the collection to delete from the selected stage.",
+  collectionDeleteIntro: "Select the collection to delete from the workspace.",
   collectionDeleteTargetLabel: "collection",
   collectionDeleteRequiredMessage: "Select a collection to delete.",
-  collectionDeleteNoTargets: "No collections are configured for the selected stage.",
+  collectionDeleteNoTargets: "No collections are configured for the workspace.",
   collectionDeletePreviewing: "Previewing collection deletion...",
   collectionDeletePreviewTitle: "Preview delete collection",
   collectionDeleteDeleting: "Deleting collection...",
@@ -193,7 +192,7 @@ function lifecycleRecord(payload, kinds) {
 function externalLifecycleRoot(payload) {
   var record = lifecycleRecord(payload, ["collection_source_root"]);
   var path = normalizeText(record && record.path);
-  var suffix = "/" + payload.stage + "/source/collections/" + payload.collection;
+  var suffix = "/working/source/collections/" + payload.collection;
   return path.endsWith(suffix) ? path.slice(0, -suffix.length) : "";
 }
 
@@ -250,7 +249,7 @@ function lifecycleFileRows(payload, records) {
 
 function lifecycleOverviewRows(payload) {
   return [
-    ["stage", payload.stage], ["collection", payload.collection], ["title", payload.title],
+    ["collection", payload.collection], ["title", payload.title],
     ["url", payload.urls && payload.urls.management]
   ];
 }
@@ -449,7 +448,7 @@ function renderDeleteCollectionSelectHtml(targets) {
 
 export async function openDeleteCollectionFlow(options = {}) {
   var callbacks = options.callbacks || {};
-  var targets = collectionLifecycleDeleteTargets(options.capabilities, options.clientOptions.stage);
+  var targets = collectionLifecycleDeleteTargets(options.capabilities);
   if (!targets.length) {
     setMessage(callbacks, SCOPE_LIFECYCLE_TEXT.collectionDeleteNoTargets, true);
     return null;

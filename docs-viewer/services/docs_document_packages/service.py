@@ -31,7 +31,6 @@ from docs_document_packages.workspace import configured_workspace_paths, workspa
 from docs_import_document_package_content import normalize_documents_import_content
 from docs_management_context import log_event
 from docs_management_document_target import resolve_managed_document_collection
-from docs_document_packages.provenance import require_package_stage
 
 
 DOCUMENTS_DATA_DOMAIN = "documents"
@@ -122,11 +121,9 @@ def config_payload(
 ) -> dict[str, Any]:
     collection = None
     request_params = params or {}
-    stage = require_package_stage(query_value(request_params, "stage"))
     if "collection" in request_params:
         collection = resolve_managed_document_collection(
             repo_root,
-            stage=query_value(request_params, "stage"),
             collection=query_value(request_params, "collection"),
         )
     profile_payload = load_config_file(repo_root)
@@ -148,7 +145,6 @@ def config_payload(
             for config in profile_payload.get("configs", [])
             if isinstance(config, dict) and config.get("enabled") is not False
         ],
-        "stage": stage,
         "workspace": {
             "available": bool(status.get("available")),
             "message": str(status.get("message") or ""),
@@ -157,7 +153,6 @@ def config_payload(
     }
     if collection is not None:
         payload.update({
-            "stage": collection.stage,
             "collection": collection.collection,
             "flat_collection": True,
         })
@@ -165,42 +160,36 @@ def config_payload(
 
 
 def documents_payload(repo_root: Path, params: dict[str, list[str]]) -> dict[str, Any]:
-    stage = require_package_stage(query_value(params, "stage"))
     collection = ""
     if "collection" in params:
         resolved_collection = resolve_managed_document_collection(
             repo_root,
-            stage=stage,
             collection=query_value(params, "collection"),
         )
         collection = resolved_collection.collection
     return selectable_document_records(
         repo_root,
-        stage=stage,
         collection=collection,
         selection_model="collection_documents" if collection else "documents",
     )
 
 
 def returned_payload(repo_root: Path, params: dict[str, list[str]]) -> dict[str, Any]:
-    stage = require_package_stage(query_value(params, "stage"))
     collection = None
     if "collection" in params:
         resolved_collection = resolve_managed_document_collection(
             repo_root,
-            stage=stage,
             collection=query_value(params, "collection"),
         )
         if not resolved_collection.document_config.supports_return_import:
             raise ValueError(
                 "returned-package import is not enabled for configured "
-                f"collection {resolved_collection.stage}/{resolved_collection.collection}"
+                f"collection {resolved_collection.collection}"
             )
         collection = resolved_collection.collection
     roots = configured_workspace_paths(repo_root)
     report = list_returned_document_packages(
         repo_root,
-        stage=stage,
         collection=collection,
         required_capability=(
             RETURN_IMPORT_CAPABILITY
@@ -228,9 +217,8 @@ def get_payload(
     path: str,
     params: dict[str, list[str]],
 ) -> dict[str, Any]:
-    require_package_stage(query_value(params, "stage"))
-    if "scope" in params:
-        raise ValueError("scope is retired; use stage and optional collection")
+    if "scope" in params or "stage" in params:
+        raise ValueError("scope and stage are retired; use an optional collection")
     if "sub_scope" in params:
         raise ValueError("sub_scope is retired; use collection")
     if path == routes.CONFIG_PATH:
@@ -252,16 +240,14 @@ def prepare_package(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     )
     if collection_aliases:
         raise ValueError(
-            "document package prepare accepts only stage and optional collection "
+            "document package prepare accepts only optional collection "
             "for collection identity: "
             + ", ".join(collection_aliases)
         )
-    stage = require_package_stage(body.get("stage"))
     collection = ""
     if "collection" in body:
         resolved_collection = resolve_managed_document_collection(
             repo_root,
-            stage=stage,
             collection=body.get("collection"),
         )
         collection = resolved_collection.collection
@@ -281,7 +267,6 @@ def prepare_package(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     roots = configured_workspace_paths(repo_root)
     payload = build_document_package(
         repo_root,
-        stage=stage,
         collection=collection,
         data_domain=DOCUMENTS_DATA_DOMAIN,
         config_id=profile_id,
@@ -305,7 +290,6 @@ def prepare_package(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
         repo_root,
         "document-package-prepare",
         {
-            "stage": stage,
             "profile_id": profile_id,
             "dry_run": dry_run,
             "output_written": bool(payload.get("output_written")),
@@ -363,7 +347,6 @@ def content_review_response(payload: dict[str, Any]) -> dict[str, Any]:
 
 
 def review_returned(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
-    stage = require_package_stage(body.get("stage"))
     staged_filename = str(body.get("staged_filename") or "").strip()
     if "collection" in body:
         raise ValueError(
@@ -376,7 +359,6 @@ def review_returned(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     payload = content_review_response(
         create_review_source_folder(
             repo_root,
-            stage=stage,
             staged_filename=staged_filename,
             dry_run=dry_run,
             staging_root=roots.import_staging,
@@ -389,7 +371,6 @@ def review_returned(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
         repo_root,
         "document-package-review",
         {
-            "stage": stage,
             "staged_filename": staged_filename,
             "dry_run": dry_run,
             "ok": bool(payload.get("ok")),
@@ -401,8 +382,9 @@ def post_response(
     path: str,
     body: dict[str, Any],
 ) -> tuple[HTTPStatus, dict[str, Any]]:
+    if "stage" in body:
+        raise ValueError("stage is retired from document package requests")
     require_direct_request(body)
-    require_package_stage(body.get("stage"))
     if path == routes.PREPARE_PATH:
         payload = prepare_package(repo_root, body)
     elif path == routes.RETURNED_REVIEW_PATH:

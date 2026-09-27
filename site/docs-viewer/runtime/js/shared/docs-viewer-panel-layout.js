@@ -1,5 +1,4 @@
-import { convertAnalysisPanelState } from "./docs-viewer-saved-state.js";
-
+import { convertWorkingPanelState } from "./docs-viewer-saved-state.js";
 import {
   buildIndexPanelStorageKey,
   expandedIndexPanelState,
@@ -18,7 +17,6 @@ import {
   projectDocsViewerViewState,
   updateDocsViewerViewState
 } from "./docs-viewer-view-state.js";
-
 
 var DEFAULT_INDEX_VIEW = {
   id: "index-tree",
@@ -43,7 +41,7 @@ export function createDocsViewerPanelLayout(options) {
   var indexPanelAvailable = settings.indexPanelAvailable || function () { return true; };
   var viewRegistry = settings.viewRegistry || null;
   var storageOwner = settings.storageOwner;
-  convertAnalysisPanelState(storage);
+  if (storageOwner === "manage") convertWorkingPanelState(storage);
   var storageKey = buildIndexPanelStorageKey(storageOwner);
   var indexPanelState = readStoredIndexPanelState();
   var viewState = createDocsViewerViewState({

@@ -2,7 +2,6 @@ import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.
 import { mountDocsViewerMediaLinks } from "../shared/docs-viewer-media-detail.js";
 import { loadWorkingCatalogueDocumentLinks } from "./docs-viewer-management-catalogue-document-links.js";
 import { loadWorksCollectionSubjectTitles } from "./docs-viewer-management-works-metadata.js";
-
 import {
   encodeDecodedLocalTarget
 } from "./docs-viewer-management-client.js";
@@ -459,8 +458,7 @@ function workingSubjectDetailInfo(context, assignSubjectAvailable) {
   var collection = exactCollection(settings.collection);
   var target = settings.target || {};
   if (
-    cleanString(target.stage) !== cleanString(collection.stage)
-    || cleanString(target.collection).toLowerCase() !== collection.collection
+    cleanString(target.collection).toLowerCase() !== collection.collection
     || cleanString(target.doc_id) !== cleanString(settings.document && settings.document.doc_id)
   ) {
     throw new Error("Working subject information target is invalid.");
@@ -479,14 +477,15 @@ function createDocsViewerManagementWorkingSubjects(options, definition) {
     throw new Error("Working subject customisation identity did not match its registry entry.");
   }
   var collection = exactCollection(options.collection);
-  var generatedWorks = collection.stage === "working" && collection.collection === "works";
+  var generatedWorks = collection.collection === "works";
   var assignSubjectAvailable = hasDocsViewerAssignableFieldGroup(options.descriptor, AUTHORING_SUBJECT_GROUP_ID);
   var collator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
   return Promise.all([
     generatedWorks ? loadWorksCollectionSubjectTitles(options) : loadSubjectTargetTitles(options),
     generatedWorks
       ? loadWorkingCatalogueDocumentLinks({
-        stageConfigs: options.stageConfigs, document: options.content.ownerDocument, fetch: options.fetch
+         document: options.content.ownerDocument, fetch: options.fetch,
+         workspaceConfig: options.workspaceConfig
       })
       : null
   ]).then(function (results) {

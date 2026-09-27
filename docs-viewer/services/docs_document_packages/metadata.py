@@ -127,7 +127,6 @@ def staged_file_record(path: Path, *, metadata_root: Path, workspace_root: Path)
             "adapter_id": normalize_text(metadata.get("adapter_id")),
             "config_id": normalize_text(metadata.get("config_id")),
             "profile_id": normalize_text(metadata.get("profile_id")),
-            "stage": normalize_text(metadata.get("stage")),
             "collection": collection,
             "target_format": normalize_text(metadata.get("target_format")),
             "record_shape": normalize_text(metadata.get("record_shape")),

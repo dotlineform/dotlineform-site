@@ -22,41 +22,26 @@ export function createDocsViewerWorkspaceProvider(options) {
     return currentValue(settings.routeContext) || routeSession.routeContext || {};
   }
 
-  function activeStage() {
-    return cleanString(currentValue(settings.viewerStage) || routeContext().viewerStage);
-  }
-
-  function configForStage(stage) {
-    var workspace = settings.workspaceConfig || {};
-    if (!stage) return workspace.activeConfig && !workspace.activeConfig.stage ? workspace.activeConfig : null;
-    return workspace.stageConfigsById instanceof Map ? workspace.stageConfigsById.get(stage) : null;
-  }
-
-  function collectionConfig(optionsForRead) {
-    var request = optionsForRead || {};
-    if (Object.prototype.hasOwnProperty.call(request, "scope")) throw new Error("Scope targets are retired.");
-    var stage = Object.prototype.hasOwnProperty.call(request, "stage") ? cleanString(request.stage) : activeStage();
-    var config = configForStage(stage);
-    if (!config) throw new Error("Docs stage is not configured: " + stage);
+  function collectionConfig() {
+    var config = settings.workspaceConfig && settings.workspaceConfig.activeConfig;
+    if (!config) throw new Error("Docs workspace is not configured.");
     return config;
   }
 
   function readIndex(optionsForRead) {
     var config = collectionConfig(optionsForRead);
-    return generatedData.readDocsIndexTree({ indexTreeUrl: config.indexTreeUrl, viewerStage: config.stage });
+    return generatedData.readDocsIndexTree({ indexTreeUrl: config.indexTreeUrl });
   }
 
   function readDocument(doc, optionsForRead) {
-    var config = collectionConfig(optionsForRead);
     return generatedData.readDocumentPayload(doc, {
-      docId: cleanString(optionsForRead && optionsForRead.docId || doc && doc.doc_id),
-      viewerStage: config.stage
+      docId: cleanString(optionsForRead && optionsForRead.docId || doc && doc.doc_id)
     });
   }
 
   function readSearch(optionsForRead) {
     var config = collectionConfig(optionsForRead);
-    return generatedData.readSearchIndex({ searchIndexUrl: config.searchIndexUrl, viewerStage: config.stage }).then(function (payload) {
+    return generatedData.readSearchIndex({ searchIndexUrl: config.searchIndexUrl }).then(function (payload) {
       if (!payload || !payload.header || payload.header.schema !== "docs_viewer_search_index_v4") {
         throw new Error("Search data has an unsupported schema.");
       }
@@ -66,7 +51,7 @@ export function createDocsViewerWorkspaceProvider(options) {
 
   function readRecent(optionsForRead) {
     var config = collectionConfig(optionsForRead);
-    return generatedData.readRecent({ recentUrl: config.recentUrl, viewerStage: config.stage });
+    return generatedData.readRecent({ recentUrl: config.recentUrl });
   }
 
   var provider = {
@@ -78,16 +63,15 @@ export function createDocsViewerWorkspaceProvider(options) {
     readSearch: readSearch
   };
 
-  function canReadLinks(target) {
-    var config = target && configForStage(cleanString(target.stage));
-    return Boolean(config && config.linksEnabled && cleanString(target.stage) === cleanString(config.stage)
-      && (cleanString(config.stage) || config.linksByIdUrlBase));
+  function canReadLinks() {
+    var config = settings.workspaceConfig && settings.workspaceConfig.activeConfig;
+    return Boolean(config && config.linksEnabled);
   }
 
-  /** Read the exact staged document's separate relationship record; never infer another collection. */
+  /** Read the exact document's separate relationship record; never infer another collection. */
   function readLinks(target) {
-    if (!canReadLinks(target)) return Promise.reject(new Error("Links is not enabled for this stage."));
-    var config = configForStage(cleanString(target.stage));
+    if (!canReadLinks(target)) return Promise.reject(new Error("Links is not enabled for this workspace."));
+    var config = collectionConfig();
     return generatedData.readDocumentLinks(target, { linksByIdUrlBase: config.linksByIdUrlBase });
   }
 
@@ -103,29 +87,28 @@ export function createDocsViewerWorkspaceProvider(options) {
   }
   if (source && typeof source.readCatalogueMediaTargets === "function") {
     provider.readCatalogueMediaTargets = function () {
-      return source.readCatalogueMediaTargets(activeStage());
+      return source.readCatalogueMediaTargets();
     };
   }
-  var mediaPolicyReads = new Map();
+  var mediaPolicyRead = null;
   if (source && typeof source.readCatalogueMediaConfig === "function"
     || routeContext().routeConfig && routeContext().routeConfig.appKind === "public") {
     provider.readCatalogueMediaConfig = function () {
       // Coalesce concurrent image reads, then revalidate policy on the next activation.
-      var stage = activeStage();
-      if (!mediaPolicyReads.has(stage)) {
-        mediaPolicyReads.set(stage, Promise.resolve().then(function () {
-          if (source && typeof source.readCatalogueMediaConfig === "function") return source.readCatalogueMediaConfig(stage);
+      if (!mediaPolicyRead) {
+        mediaPolicyRead = Promise.resolve().then(function () {
+          if (source && typeof source.readCatalogueMediaConfig === "function") return source.readCatalogueMediaConfig();
           return readPublicCatalogueMediaConfig(routeContext().routeConfig.catalogueMediaConfigUrl, function (url, optionsForFetch) {
             return settings.window.fetch(url, optionsForFetch);
           });
-        }).then(validateCatalogueMediaPolicy).finally(function () { mediaPolicyReads.delete(stage); }));
+        }).then(validateCatalogueMediaPolicy).finally(function () { mediaPolicyRead = null; });
       }
-      return mediaPolicyReads.get(stage);
+      return mediaPolicyRead;
     };
   }
   if (source && typeof source.readCatalogueWork === "function") {
     provider.readCatalogueWork = function (workId) {
-      return source.readCatalogueWork(workId, activeStage());
+      return source.readCatalogueWork(workId);
     };
   } else if (routeContext().routeConfig && routeContext().routeConfig.appKind === "public") {
     provider.readCatalogueWork = function (workId) {
@@ -135,7 +118,7 @@ export function createDocsViewerWorkspaceProvider(options) {
     };
   }
   if (source && typeof source.readCatalogueSeries === "function") {
-    provider.readCatalogueSeries = function (seriesId) { return source.readCatalogueSeries(seriesId, activeStage()); };
+    provider.readCatalogueSeries = function (seriesId) { return source.readCatalogueSeries(seriesId); };
   } else if (routeContext().routeConfig && routeContext().routeConfig.appKind === "public") {
     provider.readCatalogueSeries = function (seriesId) {
       return readPublicCatalogueSeries(routeContext().routeConfig.catalogueSeriesRecordsBaseUrl, seriesId, function (url, optionsForFetch) {
@@ -151,7 +134,7 @@ export function createDocsViewerWorkspaceProvider(options) {
     };
   }
   if (source && typeof source.readCatalogueGallery === "function") {
-    provider.readCatalogueGallery = function (galleryId) { return source.readCatalogueGallery(galleryId, activeStage()); };
+    provider.readCatalogueGallery = function (galleryId) { return source.readCatalogueGallery(galleryId); };
   } else if (routeContext().routeConfig && routeContext().routeConfig.appKind === "public") {
     provider.readCatalogueGallery = function (galleryId) {
       return readPublicCatalogueGallery(routeContext().routeConfig.catalogueGalleryRecordsBaseUrl, galleryId, function (url, optionsForFetch) {
@@ -184,25 +167,19 @@ export function createDocsViewerWorkspaceProvider(options) {
   if (source && typeof source.listStagedMedia === "function") {
     provider.listStagedMedia = function (mediaKind, optionsForList) {
       var requestSettings = optionsForList || {};
-      return source.listStagedMedia(mediaKind, Object.assign({}, requestSettings, {
-        stage: Object.prototype.hasOwnProperty.call(requestSettings, "stage") ? requestSettings.stage : activeStage()
-      }));
+      return source.listStagedMedia(mediaKind, requestSettings);
     };
   }
   if (source && typeof source.previewStagedMedia === "function") {
     provider.previewStagedMedia = function (payload, optionsForPreview) {
       var requestSettings = optionsForPreview || {};
-      return source.previewStagedMedia(payload, Object.assign({}, requestSettings, {
-        stage: Object.prototype.hasOwnProperty.call(requestSettings, "stage") ? requestSettings.stage : activeStage()
-      }));
+      return source.previewStagedMedia(payload, requestSettings);
     };
   }
   if (source && typeof source.applyStagedMedia === "function") {
     provider.applyStagedMedia = function (payload, optionsForApply) {
       var requestSettings = optionsForApply || {};
-      return source.applyStagedMedia(payload, Object.assign({}, requestSettings, {
-        stage: Object.prototype.hasOwnProperty.call(requestSettings, "stage") ? requestSettings.stage : activeStage()
-      }));
+      return source.applyStagedMedia(payload, requestSettings);
     };
   }
 

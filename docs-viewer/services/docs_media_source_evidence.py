@@ -77,14 +77,13 @@ def _adapter(repo_root: Path, config: DocsStageConfig | DocsCollectionConfig):
 
 def load_media_source_evidence(
     repo_root: Path,
-    stage: str,
     *,
     collection: str = "",
     config: DocsStageConfig | DocsCollectionConfig | None = None,
 ) -> tuple[DocsMediaSourceEvidence, ...]:
-    owner = load_docs_media_owner(repo_root, stage, collection)
+    owner = load_docs_media_owner(repo_root, collection)
     if config is not None and config != owner:
-        raise ValueError("media evidence config does not match its exact stage and collection")
+        raise ValueError("media evidence config does not match its configured collection")
     config = owner
     adapter = _adapter(repo_root, config)
     if adapter.stat(TABLE_IDENTITY) is None:
@@ -97,7 +96,7 @@ def load_media_source_evidence(
         raise ValueError("Docs media source evidence must contain only schema_version, stage, collection, and records")
     if payload.get("schema_version") != SCHEMA_VERSION:
         raise ValueError(f"Docs media source evidence schema_version must be {SCHEMA_VERSION}")
-    if payload.get("stage") != stage or payload.get("collection") != collection:
+    if payload.get("stage") != config.stage or payload.get("collection") != collection:
         raise ValueError("Docs media source evidence collection does not match its owner")
     raw_records = payload.get("records")
     if not isinstance(raw_records, list):
@@ -116,7 +115,6 @@ def load_media_source_evidence(
 
 def record_media_source_evidence(
     repo_root: Path,
-    stage: str,
     *,
     collection: str = "",
     media_type: str,
@@ -125,12 +123,10 @@ def record_media_source_evidence(
     source_path: str,
     config: DocsStageConfig | DocsCollectionConfig | None = None,
 ) -> DocsMediaSourceEvidence:
-    owner = load_docs_media_owner(repo_root, stage, collection)
+    owner = load_docs_media_owner(repo_root, collection)
     if config is not None and config != owner:
-        raise ValueError("media evidence config does not match its exact stage and collection")
+        raise ValueError("media evidence config does not match its configured collection")
     config = owner
-    if stage != "working":
-        raise ValueError("Media source evidence writes require Working")
     record = _normalize_record(
         {
             "media_type": media_type,
@@ -143,13 +139,13 @@ def record_media_source_evidence(
     )
     records = {
         (existing.media_type, existing.identity): existing
-        for existing in load_media_source_evidence(repo_root, stage, collection=collection, config=config)
+        for existing in load_media_source_evidence(repo_root, collection=collection, config=config)
     }
     records[(record.media_type, record.identity)] = record
     ordered = tuple(records[key] for key in sorted(records))
     payload = {
         "schema_version": SCHEMA_VERSION,
-        "stage": stage,
+        "stage": config.stage,
         "collection": collection,
         "records": [asdict(item) for item in ordered],
     }
@@ -163,7 +159,6 @@ def record_media_source_evidence(
 
 def media_source_evidence_for(
     repo_root: Path,
-    stage: str,
     media_type: str,
     identity: str,
     *,
@@ -174,7 +169,7 @@ def media_source_evidence_for(
     return next(
         (
             record
-            for record in load_media_source_evidence(repo_root, stage, collection=collection, config=config)
+            for record in load_media_source_evidence(repo_root, collection=collection, config=config)
             if record.media_type == media_type and record.identity == normalized_identity
         ),
         None,

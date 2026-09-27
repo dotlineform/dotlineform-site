@@ -302,7 +302,6 @@ export function resolveDocsViewerRouteConfig(options) {
     appKind: appKind,
     routeId: requireRouteConfigField(rawConfig.route_id, "route_id"),
     isDocsManagementRoute: docsManagementRoute,
-    defaultStage: appKind === "manage" ? requireRouteConfigField(rawConfig.default_stage, "default_stage") : "",
     preserveQueryParams: normalizePreservedQueryParams(rawConfig.preserve_query_params),
     viewerBaseUrl: requireRouteConfigField(rawConfig.viewer_base_url, "viewer_base_url"),
     docsViewerConfigUrl: requireRouteConfigField(configUrls.docs_viewer, "config_urls.docs_viewer"),
@@ -373,7 +372,6 @@ export function routeConfigWorkspaceProjection(workspaceConfig, options) {
     viewerPathname: windowRef && windowRef.location
       ? new URL(viewerBaseUrl || fallbackPath, windowRef.location.origin).pathname
       : viewerBaseUrl,
-    viewerStage: cleanString(config.stage),
     collections: collections,
     collectionsById: config.collectionsById instanceof Map
       ? config.collectionsById

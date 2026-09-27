@@ -76,7 +76,6 @@ async function requestImport(
 ) {
   const stagedFilename = normalizeText(file && file.filename);
   const requestBody = {
-    stage: context.stage,
     source_directory: context.sourceDirectory,
     staged_filename: stagedFilename,
     include_prompt_meta: docsHtmlImportSourceFormatForRecord(file) === "html" ? Boolean(context.includePromptMeta) : false,
@@ -109,7 +108,6 @@ async function importFileWithPrompts(state, file, context = {}) {
       );
     }
     const payload = await requestImport(file, {
-      stage: context.stage,
       collection: context.collection,
       sourceDirectory: context.sourceDirectory,
       includePromptMeta: context.includePromptMeta,
@@ -134,7 +132,6 @@ export async function runDocsHtmlImportWorkflow(
   state,
   {
     files = [],
-    stage = "",
     collection = "",
     sourceDirectory = "",
     includePromptMeta = false,
@@ -145,7 +142,6 @@ export async function runDocsHtmlImportWorkflow(
   } = {}
 ) {
   const workflowContext = {
-    stage: normalizeText(stage),
     collection: normalizeText(collection).toLowerCase(),
     sourceDirectory: normalizeText(sourceDirectory),
     includePromptMeta: Boolean(includePromptMeta),
@@ -194,7 +190,6 @@ export async function runDocsHtmlImportWorkflow(
     try {
       const destination = docsImportResultDestination(displayedResult);
       await onTerminalResult({
-        stage: destination.target.stage,
         collection: normalizeText(destination.target.collection),
         docId: destination.target.doc_id,
         target: destination.target,

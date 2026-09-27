@@ -18,7 +18,6 @@ const MEDIA_PRESENTATION_SELECTOR = [
   'script[type="application/json"]',
   "[data-docs-media-presentation]"
 ].join("");
-
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
 }
@@ -39,8 +38,7 @@ function positiveInteger(value) {
 function sameDocumentTarget(left, right) {
   var first = left || {};
   var second = right || {};
-  return cleanString(first.stage) === cleanString(second.stage)
-    && cleanString(first.collection) === cleanString(second.collection)
+  return cleanString(first.collection) === cleanString(second.collection)
     && cleanString(first.docId) === cleanString(second.docId);
 }
 
@@ -293,7 +291,6 @@ export function createDocsViewerMediaDetailAdapter() {
     var markers = Array.from(root.querySelectorAll(MEDIA_DETAIL_SELECTOR));
     var documentMountGeneration = positiveInteger(context.documentMountGeneration);
     var documentTarget = {
-      ...(context.viewerStage ? { stage: cleanString(context.viewerStage) } : {}),
       collection: "",
       docId: cleanString(context.doc && context.doc.doc_id)
     };
@@ -355,7 +352,6 @@ export function createDocsViewerMediaDetailAdapter() {
     if (!state || state.documentMountGeneration !== context.documentMountGeneration
       || !control || !root.contains(control)
       || !target || !cleanString(target.docId)
-      || cleanString(target.stage) !== cleanString(state.documentTarget.stage)
       || (context.isCurrentDocument && !context.isCurrentDocument())) return false;
 
     state.mediaRequestGeneration += 1;
@@ -367,7 +363,6 @@ export function createDocsViewerMediaDetailAdapter() {
       marker: control,
       openControl: control,
       documentTarget: Object.freeze({
-        ...(target.stage ? { stage: cleanString(target.stage) } : {}),
         collection: cleanString(target.collection), docId: cleanString(target.docId)
       }),
       isCurrentDocument: context.isCurrentDocument,
@@ -385,7 +380,6 @@ export function createDocsViewerMediaDetailAdapter() {
     var state = root && stateByRoot.get(root);
     return state && state.documentMountGeneration === context.documentMountGeneration
       && root.contains(context.invocationControl) && context.documentTarget
-      && cleanString(context.documentTarget.stage) === cleanString(state.documentTarget.stage)
       && Boolean(cleanString(context.documentTarget.docId))
       && (!context.isCurrentDocument || context.isCurrentDocument()) ? state : null;
   }

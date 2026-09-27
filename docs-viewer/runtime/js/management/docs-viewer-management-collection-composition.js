@@ -35,14 +35,13 @@ function actionTarget(targetKind, context) {
     var selected = frozenIds(context.selection && context.selection.checkedDocIds);
     if (!selected.length) return null;
     return Object.freeze({
-      ...(collection.stage ? { stage: collection.stage } : {}),
       collection: collection.collection,
       doc_ids: selected
     });
   }
   if (targetKind === "validated-detail") {
     var target = actions.documentTarget;
-    if (!target || target.collection !== collection.collection || target.stage !== collection.stage) {
+    if (!target || target.collection !== collection.collection) {
       throw new Error("Collection action requires the resolved detail target.");
     }
     return target;

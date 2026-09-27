@@ -7,28 +7,17 @@ function clearNode(node) {
 }
 
 function exactReportTarget(context) {
-  const stage = cleanString(context && context.viewerStage).toLowerCase();
   const docId = cleanString(context && context.payload && context.payload.doc_id);
-  if (!stage || !docId) {
+  if (!docId) {
     throw new Error("Documents Linking Here requires an exact report-host target.");
   }
-  return { stage, docId };
-}
-
-function exactStageConfig(context, stage) {
-  const configs = Array.isArray(context && context.stageConfigs)
-    ? context.stageConfigs
-    : [];
-  return configs.find(function (config) {
-    return cleanString(config && config.stage).toLowerCase() === stage;
-  }) || null;
+  return {  docId };
 }
 
 function normalizeRows(payload, target) {
   if (
     !payload
     || payload.schema !== "docs_backlinks_v2"
-    || cleanString(payload.stage).toLowerCase() !== target.stage
     || !payload.by_target
     || typeof payload.by_target !== "object"
     || Array.isArray(payload.by_target)
@@ -52,11 +41,11 @@ function normalizeRows(payload, target) {
 }
 
 function loadRows(context, target) {
-  const config = exactStageConfig(context, target.stage);
+  const config = context.workspaceConfig;
   const backlinksUrl = cleanString(config && config.backlinksUrl);
   if (!backlinksUrl) {
     return Promise.reject(new Error(
-      "Documents Linking Here data is not configured for this stage."
+      "Documents Linking Here data is not configured for this workspace."
     ));
   }
   return fetch(backlinksUrl, {

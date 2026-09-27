@@ -1,6 +1,5 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
 import { buildDocsMediaRows } from "./docs-media-data.js";
-
 const DEFAULT_SORT_KEY = "type";
 const DEFAULT_SORT_DIR = "asc";
 const SORT_KEYS = Object.freeze(["type", "file", "documents"]);
@@ -154,7 +153,6 @@ function appendDocumentsCell(rowNode, row) {
     link.className = "docsViewerReport__cellLink";
     link.href = documentRecord.href;
     link.textContent = documentRecord.title;
-    link.dataset.docsViewerStage = documentRecord.target.stage;
     link.dataset.docsViewerCollection = documentRecord.target.collection;
     link.dataset.docsViewerDocId = documentRecord.target.docId;
     cell.appendChild(link);
@@ -178,7 +176,7 @@ function renderRows(state) {
   if (!projection.rows.length) {
     state.emptyNode.textContent = state.sourceRows.length
       ? "No Docs Media rows match the current search."
-      : "No media files were found in " + state.stage + ".";
+      : "No media files were found.";
     return;
   }
   projection.rows.forEach((row) => {
@@ -195,7 +193,7 @@ function renderRows(state) {
 
 function resultStatus(state) {
   const count = state.sourceRows.length;
-  return count + (count === 1 ? " media file in " : " media files in ") + state.stage + ".";
+  return count + (count === 1 ? " media file." : " media files.");
 }
 
 function updateControls(state) {
@@ -214,7 +212,7 @@ function setBusy(state, busy) {
   updateControls(state);
 }
 
-function loadStage(state) {
+function loadMedia(state) {
   const service = reportService(state.context);
   if (!service) {
     state.statusNode.textContent = "Local docs-management server is not configured.";
@@ -227,7 +225,7 @@ function loadStage(state) {
   state.sourceRows = [];
   clearNode(state.rowsNode);
   state.emptyNode.hidden = true;
-  const request = { stage: state.stage, collection: "" };
+  const request = {  collection: "" };
   return Promise.all([service.readMediaFiles(request), service.readMediaReferences(request)])
     .then(([files, references]) => buildDocsMediaRows(files, references, request, state.context))
     .then((rows) => {
@@ -269,7 +267,7 @@ function openFile(state, target) {
 
 function attachEvents(state) {
   state.runButton.addEventListener("click", () => {
-    if (!state.busy) loadStage(state);
+    if (!state.busy) loadMedia(state);
   });
   state.searchInputNode.addEventListener("input", () => {
     state.searchText = state.searchInputNode.value;
@@ -341,14 +339,12 @@ function renderShell(root) {
 }
 
 export function mountDocsMediaReport(context) {
-  const stage = cleanString(context.viewerStage);
   const routeSort = readRouteSort();
   const nodes = renderShell(context.reportRoot);
   const state = Object.assign({
     busy: false,
     context,
     searchText: "",
-    stage,
     sortDir: routeSort.sortDir,
     sortKey: routeSort.sortKey,
     sourceRows: []
@@ -356,11 +352,11 @@ export function mountDocsMediaReport(context) {
   renderHead(state);
   attachEvents(state);
   updateControls(state);
-  if (stage !== "working") {
+  if (!context.managementContext) {
     state.statusNode.textContent = "Docs Media requires Working.";
     state.emptyNode.hidden = false;
     state.emptyNode.textContent = "Docs Media could not run in this viewer context.";
     return Promise.resolve();
   }
-  return loadStage(state);
+  return loadMedia(state);
 }

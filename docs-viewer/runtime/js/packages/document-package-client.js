@@ -47,23 +47,21 @@ export async function requestDocumentPackageJson(path, options = {}) {
   return payload;
 }
 
-export function getDocumentPackageConfig(stage, collection = "") {
+export function getDocumentPackageConfig( collection = "") {
   const normalizedCollection = String(collection == null ? "" : collection).trim();
   return requestDocumentPackageJson(endpointUrl(DOCUMENT_PACKAGE_ENDPOINTS.config, {
-    stage,
     collection: normalizedCollection
   }));
 }
 
-export function getPackageDocuments(stage, collection = "") {
+export function getPackageDocuments( collection = "") {
   return requestDocumentPackageJson(endpointUrl(DOCUMENT_PACKAGE_ENDPOINTS.documents, {
-    stage,
     collection: collection
   }));
 }
 
-export function getReturnedDocumentPackages(stage) {
-  return requestDocumentPackageJson(endpointUrl(DOCUMENT_PACKAGE_ENDPOINTS.returned, { stage }));
+export function getReturnedDocumentPackages() {
+  return requestDocumentPackageJson(endpointUrl(DOCUMENT_PACKAGE_ENDPOINTS.returned, {  }));
 }
 
 export function postDocumentPackageJson(path, payload) {

@@ -9,12 +9,11 @@ import docs_catalogue_media
 import docs_diagram_source_service
 import docs_import_source_service as import_source_service
 import docs_management_routes as routes
-import docs_preview_reads
 import docs_media_reads
 import docs_series_works_report
 import docs_unpublishable_report
 from docs_selected_documents import read_selected
-from docs_workspace_config import load_docs_stage
+from docs_workspace_config import load_docs_working_config
 import docs_source_config_settings
 import docs_staged_media_service
 from docs_management_capabilities_service import capabilities_payload
@@ -32,6 +31,8 @@ def docs_api_query_value(params: dict[str, list[str]], key: str) -> str:
 
 
 def docs_generated_read_payload(repo_root: Path, path: str, params: dict[str, list[str]]) -> dict[str, object]:
+    if "stage" in params:
+        raise ValueError("stage is retired from Docs requests")
     if "sub_scope" in params:
         raise ValueError("sub_scope is retired; use collection")
     if "scope" in params:
@@ -39,115 +40,78 @@ def docs_generated_read_payload(repo_root: Path, path: str, params: dict[str, li
     if "collection" in params and path != routes.GENERATED_LINKS_PATH:
         raise ValueError("Use the configured collection artifact route for child payloads")
 
-    stage = docs_api_query_value(params, "stage") if "stage" in params else None
 
     if path == routes.GENERATED_INDEX_TREE_PATH:
-        return docs_generated_reads.read_generated_docs_index_tree(repo_root, stage)
+        return docs_generated_reads.read_generated_docs_index_tree(repo_root)
     if path == routes.GENERATED_RECENT_PATH:
-        return docs_generated_reads.read_generated_recent(repo_root, stage)
+        return docs_generated_reads.read_generated_recent(repo_root)
     if path == routes.GENERATED_BACKLINKS_PATH:
-        return docs_generated_reads.read_generated_backlinks(repo_root, stage)
+        return docs_generated_reads.read_generated_backlinks(repo_root)
     if path == routes.GENERATED_SEARCH_PATH:
-        return docs_generated_reads.read_generated_search_index(repo_root, stage)
+        return docs_generated_reads.read_generated_search_index(repo_root)
     if path == routes.GENERATED_SEMANTIC_TOKENS_PATH:
-        return docs_generated_reads.read_generated_semantic_tokens_index(repo_root, stage)
+        return docs_generated_reads.read_generated_semantic_tokens_index(repo_root)
     if path == routes.GENERATED_LINKS_PATH:
         return docs_generated_reads.read_generated_doc_links(
             repo_root, docs_api_query_value(params, "doc_id"),
-            docs_api_query_value(params, "collection"), stage,
+            docs_api_query_value(params, "collection"),
         )
     if path == routes.GENERATED_WORKSPACE_LINKS_PATH:
-        return docs_generated_reads.read_generated_workspace_links(repo_root, stage)
+        return docs_generated_reads.read_generated_workspace_links(repo_root)
     if path == routes.GENERATED_PAYLOAD_PATH:
         doc_id = docs_api_query_value(params, "doc_id")
         if not doc_id:
             raise ValueError("doc_id is required")
-        return docs_generated_reads.read_generated_doc_payload(repo_root, doc_id, stage)
-    raise FileNotFoundError("Not found")
-
-
-def docs_preview_read_payload(
-    repo_root: Path,
-    path: str,
-    params: dict[str, list[str]],
-) -> dict[str, object]:
-    if "sub_scope" in params:
-        raise ValueError("sub_scope is retired; use collection")
-    if "scope" in params:
-        raise ValueError("scope is retired")
-    if "stage" in params and docs_api_query_value(params, "stage") != "preview":
-        raise ValueError("Preview reads cannot address a source/generated stage")
-    if "collection" in params:
-        raise ValueError("Use the configured Preview collection artifact route for child payloads")
-    if path == routes.PREVIEW_INDEX_TREE_PATH:
-        return docs_preview_reads.read_preview_docs_index_tree(repo_root)
-    if path == routes.PREVIEW_RECENT_PATH:
-        return docs_preview_reads.read_preview_recent(repo_root)
-    if path == routes.PREVIEW_SELECTED_PATH:
-        return docs_preview_reads.read_preview_selected(repo_root)
-    if path == routes.PREVIEW_BACKLINKS_PATH:
-        return docs_preview_reads.read_preview_backlinks(repo_root)
-    if path == routes.PREVIEW_SEARCH_PATH:
-        return docs_preview_reads.read_preview_search_index(repo_root)
-    if path == routes.PREVIEW_SEMANTIC_TOKENS_PATH:
-        return docs_preview_reads.read_preview_semantic_tokens_index(repo_root)
-    if path == routes.PREVIEW_PAYLOAD_PATH:
-        doc_id = docs_api_query_value(params, "doc_id")
-        if not doc_id:
-            raise ValueError("doc_id is required")
-        return docs_preview_reads.read_preview_doc_payload(
-            repo_root,
-            doc_id,
-        )
+        return docs_generated_reads.read_generated_doc_payload(repo_root, doc_id)
     raise FileNotFoundError("Not found")
 
 
 def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, list[str]], *, dry_run: bool = False) -> dict[str, object]:
+    if "stage" in params:
+        raise ValueError("stage is retired from Docs requests")
     if "sub_scope" in params:
         raise ValueError("sub_scope is retired; use collection")
     if "scope" in params:
-        raise ValueError("scope is retired; supply an explicit stage and optional collection")
+        raise ValueError("scope is retired; use an optional collection")
     if path == routes.HEALTH_PATH:
         return {"ok": True, "service": "docs_management", "dry_run": dry_run}
     if path == routes.CAPABILITIES_PATH:
         return capabilities_payload(repo_root)
     if path == routes.SELECTED_PATH:
-        if set(params) != {"stage"} or docs_api_query_value(params, "stage") != "working":
-            raise ValueError("Selected Documents authoring reads require stage working")
-        return read_selected(load_docs_stage(repo_root, "working"))
+        if params:
+            raise ValueError("Selected Documents reads do not accept parameters")
+        return read_selected(load_docs_working_config(repo_root))
     if path in {routes.MEDIA_FILES_PATH, routes.MEDIA_REFERENCES_PATH}:
-        if set(params) not in ({"stage"}, {"stage", "collection"}):
-            raise ValueError("Docs media reads require stage and optional collection only")
+        if set(params) - {"collection"}:
+            raise ValueError("Docs media reads accept an optional collection only")
         reader = docs_media_reads.read_media_files if path == routes.MEDIA_FILES_PATH else docs_media_reads.read_media_references
         return reader(
-            repo_root, stage=docs_api_query_value(params, "stage"),
+            repo_root,
             collection=docs_api_query_value(params, "collection"),
         )
     if path == routes.DOCUMENT_LINK_TARGETS_PATH:
         return read_document_link_targets(
             repo_root,
-            stage=docs_api_query_value(params, "stage") if "stage" in params else None,
         )
     if path == routes.CATALOGUE_MEDIA_TARGETS_PATH:
-        return docs_catalogue_media.read_catalogue_media_targets(repo_root, stage=docs_api_query_value(params, "stage"))
+        return docs_catalogue_media.read_catalogue_media_targets(repo_root)
     if path == routes.CATALOGUE_MEDIA_CONFIG_PATH:
-        return docs_catalogue_media.local_catalogue_media_config(repo_root, stage=docs_api_query_value(params, "stage"))
+        return docs_catalogue_media.local_catalogue_media_config(repo_root)
     if path == routes.CATALOGUE_WORK_PATH:
         return docs_catalogue_media.local_catalogue_work(
-            repo_root, docs_api_query_value(params, "work_id"), stage=docs_api_query_value(params, "stage"),
+            repo_root, docs_api_query_value(params, "work_id"),
         )
     if path == routes.CATALOGUE_SERIES_PATH:
         return docs_catalogue_media.read_catalogue_series(
-            repo_root, docs_api_query_value(params, "series_id"), stage=docs_api_query_value(params, "stage"),
+            repo_root, docs_api_query_value(params, "series_id"),
         )
     if path == routes.CATALOGUE_GALLERY_PATH:
         return docs_catalogue_media.read_catalogue_gallery(
-            repo_root, docs_api_query_value(params, "gallery_id"), stage=docs_api_query_value(params, "stage"),
+            repo_root, docs_api_query_value(params, "gallery_id"),
         )
     if path == routes.UNPUBLISHABLE_REPORT_PATH:
         return docs_unpublishable_report.build_unpublishable_report(
             repo_root,
-            stage=docs_api_query_value(params, "stage"),
         )
     if path in {
         routes.GENERATED_INDEX_TREE_PATH,
@@ -160,26 +124,14 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         routes.GENERATED_SEMANTIC_TOKENS_PATH,
     }:
         return docs_generated_read_payload(repo_root, path, params)
-    if path in {
-        routes.PREVIEW_INDEX_TREE_PATH,
-        routes.PREVIEW_RECENT_PATH,
-        routes.PREVIEW_SELECTED_PATH,
-        routes.PREVIEW_BACKLINKS_PATH,
-        routes.PREVIEW_PAYLOAD_PATH,
-        routes.PREVIEW_SEARCH_PATH,
-        routes.PREVIEW_SEMANTIC_TOKENS_PATH,
-    }:
-        return docs_preview_read_payload(repo_root, path, params)
     if path == routes.SOURCE_CONFIG_SETTINGS_PATH:
         return docs_source_config_settings.build_settings_contract(
             repo_root,
-            stage=docs_api_query_value(params, "stage") or None,
         )
     if path == routes.SOURCE_BODY_PATH:
         return read_source_body(repo_root, params)
     if path in {routes.METADATA_PATH, routes.SERIES_WORKS_REPORT_PATH, routes.SERIES_WORK_MEDIA_PATH}:
         target = {
-            "stage": docs_api_query_value(params, "stage"),
             "doc_id": docs_api_query_value(params, "doc_id"),
         }
         if "collection" in params:
@@ -206,7 +158,6 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         return docs_staged_media_service.list_staged_media_files(
             repo_root,
             docs_api_query_value(params, "media_kind"),
-            stage=docs_api_query_value(params, "stage"),
             collection=docs_api_query_value(params, "collection"),
         )
     if path == routes.DIAGRAM_SOURCES_PATH:

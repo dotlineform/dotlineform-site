@@ -1,19 +1,15 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
 import { mountDocsViewerMediaLinks } from "../shared/docs-viewer-media-detail.js";
-
 import { normalizeDocsViewerAuthoringSubject } from "../management/docs-viewer-management-document-subject.js";
 import { appendProjectSubjectIcon } from "./project-subject-icons.js";
-
 const SERIES_SCHEMA = "studio_catalogue_lookup_series_search_v2";
 const WORK_SCHEMA = "studio_catalogue_lookup_work_search_v2";
-const WORKS_STAGE = "working";
 const WORKS_COLLECTION = "works";
 const WORKS_CUSTOMISATION = "working_works";
 const WORKS_REPORT_DOC_ID = "d-20260801-073826-8865a8";
 const SERIES_ID_PATTERN = /^[0-9]{3}$/;
 const WORK_ID_PATTERN = /^[0-9]{5}$/;
 const DOC_ID_PATTERN = /^d-[0-9]{8}-[0-9]{6}-[0-9a-f]{6}$/;
-
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
 }
@@ -196,13 +192,7 @@ export function composeWorksProjection(seriesRecords, workRecords, workDocuments
 }
 
 function configuredWorkingWorksManifestUrl(context) {
-  const configs = Array.isArray(context && context.stageConfigs) ? context.stageConfigs : [];
-  const stageMatches = configs.filter((config) => {
-    return config.stage === WORKS_STAGE;
-  });
-  const collections = stageMatches.length === 1 && Array.isArray(stageMatches[0].collections)
-    ? stageMatches[0].collections
-    : [];
+  const collections = context.workspaceConfig?.collections || [];
   const matches = collections.filter((record) => {
     return cleanString(record && record.collection).toLowerCase()
       === WORKS_COLLECTION;
@@ -273,16 +263,14 @@ function workDocumentHref(context, docId) {
   }
   const raw = cleanString(context.viewerUrlForDocument(
     WORKS_REPORT_DOC_ID,
-    { manage: true, stage: WORKS_STAGE }
+    { manage: true }
   ));
   const url = new URL(raw, "http://docs.local");
   if (
-    url.searchParams.get("stage") !== WORKS_STAGE
-    || url.searchParams.get("doc") !== WORKS_REPORT_DOC_ID
+    url.searchParams.get("doc") !== WORKS_REPORT_DOC_ID
   ) {
     throw new Error("Working Works document links are not configured.");
   }
-  url.searchParams.set("stage", WORKS_STAGE);
   url.searchParams.set("subdoc", docId);
   return url.origin === "http://docs.local"
     ? url.pathname + url.search + url.hash
@@ -340,7 +328,7 @@ function renderProjection(state, projection) {
   });
   mountDocsViewerMediaLinks({
     content: state.rowsNode,
-    documentTarget: { stage: state.context.viewerStage, collection: "", docId: state.context.doc.doc_id },
+    documentTarget: {  collection: "", docId: state.context.doc.doc_id },
     isCurrentDocument: () => state.context.content.contains(state.rowsNode),
     openMediaTarget: state.context.openMediaTarget
   });

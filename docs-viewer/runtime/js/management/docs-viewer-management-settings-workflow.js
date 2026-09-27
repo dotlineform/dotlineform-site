@@ -23,9 +23,8 @@ export function createDocsViewerManagementSettingsWorkflow(options = {}) {
     var clientOptions = typeof callbacks.managementClientOptions === "function" ? callbacks.managementClientOptions() : {};
     return readSourceConfigSettings(clientOptions)
       .then(function (payload) {
-        var stages = Array.isArray(payload && payload.stages) ? payload.stages : [];
-        var record = stages.find(function (stage) { return stage.stage === clientOptions.stage; });
-        if (!record) throw new Error("Settings response does not match the selected stage.");
+        var record = payload && payload.workspace;
+        if (!record) throw new Error("Workspace settings are unavailable.");
         var fields = Array.isArray(record.fields) ? record.fields : [];
         var field = fields.find(function (candidate) {
           return candidate && candidate.editable !== false;

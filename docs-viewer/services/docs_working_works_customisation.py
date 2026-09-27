@@ -54,7 +54,6 @@ def project_manifest(
     documents: Sequence[Any],
     repo_root: Path,
     collection: str,
-    stage: str,
 ) -> dict[str, Any]:
     if settings:
         raise ValueError("working_works settings must be empty")

@@ -29,7 +29,6 @@ from docs_workspace_config import (
     DocsStageConfig,
     DocsCollectionConfig,
     document_source_path,
-    load_docs_stage,
     path_label,
     resolve_workspace_path,
 )
@@ -606,39 +605,6 @@ def load_document_collection_docs_for_config(
 
 def load_stage_docs_for_config(repo_root: Path, config: DocsStageConfig) -> list[SourceDoc]:
     return load_document_collection_docs_for_config(repo_root, config, config)
-
-
-def load_stage_docs(repo_root: Path, *, stage: str) -> list[SourceDoc]:
-    """Read the exact configured ordinary collection in the requested stage."""
-    return load_stage_docs_for_config(repo_root, load_docs_stage(repo_root, stage))
-
-
-def load_document_collection_docs(
-    repo_root: Path,
-    collection: str = "",
-    *,
-    stage: str,
-) -> list[SourceDoc]:
-    """Load exactly the configured stage and ordinary or named collection."""
-
-    parent_config = load_docs_stage(repo_root, stage)
-    normalized_collection = str(collection or "").strip().lower()
-    if not normalized_collection:
-        return load_stage_docs_for_config(repo_root, parent_config)
-    matching = [
-        candidate
-        for candidate in parent_config.collections
-        if candidate.collection == normalized_collection
-    ]
-    if len(matching) != 1:
-        raise ValueError(
-            f"unknown collection {normalized_collection!r}"
-        )
-    return load_document_collection_docs_for_config(
-        repo_root,
-        parent_config,
-        matching[0],
-    )
 
 
 def validate_collection_docs(docs: list[SourceDoc], *, allow_unknown_parent_ids: bool = False) -> None:

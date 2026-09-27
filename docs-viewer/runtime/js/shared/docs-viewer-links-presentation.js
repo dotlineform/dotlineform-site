@@ -1,20 +1,21 @@
 function identity(value) {
-  if (!value || !["working", "preview"].includes(value.stage)
+  if (!value
+    || Object.keys(value).sort().join(",") !== "collection,doc_id"
     || typeof value.collection !== "string" || !/^(?:[a-z][a-z0-9-]*)?$/.test(value.collection)
     || !/^d-\d{8}-\d{6}-[a-f0-9]{6}$/.test(value.doc_id)) {
     throw new Error("Links requires an exact document identity.");
   }
-  return { stage: value.stage, collection: value.collection, doc_id: value.doc_id };
+  return {  collection: value.collection, doc_id: value.doc_id };
 }
 
 function sameTarget(left, right) {
-  return left.stage === right.stage && left.collection === right.collection && left.doc_id === right.doc_id;
+  return left.collection === right.collection && left.doc_id === right.doc_id;
 }
 
-/** Validate a prepared document summary and apply the explicit local viewing stage.
+/** Validate a prepared document summary and its exact location.
  * Preserve collection and Subject metadata for consumers' document presentation.
  */
-export function docsViewerLinksDocumentSummary(value, invokingTarget) {
+export function docsViewerLinksDocumentSummary(value) {
   var target = identity(value && value.target);
   if (typeof value.title !== "string" || !value.title.trim()) throw new Error("Links document title is missing.");
   var href = value.href;
@@ -29,8 +30,7 @@ export function docsViewerLinksDocumentSummary(value, invokingTarget) {
       : params.get("doc") !== target.doc_id || params.has("subdoc"))) {
     throw new Error("Links navigation does not match its document identity.");
   }
-  if (target.stage !== invokingTarget.stage || params.has("stage")) throw new Error("Links stage does not match its document identity.");
-  params.set("stage", invokingTarget.stage);
+  if (params.has("stage")) throw new Error("Links contains a retired stage URL.");
   return {
     target: target, title: value.title, href: url.pathname + url.search + url.hash,
     subject: value.subject || null
@@ -47,21 +47,20 @@ function category(document) {
 
 /** Validate one complete version-2 response and project shallow, title-sorted sections.
  * Combine both directions by exact identity; keep the supplied directional data unchanged.
- * Runtime stage navigation is separate from the stage-free stored href.
  */
 export function docsViewerLinksPresentation(payload, target) {
   var expected = identity(target);
   if (!payload || payload.schema_version !== 2 || !Array.isArray(payload.outgoing) || !Array.isArray(payload.incoming)) {
     throw new Error("Unsupported Links data. Expected schema version 2.");
   }
-  var self = docsViewerLinksDocumentSummary(payload.self, target);
+  var self = docsViewerLinksDocumentSummary(payload.self);
   if (!sameTarget(self.target, expected)) throw new Error("Links data does not match the displayed document.");
   var sections = new Map(["Concepts", "Works", "References"].map(function (label) { return [label, []]; }));
   var documents = new Map();
   ["outgoing", "incoming"].forEach(function (direction) {
     var seen = new Set();
     payload[direction].forEach(function (entry) {
-      var document = docsViewerLinksDocumentSummary(entry && entry.document, target);
+      var document = docsViewerLinksDocumentSummary(entry && entry.document);
       var key = JSON.stringify(document.target);
       if (seen.has(key) || !Array.isArray(entry.occurrences) || !entry.occurrences.length) {
         throw new Error("Links contains an invalid counterpart entry.");

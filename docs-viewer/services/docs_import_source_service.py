@@ -109,7 +109,7 @@ def allocate_ordinary_import_doc_id(
     if not documents_root.is_dir():
         raise ValueError(
             f"missing source root for import target "
-            f"{collection.stage}/{collection.collection or '(parent)'}: "
+            f"{collection.collection or '(parent)'}: "
             f"{documents_root}",
         )
     unavailable = {
@@ -223,7 +223,6 @@ def handle_import_source(
     source_directory: str,
     trusted_sources_allowed: bool,
 ) -> Dict[str, Any]:
-    stage = destination.stage
     collection = destination.collection
     staged_filename = str(body.get("staged_filename") or "").strip()
     include_prompt_meta = bool(body.get("include_prompt_meta"))
@@ -259,7 +258,6 @@ def handle_import_source(
             destination_url = management_collection_viewer_url(
                 repo_root,
                 collection,
-                stage=destination.stage,
             )
             result = apply_edited_review_source_collection(
                 repo_root,
@@ -297,7 +295,6 @@ def handle_import_source(
                 else "docs-import-reviewed-stage-collection-preview"
             ),
             {
-                "stage": stage,
                 **({"collection": collection} if collection else {}),
                 "staged_filename": staged_filename,
                 "source_directory": accepted_source_directory,
@@ -354,11 +351,9 @@ def handle_import_source(
             destination_url = management_collection_viewer_url(
                 repo_root,
                 collection,
-                stage=destination.stage,
             )
             result = apply_document_package_collection(
                 repo_root,
-                stage=stage,
                 staged_filename=staged_filename,
                 body=body,
                 staging_root=staging_root,
@@ -379,7 +374,6 @@ def handle_import_source(
             return result
         plan = plan_document_package_collection(
             repo_root,
-            stage=stage,
             staged_filename=staged_filename,
             staging_root=staging_root,
             workspace_root=workspace_root,
@@ -392,7 +386,6 @@ def handle_import_source(
             repo_root,
             "docs-import-collection-preview",
             {
-                "stage": stage,
                 "staged_filename": staged_filename,
                 "source_directory": accepted_source_directory,
                 "source_format": source_format,
@@ -415,7 +408,6 @@ def handle_import_source(
         staging_root=staging_root,
         workspace_root=source_projects_base,
         source_path=source_path,
-        stage=stage,
         include_prompt_meta=include_prompt_meta,
         retain_private_media_source=True,
     )
@@ -429,7 +421,6 @@ def handle_import_source(
         repo_root,
         staging_root,
         source_projects_base,
-        stage=destination.stage,
         collection=destination.collection,
     )
     if interactive_plans:
@@ -452,7 +443,6 @@ def handle_import_source(
 
     if dry_run or preview_only or requires_interactive_html_confirmation:
         preview_event = {
-            "stage": stage,
             "staged_filename": staged_filename,
             "source_directory": accepted_source_directory,
             "source_format": preview.get("source_format"),
@@ -471,7 +461,6 @@ def handle_import_source(
         )
         response = {
             "ok": True,
-            "stage": stage,
             "staged_filename": staged_filename,
             "source_directory": accepted_source_directory,
             "include_prompt_meta": include_prompt_meta,
@@ -496,7 +485,6 @@ def handle_import_source(
     destination_url = management_collection_viewer_url(
         repo_root,
         collection,
-        stage=destination.stage,
     )
     source_doc_id = str(preview["proposed_doc_id"])
     create_added_date = current_doc_timestamp()
@@ -514,14 +502,12 @@ def handle_import_source(
             source_projects_base,
             source_path,
             preview,
-            stage,
         )
     retarget_inline_media_plans(
         repo_root,
         staging_root,
         source_projects_base,
         preview,
-        stage,
     )
     title = str(preview.get("title") or "Imported Doc").strip()
     record = ImportContent(
@@ -537,7 +523,6 @@ def handle_import_source(
     )
     plan = plan_import_document(
         repo_root,
-        stage,
         record,
         operation=IMPORT_DOCUMENT_CREATE,
         docs=docs,
@@ -572,7 +557,6 @@ def handle_import_source(
             plan.changed_paths,
             write_import_document,
             suppression_reason=plan.suppression_reason,
-            stage=destination.stage or None,
         )
     else:
         rebuild = dependencies.perform_source_write_and_rebuild(
@@ -580,7 +564,6 @@ def handle_import_source(
             plan.changed_paths,
             write_import_document,
             suppression_reason=plan.suppression_reason,
-            stage=destination.stage or None,
             docs_doc_ids=plan.docs_doc_ids,
         )
     event_name, event_details = import_document_event(
@@ -606,7 +589,6 @@ def handle_import_source(
     )
     response = {
         "ok": True,
-        "stage": stage,
         "staged_filename": staged_filename,
         "source_directory": accepted_source_directory,
         "include_prompt_meta": include_prompt_meta,

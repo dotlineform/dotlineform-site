@@ -1,12 +1,11 @@
 import { readManagedDocsIndex } from "./docs-viewer-management-client.js";
-import { stageStaticHtmlExportCapability } from "./docs-viewer-management-capabilities.js";
+import { staticHtmlExportCapability } from "./docs-viewer-management-capabilities.js";
 import { openStaticHtmlSnapshotExportWorkflow } from "./docs-viewer-static-html-export-workflow.js";
 import { normalizeDocsIndexTreePayload } from "../shared/docs-viewer-tree-payload-adapter.js";
-
-/** Export the complete ordinary index of the explicitly selected stage. */
+/** Export the complete ordinary index of the local workspace. */
 export async function runManagedDocsExportWorkspaceWorkflow(options = {}) {
   const clientOptions = options.clientOptions || {};
-  const capability = stageStaticHtmlExportCapability(options.capabilities, clientOptions.stage);
+  const capability = staticHtmlExportCapability(options.capabilities);
   if (!capability.available) throw new Error(capability.reason || "Workspace export is unavailable.");
   const callbacks = options.callbacks || {};
   let checkedDocIds;

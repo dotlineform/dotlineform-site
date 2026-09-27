@@ -80,7 +80,7 @@ export var DOCS_VIEWER_RUNTIME_DEFAULTS = {
   searchDebounceMs: 140,
   defaultRecentLimit: 20,
   bookmarkDbName: "dotlineform-docs-viewer",
-  bookmarkDbVersion: 3,
+  bookmarkDbVersion: 4,
   bookmarkStoreName: "favorites",
   managementCapabilityRetryAttempts: 60,
   managementCapabilityRetryDelayMs: 500,
@@ -224,7 +224,6 @@ export function createDocsViewerCollectionProvider(options) {
     workspaceConfig: settings.workspaceConfig,
     serviceContext: settings.serviceContext,
     source: settings.source,
-    viewerStage: settings.viewerStage,
     window: settings.window
   };
   var provider = typeof settings.createCollectionProvider === "function"
@@ -301,7 +300,6 @@ export function createDocsViewerAppComposition(options) {
     generatedData: appSession.domains.generatedData,
     management: appSession.domains.management,
     selectedDocument: appSession.domains.selectedDocument,
-    viewerStage: settings.viewerStage,
     window: window
   });
   var sourceServiceAdapter = (
@@ -311,7 +309,6 @@ export function createDocsViewerAppComposition(options) {
   )
     ? settings.createSourceAdapter({
         sourceService: serviceContext.source,
-        viewerStage: settings.viewerStage,
         window: window
       })
     : null;
@@ -323,7 +320,6 @@ export function createDocsViewerAppComposition(options) {
     workspaceConfig: appSession.domains.workspaceConfig,
     serviceContext: serviceContext,
     source: sourceServiceAdapter,
-    viewerStage: settings.viewerStage,
     window: window
   });
   var configService = createDocsViewerConfigService({

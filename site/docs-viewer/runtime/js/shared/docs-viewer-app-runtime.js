@@ -88,7 +88,6 @@ export function startDocsViewerRuntime(options) {
   var routeAccess = appContext.routeAccess || {};
   var featurePolicy = appContext.featurePolicy || {};
   var bookmarksEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "bookmarks");
-  var workspaceConfigurationEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "workspace-configuration");
   var managementEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "management");
   var recentEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "recent");
   var searchEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "search");
@@ -96,7 +95,7 @@ export function startDocsViewerRuntime(options) {
   var docsViewerConfigUrl = routeContext.docsViewerConfigUrl;
   var routeViewerBaseUrl = routeContext.routeViewerBaseUrl;
   var viewerBaseUrl = routeContext.viewerBaseUrl;
-  var viewerStage = routeContext.viewerStage || "";
+
   var preserveQueryParams = routeContext.preserveQueryParams || [];
   var defaultRouteDocId = routeContext.defaultRouteDocId;
   var viewerPathname = routeContext.viewerPathname;
@@ -121,7 +120,6 @@ export function startDocsViewerRuntime(options) {
     createCollectionProvider: settings.createCollectionProvider,
     createSourceAdapter: settings.createSourceAdapter,
     viewRegistry: settings.viewRegistry,
-    viewerStage: function () { return viewerStage; },
     indexPanelAvailable: sidebarCollapseAvailable,
     onBeforePanelInteraction: hideContextMenu,
     onIndexProjection: function (projection) {
@@ -211,7 +209,7 @@ export function startDocsViewerRuntime(options) {
       && displayed.displayedPayload.doc_id === displayed.displayedDocId
       ? appSession.domains.documentIndex.docsById.get(displayed.displayedDocId) : null;
     return {
-      documentTarget: doc ? { ...(viewerStage ? { stage: viewerStage } : {}), doc_id: doc.doc_id } : null,
+      documentTarget: doc ? {  doc_id: doc.doc_id } : null,
       documentRecord: doc || null
     };
   }
@@ -377,7 +375,6 @@ export function startDocsViewerRuntime(options) {
     },
     showWarning: statusController.setStatus,
     viewRegistry: viewRegistry,
-    viewerStage: function () { return viewerStage; },
     viewerTargetDocId: documentIndex.viewerTargetDocId,
     viewerUrl: viewerUrl
   });
@@ -453,7 +450,6 @@ export function startDocsViewerRuntime(options) {
     tableDetailAdapter: settings.tableDetailAdapter,
     themedDiagramAdapter: settings.themedDiagramAdapter,
     toolbar: mainViewToolbar,
-    viewerStage: function () { return viewerStage; },
     viewerUrlForDocument: viewerUrlForDocument
   });
   routeWorkflow = initDocsViewerRouteWorkflow({
@@ -500,7 +496,6 @@ export function startDocsViewerRuntime(options) {
     resolveLoadableDocId: documentIndex.resolveLoadableDocId,
     results: results,
     root: root,
-    routeStageFromUrl: routeStageFromUrl,
     routeViewerBaseUrl: function () { return routeViewerBaseUrl; },
     searchBatchSize: SEARCH_BATCH_SIZE,
     searchInput: searchInput,
@@ -517,7 +512,6 @@ export function startDocsViewerRuntime(options) {
     updateInfoPanel: documentViewCoordinator.updateInfoPanel,
     viewerBaseUrl: function () { return viewerBaseUrl; },
     viewerPathname: function () { return viewerPathname; },
-    viewerStage: function () { return viewerStage; },
     window: window
   });
   var routeWorkflowCommands = routeWorkflow.commands;
@@ -586,7 +580,6 @@ export function startDocsViewerRuntime(options) {
     workspaceConfig: appSession.domains.workspaceConfig,
     searchRecent: appSession.domains.searchRecent,
     viewerBaseUrl: function () { return viewerBaseUrl; },
-    viewerStage: function () { return viewerStage; },
   });
 
   managementRuntime = managementEnabled ? createDocsViewerManagementRuntimeAdapter({
@@ -656,7 +649,6 @@ export function startDocsViewerRuntime(options) {
       requestMainView: documentViewCoordinator.requestMainView,
       requestDocumentMode: documentViewCoordinator.requestDocumentMode,
       markdownDocLink: markdownDocLink,
-      viewerStage: function () { return viewerStage; },
     },
     logger: window.console || console,
     onLoaded: function () {
@@ -672,15 +664,10 @@ export function startDocsViewerRuntime(options) {
     return managementRuntime ? managementRuntime.load() : Promise.resolve(null);
   }
 
-  function routeStageFromUrl() {
-    if (!workspaceConfigurationEnabled) return viewerStage;
-    return configController.routeStageFromUrl();
-  }
-
   function applyRouteGlobals(values) {
     routeContext = updateDocsViewerRouteContext(routeContext, values, { window: window });
     appSession.domains.routeSession.updateRouteContext(routeContext);
-    viewerStage = routeContext.viewerStage || "";
+
     defaultRouteDocId = routeContext.defaultRouteDocId;
     viewerBaseUrl = routeContext.viewerBaseUrl;
     preserveQueryParams = routeContext.preserveQueryParams || preserveQueryParams;
@@ -692,7 +679,6 @@ export function startDocsViewerRuntime(options) {
   function loadWorkspaceConfiguration() {
     return configController.loadWorkspaceConfiguration();
   }
-
 
   function hasActiveQuery(query) {
     if (!searchEnabled) return false;
@@ -1088,7 +1074,6 @@ export function startDocsViewerRuntime(options) {
     panelLayout.bindPanelChrome();
 
     documentViewCoordinator.bind();
-
 
     if (bookmarkController) {
       bookmarkController.bind();

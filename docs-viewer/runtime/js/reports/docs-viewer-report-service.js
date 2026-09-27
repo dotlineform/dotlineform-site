@@ -50,28 +50,21 @@ export function createDocsViewerReportService(options) {
   var settings = options || {};
   var serviceOptions = {
     baseUrl: cleanBaseUrl(settings.baseUrl),
-    fetch: settings.fetch,
-    snapshotRole: cleanString(settings.snapshotRole).toLowerCase() === "preview"
-      ? "preview"
-      : "generated"
+    fetch: settings.fetch
   };
 
   return {
     baseUrl: serviceOptions.baseUrl,
-    readWorkspaceLinks: function (request) {
-      return fetchReportJson("/docs/workspace-links?" + new URLSearchParams({
-        stage: request.stage
-      }).toString(), serviceOptions);
+    readWorkspaceLinks: function () {
+      return fetchReportJson("/docs/workspace-links", serviceOptions);
     },
-    readUnpublishable: function (request) {
-      return fetchReportJson("/docs/unpublishable-report?" + new URLSearchParams({
-        stage: request.stage
-      }).toString(), Object.assign({}, serviceOptions, { requireOkEnvelope: true }));
+    readUnpublishable: function () {
+      return fetchReportJson("/docs/unpublishable-report", Object.assign({}, serviceOptions, { requireOkEnvelope: true }));
     },
-    openPublicationIgnore: function (request) {
+    openPublicationIgnore: function () {
       return fetchReportJson("/docs/open-publication-ignore", Object.assign({}, serviceOptions, {
         method: "POST",
-        payload: { stage: request.stage },
+        payload: {  },
         requireOkEnvelope: true
       }));
     },
@@ -89,20 +82,11 @@ export function createDocsViewerReportService(options) {
         requireOkEnvelope: true
       }));
     },
-    readSemanticTokens: function (request) {
-      var path = serviceOptions.snapshotRole === "preview"
-        ? "/docs/preview/semantic-tokens"
-        : "/docs/semantic-tokens";
-      return fetchReportJson(
-        path + "?" + new URLSearchParams({
-          ...(request && request.stage ? { stage: cleanString(request.stage) } : {})
-        }).toString(),
-        serviceOptions
-      );
+    readSemanticTokens: function () {
+      return fetchReportJson("/docs/semantic-tokens", serviceOptions);
     },
     runBrokenLinksAudit: function (request) {
       var payload = {
-        ...(request && request.stage ? { stage: cleanString(request.stage) } : {}),
         report_context: request && request.report_context
       };
       return fetchReportJson("/docs/broken-links", Object.assign({}, serviceOptions, {
@@ -120,13 +104,11 @@ export function createDocsViewerReportService(options) {
     },
     readMediaFiles: function (request) {
       return fetchReportJson("/docs/media-files?" + new URLSearchParams({
-        stage: request.stage,
         ...(request.collection ? { collection: request.collection } : {})
       }).toString(), Object.assign({}, serviceOptions, { requireOkEnvelope: true }));
     },
     readMediaReferences: function (request) {
       return fetchReportJson("/docs/media-references?" + new URLSearchParams({
-        stage: request.stage,
         ...(request.collection ? { collection: request.collection } : {})
       }).toString(), Object.assign({}, serviceOptions, { requireOkEnvelope: true }));
     },

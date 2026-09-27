@@ -21,8 +21,8 @@ from docs_document_packages.returned_profiles import (
 from docs_document_packages.returned_parser import parse_staged_import
 from docs_document_packages import source_context
 from docs_document_packages.metadata import list_staged_files_with_metadata
-from docs_document_packages.provenance import require_package_stage
 import docs_source_model as source_model
+from docs_workspace_config import load_docs_working_config
 
 
 def document_selectable_record(doc: Dict[str, Any]) -> Dict[str, Any]:
@@ -50,15 +50,12 @@ def document_selectable_record(doc: Dict[str, Any]) -> Dict[str, Any]:
 def selectable_document_records(
     repo_root: Path,
     *,
-    stage: str,
     selection_model: str,
     collection: str = "",
 ) -> Dict[str, Any]:
-    normalized_stage = require_package_stage(stage)
     normalized_collection = str(collection or "").strip().lower()
     docs = source_context.load_document_package_source_records(
         repo_root,
-        normalized_stage,
         normalized_collection,
     )
     records = [
@@ -75,13 +72,11 @@ def selectable_document_records(
     ]
     payload: Dict[str, Any] = {
         "ok": True,
-        "stage": normalized_stage,
         "selection_model": selection_model,
         "records": records,
         "docs": records,
         "source": {
             "kind": "docs_source",
-            "stage": normalized_stage,
         },
     }
     if normalized_collection:
@@ -97,7 +92,6 @@ def selectable_document_records(
 def build_document_package(
     repo_root: Path,
     *,
-    stage: str,
     data_domain: str,
     config_id: str,
     raw_doc_ids: Any,
@@ -111,7 +105,6 @@ def build_document_package(
     metadata_root: Path,
     collection: str = "",
 ) -> Dict[str, Any]:
-    normalized_stage = require_package_stage(stage)
     normalized_collection = str(collection or "").strip().lower()
     if not config_id:
         raise ValueError("config_id is required")
@@ -126,7 +119,6 @@ def build_document_package(
     return build_export(
         repo_root=repo_root,
         config_id=config_id,
-        stage=normalized_stage,
         collection=normalized_collection,
         data_domain=data_domain,
         selected_doc_ids=doc_ids,
@@ -145,13 +137,12 @@ def build_document_package(
 def list_returned_document_packages(
     repo_root: Path,
     *,
-    stage: str,
     collection: str | None = None,
     required_capability: str = DOCS_REVIEW_CAPABILITY,
     staging_root: Path,
     metadata_root: Path,
 ) -> Dict[str, Any]:
-    """List reviewable packages for a stage or importable packages for one child."""
+    """List reviewable packages or importable packages for one collection."""
 
     if required_capability not in {
         DOCS_REVIEW_CAPABILITY,
@@ -160,7 +151,6 @@ def list_returned_document_packages(
         raise ValueError(
             f"unsupported returned-package capability: {required_capability}"
         )
-    normalized_stage = require_package_stage(stage)
     normalized_collection = (
         None
         if collection is None
@@ -168,15 +158,14 @@ def list_returned_document_packages(
     )
     if collection is not None and not normalized_collection:
         raise ValueError("collection is required for exact returned-package listing")
-    stage_config = source_context.package_source_stage_config(repo_root, normalized_stage)
+    workspace_config = load_docs_working_config(repo_root)
     collection_labels = {
         record.collection: record.title
-        for record in stage_config.collections
+        for record in workspace_config.collections
     }
 
     def add_collection_labels(item: dict[str, Any]) -> dict[str, Any]:
         collection = str(item.get("collection") or "").strip().lower()
-        item["stage_label"] = source_model.humanize(normalized_stage)
         item["collection_label"] = (
             collection_labels.get(collection, source_model.humanize(collection))
             if collection
@@ -189,7 +178,6 @@ def list_returned_document_packages(
         staging_root=staging_root,
         metadata_root=metadata_root,
     )
-    report["stage"] = normalized_stage
     staged_files: list[dict[str, Any]] = []
     unassigned_files: list[dict[str, Any]] = []
     for item in report.get("files", []):
@@ -198,18 +186,8 @@ def list_returned_document_packages(
             continue
         if str(item.get("data_domain") or "").strip() != "documents":
             continue
-        item_stage = str(item.get("stage") or "").strip().lower()
-        if not item_stage:
-            unassigned_files.append(item)
-            continue
         item_collection = str(item.get("collection") or "").strip().lower()
-        if (
-            item_stage == normalized_stage
-            and (
-                normalized_collection is None
-                or item_collection == normalized_collection
-            )
-        ):
+        if normalized_collection is None or item_collection == normalized_collection:
             staged_files.append(add_collection_labels(item))
     supported_profile_ids = (
         supported_return_import_profile_ids()
@@ -224,18 +202,8 @@ def list_returned_document_packages(
         if item.get("provenance_error"):
             blocked_files.append(item)
             continue
-        item_stage = str(item.get("stage") or "").strip().lower()
-        if not item_stage:
-            unassigned_files.append(item)
-            continue
         item_collection = str(item.get("collection") or "").strip().lower()
-        if (
-            item_stage == normalized_stage
-            and (
-                normalized_collection is None
-                or item_collection == normalized_collection
-            )
-        ):
+        if normalized_collection is None or item_collection == normalized_collection:
             blocked_files.append(add_collection_labels(item))
     for item in staged_files:
         profile_id = str(item.get("profile_id") or "").strip()
@@ -273,7 +241,6 @@ def list_returned_document_packages(
             continue
         validation = parse_staged_import(
             repo_root=repo_root,
-            stage=normalized_stage,
             collection=normalized_collection,
             staged_file=str(item.get("filename") or "").strip(),
             staging_root=staging_root,

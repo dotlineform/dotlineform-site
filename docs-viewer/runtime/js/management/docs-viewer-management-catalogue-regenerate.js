@@ -8,7 +8,7 @@ import { openCatalogueRegenerateModal } from "./docs-viewer-management-catalogue
 /** Keep the exact collection and receipt through Apply and its awaited report refresh. */
 export function openCatalogueRegenerate(options) {
   var target = normalizeManagedDocumentCollectionTarget(options.target);
-  if (target.stage !== "working" || target.collection !== "catalogue") {
+  if (target.collection !== "catalogue") {
     throw new Error("Regenerate requires the Working Catalogue collection.");
   }
   if (typeof options.refreshCollection !== "function") {

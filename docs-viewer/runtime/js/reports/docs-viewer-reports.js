@@ -218,8 +218,7 @@ function registerExpandedPresentation(context, root, reportMeta, mountResult) {
       mountResult,
       reportMeta,
       reportRoot: root,
-      requestContentDetail: context.requestContentDetail,
-      viewerStage: context.viewerStage
+      requestContentDetail: context.requestContentDetail
     });
   } catch (error) {
     console.warn("docs_viewer: expanded report registration unavailable", error);
@@ -273,7 +272,7 @@ export function mountDocsViewerReport(context) {
           var target = child.documentTarget;
           mountDocsViewerMediaLinks({
             content: child.content,
-            documentTarget: { ...(target.stage ? { stage: target.stage } : {}),
+            documentTarget: {
               collection: target.collection, docId: target.doc_id },
             isCurrentDocument: child.isCurrentDocument,
             openMediaTarget: context.openMediaTarget,

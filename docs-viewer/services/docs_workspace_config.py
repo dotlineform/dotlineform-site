@@ -671,6 +671,11 @@ def load_docs_stage(repo_root: Path, stage: str | None) -> DocsStageConfig:
     return select_workspace_stage(load_docs_workspace_config(repo_root), stage)
 
 
+def load_docs_working_config(repo_root: Path) -> DocsStageConfig:
+    """Resolve the single local reader/authoring workspace at its storage owner."""
+    return select_workspace_stage(load_docs_workspace_config(repo_root), "working")
+
+
 def require_selected_stage(config: DocsStageConfig | DocsCollectionConfig) -> None:
     if not isinstance(config, (DocsStageConfig, DocsCollectionConfig)) or config.stage not in STAGES:
         raise ValueError("an explicit Working or Preview stage is required")
@@ -713,6 +718,19 @@ def public_documents_path(config: DocsWorkspaceConfig | DocsStageConfig | DocsCo
     return config.public_projection.documents.location.path if config.public_projection else None
 
 
+def public_document_reader_paths(config: DocsWorkspaceConfig) -> dict[str, Path]:
+    """Resolve public document locations at the storage owner, keyed by exact collection."""
+    prepared = select_workspace_stage(config, "preview")
+    owners = {"": prepared, **{child.collection: child for child in prepared.collections}}
+    paths = {}
+    for collection, owner in owners.items():
+        path = public_documents_path(owner)
+        if path is None:
+            raise ValueError(f"Public document location is unavailable: {collection or 'documents'}")
+        paths[collection] = path
+    return paths
+
+
 def public_search_path(config: DocsWorkspaceConfig | DocsStageConfig | DocsCollectionConfig) -> Path | None:
     projection = config.public_projection
     return projection.search.location.path if projection and projection.search else None
@@ -725,8 +743,8 @@ def managed_media_config(config: DocsStageConfig | DocsCollectionConfig, media_t
     return config.media.types[media_type]
 
 
-def load_docs_media_owner(repo_root: Path, stage: str | None, collection: str = "") -> DocsStageConfig | DocsCollectionConfig:
-    config = load_docs_stage(repo_root, stage)
+def load_docs_media_owner(repo_root: Path, collection: str = "") -> DocsStageConfig | DocsCollectionConfig:
+    config = load_docs_working_config(repo_root)
     if not collection:
         return config
     for child in config.collections:

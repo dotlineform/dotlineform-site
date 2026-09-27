@@ -131,8 +131,8 @@ function renderDiagramSources(context, article, state, requestId) {
     ? adapter.getDocumentTarget()
     : null;
   var documentTarget = sourceTarget || context.managedDocumentTarget || (
-    doc && context.viewerStage
-      ? { stage: context.viewerStage, doc_id: doc.doc_id }
+    doc
+      ? {  doc_id: doc.doc_id }
       : null
   );
   if (
@@ -161,7 +161,6 @@ function renderDiagramSources(context, article, state, requestId) {
     sources.forEach(function (source) {
       var item = document.createElement("li");
       item.className = "docsViewer__diagramSourcesItem";
-
       var link = document.createElement("a");
       link.href = "#";
       link.textContent = cleanString(source.label) || cleanString(source.source_identity) || "Diagram";

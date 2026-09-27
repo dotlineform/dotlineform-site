@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from docs_workspace_config import CONFIG_REL_PATH, document_source_path, load_docs_workspace_config, load_docs_stage, resolve_workspace_path, select_workspace_stage, require_document_authoring
+from docs_workspace_config import CONFIG_REL_PATH, document_source_path, load_docs_workspace_config, load_docs_working_config, resolve_workspace_path, require_document_authoring
 import docs_source_model as source_model
 
 
@@ -16,7 +16,7 @@ SCHEMA_VERSION = "docs_source_config_settings_v2"
 
 
 @dataclass(frozen=True)
-class EditableStageField:
+class EditableWorkspaceField:
     field: str
     value_type: str
     source_path: str
@@ -25,18 +25,18 @@ class EditableStageField:
     description: str
 
 
-EDITABLE_STAGE_FIELDS: dict[str, EditableStageField] = {
-    "default_doc_id": EditableStageField(
+EDITABLE_WORKSPACE_FIELDS: dict[str, EditableWorkspaceField] = {
+    "default_doc_id": EditableWorkspaceField(
         field="default_doc_id",
         value_type="string",
-        source_path=f"{CONFIG_REL_PATH.as_posix()} stages.<stage>.default_doc_id",
-        generated_path="docs-viewer/config/defaults/docs-viewer-config.json stages[].default_doc_id",
+        source_path=f"{CONFIG_REL_PATH.as_posix()} stages.working.default_doc_id",
+        generated_path="docs-viewer/config/defaults/docs-viewer-config.json workspace.default_doc_id",
         requires_rebuild=True,
-        description="Default document id opened for this stage when no document is requested. Leave blank to use the first loadable document.",
+        description="Default document id opened when no document is requested. Leave blank to use the first loadable document.",
     ),
 }
 
-BLOCKED_STAGE_FIELDS = {
+BLOCKED_WORKSPACE_FIELDS = {
     "source": "Canonical source roles and locations are install-time config and require manual review.",
     "preview": "Preview artifact roles and locations are install-time config and affect builders and imports.",
     "public_projection": "Public projections are install-time config and affect publication and public routes.",
@@ -65,7 +65,7 @@ def _load_json(path: Path, label: str) -> dict[str, Any]:
 
 
 def _validate_field_value(field: str, value: Any) -> Any:
-    contract = EDITABLE_STAGE_FIELDS.get(field)
+    contract = EDITABLE_WORKSPACE_FIELDS.get(field)
     if contract is None:
         raise ValueError(f"Source config field is not editable through settings: {field}")
     if contract.value_type == "boolean":
@@ -79,20 +79,17 @@ def _validate_field_value(field: str, value: Any) -> Any:
     raise ValueError(f"Source config field {field} has unsupported value type: {contract.value_type}")
 
 
-def _field_current_value(config: Any, contract: EditableStageField) -> Any:
+def _field_current_value(config: Any, contract: EditableWorkspaceField) -> Any:
     return getattr(config, contract.field)
 
 
-def _stage_field_payload(config: Any, contract: EditableStageField) -> dict[str, Any]:
+def _workspace_field_payload(config: Any, contract: EditableWorkspaceField) -> dict[str, Any]:
     return {
         "field": contract.field,
         "type": contract.value_type,
         "current_value": _field_current_value(config, contract),
-        "editable": config.stage == "working",
-        "source_path": (
-            f"{CONFIG_REL_PATH.as_posix()} preview.{contract.field}"
-            if config.stage == "preview" else contract.source_path.replace("<stage>", config.stage)
-        ),
+        "editable": True,
+        "source_path": contract.source_path,
         "generated_path": contract.generated_path,
         "requires_rebuild": contract.requires_rebuild,
         "description": contract.description,
@@ -100,13 +97,12 @@ def _stage_field_payload(config: Any, contract: EditableStageField) -> dict[str,
     }
 
 
-def _stage_payload(config: Any) -> dict[str, Any]:
+def _workspace_payload(config: Any) -> dict[str, Any]:
     return {
-        "stage": config.stage,
         "source_config_path": CONFIG_REL_PATH.as_posix(),
         "fields": [
-            _stage_field_payload(config, contract)
-            for contract in sorted(EDITABLE_STAGE_FIELDS.values(), key=lambda item: item.field)
+            _workspace_field_payload(config, contract)
+            for contract in sorted(EDITABLE_WORKSPACE_FIELDS.values(), key=lambda item: item.field)
         ],
     }
 
@@ -117,26 +113,25 @@ def _validate_default_doc_id(repo_root: Path, config: Any, value: str) -> list[s
     root = resolve_workspace_path(repo_root, document_source_path(config))
     if not root.exists():
         raise ValueError(
-            f"missing source root for stage {config.stage}: {document_source_path(config).as_posix()}"
+            f"missing source root for the workspace: {document_source_path(config).as_posix()}"
         )
     docs = source_model.load_stage_docs_for_config(repo_root, config)
     docs_by_id = {doc.doc_id: doc for doc in docs}
     doc = docs_by_id.get(value)
     if doc is None:
-        raise ValueError(f"default_doc_id must match a document in stage {config.stage}: {value}")
+        raise ValueError(f"default_doc_id must match a document in the workspace: {value}")
     if value in set(config.non_loadable_doc_ids):
-        raise ValueError(f"default_doc_id must be loadable in stage {config.stage}: {value}")
+        raise ValueError(f"default_doc_id must be loadable in the workspace: {value}")
     return []
 
 
-def build_settings_contract(repo_root: Path, *, stage: str | None = None) -> dict[str, Any]:
-    workspace = load_docs_workspace_config(repo_root)
-    selected_stages = (select_workspace_stage(workspace, stage),) if stage is not None else workspace.stages
+def build_settings_contract(repo_root: Path) -> dict[str, Any]:
+    config = load_docs_working_config(repo_root)
     return {
         "ok": True,
         "schema_version": SCHEMA_VERSION,
         "source_config_path": CONFIG_REL_PATH.as_posix(),
-        "editable_stage_fields": [
+        "editable_fields": [
             {
                 "field": contract.field,
                 "type": contract.value_type,
@@ -145,24 +140,24 @@ def build_settings_contract(repo_root: Path, *, stage: str | None = None) -> dic
                 "requires_rebuild": contract.requires_rebuild,
                 "description": contract.description,
             }
-            for contract in sorted(EDITABLE_STAGE_FIELDS.values(), key=lambda item: item.field)
+            for contract in sorted(EDITABLE_WORKSPACE_FIELDS.values(), key=lambda item: item.field)
         ],
-        "blocked_stage_fields": [
+        "blocked_fields": [
             {"field": field, "reason": reason}
-            for field, reason in sorted(BLOCKED_STAGE_FIELDS.items())
+            for field, reason in sorted(BLOCKED_WORKSPACE_FIELDS.items())
         ],
         "deferred_global_fields": [
             {"field": field, "reason": reason}
             for field, reason in sorted(DEFERRED_GLOBAL_FIELDS.items())
         ],
-        "stages": [_stage_payload(config) for config in selected_stages],
+        "workspace": _workspace_payload(config),
     }
 
 
-def validate_stage_settings_change(repo_root: Path, changes: dict[str, Any], *, stage: str) -> dict[str, Any]:
+def validate_settings_change(repo_root: Path, changes: dict[str, Any]) -> dict[str, Any]:
     if not isinstance(changes, dict) or not changes:
         raise ValueError("changes must be a non-empty JSON object")
-    config = load_docs_stage(repo_root, stage)
+    config = load_docs_working_config(repo_root)
     require_document_authoring(config)
     validated_changes: dict[str, Any] = {}
     rejected_fields: list[dict[str, str]] = []
@@ -170,13 +165,13 @@ def validate_stage_settings_change(repo_root: Path, changes: dict[str, Any], *, 
     affected_artifacts: set[str] = set()
 
     for field, raw_value in sorted(changes.items()):
-        if field in BLOCKED_STAGE_FIELDS:
-            rejected_fields.append({"field": field, "reason": BLOCKED_STAGE_FIELDS[field]})
+        if field in BLOCKED_WORKSPACE_FIELDS:
+            rejected_fields.append({"field": field, "reason": BLOCKED_WORKSPACE_FIELDS[field]})
             continue
         if field in DEFERRED_GLOBAL_FIELDS:
             rejected_fields.append({"field": field, "reason": DEFERRED_GLOBAL_FIELDS[field]})
             continue
-        contract = EDITABLE_STAGE_FIELDS.get(field)
+        contract = EDITABLE_WORKSPACE_FIELDS.get(field)
         value = _validate_field_value(field, raw_value)
         field_warnings: list[str] = []
         if field == "default_doc_id":
@@ -203,7 +198,6 @@ def validate_stage_settings_change(repo_root: Path, changes: dict[str, Any], *, 
     return {
         "ok": True,
         "schema_version": SCHEMA_VERSION,
-        "stage": config.stage,
         "source_config_path": CONFIG_REL_PATH.as_posix(),
         "changes": validated_changes,
         "warnings": warnings,
@@ -218,8 +212,8 @@ def _write_text_atomic(path: Path, text: str) -> None:
     temp_path.replace(path)
 
 
-def apply_stage_settings_change(repo_root: Path, changes: dict[str, Any], *, stage: str, dry_run: bool = False) -> dict[str, Any]:
-    validation = validate_stage_settings_change(repo_root, changes, stage=stage)
+def apply_settings_change(repo_root: Path, changes: dict[str, Any], *, dry_run: bool = False) -> dict[str, Any]:
+    validation = validate_settings_change(repo_root, changes)
     changed_fields = {
         field: detail["proposed_value"]
         for field, detail in validation["changes"].items()
@@ -229,9 +223,9 @@ def apply_stage_settings_change(repo_root: Path, changes: dict[str, Any], *, sta
         config_path = repo_root / CONFIG_REL_PATH
         payload = _load_json(config_path, CONFIG_REL_PATH.as_posix())
         raw_stages = payload.get("stages")
-        if not isinstance(raw_stages, dict) or not isinstance(raw_stages.get(stage), dict):
-            raise ValueError(f"Docs stage is not configured: {stage}")
-        raw_stages[stage].update(changed_fields)
+        if not isinstance(raw_stages, dict) or not isinstance(raw_stages.get("working"), dict):
+            raise ValueError("Working storage is not configured")
+        raw_stages["working"].update(changed_fields)
 
         rendered = json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
         _write_text_atomic(config_path, rendered)

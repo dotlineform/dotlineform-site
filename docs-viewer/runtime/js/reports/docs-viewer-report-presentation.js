@@ -1,5 +1,4 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
-
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
 }
@@ -18,8 +17,7 @@ function defaultWarning(message, error) {
 function sameDocumentTarget(left, right) {
   var first = left || {};
   var second = right || {};
-  return cleanString(first.stage) === cleanString(second.stage)
-    && cleanString(first.docId) === cleanString(second.docId);
+  return cleanString(first.docId) === cleanString(second.docId);
 }
 
 function sameReportTarget(left, right) {
@@ -117,7 +115,6 @@ function createOpenControl(documentRef, label) {
   var row = documentRef.createElement("div");
   row.className = "docsViewerReport__detailControlRow";
   row.setAttribute("data-docs-content-detail-control", "report");
-
   var button = documentRef.createElement("button");
   var controlLabel = "Open " + label + " in expanded view";
   button.className = "docsViewer__toolbarIconButton docsViewerReport__detailOpen";
@@ -220,8 +217,7 @@ export function createDocsViewerReportPresentationAdapter(options) {
       controlRow: null,
       documentMountGeneration: positiveInteger(context.documentMountGeneration),
       documentTarget: {
-        docId: cleanString(doc.doc_id),
-        stage: cleanString(context.viewerStage)
+        docId: cleanString(doc.doc_id)
       },
       handleClick: null,
       presentation: null,

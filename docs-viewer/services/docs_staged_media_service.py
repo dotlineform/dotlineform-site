@@ -71,7 +71,6 @@ class PreparedMermaidMedia:
 
 @dataclass(frozen=True)
 class StagedMediaContract:
-    stage: str
     kind: str
     source_path: Path
     label: str
@@ -86,7 +85,7 @@ class StagedMediaContract:
 
 def media_owner(repo_root: Path, contract: StagedMediaContract) -> DocsStageConfig | DocsCollectionConfig:
     """Resolve the collection validated for this insertion, with no parent fallback."""
-    return load_docs_media_owner(repo_root, contract.stage, contract.collection)
+    return load_docs_media_owner(repo_root, contract.collection)
 
 
 def normalize_media_kind(value: Any) -> str:
@@ -179,10 +178,9 @@ def list_staged_media_files(
     repo_root: Path,
     kind: str,
     *,
-    stage: str,
     collection: str = "",
 ) -> dict[str, Any]:
-    require_document_authoring(load_docs_media_owner(repo_root, stage, collection))
+    require_document_authoring(load_docs_media_owner(repo_root, collection))
     normalized_kind = normalize_media_kind(kind)
 
     status = workspace_status(repo_root, required_paths=("import_staging",))
@@ -248,10 +246,10 @@ def _prepared_media_source(
 def _staged_media_request_contract(repo_root: Path, body: dict[str, Any]) -> StagedMediaContract:
     kind = normalize_media_kind(body.get("media_kind"))
     if "scope" in body:
-        raise ValueError("scope is retired; supply stage and optional collection")
+        raise ValueError("scope is retired; use an optional collection")
     if "sub_scope" in body:
         raise ValueError("sub_scope is retired; use collection")
-    config = load_docs_media_owner(repo_root, body.get("stage"), body.get("collection", ""))
+    config = load_docs_media_owner(repo_root, body.get("collection", ""))
     require_document_authoring(config)
     workspace = configured_workspace_paths(repo_root)
     source_path = _resolve_staged_media(workspace.import_staging, body.get("staged_filename"), kind)
@@ -274,7 +272,6 @@ def _staged_media_request_contract(repo_root: Path, body: dict[str, Any]) -> Sta
     if media_class == "mermaid":
         media_filename = Path(media_filename).with_suffix(".mmd").name
     return StagedMediaContract(
-        stage=config.stage,
         collection=getattr(config, "collection", ""),
         kind=kind,
         source_path=source_path,
@@ -322,13 +319,12 @@ def _prepared_mermaid_media(
     source_path: Path,
     source_filename: str,
 ) -> PreparedMermaidMedia:
-    stage = config.stage
     build = config.media.build_sources.get("mermaid")
     if build is None or build.producer != "mermaid" or build.publishes_to != "svg":
-        raise ValueError(f"stage {stage!r} does not configure Mermaid source media")
+        raise ValueError("The workspace does not configure Mermaid source media")
     generated_media = config.media.types.get("svg")
     if generated_media is None or "mermaid" not in generated_media.build_inputs:
-        raise ValueError(f"stage {stage!r} does not register Mermaid as an SVG build input")
+        raise ValueError("The workspace does not register Mermaid as an SVG build input")
 
     source_identity = source_filename
     published_identity = Path(source_filename).with_suffix(".svg").as_posix()
@@ -397,7 +393,6 @@ def _mermaid_preview_payload(
     body: dict[str, Any],
 ) -> dict[str, Any]:
     plan = build_media_plan(
-        contract.stage,
         "svg",
         Path(prepared.published_identity),
         contract.label,
@@ -406,7 +401,6 @@ def _mermaid_preview_payload(
     )
     return {
         "ok": True,
-        "stage": contract.stage,
         "collection": contract.collection,
         "media_kind": contract.kind,
         "media_format": "mermaid",
@@ -467,7 +461,6 @@ def preview_staged_media(repo_root: Path, body: dict[str, Any]) -> dict[str, Any
         )
         result = publish_docs_media_files(repo_root, [item], write=False, force=True)[0]
         plan = build_media_plan(
-            contract.stage,
             contract.media_class,
             Path(contract.media_filename),
             contract.label,
@@ -477,7 +470,6 @@ def preview_staged_media(repo_root: Path, body: dict[str, Any]) -> dict[str, Any
         collision = "unchanged" if result.status == "unchanged" else "replace" if result.status == "would_overwrite" else "new"
         return {
             "ok": True,
-            "stage": contract.stage,
             "collection": contract.collection,
             "media_kind": contract.kind,
             "staged_filename": contract.source_path.name,
@@ -559,7 +551,6 @@ def apply_staged_media(repo_root: Path, body: dict[str, Any], *, write: bool = T
                 "size": len(prepared.source_bytes),
             },
             "publish": {
-                "stage": contract.stage,
                 "collection": contract.collection,
                 "media_class": "svg",
                 "filename": prepared.published_identity,

@@ -17,7 +17,6 @@ from docs_build_manifest import (
     BUILD_MANIFEST_FILENAME,
     BUILD_MANIFEST_SCHEMA_VERSION,
 )
-from docs_publication_payloads import project_preview_view
 from docs_recent_payload import validate_recent_payload
 from docs_selected_documents import validate_selected_payload
 from docs_public_mermaid_payload import public_mermaid_payload_requires_projection
@@ -199,7 +198,7 @@ def _validate_subject_associations(
         raise RuntimeError(
             f"generated subject associations for {stage}/{collection} have an unsupported schema"
         )
-    if "scope" in payload or payload.get("stage") != stage or payload.get("collection") != collection:
+    if "scope" in payload or "stage" in payload or payload.get("collection") != collection:
         raise RuntimeError(
             f"generated subject associations for {stage}/{collection} have the wrong collection identity"
         )
@@ -233,7 +232,7 @@ def _validate_subject_associations(
             doc_id = str(target.get("doc_id") or "").strip()
             if (
                 "scope" in target
-                or target.get("stage") != stage
+                or "stage" in target
                 or target.get("collection") != collection
                 or not doc_id
             ):
@@ -393,10 +392,6 @@ def build_preview_snapshot_files(
         else:
             files[relative_path] = data
 
-    workspace = load_docs_workspace_config(repo_root)
-    for path, data in list(files.items()):
-        if path.suffix == ".json" and path not in COPIED_WORKING_PAYLOAD_PATHS:
-            files[path] = json_bytes(project_preview_view(workspace, _read_json_bytes(data, f"prepared {path}")))
     for path, data in files.items():
         _validate_prepared_index(path, data, "preview")
 

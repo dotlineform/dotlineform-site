@@ -66,7 +66,6 @@ export function createDocsImportCollectionController(options = {}) {
     stagedFilename: "",
     sourceDirectory: "",
     sourceFormat: "",
-    stage: "",
     collection: "",
     plan: null,
     result: null,
@@ -105,7 +104,6 @@ export function createDocsImportCollectionController(options = {}) {
     state.stagedFilename = "";
     state.sourceDirectory = "";
     state.sourceFormat = "";
-    state.stage = "";
     state.collection = "";
     state.plan = null;
     state.result = null;
@@ -176,8 +174,7 @@ export function createDocsImportCollectionController(options = {}) {
     const targetCollection = normalizeText(target && target.collection).toLowerCase();
     const targetDocId = normalizeText(target && target.doc_id);
     if (
-      normalizeText(target && target.stage) !== state.stage
-      || targetDocId
+      targetDocId
       || (
         state.collection
           ? targetCollection !== state.collection
@@ -187,14 +184,12 @@ export function createDocsImportCollectionController(options = {}) {
       throw new Error(`Docs Import ${context} did not match the requested collection.`);
     }
     return {
-      ...(state.stage ? { stage: state.stage } : {}),
       ...(targetCollection ? { collection: targetCollection } : {})
     };
   }
 
   async function preview({
     file,
-    stage = "",
     collection = "",
     sourceDirectory = "",
     managementBaseUrl = ""
@@ -205,7 +200,6 @@ export function createDocsImportCollectionController(options = {}) {
     const sourceFormat = normalizeText(file && file.source_format);
     if (
       !stagedFilename
-      || stage !== "working"
       || !normalizedSourceDirectory
       || !isDocsImportCollectionRecord(file)
     ) {
@@ -225,7 +219,6 @@ export function createDocsImportCollectionController(options = {}) {
     state.stagedFilename = stagedFilename;
     state.sourceDirectory = normalizedSourceDirectory;
     state.sourceFormat = sourceFormat;
-    state.stage = normalizeText(stage);
     state.collection = normalizedCollection;
     state.managementBaseUrl = normalizeText(managementBaseUrl);
     state.plan = null;
@@ -236,7 +229,6 @@ export function createDocsImportCollectionController(options = {}) {
     render();
     try {
       const payload = await fetchManagementJson("/docs/import-source", "POST", {
-        ...(state.stage ? { stage: state.stage } : {}),
         ...(normalizedCollection ? { collection: normalizedCollection } : {}),
         source_directory: normalizedSourceDirectory,
         staged_filename: stagedFilename,
@@ -287,7 +279,6 @@ export function createDocsImportCollectionController(options = {}) {
     render();
     try {
       const payload = await fetchManagementJson("/docs/import-source", "POST", {
-        ...(state.stage ? { stage: state.stage } : {}),
         ...(state.collection ? { collection: state.collection } : {}),
         source_directory: state.sourceDirectory,
         staged_filename: state.stagedFilename,
@@ -338,7 +329,6 @@ export function createDocsImportCollectionController(options = {}) {
             record && (record.status === "created" || record.status === "overwritten") && normalizeText(record.doc_id)
           )) || null;
           const terminalDetail = {
-            ...(state.stage ? { stage: state.stage } : {}),
             collection: state.collection,
             docId: normalizeText(displayedRecord && displayedRecord.doc_id),
             target,

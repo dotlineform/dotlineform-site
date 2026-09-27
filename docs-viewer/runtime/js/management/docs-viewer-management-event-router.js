@@ -109,8 +109,7 @@ export function createDocsViewerManagementEventRouter(options = {}) {
       ["import", ["openImport", {}]],
       ["export-workspace", ["exportWorkspace", { hideContextMenu: true, hideManageActionsMenu: true }]],
       ["settings", ["openSettings", {}]],
-      ["deploy-repo", ["deployRepo", { hideContextMenu: true, hideManageActionsMenu: true }]],
-      ["prepare-preview", ["preparePreview", { hideContextMenu: true, hideManageActionsMenu: true }]],
+      ["publish", ["publish", { hideContextMenu: true, hideManageActionsMenu: true }]],
       ["new", ["createDoc", { hideContextMenu: true, hideManageActionsMenu: true }]],
       ["new-collection", ["createCollection", { hideContextMenu: true, hideManageActionsMenu: true }]],
       ["delete-collection", ["deleteCollection", { hideContextMenu: true, hideManageActionsMenu: true }]]

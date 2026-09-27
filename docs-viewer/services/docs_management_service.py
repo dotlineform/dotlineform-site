@@ -21,7 +21,6 @@ REPO_ROOT = ensure_studio_python_paths(__file__)
 SCRIPTS_DIR = REPO_ROOT / "scripts"
 
 import docs_diagram_source_service  # noqa: E402
-import docs_deploy_repo  # noqa: E402
 import docs_management_document_target  # noqa: E402
 import docs_management_draft  # noqa: E402
 import docs_selected_documents  # noqa: E402
@@ -30,7 +29,6 @@ import docs_local_links  # noqa: E402
 import docs_media_actions  # noqa: E402
 import docs_management_mutations as mutations  # noqa: E402
 import docs_management_routes as routes  # noqa: E402
-import docs_prepare_preview  # noqa: E402
 import docs_publish  # noqa: E402
 import docs_project_state  # noqa: E402
 import docs_missing_source_files  # noqa: E402
@@ -73,7 +71,7 @@ from docs_management_read_service import (  # noqa: E402
     docs_management_get_payload as read_docs_management_get_payload,
 )
 from docs_management_source_service import detect_preferred_markdown_app, open_publication_ignore, open_source_doc, save_source_document  # noqa: E402
-from docs_workspace_config import load_docs_stage, require_document_authoring  # noqa: E402
+from docs_workspace_config import load_docs_working_config, require_document_authoring  # noqa: E402
 
 
 def capabilities_payload(repo_root: Path) -> dict[str, object]:
@@ -100,18 +98,12 @@ def docs_management_post_response(
             raise ValueError("Publish does not support dry_run")
         payload = docs_publish.publish_docs(repo_root, body)
         return (HTTPStatus.OK if payload["complete"] else HTTPStatus.INTERNAL_SERVER_ERROR), payload
+    if "stage" in body:
+        raise ValueError("stage is retired from Docs requests")
     if "scope" in body or "parent_scope" in body:
-        raise ValueError("scope is retired; supply an explicit stage and optional collection")
+        raise ValueError("scope is retired; use an optional collection")
     if "sub_scope" in body:
         raise ValueError("sub_scope is retired; use collection")
-    if path in {routes.DEPLOY_REPO_PREVIEW_PATH, routes.DEPLOY_REPO_APPLY_PATH}:
-        if body.get("stage") != "preview":
-            raise ValueError("Publish requires stage preview")
-    elif "stage" in body:
-        selected = load_docs_stage(repo_root, body["stage"])
-        require_document_authoring(selected)
-    if path == routes.PREPARE_PREVIEW_PLAN_PATH:
-        return HTTPStatus.OK, docs_prepare_preview.plan_prepare_preview(repo_root, body)
     if path == routes.CATALOGUE_REGENERATE_PREVIEW_PATH:
         return HTTPStatus.OK, docs_catalogue_regeneration.preview_catalogue_regeneration(repo_root, body)
     if path == routes.CATALOGUE_REGENERATE_APPLY_PATH:
@@ -123,10 +115,6 @@ def docs_management_post_response(
             return HTTPStatus.CONFLICT, {"ok": False, "error": str(error)}
         except docs_catalogue_regeneration.CatalogueRegenerationApplyError as error:
             return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
-    if path == routes.PREPARE_PREVIEW_APPLY_PATH:
-        if dry_run:
-            raise ValueError("Prepare Preview apply does not support dry_run")
-        return HTTPStatus.OK, docs_prepare_preview.apply_prepare_preview(repo_root, body)
     if path == routes.SET_DRAFT_PATH:
         try:
             return HTTPStatus.OK, docs_management_draft.set_draft(repo_root, body, dry_run=dry_run)
@@ -173,14 +161,13 @@ def docs_management_post_response(
         return HTTPStatus.OK, payload
     if path == routes.SOURCE_CONFIG_SETTINGS_PATH:
         changes = body.get("changes")
-        payload = docs_source_config_settings.apply_stage_settings_change(
+        payload = docs_source_config_settings.apply_settings_change(
             repo_root,
             changes,
-            stage=body.get("stage"),
             dry_run=dry_run,
         )
         if payload.get("requires_rebuild") and not dry_run:
-            payload["rebuild"] = write_rebuild.rebuild_stage_outputs(repo_root, include_search=False, stage=body.get("stage"))
+            payload["rebuild"] = write_rebuild.rebuild_working_outputs(repo_root, include_search=False)
         else:
             payload["rebuild"] = None
         if payload.get("changed") and not dry_run:
@@ -188,7 +175,6 @@ def docs_management_post_response(
                 repo_root,
                 "docs_source_config_settings",
                 {
-                    "stage": body["stage"],
                     "fields": sorted(payload.get("changes", {}).keys()),
                     "source_config_path": payload.get("source_config_path", ""),
                 },
@@ -207,7 +193,6 @@ def docs_management_post_response(
                 repo_root,
                 "docs-staged-media-publish",
                 {
-                    "stage": payload["stage"],
                     "media_kind": payload["media_kind"],
                     "staged_filename": payload["staged_filename"],
                     "media_identity": payload["media_identity"],
@@ -226,12 +211,11 @@ def docs_management_post_response(
         except DocumentCreateCommittedError as error:
             return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
     if path == routes.REBUILD_PATH:
-        payload = write_rebuild.rebuild_stage_outputs(
+        payload = write_rebuild.rebuild_working_outputs(
             repo_root,
             include_search=True,
-            stage=body.get("stage"),
         )
-        payload["summary_text"] = f"Docs and docs search rebuilt for {body['stage']}."
+        payload["summary_text"] = "Docs and docs search rebuilt."
         return HTTPStatus.OK, payload
     if path == routes.MOVE_PATH:
         return HTTPStatus.OK, handle_move(repo_root, body, dry_run)
@@ -242,7 +226,7 @@ def docs_management_post_response(
                 mutations.plan_collection_delete_preview(repo_root, body),
             )
         doc_ids = mutations.require_delete_doc_ids(body.get("doc_ids"))
-        return HTTPStatus.OK, mutations.plan_delete_preview(repo_root, doc_ids, stage=body.get("stage"))
+        return HTTPStatus.OK, mutations.plan_delete_preview(repo_root, doc_ids)
     if path == routes.DELETE_APPLY_PATH:
         try:
             return HTTPStatus.OK, handle_delete_apply(repo_root, body, dry_run)
@@ -268,12 +252,6 @@ def docs_management_post_response(
             return HTTPStatus.OK, handle_collection_delete_apply(repo_root, body, dry_run)
         except docs_collection_lifecycle.CollectionLifecycleApplyError as error:
             return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
-    if path == routes.DEPLOY_REPO_PREVIEW_PATH:
-        return HTTPStatus.OK, docs_deploy_repo.preview_deploy_repo(repo_root, body)
-    if path == routes.DEPLOY_REPO_APPLY_PATH:
-        if dry_run:
-            raise ValueError("Publish apply does not support dry_run")
-        return HTTPStatus.OK, docs_deploy_repo.apply_deploy_repo(repo_root, body)
     if path == routes.STATIC_HTML_EXPORT_PREVIEW_PATH:
         return HTTPStatus.OK, docs_static_html_export.preview_static_html_export(repo_root, body)
     if path == routes.STATIC_HTML_EXPORT_APPLY_PATH:

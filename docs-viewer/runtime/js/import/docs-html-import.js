@@ -356,13 +356,11 @@ function refreshStagedFiles(state) {
 }
 
 async function openResultSource(state, link) {
-  const stage = normalizeText(link && link.dataset ? link.dataset.stage : "");
   const collection = normalizeText(link && link.dataset ? link.dataset.collection : "");
   const docId = normalizeText(link && link.dataset ? link.dataset.docId : "");
-  if (!stage || !docId) return;
+  if (!docId) return;
   try {
-    const target = { stage, doc_id: docId };
-    if (link.dataset.stage) target.stage = link.dataset.stage;
+    const target = {  doc_id: docId };
     if (collection) target.collection = collection;
     await openManagedDocSource(target, "vscode", managementOptionsForState(state));
   } catch (error) {
@@ -440,7 +438,6 @@ async function runImport(state) {
   if (selectedCandidateIsCollection(state)) {
     await state.collectionController.preview({
       file: candidate.raw,
-      stage: target.stage || "",
       collection: normalizeText(target.collection),
       sourceDirectory: state.sourceDirectory,
       managementBaseUrl: state.managementBaseUrl
@@ -449,7 +446,6 @@ async function runImport(state) {
   }
   await runDocsHtmlImportWorkflow(state, {
     files: [candidate.raw],
-    stage: target.stage || "",
     collection: normalizeText(target.collection),
     includePromptMeta: Boolean(state.includePromptMeta.checked),
     sourceDirectory: state.sourceDirectory,

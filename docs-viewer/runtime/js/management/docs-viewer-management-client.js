@@ -9,9 +9,9 @@ function defaultFetch(url, options) {
 
 export var DOCS_MANAGEMENT_UNAVAILABLE_MESSAGE = "Docs management service unavailable.";
 
-function stagedPayload(payload, options) {
+function collectionPayload(payload, options) {
   var settings = options || {};
-  return Object.assign({ stage: settings.stage }, settings.collection ? { collection: settings.collection } : {}, payload || {});
+  return Object.assign({  }, settings.collection ? { collection: settings.collection } : {}, payload || {});
 }
 
 export function fetchManagementJson(path, method, payload, options) {
@@ -60,7 +60,7 @@ export function readManagementCapabilities(options) {
 }
 
 export function readSelectedDocuments(options) {
-  return fetchManagementJson("/docs/selected?stage=working", "GET", undefined,
+  return fetchManagementJson("/docs/selected", "GET", undefined,
     Object.assign({}, options, { cache: "no-store" }));
 }
 
@@ -68,34 +68,29 @@ export function setManagedDocSelected(target, selected, options) {
   return fetchManagementJson("/docs/set-selected", "POST", targetPayload(target, { selected: selected }), options);
 }
 
-/** Read authoring targets in one exact stage; the response supplies ordinary hrefs. */
+/** Read authoring targets in the authoring workspace; the response supplies ordinary hrefs. */
 export function readDocumentLinkTargets(target, options) {
   var collection = normalizeManagedDocumentCollectionTarget(target);
-  var query = "?stage=" + encodeURIComponent(collection.stage);
-  if (collection.collection) query += "&collection=" + encodeURIComponent(collection.collection);
+  var query = "";
+  if (collection.collection) query += "?collection=" + encodeURIComponent(collection.collection);
   return fetchManagementJson("/docs/document-link-targets" + query, "GET", undefined,
     Object.assign({}, options, { cache: "no-store" }));
 }
 
-function catalogueStageQuery(stage) {
-  if (!["working", "preview"].includes(stage)) throw new Error("Catalogue stage is required.");
-  return "stage=" + encodeURIComponent(stage);
-}
-
 /** Read generated Catalogue targets independently of document scope and association. */
-export function readCatalogueMediaTargets(stage, options) {
-  return fetchManagementJson("/docs/catalogue-media-targets?" + catalogueStageQuery(stage), "GET", undefined, options);
+export function readCatalogueMediaTargets( options) {
+  return fetchManagementJson("/docs/catalogue-media-targets", "GET", undefined, options);
 }
 
 /** Read the generated rendition policy shared by all Catalogue records. */
-export function readCatalogueMediaConfig(stage, options) {
-  return fetchManagementJson("/docs/catalogue-media-config?" + catalogueStageQuery(stage), "GET", undefined,
+export function readCatalogueMediaConfig( options) {
+  return fetchManagementJson("/docs/catalogue-media-config", "GET", undefined,
     Object.assign({}, options, { cache: "no-cache" }));
 }
 
 /** Read the current generated Work consumer record independently of Document Build. */
-export function readCatalogueWork(workId, stage, options) {
-  return fetchManagementJson("/docs/catalogue-work?work_id=" + encodeURIComponent(workId) + "&" + catalogueStageQuery(stage), "GET", undefined,
+export function readCatalogueWork(workId,  options) {
+  return fetchManagementJson("/docs/catalogue-work?work_id=" + encodeURIComponent(workId), "GET", undefined,
     Object.assign({}, options, { cache: "no-cache" }));
 }
 
@@ -110,21 +105,19 @@ export function applyCatalogueRegeneration(payload, options) {
 }
 
 /** Read current Series membership without resolving any member Work records. */
-export function readCatalogueSeries(seriesId, stage, options) {
-  return fetchManagementJson("/docs/catalogue-series?series_id=" + encodeURIComponent(seriesId) + "&" + catalogueStageQuery(stage), "GET", undefined,
+export function readCatalogueSeries(seriesId,  options) {
+  return fetchManagementJson("/docs/catalogue-series?series_id=" + encodeURIComponent(seriesId), "GET", undefined,
     Object.assign({}, options, { cache: "no-cache" }));
 }
 
 /** Read exact Gallery membership from current Studio-generated output. */
-export function readCatalogueGallery(galleryId, stage, options) {
-  return fetchManagementJson("/docs/catalogue-gallery?gallery_id=" + encodeURIComponent(galleryId) + "&" + catalogueStageQuery(stage), "GET", undefined,
+export function readCatalogueGallery(galleryId,  options) {
+  return fetchManagementJson("/docs/catalogue-gallery?gallery_id=" + encodeURIComponent(galleryId), "GET", undefined,
     Object.assign({}, options, { cache: "no-cache" }));
 }
 
 export function readManagedDocsIndex(options) {
-  var stage = options && options.stage;
-  if (!["working", "preview"].includes(stage)) return Promise.reject(new Error("Docs stage is required."));
-  return fetchManagementJson("/docs/index-tree?stage=" + encodeURIComponent(stage), "GET", undefined, options);
+  return fetchManagementJson("/docs/index-tree", "GET", undefined, options);
 }
 
 export function encodeDecodedLocalTarget(target) {
@@ -161,59 +154,23 @@ export function openLocalTarget(target, options) {
 }
 
 export function createManagedDoc(payload, options) {
-  return fetchManagementJson("/docs/create", "POST", stagedPayload(payload, options), options);
+  return fetchManagementJson("/docs/create", "POST", collectionPayload(payload, options), options);
 }
 
 export function rebuildManagedDocs(options) {
-  return fetchManagementJson("/docs/rebuild", "POST", stagedPayload({}, options), options);
-}
-
-export function planManagedDocsPreview(options) {
-  return fetchManagementJson("/docs/prepare-preview/plan", "POST", stagedPayload({}, options), options);
-}
-
-export function prepareManagedDocsPreview(preview, options) {
-  return fetchManagementJson("/docs/prepare-preview/apply", "POST", stagedPayload({
-    confirm: true,
-    plan_revision: String(preview && preview.plan_revision || "")
-  }, options), options);
-}
-
-export function previewManagedDocsDeployRepo(options) {
-  return fetchManagementJson(
-    "/docs/deploy-repo/preview",
-    "POST",
-    { stage: "preview" },
-    options
-  );
-}
-
-export function applyManagedDocsDeployRepo(preview, options) {
-  var plan = preview && typeof preview === "object" ? preview : {};
-  return fetchManagementJson("/docs/deploy-repo/apply", "POST", {
-    stage: "preview",
-    confirm: true,
-    preview_revision: String(plan.preview_revision || "").trim(),
-    deployment_timestamp: String(plan.deployment_timestamp || "").trim(),
-    plan_revision: String(plan.plan_revision || "").trim()
-  }, options);
+  return fetchManagementJson("/docs/rebuild", "POST", collectionPayload({}, options), options);
 }
 
 export function previewManagedDocsStaticHtmlExport(docIds, options) {
-  return fetchManagementJson("/docs/export/static-html/preview", "POST", stagedPayload({
+  return fetchManagementJson("/docs/export/static-html/preview", "POST", collectionPayload({
     doc_ids: Array.isArray(docIds) ? docIds.slice() : []
   }, options), options);
 }
 
 export function applyManagedDocsStaticHtmlExport(preview, options) {
   var plan = preview && typeof preview === "object" ? preview : {};
-  var settings = options || {};
-  if (!plan.stage || plan.stage !== settings.stage || Object.prototype.hasOwnProperty.call(plan, "scope")) {
-    return Promise.reject(new Error("Snapshot preview stage no longer matches the active stage."));
-  }
   var replaceExisting = plan.target_state === "recognized" || plan.target_state === "unrecognized";
   return fetchManagementJson("/docs/export/static-html/apply", "POST", {
-    ...(plan.stage ? { stage: plan.stage } : {}),
     doc_ids: Array.isArray(plan.doc_ids) ? plan.doc_ids.slice() : [],
     export_date: String(plan.export_date || "").trim(),
     plan_revision: String(plan.plan_revision || "").trim(),
@@ -225,7 +182,7 @@ export function applyManagedDocsStaticHtmlExport(preview, options) {
 
 function targetQuery(target) {
   var normalized = normalizeManagedDocumentTarget(target);
-  var query = ["stage=" + encodeURIComponent(normalized.stage)];
+  var query = [];
   if (normalized.collection) {
     query.push("collection=" + encodeURIComponent(normalized.collection));
   }
@@ -286,7 +243,7 @@ export function openManagedDiagramSource(target, payload, options) {
 export function listStagedMedia(mediaKind, options) {
   var settings = options || {};
   var kind = encodeURIComponent(String(mediaKind || "").trim());
-  var query = ["stage=" + encodeURIComponent(settings.stage), "media_kind=" + kind];
+  var query = ["media_kind=" + kind];
   if (settings.collection) query.push("collection=" + encodeURIComponent(settings.collection));
   var sourceDirectory = String(settings.sourceDirectory || "").trim();
   if (sourceDirectory) {
@@ -301,32 +258,29 @@ export function listStagedMedia(mediaKind, options) {
 }
 
 export function previewStagedMedia(payload, options) {
-  return fetchManagementJson("/docs/staged-media-preview", "POST", stagedPayload(payload, options), options);
+  return fetchManagementJson("/docs/staged-media-preview", "POST", collectionPayload(payload, options), options);
 }
 
 export function applyStagedMedia(payload, options) {
-  return fetchManagementJson("/docs/staged-media-apply", "POST", stagedPayload(payload, options), options);
+  return fetchManagementJson("/docs/staged-media-apply", "POST", collectionPayload(payload, options), options);
 }
 
 export function readSourceConfigSettings(options) {
-  var settings = options || {};
-  var path = "/docs/source-config-settings";
-  if (settings.stage) path += "?stage=" + encodeURIComponent(settings.stage);
-  return fetchManagementJson(path, "GET", undefined, options);
+  return fetchManagementJson("/docs/source-config-settings", "GET", undefined, options);
 }
 
 export function updateSourceConfigSettings(changes, options) {
-  return fetchManagementJson("/docs/source-config-settings", "POST", stagedPayload({
+  return fetchManagementJson("/docs/source-config-settings", "POST", collectionPayload({
     changes: changes || {}
   }, options), options);
 }
 
 export function previewManagedDocDelete(docIds, options) {
-  return fetchManagementJson("/docs/delete-preview", "POST", stagedPayload({ doc_ids: docIds }, options), options);
+  return fetchManagementJson("/docs/delete-preview", "POST", collectionPayload({ doc_ids: docIds }, options), options);
 }
 
 export function applyManagedDocDelete(docIds, options) {
-  return fetchManagementJson("/docs/delete-apply", "POST", stagedPayload({
+  return fetchManagementJson("/docs/delete-apply", "POST", collectionPayload({
     doc_ids: docIds,
     confirm: true
   }, options), options);
@@ -366,32 +320,30 @@ export function applyManagedCollectionDocDelete(target, sourceRevision, options)
 }
 
 export function previewCollectionCreate(payload, options) {
-  return fetchManagementJson("/docs/collections/create-preview", "POST", Object.assign({ stage: options && options.stage }, payload || {}), options);
+  return fetchManagementJson("/docs/collections/create-preview", "POST", Object.assign({  }, payload || {}), options);
 }
 
 export function applyCollectionCreate(payload, options) {
-  return fetchManagementJson("/docs/collections/create-apply", "POST", Object.assign({ stage: options && options.stage }, payload || {}, {
+  return fetchManagementJson("/docs/collections/create-apply", "POST", Object.assign({  }, payload || {}, {
     confirm: true
   }), options);
 }
 
 export function previewCollectionDelete(collection, options) {
   return fetchManagementJson("/docs/collections/delete-preview", "POST", {
-    stage: options && options.stage,
     collection: collection
   }, options);
 }
 
 export function applyCollectionDelete(collection, options) {
   return fetchManagementJson("/docs/collections/delete-apply", "POST", {
-    stage: options && options.stage,
     collection: collection,
     confirm: true
   }, options);
 }
 
 export function moveManagedDoc(docId, targetDocId, placement, options) {
-  return fetchManagementJson("/docs/move", "POST", stagedPayload({
+  return fetchManagementJson("/docs/move", "POST", collectionPayload({
     doc_id: docId,
     target_doc_id: targetDocId,
     placement: placement
@@ -402,4 +354,8 @@ export function openManagedDocSource(target, editor, options) {
   return fetchManagementJson("/docs/open-source", "POST", targetPayload(target, {
     editor: editor === "vscode" ? "vscode" : "default"
   }), options);
+}
+
+export function publishManagedDocs(options) {
+  return fetchManagementJson("/docs/publish", "POST", {}, options);
 }

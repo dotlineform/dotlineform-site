@@ -23,10 +23,10 @@ def relative_path(repo_root: Path, path: Path) -> str:
         raise ValueError("source path is outside the repo and external Docs Viewer root") from exc
 
 
-def viewer_url_for(doc_id: str, *, stage: str) -> str:
+def viewer_url_for(doc_id: str) -> str:
     """Link to the exact imported ordinary document without a scope fallback."""
-    target = normalize_managed_document_target({"stage": stage, "doc_id": doc_id})
-    return "/docs/?" + urlencode({"stage": target["stage"], "doc": target["doc_id"]})
+    target = normalize_managed_document_target({"doc_id": doc_id})
+    return "/docs/?" + urlencode({"doc": target["doc_id"]})
 
 
 def import_summary_text(

@@ -18,7 +18,6 @@ REVIEW_PACKAGE_IDENTITY_FIELDS = (
     "package_id",
     "status",
     "data_domain",
-    "source_stage",
     "source_collection",
     "default_doc_id",
     "profile_id",

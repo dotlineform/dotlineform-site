@@ -31,11 +31,7 @@ export function mountDocsViewerPublicDocumentExtras(context) {
     onCollectionDocumentState: settings.onCollectionDocumentState,
     reportRegistryUrl: cleanString(settings.routeContext && settings.routeContext.reportRegistryUrl),
     routeContext: settings.routeContext,
-    stageConfigs: settings.workspaceConfigState && Array.isArray(settings.workspaceConfigState.stageConfigs)
-      ? settings.workspaceConfigState.stageConfigs.slice()
-      : [],
     setStatus: settings.setStatus,
-    viewerStage: cleanString(settings.routeContext && settings.routeContext.viewerStage),
     viewerUrlForDocument: settings.viewerUrlForDocument
   });
 }

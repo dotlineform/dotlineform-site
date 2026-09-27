@@ -34,24 +34,22 @@ from docs_document_packages.returned_validation import validate_whole_returned_p
 def parse_staged_import(
     *,
     repo_root: Path,
-    stage: str,
     collection: str | None = None,
     staged_file: str,
     staging_root: Path | str | None = None,
     metadata_root: Path | None = None,
     required_capability: str = RETURN_IMPORT_CAPABILITY,
 ) -> dict[str, Any]:
-    """Parse one trusted return against a stage and optional exact child target."""
+    """Parse one trusted return against the configured workspace and optional exact child target."""
 
     if required_capability not in {
         DOCS_REVIEW_CAPABILITY,
         RETURN_IMPORT_CAPABILITY,
     }:
         raise ValueError(f"unsupported returned-package capability: {required_capability}")
-    normalized_stage = normalize_text(stage).lower()
-    report = empty_report(repo_root, normalized_stage, staged_file)
+    report = empty_report(repo_root, staged_file)
     try:
-        path = resolve_staged_path(repo_root, normalized_stage, staged_file, staging_root)
+        path = resolve_staged_path(repo_root, staged_file, staging_root)
     except ValueError as exc:
         report["issues"].append(issue("error", "unsafe_staged_path", str(exc)))
         report["counts"]["errors"] = 1
@@ -162,7 +160,6 @@ def parse_staged_import(
             raw_rows,
             package_metadata,
             repo_root=repo_root,
-            stage=normalized_stage,
             collection=collection,
             required_capability=required_capability,
         )
@@ -172,7 +169,6 @@ def parse_staged_import(
     if not any(item.get("level") == "error" for item in report["issues"]):
         current_context, current_issues = load_current_docs_context(
             repo_root,
-            normalized_stage,
             (
                 metadata_collection
                 if collection is None
@@ -184,14 +180,13 @@ def parse_staged_import(
     source_profile_id = normalize_text(package_metadata.get("profile_id"))
     report["source_export_id"] = source_export_id
     report["source_profile_id"] = source_profile_id
-    report["source_stage"] = normalize_text(package_metadata.get("stage"))
     report["generated_at"] = normalize_text(package_metadata.get("generated_at"))
     report["source_metadata"] = package_metadata
     report["unknown_file_metadata"] = unknown_file_metadata
     report["records"] = records
     report["detected_import_type"] = detect_import_type(package_metadata)
     report["current_source"] = current_report_context(current_context)
-    report["issues"].extend(add_current_source_report(records, current=current_context, stage=normalized_stage))
+    report["issues"].extend(add_current_source_report(records, current=current_context))
 
     supports_return_import = package_metadata.get("supports_return_import") is True
     issue_codes = {

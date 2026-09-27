@@ -8,7 +8,6 @@ import re
 from pathlib import Path
 from typing import Any
 
-from docs_document_packages.provenance import require_package_stage
 from docs_document_packages.workspace import configured_workspace_paths, marker_path
 
 
@@ -31,7 +30,6 @@ EXPORT_METADATA_FIELDS = {
     "app",
     "adapter_id",
     "data_domain",
-    "stage",
     "collection",
     "target_format",
     "record_shape",
@@ -123,16 +121,14 @@ def issue(
     return item
 
 
-def empty_report(repo_root: Path, stage: str, staged_file: str) -> dict[str, Any]:
+def empty_report(repo_root: Path, staged_file: str) -> dict[str, Any]:
     return {
         "ok": False,
-        "stage": stage,
         "input_file": staged_file,
         "input_format": "",
         "detected_import_type": "unknown",
         "source_export_id": "",
         "source_profile_id": "",
-        "source_stage": "",
         "generated_at": "",
         "counts": {
             "records": 0,
@@ -149,8 +145,7 @@ def empty_report(repo_root: Path, stage: str, staged_file: str) -> dict[str, Any
     }
 
 
-def resolve_staged_path(repo_root: Path, stage: str, staged_file: str, staging_root: Path | str | None = None) -> Path:
-    require_package_stage(stage)
+def resolve_staged_path(repo_root: Path, staged_file: str, staging_root: Path | str | None = None) -> Path:
     base_root = Path(staging_root) if staging_root else configured_workspace_paths(repo_root).import_staging
     raw_path = Path(staged_file)
     path = raw_path if raw_path.is_absolute() else base_root / raw_path
@@ -161,8 +156,7 @@ def resolve_staged_path(repo_root: Path, stage: str, staged_file: str, staging_r
     return resolved
 
 
-def list_staged_import_files(repo_root: Path, stage: str, staging_root: Path | str | None = None) -> list[dict[str, Any]]:
-    require_package_stage(stage)
+def list_staged_import_files(repo_root: Path, staging_root: Path | str | None = None) -> list[dict[str, Any]]:
     base_root = Path(staging_root) if staging_root else configured_workspace_paths(repo_root).import_staging
     resolved_staging_root = base_root.resolve()
     if not resolved_staging_root.exists():

@@ -19,18 +19,9 @@ export function createDocsViewerGeneratedDataRuntime(options) {
   var reloadRetryAttempts = settings.reloadRetryAttempts || 0;
   var reloadRetryDelayMs = settings.reloadRetryDelayMs || 0;
 
-  function currentViewerStage() {
-    return typeof settings.viewerStage === "function" ? settings.viewerStage() : settings.viewerStage || "";
-  }
-
-  function requestViewerStage(request) {
-    return Object.prototype.hasOwnProperty.call(request, "viewerStage") ? request.viewerStage : currentViewerStage();
-  }
-
-  function stageGeneratedCapability(capabilities, stage, key) {
-    if (stage === "preview") key = key.replace("generated_", "preview_");
-    var stageCaps = capabilities && capabilities.stages ? capabilities.stages[stage] : null;
-    return Boolean(capabilities && capabilities.generated_data_reads && stageCaps && stageCaps.available && stageCaps[key]);
+  function generatedCapability(capabilities,  key) {
+    var workspaceCaps = capabilities && capabilities.workspace;
+    return Boolean(capabilities && capabilities.generated_data_reads && workspaceCaps && workspaceCaps.available && workspaceCaps[key]);
   }
 
   function readGeneratedCapabilities() {
@@ -48,9 +39,8 @@ export function createDocsViewerGeneratedDataRuntime(options) {
       });
   }
 
-  function checkGeneratedDataReadCapability(stage) {
-    var targetStage = stage === undefined ? currentViewerStage() : stage;
-    if (!generatedBaseUrl || !targetStage) return Promise.resolve(false);
+  function checkGeneratedDataReadCapability() {
+    if (!generatedBaseUrl) return Promise.resolve(false);
     if (!generatedData.generatedDataReadChecked && !generatedData.generatedDataReadRequestPromise) {
       generatedData.generatedDataReadRequestPromise = readGeneratedCapabilities().then(function (payload) {
         generatedData.generatedDataCapabilities = payload && payload.capabilities || null;
@@ -60,7 +50,7 @@ export function createDocsViewerGeneratedDataRuntime(options) {
       });
     }
     return Promise.resolve(generatedData.generatedDataReadRequestPromise).then(function () {
-      return stageGeneratedCapability(generatedData.generatedDataCapabilities, targetStage, "generated_data_reads");
+      return generatedCapability(generatedData.generatedDataCapabilities,  "generated_data_reads");
     });
   }
 
@@ -73,7 +63,6 @@ export function createDocsViewerGeneratedDataRuntime(options) {
       reloadRetryAttempts: reloadRetryAttempts,
       reloadRetryDelayMs: reloadRetryDelayMs,
       managementAvailable: management.managementAvailable,
-      viewerStage: requestViewerStage(requestSettings),
       managementBaseUrl: generatedBaseUrl,
       fetch: function (url, fetchOptions) {
         return window.fetch(url, fetchOptions);
@@ -82,12 +71,11 @@ export function createDocsViewerGeneratedDataRuntime(options) {
         return window.setTimeout(resolve, delayMs);
       },
       checkGeneratedDataReadCapability: function () {
-        return checkGeneratedDataReadCapability(requestViewerStage(requestSettings));
+        return checkGeneratedDataReadCapability();
       },
-      stageSupportsGeneratedSearchReads: function () {
-        return stageGeneratedCapability(
+      supportsGeneratedSearchReads: function () {
+        return generatedCapability(
           generatedData.generatedDataCapabilities || {},
-          requestViewerStage(requestSettings),
           "generated_search_reads"
         );
       }
@@ -97,8 +85,7 @@ export function createDocsViewerGeneratedDataRuntime(options) {
   function readDocsIndexTree(options) {
     var requestSettings = options || {};
     return fetchIndexTreeWithRetry(dataRequestOptions({
-      indexTreeUrl: requestSettings.indexTreeUrl,
-      viewerStage: requestViewerStage(requestSettings)
+      indexTreeUrl: requestSettings.indexTreeUrl
     })).then(normalizeDocsIndexTreePayload);
   }
 
@@ -109,7 +96,7 @@ export function createDocsViewerGeneratedDataRuntime(options) {
     return fetchPreferredGeneratedJson(
       contentUrl,
       "Failed to load " + contentUrl,
-      managementReloadPath("/docs/doc", { stage: requestViewerStage(requestSettings), doc_id: docId }),
+      managementReloadPath("/docs/doc", {  doc_id: docId }),
       dataRequestOptions(Object.assign({}, requestSettings, {
         useSearchCapability: false
       }))
@@ -121,7 +108,7 @@ export function createDocsViewerGeneratedDataRuntime(options) {
     return fetchPreferredGeneratedJson(
       requestSettings.searchIndexUrl,
       "Failed to load search data",
-      managementReloadPath("/docs/search", { stage: requestViewerStage(requestSettings) }),
+      managementReloadPath("/docs/search", {  }),
       dataRequestOptions(Object.assign({}, requestSettings, {
         useSearchCapability: true
       }))
@@ -134,13 +121,13 @@ export function createDocsViewerGeneratedDataRuntime(options) {
   function readDocumentLinks(target, options) {
     var staticBase = String(options && options.linksByIdUrlBase || "").replace(/\/$/, "");
     var path = managementReloadPath("/docs/links", {
-      stage: target.stage, collection: target.collection, doc_id: target.doc_id
+       collection: target.collection, doc_id: target.doc_id
     });
     return fetchPreferredGeneratedJson(
       staticBase ? staticBase + "/" + encodeURIComponent(target.doc_id) + ".json" : "",
       "Failed to load Links",
       path,
-      dataRequestOptions({ viewerStage: target.stage || "", useSearchCapability: false,
+      dataRequestOptions({  useSearchCapability: false,
         reloadNonce: "", reloadRetryAttempts: 1 })
     ).catch(function (error) {
       if (error.status === 404) return null;
@@ -153,7 +140,7 @@ export function createDocsViewerGeneratedDataRuntime(options) {
     return fetchPreferredGeneratedJson(
       requestSettings.recentUrl,
       "Failed to load Recent docs",
-      managementReloadPath("/docs/recent", { stage: requestViewerStage(requestSettings) }),
+      managementReloadPath("/docs/recent", {  }),
       dataRequestOptions(Object.assign({}, requestSettings, {
         useSearchCapability: false
       }))
@@ -168,6 +155,6 @@ export function createDocsViewerGeneratedDataRuntime(options) {
     readDocumentLinks: readDocumentLinks,
     readRecent: readRecent,
     readSearchIndex: readSearchIndex,
-    stageGeneratedCapability: stageGeneratedCapability
+    generatedCapability: generatedCapability
   };
 }

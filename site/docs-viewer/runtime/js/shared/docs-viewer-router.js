@@ -4,7 +4,7 @@ export function buildViewerUrl(options) {
   Object.entries(settings.preservedQueryParams || {}).forEach(function (entry) {
     var key = String(entry[0] || "").trim();
     var value = String(entry[1] == null ? "" : entry[1]).trim();
-    if (key === "scope") throw new Error("Scope URLs are retired.");
+    if (key === "scope" || key === "stage") throw new Error("This Docs URL uses retired context.");
     if (key && value) url.searchParams.set(key, value);
   });
   url.searchParams.set("doc", settings.docId || "");
@@ -14,7 +14,7 @@ export function buildViewerUrl(options) {
   Object.entries(settings.reportParams || {}).forEach(function (entry) {
     var key = String(entry[0] || "").trim();
     var value = String(entry[1] == null ? "" : entry[1]).trim();
-    if (key === "scope") throw new Error("Scope URLs are retired.");
+    if (key === "scope" || key === "stage") throw new Error("This Docs URL uses retired context.");
     if (key && value) url.searchParams.set(key, value);
   });
   url.hash = settings.hash || "";
@@ -26,8 +26,7 @@ export function buildViewerUrlForDocument(options) {
   return buildViewerUrl({
     viewerBaseUrl: settings.viewerBaseUrl,
     origin: settings.origin,
-    docId: settings.docId,
-    preservedQueryParams: settings.stage ? { stage: settings.stage } : {}
+    docId: settings.docId
   });
 }
 
@@ -37,13 +36,9 @@ export function routeFromAnchorHref(href, options) {
   var origin = settings.origin || window.location.origin;
   if (url.origin !== origin) return null;
   if (url.pathname !== settings.viewerPathname) return null;
-  var currentStage = new URL(settings.currentHref || window.location.href).searchParams.get("stage");
-  if (url.searchParams.has("stage") && url.searchParams.get("stage") !== currentStage) {
-    return { navigateUrl: url.pathname + url.search + url.hash };
-  }
 
-  if (url.searchParams.has("scope")) {
-    return { error: "Scope URLs are retired; use a current document link." };
+  if (url.searchParams.has("scope") || url.searchParams.has("stage")) {
+    return { error: "This Docs URL uses retired context; use a current document link." };
   }
   url.searchParams.delete("mode");
 
@@ -322,15 +317,6 @@ export function loadViewerDoc(options) {
 export function handleViewerPopstate(options) {
   var settings = options || {};
   if (typeof settings.docsAvailable === "function" && !settings.docsAvailable()) return;
-  try {
-    if (typeof settings.routeStageFromUrl === "function" && settings.routeStageFromUrl() !== settings.viewerStage) {
-      if (typeof settings.reloadWindow === "function") settings.reloadWindow();
-      return;
-    }
-  } catch (error) {
-    if (typeof settings.setStatus === "function") settings.setStatus(error.message || "Unknown Docs stage.", true);
-    return;
-  }
   if (typeof settings.hideContextMenu === "function") {
     settings.hideContextMenu();
   }

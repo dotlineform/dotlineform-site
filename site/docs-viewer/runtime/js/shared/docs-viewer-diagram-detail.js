@@ -6,7 +6,6 @@ const INLINE_DIAGRAM_SELECTOR = '.docsViewer__diagram[data-docs-viewer-diagram-k
 const DIAGRAM_FRAME_SELECTOR = ".docsViewer__diagramFrame";
 const DETAIL_CONTROL_LABEL = "Open diagram";
 const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
-
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
 }
@@ -19,8 +18,7 @@ function positiveInteger(value) {
 function sameDocumentTarget(left, right) {
   var first = left || {};
   var second = right || {};
-  return cleanString(first.stage) === cleanString(second.stage)
-    && cleanString(first.collection) === cleanString(second.collection)
+  return cleanString(first.collection) === cleanString(second.collection)
     && cleanString(first.docId) === cleanString(second.docId);
 }
 
@@ -154,7 +152,6 @@ export function createDocsViewerDiagramDetailAdapter(options) {
         context.documentMountGeneration || context.mountGeneration
       ),
       documentTarget: {
-          stage: cleanString(context.viewerStage),
           collection: "",
         docId: cleanString(doc.doc_id)
       },
@@ -341,7 +338,6 @@ export function createDocsViewerDiagramDetailAdapter(options) {
     var state = stateFor(root, context);
     var expectedGeneration = positiveInteger(context.mountGeneration || context.documentMountGeneration);
     var expectedTarget = {
-      stage: cleanString(context.viewerStage),
       collection: "",
       docId: cleanString(context.doc && context.doc.doc_id)
     };

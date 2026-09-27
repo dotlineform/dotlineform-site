@@ -16,6 +16,7 @@ from docs_workspace_config import (
     generated_documents_path,
     generated_search_path,
     load_docs_stage,
+    load_docs_working_config,
     require_document_authoring,
     resolve_workspace_path,
 )
@@ -64,20 +65,20 @@ class DocumentSourceSnapshotChanged(RuntimeError):
     """Stop one top-level write boundary before mutation when its snapshot changed."""
 
 
-def current_document_source_root(repo_root: Path, stage: str | None = None) -> Path:
-    config = load_docs_stage(repo_root, stage)
+def current_document_source_root(repo_root: Path) -> Path:
+    config = load_docs_working_config(repo_root)
     return resolve_workspace_path(repo_root, document_source_path(config))
 
 
-def current_collection_source_root(repo_root: Path, collection: str, stage: str | None = None) -> Path:
-    config = load_docs_stage(repo_root, stage)
+def current_collection_source_root(repo_root: Path, collection: str) -> Path:
+    config = load_docs_working_config(repo_root)
     matching = [
         candidate
         for candidate in config.collections
         if candidate.collection == collection
     ]
     if not matching:
-        raise ValueError(f"collection {stage}/{collection} is not configured")
+        raise ValueError(f"collection {collection} is not configured")
     return resolve_workspace_path(repo_root, document_source_path(matching[0]))
 
 
@@ -413,10 +414,27 @@ def rebuild_stage_outputs(
     }
 
 
+def rebuild_working_outputs(
+    repo_root: Path,
+    *,
+    include_search: bool = False,
+    docs_doc_ids: Optional[list[str]] = None,
+    skip_media_builds: bool = False,
+    links_doc_ids: Optional[list[str]] = None,
+    links_created_doc_ids: Optional[list[str]] = None,
+) -> Dict[str, Any]:
+    """Resolve the authoring owner once before invoking the internal build pipeline."""
+    config = load_docs_working_config(repo_root)
+    return rebuild_stage_outputs(
+        repo_root, stage=config.stage, include_search=include_search,
+        docs_doc_ids=docs_doc_ids, skip_media_builds=skip_media_builds,
+        links_doc_ids=links_doc_ids, links_created_doc_ids=links_created_doc_ids,
+    )
+
+
 def rebuild_collection_outputs(
     repo_root: Path,
     collection: str,
-    stage: str | None = None,
     links_doc_ids: Optional[list[str]] = None,
     links_created_doc_ids: Optional[list[str]] = None,
     docs_doc_ids: Optional[list[str]] = None,
@@ -431,15 +449,14 @@ def rebuild_collection_outputs(
         "--skip-browser-config",
         "--skip-media-builds",
     )
-    load_docs_stage(repo_root, stage)
-    if stage:
-        docs_command.extend(["--stage", stage])
+    config = load_docs_working_config(repo_root)
+    docs_command.extend(["--stage", config.stage])
     target_doc_ids = None if docs_doc_ids is None else ordered_docs_doc_ids(docs_doc_ids)
     if target_doc_ids is not None:
         docs_command.extend(["--only-doc-ids", ",".join(target_doc_ids)])
-    if stage == "working" and links_doc_ids is not None:
+    if links_doc_ids is not None:
         docs_command.extend(["--links-doc-ids", ",".join(ordered_docs_doc_ids(links_doc_ids))])
-    if stage == "working" and links_created_doc_ids:
+    if links_created_doc_ids:
         docs_command.extend(["--links-created-doc-ids", ",".join(ordered_docs_doc_ids(links_created_doc_ids))])
     steps = []
     docs_diagnostics: Optional[Dict[str, Any]] = None
@@ -451,7 +468,7 @@ def rebuild_collection_outputs(
         detail = step["stderr"] or step["stdout"] or f"exit {step['returncode']}"
         raise RuntimeError(
             rebuild_failure_message(
-                f"rebuild failed for {stage}/{collection}",
+                f"rebuild failed for {collection}",
                 detail,
             )
         )
@@ -472,7 +489,6 @@ def rebuild_collection_outputs(
     }
 
 
-
 def perform_source_write_and_rebuild(
     repo_root: Path,
     changed_paths: list[Path],
@@ -482,11 +498,10 @@ def perform_source_write_and_rebuild(
     docs_doc_ids: Optional[list[str]] = None,
     written_paths: Optional[list[Path]] = None,
     skip_media_builds: bool = True,
-    stage: str | None = None,
 ) -> Dict[str, Any]:
-    require_document_authoring(load_docs_stage(repo_root, stage))
-    suppression_owner = watch_suppression_owner(stage=stage)
-    root = current_document_source_root(repo_root, stage)
+    require_document_authoring(load_docs_working_config(repo_root))
+    suppression_owner = watch_suppression_owner()
+    root = current_document_source_root(repo_root)
     filenames = sorted(
         {
             path.resolve().relative_to(root.resolve()).as_posix()
@@ -494,7 +509,7 @@ def perform_source_write_and_rebuild(
             if isinstance(path, Path)
         }
     )
-    links_before = changed_source_document_ids(changed_paths) if stage == "working" else None
+    links_before = changed_source_document_ids(changed_paths)
     if filenames:
         set_watch_suppressions(
             repo_root,
@@ -506,12 +521,11 @@ def perform_source_write_and_rebuild(
         )
     try:
         write_operation()
-        rebuild = rebuild_stage_outputs(
+        rebuild = rebuild_working_outputs(
             repo_root,
             include_search=False,
             docs_doc_ids=docs_doc_ids,
             skip_media_builds=skip_media_builds,
-            stage=stage,
             **links_write_arguments(links_before, changed_paths),
         )
     except Exception:
@@ -549,13 +563,12 @@ def perform_source_write_and_rebuild_atomic(
     suppression_reason: str,
     source_snapshots: Mapping[Path, bytes],
     docs_doc_ids: Optional[list[str]] = None,
-    stage: str | None = None,
 ) -> Dict[str, Any]:
     """Write/rebuild one exact parent stage or restore its source snapshot there."""
 
-    require_document_authoring(load_docs_stage(repo_root, stage))
-    root = current_document_source_root(repo_root, stage)
-    suppression_owner = watch_suppression_owner(stage=stage)
+    require_document_authoring(load_docs_working_config(repo_root))
+    root = current_document_source_root(repo_root)
+    suppression_owner = watch_suppression_owner()
     resolved_changed_paths = {
         path.resolve()
         for path in changed_paths
@@ -585,7 +598,7 @@ def perform_source_write_and_rebuild_atomic(
         path.relative_to(root.resolve()).as_posix()
         for path in resolved_changed_paths
     )
-    links_before = changed_source_document_ids(changed_paths) if stage == "working" else None
+    links_before = changed_source_document_ids(changed_paths)
     if filenames:
         set_watch_suppressions(
             repo_root,
@@ -607,12 +620,11 @@ def perform_source_write_and_rebuild_atomic(
                 + ", ".join(sorted(changed_before_write)),
             )
         write_operation()
-        rebuild = rebuild_stage_outputs(
+        rebuild = rebuild_working_outputs(
             repo_root,
             include_search=False,
             docs_doc_ids=docs_doc_ids,
             skip_media_builds=True,
-            stage=stage,
             **links_write_arguments(links_before, changed_paths),
         )
     except DocumentSourceSnapshotChanged:
@@ -632,12 +644,11 @@ def perform_source_write_and_rebuild_atomic(
         recovery_error = ""
         if not restoration_errors:
             try:
-                recovery_rebuild = rebuild_stage_outputs(
+                recovery_rebuild = rebuild_working_outputs(
                     repo_root,
                     include_search=False,
                     docs_doc_ids=docs_doc_ids,
                     skip_media_builds=True,
-                    stage=stage,
                     **({"links_doc_ids": links_before} if links_before is not None else {}),
                 )
             except Exception as recovery_exc:
@@ -693,7 +704,6 @@ def perform_collection_source_write_and_rebuild(
     *,
     suppression_reason: str,
     source_snapshots: Mapping[Path, bytes] | None = None,
-    stage: str | None = None,
     links_created_doc_ids: list[str] | None = None,
     links_doc_ids: list[str] | None = None,
     source_writes_committed: Callable[[], bool] | None = None,
@@ -703,8 +713,8 @@ def perform_collection_source_write_and_rebuild(
     A caller reporting partial commits can supply its write receipt. On failure,
     committed writes remain suppressed so the watcher does not retry the build.
     """
-    require_document_authoring(load_docs_stage(repo_root, stage))
-    root = current_collection_source_root(repo_root, collection, stage)
+    require_document_authoring(load_docs_working_config(repo_root))
+    root = current_collection_source_root(repo_root, collection)
     resolved_changed_paths = {
         path.resolve()
         for path in changed_paths
@@ -736,10 +746,10 @@ def perform_collection_source_write_and_rebuild(
             if isinstance(path, Path)
         }
     )
-    suppression_owner = watch_suppression_owner(collection, stage=stage)
+    suppression_owner = watch_suppression_owner(collection)
     source_doc_ids_before = changed_source_document_ids(changed_paths)
     docs_doc_ids = source_doc_ids_before
-    links_before = source_doc_ids_before if stage == "working" else None
+    links_before = source_doc_ids_before
     if filenames:
         set_watch_suppressions(
             repo_root,
@@ -767,7 +777,7 @@ def perform_collection_source_write_and_rebuild(
         if links_doc_ids is not None:
             links_arguments["links_doc_ids"] = links_doc_ids
         rebuild = rebuild_collection_outputs(
-            repo_root, collection, stage=stage,
+            repo_root, collection,
             docs_doc_ids=docs_doc_ids,
             **links_arguments,
         )
@@ -800,7 +810,6 @@ def perform_collection_source_write_and_rebuild(
                 recovery_rebuild = rebuild_collection_outputs(
                     repo_root,
                     collection,
-                    stage=stage,
                     docs_doc_ids=docs_doc_ids,
                     **({"links_doc_ids": links_before if links_doc_ids is None else links_doc_ids} if links_before is not None else {}),
                 )
@@ -851,13 +860,11 @@ def perform_multi_collection_source_write_and_rebuild(
     suppressions: list[tuple[str, list[str]]] = []
     links_before: dict[str, list[str]] = {}
     for plan in rebuild_plans:
-        stage = plan.get("stage") or None
         collection = str(plan.get("collection") or "")
-        require_document_authoring(load_docs_stage(repo_root, stage))
-        root = current_collection_source_root(repo_root, collection, stage) if collection else current_document_source_root(repo_root, stage)
-        owner = watch_suppression_owner(collection, stage=stage)
-        if stage == "working":
-            links_before[owner] = changed_source_document_ids(plan.get("changed_paths", []))
+        require_document_authoring(load_docs_working_config(repo_root))
+        root = current_collection_source_root(repo_root, collection) if collection else current_document_source_root(repo_root)
+        owner = watch_suppression_owner(collection)
+        links_before[owner] = changed_source_document_ids(plan.get("changed_paths", []))
         filenames = sorted(
             {
                 path.resolve().relative_to(root.resolve()).as_posix()
@@ -881,7 +888,7 @@ def perform_multi_collection_source_write_and_rebuild(
         rebuilds: Dict[str, Any] = {}
         prepared_rebuilds = []
         for plan in rebuild_plans:
-            owner = watch_suppression_owner(str(plan.get("collection") or ""), stage=plan.get("stage") or None)
+            owner = watch_suppression_owner(str(plan.get("collection") or ""))
             changed_paths = plan.get("changed_paths", [])
             docs_doc_ids = ordered_docs_doc_ids([
                 *(plan.get("docs_doc_ids") or []),
@@ -894,19 +901,18 @@ def perform_multi_collection_source_write_and_rebuild(
         # record before the former collection processes its deletion identity.
         prepared_rebuilds.sort(key=lambda item: not bool(item[1].get("links_created_doc_ids")))
         for plan, links_arguments, docs_doc_ids in prepared_rebuilds:
-            stage = plan.get("stage") or None
             collection = str(plan.get("collection") or "")
-            owner = watch_suppression_owner(collection, stage=stage)
+            owner = watch_suppression_owner(collection)
             if collection:
                 rebuilds[owner] = rebuild_collection_outputs(
-                    repo_root, collection, stage=stage, docs_doc_ids=docs_doc_ids, **links_arguments,
+                    repo_root, collection, docs_doc_ids=docs_doc_ids, **links_arguments,
                 )
             else:
-                rebuilds[owner] = rebuild_stage_outputs(
+                rebuilds[owner] = rebuild_working_outputs(
                     repo_root, include_search=False,
                     docs_doc_ids=plan.get("docs_doc_ids"),
                     **links_arguments,
-                    **({"stage": stage, "skip_media_builds": True} if stage else {}),
+                    skip_media_builds=True,
                 )
     except Exception:
         for owner, filenames in suppressions:

@@ -15,9 +15,6 @@ function appendReaderTopRow(documentRef, mount, topBar, routeContext) {
   homeLink.title = "dotlineform home";
   homeLink.appendChild(createDocsViewerToolbarIcon(documentRef, "docsViewer__icon--dlf-home"));
   var homeUrl = new URL(routeContext.routeViewerBaseUrl, documentRef.baseURI);
-  if (routeContext.appContext.kind === "manage") {
-    homeUrl.searchParams.set("stage", routeContext.viewerStage);
-  }
   homeLink.href = homeUrl.pathname + homeUrl.search;
   row.append(homeLink, topBar, renderDocsViewerThemeToggle(documentRef));
   mount.appendChild(row);

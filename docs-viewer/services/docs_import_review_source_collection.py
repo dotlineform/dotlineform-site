@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-from docs_import_common import require_import_stage
 
 import copy
 from pathlib import Path
@@ -103,22 +102,9 @@ def _validate_destination(
     folder: EditedReviewSourceFolder,
     collection: ManagedDocumentCollection,
 ) -> None:
-    if folder.source_stage != collection.stage:
-        raise ValueError(
-            "Edited review source folder belongs to stage "
-            f"{folder.source_stage!r}, not {collection.stage!r}.",
-        )
     if folder.source_collection != collection.collection:
-        source_target = (
-            f"{folder.source_stage}/{folder.source_collection}"
-            if folder.source_collection
-            else folder.source_stage
-        )
-        destination_target = (
-            f"{collection.stage}/{collection.collection}"
-            if collection.collection
-            else collection.stage
-        )
+        source_target = folder.source_collection or "ordinary documents"
+        destination_target = collection.collection or "ordinary documents"
         raise ValueError(
             "Edited review source folder belongs to collection "
             f"{source_target!r}, not {destination_target!r}.",
@@ -137,7 +123,6 @@ def plan_edited_review_source_collection(
     """Map one trusted edited folder into the shared write-free collection plan."""
 
     _validate_destination(folder, collection)
-    stage = require_import_stage(collection.stage)
     docs = load_document_collection_docs_for_config(
         repo_root,
         collection.parent_config,
@@ -174,7 +159,6 @@ def plan_edited_review_source_collection(
         "export_id": folder.source_export_id,
         "review_folder_id": folder.review_folder_id,
         "profile_id": folder.profile_id,
-        "source_stage": folder.source_stage,
         "source_collection": folder.source_collection,
         "content_format": CONTENT_FORMAT_MARKDOWN,
         "document_count": folder.document_count,
@@ -186,7 +170,6 @@ def plan_edited_review_source_collection(
     return plan_import_content_collection(
         repo_root,
         source_format=EDITED_REVIEW_SOURCE_FORMAT,
-        stage=stage,
         staged_filename=folder.staged_filename,
         states=states,
         docs=docs,

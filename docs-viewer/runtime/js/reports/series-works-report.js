@@ -1,5 +1,4 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
-
 function searchText(value) {
   return String(value || "").normalize("NFKC").toLocaleLowerCase("en").trim();
 }
@@ -138,7 +137,7 @@ export function mountSeriesWorksReport(context) {
       if (typeof context.openMediaPresentation !== "function" || !context.openMediaPresentation({
         presentation: presentation,
         invocationControl: control,
-        documentTarget: { ...(target.stage ? { stage: target.stage } : {}), collection: target.collection || "", docId: target.doc_id },
+        documentTarget: {  collection: target.collection || "", docId: target.doc_id },
         isCurrentDocument: isCurrent
       })) throw new Error("Media View is unavailable for this document.");
       status.textContent = seriesLabel + " · " + filterSeriesWorks(rows, filter.value).length + " of " + rows.length + " works";

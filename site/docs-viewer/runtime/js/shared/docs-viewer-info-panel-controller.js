@@ -51,7 +51,6 @@ export function createDocsViewerInfoPanelController(options) {
       selectedDocId: selectedDocument.selectedDocId,
       sourceEditorServices: typeof settings.sourceEditorServices === "function" ? settings.sourceEditorServices() : settings.sourceEditorServices,
       uiStatusByValue: workspaceConfig.uiStatusByValue,
-      viewerStage: typeof settings.viewerStage === "function" ? settings.viewerStage() : settings.viewerStage,
       viewerTargetDocId: settings.viewerTargetDocId,
       viewerUrl: settings.viewerUrl
     });

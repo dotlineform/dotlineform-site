@@ -1,21 +1,11 @@
-const OWNERS = new Set(["public", "working", "preview"]);
-
-// Used only by the one-time storage conversions, never by runtime lookups.
-export const RETIRED_ANALYSIS_STATE = Object.freeze({
-  analysis: "public",
-  "analysis/working": "working",
-  "analysis/published": "preview"
-});
-
+const OWNERS = new Set(["public", "manage"]);
 export function isSavedStateOwner(owner) {
   return OWNERS.has(owner);
 }
 
-export function savedStateOwner(appKind, stage) {
-  if (appKind === "public") return "public";
-  if (appKind === "review") return "review";
-  if (appKind === "manage" && OWNERS.has(stage) && stage !== "public") return stage;
-  throw new Error("Saved Docs state requires an explicit route and stage.");
+export function savedStateOwner(appKind) {
+  if (appKind === "review" || OWNERS.has(appKind)) return appKind;
+  throw new Error("Saved Docs state requires an explicit application owner.");
 }
 
 export function indexPanelStorageKey(owner) {
@@ -24,31 +14,20 @@ export function indexPanelStorageKey(owner) {
   return "dotlineform-docs-viewer-index-panel:v2:" + owner;
 }
 
-export function convertAnalysisPanelState(storage) {
+export function convertWorkingPanelState(storage) {
   if (!storage) return;
-  const marker = "dotlineform-docs-viewer-preview-state-v3";
+  const marker = "dotlineform-docs-viewer-manage-state-v4";
   if (storage.getItem(marker) === "complete") return;
-  const sources = Object.entries(RETIRED_ANALYSIS_STATE).map(([legacy, owner]) => [
-    "dotlineform-docs-viewer-index-panel:" + legacy, owner
-  ]);
-  sources.push(["dotlineform-docs-viewer-index-panel:v2:published", "preview"]);
-  const pending = new Map();
-  const changes = sources.map(([oldKey, owner]) => {
-    const newKey = indexPanelStorageKey(owner);
-    const value = storage.getItem(oldKey);
-    const existing = pending.has(newKey) ? pending.get(newKey) : storage.getItem(newKey);
-    if (value !== null && existing !== null && existing !== value) {
-      throw new Error("Docs panel conversion found conflicting saved settings.");
-    }
-    if (value !== null) pending.set(newKey, value);
-    return { oldKey, newKey, value };
-  });
-  // Copy before removal. An interrupted conversion can resume with identical values.
-  changes.forEach(({ newKey, value }) => {
-    if (value !== null) storage.setItem(newKey, value);
-  });
-  changes.forEach(({ oldKey, value }) => {
-    if (value !== null) storage.removeItem(oldKey);
-  });
+  const oldKey = "dotlineform-docs-viewer-index-panel:v2:working";
+  const newKey = indexPanelStorageKey("manage");
+  const value = storage.getItem(oldKey);
+  const existing = storage.getItem(newKey);
+  if (value !== null && existing !== null && existing !== value) {
+    throw new Error("Docs panel conversion found conflicting saved settings.");
+  }
+  if (value !== null) {
+    storage.setItem(newKey, value);
+    storage.removeItem(oldKey);
+  }
   storage.setItem(marker, "complete");
 }

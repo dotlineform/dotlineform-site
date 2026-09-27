@@ -101,18 +101,9 @@ class ContentRenderingMixin:
         path_part = parsed.path or ""
         if not path_part:
             return href
-        # Preview preparation projects Working links into its prepared snapshot while
-        # preserving the exact document, child selection, and fragment.
         values = parse_qs(parsed.query)
-        if "scope" in values and path_part in {"/docs/", self.workspace.public_viewer_base_url}:
-            raise RuntimeError("scope-bearing Docs links are retired; update the source link before building")
-        if (self.config.stage == "preview" and path_part == "/docs/"
-                and values.get("stage") == ["working"]):
-            pairs = [(key, "preview" if key == "stage" else value) for key, value in parse_qsl(parsed.query)]
-            return html.escape(parsed._replace(query=urlencode(pairs)).geturl(), quote=True)
-        # Other authored stage targets retain their exact route and child selection.
-        if "stage" in parse_qs(html.unescape(parsed.query), keep_blank_values=True):
-            return href
+        if path_part in {"/docs/", self.workspace.public_viewer_base_url} and ({"stage", "scope"} & values.keys()):
+            raise RuntimeError("Stage or scope-bearing Docs links are retired; update the source link before building")
         query_values = parse_qs(parsed.query)
         viewer_doc_id = (query_values.get("doc") or [""])[0]
         if viewer_doc_id and self.viewer_path_match(path_part, query_values):

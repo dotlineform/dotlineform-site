@@ -2,9 +2,7 @@ const INLINE_MERMAID_ASSET_URL = "/docs-viewer/runtime/vendor/mermaid/11.16.0/me
 const INLINE_MERMAID_ASSET_VERSION = "11.16.0";
 const LIGHT_THEME = "light";
 const DARK_THEME = "dark";
-
 export const INLINE_MERMAID_ERROR_MESSAGE = "Diagram could not be rendered. Mermaid source is shown below.";
-
 function normalizeTheme(value) {
   return value === DARK_THEME ? DARK_THEME : LIGHT_THEME;
 }
@@ -112,7 +110,6 @@ function loadCheckedMermaidAsset(context) {
 
   return new Promise(function (resolve, reject) {
     var script = documentRef.querySelector("script[data-docs-viewer-inline-mermaid-runtime]");
-
     function resolveRuntime() {
       if (!windowRef.mermaid) {
         reject(new Error("The checked Mermaid asset loaded without exposing its browser runtime."));
@@ -358,7 +355,6 @@ export function createDocsViewerInlineMermaidAdapter(options) {
         document: record.document,
         host: host,
         mountGeneration: record.mountGeneration,
-        viewerStage: record.viewerStage,
         window: record.window
       });
       if (!detailResult || !detailResult.refreshed) {
@@ -502,7 +498,6 @@ export function createDocsViewerInlineMermaidAdapter(options) {
               document: documentRef,
               host: host,
               mountGeneration: context.mountGeneration,
-              viewerStage: context.viewerStage,
               window: windowRef
             });
           } catch (detailError) {
@@ -519,7 +514,6 @@ export function createDocsViewerInlineMermaidAdapter(options) {
           mountGeneration: context.mountGeneration,
           source: source,
           viewerRoot: context.viewerRoot,
-          viewerStage: context.viewerStage,
           window: windowRef
         });
       } catch (error) {

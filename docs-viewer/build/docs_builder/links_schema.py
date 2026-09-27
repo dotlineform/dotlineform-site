@@ -1,4 +1,4 @@
-"""Version 2 Links records: exact stage identity and deterministic projection."""
+"""Version 2 Links records: exact document identity and deterministic projection."""
 
 from dataclasses import asdict
 from typing import Any
@@ -34,10 +34,9 @@ def read_relationship_payload(payload: Any, target: DocumentTarget) -> DocumentL
         if not isinstance(value, dict) or set(value) != {"target", "title", "href", "subject"}:
             raise ValueError("Links requires a complete document summary")
         identity = value["target"]
-        if not isinstance(identity, dict) or set(identity) != {"stage", "collection", "doc_id"}:
+        if not isinstance(identity, dict) or set(identity) != {"collection", "doc_id"}:
             raise ValueError("Links requires an exact document target")
         if (not all(isinstance(item, str) for item in identity.values())
-                or identity["stage"] != target.stage or target.stage != "working"
                 or not is_immutable_doc_id(identity["doc_id"])):
             raise ValueError("Links document identity does not match Working")
         if not isinstance(value["title"], str) or not isinstance(value["href"], str) or not isinstance(value["subject"], dict):

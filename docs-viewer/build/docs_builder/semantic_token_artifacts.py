@@ -28,7 +28,6 @@ class SemanticTokenArtifactsMixin:
     ) -> dict[str, Any]:
         return {
             "schema_version": SEMANTIC_TOKEN_USAGE_INDEX_SCHEMA_VERSION,
-            "stage": self.config.stage,
             **extra,
             "occurrences": occurrences,
         }
@@ -50,16 +49,16 @@ class SemanticTokenArtifactsMixin:
             not isinstance(payload, dict)
             or payload.get("schema_version") != SEMANTIC_TOKEN_USAGE_INDEX_SCHEMA_VERSION
             or "scope" in payload
-            or payload.get("stage") != self.config.stage
+            or "stage" in payload
             or not isinstance(payload.get("occurrences"), list)
         ):
-            raise ValueError("Semantic-token index does not match its stage")
+            raise ValueError("Semantic-token index has an invalid reader contract")
         known = {doc.doc_id for doc in docs}
         selected = set(self.only_doc_ids) if self.targeted_build else known
         configured = {"", *(child.collection for child in self.config.collections)}
         retained = []
         for row in payload["occurrences"]:
-            if not isinstance(row, dict) or "source_scope" in row or row.get("source_stage") != self.config.stage or not row.get("source_doc_id"):
+            if not isinstance(row, dict) or "source_scope" in row or "source_stage" in row or not row.get("source_doc_id"):
                 raise ValueError("Semantic-token occurrence has invalid source identity")
             source_collection = row.get("source_collection")
             if not isinstance(source_collection, str):

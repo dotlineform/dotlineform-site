@@ -113,12 +113,10 @@ def project_reader_subject(front_matter: Mapping[str, Any]) -> dict[str, str] | 
 
 def subject_projection_generation(
     *,
-    stage: str,
     collection: str,
     subjects_by_doc_id: Mapping[str, Mapping[str, Any]],
 ) -> str:
     source = {
-        "stage": stage,
         "collection": collection,
         "documents": [
             {
@@ -139,7 +137,6 @@ def subject_projection_generation(
 
 def project_subject_associations(
     *,
-    stage: str,
     collection: str,
     documents: Sequence[Any],
     subjects_by_doc_id: Mapping[str, Mapping[str, Any]],
@@ -163,7 +160,6 @@ def project_subject_associations(
         documents_by_subject.setdefault((kind, key), []).append(
             {
                 "target": {
-                    "stage": stage,
                     "collection": collection,
                     "doc_id": doc_id,
                 },
@@ -181,7 +177,6 @@ def project_subject_associations(
         association_documents = sorted(
             documents_by_subject[(kind, key)],
             key=lambda record: (
-                record["target"]["stage"],
                 record["target"]["collection"],
                 record["target"]["doc_id"],
             ),
@@ -195,7 +190,6 @@ def project_subject_associations(
 
     return {
         "schema_version": SUBJECT_ASSOCIATIONS_SCHEMA_VERSION,
-        "stage": stage,
         "collection": collection,
         "subject_generation": subject_generation,
         "associations": associations,

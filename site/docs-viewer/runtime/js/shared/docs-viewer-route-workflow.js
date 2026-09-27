@@ -72,10 +72,6 @@ export function initDocsViewerRouteWorkflow(context) {
   var indexRefreshTimer = null;
   var indexRefreshRunning = false;
 
-  function viewerStage() {
-    return currentValue(context.viewerStage);
-  }
-
   function viewerBaseUrl() {
     return currentValue(context.viewerBaseUrl);
   }
@@ -151,14 +147,11 @@ export function initDocsViewerRouteWorkflow(context) {
     });
   }
 
-  function viewerUrlForDocument(docId, options) {
-    var stage = options && options.stage !== undefined ? options.stage : viewerStage();
-    if (stage !== viewerStage() && !(context.workspaceConfig.stageConfigsById.has(stage))) throw new Error("Docs link stage is not configured.");
+  function viewerUrlForDocument(docId) {
     return buildViewerUrlForDocument({
       docId: docId,
       origin: window.location.origin,
-      viewerBaseUrl: viewerBaseUrl(),
-      stage: stage
+      viewerBaseUrl: viewerBaseUrl()
     });
   }
 
@@ -271,8 +264,7 @@ export function initDocsViewerRouteWorkflow(context) {
     if (typeof context.onIndexReplaced === "function") {
       context.onIndexReplaced({
         docs: state.docs.slice(),
-        managementContext: state.managementContext,
-        stage: viewerStage()
+        managementContext: state.managementContext
       });
     }
 
@@ -292,7 +284,7 @@ export function initDocsViewerRouteWorkflow(context) {
   }
 
   function workingPollIsIdle() {
-    return managementUiEnabled() && viewerStage() === "working" && !root.ownerDocument.hidden
+    return managementUiEnabled() && !root.ownerDocument.hidden
       && root.dataset.managementBusy !== "true" && root.dataset.documentDisplayMode !== "markdown-source";
   }
 
@@ -328,13 +320,12 @@ export function initDocsViewerRouteWorkflow(context) {
   // Read existing generated outputs. Neither refresh path participates in Source Save.
   async function refreshWorkingIndex() {
     if (indexRefreshRunning || !workingPollIsIdle()) return;
-    var stage = viewerStage();
     indexRefreshRunning = true;
     try {
       var results = await Promise.allSettled([
         context.collectionProvider.readIndex(), refreshDisplayedDocument()
       ]);
-      if (stage !== viewerStage() || !workingPollIsIdle()) return;
+      if (!workingPollIsIdle()) return;
       var index = results[0];
       if (index.status === "fulfilled" && JSON.stringify(index.value) !== loadedIndex) {
         state.payloadCache.clear();
@@ -455,8 +446,6 @@ export function initDocsViewerRouteWorkflow(context) {
         docsAvailable: function () { return state.docs.length > 0; },
         hideContextMenu: context.hideContextMenu,
         reloadWindow: function () { window.location.reload(); },
-        routeStageFromUrl: context.routeStageFromUrl,
-        viewerStage: viewerStage(),
         setStatus: setStatus,
       });
     });

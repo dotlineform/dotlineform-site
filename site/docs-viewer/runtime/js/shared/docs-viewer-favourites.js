@@ -1,5 +1,4 @@
-import { RETIRED_ANALYSIS_STATE, isSavedStateOwner } from "./docs-viewer-saved-state.js";
-
+import { isSavedStateOwner } from "./docs-viewer-saved-state.js";
 var bookmarkDbPromise = null;
 
 export function bookmarkKey(owner, docId) {
@@ -64,17 +63,14 @@ export function openBookmarksDb(options) {
         db.createObjectStore(storeName, { keyPath: "key" });
         return;
       }
-      if (event.oldVersion < 3) {
+      if (event.oldVersion < 4) {
         var store = request.transaction.objectStore(storeName);
         var cursorRequest = store.openCursor();
         cursorRequest.onsuccess = function () {
           var cursor = cursorRequest.result;
           if (!cursor) return;
           var record = cursor.value;
-          var owner = record.owner === "published" ? "preview" : "";
-          if (event.oldVersion < 2 && Object.prototype.hasOwnProperty.call(RETIRED_ANALYSIS_STATE, record.scope)) {
-            owner = RETIRED_ANALYSIS_STATE[record.scope];
-          }
+          var owner = record.owner === "working" ? "manage" : "";
           if (owner) {
             if (typeof record.doc_id !== "string" || !record.doc_id) {
               request.transaction.abort();

@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-from docs_import_common import require_import_stage
 
 import argparse
 import datetime as dt
@@ -209,7 +208,6 @@ def generate_import_preview(
     staging_root: Path,
     workspace_root: Path,
     source_path: Path,
-    stage: str,
     include_prompt_meta: bool,
     retain_private_media_source: bool = False,
 ) -> dict[str, Any]:
@@ -220,7 +218,6 @@ def generate_import_preview(
             staging_root=staging_root,
             workspace_root=workspace_root,
             package_path=source_path,
-            stage=stage,
             retain_private_media_source=retain_private_media_source,
         )
     if source_format == "markdown":
@@ -229,7 +226,6 @@ def generate_import_preview(
             staging_root=staging_root,
             workspace_root=workspace_root,
             source_path=source_path,
-            stage=stage,
             retain_private_media_source=retain_private_media_source,
         )
     if source_format == "text":
@@ -238,7 +234,6 @@ def generate_import_preview(
             staging_root=staging_root,
             workspace_root=workspace_root,
             source_path=source_path,
-            stage=stage,
         )
     if source_format == "docx":
         return generate_docx_import_preview(
@@ -246,7 +241,6 @@ def generate_import_preview(
             staging_root=staging_root,
             workspace_root=workspace_root,
             source_path=source_path,
-            stage=stage,
             retain_private_media_source=retain_private_media_source,
         )
     return generate_html_import_preview(
@@ -254,7 +248,6 @@ def generate_import_preview(
         staging_root=staging_root,
         workspace_root=workspace_root,
         source_path=source_path,
-        stage=stage,
         include_prompt_meta=include_prompt_meta,
     )
 
@@ -265,7 +258,6 @@ def generate_docx_import_preview(
     staging_root: Path,
     workspace_root: Path,
     source_path: Path,
-    stage: str,
     retain_private_media_source: bool = False,
 ) -> dict[str, Any]:
     conversion = convert_docx_to_html(source_path)
@@ -274,7 +266,6 @@ def generate_docx_import_preview(
         repo_root=repo_root,
         source_html=conversion.html,
         source_identity=source_path.stem,
-        stage=stage,
         include_prompt_meta=False,
         staging_root=staging_root,
         workspace_root=workspace_root,
@@ -296,7 +287,6 @@ def generate_html_import_preview(
     staging_root: Path,
     workspace_root: Path,
     source_path: Path,
-    stage: str,
     include_prompt_meta: bool,
 ) -> dict[str, Any]:
     source_html = source_path.read_text(encoding="utf-8", errors="replace")
@@ -304,7 +294,6 @@ def generate_html_import_preview(
         repo_root=repo_root,
         source_html=source_html,
         source_identity=source_path.stem,
-        stage=stage,
         include_prompt_meta=include_prompt_meta,
         staging_root=staging_root,
         workspace_root=workspace_root,
@@ -337,14 +326,12 @@ def generate_html_content_import_preview(
     repo_root: Path | None = None,
     source_html: str,
     source_identity: str,
-    stage: str,
     include_prompt_meta: bool,
     staging_root: Path,
     workspace_root: Path,
     title: str = "",
     doc_id: str = "",
 ) -> dict[str, Any]:
-    normalized_stage = require_import_stage(stage)
     parsed = parse_html_document(source_html)
     parsed_title = extract_html_title(parsed.root)
     summary = build_summary(
@@ -356,7 +343,6 @@ def generate_html_content_import_preview(
         parsed=parsed,
     )
     apply_content_identity_hints(summary, title=title, doc_id=doc_id)
-    summary["stage"] = normalized_stage
     summary["source_format"] = "html"
     summary["staging_root"] = projects_path_marker(staging_root, workspace_root)
     summary["tag_counts"] = dict(parsed.tag_counts.most_common())
@@ -367,13 +353,12 @@ def generate_html_content_import_preview(
         from docs_workspace_config import default_repo_root
 
         repo_root = default_repo_root()
-    apply_inline_raster_media_plans(repo_root, staging_root, workspace_root, summary, normalized_stage)
+    apply_inline_raster_media_plans(repo_root, staging_root, workspace_root, summary)
     apply_inline_svg_media_plans(
         repo_root,
         staging_root,
         workspace_root,
         summary,
-        normalized_stage,
         source_svg_markup=source_html,
     )
     summary["markdown_validation"] = validate_markdown_preview(summary["markdown_preview"], title=summary["title"])
@@ -561,7 +546,6 @@ def generate_markdown_import_preview(
     staging_root: Path,
     workspace_root: Path,
     source_path: Path,
-    stage: str,
     retain_private_media_source: bool = False,
 ) -> dict[str, Any]:
     source_markdown = source_path.read_text(encoding="utf-8", errors="replace")
@@ -569,7 +553,6 @@ def generate_markdown_import_preview(
         repo_root=repo_root,
         source_markdown=source_markdown,
         source_identity=source_path.stem,
-        stage=stage,
         staging_root=staging_root,
         workspace_root=workspace_root,
         normalize_ordinary_front_matter=True,
@@ -586,14 +569,12 @@ def generate_markdown_content_import_preview(
     repo_root: Path | None = None,
     source_markdown: str,
     source_identity: str,
-    stage: str,
     staging_root: Path,
     workspace_root: Path,
     title: str = "",
     doc_id: str = "",
     normalize_ordinary_front_matter: bool = False,
 ) -> dict[str, Any]:
-    normalized_stage = require_import_stage(stage)
     ordinary_front_matter = None
     front_matter_title = ""
     front_matter_warnings: list[str] = []
@@ -623,7 +604,6 @@ def generate_markdown_content_import_preview(
         summary["ordinary_front_matter"] = ordinary_front_matter
         summary["warnings"] = front_matter_warnings + summary["warnings"]
     apply_content_identity_hints(summary, title=title, doc_id=doc_id)
-    summary["stage"] = normalized_stage
     summary["source_format"] = "markdown"
     summary["staging_root"] = projects_path_marker(staging_root, workspace_root)
     summary["tag_counts"] = {}
@@ -633,7 +613,7 @@ def generate_markdown_content_import_preview(
         from docs_workspace_config import default_repo_root
 
         repo_root = default_repo_root()
-    apply_inline_raster_media_plans(repo_root, staging_root, workspace_root, summary, normalized_stage)
+    apply_inline_raster_media_plans(repo_root, staging_root, workspace_root, summary)
     summary["markdown_validation"] = validate_markdown_preview(summary["markdown_preview"], title=summary["title"])
     return summary
 
@@ -644,10 +624,8 @@ def generate_markdown_package_import_preview(
     staging_root: Path,
     workspace_root: Path,
     package_path: Path,
-    stage: str,
     retain_private_media_source: bool = False,
 ) -> dict[str, Any]:
-    normalized_stage = require_import_stage(stage)
     package_root = package_path.resolve()
     markdown_path = find_package_markdown_file(package_root)
     source_markdown = markdown_path.read_text(encoding="utf-8", errors="replace")
@@ -675,7 +653,6 @@ def generate_markdown_package_import_preview(
             )
         summary["ordinary_front_matter"] = ordinary_front_matter
         summary["warnings"] = front_matter_warnings + summary["warnings"]
-    summary["stage"] = normalized_stage
     summary["source_format"] = "markdown_package"
     summary["source_path"] = projects_path_marker(package_root, workspace_root)
     summary["source_markdown"] = projects_path_marker(markdown_path, workspace_root)
@@ -691,9 +668,8 @@ def generate_markdown_package_import_preview(
         package_root=package_root,
         markdown_path=markdown_path,
         summary=summary,
-        stage=normalized_stage,
     )
-    apply_inline_raster_media_plans(repo_root, staging_root, workspace_root, summary, normalized_stage)
+    apply_inline_raster_media_plans(repo_root, staging_root, workspace_root, summary)
     if retain_private_media_source:
         summary["_inline_media_source_markdown"] = package_markdown
     summary["markdown_validation"] = validate_markdown_preview(summary["markdown_preview"], title=summary["title"])
@@ -706,14 +682,12 @@ def generate_text_import_preview(
     staging_root: Path,
     workspace_root: Path,
     source_path: Path,
-    stage: str,
 ) -> dict[str, Any]:
     source_text = source_path.read_text(encoding="utf-8", errors="replace")
     summary = generate_plain_text_content_import_preview(
         repo_root=repo_root,
         source_text=source_text,
         source_identity=source_path.stem,
-        stage=stage,
         staging_root=staging_root,
         workspace_root=workspace_root,
     )
@@ -727,16 +701,13 @@ def generate_plain_text_content_import_preview(
     repo_root: Path | None = None,
     source_text: str,
     source_identity: str,
-    stage: str,
     staging_root: Path,
     workspace_root: Path,
     title: str = "",
     doc_id: str = "",
 ) -> dict[str, Any]:
-    normalized_stage = require_import_stage(stage)
     summary = build_text_summary(source_text, source_identity)
     apply_content_identity_hints(summary, title=title, doc_id=doc_id)
-    summary["stage"] = normalized_stage
     summary["source_format"] = "text"
     summary["staging_root"] = projects_path_marker(staging_root, workspace_root)
     summary["tag_counts"] = {}
@@ -751,7 +722,6 @@ def generate_content_import_preview(
     content: str,
     content_format: str,
     source_identity: str,
-    stage: str,
     staging_root: Path,
     workspace_root: Path,
     title: str = "",
@@ -762,7 +732,6 @@ def generate_content_import_preview(
             repo_root=repo_root,
             source_markdown=content,
             source_identity=source_identity,
-            stage=stage,
             staging_root=staging_root,
             workspace_root=workspace_root,
             title=title,
@@ -773,7 +742,6 @@ def generate_content_import_preview(
             repo_root=repo_root,
             source_html=content,
             source_identity=source_identity,
-            stage=stage,
             include_prompt_meta=False,
             staging_root=staging_root,
             workspace_root=workspace_root,
@@ -785,7 +753,6 @@ def generate_content_import_preview(
             repo_root=repo_root,
             source_text=content,
             source_identity=source_identity,
-            stage=stage,
             staging_root=staging_root,
             workspace_root=workspace_root,
             title=title,
@@ -798,7 +765,6 @@ def generate_normalized_import_content_preview(
     record: ImportContent,
     *,
     repo_root: Path | None = None,
-    stage: str,
     staging_root: Path,
     workspace_root: Path,
 ) -> dict[str, Any]:
@@ -809,7 +775,6 @@ def generate_normalized_import_content_preview(
         content=record.content,
         content_format=record.content_format,
         source_identity=record.record_identity,
-        stage=stage,
         staging_root=staging_root,
         workspace_root=workspace_root,
         title=record.title,
@@ -850,12 +815,6 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--repo-root", default="", help="Override repo root auto-detection.")
     parser.add_argument("--source-html", default="", help="Import directly from an HTML file path.")
     parser.add_argument("--staged-filename", default="", help="Import from the configured shared import staging root.")
-    parser.add_argument(
-        "--stage",
-        required=True,
-        choices=("working",),
-        help="Target docs stage.",
-    )
     parser.add_argument("--include-prompt-meta", action="store_true", help="Include clearly identifiable prompt/meta blocks.")
     parser.add_argument("--markdown-preview-out", default="", help="Optional path to write the Markdown preview.")
     return parser.parse_args(argv)
@@ -871,7 +830,6 @@ def main(argv: list[str] | None = None) -> int:
         staging_root=workspace_paths.import_staging,
         workspace_root=workspace_paths.root,
         source_path=source_path,
-        stage=args.stage,
         include_prompt_meta=bool(args.include_prompt_meta),
     )
 

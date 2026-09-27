@@ -19,7 +19,7 @@ from docs_management_document_target import (
     resolve_managed_document_target,
 )
 from docs_workspace_config import (
-    load_docs_stage,
+    load_docs_working_config,
     require_document_authoring,
     generated_documents_path,
     document_source_path,
@@ -32,14 +32,13 @@ from docs_collection_customisations import (
 )
 
 
-COLLECTION_DELETE_PREVIEW_KEYS = frozenset({"stage", "collection", "doc_id"})
+COLLECTION_DELETE_PREVIEW_KEYS = frozenset({ "collection", "doc_id"})
 COLLECTION_DELETE_APPLY_KEYS = frozenset(
-    {"stage", "collection", "doc_id", "source_revision", "confirm"}
+    { "collection", "doc_id", "source_revision", "confirm"}
 )
 SOURCE_REVISION_PATTERN = re.compile(r"^sha256:[0-9a-f]{64}$")
 ASSIGN_FIELD_GROUP_KEYS = frozenset(
     {
-        "stage",
         "collection",
         "doc_id",
         "source_revision",
@@ -172,7 +171,6 @@ class SourceDelete:
 
 @dataclass(frozen=True)
 class ManagementMutationPlan:
-    stage: str
     response: Dict[str, Any]
     collection: str = ""
     source_writes: tuple[SourceWrite, ...] = ()
@@ -209,7 +207,7 @@ def plan_create(
     body_markdown; the HTTP create request does not expose it.
     """
     if "scope" in body:
-        raise ValueError("scope is retired; supply stage")
+        raise ValueError("scope is retired; use optional collection")
     if "viewable" in body:
         raise ValueError("legacy viewable is not accepted")
     if "publishable" in body or "draft" in body:
@@ -218,11 +216,9 @@ def plan_create(
     resolved_collection = resolve_managed_document_collection(
         repo_root,
         collection=body.get("collection") if collection_requested else None,
-        stage=body.get("stage"),
         require_existing_source_root=False,
     )
     require_document_authoring(resolved_collection.parent_config)
-    stage = resolved_collection.stage
     collection = resolved_collection.collection
     title = str(body.get("title") or "New Doc").strip() or "New Doc"
     create_fields: Dict[str, Any] = {}
@@ -282,7 +278,6 @@ def plan_create(
         record["parent_id"] = parent_id
     response: Dict[str, Any] = {
         "ok": True,
-        "stage": stage,
         "doc_id": doc_id,
         "path": path,
         "target": target,
@@ -292,7 +287,6 @@ def plan_create(
     if collection:
         response["collection"] = collection
     log_details = {
-        "stage": stage,
         "doc_id": doc_id,
         "path": path,
     }
@@ -301,7 +295,6 @@ def plan_create(
 
     return ManagementMutationPlan(
         collection=collection,
-        stage=resolved_collection.stage,
         response=response,
         source_writes=(
             SourceWrite(
@@ -421,7 +414,6 @@ def plan_assign_field_group(
         "ok": True,
         "operation": "assign_field_group",
         "target": resolved.request_target(),
-        "stage": resolved.stage,
         "collection": resolved.collection,
         "doc_id": target.doc_id,
         "field_group": group.group_id,
@@ -434,7 +426,6 @@ def plan_assign_field_group(
         response["summary_text"] = f"No {group.group_id} changes for {target.doc_id}."
         return ManagementMutationPlan(
             collection=resolved.collection,
-            stage=resolved.stage,
             response=response,
         )
 
@@ -470,7 +461,6 @@ def plan_assign_field_group(
     response["summary_text"] = f"Updated {group.group_id} for {target.doc_id}."
     return ManagementMutationPlan(
         collection=resolved.collection,
-        stage=resolved.stage,
         response=response,
         source_writes=(
             SourceWrite(
@@ -482,7 +472,6 @@ def plan_assign_field_group(
         suppression_reason="docs-assign-field-group",
         log_event_name="docs-assign-field-group",
         log_details={
-            "stage": resolved.stage,
             "collection": resolved.collection,
             "doc_id": target.doc_id,
             "field_group": group.group_id,
@@ -498,7 +487,7 @@ def plan_assign_field_group(
 
 def plan_move(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
     """Move one ordinary subtree by editing only index-order.json."""
-    config = load_docs_stage(repo_root, body.get("stage"))
+    config = load_docs_working_config(repo_root)
     require_document_authoring(config)
     if body.get("collection") or "parent_id" in body or "scope" in body:
         raise ValueError("Position requires an ordinary document, target_doc_id and placement")
@@ -507,9 +496,8 @@ def plan_move(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
     tree = read_index_order(root)
     parent_id = move_node(tree, doc_id, str(body.get("target_doc_id") or ""), str(body.get("placement") or ""))
     return ManagementMutationPlan(
-        stage=config.stage,
         response={
-            "ok": True, "stage": config.stage, "doc_id": doc_id,
+            "ok": True, "doc_id": doc_id,
             "record": {"doc_id": doc_id, "parent_id": parent_id},
             "summary_text": f"Positioned {doc_id}.",
         },
@@ -520,8 +508,8 @@ def plan_move(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
     )
 
 
-def plan_delete_preview(repo_root: Path, doc_ids: list[str], *, stage: str) -> Dict[str, Any]:
-    config = load_docs_stage(repo_root, stage)
+def plan_delete_preview(repo_root: Path, doc_ids: list[str]) -> Dict[str, Any]:
+    config = load_docs_working_config(repo_root)
     require_document_authoring(config)
     requested_doc_ids = require_delete_doc_ids(doc_ids)
     docs = source_model.load_stage_docs_for_config(repo_root, config)
@@ -543,7 +531,6 @@ def plan_delete_preview(repo_root: Path, doc_ids: list[str], *, stage: str) -> D
 
     return {
         "ok": True,
-        "stage": stage,
         "allowed": True,
         "blockers": [],
         "warnings": warnings,
@@ -574,15 +561,14 @@ def selected_delete_writes(config: Any, doc_ids: list[str], collection: str = ""
 
 def plan_delete_apply(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
     if "scope" in body:
-        raise ValueError("scope is retired; supply stage")
-    config = load_docs_stage(repo_root, body.get("stage"))
-    stage = config.stage
+        raise ValueError("scope is retired; use optional collection")
+    config = load_docs_working_config(repo_root)
     require_document_authoring(config)
     requested_doc_ids = require_delete_doc_ids(body.get("doc_ids"))
     if not body.get("confirm"):
         raise ValueError("delete apply requires confirm=true")
 
-    preview = plan_delete_preview(repo_root, requested_doc_ids, stage=stage)
+    preview = plan_delete_preview(repo_root, requested_doc_ids)
     if not preview["allowed"]:
         raise ValueError("; ".join(preview["blockers"]))
 
@@ -594,10 +580,8 @@ def plan_delete_apply(repo_root: Path, body: Dict[str, Any]) -> ManagementMutati
     additional_descendant_count = len(set(delete_doc_ids) - set(requested_doc_ids))
     summary_text = f"Deleted {delete_count} document{'s' if delete_count != 1 else ''}."
     return ManagementMutationPlan(
-        stage=config.stage,
         response={
             "ok": True,
-            "stage": stage,
             "paths": delete_paths,
             "requested_doc_count": len(requested_doc_ids),
             "requested_doc_ids": requested_doc_ids,
@@ -620,7 +604,6 @@ def plan_delete_apply(repo_root: Path, body: Dict[str, Any]) -> ManagementMutati
         build_doc_ids=delete_doc_ids,
         log_event_name="docs-delete",
         log_details={
-            "stage": stage,
             "paths": delete_paths,
             "requested_doc_ids": requested_doc_ids,
             "effective_root_doc_ids": effective_root_doc_ids,
@@ -700,7 +683,6 @@ def plan_collection_delete_preview(
         "ok": True,
         "operation": "preview",
         "target": target,
-        "stage": resolved.stage,
         "collection": resolved.collection,
         "doc_id": document.doc_id,
         "title": document.title,
@@ -732,7 +714,6 @@ def revision_conflict_payload(
         "ok": False,
         "operation": operation,
         "target": target,
-        "stage": target["stage"],
         "doc_id": target["doc_id"],
         "source_revision": requested_revision,
         "current_source_revision": current_revision,
@@ -781,12 +762,10 @@ def plan_collection_delete_apply(
     path = relative_path(repo_root, document.path)
     return ManagementMutationPlan(
         collection=resolved.collection,
-        stage=resolved.stage,
         response={
             "ok": True,
             "operation": "apply",
             "target": target,
-            "stage": resolved.stage,
             "collection": resolved.collection,
             "doc_id": document.doc_id,
             "title": document.title,
@@ -804,7 +783,6 @@ def plan_collection_delete_apply(
         revision_conflict_error="collection document source changed after delete preview",
         log_event_name="docs-delete",
         log_details={
-            "stage": resolved.stage,
             "collection": resolved.collection,
             "doc_id": document.doc_id,
             "deleted_doc_ids": [document.doc_id],

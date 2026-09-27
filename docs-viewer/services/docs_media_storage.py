@@ -42,7 +42,6 @@ SUCCESSFUL_UPLOAD_STATUSES = {"unchanged", "uploaded", "overwritten"}
 
 @dataclass(frozen=True)
 class DocsMediaFile:
-    stage: str
     collection: str
     media_class: str
     filename: str
@@ -54,7 +53,6 @@ class DocsMediaFile:
 
 @dataclass(frozen=True)
 class DocsMediaPublishResult:
-    stage: str
     collection: str
     media_class: str
     filename: str
@@ -116,7 +114,6 @@ def docs_media_file(
         source_root=resolved_root,
         size=resolved_path.stat().st_size,
         md5=file_md5(resolved_path),
-        stage=config.stage,
         collection=getattr(config, "collection", ""),
     )
 
@@ -132,7 +129,6 @@ def artifact_matches(item: DocsMediaFile, stat: ArtifactStat, adapter: ArtifactL
 
 def _result(item: DocsMediaFile, status: str, reason: str = "") -> DocsMediaPublishResult:
     return DocsMediaPublishResult(
-        stage=item.stage,
         collection=item.collection,
         media_class=item.media_class,
         filename=item.filename,
@@ -153,9 +149,9 @@ def plan_and_publish_docs_media(
 
     if not files:
         return []
-    identities = [(item.stage, item.collection, item.media_class, item.filename) for item in files]
+    identities = [(item.collection, item.media_class, item.filename) for item in files]
     if len(set(identities)) != len(identities):
-        raise ValueError("Docs media publication contains duplicate stage/collection/class/filename identities")
+        raise ValueError("Docs media publication contains duplicate collection/class/filename identities")
     for media_class in {item.media_class for item in files}:
         adapter = adapters.get(media_class)
         if adapter is None:
@@ -264,11 +260,11 @@ def publish_docs_media_files(
 ) -> list[DocsMediaPublishResult]:
     if not files:
         return []
-    targets = {(item.stage, item.collection) for item in files}
+    targets = {item.collection for item in files}
     if len(targets) != 1:
         raise ValueError("One Docs media insertion may target only one exact collection")
-    stage, collection = next(iter(targets))
-    config = load_docs_media_owner(repo_root, stage, collection=collection)
+    collection = next(iter(targets))
+    config = load_docs_media_owner(repo_root, collection=collection)
     require_document_authoring(config)
 
     media_classes = {item.media_class for item in files}
@@ -296,7 +292,6 @@ def docs_publish_succeeded(results: Sequence[DocsMediaPublishResult]) -> bool:
 
 def docs_publish_report(
     *,
-    stage: str,
     collection: str = "",
     results: Sequence[DocsMediaPublishResult],
     write: bool,
@@ -308,7 +303,6 @@ def docs_publish_report(
     return {
         "generated_at": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
         "scope": "docs",
-        "stage": stage,
         "collection": collection,
         "action": "publish",
         "mode": "write" if write else "dry-run",
@@ -321,7 +315,6 @@ def docs_publish_report(
 def run_docs_staged_media_publish(
     repo_root: Path,
     *,
-    stage: str,
     collection: str = "",
     media_class: str,
     staged_filename: str,
@@ -332,7 +325,7 @@ def run_docs_staged_media_publish(
     environ: Mapping[str, str] | None = None,
 ) -> dict[str, object]:
     normalized_filename = validate_media_filename(staged_filename)
-    config = load_docs_media_owner(repo_root, stage, collection=collection)
+    config = load_docs_media_owner(repo_root, collection=collection)
     workspace = configured_workspace_paths(repo_root)
     source_path = (workspace.import_staging / normalized_filename).resolve()
     item = docs_media_file(
@@ -351,7 +344,7 @@ def run_docs_staged_media_publish(
         env_files=env_files,
         environ=environ,
     )
-    return docs_publish_report(stage=config.stage, collection=collection, results=results, write=write, force=force)
+    return docs_publish_report(collection=collection, results=results, write=write, force=force)
 
 
 def local_media_config(config: DocsStageConfig | DocsCollectionConfig, media_class: str) -> DocsManagedMediaConfig:

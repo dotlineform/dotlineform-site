@@ -1,5 +1,4 @@
 import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
-
 import {
   appendAssetVersion
 } from "./docs-viewer-asset-url.js";
@@ -157,8 +156,7 @@ function resolveReportContribution(context) {
       collection && collection.collectionCustomisation,
       {
         collection: collectionTarget(
-          collectionIdValue,
-          context && context.viewerStage
+          collectionIdValue
         )
       }
     );
@@ -184,11 +182,7 @@ function collectionsFromRoute(context) {
 }
 
 function collectionsFromConfigs(context) {
-  var viewerStage = cleanId(context && context.viewerStage);
-  var configs = Array.isArray(context && context.stageConfigs) ? context.stageConfigs : [];
-  var workspaceConfig = configs.find(function (config) {
-    return cleanId(config && config.stage) === viewerStage;
-  });
+  var workspaceConfig = context && context.workspaceConfig;
   return workspaceConfig && Array.isArray(workspaceConfig.collections) ? workspaceConfig.collections : [];
 }
 
@@ -231,16 +225,14 @@ function byIdPayloadUrl(state, docId) {
   return state.byIdUrlBase + "/" + encodeURIComponent(docId) + ".json";
 }
 
-function collectionTarget(collection, stage) {
+function collectionTarget(collection) {
   return {
-    ...(stage ? { stage: stage } : {}),
     collection: cleanId(collection)
   };
 }
 
 function detailTarget(state, docId) {
   return {
-    ...(state.viewerStage ? { stage: state.viewerStage } : {}),
     collection: state.collectionId,
     doc_id: cleanString(docId)
   };
@@ -278,7 +270,7 @@ function projectDetailInfo(state, docId, payload, metadata) {
   if (!project) return null;
   var doc = state.docs.find(function (record) { return record.docId === docId; });
   var projected = project({
-    collection: collectionTarget(state.collectionId, state.viewerStage),
+    collection: collectionTarget(state.collectionId),
     data: state.customisationData,
     document: documentRecord(doc),
     metadata: metadata,
@@ -298,7 +290,7 @@ function contributionEvent(context, collectionIdValue, detail) {
   if (!notify) return;
   notify(Object.assign({
     access: context && context.managementContext ? "manage" : "public",
-    collection: collectionTarget(collectionIdValue, context && context.viewerStage)
+    collection: collectionTarget(collectionIdValue)
   }, detail || {}));
 }
 
@@ -307,7 +299,7 @@ function notifyContribution(state, detail) {
   if (!notify) return;
   notify(Object.assign({
     access: state.managementContext ? "manage" : "public",
-    collection: collectionTarget(state.collectionId, state.viewerStage)
+    collection: collectionTarget(state.collectionId)
   }, detail || {}));
 }
 
@@ -387,7 +379,7 @@ function appendDocRow(state, doc) {
 
   var renderRow = contributionCallback(state.contribution, "renderRow");
   var rowResult = renderRow ? renderRow({
-    collection: collectionTarget(state.collectionId, state.viewerStage),
+    collection: collectionTarget(state.collectionId),
     document: documentRecord(doc),
     leadingHost: leadingHost,
     titlePrefixHost: titlePrefixHost,
@@ -426,11 +418,8 @@ function renderFilterShell(context, collection) {
   var toolbar = document.createElement("div");
   toolbar.className = "docsViewerReport__toolbar docsViewerReport__collectionFilterToolbar";
   toolbar.dataset.docsCollectionFilters = "true";
-
   filterIdSequence += 1;
-  var searchId = "docs-collection-title-filter-" + cleanId(
-    context && context.viewerStage
-  ) + "-" + collectionId(collection) + "-" + filterIdSequence;
+  var searchId = "docs-collection-title-filter-" + collectionId(collection) + "-" + filterIdSequence;
   var searchLabel = document.createElement("label");
   searchLabel.className = "docsViewerReport__selectLabel visually-hidden";
   searchLabel.htmlFor = searchId;
@@ -528,7 +517,7 @@ function configureContributionFilters(state) {
   if (!createFilters) return;
   var created = createFilters({
     access: state.managementContext ? "manage" : "public",
-    collection: collectionTarget(state.collectionId, state.viewerStage),
+    collection: collectionTarget(state.collectionId),
     data: state.customisationData,
     documents: Object.freeze(state.docs.map(documentRecord))
   });
@@ -560,7 +549,7 @@ function renderContributionFilters(state) {
     var host = document.createElement("div");
     host.dataset.docsCollectionCustomFilter = filterId;
     filter.render({
-      collection: collectionTarget(state.collectionId, state.viewerStage),
+      collection: collectionTarget(state.collectionId),
       host: host,
       value: state.filterValues.get(filterId) || "",
       setValue: function (value) {
@@ -652,7 +641,7 @@ function visibleDocuments(state) {
   var compareCustom = contributionCallback(state.contribution, "compareListDocuments");
   var compare = compareCustom ? function (left, right) {
     return compareCustom({
-      collection: collectionTarget(state.collectionId, state.viewerStage),
+      collection: collectionTarget(state.collectionId),
       left: documentRecord(left),
       right: documentRecord(right),
       sortMode: state.sortMode
@@ -665,7 +654,7 @@ function visibleDocuments(state) {
     return state.filters.every(function (filter) {
       var filterId = cleanId(filter.id);
       var matches = filter.matches({
-        collection: collectionTarget(state.collectionId, state.viewerStage),
+        collection: collectionTarget(state.collectionId),
         document: documentRecord(doc),
         value: state.filterValues.get(filterId) || ""
       });
@@ -788,7 +777,7 @@ function renderListHead(state, documents) {
   var renderHead = contributionCallback(state.contribution, "renderListHead");
   if (!renderHead) return;
   renderHead({
-    collection: collectionTarget(state.collectionId, state.viewerStage),
+    collection: collectionTarget(state.collectionId),
     documents: Object.freeze(documents.map(documentRecord)),
     host: state.headNode,
     sort: listSortContext(state)
@@ -869,7 +858,7 @@ function publishState(state, reportState, target, reason, detail) {
   if (reportState === "error" || reportState === "unmounted") cancelCollectionSearch(state);
   var record = detail && detail.record || null;
   if (reportState === "detail" && (!target || target.doc_id !== state.validDetailId
-    || target.collection !== state.collectionId || cleanString(target.stage) !== state.viewerStage
+    || target.collection !== state.collectionId
     || !record || record.doc_id !== target.doc_id)) {
     throw new Error("Collection action context did not match the validated document.");
   }
@@ -1064,7 +1053,7 @@ function renderDetailPayload(state, docId, payload) {
   state.validDetailId = docId;
   var metadata = detailMetadataRecord(state, docId, payload);
   publishState(state, "detail", {
-    ...(state.viewerStage ? { stage: state.viewerStage } : {}),
+
     collection: state.collectionId,
     doc_id: docId
   }, "detail-loaded", {
@@ -1164,7 +1153,6 @@ function assertCollectionTarget(state, target) {
   var targetDocId = cleanString(target && target.doc_id);
   if (
     !targetDocId
-    || cleanString(target && target.stage) !== state.viewerStage
     || targetCollection !== state.collectionId
   ) {
     throw new Error("Deleted collection document target did not match the mounted collection.");
@@ -1177,7 +1165,6 @@ function assertCreatedCollectionTarget(state, target) {
   var targetDocId = cleanString(target && target.doc_id);
   if (
     !targetDocId
-    || cleanString(target && target.stage) !== state.viewerStage
     || targetCollection !== state.collectionId
   ) {
     throw new Error("Created collection document target did not match the mounted collection.");
@@ -1189,15 +1176,13 @@ function assertExactCollectionTarget(state, target) {
   var keys = Object.keys(target || {}).sort();
   var targetCollection = cleanId(target && target.collection);
   if (
-    keys.length !== 2
+    keys.length !== 1
     || keys[0] !== "collection"
-    || keys[1] !== "stage"
-    || cleanString(target && target.stage) !== state.viewerStage
     || targetCollection !== state.collectionId
   ) {
     throw new Error("Imported package target did not match the mounted collection.");
   }
-  return collectionTarget(targetCollection, state.viewerStage);
+  return collectionTarget(targetCollection);
 }
 
 function focusFirstListRow(state) {
@@ -1353,8 +1338,8 @@ function returnFromDeletedDetail(state, docId) {
 /** Project a confirmed save into the mounted report without a fetch or rebuild. */
 function reconcileCommittedDraft(state, target, draft) {
   var docId = cleanString(target && target.doc_id);
-  if (!docId || target.stage !== state.viewerStage || target.collection !== state.collectionId
-    || state.viewerStage !== "working" || typeof draft !== "boolean") {
+  if (!docId || target.collection !== state.collectionId
+    || typeof draft !== "boolean") {
     throw new Error("Draft readiness response did not match the mounted collection.");
   }
   if (!state.mounted) return;
@@ -1469,11 +1454,10 @@ function mountResolvedDocsCollectionReport(context, contribution) {
     onDocumentState: context.onCollectionDocumentState,
     parentDocId: cleanString(context && context.doc && context.doc.doc_id),
     parentTarget: Object.freeze({
-      ...(context.viewerStage ? { stage: context.viewerStage } : {}),
       doc_id: cleanString(context.doc && context.doc.doc_id)
     }),
     parentRecord: context.doc,
-    collectionTarget: Object.freeze(collectionTarget(collectionIdValue, context.viewerStage)),
+    collectionTarget: Object.freeze(collectionTarget(collectionIdValue)),
     listActionHost: root.ownerDocument.createElement("div"),
     collection: collection,
     collectionId: collectionIdValue,
@@ -1510,7 +1494,6 @@ function mountResolvedDocsCollectionReport(context, contribution) {
     tableNode: refs.tableNode,
     rowsNode: refs.rowsNode,
     validDetailId: "",
-    viewerStage: cleanString(context && context.viewerStage),
     mounted: true
   };
   state.listActionHost.className = "docsViewer__collectionActions";
@@ -1628,7 +1611,7 @@ export function mountDocsCollectionReport(context) {
       if (typeof context.onCollectionDocumentState === "function") {
         context.onCollectionDocumentState({
           state: "error",
-          parentTarget: { ...(context.viewerStage ? { stage: context.viewerStage } : {}), doc_id: context.doc.doc_id },
+          parentTarget: {  doc_id: context.doc.doc_id },
           documentTarget: null
         });
       }

@@ -30,7 +30,6 @@ class DocsMediaReference:
 
 @dataclass(frozen=True)
 class DocsMediaFile:
-    stage: str
     collection: str
     media_type: str
     identity: str
@@ -146,7 +145,6 @@ def list_collection_media(
                 if local_path is not None and not local_path.is_file():
                     raise FileNotFoundError("Docs media file disappeared during inventory")
                 items.append(DocsMediaFile(
-                    stage=config.stage,
                     collection=getattr(config, "collection", ""),
                     media_type=media_type,
                     identity=artifact.identity,

@@ -18,8 +18,7 @@ function cleanString(value) {
 
 function sameTarget(left, right) {
   return (
-    String(left.stage || "") === String(right.stage || "")
-    && left.collection === right.collection
+    left.collection === right.collection
     && left.doc_id === right.doc_id
   );
 }
@@ -28,7 +27,6 @@ function responseTarget(payload) {
   var candidate = payload && payload.target && typeof payload.target === "object"
     ? payload.target
     : {
-        ...(payload && payload.stage ? { stage: payload.stage } : {}),
         collection: payload && payload.collection,
         doc_id: payload && payload.doc_id
       };

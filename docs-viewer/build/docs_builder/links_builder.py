@@ -100,10 +100,10 @@ class _DocumentRefresh:
         self.removals: set[DocumentTarget] = set()
 
     def key(self, doc_id: str) -> DocumentTarget:
-        return DocumentTarget(self.config.stage, self.collection, doc_id)
+        return DocumentTarget(self.collection, doc_id)
 
     def validate_target(self, target: DocumentTarget) -> None:
-        if target.stage != self.config.stage or target.collection not in self.owners or not is_immutable_doc_id(target.doc_id):
+        if target.collection not in self.owners or not is_immutable_doc_id(target.doc_id):
             raise ValueError("Links requires an exact configured document identity")
 
     def excluded(self, target: DocumentTarget) -> bool:
@@ -126,7 +126,7 @@ class _DocumentRefresh:
             if collection and docs and not self.collection:
                 host_id = owner.report_host_doc_id
             for doc in docs:
-                target = DocumentTarget(self.config.stage, collection, doc.doc_id)
+                target = DocumentTarget(collection, doc.doc_id)
                 self.validate_target(target)
                 source = _safe_path(self.sources[collection], f"{doc.doc_id}.md")
                 if not source.is_file() or doc.front_matter.get("doc_id") != doc.doc_id or (collection != self.collection and source != doc.path):
@@ -139,7 +139,7 @@ class _DocumentRefresh:
                 if collection == self.collection:
                     summary = self.summary(target, doc)
                 else:
-                    href = canonical_document_viewer_url(self.config, host_id, subdoc_id=doc.doc_id)
+                    href = canonical_document_viewer_url(host_id, subdoc_id=doc.doc_id)
                     summary = DocumentSummary(target, doc.title, href, normalize_authoring_subject(doc.front_matter, folder_supported=True))
                 self.records[target] = DocumentLinks(summary)
                 self.original[target] = None
@@ -167,7 +167,7 @@ class _DocumentRefresh:
         return payload
 
     def viewer_target(self, resolved: dict[str, str]) -> DocumentTarget | None:
-        if resolved.get("kind") != "viewer" or resolved.get("stage", "") not in {"", self.config.stage}:
+        if resolved.get("kind") != "viewer":
             return None
         doc_id, child = resolved["doc_id"], resolved.get("subdoc", "")
         if not is_immutable_doc_id(doc_id) or (child and not is_immutable_doc_id(child)):
@@ -177,14 +177,14 @@ class _DocumentRefresh:
             collection = self.collection_by_host.get(doc_id, "")
             if not collection:
                 return None
-        target = DocumentTarget(self.config.stage, collection, child or doc_id)
+        target = DocumentTarget(collection, child or doc_id)
         return target if self.payload(target) is not None else None
 
     def summary(self, target: DocumentTarget, doc: DocRecord) -> DocumentSummary:
         resolved = parse_docs_target(resolve_href(doc.viewer_url, "/"), viewer_routes=self.routes)
         if not resolved or self.viewer_target(resolved) != target:
             raise ValueError("Links current document has no exact configured viewer location")
-        href = canonical_document_viewer_url(self.config, resolved["doc_id"], subdoc_id=resolved.get("subdoc", ""))
+        href = canonical_document_viewer_url(resolved["doc_id"], subdoc_id=resolved.get("subdoc", ""))
         return DocumentSummary(target, doc.title, href, normalize_authoring_subject(doc.front_matter, folder_supported=True))
 
     def read(self, target: DocumentTarget, *, deleted: bool = False) -> DocumentLinks | None:
@@ -198,7 +198,7 @@ class _DocumentRefresh:
         if text is not None and deleted:
             payload = json.loads(text)
             owner = DocumentTarget(**payload["self"]["target"])
-            if owner != target and owner.stage == target.stage and owner.doc_id == target.doc_id:
+            if owner != target and owner.doc_id == target.doc_id:
                 # A completed collection move already transferred this shared
                 # filename. The old collection cannot remove the new owner.
                 self.validate_target(owner)
@@ -208,7 +208,7 @@ class _DocumentRefresh:
         self.original[target] = text
         record = read_relationship_payload(json.loads(text), target) if text is not None else None
         if record is None:
-            self.warnings.append(f"Missing Links JSON for {target.stage}/{target.collection or '(parent)'}/{target.doc_id}; Links update skipped")
+            self.warnings.append(f"Missing Links JSON for {target.collection or '(parent)'}/{target.doc_id}; Links update skipped")
         else:
             for neighbour in record.incoming.keys() | record.outgoing.keys():
                 self.validate_target(neighbour)
@@ -261,7 +261,7 @@ class _DocumentRefresh:
                             metadata = parse_source(source)[0]
                             doc_id = metadata.get("doc_id")
                             if isinstance(doc_id, str) and is_immutable_doc_id(doc_id):
-                                candidate = DocumentTarget(self.config.stage, collection, doc_id)
+                                candidate = DocumentTarget(collection, doc_id)
                                 if self.payload(candidate) is not None:
                                     neighbour = candidate
                             break

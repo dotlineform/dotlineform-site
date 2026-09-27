@@ -83,33 +83,14 @@ export function createDocsViewerManagementViewDefinitions() {
         renderer: "manage-toolbar-rebuild"
       },
       {
-        id: "manage-deploy-repo",
-        actionId: DOCS_VIEWER_ACTION_IDS.DEPLOY_REPO,
+        id: "manage-publish",
+        actionId: DOCS_VIEWER_ACTION_IDS.PUBLISH,
         label: "Publish",
         ownerType: "app",
         surfaceId: "app-management",
         appKinds: ["manage"],
         features: ["management"],
-        renderer: "manage-toolbar-deploy-repo"
-      },
-      {
-        id: "manage-prepare-preview",
-        actionId: DOCS_VIEWER_ACTION_IDS.PREPARE_PREVIEW,
-        label: "Prepare Preview",
-        ownerType: "app",
-        surfaceId: "app-management",
-        appKinds: ["manage"],
-        features: ["management"],
-        renderer: "manage-toolbar-prepare-preview"
-      },
-      {
-        id: "manage-stage",
-        label: "Docs stage",
-        ownerType: "app",
-        surfaceId: "app-management",
-        appKinds: ["manage"],
-        features: ["workspace-configuration"],
-        renderer: "manage-stage-select"
+        renderer: "manage-toolbar-publish"
       },
       {
         id: "index-selection",

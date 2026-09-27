@@ -2,7 +2,7 @@
 """Audit Docs Viewer links for missing targets.
 
 Run:
-  python3 docs-viewer/services/docs_broken_links.py --stage working --json
+  python3 docs-viewer/services/docs_broken_links.py --json
 """
 
 from __future__ import annotations
@@ -23,9 +23,9 @@ from docs_workspace_config import (
     DocsCollectionConfig,
     DocsWorkspaceConfig,
     generated_documents_path,
-    preview_documents_path,
+    public_document_reader_paths,
+    load_docs_working_config,
     load_docs_workspace_config,
-    select_workspace_stage,
     resolve_workspace_path,
 )
 from docs_rendered_links import (
@@ -55,7 +55,6 @@ class DocMeta:
     doc_id: str
     title: str
     viewer_url: str
-    stage: str
     collection: str
 
     def source_fields(self) -> dict[str, str]:
@@ -63,7 +62,6 @@ class DocMeta:
         return {
             "from_page_text": self.title,
             "from_page_url": self.viewer_url,
-            "from_page_stage": self.stage,
             "from_page_collection": self.collection,
             "from_page_doc_id": self.doc_id,
         }
@@ -98,28 +96,12 @@ def read_json(path: Path, label: str) -> dict[str, Any]:
     return payload
 
 
-def target_stage_config(
-    target: dict[str, str], workspace: DocsWorkspaceConfig,
-) -> DocsStageConfig | None:
-    """Resolve the destination collection configuration without selecting source data."""
-    if target.get("kind") != "viewer":
-        return None
-    stage = target.get("stage")
-    try:
-        return select_workspace_stage(workspace, stage)
-    except ValueError:
-        return None
-
-
-def target_payload_exists(
-    repo_root: Path, target: dict[str, str], config: DocsStageConfig,
-) -> bool:
+def target_payload_exists(target: dict[str, str], roots: dict[str, Path]) -> bool:
     """Check the selected generated or accepted destination through its exact host."""
     doc_id = target["doc_id"]
     if not is_immutable_doc_id(doc_id):
         return False
-    documents_path = preview_documents_path if target["stage"] == "preview" else generated_documents_path
-    path = resolve_workspace_path(repo_root, documents_path(config)) / "by-id" / f"{doc_id}.json"
+    path = roots[""] / "by-id" / f"{doc_id}.json"
     if not path.is_file():
         return False
     child_id = target.get("subdoc")
@@ -131,12 +113,9 @@ def target_payload_exists(
     report = host.get("report")
     if not isinstance(report, dict) or report.get("id") != "docs_collection":
         return False
-    collection = next(
-        (item for item in config.collections if item.collection == report.get("collection")),
-        None,
-    )
-    return bool(collection and (
-        resolve_workspace_path(repo_root, documents_path(collection)) / "by-id" / f"{child_id}.json"
+    collection = report.get("collection")
+    return bool(collection and collection in roots and (
+        roots[collection] / "by-id" / f"{child_id}.json"
     ).is_file())
 
 
@@ -148,7 +127,7 @@ def semantic_token_broken_entries(
     if registry is None:
         raise ValueError("Semantic-token registry is unavailable.")
     entries: list[dict[str, Any]] = []
-    media_policy_available: dict[str, bool] = {}
+    media_policy_available: bool | None = None
     for meta, body in sources:
         for token in parse_semantic_tokens(body, registry=registry):
             reason = ""
@@ -156,20 +135,20 @@ def semantic_token_broken_entries(
                 reason = "unsupported_kind"
             else:
                 try:
-                    if meta.stage not in media_policy_available:
+                    if media_policy_available is None:
                         try:
-                            read_catalogue_media_config(repo_root, stage=meta.stage)
-                            media_policy_available[meta.stage] = True
+                            read_catalogue_media_config(repo_root)
+                            media_policy_available = True
                         except ValueError:
-                            media_policy_available[meta.stage] = False
-                    if not media_policy_available[meta.stage]:
+                            media_policy_available = False
+                    if not media_policy_available:
                         raise ValueError("Generated Catalogue media configuration is unavailable")
                     if token.target_type == "series":
-                        read_catalogue_series(repo_root, token.target_id, stage=meta.stage)
+                        read_catalogue_series(repo_root, token.target_id)
                     elif token.target_type == "gallery":
-                        read_catalogue_gallery(repo_root, token.target_id, stage=meta.stage)
+                        read_catalogue_gallery(repo_root, token.target_id)
                     else:
-                        catalogue_media_record(read_catalogue_work(repo_root, token.target_id, stage=meta.stage), token.target_id)
+                        catalogue_media_record(read_catalogue_work(repo_root, token.target_id), token.target_id)
                 except ValueError:
                     reason = f"missing_{token.target_type}" if token.target_type in {"series", "gallery"} else "missing_media"
             if not reason:
@@ -177,7 +156,6 @@ def semantic_token_broken_entries(
             entries.append(
                 {
                     "issue_type": "semantic_token",
-                    "source_stage": meta.stage,
                     "source_collection": meta.collection,
                     "source_doc_id": meta.doc_id,
                     "source_range": token.source_range,
@@ -194,30 +172,32 @@ def semantic_token_broken_entries(
     return entries
 
 
-def audit_docs_broken_links(repo_root: Path, *, stage: str) -> dict[str, Any]:
+def audit_docs_broken_links(repo_root: Path) -> dict[str, Any]:
     """Audit authored sources without relationship/publication eligibility filters.
 
-    Every configured collection in the explicit selected stage is audited. Rendered links
+    Every configured collection in the configured workspace is audited. Rendered links
     use generated by-ID HTML; token diagnosis uses source Markdown. Missing
     source payloads are returned separately so partial coverage is visible.
     Destination lookup remains independent of the selected source boundary.
     """
     workspace = load_docs_workspace_config(repo_root)
-    config = select_workspace_stage(workspace, stage)
+    config = load_docs_working_config(repo_root)
     viewer_routes = ("/docs/", workspace.public_viewer_base_url)
     collections: list[tuple[str, DocsStageConfig | DocsCollectionConfig]] = [("", config)]
     collections.extend((item.collection, item) for item in config.collections)
+    local_roots = {child: resolve_workspace_path(repo_root, generated_documents_path(owner)) for child, owner in collections}
+    public_roots = {child: resolve_workspace_path(repo_root, path) for child, path in public_document_reader_paths(workspace).items()}
     sources: list[tuple[DocMeta, str]] = []
     entries: list[dict[str, Any]] = []
     unavailable_sources: list[dict[str, str]] = []
     destination_exists: dict[str, bool] = {}
     for collection, resolved_collection in collections:
         collection_url = document_location.management_collection_viewer_url(
-            repo_root, collection, stage=config.stage,
+            repo_root, collection,
         )
         for doc in load_document_collection_docs_for_config(repo_root, config, resolved_collection):
             meta = DocMeta(
-                stage=config.stage, collection=collection,
+                collection=collection,
                 doc_id=doc.doc_id, title=doc.title,
                 viewer_url=document_location.management_document_viewer_url(
                     collection_url, doc.doc_id, collection=bool(collection),
@@ -230,8 +210,8 @@ def audit_docs_broken_links(repo_root: Path, *, stage: str) -> dict[str, Any]:
                 continue
             payload = read_json(payload_path, "source document payload")
             entries.extend(rendered_link_broken_entries(
-                repo_root, meta, str(payload.get("content_html") or ""),
-                workspace, viewer_routes, destination_exists,
+                meta, str(payload.get("content_html") or ""),
+                workspace, local_roots, public_roots, viewer_routes, destination_exists,
             ))
 
     entries.extend(semantic_token_broken_entries(repo_root, sources))
@@ -242,7 +222,6 @@ def audit_docs_broken_links(repo_root: Path, *, stage: str) -> dict[str, Any]:
     ))
     return {
         "ok": True,
-        "stage": config.stage,
         "summary": {"total": len(entries)},
         "entries": entries,
         "unavailable_sources": unavailable_sources,
@@ -250,8 +229,9 @@ def audit_docs_broken_links(repo_root: Path, *, stage: str) -> dict[str, Any]:
 
 
 def rendered_link_broken_entries(
-    repo_root: Path, meta: DocMeta, content_html: str,
-    workspace: DocsWorkspaceConfig, viewer_routes: tuple[str, ...],
+    meta: DocMeta, content_html: str,
+    workspace: DocsWorkspaceConfig, local_roots: dict[str, Path], public_roots: dict[str, Path],
+    viewer_routes: tuple[str, ...],
     destination_exists: dict[str, bool],
 ) -> list[dict[str, Any]]:
     """Diagnose rendered document links while retaining the owning source identity."""
@@ -273,17 +253,9 @@ def rendered_link_broken_entries(
         )
         if target is None:
             continue
-        if target.get("kind") == "viewer":
-            parsed = urlparse(resolved_href)
-            is_public = parsed.path.rstrip("/") == workspace.public_viewer_base_url.rstrip("/")
-            if is_public and "stage" in parse_qs(parsed.query, keep_blank_values=True):
-                target["kind"] = "invalid_viewer"
-            elif "stage" not in parse_qs(parsed.query, keep_blank_values=True):
-                target["stage"] = "preview" if is_public else "working"
-        target_config = target_stage_config(target, workspace)
-        if is_same_doc_fragment_link(
+        is_public = urlparse(resolved_href).path.rstrip("/") == workspace.public_viewer_base_url.rstrip("/")
+        if not is_public and is_same_doc_fragment_link(
             current_doc_id=meta.doc_id,
-            current_stage=meta.stage,
             current_parent_doc_id=parent_id,
             target=target,
         ):
@@ -292,8 +264,8 @@ def rendered_link_broken_entries(
         link_text = normalize_text(anchor.get("text")) or normalize_text(raw_href) or normalize_text(resolved_href)
         if resolved_href not in destination_exists:
             destination_exists[resolved_href] = bool(
-                target.get("kind") == "viewer" and target_config is not None
-                and target_payload_exists(repo_root, target, target_config)
+                target.get("kind") == "viewer"
+                and target_payload_exists(target, public_roots if is_public else local_roots)
             )
         if not destination_exists[resolved_href]:
             entries.append(
@@ -308,10 +280,9 @@ def rendered_link_broken_entries(
 
 
 def print_human_summary(payload: dict[str, Any]) -> None:
-    stage = normalize_text(payload.get("stage"))
     summary = payload.get("summary") if isinstance(payload.get("summary"), dict) else {}
     total = int(summary.get("total") or 0)
-    print(f"Docs broken links for {stage}: {total} issue(s)")
+    print(f"Docs broken links: {total} issue(s)")
     for source in payload.get("unavailable_sources") or []:
         print(f"- Links not scanned (generated payload missing): {source['from_page_url']}")
     for entry in payload.get("entries") or []:
@@ -332,14 +303,13 @@ def print_human_summary(payload: dict[str, Any]) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Audit Docs Viewer links for missing targets.")
-    parser.add_argument("--stage", required=True, choices=("working",), help="Exact authoring stage to audit")
     parser.add_argument("--repo-root", help="Override repo root auto-detection")
     parser.add_argument("--json", action="store_true", help="Print JSON payload")
     args = parser.parse_args(argv)
 
     try:
         repo_root = detect_repo_root(args.repo_root)
-        payload = audit_docs_broken_links(repo_root, stage=args.stage)
+        payload = audit_docs_broken_links(repo_root)
     except (FileNotFoundError, ValueError) as error:
         print(str(error), file=sys.stderr)
         return 1

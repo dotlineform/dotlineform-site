@@ -109,12 +109,6 @@ def relative_path(base: Path, path: Path) -> str:
         return str(path)
 
 
-def require_import_stage(stage: str) -> str:
-    if stage != "working":
-        raise ValueError("Docs Import requires explicit stage 'working'")
-    return stage
-
-
 def source_format_for_path(path: Path) -> str:
     if path.is_dir():
         return "markdown_package"

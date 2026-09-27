@@ -23,7 +23,7 @@ from docs_workspace_config import (
     SOURCE_COLLECTIONS_PATH,
     DocsStageConfig,
     document_source_path,
-    load_docs_stage,
+    load_docs_working_config,
     normalize_collection_id,
     public_documents_path,
     generated_documents_path,
@@ -51,10 +51,10 @@ def require_confirmed(body: dict[str, Any]) -> None:
         raise ValueError("confirm must be true to apply collection lifecycle changes")
 
 
-def request_stage_config(repo_root: Path, body: dict[str, Any]) -> DocsStageConfig:
+def request_workspace_config(repo_root: Path, body: dict[str, Any]) -> DocsStageConfig:
     if "scope" in body or "parent_scope" in body:
-        raise ValueError("scope and parent_scope are retired; supply an explicit stage")
-    return load_docs_stage(repo_root, body.get("stage"))
+        raise ValueError("scope and parent_scope are retired; use an optional collection")
+    return load_docs_working_config(repo_root)
 
 
 def normalize_title(value: Any) -> str:
@@ -219,7 +219,7 @@ def report_host_source(parent_config: DocsStageConfig, collection: str, title: s
 
 def plan_create_collection_preview(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     """Plan a Working host and collection registration."""
-    parent_config = request_stage_config(repo_root, body)
+    parent_config = request_workspace_config(repo_root, body)
     collection = normalize_collection_id(body.get("collection"), field="collection")
     title = normalize_title(body.get("title"))
     require_document_authoring(parent_config)
@@ -258,20 +258,17 @@ def plan_create_collection_preview(repo_root: Path, body: dict[str, Any]) -> dic
     ]
     if conflicts:
         raise ValueError(f"collection creation would overwrite existing paths: {', '.join(conflicts)}")
-    stage_target = {"stage": parent_config.stage}
-
     return {
         "ok": True,
         "schema_version": LIFECYCLE_PREVIEW_SCHEMA_VERSION,
         "action": "create_collection",
         "operation": "preview",
-        **stage_target,
         "collection": collection,
         "title": title,
         "planned_report_host_identity": identity,
         "report_host_source_revision": host_revision,
-        "collection_target": {**stage_target, "collection": collection},
-        "report_host_target": {**stage_target, "doc_id": identity["doc_id"]},
+        "collection_target": {"collection": collection},
+        "report_host_target": {"doc_id": identity["doc_id"]},
         "association": association,
         "planned_collection_config": planned_collection_config,
         "storage_contract": collection_storage_contract(parent_config, collection),
@@ -282,7 +279,7 @@ def plan_create_collection_preview(repo_root: Path, body: dict[str, Any]) -> dic
         ],
         "rebuild_plan": ["collection_docs", "parent_docs", "browser_config"],
         "urls": {
-            "management": f"/docs/?stage={parent_config.stage}&doc={identity['doc_id']}",
+            "management": f"/docs/?doc={identity['doc_id']}",
             "public": "",
         },
         "warnings": [],
@@ -293,9 +290,9 @@ def plan_create_collection_preview(repo_root: Path, body: dict[str, Any]) -> dic
     }
 
 
-def apply_error(result: dict[str, Any], error: Exception, *, committed: bool, stage: str) -> CollectionLifecycleApplyError:
+def apply_error(result: dict[str, Any], error: Exception, *, phase: str, committed: bool) -> CollectionLifecycleApplyError:
     retry_field = "retry_create" if result["action"] == "create_collection" else "retry_delete"
-    result.update({"ok": False, "committed": committed, retry_field: False, "failed_stage": stage, "error": str(error)})
+    result.update({"ok": False, "committed": committed, retry_field: False, "failed_phase": phase, "error": str(error)})
     return CollectionLifecycleApplyError(result)
 
 
@@ -305,9 +302,9 @@ def apply_create_collection(
     *,
     dry_run: bool,
     rebuild_collection_outputs: Callable[..., dict[str, Any]],
-    rebuild_stage_outputs: Callable[..., dict[str, Any]],
+    rebuild_working_outputs: Callable[..., dict[str, Any]],
 ) -> dict[str, Any]:
-    """Register both stages, create the Working host, and await its Working rebuilds."""
+    """Register a collection, create its host, and await its rebuilds."""
     require_confirmed(body)
     preview = plan_create_collection_preview(repo_root, body)
     result = {**preview, "schema_version": LIFECYCLE_APPLY_SCHEMA_VERSION, "operation": "apply", "dry_run": dry_run, "committed": False, "retry_create": True, "rebuild": {}}
@@ -315,8 +312,7 @@ def apply_create_collection(
         return result
 
     collection = str(preview["collection"])
-    parent_config = load_docs_stage(repo_root, preview.get("stage"))
-    build_kwargs = {"stage": parent_config.stage}
+    parent_config = load_docs_working_config(repo_root)
     identity = preview["planned_report_host_identity"]
     host_text = report_host_source(parent_config, collection, str(preview["title"]), identity)
     host_path = resolve_workspace_path(repo_root, document_source_path(parent_config)) / f"{identity['doc_id']}.md"
@@ -331,7 +327,7 @@ def apply_create_collection(
     except Exception as error:
         if host_created and host_path.exists() and host_path.read_text(encoding="utf-8") == host_text:
             host_path.unlink()
-        raise apply_error(result, error, committed=False, stage="config_commit") from error
+        raise apply_error(result, error, committed=False, phase="config_commit") from error
 
     result.update({"committed": True, "retry_create": False})
     source_model.write_text_atomic(host_path.parent / INDEX_ORDER_FILENAME, index_order_text(tree))
@@ -344,7 +340,7 @@ def apply_create_collection(
         generated_documents_path(parent_config).parent / SOURCE_COLLECTIONS_PATH / collection / "documents",
     )
     public_root = public_documents_path(parent_config)
-    stage = "roots"
+    phase = "roots"
     try:
         (source_root / SOURCE_DOCUMENTS_PATH).mkdir(parents=True, exist_ok=False)
         (docs_output / "by-id").mkdir(parents=True, exist_ok=False)
@@ -354,18 +350,17 @@ def apply_create_collection(
             (docs_output.parent / "media" / media_type).mkdir(parents=True, exist_ok=True)
         if public_root is not None:
             (resolve_workspace_path(repo_root, public_root / collection) / "by-id").mkdir(parents=True, exist_ok=False)
-        stage = "collection_build"
-        result["rebuild"]["collection"] = rebuild_collection_outputs(repo_root, collection, **build_kwargs)
-        stage = "parent_rebuild"
-        result["rebuild"]["parent"] = rebuild_stage_outputs(
+        phase = "collection_build"
+        result["rebuild"]["collection"] = rebuild_collection_outputs(repo_root, collection)
+        phase = "parent_rebuild"
+        result["rebuild"]["parent"] = rebuild_working_outputs(
             repo_root,
             include_search=False,
             docs_doc_ids=[identity["doc_id"]],
-            **({"links_created_doc_ids": [identity["doc_id"]]} if parent_config.stage == "working" else {}),
-            **build_kwargs,
+            links_created_doc_ids=[identity["doc_id"]],
         )
     except Exception as error:
-        raise apply_error(result, error, committed=True, stage=stage) from error
+        raise apply_error(result, error, committed=True, phase=phase) from error
     result["summary_text"] = f"Created Docs Viewer collection {collection} with report host {identity['doc_id']}."
     return result
 
@@ -388,10 +383,10 @@ def blocked_delete_preview(collection: str, blockers: list[str], **details: Any)
 
 def plan_delete_collection_preview(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     """Keep whole-collection retirement unavailable until its cross-stage contract is defined."""
-    config = request_stage_config(repo_root, body)
+    request_workspace_config(repo_root, body)
     collection = normalize_collection_id(body.get("collection"), field="collection")
     return blocked_delete_preview(
-        collection, ["Whole-collection deletion is unavailable in the shared lifecycle."], stage=config.stage,
+        collection, ["Whole-collection deletion is unavailable in the shared lifecycle."],
     )
 
 
@@ -400,7 +395,7 @@ def apply_delete_collection(
     body: dict[str, Any],
     *,
     dry_run: bool,
-    rebuild_stage_outputs: Callable[..., dict[str, Any]],
+    rebuild_working_outputs: Callable[..., dict[str, Any]],
 ) -> dict[str, Any]:
     """Reject retirement without mutating Working, prepared or accepted collections."""
     require_confirmed(body)

@@ -33,7 +33,6 @@ export function createDocsViewerManagementModalComposition(options = {}) {
     settingsForm: shellRef(shellRefs, "settingsForm", "docsViewerSettingsForm"),
     settingsModal: shellRef(shellRefs, "settingsModal", "docsViewerSettingsModal"),
     settingsSaveButton: shellRef(shellRefs, "settingsSaveButton", "docsViewerSettingsSaveButton"),
-    settingsStage: shellRef(shellRefs, "settingsStage", "docsViewerSettingsStage"),
     settingsBooleanField: shellRef(shellRefs, "settingsBooleanField", "docsViewerSettingsBooleanField"),
     settingsBooleanInput: shellRef(shellRefs, "settingsBooleanInput", "docsViewerSettingsBooleanInput"),
     settingsBooleanLabel: shellRef(shellRefs, "settingsBooleanLabel", "docsViewerSettingsBooleanLabel"),
@@ -67,8 +66,7 @@ export function createDocsViewerManagementModalComposition(options = {}) {
       hideContextMenu: callbacks.hideContextMenu,
       hideManageActionsMenu: callbacks.hideManageActionsMenu,
       onImportOpen: callbacks.onImportOpen,
-      onSettingsSubmit: callbacks.onSettingsSubmit,
-      viewerStage: callbacks.viewerStage
+      onSettingsSubmit: callbacks.onSettingsSubmit
     }
   });
 

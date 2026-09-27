@@ -14,10 +14,6 @@ import {
   saveManagedDocSource
 } from "./docs-viewer-management-client.js";
 
-function currentValue(value) {
-  return typeof value === "function" ? value() : value;
-}
-
 export function createDocsViewerManagementSourceAdapter(options) {
   var settings = options || {};
   var sourceService = settings.sourceService || null;
@@ -27,7 +23,6 @@ export function createDocsViewerManagementSourceAdapter(options) {
   function clientOptions(overrides) {
     return Object.assign({
       baseUrl: baseUrl,
-      stage: String(currentValue(settings.viewerStage) || "").trim(),
       fetch: function (url, requestOptions) {
         return settings.window.fetch(url, requestOptions);
       }
@@ -38,20 +33,20 @@ export function createDocsViewerManagementSourceAdapter(options) {
     readDocumentLinkTargets: function (target) {
       return readDocumentLinkTargets(target, clientOptions());
     },
-    readCatalogueMediaTargets: function (stage) {
-      return readCatalogueMediaTargets(stage, clientOptions());
+    readCatalogueMediaTargets: function () {
+      return readCatalogueMediaTargets( clientOptions());
     },
-    readCatalogueMediaConfig: function (stage) {
-      return readCatalogueMediaConfig(stage, clientOptions());
+    readCatalogueMediaConfig: function () {
+      return readCatalogueMediaConfig( clientOptions());
     },
-    readCatalogueWork: function (workId, stage) {
-      return readCatalogueWork(workId, stage, clientOptions());
+    readCatalogueWork: function (workId) {
+      return readCatalogueWork(workId,  clientOptions());
     },
-    readCatalogueSeries: function (seriesId, stage) {
-      return readCatalogueSeries(seriesId, stage, clientOptions());
+    readCatalogueSeries: function (seriesId) {
+      return readCatalogueSeries(seriesId,  clientOptions());
     },
-    readCatalogueGallery: function (galleryId, stage) {
-      return readCatalogueGallery(galleryId, stage, clientOptions());
+    readCatalogueGallery: function (galleryId) {
+      return readCatalogueGallery(galleryId,  clientOptions());
     },
     readSource: function (target, optionsForRead) {
       return readManagedDocSource(target, clientOptions(optionsForRead));
