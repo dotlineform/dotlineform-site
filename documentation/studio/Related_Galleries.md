@@ -3,12 +3,16 @@ draft: false
 doc_id: d-20260927-221737-07fbbf
 title: Related Galleries
 added_date: "2026-09-27 22:17:37"
-last_updated: "2026-09-27 22:17:37"
+last_updated: "2026-09-27 22:38:12"
 summary: Proposed per-Work related Gallery IDs, explicit Gallery-to-Series association, shared title lookup, and review of Studio Save versus general rebuild responsibilities.
 ui_status: proposed
 parent_id: d-20260428-000000-f5ff18
 ---
 # Related Galleries
+
+## Prerequisite
+
+Resolve and deliver [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) before implementing Related Galleries. The agreed direction is that Save completes everything needed for Works editor freshness, while an explicit Refresh reconciles other generated consumers. This feature must use that boundary rather than add another dependency to the current combined Save chain.
 
 ## Intended Behaviour
 
@@ -64,9 +68,9 @@ Review these responsibilities before attaching another derived relationship to S
 
 Creating, deleting or reassigning a Gallery's Series association is different from editing one Work's membership. Such definition changes can affect many Work by-ID records because the materialised Series-related list changes. They must not be confused with the rejected rule that propagates one Work's memberships to its Series peers.
 
-A possible split is for Save to persist canonical changes, return current editor values and complete the explicitly retained direct outputs, while an explicit general rebuild reconciles broader derived Work records and shared lookups. The general rebuild must include affected Work by-ID related arrays, not just the title registry, when Gallery-to-Series associations change. Keep materialised relationships in Work records even when a rebuild computes them together.
+The [Save/Refresh proposal](Catalogue_Save_And_Refresh.md) owns the separation of immediate editor completion from broader generated output. Related Gallery arrays belong to the consumer Refresh operation. Refresh must reconcile affected Work by-ID related arrays as well as the title registry when Gallery-to-Series associations change. Keep materialised relationships in Work records even when Refresh computes them together.
 
-Choose the freshness boundary deliberately. If shared lookup or broad relationship generation moves out of Save, Docs Viewer can show older titles or related IDs until rebuild; deletion can leave a stale ID until reconciliation. Decide whether that delay is acceptable, or whether specific definition operations must synchronously complete their affected outputs. Save and rebuild need clear separate success/failure results and one explicit owner each. Do not introduce background work or a pending-change system merely to implement this proposal.
+Docs Viewer may show older titles or related IDs until Refresh; deletion can leave a stale ID until reconciliation. The prerequisite delivery owns clear Save/Refresh status and failure behavior. Related Galleries must preserve that agreed freshness boundary and must not introduce its own background work or pending-change system.
 
 The deferred [Save And Targeted Publish](Catalogue_Save_And_Targeted_Publish.md) proposal also considers removing lookup generation from Save, but it proposes a broader publication lifecycle. This document does not resume it or assume that a general lookup rebuild should become Publish. Decide local read-model maintenance separately from Preview, public distribution, commit and deployment.
 
@@ -74,8 +78,8 @@ The deferred [Save And Targeted Publish](Catalogue_Save_And_Targeted_Publish.md)
 
 - Define and assign the canonical Gallery-to-Series relationship, including unassigned or multiple-Series cases and whether cross-Series membership remains unrestricted.
 - Agree the IDs-only fields for exact memberships and related Galleries, the shared title lookup owner, and removal of copied-title dependencies.
-- Define what Studio Save must complete immediately and what an explicit general rebuild owns, including private Studio lookups, consumer indexes, report metadata and related Work projections.
-- Agree acceptable Docs Viewer freshness after Save and how definition creation, reassignment and deletion reach a consistent reader state.
+- Complete and accept the Save/Refresh prerequisite, including editor freshness, the consumer output set and clear refresh status/failure handling.
+- Define how Gallery association creation, reassignment and deletion feed the agreed Refresh projection while keeping the editor current immediately.
 - Review the existing output-selection expansion and whole-corpus computation against those dependencies before designing the implementation slice.
 
 Once these decisions are settled, specify a bounded delivery covering canonical association authoring/validation, generated per-Work IDs, lookup and Save/rebuild ownership, and Media View consumption. Test changes require their own agreed specification. This proposal was produced by read-only inspection and a repository documentation edit; implementation and live lifecycle evidence remain separate work.

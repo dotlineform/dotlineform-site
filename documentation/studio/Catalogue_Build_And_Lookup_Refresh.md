@@ -3,11 +3,13 @@ draft: false
 doc_id: d-20260519-202931-0c703e
 title: Catalogue Build And Lookup Refresh
 added_date: "2026-05-19 20:29:31"
-last_updated: "2026-09-26 19:22:33"
+last_updated: "2026-09-27 22:38:12"
 parent_id: d-20260422-000000-fb2894
 ---
 
 # Catalogue Build And Lookup Refresh
+
+The proposed [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) change will separate everything needed for immediate Works editor freshness from an explicit refresh of other generated consumers. Resolve that boundary before Related Galleries. It is not implemented: the combined Save behavior documented below remains current. This document is the durable home for the resulting workflow after delivery.
 
 ## Save Completes Output
 
