@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260422-000000-45a776
 title: Catalogue Work Editor
 added_date: "2026-04-22 00:00:00"
-last_updated: "2026-09-24 12:22:06"
+last_updated: "2026-09-28 13:01:30"
 parent_id: d-20260423-000000-d015e6
 
 ---
@@ -17,11 +17,11 @@ Use `/studio/catalogue-work/` to create, find, edit or delete canonical Works, i
 - `?mode=new` starts a new canonical record; optional `?series=<series_id>` preselects a Series.
 - Explicit IDs, numeric ranges or a mixture open bulk edit mode.
 
-The [Catalogue Source Model](Catalogue_Source_Model.md) owns the data and output boundaries. Ordinary Save completes affected external Catalogue output and required media.
+The [Catalogue Source Model](Catalogue_Source_Model.md) owns the data boundary. Ordinary Save completes the canonical edit and required local media; [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns the separate generated-reader boundary.
 
 ## Create And Save
 
-The Work search and New, Save and Delete icon buttons share the top toolbar inside the editor panel. Press Enter or choose a search result to open a Work; there is no separate Open button. Status messages remain below the toolbar. The Series member list, editor and preview panels align at the top, with the preview stacking below the editor when its available width is narrow.
+The Work search and New, Save and Delete icon buttons share the top toolbar inside the editor panel. Press Enter or choose a search result to open a Work; there is no separate Open button. Save status remains below the toolbar. The Refresh Catalogue icon sits in the Catalogue Work Editor header row, aligned with the Work search, with its freshness/result message to the right. The Series member list, editor and preview panels align at the top, with the preview stacking below the editor when its available width is narrow.
 
 In the member list, click selects one Work, Shift-click selects a continuous range, and Command-click adds or removes individual Works. The selection field compresses consecutive IDs into ranges, for example `01981-01983, 01985`. Selecting one Work uses the normal editor; selecting multiple Works opens bulk Gallery editing.
 
@@ -31,23 +31,23 @@ Expanded view adds a Galleries column with comma-separated titles, wrapping and 
 
 New mode shows the editable form and Save. The suggested Work ID can be replaced with any valid unused ID, including a deleted ID. Secondary controls appear after the first successful save.
 
-Search uses the private Studio Work search projection. Opening a Work loads its exact canonical record, server-issued revision and related context from the local API. The source record remains the editable baseline.
+Search uses the live canonical Studio Work search projection. Opening a Work loads its exact canonical record, server-issued revision and related context from the local API. The source record remains the editable baseline.
 
-Save validates the form and sends the changed record with its revision. The service rejects a stale revision, validates canonical integrity, writes through the source transaction owner, completes affected generated JSON/indexes and required media, then refreshes private Studio lookups. The editor reloads the focused projection with current revisions. If output or a later editor refresh fails, the saved canonical change remains complete and the message identifies the incomplete step.
+Save validates the form and sends the changed record with its revision. The service rejects a stale revision, validates canonical integrity, writes through the source transaction owner and completes required local media. It returns current canonical records and revisions so the editor stays current without generating Catalogue reader JSON or private Docs metadata. If media or a later editor refresh fails, the saved canonical change remains complete and the message identifies the incomplete step.
 
 The pointer shows waiting throughout the Work editor while Save runs, returning to normal on completion or failure. Work search/New, list selection and editing controls follow the operation's busy state. Save success and unsaved-change messages remain visible through the normal status owner.
 
 A Work must belong to exactly one Series. Selecting another Series reassigns it; clearing the required membership cannot be saved. The Series field remains a search input with separate Edit and New buttons; it does not use chips. Membership does not assign a document subject, parent or destination.
 
-There is no Work publication state, Publish/Unpublish action or Catalogue Drafts route. Save is the only ordinary completion action; there is no separate Build or media-publish control. It does not refresh Docs semantic lookups or publish documents. The local API must be available; browser edits are not queued for offline saving.
+There is no Work publication state, Publish/Unpublish action or Catalogue Drafts route. Save and Refresh Catalogue are separate awaited actions; there is no media-publish control. Refresh reconciles generated Catalogue readers and private Docs metadata, without publishing documents. The local API must be available; browser edits are not queued for offline saving.
 
 ## Gallery And Series Definitions
 
 New beside the Gallery or Series field opens a New modal with OK and Cancel. Clicking a Gallery pill's title or Series Edit opens an Edit modal with OK, Cancel and Delete. The Series browser also separates New and Edit; Delete is inside Edit. Edit never changes into New.
 
-OK saves the shared definition immediately and completes its affected Catalogue output and private lookup refresh. Creating a Gallery adds its pill to the current Work draft; creating a Series selects it where Series assignment is editable. Work Save persists the assignment, including the existing bulk Gallery replacement semantics. Cancel before OK creates nothing. Discarding the Work draft after OK leaves the saved definition available, potentially unassigned. Title editing changes the shared definition without changing draft membership.
+OK saves the shared definition immediately and updates the editor's live canonical views. Creating a Gallery adds its pill to the current Work draft; creating a Series selects it where Series assignment is editable. Work Save persists the assignment, including the existing bulk Gallery replacement semantics. Cancel before OK creates nothing. Discarding the Work draft after OK leaves the saved definition available, potentially unassigned. Title editing changes the shared definition without changing draft membership. Generated readers update on Refresh Catalogue.
 
-The Gallery pill's × only removes membership from the current draft. Delete inside Edit confirms the number of saved associated Works, removes the Gallery definition and all canonical memberships together, refreshes every affected Work's generated JSON and relevant indexes, and removes the deleted Gallery JSON. No subsequent Work Save or manual Build is required. The list, loaded saved memberships and draft all drop the deleted ID while retaining other unsaved edits. A failure after canonical persistence is reported as incomplete output rather than an unsaved deletion.
+The Gallery pill's × only removes membership from the current draft. Delete inside Edit confirms the number of saved associated Works and removes the Gallery definition and all canonical memberships together. The list, loaded saved memberships and draft drop the deleted ID while retaining other unsaved edits. Refresh Catalogue later updates affected generated Works and indexes and removes the deleted Gallery JSON; no subsequent Work Save is required. A failure after canonical persistence is reported as incomplete local completion rather than an unsaved deletion.
 
 Series Delete is disabled with an explanation while saved Works belong to the Series. The service checks membership again when applying deletion. Deleting an empty Series clears any unsaved assignment to it in the current Work draft. Other bulk fields, including Series assignment, remain read-only.
 
@@ -57,26 +57,26 @@ Gallery membership is the only editable field in bulk mode, whether selection co
 
 The Gallery picker initially shows the intersection of the selected Works' memberships. Editing that pill set and saving replaces every selected Work's memberships with the final set. For Works in `{A, B}` and `{B, C}`, the picker shows `{B}`; adding `D` and saving gives both Works `{B, D}`. Works in `{A}` and `{B}` show no initial pills; adding `D` and saving gives both Works only `{D}`.
 
-Removing all displayed pills and saving clears the selected Works' memberships. There is no dedicated clear-all control. An untouched selection never normalizes differing memberships: an untouched Save omits Gallery replacement and retains the existing output-refresh behavior. Changing the selected Work set discards unsaved bulk edits; expansion/collapse and focus within the editor preserve them. Normal single-Work unsaved-change protection remains.
+Removing all displayed pills and saving clears the selected Works' memberships. There is no dedicated clear-all control. An untouched selection never normalizes differing memberships: an untouched Save omits Gallery replacement. Changing the selected Work set discards unsaved bulk edits; expansion/collapse and focus within the editor preserve them. Normal single-Work unsaved-change protection remains.
 
-Bulk Save uses one request and one combined canonical transaction. Each selected Work supplies its metadata revision and, when replacing Galleries, its independent loaded membership set. A stale Work or membership rejects the whole replacement before writing. The service writes the membership map once and completes affected output, required media and private lookup refresh through the same owner as single-Work Save. Returned saved memberships and current revisions refresh the editor/list; Gallery-only editing retains the existing Save cost and media side effects.
+Bulk Save uses one request and one combined canonical transaction. Each selected Work supplies its metadata revision and, when replacing Galleries, its independent loaded membership set. A stale Work or membership rejects the whole replacement before writing. The service writes the membership map once and completes required local media through the same owner as single-Work Save. Returned saved memberships and current revisions refresh the editor/list; Gallery-only editing does not regenerate unchanged images. Generated reader memberships update on Refresh Catalogue.
 
 ## Delete
 
-Work deletion uses a server preview and confirmation, then repeats validation and checks the Work revision before applying. It deletes the canonical Work and its Gallery membership entry in the same transaction. It then removes exact obsolete media and reconciles generated records, indexes and former Series/Gallery membership. Successful completion returns to the Work editor; an output error retains the deleted canonical state and reports incomplete cleanup. Deletion does not write retired Detail storage.
+Work deletion uses a server preview and confirmation, then repeats validation and checks the Work revision before applying. It deletes the canonical Work and its Gallery membership entry in the same transaction. Refresh Catalogue later removes its generated record and updates indexes and former Series/Gallery memberships. Shared or remote media cleanup is separate. Successful deletion returns to the Work editor; an incomplete local response retains the deleted canonical state. Deletion does not write retired Detail storage.
 
 Bulk Work creation from selected images remains a separate capability. No Detail-specific browser, modal or service is retained for that future work. Shared file-picker, record-list, modal and media-preview components remain available.
 
 ## Media And Runtime Ownership
 
-The media picker resolves the Work's configured source, folder, optional direct subfolder and filename. The server validates paths without exposing absolute filesystem locations. Catalogue staging uses `catalogue/media-staging/` beneath the configured Projects base. Save prepares required media and maintains generated thumbnails under `catalogue/generated/`. The preview uses the configured remote primary URL and the saved Work's media version; an unavailable image is reported separately from missing preview configuration.
+The media picker resolves the Work's configured source, folder, optional direct subfolder and filename. The server validates paths without exposing absolute filesystem locations. Catalogue staging uses `catalogue/media-staging/` beneath the configured Projects base. Save prepares required primary renditions and thumbnails in shared Docs `assets/works/`. The preview uses the saved Work's media version; an unavailable image is reported separately from missing preview configuration.
 
 Browser modules under `studio/app/frontend/js/` divide the route into fields/form, selection, actions, record state, resources and media picking. `catalogue-editor-service-client.js` owns transport; `studio_catalogue_api.py` dispatches to the focused services under `studio/services/catalogue/`. Field definitions and current code own the exact editable inventory.
 
 The editor reuses saved SVG artwork from `docs-viewer/static/icons/`, served by the existing Studio server. `studio.css` owns its theme-aware mask and icon-button presentation; `studio-icon.js` supplies decorative spans for generated fields. Resource actions and type cells use the shared record list's opt-in icon rendering. The [Works Editor Mapping](Works_Editor_Icon_Mapping.md) records the approved artwork and retained text controls. Modal actions, Gallery pill labels and media-source names remain text.
 
-The three panels are siblings in one named CSS grid. `catalogue-work-layout.js` owns the expansion choice, preview visibility and toggle accessibility; the summary renderer supplies whether preview content is available. `studio.css` owns the column tracks, expanded-only Gallery cells and narrower-window stacking. Layout changes do not calculate widths in JavaScript or rebuild panel contents. The shared record list owns opt-in multiple selection and exact-ID text-cell updates; the Work editor owns the membership intersection, draft intent and save response handling. Normal and expanded layouts use the same row dataset. Gallery titles resolve through the already-loaded canonical registry from IDs added to the live Work search response; persisted lookup JSON retains its existing format.
+The three panels are siblings in one named CSS grid. `catalogue-work-layout.js` owns the expansion choice, preview visibility and toggle accessibility; the summary renderer supplies whether preview content is available. `studio.css` owns the column tracks, expanded-only Gallery cells and narrower-window stacking. Layout changes do not calculate widths in JavaScript or rebuild panel contents. The shared record list owns opt-in multiple selection and exact-ID text-cell updates; the Work editor owns the membership intersection, draft intent and save response handling. Normal and expanded layouts use the same row dataset. Gallery titles resolve through the already-loaded canonical registry from IDs added to the live Work search response.
 
 The shared [Route Ready State](Route_Ready_State.md) is exposed on `#catalogueWorkRoot`. The retained Catalogue smoke is scoped to route/service boot; UI acceptance remains manual. Mutation test work follows the separately agreed [test specification](Test_Contract_Discipline.md).
 
-[Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns output completion and failure handling after the canonical transaction. The editor combines single and bulk state with Work resources and media context, so new responsibilities should use their existing focused owners.
+[Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns local Save completion, Refresh status and reader timing after the canonical transaction. The editor combines single and bulk state with Work resources and media context, so new responsibilities should use their existing focused owners.

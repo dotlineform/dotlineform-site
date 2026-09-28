@@ -659,6 +659,7 @@ span.studioUi__input--readonlyDisplay {
 .studioUi__icon--pen { mask-image: url("/docs-viewer/static/icons/pen.svg"); }
 .studioUi__icon--file { mask-image: url("/docs-viewer/static/icons/file.svg"); }
 .studioUi__icon--download { mask-image: url("/docs-viewer/static/icons/download.svg"); }
+.studioUi__icon--refresh-cw { mask-image: url("/docs-viewer/static/icons/refresh-cw.svg"); }
 .studioUi__icon--trash { mask-image: url("/docs-viewer/static/icons/trash.svg"); }
 .studioUi__icon--x { mask-image: url("/docs-viewer/static/icons/x.svg"); }
 .studioUi__icon--folder-open { mask-image: url("/docs-viewer/static/icons/folder-open.svg"); }
@@ -1225,13 +1226,39 @@ button.studioList__cellLink {
 .studio-local-app .studio:has(#catalogueWorkRoot) {
   max-width: none;
   container: catalogue-work / inline-size;
-}
-
-.catalogueWorkPage {
   --work-list-width: 22rem;
   --work-list-column: minmax(17rem, var(--work-list-width));
   --work-editor-column: minmax(0, 1.5fr);
   --work-preview-column: minmax(0, 1fr);
+}
+
+.studio-local-app .studio:has(#catalogueWorkRoot) > .studio__headerRow {
+  display: grid;
+  grid-template-columns: var(--work-list-column) minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.catalogueWorkPage__refreshControls {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+  padding-inline-start: calc(var(--studio-surface-padding-lg) + 1px);
+}
+
+.catalogueWorkPage__refreshControls .studioUi__status {
+  min-width: 0;
+}
+
+.studio-local-app .studio:has(#catalogueWorkRoot[data-work-layout="expanded-list"]) > .studio__headerRow {
+  grid-template-columns: var(--work-list-column) var(--work-preview-column) var(--work-editor-column);
+}
+
+.studio-local-app .studio:has(#catalogueWorkRoot[data-work-layout="expanded-list"]) .catalogueWorkPage__refreshControls {
+  grid-column: 3;
+}
+
+.catalogueWorkPage {
   display: grid;
   grid-template-columns: var(--work-list-column) var(--work-editor-column) var(--work-preview-column);
   grid-template-areas: "list editor preview";
@@ -1350,6 +1377,14 @@ button.studioList__cellLink {
   .catalogueWorkPage[data-work-layout="expanded-list"] {
     grid-template-columns: minmax(var(--work-list-width), 1fr) minmax(0, 1fr);
     grid-template-areas: "list editor";
+  }
+
+  .studio-local-app .studio:has(#catalogueWorkRoot[data-work-layout="expanded-list"]) > .studio__headerRow {
+    grid-template-columns: minmax(var(--work-list-width), 1fr) minmax(0, 1fr);
+  }
+
+  .studio-local-app .studio:has(#catalogueWorkRoot[data-work-layout="expanded-list"]) .catalogueWorkPage__refreshControls {
+    grid-column: 2;
   }
 }
 

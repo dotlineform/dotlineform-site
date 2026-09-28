@@ -78,6 +78,17 @@ def catalogue_payloads(
     return payloads
 
 
+def _same_generated_content(actual: Any, expected: dict[str, Any]) -> bool:
+    """Ignore only the generation timestamp when comparing complete output."""
+    if (not isinstance(actual, dict) or not isinstance(actual.get("header"), dict)
+            or not isinstance(actual["header"].get("generated_at_utc"), str)
+            or not actual["header"]["generated_at_utc"]):
+        return False
+    actual_content = {**actual, "header": {key: value for key, value in actual["header"].items() if key != "generated_at_utc"}}
+    expected_content = {**expected, "header": {key: value for key, value in expected["header"].items() if key != "generated_at_utc"}}
+    return actual_content == expected_content
+
+
 def generate_catalogue_json(
     repo_root: Path, source_dir: Path, *, write: bool,
     work_ids: Sequence[str] | None = None, series_ids: Sequence[str] = (),
@@ -94,6 +105,7 @@ def generate_catalogue_json(
     galleries = read_galleries(source_dir, records.works)
     timestamp = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     payloads = catalogue_payloads(repo_root, records, galleries, timestamp=timestamp)
+    complete = work_ids is None
     selected = selected_output_paths(workspace, records, galleries, work_ids=work_ids, series_ids=series_ids, gallery_ids=gallery_ids)
     selected.update(path for path in payloads if "/index/" not in path)
     written, deleted = [], []
@@ -107,12 +119,28 @@ def generate_catalogue_json(
                     path.unlink()
             continue
         if path.exists():
-            old = json.loads(path.read_text())
-            if old.get("header", {}).get("version") == payload["header"]["version"]:
+            try:
+                old = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                if not complete:
+                    raise
+                old = None
+            if (complete and _same_generated_content(old, payload)) or (
+                not complete and isinstance(old, dict) and old.get("header", {}).get("version") == payload["header"]["version"]
+            ):
                 continue
         written.append(relative)
         if write:
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    if complete and write:
+        for relative, payload in payloads.items():
+            path = output_path(workspace, relative)
+            if not _same_generated_content(json.loads(path.read_text(encoding="utf-8")), payload):
+                raise RuntimeError(f"Catalogue output did not verify: {relative}")
+        for relative in selected - payloads.keys():
+            if output_path(workspace, relative).exists():
+                raise RuntimeError(f"Obsolete Catalogue output remains: {relative}")
     return {"status": "completed", "write": write, "written": written, "deleted": deleted,
+            "verified": complete and write,
             "counts": {"works": len(records.works), "series": len(records.series), "galleries": len(galleries.galleries)}}

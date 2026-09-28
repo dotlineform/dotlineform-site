@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260928-094430-4e3c76
 title: Catalogue Hosting And Storage Options
 added_date: "2026-09-28 09:44:30"
-last_updated: "2026-09-28 09:44:30"
+last_updated: "2026-09-28 13:01:30"
 summary: Short decision summary for future Works editor hosting, canonical Catalogue storage and public Catalogue JSON hosting.
 ui_status: proposed
 parent_id: d-20260428-000000-f5ff18
@@ -12,9 +12,9 @@ parent_id: d-20260428-000000-f5ff18
 
 ## Current Baseline
 
-Studio serves the existing Works editor and owns validated Catalogue mutations. Git-tracked `studio/data/canonical/catalogue/` holds aggregate canonical Work, Series, Gallery and membership files. Save currently produces Working Catalogue JSON in the configured Docs workspace and local media in shared assets. Docs Publish prepares and distributes selected Catalogue JSON with its document snapshot; `site/` hosts public JSON and configured R2 holds referenced primary images and downloads. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns the nearer Save optimization and explicit local Refresh proposal. [Catalogue Deployment](Catalogue_Deployment.md) owns the current public path.
+Studio serves the existing Works editor and owns validated Catalogue mutations. Git-tracked `studio/data/canonical/catalogue/` holds aggregate canonical Work, Series, Gallery and membership files. Save completes canonical edits and required local media in shared assets; the explicit Refresh Catalogue action reconciles Working Catalogue JSON and private Docs metadata in the configured Docs workspace. Docs Publish prepares and distributes selected Catalogue JSON with its document snapshot; `site/` hosts public JSON and configured R2 holds referenced primary images and downloads. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns the current local boundary. [Catalogue Deployment](Catalogue_Deployment.md) owns the public path.
 
-These are future architecture decisions, not prerequisites for implementing Save/Refresh. Each needs its own bounded delivery and evidence before storage or hosting changes.
+These are future architecture decisions. Each needs its own bounded delivery and evidence before storage or hosting changes.
 
 ## Local Editor Hosting
 
@@ -24,7 +24,7 @@ These are future architecture decisions, not prerequisites for implementing Save
 | Host the existing Works editor beneath the Docs Viewer toolbar on one local server | One local entry point while preserving the editor's Series browser, Work panels, modals and services. The Docs shell owns placement and outer chrome. | Adapt page bootstrap to mount/release a view, compose request handlers, contain styles, and preserve unsaved/busy navigation protections. Public Docs must not acquire editor code or mutation capability. |
 | Native Swift host | Could share the native application's navigation and local presentation. | Requires a separate Mac/iPad product and service-boundary decision; no native editor design or performance case is accepted here. |
 
-The one-server Docs view is the intended direction from the prior discussion, but it has no approved implementation sequence. The Save/Refresh service boundary can be built in the current host and reused by a later host. Avoid a second copy of editor business logic or transitional request aliases.
+The one-server Docs view is the intended direction from the prior discussion, but it has no approved implementation sequence. The current Save/Refresh service boundary can be reused by a later host. Avoid a second copy of editor business logic or transitional request aliases.
 
 ## Canonical Catalogue Storage
 
@@ -46,4 +46,4 @@ Primary media and downloads already have configured R2 destinations; this option
 
 ## Decision Order
 
-Complete the local Save/Refresh boundary first, including measured costs and actual editor/report dependencies. Then decide editor hosting from the accepted view/service seam, canonical storage from observed source I/O and recovery needs, and public JSON hosting from measured repository/hosting constraints. The old standalone Studio report Publish and pending-publication-ledger proposal is superseded by the current single Docs Publish lifecycle; it is not an option to revive by implication. [Related Galleries](Related_Galleries.md) depends on Save/Refresh, not on a hosting or storage migration.
+Measure current Save and Refresh costs before choosing another performance delivery. Decide editor hosting from the existing view/service seam, canonical storage from observed source I/O and recovery needs, and public JSON hosting from measured repository/hosting constraints. The old standalone Studio report Publish and pending-publication-ledger proposal is superseded by the current single Docs Publish lifecycle; it is not an option to revive by implication. [Related Galleries](Related_Galleries.md) can proceed on the current Save/Refresh boundary without a hosting or storage migration.

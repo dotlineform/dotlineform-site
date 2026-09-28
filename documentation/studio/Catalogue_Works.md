@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260401-000000-ebf14a
 title: Catalogue Works
 added_date: "2026-04-01 00:00:00"
-last_updated: "2026-09-27 19:35:41"
+last_updated: "2026-09-28 13:01:30"
 parent_id: d-20260423-000000-d015e6
 
 ---
@@ -17,7 +17,7 @@ Use Working document navigation or the link above to open the report. Editing re
 
 The report loads generated metadata for all saved Works and shows rows after a search by Work ID, Work title, Series ID or Series title. It searches the full loaded dataset and renders 20 matching rows per page. Beneath the report, `chevron-left.svg` and `chevron-right.svg` surround a compact current/total indicator such as `1/2`; the arrows disable at the first and last page. One-page results show `1/1`; empty results hide the pager. Search and sort changes reset to page 1. The initial list remains empty and the default sort remains ascending Work ID. Catalogue Works and Series have no draft/published state, and the report applies no publication filter. Document workflow and publication decisions are separate from Catalogue record identity.
 
-Each Work has an exact `work_id` and an optional single `series_id`; ungrouped Works are valid and show no Series. Results retain year and curator-only storage context in one seven-column semantic table. Work, Year, Title, Series and Storage are the five embedded and sortable columns. Medium type and Medium caption appear only in Expanded Report View. **Copy table** exports all current sorted matches, across every page, as five-column TSV while embedded and seven-column TSV while expanded.
+Each Work has an exact `work_id` and one required `series_id`. Results retain year and curator-only storage context in one seven-column semantic table. Work, Year, Title, Series and Storage are the five embedded and sortable columns. Medium type and Medium caption appear only in Expanded Report View. **Copy table** exports all current sorted matches, across every page, as five-column TSV while embedded and seven-column TSV while expanded.
 
 ## Data And Ownership
 
@@ -27,13 +27,13 @@ The local report registry maps `catalogue_works` to its allowlisted loader. `doc
 
 Typing waits for a 180 ms pause before filtering and sorting; clearing search applies immediately. Copy, sorting and page controls are disabled while that update is pending. The report retains the complete sorted match list, so page turns and Copy table do not repeat filtering/sorting or fetch metadata. A pending search does not render into a detached report. Only the current page's rows and media-link controls are mounted.
 
-[Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns initial generation, targeted Save updates and recovery. Single Work Save projects one report entry; bulk Save projects its selection; Series edits also refresh affected member rows because they embed Series titles; deletion removes the exact Work entry. Unchanged rows skip the aggregate write. Complete generation is explicit. The report metadata remains private and outside the Catalogue publication inventory.
+[Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns generation and recovery. Save changes canonical source and the editor's live view; the report continues to read its previous private metadata until Refresh Catalogue regenerates all Work rows, including changed Series titles and removed Works. The report metadata remains private and outside the Catalogue publication inventory.
 
 The report module owns input validation, Work/Series search, five sortable columns, pagination, Work/Series link construction, one seven-column render, presentation-aware clipboard projection and unavailable or invalid states. Pager layout belongs to the existing local report stylesheet and reuses shared icon buttons. Editing remains in the [Catalogue Work Editor](Catalogue_Work_Editor.md) and its shared Series controls. There is no separate Catalogue Drafts workflow.
 
 Work ID and title open the matching subdocument in Working Catalogue. On each report mount, one read of Catalogue's configured `manage-manifest.json` supplies normalized `authoring_subject` rows and immutable document identities. The shared Catalogue link reader derives valid Work mappings in memory and composes exact Manage URLs with the configured report host and existing route helper. It never matches titles or infers a host from route context. Works without a mapping remain visible as plain text. Invalid manifest identities or multiple Catalogue documents for one Work fail visibly rather than choosing a destination. No association lookup file is generated or read.
 
-Linked Catalogue documents have a separate freshness boundary: Regenerate writes literal title, caption and summary values into their source. A Work Save updates this report's metadata but does not rewrite those documents. Collection caption behavior belongs to the separate collections review.
+Linked Catalogue documents have a separate freshness boundary: Regenerate writes literal title, caption and summary values into their source. A Work Save does not rewrite those documents or this report's metadata; Refresh Catalogue updates the report metadata. Collection caption behavior belongs to the separate collections review.
 
 Each Series name opens its exact Series gallery through the shared Media View reference controls and existing Catalogue media provider. Gallery data loads on activation; report loading does not fetch gallery members or Work images. Search, sorting and TSV output retain their existing values.
 

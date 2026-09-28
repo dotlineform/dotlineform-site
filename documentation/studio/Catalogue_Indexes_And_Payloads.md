@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260519-202931-b05d27
 title: Catalogue Indexes And Payloads
 added_date: "2026-05-19 20:29:31"
-last_updated: "2026-09-25 20:44:59"
+last_updated: "2026-09-28 13:01:30"
 parent_id: d-20260401-000000-a11bf3
 
 ---
@@ -12,7 +12,7 @@ parent_id: d-20260401-000000-a11bf3
 
 ## Generated Read Models
 
-Studio owns the complete replaceable consumer output beneath `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/generated/`:
+Refresh Catalogue owns the complete replaceable consumer output beneath `$DOTLINEFORM_DOCS_BASE_DIR/working/generated/catalogue/`:
 
 | Relative path | Contents |
 | --- | --- |
@@ -23,7 +23,8 @@ Studio owns the complete replaceable consumer output beneath `$DOTLINEFORM_PROJE
 | `works/works_index.json` | Compact Work identities, labels and Series membership |
 | `series/series_index.json` | Compact Series identities, labels and member count |
 | `galleries/galleries_index.json` | Compact Gallery identities, titles and member count for Add Media View link search |
-| `works/thumbs/` | Generated thumbnails resolved from exact Work identity and shared policy |
+
+Work thumbnails and primary renditions are shared local assets under `$DOTLINEFORM_DOCS_BASE_DIR/assets/works/`, prepared by Save rather than stored in the generated JSON tree. Private Docs Catalogue Works report metadata and Works collection title metadata also live beneath Working generated Catalogue output, but are outside the public Catalogue artifact inventory.
 
 Every Work belongs to one Series and zero or more Galleries; empty Series and Galleries remain valid. The producer reads Gallery identities/titles from canonical `galleries.json` and membership from `galleries-by-work.json`. `work.galleries` is always an array of `{gallery_id, title}` entries, ordered by Gallery ID; absent memberships produce `[]`. Gallery records contain `gallery: {gallery_id, title}` and `member_works` using the same compact Work ID/title/year/year-display rows as Series. No image paths, rendition arrays or canonical inverse membership map are duplicated. There is no Catalogue publication filter, primary-Work requirement, Recent projection or Catalogue Search output in this producer.
 
@@ -43,7 +44,7 @@ Content versions include schema and projected content. A generation timestamp al
 
 Every Work represents a primary image. Records retain exact Work identity, `media_version`, `width_px` and `height_px`; they contain no `media.primary` or `media.thumbnails` arrays or image-presence flags. Former Details become ordinary Works with renamed Catalogue media, unchanged original project paths and unchanged media versions. Work downloads retain their individual filenames and projected remote URLs.
 
-`catalogue_media_policy.py` projects only consumer-safe fields from `_data/pipeline.json` and `site-tools/config/site-tools.json`: primary widths, suffix and Work image base, format, media-version query naming, and thumbnail sizes/suffix. It supplies no `preferred_width` and no private source paths or encoding commands. The policy is refreshed by both complete and selected JSON generation. Route configuration supplies the local or public thumbnail base; it does not duplicate rendition sizes or filename rules.
+`catalogue_media_policy.py` projects only consumer-safe fields from `_data/pipeline.json` and `site-tools/config/site-tools.json`: primary widths, suffix and Work image base, format, media-version query naming, and thumbnail sizes/suffix. It supplies no `preferred_width` and no private source paths or encoding commands. Refresh Catalogue regenerates the policy with complete JSON generation. Route configuration supplies the local or public thumbnail base; it does not duplicate rendition sizes or filename rules.
 
 The shared Docs Viewer resolver constructs filenames from policy and exact identity. Responsive candidates use actual width descriptors capped at source width, with duplicate widths removed because the producer does not upscale. Raw-image links use the largest configured filename independently of the embedded resource. Thumbnail existence reporting and reconciliation enumerate expected derivatives from canonical records and pipeline policy, independently of consumer JSON arrays. The shared media-policy change preserved filenames; the separately owned Gallery conversion renames former Detail media into the Work family while preserving bytes and versions. [Catalogue Media View](Catalogue_Media_View.md) owns responsive display and reader behavior.
 
@@ -51,8 +52,8 @@ Work and Series `documents` arrays are currently empty. Studio does not derive d
 
 ## Consumer Boundaries
 
-Studio's private `studio/data/generated/catalogue-lookup/` remains separate from this consumer output. Studio serves generated thumbnails through its confined local `/studio/catalogue-output/` route.
+Studio Work and Series search, focused records and Gallery definitions read live canonical service projections. The inactive persisted `studio/data/generated/catalogue-lookup/` export is not a Save or Refresh dependency. Studio serves shared local thumbnails through the configured `/docs/assets/` route; `/studio/catalogue-output/` serves generated Catalogue data and private report metadata.
 
-Local Docs Viewer reads the current generated Work, Series and Gallery records and shared media configuration through its Catalogue service; Work reads include Gallery memberships. Exact Gallery tokens and Work Gallery links open the individual Gallery through `/docs/catalogue-gallery?gallery_id=<gallery_id>`. Studio Gallery editing remains a later step. Public readers use configured static paths; public Catalogue distribution remains paused as a separate delivery. Generating local Catalogue data does not deploy it. The frozen legacy payloads under `site/archive/` have their own historical shape and are outside active generation.
+Local Docs Viewer reads the latest refreshed Work, Series and Gallery records and shared media configuration through its Catalogue service; Work reads include Gallery memberships. Exact Gallery tokens and Work Gallery links open the individual Gallery through `/docs/catalogue-gallery?gallery_id=<gallery_id>`. Studio edits Gallery definitions and memberships through the Work editor. Public readers use configured static paths populated by the separate Docs Publish lifecycle and subsequent deployment. Refreshing local Catalogue data alone does not deploy it. The frozen legacy payloads under `site/archive/` have their own historical shape and are outside active generation.
 
 Change the owning serializer and focused evidence when a demonstrated consumer need changes this contract. Keep source-only metadata, Studio lookup fields and future publication dependencies under their respective owners.

@@ -61,9 +61,6 @@ STATIC_PREFIXES = (
     "/studio/app/frontend/routes/",
     "/studio/app/frontend/config/",
     "/studio/app/assets/",
-    "/studio/data/canonical/catalogue/",
-    "/studio/data/config/catalogue/",
-    "/studio/data/generated/catalogue-lookup/",
 )
 STATIC_FILES = {
     *LOCAL_BROWSER_ASSET_PATHS,

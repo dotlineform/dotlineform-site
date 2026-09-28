@@ -30,11 +30,6 @@ function readConfiguredStudioConfigUrl() {
   return meta ? String(meta.getAttribute("content") || "").trim() : "";
 }
 
-export function getStudioDataPath(config, key) {
-  const path = pathValue(config, ["paths", "data", "studio", key]);
-  return resolveSiteAssetPath(typeof path === "string" ? path : "");
-}
-
 export function getStudioRouteRegistry(config) {
   const routes = pathValue(config, ["app", "routes"]);
   return routes && typeof routes === "object" && !Array.isArray(routes) ? routes : {};
@@ -88,10 +83,6 @@ function resolveSitePath(path) {
   if (/^[a-z]+:\/\//i.test(path)) return path;
   const cleanPath = `/${String(path).replace(/^\/+/, "")}`;
   return `${SITE_BASE_PATH}${cleanPath}`.replace(/\/{2,}/g, "/");
-}
-
-function resolveSiteAssetPath(path) {
-  return buildAssetUrl(resolveSitePath(path));
 }
 
 function buildAssetUrl(path) {

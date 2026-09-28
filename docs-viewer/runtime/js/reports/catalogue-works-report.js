@@ -554,12 +554,18 @@ function renderShell(root) {
 
   root.appendChild(toolbar);
   root.appendChild(status);
+  const freshness = root.ownerDocument.createElement("p");
+  freshness.className = "docsViewerReport__status";
+  freshness.textContent = "Catalogue data reflects the last Refresh Catalogue in Studio; the Work editor may have newer saved changes.";
+  freshness.hidden = true;
+  root.appendChild(freshness);
   root.appendChild(table);
   root.appendChild(empty);
   root.appendChild(pagination);
   return {
     copyButton,
     emptyNode: empty,
+    freshnessNode: freshness,
     headRowNode: headRow,
     nextPageButton,
     pageLabelNode: pageLabel,
@@ -600,6 +606,7 @@ export function mountCatalogueWorksReport(context) {
     state.sourceRows = data.rows;
     state.documentLinks = data.documentLinks;
     state.busy = false;
+    state.freshnessNode.hidden = false;
     refreshProjection(state);
     return {
       expandedPresentation: {

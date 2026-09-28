@@ -25,13 +25,11 @@ for candidate in (SCRIPTS_DIR, STUDIO_DIR):
     if str(candidate) not in sys.path:
         sys.path.insert(0, str(candidate))
 
-from catalogue import catalogue_lookup_refresh as lookup_refresh  # noqa: E402
 from catalogue import catalogue_write_service  # noqa: E402
 from catalogue.catalogue_revisions import CatalogueRevisionConflict  # noqa: E402
 from catalogue.catalogue_galleries import read_galleries  # noqa: E402
 from catalogue.catalogue_build_media import PIPELINE_CONFIG  # noqa: E402
 from catalogue.catalogue_lookup import (  # noqa: E402
-    DEFAULT_LOOKUP_DIR,
     build_series_lookup_payload,
     build_series_search_payload,
     build_work_lookup_payload,
@@ -55,11 +53,8 @@ from catalogue_work_media_sources import (  # noqa: E402
 from pipeline_config import default_work_media_source_id, work_media_source_ids  # noqa: E402
 from catalogue.series_ids import normalize_series_id  # noqa: E402
 from catalogue.catalogue_gallery_service import gallery_record_payload  # noqa: E402
+from catalogue.catalogue_refresh_service import catalogue_refresh_status, refresh_catalogue  # noqa: E402
 from local_env import runtime_env  # noqa: E402
-from script_logging import append_script_log  # noqa: E402
-
-
-LOGS_REL_DIR = Path("var/studio/catalogue/logs")
 
 
 CATALOGUE_READ_KEYS = {
@@ -91,12 +86,16 @@ def catalogue_get_payload(repo_root: Path, api_path: str, query: Mapping[str, li
                 "gallery/save",
                 "gallery/delete",
                 "project-media",
+                "refresh",
+                "refresh-status",
             ],
         }
     if api_path == "/project-media":
         return project_media_payload(repo_root, query or {})
     if api_path == "/read":
         return catalogue_read_payload(repo_root, query or {})
+    if api_path == "/refresh-status":
+        return catalogue_refresh_status(repo_root)
     raise FileNotFoundError(f"Unknown catalogue API route: {api_path}")
 
 
@@ -107,6 +106,12 @@ def catalogue_post_response(
     *,
     dry_run: bool = False,
 ) -> tuple[HTTPStatus, dict[str, Any]]:
+    if api_path == "/refresh":
+        if body:
+            raise ValueError("Refresh Catalogue takes an empty request")
+        if dry_run:
+            raise ValueError("Refresh Catalogue cannot run as a dry run")
+        return HTTPStatus.OK, refresh_catalogue(repo_root)
     if api_path in catalogue_write_service.SERVICE_POST_PATHS:
         try:
             return catalogue_write_service.handle_catalogue_post(repo_root, api_path, body, dry_run=dry_run)
@@ -294,12 +299,10 @@ def project_media_file_records(folder_path: Path, query: str) -> list[dict[str, 
 
 def catalogue_paths(repo_root: Path) -> dict[str, Any]:
     source_dir = (repo_root / DEFAULT_SOURCE_DIR).resolve()
-    lookup_dir = (repo_root / DEFAULT_LOOKUP_DIR).resolve()
     works_path = (source_dir / SOURCE_FILES["works"]).resolve()
     series_path = (source_dir / SOURCE_FILES["series"]).resolve()
     return {
         "source_dir": source_dir,
-        "lookup_dir": lookup_dir,
         "works_path": works_path,
         "series_path": series_path,
     }
@@ -310,35 +313,3 @@ def load_source_payload(path: Path, object_key: str) -> dict[str, Any]:
     if not isinstance(payload.get(object_key), dict):
         raise ValueError(f"{object_key} source file must include a {object_key} object")
     return payload
-
-
-def refresh_lookup_payloads(repo_root: Path, source_dir: Path, lookup_dir: Path) -> dict[str, Any]:
-    result = lookup_refresh.full_lookup_refresh(source_dir, lookup_dir, repo_root)
-    log_event(
-        repo_root,
-        "catalogue_lookup_refresh",
-        {
-            "lookup_dir": rel_path(repo_root, lookup_dir),
-            "mode": result["mode"],
-            "artifacts": result["artifacts"],
-            "written_count": result["written_count"],
-        },
-    )
-    return result
-
-
-def rel_path(repo_root: Path, path: Path) -> str:
-    try:
-        return str(path.resolve().relative_to(repo_root.resolve()))
-    except ValueError:
-        return path.name
-
-
-def log_event(repo_root: Path, event: str, details: dict[str, Any]) -> None:
-    append_script_log(
-        Path(__file__),
-        event=event,
-        details=details,
-        repo_root=repo_root,
-        log_dir_rel=LOGS_REL_DIR,
-    )

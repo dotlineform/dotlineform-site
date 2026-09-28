@@ -44,6 +44,14 @@ export function deleteCatalogueGallery(payload) {
   return postJson(CATALOGUE_WRITE_ENDPOINTS.deleteGallery, payload);
 }
 
+export function refreshCatalogue() {
+  return postJson(CATALOGUE_WRITE_ENDPOINTS.refresh, {});
+}
+
+export function readCatalogueRefreshStatus() {
+  return getJson(CATALOGUE_WRITE_ENDPOINTS.refreshStatus);
+}
+
 function queryString(params = {}) {
   const search = new URLSearchParams();
   Object.entries(params).forEach(([key, value]) => {

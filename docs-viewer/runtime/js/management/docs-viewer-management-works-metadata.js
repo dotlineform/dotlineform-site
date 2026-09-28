@@ -1,4 +1,4 @@
-/** Read Save-maintained titles as a private static asset; never query Catalogue records. */
+/** Read Refresh-maintained titles as a private static asset; never query Catalogue records. */
 export async function loadWorksCollectionSubjectTitles(options) {
   let studio;
   try {

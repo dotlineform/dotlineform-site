@@ -1,6 +1,6 @@
 import { openWorkGalleryModal } from "./catalogue-work-gallery-modal.js";
 import { openWorkSeriesTitleModal } from "./catalogue-work-series-modal.js";
-import { catalogueOutputError, catalogueSavedActionError } from "./catalogue-output-result.js";
+import { catalogueSaveCompletionError, catalogueSavedActionError } from "./catalogue-save-result.js";
 import { syncWorkRouteBusyState } from "./catalogue-work-route-state.js";
 
 function removeGalleryMembership(record, galleryId) {
@@ -53,7 +53,7 @@ function validateResponse(kind, requestedId, response) {
 }
 
 /** Keep the Work draft while a shared definition saves; refresh saved labels and membership baselines. */
-export async function editWorkDefinition(state, { kind, id = "", restoreFocus, refresh }) {
+export async function editWorkDefinition(state, { kind, id = "", restoreFocus, refresh, noteCatalogueSaved }) {
   if (state.isEditingDefinition || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable) return null;
   state.messageController.clearActionMessages();
   state.isEditingDefinition = true;
@@ -76,10 +76,11 @@ export async function editWorkDefinition(state, { kind, id = "", restoreFocus, r
       : await openWorkSeriesTitleModal(state, { ...modalOptions, seriesId: id });
     if (result.confirmed) {
       response = result.response;
+      noteCatalogueSaved(response);
       validateResponse(kind, id, response);
       if (kind === "Gallery") applyGalleryResult(state, response);
       else applySeriesResult(state, response);
-      errorMessage = catalogueOutputError(response);
+      errorMessage = catalogueSaveCompletionError(response);
     }
   } catch (error) {
     errorMessage = catalogueSavedActionError(response, error) || error.message;
@@ -98,5 +99,6 @@ export async function editWorkDefinition(state, { kind, id = "", restoreFocus, r
     restoreFocus?.focus({ preventScroll: true });
   }
   if (errorMessage) state.messageController.setActionTextWithState(state.statusNode, errorMessage, "error");
+  else if (result?.confirmed) state.messageController.setActionTextWithState(state.statusNode, "Saved.", "success");
   return result;
 }

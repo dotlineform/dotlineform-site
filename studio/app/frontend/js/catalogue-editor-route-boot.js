@@ -2,7 +2,7 @@ import {
   getStudioText,
   loadStudioConfig
 } from "./studio-config.js";
-import { loadStudioLookupJson } from "./studio-data.js";
+import { loadStudioServerReadJson } from "./studio-data.js";
 import { probeCatalogueHealth } from "./studio-transport.js";
 import {
   initializeStudioRouteState,
@@ -108,13 +108,10 @@ export async function configureCatalogueEditorRouteRuntime(state, options) {
 }
 
 export async function loadCatalogueEditorLookupMaps(state, lookups, options = {}) {
-  const lookupLoader = options.lookupLoader || loadStudioLookupJson;
-  const readOptions = {
-    cache: "no-store",
-    catalogueServerAvailable: state.serverAvailable
-  };
+  const lookupLoader = options.lookupLoader || loadStudioServerReadJson;
+  const readOptions = { cache: "no-store" };
   const payloads = await Promise.all(
-    lookups.map((lookup) => lookupLoader(state.config, lookup.configKey, readOptions))
+    lookups.map((lookup) => lookupLoader(lookup.readKey, "", readOptions))
   );
   return payloads.map((payload, index) => {
     const lookup = lookups[index];

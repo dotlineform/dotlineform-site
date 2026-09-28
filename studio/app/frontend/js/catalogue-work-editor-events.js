@@ -30,6 +30,9 @@ export function bindWorkEditorEvents(state, callbacks = {}) {
   state.saveButton.addEventListener("click", () => {
     runAsync(callbacks.saveCurrentWork, "catalogue_work_editor: unexpected save failure");
   });
+  state.refreshButton.addEventListener("click", () => {
+    runAsync(callbacks.refreshCatalogue, "catalogue_work_editor: unexpected refresh failure");
+  });
   state.deleteButton.addEventListener("click", () => {
     runAsync(callbacks.deleteCurrentWork, "catalogue_work_editor: unexpected delete failure");
   });

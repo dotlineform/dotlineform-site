@@ -7,8 +7,6 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping
 
-from catalogue.catalogue_lookup import DEFAULT_LOOKUP_DIR
-from catalogue import catalogue_lookup_refresh as lookup_refresh
 from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, SOURCE_FILES, load_json_file
 from catalogue.catalogue_galleries import GALLERIES_FILE, MEMBERSHIPS_FILE
 from script_logging import append_script_log
@@ -25,18 +23,11 @@ def utc_now() -> str:
 class CatalogueWriteContext:
     repo_root: Path
     source_dir: Path
-    lookup_dir: Path
     works_path: Path
     series_path: Path
     allowed_write_paths: set[Path]
     allowed_write_roots: set[Path]
     dry_run: bool = False
-
-    def rel_path(self, path: Path) -> str:
-        try:
-            return str(path.resolve().relative_to(self.repo_root.resolve()))
-        except ValueError:
-            return path.name
 
 
 def build_catalogue_write_context(repo_root: Path, *, dry_run: bool = False) -> CatalogueWriteContext:
@@ -45,7 +36,6 @@ def build_catalogue_write_context(repo_root: Path, *, dry_run: bool = False) -> 
     return CatalogueWriteContext(
         repo_root=resolved_root,
         source_dir=source_dir,
-        lookup_dir=(resolved_root / DEFAULT_LOOKUP_DIR).resolve(),
         works_path=(source_dir / SOURCE_FILES["works"]).resolve(),
         series_path=(source_dir / SOURCE_FILES["series"]).resolve(),
         allowed_write_paths={
@@ -72,108 +62,6 @@ def load_series_payload(path: Path) -> dict[str, Any]:
     if not isinstance(series, dict):
         raise ValueError("series source file must include a series object")
     return payload
-
-
-def refresh_lookup_payloads(context: CatalogueWriteContext) -> dict[str, Any]:
-    result = lookup_refresh.full_lookup_refresh(context.source_dir, context.lookup_dir, context.repo_root)
-    log_event(
-        context.repo_root,
-        "catalogue_lookup_refresh",
-        {
-            "lookup_dir": context.rel_path(context.lookup_dir),
-            "mode": result["mode"],
-            "artifacts": result["artifacts"],
-            "written_count": result["written_count"],
-        },
-    )
-    return result
-
-
-def refresh_lookup_payloads_for_work_change(
-    context: CatalogueWriteContext,
-    work_id: str,
-    current_record: Mapping[str, Any],
-    updated_record: Mapping[str, Any],
-    changed_fields: list[str],
-) -> dict[str, Any]:
-    lookup_plan = lookup_refresh.derive_lookup_refresh_plan(
-        record_family="work",
-        changed_field_names=changed_fields,
-    )
-    result = lookup_refresh.work_change_lookup_refresh(
-        context.source_dir,
-        context.lookup_dir,
-        context.repo_root,
-        work_id=work_id,
-        current_record=current_record,
-        updated_record=updated_record,
-        lookup_plan=lookup_plan,
-    )
-    log_event(
-        context.repo_root,
-        "catalogue_lookup_refresh",
-        {
-            "lookup_dir": context.rel_path(context.lookup_dir),
-            "mode": result["mode"],
-            "work_id": work_id,
-            "artifacts": result["artifacts"],
-            "written_count": result["written_count"],
-        },
-    )
-    return result
-
-
-def refresh_lookup_payloads_for_series_change(
-    context: CatalogueWriteContext,
-    series_id: str,
-    fields_changed: list[str],
-) -> dict[str, Any]:
-    lookup_plan = lookup_refresh.derive_lookup_refresh_plan(
-        record_family="series",
-        changed_field_names=fields_changed,
-    )
-    result = lookup_refresh.series_change_lookup_refresh(
-        context.source_dir,
-        context.lookup_dir,
-        context.repo_root,
-        series_id=series_id,
-        lookup_plan=lookup_plan,
-    )
-    log_event(
-        context.repo_root,
-        "catalogue_lookup_refresh",
-        {
-            "lookup_dir": context.rel_path(context.lookup_dir),
-            "mode": result["mode"],
-            "series_id": series_id,
-            "artifacts": result["artifacts"],
-            "written_count": result["written_count"],
-        },
-    )
-    return result
-
-
-def lookup_refresh_response_for_plan(lookup_plan: Mapping[str, Any]) -> dict[str, Any]:
-    return {
-        "mode": lookup_plan["mode"],
-        "invalidation_class": lookup_plan["class"],
-        "artifacts": lookup_plan["artifacts"],
-        "unknown_fields": lookup_plan["unknown_fields"],
-    }
-
-
-def focused_lookup_refresh_response(refresh_result: Mapping[str, Any]) -> dict[str, Any]:
-    return {
-        "mode": refresh_result["mode"],
-        "invalidation_class": refresh_result["invalidation_class"],
-        "artifacts": refresh_result["artifacts"],
-        "unknown_fields": refresh_result["unknown_fields"],
-        "written_count": refresh_result["written_count"],
-    }
-
-
-def extract_apply_build(body: Mapping[str, Any]) -> bool:
-    return bool(body.get("apply_build"))
 
 
 def log_event(repo_root: Path, event: str, details: Mapping[str, Any] | None = None) -> None:

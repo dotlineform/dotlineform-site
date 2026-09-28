@@ -1,4 +1,4 @@
-"""Complete exact Catalogue media locally before generating Working reader JSON."""
+"""Complete exact Catalogue media locally after a canonical edit."""
 
 from __future__ import annotations
 
@@ -16,6 +16,9 @@ from external_workspace_paths import resolve_workspace_path
 from local_env import runtime_env
 
 
+MEDIA_SOURCE_FIELDS = ("media_source_id", "project_folder", "project_subfolder", "project_filename")
+
+
 def _download_filename(value: str) -> str:
     if not value or value in {".", ".."} or "/" in value or "\\" in value:
         raise ValueError(f"Catalogue download must name one file: {value!r}")
@@ -24,7 +27,7 @@ def _download_filename(value: str) -> str:
 
 def complete_catalogue_media(
     repo_root: Path, source_dir: Path, *, records: CatalogueSourceRecords,
-    previous: CatalogueSourceRecords | None, work_ids: Sequence[str], write: bool,
+    previous: CatalogueSourceRecords | None, work_ids: Sequence[str], image_work_ids: Sequence[str], write: bool,
 ) -> dict[str, Any]:
     """Prepare current images/downloads and their metadata, with no network dependency.
 
@@ -36,6 +39,9 @@ def complete_catalogue_media(
     if errors:
         raise ValueError("Catalogue source validation failed: " + "; ".join(errors[:20]))
     work_ids = sorted({slug_id(wid) for wid in work_ids})
+    image_work_ids = sorted({slug_id(wid) for wid in image_work_ids})
+    if not set(image_work_ids).issubset(work_ids):
+        raise ValueError("Image work IDs must be included in media work IDs")
     if not work_ids:
         return {"status": "completed" if write else "planned", "targets": []}
     assets = catalogue_workspace_config(repo_root).assets
@@ -59,8 +65,7 @@ def complete_catalogue_media(
             raise ValueError(f"Required local Catalogue download is unavailable: {filename}")
 
     tasks = []
-    source_fields = ("media_source_id", "project_folder", "project_subfolder", "project_filename")
-    for item_id in work_ids:
+    for item_id in image_work_ids:
         record = records.works.get(item_id)
         if not record or not record.get("project_filename"):
             continue
@@ -68,7 +73,7 @@ def complete_catalogue_media(
         source, reason, base, error = media.resolve_work_media_source(records, item_id, env=env)
         if error or reason or source is None or base is None or not source.is_file():
             raise ValueError(f"{item_id}: {error or reason or 'source media file is missing'}")
-        force = old is not None and any(old.get(field) != record.get(field) for field in source_fields)
+        force = old is not None and any(old.get(field) != record.get(field) for field in MEDIA_SOURCE_FIELDS)
         tasks.append(media.build_local_media_task(
             repo_root=repo_root, kind="work", item_id=item_id, source_path=source,
             projects_base_dir=base, force=force,

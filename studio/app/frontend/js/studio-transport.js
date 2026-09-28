@@ -9,6 +9,8 @@ const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
   createGallery: "/studio/api/catalogue/gallery/create",
   saveGallery: "/studio/api/catalogue/gallery/save",
   deleteGallery: "/studio/api/catalogue/gallery/delete",
+  refresh: "/studio/api/catalogue/refresh",
+  refreshStatus: "/studio/api/catalogue/refresh-status",
   projectMedia: "/studio/api/catalogue/project-media",
   read: "/studio/api/catalogue/read",
   health: "/studio/api/catalogue/health"

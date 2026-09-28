@@ -12,7 +12,7 @@ from catalogue.catalogue_series_service import series_create_payload, series_sav
 from catalogue.catalogue_gallery_service import mutate_gallery_payload
 from catalogue.catalogue_service_context import CatalogueWriteContext, build_catalogue_write_context
 from catalogue.catalogue_work_service import work_create_payload, work_save_payload
-from catalogue.catalogue_output_service import complete_saved_catalogue_output
+from catalogue.catalogue_output_service import complete_saved_catalogue_edit
 from catalogue.catalogue_source import records_from_json_source
 
 
@@ -41,7 +41,7 @@ def handle_catalogue_post(
     previous = records_from_json_source(context.source_dir) if api_path != "/delete-preview" else None
     status, payload = _dispatch_mutation(context, api_path, body)
     if previous is not None:
-        complete_saved_catalogue_output(context, payload, previous)
+        complete_saved_catalogue_edit(context, payload, previous)
     return status, payload
 
 

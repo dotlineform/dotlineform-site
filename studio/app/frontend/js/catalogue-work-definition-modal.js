@@ -1,4 +1,4 @@
-import { catalogueSavedActionError } from "./catalogue-output-result.js";
+import { catalogueSavedActionError } from "./catalogue-save-result.js";
 import { activateStudioModalFrame, renderStudioModalFrame } from "./studio-modal.js";
 
 /** Edit one shared definition; deletion replaces the form with an explicit confirmation. */

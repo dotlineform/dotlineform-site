@@ -38,9 +38,11 @@ import {
   openWorkEmbeddedEntryModal
 } from "./catalogue-work-editor-modals.js";
 import {
+  readCatalogueRefreshStatus,
   readProjectMediaFiles,
   readProjectMediaFolders,
-  readWorkMediaSources
+  readWorkMediaSources,
+  refreshCatalogue as requestCatalogueRefresh
 } from "./catalogue-editor-service-client.js";
 import {
   renderWorkCurrentPreview,
@@ -181,6 +183,63 @@ function clearActionMessages(state) {
   state.messageController.clearActionMessages();
 }
 
+const REFRESH_TIME_FORMATTER = new Intl.DateTimeFormat("en-GB", {
+  timeZone: "Europe/London", year: "numeric", month: "2-digit", day: "2-digit",
+  hour: "2-digit", minute: "2-digit", hourCycle: "h23"
+});
+
+function formatCatalogueRefreshTime(value) {
+  const date = new Date(value);
+  if (!Number.isFinite(date.getTime())) return "";
+  const parts = Object.fromEntries(REFRESH_TIME_FORMATTER.formatToParts(date).map(part => [part.type, part.value]));
+  return `${parts.year}-${parts.month}-${parts.day} ${parts.hour}:${parts.minute}`;
+}
+
+function renderCatalogueRefreshStatus(state) {
+  const refreshedAt = formatCatalogueRefreshTime(state.refreshStatus?.refreshed_at_utc);
+  let text;
+  let tone = "";
+  if (!state.serverAvailable) text = "Catalogue Refresh is unavailable.";
+  else if (state.isBuilding) text = "Refreshing Catalogue readers…";
+  else if (!state.refreshStatus) text = "Checking Catalogue reader freshness…";
+  else if (state.refreshStatus.status_error) {
+    text = state.refreshStatus.status_error;
+    tone = "error";
+  } else if (state.refreshStatus.error) {
+    text = state.refreshStatus.error;
+    tone = "error";
+  } else if (state.refreshStatus.needed) {
+    text = "Catalogue readers need Refresh before Docs Publish.";
+    tone = "warn";
+  } else {
+    text = refreshedAt ? `Working Catalogue readers refreshed at ${refreshedAt}.` : "Working Catalogue readers refreshed.";
+  }
+  setNodeTextWithState(state.refreshStatusNode, text, tone);
+}
+
+function noteCatalogueSaved(state, response) {
+  if (response?.refresh_needed) {
+    state.refreshStatus = { ok: true, needed: true };
+    renderCatalogueRefreshStatus(state);
+  }
+}
+
+async function runCatalogueRefresh(state) {
+  if (!state.serverAvailable || state.isSaving || state.isBuilding || state.isDeleting || state.isEditingDefinition || draftHasChanges(state)) return;
+  state.isBuilding = true;
+  updateEditorState(state);
+  try {
+    const response = await requestCatalogueRefresh();
+    if (!response.refresh_status || response.refresh_status.needed) throw new Error("Refresh completion was not verified.");
+    state.refreshStatus = response.refresh_status;
+  } catch (error) {
+    state.refreshStatus = { ok: true, needed: true, error: error.message || String(error) };
+  } finally {
+    state.isBuilding = false;
+    updateEditorState(state);
+  }
+}
+
 function renderEditorMessage(state, snapshot = {}) {
   const hasRecord = Object.prototype.hasOwnProperty.call(snapshot, "hasRecord")
     ? snapshot.hasRecord
@@ -219,6 +278,8 @@ function updateEditorState(state) {
   setNodeTextWithState(state.buildImpactNode, "");
 
   const dirty = hasRecord && draftHasChanges(state);
+  state.refreshButton.disabled = busy || state.isEditingDefinition || dirty || !state.serverAvailable;
+  renderCatalogueRefreshStatus(state);
   if (state.mode === "bulk" && hasRecord) {
     state.messageController.setDefaultMessage(t(state, "bulk_status_loaded", "Loaded {count} work records.", { count: String(state.bulkWorkIds.length) }));
   } else if (state.mode === "single" && hasRecord) {
@@ -264,6 +325,7 @@ function workFormOptions(state) {
     onFieldInput: (fieldKey) => onFieldInput(state, fieldKey),
     onEditDefinition: (kind, id, restoreFocus) => editWorkDefinition(state, {
       kind, id, restoreFocus,
+      noteCatalogueSaved: (response) => noteCatalogueSaved(state, response),
       refresh: () => {
         applyDraftToInputs(state);
         updateEditorState(state);
@@ -327,7 +389,8 @@ function workActionOptions(state) {
     workRouteStateOptions: (overrides = {}) => workRouteStateOptions(state, overrides),
     renderCurrentPreview: () => renderCurrentPreview(state),
     renderReadiness: () => renderReadiness(state),
-    openWorkById: (workId) => openWorkById(state, workId, workSelectionOptions(state))
+    openWorkById: (workId) => openWorkById(state, workId, workSelectionOptions(state)),
+    noteCatalogueSaved: (response) => noteCatalogueSaved(state, response)
   };
 }
 
@@ -359,7 +422,8 @@ function applyWorkEditorText(state, elements) {
   for (const [button, key, fallback] of [
     [elements.newButton, "new_button", "New"],
     [elements.saveButton, "save_button", "Save"],
-    [elements.deleteButton, "delete_button", "Delete"]
+    [elements.deleteButton, "delete_button", "Delete"],
+    [elements.refreshButton, "refresh_button", "Refresh Catalogue"]
   ]) {
     const label = t(state, key, fallback);
     button.title = label;
@@ -388,12 +452,12 @@ async function configureWorkEditorRuntime(state, elements) {
 }
 
 async function loadInitialWorkEditorData(state) {
-  const [sourcePayload, galleryPayload] = await Promise.all([
+  const [sourcePayload, galleryPayload, , refreshStatus] = await Promise.all([
     readWorkMediaSources(),
     loadStudioServerReadJson("catalogue_galleries", "", { cache: "no-store" }),
     loadCatalogueEditorLookupMaps(state, [
     {
-      configKey: "catalogue_lookup_work_search",
+      readKey: "catalogue_lookup_work_search",
       target: state.workSearchById,
       normalizeKey: (record) => normalizeWorkId(record.work_id),
       afterItems: (items) => {
@@ -401,16 +465,18 @@ async function loadInitialWorkEditorData(state) {
       }
     },
     {
-      configKey: "catalogue_lookup_series_search",
+      readKey: "catalogue_lookup_series_search",
       target: state.seriesById,
       normalizeKey: (record) => normalizeSeriesId(record.series_id)
     }
-    ])
+    ]),
+    readCatalogueRefreshStatus().catch(error => ({ ok: false, needed: true, status_error: error.message || String(error) }))
   ]);
   if (!galleryPayload.galleries || typeof galleryPayload.galleries !== "object" || Array.isArray(galleryPayload.galleries)) {
     throw new Error("Gallery lookup is unavailable.");
   }
   state.galleriesById = new Map(Object.entries(galleryPayload.galleries));
+  state.refreshStatus = refreshStatus;
   applyWorkMediaSourceConfig(state, sourcePayload);
 }
 
@@ -422,6 +488,10 @@ function markWorkEditorLoaded(state, elements) {
 }
 
 async function init() {
+  const refreshControls = document.getElementById("catalogueWorkRefreshControls");
+  const headerRow = refreshControls?.closest(".studio")?.querySelector(":scope > .studio__headerRow");
+  if (!headerRow || !refreshControls) return;
+  headerRow.appendChild(refreshControls);
   const elements = collectWorkEditorElements();
   if (!elements) return;
 
@@ -459,6 +529,7 @@ async function init() {
       deleteEmbeddedEntry: (kind, index) => deleteEmbeddedEntry(state, kind, index),
       setNewWorkMode: () => setNewWorkMode(state, workRouteStateOptions(state)),
       saveCurrentWork: () => saveCurrentWork(state, workActionOptions(state)),
+      refreshCatalogue: () => runCatalogueRefresh(state),
       deleteCurrentWork: () => deleteCurrentWork(state, workActionOptions(state))
     });
     await applyInitialWorkRouteSelection(state, workSelectionOptions(state));
