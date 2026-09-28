@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "catalogue_galleries_index_v1",
-    "version": "blake2b-614e4521418ccca09420734e2870b9da",
-    "generated_at_utc": "2026-09-24T10:54:19Z",
-    "count": 302
+    "version": "blake2b-2980d86937c2009d7637120adb05bf3e",
+    "generated_at_utc": "2026-09-28T17:14:10Z",
+    "count": 303
   },
   "galleries": {
     "001": {
@@ -1515,6 +1515,11 @@
       "gallery_id": "306",
       "title": "pond (details)",
       "work_count": 4
+    },
+    "307": {
+      "gallery_id": "307",
+      "title": "test",
+      "work_count": 0
     }
   }
 }
