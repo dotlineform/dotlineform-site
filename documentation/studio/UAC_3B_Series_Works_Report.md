@@ -3,12 +3,14 @@ draft: false
 doc_id: d-20260905-151026-cebed9
 title: UAC 3B - Works In A Series Report
 added_date: "2026-09-05 15:10:26"
-last_updated: "2026-09-09 14:38:43"
+last_updated: "2026-09-28 15:55:05"
 summary: Show a small live Works-in-Series report inside an Analysis Works sub-document using the current report mechanism and prepared generated Catalogue data.
-ui_status: review
+ui_status: stopped
 parent_id: d-20260904-204816-0f31be
 ---
 # UAC 3B - Works In A Series Report
+
+Retired on 28 September 2026: the Works in a Series report, its insertion action and generated Series by-ID/index files were removed. The Series 143 example document remains as a historical note with its exact Series Subject. The delivery record below describes the earlier implementation and is no longer a current workflow or design requirement.
 
 ## Requirements
 

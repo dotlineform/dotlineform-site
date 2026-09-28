@@ -3,12 +3,14 @@ draft: false
 doc_id: d-20260905-141447-f72ef3
 title: Gallery List Design
 added_date: "2026-09-05 14:14:47"
-last_updated: "2026-09-09 14:38:08"
+last_updated: "2026-09-28 15:55:05"
 summary: Design an insertable, bounded list of a Series' Works or a Work's Details, driven by document subject, with shared interaction and explicit data-loading questions.
-ui_status: proposed
+ui_status: stopped
 parent_id: d-20260904-204816-0f31be
 ---
 # Gallery List Design
+
+Retired on 28 September 2026: the Works in a Series report and this proposed insertable list direction are closed. Gallery Media View supplies gallery membership browsing; normal documents are not intended to host large Work lists. The requirements and questions below remain historical design notes, not planned work.
 
 ## Purpose
 

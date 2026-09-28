@@ -4,12 +4,6 @@ export const DIRECTIVE_ACTIONS_CONTROL_ID = "source-directives";
 
 export const DIRECTIVE_ACTIONS = Object.freeze([
   Object.freeze({
-    artwork: "docsViewer__icon--list",
-    id: "series-works",
-    label: "Works in this Series",
-    source: ":::report\nid: series_works\n:::"
-  }),
-  Object.freeze({
     artwork: "docsViewer__icon--table",
     id: "table-detail",
     label: "Table detail",

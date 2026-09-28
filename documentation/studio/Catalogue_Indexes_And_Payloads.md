@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260519-202931-b05d27
 title: Catalogue Indexes And Payloads
 added_date: "2026-05-19 20:29:31"
-last_updated: "2026-09-28 14:56:18"
+last_updated: "2026-09-28 15:55:05"
 parent_id: d-20260401-000000-a11bf3
 
 ---
@@ -18,15 +18,13 @@ Refresh Catalogue owns the complete replaceable consumer output beneath `$DOTLIN
 | --- | --- |
 | `media-config.json` | Shared primary-image and thumbnail rendition policy projected from the pipeline and site media configuration |
 | `works/index/<work_id>.json` | Work metadata, required `series_id`, Gallery IDs/titles in `work.galleries`, links, downloads and image facts |
-| `series/index/<series_id>.json` | Independent Series metadata and lightweight `member_works` in ascending Work-ID order |
 | `galleries/index/<gallery_id>.json` | Independent Gallery ID/title and lightweight `member_works` in ascending Work-ID order |
 | `works/works_index.json` | Compact Work identities, labels and Series membership |
-| `series/series_index.json` | Compact Series identities, labels and member count |
 | `galleries/galleries_index.json` | Compact Gallery identities, titles and member count for Add Media View link search |
 
 Work thumbnails and primary renditions are shared local assets under `$DOTLINEFORM_DOCS_BASE_DIR/assets/works/`, prepared by Save rather than stored in the generated JSON tree. Private Docs Catalogue Works report metadata and Works collection title metadata also live beneath Working generated Catalogue output, but are outside the public Catalogue artifact inventory.
 
-Every Work belongs to one Series and zero or more Galleries; empty Series and Galleries remain valid. The producer reads Gallery identities/titles from canonical `galleries.json` and membership from `galleries-by-work.json`. `work.galleries` is always an array of `{gallery_id, title}` entries, ordered by Gallery ID; absent memberships produce `[]`. Gallery records contain `gallery: {gallery_id, title}` and `member_works` using the same compact Work ID/title/year/year-display rows as Series. No image paths, rendition arrays or canonical inverse membership map are duplicated. There is no Catalogue publication filter, primary-Work requirement, Recent projection or Catalogue Search output in this producer.
+Every Work belongs to one Series and zero or more Galleries; empty Series and Galleries remain valid in canonical Catalogue data. The producer reads Gallery identities/titles from canonical `galleries.json` and membership from `galleries-by-work.json`. `work.galleries` is always an array of `{gallery_id, title}` entries, ordered by Gallery ID; absent memberships produce `[]`. Gallery records contain `gallery: {gallery_id, title}` and compact Work ID/title/year/year-display `member_works` rows. No image paths, rendition arrays or canonical inverse membership map are duplicated. There is no Catalogue publication filter, primary-Work requirement, Recent projection or Catalogue Search output in this producer. Generated Series by-ID records and the compact Series index are retired. A future Series-to-Galleries lookup needs its own schema and explicit relationship rule; this producer does not infer Gallery membership from Series membership.
 
 The Gallery search index contains a `galleries` map keyed by exact Gallery ID, with each entry containing only `gallery_id`, `title` and `work_count`. It includes empty Galleries with count zero, orders keys by Gallery ID and carries no member lists. Add Media View link searches this generated lookup by ID/title through the Catalogue media-target service, then reads the selected Gallery's individual record.
 
@@ -34,7 +32,7 @@ The Gallery search index contains a `galleries` map keyed by exact Gallery ID, w
 
 ## Exact Identity And Versions
 
-Work payloads use `work_record_v8`; Series payloads use `series_record_v5`; Gallery payloads use `gallery_record_v1`. Headers carry the exact target ID, schema, content version, generation time and count. The existing Work wire shape retains a zero count and empty sections; Series and Gallery counts are their member counts. Index headers use `catalogue_works_index_v1`, `catalogue_series_index_v1` and `catalogue_galleries_index_v1`; index counts are their entry counts. Shared media policy uses `catalogue_media_config_v1` with a content version and generation time.
+Work payloads use `work_record_v8`; Gallery payloads use `gallery_record_v1`. Headers carry the exact target ID, schema, content version, generation time and count. The existing Work wire shape retains a zero count and empty sections; Gallery counts are its member counts. Index headers use `catalogue_works_index_v1` and `catalogue_galleries_index_v1`; index counts are their entry counts. Shared media policy uses `catalogue_media_config_v1` with a content version and generation time.
 
 Detail folders, discovery indexes and media policy are retired. Active generation neither recreates an empty Detail index nor scans retired thumbnails. Series `sort_fields` is retired; both Studio's Series lookup and consumer members use ascending exact Work IDs. No relationship is inferred from a document, title, route or thumbnail filename.
 
@@ -48,12 +46,12 @@ Every Work represents a primary image. Records retain exact Work identity, `medi
 
 The shared Docs Viewer resolver constructs filenames from policy and exact identity. Responsive candidates use actual width descriptors capped at source width, with duplicate widths removed because the producer does not upscale. Raw-image links use the largest configured filename independently of the embedded resource. Thumbnail existence reporting and reconciliation enumerate expected derivatives from canonical records and pipeline policy, independently of consumer JSON arrays. The shared media-policy change preserved filenames; the separately owned Gallery conversion renames former Detail media into the Work family while preserving bytes and versions. [Catalogue Media View](Catalogue_Media_View.md) owns responsive display and reader behavior.
 
-Work and Series `documents` arrays are currently empty. Studio does not derive document associations or choose a canonical document. Accepted document dependencies and public associations belong to the later Docs integration. Catalogue prose has no parallel Markdown source or `content_html` field.
+Work `documents` arrays are currently empty. Studio does not derive document associations or choose a canonical document. Accepted document dependencies and public associations belong to the later Docs integration. Catalogue prose has no parallel Markdown source or `content_html` field.
 
 ## Consumer Boundaries
 
 Studio Work and Series search, focused records and Gallery definitions read live canonical service projections. The historical `studio/data/generated/catalogue-lookup/` files have no active producer or reader. Studio serves shared local thumbnails through the configured `/docs/assets/` route; `/studio/catalogue-output/` serves generated Catalogue data and private report metadata.
 
-Local Docs Viewer reads the latest refreshed Work, Series and Gallery records and shared media configuration through its Catalogue service; Work reads include Gallery memberships. Exact Gallery tokens and Work Gallery links open the individual Gallery through `/docs/catalogue-gallery?gallery_id=<gallery_id>`. Studio edits Gallery definitions and memberships through the Work editor. Public readers use configured static paths populated by the separate Docs Publish lifecycle and subsequent deployment. Refreshing local Catalogue data alone does not deploy it. The frozen legacy payloads under `site/archive/` have their own historical shape and are outside active generation.
+Local Docs Viewer reads the latest refreshed Work and Gallery records and shared media configuration through its Catalogue service; Work reads include Gallery memberships. Exact Gallery tokens and Work Gallery links open the individual Gallery through `/docs/catalogue-gallery?gallery_id=<gallery_id>`. Series remains a document Subject and canonical Catalogue grouping, without a generated Series reader. Studio edits Gallery definitions and memberships through the Work editor. Public readers use configured static paths populated by the separate Docs Publish lifecycle and subsequent deployment. Refreshing local Catalogue data alone does not deploy it. The frozen legacy payloads under `site/archive/` have their own historical shape and are outside active generation.
 
 Change the owning serializer and focused evidence when a demonstrated consumer need changes this contract. Keep source-only metadata, Studio lookup fields and future publication dependencies under their respective owners.

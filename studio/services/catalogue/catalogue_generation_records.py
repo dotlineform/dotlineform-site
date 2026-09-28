@@ -15,7 +15,6 @@ from catalogue.catalogue_generation_common import (
 
 
 WORK_RECORD_SCHEMA_VERSION = "work_record_v8"
-SERIES_RECORD_SCHEMA_VERSION = "series_record_v5"
 GALLERY_RECORD_SCHEMA_VERSION = "gallery_record_v1"
 
 
@@ -121,39 +120,6 @@ def build_work_json_payload(
             },
             "work": public_record,
             "sections": public_sections,
-        }
-    )
-
-
-def build_series_json_payload(
-    *,
-    series_id: str,
-    series_record: Mapping[str, Any],
-    member_works: Sequence[Mapping[str, Any]],
-    generated_at_utc: str,
-) -> Dict[str, Any]:
-    """Finalize one complete generated Series by-ID payload."""
-
-    public_record = dict(series_record)
-    raw_documents = public_record.get("documents", [])
-    if not isinstance(raw_documents, list):
-        raise ValueError("series.documents must be an array")
-    if str(public_record.get("series_id") or "") != series_id:
-        raise ValueError(f"series.series_id must match exact payload target {series_id}")
-    public_record["documents"] = normalize_catalogue_documents(raw_documents)
-    public_member_works = [compact_json_object(dict(work)) for work in member_works]
-    version_input = {"schema": SERIES_RECORD_SCHEMA_VERSION, "series": public_record, "member_works": public_member_works}
-    return compact_json_object(
-        {
-            "header": {
-                "schema": SERIES_RECORD_SCHEMA_VERSION,
-                "version": compute_payload_version(version_input),
-                "generated_at_utc": generated_at_utc,
-                "series_id": series_id,
-                "count": len(public_member_works),
-            },
-            "series": public_record,
-            "member_works": public_member_works,
         }
     )
 

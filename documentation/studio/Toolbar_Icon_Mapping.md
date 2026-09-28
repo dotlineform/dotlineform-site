@@ -2,7 +2,7 @@
 doc_id: d-20260919-100234-038395
 title: "Shared Icons: Toolbar Mapping"
 added_date: "2026-09-19 10:02:34"
-last_updated: "2026-09-27 15:47:30"
+last_updated: "2026-09-28 15:55:05"
 summary: Editable mappings for Docs Viewer toolbars, report toolbars and report list icons, including code identifiers, state variants and replacement artwork choices.
 ui_status: planned
 parent_id: d-20260910-223116-9a1011
@@ -68,7 +68,6 @@ Code identifiers below are exact **renderer keys**, except entries explicitly ma
 | Source: Media View link | `source-add-media-view-link` | Adds a Media View link | 👁️ | image-plus.svg | — | Implemented; review pending |
 | Source: document link | `source-insert-doc-link` | Inserts a document link | 📄 | file-plus-corner.svg | — | Implemented; review pending |
 | Source: directives | `source-directives` | Opens Directives menu | 🧩 | puzzle.svg | — | Implemented; review pending |
-| Directives menu: Series works | directive `series-works` | Inserts Works in this Series report | ≡ | list.svg | — | Implemented; review pending |
 | Directives menu: table detail | directive `table-detail` | Inserts table-detail marker | ⊞ | table.svg | - | Implemented; review pending |
 | Directives menu: backlinks | directive `docs-backlinks` | Inserts Documents linking here report | ↩ | — | — | Retired from insertion menu; related-links token remains follow-up work |
 | Content detail: return | `content-detail-back` | Returns from content detail to document | Text `Back to document` | arrow-left.svg | — | Implemented; review pending |
@@ -128,7 +127,6 @@ Identifiers marked `DOM` are element IDs; `selector` entries are exact attribute
 | Links: refresh | `workspace_links`; `mountWorkspaceLinksReport(): refresh`; selector `[aria-label="Refresh links"]` | Rereads the saved Links report | 🔄 | refresh-cw.svg | — | Implemented; review pending |
 | Unpublishable: refresh | `unpublishable`; `mountUnpublishableReport(): refresh` | Rereads the publication-ignore list | Text `Refresh` | refresh-cw.svg | — | Implemented; review pending |
 | Unpublishable: edit source | `unpublishable`; `mountUnpublishableReport(): open` | Opens `unpublishable.json` in VS Code | Text `Open in VS Code` | file-code-corner.svg | 20px theme-tinted mask; shared 32px borderless button and hover colour | Implemented; review pending |
-| Works in Series: refresh | `series_works`; `mountSeriesWorksReport(): refresh` | Reloads the containing Series' generated member Works | Text `Refresh` | refresh-cw.svg | — | Implemented; review pending; used by the Working draft Series 143 - Works, d-20260906-164540-4f0e39 |
 | Broken Links: run | DOM `docsBrokenLinksReportRun` | Idle; click starts the audit | Text `Run audit` | refresh-cw.svg | Icon only | Implemented; review pending |
 | Broken Links: run | DOM `docsBrokenLinksReportRun` | Audit running; disabled | Text `Running...` | Text `Running...` | Plain disabled text; no border or background; accessible busy state | Implemented; review pending |
 | Project State: run | DOM `docsProjectStateReportRun` | Runs/refreshes reconciliation | 🔄 | refresh-cw.svg | — | Implemented; review pending |
@@ -139,7 +137,7 @@ Identifiers marked `DOM` are element IDs; `selector` entries are exact attribute
 | Project State: copy Markdown | DOM `docsProjectStateReportCopyMarkdown` | Retired | Text `MD` | — | — | Retired button, handler and Markdown serializer; Copy table remains TSV |
 | Docs Media: run | DOM `docsMediaReportRun` | Runs/refreshes the media inventory | 🔄 | refresh-cw.svg | — | Implemented; review pending |
 | Docs Media: clear search | `docs_media`; selector `.docsViewerReport__searchClear` | Clears search; hidden while empty | × | x.svg | 1rem artwork; existing 1.35rem button | Implemented; review pending |
-| Works: refresh | DOM `docsWorksReportRefresh` | Refreshes Series documentation coverage | 🔄 | refresh-cw.svg | — | Implemented; review pending; separate from the Works collection list and Works in Series |
+| Works: refresh | DOM `docsWorksReportRefresh` | Refreshes Series documentation coverage | 🔄 | refresh-cw.svg | — | Implemented; review pending; separate from the Works collection list |
 | Catalogue Works: clear search | DOM `docsCatalogueWorksReportClear` | Clears the canonical Work search | × | x.svg | 1rem artwork; existing 1.35rem button | Implemented; review pending |
 | Catalogue Works: copy table | DOM `docsCatalogueWorksReportCopy` | Copies the filtered report table | Text `Copy table` | copy.svg | — | Implemented; review pending |
 | Uncataloged Files: run | DOM `docsUncatalogedFilesReportRun` | Runs/refreshes the source-folder audit | 🔄 | refresh-cw.svg | — | Implemented; review pending |

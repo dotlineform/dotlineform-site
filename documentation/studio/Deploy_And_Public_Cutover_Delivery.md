@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260915-100525-dd0aa1
 title: Deploy And Public Cutover - Delivery
 added_date: "2026-09-15 10:05:25"
-last_updated: "2026-09-24 20:53:46"
+last_updated: "2026-09-28 15:55:05"
 summary: Deploy accepted Analysis documents and independent current Catalogue output into the tracked public site, verify the prepared release, and complete the reviewed public cutover.
 ui_status: proposed
 parent_id: d-20260902-102745-8379ea
@@ -13,6 +13,8 @@ parent_id: d-20260902-102745-8379ea
 ## Scheduling Hold
 
 Paused at the user's request on 2026-09-22 until the new Catalogue model and Gallery data are working through local Docs Viewer, including Gallery tokens and the relevant consumption/navigation. [galleries](/docs/?stage=working&doc=d-20260922-200558-c62962) records that work. Studio's existing `catalogue/generated/` output supplies local consumers directly, so Gallery implementation does not depend on Deploy Repo or public deployment. There is no rush to deploy. Keep this delivery proposed and resume only when explicitly scheduled; refresh the recorded baseline and consumer inventory at readiness to account for the completed Work/Series/Gallery model.
+
+Inventory note, 28 September 2026: generated Series by-ID JSON and the compact Series index are retired. The older baseline below is historical; readiness must use the current [Catalogue artifact inventory](../../docs-viewer/config/workspace/catalogue-artifacts.json).
 
 ## Requirements
 
@@ -35,7 +37,6 @@ This delivery belongs to [Unified Analysis And Catalogue Presentation](Analysis_
 | Catalogue input below `catalogue/generated/` | Tracked public destination |
 | --- | --- |
 | `works/index/<work_id>.json` | `site/assets/data/catalogue/works/index/<work_id>.json` |
-| `series/index/<series_id>.json` | `site/assets/data/catalogue/series/index/<series_id>.json` |
 | `works/thumbs/<work_id>-thumb-96.webp` | `site/assets/data/catalogue/works/thumbs/<work_id>-thumb-96.webp` |
 
 ### Operations And Failure Behaviour

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260909-205938-3569d6
 title: Catalogue Deployment
 added_date: "2026-09-09 20:59:38"
-last_updated: "2026-09-28 14:56:18"
+last_updated: "2026-09-28 15:55:05"
 summary: Catalogue Save and Refresh, single Publish and public deployment ownership, selected JSON inventory and shared media distribution.
 parent_id: d-20260902-102745-8379ea
 ---
@@ -43,7 +43,7 @@ explicit Git commit/push ----> GitHub Actions deployment of site/
 
 Original project media and editable document build inputs retain their own owners. Historical persisted Studio lookup files have no active producer or reader. There is no Projects-generated Catalogue fallback, local Published tree or media copy beneath Preview. [Configuration And Extension Points](Configuration_And_Extension_Points.md) and [Media And Asset Handling](Media_And_Asset_Handling.md) describe the shared workspace.
 
-The design-time [Catalogue artifact inventory](../../docs-viewer/config/workspace/catalogue-artifacts.json), read by [docs_catalogue_artifacts.py](../../docs-viewer/services/docs_catalogue_artifacts.py), selects direct by-ID JSON beneath `works/index/`, `series/index/` and `galleries/index/`, plus `media-config.json`, `works/works_index.json`, `series/series_index.json` and `galleries/galleries_index.json`. It does not copy arbitrary files in the Catalogue tree. Future report projections need an explicit inventory/public-field decision before being included.
+The design-time [Catalogue artifact inventory](../../docs-viewer/config/workspace/catalogue-artifacts.json), read by [docs_catalogue_artifacts.py](../../docs-viewer/services/docs_catalogue_artifacts.py), selects direct by-ID JSON beneath `works/index/` and `galleries/index/`, plus `media-config.json`, `works/works_index.json` and `galleries/galleries_index.json`. It does not copy arbitrary files in the Catalogue tree. Generated Series by-ID files and the old Series index are retired; a future Series-to-Galleries index would need a separate design and explicit inventory decision. Future report projections also need an explicit inventory/public-field decision before being included.
 
 Publish preparation copies these selected Working bytes unchanged and records their revision with the document snapshot. Its `docs_preview_manifest_v2` also records sorted, unique shared asset identities. Asset bytes remain current and shared; Preview does not freeze an image's historical appearance. Each Publish captures fresh inputs. No asset hash history, retained rendition versions or automatic Preview invalidation is maintained.
 
@@ -55,7 +55,7 @@ The public Catalogue JSON is byte-equal to Preview. Public document payloads use
 
 The independently owned `site/assets/data/docs/public-reports.json` is preserved during Publish. Public collection registrations use `docs_collection` with exact configured collection identity; the generated public browser configuration must also contain that collection. Registration, prepared document data and runtime projection are separate requirements for a working public report.
 
-The [route configuration](../../docs-viewer/config/routes/docs-viewer-routes.json) supplies exact Work, Series and Gallery record bases, thumbnail policy and media policy. Local Catalogue readers resolve Working and use shared `/docs/assets/` media without a stage parameter. Public readers use deployed Catalogue JSON, repository thumbnails and configured R2 primary/download URLs. Active Detail payloads and destinations are retired.
+The [route configuration](../../docs-viewer/config/routes/docs-viewer-routes.json) supplies exact Work and Gallery record bases, thumbnail policy and media policy. Local Catalogue readers resolve Working and use shared `/docs/assets/` media without a stage parameter. Public readers use deployed Catalogue JSON, repository thumbnails and configured R2 primary/download URLs. Active Series and Detail payloads and destinations are retired.
 
 Publish neither deletes shared assets nor automatically removes remote media. Frozen `site/archive/` and its media stay outside active reconciliation. Obsolete shared/remote bytes require separately reviewed cleanup.
 

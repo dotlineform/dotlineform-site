@@ -3,13 +3,15 @@ draft: false
 doc_id: d-20260925-134621-42c838
 title: Catalogue Works Front-End Browsing And Search
 added_date: "2026-09-25 13:46:21"
-last_updated: "2026-09-26 15:03:12"
+last_updated: "2026-09-28 15:55:05"
 summary: Refactor Catalogue Works to Studio-generated metadata with targeted entry updates after Save; Docs Viewer owns filtering and sorting, with a persistent search index considered only if performance requires it.
 parent_id: d-20260428-000000-f5ff18
 ---
 # Catalogue Works Front-End Browsing And Search
 
 This feature covers only the Manage-only [Catalogue Works report](/docs/?stage=working&doc=d-20260810-222148-99daec), report ID `catalogue_works`. The completed delivery replaces canonical-data API reads with one Studio-generated metadata file and keeps the report current after successful Save completion. Docs Viewer filters and sorts that metadata in memory; no separate search index is required. The conversion and approved search responsiveness/20-row pagination follow-up are complete, with user feedback, selected verification and code review recorded below. Other browsing improvements remain separately scoped.
+
+Current-state note, 28 September 2026: Series Media View and generated Series by-ID/index files were retired after this report conversion. The pre-conversion inventory and delivery requirements below record historical behavior, not current Series navigation.
 
 Catalogue Works lists saved Works, including Works without a Catalogue document, and needs Work/Series metadata and private management fields. Its record set is not determined by document collection membership. Existing document links remain a navigation dependency, not a reason to combine the two reports' data requirements.
 

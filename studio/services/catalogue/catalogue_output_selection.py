@@ -11,7 +11,6 @@ from docs_artifact_locations import ArtifactLocation
 from catalogue.catalogue_galleries import CatalogueGalleries, validate_gallery_id
 from catalogue.catalogue_output_paths import output_path
 from catalogue.catalogue_source import CatalogueSourceRecords, slug_id
-from catalogue.series_ids import normalize_series_id
 
 
 def _previous_payload(workspace: ArtifactLocation, family: str, identity: str) -> dict[str, Any] | None:
@@ -30,27 +29,23 @@ def _previous_payload(workspace: ArtifactLocation, family: str, identity: str) -
 
 def selected_output_paths(
     workspace: ArtifactLocation, records: CatalogueSourceRecords, galleries: CatalogueGalleries,
-    *, work_ids: Sequence[str] | None, series_ids: Sequence[str], gallery_ids: Sequence[str],
+    *, work_ids: Sequence[str] | None, gallery_ids: Sequence[str],
 ) -> set[str]:
     """Previous generated membership invalidates outputs; canonical data owns content."""
     if work_ids is None:
         selected = set()
-        for family, ids in (("works", records.works), ("series", records.series), ("galleries", galleries.galleries)):
+        for family, ids in (("works", records.works), ("galleries", galleries.galleries)):
             selected.update(f"{family}/index/{identity}.json" for identity in ids)
             selected.update(path.relative_to(workspace.path).as_posix() for path in output_path(workspace, f"{family}/index").glob("*.json"))
         return selected
 
     selected_works = {slug_id(wid) for wid in work_ids}
-    selected_series = {normalize_series_id(sid) for sid in series_ids}
     for gid in gallery_ids:
         validate_gallery_id(gid)
     selected_galleries = set(gallery_ids)
     for wid in selected_works:
         previous = _previous_payload(workspace, "work", wid)
         if previous is not None:
-            previous_series = previous["work"].get("series_id")
-            if previous_series:
-                selected_series.add(normalize_series_id(previous_series))
             previous_galleries = previous["work"].get("galleries")
             if not isinstance(previous_galleries, list):
                 raise ValueError(f"Generated Work {wid} galleries must be an array; regenerate complete Catalogue JSON")
@@ -59,9 +54,6 @@ def selected_output_paths(
                 validate_gallery_id(gid)
                 selected_galleries.add(gid)
         selected_galleries.update(galleries.works.get(wid, []))
-        current_series = records.works.get(wid, {}).get("series_id")
-        if current_series:
-            selected_series.add(current_series)
 
     for gid in selected_galleries:
         previous = _previous_payload(workspace, "gallery", gid)
@@ -77,6 +69,5 @@ def selected_output_paths(
     selected_works.update(wid for wid, ids in galleries.works.items() if selected_galleries.intersection(ids))
     return (
         {f"works/index/{wid}.json" for wid in selected_works}
-        | {f"series/index/{sid}.json" for sid in selected_series}
         | {f"galleries/index/{gid}.json" for gid in selected_galleries}
     )

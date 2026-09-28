@@ -10,7 +10,6 @@ import docs_diagram_source_service
 import docs_import_source_service as import_source_service
 import docs_management_routes as routes
 import docs_media_reads
-import docs_series_works_report
 import docs_unpublishable_report
 from docs_selected_documents import read_selected
 from docs_workspace_config import load_docs_working_config
@@ -126,16 +125,12 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         )
     if path == routes.SOURCE_BODY_PATH:
         return read_source_body(repo_root, params)
-    if path in {routes.METADATA_PATH, routes.SERIES_WORKS_REPORT_PATH, routes.SERIES_WORK_MEDIA_PATH}:
+    if path == routes.METADATA_PATH:
         target = {
             "doc_id": docs_api_query_value(params, "doc_id"),
         }
         if "collection" in params:
             target["collection"] = docs_api_query_value(params, "collection")
-        if path == routes.SERIES_WORKS_REPORT_PATH:
-            return docs_series_works_report.build_series_works_report(repo_root, target)
-        if path == routes.SERIES_WORK_MEDIA_PATH:
-            return docs_series_works_report.build_series_work_media(repo_root, target, docs_api_query_value(params, "work_id"))
         return managed_document_metadata(repo_root, target)
     if path in {
         routes.IMPORT_SOURCE_DIRECTORIES_PATH,

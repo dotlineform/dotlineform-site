@@ -3,12 +3,14 @@ draft: false
 doc_id: d-20260904-204816-0f31be
 title: UAC 3 - Explore Tokens, Reports And The Consumer Data Model
 added_date: "2026-09-04 20:48:16"
-last_updated: "2026-09-09 14:47:42"
+last_updated: "2026-09-28 15:55:05"
 summary: Further token and specialised-tool design waits for Analysis stage structure/UI and resolution of the possible Catalogue schema change.
 ui_status: planned
 parent_id: d-20260902-102745-8379ea
 ---
 # UAC 3 - Explore Tokens, Reports And The Consumer Data Model
+
+Current-state note, 28 September 2026: Series remains a document Subject, but Series Media View tokens, the Works in a Series report, generated Series by-ID/index JSON and the proposed insertable list were retired. The report and list passages below record the earlier branch; they do not schedule a replacement. A future Series-to-Galleries index requires its own relationship rule and consumer design.
 
 ## Current Hold
 
@@ -70,7 +72,7 @@ The user confirms subject editing is available in both relevant sub-scopes. The 
 
 Analysis Works now uses the shared normalized subject metadata, revision-bound assignment modal and Manage contribution. Projects remains an optional authoring route; Analysis documents are independently authored records.
 
-The report is a live working slice using current mechanics. [Gallery List Design](Gallery_List_Design.md) retains the production questions about insertable blocks, bounded layout and data loading. The subject changes are real application capabilities and do not depend on completing the wider Catalogue schema or publishing workflow first.
+The report and [Gallery List Design](Gallery_List_Design.md) are retired historical branches. The subject changes remain real application capabilities and do not depend on restoring those branches.
 
 ## Deliverables
 
@@ -143,7 +145,7 @@ Assess current reports as reusable owners before proposing replacements. In part
 
 ### 3.4 — Define Reports, Icons And Workflow Symbols
 
-**Current branch:** [UAC 3B](UAC_3B_Series_Works_Report.md) has an accepted initial list in its real `analysis.works` sub-document. Its title links now open selected Work presentations in Media View and await manual review. The production mechanism remains open in [Gallery List Design](Gallery_List_Design.md), which covers the wider subject-driven block for Works and Details. [Publish workflow](Publish_Workflow.md) clarifies generated Manage data and accepted public data.
+**Retired branch:** [UAC 3B](UAC_3B_Series_Works_Report.md) and [Gallery List Design](Gallery_List_Design.md) retain historical design and delivery evidence. Gallery Media View now supplies gallery membership browsing; no insertable Works in a Series list is planned. [Publish workflow](Publish_Workflow.md) clarifies generated Manage data and accepted public data.
 
 - [ ] Describe the retained public `analysis.works` collection presentation and the local views needed to understand documents, subjects, Catalogue references and token associations. Keep Works as the public name and Catalogue as the internal domain term.
 - [ ] Decide whether existing Works, Catalogue Works, Docs Sub-scope and Semantic Tokens reports are retained, changed, combined or retired.

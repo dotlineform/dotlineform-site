@@ -7,8 +7,7 @@
     "source-json": "Canonical Studio Catalogue records.",
     "studio-lookup": "Private editor read projections.",
     "work-json": "catalogue/generated/works/index/<work_id>.json, including ordered Detail sections.",
-    "series-json": "catalogue/generated/series/index/<series_id>.json and ordered members.",
-    "catalogue-indexes": "Compact Work, Series and Detail indexes beneath catalogue/generated.",
+    "catalogue-indexes": "Compact Work and Gallery indexes beneath catalogue/generated.",
     "local-media": "Shared local Work primary images, thumbnails and downloads in the Docs workspace.",
     "remote-media": "Active Work/Detail primary variants and downloads; the archive is excluded."
   },
@@ -46,12 +45,11 @@
         "source-json",
         "studio-lookup",
         "work-json",
-        "series-json",
         "catalogue-indexes",
         "local-media",
         "remote-media"
       ],
-      "reason": "Refresh the exact Work and its Details, both former and current Series membership, indexes and required media. Private metadata stays in Studio."
+      "reason": "Refresh the exact Work, affected Gallery membership, indexes and required media. Private Series metadata stays in Studio."
     },
     {
       "id": "series",
@@ -63,11 +61,9 @@
       ],
       "artifacts": [
         "source-json",
-        "studio-lookup",
-        "series-json",
-        "catalogue-indexes"
+        "studio-lookup"
       ],
-      "reason": "Refresh this Series and ordered members. Explicit membership changes also refresh the affected Works through their ordinary owner."
+      "reason": "Refresh this Series' private metadata. Explicit membership changes also refresh affected Works through their ordinary owner."
     },
     {
       "id": "work_detail",

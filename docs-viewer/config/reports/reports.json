@@ -23,13 +23,6 @@
       "presets": []
     },
     {
-      "report_id": "series_works",
-      "title": "Works in Series",
-      "description": "Lists generated member Works for the containing document's Series subject.",
-      "loader_id": "series_works",
-      "presets": []
-    },
-    {
       "report_id": "reports_list",
       "title": "Reports List",
       "description": "Displays the configured Docs Viewer report metadata from the report registry.",

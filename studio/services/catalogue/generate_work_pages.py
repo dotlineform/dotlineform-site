@@ -27,7 +27,7 @@ def _index(family: str, items: Mapping[str, Any], timestamp: str) -> dict[str, A
 def catalogue_payloads(
     repo_root: Path, records: CatalogueSourceRecords, galleries: CatalogueGalleries, *, timestamp: str,
 ) -> dict[str, dict[str, Any]]:
-    """Build Work, Series and Gallery records plus compact discovery indexes."""
+    """Build Work and Gallery records plus compact discovery indexes."""
     errors = validate_source_records(records)
     if errors:
         raise ValueError("Catalogue source validation failed: " + "; ".join(errors[:20]))
@@ -58,19 +58,12 @@ def catalogue_payloads(
             work_id=wid, work_record=work, sections=[], generated_at_utc=timestamp, count=0,
         )
         works_index[wid] = {key: work[key] for key in ("work_id", "title", "year", "year_display", "series_id") if key in work}
-    for sid, source in records.series.items():
-        series = {**source, "documents": []}
-        payloads[f"series/index/{sid}.json"] = projection.build_series_json_payload(
-            series_id=sid, series_record=series,
-            member_works=indexes.build_series_member_work_records(context=context, series_id=sid), generated_at_utc=timestamp,
-        )
     for gid, source in galleries.galleries.items():
         payloads[f"galleries/index/{gid}.json"] = projection.build_gallery_json_payload(
             gallery_id=gid, gallery_record=source,
             member_works=indexes.build_member_work_records(context=context, work_ids=works_by_gallery[gid]), generated_at_utc=timestamp,
         )
     payloads["works/works_index.json"] = _index("works", works_index, timestamp)
-    payloads["series/series_index.json"] = _index("series", indexes.build_series_index_records(series_records=records.series, context=context), timestamp)
     payloads["galleries/galleries_index.json"] = _index("galleries", {
         gid: {"gallery_id": gid, "title": galleries.galleries[gid]["title"], "work_count": len(works_by_gallery[gid])}
         for gid in sorted(galleries.galleries)
@@ -91,14 +84,13 @@ def _same_generated_content(actual: Any, expected: dict[str, Any]) -> bool:
 
 def generate_catalogue_json(
     repo_root: Path, source_dir: Path, *, write: bool,
-    work_ids: Sequence[str] | None = None, series_ids: Sequence[str] = (),
-    gallery_ids: Sequence[str] = (),
+    work_ids: Sequence[str] | None = None, gallery_ids: Sequence[str] = (),
 ) -> dict[str, Any]:
     """Refresh selected records and every index, or reconcile the complete owned JSON set.
 
     Pass work_ids=() for a Gallery-only refresh. Missing selected IDs mean deletion.
     Gallery edits refresh current and former members; Work edits refresh current
-    and former Series/Galleries. Canonical records always own the written content.
+    and former Galleries. Canonical records always own the written content.
     """
     workspace = catalogue_output_workspace(repo_root)
     records = records_from_json_source(source_dir)
@@ -106,7 +98,7 @@ def generate_catalogue_json(
     timestamp = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     payloads = catalogue_payloads(repo_root, records, galleries, timestamp=timestamp)
     complete = work_ids is None
-    selected = selected_output_paths(workspace, records, galleries, work_ids=work_ids, series_ids=series_ids, gallery_ids=gallery_ids)
+    selected = selected_output_paths(workspace, records, galleries, work_ids=work_ids, gallery_ids=gallery_ids)
     selected.update(path for path in payloads if "/index/" not in path)
     written, deleted = [], []
     for relative in sorted(selected):

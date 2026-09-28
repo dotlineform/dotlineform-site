@@ -25,13 +25,6 @@ const REPORT_LOADERS = {
       });
     }
   },
-  series_works: {
-    load: function () {
-      return import("./series-works-report.js").then(function (module) {
-        return module.mountSeriesWorksReport;
-      });
-    }
-  },
   reports_list: {
     load: function () {
       return import("./reports-list-report.js").then(function (module) {

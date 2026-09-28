@@ -9,7 +9,6 @@ from catalogue.catalogue_generation_common import (
     coerce_int,
     coerce_string,
     compact_json_object,
-    compute_payload_version,
     is_empty,
     slug_id,
 )
@@ -89,14 +88,6 @@ def ordered_work_ids_by_series(context: SeriesWorkIndexContext) -> Dict[str, Lis
     return {sid: sorted(ids) for sid, ids in context.work_ids_by_series_all.items()}
 
 
-def build_series_member_work_records(
-    *,
-    context: SeriesWorkIndexContext,
-    series_id: str,
-) -> List[Dict[str, Any]]:
-    return build_member_work_records(context=context, work_ids=context.work_ids_by_series_all.get(series_id, []))
-
-
 def build_member_work_records(
     *, context: SeriesWorkIndexContext, work_ids: Sequence[str],
 ) -> List[Dict[str, Any]]:
@@ -115,49 +106,3 @@ def build_member_work_records(
             "year_display": year_display,
         }))
     return member_works
-
-
-def build_series_index_records(
-    *,
-    series_records: Mapping[str, Mapping[str, Any]],
-    context: SeriesWorkIndexContext,
-) -> Dict[str, Dict[str, Any]]:
-    member_ids_by_series = ordered_work_ids_by_series(context)
-    series_payload_unsorted: Dict[str, Dict[str, Any]] = {}
-    for series_record in series_records.values():
-        sid_raw = series_record.get("series_id")
-        if is_empty(sid_raw):
-            continue
-        sid = normalize_series_id(sid_raw)
-        series_title = coerce_string(series_record.get("title")) or sid
-        ordered_work_ids = member_ids_by_series.get(sid, [])
-        series_payload_unsorted[sid] = compact_json_object({
-            "series_id": sid,
-            "title": series_title,
-            "work_count": len(ordered_work_ids),
-        })
-
-    return {sid: series_payload_unsorted[sid] for sid in sorted(series_payload_unsorted.keys())}
-
-
-def build_series_index_payload(
-    *,
-    series_records: Mapping[str, Mapping[str, Any]],
-    context: SeriesWorkIndexContext,
-    generated_at_utc: str,
-) -> Dict[str, Any]:
-    series_payload = build_series_index_records(series_records=series_records, context=context)
-    version_payload = compact_json_object({
-        "schema": "series_index_v3",
-        "series": series_payload,
-    })
-    version = compute_payload_version(version_payload)
-    return compact_json_object({
-        "header": {
-            "schema": "series_index_v3",
-            "version": version,
-            "generated_at_utc": generated_at_utc,
-            "count": len(series_payload),
-        },
-        "series": series_payload,
-    })
