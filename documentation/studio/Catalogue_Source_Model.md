@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260519-000000-a0da45
 title: Catalogue Source Model
 added_date: "2026-05-19 00:00:00"
-last_updated: "2026-09-28 13:01:30"
+last_updated: "2026-09-28 14:56:18"
 parent_id: d-20260401-000000-a11bf3
 
 ---
@@ -31,7 +31,7 @@ Catalogue authoring source lives below `studio/data/canonical/catalogue/`:
 - Catalogue membership, document subjects, document `parent_id` and token composition are independent. None establishes another relationship.
 - Catalogue Works and Series have no `status` or `published_date`. Series have no `primary_work_id` or `series_type`.
 - A Work may belong to multiple independent Galleries, including Galleries spanning Series. The initial Series overview Galleries retain their original selections; later Series membership changes do not synchronise them.
-- Former Details become ordinary Works. Canonical Detail aggregate files are retired and rejected by the runtime loader; only the explicit one-time converter reads them. No parent identity, section order or former-parent Gallery association is retained.
+- Former Details became ordinary Works. Canonical Detail aggregate files are retired and rejected by the runtime loader; the completed one-time converter that read them has been removed. No parent identity, section order or former-parent Gallery association is retained.
 
 ## Metadata And Ordering
 
@@ -75,7 +75,7 @@ When changing a field, update its source definition, serializer, validation, edi
 
 ## Output Boundary
 
-Ordinary Studio Catalogue production is available. Save maintains canonical source and required local Work media; Refresh Catalogue reconciles generated Work, Series and Gallery records, indexes and private Docs metadata beneath `$DOTLINEFORM_DOCS_BASE_DIR/working/generated/catalogue/`. The generator reads both canonical Gallery sources, writes individual `galleries/index/<gallery_id>.json` records and embeds Gallery IDs/titles in `work.galleries`. Gallery changes appear in current and former member Works after Refresh. Download staging resolves through `catalogue/media-staging/` under the configured Projects workspace; ready thumbnails use shared Docs `assets/works/thumbs/`. Docs Viewer reads the refreshed Gallery lookup and individual records for exact Gallery tokens, search and Media View. The persisted `studio/data/generated/catalogue-lookup/` export has no active editor reader.
+Ordinary Studio Catalogue production is available. Save maintains canonical source and required local Work media; Refresh Catalogue reconciles generated Work, Series and Gallery records, indexes and private Docs metadata beneath `$DOTLINEFORM_DOCS_BASE_DIR/working/generated/catalogue/`. The generator reads both canonical Gallery sources, writes individual `galleries/index/<gallery_id>.json` records and embeds Gallery IDs/titles in `work.galleries`. Gallery changes appear in current and former member Works after Refresh. Download staging resolves through `catalogue/media-staging/` under the configured Projects workspace; ready thumbnails use shared Docs `assets/works/thumbs/`. Docs Viewer reads the refreshed Gallery lookup and individual records for exact Gallery tokens, search and Media View. The historical `studio/data/generated/catalogue-lookup/` files have no active producer or reader.
 
 Refresh Catalogue is the explicit local generated-reader action; there is no separate media-publish or per-record publication action. Full JSON maintenance is available without media conversion or upload. The frozen site and media archive remain outside active writes. Docs Publish owns public acceptance; Save alone does not make a record public or refresh Docs semantic lookups, and Publish does not run Refresh or enforce its receipt.
 
@@ -83,8 +83,4 @@ Generated output is replaceable data, not another canonical source. Empty intern
 
 ## One-time Gallery Conversion
 
-`studio/services/catalogue/convert_catalogue_galleries.py --plan var/galleries-conversion-review/plan.json` writes a review plan without changing canonical data or media. It allocates Work IDs globally in ascending exact Detail UID order and section Gallery IDs in ascending exact section-ID order. Initial overview Galleries use the existing Series IDs/titles and pre-conversion membership. The plan records source SHA-256 hashes, complete proposed canonical payloads and exact local/R2 media mappings. This is migration bookkeeping, not a canonical relationship.
-
-After reviewing that plan, `studio/services/catalogue/convert_catalogue_galleries.py --apply var/galleries-conversion-review/plan.json` revalidates it, copies and verifies media destinations, writes canonical sources, refreshes ordinary Work/Series output and Studio lookup, and removes mapped old local media. Old R2 objects remain available until the separately authorised `--remove-old-media var/galleries-conversion-review/plan.json` operation. That operation checks the canonical payloads, exact rendition mapping, all destination sizes/ETags and current source metadata before deleting only the mapped old keys. Project originals and `media_version` remain unchanged. Unmapped R2 objects are reported and retained. Remote copying uses bounded batches with connection reuse, source ETag and destination absence conditions; [R2's documented copy conditions](https://developers.cloudflare.com/r2/api/s3/extensions/#conditional-operations-in-copyobject-for-the-destination-object) prevent destination replacement.
-
-Failures stop the operation and propagate. Before canonical persistence, an explicit rerun of the same apply command accepts only matching media copies. After persistence, it completes output/local cleanup only if all four canonical payloads still exactly match the plan. Remote cleanup can also be explicitly rerun against that exact state, skipping already removed keys. No automatic retries, backup directories or persistent retry markers are created. The owner must restart user-run Studio services after code changes and refresh the viewer; the converter never manages servers, documents, publication or deployment.
+The completed Gallery conversion allocated Work IDs in exact Detail UID order and section Gallery IDs in exact section-ID order, then wrote canonical Works, Series, Galleries and memberships. Its reviewed plan recorded source hashes and exact local and R2 media mappings. This migration bookkeeping is historical, not a current canonical relationship. The one-time converter and its helpers have been removed. Current Catalogue changes use Save and Refresh Catalogue; any future migration needs its own reviewed plan and implementation.

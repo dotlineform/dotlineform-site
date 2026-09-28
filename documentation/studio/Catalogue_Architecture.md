@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260401-000000-a11bf3
 title: Catalogue Architecture
 added_date: "2026-04-01 00:00:00"
-last_updated: "2026-09-28 13:01:30"
+last_updated: "2026-09-28 14:56:18"
 parent_id: d-20260423-000000-d015e6
 ---
 
@@ -29,7 +29,7 @@ The canonical source is the editable authority. Studio Work/Series search and fo
 
 Refresh Catalogue reconciles complete replaceable Work, Series and Gallery records, compact discovery indexes, media policy and private Docs report metadata under `$DOTLINEFORM_DOCS_BASE_DIR/working/generated/catalogue/`. Generated output is a reader projection, not another editable source. Docs Viewer local Catalogue, subject and report readers can lag behind Save until Refresh completes. Public readers use the separately published Catalogue revision; Docs Publish does not run Refresh or enforce its receipt.
 
-The inactive manual `studio/data/generated/catalogue-lookup/` export and one-time Gallery converter still reference persisted lookup files. Neither is an active Studio editor or Docs reader dependency. Retiring those code paths requires a separately scoped review. The frozen legacy `site/archive/` payloads and media are outside active generation.
+The historical `studio/data/generated/catalogue-lookup/` files have no active producer or reader. The unused persisted lookup exporter and completed one-time Gallery converter have been removed; live Work and Series lookup payload builders remain in the Studio API. The frozen legacy `site/archive/` payloads and media are outside active generation.
 
 ## Change Method And Weak Spots
 

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260519-202931-b05d27
 title: Catalogue Indexes And Payloads
 added_date: "2026-05-19 20:29:31"
-last_updated: "2026-09-28 13:01:30"
+last_updated: "2026-09-28 14:56:18"
 parent_id: d-20260401-000000-a11bf3
 
 ---
@@ -52,7 +52,7 @@ Work and Series `documents` arrays are currently empty. Studio does not derive d
 
 ## Consumer Boundaries
 
-Studio Work and Series search, focused records and Gallery definitions read live canonical service projections. The inactive persisted `studio/data/generated/catalogue-lookup/` export is not a Save or Refresh dependency. Studio serves shared local thumbnails through the configured `/docs/assets/` route; `/studio/catalogue-output/` serves generated Catalogue data and private report metadata.
+Studio Work and Series search, focused records and Gallery definitions read live canonical service projections. The historical `studio/data/generated/catalogue-lookup/` files have no active producer or reader. Studio serves shared local thumbnails through the configured `/docs/assets/` route; `/studio/catalogue-output/` serves generated Catalogue data and private report metadata.
 
 Local Docs Viewer reads the latest refreshed Work, Series and Gallery records and shared media configuration through its Catalogue service; Work reads include Gallery memberships. Exact Gallery tokens and Work Gallery links open the individual Gallery through `/docs/catalogue-gallery?gallery_id=<gallery_id>`. Studio edits Gallery definitions and memberships through the Work editor. Public readers use configured static paths populated by the separate Docs Publish lifecycle and subsequent deployment. Refreshing local Catalogue data alone does not deploy it. The frozen legacy payloads under `site/archive/` have their own historical shape and are outside active generation.
 

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260909-205938-3569d6
 title: Catalogue Deployment
 added_date: "2026-09-09 20:59:38"
-last_updated: "2026-09-28 13:01:30"
+last_updated: "2026-09-28 14:56:18"
 summary: Catalogue Save and Refresh, single Publish and public deployment ownership, selected JSON inventory and shared media distribution.
 parent_id: d-20260902-102745-8379ea
 ---
@@ -41,7 +41,7 @@ explicit Git commit/push ----> GitHub Actions deployment of site/
 | Work downloads | `assets/works/media/files/` | Configured R2 `works/files/` objects. |
 | Document/collection ready media | `assets/media/workspace/<type>/` and `assets/media/collections/<id>/<type>/` | Existing configured document/collection repository or R2 bindings. |
 
-Original project media, editable document build inputs and the inactive persisted Studio lookup export retain their own owners. There is no Projects-generated Catalogue fallback, local Published tree or media copy beneath Preview. [Configuration And Extension Points](Configuration_And_Extension_Points.md) and [Media And Asset Handling](Media_And_Asset_Handling.md) describe the shared workspace.
+Original project media and editable document build inputs retain their own owners. Historical persisted Studio lookup files have no active producer or reader. There is no Projects-generated Catalogue fallback, local Published tree or media copy beneath Preview. [Configuration And Extension Points](Configuration_And_Extension_Points.md) and [Media And Asset Handling](Media_And_Asset_Handling.md) describe the shared workspace.
 
 The design-time [Catalogue artifact inventory](../../docs-viewer/config/workspace/catalogue-artifacts.json), read by [docs_catalogue_artifacts.py](../../docs-viewer/services/docs_catalogue_artifacts.py), selects direct by-ID JSON beneath `works/index/`, `series/index/` and `galleries/index/`, plus `media-config.json`, `works/works_index.json`, `series/series_index.json` and `galleries/galleries_index.json`. It does not copy arbitrary files in the Catalogue tree. Future report projections need an explicit inventory/public-field decision before being included.
 
