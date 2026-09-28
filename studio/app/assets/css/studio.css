@@ -1170,6 +1170,20 @@ button.studioList__cellLink {
   gap: 0.22rem;
 }
 
+.catalogueDefinition__relation {
+  margin-top: 0.75rem;
+}
+
+.catalogueDefinition__checkboxRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.catalogueDefinition__checkboxRow input {
+  margin: 0;
+}
+
 .studioForm__field--topAligned {
   align-items: start;
 }

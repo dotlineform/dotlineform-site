@@ -1,5 +1,6 @@
 import {
-  readPublicCatalogueWork, readPublicCatalogueGallery, catalogueGalleryMediaPresentation
+  readPublicCatalogueWork, readPublicCatalogueGallery, readPublicCatalogueSeriesGalleries,
+  validateCatalogueSeriesGalleriesIndex, catalogueGalleryMediaPresentation
 } from "./docs-viewer-catalogue-media.js";
 import { readPublicCatalogueMediaConfig, validateCatalogueMediaPolicy } from "./docs-viewer-catalogue-media-policy.js";
 
@@ -130,6 +131,16 @@ export function createDocsViewerWorkspaceProvider(options) {
       var [payload, policy] = await Promise.all([provider.readCatalogueGallery(galleryId), provider.readCatalogueMediaConfig()]);
       var config = routeContext().routeConfig || {};
       return catalogueGalleryMediaPresentation(payload, galleryId, policy, config.catalogueWorkThumbnailsBaseUrl);
+    };
+  }
+  if (source && typeof source.readCatalogueSeriesGalleries === "function") {
+    provider.readCatalogueSeriesGalleries = function () {
+      return source.readCatalogueSeriesGalleries().then(validateCatalogueSeriesGalleriesIndex);
+    };
+  } else if (routeContext().routeConfig && routeContext().routeConfig.appKind === "public") {
+    provider.readCatalogueSeriesGalleries = function () {
+      return readPublicCatalogueSeriesGalleries(routeContext().routeConfig.catalogueSeriesGalleriesIndexUrl,
+        function (url, optionsForFetch) { return settings.window.fetch(url, optionsForFetch); });
     };
   }
   if (source && typeof source.writeSource === "function") {

@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_source_galleries_v1",
-    "count": 302
+    "count": 303
   },
   "galleries": {
     "001": {
@@ -1211,6 +1211,10 @@
     "306": {
       "gallery_id": "306",
       "title": "pond (details)"
+    },
+    "307": {
+      "gallery_id": "307",
+      "title": "test"
     }
   }
 }

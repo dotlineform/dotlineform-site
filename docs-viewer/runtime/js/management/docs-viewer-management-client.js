@@ -110,6 +110,12 @@ export function readCatalogueGallery(galleryId,  options) {
     Object.assign({}, options, { cache: "no-cache" }));
 }
 
+/** Read the current generated Series relevance map independently of Work membership. */
+export function readCatalogueSeriesGalleries(options) {
+  return fetchManagementJson("/docs/catalogue-series-galleries", "GET", undefined,
+    Object.assign({}, options, { cache: "no-cache" }));
+}
+
 export function readManagedDocsIndex(options) {
   return fetchManagementJson("/docs/index-tree", "GET", undefined, options);
 }

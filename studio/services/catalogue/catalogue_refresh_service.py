@@ -11,6 +11,7 @@ import tempfile
 from typing import Any
 
 from catalogue.catalogue_galleries import GALLERIES_FILE, MEMBERSHIPS_FILE
+from catalogue.catalogue_series_galleries import SERIES_GALLERIES_FILE
 from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, SOURCE_FILES, records_from_json_source
 from catalogue.catalogue_works_metadata import generate_catalogue_works_metadata
 from catalogue.generate_work_pages import generate_catalogue_json
@@ -20,7 +21,7 @@ from catalogue.works_collection_metadata import generate_works_collection_metada
 RECEIPT_PATH = Path("var/studio/catalogue/refresh-receipt.json")
 RECEIPT_SCHEMA = "catalogue_refresh_receipt_v1"
 REVISION_PATHS = (
-    *(DEFAULT_SOURCE_DIR / name for name in (SOURCE_FILES["works"], SOURCE_FILES["series"], GALLERIES_FILE, MEMBERSHIPS_FILE)),
+    *(DEFAULT_SOURCE_DIR / name for name in (SOURCE_FILES["works"], SOURCE_FILES["series"], GALLERIES_FILE, MEMBERSHIPS_FILE, SERIES_GALLERIES_FILE)),
     Path("_data/pipeline.json"),
     Path("site-tools/config/site-tools.json"),
 )

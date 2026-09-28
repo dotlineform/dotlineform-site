@@ -9,6 +9,7 @@ import {
   readCatalogueMediaConfig,
   readCatalogueWork,
   readCatalogueGallery,
+  readCatalogueSeriesGalleries,
   readDocumentLinkTargets,
   saveManagedDocSource
 } from "./docs-viewer-management-client.js";
@@ -43,6 +44,9 @@ export function createDocsViewerManagementSourceAdapter(options) {
     },
     readCatalogueGallery: function (galleryId) {
       return readCatalogueGallery(galleryId,  clientOptions());
+    },
+    readCatalogueSeriesGalleries: function () {
+      return readCatalogueSeriesGalleries(clientOptions());
     },
     readSource: function (target, optionsForRead) {
       return readManagedDocSource(target, clientOptions(optionsForRead));

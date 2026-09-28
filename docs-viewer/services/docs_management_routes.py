@@ -18,6 +18,7 @@ CATALOGUE_MEDIA_TARGETS_PATH = "/docs/catalogue-media-targets"
 CATALOGUE_MEDIA_CONFIG_PATH = "/docs/catalogue-media-config"
 CATALOGUE_WORK_PATH = "/docs/catalogue-work"
 CATALOGUE_GALLERY_PATH = "/docs/catalogue-gallery"
+CATALOGUE_SERIES_GALLERIES_PATH = "/docs/catalogue-series-galleries"
 CATALOGUE_REGENERATE_PREVIEW_PATH = "/docs/catalogue/regenerate-preview"
 CATALOGUE_REGENERATE_APPLY_PATH = "/docs/catalogue/regenerate-apply"
 SOURCE_CONFIG_SETTINGS_PATH = "/docs/source-config-settings"
@@ -73,6 +74,7 @@ GET_PATHS = (
     CATALOGUE_WORK_PATH,
     CATALOGUE_MEDIA_CONFIG_PATH,
     CATALOGUE_GALLERY_PATH,
+    CATALOGUE_SERIES_GALLERIES_PATH,
     SOURCE_CONFIG_SETTINGS_PATH,
     SOURCE_BODY_PATH,
     DOCUMENT_LINK_TARGETS_PATH,

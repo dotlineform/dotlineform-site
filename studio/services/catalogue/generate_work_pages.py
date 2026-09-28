@@ -15,6 +15,7 @@ from catalogue.catalogue_generation_common import compact_json_object, compute_p
 from catalogue.catalogue_media_policy import catalogue_media_policy
 from catalogue.catalogue_output_paths import catalogue_output_workspace, output_path
 from catalogue.catalogue_output_selection import selected_output_paths
+from catalogue.catalogue_series_galleries import CatalogueSeriesGalleries, read_series_galleries, validate_series_galleries
 from catalogue.catalogue_source import CatalogueSourceRecords, records_from_json_source, validate_source_records
 
 
@@ -25,13 +26,15 @@ def _index(family: str, items: Mapping[str, Any], timestamp: str) -> dict[str, A
 
 
 def catalogue_payloads(
-    repo_root: Path, records: CatalogueSourceRecords, galleries: CatalogueGalleries, *, timestamp: str,
+    repo_root: Path, records: CatalogueSourceRecords, galleries: CatalogueGalleries,
+    pairs: CatalogueSeriesGalleries, *, timestamp: str,
 ) -> dict[str, dict[str, Any]]:
     """Build Work and Gallery records plus compact discovery indexes."""
     errors = validate_source_records(records)
     if errors:
         raise ValueError("Catalogue source validation failed: " + "; ".join(errors[:20]))
     validate_galleries(galleries, records.works)
+    validate_series_galleries(pairs, records.series, galleries.galleries)
     context = indexes.build_series_work_index_context(series_records=records.series, work_records=records.works)
     works_by_gallery: dict[str, list[str]] = {gid: [] for gid in galleries.galleries}
     for wid, ids in galleries.works.items():
@@ -68,6 +71,13 @@ def catalogue_payloads(
         gid: {"gallery_id": gid, "title": galleries.galleries[gid]["title"], "work_count": len(works_by_gallery[gid])}
         for gid in sorted(galleries.galleries)
     }, timestamp)
+    payloads["series-galleries-index.json"] = _index("series_galleries", {
+        sid: [
+            {"gallery_id": gid, "title": galleries.galleries[gid]["title"]}
+            for gid in pairs.pairs_by_series.get(sid, ())
+        ]
+        for sid in sorted(records.series)
+    }, timestamp)
     return payloads
 
 
@@ -95,8 +105,9 @@ def generate_catalogue_json(
     workspace = catalogue_output_workspace(repo_root)
     records = records_from_json_source(source_dir)
     galleries = read_galleries(source_dir, records.works)
+    pairs = read_series_galleries(source_dir, records.series, galleries.galleries)
     timestamp = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    payloads = catalogue_payloads(repo_root, records, galleries, timestamp=timestamp)
+    payloads = catalogue_payloads(repo_root, records, galleries, pairs, timestamp=timestamp)
     complete = work_ids is None
     selected = selected_output_paths(workspace, records, galleries, work_ids=work_ids, gallery_ids=gallery_ids)
     selected.update(path for path in payloads if "/index/" not in path)

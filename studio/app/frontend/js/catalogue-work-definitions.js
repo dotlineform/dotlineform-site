@@ -47,7 +47,8 @@ function validateResponse(kind, requestedId, response) {
     || (!requestedId && !response.created)
     || (response.deleted && kind === "Series" && response.kind !== "series")
     || (!response.deleted && (response.record?.[key] !== id
-      || typeof response.record.title !== "string" || !response.record_hash))) {
+      || typeof response.record.title !== "string" || !response.record_hash
+      || (kind === "Gallery" && !Array.isArray(response.related_series_ids))))) {
     throw new Error(`${kind} response is missing its exact record or revision.`);
   }
 }

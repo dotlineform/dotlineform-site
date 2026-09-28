@@ -1619,6 +1619,22 @@ main.container:has(> .docsViewer){
   cursor: pointer;
 }
 
+.docsViewer__mediaDetailRelatedGalleries{
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.docsViewer__mediaDetailRelatedGalleries > li + li{
+  margin-top: var(--docs-viewer-space-2);
+}
+
+.docsViewer__mediaDetailGalleryRelation{
+  display: block;
+  color: var(--docs-viewer-muted);
+  font-size: 0.85em;
+}
+
 .docsViewer__mediaDetailGalleryPane{
   min-width: 0;
   overflow-x: auto;

@@ -94,13 +94,17 @@ function normalizeWorkPresentation(value) {
   var metadata = normalizedMetadata(value.metadata);
   if (value.series !== undefined) throw new Error("Media View Series links are unsupported.");
   var galleryIds = new Set();
-  var galleries = value.galleries === undefined ? [] : value.galleries;
+  var galleries = value.galleries;
   if (!Array.isArray(galleries)) throw new Error("Media View requires an array of Gallery links.");
+  var reachedSeriesLinks = false;
   galleries = galleries.map(function (entry) {
     var target = normalizeDocsViewerCatalogueGroupTarget(entry && entry.target);
     if (target.kind !== "catalogue-gallery" || galleryIds.has(target.id)) throw new Error("Media View Gallery links are invalid or duplicated.");
+    if (entry.relation !== "direct" && entry.relation !== "series") throw new Error("Media View Gallery relation is invalid.");
+    if (entry.relation === "direct" && reachedSeriesLinks) throw new Error("Media View direct Galleries must precede Series links.");
+    if (entry.relation === "series") reachedSeriesLinks = true;
     galleryIds.add(target.id);
-    return Object.freeze({ target: target, label: normalizedTextField(entry.label, "a Gallery label") });
+    return Object.freeze({ target: target, label: normalizedTextField(entry.label, "a Gallery label"), relation: entry.relation });
   });
 
   var newTabTarget = docsViewerSafeMediaTarget(value.new_tab_target);

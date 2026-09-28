@@ -6,6 +6,7 @@
   ],
   "system_files": [
     "media-config.json",
+    "series-galleries-index.json",
     "works/works_index.json",
     "galleries/galleries_index.json"
   ]

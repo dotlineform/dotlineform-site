@@ -15,6 +15,9 @@ from catalogue.catalogue_source import (
     load_json_file,
 )
 from catalogue.catalogue_galleries import read_galleries, validate_galleries, MEMBERSHIPS_FILE
+from catalogue.catalogue_series_galleries import (
+    SERIES_GALLERIES_FILE, CatalogueSeriesGalleries, read_series_galleries, without_series,
+)
 
 
 @dataclass(frozen=True)
@@ -29,7 +32,7 @@ class DeleteApplyPlan:
 
 def _delete_records(
     source_dir: Path, kind: str, record_id: str,
-) -> tuple[CatalogueSourceRecords, dict[str, Any], dict[str, list[str]]]:
+) -> tuple[CatalogueSourceRecords, dict[str, Any], dict[str, list[str]], CatalogueSeriesGalleries | None]:
     source = records_from_json_source(source_dir)
     families = {"work": source.works, "series": source.series}
     if kind not in families:
@@ -37,6 +40,10 @@ def _delete_records(
     original = families[kind].get(record_id)
     if original is None:
         raise ValueError(f"{kind} not found: {record_id}")
+    pairs = None
+    if kind == "series":
+        galleries = read_galleries(source_dir, source.works)
+        pairs = read_series_galleries(source_dir, source.series, galleries.galleries)
     affected: dict[str, list[str]] = {"works": [], "series": []}
     if kind == "series":
         del source.series[record_id]
@@ -49,18 +56,22 @@ def _delete_records(
         affected["works"] = [record_id]
         affected["series"] = [original["series_id"]] if original.get("series_id") else []
         del source.works[record_id]
-    return source, dict(original), {key: sorted(values) for key, values in affected.items()}
+    return source, dict(original), {key: sorted(values) for key, values in affected.items()}, pairs
 
 
 def build_delete_preview(
     source_dir: Path, kind: str, record_id: str,
 ) -> dict[str, Any]:
     """Describe the exact canonical deletion; output and media remain paused."""
-    source, original, affected = _delete_records(source_dir, kind, record_id)
+    source, original, affected, pairs = _delete_records(source_dir, kind, record_id)
     errors = validate_source_records(source)
     summary = f"Delete {kind} {record_id} from canonical Catalogue data."
     if kind == "series" and affected["works"]:
         summary += f" Clear the Series assignment on {len(affected['works'])} Work(s), keeping those Works."
+    if kind == "series" and pairs is not None:
+        count = len(pairs.pairs_by_series.get(record_id, ()))
+        if count:
+            summary += f" Remove its {count} Gallery association(s)."
     summary += " Media and output are unchanged."
     return {
         "kind": kind, "id": record_id, "record": original, "affected": affected,
@@ -74,7 +85,7 @@ def build_delete_apply_plan(
     source_dir: Path, kind: str, record_id: str,
 ) -> DeleteApplyPlan:
     """Recompute and validate source writes instead of trusting the preview payload."""
-    source, _original, affected = _delete_records(source_dir, kind, record_id)
+    source, _original, affected, pairs = _delete_records(source_dir, kind, record_id)
     errors = validate_source_records(source)
     if errors:
         raise ValueError("source validation failed: " + "; ".join(errors[:20]))
@@ -83,6 +94,8 @@ def build_delete_apply_plan(
         payloads[(source_dir / SOURCE_FILES["works"]).resolve()] = payload_for_map("works", source.works)
     if kind == "series":
         payloads[(source_dir / SOURCE_FILES["series"]).resolve()] = payload_for_map("series", source.series)
+        if pairs is not None and record_id in pairs.pairs_by_series:
+            payloads[(source_dir / SERIES_GALLERIES_FILE).resolve()] = without_series(pairs, record_id).payload()
     if kind == "work":
         galleries = read_galleries(source_dir, load_json_file(source_dir / "works.json")["works"])
         galleries.works.pop(record_id, None)

@@ -585,25 +585,36 @@ export function createDocsViewerMediaDetailAdapter() {
       var metadata = appendMetadata(documentRef, caption, work.metadata);
       var groups = work.galleries.slice();
       if (supplied.gallery && !groups.some(function (entry) { return sameMediaTarget(entry.target, supplied.gallery.target); })) {
-        groups.unshift({ target: supplied.gallery.target, label: supplied.gallery.label });
+        var firstSeriesLink = groups.findIndex(function (entry) { return entry.relation === "series"; });
+        groups.splice(firstSeriesLink < 0 ? groups.length : firstSeriesLink, 0,
+          { target: supplied.gallery.target, label: supplied.gallery.label, relation: "context" });
       }
+      var relatedRow = documentRef.createElement("div");
+      relatedRow.className = "docsViewer__mediaDetailMetadataRow";
+      var relatedTerm = documentRef.createElement("dt");
+      relatedTerm.textContent = "Related galleries";
+      var relatedDescription = documentRef.createElement("dd");
+      var relatedList = documentRef.createElement("ul");
+      relatedList.className = "docsViewer__mediaDetailRelatedGalleries";
       groups.forEach(function (entry) {
-        var row = documentRef.createElement("div");
-        row.className = "docsViewer__mediaDetailMetadataRow";
-        var term = documentRef.createElement("dt");
-        term.textContent = groupLabel(entry.target);
-        var description = documentRef.createElement("dd");
+        var item = documentRef.createElement("li");
         var link = targetButton(
           "Open " + groupLabel(entry.target) + ": " + entry.label,
           "docsViewer__mediaDetailGroupLink",
           entry.target
         );
         link.textContent = entry.label;
-        description.appendChild(link);
-        row.appendChild(term);
-        row.appendChild(description);
-        metadata.appendChild(row);
+        var relation = documentRef.createElement("span");
+        relation.className = "docsViewer__mediaDetailGalleryRelation";
+        relation.textContent = entry.relation === "direct" ? "Contains this Work"
+          : entry.relation === "series" ? "Related to this Series" : "Opened from Gallery";
+        item.append(link, relation);
+        relatedList.appendChild(item);
       });
+      if (groups.length) relatedDescription.appendChild(relatedList);
+      else relatedDescription.textContent = "None";
+      relatedRow.append(relatedTerm, relatedDescription);
+      metadata.appendChild(relatedRow);
       if (supplied.gallery) {
         var position = docsViewerMediaGalleryPosition(supplied.gallery, work.target);
         caption.appendChild(navigationControls("Work", position.index + 1, position.total,

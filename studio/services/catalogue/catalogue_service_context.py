@@ -9,6 +9,7 @@ from typing import Any, Mapping
 
 from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, SOURCE_FILES, load_json_file
 from catalogue.catalogue_galleries import GALLERIES_FILE, MEMBERSHIPS_FILE
+from catalogue.catalogue_series_galleries import SERIES_GALLERIES_FILE
 from script_logging import append_script_log
 
 
@@ -42,7 +43,7 @@ def build_catalogue_write_context(repo_root: Path, *, dry_run: bool = False) -> 
             (source_dir / filename).resolve()
             for kind, filename in SOURCE_FILES.items()
             if kind in {"works", "series"}
-        } | {(source_dir / filename).resolve() for filename in (GALLERIES_FILE, MEMBERSHIPS_FILE)},
+        } | {(source_dir / filename).resolve() for filename in (GALLERIES_FILE, MEMBERSHIPS_FILE, SERIES_GALLERIES_FILE)},
         allowed_write_roots=set(),
         dry_run=dry_run,
     )

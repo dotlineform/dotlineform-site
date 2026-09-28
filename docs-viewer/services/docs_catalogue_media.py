@@ -13,6 +13,8 @@ from typing import Any
 from urllib.parse import quote, urlsplit
 
 from studio.services.catalogue.catalogue_output_paths import catalogue_workspace_config, catalogue_output_workspace, output_path
+from studio.services.catalogue.catalogue_generation_common import compute_payload_version
+from studio.services.catalogue.series_ids import normalize_series_id
 
 
 def _read_generated(repo_root: Path, relative: str) -> dict[str, Any]:
@@ -104,6 +106,41 @@ def read_catalogue_work_index(repo_root: Path) -> dict[str, dict[str, Any]]:
         if not isinstance(work, dict) or work.get("work_id") != work_id:
             raise ValueError("Generated Work index identity is mismatched")
     return works
+
+
+def validate_catalogue_series_galleries_index(payload: dict[str, Any]) -> dict[str, Any]:
+    """Validate a selected index without consulting canonical Catalogue data."""
+    header, series_galleries = payload.get("header"), payload.get("series_galleries")
+    schema = "catalogue_series_galleries_index_v1"
+    if (set(payload) != {"header", "series_galleries"} or not isinstance(header, dict)
+            or set(header) != {"schema", "version", "generated_at_utc", "count"}
+            or header.get("schema") != schema
+            or not isinstance(series_galleries, dict) or type(header.get("count")) is not int
+            or header["count"] != len(series_galleries)
+            or not isinstance(header.get("generated_at_utc"), str) or not header["generated_at_utc"]
+            or header.get("version") != compute_payload_version({"schema": schema, "series_galleries": series_galleries})):
+        raise ValueError("Generated Series-Gallery index is unavailable")
+    previous_series_id = ""
+    for series_id, galleries in series_galleries.items():
+        if (not isinstance(series_id, str) or normalize_series_id(series_id) != series_id
+                or series_id <= previous_series_id or not isinstance(galleries, list)):
+            raise ValueError("Generated Series-Gallery index has an invalid Series entry")
+        previous_series_id = series_id
+        previous_gallery_id = ""
+        for gallery in galleries:
+            if not isinstance(gallery, dict) or set(gallery) != {"gallery_id", "title"}:
+                raise ValueError("Generated Series-Gallery link is invalid")
+            gallery_id = _gallery_identity(gallery["gallery_id"])
+            if gallery_id <= previous_gallery_id:
+                raise ValueError("Generated Series-Gallery links must be distinct and ordered")
+            previous_gallery_id = gallery_id
+            _text(gallery["title"], "Gallery title")
+    return payload
+
+
+def read_catalogue_series_galleries_index(repo_root: Path) -> dict[str, Any]:
+    """Read the exact generated Series relevance map, including empty Series."""
+    return validate_catalogue_series_galleries_index(_read_generated(repo_root, "series-galleries-index.json"))
 
 
 def read_catalogue_media_targets(repo_root: Path) -> dict[str, Any]:

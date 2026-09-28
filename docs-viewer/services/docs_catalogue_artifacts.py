@@ -12,7 +12,9 @@ import json
 from pathlib import Path
 
 from docs_workspace_config import DocsCatalogueConfig, DocsWorkspaceConfig, location_child, safe_relative_path
-from docs_catalogue_media import catalogue_media_record, validate_catalogue_media_config
+from docs_catalogue_media import (
+    catalogue_media_record, validate_catalogue_media_config, validate_catalogue_series_galleries_index,
+)
 
 
 CONFIG_REL_PATH = Path("docs-viewer/config/workspace/catalogue-artifacts.json")
@@ -74,6 +76,8 @@ def read_catalogue_artifacts(
             raise ValueError(f"Catalogue {stage} JSON is unavailable or invalid: {identity}") from exc
         if not isinstance(payload, dict):
             raise ValueError(f"Catalogue {stage} JSON must be an object: {identity}")
+        if identity == "series-galleries-index.json":
+            validate_catalogue_series_galleries_index(payload)
         result[identity] = data
     return result
 

@@ -28,6 +28,7 @@ for candidate in (SCRIPTS_DIR, STUDIO_DIR):
 from catalogue import catalogue_write_service  # noqa: E402
 from catalogue.catalogue_revisions import CatalogueRevisionConflict  # noqa: E402
 from catalogue.catalogue_galleries import read_galleries  # noqa: E402
+from catalogue.catalogue_series_galleries import read_series_galleries  # noqa: E402
 from catalogue.catalogue_build_media import PIPELINE_CONFIG  # noqa: E402
 from catalogue.catalogue_lookup import (  # noqa: E402
     build_series_lookup_payload,
@@ -138,7 +139,8 @@ def catalogue_read_payload(repo_root: Path, query: Mapping[str, list[str]]) -> d
         return {"galleries": galleries.galleries}
     if key == "catalogue_gallery_record":
         galleries = read_galleries(paths["source_dir"], source_records.works)
-        return gallery_record_payload(galleries, record_id)
+        pairs = read_series_galleries(paths["source_dir"], source_records.series, galleries.galleries)
+        return gallery_record_payload(galleries, pairs, record_id)
     if key == "catalogue_lookup_work_search":
         payload = build_work_search_payload(source_records)
         galleries = read_galleries(paths["source_dir"], source_records.works)

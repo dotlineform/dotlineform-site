@@ -104,6 +104,8 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         return docs_catalogue_media.read_catalogue_gallery(
             repo_root, docs_api_query_value(params, "gallery_id"),
         )
+    if path == routes.CATALOGUE_SERIES_GALLERIES_PATH:
+        return docs_catalogue_media.read_catalogue_series_galleries_index(repo_root)
     if path == routes.UNPUBLISHABLE_REPORT_PATH:
         return docs_unpublishable_report.build_unpublishable_report(
             repo_root,
