@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260513-105343-6de36b
 title: Reports
 added_date: "2026-05-13 10:53:43"
-last_updated: "2026-09-27 15:28:26"
+last_updated: "2026-09-28 15:20:26"
 parent_id: d-20260424-000000-50b63f
 ---
 # Docs Viewer Reports
@@ -194,7 +194,7 @@ document. Unresolved occurrences remain in `docs_broken_links`.
 
 `project_state` is the local project-folder reconciliation report. It compares immediate physical Project folders with canonical Work, Series, and document relationships from `analysis/working/works` without changing any source. Only Folder-, Work-, and Series-subject documents participate in reconciliation. Detail-subject documents remain valid entries in the shared Manage manifest and subject associations, but are excluded from report rows and matched/unmatched document counts; they are not placed under their owning Work's folder. The diagnostic manifest document count still describes the complete input collection.
 
-The Projects report's Series column opens each exact response-owned Series ID in Media View through the shared Catalogue reference controls, in both Folder and Series grouping modes. Gallery data loads only on activation. Folder links, document links, search, sorting and copied TSV retain their existing behavior.
+The Projects report's Series column displays each exact response-owned Series title as plain text in both Folder and Series grouping modes. It does not open a Series Media View. Folder links, document links, search, sorting and copied TSV retain their existing behavior.
 
 `docs_media` is the local, read-only media-to-document report hosted by [Docs Media](/docs/?doc=d-20260812-212735-6d9cf3). It reads `/docs/media-files` and `/docs/media-references` from the fixed Working owner and assembles rows in `docs-media-data.js`. The browser owns associations, document links, document ordering, display exclusions and sortable Type, File name and Documents columns. The toolbar owns refresh and immediate file-name or document-title search. File name posts exact collection, role, media type and identity without stage to `/docs/open-media-source`, which validates the Docs file and uses the shared Finder helper; Documents preserves exact ordinary and collection links. The report and data routes remain absent from the public report registry and executable graph. [Media And Asset Handling](Media_And_Asset_Handling.md) owns the live data and storage boundary.
 
@@ -208,7 +208,7 @@ lookup, Work lookup, and private Projects Manage manifest. Blank rows remain
 visible; the report adds no server producer, persisted result, public report, or
 mutation path.
 
-Work Document Coverage opens each Series title in Media View using that row's exact Series ID and the shared Catalogue reference controls. Gallery data loads only when selected. Document coverage and document-link destinations retain their existing behavior.
+Work Document Coverage displays each Series title as plain text. Document coverage and document-link destinations retain their existing behavior.
 
 `catalogue_works` is the local, read-only saved-Works inspection report in Working. It reads Studio-generated private report metadata, requires a non-empty Work or Series search before showing rows, preserves exact Series membership, and renders one seven-column semantic table with 20 matching rows per page. Search fields are prepared once per load, typing waits for a short pause, and a compact chevron pager appears below the table. Work, Year, Title, Series, and curator-only Storage remain visible and sortable in the embedded document; Medium type and Medium caption are expanded-only. The report is the first and only Expanded Report View adopter: its successful mount returns the exact table presentation, Manage rehosts the one live root, and temporary widths remain local presentation state. Report-owned Copy table exports every sorted match across pages, using the five embedded columns or all seven expanded columns as TSV. The report is registered and executable only in the local report graph; public report metadata, loaders, data, expansion code, and expansion CSS do not expose it. [Catalogue Works](Catalogue_Works.md) owns its durable data, link, editing, and extension contract.
 

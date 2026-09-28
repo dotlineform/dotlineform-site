@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260728-113139-763354
 title: Sub-Scope Index Architecture
 added_date: "2026-07-28 11:31:39"
-last_updated: "2026-09-26 19:47:13"
+last_updated: "2026-09-28 15:19:36"
 summary: define collection identity, the docs_subscope default, registered customisations, selection lifecycle, and explicit function adoption
 parent_id: d-20260801-084127-752d7e
 ---
@@ -247,7 +247,7 @@ Docs generation owns document membership, titles, dates, readiness and exact sub
 
 Manage's [private title reader](../../docs-viewer/runtime/js/management/docs-viewer-management-works-metadata.js) loads `reports/works/manifest.json` from configured Working Catalogue output through the existing private local report-asset route with `cache: no-store`. This compact file contains every Work and Series ID/title, including empty Series. [Studio Save completion](Catalogue_Save_And_Refresh.md) maintains affected entries before reporting complete success. The normal list load consumes saved data; it performs no canonical reads, Catalogue-target lookup request or report generation, and needs no separate Works Build after a Catalogue Save. Missing/invalid files fail visibly; a missing subject identity retains its existing unavailable presentation. Docs builds neither generate nor overwrite this Catalogue-owned file. Public runtime/data exclude it. Subject assignment pickers retain their separately owned generated Catalogue provider.
 
-The Working Works list opens Series subjects in Media View using the exact Series ID. Work subjects open the corresponding Working Catalogue document through the generated Catalogue `subject-associations.json`, using the same exact Work-to-document reader as the Catalogue Works report. A Work without an association remains plain text; ambiguous or invalid association data fails visibly. Folder subjects retain their existing local-folder action. These destinations apply to Working Works; other collections retain their existing subject navigation.
+The Working Works list displays Series subjects as plain text. Work subjects open their exact Work in Media View; the Work presentation exposes its Gallery links only. Folder subjects retain their existing local-folder action. These destinations apply to Working Works; other collections retain their existing subject navigation.
 
 Local folder links and the detail toolbar's Open in Finder action open silently on success; failures still display an error.
 

@@ -45,7 +45,6 @@ CATALOGUE_KIND_SOURCES = {
 
 CATALOGUE_TARGET_DESTINATIONS = {
     "catalogue-work-target-lookup": ("/works/", "work"),
-    "catalogue-series-target-lookup": ("/series/", "series"),
 }
 
 

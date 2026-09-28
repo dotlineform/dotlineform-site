@@ -28,7 +28,7 @@ function modalBody(searchQuery, alt, imageMode) {
         '<input class="docsViewer__fieldInput" id="' + SEARCH_INPUT_ID + '" type="search" role="combobox" aria-autocomplete="list" aria-controls="' + RESULTS_ID + '" aria-expanded="false" autocomplete="off" spellcheck="false" value="' + escapeHtml(searchQuery) + '" disabled>' +
       "</label>" +
       '<p class="docsViewerCatalogueTokenModal__searchStatus muted small" data-role="catalogue-search-status">Loading Catalogue…</p>' +
-      '<div class="docsViewerCatalogueTargetPicker__results docsViewerCatalogueTokenModal__results" id="' + RESULTS_ID + '" role="listbox" aria-label="' + (imageMode ? "Catalogue Works" : "Catalogue Works, Series and Galleries") + '" data-role="catalogue-results" tabindex="0" hidden></div>' +
+      '<div class="docsViewerCatalogueTargetPicker__results docsViewerCatalogueTokenModal__results" id="' + RESULTS_ID + '" role="listbox" aria-label="' + (imageMode ? "Catalogue Works" : "Catalogue Works and Galleries") + '" data-role="catalogue-results" tabindex="0" hidden></div>' +
       '<label class="docsViewer__field" for="' + ALT_INPUT_ID + '">' +
         '<span class="docsViewer__fieldLabel">' + (imageMode ? "Alt text" : "Link text") + '</span>' +
         '<input class="docsViewer__fieldInput" id="' + ALT_INPUT_ID + '" type="text" autocomplete="off" value="' + escapeHtml(alt) + '" required>' +
@@ -105,7 +105,7 @@ export function openCatalogueMediaModal(options = {}) {
         search.value = target.title;
         state.list.setTargets([]);
         showResults(false);
-        message(target.targetType === "gallery" ? "Loading Gallery…" : target.targetType === "series" ? "Loading Series…" : "Loading Work image…");
+        message(target.targetType === "gallery" ? "Loading Gallery…" : "Loading Work image…");
         try {
           var presentation = await readCatalogueTokenPresentation(adapter, target);
           if (state.disposed || request !== state.request) return;
@@ -125,7 +125,7 @@ export function openCatalogueMediaModal(options = {}) {
         var matches = collectSemanticTokenTargetMatches(targets, search.value, state.support.registry, 20);
         state.list.setTargets(matches);
         showResults(true);
-        message(search.value.trim() && !matches.length ? (imageMode ? "No matching Catalogue Works." : "No matching Catalogue Works, Series or Galleries.") : "");
+        message(search.value.trim() && !matches.length ? (imageMode ? "No matching Catalogue Works." : "No matching Catalogue Works or Galleries.") : "");
       }
       function selectSubject() {
         var target = state.support.targets.find(function (item) {
@@ -165,7 +165,7 @@ export function openCatalogueMediaModal(options = {}) {
       loadCatalogueMediaSupport(adapter, { fetch: options.fetch }).then(function (support) {
         if (state.disposed) return;
         state.support = support;
-        subjectCheckbox.disabled = !subjectTarget || (imageMode && subject.kind !== "work");
+        subjectCheckbox.disabled = !subjectTarget;
         search.disabled = false;
         updateMatches();
         if (initialToken) {

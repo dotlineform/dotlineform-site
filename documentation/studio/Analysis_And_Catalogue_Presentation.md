@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260902-102745-8379ea
 title: Unified Analysis And Catalogue Presentation
 added_date: "2026-09-02 10:27:45"
-last_updated: "2026-09-15 10:05:25"
+last_updated: "2026-09-28 15:20:26"
 summary: Present accepted Analysis documents and current Catalogue data through Docs Viewer while retaining the legacy Catalogue as a frozen archive.
 ui_status: in-progress
 parent_id: d-20260428-000000-f5ff18
@@ -21,7 +21,7 @@ The current Catalogue site remains available as a frozen archive while the repla
 - Catalogue remains the canonical owner of Series, Work, Work Detail and media data; Studio remains its editor.
 - A Studio Catalogue projector prepares current generated consumer data. Documents retain authored content and exact references for shared runtime Catalogue presentation; public Catalogue reads use current deployed consumer data independently of document republication.
 - Local `dotlineform` and `analysis` Catalogue consumers read only `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/generated/`, including subject tools and lookups. Studio canonical JSON and repository-generated Catalogue lookups are not consumer dependencies; the complete switch is tracked in UAC - Change Backlog.
-- A Series or Work may have an ordinary document page, appear only as a token dependency of another document, or have no consumer presentation.
+- A Series or Work may have an ordinary document page or no document page. Work and Gallery media references are separate token relationships; Series remains a document Subject but is no longer a token target.
 - Bulk source migration is abandoned. The existing [Projects](/docs/?scope=analysis&stage=working&doc=d-20260805-155400-4c341f) backlog is complemented by a batch New doc action for selected Works or Series, with front matter and starter content. Its content, selection and availability in `dotlineform`, `analysis` or both remain to be designed.
 - The unified `cat_id` proposal is abandoned. Document subjects retain explicit `series_id`, `work_id` or `detail_uid` fields, with no subject for a plain document and real Folder subjects only in `dotlineform`.
 - Documents in Concepts and Moments are identified by `doc_id`; their collection classifies their content without declaring separate Concept or Moment entities. `concept_id`, `moment_id`, `group` and their associated controls have been removed. Document links remain the intended basis for deriving Work–Concept relationships.
@@ -41,9 +41,9 @@ The current Catalogue site remains available as a frozen archive while the repla
 
 - [Info Panel Related Links And Pinning - Delivery](Info_Panel_Links_And_Pinning_Delivery.md) records the agreed document-only Related section, concept pills, one A–Z document list deduplicated by `doc_id`, and a pin that keeps Info on its anchor while the main document changes. It includes exact semantic-token/Subject document connections and the data path through Pre-publish, Published and public presentation. Links View retains its existing grouped Manage-only presentation. The delivery is proposed pending read-only lifecycle readiness; implementation has not started.
 
-- [Semantic Tokens In Links View - Delivery](Links_View_Semantic_Tokens_Delivery.md) is stopped and superseded by Info Panel Related Links And Pinning. Its proposed media entries and Media View return to Links are no longer intended. Broader Catalogue hierarchy navigation may still connect a Work to its Series gallery and a Detail through a Work-details gallery to its Work within one Media View session; that work remains separate.
+- [Semantic Tokens In Links View - Delivery](Links_View_Semantic_Tokens_Delivery.md) is stopped and superseded by Info Panel Related Links And Pinning. Its proposed media entries and Media View return to Links are no longer intended. Current Work Media View navigation exposes only Gallery links; any broader navigation needs a separate decision.
 
-- [Media View Links And Series Galleries - Delivery](Media_Links_And_Series_Galleries_Delivery.md) is complete, accepted and closed on 2026-09-12. [Catalogue Media View](Catalogue_Media_View.md) owns Work/Detail/Series text-link authoring and galleries with 48 Works per page, selected-Work loading, cycling page/Work navigation and return-page preservation. [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md) owns exact token identities, usage and audit behavior. Add Catalogue image remains Work/Detail-only; document content gains no galleries and Series gains no stored primary-image identity. The delivery and resolved Gallery Design note are ready for manual archive; both Working gallery examples are retained. Shared caching/history and public Catalogue deployment remain separate.
+- [Media View Links And Series Galleries - Delivery](Media_Links_And_Series_Galleries_Delivery.md) records an accepted historical delivery. [Catalogue Media View](Catalogue_Media_View.md) now owns Work/Gallery text-link authoring and Gallery navigation; Series and Detail media tokens have been retired. [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md) owns exact token identities, usage and audit behavior. Add Catalogue image supports Work only; document content gains no inline galleries. Shared caching/history and public Catalogue deployment remain separate.
 
 - [Semantic Token References Across Collections](Cross_Collection_Semantic_References.md) is complete, accepted and closed on 2026-09-12. The shared usage index covers main and sub-scope documents; the [Semantic Tokens report](/docs/?scope=analysis&stage=working&doc=d-20260912-110653-264748) is Analysis Working only. [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md) and [Semantic Tokens Report](Semantic_Tokens_Report.md) own current behavior. The delivery is ready for manual archive.
 

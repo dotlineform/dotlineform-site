@@ -23,11 +23,11 @@ function cleanString(value) {
 }
 
 function groupTarget(target) {
-  return target && ["catalogue-series", "catalogue-gallery"].includes(target.kind);
+  return target && target.kind === "catalogue-gallery";
 }
 
-function groupLabel(target) {
-  return target.kind === "catalogue-series" ? "Series" : "Gallery";
+function groupLabel() {
+  return "Gallery";
 }
 
 function positiveInteger(value) {
@@ -388,8 +388,7 @@ export function createDocsViewerMediaDetailAdapter() {
   function readWork(state, workId) {
     if (!state.workReads.has(workId)) {
       var provider = state.collectionProvider;
-      if (!provider || typeof provider.readCatalogueWork !== "function" || typeof provider.readCatalogueMediaConfig !== "function"
-        || typeof provider.readCatalogueSeries !== "function") {
+      if (!provider || typeof provider.readCatalogueWork !== "function" || typeof provider.readCatalogueMediaConfig !== "function") {
         throw new Error("Catalogue media is unavailable in this view.");
       }
       var read = readCatalogueWorkMediaPresentation(provider, workId)
@@ -402,17 +401,16 @@ export function createDocsViewerMediaDetailAdapter() {
   async function readGroup(state, target) {
     normalizeDocsViewerCatalogueGroupTarget(target);
     var provider = state.collectionProvider;
-    var method = target.kind === "catalogue-gallery" ? "readCatalogueGalleryPresentation" : "readCatalogueSeriesPresentation";
-    if (!provider || typeof provider[method] !== "function") {
+    if (!provider || typeof provider.readCatalogueGalleryPresentation !== "function") {
       throw new Error("Catalogue " + groupLabel(target) + " data is unavailable in this view.");
     }
-    var payload = await provider[method](target.id);
+    var payload = await provider.readCatalogueGalleryPresentation(target.id);
     var normalized = normalizeDocsViewerMediaPresentation(payload);
     if (!normalized.gallery || !sameMediaTarget(normalized.target, target)) throw new Error("Catalogue group identity is mismatched.");
     return payload;
   }
 
-  /** Resolve one exact Work, Series or Gallery; group entry reads no Works. */
+  /** Resolve one exact Work or Gallery; Gallery entry reads no Works. */
   async function loadTarget(context) {
     context = Object.assign({}, context, {
       documentTarget: Object.freeze(Object.assign({}, context.documentTarget)),
@@ -585,7 +583,7 @@ export function createDocsViewerMediaDetailAdapter() {
       caption.className = "docsViewer__mediaDetailCaption";
       caption.appendChild(titleElement(work.label));
       var metadata = appendMetadata(documentRef, caption, work.metadata);
-      var groups = (work.series ? [work.series] : []).concat(work.galleries);
+      var groups = work.galleries.slice();
       if (supplied.gallery && !groups.some(function (entry) { return sameMediaTarget(entry.target, supplied.gallery.target); })) {
         groups.unshift({ target: supplied.gallery.target, label: supplied.gallery.label });
       }
@@ -710,7 +708,7 @@ export function createDocsViewerMediaDetailAdapter() {
       var member = supplied.gallery && supplied.gallery.members.find(function (entry) {
         return sameMediaTarget(entry.target, target);
       });
-      var groups = (current.series ? [current.series] : []).concat(current.galleries || []);
+      var groups = current.galleries || [];
       var groupLink = groups.find(function (entry) { return sameMediaTarget(entry.target, target); });
       if (!member && !groupLink) throw new Error("Media View target is not a supplied member or group link.");
       section.setAttribute("aria-busy", "true");

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260401-000000-ebf14a
 title: Catalogue Works
 added_date: "2026-04-01 00:00:00"
-last_updated: "2026-09-28 13:01:30"
+last_updated: "2026-09-28 15:19:36"
 parent_id: d-20260423-000000-d015e6
 
 ---
@@ -25,25 +25,25 @@ The local report registry maps `catalogue_works` to its allowlisted loader. `doc
 
 `catalogue_works_report_metadata_v1` contains `header` with `schema`, `count` and deterministic `version`, and a `works` map keyed by exact five-digit Work ID. Each row has `work_id`, `title`, `year`, `year_display`, nullable `storage_location`, `medium_type` and `medium_caption`, plus a `series` array containing zero or one exact `series_id`/`title` pair. The reader validates this shape and prepares normalized search fields and Series sort values once per load. Search retains per-field NFKC/English lowercase substring matching; sorting retains the English numeric collator and numeric year comparison. There is no persistent report search index.
 
-Typing waits for a 180 ms pause before filtering and sorting; clearing search applies immediately. Copy, sorting and page controls are disabled while that update is pending. The report retains the complete sorted match list, so page turns and Copy table do not repeat filtering/sorting or fetch metadata. A pending search does not render into a detached report. Only the current page's rows and media-link controls are mounted.
+Typing waits for a 180 ms pause before filtering and sorting; clearing search applies immediately. Copy, sorting and page controls are disabled while that update is pending. The report retains the complete sorted match list, so page turns and Copy table do not repeat filtering/sorting or fetch metadata. A pending search does not render into a detached report. Only the current page's rows are mounted.
 
 [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns generation and recovery. Save changes canonical source and the editor's live view; the report continues to read its previous private metadata until Refresh Catalogue regenerates all Work rows, including changed Series titles and removed Works. The report metadata remains private and outside the Catalogue publication inventory.
 
-The report module owns input validation, Work/Series search, five sortable columns, pagination, Work/Series link construction, one seven-column render, presentation-aware clipboard projection and unavailable or invalid states. Pager layout belongs to the existing local report stylesheet and reuses shared icon buttons. Editing remains in the [Catalogue Work Editor](Catalogue_Work_Editor.md) and its shared Series controls. There is no separate Catalogue Drafts workflow.
+The report module owns input validation, Work/Series search, five sortable columns, pagination, Work document links and Series labels, one seven-column render, presentation-aware clipboard projection and unavailable or invalid states. Pager layout belongs to the existing local report stylesheet and reuses shared icon buttons. Editing remains in the [Catalogue Work Editor](Catalogue_Work_Editor.md) and its shared Series controls. There is no separate Catalogue Drafts workflow.
 
 Work ID and title open the matching subdocument in Working Catalogue. On each report mount, one read of Catalogue's configured `manage-manifest.json` supplies normalized `authoring_subject` rows and immutable document identities. The shared Catalogue link reader derives valid Work mappings in memory and composes exact Manage URLs with the configured report host and existing route helper. It never matches titles or infers a host from route context. Works without a mapping remain visible as plain text. Invalid manifest identities or multiple Catalogue documents for one Work fail visibly rather than choosing a destination. No association lookup file is generated or read.
 
 Linked Catalogue documents have a separate freshness boundary: Regenerate writes literal title, caption and summary values into their source. A Work Save does not rewrite those documents or this report's metadata; Refresh Catalogue updates the report metadata. Collection caption behavior belongs to the separate collections review.
 
-Each Series name opens its exact Series gallery through the shared Media View reference controls and existing Catalogue media provider. Gallery data loads on activation; report loading does not fetch gallery members or Work images. Search, sorting and TSV output retain their existing values.
+Each Series name is displayed as plain text. Series remains a Catalogue grouping and document Subject, but this report does not open it in Media View or fetch its membership or Work images. Search, sorting and TSV output retain their existing values.
 
 ## Expanded Presentation
 
-After its generated inputs and first complete render succeed, the module returns the exact live semantic table and toolbar through the optional `expandedPresentation` handle. The adapter places its expanded-view button immediately after Copy table, on the search row. The button is disabled when no Works are displayed, hides while expanded and returns with the embedded report; the existing presentation refresh subscription keeps its disabled state current. One frozen ordered column model supplies stable ids, labels, and `both` or `expanded` visibility; headers and body cells use the same seven identities. Manage moves the existing report root into Content Detail, so search, sorting, current page, pager, rows, links, Copy table, event listeners, and route state remain on one report instance with no second data request or renderer.
+After its generated inputs and first complete render succeed, the module returns the exact live semantic table and toolbar through the optional `expandedPresentation` handle. The adapter places its expanded-view button immediately after Copy table, on the search row. The button is disabled when no Works are displayed, hides while expanded and returns with the embedded report; the existing presentation refresh subscription keeps its disabled state current. One frozen ordered column model supplies stable ids, labels, and `both` or `expanded` visibility; headers and body cells use the same seven identities. Manage moves the existing report root into Content Detail, so search, sorting, current page, pager, rows, Work links, Copy table, event listeners, and route state remain on one report instance with no second data request or renderer.
 
 Manage alone supplies accessible pointer and keyboard resize handles. One direct `colgroup` keeps headers and rows aligned through valid notified rerenders, while a mismatched header/body model fails closed. Widths exist only for the active expanded presentation: **Reset widths**, Back, or document navigation removes them, and reopening starts from the natural layout. Widened output scrolls inside the expanded viewport. Source, registry JSON, URLs, browser storage, canonical data, and generated payloads retain no width state.
 
-Opening a Series from Expanded Report View restores the live report root to the document before Media View takes over Content Detail. Back from the gallery returns to the embedded report with its search, sorting and current page retained; temporary expanded widths are released.
+Series labels in Expanded Report View remain plain text. Returning from Expanded Report View restores the embedded report with its search, sorting and current page retained; temporary expanded widths are released.
 
 ## Extension And Weak Spots
 

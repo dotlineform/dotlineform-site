@@ -5,8 +5,8 @@ import { readCatalogueWorkMediaPresentation } from "../../shared/docs-viewer-cat
 
 /** Map the source document's Catalogue subject to the existing picker identity. */
 export function catalogueDocumentSubjectTarget(subject) {
-  if (!subject || !["work", "series"].includes(subject.kind)) return null;
-  return { targetType: subject.kind, targetId: subject.key };
+  if (!subject || subject.kind !== "work") return null;
+  return { targetType: "work", targetId: subject.key };
 }
 
 /** Preserve authored labels while allowing an untouched default to follow selection. */
@@ -15,7 +15,7 @@ export function catalogueMediaLinkLabel(target, current, previous, preserveLabel
   return !current || (previous && current === previous.title) ? target.title : current;
 }
 
-/** Read exact generated Work, Series and Gallery search identities, independently of documents. */
+/** Read exact generated Work and Gallery search identities, independently of documents. */
 export async function loadCatalogueMediaSupport(adapter, options = {}) {
   var [registry, payload] = await Promise.all([
     loadSemanticTokenRegistry(options), adapter.readCatalogueMediaTargets()
@@ -27,8 +27,7 @@ export async function loadCatalogueMediaSupport(adapter, options = {}) {
   var identities = new Set();
   if (targets.length !== payload.targets.length || targets.some(function (target) {
     var valid = target.targetType === "work" ? /^\d{5}$/.test(target.targetId)
-      : target.targetType === "series" ? /^\d{3}$/.test(target.targetId)
-        : target.targetType === "gallery" && /^(?:[0-9]{3}|[1-9][0-9]{3,})$/.test(target.targetId);
+      : target.targetType === "gallery" && /^(?:[0-9]{3}|[1-9][0-9]{3,})$/.test(target.targetId);
     var key = target.targetType + ":" + target.targetId;
     if (target.family !== "catalogue" || !valid || identities.has(key)) return true;
     identities.add(key);
@@ -45,9 +44,8 @@ export async function readCatalogueMediaPresentation(adapter, workId) {
 /** Resolve a token target through its existing provider, with no document or image fallback. */
 export async function readCatalogueTokenPresentation(adapter, target) {
   if (target.targetType === "work") return readCatalogueMediaPresentation(adapter, target.targetId);
-  if (!["series", "gallery"].includes(target.targetType)) throw new Error("Unsupported Catalogue target.");
-  var payload = target.targetType === "gallery"
-    ? await adapter.readCatalogueGalleryPresentation(target.targetId) : await adapter.readCatalogueSeriesPresentation(target.targetId);
+  if (target.targetType !== "gallery") throw new Error("Unsupported Catalogue target.");
+  var payload = await adapter.readCatalogueGalleryPresentation(target.targetId);
   var presentation = normalizeDocsViewerMediaPresentation(payload);
   if (!presentation || !presentation.gallery || presentation.target.kind !== "catalogue-" + target.targetType
     || presentation.target.id !== target.targetId) throw new Error("Generated Catalogue identity is mismatched.");

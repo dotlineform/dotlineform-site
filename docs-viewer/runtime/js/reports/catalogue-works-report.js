@@ -1,5 +1,4 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
-import { mountDocsViewerMediaLinks } from "../shared/docs-viewer-media-detail.js";
 import { loadWorkingCatalogueDocumentLinks } from "../management/docs-viewer-management-catalogue-document-links.js";
 const METADATA_SCHEMA = "catalogue_works_report_metadata_v1";
 const WORK_ID_PATTERN = /^[0-9]{5}$/;
@@ -256,18 +255,10 @@ function appendSeriesCell(rowNode, row) {
   const list = rowNode.ownerDocument.createElement("span");
   list.className = "catalogueWorksReport__seriesList";
   row.series.forEach((record) => {
-    const marker = cell.ownerDocument.createElement("span");
-    marker.dataset.docsContentDetail = "media";
-    marker.dataset.docsMediaKind = "catalogue-series";
-    marker.dataset.docsMediaId = record.seriesId;
-    const link = cell.ownerDocument.createElement("button");
-    link.type = "button";
-    link.className = "docsViewer__mediaTextLink docsViewerReport__cellLink";
-    link.dataset.docsMediaOpen = "true";
-    link.textContent = record.title + " [" + record.seriesId + "]";
-    link.dataset.seriesId = record.seriesId;
-    marker.appendChild(link);
-    list.appendChild(marker);
+    const label = cell.ownerDocument.createElement("span");
+    label.textContent = record.title + " [" + record.seriesId + "]";
+    label.dataset.seriesId = record.seriesId;
+    list.appendChild(label);
   });
   cell.appendChild(list);
   rowNode.appendChild(cell);
@@ -376,12 +367,6 @@ function renderCurrent(state) {
   } else {
     const start = state.pageIndex * PAGE_SIZE;
     projection.rows.slice(start, start + PAGE_SIZE).forEach((row) => appendRow(state, row));
-    mountDocsViewerMediaLinks({
-      content: state.rowsNode,
-      documentTarget: {  collection: "", docId: state.context.doc.doc_id },
-      isCurrentDocument: () => state.context.content.contains(state.rowsNode),
-      openMediaTarget: state.context.openMediaTarget
-    });
     state.tableNode.hidden = false;
     state.emptyNode.hidden = true;
     state.emptyNode.textContent = "";

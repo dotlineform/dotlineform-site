@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260423-165116-c83a81
 title: Broken Links Script
 added_date: "2026-04-23 16:51:16"
-last_updated: "2026-09-23 15:06:26"
+last_updated: "2026-09-28 15:14:52"
 parent_id: d-20260424-000000-50b63f
 
 ---
@@ -35,7 +35,7 @@ Scope configuration resolves the external lifecycle beneath `$DOTLINEFORM_PROJEC
 
 Rendered anchors come from each source document's `generated/documents/by-id/<doc_id>.json` or `generated/sub-scopes/<sub-scope>/documents/by-id/<doc_id>.json` payload. Catalogue-token diagnosis reads source Markdown using the existing token registry and target resolver, independently of resolved usage or relationships. Retired Detail syntax is no longer parsed or reported as a Catalogue target.
 
-Work Media View links and Work image tokens read current generated Catalogue consumer records through the owner described in [Catalogue Media View](Catalogue_Media_View.md). They do not require a Work document or use the older text-target lookup to establish media availability. Missing or invalid Work media reports `missing_media`; unavailable Series and Gallery records report `missing_series` and `missing_gallery`. Detail readers, `missing_detail_image` and `detail_id` diagnosis fields were removed on 2026-09-23. This validates supplied records and media references, without fetching R2 image bytes.
+Work Media View links and Work image tokens read current generated Catalogue consumer records through the owner described in [Catalogue Media View](Catalogue_Media_View.md). They do not require a Work document or use the older text-target lookup to establish media availability. Missing or invalid Work media reports `missing_media`; unavailable Gallery records report `missing_gallery`. Series tokens are unsupported and remain literal source. This validates supplied records and media references, without fetching R2 image bytes.
 
 If a source by-ID payload is absent, its rendered links are listed as unscanned; other findings and that source's token diagnosis remain available. Generated anchors reflect the last completed document build.
 

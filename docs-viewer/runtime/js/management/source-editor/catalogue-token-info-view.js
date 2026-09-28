@@ -103,8 +103,7 @@ function renderToken(context, state, active) {
   appendReadOnlyRow(
     list,
     "Destination",
-    occurrenceHref || (token.targetType === "gallery" ? "Gallery in Media View"
-      : token.targetType === "series" ? "Series gallery in Media View" : "No resolved destination"),
+    occurrenceHref || (token.targetType === "gallery" ? "Gallery in Media View" : "No resolved destination"),
     destinationHref
   );
 

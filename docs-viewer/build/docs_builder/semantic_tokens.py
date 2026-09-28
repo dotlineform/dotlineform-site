@@ -231,7 +231,7 @@ def parse_semantic_token(
         elif target_type == "gallery":
             if not re.fullmatch(r"(?:[0-9]{3}|[1-9][0-9]{3,})", target_id):
                 return None
-        elif target_type != "series" or not re.fullmatch(r"[0-9]{3}", target_id):
+        else:
             return None
     if (
         not LEXICAL_KEY_PATTERN.fullmatch(family)

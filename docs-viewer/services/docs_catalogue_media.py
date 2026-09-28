@@ -107,7 +107,7 @@ def read_catalogue_work_index(repo_root: Path) -> dict[str, dict[str, Any]]:
 
 
 def read_catalogue_media_targets(repo_root: Path) -> dict[str, Any]:
-    """Expose Work, Series and Gallery search identities from generated indexes."""
+    """Expose Work and Gallery search identities from generated indexes."""
     targets = []
     for work_id, work in read_catalogue_work_index(repo_root).items():
         year = work.get("year_display")
@@ -115,20 +115,6 @@ def read_catalogue_media_targets(repo_root: Path) -> dict[str, Any]:
             "family": "catalogue", "target_type": "work", "target_id": work_id,
             "title": _text(work.get("title"), "title"),
             "meta": [year] if isinstance(year, str) and year else [],
-        })
-    series = _read_generated(repo_root, "series/series_index.json").get("series")
-    if not isinstance(series, dict):
-        raise ValueError("Generated Catalogue Series index is unavailable")
-    for series_id, record in series.items():
-        if not re.fullmatch(r"[0-9]{3}", series_id) or not isinstance(record, dict) or record.get("series_id") != series_id:
-            raise ValueError("Generated Series index identity is mismatched")
-        title = record.get("title")
-        if not isinstance(title, str) or not title.strip():
-            raise ValueError("Generated Series title is unavailable")
-        year = record.get("year_display")
-        targets.append({
-            "family": "catalogue", "target_type": "series", "target_id": series_id,
-            "title": title.strip(), "meta": [year] if isinstance(year, str) and year else [],
         })
     payload = _read_generated(repo_root, "galleries/galleries_index.json")
     galleries, header = payload.get("galleries"), payload.get("header")
@@ -156,31 +142,6 @@ def read_catalogue_work(repo_root: Path, work_id: str) -> dict[str, Any]:
     if not isinstance(work, dict) or work.get("work_id") != work_id:
         raise ValueError(f"Generated data does not match Work {work_id}")
     _text(work.get("title"), "title")
-    return payload
-
-
-def read_catalogue_series(repo_root: Path, series_id: str) -> dict[str, Any]:
-    """Read exact ordered membership without requiring documents or member Work reads."""
-    if not isinstance(series_id, str) or not re.fullmatch(r"[0-9]{3}", series_id):
-        raise ValueError("An exact three-digit Catalogue Series ID is required")
-    payload = _read_generated(repo_root, f"series/index/{series_id}.json")
-    series = payload.get("series")
-    if not isinstance(series, dict) or series.get("series_id") != series_id:
-        raise ValueError("Generated Series data does not match the selected Series")
-    if not isinstance(series.get("title"), str) or not series["title"].strip():
-        raise ValueError("Generated Series title is unavailable")
-    members = payload.get("member_works")
-    if not isinstance(members, list):
-        raise ValueError("Generated Series membership is unavailable")
-    seen = set()
-    for member in members:
-        if not isinstance(member, dict):
-            raise ValueError("Generated Series member must be an object")
-        work_id = _work_identity(member.get("work_id"))
-        if work_id in seen:
-            raise ValueError("Generated Series has a duplicate Work")
-        seen.add(work_id)
-        _text(member.get("title"), "title")
     return payload
 
 

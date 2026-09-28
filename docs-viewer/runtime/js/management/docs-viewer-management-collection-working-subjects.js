@@ -137,7 +137,7 @@ function renderSubjectCell(context, options, targetLookup) {
     host.appendChild(cell);
     return;
   }
-  var mediaSubject = ["work", "series"].includes(subject.kind);
+  var mediaSubject = subject.kind === "work";
   var linkedSubject = subject.kind === "folder" || mediaSubject;
   var link = host.ownerDocument.createElement(mediaSubject ? "button" : linkedSubject ? "a" : "span");
   link.className = linkedSubject

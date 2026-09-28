@@ -104,12 +104,6 @@ export function applyCatalogueRegeneration(payload, options) {
   return fetchManagementJson("/docs/catalogue/regenerate-apply", "POST", payload, options);
 }
 
-/** Read current Series membership without resolving any member Work records. */
-export function readCatalogueSeries(seriesId,  options) {
-  return fetchManagementJson("/docs/catalogue-series?series_id=" + encodeURIComponent(seriesId), "GET", undefined,
-    Object.assign({}, options, { cache: "no-cache" }));
-}
-
 /** Read exact Gallery membership from current Studio-generated output. */
 export function readCatalogueGallery(galleryId,  options) {
   return fetchManagementJson("/docs/catalogue-gallery?gallery_id=" + encodeURIComponent(galleryId), "GET", undefined,

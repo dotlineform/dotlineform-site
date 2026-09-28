@@ -3,14 +3,14 @@ draft: false
 doc_id: d-20260912-190906-d6da8f
 title: Media View Links And Series Galleries - Delivery
 added_date: "2026-09-12 19:09:06"
-last_updated: "2026-09-12 21:37:10"
+last_updated: "2026-09-28 15:22:43"
 summary: Complete Work, Detail and Series Media View links and Catalogue-backed Series galleries while preserving Work/Detail image authoring.
 ui_status: done
 parent_id: d-20260908-171728-3c539a
 ---
 # Media View Links And Series Galleries - Delivery
 
-Complete, accepted and closed on 2026-09-12 under [Unified Analysis And Catalogue Presentation](Analysis_And_Catalogue_Presentation.md). The user accepted authoring and gallery navigation, accepted the clean MVG-4 review and authorized closeout. [Catalogue Media View](Catalogue_Media_View.md) and [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md) own the shipped result. This delivery is ready for manual archive.
+Complete, accepted and closed on 2026-09-12 under [Unified Analysis And Catalogue Presentation](Analysis_And_Catalogue_Presentation.md). The user accepted authoring and gallery navigation, accepted the clean MVG-4 review and authorized closeout. Series Media View and token support was retired on 2026-09-28; the requirements and evidence below describe the historical delivery. [Catalogue Media View](Catalogue_Media_View.md) and [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md) own the current result. This delivery is ready for manual archive.
 
 ## Requirements
 
@@ -108,10 +108,10 @@ Record: closeout completed on 2026-09-12 under the user's approval to continue a
 | [Unified Analysis And Catalogue Presentation](Analysis_And_Catalogue_Presentation.md) | Retain active feature parent | Other publication and presentation outcomes remain; this completed delivery now points to durable owners. |
 | Media View Links And Series Galleries - Delivery | Ready for manual archive | Catalogue Media View and Semantic Tokens Architecture contain the accepted result; this record retains acceptance and evidence. |
 | [Gallery Design](Gallery_Design.md) | Ready for manual archive | Resolved behavior and limits are in Catalogue Media View; remaining distribution requirements are handed to Catalogue Deployment. |
-| [Media View Gallery Navigation - Review](/docs/?scope=analysis&stage=working&doc=d-20260912-194630-965ab5) | Retain Working example | Ordinary text-token entry, representative gallery navigation and the user's authoring examples remain useful for regression review. |
-| [Media View - Series 143 Gallery](/docs/?scope=analysis&stage=working&doc=d-20260906-164429-756174) | Retain supplied-presentation example | Exercises the distinct complete-presentation caller; its embedded data is not the ordinary token/loading contract. |
+| [Media View Gallery Navigation - Review](/docs/?doc=d-20260912-194630-965ab5) | Retain historical Working example | Authored Series tokens remain unchanged and now render as literal text. |
+| [Media View - Series 143 Gallery](/docs/?doc=d-20260906-164429-756174) | Retain historical note | The supplied Series gallery markup was retired from this Working document. |
 
-No document or demonstration was deleted or archived. Catalogue Media View now points to current code/config/tests and Semantic Tokens Architecture rather than relying on this delivery or Gallery Design for its contract.
+No document was deleted or archived. The supplied Series 143 demonstration was retired from its Working document, while its document identity and title remain. Catalogue Media View points to current code/config and Semantic Tokens Architecture rather than relying on this delivery or Gallery Design for its contract.
 
 ## Follow-on
 

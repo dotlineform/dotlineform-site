@@ -24,22 +24,8 @@ function workRecord(payload, workId) {
   return work;
 }
 
-/** Series identity never depends on a document, thumbnail or selected member. */
-export function catalogueSeriesTarget(seriesId) {
-  return normalizeDocsViewerCatalogueGroupTarget({ kind: "catalogue-series", id: seriesId });
-}
-
 export function catalogueGalleryTarget(galleryId) {
   return normalizeDocsViewerCatalogueGroupTarget({ kind: "catalogue-gallery", id: galleryId });
-}
-
-function seriesRecord(payload, seriesId) {
-  catalogueSeriesTarget(seriesId);
-  var series = payload && payload.series;
-  if (!series || series.series_id !== seriesId) throw new Error("Catalogue data does not match the selected Series.");
-  if (typeof series.title !== "string" || !series.title.trim()) throw new Error("Catalogue Series title is unavailable.");
-  if (!Array.isArray(payload.member_works)) throw new Error("Catalogue Series membership is unavailable.");
-  return series;
 }
 
 function galleryRecord(payload, galleryId) {
@@ -75,13 +61,6 @@ export function catalogueWorkThumbnail(workId, title, settings) {
     alt: title, width_px: settings.size, height_px: settings.size };
 }
 
-/** Project ordered references only; complete Work records are obtained when selected. */
-export function catalogueSeriesMediaPresentation(payload, seriesId, mediaPolicy, thumbnailBaseUrl) {
-  var series = seriesRecord(payload, seriesId);
-  return groupMediaPresentation(payload, catalogueSeriesTarget(seriesId), series.title,
-    [], mediaPolicy, thumbnailBaseUrl);
-}
-
 /** Gallery selection reads one generated membership record, with no Series inference. */
 export function catalogueGalleryMediaPresentation(payload, galleryId, mediaPolicy, thumbnailBaseUrl) {
   var gallery = galleryRecord(payload, galleryId);
@@ -106,10 +85,9 @@ function groupMediaPresentation(payload, target, title, metadata, mediaPolicy, t
 }
 
 /** Build a presentation from the exact current Catalogue consumer record, locally or publicly. */
-export function catalogueWorkMediaPresentation(payload, workId, mediaPolicy, seriesPayload) {
+export function catalogueWorkMediaPresentation(payload, workId, mediaPolicy) {
   var work = workRecord(payload, workId);
   var target = catalogueMediaTarget(workId);
-  var series = seriesRecord(seriesPayload, work.series_id);
   if (!Number.isInteger(work.width_px) || work.width_px <= 0
     || !Number.isInteger(work.height_px) || work.height_px <= 0) {
     throw new Error("Catalogue image dimensions are unavailable.");
@@ -135,7 +113,6 @@ export function catalogueWorkMediaPresentation(payload, workId, mediaPolicy, ser
     image: { src: image.candidates[0].src, candidates: image.candidates,
       alt: work.title, width_px: work.width_px, height_px: work.height_px },
     metadata: metadata,
-    series: { target: catalogueSeriesTarget(work.series_id), label: series.title },
     galleries: work.galleries.map(function (gallery) {
       if (!gallery || typeof gallery.title !== "string" || !gallery.title.trim()) throw new Error("Catalogue Gallery title is unavailable.");
       return { target: catalogueGalleryTarget(gallery && gallery.gallery_id), label: gallery.title };
@@ -146,13 +123,9 @@ export function catalogueWorkMediaPresentation(payload, workId, mediaPolicy, ser
   return presentation;
 }
 
-/** Read the Work's declared Series for its title, without establishing a browsing sequence. */
 export async function readCatalogueWorkMediaPresentation(provider, workId) {
   var [payload, policy] = await Promise.all([provider.readCatalogueWork(workId), provider.readCatalogueMediaConfig()]);
-  var work = workRecord(payload, workId);
-  catalogueSeriesTarget(work.series_id);
-  var series = await provider.readCatalogueSeries(work.series_id);
-  return catalogueWorkMediaPresentation(payload, workId, policy, series);
+  return catalogueWorkMediaPresentation(payload, workId, policy);
 }
 
 /** Revalidate public consumer JSON on every activation; retain no document-lifetime cache. */
@@ -171,17 +144,6 @@ function validatePublicRecordBase(baseUrl) {
     || !baseUrl.endsWith("/") || /[?#\\\s]/.test(baseUrl)) {
     throw new Error("Public Catalogue data is not configured.");
   }
-}
-
-/** Read the deployed Series record only, using the same freshness policy as Work reads. */
-export async function readPublicCatalogueSeries(baseUrl, seriesId, fetchImpl) {
-  catalogueSeriesTarget(seriesId);
-  validatePublicRecordBase(baseUrl);
-  var response = await fetchImpl(baseUrl + seriesId + ".json", { cache: "no-cache", headers: { Accept: "application/json" } });
-  if (!response.ok) throw new Error("Catalogue Series " + seriesId + " is unavailable (HTTP " + response.status + ").");
-  var payload = await response.json();
-  seriesRecord(payload, seriesId);
-  return payload;
 }
 
 /** Public Gallery reads remain confined to the configured static record base. */

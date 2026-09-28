@@ -1,5 +1,4 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
-import { mountDocsViewerMediaLinks } from "../shared/docs-viewer-media-detail.js";
 import { normalizeDocsViewerAuthoringSubject } from "../management/docs-viewer-management-document-subject.js";
 import { appendProjectSubjectIcon } from "./project-subject-icons.js";
 const SERIES_SCHEMA = "studio_catalogue_lookup_series_search_v2";
@@ -321,27 +320,13 @@ function renderProjection(state, projection) {
     const rowNode = state.rowsNode.ownerDocument.createElement("li");
     rowNode.className = "docsViewerReport__row";
     rowNode.dataset.seriesId = row.seriesId;
-    const marker = rowNode.ownerDocument.createElement("span");
-    marker.className = "docsViewerReport__cellStack";
-    marker.dataset.docsContentDetail = "media";
-    marker.dataset.docsMediaKind = "catalogue-series";
-    marker.dataset.docsMediaId = row.seriesId;
-    const seriesLink = rowNode.ownerDocument.createElement("button");
-    seriesLink.type = "button";
-    seriesLink.className = "docsViewer__mediaTextLink docsViewerReport__cellLink docsViewerReport__title";
-    seriesLink.dataset.seriesId = row.seriesId;
-    seriesLink.dataset.docsMediaOpen = "true";
-    seriesLink.textContent = row.title;
-    marker.appendChild(seriesLink);
-    rowNode.appendChild(marker);
+    const seriesTitle = rowNode.ownerDocument.createElement("span");
+    seriesTitle.className = "docsViewerReport__cellStack docsViewerReport__title";
+    seriesTitle.dataset.seriesId = row.seriesId;
+    seriesTitle.textContent = row.title;
+    rowNode.appendChild(seriesTitle);
     appendDocumentsCell(state, rowNode, row);
     state.rowsNode.appendChild(rowNode);
-  });
-  mountDocsViewerMediaLinks({
-    content: state.rowsNode,
-    documentTarget: {  collection: "", docId: state.context.doc.doc_id },
-    isCurrentDocument: () => state.context.content.contains(state.rowsNode),
-    openMediaTarget: state.context.openMediaTarget
   });
   state.statusNode.textContent = projection.rowCount === 1
     ? "1 published Series"

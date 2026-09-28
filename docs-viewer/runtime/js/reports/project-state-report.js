@@ -1,5 +1,4 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
-import { mountDocsViewerMediaLinks } from "../shared/docs-viewer-media-detail.js";
 import {
   appendProjectSubjectIcon
 } from "./project-subject-icons.js";
@@ -288,17 +287,9 @@ function appendSeriesCell(rowNode, row) {
   const cell = document.createElement("span");
   cell.className = "docsViewerReport__cellStack";
   row.series.forEach((series) => {
-    const marker = document.createElement("span");
-    marker.dataset.docsContentDetail = "media";
-    marker.dataset.docsMediaKind = "catalogue-series";
-    marker.dataset.docsMediaId = series.target.target_id;
-    const link = document.createElement("button");
-    link.type = "button";
-    link.className = "docsViewer__mediaTextLink docsViewerReport__cellLink";
-    link.dataset.docsMediaOpen = "true";
-    link.textContent = series.title;
-    marker.appendChild(link);
-    cell.appendChild(marker);
+    const label = document.createElement("span");
+    label.textContent = series.title;
+    cell.appendChild(label);
   });
   rowNode.appendChild(cell);
 }
@@ -393,12 +384,6 @@ function renderRows(state) {
     }
     projection.columns.forEach((key) => appendColumnCell(rowNode, row, key));
     state.rowsNode.appendChild(rowNode);
-  });
-  mountDocsViewerMediaLinks({
-    content: state.rowsNode,
-    documentTarget: {  collection: "", docId: state.context.doc.doc_id },
-    isCurrentDocument: () => state.context.content.contains(state.rowsNode),
-    openMediaTarget: state.context.openMediaTarget
   });
 }
 

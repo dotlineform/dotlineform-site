@@ -92,12 +92,7 @@ function normalizeWorkPresentation(value) {
   }
 
   var metadata = normalizedMetadata(value.metadata);
-  var series = null;
-  if (value.series !== undefined) {
-    var seriesTarget = normalizeDocsViewerCatalogueGroupTarget(value.series && value.series.target);
-    if (seriesTarget.kind !== "catalogue-series") throw new Error("Media View Series link is invalid.");
-    series = Object.freeze({ target: seriesTarget, label: normalizedTextField(value.series.label, "a Series label") });
-  }
+  if (value.series !== undefined) throw new Error("Media View Series links are unsupported.");
   var galleryIds = new Set();
   var galleries = value.galleries === undefined ? [] : value.galleries;
   if (!Array.isArray(galleries)) throw new Error("Media View requires an array of Gallery links.");
@@ -123,18 +118,16 @@ function normalizeWorkPresentation(value) {
       heightPx: imageHeight
     }),
     metadata: metadata,
-    series: series,
     galleries: Object.freeze(galleries),
     newTabTarget: newTabTarget
   });
 }
 
-/** Keep Series and Gallery identity separate even when their numeric IDs match. */
+/** Gallery identity uses its exact canonical spelling. */
 export function normalizeDocsViewerCatalogueGroupTarget(value) {
-  var pattern = value && (value.kind === "catalogue-series" ? /^[0-9]{3}$/
-    : value.kind === "catalogue-gallery" ? /^(?:[0-9]{3}|[1-9][0-9]{3,})$/ : null);
+  var pattern = value && value.kind === "catalogue-gallery" ? /^(?:[0-9]{3}|[1-9][0-9]{3,})$/ : null;
   if (!pattern || typeof value.id !== "string" || value.id !== value.id.trim() || !pattern.test(value.id)) {
-    throw new Error("Media View requires an exact Catalogue Series or Gallery target.");
+    throw new Error("Media View requires an exact Catalogue Gallery target.");
   }
   return Object.freeze({ kind: value.kind, id: value.id });
 }

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260905-120654-ab5e59
 title: Gallery Design
 added_date: "2026-09-05 12:06:54"
-last_updated: "2026-09-12 21:34:41"
+last_updated: "2026-09-28 15:22:43"
 summary: Record the resolved Media View gallery design, its durable destination and the separately owned public distribution and shared navigation work.
 ui_status: done
 parent_id: d-20260904-204816-0f31be
@@ -12,7 +12,7 @@ parent_id: d-20260904-204816-0f31be
 
 ## Resolved Outcome
 
-The gallery design and ordinary Catalogue-backed implementation are complete and accepted on 2026-09-12. [Catalogue Media View](Catalogue_Media_View.md) owns current authoring, data, presentation and navigation behavior. [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md) owns exact source forms, occurrence identity, Build, usage and audit behavior. This note is ready for manual archive.
+The gallery design and ordinary Catalogue-backed implementation were accepted on 2026-09-12. The Series Media View and token behavior described below was retired on 2026-09-28; these decisions remain as historical context. [Catalogue Media View](Catalogue_Media_View.md) owns current authoring, data, presentation and navigation behavior. [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md) owns exact source forms, occurrence identity, Build, usage and audit behavior. This note is ready for manual archive.
 
 A Series gallery has its own exact identity and ordered Work membership, distinct from an individual Work or Detail presentation. A gallery containing one Work remains a gallery; an empty Series remains valid. Catalogue ownership is independent of whether any corresponding document exists.
 
@@ -29,11 +29,11 @@ A Series gallery has its own exact identity and ordered Work membership, distinc
 | Sequence identity | Explicit Series context enables Work traversal. Direct Work/Detail entry does not infer a sequence from membership. Any Series thumbnail derives from its first ordered Work; no primary Work or image is stored. |
 | Loading lifetime | Render only the current page and selected image. Retain only existing in-flight Work reads and reject late results. Shared page-session reuse and browser history remain separately owned. |
 
-## Retained Examples
+## Historical Examples
 
-[Media View - Series 143 Gallery](/docs/?scope=analysis&stage=working&doc=d-20260906-164429-756174) supplies Series 143 and complete presentations for Works 01941 and 01942. It remains a distinct caller of the shared adapter and can start at the gallery or an explicitly supplied Work. Its copied thumbnails and embedded records are test input, not ordinary document authoring or a public loading contract.
+[Media View - Series 143 Gallery](/docs/?doc=d-20260906-164429-756174) previously supplied Series 143 and complete presentations for Works 01941 and 01942. Its interactive markup was retired; the Working document now preserves only a historical note.
 
-[Media View Gallery Navigation - Review](/docs/?scope=analysis&stage=working&doc=d-20260912-194630-965ab5) uses ordinary Work, Detail and Series tokens. It covers Series 143 and the 165-member Series 026, including four pages of 48/48/48/21 Works, page-boundary traversal, bidirectional cycling and return-page selection. Both Working examples remain available for manual regression review.
+[Media View Gallery Navigation - Review](/docs/?doc=d-20260912-194630-965ab5) contains authored examples of the former Work, Detail and Series behavior. Its retired token forms remain source text and no longer provide Series regression coverage.
 
 ## Archive Evidence And Remaining Boundaries
 

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260714-234030-434069
 title: Semantic Tokens Architecture
 added_date: "2026-07-14 23:40:30"
-last_updated: "2026-09-23 15:06:26"
+last_updated: "2026-09-28 15:14:52"
 summary: Describe explicit Catalogue tokens, the document-subject selection shortcut, source ownership, generated usage, and local/public resolution.
 parent_id: d-20260725-153656-516b61
 ---
@@ -15,16 +15,15 @@ Catalogue tokens retain an exact Catalogue identity and authored occurrence fiel
 
 ```md
 [[catalogue:media:work:00638|3 symbols]]
-[[catalogue:media:series:143|simultaneous equations]]
 [[catalogue:media:gallery:179|kylie structure 4 (details)]]
 [[catalogue:image:work:00638|alt=3%20symbols]]
 ```
 
-Media View text links accept an exact five-digit Work ID, an exact three-digit Series ID or an exact Gallery ID. Gallery IDs use three digits or at least four digits without a leading zero and are independent of Series IDs. The serializer escapes backslash, pipe and closing bracket in the required single-line label; the parser decodes only those escapes. Work image identity also uses five digits. Detail suffixes and the image `detail_id` field are retired: those source forms remain literal, produce no usage row and cannot resolve to a parent Work. The user removed the disposable authored Detail references before this retirement on 2026-09-23.
+Media View text links accept an exact five-digit Work ID or an exact Gallery ID. Gallery IDs use three digits or at least four digits without a leading zero. The serializer escapes backslash, pipe and closing bracket in the required single-line label; the parser decodes only those escapes. Work image identity also uses five digits. Detail and Series token forms remain literal, produce no usage row and do not open Media View. The existing authored Series tokens in Working source were deliberately left unchanged when support was removed.
 
-Image fields use deterministic percent encoding and canonical field order. Alt text is required. Captioned images also store placement (`full`, `left` or `right`) and boolean `fill_width`; summary is optional. Image tokens support Works only. Series-image tokens and the old Series slug policy are removed; Series and Gallery grids open through text links, with no inline group image.
+Image fields use deterministic percent encoding and canonical field order. Alt text is required. Captioned images also store placement (`full`, `left` or `right`) and boolean `fill_width`; summary is optional. Image tokens support Works only. Gallery grids open through text links, with no inline group image.
 
-Tokens always include their Work, Series or Gallery identity, including tokens inserted through Use document subject. Gallery selection is independent of document Subjects. Labels, alt text, captions and summaries are literal text; `title` and `metadata` are not data-binding commands. The experimental omitted-identity forms are retired without compatibility aliases.
+Tokens always include their Work or Gallery identity, including Work tokens inserted through Use document subject. Gallery selection is independent of document Subjects. Labels, alt text, captions and summaries are literal text; `title` and `metadata` are not data-binding commands. The experimental omitted-identity forms are retired without compatibility aliases.
 
 The old three-part Catalogue text form and Concept tokens are retired. They have no parser, renderer, authoring control or compatibility alias. Ordinary document references use Markdown links through [Insert doc link](Source_Editor_Scripts.md).
 
@@ -38,41 +37,41 @@ The generic Source adapter owns the mounted target, current buffer revision, cap
 
 ## Identity And Subject
 
-A token records an occurrence in body content. It does not establish that the document is about that Work or Series. Document Subject metadata retains that association, independently of body links and token usage. Supported subjects are Work, Series and, where the collection enables it, Folder; None clears the declaration. `detail_uid` is no longer an assignable subject field or a reader subject. Neither rendered media nor the usage index creates Subject metadata, public document associations or transitive relationships.
+A token records an occurrence in body content. It does not establish that the document is about that Work or Gallery. Document Subject metadata retains its independent association. Supported subjects are Work, Series and, where the collection enables it, Folder; None clears the declaration. Series is not a token or Media View target. Neither rendered media nor the usage index creates Subject metadata, public document associations or transitive relationships.
 
 Catalogue owns canonical identities and media. Tokens select Catalogue media independently of document Subject. Use document subject supplies the exact selection once during insertion. Changing the document's subject later does not retarget existing tokens; Build, Info and audits use the identity stored in the token.
 
 ## Registry And Lookups
 
-The checked configuration is `docs-viewer/config/semantic-tokens/registry.json`. It declares the Catalogue family, Work/Series/Gallery target definitions, identity policy, named lookup fields, occurrence metadata and the Catalogue Info contribution. The retired text action and modal contributions have been removed.
+The checked configuration is `docs-viewer/config/semantic-tokens/registry.json`. It declares the Catalogue family, Work/Gallery target definitions, identity policy, named lookup fields, occurrence metadata and the Catalogue Info contribution. The retired text action and modal contributions have been removed.
 
 The registry does not control which Source buttons a scope exposes. That proposed layer belongs to [Scope-configured Authoring Controls](Scope_Configured_Authoring_Controls.md). Parser, resolver and presentation implementations remain code-owned.
 
-The private generated lookup is `docs-viewer/data/generated/semantic-tokens/target-lookup.json`. Its Work/Series rows remain available to other registered Catalogue consumers. It is not the authoring, Info, Build or Broken Links authority for the supported Catalogue tokens. Retiring a token rendering path does not retire that shared lookup.
+The private generated lookup is `docs-viewer/data/generated/semantic-tokens/target-lookup.json`. It contains Work rows and is not the authoring, Info, Build or Broken Links authority for the supported Catalogue tokens. Series rows were removed with the Series token target definition.
 
-Media authoring and Info use generated Catalogue Work/Series/Gallery data through the configured media provider. The shared Catalogue media modal offers Works for images and adds Series/Gallery selection for text links. Gallery search reads Studio's generated `galleries/galleries_index.json` through `/docs/catalogue-media-targets`; Gallery resolution reads the selected `galleries/index/<gallery_id>.json` through `/docs/catalogue-gallery`. Neither needs the private legacy target lookup or a Gallery document. Current target validation precedes guarded insertion or Info updates. The Detail selector, Info field and lookup `has_details` projection are removed. These paths do not read the usage index.
+Media authoring and Info use generated Catalogue Work/Gallery data through the configured media provider. The shared Catalogue media modal offers Works for images and Work/Gallery selection for text links. Gallery search reads Studio's generated `galleries/galleries_index.json` through `/docs/catalogue-media-targets`; Gallery resolution reads the selected `galleries/index/<gallery_id>.json` through `/docs/catalogue-gallery`. Neither needs the private target lookup or a Gallery document. Current target validation precedes guarded insertion or Info updates. These paths do not read the usage index.
 
-Both Add Catalogue image and Add Media View link offer Use document subject, initially unchecked. Checking it selects the subject in the modal and disables manual Catalogue selection until unchecked. For images the checkbox is disabled without a Work subject from `work_id`; manual selection remains available. Media links support Work and Series subjects. Folder and absent subjects leave the shortcut disabled. Both actions serialize the normal explicit identity form. Token Info reads the stored identity and preserves it when updating presentation.
+Both Add Catalogue image and Add Media View link offer Use document subject, initially unchecked. Checking it selects the subject in the modal and disables manual Catalogue selection until unchecked. The checkbox is enabled only for a Work subject from `work_id`; Series, Folder and absent subjects leave manual selection available. Both actions serialize the normal explicit Work identity form. Token Info reads the stored identity and preserves it when updating presentation.
 
 ## Build And Runtime Resolution
 
-Work, Series and Gallery text links and Work images are rendered as HTML markers carrying exact Catalogue identity and authored presentation. A Gallery marker uses `data-docs-media-kind="catalogue-gallery"` and its exact Gallery ID. Build records these occurrences without requiring the private lookup or resolving a media URL. Their usage-row `href` is empty because the media provider resolves the presentation at runtime.
+Work and Gallery text links and Work images are rendered as HTML markers carrying exact Catalogue identity and authored presentation. A Gallery marker uses `data-docs-media-kind="catalogue-gallery"` and its exact Gallery ID. Build records these occurrences without requiring the private lookup or resolving a media URL. Their usage-row `href` is empty because the media provider resolves the presentation at runtime.
 
 The browser resolves those markers using generated Catalogue data and the shared [Media View](Catalogue_Media_View.md) presentation. This is also the public path: it requires public generated Catalogue data, not local authoring endpoints or document existence.
 
-Empty Series and Galleries are valid and open an empty grid. A missing Series, Gallery or selected image produces runtime failure feedback without replacing its identity. Series/Gallery image forms remain literal source and produce no usage row.
+Empty Galleries open an empty grid. A missing Gallery or selected image produces runtime failure feedback without replacing its identity. Series token forms and Gallery image forms remain literal source and produce no usage row.
 
 The builder escapes authored labels and presentation fields. Media fragments are restored after Markdown processing so authored labels remain literal text. Build does not mutate authored source or choose a replacement identity.
 
 ## Generated Usage And Audit
 
-Each workspace stage owns one `generated/documents/semantic-tokens/index.json` covering ordinary documents and all configured collections. Rows retain exact `source_stage`, `source_collection` and `source_doc_id`, with an empty collection for ordinary documents. The dataset retains its stage. Raw tokens, source ranges, family/type/identity, occurrence titles and destinations remain intact; repeated occurrences stay separate. Usage and diagnosis rows no longer contain `detail_id`; the report displays the exact Work, Series or Gallery identity.
+Each workspace stage owns one `generated/documents/semantic-tokens/index.json` covering ordinary documents and all configured collections. Rows retain exact `source_stage`, `source_collection` and `source_doc_id`, with an empty collection for ordinary documents. The dataset retains its stage. Raw tokens, source ranges, family/type/identity, occurrence titles and destinations remain intact; repeated occurrences stay separate. The report displays exact supported Work or Gallery identity.
 
 The existing `semantic_token_artifacts.py` owner combines occurrences collected during rendering with the saved index. Each sequential Save/Build replaces its built documents' occurrences and removes deleted members of that collection while preserving other documents and collections. Removing the last token removes that document's rows. Full main builds preserve child contributions, and child builds preserve main and sibling contributions. Index writing completes within the ordinary synchronous Build sequence. There are no child token indexes, per-document token stores, additional Markdown scans for token extraction or build-overlap mitigations.
 
 Publication flags, draft state and Subjects do not filter generated usage. Source-field validation remains owned by the existing document model; usage does not make an otherwise unsupported front-matter field valid. Supported document Move rebuilds the target and source collections in order, retaining the new source identity and removing the old one.
 
-The [Semantic Tokens Report](Semantic_Tokens_Report.md) is available only in Analysis Working. Its existing generated reader pairs indexed occurrences with exact generated document titles and managed URLs through the current collection-location owner. Those source summaries belong to the read response, not another saved index. Missing source payloads or ambiguous collection hosts fail visibly without choosing another document. The read-only [Docs Broken Links](Broken_Links.md) audit instead scans source and checks current generated Catalogue Work media or exact Series/Gallery membership records. It distinguishes `missing_series` and `missing_gallery` from `missing_media`. An unresolved target may require correction in Catalogue or its generated data; the audit does not retarget source or change publication state.
+The [Semantic Tokens Report](Semantic_Tokens_Report.md) pairs indexed occurrences with exact generated document titles and managed URLs through the current collection-location owner. Those source summaries belong to the read response, not another saved index. Missing source payloads or ambiguous collection hosts fail visibly without choosing another document. The read-only [Docs Broken Links](Broken_Links.md) audit scans source and checks current generated Catalogue Work media or exact Gallery membership records. It distinguishes `missing_gallery` from `missing_media`. An unresolved target may require correction in Catalogue or its generated data; the audit does not retarget source or change publication state.
 
 Ordinary document relationships remain separately owned by [Document Build](Builder.md). Token usage does not write `links.json`, `links-by-id`, Catalogue records or inferred document relationships.
 
