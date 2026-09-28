@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260714-234030-434069
 title: Semantic Tokens Architecture
 added_date: "2026-07-14 23:40:30"
-last_updated: "2026-09-28 15:14:52"
+last_updated: "2026-09-28 22:21:02"
 summary: Describe explicit Catalogue tokens, the document-subject selection shortcut, source ownership, generated usage, and local/public resolution.
 parent_id: d-20260725-153656-516b61
 ---
@@ -16,14 +16,14 @@ Catalogue tokens retain an exact Catalogue identity and authored occurrence fiel
 ```md
 [[catalogue:media:work:00638|3 symbols]]
 [[catalogue:media:gallery:179|kylie structure 4 (details)]]
-[[catalogue:image:work:00638|alt=3%20symbols]]
+[[catalogue:image:work:00638|use_work_title_caption=true&include_work_metadata=true&placement=left&fill_width=true]]
 ```
 
 Media View text links accept an exact five-digit Work ID or an exact Gallery ID. Gallery IDs use three digits or at least four digits without a leading zero. The serializer escapes backslash, pipe and closing bracket in the required single-line label; the parser decodes only those escapes. Work image identity also uses five digits. Detail and Series token forms remain literal, produce no usage row and do not open Media View. The existing authored Series tokens in Working source were deliberately left unchanged when support was removed.
 
-Image fields use deterministic percent encoding and canonical field order. Alt text is required. Captioned images also store placement (`full`, `left` or `right`) and boolean `fill_width`; summary is optional. Image tokens support Works only. Gallery grids open through text links, with no inline group image.
+Image fields use deterministic percent encoding and canonical field order. Work images require explicit boolean `use_work_title_caption` and `include_work_metadata` choices, placement (`full`, `left` or `right`) and boolean `fill_width`; `summary` is the only optional authored text. The token stores no literal Work title, alt text, caption or metadata. Image tokens support Works only. Gallery grids open through text links, with no inline group image.
 
-Tokens always include their Work or Gallery identity, including Work tokens inserted through Use document subject. Gallery selection is independent of document Subjects. Labels, alt text, captions and summaries are literal text; `title` and `metadata` are not data-binding commands. The experimental omitted-identity forms are retired without compatibility aliases.
+Tokens always include their Work or Gallery identity, including Work tokens inserted through Use document subject. Gallery selection is independent of document Subjects. Media View link labels and image summaries are authored literal text; the image choices instruct Build to resolve the exact generated Work record. The experimental omitted-identity forms are retired without compatibility aliases.
 
 The old three-part Catalogue text form and Concept tokens are retired. They have no parser, renderer, authoring control or compatibility alias. Ordinary document references use Markdown links through [Insert doc link](Source_Editor_Scripts.md).
 
@@ -49,19 +49,21 @@ The registry does not control which Source buttons a scope exposes. That propose
 
 The private generated lookup is `docs-viewer/data/generated/semantic-tokens/target-lookup.json`. It contains Work rows and is not the authoring, Info, Build or Broken Links authority for the supported Catalogue tokens. Series rows were removed with the Series token target definition.
 
-Media authoring and Info use generated Catalogue Work/Gallery data through the configured media provider. The shared Catalogue media modal offers Works for images and Work/Gallery selection for text links. Gallery search reads Studio's generated `galleries/galleries_index.json` through `/docs/catalogue-media-targets`; Gallery resolution reads the selected `galleries/index/<gallery_id>.json` through `/docs/catalogue-gallery`. Neither needs the private target lookup or a Gallery document. Current target validation precedes guarded insertion or Info updates. These paths do not read the usage index.
+Media authoring and Info use generated Catalogue Work/Gallery data through the configured media provider. The shared Catalogue media modal offers Works for images and Work/Gallery selection for text links. Gallery search reads Studio's generated `galleries/galleries_index.json` through `/docs/catalogue-media-targets`; Gallery resolution reads the selected `galleries/index/<gallery_id>.json` through `/docs/catalogue-gallery`. Neither needs the private target lookup or a Gallery document. Current target validation precedes guarded insertion or Info updates; provider failures remain visible and Source Save revalidates pending token edits. These paths do not read the usage index.
 
 Both Add Catalogue image and Add Media View link offer Use document subject, initially unchecked. Checking it selects the subject in the modal and disables manual Catalogue selection until unchecked. The checkbox is enabled only for a Work subject from `work_id`; Series, Folder and absent subjects leave manual selection available. Both actions serialize the normal explicit Work identity form. Token Info reads the stored identity and preserves it when updating presentation.
 
 ## Build And Runtime Resolution
 
-Work and Gallery text links and Work images are rendered as HTML markers carrying exact Catalogue identity and authored presentation. A Gallery marker uses `data-docs-media-kind="catalogue-gallery"` and its exact Gallery ID. Build records these occurrences without requiring the private lookup or resolving a media URL. Their usage-row `href` is empty because the media provider resolves the presentation at runtime.
+Work and Gallery text links and Work images are rendered as HTML markers carrying exact Catalogue identity. A Gallery marker uses `data-docs-media-kind="catalogue-gallery"` and its exact Gallery ID. Build records these occurrences without requiring the private lookup or resolving a media URL. Their usage-row `href` is empty because the media provider resolves the presentation at runtime.
+
+For each Work image, the shared document builder reads `works/index/<work_id>.json` from the configured stage, validates the exact Work identity and required title, and reuses that record within one build. A missing or invalid record fails the build. The current `work.title` always supplies image alt text and the usage title; `use_work_title_caption` controls its separate visible bold caption. When `include_work_metadata` is true, Build renders nonempty `year_display`, nonempty `medium_caption`, positive height × width × optional depth in centimetres, and `cat. <work_id>` as separate escaped lines in that order. It omits the dimensions line without both height and width. Authored `summary` follows the metadata with the existing figure gap; the figure also supports metadata or summary without a visible title caption. Generated HTML contains static text, including explicit metadata line breaks. Targeted and full Working builds use this path. Publish copies its already-captured Catalogue JSON into the temporary Preview build workspace before the same renderer runs; it does not reread live Working JSON during that build.
 
 The browser resolves those markers using generated Catalogue data and the shared [Media View](Catalogue_Media_View.md) presentation. This is also the public path: it requires public generated Catalogue data, not local authoring endpoints or document existence.
 
 Empty Galleries open an empty grid. A missing Gallery or selected image produces runtime failure feedback without replacing its identity. Series token forms and Gallery image forms remain literal source and produce no usage row.
 
-The builder escapes authored labels and presentation fields. Media fragments are restored after Markdown processing so authored labels remain literal text. Build does not mutate authored source or choose a replacement identity.
+The builder escapes authored labels, Work-derived text and presentation fields. Media fragments are restored after Markdown processing so authored labels remain literal text. Build does not mutate authored source or choose a replacement identity. The browser still resolves the actual image and Media View from the marker's exact Work identity and current Catalogue consumer data.
 
 ## Generated Usage And Audit
 
@@ -83,7 +85,7 @@ See [Source Editor UI](Semantic_Tokens_Source_Editor_UI.md) for the authoring an
 
 ## Focused Grammar Evidence
 
-The following selection is historical evidence, not validation of the current Detail-free grammar. Its Detail assertions and the subject/media/report fixtures that include retired Detail fields need a separately approved test update. No test files or fixtures changed during the 2026-09-23 consumer retirement.
+The following selection is historical evidence, not validation of the current bound-image grammar. Its literal image fields and Detail assertions, along with subject/media/report fixtures containing retired Detail fields, need a separately approved test update. No test files or fixtures changed during the 2026-09-23 consumer retirement or the bound-image delivery.
 
 The existing `docs-viewer/tests/python/test_semantic_tokens_catalogue.py` selection has two pure checks. `test_media_parser_preserves_literal_labels_ranges_and_code_boundaries` supplies escaped explicit Work links, adjacent occurrences, inline/fenced code and comments; it asserts decoded literal labels, source ranges, caret activation and inactive code/comment content. `test_visual_occurrence_parser_is_canonical_and_context_aware` supplies explicit primary/Detail images and captions, summaries, placement and width fields; it asserts canonical serialization, presentation retention, source ranges and rejection of its listed malformed field/identity forms.
 

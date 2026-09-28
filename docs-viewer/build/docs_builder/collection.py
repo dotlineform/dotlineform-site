@@ -225,6 +225,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
     def run(self, *, write: bool, emit_diagnostics: bool = False) -> dict[str, Any]:
         """Build all source documents or merge selected sources into saved metadata."""
         started_at = monotonic_time()
+        self._catalogue_work_cache = {}
         if self.config.stage == "working":
             read_selected(self.config)
         previous_manifest, previous_manage = self.saved_collection_metadata() if self.targeted_build else (None, None)

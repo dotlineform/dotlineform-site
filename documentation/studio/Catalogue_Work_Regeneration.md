@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260916-211443-08a668
 title: Catalogue Work Record Regeneration
 added_date: "2026-09-16 21:14:43"
-last_updated: "2026-09-17 22:22:04"
+last_updated: "2026-09-28 22:21:02"
 summary: Completed Catalogue Work-record generation, full collection delivery and retained list navigation; accepted for closeout.
 ui_status: done
 parent_id: d-20260428-000000-f5ff18
@@ -11,6 +11,8 @@ parent_id: d-20260428-000000-f5ff18
 # Catalogue Work Record Regeneration
 
 ## Purpose And Status
+
+This document records the completed 2026-09-17 Regenerate delivery and its original literal image-token form. Regenerate now emits the bound image-token form described in [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md); the original source examples and acceptance evidence below remain historical.
 
 The Catalogue collection surfaces existing Works owned by the Studio Works editor. Studio owns Work creation, metadata and generated Work JSON. Docs Viewer owns the documents that present those records, with Regenerate as their creation and maintenance action.
 

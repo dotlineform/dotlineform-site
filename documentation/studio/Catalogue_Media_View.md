@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260903-154141-7c9e4b
 title: Catalogue Media View
 added_date: "2026-09-03 15:41:41"
-last_updated: "2026-09-28 18:45:00"
+last_updated: "2026-09-28 22:21:02"
 summary: Exact Work and Gallery links, direct and Series-related Gallery navigation, responsive Work images and paginated Media View, with static-consumer and public-data limits.
 ui_status: done
 parent_id: d-20260903-222617-28475e
@@ -29,25 +29,25 @@ The authored label remains literal text and does not change when the Catalogue t
 
 Gallery IDs use the exact canonical spelling: three digits, or at least four digits without a leading zero. Gallery tokens allow no image presentation. The picker inserts `catalogue:media:gallery`; token Info reads the current Gallery title, and Broken Links checks the exact generated Gallery record. Subject assignment offers None, Work, Series and, where the collection supports it, Folder. Gallery tokens do not imply a new document Subject kind.
 
-**Add Catalogue Image** searches Catalogue Works and uses the selected Work's image. It retains authored alt text, caption, summary, placement and width settings:
+**Add Catalogue Image** searches Catalogue Works and uses the selected Work's image. Its token stores Work-title caption and metadata choices, optional static summary, placement and width settings:
 
 ```text
-[[catalogue:image:work:03072|alt=kylie%20structure%204.1&caption=Selected%20Work&placement=full&fill_width=true]]
+[[catalogue:image:work:03072|use_work_title_caption=true&include_work_metadata=true&placement=full&fill_width=true]]
 ```
 
 Insertion and token Info edits validate current selected media before changing the captured Source range. Token edits join the existing combined Source session; Save ends at canonical source persistence and the watcher refreshes document output independently. Closing Source releases its token Info ownership; delayed lookups cannot reopen or overwrite a released panel.
 
 ## Document Build And Presentation
 
-Document Build preserves exact Catalogue references and authored presentation. It embeds no Catalogue record, image URL or Catalogue metadata. A Work has `catalogue-work` identity and its five-digit ID; a Gallery has `catalogue-gallery` identity and its exact canonical Gallery ID. Gallery entry remains a text link in document content; thumbnail grids exist only inside Media View.
+Document Build preserves exact Catalogue references and authored presentation. For a Work image it reads the exact generated Work record and embeds selected title and metadata as static, escaped figure text; it embeds no Catalogue record or image URL. A Work has `catalogue-work` identity and its five-digit ID; a Gallery has `catalogue-gallery` identity and its exact canonical Gallery ID. Gallery entry remains a text link in document content; thumbnail grids exist only inside Media View.
 
-Text links and uncaptioned images preserve surrounding Markdown even at the start of a paragraph or list item. Authored labels remain escaped literal text. Captioned images are block-level figures, with their caption and summary retained.
+Text links preserve surrounding Markdown even at the start of a paragraph or list item. Authored labels remain escaped literal text. Work images are block-level figures, including when their visible title caption is omitted; selected metadata and any authored summary remain available.
 
 Opening a document resolves inline images through current Catalogue consumer data. Selecting a text link reads the exact Work or Gallery and opens Media View. Selecting an image reads its Work again, updates the inline image and opens Media View from that record. Retired Detail and Series markers do not open Media View.
 
 Media View shows the selected image, title and ordered metadata as real text. Work presentation includes available year, medium and dimensions plus Catalogue number. Open in new tab targets the supplied selected image. Back to document restores the invoking document, scroll and focus through Content Detail, preserving stage and child-document context.
 
-Build retains valid references when Catalogue data is unavailable, allowing later recovery without a document rebuild. Runtime loading and failure feedback appears beside the opener and permits retry. Replaced documents, released mounts, changed child selections and superseded requests cannot apply a late response.
+Build retains valid text-link references when Catalogue data is unavailable, allowing later runtime recovery. A Work image requires its generated record at Build and fails visibly if the exact identity or title is unavailable. Runtime loading and failure feedback for the image and Media View still appears beside the opener and permits retry. Replaced documents, released mounts, changed child selections and superseded requests cannot apply a late response.
 
 ## Current Catalogue Data
 

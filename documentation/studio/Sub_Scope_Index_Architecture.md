@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260728-113139-763354
 title: Sub-Scope Index Architecture
 added_date: "2026-07-28 11:31:39"
-last_updated: "2026-09-28 15:19:36"
+last_updated: "2026-09-28 22:21:02"
 summary: define collection identity, the docs_subscope default, registered customisations, selection lifecycle, and explicit function adoption
 parent_id: d-20260801-084127-752d7e
 ---
@@ -261,7 +261,7 @@ New Catalogue documents default to `draft: false` because they represent publish
 
 The existing collection action registration supplies the exact Working Catalogue target and report-refresh callback. The management host opens the dedicated workflow/modal. Preview lists selected Works and create/regenerate/skip counts, with Only create new docs initially checked: checked skips existing documents entirely, while unchecked updates their title and body. There is no document cap. Apply verifies the selected IDs and content/source revision receipt, then awaits source writes, document builds, new-document Links initialization and report refresh. Busy state covers those operations, while input and result display remain ready. Successful results stay in the modal with one Close button. Failures report committed sources and incomplete work without automatically retrying creation or the build.
 
-[Work-record generator](../../docs-viewer/services/docs_catalogue_work_record.py) defines the body in code. Each body is one ordinary `catalogue:image:work` token containing the explicit Work ID, `alt` and `caption` from the Work title, `placement=left` and `fill_width=true`. The front-matter title also comes from the Work title. The literal summary uses this order:
+[Work-record generator](../../docs-viewer/services/docs_catalogue_work_record.py) defines the body in code. Each body is one ordinary `catalogue:image:work` token containing the explicit Work ID, `use_work_title_caption=true`, `include_work_metadata=true`, `placement=left` and `fill_width=true`. The front-matter title also comes from the Work title, while the token stores no literal Work-derived text. The document builder resolves the current generated Work title and selected metadata on each Build, in this order:
 
 ```text
 <year_display>
@@ -270,7 +270,7 @@ The existing collection action registration supplies the exact Working Catalogue
 cat. <work_id>
 ```
 
-Empty optional summary lines are omitted. Dimensions use positive numeric `height_cm`, `width_cm` and optional `depth_cm`; the whole dimensions line is omitted if height or width is missing, and whole numbers omit `.0`. The existing image-token serializer encodes values and newlines. There are no Markdown templates or JSON field definitions, and token field values are literal: `summary=metadata` is not a lookup instruction. To change the structure, amend the generator and Regenerate with Only create new docs unchecked. To refresh Work metadata, save/generate it in Studio first, then Regenerate. Ordinary Docs Build renders the saved token values.
+Empty optional metadata lines are omitted. Dimensions use positive numeric `height_cm`, `width_cm` and optional `depth_cm`; the whole dimensions line is omitted if height or width is missing, and whole numbers omit `.0`. There are no Markdown templates or JSON field definitions. Regenerate creates or replaces the bound token and may update the document's front-matter title when Only create new docs is unchecked. To refresh rendered Work metadata, first Refresh Catalogue so generated JSON is current, then run the relevant Docs Build; changing the Work or running Regenerate alone does not update every existing rendered figure. [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md) owns the bound token grammar and rendering contract.
 
 ### Catalogue Collection Browsing
 

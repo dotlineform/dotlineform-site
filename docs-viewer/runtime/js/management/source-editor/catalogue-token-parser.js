@@ -1,15 +1,11 @@
 var LEXICAL_KEY_PATTERN = /^[a-z][a-z0-9-]*$/;
 var LEXICAL_ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
-var IMAGE_FIELDS = new Set(["alt", "caption", "summary", "placement", "fill_width"]);
+var IMAGE_FIELDS = new Set(["use_work_title_caption", "include_work_metadata", "summary", "placement", "fill_width"]);
 var IMAGE_PLACEMENTS = new Set(["full", "left", "right"]);
 var MEDIA_TARGET_PATTERNS = { work: /^[0-9]{5}$/, gallery: /^(?:[0-9]{3}|[1-9][0-9]{3,})$/ };
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
-}
-
-function plainText(value) {
-  return cleanString(value).replace(/\s+/g, " ");
 }
 
 function summaryText(value) {
@@ -101,31 +97,29 @@ export function serializeCatalogueMediaToken(options = {}) {
 export function serializeCatalogueImageToken(options = {}) {
   var targetType = cleanString(options.targetType);
   var targetId = cleanString(options.targetId);
-  var alt = plainText(options.alt);
   if (targetType !== "work" || !/^\d{5}$/.test(targetId)) return "";
   if (
     !LEXICAL_KEY_PATTERN.test(targetType)
     || !LEXICAL_ID_PATTERN.test(targetId)
-    || !alt
+    || typeof options.useWorkTitleCaption !== "boolean"
+    || typeof options.includeWorkMetadata !== "boolean"
+    || typeof options.fillWidth !== "boolean"
+    || (options.summary !== undefined && typeof options.summary !== "string")
   ) return "";
   var definition = targetDefinition(options.registry, "catalogue", targetType);
   if (definition && definition.idPolicy.canonicalPattern) {
     var canonicalPattern = new RegExp(definition.idPolicy.canonicalPattern);
     if (!canonicalPattern.test(targetId)) return "";
   }
-  var caption = plainText(options.caption);
   var summary = summaryText(options.summary);
   var placement = cleanString(options.placement).toLowerCase();
-  var fields = [["alt", alt]];
-  if (caption) {
-    if (!IMAGE_PLACEMENTS.has(placement) || typeof options.fillWidth !== "boolean") return "";
-    fields.push(["caption", caption]);
-    if (summary) fields.push(["summary", summary]);
-    fields.push(["placement", placement]);
-    fields.push(["fill_width", options.fillWidth ? "true" : "false"]);
-  } else if (summary || placement || typeof options.fillWidth === "boolean") {
-    return "";
-  }
+  if (!IMAGE_PLACEMENTS.has(placement)) return "";
+  var fields = [
+    ["use_work_title_caption", options.useWorkTitleCaption ? "true" : "false"],
+    ["include_work_metadata", options.includeWorkMetadata ? "true" : "false"]
+  ];
+  if (summary) fields.push(["summary", summary]);
+  fields.push(["placement", placement], ["fill_width", options.fillWidth ? "true" : "false"]);
   var query = fields.map(function (field) {
     return field[0] + "=" + encodeImageValue(field[1]);
   }).join("&");
@@ -148,29 +142,29 @@ function parseCatalogueImageFields(rawQuery, options) {
     if (value === null) return null;
     fields[key] = value;
   }
-  if (!fields.alt) return null;
-  var fillWidth;
-  if (Object.prototype.hasOwnProperty.call(fields, "fill_width")) {
-    if (fields.fill_width !== "true" && fields.fill_width !== "false") return null;
-    fillWidth = fields.fill_width === "true";
-  }
+  if (["use_work_title_caption", "include_work_metadata", "placement", "fill_width"].some(function (key) {
+    return !Object.prototype.hasOwnProperty.call(fields, key);
+  })) return null;
+  if (["use_work_title_caption", "include_work_metadata", "fill_width"].some(function (key) {
+    return fields[key] !== "true" && fields[key] !== "false";
+  })) return null;
   var serialized = serializeCatalogueImageToken({
     registry: options.registry,
     targetType: options.targetType,
     targetId: options.targetId,
-    alt: fields.alt,
-    caption: fields.caption || "",
+    useWorkTitleCaption: fields.use_work_title_caption === "true",
+    includeWorkMetadata: fields.include_work_metadata === "true",
     summary: fields.summary || "",
-    placement: fields.placement || "",
-    fillWidth: typeof fillWidth === "boolean" ? fillWidth : null
+    placement: fields.placement,
+    fillWidth: fields.fill_width === "true"
   });
   if (!serialized || serialized.slice(serialized.indexOf("|") + 1, -2) !== rawQuery) return null;
   return {
-    alt: plainText(fields.alt),
-    caption: plainText(fields.caption),
+    useWorkTitleCaption: fields.use_work_title_caption === "true",
+    includeWorkMetadata: fields.include_work_metadata === "true",
     summary: summaryText(fields.summary),
     placement: cleanString(fields.placement),
-    fillWidth: typeof fillWidth === "boolean" ? fillWidth : null
+    fillWidth: fields.fill_width === "true"
   };
 }
 
@@ -196,7 +190,7 @@ export function parseCatalogueToken(raw, options = {}) {
       })
     : null;
   var title = imagePresentation
-    ? imageFields && (imageFields.caption || imageFields.alt)
+    ? ""
     : unescapeTitle(rawFields);
   if (mediaPresentation && !serializeCatalogueMediaToken({ targetType: targetType, targetId: targetId, title: title })) return null;
   if (
@@ -204,7 +198,8 @@ export function parseCatalogueToken(raw, options = {}) {
     || !LEXICAL_KEY_PATTERN.test(family)
     || !LEXICAL_KEY_PATTERN.test(targetType)
     || !LEXICAL_ID_PATTERN.test(targetId)
-    || !title
+    || (!imagePresentation && !title)
+    || (imagePresentation && !imageFields)
   ) return null;
   var definition = targetDefinition(options.registry, family, targetType);
   var supported = Boolean(definition);
@@ -224,8 +219,8 @@ export function parseCatalogueToken(raw, options = {}) {
     supported: supported,
     activatable: supported,
     presentation: imagePresentation ? "image" : "media",
-    alt: imageFields ? imageFields.alt : "",
-    caption: imageFields ? imageFields.caption : "",
+    useWorkTitleCaption: imageFields ? imageFields.useWorkTitleCaption : null,
+    includeWorkMetadata: imageFields ? imageFields.includeWorkMetadata : null,
     summary: imageFields ? imageFields.summary : "",
     placement: imageFields ? imageFields.placement : "",
     fillWidth: imageFields ? imageFields.fillWidth : null

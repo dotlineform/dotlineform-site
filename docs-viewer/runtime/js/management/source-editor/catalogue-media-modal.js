@@ -8,15 +8,16 @@ import { collectSemanticTokenTargetMatches } from "./semantic-token-targets.js";
 import { parseCatalogueToken, serializeCatalogueImageToken, serializeCatalogueMediaToken } from "./catalogue-token-parser.js";
 import { createCatalogueTargetPickerList } from "./catalogue-target-picker.js";
 import {
-  bindImagePresentation, hydrateImagePresentation, imagePresentationHtml, readImagePresentation
-} from "./source-editor-image-presentation.js";
+  bindCatalogueImageDerivedTitle, catalogueImagePresentationHtml,
+  hydrateCatalogueImagePresentation, readCatalogueImagePresentation
+} from "./catalogue-image-presentation.js";
 
 var SEARCH_INPUT_ID = "docsViewerCatalogueImageSearch";
 var RESULTS_ID = "docsViewerCatalogueImageResults";
-var ALT_INPUT_ID = "docsViewerCatalogueImageAlt";
+var LINK_INPUT_ID = "docsViewerCatalogueLinkText";
 var SUBJECT_INPUT_ID = "docsViewerCatalogueUseDocumentSubject";
 
-function modalBody(searchQuery, alt, imageMode) {
+function modalBody(searchQuery, linkText, imageMode) {
   return (
     '<div class="docsViewerCatalogueTokenModal docsViewerCatalogueImageModal">' +
       '<label class="docsViewer__field docsViewer__field--checkbox" for="' + SUBJECT_INPUT_ID + '">' +
@@ -29,11 +30,11 @@ function modalBody(searchQuery, alt, imageMode) {
       "</label>" +
       '<p class="docsViewerCatalogueTokenModal__searchStatus muted small" data-role="catalogue-search-status">Loading Catalogue…</p>' +
       '<div class="docsViewerCatalogueTargetPicker__results docsViewerCatalogueTokenModal__results" id="' + RESULTS_ID + '" role="listbox" aria-label="' + (imageMode ? "Catalogue Works" : "Catalogue Works and Galleries") + '" data-role="catalogue-results" tabindex="0" hidden></div>' +
-      '<label class="docsViewer__field" for="' + ALT_INPUT_ID + '">' +
-        '<span class="docsViewer__fieldLabel">' + (imageMode ? "Alt text" : "Link text") + '</span>' +
-        '<input class="docsViewer__fieldInput" id="' + ALT_INPUT_ID + '" type="text" autocomplete="off" value="' + escapeHtml(alt) + '" required>' +
-      "</label>" +
-      (imageMode ? imagePresentationHtml({ idPrefix: "docsViewerCatalogueImage" }) : "") +
+      (imageMode ? catalogueImagePresentationHtml({ idPrefix: "docsViewerCatalogueImage" }) :
+        '<label class="docsViewer__field" for="' + LINK_INPUT_ID + '">' +
+          '<span class="docsViewer__fieldLabel">Link text</span>' +
+          '<input class="docsViewer__fieldInput" id="' + LINK_INPUT_ID + '" type="text" autocomplete="off" value="' + escapeHtml(linkText) + '" required>' +
+        "</label>") +
     "</div>"
   );
 }
@@ -49,7 +50,7 @@ export function openCatalogueMediaModal(options = {}) {
   if (initialToken && initialToken.presentation !== "media") initialToken = null;
   var selectionText = initialToken ? initialToken.title : selectedTextForCatalogueTitle(capture && capture.text);
   var state = { disposed: false, request: 0, list: null, support: null, target: null,
-    captionDefault: "", altDefault: "", replaceDefaults: null,
+    linkDefault: "", showDerivedTitle: null, replaceDefaults: null,
     useDocumentSubject: false };
   return openDocsViewerManagementModal({
     root: options.root,
@@ -65,8 +66,7 @@ export function openCatalogueMediaModal(options = {}) {
     onOpen: function (api) {
       var modalRoot = api.host.querySelector('[data-role="docs-viewer-management-modal"]');
       var search = api.host.querySelector("#" + SEARCH_INPUT_ID);
-      var alt = api.host.querySelector("#" + ALT_INPUT_ID);
-      var caption = api.host.querySelector('[data-role="staged-media-caption-text"]');
+      var linkInput = api.host.querySelector("#" + LINK_INPUT_ID);
       var results = api.host.querySelector('[data-role="catalogue-results"]');
       var status = api.host.querySelector('[data-role="catalogue-search-status"]');
       var primary = api.host.querySelector('[data-role="modal-primary"]');
@@ -74,8 +74,10 @@ export function openCatalogueMediaModal(options = {}) {
       subjectCheckbox.checked = state.useDocumentSubject;
       if (modalRoot) modalRoot.id = imageMode ? "catalogue-image-add-modal" : "catalogue-media-link-modal";
       if (imageMode) {
-        bindImagePresentation(api.host);
-        hydrateImagePresentation(api.host, { addCaption: true, caption: selectionText, placement: "full", fillWidth: true });
+        hydrateCatalogueImagePresentation(api.host, {
+          useWorkTitleCaption: true, includeWorkMetadata: true, placement: "full", fillWidth: true
+        });
+        state.showDerivedTitle = bindCatalogueImageDerivedTitle(api.host);
       }
 
       function showResults(visible) {
@@ -88,20 +90,20 @@ export function openCatalogueMediaModal(options = {}) {
         status.classList.toggle("is-error", error);
       }
       state.replaceDefaults = function (title) {
-        if (!imageMode) {
-          alt.value = catalogueMediaLinkLabel({ title: title }, alt.value, { title: state.altDefault }, Boolean(selectionText));
-          state.altDefault = title;
+        if (imageMode) {
+          state.showDerivedTitle(title);
           return;
         }
-        [[caption, "captionDefault"], [alt, "altDefault"]].forEach(function (entry) {
-          if (!entry[0].value || entry[0].value === state[entry[1]]) entry[0].value = title;
-          state[entry[1]] = title;
-        });
+        linkInput.value = catalogueMediaLinkLabel(
+          { title: title }, linkInput.value, { title: state.linkDefault }, Boolean(selectionText)
+        );
+        state.linkDefault = title;
       };
       async function selectTarget(target) {
         var request = ++state.request;
         state.target = target;
         primary.disabled = true;
+        if (imageMode) state.showDerivedTitle("");
         search.value = target.title;
         state.list.setTargets([]);
         showResults(false);
@@ -121,6 +123,7 @@ export function openCatalogueMediaModal(options = {}) {
         state.request += 1;
         state.target = null;
         primary.disabled = true;
+        if (imageMode) state.showDerivedTitle("");
         var targets = imageMode ? state.support.targets.filter(function (target) { return target.targetType === "work"; }) : state.support.targets;
         var matches = collectSemanticTokenTargetMatches(targets, search.value, state.support.registry, 20);
         state.list.setTargets(matches);
@@ -132,8 +135,10 @@ export function openCatalogueMediaModal(options = {}) {
           return item.targetType === subjectTarget.targetType && item.targetId === subjectTarget.targetId;
         });
         if (target) return selectTarget(target);
+        state.request += 1;
         state.target = null;
         primary.disabled = true;
+        if (imageMode) state.showDerivedTitle("");
         message("The selected Catalogue target is unavailable.", true);
       }
       state.list = createCatalogueTargetPickerList(results, {
@@ -185,17 +190,12 @@ export function openCatalogueMediaModal(options = {}) {
       // Revalidate current media before writing source.
       var current = await readCatalogueTokenPresentation(adapter, state.target);
       state.replaceDefaults(current.label);
-      var alt = String(api.host.querySelector("#" + ALT_INPUT_ID).value || "").trim();
-      if (!alt) { api.setStatus(imageMode ? "Enter alt text." : "Enter link text."); return false; }
-      var presentation = imageMode ? readImagePresentation(api.host) : null;
-      if (presentation && presentation.addCaption && !presentation.caption) {
-        api.setStatus("Enter caption text or turn off Add caption.");
-        return false;
-      }
-      var fields = { registry: state.support.registry, targetType: state.target.targetType, targetId: state.target.targetId, alt: alt, title: alt };
-      if (presentation && presentation.addCaption) {
-        Object.assign(fields, { caption: presentation.caption, summary: presentation.summary,
-          placement: presentation.placement, fillWidth: presentation.fillWidth });
+      var fields = { registry: state.support.registry, targetType: state.target.targetType, targetId: state.target.targetId };
+      if (imageMode) {
+        Object.assign(fields, readCatalogueImagePresentation(api.host));
+      } else {
+        fields.title = String(api.host.querySelector("#" + LINK_INPUT_ID).value || "").trim();
+        if (!fields.title) { api.setStatus("Enter link text."); return false; }
       }
       var token = imageMode ? serializeCatalogueImageToken(fields) : serializeCatalogueMediaToken(fields);
       if (!token) { api.setStatus("The selected image and presentation cannot be serialized."); return false; }

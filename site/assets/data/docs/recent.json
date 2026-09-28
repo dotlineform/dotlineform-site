@@ -4,6 +4,78 @@
   "limit": 20,
   "docs": [
     {
+      "doc_id": "d-20260801-212422-43b47c",
+      "title": "10,000",
+      "collection": "works",
+      "report_doc_id": "d-20260801-073826-8865a8",
+      "collection_title": "Context",
+      "timestamp": "2026-09-28 21:48:34"
+    },
+    {
+      "doc_id": "d-20260801-212422-081a73",
+      "title": "16 forms",
+      "collection": "works",
+      "report_doc_id": "d-20260801-073826-8865a8",
+      "collection_title": "Context",
+      "timestamp": "2026-09-28 21:48:34"
+    },
+    {
+      "doc_id": "d-20260801-212422-df11f3",
+      "title": "3 symbols",
+      "collection": "works",
+      "report_doc_id": "d-20260801-073826-8865a8",
+      "collection_title": "Context",
+      "timestamp": "2026-09-28 21:48:34"
+    },
+    {
+      "doc_id": "d-20260801-212422-632af5",
+      "title": "64 forms",
+      "collection": "works",
+      "report_doc_id": "d-20260801-073826-8865a8",
+      "collection_title": "Context",
+      "timestamp": "2026-09-28 21:48:34"
+    },
+    {
+      "doc_id": "d-20260801-212422-3a2da4",
+      "title": "a doll story",
+      "collection": "works",
+      "report_doc_id": "d-20260801-073826-8865a8",
+      "collection_title": "Context",
+      "timestamp": "2026-09-28 21:48:34"
+    },
+    {
+      "doc_id": "d-20260801-212422-773b86",
+      "title": "a feeling that we are part of a structure",
+      "collection": "works",
+      "report_doc_id": "d-20260801-073826-8865a8",
+      "collection_title": "Context",
+      "timestamp": "2026-09-28 21:48:34"
+    },
+    {
+      "doc_id": "d-20260801-212422-bc7ae1",
+      "title": "a humid home full of light",
+      "collection": "works",
+      "report_doc_id": "d-20260801-073826-8865a8",
+      "collection_title": "Context",
+      "timestamp": "2026-09-28 21:48:34"
+    },
+    {
+      "doc_id": "d-20260801-212422-d91151",
+      "title": "a poem divided into 4 parts",
+      "collection": "works",
+      "report_doc_id": "d-20260801-073826-8865a8",
+      "collection_title": "Context",
+      "timestamp": "2026-09-28 21:48:34"
+    },
+    {
+      "doc_id": "d-20260801-212422-186a69",
+      "title": "a theory of happiness",
+      "collection": "works",
+      "report_doc_id": "d-20260801-073826-8865a8",
+      "collection_title": "Context",
+      "timestamp": "2026-09-28 21:48:34"
+    },
+    {
       "doc_id": "d-20260426-164043-e14f49",
       "title": "dotlineform",
       "timestamp": "2026-09-26 21:57:26"
@@ -14,73 +86,9 @@
       "timestamp": "2026-09-26 19:38:17"
     },
     {
-      "doc_id": "d-20260801-212422-632af5",
-      "title": "64 forms",
-      "collection": "works",
-      "report_doc_id": "d-20260801-073826-8865a8",
-      "collection_title": "Context",
-      "timestamp": "2026-09-23 14:46:50"
-    },
-    {
-      "doc_id": "d-20260801-212422-773b86",
-      "title": "a feeling that we are part of a structure",
-      "collection": "works",
-      "report_doc_id": "d-20260801-073826-8865a8",
-      "collection_title": "Context",
-      "timestamp": "2026-09-16 22:23:33"
-    },
-    {
       "doc_id": "d-20260916-161504-f8c947",
       "title": "Catalogue",
       "timestamp": "2026-09-16 17:22:58"
-    },
-    {
-      "doc_id": "d-20260801-212422-186a69",
-      "title": "a theory of happiness",
-      "collection": "works",
-      "report_doc_id": "d-20260801-073826-8865a8",
-      "collection_title": "Context",
-      "timestamp": "2026-09-13 22:53:57"
-    },
-    {
-      "doc_id": "d-20260801-212422-d91151",
-      "title": "a poem divided into 4 parts",
-      "collection": "works",
-      "report_doc_id": "d-20260801-073826-8865a8",
-      "collection_title": "Context",
-      "timestamp": "2026-09-13 22:48:49"
-    },
-    {
-      "doc_id": "d-20260801-212422-bc7ae1",
-      "title": "a humid home full of light",
-      "collection": "works",
-      "report_doc_id": "d-20260801-073826-8865a8",
-      "collection_title": "Context",
-      "timestamp": "2026-09-13 22:43:46"
-    },
-    {
-      "doc_id": "d-20260801-212422-3a2da4",
-      "title": "a doll story",
-      "collection": "works",
-      "report_doc_id": "d-20260801-073826-8865a8",
-      "collection_title": "Context",
-      "timestamp": "2026-09-13 22:41:01"
-    },
-    {
-      "doc_id": "d-20260801-212422-081a73",
-      "title": "16 forms",
-      "collection": "works",
-      "report_doc_id": "d-20260801-073826-8865a8",
-      "collection_title": "Context",
-      "timestamp": "2026-09-13 22:37:11"
-    },
-    {
-      "doc_id": "d-20260801-212422-43b47c",
-      "title": "10,000",
-      "collection": "works",
-      "report_doc_id": "d-20260801-073826-8865a8",
-      "collection_title": "Context",
-      "timestamp": "2026-09-13 22:35:41"
     },
     {
       "doc_id": "d-20260801-212422-3aa736",
@@ -89,14 +97,6 @@
       "report_doc_id": "d-20260801-073826-8865a8",
       "collection_title": "Context",
       "timestamp": "2026-09-13 22:33:48"
-    },
-    {
-      "doc_id": "d-20260801-212422-df11f3",
-      "title": "3 symbols",
-      "collection": "works",
-      "report_doc_id": "d-20260801-073826-8865a8",
-      "collection_title": "Context",
-      "timestamp": "2026-09-13 22:32:12"
     },
     {
       "doc_id": "d-20260907-180859-c425b2",
@@ -117,5 +117,5 @@
       "timestamp": "2026-07-29 11:30:02"
     }
   ],
-  "generated_at": "2026-09-28T18:49:03Z"
+  "generated_at": "2026-09-28T21:23:29Z"
 }

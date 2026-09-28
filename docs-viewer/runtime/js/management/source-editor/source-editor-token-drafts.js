@@ -5,13 +5,13 @@ import {
 import { readCatalogueTokenPresentation } from "./catalogue-media-support.js";
 
 function valuesForToken(token) {
+  if (token.presentation !== "image") return { text: token.title };
   return {
-    text: token.presentation === "image" ? token.alt : token.title,
-    addCaption: Boolean(token.caption),
-    caption: token.caption || "",
+    useWorkTitleCaption: token.useWorkTitleCaption,
+    includeWorkMetadata: token.includeWorkMetadata,
     summary: token.summary || "",
-    placement: token.placement || "full",
-    fillWidth: typeof token.fillWidth === "boolean" ? token.fillWidth : true
+    placement: token.placement,
+    fillWidth: token.fillWidth
   };
 }
 
@@ -92,10 +92,12 @@ export function createSourceEditorTokenDrafts() {
         };
         var serialized;
         if (token.presentation === "image") {
-          fields.alt = values.text;
-          if (values.addCaption) Object.assign(fields, {
-            caption: values.caption, summary: values.summary,
-            placement: values.placement, fillWidth: values.fillWidth
+          Object.assign(fields, {
+            useWorkTitleCaption: values.useWorkTitleCaption,
+            includeWorkMetadata: values.includeWorkMetadata,
+            summary: values.summary,
+            placement: values.placement,
+            fillWidth: values.fillWidth
           });
           serialized = serializeCatalogueImageToken(fields);
         } else {
@@ -103,7 +105,7 @@ export function createSourceEditorTokenDrafts() {
           serialized = serializeCatalogueMediaToken(fields);
         }
         if (!serialized) throw new Error(token.presentation === "image"
-          ? "Enter alt text and complete the enabled caption presentation."
+          ? "Complete the Catalogue image choices and presentation."
           : "Enter single-line link text.");
         await readCatalogueTokenPresentation(adapter, token);
         replacements.push({ capture: capture, value: serialized });

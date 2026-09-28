@@ -162,7 +162,8 @@ def build_captured_preview(
     build_parent.mkdir(exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="preview-build-", dir=build_parent) as directory:
         build_root = Path(directory)
-        config = select_workspace_stage(load_docs_workspace_config(repo_root, docs_base_dir=build_root, assets_base_dir=workspace.assets.root.path), "preview")
+        captured_workspace = load_docs_workspace_config(repo_root, docs_base_dir=build_root, assets_base_dir=workspace.assets.root.path)
+        config = select_workspace_stage(captured_workspace, "preview")
         source_root = config.source.location.path
         generated_root = config.generated.documents.location.path.parent
         captured_search = build_root / "working-search.json"
@@ -171,6 +172,10 @@ def build_captured_preview(
         captured_recent.write_bytes(recent_payload)
         for relative, data in source_files.items():
             path = source_root / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(data)
+        for identity, data in catalogue.items():
+            path = captured_workspace.catalogue.preview.path / identity
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(data)
         for collection in (config, *config.collections):

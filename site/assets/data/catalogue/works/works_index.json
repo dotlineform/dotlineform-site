@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "catalogue_works_index_v1",
-    "version": "blake2b-51869fb383ea39356e910fa0c4638207",
-    "generated_at_utc": "2026-09-28T11:05:06Z",
+    "version": "blake2b-968e0d360a30a823027d0e1d31260138",
+    "generated_at_utc": "2026-09-28T19:08:15Z",
     "count": 4616
   },
   "works": {
@@ -32292,7 +32292,7 @@
     },
     "04620": {
       "work_id": "04620",
-      "title": "pond - detail 1",
+      "title": "pond - detail 1 test",
       "year": 2023,
       "year_display": "2023",
       "series_id": "142"

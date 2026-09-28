@@ -1834,20 +1834,6 @@ main.container:has(> .docsViewer){
   display: block;
 }
 
-.docsViewer__content .docsViewerCatalogueImageLink{
-  display: block;
-  width: max-content;
-  max-width: 100%;
-  margin-block: 1rem;
-}
-
-.docsViewer__content .docsViewerCatalogueImageLink > img{
-  display: block;
-  max-width: 100%;
-  height: auto;
-  margin: 0;
-}
-
 .docsViewer__content .docsViewerFigure{
   box-sizing: border-box;
   display: grid;
@@ -1895,6 +1881,7 @@ main.container:has(> .docsViewer){
 }
 
 .docsViewer__content .docsViewerFigure__caption,
+.docsViewer__content .docsViewerFigure__metadata,
 .docsViewer__content .docsViewerFigure__summary{
   display: block;
 }
@@ -1903,6 +1890,7 @@ main.container:has(> .docsViewer){
   font-weight: 600;
 }
 
+.docsViewer__content .docsViewerFigure__metadata,
 .docsViewer__content .docsViewerFigure__summary{
   white-space: pre-line;
 }

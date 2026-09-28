@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260623-180405-631ef4
 title: Semantic Tokens Source Editor UI
 added_date: "2026-06-23 18:04:05"
-last_updated: "2026-09-18 19:02:44"
+last_updated: "2026-09-28 22:21:02"
 summary: Describe Catalogue insertion and session-owned occurrence editing through the shared Source context panel and single Save.
 parent_id: d-20260725-153656-516b61
 ---
@@ -15,7 +15,7 @@ The manage-only Source editor provides insertion actions for document references
 | --- | --- |
 | **Insert doc link** | Select an exact document from the workspace's eligible collections; insert its title and ordinary Markdown document location. |
 | **Add Media View link** | Select an exact Catalogue Work and an occurrence Title; insert a text opener for its Media View. |
-| **Add Catalogue Image** | Select a Catalogue Work and optionally one of its generated Details; insert the image identity with alt text and optional caption presentation. |
+| **Add Catalogue Image** | Select an exact Catalogue Work; insert its image identity, title-caption and metadata choices, optional static summary, placement and width. |
 | **Add image** | Insert Docs-owned staged media through its existing media publication workflow. |
 
 **Add Catalogue Token**, **Insert Subject Link** and Concept-token authoring are retired. Subject assignment and ordinary local-folder paste/open remain independent supported workflows. Scope-specific button policy is proposed separately in [Scope-configured Authoring Controls](Scope_Configured_Authoring_Controls.md).
@@ -36,9 +36,9 @@ Activation opens that exact Work in Media View. Direct Series-gallery text autho
 
 ## Catalogue Image
 
-The image modal uses the same generated Work target source. Selecting a Work loads its generated Details and offers the primary image or an exact Detail. The author supplies required alt text and optional caption, summary, placement and fill-width settings.
+The image modal uses the same generated Work target source and validates the selected primary image. It shows the current Work title as derived alt text, offers independent **Use Work title for caption** and **Include Work metadata** choices, and accepts an optional static summary, placement and fill-width setting. The visible caption can be absent while metadata or the authored summary remains.
 
-The stored `catalogue:image:work` token contains Work identity, optional canonical Detail ID and authored presentation fields. It does not store a resolved media URL or acquire document identity. The modal validates the selected current media presentation before insertion.
+The stored `catalogue:image:work` token contains exact Work identity, explicit choices and presentation settings, plus any authored summary. It stores no literal Work title, alt text, caption, metadata or resolved media URL, and it does not acquire document identity. The modal validates the selected current media presentation before insertion; document Build derives the selected text from the generated Work record.
 
 Supported token forms and identity rules remain owned by [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md); the context-panel delivery adds no token syntax or target family.
 
@@ -46,9 +46,9 @@ Supported token forms and identity rules remain owned by [Semantic Tokens Archit
 
 The parser observes the current textarea buffer, including unsaved changes. A collapsed caret activates a supported token only strictly inside its outer delimiters. Code, comments, malformed syntax and retired text forms do not activate a token. An exact range selected by the feature keeps that occurrence active.
 
-The Semantic token view shows immutable family, target type and target ID, plus available title and destination context from its registered Catalogue provider. A missing target keeps the source identity and authored fields visible.
+The Semantic token view shows immutable family, target type and target ID, plus available title and destination context from its registered Catalogue provider. A failed target read displays its error while preserving the stored identity and pending fields; Save revalidates the target before writing.
 
-A Media View-link occurrence exposes its editable Title. An image occurrence exposes alt text, optional Work Detail ID and its caption presentation. The Work or Series identity cannot be changed in Info. To select another identity, remove the occurrence and use the corresponding insertion action.
+A Media View-link occurrence exposes its editable Title. An image occurrence exposes the current Work title as derived alt and optional visible caption, with editable caption/metadata choices, static summary, placement and width. Work or Gallery identity cannot be changed in Info. To select another identity, remove the occurrence and use the corresponding insertion action.
 
 An ordinary document link does not activate Catalogue Info or display target-document metadata in the Source panel. Ordinary text and unsupported syntax select the active document's Title/Summary editor. Rendered mode selects read-only Info.
 

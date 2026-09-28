@@ -10,11 +10,11 @@ import {
   resolveSemanticTokenTargetHref
 } from "./semantic-token-targets.js";
 import {
-  bindImagePresentation,
-  hydrateImagePresentation,
-  imagePresentationHtml,
-  readImagePresentation
-} from "./source-editor-image-presentation.js";
+  bindCatalogueImageDerivedTitle,
+  catalogueImagePresentationHtml,
+  hydrateCatalogueImagePresentation,
+  readCatalogueImagePresentation
+} from "./catalogue-image-presentation.js";
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -46,10 +46,11 @@ function targetKey(token) {
   return [token.family, token.targetType, token.targetId].join(":");
 }
 
-function emptyMessage(mount, message) {
+function emptyMessage(mount, message, isError = false) {
   mount.replaceChildren();
   var empty = document.createElement("p");
   empty.className = "docsViewer__metadataInfoEmpty muted small";
+  empty.classList.toggle("is-error", isError);
   empty.textContent = message;
   mount.appendChild(empty);
 }
@@ -107,34 +108,37 @@ function renderToken(context, state, active) {
     destinationHref
   );
 
-  var occurrenceField = document.createElement("label");
-  occurrenceField.className = "docsViewer__field";
-  var occurrenceLabel = document.createElement("span");
-  occurrenceLabel.className = "docsViewer__fieldLabel";
-  occurrenceLabel.textContent = token.presentation === "image" ? "Alt text" : "Link text";
-  var occurrenceInput = document.createElement("input");
-  occurrenceInput.className = "docsViewer__fieldInput";
-  occurrenceInput.type = "text";
-  occurrenceInput.required = true;
-  occurrenceInput.value = values.text;
-  occurrenceField.append(occurrenceLabel, occurrenceInput);
+  var occurrenceField = null;
+  var occurrenceInput = null;
+  if (token.presentation !== "image") {
+    occurrenceField = document.createElement("label");
+    occurrenceField.className = "docsViewer__field";
+    var occurrenceLabel = document.createElement("span");
+    occurrenceLabel.className = "docsViewer__fieldLabel";
+    occurrenceLabel.textContent = "Link text";
+    occurrenceInput = document.createElement("input");
+    occurrenceInput.className = "docsViewer__fieldInput";
+    occurrenceInput.type = "text";
+    occurrenceInput.required = true;
+    occurrenceInput.value = values.text;
+    occurrenceField.append(occurrenceLabel, occurrenceInput);
+  }
 
   var imagePresentation = null;
   if (token.presentation === "image") {
     imagePresentation = document.createElement("div");
-    imagePresentation.innerHTML = imagePresentationHtml({
+    imagePresentation.innerHTML = catalogueImagePresentationHtml({
       idPrefix: "docsViewerCatalogueImageInfo"
     });
-    hydrateImagePresentation(imagePresentation, values);
-    // Keep raw pending input; normalization belongs to the session's Save validation.
-    imagePresentation.querySelector('[data-role="staged-media-caption-text"]').value = values.caption;
-    imagePresentation.querySelector('[data-role="staged-media-summary"]').value = values.summary;
-    bindImagePresentation(imagePresentation);
+    hydrateCatalogueImagePresentation(imagePresentation, values);
+    bindCatalogueImageDerivedTitle(imagePresentation)(target ? target.title : "");
   }
 
   var status = document.createElement("p");
   status.className = "docsViewer__metadataInfoEmpty muted small";
-  status.hidden = true;
+  status.textContent = state.targetError;
+  status.hidden = !state.targetError;
+  status.classList.toggle("is-error", Boolean(state.targetError));
 
   var actions = document.createElement("div");
   actions.className = "docsViewerCatalogueTokenInfo__actions";
@@ -153,13 +157,10 @@ function renderToken(context, state, active) {
   fields.className = "docsViewerSourceEditor__metadataFields";
   fields.disabled = state.adapter.getSessionState().busy;
   function captureInput() {
-    var presentation = imagePresentation ? Object.assign(readImagePresentation(imagePresentation), {
-      caption: imagePresentation.querySelector('[data-role="staged-media-caption-text"]').value,
-      summary: imagePresentation.querySelector('[data-role="staged-media-summary"]').value
-    }) : {};
-    state.adapter.updateTokenDraft(draft, Object.assign({}, values, {
-      text: occurrenceInput.value
-    }, presentation));
+    var presentation = imagePresentation
+      ? readCatalogueImagePresentation(imagePresentation)
+      : { text: occurrenceInput.value };
+    state.adapter.updateTokenDraft(draft, Object.assign({}, values, presentation));
   }
   fields.addEventListener("input", captureInput);
   fields.addEventListener("change", captureInput);
@@ -180,7 +181,7 @@ function renderToken(context, state, active) {
 
   actions.append(removeButton);
   article.append(heading, list);
-  fields.appendChild(occurrenceField);
+  if (occurrenceField) fields.appendChild(occurrenceField);
   if (imagePresentation) fields.appendChild(imagePresentation);
   fields.appendChild(actions);
   article.append(fields, status);
@@ -189,6 +190,11 @@ function renderToken(context, state, active) {
 
 function render(context, state) {
   if (!context.mount) return;
+  if (state.loadError) {
+    state.renderKey = "";
+    emptyMessage(context.mount, state.loadError, true);
+    return;
+  }
   if (!state.loaded) {
     state.renderKey = "";
     emptyMessage(context.mount, "Catalogue token info is loading.");
@@ -203,20 +209,24 @@ function render(context, state) {
   var key = targetKey(active.token);
   if (state.targetKey !== key) {
     state.renderKey = "";
+    state.targetError = "";
     emptyMessage(context.mount, "Catalogue target info is loading.");
     if (state.loadingKey === key) return;
     state.loadingKey = key;
     var adapter = state.adapter;
-    var load = readCatalogueTokenPresentation(adapter, active.token).then(function (presentation) {
-          return [{ family: "catalogue", targetType: active.token.targetType, targetId: active.token.targetId,
-            title: presentation.label, href: presentation.newTabTarget }];
-        });
-    load.catch(function () { return []; }).then(function (targets) {
+    function finish(target, error) {
       if (state.adapter !== adapter || state.loadingKey !== key) return;
-      state.targetsByKey = new Map(targets.map(function (target) { return [targetKey(target), target]; }));
+      state.targetsByKey = target ? new Map([[targetKey(target), target]]) : new Map();
+      state.targetError = error || "";
       state.targetKey = key;
       state.loadingKey = "";
       render(context, state);
+    }
+    readCatalogueTokenPresentation(adapter, active.token).then(function (presentation) {
+      finish({ family: "catalogue", targetType: active.token.targetType, targetId: active.token.targetId,
+        title: presentation.label, href: presentation.newTabTarget }, "");
+    }, function (error) {
+      finish(null, error && error.message ? error.message : "Catalogue target is unavailable.");
     });
     return;
   }
@@ -232,6 +242,7 @@ function loadSupport(state) {
     .then(function (registry) {
       state.registry = registry;
       state.loaded = true;
+      state.loadError = "";
     });
 }
 
@@ -241,7 +252,9 @@ export function createCatalogueTokenInfoView(options = {}) {
     fetch: options.fetch,
     generation: 0,
     loaded: false,
+    loadError: "",
     targetKey: "",
+    targetError: "",
     loadingKey: "",
     publicPreviewBase: "",
     registry: null,
@@ -290,9 +303,10 @@ export function createCatalogueTokenInfoView(options = {}) {
         .then(function () {
           if (state.generation === generation) render(context, state);
         })
-        .catch(function () {
+        .catch(function (error) {
           if (state.generation !== generation) return;
-          state.loaded = true;
+          state.loaded = false;
+          state.loadError = error && error.message ? error.message : "Catalogue token registry is unavailable.";
           render(context, state);
         });
     },
