@@ -104944,7 +104944,7 @@
       "project_subfolder": "details",
       "project_filename": "pond - detail 1.jpg",
       "media_version": 1,
-      "title": "pond - detail 1",
+      "title": "pond - detail 1 test",
       "width_cm": null,
       "height_cm": null,
       "year": 2023,
@@ -104957,9 +104957,7 @@
       "width_px": 3000,
       "height_px": 3000,
       "provenance": null,
-      "artist": null,
-      "downloads": null,
-      "links": null
+      "artist": null
     },
     "04621": {
       "work_id": "04621",
