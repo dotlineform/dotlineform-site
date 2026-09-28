@@ -3,83 +3,85 @@ draft: false
 doc_id: d-20260927-221737-07fbbf
 title: Related Galleries
 added_date: "2026-09-27 22:17:37"
-last_updated: "2026-09-27 22:38:12"
-summary: Proposed per-Work related Gallery IDs, explicit Gallery-to-Series association, shared title lookup, and review of Studio Save versus general rebuild responsibilities.
+last_updated: "2026-09-28 17:31:55"
+summary: Proposed explicit Series-Gallery associations, Gallery checkbox authoring, a generated Series-Galleries index, and deduplicated Work Media View links.
 ui_status: proposed
 parent_id: d-20260428-000000-f5ff18
 ---
 # Related Galleries
 
-## Prerequisite
+## Complete Result
 
-Resolve and deliver [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) before implementing Related Galleries. The agreed direction is that Save completes everything needed for Works editor freshness, while an explicit Refresh reconciles other generated consumers. This feature must use that boundary rather than add another dependency to the current combined Save chain.
+Work Media View displays **Related galleries**: the Galleries explicitly assigned to that Work, followed by Galleries explicitly associated with the Work's Series. It removes duplicate links by exact Gallery ID. A Gallery's Work membership and its relevance to all Works in a Series are independent authoring decisions. A curated Gallery can contain Works from several Series without becoming related to every Work in any of them.
 
-## Intended Behaviour
+The Gallery New and Edit modals offer a checkbox labelled **Relates to all works in this series**. It applies only to the exact Series shown in the current Works editor context. Checking it adds that Series–Gallery association; unchecking it removes that association. The checkbox does not add or remove Works from the Gallery, change a Work's Series, or alter any other Series–Gallery association.
 
-Work Media View should display **Related galleries**: the Galleries the Work belongs to, plus the Galleries belonging to the Work's own Series. Deduplicate by exact Gallery ID. Gallery membership and a Gallery's association with a Series are separate relationships.
+This is a proposed delivery. The [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) split is already in place; implementation, canonical seeding, generated output and publication have not begun under this proposal.
 
-A Gallery does not become related merely because another Work in the same Series belongs to it. Changing one Work's Gallery memberships changes that Work's related list; it does not change the related lists of other Works. A Work's own explicit Gallery memberships remain related even when those Galleries belong to a different Series.
+## Canonical Association And Authoring
 
-Keep the related IDs in each generated Work by-ID JSON. Do not introduce an aggregate Work-to-related-Galleries lookup or scan other Work records in the browser. Store IDs rather than copied Gallery titles, and resolve display titles through a shared Gallery title lookup. Renaming a Gallery should not require rewriting these related-ID arrays.
+Studio owns a new canonical `studio/data/canonical/catalogue/series-galleries.json` containing exact Series–Gallery pairs. Keep the pairs unique and deterministically ordered, validate both IDs against current canonical definitions, and allow a Gallery to have no Series association or distinct associations with more than one Series. `galleries-by-work.json` remains the sole authority for Work membership. The new file records only the broader Series relevance decision.
 
-This document proposes implementation and identifies decisions still needed. It does not authorise code, source-data migration, generation, publication or a change to the current Save workflow.
+At implementation, seed the file once from current canonical Gallery membership: for each Gallery, collect its member Works' Series IDs and create a pair only when they identify one exact Series. A read-only inspection on 28 September 2026 found all 302 current Galleries have members in exactly one Series. Recheck before writing; stop on an empty or mixed-Series Gallery instead of guessing. After seeding, Work membership changes do not create, remove or infer Series–Gallery pairs. Matching numbers or titles never establish an association.
 
-## Current Model And Missing Relationship
+New Gallery defaults to unchecked. Edit Gallery loads the saved checkbox value for the displayed Series; changing that pair leaves any pair for another Series alone. The modal should name the exact Series beside the checkbox so its scope is clear. When creating a Work with no Series, disable the checkbox. Saving a new Gallery and its checked association is immediate and independent of the still-unsaved Work draft; discarding that draft does not undo either saved definition or association.
 
-[Catalogue Source Model](Catalogue_Source_Model.md) and [Catalogue Indexes And Payloads](Catalogue_Indexes_And_Payloads.md) describe the current owners. Canonical `works.json` supplies each Work's required `series_id`; `galleries-by-work.json` supplies its exact Gallery memberships. Gallery definitions in `galleries.json` currently contain only `gallery_id` and `title`; the validator rejects additional fields. There is no explicit Gallery-to-Series association in the current model. Galleries may contain Works from different Series.
+Removing a Work's Series assignment or deleting a Work leaves Series–Gallery pairs unchanged, even if no Work in that Series currently belongs to the Gallery. Unchecking the checkbox removes only the displayed Series–Gallery pair. Deleting a Gallery removes all of its pairs in the same canonical transaction as the Gallery deletion. Deleting a Series definition removes all of that Series' pairs in the same transaction; the existing rule still permits Series deletion only when it has no member Works. A stale or unknown pair is an error to repair, not a reason to infer a replacement.
 
-The proposed meaning therefore needs an explicit canonical relationship defining which Series a Gallery belongs to. One candidate is an exact `series_id` on the Gallery definition. Whether that association is required, optional, or supports more than one Series must be agreed before implementation. A Gallery's owning Series need not constrain which Works can be members unless that becomes a separately agreed requirement.
+## Generated Index And Media View
 
-Existing Gallery associations must be assigned or reviewed explicitly. Neither matching numeric IDs, matching titles, historical overview Galleries nor the Series of member Works is authority for a Gallery-to-Series assignment. Do not manufacture assignments during generation or add a fallback that infers them.
+Refresh Catalogue derives a new compact Series-to-Galleries index from the canonical pair file and Gallery definitions. The proposed consumer path is `working/generated/catalogue/series-galleries-index.json`, with a matching selected Preview/public artifact. Key entries by exact Series ID and include the associated exact Gallery IDs and current titles in deterministic order; include an empty list for a valid Series with no associations. The index does not contain Work member lists and does not reuse the retired `series/series_index.json` schema. A Gallery title change updates index labels on Refresh.
 
-## Proposed Read Model
+The selected Work by-ID record already supplies `series_id` and its direct `work.galleries` ID/title links. Media View reads the new index for that exact Series, combines direct links first with Series links, and deduplicates by Gallery ID. It loads a Gallery by-ID record only when that link is opened; it does not scan other Work records, infer associations from Gallery membership, or add a per-Work `related_gallery_ids` field. If the Work has no Series, only its direct Gallery links appear. Missing or invalid required index data fails visibly rather than silently showing a partial related list. Exact Gallery membership remains distinguishable from Series relevance in all consumers.
 
-For a Work `W`, compute:
+Save persists the pair with the Gallery definition mutation and updates the Works editor's current canonical view. It invalidates the existing Refresh receipt but does not generate consumer JSON. Refresh includes the canonical pair file in its source revision, writes and verifies the new index, and makes the latest links available to local Docs Viewer. Docs Publish captures that selected index with the other Catalogue JSON; public readers see it after the ordinary publication and deployment steps. Neither Save nor Media View writes Work by-ID related arrays, and there is no separate background refresh or compatibility alias.
 
-```text
-related_gallery_ids(W) = distinct(
-    saved Gallery memberships of W
-    + Galleries explicitly associated with W.series_id
-)
-```
+## Delivery Steps
 
-Emit `work.related_gallery_ids` as an always-present array in `works/index/<work_id>.json`, using exact canonical Gallery IDs and deterministic ID ordering. It is a replaceable derived field, not another editable membership authority. Keep exact memberships distinguishable from related IDs so neither the Work editor nor another consumer mistakes a related Gallery for a saved membership.
+### RG.0 — Readiness
 
-Use a shared Gallery ID-to-title read model for labels. The existing `galleries/galleries_index.json` already provides Gallery IDs, titles and member counts and is a candidate owner; its transport and rebuild policy need review. This is a Gallery registry shared by readers, rather than a large relationship map keyed by every Work. A Gallery rename updates that registry and its individual Gallery record while the Work's related IDs remain unchanged.
+- [ ] Confirm the current Gallery New/Edit Series context, canonical transaction owner, Refresh receipt and generated/public artifact inventory; recheck the one-Series-per-Gallery seed condition against current canonical data.
+- [ ] Confirm the complete outcome and stop on an ambiguous seed, an unavailable exact Series context, or a consumer path that would require a second association authority.
 
-Media View reads the selected Work's related IDs, resolves their labels and opens the selected exact Gallery through the existing Gallery reader. Direct Work entry establishes no Gallery browsing sequence until a Gallery is selected. Public reads use published records and lookup data; local reads use Working. Neither surface infers missing relationships or falls back to canonical data. An unavailable title lookup or unknown Gallery ID should produce a visible error under the agreed reader contract.
+**Gate:** the canonical pair and reader responsibilities are coherent against the current owners. This is a read-only checkpoint; it does not seed data or change code.
 
-Current `work.galleries` embeds Gallery IDs and titles. Adding an IDs-only related field alone would not remove that existing rename dependency. The implementation must review consumers and decide whether exact memberships also become an IDs-only field, with their titles resolved through the same registry. Avoid maintaining duplicate titled and untitled representations merely for compatibility.
+### RG.1 — Canonical Pairs And Initial Seed
 
-## Save And General Rebuild
+- [ ] Add strict canonical pair validation, an exact read model, transaction allowlisting and Refresh-receipt input ownership.
+- [ ] Seed current pairs from validated Gallery membership once, inspect the resulting Series/Gallery coverage, and keep the file as the only editable authority for Series relevance thereafter.
 
-Current [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) describes a combined synchronous Save. `catalogue_output_service.py` completes media, generated output, private report/subject metadata and Studio lookups after canonical persistence. `generate_work_pages.py` constructs the full Catalogue projection in memory even for selected output, considers aggregate indexes and shared policy, and writes changed versions. The output selector also considers current and former Gallery co-members. Private Studio lookup refresh currently uses a full refresh. A small selected write therefore does not necessarily mean a small computation.
+**Gate:** every saved pair has valid exact identities, the seed has no inferred or ambiguous association, and Save correctly marks generated output as needing Refresh. Review the canonical write before proceeding.
 
-Review these responsibilities before attaching another derived relationship to Save. Distinguish canonical persistence and immediate editor updates, selected by-ID consumer projection, shared title/discovery lookup generation, private report/subject metadata, and media completion. They have different dependencies and need not all use one full rebuild.
+### RG.2 — Gallery Authoring
 
-| Change | Effect on related-ID arrays | Other generated data to consider |
-| --- | --- | --- |
-| One Work's Gallery memberships change | Recompute that Work only; other Works' related lists are unaffected | Exact affected Gallery member records/counts |
-| One Work changes Series | Recompute that Work using its new Series association | Former/current Series member records |
-| Gallery title changes | No related-ID changes | Shared title registry and individual Gallery record; eliminate existing copied-title dependencies if adopting the IDs-only design |
-| Gallery is created or its Series association changes | Related IDs may change for Works in the affected owning Series | Gallery registry and Gallery record |
-| Gallery is deleted | Remove its ID wherever it is a membership or related reference | Canonical membership cleanup, Gallery record deletion and registry refresh |
-| Unrelated Work metadata changes | No related-ID changes | Only the read models that actually project those fields |
+- [ ] Add **Relates to all works in this series** to New/Edit Gallery for the displayed exact Series, with New unchecked and no-Series Work creation disabled.
+- [ ] Save or remove only that pair alongside the Gallery definition operation; preserve unsaved Work edits, remove all pairs on Gallery or Series deletion, and leave pairs unchanged on Work deletion or Series reassignment.
 
-Creating, deleting or reassigning a Gallery's Series association is different from editing one Work's membership. Such definition changes can affect many Work by-ID records because the materialised Series-related list changes. They must not be confused with the rejected rule that propagates one Work's memberships to its Series peers.
+**Gate:** the modal and service agree on exact Series scope and report saved or failed outcomes truthfully. Human review covers the checkbox wording, disabled state and modal behavior.
 
-The [Save/Refresh proposal](Catalogue_Save_And_Refresh.md) owns the separation of immediate editor completion from broader generated output. Related Gallery arrays belong to the consumer Refresh operation. Refresh must reconcile affected Work by-ID related arrays as well as the title registry when Gallery-to-Series associations change. Keep materialised relationships in Work records even when Refresh computes them together.
+### RG.3 — Generated And Published Index
 
-Docs Viewer may show older titles or related IDs until Refresh; deletion can leave a stale ID until reconciliation. The prerequisite delivery owns clear Save/Refresh status and failure behavior. Related Galleries must preserve that agreed freshness boundary and must not introduce its own background work or pending-change system.
+- [ ] Generate and validate the new Series-to-Galleries index from canonical pairs and Gallery titles during Refresh; add it to the explicit Catalogue preparation/distribution inventory and reader configuration.
+- [ ] Keep missing or invalid inputs visible, preserve the current Refresh receipt and Publish boundaries, and verify that changing a pair does not rewrite per-Work related data.
 
-The older targeted-Publish proposal is superseded. The [Save/Refresh delivery](Catalogue_Save_And_Refresh.md) decides local read-model maintenance separately from Preview, public distribution, commit and deployment.
+**Gate:** a completed Refresh exposes the exact local mapping; the selected public artifact has the same prepared bytes when Publish is separately authorised. Do not Publish merely to close this local step.
 
-## Decisions Before Delivery
+### RG.4 — Media View Consumption
 
-- Define and assign the canonical Gallery-to-Series relationship, including unassigned or multiple-Series cases and whether cross-Series membership remains unrestricted.
-- Agree the IDs-only fields for exact memberships and related Galleries, the shared title lookup owner, and removal of copied-title dependencies.
-- Complete and accept the Save/Refresh prerequisite, including editor freshness, the consumer output set and clear refresh status/failure handling.
-- Define how Gallery association creation, reassignment and deletion feed the agreed Refresh projection while keeping the editor current immediately.
-- Review the existing output-selection expansion and whole-corpus computation against those dependencies before designing the implementation slice.
+- [ ] Read the selected Work's exact Series and direct Galleries, resolve its Series links from the new index, present direct links first, and deduplicate by exact Gallery ID.
+- [ ] Keep Gallery by-ID reads on activation, handle no-Series Works and unavailable index data explicitly, and preserve existing Media View navigation and return behavior.
 
-Once these decisions are settled, specify a bounded delivery covering canonical association authoring/validation, generated per-Work IDs, lookup and Save/rebuild ownership, and Media View consumption. Test changes require their own agreed specification. This proposal was produced by read-only inspection and a repository documentation edit; implementation and live lifecycle evidence remain separate work.
+**Gate:** local Media View shows the intended distinct links for direct, Series-related, cross-Series curated and no-Series cases. The user reviews the interaction and visual result.
+
+### RG.5 — Code Review
+
+- [ ] Review the bounded canonical, editor, generator, reader, config, documentation and generated changes for duplicate authority, stale proposal remnants, aliases and incomplete deletion paths; resolve findings.
+
+**Gate:** findings are resolved and any affected evidence is refreshed. Test or fixture changes require their own agreed specification; ordinary lint, syntax, JSON, whitespace and selected existing checks are chosen only for credible risks at implementation.
+
+### RG.6 — Closeout
+
+- [ ] Record selected focused evidence, material limits and the local/manual outcome; update the durable [Catalogue Indexes And Payloads](Catalogue_Indexes_And_Payloads.md) and [Catalogue Media View](Catalogue_Media_View.md) owners when the behavior ships.
+- [ ] Confirm the local result with the user, then present this proposed delivery for retain-or-retire review.
+
+**Gate:** the complete local result and its durable contracts are reviewable. Publish, commit, push and deployment remain separate explicit actions.
