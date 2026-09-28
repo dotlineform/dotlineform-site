@@ -79,4 +79,4 @@ The three panels are siblings in one named CSS grid. `catalogue-work-layout.js` 
 
 The shared [Route Ready State](Route_Ready_State.md) is exposed on `#catalogueWorkRoot`. The retained Catalogue smoke is scoped to route/service boot; UI acceptance remains manual. Mutation test work follows the separately agreed [test specification](Test_Contract_Discipline.md).
 
-[Catalogue Build And Lookup Refresh](Catalogue_Build_And_Lookup_Refresh.md) owns output completion and failure handling after the canonical transaction. The editor combines single and bulk state with Work resources and media context, so new responsibilities should use their existing focused owners.
+[Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns output completion and failure handling after the canonical transaction. The editor combines single and bulk state with Work resources and media context, so new responsibilities should use their existing focused owners.

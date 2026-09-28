@@ -157,7 +157,7 @@ Verification budget: bounded documentation/source review; reuse completed implem
 
 Gate: passed. The complete result is accepted and durable ownership is current.
 
-Record: closed with user approval on 2026-09-26. [Collection architecture](Sub_Scope_Index_Architecture.md) and [Catalogue Build And Lookup Refresh](Catalogue_Build_And_Lookup_Refresh.md) describe the accepted behavior and preserve verification limits. Durable navigation points to current owners, without a dependency on this delivery. Closeout changes documentation only and reuses completed implementation checks plus user review; additional executable code review is not applicable. No rebuild, test, generated-data write, publication, commit or push was performed for closeout. The completed delivery remains available for manual archive. Full-text search and general reports review remain separate outcomes.
+Record: closed with user approval on 2026-09-26. [Collection architecture](Sub_Scope_Index_Architecture.md) and [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) describe the accepted behavior and preserve verification limits. Durable navigation points to current owners, without a dependency on this delivery. Closeout changes documentation only and reuses completed implementation checks plus user review; additional executable code review is not applicable. No rebuild, test, generated-data write, publication, commit or push was performed for closeout. The completed delivery remains available for manual archive. Full-text search and general reports review remain separate outcomes.
 
 ## Follow-on
 

@@ -88,7 +88,7 @@ Markdown package folders and interactive HTML companions are also classified out
 
 Current managed types are `img`, `svg`, `files` and `html`; `mermaid` is an editable build-source type. Ordinary ready bytes live in `assets/media/workspace/<type>/`; collection bytes live in `assets/media/collections/<id>/<type>/`. Editable build inputs and private source evidence remain under Working source. There are no ready-media copies under Working source/generated or Preview.
 
-Catalogue uses the same shared asset root with separately owned `works/primary/`, `works/thumbs/` and `works/media/files/` families. Studio owns their local preparation; Projects-owned originals remain separate. [Catalogue Build And Lookup Refresh](Catalogue_Build_And_Lookup_Refresh.md) owns dimensions/version completion.
+Catalogue uses the same shared asset root with separately owned `works/primary/`, `works/thumbs/` and `works/media/files/` families. Studio owns their local preparation; Projects-owned originals remain separate. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns dimensions/version completion.
 
 | Provider | Current use | Policy |
 | --- | --- | --- |

@@ -90,7 +90,7 @@ The legacy archive, canonical/editor simplification and Stage 5 output are compl
 
 [Sub-scope Report Reparenting](Sub_Scope_Report_Reparenting.md) is complete and accepted: Working reparenting retains its exact stage, and ordinary host edits no longer invalidate the deletion association.
 
-The Studio production pause is lifted. Save completes affected generated data, required media and private Studio lookups; import and delete share that owner. Full JSON maintenance reuses existing media references. Output failures preserve saved canonical data. Durable operations are documented in [Catalogue Build And Lookup Refresh](Catalogue_Build_And_Lookup_Refresh.md), with the consumer shape in [Catalogue Indexes And Payloads](Catalogue_Indexes_And_Payloads.md).
+The Studio production pause is lifted. Save completes affected generated data, required media and private Studio lookups; import and delete share that owner. Full JSON maintenance reuses existing media references. Output failures preserve saved canonical data. Durable operations are documented in [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md), with the consumer shape in [Catalogue Indexes And Payloads](Catalogue_Indexes_And_Payloads.md).
 
 Stage structure/UI and Content Alignment are complete and accepted. Analysis/Working owns consolidated authoring content and supports ordinary/child document creation, editing and deletion. Both stages retain their own reads and existing sub-scope report refresh. Pre-publish document authoring remains unavailable; the current Pre-publish And Publish delivery restores explicit preparation and acceptance actions and awaits user review. Source Organisation owns the current layout and behavior.
 

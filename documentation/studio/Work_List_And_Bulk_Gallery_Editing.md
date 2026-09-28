@@ -10,7 +10,7 @@ parent_id: d-20260428-000000-f5ff18
 ---
 # Work List And Bulk Gallery Editing
 
-Completed on 2026-09-24 with user acceptance after implementation, refinements and code review. The [Work editor](Catalogue_Work_Editor.md) owns the shipped interaction; [Catalogue Build And Lookup Refresh](Catalogue_Build_And_Lookup_Refresh.md) owns Save completion and the bulk membership boundary. Current combined Save completion is retained.
+Completed on 2026-09-24 with user acceptance after implementation, refinements and code review. The [Work editor](Catalogue_Work_Editor.md) owns the shipped interaction; [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns Save completion and the bulk membership boundary. Current combined Save completion is retained.
 
 ## Requirements
 
@@ -25,9 +25,9 @@ Completed on 2026-09-24 with user acceptance after implementation, refinements a
 
 ## Retained Save Completion
 
-[Save completes canonical persistence, Catalogue output, required media and private Studio lookup refresh](Catalogue_Build_And_Lookup_Refresh.md). Retain that completion boundary for this delivery, including its busy state and distinction between canonical data saved and later output/lookup failure. Bulk membership replacement uses one bulk request and one existing completion pass, rather than a sequence of single-Work Saves.
+[Save completes canonical persistence, Catalogue output, required media and private Studio lookup refresh](Catalogue_Save_And_Refresh.md). Retain that completion boundary for this delivery, including its busy state and distinction between canonical data saved and later output/lookup failure. Bulk membership replacement uses one bulk request and one existing completion pass, rather than a sequence of single-Work Saves.
 
-The separate [Catalogue Save And Targeted Publish](Catalogue_Save_And_Targeted_Publish.md) delivery is deferred and is no longer a prerequisite. Its pending-publication record, Publish control, incremental generator changes, lookup-refresh removal and media decoupling are outside this delivery. Existing Save latency and media/output side effects remain; this delivery does not promise faster Save or an absence of remote checks for Gallery-only edits.
+At this delivery's closeout, the older targeted-Publish proposal was deferred and was not a prerequisite. It is now superseded by the proposed [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) boundary and the existing single Docs Publish lifecycle. Existing Save latency and media/output side effects remained in this delivery; it did not promise faster Save.
 
 Deploy remains separate. The proposed changes affect local Studio and its shared list component; they do not change Docs Viewer readers, the public site or native hosting.
 
@@ -85,9 +85,9 @@ Review partial-write prevention, stale membership rejection, returned membership
 
 ### Closeout Record
 
-The user accepted the result and approved closeout after the review fixes. Durable interaction, selection, saved-cell updates, bulk replacement and Save feedback are recorded in [Catalogue Work Editor](Catalogue_Work_Editor.md); the necessary bulk service/response details are recorded in [Catalogue Build And Lookup Refresh](Catalogue_Build_And_Lookup_Refresh.md). Closeout changes documentation only and reuses the accepted lint, source-review and user-acceptance evidence. Live conflict/failure-path verification remains unclaimed. No tests or rebuilds were added, and no publication, deployment, commit or push was performed.
+The user accepted the result and approved closeout after the review fixes. Durable interaction, selection, saved-cell updates, bulk replacement and Save feedback are recorded in [Catalogue Work Editor](Catalogue_Work_Editor.md); the necessary bulk service/response details are recorded in [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md). Closeout changes documentation only and reuses the accepted lint, source-review and user-acceptance evidence. Live conflict/failure-path verification remains unclaimed. No tests or rebuilds were added, and no publication, deployment, commit or push was performed.
 
-Recommend retiring this completed delivery through the normal manual archive process; it remains in place pending that action. Retain [Planned Features](Planned_Features.md) as the workflow authority and retain the separate [Save And Targeted Publish](Catalogue_Save_And_Targeted_Publish.md) proposal as deferred. No concept, architecture or temporary verification siblings were created for this delivery.
+Recommend retiring this completed delivery through the normal manual archive process; it remains in place pending that action. Retain [Planned Features](Planned_Features.md) as the workflow authority; the older targeted-Publish proposal was subsequently retired during documentation consolidation. No concept, architecture or temporary verification siblings were created for this delivery.
 
 ## Follow-on
 

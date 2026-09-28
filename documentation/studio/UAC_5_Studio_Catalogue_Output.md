@@ -67,7 +67,7 @@ Closeout is documentation-only. Source/ownership review, 32 distinct local docum
 | Responsibility | Current owner |
 | --- | --- |
 | Source identity, membership and architecture | [Catalogue Source Model](Catalogue_Source_Model.md), [Catalogue Architecture](Catalogue_Architecture.md) |
-| Save, maintenance, output failure and private lookups | [Catalogue Build And Lookup Refresh](Catalogue_Build_And_Lookup_Refresh.md) |
+| Save, maintenance, output failure and private lookups | [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) |
 | Consumer JSON, indexes and media references | [Catalogue Indexes And Payloads](Catalogue_Indexes_And_Payloads.md) |
 | Work and Series workflows | [Catalogue Work Editor](Catalogue_Work_Editor.md), [Catalogue Series Editor](Catalogue_Series_Management.md) |
 | Mutation/completion services and API surface | [Catalogue Services](Catalogue_Services.md), [Local Studio APIs](Local_Studio_APIs.md) |

@@ -23,7 +23,7 @@ parent_id: d-20260428-000000-f5ff18
 
 - Work editor field actions and shared definition modal presentation, with focused Gallery/Series service adapters.
 - Canonical Gallery create/save/delete service operations with exact identity, definition revision and deletion member-set checks; reuse the existing transaction and output-completion owners.
-- Updated [Work editor](Catalogue_Work_Editor.md) and [Catalogue completion](Catalogue_Build_And_Lookup_Refresh.md) documentation.
+- Updated [Work editor](Catalogue_Work_Editor.md) and [Catalogue completion](Catalogue_Save_And_Refresh.md) documentation.
 
 ## Process
 
@@ -51,4 +51,4 @@ Local Studio must be restarted and the Works editor refreshed before manual revi
 
 ## Follow-on
 
-The deferred [Save And Targeted Publish](Catalogue_Save_And_Targeted_Publish.md) split, bulk Series assignment, bulk Work creation, public deployment and native hosting remain separate work.
+The proposed [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) split, bulk Series assignment, bulk Work creation, public deployment and native hosting remain separate work. The older targeted-Publish proposal is superseded by the single Docs Publish lifecycle.

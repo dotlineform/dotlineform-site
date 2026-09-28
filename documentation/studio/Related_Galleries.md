@@ -53,7 +53,7 @@ Current `work.galleries` embeds Gallery IDs and titles. Adding an IDs-only relat
 
 ## Save And General Rebuild
 
-Current [Catalogue Build And Lookup Refresh](Catalogue_Build_And_Lookup_Refresh.md) describes a combined synchronous Save. `catalogue_output_service.py` completes media, generated output, private report/subject metadata and Studio lookups after canonical persistence. `generate_work_pages.py` constructs the full Catalogue projection in memory even for selected output, considers aggregate indexes and shared policy, and writes changed versions. The output selector also considers current and former Gallery co-members. Private Studio lookup refresh currently uses a full refresh. A small selected write therefore does not necessarily mean a small computation.
+Current [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) describes a combined synchronous Save. `catalogue_output_service.py` completes media, generated output, private report/subject metadata and Studio lookups after canonical persistence. `generate_work_pages.py` constructs the full Catalogue projection in memory even for selected output, considers aggregate indexes and shared policy, and writes changed versions. The output selector also considers current and former Gallery co-members. Private Studio lookup refresh currently uses a full refresh. A small selected write therefore does not necessarily mean a small computation.
 
 Review these responsibilities before attaching another derived relationship to Save. Distinguish canonical persistence and immediate editor updates, selected by-ID consumer projection, shared title/discovery lookup generation, private report/subject metadata, and media completion. They have different dependencies and need not all use one full rebuild.
 
@@ -72,7 +72,7 @@ The [Save/Refresh proposal](Catalogue_Save_And_Refresh.md) owns the separation o
 
 Docs Viewer may show older titles or related IDs until Refresh; deletion can leave a stale ID until reconciliation. The prerequisite delivery owns clear Save/Refresh status and failure behavior. Related Galleries must preserve that agreed freshness boundary and must not introduce its own background work or pending-change system.
 
-The deferred [Save And Targeted Publish](Catalogue_Save_And_Targeted_Publish.md) proposal also considers removing lookup generation from Save, but it proposes a broader publication lifecycle. This document does not resume it or assume that a general lookup rebuild should become Publish. Decide local read-model maintenance separately from Preview, public distribution, commit and deployment.
+The older targeted-Publish proposal is superseded. The [Save/Refresh delivery](Catalogue_Save_And_Refresh.md) decides local read-model maintenance separately from Preview, public distribution, commit and deployment.
 
 ## Decisions Before Delivery
 

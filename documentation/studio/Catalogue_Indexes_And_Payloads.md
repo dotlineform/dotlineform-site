@@ -29,7 +29,7 @@ Every Work belongs to one Series and zero or more Galleries; empty Series and Ga
 
 The Gallery search index contains a `galleries` map keyed by exact Gallery ID, with each entry containing only `gallery_id`, `title` and `work_count`. It includes empty Galleries with count zero, orders keys by Gallery ID and carries no member lists. Add Media View link searches this generated lookup by ID/title through the Catalogue media-target service, then reads the selected Gallery's individual record.
 
-`studio/services/catalogue/generate_work_pages.py` owns the complete projection. `catalogue_generation_records.py` and `catalogue_generation_indexes.py` own record and index shaping. [Catalogue Build And Lookup Refresh](Catalogue_Build_And_Lookup_Refresh.md) owns refresh and cleanup.
+`studio/services/catalogue/generate_work_pages.py` owns the complete projection. `catalogue_generation_records.py` and `catalogue_generation_indexes.py` own record and index shaping. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns refresh and cleanup.
 
 ## Exact Identity And Versions
 

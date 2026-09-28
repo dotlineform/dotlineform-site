@@ -13,7 +13,7 @@ parent_id: d-20260902-102745-8379ea
 
 Catalogue Save completes current local reader output. One Publish action prepares eligible documents with the selected Catalogue JSON and then distributes that completed Preview and referenced current assets to the configured repository and R2 destinations. The operation remains busy through both phases, without intermediate confirmation. Git commit/push and the GitHub Actions public deployment remain separate explicit operations.
 
-Catalogue has no per-record draft/published state or separate Studio report Publish action. Canonical records remain in `studio/data/canonical/catalogue/`; the [Save completion owner](Catalogue_Build_And_Lookup_Refresh.md) prepares local media, dimensions/versions and Working JSON. Document draft/unpublishable policy selects eligible documents, without applying that policy to Catalogue record membership.
+Catalogue has no per-record draft/published state or separate Studio report Publish action. Canonical records remain in `studio/data/canonical/catalogue/`; the [Save completion owner](Catalogue_Save_And_Refresh.md) prepares local media, dimensions/versions and Working JSON. Document draft/unpublishable policy selects eligible documents, without applying that policy to Catalogue record membership.
 
 ```text
 Studio Save -> Working Catalogue JSON + shared current local assets

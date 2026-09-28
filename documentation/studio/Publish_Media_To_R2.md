@@ -13,7 +13,7 @@ parent_id: d-20260423-000000-d015e6
 
 `studio/services/media/publish_media_to_r2.py` provides Catalogue remote comparison, upload and exact operator-requested deletion. It is a maintenance transport, not the normal Catalogue Save workflow or the owner of media versions.
 
-Normal Save prepares local bytes and commits complete rendition sets with their dimensions and versions before Working JSON generation. [Catalogue Build And Lookup Refresh](Catalogue_Build_And_Lookup_Refresh.md) owns that completion. Normal public distribution uses the Docs Preview plan/apply operation, labelled **Publish**, described in [Catalogue Deployment](Catalogue_Deployment.md).
+Normal Save prepares local bytes and commits complete rendition sets with their dimensions and versions before Working JSON generation. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns that completion. Normal public distribution uses the Docs Preview plan/apply operation, labelled **Publish**, described in [Catalogue Deployment](Catalogue_Deployment.md).
 
 The CLI retains a separate `--scope docs` mode. Despite the command's historical name, that mode materializes one staged file into the local shared Docs assets; it does not publish it to R2. The domain selector is not a retired Docs scope identity.
 

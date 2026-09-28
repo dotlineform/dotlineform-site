@@ -14,7 +14,7 @@ parent_id: d-20260602-234732-8a5aae
 
 `studio/data/config/catalogue/catalogue-field-registry.json` lists current source fields and the artifact families owned by Work, Series, Detail and Detail-section operations. Read and maintain the file directly. The former read-only `/studio/catalogue-field-registry/` page is retired.
 
-The registry uses `catalogue_field_registry_v2`. It does not plan Save, classify publication eligibility or provide compatibility fallbacks. `catalogue_output_service.py` selects affected records; the producer and media services own completion. [Catalogue Build And Lookup Refresh](Catalogue_Build_And_Lookup_Refresh.md) describes that workflow.
+The registry uses `catalogue_field_registry_v2`. It does not plan Save, classify publication eligibility or provide compatibility fallbacks. `catalogue_output_service.py` selects affected records; the producer and media services own completion. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) describes that workflow.
 
 ## Owners
 

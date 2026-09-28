@@ -50,7 +50,7 @@ Focused standalone audit commands:
 
 - [Catalogue Services](Catalogue_Services.md) explains the active adapter, mutation, transaction, and safety boundary.
 - [Catalogue Source Model](Catalogue_Source_Model.md) covers canonical families, source validation, field-change order, and Series ordering.
-- [Catalogue Build And Lookup Refresh](Catalogue_Build_And_Lookup_Refresh.md) covers focused public builds, complete lookup export, and their CLI companions.
+- [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) describes current Save completion, explicit maintenance commands and the proposed Refresh action.
 - [Catalogue Field Registry](Catalogue_Field_Registry.md) covers field-impact review and the read-only registry verifier.
 
 ## Media

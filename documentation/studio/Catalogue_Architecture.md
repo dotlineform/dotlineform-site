@@ -22,7 +22,7 @@ canonical Works, Series and per-Work Details
   -> private Studio lookup refresh
 ```
 
-[Catalogue Source Model](Catalogue_Source_Model.md) owns identities and canonical relationships. [Catalogue Build And Lookup Refresh](Catalogue_Build_And_Lookup_Refresh.md) owns Save and maintenance operations. [Catalogue Indexes And Payloads](Catalogue_Indexes_And_Payloads.md) describes the external consumer data.
+[Catalogue Source Model](Catalogue_Source_Model.md) owns identities and canonical relationships. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns Save and maintenance operations. [Catalogue Indexes And Payloads](Catalogue_Indexes_And_Payloads.md) describes the external consumer data.
 
 Works have optional singular Series membership. Empty Series and ungrouped Works are valid. Detail sections and records belong to one per-Work aggregate. Catalogue records have no publication state, primary-Work prerequisite or parallel Markdown prose.
 

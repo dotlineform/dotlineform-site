@@ -28,7 +28,7 @@ browser command
 
 Canonical source is below `studio/data/canonical/catalogue/`. `catalogue_source.py` owns loading, normalization, serialization and validation; `catalogue_source_mutation.py` plans changes; `catalogue_transactions.py` owns validated single- and multi-file writes. Revisions and combined-state validation apply before a canonical mutation.
 
-Output completion runs after persistence. It refreshes affected external JSON, indexes and required media, then private Studio lookups. Its response preserves the saved outcome, updated record revisions and any incomplete output step. A failed conversion, remote operation or lookup refresh does not roll back saved source. See [Catalogue Build And Lookup Refresh](Catalogue_Build_And_Lookup_Refresh.md).
+Output completion runs after persistence. It refreshes affected external JSON, indexes and required media, then private Studio lookups. Its response preserves the saved outcome, updated record revisions and any incomplete output step. A failed conversion, remote operation or lookup refresh does not roll back saved source. See [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md).
 
 Delete previews are write-free. Apply repeats validation and revisions, removes exact canonical records, then reconciles affected output and exact obsolete media. Browser confirmation is not mutation authority.
 
