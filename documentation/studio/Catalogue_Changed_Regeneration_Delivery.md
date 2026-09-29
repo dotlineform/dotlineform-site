@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260928-231649-bf8a13
 title: Catalogue Changed Regeneration - Delivery
 added_date: "2026-09-28 23:16:49"
-last_updated: "2026-09-29 17:47:04"
+last_updated: "2026-09-29 18:12:29"
 summary: Reconcile Catalogue documents with new, changed and deleted Works using a durable update list, targeted Regenerate and Build.
 ui_status: done
 parent_id: d-20260428-000000-f5ff18
@@ -11,6 +11,8 @@ parent_id: d-20260428-000000-f5ff18
 # Catalogue Changed Regeneration - Delivery
 
 Proposed under [Planned Features](Planned_Features.md). Catalogue documents remain normal Docs Viewer collection documents. Each retains its immutable `doc_id`, the current Work title in front matter, timestamps, explicit `draft`, exact five-digit `work_id`, generated body and Links. Work IDs do not change: a Work ID is new or deleted, while edits to a Work retain the same ID. After a completed Refresh and Catalogue update, Working has exactly one Catalogue document for each current Work and none for a deleted Work. This delivery uses Refresh's Work changes to select source Regenerate, targeted Build or document deletion without changing the [bound image token](Catalogue_Image_Token_Metadata_Delivery.md). It extends [Catalogue Work Record Regeneration](Catalogue_Work_Regeneration.md).
+
+The one-time pending-list initializer described in this completed delivery was retired after migration. Current Refresh and Regenerate require the existing list and stop if it is missing or invalid.
 
 ## Requirements
 
@@ -91,4 +93,4 @@ Gate: explicit user closeout after the complete result and durable owners are cu
 
 ## Follow-on
 
-The exact Catalogue document inventory still scans sources for missing Works, orphaned documents and duplicate associations. A maintained Work-to-document index is a separate optimization if that cost becomes material. Bound Work tokens in other collections, Search freshness, token-structure migration and public Info visibility remain separate decisions.
+Bound Work tokens in other collections, Search freshness, token-structure migration and public Info visibility remain separate decisions.

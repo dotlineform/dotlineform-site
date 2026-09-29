@@ -53,12 +53,12 @@ def validate_pending_updates(value: Any) -> dict[str, Any]:
 
 
 def read_pending_updates(repo_root: Path) -> dict[str, Any]:
-    """Require the migrated list; missing or malformed state stops the caller."""
+    """Require the existing list; missing or malformed state stops the caller."""
     path = pending_updates_path(repo_root)
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
     except FileNotFoundError as error:
-        raise FileNotFoundError("Catalogue pending updates list is missing; run the one-time initialization") from error
+        raise FileNotFoundError("Catalogue pending updates list is missing") from error
     except (OSError, ValueError) as error:
         raise ValueError(f"Catalogue pending updates list is unreadable: {error}") from error
     return validate_pending_updates(payload)
@@ -67,16 +67,6 @@ def read_pending_updates(repo_root: Path) -> dict[str, Any]:
 def _text(payload: dict[str, Any]) -> str:
     validate_pending_updates(payload)
     return json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
-
-
-def create_pending_updates(repo_root: Path, current: set[str], deleted: set[str]) -> dict[str, Any]:
-    """Create the first list exactly once after migration inputs have been checked."""
-    path = pending_updates_path(repo_root)
-    payload = {"schema": SCHEMA, "current_work_ids": sorted(current), "deleted_work_ids": sorted(deleted)}
-    data = _text(payload)
-    with path.open("x", encoding="utf-8") as handle:
-        handle.write(data)
-    return payload
 
 
 def _replace_pending_updates(repo_root: Path, payload: dict[str, Any]) -> None:
