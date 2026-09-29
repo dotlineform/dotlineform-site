@@ -27,7 +27,6 @@ def catalogue_work_record(work: dict[str, Any]) -> CatalogueWorkRecord:
     title = work.get("title")
     if not isinstance(title, str) or not title.strip():
         raise ValueError("Generated Work title is unavailable")
-    title = title.strip()
     token = serialize_catalogue_image_token(
         target_type="work", target_id=work_id,
         use_work_title_caption=True, include_work_metadata=True,

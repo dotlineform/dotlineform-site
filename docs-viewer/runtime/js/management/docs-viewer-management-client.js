@@ -94,14 +94,9 @@ export function readCatalogueWork(workId,  options) {
     Object.assign({}, options, { cache: "no-cache" }));
 }
 
-/** Preview an exact Working Catalogue selection without source writes. */
-export function previewCatalogueRegeneration(payload, options) {
-  return fetchManagementJson("/docs/catalogue/regenerate-preview", "POST", payload, options);
-}
-
-/** Apply the server preview receipt and await source, document and Links outcomes. */
-export function applyCatalogueRegeneration(payload, options) {
-  return fetchManagementJson("/docs/catalogue/regenerate-apply", "POST", payload, options);
+/** Await one Working Catalogue reconciliation and its required document Build. */
+export function runCatalogueRegeneration(payload, options) {
+  return fetchManagementJson("/docs/catalogue/regenerate", "POST", payload, options);
 }
 
 /** Read exact Gallery membership from current Studio-generated output. */

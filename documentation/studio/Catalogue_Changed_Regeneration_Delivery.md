@@ -3,9 +3,9 @@ draft: false
 doc_id: d-20260928-231649-bf8a13
 title: Catalogue Changed Regeneration - Delivery
 added_date: "2026-09-28 23:16:49"
-last_updated: "2026-09-29 11:43:31"
+last_updated: "2026-09-29 17:47:04"
 summary: Reconcile Catalogue documents with new, changed and deleted Works using a durable update list, targeted Regenerate and Build.
-ui_status: proposed
+ui_status: done
 parent_id: d-20260428-000000-f5ff18
 ---
 # Catalogue Changed Regeneration - Delivery
@@ -52,42 +52,42 @@ A full Docs Build refreshes bound Work image tokens in other collections, includ
 
 ### CCR-0 — Readiness
 
-- [ ] Confirm normal Catalogue front matter, immutable Work IDs, one-to-one Working membership after reconciliation, the private list location, explicit initialization, missing-list stop, existing Refresh completion receipt and exclusion from Preview/public output.
-- [ ] Identify maintained Work by-ID write/delete paths and their `written`/`deleted` comparison. Inspect the existing Catalogue New/Delete request boundary, deletion cleanup including Links, source/Build ownership, Docs-manifest collection report and exact checks needed before document deletion.
-- [ ] Confirm one awaited action per mode, title-versus-build-only classification, completed-entry removal, failure stop/manual retry and modal wording. Identify existing duplicate dry runs, stale-plan checks and complete read-backs in Refresh, Regenerate and Build for removal. Select the smallest existing evidence for new, retitled, metadata-only and deleted Works, multiple Refreshes and failure stop; new or changed tests need a separately agreed specification under [Test Contract Discipline](Test_Contract_Discipline.md).
+- [x] Confirm normal Catalogue front matter, immutable Work IDs, one-to-one Working membership after reconciliation, the private list location, explicit initialization, missing-list stop, existing Refresh completion receipt and exclusion from Preview/public output.
+- [x] Identify maintained Work by-ID write/delete paths and their `written`/`deleted` comparison. Inspect the existing Catalogue New/Delete request boundary, deletion cleanup including Links, source/Build ownership, Docs-manifest collection report and exact checks needed before document deletion.
+- [x] Confirm one awaited action per mode, title-versus-build-only classification, completed-entry removal, failure stop/manual retry and modal wording. Identify existing duplicate dry runs, stale-plan checks and complete read-backs in Refresh, Regenerate and Build for removal. Select the smallest existing evidence for new, retitled, metadata-only and deleted Works, multiple Refreshes and failure stop; new or changed tests need a separately agreed specification under [Test Contract Discipline](Test_Contract_Discipline.md).
 
-Gate: present the bounded list, Regenerate/Build/deletion and action-removal contract for implementation approval. Record: proposed; no code, pending list, modal or tests changed by this document.
+Gate: present the bounded list, Regenerate/Build/deletion and action-removal contract for implementation approval. Record: approved 2026-09-29 after read-only owner review. The accepted implementation scope is CCR-1 and CCR-2; test creation remains separately specified.
 
 ### CCR-1 — Initialize And Maintain Update List
 
-- [ ] Explicitly create the initial list with every current generated Work pending and existing documents for absent Works pending deletion; validate records as they are read.
-- [ ] Accumulate exact current and deleted IDs in maintained Refresh paths. On an error, stop and report the partial writes without rollback or automatic requeue.
-- [ ] Stop Refresh and Catalogue update on missing/invalid list state; keep a valid empty list after processing and retain the existing Refresh completion receipt as a status record. Remove duplicate generator dry runs and complete output read-backs. Record a proportional evidence budget after owner inspection.
+- [x] Explicitly create the initial list with every current generated Work pending and existing documents for absent Works pending deletion; validate records as they are read.
+- [x] Accumulate exact current and deleted IDs in maintained Refresh paths. On an error, stop and report the partial writes without rollback or automatic requeue.
+- [x] Stop Refresh and Catalogue update on missing/invalid list state; keep a valid empty list after processing and retain the existing Refresh completion receipt as a status record. Remove duplicate generator dry runs and complete output read-backs. Record a proportional evidence budget after owner inspection.
 
-Gate: inspect initialization, missing-list failure, accumulated and no-change Refreshes, and a failed Refresh's stop/report behavior. Manual diagnosis and retry remain the response to a real failure; do not run a live full collection operation solely for this gate. Record: pending.
+Gate: inspect initialization, missing-list failure, accumulated and no-change Refreshes, and a failed Refresh's stop/report behavior. Manual diagnosis and retry remain the response to a real failure; do not run a live full collection operation solely for this gate. Record: accepted for CCR-2 on 2026-09-29. The create-once migration validated 4,616 generated Works and 4,616 Catalogue sources, then queued 4,616 current IDs and no deleted IDs. The required post-migration Refresh completed with no generated writes or deletions and retained that list. Focused Python lint, syntax compilation, JSON shape inspection and `git diff --check` passed. Missing-list and partial-failure behavior was reviewed in source; no failure was induced. No test or fixture changed, and no Docs Build ran.
 
 ### CCR-2 — Targeted Regenerate, Build And Actions
 
-- [ ] Implement one awaited Pending updates or Full reconciliation action from the relevant generated Work records, Catalogue source inventory and pending list; read selected by-ID JSON only in pending mode. Remove preview/replan and stale-plan checks.
-- [ ] Reuse source creation, targeted Build and exact collection deletion with correct Links, selected-document and failure-stop behavior; remove each pending entry after its required work succeeds. Remove redundant Build dry runs and complete output read-backs while retaining input validation and ordinary write errors.
-- [ ] Remove independent Catalogue New/Delete UI and direct management requests while preserving other collections and Regenerate's internal operations.
-- [ ] Replace the checkbox and review create, retitle, delete, build-only, empty-state and result behavior in the local UI.
+- [x] Implement one awaited Pending updates or Full reconciliation action from the relevant generated Work records, Catalogue source inventory and pending list; read selected by-ID JSON only in pending mode. Remove preview/replan and stale-plan checks.
+- [x] Reuse source creation, targeted Build and exact collection deletion with correct Links, selected-document and failure-stop behavior; remove each pending entry after its required work succeeds. Remove redundant Build dry runs and complete output read-backs while retaining input validation and ordinary write errors.
+- [x] Remove independent Catalogue New/Delete UI and direct management requests while preserving other collections and Regenerate's internal operations.
+- [x] Replace the checkbox and complete user manual review of the modal choices, simplified result and busy cursor. Review create, retitle, delete and build-only classification in source; retain the live-evidence limits below.
 
-Gate: present selected Working output and the modal for user manual review. Record: pending.
+Gate: present selected Working output and the modal for user manual review. Record: accepted for CCR-3 on 2026-09-29. A live Pending updates action built 4,616 current Catalogue documents, retitled the existing document for Work `04620` with its immutable `doc_id`, `added_date` and `draft` preserved, and cleared the list to valid empty state. The source title, generated by-ID document and both Catalogue manifest rows agreed after Build. The action ran once without a preview or second output-comparison pass. Source inspection covered exact create/delete routing, Links and Selected Documents cleanup, failure reporting and Full reconciliation; no live create, delete, Full reconciliation or injected failure ran. User modal review led to a borderless choice group, removal of explanatory copy, an Updated/Created/Deleted vertical result and suppression of the page-wide busy cursor within the open Regenerate modal. The removed guidance is in the maintained Catalogue architecture owner. Focused Python and JavaScript lint, Python syntax compilation and `git diff --check` passed. No test or fixture changed.
 
 ### CCR-3 — Code Review
 
-- [ ] Review Refresh/list ordering, immutable identities, deletion checks, pending-entry removal after Build/delete, private/public boundary, duplicated mode logic and any remaining repeated verification passes.
-- [ ] Resolve findings and update durable owner docs; rerun only evidence affected by review changes.
+- [x] Review Refresh/list ordering, immutable identities, deletion checks, pending-entry removal after Build/delete, private/public boundary, duplicated mode logic and any remaining repeated verification passes.
+- [x] Resolve findings and update durable owner docs; rerun only evidence affected by review changes.
 
-Gate: no unresolved issue inside the accepted delivery scope. Record: pending.
+Gate: no unresolved issue inside the accepted delivery scope. Record: accepted for CCR-4 on 2026-09-29. The generator's by-ID `written`/`deleted` results exclude timestamp-only changes; the validated private list is required before generated writes and moves exact IDs between current/deleted sets. Regenerate uses exact Work/source identity, awaits the selected or complete Build and clears the list afterward. Pending deletion checks the current Work index before source removal; targeted Build and Links receive the deleted document ID, and Selected Documents drops that ID. Full reconciliation uses current Work/source inventories and complete Build. Preview captures the private list only in its source revision, not its prepared source or public output. The old preview/apply route and duplicate verification passes are gone. During review the user declined additional retry-case handling; the code and owner prose retain the accepted manual diagnosis boundary. Updated [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md), [Catalogue Work Records](Sub_Scope_Index_Architecture.md#catalogue-work-records), [Runtime](Docs_Viewer_Runtime.md) and [Development Checklist](Development_Checklist.md). Focused lint, Python syntax compilation and `git diff --check` passed; no tests, browser automation, live Full reconciliation, live deletion or failure injection ran.
 
 ### CCR-4 — Closeout
 
-- [ ] Confirm one-to-one Working membership after a completed update, normal titles, cumulative list behavior, selected evidence and manual review. State any unverified failure path plainly.
-- [ ] Present the retain-or-retire recommendation for this temporary delivery document and working notes. Do not commit, push, Publish or deploy as part of closeout.
+- [x] Confirm one-to-one Working membership after a completed update, normal titles, cumulative list behavior, selected evidence and manual review. State any unverified failure path plainly.
+- [x] Present the retain-or-retire recommendation for this temporary delivery document and working notes. Do not commit, push, Publish or deploy as part of closeout.
 
-Gate: explicit user closeout after the complete result and durable owners are current. Record: pending.
+Gate: explicit user closeout after the complete result and durable owners are current. Record: user approved closeout on 2026-09-29. The initial 4,616-ID queue survived a no-change Refresh and was cleared by the first Pending action; after the user's Work `04620` modal exercise, the current list again has valid empty current/deleted sets. A read-only closeout comparison found 4,616 generated Works, 4,616 Catalogue source Markdown files and 4,616 rows in each Catalogue manifest; sorted Work IDs matched the source associations, public manifest `work_id` fields and management manifest Work subjects exactly. Work `04620` retained document `d-20260923-101154-952204`, and its current literal title `pond - detail 1 test B` agreed in generated Work JSON, source and both manifest rows. The user reviewed the modal choices, result and cursor. Live create, delete, Full reconciliation and injected failure paths remain unverified; no tests, browser automation, Docs Publish, public deployment, commit or push were part of this delivery. Durable behavior lives in [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md), [Catalogue Work Records](Sub_Scope_Index_Architecture.md#catalogue-work-records), [Runtime](Docs_Viewer_Runtime.md) and [Development Checklist](Development_Checklist.md). Recommend retiring this temporary delivery document at the next manual documentation archive after review; retain it as a completed record until then. No separate working-note or verification sibling was created.
 
 ## Follow-on
 

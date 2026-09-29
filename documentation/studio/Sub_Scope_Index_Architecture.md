@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260728-113139-763354
 title: Sub-Scope Index Architecture
 added_date: "2026-07-28 11:31:39"
-last_updated: "2026-09-28 22:21:02"
+last_updated: "2026-09-29 17:40:52"
 summary: define collection identity, the docs_subscope default, registered customisations, selection lifecycle, and explicit function adoption
 parent_id: d-20260801-084127-752d7e
 ---
@@ -255,11 +255,13 @@ Implementation/static review, initial metadata generation, a targeted no-change 
 
 ## Catalogue Work Records
 
-Working Catalogue's management contribution replaces New with Regenerate. Studio Works editor owns Work creation, metadata and generated JSON. [Regeneration service](../../docs-viewer/services/docs_catalogue_regeneration.py) reads the generated Work index and selected `works/index/<work_id>.json` records through the configured Catalogue output reader. It inventories Catalogue documents once per preview/apply operation and matches them by exact five-digit `work_id`, preserving leading zeroes. Shared creation supplies new immutable document IDs; replacement retains existing document identity, filename, added date, draft state and Links.
+Working Catalogue's management contribution replaces New with Regenerate and omits independent document Delete. Studio Works editor owns Work creation, metadata and generated JSON. [Regeneration service](../../docs-viewer/services/docs_catalogue_regeneration.py) reads the generated Work index and selected `works/index/<work_id>.json` records through the configured Catalogue output reader. It inventories Catalogue documents once per requested action and matches them by exact five-digit `work_id`, preserving leading zeroes. Shared creation supplies new immutable document IDs; updates retain existing document identity, filename, added date, draft state and Links. Direct Catalogue New/Delete management requests are rejected; other collections retain their actions.
 
 New Catalogue documents default to `draft: false` because they represent published Works with generated content and need no separate authored-draft stage. Existing Catalogue documents were set to `draft: false` when this default was adopted. Other document collections retain their draft default.
 
-The existing collection action registration supplies the exact Working Catalogue target and report-refresh callback. The management host opens the dedicated workflow/modal. Preview lists selected Works and create/regenerate/skip counts, with Only create new docs initially checked: checked skips existing documents entirely, while unchecked updates their title and body. There is no document cap. Apply verifies the selected IDs and content/source revision receipt, then awaits source writes, document builds, new-document Links initialization and report refresh. Busy state covers those operations, while input and result display remain ready. Successful results stay in the modal with one Close button. Failures report committed sources and incomplete work without automatically retrying creation or the build.
+The existing collection action registration supplies the exact Working Catalogue target and report-refresh callback. The management host opens a modal with Pending updates selected by default and Full reconciliation as the other choice. One Run action awaits source writes, document builds, Links cleanup or initialization, pending-list updates and report refresh. The result displays Updated, Created and Deleted counts as separate lines; Updated counts existing documents processed through retitle, body regeneration or Build-only work once each. Busy state covers the operation while input and result display remain ready. Successful results stay in the modal with one Close button. Failures report committed sources and incomplete work without automatically retrying.
+
+The first Pending updates run processes the initialized Work queue. Full reconciliation repairs missing, changed and orphaned Catalogue documents from the current Work index and source inventory. If the pending list is missing, run its one-time initialization before Regenerate; a missing or malformed list stops the action. After a failed Refresh, diagnose and retry Refresh. A retry can miss changes already written before the failure, so inspect the list and Work/document inventory and use Full reconciliation if needed. The pending list remains valid and empty after successful processing.
 
 [Work-record generator](../../docs-viewer/services/docs_catalogue_work_record.py) defines the body in code. Each body is one ordinary `catalogue:image:work` token containing the explicit Work ID, `use_work_title_caption=true`, `include_work_metadata=true`, `placement=left` and `fill_width=true`. The front-matter title also comes from the Work title, while the token stores no literal Work-derived text. The document builder resolves the current generated Work title and selected metadata on each Build, in this order:
 
@@ -270,7 +272,7 @@ The existing collection action registration supplies the exact Working Catalogue
 cat. <work_id>
 ```
 
-Empty optional metadata lines are omitted. Dimensions use positive numeric `height_cm`, `width_cm` and optional `depth_cm`; the whole dimensions line is omitted if height or width is missing, and whole numbers omit `.0`. There are no Markdown templates or JSON field definitions. Regenerate creates or replaces the bound token and may update the document's front-matter title when Only create new docs is unchecked. To refresh rendered Work metadata, first Refresh Catalogue so generated JSON is current, then run the relevant Docs Build; changing the Work or running Regenerate alone does not update every existing rendered figure. [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md) owns the bound token grammar and rendering contract.
+Empty optional metadata lines are omitted. Dimensions use positive numeric `height_cm`, `width_cm` and optional `depth_cm`; the whole dimensions line is omitted if height or width is missing, and whole numbers omit `.0`. There are no Markdown templates or JSON field definitions. Regenerate creates or replaces the bound token and updates a changed front-matter title on the existing document; other pending Work changes build without rewriting Markdown. To refresh rendered Work metadata, first Refresh Catalogue so generated JSON is current, then run Pending updates for Catalogue documents. A broader Docs Build is required to refresh bound Work tokens in other collections. [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md) owns the bound token grammar and rendering contract.
 
 ### Catalogue Collection Browsing
 

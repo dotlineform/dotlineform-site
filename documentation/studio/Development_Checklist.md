@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260523-190651-7157ec
 title: Development Checklist
 added_date: "2026-05-23 19:06:51"
-last_updated: "2026-09-29 11:49:42"
+last_updated: "2026-09-29 17:40:52"
 parent_id: d-20260419-000000-d2e47b
 
 ---
@@ -39,6 +39,7 @@ This checklist and the durable Studio development documentation are maintained d
 - [ ] Prefer straightforward awaited server operations. Server-side background work should not outlive the user action by default. Any necessary internal asynchronous work remains hidden within the same operation and completes before the UI returns to ready; the user does not coordinate pending jobs or delayed consistency.
 - [ ] For Docs Source Save, the agreed required result is the validated combined metadata/body write to canonical source. End Save busy state and return to rendered display at that boundary. Existing watcher document/Links generation and automatic viewer refresh run independently; do not await or suppress them, rebuild Search, or turn a later generated-output failure into a failed Save. Other operations retain their own required completion boundaries.
 - [ ] For Catalogue Save, the required result is the exact canonical mutation, required shared local media and current editor records. Keep generated Catalogue JSON and private Docs metadata in the explicit awaited Refresh Catalogue operation, with its local freshness receipt. Do not make persisted Studio lookup files an editor fallback or make Docs Publish implicitly refresh Catalogue readers. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns failure and reader timing.
+- [ ] For Catalogue Refresh and Regenerate, require the private Working `updates-pending.json` list and fail on missing or malformed state. Refresh accumulates exact generated Work by-ID writes/deletions; Regenerate clears entries only after required source/delete and Build work succeeds. Diagnose partial failures manually without automatic repair. Do not make Refresh or Regenerate part of Publish. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns the current workflow.
 
 ### Public Site And Local Apps
 

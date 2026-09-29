@@ -85,6 +85,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     ? options.markdownLinkForDocument
     : null;
   var managementContext = Boolean(options.managementContext);
+  var allowDelete = options.allowDelete !== false;
   var selectionOwner = options.selectionOwner || createDocsViewerCollectionSelectionOwner();
   var currentDocuments = [];
   var listToolbar = null;
@@ -637,6 +638,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
 
     if (
       !managementContext
+      || !allowDelete
       || typeof settings.commitDeletedDocument !== "function"
       || typeof settings.registerAction !== "function"
     ) return;

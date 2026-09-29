@@ -136,14 +136,5 @@ def generate_catalogue_json(
         if write:
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    if complete and write:
-        for relative, payload in payloads.items():
-            path = output_path(workspace, relative)
-            if not _same_generated_content(json.loads(path.read_text(encoding="utf-8")), payload):
-                raise RuntimeError(f"Catalogue output did not verify: {relative}")
-        for relative in selected - payloads.keys():
-            if output_path(workspace, relative).exists():
-                raise RuntimeError(f"Obsolete Catalogue output remains: {relative}")
     return {"status": "completed", "write": write, "written": written, "deleted": deleted,
-            "verified": complete and write,
             "counts": {"works": len(records.works), "series": len(records.series), "galleries": len(galleries.galleries)}}

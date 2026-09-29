@@ -146,6 +146,7 @@ export function loadDocsViewerCollectionContribution(settings, parent, collectio
         );
       },
       onCreateDocument: contributionOptions.onCreateDocument,
+      allowDelete: collection !== "catalogue",
       onRegenerateCatalogue: settings.managementContext
         && collection === "catalogue" && cleanString(clientOptions.baseUrl)
         ? settings.managementDocumentActions?.regenerateCatalogue

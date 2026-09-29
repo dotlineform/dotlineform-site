@@ -1,4 +1,4 @@
-"""Reconcile Catalogue reader output and record verified local freshness."""
+"""Reconcile Catalogue reader output and record completed local freshness."""
 
 from __future__ import annotations
 
@@ -14,6 +14,7 @@ from catalogue.catalogue_galleries import GALLERIES_FILE, MEMBERSHIPS_FILE
 from catalogue.catalogue_series_galleries import SERIES_GALLERIES_FILE
 from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, SOURCE_FILES, records_from_json_source
 from catalogue.catalogue_works_metadata import generate_catalogue_works_metadata
+from catalogue.catalogue_pending_updates import accumulate_generated_work_changes, read_pending_updates
 from catalogue.generate_work_pages import generate_catalogue_json
 from catalogue.works_collection_metadata import generate_works_collection_metadata
 
@@ -94,25 +95,21 @@ def _write_receipt(repo_root: Path, revision: str) -> dict[str, Any]:
 
 
 def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
-    """Refresh all owned Working readers, verify them, then record completion."""
+    """Refresh owned Working readers, queue changed Works, then record completion."""
     try:
+        pending = read_pending_updates(repo_root)
         invalidate_refresh_receipt(repo_root)
         revision = _source_revision(repo_root)
         source_dir = repo_root / DEFAULT_SOURCE_DIR
         output = generate_catalogue_json(repo_root, source_dir, write=True)
-        if not output["verified"]:
-            raise RuntimeError("Catalogue JSON verification did not complete")
+        pending_counts = accumulate_generated_work_changes(repo_root, pending, output)
         records = records_from_json_source(source_dir)
         report = generate_catalogue_works_metadata(repo_root, records, write=True)
         titles = generate_works_collection_metadata(repo_root, records, write=True)
-        if generate_catalogue_works_metadata(repo_root, records, write=False)["changed"]:
-            raise RuntimeError("Catalogue Works report metadata did not verify")
-        if generate_works_collection_metadata(repo_root, records, write=False)["changed"]:
-            raise RuntimeError("Works collection metadata did not verify")
         receipt = _write_receipt(repo_root, revision)
         status = {"ok": True, "needed": False, "refreshed_at_utc": receipt["refreshed_at_utc"]}
         return {"ok": True, "output": output, "report_metadata": report,
-                "works_collection_metadata": titles, "refresh_status": status}
+                "works_collection_metadata": titles, "pending_updates": pending_counts, "refresh_status": status}
     except Exception as error:
         try:
             invalidate_refresh_receipt(repo_root)

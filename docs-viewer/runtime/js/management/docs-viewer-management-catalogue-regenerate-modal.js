@@ -3,110 +3,81 @@ import {
   openDocsViewerManagementModal
 } from "./docs-viewer-management-modal-shell.js";
 
-function recordsHtml(records) {
-  return '<ul class="docsViewerScopeLifecycle__list">' + records.map(function (record) {
-    return "<li>" + escapeHtml(record.work_id + " — " + record.title + " (" + record.operation + ")") + "</li>";
-  }).join("") + "</ul>";
-}
-
-/** Present one preview/apply flow; source and report operations are supplied by the workflow. */
+/** Let the user choose one mode, then keep the modal busy through Run and report refresh. */
 export function openCatalogueRegenerateModal(options) {
-  var preview = null;
   var result = null;
-  var phase = "previewing";
+  var phase = "ready";
   var api;
-  var checkbox;
   var primary;
   var closeButton;
   var content;
+  var choices;
 
   function setBusy(busy) {
     api.setBusy(busy);
     options.onBusyChange(busy);
   }
 
-  function ready() {
+  function finish() {
     setBusy(false);
-    checkbox.disabled = phase === "result";
+    choices.forEach(function (choice) { choice.disabled = true; });
+    closeButton.hidden = true;
+    primary.textContent = "Close";
     primary.disabled = false;
-    closeButton.hidden = phase === "result" || Boolean(preview && preview.counts.selected === 0);
-    primary.textContent = closeButton.hidden
-      ? "Close" : phase === "preview-error" ? "Preview" : "Regenerate";
   }
 
-  function refreshPreview() {
-    phase = "previewing";
-    preview = null;
+  function run() {
+    phase = "running";
     api.setStatus("");
     setBusy(true);
-    content.textContent = "Reading Catalogue Works…";
-    return options.preview(checkbox.checked).then(function (payload) {
-      preview = payload;
-      phase = "preview";
-      var counts = payload.counts;
-      content.innerHTML = "<p>" + escapeHtml(
-        "Create: " + counts.create + ". Regenerate: " + counts.regenerate + ". Skip: " + counts.skip + "."
-      ) + "</p>" + (counts.selected
-        ? (checkbox.checked ? "" : "<p>Existing document bodies will be replaced.</p>")
-          + "<details><summary>Selected Works (" + counts.selected + ")</summary>"
-          + recordsHtml(payload.records) + "</details>"
-        : "<p>No documents to create.</p>");
-    }).catch(function (error) {
-      phase = "preview-error";
-      content.textContent = "Preview unavailable.";
-      api.setStatus(error.message);
-    }).finally(ready);
-  }
-
-  function apply() {
-    phase = "applying";
-    api.setStatus("");
-    setBusy(true);
-    content.textContent = "Regenerating documents…";
-    return options.apply(preview).then(function (payload) {
-      phase = "result";
+    content.textContent = "Reconciling Catalogue documents…";
+    var mode = api.host.querySelector('[name="catalogue-regenerate-mode"]:checked').value;
+    options.run(mode).then(function (payload) {
       result = payload;
-      content.textContent = payload.summary_text;
+      phase = "result";
+      var counts = payload.counts;
+      content.innerHTML = "<div>" + escapeHtml("Updated " + counts.updated) + "</div>"
+        + "<div>" + escapeHtml("Created " + counts.create) + "</div>"
+        + "<div>" + escapeHtml("Deleted " + counts.delete) + "</div>";
     }).catch(function (error) {
-      if (error.status === 409) {
-        phase = "preview-error";
-        preview = null;
-        content.textContent = "Preview again before applying.";
+      phase = "error";
+      result = { ...error.payload, ok: false, error: error.message };
+      if (error.payload?.ok) {
+        content.textContent = "Catalogue documents were updated, but the report could not refresh.";
+      } else if (result.committed_source_operations) {
+        content.textContent = "Source operations completed: " + result.committed_source_operations + ". Inspect the error before retrying.";
       } else {
-        phase = "result";
-        result = { ...error.payload, ok: false, error: error.message };
-        var completed = Array.isArray(result.completed_records) ? result.completed_records : [];
-        content.innerHTML = "<p>" + escapeHtml("Sources written: " + completed.length + ".") + "</p>"
-          + (completed.length ? "<details><summary>Written documents</summary>" + recordsHtml(completed) + "</details>" : "");
+        content.textContent = "Regenerate stopped before completing.";
       }
       api.setStatus(error.message);
-    }).finally(ready);
+    }).finally(finish);
   }
 
   return openDocsViewerManagementModal({
     root: options.root,
     restoreFocus: options.restoreFocus,
     title: "Regenerate Catalogue",
-    bodyHtml: '<label class="docsViewer__field"><span><input type="checkbox" data-regenerate-new-only checked> Only create new docs</span></label>'
-      + '<div data-regenerate-preview aria-live="polite"></div>',
+    bodyHtml: '<fieldset class="docsViewer__fieldGroup"><legend class="visually-hidden">Catalogue regeneration mode</legend>'
+      + '<label class="docsViewer__field docsViewer__field--checkbox"><input class="docsViewer__checkboxInput" type="radio" name="catalogue-regenerate-mode" value="pending" checked><span class="docsViewer__fieldLabel">Pending updates</span></label>'
+      + '<label class="docsViewer__field docsViewer__field--checkbox"><input class="docsViewer__checkboxInput" type="radio" name="catalogue-regenerate-mode" value="full"><span class="docsViewer__fieldLabel">Full reconciliation</span></label>'
+      + '</fieldset>'
+      + '<div data-regenerate-result aria-live="polite"></div>',
     actions: [
-      { role: "modal-primary", label: "Regenerate", disabled: true },
+      { role: "modal-primary", label: "Run" },
       { role: "modal-cancel", label: "Close" }
     ],
-    focusSelector: "[data-regenerate-new-only]",
+    focusSelector: '[name="catalogue-regenerate-mode"][value="pending"]',
     onOpen: function (modalApi) {
       api = modalApi;
-      checkbox = api.host.querySelector("[data-regenerate-new-only]");
+      api.host.querySelector('[data-role="docs-viewer-management-modal"]').dataset.suppressBusyCursor = "true";
       primary = api.host.querySelector('[data-role="modal-primary"]');
       closeButton = api.host.querySelector('button[data-role="modal-cancel"]');
-      content = api.host.querySelector("[data-regenerate-preview]");
-      checkbox.addEventListener("change", refreshPreview);
-      refreshPreview();
+      content = api.host.querySelector("[data-regenerate-result]");
+      choices = Array.from(api.host.querySelectorAll('[name="catalogue-regenerate-mode"]'));
     },
     onSubmit: function () {
-      if (phase === "result" || (preview && preview.counts.selected === 0)) return { confirmed: true };
-      if (phase === "preview-error") refreshPreview();
-      else if (phase === "preview") apply();
+      if (phase === "result" || phase === "error") return { confirmed: true };
+      if (phase === "ready") run();
       return false;
     }
   }).then(function () { return result; });

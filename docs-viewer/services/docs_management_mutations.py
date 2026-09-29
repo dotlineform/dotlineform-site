@@ -228,6 +228,7 @@ def plan_create(
             raise ValueError("Catalogue New requires work_id as an exact five-digit string")
         if not isinstance(body.get("title"), str) or not body["title"].strip():
             raise ValueError("Catalogue New requires a non-blank title")
+        title = body["title"]
         create_fields["work_id"] = work_id
     elif "work_id" in body:
         raise ValueError("work_id is only accepted when creating a Catalogue collection document")

@@ -561,6 +561,15 @@
   cursor: progress;
 }
 
+.docsViewer[data-management-busy="true"] .docsViewer__modal[data-suppress-busy-cursor="true"],
+.docsViewer[data-management-busy="true"] .docsViewer__modal[data-suppress-busy-cursor="true"] :is(button, input, select, textarea){
+  cursor: auto;
+}
+
+.docsViewer[data-management-busy="true"] .docsViewer__modal[data-suppress-busy-cursor="true"] :is(button, input[type="radio"]):not(:disabled){
+  cursor: pointer;
+}
+
 .docsViewer[data-management-busy="true"] .docsViewer__status{
   color: var(--docs-viewer-busy);
 }

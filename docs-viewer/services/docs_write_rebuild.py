@@ -707,8 +707,10 @@ def perform_collection_source_write_and_rebuild(
     links_created_doc_ids: list[str] | None = None,
     links_doc_ids: list[str] | None = None,
     source_writes_committed: Callable[[], bool] | None = None,
+    build_doc_ids: list[str] | None = None,
+    complete_build: bool = False,
 ) -> Dict[str, Any]:
-    """Await a targeted build; an explicit Links selection preserves other records.
+    """Await a selected or complete collection build and its Links update.
 
     A caller reporting partial commits can supply its write receipt. On failure,
     committed writes remain suppressed so the watcher does not retry the build.
@@ -772,13 +774,16 @@ def perform_collection_source_write_and_rebuild(
                     + ", ".join(sorted(changed_before_write))
                 )
         write_operation()
-        docs_doc_ids = sorted(set(source_doc_ids_before) | set(changed_source_document_ids(changed_paths)))
+        docs_doc_ids = sorted(set(source_doc_ids_before) | set(changed_source_document_ids(changed_paths))
+                              | set(build_doc_ids or []))
         links_arguments = links_write_arguments(links_before, changed_paths, created_doc_ids=links_created_doc_ids)
         if links_doc_ids is not None:
             links_arguments["links_doc_ids"] = links_doc_ids
+        if complete_build:
+            links_arguments.pop("links_doc_ids", None)
         rebuild = rebuild_collection_outputs(
             repo_root, collection,
-            docs_doc_ids=docs_doc_ids,
+            docs_doc_ids=None if complete_build else docs_doc_ids,
             **links_arguments,
         )
     except CollectionSourceSnapshotChanged:

@@ -101,16 +101,12 @@ def docs_management_post_response(
         raise ValueError("scope is retired; use an optional collection")
     if "sub_scope" in body:
         raise ValueError("sub_scope is retired; use collection")
-    if path == routes.CATALOGUE_REGENERATE_PREVIEW_PATH:
-        return HTTPStatus.OK, docs_catalogue_regeneration.preview_catalogue_regeneration(repo_root, body)
-    if path == routes.CATALOGUE_REGENERATE_APPLY_PATH:
+    if path == routes.CATALOGUE_REGENERATE_PATH:
         if dry_run:
-            raise ValueError("Catalogue Regenerate apply does not support dry_run")
+            raise ValueError("Catalogue Regenerate does not support dry_run")
         try:
-            return HTTPStatus.OK, docs_catalogue_regeneration.apply_catalogue_regeneration(repo_root, body)
-        except docs_catalogue_regeneration.CatalogueRegenerationConflict as error:
-            return HTTPStatus.CONFLICT, {"ok": False, "error": str(error)}
-        except docs_catalogue_regeneration.CatalogueRegenerationApplyError as error:
+            return HTTPStatus.OK, docs_catalogue_regeneration.regenerate_catalogue(repo_root, body)
+        except docs_catalogue_regeneration.CatalogueRegenerationError as error:
             return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
     if path == routes.SET_DRAFT_PATH:
         try:
@@ -203,6 +199,8 @@ def docs_management_post_response(
         except mutations.ManagedDocumentRevisionConflict as error:
             return HTTPStatus.CONFLICT, error.payload
     if path == routes.CREATE_PATH:
+        if str(body.get("collection") or "").strip().lower() == "catalogue":
+            raise ValueError("Catalogue documents are created through Regenerate")
         try:
             return HTTPStatus.OK, handle_create(repo_root, body, dry_run)
         except DocumentCreateCommittedError as error:
@@ -218,6 +216,8 @@ def docs_management_post_response(
         return HTTPStatus.OK, handle_move(repo_root, body, dry_run)
     if path == routes.DELETE_PREVIEW_PATH:
         if "collection" in body:
+            if str(body.get("collection") or "").strip().lower() == "catalogue":
+                raise ValueError("Catalogue documents are deleted through Regenerate")
             return (
                 HTTPStatus.OK,
                 mutations.plan_collection_delete_preview(repo_root, body),
@@ -225,6 +225,8 @@ def docs_management_post_response(
         doc_ids = mutations.require_delete_doc_ids(body.get("doc_ids"))
         return HTTPStatus.OK, mutations.plan_delete_preview(repo_root, doc_ids)
     if path == routes.DELETE_APPLY_PATH:
+        if str(body.get("collection") or "").strip().lower() == "catalogue":
+            raise ValueError("Catalogue documents are deleted through Regenerate")
         try:
             return HTTPStatus.OK, handle_delete_apply(repo_root, body, dry_run)
         except mutations.ManagedDocumentRevisionConflict as error:

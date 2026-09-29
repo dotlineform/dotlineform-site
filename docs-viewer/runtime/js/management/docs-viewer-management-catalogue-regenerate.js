@@ -1,11 +1,8 @@
-import {
-  applyCatalogueRegeneration,
-  previewCatalogueRegeneration
-} from "./docs-viewer-management-client.js";
+import { runCatalogueRegeneration } from "./docs-viewer-management-client.js";
 import { normalizeManagedDocumentCollectionTarget } from "./docs-viewer-management-document-target.js";
 import { openCatalogueRegenerateModal } from "./docs-viewer-management-catalogue-regenerate-modal.js";
 
-/** Keep the exact collection and receipt through Apply and its awaited report refresh. */
+/** Keep the exact collection through one awaited Run and report refresh. */
 export function openCatalogueRegenerate(options) {
   var target = normalizeManagedDocumentCollectionTarget(options.target);
   if (target.collection !== "catalogue") {
@@ -18,22 +15,13 @@ export function openCatalogueRegenerate(options) {
     root: options.root,
     restoreFocus: options.restoreFocus,
     onBusyChange: options.onBusyChange,
-    preview: function (onlyCreateNew) {
-      return previewCatalogueRegeneration({ ...target, only_create_new: onlyCreateNew }, options.clientOptions);
-    },
-    apply: async function (preview) {
-      var payload = await applyCatalogueRegeneration({
-        ...target,
-        only_create_new: preview.only_create_new,
-        work_ids: preview.work_ids,
-        preview_revision: preview.preview_revision,
-        confirm: true
-      }, options.clientOptions);
-      if (payload.counts.selected) {
+    run: async function (mode) {
+      var payload = await runCatalogueRegeneration({ ...target, mode: mode }, options.clientOptions);
+      if (mode === "full" || payload.counts.built || payload.counts.delete || payload.counts.create) {
         try {
           await options.refreshCollection(target);
         } catch (cause) {
-          var error = new Error("Documents generated, but the Catalogue report could not refresh. " + cause.message);
+          var error = new Error("Catalogue documents were updated, but the report could not refresh. " + cause.message);
           error.payload = payload;
           throw error;
         }
