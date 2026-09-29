@@ -27,7 +27,7 @@ function showContentDetailControls(context, presentation) {
     label: "Back to document"
   });
   context.mainView.projectControlState(CONTENT_DETAIL_LABEL_CONTROL_ID, {
-    hidden: false,
+    hidden: context.targetContext.kind === "media",
     label: presentation.label
   });
   projectNewTabTarget(context, presentation.newTabTarget);

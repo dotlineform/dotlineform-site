@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "gallery_record_v1",
-    "version": "blake2b-be14494a228284a0942ad6a62a3871ec",
-    "generated_at_utc": "2026-09-28T19:08:15Z",
+    "version": "blake2b-30d9238dffedbe211a219fd9739e3643",
+    "generated_at_utc": "2026-09-29T16:27:23Z",
     "gallery_id": "306",
     "count": 4
   },
@@ -13,7 +13,7 @@
   "member_works": [
     {
       "work_id": "04620",
-      "title": "pond - detail 1 test",
+      "title": "pond - detail 1 test B",
       "year": 2023,
       "year_display": "2023"
     },

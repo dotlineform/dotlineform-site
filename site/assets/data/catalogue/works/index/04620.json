@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v8",
-    "version": "blake2b-57a8cc7df8a4c38cb7dcbe585e33cad4",
-    "generated_at_utc": "2026-09-28T19:08:15Z",
+    "version": "blake2b-85947ac781715e796ae9758a4bc1a752",
+    "generated_at_utc": "2026-09-29T16:27:23Z",
     "work_id": "04620",
     "count": 0
   },
   "work": {
     "work_id": "04620",
-    "title": "pond - detail 1 test",
+    "title": "pond - detail 1 test B",
     "year": 2023,
     "year_display": "2023",
     "medium_type": "digital print",

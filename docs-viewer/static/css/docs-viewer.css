@@ -53,6 +53,7 @@
   --docs-viewer-space-4: var(--space-4, 1.125rem);
   --docs-viewer-space-5: var(--space-5, 1.375rem);
   --docs-viewer-sidebar-control-inset: 0.45rem;
+  --docs-viewer-toolbar-control-height: 2rem;
   --docs-viewer-toolbar-icon-size: 20px; /* standard 24px */
   --docs-viewer-toolbar-icon-hover-bg: color-mix(in srgb, var(--docs-viewer-panel) 92%, var(--docs-viewer-text));
   font-family: var(--docs-viewer-font-sans);
@@ -65,6 +66,7 @@
   --docs-viewer-info-width: 20rem; /* current: 280px / 17.5rem; try 14rem-22rem */
   --docs-viewer-panel-width-min: 13.75rem; /* current: 220px / 13.75rem */
   --docs-viewer-search-width: 20rem; /* current: 20rem; try 16rem-24rem */
+  --docs-viewer-media-metadata-width: 22rem;
 
   /* derived tokens */
   --docs-viewer-measure: var(--docs-viewer-doc-width);
@@ -471,7 +473,7 @@ main.container:has(> .docsViewer){
 .docsViewer__topRow,
 .docsViewer__mainViewToolbarActions,
 .docsViewer__sidebarHeader{
-  --docs-viewer-control-height: 2rem;
+  --docs-viewer-control-height: var(--docs-viewer-toolbar-control-height);
 }
 
 .docsViewer__topRow{
@@ -483,8 +485,18 @@ main.container:has(> .docsViewer){
   gap: var(--docs-viewer-top-row-gap);
 }
 
-/* Keep collection navigation and its actions on the document's shared axis. */
-.docsViewer__topRow:has(.docsViewer__collectionBack:not([hidden])){
+/* Keep collection and Media View back controls on the document's shared axis. */
+.docsViewer:has(.docsViewer__contentDetail--media) .docsViewer__topRow{
+  --docs-viewer-document-width: min(
+    100%,
+    var(--docs-viewer-doc-width),
+    calc(100vw - var(--docs-viewer-panel-clearance) - var(--docs-viewer-panel-clearance))
+  );
+  position: relative;
+}
+
+.docsViewer__topRow:has(.docsViewer__collectionBack:not([hidden])),
+.docsViewer:has(.docsViewer__contentDetail--media) .docsViewer__topRow{
   grid-template-columns:
     auto
     minmax(0, calc((100% - var(--docs-viewer-document-width)) / 2 - 2 * var(--docs-viewer-toolbar-icon-size) - 2 * var(--docs-viewer-top-row-gap)))
@@ -493,28 +505,33 @@ main.container:has(> .docsViewer){
     auto;
 }
 
-.docsViewer__topRow:has(.docsViewer__collectionBack:not([hidden])) .docsViewer__topBar{
+.docsViewer__topRow:has(.docsViewer__collectionBack:not([hidden])) .docsViewer__topBar,
+.docsViewer:has(.docsViewer__contentDetail--media) .docsViewer__topRow .docsViewer__topBar{
   display: contents;
 }
 
-.docsViewer__topRow:has(.docsViewer__collectionBack:not([hidden])) .docsViewer__viewerToolbar{
+.docsViewer__topRow:has(.docsViewer__collectionBack:not([hidden])) .docsViewer__viewerToolbar,
+.docsViewer:has(.docsViewer__contentDetail--media) .docsViewer__topRow .docsViewer__viewerToolbar{
   grid-column: 2;
   grid-row: 1;
   min-width: 0;
   width: auto;
 }
 
-.docsViewer__topRow:has(.docsViewer__collectionBack:not([hidden])) .docsViewer__mainViewToolbar{
+.docsViewer__topRow:has(.docsViewer__collectionBack:not([hidden])) .docsViewer__mainViewToolbar,
+.docsViewer:has(.docsViewer__contentDetail--media) .docsViewer__topRow .docsViewer__mainViewToolbar{
   grid-column: 3;
   grid-row: 1;
 }
 
-.docsViewer__topRow:has(.docsViewer__collectionBack:not([hidden])) .docsViewer__manageToolbarMount{
+.docsViewer__topRow:has(.docsViewer__collectionBack:not([hidden])) .docsViewer__manageToolbarMount,
+.docsViewer:has(.docsViewer__contentDetail--media) .docsViewer__topRow .docsViewer__manageToolbarMount{
   grid-column: 4;
   grid-row: 1;
 }
 
-.docsViewer__topRow:has(.docsViewer__collectionBack:not([hidden])) > [data-docs-viewer-theme-toggle]{
+.docsViewer__topRow:has(.docsViewer__collectionBack:not([hidden])) > [data-docs-viewer-theme-toggle],
+.docsViewer:has(.docsViewer__contentDetail--media) .docsViewer__topRow > [data-docs-viewer-theme-toggle]{
   grid-column: 5;
   grid-row: 1;
 }
@@ -1561,10 +1578,14 @@ main.container:has(> .docsViewer){
 
 .docsViewer__mediaDetailFigure{
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(14rem, 22rem);
+  grid-template-columns: minmax(0, 1fr) minmax(14rem, var(--docs-viewer-media-metadata-width));
   gap: var(--docs-viewer-space-4);
   align-items: start;
   margin: 0;
+}
+
+.docsViewer__mediaDetailImagePane{
+  min-width: 0;
 }
 
 .docsViewer__mediaDetailImage{
@@ -1582,57 +1603,53 @@ main.container:has(> .docsViewer){
   min-width: 0;
 }
 
+.docsViewer__mediaDetailCaption--simple{
+  font-size: var(--docs-viewer-font-small);
+  font-style: normal;
+  color: var(--docs-viewer-text);
+}
+
 .docsViewer__mediaDetailTitle{
   margin: 0 0 var(--docs-viewer-space-3);
 }
 
-.docsViewer__mediaDetailMetadata{
-  margin: 0;
+.docsViewer__mediaDetailCaption--simple .docsViewer__mediaDetailTitle{
+  font-size: var(--docs-viewer-font-body);
+  font-weight: bold;
 }
 
-.docsViewer__mediaDetailMetadataRow{
-  display: grid;
-  grid-template-columns: minmax(6rem, 0.7fr) minmax(0, 1.3fr);
-  gap: var(--docs-viewer-space-2);
-  padding: var(--docs-viewer-space-2) 0;
-  border-top: 1px solid var(--docs-viewer-border);
+.docsViewer__content .docsViewer__mediaDetailCatalogueNumber{
+  margin: 0 0 var(--docs-viewer-space-3);
 }
 
-.docsViewer__mediaDetailMetadataRow dt{
-  color: var(--docs-viewer-muted);
-}
-
-.docsViewer__mediaDetailMetadataRow dd{
-  min-width: 0;
-  margin: 0;
-  overflow-wrap: anywhere;
+.docsViewer__content .docsViewer__mediaDetailRelatedLabel{
+  margin: var(--docs-viewer-space-3) 0 var(--docs-viewer-space-2);
 }
 
 .docsViewer__mediaDetailGroupLink{
   padding: 0;
   border: 0;
   background: none;
-  color: var(--docs-viewer-link);
+  color: var(--docs-viewer-content-link);
   font: inherit;
   text-align: left;
-  text-decoration: underline;
+  text-decoration: none;
   cursor: pointer;
 }
 
-.docsViewer__mediaDetailRelatedGalleries{
+.docsViewer__mediaDetailGroupLink:hover{
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.docsViewer__mediaDetailGalleryLinks{
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.docsViewer__mediaDetailRelatedGalleries > li + li{
+.docsViewer__mediaDetailGalleryLinks > li + li{
   margin-top: var(--docs-viewer-space-2);
-}
-
-.docsViewer__mediaDetailGalleryRelation{
-  display: block;
-  color: var(--docs-viewer-muted);
-  font-size: 0.85em;
 }
 
 .docsViewer__mediaDetailGalleryPane{
@@ -1692,9 +1709,10 @@ main.container:has(> .docsViewer){
 }
 
 .docsViewer__mediaDetailPagination{
+  --docs-viewer-control-height: var(--docs-viewer-toolbar-control-height);
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: flex-end;
   gap: var(--docs-viewer-space-2);
   margin-top: var(--docs-viewer-space-4);
 }
@@ -1702,18 +1720,9 @@ main.container:has(> .docsViewer){
 .docsViewer__content .docsViewer__mediaDetailPosition{
   margin: 0;
   color: var(--docs-viewer-muted);
+  font-size: var(--docs-viewer-font-small);
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
-}
-
-.docsViewer__mediaDetailNavigationButtons{
-  display: flex;
-  gap: var(--docs-viewer-space-2);
-}
-
-.docsViewer__mediaDetailNavigationButtons .docsViewer__actionButton{
-  width: 2.3rem;
-  padding: 0;
-  font-size: var(--docs-viewer-text-xl);
 }
 
 @media (max-width: 760px){
@@ -1800,6 +1809,12 @@ main.container:has(> .docsViewer){
 .docsViewer__contentDetailOpenNewTab:visited{
   color: var(--docs-viewer-text);
   text-decoration: none;
+}
+
+.docsViewer:has(.docsViewer__contentDetail--media) .docsViewer__contentDetailOpenNewTab{
+  position: absolute;
+  top: 0;
+  right: calc(1px + var(--docs-viewer-space-4) + var(--docs-viewer-space-4) + var(--docs-viewer-media-metadata-width));
 }
 
 .docsViewer__contentDetailLabel{
@@ -2079,16 +2094,30 @@ main.container:has(> .docsViewer){
     align-items: flex-start;
   }
 
-  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__topRow:has(.docsViewer__collectionBack:not([hidden])){
+  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__topRow:has(.docsViewer__collectionBack:not([hidden])),
+  .docsViewer[data-docs-viewer-app-kind="public"]:has(.docsViewer__contentDetail--media) .docsViewer__topRow{
     grid-template-columns: auto minmax(0, 1fr) auto;
   }
 
-  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__topRow:has(.docsViewer__collectionBack:not([hidden])) .docsViewer__mainViewToolbar{
+  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__topRow:has(.docsViewer__collectionBack:not([hidden])) .docsViewer__mainViewToolbar,
+  .docsViewer[data-docs-viewer-app-kind="public"]:has(.docsViewer__contentDetail--media) .docsViewer__topRow .docsViewer__mainViewToolbar{
     grid-column: 1 / -1;
     grid-row: 2;
   }
 
-  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__topRow:has(.docsViewer__collectionBack:not([hidden])) > [data-docs-viewer-theme-toggle]{
+  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__topRow:has(.docsViewer__collectionBack:not([hidden])) > [data-docs-viewer-theme-toggle],
+  .docsViewer[data-docs-viewer-app-kind="public"]:has(.docsViewer__contentDetail--media) .docsViewer__topRow > [data-docs-viewer-theme-toggle]{
     grid-column: 3;
+  }
+
+  .docsViewer[data-docs-viewer-app-kind="public"]:has(.docsViewer__contentDetail--media) .docsViewer__contentDetailOpenNewTab{
+    top: auto;
+    bottom: 0;
+  }
+}
+
+@media (max-width: 760px){
+  .docsViewer[data-docs-viewer-app-kind="public"]:has(.docsViewer__contentDetail--media) .docsViewer__contentDetailOpenNewTab{
+    right: calc(1px + var(--docs-viewer-space-3));
   }
 }

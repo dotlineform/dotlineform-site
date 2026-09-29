@@ -3,9 +3,9 @@ import {
   normalizeDocsViewerMediaPresentation,
   normalizeDocsViewerCatalogueGroupTarget
 } from "./docs-viewer-media-presentation.js";
-import { CONTENT_DETAIL_LABEL_CONTROL_ID } from "./docs-viewer-content-detail-view.js";
 import { catalogueMediaTargetWorkId, readCatalogueWorkMediaPresentation } from "./docs-viewer-catalogue-media.js";
 import { mountDocsViewerResponsiveImage } from "./docs-viewer-responsive-image.js";
+import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
 import {
   DOCS_VIEWER_MEDIA_GALLERY_LAYOUT,
   docsViewerMediaGalleryPage,
@@ -195,24 +195,6 @@ function immutableTargetContext(state, record) {
     occurrence: record.occurrence,
     mediaTarget: Object.freeze(Object.assign({}, record.presentation.target))
   });
-}
-
-function appendMetadata(documentRef, parent, metadata) {
-  var list = documentRef.createElement("dl");
-  list.className = "docsViewer__mediaDetailMetadata";
-  metadata.forEach(function (entry) {
-    var row = documentRef.createElement("div");
-    row.className = "docsViewer__mediaDetailMetadataRow";
-    var term = documentRef.createElement("dt");
-    term.textContent = entry.label;
-    var description = documentRef.createElement("dd");
-    description.textContent = entry.value;
-    row.appendChild(term);
-    row.appendChild(description);
-    list.appendChild(row);
-  });
-  parent.appendChild(list);
-  return list;
 }
 
 /** Own exact marked Media View presentations for one rendered-document mount. */
@@ -484,6 +466,7 @@ export function createDocsViewerMediaDetailAdapter() {
     var current = null;
     var selectionRequest = 0;
     var galleryPage = 0;
+    var galleryBrowseLinks = null;
     var failedImage = null;
     var imageCleanups = [];
     var feedback = documentRef.createElement("p");
@@ -555,48 +538,30 @@ export function createDocsViewerMediaDetailAdapter() {
       var position = documentRef.createElement("p");
       position.className = "docsViewer__mediaDetailPosition";
       position.textContent = index + "/" + total;
-      navigation.appendChild(position);
-      var buttons = documentRef.createElement("div");
-      buttons.className = "docsViewer__mediaDetailNavigationButtons";
-      [["Previous", previous], ["Next", next]].forEach(function (entry) {
+      var buttons = [["Previous", previous, "docsViewer__icon--chevron-left"],
+        ["Next", next, "docsViewer__icon--chevron-right"]].map(function (entry) {
         var button = documentRef.createElement("button");
         button.type = "button";
-        button.className = "docsViewer__actionButton docsViewer__mediaDetail" + entry[0];
-        button.textContent = entry[0] === "Previous" ? "←" : "→";
+        button.className = "docsViewer__toolbarIconButton docsViewer__mediaDetail" + entry[0];
+        button.appendChild(createDocsViewerToolbarIcon(documentRef, entry[2]));
         button.setAttribute("aria-label", entry[0] + " " + label);
+        button.title = entry[0] + " " + label;
         button.disabled = !entry[1];
         button.addEventListener("click", function () {
           if (button.disabled || !isCurrent() || !viewport.contains(button)) return;
           entry[1]();
         });
-        buttons.appendChild(button);
+        return button;
       });
-      navigation.appendChild(buttons);
+      navigation.append(buttons[0], position, buttons[1]);
       return navigation;
     }
 
-    function renderWork(work) {
-      var figure = documentRef.createElement("figure");
-      figure.className = "docsViewer__mediaDetailFigure";
-      figure.appendChild(imageElement(work.image, "docsViewer__mediaDetailImage"));
-      var caption = documentRef.createElement("figcaption");
-      caption.className = "docsViewer__mediaDetailCaption";
-      caption.appendChild(titleElement(work.label));
-      var metadata = appendMetadata(documentRef, caption, work.metadata);
-      var groups = work.galleries.slice();
-      if (supplied.gallery && !groups.some(function (entry) { return sameMediaTarget(entry.target, supplied.gallery.target); })) {
-        var firstSeriesLink = groups.findIndex(function (entry) { return entry.relation === "series"; });
-        groups.splice(firstSeriesLink < 0 ? groups.length : firstSeriesLink, 0,
-          { target: supplied.gallery.target, label: supplied.gallery.label, relation: "context" });
-      }
-      var relatedRow = documentRef.createElement("div");
-      relatedRow.className = "docsViewer__mediaDetailMetadataRow";
-      var relatedTerm = documentRef.createElement("dt");
-      relatedTerm.textContent = "Related galleries";
-      var relatedDescription = documentRef.createElement("dd");
-      var relatedList = documentRef.createElement("ul");
-      relatedList.className = "docsViewer__mediaDetailRelatedGalleries";
-      groups.forEach(function (entry) {
+    function appendGalleryLinks(parent, entries) {
+      if (!entries.length) return;
+      var list = documentRef.createElement("ul");
+      list.className = "docsViewer__mediaDetailGalleryLinks";
+      entries.forEach(function (entry) {
         var item = documentRef.createElement("li");
         var link = targetButton(
           "Open " + groupLabel(entry.target) + ": " + entry.label,
@@ -604,24 +569,48 @@ export function createDocsViewerMediaDetailAdapter() {
           entry.target
         );
         link.textContent = entry.label;
-        var relation = documentRef.createElement("span");
-        relation.className = "docsViewer__mediaDetailGalleryRelation";
-        relation.textContent = entry.relation === "direct" ? "Contains this Work"
-          : entry.relation === "series" ? "Related to this Series" : "Opened from Gallery";
-        item.append(link, relation);
-        relatedList.appendChild(item);
+        item.appendChild(link);
+        list.appendChild(item);
       });
-      if (groups.length) relatedDescription.appendChild(relatedList);
-      else relatedDescription.textContent = "None";
-      relatedRow.append(relatedTerm, relatedDescription);
-      metadata.appendChild(relatedRow);
+      parent.appendChild(list);
+    }
+
+    function renderWork(work) {
+      var figure = documentRef.createElement("figure");
+      figure.className = "docsViewer__mediaDetailFigure";
+      var imagePane = documentRef.createElement("div");
+      imagePane.className = "docsViewer__mediaDetailImagePane";
+      imagePane.appendChild(imageElement(work.image, "docsViewer__mediaDetailImage"));
+      var caption = documentRef.createElement("figcaption");
+      caption.className = "docsViewer__mediaDetailCaption docsViewer__mediaDetailCaption--simple";
+      caption.appendChild(titleElement(work.label));
+      var catalogueNumber = documentRef.createElement("p");
+      catalogueNumber.className = "docsViewer__mediaDetailCatalogueNumber";
+      catalogueNumber.textContent = "cat. " + work.target.id;
+      caption.appendChild(catalogueNumber);
+      var groups = work.galleries.slice();
+      if (supplied.gallery && !groups.some(function (entry) { return sameMediaTarget(entry.target, supplied.gallery.target); })) {
+        var firstSeriesLink = groups.findIndex(function (entry) { return entry.relation === "series"; });
+        groups.splice(firstSeriesLink < 0 ? groups.length : firstSeriesLink, 0,
+          { target: supplied.gallery.target, label: supplied.gallery.label, relation: "context" });
+      }
+      galleryBrowseLinks = groups;
+      appendGalleryLinks(caption, groups.filter(function (entry) { return entry.relation !== "series"; }));
+      var relatedGalleries = groups.filter(function (entry) { return entry.relation === "series"; });
+      if (relatedGalleries.length) {
+        var relatedLabel = documentRef.createElement("p");
+        relatedLabel.className = "docsViewer__mediaDetailRelatedLabel";
+        relatedLabel.textContent = "related:";
+        caption.appendChild(relatedLabel);
+        appendGalleryLinks(caption, relatedGalleries);
+      }
       if (supplied.gallery) {
         var position = docsViewerMediaGalleryPosition(supplied.gallery, work.target);
-        caption.appendChild(navigationControls("Work", position.index + 1, position.total,
+        imagePane.appendChild(navigationControls("Work", position.index + 1, position.total,
           position.previous ? function () { selectTarget(position.previous); } : null,
           position.next ? function () { selectTarget(position.next); } : null));
       }
-      figure.appendChild(caption);
+      figure.append(imagePane, caption);
       return figure;
     }
 
@@ -656,16 +645,18 @@ export function createDocsViewerMediaDetailAdapter() {
       }
       container.appendChild(canvas);
       var information = documentRef.createElement("div");
-      information.className = "docsViewer__mediaDetailCaption";
+      information.className = "docsViewer__mediaDetailCaption docsViewer__mediaDetailCaption--simple";
       information.appendChild(titleElement(gallery.label));
-      appendMetadata(documentRef, information, gallery.metadata.concat([
-        { label: groupLabel(gallery.target), value: gallery.target.id }, { label: "Works", value: String(page.total) }
-      ]));
-      if (page.pageCount) {
+      if (galleryBrowseLinks) {
+        appendGalleryLinks(information, galleryBrowseLinks.filter(function (entry) {
+          return !sameMediaTarget(entry.target, gallery.target);
+        }));
+      }
+      if (page.pageCount > 1) {
         var pagination = navigationControls("page", page.pageIndex + 1, page.pageCount,
-          page.pageCount > 1 ? function () { selectGalleryPage(page.pageIndex - 1); } : null,
-          page.pageCount > 1 ? function () { selectGalleryPage(page.pageIndex + 1); } : null);
-        information.appendChild(pagination);
+          function () { selectGalleryPage(page.pageIndex - 1); },
+          function () { selectGalleryPage(page.pageIndex + 1); });
+        canvas.appendChild(pagination);
       }
       container.appendChild(information);
       return container;
@@ -673,10 +664,6 @@ export function createDocsViewerMediaDetailAdapter() {
 
     function projectControls() {
       if (!controls) return;
-      controls.projectControlState(CONTENT_DETAIL_LABEL_CONTROL_ID, {
-        hidden: false,
-        label: current.label
-      });
       controls.projectNewTabTarget(current.newTabTarget);
     }
 
@@ -719,7 +706,7 @@ export function createDocsViewerMediaDetailAdapter() {
       var member = supplied.gallery && supplied.gallery.members.find(function (entry) {
         return sameMediaTarget(entry.target, target);
       });
-      var groups = current.galleries || [];
+      var groups = current.galleries || galleryBrowseLinks || [];
       var groupLink = groups.find(function (entry) { return sameMediaTarget(entry.target, target); });
       if (!member && !groupLink) throw new Error("Media View target is not a supplied member or group link.");
       section.setAttribute("aria-busy", "true");
