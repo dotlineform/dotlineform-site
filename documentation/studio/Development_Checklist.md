@@ -3,13 +3,17 @@ draft: false
 doc_id: d-20260523-190651-7157ec
 title: Development Checklist
 added_date: "2026-05-23 19:06:51"
-last_updated: "2026-09-28 18:47:00"
+last_updated: "2026-09-29 11:49:42"
 parent_id: d-20260419-000000-d2e47b
 
 ---
 # Development Checklist
 
 Apply only the sections relevant to the actual change and its credible failure modes. This is a reference for judgment, not a requirement to manufacture evidence for every checkbox on every delivery.
+
+For application operations, let explicit product requirements and demonstrated failure modes determine planning, failure handling and verification. The default is to act on the request using the inputs it needs, validate them as they are used, stop on failure, and report success when the required work completes. Do not add preview/dry-run phases, saved execution plans, freshness rechecks, rollback/retry machinery, or post-action read-backs as a general pattern. Add a specific safeguard only when its need and boundary can be shown, such as protection of irretrievable data or an explicitly required publication guarantee.
+
+When reviewing an existing workflow, identify planning, recovery and verification passes that repeat work or add code complexity and runtime cost. Keep each pass only if an explicit requirement or demonstrated risk justifies it; otherwise simplify the workflow without weakening input validation or its stated completion contract. A failure stops at the point reached, with completed effects left for diagnosis and a manual retry unless that workflow explicitly requires stronger recovery.
 
 This checklist and the durable Studio development documentation are maintained directly in repository `documentation/studio/`. Studio Markdown filenames use concise readable titles with underscores. Retain each existing `doc_id` and `title` in front matter and update file links when renaming. Read and edit these repository files in place; their updates do not use the Docs source service, watcher, or Docs/Search rebuilds. Links below point to the corresponding Markdown files in this directory.
 
@@ -30,11 +34,11 @@ This checklist and the durable Studio development documentation are maintained d
 ### User-Visible Operation Ordering
 
 - [ ] Keep application workflows synchronous from the user's perspective: start A, wait for its complete outcome, then allow B. This applies across the app, including Save, Build, Refresh and the complete preparation/distribution Publish operation.
-- [ ] Local workflows are synchronous and edits are unavailable until completion. Capture current inputs and compare destinations once, then carry those results through the operation. Do not add concurrency checks, repeated input/snapshot scans, hashes or file-metadata freshness checks between internal calls. Retain input validation and verification of writes/transfers; those check actual inputs and output, not hypothetical concurrent edits.
+- [ ] Local workflows are synchronous and edits are unavailable until completion. Read the inputs required by the action and carry their results through the operation. Do not add concurrency checks, repeated input/snapshot scans, hashes or file-metadata freshness checks between internal calls. Validate inputs as they are used; verify writes or transfers only where the owning contract explicitly requires it.
 - [ ] Keep the operation busy until all required writes, derived-data updates and other follow-through have completed and the outcome is known. Make controls available again only at that completion boundary; reporting success means the operation's required results are ready to use.
 - [ ] Prefer straightforward awaited server operations. Server-side background work should not outlive the user action by default. Any necessary internal asynchronous work remains hidden within the same operation and completes before the UI returns to ready; the user does not coordinate pending jobs or delayed consistency.
 - [ ] For Docs Source Save, the agreed required result is the validated combined metadata/body write to canonical source. End Save busy state and return to rendered display at that boundary. Existing watcher document/Links generation and automatic viewer refresh run independently; do not await or suppress them, rebuild Search, or turn a later generated-output failure into a failed Save. Other operations retain their own required completion boundaries.
-- [ ] For Catalogue Save, the required result is the exact canonical mutation, required shared local media and current editor records. Keep generated Catalogue JSON and private Docs metadata in the explicit awaited Refresh Catalogue operation, with a verified local freshness receipt. Do not make persisted Studio lookup files an editor fallback or make Docs Publish implicitly refresh Catalogue readers. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns failure and reader timing.
+- [ ] For Catalogue Save, the required result is the exact canonical mutation, required shared local media and current editor records. Keep generated Catalogue JSON and private Docs metadata in the explicit awaited Refresh Catalogue operation, with its local freshness receipt. Do not make persisted Studio lookup files an editor fallback or make Docs Publish implicitly refresh Catalogue readers. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns failure and reader timing.
 
 ### Public Site And Local Apps
 
@@ -128,8 +132,8 @@ This checklist and the durable Studio development documentation are maintained d
 ### Generated Data
 
 - [ ] Edit canonical source/config/generator, never generated output as authority.
-- [ ] Run dry-run before an explicit generator write when supported.
-- [ ] Verify the generated shape and projection boundary changed as intended.
+- [ ] Run a generator dry-run before writing only when an explicit requirement or demonstrated risk calls for it; support for a dry-run is not itself a reason to run one.
+- [ ] Check generated shape and projection boundaries to address a named contract or credible failure mode; do not add a second full pass solely to confirm an operation's reported success.
 - [ ] Update contract fixtures/audits only for current positive behavior.
 - [ ] Let Docs watcher output stand; do not revert expected generated changes.
 - [ ] When Docs watcher has already generated the intended document projections, inspect those outputs and do not rerun the builder solely to prove idempotence. Search remains unchanged until an explicit Manage Rebuild or direct complete-scope search build.
