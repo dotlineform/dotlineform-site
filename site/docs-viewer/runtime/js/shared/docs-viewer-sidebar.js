@@ -92,8 +92,11 @@ export function initDocsViewerSidebarRenderer(context) {
         link.appendChild(draftIcon);
       }
       if (doc.report_id === "docs_collection") {
+        var collection = context.workspaceConfig.activeConfig.collectionsByReportHostId.get(doc.doc_id);
+        if (!collection) throw new Error("Collection report is missing its configured index icon: " + doc.doc_id);
         var reportIcon = document.createElement("span");
-        reportIcon.className = "docsViewer__listIcon docsViewer__navReportIcon docsViewer__icon--menu";
+        reportIcon.className = "docsViewer__listIcon docsViewer__navReportIcon";
+        reportIcon.style.maskImage = 'url("' + collection.iconUrl + '")';
         reportIcon.setAttribute("aria-hidden", "true");
         link.appendChild(reportIcon);
         var reportLabel = document.createElement("span");

@@ -402,12 +402,17 @@ export function initDocsViewerManagement(context) {
       context.projectMainViewControlState("edit", projectedReportControls.editDocument.state);
       var draftRecord = actionContext.documentRecord;
       var draftTarget = actionContext.documentTarget;
+      var draftPolicyRecord = draftTarget && !draftTarget.collection
+        ? documentIndex.docsById.get(draftTarget.doc_id) : null;
+      var draftIgnored = Boolean(draftPolicyRecord && draftPolicyRecord.publication_ignored === true);
       context.projectMainViewControlState("draft", {
         hidden: actionsHidden || markdownMode || !draftTarget
           || Boolean(draftTarget && draftTarget.collection),
-        disabled: actionsDisabled || !draftTarget || !draftRecord,
+        disabled: actionsDisabled || !draftTarget || !draftRecord || !draftPolicyRecord
+          || draftPolicyRecord.publication_ignored !== false,
         pressed: Boolean(draftRecord && draftRecord.draft === true),
-        label: draftRecord && draftRecord.draft === true ? "Draft — mark ready" : "Ready — mark as draft"
+        label: draftIgnored ? "Excluded from Publish by unpublishable.json"
+          : draftRecord && draftRecord.draft === true ? "Draft — mark ready" : "Ready — mark as draft"
       });
       projectSelectedControl(draftTarget, actionsHidden || markdownMode, actionsDisabled);
       context.projectMainViewControlState("open-vscode", projectedReportControls.openVsCode.state);
@@ -543,7 +548,9 @@ export function initDocsViewerManagement(context) {
         || !draftControl.target || draftControl.target.collection
         || management.managementBusy) return;
       var draftRecord = context.documentActionContext().documentRecord;
-      if (!draftRecord || draftRecord.doc_id !== draftControl.target.doc_id) return;
+      var draftPolicyRecord = documentIndex.docsById.get(draftControl.target.doc_id);
+      if (!draftRecord || draftRecord.doc_id !== draftControl.target.doc_id
+        || !draftPolicyRecord || draftPolicyRecord.publication_ignored !== false) return;
       return runDraftToggle(draftControl.target, draftRecord.draft !== true);
     }
     var reportControlOwners = new Map([

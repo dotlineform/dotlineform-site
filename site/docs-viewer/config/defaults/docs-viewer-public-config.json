@@ -21,27 +21,34 @@
       {
         "collection": "works",
         "title": "Context",
+        "icon": "dlf-context",
+        "report_host_doc_id": "d-20260801-073826-8865a8",
         "manifest_url": "/assets/data/docs/works/manifest.json",
         "by_id_url_base": "/assets/data/docs/works/by-id"
       },
       {
         "collection": "concepts",
         "title": "Concepts",
+        "icon": "dlf-concept",
+        "report_host_doc_id": "d-20260624-213316-478639",
         "manifest_url": "/assets/data/docs/concepts/manifest.json",
         "by_id_url_base": "/assets/data/docs/concepts/by-id"
       },
       {
         "collection": "moments",
         "title": "Moments",
+        "icon": "dlf-moment",
+        "report_host_doc_id": "d-20260907-180859-c425b2",
         "manifest_url": "/assets/data/docs/moments/manifest.json",
         "by_id_url_base": "/assets/data/docs/moments/by-id"
       },
       {
         "collection": "catalogue",
         "title": "catalogue",
+        "icon": "dlf-catalogue",
+        "report_host_doc_id": "d-20260916-161504-f8c947",
         "manifest_url": "/assets/data/docs/catalogue/manifest.json",
-        "by_id_url_base": "/assets/data/docs/catalogue/by-id",
-        "report_host_doc_id": "d-20260916-161504-f8c947"
+        "by_id_url_base": "/assets/data/docs/catalogue/by-id"
       }
     ]
   }

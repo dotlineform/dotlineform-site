@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260423-000000-8fd731
 title: Source Organisation
 added_date: "2026-04-23 00:00:00"
-last_updated: "2026-09-30 12:20:34"
+last_updated: "2026-09-30 21:39:26"
 summary: Working source and generated storage, one read-only Preview snapshot, and exact collection and media ownership.
 parent_id: d-20260424-000000-50b63f
 ---
@@ -71,6 +71,21 @@ Concepts and Moments are document collections rather than separate Concept/Momen
 The Position button beside Index Actions uses `arrow-up-down.svg`. Its synchronous modal moves the displayed ordinary document and its whole subtree Before, After or Inside a chosen ordinary destination. Inside appends the last child; Inside Root appends a root. All ordinary documents are available regardless of draft/unpublishable state, except the moved subtree. Save writes the JSON and refreshes the tree; Cancel writes nothing. Drag positioning is retired.
 
 New inserts after the displayed ordinary document as its sibling. With no ordinary anchor it appends at root. New child and New sibling retain their explicit destinations. Import appends new documents inside the selected parent and preserves existing placement on overwrite; batch creation writes parents before their children while retaining sibling sequence. Delete removes the complete subtree from JSON and source. Renaming or editing content does not reposition documents. Hand edits to the JSON take effect on the next Build; the Markdown watcher does not watch that file.
+
+## Collection Icons
+
+Each registered collection requires an extensionless `icon` filename stem in `docs-viewer/config/workspace/docs-workspace.json`. The shared `docs_icon_assets.py` lookup validates the name and confines it to an existing, non-symlink SVG in `docs-viewer/static/icons/`; manual [Icon Tokens](Icon_Tokens.md) use the same filename boundary. There is no fallback artwork or separate collection-icon registry.
+
+| Collection | Display title | `icon` |
+| --- | --- | --- |
+| `works` | Context | `dlf-context` |
+| `concepts` | Concepts | `dlf-concept` |
+| `moments` | Moments | `dlf-moment` |
+| `catalogue` | Catalogue | `dlf-catalogue` |
+
+The browser configuration projects `icon` and `report_host_doc_id` for every collection in both local and public readers. The Index panel matches the exact report host to its configured collection and renders that SVG using the existing list-icon mask, size and colour. It needs no document, collection-manifest or relationship read to select artwork. Report host IDs must be unique in the browser mapping; missing configuration fails visibly. Collection ownership and Subject artwork remain separate.
+
+The builder's `write_browser_config` owner regenerates local/public reader settings from the checked workspace configuration. Icon/config changes require those settings to be regenerated and public artwork to be registered in `site-tools/config/site-code-update.json` and projected with `bin/site-code-update`. They do not require document or Search rebuilds. The proposed [Related Links](Related_Links.md) builder can later read the same collection `icon` and use the inline-icon renderer; ordinary related-link targets use the selected `dlf-doc` artwork. That directive is not implemented by this slice.
 
 ## Collection Deliveries
 

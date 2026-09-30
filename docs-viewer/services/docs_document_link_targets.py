@@ -7,7 +7,7 @@ from docs_document_identity import is_document_id
 from docs_document_location import canonical_document_viewer_url, collection_report_placement
 from docs_management_document_target import confined_source_path, resolve_managed_document_collection
 from docs_workspace_config import document_source_path, resolve_workspace_path
-from docs_publication_ignore import WorkingLinksExclusions, working_ignored_doc_ids
+from docs_publication_ignore import WorkingPublicationExclusions, working_ignored_doc_ids
 
 
 def read_document_link_targets(repo_root: Path) -> dict[str, object]:
@@ -21,7 +21,7 @@ def read_document_link_targets(repo_root: Path) -> dict[str, object]:
     resolved_collection = resolve_managed_document_collection(repo_root)
     config = resolved_collection.parent_config
     documents = []
-    exclusions = WorkingLinksExclusions(
+    exclusions = WorkingPublicationExclusions(
         resolve_workspace_path(repo_root, document_source_path(config)),
         working_ignored_doc_ids(repo_root, config),
     )

@@ -104,6 +104,7 @@
       "collections": [
         {
           "collection": "works",
+          "icon": "dlf-context",
           "include_in_site_search": true,
           "title": "Context",
           "report_host_doc_id": "d-20260801-073826-8865a8",
@@ -114,6 +115,7 @@
         },
         {
           "collection": "concepts",
+          "icon": "dlf-concept",
           "include_in_site_search": false,
           "title": "Concepts",
           "report_host_doc_id": "d-20260624-213316-478639",
@@ -121,12 +123,14 @@
         },
         {
           "collection": "moments",
+          "icon": "dlf-moment",
           "include_in_site_search": false,
           "title": "Moments",
           "report_host_doc_id": "d-20260907-180859-c425b2"
         },
         {
           "collection": "catalogue",
+          "icon": "dlf-catalogue",
           "include_in_site_search": false,
           "title": "catalogue",
           "report_host_doc_id": "d-20260916-161504-f8c947"

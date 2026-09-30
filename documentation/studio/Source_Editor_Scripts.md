@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-704641
 title: Source Editor Scripts
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-09-18 19:02:44"
+last_updated: "2026-09-30 20:25:33"
 parent_id: d-20260607-222033-2a494e
 ---
 # Docs Viewer Source Editor Scripts
@@ -59,6 +59,12 @@ Source mounts beside the existing rendered DOM, which management CSS hides while
 For local-folder authoring it reads the latest runtime capability only during a `paste` event. A recognized replacement is applied to the current range and emits the normal dirty-buffer `input` path. Conversion is silent and does not implement or intercept Undo.
 
 Registered contributions now provide **Insert doc link**, **Add Media View link** and **Add Catalogue Image**. **Add Catalogue Token** and **Insert Subject Link**, their exclusive handlers and their old text-token serializer are retired. Subject metadata retains its independent read/assignment owners.
+
+## Directives
+
+`directive-actions.js` owns the captured-range Directives menu. **Insert icon** inserts `[[icon:refresh-cw]]` inline and selects `refresh-cw` for manual filename-stem editing. It adds no line breaks and preserves any selected source text after the new token. The existing Table detail directive retains its block insertion.
+
+Insertion changes only the dirty buffer through the current Source adapter and revision guard. Save persists source; the watcher independently generates the document. [Icon Tokens](Icon_Tokens.md) owns exact SVG lookup, portable rendering, literal examples and export behaviour.
 
 ## Insert Doc Link
 

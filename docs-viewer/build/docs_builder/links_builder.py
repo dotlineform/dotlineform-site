@@ -24,7 +24,7 @@ from docs_document_location import canonical_document_viewer_url
 from docs_rendered_links import collect_anchors, parse_docs_target, resolve_href
 from docs_workspace_config import DocsStageConfig, document_source_path, generated_documents_path, resolve_workspace_path
 from docs_source_model import parse_source, write_text_atomic
-from docs_publication_ignore import WorkingLinksExclusions, working_ignored_doc_ids
+from docs_publication_ignore import WorkingPublicationExclusions, working_ignored_doc_ids
 
 CONFIG_PATH = Path("docs-viewer/config/links-builder.json")
 
@@ -81,7 +81,7 @@ class _DocumentRefresh:
         self.routes = ("/docs/", builder.workspace.public_viewer_base_url)
         self.docs = {self.key(doc.doc_id): doc for doc in plan["documents"]}
         self.metadata = {target: doc.front_matter for target, doc in self.docs.items()}
-        self.exclusions = WorkingLinksExclusions(
+        self.exclusions = WorkingPublicationExclusions(
             self.sources[""], working_ignored_doc_ids(builder.repo_root, self.config),
             {doc.doc_id: doc.parent_id for doc in plan["documents"]} if not self.collection else None,
         )

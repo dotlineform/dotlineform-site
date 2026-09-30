@@ -22,6 +22,7 @@ from docs_artifact_locations import (
     filesystem_location_root,
 )
 from docs_document_identity import is_immutable_doc_id
+from docs_icon_assets import icon_asset_path
 from docs_collection_customisations import (
     DocsCollectionCustomisationConfig,
     normalize_docs_collection_customisation,
@@ -114,6 +115,7 @@ class DocsPublicProjectionConfig:
 class DocsCollectionConfig:
     collection: str
     title: str
+    icon: str
     report_host_doc_id: str
     include_in_site_search: bool
     public_title: str
@@ -451,7 +453,7 @@ def _generated(root: ArtifactLocation) -> DocsGeneratedConfig:
                                DocsArtifactConfig(location_child(root, Path("search/index.json"))))
 
 
-def _collections(raw: Any, *, workspace_root: ArtifactLocation, stage: str,
+def _collections(raw: Any, *, repo_root: Path, workspace_root: ArtifactLocation, stage: str,
                 media_settings: Any, assets: DocsAssetsConfig,
                 projection: DocsPublicProjectionConfig | None) -> tuple[DocsCollectionConfig, ...]:
     if not isinstance(raw, list):
@@ -460,7 +462,7 @@ def _collections(raw: Any, *, workspace_root: ArtifactLocation, stage: str,
     seen = set()
     for index, raw_item in enumerate(raw):
         field = f"stages.{stage}.collections[{index}]"
-        item = _object(raw_item, field=field, required={"collection", "title", "report_host_doc_id", "include_in_site_search"}, optional={
+        item = _object(raw_item, field=field, required={"collection", "title", "icon", "report_host_doc_id", "include_in_site_search"}, optional={
             "public_title", "supports_return_import", "collection_customisation",
         })
         if stage == "preview":
@@ -476,6 +478,10 @@ def _collections(raw: Any, *, workspace_root: ArtifactLocation, stage: str,
         seen.add(child)
         if not isinstance(item["title"], str) or not isinstance(item.get("public_title", ""), str):
             raise ValueError(f"{field} titles must be strings")
+        try:
+            icon_asset_path(repo_root, item["icon"])
+        except ValueError as error:
+            raise ValueError(f"{field}.icon: {error}") from error
         source_root = location_child(workspace_root, Path(stage) / "source/collections" / child)
         generated_root = location_child(workspace_root, Path(stage) / "generated/collections" / child)
         preview_root = location_child(workspace_root, Path("preview/collections") / child)
@@ -493,7 +499,7 @@ def _collections(raw: Any, *, workspace_root: ArtifactLocation, stage: str,
                 DocsArtifactConfig(location_child(projection.documents.location, Path(child))), None, public_media,
             )
         result.append(DocsCollectionConfig(
-            collection=child, title=item["title"], public_title=item.get("public_title", item["title"]),
+            collection=child, title=item["title"], icon=item["icon"], public_title=item.get("public_title", item["title"]),
             report_host_doc_id=_doc_id(item["report_host_doc_id"], field=f"{field}.report_host_doc_id"),
             include_in_site_search=_boolean(item["include_in_site_search"], field=f"{field}.include_in_site_search"),
             supports_return_import=_boolean(item.get("supports_return_import", False), field=f"{field}.supports_return_import"),
@@ -625,7 +631,7 @@ def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: 
             non_loadable_doc_ids=_doc_ids(item["non_loadable_doc_ids"], field=f"{field}.non_loadable_doc_ids"),
             manage_only_tree_root_ids=_doc_ids(item["manage_only_tree_root_ids"], field=f"{field}.manage_only_tree_root_ids"),
             allow_unresolved_parent_ids=_boolean(item["allow_unresolved_parent_ids"], field=f"{field}.allow_unresolved_parent_ids"),
-            collections=_collections(item["collections"], workspace_root=workspace_root, stage=stage,
+            collections=_collections(item["collections"], repo_root=root, workspace_root=workspace_root, stage=stage,
                                    media_settings=item["media"], assets=assets, projection=stage_projection), search_fields=fields,
         ))
     return DocsWorkspaceConfig(

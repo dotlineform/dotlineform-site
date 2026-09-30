@@ -27,6 +27,12 @@ function normalizeTreeDoc(row, parentId, depth, treeOrder) {
   var reportId = optionalStringRecordValue(row, "report_id");
   if (parentId) doc.parent_id = parentId;
   if (typeof row.draft === "boolean") doc.draft = row.draft;
+  if (Object.prototype.hasOwnProperty.call(row, "publication_ignored")) {
+    if (typeof row.publication_ignored !== "boolean") {
+      throw new Error("Management publication exclusion must be a boolean.");
+    }
+    doc.publication_ignored = row.publication_ignored;
+  }
   if (uiStatus) doc.ui_status = uiStatus;
   if (reportId) doc.report_id = reportId;
   return doc;

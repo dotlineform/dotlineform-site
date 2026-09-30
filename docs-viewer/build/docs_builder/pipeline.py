@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Any
 
 from .backlinks import BacklinksMixin
+from .inline_icons import InlineIconRenderer
 from .links_builder import build_document_links, prepare_document_links
 from .common import (
     DocsStageConfig,
@@ -69,11 +70,13 @@ class DocsDataBuilder(
         self.output_url_base = self.output_url_base_for(self.output_url_dir())
         self.site_config = load_site_tools_config(self.repo_root)
         self.semantic_token_registry = load_semantic_token_registry(self.repo_root)
+        self.inline_icons = InlineIconRenderer(self.repo_root)
         self.source_files_scanned = 0
         self.warnings: list[str] = []
 
     def run(self, *, write: bool, emit_diagnostics: bool = False) -> dict[str, Any]:
         started_at = monotonic_time()
+        self.inline_icons = InlineIconRenderer(self.repo_root)
         self._catalogue_work_cache = {}
         docs = self.load_docs()
         self.validate_canonical_doc_ids(docs)

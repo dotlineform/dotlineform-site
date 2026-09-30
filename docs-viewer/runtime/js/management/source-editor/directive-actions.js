@@ -2,12 +2,22 @@ import { createDocsViewerToolbarIcon } from "../../shared/docs-viewer-toolbar-ic
 
 export const DIRECTIVE_ACTIONS_CONTROL_ID = "source-directives";
 
+const ICON_DIRECTIVE_SOURCE = "[[icon:refresh-cw]]";
+
 export const DIRECTIVE_ACTIONS = Object.freeze([
   Object.freeze({
     artwork: "docsViewer__icon--table",
     id: "table-detail",
     label: "Table detail",
     source: "<!-- dotlineform:table-detail -->"
+  }),
+  Object.freeze({
+    artwork: "docsViewer__icon--image",
+    id: "insert-icon",
+    label: "Insert icon",
+    source: ICON_DIRECTIVE_SOURCE,
+    inline: true,
+    placeholder: Object.freeze({ start: "[[icon:".length, end: ICON_DIRECTIVE_SOURCE.length - 2 })
   })
 ]);
 
@@ -53,8 +63,8 @@ export function createDirectiveInsertionPlan(options = {}) {
   var directive = directiveById(String(options.directiveId || ""));
   if (!range || !directive) return null;
 
-  var leading = range.start > 0 && source.charAt(range.start - 1) !== "\n" ? "\n" : "";
-  var trailing = trailingNewlines(source, range.start);
+  var leading = !directive.inline && range.start > 0 && source.charAt(range.start - 1) !== "\n" ? "\n" : "";
+  var trailing = directive.inline ? "" : trailingNewlines(source, range.start);
   var insertedText = leading + directive.source + trailing;
   var selectionStart = directive.placeholder
     ? range.start + leading.length + directive.placeholder.start

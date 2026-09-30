@@ -126,6 +126,14 @@ export function initDocsViewerConfigController(context) {
     var manifestUrl = String(rawCollection.manifest_url || "").trim();
     var byIdUrlBase = String(rawCollection.by_id_url_base || "").trim().replace(/\/+$/, "");
     if (!manifestUrl || !byIdUrlBase) return null;
+    var icon = rawCollection.icon;
+    if (typeof icon !== "string" || icon !== icon.trim() || !/^[a-z0-9][a-z0-9_-]*$/.test(icon)) {
+      throw new Error("Collection icon requires an extensionless SVG filename stem.");
+    }
+    var reportHostDocId = rawCollection.report_host_doc_id;
+    if (typeof reportHostDocId !== "string" || !/^d-[0-9]{8}-[0-9]{6}-[0-9a-f]{6}$/.test(reportHostDocId)) {
+      throw new Error("Collection requires a configured immutable report host ID.");
+    }
     var collectionCustomisation = null;
     if (Object.prototype.hasOwnProperty.call(rawCollection, "collection_customisation")) {
       collectionCustomisation = normalizeDocsViewerCollectionCustomisation(
@@ -135,17 +143,13 @@ export function initDocsViewerConfigController(context) {
     var record = {
       collection: collection,
       title: String(rawCollection.title || "").trim(),
+      icon: icon,
+      iconUrl: new URL("../../../static/icons/" + icon + ".svg", import.meta.url).href,
+      reportHostDocId: reportHostDocId,
       manifestUrl: manifestUrl,
       byIdUrlBase: byIdUrlBase,
       collectionCustomisation: collectionCustomisation
     };
-    if (context.featurePolicy.management || collection === "catalogue") {
-      var reportHostDocId = rawCollection.report_host_doc_id;
-      if (typeof reportHostDocId !== "string" || !/^d-[0-9]{8}-[0-9]{6}-[0-9a-f]{6}$/.test(reportHostDocId)) {
-        throw new Error("This collection requires a configured immutable report host ID.");
-      }
-      record.reportHostDocId = reportHostDocId;
-    }
     return record;
   }
 
@@ -154,6 +158,9 @@ export function initDocsViewerConfigController(context) {
     var children = (raw.collections || []).map(normalizeCollectionConfig);
     if (children.some(function (child) { return !child; }) || new Set(children.map(function (child) { return child.collection; })).size !== children.length) {
       throw new Error("Docs Viewer collections require unique configured identities and payload URLs.");
+    }
+    if (new Set(children.map(function (child) { return child.reportHostDocId; })).size !== children.length) {
+      throw new Error("Docs Viewer collections require unique report host IDs.");
     }
     var config = {
       viewerBaseUrl: String(raw.viewer_base_url || ""),
@@ -166,7 +173,8 @@ export function initDocsViewerConfigController(context) {
       linksEnabled: raw.links_enabled === true,
       searchIndexUrl: String(raw.search_index_url || ""),
       collections: children,
-      collectionsById: new Map(children.map(function (child) { return [child.collection, child]; }))
+      collectionsById: new Map(children.map(function (child) { return [child.collection, child]; })),
+      collectionsByReportHostId: new Map(children.map(function (child) { return [child.reportHostDocId, child]; }))
     };
     if (!config.viewerBaseUrl || !config.mediaRoot || !config.indexTreeUrl
         || context.featurePolicy.recent && !config.recentUrl

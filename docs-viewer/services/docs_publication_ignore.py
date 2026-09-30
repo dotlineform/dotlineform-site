@@ -40,7 +40,7 @@ def working_ignored_doc_ids(repo_root: Path, config: DocsStageConfig) -> frozens
     return read_publication_ignore_ids(repo_root)
 
 
-class WorkingLinksExclusions:
+class WorkingPublicationExclusions:
     """Resolve ordinary ignore-list ancestry from the authored tree."""
 
     def __init__(self, source_root: Path, ignored_ids: frozenset[str], parents: Mapping[str, str] | None = None):
@@ -49,13 +49,15 @@ class WorkingLinksExclusions:
         self.excluded = dict.fromkeys(ignored_ids, True)
 
     def excludes(self, doc_id: str) -> bool:
+        if not is_immutable_doc_id(doc_id):
+            raise ValueError("Working publication ancestry requires immutable document IDs")
         ancestors: set[str] = set()
         current = doc_id
         while current and current not in self.excluded:
             if not is_immutable_doc_id(current):
-                raise ValueError("Working Links ancestry requires immutable document IDs")
+                raise ValueError("Working publication ancestry requires immutable document IDs")
             if current in ancestors:
-                raise ValueError(f"Working Links ancestry contains a cycle at {current}")
+                raise ValueError(f"Working publication ancestry contains a cycle at {current}")
             ancestors.add(current)
             current = self.parents.get(current, "")
         excluded = self.excluded.get(current, False)

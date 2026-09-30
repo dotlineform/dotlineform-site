@@ -6,7 +6,6 @@ from typing import Any
 from .common import (
     DOCS_INDEX_TREE_SCHEMA_VERSION,
     read_json,
-    render_markdown_to_html,
     utc_timestamp,
 )
 from .rendering import add_missing_image_titles
@@ -35,9 +34,13 @@ class PayloadBuilderMixin:
             doc=doc,
             semantic_tokens_by_doc=semantic_tokens_by_doc,
         )
+        try:
+            rendered = self.inline_icons.render_markdown(resolved)
+        except ValueError as exc:
+            raise ValueError(f"Document {doc.doc_id}: {exc}") from exc
         content_html = add_missing_image_titles(
             self.rewrite_doc_links(
-                self.restore_catalogue_media_html(render_markdown_to_html(resolved)),
+                self.restore_catalogue_media_html(rendered),
                 current_doc=doc, docs=docs,
             )
         )

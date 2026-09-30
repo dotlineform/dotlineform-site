@@ -16,6 +16,7 @@ from .common import (
     write_text,
 )
 from .pipeline import DocsDataBuilder
+from .inline_icons import InlineIconRenderer
 from .collection_metadata import CollectionDocumentSummary, merge_collection_manifest, read_collection_manifest
 from .links_builder import build_document_links, prepare_document_links
 from .media_builds import build_collection_media_snapshot
@@ -213,6 +214,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
     def run(self, *, write: bool, emit_diagnostics: bool = False) -> dict[str, Any]:
         """Build all source documents or merge selected sources into saved metadata."""
         started_at = monotonic_time()
+        self.inline_icons = InlineIconRenderer(self.repo_root)
         self._catalogue_work_cache = {}
         if self.config.stage == "working":
             read_selected(self.config)

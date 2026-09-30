@@ -2,7 +2,7 @@
 doc_id: d-20260910-223116-9a1011
 title: Shared Icons
 added_date: "2026-09-10 22:31:16"
-last_updated: "2026-09-24 12:30:15"
+last_updated: "2026-09-30 21:39:26"
 summary: Reuse a consistent SVG icon collection across buttons, reports, document content and the Swift app while preserving simple Markdown authoring.
 ui_status: planned
 parent_id: d-20260428-000000-f5ff18
@@ -14,7 +14,7 @@ draft: false
 
 Provide one maintained icon collection and consistent meanings across interface buttons, reports and sub-scopes, with optional reuse in authored documents and the native Mac/iPad app. SVG assets give the application control over appearance, scale and reuse. Ordinary emoji remain available in prose because they are convenient text characters that survive copy/paste without an asset dependency.
 
-Lucide is the preferred family for general interface and document-type icons. The selected Catalogue Series, Work and Detail artwork now uses saved SVG assets. Lucide is expected to cover most remaining meanings; confirm coverage when choosing the individual icons. The [Toolbar Mapping](Toolbar_Icon_Mapping.md) records the implemented toolbar replacements, state variants and remaining visual review. Viewer and report toolbars use the current 20px artwork trial inside 32px buttons, with smaller search-clear controls. Selected report-list Subject/Draft icons and index Draft/status cues use independent 16px saved artwork. Unselected report/index artwork, authored icon-token implementation and App integration remain open.
+Lucide is the preferred family for general interface and document-type icons. The selected Catalogue Series and Work artwork now uses saved SVG assets. Lucide is expected to cover most remaining meanings; confirm coverage when choosing the individual icons. The [Toolbar Mapping](Toolbar_Icon_Mapping.md) records the implemented toolbar replacements, state variants and remaining visual review. Viewer and report toolbars use the current 20px artwork trial inside 32px buttons, with smaller search-clear controls. Selected report-list Subject/Draft icons and index Draft/status cues use independent 16px saved artwork. Manual [Icon Tokens](Icon_Tokens.md) are implemented; their [delivery](Icon_Tokens_Delivery.md) awaits user visual acceptance. The selected collection config and Index markers are implemented in [Collection Icons Delivery](Collection_Icons_Delivery.md), with visual review pending. Related-links generation, other unselected report/index artwork and App integration remain open.
 
 The maintained [Toolbar Icons](Toolbar_Icons.md) reference explains the implemented shared CSS tokens, button/mask classes, rendering helper and artwork ownership. It is parented under Runtime and remains the implementation reference independently of this feature's delivery planning.
 
@@ -22,7 +22,7 @@ The [Studio Works Editor Mapping](Works_Editor_Icon_Mapping.md) records the adop
 
 ## Shared Ownership
 
-Keep one canonical collection of SVG artwork, with a shared mapping from a stable meaning such as `refresh` or `concept` to its asset. Meanings must remain independent of filenames and the chosen drawing. All reports and sub-scopes use the same classification rule; they do not invent their own icon choices. A document's collection and its Catalogue Subject are separate facts, so a Concept document with a Work Subject needs an explicit precedence or composition decision. Preserve document identity and title sorting independently of icon presentation.
+Keep one canonical collection of SVG artwork. Interface/report meanings select artwork through maintained mappings; manual document tokens deliberately use the exact extensionless SVG filename instead of a second naming registry. [Source Organisation](Source_Organisation.md#collection-icons) owns the implemented extensionless collection `icon` configuration and Index-panel host mapping. [Related Links](Related_Links.md#selected-icons-and-collection-configuration) records its planned reuse in generated link lists. Collection icons identify collection ownership; Subject artwork remains separate. Preserve document identity and title sorting independently of icon presentation.
 
 Downloaded general SVG artwork lives in `docs-viewer/static/icons/`, and the Edit document control consumes `pen.svg` there. The VS Code controls now use `file-code-corner.svg`; the former branded asset and its dedicated attribution file have been removed. Public resources have an explicit tracked site projection; App resources would be packaged from the same canonical artwork. Keep those outputs replaceable and avoid independently maintained drawings in each consumer. Any runtime meaning-to-asset mapping can be settled in a bounded delivery; the editable toolbar selection document is not runtime configuration, and this feature does not require a general asset framework.
 
@@ -51,19 +51,19 @@ The renderer owns sizing, alignment and accessibility. Give icon-only actions an
 
 Use selected [Lucide SVG assets](https://lucide.dev/license) for the shared family, retaining their ISC and applicable inherited MIT notices. Choose by the meaning of each control or document type; an existing emoji is a cue to that meaning and does not require an exact pictorial replacement. Draw a new icon only when the adopted family and existing Catalogue artwork leave a confirmed gap.
 
-`docs-viewer/runtime/js/reports/project-subject-icons.js` maps Series, Work, Detail and Folder to `dlf-series.svg`, `dlf-work.svg`, `dlf-detail.svg` and `folder.svg` under `docs-viewer/static/icons/`. The helper now creates one decorative mask span per Subject instead of inline SVG or emoji. The selected saved drawings own their geometry; shared list CSS owns 16px sizing, theme tint and alignment. The supplied Work and Detail assets are deliberate replacements for the previous inline designs.
+`docs-viewer/runtime/js/reports/project-subject-icons.js` maps Series, Work and Folder to `dlf-series.svg`, `dlf-work.svg` and `folder.svg` under `docs-viewer/static/icons/`. The helper now creates one decorative mask span per Subject instead of inline SVG or emoji. The selected saved drawings own their geometry; shared list CSS owns 16px sizing, theme tint and alignment. The supplied Work asset is a deliberate replacement for its previous inline design.
 
 Ordinary emoji remain supported in authored prose. If colour emoji artwork is later needed as an asset, choose an explicitly licensed SVG source. A Unicode character and a platform's drawing are separate: Unicode directs permission enquiries for vendor imagery to the relevant vendor. [Unicode emoji guidance](https://www.unicode.org/faq/emoji_dingbats.html).
 
 ## Markdown Authoring And Export
 
-Authors should be able to include an exact application icon without writing SVG markup or remembering deployment paths. A short reference such as `[[icon:refresh]]` is proposed, following the familiar style of existing document tokens. It would resolve to the shared icon during document generation. This syntax is not implemented or reserved yet.
+Authors can include an exact saved icon with `[[icon:refresh-cw]]`, selecting `refresh-cw.svg` from the canonical icon folder. **Directives → Insert icon** inserts that token inline and selects the stem for editing. [Icon Tokens](Icon_Tokens.md) owns the supported syntax, renderer, failure behaviour and export contract.
 
 Ordinary Markdown can also reference an SVG using an image link, but the reference still needs a reachable asset and suitable inline sizing. [Markdown image syntax](https://spec.commonmark.org/spec/#images), [SVG image support](https://developer.mozilla.org/en-US/docs/Web/SVG/Guides/SVG_as_an_image).
 
-Leave authored emoji unchanged. Do not globally replace matching characters in prose, code, titles or copied text. Icon references should resolve through a small explicit set of names; unknown names must be reported rather than silently selecting an unrelated icon. Normal rendering must not turn small icons into diagram-detail targets.
+Leave authored emoji unchanged. Do not globally replace matching characters in prose, code, titles or copied text. Manual icon references resolve exact canonical filenames; missing files fail the document build. Normal rendering must not turn small icons into diagram-detail targets.
 
-An icon token depends on our renderer and is less portable than an emoji character. Decide export behaviour before delivering token support: a standalone HTML or document package must include its image dependencies, while plain-text output needs a deliberate readable label or chosen text equivalent. Source Markdown can retain the token, with that dependency made explicit. No machine-local or website-root-only asset paths should be embedded as the portable document identity.
+Generated HTML embeds the sanitized SVG mask and inline presentation, so HTML exports carry their own artwork. Markdown and plain-text conversion retain the readable token; source packages require the matching canonical icon when rebuilt. No machine-local or website-root-only asset path is embedded in the portable icon identity.
 
 ## Swift App Reuse
 
@@ -76,6 +76,6 @@ Keep one artwork source while allowing separate web-resource and native asset-ca
 - Choose the initial Lucide icons and confirm any remaining coverage gaps, including document collection/Subject precedence and whether any prefixes combine more than one meaning.
 - Confirm the canonical asset location, attribution record and how web/public/App packages consume it.
 - Review representative Lucide actions/document types alongside the existing Catalogue designs and VS Code brand asset at the recommended sizes; decide whether the Catalogue stroke weight needs adjustment.
-- Decide whether the first complete delivery covers buttons/report prefixes alone or also includes Markdown references and their export behaviour.
+- Define the next complete delivery for collection prefixes or App reuse independently of the implemented manual token.
 
-The [Links report](/docs/?scope=analysis&stage=working&doc=d-20260910-214604-f9e841) already separates title text from a future prefix. Its shipped aggregation and navigation remain unchanged. This feature owns the shared icon decisions deferred by [Unified Analysis And Catalogue Presentation](Analysis_And_Catalogue_Presentation.md); an eventual delivery should name the consumers it migrates and provide a complete reviewable result.
+The [Links report](/docs/?doc=d-20260910-214604-f9e841) already separates title text from a future prefix. Its shipped aggregation and navigation remain unchanged. This feature owns the shared icon decisions deferred by [Unified Analysis And Catalogue Presentation](Analysis_And_Catalogue_Presentation.md); an eventual delivery should name the consumers it migrates and provide a complete reviewable result.
