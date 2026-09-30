@@ -17,6 +17,7 @@ from .common import (
 )
 from .pipeline import DocsDataBuilder
 from .inline_icons import InlineIconRenderer
+from .related_links import prepare_related_links
 from .collection_metadata import CollectionDocumentSummary, merge_collection_manifest, read_collection_manifest
 from .links_builder import build_document_links, prepare_document_links
 from .media_builds import build_collection_media_snapshot
@@ -45,6 +46,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
         only_doc_ids: list[str] | None = None,
         skip_media_builds: bool = False,
         links_doc_ids: list[str] | None = None,
+        related_links_dir: Path | None = None,
     ) -> None:
         self.collection_config = collection
         super().__init__(
@@ -55,6 +57,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
             only_doc_ids=only_doc_ids,
             skip_media_builds=skip_media_builds,
             links_doc_ids=links_doc_ids,
+            related_links_dir=related_links_dir,
         )
         self.collection_id = collection.collection
         self.output_url_base = self.output_url_base_for(self.output_url_dir())
@@ -246,6 +249,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
             else build_collection_media_snapshot(self.repo_root, self.media_owner, write=write)
         )
         semantic_tokens_by_doc: dict[str, list[dict[str, Any]]] = {}
+        prepare_related_links(self, docs)
         item_payloads = {
             doc.doc_id: self.item_entry(doc, summaries, semantic_tokens_by_doc)
             for doc in ordered_docs

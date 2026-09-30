@@ -3,6 +3,7 @@ import { createDocsViewerToolbarIcon } from "../../shared/docs-viewer-toolbar-ic
 export const DIRECTIVE_ACTIONS_CONTROL_ID = "source-directives";
 
 const ICON_DIRECTIVE_SOURCE = "[[icon:refresh-cw]]";
+const LINKS_DIRECTIVE_SOURCE = "[[links|related links]]";
 
 export const DIRECTIVE_ACTIONS = Object.freeze([
   Object.freeze({
@@ -10,6 +11,13 @@ export const DIRECTIVE_ACTIONS = Object.freeze([
     id: "table-detail",
     label: "Table detail",
     source: "<!-- dotlineform:table-detail -->"
+  }),
+  Object.freeze({
+    artwork: "docsViewer__icon--waypoints",
+    id: "insert-related-links",
+    label: "Insert related links",
+    source: LINKS_DIRECTIVE_SOURCE,
+    placeholder: Object.freeze({ start: "[[links|".length, end: LINKS_DIRECTIVE_SOURCE.length - 2 })
   }),
   Object.freeze({
     artwork: "docsViewer__icon--image",

@@ -18,6 +18,7 @@ from .common import json_text, render_markdown_to_html
 from .links_model import DocumentLinks, DocumentSummary, DocumentTarget
 from .links_schema import read_relationship_payload, relationship_payload
 from .semantic_tokens import replace_semantic_tokens
+from .related_links_directive import RELATED_LINKS_PREFIX, render_without_related_links
 from .source import DocRecord
 from docs_document_identity import is_document_id, is_immutable_doc_id
 from docs_document_location import canonical_document_viewer_url
@@ -201,7 +202,8 @@ class _DocumentRefresh:
         """Resolve this document's anchors to unique available endpoint summaries."""
         references = {}
         markdown = replace_semantic_tokens(doc.body_markdown, registry=None, replacer=lambda token: "")
-        for anchor in collect_anchors(render_markdown_to_html(markdown)):
+        rendered = render_without_related_links(markdown) if RELATED_LINKS_PREFIX in markdown else render_markdown_to_html(markdown)
+        for anchor in collect_anchors(rendered):
             authored = anchor["href"]
             if not authored or authored.startswith("#"):
                 continue

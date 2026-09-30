@@ -93,14 +93,6 @@ function renderContentDetailBack(context) {
   return button;
 }
 
-function renderDocumentLinks(context) {
-  var button = context.existingRoot || context.document.createElement("button");
-  button.className = "docsViewer__toolbarIconButton";
-  button.type = "button";
-  button.replaceChildren(createDocsViewerToolbarIcon(context.document, "docsViewer__icon--waypoints"));
-  return button;
-}
-
 function renderContentDetailLabel(context) {
   var label = context.existingRoot;
   if (!label || label.tagName !== "SPAN") {
@@ -133,7 +125,6 @@ export function createDocsViewerSharedControlRenderers() {
     "search-input": renderSearchInput,
     "bookmark-toggle": renderBookmarkToggle,
     "info-toggle": renderInfoToggle,
-    "document-links": renderDocumentLinks,
     "content-detail-back": renderContentDetailBack,
     "content-detail-label": renderContentDetailLabel,
     "content-detail-open-new-tab": renderContentDetailOpenNewTab

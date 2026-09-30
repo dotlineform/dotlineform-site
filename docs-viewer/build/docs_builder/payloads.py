@@ -10,6 +10,7 @@ from .common import (
 )
 from .rendering import add_missing_image_titles
 from .source import DocRecord, DocumentIdentity
+from .related_links import render_related_links
 from docs_document_identity import doc_updated_date, is_doc_date
 from docs_discovery_selection import select_collection_documents, select_ordinary_documents
 from docs_publication_ignore import read_publication_ignore_ids
@@ -35,7 +36,7 @@ class PayloadBuilderMixin:
             semantic_tokens_by_doc=semantic_tokens_by_doc,
         )
         try:
-            rendered = self.inline_icons.render_markdown(resolved)
+            rendered = self.inline_icons.render_markdown(resolved, related_links=lambda heading: render_related_links(self, doc, heading))
         except ValueError as exc:
             raise ValueError(f"Document {doc.doc_id}: {exc}") from exc
         content_html = add_missing_image_titles(

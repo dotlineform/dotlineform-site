@@ -5,6 +5,7 @@ from typing import Any
 
 from .backlinks import BacklinksMixin
 from .inline_icons import InlineIconRenderer
+from .related_links import prepare_related_links
 from .links_builder import build_document_links, prepare_document_links
 from .common import (
     DocsStageConfig,
@@ -50,6 +51,7 @@ class DocsDataBuilder(
         links_doc_ids: list[str] | None = None,
         skip_media_builds: bool = False,
         skip_recent: bool = False,
+        related_links_dir: Path | None = None,
     ) -> None:
         self.repo_root = repo_root.resolve()
         self.config = config
@@ -71,6 +73,7 @@ class DocsDataBuilder(
         self.site_config = load_site_tools_config(self.repo_root)
         self.semantic_token_registry = load_semantic_token_registry(self.repo_root)
         self.inline_icons = InlineIconRenderer(self.repo_root)
+        self.related_links_dir = related_links_dir or generated_documents_path(config) / "links-by-id"
         self.source_files_scanned = 0
         self.warnings: list[str] = []
 
@@ -92,6 +95,7 @@ class DocsDataBuilder(
         if self.targeted_build:
             self.validate_targeted_build_prerequisites(docs, target_doc_ids)
         semantic_tokens_by_doc: dict[str, list[dict[str, Any]]] = {}
+        prepare_related_links(self, docs)
 
         docs_for_item_build = [doc for doc in docs if doc.doc_id in target_doc_ids]
         item_payloads = {

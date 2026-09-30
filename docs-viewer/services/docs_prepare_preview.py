@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+import json
 import subprocess
 import sys
 import tempfile
@@ -38,6 +39,7 @@ class PreparationInputs:
     search_index: bytes
     recent_payload: bytes
     catalogue: dict[str, bytes]
+    related_links: dict[Path, bytes]
     preview_files: dict[Path, bytes]
     revision_basis: dict[Path, bytes]
 
@@ -83,6 +85,10 @@ def _capture_inputs(repo_root: Path) -> PreparationInputs:
     _validate_prepared_index(Path("documents/recent.json"), recent_payload)
     workspace = load_docs_workspace_config(repo_root)
     catalogue = read_catalogue_artifacts(workspace.catalogue, load_catalogue_artifact_inventory(repo_root), stage="working")
+    links_root = generated_documents_path(working) / "links-by-id"
+    if links_root.is_symlink():
+        raise ValueError("Working related-links inputs must not be a symlink")
+    related_links = _files_from_root(links_root) if links_root.exists() else {}
     source_root = _lifecycle_root(repo_root, working, "source")
     source_files = _files_from_root(source_root)
     preview_root = working.workspace_root.path / "preview"
@@ -95,9 +101,10 @@ def _capture_inputs(repo_root: Path) -> PreparationInputs:
         Path("preview"): files_revision(current).encode(),
         Path("working-search"): search_index,
         Path("working-recent"): recent_payload,
+        **{Path("working-links") / path: data for path, data in related_links.items()},
         **{Path("catalogue") / path: data for path, data in catalogue.items()},
     }
-    return PreparationInputs(working, source_files, search_index, recent_payload, catalogue, current, basis)
+    return PreparationInputs(working, source_files, search_index, recent_payload, catalogue, related_links, current, basis)
 
 
 def _plan(repo_root: Path) -> tuple[dict[str, Any], dict[Path, bytes], PreparationInputs]:
@@ -159,6 +166,7 @@ def _plan(repo_root: Path) -> tuple[dict[str, Any], dict[Path, bytes], Preparati
 def build_captured_preview(
     repo_root: Path, source_files: dict[Path, bytes], search_index: bytes, recent_payload: bytes,
     catalogue: dict[str, bytes],
+    related_links: dict[Path, bytes], eligible_doc_ids: list[str],
 ) -> tuple[dict[Path, bytes], dict[str, Any]]:
     """Build captured inputs in temporary storage without replacing live Preview."""
     workspace = load_docs_workspace_config(repo_root)
@@ -175,6 +183,25 @@ def build_captured_preview(
         captured_search.write_bytes(search_index)
         captured_recent = build_root / "working-recent.json"
         captured_recent.write_bytes(recent_payload)
+        captured_links = build_root / "related-links"
+        captured_links.mkdir()
+        eligible = set(eligible_doc_ids)
+        for relative, data in related_links.items():
+            if relative.parent != Path(".") or relative.suffix != ".json":
+                raise ValueError("Related-links inputs require flat JSON records")
+            payload = json.loads(data)
+            if (not isinstance(payload, dict) or payload.get("schema_version") != 4
+                    or not isinstance(payload.get("self"), dict)
+                    or payload["self"].get("doc_id") != relative.stem
+                    or any(not isinstance(payload.get(direction), list) for direction in ("incoming", "outgoing"))):
+                raise ValueError("Captured related-links JSON requires exact version-4 document identity and lists")
+            if payload["self"]["doc_id"] not in eligible:
+                continue
+            for direction in ("incoming", "outgoing"):
+                if any(not isinstance(row, dict) or not isinstance(row.get("doc_id"), str) for row in payload[direction]):
+                    raise ValueError("Captured related-links entries require document identities")
+                payload[direction] = [row for row in payload[direction] if row["doc_id"] in eligible]
+            (captured_links / relative).write_text(json.dumps(payload), encoding="utf-8")
         for relative, data in source_files.items():
             path = source_root / relative
             path.parent.mkdir(parents=True, exist_ok=True)
@@ -192,7 +219,8 @@ def build_captured_preview(
         result = subprocess.run(
             [sys.executable, str(repo_root / "docs-viewer/build/build_preview.py"),
              "--docs-base-dir", str(build_root), "--search-index", str(captured_search),
-             "--recent-payload", str(captured_recent), "--assets-base-dir", str(workspace.assets.root.path)],
+             "--recent-payload", str(captured_recent), "--assets-base-dir", str(workspace.assets.root.path),
+             "--related-links-dir", str(captured_links)],
             cwd=repo_root, capture_output=True, text=True, check=False,
         )
         if result.returncode:
@@ -211,6 +239,7 @@ def _complete_preview(
 ) -> CompletedPreview:
     files, build_manifest = build_captured_preview(
         repo_root, desired, inputs.search_index, inputs.recent_payload, inputs.catalogue,
+        inputs.related_links, plan["eligible_doc_ids"],
     )
     return write_preview_snapshot(
         repo_root, files=files, generated_revision=build_manifest["generated_revision"],

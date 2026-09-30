@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260423-000000-c9f3ea
 title: Builder
 added_date: "2026-04-23 00:00:00"
-last_updated: "2026-09-30 19:01:32"
+last_updated: "2026-09-30 22:42:00"
 parent_id: d-20260424-000000-50b63f
 ---
 # Builder
@@ -67,7 +67,11 @@ Ordinary and collection Doc Build call `docs-viewer/build/docs_builder/links_bui
 
 Resolve local document ownership through the configured Working storage and exact immutable `doc_id`, with `collection` only for a named owner. Canonical source filenames are `<doc_id>.md`, with front matter confirming identity; generated destinations are exact by-ID files. Collection viewer links resolve through their exact report host. Relationship identity is `{collection, doc_id}`, with an empty collection for ordinary documents. Readers derive navigation from that identity and their configured viewer route/report hosts. Stage/scope-bearing targets are invalid. Ordinary authored Markdown/HTML document links supply references; Catalogue media/image tokens do not create document relationships.
 
-`links_model.py` owns unique directed document relationships and endpoint summaries. `links_schema.py` validates and serializes separate `generated/documents/links-by-id/<doc_id>.json` records beneath the configured Working root, shared by parent and child documents. Version 4 contains only `schema_version`, `self`, `incoming` and `outgoing`. `self` and each entry directly in the incoming/outgoing arrays use the same flat `{collection, doc_id, title}` object. Explicit identity lets the same records stand alone in the aggregate without their filenames. Repeated links to the same document collapse to one relationship in each direction, regardless of label or destination fragment; occurrence details and stored counts are omitted. Counts of distinct incoming/outgoing documents can be derived from the list lengths. Earlier schemas are rejected; saved records require explicit migration rather than runtime compatibility reads. [Links View](Links_View.md) consumes one prepared record directly.
+`links_model.py` owns unique directed document relationships and endpoint summaries. `links_schema.py` validates and serializes separate `generated/documents/links-by-id/<doc_id>.json` records beneath the configured Working root, shared by parent and child documents. Version 4 contains only `schema_version`, `self`, `incoming` and `outgoing`. `self` and each entry directly in the incoming/outgoing arrays use the same flat `{collection, doc_id, title}` object. Explicit identity lets the same records stand alone in the aggregate without their filenames. Repeated links to the same document collapse to one relationship in each direction, regardless of label or destination fragment; occurrence details and stored counts are omitted. Counts of distinct incoming/outgoing documents can be derived from the list lengths. Earlier schemas are rejected; saved records require explicit migration rather than runtime compatibility reads. These records supply targeted related-links builds and the local workspace diagnostic aggregate; the per-document Links view and read endpoint are retired.
+
+`related_links.py` reads the document's currently persisted version-4 relationship JSON for the [Related Links](Related_Links.md) directive. Full and targeted builds use saved incoming/outgoing summaries without scanning neighbours, deriving a graph or writing relationship state during expansion. The existing per-collection full Build flow remains unchanged. Publish captures the persisted records, binds them into its input revision and filters their entries to the already selected eligible document IDs; the temporary Preview build receives that captured directory through `--related-links-dir`.
+
+The Markdown block parser consumes related-links directives without treating heading text as links. Expansion reuses the icon renderer, emits portable query targets and marks generated anchors; the shared anchor collector omits those anchors from backlinks and authored-link diagnostics. The persisted relationship set is the input to section rendering, so the section does not depend on rendering order. Search and publication distribution do not derive these sections.
 
 The existing Links record is the refresh's only relationship prior state:
 

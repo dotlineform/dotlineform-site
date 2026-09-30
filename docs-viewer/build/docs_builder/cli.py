@@ -21,6 +21,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--output", help="Override the selected stage's generated document directory.")
     parser.add_argument("--viewer-base-url", help="Override the local viewer page URL base.")
     parser.add_argument("--collection", help="Build one configured collection in the selected stage.")
+    parser.add_argument("--related-links-dir", type=Path, help="Use captured persisted relationship JSON during a controlled build.")
     parser.add_argument("--only-doc-ids", help="Comma-separated doc ids for a targeted docs payload rebuild.")
     parser.add_argument("--links-doc-ids", help="Exact changed/deleted document ids for Links, independently of ordinary rendering; an empty value selects none.")
     parser.add_argument("--skip-media-builds", action="store_true", help="Skip registered media producers during a controlled rebuild.")
@@ -52,6 +53,7 @@ def main(argv: list[str] | None = None) -> int:
                 only_doc_ids=only_doc_ids,
                 links_doc_ids=links_doc_ids,
                 skip_media_builds=args.skip_media_builds,
+                related_links_dir=args.related_links_dir,
             )
         else:
             builder = DocsDataBuilder(
@@ -62,6 +64,7 @@ def main(argv: list[str] | None = None) -> int:
                 skip_recent=args.skip_recent,
                 links_doc_ids=links_doc_ids,
                 skip_media_builds=args.skip_media_builds,
+                related_links_dir=args.related_links_dir,
             )
         builder.run(write=args.write, emit_diagnostics=args.diagnostics)
     except (FrontMatterSyntaxError, InvalidDocIdError, MissingDocIdError) as exc:

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260331-000000-c313fd
 title: Runtime
 added_date: "2026-03-31 00:00:00"
-last_updated: "2026-09-30 21:07:37"
+last_updated: "2026-09-30 22:42:00"
 summary: Public, manage, and review execution paths; browser/server authority boundaries; extension method; rationale; and known weak spots.
 parent_id: d-20260424-000000-50b63f
 ---
@@ -197,9 +197,9 @@ Capabilities describe what the current service can do after environment flags, c
 
 ### Links Presentation
 
-[Links View](Links_View.md) owns the shipped single-document presentation, exact ordinary/child target, generated-read contract, grouped links and return behavior. [Builder](Builder.md) owns scope-wide Analysis Working relationship maintenance. The view consumes one prepared record and never discovers or repairs relationships.
+[Related Links](Related_Links.md) owns the author-inserted `[[links|related links]]` directive. Its plain heading, sorted incoming/outgoing list and decorative collection icons are embedded in `content_html` at build time. Rendering uses the normal document mount, with no relationship request or additional manifest read. Generated anchors carry `data-docs-related-link` so authored-link collection and backlinks omit them.
 
-Links demonstrates a dedicated adapter within the shared Content Detail host. The registry's validated `mainLayoutByTargetKind` map gives Links normal document width while Media and other expanded presentations retain their own layout. Public-safe code and public activation remain separate decisions. Shared data reuse and browser-history restoration remain planned work; Links View records the current loading and return behavior.
+The per-document Links control, adapter, hosted presentation and `/docs/links` generated-read endpoint are removed. The separate local workspace Links diagnostic report remains. Content Detail continues to host Table, Diagram, Media and Report presentations. [Builder](Builder.md) owns persisted-record expansion and existing relationship maintenance; [Source Editor Scripts](Source_Editor_Scripts.md#directives) owns insertion.
 
 ### Choosing An Extension Owner
 

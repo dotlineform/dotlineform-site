@@ -282,9 +282,6 @@ export function startDocsViewerRuntime(options) {
   mainViewControlOwners.set("bookmark", function () {
     if (bookmarkController) bookmarkController.handleControl();
   });
-  mainViewControlOwners.set("document-links", function (detail) {
-    if (documentController) documentController.openLinks(detail);
-  });
   mainViewControlOwners.set("info", function () {
     if (!documentViewCoordinator) return;
     if (
@@ -388,10 +385,6 @@ export function startDocsViewerRuntime(options) {
     hasActiveQuery: hasActiveQuery,
     inlineMermaidAdapter: settings.inlineMermaidAdapter,
     mediaDetailAdapter: settings.mediaDetailAdapter,
-    linksDetailAdapter: settings.linksDetailAdapter,
-    projectLinksControlState: function (controlState) {
-      projectMainViewControlState("links", "document-links", controlState);
-    },
     managementService: managementService,
     managementDocumentActions: {
       regenerateCatalogue: function (collection, options) {

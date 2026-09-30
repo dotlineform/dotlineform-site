@@ -170,7 +170,6 @@ export function initDocsViewerConfigController(context) {
       recentUrl: String(raw.recent_url || ""),
       selectedUrl: String(raw.selected_url || ""),
       backlinksUrl: String(raw.backlinks_url || ""),
-      linksEnabled: raw.links_enabled === true,
       searchIndexUrl: String(raw.search_index_url || ""),
       collections: children,
       collectionsById: new Map(children.map(function (child) { return [child.collection, child]; })),

@@ -63,7 +63,7 @@ def docs_generated_read_payload(repo_root: Path, path: str, params: dict[str, li
         raise ValueError("sub_scope is retired; use collection")
     if "scope" in params:
         raise ValueError("scope is retired")
-    if "collection" in params and path != routes.GENERATED_LINKS_PATH:
+    if "collection" in params:
         raise ValueError("Use the configured collection artifact route for child payloads")
 
 
@@ -77,11 +77,6 @@ def docs_generated_read_payload(repo_root: Path, path: str, params: dict[str, li
         return docs_generated_reads.read_generated_search_index(repo_root)
     if path == routes.GENERATED_SEMANTIC_TOKENS_PATH:
         return docs_generated_reads.read_generated_semantic_tokens_index(repo_root)
-    if path == routes.GENERATED_LINKS_PATH:
-        return docs_generated_reads.read_generated_doc_links(
-            repo_root, docs_api_query_value(params, "doc_id"),
-            docs_api_query_value(params, "collection"),
-        )
     if path == routes.GENERATED_WORKSPACE_LINKS_PATH:
         return docs_generated_reads.read_generated_workspace_links(repo_root)
     if path == routes.GENERATED_PAYLOAD_PATH:
@@ -142,7 +137,6 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         routes.GENERATED_RECENT_PATH,
         routes.GENERATED_BACKLINKS_PATH,
         routes.GENERATED_PAYLOAD_PATH,
-        routes.GENERATED_LINKS_PATH,
         routes.GENERATED_WORKSPACE_LINKS_PATH,
         routes.GENERATED_SEARCH_PATH,
         routes.GENERATED_SEMANTIC_TOKENS_PATH,

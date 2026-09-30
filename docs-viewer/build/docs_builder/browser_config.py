@@ -6,7 +6,6 @@ from typing import Any
 from urllib.parse import quote
 
 from .common import DOCS_VIEWER_BROWSER_CONFIG_SCHEMA_VERSION, browser_path_for_repo_relative, json_text
-from .links_builder import links_enabled
 from docs_workspace_config import DocsStageConfig, DocsCollectionConfig, DocsWorkspaceConfig, public_documents_path, public_search_path, select_workspace_stage
 from docs_collection_customisations import browser_collection_customisation_payload
 
@@ -91,7 +90,7 @@ def browser_workspace_record(repo_root: Path, config: DocsStageConfig, *, public
         "collections": browser_collection_records(repo_root, config, published=published),
     }
     if not published:
-        record.update(links_enabled=links_enabled(repo_root, config), backlinks_url=browser_docs_backlinks_url(config))
+        record.update(backlinks_url=browser_docs_backlinks_url(config))
     return record
 
 

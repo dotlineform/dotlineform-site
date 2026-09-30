@@ -60,7 +60,6 @@
         "by_id_url_base": "/docs/generated/external/catalogue/by-id"
       }
     ],
-    "links_enabled": true,
     "backlinks_url": "/docs/backlinks"
   }
 }

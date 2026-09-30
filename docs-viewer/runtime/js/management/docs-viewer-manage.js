@@ -11,7 +11,6 @@ import {
 import {
   docsViewerMediaDetailAdapter
 } from "../shared/docs-viewer-media-detail.js";
-import { docsViewerLinksDetailAdapter } from "../shared/docs-viewer-links-detail.js";
 import {
   createDocsViewerTableDetailAdapter
 } from "../shared/docs-viewer-table-detail.js";
@@ -139,14 +138,12 @@ startDocsViewerManageApp({
   createSourceAdapter: createDocsViewerManagementSourceAdapter,
   diagramDetailAdapter: docsViewerDiagramDetailAdapter,
   mediaDetailAdapter: docsViewerMediaDetailAdapter,
-  linksDetailAdapter: docsViewerLinksDetailAdapter,
   viewRegistryContributions: withDocsViewerManagedTableToolDefinitions(
     withDocsViewerContentDetailDefinitions(
       createDocsViewerManagementViewDefinitions(),
       {
         diagramDetailAdapter: docsViewerDiagramDetailAdapter,
         mediaDetailAdapter: docsViewerMediaDetailAdapter,
-        linksDetailAdapter: docsViewerLinksDetailAdapter,
         reportPresentationAdapter: reportPresentationAdapter,
         tableDetailAdapter: managedTableDetailAdapter
       }

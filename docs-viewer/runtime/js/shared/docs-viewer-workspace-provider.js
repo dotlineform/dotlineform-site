@@ -57,25 +57,11 @@ export function createDocsViewerWorkspaceProvider(options) {
 
   var provider = {
     documentHref: function (target) { return docsViewerLinksDocumentHref(target, collectionConfig()); },
-    canReadLinks: canReadLinks,
-    readLinks: readLinks,
     readDocument: readDocument,
     readIndex: readIndex,
     readRecent: readRecent,
     readSearch: readSearch
   };
-
-  function canReadLinks() {
-    var config = settings.workspaceConfig && settings.workspaceConfig.activeConfig;
-    return Boolean(config && config.linksEnabled);
-  }
-
-  /** Read the exact document's separate relationship record; never infer another collection. */
-  function readLinks(target) {
-    if (!canReadLinks(target)) return Promise.reject(new Error("Links is not enabled for this workspace."));
-    var config = collectionConfig();
-    return generatedData.readDocumentLinks(target, { linksByIdUrlBase: config.linksByIdUrlBase });
-  }
 
   if (source && typeof source.readSource === "function") {
     provider.readSource = function (target, optionsForRead) {

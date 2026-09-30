@@ -3,24 +3,30 @@ draft: false
 doc_id: d-20260930-195002-b3417e
 title: Related Links
 added_date: "2026-09-30 19:50:02"
-last_updated: "2026-09-30 21:39:26"
-summary: Proposed author-inserted related-links directive, a sorted list with selected collection icons, and build-time relationship snapshots in document JSON.
-ui_status: planned
+last_updated: "2026-09-30 22:42:00"
+summary: Author-inserted related-links directive, a sorted list with collection icons, and build-time relationship snapshots in document JSON.
+ui_status: in-progress
 parent_id: d-20260428-000000-f5ff18
 ---
 # Related Links
 
-Status: related-links directive proposal; the collection config and Index icons are implemented in [Collection Icons Delivery](Collection_Icons_Delivery.md), with visual review pending. This feature is parented to [Planned Features](Planned_Features.md).
+Status: implemented, with manual acceptance pending in [Related Links Delivery](Related_Links_Delivery.md). Collection config and Index icons are recorded in [Collection Icons Delivery](Collection_Icons_Delivery.md). This feature is parented to [Planned Features](Planned_Features.md).
 
 ## Authoring Decision
 
-An author manually inserts a related-links directive in the Source Editor where the list should appear. The directive requests the document's computed related links; the author does not maintain the individual entries. Its exact source syntax remains to be chosen.
+An author manually inserts a related-links directive in the Source Editor where the list should appear. The directive requests the document's computed related links; the author does not maintain the individual entries. The source form is:
+
+```text
+[[links|related links]]
+```
+
+`links` identifies the directive; the text after `|` supplies its editable, nonempty plain-text heading. Put the directive on its own line. **Directives → Insert related links** inserts this default form and selects `related links` for editing, following the Insert icon placeholder interaction. For example, `[[links|Further reading]]` uses “Further reading” as its heading. The heading renders as a normal level-two section heading; Markdown punctuation and HTML-looking heading text remain plain text. Fenced and indented code examples remain literal.
 
 Without the directive, the document has no related-links section. If the directive resolves to no qualifying links, it produces no visible heading, list or empty-state message. An Info panel presentation is a possible later enhancement.
 
 ## Initial Presentation
 
-Use the document's normal content width, section heading and bulleted links. Combine incoming and outgoing document relationships into one plain list, sorted A–Z by displayed title, with exact collection/document identity providing a stable tie-break. Repeated and reciprocal links to the same target appear once; distinct documents with the same title remain distinct. Omit the document itself.
+Use the document's normal content width, section heading and bulleted links. Combine incoming and outgoing document relationships into one plain list, sorted A–Z by case-folded displayed title, with exact collection/document identity providing a stable tie-break. Repeated and reciprocal links to the same target appear once; distinct documents with the same title remain distinct. Omit the document itself.
 
 All participating collections use the same list. The presentation has no collection groups, direction labels, counts, cards or enclosing panel. Relationships come from supported authored document links; sharing a Subject or a Catalogue association does not add entries by itself. The original mock-up below remains a plain sorted list; the selected icon refinement is recorded separately.
 
@@ -38,7 +44,7 @@ Document links connect this explanation with supporting material. Related docume
 
 - [Builder](Builder.md)
 - [Context Navigation](Document_Context_Navigation.md)
-- [Links View](Links_View.md)
+- [Related Links](Related_Links.md)
 - [Source Editor Scripts](Source_Editor_Scripts.md)
 
 ---
@@ -55,7 +61,7 @@ The user selected the following artwork in [Insert Icon](/docs/?doc=d-20260930-2
 | Moments (`moments`) | `dlf-moment` |
 | Ordinary document | `dlf-doc` |
 
-An extensionless `icon` value is implemented on each collection record in the existing workspace configuration, such as `"icon": "dlf-context"` for Works. [Source Organisation](Source_Organisation.md#collection-icons) owns this contract. The proposed related-links builder will read this same mapping and use the implemented [Icon Tokens](Icon_Tokens.md) renderer to embed the artwork. Ordinary targets will use `dlf-doc`.
+An extensionless `icon` value belongs to each collection record in the existing workspace configuration, such as `"icon": "dlf-context"` for Works. [Source Organisation](Source_Organisation.md#collection-icons) owns this contract. The related-links builder reads this same mapping and uses the [Icon Tokens](Icon_Tokens.md) renderer to embed decorative artwork. Ordinary targets use `dlf-doc`.
 
 The Index panel now marks collection report hosts with their configured collection icon, supplied through the existing browser configuration projection. Related links will share that artwork for documents within the collection. Collection icons identify collection ownership; Subject artwork remains separate. The [collection icon delivery](Collection_Icons_Delivery.md) records static verification, code review and the pending manual visual check.
 
@@ -65,12 +71,14 @@ The builder expands the directive into a static section in the document's genera
 
 Saving a referring document can update relationship records while leaving the referred document's embedded section unchanged. Ordinary saves retain their targeted build scope; they do not rebuild neighbouring document content merely to refresh this presentation. A full Docs Build refreshes the related-links sections across the complete configured document set that can contribute relationships, including participating collections. Link additions, removals and title changes become visible in the refreshed sections.
 
-A full build must resolve the complete authored relationship set before expanding any related-links directive. Reading existing relationship files while rendering documents would risk embedding the previous build's results or making incoming links depend on build order. Reuse the build's loaded inputs and completed relationship result for expansion.
+Full and targeted builds read the document's currently persisted version-4 `links-by-id` JSON. Incoming and outgoing summaries already exist in that record; related-section rendering does not discover relationships, load neighbouring source bodies or depend on rendering order. The existing collection build flow and incremental Links maintenance remain in place.
+
+Targeted saves rebuild only their selected document content, using the saved relationship record at render time. The existing relationship builder subsequently maintains that record and affected neighbours. Working retains its existing relationship exclusions for ordinary documents listed in `unpublishable.json` and their descendants; draft state alone does not suppress Working relationships.
 
 Generated related-links sections must not contribute authored relationships or backlinks. Otherwise an incoming-link listing could manufacture a reciprocal relationship. Literal directive examples in code remain examples and do not render a section.
 
-Publish performs the same relationship resolution and directive expansion over its captured eligible document set. Public sections therefore contain only documents in that prepared snapshot. Distribution copies the completed content without deriving relationships again.
+Publish captures the persisted relationship JSON alongside its existing inputs and filters the saved lists to the captured eligible document IDs. The temporary Preview build uses those captured records for expansion. Public sections therefore contain only documents in that prepared snapshot. Distribution copies the completed content without deriving relationships again.
 
-## Next Refinement
+## Runtime And Refinement
 
-The collection config and Index icons are implemented. Choose the related-links directive syntax and its complete delivery. [Builder](Builder.md) owns current relationship maintenance; [Links View](Links_View.md) describes the existing generic presentation. Runtime changes, treatment of the existing Links toolbar action, insertion-menu support and any separately specified test work remain for that implementation decision.
+The per-document Links toolbar action, separate Content Detail presentation and `/docs/links` read endpoint are retired without aliases. The reader mounts the generated section as ordinary document content. The local workspace Links diagnostic report retains its aggregate data and exact-target helpers. [Builder](Builder.md) owns existing relationship maintenance and persisted-record expansion. Layout refinement and a possible Info-panel presentation remain later choices; test work requires its own agreed specification under [Testing](Testing.md).

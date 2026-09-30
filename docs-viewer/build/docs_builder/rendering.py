@@ -80,7 +80,7 @@ class ContentRenderingMixin:
 
         def replace_anchor(match: re.Match[str]) -> str:
             anchor = match.group(0)
-            if re.search(r"\bdata-semantic-token-family\s*=", anchor, re.IGNORECASE):
+            if re.search(r"\b(?:data-semantic-token-family|data-docs-related-link)\s*=", anchor, re.IGNORECASE):
                 return anchor
             return re.sub(r"href=([\"'])(.*?)\1", replace_href, anchor)
 

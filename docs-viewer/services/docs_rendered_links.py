@@ -17,7 +17,7 @@ def normalize_text(value: Any) -> str:
 
 
 class AnchorCollector(HTMLParser):
-    """Collect rendered anchors while excluding literal code regions."""
+    """Collect authored anchors, excluding code and generated related-link rows."""
 
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
@@ -35,6 +35,8 @@ class AnchorCollector(HTMLParser):
         if normalized_tag in {"code", "pre"}:
             self._code_depth += 1
         if normalized_tag != "a" or self._code_depth > 0:
+            return
+        if any(key.lower() == "data-docs-related-link" for key, _ in attrs):
             return
         href = ""
         for key, value in attrs:

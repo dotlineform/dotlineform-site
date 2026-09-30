@@ -78,33 +78,6 @@ def generated_search_index_path(repo_root: Path) -> Path:
     return resolve_workspace_path(repo_root, generated_search_path(config))
 
 
-def read_generated_doc_links(
-    repo_root: Path, doc_id: str, collection: str = "",
-) -> Dict[str, Any]:
-    """Read one configured relationship file and require its exact requested identity.
-
-    This read does not build, repair, or search another collection.
-    """
-    if not is_document_id(doc_id, collection=collection):
-        raise ValueError("doc_id must use the immutable document ID format")
-    config = load_docs_working_config(repo_root)
-    if collection and collection not in {child.collection for child in config.collections}:
-        raise ValueError("Links collection must be an exact configured collection")
-    output = resolve_workspace_path(repo_root, generated_documents_path(config)).resolve()
-    directory = output / "links-by-id"
-    path = directory / f"{doc_id}.json"
-    if directory.is_symlink() or path.is_symlink() or path.resolve().parent != directory.resolve():
-        raise ValueError("Links data must remain in its configured directory")
-    payload = read_generated_json(path, "generated document Links")
-    expected = {"collection": collection, "doc_id": doc_id}
-    summary = payload.get("self") if isinstance(payload, dict) else None
-    if (payload.get("schema_version") != 4 or not isinstance(summary, dict)
-            or set(summary) != {"collection", "doc_id", "title"}
-            or {name: summary[name] for name in expected} != expected):
-        raise ValueError("Links data does not match the requested document")
-    return payload
-
-
 def read_generated_workspace_links(repo_root: Path) -> Dict[str, Any]:
     """Read the last completed Working aggregate without building or scanning records."""
     output = generated_docs_output_root(repo_root).resolve()

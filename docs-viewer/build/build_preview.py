@@ -13,6 +13,7 @@ def main() -> None:
     parser.add_argument("--assets-base-dir", type=Path, required=True)
     parser.add_argument("--search-index", type=Path, required=True, help="Captured Working Search index to copy unchanged.")
     parser.add_argument("--recent-payload", type=Path, required=True, help="Captured Working Recents to copy unchanged.")
+    parser.add_argument("--related-links-dir", type=Path, required=True, help="Captured eligible persisted relationship records.")
     args = parser.parse_args()
     repo_root = Path(__file__).resolve().parents[2]
     apply_repo_local_env(repo_root, docs_base_dir=args.docs_base_dir, assets_base_dir=args.assets_base_dir)
@@ -23,6 +24,7 @@ def main() -> None:
         repo_root, stage="preview", copied_search_index=args.search_index.read_bytes(),
         copied_recent_payload=args.recent_payload.read_bytes(),
         docs_base_dir=args.docs_base_dir, assets_base_dir=args.assets_base_dir,
+        related_links_dir=args.related_links_dir,
     )
 
 

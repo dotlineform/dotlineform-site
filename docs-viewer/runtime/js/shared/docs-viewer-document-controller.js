@@ -16,7 +16,6 @@ export function initDocsViewerDocumentController(context) {
   }
 
   function nextDocumentMountGeneration() {
-    if (context.linksDetailAdapter) context.linksDetailAdapter.releaseDocument({ content: content });
     documentMountGeneration += 1;
     return documentMountGeneration;
   }
@@ -97,11 +96,6 @@ export function initDocsViewerDocumentController(context) {
         context.publishCollectionReportState(Object.assign({}, state, {
           documentMountGeneration: mountGeneration
         }));
-        var adapter = context.linksDetailAdapter;
-        if (!adapter) return;
-        var target = state.state === "detail" ? state.documentTarget : null;
-        if (target && (target.collection !== payload.report.collection)) return;
-        adapter.setDocument({ content: content, target: target, title: state.documentRecord && state.documentRecord.title });
       },
       routeContext: typeof context.routeContext === "function" ? context.routeContext() : context.routeContext,
       workspaceConfigState: workspaceConfigState,
@@ -387,19 +381,6 @@ export function initDocsViewerDocumentController(context) {
       mediaRoot: workspaceConfigState.activeConfig && workspaceConfigState.activeConfig.mediaRoot,
       viewerBaseUrl: workspaceConfigState.activeConfig && workspaceConfigState.activeConfig.viewerBaseUrl
     });
-    if (context.linksDetailAdapter) {
-      context.linksDetailAdapter.mountDocument({
-        content: content,
-        target: payload.report ? null : {
-           collection: "", doc_id: payload.doc_id
-        },
-        title: payload.title,
-        collectionProvider: context.collectionProvider,
-        projectControlState: context.projectLinksControlState,
-        requestContentDetail: context.requestContentDetail,
-        showWarning: setStatus
-      });
-    }
     mountTableDetails(doc, payload, mountGeneration);
     mountMediaDetails(doc, payload, mountGeneration);
     mountThemedDiagrams(doc, payload);
@@ -469,10 +450,6 @@ export function initDocsViewerDocumentController(context) {
   }
 
   return {
-    openLinks: function (detail) {
-      if (detail.eventType !== "click" || !context.linksDetailAdapter) return false;
-      return context.linksDetailAdapter.openTarget({ content: content, invocationControl: detail.target });
-    },
     handleMissingDoc: handleMissingDoc,
     handlePayloadError: handlePayloadError,
     hideDocPane: hideDocPane,
