@@ -7,22 +7,20 @@ Records are created only when a document relationship needs either endpoint.
 
 from __future__ import annotations
 
-from collections import defaultdict
 from collections.abc import Collection
 import fcntl
 import json
 from pathlib import Path
 from typing import Any, TYPE_CHECKING
-from urllib.parse import quote, unquote, urlsplit
+from urllib.parse import unquote, urlsplit
 
 from .common import json_text, render_markdown_to_html
-from .links_model import DocumentLinks, DocumentSummary, DocumentTarget, Occurrence, reference_counts, replace_contribution
+from .links_model import DocumentLinks, DocumentSummary, DocumentTarget
 from .links_schema import read_relationship_payload, relationship_payload
 from .semantic_tokens import replace_semantic_tokens
 from .source import DocRecord
 from docs_document_identity import is_document_id, is_immutable_doc_id
 from docs_document_location import canonical_document_viewer_url
-from docs_document_subjects import normalize_authoring_subject
 from docs_rendered_links import collect_anchors, parse_docs_target, resolve_href
 from docs_workspace_config import DocsStageConfig, document_source_path, generated_documents_path, resolve_workspace_path
 from docs_source_model import parse_source, write_text_atomic
@@ -147,15 +145,18 @@ class _DocumentRefresh:
             if payload is None:
                 raise ValueError("Links endpoint requires its exact source and generated document")
             metadata = self.metadata[target]
-            host_id = self.owners[target.collection].report_host_doc_id if target.collection else target.doc_id
-            href = canonical_document_viewer_url(host_id, subdoc_id=target.doc_id if target.collection else "", subdoc_collection=target.collection)
             title = str(metadata.get("title") or payload["title"]).strip()
-            return DocumentSummary(target, title, href, normalize_authoring_subject(metadata, folder_supported=True))
+            return DocumentSummary(target, title)
         resolved = parse_docs_target(resolve_href(doc.viewer_url, "/"), viewer_routes=self.routes)
         if not resolved or self.viewer_target(resolved) != target:
             raise ValueError("Links current document has no exact configured viewer location")
-        href = canonical_document_viewer_url(resolved["doc_id"], subdoc_id=resolved.get("subdoc", ""), subdoc_collection=target.collection)
-        return DocumentSummary(target, doc.title, href, normalize_authoring_subject(doc.front_matter, folder_supported=True))
+        return DocumentSummary(target, doc.title)
+
+    def location(self, target: DocumentTarget) -> str:
+        """Derive navigation from exact identity and configured report placement."""
+        self.validate_target(target)
+        host_id = self.owners[target.collection].report_host_doc_id if target.collection else target.doc_id
+        return canonical_document_viewer_url(host_id, subdoc_id=target.doc_id if target.collection else "", subdoc_collection=target.collection)
 
     def read(self, target: DocumentTarget, *, deleted: bool = False) -> DocumentLinks | None:
         self.validate_target(target)
@@ -168,7 +169,7 @@ class _DocumentRefresh:
         record = None
         if text is not None:
             payload = json.loads(text)
-            owner = DocumentTarget(**payload["self"]["target"])
+            owner = DocumentTarget(payload["self"]["collection"], payload["self"]["doc_id"])
             self.validate_target(owner)
             record = read_relationship_payload(payload, owner)
             if owner != target:
@@ -196,9 +197,9 @@ class _DocumentRefresh:
         self.records[target] = record
         return record
 
-    def references(self, target: DocumentTarget, doc: DocRecord, href: str) -> dict[DocumentTarget, tuple[Occurrence, ...]]:
-        """Parse this document only; resolve viewer hosts or exact relative sources."""
-        references = defaultdict(list)
+    def references(self, target: DocumentTarget, doc: DocRecord, href: str) -> dict[DocumentTarget, DocumentSummary]:
+        """Resolve this document's anchors to unique available endpoint summaries."""
+        references = {}
         markdown = replace_semantic_tokens(doc.body_markdown, registry=None, replacer=lambda token: "")
         for anchor in collect_anchors(render_markdown_to_html(markdown)):
             authored = anchor["href"]
@@ -224,28 +225,28 @@ class _DocumentRefresh:
                             break
             if neighbour is None:
                 continue
-            record = self.initialise_endpoint(neighbour)
-            fragment = resolved.get("fragment", "")
-            destination = record.document.href + ("#" + quote(unquote(fragment), safe="-._~!$&'()*+,;=:@/?") if fragment else "")
-            references[neighbour].append(Occurrence(anchor["text"], destination))
-        return {key: tuple(occurrences) for key, occurrences in references.items()}
+            if neighbour not in references:
+                endpoint = self.initialise_endpoint(neighbour)
+                references[neighbour] = (endpoint.document if endpoint.document.target == neighbour
+                                         else self.summary(neighbour, self.docs.get(neighbour)))
+        return references
 
     def refresh(self, target: DocumentTarget, doc: DocRecord | None) -> tuple[int, int]:
         record = self.read(target, deleted=doc is None)
         if doc is None:
             if record is None:
                 return 0, 0
-            before = reference_counts(record.outgoing)
+            before = set(record.outgoing)
             for neighbour in set(record.outgoing) | set(record.incoming):
                 other = self.read(neighbour)
                 if other is not None:
                     other.incoming.pop(target, None)
                     other.outgoing.pop(target, None)
             self.removals.add(target)
-            return 0, sum(before.values())
+            return 0, len(before)
         summary = self.summary(target, doc)
         previous = record.document if record is not None else summary
-        before = reference_counts(record.outgoing) if record is not None else reference_counts({})
+        before = set(record.outgoing) if record is not None else set()
         if record is not None and previous.target != target:
             # Self-links are rebuilt from current Markdown under the new owner.
             record.incoming.pop(previous.target, None)
@@ -253,7 +254,7 @@ class _DocumentRefresh:
         if record is not None:
             record.document = summary
             record.incoming = {key: value for key, value in record.incoming.items() if not self.excluded(key)}
-        references = self.references(target, doc, summary.href)
+        references = self.references(target, doc, self.location(target))
         if record is None:
             if not references:
                 return 0, 0
@@ -263,23 +264,23 @@ class _DocumentRefresh:
             if other is not None:
                 if previous.target != target:
                     other.incoming.pop(previous.target, None)
-                replace_contribution(other.incoming, summary, references.get(neighbour, ()))
+                if neighbour in references:
+                    other.incoming[target] = summary
+                else:
+                    other.incoming.pop(target, None)
         if summary != previous:
             for neighbour in list(record.incoming):
                 if neighbour == target:
                     continue
                 other = self.read(neighbour)
                 if other is not None and previous.target in other.outgoing:
-                    occurrences = other.outgoing.pop(previous.target).occurrences
-                    if previous.href != summary.href:
-                        occurrences = tuple(Occurrence(item.label, summary.href + ("#" + urlsplit(item.href).fragment if urlsplit(item.href).fragment else "")) for item in occurrences)
-                        replace_contribution(record.incoming, other.document, occurrences)
-                    replace_contribution(other.outgoing, summary, occurrences)
-        record.outgoing = {}
-        for neighbour, occurrences in references.items():
-            replace_contribution(record.outgoing, self.records[neighbour].document, occurrences)
-        after = reference_counts(record.outgoing)
-        return sum((after - before).values()), sum((before - after).values())
+                    other.outgoing.pop(previous.target)
+                    if previous.target != summary.target:
+                        record.incoming[neighbour] = other.document
+                    other.outgoing[target] = summary
+        record.outgoing = references
+        after = set(record.outgoing)
+        return len(after - before), len(before - after)
 
 
 def build_document_links(builder: DocsDataBuilder, plan: dict[str, Any] | None, *, write: bool) -> dict[str, Any] | None:
@@ -315,7 +316,7 @@ def build_document_links(builder: DocsDataBuilder, plan: dict[str, Any] | None, 
             for path in removals:
                 path.unlink()
         return {"written": [path.name for path in writes], "removed": [path.name for path in removals],
-                "occurrences_added": added, "occurrences_deleted": deleted}
+                "relationships_added": added, "relationships_removed": deleted}
 
     if write:
         private = builder.repo_root / "var/docs-viewer/links-builder" / builder.config.stage
@@ -325,5 +326,5 @@ def build_document_links(builder: DocsDataBuilder, plan: dict[str, Any] | None, 
             result = run()
     else:
         result = run()
-    print(f"  links: {len(result['written'])} written; {len(result['removed'])} removed; {result['occurrences_added']} occurrences added; {result['occurrences_deleted']} deleted")
+    print(f"  links: {len(result['written'])} written; {len(result['removed'])} removed; {result['relationships_added']} relationships added; {result['relationships_removed']} removed")
     return result

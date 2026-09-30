@@ -97,7 +97,7 @@ export function createDocsViewerLinksDetailAdapter() {
       group.entries.forEach(function (entry) {
         var row = documentRef.createElement("li");
         var link = documentRef.createElement("a");
-        link.href = entry.document.href;
+        link.href = state.context.collectionProvider.documentHref(entry.document);
         link.textContent = entry.document.title;
         row.appendChild(link);
         list.appendChild(row);

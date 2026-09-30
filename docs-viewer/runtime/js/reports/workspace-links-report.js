@@ -1,24 +1,23 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
-import { docsViewerLinksDocumentSummary } from "../shared/docs-viewer-links-presentation.js";
+import { docsViewerLinksDocumentSummary, docsViewerLinksDocumentHref } from "../shared/docs-viewer-links-presentation.js";
 const COLUMNS = ["from", "to"];
 const TITLE_ORDER = new Intl.Collator("en", { sensitivity: "base", numeric: true });
 function documentKey(document) {
-  const target = document.target;
-  return JSON.stringify([target.collection, target.doc_id]);
+  return JSON.stringify([document.collection, document.doc_id]);
 }
 
 /** Project directed pairs from the saved aggregate; incoming mirrors add no rows.
- * Keep complete document summaries so future icon prefixes can use owned metadata.
+ * Collection and immutable document ID own identity independently of display titles.
  */
 export function readWorkspaceLinksRows(payload) {
-  if (!payload || payload.schema_version !== 2 || Object.prototype.hasOwnProperty.call(payload, "scope")
+  if (!payload || payload.schema_version !== 4 || Object.prototype.hasOwnProperty.call(payload, "scope")
     || Object.prototype.hasOwnProperty.call(payload, "stage") || !Array.isArray(payload.documents)) {
     throw new Error("Unsupported workspace Links data.");
   }
   const rows = [];
   const sources = new Set();
   payload.documents.forEach(function (record) {
-    if (!record || record.schema_version !== 2 || !Array.isArray(record.outgoing)
+    if (!record || record.schema_version !== 4 || !Array.isArray(record.outgoing)
       || !Array.isArray(record.incoming)) throw new Error("Invalid document Links record.");
     const from = docsViewerLinksDocumentSummary(record.self);
     const sourceKey = documentKey(from);
@@ -28,7 +27,7 @@ export function readWorkspaceLinksRows(payload) {
     sources.add(sourceKey);
     const targets = new Set();
     record.outgoing.forEach(function (entry) {
-      const to = docsViewerLinksDocumentSummary(entry && entry.document);
+      const to = docsViewerLinksDocumentSummary(entry);
       const targetKey = documentKey(to);
       if (targets.has(targetKey)) throw new Error("Workspace Links contains a duplicate directed pair.");
       targets.add(targetKey);
@@ -54,11 +53,11 @@ export function sortWorkspaceLinksRows(rows, key = "from", direction = "asc") {
   });
 }
 
-function documentCell(documentRef, summary) {
+function documentCell(documentRef, summary, config) {
   const cell = documentRef.createElement("td");
   const link = documentRef.createElement("a");
   link.className = "docsViewerReport__cellLink docsViewerReport__title";
-  link.href = summary.href;
+  link.href = docsViewerLinksDocumentHref(summary, config);
   // A later shared icon policy can prefix the title without changing its text/key.
   const title = documentRef.createElement("span");
   title.textContent = summary.title;
@@ -134,7 +133,7 @@ export function mountWorkspaceLinksReport(context) {
     body.replaceChildren();
     sortWorkspaceLinksRows(rows, sortKey, sortDir).forEach(function (row) {
       const tr = documentRef.createElement("tr");
-      tr.append(documentCell(documentRef, row.from), documentCell(documentRef, row.to));
+      tr.append(documentCell(documentRef, row.from, context.workspaceConfig), documentCell(documentRef, row.to, context.workspaceConfig));
       body.appendChild(tr);
     });
     table.hidden = rows.length === 0;

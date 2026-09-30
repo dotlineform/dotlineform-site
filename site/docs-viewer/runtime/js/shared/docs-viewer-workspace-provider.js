@@ -3,6 +3,7 @@ import {
   validateCatalogueSeriesGalleriesIndex, catalogueGalleryMediaPresentation
 } from "./docs-viewer-catalogue-media.js";
 import { readPublicCatalogueMediaConfig, validateCatalogueMediaPolicy } from "./docs-viewer-catalogue-media-policy.js";
+import { docsViewerLinksDocumentHref } from "./docs-viewer-links-presentation.js";
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -55,6 +56,7 @@ export function createDocsViewerWorkspaceProvider(options) {
   }
 
   var provider = {
+    documentHref: function (target) { return docsViewerLinksDocumentHref(target, collectionConfig()); },
     canReadLinks: canReadLinks,
     readLinks: readLinks,
     readDocument: readDocument,

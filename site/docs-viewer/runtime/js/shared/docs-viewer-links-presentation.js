@@ -1,7 +1,10 @@
+import { buildViewerUrl } from "./docs-viewer-router.js";
+
 function identity(value) {
   if (!value
     || Object.keys(value).sort().join(",") !== "collection,doc_id"
     || typeof value.collection !== "string" || !/^(?:[a-z][a-z0-9-]*)?$/.test(value.collection)
+    || typeof value.doc_id !== "string"
     || !(value.collection === "catalogue" ? /^[0-9]{5}$/ : /^d-\d{8}-\d{6}-[a-f0-9]{6}$/).test(value.doc_id)) {
     throw new Error("Links requires an exact document identity.");
   }
@@ -12,58 +15,67 @@ function sameTarget(left, right) {
   return left.collection === right.collection && left.doc_id === right.doc_id;
 }
 
-/** Validate a prepared document summary and its exact location.
- * Preserve collection and Subject metadata for consumers' document presentation.
- */
+/** Validate the flat identity and title shared by all document summaries. */
 export function docsViewerLinksDocumentSummary(value) {
-  var target = identity(value && value.target);
+  if (!value || Object.keys(value).sort().join(",") !== "collection,doc_id,title") {
+    throw new Error("Links requires a flat document summary.");
+  }
+  var target = identity({ collection: value.collection, doc_id: value.doc_id });
   if (typeof value.title !== "string" || !value.title.trim()) throw new Error("Links document title is missing.");
-  var href = value.href;
-  if (typeof href !== "string" || !href.startsWith("/") || href.startsWith("//") || /[\\\s]/.test(href)) {
-    throw new Error("Links document navigation is invalid.");
+  return { ...target, title: value.title };
+}
+
+/** Resolve a link from the reader's configured route and exact collection host. */
+export function docsViewerLinksDocumentHref(value, config) {
+  var target = identity({ collection: value && value.collection, doc_id: value && value.doc_id });
+  if (!config || typeof config.viewerBaseUrl !== "string"
+    || !config.viewerBaseUrl.startsWith("/") || config.viewerBaseUrl.startsWith("//")
+    || /[\\\s]/.test(config.viewerBaseUrl)) {
+    throw new Error("Links requires the configured viewer route.");
   }
-  var url = new URL(href, "https://docs.invalid");
-  var params = url.searchParams;
-  if (params.has("scope")
-    || (target.collection
-      ? !params.get("doc") || params.get("subdoc") !== target.doc_id
-      : params.get("doc") !== target.doc_id || params.has("subdoc"))) {
-    throw new Error("Links navigation does not match its document identity.");
+  var base = new URL(config.viewerBaseUrl, "https://docs.invalid");
+  if (base.searchParams.has("scope") || base.searchParams.has("stage")) {
+    throw new Error("Links viewer route contains retired context.");
   }
-  if (params.has("stage")) throw new Error("Links contains a retired stage URL.");
-  return {
-    target: target, title: value.title, href: url.pathname + url.search + url.hash,
-    subject: value.subject || null
-  };
+  var docId = target.doc_id;
+  if (target.collection) {
+    var owners = (config.collections || []).filter(function (owner) { return owner.collection === target.collection; });
+    if (owners.length !== 1 || !/^d-\d{8}-\d{6}-[a-f0-9]{6}$/.test(owners[0].reportHostDocId)) {
+      throw new Error("Links requires an exact configured collection report host.");
+    }
+    docId = owners[0].reportHostDocId;
+  }
+  return buildViewerUrl({
+    viewerBaseUrl: config.viewerBaseUrl, origin: "https://docs.invalid", docId: docId,
+    reportParams: target.collection ? { subdoc: target.doc_id } : {}
+  });
 }
 
 function category(document) {
-  if (document.target.collection === "concepts") return "Concepts";
-  if (document.target.collection === "catalogue") return "Works";
-  if (document.subject && document.subject.kind === "work") return "Works";
-  if (!document.target.collection
-    || (document.target.collection === "works")) return "References";
+  if (document.collection === "concepts") return "Concepts";
+  if (document.collection === "works" || document.collection === "catalogue") return "Works";
+  if (!document.collection) return "References";
   return "";
 }
 
-/** Validate one complete version-2 response and project shallow, title-sorted sections.
+/** Validate one complete version-4 response and project shallow, title-sorted sections.
  * Combine both directions by exact identity; keep the supplied directional data unchanged.
  */
 export function docsViewerLinksPresentation(payload, target) {
   var expected = identity(target);
-  if (!payload || payload.schema_version !== 2 || !Array.isArray(payload.outgoing) || !Array.isArray(payload.incoming)) {
-    throw new Error("Unsupported Links data. Expected schema version 2.");
+  if (!payload || payload.schema_version !== 4 || !Array.isArray(payload.outgoing) || !Array.isArray(payload.incoming)) {
+    throw new Error("Unsupported Links data. Expected schema version 4.");
   }
   var self = docsViewerLinksDocumentSummary(payload.self);
-  if (!sameTarget(self.target, expected)) throw new Error("Links data does not match the displayed document.");
+  if (!sameTarget(self, expected)) throw new Error("Links data does not match the displayed document.");
   var sections = new Map(["Concepts", "Works", "References"].map(function (label) { return [label, []]; }));
   var documents = new Map();
   ["outgoing", "incoming"].forEach(function (direction) {
     var seen = new Set();
     payload[direction].forEach(function (entry) {
-      var document = docsViewerLinksDocumentSummary(entry && entry.document);
-      var key = JSON.stringify(document.target);
-      if (seen.has(key) || !Array.isArray(entry.occurrences) || !entry.occurrences.length) {
+      var document = docsViewerLinksDocumentSummary(entry);
+      var key = JSON.stringify([document.collection, document.doc_id]);
+      if (seen.has(key)) {
         throw new Error("Links contains an invalid counterpart entry.");
       }
       seen.add(key);
@@ -79,7 +91,7 @@ export function docsViewerLinksPresentation(payload, target) {
     sections: Array.from(sections, function ([label, entries]) {
       entries.sort(function (a, b) {
         return a.document.title.localeCompare(b.document.title, "en", { sensitivity: "base" })
-          || JSON.stringify(a.document.target).localeCompare(JSON.stringify(b.document.target));
+          || JSON.stringify([a.document.collection, a.document.doc_id]).localeCompare(JSON.stringify([b.document.collection, b.document.doc_id]));
       });
       return { label: label, entries: entries };
     }).filter(function (section) { return section.entries.length; })

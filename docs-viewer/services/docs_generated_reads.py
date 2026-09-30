@@ -98,7 +98,9 @@ def read_generated_doc_links(
     payload = read_generated_json(path, "generated document Links")
     expected = {"collection": collection, "doc_id": doc_id}
     summary = payload.get("self") if isinstance(payload, dict) else None
-    if not isinstance(summary, dict) or summary.get("target") != expected:
+    if (payload.get("schema_version") != 4 or not isinstance(summary, dict)
+            or set(summary) != {"collection", "doc_id", "title"}
+            or {name: summary[name] for name in expected} != expected):
         raise ValueError("Links data does not match the requested document")
     return payload
 
@@ -111,7 +113,7 @@ def read_generated_workspace_links(repo_root: Path) -> Dict[str, Any]:
         raise ValueError("Workspace Links data must remain in its configured directory")
     payload = read_generated_json(path, "generated workspace Links")
     if (
-        not isinstance(payload, dict) or payload.get("schema_version") != 2
+        not isinstance(payload, dict) or payload.get("schema_version") != 4
         or "scope" in payload or "stage" in payload
         or not isinstance(payload.get("documents"), list)
     ):
