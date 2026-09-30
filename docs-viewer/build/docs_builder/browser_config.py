@@ -60,7 +60,7 @@ def browser_collection_records(repo_root: Path, config: DocsStageConfig, *, publ
             "manifest_url": f"{base}/manifest.json" if published else f"{base}/manage-manifest.json",
             "by_id_url_base": f"{base}/by-id",
         }
-        if not published:
+        if not published or child.collection == "catalogue":
             record["report_host_doc_id"] = child.report_host_doc_id
         customisation = browser_collection_customisation_payload(child.collection_customisation, published=published)
         if customisation is not None:
@@ -73,11 +73,16 @@ def browser_workspace_record(repo_root: Path, config: DocsStageConfig, *, public
     if published and config.public_projection is None:
         raise ValueError("public reader settings require Preview configuration")
     media = config.public_projection.media if published else config.media.types
+    image_prefix = media["img"].served_path_prefix
+    if not image_prefix.endswith("/workspace/img"):
+        raise ValueError("Docs image media path must end in workspace/img")
+    media_root = image_prefix.removesuffix("workspace/img")
+    if any(item.served_path_prefix != f"{media_root}workspace/{kind}" for kind, item in media.items()):
+        raise ValueError("Docs media types must share one served root")
     record = {
         "viewer_base_url": public_viewer_base_url if published else "/docs/",
         "default_doc_id": config.default_doc_id,
-        "media": {kind: {"reference_prefix": item.reference_prefix.as_posix(), "served_path_prefix": item.served_path_prefix}
-                  for kind, item in sorted(media.items())},
+        "media_root": media_root,
         "index_tree_url": browser_docs_index_tree_url(config, published=published),
         "recent_url": browser_docs_recent_url(config, published=published),
         "selected_url": f"{public_document_base(config)}/selected.json" if published else "/docs/selected",

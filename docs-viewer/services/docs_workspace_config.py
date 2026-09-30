@@ -395,11 +395,13 @@ def _public_projection(raw: Any) -> DocsPublicProjectionConfig:
         field = f"public_projection.media.{media_type}"
         record = _object(raw_record, field=field, required={"location", "served_path_prefix"})
         location = _location(record["location"], field=f"{field}.location", providers={REPOSITORY_PROVIDER, R2_PROVIDER})
-        if location.provider == REPOSITORY_PROVIDER and location.path != documents.location.path / "media" / media_type:
+        if location.provider == REPOSITORY_PROVIDER and location.path != documents.location.path / "media/workspace" / media_type:
             raise ValueError(f"{field}.location must derive from the public documents destination")
+        if location.provider == R2_PROVIDER and location.path.parts[-3:] != ("media", "workspace", media_type):
+            raise ValueError(f"{field}.location must end with media/workspace/{media_type}")
         prefix = _served_prefix(record["served_path_prefix"], field=f"{field}.served_path_prefix")
-        if not prefix.endswith(f"/media/{media_type}"):
-            raise ValueError(f"{field}.served_path_prefix must end with /media/{media_type}")
+        if not prefix.endswith(f"/media/workspace/{media_type}"):
+            raise ValueError(f"{field}.served_path_prefix must end with /media/workspace/{media_type}")
         media[media_type] = DocsPublicMediaConfig(media_type, MEDIA_REFERENCE_ROOT / media_type, location, prefix)
     return DocsPublicProjectionConfig(documents, search, media)
 
@@ -481,12 +483,11 @@ def _collections(raw: Any, *, workspace_root: ArtifactLocation, stage: str,
         if projection is not None:
             public_media = {}
             for media_type, media in projection.media.items():
-                # Public object addresses stay stable across the local directory rename.
-                suffix = Path("sub-scopes") / child / "media" / media_type
+                suffix = Path("collections") / child / media_type
                 public_media[media_type] = DocsPublicMediaConfig(
                     media_type, MEDIA_REFERENCE_ROOT / "collections" / child / media_type,
                     ArtifactLocation(media.location.provider, media.location.path.parent.parent / suffix),
-                    media.served_path_prefix.removesuffix(f"/media/{media_type}") + f"/{suffix.as_posix()}",
+                    media.served_path_prefix.removesuffix(f"/workspace/{media_type}") + f"/{suffix.as_posix()}",
                 )
             child_projection = DocsPublicProjectionConfig(
                 DocsArtifactConfig(location_child(projection.documents.location, Path(child))), None, public_media,

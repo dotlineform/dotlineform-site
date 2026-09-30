@@ -30,9 +30,9 @@ from docs_document_subjects import (
     normalize_authoring_subject,
     project_reader_subject,
     subject_projection_generation,
-    subject_key_is_canonical,
 )
 from docs_document_identity import is_doc_timestamp
+from docs_document_identity import is_document_id
 from docs_selected_documents import read_selected, refresh_selected_documents
 
 
@@ -80,24 +80,20 @@ class CollectionDocsBuilder(DocsDataBuilder):
         return f"{url}#{anchor}" if anchor else url
 
     def by_id_metadata_entry(self, doc: DocRecord, docs: Sequence[DocumentIdentity]) -> dict[str, Any]:
-        entry = self.metadata_entry(doc, docs)
+        entry = super().by_id_metadata_entry(doc, docs)
         entry.pop("ui_status", None)
-        if doc.report is not None:
-            entry["report"] = dict(doc.report.as_payload())
         return entry
 
     def manifest_payload(self, ordered_docs: list[DocRecord]) -> dict[str, Any]:
-        """Project public list data; Catalogue rows always carry an exact Work ID."""
+        """Project list data with Catalogue Work identity in doc_id alone."""
         rows: list[dict[str, Any]] = []
         for doc in ordered_docs:
             row: dict[str, Any] = {"doc_id": doc.doc_id, "title": doc.title}
-            subject = project_reader_subject(doc.front_matter)
             if self.collection_id == "catalogue":
-                if subject is None or subject["kind"] != "work":
-                    raise ValueError(f"Catalogue document {doc.doc_id} requires one valid work_id")
-                row["work_id"] = subject["key"]
+                if not is_document_id(doc.doc_id, collection="catalogue"):
+                    raise ValueError(f"Catalogue document {doc.doc_id} requires one exact Work ID")
             else:
-                row["subject"] = subject
+                row["subject"] = project_reader_subject(doc.front_matter)
             if self.collection_id in {"catalogue", "works"}:
                 if not is_doc_timestamp(doc.last_updated):
                     raise ValueError(f"{self.collection_id} document {doc.doc_id} requires a valid last_updated timestamp")
@@ -181,11 +177,13 @@ class CollectionDocsBuilder(DocsDataBuilder):
         self,
         ordered_docs: list[DocRecord],
     ) -> dict[str, dict[str, Any]] | None:
+        if self.collection_id == "catalogue":
+            return None
         folder_supported = self.folder_subject_supported()
         configured_fields = collection_customisation_authoring_subject_fields(
             self.collection_config.collection_customisation
         )
-        if self.collection_id not in {"catalogue", "works"} and not configured_fields and not any(
+        if self.collection_id != "works" and not configured_fields and not any(
             any(field_name in doc.front_matter for field_name in AUTHORING_SUBJECT_FIELDS)
             for doc in ordered_docs
         ):
@@ -200,8 +198,8 @@ class CollectionDocsBuilder(DocsDataBuilder):
 
     def saved_collection_metadata(self) -> tuple[dict[str, Any], dict[str, Any]]:
         """Load the prior list metadata required for a targeted update."""
-        manifest = read_collection_manifest(self.output_dir / "manifest.json")
-        manage_manifest = read_collection_manifest(self.output_dir / "manage-manifest.json")
+        manifest = read_collection_manifest(self.output_dir / "manifest.json", collection=self.collection_id)
+        manage_manifest = read_collection_manifest(self.output_dir / "manage-manifest.json", collection=self.collection_id)
         if self.collection_id in {"catalogue", "works"}:
             for row in manifest["docs"]:
                 if not isinstance(row.get("last_updated"), str) or not is_doc_timestamp(row["last_updated"]):
@@ -209,11 +207,10 @@ class CollectionDocsBuilder(DocsDataBuilder):
         if self.collection_id == "catalogue":
             for row in manifest["docs"]:
                 if (
-                    "subject" in row
-                    or not isinstance(row.get("work_id"), str)
-                    or not subject_key_is_canonical("work", row["work_id"])
+                    "subject" in row or "work_id" in row
+                    or not is_document_id(row["doc_id"], collection="catalogue")
                 ):
-                    raise ValueError("Catalogue manifest requires work_id and last_updated; run a complete Catalogue Build first")
+                    raise ValueError("Catalogue manifest requires Work IDs as doc_id; run a complete Catalogue Build first")
         if {row["doc_id"] for row in manifest["docs"]} != {row["doc_id"] for row in manage_manifest["docs"]}:
             raise ValueError("Collection manifests disagree on document membership; run a complete Build first")
         if not (self.semantic_tokens_dir / "index.json").is_file():

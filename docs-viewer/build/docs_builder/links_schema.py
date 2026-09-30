@@ -3,7 +3,7 @@
 from dataclasses import asdict
 from typing import Any
 
-from docs_document_identity import is_immutable_doc_id
+from docs_document_identity import is_document_id
 from .links_model import DocumentLinks, DocumentSummary, DocumentTarget, Occurrence, Relationship
 
 
@@ -37,7 +37,7 @@ def read_relationship_payload(payload: Any, target: DocumentTarget) -> DocumentL
         if not isinstance(identity, dict) or set(identity) != {"collection", "doc_id"}:
             raise ValueError("Links requires an exact document target")
         if (not all(isinstance(item, str) for item in identity.values())
-                or not is_immutable_doc_id(identity["doc_id"])):
+                or not is_document_id(identity["doc_id"], collection=identity["collection"])):
             raise ValueError("Links document identity does not match Working")
         if not isinstance(value["title"], str) or not isinstance(value["href"], str) or not isinstance(value["subject"], dict):
             raise ValueError("Links document summary is invalid")

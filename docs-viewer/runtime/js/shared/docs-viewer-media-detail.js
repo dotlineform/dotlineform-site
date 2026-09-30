@@ -6,6 +6,7 @@ import {
 import { catalogueMediaTargetWorkId, readCatalogueWorkMediaPresentation } from "./docs-viewer-catalogue-media.js";
 import { mountDocsViewerResponsiveImage } from "./docs-viewer-responsive-image.js";
 import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
+import { buildViewerUrl } from "./docs-viewer-router.js";
 import {
   DOCS_VIEWER_MEDIA_GALLERY_LAYOUT,
   docsViewerMediaGalleryPage,
@@ -288,6 +289,7 @@ export function createDocsViewerMediaDetailAdapter() {
       nextDynamicRecord: 0,
       mediaRequestGeneration: 0,
       collectionProvider: context.collectionProvider,
+      viewerConfig: context.viewerConfig,
       workReads: new Map(),
       referenceCleanups: [],
       requestContentDetail: typeof context.requestContentDetail === "function"
@@ -586,7 +588,22 @@ export function createDocsViewerMediaDetailAdapter() {
       caption.appendChild(titleElement(work.label));
       var catalogueNumber = documentRef.createElement("p");
       catalogueNumber.className = "docsViewer__mediaDetailCatalogueNumber";
-      catalogueNumber.textContent = "cat. " + work.target.id;
+      var viewerConfig = state.viewerConfig || {};
+      var catalogue = viewerConfig.collectionsById && viewerConfig.collectionsById.get("catalogue");
+      if (!catalogue || !/^d-\d{8}-\d{6}-[0-9a-f]{6}$/.test(catalogue.reportHostDocId)
+        || !viewerConfig.viewerBaseUrl) throw new Error("Catalogue document host is not configured.");
+      var catalogueLink = documentRef.createElement("a");
+      catalogueLink.href = buildViewerUrl({
+        viewerBaseUrl: viewerConfig.viewerBaseUrl,
+        origin: new URL(documentRef.baseURI).origin,
+        docId: catalogue.reportHostDocId,
+        reportParams: { subdoc: work.target.id }
+      });
+      catalogueLink.target = "_blank";
+      catalogueLink.rel = "noopener noreferrer";
+      catalogueLink.setAttribute("aria-label", "Open Catalogue document " + work.target.id + " in a new tab");
+      catalogueLink.textContent = "cat. " + work.target.id;
+      catalogueNumber.appendChild(catalogueLink);
       caption.appendChild(catalogueNumber);
       var groups = work.galleries.slice();
       if (supplied.gallery && !groups.some(function (entry) { return sameMediaTarget(entry.target, supplied.gallery.target); })) {

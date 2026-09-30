@@ -20,7 +20,7 @@ from .links_model import DocumentLinks, DocumentSummary, DocumentTarget, Occurre
 from .links_schema import read_relationship_payload, relationship_payload
 from .semantic_tokens import replace_semantic_tokens
 from .source import DocRecord
-from docs_document_identity import is_immutable_doc_id
+from docs_document_identity import is_document_id, is_immutable_doc_id
 from docs_document_location import canonical_document_viewer_url
 from docs_document_subjects import normalize_authoring_subject
 from docs_rendered_links import collect_anchors, parse_docs_target, resolve_href
@@ -103,7 +103,7 @@ class _DocumentRefresh:
         return DocumentTarget(self.collection, doc_id)
 
     def validate_target(self, target: DocumentTarget) -> None:
-        if target.collection not in self.owners or not is_immutable_doc_id(target.doc_id):
+        if target.collection not in self.owners or not is_document_id(target.doc_id, collection=target.collection):
             raise ValueError("Links requires an exact configured document identity")
 
     def excluded(self, target: DocumentTarget) -> bool:
@@ -139,7 +139,7 @@ class _DocumentRefresh:
                 if collection == self.collection:
                     summary = self.summary(target, doc)
                 else:
-                    href = canonical_document_viewer_url(host_id, subdoc_id=doc.doc_id)
+                    href = canonical_document_viewer_url(host_id, subdoc_id=doc.doc_id, subdoc_collection=collection)
                     summary = DocumentSummary(target, doc.title, href, normalize_authoring_subject(doc.front_matter, folder_supported=True))
                 self.records[target] = DocumentLinks(summary)
                 self.original[target] = None
@@ -170,12 +170,12 @@ class _DocumentRefresh:
         if resolved.get("kind") != "viewer":
             return None
         doc_id, child = resolved["doc_id"], resolved.get("subdoc", "")
-        if not is_immutable_doc_id(doc_id) or (child and not is_immutable_doc_id(child)):
+        if not is_immutable_doc_id(doc_id):
             return None
         collection = ""
         if child:
             collection = self.collection_by_host.get(doc_id, "")
-            if not collection:
+            if not collection or not is_document_id(child, collection=collection):
                 return None
         target = DocumentTarget(collection, child or doc_id)
         return target if self.payload(target) is not None else None
@@ -184,7 +184,7 @@ class _DocumentRefresh:
         resolved = parse_docs_target(resolve_href(doc.viewer_url, "/"), viewer_routes=self.routes)
         if not resolved or self.viewer_target(resolved) != target:
             raise ValueError("Links current document has no exact configured viewer location")
-        href = canonical_document_viewer_url(resolved["doc_id"], subdoc_id=resolved.get("subdoc", ""))
+        href = canonical_document_viewer_url(resolved["doc_id"], subdoc_id=resolved.get("subdoc", ""), subdoc_collection=target.collection)
         return DocumentSummary(target, doc.title, href, normalize_authoring_subject(doc.front_matter, folder_supported=True))
 
     def read(self, target: DocumentTarget, *, deleted: bool = False) -> DocumentLinks | None:
@@ -260,7 +260,7 @@ class _DocumentRefresh:
                             source = _safe_path(root, source.name)
                             metadata = parse_source(source)[0]
                             doc_id = metadata.get("doc_id")
-                            if isinstance(doc_id, str) and is_immutable_doc_id(doc_id):
+                            if isinstance(doc_id, str) and is_document_id(doc_id, collection=collection):
                                 candidate = DocumentTarget(collection, doc_id)
                                 if self.payload(candidate) is not None:
                                     neighbour = candidate

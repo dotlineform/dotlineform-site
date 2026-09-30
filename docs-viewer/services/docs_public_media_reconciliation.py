@@ -35,7 +35,7 @@ HTML_START_TAG_PATTERN = re.compile(
     re.DOTALL,
 )
 MEDIA_URL_ATTRIBUTE_PATTERN = re.compile(
-    r"(?<![\w:-])(?:src|href)\s*=\s*"
+    r"(?<![\w:-])(?:src|href|data-docs-viewer-diagram-(?:light|dark)-src)\s*=\s*"
     r"(?:(?P<quote>[\"'])(?P<quoted_value>.*?)(?P=quote)|(?P<unquoted_value>[^\s\"'=<>`]+))",
     re.IGNORECASE,
 )
@@ -81,10 +81,7 @@ def referenced_public_media(
     projection = config.public_projection
     if projection is None:
         return {}
-    prefixes = {
-        media_type: media.served_path_prefix.rstrip("/")
-        for media_type, (_collection, media) in public_media_bindings(config).items()
-    }
+    bindings = public_media_bindings(config)
     references: dict[tuple[str, str], set[str]] = {}
     for collection, files in payload_collections:
         for relative_path, source_bytes in files.items():
@@ -105,12 +102,20 @@ def referenced_public_media(
                         if attribute.group("quote")
                         else attribute.group("unquoted_value")
                     )
-                    for media_type, prefix in prefixes.items():
+                    owner_prefix = f"collections/{collection}" if collection else "workspace"
+                    for media_type in ("img", "svg", "files", "html"):
+                        key = f"{collection}/{media_type}" if collection else media_type
+                        if key not in bindings:
+                            continue
+                        prefix = f"docs-media:{owner_prefix}/{media_type}"
                         identity = _media_identity_from_url(value, prefix)
                         if not identity:
                             continue
-                        references.setdefault((media_type, identity), set()).add(reference_label)
+                        references.setdefault((key, identity), set()).add(reference_label)
                         break
+                    else:
+                        if html.unescape(str(value or "")).startswith("docs-media:"):
+                            raise ValueError(f"Unconfigured Docs media identity in {reference_label}: {value}")
     return {
         key: tuple(sorted(labels))
         for key, labels in sorted(references.items())

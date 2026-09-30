@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any
 import json
 
-from docs_document_identity import is_immutable_doc_id
+from docs_document_identity import is_document_id
 from docs_workspace_config import DocsCollectionConfig, DocsStageConfig, generated_documents_path, resolve_workspace_path
 
 
@@ -24,11 +24,11 @@ def read_discovery_metadata(path: Path) -> dict[str, Any]:
     return payload
 
 
-def _validate_row(row: Any, *, field: str, seen_ids: set[str]) -> str:
+def _validate_row(row: Any, *, field: str, seen_ids: set[str], collection: str = "") -> str:
     if not isinstance(row, dict):
         raise ValueError(f"{field} must be an object")
     doc_id = row.get("doc_id")
-    if not isinstance(doc_id, str) or not is_immutable_doc_id(doc_id) or doc_id != doc_id.strip():
+    if not isinstance(doc_id, str) or not is_document_id(doc_id, collection=collection) or doc_id != doc_id.strip():
         raise ValueError(f"{field}.doc_id must use exact immutable document identity")
     if doc_id in seen_ids:
         raise ValueError(f"{field} contains duplicate doc_id {doc_id!r}")
@@ -78,7 +78,7 @@ def select_collection_documents(
         seen_ids: set[str] = set()
         for index, row in enumerate(manifest["docs"]):
             field = f"{path}.docs[{index}]"
-            doc_id = _validate_row(row, field=field, seen_ids=seen_ids)
+            doc_id = _validate_row(row, field=field, seen_ids=seen_ids, collection=collection.collection)
             if row["draft"]:
                 continue
             if not isinstance(row.get("last_updated"), str):

@@ -33,7 +33,6 @@ from docs_workspace_config import (
     select_workspace_stage,
     public_documents_path,
     public_search_path,
-    public_media_bindings,
 )
 from docs_preview_snapshot import CompletedPreview, COPIED_WORKING_PAYLOAD_PATHS, _validate_prepared_index
 from docs_publication_payloads import project_public_view
@@ -45,15 +44,6 @@ IGNORED_FILENAMES = frozenset({".DS_Store", ".gitkeep"})
 LOCAL_FOLDER_ANCHOR_PATTERN = re.compile(
     r"<a\b(?P<attrs>(?:[^>\"']|\"[^\"]*\"|'[^']*')*)>(?P<label>.*?)</a\s*>",
     re.IGNORECASE | re.DOTALL,
-)
-HTML_START_TAG_PATTERN = re.compile(
-    r"<(?P<body>[A-Za-z][A-Za-z0-9:-]*(?:[^>\"']|\"[^\"]*\"|'[^']*')*)>",
-    re.DOTALL,
-)
-MEDIA_URL_ATTRIBUTE_PATTERN = re.compile(
-    r"(?P<prefix>(?<![\w:-])(?:src|href|data-docs-viewer-diagram-(?:light|dark)-src)\s*=\s*)"
-    r"(?:(?P<quote>[\"'])(?P<quoted_value>.*?)(?P=quote)|(?P<unquoted_value>[^\s\"'=<>`]+))",
-    re.IGNORECASE,
 )
 
 
@@ -280,37 +270,6 @@ def project_public_local_folder_links(content_html: str) -> str:
     return LOCAL_FOLDER_ANCHOR_PATTERN.sub(replace, content_html)
 
 
-def public_media_url_projection(config: DocsStageConfig) -> dict[str, str]:
-    projection = config.public_projection
-    if projection is None:
-        return {}
-    urls = {}
-    for collection, media in public_media_bindings(config).values():
-        urls[collection.media.types[media.media_type].served_path_prefix.rstrip("/")] = media.served_path_prefix.rstrip("/")
-    return urls
-
-
-def project_public_media_urls(content_html: str, projection: Mapping[str, str]) -> str:
-    def replace_attribute(match: re.Match[str]) -> str:
-        quote = match.group("quote") or ""
-        value = match.group("quoted_value") if quote else match.group("unquoted_value")
-        projected = value
-        for published_prefix, public_prefix in projection.items():
-            if value == published_prefix:
-                projected = public_prefix
-                break
-            if value.startswith(f"{published_prefix}/"):
-                projected = f"{public_prefix}/{value.removeprefix(f'{published_prefix}/')}"
-                break
-        return f"{match.group('prefix')}{quote}{projected}{quote}"
-
-    def replace_tag(match: re.Match[str]) -> str:
-        body = MEDIA_URL_ATTRIBUTE_PATTERN.sub(replace_attribute, match.group("body"))
-        return f"<{body}>"
-
-    return HTML_START_TAG_PATTERN.sub(replace_tag, content_html)
-
-
 def project_public_report_payload(payload: dict[str, Any]) -> None:
     report = payload.get("report")
     if report is None:
@@ -326,16 +285,12 @@ def project_document_payload(
     data: bytes,
     *,
     label: str,
-    media_projection: Mapping[str, str],
 ) -> bytes:
     payload = read_json_bytes(data, label)
     project_public_report_payload(payload)
     content_html = payload.get("content_html")
     if isinstance(content_html, str):
-        payload["content_html"] = project_public_media_urls(
-            project_public_local_folder_links(content_html),
-            media_projection,
-        )
+        payload["content_html"] = project_public_local_folder_links(content_html)
     if public_mermaid_payload_requires_projection(payload):
         raise RuntimeError(
             f"{label} requires a public Mermaid projection that is not present in the accepted Preview snapshot"
@@ -360,7 +315,6 @@ def accepted_document_collections(
         if path.suffix == ".json" and path not in COPIED_WORKING_PAYLOAD_PATHS else data
         for path, data in published_files.items() if not path.is_relative_to(catalogue_prefix)
     }
-    media_projection = public_media_url_projection(config)
     parent_files: dict[Path, bytes] = {}
     parent_doc_ids: set[str] = set()
     parent_prefix = collection_public_url_prefix(config)
@@ -391,7 +345,6 @@ def accepted_document_collections(
             projected = project_document_payload(
                 data,
                 label=f"accepted parent document {relative_path.stem}",
-                media_projection=media_projection,
             )
             parent_files[Path("by-id") / relative_path.name] = projected
             parent_doc_ids.add(relative_path.stem)
@@ -422,7 +375,6 @@ def accepted_document_collections(
                         f"accepted document {collection.collection}/"
                         f"{collection_relative.stem}"
                     ),
-                    media_projection=media_projection,
                 )
             else:
                 files[collection_relative] = data
@@ -516,9 +468,9 @@ def desired_repository_projection(
     desired[search_target] = search_index
 
     payload_collections: list[tuple[str, Mapping[Path, bytes]]] = [
-        ("documents", parent_files),
+        ("", parent_files),
         *[
-            (f"{collection}", files)
+            (collection, files)
             for collection, files in sorted(collection_files.items())
         ],
     ]

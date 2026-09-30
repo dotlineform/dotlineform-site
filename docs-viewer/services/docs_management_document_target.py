@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any, Mapping
 
 import docs_source_model as source_model
+from docs_document_identity import is_document_id
 from docs_workspace_config import (
     DocsStageConfig,
     DocsCollectionConfig,
@@ -85,14 +86,14 @@ def normalize_managed_document_target(target: Mapping[str, Any]) -> dict[str, st
     normalized = {
         "doc_id": required_target_text(target.get("doc_id"), field="doc_id"),
     }
-    if not source_model.is_immutable_doc_id(normalized["doc_id"]):
-        raise ValueError("doc_id must use immutable document identity")
     if "collection" in target:
         normalized["collection"] = required_target_text(
             target.get("collection"),
             field="collection",
             lowercase=True,
         )
+    if not is_document_id(normalized["doc_id"], collection=normalized.get("collection", "")):
+        raise ValueError("doc_id must use the exact identity for its collection")
     return normalized
 
 

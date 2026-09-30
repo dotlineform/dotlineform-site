@@ -7,24 +7,7 @@
   "workspace": {
     "viewer_base_url": "/docs/",
     "default_doc_id": "d-20260426-164043-e14f49",
-    "media": {
-      "files": {
-        "reference_prefix": "docs/files",
-        "served_path_prefix": "/docs/assets/media/workspace/files"
-      },
-      "html": {
-        "reference_prefix": "docs/html",
-        "served_path_prefix": "/docs/assets/media/workspace/html"
-      },
-      "img": {
-        "reference_prefix": "docs/img",
-        "served_path_prefix": "/docs/assets/media/workspace/img"
-      },
-      "svg": {
-        "reference_prefix": "docs/svg",
-        "served_path_prefix": "/docs/assets/media/workspace/svg"
-      }
-    },
+    "media_root": "/docs/assets/media/",
     "index_tree_url": "/docs/index-tree",
     "recent_url": "/docs/recent",
     "selected_url": "/docs/selected",

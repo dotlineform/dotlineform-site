@@ -19,6 +19,8 @@ export function mountDocsViewerPublicDocumentExtras(context) {
     appContext: settings.appContext,
     content: settings.content,
     doc: settings.doc,
+    mediaRoot: settings.mediaRoot,
+    viewerBaseUrl: settings.viewerBaseUrl,
     collectionProvider: settings.collectionProvider,
     managementContext: false,
     managementService: null,

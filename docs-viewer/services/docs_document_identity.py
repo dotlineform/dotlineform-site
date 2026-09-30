@@ -11,6 +11,7 @@ from typing import Any, Callable, Iterable
 
 DOC_TIMESTAMP_FORMAT = "%Y-%m-%d %H:%M:%S"
 IMMUTABLE_DOC_ID_PATTERN = re.compile(r"^d-\d{8}-\d{6}-[0-9a-f]{6}$")
+CATALOGUE_WORK_DOC_ID_PATTERN = re.compile(r"^[0-9]{5}$")
 
 
 def current_doc_timestamp() -> str:
@@ -27,6 +28,16 @@ def is_doc_timestamp(value: Any) -> bool:
 
 def is_immutable_doc_id(value: Any) -> bool:
     return bool(IMMUTABLE_DOC_ID_PATTERN.fullmatch(str(value or "").strip()))
+
+
+def is_document_id(value: Any, *, collection: str = "") -> bool:
+    """Accept Work IDs only for documents owned by the Catalogue collection."""
+    candidate = str(value or "")
+    return bool(
+        CATALOGUE_WORK_DOC_ID_PATTERN.fullmatch(candidate)
+        if collection == "catalogue"
+        else IMMUTABLE_DOC_ID_PATTERN.fullmatch(candidate)
+    )
 
 
 def doc_id_matches_added_date(doc_id: str, added_date: str) -> bool:
@@ -66,4 +77,5 @@ __all__ = [
     "doc_id_matches_added_date",
     "is_doc_timestamp",
     "is_immutable_doc_id",
+    "is_document_id",
 ]

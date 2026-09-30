@@ -534,12 +534,17 @@ class SemanticTokensMixin:
                 alt = work["title"].strip()
                 caption = alt if token.use_work_title_caption else ""
                 metadata = work_metadata_text(work, token.target_id) if token.include_work_metadata else ""
-            occurrences.append({
-                "source_doc_id": doc.doc_id,
-                "source_range": token.source_range, "raw": token.raw, "title": alt if token.presentation == "image" else token.title,
-                "family": token.family, "target_type": token.target_type, "target_id": token.target_id,
-                "href": "",
-            })
+            if not (
+                getattr(self, "collection_id", "") == "catalogue"
+                and token.target_type == "work"
+                and token.target_id == doc.doc_id
+            ):
+                occurrences.append({
+                    "source_doc_id": doc.doc_id,
+                    "source_range": token.source_range, "raw": token.raw, "title": alt if token.presentation == "image" else token.title,
+                    "family": token.family, "target_type": token.target_type, "target_id": token.target_id,
+                    "href": "",
+                })
             fragment = render_catalogue_media_reference(token, alt=alt, caption=caption, metadata=metadata)
             marker_id = uuid4().hex
             # Comments start HTML blocks at line beginnings; inline references must not.

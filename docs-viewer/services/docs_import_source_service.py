@@ -224,6 +224,8 @@ def handle_import_source(
     trusted_sources_allowed: bool,
 ) -> Dict[str, Any]:
     collection = destination.collection
+    if collection == "catalogue":
+        raise ValueError("Catalogue documents are owned by Work Regenerate")
     staged_filename = str(body.get("staged_filename") or "").strip()
     include_prompt_meta = bool(body.get("include_prompt_meta"))
     confirm_interactive_html_overwrite = bool(body.get("confirm_interactive_html_overwrite"))
@@ -586,6 +588,7 @@ def handle_import_source(
         destination_url,
         plan.doc_id,
         collection=bool(collection),
+        collection_id=collection,
     )
     response = {
         "ok": True,

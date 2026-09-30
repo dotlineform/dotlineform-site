@@ -2,7 +2,7 @@ function identity(value) {
   if (!value
     || Object.keys(value).sort().join(",") !== "collection,doc_id"
     || typeof value.collection !== "string" || !/^(?:[a-z][a-z0-9-]*)?$/.test(value.collection)
-    || !/^d-\d{8}-\d{6}-[a-f0-9]{6}$/.test(value.doc_id)) {
+    || !(value.collection === "catalogue" ? /^[0-9]{5}$/ : /^d-\d{8}-\d{6}-[a-f0-9]{6}$/).test(value.doc_id)) {
     throw new Error("Links requires an exact document identity.");
   }
   return {  collection: value.collection, doc_id: value.doc_id };
@@ -39,6 +39,7 @@ export function docsViewerLinksDocumentSummary(value) {
 
 function category(document) {
   if (document.target.collection === "concepts") return "Concepts";
+  if (document.target.collection === "catalogue") return "Works";
   if (document.subject && document.subject.state === "valid" && document.subject.kind === "work") return "Works";
   if (!document.target.collection
     || (document.target.collection === "works")) return "References";

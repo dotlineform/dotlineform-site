@@ -10,10 +10,10 @@ function compareText(left, right) {
 }
 
 function publicWorkId(record) {
-  if (Object.hasOwn(record, "subject")) {
-    throw new Error("Catalogue list data contains the retired subject field. Rebuild its manifest.");
+  if (Object.hasOwn(record, "subject") || Object.hasOwn(record, "work_id")) {
+    throw new Error("Catalogue list data contains redundant Work identity. Rebuild its manifest.");
   }
-  return record.work_id;
+  return record.doc_id;
 }
 
 /**
@@ -41,7 +41,8 @@ export function createCollectionBrowsingData(options) {
       documents.forEach((doc) => {
         const workId = catalogue ? workIdForDocument(doc.record) : "";
         const updated = options.updatedTimestamp(doc);
-        if (!/^d-\d{8}-\d{6}-[a-f0-9]{6}$/.test(doc.docId)
+        if (!(catalogue ? /^[0-9]{5}$/.test(doc.docId) : /^d-\d{8}-\d{6}-[a-f0-9]{6}$/.test(doc.docId))
+          || (catalogue && workId !== doc.docId)
           || !doc.title || next.has(doc.docId) || !Number.isFinite(updated)) {
           throw new Error(name + " list data requires distinct document IDs, titles and valid last_updated dates. Rebuild its manifest.");
         }

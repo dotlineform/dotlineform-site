@@ -44,30 +44,30 @@
       "img": {
         "location": {
           "provider": "r2",
-          "path": "docs/analysis/media/img"
+          "path": "docs/analysis/media/workspace/img"
         },
-        "served_path_prefix": "https://media.dotlineform.com/docs/analysis/media/img"
+        "served_path_prefix": "https://media.dotlineform.com/docs/analysis/media/workspace/img"
       },
       "svg": {
         "location": {
           "provider": "r2",
-          "path": "docs/analysis/media/svg"
+          "path": "docs/analysis/media/workspace/svg"
         },
-        "served_path_prefix": "https://media.dotlineform.com/docs/analysis/media/svg"
+        "served_path_prefix": "https://media.dotlineform.com/docs/analysis/media/workspace/svg"
       },
       "files": {
         "location": {
           "provider": "r2",
-          "path": "docs/analysis/media/files"
+          "path": "docs/analysis/media/workspace/files"
         },
-        "served_path_prefix": "https://media.dotlineform.com/docs/analysis/media/files"
+        "served_path_prefix": "https://media.dotlineform.com/docs/analysis/media/workspace/files"
       },
       "html": {
         "location": {
           "provider": "r2",
-          "path": "docs/analysis/media/html"
+          "path": "docs/analysis/media/workspace/html"
         },
-        "served_path_prefix": "https://media.dotlineform.com/docs/analysis/media/html"
+        "served_path_prefix": "https://media.dotlineform.com/docs/analysis/media/workspace/html"
       }
     }
   },

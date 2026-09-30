@@ -45,7 +45,7 @@ def prepare_stage_mermaid(repo_root: Path, config: DocsStageConfig) -> dict[str,
                 raise ValueError(f"Mermaid preparation output conflicts with authored media in {owner}/{PUBLIC_MERMAID_ASSET_PREFIX}")
         plan = plan_public_mermaid_projection(
             collection=owner, documents=((doc.doc_id, doc.body) for doc in docs),
-            public_url_prefix=media.served_path_prefix,
+            public_url_prefix="docs-media:" + media.served_path_prefix.removeprefix("/docs/assets/media/"),
         )
         if plan["failures"]:
             raise ValueError("Mermaid preparation failed: " + "; ".join(

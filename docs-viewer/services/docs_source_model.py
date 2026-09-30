@@ -23,6 +23,7 @@ from docs_document_identity import (
     doc_id_matches_added_date,
     is_doc_timestamp,
     is_immutable_doc_id,
+    is_document_id,
 )
 
 from docs_workspace_config import (
@@ -483,6 +484,11 @@ def validate_document_status_front_matter(
         raise ValueError(f"draft front matter requires a workflow stage: {source_name}")
     if "draft" not in front_matter or not isinstance(front_matter["draft"], bool):
         raise ValueError(f"draft front matter must be an explicit boolean in {source_name}")
+    if getattr(collection_config, "collection", "") == "catalogue":
+        if front_matter["draft"] is not False:
+            raise ValueError(f"Catalogue documents must be ready in {source_name}")
+        if "work_id" in front_matter:
+            raise ValueError(f"Catalogue Work identity must use doc_id in {source_name}")
     if "viewable" in front_matter:
         raise ValueError(
             f"legacy viewable front matter is not supported in {source_name}; "
@@ -552,8 +558,10 @@ def load_document_collection_docs_for_config(
         doc_id = str(front_matter.get("doc_id") or "").strip()
         if not doc_id:
             raise ValueError(f"missing required doc_id in {path.relative_to(root).as_posix()}")
-        if (not collection or filenames is not None) and doc_id != path.stem:
+        if doc_id != path.stem:
             raise ValueError(f"Selected source identity does not match its filename: {path.name}")
+        if not is_document_id(doc_id, collection=collection):
+            raise ValueError(f"Invalid document ID in {path.name}")
         title = str(front_matter.get("title") or humanize(doc_id or path.stem)).strip() or doc_id
         ui_status = normalize_ui_status(front_matter.get("ui_status"))
         parent_id = parent_ids[doc_id] if not collection else ""

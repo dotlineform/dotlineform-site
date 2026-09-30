@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260714-234030-434069
 title: Semantic Tokens Architecture
 added_date: "2026-07-14 23:40:30"
-last_updated: "2026-09-28 22:21:02"
+last_updated: "2026-09-30 11:33:27"
 summary: Describe explicit Catalogue tokens, the document-subject selection shortcut, source ownership, generated usage, and local/public resolution.
 parent_id: d-20260725-153656-516b61
 ---
@@ -70,6 +70,8 @@ The builder escapes authored labels, Work-derived text and presentation fields. 
 Each workspace stage owns one `generated/documents/semantic-tokens/index.json` covering ordinary documents and all configured collections. Rows retain exact `source_stage`, `source_collection` and `source_doc_id`, with an empty collection for ordinary documents. The dataset retains its stage. Raw tokens, source ranges, family/type/identity, occurrence titles and destinations remain intact; repeated occurrences stay separate. The report displays exact supported Work or Gallery identity.
 
 The existing `semantic_token_artifacts.py` owner combines occurrences collected during rendering with the saved index. Each sequential Save/Build replaces its built documents' occurrences and removes deleted members of that collection while preserving other documents and collections. Removing the last token removes that document's rows. Full main builds preserve child contributions, and child builds preserve main and sibling contributions. Index writing completes within the ordinary synchronous Build sequence. There are no child token indexes, per-document token stores, additional Markdown scans for token extraction or build-overlap mitigations.
+
+Catalogue documents use their five-digit Work ID as `doc_id`. A Catalogue token targeting that document's own Work is rendered normally but contributes no usage occurrence: the renderer compares the explicit token Work ID directly with the Catalogue document ID. Tokens targeting another Work or a Gallery still contribute occurrences, and ordinary documents and other collections keep their existing behavior. A complete Catalogue Build reconciles saved Catalogue occurrences after this identity cutover; it preserves other collections' rows and the generated Catalogue image bodies.
 
 Publication flags, draft state and Subjects do not filter generated usage. Source-field validation remains owned by the existing document model; usage does not make an otherwise unsupported front-matter field valid. Supported document Move rebuilds the target and source collections in order, retaining the new source identity and removing the old one.
 

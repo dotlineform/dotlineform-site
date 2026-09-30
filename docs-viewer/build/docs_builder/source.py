@@ -16,7 +16,7 @@ from .common import (
     plain_text_from_html,
     read_json,
 )
-from docs_document_identity import is_immutable_doc_id
+from docs_document_identity import is_document_id, is_immutable_doc_id
 from docs_index_order import read_index_order, tree_parent_ids
 from docs_report_source import ReportDescriptor, ReportSourceContractRequired
 from docs_source_model import (
@@ -153,7 +153,7 @@ class SourceLoadingMixin:
         else:
             paths = []
             for doc_id in sorted(set(doc_ids)):
-                if not is_immutable_doc_id(doc_id):
+                if not is_document_id(doc_id, collection=getattr(self, "collection_id", "")):
                     raise InvalidDocIdError(f"Invalid selected document ID: {doc_id}")
                 path = self.source_dir / f"{doc_id}.md"
                 if path.is_symlink():
@@ -178,7 +178,7 @@ class SourceLoadingMixin:
             doc_id = str(front_matter.get("doc_id") or "").strip()
             if not doc_id:
                 raise MissingDocIdError(f"Missing required doc_id in {relative_path}")
-            if (ordinary or doc_ids is not None) and doc_id != path.stem:
+            if doc_id != path.stem:
                 raise InvalidDocIdError(f"Selected source identity does not match its filename: {relative_path}")
             title = str(front_matter.get("title") or extract_title(body_markdown) or humanize(stem)).strip()
             parent_id = parent_ids[doc_id] if ordinary else ""
@@ -244,7 +244,7 @@ class SourceLoadingMixin:
 
     def validate_canonical_doc_ids(self, docs: list[DocRecord]) -> None:
         for doc in docs:
-            if not is_immutable_doc_id(doc.doc_id):
+            if not is_document_id(doc.doc_id, collection=getattr(self, "collection_id", "")):
                 raise InvalidDocIdError(
                     f"doc_id must use the immutable document ID format in {doc.source_path}"
                 )
@@ -342,6 +342,7 @@ class SourceLoadingMixin:
 
     def by_id_metadata_entry(self, doc: DocRecord, docs: Sequence[DocumentIdentity]) -> dict[str, Any]:
         entry = self.metadata_entry(doc, docs)
+        del entry["viewer_url"]
         if doc.report is not None:
             entry["report"] = dict(doc.report.as_payload())
         return entry

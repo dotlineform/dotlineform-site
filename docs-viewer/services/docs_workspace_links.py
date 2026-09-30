@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Any
 
 from docs_json_files import load_json_object, render_json, write_text_atomic
-from docs_document_identity import is_immutable_doc_id
+from docs_document_identity import is_document_id
 from docs_workspace_config import DocsStageConfig, generated_documents_path, resolve_workspace_path
 
 
@@ -34,7 +34,7 @@ def write_workspace_links(repo_root: Path, config: DocsStageConfig) -> dict[str,
         if (record.get("schema_version") != 2 or not isinstance(identity, dict)
                 or set(identity) != { "collection", "doc_id"}
                 or identity["doc_id"] != path.stem
-                or not is_immutable_doc_id(identity["doc_id"])
+                or not is_document_id(identity["doc_id"], collection=identity["collection"])
                 or identity["collection"] not in {"", *(child.collection for child in config.collections)}):
             raise ValueError(f"Prepared Links record {path.name} has invalid document identity")
         if not isinstance(record.get("incoming"), list) or not isinstance(record.get("outgoing"), list):

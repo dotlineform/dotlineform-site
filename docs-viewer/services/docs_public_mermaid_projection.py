@@ -12,7 +12,7 @@ from typing import Any, Iterable, Mapping
 from markdown_it import MarkdownIt
 
 from docs_artifact_locations import normalize_artifact_identity
-from docs_document_identity import is_immutable_doc_id
+from docs_document_identity import is_document_id
 from docs_mermaid_accessibility import mermaid_accessibility_metadata
 
 
@@ -26,6 +26,7 @@ SOURCE_DIGEST_PATTERN = re.compile(r"\Asha256:[0-9a-f]{64}\Z")
 
 @dataclass(frozen=True)
 class PublicMermaidFence:
+    collection: str
     doc_id: str
     fence_index: int
     source_line: int
@@ -36,7 +37,7 @@ class PublicMermaidFence:
 
     @property
     def projection_id(self) -> str:
-        return public_mermaid_projection_id(self.doc_id, self.fence_index)
+        return public_mermaid_projection_id(self.doc_id, self.fence_index, collection=self.collection)
 
 
 @dataclass(frozen=True)
@@ -48,11 +49,15 @@ class PublicMermaidFenceFailure:
     message: str
 
 
-def public_mermaid_projection_id(doc_id: str, fence_index: int) -> str:
+def _document_collection(owner: str) -> str:
+    return owner.partition("/")[2]
+
+
+def public_mermaid_projection_id(doc_id: str, fence_index: int, *, collection: str = "") -> str:
     """Return one stable identity for a Mermaid fence's document-local ordinal."""
 
     normalized_doc_id = str(doc_id or "").strip()
-    if not is_immutable_doc_id(normalized_doc_id):
+    if not is_document_id(normalized_doc_id, collection=collection):
         raise ValueError(f"public Mermaid projection requires an immutable doc_id: {normalized_doc_id!r}")
     if not isinstance(fence_index, int) or isinstance(fence_index, bool) or fence_index < 1:
         raise ValueError("public Mermaid fence_index must be a positive integer")
@@ -79,6 +84,8 @@ def _is_mermaid_fence(token: Any) -> bool:
 
 def inventory_public_mermaid_fences(
     documents: Iterable[tuple[str, str]],
+    *,
+    collection: str = "",
 ) -> tuple[tuple[PublicMermaidFence, ...], tuple[PublicMermaidFenceFailure, ...]]:
     """Inventory accessible Mermaid fences without changing canonical Markdown."""
 
@@ -86,7 +93,7 @@ def inventory_public_mermaid_fences(
     seen_doc_ids: set[str] = set()
     for raw_doc_id, raw_markdown in documents:
         doc_id = str(raw_doc_id or "").strip()
-        public_mermaid_projection_id(doc_id, 1)
+        public_mermaid_projection_id(doc_id, 1, collection=collection)
         if doc_id in seen_doc_ids:
             raise ValueError(f"duplicate document in public Mermaid projection inventory: {doc_id}")
         seen_doc_ids.add(doc_id)
@@ -102,7 +109,7 @@ def inventory_public_mermaid_fences(
                 continue
             fence_index += 1
             source_line = int(token.map[0]) + 1 if token.map else 1
-            projection_id = public_mermaid_projection_id(doc_id, fence_index)
+            projection_id = public_mermaid_projection_id(doc_id, fence_index, collection=collection)
             source_text = str(token.content or "")
             try:
                 accessibility = mermaid_accessibility_metadata(projection_id, source_text)
@@ -119,6 +126,7 @@ def inventory_public_mermaid_fences(
                 continue
             fences.append(
                 PublicMermaidFence(
+                    collection=collection,
                     doc_id=doc_id,
                     fence_index=fence_index,
                     source_line=source_line,
@@ -133,8 +141,8 @@ def inventory_public_mermaid_fences(
 
 def _public_url_prefix(value: str) -> str:
     prefix = str(value or "").strip().rstrip("/")
-    if not prefix.startswith("/") or "?" in prefix or "#" in prefix:
-        raise ValueError("public Mermaid projection URL prefix must be an absolute browser path")
+    if not prefix.startswith("docs-media:") or "?" in prefix or "#" in prefix:
+        raise ValueError("public Mermaid projection URL prefix must be a Docs media identity")
     return prefix
 
 
@@ -203,7 +211,7 @@ def _validated_previous_records(
             raise ValueError("public Mermaid projection manifest diagram must be an object")
         doc_id = str(raw_record.get("doc_id") or "").strip()
         fence_index = raw_record.get("fence_index")
-        expected_projection_id = public_mermaid_projection_id(doc_id, fence_index)
+        expected_projection_id = public_mermaid_projection_id(doc_id, fence_index, collection=_document_collection(collection))
         projection_id = str(raw_record.get("projection_id") or "").strip()
         if projection_id != expected_projection_id:
             raise ValueError("public Mermaid projection manifest has an invalid projection_id")
@@ -276,7 +284,7 @@ def plan_public_mermaid_projection(
     if not normalized_collection:
         raise ValueError("public Mermaid projection collection is required")
     url_prefix = _public_url_prefix(public_url_prefix)
-    fences, failures = inventory_public_mermaid_fences(documents)
+    fences, failures = inventory_public_mermaid_fences(documents, collection=_document_collection(normalized_collection))
     previous_records = _validated_previous_records(previous_manifest, collection=normalized_collection)
     previous_by_id = {record["projection_id"]: record for record in previous_records}
 

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260514-184303-7914e2
 title: Media And Asset Handling
 added_date: "2026-05-14 18:43:03"
-last_updated: "2026-09-27 11:52:05"
+last_updated: "2026-09-29 23:51:22"
 summary: Media intake, content interpretation, document representation, storage, link resolution, extension methods, and safety boundaries.
 parent_id: d-20260424-000000-50b63f
 
@@ -112,7 +112,7 @@ File-name activation posts the exact media target to `/docs/open-media-source`, 
 
 ## Link Resolution And Delivery
 
-The docs builder resolves `media` and `html-media` tokens in `docs_builder/rendering.py`. Working and Preview payloads use the same current shared asset URLs. Prepare Preview records selected asset identities; Publish projects public served URLs from that snapshot. Canonical Markdown keeps the same logical token.
+The docs builder resolves `media` and `html-media` tokens in `docs_builder/rendering.py`. Working and Preview by-ID payloads keep Docs-owned media as `docs-media:<workspace-or-collection>/<type>/<identity>`; they contain no local served URL or R2 URL for that media. Each local/public browser configuration exposes one Docs media root, and the reader resolves images, SVGs, files and HTML media before mounting content. Static Export packages referenced media under its own paths; Review resolves inventoried package assets. Canonical Markdown keeps its existing logical token. Prepare Preview records selected asset identities, and Publish transfers their current bytes without changing by-ID media identities.
 
 The builder does not contact R2 or prove that every referenced object exists. `docs_media_inventory.py` supplies provider-independent file listing and shared source-reference extraction; consumers own associations and missing-reference policy.
 
@@ -120,7 +120,7 @@ The preparation phase of Publish captures document/Catalogue JSON and records re
 
 `docs_artifact_locations.py` owns provider resolution, confinement, authentication, I/O, byte verification, staging, and served-reference behavior. `docs_media_storage.py` applies that boundary to managed-media writes and local serving:
 
-- Document R2 keys retain configured `docs/analysis/media/<type>/<identity>` and `docs/analysis/sub-scopes/<collection>/media/<type>/<identity>` public addresses; these do not describe local stage storage.
+- Document R2 keys use `docs/analysis/media/workspace/<type>/<identity>` and `docs/analysis/media/collections/<collection>/<type>/<identity>`, matching the suffixes beneath the local `/docs/assets/media/` served root. The configured public root is `https://media.dotlineform.com/docs/analysis/media/`.
 - Local paths resolve only from the configured shared asset family and exact collection/type identity.
 - Local `/docs/assets/` routes validate the registered family and safe identity, then confine the resolved filesystem target. Retired stage-media routes are not aliases.
 - Traversal and symlink escape are rejected; `files` responses remain attachments with `nosniff`.

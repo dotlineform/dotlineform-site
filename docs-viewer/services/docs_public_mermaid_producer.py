@@ -148,6 +148,8 @@ def _validate_plan_ownership(
     diagrams: list[Any],
     manifest_records: list[Any],
     removals: list[Any],
+    *,
+    collection: str,
 ) -> None:
     manifest_by_id: dict[str, Mapping[str, Any]] = {}
     for raw_record in manifest_records:
@@ -172,7 +174,7 @@ def _validate_plan_ownership(
         doc_id = str(projection.get("doc_id") or "")
         fence_index = projection.get("fence_index")
         projection_id = str(projection.get("projection_id") or "")
-        if projection_id != public_mermaid_projection_id(doc_id, fence_index):
+        if projection_id != public_mermaid_projection_id(doc_id, fence_index, collection=collection):
             raise ValueError("public Mermaid projection plan diagram has an invalid projection identity")
         if projection_id in diagram_ids:
             raise ValueError("public Mermaid projection plan has duplicate diagram identities")
@@ -202,7 +204,7 @@ def _validate_plan_ownership(
         projection_id = str(removal.get("projection_id") or "")
         doc_id = str(removal.get("doc_id") or "")
         fence_index = removal.get("fence_index")
-        if projection_id != public_mermaid_projection_id(doc_id, fence_index):
+        if projection_id != public_mermaid_projection_id(doc_id, fence_index, collection=collection):
             raise ValueError("public Mermaid projection removal has an invalid projection identity")
         expected = [
             public_mermaid_variant_identity(projection_id, theme)
@@ -354,7 +356,7 @@ def produce_public_mermaid_projection(
     removals = plan.get("removals")
     if not isinstance(removals, list):
         raise ValueError("public Mermaid projection plan removals must be a list")
-    _validate_plan_ownership(diagrams, manifest_records, removals)
+    _validate_plan_ownership(diagrams, manifest_records, removals, collection=collection.partition("/")[2])
     manifest_by_id = {
         str(record["projection_id"]): record
         for record in manifest_records

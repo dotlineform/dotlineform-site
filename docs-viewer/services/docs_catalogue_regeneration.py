@@ -9,13 +9,12 @@ from typing import Any
 from docs_catalogue_media import read_catalogue_work, read_catalogue_work_index
 from docs_catalogue_source_inventory import catalogue_source_documents
 from docs_catalogue_work_record import catalogue_work_record
-from docs_document_identity import is_immutable_doc_id
 from docs_management_context import log_event
 from docs_management_document_target import resolve_managed_document_collection
 from docs_management_mutations import SourceWrite, plan_create
 from docs_selected_documents import selected_path, selected_text, validate_selected_payload
 import docs_source_model as source_model
-from docs_workspace_config import generated_documents_path, require_document_authoring
+from docs_workspace_config import require_document_authoring
 from docs_write_rebuild import perform_collection_source_write_and_rebuild
 from studio.services.catalogue.catalogue_pending_updates import clear_pending_updates, read_pending_updates
 
@@ -38,19 +37,6 @@ def _request_mode(body: dict[str, Any]) -> str:
             or not isinstance(body.get("mode"), str) or body["mode"] not in MODES):
         raise ValueError("Regenerate requires the Working Catalogue collection and pending or full mode")
     return body["mode"]
-
-
-def _generated_deleted_doc_id(repo_root: Path, collection: Any, work_id: str) -> str:
-    """Recover an exact generated identity after an earlier source deletion."""
-    path = generated_documents_path(collection.document_config) / "manifest.json"
-    payload = json.loads(path.read_text(encoding="utf-8"))
-    rows = payload.get("docs") if isinstance(payload, dict) else None
-    if not isinstance(rows, list):
-        raise ValueError("Catalogue generated manifest is invalid; run Full reconciliation")
-    matches = [row for row in rows if isinstance(row, dict) and row.get("work_id") == work_id]
-    if len(matches) > 1 or (matches and not is_immutable_doc_id(matches[0].get("doc_id"))):
-        raise ValueError(f"Generated Catalogue document for Work {work_id} is ambiguous")
-    return matches[0]["doc_id"] if matches else ""
 
 
 def _selection_write(config: Any, *, removed_doc_ids: set[str], full_keep_ids: set[str] | None) -> SourceWrite | None:
@@ -93,7 +79,6 @@ def regenerate_catalogue(repo_root: Path, body: dict[str, Any]) -> dict[str, Any
             raise ValueError(f"Deleted Work {work_id} remains in the generated index; run Refresh Catalogue")
 
     timestamp = source_model.current_doc_timestamp()
-    reserved_doc_ids = {document.doc_id for document in documents.values()}
     writes: list[tuple[str, str, SourceWrite]] = []
     deletes: list[tuple[str, str, Path]] = []
     build_doc_ids: set[str] = set()
@@ -110,15 +95,9 @@ def regenerate_catalogue(repo_root: Path, body: dict[str, Any]) -> dict[str, Any
             raise ValueError(f"Work {work_id}: {error}") from error
         document = documents.get(work_id)
         if document is None:
-            for _attempt in range(100):
-                create = plan_create(repo_root, {**TARGET, "work_id": work_id, "title": record.title},
-                                     body_markdown=record.body)
-                doc_id = create.response["doc_id"]
-                if doc_id not in reserved_doc_ids:
-                    break
-            else:
-                raise RuntimeError("Could not allocate a distinct Catalogue document ID")
-            reserved_doc_ids.add(doc_id)
+            create = plan_create(repo_root, {**TARGET, "work_id": work_id, "title": record.title},
+                                 body_markdown=record.body)
+            doc_id = create.response["doc_id"]
             writes.append((work_id, doc_id, create.source_writes[0]))
             created_doc_ids.add(doc_id)
             link_doc_ids.add(doc_id)
@@ -151,14 +130,13 @@ def regenerate_catalogue(repo_root: Path, body: dict[str, Any]) -> dict[str, Any
 
     for work_id in deleted_ids:
         document = documents.get(work_id)
-        doc_id = document.doc_id if document else _generated_deleted_doc_id(repo_root, collection, work_id)
-        if doc_id:
-            deleted_doc_ids.add(doc_id)
-            if document is not None:
-                deletes.append((work_id, doc_id, document.path))
-            build_doc_ids.add(doc_id)
-            link_doc_ids.add(doc_id)
-            counts["delete"] += 1
+        doc_id = work_id
+        deleted_doc_ids.add(doc_id)
+        if document is not None:
+            deletes.append((work_id, doc_id, document.path))
+        build_doc_ids.add(doc_id)
+        link_doc_ids.add(doc_id)
+        counts["delete"] += 1
 
     full_keep_ids = current_doc_ids if mode == "full" else None
     selection_write = _selection_write(collection.parent_config, removed_doc_ids=deleted_doc_ids,

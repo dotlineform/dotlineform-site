@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from docs_document_identity import is_immutable_doc_id
+from docs_document_identity import is_document_id
 
 
 @dataclass(frozen=True)
@@ -18,7 +18,7 @@ class CollectionDocumentSummary:
     title: str
 
 
-def read_collection_manifest(path: Path) -> dict[str, Any]:
+def read_collection_manifest(path: Path, *, collection: str) -> dict[str, Any]:
     """Require saved metadata; never recover it by scanning source documents."""
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
@@ -31,7 +31,7 @@ def read_collection_manifest(path: Path) -> dict[str, Any]:
         if (
             not isinstance(row, dict)
             or not isinstance(row.get("doc_id"), str)
-            or not is_immutable_doc_id(row["doc_id"])
+            or not is_document_id(row["doc_id"], collection=collection)
             or not isinstance(row.get("title"), str)
             or row["doc_id"] in seen
         ):

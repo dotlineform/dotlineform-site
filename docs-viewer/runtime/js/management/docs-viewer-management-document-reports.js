@@ -15,15 +15,14 @@ import {
 import {
   hasDocsViewerAssignableFieldGroup
 } from "../shared/docs-viewer-config-controller.js";
-import { normalizeDocsViewerAuthoringSubject } from "./docs-viewer-management-document-subject.js";
 
 /** Adapt the Working manifest's declared authoring field to public-safe browsing input. */
 function catalogueWorkIdForDocument(record) {
-  var subject = normalizeDocsViewerAuthoringSubject(record.authoring_subject);
-  if (subject.state !== "valid" || subject.kind !== "work") {
-    throw new Error("Catalogue list document requires one valid Work subject.");
+  var docId = cleanString(record && record.doc_id);
+  if (!/^[0-9]{5}$/.test(docId) || Object.prototype.hasOwnProperty.call(record, "work_id")) {
+    throw new Error("Catalogue list document requires one exact Work ID as doc_id.");
   }
-  return subject.key;
+  return docId;
 }
 
 function cleanString(value) {
@@ -285,6 +284,8 @@ export function mountDocsViewerManageDocumentExtras(context) {
       checkGeneratedDataReadCapability: settings.checkGeneratedDataReadCapability,
       content: settings.content,
       doc: settings.doc,
+      mediaRoot: settings.mediaRoot,
+      viewerBaseUrl: settings.viewerBaseUrl,
       documentMountGeneration: settings.documentMountGeneration,
       managementContext: Boolean(settings.managementContext),
       managementService: managementService,
@@ -333,6 +334,8 @@ export function mountDocsViewerManageDocumentExtras(context) {
     checkGeneratedDataReadCapability: settings.checkGeneratedDataReadCapability,
     content: settings.content,
     doc: settings.doc,
+    mediaRoot: settings.mediaRoot,
+    viewerBaseUrl: settings.viewerBaseUrl,
     documentMountGeneration: settings.documentMountGeneration,
     managementContext: Boolean(settings.managementContext),
     managementService: managementService,

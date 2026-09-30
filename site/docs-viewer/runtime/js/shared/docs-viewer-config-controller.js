@@ -139,10 +139,10 @@ export function initDocsViewerConfigController(context) {
       byIdUrlBase: byIdUrlBase,
       collectionCustomisation: collectionCustomisation
     };
-    if (context.featurePolicy.management) {
+    if (context.featurePolicy.management || collection === "catalogue") {
       var reportHostDocId = rawCollection.report_host_doc_id;
       if (typeof reportHostDocId !== "string" || !/^d-[0-9]{8}-[0-9]{6}-[0-9a-f]{6}$/.test(reportHostDocId)) {
-        throw new Error("Manage collections require a configured immutable report host ID.");
+        throw new Error("This collection requires a configured immutable report host ID.");
       }
       record.reportHostDocId = reportHostDocId;
     }
@@ -157,6 +157,7 @@ export function initDocsViewerConfigController(context) {
     }
     var config = {
       viewerBaseUrl: String(raw.viewer_base_url || ""),
+      mediaRoot: String(raw.media_root || ""),
       defaultDocId: String(raw.default_doc_id || ""),
       indexTreeUrl: String(raw.index_tree_url || ""),
       recentUrl: String(raw.recent_url || ""),
@@ -167,7 +168,7 @@ export function initDocsViewerConfigController(context) {
       collections: children,
       collectionsById: new Map(children.map(function (child) { return [child.collection, child]; }))
     };
-    if (!config.viewerBaseUrl || !config.indexTreeUrl
+    if (!config.viewerBaseUrl || !config.mediaRoot || !config.indexTreeUrl
         || context.featurePolicy.recent && !config.recentUrl
         || context.featurePolicy.search && !config.searchIndexUrl) {
       throw new Error("Docs Viewer configuration is missing a required reader URL.");

@@ -16,7 +16,7 @@ from typing import Any
 from urllib.parse import parse_qs, urlparse
 
 import docs_document_location as document_location
-from docs_document_identity import is_immutable_doc_id
+from docs_document_identity import is_document_id, is_immutable_doc_id
 
 from docs_workspace_config import (
     DocsStageConfig,
@@ -107,14 +107,12 @@ def target_payload_exists(target: dict[str, str], roots: dict[str, Path]) -> boo
     child_id = target.get("subdoc")
     if not child_id:
         return True
-    if not is_immutable_doc_id(child_id):
-        return False
     host = read_json(path, "destination report host")
     report = host.get("report")
     if not isinstance(report, dict) or report.get("id") != "docs_collection":
         return False
     collection = report.get("collection")
-    return bool(collection and collection in roots and (
+    return bool(collection and collection in roots and is_document_id(child_id, collection=collection) and (
         roots[collection] / "by-id" / f"{child_id}.json"
     ).is_file())
 
@@ -198,7 +196,7 @@ def audit_docs_broken_links(repo_root: Path) -> dict[str, Any]:
                 collection=collection,
                 doc_id=doc.doc_id, title=doc.title,
                 viewer_url=document_location.management_document_viewer_url(
-                    collection_url, doc.doc_id, collection=bool(collection),
+                    collection_url, doc.doc_id, collection=bool(collection), collection_id=collection,
                 ),
             )
             sources.append((meta, doc.body))

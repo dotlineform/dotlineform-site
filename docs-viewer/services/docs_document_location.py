@@ -7,7 +7,7 @@ from collections.abc import Collection
 from pathlib import Path
 from urllib.parse import quote
 
-from docs_document_identity import is_immutable_doc_id
+from docs_document_identity import is_document_id, is_immutable_doc_id
 from docs_workspace_config import (
     DocsStageConfig,
     DocsCollectionConfig,
@@ -53,9 +53,9 @@ def collection_report_placement(
     return config, collection, host_id
 
 
-def canonical_document_viewer_url(doc_id: str, *, subdoc_id: str = "") -> str:
+def canonical_document_viewer_url(doc_id: str, *, subdoc_id: str = "", subdoc_collection: str = "") -> str:
     """Build an ordinary location from explicit document/host identity, without a workflow stage."""
-    if not is_immutable_doc_id(doc_id) or (subdoc_id and not is_immutable_doc_id(subdoc_id)):
+    if not is_immutable_doc_id(doc_id) or (subdoc_id and not is_document_id(subdoc_id, collection=subdoc_collection)):
         raise ValueError("doc_id and subdoc_id must use immutable document identity")
     pairs = [f"doc={quote(doc_id)}"]
     if subdoc_id:
@@ -71,7 +71,7 @@ def canonical_collection_document_url(
     """Resolve the configured report host for an exact collection document."""
 
     normalized_doc_id = str(doc_id or "").strip()
-    if not is_immutable_doc_id(normalized_doc_id):
+    if not is_document_id(normalized_doc_id, collection=collection_id):
         raise ValueError("doc_id must use immutable document identity")
 
     _config, _collection, parent_doc_id = collection_report_placement(
@@ -79,7 +79,7 @@ def canonical_collection_document_url(
         collection_id,
     )
 
-    return canonical_document_viewer_url(parent_doc_id, subdoc_id=normalized_doc_id)
+    return canonical_document_viewer_url(parent_doc_id, subdoc_id=normalized_doc_id, subdoc_collection=collection_id)
 
 
 def management_collection_viewer_url(
@@ -104,11 +104,12 @@ def management_document_viewer_url(
     doc_id: str,
     *,
     collection: bool,
+    collection_id: str = "",
 ) -> str:
     """Extend a prevalidated collection URL with one exact document identity."""
 
     normalized_doc_id = str(doc_id or "").strip()
-    if not is_immutable_doc_id(normalized_doc_id):
+    if not is_document_id(normalized_doc_id, collection=collection_id):
         raise ValueError("doc_id must use immutable document identity")
     separator = "&" if "?" in collection_url else "?"
     key = "subdoc" if collection else "doc"

@@ -21,6 +21,8 @@ def set_draft(repo_root: Path, body: dict[str, Any], *, dry_run: bool = False) -
         raise ValueError("draft must be true or false")
     target = {key: body[key] for key in ( "collection", "doc_id") if key in body}
     resolved = resolve_managed_document_target(repo_root, target)
+    if resolved.collection == "catalogue":
+        raise ValueError("Catalogue documents are always ready")
     if not source_model.collection_supports_draft(resolved.document_config):
         raise ValueError("Set Draft is available only in Working")
     document = resolved.document

@@ -1,6 +1,7 @@
 import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
 import {
-  appendAssetVersion
+  appendAssetVersion,
+  mountDocsContentHtml
 } from "./docs-viewer-asset-url.js";
 import {
   normalizeDocsCollectionFilterValue,
@@ -972,14 +973,25 @@ function renderListView(state) {
 
 function returnToList(state) {
   if (!state.mounted || !state.root.isConnected) return;
-  writeSubdocUrl(state, "", "push");
-  renderListView(state);
-  var position = state.listReturnPosition;
-  var windowRef = state.root.ownerDocument.defaultView;
-  if (position && windowRef && state.root.dataset.reportState === "list") {
-    windowRef.scrollTo({ left: position.left, top: position.top, behavior: "auto" });
-    if (position.control.isConnected) position.control.focus({ preventScroll: true });
+  function reveal() {
+    if (!state.mounted || !state.root.isConnected) return;
+    writeSubdocUrl(state, "", "push");
+    renderListView(state);
+    var position = state.listReturnPosition;
+    var windowRef = state.root.ownerDocument.defaultView;
+    if (position && windowRef && state.root.dataset.reportState === "list") {
+      windowRef.scrollTo({ left: position.left, top: position.top, behavior: "auto" });
+      if (position.control.isConnected) position.control.focus({ preventScroll: true });
+    }
   }
+  if (state.manifestLoaded) return reveal();
+  publishState(state, "loading", null, "list-loading");
+  state.loadManifest().then(function (loaded) {
+    if (loaded) reveal();
+  }).catch(function (error) {
+    publishState(state, "error", null, "list-load-failed");
+    renderError(state.root, error && error.message ? error.message : "Failed to load docs collection manifest.");
+  });
 }
 
 function detailTitle(payload, fallback) {
@@ -1049,7 +1061,10 @@ function renderDetailPayload(state, docId, payload) {
   state.detailNode.dataset.reportSubdocTitle = detailTitle(payload, docId);
   state.detailNode.dataset.reportSubdocUpdated = cleanString(payload && payload.last_updated);
   state.detailNode.setAttribute("aria-label", detailTitle(payload, docId));
-  state.detailBodyNode.innerHTML = payload && payload.content_html ? payload.content_html : "";
+  mountDocsContentHtml(state.detailBodyNode, payload && payload.content_html, {
+    mediaRoot: state.mediaRoot,
+    viewerBaseUrl: state.viewerBaseUrl
+  });
   state.validDetailId = docId;
   var metadata = detailMetadataRecord(state, docId, payload);
   publishState(state, "detail", {
@@ -1451,6 +1466,8 @@ function mountResolvedDocsCollectionReport(context, contribution) {
   var state = {
     root: root,
     mountDocumentContent: context.mountCollectionDocumentContent,
+    mediaRoot: context.mediaRoot,
+    viewerBaseUrl: context.viewerBaseUrl,
     onDocumentState: context.onCollectionDocumentState,
     parentDocId: cleanString(context && context.doc && context.doc.doc_id),
     parentTarget: Object.freeze({
@@ -1462,6 +1479,7 @@ function mountResolvedDocsCollectionReport(context, contribution) {
     collection: collection,
     collectionId: collectionIdValue,
     manifestUrl: url,
+    manifestLoaded: false,
     byIdUrlBase: byIdUrlBase(collection),
     docs: [],
     docIds: [],
@@ -1544,12 +1562,12 @@ function mountResolvedDocsCollectionReport(context, contribution) {
     root: root
   });
   publishState(state, "loading", null, "report-loading");
-  return Promise.all([
-    fetchJson(url, "Failed to load docs collection manifest").then(manifestPayload),
-    state.collectionId === "catalogue" ? loadCatalogueCollectionThumbnailSettings(context) : null
-  ]).then(function (loaded) {
-      if (!state.mounted || !root.isConnected) return true;
-      var manifest = loaded[0];
+  state.loadManifest = function () {
+    return Promise.all([
+      fetchJson(url, "Failed to load docs collection manifest").then(manifestPayload),
+      state.collectionId === "catalogue" ? loadCatalogueCollectionThumbnailSettings(context) : null
+    ]).then(function (loaded) {
+      if (!state.mounted || !root.isConnected) return false;
       if (state.pagedBrowsing) {
         state.browsingData = createCollectionBrowsingData({
           collectionId: state.collectionId,
@@ -1559,14 +1577,28 @@ function mountResolvedDocsCollectionReport(context, contribution) {
         });
         state.filterInputNode.disabled = false;
       }
-      applyManifest(state, manifest);
+      applyManifest(state, loaded[0]);
+      state.manifestLoaded = true;
       notifyContribution(state, {
         type: "refresh",
         data: state.customisationData,
         documents: Object.freeze(state.docs.map(documentRecord)),
         reason: "documents-loaded"
       });
-      var selectedDetailId = currentSubdocId();
+      return true;
+    });
+  };
+  var selectedDetailId = currentSubdocId();
+  if (state.collectionId === "catalogue" && selectedDetailId) {
+    if (!/^[0-9]{5}$/.test(selectedDetailId)) {
+      publishState(state, "invalid", null, "invalid-detail-id");
+      renderError(root, "Catalogue document ID must be an exact five-digit Work ID.");
+      return Promise.resolve(true);
+    }
+    return renderDetailById(state, selectedDetailId);
+  }
+  return state.loadManifest().then(function (loaded) {
+      if (!loaded) return true;
       if (selectedDetailId) {
         if (state.docIds.indexOf(selectedDetailId) === -1) {
           publishState(state, "invalid", null, "unlisted-detail");

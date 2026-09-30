@@ -6,24 +6,7 @@
   "workspace": {
     "viewer_base_url": "/analysis/",
     "default_doc_id": "d-20260426-164043-e14f49",
-    "media": {
-      "files": {
-        "reference_prefix": "docs/files",
-        "served_path_prefix": "https://media.dotlineform.com/docs/analysis/media/files"
-      },
-      "html": {
-        "reference_prefix": "docs/html",
-        "served_path_prefix": "https://media.dotlineform.com/docs/analysis/media/html"
-      },
-      "img": {
-        "reference_prefix": "docs/img",
-        "served_path_prefix": "https://media.dotlineform.com/docs/analysis/media/img"
-      },
-      "svg": {
-        "reference_prefix": "docs/svg",
-        "served_path_prefix": "https://media.dotlineform.com/docs/analysis/media/svg"
-      }
-    },
+    "media_root": "https://media.dotlineform.com/docs/analysis/media/",
     "index_tree_url": "/assets/data/docs/index-tree.json",
     "recent_url": "/assets/data/docs/recent.json",
     "selected_url": "/assets/data/docs/selected.json",
@@ -57,7 +40,8 @@
         "collection": "catalogue",
         "title": "catalogue",
         "manifest_url": "/assets/data/docs/catalogue/manifest.json",
-        "by_id_url_base": "/assets/data/docs/catalogue/by-id"
+        "by_id_url_base": "/assets/data/docs/catalogue/by-id",
+        "report_host_doc_id": "d-20260916-161504-f8c947"
       }
     ]
   }

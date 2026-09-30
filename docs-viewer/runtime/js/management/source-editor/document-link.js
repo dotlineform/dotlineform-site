@@ -1,4 +1,7 @@
 const DOC_ID = /^d-\d{8}-\d{6}-[a-f0-9]{6}$/;
+function documentId(value, collection) {
+  return (collection === "catalogue" ? /^[0-9]{5}$/ : DOC_ID).test(value);
+}
 /** Validate a supplied document location against its exact identity, without reconstructing it. */
 function validLocation(record) {
   var target = record.target;
@@ -31,7 +34,7 @@ export function normalizeDocumentLinkTargets(payload) {
   var documents = payload.documents.map(function (record) {
     var target = record && record.target;
     if (!target || Object.keys(target).sort().join(",") !== "collection,doc_id"
-      || !DOC_ID.test(target.doc_id)
+      || !documentId(target.doc_id, target.collection)
       || (target.collection !== "" && !collections.includes(target.collection))
       || typeof record.title !== "string" || !record.title.trim() || !validLocation(record)) {
       throw new Error("A document target or location is invalid.");

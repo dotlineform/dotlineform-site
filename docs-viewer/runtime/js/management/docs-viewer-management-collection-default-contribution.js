@@ -548,7 +548,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     var target = settings.target;
     if (!host || !target) return;
 
-    if (managementContext
+    if (managementContext && target.collection !== "catalogue"
       && onToggleDraft && typeof settings.registerAction === "function"
       && typeof settings.commitDocumentDraft === "function") {
       var draft = settings.document?.draft === true;

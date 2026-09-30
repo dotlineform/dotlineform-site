@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Any, Iterable
 import json
 
-from docs_document_identity import is_doc_timestamp, is_immutable_doc_id
+from docs_document_identity import is_doc_timestamp, is_document_id
 from docs_source_model import write_text_atomic
 from docs_workspace_config import COLLECTION_ID_PATTERN, document_source_path
 
@@ -31,7 +31,9 @@ def validate_selected_payload(payload: Any) -> None:
         if set(row) != fields:
             raise ValueError("Selected Documents row has invalid fields")
         for key in ("doc_id", "report_doc_id"):
-            if key in row and (not isinstance(row[key], str) or row[key] != row[key].strip() or not is_immutable_doc_id(row[key])):
+            owner = row.get("collection", "") if key == "doc_id" else ""
+            if key in row and (not isinstance(row[key], str) or row[key] != row[key].strip()
+                               or not is_document_id(row[key], collection=owner)):
                 raise ValueError(f"Selected Documents requires an immutable {key}")
         if (not isinstance(row["title"], str) or not row["title"].strip()
                 or not isinstance(row["last_updated"], str) or not is_doc_timestamp(row["last_updated"])):

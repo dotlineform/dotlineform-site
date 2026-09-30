@@ -107,9 +107,12 @@ class ContentRenderingMixin:
         query_values = parse_qs(parsed.query)
         viewer_doc_id = (query_values.get("doc") or [""])[0]
         if viewer_doc_id and self.viewer_path_match(path_part, query_values):
+            if self.config.stage != "review":
+                target = f"?{parsed.query}{f'#{parsed.fragment}' if parsed.fragment else ''}"
+                return html.escape(target, quote=True)
             target = docs_by_id.get(viewer_doc_id)
             if target:
-                rewritten = self.viewer_url_for(target.doc_id, parsed.fragment)
+                rewritten = self.rendered_viewer_target_for(target.doc_id, parsed.fragment)
                 child_id = (query_values.get("subdoc") or [""])[0]
                 if child_id:
                     location = urlparse(rewritten)
@@ -119,8 +122,12 @@ class ContentRenderingMixin:
                 return html.escape(rewritten, quote=True)
         return href
 
+    def rendered_viewer_target_for(self, doc_id: str, anchor: str = "") -> str:
+        target = urlparse(self.viewer_url_for(doc_id, anchor))
+        return f"?{target.query}{f'#{target.fragment}' if target.fragment else ''}"
+
     def viewer_path_match(self, path_part: str, query_values: dict[str, list[str]]) -> bool:
-        return "scope" not in query_values and path_part in {self.viewer_base_url, self.workspace.public_viewer_base_url}
+        return "scope" not in query_values and path_part in {"/docs/", self.viewer_base_url, self.workspace.public_viewer_base_url}
 
     def resolve_content_tokens(
         self,
@@ -194,11 +201,15 @@ class ContentRenderingMixin:
         clean_path = relative_path.lstrip("/")
         for media in self.media_owner.media.types.values():
             reference_prefix = media.reference_prefix.as_posix().strip("/")
+            served_prefix = media.served_path_prefix
+            if not served_prefix.startswith("/docs/assets/media/"):
+                raise RuntimeError("Docs media served path must use the configured local root")
+            logical_prefix = "docs-media:" + served_prefix.removeprefix("/docs/assets/media/")
             if clean_path == reference_prefix:
-                return media.served_path_prefix
+                return logical_prefix
             if clean_path.startswith(f"{reference_prefix}/"):
                 identity = clean_path.removeprefix(f"{reference_prefix}/")
-                return f"{media.served_path_prefix}/{identity}"
+                return f"{logical_prefix}/{identity}"
         if clean_path.startswith("docs/"):
             raise RuntimeError(
                 f"Docs media reference has no configured role in {self.config.stage}: {clean_path}"

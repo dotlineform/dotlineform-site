@@ -43,6 +43,9 @@ class DocsReviewDataBuilder(DocsDataBuilder):
         url = f"/docs-review/?package={quote(self.package_id)}&doc={quote(str(doc_id))}"
         return f"{url}#{anchor}" if anchor else url
 
+    def rendered_viewer_target_for(self, doc_id: str, anchor: str = "") -> str:
+        return self.viewer_url_for(doc_id, anchor)
+
     def content_url_for(self, doc_id: str) -> str:
         return (
             f"/docs-review/packages/payload?package_id={quote(self.package_id)}"

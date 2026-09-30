@@ -3,7 +3,7 @@
 from pathlib import Path
 
 import docs_source_model as source_model
-from docs_document_identity import is_immutable_doc_id
+from docs_document_identity import is_document_id
 from docs_document_location import canonical_document_viewer_url, collection_report_placement
 from docs_management_document_target import confined_source_path, resolve_managed_document_collection
 from docs_workspace_config import document_source_path, resolve_workspace_path
@@ -42,13 +42,14 @@ def read_document_link_targets(repo_root: Path) -> dict[str, object]:
                 repo_root, collection,
             )
         for document in records:
-            if not is_immutable_doc_id(document.doc_id):
+            if not is_document_id(document.doc_id, collection=collection):
                 raise ValueError("Document link targets require an immutable doc_id.")
             if not collection and exclusions.excludes(document.doc_id):
                 continue
             href = canonical_document_viewer_url(
                 host_id if collection else document.doc_id,
                 subdoc_id=document.doc_id if collection else "",
+                subdoc_collection=collection,
             )
             documents.append({
                 "target": {"collection": collection, "doc_id": document.doc_id},

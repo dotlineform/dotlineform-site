@@ -2,7 +2,7 @@
 
 from typing import Any
 
-from docs_document_identity import is_doc_timestamp, is_immutable_doc_id
+from docs_document_identity import is_doc_timestamp, is_document_id
 from docs_workspace_config import COLLECTION_ID_PATTERN
 
 
@@ -42,7 +42,9 @@ def validate_recent_payload(payload: dict[str, Any]) -> None:
             if not isinstance(row.get(key), str) or not row[key].strip():
                 raise ValueError(f"Recents row requires {key}")
         for key in ("doc_id", "parent_id", "report_doc_id"):
-            if key in row and (not isinstance(row[key], str) or not is_immutable_doc_id(row[key]) or row[key] != row[key].strip()):
+            owner = row.get("collection", "") if key == "doc_id" else ""
+            if key in row and (not isinstance(row[key], str) or not is_document_id(row[key], collection=owner)
+                               or row[key] != row[key].strip()):
                 raise ValueError(f"Recents {key} must use exact immutable document identity")
         if payload["basis"] == "edited" and not is_doc_timestamp(row["timestamp"]):
             raise ValueError("Edited Recents requires complete document timestamps")

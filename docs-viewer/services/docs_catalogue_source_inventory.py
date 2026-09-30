@@ -3,14 +3,9 @@
 from __future__ import annotations
 
 from pathlib import Path
-import re
-
-from docs_document_identity import is_doc_timestamp, is_immutable_doc_id
+from docs_document_identity import is_doc_timestamp, is_document_id
 from docs_management_document_target import confined_source_path, resolve_managed_document_collection, source_doc_from_path
 import docs_source_model as source_model
-
-
-WORK_ID = re.compile(r"[0-9]{5}\Z")
 
 
 def catalogue_source_documents(repo_root: Path) -> dict[str, source_model.SourceDoc]:
@@ -23,18 +18,17 @@ def catalogue_source_documents(repo_root: Path) -> dict[str, source_model.Source
             requested_doc_id=path.stem,
         )
         fields = document.front_matter
-        work_id = fields.get("work_id")
-        if not is_immutable_doc_id(document.doc_id) or fields.get("collection") != "catalogue":
+        if not is_document_id(document.doc_id, collection="catalogue") or fields.get("collection") != "catalogue":
             raise ValueError(f"Catalogue source {path.name} has invalid document or collection identity")
-        if not isinstance(work_id, str) or not WORK_ID.fullmatch(work_id):
-            raise ValueError(f"Catalogue document {document.doc_id} requires one exact five-digit work_id")
+        if "work_id" in fields:
+            raise ValueError(f"Catalogue document {document.doc_id} has redundant work_id")
         if not isinstance(fields.get("title"), str) or not fields["title"].strip():
             raise ValueError(f"Catalogue document {document.doc_id} requires a title")
         if (not is_doc_timestamp(fields.get("added_date"))
                 or not is_doc_timestamp(fields.get("last_updated"))
-                or type(fields.get("draft")) is not bool):
+                or fields.get("draft") is not False):
             raise ValueError(f"Catalogue document {document.doc_id} has invalid timestamps or draft state")
-        if work_id in documents:
-            raise ValueError(f"Work {work_id} has multiple Catalogue documents")
-        documents[work_id] = document
+        if document.doc_id in documents:
+            raise ValueError(f"Work {document.doc_id} has multiple Catalogue documents")
+        documents[document.doc_id] = document
     return documents

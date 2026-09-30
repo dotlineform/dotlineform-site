@@ -588,10 +588,10 @@ def rewrite_internal_docs_viewer_links(
     def replacement(match: re.Match[str]) -> str:
         raw_url = html.unescape(match.group("url"))
         split = urlsplit(raw_url)
-        if split.scheme or split.netloc or split.path != "/docs/":
+        if split.scheme or split.netloc or split.path not in {"", "/docs/"}:
             return match.group(0)
         params = parse_qs(split.query, keep_blank_values=True)
-        if "scope" in params or "subdoc" in params or "collection" in params:
+        if "scope" in params or "collection" in params:
             return match.group(0)
         if "stage" in params:
             return match.group(0)
@@ -601,8 +601,12 @@ def rewrite_internal_docs_viewer_links(
         if not doc_id:
             return match.group(0)
         validate_doc_id_for_html_filename(doc_id)
-        if included_doc_ids is not None and doc_id not in included_doc_ids:
-            return match.group(0)
+        if "subdoc" in params or included_doc_ids is not None and doc_id not in included_doc_ids:
+            if split.path:
+                return match.group(0)
+            rewritten = f"/docs/{raw_url}"
+            quote = match.group("quote")
+            return f"{match.group('prefix')}{quote}{html.escape(rewritten, quote=True)}{quote}"
         rewritten = f"{link_prefix}{doc_id}{link_suffix}"
         if split.fragment and preserve_fragment:
             rewritten += f"#{split.fragment}"

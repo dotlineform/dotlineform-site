@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260903-154141-7c9e4b
 title: Catalogue Media View
 added_date: "2026-09-03 15:41:41"
-last_updated: "2026-09-28 22:21:02"
+last_updated: "2026-09-30 11:33:27"
 summary: Exact Work and Gallery links, direct and Series-related Gallery navigation, responsive Work images and paginated Media View, with static-consumer and public-data limits.
 ui_status: done
 parent_id: d-20260903-222617-28475e
@@ -45,7 +45,7 @@ Text links preserve surrounding Markdown even at the start of a paragraph or lis
 
 Opening a document resolves inline images through current Catalogue consumer data. Selecting a text link reads the exact Work or Gallery and opens Media View. Selecting an image reads its Work again, updates the inline image and opens Media View from that record. Retired Detail and Series markers do not open Media View.
 
-Media View shows the selected image, title and ordered metadata as real text. Work presentation includes available year, medium and dimensions plus Catalogue number. Open in new tab targets the supplied selected image. Back to document restores the invoking document, scroll and focus through Content Detail, preserving stage and child-document context.
+Media View shows the selected image, title and ordered metadata as real text. Work presentation includes available year, medium and dimensions plus a `cat. <work_id>` link to the definitive Catalogue document. The link opens the exact `?doc=<report-host-id>&subdoc=<work-id>` destination in a new tab, leaving the invoking document and Media View in place; the destination loads its by-ID payload before the searchable Catalogue list manifest. Open in new tab targets the supplied selected image. Back to document restores the invoking document, scroll and focus through Content Detail, preserving child-document context.
 
 Build retains valid text-link references when Catalogue data is unavailable, allowing later runtime recovery. A Work image requires its generated record at Build and fails visibly if the exact identity or title is unavailable. Runtime loading and failure feedback for the image and Media View still appears beside the opener and permits retry. Replaced documents, released mounts, changed child selections and superseded requests cannot apply a late response.
 

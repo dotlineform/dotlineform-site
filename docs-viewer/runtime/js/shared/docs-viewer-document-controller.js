@@ -1,3 +1,5 @@
+import { mountDocsContentHtml } from "./docs-viewer-asset-url.js";
+
 export function initDocsViewerDocumentController(context) {
   var routeSession = context.routeSession;
   var workspaceConfigState = context.workspaceConfig;
@@ -61,6 +63,8 @@ export function initDocsViewerDocumentController(context) {
       managementContext: managementContextActive(),
       mountThemedDiagrams: function () { mountThemedDiagrams(doc, payload); },
       payload: payload,
+      mediaRoot: workspaceConfigState.activeConfig && workspaceConfigState.activeConfig.mediaRoot,
+      viewerBaseUrl: workspaceConfigState.activeConfig && workspaceConfigState.activeConfig.viewerBaseUrl,
       documentMountGeneration: mountGeneration,
       reportPresentationAdapter: context.reportPresentationAdapter,
       loadMediaTarget: function (request) {
@@ -156,6 +160,7 @@ export function initDocsViewerDocumentController(context) {
         documentMountGeneration: mountGeneration,
         payload: payload,
         requestContentDetail: context.requestContentDetail,
+        viewerConfig: workspaceConfigState.activeConfig,
         window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
       });
     } catch (error) {
@@ -378,7 +383,10 @@ export function initDocsViewerDocumentController(context) {
     releaseMediaDetails();
     releaseTableDetails();
     releaseDiagramDetails();
-    content.innerHTML = payload.content_html || "";
+    mountDocsContentHtml(content, payload.content_html, {
+      mediaRoot: workspaceConfigState.activeConfig && workspaceConfigState.activeConfig.mediaRoot,
+      viewerBaseUrl: workspaceConfigState.activeConfig && workspaceConfigState.activeConfig.viewerBaseUrl
+    });
     if (context.linksDetailAdapter) {
       context.linksDetailAdapter.mountDocument({
         content: content,

@@ -243,15 +243,17 @@ def _media_identity_from_url(value: str, prefix: str) -> str:
 
 
 def _preview_media_bindings(config: DocsStageConfig) -> dict[str, tuple[str, Path]]:
-    """Map each shared local URL to its asset-root-relative family."""
+    """Map each logical Docs media family to its asset-root-relative path."""
     bindings = {}
     for collection in (config, *config.collections):
         child = getattr(collection, "collection", "")
         for media_type, media in collection.media.types.items():
             key = f"{child}/{media_type}" if child else media_type
             relative = media.asset_location.path.relative_to(collection.media.asset_root.path)
+            if not relative.parts or relative.parts[0] != "media":
+                raise ValueError("Docs media asset must be beneath the shared media root")
             bindings[key] = (
-                media.served_path_prefix.rstrip("/"),
+                "docs-media:" + Path(*relative.parts[1:]).as_posix(),
                 relative,
             )
     return bindings

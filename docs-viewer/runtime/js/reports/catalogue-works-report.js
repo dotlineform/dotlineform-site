@@ -1,5 +1,5 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
-import { loadWorkingCatalogueDocumentLinks } from "../management/docs-viewer-management-catalogue-document-links.js";
+import { buildViewerUrl } from "../shared/docs-viewer-router.js";
 const METADATA_SCHEMA = "catalogue_works_report_metadata_v1";
 const WORK_ID_PATTERN = /^[0-9]{5}$/;
 const SERIES_ID_PATTERN = /^[0-9]{3}$/;
@@ -211,13 +211,19 @@ function fetchJson(url, message) {
 
 function loadCatalogueWorks(context) {
   const url = new URL("/studio/catalogue-output/reports/catalogue-works/metadata.json", studioOrigin(context));
-  return Promise.all([
-    fetchJson(url.toString(), "Failed to load Catalogue Works metadata."),
-    loadWorkingCatalogueDocumentLinks({ document: context.content.ownerDocument, workspaceConfig: context.workspaceConfig })
-  ]).then((inputs) => ({
-    rows: normalizeCatalogueWorksMetadata(inputs[0]),
-    documentLinks: inputs[1]
-  }));
+  return fetchJson(url.toString(), "Failed to load Catalogue Works metadata.").then((payload) => {
+    const rows = normalizeCatalogueWorksMetadata(payload);
+    const workspace = context.workspaceConfig;
+    const catalogue = workspace && workspace.collections.find((entry) => entry.collection === "catalogue");
+    if (!catalogue || !/^d-[0-9]{8}-[0-9]{6}-[0-9a-f]{6}$/.test(catalogue.reportHostDocId)
+      || !workspace.viewerBaseUrl) throw new Error("Working Catalogue is not configured.");
+    const origin = new URL(context.content.ownerDocument.baseURI).origin;
+    const documentLinks = new Map(rows.map((row) => [row.workId, buildViewerUrl({
+      viewerBaseUrl: workspace.viewerBaseUrl, origin, docId: catalogue.reportHostDocId,
+      reportParams: { subdoc: row.workId }
+    })]));
+    return { rows, documentLinks };
+  });
 }
 
 function appendLink(cell, className, href, text) {

@@ -461,7 +461,6 @@ class DocsViewerSearchDataBuilder:
             if not isinstance(by_id, dict):
                 raise ValueError(f"collection by-id payload must be an object: {by_id_path}")
 
-            expected_url = f"{self.viewer_url_for(report_doc_id)}&subdoc={quote(doc_id)}"
             by_id_title = normalize_text(by_id.get("title"))
             if title != by_id_title:
                 raise ValueError(
@@ -470,10 +469,10 @@ class DocsViewerSearchDataBuilder:
                 )
             if (
                 by_id.get("doc_id") != doc_id
-                or by_id.get("viewer_url") != expected_url
+                or "viewer_url" in by_id
             ):
                 raise ValueError(
-                    f"collection by-id identity or viewer_url is stale for "
+                    f"collection by-id identity or location payload is stale for "
                     f"{self.config.stage}/{collection.collection}/{doc_id}"
                 )
             last_updated = normalize_text(by_id.get("last_updated"))

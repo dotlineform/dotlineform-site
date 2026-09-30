@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260401-000000-ebf14a
 title: Catalogue Works
 added_date: "2026-04-01 00:00:00"
-last_updated: "2026-09-28 15:19:36"
+last_updated: "2026-09-30 11:33:27"
 parent_id: d-20260423-000000-d015e6
 
 ---
@@ -31,9 +31,9 @@ Typing waits for a 180 ms pause before filtering and sorting; clearing search ap
 
 The report module owns input validation, Work/Series search, five sortable columns, pagination, Work document links and Series labels, one seven-column render, presentation-aware clipboard projection and unavailable or invalid states. Pager layout belongs to the existing local report stylesheet and reuses shared icon buttons. Editing remains in the [Catalogue Work Editor](Catalogue_Work_Editor.md) and its shared Series controls. There is no separate Catalogue Drafts workflow.
 
-Work ID and title open the matching subdocument in Working Catalogue. On each report mount, one read of Catalogue's configured `manage-manifest.json` supplies normalized `authoring_subject` rows and immutable document identities. The shared Catalogue link reader derives valid Work mappings in memory and composes exact Manage URLs with the configured report host and existing route helper. It never matches titles or infers a host from route context. Works without a mapping remain visible as plain text. Invalid manifest identities or multiple Catalogue documents for one Work fail visibly rather than choosing a destination. No association lookup file is generated or read.
+Work ID and title open the definitive subdocument in Working Catalogue. Its `doc_id` is the same five-digit Work ID, preserving leading zeroes. The report composes `?doc=<configured-report-host-id>&subdoc=<work-id>` through the shared route helper without reading a Catalogue document manifest or mapping file. A direct Catalogue destination loads its exact by-ID payload before the list manifest; a missing document fails at that destination without selecting another target. Regenerate owns repair of missing Catalogue documents.
 
-Linked Catalogue documents have a separate freshness boundary: Regenerate writes literal title, caption and summary values into their source. A Work Save does not rewrite those documents or this report's metadata; Refresh Catalogue updates the report metadata. Collection caption behavior belongs to the separate collections review.
+Linked Catalogue documents have a separate freshness boundary: Refresh Catalogue supplies current generated Work JSON and records pending document updates; Catalogue Regenerate updates document titles and bound image-token bodies where needed and builds the pending documents. Each Build resolves image alt text, caption and selected metadata from the captured generated Work record. A Work Save does not rewrite those documents or this report's metadata; [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) and [collection architecture](Sub_Scope_Index_Architecture.md#catalogue-work-records) own those operations.
 
 Each Series name is displayed as plain text. Series remains a Catalogue grouping and document Subject, but this report does not open it in Media View or fetch its membership or Work images. Search, sorting and TSV output retain their existing values.
 

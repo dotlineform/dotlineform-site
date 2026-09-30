@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260925-134621-42c838
 title: Catalogue Works Front-End Browsing And Search
 added_date: "2026-09-25 13:46:21"
-last_updated: "2026-09-28 15:55:05"
+last_updated: "2026-09-30 11:33:27"
 summary: Refactor Catalogue Works to Studio-generated metadata with targeted entry updates after Save; Docs Viewer owns filtering and sorting, with a persistent search index considered only if performance requires it.
 parent_id: d-20260428-000000-f5ff18
 ---
@@ -277,6 +277,6 @@ Later Catalogue Works delivery candidates are descending Work ID order, browsing
 
 ## Verified Implementation Owners
 
-The current list and destination owners are [Catalogue Works](../../docs-viewer/runtime/js/reports/catalogue-works-report.js), [report metadata](../../studio/services/catalogue/catalogue_works_metadata.py), [Working Catalogue document links](../../docs-viewer/runtime/js/management/docs-viewer-management-catalogue-document-links.js), [browser configuration projection](../../docs-viewer/build/docs_builder/browser_config.py), and [workspace configuration](../../docs-viewer/config/workspace/docs-workspace.json). [Studio Catalogue reads](../../studio/app/server/studio/studio_catalogue_api.py) supplied the pre-conversion list. The [collection reader](../../docs-viewer/runtime/js/shared/docs-collection-report.js) and [collection manifests](../../docs-viewer/build/docs_builder/collection.py) are referenced here only for downstream document navigation; their refactor is outside this feature.
+The current list and destination owners are [Catalogue Works](../../docs-viewer/runtime/js/reports/catalogue-works-report.js), [report metadata](../../studio/services/catalogue/catalogue_works_metadata.py), [browser configuration projection](../../docs-viewer/build/docs_builder/browser_config.py), and [workspace configuration](../../docs-viewer/config/workspace/docs-workspace.json). Catalogue Works now composes direct Work-ID document links; the separate mapping reader was retired after this feature. [Studio Catalogue reads](../../studio/app/server/studio/studio_catalogue_api.py) supplied the pre-conversion list. The [collection reader](../../docs-viewer/runtime/js/shared/docs-collection-report.js) and [collection manifests](../../docs-viewer/build/docs_builder/collection.py) are referenced here only for downstream document navigation; their refactor is outside this feature.
 
 Media and generation ownership is in the [workspace provider](../../docs-viewer/runtime/js/shared/docs-viewer-workspace-provider.js), [Media View and inline image reader](../../docs-viewer/runtime/js/shared/docs-viewer-media-detail.js), [local Catalogue media reads](../../docs-viewer/services/docs_catalogue_media.py), [public route configuration](../../docs-viewer/config/routes/docs-viewer-routes.json), [Catalogue generator](../../studio/services/catalogue/generate_work_pages.py), and [Catalogue Regenerate](../../docs-viewer/services/docs_catalogue_regeneration.py). These downstream owners were not changed by CWF-1–3.

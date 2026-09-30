@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 from typing import Any, Dict
 
-from docs_document_identity import is_immutable_doc_id
+from docs_document_identity import is_document_id, is_immutable_doc_id
 from docs_document_location import management_collection_viewer_url, management_document_viewer_url
 from docs_workspace_config import (
     generated_documents_path,
@@ -38,7 +38,7 @@ def external_collection_payload_path(repo_root: Path, request_path: str) -> Path
         raise FileNotFoundError(f"Docs collection not found: {collection}")
     if len(artifact) == 1 and artifact[0] in {"manifest.json", "manage-manifest.json"}:
         relative_path = Path(artifact[0])
-    elif len(artifact) == 2 and artifact[0] == "by-id" and artifact[1].endswith(".json") and is_immutable_doc_id(artifact[1][:-5]):
+    elif len(artifact) == 2 and artifact[0] == "by-id" and artifact[1].endswith(".json") and is_document_id(artifact[1][:-5], collection=collection):
         relative_path = Path(*artifact)
     else:
         raise ValueError("Invalid external Docs collection payload route")
@@ -85,7 +85,7 @@ def read_generated_doc_links(
 
     This read does not build, repair, or search another collection.
     """
-    if not is_immutable_doc_id(doc_id):
+    if not is_document_id(doc_id, collection=collection):
         raise ValueError("doc_id must use the immutable document ID format")
     config = load_docs_working_config(repo_root)
     if collection and collection not in {child.collection for child in config.collections}:
@@ -181,7 +181,7 @@ def read_generated_semantic_tokens_index(repo_root: Path) -> Dict[str, Any]:
             raise ValueError("Semantic-token occurrence has an invalid source contract")
         collection = occurrence.get("source_collection")
         doc_id = occurrence.get("source_doc_id")
-        if collection not in owners or not is_immutable_doc_id(doc_id):
+        if collection not in owners or not is_document_id(doc_id, collection=collection):
             raise ValueError("Semantic-token source must identify an exact configured document")
         key = (collection, doc_id)
         if key in documents:
@@ -195,7 +195,7 @@ def read_generated_semantic_tokens_index(repo_root: Path) -> Dict[str, Any]:
         documents[key] = {
             "target": {"collection": collection, "doc_id": doc_id},
             "title": document["title"],
-            "href": management_document_viewer_url(collection_urls[collection], doc_id, collection=bool(collection)),
+            "href": management_document_viewer_url(collection_urls[collection], doc_id, collection=bool(collection), collection_id=collection),
         }
     return {**payload, "source_documents": list(documents.values())}
 

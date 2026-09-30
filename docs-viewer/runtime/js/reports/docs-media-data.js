@@ -1,6 +1,9 @@
 /** Validate generic media reads and assemble local report rows in the browser. */
 
 const DOC_ID = /^d-\d{8}-\d{6}-[0-9a-f]{6}$/;
+function documentId(value, collection) {
+  return (collection === "catalogue" ? /^[0-9]{5}$/ : DOC_ID).test(value);
+}
 const TOKEN = /^[a-z0-9][a-z0-9_-]*$/;
 
 function exactKeys(value, keys) {
@@ -58,7 +61,7 @@ function documentSummary(record,  hosts, context) {
   if (!exactKeys(record, ["target", "title", "references"])
     || !exactKeys(target, ["collection", "doc_id"])
     || !collectionId(target.collection)
-    || !exactString(target.doc_id) || !DOC_ID.test(target.doc_id)
+    || !exactString(target.doc_id) || !documentId(target.doc_id, target.collection)
     || !exactString(record.title) || !record.title || !Array.isArray(record.references)) {
     throw new Error("Docs media document reference is invalid.");
   }

@@ -241,7 +241,8 @@ def owned_media_reference(
         return None
     candidate = urlsplit(raw)
     for media_type, media in sorted(media_configs.items()):
-        prefix = urlsplit(media.served_path_prefix)
+        local_prefix = media.served_path_prefix.removeprefix("/docs/assets/media/")
+        prefix = urlsplit("docs-media:" + local_prefix)
         if prefix.query or prefix.fragment:
             raise ValueError(f"configured served media prefix for {media_type} must not contain query or fragment")
         identity = _prefix_match(candidate, prefix)

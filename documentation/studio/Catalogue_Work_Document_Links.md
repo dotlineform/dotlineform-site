@@ -3,9 +3,9 @@ draft: false
 doc_id: d-20260929-201148-f1cc2f
 title: Catalogue Work IDs and Portable Docs - Proposed Delivery
 added_date: "2026-09-29 20:11:48"
-last_updated: "2026-09-29 20:50:09"
+last_updated: "2026-09-30 11:33:27"
 summary: Use each Work ID as its Catalogue document ID, link to that document directly from Media View, and make Docs viewer and media references portable across local and public roots.
-ui_status: proposed
+ui_status: in-progress
 parent_id: d-20260428-000000-f5ff18
 ---
 # Catalogue Work IDs and Portable Docs - Proposed Delivery
@@ -55,52 +55,66 @@ Today a local Moments image is served from `/docs/assets/media/collections/momen
 
 ### CWID-0 — Readiness
 
-- [ ] Inspect every Catalogue document ID validator, exact target, source/create/delete path, Links/Search/Recents/Selected reader and report route that currently assumes `d-...`. Confirm the cutover sequence and inventory old-ID references, including authored links and public destinations.
-- [ ] Confirm that Catalogue Regenerate's generated image tokens remain intact and identify the narrow Build boundary that records their occurrences. Inspect the Semantic Tokens report, Broken Links audit, Build index and Preview/public projection boundaries before excluding only self-targeting Catalogue Work tokens from usage.
-- [ ] Confirm the public report host/config projection and the direct child-detail dependencies. Identify Catalogue Draft controls and write paths, plus the ordinary report host's publication rule.
-- [ ] Inventory root-bearing by-ID URLs, internal viewer links, Docs media identities and local/public media bindings. Identify referenced public R2 keys, including Moments, and the exact transfer/verification boundary. Inspect Export and Review destinations.
+- [x] Inspect every Catalogue document ID validator, exact target, source/create/delete path, Links/Search/Recents/Selected reader and report route that currently assumes `d-...`. Confirm the cutover sequence and inventory old-ID references, including authored links and public destinations.
+- [x] Confirm that Catalogue Regenerate's generated image tokens remain intact and identify the narrow Build boundary that records their occurrences. Inspect the Semantic Tokens report, Broken Links audit, Build index and Preview/public projection boundaries before excluding only self-targeting Catalogue Work tokens from usage.
+- [x] Confirm the public report host/config projection and the direct child-detail dependencies. Identify Catalogue Draft controls and write paths, plus the ordinary report host's publication rule.
+- [x] Inventory root-bearing by-ID URLs, internal viewer links, Docs media identities and local/public media bindings. Identify referenced public R2 keys, including Moments, and the exact transfer/verification boundary. Inspect Export and Review destinations.
 
 Gate: present the exact identity migration and usage-index change, public request sequence, root-independent payload contract, R2 migration scope and readiness enforcement for implementation approval. This proposed document is not implementation approval.
 
 ### CWID-1 — Catalogue Identity Cutover
 
-- [ ] Make Catalogue Work IDs valid child document identities only in Catalogue context, and replace the old `d-...` assumptions in source, management, Build, reports and dependent readers. Retire duplicate Catalogue `work_id` source/manifest fields and derive Work association from `doc_id`.
-- [ ] Re-key the existing Catalogue source files and front matter once, preserving non-identity facts. Reconcile old exact targets and generated artifacts, then run the owning Catalogue Build and required derived-reader refreshes without dual-ID output or compatibility routes.
-- [ ] Keep the generated Catalogue image tokens and their rendering unchanged. Suppress a Catalogue document's semantic-token occurrence only when it targets that document's own Work ID. Run a complete Catalogue Build once to clear saved self-reference rows while retaining tokens that target different Works or Galleries and other collections' occurrences.
-- [ ] Keep Catalogue documents ready and reject draft selection or `draft: true` at the owning boundaries.
+- [x] Make Catalogue Work IDs valid child document identities only in Catalogue context, and replace the old `d-...` assumptions in source, management, Build, reports and dependent readers. Retire duplicate Catalogue `work_id` source/manifest fields and derive Work association from `doc_id`.
+- [x] Re-key the existing Catalogue source files and front matter once, preserving non-identity facts. Reconcile old exact targets and generated artifacts, then run the owning Catalogue Build and required derived-reader refreshes without dual-ID output or compatibility routes.
+- [x] Keep the generated Catalogue image tokens and their rendering unchanged. Suppress a Catalogue document's semantic-token occurrence only when it targets that document's own Work ID. Run a complete Catalogue Build once to clear saved self-reference rows while retaining tokens that target different Works or Galleries and other collections' occurrences.
+- [x] Keep Catalogue documents ready and reject draft selection or `draft: true` at the owning boundaries.
 
 Gate: inspect exact Work/source/manifest/by-ID membership, retained metadata and Work image presentation, including leading-zero IDs, deletion and targeted Build behavior. Confirm Catalogue self-reference rows are gone, cross-Work and Gallery references remain, other collections' occurrences remain, and Catalogue image tokens still render. Record the smallest existing evidence and migration cost after owner inspection; creating or changing tests requires a separately approved [test specification](Test_Contract_Discipline.md).
 
+Current state: CWID-1 implementation and the one-time Working migration are complete. All 4,616 Catalogue sources and generated by-ID documents use their five-digit Work IDs; source and manifest `work_id` fields and old Catalogue `d-...` by-ID/Links records are gone. The complete Catalogue Build reported 4,616 documents, zero warnings and 4,616 Links writes; the aggregate Workspace Links refresh reported no change. A targeted dry-run Build of `00001` rendered one document without writes. Its source retained title, timestamps, `draft: false` and image token, and its generated HTML retained the Work-derived image presentation and Media View marker. The Working semantic index has 27 occurrences from ordinary and `works` documents, including Work and Gallery targets, and none from Catalogue; cross-Work/Gallery Catalogue behavior is established by the renderer condition but has no current source example. Focused Python/JavaScript lint and `git diff --check` passed. No test or fixture work was approved. The owner checked `00001` in the Catalogue report and accepted its image presentation, closing the CWID-1 review gate.
+
 ### CWID-2 — Direct Public Document Link
 
-- [ ] Expose the exact Catalogue report host in public configuration and open a Catalogue child by its Work ID without loading the full list manifest.
-- [ ] Render `cat. <work_id>` as a standard new-tab link in Work Media View. Preserve the original tab's document and Media View, and show exact by-ID load errors without guessing another target.
-- [ ] Project changed shared runtime code into `site/` and inspect the tracked public delta.
+- [x] Expose the exact Catalogue report host in public configuration and open a Catalogue child by its Work ID without loading the full list manifest.
+- [x] Render `cat. <work_id>` as a standard new-tab link in Work Media View. Preserve the original tab's document and Media View, and show exact by-ID load errors without guessing another target.
+- [x] Project changed shared runtime code into `site/` and inspect the tracked public delta.
 
 Gate: focused lint, syntax and whitespace checks, `bin/site-code-update --check` and `bin/site-validate` where relevant; user manual review of navigation and visual fit. Browser automation is not implied.
 
+Current state: CWID-2 code is implemented. Public configuration carries the exact Catalogue report host, a direct `subdoc` loads the requested by-ID payload before any list manifest, and Work Media View renders `cat. <work_id>` as a native new-tab link. Opening the searchable list loads its manifest then. Focused Python/JavaScript lint, JSON syntax, `bin/site-code-update --check`, `bin/site-validate` and `git diff --check` passed. The owner accepted the local navigation and visual fit, closing this gate. The later approved Publish refreshed the tracked public Catalogue data to the new IDs.
+
 ### CWID-3 — Portable Document And Media References
 
-- [ ] Remove by-ID `viewer_url` and emit root-independent internal Docs targets. Resolve routes in local/public readers and Export/Review, and update Search's by-ID validation.
-- [ ] Emit Docs media identities in by-ID content and resolve them through each runtime's configured media root before rendering. Preserve safe external links and existing media-type behavior.
-- [ ] Replace public Docs media destinations with matching `workspace/` and `collections/` suffixes. Migrate referenced R2 bytes, including Moments, and update public projection, transfer inventory and validation without a `sub-scopes` compatibility path.
+- [x] Remove by-ID `viewer_url` and emit root-independent internal Docs targets. Resolve routes in local/public readers and Export/Review, and update Search's by-ID validation.
+- [x] Emit Docs media identities in by-ID content and resolve them through each runtime's configured media root before rendering. Preserve safe external links and existing media-type behavior.
+- [x] Replace public Docs media destinations with matching `workspace/` and `collections/` suffixes. Migrate referenced R2 bytes, including Moments, and update public projection, transfer inventory and validation without a `sub-scopes` compatibility path.
 
 Gate: inspect representative ordinary and collection documents with internal links and each managed media type in local and public preview, plus an exact inventory and byte verification of migrated referenced R2 objects. Record the selected checks and transfer cost before running them; tests or fixtures still need a separately approved specification.
 
+Current state: the renderer omits by-ID `viewer_url`, emits query-only Docs targets and `docs-media:<workspace-or-collection>/<type>/<identity>` media identities, and leaves external links intact. Local/public browser configuration supplies one media root; readers resolve links and media before mounting. Review resolves package routes and assets, while static Export packages selected media and maps included Docs links to exported HTML. Complete Working document builds covered 41 ordinary, 244 Works, 246 Concepts, 57 Moments and 4,616 Catalogue documents with no warnings; subsequent targeted builds repaired the affected authored links. Sampled ordinary, Works and Moments by-ID payloads contain no `viewer_url` or local-root Docs links. Direct Export diagnostics covered HTML and image packaging, an included Docs link and a child link outside the package; a direct Mermaid projection diagnostic produced logical light/dark SVG identities. The exact current Preview inventory contained 58 Docs media references: 36 Moments images, 21 Works images and one Works file. All old R2 keys existed, none of the new keys existed, and 3,838,506 bytes were copied to the new keys and verified byte for byte. Old keys remain for current public references. Focused Python/JavaScript lint, `bin/site-code-update --check`, `bin/site-validate` and `git diff --check` passed. No test or fixture work was authorized.
+
+Local review found that `works/d-20260911-100608-1bfe3e` displayed “Docs viewer route is not configured” because the Manage report adapter dropped the route and media root before passing its child context to the shared collection report. The Manage and public adapters now forward those configured values. Focused JavaScript lint, `bin/site-code-update --check`, `bin/site-validate` and `git diff --check` passed after the fix. The owner reports that the local checks seem to pass.
+
+The owner then authorized Publish. The first operation completed Preview preparation but stopped before distribution because its asset inventory still matched local served URLs and missed 58 logical `docs-media:` references. Preview inventory binding now matches each logical media family to its asset-root-relative path; direct diagnosis confirmed the 58 missing references, and focused Python lint passed. One subsequent Publish completed Preview revision `sha256:43716a27ff5773e6a2812e8325d338ad858be8872735857b3073f79dfa046e6d` and repository distribution with zero media errors. Its 18,526 referenced media objects were unchanged at their public destinations, including the 58 already migrated objects, so Publish copied zero objects. The repository projection added 4,616 files, changed 321, removed 4,616 old-ID files and left 4,929 unchanged. The tracked `site/` tree now contains exactly 4,616 five-digit Catalogue by-ID files and no old `d-...` Catalogue by-ID files. The running public preview served `/analysis/`, the new `00001` by-ID payload, public configuration and representative Works/Moments by-ID payloads with HTTP 200. `bin/site-code-update --check`, `bin/site-validate` and `git diff --check` passed. The owner accepted the refreshed public preview, including the requested `00001` sample, closing the CWID-3 review gate. This Publish has not committed, pushed or deployed the site.
+
 ### CWID-4 — Code Review
 
-- [ ] Review exact identity ownership, migration completeness, direct-route request order, root-independent URL/media identities, R2 transfer completeness, compatibility residue and the bounded changed-file diff. Update durable owner docs and rerun only checks affected by findings.
+- [x] Review exact identity ownership, migration completeness, direct-route request order, root-independent URL/media identities, R2 transfer completeness, compatibility residue and the bounded changed-file diff. Update durable owner docs and rerun only checks affected by findings.
 
 Gate: no unresolved issue inside this delivery's approved scope.
 
+Current state: CWID-4 review is complete with no blocking code finding. The bounded production/configuration/public-projection diff retains Catalogue-only numeric identity, exact host/child routing, lazy list loading, self-reference-only usage suppression and consumer-owned link/media resolution through browser, Export, Review and publication inventories. Read-only membership inspection found the same 4,616 Work IDs in Working source, Working by-ID, Preview by-ID and `site/` by-ID, with no old IDs or missing/extra members. Working and public Catalogue list rows contain only `doc_id`, `title` and `last_updated`; public `00001` retains its Catalogue image marker and has no `viewer_url`. The recorded R2 byte verification and accepted public-preview evidence remain the transfer/navigation evidence; no remote operation or browser automation was repeated. Stale ownership descriptions were corrected in [collection architecture](Sub_Scope_Index_Architecture.md#catalogue-work-records), [Catalogue Works](Catalogue_Works.md), [Subject Associations](data/subject-associations.md), [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md#generated-usage-and-audit), [Configuration And Extension Points](Configuration_And_Extension_Points.md) and [Catalogue Media View](Catalogue_Media_View.md); [Media And Asset Handling](Media_And_Asset_Handling.md) already describes portable media. The historical Catalogue Works feature's current-owner link to the removed mapping module was repaired. Source review and `git diff --check` passed. No production, test, fixture or generated payload change was needed during review.
+
 ### CWID-5 — Closeout
 
-- [ ] Confirm direct Work-ID links and portable Docs media against accepted public preview evidence; state any live GitHub Pages limits plainly.
-- [ ] Recommend retaining or retiring this proposed delivery once durable owners describe the shipped behavior.
+- [x] Confirm direct Work-ID links and portable Docs media against accepted public preview evidence; state any live GitHub Pages limits plainly.
+- [x] Recommend retaining or retiring this proposed delivery once durable owners describe the shipped behavior.
 
 Gate: explicit user closeout after the complete result and manual review.
+
+Current state: ready for explicit user closeout. Publish and the accepted public preview establish the prepared repository result; commit, push and GitHub Pages deployment remain pending, so there is no live deployed-site or latency claim. Previously verified new R2 media keys are retained alongside the old keys needed by the still-deployed site. Recommend manually archiving this delivery after closeout: the durable destinations above describe its delivered behavior, and [Planned Features](Planned_Features.md) remains the workflow owner. This delivery has no separate concept, architecture or temporary verification sibling to retire. Preview Build/snapshot work and deployed-site performance measurement remain separate follow-ons. No document is deleted or archived by this update.
 
 ## Follow-on
 
 - Temporary Preview Build and snapshot consistency: in a separate delivery, define the consistency required for a publishable snapshot, then examine which captured inputs Preview must build, what work it repeats from Working, and which generated artifacts need to remain in the finished Preview. Include the semantic-token usage index, which is needed while building but is currently retained in Preview without being copied to the public site. Assess build time, I/O and snapshot size before changing that workflow. This delivery retains the existing Preview Build.
-- Measure published request sizes and latency across the whole site after a separate, explicitly approved Publish and deployment.
+- Measure published request sizes and latency across the whole site after a separately approved GitHub Pages deployment.
