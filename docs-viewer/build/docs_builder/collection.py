@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
+from datetime import date
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
@@ -97,7 +98,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
             if self.collection_id in {"catalogue", "works"}:
                 if not is_doc_timestamp(doc.last_updated):
                     raise ValueError(f"{self.collection_id} document {doc.doc_id} requires a valid last_updated timestamp")
-                row["last_updated"] = doc.last_updated
+                row["last_updated"] = doc.last_updated[:10] if self.collection_id == "catalogue" else doc.last_updated
             rows.append(row)
         payload: dict[str, Any] = {
             "docs": rows
@@ -130,11 +131,12 @@ class CollectionDocsBuilder(DocsDataBuilder):
             row: dict[str, Any] = {
                 "doc_id": doc.doc_id,
                 "title": doc.title,
-                "last_updated": doc.last_updated,
-                "added_date": doc.added_date,
+                "last_updated": doc.last_updated[:10] if self.collection_id == "catalogue" else doc.last_updated,
             }
-            if self.config.stage == "working" and self.collection_id != "catalogue":
-                row["draft"] = doc.front_matter["draft"]
+            if self.collection_id != "catalogue":
+                row["added_date"] = doc.added_date
+                if self.config.stage == "working":
+                    row["draft"] = doc.front_matter["draft"]
             rows.append(row)
         payload: dict[str, Any] = {"docs": rows}
         if subjects_by_doc_id is not None:
@@ -200,17 +202,20 @@ class CollectionDocsBuilder(DocsDataBuilder):
         """Load the prior list metadata required for a targeted update."""
         manifest = read_collection_manifest(self.output_dir / "manifest.json", collection=self.collection_id)
         manage_manifest = read_collection_manifest(self.output_dir / "manage-manifest.json", collection=self.collection_id)
-        if self.collection_id in {"catalogue", "works"}:
+        if self.collection_id == "works":
             for row in manifest["docs"]:
                 if not isinstance(row.get("last_updated"), str) or not is_doc_timestamp(row["last_updated"]):
                     raise ValueError(f"{self.collection_id} manifest requires last_updated; run a complete collection Build first")
         if self.collection_id == "catalogue":
-            for row in manifest["docs"]:
-                if (
-                    "subject" in row or "work_id" in row
-                    or not is_document_id(row["doc_id"], collection="catalogue")
-                ):
-                    raise ValueError("Catalogue manifest requires Work IDs as doc_id; run a complete Catalogue Build first")
+            for saved_manifest in (manifest, manage_manifest):
+                for row in saved_manifest["docs"]:
+                    updated = row.get("last_updated")
+                    try:
+                        valid_date = isinstance(updated, str) and date.fromisoformat(updated).isoformat() == updated
+                    except ValueError:
+                        valid_date = False
+                    if set(row) != {"doc_id", "title", "last_updated"} or not valid_date:
+                        raise ValueError("Catalogue manifests require doc_id, title and date-only last_updated; run a complete Catalogue Build first")
         if {row["doc_id"] for row in manifest["docs"]} != {row["doc_id"] for row in manage_manifest["docs"]}:
             raise ValueError("Collection manifests disagree on document membership; run a complete Build first")
         if not (self.semantic_tokens_dir / "index.json").is_file():
