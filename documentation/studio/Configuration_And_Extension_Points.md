@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260512-142027-54b354
 title: Configuration And Extension Points
 added_date: "2026-05-12 14:20:27"
-last_updated: "2026-09-30 11:33:27"
+last_updated: "2026-09-30 12:20:34"
 summary: Map of the configuration, registries, generated projections, code definitions, and capability checks that drive Docs Viewer workflows.
 parent_id: d-20260424-000000-50b63f
 
@@ -62,11 +62,11 @@ Generated browser config sits between source-side workspace config and the runti
 
 Each managed media type has one `asset_location`; its owner retains `asset_root` for relative reference identities. Working and Preview resolve the same current assets through `/docs/assets/`. Ready bytes are not duplicated under source, generated output or Preview. Temporary preparation builds receive the explicit existing shared asset root; they cannot invent another one.
 
-Managed document targets use immutable `doc_id` and optional exact registered `collection`; collection targets are empty objects or contain only `collection`. Retired `stage`, `scope` and `sub_scope` selectors are rejected. Source records require boolean `draft`; collection documents are flat and do not inherit ordinary hierarchy. Reports use `id: docs_collection` with an exact collection selector.
+Managed document targets use immutable `doc_id` and optional exact registered `collection`; collection targets are empty objects or contain only `collection`. Retired `stage`, `scope` and `sub_scope` selectors are rejected. Ordinary and other collection source records require boolean `draft`; Catalogue source records reject that field and have fixed document eligibility. Collection documents are flat and do not inherit ordinary hierarchy. Reports use `id: docs_collection` with an exact collection selector.
 
 Working registers each collection once, with its ID, title and exact `report_host_doc_id`; Preview derives that registration. The host ID is configuration authority, not inferred from documents, titles or a receipt. Collection creation, registration changes and retirement are explicitly scoped deliveries; [Source Organisation](Source_Organisation.md#collection-deliveries) owns the boundary. Generic collection create/delete UI actions, endpoints, capabilities and historical creation receipts are removed.
 
-Catalogue Regenerate creates each document with the exact five-digit Work ID as its quoted `doc_id`, source filename and by-ID filename. Catalogue source and list manifests carry no separate `work_id`; other document collections and the ordinary Catalogue report host retain `d-...` IDs. Catalogue requires `draft: false` and rejects Set Draft. Local and public browser configuration expose the exact Catalogue report host so readers compose direct Work-ID links without a document mapping. Canonical Catalogue records remain Studio-owned; configuration consolidation does not move them or Projects-owned original images.
+Catalogue Regenerate creates each document with the exact five-digit Work ID as its quoted `doc_id`, source filename and by-ID filename. Catalogue source and list manifests carry no separate `work_id`; other document collections and the ordinary Catalogue report host retain `d-...` IDs. Catalogue source and generated document metadata omit `draft`; source validation rejects the field and Set Draft is rejected. Catalogue documents have fixed eligibility, while their ordinary report host still governs collection publication. Local and public browser configuration expose the exact Catalogue report host so readers compose direct Work-ID links without a document mapping. Canonical Catalogue records remain Studio-owned; configuration consolidation does not move them or Projects-owned original images.
 
 ### Builder And Local Service Integration
 
@@ -88,7 +88,7 @@ Source/Create/metadata/placement/Delete/Draft operations resolve Working and req
 
 ### Publication And Downstream Ownership
 
-`docs_prepare_preview.py` selects eligible Working sources under boolean draft and `unpublishable.json` policy, including inherited ordinary exclusions and excluded collection hosts. It builds captured inputs in temporary storage, validates and replaces Preview, writes `docs_preview_manifest_v2` after verification, then removes temporary inputs. Preview has no persistent source/generated authoring tree.
+`docs_prepare_preview.py` selects eligible Working sources under boolean draft and `unpublishable.json` policy, including inherited ordinary exclusions and excluded collection hosts. Catalogue documents have fixed document eligibility and no draft field; an excluded Catalogue report host still excludes its collection. Preparation builds captured inputs in temporary storage, validates and replaces Preview, writes `docs_preview_manifest_v2` after verification, then removes temporary inputs. Preview has no persistent source/generated authoring tree.
 
 `catalogue-artifacts.json` and `docs_catalogue_artifacts.py` select Catalogue JSON independently of document eligibility. Prepare Preview copies that JSON, Search v4 and Recents unchanged. The completion manifest binds snapshot bytes and sorted shared asset identities; it does not freeze mutable asset bytes or keep asset hashes/history. Failure before replacement preserves the previous snapshot; failure during replacement requires preparation again.
 

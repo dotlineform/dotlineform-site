@@ -35,7 +35,10 @@ def _validate_row(row: Any, *, field: str, seen_ids: set[str], collection: str =
     seen_ids.add(doc_id)
     if not isinstance(row.get("title"), str) or not row["title"].strip():
         raise ValueError(f"{field}.title must not be empty")
-    if not isinstance(row.get("draft"), bool):
+    if collection == "catalogue":
+        if "draft" in row:
+            raise ValueError(f"{field}: Catalogue metadata must omit draft")
+    elif not isinstance(row.get("draft"), bool):
         raise ValueError(f"{field}.draft must be an explicit boolean")
     return doc_id
 
@@ -65,7 +68,7 @@ def select_ordinary_documents(
 def select_collection_documents(
     repo_root: Path, config: DocsStageConfig, ordinary_ids: set[str],
 ) -> list[tuple[DocsCollectionConfig, dict[str, dict[str, Any]]]]:
-    """Read only included, eligible-host manifests and select flat non-draft rows."""
+    """Select eligible-host collection rows; Catalogue has no draft state."""
     if config.stage != "working":
         raise ValueError("Discovery selection requires Working; Preview copies saved results")
     selections = []
@@ -79,7 +82,7 @@ def select_collection_documents(
         for index, row in enumerate(manifest["docs"]):
             field = f"{path}.docs[{index}]"
             doc_id = _validate_row(row, field=field, seen_ids=seen_ids, collection=collection.collection)
-            if row["draft"]:
+            if collection.collection != "catalogue" and row["draft"]:
                 continue
             if not isinstance(row.get("last_updated"), str):
                 raise ValueError(f"{field}.last_updated must be a string")

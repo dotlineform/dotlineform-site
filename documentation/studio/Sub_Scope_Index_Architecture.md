@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260728-113139-763354
 title: Sub-Scope Index Architecture
 added_date: "2026-07-28 11:31:39"
-last_updated: "2026-09-30 11:33:27"
+last_updated: "2026-09-30 12:20:34"
 summary: define collection identity, the docs_subscope default, registered customisations, selection lifecycle, and explicit function adoption
 parent_id: d-20260801-084127-752d7e
 ---
@@ -257,7 +257,7 @@ Implementation/static review, initial metadata generation, a targeted no-change 
 
 Working Catalogue's management contribution replaces New with Regenerate and omits independent document Delete. Studio Works editor owns Work creation, metadata and generated JSON. [Regeneration service](../../docs-viewer/services/docs_catalogue_regeneration.py) reads the generated Work index and selected `works/index/<work_id>.json` records through the configured Catalogue output reader. Each Catalogue document uses the exact five-digit Work ID as its one immutable `doc_id`: quoted front matter, `<work_id>.md`, `by-id/<work_id>.json`, manifest membership and direct viewer child identity all agree. Source and manifests have no separate `work_id`, old document-ID alias or mapping file. Regenerate inventories source once and creates, updates, deletes and selects Build targets by that same ID. Updates retain identity, filename, added date and existing Links unless their source relationships change. Ordinary documents, other collections and the ordinary Catalogue report host retain `d-...` IDs; numeric document IDs are valid only in Catalogue context. Direct Catalogue New/Delete management requests are rejected; other collections retain their actions.
 
-Catalogue documents require `draft: false` because they represent Works with generated content and need no separate authored-draft stage. Their Draft control is omitted, Set Draft is rejected, and source reads for owning writes or Build reject `draft: true`. Publication still depends on the ordinary report host's eligibility. Other document collections retain their draft controls and defaults.
+Catalogue documents represent Works with generated content and are always publishable at the document level. Their source, management metadata, list manifests and by-ID payloads omit `draft`; creation and Regenerate do not seed it. Their Draft control is omitted, Set Draft is rejected, and source reads for owning writes or Build reject any `draft` field. Build, Publish, Search and Recents use fixed Catalogue eligibility. Publication still depends on the ordinary report host's eligibility. Other document collections retain their required boolean draft fields, controls and defaults.
 
 The existing collection action registration supplies the exact Working Catalogue target and report-refresh callback. The management host opens a modal with Pending updates selected by default and Full reconciliation as the other choice. One Run action awaits source writes, document builds, Links cleanup or initialization, pending-list updates and report refresh. The result displays Updated, Created and Deleted counts as separate lines; Updated counts existing documents processed through retitle, body regeneration or Build-only work once each. Busy state covers the operation while input and result display remain ready. Successful results stay in the modal with one Close button. Failures report committed sources and incomplete work without automatically retrying.
 
@@ -277,6 +277,8 @@ Empty optional metadata lines are omitted. Dimensions use positive numeric `heig
 ### Catalogue Collection Browsing
 
 The [collection builder](../../docs-viewer/build/docs_builder/collection.py) projects Catalogue public-reader list rows as `doc_id`, `title` and `last_updated`. It validates the five-digit string `doc_id` and timestamp; Catalogue list rows carry neither a separate `work_id` nor a generic `subject` object. Targeted generation requires the current saved manifest shape and otherwise fails with a complete Catalogue Build instruction. Working reads `manage-manifest.json`, while public readers consume `manifest.json`; both use `doc_id` for Work-ID search and thumbnails. Other collections retain their subject contracts.
+
+Catalogue by-ID document payloads omit both `subject`, including the null projection that the shared document writer normally emits for an absent subject, and `draft`. This applies to Working and Preview Build and therefore to published Catalogue documents. The ordinary Catalogue report host and other document collections retain their existing subject projection and readiness behavior.
 
 Local and public browser configuration expose the exact ordinary Catalogue report host. Media View and Catalogue Works compose `?doc=<report-host-id>&subdoc=<work-id>` without a document lookup. The [shared collection reader](../../docs-viewer/runtime/js/shared/docs-collection-report.js) opens a direct Catalogue child from its by-ID payload without loading the Catalogue list manifest or list thumbnail settings. Its first return to the searchable list loads those inputs; a list already loaded is reused. Invalid Work IDs and missing or mismatched by-ID payloads fail visibly without a replacement target.
 

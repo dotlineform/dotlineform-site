@@ -353,7 +353,10 @@ class DocsViewerSearchDataBuilder:
             if (
                 document.front_matter.get("doc_id") != doc_id
                 or normalize_text(document.title) != normalize_text(row["title"])
-                or document.front_matter["draft"] is not False
+                or (
+                    getattr(config, "collection", "") != "catalogue"
+                    and document.front_matter["draft"] is not False
+                )
             ):
                 raise ValueError(f"Search metadata and source identity, title or draft are stale: {target}")
             if isinstance(config, DocsStageConfig) and document.parent_id != row["parent_id"]:

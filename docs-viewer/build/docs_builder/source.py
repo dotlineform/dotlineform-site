@@ -319,7 +319,7 @@ class SourceLoadingMixin:
         parent_id = self.effective_parent_id(doc, docs)
         if parent_id:
             entry["parent_id"] = parent_id
-        if self.config.stage == "working":
+        if self.config.stage == "working" and getattr(self, "collection_id", "") != "catalogue":
             entry["draft"] = doc.front_matter["draft"]
         if doc.summary:
             entry["summary"] = doc.summary

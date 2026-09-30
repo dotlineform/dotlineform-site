@@ -25,9 +25,8 @@ def catalogue_source_documents(repo_root: Path) -> dict[str, source_model.Source
         if not isinstance(fields.get("title"), str) or not fields["title"].strip():
             raise ValueError(f"Catalogue document {document.doc_id} requires a title")
         if (not is_doc_timestamp(fields.get("added_date"))
-                or not is_doc_timestamp(fields.get("last_updated"))
-                or fields.get("draft") is not False):
-            raise ValueError(f"Catalogue document {document.doc_id} has invalid timestamps or draft state")
+                or not is_doc_timestamp(fields.get("last_updated"))):
+            raise ValueError(f"Catalogue document {document.doc_id} has invalid timestamps")
         if document.doc_id in documents:
             raise ValueError(f"Work {document.doc_id} has multiple Catalogue documents")
         documents[document.doc_id] = document

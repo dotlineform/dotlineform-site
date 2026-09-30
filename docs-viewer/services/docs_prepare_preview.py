@@ -122,7 +122,12 @@ def _plan(repo_root: Path) -> tuple[dict[str, Any], dict[Path, bytes], Preparati
     for collection in (working, *working.collections):
         child = str(getattr(collection, "collection", ""))
         docs = ordinary if not child else load_document_collection_docs_for_config(repo_root, working, collection)
-        rejected = excluded_documents(docs) if child else set(ordinary_excluded)
+        if child == "catalogue":
+            rejected = set()
+        elif child:
+            rejected = excluded_documents(docs)
+        else:
+            rejected = set(ordinary_excluded)
         if child and collection.report_host_doc_id in ordinary_excluded:
             rejected.update(doc.doc_id for doc in docs)
         excluded.update(rejected)

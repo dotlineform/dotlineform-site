@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260423-000000-8fd731
 title: Source Organisation
 added_date: "2026-04-23 00:00:00"
-last_updated: "2026-09-27 15:47:30"
+last_updated: "2026-09-30 12:20:34"
 summary: Working source and generated storage, one read-only Preview snapshot, and exact collection and media ownership.
 parent_id: d-20260424-000000-50b63f
 ---
@@ -101,7 +101,7 @@ Publish preparation intersects selections with its exact eligible document set, 
 | Publish | One awaited preparation and distribution operation | Unavailable |
 | Collection reports | Configured Working owner | Published read-only output |
 
-Every ordinary and collection source document requires explicit boolean `draft`. Prepare Preview excludes draft roots and descendants, roots in ordinary `working/source/documents/unpublishable.json` and their descendants, and collections whose report host is excluded. An intentionally empty ignore file contains `[]`; missing or invalid policy fails visibly. The eligible set is captured before building, with a pruned copy of `index-order.json` in the temporary inputs. Surviving branches retain their relative order; excluded children are not promoted. Working retains the complete tree.
+Ordinary and other collection source documents require explicit boolean `draft`. Catalogue source rejects that field, its generated document metadata omit it and every Catalogue document has fixed eligibility. Prepare Preview excludes draft roots and descendants, roots in ordinary `working/source/documents/unpublishable.json` and their descendants, and collections whose report host is excluded, including Catalogue. An intentionally empty ignore file contains `[]`; missing or invalid policy fails visibly. The eligible set is captured before building, with a pruned copy of `index-order.json` in the temporary inputs. Surviving branches retain their relative order; excluded children are not promoted. Working retains the complete tree.
 
 `POST /docs/publish` accepts an empty object. `docs_publish.py` awaits `docs_prepare_preview.py`, then distributes the returned completed snapshot through `docs_deploy_repo.py`. Preparation captures current eligible source, saved Search/Recents and selected Catalogue JSON, builds documents in temporary storage, validates the finished output and replaces Preview. `docs_preview_snapshot.py` writes `preview-manifest.json` after byte verification. A build failure leaves the previous Preview intact; failure during replacement leaves no valid completion receipt. A fresh Publish is the recovery operation. There is no intermediate confirmation, change-list modal or separate acceptance action.
 

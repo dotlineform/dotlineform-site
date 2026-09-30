@@ -133,7 +133,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
                 "last_updated": doc.last_updated,
                 "added_date": doc.added_date,
             }
-            if self.config.stage == "working":
+            if self.config.stage == "working" and self.collection_id != "catalogue":
                 row["draft"] = doc.front_matter["draft"]
             rows.append(row)
         payload: dict[str, Any] = {"docs": rows}

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260423-000000-c9f3ea
 title: Builder
 added_date: "2026-04-23 00:00:00"
-last_updated: "2026-09-27 11:52:05"
+last_updated: "2026-09-30 12:20:34"
 parent_id: d-20260424-000000-50b63f
 ---
 # Builder
@@ -127,7 +127,7 @@ Save, watcher builds and individual-document rebuilds update the prepared record
 
 ## Source Contract
 
-The common front matter is `doc_id`, `title`, `draft`, `parent_id`, `added_date`, `last_updated`, and optional `summary`. Every ordinary and named-collection source document requires `draft` as an explicit boolean in Working and captured preparation input. Source loading, Search, preparation and Source Save validate this requirement before using or writing the document. New documents, imported documents and collection report hosts start with `draft: true`; generated Catalogue creation assigns `draft: false`. Prepared sources retain the captured readiness field, while public reader payloads omit authoring readiness. Ordinary workspace documents additionally support free-text `ui_status`, without a fixed value enumeration; this includes the text `draft`, which has no publication effect. Named collection documents do not use that field: source formatting and collection-placement rewrites remove it, collection management manifests and by-ID metadata omit it, and the metadata endpoint omits it for collection targets. The reader's optional status artwork is a separate presentation mapping. `publishable` is retired and rejected. The ignore list is separate Working source policy data and is not copied into prepared content. Source validation is owned by the builder/source model.
+The common front matter is `doc_id`, `title`, `parent_id`, `added_date`, `last_updated`, and optional `summary`. Ordinary and other named-collection sources additionally require `draft` as an explicit boolean in Working and captured preparation input. Catalogue sources reject that field and have fixed document eligibility; Catalogue creation, Regenerate, management metadata, list manifests and by-ID payloads omit it. Source loading, Search, preparation and Source Save validate the owning collection's readiness rule before using or writing the document. New ordinary and other collection documents, imported documents and collection report hosts start with `draft: true`. Prepared sources retain applicable captured readiness fields, while public reader payloads omit authoring readiness. An excluded ordinary collection host still excludes its collection, including Catalogue. Ordinary workspace documents additionally support free-text `ui_status`, without a fixed value enumeration; this includes the text `draft`, which has no publication effect. Named collection documents do not use that field: source formatting and collection-placement rewrites remove it, collection management manifests and by-ID metadata omit it, and the metadata endpoint omits it for collection targets. The reader's optional status artwork is a separate presentation mapping. `publishable` is retired and rejected. The ignore list is separate Working source policy data and is not copied into prepared content. Source validation is owned by the builder/source model.
 
 - new documents give `added_date` and `last_updated` one captured full timestamp; after creation, only body, `title`, or `summary` changes advance `last_updated`.
 - edited Recent includes only full `last_updated` timestamps; legacy date-only values become eligible after the next qualifying edit.

@@ -466,8 +466,8 @@ def normalize_ui_status(value: Any) -> str:
 
 
 def collection_supports_draft(config: DocsStageConfig | DocsCollectionConfig) -> bool:
-    """Draft authoring belongs to every collection in Working."""
-    return config.stage == "working"
+    """Working documents support draft authoring except Catalogue Works."""
+    return config.stage == "working" and getattr(config, "collection", "") != "catalogue"
 
 
 def validate_document_status_front_matter(
@@ -482,13 +482,13 @@ def validate_document_status_front_matter(
         raise ValueError(f"sub-scope front matter is retired; use collection: {source_name}")
     if collection_config.stage not in {"working", "preview"}:
         raise ValueError(f"draft front matter requires a workflow stage: {source_name}")
-    if "draft" not in front_matter or not isinstance(front_matter["draft"], bool):
-        raise ValueError(f"draft front matter must be an explicit boolean in {source_name}")
     if getattr(collection_config, "collection", "") == "catalogue":
-        if front_matter["draft"] is not False:
-            raise ValueError(f"Catalogue documents must be ready in {source_name}")
+        if "draft" in front_matter:
+            raise ValueError(f"Catalogue documents must omit draft in {source_name}")
         if "work_id" in front_matter:
             raise ValueError(f"Catalogue Work identity must use doc_id in {source_name}")
+    elif "draft" not in front_matter or not isinstance(front_matter["draft"], bool):
+        raise ValueError(f"draft front matter must be an explicit boolean in {source_name}")
     if "viewable" in front_matter:
         raise ValueError(
             f"legacy viewable front matter is not supported in {source_name}; "

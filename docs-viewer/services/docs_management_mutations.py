@@ -202,7 +202,7 @@ def plan_create(
     """Plan one create-only write without reading existing named-collection docs.
 
     Ordinary documents add their ID to the authored tree.
-    Catalogue records start ready; other documents start as drafts. Catalogue
+    Catalogue records have no draft field; other documents start as drafts. Catalogue
     fields are present before the creation build. Internal generators may supply
     body_markdown; the HTTP create request does not expose it.
     """
@@ -252,7 +252,7 @@ def plan_create(
         "added_date": timestamp,
     }
     if source_model.collection_supports_draft(resolved_collection.document_config):
-        front_matter_seed["draft"] = collection != "catalogue"
+        front_matter_seed["draft"] = True
     front_matter = source_model.advance_doc_front_matter(
         front_matter_seed,
         timestamp=timestamp,
