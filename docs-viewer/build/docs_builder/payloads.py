@@ -43,7 +43,7 @@ class PayloadBuilderMixin:
             )
         )
         entry = self.by_id_metadata_entry(doc, docs)
-        if getattr(self, "collection_id", "") != "catalogue":
+        if getattr(self, "collection_id", "") == "works":
             entry["subject"] = project_reader_subject(doc.front_matter)
         entry["content_html"] = content_html
         return entry

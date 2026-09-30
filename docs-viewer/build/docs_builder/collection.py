@@ -93,7 +93,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
             if self.collection_id == "catalogue":
                 if not is_document_id(doc.doc_id, collection="catalogue"):
                     raise ValueError(f"Catalogue document {doc.doc_id} requires one exact Work ID")
-            else:
+            elif self.collection_id == "works":
                 row["subject"] = project_reader_subject(doc.front_matter)
             rows.append(row)
         payload: dict[str, Any] = {

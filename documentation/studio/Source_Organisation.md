@@ -66,7 +66,7 @@ Authored Markdown is flat beneath each owner's `documents/`. Ordinary hierarchy 
 
 Each collection has an exact ordinary report host. Positioning that host retains its immutable association; it does not choose a different collection or turn collection rows into tree children. A delivery registers the owner once in Working and explicitly places its host in the ordinary tree. Preparation later includes its eligible output in Preview.
 
-Concepts and Moments are document collections rather than separate Concept/Moment entities. Works owns Subject specialisation. Ordinary documents retain their authored fields through common preparation, while collection customisations project their own authoring fields into reader data. Catalogue has its own canonical Work identity and regeneration owner.
+Concepts and Moments are document collections rather than separate Concept/Moment entities. Works owns Subject specialisation: only Works collection manifests and individual document JSON emit the reader `subject` field. Ordinary documents retain their authored fields through common preparation, while collection customisations project their own authoring fields into reader data. Catalogue has its own canonical Work identity and regeneration owner.
 
 The Position button beside Index Actions uses `arrow-up-down.svg`. Its synchronous modal moves the displayed ordinary document and its whole subtree Before, After or Inside a chosen ordinary destination. Inside appends the last child; Inside Root appends a root. All ordinary documents are available regardless of draft/unpublishable state, except the moved subtree. Save writes the JSON and refreshes the tree; Cancel writes nothing. Drag positioning is retired.
 
