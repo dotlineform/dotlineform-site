@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260605-125108-c68916
 title: Generated Data Contracts
 added_date: "2026-06-05 12:51:08"
-last_updated: "2026-09-30 12:20:34"
+last_updated: "2026-09-30 13:33:18"
 summary: Public and manage Docs Viewer payload schemas, registered publication roots, read authority, publishing, and builder ownership contracts.
 parent_id: d-20260331-000000-c313fd
 ---
@@ -51,8 +51,14 @@ Scope-independent generated data has a separate owner. The semantic-token target
 | Selected document render | by-id payload | by-id payload | By-id payloads remain in scope for selected documents. |
 | Info-panel metadata | selected by-id payload | selected by-id payload | Public reader metadata is limited to title, summary, and last updated. |
 | Search | search payload | search payload | Search runtime reads separate search payloads. |
-| Recent | unchanged copy of Working `recent.json` | Working generated `recent.json` | One stage-independent payload declares the shared `added` or `edited` basis; readers own navigation. |
+| Recent | unchanged copy of Working `recent.json` | Working generated `recent.json` | One stage-independent payload lists recently edited documents; readers own navigation. |
 | Management metadata/actions | not public route data | management services and manage payloads as needed | Public tree/by-id payloads should not carry management-only metadata. |
+
+## List Date Projections
+
+All collection reader and management manifests, Search result metadata, Recents and Selected Documents use populated update dates in canonical `YYYY-MM-DD` form. The ordinary builder's in-memory flat rows use the same projection; no flat index file is written. List inventories omit `added_date`; source Markdown and by-ID document payloads retain their original `added_date` and `last_updated` precision for exact document metadata and source/output consistency checks. Collection reader manifests include `last_updated` even when they previously exposed only identity, title and subject. Ordinary navigation trees retain their authored order and carry no update dates.
+
+Recency sorting uses the projected update date; entries updated on the same day use the owning report's deterministic title/identity ties. List dates derive from existing source timestamps or dates. Undated documents retain an empty update value, sort after dated report entries and are excluded from Recents; creation dates are never substituted. Catalogue, Works and Selected Documents continue to require populated update dates. Malformed populated source or projected dates fail at their owning operation. Targeted collection builds require current reader and management manifest shapes and direct users to a complete collection Build when migration is needed. Search compares source and by-ID update values at their original precision and their date projection with collection management metadata.
 
 ## `index-tree.json` Contract
 
@@ -107,13 +113,13 @@ That is a builder-source responsibility, not a public search runtime capability 
 
 ## Recent Contract
 
-Recents uses one `docs_recent_v1` artifact with `schema`, `basis`, `limit`, `generated_at` and `docs`. Working alone generates it at its configured `generated/documents/recent.json` location. The workspace's `recent_limit` is 20. Every enabled reader must use the same date basis, currently edited; different stage or public variants are not generated.
+Recents uses one `docs_recent_v2` artifact with `schema`, `limit`, `generated_at` and `docs`. Working alone generates it at its configured `generated/documents/recent.json` location. The workspace's `recent_limit` is 20. Recents always uses document updates; the added-based mode, route `recent_basis` setting and payload `basis` field are retired. Different stage or public variants are not generated.
 
-Each row carries exact `doc_id`, title, one neutral `timestamp` and optional parent context. Collection rows additionally carry `collection`, `report_doc_id` and `collection_title`. Rows contain no stage, result URL or `content_url`. The existing schema and identity fields remain; the reader no longer requires or consumes a stored content URL. The active route resolves navigation from exact document/collection/host identity. Recents and Search share result navigation but load independent artifacts.
+Each row carries exact `doc_id`, title, one date-only update `timestamp` (`YYYY-MM-DD`) and optional parent context. Collection rows additionally carry `collection`, `report_doc_id` and `collection_title`. Rows contain no stage, result URL or `content_url`. The active route resolves navigation from exact document/collection/host identity. Recents and Search share result navigation but load independent artifacts.
 
 Search and Recents use [the shared metadata selector](../../docs-viewer/services/docs_discovery_selection.py): ordinary documents plus the explicitly included Works collection, with draft/unpublishable ordinary branches excluded, the included collection host required to survive, and flat eligible collection rows selected independently. Catalogue rows have fixed document eligibility and omit `draft`; other collection rows use explicit boolean draft state. Eligible Catalogue, Concepts and Moments landing pages remain ordinary candidates; their subdocs remain excluded by configuration. Processing's empty Docs collection was retired on 2026-09-27. Recents applies all selection before date sorting and limiting.
 
-The [Recents builder](../../docs-viewer/build/docs_builder/payloads.py) reuses current ordinary records and their in-memory tree. Included collections supply compact Working `manage-manifest.json` metadata: identity, title, `last_updated` and effective `added_date`, plus explicit draft state for collections other than Catalogue. Full and targeted collection builds maintain the date fields. Recents does not open collection Markdown or by-ID bodies, read Search, or fall back to a source scan. Missing/invalid required metadata fails clearly. Manage Rebuild refreshes included collection metadata before the ordinary build generates Recents once; direct full Working document builds require current saved collection metadata.
+The [Recents builder](../../docs-viewer/build/docs_builder/payloads.py) reuses current ordinary records and their in-memory tree. Included collections supply compact Working `manage-manifest.json` metadata: identity, title and date-only `last_updated`, plus explicit draft state for collections other than Catalogue. Full and targeted collection builds maintain the date field. Recents does not open collection Markdown or by-ID bodies, read Search, or fall back to a source scan. Missing/invalid required metadata fails clearly. Manage Rebuild refreshes included collection metadata before the ordinary build generates Recents once; direct full Working document builds require current saved collection metadata.
 
 Full Working document builds own generation. Targeted ordinary builds, collection-only builds, source saves and watcher passes preserve saved Recents, including when authoring falls back to a full document rebuild. A saved list can retain an old title or target until its next owning build. Opening Recents only reads JSON, and the ordinary tree does not gain timestamp fields.
 

@@ -241,17 +241,6 @@ function normalizeServiceSurfaces(rawServices) {
   };
 }
 
-function normalizeRecentBasis(value, enabled) {
-  var basis = cleanString(value).toLowerCase();
-  if (enabled && basis !== "added" && basis !== "edited") {
-    throw new Error("Docs Viewer routes with Recent enabled must declare recent_basis as added or edited.");
-  }
-  if (!enabled && basis) {
-    throw new Error("Docs Viewer routes cannot declare recent_basis without the Recent feature.");
-  }
-  return basis;
-}
-
 function normalizeSiteBase(value, siteId) {
   var sites = value && typeof value === "object" && !Array.isArray(value) ? value : {};
   var site = sites[siteId]
@@ -294,7 +283,9 @@ export function resolveDocsViewerRouteConfig(options) {
   }
   var searchEnabled = docsViewerRouteFeatureEnabled(features, "search");
   var recentEnabled = docsViewerRouteFeatureEnabled(features, "recent");
-  var recentBasis = normalizeRecentBasis(rawConfig.recent_basis, recentEnabled);
+  if (Object.hasOwn(rawConfig, "recent_basis")) {
+    throw new Error("Docs Viewer routes must omit the retired recent_basis setting.");
+  }
   var reportsEnabled = docsViewerRouteFeatureEnabled(features, "reports");
   return {
     schemaVersion: schemaVersion,
@@ -319,7 +310,6 @@ export function resolveDocsViewerRouteConfig(options) {
     recentUrl: normalizePath(recentEnabled
       ? requireRouteConfigField(docsPaths.recent_url, "docs_paths.recent_url")
       : docsPaths.recent_url),
-    recentBasis: recentBasis,
     searchIndexUrl: normalizePath(searchEnabled
       ? requireRouteConfigField(docsPaths.search_index_url, "docs_paths.search_index_url")
       : docsPaths.search_index_url),

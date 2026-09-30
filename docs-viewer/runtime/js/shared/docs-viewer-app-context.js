@@ -73,7 +73,6 @@ export function createDocsViewerRouteContext(options) {
     routeViewerBaseUrl: routeViewerBaseUrl,
     indexTreeUrl: appendAssetVersion(routeConfig.indexTreeUrl, assetVersion),
     recentUrl: appendAssetVersion(routeConfig.recentUrl, assetVersion),
-    recentBasis: routeConfig.recentBasis,
     viewerBaseUrl: viewerBaseUrl,
     preserveQueryParams: routeConfig.preserveQueryParams || [],
     defaultRouteDocId: "",

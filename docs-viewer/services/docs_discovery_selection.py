@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any
 import json
 
-from docs_document_identity import is_document_id
+from docs_document_identity import is_doc_date, is_document_id
 from docs_workspace_config import DocsCollectionConfig, DocsStageConfig, generated_documents_path, resolve_workspace_path
 
 
@@ -84,8 +84,8 @@ def select_collection_documents(
             doc_id = _validate_row(row, field=field, seen_ids=seen_ids, collection=collection.collection)
             if collection.collection != "catalogue" and row["draft"]:
                 continue
-            if not isinstance(row.get("last_updated"), str):
-                raise ValueError(f"{field}.last_updated must be a string")
+            if "added_date" in row or (row.get("last_updated") != "" and not is_doc_date(row.get("last_updated"))):
+                raise ValueError(f"{field} requires date-only last_updated and no added_date; rebuild the collection")
             selected[doc_id] = row
         selections.append((collection, selected))
     return selections

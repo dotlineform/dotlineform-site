@@ -59,9 +59,7 @@ export function initDocsViewerSearchController(context) {
   }
 
   function recentLanguage() {
-    return context.recentBasis === "added"
-      ? { adjective: "recently added", title: "Recently Added" }
-      : { adjective: "recently edited", title: "Recently Edited" };
+    return { adjective: "recently edited", title: "Recently Edited" };
   }
 
   function applyCurrentRoute(options) {
@@ -159,11 +157,10 @@ export function initDocsViewerSearchController(context) {
 
     searchRecent.recentRequestPromise = context.collectionProvider.readRecent()
       .then(function (payload) {
-        if (!payload || payload.basis !== context.recentBasis) {
-          throw new Error("Recent documents payload basis does not match the route policy.");
+        if (!payload || !Array.isArray(payload.docs)) {
+          throw new Error("Recent documents payload is invalid.");
         }
         searchRecent.recentEntries = normalizeRecentEntries(payload && Array.isArray(payload.docs) ? payload.docs : []);
-        searchRecent.recentBasis = payload.basis;
         searchRecent.recentLoaded = true;
         return searchRecent.recentEntries;
       })
@@ -266,9 +263,13 @@ export function initDocsViewerSearchController(context) {
       return;
     }
 
-    setResultsStatus(recentDocs.length === 1
-      ? "1 " + language.adjective + " doc"
-      : recentDocs.length + " " + language.adjective + " docs", false);
+    if (context.appKind === "public") {
+      clearResultsStatus();
+    } else {
+      setResultsStatus(recentDocs.length === 1
+        ? "1 " + language.adjective + " doc"
+        : recentDocs.length + " " + language.adjective + " docs", false);
+    }
     results.innerHTML = recentDocs.map(renderRecentResultEntry).join("");
     more.innerHTML = "";
     more.hidden = true;

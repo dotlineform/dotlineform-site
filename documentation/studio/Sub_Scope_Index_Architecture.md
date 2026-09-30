@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260728-113139-763354
 title: Sub-Scope Index Architecture
 added_date: "2026-07-28 11:31:39"
-last_updated: "2026-09-30 13:10:02"
+last_updated: "2026-09-30 13:33:18"
 summary: define collection identity, the docs_subscope default, registered customisations, selection lifecycle, and explicit function adoption
 parent_id: d-20260801-084127-752d7e
 ---
@@ -108,7 +108,7 @@ Manage mode supplies one compact inventory containing:
   "title": "<title>",
   "ui_status": "<status>",
   "publishable": false,
-  "last_updated": "YYYY-MM-DD HH:MM:SS"
+  "last_updated": "YYYY-MM-DD"
 }
 ```
 
@@ -276,7 +276,7 @@ Empty optional metadata lines are omitted. Dimensions use positive numeric `heig
 
 ### Catalogue Collection Browsing
 
-The [collection builder](../../docs-viewer/build/docs_builder/collection.py) projects both Catalogue list manifests with exactly `doc_id`, `title` and date-only `last_updated` (`YYYY-MM-DD`). It validates the five-digit string `doc_id` and full source timestamp before projecting the date; Catalogue list rows carry no separate `work_id`, generic `subject` object or `added_date`. Targeted generation requires that current shape and a valid calendar date in both saved manifests, otherwise it fails with a complete Catalogue Build instruction. Working reads `manage-manifest.json`, while public readers consume `manifest.json`; both use the same day-level update order and `doc_id` for Work-ID search and thumbnails. Updates on the same day tie by title, then document ID. Full `last_updated` and `added_date` timestamps remain in source and by-ID payloads for document metadata. Other collections retain their timestamp and subject contracts, including management `added_date` for Recents; Catalogue remains excluded from site Search and Recents by its configured inclusion setting.
+The [collection builder](../../docs-viewer/build/docs_builder/collection.py) projects both Catalogue list manifests with exactly `doc_id`, `title` and date-only `last_updated` (`YYYY-MM-DD`). It validates the five-digit string `doc_id` and full source timestamp before projecting the date; Catalogue list rows carry no separate `work_id`, generic `subject` object or `added_date`. Targeted generation requires that current shape and a valid calendar date in both saved manifests, otherwise it fails with a complete Catalogue Build instruction. Working reads `manage-manifest.json`, while public readers consume `manifest.json`; both use the same day-level update order and `doc_id` for Work-ID search and thumbnails. Updates on the same day tie by title, then document ID. Full `last_updated` and `added_date` timestamps remain in source and by-ID payloads for document metadata. All other collections also use date-only update values and omit `added_date` from their reader/management manifests while retaining their own subject and readiness fields. Catalogue remains excluded from site Search and Recents by its configured inclusion setting. [Generated Data Contracts](Generated_Data_Contracts.md#list-date-projections) owns the shared projection rule.
 
 Catalogue by-ID document payloads omit both `subject`, including the null projection that the shared document writer normally emits for an absent subject, and `draft`. This applies to Working and Preview Build and therefore to published Catalogue documents. The ordinary Catalogue report host and other document collections retain their existing subject projection and readiness behavior.
 

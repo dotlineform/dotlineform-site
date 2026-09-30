@@ -9,7 +9,7 @@ export function selectedDocumentRows(payload) {
     if (!row || typeof row.doc_id !== "string"
       || !(row.collection === "catalogue" ? /^[0-9]{5}$/ : identity).test(row.doc_id)
       || typeof row.title !== "string" || !row.title.trim()
-      || typeof row.last_updated !== "string" || !/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(row.last_updated)) {
+      || typeof row.last_updated !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(row.last_updated)) {
       throw new Error("Selected Documents row is incomplete.");
     }
     const collection = Object.hasOwn(row, "collection");

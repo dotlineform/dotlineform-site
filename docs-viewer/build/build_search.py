@@ -52,7 +52,7 @@ from docs_workspace_config import (  # noqa: E402
 from docs_discovery_selection import (  # noqa: E402
     read_discovery_metadata, select_collection_documents, select_ordinary_documents,
 )
-from docs_document_identity import is_immutable_doc_id  # noqa: E402
+from docs_document_identity import doc_updated_date, is_immutable_doc_id  # noqa: E402
 from docs_publication_ignore import read_publication_ignore_ids  # noqa: E402
 from docs_report_source import (  # noqa: E402
     ReportDescriptor,
@@ -398,15 +398,16 @@ class DocsViewerSearchDataBuilder:
         records: list[dict[str, Any]] = []
         for doc in combined_docs:
             parent_title = "" if not doc.parent_id else normalize_text(title_by_id.get(doc.parent_id))
+            updated_date = doc_updated_date(doc.last_updated)
             record: dict[str, Any] = {
                 "id": doc.doc_id,
                 "title": doc.title,
                 "summary": doc.summary,
-                "last_updated": doc.last_updated,
+                "last_updated": updated_date,
                 "parent_id": doc.parent_id,
                 "parent_title": parent_title,
                 "display_meta": compact_join(
-                    doc.last_updated,
+                    updated_date,
                     doc.collection_title or parent_title,
                 ),
             }
@@ -481,10 +482,10 @@ class DocsViewerSearchDataBuilder:
             last_updated = normalize_text(by_id.get("last_updated"))
             if (
                 last_updated != normalize_text(source_doc.front_matter.get("last_updated"))
-                or last_updated != normalize_text(row["last_updated"])
+                or doc_updated_date(last_updated) != row["last_updated"]
             ):
                 raise ValueError(
-                    f"collection manifest, source and by-id last_updated must match for "
+                    f"source/by-id update values and projected manifest date must agree for "
                     f"{self.config.stage}/{collection.collection}/{doc_id}"
                 )
             records.append(

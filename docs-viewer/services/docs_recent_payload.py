@@ -2,11 +2,11 @@
 
 from typing import Any
 
-from docs_document_identity import is_doc_timestamp, is_document_id
+from docs_document_identity import is_doc_date, is_document_id
 from docs_workspace_config import COLLECTION_ID_PATTERN
 
 
-DOCS_RECENT_SCHEMA_VERSION = "docs_recent_v1"
+DOCS_RECENT_SCHEMA_VERSION = "docs_recent_v2"
 RECENT_FIELDS = frozenset({
     "doc_id", "title", "timestamp", "parent_id", "parent_title",
     "collection", "report_doc_id", "collection_title",
@@ -19,14 +19,10 @@ def validate_recent_payload(payload: dict[str, Any]) -> None:
     Validation does not compare against current source or prepared membership:
     ordinary edits may leave this saved artifact stale until its owning build.
     """
-    if set(payload) != {"schema", "basis", "limit", "generated_at", "docs"}:
-        raise ValueError("Recents requires only schema, basis, limit, generated_at and docs")
-    if (
-        payload["schema"] != DOCS_RECENT_SCHEMA_VERSION
-        or not isinstance(payload["basis"], str)
-        or payload["basis"] not in {"added", "edited"}
-    ):
-        raise ValueError("Recents has an unsupported schema or date basis")
+    if set(payload) != {"schema", "limit", "generated_at", "docs"}:
+        raise ValueError("Recents requires only schema, limit, generated_at and docs")
+    if payload["schema"] != DOCS_RECENT_SCHEMA_VERSION:
+        raise ValueError("Recents has an unsupported schema")
     if type(payload["limit"]) is not int or payload["limit"] < 1:
         raise ValueError("Recents limit must be a positive integer")
     if not isinstance(payload["generated_at"], str) or not payload["generated_at"].strip():
@@ -46,8 +42,8 @@ def validate_recent_payload(payload: dict[str, Any]) -> None:
             if key in row and (not isinstance(row[key], str) or not is_document_id(row[key], collection=owner)
                                or row[key] != row[key].strip()):
                 raise ValueError(f"Recents {key} must use exact immutable document identity")
-        if payload["basis"] == "edited" and not is_doc_timestamp(row["timestamp"]):
-            raise ValueError("Edited Recents requires complete document timestamps")
+        if not is_doc_date(row["timestamp"]):
+            raise ValueError("Recents requires date-only document updates")
         for key in ("parent_title", "collection_title"):
             if key in row and (not isinstance(row[key], str) or not row[key].strip()):
                 raise ValueError(f"Recents {key} must be a non-empty string")

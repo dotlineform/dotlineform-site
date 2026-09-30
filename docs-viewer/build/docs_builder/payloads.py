@@ -11,7 +11,7 @@ from .common import (
 )
 from .rendering import add_missing_image_titles
 from .source import DocRecord, DocumentIdentity
-from docs_document_identity import is_doc_timestamp
+from docs_document_identity import doc_updated_date, is_doc_date
 from docs_document_subjects import project_reader_subject
 from docs_discovery_selection import select_collection_documents, select_ordinary_documents
 from docs_publication_ignore import read_publication_ignore_ids
@@ -133,8 +133,7 @@ class PayloadBuilderMixin:
         entry: dict[str, Any] = {
             "doc_id": doc.doc_id,
             "title": doc.title,
-            "added_date": doc.added_date,
-            "last_updated": doc.last_updated,
+            "last_updated": doc_updated_date(doc.last_updated),
         }
         parent_id = self.effective_parent_id(doc, docs)
         if parent_id and parent_id in title_by_id:
@@ -158,12 +157,9 @@ class PayloadBuilderMixin:
         rows = [self.recent_entry(doc, eligible_docs, title_by_id) for doc in eligible_docs]
         for collection, children in select_collection_documents(self.repo_root, self.config, set(selected)):
             for doc_id, child in children.items():
-                if not isinstance(child.get("added_date"), str):
-                    raise ValueError(f"Recents requires added_date metadata for {collection.collection}/{doc_id}; rebuild the collection")
                 rows.append({
                     "doc_id": doc_id,
                     "title": child["title"].strip(),
-                    "added_date": child["added_date"].strip(),
                     "last_updated": child["last_updated"].strip(),
                     "collection": collection.collection,
                     "report_doc_id": collection.report_host_doc_id,
@@ -175,30 +171,26 @@ class PayloadBuilderMixin:
         self,
         candidates: list[dict[str, Any]],
         *,
-        basis: str,
         output_path: Path,
     ) -> dict[str, Any]:
         """Sort the complete candidate set before limiting a reader projection."""
-        if basis not in {"added", "edited"}:
-            raise ValueError(f"unsupported Recent basis {basis!r}")
         limit = self.recent_limit()
-        timestamp_key = "added_date" if basis == "added" else "last_updated"
+        for row in candidates:
+            if row.get("last_updated") != "" and not is_doc_date(row.get("last_updated")):
+                raise ValueError("Recents requires date-only last_updated metadata")
         ordered = sorted(
-            candidates,
+            (row for row in candidates if row["last_updated"]),
             key=lambda row: (row["title"].lower(), row["doc_id"], row.get("collection", "")),
         )
-        ordered.sort(key=lambda row: row[timestamp_key], reverse=True)
+        ordered.sort(key=lambda row: row["last_updated"], reverse=True)
         fields = ("doc_id", "title", "parent_id", "parent_title",
                   "collection", "report_doc_id", "collection_title")
         rows = [
-            {**{key: row[key] for key in fields if key in row}, "timestamp": row[timestamp_key]}
+            {**{key: row[key] for key in fields if key in row}, "timestamp": row["last_updated"]}
             for row in ordered
-            if (basis == "added" and row[timestamp_key])
-            or (basis == "edited" and is_doc_timestamp(row[timestamp_key]))
         ][:limit]
         comparable = {
             "schema": DOCS_RECENT_SCHEMA_VERSION,
-            "basis": basis,
             "limit": limit,
             "docs": rows,
         }

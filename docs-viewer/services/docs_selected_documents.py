@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Any, Iterable
 import json
 
-from docs_document_identity import is_doc_timestamp, is_document_id
+from docs_document_identity import doc_updated_date, is_doc_date, is_document_id
 from docs_source_model import write_text_atomic
 from docs_workspace_config import COLLECTION_ID_PATTERN, document_source_path
 
@@ -36,8 +36,8 @@ def validate_selected_payload(payload: Any) -> None:
                                or not is_document_id(row[key], collection=owner)):
                 raise ValueError(f"Selected Documents requires an immutable {key}")
         if (not isinstance(row["title"], str) or not row["title"].strip()
-                or not isinstance(row["last_updated"], str) or not is_doc_timestamp(row["last_updated"])):
-            raise ValueError("Selected Documents requires a title and last_updated timestamp")
+                or not is_doc_date(row["last_updated"])):
+            raise ValueError("Selected Documents requires a title and date-only last_updated")
         target = (row.get("collection", ""), row["doc_id"])
         if target in seen:
             raise ValueError("Selected Documents contains a duplicate target")
@@ -67,7 +67,7 @@ def selected_row(document: Any, owner: Any) -> dict[str, Any]:
     row = {
         "doc_id": document.doc_id,
         "title": document.title,
-        "last_updated": document.front_matter["last_updated"],
+        "last_updated": doc_updated_date(document.front_matter["last_updated"]),
     }
     collection = getattr(owner, "collection", "")
     if collection:

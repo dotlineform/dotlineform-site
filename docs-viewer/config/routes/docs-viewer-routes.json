@@ -69,7 +69,6 @@
         "source-editing",
         "management"
       ],
-      "recent_basis": "edited",
       "access": {
         "management_ui": true
       },
@@ -124,7 +123,6 @@
         "bookmarks",
         "reports"
       ],
-      "recent_basis": "edited",
       "access": {
         "management_ui": false
       },

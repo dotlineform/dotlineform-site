@@ -49,6 +49,9 @@ function normalizeRecentDoc(row) {
   var title = cleanString(row.title);
   var timestamp = cleanString(row.timestamp);
   if (!docId || !title || !timestamp) return null;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(timestamp)) {
+    throw new Error("Recent document updates must be calendar dates.");
+  }
   var doc = {
     doc_id: docId,
     title: title,
@@ -97,20 +100,16 @@ export function normalizeRecentPayload(payload) {
   if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
     throw new Error("Recent docs payload must be a JSON object.");
   }
-  if (cleanString(payload.schema) !== "docs_recent_v1") {
+  if (cleanString(payload.schema) !== "docs_recent_v2"
+    || Object.keys(payload).sort().join() !== "docs,generated_at,limit,schema") {
     throw new Error("Recent docs payload has an unsupported schema.");
   }
   if (!Array.isArray(payload.docs)) {
     throw new Error("Recent docs payload requires docs array.");
   }
-  var basis = cleanString(payload.basis);
-  if (basis !== "added" && basis !== "edited") {
-    throw new Error("Recent docs payload requires an added or edited basis.");
-  }
   var limit = parseInt(payload.limit, 10);
   return {
-    schema: "docs_recent_v1",
-    basis: basis,
+    schema: "docs_recent_v2",
     generated_at: cleanString(payload.generated_at),
     limit: limit > 0 ? limit : payload.docs.length,
     docs: payload.docs.map(normalizeRecentDoc).filter(Boolean)

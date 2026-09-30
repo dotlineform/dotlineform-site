@@ -224,15 +224,10 @@ def _validate_docs_viewer_routes(site_root: Path, config: SiteToolsConfig) -> tu
         }
         if "search" in features:
             required_fields.add(("docs_paths", "search_index_url"))
-        recent_basis = route.get("recent_basis")
+        if "recent_basis" in route:
+            raise RuntimeError(f"Docs Viewer route {route_id} must omit the retired recent_basis setting")
         if "recent" in features:
             required_fields.add(("docs_paths", "recent_url"))
-            if recent_basis not in {"added", "edited"}:
-                raise RuntimeError(
-                    f"Docs Viewer route {route_id} with Recent enabled must define recent_basis as added or edited"
-                )
-        elif recent_basis:
-            raise RuntimeError(f"Docs Viewer route {route_id} cannot define recent_basis without Recent")
         if "reports" in features:
             required_fields.add(("config_urls", "report_registry"))
         for section_name, field_name in required_fields:

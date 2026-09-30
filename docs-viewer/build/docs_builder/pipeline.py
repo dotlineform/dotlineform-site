@@ -19,7 +19,6 @@ from .common import (
 )
 from .media_builds import build_collection_media_snapshot
 from .payloads import PayloadBuilderMixin
-from .recent_policy import working_recent_basis
 from .rendering import ContentRenderingMixin
 from .semantic_token_artifacts import SemanticTokenArtifactsMixin
 from .semantic_token_registry import load_semantic_token_registry
@@ -121,7 +120,6 @@ class DocsDataBuilder(
             recent_candidates = self.recent_candidates(docs, index_tree_payload["docs"])
             recent_payload = self.recent_payload(
                 recent_candidates,
-                basis=working_recent_basis(self.repo_root),
                 output_path=self.output_dir / "recent.json",
             )
         semantic_token_payloads = self.build_semantic_token_payloads(docs, semantic_tokens_by_doc)

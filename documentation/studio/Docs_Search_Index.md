@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260813-214350-4c7a21
 title: Docs Viewer Search Index
 added_date: "2026-08-13 21:43:50"
-last_updated: "2026-09-30 12:20:34"
+last_updated: "2026-09-30 13:33:18"
 summary: Durable structure, field policy, build ownership, ranking inputs, and extension boundary for Docs Viewer search indexes.
 parent_id: d-20260602-160839-6d3cbb
 ---
@@ -36,9 +36,9 @@ Site Search includes eligible ordinary documents plus Works subdocs. Each config
 
 Selection finishes before reading searchable content. The builder reads `unpublishable.json` once through `read_publication_ignore_ids`, then traverses Working `index-tree.json`. An ignored or explicitly draft ordinary node excludes its entire branch. For each included collection, its exact configured `report_host_doc_id` must survive that traversal before the builder reads its Working `manage-manifest.json`. Entries are flat: Catalogue rows must omit `draft` and are eligible independently; other collection rows require explicit `draft: false`, without collection ancestry or a `parent_id` lookup. Excluded collections and excluded hosts cause no manifest, source or by-ID content reads for their subdocs.
 
-The source model loads only selected filenames from their configured boundaries. Missing or invalid required metadata and selected source inconsistencies stop the build without replacing the saved index. Ordinary sources must agree with the tree's identity, title, draft state and parent placement. Selected collection sources and by-ID payloads must agree with management metadata on exact identity, title and update time, and by-ID URLs must use the configured host. Search never discovers substitute IDs, scans every source as a fallback, or rebuilds document projections itself.
+The source model loads only selected filenames from their configured boundaries. Missing or invalid required metadata and selected source inconsistencies stop the build without replacing the saved index. Ordinary sources must agree with the tree's identity, title, draft state and parent placement. Selected collection sources and by-ID payloads must agree on exact identity, title and update value at its original precision; management metadata must carry the same projected update date. Search never discovers substitute IDs, scans every source as a fallback, or rebuilds document projections itself.
 
-Child rows retain `id` as document identity and add exact `collection`, `report_doc_id`, and display-only `collection_title`. The browser constructs the canonical parent URL from that structured identity and the active Manage or public route, preserving the child as `subdoc`. The existing compact `display_meta` line shows update time plus configured collection title without making collection structure searchable.
+Child rows retain `id` as document identity and add exact `collection`, `report_doc_id`, and display-only `collection_title`. The browser constructs the canonical parent URL from that structured identity and the active Manage or public route, preserving the child as `subdoc`. Document-table `last_updated` and the compact `display_meta` line use `YYYY-MM-DD` update dates plus configured collection title without making collection structure searchable. Source and by-ID timestamps retain their original precision.
 
 The combined index remains one complete artifact and one relevance corpus. Excluded documents contribute neither result rows nor terms. Search does not create per-collection indexes, make collection structure searchable, or control Index and Recents payload generation.
 

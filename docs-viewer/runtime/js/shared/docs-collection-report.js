@@ -596,31 +596,19 @@ function compareTitleAscending(left, right) {
 
 function lastUpdatedTimestamp(doc) {
   var value = cleanString(doc && doc.record && doc.record.last_updated);
-  var match = /^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{2}):(\d{2}):(\d{2})(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})?)?$/.exec(value);
+  var match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
   if (!match) return NaN;
-  if (/Z$|[+-]\d{2}:\d{2}$/.test(value)) {
-    return Date.parse(value.replace(" ", "T"));
-  }
-  var parts = match.slice(1, 7).map(function (part, index) {
-    if (part == null) return index < 3 ? NaN : 0;
-    return Number(part);
-  });
+  var parts = match.slice(1).map(Number);
   var timestamp = Date.UTC(
     parts[0],
     parts[1] - 1,
-    parts[2],
-    parts[3],
-    parts[4],
-    parts[5]
+    parts[2]
   );
   var date = new Date(timestamp);
   if (
     date.getUTCFullYear() !== parts[0]
     || date.getUTCMonth() !== parts[1] - 1
     || date.getUTCDate() !== parts[2]
-    || date.getUTCHours() !== parts[3]
-    || date.getUTCMinutes() !== parts[4]
-    || date.getUTCSeconds() !== parts[5]
   ) return NaN;
   return timestamp;
 }

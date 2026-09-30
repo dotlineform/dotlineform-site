@@ -26,6 +26,27 @@ def is_doc_timestamp(value: Any) -> bool:
     return True
 
 
+def doc_updated_date(value: Any) -> str:
+    """Project source update metadata without inventing dates for undated documents."""
+    source_value = str(value or "").strip()
+    if not source_value or is_doc_date(source_value):
+        return source_value
+    try:
+        return dt.datetime.strptime(source_value, DOC_TIMESTAMP_FORMAT).date().isoformat()
+    except ValueError as error:
+        raise ValueError("Document list dates require a source date or complete timestamp") from error
+
+
+def is_doc_date(value: Any) -> bool:
+    """Require one canonical YYYY-MM-DD calendar date in projected metadata."""
+    if not isinstance(value, str):
+        return False
+    try:
+        return dt.date.fromisoformat(value).isoformat() == value
+    except ValueError:
+        return False
+
+
 def is_immutable_doc_id(value: Any) -> bool:
     return bool(IMMUTABLE_DOC_ID_PATTERN.fullmatch(str(value or "").strip()))
 
@@ -75,6 +96,8 @@ __all__ = [
     "allocate_doc_id",
     "current_doc_timestamp",
     "doc_id_matches_added_date",
+    "doc_updated_date",
+    "is_doc_date",
     "is_doc_timestamp",
     "is_immutable_doc_id",
     "is_document_id",

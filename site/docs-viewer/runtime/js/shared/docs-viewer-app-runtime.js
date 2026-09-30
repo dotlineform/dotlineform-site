@@ -526,6 +526,7 @@ export function startDocsViewerRuntime(options) {
     showSearchPane: showSearchPane
   };
   searchController = searchEnabled || recentEnabled ? initDocsViewerSearchController({
+    appKind: routeContext.appKind,
     clearSearchInput: function () {
       if (searchInput) searchInput.value = "";
     },
@@ -543,7 +544,6 @@ export function startDocsViewerRuntime(options) {
     searchEnabled: searchEnabled,
     searchRecent: appSession.domains.searchRecent,
     recentEnabled: recentEnabled,
-    recentBasis: routeContext.recentBasis,
     selectedDocument: appSession.domains.selectedDocument,
     setRecentModeActive: setRecentModeActive,
     setStatus: statusController.setStatus,

@@ -16,7 +16,7 @@ from .common import (
     plain_text_from_html,
     read_json,
 )
-from docs_document_identity import is_document_id, is_immutable_doc_id
+from docs_document_identity import doc_updated_date, is_document_id, is_immutable_doc_id
 from docs_index_order import read_index_order, tree_parent_ids
 from docs_report_source import ReportDescriptor, ReportSourceContractRequired
 from docs_source_model import (
@@ -350,6 +350,8 @@ class SourceLoadingMixin:
     def index_entry(self, doc: DocRecord, docs: list[DocRecord], item_payload: dict[str, Any] | None) -> dict[str, Any]:
         item = item_payload if item_payload is not None else read_json(self.items_dir / f"{doc.doc_id}.json")
         entry = self.metadata_entry(doc, docs)
+        del entry["added_date"]
+        entry["last_updated"] = doc_updated_date(doc.last_updated)
         entry["content_url"] = doc.content_url
         entry["content_text_length"] = len(plain_text_from_html((item or {}).get("content_html", ""), title=doc.title))
         return entry
