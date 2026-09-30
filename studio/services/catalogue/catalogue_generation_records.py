@@ -14,7 +14,7 @@ from catalogue.catalogue_generation_common import (
 
 
 
-WORK_RECORD_SCHEMA_VERSION = "work_record_v8"
+WORK_RECORD_SCHEMA_VERSION = "work_record_v9"
 GALLERY_RECORD_SCHEMA_VERSION = "gallery_record_v1"
 
 
@@ -92,11 +92,8 @@ def normalize_catalogue_documents(values: Sequence[Mapping[str, Any]]) -> List[D
 
 def build_work_json_payload(
     *,
-    work_id: str,
     work_record: Mapping[str, Any],
-    sections: Sequence[Mapping[str, Any]],
     generated_at_utc: str,
-    count: int,
 ) -> Dict[str, Any]:
     """Finalize one complete generated Work by-ID payload."""
 
@@ -107,19 +104,15 @@ def build_work_json_payload(
     if not isinstance(raw_documents, list):
         raise ValueError("work.documents must be an array")
     public_record["documents"] = normalize_catalogue_documents(raw_documents)
-    public_sections = [dict(section) for section in sections]
-    version_input = {"schema": WORK_RECORD_SCHEMA_VERSION, "work": public_record, "sections": public_sections}
+    version_input = {"schema": WORK_RECORD_SCHEMA_VERSION, "work": public_record}
     return compact_json_object(
         {
             "header": {
                 "schema": WORK_RECORD_SCHEMA_VERSION,
                 "version": compute_payload_version(version_input),
                 "generated_at_utc": generated_at_utc,
-                "work_id": work_id,
-                "count": count,
             },
             "work": public_record,
-            "sections": public_sections,
         }
     )
 

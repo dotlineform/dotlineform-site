@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260519-202931-b05d27
 title: Catalogue Indexes And Payloads
 added_date: "2026-05-19 20:29:31"
-last_updated: "2026-09-28 18:45:00"
+last_updated: "2026-09-30 12:44:47"
 parent_id: d-20260401-000000-a11bf3
 
 ---
@@ -33,7 +33,7 @@ The Gallery search index contains a `galleries` map keyed by exact Gallery ID, w
 
 ## Exact Identity And Versions
 
-Work payloads use `work_record_v8`; Gallery payloads use `gallery_record_v1`. Headers carry the exact target ID, schema, content version, generation time and count. The existing Work wire shape retains a zero count and empty sections; Gallery counts are its member counts. Index headers use `catalogue_works_index_v1`, `catalogue_galleries_index_v1` and `catalogue_series_galleries_index_v1`; index counts are their entry counts, including all valid Series in the Series–Gallery index. Shared media policy uses `catalogue_media_config_v1` with a content version and generation time.
+Work payloads use `work_record_v9`. Each contains only `header` and `work`; the header carries schema, content version and generation time, while `work.work_id` carries the exact Work identity. The retired Detail count and sections are absent, and the header does not duplicate the Work ID. Gallery payloads use `gallery_record_v1`; their headers also carry the exact Gallery ID and member count. Index headers use `catalogue_works_index_v1`, `catalogue_galleries_index_v1` and `catalogue_series_galleries_index_v1`; index counts are their entry counts, including all valid Series in the Series–Gallery index. Shared media policy uses `catalogue_media_config_v1` with a content version and generation time.
 
 Detail folders and their discovery indexes are retired. Active generation neither recreates an empty Detail index nor scans retired thumbnails. Series `sort_fields` is retired; both Studio's Series lookup and consumer members use ascending exact Work IDs. No relationship is inferred from a document, title, route or thumbnail filename.
 

@@ -58,7 +58,7 @@ def catalogue_payloads(
         work["documents"] = []
         work["galleries"] = [dict(galleries.galleries[gid]) for gid in sorted(galleries.works.get(wid, []))]
         payloads[f"works/index/{wid}.json"] = projection.build_work_json_payload(
-            work_id=wid, work_record=work, sections=[], generated_at_utc=timestamp, count=0,
+            work_record=work, generated_at_utc=timestamp,
         )
         works_index[wid] = {key: work[key] for key in ("work_id", "title", "year", "year_display", "series_id") if key in work}
     for gid, source in galleries.galleries.items():
