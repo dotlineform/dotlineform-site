@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-11be48951b9598e2b57aca95c8b0c057",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "04178",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-48085d55c7aac64b870b7617d675323a",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "04178",
@@ -24,6 +22,5 @@
         "title": "form paths (paths)"
       }
     ]
-  },
-  "sections": []
+  }
 }

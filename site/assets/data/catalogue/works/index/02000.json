@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-a7afd674803907dd5a78d6780f5eff9e",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "02000",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-8d9121cdcfe7f9a228d62e8358206795",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "02000",
@@ -24,6 +22,5 @@
         "title": "nerve (formaldehyde form) (pages)"
       }
     ]
-  },
-  "sections": []
+  }
 }

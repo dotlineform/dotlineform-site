@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-5b4d0fcd8f32b879619dd28a9b9e0e83",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "03622",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-16a1ab76d3fa0f834e5668685154929a",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "03622",
@@ -24,6 +22,5 @@
         "title": "egg forms (work in progress)"
       }
     ]
-  },
-  "sections": []
+  }
 }

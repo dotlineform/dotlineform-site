@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-8b25e9d0bcfc6a5a762ea12a6004b180",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01165",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-43b2099e17de1612f5cb7accb9fb8834",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01165",
@@ -26,6 +24,5 @@
         "title": "folding structure"
       }
     ]
-  },
-  "sections": []
+  }
 }

@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-eb0251d1c2b55b1717c9539f79ddd9bc",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "02929",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-9f5aa8c383f70ce898b93d58141b939a",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "02929",
@@ -24,6 +22,5 @@
         "title": "forest memories 1-48 (memories)"
       }
     ]
-  },
-  "sections": []
+  }
 }

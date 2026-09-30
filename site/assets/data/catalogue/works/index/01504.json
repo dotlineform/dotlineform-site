@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-2c59cdf0631201e7d1448a920e677c12",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01504",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-29fb5c333a5e87ed996e6bab90fba64a",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01504",
@@ -26,6 +24,5 @@
         "title": "petri"
       }
     ]
-  },
-  "sections": []
+  }
 }

@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-475f9ed6459257365bc031be2ad958ed",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "03100",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-13f75db44a1dba870ede1a6ca5c76854",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "03100",
@@ -24,6 +22,5 @@
         "title": "body monoprint petals (details)"
       }
     ]
-  },
-  "sections": []
+  }
 }

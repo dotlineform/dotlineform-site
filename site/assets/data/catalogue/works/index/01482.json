@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-0613f9fb610d83e3406bdde070341c5b",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01482",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-29aa34f9dcbe2825b5c53e6b15d6139c",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01482",
@@ -26,6 +24,5 @@
         "title": "particle machine"
       }
     ]
-  },
-  "sections": []
+  }
 }

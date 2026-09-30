@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-8bb8b2d397becea5e268e739c76c0562",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "04575",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-d004eefabcc80017e0dd498803312bac",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "04575",
@@ -24,6 +22,5 @@
         "title": "tulips 3 (details)"
       }
     ]
-  },
-  "sections": []
+  }
 }

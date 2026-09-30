@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-cab6e924cccea3099ce7cc21ba371247",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "00649",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-ffda86cefe4949ca76dd420e6d5cf567",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "00649",
@@ -26,6 +24,5 @@
         "title": "a doll story"
       }
     ]
-  },
-  "sections": []
+  }
 }

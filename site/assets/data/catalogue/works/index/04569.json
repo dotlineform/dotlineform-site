@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-02059c335433b7189427bc12d09e09ee",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "04569",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-a3feefecdf10a108a1903e46f280484e",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "04569",
@@ -24,6 +22,5 @@
         "title": "tulips 1 (details)"
       }
     ]
-  },
-  "sections": []
+  }
 }

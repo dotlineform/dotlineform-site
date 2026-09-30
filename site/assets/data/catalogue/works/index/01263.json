@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-1aab96c96c2d478b13cab8199ad095fa",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01263",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-520098f73e25bb85e0a9d15bd36d6751",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01263",
@@ -26,6 +24,5 @@
         "title": "grey series"
       }
     ]
-  },
-  "sections": []
+  }
 }

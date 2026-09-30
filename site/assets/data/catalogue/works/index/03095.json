@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-98d2b9acc1f58987ee32942cb7d3ab01",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "03095",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-a2d6d1a2e4f629704a64118e29950661",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "03095",
@@ -24,6 +22,5 @@
         "title": "body monoprint (details)"
       }
     ]
-  },
-  "sections": []
+  }
 }

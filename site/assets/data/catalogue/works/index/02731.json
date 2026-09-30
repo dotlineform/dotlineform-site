@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-71c0c3fdf23dfcd8b8df8aa12bd75b81",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "02731",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-44dbac2f73f8af263373b8cf797ceb48",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "02731",
@@ -24,6 +22,5 @@
         "title": "molecule forms (molecules)"
       }
     ]
-  },
-  "sections": []
+  }
 }

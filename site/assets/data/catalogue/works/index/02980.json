@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-2d9a3196755643db3ebe6a25860ce6ca",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "02980",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-f4c3e1128e1b90931117826a328cbfae",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "02980",
@@ -24,6 +22,5 @@
         "title": "landscape 2.1 (details)"
       }
     ]
-  },
-  "sections": []
+  }
 }

@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "docs_viewer_search_index_v4",
-    "version": "blake2b-84b04ad64f99d1e6687c08b426b12273",
-    "generated_at_utc": "2026-09-28T21:23:38Z",
+    "version": "blake2b-fe90f9066ff4d840d798333923d6af6f",
+    "generated_at_utc": "2026-09-30T12:49:40Z",
     "count": 16
   },
   "fields": [
@@ -16,26 +16,26 @@
     {
       "id": "d-20260426-164043-e14f49",
       "title": "dotlineform",
-      "last_updated": "2026-09-26 21:57:26",
-      "display_meta": "2026-09-26 21:57:26"
+      "last_updated": "2026-09-26",
+      "display_meta": "2026-09-26"
     },
     {
       "id": "d-20260624-213316-478639",
       "title": "Concepts",
-      "last_updated": "2026-07-29 11:30:02",
-      "display_meta": "2026-07-29 11:30:02"
+      "last_updated": "2026-07-29",
+      "display_meta": "2026-07-29"
     },
     {
       "id": "d-20260801-073826-8865a8",
       "title": "Context",
-      "last_updated": "2026-09-26 19:38:17",
-      "display_meta": "2026-09-26 19:38:17"
+      "last_updated": "2026-09-26",
+      "display_meta": "2026-09-26"
     },
     {
       "id": "d-20260801-212422-081a73",
       "title": "16 forms",
-      "last_updated": "2026-09-28 21:48:34",
-      "display_meta": "2026-09-28 21:48:34 • Context",
+      "last_updated": "2026-09-28",
+      "display_meta": "2026-09-28 • Context",
       "collection": "works",
       "report_doc_id": "d-20260801-073826-8865a8",
       "collection_title": "Context"
@@ -43,8 +43,8 @@
     {
       "id": "d-20260801-212422-186a69",
       "title": "a theory of happiness",
-      "last_updated": "2026-09-28 21:48:34",
-      "display_meta": "2026-09-28 21:48:34 • Context",
+      "last_updated": "2026-09-28",
+      "display_meta": "2026-09-28 • Context",
       "collection": "works",
       "report_doc_id": "d-20260801-073826-8865a8",
       "collection_title": "Context"
@@ -52,8 +52,8 @@
     {
       "id": "d-20260801-212422-3a2da4",
       "title": "a doll story",
-      "last_updated": "2026-09-28 21:48:34",
-      "display_meta": "2026-09-28 21:48:34 • Context",
+      "last_updated": "2026-09-28",
+      "display_meta": "2026-09-28 • Context",
       "collection": "works",
       "report_doc_id": "d-20260801-073826-8865a8",
       "collection_title": "Context"
@@ -61,8 +61,8 @@
     {
       "id": "d-20260801-212422-3aa736",
       "title": "10,000 - original text",
-      "last_updated": "2026-09-13 22:33:48",
-      "display_meta": "2026-09-13 22:33:48 • Context",
+      "last_updated": "2026-09-13",
+      "display_meta": "2026-09-13 • Context",
       "collection": "works",
       "report_doc_id": "d-20260801-073826-8865a8",
       "collection_title": "Context"
@@ -70,8 +70,8 @@
     {
       "id": "d-20260801-212422-43b47c",
       "title": "10,000",
-      "last_updated": "2026-09-28 21:48:34",
-      "display_meta": "2026-09-28 21:48:34 • Context",
+      "last_updated": "2026-09-28",
+      "display_meta": "2026-09-28 • Context",
       "collection": "works",
       "report_doc_id": "d-20260801-073826-8865a8",
       "collection_title": "Context"
@@ -79,8 +79,8 @@
     {
       "id": "d-20260801-212422-632af5",
       "title": "64 forms",
-      "last_updated": "2026-09-28 21:48:34",
-      "display_meta": "2026-09-28 21:48:34 • Context",
+      "last_updated": "2026-09-28",
+      "display_meta": "2026-09-28 • Context",
       "collection": "works",
       "report_doc_id": "d-20260801-073826-8865a8",
       "collection_title": "Context"
@@ -88,8 +88,8 @@
     {
       "id": "d-20260801-212422-773b86",
       "title": "a feeling that we are part of a structure",
-      "last_updated": "2026-09-28 21:48:34",
-      "display_meta": "2026-09-28 21:48:34 • Context",
+      "last_updated": "2026-09-28",
+      "display_meta": "2026-09-28 • Context",
       "collection": "works",
       "report_doc_id": "d-20260801-073826-8865a8",
       "collection_title": "Context"
@@ -97,8 +97,8 @@
     {
       "id": "d-20260801-212422-9f0121",
       "title": "20 photos",
-      "last_updated": "2026-08-06 22:42:40",
-      "display_meta": "2026-08-06 22:42:40 • Context",
+      "last_updated": "2026-08-06",
+      "display_meta": "2026-08-06 • Context",
       "collection": "works",
       "report_doc_id": "d-20260801-073826-8865a8",
       "collection_title": "Context"
@@ -106,8 +106,8 @@
     {
       "id": "d-20260801-212422-bc7ae1",
       "title": "a humid home full of light",
-      "last_updated": "2026-09-28 21:48:34",
-      "display_meta": "2026-09-28 21:48:34 • Context",
+      "last_updated": "2026-09-28",
+      "display_meta": "2026-09-28 • Context",
       "collection": "works",
       "report_doc_id": "d-20260801-073826-8865a8",
       "collection_title": "Context"
@@ -115,8 +115,8 @@
     {
       "id": "d-20260801-212422-d91151",
       "title": "a poem divided into 4 parts",
-      "last_updated": "2026-09-28 21:48:34",
-      "display_meta": "2026-09-28 21:48:34 • Context",
+      "last_updated": "2026-09-28",
+      "display_meta": "2026-09-28 • Context",
       "collection": "works",
       "report_doc_id": "d-20260801-073826-8865a8",
       "collection_title": "Context"
@@ -124,8 +124,8 @@
     {
       "id": "d-20260801-212422-df11f3",
       "title": "3 symbols",
-      "last_updated": "2026-09-28 21:48:34",
-      "display_meta": "2026-09-28 21:48:34 • Context",
+      "last_updated": "2026-09-28",
+      "display_meta": "2026-09-28 • Context",
       "collection": "works",
       "report_doc_id": "d-20260801-073826-8865a8",
       "collection_title": "Context"
@@ -133,14 +133,14 @@
     {
       "id": "d-20260907-180859-c425b2",
       "title": "Moments",
-      "last_updated": "2026-09-07 18:08:59",
-      "display_meta": "2026-09-07 18:08:59"
+      "last_updated": "2026-09-07",
+      "display_meta": "2026-09-07"
     },
     {
       "id": "d-20260916-161504-f8c947",
       "title": "Catalogue",
-      "last_updated": "2026-09-16 17:22:58",
-      "display_meta": "2026-09-16 17:22:58"
+      "last_updated": "2026-09-16",
+      "display_meta": "2026-09-16"
     }
   ],
   "terms": {

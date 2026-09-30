@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-009609e9c1ad4dc43d140f3dd0819bc7",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "00847",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-1b88b3d73d191dca104289b605449ff6",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "00847",
@@ -26,6 +24,5 @@
         "title": "cube structure"
       }
     ]
-  },
-  "sections": []
+  }
 }

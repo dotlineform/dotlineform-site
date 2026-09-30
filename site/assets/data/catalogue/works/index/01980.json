@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-8c4e3ea479c62d0672d7f6829b27888a",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01980",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-b0e68b2c5cc18a1f24dbfbb6c763718a",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01980",
@@ -24,6 +22,5 @@
         "title": "mouse story (details)"
       }
     ]
-  },
-  "sections": []
+  }
 }

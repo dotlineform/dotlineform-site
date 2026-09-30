@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-4ae45f11601963879760c5f0622f75f8",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "04399",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-6351836f46952373846cdfdfabd6d37a",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "04399",
@@ -24,6 +22,5 @@
         "title": "spine symbols (symbols)"
       }
     ]
-  },
-  "sections": []
+  }
 }

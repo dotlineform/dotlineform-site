@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-7b9fd53a4fbd7908febf757d43a9267d",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01819",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-da65f250c62c80dba18c4303bf5bd3a7",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01819",
@@ -26,6 +24,5 @@
         "title": "train moments"
       }
     ]
-  },
-  "sections": []
+  }
 }

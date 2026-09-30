@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-4cc0c01033060b429d1255ab42b51b84",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "00810",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-e2f6affbbbca94c646ecf1edf060eec1",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "00810",
@@ -26,6 +24,5 @@
         "title": "book of curves"
       }
     ]
-  },
-  "sections": []
+  }
 }

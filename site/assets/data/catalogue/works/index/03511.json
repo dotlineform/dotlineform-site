@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-6c15e8314a5c11bafd07c10661801df1",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "03511",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-c686e3af414f3d9041297d61e9be6d69",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "03511",
@@ -24,6 +22,5 @@
         "title": "colours kylie (versions)"
       }
     ]
-  },
-  "sections": []
+  }
 }

@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-231a8078ff54eef876e5965627dac6a6",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "03212",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-59920725c59aa6bb09af422620b4d19c",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "03212",
@@ -24,6 +22,5 @@
         "title": "3 symbols (source)"
       }
     ]
-  },
-  "sections": []
+  }
 }

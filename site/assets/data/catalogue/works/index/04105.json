@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-0a7f1ee6a731bcd1ae842ab8c248df2b",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "04105",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-20d5c6b1f9259c6e7767274c5afa0639",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "04105",
@@ -24,6 +22,5 @@
         "title": "form space 1 (noise particles)"
       }
     ]
-  },
-  "sections": []
+  }
 }

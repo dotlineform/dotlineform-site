@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-0b54d7534eba3b3e0e00bded0068e688",
-    "generated_at_utc": "2026-09-28T11:05:06Z",
-    "work_id": "00008",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-543decacfbd4c4e7bc921ee5548968cc",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "00008",
@@ -39,6 +37,5 @@
         "title": "nerve"
       }
     ]
-  },
-  "sections": []
+  }
 }

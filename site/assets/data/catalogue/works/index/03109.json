@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-93624ffef260a42d9e18e698850404e6",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "03109",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-9cac4621ed8ec4a042093be63b87743c",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "03109",
@@ -24,6 +22,5 @@
         "title": "2 bodies monoprint (details)"
       }
     ]
-  },
-  "sections": []
+  }
 }

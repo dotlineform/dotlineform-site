@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-e453e4890f0b1f68737857e0776e3245",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "00499",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-8de67ae50c4d2fbe5bd42b614a201dba",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "00499",
@@ -26,6 +24,5 @@
         "title": "mm"
       }
     ]
-  },
-  "sections": []
+  }
 }

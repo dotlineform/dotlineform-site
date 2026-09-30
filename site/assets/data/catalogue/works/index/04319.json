@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-545697fef5a092ffe3f984e28ddd97a9",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "04319",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-ea4980d6115a0b50b9d6ae4f33815495",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "04319",
@@ -24,6 +22,5 @@
         "title": "k particles grid (details)"
       }
     ]
-  },
-  "sections": []
+  }
 }

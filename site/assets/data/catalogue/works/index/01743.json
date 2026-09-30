@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-ce622735b98f21dabf03a0dc1f1b6891",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01743",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-ef55e0c3208d8848e187da639b883f62",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01743",
@@ -26,6 +24,5 @@
         "title": "surface history"
       }
     ]
-  },
-  "sections": []
+  }
 }

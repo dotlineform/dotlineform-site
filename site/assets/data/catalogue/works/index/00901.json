@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-614cf98638f2c8ddf2cce2cd12ba22db",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "00901",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-915cafd230ebd88316c0d87e2e3cd42b",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "00901",
@@ -26,6 +24,5 @@
         "title": "doll faces"
       }
     ]
-  },
-  "sections": []
+  }
 }

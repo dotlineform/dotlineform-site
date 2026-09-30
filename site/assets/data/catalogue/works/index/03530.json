@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-b23664407a9fd12f82e27a6c691aa4f6",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "03530",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-9511aea6792cf82aefaae52a350e791c",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "03530",
@@ -24,6 +22,5 @@
         "title": "curves (versions)"
       }
     ]
-  },
-  "sections": []
+  }
 }

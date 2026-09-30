@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-2da4e6c4d66cdf8cb29ab02efaa7966a",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "00229",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-b4ff51d7b10fc8d97775714d34009f96",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "00229",
@@ -26,6 +24,5 @@
         "title": "collected digital c. 1998"
       }
     ]
-  },
-  "sections": []
+  }
 }

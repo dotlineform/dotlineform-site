@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-0ab9d7ed9125d27767e29bf2c493f75d",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "00804",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-5af8ff8d0a2b5a8a31c67fd926c539b8",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "00804",
@@ -26,6 +24,5 @@
         "title": "book dna"
       }
     ]
-  },
-  "sections": []
+  }
 }

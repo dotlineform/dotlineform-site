@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-0b8e94e878ff3884d3abfe9c38d56f06",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "00983",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-6fc46d2e8d5419b0485fba8e51065742",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "00983",
@@ -26,6 +24,5 @@
         "title": "dotlineform (2021)"
       }
     ]
-  },
-  "sections": []
+  }
 }

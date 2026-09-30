@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-b81c76dec3ddd46f9cba5232d54ce9bc",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "03660",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-d0653a7e005848d0a84c2ef233e8b225",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "03660",
@@ -24,6 +22,5 @@
         "title": "fireworks form (details)"
       }
     ]
-  },
-  "sections": []
+  }
 }

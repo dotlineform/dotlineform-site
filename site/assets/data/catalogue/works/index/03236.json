@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-e6c54e9217e5818cd94a95a51537e608",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "03236",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-3e8e58ea51ccec54a46fea01d5bbd967",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "03236",
@@ -24,6 +22,5 @@
         "title": "3 symbols (composites)"
       }
     ]
-  },
-  "sections": []
+  }
 }

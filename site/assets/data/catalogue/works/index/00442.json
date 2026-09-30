@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-91670324f17a99e2ecb71aca430f1022",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "00442",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-4ac14bab73938f0d9faad3d64ca11296",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "00442",
@@ -26,6 +24,5 @@
         "title": "found forms"
       }
     ]
-  },
-  "sections": []
+  }
 }

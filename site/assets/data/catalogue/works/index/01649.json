@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-5fa2416a19ce54c64e623db4657848c8",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01649",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-57a9b6c36f3d8c3f70c1e354b5592b54",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01649",
@@ -26,6 +24,5 @@
         "title": "changed photos"
       }
     ]
-  },
-  "sections": []
+  }
 }

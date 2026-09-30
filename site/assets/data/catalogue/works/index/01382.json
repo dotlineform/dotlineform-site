@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-88f2f11a91b2b0b5a280431c18584fdc",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01382",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-24901804769697bb195bfafc25a3142c",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01382",
@@ -26,6 +24,5 @@
         "title": "in the end we'll know"
       }
     ]
-  },
-  "sections": []
+  }
 }

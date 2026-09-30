@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-4b5cc8ec67da4313a7dd4fc747938c59",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "04171",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-83d0a9c6e5590c0ed7a0de3e3b9e4b82",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "04171",
@@ -24,6 +22,5 @@
         "title": "forms (forms)"
       }
     ]
-  },
-  "sections": []
+  }
 }

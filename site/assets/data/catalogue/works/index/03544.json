@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-181110f17e2946404759d674d4791b1b",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "03544",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-82cdae2b4974487cd69ed1da07bdf291",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "03544",
@@ -24,6 +22,5 @@
         "title": "doll moiré (versions (2022))"
       }
     ]
-  },
-  "sections": []
+  }
 }

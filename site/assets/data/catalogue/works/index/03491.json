@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-66f7fc76b54712297217c84b9bd60e7a",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "03491",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-7384a464315e44c90c9471fefa26cfb8",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "03491",
@@ -24,6 +22,5 @@
         "title": "book dna sequence (dna)"
       }
     ]
-  },
-  "sections": []
+  }
 }

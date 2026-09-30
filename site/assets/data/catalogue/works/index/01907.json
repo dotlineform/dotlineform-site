@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-7ee126aa20a85d0d89e0d1b9c826b46f",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01907",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-dee571bf3cac92c9c09736b6739e12c1",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01907",
@@ -26,6 +24,5 @@
         "title": "untitled (destroyed)"
       }
     ]
-  },
-  "sections": []
+  }
 }

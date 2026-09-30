@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-d99f81a3d0ebb05abc18122e59366290",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "02013",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-843455c1aeac903d3f13f3a6c3cf4fe0",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "02013",
@@ -24,6 +22,5 @@
         "title": "the eye (details)"
       }
     ]
-  },
-  "sections": []
+  }
 }

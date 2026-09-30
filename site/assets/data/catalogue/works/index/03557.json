@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-fee4467708b51113e079a744b97bba58",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "03557",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-7ed8a2571f96bafc596d12ac2c03aa61",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "03557",
@@ -24,6 +22,5 @@
         "title": "doll still life 1 (versions (2022))"
       }
     ]
-  },
-  "sections": []
+  }
 }

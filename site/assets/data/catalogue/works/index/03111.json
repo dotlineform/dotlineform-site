@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-4f6488400b32008f926b524c7eb075fe",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "03111",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-8b1d033e130605121f218ff487989066",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "03111",
@@ -24,6 +22,5 @@
         "title": "forms scan 5 (working)"
       }
     ]
-  },
-  "sections": []
+  }
 }

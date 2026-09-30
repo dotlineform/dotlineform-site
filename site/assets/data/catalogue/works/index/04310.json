@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-cec5acffb63845417c889b75387bf248",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "04310",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-cb177a7e0a70ca2ac46f5279ddfda66d",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "04310",
@@ -24,6 +22,5 @@
         "title": "olive tree (details)"
       }
     ]
-  },
-  "sections": []
+  }
 }

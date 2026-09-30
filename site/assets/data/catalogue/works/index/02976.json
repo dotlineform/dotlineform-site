@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-fab61dca3d0fb8b8aaa116fb5b7320b5",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "02976",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-add06bcb3b7b43ec0955f81b5fc6ffd7",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "02976",
@@ -24,6 +22,5 @@
         "title": "landscape 1 (details)"
       }
     ]
-  },
-  "sections": []
+  }
 }

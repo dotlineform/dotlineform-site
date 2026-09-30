@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-619ee0325ea510c6a5673223c16a1dd1",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "00604",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-8ba32977ed34f4c42825aae88ee48c43",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "00604",
@@ -26,6 +24,5 @@
         "title": "wa"
       }
     ]
-  },
-  "sections": []
+  }
 }

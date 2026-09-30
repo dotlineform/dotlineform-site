@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-1b627ad84c3b746dc9174e9b612b452e",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "00923",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-40a3554e446148796fbd9bb4e2087507",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "00923",
@@ -26,6 +24,5 @@
         "title": "doll sees everything"
       }
     ]
-  },
-  "sections": []
+  }
 }

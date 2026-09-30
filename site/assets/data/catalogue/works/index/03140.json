@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-988084b44d84c8274ed96d7379232dca",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "03140",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-19ffdec15c57a6d4fe62d6e0ae11eb95",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "03140",
@@ -24,6 +22,5 @@
         "title": "quantum random number theory (versions)"
       }
     ]
-  },
-  "sections": []
+  }
 }

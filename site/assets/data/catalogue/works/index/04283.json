@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-c9c180b8209e1099d7c8e4ab1594ce72",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "04283",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-5d5e1009a855dc176f67c4191ee71eb8",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "04283",
@@ -24,6 +22,5 @@
         "title": "kylie wax model 3.0 (iterations)"
       }
     ]
-  },
-  "sections": []
+  }
 }

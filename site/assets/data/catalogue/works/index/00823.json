@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-8c144eb40d4f0242a6f7fa1093c601f4",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "00823",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-dade51cf7179093b8ccef8885e6bd698",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "00823",
@@ -26,6 +24,5 @@
         "title": "concrete"
       }
     ]
-  },
-  "sections": []
+  }
 }

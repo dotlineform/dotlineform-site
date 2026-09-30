@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-900325b2f981f93809d3b90b5f26d499",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01179",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-4020502f4f5bb1139e86d266bcd02e7e",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01179",
@@ -26,6 +24,5 @@
         "title": "form space"
       }
     ]
-  },
-  "sections": []
+  }
 }

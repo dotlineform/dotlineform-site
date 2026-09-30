@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-c1810abb0eccc297749388a2f4a87729",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "04004",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-9a0e562a256bafa982bf020250b3e8bd",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "04004",
@@ -24,6 +22,5 @@
         "title": "fireworks particles (particles)"
       }
     ]
-  },
-  "sections": []
+  }
 }

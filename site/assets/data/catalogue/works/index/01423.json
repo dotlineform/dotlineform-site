@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-ee7bee00ce2379dd644171576ba6b45e",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01423",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-e202ecbfa4bab0ab6114aad80ae03faa",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01423",
@@ -26,6 +24,5 @@
         "title": "melancholy hope cell"
       }
     ]
-  },
-  "sections": []
+  }
 }

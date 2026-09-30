@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-6973e05b69764149da9ca01a5cb6b2e3",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "04323",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-b3bfd9d5e68e510dea754dff394b5fd3",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "04323",
@@ -24,6 +22,5 @@
         "title": "pi (details)"
       }
     ]
-  },
-  "sections": []
+  }
 }

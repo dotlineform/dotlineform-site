@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-916f11e74f4d5e4be853581146e1e7e7",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01940",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-f6921a65e1bc02fb1cfb83ef645c04bd",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01940",
@@ -26,6 +24,5 @@
         "title": "water sea pond"
       }
     ]
-  },
-  "sections": []
+  }
 }

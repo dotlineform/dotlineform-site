@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-216fa22a071b3cc6ed3d3d948e9ef802",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "00462",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-cf00766aa074f4578ce388bcddb76e9f",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "00462",
@@ -26,6 +24,5 @@
         "title": "molecules"
       }
     ]
-  },
-  "sections": []
+  }
 }

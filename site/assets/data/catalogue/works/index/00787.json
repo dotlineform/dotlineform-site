@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-41621060242c4038771e01412c082dc5",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "00787",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-f7a81c108b169a6bda0654eccec8cb85",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "00787",
@@ -26,6 +24,5 @@
         "title": "body space"
       }
     ]
-  },
-  "sections": []
+  }
 }

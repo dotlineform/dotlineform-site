@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-b8b9eed863b2c53cc29d23179c3008c3",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "03553",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-f1931e1cbe5d2c9b55209e565839a16d",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "03553",
@@ -24,6 +22,5 @@
         "title": "doll moiré reduced (versions (2022))"
       }
     ]
-  },
-  "sections": []
+  }
 }

@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-97bef0a5c3be1b6f580f558a2f78ce55",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "00573",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-6a2bed2582c94a4c9582357eca8fc4b5",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "00573",
@@ -26,6 +24,5 @@
         "title": "string theory"
       }
     ]
-  },
-  "sections": []
+  }
 }

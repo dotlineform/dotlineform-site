@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-fe6abae0547c833f1f040923c01f63ae",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01069",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-87a262021ac76b242dfd846e0b3c2a2a",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01069",
@@ -26,6 +24,5 @@
         "title": "fluid forms"
       }
     ]
-  },
-  "sections": []
+  }
 }

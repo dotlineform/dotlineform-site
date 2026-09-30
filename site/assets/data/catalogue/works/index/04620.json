@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-85947ac781715e796ae9758a4bc1a752",
-    "generated_at_utc": "2026-09-29T16:27:23Z",
-    "work_id": "04620",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-289718989b4a0021185961978f154c44",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "04620",
@@ -24,6 +22,5 @@
         "title": "pond (details)"
       }
     ]
-  },
-  "sections": []
+  }
 }

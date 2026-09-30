@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-b90454d3ba7309e99cc5a728f3872f03",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "03160",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-b745aa5a0e7f0addb8b966e47f6e2d27",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "03160",
@@ -24,6 +22,5 @@
         "title": "bits symbols 1 (details)"
       }
     ]
-  },
-  "sections": []
+  }
 }

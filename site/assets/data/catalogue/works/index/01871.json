@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-e03c93423a73d546def3eb1f02a1231d",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01871",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-8861ced85909ff50740249639564533a",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01871",
@@ -26,6 +24,5 @@
         "title": "tulips"
       }
     ]
-  },
-  "sections": []
+  }
 }

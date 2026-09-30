@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-2f8991520d62248e18ca7e445081a93a",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "02010",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-d36327c6f4fc03fbe03556c1c051601c",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "02010",
@@ -24,6 +22,5 @@
         "title": "untitled [227] (reverse)"
       }
     ]
-  },
-  "sections": []
+  }
 }

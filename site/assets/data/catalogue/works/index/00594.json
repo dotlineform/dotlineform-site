@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-38fdfb3a412811821e60474513e1a24d",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "00594",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-4f8a4faf73289381c41e9770670c347c",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "00594",
@@ -26,6 +24,5 @@
         "title": "form mobile"
       }
     ]
-  },
-  "sections": []
+  }
 }

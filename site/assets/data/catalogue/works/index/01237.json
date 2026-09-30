@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-6ef9938a85a92fa62a1b2e3c906967a3",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01237",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-e083816d63c81d892256069afdd327b4",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01237",
@@ -26,6 +24,5 @@
         "title": "fragments"
       }
     ]
-  },
-  "sections": []
+  }
 }

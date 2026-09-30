@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-63bfb950438c0abb96a0ad3d753a6f57",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "04034",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-0c15a544bd52a353b7fd0bad14cab443",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "04034",
@@ -24,6 +22,5 @@
         "title": "fireworks particles version (details)"
       }
     ]
-  },
-  "sections": []
+  }
 }

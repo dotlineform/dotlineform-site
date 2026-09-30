@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-fe511b0bb9eb831df192352df50fef25",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "02862",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-497cac4280a3f00bccfb53d71767205b",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "02862",
@@ -24,6 +22,5 @@
         "title": "molecules (versions)"
       }
     ]
-  },
-  "sections": []
+  }
 }

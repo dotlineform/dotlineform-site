@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-630c74e6ff559ecbbfe583ddeb904ac9",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "00457",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-5791e8df345f79d4dc4740c7ac915343",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "00457",
@@ -32,6 +30,5 @@
         "title": "intuition (2020)"
       }
     ]
-  },
-  "sections": []
+  }
 }

@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-abad26bb65ad1ae96e23e19293d7381f",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "00219",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-4a6daa22944c44b01cce7098b8045beb",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "00219",
@@ -26,6 +24,5 @@
         "title": "colouring book"
       }
     ]
-  },
-  "sections": []
+  }
 }

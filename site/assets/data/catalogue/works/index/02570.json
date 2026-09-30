@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-7b00a9f49d9b852cc6a6e6403b3f4781",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "02570",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-7ce864dc17e9f53ab001020791f364d5",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "02570",
@@ -24,6 +22,5 @@
         "title": "dotlineform (work in progress)"
       }
     ]
-  },
-  "sections": []
+  }
 }

@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-5ff97e204668a027dfe25e1c42b0e62a",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "04198",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-153b8c4c94a8ab7bde5368ddfd36a7b0",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "04198",
@@ -24,6 +22,5 @@
         "title": "form particles (particles)"
       }
     ]
-  },
-  "sections": []
+  }
 }

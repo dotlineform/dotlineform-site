@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-3844a163bcb7f3594af599b1c3df23f4",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "04261",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-1679ae02b44a344e3db5c6e973aa4ecd",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "04261",
@@ -24,6 +22,5 @@
         "title": "interior design 3 (details)"
       }
     ]
-  },
-  "sections": []
+  }
 }

@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-bd99136c62bbb132b19a09f66e6c9b73",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "00024",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-830102ddfe4da2e3a57cf8895dfac3f4",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "00024",
@@ -26,6 +24,5 @@
         "title": "collected 1989-1998"
       }
     ]
-  },
-  "sections": []
+  }
 }

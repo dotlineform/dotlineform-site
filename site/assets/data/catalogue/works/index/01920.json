@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-887fbf3e2937ed3ab449252ee985b069",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01920",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-4a57b6f8b10c58c95847d79df08ce60a",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01920",
@@ -26,6 +24,5 @@
         "title": "water"
       }
     ]
-  },
-  "sections": []
+  }
 }

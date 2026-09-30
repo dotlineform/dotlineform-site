@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-6a5065d39686fdf607ffd8ffccd2c66e",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "03283",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-3dfaed0d6da7747fe98baed68eef71fb",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "03283",
@@ -24,6 +22,5 @@
         "title": "16 forms (transformed forms)"
       }
     ]
-  },
-  "sections": []
+  }
 }

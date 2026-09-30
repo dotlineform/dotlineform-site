@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-17b4171393f04c218f120effc5133503",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "03116",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-4eba5017f38a1132db6ed8ed97435517",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "03116",
@@ -24,6 +22,5 @@
         "title": "harmony 3 (version) (details)"
       }
     ]
-  },
-  "sections": []
+  }
 }

@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-0734a2151b71ceb33728c14815ecd64b",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01582",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-c601da8fdf1f4110872d83bb647533a1",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01582",
@@ -26,6 +24,5 @@
         "title": "pole vault"
       }
     ]
-  },
-  "sections": []
+  }
 }

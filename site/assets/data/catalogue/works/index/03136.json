@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-0cf27ae5b5aa9c25cae2235f4e4087c0",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "03136",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-0ddae16d263a4746678d1bd40d0b6d7d",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "03136",
@@ -24,6 +22,5 @@
         "title": "k crystals (squared transparent) (details)"
       }
     ]
-  },
-  "sections": []
+  }
 }

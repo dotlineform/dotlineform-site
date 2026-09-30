@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-3c9385ba422ad26ec86b213b6a7001ab",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "04223",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-85efacf59d99af5934dd8e3d4df26d03",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "04223",
@@ -24,6 +22,5 @@
         "title": "forms painting (details)"
       }
     ]
-  },
-  "sections": []
+  }
 }

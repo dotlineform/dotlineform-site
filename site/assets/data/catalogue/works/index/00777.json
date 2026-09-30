@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-d5e258e7cff816c6d9e62e79202288e5",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "00777",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-2f2da56a47ce049e42375fc83769f738",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "00777",
@@ -26,6 +24,5 @@
         "title": "birds"
       }
     ]
-  },
-  "sections": []
+  }
 }

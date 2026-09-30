@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-4acd7e33a5ffc053b4c019be828aef73",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01620",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-cb090c8da51046e5b9bbc2559fda539c",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01620",
@@ -26,6 +24,5 @@
         "title": "residues"
       }
     ]
-  },
-  "sections": []
+  }
 }

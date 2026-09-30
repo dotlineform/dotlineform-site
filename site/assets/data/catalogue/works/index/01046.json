@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-f697f2ee1d2f56edb38c63e973434aa8",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01046",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-86661033845ec0c9691b6c2c082e01a2",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01046",
@@ -26,6 +24,5 @@
         "title": "espresso"
       }
     ]
-  },
-  "sections": []
+  }
 }

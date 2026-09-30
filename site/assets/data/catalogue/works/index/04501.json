@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-4f9e5bc798fc35fbec70c6f520ee2fa9",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "04501",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-6424e675f3f43b4314310d97d4e3263c",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "04501",
@@ -24,6 +22,5 @@
         "title": "state of mind (source)"
       }
     ]
-  },
-  "sections": []
+  }
 }

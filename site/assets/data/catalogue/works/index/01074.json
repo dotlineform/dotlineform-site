@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-fa80c50a3238a72eab0187cd95248f05",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01074",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-946333d54e75a4c87b8fa66519da36a8",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01074",
@@ -26,6 +24,5 @@
         "title": "fog"
       }
     ]
-  },
-  "sections": []
+  }
 }

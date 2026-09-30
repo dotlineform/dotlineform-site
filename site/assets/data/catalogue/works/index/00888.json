@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-e4cd882d0d15faf19613765c455d4418",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "00888",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-62a3e94d4b28c82d75f786a057ce836d",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "00888",
@@ -26,6 +24,5 @@
         "title": "doll"
       }
     ]
-  },
-  "sections": []
+  }
 }

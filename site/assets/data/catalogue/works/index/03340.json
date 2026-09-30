@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-5ddd680eb74dc627f3711347b45ac1cc",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "03340",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-936950e4cdfbfcd086853625a7b3743c",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "03340",
@@ -24,6 +22,5 @@
         "title": "a theory of happiness is a theory of everything (64°) (64 degrees)"
       }
     ]
-  },
-  "sections": []
+  }
 }

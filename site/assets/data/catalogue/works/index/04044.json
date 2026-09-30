@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-89adf33f77d71995261e8d0f96d46c43",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "04044",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-2a70591e13b1604b65f5171160905121",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "04044",
@@ -24,6 +22,5 @@
         "title": "flowers 2 (details)"
       }
     ]
-  },
-  "sections": []
+  }
 }

@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-97b43a6adba07c74f57bc4d7d752b7f8",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "04314",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-a14816211a9316411d0ba6d0dd010344",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "04314",
@@ -24,6 +22,5 @@
         "title": "k particles (details)"
       }
     ]
-  },
-  "sections": []
+  }
 }

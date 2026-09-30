@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-9a1743d878aa0fc1e5e8641186a37396",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01959",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-3d7aef8f458637e3d05f363d0821f12f",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01959",
@@ -24,6 +22,5 @@
         "title": "a poem divided into 4 parts (\"our dreams are real\") (details)"
       }
     ]
-  },
-  "sections": []
+  }
 }

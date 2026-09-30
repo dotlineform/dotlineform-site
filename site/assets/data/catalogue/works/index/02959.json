@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-83ba8d5408e3cd24485a17fae5c24b2b",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "02959",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-a983e5a39a94d593dfadec11d146a170",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "02959",
@@ -24,6 +22,5 @@
         "title": "forest 4 (details)"
       }
     ]
-  },
-  "sections": []
+  }
 }

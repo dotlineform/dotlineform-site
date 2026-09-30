@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-c1057374dff46036db37ce8a3fc8b63e",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "02544",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-ab6da15051da1db7ac22565fc8c56ad5",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "02544",
@@ -24,6 +22,5 @@
         "title": "spiders (photos)"
       }
     ]
-  },
-  "sections": []
+  }
 }

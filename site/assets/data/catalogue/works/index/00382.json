@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-802690d997edd4bbe4edd1cab3d0d444",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "00382",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-4a27152a2bf0c37e045234012f46ce38",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "00382",
@@ -26,6 +24,5 @@
         "title": "harmony"
       }
     ]
-  },
-  "sections": []
+  }
 }

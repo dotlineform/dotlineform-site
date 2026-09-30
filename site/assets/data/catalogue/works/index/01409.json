@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-acaa8465596579336600c28a8c936d6a",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01409",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-782d58caa9fd24df7ae1ab16d13444b3",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01409",
@@ -26,6 +24,5 @@
         "title": "lights"
       }
     ]
-  },
-  "sections": []
+  }
 }

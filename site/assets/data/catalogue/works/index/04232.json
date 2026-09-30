@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-a795d92dc50f4aa9571110e7c4a86c53",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "04232",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-8f62d546befb1178a25948027be025ca",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "04232",
@@ -24,6 +22,5 @@
         "title": "heaven and earth (colour series) (details)"
       }
     ]
-  },
-  "sections": []
+  }
 }

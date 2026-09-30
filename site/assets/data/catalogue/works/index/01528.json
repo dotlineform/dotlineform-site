@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-fb50cebc8d61ab0be5dd404459c22f3b",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01528",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-749b3c4474d2fe515a83563f5dc22014",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01528",
@@ -26,6 +24,5 @@
         "title": "plant forms"
       }
     ]
-  },
-  "sections": []
+  }
 }

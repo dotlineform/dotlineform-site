@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-fdbf5527d9bffe785878b946ad608437",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01323",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-918be3dd52a5554152f622f1716530c4",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01323",
@@ -26,6 +24,5 @@
         "title": "grid fields"
       }
     ]
-  },
-  "sections": []
+  }
 }

@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-011f3e0bf70f507fe304312565467304",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "03130",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-40a5d7c60ce565185074b29be5a45357",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "03130",
@@ -24,6 +22,5 @@
         "title": "k crystals (derivation)"
       }
     ]
-  },
-  "sections": []
+  }
 }

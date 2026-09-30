@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-8352cf2d166af45f91264a70905f6c72",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "04359",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-3333da1e764d7ceefb69bf84ace3d262",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "04359",
@@ -24,6 +22,5 @@
         "title": "room 3 (details)"
       }
     ]
-  },
-  "sections": []
+  }
 }

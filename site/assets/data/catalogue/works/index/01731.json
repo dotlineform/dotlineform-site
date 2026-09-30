@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-551705838f42282a723a426424fc75c9",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01731",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-3c67bf1a47e51ae5d73ef9881d58ee1f",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01731",
@@ -26,6 +24,5 @@
         "title": "still life"
       }
     ]
-  },
-  "sections": []
+  }
 }

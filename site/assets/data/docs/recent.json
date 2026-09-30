@@ -1,6 +1,5 @@
 {
-  "schema": "docs_recent_v1",
-  "basis": "edited",
+  "schema": "docs_recent_v2",
   "limit": 20,
   "docs": [
     {
@@ -9,7 +8,7 @@
       "collection": "works",
       "report_doc_id": "d-20260801-073826-8865a8",
       "collection_title": "Context",
-      "timestamp": "2026-09-28 21:48:34"
+      "timestamp": "2026-09-28"
     },
     {
       "doc_id": "d-20260801-212422-081a73",
@@ -17,7 +16,7 @@
       "collection": "works",
       "report_doc_id": "d-20260801-073826-8865a8",
       "collection_title": "Context",
-      "timestamp": "2026-09-28 21:48:34"
+      "timestamp": "2026-09-28"
     },
     {
       "doc_id": "d-20260801-212422-df11f3",
@@ -25,7 +24,7 @@
       "collection": "works",
       "report_doc_id": "d-20260801-073826-8865a8",
       "collection_title": "Context",
-      "timestamp": "2026-09-28 21:48:34"
+      "timestamp": "2026-09-28"
     },
     {
       "doc_id": "d-20260801-212422-632af5",
@@ -33,7 +32,7 @@
       "collection": "works",
       "report_doc_id": "d-20260801-073826-8865a8",
       "collection_title": "Context",
-      "timestamp": "2026-09-28 21:48:34"
+      "timestamp": "2026-09-28"
     },
     {
       "doc_id": "d-20260801-212422-3a2da4",
@@ -41,7 +40,7 @@
       "collection": "works",
       "report_doc_id": "d-20260801-073826-8865a8",
       "collection_title": "Context",
-      "timestamp": "2026-09-28 21:48:34"
+      "timestamp": "2026-09-28"
     },
     {
       "doc_id": "d-20260801-212422-773b86",
@@ -49,7 +48,7 @@
       "collection": "works",
       "report_doc_id": "d-20260801-073826-8865a8",
       "collection_title": "Context",
-      "timestamp": "2026-09-28 21:48:34"
+      "timestamp": "2026-09-28"
     },
     {
       "doc_id": "d-20260801-212422-bc7ae1",
@@ -57,7 +56,7 @@
       "collection": "works",
       "report_doc_id": "d-20260801-073826-8865a8",
       "collection_title": "Context",
-      "timestamp": "2026-09-28 21:48:34"
+      "timestamp": "2026-09-28"
     },
     {
       "doc_id": "d-20260801-212422-d91151",
@@ -65,7 +64,7 @@
       "collection": "works",
       "report_doc_id": "d-20260801-073826-8865a8",
       "collection_title": "Context",
-      "timestamp": "2026-09-28 21:48:34"
+      "timestamp": "2026-09-28"
     },
     {
       "doc_id": "d-20260801-212422-186a69",
@@ -73,22 +72,22 @@
       "collection": "works",
       "report_doc_id": "d-20260801-073826-8865a8",
       "collection_title": "Context",
-      "timestamp": "2026-09-28 21:48:34"
-    },
-    {
-      "doc_id": "d-20260426-164043-e14f49",
-      "title": "dotlineform",
-      "timestamp": "2026-09-26 21:57:26"
+      "timestamp": "2026-09-28"
     },
     {
       "doc_id": "d-20260801-073826-8865a8",
       "title": "Context",
-      "timestamp": "2026-09-26 19:38:17"
+      "timestamp": "2026-09-26"
+    },
+    {
+      "doc_id": "d-20260426-164043-e14f49",
+      "title": "dotlineform",
+      "timestamp": "2026-09-26"
     },
     {
       "doc_id": "d-20260916-161504-f8c947",
       "title": "Catalogue",
-      "timestamp": "2026-09-16 17:22:58"
+      "timestamp": "2026-09-16"
     },
     {
       "doc_id": "d-20260801-212422-3aa736",
@@ -96,12 +95,12 @@
       "collection": "works",
       "report_doc_id": "d-20260801-073826-8865a8",
       "collection_title": "Context",
-      "timestamp": "2026-09-13 22:33:48"
+      "timestamp": "2026-09-13"
     },
     {
       "doc_id": "d-20260907-180859-c425b2",
       "title": "Moments",
-      "timestamp": "2026-09-07 18:08:59"
+      "timestamp": "2026-09-07"
     },
     {
       "doc_id": "d-20260801-212422-9f0121",
@@ -109,13 +108,13 @@
       "collection": "works",
       "report_doc_id": "d-20260801-073826-8865a8",
       "collection_title": "Context",
-      "timestamp": "2026-08-06 22:42:40"
+      "timestamp": "2026-08-06"
     },
     {
       "doc_id": "d-20260624-213316-478639",
       "title": "Concepts",
-      "timestamp": "2026-07-29 11:30:02"
+      "timestamp": "2026-07-29"
     }
   ],
-  "generated_at": "2026-09-28T21:23:29Z"
+  "generated_at": "2026-09-30T12:49:23Z"
 }

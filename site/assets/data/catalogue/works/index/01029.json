@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-79103dc3d9aae33dd1bd36696bf33259",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01029",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-81a5aec26be52aa61d2efcb8b4bb2809",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01029",
@@ -26,6 +24,5 @@
         "title": "droplets"
       }
     ]
-  },
-  "sections": []
+  }
 }

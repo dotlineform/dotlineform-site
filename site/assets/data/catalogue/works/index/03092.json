@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-fb16685c56425d1652e8941e85df4a57",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "03092",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-a7278b42e78b7701fa534723a1735c3d",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "03092",
@@ -24,6 +22,5 @@
         "title": "body curves (details)"
       }
     ]
-  },
-  "sections": []
+  }
 }

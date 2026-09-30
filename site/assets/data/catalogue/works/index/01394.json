@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-216be54d28e09e0ce82571354cf643ec",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01394",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-6431ed5174eb66aa767ecd1fd415e405",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01394",
@@ -26,6 +24,5 @@
         "title": "kylie wax model"
       }
     ]
-  },
-  "sections": []
+  }
 }

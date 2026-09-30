@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-984e68c2e0d545dcce056fe75cc6aa21",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "00813",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-528c3b0fade9659d9cd88a621b7a0953",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "00813",
@@ -26,6 +24,5 @@
         "title": "colours"
       }
     ]
-  },
-  "sections": []
+  }
 }

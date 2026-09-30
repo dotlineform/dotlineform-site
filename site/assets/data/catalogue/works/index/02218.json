@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-2ea1f275772b2abf78f45a9d1552736e",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "02218",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-4c9a52c9290d24876c2fa7cb58598a84",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "02218",
@@ -24,6 +22,5 @@
         "title": "certainty (photos)"
       }
     ]
-  },
-  "sections": []
+  }
 }

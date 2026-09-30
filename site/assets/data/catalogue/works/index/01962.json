@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-09d73652002e58ac635cdd7d8b96f3bf",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01962",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-4192351a4a3ea06a2f6933d3bb47cdce",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01962",
@@ -24,6 +22,5 @@
         "title": "grid dissection (details)"
       }
     ]
-  },
-  "sections": []
+  }
 }

@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-096f586656ba9c7b4ac59f2378038091",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "03533",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-3e1af47ccfadf7254a78dcc7df8d52a3",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "03533",
@@ -24,6 +22,5 @@
         "title": "holes (details)"
       }
     ]
-  },
-  "sections": []
+  }
 }

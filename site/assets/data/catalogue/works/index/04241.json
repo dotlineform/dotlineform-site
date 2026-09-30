@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-1fedab2da3640abfb2d8788a87204cf9",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "04241",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-b951c1bdb279376e6cb08b0b7fe8e3d5",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "04241",
@@ -24,6 +22,5 @@
         "title": "home 2 (details)"
       }
     ]
-  },
-  "sections": []
+  }
 }

@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-be1d2bbe6b494dd97e5ffdfa075058cd",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "00389",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-e723172469bca7ea1dc9bcebba8ca973",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "00389",
@@ -26,6 +24,5 @@
         "title": "certainty"
       }
     ]
-  },
-  "sections": []
+  }
 }

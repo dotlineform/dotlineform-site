@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-f336809d1012024c6e4e9669834075fb",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "00936",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-261c848aff8d8411b7488c4e95e1f3cb",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "00936",
@@ -26,6 +24,5 @@
         "title": "dot"
       }
     ]
-  },
-  "sections": []
+  }
 }

@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-bef7f974be55216f7dfcef87c17b5394",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "03404",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-41e3f4264a1d5a432ec5f617dcdf0aca",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "03404",
@@ -24,6 +22,5 @@
         "title": "birth of healing forms (versions)"
       }
     ]
-  },
-  "sections": []
+  }
 }

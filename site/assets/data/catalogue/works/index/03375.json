@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-0857b77d2a9363bd876d56ba7caa7936",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "03375",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-9306d3eb582844908bb40f5b5f8a43f9",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "03375",
@@ -24,6 +22,5 @@
         "title": "assembly code 3 (details)"
       }
     ]
-  },
-  "sections": []
+  }
 }

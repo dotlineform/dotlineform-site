@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-9558304b7ff0d225c4bb621f13c26074",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "00356",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-37abe2accfd7ffb0b2a1e5ceba7b2a57",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "00356",
@@ -26,6 +24,5 @@
         "title": "curve poems"
       }
     ]
-  },
-  "sections": []
+  }
 }

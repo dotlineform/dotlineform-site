@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-66119a2c1e4d1f4cb30fb7caf95dc1e6",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01755",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-fbf6d93febbf8283be19dbcb4550178d",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01755",
@@ -26,6 +24,5 @@
         "title": "thorns"
       }
     ]
-  },
-  "sections": []
+  }
 }

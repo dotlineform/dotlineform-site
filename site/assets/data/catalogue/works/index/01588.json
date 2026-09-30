@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-fbf3bc781bab77bfa51eab780c6680c8",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01588",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-03cf05b61a67cf836d6247c2a4a085f0",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01588",
@@ -26,6 +24,5 @@
         "title": "porto santo"
       }
     ]
-  },
-  "sections": []
+  }
 }

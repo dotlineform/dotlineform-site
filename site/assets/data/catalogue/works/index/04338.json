@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-de353ea5f8d33458f62d5f6ac2dc6067",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "04338",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-39a563125423493f66ac452902363f88",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "04338",
@@ -24,6 +22,5 @@
         "title": "poa 1 (map 1-500) (selected source)"
       }
     ]
-  },
-  "sections": []
+  }
 }

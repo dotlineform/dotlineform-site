@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-5b6ef2ec12387eba221534ea2777ad4f",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01942",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-55af88592fb1fdb3e5eec35ff973634d",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01942",
@@ -26,6 +24,5 @@
         "title": "simultaneous equations"
       }
     ]
-  },
-  "sections": []
+  }
 }

@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-185a9721cdf97570e3355312d188af7e",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01111",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-fa9f6cda84edc8787687c5ddeccffcba",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01111",
@@ -26,6 +24,5 @@
         "title": "folding forms"
       }
     ]
-  },
-  "sections": []
+  }
 }

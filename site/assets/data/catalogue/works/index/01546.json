@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-001374b57b9c6d6a9d10ec703895f64c",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01546",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-6f74a5f657ab53b9b4a111dc88e5f9f0",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01546",
@@ -26,6 +24,5 @@
         "title": "poa"
       }
     ]
-  },
-  "sections": []
+  }
 }

@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-6843d206d4a78d51599094c369994728",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "03506",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-3201f567ca4692142bd5abc088ada681",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "03506",
@@ -24,6 +22,5 @@
         "title": "colours 1958-2001 (versions)"
       }
     ]
-  },
-  "sections": []
+  }
 }

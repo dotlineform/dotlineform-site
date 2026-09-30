@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-2f7f5ad8e71a218a164343ebf22d0704",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01694",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-b7dac7a697098a5c584d2d1a3d9b8993",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01694",
@@ -26,6 +24,5 @@
         "title": "spider webs"
       }
     ]
-  },
-  "sections": []
+  }
 }

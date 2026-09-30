@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-49d85f9efd16ed2fe0845e5f5f938a37",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "03001",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-fe12814030ad38d2d376f3fa37ebe1b5",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "03001",
@@ -24,6 +22,5 @@
         "title": "learning to draw landscapes (versions) (versions)"
       }
     ]
-  },
-  "sections": []
+  }
 }

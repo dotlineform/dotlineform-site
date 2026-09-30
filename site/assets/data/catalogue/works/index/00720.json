@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-863de6b52868f9ecbae7e18c3c2107f4",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "00720",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-fcf459eae62a09197e75461441eac987",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "00720",
@@ -26,6 +24,5 @@
         "title": "a feeling that we are part of a structure"
       }
     ]
-  },
-  "sections": []
+  }
 }

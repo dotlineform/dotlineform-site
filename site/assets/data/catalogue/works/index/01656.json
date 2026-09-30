@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-bf27a62e7a0b4434d4822b2c59a990b2",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "01656",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-15cb06802bb8622954795edffcff5477",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "01656",
@@ -26,6 +24,5 @@
         "title": "snow"
       }
     ]
-  },
-  "sections": []
+  }
 }

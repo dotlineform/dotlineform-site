@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-e9b7eba1e0bb7650c66195a66f51e371",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "00750",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-da510da039d25895c2e1e47c96ec7103",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "00750",
@@ -26,6 +24,5 @@
         "title": "an act of kindness"
       }
     ]
-  },
-  "sections": []
+  }
 }

@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v8",
-    "version": "blake2b-45e210de006b2ce8600e2b154dff1155",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
-    "work_id": "04041",
-    "count": 0
+    "schema": "work_record_v9",
+    "version": "blake2b-40f3b8a8dca39acb712212f6ebb94047",
+    "generated_at_utc": "2026-09-30T11:46:22Z"
   },
   "work": {
     "work_id": "04041",
@@ -24,6 +22,5 @@
         "title": "flowers 1 (details)"
       }
     ]
-  },
-  "sections": []
+  }
 }
