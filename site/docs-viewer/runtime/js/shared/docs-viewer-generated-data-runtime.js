@@ -116,7 +116,7 @@ export function createDocsViewerGeneratedDataRuntime(options) {
   }
 
   /** Use the generated-read service locally or a configured static file publicly.
-   * A missing relationship file is unavailable data, distinct from an empty record.
+   * A missing relationship file is normal for a document with no relationships.
    */
   function readDocumentLinks(target, options) {
     var staticBase = String(options && options.linksByIdUrlBase || "").replace(/\/$/, "");

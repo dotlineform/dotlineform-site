@@ -85,7 +85,6 @@ def regenerate_catalogue(repo_root: Path, body: dict[str, Any]) -> dict[str, Any
     current_doc_ids: set[str] = set()
     deleted_doc_ids: set[str] = set()
     link_doc_ids: set[str] = set()
-    created_doc_ids: set[str] = set()
     counts = {"create": 0, "retitle": 0, "regenerate_body": 0, "build_only": 0, "delete": 0}
 
     for work_id in current_ids:
@@ -99,7 +98,6 @@ def regenerate_catalogue(repo_root: Path, body: dict[str, Any]) -> dict[str, Any
                                  body_markdown=record.body)
             doc_id = create.response["doc_id"]
             writes.append((work_id, doc_id, create.source_writes[0]))
-            created_doc_ids.add(doc_id)
             link_doc_ids.add(doc_id)
             counts["create"] += 1
         else:
@@ -179,7 +177,6 @@ def regenerate_catalogue(repo_root: Path, body: dict[str, Any]) -> dict[str, Any
             repo_root, "catalogue", changed_paths, write_operation,
             suppression_reason="docs-catalogue-regenerate",
             links_doc_ids=None if mode == "full" else sorted(link_doc_ids),
-            links_created_doc_ids=sorted(created_doc_ids),
             source_writes_committed=lambda: bool(committed_records or selection_updated),
             build_doc_ids=sorted(build_doc_ids),
             complete_build=mode == "full",

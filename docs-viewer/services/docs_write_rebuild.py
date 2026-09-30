@@ -116,13 +116,12 @@ def changed_source_document_ids(paths: list[Path]) -> list[str]:
     return sorted(identities - {""})
 
 
-def links_write_arguments(before: list[str] | None, paths: list[Path], *, created_doc_ids: list[str] | None = None) -> dict[str, list[str]]:
-    """Carry changed/deleted identities and explicit creation from one source write."""
+def links_write_arguments(before: list[str] | None, paths: list[Path]) -> dict[str, list[str]]:
+    """Carry exact changed/deleted identities from one source write."""
     if before is None:
         return {}
     after = set(changed_source_document_ids(paths))
-    created = after - set(before) if created_doc_ids is None else set(created_doc_ids)
-    return {"links_doc_ids": sorted(set(before) | after), "links_created_doc_ids": sorted(created)}
+    return {"links_doc_ids": sorted(set(before) | after)}
 
 
 def iter_docs_tree_records(docs: Any) -> list[Dict[str, Any]]:
@@ -249,7 +248,6 @@ def rebuild_stage_outputs(
     skip_media_builds: bool = False,
     stage: str | None = None,
     links_doc_ids: Optional[list[str]] = None,
-    links_created_doc_ids: Optional[list[str]] = None,
     docs_base_dir: Path | None = None,
     assets_base_dir: Path | None = None,
     copied_search_index: bytes | None = None,
@@ -290,8 +288,6 @@ def rebuild_stage_outputs(
         selected_links = links_doc_ids if links_doc_ids is not None else docs_doc_ids
         if selected_links is not None:
             docs_command.extend(["--links-doc-ids", ",".join(ordered_docs_doc_ids(selected_links))])
-        if links_created_doc_ids:
-            docs_command.extend(["--links-created-doc-ids", ",".join(ordered_docs_doc_ids(links_created_doc_ids))])
     if docs_doc_ids is not None:
         docs_target_doc_ids = ordered_docs_doc_ids(docs_doc_ids)
         if docs_target_doc_ids:
@@ -421,14 +417,13 @@ def rebuild_working_outputs(
     docs_doc_ids: Optional[list[str]] = None,
     skip_media_builds: bool = False,
     links_doc_ids: Optional[list[str]] = None,
-    links_created_doc_ids: Optional[list[str]] = None,
 ) -> Dict[str, Any]:
     """Resolve the authoring owner once before invoking the internal build pipeline."""
     config = load_docs_working_config(repo_root)
     return rebuild_stage_outputs(
         repo_root, stage=config.stage, include_search=include_search,
         docs_doc_ids=docs_doc_ids, skip_media_builds=skip_media_builds,
-        links_doc_ids=links_doc_ids, links_created_doc_ids=links_created_doc_ids,
+        links_doc_ids=links_doc_ids,
     )
 
 
@@ -436,7 +431,6 @@ def rebuild_collection_outputs(
     repo_root: Path,
     collection: str,
     links_doc_ids: Optional[list[str]] = None,
-    links_created_doc_ids: Optional[list[str]] = None,
     docs_doc_ids: Optional[list[str]] = None,
 ) -> Dict[str, Any]:
     """Build a complete collection or render only its exact changed/deleted IDs."""
@@ -456,8 +450,6 @@ def rebuild_collection_outputs(
         docs_command.extend(["--only-doc-ids", ",".join(target_doc_ids)])
     if links_doc_ids is not None:
         docs_command.extend(["--links-doc-ids", ",".join(ordered_docs_doc_ids(links_doc_ids))])
-    if links_created_doc_ids:
-        docs_command.extend(["--links-created-doc-ids", ",".join(ordered_docs_doc_ids(links_created_doc_ids))])
     steps = []
     docs_diagnostics: Optional[Dict[str, Any]] = None
     step = run_rebuild_command(docs_command, repo_root)
@@ -704,7 +696,6 @@ def perform_collection_source_write_and_rebuild(
     *,
     suppression_reason: str,
     source_snapshots: Mapping[Path, bytes] | None = None,
-    links_created_doc_ids: list[str] | None = None,
     links_doc_ids: list[str] | None = None,
     source_writes_committed: Callable[[], bool] | None = None,
     build_doc_ids: list[str] | None = None,
@@ -776,7 +767,7 @@ def perform_collection_source_write_and_rebuild(
         write_operation()
         docs_doc_ids = sorted(set(source_doc_ids_before) | set(changed_source_document_ids(changed_paths))
                               | set(build_doc_ids or []))
-        links_arguments = links_write_arguments(links_before, changed_paths, created_doc_ids=links_created_doc_ids)
+        links_arguments = links_write_arguments(links_before, changed_paths)
         if links_doc_ids is not None:
             links_arguments["links_doc_ids"] = links_doc_ids
         if complete_build:
@@ -900,12 +891,14 @@ def perform_multi_collection_source_write_and_rebuild(
                 *links_before.get(owner, []),
                 *changed_source_document_ids(changed_paths),
             ])
-            prepared_rebuilds.append((plan, links_write_arguments(links_before.get(owner), changed_paths), docs_doc_ids))
+            links_arguments = links_write_arguments(links_before.get(owner), changed_paths)
+            has_destination = bool(set(links_arguments.get("links_doc_ids", [])) - set(links_before.get(owner, [])))
+            prepared_rebuilds.append((plan, links_arguments, docs_doc_ids, has_destination))
         # A collection move keeps its immutable ID and shared Links filename.
         # Prepare the destination first so it can transfer the exact prior
         # record before the former collection processes its deletion identity.
-        prepared_rebuilds.sort(key=lambda item: not bool(item[1].get("links_created_doc_ids")))
-        for plan, links_arguments, docs_doc_ids in prepared_rebuilds:
+        prepared_rebuilds.sort(key=lambda item: not item[3])
+        for plan, links_arguments, docs_doc_ids, _has_destination in prepared_rebuilds:
             collection = str(plan.get("collection") or "")
             owner = watch_suppression_owner(collection)
             if collection:

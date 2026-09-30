@@ -84,7 +84,7 @@ export function createDocsViewerLinksDetailAdapter() {
     root.appendChild(heading);
     if (!data || !data.sections.length) {
       var empty = documentRef.createElement("p");
-      empty.textContent = data ? "No links." : "Links data is not available for this document.";
+      empty.textContent = "No links.";
       root.appendChild(empty);
     }
     (data ? data.sections : []).forEach(function (group) {

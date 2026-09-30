@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260910-202325-53b5f9
 title: Links View
 added_date: "2026-09-10 20:23:25"
-last_updated: "2026-09-12 15:13:10"
+last_updated: "2026-09-30 17:39:22"
 summary: The single-document Links presentation, exact generated-data reads, Content Detail hosting and navigation boundaries.
 parent_id: d-20260331-000000-c313fd
 ---
@@ -37,7 +37,7 @@ Locally, the generated-data runtime calls `GET /docs/links` with the exact scope
 
 One version 1 response contains `self`, `incoming`, `outgoing` and `counts`. Each counterpart has a shallow document summary and its authored occurrences. The browser uses the supplied title, Subject and href; it fetches neither a scope index nor each neighbour's ordinary payload. `links_schema.py` owns the JSON projection independently of `links_model.py` and reference maintenance.
 
-An existing record with no displayable entries shows **No links.** A missing relationship file shows **Links data is not available for this document.** A failed read or an identity/schema mismatch reports an error. These states do not cause the browser to create or repair data.
+An existing record with no displayable entries, or a missing relationship file for the mounted document, shows **No links.** Records are created lazily when a resolved relationship needs them, so absence is normal. A failed read other than a missing file, or an identity/schema mismatch, reports an error. These states do not cause the browser to create or repair data.
 
 The public-safe provider can read a configured static `links_by_id_url_base` without local service URLs or capability probes. Public configuration currently leaves Links disabled. Prepared published relationship data, public activation and deployment belong to their separate workflow.
 

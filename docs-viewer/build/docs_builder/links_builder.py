@@ -2,7 +2,7 @@
 
 Existing Links JSON is the only relationship prior state. Targeted refreshes
 read selected documents, necessary ancestors and directly affected neighbours.
-Complete builds initialise missing eligible records before refreshing links.
+Records are created only when a document relationship needs either endpoint.
 """
 
 from __future__ import annotations
@@ -25,7 +25,7 @@ from docs_document_location import canonical_document_viewer_url
 from docs_document_subjects import normalize_authoring_subject
 from docs_rendered_links import collect_anchors, parse_docs_target, resolve_href
 from docs_workspace_config import DocsStageConfig, document_source_path, generated_documents_path, resolve_workspace_path
-from docs_source_model import load_document_collection_docs_for_config, parse_source, write_text_atomic
+from docs_source_model import parse_source, write_text_atomic
 from docs_publication_ignore import WorkingLinksExclusions, working_ignored_doc_ids
 
 CONFIG_PATH = Path("docs-viewer/config/links-builder.json")
@@ -58,19 +58,12 @@ def prepare_document_links(
     builder: DocsDataBuilder, docs: list[DocRecord], built_doc_ids: Collection[str],
     stale_doc_ids: Collection[str],
 ) -> dict[str, Any] | None:
-    """Keep explicit change/creation identities independent of ordinary rendering.
-
-    Targeted operations require explicit creation. Complete builds also admit
-    missing eligible records from source, without consulting a collection index.
-    """
+    """Keep exact changed/deleted identities independent of ordinary rendering."""
     if not links_enabled(builder.repo_root, builder.config):
         return None
     selected = builder.links_doc_ids if builder.links_doc_ids is not None else builder.only_doc_ids
     doc_ids = set(selected if selected is not None else set(built_doc_ids) | set(stale_doc_ids))
-    created = set(builder.links_created_doc_ids)
-    if not created <= doc_ids & {doc.doc_id for doc in docs}:
-        raise ValueError("Initial Links creation requires exact selected source documents")
-    return {"documents": docs, "doc_ids": doc_ids, "new_doc_ids": created, "built_doc_ids": set(built_doc_ids)}
+    return {"documents": docs, "doc_ids": doc_ids, "built_doc_ids": set(built_doc_ids)}
 
 
 class _DocumentRefresh:
@@ -89,6 +82,7 @@ class _DocumentRefresh:
         self.output = self.outputs[""].parent / "links-by-id"
         self.routes = ("/docs/", builder.workspace.public_viewer_base_url)
         self.docs = {self.key(doc.doc_id): doc for doc in plan["documents"]}
+        self.metadata = {target: doc.front_matter for target, doc in self.docs.items()}
         self.exclusions = WorkingLinksExclusions(
             self.sources[""], working_ignored_doc_ids(builder.repo_root, self.config),
             {doc.doc_id: doc.parent_id for doc in plan["documents"]} if not self.collection else None,
@@ -96,7 +90,6 @@ class _DocumentRefresh:
         self.pending = {self.key(doc_id) for doc_id in plan["built_doc_ids"]} if not write else set()
         self.records: dict[DocumentTarget, DocumentLinks | None] = {}
         self.original: dict[DocumentTarget, str | None] = {}
-        self.warnings: list[str] = []
         self.removals: set[DocumentTarget] = set()
 
     def key(self, doc_id: str) -> DocumentTarget:
@@ -109,41 +102,6 @@ class _DocumentRefresh:
     def excluded(self, target: DocumentTarget) -> bool:
         return not target.collection and self.exclusions.excludes(target.doc_id)
 
-    def initialise_missing(self) -> None:
-        """Seed a complete build before any relationship refresh.
-
-        Ordinary Build starts the workspace sequence, so it seeds all configured
-        collections first. A standalone collection Build seeds its own sources.
-        Existing records remain the relationship prior state.
-        """
-        owners = {self.collection: self.owners[self.collection]} if self.collection else self.owners
-        identities: set[str] = set()
-        for collection, owner in owners.items():
-            docs = list(self.docs.values()) if collection == self.collection else load_document_collection_docs_for_config(
-                self.builder.repo_root, self.config, owner,
-            )
-            host_id = ""
-            if collection and docs and not self.collection:
-                host_id = owner.report_host_doc_id
-            for doc in docs:
-                target = DocumentTarget(collection, doc.doc_id)
-                self.validate_target(target)
-                source = _safe_path(self.sources[collection], f"{doc.doc_id}.md")
-                if not source.is_file() or doc.front_matter.get("doc_id") != doc.doc_id or (collection != self.collection and source != doc.path):
-                    raise ValueError("Links initialisation requires exact source filenames and identities")
-                if doc.doc_id in identities:
-                    raise ValueError(f"Links source identity exists in multiple collections: {doc.doc_id}")
-                identities.add(doc.doc_id)
-                if self.excluded(target) or _safe_path(self.output, f"{doc.doc_id}.json").exists():
-                    continue
-                if collection == self.collection:
-                    summary = self.summary(target, doc)
-                else:
-                    href = canonical_document_viewer_url(host_id, subdoc_id=doc.doc_id, subdoc_collection=collection)
-                    summary = DocumentSummary(target, doc.title, href, normalize_authoring_subject(doc.front_matter, folder_supported=True))
-                self.records[target] = DocumentLinks(summary)
-                self.original[target] = None
-
     def payload(self, target: DocumentTarget) -> dict[str, Any] | None:
         """Read one exact generated destination, including its source identity guard."""
         self.validate_target(target)
@@ -151,7 +109,10 @@ class _DocumentRefresh:
         doc = self.docs.get(target)
         if not source.is_file():
             return None
-        metadata = doc.front_matter if doc else parse_source(source)[0]
+        metadata = self.metadata.get(target)
+        if metadata is None:
+            metadata = parse_source(source)[0]
+            self.metadata[target] = metadata
         if metadata.get("doc_id") != target.doc_id:
             raise ValueError("Links source document identity does not match")
         if self.excluded(target):
@@ -180,7 +141,16 @@ class _DocumentRefresh:
         target = DocumentTarget(collection, child or doc_id)
         return target if self.payload(target) is not None else None
 
-    def summary(self, target: DocumentTarget, doc: DocRecord) -> DocumentSummary:
+    def summary(self, target: DocumentTarget, doc: DocRecord | None = None) -> DocumentSummary:
+        if doc is None:
+            payload = self.payload(target)
+            if payload is None:
+                raise ValueError("Links endpoint requires its exact source and generated document")
+            metadata = self.metadata[target]
+            host_id = self.owners[target.collection].report_host_doc_id if target.collection else target.doc_id
+            href = canonical_document_viewer_url(host_id, subdoc_id=target.doc_id if target.collection else "", subdoc_collection=target.collection)
+            title = str(metadata.get("title") or payload["title"]).strip()
+            return DocumentSummary(target, title, href, normalize_authoring_subject(metadata, folder_supported=True))
         resolved = parse_docs_target(resolve_href(doc.viewer_url, "/"), viewer_routes=self.routes)
         if not resolved or self.viewer_target(resolved) != target:
             raise ValueError("Links current document has no exact configured viewer location")
@@ -195,49 +165,36 @@ class _DocumentRefresh:
             return None
         path = _safe_path(self.output, f"{target.doc_id}.json")
         text = path.read_text() if path.is_file() else None
-        if text is not None and deleted:
+        record = None
+        if text is not None:
             payload = json.loads(text)
             owner = DocumentTarget(**payload["self"]["target"])
-            if owner != target and owner.doc_id == target.doc_id:
+            self.validate_target(owner)
+            record = read_relationship_payload(payload, owner)
+            if owner != target:
+                if owner.doc_id != target.doc_id:
+                    raise ValueError("Links record identity does not match its exact document")
                 # A completed collection move already transferred this shared
                 # filename. The old collection cannot remove the new owner.
-                self.validate_target(owner)
-                read_relationship_payload(payload, owner)
-                if self.payload(owner) is not None:
+                if deleted and self.payload(owner) is not None:
                     return None
+                if _safe_path(self.sources[owner.collection], f"{owner.doc_id}.md").exists():
+                    raise ValueError("Links record conflicts with an existing document identity")
         self.original[target] = text
-        record = read_relationship_payload(json.loads(text), target) if text is not None else None
-        if record is None:
-            self.warnings.append(f"Missing Links JSON for {target.collection or '(parent)'}/{target.doc_id}; Links update skipped")
-        else:
+        if record is not None:
             for neighbour in record.incoming.keys() | record.outgoing.keys():
                 self.validate_target(neighbour)
         self.records[target] = record
         return record
 
-    def admit_created(self, target: DocumentTarget, doc: DocRecord) -> None:
-        """Initialise explicit creation, or transfer the exact prior move owner.
-
-        A same-ID collection move uses the previous record as its prior state.
-        It is accepted only when that old source no longer exists; a live
-        duplicate or malformed record still fails without replacement.
-        """
-        path = _safe_path(self.output, f"{target.doc_id}.json")
-        if not path.exists():
-            self.records[target] = DocumentLinks(self.summary(target, doc))
-            self.original[target] = None
-            return
-        text = path.read_text()
-        payload = json.loads(text)
-        owner = DocumentTarget(**payload["self"]["target"])
-        self.validate_target(owner)
-        record = read_relationship_payload(payload, owner)
-        if owner == target:
-            return
-        if owner.doc_id != target.doc_id or _safe_path(self.sources[owner.collection], f"{owner.doc_id}.md").exists():
-            raise ValueError("Links initial creation conflicts with an existing document identity")
+    def initialise_endpoint(self, target: DocumentTarget, summary: DocumentSummary | None = None) -> DocumentLinks:
+        """Create an available endpoint only when a resolved relationship needs it."""
+        record = self.read(target)
+        if record is not None:
+            return record
+        record = DocumentLinks(summary or self.summary(target, self.docs.get(target)))
         self.records[target] = record
-        self.original[target] = text
+        return record
 
     def references(self, target: DocumentTarget, doc: DocRecord, href: str) -> dict[DocumentTarget, tuple[Occurrence, ...]]:
         """Parse this document only; resolve viewer hosts or exact relative sources."""
@@ -267,9 +224,7 @@ class _DocumentRefresh:
                             break
             if neighbour is None:
                 continue
-            record = self.read(neighbour)
-            if record is None:
-                continue
+            record = self.initialise_endpoint(neighbour)
             fragment = resolved.get("fragment", "")
             destination = record.document.href + ("#" + quote(unquote(fragment), safe="-._~!$&'()*+,;=:@/?") if fragment else "")
             references[neighbour].append(Occurrence(anchor["text"], destination))
@@ -277,10 +232,10 @@ class _DocumentRefresh:
 
     def refresh(self, target: DocumentTarget, doc: DocRecord | None) -> tuple[int, int]:
         record = self.read(target, deleted=doc is None)
-        if record is None:
-            return 0, 0
-        before = reference_counts(record.outgoing)
         if doc is None:
+            if record is None:
+                return 0, 0
+            before = reference_counts(record.outgoing)
             for neighbour in set(record.outgoing) | set(record.incoming):
                 other = self.read(neighbour)
                 if other is not None:
@@ -289,14 +244,20 @@ class _DocumentRefresh:
             self.removals.add(target)
             return 0, sum(before.values())
         summary = self.summary(target, doc)
-        previous = record.document
-        if previous.target != target:
+        previous = record.document if record is not None else summary
+        before = reference_counts(record.outgoing) if record is not None else reference_counts({})
+        if record is not None and previous.target != target:
             # Self-links are rebuilt from current Markdown under the new owner.
             record.incoming.pop(previous.target, None)
             record.outgoing.pop(previous.target, None)
-        record.document = summary
-        record.incoming = {key: value for key, value in record.incoming.items() if not self.excluded(key)}
+        if record is not None:
+            record.document = summary
+            record.incoming = {key: value for key, value in record.incoming.items() if not self.excluded(key)}
         references = self.references(target, doc, summary.href)
+        if record is None:
+            if not references:
+                return 0, 0
+            record = self.initialise_endpoint(target, summary)
         for neighbour in set(record.outgoing) | set(references):
             other = self.read(neighbour)
             if other is not None:
@@ -328,14 +289,6 @@ def build_document_links(builder: DocsDataBuilder, plan: dict[str, Any] | None, 
 
     def run() -> dict[str, Any]:
         refresh = _DocumentRefresh(builder, plan, write=write)
-        if builder.only_doc_ids is None and builder.links_doc_ids is None:
-            refresh.initialise_missing()
-        # Admit only genuinely new selected documents before resolving mutual links.
-        for doc_id in sorted(plan["new_doc_ids"]):
-            key = refresh.key(doc_id)
-            doc = refresh.docs[key]
-            if not refresh.excluded(key):
-                refresh.admit_created(key, doc)
         added = deleted = 0
         for doc_id in sorted(plan["doc_ids"]):
             key = refresh.key(doc_id)
@@ -362,7 +315,7 @@ def build_document_links(builder: DocsDataBuilder, plan: dict[str, Any] | None, 
             for path in removals:
                 path.unlink()
         return {"written": [path.name for path in writes], "removed": [path.name for path in removals],
-                "occurrences_added": added, "occurrences_deleted": deleted, "warnings": refresh.warnings}
+                "occurrences_added": added, "occurrences_deleted": deleted}
 
     if write:
         private = builder.repo_root / "var/docs-viewer/links-builder" / builder.config.stage
@@ -372,8 +325,5 @@ def build_document_links(builder: DocsDataBuilder, plan: dict[str, Any] | None, 
             result = run()
     else:
         result = run()
-    builder.warnings.extend(result["warnings"])
     print(f"  links: {len(result['written'])} written; {len(result['removed'])} removed; {result['occurrences_added']} occurrences added; {result['occurrences_deleted']} deleted")
-    for warning in result["warnings"]:
-        print(f"  warning: {warning}")
     return result

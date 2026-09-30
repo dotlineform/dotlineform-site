@@ -704,7 +704,6 @@ def rebuild_stage(
     repo_root: Path,
     docs_doc_ids: Optional[list[str]] = None,
     *, stage: str | None = None, links_doc_ids: Optional[list[str]] = None,
-    links_created_doc_ids: Optional[list[str]] = None,
 ) -> bool:
     try:
         remove_build_manifest(repo_root, load_docs_stage(repo_root, stage))
@@ -716,8 +715,6 @@ def rebuild_stage(
         docs_command.extend(["--stage", stage, "--skip-browser-config", "--skip-media-builds"])
     if stage == "working" and links_doc_ids is not None:
         docs_command.extend(["--links-doc-ids", ",".join(ordered_unique(links_doc_ids))])
-    if stage == "working" and links_created_doc_ids:
-        docs_command.extend(["--links-created-doc-ids", ",".join(ordered_unique(links_created_doc_ids))])
     docs_target_doc_ids = ordered_unique(docs_doc_ids or [])
     if docs_doc_ids is not None and docs_target_doc_ids:
         fallback_reason = targeted_docs_build_fallback_reason(repo_root, docs_target_doc_ids, stage=stage)
@@ -783,10 +780,6 @@ def process_document_collection_changes(
     links_arguments = {}
     if stage == "working":
         links_arguments["links_doc_ids"] = changed_doc_ids
-        if state.get("doc_snapshot") is not None and current_docs is not None:
-            before = {row["doc_id"] for filename in changed_files if (row := state["doc_snapshot"].get(filename)) and row.get("doc_id")}
-            after = {row["doc_id"] for filename in changed_files if (row := current_docs.get(filename)) and row.get("doc_id")}
-            links_arguments["links_created_doc_ids"] = sorted(after - before)
     if snapshot_error or current_docs is None:
         log(
             f"{label} parsed docs snapshot unavailable; timestamp capture skipped: "
@@ -891,7 +884,7 @@ def process_document_collection_changes(
 def rebuild_collection(
     repo_root: Path, collection: str, *, stage: str | None = None,
     docs_doc_ids: list[str],
-    links_doc_ids: Optional[list[str]] = None, links_created_doc_ids: Optional[list[str]] = None,
+    links_doc_ids: Optional[list[str]] = None,
 ) -> bool:
     label = f"{stage}/{collection}"
     try:
@@ -912,7 +905,6 @@ def rebuild_collection(
                 ",".join(ordered_unique(docs_doc_ids)),
                 *(["--stage", stage, "--skip-browser-config", "--skip-media-builds"] if stage else []),
                 *(["--links-doc-ids", ",".join(ordered_unique(links_doc_ids))] if stage == "working" and links_doc_ids is not None else []),
-                *(["--links-created-doc-ids", ",".join(ordered_unique(links_created_doc_ids))] if stage == "working" and links_created_doc_ids else []),
             ),
         ),
     ]

@@ -47,7 +47,6 @@ class DocsDataBuilder(
         viewer_base_url: str | None = None,
         only_doc_ids: list[str] | None = None,
         links_doc_ids: list[str] | None = None,
-        links_created_doc_ids: list[str] | None = None,
         skip_media_builds: bool = False,
         skip_recent: bool = False,
     ) -> None:
@@ -65,7 +64,6 @@ class DocsDataBuilder(
         self.allow_unresolved_parent_ids = config.allow_unresolved_parent_ids is True
         self.only_doc_ids = None if only_doc_ids is None else normalize_doc_ids(only_doc_ids)
         self.links_doc_ids = None if links_doc_ids is None else normalize_doc_ids(links_doc_ids)
-        self.links_created_doc_ids = normalize_doc_ids(links_created_doc_ids or [])
         self.skip_media_builds = skip_media_builds is True
         self.skip_recent = skip_recent is True
         self.output_url_base = self.output_url_base_for(self.output_url_dir())

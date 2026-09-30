@@ -23,7 +23,6 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--collection", help="Build one configured collection in the selected stage.")
     parser.add_argument("--only-doc-ids", help="Comma-separated doc ids for a targeted docs payload rebuild.")
     parser.add_argument("--links-doc-ids", help="Exact changed/deleted document ids for Links, independently of ordinary rendering; an empty value selects none.")
-    parser.add_argument("--links-created-doc-ids", help="Exact documents created by this operation that require initial Links records.")
     parser.add_argument("--skip-media-builds", action="store_true", help="Skip registered media producers during a controlled rebuild.")
     parser.add_argument("--skip-recent", action="store_true", help="Preserve saved Recents during authoring follow-through.")
     parser.add_argument("--skip-browser-config", action="store_true", help="Skip browser-config writes during a controlled rebuild.")
@@ -46,13 +45,12 @@ def main(argv: list[str] | None = None) -> int:
         write_browser_config(repo_root, workspace, path=DOCS_VIEWER_BROWSER_CONFIG_PATH, label="Docs Viewer browser config")
     only_doc_ids = None if args.only_doc_ids is None else [item.strip() for item in args.only_doc_ids.split(",") if item.strip()]
     links_doc_ids = None if args.links_doc_ids is None else [item.strip() for item in args.links_doc_ids.split(",") if item.strip()]
-    links_created_doc_ids = [item.strip() for item in (args.links_created_doc_ids or "").split(",") if item.strip()]
     try:
         if args.collection:
             builder = CollectionDocsBuilder(
                 repo_root=repo_root, config=config, collection=selected_collection(config, args.collection),
                 only_doc_ids=only_doc_ids,
-                links_doc_ids=links_doc_ids, links_created_doc_ids=links_created_doc_ids,
+                links_doc_ids=links_doc_ids,
                 skip_media_builds=args.skip_media_builds,
             )
         else:
@@ -62,7 +60,7 @@ def main(argv: list[str] | None = None) -> int:
                 output_dir=Path(args.output) if args.output else None,
                 viewer_base_url=args.viewer_base_url, only_doc_ids=only_doc_ids,
                 skip_recent=args.skip_recent,
-                links_doc_ids=links_doc_ids, links_created_doc_ids=links_created_doc_ids,
+                links_doc_ids=links_doc_ids,
                 skip_media_builds=args.skip_media_builds,
             )
         builder.run(write=args.write, emit_diagnostics=args.diagnostics)

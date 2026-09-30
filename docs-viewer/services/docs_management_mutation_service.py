@@ -104,7 +104,6 @@ def recover_collection_document_delete(
             [source_delete.path],
             restore_operation,
             suppression_reason="docs-collection-document-delete-recovery",
-            links_created_doc_ids=[],
         )
     except Exception as recovery_error:
         source_restored = source_matches_original()

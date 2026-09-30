@@ -44,7 +44,6 @@ class CollectionDocsBuilder(DocsDataBuilder):
         only_doc_ids: list[str] | None = None,
         skip_media_builds: bool = False,
         links_doc_ids: list[str] | None = None,
-        links_created_doc_ids: list[str] | None = None,
     ) -> None:
         self.collection_config = collection
         super().__init__(
@@ -55,7 +54,6 @@ class CollectionDocsBuilder(DocsDataBuilder):
             only_doc_ids=only_doc_ids,
             skip_media_builds=skip_media_builds,
             links_doc_ids=links_doc_ids,
-            links_created_doc_ids=links_created_doc_ids,
         )
         self.collection_id = collection.collection
         self.output_url_base = self.output_url_base_for(self.output_url_dir())
