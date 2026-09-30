@@ -87,20 +87,7 @@ function normalizeWorkDocument(value) {
   const keys = value && typeof value === "object" && !Array.isArray(value)
     ? Object.keys(value).filter((key) => key !== "draft").sort().join(",")
     : "";
-  if (
-    ![
-      "authoring_subject,doc_id,last_updated,title",
-      "authoring_subject,customisation,doc_id,last_updated,title"
-    ].includes(keys)
-    || (
-      Object.prototype.hasOwnProperty.call(value, "customisation")
-      && (
-        !value.customisation
-        || typeof value.customisation !== "object"
-        || Array.isArray(value.customisation)
-      )
-    )
-  ) {
+  if (keys !== "authoring_subject,doc_id,last_updated,title") {
     throw new Error("Working Works manifest is invalid.");
   }
   if (Object.hasOwn(value, "draft") && typeof value.draft !== "boolean") {

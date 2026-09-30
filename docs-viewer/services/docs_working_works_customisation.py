@@ -55,25 +55,12 @@ def project_manifest(
     repo_root: Path,
     collection: str,
 ) -> dict[str, Any]:
+    """Project the collection-wide Working Works browser descriptor."""
     if settings:
         raise ValueError("working_works settings must be empty")
-    rows: dict[str, dict[str, Any]] = {}
-    for document in documents:
-        doc_id = str(getattr(document, "doc_id", "") or "").strip()
-        front_matter = getattr(document, "front_matter", None)
-        if not isinstance(front_matter, Mapping):
-            raise ValueError(
-                f"working_works source metadata is unavailable for {doc_id!r}"
-            )
-        subject = normalize_authoring_subject(
-            front_matter,
-            folder_supported=True,
-        )
-        if subject["state"] == "valid" and subject["kind"] == "folder":
-            rows[doc_id] = {FOLDER_PATH_FIELD: subject["key"]}
     return {
         "root": {"id": CUSTOMISATION_ID, "data": {}},
-        "rows": rows,
+        "rows": {},
     }
 
 
