@@ -12,7 +12,6 @@ from .common import (
 from .rendering import add_missing_image_titles
 from .source import DocRecord, DocumentIdentity
 from docs_document_identity import doc_updated_date, is_doc_date
-from docs_document_subjects import project_reader_subject
 from docs_discovery_selection import select_collection_documents, select_ordinary_documents
 from docs_publication_ignore import read_publication_ignore_ids
 from docs_recent_payload import DOCS_RECENT_SCHEMA_VERSION, validate_recent_payload
@@ -43,8 +42,6 @@ class PayloadBuilderMixin:
             )
         )
         entry = self.by_id_metadata_entry(doc, docs)
-        if getattr(self, "collection_id", "") == "works":
-            entry["subject"] = project_reader_subject(doc.front_matter)
         entry["content_html"] = content_html
         return entry
 
