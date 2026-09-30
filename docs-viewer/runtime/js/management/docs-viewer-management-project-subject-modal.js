@@ -104,23 +104,6 @@ function assignedSubject(response, target) {
   return response;
 }
 
-function selectedKind(subject) {
-  return subject.state === "valid" ? subject.kind : (subject.state === "none" ? "none" : "");
-}
-
-function evidenceText(subject) {
-  if (subject.state === "malformed") {
-    return "The current " + subject.fields[0] + " declaration " + JSON.stringify(subject.evidence[subject.fields[0]]) + " is malformed. Choose a replacement or None.";
-  }
-  if (subject.state === "conflicting") {
-    var declarations = subject.fields.map(function (field) {
-      return field + "=" + JSON.stringify(subject.evidence[field]);
-    }).join(", ");
-    return "The current declarations conflict: " + declarations + ". Choose one replacement or None.";
-  }
-  return "";
-}
-
 function radio(value, label, selected) {
   return '<label class="docsViewer__field docsViewer__field--checkbox">' +
     '<input class="docsViewer__checkboxInput" type="radio" name="docs-project-subject" value="' + value + '"' +
@@ -130,11 +113,9 @@ function radio(value, label, selected) {
 }
 
 function modalBody(subject, folderSupported) {
-  var selected = selectedKind(subject);
-  var folderValue = subject.state === "valid" && subject.kind === "folder" ? subject.key : "";
-  var evidence = evidenceText(subject);
+  var selected = subject.kind;
+  var folderValue = subject.kind === "folder" ? subject.key : "";
   return "" +
-    (evidence ? '<p class="docsViewer__modalNote docsViewerProjectSubjectModal__warning small" data-project-subject-evidence>' + escapeHtml(evidence) + "</p>" : "") +
     '<fieldset class="docsViewer__fieldGroup" data-project-subject-options>' +
       '<legend class="visually-hidden">Subject</legend>' +
       radio("none", "None", selected) +
@@ -173,7 +154,7 @@ function openSubjectModal(options, target, loaded) {
     title: "Assign subject",
     size: "document",
     bodyHtml: modalBody(loaded.subject, loaded.folderSupported),
-    focusSelector: 'input[name="docs-project-subject"]' + (selectedKind(loaded.subject) ? ':checked' : ''),
+    focusSelector: 'input[name="docs-project-subject"]:checked',
     actions: [
       { role: "modal-primary", label: "OK" },
       { role: "modal-cancel", label: "Cancel" }
@@ -241,8 +222,7 @@ function openSubjectModal(options, target, loaded) {
       function restoreCurrentTarget() {
         var subject = loaded.subject;
         if (
-          subject.state !== "valid"
-          || !["work", "series"].includes(subject.kind)
+          !["work", "series"].includes(subject.kind)
           || chosenKind() !== subject.kind
         ) {
           updateMatches();

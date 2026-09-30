@@ -56,7 +56,7 @@ function subjectTargetIdentity(kind, key) {
 
 export function projectDocsViewerWorkingSubject(documentRecord, targetLookup) {
   var subject = authoringSubject(documentRecord);
-  if (subject.state === "valid") {
+  if (subject.kind !== "none") {
     var targetTitles = targetLookup && targetLookup.titles instanceof Map
       ? targetLookup.titles
       : new Map();
@@ -73,15 +73,6 @@ export function projectDocsViewerWorkingSubject(documentRecord, targetLookup) {
       label: targetTitle || subject.key,
       state: targetUnavailable ? "unavailable" : "valid",
       targetTitle: targetTitle
-    };
-  }
-  if (["malformed", "conflicting"].includes(subject.state)) {
-    return {
-      kind: subject.kind,
-      key: "",
-      label: "Subject warning",
-      state: "warning",
-      targetTitle: ""
     };
   }
   return {
@@ -113,11 +104,6 @@ function renderSubjectCell(context, options, targetLookup) {
   cell.dataset.projectSubjectState = subject.state;
   if (subject.state === "none") {
     cell.setAttribute("aria-label", "No subject");
-    host.appendChild(cell);
-    return;
-  }
-  if (subject.state === "warning") {
-    cell.textContent = "⚠️ Subject warning";
     host.appendChild(cell);
     return;
   }
@@ -194,7 +180,7 @@ function compareProjectDocuments(context, targetLookup, collator) {
   if (sortMode.startsWith("subject-")) {
     var leftSubject = projectDocsViewerWorkingSubject(left, targetLookup);
     var rightSubject = projectDocsViewerWorkingSubject(right, targetLookup);
-    var stateOrder = { valid: 0, unavailable: 1, warning: 2, none: 3 };
+    var stateOrder = { valid: 0, unavailable: 1, none: 2 };
     comparison = stateOrder[leftSubject.state] - stateOrder[rightSubject.state];
     if (comparison) return comparison;
     comparison = compareText(collator, leftSubject.label, rightSubject.label) * direction;
@@ -253,7 +239,7 @@ function renderListHead(context) {
 
 function folderPath(documentRecord) {
   var subject = authoringSubject(documentRecord);
-  return subject.state === "valid" && subject.kind === "folder" ? subject.key : "";
+  return subject.kind === "folder" ? subject.key : "";
 }
 
 function renderWorkingSubjectRow(context, options, targetLookup) {
@@ -336,7 +322,7 @@ function renderAssignSubject(context, options, assignSubjectAvailable) {
   button.className = "docsViewer__toolbarIconButton docsReportDetail__assignSubject";
   button.type = "button";
   button.dataset.docsProjectsAssignSubject = "true";
-  var assigned = authoringSubject(settings.document).state === "valid";
+  var assigned = authoringSubject(settings.document).kind !== "none";
   button.appendChild(createDocsViewerToolbarIcon(host.ownerDocument,
     assigned ? "docsViewer__icon--dlf-subject-assigned" : "docsViewer__icon--dlf-subject"));
   button.setAttribute("aria-label", assigned ? "Change Subject" : "Assign Subject");
@@ -358,35 +344,13 @@ function renderAssignSubject(context, options, assignSubjectAvailable) {
 }
 
 function subjectInfoField(subject) {
-  if (subject.state === "valid") {
+  if (subject.kind !== "none") {
     return {
       detail: subject.key,
       id: AUTHORING_SUBJECT_GROUP_ID,
       label: "Subject",
       state: subject.kind,
       value: ({ folder: "Folder", work: "Work", series: "Series" })[subject.kind]
-    };
-  }
-  if (subject.state === "malformed") {
-    var field = subject.fields[0];
-    return {
-      detail: "Malformed " + field + " declaration: " + JSON.stringify(subject.evidence[field]),
-      id: AUTHORING_SUBJECT_GROUP_ID,
-      label: "Subject",
-      state: "warning",
-      value: "Authoring warning"
-    };
-  }
-  if (subject.state === "conflicting") {
-    var declarations = subject.fields.map(function (field) {
-      return field + "=" + JSON.stringify(subject.evidence[field]);
-    }).join(", ");
-    return {
-      detail: "Conflicting declarations: " + declarations,
-      id: AUTHORING_SUBJECT_GROUP_ID,
-      label: "Subject",
-      state: "warning",
-      value: "Authoring warning"
     };
   }
   return {

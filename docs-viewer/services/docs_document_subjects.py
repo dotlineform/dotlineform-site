@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Normalized document subjects for private manifests and public reader rows."""
+"""Single document Subject identities for authoring metadata and Links."""
 
 from __future__ import annotations
 
@@ -41,8 +41,8 @@ def normalize_authoring_subject(
     front_matter: Mapping[str, Any],
     *,
     folder_supported: bool,
-) -> dict[str, Any]:
-    """Project one non-blocking subject state from raw canonical front matter."""
+) -> dict[str, str]:
+    """Project one Subject identity, rejecting invalid source declarations."""
 
     declared_fields = [
         field_name
@@ -50,64 +50,30 @@ def normalize_authoring_subject(
         if field_name in front_matter
     ]
     if not declared_fields:
-        return {
-            "state": "none",
-            "kind": "none",
-            "key": "",
-            "fields": [],
-        }
+        return {"kind": "none", "key": ""}
     if len(declared_fields) > 1:
-        return {
-            "state": "conflicting",
-            "kind": "conflict",
-            "key": "",
-            "fields": declared_fields,
-            "evidence": {
-                field_name: front_matter[field_name]
-                for field_name in declared_fields
-            },
-        }
+        raise ValueError("A document must declare at most one Subject")
 
     field_name = declared_fields[0]
     kind = SUBJECT_KIND_BY_FIELD[field_name]
-    raw_value = front_matter[field_name]
-    value = raw_value if isinstance(raw_value, str) else ""
-    valid = bool(value) and value == value.strip()
+    value = front_matter[field_name]
+    if not isinstance(value, str) or not value or value != value.strip():
+        raise ValueError(f"Document {field_name} must be one exact nonblank string")
     if field_name == FOLDER_PATH_FIELD:
-        valid = valid and folder_supported
-        if valid:
-            try:
-                value = normalize_decoded_relative_target(value)
-            except ValueError:
-                valid = False
-    elif valid:
-        valid = subject_key_is_canonical(kind, value)
-    if not valid:
-        return {
-            "state": "malformed",
-            "kind": kind,
-            "key": "",
-            "fields": [field_name],
-            "evidence": {field_name: raw_value},
-        }
-    return {
-        "state": "valid",
-        "kind": kind,
-        "key": value,
-        "fields": [field_name],
-    }
+        if not folder_supported:
+            raise ValueError("This collection does not support Folder subjects")
+        value = normalize_decoded_relative_target(value)
+    elif not subject_key_is_canonical(kind, value):
+        raise ValueError(f"Document {field_name} must be one canonical {kind} ID")
+    return {"kind": kind, "key": value}
 
 
 def project_reader_subject(front_matter: Mapping[str, Any]) -> dict[str, str] | None:
-    """Expose an exact Catalogue subject in reader JSON, or null when unavailable.
-
-    Reuse authoring validation without exposing Folder paths, raw declarations,
-    or authoring diagnostics. No Catalogue lookup or identity inference occurs.
-    """
-    subject = normalize_authoring_subject(front_matter, folder_supported=False)
-    if subject["state"] != "valid" or subject["kind"] not in {"work", "series"}:
+    """Project Work/Series identity for source authoring and publication inputs."""
+    subject = normalize_authoring_subject(front_matter, folder_supported=True)
+    if subject["kind"] not in {"work", "series"}:
         return None
-    return {"kind": subject["kind"], "key": subject["key"]}
+    return subject
 
 
 def subject_projection_generation(

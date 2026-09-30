@@ -27,7 +27,7 @@ CUSTOMISATION_ID = "working_works"
 
 
 def publication_front_matter(front_matter: Mapping[str, Any]) -> dict[str, Any]:
-    """Prepare Works reader Subject fields without altering authored Working metadata."""
+    """Keep Catalogue Subject IDs needed by publication rendering; omit Folder paths."""
     prepared = dict(front_matter)
     subject = project_reader_subject(front_matter)
     for field in AUTHORING_SUBJECT_FIELDS:
@@ -76,8 +76,8 @@ def metadata_record(
     del doc_id
     subject = normalize_authoring_subject(front_matter, folder_supported=folder_supported)
     record = dict.fromkeys(AUTHORING_SUBJECT_FIELDS, "")
-    if subject["state"] == "valid":
-        field_name = subject["fields"][0]
+    if subject["kind"] != "none":
+        field_name = next(field for field, kind in SUBJECT_KIND_BY_FIELD.items() if kind == subject["kind"])
         record[field_name] = subject["key"]
     return record
 
@@ -132,10 +132,7 @@ def normalize_metadata_update(
         except ValueError as error:
             raise ValueError(f"customisation.folder_path is invalid: {error}") from error
     current = metadata_record(settings, front_matter, doc_id=doc_id, folder_supported=folder_supported)
-    changed = values != current or normalize_authoring_subject(
-        front_matter,
-        folder_supported=folder_supported,
-    )["state"] not in {"none", "valid"}
+    changed = values != current
     return {
         "front_matter_updates": {
             field_name: values[field_name] or None

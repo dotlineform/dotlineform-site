@@ -4,12 +4,6 @@ export const AUTHORING_SUBJECT_FIELDS = Object.freeze([
   "series_id"
 ]);
 
-const SUBJECT_FIELD_BY_KIND = Object.freeze({
-  folder: "folder_path",
-  work: "work_id",
-  series: "series_id"
-});
-
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
 }
@@ -25,78 +19,16 @@ export function normalizeDocsViewerAuthoringSubject(value, options = {}) {
     invalidSubject(message);
   }
   var keys = Object.keys(subject).sort().join(",");
-  var hasEvidence = Object.prototype.hasOwnProperty.call(subject, "evidence");
+  var kind = cleanString(subject.kind);
+  var key = subject.key;
   if (
-    !["fields,key,kind,state", "evidence,fields,key,kind,state"].includes(keys)
-    || !Array.isArray(subject.fields)
-    || subject.fields.some(function (field) {
-      return !AUTHORING_SUBJECT_FIELDS.includes(field);
-    })
-    || new Set(subject.fields).size !== subject.fields.length
-    || (
-      hasEvidence
-      && (
-        !subject.evidence
-        || typeof subject.evidence !== "object"
-        || Array.isArray(subject.evidence)
-      )
-    )
+    keys !== "key,kind"
+    || !["none", "folder", "work", "series"].includes(kind)
+    || typeof key !== "string"
+    || key !== key.trim()
+    || (kind === "none" ? key !== "" : !key)
   ) {
     invalidSubject(message);
   }
-
-  var state = cleanString(subject.state);
-  var kind = cleanString(subject.kind);
-  var key = typeof subject.key === "string" ? subject.key : "";
-  var fields = subject.fields.slice();
-  var validField = SUBJECT_FIELD_BY_KIND[kind];
-  var evidenceKeys = hasEvidence ? Object.keys(subject.evidence).sort() : [];
-  var fieldKeys = fields.slice().sort();
-  var valid = (
-    state === "valid"
-    && Boolean(validField)
-    && Boolean(key)
-    && key === key.trim()
-    && fields.length === 1
-    && fields[0] === validField
-    && !hasEvidence
-  );
-  var none = (
-    state === "none"
-    && kind === "none"
-    && !key
-    && !fields.length
-    && !hasEvidence
-  );
-  var malformed = (
-    state === "malformed"
-    && Boolean(validField)
-    && !key
-    && fields.length === 1
-    && fields[0] === validField
-    && hasEvidence
-    && evidenceKeys.length === 1
-    && evidenceKeys[0] === validField
-  );
-  var conflicting = (
-    state === "conflicting"
-    && kind === "conflict"
-    && !key
-    && fields.length > 1
-    && hasEvidence
-    && evidenceKeys.join(",") === fieldKeys.join(",")
-  );
-  if (!valid && !none && !malformed && !conflicting) {
-    invalidSubject(message);
-  }
-  var normalized = {
-    state: state,
-    kind: kind,
-    key: key,
-    fields: Object.freeze(fields)
-  };
-  if (hasEvidence) {
-    normalized.evidence = Object.freeze(Object.assign({}, subject.evidence));
-  }
-  return Object.freeze(normalized);
+  return Object.freeze({ kind: kind, key: key });
 }

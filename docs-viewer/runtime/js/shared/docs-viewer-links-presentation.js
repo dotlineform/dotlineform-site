@@ -40,7 +40,7 @@ export function docsViewerLinksDocumentSummary(value) {
 function category(document) {
   if (document.target.collection === "concepts") return "Concepts";
   if (document.target.collection === "catalogue") return "Works";
-  if (document.subject && document.subject.state === "valid" && document.subject.kind === "work") return "Works";
+  if (document.subject && document.subject.kind === "work") return "Works";
   if (!document.target.collection
     || (document.target.collection === "works")) return "References";
   return "";

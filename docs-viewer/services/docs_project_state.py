@@ -114,8 +114,8 @@ def _subject_documents(
 ) -> tuple[str, dict[tuple[str, str], list[dict[str, Any]]], int]:
     """Group valid Works subjects directly from private rows with configured links.
 
-    Keep every document for a subject; invalid declarations remain in the manifest
-    and contribute only to its document count, not report placement.
+    Keep every document for a subject; unassigned documents contribute only to
+    the document count, not report placement.
     """
     generation = str(manifest.get("subject_generation") or "").strip()
     manifest_rows = manifest.get("docs")
@@ -132,12 +132,12 @@ def _subject_documents(
             raise ValueError("Projects Manage manifest contains an invalid or duplicate doc_id")
         seen_doc_ids.add(doc_id)
         subject = row.get("authoring_subject")
-        if not isinstance(subject, dict) or subject.get("state") != "valid":
+        if not isinstance(subject, dict) or subject.get("kind") == "none":
             continue
         kind = str(subject.get("kind") or "").strip()
         key = str(subject.get("key") or "").strip()
         if kind not in {"folder", "work", "series"} or not key:
-            raise ValueError("Projects Manage manifest contains an invalid valid subject")
+            raise ValueError("Projects Manage manifest contains an invalid subject")
         title = str(row.get("title") or "").strip()
         if not title:
             raise ValueError("Project document has invalid presentation")
