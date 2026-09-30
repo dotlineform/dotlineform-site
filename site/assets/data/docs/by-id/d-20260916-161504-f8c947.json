@@ -8,6 +8,5 @@
     "preset": null,
     "collection": "catalogue"
   },
-  "subject": null,
   "content_html": "<section class=\"docsViewerReport\" data-docs-viewer-report-host aria-label=\"Document report\"></section>\n"
 }

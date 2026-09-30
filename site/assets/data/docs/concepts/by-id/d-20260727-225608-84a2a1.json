@@ -3,6 +3,5 @@
   "title": "animal",
   "added_date": "2026-07-27 22:56:08",
   "last_updated": "2026-07-27",
-  "subject": null,
   "content_html": "<h1>animal</h1>\n<p><strong>subject</strong></p>\n<p>Depicted animal: an observable element the viewer can point to. Useful for content-level linking across media; keep separate from domain framing and theme inference to reduce ambiguity.</p>\n"
 }

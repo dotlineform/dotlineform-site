@@ -8,6 +8,5 @@
     "preset": null,
     "collection": "concepts"
   },
-  "subject": null,
   "content_html": "<h1>Concepts</h1>\n<p>Concepts provide contextual documents for recurring subject, form, domain, and\ntheme language used across the analysis scope.</p>\n<section class=\"docsViewerReport\" data-docs-viewer-report-host aria-label=\"Document report\"></section>\n"
 }
