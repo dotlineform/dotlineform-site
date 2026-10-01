@@ -436,7 +436,7 @@ function renderFilterShell(context, collection) {
   input.type = "search";
   input.autocomplete = "off";
   input.spellcheck = false;
-  input.placeholder = ({ catalogue: "work", works: "title" })[collectionId(collection)] || "search";
+  input.placeholder = ({ catalogue: "work", concepts: "concept", moments: "moment", works: "title" })[collectionId(collection)] || "search";
 
   search.appendChild(input);
   var clear = mountSearchField(input).clearButton;
