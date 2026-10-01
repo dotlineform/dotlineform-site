@@ -1,3 +1,4 @@
+import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { collectDescendantDocIds } from "./docs-viewer-management-action-workflow.js";
 import { escapeHtml, openDocsViewerManagementModal } from "./docs-viewer-management-modal-shell.js";
 
@@ -32,6 +33,7 @@ export function openDocsViewerPositionModal(options) {
     focusSelector: "#docsViewerPositionSearch",
     onOpen: function (api) {
       var search = api.host.querySelector("#docsViewerPositionSearch");
+      mountSearchField(search);
       var placement = api.host.querySelector("#docsViewerPositionPlacement");
       var target = api.host.querySelector("#docsViewerPositionTarget");
       function renderDestinations() {

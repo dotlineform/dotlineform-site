@@ -1,3 +1,4 @@
+import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
 import { buildViewerUrl } from "../shared/docs-viewer-router.js";
 const METADATA_SCHEMA = "catalogue_works_report_metadata_v1";
@@ -386,8 +387,6 @@ function renderCurrent(state) {
 function updateControls(state) {
   const resultsUnavailable = state.busy || state.failed || state.searchTimer !== null;
   state.searchInputNode.disabled = state.busy || state.failed;
-  state.searchClearNode.hidden = !state.searchText;
-  state.searchClearNode.disabled = state.busy || state.failed || !state.searchText;
   state.copyButton.disabled = resultsUnavailable || !state.projection.rows.length;
   state.paginationNode.hidden = !state.projection.rows.length;
   state.previousPageButton.disabled = resultsUnavailable || state.pageIndex === 0;
@@ -442,12 +441,6 @@ function attachEvents(state) {
     state.searchTimer = setTimeout(applySearch, SEARCH_DELAY_MS);
     updateControls(state);
   });
-  state.searchClearNode.addEventListener("click", () => {
-    state.searchText = "";
-    state.searchInputNode.value = "";
-    applySearch();
-    state.searchInputNode.focus();
-  });
   state.headRowNode.addEventListener("click", (event) => {
     const button = event.target && typeof event.target.closest === "function"
       ? event.target.closest("[data-report-sort]")
@@ -489,15 +482,8 @@ function renderShell(root) {
   searchInput.type = "search";
   searchInput.placeholder = "work";
   searchInput.setAttribute("aria-label", "Search Catalogue Works");
-  const searchClear = root.ownerDocument.createElement("button");
-  searchClear.id = "docsCatalogueWorksReportClear";
-  searchClear.className = "docsViewer__toolbarIconButton docsViewerReport__searchClear";
-  searchClear.type = "button";
-  searchClear.setAttribute("aria-label", "Clear Catalogue Works search");
-  searchClear.title = "Clear Catalogue Works search";
-  searchClear.appendChild(createDocsViewerToolbarIcon(root.ownerDocument, "docsViewer__icon--x"));
   search.appendChild(searchInput);
-  search.appendChild(searchClear);
+  mountSearchField(searchInput, { clearLabel: "Clear Catalogue Works search" });
   const copyButton = root.ownerDocument.createElement("button");
   copyButton.id = "docsCatalogueWorksReportCopy";
   copyButton.className = "docsViewer__toolbarIconButton";
@@ -563,7 +549,6 @@ function renderShell(root) {
     paginationNode: pagination,
     previousPageButton,
     rowsNode: body,
-    searchClearNode: searchClear,
     searchInputNode: searchInput,
     statusNode: status,
     tableNode: table,

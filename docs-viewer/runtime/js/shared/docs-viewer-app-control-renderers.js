@@ -1,3 +1,4 @@
+import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
 
 function appViewerConfigMount(root) {
@@ -48,6 +49,7 @@ function renderSearchInput(context) {
     input.setAttribute("aria-label", ariaLabel);
 
     wrap.append(label, input);
+    mountSearchField(input);
   }
   return { root: wrap, interactive: input };
 }

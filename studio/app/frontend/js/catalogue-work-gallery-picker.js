@@ -1,3 +1,4 @@
+import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { normalizeText } from "./catalogue-work-fields.js";
 import { createStudioIcon } from "./studio-icon.js";
 
@@ -94,6 +95,7 @@ export function createWorkGalleryPicker(field, fieldsNode, state, options) {
   const popupNode = node("div", "studioUi__popupInner catalogueWorkSeriesPicker__popup");
   popupNode.hidden = true;
   searchWrap.append(searchInput, popupNode);
+  mountSearchField(searchInput);
   const searchRow = node("div", "catalogueWorkSeriesPicker__searchRow");
   const newButton = node("button", "studioUi__iconButton");
   newButton.append(createStudioIcon(document, "file"));

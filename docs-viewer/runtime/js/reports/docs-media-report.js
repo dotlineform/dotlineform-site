@@ -1,3 +1,4 @@
+import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
 import { buildDocsMediaRows } from "./docs-media-data.js";
 const DEFAULT_SORT_KEY = "type";
@@ -200,8 +201,6 @@ function updateControls(state) {
   state.runButton.disabled = state.busy;
   state.runButton.setAttribute("aria-busy", state.busy ? "true" : "false");
   state.searchInputNode.disabled = state.busy;
-  state.searchClearNode.hidden = !state.searchText;
-  state.searchClearNode.disabled = state.busy || !state.searchText;
   state.headNode.querySelectorAll("[data-report-sort]").forEach((button) => {
     button.disabled = state.busy;
   });
@@ -274,13 +273,6 @@ function attachEvents(state) {
     renderRows(state);
     updateControls(state);
   });
-  state.searchClearNode.addEventListener("click", () => {
-    state.searchText = "";
-    state.searchInputNode.value = "";
-    renderRows(state);
-    updateControls(state);
-    state.searchInputNode.focus();
-  });
   state.headNode.addEventListener("click", (event) => {
     const button = event.target instanceof Element
       ? event.target.closest("[data-report-sort]")
@@ -315,7 +307,6 @@ function renderShell(root) {
     '  <button id="docsMediaReportRun" type="button" class="docsViewer__toolbarIconButton" aria-label="Run/Refresh" title="Run/Refresh"></button>',
     '  <span class="docsViewerReport__search">',
     '    <input id="docsMediaReportSearch" class="docsViewerReport__searchInput" type="search" placeholder="Search" aria-label="Search Docs Media">',
-    '    <button type="button" class="docsViewer__toolbarIconButton docsViewerReport__searchClear" aria-label="Clear search" title="Clear search" hidden></button>',
     "  </span>",
     "</div>",
     '<p class="docsViewerReport__status"></p>',
@@ -326,13 +317,12 @@ function renderShell(root) {
     '<p class="docsViewerReport__empty" hidden></p>'
   ].join("");
   root.querySelector("#docsMediaReportRun").appendChild(createDocsViewerToolbarIcon(root.ownerDocument, "docsViewer__icon--refresh-cw"));
-  root.querySelector(".docsViewerReport__searchClear").appendChild(createDocsViewerToolbarIcon(root.ownerDocument, "docsViewer__icon--x"));
+  mountSearchField(root.querySelector("#docsMediaReportSearch"));
   return {
     emptyNode: root.querySelector(".docsViewerReport__empty"),
     headNode: root.querySelector(".docsViewerReport__head"),
     rowsNode: root.querySelector(".docsViewerReport__rows"),
     runButton: root.querySelector("#docsMediaReportRun"),
-    searchClearNode: root.querySelector(".docsViewerReport__searchClear"),
     searchInputNode: root.querySelector("#docsMediaReportSearch"),
     statusNode: root.querySelector(".docsViewerReport__status")
   };

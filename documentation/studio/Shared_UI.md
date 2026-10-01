@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260505-181739-bb5223
 title: Shared UI
 added_date: "2026-05-05 18:17:39"
-last_updated: "2026-08-03 14:08:34"
+last_updated: "2026-10-01 19:21:57"
 parent_id: ""
 ---
 # Shared UI
@@ -15,6 +15,7 @@ Use this section for reviewed browser primitives shared across routes or apps, p
 - [Record List And Actions](Record_List_And_Actions.md): fixed columns, optional single-row selection, and a separate action toolbar.
 - [Selectable List](Selectable_List.md): single or multiple checkbox selection, including optional parent/child tree behaviour.
 - [Search List](Search_List.md): autocomplete/listbox behaviour around a caller-owned text input and option loader.
+- [Search Fields](Search_Fields.md): shared underline, focus icon and query-clear presentation around a caller-owned search or autocomplete input.
 - [File Picker](File_Picker.md): load a folder, an optional subfolder, and one or more files through caller-provided loaders.
 - [Folder Picker](Folder_Picker.md): navigate the Projects-root directory tree lazily and submit one currently selectable directory marker.
 

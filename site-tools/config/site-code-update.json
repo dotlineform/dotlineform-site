@@ -132,11 +132,24 @@
         "menu.svg",
         "moon.svg",
         "pin.svg",
+        "search.svg",
         "sprout.svg",
         "sun.svg",
         "waypoints.svg",
         "x.svg"
       ]
+    },
+    {
+      "id": "shared-search-js",
+      "source_root": "shared/frontend/js",
+      "destination_root": "site/shared/frontend/js",
+      "files": ["search-field.js"]
+    },
+    {
+      "id": "shared-search-css",
+      "source_root": "shared/frontend/css",
+      "destination_root": "site/shared/frontend/css",
+      "files": ["search-field.css"]
     }
   ]
 }

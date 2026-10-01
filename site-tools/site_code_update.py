@@ -69,6 +69,16 @@ PROJECTION_POLICIES = {
         destination_root="site/docs-viewer/static/icons",
         suffix=".svg",
     ),
+    "shared-search-js": ProjectionPolicy(
+        source_root="shared/frontend/js",
+        destination_root="site/shared/frontend/js",
+        suffix=".js",
+    ),
+    "shared-search-css": ProjectionPolicy(
+        source_root="shared/frontend/css",
+        destination_root="site/shared/frontend/css",
+        suffix=".css",
+    ),
 }
 
 

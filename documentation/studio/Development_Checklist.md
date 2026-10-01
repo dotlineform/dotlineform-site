@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260523-190651-7157ec
 title: Development Checklist
 added_date: "2026-05-23 19:06:51"
-last_updated: "2026-10-01 13:29:44"
+last_updated: "2026-10-01 19:31:53"
 parent_id: d-20260419-000000-d2e47b
 
 ---
@@ -105,6 +105,7 @@ This checklist and the durable Studio development documentation are maintained d
 ### Docs Viewer Runtime
 
 - [ ] Shared/public Docs Viewer JavaScript and stylesheets are edited under `docs-viewer/`. When a represented canonical file changes, run `bin/site-code-update`, inspect the exact tracked `site/docs-viewer/` delta, then run `bin/site-code-update --check` and `bin/site-validate` before handoff.
+- [ ] CSS custom properties that carry asset URLs across stylesheet owners use explicit root-relative or absolute URLs. A relative URL is resolved from the consuming stylesheet; canonical/public byte equality alone does not prove that a browser can load the referenced artwork.
 - [ ] Treat `site-tools/config/site-code-update.json` as the sole canonical-to-site runtime inventory. Change it explicitly when a represented file is added, removed, or changes public status; do not add local-only code from mixed runtime or stylesheet directories.
 - [ ] Identify app context, provider, service adapter, state domain, controller, hosted view, and backend/generated contract involved.
 - [ ] Public installs remain read-only and receive no management assets, services, local generated-read URLs, or write-capable handles.

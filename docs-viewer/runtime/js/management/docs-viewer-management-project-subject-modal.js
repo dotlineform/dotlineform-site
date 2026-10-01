@@ -1,3 +1,4 @@
+import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import {
   escapeHtml,
   openDocsViewerManagementModal
@@ -131,10 +132,10 @@ function modalBody(subject, folderSupported) {
     "</label>" +
     '<section class="docsViewerProjectSubjectModal__catalogue" data-project-subject-catalogue' +
       (["work", "series"].includes(selected) ? "" : " hidden") + ">" +
-      '<label class="docsViewer__field" for="' + SEARCH_INPUT_ID + '">' +
-        '<span class="docsViewer__fieldLabel">Search Catalogue</span>' +
+      '<div class="docsViewer__field">' +
+        '<label class="docsViewer__fieldLabel" for="' + SEARCH_INPUT_ID + '">Search Catalogue</label>' +
         '<input class="docsViewer__fieldInput" id="' + SEARCH_INPUT_ID + '" type="search" role="combobox" aria-autocomplete="list" aria-controls="' + RESULTS_ID + '" aria-expanded="false" autocomplete="off" spellcheck="false" disabled>' +
-      "</label>" +
+      "</div>" +
       '<p class="docsViewerCatalogueTokenModal__searchStatus muted small" data-project-subject-search-status>Choose Work or Series to load Catalogue targets.</p>' +
       '<div class="docsViewerCatalogueTargetPicker__results docsViewerCatalogueTokenModal__results" id="' + RESULTS_ID + '" role="listbox" aria-label="Work and Series targets" data-project-subject-results tabindex="0" hidden></div>' +
     "</section>";
@@ -164,6 +165,7 @@ function openSubjectModal(options, target, loaded) {
       var folderInput = api.host.querySelector("[data-project-subject-folder-input]");
       var catalogue = api.host.querySelector("[data-project-subject-catalogue]");
       var searchInput = api.host.querySelector("#" + SEARCH_INPUT_ID);
+      mountSearchField(searchInput);
       var results = api.host.querySelector("[data-project-subject-results]");
       var searchStatus = api.host.querySelector("[data-project-subject-search-status]");
       function chosenKind() {

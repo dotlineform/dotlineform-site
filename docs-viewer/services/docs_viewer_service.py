@@ -74,6 +74,8 @@ RUNTIME_STATIC_ROUTES = (
     ("/docs-viewer/runtime/js/local/", Path("docs-viewer/runtime/js/local")),
 )
 SHARED_STATIC_ROUTES = {
+    "/shared/frontend/js/search-field.js": Path("shared/frontend/js/search-field.js"),
+    "/shared/frontend/css/search-field.css": Path("shared/frontend/css/search-field.css"),
     "/docs-viewer/runtime/js/shared-frontend/folder-picker.js": Path(
         "shared/frontend/js/folder-picker.js"
     ),

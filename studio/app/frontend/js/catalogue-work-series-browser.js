@@ -1,4 +1,5 @@
 import { createRecordList } from "/shared/frontend/js/record-list.js";
+import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { bindSearchList } from "/shared/frontend/js/search-list.js";
 import { confirmCatalogueActionModal } from "./catalogue-editor-action-modals.js";
 import { buildWorkThumbPreview } from "./catalogue-media-preview.js";
@@ -177,6 +178,7 @@ export function createWorkSeriesBrowser(state, elements, options) {
     }
   }
 
+  mountSearchField(search);
   const searchController = bindSearchList(search, popup, {
     id: "catalogueWorkSeriesBrowseList",
     openOnFocus: false,

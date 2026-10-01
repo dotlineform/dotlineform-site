@@ -1,3 +1,4 @@
+import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
 import {
   appendProjectSubjectIcon
@@ -415,8 +416,6 @@ function updateControls(state) {
     state.groupBy === "series" ? "docsViewer__icon--dlf-series" : "docsViewer__icon--folder", groupLabel);
   state.groupToggleButton.disabled = state.busy;
   state.searchInputNode.disabled = state.busy;
-  state.searchClearNode.hidden = !state.searchText;
-  state.searchClearNode.disabled = state.busy || !state.searchText;
   state.copyTableButton.disabled = state.busy || !state.generatedAt;
   state.headNode.querySelectorAll("[data-report-sort]").forEach((button) => {
     button.disabled = state.busy;
@@ -507,13 +506,6 @@ function attachEvents(state) {
     renderRows(state);
     updateControls(state);
   });
-  state.searchClearNode.addEventListener("click", () => {
-    state.searchText = "";
-    state.searchInputNode.value = "";
-    renderRows(state);
-    updateControls(state);
-    state.searchInputNode.focus();
-  });
   state.headNode.addEventListener("click", (event) => {
     const button = event.target instanceof Element ? event.target.closest("[data-report-sort]") : null;
     if (!button || state.busy) return;
@@ -562,15 +554,8 @@ function renderShell(root) {
   searchInput.type = "search";
   searchInput.placeholder = "Search";
   searchInput.setAttribute("aria-label", "Search Project State");
-  const searchClear = document.createElement("button");
-  searchClear.type = "button";
-  searchClear.className = "docsViewer__toolbarIconButton docsViewerReport__searchClear";
-  searchClear.setAttribute("aria-label", "Clear search");
-  searchClear.title = "Clear search";
-  searchClear.appendChild(createDocsViewerToolbarIcon(document, "docsViewer__icon--x"));
-  searchClear.hidden = true;
   search.appendChild(searchInput);
-  search.appendChild(searchClear);
+  mountSearchField(searchInput);
 
   const copyTable = document.createElement("button");
   copyTable.id = "docsProjectStateReportCopyTable";
@@ -608,7 +593,6 @@ function renderShell(root) {
     headNode: head,
     rowsNode: rows,
     runButton,
-    searchClearNode: searchClear,
     searchInputNode: searchInput,
     statusNode: status
   };

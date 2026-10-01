@@ -1,3 +1,4 @@
+import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { displayValue } from "./catalogue-editor-records.js";
 import { createStudioIcon } from "./studio-icon.js";
 import { createWorkGalleryPicker, renderWorkGalleryPicker, setWorkGalleryPickerAvailability } from "./catalogue-work-gallery-picker.js";
@@ -368,6 +369,7 @@ function renderSeriesField(field, fieldsNode, state, options) {
   popupNode.className = "studioUi__popupInner catalogueWorkSeriesPicker__popup";
   popupNode.hidden = true;
   searchWrap.appendChild(searchInput);
+  mountSearchField(searchInput);
   searchWrap.appendChild(popupNode);
   const searchRow = document.createElement("div");
   searchRow.className = "catalogueWorkSeriesPicker__searchRow";

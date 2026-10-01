@@ -1,3 +1,4 @@
+import { mountSearchField } from "./search-field.js";
 import {
   bindSearchList
 } from "/shared/frontend/js/search-list.js";
@@ -520,6 +521,7 @@ export function createFilePicker(rootNode, options = {}) {
     }
   }
 
+  mountSearchField(folderInput);
   const searchController = bindSearchList(folderInput, folderPopup, {
     id: `${id}-folder-popup`,
     maxOptions: config.search.maxFolderResults,

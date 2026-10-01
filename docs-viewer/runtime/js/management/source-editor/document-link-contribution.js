@@ -1,3 +1,4 @@
+import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { createDocsViewerToolbarIcon } from "../../shared/docs-viewer-toolbar-icon.js";
 
 import { DOCS_VIEWER_ACTION_IDS } from "../docs-viewer-action-definitions.js";
@@ -21,9 +22,9 @@ export function openDocumentLinkModal(options) {
       + '<label class="docsViewer__field" for="docsViewerDocumentLinkCollection"><span class="docsViewer__fieldLabel">Documents</span>'
       + '<select class="docsViewer__fieldInput" id="docsViewerDocumentLinkCollection" disabled>'
       + '<option value="all">All documents</option><option value="scope">Scope-level documents</option></select></label>'
-      + '<label class="docsViewer__field" for="docsViewerDocumentLinkSearch"><span class="docsViewer__fieldLabel">Search documents</span>'
+      + '<div class="docsViewer__field"><label class="docsViewer__fieldLabel" for="docsViewerDocumentLinkSearch">Search documents</label>'
       + '<input class="docsViewer__fieldInput" id="docsViewerDocumentLinkSearch" type="search" role="combobox"'
-      + ' aria-autocomplete="list" aria-controls="docsViewerDocumentLinkResults" aria-expanded="true" autocomplete="off" disabled></label>'
+      + ' aria-autocomplete="list" aria-controls="docsViewerDocumentLinkResults" aria-expanded="true" autocomplete="off" disabled></div>'
       + '<p class="docsViewerCatalogueTokenModal__searchStatus muted small" data-document-link-status>Loading documents…</p>'
       + '<div class="docsViewerCatalogueTargetPicker__results docsViewerCatalogueTokenModal__results"'
       + ' id="docsViewerDocumentLinkResults" role="listbox" aria-label="Documents" tabindex="0"></div></div>',
@@ -33,6 +34,7 @@ export function openDocumentLinkModal(options) {
     ],
     onOpen: function (api) {
       var search = api.host.querySelector("#docsViewerDocumentLinkSearch");
+      mountSearchField(search);
       var collection = api.host.querySelector("#docsViewerDocumentLinkCollection");
       var results = api.host.querySelector("#docsViewerDocumentLinkResults");
       var status = api.host.querySelector("[data-document-link-status]");

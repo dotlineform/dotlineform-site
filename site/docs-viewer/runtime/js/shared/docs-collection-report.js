@@ -1,3 +1,4 @@
+import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
 import {
   appendAssetVersion,
@@ -437,13 +438,8 @@ function renderFilterShell(context, collection) {
   input.spellcheck = false;
   input.placeholder = ({ catalogue: "work", works: "title" })[collectionId(collection)] || "search";
 
-  var clear = document.createElement("button");
-  clear.className = "docsViewer__toolbarIconButton docsViewerReport__searchClear";
-  clear.type = "button";
-  clear.appendChild(createDocsViewerToolbarIcon(document, "docsViewer__icon--x"));
-  clear.hidden = true;
   search.appendChild(input);
-  search.appendChild(clear);
+  var clear = mountSearchField(input).clearButton;
 
   var extensions = document.createElement("div");
   extensions.className = "docsViewerReport__filters";
@@ -564,11 +560,9 @@ function renderContributionFilters(state) {
 }
 
 function updateFilterControls(state) {
-  var normalizedQuery = normalizeDocsCollectionFilterValue(state.query);
   if (state.filterInputNode.value !== state.query) {
     state.filterInputNode.value = state.query;
   }
-  state.filterClearNode.hidden = !normalizedQuery;
   state.filterClearNode.setAttribute(
     "aria-label",
     state.collectionId === "works" ? "Clear document search"
@@ -676,7 +670,6 @@ function bindFilterControls(state) {
     if (state.pagedBrowsing) {
       cancelCollectionSearch(state);
       state.listNeedsRender = true;
-      state.filterClearNode.hidden = !normalizeDocsCollectionFilterValue(state.query);
       if (!normalizeDocsCollectionFilterValue(state.query)) {
         state.pageIndex = 0;
         renderListProjectionContained(state, "collection-search-clear");
@@ -694,14 +687,6 @@ function bindFilterControls(state) {
       return;
     }
     renderListProjectionContained(state, "title-filter");
-  });
-  state.filterClearNode.addEventListener("click", function () {
-    cancelCollectionSearch(state);
-    state.pageIndex = 0;
-    state.query = "";
-    state.filterInputNode.value = "";
-    renderListProjectionContained(state, "title-filter-clear");
-    state.filterInputNode.focus();
   });
 }
 

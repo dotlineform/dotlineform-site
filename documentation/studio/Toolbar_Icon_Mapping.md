@@ -2,7 +2,7 @@
 doc_id: d-20260919-100234-038395
 title: "Shared Icons: Toolbar Mapping"
 added_date: "2026-09-19 10:02:34"
-last_updated: "2026-10-01 18:38:36"
+last_updated: "2026-10-01 19:21:57"
 summary: Editable mappings for Docs Viewer toolbars, report toolbars and report list icons, including code identifiers, state variants and replacement artwork choices.
 ui_status: planned
 parent_id: d-20260910-223116-9a1011
@@ -97,7 +97,7 @@ Code identifiers below are exact **renderer keys**, except entries explicitly ma
 
 ## Report Toolbars
 
-Implemented on 19 September 2026 from the selected mappings below. Converted controls use the shared toolbar button and mask styles, with accessible names, tooltips and existing capability rules retained. The **Previous icon or text** column records the migration baseline. Visual review remains pending. Search-clear controls keep their smaller `1rem` artwork and `1.35rem` button.
+Implemented on 19 September 2026 from the selected mappings below. Converted controls use the shared toolbar button and mask styles, with accessible names, tooltips and existing capability rules retained. The **Previous icon or text** column records the migration baseline. Visual review remains pending. Search controls now use [Search Fields](Search_Fields.md), with 20px focus-only search artwork and 16px clear artwork in a 1.75rem button.
 
 Identifiers marked `DOM` are element IDs; `selector` entries are exact attributes/classes scoped to the named report or collection control. `action` and `renderer` entries are registered code identifiers. Where a control has no dedicated ID or selector, its exact report ID, mounting function and local variable identify it. A shared collection row covers every collection using that contribution, subject to existing capability rules. Collections with a custom sortable header, including the subject-aware Works list, omit the generic title/recent sort toggle; their header indicators are in the Report List Icons table.
 
@@ -112,7 +112,7 @@ Identifiers marked `DOM` are element IDs; `selector` entries are exact attribute
 | Collection selection: select all | selector `[data-docs-collection-selection-command="select-all"]` | Selects all eligible documents | Text `Select all` | Text `All` | — | Implemented; review pending |
 | Collection selection: clear | selector `[data-docs-collection-selection-command="clear"]` | Clears selection | Text `Clear` | Text `Clear` | — | Keep |
 | Collection selection: done | selector `[data-docs-collection-selection-command="done"]` | Ends selection mode | Text `Done` | Text `Done` | — | Keep |
-| Collection list: clear search | `docs_collection`; selector `[data-docs-collection-filters] .docsViewerReport__searchClear` | Clears title search; hidden while empty | × | x.svg | 1rem artwork; existing 1.35rem button | Implemented; review pending |
+| Collection list: clear search | `docs_collection`; selector `[data-docs-collection-filters] .sharedSearchField__clear` | Clears search; hidden while empty or uneditable | × | x.svg | 1rem artwork; 1.75rem button | Shared Search Fields; review pending |
 | Collection detail: return | selector `.docsReportDetail__back` | Returns to the collection list and its saved position | ← | arrow-left.svg | — | Implemented; review pending |
 | Collection detail: draft readiness | selector `[data-docs-collection-draft]`; action `set-draft` | Draft (`aria-pressed=true`); click marks Ready | 📝 | circle-dashed-check.svg | — | Implemented; review pending |
 | Collection detail: draft readiness | selector `[data-docs-collection-draft]`; action `set-draft` | Ready (`aria-pressed=false`); click marks Draft | ✅ | circle-check.svg | — | Implemented; review pending |
@@ -132,12 +132,12 @@ Identifiers marked `DOM` are element IDs; `selector` entries are exact attribute
 | Project State: run | DOM `docsProjectStateReportRun` | Runs/refreshes reconciliation | 🔄 | refresh-cw.svg | — | Implemented; review pending |
 | Project State: group | DOM `docsProjectStateReportGroup`; selector `[data-group-target="series"]` | Currently grouped by Folder; click groups by Series | Inline three-row list SVG; `CONTROL_ICON_MARKUP.list` | folder.svg | Artwork shows active grouping | Implemented; review pending; accessible name gives current group and next action; data-group-target remains the next group |
 | Project State: group | DOM `docsProjectStateReportGroup`; selector `[data-group-target="folder"]` | Currently grouped by Series; click groups by Folder | Inline folder SVG; `CONTROL_ICON_MARKUP.folder` | dlf-series.svg | Artwork shows active grouping | Implemented; review pending; accessible name gives current group and next action; data-group-target remains the next group |
-| Project State: clear search | `project_state`; selector `.docsViewerReport__searchClear` | Clears search; hidden while empty | × | x.svg | 1rem artwork; existing 1.35rem button | Implemented; review pending |
+| Project State: clear search | `project_state`; selector `.sharedSearchField__clear` | Clears search; hidden while empty or uneditable | × | x.svg | 1rem artwork; 1.75rem button | Shared Search Fields; review pending |
 | Project State: copy table | DOM `docsProjectStateReportCopyTable` | Copies the report table | Inline overlapping-sheets SVG; `CONTROL_ICON_MARKUP.copy` | copy.svg | — | Implemented; review pending |
 | Project State: copy Markdown | DOM `docsProjectStateReportCopyMarkdown` | Retired | Text `MD` | — | — | Retired button, handler and Markdown serializer; Copy table remains TSV |
 | Docs Media: run | DOM `docsMediaReportRun` | Runs/refreshes the media inventory | 🔄 | refresh-cw.svg | — | Implemented; review pending |
-| Docs Media: clear search | `docs_media`; selector `.docsViewerReport__searchClear` | Clears search; hidden while empty | × | x.svg | 1rem artwork; existing 1.35rem button | Implemented; review pending |
-| Catalogue Works: clear search | DOM `docsCatalogueWorksReportClear` | Clears the canonical Work search | × | x.svg | 1rem artwork; existing 1.35rem button | Implemented; review pending |
+| Docs Media: clear search | `docs_media`; selector `.sharedSearchField__clear` | Clears search; hidden while empty or uneditable | × | x.svg | 1rem artwork; 1.75rem button | Shared Search Fields; review pending |
+| Catalogue Works: clear search | `catalogue_works`; selector `.sharedSearchField__clear` | Clears the Work search; hidden while empty or uneditable | × | x.svg | 1rem artwork; 1.75rem button | Shared Search Fields; review pending |
 | Catalogue Works: copy table | DOM `docsCatalogueWorksReportCopy` | Copies the filtered report table | Text `Copy table` | copy.svg | — | Implemented; review pending |
 | Uncataloged Files: run | DOM `docsUncatalogedFilesReportRun` | Runs/refreshes the source-folder audit | 🔄 | refresh-cw.svg | — | Implemented; review pending |
 | Missing Source Files: run | DOM `docsMissingSourceFilesReportRun` | Runs/refreshes the expected-source-file audit | 🔄 | refresh-cw.svg | — | Implemented; review pending |

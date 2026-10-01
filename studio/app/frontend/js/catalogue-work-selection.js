@@ -1,4 +1,5 @@
 
+import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import {
   buildWorkRecordSummary as buildRecordSummary
 } from "./catalogue-work-sections.js";
@@ -259,6 +260,7 @@ export async function openWorkById(state, requestedWorkId, context) {
 }
 
 export function bindWorkSelectionControls(state, context) {
+  mountSearchField(state.searchNode);
   const searchController = bindSearchList(state.searchNode, state.popupListNode, {
     id: "catalogueWorkSearchList",
     maxOptions: SEARCH_LIMIT,

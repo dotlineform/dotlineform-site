@@ -1,0 +1,113 @@
+.sharedSearchField {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  min-width: 0;
+  color: var(--shared-search-text);
+}
+
+.sharedSearchField__icon,
+.sharedSearchField__clearIcon {
+  display: block;
+  background: currentColor;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+}
+
+.sharedSearchField__icon {
+  width: 20px;
+  height: 20px;
+  color: var(--shared-search-muted);
+  mask-image: var(--shared-search-icon);
+  cursor: text;
+}
+
+.sharedSearchField__text {
+  position: relative;
+  display: block;
+  min-width: 0;
+}
+
+.sharedSearchField > .sharedSearchField__text > input.sharedSearchField__input {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: 2rem;
+  min-height: 2rem;
+  margin: 0;
+  padding: 0.35rem 1.75rem 0.35rem 0.25rem;
+  border: 0;
+  border-bottom: 1px solid var(--shared-search-muted);
+  border-radius: 0;
+  outline: none;
+  box-shadow: none;
+  background: transparent;
+  color: var(--shared-search-text);
+  caret-color: var(--shared-search-text);
+  -webkit-text-fill-color: var(--shared-search-text);
+  font: inherit;
+  font-size: 0.875rem;
+  line-height: 1.25;
+  appearance: none;
+}
+
+.sharedSearchField input.sharedSearchField__input::placeholder {
+  color: var(--shared-search-muted);
+  -webkit-text-fill-color: var(--shared-search-muted);
+  opacity: 1;
+}
+
+.sharedSearchField__input::-webkit-search-cancel-button,
+.sharedSearchField__input::-webkit-search-decoration {
+  appearance: none;
+}
+
+.sharedSearchField .sharedSearchField__clear {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--shared-search-muted);
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.sharedSearchField__clearIcon {
+  width: 1rem;
+  height: 1rem;
+  mask-image: var(--shared-search-clear-icon);
+}
+
+.sharedSearchField__clear:focus-visible {
+  outline: 2px solid var(--shared-search-text);
+  outline-offset: -2px;
+}
+
+.sharedSearchField:has(.sharedSearchField__input:placeholder-shown) .sharedSearchField__clear,
+.sharedSearchField:has(.sharedSearchField__input:disabled) .sharedSearchField__clear,
+.sharedSearchField:has(.sharedSearchField__input:read-only) .sharedSearchField__clear {
+  display: none;
+}
+
+.sharedSearchField:has(.sharedSearchField__input:disabled) {
+  opacity: 0.55;
+}
+
+.sharedSearchField:has(.sharedSearchField__input:disabled) .sharedSearchField__icon {
+  cursor: default;
+}

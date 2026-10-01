@@ -30,7 +30,7 @@ function renderReviewPackageControls(context) {
     mount.setAttribute("aria-label", "Review package controls");
 
     var select = context.document.createElement("select");
-    select.className = "docsViewer__searchInput docsViewer__reviewPackageSelect";
+    select.className = "docsViewer__reviewPackageSelect";
     select.setAttribute("aria-label", "Review package");
     var buildButton = createButton(context.document, "Build");
     buildButton.disabled = true;

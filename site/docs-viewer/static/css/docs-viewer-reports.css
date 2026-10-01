@@ -33,8 +33,6 @@
 }
 
 .docsViewerReport__button:focus-visible,
-.docsViewerReport__searchInput:focus-visible,
-.docsViewerReport__searchClear:focus-visible,
 .docsViewerReport__cellLink:focus-visible{
   outline: 2px solid var(--docs-viewer-focus-ring);
   outline-offset: 2px;
@@ -82,40 +80,6 @@
   flex: 0 1 12rem;
   align-items: center;
   min-width: min(100%, 10rem);
-}
-
-.docsViewerReport__searchInput{
-  width: 100%;
-  height: 1.8rem;
-  border: 1px solid var(--docs-viewer-border);
-  border-radius: 999px;
-  color: var(--docs-viewer-text);
-  background: var(--docs-viewer-panel);
-  font: inherit;
-  font-size: var(--docs-viewer-font-small);
-  line-height: var(--docs-viewer-line-snug);
-  padding: 0 1.75rem 0 0.52rem;
-}
-
-.docsViewerReport__searchInput::placeholder{
-  color: var(--docs-viewer-muted);
-  opacity: 1;
-}
-
-.docsViewerReport__searchInput::-webkit-search-cancel-button{
-  appearance: none;
-}
-
-.docsViewerReport__searchClear{
-  --docs-viewer-control-height: 1.35rem;
-  --docs-viewer-toolbar-icon-size: 1rem;
-  position: absolute;
-  right: 0.28rem;
-  color: var(--docs-viewer-muted);
-}
-
-.docsViewerReport__searchClear:hover:not(:disabled){
-  color: var(--docs-viewer-text);
 }
 
 .docsViewerReport__table{

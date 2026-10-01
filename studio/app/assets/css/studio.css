@@ -1,4 +1,10 @@
+@import url("/shared/frontend/css/search-field.css");
+
 .studio-local-app {
+  --shared-search-text: var(--text);
+  --shared-search-muted: var(--muted);
+  --shared-search-icon: url("/docs-viewer/static/icons/search.svg");
+  --shared-search-clear-icon: url("/docs-viewer/static/icons/x.svg");
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --text-xs: 0.75rem;
@@ -353,6 +359,7 @@ html[data-theme="dark"] {
   --studio-line-input: #d6d6d6;
   --studio-muted: #666;
   --studio-default-value: #8c8c8c;
+  --shared-search-muted: var(--studio-default-value);
   --studio-muted-soft: #6d6d6d;
   --studio-muted-body: #4a4a4a;
   --studio-focus: #5f8ffb;

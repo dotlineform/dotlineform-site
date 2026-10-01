@@ -1,3 +1,4 @@
+import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { escapeHtml, openDocsViewerManagementModal } from "../docs-viewer-management-modal-shell.js";
 import { selectedTextForCatalogueTitle } from "./catalogue-token-contract.js";
 import {
@@ -25,10 +26,10 @@ function modalBody(searchQuery, linkText, imageMode) {
         '<input class="docsViewer__checkboxInput" id="' + SUBJECT_INPUT_ID + '" type="checkbox" disabled>' +
         '<span class="docsViewer__fieldLabel">Use document subject</span>' +
       '</label>' +
-      '<label class="docsViewer__field" for="' + SEARCH_INPUT_ID + '">' +
-        '<span class="docsViewer__fieldLabel">Search Catalogue</span>' +
+      '<div class="docsViewer__field">' +
+        '<label class="docsViewer__fieldLabel" for="' + SEARCH_INPUT_ID + '">Search Catalogue</label>' +
         '<input class="docsViewer__fieldInput" id="' + SEARCH_INPUT_ID + '" type="search" role="combobox" aria-autocomplete="list" aria-controls="' + RESULTS_ID + '" aria-expanded="false" autocomplete="off" spellcheck="false" value="' + escapeHtml(searchQuery) + '" disabled>' +
-      "</label>" +
+      "</div>" +
       '<p class="muted small" data-role="document-subject-status" hidden></p>' +
       '<p class="docsViewerCatalogueTokenModal__searchStatus muted small" data-role="catalogue-search-status">Loading Catalogue…</p>' +
       '<div class="docsViewerCatalogueTargetPicker__results docsViewerCatalogueTokenModal__results" id="' + RESULTS_ID + '" role="listbox" aria-label="' + (imageMode ? "Catalogue Works" : "Catalogue Works and Galleries") + '" data-role="catalogue-results" tabindex="0" hidden></div>' +
@@ -68,6 +69,7 @@ export function openCatalogueMediaModal(options = {}) {
     onOpen: function (api) {
       var modalRoot = api.host.querySelector('[data-role="docs-viewer-management-modal"]');
       var search = api.host.querySelector("#" + SEARCH_INPUT_ID);
+      mountSearchField(search);
       var linkInput = api.host.querySelector("#" + LINK_INPUT_ID);
       var results = api.host.querySelector('[data-role="catalogue-results"]');
       var status = api.host.querySelector('[data-role="catalogue-search-status"]');
