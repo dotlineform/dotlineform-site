@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260930-221742-069a8a
 title: Related Links Delivery
 added_date: "2026-09-30 22:17:42"
-last_updated: "2026-09-30 22:42:00"
+last_updated: "2026-10-01 08:22:22"
 summary: Deliver the editable related-links directive and retire the separate per-document Links view.
 ui_status: in-progress
 parent_id: d-20260930-195002-b3417e
@@ -12,7 +12,7 @@ parent_id: d-20260930-195002-b3417e
 
 ## Requirements And Decisions
 
-Deliver the approved `[[links|related links]]` block directive, an editable plain heading, a title-sorted combined incoming/outgoing list and the chosen collection icons. Omit self-links, duplicates and empty sections. Embed the result in generated document JSON using the existing icon renderer and currently persisted version-4 relationship JSON. Full and targeted builds read the same saved incoming/outgoing summaries; section rendering does not derive relationships or depend on build order. Publish captures those records and filters entries to its already selected eligible document IDs. The user explicitly confirmed that this replaces the separate per-document Links view; remove its control, adapter and read endpoint. Keep the original build flow, workspace diagnostic aggregate and existing incremental relationship maintenance. Info-panel presentation, styling refinement and test changes are separate.
+Deliver the approved `[[links|related links]]` block directive, an editable plain H3 heading, a title-sorted combined incoming/outgoing list and the chosen collection icons without bullet markers or indentation. Omit self-links, duplicates and empty sections. Embed the result in generated document JSON using the existing icon renderer and version-4 relationship records. Each Working document build refreshes its selected relationships before rendering, so the section includes current outgoing links and already recorded incoming links in that same build. Reuse the existing updater's records; section expansion does not derive relationships or depend on document rendering order. Publish captures persisted records and filters entries to its already selected eligible document IDs. The user explicitly confirmed that this replaces the separate per-document Links view; remove its control, adapter and read endpoint. Keep per-collection build orchestration, the workspace diagnostic aggregate and existing incremental relationship rules. Info-panel presentation and test changes are separate.
 
 ## RL-0 — Readiness
 
@@ -25,22 +25,24 @@ Gate: one complete feature using persisted relationships, no reader-time fetchin
 ## RL-1 — Implementation
 
 - [x] Add the standalone Markdown directive and selected-heading insertion action.
-- [x] Read currently persisted relationship JSON for both full and targeted section rendering.
+- [x] Use this build's refreshed relationships for full and targeted Working section rendering.
 - [x] Capture and filter persisted relationship records for temporary Preview inputs.
-- [x] Restore the original collection build flow and incremental relationship maintenance.
+- [x] Preserve per-collection build orchestration and run the existing incremental Links maintenance before section rendering.
 - [x] Render the sorted list with self-contained decorative icons and portable document targets.
 - [x] Exclude generated links from authored-anchor/backlink collection.
 - [x] Remove the separate document Links UI, runtime reads and endpoint without compatibility aliases.
 - [x] Complete config/runtime projection and selected static verification.
 
-Gate: code and public projection are ready for review. Explicit lint and compilation passed for the nine Python sources touched by the simplification; the retained JavaScript passed its earlier explicit lint. The restored production ordinary-document dry run processed 42 sources with no warnings, payload/index changes or relationship writes/removals. The local reader config lost only the retired activation field; public settings were unchanged. The retained site projection changes 13 runtime/CSS files and removes the Links adapter; projection check and site validation passed after the simplification. Whitespace review passed. Current sources contain no directive, so the build run proves restored build wiring and unchanged existing content, rather than token expansion or visual acceptance.
+Gate: code and public projection are ready for review. Explicit lint and compilation passed for the nine Python sources touched by the simplification; the retained JavaScript passed its earlier explicit lint. The restored production ordinary-document dry run processed 42 sources with no warnings, payload/index changes or relationship writes/removals. The local reader config lost only the retired activation field; public settings were unchanged. The retained site projection changes 13 runtime/CSS files and removes the Links adapter; projection check and site validation passed after the simplification. Whitespace review passed. At initial implementation, sources contained no directive, so that build run proved restored build wiring and unchanged existing content, rather than token expansion or visual acceptance. Subsequent user-source build evidence is recorded below.
 
 ## RL-2 — Review
 
 - [x] Review persisted-record ownership, freshness, literal syntax, escaping, routing, icon reuse and generated-anchor exclusion.
 - [x] Inspect the exact public delta and resolve findings.
 
-Gate: no blocking code-review findings. Source-graph derivation, preloaded-source plumbing, the combined-build mode and full-graph reconciliation are removed. Section rendering only reads exact persisted records. Exact collection/document identities own deduplication and routes, heading/title text is escaped, and icons use the existing sanitized portable masks. Generated anchors bypass authored-link rewriting and collection. Publish uses captured relationship inputs outside the generated snapshot root and filters entries with its existing eligible IDs; distribution does not derive them. The Links-only target-layout map and dispatch were removed with the view, while the aggregate's summary/target helpers remain. Retired-view tests, including `docs-viewer/tests/js/docs_viewer_links_contract.mjs` and the per-document Links-read cases in `docs-viewer/tests/python/test_docs_generated_reads.py`, remain unchanged and unrun; they require a separately agreed specification before retirement or replacement. Publish and Review-package expansion were not exercised in this delivery.
+Gate: no blocking code-review findings. Source-graph derivation, preloaded-source plumbing, the combined-build mode and full-graph reconciliation remain removed. Working section rendering reuses the completed incremental updater's records, while Preview reads captured records. Generated document removals are determined once and shared with relationship maintenance and output; selected source identities support endpoints rendered in the same build. Exact collection/document identities own deduplication and routes, heading/title text is escaped, and icons use the existing sanitized portable masks. Generated anchors bypass authored-link rewriting and collection. Publish uses captured relationship inputs outside the generated snapshot root and filters entries with its existing eligible IDs; distribution does not derive them. The Links-only target-layout map and dispatch were removed with the view, while the aggregate's summary/target helpers remain. Retired-view tests, including `docs-viewer/tests/js/docs_viewer_links_contract.mjs` and the per-document Links-read cases in `docs-viewer/tests/python/test_docs_generated_reads.py`, remain unchanged and unrun; they require a separately agreed specification before retirement or replacement. Publish and Review-package expansion were not exercised in this delivery.
+
+The 2026-10-01 manual review found a build-order defect: saving `10,000` updated its Links JSON with `compressed` after the related section had rendered from the old record. The fix moves the existing relationship refresh ahead of rendering in both builders and passes its same records to expansion, including dry runs. Explicit lint and syntax checks passed for the five changed Python files. The production Works dry run selected only `10,000`, predicted one document write with unchanged manifests, semantic tokens and relationships, and reported no warnings. The ordinary production dry run processed 42 sources with no writes or warnings. The targeted Works write then updated only `10,000`'s document payload, with no relationship, manifest or semantic-token writes and no warnings. Direct inspection confirmed its H3 related section lists `3 symbols` and `compressed`. H3 and bullet-free presentation remain pending visual acceptance; first-build outgoing additions/removals, empty sections and incoming refresh timing remain manual checks. No automated tests were created, changed or run.
 
 ## RL-3 — Closeout
 

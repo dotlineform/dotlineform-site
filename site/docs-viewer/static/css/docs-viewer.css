@@ -1103,6 +1103,11 @@ main.container:has(> .docsViewer){
   word-break: normal;
 }
 
+.docsViewer__content [data-docs-related-links] > ul{
+  list-style: none;
+  padding: 0;
+}
+
 .docsViewer__mediaImageLink{
   appearance: none;
   border: 0;

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Collection
 from pathlib import Path
 from typing import Any
 
@@ -17,6 +18,17 @@ class WritePlanMixin:
             return []
         return sorted(path.stem for path in directory.glob("*.json"))
 
+    def stale_doc_payload_ids(
+        self, desired_doc_ids: Collection[str], *, target_doc_ids: list[str] | None = None,
+    ) -> list[str]:
+        """Determine removals once, before relationship refresh and rendering."""
+        existing = (
+            self.existing_doc_payload_ids(self.items_dir)
+            if target_doc_ids is None
+            else [doc_id for doc_id in target_doc_ids if (self.items_dir / f"{doc_id}.json").is_file()]
+        )
+        return sorted(set(existing) - set(desired_doc_ids))
+
     def build_write_plan(
         self,
         index_tree_payload: dict[str, Any],
@@ -24,14 +36,14 @@ class WritePlanMixin:
         item_payloads: dict[str, dict[str, Any]],
         semantic_token_payloads: dict[str, Any],
         *,
+        stale_item_ids: list[str],
         backlinks_payload: dict[str, Any] | None = None,
-        target_doc_ids: list[str] | None = None,
     ) -> dict[str, Any]:
         """Return exact writes and removals without mutating generated output.
 
-        A targeted build may remove stale document and semantic-token payloads
-        only when their identities are in ``target_doc_ids``. A missing Recent
-        payload means generation was not requested; leave saved Recents alone.
+        Document removals were already confined to the build's selected IDs.
+        A missing Recent payload means generation was not requested; leave saved
+        Recents alone.
         """
 
         index_tree_text = json_text(index_tree_payload)
@@ -43,11 +55,6 @@ class WritePlanMixin:
             item_text_by_id[doc_id] = text
             if read_text(self.items_dir / f"{doc_id}.json") != text:
                 changed_item_ids.append(doc_id)
-        existing_item_ids = self.existing_doc_payload_ids(self.items_dir)
-        desired_item_ids = sorted(item_payloads)
-        stale_item_ids = sorted(set(existing_item_ids) - set(desired_item_ids))
-        if target_doc_ids:
-            stale_item_ids = sorted(set(stale_item_ids) & set(target_doc_ids))
         backlinks_text = (
             json_text(backlinks_payload)
             if backlinks_payload is not None

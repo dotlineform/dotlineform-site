@@ -1,4 +1,4 @@
-"""Render related sections from currently persisted relationship JSON."""
+"""Render related sections from refreshed Working or captured relationship records."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ import html
 import json
 from typing import TYPE_CHECKING
 
-from .links_model import DocumentTarget
+from .links_model import DocumentLinks, DocumentTarget
 from .links_schema import read_relationship_payload
 from .related_links_directive import RELATED_LINKS_PREFIX
 from .source import DocRecord
@@ -16,12 +16,15 @@ if TYPE_CHECKING:
     from .pipeline import DocsDataBuilder
 
 
-def prepare_related_links(builder: DocsDataBuilder, docs: list[DocRecord]) -> None:
-    """Read exact saved records for rendered documents that request a section.
+def prepare_related_links(
+    builder: DocsDataBuilder, docs: list[DocRecord],
+    current_records: dict[DocumentTarget, DocumentLinks | None],
+) -> None:
+    """Use this build's refreshed records or exact saved inputs for its sections.
 
-    Both full and targeted builds use persisted incoming/outgoing summaries. This
-    performs no source discovery, relationship derivation or neighbour writes.
-    Publish supplies captured records filtered to its eligible document set.
+    The existing Working Links updater owns relationship maintenance. Reuse its
+    results for write and dry-run rendering, without a second refresh or read.
+    Publish uses captured records filtered to its eligible document set.
     """
     builder.related_documents = {}
     root = builder.related_links_dir
@@ -31,13 +34,20 @@ def prepare_related_links(builder: DocsDataBuilder, docs: list[DocRecord]) -> No
             continue
         if RELATED_LINKS_PREFIX not in doc.body_markdown:
             continue
-        path = root / f"{doc.doc_id}.json"
-        if root.is_symlink() or path.is_symlink() or path.resolve().parent != root.resolve():
-            raise ValueError("Related-links JSON must stay inside its configured directory")
-        if not path.is_file():
-            continue
         target = DocumentTarget(getattr(builder, "collection_id", ""), doc.doc_id)
-        record = read_relationship_payload(json.loads(path.read_text()), target)
+        if target in current_records:
+            record = current_records[target]
+        else:
+            path = root / f"{doc.doc_id}.json"
+            if root.is_symlink() or path.is_symlink() or path.resolve().parent != root.resolve():
+                raise ValueError("Related-links JSON must stay inside its configured directory")
+            if not path.is_file():
+                continue
+            record = read_relationship_payload(json.loads(path.read_text()), target)
+        if record is None:
+            continue
+        if record.document.target != target:
+            raise ValueError("Related-links record identity must match its exact document")
         if any(neighbour.collection not in owners for neighbour in record.incoming.keys() | record.outgoing.keys()):
             raise ValueError("Related links require exact configured collection owners")
         builder.related_documents[target] = record
@@ -66,4 +76,4 @@ def render_related_links(builder: DocsDataBuilder, doc: DocRecord, heading: str)
             href = (builder.rendered_viewer_target_for(destination.doc_id) if builder.config.stage == "review"
                     else "?" + canonical_document_viewer_url(destination.doc_id).split("?", 1)[1])
         rows.append(f'<li>{builder.inline_icons.render(icon, decorative=True)} <a data-docs-related-link="true" href="{html.escape(href, quote=True)}">{html.escape(summary.title)}</a></li>')
-    return f'<section data-docs-related-links="true"><h2>{html.escape(heading)}</h2>\n<ul>\n' + "\n".join(rows) + "\n</ul></section>\n"
+    return f'<section data-docs-related-links="true"><h3>{html.escape(heading)}</h3>\n<ul>\n' + "\n".join(rows) + "\n</ul></section>\n"

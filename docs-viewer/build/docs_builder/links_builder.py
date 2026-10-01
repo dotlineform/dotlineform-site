@@ -68,7 +68,7 @@ def prepare_document_links(
 class _DocumentRefresh:
     """Hold only this operation's selected records and affected neighbours."""
 
-    def __init__(self, builder: DocsDataBuilder, plan: dict[str, Any], *, write: bool):
+    def __init__(self, builder: DocsDataBuilder, plan: dict[str, Any]):
         self.builder = builder
         self.config = builder.config
         self.collection = getattr(builder, "collection_id", "")
@@ -86,7 +86,7 @@ class _DocumentRefresh:
             self.sources[""], working_ignored_doc_ids(builder.repo_root, self.config),
             {doc.doc_id: doc.parent_id for doc in plan["documents"]} if not self.collection else None,
         )
-        self.pending = {self.key(doc_id) for doc_id in plan["built_doc_ids"]} if not write else set()
+        self.pending = {self.key(doc_id) for doc_id in plan["built_doc_ids"]}
         self.records: dict[DocumentTarget, DocumentLinks | None] = {}
         self.original: dict[DocumentTarget, str | None] = {}
         self.removals: set[DocumentTarget] = set()
@@ -285,13 +285,16 @@ class _DocumentRefresh:
         return len(after - before), len(before - after)
 
 
-def build_document_links(builder: DocsDataBuilder, plan: dict[str, Any] | None, *, write: bool) -> dict[str, Any] | None:
-    """Complete selected refreshes and writes under the Working Links lock."""
+def build_document_links(
+    builder: DocsDataBuilder, plan: dict[str, Any] | None, *, write: bool,
+    related_records: dict[DocumentTarget, DocumentLinks | None] | None = None,
+) -> dict[str, Any] | None:
+    """Refresh selected Links before rendering; share the resulting records."""
     if plan is None:
         return None
 
     def run() -> dict[str, Any]:
-        refresh = _DocumentRefresh(builder, plan, write=write)
+        refresh = _DocumentRefresh(builder, plan)
         added = deleted = 0
         for doc_id in sorted(plan["doc_ids"]):
             key = refresh.key(doc_id)
@@ -317,6 +320,12 @@ def build_document_links(builder: DocsDataBuilder, plan: dict[str, Any] | None, 
                 write_text_atomic(path, content)
             for path in removals:
                 path.unlink()
+        if related_records is not None:
+            related_records.update(refresh.records)
+            for key in refresh.removals:
+                related_records[key] = None
+            for doc_id in plan["doc_ids"]:
+                related_records.setdefault(refresh.key(doc_id), None)
         return {"written": [path.name for path in writes], "removed": [path.name for path in removals],
                 "relationships_added": added, "relationships_removed": deleted}
 

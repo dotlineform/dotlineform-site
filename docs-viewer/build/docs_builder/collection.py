@@ -249,7 +249,12 @@ class CollectionDocsBuilder(DocsDataBuilder):
             else build_collection_media_snapshot(self.repo_root, self.media_owner, write=write)
         )
         semantic_tokens_by_doc: dict[str, list[dict[str, Any]]] = {}
-        prepare_related_links(self, docs)
+        built_doc_ids = [doc.doc_id for doc in ordered_docs]
+        stale_item_ids = self.stale_doc_payload_ids(built_doc_ids, target_doc_ids=self.only_doc_ids)
+        links_plan = prepare_document_links(self, docs, built_doc_ids, stale_item_ids)
+        related_records = {}
+        links_build = build_document_links(self, links_plan, write=write, related_records=related_records)
+        prepare_related_links(self, docs, related_records)
         item_payloads = {
             doc.doc_id: self.item_entry(doc, summaries, semantic_tokens_by_doc)
             for doc in ordered_docs
@@ -270,11 +275,10 @@ class CollectionDocsBuilder(DocsDataBuilder):
             manifest_payload,
             manage_manifest_payload,
             item_payloads,
-            target_doc_ids=self.only_doc_ids,
+            stale_item_ids=stale_item_ids,
         )
         semantic_token_payloads = self.build_semantic_token_payloads(docs, semantic_tokens_by_doc)
         write_plan.update(self.build_semantic_token_write_plan(semantic_token_payloads))
-        links_plan = prepare_document_links(self, docs, item_payloads, write_plan["stale_item_ids"])
         diagnostics = self.collection_diagnostics_payload(
             docs_total=len(summaries),
             docs_emitted=len(item_payloads),
@@ -285,7 +289,6 @@ class CollectionDocsBuilder(DocsDataBuilder):
             self.write_collection_outputs(write_plan, docs_total=len(summaries))
         else:
             self.print_collection_summary(write_plan, mode="dry-run", docs_total=len(summaries))
-        links_build = build_document_links(self, links_plan, write=write)
         if self.config.stage == "working":
             refresh_selected_documents(self.config, self.collection_config, docs, write=write)
         diagnostics["warning_count"] = len(self.warnings)
@@ -308,7 +311,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
         manage_manifest_payload: dict[str, Any],
         item_payloads: dict[str, dict[str, Any]],
         *,
-        target_doc_ids: list[str] | None = None,
+        stale_item_ids: list[str],
     ) -> dict[str, Any]:
         """Compare selected payloads and confine targeted removals to selected IDs."""
         manifest_text = json_text(manifest_payload)
@@ -320,14 +323,6 @@ class CollectionDocsBuilder(DocsDataBuilder):
             item_text_by_id[doc_id] = text
             if read_text(self.items_dir / f"{doc_id}.json") != text:
                 changed_item_ids.append(doc_id)
-        existing_item_ids = (
-            self.existing_doc_payload_ids(self.items_dir)
-            if target_doc_ids is None
-            else [doc_id for doc_id in target_doc_ids if (self.items_dir / f"{doc_id}.json").is_file()]
-        )
-        stale_item_ids = set(existing_item_ids) - set(item_payloads)
-        if target_doc_ids is not None:
-            stale_item_ids &= set(target_doc_ids)
         return {
             "manifest_write": read_text(self.output_dir / "manifest.json") != manifest_text,
             "manifest_text": manifest_text,

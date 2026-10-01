@@ -95,9 +95,16 @@ class DocsDataBuilder(
         if self.targeted_build:
             self.validate_targeted_build_prerequisites(docs, target_doc_ids)
         semantic_tokens_by_doc: dict[str, list[dict[str, Any]]] = {}
-        prepare_related_links(self, docs)
-
         docs_for_item_build = [doc for doc in docs if doc.doc_id in target_doc_ids]
+        stale_item_ids = self.stale_doc_payload_ids(
+            [doc.doc_id for doc in docs_for_item_build],
+            target_doc_ids=target_doc_ids if self.targeted_build else None,
+        )
+        links_plan = prepare_document_links(self, docs, target_doc_ids, stale_item_ids)
+        related_records = {}
+        links_build = build_document_links(self, links_plan, write=write, related_records=related_records)
+        prepare_related_links(self, docs, related_records)
+
         item_payloads = {
             doc.doc_id: self.item_entry(
                 doc,
@@ -134,10 +141,9 @@ class DocsDataBuilder(
             recent_payload,
             item_payloads,
             semantic_token_payloads,
+            stale_item_ids=stale_item_ids,
             backlinks_payload=backlinks_payload,
-            target_doc_ids=target_doc_ids if self.targeted_build else None,
         )
-        links_plan = prepare_document_links(self, docs, target_doc_ids, write_plan["stale_item_ids"])
         diagnostics = self.diagnostics_payload(
             docs=docs,
             write_plan=write_plan,
@@ -160,7 +166,6 @@ class DocsDataBuilder(
                 semantic_token_payloads,
                 write_plan,
             )
-        links_build = build_document_links(self, links_plan, write=write)
         if self.config.stage == "working":
             refresh_selected_documents(self.config, self.config, docs_for_item_build, write=write)
         elif write:
