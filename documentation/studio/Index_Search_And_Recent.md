@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261001-203710-09959e
 title: Index Search And Recent
 added_date: "2026-10-01 20:37:10"
-last_updated: "2026-10-01 22:32:33"
+last_updated: "2026-10-01 22:42:48"
 summary: Share incremental sidebar tracking across document navigation, then move Search and Recent into retained Index panel views without index or document reloads on return.
 ui_status: done
 parent_id: d-20260428-000000-f5ff18
@@ -171,6 +171,12 @@ Record: bounded final review completed on 2026-10-01 with no remaining blocking 
 Gate: the complete outcome and user closeout acceptance are recorded, with public narrow-screen access assigned to a separate review. Reuse accepted evidence; closeout bookkeeping does not trigger another rebuild or test run. Publish, deployment, commit and push remain separately requested actions, and delivery-record deletion requires approval.
 
 Record: closed on 2026-10-01 after the user accepted the delivery and explicitly assigned narrow-screen access to a separate review. Durable documentation transfer is complete. Retain this completed delivery record and the existing static/review evidence. Closeout changed only this documentation; no verification rerun, rebuild, publication, commit or push was needed.
+
+## Index Actions Checkbox Correction
+
+After closeout on 2026-10-01, the user reported that Index Actions did not reveal checkboxes. Source review traced the selection toggle and gutter projection, then identified the new tree scroll boundary clipping the existing negatively positioned gutters. The Manage stylesheet now reserves root-list space inside that boundary for checkboxes and their focus rings; nested indentation and selection/navigation owners retain their existing behavior.
+
+The bounded final diff and CSS ownership review found no blocking source findings, and `git diff --check` passed. This stylesheet is local-only and excluded from the public projection inventory, so no projection, site validation, tests, browser checks or rebuilds were needed. User visual confirmation of this correction remains pending; narrow-screen access remains the separate review below.
 
 ## Completion Criteria
 

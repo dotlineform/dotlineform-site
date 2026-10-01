@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260331-000000-c313fd
 title: Runtime
 added_date: "2026-03-31 00:00:00"
-last_updated: "2026-10-01 21:46:01"
+last_updated: "2026-10-01 22:42:48"
 summary: Public, manage, and review execution paths; browser/server authority boundaries; extension method; rationale; and known weak spots.
 parent_id: d-20260424-000000-50b63f
 ---
@@ -35,7 +35,7 @@ The shared [focus-mode owner](../../docs-viewer/runtime/js/shared/docs-viewer-fo
 
 [Toolbar Icons](Toolbar_Icons.md) owns the reusable mask helper, independent artwork-size and button-size tokens, button states, artwork classes and extension method. The selected reader, management, source-editor, content-detail and report toolbars, collection list/detail controls, toolbar menus, index header and Info close control use this foundation; the Shared Icons mapping records their artwork and visual-review status.
 
-Manage shows its Actions controls in the top row. Index Actions and Position occupy the second Index row and remain visible but disabled while Search or Recent results are active; tree selection exits on leaving the tree. Collection Actions shares the top row with the other document and collection actions. The public reader has no management controls.
+Manage shows its Actions controls in the top row. Index Actions and Position occupy the second Index row and remain visible but disabled while Search or Recent results are active; tree selection exits on leaving the tree. The Manage stylesheet reserves space inside the tree's scroll area for selection checkboxes and their focus rings. Collection Actions shares the top row with the other document and collection actions. The public reader has no management controls.
 
 “Shared” does not mean public. A module is part of the public surface only when the public entrypoint imports it or a public-safe lazy path can reach it.
 

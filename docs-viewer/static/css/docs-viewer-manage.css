@@ -198,6 +198,11 @@
   left: auto;
 }
 
+.docsViewer__nav > .docsViewer__navList{
+  /* Keep selection gutters and their focus rings inside the nav scrollport. */
+  padding-inline-start: 1.15rem;
+}
+
 .docsViewer__navItem{
   position: relative;
 }
