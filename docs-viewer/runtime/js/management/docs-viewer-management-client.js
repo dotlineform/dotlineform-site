@@ -202,6 +202,10 @@ export function readManagedDocSource(target, options) {
   return fetchManagementJson("/docs/source?" + targetQuery(target), "GET", undefined, options);
 }
 
+export function readManagedDocSourceContext(target, payload, options) {
+  return fetchManagementJson("/docs/source/context", "POST", targetPayload(target, payload), options);
+}
+
 export function readManagedDocMetadata(target, options) {
   return fetchManagementJson("/docs/metadata?" + targetQuery(target), "GET", undefined, options);
 }

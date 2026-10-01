@@ -147,9 +147,6 @@ export function startDocsViewerRuntime(options) {
   var documentIndex = null;
   var documentViewCoordinator = null;
   var activeSourceEditorContextAdapter = null;
-  var activeSourceEditorInfoUnsubscribe = null;
-  var sourceEditorInfoRequest = 0;
-  var sourceEditorInfoViewId = "";
   var recentControlLabel = "Recent";
   var latestCollectionReportGeneration = 0;
   var latestCollectionReportState = {
@@ -198,7 +195,6 @@ export function startDocsViewerRuntime(options) {
     if (controller && typeof controller.publishCollectionReportState === "function") {
       controller.publishCollectionReportState(latestCollectionReportState);
     }
-    if (documentViewCoordinator) documentViewCoordinator.updateInfoPanel();
     renderMainViewControls();
   }
 
@@ -282,18 +278,6 @@ export function startDocsViewerRuntime(options) {
   mainViewControlOwners.set("bookmark", function () {
     if (bookmarkController) bookmarkController.handleControl();
   });
-  mainViewControlOwners.set("info", function () {
-    if (!documentViewCoordinator) return;
-    if (
-      activeSourceEditorContextAdapter
-      && !documentViewCoordinator.isInfoOpen()
-      && sourceEditorInfoViewId
-    ) {
-      documentViewCoordinator.openInfoView(sourceEditorInfoViewId);
-      return;
-    }
-    documentViewCoordinator.handleInfoControl();
-  });
   if (contentDetailBackControlId) {
     mainViewControlOwners.set(contentDetailBackControlId, function () {
       if (!documentViewCoordinator) return;
@@ -345,7 +329,6 @@ export function startDocsViewerRuntime(options) {
     buildTrail: buildTrail,
     collectionProvider: collectionProvider,
     documentIndex: appSession.domains.documentIndex,
-    infoPanelDefaultViewByDocumentMode: settings.infoPanelDefaultViewByDocumentMode,
     infoPanelRefs: infoPanelRefs,
     managedDocumentContext: function () { return latestCollectionReportState; },
     mount: content,
@@ -502,7 +485,6 @@ export function startDocsViewerRuntime(options) {
       setStatus: statusController.setStatus,
       startBusy: statusController.startBusy
     },
-    updateInfoPanel: documentViewCoordinator.updateInfoPanel,
     viewerBaseUrl: function () { return viewerBaseUrl; },
     viewerPathname: function () { return viewerPathname; },
     window: window
@@ -825,57 +807,18 @@ export function startDocsViewerRuntime(options) {
   }
 
   function sourceEditorServices() {
-    function clearInfoSubscription() {
-      sourceEditorInfoRequest += 1;
-      if (typeof activeSourceEditorInfoUnsubscribe === "function") {
-        activeSourceEditorInfoUnsubscribe();
-      }
-      activeSourceEditorInfoUnsubscribe = null;
-      sourceEditorInfoViewId = settings.infoPanelDefaultViewByDocumentMode["markdown-source"];
-    }
-
-    function routeInfoView(adapter) {
-      var resolver = settings.sourceEditorInfoViewResolver;
-      if (typeof resolver !== "function" || !adapter) return;
-      var requestId = ++sourceEditorInfoRequest;
-      Promise.resolve(resolver(adapter)).then(function (viewId) {
-        var resolvedViewId = String(viewId || "").trim() || settings.infoPanelDefaultViewByDocumentMode["markdown-source"];
-        if (requestId !== sourceEditorInfoRequest || adapter !== activeSourceEditorContextAdapter) return;
-        sourceEditorInfoViewId = resolvedViewId;
-        if (!documentViewCoordinator) return;
-        documentViewCoordinator.renderInfoToggle();
-        if (!documentViewCoordinator.isInfoOpen()) return;
-        if (documentViewCoordinator.activeInfoViewId() === resolvedViewId) {
-          documentViewCoordinator.updateInfoPanel();
-        } else {
-          documentViewCoordinator.openInfoView(resolvedViewId);
-        }
-      });
-    }
-
     return {
-      openMetadataPanel: function () {
-        if (!activeSourceEditorContextAdapter) return;
-        activeSourceEditorContextAdapter.selectMetadataContext();
-        documentViewCoordinator.openInfoView(settings.infoPanelDefaultViewByDocumentMode["markdown-source"]);
-      },
       localFolderLinksCapability: function () {
         var capabilities = appSession.domains.management.managementCapabilities;
         return capabilities ? capabilities.local_folder_links || null : null;
       },
       clearActiveSourceEditorContextAdapter: function (adapter) {
         if (adapter && activeSourceEditorContextAdapter !== adapter) return;
-        clearInfoSubscription();
         activeSourceEditorContextAdapter = null;
-        if (documentViewCoordinator) {
-          documentViewCoordinator.closeInfoIfOpen();
-          documentViewCoordinator.renderInfoToggle();
-        }
       },
       getActiveSourceEditorContextAdapter: function () {
         return activeSourceEditorContextAdapter;
       },
-      getInfoViewId: function () { return sourceEditorInfoViewId; },
       projectMainViewControlState: function (controlId, controlState) {
         projectMainViewControlState("source-editor", controlId, controlState);
       },
@@ -885,20 +828,8 @@ export function startDocsViewerRuntime(options) {
         ? settings.sourceEditorActionControlIds.slice()
         : [],
       setActiveSourceEditorContextAdapter: function (adapter) {
-        clearInfoSubscription();
         activeSourceEditorContextAdapter = adapter || null;
-        if (
-          activeSourceEditorContextAdapter
-          && typeof activeSourceEditorContextAdapter.onSelectionChange === "function"
-        ) {
-          activeSourceEditorInfoUnsubscribe = activeSourceEditorContextAdapter.onSelectionChange(
-            function () {
-              routeInfoView(activeSourceEditorContextAdapter);
-            }
-          );
-        }
-        routeInfoView(activeSourceEditorContextAdapter);
-        if (documentViewCoordinator) documentViewCoordinator.renderInfoToggle();
+        if (documentViewCoordinator) documentViewCoordinator.closeInfoIfOpen();
       },
       setStatus: statusController.setStatus,
       startBusy: statusController.startBusy
@@ -914,7 +845,6 @@ export function startDocsViewerRuntime(options) {
 
   function renderBookmarkToggle() {
     renderBookmarkControl();
-    if (documentViewCoordinator) documentViewCoordinator.renderInfoToggle();
   }
 
   function renderBookmarkControl() {
@@ -1009,27 +939,23 @@ export function startDocsViewerRuntime(options) {
     documentViewCoordinator.showRenderedDocument(documentController.hideDocPane, {
       reason: "document-navigation"
     });
-    documentViewCoordinator.updateInfoPanel();
   }
 
   function showSearchPane() {
     documentViewCoordinator.showView("search-results", documentController.showSearchPane, {
       reason: "document-navigation"
     });
-    documentViewCoordinator.updateInfoPanel();
   }
 
   function showRecentPane() {
     documentViewCoordinator.showView("recent-results", documentController.showRecentPane, {
       reason: "document-navigation"
     });
-    documentViewCoordinator.updateInfoPanel();
   }
 
   function renderPayload(doc, payload, hash) {
     documentViewCoordinator.showRenderedDocument(function () {
       documentController.renderPayload(doc, payload, hash);
-      documentViewCoordinator.updateInfoPanel();
     }, { reason: "document-navigation" });
   }
 
@@ -1043,21 +969,18 @@ export function startDocsViewerRuntime(options) {
   function handleMissingDoc() {
     documentViewCoordinator.showRenderedDocument(function () {
       documentController.handleMissingDoc();
-      documentViewCoordinator.updateInfoPanel();
     }, { reason: "document-navigation" });
   }
 
   function renderDocLoadingState(doc) {
     documentViewCoordinator.showRenderedDocument(function () {
       documentController.renderDocLoadingState(doc);
-      documentViewCoordinator.updateInfoPanel();
     }, { reason: "document-navigation" });
   }
 
   function handlePayloadError(error) {
     documentViewCoordinator.showRenderedDocument(function () {
       documentController.handlePayloadError(error);
-      documentViewCoordinator.updateInfoPanel();
     }, { reason: "document-navigation" });
   }
 

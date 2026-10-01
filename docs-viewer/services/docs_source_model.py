@@ -43,6 +43,7 @@ from docs_report_source import (
 
 
 FRONT_MATTER_PATTERN = re.compile(r"\A---\s*\n(.*?)\n---\s*\n?", re.DOTALL)
+STRICT_FRONT_MATTER_PATTERN = re.compile(r"\A---[ \t]*\r?\n(.*?)\r?\n---[ \t]*(?:\r?\n|$)", re.DOTALL)
 INTEGER_PATTERN = re.compile(r"^-?\d+$")
 SLUG_SEP_PATTERN = re.compile(r"[^a-z0-9]+")
 SAFE_PLAIN_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 .,&()/_'-]*$")
@@ -96,20 +97,37 @@ def parse_front_matter_value(raw_value: str) -> Any:
     return value
 
 
-def parse_source_text(raw: str, *, source_name: str = "source") -> tuple[Dict[str, Any], str]:
-    match = FRONT_MATTER_PATTERN.match(raw)
+def parse_source_text(raw: str, *, source_name: str = "source", strict: bool = False) -> tuple[Dict[str, Any], str]:
+    match = (STRICT_FRONT_MATTER_PATTERN if strict else FRONT_MATTER_PATTERN).match(raw)
     if not match:
-        if raw.startswith("---"):
+        if strict or raw.startswith("---"):
             raise ValueError(f"front matter could not be parsed in {source_name}")
         return {}, raw
 
     front_matter: Dict[str, Any] = {}
-    for line in match.group(1).splitlines():
+    for line_number, line in enumerate(match.group(1).splitlines(), start=2):
         stripped = line.strip()
-        if not stripped or stripped.startswith("#") or ":" not in stripped:
+        if not stripped or stripped.startswith("#"):
+            continue
+        if ":" not in stripped:
+            if strict:
+                raise ValueError(f"front matter line {line_number} is not a key/value pair in {source_name}")
             continue
         key, raw_value = stripped.split(":", 1)
-        front_matter[key.strip()] = parse_front_matter_value(raw_value)
+        key = key.strip()
+        if strict:
+            if not key or key in front_matter:
+                raise ValueError(f"front matter line {line_number} has a blank or duplicate key in {source_name}")
+            value = raw_value.strip()
+            if value.startswith(('"', "'")):
+                if len(value) < 2 or value[-1] != value[0]:
+                    raise ValueError(f"front matter line {line_number} has an unclosed quoted value in {source_name}")
+                if value[0] == '"':
+                    try:
+                        json.loads(value)
+                    except json.JSONDecodeError as error:
+                        raise ValueError(f"front matter line {line_number} has an invalid quoted value in {source_name}") from error
+        front_matter[key] = parse_front_matter_value(raw_value)
     body = raw[match.end():]
     return front_matter, body
 
@@ -184,13 +202,14 @@ def split_source_text(
     raw: str,
     *,
     source_name: str = "source",
+    strict: bool = False,
 ) -> tuple[str, Dict[str, Any], str]:
     """Return exact front-matter source, parsed metadata, and body."""
 
-    match = FRONT_MATTER_PATTERN.match(raw)
+    match = (STRICT_FRONT_MATTER_PATTERN if strict else FRONT_MATTER_PATTERN).match(raw)
     if not match:
         raise ValueError(f"front matter could not be parsed in {source_name}")
-    front_matter, body = parse_source_text(raw, source_name=source_name)
+    front_matter, body = parse_source_text(raw, source_name=source_name, strict=strict)
     return raw[: match.end()], front_matter, body
 
 

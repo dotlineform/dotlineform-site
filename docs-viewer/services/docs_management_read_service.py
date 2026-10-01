@@ -18,7 +18,7 @@ import docs_source_config_settings
 import docs_staged_media_service
 from docs_management_capabilities_service import capabilities_payload
 from docs_management_document_target import managed_document_metadata
-from docs_management_source_service import read_source_body
+from docs_management_source_service import read_source_document
 from docs_document_link_targets import read_document_link_targets
 from studio.shared.python.projects_directories import list_projects_directory
 
@@ -143,8 +143,8 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         return docs_source_config_settings.build_settings_contract(
             repo_root,
         )
-    if path == routes.SOURCE_BODY_PATH:
-        return read_source_body(repo_root, params)
+    if path == routes.SOURCE_PATH:
+        return read_source_document(repo_root, params)
     if path == routes.METADATA_PATH:
         target = {
             "doc_id": docs_api_query_value(params, "doc_id"),

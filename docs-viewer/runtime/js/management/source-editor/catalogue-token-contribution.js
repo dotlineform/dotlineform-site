@@ -2,36 +2,20 @@ import {
   catalogueTokenAtSelection,
   parseCatalogueTokens
 } from "./catalogue-token-parser.js";
-import {
-  loadSemanticTokenRegistry
-} from "./semantic-token-registry.js";
+import { sourceBodyStart } from "./source-buffer.js";
 
-export function createCatalogueTokenInfoViewResolver(options = {}) {
-  var registryPromise = null;
-  function loadRegistry() {
-    if (!registryPromise) {
-      registryPromise = loadSemanticTokenRegistry({ fetch: options.fetch });
-    }
-    return registryPromise;
-  }
-  return function (adapter) {
-    if (
-      !adapter
-      || typeof adapter.getBufferSnapshot !== "function"
-      || typeof adapter.getSelection !== "function"
-    ) return Promise.resolve("source-metadata");
-    if (adapter.isMetadataContext()) return Promise.resolve("source-metadata");
-    return loadRegistry()
-      .then(function (registry) {
-        var snapshot = adapter.getBufferSnapshot();
-        var selection = adapter.getSelection();
-        var tokens = parseCatalogueTokens(snapshot.value, { registry: registry });
-        return catalogueTokenAtSelection(tokens, selection)
-          ? "catalogue-token-info"
-          : "source-metadata";
-      })
-      .catch(function () {
-        return "source-metadata";
-      });
+/** Capture the corresponding body occurrence before opening a modal or doing asynchronous reads. */
+export function captureCatalogueTokenAction(adapter, selection, presentation) {
+  var snapshot = adapter.getBufferSnapshot();
+  var bodyStart = sourceBodyStart(snapshot.value);
+  var tokens = parseCatalogueTokens(snapshot.value.slice(bodyStart)).map(function (token) {
+    return Object.assign({}, token, { start: token.start + bodyStart, end: token.end + bodyStart });
+  });
+  var token = catalogueTokenAtSelection(tokens, selection);
+  if (token && token.presentation !== presentation) token = null;
+  return {
+    snapshot: snapshot,
+    token: token,
+    capture: token ? { start: token.start, end: token.end, text: token.raw, revision: snapshot.revision } : selection
   };
 }

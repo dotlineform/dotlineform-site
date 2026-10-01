@@ -21,7 +21,6 @@ from docs_management_document_target import (
     resolve_managed_document_collection,
     source_doc_from_path,
 )
-from docs_management_source_service import split_source_exact
 from docs_review_materialization import match_existing_review_package, publish_review_package
 from docs_document_packages.returned_common import (
     DOCS_REVIEW_CAPABILITY,
@@ -369,7 +368,7 @@ def validate_materialized_sources(source_records: list[dict[str, Any]]) -> list[
         filename = clean_text(record.get("filename"))
         expected_doc_id = clean_text(record.get("doc_id"))
         try:
-            _front_matter_source, front_matter, _source_body = split_source_exact(str(record.get("source_text") or ""))
+            _front_matter_source, front_matter, _source_body = source_model.split_source_text(str(record.get("source_text") or ""), strict=True)
         except ValueError as exc:
             issues.append(
                 issue(
@@ -592,7 +591,7 @@ def create_review_source_folder(
                         )
                     )
                     continue
-                _front_matter_source, _current_front_matter, body = split_source_exact(current_doc.source_text)
+                _front_matter_source, _current_front_matter, body = source_model.split_source_text(current_doc.source_text, strict=True)
             elif record.content_intent == CONTENT_INTENT_EMPTY_NEW:
                 body = ""
             else:

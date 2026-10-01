@@ -9,7 +9,7 @@ import shutil
 import tempfile
 from typing import Any, Iterable
 
-from docs_management_source_service import split_source_exact
+from docs_source_model import split_source_text
 from docs_review_build import build_review_package
 
 
@@ -55,7 +55,7 @@ def _read_manifest(path: Path) -> dict[str, Any]:
 
 def _source_identity(source_text: str) -> tuple[dict[str, Any], str]:
     try:
-        _front_matter_source, front_matter, body = split_source_exact(source_text)
+        _front_matter_source, front_matter, body = split_source_text(source_text, strict=True)
     except ValueError as exc:
         raise ValueError("existing review package source is invalid") from exc
     identity_front_matter = dict(front_matter)

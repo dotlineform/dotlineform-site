@@ -12,7 +12,7 @@ from typing import Any
 
 from docs_import_document_package_content import duplicate_front_matter_fields
 from docs_management_document_target import resolve_managed_document_collection
-from docs_management_source_service import split_source_exact
+from docs_source_model import split_source_text
 import docs_review_packages
 from docs_document_packages.provenance import INVALID_PROVENANCE_MESSAGE
 from docs_document_packages.returned_common import RETURN_IMPORT_CAPABILITY
@@ -173,8 +173,8 @@ def _source_record(path: Path) -> dict[str, Any]:
             + ", ".join(duplicates),
         )
     try:
-        _front_matter_source, front_matter, source_body = split_source_exact(
-            source_text,
+        _front_matter_source, front_matter, source_body = split_source_text(
+            source_text, strict=True,
         )
     except ValueError as exc:
         raise ValueError(

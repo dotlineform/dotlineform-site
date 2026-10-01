@@ -64,9 +64,6 @@ import {
   createCatalogueMediaLinkControlHandlers
 } from "./source-editor/catalogue-media-link.js";
 import {
-  createCatalogueTokenInfoViewResolver
-} from "./source-editor/catalogue-token-contribution.js";
-import {
   DIRECTIVE_ACTIONS_CONTROL_ID,
   createDirectiveActionsMainViewControlHandlers,
   directiveActionsControlRenderer
@@ -149,9 +146,6 @@ startDocsViewerManageApp({
       }
     )
   ),
-  infoPanelDefaultViewByDocumentMode: {
-    "markdown-source": "source-metadata"
-  },
   inlineMermaidAdapter: docsViewerInlineMermaidAdapter,
   themedDiagramAdapter: themedDiagramAdapter,
   mainViewControlHandlerContributions: Object.assign(
@@ -171,6 +165,5 @@ startDocsViewerManageApp({
     DOCUMENT_LINK_CONTROL_ID,
     DIRECTIVE_ACTIONS_CONTROL_ID
   ],
-  sourceEditorInfoViewResolver: createCatalogueTokenInfoViewResolver(),
   tableDetailAdapter: managedTableDetailAdapter
 });

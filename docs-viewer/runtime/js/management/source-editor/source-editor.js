@@ -6,14 +6,20 @@ import {
   normalizeManagedDocumentTarget
 } from "../docs-viewer-management-document-target.js";
 import { localFolderPasteReplacement } from "./local-folder-links.js";
-import { createSourceEditorTokenDrafts } from "./source-editor-token-drafts.js";
+import { sourceBodyStart } from "./source-buffer.js";
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
 }
 
-function normalizeBody(value) {
+function normalizeSource(value) {
   return String(value == null ? "" : value).replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+}
+
+function responseMatchesTarget(payload, target) {
+  var returned = { doc_id: payload && payload.doc_id };
+  if (payload && Object.prototype.hasOwnProperty.call(payload, "collection")) returned.collection = payload.collection;
+  return managedDocumentTargetsEqual(returned, target);
 }
 
 function setHidden(node, hidden) {
@@ -59,7 +65,7 @@ function renderEditorShell(context, state) {
   textarea.className = "docsViewerSourceEditor__textarea";
   textarea.spellcheck = false;
   textarea.wrap = "soft";
-  textarea.setAttribute("aria-label", "Markdown source body");
+  textarea.setAttribute("aria-label", "Complete Markdown source");
 
   editor.append(textarea);
   root.append(dirty, status, editor);
@@ -79,11 +85,7 @@ function setStatus(state, message, isError) {
 }
 
 function dirtyNow(state) {
-  return normalizeBody(state.textarea ? state.textarea.value : "") !== state.lastCleanBody
-    || state.tokenDrafts.isDirty()
-    || ["title", "summary"].some(function (field) {
-      return state.metadataDraft[field] !== state.lastCleanMetadata[field];
-    });
+  return normalizeSource(state.textarea ? state.textarea.value : "") !== state.lastCleanSource;
 }
 
 function projectDirty(state) {
@@ -111,14 +113,6 @@ function setBusy(state, busy) {
   state.busy = Boolean(busy);
   if (state.textarea) state.textarea.readOnly = state.busy;
   projectDirty(state);
-  state.sessionListeners.forEach(function (listener) { listener(); });
-}
-
-function emitSelectionChange(state) {
-  if (!state.selectionListeners) return;
-  state.selectionListeners.forEach(function (listener) {
-    listener();
-  });
 }
 
 function sourceSelection(state) {
@@ -164,12 +158,14 @@ function replaceCapturedRange(state, capture, value, selectionMode) {
 }
 
 function createSourceEditorContextAdapter(state) {
-  return {
+  function isCurrent() { return state.sourceEditorAdapter === adapter && state.loaded && Boolean(state.textarea); }
+  var adapter = {
+    isCurrent: isCurrent,
     captureSelection: function () {
       return Object.assign(sourceSelection(state), { revision: state.bufferRevision });
     },
     focus: function () {
-      if (state.textarea) state.textarea.focus();
+      if (isCurrent()) state.textarea.focus();
     },
     getBufferSnapshot: function () {
       return {
@@ -180,35 +176,13 @@ function createSourceEditorContextAdapter(state) {
     getDocumentTarget: function () {
       return state.target ? Object.assign({}, state.target) : null;
     },
-    getDocumentSubject: function () {
-      return state.subject ? Object.assign({}, state.subject) : null;
-    },
-    /** Views write each input event into the session, independently of their mounts. */
-    getMetadataDraft: function () {
-      return Object.assign({}, state.metadataDraft);
-    },
-    selectMetadataContext: function () { state.metadataContext = true; emitSelectionChange(state); },
-    isMetadataContext: function () { return Boolean(state.metadataContext); },
-    getSessionState: function () { return { loaded: state.loaded, busy: state.busy }; },
-    onSessionChange: function (listener) {
-      state.sessionListeners.add(listener);
-      return function () { state.sessionListeners.delete(listener); };
-    },
-    getTokenDraft: function (token, capture, registry) {
-      return state.tokenDrafts.get(token, capture, registry);
-    },
-    updateTokenDraft: function (draft, values) {
-      if (state.busy || !state.loaded) return false;
-      draft.values = values;
-      projectDirty(state);
-      return true;
-    },
-    removeTokenDraft: function (draft) { state.tokenDrafts.remove(draft); projectDirty(state); },
-    setMetadataField: function (field, value) {
-      if (!state.loaded || state.busy || !["title", "summary"].includes(field)) return false;
-      state.metadataDraft[field] = String(value == null ? "" : value);
-      projectDirty(state);
-      return true;
+    readDocumentSubject: async function (snapshot) {
+      if (!isCurrent()) throw new Error("The Source editor was replaced.");
+      var target = adapter.getDocumentTarget();
+      var payload = await state.collectionProvider.readSourceContext(target, { source_text: snapshot.value });
+      if (!isCurrent() || snapshot.revision !== state.bufferRevision
+        || !responseMatchesTarget(payload, target)) throw new Error("The Source context changed.");
+      return payload.subject;
     },
     readCatalogueMediaTargets: function () {
       return state.collectionProvider.readCatalogueMediaTargets();
@@ -232,15 +206,8 @@ function createSourceEditorContextAdapter(state) {
     getSelection: function () {
       return sourceSelection(state);
     },
-    onSelectionChange: function (listener) {
-      if (typeof listener !== "function") return function () {};
-      state.selectionListeners.add(listener);
-      return function () {
-        state.selectionListeners.delete(listener);
-      };
-    },
     replaceSelection: function (value) {
-      if (!state.textarea || !state.loaded || state.saving) return false;
+      if (!isCurrent() || state.saving) return false;
       var selection = sourceSelection(state);
       state.textarea.setRangeText(String(value || ""), selection.start, selection.end, "end");
       state.textarea.dispatchEvent(new Event("input", { bubbles: true }));
@@ -248,26 +215,27 @@ function createSourceEditorContextAdapter(state) {
       return true;
     },
     replaceCapturedSelection: function (capture, value) {
-      return replaceCapturedRange(state, capture, value, "end");
+      return isCurrent() && replaceCapturedRange(state, capture, value, "end");
     },
     replaceCapturedRange: function (capture, value, selectionMode) {
-      return replaceCapturedRange(state, capture, value, selectionMode);
+      return isCurrent() && replaceCapturedRange(state, capture, value, selectionMode);
     },
     selectCapturedRange: function (capture) {
-      var range = capturedRangeIsCurrent(state, capture);
+      var range = isCurrent() && capturedRangeIsCurrent(state, capture);
       if (!range) return false;
       state.textarea.setSelectionRange(range.start, range.end);
       state.textarea.focus();
-      emitSelectionChange(state);
       return true;
     },
     setStatus: function (message, isError) {
       setStatus(state, message, isError);
     }
   };
+  return adapter;
 }
 
 function loadSource(context, state) {
+  var adapter = state.sourceEditorAdapter;
   var provider = context.collectionProvider || {};
   if (typeof provider.readSource !== "function") {
     setStatus(state, "Markdown source editing is unavailable on this route.", true);
@@ -278,6 +246,7 @@ function loadSource(context, state) {
   setStatus(state, "Loading source...", false);
   return provider.readSource(state.target)
     .then(function (payload) {
+      if (state.sourceEditorAdapter !== adapter) return null;
       var responseTarget = {
         doc_id: cleanString(payload && payload.doc_id)
       };
@@ -287,23 +256,13 @@ function loadSource(context, state) {
       if (!managedDocumentTargetsEqual(responseTarget, state.target)) {
         throw new Error("Source service returned a different managed document target.");
       }
-      if (!payload.metadata || typeof payload.metadata !== "object" || Array.isArray(payload.metadata)
-        || payload.metadata.doc_id !== state.target.doc_id
-        || typeof payload.source_front_matter !== "string" || typeof payload.source_body !== "string") {
+      if (typeof payload.source_text !== "string") {
         throw new Error("Source service did not return the complete document.");
       }
-      state.frontMatterSource = payload.source_front_matter;
-      state.metadataDraft = Object.assign({}, payload.metadata, {
-        title: String(payload.metadata.title == null ? "" : payload.metadata.title),
-        summary: String(payload.metadata.summary == null ? "" : payload.metadata.summary)
-      });
-      state.lastCleanMetadata = Object.assign({}, state.metadataDraft);
-      state.lastCleanBody = normalizeBody(payload.source_body);
-      state.previousBody = state.lastCleanBody;
-      state.subject = payload.subject;
+      state.lastCleanSource = normalizeSource(payload.source_text);
       state.loaded = true;
       if (state.textarea) {
-        state.textarea.value = state.lastCleanBody;
+        state.textarea.value = state.lastCleanSource;
         state.textarea.setSelectionRange(0, 0);
         state.textarea.focus();
       }
@@ -313,10 +272,11 @@ function loadSource(context, state) {
       return payload;
     })
     .catch(function (error) {
+      if (state.sourceEditorAdapter !== adapter) return;
       setStatus(state, error && error.message ? error.message : "Failed to load source.", true);
     })
     .finally(function () {
-      setBusy(state, false);
+      if (state.sourceEditorAdapter === adapter) setBusy(state, false);
     });
 }
 
@@ -324,33 +284,18 @@ function saveSource(context, state) {
   var provider = context.collectionProvider || {};
   var services = context.sourceEditorServices || {};
   if (!state.loaded || state.busy || typeof provider.writeSource !== "function") return Promise.resolve(false);
-  if (!cleanString(state.metadataDraft.title)) {
-    setStatus(state, "Enter a title.", true);
-    return Promise.resolve(false);
-  }
-
   setBusy(state, true);
   state.saving = true;
   setStatus(state, "Saving doc...", false);
-  var snapshot = state.sourceEditorAdapter.getBufferSnapshot();
-  return state.tokenDrafts.prepare(snapshot, state.sourceEditorAdapter).then(function (body) {
-    return provider.writeSource(state.target, {
-      source_front_matter: state.frontMatterSource,
-      source_body: normalizeBody(body),
-      metadata: { title: state.metadataDraft.title, summary: state.metadataDraft.summary }
-    });
-  })
+  var adapter = state.sourceEditorAdapter;
+  return provider.writeSource(state.target, { source_text: normalizeSource(state.textarea.value) })
     .then(function (payload) {
-      state.frontMatterSource = payload.source_front_matter;
-      state.metadataDraft = Object.assign({}, payload.metadata, {
-        title: String(payload.metadata.title == null ? "" : payload.metadata.title),
-        summary: String(payload.metadata.summary == null ? "" : payload.metadata.summary)
-      });
-      state.lastCleanMetadata = Object.assign({}, state.metadataDraft);
-      state.lastCleanBody = normalizeBody(payload.source_body);
-      state.previousBody = state.lastCleanBody;
-      state.tokenDrafts.clear();
-      if (state.textarea) state.textarea.value = state.lastCleanBody;
+      if (state.sourceEditorAdapter !== adapter) return true;
+      if (!responseMatchesTarget(payload, state.target) || typeof payload.source_text !== "string") {
+        throw new Error("Source service did not return the saved document.");
+      }
+      state.lastCleanSource = normalizeSource(payload.source_text);
+      if (state.textarea) state.textarea.value = state.lastCleanSource;
       state.saving = false;
       setBusy(state, false);
       setStatus(state, payload.summary_text || "Doc saved.", false);
@@ -365,13 +310,16 @@ function saveSource(context, state) {
       return true;
     })
     .catch(function (error) {
+      if (state.sourceEditorAdapter !== adapter) return false;
       var message = error && error.message ? error.message : "Save failed.";
       setStatus(state, message, true);
       return false;
     })
     .finally(function () {
-      state.saving = false;
-      setBusy(state, false);
+      if (state.sourceEditorAdapter === adapter) {
+        state.saving = false;
+        setBusy(state, false);
+      }
     });
 }
 
@@ -391,9 +339,7 @@ async function confirmNavigation(context, state) {
   if (!dirtyNow(state)) return true;
   var confirmed = await openLeavePrompt(context.root || document.body);
   if (!confirmed) return false;
-  state.lastCleanBody = normalizeBody(state.textarea.value);
-  state.lastCleanMetadata = Object.assign({}, state.metadataDraft);
-  state.tokenDrafts.clear();
+  state.lastCleanSource = normalizeSource(state.textarea.value);
   projectDirty(state);
   return true;
 }
@@ -435,19 +381,13 @@ function bindEvents(context, state) {
     : [];
   state.onInput = function () {
     state.bufferRevision += 1;
-    state.tokenDrafts.reconcile(state.previousBody, state.textarea.value, state.bufferRevision);
-    state.previousBody = state.textarea.value;
     projectDirty(state);
-    emitSelectionChange(state);
-  };
-  state.onSelectionChange = function () {
-    state.metadataContext = false;
-    emitSelectionChange(state);
   };
   state.onPaste = function (event) {
     var capability = typeof services.localFolderLinksCapability === "function" ? services.localFolderLinksCapability() : null;
     if (!state.loaded || state.busy || !capability || capability.authoring !== true || !capability.base_path) return;
     var selection = sourceSelection(state);
+    if (selection.start < sourceBodyStart(state.textarea.value)) return;
     var replacement = localFolderPasteReplacement({
       text: event.clipboardData ? event.clipboardData.getData("text/plain") : "",
       basePath: capability.base_path,
@@ -485,9 +425,6 @@ function bindEvents(context, state) {
   if (state.textarea) {
     state.textarea.addEventListener("input", state.onInput);
     state.textarea.addEventListener("paste", state.onPaste);
-    state.textarea.addEventListener("keyup", state.onSelectionChange);
-    state.textarea.addEventListener("mouseup", state.onSelectionChange);
-    state.textarea.addEventListener("select", state.onSelectionChange);
   }
   if (state.root) state.root.addEventListener("click", state.onClick);
   if (root && state.onToolbarSave) root.addEventListener("docs-viewer-source-editor-save", state.onToolbarSave);
@@ -501,11 +438,6 @@ function unbindEvents(context, state) {
   var root = context && context.root ? context.root : document;
   if (state.textarea && state.onInput) state.textarea.removeEventListener("input", state.onInput);
   if (state.textarea && state.onPaste) state.textarea.removeEventListener("paste", state.onPaste);
-  if (state.textarea && state.onSelectionChange) {
-    state.textarea.removeEventListener("keyup", state.onSelectionChange);
-    state.textarea.removeEventListener("mouseup", state.onSelectionChange);
-    state.textarea.removeEventListener("select", state.onSelectionChange);
-  }
   if (state.root && state.onClick) state.root.removeEventListener("click", state.onClick);
   if (root && state.onToolbarSave) root.removeEventListener("docs-viewer-source-editor-save", state.onToolbarSave);
   if (root && state.onToolbarAddImage) root.removeEventListener("docs-viewer-source-editor-add-image", state.onToolbarAddImage);
@@ -520,6 +452,9 @@ function restoreRenderedContent(context, state) {
   state.root.remove();
   context.mount.scrollTop = state.renderedScrollTop;
   state.root = null;
+  state.textarea = null;
+  state.loaded = false;
+  state.sourceEditorAdapter = null;
 }
 
 export function createDocsViewerSourceEditorMode() {
@@ -528,21 +463,13 @@ export function createDocsViewerSourceEditorMode() {
     saving: false,
     bufferRevision: 0,
     dirtyValue: false,
-    lastCleanBody: "",
-    lastCleanMetadata: {},
-    previousBody: "",
-    tokenDrafts: createSourceEditorTokenDrafts(),
-    sessionListeners: new Set(),
-    metadataDraft: {},
-    frontMatterSource: "",
+    lastCleanSource: "",
     loaded: false,
     collectionProvider: null,
     root: null,
     renderedScrollTop: 0,
-    selectionListeners: new Set(),
     sourceActionControlIds: [],
     status: null,
-    subject: null,
     target: null,
     textarea: null,
     projectMainViewControlState: null
@@ -555,14 +482,7 @@ export function createDocsViewerSourceEditorMode() {
       state.saving = false;
       state.bufferRevision = 0;
       state.dirtyValue = false;
-      state.lastCleanBody = "";
-      state.lastCleanMetadata = {};
-      state.previousBody = "";
-      state.tokenDrafts.clear();
-      state.metadataDraft = {};
-      state.metadataContext = false;
-      state.frontMatterSource = "";
-      state.subject = null;
+      state.lastCleanSource = "";
       state.loaded = false;
       state.collectionProvider = context.collectionProvider || null;
       state.renderedScrollTop = context.mount.scrollTop;
@@ -601,8 +521,6 @@ export function createDocsViewerSourceEditorMode() {
       if (typeof services.clearActiveSourceEditorContextAdapter === "function") {
         services.clearActiveSourceEditorContextAdapter(state.sourceEditorAdapter);
       }
-      state.selectionListeners.clear();
-      state.sessionListeners.clear();
       unbindEvents(context, state);
       restoreRenderedContent(context, state);
     },
@@ -611,8 +529,6 @@ export function createDocsViewerSourceEditorMode() {
       if (typeof services.clearActiveSourceEditorContextAdapter === "function") {
         services.clearActiveSourceEditorContextAdapter(state.sourceEditorAdapter);
       }
-      state.selectionListeners.clear();
-      state.sessionListeners.clear();
       unbindEvents(context, state);
       restoreRenderedContent(context, state);
     }

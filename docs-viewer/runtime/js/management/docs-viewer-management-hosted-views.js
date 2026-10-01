@@ -12,33 +12,7 @@ import {
 
 export function createDocsViewerManagementViewDefinitions() {
   return {
-    views: [
-      {
-        id: "source-metadata",
-        label: "Document metadata",
-        panel: "info",
-        appKinds: ["manage"],
-        features: ["source-editing"],
-        load: function () {
-          return import("./source-editor/source-metadata-view.js").then(function (module) {
-            return module.createSourceMetadataView();
-          });
-        }
-      },
-      {
-        id: "catalogue-token-info",
-        label: "Semantic token",
-        panel: "info",
-        appKinds: ["manage"],
-        features: ["source-editing"],
-        load: function () {
-          return import("./source-editor/catalogue-token-info-view.js")
-            .then(function (module) {
-              return module.createCatalogueTokenInfoView();
-            });
-        }
-      }
-    ],
+    views: [],
     modes: [{
       id: "markdown-source",
       features: ["source-editing"],
@@ -53,18 +27,6 @@ export function createDocsViewerManagementViewDefinitions() {
       }
     }],
     controls: [
-      {
-        id: "info",
-        actionId: "info",
-        label: "Source info",
-        ownerType: "view",
-        ownerViewId: "rendered-document",
-        modeIds: ["markdown-source"],
-        surfaceId: "main-view",
-        appKinds: ["manage"],
-        features: ["source-editing"],
-        renderer: "info-toggle"
-      },
       {
         id: "manage-import",
         actionId: DOCS_VIEWER_ACTION_IDS.IMPORT,

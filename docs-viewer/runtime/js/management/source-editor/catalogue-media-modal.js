@@ -5,7 +5,8 @@ import {
   readCatalogueTokenPresentation
 } from "./catalogue-media-support.js";
 import { collectSemanticTokenTargetMatches } from "./semantic-token-targets.js";
-import { parseCatalogueToken, serializeCatalogueImageToken, serializeCatalogueMediaToken } from "./catalogue-token-parser.js";
+import { serializeCatalogueImageToken, serializeCatalogueMediaToken } from "./catalogue-token-parser.js";
+import { captureCatalogueTokenAction } from "./catalogue-token-contribution.js";
 import { createCatalogueTargetPickerList } from "./catalogue-target-picker.js";
 import {
   bindCatalogueImageDerivedTitle, catalogueImagePresentationHtml,
@@ -28,6 +29,7 @@ function modalBody(searchQuery, linkText, imageMode) {
         '<span class="docsViewer__fieldLabel">Search Catalogue</span>' +
         '<input class="docsViewer__fieldInput" id="' + SEARCH_INPUT_ID + '" type="search" role="combobox" aria-autocomplete="list" aria-controls="' + RESULTS_ID + '" aria-expanded="false" autocomplete="off" spellcheck="false" value="' + escapeHtml(searchQuery) + '" disabled>' +
       "</label>" +
+      '<p class="muted small" data-role="document-subject-status" hidden></p>' +
       '<p class="docsViewerCatalogueTokenModal__searchStatus muted small" data-role="catalogue-search-status">Loading Catalogue…</p>' +
       '<div class="docsViewerCatalogueTargetPicker__results docsViewerCatalogueTokenModal__results" id="' + RESULTS_ID + '" role="listbox" aria-label="' + (imageMode ? "Catalogue Works" : "Catalogue Works and Galleries") + '" data-role="catalogue-results" tabindex="0" hidden></div>' +
       (imageMode ? catalogueImagePresentationHtml({ idPrefix: "docsViewerCatalogueImage" }) :
@@ -43,11 +45,10 @@ function modalBody(searchQuery, linkText, imageMode) {
 export function openCatalogueMediaModal(options = {}) {
   var imageMode = options.presentation === "image";
   var adapter = options.adapter;
-  var capture = options.capture;
-  var subject = adapter.getDocumentSubject();
-  var subjectTarget = catalogueDocumentSubjectTarget(subject);
-  var initialToken = !imageMode && parseCatalogueToken(capture && capture.text);
-  if (initialToken && initialToken.presentation !== "media") initialToken = null;
+  var action = captureCatalogueTokenAction(adapter, options.capture, imageMode ? "image" : "media");
+  var capture = action.capture;
+  var initialToken = action.token;
+  var subjectTarget = null;
   var selectionText = initialToken ? initialToken.title : selectedTextForCatalogueTitle(capture && capture.text);
   var state = { disposed: false, request: 0, list: null, support: null, target: null,
     linkDefault: "", showDerivedTitle: null, replaceDefaults: null,
@@ -55,12 +56,13 @@ export function openCatalogueMediaModal(options = {}) {
   return openDocsViewerManagementModal({
     root: options.root,
     restoreFocus: adapter && typeof adapter.focus === "function" ? { focus: function () { adapter.focus(); } } : null,
-    title: imageMode ? "Add Catalogue image" : "Add Media View link",
+    title: initialToken ? (imageMode ? "Edit Catalogue image" : "Edit Media View link")
+      : imageMode ? "Add Catalogue image" : "Add Media View link",
     size: "document",
     bodyHtml: modalBody(initialToken ? initialToken.targetType + ":" + initialToken.targetId : selectionText, selectionText, imageMode),
     focusSelector: "#" + SEARCH_INPUT_ID,
     actions: [
-      { role: "modal-primary", label: imageMode ? "Add image" : "Add link", disabled: true },
+      { role: "modal-primary", label: initialToken ? "Apply" : imageMode ? "Add image" : "Add link", disabled: true },
       { role: "modal-cancel", label: "Cancel" }
     ],
     onOpen: function (api) {
@@ -74,7 +76,7 @@ export function openCatalogueMediaModal(options = {}) {
       subjectCheckbox.checked = state.useDocumentSubject;
       if (modalRoot) modalRoot.id = imageMode ? "catalogue-image-add-modal" : "catalogue-media-link-modal";
       if (imageMode) {
-        hydrateCatalogueImagePresentation(api.host, {
+        hydrateCatalogueImagePresentation(api.host, initialToken || {
           useWorkTitleCaption: true, includeWorkMetadata: true, placement: "full", fillWidth: true
         });
         state.showDerivedTitle = bindCatalogueImageDerivedTitle(api.host);
@@ -94,6 +96,7 @@ export function openCatalogueMediaModal(options = {}) {
           state.showDerivedTitle(title);
           return;
         }
+        if (initialToken) return;
         linkInput.value = catalogueMediaLinkLabel(
           { title: title }, linkInput.value, { title: state.linkDefault }, Boolean(selectionText)
         );
@@ -184,8 +187,19 @@ export function openCatalogueMediaModal(options = {}) {
       }).catch(function (error) {
         if (!state.disposed) message(error.message || "Catalogue images are unavailable.", true);
       });
+      adapter.readDocumentSubject(action.snapshot).then(function (subject) {
+        if (state.disposed) return;
+        subjectTarget = catalogueDocumentSubjectTarget(subject);
+        subjectCheckbox.disabled = !subjectTarget || !state.support;
+      }).catch(function (error) {
+        if (state.disposed) return;
+        var note = api.host.querySelector('[data-role="document-subject-status"]');
+        note.textContent = "Document subject unavailable: " + error.message;
+        note.hidden = false;
+      });
     },
     onSubmit: async function (api) {
+      if (!adapter.isCurrent()) { api.setStatus("The Source editor was replaced. Cancel and try again."); return false; }
       if (!state.target) { api.setStatus("Choose a Catalogue target."); return false; }
       // Revalidate current media before writing source.
       var current = await readCatalogueTokenPresentation(adapter, state.target);

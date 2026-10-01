@@ -25,9 +25,9 @@ from docs_import_content import (  # noqa: E402
     CONTENT_INTENT_REPLACE,
     ImportContent,
 )
-from docs_management_source_service import (  # noqa: E402
+from docs_source_model import (  # noqa: E402
     STRICT_FRONT_MATTER_PATTERN,
-    split_source_exact,
+    split_source_text,
 )
 
 
@@ -175,7 +175,7 @@ def full_source_content(
             + ", ".join(duplicates)
         )
     try:
-        _front_matter_source, parsed_front_matter, body = split_source_exact(canonical)
+        _front_matter_source, parsed_front_matter, body = split_source_text(canonical, strict=True)
     except ValueError as exc:
         raise ValueError(f"record {record_index} canonical_markdown front matter is invalid: {exc}") from exc
     parsed_doc_id = clean_text(parsed_front_matter.get("doc_id"))

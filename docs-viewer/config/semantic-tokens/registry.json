@@ -6,21 +6,10 @@
       "schema_version": "docs_semantic_token_family_definition_v1",
       "key": "catalogue",
       "labels": {
-        "family": "Catalogue",
-        "info_view": "Catalogue token"
+        "family": "Catalogue"
       },
-      "occurrence_fields": [
-        {
-          "key": "title",
-          "label": "Title",
-          "required": true,
-          "editable": true,
-          "control": "text"
-        }
-      ],
-      "ui_contributions": {
-        "info_view": "catalogue-token-info"
-      },
+      "occurrence_fields": [],
+      "ui_contributions": {},
       "target_types": [
         {
           "key": "gallery",

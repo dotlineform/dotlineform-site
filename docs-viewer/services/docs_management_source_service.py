@@ -17,7 +17,11 @@ import docs_source_model as source_model  # noqa: E402
 from docs_management_context import DEFAULT_MARKDOWN_APP_ENV, log_event  # noqa: E402
 from docs_management_mutations import normalize_metadata_text, normalize_summary  # noqa: E402
 from docs_management_document_target import (  # noqa: E402
+    ManagedDocumentCollection,
+    ManagedDocumentTarget,
     managed_document_target_request,
+    normalize_managed_document_target,
+    resolve_managed_document_collection,
     resolve_managed_document_target,
 )
 from docs_workspace_config import path_label, require_document_authoring  # noqa: E402
@@ -25,8 +29,7 @@ from local_env import runtime_env  # noqa: E402
 from markdown_renderer import normalize_markdown_blank_lines  # noqa: E402
 from docs_publication_ignore import publication_ignore_path  # noqa: E402
 from docs_document_subjects import project_reader_subject  # noqa: E402
-
-STRICT_FRONT_MATTER_PATTERN = re.compile(r"\A---[ \t]*\r?\n(.*?)\r?\n---[ \t]*(?:\r?\n|$)", re.DOTALL)
+from docs_collection_customisations import collection_customisation_metadata_record  # noqa: E402
 
 
 def normalize_source_body(value: Any) -> str:
@@ -37,37 +40,13 @@ def normalize_source_body_for_write(value: Any) -> str:
     return normalize_markdown_blank_lines(normalize_source_body(value))
 
 
-def parse_front_matter_block(front_matter_text: str) -> Dict[str, Any]:
-    front_matter: Dict[str, Any] = {}
-    for line_number, line in enumerate(front_matter_text.splitlines(), start=1):
-        stripped = line.strip()
-        if not stripped or stripped.startswith("#"):
-            continue
-        if ":" not in stripped:
-            raise ValueError(f"front matter line {line_number} is not a key/value pair")
-        key, raw_value = stripped.split(":", 1)
-        key = key.strip()
-        if not key:
-            raise ValueError(f"front matter line {line_number} has a blank key")
-        front_matter[key] = source_model.parse_front_matter_value(raw_value)
-    return front_matter
-
-
-def split_source_exact(source_text: str) -> tuple[str, Dict[str, Any], str]:
-    match = STRICT_FRONT_MATTER_PATTERN.match(source_text)
-    if not match:
-        raise ValueError("existing source front matter could not be parsed")
-    front_matter = parse_front_matter_block(match.group(1))
-    return source_text[: match.end()], front_matter, source_text[match.end() :]
-
-
-def read_source_body(repo_root: Path, params: Dict[str, list[str]]) -> Dict[str, Any]:
+def read_source_document(repo_root: Path, params: Dict[str, list[str]]) -> Dict[str, Any]:
     """Load the complete source snapshot for one exact editor session."""
     request_target = managed_document_target_request({key: values[0] if values else "" for key, values in params.items()})
     resolved = resolve_managed_document_target(repo_root, request_target)
     target = resolved.document
     source_text = target.source_text
-    front_matter_source, front_matter, source_body = split_source_exact(source_text)
+    _, front_matter, _ = source_model.split_source_text(source_text, source_name=target.path.name, strict=True)
     existing_doc_id = str(front_matter.get("doc_id") or "").strip()
     if not existing_doc_id:
         raise ValueError("existing source front matter is missing doc_id")
@@ -76,10 +55,7 @@ def read_source_body(repo_root: Path, params: Dict[str, list[str]]) -> Dict[str,
     payload = {
         "ok": True,
         **resolved.request_target(),
-        "source_body": normalize_source_body(source_body),
-        "subject": project_reader_subject(front_matter),
-        "source_front_matter": front_matter_source,
-        "metadata": front_matter,
+        "source_text": source_text,
         "path": path_label(repo_root, target.path),
     }
     if resolved.collection:
@@ -87,13 +63,21 @@ def read_source_body(repo_root: Path, params: Dict[str, list[str]]) -> Dict[str,
     return payload
 
 
-def rewrite_session_metadata(front_matter_source: str, front_matter: Dict[str, Any], metadata: Dict[str, str]) -> str:
-    """Apply only the retained editor fields, preserving all other authored lines."""
+def normalize_source_metadata(front_matter_source: str, front_matter: Dict[str, Any]) -> str:
+    """Normalize Title/Summary without rewriting unrelated authored lines."""
     lines = front_matter_source.splitlines(keepends=True)
     newline = "\r\n" if lines[0].endswith("\r\n") else "\n"
-    for key, value in metadata.items():
+    for key in ("title", "summary"):
+        if key not in front_matter and key == "summary":
+            continue
+        raw_value = front_matter.get(key)
+        if not isinstance(raw_value, str):
+            raise ValueError(f"{key} must be a string")
         normalize = normalize_summary if key == "summary" else normalize_metadata_text
-        if value == normalize(front_matter.get(key)):
+        value = normalize(raw_value)
+        if key == "title" and not value:
+            raise ValueError("title is required")
+        if value and value == raw_value:
             continue
         pattern = re.compile(rf"^[ \t]*{key}[ \t]*:")
         indices = [index for index, line in enumerate(lines) if pattern.match(line)]
@@ -105,63 +89,84 @@ def rewrite_session_metadata(front_matter_source: str, front_matter: Dict[str, A
     return result if result.endswith("\n") else result + newline
 
 
-def save_source_document(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    """Validate and atomically persist the loaded session, without generation or revision checks.
-
-    The loaded front-matter snapshot preserves non-edited fields. Only Title and
-    Summary are editable here; the exact resolved target owns identity and collection.
-    The watcher observes the ordinary source write independently.
-    """
-    required = { "doc_id", "source_front_matter", "source_body", "metadata"}
+def source_candidate_target(body: Dict[str, Any]) -> Dict[str, str]:
+    """Accept one complete buffer with an independently declared fixed target."""
+    required = {"doc_id", "source_text"}
     if not required.issubset(body) or set(body) - required - {"collection"}:
-        raise ValueError("Source Save requires an exact target, loaded front matter, body and metadata")
-    if not isinstance(body["source_body"], str) or not isinstance(body["source_front_matter"], str):
-        raise ValueError("source_body and source_front_matter must be strings")
-    metadata = body["metadata"]
-    if not isinstance(metadata, dict) or set(metadata) != {"title", "summary"}:
-        raise ValueError("Source metadata must contain exactly title and summary")
-    if any(not isinstance(value, str) for value in metadata.values()):
-        raise ValueError("Source metadata values must be strings")
-    metadata = {"title": normalize_metadata_text(metadata["title"]), "summary": normalize_summary(metadata["summary"])}
-    if not metadata["title"]:
-        raise ValueError("title is required")
+        raise ValueError("Source requires an exact target and complete source_text")
+    if not isinstance(body["source_text"], str):
+        raise ValueError("source_text must be a string")
+    return normalize_managed_document_target(managed_document_target_request(body))
 
-    resolved = resolve_managed_document_target(repo_root, managed_document_target_request(body))
+
+def validate_source_candidate(
+    repo_root: Path,
+    target: Dict[str, str],
+    source_text: str,
+    resolved: ManagedDocumentCollection | ManagedDocumentTarget,
+) -> tuple[str, Dict[str, Any]]:
+    """Validate the buffer using already resolved identity and schema owners."""
     require_document_authoring(resolved.parent_config)
-    target = resolved.document
-    front_matter_source, front_matter, trailing_body = split_source_exact(body["source_front_matter"])
-    if trailing_body:
-        raise ValueError("source_front_matter must contain only the loaded front matter")
-    if front_matter.get("doc_id") != target.doc_id:
-        raise ValueError("loaded source doc_id does not match the requested document")
+    source_name = f"{target['doc_id']}.md"
+    front_matter_source, front_matter, source_body = source_model.split_source_text(
+        source_text, source_name=source_name, strict=True,
+    )
+    if front_matter.get("doc_id") != target["doc_id"]:
+        raise ValueError("source doc_id must match the mounted document")
     if "collection" in front_matter and front_matter["collection"] != resolved.collection:
-        raise ValueError("loaded source collection does not match the requested collection")
+        raise ValueError("source collection must match the mounted document collection")
     source_model.validate_document_status_front_matter(
         front_matter,
         collection_config=resolved.document_config,
-        source_name=target.path.name,
+        source_name=source_name,
     )
 
-    next_source_body = normalize_source_body_for_write(body["source_body"])
-    next_front_matter_source = rewrite_session_metadata(front_matter_source, front_matter, metadata)
+    next_source_body = normalize_source_body_for_write(source_body)
+    next_front_matter_source = normalize_source_metadata(front_matter_source, front_matter)
     next_source_text = source_model.rewrite_source_collection(next_front_matter_source + next_source_body, resolved.collection)
+    _, next_metadata, _ = source_model.split_source_text(next_source_text, source_name=source_name, strict=True)
+    # Collection customisations own Subject validity; common projection also rejects multiple declarations.
+    if resolved.collection:
+        collection_customisation_metadata_record(
+            resolved.document_config.collection_customisation, next_metadata, doc_id=target["doc_id"],
+        )
+    project_reader_subject(next_metadata)
+    source_model.parse_collection_document_report(
+        repo_root, resolved.parent_config, resolved.document_config,
+        next_source_text, source_name=source_name,
+    )
+    return next_source_text, next_metadata
+
+
+def read_source_context(repo_root: Path, body: Dict[str, Any]) -> Dict[str, Any]:
+    """Project validated unsaved authoring context without a write or browser parser."""
+    target = source_candidate_target(body)
+    resolved = resolve_managed_document_collection(repo_root, collection=target.get("collection"))
+    _, metadata = validate_source_candidate(repo_root, target, body["source_text"], resolved)
+    return {"ok": True, **target, "subject": project_reader_subject(metadata)}
+
+
+def save_source_document(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
+    """Persist one validated complete buffer; the watcher independently observes the write."""
+    request_target = source_candidate_target(body)
+    resolved = resolve_managed_document_target(repo_root, request_target)
+    next_source_text, _ = validate_source_candidate(repo_root, request_target, body["source_text"], resolved)
+    target = resolved.document
+    # Textareas normalize line endings; retain the loaded header's newline convention.
+    front_matter_source, _, source_body = source_model.split_source_text(next_source_text, strict=True)
+    original_first_line = target.source_text.splitlines(keepends=True)[0]
+    header_newline = "\r\n" if original_first_line.endswith("\r\n") else "\n"
+    next_source_text = normalize_source_body(front_matter_source).replace("\n", header_newline) + source_body
     source_changed = next_source_text != target.source_text
     if source_changed and not dry_run:
-        next_front_matter_source, next_metadata, _ = split_source_exact(next_source_text)
+        next_front_matter_source, next_metadata, next_source_body = source_model.split_source_text(next_source_text, strict=True)
         next_front_matter_source = source_model.rewrite_front_matter_source_timestamp(next_front_matter_source, next_metadata)
         next_source_text = next_front_matter_source + next_source_body
 
-    source_model.parse_collection_document_report(
-        repo_root, resolved.parent_config, resolved.document_config,
-        next_source_text, source_name=target.path.as_posix(),
-    )
-    saved_front_matter, saved_metadata, saved_body = split_source_exact(next_source_text)
     payload = {
         "ok": True,
         **resolved.request_target(),
-        "source_front_matter": saved_front_matter,
-        "metadata": saved_metadata,
-        "source_body": normalize_source_body(saved_body),
+        "source_text": next_source_text,
         "path": path_label(repo_root, target.path),
         "summary_text": (
             f"{'Would save' if dry_run else 'Saved'} {target.doc_id}."

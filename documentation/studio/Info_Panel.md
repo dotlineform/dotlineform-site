@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260623-000000-c99cef
 title: Info Panel
 added_date: "2026-06-23 00:00:00"
-last_updated: "2026-10-01 17:31:33"
+last_updated: "2026-10-01 17:58:55"
 parent_id: d-20260424-000000-50b63f
 
 ---
@@ -35,33 +35,23 @@ The panel does not fetch relationship records, collection manifests or neighbour
 The shared panel retains three focused owners:
 
 - `docs-viewer/runtime/js/shared/docs-viewer-info-panel-renderer.js` creates the shell and projects title, visibility and Close.
-- `docs-viewer/runtime/js/shared/docs-viewer-info-panel-controller.js` owns the detached reader capture, replacement, repeated-pin behavior, Close and live Source context.
+- `docs-viewer/runtime/js/shared/docs-viewer-info-panel-controller.js` owns the detached reader capture, replacement, repeated-pin behavior and Close.
 - `docs-viewer/runtime/js/shared/docs-viewer-info-panel-host.js` loads and mounts the chosen view, invalidating pending loads and shell updates after replacement or Close.
 
 `docs-viewer/runtime/js/shared/docs-viewer-related-links.js` owns pin mounting and the synchronous `related-links` hosted view. That view receives only the capture; it has no main-document subscription or service handles. It copies only the list, so the document heading and opening pin never appear inside the panel. Missing body content produces no placeholder.
 
 `docs-viewer/runtime/js/shared/docs-viewer-document-view-coordinator.js` wires pin mounts and document-mode transitions through these owners. Ordinary and collection-detail mounting provide explicit inputs; the app runtime only wires the callback. Public/Manage view registration makes reader capture available on those routes. Exports and Docs Review retain their static lists without the reader opening control.
 
-## Temporary Source Workflow
+## Source Boundary
 
-| Surface | Panel view | Shell title | Opening control |
-| --- | --- | --- | --- |
-| Rendered ordinary or collection document | `related-links`, captured | Captured document title | Section pin |
-| Source, no supported editable token selected | `source-metadata` | Document metadata | Source **i** or Edit document |
-| Source, supported editable token selected | `catalogue-token-info` | Semantic token | Source **i** or editing workflow |
+Entering Source closes and releases the reader capture. Source has no hosted metadata/token view, selection-driven panel routing or **i** control. Returning to rendered content leaves the reader panel closed until a non-empty related section's pin is used.
 
-Entering Source closes and releases the reader capture. Source retains its live metadata/token panel and **i** control for the current authoring session. Returning to rendered content closes the authoring panel and leaves the reader panel closed until a pin is used.
-
-`source-metadata` edits only Title and Summary. The source session preserves other front matter, including date, status and placement fields. Source Save does not move or reparent the document.
-
-`catalogue-token-info` edits an existing occurrence's presentation fields while retaining its immutable target. Pending values and dirty state belong to the Source session and survive view changes or panel closure. **Add Media View link** and **Add Catalogue Image** retain management modals for discovery and insertion into the captured Source buffer.
-
-One session owns metadata, body, pending token values, dirty state, validation and discard. Its single **Save** validates and persists the combined source; panel views have no independent Save. [Source Editor Scripts](Source_Editor_Scripts.md) owns authoring integration and [Source Editor Endpoints](Source_Editor_Endpoints.md) owns persistence.
+Source edits complete Markdown, including Title/Summary and other valid front matter, in one buffer. Catalogue modals create and edit supported occurrences there through guarded insertion or Apply. One Save persists the validated complete source; it does not move or reparent the document. [Source Editor Scripts](Source_Editor_Scripts.md) owns authoring integration and [Source Editor Endpoints](Source_Editor_Endpoints.md) owns persistence.
 
 ## Public And Local Boundary
 
 Canonical shared JavaScript, styles and artwork live under `docs-viewer/` and reach `site/docs-viewer/` through the explicit tracked code projection. Public readers reuse their loaded prepared sections and configured routes without management modules, local service calls, capability probes or Working fallback. Preview is a physical publication artifact without a browser stage or read route.
 
-Local Manage uses Working generated content. Source editing remains management-only; its views and service adapters stay outside the public inventory. One shell serves both surfaces through explicit registration and context, without a second public shell or compatibility metadata view.
+Local Manage uses Working generated content. Source editing remains management-only; its editor, modals and service adapters stay outside the public inventory. Public-safe reader shell/controller code is projected explicitly, without management calls or authoring context in the capture.
 
 Ordinary interaction, long-title fit, Close alignment and public mobile presentation require manual review. Automated test changes require an agreed specification under [Testing](Testing.md). [Docs Viewer Runtime](Docs_Viewer_Runtime.md) owns the wider runtime boundary.

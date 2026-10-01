@@ -3,9 +3,9 @@ draft: false
 doc_id: d-20261001-145038-ad04ac
 title: Source Editor And Token Modals - Delivery
 added_date: "2026-10-01 14:50:38"
-last_updated: "2026-10-01 14:50:38"
+last_updated: "2026-10-01 18:27:54"
 summary: Edit complete Markdown including front matter and reopen token modals with existing values, removing Source's metadata/token panel while retaining one validated document Save.
-ui_status: proposed
+ui_status: done
 parent_id: d-20260902-102745-8379ea
 ---
 # Source Editor And Token Modals - Delivery
@@ -14,7 +14,7 @@ parent_id: d-20260902-102745-8379ea
 
 Deliver one outcome: eligible local documents are edited as complete Markdown in one Source buffer, including front matter, while supported Catalogue tokens are created or edited through their corresponding modals. Source no longer needs a metadata/token side panel or **i** control. One document Save validates and persists the complete source; modal confirmation changes only the unsaved buffer.
 
-The requirements were agreed on 2026-10-01. This is a proposed delivery; readiness and implementation have not started. [Unified Analysis And Catalogue Presentation](Analysis_And_Catalogue_Presentation.md) is the feature parent. Suggested order is [Info Panel Related Links And Pinning - Delivery](Info_Panel_Links_And_Pinning_Delivery.md) first, this Source simplification second. Reader pinning does not depend on this delivery. [Source Editor Scripts](Source_Editor_Scripts.md) is the primary durable destination, with API ownership in [Source Editor Endpoints](Source_Editor_Endpoints.md) and token interaction in [Semantic Tokens Source Editor UI](Semantic_Tokens_Source_Editor_UI.md).
+Complete, accepted and closed on 2026-10-01. Complete-source editing, modal occurrence editing and panel retirement are implemented; focused static evidence, shared-runtime projection and bounded code review are complete. The user accepted the delivered outcome and explicitly approved closeout; separately itemized interaction cases and live persistence/Import/Review remain evidence limits. [Unified Analysis And Catalogue Presentation](Analysis_And_Catalogue_Presentation.md) is the feature parent. [Info Panel Related Links And Pinning - Delivery](Info_Panel_Links_And_Pinning_Delivery.md) is accepted and closed, satisfying the suggested sequence. [Source Editor Scripts](Source_Editor_Scripts.md) is the updated primary durable owner, with the implemented API in [Source Editor Endpoints](Source_Editor_Endpoints.md) and token interaction in [Semantic Tokens Source Editor UI](Semantic_Tokens_Source_Editor_UI.md). This delivery is ready for manual archive; Publish, deployment and Git actions remain separate.
 
 ### Complete Markdown Buffer
 
@@ -47,12 +47,12 @@ This delivery is local Manage authoring work. Public readers gain no source, tok
 
 ## Deliverables
 
-- [ ] One complete Markdown Source buffer, including front matter, with one dirty/discard/Save lifecycle.
-- [ ] Full-source read/save integration with required-field validation, fixed document/collection identity and preserved failed drafts.
-- [ ] Creation/edit modal reuse with current-token initialization, Apply/Cancel and guarded exact-occurrence replacement.
-- [ ] Removal of the separate Source metadata/token panel, **i** control and obsolete drafts/hosted-view wiring without aliases.
-- [ ] Preserved reader pinning, local/public boundaries, source normalization/timestamps and independent watcher generation.
-- [ ] Proportionate selected evidence, user editor/modal review, distinct code review and durable documentation transfer.
+- [x] One complete Markdown Source buffer, including front matter, with one dirty/discard/Save lifecycle.
+- [x] Full-source read/save integration with required-field validation, fixed document/collection identity and preserved failed drafts.
+- [x] Creation/edit modal reuse with current-token initialization, Apply/Cancel and guarded exact-occurrence replacement.
+- [x] Removal of the separate Source metadata/token panel, **i** control and obsolete drafts/hosted-view wiring without aliases.
+- [x] Preserved reader pinning, local/public boundaries, source normalization/timestamps and independent watcher generation.
+- [x] Proportionate selected evidence, user acceptance, distinct code review and durable documentation transfer; separately itemized interaction cases remain an evidence limit.
 
 ## Process
 
@@ -67,58 +67,60 @@ This delivery is local Manage authoring work. Public readers gain no source, tok
 
 ### SEM-0 — Readiness
 
-- [ ] Confirm full-source read/save ownership, schema/identity rules, timestamp handling and the exact ordinary/collection authoring boundary.
-- [ ] Confirm current modal initialization, explicit occurrence selection and full-buffer token ranges against the existing parser/editor owners.
-- [ ] Confirm source-panel retirement and reader capture transitions can be completed without changing public capabilities or unrelated authoring workflows.
-- [ ] Confirm the delivery sequence and primary durable owner. Stop for a required identity migration, index-placement redesign, new front-matter language or broader editor framework.
+- [x] Confirm full-source read/save ownership, schema/identity rules, timestamp handling and the exact ordinary/collection authoring boundary.
+- [x] Confirm current modal initialization, explicit occurrence selection and full-buffer token ranges against the existing parser/editor owners.
+- [x] Confirm source-panel retirement and reader capture transitions can be completed without changing public capabilities or unrelated authoring workflows.
+- [x] Confirm the delivery sequence and primary durable owner. Stop for a required identity migration, index-placement redesign, new front-matter language or broader editor framework.
 
-Gate: present concise read-only readiness for implementation approval; remain proposed until safe to implement. Verification: broad specification/owner comparison, without a prototype, test authoring or generated writes. Record: requirements agreed on 2026-10-01; readiness not started.
+Gate: complete; the user approved implementation on 2026-10-01. Record: read-only comparison confirmed the source service, mounted adapter, existing Catalogue modal/parser and reader capture as the owning boundaries. Reader pinning is closed; no migration, Index redesign, new language or editor framework was required. The worktree was clean. Stale Source endpoint documentation and scope/revision-bearing tests were identified; production documentation is reconciled and test work remains separate.
 
 ### SEM-1 — Complete Source Session And Save
 
-- [ ] Mount one complete-source buffer and replace the separate metadata form/draft and split request assembly.
-- [ ] Parse and validate the complete source at Save, enforce the fixed target and preserve the draft on failure.
-- [ ] Preserve normal source normalization, timestamp ownership, atomic persistence and source-write completion timing.
-- [ ] Keep body contributions and current document-subject projection tied to the exact active buffer/target without a duplicate editable state.
+- [x] Mount one complete-source buffer and replace the separate metadata form/draft and split request assembly.
+- [x] Parse and validate the complete source at Save, enforce the fixed target and preserve the draft on failure.
+- [x] Preserve normal source normalization, timestamp ownership, atomic persistence and source-write completion timing.
+- [x] Keep body contributions and current document-subject projection tied to the exact active buffer/target without a duplicate editable state.
 
-Gate: complete-source editing and Save are available for local review. Verification: inspect the smallest relevant existing parser/service selection and its durable coverage before selecting execution; document the risk, side effects and cost. Use focused syntax/lint and source review where sufficient. Test changes require a separately approved specification under [Testing](Testing.md) and [Test Contract Discipline](Test_Contract_Discipline.md). Record: not started.
+Gate: complete and accepted. Record: read/save use one `source_text` contract with no split-field aliases. The source model owns strict splitting; the service validates fixed identity, required Title/readiness, report rules and collection Subject fields before the existing atomic write. A write-free context request projects the captured unsaved Subject without rereading document sources. Header newline conventions, authored formatting, body normalization and existing timestamp policy are retained. Save still ends at persistence, independently of watcher generation.
+
+Verification budget: explicit-path Python/JavaScript lint and Python syntax address malformed source and module errors; direct module imports address the moved splitter's service integration; bounded diff review addresses identity, failed-draft retention and normalization. These are local diagnostics with no service startup, network requests or document writes and took seconds. Existing Source service tests were inspected and retain retired scope/revision contracts, so no tests were changed or run. Evidence limits are recorded in [Source Editor Scripts](Source_Editor_Scripts.md); test changes require separate agreement under [Testing](Testing.md). Python lint/syntax passed for the eleven changed service/parser modules, JavaScript lint passed for the seventeen changed/new modules, and management/viewer module imports succeeded.
 
 ### SEM-2 — Modal Occurrence Editing And Panel Removal
 
-- [ ] Add edit-mode initialization for every supported stored token value and retain current creation behaviour.
-- [ ] Bind the corresponding explicit action to a recognized occurrence, implement Apply/Cancel and guard its full-buffer range before replacement.
-- [ ] Remove Source metadata/token hosted views, **i**, selection-driven panel updates and obsolete pending token drafts after their replacements are available.
-- [ ] Preserve one session Save/discard lifecycle and the independent reader-pinning owner; remove obsolete production call sites and configuration without aliases.
-- [ ] Inspect any affected existing tests as unreviewed contracts; separately scope changes instead of silently rewriting them to match the new implementation.
+- [x] Add edit-mode initialization for every supported stored token value and retain current creation behaviour.
+- [x] Bind the corresponding explicit action to a recognized occurrence, implement Apply/Cancel and guard its full-buffer range before replacement.
+- [x] Remove Source metadata/token hosted views, **i**, selection-driven panel updates and obsolete pending token drafts after their replacements are available.
+- [x] Preserve one session Save/discard lifecycle and the independent reader-pinning owner; remove obsolete production call sites and configuration without aliases.
+- [x] Inspect any affected existing tests as unreviewed contracts; separately scope changes instead of silently rewriting them to match the new implementation.
 
-Gate: Source works entirely through its full buffer and modals, with no authoring panel dependency. Verification: select any justified existing parser/range/provider evidence within the agreed budget; editor selection, modal values, cancellation and feel remain user manual review. Record: not started.
+Gate: complete and accepted. Record: explicit actions recognize only corresponding body occurrences, initialize stored Work/Gallery links or Work image fields, preserve authored values during media reads and serialize Apply directly into the unsaved buffer. Recognition excludes front matter and literal Markdown contexts. Captured text/range, revision and mounted adapter protect exact repeated occurrences and stale mutations. Source hosted views, **i**, metadata/token drafts, automatic panel routing and obsolete registrations/CSS are removed. The reader controller now carries only detached capture, pin replacement and Close. Explicit-path lint and bounded source/call-site review passed; no tests or browser checks were run.
 
 ### SEM-3 — Integration And User Review
 
-- [ ] Confirm ordinary and configured collection targets, validation failures, dirty discard and existing buffer contributions still use the mounted Source target.
-- [ ] Record user review of complete front matter, Title/Summary edits, exact repeated-token occurrences, existing-value preselection, Apply/Cancel and failed Save recovery.
-- [ ] Confirm Source entry/exit and rendered pin opening without exposing management capabilities publicly.
-- [ ] For inventory-listed shared runtime changes, run `bin/site-code-update`, inspect the exact tracked delta, then run `bin/site-code-update --check` and `bin/site-validate`. Do not project management-only modules.
+- [x] Confirm ordinary and configured collection targets, validation failures, dirty discard and existing buffer contributions still use the mounted Source target.
+- [x] Record user acceptance of the delivered Source/modal workflow; separately itemized review of front matter, Title/Summary edits, repeated-token occurrences, preselection, Apply/Cancel and failed Save recovery remains an evidence limit.
+- [x] Confirm Source entry/exit and rendered pin opening without exposing management capabilities publicly.
+- [x] For inventory-listed shared runtime changes, run `bin/site-code-update`, inspect the exact tracked delta, then run `bin/site-code-update --check` and `bin/site-validate`. Do not project management-only modules.
 
-Gate: user acceptance of the complete Source/modal workflow. Verification: explicit-path lint, required shared-runtime projection checks and the agreed manual review; no automatic broad suite, browser choreography, Search build or Publish. Record: not started.
+Gate: complete; user acceptance recorded on 2026-10-01. Record: source review confirms mounted ordinary/collection targets remain independent of editable metadata, failed Save retains the draft, contributions use the current complete buffer, and Source entry releases reader capture without an authoring reopening path. `bin/site-code-update` projected exactly seven changed shared runtime files; the tracked delta was inspected. `bin/site-code-update --check` and `bin/site-validate` passed. Management modules and token registry remain outside the public inventory. The user accepted the delivered outcome and approved closeout after clarification of the shared runtime changes. Live Save/failed-write recovery, Import/Review flows and editor/modal interaction were not exercised by Codex; no separate item-by-item manual results were supplied. No browser tests, Docs/Search rebuild, Publish, deployment, commit or push occurred.
 
 ### SEM-4 — Code Review
 
-- [ ] Review the final bounded diff for source/target ownership, parser duplication, normalization loss, range errors, modal-default overwrite, failed-draft loss and stale mutation paths.
-- [ ] Confirm removal of duplicate metadata/token drafts, old request assembly, dead hosted views and compatibility residue.
-- [ ] Confirm public code/config carries no management capability and reader capture does not become authoring context.
-- [ ] Resolve findings and repeat only affected evidence; report separately scoped test gaps and other omissions.
+- [x] Review the final bounded diff for source/target ownership, parser duplication, normalization loss, range errors, modal-default overwrite, failed-draft loss and stale mutation paths.
+- [x] Confirm removal of duplicate metadata/token drafts, old request assembly, dead hosted views and compatibility residue.
+- [x] Confirm public code/config carries no management capability and reader capture does not become authoring context.
+- [x] Resolve findings and repeat only affected evidence; report separately scoped test gaps and other omissions.
 
-Gate: present review findings, resolutions and remaining limitations. Verification: bounded code/diff review with selected affected checks. Record: not started.
+Gate: bounded code review complete. Findings resolved: guard parser registry access during synchronous occurrence recognition; treat valid token fields atomically so authored backticks/comment markers do not create Markdown exclusion contexts; compare response identity using explicit target fields; invalidate adapters and late source/context responses after replacement; preserve original header newlines after textarea normalization; resolve unsaved Subject context without scanning source documents; redirect existing Import/Review splitter consumers to the source-model owner. Production reference scans found no obsolete panel/draft calls or aliases. Affected lint/syntax passed after corrections, and management/viewer module imports succeeded. Public capture carries no authoring/service context, and public adapters acquire no Source API. Separately itemized interaction cases and live persistence/Import/Review evidence remain the explicit limits.
 
 ### SEM-5 — Closeout
 
-- [ ] Confirm complete Markdown editing, current-token modal editing and removal of Source's panel and **i** control.
-- [ ] Transfer shipped ownership into Source Editor Scripts, update Source Editor Endpoints for the actual API contract, and reconcile Semantic Tokens Source Editor UI and Info Panel for the retired authoring views.
-- [ ] Update the feature parent's delivery state and recommend this delivery for manual archive after durable transfer.
-- [ ] Distinguish verified implementation from separately requested Publish, deployment, commit and push.
+- [x] Confirm user acceptance of complete Markdown editing, current-token modal editing and removal of Source's panel and **i** control, with explicit closeout approval.
+- [x] Transfer implemented ownership into Source Editor Scripts, update Source Editor Endpoints for the actual API contract, and reconcile Semantic Tokens Source Editor UI and Info Panel for the retired authoring views.
+- [x] Update the feature parent's delivery state and recommend this completed delivery for manual archive.
+- [x] Distinguish verified implementation from separately requested Publish, deployment, commit and push.
 
-Gate: explicit user closeout. Verification: reuse accepted implementation evidence; documentation-only closeout needs bounded source review, without automatic rebuilds or tests. Record: not started.
+Gate: complete; the user explicitly approved closeout on 2026-10-01. Durable ownership is transferred and the feature parent's state records the accepted delivery. Recommend this completed delivery for the next manual documentation archive. Closeout reused the recorded implementation evidence and reviewed only the status/documentation edits; no rebuild, lint or test run was required. No separate working-note or verification sibling was created. Publish, deployment, commit and push remain separate user actions and were not performed.
 
 ## Follow-on
 

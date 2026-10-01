@@ -11,7 +11,8 @@ import re
 from typing import Any
 
 from docs_management_context import log_event
-from docs_management_source_service import open_source_path, split_source_exact
+from docs_management_source_service import open_source_path
+from docs_source_model import split_source_text
 from docs_review_build import build_review_package
 from docs_document_packages.workspace import configured_workspace_paths, marker_path
 
@@ -123,7 +124,7 @@ def _source_files(package_path: Path) -> list[Path]:
 
 def _source_record(path: Path) -> dict[str, Any]:
     source_text = path.read_text(encoding="utf-8")
-    _front_matter_source, front_matter, source_body = split_source_exact(source_text)
+    _front_matter_source, front_matter, source_body = split_source_text(source_text, strict=True)
     doc_id = validate_doc_id(front_matter.get("doc_id"))
     if path.stem != doc_id:
         raise ValueError(f"review source filename must match doc_id: {path.name}")

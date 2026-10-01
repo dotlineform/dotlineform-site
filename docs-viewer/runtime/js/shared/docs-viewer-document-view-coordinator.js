@@ -9,20 +9,6 @@ import {
 } from "./docs-viewer-main-view-host.js";
 import { mountDocsViewerRelatedLinks } from "./docs-viewer-related-links.js";
 
-function cleanString(value) {
-  return String(value == null ? "" : value).trim();
-}
-
-function infoPanelDefaultViewId(settings, modeId) {
-  if (modeId !== "markdown-source") return "";
-  var services = typeof settings.sourceEditorServices === "function" ? settings.sourceEditorServices() : null;
-  var sourceViewId = services && typeof services.getInfoViewId === "function" ? services.getInfoViewId() : "";
-  if (sourceViewId) return sourceViewId;
-  var map = settings.infoPanelDefaultViewByDocumentMode;
-  if (!map || typeof map !== "object") return "";
-  return cleanString(map[cleanString(modeId)]);
-}
-
 /** Coordinate document modes and exact pin mounts; reader navigation retains capture, Source transitions close it. */
 export function createDocsViewerDocumentViewCoordinator(options) {
   var settings = options || {};
@@ -88,7 +74,6 @@ export function createDocsViewerDocumentViewCoordinator(options) {
 
   function projectControlState() {
     if (typeof settings.projectControlStates === "function") settings.projectControlStates();
-    if (infoPanelController) infoPanelController.renderToggleState();
   }
 
   var documentDisplayModeHost = createDocsViewerDocumentDisplayModeHost({
@@ -107,47 +92,16 @@ export function createDocsViewerDocumentViewCoordinator(options) {
   });
 
   infoPanelController = createDocsViewerInfoPanelController({
-    buildTrail: settings.buildTrail,
-    documentIndex: settings.documentIndex,
-    controlActive: controlActive,
     panelView: panelView,
-    projectControlState: settings.projectControlState,
     projectInfoPanel: function (projection) { panelLayout.projectInfoPanel(projection || {}); },
     projectViewState: function () { return panelLayout.projectViewState(); },
     refs: settings.infoPanelRefs,
     registry: viewRegistry,
-    appContext: settings.appContext,
-    collectionProvider: settings.collectionProvider,
-    managedDocumentContext: settings.managedDocumentContext,
-    workspaceConfig: settings.workspaceConfig,
-    selectedDocument: settings.selectedDocument,
-    defaultViewId: function () {
-      return infoPanelDefaultViewId(settings, documentDisplayModeHost.activeModeId());
-    },
-    sourceEditorServices: settings.sourceEditorServices,
-    viewerTargetDocId: settings.viewerTargetDocId,
-    viewerUrl: settings.viewerUrl
   });
   projectControlState();
 
-  function syncInfoPanelDefault(modeId) {
-    var defaultViewId = infoPanelDefaultViewId(settings, modeId);
-    if (!defaultViewId || !infoPanelController.isOpen()) return;
-    if (infoPanelController.activeViewId() === defaultViewId) {
-      infoPanelController.update();
-      return;
-    }
-    infoPanelController.openView(defaultViewId);
-  }
-
   function requestDocumentMode(modeId, optionsForRequest) {
-    var requestSettings = Object.assign({}, optionsForRequest || {});
-    var onAccepted = requestSettings.onAccepted;
-    requestSettings.onAccepted = function (mode) {
-      if (typeof onAccepted === "function") onAccepted(mode);
-      syncInfoPanelDefault(mode && mode.id ? mode.id : modeId);
-    };
-    return documentDisplayModeHost.requestMode(modeId, requestSettings);
+    return documentDisplayModeHost.requestMode(modeId, optionsForRequest);
   }
 
   function showView(viewId, onAccepted, optionsForRequest) {
@@ -171,15 +125,11 @@ export function createDocsViewerDocumentViewCoordinator(options) {
   }
 
   return {
-    activeInfoViewId: function () { return infoPanelController.activeViewId(); },
     activeViewState: activeViewState,
     confirmDocumentNavigation: documentDisplayModeHost.confirmNavigation,
     bind: function () { infoPanelController.bind(); },
     closeInfoIfOpen: function () { return infoPanelController.closeIfOpen(); },
     controlActive: controlActive,
-    isInfoOpen: function () { return infoPanelController.isOpen(); },
-    handleInfoControl: function () { return infoPanelController.handleControl(); },
-    openInfoView: function (viewId) { return infoPanelController.openView(viewId); },
     mountRelatedLinks: function (context) {
       var available = viewRegistry.resolveView("related-links").available;
       if (!available || documentDisplayModeHost.activeModeId() !== "rendered-document") return;
@@ -189,11 +139,9 @@ export function createDocsViewerDocumentViewCoordinator(options) {
         }
       }));
     },
-    renderInfoToggle: function () { return infoPanelController.renderToggleState(); },
     requestDocumentMode: requestDocumentMode,
     requestMainView: function (viewId, requestOptions) { return mainViewHost.requestView(viewId, requestOptions); },
     showRenderedDocument: showRenderedDocument,
-    showView: showView,
-    updateInfoPanel: function () { return infoPanelController.update(); }
+    showView: showView
   };
 }

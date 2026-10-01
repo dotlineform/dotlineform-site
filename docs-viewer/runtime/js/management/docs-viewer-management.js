@@ -345,7 +345,7 @@ export function initDocsViewerManagement(context) {
       var services = typeof context.sourceEditorServices === "function" ? context.sourceEditorServices() : context.sourceEditorServices;
       var activeTarget = activeSourceTarget();
       if (activeTarget && managedDocumentTargetsEqual(activeTarget, sourceTarget)) {
-        services.openMetadataPanel();
+        services.getActiveSourceEditorContextAdapter().focus();
         return;
       }
       if (!sourceTarget.collection && selectedDocument.selectedDocId !== sourceTarget.doc_id) {
@@ -354,7 +354,6 @@ export function initDocsViewerManagement(context) {
         if (payload.doc_id !== sourceTarget.doc_id) throw new Error("The document opened did not match the metadata target.");
       }
       await requestCommittedDocumentSource(sourceTarget, context.requestDocumentMode);
-      services.openMetadataPanel();
     } catch (error) {
       setManagementMessage(error.message || "Document source could not be opened.", true);
       renderManagementUi();

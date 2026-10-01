@@ -67,7 +67,7 @@ from docs_management_read_service import (  # noqa: E402
     docs_generated_read_payload,
     docs_management_get_payload as read_docs_management_get_payload,
 )
-from docs_management_source_service import detect_preferred_markdown_app, open_publication_ignore, open_source_doc, save_source_document  # noqa: E402
+from docs_management_source_service import detect_preferred_markdown_app, open_publication_ignore, open_source_doc, read_source_context, save_source_document  # noqa: E402
 from docs_workspace_config import load_docs_working_config, require_document_authoring  # noqa: E402
 
 
@@ -117,6 +117,8 @@ def docs_management_post_response(
         return HTTPStatus.OK, docs_selected_documents.set_selected(repo_root, body, dry_run=dry_run)
     if path == routes.SOURCE_SAVE_PATH:
         return HTTPStatus.OK, save_source_document(repo_root, body, dry_run)
+    if path == routes.SOURCE_CONTEXT_PATH:
+        return HTTPStatus.OK, read_source_context(repo_root, body)
     if path == routes.OPEN_SOURCE_PATH:
         return HTTPStatus.OK, open_source_doc(repo_root, body, dry_run)
     if path == routes.OPEN_PUBLICATION_IGNORE_PATH:

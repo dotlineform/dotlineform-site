@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-704641
 title: Source Editor Scripts
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-01 16:39:11"
+last_updated: "2026-10-01 17:58:55"
 parent_id: d-20260607-222033-2a494e
 ---
 # Docs Viewer Source Editor Scripts
@@ -18,10 +18,11 @@ Responsibilities:
 
 - resolves exact Working document targets through the configured workspace and collection owners
 - confines source paths to their configured roots and checks immutable document identity
-- returns full parsed metadata, the loaded front-matter block, body and safe Subject projection
-- validates Title, Summary and the complete candidate source before one atomic write
-- preserves non-edited metadata lines and applies the normal source timestamp on changed writes
-- normalizes submitted body line endings and Unicode-whitespace-only prose lines
+- reads and saves the complete Markdown through `source_text`, including front matter and body
+- uses the source model's strict splitter, required Title/readiness rules, exact collection contract and Subject customisation before one atomic write
+- preserves unaffected authored metadata lines, normalizes Title/Summary and applies the normal source timestamp on changed writes
+- normalizes body line endings and Unicode-whitespace-only prose lines outside literal blocks
+- projects the validated unsaved buffer's Subject through a write-free context request for Catalogue modals
 - completes Save at source persistence; the watcher independently owns targeted document and Links generation
 - opens source docs with the configured or preferred local Markdown editor
 - logs open-source events
@@ -48,11 +49,13 @@ If none are installed, macOS Launch Services chooses the default application for
 
 ## `docs-viewer/runtime/js/management/source-editor/source-editor.js`
 
-Purpose: own the exact mounted Working target, loaded front matter, body, Title/Summary and pending token occurrence edits as one session. The session owns dirty/busy state, complete validation, a single Save and one leave/discard decision.
+Purpose: own the exact mounted Working target and one complete Markdown buffer, including front matter. The session owns dirty/busy state, a single Save and one leave/discard decision; the service owns candidate validation and persistence.
 
-**Edit document** opens this session with the metadata panel visible. It targets the ordinary document, the report host from a collection list, or the exact validated document from a collection detail. A detail does not offer a separate parent Source action. Open in VS Code retains its separate action.
+**Edit document** opens the complete buffer without a side panel. It targets the ordinary document, the report host from a collection list, or the exact validated document from a collection detail. A detail does not offer a separate parent Source action. Open in VS Code retains its separate action.
 
-`source-metadata-view.js` binds Title/Summary inputs to the session. `source-editor-token-drafts.js` retains raw occurrence values outside panel mounts, rebases unaffected ranges after body changes and prepares validated replacements for Save. `catalogue-token-info-view.js` supplies the selected occurrence's fields. Closing or switching the panel cannot discard pending input; a failed validation or source write retains the draft.
+Title, Summary and other valid authored fields are edited directly in the same buffer. Save submits only that text with the fixed target; an identity conflict, malformed header, invalid collection metadata or write failure retains the full draft. Ordinary hierarchy/order stays with `index-order.json`. There is no metadata draft, pending token-field draft, Source hosted panel or **i** control. Entering Source releases the captured reader panel; returning to rendered content leaves it closed until a related-links pin is used.
+
+The exact splitter lives in `docs_source_model.py`, including the strict key/value and quoted-scalar checks used by Source and existing Import/Review consumers. It uses the maintained front-matter value grammar rather than YAML or a separate browser field parser. `source-buffer.js` locates only the body boundary for buffer contributions; it does not interpret metadata. The modal's write-free context request projects the current buffer's Subject through the service and the owning collection customisation.
 
 Source mounts beside the existing rendered DOM, which management CSS hides while editing. It does not detach the collection report or end its lifecycle. Successful Save removes the editor and returns to the existing rendered view immediately. [Runtime](Docs_Viewer_Runtime.md#automatic-working-refresh) owns the independent polling that later refreshes generated content and Info while retaining the report toolbar.
 
@@ -82,9 +85,13 @@ The watcher observes the source write and independently invokes targeted documen
 
 ## Catalogue Media And Image Contributions
 
-`catalogue-media-link.js` authors explicit `catalogue:media:work` tokens from generated Catalogue Work targets. `catalogue-image-modal.js` uses those targets and exact generated Work Details for image insertion. Both retain captured Source mutation, Catalogue-owned selection and validation of the selected current media presentation; neither requires a related document.
+`catalogue-media-link.js` authors explicit Work/Gallery Media View tokens. `catalogue-image-contribution.js` authors Work images. Both use `catalogue-media-modal.js`, the same generated Catalogue picker and validation of the selected current media presentation; neither requires a related document.
 
-`catalogue-token-parser.js` owns the supported explicit Catalogue `media` and `image` forms, source ranges and serializers. `catalogue-token-contribution.js` contributes the Catalogue context resolver. `catalogue-token-info-view.js` edits occurrence fields through the mounted session's token drafts; it has no separate Update or persistence operation. The immutable target stays fixed, and Save validates all pending occurrence fields before writing. [Semantic Tokens Source Editor UI](Semantic_Tokens_Source_Editor_UI.md) describes the interaction.
+`catalogue-token-parser.js` owns the supported explicit Catalogue `media` and `image` forms, literal-context exclusions, ranges and serializers. `catalogue-token-contribution.js` captures a corresponding occurrence only when its explicit action is used with the caret inside it or its exact range selected. Recognition is limited to the body; ranges include the current front-matter offset. The shared modal initializes every authored field and the stored target, allows target changes through its existing picker, and uses **Apply** to replace only that occurrence in the unsaved buffer. Creation keeps its insertion action. Cancellation and failed validation retain source unchanged; failed media reads retain the stored identity and entered fields.
+
+Captured text/range, buffer revision and mounted adapter guard Apply. A replaced editor cannot mutate a new session, even when its buffer and revision match. Work-derived title/alt updates do not reset stored image choices or link text. The serialized token becomes authoritative immediately; Save has no later token-draft serialization. [Semantic Tokens Source Editor UI](Semantic_Tokens_Source_Editor_UI.md) describes the interaction.
+
+Current Source service and browser tests still contain retired scope/revision or body-only contracts and are unreviewed for this workflow. This delivery uses explicit-path lint, Python syntax, bounded source review and shared-runtime projection/validation. Live Save failure/atomic-write behavior, Import/Review flows and editor/modal interaction are not automated evidence; test changes require a separately agreed specification under [Testing](Testing.md).
 
 The old three-part Catalogue text grammar has no compatibility alias. Its exclusive Source action, Subject-link contribution, rendering and audit branches, validation transport and fixture-only tests are removed. [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md) records the retained Build/runtime boundary.
 

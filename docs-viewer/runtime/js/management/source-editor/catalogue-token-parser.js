@@ -202,8 +202,9 @@ export function parseCatalogueToken(raw, options = {}) {
     || (imagePresentation && !imageFields)
   ) return null;
   var definition = targetDefinition(options.registry, family, targetType);
-  var supported = Boolean(definition);
-  if (supported && definition.idPolicy.canonicalPattern) {
+  var supported = options.registry ? Boolean(definition)
+    : imagePresentation ? targetType === "work" : Object.prototype.hasOwnProperty.call(MEDIA_TARGET_PATTERNS, targetType);
+  if (definition && definition.idPolicy.canonicalPattern) {
     var canonicalPattern = new RegExp(definition.idPolicy.canonicalPattern);
     if (!canonicalPattern.test(targetId)) return null;
   }
@@ -246,49 +247,87 @@ function outsideInlineCodeRanges(text, start, end) {
   return ranges;
 }
 
-function outsideCommentRanges(text, start, end, inComment) {
+function outsideLiteralRanges(text, start, end, inLiteral) {
   var ranges = [];
   var index = start;
-  var comment = Boolean(inComment);
+  var literal = inLiteral;
   while (index < end) {
-    if (comment) {
-      var close = text.indexOf("-->", index);
-      if (close < 0 || close >= end) return { ranges: ranges, inComment: true };
-      index = close + 3;
-      comment = false;
+    if (literal) {
+      var close = (literal === "comment" ? /-->/ : /<\/pre\s*>/i).exec(text.slice(index, end));
+      if (!close) return { ranges: ranges, inLiteral: literal };
+      index += close.index + close[0].length;
+      literal = "";
       continue;
     }
-    var opening = text.indexOf("<!--", index);
-    var segmentEnd = opening < 0 || opening >= end ? end : opening;
-    ranges = ranges.concat(outsideInlineCodeRanges(text, index, segmentEnd));
-    if (segmentEnd === end) return { ranges: ranges, inComment: false };
-    index = opening + 4;
-    comment = true;
+    var codeRanges = outsideInlineCodeRanges(text, index, end);
+    var opening = null;
+    for (var range of codeRanges) {
+      var marker = /<!--|<pre\b/i.exec(text.slice(range[0], range[1]));
+      if (marker) {
+        opening = { index: range[0] + marker.index, kind: marker[0] === "<!--" ? "comment" : "pre" };
+        if (opening.index > range[0]) ranges.push([range[0], opening.index]);
+        break;
+      }
+      ranges.push(range);
+    }
+    if (!opening) return { ranges: ranges, inLiteral: "" };
+    index = opening.index + 4;
+    literal = opening.kind;
   }
-  return { ranges: ranges, inComment: comment };
+  return { ranges: ranges, inLiteral: literal };
+}
+
+function tokenOpeningIsEscaped(source, opening) {
+  var escapes = /\\+$/.exec(source.slice(0, opening));
+  return Boolean(escapes && escapes[0].length % 2);
+}
+
+/** Authored token fields are plain text; their punctuation cannot open Markdown literal contexts. */
+function tokenContextSource(markdown) {
+  var source = String(markdown || "");
+  var parts = [];
+  var start = 0;
+  var index = 0;
+  while (index < source.length) {
+    var opening = source.indexOf("[[catalogue:", index);
+    if (opening < 0) break;
+    var closing = semanticTokenClosingIndex(source, opening + 2);
+    if (closing < 0) break;
+    var end = closing + 2;
+    if (!tokenOpeningIsEscaped(source, opening) && parseCatalogueToken(source.slice(opening, end))) {
+      parts.push(source.slice(start, opening), "x".repeat(end - opening));
+      start = end;
+    }
+    index = end;
+  }
+  return parts.join("") + source.slice(start);
 }
 
 export function semanticTokenTextRanges(markdown) {
+  var contextSource = tokenContextSource(markdown);
   var ranges = [];
-  var lines = String(markdown || "").match(/[^\n]*\n|[^\n]+$/g) || [];
+  var lines = contextSource.match(/[^\n]*\n|[^\n]+$/g) || [];
   var offset = 0;
   var inFence = false;
   var fenceCharacter = "";
-  var inComment = false;
+  var inLiteral = "";
+  var fenceLength = 0;
   lines.forEach(function (line) {
     var fence = /^ {0,3}(`{3,}|~{3,})/.exec(line);
-    if (fence) {
-      if (inFence && fence[1][0] === fenceCharacter) {
+    if (fence && !inLiteral) {
+      if (inFence && fence[1][0] === fenceCharacter && fence[1].length >= fenceLength
+        && /^[ \t\r\n]*$/.test(line.slice(fence[0].length))) {
         inFence = false;
         fenceCharacter = "";
       } else if (!inFence) {
         inFence = true;
         fenceCharacter = fence[1][0];
+        fenceLength = fence[1].length;
       }
-    } else if (!inFence) {
-      var result = outsideCommentRanges(markdown, offset, offset + line.length, inComment);
+    } else if (!inFence && (inLiteral || !/^(?: {4}|\t)/.test(line))) {
+      var result = outsideLiteralRanges(contextSource, offset, offset + line.length, inLiteral);
       ranges = ranges.concat(result.ranges);
-      inComment = result.inComment;
+      inLiteral = result.inLiteral;
     }
     offset += line.length;
   });
@@ -304,6 +343,7 @@ export function parseCatalogueTokens(markdown, options = {}) {
     while (index < range[1]) {
       var opening = source.indexOf("[[catalogue:", index);
       if (opening < 0 || opening >= range[1]) break;
+      if (tokenOpeningIsEscaped(source, opening)) { index = opening + 2; continue; }
       var closing = semanticTokenClosingIndex(source, opening + 2);
       if (closing < 0 || closing + 2 > range[1]) break;
       var token = parseCatalogueToken(source.slice(opening, closing + 2), {

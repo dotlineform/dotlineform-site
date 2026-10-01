@@ -245,9 +245,6 @@ export function initDocsViewerRouteWorkflow(context) {
       setStatus: setStatus,
       state: state,
     });
-    if (typeof context.updateInfoPanel === "function") {
-      context.updateInfoPanel();
-    }
     return result;
   }
 
@@ -314,7 +311,6 @@ export function initDocsViewerRouteWorkflow(context) {
     if (!current() || JSON.stringify(payload) === JSON.stringify(displayed.displayedPayload)) return;
     state.payloadCache.set(docId, payload);
     context.refreshRenderedPayload(doc, payload);
-    context.updateInfoPanel();
   }
 
   // Read existing generated outputs. Neither refresh path participates in Source Save.

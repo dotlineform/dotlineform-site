@@ -69,19 +69,6 @@ function renderBookmarkToggle(context) {
   return button;
 }
 
-function renderInfoToggle(context) {
-  var button = context.existingRoot;
-  if (!button || button.tagName !== "BUTTON") {
-    button = context.document.createElement("button");
-    button.className = "docsViewer__toolbarIconButton";
-    button.id = "docsViewerInfoToggle";
-    button.type = "button";
-    button.appendChild(createDocsViewerToolbarIcon(context.document, "docsViewer__icon--info"));
-    button.setAttribute("aria-expanded", "false");
-  }
-  return button;
-}
-
 function renderContentDetailBack(context) {
   var button = context.existingRoot;
   if (!button || button.tagName !== "BUTTON") {
@@ -124,7 +111,6 @@ export function createDocsViewerSharedControlRenderers() {
     "recent-button": renderRecentButton,
     "search-input": renderSearchInput,
     "bookmark-toggle": renderBookmarkToggle,
-    "info-toggle": renderInfoToggle,
     "content-detail-back": renderContentDetailBack,
     "content-detail-label": renderContentDetailLabel,
     "content-detail-open-new-tab": renderContentDetailOpenNewTab

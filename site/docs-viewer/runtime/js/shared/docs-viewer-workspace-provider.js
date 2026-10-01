@@ -136,6 +136,9 @@ export function createDocsViewerWorkspaceProvider(options) {
       return source.writeSource(target, payload, optionsForWrite || {});
     };
   }
+  if (source && typeof source.readSourceContext === "function") {
+    provider.readSourceContext = function (target, payload) { return source.readSourceContext(target, payload); };
+  }
   if (source && typeof source.readDiagramSources === "function") {
     provider.readDiagramSources = function (target, optionsForRead) {
       return source.readDiagramSources(target, optionsForRead || {});

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-4b1d77
 title: Source Editor Endpoints
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-09-18 19:02:44"
+last_updated: "2026-10-01 17:58:55"
 parent_id: d-20260607-222033-647b52
 ---
 # Docs Viewer Source Editor Endpoints
@@ -13,7 +13,6 @@ parent_id: d-20260607-222033-647b52
 Query parameters:
 
 ```text
-stage=working
 doc_id=d-20260918-123509-93122f
 ```
 
@@ -21,17 +20,17 @@ For a configured collection document, add its explicit `collection` identity and
 
 `doc` is not a source-target alias. Source reads require `doc_id`.
 
-Returned data includes `ok`, `stage`, `doc_id`, optional `collection`, full parsed `metadata`, the exact loaded `source_front_matter` block, normalized `source_body`, a safe Catalogue `subject` projection and a provider-safe `path`. No source revision is returned.
+Returned data includes `ok`, `doc_id`, optional `collection`, complete `source_text` and a provider-safe `path`. `source_text` contains the loaded front matter and body. No source revision or separate metadata/body transport is returned.
 
 Used for:
 
 - loading the manage-mode Markdown source editor
-- loading the complete metadata/body draft for one editing session
+- loading the complete Markdown draft for one editing session
 - displaying the provider-safe source path for the mounted target
 
 Validation:
 
-- `stage` must be explicitly `working` or `pre-publish`; the editing UI uses Working only
+- the service resolves Working; caller-selected `stage`, `scope` and `sub_scope` are rejected
 - a supplied `collection` must be configured
 - `doc_id` must resolve inside that exact ordinary or named-collection source root
 - the source path must remain inside the configured target root
@@ -44,14 +43,14 @@ This endpoint reads canonical source and does not write files. Index rows and ge
 
 The manage UI opens Markdown source with one explicit target:
 
-- ordinary document: `{ stage: "working", doc_id }`
-- configured collection document: `{ stage: "working", collection, doc_id }`
+- ordinary document: `{ doc_id }`
+- configured collection document: `{ collection, doc_id }`
 
 The editor mounts that target once and uses it for source read, Save, Open in VS Code, diagram-source actions and every registered buffer contribution. Selected-document state, displayed content and URL `doc` or `subdoc` values cannot retarget an active session.
 
-One **Edit document** action opens Source with its metadata panel. It targets the displayed ordinary document, the host from a collection list, or the exact validated collection detail. Separate Source and Subdoc Source controls are removed; a detail offers no parent Source action.
+One **Edit document** action opens the complete Markdown buffer without a metadata/token panel or **i** control. It targets the displayed ordinary document, the host from a collection list, or the exact validated collection detail. A detail offers no parent Source action.
 
-The session owns Title/Summary, body and raw pending token occurrence input. One Save validates and persists the complete draft. **Return to doc** is the explicit non-save exit; one discard decision covers the whole draft, and cancellation retains it. Successful Save returns to the unchanged rendered route at source-write completion. Independent Working polling later updates generated content and Info without replacing the mounted report toolbar or an active Source session.
+The session owns one complete text buffer. Title/Summary and other valid front matter are edited there; token Apply serializes directly into that buffer. One Save validates and persists the complete draft. **Return to doc** is the explicit non-save exit; one discard decision covers the whole draft, and cancellation retains it. Successful Save returns to the unchanged rendered route at source-write completion. Independent Working polling later updates generated content without replacing the mounted report toolbar or an active Source session. Entering Source closes the reader capture; returning leaves the reader panel closed until a pin is used.
 
 ## Local folder-link paste
 
@@ -82,9 +81,9 @@ activation occurs only from a rendered valid link.
 
 ## `GET /docs/document-link-targets`
 
-**Insert doc link** requests explicit `stage=working`. The read-only service enumerates ordinary documents and every configured collection through their source owners. The Working ignore list excludes ignored ordinary targets and their ordinary descendants; named-collection documents do not participate in that lookup. Draft readiness and Subject metadata do not filter selection.
+**Insert doc link** reads Working through the owning service. The read-only service enumerates ordinary documents and every configured collection through their source owners. Draft readiness, ordinary ignore membership, publication eligibility and Subject metadata do not filter selection.
 
-The `docs_document_link_targets_v2` response contains `stage`, configured `collections` and `documents`. Each document supplies its title, explicit `{stage, collection, doc_id}` target and ordinary `href`. Collection locations use the exact stage's host and document identity. Authored hrefs omit workflow-stage parameters. Unavailable collections and ambiguous hosts fail visibly without fallback.
+The `docs_document_link_targets_v2` response contains configured `collections` and `documents`. Each document supplies its title, explicit `{collection, doc_id}` target and ordinary `href`; ordinary targets use an empty collection in the picker record. Collection locations use the configured host and exact document identity. Authored hrefs omit workflow-stage parameters. Unavailable collections and ambiguous hosts fail visibly without fallback.
 
 The modal filters all documents, ordinary documents or one exact collection and searches by title or immutable ID. Confirmation inserts the selected title and href through captured, revision-guarded buffer replacement. This guard concerns the mounted buffer, not a disk revision. Insertion does not save, rebuild, change front matter or generate relationships. Public providers expose no local target-lookup capability.
 
@@ -96,32 +95,35 @@ Expected data:
 
 ```json
 {
-  "stage": "working",
   "doc_id": "d-20260918-123509-93122f",
-  "source_front_matter": "---\ndoc_id: d-20260918-123509-93122f\ntitle: Example\n---\n",
-  "source_body": "# Example\n",
-  "metadata": {"title": "Example", "summary": "An edited summary."}
+  "source_text": "---\ndraft: false\ndoc_id: d-20260918-123509-93122f\ntitle: Example\nsummary: An edited summary.\n---\n# Example\n"
 }
 ```
 
-A collection Save also includes its exact `collection`. The only accepted request fields are the five required fields above and optional `collection`. `source_front_matter` must be the complete loaded front-matter block, with no body text. `metadata` must contain exactly the two string fields `title` and `summary`.
+A collection Save also includes its exact `collection`. The only accepted fields are required `doc_id` and string `source_text`, plus optional `collection`. The previous split `source_front_matter`, `source_body` and editable `metadata` contract is removed without aliases.
 
 Actions:
 
-- resolves and validates the exact Working target, existing source and loaded front matter
-- requires the loaded immutable document and collection identity to match the target
+- resolves the fixed Working target and confines its source path before interpreting editable metadata
+- parses the complete candidate through the source model's strict front-matter splitter, rejecting missing delimiters, malformed lines, duplicate keys and invalid quoted values
+- requires candidate `doc_id` and any declared `collection` to match the mounted target; edited metadata cannot rename, relocate or select a different file
 - normalizes Title and Summary, rejects an empty Title and removes a blank Summary
-- preserves other authored metadata lines, including fields absent from the panel
+- validates required readiness, collection report rules and Subject customisation through their current owners; Catalogue retains fixed eligibility and rejects `draft`
+- preserves other authored metadata lines and the existing canonical membership policy; ordinary hierarchy/order remains owned by `index-order.json`
 - normalizes submitted body line endings to `\n`
 - replaces Unicode-whitespace-only lines with empty lines outside fenced code and explicit `<pre>` blocks
 - applies the normal source timestamp for changed, non-dry-run writes
 - validates the complete candidate through the source schema before one atomic source write
 
-Returned data includes `ok`, the exact target, saved `source_front_matter`, full `metadata`, `source_body`, provider-safe `path`, `source_changed`, `summary_text` and `dry_run`. An unchanged source is a successful no-op. Validation or write failure leaves the browser draft available for correction.
+Returned data includes `ok`, the exact target, saved complete `source_text`, provider-safe `path`, `source_changed`, `summary_text` and `dry_run`. An unchanged source is a successful no-op. Validation or write failure leaves the complete browser draft available for correction.
 
 This is a single-editor snapshot save: there is no disk revision check, external-edit merge or placement operation. Save ends at source persistence. It does not build documents or Links, suppress or await the watcher, rebuild Search, or wait for the viewer. The watcher independently observes changed source and maintains targeted document/Links output; generated-output failure cannot turn the completed source write into a failed Save.
 
 `POST /docs/source/rebuild` and `POST /docs/update-metadata` are removed without compatibility aliases. Title/Summary editing now uses this combined session write.
+
+## `POST /docs/source/context`
+
+This write-free request accepts the same exact target and complete `source_text` as Save. The source service validates the unsaved candidate through the same parser, identity and collection owners and returns `{ok, doc_id, collection?, subject}`. It resolves the configured collection without rereading document sources; Save independently resolves the actual file before persistence. The safe Work/Series Subject projection powers **Use document subject** in Catalogue modals; it is derived from the captured current buffer, not a loaded metadata draft. Invalid source disables that optional choice with a visible error while the modal preserves its token values and Catalogue picker. The adapter rejects a late context response after the buffer or mounted editor changes. This endpoint performs no source write, timestamp advancement, generation, Search rebuild or Publish.
 
 ## `GET /docs/staged-media-files`
 
@@ -144,7 +146,7 @@ Expected data:
 
 ```json
 {
-  "scope": "studio",
+  "doc_id": "d-20260918-123509-93122f",
   "media_kind": "image",
   "staged_filename": "diagram.svg",
   "label": "Energy wells"
@@ -155,7 +157,7 @@ A captioned image adds the semantic presentation fields:
 
 ```json
 {
-  "scope": "studio",
+  "doc_id": "d-20260918-123509-93122f",
   "media_kind": "image",
   "staged_filename": "diagram.svg",
   "label": "Energy wells diagram",
@@ -207,7 +209,6 @@ Expected data:
 
 ```json
 {
-  "stage": "working",
   "doc_id": "d-20260918-123509-93122f",
   "editor": "default"
 }
@@ -217,7 +218,7 @@ Add `collection` for a configured collection target.
 
 `editor` must be `default` or `vscode`.
 
-The manage toolbar supplies the target explicitly. On an ordinary document or collection report list, **Open in VS Code** supplies the selected document or host target. On a validated collection detail, it supplies that detail's `{stage, collection, doc_id}`. Loading, failed, unknown or unlisted details disable the action without falling back to the host. In Source mode, the action supplies the editor's fixed mounted target.
+The manage toolbar supplies the target explicitly. On an ordinary document or collection report list, **Open in VS Code** supplies the selected document or host target. On a validated collection detail, it supplies that detail's `{collection, doc_id}`. Loading, failed, unknown or unlisted details disable the action without falling back to the host. In Source mode, the action supplies the editor's fixed mounted target.
 
 Actions:
 
@@ -226,6 +227,6 @@ Actions:
 - for `editor: "default"`, uses `DOCS_MANAGEMENT_DEFAULT_MARKDOWN_APP` when configured, otherwise prefers `MarkEdit`, `Typora`, `Marked 2`, then `Marked`, then macOS Launch Services defaults
 - logs a `docs-open-source` event when the open command succeeds
 
-Returned data includes `ok`, `stage`, optional `collection`, `doc_id`, `editor`, `preferred_app`, provider-safe `path`, summary text and `dry_run`.
+Returned data includes `ok`, optional `collection`, `doc_id`, `editor`, `preferred_app`, provider-safe `path`, summary text and `dry_run`.
 
 This endpoint opens a local application. It does not modify docs source or generated output.
