@@ -53,13 +53,6 @@ const REPORT_LOADERS = {
       });
     }
   },
-  semantic_tokens: {
-    load: function () {
-      return import("./semantic-tokens-report.js").then(function (module) {
-        return module.mountSemanticTokensReport;
-      });
-    }
-  },
   project_state: {
     load: function () {
       return import("./project-state-report.js").then(function (module) {

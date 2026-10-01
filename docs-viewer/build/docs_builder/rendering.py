@@ -132,14 +132,9 @@ class ContentRenderingMixin:
     def resolve_content_tokens(
         self,
         markdown: str,
-        *,
-        doc: DocRecord,
-        semantic_tokens_by_doc: dict[str, list[dict[str, Any]]],
     ) -> str:
         resolved = self.resolve_semantic_tokens(
             markdown,
-            doc=doc,
-            occurrences_by_doc=semantic_tokens_by_doc,
         )
         return self.resolve_html_media_tokens(self.resolve_media_tokens(self.resolve_local_folder_links(resolved)))
 

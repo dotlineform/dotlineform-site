@@ -22,7 +22,6 @@ from .common import (
 from .media_builds import build_collection_media_snapshot
 from .payloads import PayloadBuilderMixin
 from .rendering import ContentRenderingMixin
-from .semantic_token_artifacts import SemanticTokenArtifactsMixin
 from .semantic_token_registry import load_semantic_token_registry
 from .semantic_tokens import SemanticTokensMixin
 from .source import SourceLoadingMixin
@@ -35,7 +34,6 @@ class DocsDataBuilder(
     PayloadBuilderMixin,
     ContentRenderingMixin,
     SemanticTokensMixin,
-    SemanticTokenArtifactsMixin,
     WritePlanMixin,
     BacklinksMixin,
 ):
@@ -94,7 +92,6 @@ class DocsDataBuilder(
         target_doc_ids = self.only_doc_ids if self.only_doc_ids is not None else [doc.doc_id for doc in docs]
         if self.targeted_build:
             self.validate_targeted_build_prerequisites(docs, target_doc_ids)
-        semantic_tokens_by_doc: dict[str, list[dict[str, Any]]] = {}
         docs_for_item_build = [doc for doc in docs if doc.doc_id in target_doc_ids]
         stale_item_ids = self.stale_doc_payload_ids(
             [doc.doc_id for doc in docs_for_item_build],
@@ -109,12 +106,9 @@ class DocsDataBuilder(
             doc.doc_id: self.item_entry(
                 doc,
                 docs,
-                semantic_tokens_by_doc,
             )
             for doc in docs_for_item_build
         }
-        for doc in docs_for_item_build:
-            semantic_tokens_by_doc.setdefault(doc.doc_id, [])
 
         flat_doc_rows = [
             self.index_entry(doc, docs, item_payloads.get(doc.doc_id)) for doc in self.ordered_docs_for_index(docs)
@@ -134,13 +128,11 @@ class DocsDataBuilder(
                 recent_candidates,
                 output_path=self.output_dir / "recent.json",
             )
-        semantic_token_payloads = self.build_semantic_token_payloads(docs, semantic_tokens_by_doc)
         backlinks_payload = self.backlinks_payload(docs, item_payloads)
         write_plan = self.build_write_plan(
             index_tree_payload,
             recent_payload,
             item_payloads,
-            semantic_token_payloads,
             stale_item_ids=stale_item_ids,
             backlinks_payload=backlinks_payload,
         )
@@ -156,14 +148,12 @@ class DocsDataBuilder(
                 docs_total=len(index_payload["docs"]),
                 tree_total=len(index_tree_payload["docs"]),
                 recent_total=len(recent_payload["docs"]) if recent_payload is not None else None,
-                semantic_token_total=len(semantic_token_payloads["index"]["occurrences"]),
             )
         else:
             self.print_dry_run(
                 index_payload,
                 index_tree_payload,
                 recent_payload,
-                semantic_token_payloads,
                 write_plan,
             )
         if self.config.stage == "working":
@@ -178,7 +168,6 @@ class DocsDataBuilder(
             "index_tree_payload": index_tree_payload,
             "recent_payload": recent_payload,
             "item_payloads": item_payloads,
-            "semantic_token_payloads": semantic_token_payloads,
             "backlinks_payload": backlinks_payload,
             "write_plan": write_plan,
             "diagnostics": diagnostics,

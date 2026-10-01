@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260728-113139-763354
 title: Sub-Scope Index Architecture
 added_date: "2026-07-28 11:31:39"
-last_updated: "2026-09-30 13:33:18"
+last_updated: "2026-10-01 13:29:44"
 summary: define collection identity, the docs_subscope default, registered customisations, selection lifecycle, and explicit function adoption
 parent_id: d-20260801-084127-752d7e
 ---
@@ -263,7 +263,7 @@ The existing collection action registration supplies the exact Working Catalogue
 
 Full reconciliation repairs missing, changed and orphaned Catalogue documents from the current Work index and source inventory. The pending list must remain present and valid; a missing or malformed list stops Refresh and Regenerate for diagnosis. After a failed Refresh, diagnose and retry Refresh. A retry can miss changes already written before the failure, so inspect the list and Work/document inventory and use Full reconciliation if needed. The pending list remains valid and empty after successful processing.
 
-[Work-record generator](../../docs-viewer/services/docs_catalogue_work_record.py) defines the body in code. Each body is one ordinary `catalogue:image:work` token containing the explicit Work ID, `use_work_title_caption=true`, `include_work_metadata=true`, `placement=left` and `fill_width=true`. The front-matter title also comes from the Work title, while the token stores no literal Work-derived text. The document builder resolves the current generated Work title and selected metadata on each Build, in this order:
+[Work-record generator](../../docs-viewer/services/docs_catalogue_work_record.py) defines the body in code. Each body contains one ordinary `catalogue:image:work` token containing the explicit Work ID, `use_work_title_caption=true`, `include_work_metadata=true`, `placement=left` and `fill_width=true`, followed by a blank line and `[[links|related links]]`. Regenerate maintains that complete body for existing and newly created documents. The Work's own token creates no self-relationship; Related links displays recorded document references and creates no graph record by itself. [Related Links](Related_Links.md) owns the rebuild sequence. The front-matter title also comes from the Work title, while the token stores no literal Work-derived text. The document builder resolves the current generated Work title and selected metadata on each Build, in this order:
 
 ```text
 <year_display>

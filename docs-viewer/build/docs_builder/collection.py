@@ -208,10 +208,6 @@ class CollectionDocsBuilder(DocsDataBuilder):
                         raise ValueError("Catalogue manifests require doc_id, title and last_updated; run a complete Catalogue Build first")
         if {row["doc_id"] for row in manifest["docs"]} != {row["doc_id"] for row in manage_manifest["docs"]}:
             raise ValueError("Collection manifests disagree on document membership; run a complete Build first")
-        if not (self.semantic_tokens_dir / "index.json").is_file():
-            raise RuntimeError(
-                "Targeted collection build requires the existing semantic-token index; run a complete Build first"
-            )
         return manifest, manage_manifest
 
     def run(self, *, write: bool, emit_diagnostics: bool = False) -> dict[str, Any]:
@@ -248,7 +244,6 @@ class CollectionDocsBuilder(DocsDataBuilder):
             None if self.skip_media_builds or self.targeted_build
             else build_collection_media_snapshot(self.repo_root, self.media_owner, write=write)
         )
-        semantic_tokens_by_doc: dict[str, list[dict[str, Any]]] = {}
         built_doc_ids = [doc.doc_id for doc in ordered_docs]
         stale_item_ids = self.stale_doc_payload_ids(built_doc_ids, target_doc_ids=self.only_doc_ids)
         links_plan = prepare_document_links(self, docs, built_doc_ids, stale_item_ids)
@@ -256,7 +251,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
         links_build = build_document_links(self, links_plan, write=write, related_records=related_records)
         prepare_related_links(self, docs, related_records)
         item_payloads = {
-            doc.doc_id: self.item_entry(doc, summaries, semantic_tokens_by_doc)
+            doc.doc_id: self.item_entry(doc, summaries)
             for doc in ordered_docs
         }
         if subjects_by_doc_id is not None or "subject_generation" in manage_manifest_payload:
@@ -277,8 +272,6 @@ class CollectionDocsBuilder(DocsDataBuilder):
             item_payloads,
             stale_item_ids=stale_item_ids,
         )
-        semantic_token_payloads = self.build_semantic_token_payloads(docs, semantic_tokens_by_doc)
-        write_plan.update(self.build_semantic_token_write_plan(semantic_token_payloads))
         diagnostics = self.collection_diagnostics_payload(
             docs_total=len(summaries),
             docs_emitted=len(item_payloads),
@@ -298,7 +291,6 @@ class CollectionDocsBuilder(DocsDataBuilder):
             "manifest_payload": manifest_payload,
             "manage_manifest_payload": manage_manifest_payload,
             "item_payloads": item_payloads,
-            "semantic_token_payloads": semantic_token_payloads,
             "media_snapshot": media_snapshot,
             "write_plan": write_plan,
             "diagnostics": diagnostics,
@@ -350,7 +342,6 @@ class CollectionDocsBuilder(DocsDataBuilder):
             write_text(self.items_dir / f"{doc_id}.json", write_plan["item_text_by_id"][doc_id])
         for doc_id in write_plan["stale_item_ids"]:
             (self.items_dir / f"{doc_id}.json").unlink(missing_ok=True)
-        self.write_semantic_token_outputs(write_plan)
         self.print_collection_summary(write_plan, mode="write", docs_total=docs_total)
 
     def print_collection_summary(self, write_plan: dict[str, Any], *, mode: str, docs_total: int) -> None:
@@ -366,7 +357,6 @@ class CollectionDocsBuilder(DocsDataBuilder):
             "  manage manifest "
             f"{verb}: {1 if write_plan['manage_manifest_write'] else 0}"
         )
-        print(f"  semantic tokens {verb}: {1 if write_plan['semantic_token_index_write'] else 0}")
         print(f"  warnings: {len(self.warnings)}")
 
     def collection_diagnostics_payload(
@@ -391,7 +381,6 @@ class CollectionDocsBuilder(DocsDataBuilder):
             "manage_manifest_changed": (
                 1 if write_plan["manage_manifest_write"] else 0
             ),
-            "semantic_token_index_changed": 1 if write_plan["semantic_token_index_write"] else 0,
             "warning_count": len(self.warnings),
             "warnings": self.warnings,
             "elapsed_seconds": elapsed_seconds,

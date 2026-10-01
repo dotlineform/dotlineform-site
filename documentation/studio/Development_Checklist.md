@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260523-190651-7157ec
 title: Development Checklist
 added_date: "2026-05-23 19:06:51"
-last_updated: "2026-09-30 12:20:34"
+last_updated: "2026-10-01 13:29:44"
 parent_id: d-20260419-000000-d2e47b
 
 ---
@@ -133,6 +133,7 @@ This checklist and the durable Studio development documentation are maintained d
 
 ### Generated Data
 
+- [ ] Keep document relationship construction independent of destination existence and link-validity checks. Link validity belongs to authoring and Broken Links; explicit document deletion still cleans up its record and associated relationships. Related links directives alone do not create graph records.
 - [ ] Edit canonical source/config/generator, never generated output as authority.
 - [ ] Run a generator dry-run before writing only when an explicit requirement or demonstrated risk calls for it; support for a dry-run is not itself a reason to run one.
 - [ ] Check generated shape and projection boundaries to address a named contract or credible failure mode; do not add a second full pass solely to confirm an operation's reported success.

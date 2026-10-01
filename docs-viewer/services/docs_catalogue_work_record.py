@@ -22,7 +22,7 @@ class CatalogueWorkRecord:
 
 
 def catalogue_work_record(work: dict[str, Any]) -> CatalogueWorkRecord:
-    """Return bound image source content; this function performs no reads or writes."""
+    """Return the bound image and related-links directive without reads or writes."""
     work_id = work.get("work_id")
     title = work.get("title")
     if not isinstance(title, str) or not title.strip():
@@ -34,4 +34,4 @@ def catalogue_work_record(work: dict[str, Any]) -> CatalogueWorkRecord:
     )
     if not token:
         raise ValueError("Generated Work cannot produce a Catalogue image token")
-    return CatalogueWorkRecord(work_id=work_id, title=title, body=token + "\n")
+    return CatalogueWorkRecord(work_id=work_id, title=title, body=token + "\n\n[[links|related links]]\n")

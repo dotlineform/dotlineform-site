@@ -23,7 +23,6 @@ class PayloadBuilderMixin:
         self,
         doc: DocRecord,
         docs: Sequence[DocumentIdentity],
-        semantic_tokens_by_doc: dict[str, list[dict[str, Any]]],
     ) -> dict[str, Any]:
         projected_markdown = project_report_markdown(
             doc.body_markdown,
@@ -32,8 +31,6 @@ class PayloadBuilderMixin:
         )
         resolved = self.resolve_content_tokens(
             projected_markdown,
-            doc=doc,
-            semantic_tokens_by_doc=semantic_tokens_by_doc,
         )
         try:
             rendered = self.inline_icons.render_markdown(resolved, related_links=lambda heading: render_related_links(self, doc, heading))

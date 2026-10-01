@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260512-142027-54b354
 title: Configuration And Extension Points
 added_date: "2026-05-12 14:20:27"
-last_updated: "2026-09-30 12:20:34"
+last_updated: "2026-10-01 13:29:44"
 summary: Map of the configuration, registries, generated projections, code definitions, and capability checks that drive Docs Viewer workflows.
 parent_id: d-20260424-000000-50b63f
 
@@ -118,7 +118,7 @@ Links records and their workspace aggregate use `schema_version: 2` without a st
 
 `docs_document_link_targets_v2` selects exact Working documents and shares Links' ordinary ignore-list ancestry rule: omit any ordinary document whose ID or ancestor's ID is listed. Drafts remain selectable and linkable; named collections retain their existing Working eligibility. Authored document links, stored relationship hrefs and navigation remain stage-free `/docs/?doc=<id>` locations, with `subdoc` for a configured report-host placement. `docs_backlinks_v2` carries no stage. Broken Links audits configured source collections and identifies correction targets by collection and immutable ID; it reports retired stage/scope-bearing viewer links as broken. Local destinations use Working output; public destinations use configured repository payloads, never untransferred Working or Preview output.
 
-Semantic usage uses `docs_semantic_token_usage_index_v2`, with `source_collection` and `source_doc_id` on every occurrence and no stage envelope or `source_stage`. Usage remains separate from Links. The Works Subject column and picker use the local generated Catalogue target reader. Remaining private semantic lookup consumers retain their own refresh owner pending explicit retirement. The shared Working ignore-file resolver and `docs_unpublishable_report_v4` have no stage/scope parameter. Both Working Links and preparation inherit ordinary ignore-list exclusions; preparation additionally excludes draft subtrees and collections with excluded hosts.
+The semantic usage index and report are retired. Supported Work tokens contribute Catalogue document relationships through the existing Links owner; Gallery Media View tokens create no document relationship. Link construction does not validate destinations; explicit deletion still removes associated relationships. The Works Subject column and picker use the local generated Catalogue target reader. Remaining private semantic lookup consumers retain their own refresh owner pending explicit retirement. The shared Working ignore-file resolver and `docs_unpublishable_report_v4` have no stage/scope parameter. Both Working Links and preparation inherit ordinary ignore-list exclusions; preparation additionally excludes draft subtrees and collections with excluded hosts.
 
 Search uses stage-independent `docs_viewer_search_index_v4`, with no header stage or result URLs; the content version excludes stage. Readers resolve exact document/collection/report-host identity through their active route. Working builds its complete index. Publish captures that existing file once and copies it unchanged while building eligible document output in temporary storage. Missing/invalid Search fails; Publish does not rebuild it or impose freshness after ordinary edits. Configured collection inclusion and inherited readiness select the Working Search corpus independently of snapshot membership. Tokenization, ranking, fields and explicit rebuild policy remain unchanged. `build_search.py` accepts only `--stage working` at its internal build boundary.
 

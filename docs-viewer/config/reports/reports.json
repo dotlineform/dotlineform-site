@@ -51,13 +51,6 @@
       "presets": []
     },
     {
-      "report_id": "semantic_tokens",
-      "title": "Semantic Tokens",
-      "description": "Lists semantic-token occurrences across all Working collections.",
-      "loader_id": "semantic_tokens",
-      "presets": []
-    },
-    {
       "report_id": "project_state",
       "title": "Project State",
       "description": "Reconciles immediate project folders with canonical Works, Series, and Project documents.",

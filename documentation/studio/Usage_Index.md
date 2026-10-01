@@ -3,88 +3,13 @@ draft: false
 doc_id: d-20260726-191340-d00c52
 title: Usage Index
 added_date: "2026-07-26 19:13:40"
-last_updated: "2026-08-11 22:03:14"
+last_updated: "2026-10-01 13:20:00"
 parent_id: d-20260725-153656-516b61
 ---
 # Usage Index
 
-The scope-specific usage index is built by the normal Docs Viewer document build:
+The generated semantic usage index is retired. Build no longer stores occurrence rows, raw token text or source positions, and targeted builds require no semantic index prerequisite. The Semantic Tokens report and its read endpoint are also retired.
 
-```text
-scope Markdown
-    + semantic-token registry
-    + current target-lookup.json
-    -> build_docs.py --scope <scope>
-    -> rendered document payloads
-    + semantic-tokens/index.json
-```
+Supported Work tokens contribute unique Catalogue document relationships through [Document Build](Builder.md), stored in the existing `links-by-id` graph. [Related Links](Related_Links.md) presents these relationships. Gallery Media View tokens create no document relationship.
 
-producing, for example:
-
-`docs-viewer/scopes/analysis/published/documents/semantic-tokens/index.json`
-
-## Build
-
-For each source document, the Docs builder:
-
-1. Parses supported token syntax outside excluded contexts such as code.
-2. Looks for an exact family/type/ID match in `target-lookup.json`.
-3. Requires that target to have a workable relative `href`.
-4. Renders the token as an anchor.
-5. Records an occurrence containing:
-   - source scope and document
-   - source character range
-   - raw token text and occurrence Title
-   - family, target type, and target ID
-   - resolved `href`
-
-Unsupported or unresolved tokens remain ordinary text and produce no usage occurrence. This happens in `semantic_tokens.py`.
-
-The artifact builder writes one `index.json` envelope containing every resolved
-occurrence in the scope.
-
-A full scope build regenerates everything:
-
-```bash
-python docs-viewer/build/build_docs.py --scope analysis --write
-```
-
-A Source Editor Rebuild normally performs a targeted document build. It reads
-the existing scope index, preserves occurrences from untouched documents,
-rebuilds the selected document, and writes the complete scope index. The
-existing index is required before a targeted build is considered safe.
-
-## Consumers
-
-The direct product consumer is the manage-only Semantic Tokens report:
-
-```text
-Semantic Tokens report
-    -> GET /docs/semantic-tokens?scope=analysis
-    -> analysis/.../semantic-tokens/index.json
-```
-
-The report combines the occurrence index with that scope’s document index tree to display Title, Identity, and the owning Document link for resolved Catalogue and Tag occurrences. It does not need family-specific report rows because every occurrence already carries exact family/type/ID identity.
-
-The targeted Docs builder also reads the index to preserve occurrences belonging
-to untouched documents. The rebuild coordinator checks that `index.json`
-exists before allowing a targeted build.
-
-No per-document or per-target usage files are generated. Those projections were
-retired because they had no product consumer and implied a document-specific
-payload contract that this manage-only inventory does not need. A future
-consumer can group the scope index in memory or justify its own focused
-projection.
-
-## Non-consumers
-
-- The Add modal and Info view use `target-lookup.json`, not the usage index.
-- Docs Broken Links scans source Markdown and checks the registry/target lookup independently, because unresolved tokens are necessarily absent from the usage index. Tag diagnosis additionally consults the same private selected-primary-or-first association owner used by target generation.
-- The public reader does not consume it. The publish gate excludes the entire `semantic-tokens/` directory.
-
-So the concise distinction is:
-
-- **Target lookup:** which targets can currently resolve.
-- **Usage index:** which resolved targets actually occur in a particular Docs scope.
-
-One lifecycle implication: rebuilding `target-lookup.json` does not itself refresh existing scope usage indexes or rendered document links. Each affected Docs scope must subsequently be rebuilt.
+Live token parsing retains raw text and source positions for Source editing and audits. [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md) owns that contract; [Docs Broken Links](Broken_Links.md) independently checks authored links and media. The private Catalogue target lookup has separate consumers and is unaffected by usage-index retirement.

@@ -11,7 +11,6 @@ from typing import Any, Callable, Iterable
 from urllib.parse import quote, unquote_to_bytes
 
 from .semantic_token_registry import SemanticTokenRegistry
-from .source import DocRecord
 from docs_workspace_config import location_child
 from docs_staged_media_fragments import (
     FIGURE_NATURAL_WIDTH_CLASS,
@@ -518,11 +517,8 @@ class SemanticTokensMixin:
     def resolve_semantic_tokens(
         self,
         markdown: str,
-        *,
-        doc: DocRecord,
-        occurrences_by_doc: dict[str, list[dict[str, Any]]],
     ) -> str:
-        occurrences: list[dict[str, Any]] = []
+        """Render Catalogue markers and bound image text without a usage index."""
         self._catalogue_media_html: dict[str, str] = {}
 
         def replace(token: SemanticTokenOccurrence) -> str:
@@ -534,17 +530,6 @@ class SemanticTokensMixin:
                 alt = work["title"].strip()
                 caption = alt if token.use_work_title_caption else ""
                 metadata = work_metadata_text(work, token.target_id) if token.include_work_metadata else ""
-            if not (
-                getattr(self, "collection_id", "") == "catalogue"
-                and token.target_type == "work"
-                and token.target_id == doc.doc_id
-            ):
-                occurrences.append({
-                    "source_doc_id": doc.doc_id,
-                    "source_range": token.source_range, "raw": token.raw, "title": alt if token.presentation == "image" else token.title,
-                    "family": token.family, "target_type": token.target_type, "target_id": token.target_id,
-                    "href": "",
-                })
             fragment = render_catalogue_media_reference(token, alt=alt, caption=caption, metadata=metadata)
             marker_id = uuid4().hex
             # Comments start HTML blocks at line beginnings; inline references must not.
@@ -561,5 +546,4 @@ class SemanticTokensMixin:
             registry=self.semantic_token_registry,
             replacer=replace,
         )
-        occurrences_by_doc[doc.doc_id] = occurrences
         return rendered

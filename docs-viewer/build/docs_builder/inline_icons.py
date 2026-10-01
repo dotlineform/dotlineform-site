@@ -102,8 +102,7 @@ class InlineIconRenderer:
         """Expand icons only in Markdown inline content, preserving literal code.
 
         Normal Markdown parsing also protects fences, indented code, comments,
-        escaped text and raw HTML attributes. Icon tokens create no relationships
-        or Catalogue semantic-usage entries.
+        escaped text and raw HTML attributes. Icon tokens create no relationships.
         """
         if ICON_TOKEN_PREFIX not in markdown and RELATED_LINKS_PREFIX not in markdown:
             return render_markdown_to_html(markdown)

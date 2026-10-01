@@ -8,7 +8,6 @@ from pathlib import Path
 from typing import Any, Dict
 
 from docs_document_identity import is_document_id, is_immutable_doc_id
-from docs_document_location import management_collection_viewer_url, management_document_viewer_url
 from docs_workspace_config import (
     generated_documents_path,
     generated_search_path,
@@ -61,10 +60,6 @@ def generated_recent_path(repo_root: Path) -> Path:
 
 def generated_backlinks_path(repo_root: Path) -> Path:
     return generated_docs_output_root(repo_root) / "backlinks.json"
-
-
-def generated_semantic_tokens_index_path(repo_root: Path) -> Path:
-    return generated_docs_output_root(repo_root) / "semantic-tokens" / "index.json"
 
 
 def generated_doc_payload_path(repo_root: Path, doc_id: str) -> Path:
@@ -133,46 +128,6 @@ def read_generated_backlinks(repo_root: Path) -> Dict[str, Any]:
         generated_backlinks_path(repo_root),
         "generated backlinks",
     )
-
-
-def read_generated_semantic_tokens_index(repo_root: Path) -> Dict[str, Any]:
-    """Read usage plus exact generated source titles and configured report locations.
-
-    Source summaries are response-only. Never infer a collection from a document
-    ID or use publication eligibility to omit an indexed occurrence.
-    """
-    config = load_docs_working_config(repo_root)
-    payload = read_generated_json(
-        generated_semantic_tokens_index_path(repo_root),
-        "generated semantic-token usage index",
-    )
-    if payload.get("schema_version") != "docs_semantic_token_usage_index_v2" or "scope" in payload or "stage" in payload or not isinstance(payload.get("occurrences"), list):
-        raise ValueError("Semantic-token index has an invalid reader contract")
-    owners = {"": config, **{child.collection: child for child in config.collections}}
-    documents: dict[tuple[str, str], dict[str, Any]] = {}
-    collection_urls: dict[str, str] = {}
-    for occurrence in payload["occurrences"]:
-        if not isinstance(occurrence, dict) or "source_scope" in occurrence or "source_stage" in occurrence:
-            raise ValueError("Semantic-token occurrence has an invalid source contract")
-        collection = occurrence.get("source_collection")
-        doc_id = occurrence.get("source_doc_id")
-        if collection not in owners or not is_document_id(doc_id, collection=collection):
-            raise ValueError("Semantic-token source must identify an exact configured document")
-        key = (collection, doc_id)
-        if key in documents:
-            continue
-        output = resolve_workspace_path(repo_root, generated_documents_path(owners[collection]))
-        document = read_generated_json(output / "by-id" / f"{doc_id}.json", "semantic-token source document")
-        if document.get("doc_id") != doc_id or not isinstance(document.get("title"), str):
-            raise ValueError("Semantic-token source payload does not match its document")
-        if collection not in collection_urls:
-            collection_urls[collection] = management_collection_viewer_url(repo_root, collection)
-        documents[key] = {
-            "target": {"collection": collection, "doc_id": doc_id},
-            "title": document["title"],
-            "href": management_document_viewer_url(collection_urls[collection], doc_id, collection=bool(collection), collection_id=collection),
-        }
-    return {**payload, "source_documents": list(documents.values())}
 
 
 def read_generated_search_index(repo_root: Path) -> Dict[str, Any]:

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260513-105343-6de36b
 title: Reports
 added_date: "2026-05-13 10:53:43"
-last_updated: "2026-09-30 19:01:32"
+last_updated: "2026-10-01 13:29:44"
 parent_id: d-20260424-000000-50b63f
 ---
 # Docs Viewer Reports
@@ -60,7 +60,7 @@ Only by-ID payloads receive the fixed-shape `report` object:
 }
 ```
 
-Manage, prepared and public by-ID payloads retain the report descriptor and generated host. Publication does not strip reports or infer eligibility from report type. Index, Recent, search, manifests, and semantic-token indexes do not carry report metadata.
+Manage, prepared and public by-ID payloads retain the report descriptor and generated host. Publication does not strip reports or infer eligibility from report type. Index, Recent, Search and manifests do not carry report metadata.
 
 ## Report Availability
 
@@ -187,10 +187,7 @@ It uses the local Docs API endpoint `POST /docs/broken-links`, scans both render
 
 `docs_backlinks` renders the generated same-scope incoming-link rows for the exact current report-host document. Parent-scope Docs builds write `backlinks.json` from rendered anchors; targeted builds overlay selected new by-ID payloads on unchanged existing payloads before regenerating the reverse mapping. The report target is only `{ viewerScope, payload.doc_id }`. Code examples, self-links, external links, missing targets, and cross-scope targets are excluded. Local repository-backed browser config uses the static payload URL, external-local config uses the scope-validated generated-read route, the local report registry and loader own execution, and Publish excludes the index.
 
-`semantic_tokens` lists resolved semantic-token occurrences for a selected scope
-in manage mode. It reads the local generated usage index and presents sortable
-Title, Identity, and Document columns; Document links to the owning managed
-document. Unresolved occurrences remain in `docs_broken_links`.
+`semantic_tokens` and its generated usage index are retired. Work image and Work Media View text tokens now contribute ordinary document relationships to Catalogue subdocuments, presented by [Related Links](Related_Links.md). Gallery Media View tokens create no document relationship. `docs_broken_links` remains the independent authoring audit.
 
 `project_state` is the local project-folder reconciliation report. It compares immediate physical Project folders with canonical Work, Series, and document relationships from `analysis/working/works` without changing any source. Only Folder-, Work-, and Series-subject documents participate in reconciliation. Detail-subject documents remain valid entries in the shared Manage manifest and subject associations, but are excluded from report rows and matched/unmatched document counts; they are not placed under their owning Work's folder. The diagnostic manifest document count still describes the complete input collection.
 

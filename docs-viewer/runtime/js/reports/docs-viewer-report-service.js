@@ -68,9 +68,6 @@ export function createDocsViewerReportService(options) {
         requireOkEnvelope: true
       }));
     },
-    readSemanticTokens: function () {
-      return fetchReportJson("/docs/semantic-tokens", serviceOptions);
-    },
     runBrokenLinksAudit: function (request) {
       var payload = {
         report_context: request && request.report_context

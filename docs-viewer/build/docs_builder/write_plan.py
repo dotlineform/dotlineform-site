@@ -34,7 +34,6 @@ class WritePlanMixin:
         index_tree_payload: dict[str, Any],
         recent_payload: dict[str, Any] | None,
         item_payloads: dict[str, dict[str, Any]],
-        semantic_token_payloads: dict[str, Any],
         *,
         stale_item_ids: list[str],
         backlinks_payload: dict[str, Any] | None = None,
@@ -74,7 +73,6 @@ class WritePlanMixin:
                 and read_text(self.output_dir / "backlinks.json") != backlinks_text
             ),
             "backlinks_text": backlinks_text,
-            **self.build_semantic_token_write_plan(semantic_token_payloads),
         }
 
     def write_outputs(
@@ -84,7 +82,6 @@ class WritePlanMixin:
         docs_total: int,
         tree_total: int,
         recent_total: int | None,
-        semantic_token_total: int,
     ) -> None:
         """Apply one write plan and report the resulting output counts.
 
@@ -103,7 +100,6 @@ class WritePlanMixin:
             write_text(self.items_dir / f"{doc_id}.json", write_plan["item_text_by_id"][doc_id])
         for doc_id in write_plan["stale_item_ids"]:
             (self.items_dir / f"{doc_id}.json").unlink(missing_ok=True)
-        self.write_semantic_token_outputs(write_plan)
         # Readers seeing the changed index can now load every referenced payload.
         if write_plan["index_tree_write"]:
             write_text(self.output_dir / "index-tree.json", write_plan["index_tree_text"])
@@ -113,7 +109,6 @@ class WritePlanMixin:
             docs_total=docs_total,
             tree_total=tree_total,
             recent_total=recent_total,
-            semantic_token_total=semantic_token_total,
         )
 
     def print_dry_run(
@@ -121,7 +116,6 @@ class WritePlanMixin:
         index_payload: dict[str, Any],
         index_tree_payload: dict[str, Any],
         recent_payload: dict[str, Any] | None,
-        semantic_token_payloads: dict[str, Any],
         write_plan: dict[str, Any],
     ) -> None:
         self.print_human_summary(
@@ -130,7 +124,6 @@ class WritePlanMixin:
             docs_total=len(index_payload["docs"]),
             tree_total=len(index_tree_payload["docs"]),
             recent_total=len(recent_payload["docs"]) if recent_payload is not None else None,
-            semantic_token_total=len(semantic_token_payloads["index"]["occurrences"]),
         )
 
     def print_human_summary(
@@ -141,15 +134,12 @@ class WritePlanMixin:
         docs_total: int,
         tree_total: int,
         recent_total: int | None,
-        semantic_token_total: int,
     ) -> None:
         doc_write_count = len(write_plan["changed_item_ids"])
         doc_remove_count = len(write_plan["stale_item_ids"])
-        semantic_token_write_count = 1 if write_plan["semantic_token_index_write"] else 0
         index_write_count = (
             (1 if write_plan["index_tree_write"] else 0)
             + (1 if write_plan["recent_write"] else 0)
-            + (1 if write_plan["semantic_token_index_write"] else 0)
             + (1 if write_plan["backlinks_write"] else 0)
         )
         verb = "would write" if mode == "dry-run" else "wrote"
@@ -161,8 +151,6 @@ class WritePlanMixin:
         print(f"  docs {remove_verb}: {doc_remove_count}")
         print(f"  tree docs total: {tree_total}")
         print(f"  recent total: {recent_total if recent_total is not None else 'unchanged'}")
-        print(f"  semantic tokens total: {semantic_token_total}")
-        print(f"  semantic tokens {verb}: {semantic_token_write_count}")
         print(f"  indexes {verb}: {index_write_count}")
         print(f"  warnings: {len(self.warnings)}")
 
@@ -184,7 +172,6 @@ class WritePlanMixin:
             "doc_payloads_removed": len(write_plan["stale_item_ids"]),
             "index_tree_changed": 1 if write_plan["index_tree_write"] else 0,
             "recent_changed": 1 if write_plan["recent_write"] else 0,
-            "semantic_token_index_changed": 1 if write_plan["semantic_token_index_write"] else 0,
             "backlinks_changed": 1 if write_plan["backlinks_write"] else 0,
             "warning_count": len(self.warnings),
             "warnings": self.warnings,

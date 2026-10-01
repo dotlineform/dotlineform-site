@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260930-195002-b3417e
 title: Related Links
 added_date: "2026-09-30 19:50:02"
-last_updated: "2026-10-01 08:22:22"
+last_updated: "2026-10-01 13:29:44"
 summary: Author-inserted related-links directive, a sorted list with collection icons, and build-time relationship snapshots in document JSON.
 ui_status: in-progress
 parent_id: d-20260428-000000-f5ff18
@@ -76,6 +76,8 @@ The builder expands the directive into a static section in the document's genera
 Saving a referring document can update relationship records while leaving the referred document's embedded section unchanged. Ordinary saves retain their targeted build scope; they do not rebuild neighbouring document content merely to refresh this presentation. A full Docs Build refreshes the related-links sections across the complete configured document set that can contribute relationships, including participating collections. Link additions, removals and title changes become visible in the refreshed sections.
 
 Each Working document build first runs the existing incremental Links maintenance for its selected documents. That refresh preserves the saved incoming summaries and updates outgoing summaries from current authored links. The related section then uses the same refreshed version-4 record written to `links-by-id`, so adding or removing an outgoing link is reflected in that document's current build. A dry run uses the same refreshed records in memory without writing them. Section expansion does not discover relationships or add a source graph; the existing per-collection build orchestration remains in place.
+
+Supported Catalogue Work image and Media View tokens contribute ordinary document relationships to their Work's Catalogue subdocument. Gallery Media View tokens contribute none. The generated Catalogue body contains its Work image, a blank line and `[[links|related links]]`; its self-targeting image is omitted from the graph. A Catalogue page can therefore show the documents that reference its Work through incoming links without generating outgoing relationships from the displayed list. A directive alone creates no Links record, and an empty list produces no section. Full Docs rebuilds render Catalogue after the contributing documents and use the final document-JSON comparison to detect changes in the embedded list; no separate Links-file change detector is needed.
 
 Targeted saves rebuild only their selected document content, after refreshing its relationship record and affected neighbours. A document build includes all incoming links already recorded when it runs. Later edits to other documents can change that incoming list without rebuilding this document's content; a subsequent document build or full Docs Build refreshes its embedded section. Working retains its existing relationship exclusions for ordinary documents listed in `unpublishable.json` and their descendants; draft state alone does not suppress Working relationships.
 

@@ -217,8 +217,6 @@ def _validate_prepared_index(path: Path, data: bytes) -> None:
             key = "docs"
         elif path == Path("documents/backlinks.json"):
             key = "by_target"
-        elif path == Path("documents/semantic-tokens/index.json"):
-            key = "occurrences"
         if key:
             payload = _read_json_bytes(data, f"generated {path}")
             if not isinstance(payload.get(key), dict if key == "by_target" else list):

@@ -17,7 +17,7 @@ from urllib.parse import unquote, urlsplit
 from .common import json_text, render_markdown_to_html
 from .links_model import DocumentLinks, DocumentSummary, DocumentTarget
 from .links_schema import read_relationship_payload, relationship_payload
-from .semantic_tokens import replace_semantic_tokens
+from .semantic_tokens import SemanticTokenOccurrence, replace_semantic_tokens
 from .related_links_directive import RELATED_LINKS_PREFIX, render_without_related_links
 from .source import DocRecord
 from docs_document_identity import is_document_id, is_immutable_doc_id
@@ -62,7 +62,7 @@ def prepare_document_links(
         return None
     selected = builder.links_doc_ids if builder.links_doc_ids is not None else builder.only_doc_ids
     doc_ids = set(selected if selected is not None else set(built_doc_ids) | set(stale_doc_ids))
-    return {"documents": docs, "doc_ids": doc_ids, "built_doc_ids": set(built_doc_ids)}
+    return {"documents": docs, "doc_ids": doc_ids}
 
 
 class _DocumentRefresh:
@@ -86,7 +86,6 @@ class _DocumentRefresh:
             self.sources[""], working_ignored_doc_ids(builder.repo_root, self.config),
             {doc.doc_id: doc.parent_id for doc in plan["documents"]} if not self.collection else None,
         )
-        self.pending = {self.key(doc_id) for doc_id in plan["built_doc_ids"]}
         self.records: dict[DocumentTarget, DocumentLinks | None] = {}
         self.original: dict[DocumentTarget, str | None] = {}
         self.removals: set[DocumentTarget] = set()
@@ -101,31 +100,6 @@ class _DocumentRefresh:
     def excluded(self, target: DocumentTarget) -> bool:
         return not target.collection and self.exclusions.excludes(target.doc_id)
 
-    def payload(self, target: DocumentTarget) -> dict[str, Any] | None:
-        """Read one exact generated destination, including its source identity guard."""
-        self.validate_target(target)
-        source = _safe_path(self.sources[target.collection], f"{target.doc_id}.md")
-        doc = self.docs.get(target)
-        if not source.is_file():
-            return None
-        metadata = self.metadata.get(target)
-        if metadata is None:
-            metadata = parse_source(source)[0]
-            self.metadata[target] = metadata
-        if metadata.get("doc_id") != target.doc_id:
-            raise ValueError("Links source document identity does not match")
-        if self.excluded(target):
-            return None
-        path = _safe_path(self.outputs[target.collection], f"{target.doc_id}.json")
-        if target in self.pending and doc:
-            return {"doc_id": target.doc_id, "report": doc.report.as_payload() if doc.report else None}
-        if not path.is_file():
-            return None
-        payload = json.loads(path.read_text())
-        if not isinstance(payload, dict) or payload.get("doc_id") != target.doc_id:
-            raise ValueError("Links target document payload identity does not match")
-        return payload
-
     def viewer_target(self, resolved: dict[str, str]) -> DocumentTarget | None:
         if resolved.get("kind") != "viewer":
             return None
@@ -137,21 +111,27 @@ class _DocumentRefresh:
             collection = self.collection_by_host.get(doc_id, "")
             if not collection or not is_document_id(child, collection=collection):
                 return None
-        target = DocumentTarget(collection, child or doc_id)
-        return target if self.payload(target) is not None else None
+        return DocumentTarget(collection, child or doc_id)
 
-    def summary(self, target: DocumentTarget, doc: DocRecord | None = None) -> DocumentSummary:
-        if doc is None:
-            payload = self.payload(target)
-            if payload is None:
-                raise ValueError("Links endpoint requires its exact source and generated document")
-            metadata = self.metadata[target]
-            title = str(metadata.get("title") or payload["title"]).strip()
-            return DocumentSummary(target, title)
-        resolved = parse_docs_target(resolve_href(doc.viewer_url, "/"), viewer_routes=self.routes)
-        if not resolved or self.viewer_target(resolved) != target:
-            raise ValueError("Links current document has no exact configured viewer location")
-        return DocumentSummary(target, doc.title)
+    def summary(self, target: DocumentTarget, doc: DocRecord | None = None, label: str = "") -> DocumentSummary:
+        """Enrich a new endpoint's label without requiring its destination to exist.
+
+        Current documents and saved Links records supply titles without target
+        reads. A new neighbour may supply source metadata; unavailable metadata
+        leaves the authored label or exact ID. No generated destination is read.
+        """
+        if doc is not None:
+            return DocumentSummary(target, doc.title)
+        metadata = self.metadata.get(target)
+        if metadata is None:
+            source = _safe_path(self.sources[target.collection], f"{target.doc_id}.md")
+            try:
+                metadata = parse_source(source)[0]
+            except (OSError, ValueError):
+                metadata = {}
+            self.metadata[target] = metadata
+        title = metadata.get("title")
+        return DocumentSummary(target, title.strip() if isinstance(title, str) and title.strip() else label or target.doc_id)
 
     def location(self, target: DocumentTarget) -> str:
         """Derive navigation from exact identity and configured report placement."""
@@ -163,8 +143,6 @@ class _DocumentRefresh:
         self.validate_target(target)
         if target in self.records:
             return self.records[target]
-        if not deleted and self.payload(target) is None:
-            return None
         path = _safe_path(self.output, f"{target.doc_id}.json")
         text = path.read_text() if path.is_file() else None
         record = None
@@ -178,10 +156,10 @@ class _DocumentRefresh:
                     raise ValueError("Links record identity does not match its exact document")
                 # A completed collection move already transferred this shared
                 # filename. The old collection cannot remove the new owner.
-                if deleted and self.payload(owner) is not None:
+                if deleted:
                     return None
-                if _safe_path(self.sources[owner.collection], f"{owner.doc_id}.md").exists():
-                    raise ValueError("Links record conflicts with an existing document identity")
+                if target not in self.docs:
+                    raise ValueError("Links record belongs to another collection")
         self.original[target] = text
         if record is not None:
             for neighbour in record.incoming.keys() | record.outgoing.keys():
@@ -189,19 +167,38 @@ class _DocumentRefresh:
         self.records[target] = record
         return record
 
-    def initialise_endpoint(self, target: DocumentTarget, summary: DocumentSummary | None = None) -> DocumentLinks:
-        """Create an available endpoint only when a resolved relationship needs it."""
+    def initialise_endpoint(self, target: DocumentTarget, summary: DocumentSummary | None = None, *, label: str = "") -> DocumentLinks:
+        """Create an endpoint only when an authored relationship needs it."""
         record = self.read(target)
         if record is not None:
             return record
-        record = DocumentLinks(summary or self.summary(target, self.docs.get(target)))
+        record = DocumentLinks(summary or self.summary(target, self.docs.get(target), label))
         self.records[target] = record
         return record
 
     def references(self, target: DocumentTarget, doc: DocRecord, href: str) -> dict[DocumentTarget, DocumentSummary]:
-        """Resolve this document's anchors to unique available endpoint summaries."""
+        """Extract unique document relationships without destination-validity reads.
+
+        Work media/image tokens name Catalogue documents directly; Gallery
+        tokens and generated related-link rows contribute no relationship.
+        """
         references = {}
-        markdown = replace_semantic_tokens(doc.body_markdown, registry=None, replacer=lambda token: "")
+
+        def add_reference(neighbour: DocumentTarget, label: str = "") -> None:
+            if neighbour in references or self.excluded(neighbour):
+                return
+            endpoint = self.initialise_endpoint(neighbour, label=label)
+            references[neighbour] = (endpoint.document if endpoint.document.target == neighbour
+                                     else self.summary(neighbour, self.docs.get(neighbour), label))
+
+        def token_reference(token: SemanticTokenOccurrence) -> str:
+            if token.supported and token.family == "catalogue" and token.target_type == "work":
+                neighbour = DocumentTarget("catalogue", token.target_id)
+                if neighbour != target:
+                    add_reference(neighbour, token.title)
+            return ""
+
+        markdown = replace_semantic_tokens(doc.body_markdown, registry=self.builder.semantic_token_registry, replacer=token_reference)
         rendered = render_without_related_links(markdown) if RELATED_LINKS_PREFIX in markdown else render_markdown_to_html(markdown)
         for anchor in collect_anchors(rendered):
             authored = anchor["href"]
@@ -216,21 +213,22 @@ class _DocumentRefresh:
                 if not raw.scheme and not raw.netloc:
                     source = self.sources[target.collection] / unquote(raw.path)
                     for collection, root in self.sources.items():
-                        if source.resolve().parent == root.resolve() and source.is_file():
+                        if source.resolve().parent == root.resolve():
                             source = _safe_path(root, source.name)
-                            metadata = parse_source(source)[0]
-                            doc_id = metadata.get("doc_id")
+                            doc_id = source.stem
+                            if not is_document_id(doc_id, collection=collection):
+                                # Readable source filenames require metadata to
+                                # identify the document, never to permit a link.
+                                try:
+                                    doc_id = parse_source(source)[0].get("doc_id")
+                                except (OSError, ValueError):
+                                    doc_id = None
                             if isinstance(doc_id, str) and is_document_id(doc_id, collection=collection):
-                                candidate = DocumentTarget(collection, doc_id)
-                                if self.payload(candidate) is not None:
-                                    neighbour = candidate
+                                neighbour = DocumentTarget(collection, doc_id)
                             break
             if neighbour is None:
                 continue
-            if neighbour not in references:
-                endpoint = self.initialise_endpoint(neighbour)
-                references[neighbour] = (endpoint.document if endpoint.document.target == neighbour
-                                         else self.summary(neighbour, self.docs.get(neighbour)))
+            add_reference(neighbour, anchor["text"])
         return references
 
     def refresh(self, target: DocumentTarget, doc: DocRecord | None) -> tuple[int, int]:
