@@ -7,35 +7,30 @@ import {
 import {
   createDocsViewerMainViewHost
 } from "./docs-viewer-main-view-host.js";
+import { mountDocsViewerRelatedLinks } from "./docs-viewer-related-links.js";
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
 }
 
 function infoPanelDefaultViewId(settings, modeId) {
+  if (modeId !== "markdown-source") return "";
   var services = typeof settings.sourceEditorServices === "function" ? settings.sourceEditorServices() : null;
-  if (modeId === "markdown-source" && services && services.getInfoViewId) return services.getInfoViewId();
+  var sourceViewId = services && typeof services.getInfoViewId === "function" ? services.getInfoViewId() : "";
+  if (sourceViewId) return sourceViewId;
   var map = settings.infoPanelDefaultViewByDocumentMode;
   if (!map || typeof map !== "object") return "";
   return cleanString(map[cleanString(modeId)]);
 }
 
-function infoPanelAutoOpensForMode(settings, modeId) {
-  var configuredModes = Array.isArray(settings.infoPanelAutoOpenDocumentModes)
-    ? settings.infoPanelAutoOpenDocumentModes
-    : [];
-  var targetModeId = cleanString(modeId);
-  return configuredModes.some(function (configuredModeId) {
-    return cleanString(configuredModeId) === targetModeId;
-  });
-}
-
+/** Coordinate document modes and exact pin mounts; reader navigation retains capture, Source transitions close it. */
 export function createDocsViewerDocumentViewCoordinator(options) {
   var settings = options || {};
   var viewRegistry = settings.viewRegistry;
   var panelLayout = settings.panelLayout;
   var panelView = settings.panelView || null;
   var infoPanelController = null;
+  var panelDocumentMode = "rendered-document";
 
   if (!viewRegistry) throw new Error("Docs Viewer document-view coordinator requires a view registry.");
   if (!panelLayout) throw new Error("Docs Viewer document-view coordinator requires panel layout.");
@@ -100,7 +95,11 @@ export function createDocsViewerDocumentViewCoordinator(options) {
     contextOptions: documentModeContextOptions,
     defaultModeId: "rendered-document",
     mount: settings.mount,
-    onModeChange: projectControlState,
+    onModeChange: function (modeId) {
+      if (modeId !== panelDocumentMode && infoPanelController) infoPanelController.closeIfOpen();
+      panelDocumentMode = modeId;
+      projectControlState();
+    },
     projectToolbar: settings.projectMainView,
     root: settings.root,
     showWarning: settings.showWarning,
@@ -123,7 +122,7 @@ export function createDocsViewerDocumentViewCoordinator(options) {
     workspaceConfig: settings.workspaceConfig,
     selectedDocument: settings.selectedDocument,
     defaultViewId: function () {
-      return infoPanelDefaultViewId(settings, documentDisplayModeHost.activeModeId()) || "metadata-info";
+      return infoPanelDefaultViewId(settings, documentDisplayModeHost.activeModeId());
     },
     sourceEditorServices: settings.sourceEditorServices,
     viewerTargetDocId: settings.viewerTargetDocId,
@@ -132,13 +131,8 @@ export function createDocsViewerDocumentViewCoordinator(options) {
   projectControlState();
 
   function syncInfoPanelDefault(modeId) {
-    var defaultViewId = infoPanelDefaultViewId(settings, modeId) || "metadata-info";
-    if (!infoPanelController.isOpen()) {
-      if (infoPanelAutoOpensForMode(settings, modeId)) {
-        infoPanelController.openView(defaultViewId);
-      }
-      return;
-    }
+    var defaultViewId = infoPanelDefaultViewId(settings, modeId);
+    if (!defaultViewId || !infoPanelController.isOpen()) return;
     if (infoPanelController.activeViewId() === defaultViewId) {
       infoPanelController.update();
       return;
@@ -186,6 +180,15 @@ export function createDocsViewerDocumentViewCoordinator(options) {
     isInfoOpen: function () { return infoPanelController.isOpen(); },
     handleInfoControl: function () { return infoPanelController.handleControl(); },
     openInfoView: function (viewId) { return infoPanelController.openView(viewId); },
+    mountRelatedLinks: function (context) {
+      var available = viewRegistry.resolveView("related-links").available;
+      if (!available || documentDisplayModeHost.activeModeId() !== "rendered-document") return;
+      mountDocsViewerRelatedLinks(Object.assign({}, context, {
+        onPin: function (capture) {
+          if (documentDisplayModeHost.activeModeId() === "rendered-document") infoPanelController.pinRelatedLinks(capture);
+        }
+      }));
+    },
     renderInfoToggle: function () { return infoPanelController.renderToggleState(); },
     requestDocumentMode: requestDocumentMode,
     requestMainView: function (viewId, requestOptions) { return mainViewHost.requestView(viewId, requestOptions); },

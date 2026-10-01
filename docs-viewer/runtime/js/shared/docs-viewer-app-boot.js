@@ -127,8 +127,8 @@ function applyResolvedRouteDataset(root, documentRef, routeContext) {
   }
 
   if (headerMount && headerMount.dataset && viewerSearch.configured) {
-    headerMount.dataset.searchPlaceholder = viewerSearch.placeholder || "search docs";
-    headerMount.dataset.searchAriaLabel = viewerSearch.ariaLabel || "Search docs";
+    headerMount.dataset.searchPlaceholder = viewerSearch.placeholder || "search";
+    headerMount.dataset.searchAriaLabel = viewerSearch.ariaLabel || "Search";
   }
 
   if (routeShell.pageTitle && documentRef) {
@@ -193,7 +193,6 @@ export function resolveDocsViewerAppBootContext(options) {
         mediaDetailAdapter: settings.mediaDetailAdapter,
         routeContext: routeContext,
         viewRegistry: viewRegistry,
-        infoPanelAutoOpenDocumentModes: settings.infoPanelAutoOpenDocumentModes,
         infoPanelDefaultViewByDocumentMode: settings.infoPanelDefaultViewByDocumentMode,
         inlineMermaidAdapter: settings.inlineMermaidAdapter,
         mainViewControlHandlerContributions: settings.mainViewControlHandlerContributions || {},

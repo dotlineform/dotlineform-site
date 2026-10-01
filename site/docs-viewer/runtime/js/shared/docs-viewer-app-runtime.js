@@ -149,7 +149,7 @@ export function startDocsViewerRuntime(options) {
   var activeSourceEditorContextAdapter = null;
   var activeSourceEditorInfoUnsubscribe = null;
   var sourceEditorInfoRequest = 0;
-  var sourceEditorInfoViewId = "metadata-info";
+  var sourceEditorInfoViewId = "";
   var recentControlLabel = "Recent";
   var latestCollectionReportGeneration = 0;
   var latestCollectionReportState = {
@@ -345,7 +345,6 @@ export function startDocsViewerRuntime(options) {
     buildTrail: buildTrail,
     collectionProvider: collectionProvider,
     documentIndex: appSession.domains.documentIndex,
-    infoPanelAutoOpenDocumentModes: settings.infoPanelAutoOpenDocumentModes,
     infoPanelDefaultViewByDocumentMode: settings.infoPanelDefaultViewByDocumentMode,
     infoPanelRefs: infoPanelRefs,
     managedDocumentContext: function () { return latestCollectionReportState; },
@@ -413,6 +412,7 @@ export function startDocsViewerRuntime(options) {
       }
     },
     mountDocumentExtras: settings.mountDocumentExtras,
+    mountRelatedLinks: documentViewCoordinator.mountRelatedLinks,
     reportPresentationAdapter: settings.reportPresentationAdapter,
     more: more,
     projectDocumentShell: panelLayout.projectMainView,
@@ -703,7 +703,7 @@ export function startDocsViewerRuntime(options) {
           label: recentControlLabel,
           pressed: appSession.domains.searchRecent.recentModeActive
         },
-        "search": { label: "Search docs" }
+        "search": { label: "Search" }
       }
     });
   }
@@ -867,9 +867,8 @@ export function startDocsViewerRuntime(options) {
         if (adapter && activeSourceEditorContextAdapter !== adapter) return;
         clearInfoSubscription();
         activeSourceEditorContextAdapter = null;
-        if (documentViewCoordinator && documentViewCoordinator.isInfoOpen()) {
-          documentViewCoordinator.openInfoView("metadata-info");
-        } else if (documentViewCoordinator) {
+        if (documentViewCoordinator) {
+          documentViewCoordinator.closeInfoIfOpen();
           documentViewCoordinator.renderInfoToggle();
         }
       },

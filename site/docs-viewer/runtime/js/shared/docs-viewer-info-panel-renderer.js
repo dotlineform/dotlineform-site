@@ -36,8 +36,8 @@ export function renderDocsViewerInfoPanelShell(options = {}) {
   closeButton.className = "docsViewer__toolbarIconButton docsViewer__infoPanelClose";
   closeButton.id = "docsViewerInfoPanelClose";
   closeButton.type = "button";
-  closeButton.setAttribute("aria-label", "Hide info panel");
-  closeButton.title = "Hide info panel";
+  closeButton.setAttribute("aria-label", "Close");
+  closeButton.title = "Close";
   closeButton.appendChild(createDocsViewerToolbarIcon(documentRef, "docsViewer__icon--x"));
 
   header.append(copy, closeButton);
@@ -50,7 +50,7 @@ export function renderDocsViewerInfoPanelShell(options = {}) {
   const body = documentRef.createElement("div");
   body.className = "docsViewer__infoPanelBody";
   body.id = "docsViewerInfoPanelBody";
-  body.setAttribute("data-docs-viewer-hosted-view-mount", "metadata-info");
+  body.setAttribute("data-docs-viewer-hosted-view-mount", "info");
 
   panel.append(header, status, body);
   mount.replaceChildren(panel);

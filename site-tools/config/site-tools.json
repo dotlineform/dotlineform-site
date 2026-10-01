@@ -80,7 +80,7 @@
       "docs-viewer/static/css/docs-viewer.css",
       "docs-viewer/runtime/js/public/docs-viewer-public.js",
       "docs-viewer/runtime/js/shared/docs-viewer-app-boot.js",
-      "docs-viewer/runtime/js/shared/docs-viewer-metadata-info-view.js",
+      "docs-viewer/runtime/js/shared/docs-viewer-related-links.js",
       "404.html",
       "archive/index.html",
       "archive/assets/css/main.css",

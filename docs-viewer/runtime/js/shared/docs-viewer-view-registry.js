@@ -227,12 +227,13 @@ export function createDocsViewerSharedViewDefinitions() {
       { id: "search-results", label: "Search results", panel: "main", features: ["search"] },
       { id: "recent-results", label: "Recent", panel: "main", features: ["recent"] },
       {
-        id: "metadata-info",
-        label: "Metadata info",
+        id: "related-links",
+        label: "Related links",
         panel: "info",
+        appKinds: ["public", "manage"],
         load: function () {
-          return import("./docs-viewer-metadata-info-view.js")
-            .then(function (module) { return module.createDocsViewerMetadataInfoView(); });
+          return import("./docs-viewer-related-links.js")
+            .then(function (module) { return module.createDocsViewerRelatedLinksView(); });
         }
       }
     ],
@@ -250,7 +251,7 @@ export function createDocsViewerSharedViewDefinitions() {
       },
       {
         id: "search",
-        label: "Search docs",
+        label: "Search",
         ownerType: "app",
         surfaceId: "app-viewer",
         features: ["search"],
@@ -266,15 +267,6 @@ export function createDocsViewerSharedViewDefinitions() {
         surfaceId: "main-view",
         features: ["bookmarks"],
         renderer: "bookmark-toggle"
-      },
-      {
-        id: "info",
-        actionId: "info",
-        label: "Document info",
-        ownerType: "view",
-        ownerViewId: "rendered-document",
-        surfaceId: "main-view",
-        renderer: "info-toggle"
       }
     ]
   };

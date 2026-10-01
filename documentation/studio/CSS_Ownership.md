@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260511-200845-2a03a0
 title: CSS Ownership
 added_date: "2026-05-11 20:08:45"
-last_updated: "2026-08-09 12:06:07"
+last_updated: "2026-10-01 17:27:38"
 parent_id: d-20260424-000000-50b63f
 
 ---
@@ -14,11 +14,13 @@ Docs Viewer is portable but intentionally inherits the prose language of its hos
 ## Owners
 
 - **host CSS** owns site chrome, layout, baseline typography, theme tokens, and generic `.content` prose/media rules.
-- **portable Docs Viewer CSS** at `site/docs-viewer/static/css/docs-viewer.css` owns the reader shell, navigation, panels, search, bookmarks, status, and shared viewer controls.
+- **portable Docs Viewer CSS** at `docs-viewer/static/css/docs-viewer.css`, projected to `site/docs-viewer/static/css/docs-viewer.css`, owns the reader shell, navigation, panels, search, bookmarks, status, and shared viewer controls.
 - **scope CSS**, when installed by an owning route, owns presentation meaningful to one content scope. No current public scope installs a scope-specific stylesheet.
 - **manage feature CSS** under `docs-viewer/static/css/` owns the manage shell, source editor, import, and other local-only surfaces.
 
 Rendered document HTML uses both `docsViewer__content` and `content`. This is deliberate: the viewer owns its container while the host owns ordinary document typography.
+
+The shared viewer stylesheet explicitly owns document body font/line height, paragraph margins, H1 sizing, Related Links heading typography and list spacing, and Info panel line and row spacing. Public and Manage use the same token-based rules without relying on public host styles or browser defaults for those details. Specialised document presentation, including Moments, retains its more specific rules.
 
 ## Load Boundary
 
@@ -26,7 +28,7 @@ Public routes load host CSS, the portable viewer stylesheet, and an explicit sco
 
 The local manage shell loads the portable viewer stylesheet, shared report styles, applicable scope styles, and focused management feature styles. Management controls must not depend on Studio CSS even when Studio is the local host.
 
-The local Docs Viewer service maps the public portable CSS URL to the same tracked file, so public and manage routes do not maintain separate reader styles.
+Local apps serve canonical reader styles under `docs-viewer/`; public preview and GitHub Pages serve their tracked projection under `site/docs-viewer/`. `bin/site-code-update` maintains that projection, so public and Manage do not maintain separate reader styles.
 
 ## Extension Method
 

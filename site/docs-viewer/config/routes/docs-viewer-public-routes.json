@@ -55,7 +55,7 @@
         },
         "info": {
           "enabled": true,
-          "default_view": "metadata-info"
+          "default_view": "related-links"
         }
       }
     }

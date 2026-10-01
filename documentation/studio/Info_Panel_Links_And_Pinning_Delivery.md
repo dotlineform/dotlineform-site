@@ -3,9 +3,9 @@ draft: false
 doc_id: d-20260913-151251-cbee5b
 title: Info Panel Related Links And Pinning - Delivery
 added_date: "2026-09-13 15:12:51"
-last_updated: "2026-10-01 15:05:39"
+last_updated: "2026-10-01 17:31:33"
 summary: Open an always-pinned document panel from the generated related-links section, showing only its title, optional summary and related list while the reader browses other documents.
-ui_status: proposed
+ui_status: done
 parent_id: d-20260902-102745-8379ea
 ---
 # Info Panel Related Links And Pinning - Delivery
@@ -14,7 +14,7 @@ parent_id: d-20260902-102745-8379ea
 
 Deliver one outcome: a reader intentionally opens a document's related links beside the main pane and keeps that document's context while browsing the destinations. The Info panel is always pinned to the document whose related-links pin opened it. Closing the panel ends that context; a rendered document's related-links pin is its only reopening action.
 
-The revised requirements were agreed on 2026-10-01. This replaces the earlier following/pin-toggle interaction, concept-pill presentation and proposed Subject-based relationship expansion. Reuse the generated document-only list described in [Related Links](Related_Links.md); the separate per-document Links view and read endpoint are already retired. Implementation has not started, and this delivery remains proposed pending **IRP-0 — Readiness**. [Unified Analysis And Catalogue Presentation](Analysis_And_Catalogue_Presentation.md) remains the feature parent. [Info Panel](Info_Panel.md) is the primary durable destination at closeout.
+Complete, accepted and closed on 2026-10-01. Reader pinning and unfiltered targets are implemented, the approved Working docs-only reconciliation and public runtime projection are complete, and bounded code review is recorded below. The user confirmed matching local/public presentation, accepted the Info panel's reader purpose and explicitly approved closeout. [Unified Analysis And Catalogue Presentation](Analysis_And_Catalogue_Presentation.md) remains the feature parent. [Info Panel](Info_Panel.md) is the primary durable owner. This delivery is ready for manual archive; Source simplification, Publish, deployment and Git actions remain separate.
 
 ### Opening From Document Content
 
@@ -70,7 +70,7 @@ Link destinations are an authoring choice. Draft is a temporary indication of un
 - Do not read linked documents to validate their draft state, require target existence during relationship construction, add readiness warnings or rewrite unavailable destinations. A public link to a document omitted from the snapshot remains visible and receives the normal unavailable-document response when followed. The author can finish/include that document or change the authored link.
 - The same unfiltered generated list supplies the document section and captured panel. A list containing only unpublished destinations is still non-empty and therefore still has its heading/pin, subject to the authored heading text.
 
-Current implementation still applies the ordinary ignore policy in Working relationship/picker selection and filters captured related-list targets against prepared IDs. Removing those policies is a proposed change in this delivery, not a claim about shipped behaviour. Ordinary source loading, editing and preparation continue validating each document's own required front matter; this proposal removes readiness validation as a condition of linking to it. [Related Links](Related_Links.md) and [Builder](Builder.md) describe the current filtering until implementation and durable transfer are complete.
+Working relationship/picker selection no longer reads ordinary ignore policy, and captured related-list rows are no longer filtered against prepared target IDs. Picker discovery reads identity/title metadata without validating draft readiness. Ordinary source loading, editing and preparation continue validating each document's own required front matter. [Related Links](Related_Links.md) and [Builder](Builder.md) describe the implemented target policy; publication of newly generated content still requires its own Publish request.
 
 Apply the reader behaviour to ordinary and configured collection documents available in local Manage and the public viewer. Publish captures persisted relationships and embeds the retained lists in completed Preview document output; distribution carries that same snapshot to the public site without another target filter. The panel reuses those prepared sections and their configured local/public routes. Preview remains a physical publication artifact, with no browser stage or preview read route. Public readers use deployed static assets without local service calls, capability probes or Working fallback.
 
@@ -80,13 +80,13 @@ Shared browser code remains canonical under `docs-viewer/`, with its tracked pub
 
 ## Deliverables
 
-- [ ] A pin beside each non-empty document related-links heading, including the heading-free form, with empty sections still suppressed.
-- [ ] A rendered panel containing the captured document title, optional uncaptioned summary and existing related list, plus Close.
-- [ ] Captured context retained across document navigation and replaced only by another pin action; Close releases it.
-- [ ] Removal of the rendered-document **i** action and previous metadata presentation, while Source retains its separate temporary editing workflow.
-- [ ] Local/public integration and the required tracked runtime projection using already generated document content.
-- [ ] Removal of link-target draft/publication filtering from picker/relationship selection and captured related-list expansion, while retaining document-body publication eligibility.
-- [ ] Proportionate static verification, user interaction/layout review, code review and durable transfer to Info Panel.
+- [x] A pin beside each non-empty document related-links heading, including the heading-free form, with empty sections still suppressed.
+- [x] A rendered panel containing the captured document title, optional uncaptioned summary and existing related list, plus Close.
+- [x] Captured context retained across document navigation and replaced only by another pin action; Close releases it.
+- [x] Removal of the rendered-document **i** action and previous metadata presentation, while Source retains its separate temporary editing workflow.
+- [x] Local/public integration and the required tracked runtime projection using already generated document content.
+- [x] Removal of link-target draft/publication filtering from picker/relationship selection and captured related-list expansion, while retaining document-body publication eligibility.
+- [x] Proportionate static verification, user interaction/layout acceptance, code review and durable transfer to Info Panel.
 
 ## Process
 
@@ -102,59 +102,66 @@ Shared browser code remains canonical under `docs-viewer/`, with its tracked pub
 
 ### IRP-0 — Readiness
 
-- [ ] Confirm generated-section reuse, exact ordinary/collection targets, captured state ownership and main-pane link activation against current owners.
-- [ ] Confirm pin/heading suppression, shell title/Close layout and removal of rendered metadata without changing authored relationship extraction.
-- [ ] Confirm removal of draft/ignore/prepared-membership checks for link targets, with document-body eligibility and source-schema validation retained by their existing owners.
-- [ ] Confirm local/public route composition, non-viewer consumers of generated content and the temporary Source transition boundary.
-- [ ] Confirm the bounded implementation sequence and proportionate verification budget. Stop if this requires a publication redesign, another relationship graph or a general history/cache framework.
+- [x] Confirm generated-section reuse, exact ordinary/collection targets, captured state ownership and main-pane link activation against current owners.
+- [x] Confirm pin/heading suppression, shell title/Close layout and removal of rendered metadata without changing authored relationship extraction.
+- [x] Confirm removal of draft/ignore/prepared-membership checks for link targets, with document-body eligibility and source-schema validation retained by their existing owners.
+- [x] Confirm local/public route composition, non-viewer consumers of generated content and the temporary Source transition boundary.
+- [x] Confirm the bounded implementation sequence and proportionate verification budget. Stop if this requires a publication redesign, another relationship graph or a general history/cache framework.
 
-Gate: present concise read-only readiness for implementation approval; remain proposed until it is safe to implement. Verification: specification and broad owner comparison only, with no prototype, tests or generated writes. Record: revised requirements agreed on 2026-10-01; readiness not started.
+Gate: complete; implementation and the separately named Working docs-only reconciliation approved on 2026-10-01. Verification: specification and broad owner comparison only, with no prototype, executable tests or generated writes during readiness. Record: safe to implement within the existing relationship, preparation, document-mount, route and panel owners.
+
+Readiness decisions: reuse each loaded payload's title/summary and copy its generated list at pin activation, preserving resolved routes and icons independently of the document mount. Add the opening control during local/public reader mounting so exported content and Docs Review retain their static lists. Ordinary mounting and collection-detail mounting already expose their own payloads and exact targets; use both rather than inferring a detail from the selected report host. The shared route listener already handles links throughout the app root, including the panel. The panel controller owns capture and release; its hosted view renders the captured summary/list, and the shell projects the captured title. Navigation updates must leave reader capture intact. Existing host request invalidation provides the lifecycle boundary for replacement and Close. Source entry releases reader capture; Source exit closes the authoring panel instead of reopening rendered metadata. Retire the rendered metadata view/control paths without compatibility aliases, retaining Source's separate views.
+
+Approved implementation order and verification budget: **IRP-1**, then **IRP-2**, then **IRP-3**, followed by bounded **IRP-4** review. Remove ordinary ignore checks from relationship maintenance and picker discovery, use identity/title metadata discovery without the full source loader's draft validation, and retain captured incoming/outgoing rows without prepared-target filtering. Keep source editing/build validation and body eligibility unchanged. The approved full Working docs-only reconciliation restores suppressed relationships and refreshes embedded sections without rebuilding Search or running Publish. Use explicit-path Python/JavaScript lint and source/diff review, then the required runtime projection, projection check and site validation. Static checks should cost seconds to a few minutes; full-build cost depends on the configured document set and is not benchmarked at readiness. The relevant picker, relationship and preparation Python tests still use retired scope contracts and are not selected as current evidence. No test authoring, migration, suite or browser automation is proposed. Manual local/public review remains the interaction/layout gate; additional real Build, Publish, deployment, commit and push retain their separately named authorization boundaries.
 
 ### IRP-1 — Unfiltered Link Targets
 
-- [ ] Remove ordinary publication exclusions from document-link picker selection and authored relationship endpoint maintenance; do not make target draft validity a picker prerequisite.
-- [ ] Preserve the captured incoming/outgoing summaries for published documents without filtering their destinations against prepared IDs.
-- [ ] Keep exact identity/schema validation, authored labels, self-link removal and deduplication; keep document-body preparation eligibility separate.
-- [ ] Confirm any required full Working relationship reconciliation to restore relationships previously suppressed by the removed policy. Treat it as an explicit build operation, not a new scan during ordinary linking or panel opening.
+- [x] Remove ordinary publication exclusions from document-link picker selection and authored relationship endpoint maintenance; do not make target draft validity a picker prerequisite.
+- [x] Preserve the captured incoming/outgoing summaries for published documents without filtering their destinations against prepared IDs.
+- [x] Keep exact identity/schema validation, authored labels, self-link removal and deduplication; keep document-body preparation eligibility separate.
+- [x] Confirm any required full Working relationship reconciliation to restore relationships previously suppressed by the removed policy. Treat it as an explicit build operation, not a new scan during ordinary linking or panel opening.
 
-Gate: linking and rendered related lists follow the author's references independently of target readiness. Verification: bounded source review and the smallest justified existing picker/relationship/preparation selection after inspecting its coverage and side effects. Separately approve any test changes or real build/publication action; record evidence limits when no executable selection is justified. Record: not started.
+Gate: implementation complete. Record: explicit-path Python lint passed and source review retained exact identity, path confinement and body eligibility. The approved docs-only reconciliation processed 5,204 documents across ordinary and all four configured collections, restored seven relationships in twelve changed records, updated two Catalogue sections and refreshed the 56-record non-empty aggregate, with zero warnings. Collection rendering after the final relationship updates reused persisted records without another relationship refresh. Search and Publish were not run. Retired-scope picker/relationship/preparation tests are not current coverage and were neither changed nor run; real omitted-target publication was not exercised by Codex.
 
 ### IRP-2 — Document Pin And Captured Panel
 
-- [ ] Add the pin to non-empty related sections and remove the rendered **i** control, retaining Source's temporary control.
-- [ ] Project the captured title into the shell, lay out the wrapping title and centred Close control, and render only optional summary and the existing list.
-- [ ] Retain the exact captured context across main navigation; implement replacement, repeated-pin and Close behaviour through the existing panel lifecycle owners.
-- [ ] Keep capture independent of disposed document mounts and reject late work after replacement or closure.
-- [ ] End reader capture on entering Source and preserve the existing authoring workflow until its separate delivery.
+- [x] Add the pin to non-empty related sections and remove the rendered **i** control, retaining Source's temporary control.
+- [x] Project the captured title into the shell, lay out the wrapping title and centred Close control, and render only optional summary and the existing list.
+- [x] Retain the exact captured context across main navigation; implement replacement, repeated-pin and Close behaviour through the existing panel lifecycle owners.
+- [x] Keep capture independent of disposed document mounts and reject late work after replacement or closure.
+- [x] End reader capture on entering Source and preserve the existing authoring workflow until its separate delivery.
 
-Gate: the complete reader interaction is available for local review. Verification: select explicit-path lint and any justified existing state/route evidence after inspecting their documented coverage; layout, copy, focus and navigation feel remain manual. New or changed tests require their own approved specification under [Testing](Testing.md) and [Test Contract Discipline](Test_Contract_Discipline.md). Record: not started.
+Gate: complete; reader panel accepted at user closeout on 2026-10-01. Record: explicit-path lint passed for the changed JavaScript files, including the subsequent Search label follow-through. Bounded source review confirms ordinary/detail callbacks carry loaded payloads and exact targets, pins copy only the list, main navigation leaves capture intact, and Source mode transitions close it. The rendered metadata module and shared rendered **i** registration are removed; the Source control is management-only. No browser checks or new/changed tests were run. User acceptance covers the delivered reader outcome; individual interaction edge cases were not itemized as separate manual results.
 
 ### IRP-3 — Public Projection And Presentation Review
 
-- [ ] Confirm public composition reuses its loaded document sections and configured navigation without management services or additional data fetching.
-- [ ] Confirm retained links to omitted targets do not cause target-readiness reads, list suppression or publication warnings/gates.
-- [ ] Project changed shared runtime files with `bin/site-code-update`, inspect the exact tracked delta, then run `bin/site-code-update --check` and `bin/site-validate`.
-- [ ] Record user review of main and collection documents, long titles, missing/blank summary, heading-free sections, empty sections, repeated pins, replacement and Close.
+- [x] Confirm public composition reuses its loaded document sections and configured navigation without management services or additional data fetching.
+- [x] Confirm retained links to omitted targets do not cause target-readiness reads, list suppression or publication warnings/gates.
+- [x] Project changed shared runtime files with `bin/site-code-update`, inspect the exact tracked delta, then run `bin/site-code-update --check` and `bin/site-validate`.
+- [x] Record user acceptance of the local/public reader and presentation; distinguish overall acceptance from separately itemized edge-case coverage.
 
-Gate: user acceptance in local Manage and public-site preview. Verification: required projection/validation and manual presentation review within the agreed budget; real Publish or deployment requires its own request. Record: not started.
+Gate: complete; local/public presentation accepted on 2026-10-01. Record: public inventory replaces the retired metadata module with the related-links owner and adds existing pin artwork; route defaults use the new view, while Docs Review retains static content. The exact site runtime delta was inspected; projection check and site validation passed. After the requested refinements, the user confirmed they could switch between Manage and public without noticing a presentation difference and accepted the Info panel's purpose. Long-title, missing-summary, heading-free/empty-section, repeated-pin, replacement and Close cases were not individually itemized in that confirmation. Static review confirms no capture reads or management handles. Codex did not run a real Publish; public content publication remains a separately requested operation.
+
+Accepted presentation refinements are incorporated into shared CSS: loose Info line spacing and the public list row gap on both surfaces, document link colours/states, a pin matching inline icon size, the public H1 size, and Manage's gap below the Related Links heading. Screenshot comparison identified further host/browser differences in body paragraph margins and generated Related Links heading/list styles; shared token-based rules now use the public paragraph margins, heading typography and row gap on both surfaces. Public and Manage site Search now use the same `search` placeholder and `Search` accessible label. [CSS Ownership](CSS_Ownership.md) records the explicit shared-style boundary.
 
 ### IRP-4 — Code Review
 
-- [ ] Review the bounded diff for exact target ownership, retained-context lifetime, dead metadata/control paths, duplicate list rendering, compatibility residue and public leakage.
-- [ ] Confirm the panel contains no heading/pin copied from the document section and no remaining rendered opening path through **i**.
-- [ ] Confirm target-publication filtering is removed without weakening exact identity/schema validation, changing document-body eligibility or moving Source authoring ownership.
-- [ ] Resolve findings and repeat only affected evidence; separately scope any required test changes.
+- [x] Review the bounded diff for exact target ownership, retained-context lifetime, dead metadata/control paths, duplicate list rendering, compatibility residue and public leakage.
+- [x] Confirm the panel contains no heading/pin copied from the document section and no remaining rendered opening path through **i**.
+- [x] Confirm target-publication filtering is removed without weakening exact identity/schema validation, changing document-body eligibility or moving Source authoring ownership.
+- [x] Resolve findings and repeat only affected evidence; separately scope any required test changes.
 
-Gate: present review findings, resolutions and remaining limitations. Verification: bounded code/diff review and selected affected checks. Record: not started.
+Gate: bounded review complete. Findings resolved: retain explicit picker source-symlink rejection after removing the full source loader; render absent captured body content without placeholders; keep the Source default resolver to one read and no rendered fallback; update the public required-file inventory alongside removal of the metadata view. The projection manifest's sorted-file validation caught and corrected the new module's initial placement. Affected lint and public projection/validation were repeated after review changes. No compatibility aliases, second graph, target-readiness checks, public service calls or additional reader opening path were introduced. User presentation acceptance is recorded in IRP-3; separately itemized interaction cases and real omitted-target publication remain evidence limits.
 
 ### IRP-5 — Closeout
 
-- [ ] Confirm acceptance of the intentional pin/open, captured title/summary/list, navigation, replacement and Close workflow.
-- [ ] Transfer shipped behaviour into Info Panel and reconcile Related Links, Builder and the document-link picker owner for the removed target filters. Keep the separate Source delivery proposed until its readiness/implementation is approved.
-- [ ] Update the feature parent and recommend this delivery for manual archive after durable transfer.
-- [ ] Distinguish implementation/public projection from any separately authorized Publish, deployment, commit or push.
+- [x] Confirm user acceptance of the delivered reader workflow and explicit closeout.
+- [x] Transfer implemented behaviour into Info Panel and reconcile Related Links, Builder and the document-link picker owner for the removed target filters. Keep the separate Source delivery proposed until its readiness/implementation is approved.
+- [x] Update the feature parent's current state.
+- [x] Recommend this delivery for manual archive after acceptance and durable transfer.
+- [x] Distinguish implementation/public projection from any separately authorized Publish, deployment, commit or push.
 
-Gate: explicit user closeout. Verification: reuse accepted implementation evidence; documentation-only closeout needs bounded source review, with no automatic build or test run. Record: not started.
+Gate: complete; the user explicitly approved closeout on 2026-10-01 after accepting the matching local/public presentation and useful reader panel. Durable owners and the feature parent's current state are updated. Recommend this completed delivery for the next manual documentation archive. No separate working-note or verification sibling was created. No Publish, deployment, commit or push occurred. Closeout reused the recorded implementation evidence without rebuilding or running tests.
 
 ## Follow-on
 

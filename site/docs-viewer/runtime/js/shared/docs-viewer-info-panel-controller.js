@@ -6,6 +6,7 @@ import {
   resolveDocsViewerSelectedDoc
 } from "./docs-viewer-view-context.js";
 
+/** Own detached reader capture and live Source context in the shared shell; Close releases either. */
 export function createDocsViewerInfoPanelController(options) {
   var settings = options || {};
   var refs = settings.refs || {};
@@ -13,6 +14,7 @@ export function createDocsViewerInfoPanelController(options) {
   var selectedDocument = settings.selectedDocument || {};
   var workspaceConfig = settings.workspaceConfig || {};
   var panelView = settings.panelView || null;
+  var capture = null;
   var host = createDocsViewerInfoPanelHost({
     refs: refs,
     registry: settings.registry,
@@ -56,19 +58,14 @@ export function createDocsViewerInfoPanelController(options) {
     });
   }
 
-  function metadataInfoAvailable() {
-    return host.viewOptions().some(function (view) {
-      return view.available;
-    });
-  }
-
   function renderToggleState() {
     var eligible = typeof settings.controlActive !== "function" || settings.controlActive("info");
-    var canShow = eligible && Boolean(currentSelectedDoc() && metadataInfoAvailable());
-    var open = host.isOpen();
     var defaultViewId = typeof settings.defaultViewId === "function" ? settings.defaultViewId() : settings.defaultViewId;
-    var view = settings.registry.resolveView(open ? host.activeViewId() : defaultViewId);
-    var description = view && view.view && view.view.id !== "metadata-info" ? view.view.label.toLowerCase() : "document info";
+    var resolved = defaultViewId ? settings.registry.resolveView(defaultViewId) : null;
+    var canShow = eligible && Boolean(currentSelectedDoc() && resolved && resolved.available);
+    var open = host.isOpen();
+    var view = canShow ? settings.registry.resolveView(open ? host.activeViewId() : defaultViewId) : null;
+    var description = view && view.view ? view.view.label.toLowerCase() : "document info";
     var label = (open ? "Hide " : "Show ") + description;
     if (typeof settings.projectControlState === "function") {
       settings.projectControlState("info", {
@@ -81,7 +78,7 @@ export function createDocsViewerInfoPanelController(options) {
 
   function update() {
     renderToggleState();
-    if (host.isOpen()) {
+    if (host.isOpen() && !capture) {
       host.update(context());
     }
   }
@@ -89,16 +86,27 @@ export function createDocsViewerInfoPanelController(options) {
   function openView(viewId) {
     if (!currentSelectedDoc()) return;
     var defaultViewId = typeof settings.defaultViewId === "function" ? settings.defaultViewId() : settings.defaultViewId;
-    var targetViewId = String(viewId || "").trim() || String(defaultViewId || "").trim() || host.activeViewId() || "metadata-info";
+    var targetViewId = String(viewId || "").trim() || String(defaultViewId || "").trim();
+    if (!targetViewId || targetViewId === "related-links") return;
+    capture = null;
     host.open(targetViewId, context()).then(function () {
       renderToggleState();
     });
   }
 
   function close() {
+    capture = null;
     host.close().then(function () {
       renderToggleState();
     });
+  }
+
+  /** Retain one detached reader capture until replacement, Close or Source entry. */
+  function pinRelatedLinks(nextCapture) {
+    if (capture && host.isOpen() && capture.target.collection === nextCapture.target.collection
+        && capture.target.doc_id === nextCapture.target.doc_id) return;
+    capture = nextCapture;
+    host.open("related-links", { capture: capture, panelTitle: capture.title });
   }
 
   function closeIfOpen() {
@@ -126,6 +134,7 @@ export function createDocsViewerInfoPanelController(options) {
       if (!closeIfOpen()) openView("");
     },
     openView: openView,
+    pinRelatedLinks: pinRelatedLinks,
     renderToggleState: renderToggleState,
     update: update
   };

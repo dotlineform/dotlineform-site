@@ -27,8 +27,8 @@ function renderSearchInput(context) {
   var input = wrap ? wrap.querySelector("#docsViewerSearchInput") : null;
   if (!wrap || !input) {
     var configMount = appViewerConfigMount(context.mount);
-    var ariaLabel = String(configMount && configMount.dataset.searchAriaLabel || control.label || "Search docs");
-    var placeholder = String(configMount && configMount.dataset.searchPlaceholder || "search docs");
+    var ariaLabel = String(configMount && configMount.dataset.searchAriaLabel || control.label || "Search");
+    var placeholder = String(configMount && configMount.dataset.searchPlaceholder || "search");
 
     wrap = context.document.createElement("div");
     wrap.className = "docsViewer__search";

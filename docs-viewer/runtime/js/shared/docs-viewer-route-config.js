@@ -66,7 +66,7 @@ function normalizePanelDefaults(rawPanels) {
     },
     info: {
       enabled: info.enabled !== false,
-      defaultView: cleanString(info.default_view) || "metadata-info"
+      defaultView: cleanString(info.default_view) || "related-links"
     }
   };
 }
@@ -87,8 +87,8 @@ function normalizeRouteUi(rawUi) {
     },
     viewerSearch: {
       configured: Boolean(ui.viewer_search),
-      placeholder: cleanString(viewerSearch.placeholder) || "search docs",
-      ariaLabel: cleanString(viewerSearch.aria_label) || "Search docs"
+      placeholder: cleanString(viewerSearch.placeholder) || "search",
+      ariaLabel: cleanString(viewerSearch.aria_label) || "Search"
     }
   };
 }

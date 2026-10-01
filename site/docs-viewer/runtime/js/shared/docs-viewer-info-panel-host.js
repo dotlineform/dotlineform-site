@@ -12,6 +12,7 @@ function callLifecycle(lifecycle, name, context) {
   return Promise.resolve(lifecycle[name](context));
 }
 
+/** Host one panel lifecycle; replacement/Close invalidate pending loads and shell projections. */
 export function createDocsViewerInfoPanelHost(options = {}) {
   const refs = options.refs || {};
   const registry = options.registry || null;
@@ -21,22 +22,12 @@ export function createDocsViewerInfoPanelHost(options = {}) {
   let mounted = false;
   let open = false;
   let request = 0;
+  let panelTitle = "";
 
   function viewLabel() {
-    if (activeViewId === "metadata-info") return "Info";
+    if (panelTitle) return panelTitle;
     const resolved = registry && registry.resolveView(activeViewId);
     return resolved && resolved.view ? resolved.view.label : "Info";
-  }
-
-  function viewOptions() {
-    return (registry ? registry.listViews("info") : []).map(function (view) {
-      return {
-        id: view.id,
-        label: view.label,
-        available: Boolean(view.available),
-        unavailableReason: view.unavailableReason || ""
-      };
-    });
   }
 
   function projectPanel(projection) {
@@ -65,6 +56,7 @@ export function createDocsViewerInfoPanelHost(options = {}) {
   function close() {
     const currentRequest = ++request;
     open = false;
+    panelTitle = "";
     return unmountActive().finally(function () {
       if (currentRequest !== request) return;
       projectPanel({ visible: false, statusText: "", statusHidden: true, statusError: false });
@@ -91,6 +83,7 @@ export function createDocsViewerInfoPanelHost(options = {}) {
     const currentRequest = ++request;
     const nextViewId = cleanString(viewId);
     activeViewId = nextViewId;
+    panelTitle = cleanString(context && context.panelTitle);
     if (!registry || typeof registry.resolveView !== "function") {
       open = true;
       projectPanel({
@@ -170,6 +163,7 @@ export function createDocsViewerInfoPanelHost(options = {}) {
     activeLifecycle = null;
     mounted = false;
     open = false;
+    panelTitle = "";
     if (refs.body) refs.body.replaceChildren();
     return callLifecycle(lifecycle, "dispose", { mount: refs.body });
   }
@@ -180,7 +174,6 @@ export function createDocsViewerInfoPanelHost(options = {}) {
     dispose: dispose,
     isOpen: function () { return open; },
     open: openView,
-    update: update,
-    viewOptions: viewOptions
+    update: update
   };
 }

@@ -200,8 +200,9 @@ def build_captured_preview(
             for direction in ("incoming", "outgoing"):
                 if any(not isinstance(row, dict) or not isinstance(row.get("doc_id"), str) for row in payload[direction]):
                     raise ValueError("Captured related-links entries require document identities")
-                payload[direction] = [row for row in payload[direction] if row["doc_id"] in eligible]
-            (captured_links / relative).write_text(json.dumps(payload), encoding="utf-8")
+            # Body eligibility selects the owner only; linked destinations keep
+            # their captured identities/titles even when their bodies are omitted.
+            (captured_links / relative).write_bytes(data)
         for relative, data in source_files.items():
             path = source_root / relative
             path.parent.mkdir(parents=True, exist_ok=True)

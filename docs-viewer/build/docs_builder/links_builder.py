@@ -1,7 +1,7 @@
 """Synchronous current-document and direct-neighbour Links maintenance.
 
 Existing Links JSON is the only relationship prior state. Targeted refreshes
-read selected documents, necessary ancestors and directly affected neighbours.
+read selected documents and directly affected neighbours.
 Records are created only when a document relationship needs either endpoint.
 """
 
@@ -25,7 +25,6 @@ from docs_document_location import canonical_document_viewer_url
 from docs_rendered_links import collect_anchors, parse_docs_target, resolve_href
 from docs_workspace_config import DocsStageConfig, document_source_path, generated_documents_path, resolve_workspace_path
 from docs_source_model import parse_source, write_text_atomic
-from docs_publication_ignore import WorkingPublicationExclusions, working_ignored_doc_ids
 
 CONFIG_PATH = Path("docs-viewer/config/links-builder.json")
 
@@ -82,10 +81,6 @@ class _DocumentRefresh:
         self.routes = ("/docs/", builder.workspace.public_viewer_base_url)
         self.docs = {self.key(doc.doc_id): doc for doc in plan["documents"]}
         self.metadata = {target: doc.front_matter for target, doc in self.docs.items()}
-        self.exclusions = WorkingPublicationExclusions(
-            self.sources[""], working_ignored_doc_ids(builder.repo_root, self.config),
-            {doc.doc_id: doc.parent_id for doc in plan["documents"]} if not self.collection else None,
-        )
         self.records: dict[DocumentTarget, DocumentLinks | None] = {}
         self.original: dict[DocumentTarget, str | None] = {}
         self.removals: set[DocumentTarget] = set()
@@ -96,9 +91,6 @@ class _DocumentRefresh:
     def validate_target(self, target: DocumentTarget) -> None:
         if target.collection not in self.owners or not is_document_id(target.doc_id, collection=target.collection):
             raise ValueError("Links requires an exact configured document identity")
-
-    def excluded(self, target: DocumentTarget) -> bool:
-        return not target.collection and self.exclusions.excludes(target.doc_id)
 
     def viewer_target(self, resolved: dict[str, str]) -> DocumentTarget | None:
         if resolved.get("kind") != "viewer":
@@ -185,7 +177,7 @@ class _DocumentRefresh:
         references = {}
 
         def add_reference(neighbour: DocumentTarget, label: str = "") -> None:
-            if neighbour in references or self.excluded(neighbour):
+            if neighbour in references:
                 return
             endpoint = self.initialise_endpoint(neighbour, label=label)
             references[neighbour] = (endpoint.document if endpoint.document.target == neighbour
@@ -253,7 +245,6 @@ class _DocumentRefresh:
             record.outgoing.pop(previous.target, None)
         if record is not None:
             record.document = summary
-            record.incoming = {key: value for key, value in record.incoming.items() if not self.excluded(key)}
         references = self.references(target, doc, self.location(target))
         if record is None:
             if not references:
@@ -297,10 +288,6 @@ def build_document_links(
         for doc_id in sorted(plan["doc_ids"]):
             key = refresh.key(doc_id)
             doc = refresh.docs.get(key)
-            if refresh.excluded(key):
-                if not _safe_path(refresh.output, f"{key.doc_id}.json").exists():
-                    continue
-                doc = None
             new, removed = refresh.refresh(key, doc)
             added += new
             deleted += removed

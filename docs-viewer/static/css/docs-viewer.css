@@ -17,6 +17,7 @@
   --docs-viewer-font-heading-1: var(--font-heading-1, var(--docs-viewer-text-2xl));
   --docs-viewer-font-heading-2: var(--font-heading-2, var(--docs-viewer-text-xl));
   --docs-viewer-font-heading-3: var(--font-heading-3, var(--docs-viewer-text-lg));
+  --docs-viewer-line-heading-3: var(--line-heading-3, 1.35);
   --docs-viewer-font-heading-4: var(--font-heading-4, var(--docs-viewer-text-md));
   --docs-viewer-container: var(--container, 980px);
   --docs-viewer-content-measure: var(--content-measure, 72ch);
@@ -835,6 +836,10 @@ main.container:has(> .docsViewer){
   mask-image: url("../icons/info.svg");
 }
 
+.docsViewer__icon--pin{
+  mask-image: url("../icons/pin.svg");
+}
+
 .docsViewer__icon--menu{
   mask-image: url("../icons/menu.svg");
 }
@@ -915,12 +920,12 @@ main.container:has(> .docsViewer){
   background: var(--docs-viewer-panel);
   padding: var(--docs-viewer-space-3);
   font-size: var(--docs-viewer-font-small);
-  line-height: var(--docs-viewer-line-snug);
+  line-height: var(--docs-viewer-line-loose);
 }
 
 .docsViewer__infoPanelHeader{
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: var(--docs-viewer-space-2);
   margin-bottom: var(--docs-viewer-space-3);
@@ -928,6 +933,8 @@ main.container:has(> .docsViewer){
 
 .docsViewer__infoPanelHeaderCopy{
   min-width: 0;
+  flex: 1;
+  overflow-wrap: anywhere;
 }
 
 .docsViewer__infoPanelTitle{
@@ -1101,11 +1108,56 @@ main.container:has(> .docsViewer){
   margin-right: auto;
   overflow-wrap: normal;
   word-break: normal;
+  font-size: var(--docs-viewer-font-body);
+  line-height: var(--docs-viewer-line-loose);
+}
+
+.docsViewer__content :where(p){
+  margin: 0 0 var(--docs-viewer-space-3);
+}
+
+.docsViewer__content h1{
+  font-size: var(--docs-viewer-font-heading-1);
+  line-height: var(--docs-viewer-line-snug);
+}
+
+.docsViewer__content [data-docs-related-links] > ul,
+.docsViewer__relatedLinksBody > ul{
+  list-style: none;
+  padding: 0;
 }
 
 .docsViewer__content [data-docs-related-links] > ul{
-  list-style: none;
-  padding: 0;
+  margin: 1em 0 var(--docs-viewer-space-3);
+}
+
+.docsViewer__content [data-docs-related-links] > ul > li,
+.docsViewer__relatedLinksBody > ul > li{
+  margin: 0 0 var(--docs-viewer-space-1);
+}
+
+.docsViewer__relatedLinksHeader{
+  display: flex;
+  align-items: center;
+  gap: var(--docs-viewer-space-2);
+  margin-top: var(--docs-viewer-space-5);
+}
+
+.docsViewer__relatedLinksHeader [data-docs-related-pin]{
+  --docs-viewer-toolbar-icon-size: 1em;
+  font-size: inherit;
+}
+
+.docsViewer__content .docsViewer__relatedLinksHeader > h3{
+  min-width: 0;
+  margin: 0;
+  font-size: var(--docs-viewer-font-heading-3);
+  line-height: var(--docs-viewer-line-heading-3);
+}
+
+.docsViewer__relatedLinksBody > p:first-child,
+.docsViewer__relatedLinksBody > ul:first-child{
+  margin-top: 0;
 }
 
 .docsViewer__mediaImageLink{
@@ -1152,29 +1204,34 @@ main.container:has(> .docsViewer){
   word-break: normal;
 }
 
-.docsViewer__content :where(a:not(.docsViewer__diagramDetailControl, .docsViewer__contentDetailOpenNewTab, .docsViewerReport__cellLink)):link{
+.docsViewer__content :where(a:not(.docsViewer__diagramDetailControl, .docsViewer__contentDetailOpenNewTab, .docsViewerReport__cellLink)):link,
+.docsViewer__relatedLinksBody :where(a):link{
   color: var(--docs-viewer-content-link);
   text-decoration: none;
 }
 
-.docsViewer__content :where(a:not(.docsViewer__diagramDetailControl, .docsViewer__contentDetailOpenNewTab, .docsViewerReport__cellLink)):visited{
+.docsViewer__content :where(a:not(.docsViewer__diagramDetailControl, .docsViewer__contentDetailOpenNewTab, .docsViewerReport__cellLink)):visited,
+.docsViewer__relatedLinksBody :where(a):visited{
   color: var(--docs-viewer-content-link-visited);
   text-decoration: none;
 }
 
-.docsViewer__content :where(a:not(.docsViewer__diagramDetailControl, .docsViewer__contentDetailOpenNewTab, .docsViewerReport__cellLink)):link:hover{
+.docsViewer__content :where(a:not(.docsViewer__diagramDetailControl, .docsViewer__contentDetailOpenNewTab, .docsViewerReport__cellLink)):link:hover,
+.docsViewer__relatedLinksBody :where(a):link:hover{
   color: var(--docs-viewer-content-link);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
-.docsViewer__content :where(a:not(.docsViewer__diagramDetailControl, .docsViewer__contentDetailOpenNewTab, .docsViewerReport__cellLink)):visited:hover{
+.docsViewer__content :where(a:not(.docsViewer__diagramDetailControl, .docsViewer__contentDetailOpenNewTab, .docsViewerReport__cellLink)):visited:hover,
+.docsViewer__relatedLinksBody :where(a):visited:hover{
   color: var(--docs-viewer-content-link-visited);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
-.docsViewer__content :where(a:not(.docsViewer__diagramDetailControl, .docsViewer__contentDetailOpenNewTab, .docsViewerReport__cellLink)):focus-visible{
+.docsViewer__content :where(a:not(.docsViewer__diagramDetailControl, .docsViewer__contentDetailOpenNewTab, .docsViewerReport__cellLink)):focus-visible,
+.docsViewer__relatedLinksBody :where(a):focus-visible{
   outline: 2px solid var(--docs-viewer-focus-ring);
   outline-offset: 2px;
   text-decoration: underline;

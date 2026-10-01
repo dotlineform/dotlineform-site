@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-704641
 title: Source Editor Scripts
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-09-30 22:17:42"
+last_updated: "2026-10-01 16:39:11"
 parent_id: d-20260607-222033-2a494e
 ---
 # Docs Viewer Source Editor Scripts
@@ -72,13 +72,13 @@ Insertion changes only the dirty buffer through the current Source adapter and r
 
 **📄 Insert doc link** is a Source contribution in `docs-viewer/runtime/js/management/source-editor/document-link-contribution.js`; `document-link.js` owns response validation, collection filtering, literal Markdown encoding and guarded insertion.
 
-The mounted source adapter supplies its explicit Working stage to the management client's read-only `GET /docs/document-link-targets` request. `docs-viewer/services/docs_document_link_targets.py` reads ordinary documents and every configured collection through the source and location owners. Working omits ignored ordinary targets and their ordinary descendants through `docs_publication_ignore.py`; named-collection documents do not participate in that lookup. Draft readiness and Subject metadata do not filter the picker. This target-selection rule does not rewrite existing links or restrict typed or pasted links. Unavailable collections, an invalid ignore file or ambiguous collection hosts fail visibly.
+The mounted source adapter requests the management client's read-only `GET /docs/document-link-targets` endpoint without stage context. `docs-viewer/services/docs_document_link_targets.py` reads ordinary and configured collection identity/title metadata through the source and location owners. Draft/readiness validity, ordinary ignore membership, inherited publication exclusion, prepared-document membership and Subject metadata do not filter target discovery. The picker does not load full document/report models or read publication policy. It retains exact identity, source-filename agreement, symlink rejection, path confinement and configured collection hosts; unavailable collections and malformed target identities fail visibly. This selection does not rewrite existing links or restrict typed/pasted references.
 
-The picker filters all documents, ordinary documents or an exact configured collection, with title or immutable-ID search. Selection identifies `{stage, collection, doc_id}` explicitly; titles and Subject metadata do not select a target. The source stage determines the collection host, while the supplied ordinary href contains no stage parameter. Public providers expose no local target-lookup capability.
+The picker filters all documents, ordinary documents or an exact configured collection, with title or immutable-ID search. Selection identifies `{collection, doc_id}` explicitly, with an empty collection for ordinary documents; titles and Subject metadata do not select a target. Configuration supplies collection report hosts and portable document hrefs. Public providers expose no local target-lookup capability.
 
 Insertion uses the selected document's title as escaped literal link text and its supplied href. It replaces the captured selection or inserts at the captured cursor, provided that the same editor remains mounted and its buffer revision is unchanged. This changes the dirty buffer only; Save owns the combined source write. It does not automatically save or maintain relationships. Build preserves explicit collection destinations, fragments and HTML escaping when rewriting local document links; external URLs, including protocol-relative URLs with a hostname, retain their authored destination.
 
-The watcher observes the source write and independently invokes targeted document generation and the [Builder's relationship maintenance](Builder.md). Inserted, typed and pasted document links receive the same Build treatment. [Links View](Links_View.md) consumes those separate prepared records; the Source contribution does not write relationship JSON. Save does not await generation, and Search remains separately requested.
+The watcher observes the source write and independently invokes targeted document generation and the [Builder's relationship maintenance](Builder.md). Inserted, typed and pasted document links receive the same Build treatment. [Related Links](Related_Links.md) expands the refreshed records into generated content; the Source contribution does not write relationship JSON. Search remains separately requested.
 
 ## Catalogue Media And Image Contributions
 

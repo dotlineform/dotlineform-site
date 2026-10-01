@@ -27,6 +27,7 @@ export function mountDocsViewerPublicDocumentExtras(context) {
     payload: payload,
     selectedUrl: settings.workspaceConfigState.activeConfig.selectedUrl,
     mountThemedDiagrams: settings.mountThemedDiagrams,
+    mountRelatedLinks: settings.mountRelatedLinks,
     openMediaPresentation: settings.openMediaPresentation,
     openMediaTarget: settings.openMediaTarget,
     loadMediaTarget: settings.loadMediaTarget,

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260930-195002-b3417e
 title: Related Links
 added_date: "2026-09-30 19:50:02"
-last_updated: "2026-10-01 13:56:37"
+last_updated: "2026-10-01 16:39:11"
 summary: Author-inserted related-links directive, a sorted list with collection icons, and build-time relationship snapshots in document JSON.
 ui_status: in-progress
 parent_id: d-20260428-000000-f5ff18
@@ -22,7 +22,7 @@ An author manually inserts a related-links directive in the Source Editor where 
 
 `links` identifies the directive; the text after `|` supplies its optional, editable plain-text heading. `[[links|]]` renders the list without a heading; whitespace-only text also omits the heading. Put the directive on its own line. **Directives → Insert related links** inserts the default form above and selects `related links` for editing, following the Insert icon placeholder interaction. For example, `[[links|Further reading]]` uses “Further reading” as its heading. A supplied heading renders as a normal level-three section heading; Markdown punctuation and HTML-looking heading text remain plain text. Fenced and indented code examples remain literal.
 
-Without the directive, the document has no related-links section. If the directive resolves to no qualifying links, it produces no visible heading, list or empty-state message. An Info panel presentation is a possible later enhancement.
+Without the directive, the document has no related-links section. If the directive resolves to no qualifying links, it produces no visible heading, list, pin or empty-state message. Local/public readers add **Pin related links** beside a non-empty section's optional H3 heading; heading-free directives retain the pin. [Info Panel](Info_Panel.md) owns capture, navigation, replacement and Close. Exports and Docs Review keep the static list without a pin.
 
 ## Initial Presentation
 
@@ -79,12 +79,12 @@ Each Working document build first runs the existing incremental Links maintenanc
 
 Supported Catalogue Work image and Media View tokens contribute ordinary document relationships to their Work's Catalogue subdocument. Gallery Media View tokens contribute none. The generated Catalogue body contains its Work image, a blank line and `[[links|related links]]`; its self-targeting image is omitted from the graph. A Catalogue page can therefore show the documents that reference its Work through incoming links without generating outgoing relationships from the displayed list. A directive alone creates no Links record, and an empty list produces no section. Full Docs rebuilds render Catalogue after the contributing documents and use the final document-JSON comparison to detect changes in the embedded list; no separate Links-file change detector is needed.
 
-Targeted saves rebuild only their selected document content, after refreshing its relationship record and affected neighbours. A document build includes all incoming links already recorded when it runs. Later edits to other documents can change that incoming list without rebuilding this document's content; a subsequent document build or full Docs Build refreshes its embedded section. Working retains its existing relationship exclusions for ordinary documents listed in `unpublishable.json` and their descendants; draft state alone does not suppress Working relationships.
+Targeted saves rebuild only their selected document content, after refreshing its relationship record and affected neighbours. A document build includes all incoming links already recorded when it runs. Later edits to other documents can change that incoming list without rebuilding this document's content; a subsequent document build or full Docs Build refreshes its embedded section. Working relationships do not filter sources or targets by draft state, ordinary `unpublishable.json` membership or inherited publication exclusion. Removing an old filter requires an explicit complete relationship reconciliation to restore suppressed references; panel opening adds no scan or rebuild.
 
 Generated related-links sections must not contribute authored relationships or backlinks. Otherwise an incoming-link listing could manufacture a reciprocal relationship. Literal directive examples in code remain examples and do not render a section.
 
-Publish captures the persisted relationship JSON alongside its existing inputs and filters the saved lists to the captured eligible document IDs. The temporary Preview build uses those captured records for expansion. Public sections therefore contain only documents in that prepared snapshot. Distribution copies the completed content without deriving relationships again.
+Publish captures the persisted relationship JSON alongside its existing inputs. Body eligibility selects the records whose owners are prepared, while their incoming/outgoing target rows remain intact. The temporary Preview build expands those captured records without target-readiness reads, filtering or warnings; distribution copies the completed content without deriving relationships again. A public section may retain a title/link for a destination whose body was omitted by draft or ignore policy. Following it uses the normal unavailable-document response. The author owns the decision to finish/include the destination or change the reference.
 
 ## Runtime And Refinement
 
-The per-document Links toolbar action, separate Content Detail presentation and `/docs/links` read endpoint are retired without aliases. The reader mounts the generated section as ordinary document content. The local workspace Links diagnostic report retains its aggregate data and exact-target helpers. [Builder](Builder.md) owns existing relationship maintenance and persisted-record expansion. Layout refinement and a possible Info-panel presentation remain later choices; test work requires its own agreed specification under [Testing](Testing.md).
+The per-document Links toolbar action, separate Content Detail presentation and `/docs/links` read endpoint are retired without aliases. The reader mounts the generated section as ordinary document content. Its pin opens the [Info Panel](Info_Panel.md) with the loaded title, optional summary and a copy of that same list; the panel fetches no relationship data. The local workspace Links diagnostic report retains its aggregate data and exact-target helpers. [Builder](Builder.md) owns relationship maintenance and persisted-record expansion. Interaction and layout acceptance remain manual; test work requires its own agreed specification under [Testing](Testing.md).

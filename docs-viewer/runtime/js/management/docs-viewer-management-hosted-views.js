@@ -54,6 +54,18 @@ export function createDocsViewerManagementViewDefinitions() {
     }],
     controls: [
       {
+        id: "info",
+        actionId: "info",
+        label: "Source info",
+        ownerType: "view",
+        ownerViewId: "rendered-document",
+        modeIds: ["markdown-source"],
+        surfaceId: "main-view",
+        appKinds: ["manage"],
+        features: ["source-editing"],
+        renderer: "info-toggle"
+      },
+      {
         id: "manage-import",
         actionId: DOCS_VIEWER_ACTION_IDS.IMPORT,
         label: "Import",

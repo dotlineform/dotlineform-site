@@ -61,6 +61,7 @@ export function initDocsViewerDocumentController(context) {
       managementService: context.managementService || null,
       managementContext: managementContextActive(),
       mountThemedDiagrams: function () { mountThemedDiagrams(doc, payload); },
+      mountRelatedLinks: context.mountRelatedLinks,
       payload: payload,
       mediaRoot: workspaceConfigState.activeConfig && workspaceConfigState.activeConfig.mediaRoot,
       viewerBaseUrl: workspaceConfigState.activeConfig && workspaceConfigState.activeConfig.viewerBaseUrl,
@@ -381,6 +382,14 @@ export function initDocsViewerDocumentController(context) {
       mediaRoot: workspaceConfigState.activeConfig && workspaceConfigState.activeConfig.mediaRoot,
       viewerBaseUrl: workspaceConfigState.activeConfig && workspaceConfigState.activeConfig.viewerBaseUrl
     });
+    if (typeof context.mountRelatedLinks === "function") {
+      context.mountRelatedLinks({
+        content: content,
+        payload: payload,
+        documentTarget: { doc_id: doc.doc_id },
+        isCurrentDocument: function () { return mountGeneration === documentMountGeneration; }
+      });
+    }
     mountTableDetails(doc, payload, mountGeneration);
     mountMediaDetails(doc, payload, mountGeneration);
     mountThemedDiagrams(doc, payload);

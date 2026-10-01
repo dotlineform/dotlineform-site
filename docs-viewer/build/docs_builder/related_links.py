@@ -24,7 +24,7 @@ def prepare_related_links(
 
     The existing Working Links updater owns relationship maintenance. Reuse its
     results for write and dry-run rendering, without a second refresh or read.
-    Publish uses captured records filtered to its eligible document set.
+    Publish captures selected documents' records with their target rows intact.
     """
     builder.related_documents = {}
     root = builder.related_links_dir

@@ -103,7 +103,7 @@ def ordered_docs_doc_ids(doc_ids: list[str]) -> list[str]:
 
 
 def changed_source_document_ids(paths: list[Path]) -> list[str]:
-    """Read changed source identities; the Links builder owns ignore-list selection.
+    """Read exact changed source identities for authored relationship maintenance.
 
     Capture before deletion as well as after creation. Paths never stand in for
     document identity, and this helper never inventories a collection.

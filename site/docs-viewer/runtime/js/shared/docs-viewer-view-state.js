@@ -18,7 +18,7 @@ function normalizePanelDefaults(rawPanels) {
     },
     info: {
       enabled: info.enabled !== false,
-      defaultView: cleanString(info.defaultView || info.default_view) || "metadata-info"
+      defaultView: cleanString(info.defaultView || info.default_view) || "related-links"
     }
   };
 }

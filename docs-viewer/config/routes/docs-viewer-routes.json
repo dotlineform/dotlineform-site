@@ -44,8 +44,8 @@
           "default_view": "rendered-document"
         },
         "info": {
-          "enabled": true,
-          "default_view": "metadata-info"
+          "enabled": false,
+          "default_view": "related-links"
         }
       },
       "view_policy": {
@@ -106,7 +106,7 @@
         },
         "info": {
           "enabled": true,
-          "default_view": "metadata-info"
+          "default_view": "related-links"
         }
       }
     },
@@ -164,7 +164,7 @@
         },
         "info": {
           "enabled": true,
-          "default_view": "metadata-info"
+          "default_view": "related-links"
         }
       }
     }

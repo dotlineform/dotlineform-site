@@ -3,147 +3,65 @@ draft: false
 doc_id: d-20260623-000000-c99cef
 title: Info Panel
 added_date: "2026-06-23 00:00:00"
-last_updated: "2026-09-18 19:02:44"
+last_updated: "2026-10-01 17:31:33"
 parent_id: d-20260424-000000-50b63f
 
 ---
 # Info Panel
 
-The Docs Viewer info panel is the secondary panel used for context-specific assistance beside the active document surface.
+The Docs Viewer Info panel retains a document's related context beside the main pane. A reader intentionally opens it with **Pin related links** beside a non-empty generated [Related Links](Related_Links.md) section. The panel is always pinned to that document until another pin replaces it or Close releases it. Public and Manage share the reader presentation through [CSS Ownership](CSS_Ownership.md).
 
-It is intentionally small:
+## Reader Workflow
 
-- the shell title identifies the current context: **Info**, **Document metadata**, or **Semantic token**
-- the shell does not contain its own view-switching toolbar
-- the active outside context chooses which hosted view appears in the panel
-- hosted views receive a projected context rather than reading broad app state directly
+- A pin appears beside the section's optional authored H3 heading. A heading-free directive still has a pin. Empty generated sections and documents without the directive have no pin.
+- The shell's top row shows the captured document title and a right-hand **Close** control. Long titles wrap before the vertically centred close button.
+- The body contains only a non-empty, uncaptioned summary and a copy of the generated related list. It has no repeated heading, pin, IDs, dates, operational fields, diagram-source links or empty-state messages.
+- The list retains its collection icons, title ordering, deduplication and exact destinations. Concepts use the same list. The panel body uses the document's loose line spacing and the public list's row gap on both public and Manage surfaces. Links share the document's blue unvisited and purple visited colours, with no underline until hover or keyboard focus.
+- Following a panel link or navigating elsewhere changes the main pane while preserving the capture. Another document's pin replaces the capture; repeating the captured document's pin leaves it open.
+- Close releases the capture. Navigation does not reopen the panel. Reload clears the capture; persistence, cross-tab synchronization and bookmarkable panel state are outside this workflow.
 
-This keeps the panel usable in both public read-only routes and the local manage route without letting public routes inherit manage-only controls, service handles, or implementation assumptions.
+The rendered-document toolbar has no **i** action. The related section's pin is the reader's only opening control. A summary alone does not make a document eligible to open the panel.
 
-## Current Views
+## Data And Exact Targets
 
-| Main view | Selection | Hosted view | Heading |
+Pins capture title and summary from the already loaded by-ID payload and a detached copy of that section's resolved list. Ordinary mounts supply their document ID; collection-detail mounts supply their own exact `{collection, doc_id}` and payload. The selected report host never substitutes for its detail document.
+
+The panel does not fetch relationship records, collection manifests or neighbouring documents. The detached capture survives removal or refresh of the original mount, and normal main-document updates cannot retarget it. The existing root route listener activates panel links through the current local/public reader route, retaining exact report-host and sub-document destinations.
+
+[Builder](Builder.md) owns relationship construction and generated-section freshness. Link targets are the author's references, independently of draft, ordinary ignore membership, inherited publication exclusion or prepared-document membership. A public list can therefore retain a destination whose body was omitted. Following it receives the ordinary unavailable-document response; opening the panel adds no target-readiness scan, warning or publication gate.
+
+## Hosting And Lifetime
+
+The shared panel retains three focused owners:
+
+- `docs-viewer/runtime/js/shared/docs-viewer-info-panel-renderer.js` creates the shell and projects title, visibility and Close.
+- `docs-viewer/runtime/js/shared/docs-viewer-info-panel-controller.js` owns the detached reader capture, replacement, repeated-pin behavior, Close and live Source context.
+- `docs-viewer/runtime/js/shared/docs-viewer-info-panel-host.js` loads and mounts the chosen view, invalidating pending loads and shell updates after replacement or Close.
+
+`docs-viewer/runtime/js/shared/docs-viewer-related-links.js` owns pin mounting and the synchronous `related-links` hosted view. That view receives only the capture; it has no main-document subscription or service handles. It copies only the list, so the document heading and opening pin never appear inside the panel. Missing body content produces no placeholder.
+
+`docs-viewer/runtime/js/shared/docs-viewer-document-view-coordinator.js` wires pin mounts and document-mode transitions through these owners. Ordinary and collection-detail mounting provide explicit inputs; the app runtime only wires the callback. Public/Manage view registration makes reader capture available on those routes. Exports and Docs Review retain their static lists without the reader opening control.
+
+## Temporary Source Workflow
+
+| Surface | Panel view | Shell title | Opening control |
 | --- | --- | --- | --- |
-| Rendered document | Any | `metadata-info`, read-only | Info |
-| Source | No supported editable token | `source-metadata` | Document metadata |
-| Source | Supported editable token occurrence | `catalogue-token-info` | Semantic token |
+| Rendered ordinary or collection document | `related-links`, captured | Captured document title | Section pin |
+| Source, no supported editable token selected | `source-metadata` | Document metadata | Source **i** or Edit document |
+| Source, supported editable token selected | `catalogue-token-info` | Semantic token | Source **i** or editing workflow |
 
-One **i** control opens or closes the panel. Mode and source selection choose the view without an internal selector. A context change does not open a closed panel; the explicit **Edit document** action opens Source with metadata visible for its exact target.
+Entering Source closes and releases the reader capture. Source retains its live metadata/token panel and **i** control for the current authoring session. Returning to rendered content closes the authoring panel and leaves the reader panel closed until a pin is used.
 
-## Hosting Model
+`source-metadata` edits only Title and Summary. The source session preserves other front matter, including date, status and placement fields. Source Save does not move or reparent the document.
 
-The info panel has three small shared owners:
+`catalogue-token-info` edits an existing occurrence's presentation fields while retaining its immutable target. Pending values and dirty state belong to the Source session and survive view changes or panel closure. **Add Media View link** and **Add Catalogue Image** retain management modals for discovery and insertion into the captured Source buffer.
 
-- `docs-viewer/runtime/js/shared/docs-viewer-info-panel-renderer.js` renders the shell
-- `docs-viewer/runtime/js/shared/docs-viewer-info-panel-controller.js` owns open/close state and shell lifecycle wiring
-- `docs-viewer/runtime/js/shared/docs-viewer-info-panel-host.js` mounts and updates the active hosted view inside the shell body
+One session owns metadata, body, pending token values, dirty state, validation and discard. Its single **Save** validates and persists the combined source; panel views have no independent Save. [Source Editor Scripts](Source_Editor_Scripts.md) owns authoring integration and [Source Editor Endpoints](Source_Editor_Endpoints.md) owns persistence.
 
-These canonical shared modules reach `site/` through the explicit code projection. The host discards asynchronous view loads after the active context changes or the panel closes.
+## Public And Local Boundary
 
-The host treats panel views like small modules with the same basic lifecycle shape used elsewhere in Docs Viewer:
+Canonical shared JavaScript, styles and artwork live under `docs-viewer/` and reach `site/docs-viewer/` through the explicit tracked code projection. Public readers reuse their loaded prepared sections and configured routes without management modules, local service calls, capability probes or Working fallback. Preview is a physical publication artifact without a browser stage or read route.
 
-- `mount(context)`
-- `update(context)`
-- `unmount(context)`
-- `dispose(context)`
+Local Manage uses Working generated content. Source editing remains management-only; its views and service adapters stay outside the public inventory. One shell serves both surfaces through explicit registration and context, without a second public shell or compatibility metadata view.
 
-The shell is not the owner of feature behavior.
-It provides a stable mount point and lifecycle boundary.
-The hosted view owns its own rendering and any feature-specific interaction.
-
-## Hosted-View Context
-
-Shared hosted-view context projection lives in `docs-viewer/runtime/js/shared/docs-viewer-view-context.js`.
-
-The context is deliberately explicit.
-Hosted views should receive only the data and services they need, such as:
-
-- selected document record
-- selected document payload metadata
-- exact managed-document target and projected read-only information for an active collection detail
-- route access flags
-- viewer stage
-- canonical URL when appropriate
-- parent trail when appropriate
-- status display label when appropriate
-- manage-only source-editor services only when the route allows management
-
-Public-safe hosted views must not reach for management clients, backend probes, write-capable service handles, local filesystem paths, or manage-only runtime modules.
-Manage-only views may receive manage-only service adapters, but their availability should still be projected by route/view context rather than inferred from loose global state.
-
-## Metadata Info View
-
-`metadata-info` is implemented by `docs-viewer/runtime/js/shared/docs-viewer-metadata-info-view.js`.
-
-It renders one selected-document metadata summary with the document title as the heading.
-The visible field list is a renderer policy, not a payload-pruning side effect.
-This distinction matters because public routes may receive or cache metadata that is useful to the runtime but should not be shown in the public info panel.
-
-Current field policy:
-
-| Route context | Visible fields |
-| --- | --- |
-| Public read-only | `Summary`, `Updated` |
-| Manage/local | `Doc ID`, `Summary`, `Date`, `Added`, `Updated` |
-
-An active Manage collection detail may add explicit read-only fields through `managedDocumentTarget` and `metadataInfo`. The target is the validated `{stage, collection, doc_id}` detail, and its matching record replaces the parent report or selected index row for the hosted view. Collection-owned metadata and action eligibility remain explicit contributions; the shared Info view does not acquire mutation ownership.
-
-The view chooses the field policy from explicit `context.appContext.kind`.
-Public route tests should assert that public metadata does not leak manage-oriented fields such as `Doc ID`, `Date`, `Added`, `Scope`, `Parent path`, `UI status`, `Visibility`, or `Route`.
-
-Manage/local routes can show more operational metadata because they are local authoring and maintenance surfaces. Rendered Info remains passive. Common metadata editing belongs to the Source session's metadata view; Subject assignment and index placement retain their separate workflows.
-
-## Source Editing Views
-
-`source-metadata` edits only Title and Summary. The source session loads full front matter and preserves non-edited values, including `date`, `date_display`, `ui_status` and `parent_id`. These fields have no common panel controls. Source Save does not move or reparent a document.
-
-`catalogue-token-info` edits the selected occurrence's presentation fields while retaining its immutable target identity. Moving focus into the form retains the source selection. Raw pending values, including invalid input, belong to the session and survive switching occurrences, returning to metadata, or closing the panel. Removing an occurrence changes the same source draft.
-
-One session owns metadata, body, pending token values, dirty state, validation and discard. Its single **Save** validates all pending input and persists the combined document. Panel views have no independent Update or Save operation. [Source Editor Scripts](Source_Editor_Scripts.md) owns the implementation map and [Source Editor Endpoints](Source_Editor_Endpoints.md) owns persistence.
-
-## Public And Manage Separation
-
-Public and manage differences enter through route access and hosted-view context, not through duplicated panel shells.
-
-Public routes:
-
-- use public route config and public UI text
-- run as read-only document viewers
-- expose only public-safe hosted views and public-safe metadata fields
-- must not receive management services or write-capable adapters
-
-The local `/docs/` manage route:
-
-- uses manage/local route config and manage UI text
-- can receive management service adapters after route capability checks
-- can host manage-only views when an accepted feature requires one
-- can show compact operational metadata useful while authoring
-- can project exact collection-detail information without giving the shared Info view mutation ownership
-
-Source editing is available only for eligible Working targets. Pre-publish, Published and public routes retain read-only Info. The metadata and token editor modules remain management-only and outside the public code inventory.
-
-The same shell and host can serve both environments because the boundary is enforced by context projection and hosted-view registration.
-Do not fork the info panel shell just to change public/manage field visibility.
-
-## Catalogue Creation Outside The Panel
-
-**Add Media View link** and **Add Catalogue Image** use management modals for target discovery and identity selection. Confirmation inserts into the captured Source buffer; cancellation leaves it unchanged. The panel edits existing occurrences. Neither insertion nor occurrence editing persists independently of the session's Save.
-
-## Implementation Rules
-
-Use these rules when changing or adding info-panel behavior:
-
-- keep the shell simple and view-agnostic
-- choose the active panel view from outside context
-- pass explicit hosted-view context instead of broad app state
-- make public/manage rendering differences deliberate field or capability policies
-- keep public-safe views free of manage services and local-only runtime modules
-- place manage-only hosted views under manage ownership, even when they mount inside the shared panel shell
-- keep ordinary panel interaction under manual review; any test changes require their own agreed specification
-
-Related documents:
-
-- [Toolbar Model](Toolbar_Model.md)
-- [Runtime Boundary](Docs_Viewer_Runtime.md)
-- [Runtime Module Ownership](Runtime_Module_Ownership.md)
-- [Config](Configuration_And_Extension_Points.md)
+Ordinary interaction, long-title fit, Close alignment and public mobile presentation require manual review. Automated test changes require an agreed specification under [Testing](Testing.md). [Docs Viewer Runtime](Docs_Viewer_Runtime.md) owns the wider runtime boundary.

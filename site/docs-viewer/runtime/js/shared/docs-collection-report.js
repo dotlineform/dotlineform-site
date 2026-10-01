@@ -1054,6 +1054,14 @@ function renderDetailPayload(state, docId, payload) {
     viewerBaseUrl: state.viewerBaseUrl
   });
   state.validDetailId = docId;
+  if (typeof state.mountRelatedLinks === "function") {
+    state.mountRelatedLinks({
+      content: state.detailBodyNode,
+      payload: payload,
+      documentTarget: detailTarget(state, docId),
+      isCurrentDocument: function () { return state.validDetailId === docId && state.mounted; }
+    });
+  }
   var metadata = detailMetadataRecord(state, docId, payload);
   publishState(state, "detail", {
 
@@ -1454,6 +1462,7 @@ function mountResolvedDocsCollectionReport(context, contribution) {
   var state = {
     root: root,
     mountDocumentContent: context.mountCollectionDocumentContent,
+    mountRelatedLinks: context.mountRelatedLinks,
     mediaRoot: context.mediaRoot,
     viewerBaseUrl: context.viewerBaseUrl,
     onDocumentState: context.onCollectionDocumentState,

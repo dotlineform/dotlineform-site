@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260902-102745-8379ea
 title: Unified Analysis And Catalogue Presentation
 added_date: "2026-09-02 10:27:45"
-last_updated: "2026-10-01 15:05:39"
+last_updated: "2026-10-01 17:31:33"
 summary: Present accepted Analysis documents and current Catalogue data through Docs Viewer while retaining the legacy Catalogue as a frozen archive.
 ui_status: in-progress
 parent_id: d-20260428-000000-f5ff18
@@ -39,7 +39,7 @@ The current Catalogue site remains available as a frozen archive while the repla
 
 - [Document Link Strength](Document_Link_Strength.md) records numeric strength saved and shown on outgoing document links, authored through a cold-blue to hot-red slider in Insert doc link. Reciprocal strengths are independent: a future visualisation can show A → B hot and B → A cold as two directed links. Scale, persistence mechanics and detailed pill presentation remain to be designed. It is separate follow-on work to the Related/pinning delivery.
 
-- [Info Panel Related Links And Pinning - Delivery](Info_Panel_Links_And_Pinning_Delivery.md) records the revised 2026-10-01 reader approach: a pin beside a non-empty generated related-links heading opens an always-pinned panel with the document title, optional summary and the same flat related list. No links means no heading or pin; heading-free directives retain the pin. The panel has only Close, and the rendered **i** action is removed. Link targets are an authoring choice: remove draft/publication filtering from picker/relationship selection and captured related lists while retaining eligibility for document bodies. Existing relationship and Publish owners supply the data. The delivery remains proposed; implementation has not started.
+- [Info Panel](Info_Panel.md) owns the completed reader pinning workflow, accepted and closed on 2026-10-01. A non-empty generated section's pin opens an always-pinned title, optional summary and the same flat list; heading-free sections retain the pin and empty sections have none. Navigation retains capture, another pin replaces it and Close releases it. Rendered **i** and metadata are retired; Source temporarily retains its authoring views and control. Link targets are independent of publication readiness while document-body eligibility retains its existing owner. Working relationships have been reconciled, the shared runtime projected to `site/`, and matching local/public presentation accepted by the user. [Related Links](Related_Links.md), [Builder](Builder.md), [Source Editor Scripts](Source_Editor_Scripts.md) and [CSS Ownership](CSS_Ownership.md) retain the other durable boundaries. The delivery is ready for manual archive; Publish, public deployment and Source simplification remain separately requested.
 
 - [Source Editor And Token Modals - Delivery](Source_Editor_And_Token_Modals_Delivery.md) is the separate proposed follow-on: expose complete Markdown including front matter, validate one complete-source Save, edit existing Catalogue tokens through their creation modals with stored values preselected, and remove Source's metadata/token panel and **i** control. Suggested internal order is reader pinning first, Source simplification second. Source retains its current authoring panel until this delivery replaces it.
 
