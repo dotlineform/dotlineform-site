@@ -8,7 +8,15 @@
       "collection": "works",
       "report_doc_id": "d-20260801-073826-8865a8",
       "collection_title": "Context",
-      "timestamp": "2026-09-28"
+      "timestamp": "2026-10-01"
+    },
+    {
+      "doc_id": "d-20260801-212422-773b86",
+      "title": "a feeling that we are part of a structure",
+      "collection": "works",
+      "report_doc_id": "d-20260801-073826-8865a8",
+      "collection_title": "Context",
+      "timestamp": "2026-10-01"
     },
     {
       "doc_id": "d-20260801-212422-081a73",
@@ -43,14 +51,6 @@
       "timestamp": "2026-09-28"
     },
     {
-      "doc_id": "d-20260801-212422-773b86",
-      "title": "a feeling that we are part of a structure",
-      "collection": "works",
-      "report_doc_id": "d-20260801-073826-8865a8",
-      "collection_title": "Context",
-      "timestamp": "2026-09-28"
-    },
-    {
       "doc_id": "d-20260801-212422-bc7ae1",
       "title": "a humid home full of light",
       "collection": "works",
@@ -73,6 +73,13 @@
       "report_doc_id": "d-20260801-073826-8865a8",
       "collection_title": "Context",
       "timestamp": "2026-09-28"
+    },
+    {
+      "doc_id": "d-20260809-130120-837891",
+      "title": "Beauty",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library",
+      "timestamp": "2026-09-27"
     },
     {
       "doc_id": "d-20260801-073826-8865a8",
@@ -103,18 +110,40 @@
       "timestamp": "2026-09-07"
     },
     {
-      "doc_id": "d-20260801-212422-9f0121",
-      "title": "20 photos",
-      "collection": "works",
-      "report_doc_id": "d-20260801-073826-8865a8",
-      "collection_title": "Context",
-      "timestamp": "2026-08-06"
+      "doc_id": "d-20260809-130120-461754",
+      "title": "Abstract Thought and Physical Processes",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library",
+      "timestamp": "2026-08-09"
     },
     {
-      "doc_id": "d-20260624-213316-478639",
-      "title": "Concepts",
-      "timestamp": "2026-07-29"
+      "doc_id": "d-20260809-130120-91c97f",
+      "title": "Bayesian Reasoning",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library",
+      "timestamp": "2026-08-09"
+    },
+    {
+      "doc_id": "d-20260809-130120-28fb85",
+      "title": "Beauty × Memory × Meaning",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library",
+      "timestamp": "2026-08-09"
+    },
+    {
+      "doc_id": "d-20260809-130120-44384d",
+      "title": "Beyond Conscious vs. Subconscious",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library",
+      "timestamp": "2026-08-09"
+    },
+    {
+      "doc_id": "d-20260809-130120-d66e0b",
+      "title": "Can the Brain Comprehend How It Works?",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library",
+      "timestamp": "2026-08-09"
     }
   ],
-  "generated_at": "2026-09-30T12:49:23Z"
+  "generated_at": "2026-10-01T14:19:50Z"
 }

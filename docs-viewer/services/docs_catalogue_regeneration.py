@@ -107,15 +107,17 @@ def regenerate_catalogue(repo_root: Path, body: dict[str, Any]) -> dict[str, Any
                 metadata = {**document.front_matter, "title": record.title}
                 content = source_model.format_source(metadata, record.body, collection="catalogue")
                 if content != document.source_text:
-                    content = source_model.format_source(
-                        source_model.advance_doc_front_matter(
-                            metadata,
-                            timestamp=source_model.strictly_later_doc_timestamp(
-                                document.front_matter["last_updated"], timestamp,
+                    # Generated body/format maintenance preserves document dates.
+                    if title_changed:
+                        content = source_model.format_source(
+                            source_model.advance_doc_front_matter(
+                                metadata,
+                                timestamp=source_model.strictly_later_doc_timestamp(
+                                    document.front_matter["last_updated"], timestamp,
+                                ),
                             ),
-                        ),
-                        record.body, collection="catalogue",
-                    )
+                            record.body, collection="catalogue",
+                        )
                     writes.append((work_id, doc_id, SourceWrite(document.path, content)))
                     link_doc_ids.add(doc_id)
                     counts["retitle" if title_changed else "regenerate_body"] += 1
