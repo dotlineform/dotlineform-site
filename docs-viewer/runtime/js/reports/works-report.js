@@ -1,4 +1,3 @@
-import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
 import { normalizeDocsViewerAuthoringSubject } from "../management/docs-viewer-management-document-subject.js";
 import { appendProjectSubjectIcon } from "./project-subject-icons.js";
 const SERIES_SCHEMA = "studio_catalogue_lookup_series_search_v2";
@@ -320,28 +319,19 @@ function renderProjection(state, projection) {
     : projection.rowCount + " published Series";
 }
 
-function setBusy(state, busy) {
-  state.busy = Boolean(busy);
-  state.refreshButton.disabled = state.busy;
-  state.refreshButton.setAttribute("aria-busy", state.busy ? "true" : "false");
-}
-
-function refreshWorksReport(state) {
+function loadWorksReport(state) {
   clearNode(state.rowsNode);
   state.emptyNode.hidden = true;
   state.statusNode.textContent = "Loading Works...";
-  setBusy(state, true);
   return loadWorksProjection(state.context).then((projection) => {
     renderProjection(state, projection);
   }).catch((error) => {
     clearNode(state.rowsNode);
     state.statusNode.textContent = error && error.message
       ? error.message
-      : "Works refresh failed.";
+      : "Works report failed to load.";
     state.emptyNode.hidden = false;
     state.emptyNode.textContent = "The current Works report could not complete.";
-  }).finally(() => {
-    setBusy(state, false);
   });
 }
 
@@ -349,10 +339,6 @@ function renderShell(root) {
   root.dataset.reportId = "works";
   root.dataset.reportColumns = "2";
   root.innerHTML = [
-    '<div class="docsViewerReport__toolbar">',
-    '<button id="docsWorksReportRefresh" type="button"',
-    ' class="docsViewer__toolbarIconButton"',
-    ' aria-label="Run/Refresh" title="Run/Refresh"></button></div>',
     '<p class="docsViewerReport__status"></p>',
     '<div class="docsViewerReport__table"><div class="docsViewerReport__head">',
     '<span class="docsViewerReport__headLabel">Series</span>',
@@ -360,10 +346,8 @@ function renderShell(root) {
     '<ul class="docsViewerReport__rows"></ul></div>',
     '<p class="docsViewerReport__empty" hidden></p>'
   ].join("");
-  root.querySelector("#docsWorksReportRefresh").appendChild(createDocsViewerToolbarIcon(root.ownerDocument, "docsViewer__icon--refresh-cw"));
   return {
     emptyNode: root.querySelector(".docsViewerReport__empty"),
-    refreshButton: root.querySelector("#docsWorksReportRefresh"),
     rowsNode: root.querySelector(".docsViewerReport__rows"),
     statusNode: root.querySelector(".docsViewerReport__status")
   };
@@ -371,9 +355,6 @@ function renderShell(root) {
 
 export function mountWorksReport(context) {
   const nodes = renderShell(context.reportRoot);
-  const state = Object.assign({ busy: false, context }, nodes);
-  state.refreshButton.addEventListener("click", () => {
-    if (!state.busy) refreshWorksReport(state);
-  });
-  return refreshWorksReport(state);
+  const state = Object.assign({ context }, nodes);
+  return loadWorksReport(state);
 }

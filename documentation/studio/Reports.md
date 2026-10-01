@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260513-105343-6de36b
 title: Reports
 added_date: "2026-05-13 10:53:43"
-last_updated: "2026-10-01 13:29:44"
+last_updated: "2026-10-01 18:38:36"
 parent_id: d-20260424-000000-50b63f
 ---
 # Docs Viewer Reports
@@ -195,15 +195,7 @@ The Projects report's Series column displays each exact response-owned Series ti
 
 `docs_media` is the local, read-only media-to-document report hosted by [Docs Media](/docs/?doc=d-20260812-212735-6d9cf3). It reads `/docs/media-files` and `/docs/media-references` from the fixed Working owner and assembles rows in `docs-media-data.js`. The browser owns associations, document links, document ordering, display exclusions and sortable Type, File name and Documents columns. The toolbar owns refresh and immediate file-name or document-title search. File name posts exact collection, role, media type and identity without stage to `/docs/open-media-source`, which validates the Docs file and uses the shared Finder helper; Documents preserves exact ordinary and collection links. The report and data routes remain absent from the public report registry and executable graph. [Media And Asset Handling](Media_And_Asset_Handling.md) owns the live data and storage boundary.
 
-`works` is the local, read-only documentation-coverage report hosted in the
-`dotlineform` scope. It renders one row for every Series classified as published
-by the current Studio Series lookup. The Docs cell is the deduplicated union of
-exact Projects documents about that Series and exact Projects documents about
-published member Works, expanded only through each Work's current `series_ids`.
-The browser composes and refreshes the complete result from the existing Series
-lookup, Work lookup, and private Projects Manage manifest. Blank rows remain
-visible; the report adds no server producer, persisted result, public report, or
-mutation path.
+`works` is the local, read-only documentation-coverage report hosted in the `dotlineform` scope. It renders one row for every Series classified as published by the current Studio Series lookup. The Docs cell is the deduplicated union of exact Projects documents about that Series and exact Projects documents about published member Works, expanded only through each Work's current `series_ids`. Opening or returning to the report rereads the existing Series lookup, Work lookup, and private Projects Manage manifest and composes the complete result; there is no separate Refresh control. Blank rows remain visible; the report adds no server producer, persisted result, public report, or mutation path.
 
 Work Document Coverage displays each Series title as plain text. Document coverage and document-link destinations retain their existing behavior.
 

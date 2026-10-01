@@ -2,7 +2,7 @@
 doc_id: d-20260919-100234-038395
 title: "Shared Icons: Toolbar Mapping"
 added_date: "2026-09-19 10:02:34"
-last_updated: "2026-09-28 15:55:05"
+last_updated: "2026-10-01 18:38:36"
 summary: Editable mappings for Docs Viewer toolbars, report toolbars and report list icons, including code identifiers, state variants and replacement artwork choices.
 ui_status: planned
 parent_id: d-20260910-223116-9a1011
@@ -137,13 +137,12 @@ Identifiers marked `DOM` are element IDs; `selector` entries are exact attribute
 | Project State: copy Markdown | DOM `docsProjectStateReportCopyMarkdown` | Retired | Text `MD` | — | — | Retired button, handler and Markdown serializer; Copy table remains TSV |
 | Docs Media: run | DOM `docsMediaReportRun` | Runs/refreshes the media inventory | 🔄 | refresh-cw.svg | — | Implemented; review pending |
 | Docs Media: clear search | `docs_media`; selector `.docsViewerReport__searchClear` | Clears search; hidden while empty | × | x.svg | 1rem artwork; existing 1.35rem button | Implemented; review pending |
-| Works: refresh | DOM `docsWorksReportRefresh` | Refreshes Series documentation coverage | 🔄 | refresh-cw.svg | — | Implemented; review pending; separate from the Works collection list |
 | Catalogue Works: clear search | DOM `docsCatalogueWorksReportClear` | Clears the canonical Work search | × | x.svg | 1rem artwork; existing 1.35rem button | Implemented; review pending |
 | Catalogue Works: copy table | DOM `docsCatalogueWorksReportCopy` | Copies the filtered report table | Text `Copy table` | copy.svg | — | Implemented; review pending |
 | Uncataloged Files: run | DOM `docsUncatalogedFilesReportRun` | Runs/refreshes the source-folder audit | 🔄 | refresh-cw.svg | — | Implemented; review pending |
 | Missing Source Files: run | DOM `docsMissingSourceFilesReportRun` | Runs/refreshes the expected-source-file audit | 🔄 | refresh-cw.svg | — | Implemented; review pending |
 
-Reports List and Documents Linking Here have no additional toolbar icon buttons. Source Config has a native Stage select. Semantic Tokens and Docs Index Table have sortable headers covered below; both current Docs Index Table presets configure no filter buttons. Collection filters remain native/text controls. These are observed absences, not proposals to add controls.
+Reports List, Documents Linking Here and Work Document Coverage have no additional toolbar icon buttons. Source Config has a native Stage select. Semantic Tokens and Docs Index Table have sortable headers covered below; both current Docs Index Table presets configure no filter buttons. Collection filters remain native/text controls. These are observed absences, not proposals to add controls.
 
 ## Report List Icons
 
@@ -306,7 +305,7 @@ Report inventory owners:
 - Shared collection search-clear and detail-return controls: `docs-viewer/runtime/js/shared/docs-collection-report.js`. Collection New, Regenerate, Actions, package menu, sort toggle, selection commands, Draft/Ready, Copy link, Delete and row status/draft cues: `docs-viewer/runtime/js/management/docs-viewer-management-collection-default-contribution.js`.
 - Subject-aware collection header sorts, Subject cells, assignment and Finder controls: `docs-viewer/runtime/js/management/docs-viewer-management-collection-working-subjects.js`. The registered Manage customisation is `working_works`; its current capabilities decide which controls appear. The Processing collection and `working_processing` contribution were retired on 2026-09-27.
 - Subject artwork shared across collection lists, Project State and Works: `docs-viewer/runtime/js/reports/project-subject-icons.js`. Ordinary-document status artwork: `docs-viewer/runtime/js/shared/docs-viewer-code-config.js`. The mapping does not validate front-matter values.
-- Report-owned toolbar controls: the corresponding `workspace-links-report.js`, `unpublishable-report.js`, `series-works-report.js`, `docs-broken-links-report.js`, `project-state-report.js`, `docs-media-report.js`, `works-report.js`, `catalogue-works-report.js`, `uncataloged-files-report.js` and `missing-source-files-report.js` under `docs-viewer/runtime/js/reports/`.
+- Report-owned toolbar controls: the corresponding `workspace-links-report.js`, `unpublishable-report.js`, `series-works-report.js`, `docs-broken-links-report.js`, `project-state-report.js`, `docs-media-report.js`, `catalogue-works-report.js`, `uncataloged-files-report.js` and `missing-source-files-report.js` under `docs-viewer/runtime/js/reports/`.
 - Expanded report invocation: `docs-viewer/runtime/js/reports/docs-viewer-report-presentation.js`. Managed expanded-table Copy/Reset controls: `docs-viewer/runtime/js/management/docs-viewer-managed-table-tools.js`.
 - Report presentation: `docs-viewer/static/css/docs-viewer-reports.css`, `docs-viewer-local-reports.css` and the report/collection rules in `docs-viewer-manage.css`. Report toolbars consume the shared toolbar-icon styles; saved list artwork consumes `.docsViewer__listIcon` from `docs-viewer.css`.
 
