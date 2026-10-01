@@ -85,8 +85,7 @@ export var DOCS_VIEWER_RUNTIME_DEFAULTS = {
   managementCapabilityRetryAttempts: 60,
   managementCapabilityRetryDelayMs: 500,
   reloadRetryAttempts: 12,
-  reloadRetryDelayMs: 250,
-  sidebarCollapseMedia: "(min-width: 821px)"
+  reloadRetryDelayMs: 250
 };
 
 var STARTUP_PHASES = [
@@ -255,7 +254,6 @@ export function createDocsViewerAppComposition(options) {
   var appShellRefs = settings.appShellRefs || {};
   var routeAccess = appContext.routeAccess || {};
   var featurePolicy = appContext.featurePolicy || {};
-  var bookmarkOwner = routeContext.bookmarkOwner;
   var viewRegistry = settings.viewRegistry;
   if (!viewRegistry) throw new Error("Docs Viewer app composition requires a view registry.");
   var serviceContext = createDocsViewerServiceContext({
@@ -263,16 +261,12 @@ export function createDocsViewerAppComposition(options) {
   });
   var panelLayout = createDocsViewerPanelLayout({
     root: root,
-    storage: window.localStorage,
-    storageOwner: bookmarkOwner,
     panels: routeConfig.panels,
     routeId: routeConfig.routeId,
     indexPanelRefs: appShellRefs.indexPanel,
     mainViewRefs: appShellRefs.mainView,
     infoPanelRefs: appShellRefs.infoPanel,
     viewRegistry: viewRegistry,
-    indexPanelAvailable: settings.indexPanelAvailable,
-    onBeforePanelInteraction: settings.onBeforePanelInteraction,
     onIndexProjection: settings.onIndexProjection
   });
   var appSession = createDocsViewerAppSession({

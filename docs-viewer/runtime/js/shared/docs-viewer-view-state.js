@@ -9,8 +9,7 @@ function normalizePanelDefaults(rawPanels) {
   var info = panels.info && typeof panels.info === "object" ? panels.info : {};
   return {
     index: {
-      enabled: index.enabled !== false,
-      defaultState: cleanString(index.defaultState || index.default_state) || "normal"
+      enabled: index.enabled !== false
     },
     main: {
       enabled: mainPanel.enabled !== false,
@@ -33,7 +32,6 @@ export function createDocsViewerViewState(options) {
       index: {
         id: "index",
         enabled: panelDefaults.index.enabled,
-        state: cleanString(settings.indexPanelState) || panelDefaults.index.defaultState,
         mounted: panelDefaults.index.enabled,
         activeViewId: cleanString(settings.indexViewId) || "index-tree"
       },
@@ -65,9 +63,6 @@ export function updateDocsViewerViewState(viewState, patch) {
       info: Object.assign({}, current.panels.info)
     }
   };
-  if (changes.indexPanelState) {
-    next.panels.index.state = cleanString(changes.indexPanelState);
-  }
   if (changes.indexViewId) {
     next.panels.index.activeViewId = cleanString(changes.indexViewId);
   }
@@ -83,22 +78,18 @@ export function updateDocsViewerViewState(viewState, patch) {
   return next;
 }
 
-export function projectDocsViewerViewState(viewState, options) {
-  var settings = options || {};
+export function projectDocsViewerViewState(viewState) {
   var state = viewState || createDocsViewerViewState();
-  var indexProjection = settings.indexProjection || {};
-  var documentPaneVisible = indexProjection.documentPaneVisible !== false;
   return {
     index: {
       panel: "index",
       visible: Boolean(state.panels.index.enabled),
       mounted: Boolean(state.panels.index.mounted),
-      state: cleanString(indexProjection.activeState) || state.panels.index.state,
       activeViewId: state.panels.index.activeViewId
     },
     main: {
       panel: "main",
-      visible: Boolean(state.panels.main.enabled && documentPaneVisible),
+      visible: Boolean(state.panels.main.enabled),
       mounted: Boolean(state.panels.main.mounted),
       activeViewId: state.panels.main.activeViewId
     },

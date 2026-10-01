@@ -57,8 +57,7 @@ function normalizePanelDefaults(rawPanels) {
   var info = panels.info && typeof panels.info === "object" ? panels.info : {};
   return {
     index: {
-      enabled: index.enabled !== false,
-      defaultState: cleanString(index.default_state) || "normal"
+      enabled: index.enabled !== false
     },
     main: {
       enabled: mainPanel.enabled !== false,

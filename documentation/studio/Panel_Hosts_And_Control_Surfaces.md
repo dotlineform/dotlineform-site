@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260528-224754-964108
 title: Panel Hosts and Control Surfaces
 added_date: "2026-05-28 22:47:54"
-last_updated: "2026-08-03 21:07:43"
+last_updated: "2026-10-01 19:59:57"
 summary: Stable panel, view, mode, control-surface, context, lifecycle, and extension model for Docs Viewer browser modules.
 parent_id: d-20260424-000000-50b63f
 
@@ -19,7 +19,7 @@ The app shell owns regions and mounts. The code-owned registry owns definitions 
 | category | owner | examples | rule |
 | --- | --- | --- | --- |
 | app control | shared app or app-kind contribution | search, recently added, scope, theme, review package controls | register on `app-viewer` or `app-management` |
-| panel chrome | panel host or layout owner | collapse/expand index, close info | keep adjacent to the surface registry |
+| panel chrome | panel host or layout owner | close info | keep adjacent to the surface registry |
 | view control | active view or mode contribution | bookmark, info, edit, source, save | register on `index-view` or `main-view` with its view/mode owner |
 | workflow action | action definition and focused workflow controller | import, publish, move, delete | resolve targets independently of placement |
 | component control | focused component | report filter, modal action, tree-node toggle | render locally; do not register globally |
@@ -66,7 +66,7 @@ Live state is keyed by control id and limited to renderer-facing values such as 
 
 - `app-viewer`: shared discovery/index-view controls and review package controls.
 - `app-management`: manage toolbar, scope, theme, and workflow placements; absent from public/review shells.
-- `index-view`: controls owned by the active index view. Panel collapse/expand remains adjacent panel chrome.
+- `index-view`: controls owned by the active index view.
 - `main-view`: bookmark/info plus manage edit/source/save controls filtered by active view and mode.
 
 An optional mount remains genuine optionality. A route with no eligible main-view controls does not render replacement chrome merely to satisfy a reference.
@@ -93,7 +93,9 @@ multi-selection cardinality failures remain explicit disabled resolutions.
 
 ### Index
 
-The index panel renders the tree or manage-only graph placeholder. `layoutStates` is its only hosted-view layout capability. Collapse/expand belongs to panel layout; index-view switching is an app-viewer control. The manage Index owns its compact Actions/Select all/Clear/Done projection and supplies only its checked IDs to selection-targeted actions.
+The index panel renders the document tree at its normal width. Collapse/expand controls, index layout capabilities, saved panel sizing and the old Working-to-Manage setting conversion are retired. Previously saved collapse/expand values are no longer read. The header is hidden when its index-view control surface is empty. The manage Index owns its compact Actions/Select all/Clear/Done projection and supplies only its checked IDs to selection-targeted actions. Tree-node disclosure remains independent of panel presentation.
+
+Public narrow-screen presentation retains its current stacked index/document layout. A future mobile show/hide index control belongs in the main site header and requires separate implementation; it is not part of the panel chrome. Content Detail still temporarily hides the index through its `expanded-main` layout and restores it on return.
 
 ### Main
 
@@ -133,7 +135,6 @@ collection customisation in isolated positions.
 ## Weak Spots
 
 - Main views still combine hosted lifecycle modules with established document/search/report controllers.
-- `index-graph` remains a layout placeholder, not evidence of a generic visualization extension point.
 - The shared hosted-view context is broader than every consumer needs and should narrow when stable per-view contracts emerge.
 - Index and `docs_subscope` selection owners remain separate; neither may
   supply or infer checked IDs for the other collection.

@@ -1,12 +1,3 @@
-import { convertWorkingPanelState } from "./docs-viewer-saved-state.js";
-import {
-  buildIndexPanelStorageKey,
-  expandedIndexPanelState,
-  nextIndexPanelState,
-  persistIndexPanelState,
-  projectIndexPanelState,
-  readIndexPanelState
-} from "./docs-viewer-index-panel.js";
 import {
   renderDocsViewerAppShellMainViewState,
   renderDocsViewerAppShellInfoPanelState,
@@ -21,31 +12,25 @@ import {
 var DEFAULT_INDEX_VIEW = {
   id: "index-tree",
   label: "Index tree",
-  renderer: "index-tree",
-  capabilities: {
-    layoutStates: ["normal", "collapsed"]
-  }
+  renderer: "index-tree"
 };
 
 function normalizeMainLayoutState(value) {
   return String(value || "").trim() === "expanded-main" ? "expanded-main" : "normal";
 }
 
+/**
+ * Project the index, main and info panels without saved index sizing state.
+ * Content Detail can temporarily hide the index through its main-view layout.
+ */
 export function createDocsViewerPanelLayout(options) {
   var settings = options || {};
   var root = settings.root || null;
-  var storage = settings.storage || null;
   var indexPanelRefs = settings.indexPanelRefs || {};
   var mainViewRefs = settings.mainViewRefs || {};
   var infoPanelRefs = settings.infoPanelRefs || {};
-  var indexPanelAvailable = settings.indexPanelAvailable || function () { return true; };
   var viewRegistry = settings.viewRegistry || null;
-  var storageOwner = settings.storageOwner;
-  if (storageOwner === "manage") convertWorkingPanelState(storage);
-  var storageKey = buildIndexPanelStorageKey(storageOwner);
-  var indexPanelState = readStoredIndexPanelState();
   var viewState = createDocsViewerViewState({
-    indexPanelState: indexPanelState,
     panels: settings.panels,
     routeId: settings.routeId
   });
@@ -91,49 +76,6 @@ export function createDocsViewerPanelLayout(options) {
     return fallbackIndexView();
   }
 
-  function activeIndexViewCapabilities() {
-    var view = activeIndexView();
-    return view && view.capabilities ? view.capabilities : null;
-  }
-
-  function normalizeCurrentIndexState() {
-    var projection = projectIndexPanelState(indexPanelState, {
-      available: indexPanelAvailable(),
-      capabilities: activeIndexViewCapabilities()
-    });
-    if (indexPanelState !== projection.activeState) {
-      indexPanelState = projection.activeState;
-      persistCurrentIndexPanelState();
-    }
-    return projection;
-  }
-
-  function readStoredIndexPanelState() {
-    return readIndexPanelState({
-      storage: storage,
-      storageKey: storageKey
-    });
-  }
-
-  function persistCurrentIndexPanelState() {
-    persistIndexPanelState({
-      storage: storage,
-      storageKey: storageKey,
-      state: indexPanelState,
-      capabilities: activeIndexViewCapabilities()
-    });
-  }
-
-  function setStorageOwner(owner) {
-    storageOwner = owner;
-    storageKey = buildIndexPanelStorageKey(storageOwner);
-    indexPanelState = readStoredIndexPanelState();
-    viewState = updateDocsViewerViewState(viewState, {
-      indexPanelState: indexPanelState
-    });
-    return indexPanelState;
-  }
-
   function renderIndexPanelState() {
     var activeView = activeIndexView();
     if (activeView && activeView.id !== viewState.panels.index.activeViewId) {
@@ -141,7 +83,7 @@ export function createDocsViewerPanelLayout(options) {
         indexViewId: activeView.id
       });
     }
-    var projection = normalizeCurrentIndexState();
+    var projection = {};
     projection.activeViewId = activeView && activeView.id ? activeView.id : "";
     projection.activeViewLabel = activeView && activeView.label ? activeView.label : projection.activeViewId;
     projection.activeViewRenderer = activeView && activeView.renderer ? activeView.renderer : "";
@@ -151,7 +93,6 @@ export function createDocsViewerPanelLayout(options) {
     projection.treeHidden = projection.activeViewRenderer !== "index-tree";
     projection.placeholderHidden = projection.activeViewRenderer !== "index-placeholder";
     viewState = updateDocsViewerViewState(viewState, {
-      indexPanelState: projection.activeState,
       indexViewId: projection.activeViewId
     });
     renderDocsViewerAppShellIndexPanelState({
@@ -165,38 +106,13 @@ export function createDocsViewerPanelLayout(options) {
   }
 
   function projectViewState() {
-    var projected = projectDocsViewerViewState(viewState, {
-      indexProjection: projectIndexPanelState(indexPanelState, {
-        available: indexPanelAvailable(),
-        capabilities: activeIndexViewCapabilities()
-      })
-    });
+    var projected = projectDocsViewerViewState(viewState);
     projected.main.layoutState = mainLayoutState;
     if (mainLayoutState === "expanded-main") {
       projected.index.visible = false;
       projected.info.visible = false;
     }
     return projected;
-  }
-
-  function toggleIndexPanelState() {
-    if (!indexPanelAvailable()) return indexPanelState;
-    indexPanelState = nextIndexPanelState(indexPanelState, {
-      capabilities: activeIndexViewCapabilities()
-    });
-    persistCurrentIndexPanelState();
-    renderIndexPanelState();
-    return indexPanelState;
-  }
-
-  function expandIndexPanelState() {
-    if (!indexPanelAvailable()) return indexPanelState;
-    indexPanelState = expandedIndexPanelState(indexPanelState, {
-      capabilities: activeIndexViewCapabilities()
-    });
-    persistCurrentIndexPanelState();
-    renderIndexPanelState();
-    return indexPanelState;
   }
 
   function projectMainView(projection) {
@@ -208,7 +124,6 @@ export function createDocsViewerPanelLayout(options) {
 
   function viewerLayoutName(projection) {
     if (mainLayoutState === "expanded-main") return "expanded-main";
-    if (projection.index.state === "expanded") return "index-expanded";
     if (projection.info.visible) return "index-document-info";
     return "index-document";
   }
@@ -239,21 +154,6 @@ export function createDocsViewerPanelLayout(options) {
     return renderInfoPanelState();
   }
 
-  function bindPanelChrome() {
-    if (indexPanelRefs.sidebarToggle) {
-      indexPanelRefs.sidebarToggle.addEventListener("click", function () {
-        if (typeof settings.onBeforePanelInteraction === "function") settings.onBeforePanelInteraction();
-        toggleIndexPanelState();
-      });
-    }
-    if (indexPanelRefs.sidebarExpand) {
-      indexPanelRefs.sidebarExpand.addEventListener("click", function () {
-        if (typeof settings.onBeforePanelInteraction === "function") settings.onBeforePanelInteraction();
-        expandIndexPanelState();
-      });
-    }
-  }
-
   function setActiveMainView(viewId) {
     var targetViewId = String(viewId || "").trim();
     var resolved = viewRegistry && typeof viewRegistry.resolveView === "function"
@@ -275,17 +175,12 @@ export function createDocsViewerPanelLayout(options) {
   }
 
   return {
-    bindPanelChrome: bindPanelChrome,
-    expandIndexPanelState: expandIndexPanelState,
-    indexPanelState: function () { return indexPanelState; },
     projectInfoPanel: projectInfoPanel,
     projectMainView: projectMainView,
     projectViewState: projectViewState,
     renderIndexPanelState: renderIndexPanelState,
     setActiveMainView: setActiveMainView,
     setMainLayoutState: setMainLayoutState,
-    mainLayoutState: function () { return mainLayoutState; },
-    setStorageOwner: setStorageOwner,
-    toggleIndexPanelState: toggleIndexPanelState
+    mainLayoutState: function () { return mainLayoutState; }
   };
 }

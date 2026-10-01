@@ -2,7 +2,7 @@
 doc_id: d-20260919-100234-038395
 title: "Shared Icons: Toolbar Mapping"
 added_date: "2026-09-19 10:02:34"
-last_updated: "2026-10-01 19:21:57"
+last_updated: "2026-10-01 19:59:57"
 summary: Editable mappings for Docs Viewer toolbars, report toolbars and report list icons, including code identifiers, state variants and replacement artwork choices.
 ui_status: planned
 parent_id: d-20260910-223116-9a1011
@@ -82,10 +82,6 @@ Code identifiers below are exact **renderer keys**, except entries explicitly ma
 | Actions menu: Import | action `import` | Opens Import | 📥 and text | import.svg and text | — | Implemented; review pending |
 | Actions menu: Export | action `export-workspace` | Exports workspace | ⬇️ and text | square-arrow-right-exit.svg and text | — | Implemented; review pending |
 | Actions menu: Settings | action `settings` | Opens Settings | ⚙️ and text | settings.svg and text | — | Implemented; review pending |
-| Index header: collapse | DOM `docsViewerSidebarToggle` | Normal panel; click collapses it | ‹ | chevron-left.svg | — | Implemented; review pending |
-| Index header: restore | DOM `docsViewerSidebarToggle` | Collapsed panel; click restores it | › | chevron-right.svg | — | Implemented; review pending |
-| Index header: restore | DOM `docsViewerSidebarToggle` | Expanded panel; click restores normal width | ‹ | chevron-left.svg | — | Implemented; review pending |
-| Index header: expand | DOM `docsViewerSidebarExpand` | Normal panel; click expands it | ⤢ | expand.svg | — | Implemented; review pending; existing capability-based visibility retained |
 | Index header: actions | `manage-index-actions` | Opens Index actions menu | 🛠️ | wrench.svg | — | Implemented; review pending; wrench.svg replaces the missing spanner.svg by agreement |
 | Index selection: select all | `manage-index-selection`; command `select-all` | Selects all available documents | Text `Select all` | Text `All` | — | Implemented; review pending |
 | Index selection: clear | `manage-index-selection`; command `clear` | Clears selection | Text `Clear` | Text `Clear` | — | Keep |
@@ -293,7 +289,7 @@ Paths below are relative to the repository root. They identify the inspected own
 - Management document/source/index controls and Index actions menu: `docs-viewer/runtime/js/management/docs-viewer-management-control-renderers.js`; definitions in `docs-viewer-management-hosted-views.js` in the same directory.
 - Management toolbar and Actions menu: `docs-viewer/runtime/js/management/docs-viewer-management-actions-renderer.js`; action identifiers in `docs-viewer-action-definitions.js` in the same directory.
 - Source contributions and Directives menu: `docs-viewer/runtime/js/management/source-editor/catalogue-image-contribution.js`, `catalogue-media-link.js`, `document-link-contribution.js` and `directive-actions.js` in that directory.
-- Index header drawings and panel states: `docs-viewer/runtime/js/shared/docs-viewer-index-panel-renderer.js` and `docs-viewer-index-panel.js` in the same directory. Panel layout comes from `docs-viewer-panel-layout.js`; the retired Tree/Graph switch and Graph placeholder are removed.
+- Index header rendering: `docs-viewer/runtime/js/shared/docs-viewer-index-panel-renderer.js`. Panel layout comes from `docs-viewer-panel-layout.js` in the same directory. Collapse/expand controls and saved sizing are retired; the header remains only for active index-view controls.
 - Info panel close control: `docs-viewer/runtime/js/shared/docs-viewer-info-panel-renderer.js`.
 - Bookmark state: `docs-viewer/runtime/js/shared/docs-viewer-bookmarks.js`. Ordinary document Draft/Ready state: `docs-viewer/runtime/js/management/docs-viewer-management.js`.
 - Shared icon creation: `docs-viewer/runtime/js/shared/docs-viewer-toolbar-icon.js`. Shared sizing, button/mask presentation and theme styles: `docs-viewer/static/css/docs-viewer.css` and `docs-viewer-theme.css`; management-only artwork URLs live in `docs-viewer-manage.css` in the same directory.
@@ -311,7 +307,7 @@ Report inventory owners:
 
 ## Implementation Review
 
-The Tree/Graph index switch and Graph placeholder are retired. The backlinks insertion-menu entry is retired; existing authored `docs_backlinks` reports remain supported. The proposed image-modal combination and related-links token need their own implementation work.
+The Tree/Graph index switch, Graph placeholder and index-panel collapse/expand controls are retired. The backlinks insertion-menu entry is retired; existing authored `docs_backlinks` reports remain supported. The proposed image-modal combination and related-links token need their own implementation work.
 
 For the earlier viewer-toolbar migration, selected JavaScript lint (16 changed canonical modules), Python lint for the projection tool, `bin/site-code-update --check`, `bin/site-validate`, and `git diff --check` passed. The public projection adds 13 SVG assets and updates nine shared JavaScript modules plus the shared stylesheet. Visual fit, hover, state changes and light/dark appearance remain manual review; no browser or test-suite run is claimed.
 

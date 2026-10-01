@@ -1,7 +1,4 @@
 import {
-  normalizeHostedViewCapabilities
-} from "./docs-viewer-hosted-view-capabilities.js";
-import {
   docsViewerRouteFeatureEnabled
 } from "./docs-viewer-route-features.js";
 
@@ -90,8 +87,7 @@ function normalizeView(record) {
     panel: panel,
     renderer: cleanString(source.renderer),
     placeholderText: cleanString(source.placeholderText),
-    mainLayoutState: mainLayoutState,
-    capabilities: normalizeHostedViewCapabilities(source.capabilities)
+    mainLayoutState: mainLayoutState
   });
 }
 
@@ -220,8 +216,7 @@ export function createDocsViewerSharedViewDefinitions() {
         id: "index-tree",
         label: "Index tree",
         panel: "index",
-        renderer: "index-tree",
-        capabilities: { layoutStates: ["normal", "collapsed"] }
+        renderer: "index-tree"
       },
       { id: "rendered-document", label: "Document", panel: "main" },
       { id: "search-results", label: "Search results", panel: "main", features: ["search"] },

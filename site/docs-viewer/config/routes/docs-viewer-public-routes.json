@@ -46,8 +46,7 @@
       },
       "panels": {
         "index": {
-          "enabled": true,
-          "default_state": "normal"
+          "enabled": true
         },
         "main": {
           "enabled": true,

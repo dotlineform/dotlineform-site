@@ -1,5 +1,3 @@
-import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
-
 const INDEX_PANEL_MOUNT_SELECTOR = "[data-docs-viewer-index-panel-mount]";
 
 export function indexPanelMount(root) {
@@ -22,24 +20,10 @@ export function renderDocsViewerIndexPanelShell(options = {}) {
   const header = documentRef.createElement("div");
   header.className = "docsViewer__sidebarHeader";
 
-  const controls = documentRef.createElement("div");
-  controls.className = "docsViewer__sidebarControls";
-
   const viewControls = documentRef.createElement("div");
   viewControls.className = "docsViewer__indexViewControls";
   viewControls.hidden = true;
   viewControls.setAttribute("data-docs-viewer-control-surface-mount", "index-view");
-
-  const sidebarToggle = renderSidebarToggle(documentRef, {
-    id: "docsViewerSidebarToggle",
-    label: "Collapse docs index",
-    icon: "docsViewer__icon--chevron-left"
-  });
-  const sidebarExpand = renderSidebarToggle(documentRef, {
-    id: "docsViewerSidebarExpand",
-    label: "Expand docs index",
-    icon: "docsViewer__icon--expand"
-  });
 
   const nav = documentRef.createElement("nav");
   nav.className = "docsViewer__nav";
@@ -51,8 +35,7 @@ export function renderDocsViewerIndexPanelShell(options = {}) {
   placeholder.id = "docsViewerIndexPlaceholder";
   placeholder.hidden = true;
 
-  controls.append(sidebarToggle, sidebarExpand);
-  header.append(viewControls, controls);
+  header.appendChild(viewControls);
   inner.append(header, nav, placeholder);
   aside.appendChild(inner);
   mount.replaceChildren(aside);
@@ -67,9 +50,7 @@ export function findDocsViewerIndexPanelRefs(options = {}) {
     sidebar: root.querySelector(".docsViewer__sidebar"),
     nav: root.querySelector("#docsViewerNav"),
     indexPlaceholder: root.querySelector("#docsViewerIndexPlaceholder"),
-    viewControls: root.querySelector('[data-docs-viewer-control-surface-mount="index-view"]'),
-    sidebarToggle: root.querySelector("#docsViewerSidebarToggle"),
-    sidebarExpand: root.querySelector("#docsViewerSidebarExpand")
+    viewControls: root.querySelector('[data-docs-viewer-control-surface-mount="index-view"]')
   };
 }
 
@@ -78,7 +59,6 @@ export function applyDocsViewerIndexPanelProjection(options = {}) {
   const refs = options.refs || {};
   const projection = options.projection || {};
   if (root) {
-    root.dataset.indexPanelState = projection.activeState || "normal";
     root.dataset.indexPanelView = projection.activeViewId || "";
   }
   if (refs.nav) refs.nav.hidden = Boolean(projection.treeHidden);
@@ -86,40 +66,4 @@ export function applyDocsViewerIndexPanelProjection(options = {}) {
     refs.indexPlaceholder.hidden = Boolean(projection.placeholderHidden);
     refs.indexPlaceholder.textContent = projection.placeholderText || "";
   }
-  applyToggleProjection(refs.sidebarExpand, {
-    hidden: projection.expandHidden,
-    ariaExpanded: projection.expandAriaExpanded,
-    label: projection.expandLabel,
-    icon: projection.expandIcon
-  });
-  applyToggleProjection(refs.sidebarToggle, {
-    hidden: projection.stepHidden,
-    ariaExpanded: projection.stepAriaExpanded,
-    label: projection.stepLabel,
-    icon: projection.stepIcon
-  });
-}
-
-function renderSidebarToggle(documentRef, options) {
-  const button = documentRef.createElement("button");
-  button.className = "docsViewer__toolbarIconButton";
-  button.type = "button";
-  button.id = options.id;
-  button.setAttribute("aria-controls", "docsViewerNav");
-  button.setAttribute("aria-expanded", "true");
-  button.setAttribute("aria-label", options.label);
-  button.title = options.label;
-
-  button.appendChild(createDocsViewerToolbarIcon(documentRef, options.icon));
-
-  return button;
-}
-
-function applyToggleProjection(button, options) {
-  if (!button) return;
-  button.hidden = Boolean(options.hidden);
-  button.setAttribute("aria-expanded", options.ariaExpanded || "true");
-  button.setAttribute("aria-label", options.label || "");
-  button.title = options.label || "";
-  button.replaceChildren(createDocsViewerToolbarIcon(button.ownerDocument, options.icon));
 }

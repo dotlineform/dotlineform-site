@@ -58,7 +58,6 @@
   --docs-viewer-space-3: var(--space-3, 0.875rem);
   --docs-viewer-space-4: var(--space-4, 1.125rem);
   --docs-viewer-space-5: var(--space-5, 1.375rem);
-  --docs-viewer-sidebar-control-inset: 0.45rem;
   --docs-viewer-toolbar-control-height: 2rem;
   --docs-viewer-toolbar-icon-size: 20px; /* standard 24px */
   --docs-viewer-toolbar-icon-hover-bg: color-mix(in srgb, var(--docs-viewer-panel) 92%, var(--docs-viewer-text));
@@ -158,23 +157,6 @@ main.container:has(> .docsViewer){
     var(--docs-viewer-info-rail);
 }
 
-.docsViewer:is([data-docs-viewer-app-kind="manage"], [data-docs-viewer-app-kind="review"])[data-index-panel-state="collapsed"]{
-  --docs-viewer-panel-clearance-width: 2.8rem;
-  --docs-viewer-measure: var(--docs-viewer-doc-width);
-  grid-template-columns: 2.8rem minmax(0, 1fr);
-}
-
-.docsViewer:is([data-docs-viewer-app-kind="manage"], [data-docs-viewer-app-kind="review"])[data-index-panel-state="collapsed"][data-info-panel-state="open"]{
-  --docs-viewer-panel-clearance-width: var(--docs-viewer-info-width);
-  --docs-viewer-measure: var(--docs-viewer-doc-width);
-  grid-template-columns: 2.8rem minmax(0, 1fr) var(--docs-viewer-info-rail);
-}
-
-.docsViewer:is([data-docs-viewer-app-kind="manage"], [data-docs-viewer-app-kind="review"])[data-index-panel-state="expanded"]{
-  --docs-viewer-measure: min(120ch, 100%);
-  grid-template-columns: minmax(0, 1fr);
-}
-
 .docsViewer[data-viewer-layout="expanded-main"]{
   --docs-viewer-document-width: 100%;
   --docs-viewer-measure: 100%;
@@ -193,25 +175,6 @@ main.container:has(> .docsViewer){
 .docsViewer[data-viewer-layout="expanded-main"] .docsViewer__sidebar,
 .docsViewer[data-viewer-layout="expanded-main"] .docsViewer__infoPanel{
   display: none !important;
-}
-
-@media (min-width: 821px){
-  .docsViewer[data-docs-viewer-app-kind="public"][data-index-panel-state="collapsed"]{
-    --docs-viewer-panel-clearance-width: 2.8rem;
-    --docs-viewer-measure: var(--docs-viewer-doc-width);
-    grid-template-columns: 2.8rem minmax(0, 1fr);
-  }
-
-  .docsViewer[data-docs-viewer-app-kind="public"][data-index-panel-state="collapsed"][data-info-panel-state="open"]{
-    --docs-viewer-panel-clearance-width: var(--docs-viewer-info-width);
-    --docs-viewer-measure: var(--docs-viewer-doc-width);
-    grid-template-columns: 2.8rem minmax(0, 1fr) var(--docs-viewer-info-rail);
-  }
-
-  .docsViewer[data-docs-viewer-app-kind="public"][data-index-panel-state="expanded"]{
-    --docs-viewer-measure: min(120ch, 100%);
-    grid-template-columns: minmax(0, 1fr);
-  }
 }
 
 .docsViewer__controls{
@@ -250,15 +213,11 @@ main.container:has(> .docsViewer){
   justify-content: space-between;
   gap: 0.4rem;
   min-height: 1.8rem;
-  margin: calc(var(--docs-viewer-sidebar-control-inset) - var(--docs-viewer-space-3))
-    calc(var(--docs-viewer-sidebar-control-inset) - var(--docs-viewer-space-3))
-    0.45rem 0;
+  margin: 0 0 0.45rem;
 }
 
-.docsViewer__sidebarControls{
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
+.docsViewer__sidebarHeader:has(> .docsViewer__indexViewControls[hidden]){
+  display: none;
 }
 
 .docsViewer__indexViewControls,
@@ -292,64 +251,6 @@ main.container:has(> .docsViewer){
 .docsViewer__indexPlaceholder[hidden],
 .docsViewer__nav[hidden]{
   display: none;
-}
-
-.docsViewer:is([data-docs-viewer-app-kind="manage"], [data-docs-viewer-app-kind="review"])[data-index-panel-state="collapsed"] .docsViewer__sidebarInner{
-  padding: var(--docs-viewer-sidebar-control-inset);
-}
-
-.docsViewer:is([data-docs-viewer-app-kind="manage"], [data-docs-viewer-app-kind="review"])[data-index-panel-state="collapsed"] .docsViewer__sidebarHeader{
-  justify-content: center;
-  margin: 0;
-}
-
-.docsViewer:is([data-docs-viewer-app-kind="manage"], [data-docs-viewer-app-kind="review"])[data-index-panel-state="collapsed"] .docsViewer__indexViewControls,
-.docsViewer:is([data-docs-viewer-app-kind="manage"], [data-docs-viewer-app-kind="review"])[data-index-panel-state="collapsed"] .docsViewer__nav{
-  display: none;
-}
-
-.docsViewer:is([data-docs-viewer-app-kind="manage"], [data-docs-viewer-app-kind="review"])[data-index-panel-state="expanded"] .docsViewer__sidebar{
-  grid-column: 1 / -1;
-  justify-self: stretch;
-  width: 100%;
-}
-
-.docsViewer:is([data-docs-viewer-app-kind="manage"], [data-docs-viewer-app-kind="review"])[data-index-panel-state="expanded"] .docsViewer__main,
-.docsViewer:is([data-docs-viewer-app-kind="manage"], [data-docs-viewer-app-kind="review"])[data-index-panel-state="expanded"] .docsViewer__infoPanel{
-  display: none;
-}
-
-@media (min-width: 821px){
-  .docsViewer[data-docs-viewer-app-kind="public"][data-index-panel-state="collapsed"] .docsViewer__sidebarInner{
-    padding: var(--docs-viewer-sidebar-control-inset);
-  }
-
-  .docsViewer[data-docs-viewer-app-kind="public"][data-index-panel-state="collapsed"] .docsViewer__sidebarHeader{
-    justify-content: center;
-    margin: 0;
-  }
-
-  .docsViewer[data-docs-viewer-app-kind="public"][data-index-panel-state="collapsed"] .docsViewer__indexViewControls{
-    display: none;
-  }
-
-  .docsViewer[data-docs-viewer-app-kind="public"][data-index-panel-state="collapsed"] .docsViewer__nav{
-    display: none;
-  }
-
-  .docsViewer[data-docs-viewer-app-kind="public"][data-index-panel-state="expanded"] .docsViewer__sidebar{
-    grid-column: 1 / -1;
-    justify-self: stretch;
-    width: 100%;
-  }
-
-  .docsViewer[data-docs-viewer-app-kind="public"][data-index-panel-state="expanded"] .docsViewer__main{
-    display: none;
-  }
-
-  .docsViewer[data-docs-viewer-app-kind="public"][data-index-panel-state="expanded"] .docsViewer__infoPanel{
-    display: none;
-  }
 }
 
 .docsViewer__navList{
@@ -827,10 +728,6 @@ main.container:has(> .docsViewer){
 
 .docsViewer__icon--clock-3{
   mask-image: url("../icons/clock-3.svg");
-}
-
-.docsViewer__icon--expand{
-  mask-image: url("../icons/expand.svg");
 }
 
 .docsViewer__icon--external-link{
@@ -2115,10 +2012,6 @@ main.container:has(> .docsViewer){
 
   .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__controls{
     grid-row: auto;
-  }
-
-  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__sidebarHeader{
-    display: none;
   }
 
   .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__sidebarInner{

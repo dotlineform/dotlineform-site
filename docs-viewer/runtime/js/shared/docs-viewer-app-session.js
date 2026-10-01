@@ -103,9 +103,6 @@ function createStateDefaults(settings) {
     pendingBusyCount: 0,
     nonLoadableDocIds: new Set(),
     manageOnlyTreeRootIds: new Set(),
-    indexPanelState: panelLayout && typeof panelLayout.indexPanelState === "function"
-      ? panelLayout.indexPanelState()
-      : null,
     viewState: panelLayout && typeof panelLayout.projectViewState === "function"
       ? panelLayout.projectViewState()
       : null
@@ -194,7 +191,6 @@ function createStateDomains(state, settings) {
       "pendingBookmarkFocusKey"
     ]),
     panelView: stateDomain("panelView", "browser-only UI state", state, [
-      "indexPanelState",
       "viewState"
     ]),
     management: stateDomain("management", "management backend capability and write flow", state, [

@@ -8,7 +8,6 @@
 }
 
 .docsViewer[data-document-display-mode="markdown-source"],
-.docsViewer[data-document-display-mode="markdown-source"][data-index-panel-state],
 .docsViewer[data-document-display-mode="markdown-source"][data-info-panel-state]{
   --docs-viewer-measure: 100%;
 }

@@ -108,7 +108,6 @@ export function startDocsViewerRuntime(options) {
   var BOOKMARK_STORE_NAME = runtimeDefaults.bookmarkStoreName;
   var MANAGEMENT_CAPABILITY_RETRY_ATTEMPTS = runtimeDefaults.managementCapabilityRetryAttempts;
   var MANAGEMENT_CAPABILITY_RETRY_DELAY_MS = runtimeDefaults.managementCapabilityRetryDelayMs;
-  var SIDEBAR_COLLAPSE_MEDIA = runtimeDefaults.sidebarCollapseMedia;
   var bookmarkOwner = routeContext.bookmarkOwner;
   var latestIndexProjection = null;
   var composition = createDocsViewerAppComposition({
@@ -120,8 +119,6 @@ export function startDocsViewerRuntime(options) {
     createCollectionProvider: settings.createCollectionProvider,
     createSourceAdapter: settings.createSourceAdapter,
     viewRegistry: settings.viewRegistry,
-    indexPanelAvailable: sidebarCollapseAvailable,
-    onBeforePanelInteraction: hideContextMenu,
     onIndexProjection: function (projection) {
       latestIndexProjection = projection || null;
       var controller = managementRuntime ? managementRuntime.controller() : null;
@@ -648,7 +645,6 @@ export function startDocsViewerRuntime(options) {
     preserveQueryParams = routeContext.preserveQueryParams || preserveQueryParams;
     viewerPathname = routeContext.viewerPathname;
     bookmarkOwner = routeContext.bookmarkOwner;
-    state.indexPanelState = panelLayout.setStorageOwner(bookmarkOwner);
   }
 
   function loadWorkspaceConfiguration() {
@@ -791,11 +787,6 @@ export function startDocsViewerRuntime(options) {
       activeModeId: activeState.activeModeId,
       controlStateById: controlStateById
     });
-  }
-
-  function sidebarCollapseAvailable() {
-    if (!window.matchMedia) return window.innerWidth > 820;
-    return window.matchMedia(SIDEBAR_COLLAPSE_MEDIA).matches;
   }
 
   function renderIndexPanelState() {
@@ -986,7 +977,6 @@ export function startDocsViewerRuntime(options) {
 
   function bindLinkInterception() {
     routeWorkflow.bindRouteLinks();
-    panelLayout.bindPanelChrome();
 
     documentViewCoordinator.bind();
 
@@ -1018,10 +1008,7 @@ export function startDocsViewerRuntime(options) {
   routeWorkflow.bindPopstate();
 
   window.addEventListener("scroll", hideContextMenu, { passive: true });
-  window.addEventListener("resize", function () {
-    hideContextMenu();
-    renderIndexPanelState();
-  });
+  window.addEventListener("resize", hideContextMenu);
   window.addEventListener("keydown", function (event) {
     if (event.key === "Escape") {
       hideContextMenu();
