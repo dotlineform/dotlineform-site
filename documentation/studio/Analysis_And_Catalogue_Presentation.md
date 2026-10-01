@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260902-102745-8379ea
 title: Unified Analysis And Catalogue Presentation
 added_date: "2026-09-02 10:27:45"
-last_updated: "2026-09-28 15:20:26"
+last_updated: "2026-10-01 15:05:39"
 summary: Present accepted Analysis documents and current Catalogue data through Docs Viewer while retaining the legacy Catalogue as a frozen archive.
 ui_status: in-progress
 parent_id: d-20260428-000000-f5ff18
@@ -39,7 +39,9 @@ The current Catalogue site remains available as a frozen archive while the repla
 
 - [Document Link Strength](Document_Link_Strength.md) records numeric strength saved and shown on outgoing document links, authored through a cold-blue to hot-red slider in Insert doc link. Reciprocal strengths are independent: a future visualisation can show A → B hot and B → A cold as two directed links. Scale, persistence mechanics and detailed pill presentation remain to be designed. It is separate follow-on work to the Related/pinning delivery.
 
-- [Info Panel Related Links And Pinning - Delivery](Info_Panel_Links_And_Pinning_Delivery.md) records the agreed document-only Related section, concept pills, one A–Z document list deduplicated by `doc_id`, and a pin that keeps Info on its anchor while the main document changes. It includes exact semantic-token/Subject document connections and the data path through Pre-publish, Published and public presentation. Links View retains its existing grouped Manage-only presentation. The delivery is proposed pending read-only lifecycle readiness; implementation has not started.
+- [Info Panel Related Links And Pinning - Delivery](Info_Panel_Links_And_Pinning_Delivery.md) records the revised 2026-10-01 reader approach: a pin beside a non-empty generated related-links heading opens an always-pinned panel with the document title, optional summary and the same flat related list. No links means no heading or pin; heading-free directives retain the pin. The panel has only Close, and the rendered **i** action is removed. Link targets are an authoring choice: remove draft/publication filtering from picker/relationship selection and captured related lists while retaining eligibility for document bodies. Existing relationship and Publish owners supply the data. The delivery remains proposed; implementation has not started.
+
+- [Source Editor And Token Modals - Delivery](Source_Editor_And_Token_Modals_Delivery.md) is the separate proposed follow-on: expose complete Markdown including front matter, validate one complete-source Save, edit existing Catalogue tokens through their creation modals with stored values preselected, and remove Source's metadata/token panel and **i** control. Suggested internal order is reader pinning first, Source simplification second. Source retains its current authoring panel until this delivery replaces it.
 
 - [Semantic Tokens In Links View - Delivery](Links_View_Semantic_Tokens_Delivery.md) is stopped and superseded by Info Panel Related Links And Pinning. Its proposed media entries and Media View return to Links are no longer intended. Current Work Media View navigation exposes only Gallery links; any broader navigation needs a separate decision.
 

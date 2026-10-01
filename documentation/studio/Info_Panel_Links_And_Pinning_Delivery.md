@@ -3,8 +3,8 @@ draft: false
 doc_id: d-20260913-151251-cbee5b
 title: Info Panel Related Links And Pinning - Delivery
 added_date: "2026-09-13 15:12:51"
-last_updated: "2026-09-13 15:39:44"
-summary: Add document-only Related links and pinning to Info in Manage and public, with prepared relationship data through Pre-publish, Published and site deployment while retaining the existing Manage-only Links View.
+last_updated: "2026-10-01 15:05:39"
+summary: Open an always-pinned document panel from the generated related-links section, showing only its title, optional summary and related list while the reader browses other documents.
 ui_status: proposed
 parent_id: d-20260902-102745-8379ea
 ---
@@ -12,152 +12,152 @@ parent_id: d-20260902-102745-8379ea
 
 ## Requirements
 
-Deliver one outcome: a reader can keep a document's Info panel beside the main document, use its Related links to explore other documents, and pin that panel so the original context remains available. This works in Analysis Working and Pre-publish in Manage, and through the accepted Published snapshot to public-site presentation. The standalone Links View retains its current grouped presentation and Manage-only availability.
+Deliver one outcome: a reader intentionally opens a document's related links beside the main pane and keeps that document's context while browsing the destinations. The Info panel is always pinned to the document whose related-links pin opened it. Closing the panel ends that context; a rendered document's related-links pin is its only reopening action.
 
-The requirements were agreed on 2026-09-13. This delivery is proposed until **IRP-0 — Readiness** confirms the publication and public-route prerequisites; implementation has not started. [Unified Analysis And Catalogue Presentation](Analysis_And_Catalogue_Presentation.md) is the feature parent. [Info Panel](Info_Panel.md) is the primary durable destination at closeout.
+The revised requirements were agreed on 2026-10-01. This replaces the earlier following/pin-toggle interaction, concept-pill presentation and proposed Subject-based relationship expansion. Reuse the generated document-only list described in [Related Links](Related_Links.md); the separate per-document Links view and read endpoint are already retired. Implementation has not started, and this delivery remains proposed pending **IRP-0 — Readiness**. [Unified Analysis And Catalogue Presentation](Analysis_And_Catalogue_Presentation.md) remains the feature parent. [Info Panel](Info_Panel.md) is the primary durable destination at closeout.
 
-### Related Presentation
+### Opening From Document Content
 
-Add one **Related** section beneath the existing document information:
+- Add a pin button beside the optional H3 heading of each non-empty generated related-links section. Keep the heading's authored text from `[[links|related links]]` or another supplied label.
+- With `[[links|]]` or whitespace-only heading text, show the pin without heading text, followed by the existing list.
+- If there are no qualifying related links, render no heading, list or pin. There is then no way to open the panel from that document, even when it has a summary. A document without the directive also has no pin.
+- Remove the rendered-document toolbar's **i** button. Do not add another reader entry point or automatically open the panel on document selection.
+- Opening captures the exact document represented by that section, including a collection document displayed inside a report. It does not navigate the main pane or substitute the report host for its detail document.
+- Give the pin an accessible action label such as **Pin related links**. It opens a captured context; it is not an unpin toggle.
+
+### Panel Presentation
+
+Replace the current metadata presentation with:
 
 ```text
-Related
+Document title                         [Close]
 
-[Concept A] [Concept B] [Concept C]
+Optional document summary
 
 Document A
 Document B
 Document C
 ```
 
-- Concept documents appear as linked pills, using exact configured concept-collection membership. Each opens its document.
-- All remaining related documents appear in one A–Z list by document title. Info has no separate Works or References headings, and their current classification does not restrict the combined list to Work Subjects or scope-level documents.
-- Deduplicate the complete Related result by `doc_id` across incoming, outgoing and semantic-token contributions. A concept document appears only as a pill, never again in the list. Distinct documents with the same title remain distinct; use `doc_id` as the deterministic title-sort tie-break.
-- Document titles supply display labels. Every entry opens an exact ordinary document or configured child-document location. No entry opens a Catalogue target or Media View.
-- Hide empty pill/list groups; omit Related when a successful read has no related documents. Unavailable or failed data remains distinguishable from a successfully empty result without replacing useful metadata.
+- Put the captured document's title in the shell's top row, replacing **Info**. The title wraps within the space before the right-hand close button, which remains vertically centred against the title.
+- Show a non-empty `summary` directly beneath the title, without a **Summary** caption. Omit absent or blank summaries without placeholder text.
+- Below the summary, show the same related list as the captured document, without its section heading or another pin button. Preserve the existing collection icons, A–Z title ordering, exact `{collection, doc_id}` destinations and deduplication rules. Concepts participate in this same list; there are no pills or collection groups.
+- Remove all other rendered-panel metadata and ancillary sections, including IDs, dates, operational fields and diagram-source links. The panel contains only the title, optional summary, related list and close control.
+- Keep the close control on the right. Its label and tooltip are **Close**, replacing **Hide info panel**. There is no pin/unpin control inside the panel.
+- Missing summary or list content produces no caption or empty-state message. If both are absent, the body is empty while the title and Close remain visible. Normal opening requires a non-empty related section, so an empty list alone never creates an opening action.
 
-Preserve the exact `{scope, stage, sub_scope, doc_id}` context for lookup and navigation even though presentation deduplication uses `doc_id`. No title, selected index row or report host substitutes for the displayed child document. A conflicting identity is a data problem, not permission to select an arbitrary location.
-
-### Document Connections From Semantic Tokens
-
-Ordinary incoming/outgoing document links and semantic-token-derived document connections contribute to the same document-only selection. Keep the source evidence distinct from the deduplicated display so the existing deeper Links presentation and later analysis can inspect it.
-
-- A supported Work, Series or Detail token in Doc A connects A to every eligible document whose valid normalized Subject matches that exact typed target in the same scope/stage, including configured child collections.
-- For example, A mentions Work 00523 and B has Work Subject 00523: A lists B, and B lists A. If C also has that exact Subject, it is another document destination. Matching Subjects alone do not connect B and C without token or ordinary-link evidence.
-- Work-primary, Series and exact Work/Detail identities are distinct. A Detail token does not match its owning Work's primary Subject, and Series membership does not expand a token's matches.
-- If no document has a matching Subject, that token contributes no document destination. A document without a Subject may still connect through its own tokens. Exclude self-connections and deduplicate repeated occurrences and overlap with ordinary document links.
-- Both Media View text-link tokens and Catalogue image tokens contribute under the existing usage rules. Their authored content and existing Media View activation remain unchanged.
-- Use prepared token usage and exact document metadata from their current owners. Do not invent documents, infer Subjects from titles, choose a single preferred document, or make Catalogue media a replacement destination.
-
-This replaces the destination and nested-return design in [Semantic Tokens In Links View - Delivery](Links_View_Semantic_Tokens_Delivery.md). That older media-entry plan is superseded. The shared selection supplies document destinations; the standalone Links View keeps its existing Concepts, Works and References sections, sorting, ordinary navigation and Content Detail behaviour. This delivery adds no new Links View layout, controls, Media View entry or network visualisation.
-
-### Pinning
-
-Add a pin toggle to the Info panel header. It anchors the entire document-information context, including title, metadata, concept pills and Related list, independently of the document currently displayed in the main pane.
+### Captured Context And Lifetime
 
 | State or action | Behaviour |
 | --- | --- |
-| Unpinned | Info follows the current exact document or child. |
-| Pin | Retain the document context currently shown in Info. Its title remains visible as the anchor. |
-| Navigate while pinned | The main pane follows ordinary document navigation, including Related links, while Info continues showing the pinned document and list. |
-| Unpin | Immediately resume following the current main document, even if several documents have been visited since pinning. Use ordinary loading/error behaviour if its data is not ready. |
+| Click a document's pin | Open its captured title, summary and related list. The panel is always pinned. |
+| Navigate in the main pane or follow a panel link | Change the main document while retaining the captured panel context, even when the destination has no related links. |
+| Click another document's pin | Replace the captured panel context with that document's title, summary and list. |
+| Click the pin for the already captured document | Leave the panel open; do not treat the action as Close or unpin. |
+| Close | Close the panel and release the captured context. Subsequent navigation does not reopen it. |
 
-The pin affects only Info. It does not freeze the main document, selected child, authoring target or the document used when opening Links View. Retain the anchor independently of the old main-document mount; reject late reads that belong to a replaced Info target or released scope/stage. Pinning must not capture a loading child's report host or mix one document's metadata with another's Related list.
+Retain the captured data and exact navigation context independently of the original document mount. A replaced target or closed panel must not receive late updates belonging to an earlier capture. There is no state in which the rendered panel follows the current main document. Full page reload clears the capture; persistent pins, cross-tab synchronization and bookmarkable panel state are outside this delivery.
 
-Use monochrome for unpinned and colour for pinned as the provisional visual direction. Final icon assets and broader icon consistency are deferred. Give the toggle an accessible name and exposed pressed state so colour is not its only state cue; visual fit remains a manual review item.
+### Data, Public Routes And Source Boundary
 
-Proposed lifetime default for readiness confirmation: pinning lasts within the current viewer session and scope/stage, including closing and reopening Info. A full page reload or scope/stage change clears the pin. Persistent pins, cross-tab synchronisation and bookmarkable pin state are outside this delivery. Reuse the existing navigation and hosted-context owners; do not turn panel pinning into a new history or caching framework.
+Use the title, summary and generated related section from the document already loaded by the reader. Do not fetch separate Links records, collection manifests or neighbouring documents to populate the panel, derive another relationship graph, or reintroduce the retired Links view/API. [Related Links](Related_Links.md) and [Builder](Builder.md) retain authored relationship construction and Build freshness ownership, subject to the revised target policy below. This delivery adds no Subject matching, token families or relationship expansion.
 
-### Availability And Publication
+Link destinations are an authoring choice. Draft is a temporary indication of unfinished document work across potentially discontinuous editing sessions; the current large draft population does not define the intended long-term operating model. Tracking whether every destination is ready for publication is the author's responsibility. Do not maintain target-readiness scans, filtering or publication gates to compensate for forgotten draft states.
 
-- Related and pinning work for main and configured child documents in Manage Working and Pre-publish, and for public read-only documents from the accepted Published snapshot. Pinning is local viewer state and needs no write service.
-- Keep Related-data availability separate from the standalone Links action. Preserve today's Manage-only Links View activation, currently Analysis Working; exposing Related in Pre-publish or public must not expose the standalone view there.
-- Document Build and the existing semantic-token owner prepare the data. Establish the smallest shared document-selection and prepared-data projection through those owners; neither Info nor Links scans Markdown, reconstructs a graph by loading every neighbouring document, or repairs missing artifacts.
-- Pre-publish consumes its own prepared document set and exact stage data. Published/public connections contain only documents and relationships permitted by the accepted snapshot, including both ends of semantic-derived connections. Omitted documents must not leak through titles, links or counts.
-- Preserve the existing Pre-publish preparation and Publish acceptance responsibilities. Publish remains the acceptance owner; Deploy Repo and the public renderer consume that accepted document set without a second eligibility policy or fallback to Working data.
-- Include the necessary relationship artifacts and browser-safe availability/locations in the normal Published and Deploy Repo projections. Public routes read deployed static assets only, with public document/child URLs and no Working/Pre-publish route parameters, local service URLs or capability probes.
-- Shared browser code remains canonical under `docs-viewer/`, with its tracked public projection under `site/docs-viewer/`. Reconcile the canonical-to-site inventory if the runtime file boundary changes.
+- Do not filter document-link picker targets or authored relationship endpoints by `draft`, ordinary `unpublishable.json` membership, inherited publication exclusion or membership in the prepared public document set. Picker discovery reads the metadata needed to identify and label targets without making their draft state a selection prerequisite.
+- Preserve incoming and outgoing related-list entries for omitted destinations. Self-link removal, exact-identity deduplication, title sorting, configured collection ownership and structural validation remain normal list/data rules; they do not establish target publication readiness.
+- Publish still selects which document bodies it includes under the owning draft and ignore policy. Capture the relationship records needed by those documents with their incoming/outgoing target rows intact. Excluding a target's body does not remove its title or link from another document's related list, include its body, or block publication.
+- Do not read linked documents to validate their draft state, require target existence during relationship construction, add readiness warnings or rewrite unavailable destinations. A public link to a document omitted from the snapshot remains visible and receives the normal unavailable-document response when followed. The author can finish/include that document or change the authored link.
+- The same unfiltered generated list supplies the document section and captured panel. A list containing only unpublished destinations is still non-empty and therefore still has its heading/pin, subject to the authored heading text.
 
-Current Links reads are configured for Analysis Working; static record transport exists but does not establish prepared public data or activation. [Pre-publish And Publish - Delivery](Pre_Publish_And_Publish_Delivery.md) and the feature parent's public cutover work remain the lifecycle authorities. Confirm their actual state at readiness. Working-only success is not completion of this delivery; public-preview evidence must cover the complete accepted-data path. Real Publish, Deploy Repo, live public deployment, commit and push remain explicit user actions.
+Current implementation still applies the ordinary ignore policy in Working relationship/picker selection and filters captured related-list targets against prepared IDs. Removing those policies is a proposed change in this delivery, not a claim about shipped behaviour. Ordinary source loading, editing and preparation continue validating each document's own required front matter; this proposal removes readiness validation as a condition of linking to it. [Related Links](Related_Links.md) and [Builder](Builder.md) describe the current filtering until implementation and durable transfer are complete.
+
+Apply the reader behaviour to ordinary and configured collection documents available in local Manage and the public viewer. Publish captures persisted relationships and embeds the retained lists in completed Preview document output; distribution carries that same snapshot to the public site without another target filter. The panel reuses those prepared sections and their configured local/public routes. Preview remains a physical publication artifact, with no browser stage or preview read route. Public readers use deployed static assets without local service calls, capability probes or Working fallback.
+
+The Source editor temporarily retains its current metadata/token panel and **i** button until [Source Editor And Token Modals - Delivery](Source_Editor_And_Token_Modals_Delivery.md) replaces those workflows. Entering Source ends the captured reader context; it must not freeze or retarget the authoring session. Returning to rendered content leaves the reader panel closed until a related-links pin is used. The Source delivery owns final removal of the authoring panel integration.
+
+Shared browser code remains canonical under `docs-viewer/`, with its tracked public projection under `site/docs-viewer/`. Update the explicit public inventory only if its runtime boundary changes. Real Publish, deployment, commit and push remain separately requested actions.
 
 ## Deliverables
 
-- [ ] Shared document-only Related selection from ordinary links and exact semantic-token/Subject matches, with identity-safe navigation and `doc_id` deduplication.
-- [ ] Prepared relationship data and route configuration through Working, Pre-publish, Published and the public-site projection.
-- [ ] A compact Related section in the existing shared Info view: concept pills and one A–Z document list.
-- [ ] Info pin/unpin state independent of main-document navigation, with a visible and accessible state indicator.
-- [ ] Preserved Manage-only Links View presentation and existing document-content Media View behaviour.
-- [ ] Focused verification, user presentation review, code review and durable transfer into Info Panel, with other owners updated only for their changed contracts.
+- [ ] A pin beside each non-empty document related-links heading, including the heading-free form, with empty sections still suppressed.
+- [ ] A rendered panel containing the captured document title, optional uncaptioned summary and existing related list, plus Close.
+- [ ] Captured context retained across document navigation and replaced only by another pin action; Close releases it.
+- [ ] Removal of the rendered-document **i** action and previous metadata presentation, while Source retains its separate temporary editing workflow.
+- [ ] Local/public integration and the required tracked runtime projection using already generated document content.
+- [ ] Removal of link-target draft/publication filtering from picker/relationship selection and captured related-list expansion, while retaining document-body publication eligibility.
+- [ ] Proportionate static verification, user interaction/layout review, code review and durable transfer to Info Panel.
 
 ## Process
 
-1. Open Doc A in Manage or public and show Info. Read its metadata, concept pills and Related document links.
-2. While unpinned, follow a related document to B. Both the main document and Info now describe B.
-3. Return to A and pin Info. Follow links to B and C from the retained Related list; the main document changes while Info continues describing A.
-4. Unpin while C is displayed. Info immediately follows C. Repeat with an exact child document to confirm that the child, rather than its report host, is the anchor.
-5. In Manage, use the existing Links View when grouped detail is useful. It continues to follow its invoking main document and remains separate from Info's pinned context.
-6. Review the same Related and pin behaviour in Pre-publish and public preview using their own prepared data. Ordinary Publish and deployment carry the accepted result to the live site when explicitly requested.
+1. Open Doc A with a non-empty related-links section and click its pin. The main pane remains on A; the panel shows A's title, available summary and related list.
+2. Follow panel links to B and C. The main pane changes while the panel continues to describe A.
+3. Click C's related-links pin to replace the panel with C's context. A heading-free directive still provides its pin; an empty section provides none.
+4. Close the panel. Navigate again and confirm it remains closed until a document's related-links pin is used.
+5. Retain a link to an unfinished document omitted from the public snapshot. The referring document's section/panel still lists that destination; following it uses the normal unavailable response. The referring document remains publishable without a target-readiness gate.
+6. Repeat with an exact collection detail and in local/public presentation. Review long-title wrapping, Close alignment, missing summary and the existing collection icons manually.
+7. In local Manage, enter Source and use its existing editing workflow. Return to the document with the reader panel closed. The separate Source delivery later replaces this authoring panel.
 
 ## Delivery Steps
 
 ### IRP-0 — Readiness
 
-- [ ] Confirm the agreed document matching, flat Info presentation and unchanged Links View boundary against current owners.
-- [ ] Confirm the state of Pre-publish, Publish and public cutover, and the credible work needed to supply stage-correct and accepted public relationship data.
-- [ ] Confirm Info target/context ownership and the proposed pin lifetime, including child navigation and close/reopen behaviour. Check any already-delivered shared caching/history policy before choosing state ownership.
-- [ ] Confirm the implementation sequence, primary durable destination and real stop conditions. Stop for a wider publication redesign, ambiguous document identities or a required general navigation framework.
+- [ ] Confirm generated-section reuse, exact ordinary/collection targets, captured state ownership and main-pane link activation against current owners.
+- [ ] Confirm pin/heading suppression, shell title/Close layout and removal of rendered metadata without changing authored relationship extraction.
+- [ ] Confirm removal of draft/ignore/prepared-membership checks for link targets, with document-body eligibility and source-schema validation retained by their existing owners.
+- [ ] Confirm local/public route composition, non-viewer consumers of generated content and the temporary Source transition boundary.
+- [ ] Confirm the bounded implementation sequence and proportionate verification budget. Stop if this requires a publication redesign, another relationship graph or a general history/cache framework.
 
-Gate: present the concise read-only readiness result for approval before code changes; promote to planned only when prerequisites are satisfied. Verification: specification and broad owner comparison only. Record: not started; requirements agreed, lifecycle readiness unconfirmed.
+Gate: present concise read-only readiness for implementation approval; remain proposed until it is safe to implement. Verification: specification and broad owner comparison only, with no prototype, tests or generated writes. Record: revised requirements agreed on 2026-10-01; readiness not started.
 
-### IRP-1 — Shared Document Selection
+### IRP-1 — Unfiltered Link Targets
 
-- [ ] Implement exact ordinary-link and semantic-token/Subject document selection through focused existing data owners.
-- [ ] Preserve connection evidence, exclude self-links and deduplicate the presentation by `doc_id` without merging distinct same-title documents.
-- [ ] Supply the grouped Links and compact Info consumers without adding Media destinations or changing Links View's layout and activation policy.
-- [ ] Record the proportional verification budget after inspecting the affected owners and before changing tests.
+- [ ] Remove ordinary publication exclusions from document-link picker selection and authored relationship endpoint maintenance; do not make target draft validity a picker prerequisite.
+- [ ] Preserve the captured incoming/outgoing summaries for published documents without filtering their destinations against prepared IDs.
+- [ ] Keep exact identity/schema validation, authored labels, self-link removal and deduplication; keep document-body preparation eligibility separate.
+- [ ] Confirm any required full Working relationship reconciliation to restore relationships previously suppressed by the removed policy. Treat it as an explicit build operation, not a new scan during ordinary linking or panel opening.
 
-Gate: review selection and ownership before extending publication. Verification: focused pure/service/generator cases for reciprocal and repeated links, zero/multiple Subject matches, Work/Series/Detail distinctions, child identity and missing versus empty data; retain tests only for durable data contracts. Record: not started.
+Gate: linking and rendered related lists follow the author's references independently of target readiness. Verification: bounded source review and the smallest justified existing picker/relationship/preparation selection after inspecting its coverage and side effects. Separately approve any test changes or real build/publication action; record evidence limits when no executable selection is justified. Record: not started.
 
-### IRP-2 — Pre-publish Through Public Data
+### IRP-2 — Document Pin And Captured Panel
 
-- [ ] Prepare exact stage-owned relationship data and carry the accepted set through Published and the normal site deployment projection.
-- [ ] Separate Related-data capability from standalone Links View activation; keep public composition read-only.
-- [ ] Preserve accepted endpoint eligibility, configured child navigation and failure behaviour without runtime source scans or cross-stage fallback.
-- [ ] Confirm the verification budget and use isolated snapshot/projection evidence for mutations that do not yet have real publication approval.
+- [ ] Add the pin to non-empty related sections and remove the rendered **i** control, retaining Source's temporary control.
+- [ ] Project the captured title into the shell, lay out the wrapping title and centred Close control, and render only optional summary and the existing list.
+- [ ] Retain the exact captured context across main navigation; implement replacement, repeated-pin and Close behaviour through the existing panel lifecycle owners.
+- [ ] Keep capture independent of disposed document mounts and reject late work after replacement or closure.
+- [ ] End reader capture on entering Source and preserve the existing authoring workflow until its separate delivery.
 
-Gate: review the complete data path and public isolation before presenting the UI as available publicly. Verification: focused generator/service/projection checks for main and child destinations, excluded endpoints, stage transitions and public URLs; no broad scope rebuild merely for evidence. Record: not started.
+Gate: the complete reader interaction is available for local review. Verification: select explicit-path lint and any justified existing state/route evidence after inspecting their documented coverage; layout, copy, focus and navigation feel remain manual. New or changed tests require their own approved specification under [Testing](Testing.md) and [Test Contract Discipline](Test_Contract_Discipline.md). Record: not started.
 
-### IRP-3 — Related And Pinning In Info
+### IRP-3 — Public Projection And Presentation Review
 
-- [ ] Render Related under metadata with concept pills, one A–Z document list and explicit empty/unavailable handling.
-- [ ] Add the pin toggle and exact pinned context through the Info lifecycle owners; ordinary main-document navigation remains independent.
-- [ ] Preserve the pinned title, metadata and list across related navigation; unpin follows the current document and stale responses cannot replace it.
-- [ ] Apply the same behaviour in Manage and public while preserving their existing metadata field policies and independent authoring targets.
+- [ ] Confirm public composition reuses its loaded document sections and configured navigation without management services or additional data fetching.
+- [ ] Confirm retained links to omitted targets do not cause target-readiness reads, list suppression or publication warnings/gates.
 - [ ] Project changed shared runtime files with `bin/site-code-update`, inspect the exact tracked delta, then run `bin/site-code-update --check` and `bin/site-validate`.
+- [ ] Record user review of main and collection documents, long titles, missing/blank summary, heading-free sections, empty sections, repeated pins, replacement and Close.
 
-Gate: user review of Info in Working, Pre-publish and public preview, including child documents, pinning and unpinning after several navigations. Verification: focused state/identity and request-ownership checks where warranted; manual review for pills, icon colour, panel fit and navigation feel. Run explicit-path lint for changed source and `git diff --check`; do not add a permanent browser choreography suite. Record: not started.
+Gate: user acceptance in local Manage and public-site preview. Verification: required projection/validation and manual presentation review within the agreed budget; real Publish or deployment requires its own request. Record: not started.
 
 ### IRP-4 — Code Review
 
-- [ ] Review the bounded production, config, generated and test diff for duplicate relationship logic, mismatched targets, pin state tied to discarded document mounts, compatibility residue and public leakage.
-- [ ] Confirm Info includes all intended non-concept documents without inheriting the grouped Links presentation's omissions.
-- [ ] Confirm there are no Links View UI changes, Media entry/return work, network visualisation or general caching/history changes outside the agreed boundary.
-- [ ] Resolve findings and repeat only evidence affected by the corrections; remove excessive or implementation-mirroring tests.
+- [ ] Review the bounded diff for exact target ownership, retained-context lifetime, dead metadata/control paths, duplicate list rendering, compatibility residue and public leakage.
+- [ ] Confirm the panel contains no heading/pin copied from the document section and no remaining rendered opening path through **i**.
+- [ ] Confirm target-publication filtering is removed without weakening exact identity/schema validation, changing document-body eligibility or moving Source authoring ownership.
+- [ ] Resolve findings and repeat only affected evidence; separately scope any required test changes.
 
-Gate: present review findings, resolutions and remaining limitations before closeout. Verification: bounded code review and selected affected checks. Record: not started.
+Gate: present review findings, resolutions and remaining limitations. Verification: bounded code/diff review and selected affected checks. Record: not started.
 
 ### IRP-5 — Closeout
 
-- [ ] Confirm acceptance of document-only selection, Related presentation, pin/unpin behaviour and the Pre-publish-to-public data path.
-- [ ] Update Info Panel as the primary durable owner. Reconcile Links View, Builder and Semantic Tokens Architecture only for the shared contracts actually changed.
-- [ ] Update the feature parent's current delivery state. Recommend this delivery and the superseded semantic-token media-entry plan for manual archive after durable transfer; retain the parent for its remaining work.
-- [ ] Record any real publication/deployment action still awaiting authorization separately from verified implementation, and retain broader icon and visualisation work as follow-on scope.
+- [ ] Confirm acceptance of the intentional pin/open, captured title/summary/list, navigation, replacement and Close workflow.
+- [ ] Transfer shipped behaviour into Info Panel and reconcile Related Links, Builder and the document-link picker owner for the removed target filters. Keep the separate Source delivery proposed until its readiness/implementation is approved.
+- [ ] Update the feature parent and recommend this delivery for manual archive after durable transfer.
+- [ ] Distinguish implementation/public projection from any separately authorized Publish, deployment, commit or push.
 
-Gate: explicit user closeout. Verification: reuse accepted implementation evidence and inspect source/watcher follow-through; repeat checks only for a new concrete risk. Record: not started.
+Gate: explicit user closeout. Verification: reuse accepted implementation evidence; documentation-only closeout needs bounded source review, with no automatic build or test run. Record: not started.
 
 ## Follow-on
 
-- **Document link strength:** [Document Link Strength](Document_Link_Strength.md) records an authored numeric value on each outgoing relationship, independent reciprocal strengths, a cold-blue to hot-red slider in Insert doc link, and possible concept-pill styling. Its authoring, persistence, weighted UI and future visualisation of both directed links remain separate from this delivery.
-- **Links View visualisation:** a network view or deeper relationship inspection may use the retained evidence. The current grouped list remains in Manage until a separate delivery changes it.
-- **Final icons:** review the pin asset and monochrome/colour treatment with [Shared Icons](Shared_Icons.md). This delivery needs a clear state cue, not completion of the wider icon migration.
-- **Shared navigation:** [View Caching and History - Delivery](View_Caching_And_History_Delivery.md) owns general cache/history defaults. Broader Media View hierarchy navigation from Work to Series and Detail through Work-details to Work remains separate from document-only Related links.
+- **Source editing:** [Source Editor And Token Modals - Delivery](Source_Editor_And_Token_Modals_Delivery.md) owns complete Markdown editing, existing-token modal editing and retirement of Source's panel and **i** control. Suggested order is the reader panel first, Source simplification second.
+- **Document link strength:** [Document Link Strength](Document_Link_Strength.md) retains separate strength authoring and persistence work. It must be reassessed against the flat generated list before implementation; this delivery adds no weighting, filtering or visualisation.
+- **Broader icons/navigation:** use [Shared Icons](Shared_Icons.md) for the pin artwork and existing toolbar foundation. Wider icon migration, Media View navigation and general history/caching remain separately scoped.
