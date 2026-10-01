@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260930-195002-b3417e
 title: Related Links
 added_date: "2026-09-30 19:50:02"
-last_updated: "2026-10-01 13:29:44"
+last_updated: "2026-10-01 13:56:37"
 summary: Author-inserted related-links directive, a sorted list with collection icons, and build-time relationship snapshots in document JSON.
 ui_status: in-progress
 parent_id: d-20260428-000000-f5ff18
@@ -20,7 +20,7 @@ An author manually inserts a related-links directive in the Source Editor where 
 [[links|related links]]
 ```
 
-`links` identifies the directive; the text after `|` supplies its editable, nonempty plain-text heading. Put the directive on its own line. **Directives → Insert related links** inserts this default form and selects `related links` for editing, following the Insert icon placeholder interaction. For example, `[[links|Further reading]]` uses “Further reading” as its heading. The heading renders as a normal level-three section heading; Markdown punctuation and HTML-looking heading text remain plain text. Fenced and indented code examples remain literal.
+`links` identifies the directive; the text after `|` supplies its optional, editable plain-text heading. `[[links|]]` renders the list without a heading; whitespace-only text also omits the heading. Put the directive on its own line. **Directives → Insert related links** inserts the default form above and selects `related links` for editing, following the Insert icon placeholder interaction. For example, `[[links|Further reading]]` uses “Further reading” as its heading. A supplied heading renders as a normal level-three section heading; Markdown punctuation and HTML-looking heading text remain plain text. Fenced and indented code examples remain literal.
 
 Without the directive, the document has no related-links section. If the directive resolves to no qualifying links, it produces no visible heading, list or empty-state message. An Info panel presentation is a possible later enhancement.
 

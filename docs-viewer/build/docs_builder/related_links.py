@@ -54,7 +54,7 @@ def prepare_related_links(
 
 
 def render_related_links(builder: DocsDataBuilder, doc: DocRecord, heading: str) -> str:
-    """Emit one title-sorted list with portable targets and shared decorative icons."""
+    """Emit a sorted list with portable targets, decorative icons and an optional heading."""
     target = DocumentTarget(getattr(builder, "collection_id", ""), doc.doc_id)
     record = builder.related_documents.get(target)
     if record is None:
@@ -76,4 +76,5 @@ def render_related_links(builder: DocsDataBuilder, doc: DocRecord, heading: str)
             href = (builder.rendered_viewer_target_for(destination.doc_id) if builder.config.stage == "review"
                     else "?" + canonical_document_viewer_url(destination.doc_id).split("?", 1)[1])
         rows.append(f'<li>{builder.inline_icons.render(icon, decorative=True)} <a data-docs-related-link="true" href="{html.escape(href, quote=True)}">{html.escape(summary.title)}</a></li>')
-    return f'<section data-docs-related-links="true"><h3>{html.escape(heading)}</h3>\n<ul>\n' + "\n".join(rows) + "\n</ul></section>\n"
+    title = f'<h3>{html.escape(heading)}</h3>\n' if heading else ""
+    return f'<section data-docs-related-links="true">{title}<ul>\n' + "\n".join(rows) + "\n</ul></section>\n"

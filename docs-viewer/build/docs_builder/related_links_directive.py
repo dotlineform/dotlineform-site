@@ -1,4 +1,4 @@
-"""Standalone plain-heading related-links Markdown block syntax."""
+"""Standalone related-links Markdown blocks with optional plain headings."""
 
 from collections.abc import Callable
 from typing import Any
@@ -11,7 +11,7 @@ RELATED_LINKS_PREFIX = "[[links|"
 
 
 def install_related_links_rule(renderer: Any, render_section: Callable[[str], str]) -> None:
-    """Preserve fenced/indented code and raw HTML; reject empty plain headings."""
+    """Preserve fenced/indented code and raw HTML; allow an empty heading."""
     def parse(state: StateBlock, start_line: int, end_line: int, silent: bool) -> bool:
         del end_line
         if state.is_code_block(start_line):
@@ -24,8 +24,6 @@ def install_related_links_rule(renderer: Any, render_section: Callable[[str], st
         if "]]" in heading:
             return False
         if not silent:
-            if not heading:
-                raise ValueError("Related-links directive requires a nonempty heading")
             token = state.push("docs_related_links", "", 0)
             token.content = heading
             token.map = [start_line, start_line + 1]
