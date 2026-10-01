@@ -79,8 +79,7 @@ export function createDocsViewerManagementViewDefinitions() {
       {
         id: "index-actions",
         label: "Index actions",
-        ownerType: "view",
-        ownerViewId: "index-tree",
+        ownerType: "app",
         surfaceId: "index-view",
         appKinds: ["manage"],
         features: ["management"],
@@ -89,8 +88,7 @@ export function createDocsViewerManagementViewDefinitions() {
       {
         id: "index-position",
         label: "Position",
-        ownerType: "view",
-        ownerViewId: "index-tree",
+        ownerType: "app",
         surfaceId: "index-view",
         appKinds: ["manage"],
         features: ["management"],

@@ -48,11 +48,6 @@ function createRouteWorkflowStateBridge(inputs) {
     get reloadExpectedDocId() { return selectedDocument.reloadExpectedDocId || ""; },
     set reloadExpectedDocId(value) { selectedDocument.reloadExpectedDocId = value; },
     get searchQuery() { return searchRecent.searchQuery || ""; },
-    set searchQuery(value) { searchRecent.searchQuery = value; },
-    get searchVisibleCount() { return searchRecent.searchVisibleCount || 0; },
-    set searchVisibleCount(value) { searchRecent.searchVisibleCount = value; },
-    get searchRouteActive() { return Boolean(searchRecent.searchRouteActive); },
-    set searchRouteActive(value) { searchRecent.searchRouteActive = Boolean(value); }
   };
 }
 
@@ -66,11 +61,11 @@ export function initDocsViewerRouteWorkflow(context) {
   var window = context.window;
   var root = context.root;
   var content = context.content;
-  var searchInput = context.searchInput;
   var statusCommands = context.statusCommands || {};
   var loadedIndex = "";
   var indexRefreshTimer = null;
   var indexRefreshRunning = false;
+  var displayedHash = "";
 
   function viewerBaseUrl() {
     return currentValue(context.viewerBaseUrl);
@@ -165,8 +160,34 @@ export function initDocsViewerRouteWorkflow(context) {
       preservedQueryParams: preservedQueryParams(),
       query: query,
       reportParams: reportParams || currentReportRouteParams(docId),
+      indexViewId: context.activeIndexViewId(),
       viewerBaseUrl: viewerBaseUrl(),
     });
+  }
+
+  /** Change only Index history, retaining the exact current document, child and hash. */
+  function updateIndexHistory(query, indexViewId, mode) {
+    setViewerHistory({
+      docId: currentDocId() || state.selectedDocId,
+      hash: currentHash(),
+      query: query,
+      indexViewId: indexViewId,
+      reportParams: currentReportRouteParams(currentDocId()),
+      history: window.history,
+      mode: mode,
+      origin: window.location.origin,
+      preservedQueryParams: preservedQueryParams(),
+      viewerBaseUrl: viewerBaseUrl()
+    });
+  }
+
+  function isCurrentDocumentRoute(docId, hash) {
+    if (state.reloadExpectedDocId || state.selectedDocId !== docId || context.selectedDocument.displayedDocId !== docId
+      || !context.selectedDocument.displayedPayload || displayedHash !== hash) return false;
+    var report = context.managedDocumentContext();
+    var subdoc = currentReportRouteParams(docId).subdoc || "";
+    if (subdoc) return Boolean(report && report.documentTarget && report.documentTarget.doc_id === subdoc);
+    return !report || report.state !== "detail";
   }
 
   function resolveDocId() {
@@ -197,8 +218,6 @@ export function initDocsViewerRouteWorkflow(context) {
     clearManagementMessageForDocChange(docId);
     return loadViewerDoc({
       docId: docId,
-      expandTrailForDoc: context.expandTrail,
-      expandTrail: !options || options.expandTrail !== false,
       fetchPayload: fetchDocPayload,
       handleMissingDoc: context.handleMissingDoc,
       handlePayloadError: context.handlePayloadError,
@@ -207,45 +226,39 @@ export function initDocsViewerRouteWorkflow(context) {
       reportParams: options && options.reportParams ? options.reportParams : currentReportRouteParams(docId),
       renderBookmarkUi: context.renderBookmarkUi,
       renderLoadingState: context.renderDocLoadingState,
-      renderPayload: context.renderPayload,
+      renderPayload: function (doc, payload, hash) {
+        displayedHash = hash;
+        context.renderPayload(doc, payload, hash);
+      },
       resolveLoadableDocId: context.resolveLoadableDocId,
       setHistory: setHistory,
-      setRecentModeActive: context.setRecentModeActive,
+      trackSidebarSelection: context.trackSidebarSelection,
       state: state
     });
   }
 
   function applyCurrentRoute(options) {
     var result = applyViewerRoute({
-      applyDocVisibility: context.applyDocVisibility,
       currentDocId: currentDocId,
       currentHash: currentHash,
       currentQuery: currentQuery,
       defaultDocId: context.defaultDocId,
       defaultRouteDocId: defaultRouteDocId(),
-      docHasParent: function (docId) {
-        var doc = state.docsById.get(docId);
-        return Boolean(doc && doc.parent_id);
-      },
-      expandTrail: context.expandTrail,
-      hasActiveQuery: context.hasActiveQuery,
       hasDisallowedModeInUrl: hasDisallowedModeInUrl,
       hash: options && options.hash ? options.hash : "",
       historyMode: options && options.historyMode ? options.historyMode : "push",
       loadDoc: loadDoc,
       managementContextActive: managementUiEnabled,
-      renderBookmarkUi: context.renderBookmarkUi,
-      renderManagementUi: context.renderManagementUi,
-      renderSearchMode: context.renderSearchMode,
-      renderSidebar: context.renderSidebar,
+      isCurrentDocumentRoute: isCurrentDocumentRoute,
+      syncIndexRoute: function (query) {
+        context.syncIndexRoute(query, window.history.state && window.history.state.indexViewId);
+      },
       resolveLoadableDocId: context.resolveLoadableDocId,
-      searchInput: searchInput,
       setHistory: setHistory,
-      setRecentModeActive: context.setRecentModeActive,
       setStatus: setStatus,
       state: state,
     });
-    return result;
+    return result.loading || result;
   }
 
   function replaceIndex(payload) {
@@ -397,12 +410,7 @@ export function initDocsViewerRouteWorkflow(context) {
       var toggle = event.target.closest("[data-toggle-doc-id]");
       if (toggle) {
         var toggleDocId = toggle.dataset.toggleDocId;
-        if (state.expandedDocIds.has(toggleDocId)) {
-          state.expandedDocIds.delete(toggleDocId);
-        } else {
-          state.expandedDocIds.add(toggleDocId);
-        }
-        context.renderSidebar();
+        context.toggleSidebarBranch(toggleDocId);
         return;
       }
 
@@ -418,12 +426,6 @@ export function initDocsViewerRouteWorkflow(context) {
       if (route.navigateUrl) {
         window.location.assign(route.navigateUrl);
         return;
-      }
-      context.cancelSearchDebounce();
-      state.searchQuery = "";
-      state.searchVisibleCount = context.searchBatchSize;
-      if (searchInput) {
-        searchInput.value = "";
       }
       loadDoc(route.docId, {
         historyMode: "push",
@@ -453,6 +455,7 @@ export function initDocsViewerRouteWorkflow(context) {
     loadIndex: loadIndex,
     resolveDocId: resolveDocId,
     setHistory: setHistory,
+    updateIndexHistory: updateIndexHistory,
     viewerUrl: viewerUrl,
     viewerUrlForDocument: viewerUrlForDocument
   };

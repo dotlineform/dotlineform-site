@@ -298,7 +298,7 @@ export function initDocsViewerConfigController(context) {
     if (documentIndex.docs.length) {
       context.renderSidebar();
     }
-    if (searchRecent.recentModeActive) {
+    if (context.activeIndexViewId() === "recent-results") {
       context.renderRecentMode();
     }
   }

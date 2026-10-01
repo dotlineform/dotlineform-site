@@ -220,6 +220,7 @@ export function getDocsViewerAppShellRefs(options) {
   return {
     controlSurfaces: {
       appViewer: root ? root.querySelector('[data-docs-viewer-control-surface-mount="app-viewer"]') : null,
+      indexLists: root ? root.querySelector('[data-docs-viewer-control-surface-mount="index-lists"]') : null,
       appManagement: root ? root.querySelector('[data-docs-viewer-control-surface-mount="app-management"]') : null,
       indexView: root ? root.querySelector('[data-docs-viewer-control-surface-mount="index-view"]') : null,
       mainView: root ? root.querySelector('[data-docs-viewer-control-surface-mount="main-view"]') : null

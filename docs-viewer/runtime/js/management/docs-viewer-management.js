@@ -677,8 +677,7 @@ export function initDocsViewerManagement(context) {
     var editAction = resolveAction(DOCS_VIEWER_ACTION_IDS.EDIT_DOCUMENT);
     var editDisabled = (
       management.managementBusy ||
-      !editAction.enabled ||
-      searchRecent.searchRouteActive
+      !editAction.enabled
     );
     var publishAvailable = management.managementAvailable && publishSupported(
       management.managementCapabilities
@@ -777,11 +776,11 @@ export function initDocsViewerManagement(context) {
     selectedDocument.reloadExpectedDocId = String(targetDocId || "").trim();
     searchRecent.searchQuery = "";
     searchRecent.searchVisibleCount = context.SEARCH_BATCH_SIZE;
-    searchRecent.searchRouteActive = false;
     context.cancelSearchDebounce();
     if (context.searchInput) {
       context.searchInput.value = "";
     }
+    context.resetIndexLists();
 
     if (targetDocId) {
       setRouteHistory(targetDocId, "", "", "replace", reportParams);

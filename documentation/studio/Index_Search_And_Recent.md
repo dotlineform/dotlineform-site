@@ -3,14 +3,14 @@ draft: false
 doc_id: d-20261001-203710-09959e
 title: Index Search And Recent
 added_date: "2026-10-01 20:37:10"
-last_updated: "2026-10-01 21:03:10"
+last_updated: "2026-10-01 22:32:33"
 summary: Share incremental sidebar tracking across document navigation, then move Search and Recent into retained Index panel views without index or document reloads on return.
-ui_status: planned
+ui_status: done
 parent_id: d-20260428-000000-f5ff18
 ---
 # Index Search And Recent
 
-Status: agreed feature proposal with proposed delivery steps. The current loading/validation baseline has been inspected; the remaining readiness work and implementation are pending. This feature is parented to [Planned Features](Planned_Features.md).
+Status: complete, accepted for closeout by the user on 2026-10-01. Implementation, public projection, selected static checks, code review and durable documentation transfer are complete. Public narrow-screen access remains a separate review. This feature is parented to [Planned Features](Planned_Features.md).
 
 Move the shared Docs Viewer Search and Recent controls into the Index panel and make their results alternative views of that panel. Users can open several results while the list remains visible and the document appears in the main pane. The retained tree continues tracking the displayed document while hidden; returning to it reveals the current selection without fetching its data or redrawing it merely because it became visible.
 
@@ -106,86 +106,94 @@ Review the repeated Search schema checks and Recent normalization within the int
 
 The shared sidebar owns incremental selection, ancestor expansion and branch toggles across navigation paths. The existing shared view registry and panel layout own the Index view selection and visibility. The Index shell owns its controls and mounted tree/results areas. The Search controller retains query, loading, ranking integration and paging responsibility; route navigation opens documents without resetting the active results view. Existing collection configuration owns icon selection.
 
-The current implementation registers Search and Recent as main-panel views, and both the shared link handler and document opening clear Search. Implementation must move those responsibilities coherently and remove the obsolete main-pane result presentation and automatic Search reset behavior. Preserve the active Index view through document navigation from results, pinned Related links and document content; resetting it belongs to explicit Search clearing or Index-view switching. Do not retain compatibility aliases or duplicate results surfaces.
+Search and Recent are registered as Index-panel views. Their former main-pane presentation and automatic Search resets in the shared link handler/document opener are retired. The active Index view survives document navigation from results, pinned Related links, bookmarks and document content; resetting it belongs to explicit Search clearing, Index-view switching or the existing management reload/invalidation owner. No compatibility aliases or duplicate results surfaces remain.
 
 This is a reader presentation and navigation change. Search corpus, tokenizer, ranking, Recent eligibility, generated payload schemas, document builders, services and publication semantics retain their current owners. [Docs Viewer Search](Docs_Viewer_Search.md) describes the maintained data and query contracts.
 
-## Proposed Delivery Steps
+## Delivery Steps
 
-The steps below follow [Development Checklist](Development_Checklist.md) and remain proposed until readiness and implementation are authorized. Update each step's compact record with changed owners, selected evidence, findings and its gate outcome as work proceeds.
+The steps below follow [Development Checklist](Development_Checklist.md). Delivery was authorized and accepted for closeout on 2026-10-01; each record identifies changed owners, selected evidence, findings and its gate outcome.
 
 ### 0 Readiness
 
 - [x] Trace and record current Search/Recent acquisition, cache, normalization and validation behavior from the existing source.
-- [ ] Confirm the shared sidebar, selection, route, Index view and management-control owners against this specification.
-- [ ] Confirm the two implementation steps form one complete outcome and identify any conflicting navigation or hierarchy behavior before editing.
-- [ ] Use the recorded baseline to confirm the delivery adds no list reads or validation passes and identify the bounded consolidation needed in the existing read/processing path.
+- [x] Confirm the shared sidebar, selection, route, Index view and management-control owners against this specification.
+- [x] Confirm the two implementation steps form one complete outcome and identify any conflicting navigation or hierarchy behavior before editing.
+- [x] Use the recorded baseline to confirm the delivery adds no list reads or validation passes and identify the bounded consolidation needed in the existing read/processing path.
 
 Gate: a concise read-only review establishes the boundary and implementation order. Stop for an unresolved product decision or a required expansion into data, service or hierarchy redesign; exact file inventories and test architecture are not readiness prerequisites. No executable verification is needed at this step.
 
-Record: source inspection recorded on 2026-10-01. Repeated Search schema checks and Recent normalization were found; production code is unchanged. No endpoint calls, executable tests or benchmarks were run. Remaining readiness items are pending.
+Record: readiness passed on 2026-10-01. Sidebar selection/branches, route workflow, panel layout/registry, document shell and management controls are the implementation owners. Remove the main-panel results registrations and automatic navigation resets together; preserve collection `subdoc` routes and independent Info capture. Search schema validation remains at the workspace provider; Recent normalization remains at the generated-data adapter. No service, data or hierarchy redesign is required. Read-only source review used no endpoint calls, executable tests or benchmarks.
 
 ### 1 Incremental Sidebar Tracking
 
-- [ ] Replace full tree redraws for ordinary selection, required ancestor expansion and manual branch toggles with targeted updates through the shared sidebar owner.
-- [ ] Keep selection and ancestor tracking active when the tree is hidden, preserve unrelated mounted nodes, and defer scrolling until the tree is visible.
-- [ ] Retain initial/full-index rendering and the existing structural-update workflows where appropriate.
+- [x] Replace full tree redraws for ordinary selection, required ancestor expansion and manual branch toggles with targeted updates through the shared sidebar owner.
+- [x] Keep selection and ancestor tracking active when the tree is hidden, preserve unrelated mounted nodes, and defer scrolling until the tree is visible.
+- [x] Retain initial/full-index rendering and the existing structural-update workflows where appropriate.
 
 Gate: ordinary navigation benefits independently of Search, and visible and hidden tracking use the same selection path. Source review confirms that these small operations no longer clear and rebuild the whole tree. Focus, branch behavior and scrolling receive user manual review.
 
 Proposed evidence budget: bounded source/diff review, lint of changed JavaScript and whitespace checks, plus focused manual ordinary-document and collection-host navigation and branch toggling. Static commands should take seconds; manual review takes a few minutes. This addresses selection/branch wiring and preservation of mounted nodes, without authorizing automated test work.
 
-Record: not started.
+Record: implemented on 2026-10-01 in the shared sidebar, router and route workflow. Navigation changes markers and ancestors; manual toggles retain child nodes and affect only the selected branch. Document loading/rendering no longer redraws the tree. Full rendering remains with initial/authoritative index and management/configuration updates. Changed-source lint and whitespace evidence are recorded below; the user accepted delivery for closeout on 2026-10-01 without a separate scenario-by-scenario manual record.
 
 ### 2 Search And Recent Index Views
 
-- [ ] Move controls and results into the Index shell with the agreed two-row Manage layout, compact icon/title rows and results states.
-- [ ] Make Search and Recent independent of the displayed document, preserving exact targets, query/history, active-result highlighting, paging and list scroll through result navigation.
-- [ ] Preserve independent Index results and pinned Info capture through navigation from either list or document content, including destinations outside the current results and independent clearing/closing.
-- [ ] Reuse existing loaded inputs and consolidate overlapping Search schema checks and Recent normalization at their owning boundary, without adding runtime validation, target preflights or refresh-on-show reads.
-- [ ] Retain the synchronized tree, gate tree-specific actions in results views, and implement clearing/toggling and the agreed expanded/media availability.
-- [ ] Project changed shared/public runtime through the maintained site-code inventory and update durable runtime/search documentation to describe the implemented behavior.
+- [x] Move controls and results into the Index shell with the agreed two-row Manage layout, compact icon/title rows and results states.
+- [x] Make Search and Recent independent of the displayed document, preserving exact targets, query/history, active-result highlighting, paging and list scroll through result navigation.
+- [x] Preserve independent Index results and pinned Info capture through navigation from either list or document content, including destinations outside the current results and independent clearing/closing.
+- [x] Reuse existing loaded inputs and consolidate overlapping Search schema checks and Recent normalization at their owning boundary, without adding runtime validation, target preflights or refresh-on-show reads.
+- [x] Retain the synchronized tree, gate tree-specific actions in results views, and implement clearing/toggling and the agreed expanded/media availability.
+- [x] Project changed shared/public runtime through the maintained site-code inventory and update durable runtime/search documentation to describe the implemented behavior.
 
-Gate: all completion criteria below are implemented, with no duplicate main-pane result surface, obsolete Search-reset path or compatibility alias. Manual acceptance remains explicit until the user has reviewed the interactions and layout.
+Gate: all behavior criteria below are implemented, with no duplicate main-pane result surface, obsolete Search-reset path or compatibility alias. The user accepted delivery for closeout, assigning public narrow-screen access to a separate review.
 
 Proposed evidence budget: changed-source lint and whitespace checks, bounded route/view/selection review, then the required `bin/site-code-update`, exact tracked runtime projection review, `bin/site-code-update --check` and `bin/site-validate`. Projection and validation cover public asset distribution, not interaction correctness; inspect their current cost before running. User manual review covers pinned ordinary/collection navigation, simultaneous Index results and Related links, an Info-link destination outside the results, independent clearing/closing, document-content navigation, Back/Forward, disabled actions and public narrow-screen access. No Docs/Search rebuild or Publish is required for this runtime change. Any existing automated test selection or test changes need a separately agreed scope under [Testing](Testing.md).
 
-Record: not started.
+Record: implemented on 2026-10-01. The Index shell/registry/panel layout own controls and tree/results visibility; the Search controller retains loaded inputs and mounted results; route history carries `q`, exact host/`subdoc` and the Index view independently of the main document. Main-pane result surfaces, navigation resets and duplicate mode flags were removed. Bookmark and document controls retain their normal capability rules; Index Actions/Position stay visible but disabled in results. Collection artwork comes from loaded configuration; the existing ordinary `dlf-doc.svg` now has a mask class and explicit public projection entry. Durable behavior is recorded in [Docs Viewer Search](Docs_Viewer_Search.md#index-results-and-navigation) and [Runtime](Docs_Viewer_Runtime.md#retained-index-views).
+
+Selected evidence: `bin/lint-js` covered the 23 changed production JavaScript paths (18 shared, five management); the first run found one unused initial assignment, which was fixed, and subsequent runs covered only the affected/newly changed paths. Final changed-source lint is clear. `git diff --check` passed. `bin/site-code-update` projected 19 changed JS/CSS files and added the existing ordinary icon; the exact tracked projection delta and manifest addition were reviewed. After the artwork correction, `bin/site-code-update --check` reported 104 unchanged projected files and `bin/site-validate` passed (62 required files, seven directories, 72 runtime modules, one route and seven route files). Commands completed in under a second each. No tests, browser probes, benchmarks, Docs/Search builds, Publish, deployment, commit or push ran. Static evidence establishes source hygiene and public distribution; the user's closeout acceptance does not add automated interaction evidence or public narrow-screen review evidence.
 
 ### 3 Code Review
 
-- [ ] Review the final production, documentation and projected-runtime diff for ownership drift, full-redraw call sites in ordinary tracking, hidden-state resets, coupled Index/Info lifecycles, duplicate selection state, route-target loss, additional reads/validation against the recorded baseline and compatibility residue.
-- [ ] Resolve findings within the delivery boundary and rerun only evidence affected by a relevant change.
+- [x] Review the final production, documentation and projected-runtime diff for ownership drift, full-redraw call sites in ordinary tracking, hidden-state resets, coupled Index/Info lifecycles, duplicate selection state, route-target loss, additional reads/validation against the recorded baseline and compatibility residue.
+- [x] Resolve findings within the delivery boundary and rerun only evidence affected by a relevant change.
 
 Gate: no blocking findings remain, and completion claims match the inspected behavior and selected evidence. The bounded review adds no broad test run; record any remaining manual acceptance gaps.
 
-Record: not started.
+Record: bounded final review completed on 2026-10-01 with no remaining blocking source findings. Resolved findings: retained collapsed rows needed ancestor-aware range exclusion; the active Index view needed one panel-layout owner rather than duplicate Search/Recent mode flags; cached/missing-document navigation needed to retire the preceding payload request before tracking the new target; view-only history returns must require both requested and displayed document identity to agree so Back during a pending navigation can cancel it; ordinary artwork needed its public inventory entry and CSS mask. Results consume loaded targets/configuration without added acquisition or schema passes, and rendering errors remain inside the active list. Affected lint and projection/check/validation were rerun after the artwork/controller correction and final route guard. No compatibility aliases or obsolete main-pane result registrations remain. Pinned Info retains its existing navigation and Source-mode lifecycle. The user accepted delivery for closeout; detailed manual scenario evidence was not recorded, and public narrow-screen access remains a separate review.
 
 ### 4 Closeout
 
-- [ ] Record user manual acceptance and reconcile the completion criteria with the final implementation and review evidence.
-- [ ] Confirm the durable documentation transfer, summarize remaining limits, and present this proposal for retention or retirement.
+- [x] Record user closeout acceptance and reconcile the completion criteria with the final implementation and review evidence.
+- [x] Confirm the durable documentation transfer, summarize remaining limits, and retain this completed delivery record.
 
-Gate: the complete outcome and manual acceptance are recorded. Reuse accepted evidence; closeout bookkeeping does not trigger another rebuild or test run. Publish, deployment, commit and push remain separately requested actions, and proposal deletion requires approval.
+Gate: the complete outcome and user closeout acceptance are recorded, with public narrow-screen access assigned to a separate review. Reuse accepted evidence; closeout bookkeeping does not trigger another rebuild or test run. Publish, deployment, commit and push remain separately requested actions, and delivery-record deletion requires approval.
 
-Record: not started.
+Record: closed on 2026-10-01 after the user accepted the delivery and explicitly assigned narrow-screen access to a separate review. Durable documentation transfer is complete. Retain this completed delivery record and the existing static/review evidence. Closeout changed only this documentation; no verification rerun, rebuild, publication, commit or push was needed.
 
 ## Completion Criteria
 
-- [ ] Search and Recent controls appear in the first Index row, with Manage Index Actions and Position in the second row.
-- [ ] Search and Recent results use the shared icon/title row, with no displayed date or collection subtitle.
-- [ ] Opening ordinary or collection results changes the main document while retaining the active list, query where applicable, paging and scroll position.
-- [ ] Search or Recent results coexist with pinned Related links; navigation from either list or document content preserves both list states under the existing Info/document-mode lifecycle.
-- [ ] Opening a target outside the displayed results leaves the results intact with no active row highlighted; matching uses exact document identity.
-- [ ] Clearing Search or leaving Recent preserves the pinned Info capture, and closing or replacing the Info capture preserves the Index results.
-- [ ] Clearing Search or toggling Recent off reveals the retained tree without an index request, full tree redraw or document reload caused by the view switch.
-- [ ] List/view navigation introduces no extra acquisition, revalidation, destination preflight, membership filtering or freshness scan; duplicate input processing is consolidated with necessary malformed-input handling retained at its owner.
-- [ ] Ordinary navigation and manual branch toggles update the affected sidebar nodes without rebuilding unrelated rows.
-- [ ] After opening B from results initiated while A was displayed, the hidden Index already tracks B; leaving results keeps B displayed and reveals its selection without reopening A or running a separate catch-up pass.
-- [ ] Existing expanded branches are preserved, the current target's ancestors follow navigation, and scrolling occurs only when needed while the tree is visible under existing ordinary-document and collection-host tracking rules.
-- [ ] Back and Forward preserve the intended document and Index view behavior.
-- [ ] Tree-specific management controls remain disabled in results views, and normal document capabilities remain available.
-- [ ] Expanded and media views require no Search or Recent entry point.
-- [ ] Manual review accepts compact rows, panel scrolling and public narrow-screen access to the document.
+Checked behavior items indicate implementation and source review. User acceptance authorizes closeout; public narrow-screen access is outside that acceptance and remains in the separate review below.
 
-Test authoring, changes or non-trivial test runs require their separately agreed scope under [Testing](Testing.md). This documentation update does not authorize implementation or test work.
+- [x] Search and Recent controls appear in the first Index row, with Manage Index Actions and Position in the second row.
+- [x] Search and Recent results use the shared icon/title row, with no displayed date or collection subtitle.
+- [x] Opening ordinary or collection results changes the main document while retaining the active list, query where applicable, paging and scroll position.
+- [x] Search or Recent results coexist with pinned Related links; navigation from either list or document content preserves both list states under the existing Info/document-mode lifecycle.
+- [x] Opening a target outside the displayed results leaves the results intact with no active row highlighted; matching uses exact document identity.
+- [x] Clearing Search or leaving Recent preserves the pinned Info capture, and closing or replacing the Info capture preserves the Index results.
+- [x] Clearing Search or toggling Recent off reveals the retained tree without an index request, full tree redraw or document reload caused by the view switch.
+- [x] List/view navigation introduces no extra acquisition, revalidation, destination preflight, membership filtering or freshness scan; duplicate input processing is consolidated with necessary malformed-input handling retained at its owner.
+- [x] Ordinary navigation and manual branch toggles update the affected sidebar nodes without rebuilding unrelated rows.
+- [x] After opening B from results initiated while A was displayed, the hidden Index already tracks B; leaving results keeps B displayed and reveals its selection without reopening A or running a separate catch-up pass.
+- [x] Existing expanded branches are preserved, the current target's ancestors follow navigation, and scrolling occurs only when needed while the tree is visible under existing ordinary-document and collection-host tracking rules.
+- [x] Back and Forward preserve the intended document and Index view behavior.
+- [x] Tree-specific management controls remain disabled in results views, and normal document capabilities remain available.
+- [x] Expanded and media views require no Search or Recent entry point.
+- [x] The user accepts delivery for closeout, with public narrow-screen access assigned to a separate review.
+
+## Separate Narrow-Screen Review
+
+- [ ] Review public narrow-screen access to the displayed document while Search or Recent results sit above it, including bounded list scrolling and coexistence with pinned Info. This manual review is separate from the completed delivery and has not been performed or scheduled here.
+
+Test authoring, changes or non-trivial test runs require their separately agreed scope under [Testing](Testing.md). Delivery authorization does not authorize test work.

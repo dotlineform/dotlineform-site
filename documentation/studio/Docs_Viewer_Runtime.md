@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260331-000000-c313fd
 title: Runtime
 added_date: "2026-03-31 00:00:00"
-last_updated: "2026-09-30 22:42:00"
+last_updated: "2026-10-01 21:46:01"
 summary: Public, manage, and review execution paths; browser/server authority boundaries; extension method; rationale; and known weak spots.
 parent_id: d-20260424-000000-50b63f
 ---
@@ -27,15 +27,15 @@ The runtime boundary is not “which controls are hidden.” It is the combinati
 | Manage `/docs/` | Service shell, manage entrypoint, shared reader, and manage-owned views, controls, reports, imports, and scope workflows. | Independent generated-data, source, and management service surfaces, constrained by live capabilities and server validation. |
 | Review `/docs-review/` | Review shell, shared reader, returned-package provider, and package toolbar/workflow. | Independently gated reads over validated package previews. No canonical source write or general management authority. |
 
-Public and Manage share the top-row renderer and theme control. The `dotlineform` home link sits before Recent and Search and opens the configured default document: `/analysis/` publicly and `/docs/` with the current stage in Manage. Manage adds its stage, document and management controls to the shared row; the public footer remains part of the site shell. The Index supplies document hierarchy navigation; the shared toolbar has no breadcrumb trail. Theme changes retain the public themed-diagram event and the local inline-Mermaid callback.
+Public and Manage share the top-row renderer and theme control. The `dotlineform` home link opens the configured default document at `/analysis/` publicly or `/docs/` in Manage. Document and management controls occupy the shared top row; Recent and Search occupy the first row inside the Index panel. The public footer remains part of the site shell, and the shared toolbar has no breadcrumb trail. Theme changes retain the public themed-diagram event and the local inline-Mermaid callback.
 
-The shared Docs Viewer stylesheet owns the page inset and top-row sizing across the public and local shells. The archive header is the spacing reference: 18px top padding and 2rem top-row controls, including the Manage stage group. Control sizing is scoped to the top row so modal controls retain their own dimensions.
+The shared Docs Viewer stylesheet owns the page inset and reader-control sizing across the public and local shells. The archive header is the spacing reference: 18px top padding and 2rem controls in the top row and Index header. Modal controls retain their own dimensions.
 
 The shared [focus-mode owner](../../docs-viewer/runtime/js/shared/docs-viewer-focus-mode.js) controls visible focus indicators across Public, Manage and Review, including report rows, Media View and management modals. Initial and pointer-driven focus stays visually quiet. Tab, arrow, Home/End and Page Up/Down navigation enables keyboard indicators until the next pointer press; typing alone does not enable them. Document capture listeners set the mode before controls move focus. Actual focus, modal trapping and restoration after Back or modal closing retain their existing owners. Search halos and Import's containing-table outline follow the same mode; selection, ordinary borders and drag/drop indicators remain independent.
 
 [Toolbar Icons](Toolbar_Icons.md) owns the reusable mask helper, independent artwork-size and button-size tokens, button states, artwork classes and extension method. The selected reader, management, source-editor, content-detail and report toolbars, collection list/detail controls, toolbar menus, index header and Info close control use this foundation; the Shared Icons mapping records their artwork and visual-review status.
 
-Manage shows the Actions wrench controls in the top row and Index panel only in Working. Collection Actions shares the top row with the other document and collection actions. Pre-publish and Published hide these controls, including the entry points that activate document-selection checkboxes.
+Manage shows its Actions controls in the top row. Index Actions and Position occupy the second Index row and remain visible but disabled while Search or Recent results are active; tree selection exits on leaving the tree. Collection Actions shares the top row with the other document and collection actions. The public reader has no management controls.
 
 “Shared” does not mean public. A module is part of the public surface only when the public entrypoint imports it or a public-safe lazy path can reach it.
 
@@ -47,9 +47,17 @@ For an ordinary document, the runtime resolves the target only when the selected
 
 The ordinary-document Draft/Ready button stays visible but disabled when the document or an ancestor is listed in `unpublishable.json`. Its tooltip and accessible label read “Excluded from Publish by unpublishable.json”; its icon still reflects the saved draft value. Collection report hosts use their ordinary-document exclusion state while displaying the collection list. The local `/docs/index-tree` response supplies an explicit `publication_ignored` boolean for each ordinary document, derived from the current ignore list and canonical `index-order.json` through the shared publication-exclusion reader. This state exists only in the service response; generated files, public payloads and authored draft values are unchanged. The existing Working index refresh observes ignore-list and hierarchy edits, and the Draft/Ready click handler requires a current unexcluded record. This control describes ignore policy only; Publish remains the owner of complete eligibility, including draft subtrees and collection-host exclusions.
 
-The [main toolbar renderer](../../docs-viewer/runtime/js/shared/docs-viewer-main-view-renderer.js) presents document and collection actions in the existing page-wide top row beside site Search and management controls. Collection Back aligns with the document's left edge using its current width, including narrower Moments content. Other document actions start three button widths from Back's left edge and wrap within their own group. Narrow public headers wrap that group onto a full-width header line. Public Back uses the shared report's return operation without management imports. Content Detail retains its own Back destination.
+The [main toolbar renderer](../../docs-viewer/runtime/js/shared/docs-viewer-main-view-renderer.js) presents document and collection actions in the existing page-wide top row beside management controls. Collection Back aligns with the document's left edge using its current width, including narrower Moments content. Other document actions start three button widths from Back's left edge and wrap within their own group. Narrow public headers wrap that group onto a full-width header line. Public Back uses the shared report's return operation without management imports. Content Detail retains its own Back destination.
 
 Collection search, filters, sorting and row-selection controls remain beside the list. Manage's sort button follows the collection search field with the standard report toolbar gap (`0.55rem`). There is no duplicate detail action row. Source and Content Detail hide the collection controls while retaining their mounted nodes; generated detail refresh updates content and context without rebuilding those controls. [Shared layout](../../docs-viewer/static/css/docs-viewer.css), [report styling](../../docs-viewer/static/css/docs-viewer-reports.css) and [Manage styling](../../docs-viewer/static/css/docs-viewer-manage.css) own these presentation rules.
+
+## Retained Index Views
+
+The shared view registry registers Index tree, Search results and Recent results in the Index panel. Panel layout alone selects their visibility. The Index shell mounts controls, the retained tree and one results area; the main shell owns only document content and its toolbar. Review retains its existing top-row package-control surface, with Search and Recent gated by its route features.
+
+The sidebar tracks the current ordinary document or collection report host through one navigation path, updating the previous/current markers and required ancestors even while hidden. Branch toggles hide or reveal only their mounted child list, creating that branch's rows on first expansion. Unrelated nodes stay mounted. Selection ranges exclude rows hidden by any ancestor. Initial loading, authoritative index replacement, configuration changes and management selection setup retain full rendering under their existing owners.
+
+Visible navigation scrolls the current row only when needed; hidden tracking neither scrolls results nor moves focus. Revealing the tree scrolls its already current selection without fetching the Index, rebuilding nodes or reloading a document. Search and Recent keep query/ranking/paging and mounted results independent of document navigation and Info capture. [Docs Viewer Search](Docs_Viewer_Search.md#index-results-and-navigation) owns list acquisition, compact rows, history and clearing/toggling behavior.
 
 ## Public Execution Path
 

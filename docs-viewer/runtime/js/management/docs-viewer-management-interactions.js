@@ -10,7 +10,6 @@ export function createDocsViewerManagementInteractionController(options) {
   var documentIndex = options.documentIndex || {};
   var management = options.management || {};
   var routeSession = options.routeSession || {};
-  var searchRecent = options.searchRecent || {};
   var selectedDocument = options.selectedDocument || {};
   var indexSelection = options.indexSelection || null;
   var refs = options.refs || {};
@@ -25,11 +24,11 @@ export function createDocsViewerManagementInteractionController(options) {
   var lastEditRequestTime = 0;
 
   function contextMenuEnabled() {
-    return routeSession.managementContext && management.managementAvailable && !management.managementBusy && !searchRecent.searchRouteActive;
+    return routeSession.managementContext && management.managementAvailable && !management.managementBusy && !nav.hidden;
   }
 
   function editFromIndexEnabled() {
-    return routeSession.managementContext && management.managementAvailable && !management.managementBusy && !searchRecent.searchRouteActive;
+    return routeSession.managementContext && management.managementAvailable && !management.managementBusy && !nav.hidden;
   }
 
   function indexSelectionEnabled() {

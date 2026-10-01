@@ -66,7 +66,6 @@ export function createDocsViewerManagementIndexController(options = {}) {
   var documentIndex = options.documentIndex || {};
   var management = options.management || {};
   var routeSession = options.routeSession || {};
-  var searchRecent = options.searchRecent || {};
   var callbacks = options.callbacks || {};
   var documentRef = options.document || document;
   var openSnapshotExportWorkflow = options.openSnapshotExportWorkflow || openStaticHtmlSnapshotExportWorkflow;
@@ -186,8 +185,8 @@ export function createDocsViewerManagementIndexController(options = {}) {
       disabledReason = "Delete is unavailable.";
     } else if (management.managementBusy) {
       disabledReason = "Docs management is busy.";
-    } else if (searchRecent.searchRouteActive) {
-      disabledReason = "Clear search to delete documents.";
+    } else if (activeIndexViewId() !== "index-tree") {
+      disabledReason = "Return to the Index tree to delete documents.";
     } else if (!resolution || !resolution.enabled) {
       disabledReason = resolution ? resolution.disabledReason : "Select one or more documents.";
     }
@@ -210,14 +209,11 @@ export function createDocsViewerManagementIndexController(options = {}) {
 
   function projectActions() {
     if (typeof callbacks.projectIndexViewControlState !== "function") return null;
-    var visible = Boolean(
-      routeSession.managementContext
-
-      && activeIndexViewId() === "index-tree"
-    );
+    var visible = Boolean(routeSession.managementContext);
+    var treeActive = activeIndexViewId() === "index-tree";
     var state = {
       hidden: !visible,
-      disabled: false,
+      disabled: !treeActive || management.managementBusy,
       items: {
         [DOCS_VIEWER_ACTION_IDS.EXPORT_DOCS]: snapshotExportActionControlState(),
         [DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE]: preparePackageActionControlState(),
@@ -227,9 +223,9 @@ export function createDocsViewerManagementIndexController(options = {}) {
     callbacks.projectIndexViewControlState("index-actions", state);
     callbacks.projectIndexViewControlState("index-position", {
       hidden: !visible,
-      disabled: !management.managementAvailable || management.managementBusy || !callbacks.canPositionDoc()
+      disabled: !treeActive || !management.managementAvailable || management.managementBusy || !callbacks.canPositionDoc()
     });
-    if (!visible) hideIndexActionsMenu();
+    if (!visible || !treeActive) hideIndexActionsMenu();
     return state;
   }
 
@@ -397,6 +393,7 @@ export function createDocsViewerManagementIndexController(options = {}) {
       return true;
     }
     if (controlId === "index-position" && String(detail && detail.eventType || "") === "click") {
+      if (activeIndexViewId() !== "index-tree") return false;
       if (!management.managementAvailable || management.managementBusy || !callbacks.canPositionDoc()) return false;
       hideIndexActionsMenu();
       callbacks.handlePositionDoc();
@@ -405,6 +402,7 @@ export function createDocsViewerManagementIndexController(options = {}) {
     if (controlId !== "index-actions" || String(detail && detail.eventType || "") !== "click") {
       return false;
     }
+    if (activeIndexViewId() !== "index-tree") return false;
     if (!actionId) {
       var menu = indexActionsMenu();
       if (!menu || menu.hidden) {

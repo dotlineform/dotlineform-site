@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260602-160839-6d3cbb
 title: Docs Viewer Search
 added_date: "2026-06-02 16:08:39"
-last_updated: "2026-09-27 15:47:30"
+last_updated: "2026-10-01 21:46:01"
 parent_id: d-20260331-000000-5dcf32
 
 ---
@@ -30,7 +30,7 @@ Working tree metadata selects ordinary documents, pruning draft and unpublishabl
 
 Ordinary documents and Works share one index, query and relevance order. Catalogue, Concepts and Moments subdocs are excluded by explicit collection policy; their eligible ordinary landing pages remain searchable. A collection delivery explicitly sets `include_in_site_search`; registration does not imply inclusion. Recents shares the collection policy and metadata eligibility without reading the Search index. Report-local title search remains a list filter, not another full-text engine.
 
-Collection results retain exact `{collection, doc_id}` identity plus explicit `report_doc_id` placement. The shared route workflow uses that structured target to create the active Manage or public parent URL and preserve the child as `subdoc`. Configured collection/report title is display-only context beneath the result title and emits no postings.
+Collection results retain exact `{collection, doc_id}` identity plus explicit `report_doc_id` placement. The shared route workflow uses that structured target to create the active Manage or public parent URL and preserve the child as `subdoc`. Collection/report title remains payload metadata and emits no postings; result rows display only decorative collection artwork and the document title.
 
 ## Build And Publication
 
@@ -40,9 +40,17 @@ The Working index lives at its configured generated-search location. Prepare Pre
 
 ## Browser Query Path
 
-Generated browser config declares the Docs Viewer domain, v4 schema, index URL, and `whole_index` rebuild policy. The collection provider reads its configured index URL without requiring stage identity inside that JSON. `docs-viewer-search-controller.js` validates v4 and owns query/history/loading/paging state, and `docs-viewer-search.js` is the sole tokenizer, postings-intersection, ranking, and tie-breaking owner.
+Generated browser config declares the Docs Viewer domain, v4 schema, index URL, and `whole_index` rebuild policy. The workspace provider checks the v4 schema once at acquisition without requiring stage identity inside that JSON. `docs-viewer-search-controller.js` caches that loaded input and owns query/loading/paging state; route commands own history writes. `docs-viewer-search.js` is the sole tokenizer, postings-intersection, ranking, and tie-breaking owner, with no repeated schema validation on query or More. Recent is acquired independently and normalized once by the generated-data adapter, then cached by the same list controller. Neither list reads destination documents or collection manifests to populate its rows.
 
 A multi-term query requires one matching posting set per normalized term. Prefix matching begins at three characters. Generic ranking prefers exact identity, exact title, title, heading, summary, parent title, body/code, and update metadata; only enabled fields participate. The workspace therefore ranks exact title, title, heading, summary, then body/code. Ties sort by title and identity, and each exact ordinary or collection target appears at most once.
+
+## Index Results And Navigation
+
+Search and Recent controls occupy the first Index row in Public and Manage. Their results replace the visible tree while the document remains in the main pane. Manage keeps Index Actions and Position in a second row, disabled while results are active; displayed-document controls retain their normal capabilities. Expanded main views can hide the whole Index panel and retain its active view for return. Public narrow screens bound the list height so the document below remains reachable.
+
+Opening a result, pinned Related link, bookmark or in-app document-content link preserves the active list, query, paging and list scroll. Only exact ordinary or collection/document identity determines the highlighted row; a destination outside the displayed results leaves no row active. Related links retain their independent Info capture and lifecycle, including release on Source entry. Clearing Search or toggling Recent off reveals the retained tree and keeps the current exact document, including `subdoc` and hash. Recent clears an active query; typing a non-empty query switches from Recent to Search.
+
+The URL's `q` and browser history's Index view record apply independently of document loading. Back and Forward restore the view and exact document target; a view-only change for the already displayed target does not remount the document. Matching query/index state reuses the mounted rows and cached matches, and More slices that ranking in memory. Switching visibility never reloads the Index or either list, repeats input validation or performs a target preflight. Explicit management reload retains its existing cache invalidation responsibility.
 
 ## Extension Boundary
 

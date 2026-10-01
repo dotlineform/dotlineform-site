@@ -36,6 +36,7 @@ export function createDocsViewerPanelLayout(options) {
   });
   var infoPanelProjection = {};
   var mainLayoutState = "normal";
+  var treeVisible = false;
 
   function indexViews() {
     return viewRegistry ? viewRegistry.listViews("index") : [];
@@ -142,6 +143,10 @@ export function createDocsViewerPanelLayout(options) {
         visible: projected.info.visible
       })
     });
+    var nextTreeVisible = mainLayoutState !== "expanded-main" && projected.index.visible
+      && projected.index.activeViewId === "index-tree";
+    if (nextTreeVisible && !treeVisible && typeof settings.onTreeVisible === "function") settings.onTreeVisible();
+    treeVisible = nextTreeVisible;
     return projected.info;
   }
 
@@ -168,6 +173,14 @@ export function createDocsViewerPanelLayout(options) {
     return resolved.view;
   }
 
+  /** Switch visibility of retained Index content; acquisition stays with each view's owner. */
+  function setActiveIndexView(viewId) {
+    var resolved = viewRegistry.resolveView(viewId);
+    if (!resolved.available || !resolved.view || resolved.view.panel !== "index") return null;
+    viewState = updateDocsViewerViewState(viewState, { indexViewId: resolved.view.id });
+    return renderIndexPanelState();
+  }
+
   function setMainLayoutState(state) {
     mainLayoutState = normalizeMainLayoutState(state);
     renderInfoPanelState();
@@ -180,6 +193,7 @@ export function createDocsViewerPanelLayout(options) {
     projectViewState: projectViewState,
     renderIndexPanelState: renderIndexPanelState,
     setActiveMainView: setActiveMainView,
+    setActiveIndexView: setActiveIndexView,
     setMainLayoutState: setMainLayoutState,
     mainLayoutState: function () { return mainLayoutState; }
   };

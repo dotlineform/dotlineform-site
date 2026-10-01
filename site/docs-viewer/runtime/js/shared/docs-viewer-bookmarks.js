@@ -25,10 +25,8 @@ export function initDocsViewerBookmarks(context) {
   var bookmarkState = context.bookmarks;
   var documentIndex = context.documentIndex;
   var selectedDocument = context.selectedDocument;
-  var searchRecent = context.searchRecent;
   var bookmarkRow = context.bookmarkRow;
   var routeCommands = context.routeCommands || {};
-  var searchResetCommand = context.searchResetCommand || {};
 
   function bookmarkOwner() {
     return context.bookmarkOwner();
@@ -98,7 +96,7 @@ export function initDocsViewerBookmarks(context) {
   function renderToggle() {
     var doc = documentIndex.docsById.get(selectedDocument.selectedDocId);
     var eligible = typeof context.controlActive !== "function" || context.controlActive("bookmark");
-    var canShow = eligible && Boolean(doc) && bookmarkState.bookmarksLoaded && bookmarkState.bookmarkSupport && !searchRecent.searchRouteActive;
+    var canShow = eligible && Boolean(doc) && bookmarkState.bookmarksLoaded && bookmarkState.bookmarkSupport;
     var active = canShow && Boolean(getBookmarkForDoc(doc.doc_id));
     if (typeof context.projectControlState === "function") {
       context.projectControlState("bookmark", {
@@ -292,14 +290,8 @@ export function initDocsViewerBookmarks(context) {
     return null;
   }
 
-  function resetSearchForBookmarkOpen() {
-    var callback = searchResetCommand.resetForBookmarkOpen;
-    if (typeof callback === "function") callback();
-  }
-
   function openBookmark(docId) {
     if (!docId) return;
-    resetSearchForBookmarkOpen();
     loadDoc(docId, { historyMode: "push", hash: "" });
   }
 

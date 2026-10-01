@@ -148,7 +148,7 @@ export function visibleDocsViewerIndexSelectionDocIds(nav) {
   return normalizeDocsViewerSelectionDocIds(Array.from(nav.querySelectorAll("[data-docs-viewer-selection-checkbox]"))
     .filter(function (checkbox) {
       var gutter = checkbox.closest("[data-docs-viewer-selection-gutter]");
-      return gutter && !gutter.hidden && !checkbox.hidden;
+      return gutter && !checkbox.closest("[hidden]");
     })
     .map(function (checkbox) { return checkbox.dataset.docsViewerSelectionCheckbox; }));
 }

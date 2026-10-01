@@ -3,7 +3,7 @@ import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
 
 function appViewerConfigMount(root) {
   return root && typeof root.closest === "function"
-    ? root.closest("[data-docs-viewer-header-controls-mount]")
+    ? root.closest(".docsViewer").querySelector("[data-docs-viewer-header-controls-mount]")
     : null;
 }
 

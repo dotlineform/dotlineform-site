@@ -59,25 +59,10 @@ export function renderDocsViewerMainView(options = {}) {
   content.className = "docsViewer__content content";
   content.id = "docsViewerContent";
 
-  const resultsStatus = documentRef.createElement("p");
-  resultsStatus.className = "docsViewer__panelStatus muted small";
-  resultsStatus.id = "docsViewerResultsStatus";
-  resultsStatus.hidden = true;
-
-  const results = documentRef.createElement("ol");
-  results.className = "docsViewer__results";
-  results.id = "docsViewerResults";
-  results.hidden = true;
-
-  const more = documentRef.createElement("div");
-  more.className = "docsViewer__more";
-  more.id = "docsViewerMore";
-  more.hidden = true;
-
   if (!toolbarMount && toolbar) {
     main.appendChild(toolbar);
   }
-  main.append(content, resultsStatus, results, more);
+  main.appendChild(content);
   mount.replaceChildren(main);
 
   return findDocsViewerMainViewRefs({ document: documentRef, root: options.root || mount });
@@ -91,10 +76,7 @@ export function findDocsViewerMainViewRefs(options = {}) {
     toolbar: root.querySelector("#docsViewerMainViewToolbar"),
     collectionBack: root.querySelector(".docsViewer__collectionBack"),
     collectionActions: root.querySelector(".docsViewer__collectionActionMount"),
-    content: root.querySelector("#docsViewerContent"),
-    resultsStatus: root.querySelector("#docsViewerResultsStatus"),
-    results: root.querySelector("#docsViewerResults"),
-    more: root.querySelector("#docsViewerMore")
+    content: root.querySelector("#docsViewerContent")
   };
 }
 
@@ -104,22 +86,6 @@ export function applyDocsViewerMainViewProjection(options = {}) {
 
   applyToolbarHidden(refs.toolbar, projection, "toolbarHidden");
   applyHidden(refs.content, projection, "contentHidden");
-  applyHidden(refs.resultsStatus, projection, "resultsStatusHidden");
-  applyHidden(refs.results, projection, "resultsHidden");
-  applyHidden(refs.more, projection, "moreHidden");
-
-  if (refs.resultsStatus) {
-    if (Object.prototype.hasOwnProperty.call(projection, "resultsStatusText")) {
-      refs.resultsStatus.textContent = String(projection.resultsStatusText || "");
-    }
-    if (Object.prototype.hasOwnProperty.call(projection, "resultsStatusError")) {
-      refs.resultsStatus.classList.toggle("is-error", Boolean(projection.resultsStatusError));
-    }
-  }
-
-  if (refs.more && projection.clearMore) {
-    refs.more.innerHTML = "";
-  }
 }
 
 function applyHidden(element, projection, key) {

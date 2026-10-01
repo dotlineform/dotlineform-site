@@ -20,6 +20,11 @@ export function renderDocsViewerIndexPanelShell(options = {}) {
   const header = documentRef.createElement("div");
   header.className = "docsViewer__sidebarHeader";
 
+  const listControls = documentRef.createElement("div");
+  listControls.className = "docsViewer__indexListControls";
+  listControls.setAttribute("data-docs-viewer-control-surface-mount", "index-lists");
+  listControls.hidden = true;
+
   const viewControls = documentRef.createElement("div");
   viewControls.className = "docsViewer__indexViewControls";
   viewControls.hidden = true;
@@ -35,8 +40,26 @@ export function renderDocsViewerIndexPanelShell(options = {}) {
   placeholder.id = "docsViewerIndexPlaceholder";
   placeholder.hidden = true;
 
-  header.appendChild(viewControls);
-  inner.append(header, nav, placeholder);
+  const resultsView = documentRef.createElement("section");
+  resultsView.className = "docsViewer__indexResults";
+  resultsView.hidden = true;
+  resultsView.setAttribute("aria-label", "Document results");
+  const resultsStatus = documentRef.createElement("p");
+  resultsStatus.className = "docsViewer__panelStatus muted small";
+  resultsStatus.id = "docsViewerResultsStatus";
+  resultsStatus.setAttribute("role", "status");
+  resultsStatus.hidden = true;
+  const results = documentRef.createElement("ol");
+  results.className = "docsViewer__results";
+  results.id = "docsViewerResults";
+  const more = documentRef.createElement("div");
+  more.className = "docsViewer__more";
+  more.id = "docsViewerMore";
+  more.hidden = true;
+  resultsView.append(resultsStatus, results, more);
+
+  header.append(listControls, viewControls);
+  inner.append(header, nav, resultsView, placeholder);
   aside.appendChild(inner);
   mount.replaceChildren(aside);
 
@@ -49,6 +72,11 @@ export function findDocsViewerIndexPanelRefs(options = {}) {
   return {
     sidebar: root.querySelector(".docsViewer__sidebar"),
     nav: root.querySelector("#docsViewerNav"),
+    listControls: root.querySelector('[data-docs-viewer-control-surface-mount="index-lists"]'),
+    resultsView: root.querySelector(".docsViewer__indexResults"),
+    resultsStatus: root.querySelector("#docsViewerResultsStatus"),
+    results: root.querySelector("#docsViewerResults"),
+    more: root.querySelector("#docsViewerMore"),
     indexPlaceholder: root.querySelector("#docsViewerIndexPlaceholder"),
     viewControls: root.querySelector('[data-docs-viewer-control-surface-mount="index-view"]')
   };
@@ -62,6 +90,10 @@ export function applyDocsViewerIndexPanelProjection(options = {}) {
     root.dataset.indexPanelView = projection.activeViewId || "";
   }
   if (refs.nav) refs.nav.hidden = Boolean(projection.treeHidden);
+  if (refs.resultsView) {
+    refs.resultsView.hidden = projection.activeViewRenderer !== "index-results";
+    refs.resultsView.setAttribute("aria-label", projection.activeViewLabel || "Document results");
+  }
   if (refs.indexPlaceholder) {
     refs.indexPlaceholder.hidden = Boolean(projection.placeholderHidden);
     refs.indexPlaceholder.textContent = projection.placeholderText || "";

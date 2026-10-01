@@ -70,7 +70,6 @@
   --docs-viewer-doc-width: 80ch; /* current: 72ch; try 60ch-88ch */
   --docs-viewer-info-width: 20rem; /* current: 280px / 17.5rem; try 14rem-22rem */
   --docs-viewer-panel-width-min: 13.75rem; /* current: 220px / 13.75rem */
-  --docs-viewer-search-width: 20rem; /* current: 20rem; try 16rem-24rem */
   --docs-viewer-media-metadata-width: 22rem;
 
   /* derived tokens */
@@ -209,18 +208,19 @@ main.container:has(> .docsViewer){
 
 .docsViewer__sidebarHeader{
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: stretch;
   gap: 0.4rem;
   min-height: 1.8rem;
   margin: 0 0 0.45rem;
 }
 
-.docsViewer__sidebarHeader:has(> .docsViewer__indexViewControls[hidden]){
+.docsViewer__sidebarHeader:has(> .docsViewer__indexViewControls[hidden]):has(> .docsViewer__indexListControls[hidden]){
   display: none;
 }
 
 .docsViewer__indexViewControls,
+.docsViewer__indexListControls,
 .docsViewer__viewerAppControls{
   display: inline-flex;
   align-items: center;
@@ -228,12 +228,26 @@ main.container:has(> .docsViewer){
 }
 
 .docsViewer__indexViewControls[hidden],
+.docsViewer__indexListControls[hidden],
 .docsViewer__viewerAppControls[hidden]{
   display: none;
 }
 
 .docsViewer__nav{
   min-width: 0;
+  font-size: var(--docs-viewer-font-small);
+  line-height: var(--docs-viewer-line-snug);
+}
+
+.docsViewer__nav,
+.docsViewer__indexResults{
+  max-height: calc(100dvh - 10rem);
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+.docsViewer__indexResults{
   font-size: var(--docs-viewer-font-small);
   line-height: var(--docs-viewer-line-snug);
 }
@@ -473,8 +487,7 @@ main.container:has(> .docsViewer){
 
 .docsViewer__viewerToolbar{
   display: flex;
-  flex: 0 1 32rem;
-  width: 32rem;
+  flex: 0 1 auto;
   max-width: 100%;
   flex-wrap: wrap;
   align-items: center;
@@ -487,9 +500,8 @@ main.container:has(> .docsViewer){
 
 .docsViewer__search{
   display: flex;
-  flex: 1 1 18rem;
+  flex: 1 1 auto;
   min-width: 0;
-  max-width: var(--docs-viewer-search-width);
 }
 
 .docsViewer__reviewPackageSelect{
@@ -704,6 +716,10 @@ main.container:has(> .docsViewer){
 
 .docsViewer__icon--dlf-home{
   mask-image: url("../icons/dlf-home.svg");
+}
+
+.docsViewer__icon--dlf-doc{
+  mask-image: url("../icons/dlf-doc.svg");
 }
 
 .docsViewer__icon--bookmark{
@@ -1928,29 +1944,28 @@ main.container:has(> .docsViewer){
 }
 
 .docsViewer__resultItem{
-  padding: 0.8rem 0;
-  border-top: 1px solid var(--docs-viewer-border);
-}
-
-.docsViewer__resultItem:first-child{
-  border-top: 0;
-  padding-top: 0;
+  margin: 0 0 0.25rem;
 }
 
 .docsViewer__resultTitle{
-  color: var(--docs-viewer-link);
-  font-weight: 700;
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  padding: 0.3rem 0.4rem;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  color: var(--docs-viewer-text);
+  overflow-wrap: anywhere;
   text-decoration: none;
 }
 
 .docsViewer__resultTitle:visited{
-  color: var(--docs-viewer-link-visited);
+  color: var(--docs-viewer-text);
 }
 
 .docsViewer__resultTitle:hover{
-  color: var(--docs-viewer-link-hover);
-  text-decoration: underline;
-  text-underline-offset: 2px;
+  background: var(--docs-viewer-panel-2);
+  text-decoration: none;
 }
 
 .docsViewer__resultTitle:focus-visible{
@@ -1960,11 +1975,10 @@ main.container:has(> .docsViewer){
   text-underline-offset: 2px;
 }
 
-.docsViewer__resultMeta{
-  margin: 0.18rem 0 0;
-  color: var(--docs-viewer-muted);
-  font-size: var(--docs-viewer-font-small);
-  line-height: var(--docs-viewer-line-snug);
+.docsViewer__resultTitle.is-active{
+  background: var(--docs-viewer-selection-bg);
+  border-color: var(--docs-viewer-border-strong);
+  color: var(--docs-viewer-selection-text);
 }
 
 .docsViewer__more{
@@ -2016,6 +2030,11 @@ main.container:has(> .docsViewer){
 
   .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__sidebarInner{
     position: static;
+  }
+
+  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__nav,
+  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__indexResults{
+    max-height: 35dvh;
   }
 
   .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__sidebar,

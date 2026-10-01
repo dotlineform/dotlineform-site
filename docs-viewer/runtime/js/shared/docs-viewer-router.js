@@ -53,9 +53,9 @@ export function routeFromAnchorHref(href, options) {
   };
 }
 
-export function writeViewerHistory(history, docId, url, hash, query, mode, reportParams) {
+export function writeViewerHistory(history, docId, url, hash, query, mode, reportParams, indexViewId) {
   if (mode === "none") return;
-  var nextState = { docId: docId, hash: hash || "", q: query || "", reportParams: reportParams || {} };
+  var nextState = { docId: docId, hash: hash || "", q: query || "", reportParams: reportParams || {}, indexViewId: indexViewId || "index-tree" };
   if (mode === "replace") {
     history.replaceState(nextState, "", url);
     return;
@@ -73,7 +73,8 @@ export function setViewerHistory(options) {
     settings.hash,
     settings.query,
     settings.mode,
-    settings.reportParams
+    settings.reportParams,
+    settings.indexViewId
   );
   return nextUrl;
 }
@@ -123,20 +124,15 @@ export function resolveViewerRouteDocId(options) {
   };
 }
 
+/** Apply Index history independently; open a document only when its exact displayed route changed. */
 export function applyViewerRoute(options) {
   var settings = options || {};
   var state = settings.state;
   var routeHash = settings.hash || (typeof settings.currentHash === "function" ? settings.currentHash() : "");
   var historyMode = settings.historyMode || "push";
 
-  if (typeof settings.setRecentModeActive === "function") {
-    settings.setRecentModeActive(false);
-  }
   if (state && typeof settings.managementContextActive === "function") {
     state.managementContext = settings.managementContextActive();
-  }
-  if (typeof settings.applyDocVisibility === "function") {
-    settings.applyDocVisibility();
   }
 
   var route = resolveViewerRouteDocId({
@@ -153,37 +149,12 @@ export function applyViewerRoute(options) {
     }
     return {
       docId: "",
-      route: route,
-      searchRouteActive: false
+      route: route
     };
   }
 
   var query = typeof settings.currentQuery === "function" ? settings.currentQuery() : "";
-  var searchRouteActive = typeof settings.hasActiveQuery === "function"
-    ? settings.hasActiveQuery(query)
-    : Boolean(String(query || "").trim());
-
-  if (state) {
-    state.searchQuery = query;
-    state.searchRouteActive = searchRouteActive;
-    state.selectedDocId = docId;
-  }
-  if (settings.searchInput) {
-    settings.searchInput.value = query;
-  }
-
-  if (typeof settings.expandTrail === "function") {
-    settings.expandTrail(docId);
-  }
-  if (typeof settings.renderSidebar === "function") {
-    settings.renderSidebar();
-  }
-  if (typeof settings.renderBookmarkUi === "function") {
-    settings.renderBookmarkUi();
-  }
-  if (typeof settings.renderManagementUi === "function") {
-    settings.renderManagementUi();
-  }
+  settings.syncIndexRoute(query);
 
   var shouldReplaceHistory = route.corrected;
   if (!shouldReplaceHistory && typeof settings.hasDisallowedModeInUrl === "function") {
@@ -193,86 +164,61 @@ export function applyViewerRoute(options) {
     settings.setHistory(docId, routeHash, query, "replace");
   }
 
-  if (searchRouteActive) {
-    if (typeof settings.renderSearchMode === "function") {
-      settings.renderSearchMode();
-    }
-    return {
-      docId: docId,
-      route: route,
-      searchRouteActive: true
-    };
-  }
-
-  if (typeof settings.loadDoc === "function") {
-    settings.loadDoc(docId, {
+  var loading = null;
+  if (!settings.isCurrentDocumentRoute(docId, routeHash)) {
+    loading = settings.loadDoc(docId, {
       historyMode: historyMode,
-      hash: routeHash,
-      expandTrail: typeof settings.docHasParent === "function" ? settings.docHasParent(docId) : true
+      hash: routeHash
     });
   }
 
   return {
     docId: docId,
     route: route,
-    searchRouteActive: false
+    loading: loading
   };
 }
 
+/** Open the requested document through the existing cache/read path while retaining the Index view/query. */
 export function loadViewerDoc(options) {
   var settings = options || {};
   var state = settings.state;
   var docId = settings.docId || "";
   var mode = settings.historyMode || "push";
   var hash = settings.hash || "";
-  var shouldExpandTrail = settings.expandTrail !== false;
-  var expandTrail = typeof settings.expandTrailForDoc === "function"
-    ? settings.expandTrailForDoc
-    : (typeof settings.expandTrail === "function" ? settings.expandTrail : null);
   var targetDocId = typeof settings.resolveLoadableDocId === "function" ? settings.resolveLoadableDocId(docId) : "";
-
-  // Opening a document exits Search before any document controls render.
-  if (state) {
-    state.searchQuery = "";
-    state.searchRouteActive = false;
-  }
-  if (typeof settings.setRecentModeActive === "function") {
-    settings.setRecentModeActive(false);
-  }
 
   if (targetDocId && targetDocId !== docId) {
     return loadViewerDoc(Object.assign({}, settings, {
       docId: targetDocId,
       historyMode: mode === "none" ? "replace" : mode,
       hash: hash,
-      expandTrail: shouldExpandTrail,
       reportParams: settings.reportParams
     }));
   }
 
   var doc = state && state.docsById ? state.docsById.get(docId) : null;
+  var requestId = state.requestId + 1;
+  state.requestId = requestId;
+  state.selectedDocId = docId;
   if (!doc) {
     if (typeof settings.setHistory === "function") {
-      settings.setHistory(docId, hash, "", mode);
+      settings.setHistory(docId, hash, state.searchQuery, mode, settings.reportParams || {});
     }
+    settings.trackSidebarSelection();
     if (typeof settings.handleMissingDoc === "function") {
       settings.handleMissingDoc();
     }
     return Promise.resolve(null);
   }
 
-  if (state) {
-    state.selectedDocId = docId;
-  }
-  if (shouldExpandTrail && expandTrail) {
-    expandTrail(docId);
-  }
   if (typeof settings.renderBookmarkUi === "function") {
     settings.renderBookmarkUi();
   }
   if (typeof settings.setHistory === "function") {
-    settings.setHistory(docId, hash, "", mode, settings.reportParams || {});
+    settings.setHistory(docId, hash, state.searchQuery, mode, settings.reportParams || {});
   }
+  settings.trackSidebarSelection();
 
   if (state && state.payloadCache && state.payloadCache.has(docId)) {
     if (typeof settings.renderPayload === "function") {
@@ -288,9 +234,6 @@ export function loadViewerDoc(options) {
   if (!state || typeof settings.fetchPayload !== "function") {
     return Promise.resolve(null);
   }
-
-  var requestId = state.requestId + 1;
-  state.requestId = requestId;
 
   return settings.fetchPayload(doc, docId)
     .then(function (payload) {

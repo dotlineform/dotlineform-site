@@ -1,8 +1,11 @@
+/** Own mounted tree rows; navigation changes markers/ancestors without replacing unrelated nodes. */
 export function initDocsViewerSidebarRenderer(context) {
   var documentIndex = context.documentIndex;
   var selectedDocument = context.selectedDocument;
   var nav = context.nav;
   var toolbar = context.toolbar;
+  var mountedRows = new Map();
+  var markedDocId = "";
 
   function docChildren(docId) {
     return documentIndex.childrenByParent.get(docId) || [];
@@ -21,18 +24,74 @@ export function initDocsViewerSidebarRenderer(context) {
   function expandTrail(docId) {
     buildTrail(docId).forEach(function (doc) {
       if (docChildren(doc.doc_id).length > 0) {
-        documentIndex.expandedDocIds.add(doc.doc_id);
+        if (!documentIndex.expandedDocIds.has(doc.doc_id)) {
+          documentIndex.expandedDocIds.add(doc.doc_id);
+          updateBranch(doc.doc_id);
+        }
       }
     });
   }
 
   function renderSidebar() {
     nav.textContent = "";
+    mountedRows.clear();
+    markedDocId = "";
     if (documentIndex.docs.length === 0) {
       return;
     }
 
     nav.appendChild(renderNavList(""));
+    trackSelection();
+  }
+
+  function updateBranch(docId) {
+    var mounted = mountedRows.get(docId);
+    if (!mounted || !mounted.toggle) return;
+    var expanded = documentIndex.expandedDocIds.has(docId);
+    mounted.toggle.setAttribute("aria-expanded", expanded ? "true" : "false");
+    mounted.toggle.setAttribute("aria-label", expanded ? "Collapse section" : "Expand section");
+    mounted.toggle.textContent = expanded ? "▼" : "►";
+    if (expanded && !mounted.children) {
+      mounted.children = renderNavList(docId);
+      mounted.item.appendChild(mounted.children);
+    }
+    if (mounted.children) mounted.children.hidden = !expanded;
+  }
+
+  function toggleBranch(docId) {
+    if (documentIndex.expandedDocIds.has(docId)) documentIndex.expandedDocIds.delete(docId);
+    else documentIndex.expandedDocIds.add(docId);
+    updateBranch(docId);
+  }
+
+  function markSelection(docId, active) {
+    var mounted = mountedRows.get(docId);
+    if (!mounted) return;
+    mounted.link.classList.toggle("is-active", active);
+    if (active) mounted.link.setAttribute("aria-current", "page");
+    else mounted.link.removeAttribute("aria-current");
+  }
+
+  function scrollSelectionIntoView() {
+    var mounted = mountedRows.get(selectedDocument.selectedDocId);
+    if (!mounted || nav.closest("[hidden]")) return;
+    var row = mounted.row.getBoundingClientRect();
+    if (!row.height) return;
+    var bounds = nav.getBoundingClientRect();
+    var top = Math.max(bounds.top, 0);
+    var bottom = Math.min(bounds.bottom, nav.ownerDocument.defaultView.innerHeight);
+    if (row.top < top) nav.scrollTop -= top - row.top;
+    else if (row.bottom > bottom) nav.scrollTop += row.bottom - bottom;
+  }
+
+  /** Track even while hidden; showing the tree only needs the separate scroll operation. */
+  function trackSelection() {
+    var docId = selectedDocument.selectedDocId;
+    expandTrail(docId);
+    if (markedDocId !== docId) markSelection(markedDocId, false);
+    markSelection(docId, true);
+    markedDocId = docId;
+    scrollSelectionIntoView();
   }
 
   function renderNavList(parentId) {
@@ -68,10 +127,6 @@ export function initDocsViewerSidebarRenderer(context) {
 
       var link = document.createElement("a");
       link.className = "docsViewer__navLink";
-      if (doc.doc_id === selectedDocument.selectedDocId) {
-        link.className += " is-active";
-        link.setAttribute("aria-current", "page");
-      }
       link.href = context.viewerUrl(context.viewerTargetDocId(doc.doc_id));
       link.dataset.docId = doc.doc_id;
       link.draggable = false;
@@ -106,6 +161,8 @@ export function initDocsViewerSidebarRenderer(context) {
       }
       link.appendChild(document.createTextNode(doc.title));
       row.appendChild(link);
+      var mounted = { item: item, row: row, link: link, toggle: hasChildren ? toggle : null, children: null };
+      mountedRows.set(doc.doc_id, mounted);
       var selectionGutter = typeof context.renderIndexSelectionGutter === "function"
         ? context.renderIndexSelectionGutter(doc)
         : null;
@@ -115,7 +172,8 @@ export function initDocsViewerSidebarRenderer(context) {
       item.appendChild(row);
 
       if (hasChildren && documentIndex.expandedDocIds.has(doc.doc_id)) {
-        item.appendChild(renderNavList(doc.doc_id));
+        mounted.children = renderNavList(doc.doc_id);
+        item.appendChild(mounted.children);
       }
 
       list.appendChild(item);
@@ -131,8 +189,10 @@ export function initDocsViewerSidebarRenderer(context) {
 
   return {
     buildTrail: buildTrail,
-    expandTrail: expandTrail,
     renderMeta: renderMeta,
-    renderSidebar: renderSidebar
+    renderSidebar: renderSidebar,
+    scrollSelectionIntoView: scrollSelectionIntoView,
+    toggleBranch: toggleBranch,
+    trackSelection: trackSelection
   };
 }

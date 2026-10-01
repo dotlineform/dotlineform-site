@@ -7,8 +7,6 @@ export function initDocsViewerDocumentController(context) {
   var statusCommands = context.statusCommands || {};
   var content = context.content;
   var toolbar = context.toolbar;
-  var results = context.results;
-  var more = context.more;
   var documentMountGeneration = 0;
 
   function managementContextActive() {
@@ -305,14 +303,9 @@ export function initDocsViewerDocumentController(context) {
   }
 
   function showDocPane() {
-    if (typeof context.clearResultsStatus === "function") context.clearResultsStatus();
-    context.setRecentModeActive(false);
     projectDocumentShell({
       toolbarHidden: false,
-      contentHidden: false,
-      resultsHidden: true,
-      moreHidden: true,
-      clearMore: true
+      contentHidden: false
     });
   }
 
@@ -339,17 +332,6 @@ export function initDocsViewerDocumentController(context) {
     content.appendChild(status);
   }
 
-  function showSearchPane() {
-    hideDocPane();
-    projectDocumentShell({ resultsHidden: false });
-  }
-
-  function showRecentPane() {
-    hideDocPane();
-    context.setRecentModeActive(true);
-    projectDocumentShell({ resultsHidden: false });
-  }
-
   function renderPayload(doc, payload, hash, options = {}) {
     var scrollPositions = [];
     for (var node = content; options.preservePosition && node; node = node.parentElement) {
@@ -362,15 +344,8 @@ export function initDocsViewerDocumentController(context) {
     selectedDocument.selectedDocId = doc.doc_id;
     selectedDocument.displayedDocId = doc.doc_id;
     selectedDocument.displayedPayload = payload;
-    if (!options.preservePosition) context.renderSidebar();
     context.renderBookmarkUi();
     context.renderManagementUi();
-
-    if (context.hasActiveQuery()) {
-      context.setRecentModeActive(false);
-      context.renderSearchMode();
-      return;
-    }
 
     showDocPane();
     context.renderMeta(doc);
@@ -413,16 +388,12 @@ export function initDocsViewerDocumentController(context) {
 
   function handleMissingDoc() {
     renderDocumentStatus("Document not found.", true, { hideMeta: true });
-    results.innerHTML = "";
-    more.innerHTML = "";
-    more.hidden = true;
     context.renderManagementUi();
   }
 
   function renderDocLoadingState(doc) {
     var mountGeneration = nextDocumentMountGeneration();
     clearCollectionReportState("navigation-start", mountGeneration);
-    context.renderSidebar();
     showDocPane();
     context.renderMeta(doc);
     releaseReportPresentation();
@@ -447,15 +418,6 @@ export function initDocsViewerDocumentController(context) {
     if (content && Object.prototype.hasOwnProperty.call(projection || {}, "contentHidden")) {
       content.hidden = Boolean(projection.contentHidden);
     }
-    if (results && Object.prototype.hasOwnProperty.call(projection || {}, "resultsHidden")) {
-      results.hidden = Boolean(projection.resultsHidden);
-    }
-    if (more && Object.prototype.hasOwnProperty.call(projection || {}, "moreHidden")) {
-      more.hidden = Boolean(projection.moreHidden);
-    }
-    if (more && projection && projection.clearMore) {
-      more.innerHTML = "";
-    }
   }
 
   return {
@@ -464,8 +426,6 @@ export function initDocsViewerDocumentController(context) {
     hideDocPane: hideDocPane,
     renderDocLoadingState: renderDocLoadingState,
     renderPayload: renderPayload,
-    showDocPane: showDocPane,
-    showRecentPane: showRecentPane,
-    showSearchPane: showSearchPane
+    showDocPane: showDocPane
   };
 }

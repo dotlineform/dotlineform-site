@@ -66,8 +66,6 @@ function createStateDefaults(settings) {
     searchQuery: "",
     searchVisibleCount: options.searchBatchSize || 50,
     searchDebounceId: null,
-    searchRouteActive: false,
-    recentModeActive: false,
     recentLimit: options.defaultRecentLimit || 20,
     docsViewerConfigLoaded: false,
     docsViewerConfigRequestPromise: null,
@@ -179,8 +177,6 @@ function createStateDomains(state, settings) {
       "searchQuery",
       "searchVisibleCount",
       "searchDebounceId",
-      "searchRouteActive",
-      "recentModeActive",
       "recentLimit"
     ]),
     bookmarks: stateDomain("bookmarks", "browser storage", state, [

@@ -267,7 +267,8 @@ export function createDocsViewerAppComposition(options) {
     mainViewRefs: appShellRefs.mainView,
     infoPanelRefs: appShellRefs.infoPanel,
     viewRegistry: viewRegistry,
-    onIndexProjection: settings.onIndexProjection
+    onIndexProjection: settings.onIndexProjection,
+    onTreeVisible: settings.onTreeVisible
   });
   var appSession = createDocsViewerAppSession({
     defaultRecentLimit: constants.defaultRecentLimit,

@@ -6,7 +6,7 @@ var PANELS = ["index", "main", "info"];
 var APP_KINDS = ["public", "manage", "review"];
 var MAIN_LAYOUT_STATES = ["normal", "expanded-main"];
 var CONTROL_OWNER_TYPES = ["app", "view"];
-var CONTROL_SURFACES = ["app-viewer", "app-management", "index-view", "main-view"];
+var CONTROL_SURFACES = ["app-viewer", "app-management", "index-lists", "index-view", "main-view"];
 
 export const DOCS_VIEWER_CONTROL_OWNER_TYPES = Object.freeze({
   APP: "app",
@@ -16,6 +16,7 @@ export const DOCS_VIEWER_CONTROL_OWNER_TYPES = Object.freeze({
 export const DOCS_VIEWER_CONTROL_SURFACES = Object.freeze({
   APP_VIEWER: "app-viewer",
   APP_MANAGEMENT: "app-management",
+  INDEX_LISTS: "index-lists",
   INDEX_VIEW: "index-view",
   MAIN_VIEW: "main-view"
 });
@@ -120,6 +121,8 @@ function normalizeControl(record) {
     if (
       surfaceId !== DOCS_VIEWER_CONTROL_SURFACES.APP_VIEWER
       && surfaceId !== DOCS_VIEWER_CONTROL_SURFACES.APP_MANAGEMENT
+      && surfaceId !== DOCS_VIEWER_CONTROL_SURFACES.INDEX_LISTS
+      && surfaceId !== DOCS_VIEWER_CONTROL_SURFACES.INDEX_VIEW
     ) {
       throw new Error("Docs Viewer app control " + cleanString(source.id) + " requires an app control surface.");
     }
@@ -219,8 +222,8 @@ export function createDocsViewerSharedViewDefinitions() {
         renderer: "index-tree"
       },
       { id: "rendered-document", label: "Document", panel: "main" },
-      { id: "search-results", label: "Search results", panel: "main", features: ["search"] },
-      { id: "recent-results", label: "Recent", panel: "main", features: ["recent"] },
+      { id: "search-results", label: "Search results", panel: "index", renderer: "index-results", features: ["search"] },
+      { id: "recent-results", label: "Recent", panel: "index", renderer: "index-results", features: ["recent"] },
       {
         id: "related-links",
         label: "Related links",
@@ -240,7 +243,7 @@ export function createDocsViewerSharedViewDefinitions() {
         id: "recent",
         label: "Recent",
         ownerType: "app",
-        surfaceId: "app-viewer",
+        surfaceId: "index-lists",
         features: ["recent"],
         renderer: "recent-button"
       },
@@ -248,7 +251,7 @@ export function createDocsViewerSharedViewDefinitions() {
         id: "search",
         label: "Search",
         ownerType: "app",
-        surfaceId: "app-viewer",
+        surfaceId: "index-lists",
         features: ["search"],
         renderer: "search-input"
       },

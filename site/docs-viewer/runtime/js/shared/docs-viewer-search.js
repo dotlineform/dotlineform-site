@@ -6,7 +6,6 @@ export function normalizeSearchText(value) {
     .trim();
 }
 
-const SEARCH_INDEX_SCHEMA = "docs_viewer_search_index_v4";
 const SEARCH_V2_STOP_WORDS = new Set([
   "a", "an", "and", "are", "as", "at", "be", "by", "for", "from",
   "in", "is", "it", "of", "on", "or", "that", "the", "to", "with"
@@ -84,10 +83,8 @@ function searchScoreV2(index, position, query, matchedFields) {
   return 100;
 }
 
+/** Query the v4 payload already validated by the workspace provider; no per-query schema pass. */
 export function collectSearchMatches(index, rawQuery) {
-  if (!index || !index.header || index.header.schema !== SEARCH_INDEX_SCHEMA) {
-    throw new Error("Docs Viewer search index has an unsupported schema.");
-  }
   var query = normalizeSearchText(rawQuery);
   if (!query) return [];
   var fields = Array.isArray(index.fields) ? index.fields : [];
@@ -124,29 +121,6 @@ export function collectSearchMatches(index, rawQuery) {
   });
 }
 
-export function normalizeRecentEntries(entries) {
-  return entries
-    .filter(function (entry) {
-      return entry && typeof entry === "object";
-    })
-    .map(function (entry) {
-      return {
-        doc_id: String(entry.doc_id || "").trim(),
-        title: String(entry.title || "").trim(),
-        content_url: String(entry.content_url || "").trim(),
-        timestamp: String(entry.timestamp || "").trim(),
-        parent_id: String(entry.parent_id || "").trim(),
-        parent_title: String(entry.parent_title || "").trim(),
-        collection: String(entry.collection || "").trim(),
-        report_doc_id: String(entry.report_doc_id || "").trim(),
-        collection_title: String(entry.collection_title || "").trim()
-      };
-    })
-    .filter(function (entry) {
-      return entry.doc_id && entry.title && entry.timestamp;
-    });
-}
-
 export function compareRecentDocs(left, right) {
   var leftDate = String(left.timestamp || "");
   var rightDate = String(right.timestamp || "");
@@ -160,9 +134,6 @@ export function compareRecentDocs(left, right) {
 
 export function collectRecentDocs(docs, recentLimit) {
   return docs
-    .filter(function (doc) {
-      return doc && doc.doc_id;
-    })
     .slice()
     .sort(compareRecentDocs)
     .slice(0, recentLimit);
