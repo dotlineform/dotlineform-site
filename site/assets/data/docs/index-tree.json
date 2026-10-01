@@ -30,6 +30,12 @@
       "report_id": "docs_collection"
     },
     {
+      "doc_id": "d-20260907-180859-c425b2",
+      "title": "Moments",
+      "content_url": "/assets/data/docs/by-id/d-20260907-180859-c425b2.json",
+      "report_id": "docs_collection"
+    },
+    {
       "doc_id": "d-20260809-130120-870cc2",
       "title": "Library",
       "content_url": "/assets/data/docs/by-id/d-20260809-130120-870cc2.json",
@@ -100,13 +106,7 @@
           "content_url": "/assets/data/docs/by-id/d-20260809-130120-b96ba9.json"
         }
       ]
-    },
-    {
-      "doc_id": "d-20260907-180859-c425b2",
-      "title": "Moments",
-      "content_url": "/assets/data/docs/by-id/d-20260907-180859-c425b2.json",
-      "report_id": "docs_collection"
     }
   ],
-  "generated_at": "2026-10-01T16:35:22Z"
+  "generated_at": "2026-10-01T19:10:38Z"
 }
