@@ -212,7 +212,7 @@ main.container:has(> .docsViewer){
   align-items: stretch;
   gap: 0.4rem;
   min-height: 1.8rem;
-  margin: 0 0 0.45rem;
+  margin: 0 0 0.9rem;
 }
 
 .docsViewer__sidebarHeader:has(> .docsViewer__indexViewControls[hidden]):has(> .docsViewer__indexListControls[hidden]){
@@ -649,6 +649,10 @@ main.container:has(> .docsViewer){
   align-items: center;
   justify-content: center;
   cursor: pointer;
+}
+
+.docsViewer__recentButton:where(:not(:disabled, .is-active)){
+  color: var(--docs-viewer-theme-text-placeholder);
 }
 
 .docsViewer__toolbarIconButton:hover:where(:not(:disabled)){

@@ -240,20 +240,20 @@ export function createDocsViewerSharedViewDefinitions() {
     ],
     controls: [
       {
-        id: "recent",
-        label: "Recent",
-        ownerType: "app",
-        surfaceId: "index-lists",
-        features: ["recent"],
-        renderer: "recent-button"
-      },
-      {
         id: "search",
         label: "Search",
         ownerType: "app",
         surfaceId: "index-lists",
         features: ["search"],
         renderer: "search-input"
+      },
+      {
+        id: "recent",
+        label: "Recent",
+        ownerType: "app",
+        surfaceId: "index-lists",
+        features: ["recent"],
+        renderer: "recent-button"
       }
     ]
   };

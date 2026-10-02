@@ -355,6 +355,10 @@
   justify-self: start;
 }
 
+.docsViewerReport__collectionSortButton:where(:not(:disabled)){
+  color: var(--docs-viewer-theme-text-placeholder);
+}
+
 .docsViewerReport__collectionFilterToolbar
   > .docsViewerReport__contributionToolbar--list{
   flex: 0 0 auto;

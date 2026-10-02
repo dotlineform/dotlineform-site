@@ -334,24 +334,6 @@ function writeSubdocUrl(state, docId, mode) {
   window.history.pushState(nextState, "", url.pathname + url.search + url.hash);
 }
 
-function renderStatus(state, visibleCount) {
-  var totalCount = state.docs.length;
-  if (["catalogue", "works"].includes(state.collectionId)) {
-    var noun = state.collectionId === "catalogue" ? "work" : "document";
-    state.statusNode.textContent = (visibleCount === totalCount ? String(totalCount) : visibleCount + " of " + totalCount)
-      + " " + noun + (totalCount === 1 ? "" : "s");
-    return;
-  }
-  var scopeTitle = collectionTitle(state.collection, state.collectionId);
-  if (visibleCount === totalCount) {
-    state.statusNode.textContent = totalCount + " " + scopeTitle + " "
-      + (totalCount === 1 ? "document" : "documents");
-    return;
-  }
-  state.statusNode.textContent = visibleCount + " of " + totalCount + " "
-    + scopeTitle + " " + (totalCount === 1 ? "document" : "documents");
-}
-
 function appendDocRow(state, doc) {
   var docId = doc.docId;
   var row = document.createElement("li");
@@ -485,9 +467,9 @@ function renderShell(context, collection) {
   root.appendChild(status);
   root.appendChild(table);
 
+  if (collectionId(collection) === "catalogue") status.classList.remove("visually-hidden");
   var collectionSort = null;
-  if (["catalogue", "works"].includes(collectionId(collection))) {
-    if (collectionId(collection) === "catalogue") status.classList.remove("visually-hidden");
+  if (context.managementContext && ["catalogue", "works"].includes(collectionId(collection))) {
     collectionSort = document.createElement("button");
     collectionSort.type = "button";
     collectionSort.className = "docsViewer__toolbarIconButton docsViewerReport__collectionSortButton";
@@ -701,20 +683,22 @@ function cancelCollectionSearch(state) {
 function updateCollectionControls(state) {
   if (!state.pagedBrowsing) return;
   var pending = state.searchTimer !== null || !state.browsingData;
-  var recentMode = state.sortMode === "last-updated-desc";
-  var currentLabel = {
-    "title-asc": "title A–Z", "title-desc": "title Z–A",
-    "subject-asc": "subject ascending", "subject-desc": "subject descending",
-    "last-updated-desc": "recently updated"
-  }[state.sortMode];
   var button = state.collectionSortNode;
-  button.disabled = pending;
-  button.dataset.docsCollectionSort = state.sortMode;
-  button.replaceChildren(createDocsViewerToolbarIcon(button.ownerDocument,
-    recentMode ? "docsViewer__icon--clock-3" : "docsViewer__icon--arrow-down-a-z"));
-  button.title = "Sorted by " + currentLabel + ". Switch to "
-    + (recentMode ? "title A–Z." : "recently updated.");
-  button.setAttribute("aria-label", button.title);
+  if (button) {
+    var recentMode = state.sortMode === "last-updated-desc";
+    var currentLabel = {
+      "title-asc": "title A–Z", "title-desc": "title Z–A",
+      "subject-asc": "subject ascending", "subject-desc": "subject descending",
+      "last-updated-desc": "recently updated"
+    }[state.sortMode];
+    button.disabled = pending;
+    button.dataset.docsCollectionSort = state.sortMode;
+    button.replaceChildren(createDocsViewerToolbarIcon(button.ownerDocument,
+      recentMode ? "docsViewer__icon--clock-3" : "docsViewer__icon--arrow-down-a-z"));
+    button.title = "Sorted by " + currentLabel + ". Switch to "
+      + (recentMode ? "title A–Z." : "recently updated.");
+    button.setAttribute("aria-label", button.title);
+  }
   state.headNode.querySelectorAll("button").forEach(function (heading) {
     heading.disabled = pending;
   });
@@ -805,7 +789,8 @@ function renderListToolbar(state, documents) {
 function renderRows(state, docs) {
   clearNode(state.rowsNode);
   state.root.removeAttribute("data-report-leading-column");
-  renderStatus(state, state.pagedBrowsing ? state.matches.length : docs.length);
+  state.statusNode.textContent = "";
+  state.statusNode.hidden = true;
   if (!docs.length) {
     var empty = document.createElement("li");
     empty.className = "docsViewerReport__empty";
@@ -939,7 +924,6 @@ function renderListView(state) {
   state.root.dataset.reportState = "list";
   state.filterToolbarNode.hidden = false;
   state.tableNode.hidden = false;
-  state.statusNode.hidden = false;
   if (state.detailNode) state.detailNode.hidden = true;
   publishState(state, "list", null, "list-view");
   if (state.listNeedsRender && !renderListProjectionContained(state, "list-projection-failed")) return;
@@ -1512,9 +1496,11 @@ function mountResolvedDocsCollectionReport(context, contribution) {
       }
     });
     root.appendChild(state.pager.root);
-    state.collectionSortNode.addEventListener("click", function () {
-      listSortContext(state).setMode(state.sortMode === "last-updated-desc" ? "title-asc" : "last-updated-desc");
-    });
+    if (state.collectionSortNode) {
+      state.collectionSortNode.addEventListener("click", function () {
+        listSortContext(state).setMode(state.sortMode === "last-updated-desc" ? "title-asc" : "last-updated-desc");
+      });
+    }
     updateCollectionControls(state);
   }
   bindFilterControls(state);

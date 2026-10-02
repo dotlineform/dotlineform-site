@@ -602,8 +602,8 @@ export function createDocsViewerMediaDetailAdapter() {
       catalogueLink.target = "_blank";
       catalogueLink.rel = "noopener noreferrer";
       catalogueLink.setAttribute("aria-label", "Open Catalogue document " + work.target.id + " in a new tab");
-      catalogueLink.textContent = "cat. " + work.target.id;
-      catalogueNumber.appendChild(catalogueLink);
+      catalogueLink.textContent = work.target.id;
+      catalogueNumber.append("cat. ", catalogueLink);
       caption.appendChild(catalogueNumber);
       var groups = work.galleries.slice();
       if (supplied.gallery && !groups.some(function (entry) { return sameMediaTarget(entry.target, supplied.gallery.target); })) {

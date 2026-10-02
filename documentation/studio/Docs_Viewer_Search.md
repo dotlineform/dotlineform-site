@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260602-160839-6d3cbb
 title: Docs Viewer Search
 added_date: "2026-06-02 16:08:39"
-last_updated: "2026-10-01 21:46:01"
+last_updated: "2026-10-02 20:37:51"
 parent_id: d-20260331-000000-5dcf32
 
 ---
@@ -45,6 +45,8 @@ Generated browser config declares the Docs Viewer domain, v4 schema, index URL, 
 A multi-term query requires one matching posting set per normalized term. Prefix matching begins at three characters. Generic ranking prefers exact identity, exact title, title, heading, summary, parent title, body/code, and update metadata; only enabled fields participate. The workspace therefore ranks exact title, title, heading, summary, then body/code. Ties sort by title and identity, and each exact ordinary or collection target appears at most once.
 
 ## Index Results And Navigation
+
+Search renders and announces no numeric result counts or shown/total summaries. Loading, searching, empty-result and error messages remain, and More continues to reveal the next batch of results. Recent likewise shows no count.
 
 Search and Recent controls occupy the first Index row in Public and Manage. Their results replace the visible tree while the document remains in the main pane. Manage keeps Index Actions and Position in a second row, disabled while results are active; displayed-document controls retain their normal capabilities. Expanded main views can hide the whole Index panel and retain its active view for return. Public narrow screens bound the list height so the document below remains reachable.
 

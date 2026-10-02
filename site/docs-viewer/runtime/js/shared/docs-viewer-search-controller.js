@@ -200,10 +200,7 @@ export function initDocsViewerSearchController(context) {
       && renderedCount === searchRecent.searchVisibleCount) { syncSelection(); return; }
     var visible = searchMatches.slice(0, searchRecent.searchVisibleCount);
     var scrollTop = changedQuery ? 0 : resultsView.scrollTop;
-    setResultsStatus(!searchMatches.length ? "No results."
-      : searchMatches.length > visible.length
-        ? "Showing " + visible.length + " of " + searchMatches.length + " results"
-        : searchMatches.length === 1 ? "1 result" : searchMatches.length + " results", false);
+    setResultsStatus(searchMatches.length ? "" : "No results.", false);
     results.innerHTML = visible.map(function (match) { return resultEntry(match.entry, match.entry.id); }).join("");
     more.hidden = searchMatches.length <= visible.length;
     more.innerHTML = more.hidden ? "" : '<button type="button" class="docsViewer__moreBtn" data-role="more">more</button>';

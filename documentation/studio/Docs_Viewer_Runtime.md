@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260331-000000-c313fd
 title: Runtime
 added_date: "2026-03-31 00:00:00"
-last_updated: "2026-10-02 10:40:00"
+last_updated: "2026-10-02 20:28:02"
 summary: Public, manage, and review execution paths; browser/server authority boundaries; extension method; rationale; and known weak spots.
 parent_id: d-20260424-000000-50b63f
 ---
@@ -51,7 +51,9 @@ The ordinary-document Draft/Ready button stays visible but disabled when the doc
 
 The [main toolbar renderer](../../docs-viewer/runtime/js/shared/docs-viewer-main-view-renderer.js) presents document and collection actions in the existing page-wide top row beside management controls. Collection Back aligns with the document's left edge using its current width, including narrower Moments content. Other document actions start three button widths from Back's left edge and wrap within their own group. Narrow public headers wrap that group onto a full-width header line. Public Back uses the shared report's return operation without management imports. Content Detail retains its own Back destination.
 
-Collection search, filters, sorting and row-selection controls remain beside the list. Manage's sort button follows the collection search field with the standard report toolbar gap (`0.55rem`). There is no duplicate detail action row. Source and Content Detail hide the collection controls while retaining their mounted nodes; generated detail refresh updates content and context without rebuilding those controls. [Shared layout](../../docs-viewer/static/css/docs-viewer.css), [report styling](../../docs-viewer/static/css/docs-viewer-reports.css) and [Manage styling](../../docs-viewer/static/css/docs-viewer-manage.css) own these presentation rules.
+Collection search and filters remain beside the list. Sort and row-selection controls are Manage-only; public lists retain their default order: recently updated for Catalogue and title A–Z for the other collections. Manage's sort button follows the collection search field with the standard report toolbar gap (`0.55rem`). There is no duplicate detail action row. Source and Content Detail hide the collection controls while retaining their mounted nodes; generated detail refresh updates content and context without rebuilding those controls. [Shared layout](../../docs-viewer/static/css/docs-viewer.css), [report styling](../../docs-viewer/static/css/docs-viewer-reports.css) and [Manage styling](../../docs-viewer/static/css/docs-viewer-manage.css) own these presentation rules.
+
+The shared [Docs Viewer palette](../../docs-viewer/static/css/docs-viewer-theme.css) owns two neutral UI roles across Public, Manage and Review. Panel borders and report dividers use `--docs-viewer-theme-border` through `--docs-viewer-border` (`#e6e6e6` in light mode; `#2b2b30` in dark mode). Search icons, placeholder text, the enabled inactive Index Recent button and enabled Manage collection sort icons use `--docs-viewer-theme-text-placeholder` (`#8c8c8c` in light mode; `#9b9ba3` in dark mode); shared search fields consume it through `--shared-search-muted`. Normal text, selected controls, disabled states and focus indicators retain their own semantic roles. Studio defines its matching search-grey values in its separate palette.
 
 ## Retained Index Views
 
