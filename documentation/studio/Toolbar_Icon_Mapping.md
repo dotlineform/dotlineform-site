@@ -50,8 +50,6 @@ Code identifiers below are exact **renderer keys**, except entries explicitly ma
 | Reader: Recent | `recent-button` | Opens Recent results | Text `Recent` | clock-9.svg | — | Implemented; review pending |
 | Reader: index view | `index-view-toggle` | Tree view active; click cycles view | 📁 | — | — | Retired |
 | Reader: index view | `index-view-toggle` | Graph view active; click cycles view | 🕸️ | — | — | Retired; superseded by Links view |
-| Document: bookmark | `bookmark-toggle` | Not bookmarked; click adds bookmark | ☆ | bookmark.svg | — | Implemented; review pending |
-| Document: bookmark | `bookmark-toggle` | Bookmarked; click removes bookmark | ★ and active styling | bookmark-filled.svg | Filled theme text colour: near-black in light, near-white in dark; existing selected background | Implemented; review pending |
 | Document: Info | `info-toggle` | Info panel closed | Text `i` | info.svg | — | Implemented; review pending |
 | Document: Info | `info-toggle` | Info panel open | Same `i`, selected background/text styling | info.svg | no change when open | Implemented; review pending |
 | Document: Links | `document-links` | Opens document Links | 🔀 | waypoints.svg | — | Implemented; review pending |
@@ -288,7 +286,7 @@ Paths below are relative to the repository root. They identify the inspected own
 - Source contributions and Directives menu: `docs-viewer/runtime/js/management/source-editor/catalogue-image-contribution.js`, `catalogue-media-link.js`, `document-link-contribution.js` and `directive-actions.js` in that directory.
 - Index header rendering: `docs-viewer/runtime/js/shared/docs-viewer-index-panel-renderer.js`. Panel layout comes from `docs-viewer-panel-layout.js` in the same directory. Collapse/expand controls and saved sizing are retired; the header remains only for active index-view controls.
 - Info panel close control: `docs-viewer/runtime/js/shared/docs-viewer-info-panel-renderer.js`.
-- Bookmark state: `docs-viewer/runtime/js/shared/docs-viewer-bookmarks.js`. Ordinary document Draft/Ready state: `docs-viewer/runtime/js/management/docs-viewer-management.js`.
+- Ordinary document Draft/Ready state: `docs-viewer/runtime/js/management/docs-viewer-management.js`.
 - Shared icon creation: `docs-viewer/runtime/js/shared/docs-viewer-toolbar-icon.js`. Shared sizing, button/mask presentation and theme styles: `docs-viewer/static/css/docs-viewer.css` and `docs-viewer-theme.css`; management-only artwork URLs live in `docs-viewer-manage.css` in the same directory.
 - Public runtime projection ownership: `site-tools/config/site-code-update.json`. The shared reader's required SVGs, including ordinary-document status and index Draft artwork, are explicitly projected; management-only Subject artwork stays local.
 

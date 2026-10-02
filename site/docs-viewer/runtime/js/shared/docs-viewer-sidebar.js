@@ -178,7 +178,6 @@ export function initDocsViewerSidebarRenderer(context) {
 
   function renderMeta() {
     if (toolbar) toolbar.hidden = toolbar.hasAttribute("data-docs-viewer-toolbar-disabled");
-    context.renderBookmarkToggle();
   }
 
   return {

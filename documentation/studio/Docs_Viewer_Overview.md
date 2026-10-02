@@ -9,7 +9,7 @@ parent_id: d-20260424-000000-50b63f
 ---
 # Docs Viewer Overview
 
-Docs Viewer is a shared documentation reader built around generated document collections. It provides tree navigation, rendered documents, URL-addressable selection, search, recent documents, bookmarks, metadata panels, and optional reports.
+Docs Viewer is a shared documentation reader built around generated document collections. It provides tree navigation, rendered documents, URL-addressable selection, search, recent documents, metadata panels, and optional reports.
 
 The local management surface adds source editing, import, rebuild, export, settings, and scope workflows. The separate review surface renders validated returned packages without gaining authority over canonical source.
 
@@ -53,7 +53,7 @@ Shared code is not automatically public code. What a route imports, renders, exp
 2. App boot creates the route context, service context, collection provider, and reader state.
 3. The provider loads the active collection's generated index.
 4. The route workflow resolves the requested document and keeps canonical URL state in sync.
-5. The selected generated payload is rendered into the document pane; search, recent documents, bookmarks, info views, and reports are composed only when enabled.
+5. The selected generated payload is rendered into the document pane; search, recent documents, info views, and reports are composed only when enabled.
 6. Manage-only writes go through management endpoints and server-side validation, then rebuild or refresh generated data as required.
 
 The URL normally uses `doc` for document selection and a heading hash for in-document navigation. The local manage route also uses `scope`; the review route preserves `package`. Feature-specific parameters belong to their focused owner rather than this overview.

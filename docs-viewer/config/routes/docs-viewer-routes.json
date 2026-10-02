@@ -46,11 +46,6 @@
           "enabled": false,
           "default_view": "related-links"
         }
-      },
-      "view_policy": {
-        "hidden_controls": [
-          "bookmark"
-        ]
       }
     },
     {
@@ -63,7 +58,6 @@
         "workspace-configuration",
         "search",
         "recent",
-        "bookmarks",
         "reports",
         "source-editing",
         "management"
@@ -118,7 +112,6 @@
         "workspace-configuration",
         "search",
         "recent",
-        "bookmarks",
         "reports"
       ],
       "access": {

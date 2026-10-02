@@ -254,17 +254,6 @@ export function createDocsViewerSharedViewDefinitions() {
         surfaceId: "index-lists",
         features: ["search"],
         renderer: "search-input"
-      },
-      {
-        id: "bookmark",
-        actionId: "bookmark",
-        label: "Bookmark",
-        ownerType: "view",
-        ownerViewId: "rendered-document",
-        modeIds: ["rendered-document"],
-        surfaceId: "main-view",
-        features: ["bookmarks"],
-        renderer: "bookmark-toggle"
       }
     ]
   };

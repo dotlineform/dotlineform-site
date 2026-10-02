@@ -20,7 +20,7 @@ The app shell owns regions and mounts. The code-owned registry owns definitions 
 | --- | --- | --- | --- |
 | app control | shared app or app-kind contribution | search, recently added, scope, theme, review package controls | register on `app-viewer` or `app-management` |
 | panel chrome | panel host or layout owner | close info | keep adjacent to the surface registry |
-| view control | active view or mode contribution | bookmark, info, edit, source, save | register on `index-view` or `main-view` with its view/mode owner |
+| view control | active view or mode contribution | info, edit, source, save | register on `index-view` or `main-view` with its view/mode owner |
 | workflow action | action definition and focused workflow controller | import, publish, move, delete | resolve targets independently of placement |
 | component control | focused component | report filter, modal action, tree-node toggle | render locally; do not register globally |
 
@@ -67,7 +67,7 @@ Live state is keyed by control id and limited to renderer-facing values such as 
 - `app-viewer`: shared discovery/index-view controls and review package controls.
 - `app-management`: manage toolbar, scope, theme, and workflow placements; absent from public/review shells.
 - `index-view`: controls owned by the active index view.
-- `main-view`: bookmark/info plus manage edit/source/save controls filtered by active view and mode.
+- `main-view`: info plus manage edit/source/save controls filtered by active view and mode.
 
 An optional mount remains genuine optionality. A route with no eligible main-view controls does not render replacement chrome merely to satisfy a reference.
 

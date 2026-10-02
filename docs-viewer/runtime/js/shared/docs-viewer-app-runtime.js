@@ -2,10 +2,6 @@ import {
   normalizeSearchText
 } from "./docs-viewer-search.js";
 import {
-  createDocsViewerBookmarkRouteCommands,
-  initDocsViewerBookmarks
-} from "./docs-viewer-bookmarks.js";
-import {
   formatText,
   getConfigText,
   getConfigValue,
@@ -77,7 +73,6 @@ export function startDocsViewerRuntime(options) {
   var mainViewRefs = appShellRefs.mainView;
   var infoPanelRefs = appShellRefs.infoPanel;
   var mainViewToolbar = mainViewRefs.toolbar;
-  var bookmarkRow = appShellRefs.bookmarkRow;
   var content = mainViewRefs.content;
   var searchInput = null;
   var resultsStatus = indexPanelRefs.resultsStatus;
@@ -87,7 +82,6 @@ export function startDocsViewerRuntime(options) {
   var appContext = routeContext.appContext || {};
   var routeAccess = appContext.routeAccess || {};
   var featurePolicy = appContext.featurePolicy || {};
-  var bookmarksEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "bookmarks");
   var managementEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "management");
   var recentEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "recent");
   var searchEnabled = docsViewerRouteFeatureEnabled(featurePolicy, "search");
@@ -103,12 +97,8 @@ export function startDocsViewerRuntime(options) {
   var SEARCH_BATCH_SIZE = runtimeDefaults.searchBatchSize;
   var SEARCH_DEBOUNCE_MS = runtimeDefaults.searchDebounceMs;
   var DEFAULT_RECENT_LIMIT = runtimeDefaults.defaultRecentLimit;
-  var BOOKMARK_DB_NAME = runtimeDefaults.bookmarkDbName;
-  var BOOKMARK_DB_VERSION = runtimeDefaults.bookmarkDbVersion;
-  var BOOKMARK_STORE_NAME = runtimeDefaults.bookmarkStoreName;
   var MANAGEMENT_CAPABILITY_RETRY_ATTEMPTS = runtimeDefaults.managementCapabilityRetryAttempts;
   var MANAGEMENT_CAPABILITY_RETRY_DELAY_MS = runtimeDefaults.managementCapabilityRetryDelayMs;
-  var bookmarkOwner = routeContext.bookmarkOwner;
   var latestIndexProjection = null;
   var composition = createDocsViewerAppComposition({
     root: root,
@@ -140,7 +130,6 @@ export function startDocsViewerRuntime(options) {
   var managementBaseUrl = managementService ? managementService.baseUrl : "";
   var panelLayout = composition.panelLayout;
   var managementRuntime = null;
-  var bookmarkController = null;
   var searchController = null;
   var documentController = null;
   var routeWorkflow = null;
@@ -285,9 +274,6 @@ export function startDocsViewerRuntime(options) {
       }
     }
   });
-  mainViewControlOwners.set("bookmark", function () {
-    if (bookmarkController) bookmarkController.handleControl();
-  });
   if (contentDetailBackControlId) {
     mainViewControlOwners.set(contentDetailBackControlId, function () {
       if (!documentViewCoordinator) return;
@@ -322,7 +308,6 @@ export function startDocsViewerRuntime(options) {
     documentIndex: appSession.domains.documentIndex,
     toolbar: mainViewToolbar,
     nav: nav,
-    renderBookmarkToggle: renderBookmarkToggle,
     workspaceConfig: appSession.domains.workspaceConfig,
     selectedDocument: appSession.domains.selectedDocument,
     statusForIndexDoc: documentIndex.statusForIndexDoc,
@@ -344,7 +329,6 @@ export function startDocsViewerRuntime(options) {
       projectMainViewControlState("content-detail", controlId, controlState);
     },
     projectControlStates: function () {
-      renderBookmarkControl();
       renderManagementUi();
       renderMainViewControls();
     },
@@ -401,8 +385,6 @@ export function startDocsViewerRuntime(options) {
     mountRelatedLinks: documentViewCoordinator.mountRelatedLinks,
     reportPresentationAdapter: settings.reportPresentationAdapter,
     projectDocumentShell: panelLayout.projectMainView,
-    renderBookmarkToggle: renderBookmarkToggle,
-    renderBookmarkUi: renderBookmarkUi,
     renderManagementUi: renderManagementUi,
     renderMeta: renderMeta,
     publishCollectionReportState: publishCollectionReportState,
@@ -454,7 +436,6 @@ export function startDocsViewerRuntime(options) {
     hideDocPane: hideDocPane,
     collectionProvider: collectionProvider,
     preserveQueryParams: function () { return preserveQueryParams; },
-    renderBookmarkUi: renderBookmarkUi,
     renderDocLoadingState: renderDocLoadingState,
     renderManagementUi: renderManagementUi,
     renderPayload: renderPayload,
@@ -582,7 +563,6 @@ export function startDocsViewerRuntime(options) {
         projectMainViewControlState("management", controlId, controlState);
       },
       nav: nav,
-      renderBookmarkUi: renderBookmarkUi,
       renderRecentMode: renderRecentMode,
       renderSearchMode: renderSearchMode,
       renderSidebar: renderSidebar,
@@ -620,7 +600,6 @@ export function startDocsViewerRuntime(options) {
     viewerBaseUrl = routeContext.viewerBaseUrl;
     preserveQueryParams = routeContext.preserveQueryParams || preserveQueryParams;
     viewerPathname = routeContext.viewerPathname;
-    bookmarkOwner = routeContext.bookmarkOwner;
   }
 
   function loadWorkspaceConfiguration() {
@@ -796,29 +775,6 @@ export function startDocsViewerRuntime(options) {
     };
   }
 
-  function renderBookmarkUi() {
-    if (bookmarkController) {
-      bookmarkController.renderUi();
-      return;
-    }
-  }
-
-  function renderBookmarkToggle() {
-    renderBookmarkControl();
-  }
-
-  function renderBookmarkControl() {
-    if (bookmarkController) {
-      bookmarkController.renderToggle();
-      return;
-    }
-    projectMainViewControlState("bookmarks", "bookmark", { hidden: true });
-  }
-
-  function initializeBookmarks() {
-    if (bookmarkController) bookmarkController.initialize();
-  }
-
   function viewerUrl(docId, hash, query) {
     return routeWorkflowCommands.viewerUrl(docId, hash, query);
   }
@@ -939,10 +895,6 @@ export function startDocsViewerRuntime(options) {
 
     documentViewCoordinator.bind();
 
-    if (bookmarkController) {
-      bookmarkController.bind();
-    }
-
     document.addEventListener("keydown", function (event) {
       var controller = managementRuntime ? managementRuntime.controller() : null;
       if (controller && controller.handleDocumentKeydown(event)) {
@@ -974,29 +926,6 @@ export function startDocsViewerRuntime(options) {
     }
   });
 
-  if (bookmarksEnabled) {
-    var bookmarkRouteCommands = createDocsViewerBookmarkRouteCommands({
-      routeCommands: routeWorkflowCommands
-    });
-    bookmarkController = initDocsViewerBookmarks({
-      bookmarks: appSession.domains.bookmarks,
-      bookmarkRow: bookmarkRow,
-      bookmarkOwner: function () { return bookmarkOwner; },
-      controlActive: documentViewCoordinator.controlActive,
-      cssEscape: cssEscape,
-      dbName: BOOKMARK_DB_NAME,
-      dbVersion: BOOKMARK_DB_VERSION,
-      documentIndex: appSession.domains.documentIndex,
-      hideContextMenu: hideContextMenu,
-      routeCommands: bookmarkRouteCommands,
-      projectControlState: function (controlId, controlState) {
-        projectMainViewControlState("bookmarks", controlId, controlState);
-      },
-      selectedDocument: appSession.domains.selectedDocument,
-      setStatus: statusController.setStatus,
-      storeName: BOOKMARK_STORE_NAME
-    });
-  }
   var initialLoadPromise = startDocsViewerStartupPhases({
     composition: composition,
     bindEvents: bindLinkInterception,
@@ -1004,7 +933,6 @@ export function startDocsViewerRuntime(options) {
     loadWorkspaceConfiguration: loadWorkspaceConfiguration,
     renderIndexPanelState: renderIndexPanelState,
     loadViewerSettings: loadViewerSettings,
-    initializeBookmarks: initializeBookmarks,
     initializeManagement: initializeManagement,
     loadIndex: routeWorkflowCommands.loadIndex,
     openImportOnLoad: function () {

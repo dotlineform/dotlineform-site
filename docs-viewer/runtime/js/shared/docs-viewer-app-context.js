@@ -1,4 +1,3 @@
-import { savedStateOwner } from "./docs-viewer-saved-state.js";
 import {
   appendAssetVersion
 } from "./docs-viewer-asset-url.js";
@@ -82,7 +81,6 @@ export function createDocsViewerRouteContext(options) {
     collectionsById: new Map(),
     reportRegistryUrl: routeConfig.reportRegistryUrl
   };
-  context.bookmarkOwner = savedStateOwner(routeConfig.appKind);
   var routeParams = new URLSearchParams(locationSearch(windowRef));
   context.openImportOnLoad = context.isDocsManagementRoute && routeParams.get("import") === "1";
   return context;
@@ -127,6 +125,5 @@ export function updateDocsViewerRouteContext(context, values, options) {
     collections: nextContext.collections,
     viewerBaseUrl: nextContext.viewerBaseUrl
   });
-  nextContext.bookmarkOwner = savedStateOwner(nextContext.routeConfig.appKind);
   return nextContext;
 }

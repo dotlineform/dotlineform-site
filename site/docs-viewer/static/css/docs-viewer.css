@@ -570,18 +570,6 @@ main.container:has(> .docsViewer){
   color: var(--docs-viewer-danger);
 }
 
-.docsViewer__bookmarkRow{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.38rem;
-  width: 100%;
-  margin: 0;
-}
-
-.docsViewer__bookmarkRow[hidden]{
-  display: none;
-}
-
 .docsViewer__mainViewToolbar{
   flex: 0 1 auto;
   max-width: var(--docs-viewer-doc-width);
@@ -720,14 +708,6 @@ main.container:has(> .docsViewer){
 
 .docsViewer__icon--dlf-doc{
   mask-image: url("../icons/dlf-doc.svg");
-}
-
-.docsViewer__icon--bookmark{
-  mask-image: url("../icons/bookmark.svg");
-}
-
-.docsViewer__icon--bookmark-filled{
-  mask-image: url("../icons/bookmark-filled.svg");
 }
 
 .docsViewer__icon--chevron-left{
@@ -931,92 +911,6 @@ main.container:has(> .docsViewer){
   gap: 0.3rem 0.75rem;
   min-width: 0;
   overflow-wrap: anywhere;
-}
-
-.docsViewer__bookmarkPill{
-  box-sizing: border-box;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.16rem;
-  min-height: 1.8rem;
-  max-width: min(100%, 18rem);
-  padding: 0.08rem 0.22rem 0.08rem 0.5rem;
-  border: 1px solid var(--docs-viewer-border);
-  border-radius: 999px;
-  background: var(--docs-viewer-panel);
-  color: var(--docs-viewer-text);
-  font-size: var(--docs-viewer-font-small);
-  line-height: var(--docs-viewer-line-snug);
-}
-
-.docsViewer__bookmarkPill.is-active{
-  border-color: var(--docs-viewer-border-strong);
-  background: var(--docs-viewer-selection-bg);
-  color: var(--docs-viewer-selection-text);
-}
-
-.docsViewer__bookmarkOpen,
-.docsViewer__bookmarkRemove{
-  appearance: none;
-  border: 0;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-}
-
-.docsViewer__bookmarkOpen{
-  min-width: 0;
-  max-width: 100%;
-  padding: 0;
-  cursor: pointer;
-}
-
-.docsViewer__bookmarkOpen:hover .docsViewer__bookmarkLabel,
-.docsViewer__bookmarkOpen:focus-visible .docsViewer__bookmarkLabel{
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-.docsViewer__bookmarkOpen:focus-visible,
-.docsViewer__bookmarkRemove:focus-visible,
-.docsViewer__bookmarkInput:focus-visible{
-  outline: 2px solid var(--docs-viewer-focus-ring);
-  outline-offset: 2px;
-}
-
-.docsViewer__bookmarkLabel{
-  display: block;
-  max-width: 100%;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.docsViewer__bookmarkInput{
-  width: min(100%, 11rem);
-  min-width: 4rem;
-  border: 0;
-  padding: 0;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  font-size: var(--docs-viewer-font-small);
-  line-height: var(--docs-viewer-line-snug);
-}
-
-.docsViewer__bookmarkInput:focus{
-  outline: none;
-}
-
-.docsViewer__bookmarkRemove{
-  flex: 0 0 auto;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 1rem;
-  padding: 0 0.12rem;
-  line-height: 1;
-  cursor: pointer;
 }
 
 .docsViewer .docsViewer__content{

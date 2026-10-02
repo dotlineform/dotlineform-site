@@ -224,7 +224,6 @@ export function initDocsViewerRouteWorkflow(context) {
       hash: options && options.hash ? options.hash : "",
       historyMode: options && options.historyMode ? options.historyMode : "push",
       reportParams: options && options.reportParams ? options.reportParams : currentReportRouteParams(docId),
-      renderBookmarkUi: context.renderBookmarkUi,
       renderLoadingState: context.renderDocLoadingState,
       renderPayload: function (doc, payload, hash) {
         displayedHash = hash;
@@ -272,7 +271,6 @@ export function initDocsViewerRouteWorkflow(context) {
     state.allDocs = Array.isArray(payload.docs) ? payload.docs.slice() : [];
     context.applyDocVisibility();
     context.renderSidebar();
-    context.renderBookmarkUi();
   }
 
   function initializeIndex(payload) {

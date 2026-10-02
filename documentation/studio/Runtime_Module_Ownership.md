@@ -32,7 +32,7 @@ Shared browser code lives under `docs-viewer/runtime/js/shared/`.
 | data and services | `docs-viewer-configured-scope-provider.js`, `docs-viewer-generated-data-runtime.js`, `docs-viewer-service-context.js` | collection reads and independent config/generated/source/management service surfaces |
 | document state | `docs-viewer-document-index-state.js`, `docs-viewer-document-controller.js` | visibility/loadability, selection, payload states, and rendered-document transitions |
 | views and panels | `docs-viewer-document-view-coordinator.js`, `docs-viewer-main-view-host.js`, `docs-viewer-info-panel-host.js`, `docs-viewer-view-registry.js` | hosted-view lifecycle, active mode/control projection, and panel composition |
-| navigation and discovery | `docs-viewer-sidebar.js`, `docs-viewer-tree.js`, `docs-viewer-search-controller.js`, `docs-viewer-bookmarks.js` | tree navigation, search/recent state, and bookmark workflows |
+| navigation and discovery | `docs-viewer-sidebar.js`, `docs-viewer-tree.js`, `docs-viewer-search-controller.js` | tree navigation and search/recent state |
 
 Search the shared directory for the exact current helper set. The table should change only when responsibility moves between areas.
 

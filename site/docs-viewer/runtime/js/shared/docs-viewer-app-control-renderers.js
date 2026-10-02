@@ -54,23 +54,6 @@ function renderSearchInput(context) {
   return { root: wrap, interactive: input };
 }
 
-function renderBookmarkToggle(context) {
-  var control = context.control;
-  var button = context.existingRoot;
-  if (!button || button.tagName !== "BUTTON") {
-    button = context.document.createElement("button");
-    button.className = "docsViewer__toolbarIconButton";
-    button.id = "docsViewerBookmarkToggle";
-    button.type = "button";
-    button.setAttribute("aria-pressed", "false");
-  }
-  var active = Boolean(control.state && control.state.pressed);
-  button.classList.toggle("is-active", active);
-  button.replaceChildren(createDocsViewerToolbarIcon(context.document,
-    active ? "docsViewer__icon--bookmark-filled" : "docsViewer__icon--bookmark"));
-  return button;
-}
-
 function renderContentDetailBack(context) {
   var button = context.existingRoot;
   if (!button || button.tagName !== "BUTTON") {
@@ -112,7 +95,6 @@ export function createDocsViewerSharedControlRenderers() {
   return {
     "recent-button": renderRecentButton,
     "search-input": renderSearchInput,
-    "bookmark-toggle": renderBookmarkToggle,
     "content-detail-back": renderContentDetailBack,
     "content-detail-label": renderContentDetailLabel,
     "content-detail-open-new-tab": renderContentDetailOpenNewTab

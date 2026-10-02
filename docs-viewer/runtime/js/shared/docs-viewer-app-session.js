@@ -43,7 +43,6 @@ function stateDomain(name, authority, state, fieldNames) {
 function createStateDefaults(settings) {
   var options = settings || {};
   var panelLayout = options.panelLayout || null;
-  var windowRef = options.window || {};
 
   return {
     allDocs: [],
@@ -77,11 +76,6 @@ function createStateDefaults(settings) {
     viewerConfigRequestPromise: null,
     uiStatuses: [],
     uiStatusByValue: new Map(),
-    bookmarks: [],
-    bookmarksLoaded: false,
-    bookmarkSupport: Boolean(windowRef.indexedDB),
-    editingBookmarkKey: "",
-    pendingBookmarkFocusKey: "",
     managementContext: false,
     managementChecked: false,
     managementAvailable: false,
@@ -178,13 +172,6 @@ function createStateDomains(state, settings) {
       "searchVisibleCount",
       "searchDebounceId",
       "recentLimit"
-    ]),
-    bookmarks: stateDomain("bookmarks", "browser storage", state, [
-      "bookmarks",
-      "bookmarksLoaded",
-      "bookmarkSupport",
-      "editingBookmarkKey",
-      "pendingBookmarkFocusKey"
     ]),
     panelView: stateDomain("panelView", "browser-only UI state", state, [
       "viewState"

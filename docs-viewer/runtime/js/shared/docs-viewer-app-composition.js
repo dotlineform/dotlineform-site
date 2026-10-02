@@ -79,9 +79,6 @@ export var DOCS_VIEWER_RUNTIME_DEFAULTS = {
   searchBatchSize: 50,
   searchDebounceMs: 140,
   defaultRecentLimit: 20,
-  bookmarkDbName: "dotlineform-docs-viewer",
-  bookmarkDbVersion: 4,
-  bookmarkStoreName: "favorites",
   managementCapabilityRetryAttempts: 60,
   managementCapabilityRetryDelayMs: 500,
   reloadRetryAttempts: 12,
@@ -101,11 +98,6 @@ var STARTUP_PHASES = [
   {
     id: "load-viewer-settings-ui-text",
     authority: "browser-safe config asset"
-  },
-  {
-    id: "initialize-bookmarks",
-    authority: "browser storage",
-    feature: "bookmarks"
   },
   {
     id: "initialize-management",
@@ -177,13 +169,6 @@ function startupAuthorityRecords(routeContext, serviceContext) {
       authority: serviceContext.config.authority
     });
   }
-  if (docsViewerRouteFeatureEnabled(featurePolicy, "bookmarks")) {
-    output.push({
-      phase: "bookmark initialization",
-      authority: "browser storage"
-    });
-  }
-
   if (docsViewerRouteFeatureEnabled(featurePolicy, "management") && routeAccess.managementUi && serviceContext.management) {
     output.push({
       phase: "management initialization",
@@ -274,8 +259,7 @@ export function createDocsViewerAppComposition(options) {
     defaultRecentLimit: constants.defaultRecentLimit,
     panelLayout: panelLayout,
     routeContext: routeContext,
-    searchBatchSize: constants.searchBatchSize,
-    window: window
+    searchBatchSize: constants.searchBatchSize
   });
   var state = appSession.state;
   viewRegistry.setProjectionInputs(function () {
@@ -356,7 +340,7 @@ export function createDocsViewerAppComposition(options) {
  * Run feature-gated startup phases in their shared browser order.
  *
  * Events and busy state start before workspace and viewer-settings
- * reads. Bookmark/management setup precedes the initial index read; an
+ * reads. Management setup precedes the initial index read; an
  * import-on-load request runs last. Rejected phase work is rendered as a
  * startup failure and absorbed, and busy cleanup runs when the chain settles.
  * A supplied `startBusy` callback must return its cleanup function.
@@ -393,10 +377,6 @@ export function startDocsViewerStartupPhases(options) {
       return callPhase("loadViewerSettings");
     })
     .then(function () {
-      if (
-        docsViewerRouteFeatureEnabled(featurePolicy, "bookmarks")
-        && typeof settings.initializeBookmarks === "function"
-      ) settings.initializeBookmarks();
       var shouldInitializeManagement = typeof composition.shouldInitializeManagement === "function"
         ? composition.shouldInitializeManagement()
         : true;

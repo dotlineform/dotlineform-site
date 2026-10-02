@@ -22,7 +22,7 @@ Ordinary document linking is useful across editable scopes. Catalogue-specific a
 
 ## Existing Model And Gap
 
-Route configuration already enables broad features such as `source-editing` and supports individual registered control IDs through `view_policy.hidden_controls`. Docs Review uses this to hide Bookmark. The shared control registry validates those IDs and combines route policy with feature, capability, view and mode availability.
+Route configuration already enables broad features such as `source-editing` and supports individual registered control IDs through `view_policy.hidden_controls`. The shared control registry validates those IDs and combines route policy with feature, capability, view and mode availability.
 
 All editable scopes share the Manage route, so its policy cannot currently give Studio and Analysis different authoring controls. Scope configuration and its browser projection carry no equivalent control policy. Existing sub-scope customisation capabilities cover particular operations, including Subject assignment, rather than a general authoring-control selection.
 

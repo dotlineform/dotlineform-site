@@ -37,7 +37,7 @@ Surface: `app-viewer`, mounted by `docs-viewer-viewer-toolbar-renderer.js` and r
 
 Use the main-view toolbar for controls belonging to the active central view, its content, or its current display mode.
 
-For `rendered-document`, this includes its breadcrumb, info/bookmark controls and manage-only **Edit document** action. Edit opens Source with the metadata panel for the exact ordinary document, collection-list host or validated collection detail. A detail has no parent Source action, and separate Source/Subdoc Source controls are removed. Open in VS Code remains separate. Mode-specific controls such as Source Save and Return remain here because the document view owns the mode. For `content-detail`, the same surface supplies the public-safe **Back to document** control and presentation label; later Manage-only table tools may contribute beside them without creating another toolbar.
+For `rendered-document`, this includes its breadcrumb, info control and manage-only **Edit document** action. Edit opens Source with the metadata panel for the exact ordinary document, collection-list host or validated collection detail. A detail has no parent Source action, and separate Source/Subdoc Source controls are removed. Open in VS Code remains separate. Mode-specific controls such as Source Save and Return remain here because the document view owns the mode. For `content-detail`, the same surface supplies the public-safe **Back to document** control and presentation label; later Manage-only table tools may contribute beside them without creating another toolbar.
 
 The shared renderer creates one stable `main-view` mount. Shared and manage entrypoints contribute eligible controls to the same host in definition order.
 

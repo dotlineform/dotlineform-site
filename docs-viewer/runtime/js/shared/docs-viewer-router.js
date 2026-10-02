@@ -212,9 +212,6 @@ export function loadViewerDoc(options) {
     return Promise.resolve(null);
   }
 
-  if (typeof settings.renderBookmarkUi === "function") {
-    settings.renderBookmarkUi();
-  }
   if (typeof settings.setHistory === "function") {
     settings.setHistory(docId, hash, state.searchQuery, mode, settings.reportParams || {});
   }

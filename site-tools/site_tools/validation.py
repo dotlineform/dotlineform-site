@@ -14,7 +14,6 @@ DOCS_VIEWER_ROUTE_FEATURE_IDS = {
     "workspace-configuration",
     "search",
     "recent",
-    "bookmarks",
     "reports",
     "source-editing",
     "management",

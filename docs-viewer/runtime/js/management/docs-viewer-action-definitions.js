@@ -1,5 +1,4 @@
 export const DOCS_VIEWER_ACTION_IDS = Object.freeze({
-  BOOKMARK: "bookmark",
   COPY_LINK: "copy-link",
   DELETE: "delete",
   EDIT_DOCUMENT: "edit-document",
@@ -40,7 +39,6 @@ var TARGETS = DOCS_VIEWER_ACTION_TARGETS;
 var IDS = DOCS_VIEWER_ACTION_IDS;
 
 export const DOCS_VIEWER_ACTION_DEFINITIONS = Object.freeze({
-  [IDS.BOOKMARK]: actionDefinition(IDS.BOOKMARK, TARGETS.ACTIVE_DOCUMENT),
   [IDS.COPY_LINK]: actionDefinition(IDS.COPY_LINK, TARGETS.DOCUMENT),
   [IDS.DELETE]: actionDefinition(IDS.DELETE, TARGETS.DOCUMENT_SUBTREE),
   [IDS.EDIT_DOCUMENT]: actionDefinition(IDS.EDIT_DOCUMENT, TARGETS.ACTIVE_DOCUMENT),

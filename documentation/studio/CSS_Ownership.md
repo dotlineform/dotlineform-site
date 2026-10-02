@@ -14,7 +14,7 @@ Docs Viewer is portable but intentionally inherits the prose language of its hos
 ## Owners
 
 - **host CSS** owns site chrome, layout, baseline typography, theme tokens, and generic `.content` prose/media rules.
-- **portable Docs Viewer CSS** at `docs-viewer/static/css/docs-viewer.css`, projected to `site/docs-viewer/static/css/docs-viewer.css`, owns the reader shell, navigation, panels, search, bookmarks, status, and shared viewer controls.
+- **portable Docs Viewer CSS** at `docs-viewer/static/css/docs-viewer.css`, projected to `site/docs-viewer/static/css/docs-viewer.css`, owns the reader shell, navigation, panels, search, status, and shared viewer controls.
 - **scope CSS**, when installed by an owning route, owns presentation meaningful to one content scope. No current public scope installs a scope-specific stylesheet.
 - **manage feature CSS** under `docs-viewer/static/css/` owns the manage shell, source editor, import, and other local-only surfaces.
 

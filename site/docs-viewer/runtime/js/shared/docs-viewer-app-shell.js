@@ -235,8 +235,7 @@ export function getDocsViewerAppShellRefs(options) {
     mainView: getDocsViewerAppShellMainViewRefs({ root: root, document: documentRef }),
     infoPanel: getDocsViewerAppShellInfoPanelRefs({ root: root, document: documentRef }),
     managementShell: getDocsViewerAppShellManagementShellRefs({ root: root, document: documentRef }),
-    status: documentRef.getElementById("docsViewerStatus"),
-    bookmarkRow: documentRef.getElementById("docsViewerBookmarkRow")
+    status: documentRef.getElementById("docsViewerStatus")
   };
 }
 

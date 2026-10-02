@@ -299,7 +299,6 @@ export function initDocsViewerDocumentController(context) {
       toolbarHidden: true,
       contentHidden: true
     });
-    context.renderBookmarkToggle();
   }
 
   function showDocPane() {
@@ -344,7 +343,6 @@ export function initDocsViewerDocumentController(context) {
     selectedDocument.selectedDocId = doc.doc_id;
     selectedDocument.displayedDocId = doc.doc_id;
     selectedDocument.displayedPayload = payload;
-    context.renderBookmarkUi();
     context.renderManagementUi();
 
     showDocPane();

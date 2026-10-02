@@ -2,7 +2,6 @@ export const DOCS_VIEWER_ROUTE_FEATURE_IDS = [
   "workspace-configuration",
   "search",
   "recent",
-  "bookmarks",
   "reports",
   "source-editing",
   "management"
@@ -12,7 +11,6 @@ var FEATURE_KEYS = {
   "workspace-configuration": "workspaceConfiguration",
   "search": "search",
   "recent": "recent",
-  "bookmarks": "bookmarks",
   "reports": "reports",
   "source-editing": "sourceEditing",
   "management": "management"
