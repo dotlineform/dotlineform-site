@@ -3,11 +3,13 @@ draft: false
 doc_id: d-20260728-205013-41deb8
 title: Sub-Scope Public And Manage Manifests
 added_date: "2026-07-28 20:50:13"
-last_updated: "2026-09-07 15:57:21"
-summary: Define public and Manage sub-scope manifests and the document-owned Concepts customisation.
+last_updated: "2026-10-03 00:44:36"
+summary: Historical public and Manage manifest design and Concepts customisation; current manifest ownership lives in Generated Data Contracts.
 parent_id: d-20260801-084127-752d7e
 ---
 # Sub-Scope Public And Manage Manifests
+
+Historical design: the dual-manifest generation, scope paths and publication workflows below have been retired. [Generated Data Contracts](Generated_Data_Contracts.md#collection-manifest-ownership) owns the current lifecycle: Working builds only the management manifest, and temporary publication builds only the public manifest. This document remains available as context for the earlier copy-based model.
 
 ## Purpose
 

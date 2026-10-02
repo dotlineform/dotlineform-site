@@ -644,7 +644,7 @@ def collection_delete_generated_outputs(
         {
             "kind": "collection_manifest",
             "action": "rebuild",
-            "path": relative_path(repo_root, output_root / "manifest.json"),
+            "path": relative_path(repo_root, output_root / "manage-manifest.json"),
         },
         {
             "kind": "collection_document",

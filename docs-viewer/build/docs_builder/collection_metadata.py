@@ -1,4 +1,4 @@
-"""Merge selected document metadata into a collection's saved manifests."""
+"""Merge selected document metadata into the current collection manifest."""
 
 from __future__ import annotations
 

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260605-125108-c68916
 title: Generated Data Contracts
 added_date: "2026-06-05 12:51:08"
-last_updated: "2026-09-30 13:33:18"
+last_updated: "2026-10-03 00:44:36"
 summary: Public and manage Docs Viewer payload schemas, registered publication roots, read authority, publishing, and builder ownership contracts.
 parent_id: d-20260331-000000-c313fd
 ---
@@ -43,6 +43,16 @@ Working builders and management follow-through write local generated output. One
 
 Scope-independent generated data has a separate owner. The semantic-token target lookup is reproducible application data at `docs-viewer/data/generated/semantic-tokens/target-lookup.json`, registered to the manage-only browser URL `/docs-viewer/data/generated/semantic-tokens/target-lookup.json`. It combines catalogue inputs into a focused target projection, so it is neither one scope's publication nor a public projection. `data/generated/` is not a fallback location for scope payloads.
 
+## Collection Manifest Ownership
+
+The [collection builder](../../docs-viewer/build/docs_builder/collection.py) produces one list manifest for the operation's existing build role. Working full and targeted collection builds generate only `manage-manifest.json`, including requested draft documents and the existing management metadata. Working does not generate, read or require a public `manifest.json`. The local generated collection route serves the management manifest and exact by-ID documents; public-manifest reads through that route are retired without a fallback.
+
+The watcher passes changed/deleted document identities to the builder. Targeted Working builds read only the saved management manifest, validate its required metadata, merge selected rows, and use its membership and titles as rendering context. Unselected rows and document payloads remain intact. The manifest is written only when its projected contents change. Missing/invalid required management metadata fails with a complete collection Build instruction; no public-manifest agreement check or full-source fallback remains.
+
+Publish selects eligible source inputs and invokes the same builder in its temporary Preview workspace. Those collection builds generate only the existing public `manifest.json` projection. They do not construct private authoring-subject metadata or a management manifest. The completed snapshot and distribution retain the existing public filename, fields and validation, and the snapshot boundary continues excluding management artifacts. Publish has no dependency on Working's public-manifest output.
+
+Identity, date and field meanings remain unchanged. Collection diagnostics report the selected `manifest_filename` and one `manifest_changed` count; the former separate management-manifest count is retired.
+
 ## Route Payload Contract
 
 | Capability | Public route source | Manage route source | Notes |
@@ -58,7 +68,7 @@ Scope-independent generated data has a separate owner. The semantic-token target
 
 All collection reader and management manifests, Search result metadata, Recents and Selected Documents use populated update dates in canonical `YYYY-MM-DD` form. The ordinary builder's in-memory flat rows use the same projection; no flat index file is written. List inventories omit `added_date`; source Markdown and by-ID document payloads retain their original `added_date` and `last_updated` precision for exact document metadata and source/output consistency checks. Collection reader manifests include `last_updated` even when they previously exposed only identity, title and subject. Ordinary navigation trees retain their authored order and carry no update dates.
 
-Recency sorting uses the projected update date; entries updated on the same day use the owning report's deterministic title/identity ties. List dates derive from existing source timestamps or dates. Undated documents retain an empty update value, sort after dated report entries and are excluded from Recents; creation dates are never substituted. Catalogue, Works and Selected Documents continue to require populated update dates. Malformed populated source or projected dates fail at their owning operation. Targeted collection builds require current reader and management manifest shapes and direct users to a complete collection Build when migration is needed. Search compares source and by-ID update values at their original precision and their date projection with collection management metadata.
+Recency sorting uses the projected update date; entries updated on the same day use the owning report's deterministic title/identity ties. List dates derive from existing source timestamps or dates. Undated documents retain an empty update value, sort after dated report entries and are excluded from Recents; creation dates are never substituted. Catalogue, Works and Selected Documents continue to require populated update dates. Malformed populated source or projected dates fail at their owning operation. Targeted collection builds require the current shape of their operation's saved manifest, using only management metadata in Working, and direct users to a complete collection Build when migration is needed. Search compares source and by-ID update values at their original precision and their date projection with collection management metadata.
 
 ## `index-tree.json` Contract
 
