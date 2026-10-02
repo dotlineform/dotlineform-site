@@ -14,6 +14,7 @@ if str(DOCS_BUILD_DIR) not in sys.path:
 
 from build_docs import DocsDataBuilder, DocRecord  # noqa: E402
 from docs_builder.collection import CollectionDocsBuilder  # noqa: E402
+from docs_builder.related_links import prepare_related_links  # noqa: E402
 from docs_management_document_target import resolve_managed_document_collection  # noqa: E402
 from docs_workspace_config import (  # noqa: E402
     DocsStageConfig,
@@ -84,6 +85,7 @@ def load_document_package_source_context(
         builder = DocsDataBuilder(repo_root=root, config=config)
     source_docs = builder.load_docs()
     builder.validate_docs(source_docs)
+    prepare_related_links(builder, source_docs, {})
 
     source_docs_by_id = {doc.doc_id: doc for doc in source_docs}
     records: list[DocumentPackageSourceRecord] = []

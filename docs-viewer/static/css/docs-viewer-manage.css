@@ -151,17 +151,6 @@
   mask-image: url("../icons/wrench.svg");
 }
 
-.docsViewer__indexActionsHost{
-  position: relative;
-  display: inline-flex;
-}
-
-.docsViewer__indexActionsMenu{
-  right: 0;
-  left: auto;
-}
-
-
 .docsViewer__draftIndicator{
   display: inline-block;
   margin-right: 0.35rem;
@@ -441,6 +430,8 @@
   position: fixed;
   z-index: 30;
   min-width: 11rem;
+  max-height: calc(100vh - 16px);
+  overflow-y: auto;
   padding: 0.3rem;
   border: 1px solid var(--docs-viewer-border);
   border-radius: 0.85rem;
@@ -450,6 +441,13 @@
 
 .docsViewer__contextMenu[hidden]{
   display: none;
+}
+
+.docsViewer__navRow.is-context-target{
+  border-radius: 0.6rem;
+  outline: 2px solid var(--docs-viewer-focus-ring);
+  outline-offset: -2px;
+  background: var(--docs-viewer-panel-2);
 }
 
 .docsViewer__contextDivider{
@@ -473,7 +471,12 @@
   cursor: pointer;
 }
 
-.docsViewer__contextAction:hover{
+.docsViewer__contextAction:disabled{
+  opacity: 0.5;
+  cursor: default;
+}
+
+.docsViewer__contextAction:not(:disabled):hover{
   background: var(--docs-viewer-panel-2);
 }
 

@@ -24,7 +24,7 @@ export function docsViewerPreparePackageActionControlState(options = {}) {
     else if (!resolution || !resolution.enabled) {
       disabledReason = resolution && resolution.disabledReason
         ? resolution.disabledReason
-        : "No displayed Index document.";
+        : "No Index target document.";
     }
   }
   return {
@@ -46,7 +46,7 @@ export function docsViewerStaticHtmlExportActionControlState(options = {}) {
     else if (!resolution || !resolution.enabled) {
       disabledReason = resolution && resolution.disabledReason
         ? resolution.disabledReason
-        : "No displayed Index document.";
+        : "No Index target document.";
     }
   }
   return {
@@ -58,9 +58,7 @@ export function docsViewerStaticHtmlExportActionControlState(options = {}) {
 export function createDocsViewerManagementIndexController(options = {}) {
   var root = options.root || null;
   var management = options.management || {};
-  var routeSession = options.routeSession || {};
   var callbacks = options.callbacks || {};
-  var documentRef = options.document || document;
   var openSnapshotExportWorkflow = options.openSnapshotExportWorkflow || openStaticHtmlSnapshotExportWorkflow;
   var preparePackageWorkflowRequest = null;
   var snapshotExportWorkflowActive = false;
@@ -71,18 +69,10 @@ export function createDocsViewerManagementIndexController(options = {}) {
       : "index-tree";
   }
 
-  function resolveAction(actionId) {
+  function resolveAction(actionId, targetDocId) {
     return typeof callbacks.resolveAction === "function"
-      ? callbacks.resolveAction(actionId)
+      ? callbacks.resolveAction(actionId, targetDocId)
       : null;
-  }
-
-  function indexActionsButton() {
-    return documentRef.getElementById("docsViewerIndexActionsButton");
-  }
-
-  function indexActionsMenu() {
-    return documentRef.getElementById("docsViewerIndexActionsMenu");
   }
 
   function managementClientOptions() {
@@ -105,41 +95,32 @@ export function createDocsViewerManagementIndexController(options = {}) {
     }
   }
 
-  function hideIndexActionsMenu(options) {
-    if (typeof callbacks.hideIndexActionsMenu === "function") {
-      callbacks.hideIndexActionsMenu(options);
-    }
-  }
-
-  function toggleIndexActionsMenu() {
-    if (typeof callbacks.toggleIndexActionsMenu === "function") {
-      callbacks.toggleIndexActionsMenu();
-    }
-  }
-
-  function preparePackageActionControlState() {
+  function preparePackageActionControlState(targetDocId) {
     return docsViewerPreparePackageActionControlState({
       capabilities: management.managementCapabilities,
       managementAvailable: management.managementAvailable,
       managementBusy: management.managementBusy,
       managementChecked: management.managementChecked,
-      resolution: resolveAction(DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE)
+      resolution: resolveAction(DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE, targetDocId)
     });
   }
 
-  function deleteActionControlState() {
-    var resolution = resolveAction(DOCS_VIEWER_ACTION_IDS.DELETE);
+  function mutationActionControlState(actionId, targetDocId) {
+    var resolution = resolveAction(actionId, targetDocId);
+    var label = actionId === DOCS_VIEWER_ACTION_IDS.DELETE ? "Delete" : "Position";
     var disabledReason = "";
     if (!management.managementChecked) {
-      disabledReason = "Checking Delete availability.";
+      disabledReason = "Checking " + label + " availability.";
     } else if (!management.managementAvailable) {
-      disabledReason = "Delete is unavailable.";
+      disabledReason = label + " is unavailable.";
     } else if (management.managementBusy) {
       disabledReason = "Docs management is busy.";
     } else if (activeIndexViewId() !== "index-tree") {
-      disabledReason = "Return to the Index tree to delete documents.";
+      disabledReason = "Return to the Index tree.";
+    } else if (callbacks.sourceEditingActive()) {
+      disabledReason = "Finish source editing before changing the Index.";
     } else if (!resolution || !resolution.enabled) {
-      disabledReason = resolution ? resolution.disabledReason : "No displayed Index document.";
+      disabledReason = resolution ? resolution.disabledReason : "No Index target document.";
     }
     return {
       hidden: Boolean(resolution && resolution.hidden),
@@ -148,36 +129,32 @@ export function createDocsViewerManagementIndexController(options = {}) {
     };
   }
 
-  function snapshotExportActionControlState() {
+  function snapshotExportActionControlState(targetDocId) {
     return docsViewerStaticHtmlExportActionControlState({
       capabilities: management.managementCapabilities,
       managementBusy: management.managementBusy,
       managementChecked: management.managementChecked,
-      resolution: resolveAction(DOCS_VIEWER_ACTION_IDS.EXPORT_DOCS),
+      resolution: resolveAction(DOCS_VIEWER_ACTION_IDS.EXPORT_DOCS, targetDocId),
       workflowActive: snapshotExportWorkflowActive
     });
   }
 
-  function projectActions() {
-    if (typeof callbacks.projectIndexViewControlState !== "function") return null;
-    var visible = Boolean(routeSession.managementContext);
-    var treeActive = activeIndexViewId() === "index-tree";
-    var state = {
-      hidden: !visible,
-      disabled: !treeActive || management.managementBusy,
-      items: {
-        [DOCS_VIEWER_ACTION_IDS.EXPORT_DOCS]: snapshotExportActionControlState(),
-        [DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE]: preparePackageActionControlState(),
-        [DOCS_VIEWER_ACTION_IDS.DELETE]: deleteActionControlState()
-      }
+  function actionControlState(actionId, targetDocId) {
+    if (actionId === DOCS_VIEWER_ACTION_IDS.EXPORT_DOCS) return snapshotExportActionControlState(targetDocId);
+    if (actionId === DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE) return preparePackageActionControlState(targetDocId);
+    if (actionId === DOCS_VIEWER_ACTION_IDS.DELETE || actionId === DOCS_VIEWER_ACTION_IDS.POSITION) {
+      return mutationActionControlState(actionId, targetDocId);
+    }
+    return null;
+  }
+
+  function actionStates(targetDocId) {
+    return {
+      [DOCS_VIEWER_ACTION_IDS.EXPORT_DOCS]: snapshotExportActionControlState(targetDocId),
+      [DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE]: preparePackageActionControlState(targetDocId),
+      [DOCS_VIEWER_ACTION_IDS.DELETE]: mutationActionControlState(DOCS_VIEWER_ACTION_IDS.DELETE, targetDocId),
+      [DOCS_VIEWER_ACTION_IDS.POSITION]: mutationActionControlState(DOCS_VIEWER_ACTION_IDS.POSITION, targetDocId)
     };
-    callbacks.projectIndexViewControlState("index-actions", state);
-    callbacks.projectIndexViewControlState("index-position", {
-      hidden: !visible,
-      disabled: !treeActive || !management.managementAvailable || management.managementBusy || !callbacks.canPositionDoc()
-    });
-    if (!visible || !treeActive) hideIndexActionsMenu();
-    return state;
   }
 
   function loadPreparePackageWorkflow() {
@@ -196,21 +173,18 @@ export function createDocsViewerManagementIndexController(options = {}) {
     return preparePackageWorkflowRequest;
   }
 
-  function handlePreparePackage() {
-    var resolution = resolveAction(DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE);
-    if (!resolution || !resolution.enabled || preparePackageActionControlState().disabled) {
-      return Promise.resolve(null);
-    }
+  function handlePreparePackage(resolution, targetDocument, restoreFocus) {
     var docIds = resolution.targetDocIds.slice(0, 1);
-    var restoreFocus = indexActionsButton();
+    setManagementBusy(true);
+    renderManagementUi();
     return loadPreparePackageWorkflow()
       .then(function (module) {
         return module.openDocumentPackagePrepareWorkflow({
           root: root,
           docIds: docIds,
+          targetDocument: targetDocument,
           restoreFocus: restoreFocus,
           callbacks: {
-            hideManageActionsMenu: hideIndexActionsMenu,
             setBusy: function (busy) {
               setManagementBusy(busy);
               renderManagementUi();
@@ -229,24 +203,15 @@ export function createDocsViewerManagementIndexController(options = {}) {
       });
   }
 
-  function handleSnapshotExport() {
-    var resolution = resolveAction(DOCS_VIEWER_ACTION_IDS.EXPORT_DOCS);
-    var controlState = snapshotExportActionControlState();
-    if (
-      !resolution
-      || !resolution.enabled
-      || controlState.disabled
-      || snapshotExportWorkflowActive
-    ) {
-      return Promise.resolve(null);
-    }
+  function handleSnapshotExport(resolution, targetDocument, restoreFocus) {
     var docIds = resolution.targetDocIds.slice();
     snapshotExportWorkflowActive = true;
     renderManagementUi();
     return openSnapshotExportWorkflow({
       root: root,
-      restoreFocus: indexActionsButton(),
+      restoreFocus: restoreFocus,
       docIds: docIds,
+      targetDocument: targetDocument,
       clientOptions: managementClientOptions(),
       callbacks: {
         setBusy: setManagementBusy,
@@ -272,37 +237,22 @@ export function createDocsViewerManagementIndexController(options = {}) {
     });
   }
 
-  function handleControl(detail) {
-    var controlId = String(detail && detail.controlId || "").trim();
-    var actionId = String(detail && detail.actionId || "").trim();
-    if (controlId === "index-position" && String(detail && detail.eventType || "") === "click") {
-      if (activeIndexViewId() !== "index-tree") return false;
-      if (!management.managementAvailable || management.managementBusy || !callbacks.canPositionDoc()) return false;
-      hideIndexActionsMenu();
-      callbacks.handlePositionDoc();
-      return true;
-    }
-    if (controlId !== "index-actions" || String(detail && detail.eventType || "") !== "click") {
-      return false;
-    }
+  function handleAction(actionId, targetDocId, restoreFocus) {
     if (activeIndexViewId() !== "index-tree") return false;
     if (management.managementBusy) return false;
-    if (!actionId) {
-      projectActions();
-      toggleIndexActionsMenu();
-      return true;
-    }
-    var controlState = projectActions();
-    var itemState = controlState && controlState.items[actionId];
+    var itemState = actionControlState(actionId, targetDocId);
     if (!itemState || itemState.disabled) return false;
-    hideIndexActionsMenu({ focusButton: true });
+    var resolution = resolveAction(actionId, targetDocId);
+    var targetDocument = callbacks.indexDocument(targetDocId);
+    if (!targetDocument || !resolution || !resolution.enabled) return false;
     if (actionId === DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE) {
-      handlePreparePackage();
+      handlePreparePackage(resolution, targetDocument, restoreFocus);
     } else if (actionId === DOCS_VIEWER_ACTION_IDS.EXPORT_DOCS) {
-      handleSnapshotExport();
-
+      handleSnapshotExport(resolution, targetDocument, restoreFocus);
     } else if (actionId === DOCS_VIEWER_ACTION_IDS.DELETE) {
-      if (typeof callbacks.handleDeleteDoc === "function") callbacks.handleDeleteDoc();
+      callbacks.handleDeleteDoc(targetDocId, restoreFocus);
+    } else if (actionId === DOCS_VIEWER_ACTION_IDS.POSITION) {
+      callbacks.handlePositionDoc(targetDocId, restoreFocus);
     } else {
       return false;
     }
@@ -310,10 +260,7 @@ export function createDocsViewerManagementIndexController(options = {}) {
   }
 
   return {
-    actionsButton: indexActionsButton,
-    actionsMenu: indexActionsMenu,
-    handleControl: handleControl,
-    handleViewChange: projectActions,
-    render: projectActions
+    actionStates: actionStates,
+    handleAction: handleAction
   };
 }

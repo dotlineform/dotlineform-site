@@ -161,7 +161,12 @@ export function staticHtmlSnapshotConfirmationOptions(preview, options = {}) {
     root: options.root,
     restoreFocus: options.restoreFocus,
     title: staticHtmlSnapshotConfirmationTitle(preview),
-    body: buildStaticHtmlSnapshotConfirmationBody(preview),
+    body: [
+      ...(options.targetDocument ? [
+        "Document: " + options.targetDocument.title + " (" + options.targetDocument.doc_id + "). Includes this document and all its descendants."
+      ] : []),
+      ...buildStaticHtmlSnapshotConfirmationBody(preview)
+    ],
     primaryLabel: replacing ? "Replace" : canApply ? "Create snapshot" : "Unavailable",
     primaryDisabled: !canApply,
     primaryTone: replacing ? "danger" : "",

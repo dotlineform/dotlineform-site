@@ -18,6 +18,7 @@ export const DOCS_VIEWER_ACTION_IDS = Object.freeze({
   NEW_SIBLING: "new-sibling",
   OPEN: "open",
   OPEN_VSCODE: "open-vscode",
+  POSITION: "position",
   PREPARE_DOCUMENT_PACKAGE: "prepare-document-package",
   PUBLISH: "publish",
   REBUILD_DOCS: "rebuild-docs",
@@ -58,6 +59,7 @@ export const DOCS_VIEWER_ACTION_DEFINITIONS = Object.freeze({
   [IDS.NEW_SIBLING]: actionDefinition(IDS.NEW_SIBLING, TARGETS.DOCUMENT),
   [IDS.OPEN]: actionDefinition(IDS.OPEN, TARGETS.DOCUMENT),
   [IDS.OPEN_VSCODE]: actionDefinition(IDS.OPEN_VSCODE, TARGETS.DOCUMENT),
+  [IDS.POSITION]: actionDefinition(IDS.POSITION, TARGETS.DOCUMENT),
   [IDS.PREPARE_DOCUMENT_PACKAGE]: actionDefinition(IDS.PREPARE_DOCUMENT_PACKAGE, TARGETS.DOCUMENT_SUBTREE),
   [IDS.PUBLISH]: actionDefinition(IDS.PUBLISH, TARGETS.WORKSPACE),
   [IDS.REBUILD_DOCS]: actionDefinition(IDS.REBUILD_DOCS, TARGETS.WORKSPACE),
@@ -117,8 +119,8 @@ export function resolveDocsViewerAction(actionId, context = {}) {
     if (documentId) targetDocIds = [documentId];
     else disabledReason = "No document.";
   } else if (definition.target === TARGETS.DOCUMENT_SUBTREE) {
-    if (!activeDocId || subtreeDocIds.indexOf(activeDocId) === -1) {
-      disabledReason = "No displayed Index document.";
+    if (!invocationDocId || subtreeDocIds.indexOf(invocationDocId) === -1) {
+      disabledReason = "No Index target document.";
     } else targetDocIds = subtreeDocIds;
   }
 

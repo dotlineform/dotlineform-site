@@ -5,7 +5,7 @@ import {
 var ACTION_IDS = DOCS_VIEWER_ACTION_IDS;
 
 var MANAGEMENT_SHELL_MARKUP = [
-  '<div class="docsViewer__contextMenu" id="docsViewerContextMenu" hidden>',
+  '<div class="docsViewer__contextMenu" id="docsViewerContextMenu" role="menu" aria-label="Index actions" hidden>',
   '  <button class="docsViewer__contextAction" type="button" data-docs-viewer-action="' + ACTION_IDS.COPY_LINK + '" aria-label="Copy Link">Copy Link</button>',
   '  <div class="docsViewer__contextDivider" aria-hidden="true"></div>',
   '  <button class="docsViewer__contextAction" type="button" data-docs-viewer-action="' + ACTION_IDS.OPEN + '">Open</button>',
@@ -13,6 +13,12 @@ var MANAGEMENT_SHELL_MARKUP = [
   '  <div class="docsViewer__contextDivider" aria-hidden="true"></div>',
   '  <button class="docsViewer__contextAction" type="button" data-docs-viewer-action="' + ACTION_IDS.NEW_SIBLING + '">New Sibling</button>',
   '  <button class="docsViewer__contextAction" type="button" data-docs-viewer-action="' + ACTION_IDS.NEW_CHILD + '">New Child</button>',
+  '  <button class="docsViewer__contextAction" type="button" data-docs-viewer-action="' + ACTION_IDS.POSITION + '">Position…</button>',
+  '  <div class="docsViewer__contextDivider" aria-hidden="true"></div>',
+  '  <button class="docsViewer__contextAction" type="button" data-docs-viewer-action="' + ACTION_IDS.EXPORT_DOCS + '">Export…</button>',
+  '  <button class="docsViewer__contextAction" type="button" data-docs-viewer-action="' + ACTION_IDS.PREPARE_DOCUMENT_PACKAGE + '">Prepare package…</button>',
+  '  <div class="docsViewer__contextDivider" aria-hidden="true"></div>',
+  '  <button class="docsViewer__contextAction" type="button" data-docs-viewer-action="' + ACTION_IDS.DELETE + '">Delete…</button>',
   '</div>',
   '<div class="docsViewer__modal" id="docsViewerImportModal" hidden>',
   '  <div class="docsViewer__modalBackdrop" data-import-close="true"></div>',

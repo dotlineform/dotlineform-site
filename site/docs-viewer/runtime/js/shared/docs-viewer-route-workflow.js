@@ -360,18 +360,32 @@ export function initDocsViewerRouteWorkflow(context) {
   });
   window.addEventListener("pageshow", startIndexRefresh);
 
-  function loadIndex() {
+  function loadIndex(options = {}) {
     var stopBusy = startBusy();
     return context.collectionProvider.readIndex()
       .then(function (payload) {
         startIndexRefresh();
+        if (options.preserveDocument) {
+          state.payloadCache.clear();
+          replaceIndex(payload);
+          var displayed = context.selectedDocument;
+          if (state.docsById.has(state.selectedDocId)) {
+            if (displayed.displayedPayload && displayed.displayedDocId === state.selectedDocId) {
+              state.payloadCache.set(displayed.displayedDocId, displayed.displayedPayload);
+            }
+            return;
+          }
+          return applyCurrentRoute({ historyMode: "replace", hash: currentHash() });
+        }
         return initializeIndex(payload);
       })
       .catch(function (error) {
         state.reloadExpectedDocId = "";
         setStatus(error.message || "Failed to load docs index tree.", true);
-        context.hideDocPane();
-        if (content) content.textContent = "";
+        if (!options.preserveDocument) {
+          context.hideDocPane();
+          if (content) content.textContent = "";
+        }
         throw error;
       })
       .finally(function () {

@@ -56,8 +56,15 @@ function writeSelectOptions(select, values, selectedValue, labelForValue = forma
   }));
 }
 
-function optionsBodyHtml() {
+function targetDocumentHtml(targetDocument) {
+  if (!targetDocument) return "";
+  return '<p class="docsViewer__modalNote muted small">Document: ' + escapeHtml(targetDocument.title)
+    + ' (' + escapeHtml(targetDocument.doc_id) + '). Includes descendants, subject to the package profile and filters.</p>';
+}
+
+function optionsBodyHtml(targetDocument) {
   return [
+    targetDocumentHtml(targetDocument),
     '<label class="docsViewer__field" for="docsViewerPackageProfile">',
     '  <span class="docsViewer__fieldLabel">Profile</span>',
     '  <select class="docsViewer__fieldInput" id="docsViewerPackageProfile" data-package-profile></select>',
@@ -176,7 +183,7 @@ function openPrepareOptions(options) {
     restoreFocus: options.restoreFocus,
     title: "Prepare package",
     size: "standard",
-    bodyHtml: optionsBodyHtml(),
+    bodyHtml: optionsBodyHtml(options.targetDocument),
     focusSelector: "[data-package-profile]",
     actions: [
       { role: "modal-primary", label: "Prepare package" },
@@ -328,7 +335,7 @@ function showPrepareResult(options) {
     restoreFocus: options.restoreFocus,
     title: payload.ok === false ? "Document package was not prepared" : "Document package prepared",
     size: "compact",
-    bodyHtml: documentPackagePrepareResultHtml(payload),
+    bodyHtml: targetDocumentHtml(options.targetDocument) + documentPackagePrepareResultHtml(payload),
     actions: [{ role: "modal-primary", label: "Close" }]
   });
 }
@@ -376,7 +383,7 @@ export async function openDocumentPackagePrepareWorkflow(options = {}) {
   if (loadError) {
     const payload = resultPayloadForError(loadError);
     setMessage(payload.summary_text, true);
-    await showPrepareResult({ root, restoreFocus: options.restoreFocus, payload });
+    await showPrepareResult({ root, restoreFocus: options.restoreFocus, targetDocument: options.targetDocument, payload });
     return { confirmed: false, error: loadError, payload };
   }
 
@@ -416,6 +423,7 @@ export async function openDocumentPackagePrepareWorkflow(options = {}) {
       restoreFocus: options.restoreFocus,
       collection,
       docIds,
+      targetDocument: options.targetDocument,
       profiles,
       documents,
       flatCollection: Boolean(collection)
@@ -434,12 +442,12 @@ export async function openDocumentPackagePrepareWorkflow(options = {}) {
     } finally {
       setBusy(false);
     }
-    await showPrepareResult({ root, restoreFocus: options.restoreFocus, payload });
+    await showPrepareResult({ root, restoreFocus: options.restoreFocus, targetDocument: options.targetDocument, payload });
     return { confirmed: true, ok: payload.ok !== false, payload, request: result.request };
   } catch (error) {
     const payload = resultPayloadForError(error);
     setMessage(payload.summary_text, true);
-    await showPrepareResult({ root, restoreFocus: options.restoreFocus, payload });
+    await showPrepareResult({ root, restoreFocus: options.restoreFocus, targetDocument: options.targetDocument, payload });
     return { confirmed: false, error, payload };
   }
 }

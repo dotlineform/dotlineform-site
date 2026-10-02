@@ -16,8 +16,10 @@ export function openDocsViewerPositionModal(options) {
 
   return openDocsViewerManagementModal({
     root: options.root,
+    restoreFocus: options.restoreFocus,
     title: "Position " + options.doc.title,
     bodyHtml:
+      '<p class="docsViewer__modalNote muted small">Document: ' + escapeHtml(options.doc.title) + ' (' + escapeHtml(options.doc.doc_id) + '). Moves this document with all its descendants.</p>' +
       '<label class="docsViewer__fieldLabel" for="docsViewerPositionPlacement">Position</label>' +
       '<select class="docsViewer__fieldInput" id="docsViewerPositionPlacement">' +
         '<option value="before">Before</option><option value="after">After</option><option value="inside">Inside (last child)</option>' +

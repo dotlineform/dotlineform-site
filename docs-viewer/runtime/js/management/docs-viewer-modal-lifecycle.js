@@ -176,7 +176,7 @@ export function createDocsViewerModalLifecycle(options = {}) {
       restoreFocusTimer = null;
     }
     restoreFocus = openOptions.restoreFocus ||
-      resolveNode(options.restoreFocus) ||
+      options.restoreFocus ||
       documentRef.activeElement;
     active = true;
     lockScroll();
@@ -205,7 +205,8 @@ export function createDocsViewerModalLifecycle(options = {}) {
     restoreFocusTimer = windowRef.setTimeout(function () {
       restoreFocusTimer = null;
       if (active) return;
-      focusNode(returnTarget, false);
+      // A tree mutation may have replaced the row while the modal was open.
+      focusNode(resolveNode(returnTarget), false);
     }, 0);
     return true;
   }

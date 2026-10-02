@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260331-000000-c313fd
 title: Runtime
 added_date: "2026-03-31 00:00:00"
-last_updated: "2026-10-02 10:19:41"
+last_updated: "2026-10-02 10:40:00"
 summary: Public, manage, and review execution paths; browser/server authority boundaries; extension method; rationale; and known weak spots.
 parent_id: d-20260424-000000-50b63f
 ---
@@ -35,7 +35,9 @@ The shared [focus-mode owner](../../docs-viewer/runtime/js/shared/docs-viewer-fo
 
 [Toolbar Icons](Toolbar_Icons.md) owns the reusable mask helper, independent artwork-size and button-size tokens, button states, artwork classes and extension method. The selected reader, management, source-editor, content-detail and report toolbars, collection list/detail controls, toolbar menus, index header and Info close control use this foundation; the Shared Icons mapping records their artwork and visual-review status.
 
-Manage shows its Actions controls in the top row. Index Actions and Position occupy the second Index row and remain visible but disabled while Search or Recent results are active. Index Export, Prepare package and Delete target the currently displayed ordinary document and all descendants, including collapsed branches; no Index checkboxes or selection commands remain. Index Actions do not target a collection host while its detail document is displayed. Collection Actions shares the top row with the other document and collection actions and retains its own checked-row workflow. The public reader has no management controls.
+Manage shows its Actions controls in the top row. The Index tree context menu owns Copy Link, Open, Open in VS Code, New Sibling, New Child, Position, Export, Prepare package and Delete. Every menu action captures the invoked ordinary tree node independently of the main pane, including a collection host while its detail document is displayed. Export, Prepare package and Delete use that node and its complete subtree, including collapsed descendants; package profiles and filters still determine the effective package set. Position moves the node with its descendants. No second-row Index management controls, checkboxes or selection commands remain. Collection Actions shares the top row with the other document and collection actions and retains its own checked-row workflow. The public reader has no management controls.
+
+Right-click or Shift+F10/the context-menu key opens the menu for its row. A temporary outline identifies the target without changing the displayed-document marker; arrow keys, Home/End, Escape and Tab provide keyboard navigation and dismissal. Existing capability and busy rules govern availability. Position and Delete remain disabled during source editing. The operation modals identify their target by title and ID and describe descendant scope; New Sibling/Child also identify their relative document. Opening or dismissing the menu does not load a document. Position and deletion of another subtree refresh the Index while preserving the surviving main-pane document, collection detail, route and reading position. Delete navigates to a surviving document only when the displayed node is removed. Modal focus restoration resolves the current target row after a tree refresh, or the displayed row when the target is gone or hidden.
 
 “Shared” does not mean public. A module is part of the public surface only when the public entrypoint imports it or a public-safe lazy path can reach it.
 
@@ -55,7 +57,7 @@ Collection search, filters, sorting and row-selection controls remain beside the
 
 The shared view registry registers Index tree, Search results and Recent results in the Index panel. Panel layout alone selects their visibility. The Index shell mounts controls, the retained tree and one results area; the main shell owns only document content and its toolbar. Review retains its existing top-row package-control surface, with Search and Recent gated by its route features.
 
-The sidebar tracks the current ordinary document or collection report host through one navigation path, updating the previous/current markers and required ancestors even while hidden. Branch toggles hide or reveal only their mounted child list, creating that branch's rows on first expansion. Unrelated nodes stay mounted. Selection ranges exclude rows hidden by any ancestor. Initial loading, authoritative index replacement, configuration changes and management selection setup retain full rendering under their existing owners.
+The sidebar tracks the current ordinary document or collection report host through one navigation path, updating the previous/current markers and required ancestors even while hidden. Branch toggles hide or reveal only their mounted child list, creating that branch's rows on first expansion. Unrelated nodes stay mounted. Initial loading, authoritative index replacement and configuration changes retain full rendering under their existing owners.
 
 Visible navigation scrolls the current row only when needed; hidden tracking neither scrolls results nor moves focus. Revealing the tree scrolls its already current selection without fetching the Index, rebuilding nodes or reloading a document. Search and Recent keep query/ranking/paging and mounted results independent of document navigation and Info capture. [Docs Viewer Search](Docs_Viewer_Search.md#index-results-and-navigation) owns list acquisition, compact rows, history and clearing/toggling behavior.
 

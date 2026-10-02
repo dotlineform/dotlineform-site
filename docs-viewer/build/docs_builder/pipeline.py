@@ -71,6 +71,7 @@ class DocsDataBuilder(
         self.site_config = load_site_tools_config(self.repo_root)
         self.semantic_token_registry = load_semantic_token_registry(self.repo_root)
         self.inline_icons = InlineIconRenderer(self.repo_root)
+        self._catalogue_work_cache: dict[str, dict[str, Any]] = {}
         self.related_links_dir = related_links_dir or generated_documents_path(config) / "links-by-id"
         self.source_files_scanned = 0
         self.warnings: list[str] = []

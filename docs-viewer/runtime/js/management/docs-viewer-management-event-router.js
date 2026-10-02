@@ -40,27 +40,6 @@ export function createDocsViewerManagementEventRouter(options = {}) {
     hideManageActionsMenu();
   }
 
-  function hideIndexActionsMenu(options = {}) {
-    var menu = ref("indexActionsMenu");
-    var button = ref("indexActionsButton");
-    if (!menu || !button) return;
-    menu.hidden = true;
-    button.setAttribute("aria-expanded", "false");
-    if (options.focusButton && typeof button.focus === "function") button.focus();
-  }
-
-  function toggleIndexActionsMenu() {
-    var menu = ref("indexActionsMenu");
-    var button = ref("indexActionsButton");
-    if (!menu || !button) return;
-    if (menu.hidden) {
-      menu.hidden = false;
-      button.setAttribute("aria-expanded", "true");
-      return;
-    }
-    hideIndexActionsMenu();
-  }
-
   function invoke(commandName, options = {}, detail = {}) {
     if (options.hideContextMenu) hideContextMenu();
     if (options.hideManageActionsMenu) hideManageActionsMenu();
@@ -73,21 +52,12 @@ export function createDocsViewerManagementEventRouter(options = {}) {
     if (ref("manageActionsMenu") && !event.target.closest('[data-docs-viewer-control="manage-actions"]')) {
       hideManageActionsMenu();
     }
-    if (ref("indexActionsMenu") && !event.target.closest('[data-docs-viewer-control="index-actions"]')) {
-      hideIndexActionsMenu();
-    }
     return false;
   }
 
   function handleDocumentKeydown(event) {
     var interaction = interactionController();
     if (interaction && interaction.handleDocumentKeydown(event)) return true;
-    var indexMenu = ref("indexActionsMenu");
-    if (event.key === "Escape" && indexMenu && !indexMenu.hidden) {
-      event.preventDefault();
-      hideIndexActionsMenu({ focusButton: true });
-      return true;
-    }
     var manageMenu = ref("manageActionsMenu");
     if (event.key === "Escape" && manageMenu && !manageMenu.hidden) {
       event.preventDefault();
@@ -129,9 +99,7 @@ export function createDocsViewerManagementEventRouter(options = {}) {
     handleAppManagementControl: handleAppManagementControl,
     handleDocumentKeydown: handleDocumentKeydown,
     handleRootClick: handleRootClick,
-    hideIndexActionsMenu: hideIndexActionsMenu,
     hideManageActionsMenu: hideManageActionsMenu,
-    toggleIndexActionsMenu: toggleIndexActionsMenu,
     wireEvents: wireEvents
   };
 }

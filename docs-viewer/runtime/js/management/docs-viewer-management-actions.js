@@ -265,10 +265,6 @@ export function createDocsViewerManagementActionController(options) {
     return callbacks.currentActiveDoc ? callbacks.currentActiveDoc() : null;
   }
 
-  function currentContextMenuDoc() {
-    return callbacks.currentContextMenuDoc ? callbacks.currentContextMenuDoc() : null;
-  }
-
   function actionTargetDoc(actionId, targetDocId) {
     var resolution = arguments.length > 1
       ? resolveAction(actionId, targetDocId)
@@ -351,6 +347,7 @@ export function createDocsViewerManagementActionController(options) {
     return openDocsViewerTextInputModal({
       root: root,
       title: title,
+      body: modalSettings.body,
       label: ACTION_TEXT.createDocLabel,
       initialValue: ACTION_TEXT.createDocDefaultTitle,
       defaultValue: ACTION_TEXT.createDocDefaultTitle,
@@ -405,16 +402,16 @@ export function createDocsViewerManagementActionController(options) {
     });
   }
 
-  async function handleCreateRelatedDoc(kind) {
-    var contextDoc = currentContextMenuDoc();
+  async function handleCreateRelatedDoc(kind, targetDocId) {
     var actionId = kind === "child" ? DOCS_VIEWER_ACTION_IDS.NEW_CHILD : DOCS_VIEWER_ACTION_IDS.NEW_SIBLING;
-    var baseDoc = contextDoc ? actionTargetDoc(actionId, contextDoc.doc_id) : null;
+    var baseDoc = targetDocId ? actionTargetDoc(actionId, targetDocId) : null;
     if (!baseDoc) return;
 
     var titleResult = await openCreateTitleModal(
       kind === "child"
         ? ACTION_TEXT.createChildDocTitle
-        : ACTION_TEXT.createSiblingDocTitle
+        : ACTION_TEXT.createSiblingDocTitle,
+      { body: "Relative to: " + baseDoc.title + " (" + baseDoc.doc_id + ")." }
     );
     if (!titleResult || !titleResult.confirmed) return;
 
@@ -592,17 +589,20 @@ export function createDocsViewerManagementActionController(options) {
     handleSettingsSave();
   }
 
-  function handleDeleteDoc() {
-    var resolution = resolveAction(DOCS_VIEWER_ACTION_IDS.DELETE);
+  function handleDeleteDoc(targetDocId, restoreFocus) {
+    if (!targetDocId || management.managementBusy) return;
+    var resolution = resolveAction(DOCS_VIEWER_ACTION_IDS.DELETE, targetDocId);
     var docIds = resolution && resolution.enabled
       ? resolution.targetDocIds.slice(0, 1)
       : [];
     if (!docIds.length) return;
+    var doc = documentIndex.docsById.get(docIds[0]);
+    if (!doc) return;
 
     setManagementBusy(true);
-    setManagementMessage("Checking delete impact for the displayed document and its children...", false);
+    setManagementMessage("Checking delete impact for " + doc.title + " and its descendants...", false);
 
-    previewManagedDocDelete(docIds, managementClientOptions())
+    return previewManagedDocDelete(docIds, managementClientOptions())
       .then(function (preview) {
         if (!preview.allowed) {
           var blockerText = (preview.blockers || []).join("; ") || "Delete is blocked.";
@@ -615,8 +615,13 @@ export function createDocsViewerManagementActionController(options) {
         setManagementMessage("", false);
         return openDocsViewerConfirmModal({
           root: root,
+          restoreFocus: restoreFocus,
           title: "Delete " + deleteLabel + "?",
-          body: buildDocsViewerDeletePreviewBody(preview),
+          body: [
+            "Document: " + doc.title + " (" + doc.doc_id + ").",
+            "Deletes this document and all its descendants.",
+            ...buildDocsViewerDeletePreviewBody(preview)
+          ],
           primaryLabel: "Delete " + deleteLabel,
           primaryTone: "danger",
           initialFocus: "cancel",
@@ -633,17 +638,17 @@ export function createDocsViewerManagementActionController(options) {
       })
       .then(function (payload) {
         if (!payload) return;
-        var fallbackDocId = firstRemainingRootDocId(
-          documentIndex.allDocs,
-          payload.deleted_doc_ids || docIds,
-          context.resolveLoadableDocId
-        );
+        var deletedDocIds = payload.deleted_doc_ids || resolution.targetDocIds;
+        var displayedRemoved = deletedDocIds.includes(selectedDocument.selectedDocId);
+        var fallbackDocId = displayedRemoved ? firstRemainingRootDocId(
+          documentIndex.allDocs, deletedDocIds, context.resolveLoadableDocId
+        ) : "";
         setManagementMessage("", false);
         var configReload = payload.default_doc_id_changed
           ? reloadViewerConfiguration()
           : Promise.resolve(null);
         return configReload.then(function () {
-          return reloadDocsIndex(fallbackDocId, "");
+          return displayedRemoved ? reloadDocsIndex(fallbackDocId, "") : callbacks.refreshIndexTree();
         }).then(function (result) {
           var completionMessage = docsViewerDeleteCompletionMessage(payload);
           if (completionMessage) setManagementMessage(completionMessage, false);
@@ -659,19 +664,20 @@ export function createDocsViewerManagementActionController(options) {
       });
   }
 
-  async function handlePositionDoc() {
-    var doc = currentActiveDoc();
+  async function handlePositionDoc(targetDocId, restoreFocus) {
+    var doc = targetDocId ? actionTargetDoc(DOCS_VIEWER_ACTION_IDS.POSITION, targetDocId) : null;
     if (!doc || management.managementBusy) return;
     hideContextMenu();
     return openDocsViewerPositionModal({
       root: root,
+      restoreFocus: restoreFocus,
       doc: doc,
       docs: documentIndex.allDocs,
       onSave: async function (targetDocId, placement) {
         setManagementBusy(true);
         try {
           await moveManagedDoc(doc.doc_id, targetDocId, placement, managementClientOptions());
-          await reloadDocsIndex(doc.doc_id, "");
+          await callbacks.refreshIndexTree();
         } finally {
           setManagementBusy(false);
           renderManagementUi();
@@ -701,9 +707,8 @@ export function createDocsViewerManagementActionController(options) {
       });
   }
 
-  function handleCopyLink() {
-    var contextDoc = currentContextMenuDoc();
-    var doc = contextDoc ? actionTargetDoc(DOCS_VIEWER_ACTION_IDS.COPY_LINK, contextDoc.doc_id) : null;
+  function handleCopyLink(targetDocId) {
+    var doc = targetDocId ? actionTargetDoc(DOCS_VIEWER_ACTION_IDS.COPY_LINK, targetDocId) : null;
     if (!doc || typeof context.markdownDocLink !== "function") return;
     var markdownLink = context.markdownDocLink(doc);
     if (!markdownLink) return;

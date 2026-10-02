@@ -55,14 +55,12 @@ var MANAGEMENT_TEXT = {
 export function createDocsViewerManagementActionContext(options = {}) {
   var selectedDocument = options.selectedDocument || {};
   var documentIndex = options.documentIndex || {};
-  var displayedTarget = options.documentActionContext && options.documentActionContext.documentTarget;
+  var invocationDocId = String(options.invocationDocId || "").trim();
   var subtreeDocIds = [];
   if (
-    displayedTarget && !displayedTarget.collection
-    && displayedTarget.doc_id === selectedDocument.selectedDocId
-    && documentIndex.docsById.has(displayedTarget.doc_id)
+    options.includeSubtree && invocationDocId && documentIndex.docsById.has(invocationDocId)
   ) {
-    var pending = [displayedTarget.doc_id];
+    var pending = [invocationDocId];
     var seen = new Set();
     while (pending.length) {
       var docId = pending.pop();
@@ -90,8 +88,7 @@ export function createDocsViewerManagementActionResolver(options = {}) {
     var definition = getDocsViewerActionDefinition(actionId);
     var contextOptions = {
       documentIndex: options.documentIndex,
-      documentActionContext: definition && definition.target === DOCS_VIEWER_ACTION_TARGETS.DOCUMENT_SUBTREE
-        ? options.documentActionContext() : null,
+      includeSubtree: definition && definition.target === DOCS_VIEWER_ACTION_TARGETS.DOCUMENT_SUBTREE,
       selectedDocument: selectedDocument
     };
     if (arguments.length > 1) contextOptions.invocationDocId = targetDocId;
@@ -210,49 +207,36 @@ export function initDocsViewerManagement(context) {
   var indexController = createDocsViewerManagementIndexController({
     root: root,
     management: management,
-    routeSession: routeSession,
-    searchRecent: searchRecent,
     callbacks: {
-      canPositionDoc: function () {
-        return Boolean(currentActiveDoc()) && selectedDocument.displayMode !== "markdown-source";
+      sourceEditingActive: function () {
+        return selectedDocument.displayMode === "markdown-source";
       },
-      handlePositionDoc: function () {
-        if (actionController) return actionController.handlePositionDoc();
+      handlePositionDoc: function (docId, restoreFocus) {
+        if (actionController) return actionController.handlePositionDoc(docId, restoreFocus);
       },
       activeIndexViewId: function () {
         return typeof context.activeIndexViewId === "function"
           ? context.activeIndexViewId()
           : "index-tree";
       },
-      handleDeleteDoc: function () {
-        if (actionController) actionController.handleDeleteDoc();
-      },
-      hideIndexActionsMenu: function (options) {
-        if (eventRouter) eventRouter.hideIndexActionsMenu(options);
+      handleDeleteDoc: function (docId, restoreFocus) {
+        if (actionController) return actionController.handleDeleteDoc(docId, restoreFocus);
       },
       managementClientOptions: managementClientOptions,
-      projectIndexViewControlState: function (controlId, controlState) {
-        if (typeof context.projectIndexViewControlState === "function") {
-          return context.projectIndexViewControlState(controlId, controlState);
-        }
-        return null;
+      indexDocument: function (docId) {
+        return documentIndex.docsById.get(docId) || null;
       },
       refreshManagementCapabilities: refreshManagementCapabilities,
-      reloadDocsIndex: reloadDocsIndex,
       renderManagementUi: renderManagementUi,
-      resolveAction: function (actionId) {
-        return resolveAction ? resolveAction(actionId) : null;
+      resolveAction: function (actionId, docId) {
+        return resolveAction ? resolveAction(actionId, docId) : null;
       },
       setManagementBusy: setManagementBusy,
       setManagementMessage: setManagementMessage,
-      toggleIndexActionsMenu: function () {
-        if (eventRouter) eventRouter.toggleIndexActionsMenu();
-      },
     }
   });
   resolveAction = createDocsViewerManagementActionResolver({
     documentIndex: documentIndex,
-    documentActionContext: context.documentActionContext,
     selectedDocument: selectedDocument
   });
 
@@ -368,12 +352,8 @@ export function initDocsViewerManagement(context) {
     }
   }
 
-  function currentContextMenuDoc() {
-    return interactionController ? interactionController.currentContextMenuDoc() : null;
-  }
-
-  function hideContextMenu() {
-    if (interactionController) interactionController.hideContextMenu();
+  function hideContextMenu(options) {
+    if (interactionController) interactionController.hideContextMenu(options);
   }
 
   function setManagementBusy(busy) {
@@ -649,7 +629,7 @@ export function initDocsViewerManagement(context) {
     if (!manageRow) return;
 
     routeSession.managementContext = typeof context.isManagementContext === "function" && context.isManagementContext();
-    indexController.render();
+    if (interactionController) interactionController.render();
     if (!routeSession.managementContext) {
       syncManagementStatus("", false);
       hideAppManagementControls();
@@ -767,9 +747,15 @@ export function initDocsViewerManagement(context) {
     if (command) command(docId, hash, query, mode, reportParams);
   }
 
-  function loadRouteIndex() {
+  function loadRouteIndex(options) {
     var command = routeCommand("loadIndex");
-    return command ? command() : Promise.resolve(null);
+    return command ? command(options) : Promise.resolve(null);
+  }
+
+  function refreshIndexTree() {
+    return loadRouteIndex({ preserveDocument: true }).then(function () {
+      renderManagementUi();
+    });
   }
 
   function reloadDocsIndex(targetDocId, _summaryText, reportParams) {
@@ -842,22 +828,24 @@ export function initDocsViewerManagement(context) {
       contextMenu: shellRefs.contextMenu
     },
     callbacks: {
-      onContextAction: function (actionId) {
+      contextActionStates: indexController.actionStates,
+      onContextAction: function (actionId, targetDocId, restoreFocus) {
         if (!actionController) return;
+        if (indexController.handleAction(actionId, targetDocId, restoreFocus)) return;
         if (actionId === DOCS_VIEWER_ACTION_IDS.NEW_SIBLING) {
-          actionController.handleCreateRelatedDoc("sibling");
+          actionController.handleCreateRelatedDoc("sibling", targetDocId);
           return;
         }
         if (actionId === DOCS_VIEWER_ACTION_IDS.NEW_CHILD) {
-          actionController.handleCreateRelatedDoc("child");
+          actionController.handleCreateRelatedDoc("child", targetDocId);
           return;
         }
         if (actionId === DOCS_VIEWER_ACTION_IDS.COPY_LINK) {
-          actionController.handleCopyLink();
+          actionController.handleCopyLink(targetDocId);
           return;
         }
         if (actionId === DOCS_VIEWER_ACTION_IDS.OPEN_VSCODE) {
-          var vscodeDoc = currentContextMenuDoc();
+          var vscodeDoc = documentIndex.docsById.get(targetDocId);
           if (vscodeDoc) {
             actionController.handleOpenSource(
               "vscode",
@@ -868,7 +856,7 @@ export function initDocsViewerManagement(context) {
           return;
         }
         if (actionId === DOCS_VIEWER_ACTION_IDS.OPEN) {
-          var defaultDoc = currentContextMenuDoc();
+          var defaultDoc = documentIndex.docsById.get(targetDocId);
           if (defaultDoc) {
             actionController.handleOpenSource(
               "default",
@@ -899,7 +887,6 @@ export function initDocsViewerManagement(context) {
     resolveAction: resolveAction,
     callbacks: {
       currentActiveDoc: currentActiveDoc,
-      currentContextMenuDoc: currentContextMenuDoc,
       getSettingsWorkflow: function () {
         return settingsWorkflow;
       },
@@ -907,6 +894,7 @@ export function initDocsViewerManagement(context) {
       managementClientOptions: managementClientOptions,
       openCreatedDocumentSource: openCreatedDocumentSource,
       reloadDocsIndex: reloadDocsIndex,
+      refreshIndexTree: refreshIndexTree,
       reloadViewerConfiguration: reloadViewerConfiguration,
       refreshManagementCapabilities: refreshManagementCapabilities,
       renderManagementUi: renderManagementUi,
@@ -917,15 +905,12 @@ export function initDocsViewerManagement(context) {
 
   eventRouter = createDocsViewerManagementEventRouter({
     refs: {
-      indexActionsButton: indexController.actionsButton,
-      indexActionsMenu: indexController.actionsMenu,
       manageActionsButton: manageActionsButton,
       manageActionsMenu: manageActionsMenu
     },
     commands: {
       createDoc: function () { actionController.handleCreateDoc(); },
       exportWorkspace: openExportWorkspace,
-      deleteDoc: function () { actionController.handleDeleteDoc(); },
       openImport: openAppImport,
       openSettings: function () { settingsWorkflow.open(); },
       publish: function () { actionController.handlePublish(); },
@@ -984,8 +969,9 @@ export function initDocsViewerManagement(context) {
     toggleCollectionDocumentDraft: toggleCollectionDocumentDraft,
     handleDocumentKeydown: eventRouter.handleDocumentKeydown,
     handleAppManagementControl: handleAppManagementControl,
-    handleIndexViewChange: indexController.handleViewChange,
-    handleIndexViewControl: indexController.handleControl,
+    handleIndexViewChange: function (viewId) {
+      if (viewId !== "index-tree") hideContextMenu();
+    },
     handleMainViewControl: handleMainViewControl,
     handleRootClick: eventRouter.handleRootClick,
     hideContextMenu: hideContextMenu,
