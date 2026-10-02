@@ -47,6 +47,10 @@
   mask-image: url("../icons/file-code-corner.svg");
 }
 
+.docsViewer__icon--square-code{
+  mask-image: url("../icons/square-code.svg");
+}
+
 .docsViewer__icon--folder-open{
   mask-image: url("../icons/folder-open.svg");
 }
@@ -1240,9 +1244,35 @@ select.docsViewer__positionTargets{
 }
 
 .docsViewer__manageToolbarMount .docsViewer__actionsMenu,
+.docsViewer__editMenu,
 .docsViewerDirectiveActions__menu{
   right: 0;
   left: auto;
+}
+
+.docsViewer__editMenu{
+  display: flex;
+  flex-direction: column;
+}
+
+.docsViewer__editMenuCollectionActions{
+  display: contents;
+}
+
+.docsViewer__editMenu [data-docs-viewer-action="open-vscode"]{ order: 1; }
+.docsViewer__editMenu [data-docs-viewer-action="set-draft"]{ order: 2; }
+.docsViewer__editMenu [data-docs-viewer-action="set-selected"]{ order: 3; }
+.docsViewer__editMenu [data-docs-viewer-action="copy-link"]{ order: 4; }
+.docsViewer__editMenu [data-docs-viewer-action="delete"]{ order: 5; }
+.docsViewer__editMenu [data-docs-viewer-action="assign-subject"]{ order: 6; }
+.docsViewer__editMenu [data-docs-viewer-action="open-project-folder"]{ order: 7; }
+
+/* Contribution controls arrive after detail loading and own their live state. */
+.docsViewer__editMenu:has(.docsViewer__editMenuCollectionActions [data-docs-viewer-action="copy-link"]) > .docsViewer__editMenuFallback[data-docs-viewer-action="copy-link"],
+.docsViewer__editMenu:has(.docsViewer__editMenuCollectionActions [data-docs-viewer-action="delete"]) > .docsViewer__editMenuFallback[data-docs-viewer-action="delete"],
+.docsViewer__editMenu:has(.docsViewer__editMenuCollectionActions [data-docs-viewer-action="assign-subject"]) > .docsViewer__editMenuFallback[data-docs-viewer-action="assign-subject"],
+.docsViewer__editMenu:has(.docsViewer__editMenuCollectionActions [data-docs-viewer-action="open-project-folder"]) > .docsViewer__editMenuFallback[data-docs-viewer-action="open-project-folder"]{
+  display: none;
 }
 
 .docsViewer__actionMenuItem{

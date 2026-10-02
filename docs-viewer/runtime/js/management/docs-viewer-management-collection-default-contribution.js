@@ -1,4 +1,5 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
+import { createDocsViewerEditMenuItem } from "./docs-viewer-management-edit-menu.js";
 import {
   DOCS_VIEWER_ACTION_IDS
 } from "./docs-viewer-action-definitions.js";
@@ -372,17 +373,14 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     var clearButton = selectionCommandButton(documentRef, "clear", "Clear");
     var doneButton = selectionCommandButton(documentRef, "done", "Done");
     selectionControl.replaceChildren(selectAllButton, clearButton, doneButton);
-    settings.actionHost.replaceChildren.apply(
-      settings.actionHost,
-      (regenerateButton ? [regenerateButton] : [])
-        .concat([actionsHost])
-    );
+    settings.actionHost.replaceChildren(...(regenerateButton ? [regenerateButton] : []));
     if (sortButton) root.appendChild(sortButton);
+    root.appendChild(actionsHost);
     root.appendChild(selectionControl);
     host.appendChild(root);
 
     function handleDocumentClick(event) {
-      if (!settings.actionHost.contains(event.target)) hideActionsMenu(false);
+      if (!actionsHost.contains(event.target)) hideActionsMenu(false);
     }
 
     function handleDocumentKeydown(event) {
@@ -496,13 +494,13 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
           return writeClipboardText(host.ownerDocument, markdownLink);
         }
       });
-      var copyButton = host.ownerDocument.createElement("button");
-      copyButton.className = "docsViewer__toolbarIconButton docsReportDetail__copyLink";
-      copyButton.type = "button";
+      var copyButton = createDocsViewerEditMenuItem(host.ownerDocument, {
+        actionId: DOCS_VIEWER_ACTION_IDS.COPY_LINK, label: "Copy link",
+        artwork: "docsViewer__icon--link", contribution: true
+      });
       copyButton.dataset.docsCollectionCopyLink = "true";
       copyButton.setAttribute("aria-label", "Copy link");
       copyButton.title = "Copy link";
-      copyButton.appendChild(createDocsViewerToolbarIcon(host.ownerDocument, "docsViewer__icon--link"));
       copyButton.disabled = !copyRegistration.enabled;
       copyButton.addEventListener("click", function () {
         copyRegistration.invoke().catch(function (error) {
@@ -538,12 +536,12 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
 
     clearDeleteWorkflow();
     var request = deleteWorkflowRequest;
-    var button = host.ownerDocument.createElement("button");
-    button.className = "docsViewer__toolbarIconButton docsReportDetail__delete";
-    button.type = "button";
+    var button = createDocsViewerEditMenuItem(host.ownerDocument, {
+      actionId: DOCS_VIEWER_ACTION_IDS.DELETE, label: "Delete",
+      artwork: "docsViewer__icon--trash", contribution: true
+    });
     button.disabled = true;
     button.dataset.docsCollectionDelete = "true";
-    button.appendChild(createDocsViewerToolbarIcon(host.ownerDocument, "docsViewer__icon--trash"));
     button.setAttribute("aria-label", "Delete. Checking Delete availability.");
     button.title = "Checking Delete availability.";
     host.appendChild(button);
@@ -556,6 +554,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
           clientOptions: options.clientOptions || {},
           commitDeletedDocument: settings.commitDeletedDocument,
           root: options.root,
+          restoreFocus: function () { return options.root?.querySelector("#docsViewerManageEditButton"); },
           setStatus: options.setStatus,
           target: deleteRegistration.target,
           title: cleanString(settings.document && settings.document.title)

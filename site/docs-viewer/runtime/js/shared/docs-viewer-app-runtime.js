@@ -710,7 +710,8 @@ export function startDocsViewerRuntime(options) {
     }
     var mount = mainViewRefs.collectionActions;
     if (mount) {
-      var host = report.actionHost || null;
+      // Manage detail actions use Edit while rendered; retain them here in other modes.
+      var host = appContext.kind === "manage" && report.state === "detail" && rendered ? null : report.actionHost || null;
       if (mount.firstChild !== host) mount.replaceChildren(...(host ? [host] : []));
       mount.hidden = !rendered;
     }

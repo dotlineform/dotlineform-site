@@ -1,5 +1,6 @@
 import { runManagedDocsExportWorkspaceWorkflow } from "./docs-viewer-export-workspace-workflow.js";
 import { staticHtmlExportCapability } from "./docs-viewer-management-capabilities.js";
+import { createDocsViewerEditMenuController } from "./docs-viewer-management-edit-menu.js";
 import { createDocsViewerManagementContextActions } from "./docs-viewer-management-context-actions.js";
 import { projectDocsViewerManagementActionMenuItem } from "./docs-viewer-management-actions-renderer.js";
 import {
@@ -196,6 +197,7 @@ export function initDocsViewerManagement(context) {
   var projectedReportControls = null;
   var collectionReportState = null;
   var contextActions = null;
+  var editMenuController = null;
   var indexController = createDocsViewerManagementIndexController({
     root: root,
     management: management,
@@ -387,6 +389,8 @@ export function initDocsViewerManagement(context) {
         disabled: actionsDisabled
       });
     }
+    if (editMenuController) editMenuController.render();
+    if (contextActions) contextActions.render();
   }
 
   function projectAppControl(controlId, controlState) {
@@ -402,13 +406,8 @@ export function initDocsViewerManagement(context) {
   function handleMainViewControl(detail) {
     var controlId = String(detail && detail.controlId || "").trim();
     var actionId = String(detail && detail.actionId || "").trim();
+    if (controlId === "edit") return editMenuController.handleControl(detail);
     var reportControlOwners = new Map([
-      ["edit", {
-        projection: "editDocument",
-        run: function (target) {
-          openDocumentEditor(target);
-        }
-      }],
       ["return-to-doc", {
         projection: "returnToDoc",
         run: function () {
@@ -475,7 +474,8 @@ export function initDocsViewerManagement(context) {
 
   function handleAppManagementControl(detail) {
     var actionId = String(detail && detail.actionId || "").trim();
-    if (contextActions.owns(actionId)) {
+    if (detail.eventType === "click") editMenuController.close(false);
+    if (actionId === DOCS_VIEWER_ACTION_IDS.NEW) {
       if (detail.eventType !== "click") return false;
       hideContextMenu();
       eventRouter.hideManageActionsMenu();
@@ -491,7 +491,6 @@ export function initDocsViewerManagement(context) {
 
     routeSession.managementContext = typeof context.isManagementContext === "function" && context.isManagementContext();
     if (interactionController) interactionController.render();
-    if (contextActions) contextActions.render();
     if (!routeSession.managementContext) {
       syncManagementStatus("", false);
       hideAppManagementControls();
@@ -755,16 +754,30 @@ export function initDocsViewerManagement(context) {
     actions: actionController,
     documentActionContext: context.documentActionContext,
     activeViewState: context.activeViewState,
-    sourceTarget: activeSourceTarget,
     isManagementContext: context.isManagementContext,
     clientOptions: managementClientOptions,
     project: function (actionId, state) {
-      projectDocsViewerManagementActionMenuItem(manageActionsMenu, actionId, state);
+      var menu = actionId === DOCS_VIEWER_ACTION_IDS.NEW
+        ? manageActionsMenu : root.querySelector("#docsViewerManageEditMenu");
+      projectDocsViewerManagementActionMenuItem(menu, actionId, state);
     },
     render: renderManagementUi,
     renderSidebar: context.renderSidebar,
     setBusy: setManagementBusy,
     setMessage: setManagementMessage
+  });
+
+  editMenuController = createDocsViewerEditMenuController({
+    root: root,
+    contextActions: contextActions,
+    documentActionContext: context.documentActionContext,
+    activeViewState: context.activeViewState,
+    editControl: function () { return projectedReportControls?.editDocument; },
+    deleteState: function (docId) { return indexController.actionControlState(DOCS_VIEWER_ACTION_IDS.DELETE, docId); },
+    openSource: openDocumentEditor,
+    copyLink: actionController.handleCopyLink,
+    deleteDocument: actionController.handleDeleteDoc,
+    closeOtherMenus: function () { hideContextMenu(); eventRouter.hideManageActionsMenu(); }
   });
 
   eventRouter = createDocsViewerManagementEventRouter({
@@ -828,13 +841,18 @@ export function initDocsViewerManagement(context) {
   return {
     applyConfig: applyConfig,
     regenerateCatalogue: actionController.handleRegenerateCatalogue,
-    handleDocumentKeydown: eventRouter.handleDocumentKeydown,
+    handleDocumentKeydown: function (event) {
+      return editMenuController.handleKeydown(event) || eventRouter.handleDocumentKeydown(event);
+    },
     handleAppManagementControl: handleAppManagementControl,
     handleIndexViewChange: function (viewId) {
       if (viewId !== "index-tree") hideContextMenu();
     },
     handleMainViewControl: handleMainViewControl,
-    handleRootClick: eventRouter.handleRootClick,
+    handleRootClick: function (event) {
+      editMenuController.handleRootClick(event);
+      return eventRouter.handleRootClick(event);
+    },
     hideContextMenu: hideContextMenu,
     initialize: initializeManagement,
     openImportModal: importController.open,

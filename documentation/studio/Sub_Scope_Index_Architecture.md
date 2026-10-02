@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260728-113139-763354
 title: Sub-Scope Index Architecture
 added_date: "2026-07-28 11:31:39"
-last_updated: "2026-10-01 15:31:10"
+last_updated: "2026-10-02 13:02:25"
 summary: define collection identity, the docs_subscope default, registered customisations, selection lifecycle, and explicit function adoption
 parent_id: d-20260801-084127-752d7e
 ---
@@ -73,7 +73,7 @@ import path to its implementation.
 
 ## Default And Registered Customisations
 
-A configured sub-scope record with its ordinary fields selects the default. The shared engine always supplies title search, title-ascending initial order, normal empty/error states, and list/detail navigation. Manage adds status and, only for a publish-capable collection, publishability row treatment, plus the title/recency sort toggle, New, selection, Prepare Package, validated-detail Copy Link, and validated-detail Delete.
+A configured sub-scope record with its ordinary fields selects the default. The shared engine always supplies title search, title-ascending initial order, normal empty/error states, and list/detail navigation. Manage adds status and, only for a publish-capable collection, publishability row treatment, plus the title/recency sort toggle, selection and Prepare Package. New uses the main Actions menu. Validated-detail Copy Link and Delete retain their collection contribution owners and appear inside the document's Edit dropdown alongside configured Subject and Finder actions; unsupported items remain disabled.
 
 An optional strict `sub_scope_customisation: {id, settings}` selects one known registry entry. The builder may project only a namespaced `customisation` root and per-row `customisation` data; the access-specific browser registry resolves its module. Unknown, unavailable, or mismatched identities fail as contained report errors and retain the selected collection's error state.
 
@@ -163,8 +163,8 @@ public:                     [title]
 A focused manage-owned composition contributes the standard default and at
 most one registered customisation. The default owns:
 
-- a detail toolbar mounted only for a validated detail target;
-- a list toolbar for deterministic sorting, New, collection actions, and
+- a retained detail action host mounted inside Edit only for a validated detail target;
+- a list toolbar for deterministic sorting, collection actions, and
   selection commands;
 - a dedicated sibling checkbox cell before each list-row title;
 - collection-local selection projection and event handling;
@@ -249,7 +249,7 @@ Manage's [private title reader](../../docs-viewer/runtime/js/management/docs-vie
 
 The Working Works list displays Series subjects as plain text. Work subjects open their exact Work in Media View; the Work presentation exposes its Gallery links only. Folder subjects retain their existing local-folder action. These destinations apply to Working Works; other collections retain their existing subject navigation.
 
-Local folder links and the detail toolbar's Open in Finder action open silently on success; failures still display an error.
+Local folder links and the Edit menu's Open in Finder action open silently on success; failures still display an error.
 
 Implementation/static review, initial metadata generation, a targeted no-change preview and direct HTTP serving checks passed on 2026-09-26. The user confirmed review through Site Preview, accepted the final count/placeholder/heading changes, confirmed Studio Save testing and authorized closeout. Current Preview/site manifests include the required timestamps. This establishes user manual acceptance; it does not claim browser automation, measured performance, failure injection or exhaustive mutation/selection/subject-action coverage. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns Save freshness and recovery.
 

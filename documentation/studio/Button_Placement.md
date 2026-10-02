@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260716-204013-3be4e1
 title: Button Placement
 added_date: "2026-07-16 20:40:13"
-last_updated: "2026-10-02 12:15:13"
+last_updated: "2026-10-02 13:24:24"
 parent_id: d-20260424-000000-50b63f
 ---
 # Button Placement
@@ -20,7 +20,8 @@ This feature owns that user-facing mental model. The control registry, action ta
 | --- | --- |
 | The displayed document and its parent/child structure | Index panel toolbar |
 | The right-clicked row, with deliberately secondary discovery | Index panel context menu |
-| New, VS Code, Draft/Ready or Star for the displayed document/collection | Context group in Manage Actions |
+| New for the displayed document/collection | Manage Actions |
+| Source editor, VS Code, Draft/Ready, Star, Copy link, Delete, Assign Subject or Open in Finder for the displayed document | Edit dropdown at the document's right edge |
 | Rendered document presentation, editing, or display mode | Document toolbar |
 | The workspace or application as a whole | Workspace group in Manage Actions |
 
@@ -53,19 +54,23 @@ In user-facing discussion, **index toolbar** means the toolbar belonging to the 
 
 The **🛠️ Index Actions** menu operates on the currently displayed ordinary document and all its descendants. **Export…**, **Prepare package…**, and **Delete…** share that target, including children hidden within collapsed branches. Opening the menu does not create selection state, and the Index has no checkboxes or All/Clear/Done controls.
 
-Collection Actions retain their own checked-document workflow. The app-level **Actions** menu contains a context group for New, Open in VS Code, Draft/Ready and Star, then a workspace group for Import, Export, Rebuild docs and Search, Publish and Settings. Unavailable items remain visible and disabled. [Toolbar Model](Toolbar_Model.md#manage-toolbar) owns exact targets and Catalogue exceptions.
+Collection Actions retain their own checked-document workflow. The app-level **Actions** menu contains New, then a workspace group for Import, Export, Rebuild docs and Search, Publish and Settings. Open in VS Code, Draft/Ready and Star belong to Edit. Unavailable items remain visible and disabled. [Toolbar Model](Toolbar_Model.md#manage-toolbar) owns exact targets and Catalogue exceptions.
 
 [Create And Import Endpoints](Create_And_Import_Endpoints.md) owns the server contract.
 
 ### Open in VS Code
 
-**Open in VS Code** is available in the main Actions menu for the exact displayed ordinary document, collection-list host or validated collection subdocument. In Source mode it uses the editor's captured target. The Index context-menu item remains available because it operates directly on an invoked row without first opening that document.
+**Open in VS Code** is available in Edit for the exact displayed ordinary document, collection-list host or validated collection subdocument. Edit is hidden in Source and expanded views, so its VS Code item is unavailable there. The Index context-menu item remains available because it operates directly on an invoked row without first opening that document.
 
-Both placements invoke the same source-opening service. The Index context menu supplies its invoked ordinary document; the main Actions context owner supplies an exact ordinary or collection target. Neither placement changes the other's target.
+Both placements invoke the same source-opening service. The Index context menu supplies its invoked ordinary document; Edit's context owner supplies an exact ordinary or collection target. Neither placement changes the other's target.
+
+### Edit Document
+
+The pen button opens **Edit document** beside the document's right edge. Its menu opens to the left and contains Source editor, Open in VS Code, Draft/Ready, Star, Copy link, Delete, Assign Subject and Open in Finder. Unavailable items remain disabled. A collection detail supplies its exact document actions to this menu; it has no duplicate detail toolbar buttons. The menu is hidden during Source editing and expanded views. [Toolbar Model](Toolbar_Model.md#main-view-toolbar) owns eligibility and action lifecycle.
 
 ## Current Boundary
 
-The placement language, displayed-subtree Index Actions and context-aware main Actions menu are shipped. New, VS Code, Draft/Ready and Star have no duplicate document or collection-toolbar controls. Collection checkbox selection remains owned by its mounted report.
+The placement language and context-aware Actions and Edit menus are shipped. New remains in Actions; VS Code, Draft/Ready and Star appear in Edit without duplicate toolbar controls. Collection checkbox selection remains owned by its mounted report.
 
 ## Technical Homes
 

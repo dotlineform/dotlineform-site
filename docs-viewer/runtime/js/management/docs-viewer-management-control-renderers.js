@@ -1,4 +1,5 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
+import { renderDocsViewerEditMenu } from "./docs-viewer-management-edit-menu.js";
 
 function renderDocumentActionButton(context, options) {
   var settings = options || {};
@@ -19,12 +20,7 @@ function renderDocumentActionButton(context, options) {
 
 export function createDocsViewerManagementControlRenderers() {
   return {
-    "manage-edit": function (context) {
-      return renderDocumentActionButton(context, {
-        id: "docsViewerManageEditButton",
-        artwork: "docsViewer__icon--pen"
-      });
-    },
+    "manage-edit": renderDocsViewerEditMenu,
     "return-to-doc": function (context) {
       return renderDocumentActionButton(context, {
         id: "docsViewerManageReturnToDocButton",

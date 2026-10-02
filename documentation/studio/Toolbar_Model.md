@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260531-152622-ed2451
 title: Toolbar Model
 added_date: 2026-05-31 15:26:22
-last_updated: "2026-10-02 12:15:13"
+last_updated: "2026-10-02 13:24:24"
 summary: Placement and ownership rules for app, active-view, docs_subscope, management, and context-panel controls.
 parent_id: d-20260424-000000-50b63f
 
@@ -37,28 +37,32 @@ Surface: `app-viewer`, mounted by `docs-viewer-viewer-toolbar-renderer.js` and r
 
 Use the main-view toolbar for controls belonging to the active central view, its content, or its current display mode.
 
-For `rendered-document`, this includes its breadcrumb, info control and manage-only **Edit document** action. Edit opens Source with the metadata panel for the exact ordinary document, collection-list host or validated collection detail. A detail has no parent Source action, and separate Source/Subdoc Source controls are removed. New, Open in VS Code, Draft/Ready and Star live in the Manage Actions menu. Mode-specific controls such as Source Save and Return remain here because the document view owns the mode. For `content-detail`, the same surface supplies the public-safe **Back to document** control and presentation label; later Manage-only table tools may contribute beside them without creating another toolbar.
+For `rendered-document`, this includes its breadcrumb, info control and manage-only **Edit document** dropdown. Its items are Source editor, Open in VS Code, Draft/Ready, Star, Copy link, Delete, Assign Subject and Open in Finder, in that order. Source editor opens Source with the metadata panel for the exact ordinary document, collection-list host or validated collection detail. Copy link uses that same displayed identity. Delete retains ordinary subtree confirmation or the collection's singular validated-detail workflow; Catalogue detail deletion stays disabled. Assign Subject and Open in Finder retain the configured subject-aware collection rules, with Finder requiring a valid Folder subject. Unsupported items remain visible and disabled. Collection detail contributions supply their existing live state and handlers inside this menu instead of duplicate toolbar buttons. A detail has no parent Source action.
+
+New stays in the Manage Actions menu. Mode-specific controls such as Source Save and Return remain in the main-view toolbar because the document view owns the mode. For `content-detail`, the same surface supplies the public-safe **Back to document** control and presentation label; later Manage-only table tools may contribute beside them without creating another toolbar.
 
 The shared renderer creates one stable `main-view` mount. Shared and manage entrypoints contribute eligible controls to the same host in definition order.
 
-In Manage, Edit document aligns to the right edge of the centered document and collection report using the shared document-width token. Its existing view/mode eligibility hides it in expanded content views and Source mode. Actions retains its app-toolbar position.
+In Manage, Edit document retains the pen artwork and aligns to the right edge of the centered document and collection report using the shared document-width token. Its dropdown opens to the left; Source editor uses `square-code.svg`. Its existing view/mode eligibility hides it in expanded content views and Source mode. Disclosure closes when the target or availability changes. Delete and Subject modals restore focus to the Edit trigger. Actions retains its app-toolbar position.
 
 Owners: `site/docs-viewer/runtime/js/shared/docs-viewer-main-view-renderer.js`, shared control renderers, and manage-owned `docs-viewer-management-control-renderers.js`.
 
 ## Manage Toolbar
 
-The Manage toolbar exposes one **Actions** menu. Its first group contains context-aware New, Open in VS Code, Draft/Ready and Star. Its second group contains Import, Export, Rebuild docs and Search, Publish and Settings. These actions have no duplicate main-view or collection-toolbar buttons. Unavailable menu items remain visible and disabled; their tooltips explain the reason. The Actions entrypoint retains route, service and busy gating.
+The Manage toolbar exposes one **Actions** menu. Its first group contains context-aware New. Its second group contains Import, Export, Rebuild docs and Search, Publish and Settings. Open in VS Code, Draft/Ready and Star appear only in Edit for the displayed document. These actions have no duplicate main-view or collection-toolbar buttons. Unavailable menu items remain visible and disabled; their tooltips explain the reason. The Actions entrypoint retains route, service and busy gating.
 
-| Action | Ordinary document | Collection list | Validated collection detail |
-| --- | --- | --- | --- |
-| New | Creates a sibling after the displayed document, or a root document when none is selected | Creates a member of the displayed collection | Creates a member of the displayed collection |
-| Open in VS Code | Opens the exact displayed document source | Opens the ordinary collection report host source | Opens the exact collection subdocument source |
-| Draft/Ready | Marks the displayed document ready or draft | Marks the ordinary report host ready or draft | Marks the exact subdocument ready or draft |
-| Star | Toggles the displayed document's Selected Documents membership | Toggles the ordinary report host's membership | Toggles the exact subdocument's membership |
+Context-aware targets across Actions and Edit:
+
+| Action | Menu | Ordinary document | Collection list | Validated collection detail |
+| --- | --- | --- | --- | --- |
+| New | Actions | Creates a sibling after the displayed document, or a root document when none is selected | Creates a member of the displayed collection | Creates a member of the displayed collection |
+| Open in VS Code | Edit | Opens the exact displayed document source | Opens the ordinary collection report host source | Opens the exact collection subdocument source |
+| Draft/Ready | Edit | Marks the displayed document ready or draft | Marks the ordinary report host ready or draft | Marks the exact subdocument ready or draft |
+| Star | Edit | Toggles the displayed document's Selected Documents membership | Toggles the ordinary report host's membership | Toggles the exact subdocument's membership |
 
 New is disabled in Catalogue lists and details because regeneration owns creation. Draft/Ready is disabled for Catalogue subdocuments because their Publish eligibility is fixed; the ordinary Catalogue report host retains its own readiness. Documents excluded by `unpublishable.json` retain disabled readiness controls. Draft/Ready changes eligibility for a later Publish and does not publish immediately. Star uses outline/filled artwork, an explicit menu checkbox state and the next-action labels Star/Remove star.
 
-Loading or invalid collection details disable target-dependent actions without falling back to the report host. VS Code uses the editor's captured source target in Source mode. Draft/Ready and Star are disabled outside the rendered-document view; New keeps its existing app-level availability. The mounted collection report owns the immediate projection of a committed draft save and refresh/open after creation. Independently invoked Index context-menu commands retain their explicit row targets.
+Loading or invalid collection details disable target-dependent actions without falling back to the report host. Edit, including VS Code, Draft/Ready and Star, is hidden in Source and expanded views; New keeps its existing app-level availability. The mounted collection report owns the immediate projection of a committed draft save and refresh/open after creation. Independently invoked Index context-menu commands retain their explicit row targets.
 
 The workspace Actions dropdown aligns to the button's right edge and opens to the left, keeping it inside the desktop window when the button sits near the right side of the top row.
 
@@ -68,7 +72,9 @@ Surface: `app-management`. Manage definitions, renderer contributions, focused c
 
 ## Sub-Scope Report Controls
 
-Collection-specific controls stay in the report. The shared report owns title search and Back. Its standard Manage contribution owns the title/recency sort toggle, collection Actions and selection commands, Prepare Package, Copy Link, and validated-detail Delete. New and Draft/Ready use the main Actions menu and the report's published context; Import also consumes its explicitly published collection.
+Collection-specific list controls stay in the report. The shared report owns title search and Back. Its standard Manage contribution owns the title/recency sort toggle, collection Actions and selection commands, Prepare Package, Copy Link, and validated-detail Delete. Copy Link and Delete are contributed to Edit; configured Subject and Finder actions join them there. New uses Actions; Draft/Ready uses Edit. Both consume the report's published context, and Import consumes its explicitly published collection.
+
+The collection list's package-selection Actions menu stays in the report's filter toolbar alongside sort and selection commands. It does not mount beside Home in the top row. Its checkbox-based subdocument package preparation remains separate from the Index right-click menu's ordinary-document package preparation.
 
 A configured collection may select one registered customisation. Its controls
 render only in the composition positions supplied for that collection; they
@@ -76,7 +82,7 @@ do not insert DOM into the default toolbar or become app controls. Any added
 action must register its placement, explicit collection/selection/validated
 detail target, capability, empty-state, and refresh effect before dispatch.
 
-A collection detail creates its toolbar once when opening the detail shell. A generated document-content refresh updates the body, metadata and Info without creating, replacing or removing that toolbar. Source mode retains the mounted report beneath its editor so entering or leaving Source does not invalidate the report's target or controls.
+A collection detail creates its action host once when opening the detail shell. Manage portals that host into Edit while the document is rendered and retains it in the hidden collection-action mount during Source or expanded views. The report's internal `detail-toolbar` contribution position still owns exact targets and lifecycle. A generated document-content refresh updates the body, metadata and Info without recreating the actions. Source mode retains the mounted report beneath its editor so entering or leaving Source does not invalidate the report's target or controls.
 
 ## Context Panel Chrome
 
@@ -89,7 +95,7 @@ A hosted view may render controls inside its own body when they operate on that 
 1. Does it change collection reading or select the active index view? Put it in the viewer toolbar.
 2. Does it resize, collapse, or otherwise operate on one panel? Put it in that panel's chrome.
 3. Does it act on tree structure, hierarchy, or a subtree? Put it in the index-view toolbar; use the index context menu for deliberately secondary invoked-row commands.
-4. Does it operate on the active main view or document mode? Put it in the main-view toolbar. The shared document commands New, VS Code, Draft/Ready and Star use the context group in Manage Actions.
+4. Does it operate on the active main view or document mode? Put it in the main-view toolbar. Document actions, including VS Code, Draft/Ready and Star, use Edit; New remains in Manage Actions.
 5. Does it act on the workspace or application as a whole? Put it in Manage Actions.
 6. Does it operate only inside one mounted sub-scope collection? Put it in the
    default or registered report contribution position.

@@ -1,4 +1,4 @@
-import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
+import { createDocsViewerEditMenuItem } from "./docs-viewer-management-edit-menu.js";
 import { mountDocsViewerMediaLinks } from "../shared/docs-viewer-media-detail.js";
 import { loadWorksCollectionSubjectTitles } from "./docs-viewer-management-works-metadata.js";
 import {
@@ -267,11 +267,11 @@ function renderOpenInFinder(context, options) {
       return options.openLocalTarget(encodedPath, options.clientOptions || {});
     }
   });
-  var button = host.ownerDocument.createElement("button");
-  button.className = "docsViewer__toolbarIconButton docsReportDetail__openProjectFolder";
-  button.type = "button";
+  var button = createDocsViewerEditMenuItem(host.ownerDocument, {
+    actionId: "open-project-folder", label: "Open in Finder",
+    artwork: "docsViewer__icon--folder-open", contribution: true
+  });
   button.dataset.docsProjectsOpenFolder = "true";
-  button.appendChild(createDocsViewerToolbarIcon(host.ownerDocument, "docsViewer__icon--folder-open"));
   button.setAttribute("aria-label", "Open in Finder");
   button.title = "Open in Finder";
   button.disabled = !registration.enabled;
@@ -291,7 +291,11 @@ function renderAssignSubject(context, options, assignSubjectAvailable) {
   var host = settings.host;
   if (!host || !assignSubjectAvailable || typeof settings.registerAction !== "function") return;
   var serviceAvailable = typeof options.readMetadata === "function" && typeof options.assignFieldGroup === "function";
-  var button = host.ownerDocument.createElement("button");
+  var assigned = authoringSubject(settings.document).kind !== "none";
+  var button = createDocsViewerEditMenuItem(host.ownerDocument, {
+    actionId: "assign-subject", label: "Assign Subject",
+    artwork: assigned ? "docsViewer__icon--dlf-subject-assigned" : "docsViewer__icon--dlf-subject", contribution: true
+  });
   var registration = settings.registerAction({
     id: "assign-subject",
     placement: "detail-toolbar",
@@ -305,7 +309,7 @@ function renderAssignSubject(context, options, assignSubjectAvailable) {
         catalogueProvider: options.catalogueProvider,
         fetch: options.fetch,
         readMetadata: options.readMetadata,
-        restoreFocus: button,
+        restoreFocus: function () { return options.root?.querySelector("#docsViewerManageEditButton"); },
         root: options.root,
         target: target
       }).then(function (result) {
@@ -319,12 +323,7 @@ function renderAssignSubject(context, options, assignSubjectAvailable) {
     }
   });
   if (registration.hidden) return;
-  button.className = "docsViewer__toolbarIconButton docsReportDetail__assignSubject";
-  button.type = "button";
   button.dataset.docsProjectsAssignSubject = "true";
-  var assigned = authoringSubject(settings.document).kind !== "none";
-  button.appendChild(createDocsViewerToolbarIcon(host.ownerDocument,
-    assigned ? "docsViewer__icon--dlf-subject-assigned" : "docsViewer__icon--dlf-subject"));
   button.setAttribute("aria-label", assigned ? "Change Subject" : "Assign Subject");
   button.title = button.getAttribute("aria-label");
   button.disabled = !registration.enabled;

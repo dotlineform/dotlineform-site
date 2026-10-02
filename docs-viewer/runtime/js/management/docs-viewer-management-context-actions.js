@@ -5,7 +5,7 @@ import { managedDocumentTargetsEqual, normalizeManagedDocumentTarget } from "./d
 import { selectedDocumentRows } from "../shared/docs-selected-documents.js";
 
 /**
- * Own the main Actions menu's exact document/collection targets and availability.
+ * Own context-aware New and Edit actions' exact targets and availability.
  * Collection loading/error states never fall back to the ordinary report host.
  * Writes use management services; the mounted report projects committed draft
  * changes and owns refresh/open after collection creation. Selection reads are
@@ -20,7 +20,6 @@ export function createDocsViewerManagementContextActions(options) {
     var context = options.documentActionContext() || {};
     var view = options.activeViewState();
     var rendered = view.activeViewId === "rendered-document" && view.activeModeId === "rendered-document";
-    var source = view.activeViewId === "rendered-document" && view.activeModeId === "markdown-source";
     var target = context.documentTarget;
     var record = context.documentRecord;
     var exact = Boolean(target && record && record.doc_id === target.doc_id);
@@ -39,7 +38,7 @@ export function createDocsViewerManagementContextActions(options) {
     } else if (!createReason && !exact && options.selectedDocument.selectedDocId) {
       createReason = "Wait for the selected document to finish loading.";
     }
-    var sourceTarget = source ? options.sourceTarget() : (rendered && exact ? target : null);
+    var sourceTarget = rendered && exact ? target : null;
     var documentReason = reason || (!rendered ? "Return to the document to use this action."
       : !exact ? "Wait for a valid document to finish loading." : "");
     var draftReason = documentReason;
@@ -56,7 +55,7 @@ export function createDocsViewerManagementContextActions(options) {
       record: record, collection: collection,
       newReason: createReason,
       vscodeTarget: sourceTarget,
-      vscodeReason: reason || (!sourceTarget ? "Open a valid document or its source first." : ""),
+      vscodeReason: reason || (!sourceTarget ? "Open a valid document first." : ""),
       draftReason: draftReason, selectedReason: documentReason,
       canReadSelection: !unavailable && exact && rendered,
       blocked: blocked

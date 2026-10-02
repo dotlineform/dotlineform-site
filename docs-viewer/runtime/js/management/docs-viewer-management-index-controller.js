@@ -260,6 +260,7 @@ export function createDocsViewerManagementIndexController(options = {}) {
   }
 
   return {
+    actionControlState: actionControlState,
     actionStates: actionStates,
     handleAction: handleAction
   };

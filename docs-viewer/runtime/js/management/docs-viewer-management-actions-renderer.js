@@ -13,26 +13,6 @@ var MANAGEMENT_ACTION_MENU_ITEMS = [
     label: "New"
   },
   {
-    id: "docsViewerManageOpenVsCodeButton",
-    actionId: ACTION_IDS.OPEN_VSCODE,
-    artwork: "docsViewer__icon--file-code-corner",
-    label: "Open in VS Code"
-  },
-  {
-    id: "docsViewerManageDraftButton",
-    actionId: ACTION_IDS.SET_DRAFT,
-    artwork: "docsViewer__icon--circle-check",
-    label: "Mark as draft",
-    checked: false
-  },
-  {
-    id: "docsViewerManageSelectedButton",
-    actionId: ACTION_IDS.SET_SELECTED,
-    artwork: "docsViewer__icon--star",
-    label: "Star",
-    checked: false
-  },
-  {
     id: "docsViewerManageImportButton",
     actionId: ACTION_IDS.IMPORT,
     artwork: "docsViewer__icon--import",
@@ -72,8 +52,7 @@ function renderActionMenuItem(documentRef, item) {
   button.type = "button";
   button.disabled = true;
   button.dataset.docsViewerAction = item.actionId;
-  button.setAttribute("role", typeof item.checked === "boolean" ? "menuitemcheckbox" : "menuitem");
-  if (typeof item.checked === "boolean") button.setAttribute("aria-checked", String(item.checked));
+  button.setAttribute("role", "menuitem");
   button.setAttribute("aria-label", item.label);
   button.title = item.label;
   var label = documentRef.createElement("span");

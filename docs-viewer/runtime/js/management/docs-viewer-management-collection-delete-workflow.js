@@ -185,7 +185,7 @@ export function createDocsViewerManagementCollectionDeleteWorkflow(options = {})
         : null;
       var confirmed = await confirmDelete({
         root: options.root,
-        restoreFocus: button,
+        restoreFocus: options.restoreFocus || button,
         title: "Delete " + title + "?",
         body: previewBody(preview, target, title),
         primaryLabel: "Delete document",

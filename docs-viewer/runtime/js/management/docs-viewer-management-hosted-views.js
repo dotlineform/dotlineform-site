@@ -38,7 +38,6 @@ export function createDocsViewerManagementViewDefinitions() {
       },
       {
         id: "edit",
-        actionId: DOCS_VIEWER_ACTION_IDS.EDIT_DOCUMENT,
         label: "Edit document",
         ownerType: "view",
         ownerViewId: "rendered-document",

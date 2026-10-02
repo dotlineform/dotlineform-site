@@ -2,7 +2,7 @@
 doc_id: d-20260919-100234-038395
 title: "Shared Icons: Toolbar Mapping"
 added_date: "2026-09-19 10:02:34"
-last_updated: "2026-10-02 12:15:13"
+last_updated: "2026-10-02 13:24:24"
 summary: Editable mappings for Docs Viewer toolbars, report toolbars and report list icons, including code identifiers, state variants and replacement artwork choices.
 ui_status: planned
 parent_id: d-20260910-223116-9a1011
@@ -53,7 +53,10 @@ Code identifiers below are exact **renderer keys**, except entries explicitly ma
 | Document: Info | `info-toggle` | Info panel closed | Text `i` | info.svg | — | Implemented; review pending |
 | Document: Info | `info-toggle` | Info panel open | Same `i`, selected background/text styling | info.svg | no change when open | Implemented; review pending |
 | Document: Links | `document-links` | Opens document Links | 🔀 | waypoints.svg | — | Implemented; review pending |
-| Document: Edit document | `manage-edit` | Opens document editing | `pen.svg` mask | `pen.svg` | 20px mask; 32px button; theme text tint; borderless; stronger hover background | Adopted pen; 20px trial review pending |
+| Document: Edit document | `manage-edit` | Opens the Edit dropdown | `pen.svg` mask | `pen.svg` | 20px mask; 32px button; theme text tint; borderless; stronger hover background | Retained pen; menu opens left at document right edge; review pending |
+| Edit menu: Source editor | action `edit-document` | Opens Source for the displayed ordinary document, collection host or validated detail | Pen button previously opened Source directly | square-code.svg | Icon and text `Source editor` | Implemented; review pending |
+| Edit menu: ordinary Copy link | action `copy-link` | Copies the exact displayed ordinary document or collection host link | Index context-menu link artwork | link.svg | Icon and text `Copy link` | Existing handler; collection detail contribution listed below |
+| Edit menu: ordinary Delete | action `delete` | Uses existing ordinary subtree availability and confirmation | Index context-menu trash artwork | trash.svg | Icon and text `Delete` | Existing handler; collection detail contribution listed below |
 | Review: VS Code | DOM `docsViewerReviewOpenVsCodeButton` | Opens package document source in VS Code | Branded VS Code SVG | file-code-corner.svg | 20px theme-tinted mask; existing 32px document action button | Implemented; review pending; branded asset removed |
 | Source: return | `return-to-doc` | Returns to rendered document | ↩ | corner-down-left.svg | — | Implemented; review pending |
 | Source: save | `markdown-source-save` | Saves Markdown source | 💾 | download.svg | — | Implemented; review pending |
@@ -71,11 +74,11 @@ Code identifiers below are exact **renderer keys**, except entries explicitly ma
 | Management: Pre-publish | `manage-toolbar-pre-publish` | Opens Pre-publish | Text `Pre-publish` | book-up.svg | — | Implemented; review pending; no text |
 | Management: stage | `manage-stage-select` | Stage selection, with selected-state styling | Stage-name text buttons | circle-ellipsis.svg, circle-check.svg, circle-arrow-up.svg | Working, Pre-publish, Published respectively; inactive grey, selected normal text colour | Implemented; review pending; icon-only |
 | Actions menu: New | action `new` | Creates an ordinary sibling/root or a member of the displayed collection; disabled in Catalogue | 📄 and text | file.svg and text | — | Implemented; manual review pending |
-| Actions menu: VS Code | action `open-vscode` | Opens the exact ordinary or collection source, including the captured Source target | Branded VS Code SVG | file-code-corner.svg and text | 20px theme-tinted mask | Implemented; manual review pending |
-| Actions menu: draft readiness | action `set-draft` | Draft (`aria-checked=true`); Mark ready | 📝 | circle-dashed-check.svg and text | — | Implemented; disabled for Catalogue subdocuments; manual review pending |
-| Actions menu: draft readiness | action `set-draft` | Ready (`aria-checked=false`); Mark as draft | ✅ | circle-check.svg and text | — | Implemented; disabled for Catalogue subdocuments; manual review pending |
-| Actions menu: Star | action `set-selected` | Unset (`aria-checked=false`); Star | Outline star | star.svg and text | Theme text tint | Implemented; manual review pending |
-| Actions menu: Star | action `set-selected` | Set (`aria-checked=true`); Remove star | Filled star | star-filled.svg and text | Yellow when enabled; disabled colour otherwise | Implemented; manual review pending |
+| Edit menu: VS Code | action `open-vscode` | Opens the exact displayed ordinary or collection source; Edit hidden in Source/expanded views | Branded VS Code SVG | file-code-corner.svg and text | 20px theme-tinted mask | Implemented; manual review pending |
+| Edit menu: draft readiness | action `set-draft` | Draft (`aria-checked=true`); Mark ready | 📝 | circle-dashed-check.svg and text | — | Implemented; disabled for Catalogue subdocuments; manual review pending |
+| Edit menu: draft readiness | action `set-draft` | Ready (`aria-checked=false`); Mark as draft | ✅ | circle-check.svg and text | — | Implemented; disabled for Catalogue subdocuments; manual review pending |
+| Edit menu: Star | action `set-selected` | Unset (`aria-checked=false`); Star | Outline star | star.svg and text | Theme text tint | Implemented; manual review pending |
+| Edit menu: Star | action `set-selected` | Set (`aria-checked=true`); Remove star | Filled star | star-filled.svg and text | Yellow when enabled; disabled colour otherwise | Implemented; manual review pending |
 | Actions menu: Import | action `import` | Opens Import | 📥 and text | import.svg and text | — | Implemented; review pending |
 | Actions menu: Export | action `export-workspace` | Exports workspace | ⬇️ and text | square-arrow-right-exit.svg and text | — | Implemented; review pending |
 | Actions menu: Rebuild | action `rebuild-docs` | Rebuilds docs and Search | 🔄 and text | refresh-cw.svg and text | — | Implemented; manual review pending |
@@ -105,11 +108,11 @@ Identifiers marked `DOM` are element IDs; `selector` entries are exact attribute
 | Collection selection: done | selector `[data-docs-collection-selection-command="done"]` | Ends selection mode | Text `Done` | Text `Done` | — | Keep |
 | Collection list: clear search | `docs_collection`; selector `[data-docs-collection-filters] .sharedSearchField__clear` | Clears search; hidden while empty or uneditable | × | x.svg | 1rem artwork; 1.75rem button | Shared Search Fields; review pending |
 | Collection detail: return | selector `.docsReportDetail__back` | Returns to the collection list and its saved position | ← | arrow-left.svg | — | Implemented; review pending |
-| Collection detail: copy link | selector `[data-docs-collection-copy-link]`; action `copy-link` | Copies the exact detail document's Markdown link | 🔗 | link.svg | — | Implemented; review pending |
-| Collection detail: Delete | selector `[data-docs-collection-delete]`; action `delete` | Deletes the validated detail when available; same artwork while checking/disabled | 🗑️ | trash.svg | — | Implemented; review pending |
-| Subject-aware collection detail: assign | selector `[data-docs-projects-assign-subject]`; action `assign-subject` | No valid Subject declaration; opens Subject assignment | Text `Subject` | dlf-subject.svg | — | Implemented; missing, malformed or conflicting declarations use unassigned artwork |
-| Subject-aware collection detail: assign | selector `[data-docs-projects-assign-subject]`; action `assign-subject` | Valid Subject declaration; opens Subject assignment to change it | Text `Subject` | dlf-subject-assigned.svg | — | Implemented; a valid declaration remains assigned if its target is unavailable; review pending |
-| Subject-aware collection detail: Finder | selector `[data-docs-projects-open-folder]`; action `open-project-folder` | Opens a valid Folder subject in Finder; disabled without one | Text `Open in Finder` | folder-open.svg | Icon only | Implemented; review pending |
+| Edit menu: collection Copy link | selector `[data-docs-collection-copy-link]`; action `copy-link` | Copies the exact detail document's Markdown link | 🔗 | link.svg | Icon and text `Copy link` | Moved from detail toolbar; review pending |
+| Edit menu: collection Delete | selector `[data-docs-collection-delete]`; action `delete` | Deletes the validated detail when available; Catalogue disabled | 🗑️ | trash.svg | Icon and text `Delete` | Moved from detail toolbar; same artwork while checking/disabled; review pending |
+| Edit menu: Assign Subject | selector `[data-docs-projects-assign-subject]`; action `assign-subject` | No valid Subject declaration; opens Subject assignment | Text `Subject` | dlf-subject.svg | Icon and text `Assign Subject` | Moved from detail toolbar; unsupported collections disabled; missing, malformed or conflicting declarations use unassigned artwork |
+| Edit menu: Assign Subject | selector `[data-docs-projects-assign-subject]`; action `assign-subject` | Valid Subject declaration; opens Subject assignment to change it | Text `Subject` | dlf-subject-assigned.svg | Icon and text `Assign Subject`; accessible next action `Change Subject` | Moved from detail toolbar; a valid declaration remains assigned if its target is unavailable; review pending |
+| Edit menu: Open in Finder | selector `[data-docs-projects-open-folder]`; action `open-project-folder` | Opens a valid Folder subject in Finder; disabled without one | Text `Open in Finder` | folder-open.svg | Icon and text `Open in Finder` | Moved from detail toolbar; unsupported collections disabled; review pending |
 | Report presentation: expand | selector `.docsViewerReport__detailOpen`; function `createOpenControl()` | Opens a report's expanded view within Docs Viewer | Inline external-link-style SVG | square-arrow-out-up-right.svg | — | Implemented; review pending; opens an internal expanded view |
 | Expanded table: reset | renderer `content-detail-reset-widths` | Resets resized columns; shared with other managed semantic-table details | Text `Reset widths` | unfold-horizontal.svg | — | Implemented; review pending |
 | Expanded table: copy | renderer `content-detail-copy-table` | Copies the visible semantic table as TSV | Inline overlapping-sheets SVG | copy.svg | — | Implemented; review pending |
@@ -284,14 +287,15 @@ Paths below are relative to the repository root. They identify the inspected own
 - Source contributions and Directives menu: `docs-viewer/runtime/js/management/source-editor/catalogue-image-contribution.js`, `catalogue-media-link.js`, `document-link-contribution.js` and `directive-actions.js` in that directory.
 - Index header rendering: `docs-viewer/runtime/js/shared/docs-viewer-index-panel-renderer.js`. Panel layout comes from `docs-viewer-panel-layout.js` in the same directory. Collapse/expand controls and saved sizing are retired; the header remains only for active index-view controls.
 - Info panel close control: `docs-viewer/runtime/js/shared/docs-viewer-info-panel-renderer.js`.
-- Context New/VS Code/Draft/Ready/Star state and dispatch: `docs-viewer/runtime/js/management/docs-viewer-management-context-actions.js`.
+- Context New in Actions and VS Code/Draft/Ready/Star in Edit state and dispatch: `docs-viewer/runtime/js/management/docs-viewer-management-context-actions.js`.
+- Edit dropdown, Source editor and ordinary Copy/Delete entries: `docs-viewer/runtime/js/management/docs-viewer-management-edit-menu.js`. Collection entries retain their contribution owners below. `square-code.svg` is management-only artwork.
 - Shared icon creation: `docs-viewer/runtime/js/shared/docs-viewer-toolbar-icon.js`. Shared sizing, button/mask presentation and theme styles: `docs-viewer/static/css/docs-viewer.css` and `docs-viewer-theme.css`; management-only artwork URLs live in `docs-viewer-manage.css` in the same directory.
 - Public runtime projection ownership: `site-tools/config/site-code-update.json`. The shared reader's required SVGs, including ordinary-document status and index Draft artwork, are explicitly projected; management-only Subject artwork stays local.
 
 Report inventory owners:
 
 - Report identities and loader membership: `docs-viewer/config/reports/reports.json`; local/public loaders in `docs-viewer/runtime/js/reports/docs-viewer-reports.js` and `docs-viewer-public-reports.js`.
-- Shared collection search-clear and detail-return controls: `docs-viewer/runtime/js/shared/docs-collection-report.js`. Collection Regenerate, Actions, package menu, sort toggle, selection commands, Copy link, Delete and row status/draft cues: `docs-viewer/runtime/js/management/docs-viewer-management-collection-default-contribution.js`. Collection New and Draft/Ready use the main Actions menu's context owner.
+- Shared collection search-clear and detail-return controls: `docs-viewer/runtime/js/shared/docs-collection-report.js`. Collection Regenerate, Actions, package menu, sort toggle, selection commands, Copy link, Delete and row status/draft cues: `docs-viewer/runtime/js/management/docs-viewer-management-collection-default-contribution.js`. Collection New in Actions and Draft/Ready in Edit use the same context owner.
 - Subject-aware collection header sorts, Subject cells, assignment and Finder controls: `docs-viewer/runtime/js/management/docs-viewer-management-collection-working-subjects.js`. The registered Manage customisation is `working_works`; its current capabilities decide which controls appear. The Processing collection and `working_processing` contribution were retired on 2026-09-27.
 - Subject artwork shared across collection lists, Project State and Works: `docs-viewer/runtime/js/reports/project-subject-icons.js`. Ordinary-document status artwork: `docs-viewer/runtime/js/shared/docs-viewer-code-config.js`. The mapping does not validate front-matter values.
 - Report-owned toolbar controls: the corresponding `workspace-links-report.js`, `unpublishable-report.js`, `series-works-report.js`, `docs-broken-links-report.js`, `project-state-report.js`, `docs-media-report.js`, `catalogue-works-report.js`, `uncataloged-files-report.js` and `missing-source-files-report.js` under `docs-viewer/runtime/js/reports/`.
