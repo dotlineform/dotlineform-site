@@ -65,13 +65,6 @@ function managementModalRoot(settings) {
     : null;
 }
 
-function createCollectionDocumentAction(settings) {
-  var actions = settings && settings.managementDocumentActions;
-  return actions && typeof actions.createCollectionDocument === "function"
-    ? actions.createCollectionDocument
-    : null;
-}
-
 function configuredCollection(settings,  collection) {
   var normalizedCollection = cleanString(collection).toLowerCase();
   var parentConfig = settings.workspaceConfigState.activeConfig;
@@ -144,15 +137,10 @@ export function loadDocsViewerCollectionContribution(settings, parent, collectio
           documentRecord
         );
       },
-      onCreateDocument: contributionOptions.onCreateDocument,
       allowDelete: collection !== "catalogue",
       onRegenerateCatalogue: settings.managementContext
         && collection === "catalogue" && cleanString(clientOptions.baseUrl)
         ? settings.managementDocumentActions?.regenerateCatalogue
-        : null,
-      onToggleDraft: settings.managementContext
-        && cleanString(clientOptions.baseUrl)
-        ? settings.managementDocumentActions?.toggleCollectionDocumentDraft
         : null,
       onPreparePackage: contributionOptions.onPreparePackage,
       root: managementModalRoot(settings),
@@ -196,41 +184,6 @@ export function loadDocsViewerCollectionContribution(settings, parent, collectio
       });
     });
   });
-}
-
-function openCollectionCreate(settings, parent, collectionId, request, context) {
-  var target = request && typeof request === "object" ? request : {};
-  var keys = Object.keys(target).sort();
-  if (
-    keys.length !== 1
-    || keys[0] !== "collection"
-    || cleanString(target.collection).toLowerCase() !== collectionId
-  ) {
-    return Promise.reject(new Error(
-      "Collection create target did not match the mounted report."
-    ));
-  }
-  var refreshAndOpenDocument = context
-    && typeof context.refreshAndOpenDocument === "function"
-    ? context.refreshAndOpenDocument
-    : null;
-  if (!refreshAndOpenDocument) {
-    return Promise.reject(new Error(
-      "Collection create report refresh is unavailable."
-    ));
-  }
-  var action = createCollectionDocumentAction(settings);
-  if (!action) {
-    return Promise.reject(new Error("Collection document creation is unavailable."));
-  }
-  return action(
-    {
-      collection: collectionId
-    },
-    {
-      refreshAndSelect: refreshAndOpenDocument
-    }
-  );
 }
 
 var preparePackageWorkflowRequest = null;
@@ -311,18 +264,7 @@ export function mountDocsViewerManageDocumentExtras(context) {
   }
 
   var parent = parentTarget(settings);
-  var createAction = createCollectionDocumentAction(settings);
   var contribution = loadDocsViewerCollectionContribution(settings, parent, collection, {
-    onCreateDocument: (
-      settings.managementContext
-      && collection !== "catalogue"
-      && reportManagementBaseUrl
-      && createAction
-    )
-      ? function (request, context) {
-          return openCollectionCreate(settings, parent, collection, request, context);
-        }
-      : null,
     onPreparePackage: settings.managementContext && reportManagementBaseUrl
       ? function (request, context) {
           return openCollectionPreparePackage(settings, request, context);

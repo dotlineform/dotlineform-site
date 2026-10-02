@@ -363,22 +363,6 @@ export function startDocsViewerRuntime(options) {
           }
           return controller.regenerateCatalogue(collection, options);
         });
-      },
-      toggleCollectionDocumentDraft: function (target, draft) {
-        return loadManagementController().then(function (controller) {
-          if (!controller || typeof controller.toggleCollectionDocumentDraft !== "function") {
-            throw new Error("Collection draft readiness is unavailable.");
-          }
-          return controller.toggleCollectionDocumentDraft(target, draft);
-        });
-      },
-      createCollectionDocument: function (collection, options) {
-        return loadManagementController().then(function (controller) {
-          if (!controller || typeof controller.createCollectionDocument !== "function") {
-            throw new Error("Collection document creation is unavailable.");
-          }
-          return controller.createCollectionDocument(collection, options);
-        });
       }
     },
     mountDocumentExtras: settings.mountDocumentExtras,

@@ -79,8 +79,7 @@ export function createDocsViewerManagementEventRouter(options = {}) {
       ["import", ["openImport", {}]],
       ["export-workspace", ["exportWorkspace", { hideContextMenu: true, hideManageActionsMenu: true }]],
       ["settings", ["openSettings", {}]],
-      ["publish", ["publish", { hideContextMenu: true, hideManageActionsMenu: true }]],
-      ["new", ["createDoc", { hideContextMenu: true, hideManageActionsMenu: true }]]
+      ["publish", ["publish", { hideContextMenu: true, hideManageActionsMenu: true }]]
     ]);
     var command = commandsByAction.get(actionId);
     if (!command || detail.eventType !== "click") return false;

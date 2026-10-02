@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260716-204013-3be4e1
 title: Button Placement
 added_date: "2026-07-16 20:40:13"
-last_updated: "2026-10-02 10:19:41"
+last_updated: "2026-10-02 12:15:13"
 parent_id: d-20260424-000000-50b63f
 ---
 # Button Placement
@@ -20,8 +20,9 @@ This feature owns that user-facing mental model. The control registry, action ta
 | --- | --- |
 | The displayed document and its parent/child structure | Index panel toolbar |
 | The right-clicked row, with deliberately secondary discovery | Index panel context menu |
-| Rendered document, source, or display mode | Document toolbar |
-| The scope or application as a whole | Manage toolbar / Actions |
+| New, VS Code, Draft/Ready or Star for the displayed document/collection | Context group in Manage Actions |
+| Rendered document presentation, editing, or display mode | Document toolbar |
+| The workspace or application as a whole | Workspace group in Manage Actions |
 
 The index toolbar is visible only while the index panel is open. Collapsing the panel hides the complete `index-view` control surface, including every current and future index action. The restore control remains visible because it is panel chrome outside that toolbar.
 
@@ -52,21 +53,19 @@ In user-facing discussion, **index toolbar** means the toolbar belonging to the 
 
 The **🛠️ Index Actions** menu operates on the currently displayed ordinary document and all its descendants. **Export…**, **Prepare package…**, and **Delete…** share that target, including children hidden within collapsed branches. Opening the menu does not create selection state, and the Index has no checkboxes or All/Clear/Done controls.
 
-Collection Actions retain their own checked-document workflow. The app-level **Actions** menu remains reserved for operations on the workspace or application.
+Collection Actions retain their own checked-document workflow. The app-level **Actions** menu contains a context group for New, Open in VS Code, Draft/Ready and Star, then a workspace group for Import, Export, Rebuild docs and Search, Publish and Settings. Unavailable items remain visible and disabled. [Toolbar Model](Toolbar_Model.md#manage-toolbar) owns exact targets and Catalogue exceptions.
 
 [Create And Import Endpoints](Create_And_Import_Endpoints.md) owns the server contract.
 
 ### Open in VS Code
 
-**Open in VS Code** is available in the document toolbar because it is used frequently on the active document's source. The context-menu item remains available because it operates directly on an invoked row without first opening that document.
+**Open in VS Code** is available in the main Actions menu for the exact displayed ordinary document, collection-list host or validated collection subdocument. In Source mode it uses the editor's captured target. The Index context-menu item remains available because it operates directly on an invoked row without first opening that document.
 
-Both placements invoke the same action and source-opening behaviour. The context menu supplies the invoked document; the document toolbar supplies the active document. A singular document target prefers an explicit invocation document and otherwise resolves the active document, so source opening has no placement-specific implementation.
+Both placements invoke the same source-opening service. The Index context menu supplies its invoked ordinary document; the main Actions context owner supplies an exact ordinary or collection target. Neither placement changes the other's target.
 
 ## Current Boundary
 
-The placement language, displayed-subtree Index Actions, and Open in VS Code promotion are shipped. Collection checkbox selection remains owned by its mounted report.
-
-No delivery document or tracker was needed.
+The placement language, displayed-subtree Index Actions and context-aware main Actions menu are shipped. New, VS Code, Draft/Ready and Star have no duplicate document or collection-toolbar controls. Collection checkbox selection remains owned by its mounted report.
 
 ## Technical Homes
 

@@ -25,24 +25,6 @@ export function createDocsViewerManagementControlRenderers() {
         artwork: "docsViewer__icon--pen"
       });
     },
-    "manage-draft": function (context) {
-      return renderDocumentActionButton(context, {
-        id: "docsViewerManageDraftButton",
-        artwork: function (state) { return state.pressed === true ? "docsViewer__icon--circle-dashed-check" : "docsViewer__icon--circle-check"; }
-      });
-    },
-    "manage-selected": function (context) {
-      return renderDocumentActionButton(context, {
-        id: "docsViewerManageSelectedButton",
-        artwork: function (state) { return state.pressed === true ? "docsViewer__icon--star-filled" : "docsViewer__icon--star"; }
-      });
-    },
-    "manage-open-vscode": function (context) {
-      return renderDocumentActionButton(context, {
-        id: "docsViewerManageOpenVsCodeButton",
-        artwork: "docsViewer__icon--file-code-corner"
-      });
-    },
     "return-to-doc": function (context) {
       return renderDocumentActionButton(context, {
         id: "docsViewerManageReturnToDocButton",

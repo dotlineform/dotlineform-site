@@ -1,6 +1,7 @@
 import { runManagedDocsExportWorkspaceWorkflow } from "./docs-viewer-export-workspace-workflow.js";
 import { staticHtmlExportCapability } from "./docs-viewer-management-capabilities.js";
-import { toggleManagedDocDraft } from "./docs-viewer-management-draft-workflow.js";
+import { createDocsViewerManagementContextActions } from "./docs-viewer-management-context-actions.js";
+import { projectDocsViewerManagementActionMenuItem } from "./docs-viewer-management-actions-renderer.js";
 import {
   createDocsViewerManagementCapabilityController,
   publishSupported
@@ -35,11 +36,6 @@ import {
 import {
   projectDocsViewerReportControlState
 } from "./docs-viewer-management-report-controls.js";
-import {
-  readSelectedDocuments,
-  setManagedDocSelected
-} from "./docs-viewer-management-client.js";
-import { selectedDocumentRows } from "../shared/docs-selected-documents.js";
 import {
   DOCS_VIEWER_ACTION_IDS,
   DOCS_VIEWER_ACTION_TARGETS,
@@ -183,11 +179,7 @@ export function initDocsViewerManagement(context) {
   var manageRebuildButton = document.getElementById("docsViewerManageRebuildButton");
   var manageSettingsButton = document.getElementById("docsViewerManageSettingsButton");
   var managePublishButton = document.getElementById("docsViewerManagePublishButton");
-  var manageToolbarPublishButton = document.getElementById("docsViewerManageToolbarPublishButton");
-  var managePublishButtons = [managePublishButton, manageToolbarPublishButton].filter(Boolean);
   var manageImportButton = document.getElementById("docsViewerManageImportButton");
-  var manageToolbarImportButton = document.getElementById("docsViewerManageToolbarImportButton");
-  var manageImportButtons = [manageImportButton, manageToolbarImportButton].filter(Boolean);
   var manageNewButton = document.getElementById("docsViewerManageNewButton");
   var importRoot = shellRef("importRoot", "docsHtmlImportRoot");
   var importBootStatus = shellRef("importBootStatus", "docsHtmlImportBootStatus");
@@ -203,7 +195,7 @@ export function initDocsViewerManagement(context) {
   var resolveAction = null;
   var projectedReportControls = null;
   var collectionReportState = null;
-  var selectedState = null;
+  var contextActions = null;
   var indexController = createDocsViewerManagementIndexController({
     root: root,
     management: management,
@@ -295,11 +287,6 @@ export function initDocsViewerManagement(context) {
     };
   }
 
-  function currentActiveDoc() {
-    if (collectionReportState?.state === "detail") return null;
-    return documentIndex.docsById.get(selectedDocument.selectedDocId) || null;
-  }
-
   function sourceTargetForDoc(doc) {
     if (!doc || !doc.doc_id) return null;
     return normalizeManagedDocumentTarget({
@@ -382,27 +369,10 @@ export function initDocsViewerManagement(context) {
       disabled: actionsDisabled,
       documentMode: documentMode,
       hidden: actionsHidden,
-      actionContext: actionContext,
-      sourceTarget: markdownMode ? activeSourceTarget() : null
+      actionContext: actionContext
     });
     if (typeof context.projectMainViewControlState === "function") {
       context.projectMainViewControlState("edit", projectedReportControls.editDocument.state);
-      var draftRecord = actionContext.documentRecord;
-      var draftTarget = actionContext.documentTarget;
-      var draftPolicyRecord = draftTarget && !draftTarget.collection
-        ? documentIndex.docsById.get(draftTarget.doc_id) : null;
-      var draftIgnored = Boolean(draftPolicyRecord && draftPolicyRecord.publication_ignored === true);
-      context.projectMainViewControlState("draft", {
-        hidden: actionsHidden || markdownMode || !draftTarget
-          || Boolean(draftTarget && draftTarget.collection),
-        disabled: actionsDisabled || !draftTarget || !draftRecord || !draftPolicyRecord
-          || draftPolicyRecord.publication_ignored !== false,
-        pressed: Boolean(draftRecord && draftRecord.draft === true),
-        label: draftIgnored ? "Excluded from Publish by unpublishable.json"
-          : draftRecord && draftRecord.draft === true ? "Draft — mark ready" : "Ready — mark as draft"
-      });
-      projectSelectedControl(draftTarget, actionsHidden || markdownMode, actionsDisabled);
-      context.projectMainViewControlState("open-vscode", projectedReportControls.openVsCode.state);
       context.projectMainViewControlState("return-to-doc", projectedReportControls.returnToDoc.state);
       context.projectMainViewControlState("save-markdown-source", {
         hidden: actionsHidden,
@@ -426,120 +396,12 @@ export function initDocsViewerManagement(context) {
   }
 
   function hideAppManagementControls() {
-    [
-      "manage-import",
-      "manage-actions",
-      "manage-rebuild",
-      "manage-publish"
-    ].forEach(function (controlId) {
-      projectAppControl(controlId, { hidden: true, disabled: true });
-    });
-  }
-
-  function runDraftToggle(target, draft) {
-    setManagementBusy(true);
-    setManagementMessage("", false);
-    renderManagementUi();
-    return toggleManagedDocDraft(target, draft, {
-      clientOptions: managementClientOptions(),
-      onSaved: function (savedTarget, response) {
-        if (!savedTarget.collection) {
-          var record = documentIndex.docsById.get(savedTarget.doc_id);
-          if (record) record.draft = response.record.draft;
-          context.renderSidebar();
-        }
-        renderManagementUi();
-      }
-    }).catch(function (error) {
-      setManagementMessage(error.message || "Draft readiness could not be saved.", true);
-    }).finally(function () {
-      setManagementBusy(false);
-      renderManagementUi();
-    });
-  }
-
-  function projectSelectedControl(target, hidden, disabled) {
-    if (hidden || !target) {
-      selectedState = null;
-      context.projectMainViewControlState("selected", { hidden: true, disabled: true });
-      return;
-    }
-    if (!selectedState || !managedDocumentTargetsEqual(selectedState.target, target)) {
-      var pending = { target: normalizeManagedDocumentTarget(target), ready: false, selected: false, error: "" };
-      selectedState = pending;
-      readSelectedDocuments(managementClientOptions()).then(function (payload) {
-        if (selectedState !== pending) return;
-        pending.selected = selectedDocumentRows(payload).some(function (row) {
-          return row.doc_id === target.doc_id && (row.collection || "") === (target.collection || "");
-        });
-        pending.ready = true;
-        renderManagementUi();
-      }).catch(function (error) {
-        if (selectedState !== pending) return;
-        pending.error = error.message || "Selected Documents could not be loaded.";
-        setManagementMessage(pending.error, true);
-        renderManagementUi();
-      });
-    }
-    context.projectMainViewControlState("selected", {
-      hidden: false,
-      disabled: disabled || !selectedState.ready,
-      pressed: selectedState.selected,
-      label: selectedState.error || (!selectedState.ready ? "Loading document selection…"
-        : selectedState.selected ? "Starred — remove from Selected Documents" : "Star — add to Selected Documents")
-    });
-  }
-
-  async function runSelectedToggle() {
-    var state = selectedState;
-    var actionContext = context.documentActionContext();
-    var control = projectedReportControls && projectedReportControls.editDocument;
-    if (!state || !state.ready || !control || control.state.hidden || control.state.disabled
-      || management.managementBusy
-      || !managedDocumentTargetsEqual(state.target, actionContext.documentTarget)) return;
-    var selected = !state.selected;
-    setManagementBusy(true);
-    setManagementMessage("", false);
-    renderManagementUi();
-    try {
-      var response = await setManagedDocSelected(state.target, selected, managementClientOptions());
-      if (response.ok !== true || !managedDocumentTargetsEqual(response.target, state.target) || response.selected !== selected) {
-        throw new Error("Selected Documents response did not match the requested document.");
-      }
-      if (selectedState === state) state.selected = selected;
-    } catch (error) {
-      setManagementMessage(error.message || "Document selection could not be saved.", true);
-    } finally {
-      setManagementBusy(false);
-      renderManagementUi();
-    }
-  }
-
-  function toggleCollectionDocumentDraft(target, draft) {
-    if (management.managementBusy
-      || collectionReportState?.state !== "detail"
-      || !managedDocumentTargetsEqual(target, collectionReportState.documentTarget)
-    ) {
-      return Promise.reject(new Error("Draft readiness is unavailable for this collection document."));
-    }
-    return runDraftToggle(target, draft);
+    projectAppControl("manage-actions", { hidden: true, disabled: true });
   }
 
   function handleMainViewControl(detail) {
     var controlId = String(detail && detail.controlId || "").trim();
     var actionId = String(detail && detail.actionId || "").trim();
-    if (controlId === "selected") return runSelectedToggle();
-    if (controlId === "draft") {
-      var draftControl = projectedReportControls && projectedReportControls.editDocument;
-      if (!draftControl || draftControl.state.hidden || draftControl.state.disabled
-        || !draftControl.target || draftControl.target.collection
-        || management.managementBusy) return;
-      var draftRecord = context.documentActionContext().documentRecord;
-      var draftPolicyRecord = documentIndex.docsById.get(draftControl.target.doc_id);
-      if (!draftRecord || draftRecord.doc_id !== draftControl.target.doc_id
-        || !draftPolicyRecord || draftPolicyRecord.publication_ignored !== false) return;
-      return runDraftToggle(draftControl.target, draftRecord.draft !== true);
-    }
     var reportControlOwners = new Map([
       ["edit", {
         projection: "editDocument",
@@ -551,14 +413,6 @@ export function initDocsViewerManagement(context) {
         projection: "returnToDoc",
         run: function () {
           actionController.handleReturnToDoc();
-        }
-      }],
-      ["open-vscode", {
-        projection: "openVsCode",
-        run: function (target) {
-          var record = context.documentActionContext().documentRecord;
-          actionController.handleOpenSource("vscode", target,
-            record && record.doc_id === target.doc_id ? record.title : target.doc_id);
         }
       }]
     ]);
@@ -621,6 +475,13 @@ export function initDocsViewerManagement(context) {
 
   function handleAppManagementControl(detail) {
     var actionId = String(detail && detail.actionId || "").trim();
+    if (contextActions.owns(actionId)) {
+      if (detail.eventType !== "click") return false;
+      hideContextMenu();
+      eventRouter.hideManageActionsMenu();
+      contextActions.invoke(actionId);
+      return true;
+    }
     if (actionId && !resolveAction(actionId).enabled) return false;
     return eventRouter.handleAppManagementControl(detail);
   }
@@ -630,6 +491,7 @@ export function initDocsViewerManagement(context) {
 
     routeSession.managementContext = typeof context.isManagementContext === "function" && context.isManagementContext();
     if (interactionController) interactionController.render();
+    if (contextActions) contextActions.render();
     if (!routeSession.managementContext) {
       syncManagementStatus("", false);
       hideAppManagementControls();
@@ -671,21 +533,9 @@ export function initDocsViewerManagement(context) {
       management.managementCapabilities
     );
 
-    projectAppControl("manage-import", {
-      hidden: managementActionsHidden,
-      disabled: management.managementBusy || !management.managementAvailable
-    });
     projectAppControl("manage-actions", {
       hidden: managementActionsHidden,
       disabled: management.managementBusy || !management.managementAvailable
-    });
-    projectAppControl("manage-rebuild", {
-      hidden: managementActionsHidden,
-      disabled: management.managementBusy || !management.managementAvailable
-    });
-    projectAppControl("manage-publish", {
-      hidden: managementActionsHidden || !publishAvailable,
-      disabled: management.managementBusy || !publishAvailable
     });
 
     manageRebuildButton.disabled = management.managementBusy || !management.managementAvailable;
@@ -700,21 +550,17 @@ export function initDocsViewerManagement(context) {
       workspaceExportButton.disabled = management.managementBusy || workspaceExportActive || !exportCapability.available;
       workspaceExportButton.title = exportCapability.available ? "Export workspace" : exportCapability.reason;
     }
-    managePublishButtons.forEach(function (button) {
-      button.disabled = management.managementBusy || !publishAvailable;
-    });
-    if (manageToolbarPublishButton) manageToolbarPublishButton.hidden = !publishAvailable;
-    manageImportButtons.forEach(function (button) {
-      button.disabled = management.managementBusy || !management.managementAvailable;
-    });
+    if (managePublishButton) {
+      managePublishButton.disabled = management.managementBusy || !publishAvailable;
+      managePublishButton.title = publishAvailable ? "Publish" : "Publish is unavailable for this workspace.";
+    }
+    if (manageImportButton) {
+      manageImportButton.disabled = management.managementBusy || !management.managementAvailable;
+    }
     if (manageSettingsButton) {
       manageSettingsButton.disabled = management.managementBusy || !management.managementAvailable;
     }
     var authoringAvailable = management.managementAvailable;
-    manageNewButton.hidden = !authoringAvailable;
-    manageNewButton.disabled = management.managementBusy || !authoringAvailable;
-    manageImportButtons.forEach(function (button) { button.hidden = !authoringAvailable; });
-    if (manageSettingsButton) manageSettingsButton.hidden = !authoringAvailable;
     projectDocumentActionButtons(!management.managementChecked || !authoringAvailable, !authoringAvailable || editDisabled);
     if (settingsWorkflow) settingsWorkflow.render();
   }
@@ -886,7 +732,6 @@ export function initDocsViewerManagement(context) {
     refs: {},
     resolveAction: resolveAction,
     callbacks: {
-      currentActiveDoc: currentActiveDoc,
       getSettingsWorkflow: function () {
         return settingsWorkflow;
       },
@@ -903,13 +748,31 @@ export function initDocsViewerManagement(context) {
     }
   });
 
+  contextActions = createDocsViewerManagementContextActions({
+    management: management,
+    selectedDocument: selectedDocument,
+    documentIndex: documentIndex,
+    actions: actionController,
+    documentActionContext: context.documentActionContext,
+    activeViewState: context.activeViewState,
+    sourceTarget: activeSourceTarget,
+    isManagementContext: context.isManagementContext,
+    clientOptions: managementClientOptions,
+    project: function (actionId, state) {
+      projectDocsViewerManagementActionMenuItem(manageActionsMenu, actionId, state);
+    },
+    render: renderManagementUi,
+    renderSidebar: context.renderSidebar,
+    setBusy: setManagementBusy,
+    setMessage: setManagementMessage
+  });
+
   eventRouter = createDocsViewerManagementEventRouter({
     refs: {
       manageActionsButton: manageActionsButton,
       manageActionsMenu: manageActionsMenu
     },
     commands: {
-      createDoc: function () { actionController.handleCreateDoc(); },
       exportWorkspace: openExportWorkspace,
       openImport: openAppImport,
       openSettings: function () { settingsWorkflow.open(); },
@@ -946,7 +809,7 @@ export function initDocsViewerManagement(context) {
     domains: { management: management },
     shellRefs: shellRefs,
     manageActionsButton: manageActionsButton,
-    manageImportButton: manageToolbarImportButton || manageImportButton,
+    manageImportButton: manageImportButton,
     manageSettingsButton: manageSettingsButton,
     callbacks: {
       hideContextMenu: hideContextMenu,
@@ -964,9 +827,7 @@ export function initDocsViewerManagement(context) {
 
   return {
     applyConfig: applyConfig,
-    createCollectionDocument: actionController.handleCreateCollectionDocument,
     regenerateCatalogue: actionController.handleRegenerateCatalogue,
-    toggleCollectionDocumentDraft: toggleCollectionDocumentDraft,
     handleDocumentKeydown: eventRouter.handleDocumentKeydown,
     handleAppManagementControl: handleAppManagementControl,
     handleIndexViewChange: function (viewId) {

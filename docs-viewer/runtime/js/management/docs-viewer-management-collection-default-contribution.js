@@ -70,12 +70,6 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
   var onPreparePackage = typeof options.onPreparePackage === "function"
     ? options.onPreparePackage
     : null;
-  var onToggleDraft = typeof options.onToggleDraft === "function"
-    ? options.onToggleDraft
-    : null;
-  var onCreateDocument = typeof options.onCreateDocument === "function"
-    ? options.onCreateDocument
-    : null;
   var onRegenerateCatalogue = typeof options.onRegenerateCatalogue === "function"
     ? options.onRegenerateCatalogue
     : null;
@@ -87,7 +81,6 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
   var selectionOwner = options.selectionOwner || createDocsViewerCollectionSelectionOwner();
   var currentDocuments = [];
   var listToolbar = null;
-  var createInFlight = false;
   var prepareInFlight = false;
   var rowSelections = new Map();
   var activeDeleteWorkflow = null;
@@ -153,14 +146,6 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     }
     if (!listToolbar) return snapshot;
 
-    if (listToolbar.createButton) {
-      listToolbar.createButton.disabled = createInFlight;
-      if (createInFlight) {
-        listToolbar.createButton.setAttribute("aria-busy", "true");
-      } else {
-        listToolbar.createButton.removeAttribute("aria-busy");
-      }
-    }
     listToolbar.actionsButton.disabled = !available;
     listToolbar.selectionControl.hidden = !active;
     listToolbar.selectAllButton.disabled = !active || allSelected || eligible.length === 0;
@@ -319,37 +304,6 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
       });
     }
 
-    var createButton = null;
-    var createRegistration = null;
-    if (managementContext && onCreateDocument) {
-      createButton = documentRef.createElement("button");
-      createButton.className = (
-        "docsViewer__toolbarIconButton "
-        + "docsViewerReport__collectionNewButton"
-      );
-      createButton.type = "button";
-      createButton.dataset.docsCollectionNew = "true";
-      createButton.setAttribute("aria-label", "New");
-      createButton.title = "New";
-      createButton.appendChild(createDocsViewerToolbarIcon(documentRef, "docsViewer__icon--file"));
-      if (typeof settings.registerAction === "function") {
-        createRegistration = settings.registerAction({
-          id: DOCS_VIEWER_ACTION_IDS.NEW,
-          placement: "list-toolbar",
-          targetKind: "collection",
-          capability: true,
-          emptyState: "enabled",
-          refreshEffect: "open-created-document",
-          handler: function (target) {
-            return onCreateDocument(target, {
-              refreshAndOpenDocument: settings.refreshAndOpenDocument,
-              restoreFocus: createButton
-            });
-          }
-        });
-      }
-    }
-
     var regenerateButton = null;
     if (managementContext && onRegenerateCatalogue) {
       regenerateButton = documentRef.createElement("button");
@@ -420,8 +374,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     selectionControl.replaceChildren(selectAllButton, clearButton, doneButton);
     settings.actionHost.replaceChildren.apply(
       settings.actionHost,
-      (createButton ? [createButton] : [])
-        .concat(regenerateButton ? [regenerateButton] : [])
+      (regenerateButton ? [regenerateButton] : [])
         .concat([actionsHost])
     );
     if (sortButton) root.appendChild(sortButton);
@@ -441,7 +394,6 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     listToolbar = {
       actionsButton: actionsButton,
       clearButton: clearButton,
-      createButton: createButton,
       document: documentRef,
       doneButton: doneButton,
       handleDocumentClick: handleDocumentClick,
@@ -455,27 +407,6 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     documentRef.addEventListener("click", handleDocumentClick);
     documentRef.addEventListener("keydown", handleDocumentKeydown);
 
-    if (createButton) {
-      createButton.addEventListener("click", function () {
-        if (createButton.disabled || createInFlight) return;
-        createInFlight = true;
-        projectSelection();
-        var createRequest = createRegistration.invoke();
-        Promise.resolve(createRequest).catch(function (error) {
-          if (typeof options.setStatus === "function") {
-            options.setStatus(
-              error && error.message
-                ? error.message
-                : "Collection document creation failed.",
-              true
-            );
-          }
-        }).finally(function () {
-          createInFlight = false;
-          projectSelection();
-        });
-      });
-    }
     actionsButton.addEventListener("click", function (event) {
       event.stopPropagation();
       if (actionsButton.disabled) return;
@@ -545,54 +476,6 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     var host = settings.host;
     var target = settings.target;
     if (!host || !target) return;
-
-    if (managementContext && target.collection !== "catalogue"
-      && onToggleDraft && typeof settings.registerAction === "function"
-      && typeof settings.commitDocumentDraft === "function") {
-      var draft = settings.document?.draft === true;
-      var draftRegistration = settings.registerAction({
-        id: "set-draft",
-        placement: "detail-toolbar",
-        targetKind: "validated-detail",
-        capability: true,
-        emptyState: "omitted",
-        refreshEffect: "none",
-        handler: function (draftTarget) {
-          return onToggleDraft(draftTarget, !draft);
-        }
-      });
-      var draftButton = host.ownerDocument.createElement("button");
-      draftButton.className = "docsViewer__toolbarIconButton";
-      draftButton.type = "button";
-      draftButton.dataset.docsCollectionDraft = "true";
-      draftButton.title = draft ? "Draft — mark ready" : "Ready — mark as draft";
-      draftButton.setAttribute("aria-label", draftButton.title);
-      draftButton.setAttribute("aria-pressed", String(draft));
-      draftButton.appendChild(createDocsViewerToolbarIcon(host.ownerDocument,
-        draft ? "docsViewer__icon--circle-dashed-check" : "docsViewer__icon--circle-check"));
-      draftButton.disabled = !draftRegistration.enabled;
-      draftButton.addEventListener("click", function () {
-        if (draftButton.disabled) return;
-        draftButton.disabled = true;
-        draftRegistration.invoke().then(function (response) {
-          if (!response || response.ok !== true) return;
-          settings.commitDocumentDraft(response.target, response.record.draft);
-          draft = response.record.draft;
-          draftButton.title = draft ? "Draft — mark ready" : "Ready — mark as draft";
-          draftButton.setAttribute("aria-label", draftButton.title);
-          draftButton.setAttribute("aria-pressed", String(draft));
-          draftButton.replaceChildren(createDocsViewerToolbarIcon(host.ownerDocument,
-            draft ? "docsViewer__icon--circle-dashed-check" : "docsViewer__icon--circle-check"));
-        }).catch(function (error) {
-          if (typeof options.setStatus === "function") {
-            options.setStatus(error.message || "Draft readiness could not be saved.", true);
-          }
-        }).finally(function () {
-          draftButton.disabled = !draftRegistration.enabled;
-        });
-      });
-      host.appendChild(draftButton);
-    }
 
     if (markdownLinkForDocument && typeof settings.registerAction === "function") {
       var copyRegistration = settings.registerAction({

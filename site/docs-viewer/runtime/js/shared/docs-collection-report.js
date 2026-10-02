@@ -26,8 +26,8 @@ import {
  * populated. `notify` receives explicit collection-scoped mount, state,
  * complete-manifest refresh, visible-row projection, and unmount events.
  * Detail toolbars are mounted once per detail shell; generated-content refresh
- * retains them. They receive `commitDocumentDraft(target, draft)` to project a
- * confirmed save into the report's list and detail records without I/O.
+ * retains them. Published action context receives `commitDocumentDraft(target,
+ * draft)` to project a confirmed save into list/detail records without I/O.
  * Published action context keeps the configured `collectionLabel` for identity
  * display and supplies `returnToListLabel` alongside its Back action.
  *
@@ -858,6 +858,9 @@ function publishState(state, reportState, target, reason, detail) {
     returnToList: reportState === "detail" ? function () { returnToList(state); } : null,
     returnToListLabel: "Back to all " + collectionItemsLabel(state.collection).toLowerCase(),
     refreshDocument: function (documentTarget) { return refreshAndOpenDocument(state, documentTarget); },
+    commitDocumentDraft: function (documentTarget, draft) {
+      return reconcileCommittedDraft(state, documentTarget, draft);
+    },
     refreshDisplayedDocument: function (documentTarget, isCurrent) {
       return refreshDisplayedDocument(state, documentTarget, isCurrent);
     },
@@ -1000,9 +1003,6 @@ function renderDetailToolbar(state) {
     collection: state.actionContext.collectionTarget,
     commitDeletedDocument: function (target) {
       return reconcileCommittedDeletion(state, target);
-    },
-    commitDocumentDraft: function (target, draft) {
-      return reconcileCommittedDraft(state, target, draft);
     },
     data: state.customisationData,
     document: state.actionContext.documentRecord,

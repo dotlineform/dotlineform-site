@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260605-125108-1d1ef3
 title: Runtime Module Ownership
 added_date: 2026-06-05 12:51:08
-last_updated: "2026-10-02 10:19:41"
+last_updated: "2026-10-02 12:15:13"
 summary: Grouped browser-code owners and a practical trace order for Docs Viewer runtime changes.
 parent_id: d-20260331-000000-c313fd
 ---
@@ -57,6 +57,7 @@ Local report implementations and their current local-only presentation capabilit
 Manage-only browser code lives under `docs-viewer/runtime/js/management/`.
 
 - `docs-viewer-management.js` coordinates capabilities and focused management controllers.
+- `docs-viewer-management-context-actions.js` owns the main Actions menu's New, VS Code, Draft/Ready and Star targets, disabled-state projection and dispatch. It consumes the exact displayed ordinary target or validated collection action context; it never infers a subdocument from a route. The shared collection report owns committed draft projection and refresh/open after creation. Workspace actions remain under their existing workflow owners.
 - `docs-viewer-runtime-lazy-controller.js` is the neutral shared-side lazy boundary that prevents public startup from importing management orchestration.
 - `docs-viewer-action-definitions.js` owns action ids and workspace/document/active-document/document-subtree target policy. It does not own handlers, placement, or mutations. Management resolves a subtree from the validated displayed ordinary-document target and the complete loaded hierarchy; context-menu invocation never changes that target.
 - `docs-viewer-management-index-controller.js` owns the Index Actions menu and Export/Prepare package/Delete dispatch. The Index has no checkbox-selection owner, gutter, commands, or reload reconciliation. Export receives the explicit subtree IDs; Prepare package and Delete receive the captured displayed root and expand descendants through their existing source owners. Collection selection remains independently owned by `docs-viewer-collection-selection.js` and the default collection contribution.

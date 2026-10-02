@@ -7,6 +7,18 @@
   margin-left: auto;
 }
 
+.docsViewer[data-docs-viewer-app-kind="manage"] .docsViewer__topRow{
+  position: relative;
+}
+
+/* Match the centered document/report boundary, independent of toolbar flow. */
+.docsViewer[data-docs-viewer-app-kind="manage"] .docsViewer__topRow [data-docs-viewer-control="edit"]{
+  position: absolute;
+  top: 0;
+  font-size: inherit;
+  right: calc((100% - var(--docs-viewer-document-width)) / 2);
+}
+
 .docsViewer__icon--arrow-up-down{
   mask-image: url("../icons/arrow-up-down.svg");
 }
@@ -1227,6 +1239,7 @@ select.docsViewer__positionTargets{
   display: none;
 }
 
+.docsViewer__manageToolbarMount .docsViewer__actionsMenu,
 .docsViewerDirectiveActions__menu{
   right: 0;
   left: auto;
@@ -1259,6 +1272,11 @@ select.docsViewer__positionTargets{
   min-width: 0;
 }
 
+.docsViewer__actionMenuSeparator{
+  border-top: 1px solid var(--docs-viewer-border);
+  margin: 0.3rem 0.65rem;
+}
+
 .docsViewer__actionMenuItem:hover{
   background: var(--docs-viewer-panel-2);
 }
@@ -1284,4 +1302,8 @@ select.docsViewer__positionTargets{
 .docsViewer__toolbarIcon.docsViewer__icon--star-filled{
   mask-image: url("../icons/star-filled.svg");
   background-color: #f4c430;
+}
+
+.docsViewer__actionMenuItem:disabled .docsViewer__icon--star-filled{
+  background-color: var(--docs-viewer-disabled);
 }

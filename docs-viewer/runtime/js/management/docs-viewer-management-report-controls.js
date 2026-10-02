@@ -15,7 +15,6 @@ export function projectDocsViewerReportControlState(options = {}) {
   var hidden = Boolean(options.hidden);
   var disabled = Boolean(options.disabled);
   var editTarget = options.actionContext && options.actionContext.documentTarget;
-  var sourceTarget = sourceMode ? options.sourceTarget : editTarget;
 
   return {
     editDocument: control({
@@ -23,11 +22,6 @@ export function projectDocsViewerReportControlState(options = {}) {
       disabled: disabled || sourceMode || !editTarget,
       label: "Edit document"
     }, editTarget),
-    openVsCode: control({
-      hidden: hidden,
-      disabled: disabled || !sourceTarget,
-      label: "Open in VS Code"
-    }, sourceTarget),
     returnToDoc: control({
       hidden: hidden || !sourceMode,
       disabled: disabled || !sourceMode,

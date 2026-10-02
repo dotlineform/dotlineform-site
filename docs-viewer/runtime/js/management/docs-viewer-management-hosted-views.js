@@ -28,16 +28,6 @@ export function createDocsViewerManagementViewDefinitions() {
     }],
     controls: [
       {
-        id: "manage-import",
-        actionId: DOCS_VIEWER_ACTION_IDS.IMPORT,
-        label: "Import",
-        ownerType: "app",
-        surfaceId: "app-management",
-        appKinds: ["manage"],
-        features: ["management"],
-        renderer: "manage-toolbar-import"
-      },
-      {
         id: "manage-actions",
         label: "Actions",
         ownerType: "app",
@@ -45,50 +35,6 @@ export function createDocsViewerManagementViewDefinitions() {
         appKinds: ["manage"],
         features: ["management"],
         renderer: "manage-actions-menu"
-      },
-      {
-        id: "manage-rebuild",
-        actionId: DOCS_VIEWER_ACTION_IDS.REBUILD_DOCS,
-        label: "Rebuild docs and Search",
-        ownerType: "app",
-        surfaceId: "app-management",
-        appKinds: ["manage"],
-        features: ["management"],
-        renderer: "manage-toolbar-rebuild"
-      },
-      {
-        id: "manage-publish",
-        actionId: DOCS_VIEWER_ACTION_IDS.PUBLISH,
-        label: "Publish",
-        ownerType: "app",
-        surfaceId: "app-management",
-        appKinds: ["manage"],
-        features: ["management"],
-        renderer: "manage-toolbar-publish"
-      },
-      {
-        id: "draft",
-        actionId: "set-draft",
-        label: "Draft readiness",
-        ownerType: "view",
-        ownerViewId: "rendered-document",
-        modeIds: ["rendered-document"],
-        surfaceId: "main-view",
-        appKinds: ["manage"],
-        features: ["management"],
-        renderer: "manage-draft"
-      },
-      {
-        id: "selected",
-        actionId: "set-selected",
-        label: "Select document",
-        ownerType: "view",
-        ownerViewId: "rendered-document",
-        modeIds: ["rendered-document"],
-        surfaceId: "main-view",
-        appKinds: ["manage"],
-        features: ["management"],
-        renderer: "manage-selected"
       },
       {
         id: "edit",
@@ -101,18 +47,6 @@ export function createDocsViewerManagementViewDefinitions() {
         appKinds: ["manage"],
         features: ["management", "source-editing"],
         renderer: "manage-edit"
-      },
-      {
-        id: "open-vscode",
-        actionId: DOCS_VIEWER_ACTION_IDS.OPEN_VSCODE,
-        label: "Open in VS Code",
-        ownerType: "view",
-        ownerViewId: "rendered-document",
-        modeIds: ["rendered-document", "markdown-source"],
-        surfaceId: "main-view",
-        appKinds: ["manage"],
-        features: ["management"],
-        renderer: "manage-open-vscode"
       },
       {
         id: "source-add-image",

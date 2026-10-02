@@ -261,10 +261,6 @@ export function createDocsViewerManagementActionController(options) {
     throw new Error("Docs Viewer management actions require action target resolution.");
   }
 
-  function currentActiveDoc() {
-    return callbacks.currentActiveDoc ? callbacks.currentActiveDoc() : null;
-  }
-
   function actionTargetDoc(actionId, targetDocId) {
     var resolution = arguments.length > 1
       ? resolveAction(actionId, targetDocId)
@@ -385,20 +381,20 @@ export function createDocsViewerManagementActionController(options) {
     });
   }
 
-  async function handleCreateDoc() {
+  async function handleCreateDoc(target) {
+    var anchor = target ? normalizeManagedDocumentTarget(target) : null;
+    if (anchor && anchor.collection) throw new Error("Ordinary document creation requires an ordinary target.");
     var titleResult = await openCreateTitleModal(ACTION_TEXT.createDocTitle);
     if (!titleResult || !titleResult.confirmed) return;
 
     var title = String(titleResult.value || "").trim() || ACTION_TEXT.createDocDefaultTitle;
-    var currentDoc = currentActiveDoc();
-
     setManagementBusy(true);
     setManagementMessage("Creating doc...", false);
 
     return createDocumentAndOpenSource({
       title: title,
-      target_doc_id: currentDoc ? currentDoc.doc_id : "",
-      placement: currentDoc ? "after" : "inside"
+      target_doc_id: anchor ? anchor.doc_id : "",
+      placement: anchor ? "after" : "inside"
     });
   }
 

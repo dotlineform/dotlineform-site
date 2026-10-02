@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260528-224754-964108
 title: Panel Hosts and Control Surfaces
 added_date: "2026-05-28 22:47:54"
-last_updated: "2026-10-02 10:19:41"
+last_updated: "2026-10-02 12:15:13"
 summary: Stable panel, view, mode, control-surface, context, lifecycle, and extension model for Docs Viewer browser modules.
 parent_id: d-20260424-000000-50b63f
 
@@ -75,13 +75,15 @@ Composite controls are acceptable when their internals form one focused componen
 
 ## Actions And Invocation Context
 
-Action definitions are the authority used by toolbar, menu, main-view, and context placements before dispatch.
+Action definitions own stable action identities and target categories. Focused controllers resolve the applicable exact target before dispatch.
 
 - displayed-document controls use `activeDocId`;
 - singular document actions use `invocationDocId` when a placement supplies one and otherwise use `activeDocId`;
 - Index Actions use the displayed ordinary document and its complete descendant subtree;
 - scope actions have no document target;
 - context-menu operations pass `invocationDocId`, which supplies the invocation document without changing the Index Actions target.
+
+The main Manage Actions context group uses the displayed `{doc_id}` or validated `{collection, doc_id}` supplied by the document/collection owner. In a collection list, document actions use the ordinary report host; in detail they use the exact subdocument. New consumes the published collection identity and report-owned refresh/open callback. Loading or invalid detail never falls back to its host. The menu uses visible disabled states rather than omitting unavailable commands.
 
 Each mounted collection retains its own checkbox-selection owner and supplies immutable checked IDs to registered collection selection actions. The Index has no checkbox-selection owner. Its subtree action context requires a validated displayed ordinary-document target; a loading or missing document and collection detail do not supply a host fallback.
 

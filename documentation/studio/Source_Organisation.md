@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260423-000000-8fd731
 title: Source Organisation
 added_date: "2026-04-23 00:00:00"
-last_updated: "2026-09-30 21:39:26"
+last_updated: "2026-10-02 12:15:13"
 summary: Working source and generated storage, one read-only Preview snapshot, and exact collection and media ownership.
 parent_id: d-20260424-000000-50b63f
 ---
@@ -99,7 +99,7 @@ Document-level New, Edit and Delete operate within an existing configured collec
 
 ### Selected Documents
 
-`working/source/documents/selected.json` owns star membership for ordinary documents and collection sub-documents. Its `docs_selected_v1` payload contains `docs` rows with exact `doc_id`, `title` and `last_updated`; collection rows also carry their configured `collection` and `report_doc_id`. Missing or malformed selection data fails visibly. Membership is the flag; there is no second editable front-matter value. The Working star control uses an outline when unset and a filled yellow star when set, and writes through `/docs/set-selected` without changing document Markdown or its modification date.
+`working/source/documents/selected.json` owns star membership for ordinary documents and collection sub-documents. Its `docs_selected_v1` payload contains `docs` rows with exact `doc_id`, `title` and `last_updated`; collection rows also carry their configured `collection` and `report_doc_id`. Missing or malformed selection data fails visibly. Membership is the flag; there is no second editable front-matter value. The Working Actions menu's Star/Remove star item uses an outline when unset, a filled yellow star when set and an explicit menu checkbox state. It writes through `/docs/set-selected` without changing document Markdown or its modification date.
 
 Ordinary and targeted collection builds update title/date metadata only for selected documents they build. Delete removes all selected targets actually deleted, including ordinary descendants; collection-document delete recovery restores the selection alongside the source. A whole-collection retirement delivery handles that collection's selected-document entries explicitly. The list is independent of Search/Recents inclusion policy.
 
