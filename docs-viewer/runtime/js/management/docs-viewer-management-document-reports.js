@@ -257,7 +257,7 @@ function openCollectionPreparePackage(settings, request, context) {
     return module.openDocumentPackagePrepareWorkflow({
       root: managementModalRoot(settings),
       collection: cleanString(request && request.collection).toLowerCase(),
-      checkedDocIds: Array.isArray(request && request.doc_ids)
+      docIds: Array.isArray(request && request.doc_ids)
         ? request.doc_ids.slice()
         : [],
       restoreFocus: actionContext.restoreFocus,

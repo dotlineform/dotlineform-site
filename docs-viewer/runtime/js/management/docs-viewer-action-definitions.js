@@ -26,34 +26,25 @@ export const DOCS_VIEWER_ACTION_IDS = Object.freeze({
 
 export const DOCS_VIEWER_ACTION_TARGETS = Object.freeze({
   ACTIVE_DOCUMENT: "active-document",
+  DOCUMENT_SUBTREE: "document-subtree",
   DOCUMENT: "document",
-  WORKSPACE: "workspace",
-  SELECTION: "selection"
+  WORKSPACE: "workspace"
 });
 
-export const DOCS_VIEWER_SELECTION_POLICIES = Object.freeze({
-  ALL: "all",
-  EXACTLY_ONE: "exactly-one",
-  PRIMARY: "primary"
-});
-
-function actionDefinition(id, target, selectionPolicy) {
-  var definition = { id: id, target: target };
-  if (selectionPolicy) definition.selectionPolicy = selectionPolicy;
-  return Object.freeze(definition);
+function actionDefinition(id, target) {
+  return Object.freeze({ id: id, target: target });
 }
 
 var TARGETS = DOCS_VIEWER_ACTION_TARGETS;
-var POLICIES = DOCS_VIEWER_SELECTION_POLICIES;
 var IDS = DOCS_VIEWER_ACTION_IDS;
 
 export const DOCS_VIEWER_ACTION_DEFINITIONS = Object.freeze({
   [IDS.BOOKMARK]: actionDefinition(IDS.BOOKMARK, TARGETS.ACTIVE_DOCUMENT),
   [IDS.COPY_LINK]: actionDefinition(IDS.COPY_LINK, TARGETS.DOCUMENT),
-  [IDS.DELETE]: actionDefinition(IDS.DELETE, TARGETS.SELECTION, POLICIES.ALL),
+  [IDS.DELETE]: actionDefinition(IDS.DELETE, TARGETS.DOCUMENT_SUBTREE),
   [IDS.EDIT_DOCUMENT]: actionDefinition(IDS.EDIT_DOCUMENT, TARGETS.ACTIVE_DOCUMENT),
   [IDS.EXPORT_WORKSPACE]: actionDefinition(IDS.EXPORT_WORKSPACE, TARGETS.WORKSPACE),
-  [IDS.EXPORT_DOCS]: actionDefinition(IDS.EXPORT_DOCS, TARGETS.SELECTION, POLICIES.ALL),
+  [IDS.EXPORT_DOCS]: actionDefinition(IDS.EXPORT_DOCS, TARGETS.DOCUMENT_SUBTREE),
   [IDS.IMPORT]: actionDefinition(IDS.IMPORT, TARGETS.WORKSPACE),
   [IDS.INFO]: actionDefinition(IDS.INFO, TARGETS.ACTIVE_DOCUMENT),
   [IDS.MARKDOWN_SAVE]: actionDefinition(IDS.MARKDOWN_SAVE, TARGETS.ACTIVE_DOCUMENT),
@@ -67,7 +58,7 @@ export const DOCS_VIEWER_ACTION_DEFINITIONS = Object.freeze({
   [IDS.NEW_SIBLING]: actionDefinition(IDS.NEW_SIBLING, TARGETS.DOCUMENT),
   [IDS.OPEN]: actionDefinition(IDS.OPEN, TARGETS.DOCUMENT),
   [IDS.OPEN_VSCODE]: actionDefinition(IDS.OPEN_VSCODE, TARGETS.DOCUMENT),
-  [IDS.PREPARE_DOCUMENT_PACKAGE]: actionDefinition(IDS.PREPARE_DOCUMENT_PACKAGE, TARGETS.SELECTION, POLICIES.ALL),
+  [IDS.PREPARE_DOCUMENT_PACKAGE]: actionDefinition(IDS.PREPARE_DOCUMENT_PACKAGE, TARGETS.DOCUMENT_SUBTREE),
   [IDS.PUBLISH]: actionDefinition(IDS.PUBLISH, TARGETS.WORKSPACE),
   [IDS.REBUILD_DOCS]: actionDefinition(IDS.REBUILD_DOCS, TARGETS.WORKSPACE),
   [IDS.SETTINGS]: actionDefinition(IDS.SETTINGS, TARGETS.WORKSPACE)
@@ -98,15 +89,11 @@ export function listDocsViewerActionDefinitions() {
 
 export function createDocsViewerActionContext(options = {}) {
   var activeDocId = normalizeId(options.activeDocId);
-  var selectedDocIds = normalizeIds(options.selectedDocIds);
   var invocationDocId = normalizeId(options.invocationDocId);
-  var primaryDocId = invocationDocId || normalizeId(options.primaryDocId);
-  if (!primaryDocId && selectedDocIds.length === 1) primaryDocId = selectedDocIds[0];
   return {
     activeDocId: activeDocId,
     invocationDocId: invocationDocId,
-    primaryDocId: primaryDocId,
-    selectedDocIds: selectedDocIds
+    subtreeDocIds: normalizeIds(options.subtreeDocIds)
   };
 }
 
@@ -118,8 +105,7 @@ export function resolveDocsViewerAction(actionId, context = {}) {
 
   var activeDocId = normalizeId(context.activeDocId);
   var invocationDocId = normalizeId(context.invocationDocId);
-  var primaryDocId = normalizeId(context.primaryDocId);
-  var selectedDocIds = normalizeIds(context.selectedDocIds);
+  var subtreeDocIds = normalizeIds(context.subtreeDocIds);
   var targetDocIds = [];
   var disabledReason = "";
 
@@ -130,25 +116,16 @@ export function resolveDocsViewerAction(actionId, context = {}) {
     var documentId = invocationDocId || activeDocId;
     if (documentId) targetDocIds = [documentId];
     else disabledReason = "No document.";
-  } else if (definition.target === TARGETS.SELECTION) {
-    if (definition.selectionPolicy === POLICIES.PRIMARY) {
-      if (!primaryDocId) disabledReason = "No primary document.";
-      else targetDocIds = [primaryDocId];
-    } else if (definition.selectionPolicy === POLICIES.ALL) {
-      if (!selectedDocIds.length) disabledReason = "Select one or more documents.";
-      else targetDocIds = selectedDocIds;
-    } else if (definition.selectionPolicy === POLICIES.EXACTLY_ONE) {
-      if (selectedDocIds.length === 1) targetDocIds = selectedDocIds;
-      else if (!selectedDocIds.length) disabledReason = "Select one document.";
-      else disabledReason = "Available for one document only.";
-    }
+  } else if (definition.target === TARGETS.DOCUMENT_SUBTREE) {
+    if (!activeDocId || subtreeDocIds.indexOf(activeDocId) === -1) {
+      disabledReason = "No displayed Index document.";
+    } else targetDocIds = subtreeDocIds;
   }
 
   return {
     actionId: definition.id,
     disabledReason: disabledReason,
     enabled: !disabledReason,
-    selectionPolicy: definition.selectionPolicy || "",
     target: definition.target,
     targetDocIds: targetDocIds
   };

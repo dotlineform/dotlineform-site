@@ -17,39 +17,6 @@ function renderDocumentActionButton(context, options) {
   return button;
 }
 
-function selectionCommandButton(documentRef, command, label) {
-  var button = documentRef.createElement("button");
-  button.type = "button";
-  button.className = "docsViewer__indexSelectionButton";
-  button.dataset.docsViewerSelectionCommand = command;
-  button.textContent = label;
-  return button;
-}
-
-function renderIndexSelectionControl(context) {
-  var state = context.control.state || {};
-  var disabled = Boolean(state.disabled);
-  var total = Number.isFinite(Number(state.total)) ? Number(state.total) : 0;
-  var hasSelection = Boolean(state.hasSelection);
-  var allSelected = Boolean(state.allSelected);
-  var root = context.existingRoot;
-  if (!root || root.tagName !== "DIV") {
-    root = context.document.createElement("div");
-    root.className = "docsViewer__indexSelectionControl";
-    root.setAttribute("role", "group");
-    root.setAttribute("aria-label", "Index selection");
-  }
-
-  var selectAllButton = selectionCommandButton(context.document, "select-all", "All");
-  selectAllButton.disabled = disabled || total === 0 || allSelected;
-  var clearButton = selectionCommandButton(context.document, "clear", "Clear");
-  clearButton.disabled = disabled || !hasSelection;
-  var doneButton = selectionCommandButton(context.document, "done", "Done");
-  doneButton.disabled = disabled;
-  root.replaceChildren(selectAllButton, clearButton, doneButton);
-  return { root: root, interactive: doneButton };
-}
-
 var INDEX_ACTION_ITEMS = [
   {
     id: "docsViewerIndexExportButton",
@@ -131,7 +98,6 @@ function renderIndexActionsControl(context) {
 
 export function createDocsViewerManagementControlRenderers() {
   return {
-    "manage-index-selection": renderIndexSelectionControl,
     "manage-index-actions": renderIndexActionsControl,
     "manage-index-position": function (context) {
       return renderDocumentActionButton(context, {

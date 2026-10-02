@@ -323,12 +323,6 @@ export function startDocsViewerRuntime(options) {
     toolbar: mainViewToolbar,
     nav: nav,
     renderBookmarkToggle: renderBookmarkToggle,
-    renderIndexSelectionGutter: function (doc) {
-      var controller = managementRuntime ? managementRuntime.controller() : null;
-      return controller && typeof controller.renderIndexSelectionGutter === "function"
-        ? controller.renderIndexSelectionGutter(doc)
-        : null;
-    },
     workspaceConfig: appSession.domains.workspaceConfig,
     selectedDocument: appSession.domains.selectedDocument,
     statusForIndexDoc: documentIndex.statusForIndexDoc,
@@ -460,14 +454,6 @@ export function startDocsViewerRuntime(options) {
     hideDocPane: hideDocPane,
     collectionProvider: collectionProvider,
     preserveQueryParams: function () { return preserveQueryParams; },
-    onIndexReplaced: function (replacement) {
-      var controller = managementRuntime ? managementRuntime.controller() : null;
-      if (!controller || typeof controller.reconcileIndexSelectionReload !== "function") return;
-      var docs = replacement && Array.isArray(replacement.docs) ? replacement.docs : [];
-      controller.reconcileIndexSelectionReload(docs.map(function (doc) {
-        return doc && doc.doc_id;
-      }));
-    },
     renderBookmarkUi: renderBookmarkUi,
     renderDocLoadingState: renderDocLoadingState,
     renderManagementUi: renderManagementUi,

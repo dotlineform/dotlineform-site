@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260528-224754-964108
 title: Panel Hosts and Control Surfaces
 added_date: "2026-05-28 22:47:54"
-last_updated: "2026-10-01 19:59:57"
+last_updated: "2026-10-02 10:19:41"
 summary: Stable panel, view, mode, control-surface, context, lifecycle, and extension model for Docs Viewer browser modules.
 parent_id: d-20260424-000000-50b63f
 
@@ -79,21 +79,17 @@ Action definitions are the authority used by toolbar, menu, main-view, and conte
 
 - displayed-document controls use `activeDocId`;
 - singular document actions use `invocationDocId` when a placement supplies one and otherwise use `activeDocId`;
-- batch actions use the independently supplied `selectedDocIds` checkbox set;
+- Index Actions use the displayed ordinary document and its complete descendant subtree;
 - scope actions have no document target;
-- context-menu operations pass `invocationDocId`, which supplies the primary invocation document without becoming checkbox selection.
+- context-menu operations pass `invocationDocId`, which supplies the invocation document without changing the Index Actions target.
 
-The manage Index and each mounted `docs_subscope` collection have independent
-checkbox-selection owners. Each owner supplies immutable selected IDs to its
-own action resolver; selection is never inferred from the displayed document,
-active-row styling, context invocation, or checkbox DOM. Exact-one and
-multi-selection cardinality failures remain explicit disabled resolutions.
+Each mounted collection retains its own checkbox-selection owner and supplies immutable checked IDs to registered collection selection actions. The Index has no checkbox-selection owner. Its subtree action context requires a validated displayed ordinary-document target; a loading or missing document and collection detail do not supply a host fallback.
 
 ## Panels And Lifecycle
 
 ### Index
 
-The index panel renders the document tree at its normal width. Collapse/expand controls, index layout capabilities, saved panel sizing and the old Working-to-Manage setting conversion are retired. Previously saved collapse/expand values are no longer read. The header is hidden when its index-view control surface is empty. The manage Index owns its compact Actions/Select all/Clear/Done projection and supplies only its checked IDs to selection-targeted actions. Tree-node disclosure remains independent of panel presentation.
+The index panel renders the document tree at its normal width. Collapse/expand controls, index layout capabilities, saved panel sizing and the old Working-to-Manage setting conversion are retired. Previously saved collapse/expand values are no longer read. The header is hidden when its index-view control surface is empty. The manage Index owns Actions and Position; Export, Prepare package and Delete operate on the displayed document and descendants without checkboxes or selection commands. Tree-node disclosure remains independent of action targeting and panel presentation.
 
 Public narrow-screen presentation retains its current stacked index/document layout. A future mobile show/hide index control belongs in the main site header and requires separate implementation; it is not part of the panel chrome. Content Detail still temporarily hides the index through its `expanded-main` layout and restores it on return.
 
@@ -125,19 +121,13 @@ Hosted modules receive projected context rather than broad runtime state. Regist
 6. If it invokes a workflow, reference the existing action id and resolve its target context before work begins.
 7. Preserve the public import boundary and add the narrowest registry/host/route evidence for the new seam.
 
-The shipped manage Index selection follows this shape: one focused
-renderer/controller projects into the existing `index-view` host, with no new
-toolbar mount or global DOM reference. `docs_subscope` uses a component-level
-composition because its state belongs to that mounted collection: the standard
-Manage contribution is always first, followed by at most one registered
-collection customisation in isolated positions.
+Index Actions follow this shape: one focused renderer/controller projects into the existing `index-view` host, with no new toolbar mount or global DOM reference. Collections use a component-level composition because their state belongs to the mounted collection: the standard Manage contribution is always first, followed by at most one registered collection customisation in isolated positions.
 
 ## Weak Spots
 
 - Main views still combine hosted lifecycle modules with established document/search/report controllers.
 - The shared hosted-view context is broader than every consumer needs and should narrow when stable per-view contracts emerge.
-- Index and `docs_subscope` selection owners remain separate; neither may
-  supply or infer checked IDs for the other collection.
+- Collection selection may not supply or infer the ordinary Index subtree target.
 - Review package controls are intentionally one composite app control; split them only if independent placement or state ownership becomes useful.
 
 ## Code Pointers
@@ -149,9 +139,7 @@ collection customisation in isolated positions.
 - main/mode/info coordination: `site/docs-viewer/runtime/js/shared/docs-viewer-document-view-coordinator.js`
 - Content Detail lifecycle and table target adapter: `site/docs-viewer/runtime/js/shared/docs-viewer-content-detail-view.js` and `docs-viewer-table-detail.js`
 - manage definitions/renderers/actions: `docs-viewer/runtime/js/management/docs-viewer-management-hosted-views.js`, `docs-viewer-management-control-renderers.js`, `docs-viewer-management-actions-renderer.js`, and `docs-viewer-action-definitions.js`
-- manage selection owners: `docs-viewer/runtime/js/management/docs-viewer-index-selection.js`,
-  `docs-viewer-management-subscope-default-contribution.js`, and
-  `docs-viewer-subscope-selection.js`
+- manage collection selection owners: `docs-viewer/runtime/js/management/docs-viewer-management-collection-default-contribution.js` and `docs-viewer-collection-selection.js`
 - sub-scope composition and optional module resolution:
   `docs-viewer-management-subscope-composition.js` and
   `docs-viewer-management-subscope-customisation-registry.js`

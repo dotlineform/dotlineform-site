@@ -56,7 +56,7 @@ function setMessage(callbacks, message, isError) {
 
 export function validateStaticHtmlSnapshotPreview(preview, options = {}) {
   var payload = preview && typeof preview === "object" ? preview : {};
-  var requestedDocIds = normalizeIds(options.checkedDocIds);
+  var requestedDocIds = normalizeIds(options.docIds);
   var previewDocIds = normalizeIds(payload.doc_ids);
   var rawPreviewDocIds = Array.isArray(payload.doc_ids) ? payload.doc_ids : [];
   var targetState = String(payload.target_state || "").trim();
@@ -74,7 +74,7 @@ export function validateStaticHtmlSnapshotPreview(preview, options = {}) {
     || rawPreviewDocIds.length !== previewDocIds.length
     || !sameIds(requestedDocIds, previewDocIds)
   ) {
-    throw new Error("Snapshot preview documents no longer match the checked selection.");
+    throw new Error("Snapshot preview documents no longer match the requested documents.");
   }
   if (Number(payload.document_count) !== previewDocIds.length) {
     throw new Error("Snapshot preview document count is invalid.");
@@ -171,24 +171,24 @@ export function staticHtmlSnapshotConfirmationOptions(preview, options = {}) {
 }
 
 export async function openStaticHtmlSnapshotExportWorkflow(options = {}) {
-  var checkedDocIds = normalizeIds(options.checkedDocIds);
+  var docIds = normalizeIds(options.docIds);
   var callbacks = options.callbacks || {};
   var clientOptions = options.clientOptions || {};
   var previewSnapshot = options.previewSnapshot || previewManagedDocsStaticHtmlExport;
   var applySnapshot = options.applySnapshot || applyManagedDocsStaticHtmlExport;
   var confirmSnapshot = options.confirmSnapshot || openDocsViewerConfirmModal;
-  if (!checkedDocIds.length) throw new Error("Select one or more documents.");
+  if (!docIds.length) throw new Error("No documents are available for export.");
 
   var preview;
   setBusy(callbacks, true);
   setMessage(callbacks, "Preparing dated snapshot…", false);
   try {
-    preview = await previewSnapshot(checkedDocIds, clientOptions);
+    preview = await previewSnapshot(docIds, clientOptions);
   } finally {
     setBusy(callbacks, false);
   }
   preview = validateStaticHtmlSnapshotPreview(preview, {
-    checkedDocIds: checkedDocIds
+    docIds: docIds
   });
   setMessage(callbacks, "", false);
 

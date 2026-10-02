@@ -163,12 +163,6 @@ export function initDocsViewerSidebarRenderer(context) {
       row.appendChild(link);
       var mounted = { item: item, row: row, link: link, toggle: hasChildren ? toggle : null, children: null };
       mountedRows.set(doc.doc_id, mounted);
-      var selectionGutter = typeof context.renderIndexSelectionGutter === "function"
-        ? context.renderIndexSelectionGutter(doc)
-        : null;
-      if (selectionGutter && selectionGutter.nodeType === 1) {
-        item.appendChild(selectionGutter);
-      }
       item.appendChild(row);
 
       if (hasChildren && documentIndex.expandedDocIds.has(doc.doc_id)) {

@@ -1,8 +1,6 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
 import {
-  DOCS_VIEWER_ACTION_IDS,
-  createDocsViewerActionContext,
-  resolveDocsViewerAction
+  DOCS_VIEWER_ACTION_IDS
 } from "./docs-viewer-action-definitions.js";
 import {
   createDocsViewerCollectionSelectionOwner
@@ -97,12 +95,12 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
   var publishSelection = null;
 
   function prepareResolution() {
-    return resolveDocsViewerAction(
-      DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE,
-      createDocsViewerActionContext({
-        selectedDocIds: selectionOwner.selectedDocIds()
-      })
-    );
+    var docIds = selectionOwner.selectedDocIds();
+    return {
+      enabled: docIds.length > 0,
+      disabledReason: docIds.length ? "" : "Select one or more documents.",
+      targetDocIds: docIds
+    };
   }
 
   function eligibleDocIds() {

@@ -2,7 +2,7 @@
 doc_id: d-20260919-100234-038395
 title: "Shared Icons: Toolbar Mapping"
 added_date: "2026-09-19 10:02:34"
-last_updated: "2026-10-01 19:59:57"
+last_updated: "2026-10-02 10:19:41"
 summary: Editable mappings for Docs Viewer toolbars, report toolbars and report list icons, including code identifiers, state variants and replacement artwork choices.
 ui_status: planned
 parent_id: d-20260910-223116-9a1011
@@ -83,9 +83,6 @@ Code identifiers below are exact **renderer keys**, except entries explicitly ma
 | Actions menu: Export | action `export-workspace` | Exports workspace | ⬇️ and text | square-arrow-right-exit.svg and text | — | Implemented; review pending |
 | Actions menu: Settings | action `settings` | Opens Settings | ⚙️ and text | settings.svg and text | — | Implemented; review pending |
 | Index header: actions | `manage-index-actions` | Opens Index actions menu | 🛠️ | wrench.svg | — | Implemented; review pending; wrench.svg replaces the missing spanner.svg by agreement |
-| Index selection: select all | `manage-index-selection`; command `select-all` | Selects all available documents | Text `Select all` | Text `All` | — | Implemented; review pending |
-| Index selection: clear | `manage-index-selection`; command `clear` | Clears selection | Text `Clear` | Text `Clear` | — | Keep |
-| Index selection: done | `manage-index-selection`; command `done` | Ends selection mode | Text `Done` | Text `Done` | — | Keep |
 | Index actions menu: Export | action `export-docs` | Exports selected documents | ⬇️ and text | square-arrow-right-exit.svg and text | — | Implemented; review pending |
 | Index actions menu: package | action `prepare-document-package` | Prepares a document package | 📦 and text | package.svg and text | — | Implemented; review pending |
 | Index actions menu: Delete | action `delete` | Deletes selected documents | 🗑️ and text | trash.svg and text | — | Implemented; review pending |

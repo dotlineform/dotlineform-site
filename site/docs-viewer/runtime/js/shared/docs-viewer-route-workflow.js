@@ -271,13 +271,6 @@ export function initDocsViewerRouteWorkflow(context) {
     state.manageOnlyTreeRootIds = normalizeDocIdSet(viewerOptions.manage_only_tree_root_ids, []);
     state.allDocs = Array.isArray(payload.docs) ? payload.docs.slice() : [];
     context.applyDocVisibility();
-    if (typeof context.onIndexReplaced === "function") {
-      context.onIndexReplaced({
-        docs: state.docs.slice(),
-        managementContext: state.managementContext
-      });
-    }
-
     context.renderSidebar();
     context.renderBookmarkUi();
   }

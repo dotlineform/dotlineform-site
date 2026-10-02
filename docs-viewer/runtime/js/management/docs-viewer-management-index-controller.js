@@ -6,11 +6,6 @@ import {
   DOCS_VIEWER_ACTION_IDS
 } from "./docs-viewer-action-definitions.js";
 import {
-  createDocsViewerIndexSelectionGutter,
-  createDocsViewerIndexSelectionOwner,
-  projectDocsViewerIndexSelectionRows
-} from "./docs-viewer-index-selection.js";
-import {
   openStaticHtmlSnapshotExportWorkflow
 } from "./docs-viewer-static-html-export-workflow.js";
 
@@ -29,7 +24,7 @@ export function docsViewerPreparePackageActionControlState(options = {}) {
     else if (!resolution || !resolution.enabled) {
       disabledReason = resolution && resolution.disabledReason
         ? resolution.disabledReason
-        : "Select one or more documents.";
+        : "No displayed Index document.";
     }
   }
   return {
@@ -51,7 +46,7 @@ export function docsViewerStaticHtmlExportActionControlState(options = {}) {
     else if (!resolution || !resolution.enabled) {
       disabledReason = resolution && resolution.disabledReason
         ? resolution.disabledReason
-        : "Select one or more documents.";
+        : "No displayed Index document.";
     }
   }
   return {
@@ -62,23 +57,13 @@ export function docsViewerStaticHtmlExportActionControlState(options = {}) {
 
 export function createDocsViewerManagementIndexController(options = {}) {
   var root = options.root || null;
-  var nav = options.nav || null;
-  var documentIndex = options.documentIndex || {};
   var management = options.management || {};
   var routeSession = options.routeSession || {};
   var callbacks = options.callbacks || {};
   var documentRef = options.document || document;
   var openSnapshotExportWorkflow = options.openSnapshotExportWorkflow || openStaticHtmlSnapshotExportWorkflow;
-  var indexSelection = options.indexSelection || createDocsViewerIndexSelectionOwner({
-  });
   var preparePackageWorkflowRequest = null;
   var snapshotExportWorkflowActive = false;
-
-  function activeDocId() {
-    return typeof callbacks.activeDocId === "function"
-      ? String(callbacks.activeDocId() || "").trim()
-      : "";
-  }
 
   function activeIndexViewId() {
     return typeof callbacks.activeIndexViewId === "function"
@@ -98,13 +83,6 @@ export function createDocsViewerManagementIndexController(options = {}) {
 
   function indexActionsMenu() {
     return documentRef.getElementById("docsViewerIndexActionsMenu");
-  }
-
-  function lifecycleContext(indexViewId) {
-    return {
-      managementContext: routeSession.managementContext,
-      indexViewId: arguments.length ? String(indexViewId || "").trim() : activeIndexViewId()
-    };
   }
 
   function managementClientOptions() {
@@ -139,33 +117,6 @@ export function createDocsViewerManagementIndexController(options = {}) {
     }
   }
 
-  function indexSelectionAvailable() {
-    var snapshotCapability = staticHtmlExportCapability(
-      management.managementCapabilities
-    );
-    return Boolean(
-      routeSession.managementContext
-      && activeIndexViewId() === "index-tree"
-      && management.managementChecked
-      && (management.managementAvailable || snapshotCapability.available)
-    );
-  }
-
-  function eligibleIndexSelectionDocIds() {
-    return documentIndex.docs.map(function (doc) {
-      return String(doc && doc.doc_id || "").trim();
-    }).filter(Boolean);
-  }
-
-  function renderIndexSelectionGutter(doc) {
-    return createDocsViewerIndexSelectionGutter({
-      document: documentRef,
-      doc: doc,
-      state: indexSelection.snapshot(),
-      disabled: !indexSelectionAvailable() || management.managementBusy
-    });
-  }
-
   function preparePackageActionControlState() {
     return docsViewerPreparePackageActionControlState({
       capabilities: management.managementCapabilities,
@@ -188,7 +139,7 @@ export function createDocsViewerManagementIndexController(options = {}) {
     } else if (activeIndexViewId() !== "index-tree") {
       disabledReason = "Return to the Index tree to delete documents.";
     } else if (!resolution || !resolution.enabled) {
-      disabledReason = resolution ? resolution.disabledReason : "Select one or more documents.";
+      disabledReason = resolution ? resolution.disabledReason : "No displayed Index document.";
     }
     return {
       hidden: Boolean(resolution && resolution.hidden),
@@ -229,54 +180,6 @@ export function createDocsViewerManagementIndexController(options = {}) {
     return state;
   }
 
-  function projectSelection() {
-    var snapshot = indexSelection.snapshot();
-    var available = indexSelectionAvailable();
-    var eligibleDocIds = eligibleIndexSelectionDocIds();
-    var selectedCount = snapshot.selectedDocIds.length;
-    if (typeof callbacks.projectIndexViewControlState === "function") {
-      callbacks.projectIndexViewControlState("index-selection", {
-        hidden: !available || !snapshot.selectionModeActive,
-        disabled: !available || management.managementBusy,
-        active: snapshot.selectionModeActive,
-        hasSelection: selectedCount > 0,
-        allSelected: eligibleDocIds.length > 0 && selectedCount === eligibleDocIds.length,
-        total: eligibleDocIds.length,
-        label: "Done selecting documents"
-      });
-    }
-    projectDocsViewerIndexSelectionRows({
-      nav: nav,
-      state: snapshot,
-      disabled: !available || management.managementBusy
-    });
-    projectActions();
-    return snapshot;
-  }
-
-  function render() {
-    indexSelection.syncContext(lifecycleContext());
-    return projectSelection();
-  }
-
-  function reconcileReload(eligibleDocIds) {
-    if (typeof callbacks.isManagementContext === "function") {
-      routeSession.managementContext = callbacks.isManagementContext();
-    }
-    var snapshot = indexSelection.reconcileReload(
-      eligibleDocIds,
-      lifecycleContext()
-    );
-    projectSelection();
-    return snapshot;
-  }
-
-  function handleViewChange(indexViewId) {
-    var snapshot = indexSelection.syncContext(lifecycleContext(indexViewId));
-    projectSelection();
-    return snapshot;
-  }
-
   function loadPreparePackageWorkflow() {
     if (preparePackageWorkflowRequest) return preparePackageWorkflowRequest;
     preparePackageWorkflowRequest = import("../packages/document-package-prepare-workflow.js")
@@ -298,13 +201,13 @@ export function createDocsViewerManagementIndexController(options = {}) {
     if (!resolution || !resolution.enabled || preparePackageActionControlState().disabled) {
       return Promise.resolve(null);
     }
-    var checkedDocIds = resolution.targetDocIds.slice();
+    var docIds = resolution.targetDocIds.slice(0, 1);
     var restoreFocus = indexActionsButton();
     return loadPreparePackageWorkflow()
       .then(function (module) {
         return module.openDocumentPackagePrepareWorkflow({
           root: root,
-          checkedDocIds: checkedDocIds,
+          docIds: docIds,
           restoreFocus: restoreFocus,
           callbacks: {
             hideManageActionsMenu: hideIndexActionsMenu,
@@ -337,13 +240,13 @@ export function createDocsViewerManagementIndexController(options = {}) {
     ) {
       return Promise.resolve(null);
     }
-    var checkedDocIds = resolution.targetDocIds.slice();
+    var docIds = resolution.targetDocIds.slice();
     snapshotExportWorkflowActive = true;
     renderManagementUi();
     return openSnapshotExportWorkflow({
       root: root,
       restoreFocus: indexActionsButton(),
-      checkedDocIds: checkedDocIds,
+      docIds: docIds,
       clientOptions: managementClientOptions(),
       callbacks: {
         setBusy: setManagementBusy,
@@ -372,26 +275,6 @@ export function createDocsViewerManagementIndexController(options = {}) {
   function handleControl(detail) {
     var controlId = String(detail && detail.controlId || "").trim();
     var actionId = String(detail && detail.actionId || "").trim();
-    if (controlId === "index-selection") {
-      if (String(detail && detail.eventType || "") !== "click") return false;
-      var eventTarget = detail && detail.event && detail.event.target;
-      var commandTarget = eventTarget && typeof eventTarget.closest === "function"
-        ? eventTarget.closest("[data-docs-viewer-selection-command]")
-        : null;
-      var command = commandTarget ? String(commandTarget.dataset.docsViewerSelectionCommand || "") : "";
-      if (!command || !indexSelectionAvailable() || management.managementBusy) return false;
-      if (command === "select-all") {
-        indexSelection.selectAll(eligibleIndexSelectionDocIds());
-      } else if (command === "clear") {
-        indexSelection.clear();
-      } else if (command === "done") {
-        indexSelection.exit();
-      } else {
-        return false;
-      }
-      projectSelection();
-      return true;
-    }
     if (controlId === "index-position" && String(detail && detail.eventType || "") === "click") {
       if (activeIndexViewId() !== "index-tree") return false;
       if (!management.managementAvailable || management.managementBusy || !callbacks.canPositionDoc()) return false;
@@ -403,25 +286,9 @@ export function createDocsViewerManagementIndexController(options = {}) {
       return false;
     }
     if (activeIndexViewId() !== "index-tree") return false;
+    if (management.managementBusy) return false;
     if (!actionId) {
-      var menu = indexActionsMenu();
-      if (!menu || menu.hidden) {
-        var snapshot = indexSelection.snapshot();
-        var enteredSelection = !snapshot.selectionModeActive;
-        if (enteredSelection) indexSelection.enter();
-        var displayedDocId = activeDocId();
-        if (
-          displayedDocId
-          && eligibleIndexSelectionDocIds().indexOf(displayedDocId) !== -1
-          && indexSelection.selectedDocIds().indexOf(displayedDocId) === -1
-        ) {
-          indexSelection.toggle(displayedDocId, true);
-        }
-        if (enteredSelection && typeof callbacks.renderSidebar === "function") {
-          callbacks.renderSidebar();
-        }
-        projectSelection();
-      }
+      projectActions();
       toggleIndexActionsMenu();
       return true;
     }
@@ -446,11 +313,7 @@ export function createDocsViewerManagementIndexController(options = {}) {
     actionsButton: indexActionsButton,
     actionsMenu: indexActionsMenu,
     handleControl: handleControl,
-    handleViewChange: handleViewChange,
-    indexSelection: indexSelection,
-    projectSelection: projectSelection,
-    reconcileReload: reconcileReload,
-    render: render,
-    renderSelectionGutter: renderIndexSelectionGutter
+    handleViewChange: projectActions,
+    render: projectActions
   };
 }

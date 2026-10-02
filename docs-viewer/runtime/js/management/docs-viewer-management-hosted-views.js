@@ -67,16 +67,6 @@ export function createDocsViewerManagementViewDefinitions() {
         renderer: "manage-toolbar-publish"
       },
       {
-        id: "index-selection",
-        label: "Index selection",
-        ownerType: "view",
-        ownerViewId: "index-tree",
-        surfaceId: "index-view",
-        appKinds: ["manage"],
-        features: ["management"],
-        renderer: "manage-index-selection"
-      },
-      {
         id: "index-actions",
         label: "Index actions",
         ownerType: "app",

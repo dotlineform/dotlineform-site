@@ -3,8 +3,8 @@ draft: false
 doc_id: d-20260629-152159-ac1af9
 title: Export
 added_date: "2026-06-29 15:21:59"
-last_updated: "2026-08-31 12:20:38"
-summary: create guarded dated self-contained HTML snapshots from exact checked document sets and their referenced scope-owned media
+last_updated: "2026-10-02 10:19:41"
+summary: create guarded dated self-contained HTML snapshots from the displayed document subtree and its referenced media
 parent_id: d-20260424-000000-50b63f
 ---
 # Export
@@ -15,7 +15,7 @@ Docs Viewer Export creates a browseable dated static HTML snapshot from existing
 
 Export is available in the main index panel's **Index Actions** menu while Manage is active. It is not present in the app-level **Actions** menu or sub-scope report Actions.
 
-Opening **Index Actions** enters the existing checkbox-selection workflow and explicitly checks the currently displayed document. After that handoff, Export consumes only the exact non-empty checked `doc_id` set. It does not infer a displayed, active, default, URL, parent, or descendant document, and it has no export mode or **Include descendants** option. **Select all** is the whole-scope case.
+**Index Actions → Export** targets the currently displayed ordinary document and every descendant in the loaded Index hierarchy, including collapsed branches. The Index has no checkbox selection or All/Clear/Done controls. Descendant inclusion is fixed, with no export mode or **Include descendants** option. A missing or loading document, or a displayed collection detail, supplies no ordinary Index target. **Export Workspace** remains the separate whole-workspace action.
 
 The confirmation identifies the destination and the v2 media plan:
 
@@ -28,7 +28,7 @@ Leaves E external media reference(s) unchanged.
 
 The external-reference line is omitted when its count is zero.
 
-The primary button is **Create snapshot**, **Replace**, or disabled **Unavailable** according to the previewed target. Replacement uses the danger tone and initially focuses **Cancel**. Cancel, success, and failure preserve the checked selection.
+The primary button is **Create snapshot**, **Replace**, or disabled **Unavailable** according to the previewed target. Replacement uses the danger tone and initially focuses **Cancel**. The document IDs are captured when Export starts and retained through its confirmation.
 
 ## Input And Eligibility
 
@@ -138,7 +138,7 @@ docs-viewer/services/docs_management_service.py
 docs-viewer/services/docs_management_capabilities_service.py
 ```
 
-Main-index action, exact checked-set dispatch, client, and confirmation workflow:
+Main-index subtree action, explicit document-set dispatch, client, and confirmation workflow:
 
 ```text
 docs-viewer/runtime/js/management/docs-viewer-action-definitions.js
@@ -160,4 +160,4 @@ docs-viewer/tests/python/test_docs_management_capabilities.py
 docs-viewer/tests/python/test_docs_management_routes.py
 ```
 
-The focused suites cover exact single, partial, and complete membership; hierarchy and link projection; portable single-file layout, inline CSS, fragment navigation, and image placeholders; repository, external-local, and fake-R2 media reads; images, SVGs, files, HTML media, `srcset`, confinement, deduplication, unchanged dependencies, selected-only packages, and missing or stale media; browser-safe v2 capability and preview payloads; absent, recognized, v1-unrecognized, non-directory, symlink, stale, pre-write render, direct-write, incomplete-target, in-place directory-preservation, and Finder metadata paths; exact preview/apply request bodies; and the absence of arbitrary served-URL fetch, app-level, and delete compatibility paths. Selection and confirmation-modal behavior are accepted manually.
+The focused suites cover exact single, partial, and complete membership; hierarchy and link projection; portable single-file layout, inline CSS, fragment navigation, and image placeholders; repository, external-local, and fake-R2 media reads; images, SVGs, files, HTML media, `srcset`, confinement, deduplication, unchanged dependencies, selected-only packages, and missing or stale media; browser-safe v2 capability and preview payloads; absent, recognized, v1-unrecognized, non-directory, symlink, stale, pre-write render, direct-write, incomplete-target, in-place directory-preservation, and Finder metadata paths; exact preview/apply request bodies; and the absence of arbitrary served-URL fetch, app-level, and delete compatibility paths. Displayed-subtree dispatch and confirmation-modal behavior require manual review; the Index Actions change did not run or alter these suites.

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260716-204013-3be4e1
 title: Button Placement
 added_date: "2026-07-16 20:40:13"
-last_updated: "2026-07-24 17:52:09"
+last_updated: "2026-10-02 10:19:41"
 parent_id: d-20260424-000000-50b63f
 ---
 # Button Placement
@@ -18,14 +18,14 @@ This feature owns that user-facing mental model. The control registry, action ta
 
 | User is acting on… | Primary placement |
 | --- | --- |
-| A checked document set or parent/child structure | Index panel toolbar |
+| The displayed document and its parent/child structure | Index panel toolbar |
 | The right-clicked row, with deliberately secondary discovery | Index panel context menu |
 | Rendered document, source, or display mode | Document toolbar |
 | The scope or application as a whole | Manage toolbar / Actions |
 
 The index toolbar is visible only while the index panel is open. Collapsing the panel hides the complete `index-view` control surface, including every current and future index action. The restore control remains visible because it is panel chrome outside that toolbar.
 
-The index context menu acts on the row that was right-clicked, even when another document remains active and displayed. Opening it does not change the active document or the separate checked-document set. This explicit invoked-document target is why the menu can contain unique, rarely used row commands rather than merely duplicating shortcuts for the selected node.
+The index context menu acts on the row that was right-clicked, even when another document remains active and displayed. Opening it does not change the active document or the target of Index Actions. This explicit invoked-document target is why the menu can contain unique, rarely used row commands rather than merely duplicating shortcuts for the selected node.
 
 A toolbar control is not justified only by frequency: it may deserve direct placement because it expresses a central operation on that surface.
 
@@ -41,7 +41,7 @@ Whether an action writes data does not choose its placement. Placement follows t
 | target | the document set, invoked document, active document, or scope the action operates on |
 | active document | the document currently displayed by the route |
 | invoked document | the tree row from which a context-menu command was opened; it need not be the active document |
-| checked documents | the explicit checkbox set used by document-selection Actions |
+| checked documents | the explicit checkbox set used by Collection Actions |
 | promotion | making an existing action directly visible on another appropriate surface without duplicating its behaviour |
 
 In user-facing discussion, **index toolbar** means the toolbar belonging to the active index tree; its technical surface id is `index-view`. **Document toolbar** means the toolbar belonging to the active rendered-document view; its technical surface id is `main-view`. **Manage toolbar** means the app-level management surface. **Actions** is a menu within that toolbar, not another name for the entire surface.
@@ -50,9 +50,9 @@ In user-facing discussion, **index toolbar** means the toolbar belonging to the 
 
 ### Index Document Actions
 
-The user is acting on an explicit checked set assembled in the Index, so the **🛠️** **Index actions** menu belongs in the manage-only index toolbar. Opening it enters checkbox selection and checks the active displayed document, making the Actions immediately available for the common one-document case. The revealed selection group contains **Select all**, **Clear**, and **Done**; there is no separate **Select** button or selected-count label.
+The **🛠️ Index Actions** menu operates on the currently displayed ordinary document and all its descendants. **Export…**, **Prepare package…**, and **Delete…** share that target, including children hidden within collapsed branches. Opening the menu does not create selection state, and the Index has no checkboxes or All/Clear/Done controls.
 
-**Prepare package…**, **Copy to scope…**, **Move to scope…**, and **Delete…** use checked ids only. The cross-scope target picker used by Copy and Move does not make either a scope-level or rendered-document control. The app-level **Actions** menu remains reserved for operations on the scope or application.
+Collection Actions retain their own checked-document workflow. The app-level **Actions** menu remains reserved for operations on the workspace or application.
 
 [Create And Import Endpoints](Create_And_Import_Endpoints.md) owns the server contract.
 
@@ -64,7 +64,7 @@ Both placements invoke the same action and source-opening behaviour. The context
 
 ## Current Boundary
 
-The placement language, Index Actions split, and Open in VS Code promotion are shipped. The old singular Copy Subtree example was retired when Copy and Move adopted the checked-document target.
+The placement language, displayed-subtree Index Actions, and Open in VS Code promotion are shipped. Collection checkbox selection remains owned by its mounted report.
 
 No delivery document or tracker was needed.
 
