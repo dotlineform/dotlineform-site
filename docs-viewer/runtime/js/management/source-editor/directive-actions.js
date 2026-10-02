@@ -1,9 +1,21 @@
 import { createDocsViewerToolbarIcon } from "../../shared/docs-viewer-toolbar-icon.js";
+import { DOCS_VIEWER_ACTION_IDS as ACTION_IDS } from "../docs-viewer-action-definitions.js";
+import { openCatalogueMediaModal } from "./catalogue-media-modal.js";
+import { openDocumentLinkModal } from "./document-link-contribution.js";
 
 export const DIRECTIVE_ACTIONS_CONTROL_ID = "source-directives";
 
 const ICON_DIRECTIVE_SOURCE = "[[icon:refresh-cw]]";
 const LINKS_DIRECTIVE_SOURCE = "[[links|related links]]";
+
+const SOURCE_ACTIONS = [
+  { actionId: ACTION_IDS.SOURCE_ADD_IMAGE, artwork: "docsViewer__icon--image", label: "Add image" },
+  { actionId: ACTION_IDS.SOURCE_ADD_CATALOGUE_IMAGE, artwork: "docsViewer__icon--book-image", label: "Add Catalogue image" },
+  { actionId: ACTION_IDS.SOURCE_ADD_FILE, artwork: "docsViewer__icon--paperclip", label: "Add file" },
+  { actionId: ACTION_IDS.SOURCE_ADD_MEDIA_VIEW_LINK, artwork: "docsViewer__icon--image-plus", label: "Add Media View link" },
+  { actionId: ACTION_IDS.SOURCE_INSERT_DOC_LINK, artwork: "docsViewer__icon--file-plus-corner", label: "Insert doc link" },
+  { actionId: ACTION_IDS.OPEN_VSCODE, artwork: "docsViewer__icon--file-code-corner", label: "Open in VS Code" }
+];
 
 export const DIRECTIVE_ACTIONS = Object.freeze([
   Object.freeze({
@@ -90,6 +102,7 @@ export function createDirectiveInsertionPlan(options = {}) {
 function closeMenu(controller, options = {}) {
   if (!controller) return;
   controller.capture = null;
+  controller.adapter = null;
   controller.menu.hidden = true;
   controller.button.setAttribute("aria-expanded", "false");
   if (options.focusButton && controller.button.isConnected) controller.button.focus();
@@ -107,6 +120,7 @@ function disposeController(controller) {
 function createController(root, button, menu) {
   var document = root.ownerDocument;
   var controller = {
+    adapter: null,
     button: button,
     capture: null,
     disposed: false,
@@ -119,9 +133,22 @@ function createController(root, button, menu) {
     if (!controller.menu.hidden && !controller.root.contains(event.target)) closeMenu(controller);
   };
   controller.onDocumentKeydown = function (event) {
-    if (event.key !== "Escape" || controller.menu.hidden) return;
+    if (controller.menu.hidden) return;
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeMenu(controller, { focusButton: true });
+      return;
+    }
+    if (!controller.menu.contains(event.target)) return;
+    if (event.key === "Tab") { closeMenu(controller); return; }
+    if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
     event.preventDefault();
-    closeMenu(controller, { focusButton: true });
+    var items = enabledMenuItems(controller);
+    if (!items.length) return;
+    var index = items.indexOf(event.target.closest('[role="menuitem"]'));
+    var next = event.key === "Home" ? 0 : event.key === "End" ? items.length - 1
+      : (index + (event.key === "ArrowUp" ? -1 : 1) + items.length) % items.length;
+    items[next].focus({ preventScroll: true });
   };
   document.addEventListener("click", controller.onDocumentClick);
   document.addEventListener("keydown", controller.onDocumentKeydown);
@@ -141,7 +168,9 @@ function menuItem(document, directive) {
   item.className = "docsViewer__actionMenuItem";
   item.type = "button";
   item.setAttribute("role", "menuitem");
-  item.setAttribute("data-docs-viewer-directive-action", directive.id);
+  if (directive.actionId) item.dataset.docsViewerAction = directive.actionId;
+  else item.dataset.docsViewerDirectiveAction = directive.id;
+  item.title = directive.label;
   var icon = createDocsViewerToolbarIcon(document, directive.artwork);
   var label = document.createElement("span");
   label.className = "docsViewer__actionMenuLabel";
@@ -182,6 +211,13 @@ export function directiveActionsControlRenderer(context) {
     menu.id = "docsViewerManageSourceDirectivesMenu";
     menu.setAttribute("role", "menu");
     menu.hidden = true;
+    SOURCE_ACTIONS.forEach(function (action) {
+      menu.appendChild(menuItem(context.document, action));
+    });
+    var separator = context.document.createElement("div");
+    separator.className = "docsViewer__actionMenuSeparator";
+    separator.setAttribute("role", "separator");
+    menu.appendChild(separator);
     DIRECTIVE_ACTIONS.forEach(function (directive) {
       menu.appendChild(menuItem(context.document, directive));
     });
@@ -192,6 +228,9 @@ export function directiveActionsControlRenderer(context) {
     root.querySelector("#docsViewerManageSourceDirectivesButton"),
     root.querySelector("#docsViewerManageSourceDirectivesMenu")
   );
+  controller.menu.querySelectorAll('[role="menuitem"]').forEach(function (item) {
+    item.disabled = Boolean(context.control.state.disabled || context.control.state.hidden);
+  });
   if (context.control.state.disabled || context.control.state.hidden) closeMenu(controller);
   return { root: root, interactive: controller.button };
 }
@@ -207,13 +246,49 @@ function focusEditor(adapter) {
   if (adapter && typeof adapter.focus === "function") adapter.focus();
 }
 
+function enabledMenuItems(controller) {
+  return Array.from(controller.menu.querySelectorAll('[role="menuitem"]')).filter(function (item) {
+    return !item.disabled;
+  });
+}
+
+function runSourceAction(context, controller, actionId) {
+  var adapter = controller.adapter;
+  var capture = controller.capture;
+  closeMenu(controller);
+  if (!adapter || !capture || adapter !== activeAdapter(context) || !adapter.isCurrent()) return false;
+  Promise.resolve().then(function () {
+    if (actionId === ACTION_IDS.SOURCE_ADD_IMAGE || actionId === ACTION_IDS.SOURCE_ADD_FILE) {
+      return adapter.addStagedMedia(actionId === ACTION_IDS.SOURCE_ADD_FILE ? "file" : "image", capture);
+    }
+    if (actionId === ACTION_IDS.SOURCE_ADD_CATALOGUE_IMAGE || actionId === ACTION_IDS.SOURCE_ADD_MEDIA_VIEW_LINK) {
+      return openCatalogueMediaModal({
+        presentation: actionId === ACTION_IDS.SOURCE_ADD_CATALOGUE_IMAGE ? "image" : "media",
+        adapter: adapter, capture: capture, root: context.root
+      });
+    }
+    if (actionId === ACTION_IDS.SOURCE_INSERT_DOC_LINK) {
+      return openDocumentLinkModal({
+        adapter: adapter, capture: capture, root: context.root,
+        isCurrent: function () { return activeAdapter(context) === adapter && adapter.isCurrent(); }
+      });
+    }
+    if (actionId === ACTION_IDS.OPEN_VSCODE) return context.openSourceInVsCode(adapter.getDocumentTarget());
+  }).catch(function (error) {
+    context.setStatus(error.message || "The Source action failed.", true);
+    focusEditor(adapter);
+  });
+  return true;
+}
+
 function insertDirective(context, controller, directiveId) {
-  var adapter = activeAdapter(context);
+  var adapter = controller.adapter;
   var capture = controller.capture;
   closeMenu(controller);
   if (
     !adapter
     || !capture
+    || adapter !== activeAdapter(context)
     || typeof adapter.getBufferSnapshot !== "function"
     || typeof adapter.replaceCapturedRange !== "function"
   ) {
@@ -250,10 +325,16 @@ export function createDirectiveActionsMainViewControlHandlers() {
       if (detail.eventType !== "click") return false;
       var controller = controllers.get(detail.target);
       if (!controller || controller.button.disabled) return false;
+      if (detail.actionId) {
+        if (!SOURCE_ACTIONS.some(function (action) { return action.actionId === detail.actionId; })
+          || detail.actionTarget?.disabled) return false;
+        return runSourceAction(context, controller, detail.actionId);
+      }
       var action = detail.event && detail.event.target.closest(
         "[data-docs-viewer-directive-action]"
       );
       if (action && controller.root.contains(action)) {
+        if (action.disabled) return false;
         return insertDirective(context, controller, action.dataset.docsViewerDirectiveAction);
       }
       if (!controller.menu.hidden) {
@@ -262,9 +343,11 @@ export function createDirectiveActionsMainViewControlHandlers() {
       }
       var adapter = activeAdapter(context);
       if (!adapter || typeof adapter.captureSelection !== "function") return false;
+      controller.adapter = adapter;
       controller.capture = adapter.captureSelection();
       controller.menu.hidden = false;
       controller.button.setAttribute("aria-expanded", "true");
+      enabledMenuItems(controller)[0]?.focus({ preventScroll: true });
       return true;
     }
   };

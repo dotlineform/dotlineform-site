@@ -1,12 +1,7 @@
 import { mountSearchField } from "/shared/frontend/js/search-field.js";
-import { createDocsViewerToolbarIcon } from "../../shared/docs-viewer-toolbar-icon.js";
-
-import { DOCS_VIEWER_ACTION_IDS } from "../docs-viewer-action-definitions.js";
 import { escapeHtml, openDocsViewerManagementModal } from "../docs-viewer-management-modal-shell.js";
 import { createCatalogueTargetPickerList } from "./catalogue-target-picker.js";
 import { filterDocumentLinkTargets, insertDocumentLink, normalizeDocumentLinkTargets } from "./document-link.js";
-
-export const DOCUMENT_LINK_CONTROL_ID = "source-insert-doc-link";
 
 /** Select one exact document using existing modal/list presentation and the mounted source adapter. */
 export function openDocumentLinkModal(options) {
@@ -100,36 +95,4 @@ export function openDocumentLinkModal(options) {
     state.disposed = true;
     if (state.list) state.list.destroy();
   });
-}
-
-export function documentLinkControlDefinition() {
-  return {
-    id: DOCUMENT_LINK_CONTROL_ID,
-    actionId: DOCS_VIEWER_ACTION_IDS.SOURCE_INSERT_DOC_LINK,
-    label: "Insert doc link",
-    ownerType: "view", ownerViewId: "rendered-document", modeIds: ["markdown-source"],
-    surfaceId: "main-view", appKinds: ["manage"], features: ["source-editing"],
-    renderer: DOCUMENT_LINK_CONTROL_ID
-  };
-}
-
-export function documentLinkControlRenderer(context) {
-  var button = context.existingRoot || context.document.createElement("button");
-  button.className = "docsViewer__toolbarIconButton";
-  button.type = "button";
-  button.replaceChildren(createDocsViewerToolbarIcon(context.document, "docsViewer__icon--file-plus-corner"));
-  return button;
-}
-
-export function createDocumentLinkControlHandlers() {
-  return {
-    [DOCUMENT_LINK_CONTROL_ID]: function (context) {
-      var services = context.sourceEditorServices;
-      var adapter = services.getActiveSourceEditorContextAdapter();
-      return openDocumentLinkModal({
-        adapter: adapter, capture: adapter.captureSelection(), root: context.root,
-        isCurrent: function () { return services.getActiveSourceEditorContextAdapter() === adapter; }
-      });
-    }
-  };
 }

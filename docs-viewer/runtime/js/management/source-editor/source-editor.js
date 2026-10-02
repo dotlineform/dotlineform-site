@@ -100,7 +100,7 @@ function projectDirty(state) {
       busy: state.busy,
       disabled: state.busy
     });
-    ["source-add-image", "source-add-file"].concat(state.sourceActionControlIds || []).forEach(function (controlId) {
+    (state.sourceActionControlIds || []).forEach(function (controlId) {
       state.projectMainViewControlState(controlId, {
         busy: state.busy,
         disabled: state.busy || !state.loaded
@@ -157,12 +157,16 @@ function replaceCapturedRange(state, capture, value, selectionMode) {
   return true;
 }
 
-function createSourceEditorContextAdapter(state) {
+function createSourceEditorContextAdapter(context, state) {
   function isCurrent() { return state.sourceEditorAdapter === adapter && state.loaded && Boolean(state.textarea); }
   var adapter = {
     isCurrent: isCurrent,
     captureSelection: function () {
       return Object.assign(sourceSelection(state), { revision: state.bufferRevision });
+    },
+    addStagedMedia: function (mediaKind, capture) {
+      if (!isCurrent() || !capturedRangeIsCurrent(state, capture)) return Promise.resolve(null);
+      return addStagedMedia(context, state, mediaKind, capture);
     },
     focus: function () {
       if (isCurrent()) state.textarea.focus();
@@ -205,14 +209,6 @@ function createSourceEditorContextAdapter(state) {
     },
     getSelection: function () {
       return sourceSelection(state);
-    },
-    replaceSelection: function (value) {
-      if (!isCurrent() || state.saving) return false;
-      var selection = sourceSelection(state);
-      state.textarea.setRangeText(String(value || ""), selection.start, selection.end, "end");
-      state.textarea.dispatchEvent(new Event("input", { bubbles: true }));
-      state.textarea.focus();
-      return true;
     },
     replaceCapturedSelection: function (capture, value) {
       return isCurrent() && replaceCapturedRange(state, capture, value, "end");
@@ -344,7 +340,7 @@ async function confirmNavigation(context, state) {
   return true;
 }
 
-function addStagedMedia(context, state, mediaKind) {
+function addStagedMedia(context, state, mediaKind, capture) {
   if (state.busy || !state.loaded) return Promise.resolve(null);
   var provider = context.collectionProvider || {};
   setBusy(state, true);
@@ -353,6 +349,7 @@ function addStagedMedia(context, state, mediaKind) {
     .then(function (module) {
       return module.publishAndInsertStagedMedia({
         adapter: state.sourceEditorAdapter,
+        capture: capture,
         mediaKind: mediaKind,
         provider: provider,
         target: Object.assign({}, state.target),
@@ -410,12 +407,6 @@ function bindEvents(context, state) {
   state.onToolbarSave = function () {
     saveSource(context, state);
   };
-  state.onToolbarAddImage = function () {
-    addStagedMedia(context, state, "image");
-  };
-  state.onToolbarAddFile = function () {
-    addStagedMedia(context, state, "file");
-  };
   state.onBeforeUnload = function (event) {
     if (!dirtyNow(state)) return;
     event.preventDefault();
@@ -428,8 +419,6 @@ function bindEvents(context, state) {
   }
   if (state.root) state.root.addEventListener("click", state.onClick);
   if (root && state.onToolbarSave) root.addEventListener("docs-viewer-source-editor-save", state.onToolbarSave);
-  if (root && state.onToolbarAddImage) root.addEventListener("docs-viewer-source-editor-add-image", state.onToolbarAddImage);
-  if (root && state.onToolbarAddFile) root.addEventListener("docs-viewer-source-editor-add-file", state.onToolbarAddFile);
   window.addEventListener("beforeunload", state.onBeforeUnload);
   projectDirty(state);
 }
@@ -440,8 +429,6 @@ function unbindEvents(context, state) {
   if (state.textarea && state.onPaste) state.textarea.removeEventListener("paste", state.onPaste);
   if (state.root && state.onClick) state.root.removeEventListener("click", state.onClick);
   if (root && state.onToolbarSave) root.removeEventListener("docs-viewer-source-editor-save", state.onToolbarSave);
-  if (root && state.onToolbarAddImage) root.removeEventListener("docs-viewer-source-editor-add-image", state.onToolbarAddImage);
-  if (root && state.onToolbarAddFile) root.removeEventListener("docs-viewer-source-editor-add-file", state.onToolbarAddFile);
   if (state.onBeforeUnload) window.removeEventListener("beforeunload", state.onBeforeUnload);
   state.projectMainViewControlState = null;
   state.sourceActionControlIds = [];
@@ -498,7 +485,7 @@ export function createDocsViewerSourceEditorMode() {
       });
       renderEditorShell(context, state);
       bindEvents(context, state);
-      state.sourceEditorAdapter = createSourceEditorContextAdapter(state);
+      state.sourceEditorAdapter = createSourceEditorContextAdapter(context, state);
       var services = context.sourceEditorServices || {};
       if (typeof services.setActiveSourceEditorContextAdapter === "function") {
         services.setActiveSourceEditorContextAdapter(state.sourceEditorAdapter);

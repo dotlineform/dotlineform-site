@@ -19,6 +19,22 @@
   right: calc((100% - var(--docs-viewer-document-width)) / 2);
 }
 
+/* Source's three controls share the document's left edge and one row. */
+.docsViewer[data-docs-viewer-app-kind="manage"][data-document-display-mode="markdown-source"] .docsViewer__topRow .docsViewer__mainViewToolbar{
+  position: absolute;
+  top: 0;
+  left: calc((100% - var(--docs-viewer-document-width)) / 2);
+  font-size: inherit;
+  flex-wrap: nowrap;
+}
+
+.docsViewer[data-docs-viewer-app-kind="manage"][data-document-display-mode="markdown-source"] .docsViewer__mainViewToolbarControlGroup{
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.38rem;
+}
+
 .docsViewer__icon--arrow-up-down{
   mask-image: url("../icons/arrow-up-down.svg");
 }
@@ -1244,8 +1260,7 @@ select.docsViewer__positionTargets{
 }
 
 .docsViewer__manageToolbarMount .docsViewer__actionsMenu,
-.docsViewer__editMenu,
-.docsViewerDirectiveActions__menu{
+.docsViewer__editMenu{
   right: 0;
   left: auto;
 }

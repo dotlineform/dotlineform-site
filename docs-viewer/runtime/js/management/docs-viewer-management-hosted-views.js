@@ -2,11 +2,6 @@ import {
   DOCS_VIEWER_ACTION_IDS
 } from "./docs-viewer-action-definitions.js";
 import {
-  catalogueImageControlDefinition
-} from "./source-editor/catalogue-image-contribution.js";
-import { catalogueMediaLinkControlDefinition } from "./source-editor/catalogue-media-link.js";
-import { documentLinkControlDefinition } from "./source-editor/document-link-contribution.js";
-import {
   directiveActionsControlDefinition
 } from "./source-editor/directive-actions.js";
 
@@ -48,46 +43,6 @@ export function createDocsViewerManagementViewDefinitions() {
         renderer: "manage-edit"
       },
       {
-        id: "source-add-image",
-        actionId: DOCS_VIEWER_ACTION_IDS.SOURCE_ADD_IMAGE,
-        label: "Add image",
-        ownerType: "view",
-        ownerViewId: "rendered-document",
-        modeIds: ["markdown-source"],
-        surfaceId: "main-view",
-        appKinds: ["manage"],
-        features: ["source-editing"],
-        renderer: "source-add-image"
-      },
-      catalogueImageControlDefinition(),
-      {
-        id: "source-add-file",
-        actionId: DOCS_VIEWER_ACTION_IDS.SOURCE_ADD_FILE,
-        label: "Add file",
-        ownerType: "view",
-        ownerViewId: "rendered-document",
-        modeIds: ["markdown-source"],
-        surfaceId: "main-view",
-        appKinds: ["manage"],
-        features: ["source-editing"],
-        renderer: "source-add-file"
-      },
-      catalogueMediaLinkControlDefinition(),
-      documentLinkControlDefinition(),
-      directiveActionsControlDefinition(),
-      {
-        id: "save-markdown-source",
-        actionId: "markdown-save",
-        label: "Save Markdown source",
-        ownerType: "view",
-        ownerViewId: "rendered-document",
-        modeIds: ["markdown-source"],
-        surfaceId: "main-view",
-        appKinds: ["manage"],
-        features: ["source-editing"],
-        renderer: "markdown-source-save"
-      },
-      {
         id: "return-to-doc",
         label: "Return to doc",
         ownerType: "view",
@@ -97,7 +52,20 @@ export function createDocsViewerManagementViewDefinitions() {
         appKinds: ["manage"],
         features: ["source-editing"],
         renderer: "return-to-doc"
-      }
+      },
+      {
+        id: "save-markdown-source",
+        actionId: DOCS_VIEWER_ACTION_IDS.MARKDOWN_SAVE,
+        label: "Save Markdown source",
+        ownerType: "view",
+        ownerViewId: "rendered-document",
+        modeIds: ["markdown-source"],
+        surfaceId: "main-view",
+        appKinds: ["manage"],
+        features: ["source-editing"],
+        renderer: "markdown-source-save"
+      },
+      directiveActionsControlDefinition()
     ]
   };
 }

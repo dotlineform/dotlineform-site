@@ -54,16 +54,6 @@ import {
   mountManagedDocsViewerDocumentLinks
 } from "./docs-viewer-management-document-links.js";
 import {
-  CATALOGUE_IMAGE_CONTROL_ID,
-  catalogueImageControlRenderer,
-  createCatalogueImageMainViewControlHandlers
-} from "./source-editor/catalogue-image-contribution.js";
-import {
-  CATALOGUE_MEDIA_LINK_CONTROL_ID,
-  catalogueMediaLinkControlRenderer,
-  createCatalogueMediaLinkControlHandlers
-} from "./source-editor/catalogue-media-link.js";
-import {
   DIRECTIVE_ACTIONS_CONTROL_ID,
   createDirectiveActionsMainViewControlHandlers,
   directiveActionsControlRenderer
@@ -74,11 +64,6 @@ import {
 import {
   mountLocalFolderLinkActivation
 } from "./source-editor/local-folder-links.js";
-import {
-  DOCUMENT_LINK_CONTROL_ID,
-  createDocumentLinkControlHandlers,
-  documentLinkControlRenderer
-} from "./source-editor/document-link-contribution.js";
 
 function mountDocsViewerManageExtras(context) {
   var settings = context || {};
@@ -126,9 +111,6 @@ startDocsViewerManageApp({
     createDocsViewerManagementControlRenderers(),
     createDocsViewerManagedTableToolControlRenderers(),
     {
-      [CATALOGUE_IMAGE_CONTROL_ID]: catalogueImageControlRenderer,
-      [CATALOGUE_MEDIA_LINK_CONTROL_ID]: catalogueMediaLinkControlRenderer,
-      [DOCUMENT_LINK_CONTROL_ID]: documentLinkControlRenderer,
       [DIRECTIVE_ACTIONS_CONTROL_ID]: directiveActionsControlRenderer
     }
   ),
@@ -150,20 +132,12 @@ startDocsViewerManageApp({
   themedDiagramAdapter: themedDiagramAdapter,
   mainViewControlHandlerContributions: Object.assign(
     {},
-    createCatalogueImageMainViewControlHandlers(),
-    createCatalogueMediaLinkControlHandlers(),
-    createDocumentLinkControlHandlers(),
     createDirectiveActionsMainViewControlHandlers(),
     managedTableTools.controlHandlers()
   ),
   managementShellRenderers: createDocsViewerManagementShellRenderers(),
   mountDocumentExtras: mountDocsViewerManageExtras,
   reportPresentationAdapter: reportPresentationAdapter,
-  sourceEditorActionControlIds: [
-    CATALOGUE_IMAGE_CONTROL_ID,
-    CATALOGUE_MEDIA_LINK_CONTROL_ID,
-    DOCUMENT_LINK_CONTROL_ID,
-    DIRECTIVE_ACTIONS_CONTROL_ID
-  ],
+  sourceEditorActionControlIds: [DIRECTIVE_ACTIONS_CONTROL_ID],
   tableDetailAdapter: managedTableDetailAdapter
 });

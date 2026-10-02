@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260528-224754-964108
 title: Panel Hosts and Control Surfaces
 added_date: "2026-05-28 22:47:54"
-last_updated: "2026-10-02 12:15:13"
+last_updated: "2026-10-02 13:52:21"
 summary: Stable panel, view, mode, control-surface, context, lifecycle, and extension model for Docs Viewer browser modules.
 parent_id: d-20260424-000000-50b63f
 
@@ -73,6 +73,8 @@ An optional mount remains genuine optionality. A route with no eligible main-vie
 
 Composite controls are acceptable when their internals form one focused component. The Docs Review package group is one review app control; its selector, repair/assets buttons, and links remain owned by the review controller.
 
+Source's Directives control is one composite `main-view` control. Its flat menu owns media/link insertion, VS Code and the directive insertion group; those entries are component actions rather than separately registered toolbar controls. The Source session and management coordinator merge loaded/busy availability on this one control. The component captures its mounted adapter and selection before moving focus and routes to existing workflow owners; moving an item never changes its operation authority.
+
 ## Actions And Invocation Context
 
 Action definitions own stable action identities and target categories. Focused controllers resolve the applicable exact target before dispatch.
@@ -83,7 +85,7 @@ Action definitions own stable action identities and target categories. Focused c
 - scope actions have no document target;
 - context-menu operations pass `invocationDocId`, which supplies the invocation document without changing the Index Actions target.
 
-The main Manage Actions context group uses the displayed `{doc_id}` or validated `{collection, doc_id}` supplied by the document/collection owner. In a collection list, document actions use the ordinary report host; in detail they use the exact subdocument. New consumes the published collection identity and report-owned refresh/open callback. Loading or invalid detail never falls back to its host. The menu uses visible disabled states rather than omitting unavailable commands.
+New in Manage Actions and VS Code, Draft/Ready and Star in Edit use the displayed `{doc_id}` or validated `{collection, doc_id}` supplied by the document/collection owner. In a collection list, document actions use the ordinary report host; in detail they use the exact subdocument. New consumes the published collection identity and report-owned refresh/open callback. Loading or invalid detail never falls back to its host. Menus use visible disabled states rather than omitting unavailable commands. Source's VS Code item separately uses the editor adapter's captured target.
 
 Each mounted collection retains its own checkbox-selection owner and supplies immutable checked IDs to registered collection selection actions. The Index has no checkbox-selection owner. Its subtree action context requires a validated displayed ordinary-document target; a loading or missing document and collection detail do not supply a host fallback.
 

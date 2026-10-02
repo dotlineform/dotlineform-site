@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261002-130225-c46d18
 title: Document Edit Menu
 added_date: "2026-10-02 13:02:25"
-last_updated: "2026-10-02 13:24:24"
+last_updated: "2026-10-02 13:52:21"
 parent_id: d-20260428-000000-f5ff18
 ui_status: done
 summary: Consolidate displayed-document editing actions into the right-aligned Edit dropdown.
@@ -12,7 +12,7 @@ summary: Consolidate displayed-document editing actions into the right-aligned E
 
 ## Requirements
 
-Replace the direct Edit action with a dropdown containing Source editor, Open in VS Code, Draft/Ready, Star, Copy link, Delete, Assign Subject and Open in Finder, in that order. Source editor uses `square-code.svg` and retains the existing Source workflow. VS Code, Draft/Ready and Star move from workspace Actions and keep their context-aware targets, handlers, changing labels, checkbox state and artwork. New remains in Actions. All items remain visible; existing eligibility makes unsupported operations disabled. The pen trigger retains its document-right-edge placement and the menu opens left. Source and expanded views hide it, including VS Code; Source-view access is part of the later toolbar design.
+Replace the direct Edit action with a dropdown containing Source editor, Open in VS Code, Draft/Ready, Star, Copy link, Delete, Assign Subject and Open in Finder, in that order. Source editor uses `square-code.svg` and retains the existing Source workflow. VS Code, Draft/Ready and Star move from workspace Actions and keep their context-aware targets, handlers, changing labels, checkbox state and artwork. New remains in Actions. All items remain visible; existing eligibility makes unsupported operations disabled. The pen trigger retains its document-right-edge placement and the menu opens left. Source and expanded views hide Edit; [Source Editor Toolbar](Source_Editor_Toolbar.md) separately supplies VS Code inside Source's Directives menu.
 
 Collection detail actions keep their validated targets, existing workflows and live availability, with no duplicate detail toolbar buttons. Ordinary Copy/Delete use the existing handlers and deletion confirmation. Source editor toolbar changes remain a later outcome.
 
@@ -40,4 +40,4 @@ Placement-revision evidence: `bin/lint-js` passed for `docs-viewer-management-ac
 
 ## Follow-on
 
-Review the Source editor view's buttons as a separate design and implementation slice.
+The approved Source toolbar consolidation is delivered separately in [Source Editor Toolbar](Source_Editor_Toolbar.md).

@@ -32,18 +32,6 @@ export function createDocsViewerManagementControlRenderers() {
         id: "docsViewerManageSourceSaveButton",
         artwork: "docsViewer__icon--download"
       });
-    },
-    "source-add-image": function (context) {
-      return renderDocumentActionButton(context, {
-        id: "docsViewerManageSourceAddImageButton",
-        artwork: "docsViewer__icon--image"
-      });
-    },
-    "source-add-file": function (context) {
-      return renderDocumentActionButton(context, {
-        id: "docsViewerManageSourceAddFileButton",
-        artwork: "docsViewer__icon--paperclip"
-      });
     }
   };
 }

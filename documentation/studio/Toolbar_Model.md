@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260531-152622-ed2451
 title: Toolbar Model
 added_date: 2026-05-31 15:26:22
-last_updated: "2026-10-02 13:24:24"
+last_updated: "2026-10-02 13:52:21"
 summary: Placement and ownership rules for app, active-view, docs_subscope, management, and context-panel controls.
 parent_id: d-20260424-000000-50b63f
 
@@ -37,9 +37,11 @@ Surface: `app-viewer`, mounted by `docs-viewer-viewer-toolbar-renderer.js` and r
 
 Use the main-view toolbar for controls belonging to the active central view, its content, or its current display mode.
 
-For `rendered-document`, this includes its breadcrumb, info control and manage-only **Edit document** dropdown. Its items are Source editor, Open in VS Code, Draft/Ready, Star, Copy link, Delete, Assign Subject and Open in Finder, in that order. Source editor opens Source with the metadata panel for the exact ordinary document, collection-list host or validated collection detail. Copy link uses that same displayed identity. Delete retains ordinary subtree confirmation or the collection's singular validated-detail workflow; Catalogue detail deletion stays disabled. Assign Subject and Open in Finder retain the configured subject-aware collection rules, with Finder requiring a valid Folder subject. Unsupported items remain visible and disabled. Collection detail contributions supply their existing live state and handlers inside this menu instead of duplicate toolbar buttons. A detail has no parent Source action.
+For `rendered-document`, this includes its breadcrumb, info control and manage-only **Edit document** dropdown. Its items are Source editor, Open in VS Code, Draft/Ready, Star, Copy link, Delete, Assign Subject and Open in Finder, in that order. Source editor opens the complete Markdown buffer for the exact ordinary document, collection-list host or validated collection detail. Copy link uses that same displayed identity. Delete retains ordinary subtree confirmation or the collection's singular validated-detail workflow; Catalogue detail deletion stays disabled. Assign Subject and Open in Finder retain the configured subject-aware collection rules, with Finder requiring a valid Folder subject. Unsupported items remain visible and disabled. Collection detail contributions supply their existing live state and handlers inside this menu instead of duplicate toolbar buttons. A detail has no parent Source action.
 
-New stays in the Manage Actions menu. Mode-specific controls such as Source Save and Return remain in the main-view toolbar because the document view owns the mode. For `content-detail`, the same surface supplies the public-safe **Back to document** control and presentation label; later Manage-only table tools may contribute beside them without creating another toolbar.
+New stays in the Manage Actions menu. Source mode registers only Return to doc, Save Markdown source and Directives, in that order on one row at the document's left edge. Directives opens to the right and contains Add image, Add Catalogue image, Add file, Add Media View link, Insert doc link and Open in VS Code. A separator groups Table detail, Insert related links and Insert icon in the same flat list. Source and management owners project loaded/busy availability; unavailable entries remain disabled. The menu captures the mounted adapter and selection, while VS Code uses that adapter's immutable target. There are no duplicate standalone insertion buttons. [Source Editor Scripts](Source_Editor_Scripts.md) owns the workflows.
+
+For `content-detail`, the same surface supplies the public-safe **Back to document** control and presentation label; later Manage-only table tools may contribute beside them without creating another toolbar.
 
 The shared renderer creates one stable `main-view` mount. Shared and manage entrypoints contribute eligible controls to the same host in definition order.
 
@@ -62,7 +64,7 @@ Context-aware targets across Actions and Edit:
 
 New is disabled in Catalogue lists and details because regeneration owns creation. Draft/Ready is disabled for Catalogue subdocuments because their Publish eligibility is fixed; the ordinary Catalogue report host retains its own readiness. Documents excluded by `unpublishable.json` retain disabled readiness controls. Draft/Ready changes eligibility for a later Publish and does not publish immediately. Star uses outline/filled artwork, an explicit menu checkbox state and the next-action labels Star/Remove star.
 
-Loading or invalid collection details disable target-dependent actions without falling back to the report host. Edit, including VS Code, Draft/Ready and Star, is hidden in Source and expanded views; New keeps its existing app-level availability. The mounted collection report owns the immediate projection of a committed draft save and refresh/open after creation. Independently invoked Index context-menu commands retain their explicit row targets.
+Loading or invalid collection details disable target-dependent actions without falling back to the report host. Edit, including VS Code, Draft/Ready and Star, is hidden in Source and expanded views; Source has its own VS Code item in Directives, and New keeps its existing app-level availability. The mounted collection report owns the immediate projection of a committed draft save and refresh/open after creation. Independently invoked Index context-menu commands retain their explicit row targets.
 
 The workspace Actions dropdown aligns to the button's right edge and opens to the left, keeping it inside the desktop window when the button sits near the right side of the top row.
 

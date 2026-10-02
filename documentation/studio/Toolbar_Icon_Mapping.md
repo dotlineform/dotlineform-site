@@ -2,7 +2,7 @@
 doc_id: d-20260919-100234-038395
 title: "Shared Icons: Toolbar Mapping"
 added_date: "2026-09-19 10:02:34"
-last_updated: "2026-10-02 13:24:24"
+last_updated: "2026-10-02 13:52:21"
 summary: Editable mappings for Docs Viewer toolbars, report toolbars and report list icons, including code identifiers, state variants and replacement artwork choices.
 ui_status: planned
 parent_id: d-20260910-223116-9a1011
@@ -58,15 +58,18 @@ Code identifiers below are exact **renderer keys**, except entries explicitly ma
 | Edit menu: ordinary Copy link | action `copy-link` | Copies the exact displayed ordinary document or collection host link | Index context-menu link artwork | link.svg | Icon and text `Copy link` | Existing handler; collection detail contribution listed below |
 | Edit menu: ordinary Delete | action `delete` | Uses existing ordinary subtree availability and confirmation | Index context-menu trash artwork | trash.svg | Icon and text `Delete` | Existing handler; collection detail contribution listed below |
 | Review: VS Code | DOM `docsViewerReviewOpenVsCodeButton` | Opens package document source in VS Code | Branded VS Code SVG | file-code-corner.svg | 20px theme-tinted mask; existing 32px document action button | Implemented; review pending; branded asset removed |
-| Source: return | `return-to-doc` | Returns to rendered document | ↩ | corner-down-left.svg | — | Implemented; review pending |
-| Source: save | `markdown-source-save` | Saves Markdown source | 💾 | download.svg | — | Implemented; review pending |
-| Source: add image | `source-add-image` | Opens image insertion | 🧜‍♀️ | image.svg | — | Implemented; review pending; image-modal combination remains follow-up work |
-| Source: Catalogue image | `source-add-catalogue-image` | Adds a Catalogue image | 🏞️ | book-image.svg | — | Implemented; review pending; image-modal combination remains follow-up work |
-| Source: add file | `source-add-file` | Adds a file link | 📎 | paperclip.svg | — | Implemented; review pending |
-| Source: Media View link | `source-add-media-view-link` | Adds a Media View link | 👁️ | image-plus.svg | — | Implemented; review pending |
-| Source: document link | `source-insert-doc-link` | Inserts a document link | 📄 | file-plus-corner.svg | — | Implemented; review pending |
-| Source: directives | `source-directives` | Opens Directives menu | 🧩 | puzzle.svg | — | Implemented; review pending |
+| Source: return | `return-to-doc` | Returns to rendered document | ↩ | corner-down-left.svg | — | First control at document left edge; review pending |
+| Source: save | `markdown-source-save` | Saves Markdown source | 💾 | download.svg | — | Follows Return on the same row; review pending |
+| Source: directives | `source-directives` | Opens the flat Source action menu | 🧩 | puzzle.svg | — | Follows Save; opens to the right; review pending |
+| Directives menu: add image | action `source-add-image` | Opens image insertion at the captured selection | 🧜‍♀️ | image.svg | Icon and text | Moved from standalone toolbar; review pending |
+| Directives menu: Catalogue image | action `source-add-catalogue-image` | Adds or edits a Catalogue image | 🏞️ | book-image.svg | Icon and text | Moved from standalone toolbar; review pending |
+| Directives menu: add file | action `source-add-file` | Adds a file link at the captured selection | 📎 | paperclip.svg | Icon and text | Moved from standalone toolbar; review pending |
+| Directives menu: Media View link | action `source-add-media-view-link` | Adds or edits a Media View link | 👁️ | image-plus.svg | Icon and text | Moved from standalone toolbar; review pending |
+| Directives menu: document link | action `source-insert-doc-link` | Inserts a document link | 📄 | file-plus-corner.svg | Icon and text | Moved from standalone toolbar; review pending |
+| Directives menu: VS Code | action `open-vscode` | Opens the mounted Source adapter's immutable target | Branded VS Code SVG | file-code-corner.svg | Icon and text | Same action owner as Edit's VS Code; review pending |
 | Directives menu: table detail | directive `table-detail` | Inserts table-detail marker | ⊞ | table.svg | - | Implemented; review pending |
+| Directives menu: related links | directive `insert-related-links` | Inserts the related-links token and selects its heading | Relationship cue | waypoints.svg | Icon and text | Flat directive group below the separator; review pending |
+| Directives menu: icon | directive `insert-icon` | Inserts the icon token and selects its filename stem | Picture cue | image.svg | Icon and text | Flat directive group below the separator; review pending |
 | Directives menu: backlinks | directive `docs-backlinks` | Inserts Documents linking here report | ↩ | — | — | Retired from insertion menu; related-links token remains follow-up work |
 | Content detail: return | `content-detail-back` | Returns from content detail to document | Text `Back to document` | arrow-left.svg | — | Implemented; review pending |
 | Content detail: open | `content-detail-open-new-tab` | Opens supported detail target in another tab | Inline external-link SVG | external-link.svg | — | Implemented; review pending |
@@ -284,7 +287,7 @@ Paths below are relative to the repository root. They identify the inspected own
 - Theme drawings and active-theme semantics: `docs-viewer/runtime/js/shared/docs-viewer-theme.js`.
 - Management document/source/index controls and Index actions menu: `docs-viewer/runtime/js/management/docs-viewer-management-control-renderers.js`; definitions in `docs-viewer-management-hosted-views.js` in the same directory.
 - Management toolbar and Actions menu: `docs-viewer/runtime/js/management/docs-viewer-management-actions-renderer.js`; action identifiers in `docs-viewer-action-definitions.js` in the same directory.
-- Source contributions and Directives menu: `docs-viewer/runtime/js/management/source-editor/catalogue-image-contribution.js`, `catalogue-media-link.js`, `document-link-contribution.js` and `directive-actions.js` in that directory.
+- Source's Directives menu: `docs-viewer/runtime/js/management/source-editor/directive-actions.js`. Existing `catalogue-media-modal.js`, `document-link-contribution.js` and `source-editor-media.js` in that directory own the selected workflows; standalone Catalogue toolbar wrapper modules are retired.
 - Index header rendering: `docs-viewer/runtime/js/shared/docs-viewer-index-panel-renderer.js`. Panel layout comes from `docs-viewer-panel-layout.js` in the same directory. Collapse/expand controls and saved sizing are retired; the header remains only for active index-view controls.
 - Info panel close control: `docs-viewer/runtime/js/shared/docs-viewer-info-panel-renderer.js`.
 - Context New in Actions and VS Code/Draft/Ready/Star in Edit state and dispatch: `docs-viewer/runtime/js/management/docs-viewer-management-context-actions.js`.

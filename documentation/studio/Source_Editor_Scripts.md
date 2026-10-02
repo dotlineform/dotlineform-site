@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-704641
 title: Source Editor Scripts
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-01 17:58:55"
+last_updated: "2026-10-02 13:52:21"
 parent_id: d-20260607-222033-2a494e
 ---
 # Docs Viewer Source Editor Scripts
@@ -51,7 +51,7 @@ If none are installed, macOS Launch Services chooses the default application for
 
 Purpose: own the exact mounted Working target and one complete Markdown buffer, including front matter. The session owns dirty/busy state, a single Save and one leave/discard decision; the service owns candidate validation and persistence.
 
-**Edit document** opens the complete buffer without a side panel. It targets the ordinary document, the report host from a collection list, or the exact validated document from a collection detail. A detail does not offer a separate parent Source action. Open in VS Code retains its separate action.
+**Source editor** in Edit opens the complete buffer without a side panel. It targets the ordinary document, the report host from a collection list, or the exact validated document from a collection detail. A detail does not offer a separate parent Source action. Source's toolbar contains Return to doc, Save Markdown source and Directives, in that order, on one row beginning at the document's left edge. VS Code remains in Edit for rendered documents and is also available inside Source's Directives menu using the adapter's immutable document target.
 
 Title, Summary and other valid authored fields are edited directly in the same buffer. Save submits only that text with the fixed target; an identity conflict, malformed header, invalid collection metadata or write failure retains the full draft. Ordinary hierarchy/order stays with `index-order.json`. There is no metadata draft, pending token-field draft, Source hosted panel or **i** control. Entering Source releases the captured reader panel; returning to rendered content leaves it closed until a related-links pin is used.
 
@@ -61,11 +61,13 @@ Source mounts beside the existing rendered DOM, which management CSS hides while
 
 For local-folder authoring it reads the latest runtime capability only during a `paste` event. A recognized replacement is applied to the current range and emits the normal dirty-buffer `input` path. Conversion is silent and does not implement or intercept Undo.
 
-Registered contributions now provide **Insert doc link**, **Add Media View link** and **Add Catalogue Image**. **Add Catalogue Token** and **Insert Subject Link**, their exclusive handlers and their old text-token serializer are retired. Subject metadata retains its independent read/assignment owners.
+The Directives menu provides **Add image**, **Add Catalogue image**, **Add file**, **Add Media View link**, **Insert doc link** and **Open in VS Code**, followed by a separator and the existing directive insertion items. These are flat menu items rather than nested menus or duplicate toolbar controls. Source loaded/busy state and management availability gate the menu; unavailable items stay disabled. **Add Catalogue Token** and **Insert Subject Link**, their exclusive handlers and their old text-token serializer are retired. Subject metadata retains its independent read/assignment owners.
 
 ## Directives
 
-`directive-actions.js` owns the captured-range Directives menu. **Insert icon** inserts `[[icon:refresh-cw]]` inline and selects `refresh-cw` for manual filename-stem editing. It adds no line breaks and preserves any selected source text after the new token. The existing Table detail directive retains its block insertion.
+`directive-actions.js` owns the Source action menu, its disclosure, keyboard navigation and captured adapter/range. Opening the menu captures the current selection before moving focus; choosing an action closes it before opening a modal or invoking a workflow. Catalogue image/Media View and document-link items reuse their existing modal owners with that capture. Add image/file calls the mounted adapter's `addStagedMedia` operation, which keeps Source busy through the existing media workflow and inserts using the captured range and revision. VS Code invokes the existing management source-opening workflow with the captured adapter's exact target; it does not save the buffer. The old standalone insertion-control definitions/renderers and image/file dispatch events are retired.
+
+The final menu group contains Table detail, Insert related links and Insert icon. **Insert icon** inserts `[[icon:refresh-cw]]` inline and selects `refresh-cw` for manual filename-stem editing. It adds no line breaks and preserves any selected source text after the new token. The existing Table detail directive retains its block insertion.
 
 **Insert related links** inserts `[[links|related links]]` as a block directive and selects its plain-text heading for editing. It preserves selected source text after the token. [Related Links](Related_Links.md) owns the generated sorted list, icons, empty-section suppression and full-build freshness.
 
@@ -85,7 +87,7 @@ The watcher observes the source write and independently invokes targeted documen
 
 ## Catalogue Media And Image Contributions
 
-`catalogue-media-link.js` authors explicit Work/Gallery Media View tokens. `catalogue-image-contribution.js` authors Work images. Both use `catalogue-media-modal.js`, the same generated Catalogue picker and validation of the selected current media presentation; neither requires a related document.
+The Directives menu's Catalogue items author explicit Work/Gallery Media View tokens and Work images through `catalogue-media-modal.js`, the same generated Catalogue picker and validation of the selected current media presentation; neither requires a related document. Their former standalone toolbar wrapper modules are retired.
 
 `catalogue-token-parser.js` owns the supported explicit Catalogue `media` and `image` forms, literal-context exclusions, ranges and serializers. `catalogue-token-contribution.js` captures a corresponding occurrence only when its explicit action is used with the caret inside it or its exact range selected. Recognition is limited to the body; ranges include the current front-matter offset. The shared modal initializes every authored field and the stored target, allows target changes through its existing picker, and uses **Apply** to replace only that occurrence in the unsaved buffer. Creation keeps its insertion action. Cancellation and failed validation retain source unchanged; failed media reads retain the stored identity and entered fields.
 

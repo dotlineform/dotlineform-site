@@ -689,6 +689,7 @@ export function createDocsViewerManagementActionController(options) {
     setManagementBusy(true);
     hideContextMenu();
     setManagementMessage("Opening source for " + targetTitle + "...", false);
+    renderManagementUi();
 
     return openManagedDocSource(sourceTarget, editor, managementClientOptions())
       .then(function () {

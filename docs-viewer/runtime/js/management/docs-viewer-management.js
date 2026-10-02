@@ -380,11 +380,7 @@ export function initDocsViewerManagement(context) {
         hidden: actionsHidden,
         disabled: actionsDisabled
       });
-      context.projectMainViewControlState("source-add-image", {
-        hidden: actionsHidden || !markdownMode,
-        disabled: actionsDisabled
-      });
-      context.projectMainViewControlState("source-add-file", {
+      context.projectMainViewControlState("source-directives", {
         hidden: actionsHidden || !markdownMode,
         disabled: actionsDisabled
       });
@@ -437,24 +433,11 @@ export function initDocsViewerManagement(context) {
 
     var resolution = actionId ? resolveAction(actionId) : null;
     if (actionId && (!resolution || !resolution.enabled)) return false;
-    var owners = new Map([
-      ["save-markdown-source", function () { actionController.handleMarkdownSave(); }],
-      ["source-add-image", function () {
-        if (root && typeof root.dispatchEvent === "function") {
-          root.dispatchEvent(new CustomEvent("docs-viewer-source-editor-add-image", { bubbles: true }));
-        }
-      }],
-      ["source-add-file", function () {
-        if (root && typeof root.dispatchEvent === "function") {
-          root.dispatchEvent(new CustomEvent("docs-viewer-source-editor-add-file", { bubbles: true }));
-        }
-      }]
-    ]);
-    var owner = owners.get(controlId);
-    if (owner) {
-      owner();
+    if (controlId === "save-markdown-source") {
+      actionController.handleMarkdownSave();
       return true;
     }
+    if (controlId === "source-directives" && management.managementBusy) return false;
     var contributions = context.mainViewControlHandlerContributions || {};
     var contribution = typeof contributions[controlId] === "function"
       ? contributions[controlId]
@@ -465,6 +448,7 @@ export function initDocsViewerManagement(context) {
       resolution: resolution,
       root: root,
       setStatus: context.setStatus,
+      openSourceInVsCode: function (target) { return actionController.handleOpenSource("vscode", target); },
       sourceEditorServices: typeof context.sourceEditorServices === "function"
         ? context.sourceEditorServices()
         : context.sourceEditorServices

@@ -251,7 +251,7 @@ export async function publishAndInsertStagedMedia(options = {}) {
     typeof provider.listStagedMedia !== "function" ||
     typeof provider.previewStagedMedia !== "function" ||
     typeof provider.applyStagedMedia !== "function" ||
-    !adapter || typeof adapter.replaceSelection !== "function"
+    !adapter || typeof adapter.replaceCapturedSelection !== "function" || !options.capture
   ) {
     throw new Error("Staged media publication is unavailable on this route.");
   }
@@ -299,7 +299,7 @@ export async function publishAndInsertStagedMedia(options = {}) {
   var payload = await provider.applyStagedMedia(Object.assign({}, request, {
     confirm_replace: Boolean(preview.requires_replace_confirmation)
   }));
-  if (!adapter.replaceSelection(payload.markdown)) {
+  if (!adapter.replaceCapturedSelection(options.capture, payload.markdown)) {
     throw new Error("Media was published, but its Markdown reference could not be inserted.");
   }
   return payload;

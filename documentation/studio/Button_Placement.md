@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260716-204013-3be4e1
 title: Button Placement
 added_date: "2026-07-16 20:40:13"
-last_updated: "2026-10-02 13:24:24"
+last_updated: "2026-10-02 13:52:21"
 parent_id: d-20260424-000000-50b63f
 ---
 # Button Placement
@@ -60,13 +60,17 @@ Collection Actions retain their own checked-document workflow. The app-level **A
 
 ### Open in VS Code
 
-**Open in VS Code** is available in Edit for the exact displayed ordinary document, collection-list host or validated collection subdocument. Edit is hidden in Source and expanded views, so its VS Code item is unavailable there. The Index context-menu item remains available because it operates directly on an invoked row without first opening that document.
+**Open in VS Code** is available in Edit for the exact displayed ordinary document, collection-list host or validated collection subdocument. Edit is hidden in Source and expanded views. Source's Directives menu supplies its own VS Code item using the editor adapter's immutable target. The Index context-menu item remains available because it operates directly on an invoked row without first opening that document.
 
-Both placements invoke the same source-opening service. The Index context menu supplies its invoked ordinary document; Edit's context owner supplies an exact ordinary or collection target. Neither placement changes the other's target.
+These placements invoke the same source-opening service. The Index context menu supplies its invoked ordinary document; Edit's context owner supplies an exact ordinary or collection target; Directives uses the mounted editor's target. Each placement retains its own target.
 
 ### Edit Document
 
 The pen button opens **Edit document** beside the document's right edge. Its menu opens to the left and contains Source editor, Open in VS Code, Draft/Ready, Star, Copy link, Delete, Assign Subject and Open in Finder. Unavailable items remain disabled. A collection detail supplies its exact document actions to this menu; it has no duplicate detail toolbar buttons. The menu is hidden during Source editing and expanded views. [Toolbar Model](Toolbar_Model.md#main-view-toolbar) owns eligibility and action lifecycle.
+
+### Source Toolbar
+
+Source places Return to doc, Save Markdown source and Directives on one row starting at the document's left edge. Directives opens to the right. All remaining insertion actions and VS Code appear in its flat menu; a separator keeps Table detail, Insert related links and Insert icon together without another submenu. Unavailable entries remain disabled. [Source Editor Scripts](Source_Editor_Scripts.md#directives) owns captured selections, workflows and Source targets.
 
 ## Current Boundary
 

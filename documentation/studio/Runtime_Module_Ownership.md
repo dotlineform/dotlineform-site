@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260605-125108-1d1ef3
 title: Runtime Module Ownership
 added_date: 2026-06-05 12:51:08
-last_updated: "2026-10-02 13:24:24"
+last_updated: "2026-10-02 13:52:21"
 summary: Grouped browser-code owners and a practical trace order for Docs Viewer runtime changes.
 parent_id: d-20260331-000000-c313fd
 ---
@@ -59,6 +59,7 @@ Manage-only browser code lives under `docs-viewer/runtime/js/management/`.
 - `docs-viewer-management.js` coordinates capabilities and focused management controllers.
 - `docs-viewer-management-context-actions.js` owns exact targets, disabled-state projection and dispatch for New in Actions and VS Code, Draft/Ready and Star in Edit. It consumes the exact displayed ordinary target or validated collection action context; it never infers a subdocument from a route. The shared collection report owns committed draft projection and refresh/open after creation. Workspace actions remain under their existing workflow owners.
 - `docs-viewer-management-edit-menu.js` owns the stable Edit dropdown, Source editor dispatch, ordinary Copy link/Delete dispatch and disabled fallback items. Collection detail contributions retain their exact registrations, async state and existing Copy/Delete/Subject/Finder handlers; their retained action host mounts inside Edit rather than a second toolbar. The shared main-view runtime keeps this host connected in its hidden collection-action mount during Source and expanded views. The menu never infers a detail from a route or substitutes its collection host.
+- `source-editor/directive-actions.js` owns Source's flat action menu, disclosure, keyboard navigation and captured adapter/selection. It calls existing Catalogue/document-link modal owners and the Source adapter's staged-media operation; VS Code reuses the existing management source-opening workflow with the adapter's immutable target. Source mode contributes only Return, Save and Directives to `main-view`. The former standalone insertion-control wrappers, definitions and image/file dispatch events are retired.
 - `docs-viewer-runtime-lazy-controller.js` is the neutral shared-side lazy boundary that prevents public startup from importing management orchestration.
 - `docs-viewer-action-definitions.js` owns action ids and workspace/document/active-document/document-subtree target policy. It does not own handlers, placement, or mutations. Management resolves a subtree from the validated displayed ordinary-document target and the complete loaded hierarchy; context-menu invocation never changes that target.
 - `docs-viewer-management-index-controller.js` owns the Index Actions menu and Export/Prepare package/Delete dispatch. The Index has no checkbox-selection owner, gutter, commands, or reload reconciliation. Export receives the explicit subtree IDs; Prepare package and Delete receive the captured displayed root and expand descendants through their existing source owners. Collection selection remains independently owned by `docs-viewer-collection-selection.js` and the default collection contribution.
