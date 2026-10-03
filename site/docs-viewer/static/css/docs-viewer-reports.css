@@ -10,8 +10,8 @@
   line-height: var(--docs-viewer-line-snug);
 }
 
-/* Match the Index search's inset: sidebar padding plus its top border. */
-.docsViewer__content > .docsViewerReport[data-report-collection][data-report-state="list"]:first-child{
+/* Match the Index search's inset from shell mount through list loading. */
+.docsViewer__content > .docsViewerReport[data-report-collection]:not([data-report-state="detail"]):first-child{
   margin-top: calc(var(--docs-viewer-space-3) + 1px);
 }
 

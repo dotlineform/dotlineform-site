@@ -449,6 +449,7 @@ function renderShell(context, collection) {
   status.className = "docsViewerReport__status visually-hidden";
   status.setAttribute("aria-live", "polite");
   status.setAttribute("role", "status");
+  status.hidden = Boolean(context.managementContext);
 
   var table = document.createElement("div");
   table.className = "docsViewerReport__table";
@@ -1427,7 +1428,9 @@ function mountResolvedDocsCollectionReport(context, contribution) {
   }
 
   var refs = renderShell(context, collection);
-  refs.statusNode.textContent = "Loading " + collectionItemsLabel(collection) + "...";
+  if (!context.managementContext) {
+    refs.statusNode.textContent = "Loading " + collectionItemsLabel(collection) + "...";
+  }
   var state = {
     root: root,
     mountDocumentContent: context.mountCollectionDocumentContent,

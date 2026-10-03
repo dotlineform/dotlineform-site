@@ -246,7 +246,9 @@ export function mountDocsViewerReport(context) {
       return true;
     }
 
-    root.innerHTML = '<p class="docsViewerReport__status">Loading report...</p>';
+    if (reportMeta.loaderId !== "docs_collection") {
+      root.innerHTML = '<p class="docsViewerReport__status">Loading report...</p>';
+    }
     return loader.load().then(function (mount) {
       if (!isCurrent()) return false;
       const resolvedReportMeta = Object.assign({}, meta, { registryEntry: reportMeta });

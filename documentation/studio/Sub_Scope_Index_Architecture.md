@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260728-113139-763354
 title: Sub-Scope Index Architecture
 added_date: "2026-07-28 11:31:39"
-last_updated: "2026-10-03 00:44:36"
+last_updated: "2026-10-03 01:02:49"
 summary: define collection identity, the docs_subscope default, registered customisations, selection lifecycle, and explicit function adoption
 parent_id: d-20260801-084127-752d7e
 ---
@@ -205,6 +205,8 @@ The sub-scope owner is keyed by `{ scope, sub_scope }` and owns:
   left.
 
 Opening a detail retains the mounted list rows, headings and toolbar. The report's Back button reveals that list without fetching the manifest or recreating unchanged rows, restores the window scroll position saved when the row was opened, and returns focus to the original row control when it is still connected. Filters, sort and selection remain with the mounted list. Manifest replacement, committed draft changes and deletion invalidate its rendering so the next return rebuilds current data; filters and sorting still rebuild immediately. Initial direct-to-detail navigation builds the list on its first return. Browser Back continues to use the route-loading path.
+
+Working collection loads do not display transient loading messages in the report layout. The collection search keeps the same top inset from shell mount through list loading, so completing the manifest read does not reposition it. Loading still gates management actions, and failures remain visible.
 
 Only checked IDs are supplied to selection actions. The displayed detail, focused row, URL `subdoc`, and selected parent index document are never fallback targets.
 
