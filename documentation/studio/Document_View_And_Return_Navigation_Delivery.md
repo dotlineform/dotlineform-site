@@ -163,6 +163,7 @@ Save still succeeds at canonical source persistence. Its committed metadata noti
 - Identify the actual route producers and authored/saved references for the accepted URL cutover; agree any required Working source edits and generated reconciliation before writes.
 - Confirm the smallest committed summary shared by Save and retained list owners, and Projects' retained inputs for Subject/group changes. Stop if a new workspace scan or broader report-data redesign is required.
 - Confirm Create/Import completion integration and treatment of unavailable/deleted callers using existing failure owners, without a new recovery framework.
+- Important: this is a synchronous workflow. It should be assumed without validation that callers still exist and have not been edited whilst a linked doc is open, regardless of whether it has been opened in a new tab.
 
 ## Deliverables
 
