@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260907-125101-d3bde6
 title: Doc Relationships
 added_date: "2026-09-07 12:51:01"
-last_updated: "2026-10-03 17:35:06"
+last_updated: "2026-10-03 21:27:23"
 summary: Record eligible document relationships in separate links-by-id files during Working, including drafts, with coordinated Document Build updates and aggregation of prepared records.
 ui_status: done
 parent_id: d-20260908-171728-3c539a
@@ -30,7 +30,7 @@ Surfacing relationships across a scope or sub-scope belongs to [Catalogue Data V
 
 Use ordinary Markdown links to author references between documents. A single **Insert doc link** button selects a document and inserts its title and normal document location. Document Build extracts those references, records eligible relationships and enriches them with the linked documents' collection membership and optional Catalogue subjects. Incoming references are the generated reverse view of those same recorded links.
 
-`doc_id` identifies a document. A document in `concepts` is about concepts without having to define one unique Concept; Moments use the same document model. Catalogue retains canonical Work, Series and Detail identities. A document's `work_id`, `series_id` or `detail_uid` associates it with an existing Catalogue item. Folder subjects retain their supported authoring boundary. Document identity, collection and Subject remain independent.
+`doc_id` identifies a document. A document in `concepts` is about concepts without having to define one unique Concept; Moments use the same document model. A document's `work_id` associates it with an exact Catalogue Work. Folder subjects retain their configured authoring boundary; None is valid. Series and Detail document Subjects are retired. Studio Series membership and Work/Gallery media identities remain separate Catalogue relationships. Document identity, collection and Subject remain independent.
 
 [Source Organisation](Source_Organisation.md) owns the implemented `sub-scope` front matter and completed source backfill. A nonempty value is the exact configured collection name; missing, null or empty means a normal scope-level document. Configured storage remains authoritative. Concept/Moment IDs and `group` metadata are retired.
 

@@ -157,15 +157,10 @@ export function composeWorksProjection(seriesRecords, workRecords, workDocuments
   catalogueSeries.forEach((_series, seriesId) => documentsBySeries.set(seriesId, new Map()));
   workDocuments.forEach((documentRecord) => {
     const subject = documentRecord.subject;
-    if (!["work", "series"].includes(subject.kind)) return;
-    let seriesIds = [];
-    if (subject.kind === "series" && catalogueSeries.has(subject.key)) {
-      seriesIds = [subject.key];
-    } else if (subject.kind === "work" && catalogueWorks.has(subject.key)) {
-      seriesIds = [catalogueWorks.get(subject.key).seriesId].filter((seriesId) => {
-        return catalogueSeries.has(seriesId);
-      });
-    }
+    if (subject.kind !== "work" || !catalogueWorks.has(subject.key)) return;
+    const seriesIds = [catalogueWorks.get(subject.key).seriesId].filter((seriesId) => {
+      return catalogueSeries.has(seriesId);
+    });
     seriesIds.forEach((seriesId) => {
       documentsBySeries.get(seriesId).set(documentRecord.docId, {
         docId: documentRecord.docId,

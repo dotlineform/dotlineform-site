@@ -1,7 +1,6 @@
 export const AUTHORING_SUBJECT_FIELDS = Object.freeze([
   "folder_path",
-  "work_id",
-  "series_id"
+  "work_id"
 ]);
 
 function cleanString(value) {
@@ -23,7 +22,7 @@ export function normalizeDocsViewerAuthoringSubject(value, options = {}) {
   var key = subject.key;
   if (
     keys !== "key,kind"
-    || !["none", "folder", "work", "series"].includes(kind)
+    || !["none", "folder", "work"].includes(kind)
     || typeof key !== "string"
     || key !== key.trim()
     || (kind === "none" ? key !== "" : !key)

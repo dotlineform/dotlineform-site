@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260927-135604-05446e
 title: Subject Associations
 added_date: "2026-09-27 13:56:04"
-last_updated: "2026-10-03 17:35:06"
+last_updated: "2026-10-03 21:27:23"
 summary: Manifest-owned subjects, in-memory report associations, exact navigation, and private/public generation boundaries.
 parent_id: d-20260423-000000-d015e6
 ---
@@ -11,13 +11,13 @@ parent_id: d-20260423-000000-d015e6
 
 ## Purpose And Review Boundary
 
-This is a current-state inventory, updated for Catalogue Work-ID documents on 2026-09-30, for understanding document relationships before deciding whether their data model or presentation should change. Record each data product's purpose, the UI actions that read or change it, its consumers, and its update/publication rules. Use the same questions when reviewing semantic tokens, document links, and their UI actions.
+This is the current-state inventory for document Subjects and their derived report associations. On 2026-10-03 Series was retired as a document Subject after the user reassigned every remaining declaration. Work, configured Folder and None are the supported choices. Record each data product's purpose, the UI actions that read or change it, its consumers, and its update/publication rules. Use the same questions when reviewing semantic tokens, document links, and their UI actions.
 
 Reports derive associations in memory from normalized `authoring_subject` rows in each collection's private `manage-manifest.json`. An explicitly declared subject maps to the documents about that subject. The former `subject-associations.json` product is retired from every collection: no producer, generated-data read allowance, Preview validation or distribution branch remains. There is no replacement lookup file. Subjects do not collect semantic-token references, Markdown links, or all documents related through Catalogue membership.
 
 The proposed UI idea is to present document relationships as **related links**, regardless of how they were derived. That is an exploration aim, not an implemented or agreed replacement model. This document records current behavior separately from questions for that review.
 
-Catalogue remains a registered document collection. On 2026-10-03 the user retired the superseded proposal to remove Catalogue documents; future Subject review is separate and does not authorize changing the current Subject model or Catalogue ownership.
+Catalogue remains a registered document collection. On 2026-10-03 the user retired the superseded proposal to remove Catalogue documents. Subject retirement does not change Catalogue Work IDs, Studio Series, Work-to-Series membership, report Series columns or Catalogue ownership.
 
 ## Key Data Files
 
@@ -26,19 +26,20 @@ All workspace paths below are relative to the configured `$DOTLINEFORM_DOCS_BASE
 | File | Purpose And Authority | UI Actions And Consumers | Update And Publication Rules |
 | --- | --- | --- | --- |
 | `working/source/collections/<collection>/documents/*.md` | Canonical document identities and configured subject declarations in front matter. Catalogue uses the Work ID as `doc_id`, with no separate `work_id`. | Assign/Change Subject writes the configured subject field group. Open Source permits direct file editing. Collection Regenerate can replace generated document source, including Catalogue Work documents. | Source changes feed collection document builds. Publish captures eligible source and builds temporary Preview output. Canonical Working source is not distributed as reader data. |
-| `working/generated/collections/<collection>/documents/manage-manifest.json` | Private document list with normalized `authoring_subject` per row when subject projection is enabled, plus `subject_generation`. Retains missing, malformed, and conflicting subject states for management. Catalogue does not project authoring subjects. | Collection Subject display and assignment context; Project State's Works grouping. Catalogue browsing uses its Work-ID `doc_id` directly. | Collection builds maintain the rows and generation. Targeted builds merge selected rows with saved rows, preserving unselected metadata. Excluded from the completed Preview snapshot and public distribution. |
-| `working/generated/collections/<collection>/documents/manifest.json` | Reader document list. Catalogue rows contain `doc_id`, `title` and `last_updated`; other collection rows carry a public-safe Work/Series `subject` or `null`. | Collection readers use their existing public-safe representation. | Written by the collection builder. Preview rebuilds its reader list from the prepared document set, and distribution projects that list into `site/assets/data/docs/<collection>/manifest.json`. Folder subjects and authoring diagnostics are not reader subject data. |
-| `working/generated/catalogue/reports/works/manifest.json` | Private exact Work/Series title maps, separate from document manifests. | Context's Subject column displays current titles and opens Work/Series subjects in Media View by exact Catalogue identity. | Maintained by Studio Save. Context does not need Catalogue document mappings to open media. |
+| `working/generated/collections/<collection>/documents/manage-manifest.json` | Private document list with normalized `{kind, key}` `authoring_subject` per row when subject projection is enabled, plus `subject_generation`. Invalid and conflicting declarations fail; absence projects to None. Catalogue does not project authoring subjects. | Exact-document Subject information and assignment; Projects' Folder/Work placement and Works' Work-derived Series coverage. Catalogue browsing uses its Work-ID `doc_id` directly. | Collection builds maintain the rows and generation. Targeted builds merge selected rows with saved rows, preserving unselected metadata. Excluded from the completed Preview snapshot and public distribution. |
+| `preview/collections/<collection>/documents/manifest.json` | Prepared public-reader list containing `doc_id`, `title` and date-only `last_updated`, without Subject columns or authoring metadata. | Public collection readers use the prepared list. | Working does not keep a public `manifest.json`. Publish builds the reader list in temporary storage, retains it in Preview and distributes it to the configured repository destination. |
 
 Catalogue Works' private `working/generated/catalogue/reports/catalogue-works/metadata.json` supplies Work/Series display and search data. Each Work's definitive Catalogue document uses that exact Work ID as `doc_id`; the report composes its destination using the configured report host and existing route helper without reading a document manifest. Studio Work Save updates canonical records and the editor; Refresh Catalogue updates report metadata, while Catalogue Regenerate maintains the linked documents. [Catalogue Works](../Catalogue_Works.md) owns that distinction. Local and public browser configuration expose Catalogue's exact `report_host_doc_id`, without inferring a host from the current route or document tree.
 
 ## Subject And Association Shape
 
-The recognized declarations are `work_id` → `work`, `series_id` → `series`, and `folder_path` → `folder`. A document must have exactly one valid declaration to participate in report associations. No declaration normalizes to `none`; multiple declared fields normalize to `conflicting`; a bad value or unsupported folder declaration normalizes to `malformed`. These states remain management evidence, while only `valid` subjects produce associations.
+The recognized declarations are `work_id` → `work` and `folder_path` → `folder`. A document may declare at most one Subject. Its normalized form is exactly `{kind: "work" | "folder", key: "<identity>"}`; no declaration is `{kind: "none", key: ""}`. Multiple declarations, invalid values and unsupported Folder declarations fail validation. Document `series_id` fields are rejected even when blank; normalized Series subject records and obsolete assignment field sets are also rejected, without conversion or aliases. Studio Work `series_id` remains a separate Catalogue membership field.
 
-Work keys are exact five-digit strings. Series keys use the canonical lowercase alphanumeric/hyphen format. Supported folder keys are normalized relative targets. Normalization does not check current Work/Series registry membership or folder existence, and never infers identity from titles, filenames, body text, selected rows, or route context.
+Work keys are exact five-digit strings. Supported Folder keys are normalized relative targets, with availability limited by the exact collection's registered capability. Normalization does not check current Work registry membership or folder existence, and never infers identity from titles, filenames, body text, selected rows, or route context.
 
 Subject-enabled management manifests contain immutable `doc_id`, presentation metadata, normalized `authoring_subject` and `subject_generation`. Project State groups valid rows by `{kind, key}`, keeps every matching document, composes exact Manage links from the configured Works host, and preserves title/ID ordering. Catalogue has no subject projection or separate Work-to-document association: navigation uses its five-digit `doc_id` directly. There is no publishing-stage discriminator or persisted association payload.
+
+Projects first scans every immediate physical project folder and retains unmatched folder rows. Work-subject documents are placed through their Work's canonical project folder and Series membership. Folder-subject documents are placed at the declared folder and may appear against every Series represented by Works there; that association is broader than an explicit Series declaration. The Works coverage report derives Series documentation through member-Work subjects only. Both reports keep plain-text Series columns, while their Docs cells retain exact document links.
 
 Several documents may share a subject. That is valid for Project State. Every current Work requires one definitive Catalogue document with its Work ID as `doc_id`. A direct link loads that exact by-ID payload before any list manifest; a missing document is a destination error to repair through Regenerate, without a guessed target or old-ID alias.
 
@@ -54,7 +55,7 @@ Several documents may share a subject. That is valid for Project State. Every cu
 | Document create, import, or delete with collection rebuild follow-through | Adds or removes exact manifest rows. | The source operation's collection build owns reconciliation. |
 | Publish | Captures eligible source, builds temporary document output, validates/replaces Preview and distributes the completed snapshot. | One awaited Publish action. Management manifests remain private; no association artifact is generated. Git commit, push and Deploy Public are separate actions. |
 | Open Catalogue Works | Reads private report metadata and composes Work ID/title links from each Work ID and the configured Catalogue report host. | No Catalogue document-manifest or mapping read; direct destinations load exact by-ID content. |
-| Open Context (Working Works collection) | Uses its own normalized document subjects and private Work/Series title metadata. Both Work and Series subjects open Media View by exact Catalogue identity. | Loaded with the collection subject contribution; no Catalogue document-manifest read is required. Folder subjects retain their local-folder action. |
+| Open Context (Working Works collection) | Uses the shared title/draft/selection list. Its `working_works` contribution supplies document-detail Subject information, Assign Subject and Folder-only Open in Finder. | No Subject column, heading sorts or private Catalogue title-file read. The assignment picker reads current generated Work targets through its separately owned Catalogue provider. |
 | Project State Run/Refresh | Reads Works' management manifest, groups valid subjects and places documents against project folders and canonical Catalogue data. | Returns a newly assembled report without rebuilding or repairing its inputs. |
 | Follow a document link or open a Series gallery | Uses the exact destination or the separate Media View owner. | Navigation only. |
 
@@ -66,7 +67,7 @@ The builder writes manifests only when their serialized bytes change. `subject_g
 
 Working subjects include draft documents independently of publication readiness. Publish selects documents using explicit `draft`, ordinary `unpublishable.json` exclusions and inherited exclusions; exclusion of a collection's report host excludes the collection. [Preview preparation](../../../docs-viewer/services/docs_prepare_preview.py) rebuilds that eligible set in isolated temporary storage.
 
-The configured Works publication owner removes authoring subject fields and retains only a valid Work or Series declaration. Folder subjects and invalid/conflicting subject declarations do not survive that projection. This specialization belongs to Works; other collection source fields are not globally stripped. Preview removes other Working collection customisations while retaining Works' derived subject support.
+The configured Works publication owner removes authoring subject fields and retains only a valid Work declaration. Folder declarations are omitted; invalid, conflicting and retired Series declarations fail before projection. This specialization belongs to Works; other collection source fields are not globally stripped. Preview removes other Working collection customisations while retaining Works' derived Work-subject support.
 
 [Snapshot assembly](../../../docs-viewer/services/docs_preview_snapshot.py) excludes management manifests and retains the existing reader payloads. [Repository distribution](../../../docs-viewer/services/docs_deploy_repo.py) consumes that completed snapshot. Neither operation has association-file handling. Search rebuilding remains separate.
 
@@ -75,12 +76,15 @@ The configured Works publication owner removes authoring subject fields and reta
 | Owner | Input And Responsibility |
 | --- | --- |
 | [Catalogue Works report](../../../docs-viewer/runtime/js/reports/catalogue-works-report.js) | Reads generated Work/Series report metadata and composes definitive Catalogue document links from each Work ID and the configured report host. The separate document-link reader is retired. |
-| [Working collection subjects](../../../docs-viewer/runtime/js/management/docs-viewer-management-collection-working-subjects.js) | Context uses normalized subjects and private title metadata. Work and Series subjects open the existing Media View; Folder opens Finder. It does not consume Catalogue document associations. |
-| [Project State producer](../../../docs-viewer/services/docs_project_state.py) | Groups valid Works management rows, then places documents against project folders using Folder, Work and Series relationships. Invoked by Run/Refresh through `/docs/project-state`. |
+| [Working collection subjects](../../../docs-viewer/runtime/js/management/docs-viewer-management-collection-working-subjects.js) | Context's document-detail Subject information, Work/Folder/None assignment and Folder-only Finder action. It does not contribute list rows or consume a private title map. |
+| [Project State producer](../../../docs-viewer/services/docs_project_state.py) | Groups valid Works management rows, then places documents through Folder or Work identities and derives Series membership from canonical Works. Invoked by Run/Refresh through `/docs/project-state`. |
+| [Works coverage report](../../../docs-viewer/runtime/js/reports/works-report.js) | Retains Studio Series rows and joins documents through exact member-Work subjects. Folder and None supply no coverage; direct Series subjects are unsupported. |
 
 ## Artifact Retirement
 
 Obsolete association files were removed from configured Working and Preview collection document owners. Cleanup preserved source, registrations, media, reader manifests, management manifests and unrelated output. Changing Preview bytes invalidates its completion receipt; the receipt was already absent at the association-file cutover. Subsequent explicit Publish operations rebuild and verify the completed snapshot through the ordinary publication owner.
+
+Context's Subject column and its private `reports/works/manifest.json` reader/generator were retired on 2026-10-03. Series-subject retirement then removed the picker choice, field support, detail label/icon and direct report placement branches. Working source inspection found no Series declarations; its 244 Context rows contained 24 Work, 208 Folder and 12 None subjects. The existing complete Works docs-only dry-run rendered all 244 documents with zero proposed writes/removals, zero manifest changes and zero warnings, so no generated reconciliation was required. Tests and browser review remain separately scoped; no test or fixture was changed for this retirement.
 
 ## Questions For The Relationship Review
 

@@ -122,7 +122,6 @@ function modalBody(subject, folderSupported) {
       radio("none", "None", selected) +
       (folderSupported ? radio("folder", "Folder", selected) : "") +
       radio("work", "Work", selected) +
-      radio("series", "Series", selected) +
     "</fieldset>" +
     '<label class="docsViewer__field" data-project-subject-folder' +
       (selected === "folder" ? "" : " hidden") + ">" +
@@ -131,13 +130,13 @@ function modalBody(subject, folderSupported) {
         'autocomplete="off" spellcheck="false" value="' + escapeHtml(folderValue) + '">' +
     "</label>" +
     '<section class="docsViewerProjectSubjectModal__catalogue" data-project-subject-catalogue' +
-      (["work", "series"].includes(selected) ? "" : " hidden") + ">" +
+      (selected === "work" ? "" : " hidden") + ">" +
       '<div class="docsViewer__field">' +
         '<label class="docsViewer__fieldLabel" for="' + SEARCH_INPUT_ID + '">Search Catalogue</label>' +
         '<input class="docsViewer__fieldInput" id="' + SEARCH_INPUT_ID + '" type="search" role="combobox" aria-autocomplete="list" aria-controls="' + RESULTS_ID + '" aria-expanded="false" autocomplete="off" spellcheck="false" disabled>' +
       "</div>" +
-      '<p class="docsViewerCatalogueTokenModal__searchStatus muted small" data-project-subject-search-status>Choose Work or Series to load Catalogue targets.</p>' +
-      '<div class="docsViewerCatalogueTargetPicker__results docsViewerCatalogueTokenModal__results" id="' + RESULTS_ID + '" role="listbox" aria-label="Work and Series targets" data-project-subject-results tabindex="0" hidden></div>' +
+      '<p class="docsViewerCatalogueTokenModal__searchStatus muted small" data-project-subject-search-status>Choose Work to load Catalogue targets.</p>' +
+      '<div class="docsViewerCatalogueTargetPicker__results docsViewerCatalogueTokenModal__results" id="' + RESULTS_ID + '" role="listbox" aria-label="Work targets" data-project-subject-results tabindex="0" hidden></div>' +
     "</section>";
 }
 
@@ -195,27 +194,16 @@ function openSubjectModal(options, target, loaded) {
         if (focusInput && searchInput) searchInput.focus();
       }
 
-      function supportFor(kind) {
-        return {
-          registry: state.support.registry,
-          targetTypes: new Set([kind]),
-          searchableTargets: state.support.searchableTargets.filter(function (record) {
-            return record.targetType === kind;
-          })
-        };
-      }
-
       function updateMatches() {
-        var kind = chosenKind();
-        if (!state.list || !state.support || !searchInput || !["work", "series"].includes(kind)) return;
+        if (!state.list || !state.support || !searchInput || chosenKind() !== "work") return;
         state.selectedTarget = null;
-        var matches = collectCatalogueTargetMatches(supportFor(kind), searchInput.value, 20);
+        var matches = collectCatalogueTargetMatches(state.support, searchInput.value, 20);
         state.list.setTargets(matches);
         showResults(true);
         if (searchStatus) {
           searchStatus.classList.remove("is-error");
           searchStatus.textContent = searchInput.value.trim() && !matches.length
-            ? "No matching " + (kind === "work" ? "Work" : "Series") + " targets."
+            ? "No matching Work targets."
             : "";
           searchStatus.hidden = !searchStatus.textContent;
         }
@@ -224,7 +212,7 @@ function openSubjectModal(options, target, loaded) {
       function restoreCurrentTarget() {
         var subject = loaded.subject;
         if (
-          !["work", "series"].includes(subject.kind)
+          subject.kind !== "work"
           || chosenKind() !== subject.kind
         ) {
           updateMatches();
@@ -242,7 +230,7 @@ function openSubjectModal(options, target, loaded) {
           state.list.setTargets([]);
           state.selectedTarget = null;
           showResults(false);
-          searchStatus.textContent = "Current " + (subject.kind === "work" ? "Work" : "Series") + " " + subject.key + " is unavailable. Choose a current target or another subject.";
+          searchStatus.textContent = "Current Work " + subject.key + " is unavailable. Choose a current target or another subject.";
           searchStatus.hidden = false;
         }
       }
@@ -255,7 +243,7 @@ function openSubjectModal(options, target, loaded) {
         }
         state.supportPromise = loadCatalogueTargetSupport(options.catalogueProvider, {
           fetch: options.fetch,
-          allowedTargetTypes: ["work", "series"]
+          allowedTargetTypes: ["work"]
         }).then(function (support) {
           if (state.disposed) return support;
           state.support = support;
@@ -278,7 +266,7 @@ function openSubjectModal(options, target, loaded) {
         var form = folderField && folderField.closest("form");
         var busy = Boolean(form && form.dataset.busy === "true");
         var folderSelected = kind === "folder";
-        var catalogueSelected = ["work", "series"].includes(kind);
+        var catalogueSelected = kind === "work";
         if (folderField) folderField.hidden = !folderSelected;
         if (folderInput) folderInput.disabled = busy || !folderSelected;
         if (catalogue) catalogue.hidden = !catalogueSelected;
@@ -341,12 +329,12 @@ function openSubjectModal(options, target, loaded) {
           return false;
         }
       }
-      if (["work", "series"].includes(selected.value)) {
+      if (selected.value === "work") {
         if (!state.selectedTarget || state.selectedTarget.targetType !== selected.value) {
-          api.setStatus("Choose a current " + (selected.value === "work" ? "Work" : "Series") + " target.");
+          api.setStatus("Choose a current Work target.");
           return false;
         }
-        fields[selected.value + "_id"] = state.selectedTarget.targetId;
+        fields.work_id = state.selectedTarget.targetId;
       }
       return options.assignFieldGroup(target, {
         source_revision: loaded.sourceRevision,

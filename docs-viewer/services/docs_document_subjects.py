@@ -13,28 +13,28 @@ from docs_local_links import normalize_decoded_relative_target
 
 FOLDER_PATH_FIELD = "folder_path"
 WORK_ID_FIELD = "work_id"
-SERIES_ID_FIELD = "series_id"
 AUTHORING_SUBJECT_FIELDS = (
     FOLDER_PATH_FIELD,
     WORK_ID_FIELD,
-    SERIES_ID_FIELD,
 )
 SUBJECT_KIND_BY_FIELD = {
     FOLDER_PATH_FIELD: "folder",
     WORK_ID_FIELD: "work",
-    SERIES_ID_FIELD: "series",
 }
 WORK_ID_PATTERN = re.compile(r"\A\d{5}\Z")
-SERIES_ID_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9-]*\Z")
 
 
 def subject_key_is_canonical(kind: str, key: str) -> bool:
     """Validate exact non-Folder identity without consulting a registry."""
     if kind == "work":
         return WORK_ID_PATTERN.fullmatch(key) is not None
-    if kind == "series":
-        return SERIES_ID_PATTERN.fullmatch(key) is not None
     return False
+
+
+def validate_document_subject_fields(front_matter: Mapping[str, Any]) -> None:
+    """Reject retired Subject fields even when no current Subject is declared."""
+    if "series_id" in front_matter:
+        raise ValueError("Document Series subjects are retired; use work_id or folder_path")
 
 
 def normalize_authoring_subject(
@@ -44,6 +44,7 @@ def normalize_authoring_subject(
 ) -> dict[str, str]:
     """Project one Subject identity, rejecting invalid source declarations."""
 
+    validate_document_subject_fields(front_matter)
     declared_fields = [
         field_name
         for field_name in AUTHORING_SUBJECT_FIELDS
@@ -69,9 +70,9 @@ def normalize_authoring_subject(
 
 
 def project_reader_subject(front_matter: Mapping[str, Any]) -> dict[str, str] | None:
-    """Project Work/Series identity for source authoring and publication inputs."""
+    """Project Work identity for source authoring and publication inputs."""
     subject = normalize_authoring_subject(front_matter, folder_supported=True)
-    if subject["kind"] not in {"work", "series"}:
+    if subject["kind"] != "work":
         return None
     return subject
 
@@ -103,9 +104,9 @@ def subject_projection_generation(
 __all__ = [
     "AUTHORING_SUBJECT_FIELDS",
     "FOLDER_PATH_FIELD",
-    "SERIES_ID_FIELD",
     "WORK_ID_FIELD",
     "subject_key_is_canonical",
+    "validate_document_subject_fields",
     "normalize_authoring_subject",
     "project_reader_subject",
     "subject_projection_generation",

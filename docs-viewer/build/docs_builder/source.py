@@ -17,6 +17,7 @@ from .common import (
     read_json,
 )
 from docs_document_identity import doc_updated_date, is_document_id, is_immutable_doc_id
+from docs_document_subjects import validate_document_subject_fields
 from docs_index_order import read_index_order, tree_parent_ids
 from docs_report_source import ReportDescriptor, ReportSourceContractRequired
 from docs_source_model import (
@@ -104,6 +105,10 @@ def parse_source_text(raw: str, *, source_name: str) -> tuple[dict[str, Any], st
         if not key:
             raise FrontMatterSyntaxError(f"problem with front-matter on doc {source_name} at line {index}: empty key")
         front_matter[key] = parse_front_matter_value(value)
+    try:
+        validate_document_subject_fields(front_matter)
+    except ValueError as error:
+        raise FrontMatterSyntaxError(f"problem with front-matter on doc {source_name}: {error}") from error
     return front_matter, raw[match.end() :]
 
 

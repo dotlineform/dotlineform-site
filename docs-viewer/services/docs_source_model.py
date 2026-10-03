@@ -33,6 +33,7 @@ from docs_workspace_config import (
     path_label,
     resolve_workspace_path,
 )
+from docs_document_subjects import validate_document_subject_fields
 from docs_report_source import (
     ReportDescriptor,
     ReportSourceContractRequired,
@@ -128,6 +129,10 @@ def parse_source_text(raw: str, *, source_name: str = "source", strict: bool = F
                     except json.JSONDecodeError as error:
                         raise ValueError(f"front matter line {line_number} has an invalid quoted value in {source_name}") from error
         front_matter[key] = parse_front_matter_value(raw_value)
+    try:
+        validate_document_subject_fields(front_matter)
+    except ValueError as error:
+        raise ValueError(f"{source_name}: {error}") from error
     body = raw[match.end():]
     return front_matter, body
 
@@ -276,7 +281,6 @@ def format_source(front_matter: Dict[str, Any], body: str, *, collection: str | 
         "ui_status",
         "folder_path",
         "work_id",
-        "series_id",
         "parent_id",
         "draft",
     ]

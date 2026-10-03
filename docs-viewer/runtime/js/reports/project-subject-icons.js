@@ -1,7 +1,6 @@
 const SUBJECT_ICON_CLASSES = Object.freeze({
   folder: "docsViewer__icon--folder",
-  work: "docsViewer__icon--dlf-work",
-  series: "docsViewer__icon--dlf-series"
+  work: "docsViewer__icon--dlf-work"
 });
 
 /** Append a decorative 16px saved Subject icon; the parent owns its meaning. */

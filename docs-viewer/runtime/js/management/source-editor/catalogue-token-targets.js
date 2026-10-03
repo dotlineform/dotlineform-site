@@ -5,7 +5,7 @@ import {
   collectSemanticTokenTargetMatches
 } from "./semantic-token-targets.js";
 
-var CATALOGUE_TARGET_TYPES = new Set(["work", "series"]);
+var CATALOGUE_TARGET_TYPES = new Set(["work"]);
 
 function allowedTargetTypes(raw) {
   var values = Array.isArray(raw) ? raw : Array.from(CATALOGUE_TARGET_TYPES);
@@ -31,7 +31,7 @@ function catalogueTarget(row, targetTypes) {
   };
 }
 
-/** Select Work/Series subject identities; image availability and links do not define a subject. */
+/** Select Work subject identities; image availability and links do not define a subject. */
 export function createCatalogueTargetSupport(registry, targets, options = {}) {
   var targetTypes = allowedTargetTypes(options.allowedTargetTypes);
   var searchableTargets = (Array.isArray(targets) ? targets : []).filter(function (row) {

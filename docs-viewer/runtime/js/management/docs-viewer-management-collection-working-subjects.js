@@ -146,7 +146,7 @@ function subjectInfoField(subject) {
       id: AUTHORING_SUBJECT_GROUP_ID,
       label: "Subject",
       state: subject.kind,
-      value: ({ folder: "Folder", work: "Work", series: "Series" })[subject.kind]
+      value: ({ folder: "Folder", work: "Work" })[subject.kind]
     };
   }
   return {

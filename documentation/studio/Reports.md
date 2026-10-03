@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260513-105343-6de36b
 title: Reports
 added_date: "2026-05-13 10:53:43"
-last_updated: "2026-10-01 18:38:36"
+last_updated: "2026-10-03 21:27:23"
 parent_id: d-20260424-000000-50b63f
 ---
 # Docs Viewer Reports
@@ -189,13 +189,13 @@ It uses the local Docs API endpoint `POST /docs/broken-links`, scans both render
 
 `semantic_tokens` and its generated usage index are retired. Work image and Work Media View text tokens now contribute ordinary document relationships to Catalogue subdocuments, presented by [Related Links](Related_Links.md). Gallery Media View tokens create no document relationship. `docs_broken_links` remains the independent authoring audit.
 
-`project_state` is the local project-folder reconciliation report. It compares immediate physical Project folders with canonical Work, Series, and document relationships from `analysis/working/works` without changing any source. Only Folder-, Work-, and Series-subject documents participate in reconciliation. Detail-subject documents remain valid entries in the shared Manage manifest and subject associations, but are excluded from report rows and matched/unmatched document counts; they are not placed under their owning Work's folder. The diagnostic manifest document count still describes the complete input collection.
+`project_state`, displayed as Projects, is the local project-folder reconciliation report. It first scans every immediate physical project folder and retains unmatched folder rows, then compares canonical Work/Series relationships with document Subjects from the configured Working `works` management manifest. Only Folder- and Work-subject documents participate in placement. Work subjects follow the exact Work's project folder and Series membership; Folder subjects may apply to every Series represented by Works in that folder. None contributes only to the complete input document count. Direct Series subjects and the document `series_id` field are retired; Studio Series and their membership remain supported. Run/Refresh assembles the report without changing source or repairing its inputs.
 
 The Projects report's Series column displays each exact response-owned Series title as plain text in both Folder and Series grouping modes. It does not open a Series Media View. Folder links, document links, search, sorting and copied TSV retain their existing behavior.
 
 `docs_media` is the local, read-only media-to-document report hosted by [Docs Media](/docs/?doc=d-20260812-212735-6d9cf3). It reads `/docs/media-files` and `/docs/media-references` from the fixed Working owner and assembles rows in `docs-media-data.js`. The browser owns associations, document links, document ordering, display exclusions and sortable Type, File name and Documents columns. The toolbar owns refresh and immediate file-name or document-title search. File name posts exact collection, role, media type and identity without stage to `/docs/open-media-source`, which validates the Docs file and uses the shared Finder helper; Documents preserves exact ordinary and collection links. The report and data routes remain absent from the public report registry and executable graph. [Media And Asset Handling](Media_And_Asset_Handling.md) owns the live data and storage boundary.
 
-`works` is the local, read-only documentation-coverage report hosted in the `dotlineform` scope. It renders one row for every Series classified as published by the current Studio Series lookup. The Docs cell is the deduplicated union of exact Projects documents about that Series and exact Projects documents about published member Works, expanded only through each Work's current `series_ids`. Opening or returning to the report rereads the existing Series lookup, Work lookup, and private Projects Manage manifest and composes the complete result; there is no separate Refresh control. Blank rows remain visible; the report adds no server producer, persisted result, public report, or mutation path.
+`works` is the local, read-only documentation-coverage report. It retains one row for every Series returned by the current Studio Series lookup. The Docs cell contains distinct exact Context documents with Work subjects whose current Catalogue `series_id` identifies that Series; direct Series subjects are unsupported, and Folder/None contribute no coverage. The Series column is plain text and Docs cells retain exact document links. Opening the report reads the existing Series lookup, Work lookup and private Working Works management manifest and composes the complete result; there is no separate Refresh control. Blank rows remain visible. The report adds no server producer, persisted result, public report or mutation path. [Works Report](Works_Report_Concept_And_Architecture.md) owns the current coverage boundary.
 
 Work Document Coverage displays each Series title as plain text. Document coverage and document-link destinations retain their existing behavior.
 

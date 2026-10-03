@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260903-154141-7c9e4b
 title: Catalogue Media View
 added_date: "2026-09-03 15:41:41"
-last_updated: "2026-10-02 20:48:57"
+last_updated: "2026-10-03 21:27:23"
 summary: Exact Work and Gallery links, direct and Series-related Gallery navigation, responsive Work images and paginated Media View, with static-consumer and public-data limits.
 ui_status: done
 parent_id: d-20260903-222617-28475e
@@ -12,7 +12,7 @@ parent_id: d-20260903-222617-28475e
 
 ## Purpose
 
-Media View presents an exact Catalogue Work or Gallery inside the Docs Viewer main pane. Authors can open these through a text link or insert a Work image that opens the same view. Catalogue owns identity and media; the invoking document supplies browsing context. A corresponding document or document Subject is not required, and these references create no doc-to-doc relationship. Series remains a document Subject and a Catalogue grouping, without a Media View target.
+Media View presents an exact Catalogue Work or Gallery inside the Docs Viewer main pane. Authors can open these through a text link or insert a Work image that opens the same view. Catalogue owns identity and media; the invoking document supplies browsing context. A corresponding document or document Subject is not required, and these references create no doc-to-doc relationship. Series remains a Catalogue grouping, without a document Subject or Media View target.
 
 The Gallery conversion retired canonical Details. Detail subject assignment, token syntax, image selection, Info fields, report support and media readers are removed, with no old-to-new aliases. Work images and Work or Gallery text links are the supported Catalogue media forms. Series Media View links and galleries are retired without an alias.
 
@@ -27,7 +27,7 @@ The Gallery conversion retired canonical Details. Detail subject assignment, tok
 
 The authored label remains literal text and does not change when the Catalogue title changes. The rendered opener is a keyboard-accessible button styled as inline link text, with no invented navigation URL. Work text links retain their existing form; unqualified Catalogue text and all Series token forms are retired without aliases. Existing authored Series tokens remain unchanged in Working source and render as literal text after rebuild.
 
-Gallery IDs use the exact canonical spelling: three digits, or at least four digits without a leading zero. Gallery tokens allow no image presentation. The picker inserts `catalogue:media:gallery`; token Info reads the current Gallery title, and Broken Links checks the exact generated Gallery record. Subject assignment offers None, Work, Series and, where the collection supports it, Folder. Gallery tokens do not imply a new document Subject kind.
+Gallery IDs use the exact canonical spelling: three digits, or at least four digits without a leading zero. Gallery tokens allow no image presentation. The picker inserts `catalogue:media:gallery`; token Info reads the current Gallery title, and Broken Links checks the exact generated Gallery record. Subject assignment offers None, Work and, where the collection supports it, Folder. Series document Subjects were retired on 2026-10-03; Gallery tokens do not imply a new document Subject kind.
 
 **Add Catalogue Image** searches Catalogue Works and uses the selected Work's image. Its token stores Work-title caption and metadata choices, optional static summary, placement and width settings:
 

@@ -3,11 +3,13 @@ draft: false
 doc_id: d-20260731-155053-3929e2
 title: Sub-Scope Customisation Architecture
 added_date: "2026-07-31 15:50:53"
-last_updated: "2026-09-27 20:20:16"
+last_updated: "2026-10-03 21:27:23"
 summary: define the default docs_subscope report, unified registered aspects, access-safe projection, exact targets, browser composition, and extension checks
 parent_id: d-20260801-084127-752d7e
 ---
 # Sub-Scope Customisation Architecture
+
+Current workspace note: the scope/lineage examples below describe the historical registration design. The configured Working Works collection owns current Subject assignment; [Subject Associations](data/subject-associations.md) records its current field, report and publication boundaries. Series document Subjects and Context's Subject list column were retired on 2026-10-03.
 
 ## Purpose
 
@@ -183,11 +185,11 @@ The descriptor and manifest IDs agree exactly. Custom row data targets supplied 
 
 ### Authoring Subjects And Manifest Associations
 
-Current subject scope after the Gallery conversion: the `authoring_subject` field group contains only `folder_path`, `work_id` and `series_id`. On 2026-09-23 Detail assignment, `detail_uid` subject projection and Detail report cues were removed after the user deleted the disposable references. The exact collection capability controls Folder availability; Work and Series retain their existing identity rules. Project State accepts only Folder, Work and Series associations. Uncataloged Files compares represented directories against canonical Work source files, including converted Works, without a former Detail-directory exclusion. Gallery remains a media token target, not a document Subject.
+The current `authoring_subject` field group contains exactly `folder_path` and `work_id`. Series assignment, its document `series_id` field and direct-Series report placement were retired on 2026-10-03 after all declarations were reassigned. Detail assignment, `detail_uid` subject projection and Detail report cues were previously retired on 2026-09-23. The exact collection capability controls Folder availability. Project State accepts Folder and Work subjects and derives Series associations from canonical Work membership; its physical folder scan and plain-text Series column remain. Gallery remains a media token target, not a document Subject.
 
-The shared source reader projects one exact `folder_path`, `work_id`, or `series_id` declaration into an `authoring_subject` object containing only `kind` and `key`. Assigned kinds are `folder`, `work`, and `series`; no assignment is `{kind: "none", key: ""}`. The source field is derived from the kind. Source validation requires at most one declaration, an exact five-digit Work ID, an exact lowercase alphanumeric-or-hyphen Series ID, or an accepted relative Folder path in a collection that supports Folder subjects. Invalid input fails projection rather than becoming a stored diagnostic or UI warning state. Target availability is resolved separately against the Catalogue lookup.
+The shared source reader projects one exact `folder_path` or `work_id` declaration into an `authoring_subject` object containing only `kind` and `key`. Assigned kinds are `folder` and `work`; no assignment is `{kind: "none", key: ""}`. Source validation requires at most one declaration, an exact five-digit Work ID or an accepted relative Folder path in a collection that supports Folder subjects. Management/import and Build source parsers share the retired-field check, so document `series_id` is rejected even if blank. Normalized Series records and old three-field assignment requests also fail. Target availability is resolved separately against generated Catalogue Work targets.
 
-Private collection management manifests carry normalized `authoring_subject` rows and top-level `subject_generation` when subject projection is enabled. Works requires this projection independently of existing generated files. Reports derive associations in memory: Project State retains every assigned Works row for each `{kind, key}`, while Catalogue Works navigation requires a single exact document per Work. Document links use the configured collection report host and immutable `doc_id`; titles, filenames and current route selection never supply identity. Context's Work and Series Subject controls instead open Media View by exact Catalogue identity, without reading Catalogue's document manifest. [Subject Associations](data/subject-associations.md) owns the current inventory and update boundaries.
+Private collection management manifests carry normalized `authoring_subject` rows and top-level `subject_generation` when subject projection is enabled. Works requires this projection independently of existing generated files. Reports derive associations in memory: Project State retains every assigned Works row for each `{kind, key}`, while Works coverage joins member-Work documents to Studio Series. Document links use the configured collection report host and immutable `doc_id`; titles, filenames and current route selection never supply identity. Context's collection contribution now supplies document-detail Subject information and actions only. [Subject Associations](data/subject-associations.md) owns the current inventory and update boundaries.
 
 The builder maintains subjects and generation in the management manifest; targeted builds merge selected rows with saved metadata and preserve unselected rows. The separate association product and cross-file receipt comparison are retired. Reader manifests and by-ID schemas omit `subject`; private Subject metadata, local paths and assignment capability remain with Manage. Links document summaries use the same `{kind, key}` Subject shape. Completed Preview and public distribution exclude management manifests.
 

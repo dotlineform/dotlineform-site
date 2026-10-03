@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260728-113139-763354
 title: Sub-Scope Index Architecture
 added_date: "2026-07-28 11:31:39"
-last_updated: "2026-10-03 20:38:59"
+last_updated: "2026-10-03 21:27:23"
 summary: Collection-list ownership, exact document identity, registered customisations, retained selection and explicit management adoption.
 parent_id: d-20260801-084127-752d7e
 ---
@@ -209,7 +209,7 @@ Docs generation owns document membership, titles, dates, readiness and exact sub
 
 The retired Subject column used a private Catalogue title reader and `reports/works/manifest.json` to display and sort Work/Series subject titles. With its last consumer removed, the reader, metadata generator, Catalogue Refresh step and private report-serving allowance were removed together. Context list loading requires no Catalogue title-file read. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) retains its other generated-reader and freshness responsibilities.
 
-The `working_works` contribution now supplies only document-detail Subject information, Assign Subject and Open in Finder. Subject assignment pickers retain their separately owned generated Catalogue provider. Removing the list column does not migrate source subjects or restrict the supported Subject kinds.
+The `working_works` contribution supplies only document-detail Subject information, Assign Subject and Open in Finder. Subject assignment offers Work, configured Folder and None through its separately owned generated Catalogue provider. On 2026-10-03 Series was separately retired as a document Subject after all Working declarations were reassigned. Document `series_id` fields and normalized Series subject records fail explicitly, while Studio Series, report columns and Work-derived Series associations remain supported. [Subject Associations](data/subject-associations.md) owns the current field and report boundaries.
 
 Local folder links and the Edit menu's Open in Finder action open silently on success; failures still display an error.
 

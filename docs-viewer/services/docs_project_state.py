@@ -136,7 +136,7 @@ def _subject_documents(
             continue
         kind = str(subject.get("kind") or "").strip()
         key = str(subject.get("key") or "").strip()
-        if kind not in {"folder", "work", "series"} or not key:
+        if kind not in {"folder", "work"} or not key:
             raise ValueError("Projects Manage manifest contains an invalid subject")
         title = str(row.get("title") or "").strip()
         if not title:
@@ -252,12 +252,6 @@ def _place_documents(
                 placements.append(
                     (folder_key, list(work_placement.get("applicable_series_ids") or []))
                 )
-        elif kind == "series":
-            placements.extend(
-                (folder_key, [key])
-                for folder_key in folder_keys_by_series.get(key, [])
-                if folder_key in scanned_folders
-            )
 
         if not placements:
             unmatched_document_ids.update(document["target"]["doc_id"] for document in documents)
@@ -424,7 +418,7 @@ def validate_report(report: Mapping[str, Any]) -> None:
                 or not str(document.get("title") or "").strip()
                 or not str(document.get("href") or "").strip()
                 or doc_id in document_ids
-                or kind not in {"folder", "work", "series"}
+                or kind not in {"folder", "work"}
                 or not key
                 or not isinstance(applicable_series_ids, list)
                 or any(not isinstance(series_id, str) or not series_id for series_id in applicable_series_ids)
@@ -434,15 +428,13 @@ def validate_report(report: Mapping[str, Any]) -> None:
                 raise ValueError("Project State row failed document-placement validation")
             if kind == "folder":
                 expected_series_ids = series_ids if key == folder_key else None
-            elif kind == "work":
+            else:
                 work = work_by_id.get(key)
                 expected_series_ids = (
                     [series_id for series_id in work["series_ids"] if series_id in series_ids]
                     if work is not None
                     else None
                 )
-            else:
-                expected_series_ids = [key] if key in series_ids else None
             if expected_series_ids is None or applicable_series_ids != expected_series_ids:
                 raise ValueError("Project State document provenance does not match its Folder row")
             document_ids.add(doc_id)

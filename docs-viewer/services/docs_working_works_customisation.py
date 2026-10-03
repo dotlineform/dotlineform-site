@@ -14,7 +14,6 @@ from docs_local_links import (
 from docs_document_subjects import (
     AUTHORING_SUBJECT_FIELDS,
     FOLDER_PATH_FIELD,
-    SERIES_ID_FIELD,
     WORK_ID_FIELD,
     subject_key_is_canonical,
     normalize_authoring_subject,
@@ -27,7 +26,7 @@ CUSTOMISATION_ID = "working_works"
 
 
 def publication_front_matter(front_matter: Mapping[str, Any]) -> dict[str, Any]:
-    """Keep Catalogue Subject IDs needed by publication rendering; omit Folder paths."""
+    """Keep the Work Subject ID needed by publication rendering; omit Folder paths."""
     prepared = dict(front_matter)
     subject = project_reader_subject(front_matter)
     for field in AUTHORING_SUBJECT_FIELDS:
@@ -99,12 +98,8 @@ def _strict_scalar_subject_fields(raw: Any, *, field: str) -> dict[str, str]:
         values[field_name] = value
     if sum(bool(value) for value in values.values()) > 1:
         raise ValueError(f"{field} must select at most one authoring subject")
-    for field_name, kind in ((WORK_ID_FIELD, "work"), (SERIES_ID_FIELD, "series")):
-        if values[field_name] and not subject_key_is_canonical(
-            kind,
-            values[field_name],
-        ):
-            raise ValueError(f"{field}.{field_name} must be one canonical {kind} id")
+    if values[WORK_ID_FIELD] and not subject_key_is_canonical("work", values[WORK_ID_FIELD]):
+        raise ValueError(f"{field}.{WORK_ID_FIELD} must be one canonical work id")
     return values
 
 
@@ -168,14 +163,8 @@ def normalize_import_front_matter(
         raise ValueError(
             f"custom import authoring subject is conflicting for {doc_id!r}"
         )
-    for field_name, kind in ((WORK_ID_FIELD, "work"), (SERIES_ID_FIELD, "series")):
-        if values[field_name] and not subject_key_is_canonical(
-            kind,
-            values[field_name],
-        ):
-            raise ValueError(
-                f"custom import {field_name} must be one canonical {kind} id"
-            )
+    if values[WORK_ID_FIELD] and not subject_key_is_canonical("work", values[WORK_ID_FIELD]):
+        raise ValueError(f"custom import {WORK_ID_FIELD} must be one canonical work id")
     if values[FOLDER_PATH_FIELD]:
         try:
             values[FOLDER_PATH_FIELD] = normalize_decoded_relative_target(
@@ -195,7 +184,6 @@ def normalize_import_front_matter(
 __all__ = [
     "CUSTOMISATION_ID",
     "FOLDER_PATH_FIELD",
-    "SERIES_ID_FIELD",
     "WORK_ID_FIELD",
     "metadata_record",
     "normalize_metadata_update",

@@ -64,7 +64,7 @@ function normalizeDocument(value) {
     || !docId
     || !title
     || !href
-    || !["folder", "work", "series"].includes(subjectKind)
+    || !["folder", "work"].includes(subjectKind)
     || !subjectKey
     || applicableSeriesIds.some((seriesId) => !seriesId)
     || new Set(applicableSeriesIds).size !== applicableSeriesIds.length
@@ -492,7 +492,6 @@ function commitDocumentChange(state, change) {
         const work = row.works.find(function (record) { return record.workId === subject.key; });
         if (work) seriesIds = work.seriesIds.filter(function (id) { return available.includes(id); }).sort();
       }
-      if (subject.kind === "series" && available.includes(subject.key)) seriesIds = [subject.key];
     }
     if (seriesIds) { changed = true; row.documents.push({ target: change.target, title: change.record.title,
       href: state.context.viewerUrlForDocument(docId, { collection: "works" }),
