@@ -137,7 +137,6 @@ export function startDocsViewerRuntime(options) {
   var documentViewCoordinator = null;
   var activeSourceEditorContextAdapter = null;
   var recentControlLabel = "Recent";
-  var latestCollectionReportGeneration = 0;
   var latestCollectionReportState = {
     state: "inactive",
     reason: "startup",
@@ -161,11 +160,6 @@ export function startDocsViewerRuntime(options) {
   var mainViewControlHost = null;
 
   function publishCollectionReportState(value) {
-    var generation = Number(value && value.documentMountGeneration);
-    if (Number.isInteger(generation) && generation > 0) {
-      if (generation < latestCollectionReportGeneration) return;
-      latestCollectionReportGeneration = generation;
-    }
     latestCollectionReportState = value && typeof value === "object"
       ? Object.assign({}, value)
       : {
@@ -188,17 +182,7 @@ export function startDocsViewerRuntime(options) {
     if (searchController) searchController.syncSelection();
   }
 
-  function documentActionContext() {
-    if (latestCollectionReportState.parentTarget) return latestCollectionReportState;
-    var displayed = appSession.domains.selectedDocument;
-    var doc = displayed.selectedDocId === displayed.displayedDocId && displayed.displayedPayload
-      && displayed.displayedPayload.doc_id === displayed.displayedDocId
-      ? appSession.domains.documentIndex.docsById.get(displayed.displayedDocId) : null;
-    return {
-      documentTarget: doc ? {  doc_id: doc.doc_id } : null,
-      documentRecord: doc || null
-    };
-  }
+  function documentActionContext() { return documentController ? documentController.actionContext() : {}; }
 
   var appSession = composition.appSession;
   var state = appSession.state;
@@ -277,16 +261,13 @@ export function startDocsViewerRuntime(options) {
   if (contentDetailBackControlId) {
     mainViewControlOwners.set(contentDetailBackControlId, function () {
       if (!documentViewCoordinator) return;
-      documentViewCoordinator.requestMainView("rendered-document", {
-        reason: "back",
-        warn: false
-      });
+      routeWorkflowCommands.returnToDocument().catch(function (error) { statusController.setStatus(error.message, true); });
     });
   }
   if (mainViewRefs.collectionBack) {
     mainViewRefs.collectionBack.addEventListener("click", function () {
       if (mainViewRefs.collectionBack.hidden || mainViewRefs.collectionBack.disabled) return;
-      if (typeof latestCollectionReportState.returnToList === "function") latestCollectionReportState.returnToList();
+      routeWorkflowCommands.back();
     });
   }
   appViewerControlHost.render();
@@ -320,8 +301,8 @@ export function startDocsViewerRuntime(options) {
     collectionProvider: collectionProvider,
     documentIndex: appSession.domains.documentIndex,
     infoPanelRefs: infoPanelRefs,
-    managedDocumentContext: function () { return latestCollectionReportState; },
-    mount: content,
+    managedDocumentContext: documentActionContext,
+    mount: function () { return documentController ? documentController.activeMount() : content; },
     panelLayout: panelLayout,
     panelView: appSession.domains.panelView,
     projectMainView: panelLayout.projectMainView,
@@ -366,6 +347,11 @@ export function startDocsViewerRuntime(options) {
       }
     },
     mountDocumentExtras: settings.mountDocumentExtras,
+    openDocument: function (target, response) {
+      if (response && response.record) collectionProvider.commitDocumentChange({ target: target, record: response.record });
+      return routeWorkflowCommands.loadDoc(target);
+    },
+    commitDeletedDocument: function (target) { return routeWorkflowCommands.commitDeletedDocument(target); },
     mountRelatedLinks: documentViewCoordinator.mountRelatedLinks,
     reportPresentationAdapter: settings.reportPresentationAdapter,
     projectDocumentShell: panelLayout.projectMainView,
@@ -373,12 +359,9 @@ export function startDocsViewerRuntime(options) {
     renderMeta: renderMeta,
     publishCollectionReportState: publishCollectionReportState,
     requestContentDetail: function (targetContext) {
-      if (!documentViewCoordinator) return false;
-      return documentViewCoordinator.requestMainView("content-detail", {
-        reason: "content-detail-open",
-        targetContext: targetContext,
-        warn: true
-      });
+      if (!routeWorkflow) return false;
+      routeWorkflowCommands.openPresentation(targetContext).catch(function (error) { statusController.setStatus(error.message, true); });
+      return true;
     },
     routeContext: function () { return routeContext; },
     routeSession: appSession.domains.routeSession,
@@ -393,6 +376,16 @@ export function startDocsViewerRuntime(options) {
     viewerUrlForDocument: viewerUrlForDocument
   });
   routeWorkflow = initDocsViewerRouteWorkflow({
+    activeMount: documentController.activeMount,
+    captureDocument: documentController.capture,
+    restoreDocument: documentController.restore,
+    restoreRetainedDocument: documentController.restoreRetained,
+    retainDocuments: documentController.retainDocuments,
+    scrollToHash: documentController.scrollToHash,
+    prepareDocumentNavigation: documentViewCoordinator.prepareDocumentNavigation,
+    returnToDocument: documentViewCoordinator.returnToDocument,
+    openPresentation: documentViewCoordinator.openPresentation,
+    projectBack: renderMainViewControls,
     activeIndexViewId: function () { return panelLayout.projectViewState().index.activeViewId; },
     syncIndexRoute: function (query, viewId) {
       if (searchController) searchController.applyRoute(query, viewId);
@@ -468,6 +461,14 @@ export function startDocsViewerRuntime(options) {
     activeIndexViewId: function () { return panelLayout.projectViewState().index.activeViewId; },
     startBusy: statusController.startBusy
   }) : null;
+  if (collectionProvider.subscribeDocumentChanges) collectionProvider.subscribeDocumentChanges(function (change) {
+    if (change.target.collection) return;
+    var index = appSession.domains.documentIndex;
+    if (change.deleted) index.allDocs = index.allDocs.filter(function (doc) { return doc.doc_id !== change.target.doc_id; });
+    else index.allDocs = index.allDocs.map(function (doc) { return doc.doc_id === change.target.doc_id ? Object.assign({}, doc, change.record) : doc; });
+    documentIndex.applyDocVisibility();
+    renderSidebar();
+  });
   var configController = initDocsViewerConfigController({
     activeIndexViewId: function () { return panelLayout.projectViewState().index.activeViewId; },
     configService: composition.configService,
@@ -539,6 +540,8 @@ export function startDocsViewerRuntime(options) {
       mainViewControlHandlerContributions: settings.mainViewControlHandlerContributions || {},
       documentActionContext: documentActionContext,
       sourceEditorServices: sourceEditorServices,
+      commitDocumentChange: collectionProvider.commitDocumentChange,
+      commitDeletedDocument: function (target) { return routeWorkflowCommands.commitDeletedDocument(target); },
       viewRegistry: viewRegistry,
       activeViewState: documentViewCoordinator.activeViewState,
       projectAppManagementControlState: projectAppManagementControlState,
@@ -702,9 +705,9 @@ export function startDocsViewerRuntime(options) {
       && activeState.activeModeId === "rendered-document";
     var report = latestCollectionReportState;
     if (mainViewRefs.collectionBack) {
-      mainViewRefs.collectionBack.hidden = !rendered || typeof report.returnToList !== "function";
+      mainViewRefs.collectionBack.hidden = !rendered || !routeWorkflow || !routeWorkflow.commands.hasCaller();
       mainViewRefs.collectionBack.disabled = root.dataset.managementBusy === "true";
-      var label = typeof report.returnToList === "function" ? report.returnToListLabel : "";
+      var label = "Back";
       mainViewRefs.collectionBack.title = label;
       mainViewRefs.collectionBack.setAttribute("aria-label", label);
     }
@@ -732,6 +735,7 @@ export function startDocsViewerRuntime(options) {
 
   function sourceEditorServices() {
     return {
+      commitDocumentChange: collectionProvider.commitDocumentChange,
       localFolderLinksCapability: function () {
         var capabilities = appSession.domains.management.managementCapabilities;
         return capabilities ? capabilities.local_folder_links || null : null;
@@ -760,8 +764,8 @@ export function startDocsViewerRuntime(options) {
     };
   }
 
-  function viewerUrl(docId, hash, query) {
-    return routeWorkflowCommands.viewerUrl(docId, hash, query);
+  function viewerUrl(docId, hash, query, options) {
+    return routeWorkflowCommands.viewerUrl(docId, hash, query, options);
   }
 
   function viewerUrlForDocument(docId, options) {
@@ -795,14 +799,7 @@ export function startDocsViewerRuntime(options) {
     if (searchController) searchController.syncSelection();
   }
 
-  function currentDocumentTarget() {
-    var params = new URLSearchParams(window.location.search);
-    var hostId = params.get("doc") || "";
-    var subdoc = params.get("subdoc") || "";
-    var config = appSession.domains.workspaceConfig.activeConfig;
-    var collection = config && config.collectionsByReportHostId.get(hostId);
-    return subdoc && collection ? { collection: collection.collection, doc_id: subdoc } : { doc_id: hostId };
-  }
+  function currentDocumentTarget() { return appSession.domains.selectedDocument.documentTarget; }
 
   function renderMeta() {
     sidebarRenderer.renderMeta();
@@ -844,11 +841,7 @@ export function startDocsViewerRuntime(options) {
     });
   }
 
-  function renderPayload(doc, payload, hash) {
-    documentViewCoordinator.showRenderedDocument(function () {
-      documentController.renderPayload(doc, payload, hash);
-    }, { reason: "document-navigation" });
-  }
+  function renderPayload(doc, payload, hash) { return documentController.renderPayload(doc, payload, hash); }
 
   function cancelSearchDebounce() {
     var searchRecent = appSession.domains.searchRecent;
@@ -857,23 +850,11 @@ export function startDocsViewerRuntime(options) {
     searchRecent.searchDebounceId = null;
   }
 
-  function handleMissingDoc() {
-    documentViewCoordinator.showRenderedDocument(function () {
-      documentController.handleMissingDoc();
-    }, { reason: "document-navigation" });
-  }
+  function handleMissingDoc() { return documentController.handleMissingDoc(); }
 
-  function renderDocLoadingState(doc) {
-    documentViewCoordinator.showRenderedDocument(function () {
-      documentController.renderDocLoadingState(doc);
-    }, { reason: "document-navigation" });
-  }
+  function renderDocLoadingState(doc) { return documentController.renderDocLoadingState(doc); }
 
-  function handlePayloadError(error) {
-    documentViewCoordinator.showRenderedDocument(function () {
-      documentController.handlePayloadError(error);
-    }, { reason: "document-navigation" });
-  }
+  function handlePayloadError(error) { return documentController.handlePayloadError(error); }
 
   function bindLinkInterception() {
     routeWorkflow.bindRouteLinks();

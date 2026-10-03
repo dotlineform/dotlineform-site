@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any, Mapping
 
 import docs_source_model as source_model
-from docs_document_identity import is_document_id
+from docs_document_identity import doc_updated_date, is_document_id
 from docs_workspace_config import (
     DocsStageConfig,
     DocsCollectionConfig,
@@ -22,7 +22,6 @@ from docs_collection_customisations import (
     collection_customisation_metadata_record,
 )
 from docs_document_subjects import (
-    AUTHORING_SUBJECT_FIELDS,
     FOLDER_PATH_FIELD,
     normalize_authoring_subject,
 )
@@ -308,6 +307,34 @@ def resolve_managed_document_target(
     )
 
 
+def committed_document_record(
+    front_matter: Mapping[str, Any], doc_id: str,
+    document_config: DocsStageConfig | DocsCollectionConfig,
+    *, collection: str = "", parent_id: str = "",
+) -> dict[str, object]:
+    """Project a complete committed summary from validated in-memory source metadata."""
+    record: dict[str, object] = {
+        "doc_id": doc_id, "title": str(front_matter.get("title") or doc_id).strip(),
+        "summary": " ".join(str(front_matter.get("summary") or "").split()),
+        "date": str(front_matter.get("date") or "").strip(),
+        "date_display": str(front_matter.get("date_display") or "").strip(),
+        "added_date": doc_updated_date(front_matter.get("added_date")),
+        "last_updated": doc_updated_date(front_matter.get("last_updated")),
+    }
+    if source_model.collection_supports_draft(document_config):
+        record["draft"] = front_matter["draft"]
+    if not collection:
+        record.update(ui_status=str(front_matter.get("ui_status") or ""), parent_id=parent_id)
+    else:
+        fields = collection_customisation_authoring_subject_fields(document_config.collection_customisation)
+        if fields:
+            record["authoring_subject"] = normalize_authoring_subject(front_matter, folder_supported=FOLDER_PATH_FIELD in fields)
+        customisation = collection_customisation_metadata_record(document_config.collection_customisation, front_matter, doc_id=doc_id)
+        if customisation is not None:
+            record["customisation"] = customisation
+    return record
+
+
 def managed_document_metadata(
     repo_root: Path,
     target: Mapping[str, Any],
@@ -315,13 +342,7 @@ def managed_document_metadata(
     resolved = resolve_managed_document_target(repo_root, target)
     document = resolved.document
     front_matter = document.front_matter
-    record: dict[str, object] = {
-        "doc_id": document.doc_id,
-        "title": document.title,
-        "summary": " ".join(str(front_matter.get("summary") or "").split()),
-        "date": str(front_matter.get("date") or "").strip(),
-        "date_display": str(front_matter.get("date_display") or "").strip(),
-    }
+    record = committed_document_record(front_matter, document.doc_id, resolved.document_config, collection=resolved.collection, parent_id=document.parent_id)
     payload_revision = source_model.source_revision(document.source_text.encode("utf-8"))
     if source_model.collection_supports_draft(resolved.document_config):
         record["draft"] = front_matter["draft"]
@@ -339,24 +360,6 @@ def managed_document_metadata(
 
     payload["location_parent_id"] = document_location_parent_id(repo_root, resolved)
     if resolved.collection:
-        subject_fields = collection_customisation_authoring_subject_fields(
-            resolved.document_config.collection_customisation
-        )
-        folder_supported = FOLDER_PATH_FIELD in subject_fields
-        payload["folder_subject_supported"] = folder_supported
-        if subject_fields or any(
-            field_name in front_matter for field_name in AUTHORING_SUBJECT_FIELDS
-        ):
-            record["authoring_subject"] = normalize_authoring_subject(
-                front_matter,
-                folder_supported=folder_supported,
-            )
-        customisation_record = collection_customisation_metadata_record(
-            resolved.document_config.collection_customisation,
-            front_matter,
-            doc_id=document.doc_id,
-        )
-        if customisation_record is not None:
-            record["customisation"] = customisation_record
+        payload["folder_subject_supported"] = FOLDER_PATH_FIELD in collection_customisation_authoring_subject_fields(resolved.document_config.collection_customisation)
         payload["collection"] = resolved.collection
     return payload

@@ -40,9 +40,10 @@ export function createDocsViewerMainViewHost(options) {
   var projectToolbar = typeof settings.projectToolbar === "function" ? settings.projectToolbar : function () {};
   var updatePanelViewState = typeof settings.updatePanelViewState === "function" ? settings.updatePanelViewState : function () {};
   var showWarning = typeof settings.showWarning === "function" ? settings.showWarning : function () {};
-  var mount = settings.mount || null;
+  function currentMount() { return typeof settings.mount === "function" ? settings.mount() : settings.mount || null; }
   var activeViewId = cleanString(settings.defaultViewId) || "rendered-document";
   var activeLifecycle = null;
+  var activationPromise = Promise.resolve();
   var activeTargetContext = null;
   var activeRequestReason = "";
   var requestGeneration = 0;
@@ -130,7 +131,7 @@ export function createDocsViewerMainViewHost(options) {
       activeLifecycle &&
       typeof activeLifecycle.beforeLeave === "function" &&
       activeLifecycle.beforeLeave(moduleContext({
-        mount: mount,
+        mount: currentMount(),
         requestedViewId: resolved.view.id,
         requestReason: cleanString(requestSettings.reason),
         targetContext: activeTargetContext
@@ -143,7 +144,7 @@ export function createDocsViewerMainViewHost(options) {
     var requestReason = cleanString(requestSettings.reason);
     var previousTargetContext = activeTargetContext;
     var unmountPromise = unmountActive({
-      mount: mount,
+      mount: currentMount(),
       requestedViewId: resolved.view.id,
       requestReason: requestReason,
       targetContext: previousTargetContext
@@ -167,14 +168,15 @@ export function createDocsViewerMainViewHost(options) {
       requestSettings.onAccepted(resolved.view);
     }
     if (resolved.view.id === "rendered-document" || !resolved.view.load) {
+      activationPromise = unmountPromise;
       return true;
     }
     var lifecycleContext = moduleContext({
-      mount: mount,
+      mount: currentMount(),
       requestReason: activeRequestReason,
       targetContext: activeTargetContext
     });
-    unmountPromise
+    activationPromise = unmountPromise
       .then(function () {
         if (requestId !== requestGeneration) return null;
         return loadLifecycle(resolved.view, lifecycleContext);
@@ -199,6 +201,7 @@ export function createDocsViewerMainViewHost(options) {
   requestView(activeViewId, { projectControls: false, warn: false });
 
   return {
+    whenReady: function () { return activationPromise; },
     activeViewId: function () { return activeViewId; },
     activeTargetContext: function () { return activeTargetContext; },
     moduleContext: moduleContext,

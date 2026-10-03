@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260907-125101-d3bde6
 title: Doc Relationships
 added_date: "2026-09-07 12:51:01"
-last_updated: "2026-09-10 20:35:22"
+last_updated: "2026-10-03 17:35:06"
 summary: Record eligible document relationships in separate links-by-id files during Working, including drafts, with coordinated Document Build updates and aggregation of prepared records.
 ui_status: done
 parent_id: d-20260908-171728-3c539a
@@ -347,7 +347,7 @@ Publish copies the prepared JSON files unchanged. It does not extract links, enr
 
 ## One-document-deep Views
 
-The Links adapter and exact generated-record read are implemented and reviewed for Analysis Working; [Links View](Links_View.md) is the durable runtime reference. Availability is projected from the scope/stage setting in `links-builder.json`; there is no document allowlist. The provider currently reads one separate record on each opening, preserves staged navigation and rejects mismatched identities. Public-safe rendering is present but public data preparation and activation remain pending. The proof and version 1 schema were accepted for the completed rollout. [View Caching and History - Delivery](View_Caching_And_History_Delivery.md) separately owns the agreed replacement for per-opening reads and browser-history restoration.
+The Links adapter and exact generated-record read are implemented and reviewed for Analysis Working; [Links View](Links_View.md) is the durable runtime reference. Availability is projected from the scope/stage setting in `links-builder.json`; there is no document allowlist. The provider currently reads one separate record on each opening, preserves staged navigation and rejects mismatched identities. Public-safe rendering is present but public data preparation and activation remain pending. The proof and version 1 schema were accepted for the completed rollout. [Runtime](Docs_Viewer_Runtime.md#exact-document-navigation-and-return) owns current browser-history caller restoration; the superseded View Caching and History delivery is retired and wider resource reuse remains separately scoped.
 
 After opening the initial view, the user chose normal document width without an outer border. Links now selects that layout through the shared host and retains the index panel's existing state. Media and other expanded presentations keep their own layout setting.
 

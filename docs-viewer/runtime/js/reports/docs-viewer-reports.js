@@ -1,7 +1,6 @@
 import {
   appendAssetVersion
 } from "../shared/docs-viewer-asset-url.js";
-import { mountDocsViewerMediaLinks } from "../shared/docs-viewer-media-detail.js";
 
 const REPORT_LOADERS = {
   selected_documents: {
@@ -255,26 +254,7 @@ export function mountDocsViewerReport(context) {
       return Promise.resolve(mount(Object.assign({}, context, {
         reportRoot: root,
         reportMeta: resolvedReportMeta,
-        reportRegistry: registry,
-        mountCollectionDocumentContent: function (child) {
-          var target = child.documentTarget;
-          mountDocsViewerMediaLinks({
-            content: child.content,
-            documentTarget: {
-              collection: target.collection, docId: target.doc_id },
-            isCurrentDocument: child.isCurrentDocument,
-            openMediaTarget: context.openMediaTarget,
-            loadMediaTarget: context.loadMediaTarget,
-            openMediaPresentation: context.openMediaPresentation
-          });
-          if (typeof context.mountThemedDiagrams === "function") context.mountThemedDiagrams();
-          if (!child.payload.report) return Promise.resolve();
-          return mountDocsViewerReport(Object.assign({}, context, child, {
-            // Child reports mount inline; the outer document owns Content Detail.
-            reportPresentationAdapter: null,
-            onCollectionDocumentState: null
-          }));
-        }
+        reportRegistry: registry
       }))).then(function (mountResult) {
         if (!isCurrent()) return false;
         registerExpandedPresentation(context, root, resolvedReportMeta, mountResult);

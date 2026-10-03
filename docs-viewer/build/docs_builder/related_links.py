@@ -70,7 +70,7 @@ def render_related_links(builder: DocsDataBuilder, doc: DocRecord, heading: str)
         if destination.collection:
             owner = owners[destination.collection]
             icon = owner.icon
-            href = "?" + canonical_document_viewer_url(owner.report_host_doc_id, subdoc_id=destination.doc_id, subdoc_collection=destination.collection).split("?", 1)[1]
+            href = "?" + canonical_document_viewer_url(destination.doc_id, collection=destination.collection).split("?", 1)[1]
         else:
             icon = "dlf-doc"
             href = (builder.rendered_viewer_target_for(destination.doc_id) if builder.config.stage == "review"

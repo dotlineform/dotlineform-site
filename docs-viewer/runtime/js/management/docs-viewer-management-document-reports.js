@@ -93,10 +93,9 @@ function markdownLinkForCollectionDocument(settings, parent, collection, target,
   ) {
     throw new Error("Copy Link target did not match the mounted collection report.");
   }
-  var base = settings.viewerUrlForDocument(parent.doc_id, { manage: false });
+  var base = settings.viewerUrlForDocument(normalized.doc_id, { collection: normalized.collection });
   if (!cleanString(base)) throw new Error("Copy Link viewer URL is unavailable.");
   var url = new URL(base, "http://docs.local");
-  url.searchParams.set("subdoc", normalized.doc_id);
   var title = escapeMarkdownLinkText(
     cleanString(documentRecord && documentRecord.title) || normalized.doc_id
   );
@@ -163,7 +162,7 @@ export function loadDocsViewerCollectionContribution(settings, parent, collectio
         catalogueProvider: settings.collectionProvider,
         collection: {  collection: collection },
         content: settings.content,
-        documentTarget: {  collection: "", docId: parent.doc_id },
+        documentTarget: { collection: settings.documentTarget && settings.documentTarget.collection || "", docId: parent.doc_id },
         openMediaTarget: settings.openMediaTarget,
         openLocalTarget: openLocalTarget,
         publicPreviewBase: cleanString(settings.routeContext && settings.routeContext.publicPreviewBase),
@@ -221,10 +220,50 @@ function openCollectionPreparePackage(settings, request, context) {
   });
 }
 
+/** Collection documents use the shared reader mount and exact action target. */
+function mountCollectionDocumentActions(settings) {
+  var target = normalizeManagedDocumentTarget(settings.documentTarget);
+  var parent = { doc_id: target.doc_id };
+  return loadDocsViewerCollectionContribution(settings, parent, target.collection).then(async function (contribution) {
+    var metadata = settings.collectionProvider.readMetadata
+      ? await settings.collectionProvider.readMetadata(target) : null;
+    var record = metadata && metadata.record ? metadata.record : settings.doc;
+    var host = settings.content.ownerDocument.createElement("div");
+    host.className = "docsViewer__collectionActions";
+    function project() {
+      var actionContext = Object.assign({}, settings.documentActionContext, { documentRecord: record, actionHost: host });
+      if (contribution.projectDetailInfo) actionContext.documentInfo = contribution.projectDetailInfo({
+        collection: { collection: target.collection }, target: target, document: record, metadata: record, payload: settings.payload, data: {}
+      });
+      settings.onDocumentActionState(actionContext);
+      host.replaceChildren();
+      if (contribution.renderDetailToolbar) contribution.renderDetailToolbar({
+        actionContext: actionContext, collection: { collection: target.collection }, target: target,
+        document: record, data: {}, host: host, commitDeletedDocument: settings.commitDeletedDocument,
+        refreshAndOpenDocument: settings.openDocument, refreshCollection: actionContext.refreshCollection
+      });
+    }
+    project();
+    settings.collectionProvider.subscribeDocumentChanges(function (change) {
+      if (!change.deleted && change.target.collection === target.collection && change.target.doc_id === target.doc_id && settings.content.isConnected) {
+        record = change.record;
+        project();
+      }
+    });
+    return true;
+  });
+}
+
 export function mountDocsViewerManageDocumentExtras(context) {
   var settings = context || {};
   var payload = settings.payload || {};
   var routeContext = settings.routeContext || {};
+  if (settings.documentTarget && settings.documentTarget.collection) {
+    return mountCollectionDocumentActions(settings).then(function () {
+      if (!payloadHasReport(payload)) return true;
+      return mountDocsViewerReport(Object.assign({}, settings, { workspaceConfig: settings.workspaceConfigState.activeConfig, reportRegistryUrl: settings.routeContext.reportRegistryUrl }));
+    });
+  }
   if (!payloadHasReport(payload)) return Promise.resolve(false);
 
   var managementService = settings.managementService || null;
@@ -233,9 +272,10 @@ export function mountDocsViewerManageDocumentExtras(context) {
   if (!collection) {
     return mountDocsViewerReport({
       appContext: settings.appContext,
-    workspaceConfig: settings.workspaceConfigState.activeConfig,
+      workspaceConfig: settings.workspaceConfigState.activeConfig,
       checkGeneratedDataReadCapability: settings.checkGeneratedDataReadCapability,
       content: settings.content,
+      registerRetainedView: settings.registerRetainedView,
       doc: settings.doc,
       mediaRoot: settings.mediaRoot,
       viewerBaseUrl: settings.viewerBaseUrl,
@@ -243,6 +283,8 @@ export function mountDocsViewerManageDocumentExtras(context) {
       managementContext: Boolean(settings.managementContext),
       managementService: managementService,
       payload: payload,
+      collectionProvider: settings.collectionProvider,
+      openDocument: settings.openDocument,
       mountThemedDiagrams: settings.mountThemedDiagrams,
       mountRelatedLinks: settings.mountRelatedLinks,
       reportPresentationAdapter: settings.reportPresentationAdapter,
@@ -276,6 +318,7 @@ export function mountDocsViewerManageDocumentExtras(context) {
     workspaceConfig: settings.workspaceConfigState.activeConfig,
     checkGeneratedDataReadCapability: settings.checkGeneratedDataReadCapability,
     content: settings.content,
+    registerRetainedView: settings.registerRetainedView,
     doc: settings.doc,
     mediaRoot: settings.mediaRoot,
     viewerBaseUrl: settings.viewerBaseUrl,
@@ -301,6 +344,7 @@ export function mountDocsViewerManageDocumentExtras(context) {
     setStatus: settings.setStatus,
     collectionReportContributionPromise: contribution,
     collectionProvider: settings.collectionProvider,
+    openDocument: settings.openDocument,
     routeContext: routeContext,
     catalogueWorkIdForDocument: collection === "catalogue" && settings.managementContext
       ? catalogueWorkIdForDocument : undefined,

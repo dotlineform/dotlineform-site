@@ -339,6 +339,8 @@ export function composeDocsViewerManagementCollectionContributions(options = {})
 
   var composed = {
     id: "management_composition",
+    captureListState: function () { return defaultContribution.captureListState ? defaultContribution.captureListState() : null; },
+    restoreListState: function (saved) { if (defaultContribution.restoreListState) defaultContribution.restoreListState(saved); },
     createFilters: createFilters,
     notify: notify,
     projectDetailInfo: projectDetailInfo,

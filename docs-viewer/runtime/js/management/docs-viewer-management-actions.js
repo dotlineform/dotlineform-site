@@ -319,8 +319,11 @@ export function createDocsViewerManagementActionController(options) {
           createSettings.clientOptions || managementClientOptions()
         );
       },
-      refreshAndSelect: createSettings.refreshAndSelect || function (target) {
-        return reloadDocsIndex(target.doc_id, "");
+      refreshAndSelect: function (target, response) {
+        if (context.commitDocumentChange) context.commitDocumentChange({ target: target, record: response.record });
+        if (createSettings.refreshAndSelect) return createSettings.refreshAndSelect(target, response);
+        if (target.collection) return context.routeCommands.loadDoc(target);
+        return context.routeCommands.loadIndex({ preserveDocument: true }).then(function () { return context.routeCommands.loadDoc(target, { indexDocId: target.doc_id }); });
       },
       openSource: createSettings.openSource || openCreatedDocumentSource
     })
@@ -635,16 +638,16 @@ export function createDocsViewerManagementActionController(options) {
       .then(function (payload) {
         if (!payload) return;
         var deletedDocIds = payload.deleted_doc_ids || resolution.targetDocIds;
-        var displayedRemoved = deletedDocIds.includes(selectedDocument.selectedDocId);
-        var fallbackDocId = displayedRemoved ? firstRemainingRootDocId(
-          documentIndex.allDocs, deletedDocIds, context.resolveLoadableDocId
-        ) : "";
+        var displayedRemoved = !selectedDocument.documentTarget?.collection && deletedDocIds.includes(selectedDocument.displayedDocId);
+        var displayedDocId = selectedDocument.displayedDocId;
         setManagementMessage("", false);
-        var configReload = payload.default_doc_id_changed
-          ? reloadViewerConfiguration()
-          : Promise.resolve(null);
+        var configReload = payload.default_doc_id_changed ? reloadViewerConfiguration() : Promise.resolve(null);
         return configReload.then(function () {
-          return displayedRemoved ? reloadDocsIndex(fallbackDocId, "") : callbacks.refreshIndexTree();
+          deletedDocIds.forEach(function (docId) {
+            if (!displayedRemoved || docId !== displayedDocId) context.commitDocumentChange({ target: { doc_id: docId }, deleted: true });
+          });
+          if (displayedRemoved && context.commitDeletedDocument) return context.commitDeletedDocument({ doc_id: displayedDocId });
+          return callbacks.refreshIndexTree();
         }).then(function (result) {
           var completionMessage = docsViewerDeleteCompletionMessage(payload);
           if (completionMessage) setManagementMessage(completionMessage, false);

@@ -12,14 +12,16 @@
   --docs-viewer-measure: 100%;
 }
 
-.docsViewer[data-document-display-mode="markdown-source"] .docsViewer__content{
+.docsViewer[data-document-display-mode="markdown-source"] .docsViewer__content,
+.docsViewer[data-document-display-mode="markdown-source"] .docsViewer__content > .docsViewer__documentMount:not([hidden]){
   display: flex;
   width: 100%;
   max-width: 100%;
   min-height: max(32rem, calc(100dvh - 8rem));
 }
 
-.docsViewer[data-document-display-mode="markdown-source"] .docsViewer__content > :not([data-docs-viewer-source-editor]){
+/* Keep the retained document mount visible while hiding its rendered children. */
+.docsViewer[data-document-display-mode="markdown-source"] .docsViewer__content > .docsViewer__documentMount > :not([data-docs-viewer-source-editor]){
   display: none !important;
 }
 

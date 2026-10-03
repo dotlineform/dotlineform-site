@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260902-102745-8379ea
 title: Unified Analysis And Catalogue Presentation
 added_date: "2026-09-02 10:27:45"
-last_updated: "2026-10-01 18:27:54"
+last_updated: "2026-10-03 17:35:06"
 summary: Present accepted Analysis documents and current Catalogue data through Docs Viewer while retaining the legacy Catalogue as a frozen archive.
 ui_status: in-progress
 parent_id: d-20260428-000000-f5ff18
@@ -53,7 +53,7 @@ The current Catalogue site remains available as a frozen archive while the repla
 
 - [Scope Links - Delivery](Scope_Links_Delivery.md) is complete, accepted and closed on 2026-09-10. Working docs/Search rebuild support, scope aggregation and the local two-column sortable [Links report](/docs/?scope=analysis&stage=working&doc=d-20260910-214604-f9e841) are shipped, including the 🔄 Refresh control beside the links count. [Builder](Builder.md) and [Reports](Reports.md) own current behavior; the delivery is ready for manual archive. [Shared Icons](Shared_Icons.md) owns the separate proposal for consistent assets and document-type meanings across reports, sub-scopes and other consumers.
 
-- [View Caching and History - Delivery](View_Caching_And_History_Delivery.md) records agreed shared defaults for Links, Media and future hosted views: page-session data reuse, browser Back/Forward and restoration without an intermediate document display, with explicit overrides when necessary. The separate delivery is proposed; implementation and durable transfer remain pending.
+- [Runtime](Docs_Viewer_Runtime.md#exact-document-navigation-and-return) owns the accepted common document reader, browser-history caller return and retained document/list/Content Detail restoration. The superseded View Caching and History delivery is retired; wider resource/media reuse changes remain separately scoped. Catalogue remains a document collection and future Subject review is separate.
 - [Document-owned Concept And Moment IDs](Document_Concept_And_Moment_IDs.md) is complete and accepted, closed on 2026-09-08. The redundant IDs, group metadata and dependent controls/modals are removed, with existing document-reference targets preserved and all 323 selected Python checks passing. The delivery is ready for manual archive; [Source Organisation](Source_Organisation.md) owns the implemented document model.
 - [Document Sub-scope Metadata](Document_Sub_Scope_Metadata.md) is complete, accepted and closed on 2026-09-08, including the source backfill and review formatting correction. [Source Organisation](Source_Organisation.md) owns automatic membership and its authoring rules. The delivery is ready for manual archive; lookup and relationship work remains separate.
 - [Moment IDs And Subjects](Moment_IDs_And_Subjects.md) records the initial 56 allocations. Final review supersedes both their separate identity role and the earlier Moment-as-Subject model; document identities and content are retained.

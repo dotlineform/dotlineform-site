@@ -96,7 +96,7 @@ export function createDocsViewerGeneratedDataRuntime(options) {
     return fetchPreferredGeneratedJson(
       contentUrl,
       "Failed to load " + contentUrl,
-      managementReloadPath("/docs/doc", {  doc_id: docId }),
+      requestSettings.collection ? contentUrl : managementReloadPath("/docs/doc", { doc_id: docId }),
       dataRequestOptions(Object.assign({}, requestSettings, {
         useSearchCapability: false
       }))

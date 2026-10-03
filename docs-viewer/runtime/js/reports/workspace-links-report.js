@@ -145,6 +145,25 @@ export function mountWorkspaceLinksReport(context) {
       && (typeof context.isCurrentDocument !== "function" || context.isCurrentDocument());
   }
 
+  if (context.registerRetainedView) context.registerRetainedView({
+    id: "workspace-links",
+    capture: function () { return { key: sortKey, direction: sortDir }; },
+    restore: function (saved) {
+      if (sortKey === saved.key && sortDir === saved.direction) return;
+      sortKey = saved.key; sortDir = saved.direction; render();
+    }
+  });
+  if (context.collectionProvider && context.collectionProvider.subscribeDocumentChanges) context.collectionProvider.subscribeDocumentChanges(function (change) {
+    if (!root.isConnected) return;
+    var matches = function (record) { return record.doc_id === change.target.doc_id && (record.collection || "") === (change.target.collection || ""); };
+    if (!rows.some(function (row) { return [row.from, row.to].some(function (record) { return matches(record) && (change.deleted || record.title !== change.record.title); }); })) return;
+    rows = rows.filter(function (row) { return !change.deleted || (!matches(row.from) && !matches(row.to)); }).map(function (row) {
+      return { from: matches(row.from) ? Object.assign({}, row.from, { title: change.record.title }) : row.from,
+        to: matches(row.to) ? Object.assign({}, row.to, { title: change.record.title }) : row.to };
+    });
+    render();
+  });
+
   async function load() {
     const version = ++requestVersion;
     refresh.disabled = true;

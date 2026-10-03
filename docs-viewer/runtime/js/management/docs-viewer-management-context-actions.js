@@ -23,7 +23,7 @@ export function createDocsViewerManagementContextActions(options) {
     var target = context.documentTarget;
     var record = context.documentRecord;
     var exact = Boolean(target && record && record.doc_id === target.doc_id);
-    var report = context.parentTarget ? context : null;
+    var report = context.collectionTarget ? context : null;
     var readyReport = report && ["list", "detail"].includes(report.state) && exact;
     var unavailable = !options.isManagementContext() || !management.managementAvailable;
     var blocked = unavailable || management.managementBusy;
@@ -125,7 +125,7 @@ export function createDocsViewerManagementContextActions(options) {
       await toggleManagedDocDraft(state.target, !state.record.draft, {
         clientOptions: options.clientOptions(),
         onSaved: function (target, response) {
-          if (target.collection) state.context.commitDocumentDraft(target, response.record.draft);
+          if (state.context.commitDocumentDraft) state.context.commitDocumentDraft(target, response.record);
           else {
             var record = options.documentIndex.docsById.get(target.doc_id);
             if (record) record.draft = response.record.draft;

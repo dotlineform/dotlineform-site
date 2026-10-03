@@ -164,6 +164,7 @@ export function initDocsViewerConfigController(context) {
     }
     var config = {
       viewerBaseUrl: String(raw.viewer_base_url || ""),
+      documentUrlTemplate: String(raw.document_url_template || ""),
       mediaRoot: String(raw.media_root || ""),
       defaultDocId: String(raw.default_doc_id || ""),
       indexTreeUrl: String(raw.index_tree_url || ""),
@@ -175,6 +176,10 @@ export function initDocsViewerConfigController(context) {
       collectionsById: new Map(children.map(function (child) { return [child.collection, child]; })),
       collectionsByReportHostId: new Map(children.map(function (child) { return [child.reportHostDocId, child]; }))
     };
+    if (!config.documentUrlTemplate.startsWith("/") || config.documentUrlTemplate.startsWith("//")
+        || config.documentUrlTemplate.split("{doc_id}").length !== 2) {
+      throw new Error("Docs Viewer requires one configured exact document URL template.");
+    }
     if (!config.viewerBaseUrl || !config.mediaRoot || !config.indexTreeUrl
         || context.featurePolicy.recent && !config.recentUrl
         || context.featurePolicy.search && !config.searchIndexUrl) {

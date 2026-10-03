@@ -5,9 +5,9 @@ from __future__ import annotations
 
 from collections.abc import Collection
 from pathlib import Path
-from urllib.parse import quote
+from urllib.parse import quote, parse_qsl, urlencode, urlsplit, urlunsplit
 
-from docs_document_identity import is_document_id, is_immutable_doc_id
+from docs_document_identity import is_document_id
 from docs_workspace_config import (
     DocsStageConfig,
     DocsCollectionConfig,
@@ -53,13 +53,11 @@ def collection_report_placement(
     return config, collection, host_id
 
 
-def canonical_document_viewer_url(doc_id: str, *, subdoc_id: str = "", subdoc_collection: str = "") -> str:
-    """Build an ordinary location from explicit document/host identity, without a workflow stage."""
-    if not is_immutable_doc_id(doc_id) or (subdoc_id and not is_document_id(subdoc_id, collection=subdoc_collection)):
-        raise ValueError("doc_id and subdoc_id must use immutable document identity")
-    pairs = [f"doc={quote(doc_id)}"]
-    if subdoc_id:
-        pairs.append(f"subdoc={quote(subdoc_id)}")
+def canonical_document_viewer_url(doc_id: str, *, collection: str = "") -> str:
+    """Address the exact storage owner and document, independently of its browse host."""
+    if not is_document_id(doc_id, collection=collection):
+        raise ValueError("doc_id must use immutable document identity")
+    pairs = ([f"collection={quote(collection)}"] if collection else []) + [f"doc={quote(doc_id)}"]
     return f"/docs/?{'&'.join(pairs)}"
 
 
@@ -68,18 +66,18 @@ def canonical_collection_document_url(
     collection_id: str,
     doc_id: str,
 ) -> str:
-    """Resolve the configured report host for an exact collection document."""
+    """Validate the configured collection and address its exact document."""
 
     normalized_doc_id = str(doc_id or "").strip()
     if not is_document_id(normalized_doc_id, collection=collection_id):
         raise ValueError("doc_id must use immutable document identity")
 
-    _config, _collection, parent_doc_id = collection_report_placement(
+    collection_report_placement(
         repo_root,
         collection_id,
     )
 
-    return canonical_document_viewer_url(parent_doc_id, subdoc_id=normalized_doc_id, subdoc_collection=collection_id)
+    return canonical_document_viewer_url(normalized_doc_id, collection=collection_id)
 
 
 def management_collection_viewer_url(
@@ -111,9 +109,14 @@ def management_document_viewer_url(
     normalized_doc_id = str(doc_id or "").strip()
     if not is_document_id(normalized_doc_id, collection=collection_id):
         raise ValueError("doc_id must use immutable document identity")
-    separator = "&" if "?" in collection_url else "?"
-    key = "subdoc" if collection else "doc"
-    return f"{collection_url}{separator}{key}={quote(normalized_doc_id)}"
+    if collection and not collection_id:
+        raise ValueError("Named document navigation requires its exact collection")
+    location = urlsplit(collection_url)
+    pairs = [(key, value) for key, value in parse_qsl(location.query) if key not in {"doc", "collection"}]
+    if collection:
+        pairs.append(("collection", collection_id))
+    pairs.append(("doc", normalized_doc_id))
+    return urlunsplit((location.scheme, location.netloc, location.path, urlencode(pairs), location.fragment))
 
 
 __all__ = [

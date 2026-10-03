@@ -456,6 +456,7 @@ async function runImport(state) {
       syncRouteBusyState(state);
       state.onBusyChange(busy);
     },
+    onCommittedResult: state.onCommittedResult,
     onTerminalResult: state.onTerminalResult
   });
   syncImportInputControls(state);
@@ -603,6 +604,7 @@ export async function initDocsHtmlImport(options = {}) {
     onCollectionStateChange: typeof options.onCollectionStateChange === "function"
       ? options.onCollectionStateChange
       : () => {},
+    onCommittedResult: options.onCommittedResult || (() => {}),
     onTerminalResult: typeof options.onTerminalResult === "function"
       ? options.onTerminalResult
       : () => {}
@@ -613,6 +615,7 @@ export async function initDocsHtmlImport(options = {}) {
     previewStatusNode: state.statusNode,
     renderActions: false,
     routePath: state.routePath,
+    onCommittedResult: state.onCommittedResult,
     onTerminalResult: state.onTerminalResult,
     onViewStateChange: state.onCollectionStateChange,
     onBusyChange: (busy) => {

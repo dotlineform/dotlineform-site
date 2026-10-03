@@ -102,8 +102,8 @@ def parse_docs_target(
 ) -> dict[str, str] | None:
     """Parse exact workspace links; retired scope parameters are invalid.
 
-    ``doc_id`` remains the route's parent document; ``subdoc`` identifies an
-    opened child. Consumers resolve exact collection ownership.
+    The optional collection and document ID identify the exact storage owner.
+    Host-plus-subdoc routes are rejected rather than inferred.
     """
 
     raw = normalize_text(resolved_href)
@@ -128,7 +128,7 @@ def parse_docs_target(
         viewer_path = normalize_text(viewer_base_url).rstrip("/")
         if trimmed_path != viewer_path:
             continue
-        if "stage" in query or "scope" in query or any(len(query.get(key, [])) > 1 for key in ("doc",  "subdoc")):
+        if {"stage", "scope", "subdoc"} & query.keys() or any(len(query.get(key, [])) > 1 for key in ("doc", "collection")):
             return {"kind": "invalid_viewer", "fragment": fragment}
         doc_id = normalize_text(query.get("doc", [""])[0])
         if not doc_id:
@@ -136,7 +136,7 @@ def parse_docs_target(
         return {
             "kind": "viewer",
             "doc_id": doc_id,
-            "subdoc": normalize_text(query.get("subdoc", [""])[0]),
+            "collection": normalize_text(query.get("collection", [""])[0]),
             "fragment": fragment,
         }
 
@@ -154,13 +154,13 @@ def is_same_doc_fragment_link(
     *,
     current_doc_id: str,
     target: dict[str, str],
-    current_parent_doc_id: str = "",
+    current_collection: str = "",
 ) -> bool:
     if not normalize_text(target.get("fragment")):
         return False
     return (
         target.get("kind") == "viewer"
-        and (not target.get("subdoc") or target.get("doc_id") == current_parent_doc_id)
-        and normalize_text(target.get("subdoc") or target.get("doc_id"))
+        and normalize_text(target.get("doc_id"))
         == normalize_text(current_doc_id)
+        and normalize_text(target.get("collection")) == current_collection
     )

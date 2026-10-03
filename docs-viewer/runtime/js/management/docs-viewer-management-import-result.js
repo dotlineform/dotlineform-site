@@ -38,24 +38,11 @@ export function docsImportResultDestination(payload, options = {}) {
     throw new Error("Docs Import result uses a retired scope URL.");
   }
 
-  let expectedKeys = [];
-  if (target.collection) {
-    const reportDocId = cleanText(url.searchParams.get("doc"));
-    if (!reportDocId) {
-      throw new Error("Docs Import child destination requires its report document.");
-    }
-    expectedKeys.push("doc");
-    if (!collection) {
-      if (url.searchParams.get("subdoc") !== target.doc_id) {
-        throw new Error("Docs Import child destination does not match its document.");
-      }
-      expectedKeys.push("subdoc");
-    }
-  } else if (!collection) {
-    if (url.searchParams.get("doc") !== target.doc_id) {
-      throw new Error("Docs Import destination does not match its document.");
-    }
-    expectedKeys.push("doc");
+  let expectedKeys = ["doc"];
+  if (!collection && url.searchParams.get("doc") !== target.doc_id) throw new Error("Docs Import destination does not match its document.");
+  if (!collection && target.collection) {
+    if (url.searchParams.get("collection") !== target.collection) throw new Error("Docs Import destination does not match its collection.");
+    expectedKeys.push("collection");
   }
   if (!exactQueryKeys(url, expectedKeys)) {
     throw new Error("Docs Import result destination contains unexpected route state.");

@@ -18,10 +18,12 @@ export function mountDocsViewerPublicDocumentExtras(context) {
   return mountDocsViewerPublicReport({
     appContext: settings.appContext,
     content: settings.content,
+    registerRetainedView: settings.registerRetainedView,
     doc: settings.doc,
     mediaRoot: settings.mediaRoot,
     viewerBaseUrl: settings.viewerBaseUrl,
     collectionProvider: settings.collectionProvider,
+    openDocument: settings.openDocument,
     managementContext: false,
     managementService: null,
     payload: payload,

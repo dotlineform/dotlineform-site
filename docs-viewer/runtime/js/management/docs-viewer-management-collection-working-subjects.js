@@ -315,7 +315,7 @@ function renderAssignSubject(context, options, assignSubjectAvailable) {
       }).then(function (result) {
         if (!result || result.confirmed !== true) return result;
         var refresh = actionContext && actionContext.refreshDocument;
-        var refreshed = typeof refresh === "function" ? refresh(target) : Promise.resolve(target);
+        var refreshed = typeof refresh === "function" ? refresh(target, result.payload) : Promise.resolve(target);
         return Promise.resolve(refreshed).then(function () {
           return result.payload;
         });

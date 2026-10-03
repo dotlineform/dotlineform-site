@@ -28,6 +28,9 @@ export function createDocsViewerDocumentViewCoordinator(options) {
       payloadCache: settings.selectedDocument.payloadCache,
       appContext: typeof settings.appContext === "function" ? settings.appContext() : settings.appContext,
       selectedDocId: settings.selectedDocument.selectedDocId,
+      selectedDoc: settings.selectedDocument.displayedRecord,
+      managedDocumentContext: typeof settings.managedDocumentContext === "function" ? settings.managedDocumentContext() : null,
+      sourceTarget: settings.selectedDocument.documentTarget,
       uiStatusByValue: settings.workspaceConfig.uiStatusByValue,
       viewerTargetDocId: settings.viewerTargetDocId,
       viewerUrl: settings.viewerUrl
@@ -124,7 +127,33 @@ export function createDocsViewerDocumentViewCoordinator(options) {
     return showView("rendered-document", onAccepted, optionsForRequest);
   }
 
+  function leaveSource() {
+    return new Promise(function (resolve, reject) {
+      if (!documentDisplayModeHost.requestMode("rendered-document", { force: true, warn: false, onAccepted: resolve, onFailed: reject })) resolve(false);
+    });
+  }
+
+  async function returnToDocument() {
+    if (mainViewHost.activeViewId() !== "rendered-document") {
+      mainViewHost.requestView("rendered-document", { force: true, warn: false, reason: "back" });
+    }
+    await mainViewHost.whenReady();
+  }
+
+  async function prepareDocumentNavigation() {
+    await leaveSource();
+    await returnToDocument();
+  }
+
   return {
+    prepareDocumentNavigation: prepareDocumentNavigation,
+    returnToDocument: returnToDocument,
+    openPresentation: async function (targetContext) {
+      if (!mainViewHost.requestView("content-detail", { reason: "content-detail-open", targetContext: targetContext, warn: true })) {
+        throw new Error("Content detail is unavailable.");
+      }
+      await mainViewHost.whenReady();
+    },
     activeViewState: activeViewState,
     confirmDocumentNavigation: documentDisplayModeHost.confirmNavigation,
     bind: function () { infoPanelController.bind(); },

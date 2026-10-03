@@ -4,7 +4,6 @@ const SERIES_SCHEMA = "studio_catalogue_lookup_series_search_v2";
 const WORK_SCHEMA = "studio_catalogue_lookup_work_search_v2";
 const WORKS_COLLECTION = "works";
 const WORKS_CUSTOMISATION = "working_works";
-const WORKS_REPORT_DOC_ID = "d-20260801-073826-8865a8";
 const SERIES_ID_PATTERN = /^[0-9]{3}$/;
 const WORK_ID_PATTERN = /^[0-9]{5}$/;
 const DOC_ID_PATTERN = /^d-[0-9]{8}-[0-9]{6}-[0-9a-f]{6}$/;
@@ -236,7 +235,7 @@ function fetchJson(url, message) {
   });
 }
 
-function loadWorksProjection(context) {
+function loadWorksInputs(context) {
   return Promise.all([
     fetchJson(
       studioReadUrl(context, "catalogue_lookup_series_search"),
@@ -250,7 +249,7 @@ function loadWorksProjection(context) {
       configuredWorkingWorksManifestUrl(context),
       "Failed to load Working Works manifest."
     ).then(normalizeWorksDocumentsManifest)
-  ]).then((inputs) => composeWorksProjection(inputs[0], inputs[1], inputs[2]));
+  ]);
 }
 
 function workDocumentHref(context, docId) {
@@ -258,16 +257,15 @@ function workDocumentHref(context, docId) {
     throw new Error("Working Works document links are not configured.");
   }
   const raw = cleanString(context.viewerUrlForDocument(
-    WORKS_REPORT_DOC_ID,
-    { manage: true }
+    docId,
+    { collection: "works" }
   ));
   const url = new URL(raw, "http://docs.local");
   if (
-    url.searchParams.get("doc") !== WORKS_REPORT_DOC_ID
+    url.searchParams.get("doc") !== docId || url.searchParams.get("collection") !== "works"
   ) {
     throw new Error("Working Works document links are not configured.");
   }
-  url.searchParams.set("subdoc", docId);
   return url.origin === "http://docs.local"
     ? url.pathname + url.search + url.hash
     : url.toString();
@@ -323,8 +321,9 @@ function loadWorksReport(state) {
   clearNode(state.rowsNode);
   state.emptyNode.hidden = true;
   state.statusNode.textContent = "Loading Works...";
-  return loadWorksProjection(state.context).then((projection) => {
-    renderProjection(state, projection);
+  return loadWorksInputs(state.context).then((inputs) => {
+    state.inputs = inputs;
+    renderProjection(state, composeWorksProjection(inputs[0], inputs[1], inputs[2]));
   }).catch((error) => {
     clearNode(state.rowsNode);
     state.statusNode.textContent = error && error.message
@@ -356,5 +355,16 @@ function renderShell(root) {
 export function mountWorksReport(context) {
   const nodes = renderShell(context.reportRoot);
   const state = Object.assign({ context }, nodes);
+  if (context.collectionProvider && context.collectionProvider.subscribeDocumentChanges) context.collectionProvider.subscribeDocumentChanges(function (change) {
+    if (!context.reportRoot.isConnected || !state.inputs || change.target.collection !== "works") return;
+    var previous = state.inputs[2].find(function (record) { return record.docId === change.target.doc_id; });
+    if (change.deleted && !previous) return;
+    var subject = change.deleted ? null : normalizeDocsViewerAuthoringSubject(change.record.authoring_subject);
+    if (previous && !change.deleted && previous.title === change.record.title && previous.subject.kind === subject.kind && previous.subject.key === subject.key) return;
+    state.inputs[2] = state.inputs[2].filter(function (record) { return record.docId !== change.target.doc_id; });
+    if (!change.deleted) state.inputs[2].push({ docId: change.target.doc_id, title: change.record.title,
+      subject: subject });
+    renderProjection(state, composeWorksProjection(state.inputs[0], state.inputs[1], state.inputs[2]));
+  });
   return loadWorksReport(state);
 }

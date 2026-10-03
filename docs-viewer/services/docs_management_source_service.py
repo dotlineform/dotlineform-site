@@ -17,6 +17,7 @@ import docs_source_model as source_model  # noqa: E402
 from docs_management_context import DEFAULT_MARKDOWN_APP_ENV, log_event  # noqa: E402
 from docs_management_mutations import normalize_metadata_text, normalize_summary  # noqa: E402
 from docs_management_document_target import (  # noqa: E402
+    committed_document_record,
     ManagedDocumentCollection,
     ManagedDocumentTarget,
     managed_document_target_request,
@@ -175,6 +176,9 @@ def save_source_document(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
         "source_changed": source_changed,
         "dry_run": dry_run,
     }
+    if not dry_run:
+        metadata, _ = source_model.parse_source_text(next_source_text, strict=True)
+        payload["committed_document"] = {"target": resolved.request_target(), "record": committed_document_record(metadata, target.doc_id, resolved.document_config, collection=resolved.collection, parent_id=target.parent_id)}
     if source_changed and not dry_run:
         source_model.write_text_atomic(target.path, next_source_text)
     return payload

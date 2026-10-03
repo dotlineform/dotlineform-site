@@ -13,6 +13,7 @@ import docs_source_model as source_model
 from docs_document_subjects import subject_key_is_canonical
 from docs_index_order import INDEX_ORDER_FILENAME, exclude_nodes, index_order_text, insert_node, move_node, read_index_order, tree_parent_ids
 from docs_management_document_target import (
+    committed_document_record,
     ManagedDocumentTarget,
     managed_document_target_request,
     resolve_managed_document_collection,
@@ -265,14 +266,7 @@ def plan_create(
     target = {**resolved_collection.request_target(), "doc_id": doc_id}
     if collection:
         target["collection"] = collection
-    record: Dict[str, Any] = {
-        "doc_id": doc_id,
-        "title": title,
-    }
-    if source_model.collection_supports_draft(resolved_collection.document_config):
-        record["draft"] = front_matter["draft"]
-    if not collection:
-        record["parent_id"] = parent_id
+    record = committed_document_record(front_matter, doc_id, resolved_collection.document_config, collection=collection, parent_id=parent_id)
     response: Dict[str, Any] = {
         "ok": True,
         "doc_id": doc_id,

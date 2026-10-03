@@ -33,16 +33,6 @@ export function docsViewerLinksDocumentHref(value, config) {
   if (base.searchParams.has("scope") || base.searchParams.has("stage")) {
     throw new Error("Links viewer route contains retired context.");
   }
-  var docId = target.doc_id;
-  if (target.collection) {
-    var owners = (config.collections || []).filter(function (owner) { return owner.collection === target.collection; });
-    if (owners.length !== 1 || !/^d-\d{8}-\d{6}-[a-f0-9]{6}$/.test(owners[0].reportHostDocId)) {
-      throw new Error("Links requires an exact configured collection report host.");
-    }
-    docId = owners[0].reportHostDocId;
-  }
-  return buildViewerUrl({
-    viewerBaseUrl: config.viewerBaseUrl, origin: "https://docs.invalid", docId: docId,
-    reportParams: target.collection ? { subdoc: target.doc_id } : {}
-  });
+  if (target.collection && !config.collectionsById.has(target.collection)) throw new Error("Links requires a configured collection.");
+  return buildViewerUrl({ viewerBaseUrl: config.viewerBaseUrl, origin: "https://docs.invalid", docId: target.doc_id, collection: target.collection });
 }

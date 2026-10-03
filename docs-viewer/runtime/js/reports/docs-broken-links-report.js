@@ -255,6 +255,15 @@ export function mountDocsBrokenLinksReport(context) {
     sortDir: DEFAULT_SORT_DIR,
     collator: new Intl.Collator(undefined, { numeric: true, sensitivity: "base" })
   }, nodes);
+  if (context.registerRetainedView) context.registerRetainedView({
+    id: "broken-links",
+    capture: function () { return { key: state.sortKey, direction: state.sortDir }; },
+    restore: function (saved) {
+      if (state.sortKey === saved.key && state.sortDir === saved.direction) return;
+      state.sortKey = saved.key; state.sortDir = saved.direction;
+      renderHead(state); renderRows(state);
+    }
+  });
 
   renderHead(state);
   attachEvents(state);

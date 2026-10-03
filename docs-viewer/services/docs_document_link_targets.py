@@ -5,7 +5,7 @@ from pathlib import Path
 import docs_source_model as source_model
 from docs_document_identity import is_document_id
 from docs_index_order import read_index_order, tree_parent_ids
-from docs_document_location import canonical_document_viewer_url, collection_report_placement
+from docs_document_location import canonical_document_viewer_url
 from docs_management_document_target import confined_source_path, resolve_managed_document_collection
 from docs_workspace_config import document_source_path, resolve_workspace_path
 
@@ -32,12 +32,6 @@ def read_document_link_targets(repo_root: Path) -> dict[str, object]:
             confined_source_path(root.resolve(), path)
         if not collection:
             paths = [root / f"{doc_id}.md" for doc_id in tree_parent_ids(read_index_order(root))]
-        # Resolve a child host only when the collection contains selectable documents.
-        host_id = ""
-        if collection and paths:
-            _config, _collection, host_id = collection_report_placement(
-                repo_root, collection,
-            )
         for path in paths:
             confined_source_path(root.resolve(), path)
             metadata, _body = source_model.parse_source(path)
@@ -46,9 +40,7 @@ def read_document_link_targets(repo_root: Path) -> dict[str, object]:
                 raise ValueError("Document link targets require an immutable doc_id.")
             title = str(metadata.get("title") or source_model.humanize(doc_id)).strip() or doc_id
             href = canonical_document_viewer_url(
-                host_id if collection else doc_id,
-                subdoc_id=doc_id if collection else "",
-                subdoc_collection=collection,
+                doc_id, collection=collection,
             )
             documents.append({
                 "target": {"collection": collection, "doc_id": doc_id},

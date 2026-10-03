@@ -80,6 +80,7 @@ def browser_workspace_record(repo_root: Path, config: DocsStageConfig, *, public
         raise ValueError("Docs media types must share one served root")
     record = {
         "viewer_base_url": public_viewer_base_url if published else "/docs/",
+        "document_url_template": f"{public_document_base(config)}/by-id/{{doc_id}}.json" if published else "/docs/doc?doc_id={doc_id}",
         "default_doc_id": config.default_doc_id,
         "media_root": media_root,
         "index_tree_url": browser_docs_index_tree_url(config, published=published),

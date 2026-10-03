@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260927-135604-05446e
 title: Subject Associations
 added_date: "2026-09-27 13:56:04"
-last_updated: "2026-09-30 11:33:27"
+last_updated: "2026-10-03 17:35:06"
 summary: Manifest-owned subjects, in-memory report associations, exact navigation, and private/public generation boundaries.
 parent_id: d-20260423-000000-d015e6
 ---
@@ -16,6 +16,8 @@ This is a current-state inventory, updated for Catalogue Work-ID documents on 20
 Reports derive associations in memory from normalized `authoring_subject` rows in each collection's private `manage-manifest.json`. An explicitly declared subject maps to the documents about that subject. The former `subject-associations.json` product is retired from every collection: no producer, generated-data read allowance, Preview validation or distribution branch remains. There is no replacement lookup file. Subjects do not collect semantic-token references, Markdown links, or all documents related through Catalogue membership.
 
 The proposed UI idea is to present document relationships as **related links**, regardless of how they were derived. That is an exploration aim, not an implemented or agreed replacement model. This document records current behavior separately from questions for that review.
+
+Catalogue remains a registered document collection. On 2026-10-03 the user retired the superseded proposal to remove Catalogue documents; future Subject review is separate and does not authorize changing the current Subject model or Catalogue ownership.
 
 ## Key Data Files
 

@@ -316,6 +316,8 @@ export function createDocsViewerReportPresentationAdapter(options) {
           extension.activate(activationContext || {});
         }
       },
+      suspend: function () { if (placeholder.isConnected) placeholder.before(state.reportRoot); },
+      resume: function () { viewport.appendChild(state.reportRoot); },
       focusTarget: viewport,
       invocationControl: state.button,
       label: state.presentationHandle.label,

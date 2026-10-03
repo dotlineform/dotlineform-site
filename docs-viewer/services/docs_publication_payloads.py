@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qsl, urlencode, urlsplit
 
-from docs_document_identity import is_immutable_doc_id
+from docs_document_identity import is_document_id, is_immutable_doc_id
 from docs_workspace_config import (
     DocsWorkspaceConfig,
     public_documents_path,
@@ -37,9 +37,9 @@ def project_public_view(config: DocsWorkspaceConfig, payload: dict[str, Any]) ->
         pairs = parse_qsl(parsed.query, keep_blank_values=True)
         query = dict(pairs)
         if parsed.path in {"/docs/", config.public_viewer_base_url}:
-            if "stage" in query or "scope" in query:
+            if {"stage", "scope", "subdoc"} & query.keys():
                 raise ValueError("Accepted document URL contains retired stage or scope identity")
-            if is_immutable_doc_id(query.get("doc", "")):
+            if is_document_id(query.get("doc", ""), collection=query.get("collection", "")) and (not query.get("collection") or query["collection"] in child_prefixes):
                 return parsed._replace(path=config.public_viewer_base_url, query=urlencode(pairs)).geturl()
         external = "/docs/generated/external/"
         if parsed.path.startswith(external):

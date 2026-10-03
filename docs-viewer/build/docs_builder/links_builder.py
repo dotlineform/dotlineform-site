@@ -20,7 +20,7 @@ from .links_schema import read_relationship_payload, relationship_payload
 from .semantic_tokens import SemanticTokenOccurrence, replace_semantic_tokens
 from .related_links_directive import RELATED_LINKS_PREFIX, render_without_related_links
 from .source import DocRecord
-from docs_document_identity import is_document_id, is_immutable_doc_id
+from docs_document_identity import is_document_id
 from docs_document_location import canonical_document_viewer_url
 from docs_rendered_links import collect_anchors, parse_docs_target, resolve_href
 from docs_workspace_config import DocsStageConfig, document_source_path, generated_documents_path, resolve_workspace_path
@@ -72,7 +72,6 @@ class _DocumentRefresh:
         self.config = builder.config
         self.collection = getattr(builder, "collection_id", "")
         self.owners = {"": self.config, **{owner.collection: owner for owner in self.config.collections}}
-        self.collection_by_host = {owner.report_host_doc_id: owner.collection for owner in self.config.collections}
         self.sources = {name: resolve_workspace_path(builder.repo_root, document_source_path(owner)) for name, owner in self.owners.items()}
         self.outputs = {name: resolve_workspace_path(builder.repo_root, generated_documents_path(owner)) / "by-id" for name, owner in self.owners.items()}
         if builder.source_dir != self.sources[self.collection] or builder.items_dir != self.outputs[self.collection]:
@@ -95,15 +94,10 @@ class _DocumentRefresh:
     def viewer_target(self, resolved: dict[str, str]) -> DocumentTarget | None:
         if resolved.get("kind") != "viewer":
             return None
-        doc_id, child = resolved["doc_id"], resolved.get("subdoc", "")
-        if not is_immutable_doc_id(doc_id):
+        doc_id, collection = resolved["doc_id"], resolved.get("collection", "")
+        if collection not in self.owners or not is_document_id(doc_id, collection=collection):
             return None
-        collection = ""
-        if child:
-            collection = self.collection_by_host.get(doc_id, "")
-            if not collection or not is_document_id(child, collection=collection):
-                return None
-        return DocumentTarget(collection, child or doc_id)
+        return DocumentTarget(collection, doc_id)
 
     def summary(self, target: DocumentTarget, doc: DocRecord | None = None, label: str = "") -> DocumentSummary:
         """Enrich a new endpoint's label without requiring its destination to exist.
@@ -128,8 +122,7 @@ class _DocumentRefresh:
     def location(self, target: DocumentTarget) -> str:
         """Derive navigation from exact identity and configured report placement."""
         self.validate_target(target)
-        host_id = self.owners[target.collection].report_host_doc_id if target.collection else target.doc_id
-        return canonical_document_viewer_url(host_id, subdoc_id=target.doc_id if target.collection else "", subdoc_collection=target.collection)
+        return canonical_document_viewer_url(target.doc_id, collection=target.collection)
 
     def read(self, target: DocumentTarget, *, deleted: bool = False) -> DocumentLinks | None:
         self.validate_target(target)

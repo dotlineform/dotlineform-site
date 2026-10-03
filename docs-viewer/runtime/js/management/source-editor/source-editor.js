@@ -295,6 +295,7 @@ function saveSource(context, state) {
       state.saving = false;
       setBusy(state, false);
       setStatus(state, payload.summary_text || "Doc saved.", false);
+      if (payload.projection_errors && payload.projection_errors.length && services.setStatus) services.setStatus("Doc saved. A retained list could not be updated: " + payload.projection_errors.join("; "), true);
       // Rendering is independent of a successful source write and cannot fail Save.
       Promise.resolve().then(function () {
         return context.documentView.requestMode("rendered-document", { force: true, warn: false });

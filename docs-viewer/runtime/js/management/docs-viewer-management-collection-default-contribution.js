@@ -576,6 +576,8 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
   }
 
   return {
+    captureListState: selectionOwner.snapshot,
+    restoreListState: function (saved) { selectionOwner.restore(saved, currentDocuments); },
     id: "default",
     notify: notify,
     renderDetailToolbar: renderDetailToolbar,

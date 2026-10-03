@@ -76,7 +76,11 @@ export function createDocsViewerReturnedPackageProvider(options) {
   function readDocument(doc, optionsForRead) {
     var requestSettings = optionsForRead || {};
     var docId = cleanString(requestSettings.docId || doc && doc.doc_id);
-    return ensurePackage().then(function (packageId) {
+    return ensurePackage().then(async function (packageId) {
+      if (doc && doc.collection) {
+        var manifest = await readManifest();
+        if (doc.collection !== manifest.manifest.source_collection) throw new Error("Document collection is outside the selected review package.");
+      }
       return request("/docs-review/packages/payload", {
         query: { package_id: packageId, doc_id: docId }
       }).then(function (payload) { return payload.payload; });

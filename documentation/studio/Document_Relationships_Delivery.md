@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260909-124914-76d536
 title: DR - Delivery
 added_date: "2026-09-09 12:49:14"
-last_updated: "2026-09-10 20:35:22"
+last_updated: "2026-10-03 17:35:06"
 summary: Accepted and closed on 2026-09-10. Scope-wide Analysis Working document links and Links View are complete; durable documentation is transferred and the delivery is ready for manual archive.
 ui_status: done
 parent_id: d-20260907-125101-d3bde6
@@ -277,7 +277,7 @@ Verification result:
 - The layout refinement's bounded Node probe passed through the actual registry, main-view host and panel-state projection: Links selects normal layout, the four existing presentation kinds retain expanded layout, normal/collapsed index state survives transitions and invalid layout settings are rejected. Explicit lint passed for the three changed JavaScript owners. Their site projection was updated and inspected; projection check, site validation and whitespace checks passed. No permanent layout test or browser probe was added.
 - The combined-entry refinement passed the maintained Links JavaScript contract script and lint for both presentation modules. Checks cover reciprocal deduplication, incoming-only entries, same-title documents, exact collection identity and preservation of the original directional response. Both site projections were updated and inspected; projection check, site validation and whitespace checks passed. The builder and JSON schema are unchanged.
 
-Proof gate outcome: on 2026-09-10 the user accepted the proof as sufficient and authorized DR-6. Unchecked detailed manual-review cases above are not claims of completed checks and no longer block that accepted rollout. Browser history and shared caching are separately recorded in View Caching and History - Delivery.
+Proof gate outcome: on 2026-09-10 the user accepted the proof as sufficient and authorized DR-6. Unchecked detailed manual-review cases above are not claims of completed checks and no longer block that accepted rollout. [Runtime](Docs_Viewer_Runtime.md#exact-document-navigation-and-return) now owns browser-history caller restoration; wider shared caching remains separately scoped after retirement of the older proposal.
 
 ### DR-4 — Iterate And Accept The Schema
 
@@ -388,7 +388,7 @@ No document or temporary file was deleted or archived automatically.
 
 ## Follow-on
 
-- [View Caching and History - Delivery](View_Caching_And_History_Delivery.md) records the agreed shared defaults for Links, Media and future hosted views: reuse page-session data without navigation-time revalidation, restore exact views through browser Back/Forward without a document flash, and allow explicit policy overrides. Implementation and durable transfer are owned by that separate delivery.
+- [Runtime](Docs_Viewer_Runtime.md#exact-document-navigation-and-return) owns implemented browser-history caller return and retained document/list/Content Detail restoration. The superseded View Caching and History delivery is retired; wider resource reuse changes remain separately scoped.
 - [Scope-configured Authoring Controls](Scope_Configured_Authoring_Controls.md) records proposed per-scope control policy through configuration. It is deferred and does not block this delivery.
 - Revisit Moments presentation only when its purpose is settled, and Processing presentation when that collection has content. Neither is a prerequisite for the initial Links view.
 - Pills and additional styling, full Series/Work/Detail association coverage within Works, semantic-token references and special sorting precedence can be considered after the simple document-link view is accepted.

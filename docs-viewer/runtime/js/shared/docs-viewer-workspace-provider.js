@@ -3,6 +3,7 @@ import {
   validateCatalogueSeriesGalleriesIndex, catalogueGalleryMediaPresentation
 } from "./docs-viewer-catalogue-media.js";
 import { readPublicCatalogueMediaConfig, validateCatalogueMediaPolicy } from "./docs-viewer-catalogue-media-policy.js";
+import { documentTarget } from "./docs-viewer-document-target.js";
 import { docsViewerLinksDocumentHref } from "./docs-viewer-links-presentation.js";
 
 function cleanString(value) {
@@ -17,6 +18,17 @@ export function createDocsViewerWorkspaceProvider(options) {
   var settings = options || {};
   var generatedData = settings.generatedData || {};
   var source = settings.source || null;
+  var changeListeners = new Set();
+  function commitDocumentChange(change) {
+    var target = documentTarget(change.target);
+    if (!change.deleted && (!change.record || change.record.doc_id !== target.doc_id)) throw new Error("Committed record did not match its target.");
+    var failures = [];
+    changeListeners.forEach(function (listener) {
+      try { listener(Object.assign({}, change, { target: target })); } catch (error) { failures.push(error); }
+    });
+    if (failures.length) console.warn("Document saved; a retained list projection failed.", failures);
+    return failures;
+  }
 
   function routeContext() {
     var routeSession = settings.routeSession || {};
@@ -35,9 +47,14 @@ export function createDocsViewerWorkspaceProvider(options) {
   }
 
   function readDocument(doc, optionsForRead) {
-    return generatedData.readDocumentPayload(doc, {
-      docId: cleanString(optionsForRead && optionsForRead.docId || doc && doc.doc_id)
-    });
+    var target = documentTarget({ doc_id: cleanString(optionsForRead && optionsForRead.docId || doc && doc.doc_id), collection: doc && doc.collection || "" });
+    var config = collectionConfig();
+    var owner = target.collection ? config.collectionsById.get(target.collection) : null;
+    if (target.collection && !owner) throw new Error("Unknown document collection: " + target.collection);
+    var url = owner ? owner.byIdUrlBase + "/" + encodeURIComponent(target.doc_id) + ".json"
+      : config.documentUrlTemplate.replace("{doc_id}", encodeURIComponent(target.doc_id));
+    if (!url) throw new Error("Document payload URL is not configured.");
+    return generatedData.readDocumentPayload({ doc_id: target.doc_id, content_url: url }, { collection: target.collection || "", docId: target.doc_id });
   }
 
   function readSearch(optionsForRead) {
@@ -56,6 +73,8 @@ export function createDocsViewerWorkspaceProvider(options) {
   }
 
   var provider = {
+    commitDocumentChange: commitDocumentChange,
+    subscribeDocumentChanges: function (listener) { changeListeners.add(listener); return function () { changeListeners.delete(listener); }; },
     documentHref: function (target) { return docsViewerLinksDocumentHref(target, collectionConfig()); },
     readDocument: readDocument,
     readIndex: readIndex,
@@ -63,6 +82,7 @@ export function createDocsViewerWorkspaceProvider(options) {
     readSearch: readSearch
   };
 
+  if (source && typeof source.readMetadata === "function") provider.readMetadata = source.readMetadata;
   if (source && typeof source.readSource === "function") {
     provider.readSource = function (target, optionsForRead) {
       return source.readSource(target, optionsForRead || {});
@@ -133,7 +153,13 @@ export function createDocsViewerWorkspaceProvider(options) {
   }
   if (source && typeof source.writeSource === "function") {
     provider.writeSource = function (target, payload, optionsForWrite) {
-      return source.writeSource(target, payload, optionsForWrite || {});
+      return source.writeSource(target, payload, optionsForWrite || {}).then(function (response) {
+        if (response.committed_document) {
+          try { response.projection_errors = commitDocumentChange(response.committed_document).map(function (error) { return error.message; }); }
+          catch (error) { response.projection_errors = [error.message]; }
+        }
+        return response;
+      });
     };
   }
   if (source && typeof source.readSourceContext === "function") {

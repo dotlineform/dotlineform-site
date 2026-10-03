@@ -119,6 +119,7 @@ export function createDocsViewerManagementImportController(options = {}) {
           onChooseSource: openFolderPicker,
           onBusyChange: projectBusy,
           onCollectionStateChange: projectCollectionState,
+          onCommittedResult: callbacks.onCommittedResult,
           onTerminalResult: projectTerminalResult
         });
       })

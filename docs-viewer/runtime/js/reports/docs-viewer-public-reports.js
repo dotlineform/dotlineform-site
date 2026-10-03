@@ -1,7 +1,6 @@
 import {
   appendAssetVersion
 } from "../shared/docs-viewer-asset-url.js";
-import { mountDocsViewerMediaLinks } from "../shared/docs-viewer-media-detail.js";
 
 const PUBLIC_REPORT_LOADERS = {
   selected_documents: {
@@ -164,24 +163,7 @@ export function mountDocsViewerPublicReport(context) {
       return Promise.resolve(mount(Object.assign({}, context, {
         reportRoot: root,
         reportMeta: resolvedReportMeta,
-        reportRegistry: registry,
-        mountCollectionDocumentContent: function (child) {
-          var target = child.documentTarget;
-          mountDocsViewerMediaLinks({
-            content: child.content,
-            documentTarget: {
-              collection: target.collection, docId: target.doc_id },
-            isCurrentDocument: child.isCurrentDocument,
-            openMediaTarget: context.openMediaTarget,
-            loadMediaTarget: context.loadMediaTarget,
-            openMediaPresentation: context.openMediaPresentation
-          });
-          if (typeof context.mountThemedDiagrams === "function") context.mountThemedDiagrams();
-          if (!child.payload.report) return Promise.resolve();
-          return mountDocsViewerPublicReport(Object.assign({}, context, child, {
-            onCollectionDocumentState: null
-          }));
-        }
+        reportRegistry: registry
       }))).then(function () {
         if (!isCurrent()) return false;
         return true;

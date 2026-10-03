@@ -25,19 +25,17 @@ export function resolveManagedDocsViewerDocumentHref(href, options = {}) {
   var docId = cleanText(targetUrl.searchParams.get("doc"));
   if (!options.publicViewerBaseUrl || !docId || targetUrl.origin !== currentUrl.origin
       || normalizedPathname(targetUrl.pathname) !== normalizedPathname(publicUrl.pathname)
-      || targetUrl.searchParams.has("scope") || targetUrl.searchParams.has("stage")) return "";
+      || targetUrl.searchParams.has("scope") || targetUrl.searchParams.has("stage") || targetUrl.searchParams.has("subdoc")) return "";
 
   var managedUrl;
   try {
     managedUrl = new URL(
-      viewerUrlForDocument(docId, { manage: true }),
+      viewerUrlForDocument(docId, { collection: targetUrl.searchParams.get("collection") || "" }),
       currentUrl
     );
   } catch (_error) {
     return "";
   }
-  var subdoc = cleanText(targetUrl.searchParams.get("subdoc"));
-  if (subdoc) managedUrl.searchParams.set("subdoc", subdoc);
   managedUrl.hash = targetUrl.hash;
   return managedUrl.pathname + managedUrl.search + managedUrl.hash;
 }

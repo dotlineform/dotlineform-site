@@ -1,7 +1,6 @@
 /** Own mounted tree rows; navigation changes markers/ancestors without replacing unrelated nodes. */
 export function initDocsViewerSidebarRenderer(context) {
   var documentIndex = context.documentIndex;
-  var selectedDocument = context.selectedDocument;
   var nav = context.nav;
   var toolbar = context.toolbar;
   var mountedRows = new Map();
@@ -73,7 +72,7 @@ export function initDocsViewerSidebarRenderer(context) {
   }
 
   function scrollSelectionIntoView() {
-    var mounted = mountedRows.get(selectedDocument.selectedDocId);
+    var mounted = mountedRows.get(documentIndex.indexSelectedDocId);
     if (!mounted || nav.closest("[hidden]")) return;
     var row = mounted.row.getBoundingClientRect();
     if (!row.height) return;
@@ -86,7 +85,7 @@ export function initDocsViewerSidebarRenderer(context) {
 
   /** Track even while hidden; showing the tree only needs the separate scroll operation. */
   function trackSelection() {
-    var docId = selectedDocument.selectedDocId;
+    var docId = documentIndex.indexSelectedDocId;
     expandTrail(docId);
     if (markedDocId !== docId) markSelection(markedDocId, false);
     markSelection(docId, true);

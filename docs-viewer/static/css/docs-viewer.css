@@ -1376,7 +1376,7 @@ main.container:has(> .docsViewer){
   outline-offset: 2px;
 }
 
-.docsViewer__content[data-docs-content-detail-active="true"] > :not([data-docs-content-detail-view]){
+.docsViewer__documentMount[data-docs-content-detail-active="true"] > :not([data-docs-content-detail-view]){
   display: none !important;
 }
 

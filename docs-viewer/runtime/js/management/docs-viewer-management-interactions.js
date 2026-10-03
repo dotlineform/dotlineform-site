@@ -3,7 +3,6 @@ export function createDocsViewerManagementInteractionController(options) {
   var documentIndex = options.documentIndex || {};
   var management = options.management || {};
   var routeSession = options.routeSession || {};
-  var selectedDocument = options.selectedDocument || {};
   var refs = options.refs || {};
   var callbacks = options.callbacks || {};
   var contextMenu = refs.contextMenu || document.getElementById("docsViewerContextMenu");
@@ -122,10 +121,6 @@ export function createDocsViewerManagementInteractionController(options) {
     if (callbacks.onEditDoc) callbacks.onEditDoc(normalizedDocId);
   }
 
-  function requestEditSelectedDoc() {
-    requestEditDoc(selectedDocument.selectedDocId);
-  }
-
   function handleRootClick(event) {
     if (contextMenu && !event.target.closest("#docsViewerContextMenu")) {
       hideContextMenu();
@@ -163,11 +158,11 @@ export function createDocsViewerManagementInteractionController(options) {
 
     nav.addEventListener("click", function (event) {
       if (event.detail >= 2 && !event.target.closest("[data-toggle-doc-id]")) {
-        if (editFromIndexEnabled() && documentIndex.docsById.has(selectedDocument.selectedDocId)) {
+        if (editFromIndexEnabled() && documentIndex.docsById.has(event.target.closest("[data-doc-row-id]")?.dataset.docRowId)) {
           suppressNextClick = false;
           event.preventDefault();
           event.stopPropagation();
-          requestEditSelectedDoc();
+          requestEditDoc(event.target.closest("[data-doc-row-id]").dataset.docRowId);
           return;
         }
       }
@@ -179,11 +174,11 @@ export function createDocsViewerManagementInteractionController(options) {
 
     nav.addEventListener("mousedown", function (event) {
       if (event.button === 0 && event.detail >= 2 && !event.target.closest("[data-toggle-doc-id]")) {
-        if (editFromIndexEnabled() && documentIndex.docsById.has(selectedDocument.selectedDocId)) {
+        if (editFromIndexEnabled() && documentIndex.docsById.has(event.target.closest("[data-doc-row-id]")?.dataset.docRowId)) {
           suppressNextClick = true;
           event.preventDefault();
           event.stopPropagation();
-          requestEditSelectedDoc();
+          requestEditDoc(event.target.closest("[data-doc-row-id]").dataset.docRowId);
           return;
         }
       }
@@ -214,9 +209,9 @@ export function createDocsViewerManagementInteractionController(options) {
       if (event.target.closest("[data-toggle-doc-id]")) return;
       var row = event.target.closest("[data-doc-row-id]");
       if (!row || !editFromIndexEnabled()) return;
-      if (!documentIndex.docsById.has(selectedDocument.selectedDocId)) return;
+      if (!documentIndex.docsById.has(event.target.closest("[data-doc-row-id]")?.dataset.docRowId)) return;
       event.preventDefault();
-      requestEditSelectedDoc();
+      requestEditDoc(row.dataset.docRowId);
     });
 
   }

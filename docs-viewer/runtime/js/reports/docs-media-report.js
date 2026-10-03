@@ -21,7 +21,7 @@ function clearNode(node) {
 function replaceRouteParams(mutator) {
   const url = new URL(window.location.href);
   mutator(url.searchParams);
-  window.history.replaceState({}, "", url.pathname + url.search + url.hash);
+  window.history.replaceState(window.history.state, "", url.pathname + url.search + url.hash);
 }
 
 function readRouteSort() {
@@ -340,7 +340,29 @@ export function mountDocsMediaReport(context) {
     sourceRows: []
   }, nodes);
   renderHead(state);
+  if (context.registerRetainedView) context.registerRetainedView({
+    id: "docs-media",
+    capture: function () { return { query: state.searchText, key: state.sortKey, direction: state.sortDir }; },
+    restore: function (saved) {
+      if (state.searchText === saved.query && state.sortKey === saved.key && state.sortDir === saved.direction) return;
+      state.searchText = saved.query; state.sortKey = saved.key; state.sortDir = saved.direction;
+      state.searchInputNode.value = saved.query;
+      renderRows(state); updateControls(state);
+    }
+  });
   attachEvents(state);
+  if (context.collectionProvider && context.collectionProvider.subscribeDocumentChanges) context.collectionProvider.subscribeDocumentChanges(function (change) {
+    if (!context.reportRoot.isConnected) return;
+    var changed = false;
+    state.sourceRows.forEach(function (row) {
+      var matches = function (record) { return record.target.docId === change.target.doc_id && record.target.collection === (change.target.collection || ""); };
+      if (row.documents.some(function (record) { return matches(record) && (change.deleted || record.title !== change.record.title); })) changed = true;
+      row.documents = row.documents.filter(function (record) { return !change.deleted || !matches(record); }).map(function (record) {
+        return matches(record) ? Object.assign({}, record, { title: change.record.title }) : record;
+      });
+    });
+    if (changed) { renderRows(state); updateControls(state); }
+  });
   updateControls(state);
   if (!context.managementContext) {
     state.statusNode.textContent = "Docs Media requires Working.";

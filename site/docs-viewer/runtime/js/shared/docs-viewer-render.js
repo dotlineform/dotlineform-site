@@ -12,7 +12,7 @@ export function escapeHtml(value) {
  * @property {string} docId Exact document ID within the ordinary or named collection.
  * @property {string} collection Empty for an ordinary document.
  * @property {string} title Link label; titles are not identity.
- * @property {string} href Reader-owned route, including any collection subdoc.
+ * @property {string} href Reader-owned route, including exact collection identity.
  * @property {string} iconUrl Loaded configured collection artwork, or empty for dlf-doc.
  */
 

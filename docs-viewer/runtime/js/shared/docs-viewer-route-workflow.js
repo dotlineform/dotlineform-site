@@ -1,483 +1,260 @@
-import {
-  normalizeDocIdSet
-} from "./docs-viewer-tree.js";
-import {
-  applyViewerRoute,
-  buildViewerUrl,
-  buildViewerUrlForDocument,
-  handleViewerPopstate,
-  loadViewerDoc,
-  resolveViewerRouteDocId,
-  routeFromAnchorHref,
-  setViewerHistory
-} from "./docs-viewer-router.js";
+import { normalizeDocIdSet } from "./docs-viewer-tree.js";
+import { buildViewerUrl, routeFromAnchorHref } from "./docs-viewer-router.js";
+import { documentTarget, documentTargetKey } from "./docs-viewer-document-target.js";
+import { createDocsViewerNavigation } from "./docs-viewer-navigation.js";
 
-function currentValue(value) {
-  return typeof value === "function" ? value() : value;
-}
+function currentValue(value) { return typeof value === "function" ? value() : value; }
 
-function createRouteWorkflowStateBridge(inputs) {
-  var routeSession = inputs.routeSession || {};
-  var documentIndex = inputs.documentIndex || {};
-  var selectedDocument = inputs.selectedDocument || {};
-  var searchRecent = inputs.searchRecent || {};
-
-  return {
-    get managementContext() { return Boolean(routeSession.managementContext); },
-    set managementContext(value) { routeSession.managementContext = Boolean(value); },
-    get allDocs() { return documentIndex.allDocs || []; },
-    set allDocs(value) { documentIndex.allDocs = value; },
-    get docs() { return documentIndex.docs || []; },
-    set docs(value) { documentIndex.docs = value; },
-    get docsById() { return documentIndex.docsById || new Map(); },
-    set docsById(value) { documentIndex.docsById = value; },
-    get expandedDocIds() { return documentIndex.expandedDocIds || new Set(); },
-    set expandedDocIds(value) { documentIndex.expandedDocIds = value; },
-    get nonLoadableDocIds() { return documentIndex.nonLoadableDocIds || new Set(); },
-    set nonLoadableDocIds(value) { documentIndex.nonLoadableDocIds = value; },
-    get manageOnlyTreeRootIds() { return documentIndex.manageOnlyTreeRootIds || new Set(); },
-    set manageOnlyTreeRootIds(value) { documentIndex.manageOnlyTreeRootIds = value; },
-    get selectedDocId() { return selectedDocument.selectedDocId || ""; },
-    set selectedDocId(value) { selectedDocument.selectedDocId = value; },
-    get payloadCache() { return selectedDocument.payloadCache || new Map(); },
-    set payloadCache(value) { selectedDocument.payloadCache = value; },
-    get requestId() { return selectedDocument.requestId || 0; },
-    set requestId(value) { selectedDocument.requestId = value; },
-    get reloadNonce() { return selectedDocument.reloadNonce || ""; },
-    set reloadNonce(value) { selectedDocument.reloadNonce = value; },
-    get reloadExpectedDocId() { return selectedDocument.reloadExpectedDocId || ""; },
-    set reloadExpectedDocId(value) { selectedDocument.reloadExpectedDocId = value; },
-    get searchQuery() { return searchRecent.searchQuery || ""; },
-  };
-}
-
+/** The common reader resolves exact targets; view owners retain their models. */
 export function initDocsViewerRouteWorkflow(context) {
-  var state = createRouteWorkflowStateBridge({
-    routeSession: context.routeSession,
-    documentIndex: context.documentIndex,
-    selectedDocument: context.selectedDocument,
-    searchRecent: context.searchRecent
-  });
   var window = context.window;
-  var root = context.root;
-  var content = context.content;
-  var statusCommands = context.statusCommands || {};
+  var index = context.documentIndex;
+  var selected = context.selectedDocument;
+  var search = context.searchRecent;
   var loadedIndex = "";
-  var indexRefreshTimer = null;
-  var indexRefreshRunning = false;
+  var timer = null;
+  var refreshing = false;
   var displayedHash = "";
+  var initialized = false;
+  var pendingDocumentOpen = null;
+  var navigation;
 
-  function viewerBaseUrl() {
-    return currentValue(context.viewerBaseUrl);
-  }
-
-  function viewerPathname() {
-    return currentValue(context.viewerPathname);
-  }
-
+  function currentDocId() { return new URLSearchParams(window.location.search).get("doc") || ""; }
+  function currentHash() { return window.location.hash.slice(1); }
+  function currentQuery() { return (new URLSearchParams(window.location.search).get("q") || "").trim(); }
+  function managementUiEnabled() { return Boolean(currentValue(context.managementUiEnabled)); }
+  function setStatus(message, error) { context.statusCommands.setStatus(message, error); }
   function preservedQueryParams() {
-    var names = currentValue(context.preserveQueryParams);
-    var current = new URLSearchParams(window.location.search);
-    var preserved = {};
-    (Array.isArray(names) ? names : []).forEach(function (name) {
-      var value = current.get(name);
-      if (value) preserved[name] = value;
-    });
-    return preserved;
-  }
-
-  function defaultRouteDocId() {
-    return currentValue(context.defaultRouteDocId) || "";
-  }
-
-  function managementUiEnabled() {
-    return Boolean(currentValue(context.managementUiEnabled));
-  }
-
-  function setStatus(message, isError) {
-    if (typeof statusCommands.setStatus === "function") {
-      statusCommands.setStatus(message, isError);
-    }
-  }
-
-  function startBusy() {
-    if (typeof statusCommands.startBusy === "function") {
-      return statusCommands.startBusy();
-    }
-    return function () {};
-  }
-
-  function currentDocId() {
-    return new URLSearchParams(window.location.search).get("doc") || "";
-  }
-
-  function currentHash() {
-    return window.location.hash ? window.location.hash.slice(1) : "";
-  }
-
-  function currentQuery() {
-    return (new URLSearchParams(window.location.search).get("q") || "").trim();
-  }
-
-  function currentReportRouteParams(docId) {
     var params = new URLSearchParams(window.location.search);
-    if ((params.get("doc") || "") !== docId) return {};
-    var subdoc = (params.get("subdoc") || "").trim();
-    return subdoc ? { subdoc: subdoc } : {};
-  }
-
-  function hasDisallowedModeInUrl() {
-    return new URLSearchParams(window.location.search).has("mode");
-  }
-
-  function viewerUrl(docId, hash, query, reportParams) {
-    return buildViewerUrl({
-      docId: docId,
-      hash: hash,
-      origin: window.location.origin,
-      preservedQueryParams: preservedQueryParams(),
-      query: query,
-      reportParams: reportParams,
-      viewerBaseUrl: viewerBaseUrl(),
+    var result = {};
+    (currentValue(context.preserveQueryParams) || []).forEach(function (name) {
+      if (params.get(name)) result[name] = params.get(name);
     });
+    return result;
   }
-
-  function viewerUrlForDocument(docId) {
-    return buildViewerUrlForDocument({
-      docId: docId,
-      origin: window.location.origin,
-      viewerBaseUrl: viewerBaseUrl()
-    });
+  function viewerUrl(docId, hash, query, targetOptions = {}) {
+    return buildViewerUrl({ docId: docId, collection: targetOptions.collection || "", hash: hash,
+      query: query, origin: window.location.origin, preservedQueryParams: preservedQueryParams(),
+      viewerBaseUrl: currentValue(context.viewerBaseUrl) });
   }
-
-  function setHistory(docId, hash, query, mode, reportParams) {
-    setViewerHistory({
-      docId: docId,
-      hash: hash,
-      history: window.history,
-      mode: mode,
-      origin: window.location.origin,
-      preservedQueryParams: preservedQueryParams(),
-      query: query,
-      reportParams: reportParams || currentReportRouteParams(docId),
-      indexViewId: context.activeIndexViewId(),
-      viewerBaseUrl: viewerBaseUrl(),
-    });
+  function viewerUrlForDocument(docId, options = {}) { return viewerUrl(docId, "", "", options); }
+  function routeFromAnchor(anchor) {
+    return routeFromAnchorHref(anchor.href, { currentHref: window.location.href,
+      origin: window.location.origin, viewerPathname: currentValue(context.viewerPathname) });
   }
-
-  /** Change only Index history, retaining the exact current document, child and hash. */
-  function updateIndexHistory(query, indexViewId, mode) {
-    setViewerHistory({
-      docId: currentDocId() || state.selectedDocId,
-      hash: currentHash(),
-      query: query,
-      indexViewId: indexViewId,
-      reportParams: currentReportRouteParams(currentDocId()),
-      history: window.history,
-      mode: mode,
-      origin: window.location.origin,
-      preservedQueryParams: preservedQueryParams(),
-      viewerBaseUrl: viewerBaseUrl()
-    });
+  function requestedTarget() {
+    var route = routeFromAnchor({ href: window.location.href });
+    if (route && route.error) throw new Error(route.error);
+    return route ? route.target : documentTarget({ doc_id: currentValue(context.defaultRouteDocId) || context.defaultDocId() }, { review: currentValue(context.viewerPathname) === "/docs-review/" });
   }
-
-  function isCurrentDocumentRoute(docId, hash) {
-    if (state.reloadExpectedDocId || state.selectedDocId !== docId || context.selectedDocument.displayedDocId !== docId
-      || !context.selectedDocument.displayedPayload || displayedHash !== hash) return false;
-    var report = context.managedDocumentContext();
-    var subdoc = currentReportRouteParams(docId).subdoc || "";
-    if (subdoc) return Boolean(report && report.documentTarget && report.documentTarget.doc_id === subdoc);
-    return !report || report.state !== "detail";
-  }
-
-  function resolveDocId() {
-    return resolveViewerRouteDocId({
-      requestedDocId: currentDocId(),
-      docsById: state.docsById,
-      defaultRouteDocId: defaultRouteDocId(),
-      resolveLoadableDocId: context.resolveLoadableDocId,
-      defaultDocId: context.defaultDocId
-    });
-  }
-
-  function clearManagementMessageForDocChange(docId) {
-    if (typeof context.clearManagementMessageForDocChange === "function") {
-      context.clearManagementMessageForDocChange(docId);
+  function capturePositions() {
+    var positions = [];
+    for (var node = context.activeMount(); node; node = node.parentElement) {
+      positions.push({ node: node, top: node.scrollTop, left: node.scrollLeft });
     }
+    context.root.querySelectorAll(".docsViewer__nav, .docsViewer__results, [data-docs-viewer-index-panel]").forEach(function (node) {
+      positions.push({ node: node, top: node.scrollTop, left: node.scrollLeft });
+    });
+    return positions;
   }
-
-  function fetchDocPayload(doc, docId) {
-    var stopBusy = startBusy();
-    return context.collectionProvider.readDocument(doc, {
-      docId: docId
-    }).finally(stopBusy);
+  async function capture() {
+    return { document: context.captureDocument(), hash: displayedHash,
+      indexDocId: index.indexSelectedDocId, expanded: new Set(index.expandedDocIds),
+      query: search.searchQuery, count: search.searchVisibleCount, indexView: context.activeIndexViewId(),
+      positions: capturePositions(), x: window.scrollX, y: window.scrollY,
+      focus: context.root.ownerDocument.activeElement,
+      focusHref: context.root.ownerDocument.activeElement && context.root.ownerDocument.activeElement.href || "" };
   }
-
-  async function loadDoc(docId, options) {
-    if (!await context.confirmDocumentNavigation()) return null;
-    clearManagementMessageForDocChange(docId);
-    return loadViewerDoc({
-      docId: docId,
-      fetchPayload: fetchDocPayload,
-      handleMissingDoc: context.handleMissingDoc,
-      handlePayloadError: context.handlePayloadError,
-      hash: options && options.hash ? options.hash : "",
-      historyMode: options && options.historyMode ? options.historyMode : "push",
-      reportParams: options && options.reportParams ? options.reportParams : currentReportRouteParams(docId),
-      renderLoadingState: context.renderDocLoadingState,
-      renderPayload: function (doc, payload, hash) {
+  async function restore(record) {
+    if (!record) throw new Error("This navigation entry is unavailable.");
+    context.restoreDocument(record.document);
+    displayedHash = record.hash;
+    var treeChanged = index.indexSelectedDocId !== record.indexDocId || JSON.stringify(Array.from(index.expandedDocIds).sort()) !== JSON.stringify(Array.from(record.expanded).sort());
+    index.indexSelectedDocId = index.docsById.has(record.indexDocId) ? record.indexDocId : "";
+    index.expandedDocIds = new Set(Array.from(record.expanded).filter(function (docId) { return index.docsById.has(docId); }));
+    search.searchVisibleCount = record.count;
+    search.searchQuery = record.query;
+    if (treeChanged) context.renderSidebar();
+    context.syncIndexRoute(record.query, record.indexView);
+    record.positions.forEach(function (position) {
+      if (position.node.isConnected) { position.node.scrollTop = position.top; position.node.scrollLeft = position.left; }
+    });
+    window.scrollTo(record.x, record.y);
+    var focus = record.focus && record.focus.isConnected ? record.focus :
+      Array.from(context.root.querySelectorAll("a[href]")).find(function (node) { return record.focusHref && node.href === record.focusHref && !node.closest("[hidden]"); });
+    if (focus) focus.focus({ preventScroll: true });
+  }
+  async function open(destination) {
+    displayedHash = destination.hash || "";
+    var target = destination.target;
+    if (destination.indexDocId) {
+      index.indexSelectedDocId = destination.indexDocId;
+      context.trackSidebarSelection();
+    }
+    if (context.restoreRetainedDocument(target, displayedHash)) return target;
+    selected.documentTarget = target;
+    selected.displayedRecord = null;
+    selected.displayedPayload = null;
+    var request = ++selected.requestId;
+    context.renderDocLoadingState({ doc_id: target.doc_id, collection: target.collection || "" });
+    var stop = context.statusCommands.startBusy();
+    try {
+      var payload = await context.collectionProvider.readDocument(target);
+      if (request !== selected.requestId) return null;
+      if (!payload || payload.doc_id !== target.doc_id) throw new Error("Document payload did not match its exact target.");
+      var policy = target.collection ? {} : index.docsById.get(target.doc_id) || {};
+      var doc = Object.assign({}, policy, payload, target);
+      selected.payloadCache.set(documentTargetKey(target), payload);
+      await context.renderPayload(doc, payload, displayedHash);
+      return target;
+    } catch (error) {
+      context.handlePayloadError(error);
+      return null;
+    } finally { stop(); }
+  }
+  navigation = createDocsViewerNavigation({ window: window, capture: capture,
+    prepare: context.prepareDocumentNavigation,
+    retain: function (records) { context.retainDocuments(records.map(function (record) { return record.document; })); },
+    confirm: context.confirmDocumentNavigation, open: open, restore: restore,
+    projectBack: context.projectBack, reportError: function (error) { setStatus(error.message, true); } });
+  function loadDoc(value, options = {}) {
+    var target = documentTarget(typeof value === "string" ? { doc_id: value, collection: options.collection || "" } : value, { review: currentValue(context.viewerPathname) === "/docs-review/" });
+    var key = documentTargetKey(target);
+    if (pendingDocumentOpen) return pendingDocumentOpen.key === key ? pendingDocumentOpen.promise : Promise.resolve(null);
+    var hash = options.hash || "";
+    if (selected.documentTarget && documentTargetKey(target) === documentTargetKey(selected.documentTarget) && !options.force) {
+      return (async function () {
+        if (!await context.confirmDocumentNavigation()) return null;
+        await context.prepareDocumentNavigation();
+        if (options.indexDocId) { index.indexSelectedDocId = options.indexDocId; context.trackSidebarSelection(); }
         displayedHash = hash;
-        context.renderPayload(doc, payload, hash);
-      },
-      resolveLoadableDocId: context.resolveLoadableDocId,
-      setHistory: setHistory,
-      trackSidebarSelection: context.trackSidebarSelection,
-      state: state
+        navigation.replaceUrl(viewerUrl(target.doc_id, hash, search.searchQuery, target));
+        context.scrollToHash(hash);
+        await navigation.update();
+        return target;
+      })();
+    }
+    var promise = navigation.open({ target: target, hash: hash, indexDocId: options.indexDocId,
+      url: viewerUrl(target.doc_id, hash, search.searchQuery, target) }, { replace: options.historyMode === "replace" });
+    pendingDocumentOpen = { key: key, promise: promise };
+    return promise.finally(function () {
+      if (pendingDocumentOpen && pendingDocumentOpen.promise === promise) pendingDocumentOpen = null;
     });
   }
-
-  function applyCurrentRoute(options) {
-    var result = applyViewerRoute({
-      currentDocId: currentDocId,
-      currentHash: currentHash,
-      currentQuery: currentQuery,
-      defaultDocId: context.defaultDocId,
-      defaultRouteDocId: defaultRouteDocId(),
-      hasDisallowedModeInUrl: hasDisallowedModeInUrl,
-      hash: options && options.hash ? options.hash : "",
-      historyMode: options && options.historyMode ? options.historyMode : "push",
-      loadDoc: loadDoc,
-      managementContextActive: managementUiEnabled,
-      isCurrentDocumentRoute: isCurrentDocumentRoute,
-      syncIndexRoute: function (query) {
-        context.syncIndexRoute(query, window.history.state && window.history.state.indexViewId);
-      },
-      resolveLoadableDocId: context.resolveLoadableDocId,
-      setHistory: setHistory,
-      setStatus: setStatus,
-      state: state,
-    });
-    return result.loading || result;
+  async function openPresentation(targetContext) {
+    if (!await context.confirmDocumentNavigation()) return null;
+    await context.prepareDocumentNavigation();
+    await navigation.update();
+    return context.openPresentation(targetContext);
   }
-
+  async function returnToDocument() {
+    await context.returnToDocument();
+    await navigation.update();
+  }
+  function updateNavigation() {
+    if (context.activeViewState().activeViewId === "rendered-document") return navigation.update();
+    return Promise.resolve();
+  }
+  function updateIndexHistory(query) {
+    var target = selected.documentTarget;
+    if (target) navigation.replaceUrl(viewerUrl(target.doc_id, displayedHash, query, target));
+    updateNavigation();
+  }
+  async function applyCurrentRoute() {
+    try {
+      var target = requestedTarget();
+      if (!initialized) {
+        initialized = true;
+        context.syncIndexRoute(currentQuery());
+        return await navigation.initialize({ target: target, hash: currentHash(),
+          indexDocId: !target.collection && index.docsById.has(target.doc_id) ? target.doc_id : "",
+          url: viewerUrl(target.doc_id, currentHash(), currentQuery(), target) });
+      }
+      return await loadDoc(target, { hash: currentHash(), historyMode: "replace", force: true });
+    } catch (error) { context.handlePayloadError(error); return null; }
+  }
   function replaceIndex(payload) {
     loadedIndex = JSON.stringify(payload);
-    state.managementContext = managementUiEnabled();
-    var viewerOptions = payload && payload.viewer_options && typeof payload.viewer_options === "object"
-      ? payload.viewer_options
-      : {};
-    state.nonLoadableDocIds = normalizeDocIdSet(viewerOptions.non_loadable_doc_ids, []);
-    state.manageOnlyTreeRootIds = normalizeDocIdSet(viewerOptions.manage_only_tree_root_ids, []);
-    state.allDocs = Array.isArray(payload.docs) ? payload.docs.slice() : [];
+    context.routeSession.managementContext = managementUiEnabled();
+    var options = payload.viewer_options || {};
+    index.nonLoadableDocIds = normalizeDocIdSet(options.non_loadable_doc_ids, []);
+    index.manageOnlyTreeRootIds = normalizeDocIdSet(options.manage_only_tree_root_ids, []);
+    index.allDocs = Array.isArray(payload.docs) ? payload.docs.slice() : [];
     context.applyDocVisibility();
     context.renderSidebar();
   }
-
-  function initializeIndex(payload) {
-    replaceIndex(payload);
-
-    if (state.docs.length === 0) {
-      setStatus("No docs available.", true);
-      return;
-    }
-
-    return applyCurrentRoute({ historyMode: "replace", hash: currentHash() });
-  }
-
-  function workingPollIsIdle() {
-    return managementUiEnabled() && !root.ownerDocument.hidden
-      && root.dataset.managementBusy !== "true" && root.dataset.documentDisplayMode !== "markdown-source";
-  }
-
+  function idle() { return managementUiEnabled() && !context.root.ownerDocument.hidden
+    && context.root.dataset.managementBusy !== "true" && context.activeViewState().activeModeId === "rendered-document"; }
   async function refreshDisplayedDocument() {
-    var displayed = context.selectedDocument;
-    var docId = displayed.displayedDocId;
-    var requestId = state.requestId;
-    var href = window.location.href;
-    var report = context.managedDocumentContext();
-    function current() {
-      var view = context.activeViewState();
-      return workingPollIsIdle() && view.activeModeId === "rendered-document"
-        && view.activeViewId === "rendered-document" && state.requestId === requestId
-        && displayed.displayedDocId === docId && state.selectedDocId === docId
-        && window.location.href === href;
-    }
-    if (!docId || !current()) return;
-    if (report && report.state === "detail" && report.documentTarget) {
-      if (typeof report.refreshDisplayedDocument === "function") {
-        await report.refreshDisplayedDocument(report.documentTarget, current);
-      }
-      return;
-    }
-    var doc = state.docsById.get(docId);
-    if (!doc) return;
-    var payload = await context.collectionProvider.readDocument(doc, { docId: docId });
-    if (!current() || JSON.stringify(payload) === JSON.stringify(displayed.displayedPayload)) return;
-    state.payloadCache.set(docId, payload);
-    context.refreshRenderedPayload(doc, payload);
+    var target = selected.documentTarget;
+    if (!target || !selected.displayedPayload || context.activeViewState().activeViewId !== "rendered-document") return;
+    var request = selected.requestId;
+    var payload = await context.collectionProvider.readDocument(target);
+    if (!idle() || request !== selected.requestId || target !== selected.documentTarget
+      || context.activeViewState().activeViewId !== "rendered-document") return;
+    if (JSON.stringify(payload) === JSON.stringify(selected.displayedPayload)) return;
+    selected.payloadCache.set(documentTargetKey(target), payload);
+    context.refreshRenderedPayload(Object.assign({}, selected.displayedRecord, payload, target), payload);
   }
-
-  // Read existing generated outputs. Neither refresh path participates in Source Save.
   async function refreshWorkingIndex() {
-    if (indexRefreshRunning || !workingPollIsIdle()) return;
-    indexRefreshRunning = true;
+    if (refreshing || !idle()) return;
+    refreshing = true;
     try {
-      var results = await Promise.allSettled([
-        context.collectionProvider.readIndex(), refreshDisplayedDocument()
-      ]);
-      if (!workingPollIsIdle()) return;
-      var index = results[0];
-      if (index.status === "fulfilled" && JSON.stringify(index.value) !== loadedIndex) {
-        state.payloadCache.clear();
-        replaceIndex(index.value);
-        var displayed = context.selectedDocument;
-        if (displayed.displayedPayload && displayed.displayedDocId === state.selectedDocId) {
-          state.payloadCache.set(displayed.displayedDocId, displayed.displayedPayload);
-        }
-        context.renderManagementUi();
+      var results = await Promise.allSettled([context.collectionProvider.readIndex(), refreshDisplayedDocument()]);
+      if (!idle()) return;
+      if (results[0].status === "fulfilled" && JSON.stringify(results[0].value) !== loadedIndex) {
+        replaceIndex(results[0].value); context.renderManagementUi();
       }
-      results.forEach(function (result) {
-        if (result.status === "rejected") throw result.reason;
-      });
-    } catch (error) {
-      setStatus(error.message || "Could not refresh Working generated output.", true);
-    } finally {
-      indexRefreshRunning = false;
-    }
+      results.forEach(function (result) { if (result.status === "rejected") throw result.reason; });
+    } catch (error) { setStatus(error.message, true); } finally { refreshing = false; }
   }
-
-  function startIndexRefresh() {
-    if (indexRefreshTimer === null && managementUiEnabled()) {
-      indexRefreshTimer = window.setInterval(refreshWorkingIndex, 2000);
-    }
+  async function loadIndex(options = {}) {
+    var stop = context.statusCommands.startBusy();
+    try {
+      replaceIndex(await context.collectionProvider.readIndex());
+      if (timer === null && managementUiEnabled()) timer = window.setInterval(refreshWorkingIndex, 2000);
+      if (!options.preserveDocument) return await applyCurrentRoute();
+    } finally { stop(); }
   }
-
-  window.addEventListener("pagehide", function () {
-    window.clearInterval(indexRefreshTimer);
-    indexRefreshTimer = null;
-  });
-  window.addEventListener("pageshow", startIndexRefresh);
-
-  function loadIndex(options = {}) {
-    var stopBusy = startBusy();
-    return context.collectionProvider.readIndex()
-      .then(function (payload) {
-        startIndexRefresh();
-        if (options.preserveDocument) {
-          state.payloadCache.clear();
-          replaceIndex(payload);
-          var displayed = context.selectedDocument;
-          if (state.docsById.has(state.selectedDocId)) {
-            if (displayed.displayedPayload && displayed.displayedDocId === state.selectedDocId) {
-              state.payloadCache.set(displayed.displayedDocId, displayed.displayedPayload);
-            }
-            return;
-          }
-          return applyCurrentRoute({ historyMode: "replace", hash: currentHash() });
-        }
-        return initializeIndex(payload);
-      })
-      .catch(function (error) {
-        state.reloadExpectedDocId = "";
-        setStatus(error.message || "Failed to load docs index tree.", true);
-        if (!options.preserveDocument) {
-          context.hideDocPane();
-          if (content) content.textContent = "";
-        }
-        throw error;
-      })
-      .finally(function () {
-        stopBusy();
-      });
-  }
-
-  function routeFromAnchor(anchor) {
-    return routeFromAnchorHref(anchor.href, {
-      currentHref: window.location.href,
-      origin: window.location.origin,
-      viewerPathname: viewerPathname(),
-    });
-  }
-
   function shouldUseNativeNavigation(event, anchor) {
-    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
-      return true;
-    }
-    var target = anchor.getAttribute("target");
-    return Boolean((target && target !== "_self") || anchor.hasAttribute("download"));
+    return event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey
+      || anchor.hasAttribute("download") || Boolean(anchor.target && anchor.target !== "_self");
   }
-
   function bindRouteLinks() {
-    root.addEventListener("click", function (event) {
-      if (typeof context.handleManagementRootClick === "function" && context.handleManagementRootClick(event)) {
-        return;
-      }
+    ["input", "change"].forEach(function (eventName) { context.root.addEventListener(eventName, updateNavigation); });
+    context.root.addEventListener("click", function (event) {
+      if (event.target.closest("button, input")) window.setTimeout(updateNavigation, 0);
+      if (context.handleManagementRootClick && context.handleManagementRootClick(event)) return;
       var toggle = event.target.closest("[data-toggle-doc-id]");
-      if (toggle) {
-        var toggleDocId = toggle.dataset.toggleDocId;
-        context.toggleSidebarBranch(toggleDocId);
-        return;
-      }
-
+      if (toggle) { context.toggleSidebarBranch(toggle.dataset.toggleDocId); updateNavigation(); return; }
       var anchor = event.target.closest("a[href]");
-      if (!anchor) return;
-      if (shouldUseNativeNavigation(event, anchor)) return;
-
+      if (!anchor || shouldUseNativeNavigation(event, anchor)) return;
       var route = routeFromAnchor(anchor);
       if (!route) return;
-
       event.preventDefault();
       if (route.error) { setStatus(route.error, true); return; }
-      if (route.navigateUrl) {
-        window.location.assign(route.navigateUrl);
-        return;
-      }
-      loadDoc(route.docId, {
-        historyMode: "push",
-        hash: route.hash,
-        reportParams: route.reportParams || {}
-      });
+      var row = anchor.closest("[data-doc-row-id]");
+      loadDoc(route.target, { hash: route.hash, indexDocId: row && row.dataset.docRowId }).catch(function (error) { setStatus(error.message, true); });
     });
   }
-
-  function bindPopstate() {
-    window.addEventListener("popstate", function () {
-      handleViewerPopstate({
-        applyCurrentRoute: applyCurrentRoute,
-        cancelSearchDebounce: context.cancelSearchDebounce,
-        currentHash: currentHash,
-        docsAvailable: function () { return state.docs.length > 0; },
-        hideContextMenu: context.hideContextMenu,
-        reloadWindow: function () { window.location.reload(); },
-        setStatus: setStatus,
-      });
-    });
+  async function commitDeletedDocument(target) {
+    context.collectionProvider.commitDocumentChange({ target: target, deleted: true });
+    if (navigation.hasCaller()) { navigation.back(); return; }
+    await loadIndex({ preserveDocument: true });
+    var docId = context.defaultDocId();
+    if (docId) return loadDoc(docId, { historyMode: "replace", force: true });
+    context.hideDocPane();
   }
-
-  var commands = {
-    applyCurrentRoute: applyCurrentRoute,
-    loadDoc: loadDoc,
-    loadIndex: loadIndex,
-    resolveDocId: resolveDocId,
-    setHistory: setHistory,
-    updateIndexHistory: updateIndexHistory,
-    viewerUrl: viewerUrl,
-    viewerUrlForDocument: viewerUrlForDocument
-  };
-
-  return {
-    bindPopstate: bindPopstate,
-    bindRouteLinks: bindRouteLinks,
-    commands: commands,
-    currentDocId: currentDocId,
-    currentHash: currentHash,
-    currentQuery: currentQuery,
-    hasDisallowedModeInUrl: hasDisallowedModeInUrl,
-    initializeIndex: initializeIndex,
-    managementUiEnabled: managementUiEnabled,
-    routeFromAnchor: routeFromAnchor,
-    shouldUseNativeNavigation: shouldUseNativeNavigation,
-    viewerUrl: viewerUrl,
-    viewerUrlForDocument: viewerUrlForDocument
-  };
+  window.addEventListener("pagehide", function () { window.clearInterval(timer); timer = null; });
+  var commands = { applyCurrentRoute: applyCurrentRoute, loadDoc: loadDoc, loadIndex: loadIndex,
+    resolveDocId: currentDocId, updateIndexHistory: updateIndexHistory,
+    viewerUrl: viewerUrl, viewerUrlForDocument: viewerUrlForDocument,
+    openPresentation: openPresentation, returnToDocument: returnToDocument, back: navigation.back, hasCaller: navigation.hasCaller,
+    commitDeletedDocument: commitDeletedDocument };
+  return { commands: commands, bindPopstate: navigation.bind, bindRouteLinks: bindRouteLinks,
+    currentDocId: currentDocId, currentHash: currentHash, currentQuery: currentQuery,
+    hasDisallowedModeInUrl: function () { return new URLSearchParams(window.location.search).has("mode"); },
+    managementUiEnabled: managementUiEnabled, routeFromAnchor: routeFromAnchor,
+    shouldUseNativeNavigation: shouldUseNativeNavigation, viewerUrl: viewerUrl,
+    viewerUrlForDocument: viewerUrlForDocument };
 }

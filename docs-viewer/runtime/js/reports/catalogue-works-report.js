@@ -220,8 +220,7 @@ function loadCatalogueWorks(context) {
       || !workspace.viewerBaseUrl) throw new Error("Working Catalogue is not configured.");
     const origin = new URL(context.content.ownerDocument.baseURI).origin;
     const documentLinks = new Map(rows.map((row) => [row.workId, buildViewerUrl({
-      viewerBaseUrl: workspace.viewerBaseUrl, origin, docId: catalogue.reportHostDocId,
-      reportParams: { subdoc: row.workId }
+      viewerBaseUrl: workspace.viewerBaseUrl, origin, docId: row.workId, collection: "catalogue"
     })]));
     return { rows, documentLinks };
   });
@@ -572,6 +571,18 @@ export function mountCatalogueWorksReport(context) {
     sortKey: "work",
     sourceRows: []
   }, nodes);
+  if (context.registerRetainedView) context.registerRetainedView({
+    id: "catalogue-works",
+    capture: function () { return { query: state.searchText, key: state.sortKey, direction: state.sortDir, page: state.pageIndex }; },
+    restore: function (saved) {
+      if (state.searchText === saved.query && state.sortKey === saved.key && state.sortDir === saved.direction && state.pageIndex === saved.page) return;
+      clearTimeout(state.searchTimer); state.searchTimer = null;
+      state.searchText = saved.query; state.sortKey = saved.key; state.sortDir = saved.direction;
+      state.searchInputNode.value = saved.query;
+      state.projection = buildCatalogueWorksProjection(state.sourceRows, { searchText: state.searchText, sortKey: state.sortKey, sortDir: state.sortDir });
+      state.pageIndex = saved.page; renderCurrent(state);
+    }
+  });
   attachEvents(state);
   renderHead(state);
   state.tableNode.hidden = true;

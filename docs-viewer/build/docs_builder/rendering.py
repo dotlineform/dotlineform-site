@@ -102,8 +102,8 @@ class ContentRenderingMixin:
         if not path_part:
             return href
         values = parse_qs(parsed.query)
-        if path_part in {"/docs/", self.workspace.public_viewer_base_url} and ({"stage", "scope"} & values.keys()):
-            raise RuntimeError("Stage or scope-bearing Docs links are retired; update the source link before building")
+        if path_part in {"/docs/", self.workspace.public_viewer_base_url} and ({"stage", "scope", "subdoc"} & values.keys()):
+            raise RuntimeError("Stage, scope or subdoc-bearing Docs links are retired; update the source link before building")
         query_values = parse_qs(parsed.query)
         viewer_doc_id = (query_values.get("doc") or [""])[0]
         if viewer_doc_id and self.viewer_path_match(path_part, query_values):
@@ -113,12 +113,10 @@ class ContentRenderingMixin:
             target = docs_by_id.get(viewer_doc_id)
             if target:
                 rewritten = self.rendered_viewer_target_for(target.doc_id, parsed.fragment)
-                child_id = (query_values.get("subdoc") or [""])[0]
-                if child_id:
+                collection = (query_values.get("collection") or [""])[0]
+                if collection:
                     location = urlparse(rewritten)
-                    pairs = [(key, value) for key, value in parse_qsl(location.query) if key != "subdoc"]
-                    pairs.append(("subdoc", child_id))
-                    rewritten = location._replace(query=urlencode(pairs)).geturl()
+                    rewritten = location._replace(query=urlencode([*parse_qsl(location.query), ("collection", collection)])).geturl()
                 return html.escape(rewritten, quote=True)
         return href
 

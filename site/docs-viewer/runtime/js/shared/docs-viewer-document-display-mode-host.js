@@ -32,7 +32,7 @@ export function createDocsViewerDocumentDisplayModeHost(options) {
   var projectToolbar = typeof settings.projectToolbar === "function" ? settings.projectToolbar : noop;
   var showWarning = typeof settings.showWarning === "function" ? settings.showWarning : noop;
   var root = settings.root || null;
-  var mount = settings.mount || null;
+  function currentMount() { return typeof settings.mount === "function" ? settings.mount() : settings.mount || null; }
   var activeModeId = cleanString(settings.defaultModeId) || "rendered-document";
   var activeLifecycle = null;
 
@@ -70,7 +70,7 @@ export function createDocsViewerDocumentDisplayModeHost(options) {
   function unmountActive() {
     var lifecycle = activeLifecycle;
     activeLifecycle = null;
-    return callLifecycle(lifecycle, "unmount", modeContext({ mount: mount }));
+    return callLifecycle(lifecycle, "unmount", modeContext({ mount: currentMount() }));
   }
 
   function loadLifecycle(mode) {
@@ -88,7 +88,7 @@ export function createDocsViewerDocumentDisplayModeHost(options) {
     return callLifecycle(lifecycle, "mount", modeContext(Object.assign(
       {},
       contextOverrides || {},
-      { mount: mount }
+      { mount: currentMount() }
     )));
   }
 
@@ -107,7 +107,7 @@ export function createDocsViewerDocumentDisplayModeHost(options) {
       activeLifecycle &&
       typeof activeLifecycle.beforeLeave === "function" &&
       activeLifecycle.beforeLeave(modeContext({
-        mount: mount,
+        mount: currentMount(),
         requestedModeId: resolved.mode.id
       })) === false
     ) {
@@ -152,7 +152,7 @@ export function createDocsViewerDocumentDisplayModeHost(options) {
     activeModeId: function () { return activeModeId; },
     confirmNavigation: function () {
       return activeLifecycle && typeof activeLifecycle.confirmNavigation === "function"
-        ? activeLifecycle.confirmNavigation(modeContext({ mount: mount }))
+        ? activeLifecycle.confirmNavigation(modeContext({ mount: currentMount() }))
         : Promise.resolve(true);
     },
     modeContext: modeContext,

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260912-222051-9f4517
 title: Semantic Tokens In Links View - Delivery
 added_date: "2026-09-12 22:20:51"
-last_updated: "2026-09-13 15:12:51"
+last_updated: "2026-10-03 17:35:06"
 summary: Superseded media-entry proposal. Info Panel Related Links And Pinning now owns document-only semantic connections, compact Related links and pinning through to public presentation.
 ui_status: stopped
 parent_id: d-20260902-102745-8379ea
@@ -57,7 +57,7 @@ Selecting a media entry replaces Links View with the exact Work, Detail or Serie
 
 The outer action is **Back to Links** for this entry path. Restore the same Links presentation, scroll position and invoking entry focus without an intermediate document display. Links View's own **Back to document** then restores the original document or exact child and its original position. Existing navigation within a Series gallery keeps its current behavior and does not replace the outer Links return destination. Direct Media entry from document content continues to return to that document.
 
-Keep this return context within the existing hosted-view lifecycle and clear it when the owning document/child context is released. Failed or superseded media reads must not replace the selected Links presentation or restore a stale document context. This bounded nested return does not implement page-session data caching, browser Back/Forward, shareable URLs or a general navigation stack; [View Caching and History - Delivery](View_Caching_And_History_Delivery.md) owns those shared defaults. Reuse that delivery's owners if they have shipped before this work starts.
+Keep this return context within the existing hosted-view lifecycle and clear it when the owning document/child context is released. Failed or superseded media reads must not replace the selected Links presentation or restore a stale document context. This bounded nested return does not implement page-session data caching, browser Back/Forward, shareable URLs or a general navigation stack; [Runtime](Docs_Viewer_Runtime.md#exact-document-navigation-and-return) owns current shared browser-history restoration. The superseded View Caching and History delivery is retired; any future resource reuse or shareable URL work needs its own scope.
 
 ## Deliverables
 

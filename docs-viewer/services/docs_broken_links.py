@@ -13,10 +13,10 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import urlparse
 
 import docs_document_location as document_location
-from docs_document_identity import is_document_id, is_immutable_doc_id
+from docs_document_identity import is_document_id
 
 from docs_workspace_config import (
     DocsStageConfig,
@@ -97,24 +97,12 @@ def read_json(path: Path, label: str) -> dict[str, Any]:
 
 
 def target_payload_exists(target: dict[str, str], roots: dict[str, Path]) -> bool:
-    """Check the selected generated or accepted destination through its exact host."""
+    """Check the exact configured by-ID destination without reading its browse host."""
     doc_id = target["doc_id"]
-    if not is_immutable_doc_id(doc_id):
+    collection = target.get("collection", "")
+    if collection not in roots or not is_document_id(doc_id, collection=collection):
         return False
-    path = roots[""] / "by-id" / f"{doc_id}.json"
-    if not path.is_file():
-        return False
-    child_id = target.get("subdoc")
-    if not child_id:
-        return True
-    host = read_json(path, "destination report host")
-    report = host.get("report")
-    if not isinstance(report, dict) or report.get("id") != "docs_collection":
-        return False
-    collection = report.get("collection")
-    return bool(collection and collection in roots and is_document_id(child_id, collection=collection) and (
-        roots[collection] / "by-id" / f"{child_id}.json"
-    ).is_file())
+    return (roots[collection] / "by-id" / f"{doc_id}.json").is_file()
 
 
 def semantic_token_broken_entries(
@@ -232,7 +220,6 @@ def rendered_link_broken_entries(
 ) -> list[dict[str, Any]]:
     """Diagnose rendered document links while retaining the owning source identity."""
     entries: list[dict[str, Any]] = []
-    parent_id = parse_qs(urlparse(meta.viewer_url).query).get("doc", [""])[0] if meta.collection else ""
     for anchor in collect_anchors(content_html):
         raw_href = normalize_text(anchor.get("href"))
         if not raw_href:
@@ -252,7 +239,7 @@ def rendered_link_broken_entries(
         is_public = urlparse(resolved_href).path.rstrip("/") == workspace.public_viewer_base_url.rstrip("/")
         if not is_public and is_same_doc_fragment_link(
             current_doc_id=meta.doc_id,
-            current_parent_doc_id=parent_id,
+            current_collection=meta.collection,
             target=target,
         ):
             continue

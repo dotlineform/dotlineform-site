@@ -596,8 +596,7 @@ export function createDocsViewerMediaDetailAdapter() {
       catalogueLink.href = buildViewerUrl({
         viewerBaseUrl: viewerConfig.viewerBaseUrl,
         origin: new URL(documentRef.baseURI).origin,
-        docId: catalogue.reportHostDocId,
-        reportParams: { subdoc: work.target.id }
+        docId: work.target.id, collection: "catalogue"
       });
       catalogueLink.target = "_blank";
       catalogueLink.rel = "noopener noreferrer";

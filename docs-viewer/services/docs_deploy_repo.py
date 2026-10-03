@@ -616,8 +616,8 @@ def lineage_projections(
             raise ValueError(f"accepted collection {editorial.collection} has no accepted report host")
         publication_urls = {
             doc_id: (
-                f"{config.public_viewer_base_url}?doc={quote(child.report_host_doc_id)}"
-                f"&subdoc={quote(doc_id)}"
+                f"{config.public_viewer_base_url}?collection={quote(editorial.collection)}"
+                f"&doc={quote(doc_id)}"
             )
             for doc_id in sorted(accepted_ids)
         }

@@ -23,7 +23,7 @@ from docs_import_content import (  # noqa: E402
 from docs_import_media import materialize_import_media  # noqa: E402
 from docs_import_source_helpers import import_summary_text, relative_path, viewer_url_for  # noqa: E402
 from docs_import_source_interactive import materialize_interactive_html_assets  # noqa: E402
-from docs_management_document_target import ManagedDocumentCollection  # noqa: E402
+from docs_management_document_target import ManagedDocumentCollection, committed_document_record  # noqa: E402
 from docs_collection_customisations import (  # noqa: E402
     normalize_collection_customisation_import_front_matter,
 )
@@ -83,6 +83,7 @@ class ImportDocumentPlan:
     title: str
     parent_id: str
     import_preview: dict[str, Any]
+    committed_record: dict[str, Any]
     collection: str = ""
     target: SourceDoc | None = None
 
@@ -367,6 +368,7 @@ def plan_import_document(
         title=title,
         parent_id=parent_id,
         import_preview=preview,
+        committed_record=committed_document_record(front_matter, record.doc_id, document_config, collection=collection_id, parent_id=parent_id),
         collection=collection_id,
         target=target,
     )
@@ -480,12 +482,7 @@ def import_document_result(
     target = {"doc_id": plan.doc_id}
     if plan.collection:
         target["collection"] = plan.collection
-    record: dict[str, Any] = {
-        "doc_id": plan.doc_id,
-        "title": plan.title,
-    }
-    if not plan.collection:
-        record["parent_id"] = plan.parent_id
+    record = dict(plan.committed_record)
     result = {
         "operation": plan.operation,
         "doc_id": plan.doc_id,

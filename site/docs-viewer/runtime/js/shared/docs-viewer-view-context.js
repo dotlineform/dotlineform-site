@@ -1,3 +1,4 @@
+import { documentTargetKey } from "./docs-viewer-document-target.js";
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
 }
@@ -36,27 +37,20 @@ function normalizeMetadataInfo(value) {
   });
 }
 
-function activeManagedDocument(value, appContext) {
-  if (!appContext || appContext.kind !== "manage") return null;
+function activeManagedDocument(value) {
   var context = objectRecord(value);
   var target = objectRecord(context && context.documentTarget);
   var record = objectRecord(context && context.documentRecord);
-  var targetKeys = Object.keys(target || {}).sort();
   var collection = cleanString(target && target.collection).toLowerCase();
   var docId = cleanString(target && target.doc_id);
   if (
-    cleanString(context && context.state).toLowerCase() !== "detail"
-    || targetKeys.length !== 2
-    || targetKeys[0] !== "collection"
-    || targetKeys[1] !== "doc_id"
-    || !collection
-    || !docId
+    !target || !docId
     || cleanString(record && record.doc_id) !== docId
   ) return null;
   return Object.freeze({
     info: normalizeMetadataInfo(context.documentInfo),
     record: Object.freeze(Object.assign({}, record, { doc_id: docId })),
-    target: Object.freeze({  collection: collection, doc_id: docId })
+    target: Object.freeze(collection ? { collection: collection, doc_id: docId } : { doc_id: docId })
   });
 }
 
@@ -106,27 +100,26 @@ export function docsViewerStatusLabel(value, uiStatusByValue) {
 export function createDocsViewerHostedViewContext(options = {}) {
   const appContext = options.appContext || {};
   const managedDocument = activeManagedDocument(
-    options.managedDocumentContext,
-    appContext
+    options.managedDocumentContext
   );
   const selectedDoc = managedDocument
     ? managedDocument.record
     : options.selectedDoc || resolveDocsViewerSelectedDoc(options);
   const docId = selectedDoc ? cleanString(selectedDoc.doc_id) : "";
-  const payload = docId ? mapGet(options.payloadCache, docId) || null : null;
+  const payload = docId ? mapGet(options.payloadCache, documentTargetKey(managedDocument ? managedDocument.target : options.sourceTarget || { doc_id: docId })) || null : null;
   const selectedMetadata = selectedPayloadMetadata(
     managedDocument ? managedDocument.record : payload,
     appContext,
     docId
   );
-  const trail = selectedDoc && !managedDocument && typeof options.buildTrail === "function"
+  const trail = selectedDoc && !(managedDocument && managedDocument.target.collection) && typeof options.buildTrail === "function"
     ? options.buildTrail(docId).slice(0, -1)
     : [];
   const targetDocId = selectedDoc && !managedDocument && typeof options.viewerTargetDocId === "function"
     ? options.viewerTargetDocId(docId)
     : docId;
-  const canonicalUrl = selectedDoc && !managedDocument && typeof options.viewerUrl === "function"
-    ? options.viewerUrl(targetDocId)
+  const canonicalUrl = selectedDoc && typeof options.viewerUrl === "function"
+    ? options.viewerUrl(targetDocId, "", "", managedDocument ? managedDocument.target : {})
     : "";
 
   return {

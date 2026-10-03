@@ -121,6 +121,10 @@ export function createDocsViewerCollectionSelectionOwner(options = {}) {
       ));
     },
     snapshot: function () { return current; },
+    restore: function (saved, documents) {
+      if (!available()) return current;
+      return transition(reconcileDocsViewerSelection(createDocsViewerSelectionState(saved), documentIds(documents)));
+    },
     syncContext: syncContext,
     toggle: function (docId, checked) {
       if (!available()) return current;

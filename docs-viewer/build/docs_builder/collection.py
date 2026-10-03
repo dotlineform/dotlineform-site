@@ -75,10 +75,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
         return f"{self.output_url_base}/by-id/{quote(doc_id)}.json"
 
     def viewer_url_for(self, doc_id: str, anchor: str = "") -> str:
-        parent_doc_id = self.collection_config.report_host_doc_id
-        pairs: list[str] = []
-        pairs.append(f"doc={quote(parent_doc_id)}")
-        pairs.append(f"subdoc={quote(str(doc_id))}")
+        pairs = [f"collection={quote(self.collection_id)}", f"doc={quote(str(doc_id))}"]
         url = f"{self.viewer_base_url}?{'&'.join(pairs)}"
         return f"{url}#{anchor}" if anchor else url
 

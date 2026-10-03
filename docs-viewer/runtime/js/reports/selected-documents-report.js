@@ -6,8 +6,9 @@ export async function mountSelectedDocumentsReport(context) {
   if (!context.selectedUrl) throw new Error("Selected Documents data is not configured.");
   const response = await fetch(context.selectedUrl, { headers: { Accept: "application/json" }, cache: "no-cache" });
   if (!response.ok) throw new Error("Failed to load Selected Documents.");
-  const rows = selectedDocumentRows(await response.json());
+  let rows = selectedDocumentRows(await response.json());
   if (!root.isConnected) return false;
+  function render() {
   const list = documentRef.createElement("ul");
   list.className = "docsViewerReport__rows";
   rows.forEach(function (row) {
@@ -15,8 +16,7 @@ export async function mountSelectedDocumentsReport(context) {
     item.className = "docsViewerReport__row";
     const link = documentRef.createElement("a");
     link.className = "docsViewerReport__cellLink docsViewerReport__title";
-    const url = new URL(context.viewerUrlForDocument(row.collection ? row.report_doc_id : row.doc_id), documentRef.baseURI);
-    if (row.collection) url.searchParams.set("subdoc", row.doc_id);
+    const url = new URL(context.viewerUrlForDocument(row.doc_id, { collection: row.collection || "" }), documentRef.baseURI);
     link.href = url.href;
     link.textContent = row.title;
     item.appendChild(link);
@@ -29,5 +29,14 @@ export async function mountSelectedDocumentsReport(context) {
     note.textContent = "No selected documents.";
     root.replaceChildren(note);
   }
+  }
+  render();
+  if (context.collectionProvider && context.collectionProvider.subscribeDocumentChanges) context.collectionProvider.subscribeDocumentChanges(function (change) {
+    if (!root.isConnected) return;
+    rows = rows.filter(function (row) { return !change.deleted || row.doc_id !== change.target.doc_id || (row.collection || "") !== (change.target.collection || ""); }).map(function (row) {
+      return row.doc_id === change.target.doc_id && (row.collection || "") === (change.target.collection || "") ? Object.assign({}, row, change.record) : row;
+    });
+    render();
+  });
   return true;
 }

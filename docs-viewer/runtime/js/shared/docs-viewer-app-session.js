@@ -52,6 +52,9 @@ function createStateDefaults(settings) {
     childrenByParent: new Map(),
     payloadCache: new Map(),
     selectedDocId: "",
+    indexSelectedDocId: "",
+    documentTarget: null,
+    displayedRecord: null,
     displayedDocId: "",
     displayedPayload: null,
     expandedDocIds: new Set(),
@@ -148,6 +151,7 @@ function createStateDomains(state, settings) {
       "docs",
       "docsById",
       "childrenByParent",
+      "indexSelectedDocId",
       "expandedDocIds",
       "nonLoadableDocIds",
       "manageOnlyTreeRootIds"
@@ -155,6 +159,8 @@ function createStateDomains(state, settings) {
     selectedDocument: stateDomain("selectedDocument", "generated static data or local generated-read service", state, [
       "selectedDocId",
       "displayedDocId",
+      "documentTarget",
+      "displayedRecord",
       "displayedPayload",
       "payloadCache",
       "requestId",

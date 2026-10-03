@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260912-190906-d6da8f
 title: Media View Links And Series Galleries - Delivery
 added_date: "2026-09-12 19:09:06"
-last_updated: "2026-09-28 15:22:43"
+last_updated: "2026-10-03 17:35:06"
 summary: Complete Work, Detail and Series Media View links and Catalogue-backed Series galleries while preserving Work/Detail image authoring.
 ui_status: done
 parent_id: d-20260908-171728-3c539a
@@ -117,4 +117,4 @@ No document was deleted or archived. The supplied Series 143 demonstration was r
 
 [Catalogue Deployment](Catalogue_Deployment.md) retains the unimplemented public transfer. Its handoff now records Work and Series by-ID destinations and existing `<work_id>-thumb-96.webp` thumbnails under `site/assets/data/catalogue/`. Public runtime projection does not establish public data availability, and Catalogue distribution remains independent of document publication.
 
-[View Caching and History - Delivery](View_Caching_And_History_Delivery.md) retains shared page-session reuse and browser Back/Forward. Static export/Docs Review image preparation, associated-document actions and shareable Media View URLs remain separate outcomes. Network-performance budgets and neighbour prefetch are not claimed. None of these follow-ons may reintroduce a Series primary image or galleries in document content without changing the agreed direction.
+[Runtime](Docs_Viewer_Runtime.md#exact-document-navigation-and-return) owns browser Back/Forward and retained caller restoration. The superseded View Caching and History delivery is retired; wider resource reuse, static export/Docs Review image preparation, associated-document actions and shareable Media View URLs remain separate outcomes. Network-performance budgets and neighbour prefetch are not claimed. None of these follow-ons may reintroduce a Series primary image or galleries in document content without changing the agreed direction.

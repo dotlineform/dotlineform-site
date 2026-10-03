@@ -6,6 +6,7 @@
   "public_viewer_base_url": "/analysis/",
   "workspace": {
     "viewer_base_url": "/docs/",
+    "document_url_template": "/docs/doc?doc_id={doc_id}",
     "default_doc_id": "d-20260426-164043-e14f49",
     "media_root": "/docs/assets/media/",
     "index_tree_url": "/docs/index-tree",

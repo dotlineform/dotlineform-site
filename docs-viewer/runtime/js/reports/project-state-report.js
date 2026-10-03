@@ -97,7 +97,7 @@ function normalizeSeries(value) {
   ) {
     throw new Error("Project State Series membership is invalid.");
   }
-  return { target, title, href, workCount };
+  return { target, title, href, workCount, workIds: requireArray(value.work_ids, "Series Work IDs").slice() };
 }
 
 function normalizeRow(value) {
@@ -129,6 +129,9 @@ function normalizeRow(value) {
   }
   return {
     folder: { key, label, href },
+    works: requireArray(value.works, "Work memberships").map(function (work) {
+      return { workId: cleanString(work.target && work.target.target_id), seriesIds: requireArray(work.series_ids, "Work Series IDs").slice() };
+    }),
     documents,
     series,
     seriesIssues: requireArray(value.series_issues, "Series issues"),
@@ -467,6 +470,40 @@ function runReport(state) {
     });
 }
 
+/** Reproject committed Works metadata against the last explicit scan's memberships. */
+function commitDocumentChange(state, change) {
+  if (change.target.collection !== "works") return;
+  const subject = change.record && change.record.authoring_subject;
+  const docId = change.target.doc_id;
+  const existing = state.sourceRows.flatMap(function (row) { return row.documents; }).filter(function (record) { return record.target.doc_id === docId; });
+  if (change.deleted && !existing.length) return;
+  if (!change.deleted && existing.length && existing.every(function (record) {
+    return subject && record.title === change.record.title && record.declaredSubject.kind === subject.kind && record.declaredSubject.key === subject.key;
+  })) return;
+  let changed = false;
+  state.sourceRows.forEach(function (row) {
+    if (row.documents.some(function (record) { return record.target.doc_id === docId; })) changed = true;
+    row.documents = row.documents.filter(function (record) { return record.target.doc_id !== docId; });
+    let seriesIds = null;
+    const available = row.series.map(function (series) { return series.target.target_id; });
+    if (!change.deleted && subject) {
+      if (subject.kind === "folder" && subject.key === row.folder.key) seriesIds = available.slice().sort();
+      if (subject.kind === "work") {
+        const work = row.works.find(function (record) { return record.workId === subject.key; });
+        if (work) seriesIds = work.seriesIds.filter(function (id) { return available.includes(id); }).sort();
+      }
+      if (subject.kind === "series" && available.includes(subject.key)) seriesIds = [subject.key];
+    }
+    if (seriesIds) { changed = true; row.documents.push({ target: change.target, title: change.record.title,
+      href: state.context.viewerUrlForDocument(docId, { collection: "works" }),
+      declaredSubject: { kind: subject.kind, key: subject.key }, applicableSeriesIds: seriesIds }); }
+    row.documents.sort(function (left, right) { return left.title.localeCompare(right.title) || left.target.doc_id.localeCompare(right.target.doc_id); });
+    row.matchedDocumentCount = row.documents.length;
+    row.reconciliation = row.documents.length ? (row.matchedWorkCount ? "reconciled" : "documents_only") : (row.matchedWorkCount ? "works_only" : "folder_only");
+  });
+  if (changed) renderRows(state);
+}
+
 function clipboardWindow(state) {
   return state.context && state.context.window ? state.context.window : window;
 }
@@ -612,7 +649,15 @@ export function mountProjectStateReport(context) {
     sourceRows: []
   }, nodes);
   renderHead(state);
+  if (context.registerRetainedView) context.registerRetainedView({
+    id: "project-state",
+    capture: function () { return { query: state.searchText, group: state.groupBy, key: state.sortKey, direction: state.sortDir }; },
+    restore: function (saved) { if (state.searchText === saved.query && state.groupBy === saved.group && state.sortKey === saved.key && state.sortDir === saved.direction) return; state.searchText = saved.query; state.groupBy = saved.group; state.sortKey = saved.key; state.sortDir = saved.direction; state.searchInputNode.value = saved.query; renderRows(state); updateControls(state); }
+  });
   attachEvents(state);
+  if (context.collectionProvider && context.collectionProvider.subscribeDocumentChanges) context.collectionProvider.subscribeDocumentChanges(function (change) {
+    if (context.reportRoot.isConnected) commitDocumentChange(state, change);
+  });
   updateControls(state);
   return runReport(state);
 }

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-704641
 title: Source Editor Scripts
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-02 13:52:21"
+last_updated: "2026-10-03 16:57:58"
 parent_id: d-20260607-222033-2a494e
 ---
 # Docs Viewer Source Editor Scripts
@@ -57,7 +57,7 @@ Title, Summary and other valid authored fields are edited directly in the same b
 
 The exact splitter lives in `docs_source_model.py`, including the strict key/value and quoted-scalar checks used by Source and existing Import/Review consumers. It uses the maintained front-matter value grammar rather than YAML or a separate browser field parser. `source-buffer.js` locates only the body boundary for buffer contributions; it does not interpret metadata. The modal's write-free context request projects the current buffer's Subject through the service and the owning collection customisation.
 
-Source mounts beside the existing rendered DOM, which management CSS hides while editing. It does not detach the collection report or end its lifecycle. Successful Save removes the editor and returns to the existing rendered view immediately. [Runtime](Docs_Viewer_Runtime.md#automatic-working-refresh) owns the independent polling that later refreshes generated content and Info while retaining the report toolbar.
+Source mounts beside the existing rendered DOM inside the common reader's active `.docsViewer__documentMount`. Management CSS keeps that mount and the editor visible while hiding only the mount's rendered children; inactive retained document mounts stay hidden. It does not detach the collection report or end its lifecycle. Successful Save removes the editor and returns to the existing rendered view immediately. [Runtime](Docs_Viewer_Runtime.md#automatic-working-refresh) owns the independent polling that later refreshes generated content and Info while retaining the report toolbar.
 
 For local-folder authoring it reads the latest runtime capability only during a `paste` event. A recognized replacement is applied to the current range and emits the normal dirty-buffer `input` path. Conversion is silent and does not implement or intercept Undo.
 

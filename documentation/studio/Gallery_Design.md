@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260905-120654-ab5e59
 title: Gallery Design
 added_date: "2026-09-05 12:06:54"
-last_updated: "2026-09-28 15:55:05"
+last_updated: "2026-10-03 17:35:06"
 summary: Record the resolved Media View gallery design, its durable destination and the separately owned public distribution and shared navigation work.
 ui_status: done
 parent_id: d-20260904-204816-0f31be
@@ -43,6 +43,6 @@ The September 2026 inspections found 167 Works in the archived Series 026 record
 
 [Catalogue Deployment](Catalogue_Deployment.md) owns distribution of current Catalogue output, independently of document Publish. Public readers are configured for Work and Series by-ID records and existing 96px Work thumbnails under `/assets/data/catalogue/`; reader wiring does not establish deployment. The earlier proposal to pin Catalogue data to an accepted document snapshot is superseded.
 
-[View Caching and History - Delivery](View_Caching_And_History_Delivery.md) remains planned and owns shared resource reuse and browser Back/Forward restoration. Associated-document actions and shareable Media View URLs remain separate choices.
+[Runtime](Docs_Viewer_Runtime.md#exact-document-navigation-and-return) owns implemented browser Back/Forward and caller restoration. The older View Caching and History delivery is retired; wider resource reuse, associated-document actions and shareable Media View URLs remain separate choices.
 
 [Gallery List Design](Gallery_List_Design.md) was retired on 28 September 2026 with the Works in a Series report. Gallery Media View supplies gallery membership browsing; no large insertable Works list is planned for ordinary documents.

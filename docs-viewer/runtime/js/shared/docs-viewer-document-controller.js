@@ -1,3 +1,4 @@
+import { documentTarget, documentTargetKey } from "./docs-viewer-document-target.js";
 import { mountDocsContentHtml } from "./docs-viewer-asset-url.js";
 
 export function initDocsViewerDocumentController(context) {
@@ -5,16 +6,96 @@ export function initDocsViewerDocumentController(context) {
   var workspaceConfigState = context.workspaceConfig;
   var selectedDocument = context.selectedDocument;
   var statusCommands = context.statusCommands || {};
-  var content = context.content;
+  var outerContent = context.content;
+  var content = outerContent;
+  var retained = new Map();
+  var activeRecord = null;
+  var transientContent = null;
+  var document = outerContent.ownerDocument;
+  var window = document.defaultView;
+
+  function actionContext() { return activeRecord && activeRecord.actionContext || {}; }
+  function capture() { return { record: activeRecord, owners: (activeRecord && activeRecord.viewOwners || []).map(function (owner) { return { id: owner.id, state: owner.capture() }; }) }; }
+  function activate(record) {
+    if (transientContent) { transientContent.remove(); transientContent = null; }
+    retained.forEach(function (item) { item.root.hidden = item !== record; });
+    if (content === outerContent) outerContent.replaceChildren();
+    content = record.root;
+    activeRecord = record;
+    documentMountGeneration = record.generation;
+    selectedDocument.documentTarget = record.target;
+    selectedDocument.selectedDocId = record.target.doc_id;
+    selectedDocument.displayedDocId = record.target.doc_id;
+    selectedDocument.displayedRecord = record.doc;
+    selectedDocument.displayedPayload = record.payload;
+    content.hidden = false;
+    showDocPane();
+    context.publishCollectionReportState(record.actionContext);
+    document.title = (record.doc.title || record.target.doc_id) + " | dotlineform";
+    context.renderManagementUi();
+  }
+  function restore(snapshot) {
+    var record = snapshot && snapshot.record;
+    if (record) selectedDocument.documentTarget = record.target;
+    if (record && record.error) renderDocumentStatus(record.error, true);
+    else if (record && retained.get(documentTargetKey(record.target)) === record) {
+      activate(record);
+      record.restorationStates = new Map((snapshot.owners || []).map(function (saved) { return [saved.id, saved.state]; }));
+      record.viewOwners.forEach(function (owner) {
+        if (record.restorationStates.has(owner.id)) owner.restore(record.restorationStates.get(owner.id));
+      });
+    } else handleMissingDoc();
+  }
+  function restoreRetained(target, hash) {
+    var record = retained.get(documentTargetKey(target));
+    if (!record) return false;
+    activate(record);
+    if (hash) scrollToHash(hash);
+    else window.scrollTo(0, 0);
+    return true;
+  }
+
+  function releaseRecordViews(record) {
+    var lifetime = record.lifetime;
+    if (lifetime) {
+      lifetime.active = false;
+      lifetime.unsubscribers.forEach(function (unsubscribe) { unsubscribe(); });
+      lifetime.unsubscribers = [];
+    }
+    record.viewOwners.forEach(function (owner) { if (owner.dispose) owner.dispose(); });
+    record.viewOwners = [];
+    record.restorationStates = null;
+    releaseReportPresentation(record.root);
+    releaseMediaDetails(record.root);
+    releaseTableDetails(record.root);
+    releaseDiagramDetails(record.root);
+  }
+
+  function releaseRecord(record) {
+    releaseRecordViews(record);
+    record.root.remove();
+    var key = documentTargetKey(record.target);
+    retained.delete(key);
+    selectedDocument.payloadCache.delete(key);
+  }
+
+  function retainDocuments(snapshots) {
+    var keep = new Set(snapshots.map(function (snapshot) { return snapshot.record; }));
+    retained.forEach(function (record) { if (!keep.has(record)) releaseRecord(record); });
+    selectedDocument.payloadCache.forEach(function (_, key) {
+      if (!retained.has(key)) selectedDocument.payloadCache.delete(key);
+    });
+  }
   var toolbar = context.toolbar;
   var documentMountGeneration = 0;
+  var generationSequence = 0;
 
   function managementContextActive() {
     return Boolean(routeSession && routeSession.managementContext);
   }
 
   function nextDocumentMountGeneration() {
-    documentMountGeneration += 1;
+    documentMountGeneration = ++generationSequence;
     return documentMountGeneration;
   }
 
@@ -38,6 +119,21 @@ export function initDocsViewerDocumentController(context) {
   }
 
   function mountDocumentExtras(doc, payload, mountGeneration) {
+    var mountContent = content;
+    var mountedRecord = activeRecord;
+    var lifetime = mountedRecord.lifetime;
+    // Preserve route capabilities while bounding report listeners to this mount.
+    var collectionProvider = Object.assign({}, context.collectionProvider);
+    if (context.collectionProvider.subscribeDocumentChanges) {
+      collectionProvider.subscribeDocumentChanges = function (listener) {
+        if (!lifetime.active) return function () {};
+        var unsubscribe = context.collectionProvider.subscribeDocumentChanges(function (change) {
+          if (lifetime.active) listener(change);
+        });
+        lifetime.unsubscribers.push(unsubscribe);
+        return unsubscribe;
+      };
+    }
     if (typeof context.mountDocumentExtras !== "function") return;
     if (payload.report && payload.report.id === "docs_collection") {
       context.publishCollectionReportState({
@@ -52,13 +148,29 @@ export function initDocsViewerDocumentController(context) {
     Promise.resolve(context.mountDocumentExtras({
       appContext: context.appContext || {},
       checkGeneratedDataReadCapability: context.checkGeneratedDataReadCapability,
-      content: content,
+      content: mountContent,
       doc: doc,
-      collectionProvider: context.collectionProvider,
+      documentTarget: mountedRecord.target,
+      documentActionContext: mountedRecord.actionContext,
+      registerRetainedView: function (owner) {
+        if (!lifetime.active) { if (owner.dispose) owner.dispose(); return; }
+        mountedRecord.viewOwners.push(owner);
+        if (mountedRecord.restorationStates && mountedRecord.restorationStates.has(owner.id)) owner.restore(mountedRecord.restorationStates.get(owner.id));
+      },
+      onDocumentActionState: function (state) {
+        if (!lifetime.active) return;
+        mountedRecord.actionContext = state;
+        if (state.documentRecord) mountedRecord.doc = Object.assign({}, state.documentRecord, mountedRecord.target);
+        if (activeRecord === mountedRecord) selectedDocument.displayedRecord = mountedRecord.doc;
+        if (activeRecord === mountedRecord) context.publishCollectionReportState(state);
+      },
+      openDocument: context.openDocument,
+      commitDeletedDocument: context.commitDeletedDocument,
+      collectionProvider: collectionProvider,
       managementDocumentActions: context.managementDocumentActions || null,
       managementService: context.managementService || null,
       managementContext: managementContextActive(),
-      mountThemedDiagrams: function () { mountThemedDiagrams(doc, payload); },
+      mountThemedDiagrams: function () { if (lifetime.active) mountThemedDiagrams(doc, payload, mountContent); },
       mountRelatedLinks: context.mountRelatedLinks,
       payload: payload,
       mediaRoot: workspaceConfigState.activeConfig && workspaceConfigState.activeConfig.mediaRoot,
@@ -67,34 +179,31 @@ export function initDocsViewerDocumentController(context) {
       reportPresentationAdapter: context.reportPresentationAdapter,
       loadMediaTarget: function (request) {
         var adapter = context.mediaDetailAdapter;
-        if (mountGeneration !== documentMountGeneration || !adapter) return null;
+        if (!lifetime.active || !mountContent.isConnected || !adapter) return null;
         return adapter.loadTarget(Object.assign({}, request, {
-          content: content, documentMountGeneration: mountGeneration
+          content: mountContent, documentMountGeneration: mountGeneration
         }));
       },
       openMediaTarget: function (request) {
         var adapter = context.mediaDetailAdapter;
-        if (mountGeneration !== documentMountGeneration || !adapter) return false;
+        if (!lifetime.active || !mountContent.isConnected || !adapter) return false;
         return adapter.openTarget(Object.assign({}, request, {
-          content: content, documentMountGeneration: mountGeneration
+          content: mountContent, documentMountGeneration: mountGeneration
         }));
       },
       openMediaPresentation: function (request) {
         var adapter = context.mediaDetailAdapter;
-        if (mountGeneration !== documentMountGeneration || !adapter) return false;
+        if (!lifetime.active || !mountContent.isConnected || !adapter) return false;
         return adapter.openPresentation(Object.assign({}, request, {
-          content: content,
+          content: mountContent,
           documentMountGeneration: mountGeneration
         }));
       },
       requestContentDetail: context.requestContentDetail,
       onCollectionDocumentState: function (state) {
-        if (mountGeneration !== documentMountGeneration) return;
-        if (state.parentTarget && state.parentTarget.doc_id !== doc.doc_id) return;
-        if (state.collectionTarget && (state.collectionTarget.collection !== payload.report.collection)) return;
-        context.publishCollectionReportState(Object.assign({}, state, {
-          documentMountGeneration: mountGeneration
-        }));
+        if (!lifetime.active || !mountContent.isConnected) return;
+        mountedRecord.actionContext = Object.assign({}, state, { documentMountGeneration: mountGeneration });
+        if (activeRecord === mountedRecord) context.publishCollectionReportState(mountedRecord.actionContext);
       },
       routeContext: typeof context.routeContext === "function" ? context.routeContext() : context.routeContext,
       workspaceConfigState: workspaceConfigState,
@@ -161,56 +270,56 @@ export function initDocsViewerDocumentController(context) {
     }
   }
 
-  function releaseTableDetails() {
+  function releaseTableDetails(mount = content) {
     var adapter = context.tableDetailAdapter;
     if (!adapter || typeof adapter.releaseDocument !== "function") return;
     try {
       adapter.releaseDocument({
-        content: content,
-        document: content ? content.ownerDocument : null,
-        window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
+        content: mount,
+        document: mount ? mount.ownerDocument : null,
+        window: mount && mount.ownerDocument ? mount.ownerDocument.defaultView : null
       });
     } catch (error) {
       console.warn("docs_viewer: table detail cleanup unavailable", error);
     }
   }
 
-  function releaseMediaDetails() {
+  function releaseMediaDetails(mount = content) {
     var adapter = context.mediaDetailAdapter;
     if (!adapter || typeof adapter.releaseDocument !== "function") return;
     try {
       adapter.releaseDocument({
-        content: content,
-        document: content ? content.ownerDocument : null,
-        window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
+        content: mount,
+        document: mount ? mount.ownerDocument : null,
+        window: mount && mount.ownerDocument ? mount.ownerDocument.defaultView : null
       });
     } catch (error) {
       console.warn("docs_viewer: media detail cleanup unavailable", error);
     }
   }
 
-  function releaseReportPresentation() {
+  function releaseReportPresentation(mount = content) {
     var adapter = context.reportPresentationAdapter;
     if (!adapter || typeof adapter.releaseDocument !== "function") return;
     try {
       adapter.releaseDocument({
-        content: content,
-        document: content ? content.ownerDocument : null,
-        window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
+        content: mount,
+        document: mount ? mount.ownerDocument : null,
+        window: mount && mount.ownerDocument ? mount.ownerDocument.defaultView : null
       });
     } catch (error) {
       console.warn("docs_viewer: report presentation cleanup unavailable", error);
     }
   }
 
-  function releaseDiagramDetails() {
+  function releaseDiagramDetails(mount = content) {
     var inlineAdapter = context.inlineMermaidAdapter;
     if (inlineAdapter && typeof inlineAdapter.releaseDocument === "function") {
       try {
         inlineAdapter.releaseDocument({
-          content: content,
-          document: content ? content.ownerDocument : null,
-          window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
+          content: mount,
+          document: mount ? mount.ownerDocument : null,
+          window: mount && mount.ownerDocument ? mount.ownerDocument.defaultView : null
         });
       } catch (error) {
         console.warn("docs_viewer: inline Mermaid registry cleanup unavailable", error);
@@ -220,9 +329,9 @@ export function initDocsViewerDocumentController(context) {
     if (themedAdapter && typeof themedAdapter.releaseDocument === "function") {
       try {
         themedAdapter.releaseDocument({
-          content: content,
-          document: content ? content.ownerDocument : null,
-          window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
+          content: mount,
+          document: mount ? mount.ownerDocument : null,
+          window: mount && mount.ownerDocument ? mount.ownerDocument.defaultView : null
         });
       } catch (error) {
         console.warn("docs_viewer: themed diagram registry cleanup unavailable", error);
@@ -232,25 +341,26 @@ export function initDocsViewerDocumentController(context) {
     if (!adapter || typeof adapter.releaseDocument !== "function") return;
     try {
       adapter.releaseDocument({
-        content: content,
-        document: content ? content.ownerDocument : null,
-        window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
+        content: mount,
+        document: mount ? mount.ownerDocument : null,
+        window: mount && mount.ownerDocument ? mount.ownerDocument.defaultView : null
       });
     } catch (error) {
       console.warn("docs_viewer: diagram detail resource cleanup unavailable", error);
     }
   }
 
-  function mountThemedDiagrams(doc, payload) {
+  function mountThemedDiagrams(doc, payload, mountRoot) {
+    var mountedContent = mountRoot || content;
     var adapter = context.themedDiagramAdapter;
     if (!adapter || typeof adapter.mountDocument !== "function") return;
     try {
       adapter.mountDocument({
-        content: content,
+        content: mountedContent,
         doc: doc,
-        document: content ? content.ownerDocument : null,
+        document: mountedContent ? mountedContent.ownerDocument : null,
         payload: payload,
-        window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
+        window: mountedContent && mountedContent.ownerDocument ? mountedContent.ownerDocument.defaultView : null
       });
     } catch (error) {
       console.warn("docs_viewer: themed diagram adapter unavailable", error);
@@ -283,7 +393,7 @@ export function initDocsViewerDocumentController(context) {
       return;
     }
 
-    var target = document.getElementById(hash);
+    var target = Array.from(content.querySelectorAll("[id]")).find(function (node) { return node.id === hash; });
     if (!target) return;
 
     target.scrollIntoView({ block: "start", behavior: "auto" });
@@ -311,6 +421,14 @@ export function initDocsViewerDocumentController(context) {
   function renderDocumentStatus(message, isError, options) {
     var settings = options || {};
     var mountGeneration = nextDocumentMountGeneration();
+    activeRecord = { target: selectedDocument.documentTarget, error: message, root: null };
+    selectedDocument.displayedRecord = null;
+    selectedDocument.displayedPayload = null;
+    retained.forEach(function (record) { record.root.hidden = true; });
+    if (transientContent) transientContent.remove();
+    content = document.createElement("div");
+    transientContent = content;
+    outerContent.appendChild(content);
     clearCollectionReportState("document-status", mountGeneration);
     showDocPane();
     if (settings.hideMeta) {
@@ -329,6 +447,7 @@ export function initDocsViewerDocumentController(context) {
     status.classList.toggle("is-error", Boolean(isError));
     status.textContent = String(message || "");
     content.appendChild(status);
+    activeRecord.root = content;
   }
 
   function renderPayload(doc, payload, hash, options = {}) {
@@ -338,11 +457,44 @@ export function initDocsViewerDocumentController(context) {
     }
     var scrollX = window.scrollX;
     var scrollY = window.scrollY;
+    if (transientContent) { transientContent.remove(); transientContent = null; }
+    var target = documentTarget(doc, { review: context.appContext.kind === "review" });
+    var key = documentTargetKey(target);
+    var previous = retained.get(key);
+    var committedRecord = previous && previous.committedRecord && JSON.stringify(payload) === JSON.stringify(previous.payload) ? previous.committedRecord : null;
+    if (committedRecord) doc = Object.assign({}, doc, committedRecord, target);
     var mountGeneration = nextDocumentMountGeneration();
-    clearCollectionReportState("document-mount", mountGeneration);
+    retained.forEach(function (record) { record.root.hidden = true; });
+    if (previous) {
+      content = previous.root;
+      releaseRecordViews(previous);
+    } else {
+      if (content === outerContent) outerContent.replaceChildren();
+      content = document.createElement("div");
+      content.className = "docsViewer__documentMount";
+      outerContent.appendChild(content);
+    }
+    content.hidden = false;
+    var record = Object.assign(previous || {}, { target: target, doc: doc, payload: payload, root: content, generation: mountGeneration, viewOwners: [], restorationStates: null,
+      lifetime: { active: true, unsubscribers: [] },
+      committedRecord: committedRecord,
+      actionContext: { state: target.collection ? "detail" : "document", documentTarget: target, documentRecord: doc,
+        collectionTarget: target.collection ? { collection: target.collection } : null,
+        collectionLabel: target.collection || "",
+        refreshDocument: context.openDocument,
+        commitDeletedDocument: context.commitDeletedDocument,
+        commitDocumentDraft: function (draftTarget, committedRecord) {
+          context.collectionProvider.commitDocumentChange({ target: draftTarget, record: committedRecord });
+        } } });
+    activeRecord = record;
+    retained.set(key, record);
+    selectedDocument.documentTarget = target;
+    selectedDocument.displayedRecord = doc;
+    context.publishCollectionReportState(record.actionContext);
     selectedDocument.selectedDocId = doc.doc_id;
     selectedDocument.displayedDocId = doc.doc_id;
     selectedDocument.displayedPayload = payload;
+    selectedDocument.payloadCache.set(documentTargetKey(target), payload);
     context.renderManagementUi();
 
     showDocPane();
@@ -359,7 +511,7 @@ export function initDocsViewerDocumentController(context) {
       context.mountRelatedLinks({
         content: content,
         payload: payload,
-        documentTarget: { doc_id: doc.doc_id },
+        documentTarget: target,
         isCurrentDocument: function () { return mountGeneration === documentMountGeneration; }
       });
     }
@@ -385,20 +537,21 @@ export function initDocsViewerDocumentController(context) {
   }
 
   function handleMissingDoc() {
-    renderDocumentStatus("Document not found.", true, { hideMeta: true });
+    renderDocumentStatus("Document not found.", true);
     context.renderManagementUi();
   }
 
-  function renderDocLoadingState(doc) {
-    var mountGeneration = nextDocumentMountGeneration();
-    clearCollectionReportState("navigation-start", mountGeneration);
+  function renderDocLoadingState() {
+    retained.forEach(function (record) { record.root.hidden = true; });
+    activeRecord = null;
+    if (content === outerContent) outerContent.replaceChildren();
+    content = document.createElement("div");
+    content.className = "docsViewer__documentMount";
+    if (transientContent) transientContent.remove();
+    transientContent = content;
+    outerContent.appendChild(content);
     showDocPane();
-    context.renderMeta(doc);
-    releaseReportPresentation();
-    releaseMediaDetails();
-    releaseTableDetails();
-    releaseDiagramDetails();
-    content.textContent = "";
+    clearCollectionReportState("navigation-start", nextDocumentMountGeneration());
   }
 
   function handlePayloadError(error) {
@@ -414,11 +567,33 @@ export function initDocsViewerDocumentController(context) {
       toolbar.hidden = Boolean(projection.toolbarHidden);
     }
     if (content && Object.prototype.hasOwnProperty.call(projection || {}, "contentHidden")) {
-      content.hidden = Boolean(projection.contentHidden);
+      outerContent.hidden = Boolean(projection.contentHidden);
     }
   }
 
+  if (context.collectionProvider.subscribeDocumentChanges) context.collectionProvider.subscribeDocumentChanges(function (change) {
+    var key = documentTargetKey(change.target);
+    var record = retained.get(key);
+    if (change.deleted) { if (record) releaseRecord(record); return; }
+    if (!record) return;
+    record.committedRecord = change.record;
+    var policy = typeof record.doc.publication_ignored === "boolean" ? { publication_ignored: record.doc.publication_ignored } : {};
+    record.doc = Object.assign({}, policy, change.record, record.target);
+    record.actionContext = Object.assign({}, record.actionContext, { documentRecord: record.doc });
+    if (activeRecord === record) {
+      selectedDocument.displayedRecord = record.doc;
+      context.publishCollectionReportState(record.actionContext);
+      context.renderManagementUi();
+    }
+  });
   return {
+    activeMount: function () { return content; },
+    actionContext: actionContext,
+    capture: capture,
+    restore: restore,
+    restoreRetained: restoreRetained,
+    retainDocuments: retainDocuments,
+    scrollToHash: scrollToHash,
     handleMissingDoc: handleMissingDoc,
     handlePayloadError: handlePayloadError,
     hideDocPane: hideDocPane,

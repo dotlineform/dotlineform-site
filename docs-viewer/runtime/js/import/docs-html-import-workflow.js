@@ -138,6 +138,7 @@ export async function runDocsHtmlImportWorkflow(
     routePath = "/docs/",
     managementBaseUrl = "",
     onRunningChange = () => {},
+    onCommittedResult = () => {},
     onTerminalResult = () => {}
   } = {}
 ) {
@@ -175,7 +176,7 @@ export async function runDocsHtmlImportWorkflow(
         );
         return;
       }
-      if (result.payload) results.push(result.payload);
+      if (result.payload) { results.push(result.payload); await onCommittedResult(result.payload); }
     }
 
     renderDocsHtmlImportResult(state, results);

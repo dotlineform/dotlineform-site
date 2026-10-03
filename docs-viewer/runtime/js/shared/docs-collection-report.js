@@ -1,8 +1,7 @@
 import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
 import {
-  appendAssetVersion,
-  mountDocsContentHtml
+  appendAssetVersion
 } from "./docs-viewer-asset-url.js";
 import {
   normalizeDocsCollectionFilterValue,
@@ -25,11 +24,8 @@ import {
  * Render callbacks receive detached hosts that enter the document only when
  * populated. `notify` receives explicit collection-scoped mount, state,
  * complete-manifest refresh, visible-row projection, and unmount events.
- * Detail toolbars are mounted once per detail shell; generated-content refresh
- * retains them. Published action context receives `commitDocumentDraft(target,
- * draft)` to project a confirmed save into list/detail records without I/O.
- * Published action context keeps the configured `collectionLabel` for identity
- * display and supplies `returnToListLabel` alongside its Back action.
+ * Committed records update the retained list in memory. Document navigation
+ * and detail actions belong to the shared reader.
  *
  * @typedef {Object} DocsCollectionReportContribution
  * @property {function(Object): void} [notify]
@@ -38,8 +34,6 @@ import {
  * @property {function(Object): (Object|void)} [renderRow]
  * @property {function(Object): void} [renderListHead]
  * @property {function(Object): void} [renderListToolbar]
- * @property {function(Object): void} [renderDetailToolbar]
- * @property {function(Object): (Object|null)} [projectDetailInfo]
  */
 
 var filterIdSequence = 0;
@@ -213,77 +207,14 @@ function manifestUrl(record) {
   return cleanString(record && (record.manifestUrl || record.manifest_url));
 }
 
-function byIdUrlBase(record) {
-  return cleanString(record && (record.byIdUrlBase || record.by_id_url_base)).replace(/\/+$/, "");
-}
-
-function currentSubdocId() {
-  if (typeof window === "undefined" || !window.location) return "";
-  return cleanString(new URLSearchParams(window.location.search).get("subdoc"));
-}
-
-function byIdPayloadUrl(state, docId) {
-  if (!state.byIdUrlBase) return "";
-  return state.byIdUrlBase + "/" + encodeURIComponent(docId) + ".json";
-}
-
 function collectionTarget(collection) {
   return {
     collection: cleanId(collection)
   };
 }
 
-function detailTarget(state, docId) {
-  return {
-    collection: state.collectionId,
-    doc_id: cleanString(docId)
-  };
-}
-
 function documentRecord(doc) {
   return doc && doc.record ? doc.record : Object.freeze({});
-}
-
-function detailMetadataRecord(state, docId, payload) {
-  var doc = state.docs.find(function (record) { return record.docId === docId; });
-  var manifestRecord = documentRecord(doc);
-  var payloadRecord = payload && typeof payload === "object" ? payload : {};
-  var record = { doc_id: docId };
-  [
-    "title",
-    "summary",
-    "date",
-    "date_display",
-    "added_date",
-    "last_updated",
-    "draft"
-  ].forEach(function (fieldName) {
-    if (Object.prototype.hasOwnProperty.call(payloadRecord, fieldName)) {
-      record[fieldName] = payloadRecord[fieldName];
-    } else if (fieldName !== "summary" && Object.prototype.hasOwnProperty.call(manifestRecord, fieldName)) {
-      record[fieldName] = manifestRecord[fieldName];
-    }
-  });
-  return Object.freeze(record);
-}
-
-function projectDetailInfo(state, docId, payload, metadata) {
-  var project = contributionCallback(state.contribution, "projectDetailInfo");
-  if (!project) return null;
-  var doc = state.docs.find(function (record) { return record.docId === docId; });
-  var projected = project({
-    collection: collectionTarget(state.collectionId),
-    data: state.customisationData,
-    document: documentRecord(doc),
-    metadata: metadata,
-    payload: payload,
-    target: detailTarget(state, docId)
-  });
-  if (projected == null) return null;
-  if (typeof projected !== "object" || Array.isArray(projected)) {
-    throw new Error("Docs collection detail information projection is invalid.");
-  }
-  return projected;
 }
 
 function contributionEvent(context, collectionIdValue, detail) {
@@ -313,27 +244,6 @@ function filterValuesPayload(state) {
   return Object.freeze(payload);
 }
 
-function writeSubdocUrl(state, docId, mode) {
-  if (typeof window === "undefined" || !window.history || !window.location) return;
-  var url = new URL(window.location.href);
-  if (state.parentDocId) url.searchParams.set("doc", state.parentDocId);
-  if (docId) {
-    url.searchParams.set("subdoc", docId);
-  } else {
-    url.searchParams.delete("subdoc");
-  }
-  var nextState = Object.assign({}, window.history.state || {}, {
-    docId: state.parentDocId || url.searchParams.get("doc") || "",
-    hash: url.hash ? url.hash.slice(1) : "",
-    reportParams: docId ? { subdoc: docId } : {}
-  });
-  if (mode === "replace") {
-    window.history.replaceState(nextState, "", url.pathname + url.search + url.hash);
-    return;
-  }
-  window.history.pushState(nextState, "", url.pathname + url.search + url.hash);
-}
-
 function appendDocRow(state, doc) {
   var docId = doc.docId;
   var row = document.createElement("li");
@@ -344,9 +254,9 @@ function appendDocRow(state, doc) {
   leadingHost.className = "docsViewerReport__rowContribution docsViewerReport__rowContribution--leading";
   leadingHost.dataset.reportContributionHost = "row-leading";
 
-  var title = document.createElement("button");
+  var title = document.createElement("a");
   title.className = "docsViewerReport__cellLink docsViewerReport__collectionButton";
-  title.type = "button";
+  title.href = state.collectionProvider.documentHref({ collection: state.collectionId, doc_id: docId });
   if (state.collectionId === "catalogue") state.browsingData.appendThumbnail(title, doc);
 
   var titlePrefixHost = document.createElement("span");
@@ -377,16 +287,6 @@ function appendDocRow(state, doc) {
   if (accessibleLabels.length) {
     title.setAttribute("aria-label", [titleText.textContent].concat(accessibleLabels).join(", "));
   }
-  title.addEventListener("click", function () {
-    var windowRef = row.ownerDocument.defaultView;
-    state.listReturnPosition = windowRef ? {
-      left: windowRef.scrollX,
-      top: windowRef.scrollY,
-      control: title
-    } : null;
-    writeSubdocUrl(state, docId, "push");
-    renderDetailById(state, docId);
-  });
   if (leadingHost.childNodes.length) row.appendChild(leadingHost);
   row.appendChild(title);
   if (trailingHost.childNodes.length) row.appendChild(trailingHost);
@@ -775,7 +675,7 @@ function renderListToolbar(state, documents) {
     host: host,
     actionHost: state.listActionHost,
     refreshAndOpenDocument: function (target) {
-      return refreshAndOpenDocument(state, target);
+      return state.openDocument(target);
     },
     refreshCollection: function (target) {
       return refreshCollection(state, target);
@@ -814,58 +714,22 @@ function renderRows(state, docs) {
   });
 }
 
-function publishState(state, reportState, target, reason, detail) {
+function publishState(state, reportState, target, reason) {
   if (reportState === "error" || reportState === "unmounted") cancelCollectionSearch(state);
-  var record = detail && detail.record || null;
-  if (reportState === "detail" && (!target || target.doc_id !== state.validDetailId
-    || target.collection !== state.collectionId
-    || !record || record.doc_id !== target.doc_id)) {
-    throw new Error("Collection action context did not match the validated document.");
-  }
-  if (record) {
-    record = Object.freeze(Object.assign({}, documentRecord(state.docs.find(function (doc) {
-      return doc.docId === target.doc_id;
-    })), record));
-  }
   var active = !["inactive", "unmounted"].includes(reportState);
-  var context = Object.freeze({
-    state: reportState,
-    reason: reason,
+  state.actionContext = Object.freeze({
+    state: reportState, reason: reason,
     parentTarget: active ? state.parentTarget : null,
     collectionTarget: active ? state.collectionTarget : null,
     collectionLabel: collectionTitle(state.collection, state.collectionId),
-    documentTarget: reportState === "detail" ? Object.freeze(target)
-      : (reportState === "list" ? state.parentTarget : null),
-    documentRecord: reportState === "detail" ? record
-      : (reportState === "list" ? state.parentRecord : null),
-    documentInfo: detail && detail.info || null,
-    actionHost: reportState === "detail" ? state.detailActionHost
-      : (reportState === "list" ? state.listActionHost : null),
-    returnToList: reportState === "detail" ? function () { returnToList(state); } : null,
-    returnToListLabel: "Back to all " + collectionItemsLabel(state.collection).toLowerCase(),
-    refreshDocument: function (documentTarget) { return refreshAndOpenDocument(state, documentTarget); },
-    commitDocumentDraft: function (documentTarget, draft) {
-      return reconcileCommittedDraft(state, documentTarget, draft);
-    },
-    refreshDisplayedDocument: function (documentTarget, isCurrent) {
-      return refreshDisplayedDocument(state, documentTarget, isCurrent);
-    },
-    refreshCollection: function (collection) { return refreshCollection(state, collection); }
+    documentTarget: reportState === "list" ? state.parentTarget : null,
+    documentRecord: reportState === "list" ? state.parentRecord : null,
+    actionHost: reportState === "list" ? state.listActionHost : null,
+    refreshDocument: state.openDocument,
+    refreshCollection: function (target) { return refreshCollection(state, target); }
   });
-  state.actionContext = context;
-  if (typeof state.onDocumentState === "function") {
-    state.onDocumentState(context);
-  }
-  notifyContribution(state, Object.assign({
-    type: "state",
-    state: cleanString(reportState),
-    reason: cleanString(reason)
-  }, detail || {}));
-}
-
-function invalidateDetailRequest(state) {
-  state.detailRequestVersion += 1;
-  return state.detailRequestVersion;
+  if (typeof state.onDocumentState === "function") state.onDocumentState(state.actionContext);
+  notifyContribution(state, { type: "state", state: reportState, reason: reason });
 }
 
 function renderListProjection(state) {
@@ -920,204 +784,13 @@ function renderListProjectionContained(state, reason) {
 
 /** Reveal the retained list, rebuilding only when its document data changed. */
 function renderListView(state) {
-  invalidateDetailRequest(state);
-  state.validDetailId = "";
   state.root.dataset.reportState = "list";
   state.filterToolbarNode.hidden = false;
   state.tableNode.hidden = false;
-  if (state.detailNode) state.detailNode.hidden = true;
   publishState(state, "list", null, "list-view");
   if (state.listNeedsRender && !renderListProjectionContained(state, "list-projection-failed")) return;
   if (state.listToolbarNode) state.listToolbarNode.hidden = false;
   if (state.pager) state.pager.root.hidden = state.matches.length === 0;
-}
-
-function returnToList(state) {
-  if (!state.mounted || !state.root.isConnected) return;
-  function reveal() {
-    if (!state.mounted || !state.root.isConnected) return;
-    writeSubdocUrl(state, "", "push");
-    renderListView(state);
-    var position = state.listReturnPosition;
-    var windowRef = state.root.ownerDocument.defaultView;
-    if (position && windowRef && state.root.dataset.reportState === "list") {
-      windowRef.scrollTo({ left: position.left, top: position.top, behavior: "auto" });
-      if (position.control.isConnected) position.control.focus({ preventScroll: true });
-    }
-  }
-  if (state.manifestLoaded) return reveal();
-  publishState(state, "loading", null, "list-loading");
-  state.loadManifest().then(function (loaded) {
-    if (loaded) reveal();
-  }).catch(function (error) {
-    publishState(state, "error", null, "list-load-failed");
-    renderError(state.root, error && error.message ? error.message : "Failed to load docs collection manifest.");
-  });
-}
-
-function detailTitle(payload, fallback) {
-  return cleanString(payload && payload.title) || humanize(fallback) || fallback;
-}
-
-function renderDetailShell(state, docId) {
-  if (state.detailNode) state.detailNode.remove();
-  state.validDetailId = "";
-
-  var section = document.createElement("section");
-  section.className = "docsReportDetail";
-  section.setAttribute("aria-label", "Loading " + (humanize(docId) || docId));
-
-  var body = document.createElement("article");
-  body.className = "docsReportDetail__body docsViewer__content content";
-
-  section.appendChild(body);
-  state.root.appendChild(section);
-  state.detailNode = section;
-  state.detailActionHost = document.createElement("div");
-  state.detailActionHost.className = "docsViewer__collectionActions";
-  state.detailBodyNode = body;
-}
-
-function renderDetailToolbar(state) {
-  var renderToolbar = contributionCallback(state.contribution, "renderDetailToolbar");
-  if (!renderToolbar || !state.detailActionHost) return;
-  var host = state.detailActionHost;
-  host.dataset.reportContributionHost = "detail-toolbar";
-  renderToolbar({
-    actionContext: state.actionContext,
-    collection: state.actionContext.collectionTarget,
-    commitDeletedDocument: function (target) {
-      return reconcileCommittedDeletion(state, target);
-    },
-    data: state.customisationData,
-    document: state.actionContext.documentRecord,
-    host: host,
-    refreshAndOpenDocument: function (target) {
-      return refreshAndOpenDocument(state, target);
-    },
-    refreshCollection: function (target) {
-      return refreshCollection(state, target);
-    },
-    target: state.actionContext.documentTarget
-  });
-}
-
-/** Update generated content and Info within the existing detail shell. */
-function renderDetailPayload(state, docId, payload) {
-  var payloadDocId = cleanString(payload && payload.doc_id);
-  if (payloadDocId !== docId) {
-    throw new Error("Docs collection detail payload did not match the requested document.");
-  }
-  state.detailPayloadSignatures[docId] = JSON.stringify(payload);
-  // A saved readiness response is current before the watcher catches up.
-  var record = documentRecord(state.docs.find(function (doc) { return doc.docId === docId; }));
-  if (typeof record.draft === "boolean") {
-    payload = Object.assign({}, payload, { draft: record.draft });
-  }
-  state.detailPayloads[docId] = payload;
-  state.detailNode.dataset.reportSubdocId = docId;
-  state.detailNode.dataset.reportSubdocTitle = detailTitle(payload, docId);
-  state.detailNode.dataset.reportSubdocUpdated = cleanString(payload && payload.last_updated);
-  state.detailNode.setAttribute("aria-label", detailTitle(payload, docId));
-  mountDocsContentHtml(state.detailBodyNode, payload && payload.content_html, {
-    mediaRoot: state.mediaRoot,
-    viewerBaseUrl: state.viewerBaseUrl
-  });
-  state.validDetailId = docId;
-  if (typeof state.mountRelatedLinks === "function") {
-    state.mountRelatedLinks({
-      content: state.detailBodyNode,
-      payload: payload,
-      documentTarget: detailTarget(state, docId),
-      isCurrentDocument: function () { return state.validDetailId === docId && state.mounted; }
-    });
-  }
-  var metadata = detailMetadataRecord(state, docId, payload);
-  publishState(state, "detail", {
-
-    collection: state.collectionId,
-    doc_id: docId
-  }, "detail-loaded", {
-    info: projectDetailInfo(state, docId, payload, metadata),
-    record: metadata
-  });
-  if (typeof state.mountDocumentContent !== "function") return Promise.resolve();
-  var content = state.detailBodyNode;
-  var requestVersion = state.detailRequestVersion;
-  return state.mountDocumentContent({
-    content: content,
-    doc: payload,
-    payload: payload,
-    documentTarget: detailTarget(state, docId),
-    isCurrentDocument: function () {
-      return state.mounted
-        && state.root.isConnected !== false
-        && state.validDetailId === docId
-        && state.detailBodyNode === content
-        && state.detailRequestVersion === requestVersion;
-    }
-  });
-}
-
-/** Refresh only this mounted detail; a late read cannot replace navigation or Source. */
-async function refreshDisplayedDocument(state, target, isCurrent) {
-  var docId = assertCreatedCollectionTarget(state, target);
-  var requestVersion = state.detailRequestVersion;
-  function current() {
-    return state.mounted && state.root.isConnected && state.validDetailId === docId
-      && state.detailRequestVersion === requestVersion && isCurrent();
-  }
-  if (!current()) return false;
-  var payload = await fetchJson(byIdPayloadUrl(state, docId), "Failed to refresh docs collection detail", { cache: "no-cache" });
-  if (!current() || JSON.stringify(payload) === state.detailPayloadSignatures[docId]) return false;
-  var positions = [];
-  for (var node = state.detailBodyNode; node; node = node.parentElement) {
-    positions.push({ node: node, top: node.scrollTop, left: node.scrollLeft });
-  }
-  var x = window.scrollX;
-  var y = window.scrollY;
-  var completion = renderDetailPayload(state, docId, payload);
-  positions.forEach(function (position) {
-    position.node.scrollTop = position.top;
-    position.node.scrollLeft = position.left;
-  });
-  window.scrollTo(x, y);
-  await completion;
-  return true;
-}
-
-function renderDetailById(state, docId, options) {
-  cancelCollectionSearch(state);
-  if (state.pager) state.pager.root.hidden = true;
-  var requestVersion = invalidateDetailRequest(state);
-  publishState(state, "loading", null, "detail-navigation");
-  state.root.dataset.reportState = "detail";
-  state.filterToolbarNode.hidden = true;
-  state.tableNode.hidden = true;
-  state.statusNode.hidden = true;
-  if (state.listToolbarNode) state.listToolbarNode.hidden = true;
-  renderDetailShell(state, docId);
-
-  var url = byIdPayloadUrl(state, docId);
-  if (!url) {
-    publishState(state, "error", null, "missing-detail-path");
-    renderError(state.root, "Docs collection by-id payload path is not configured: " + state.collectionId);
-    return Promise.resolve(true);
-  }
-
-  return fetchJson(url, "Failed to load docs collection detail payload", options)
-    .then(function (payload) {
-      if (requestVersion !== state.detailRequestVersion) return true;
-      var contentReady = renderDetailPayload(state, docId, payload);
-      renderDetailToolbar(state);
-      return Promise.resolve(contentReady).then(function () { return true; });
-    })
-    .catch(function (error) {
-      if (requestVersion !== state.detailRequestVersion) return true;
-      publishState(state, "error", null, "detail-load-failed");
-      renderError(state.root, error && error.message ? error.message : "Failed to render docs collection detail.");
-      return true;
-    });
 }
 
 function renderError(root, message) {
@@ -1127,30 +800,6 @@ function renderError(root, message) {
   note.className = "docsViewerReport__status is-error";
   note.textContent = message;
   root.appendChild(note);
-}
-
-function assertCollectionTarget(state, target) {
-  var targetCollection = cleanId(target && target.collection);
-  var targetDocId = cleanString(target && target.doc_id);
-  if (
-    !targetDocId
-    || targetCollection !== state.collectionId
-  ) {
-    throw new Error("Deleted collection document target did not match the mounted collection.");
-  }
-  return targetDocId;
-}
-
-function assertCreatedCollectionTarget(state, target) {
-  var targetCollection = cleanId(target && target.collection);
-  var targetDocId = cleanString(target && target.doc_id);
-  if (
-    !targetDocId
-    || targetCollection !== state.collectionId
-  ) {
-    throw new Error("Created collection document target did not match the mounted collection.");
-  }
-  return targetDocId;
 }
 
 function assertExactCollectionTarget(state, target) {
@@ -1164,16 +813,6 @@ function assertExactCollectionTarget(state, target) {
     throw new Error("Imported package target did not match the mounted collection.");
   }
   return collectionTarget(targetCollection);
-}
-
-function focusFirstListRow(state) {
-  var first = state.rowsNode && state.rowsNode.querySelector(".docsViewerReport__collectionButton");
-  if (!first || typeof first.focus !== "function") return;
-  try {
-    first.focus({ preventScroll: true });
-  } catch (_error) {
-    first.focus();
-  }
 }
 
 function publishDocumentsRefresh(state, reason) {
@@ -1210,183 +849,12 @@ function applyManifest(state, manifest) {
   state.docIds = state.docs.map(function (doc) { return doc.docId; });
 }
 
-function refreshAndOpenDocument(state, target) {
-  var docId = assertCreatedCollectionTarget(state, target);
-  cancelCollectionSearch(state);
-  if (!state.mounted) {
-    return Promise.reject(new Error(
-      "Document was created, but the mounted collection report is no longer available."
-    ));
-  }
-  return fetchJson(
-    state.manifestUrl,
-    "Failed to refresh docs collection manifest",
-    { cache: "no-cache" }
-  )
-    .then(manifestPayload)
-    .then(function (manifest) {
-      if (!state.mounted) {
-        throw new Error(
-          "Document was created, but the mounted collection report is no longer available."
-        );
-      }
-      applyManifest(state, manifest);
-      var matches = state.docs.filter(function (doc) { return doc.docId === docId; });
-      if (matches.length !== 1) {
-        throw new Error(
-          "Document was created, but the refreshed report did not contain one exact target."
-        );
-      }
-      publishDocumentsRefresh(state, "document-created-refresh");
-      writeSubdocUrl(state, docId, "replace");
-      return renderDetailById(state, docId, { cache: "no-cache" });
-    })
-    .then(function () {
-      if (state.validDetailId !== docId) {
-        throw new Error(
-          "Document was created, but its report detail could not be opened."
-        );
-      }
-      return target;
-    });
-}
-
+/** An explicit import/regeneration refresh belongs to this list, never to Back. */
 function refreshCollection(state, target) {
   var collection = assertExactCollectionTarget(state, target);
-  cancelCollectionSearch(state);
-  var activeDetailId = state.root.dataset.reportState === "detail"
-    ? cleanString(state.validDetailId)
-    : "";
-  if (!state.mounted) {
-    return Promise.reject(new Error(
-      "Package import completed, but the mounted collection report is no longer available."
-    ));
-  }
-  return fetchJson(
-    state.manifestUrl,
-    "Failed to refresh docs collection manifest",
-    { cache: "no-cache" }
-  )
-    .then(manifestPayload)
-    .then(function (manifest) {
-      if (!state.mounted) {
-        throw new Error(
-          "Package import completed, but the mounted collection report is no longer available."
-        );
-      }
-      applyManifest(state, manifest);
-      publishDocumentsRefresh(state, "package-import-refresh");
-      if (!activeDetailId) {
-        renderListView(state);
-        return collection;
-      }
-      var matches = state.docs.filter(function (doc) {
-        return doc.docId === activeDetailId;
-      });
-      if (matches.length !== 1) {
-        throw new Error(
-          "Package import completed, but the current report detail is no longer available."
-        );
-      }
-      return renderDetailById(state, activeDetailId, { cache: "no-cache" })
-        .then(function () {
-          if (state.validDetailId !== activeDetailId) {
-            throw new Error(
-              "Package import completed, but the current report detail could not be refreshed."
-            );
-          }
-          return collection;
-        });
-    });
+  return state.loadManifest().then(function () { renderListView(state); return collection; });
 }
 
-function returnFromDeletedDetail(state, docId) {
-  if (state.validDetailId === docId) {
-    if (state.detailNode) state.detailNode.remove();
-    state.detailNode = null;
-    state.detailActionHost = null;
-    state.detailBodyNode = null;
-    writeSubdocUrl(state, "", "replace");
-    renderListView(state);
-    focusFirstListRow(state);
-    return;
-  }
-  if (state.root.dataset.reportState === "list") {
-    renderListView(state);
-  }
-}
-
-/** Project a confirmed save into the mounted report without a fetch or rebuild. */
-function reconcileCommittedDraft(state, target, draft) {
-  var docId = cleanString(target && target.doc_id);
-  if (!docId || target.collection !== state.collectionId
-    || typeof draft !== "boolean") {
-    throw new Error("Draft readiness response did not match the mounted collection.");
-  }
-  if (!state.mounted) return;
-  var matches = state.docs.filter(function (doc) { return doc.docId === docId; });
-  if (matches.length !== 1) {
-    throw new Error("Saved draft readiness did not match one collection document.");
-  }
-  state.docs = state.docs.map(function (doc) {
-    return doc.docId === docId
-      ? normalizeDocument(Object.assign({}, doc.record, { draft: draft }))
-      : doc;
-  });
-  var payload = state.detailPayloads[docId];
-  if (payload) {
-    payload = Object.assign({}, payload, { draft: draft });
-    state.detailPayloads[docId] = payload;
-  }
-  publishDocumentsRefresh(state, "document-draft-saved");
-  if (state.root.dataset.reportState === "list") {
-    renderListProjectionContained(state, "document-draft-saved");
-  } else if (state.validDetailId === docId) {
-    var metadata = detailMetadataRecord(state, docId, payload);
-    publishState(state, "detail", detailTarget(state, docId), "document-draft-saved", {
-      record: metadata,
-      info: projectDetailInfo(state, docId, payload, metadata)
-    });
-  }
-}
-
-function reconcileCommittedDeletion(state, target) {
-  var docId = assertCollectionTarget(state, target);
-  if (!state.mounted) {
-    return Promise.resolve({ reconciled: false, mode: "unmounted" });
-  }
-  if (!Array.isArray(state.docs)) {
-    return Promise.reject(new Error(
-      "Document was deleted, but the report manifest could not be reconciled."
-    ));
-  }
-  var matchingIndexes = [];
-  state.docs.forEach(function (doc, index) {
-    if (doc.docId === docId) matchingIndexes.push(index);
-  });
-  if (matchingIndexes.length !== 1) {
-    return Promise.reject(new Error(
-      "Document was deleted, but the report manifest did not contain one exact target."
-    ));
-  }
-  state.docs = state.docs.filter(function (_doc, index) {
-    return index !== matchingIndexes[0];
-  });
-  state.docIds = state.docs.map(function (doc) { return doc.docId; });
-  delete state.detailPayloads[docId];
-  publishDocumentsRefresh(state, "document-deleted-local");
-  returnFromDeletedDetail(state, docId);
-  return Promise.resolve({ reconciled: true, mode: "local" });
-}
-
-/**
- * Mounts the manifest-backed collection reader with an optional caller-owned
- * contribution. The report retains collection identity, membership,
- * navigation, and detail validation.
- *
- * @param {Object} context
- * @returns {Promise<boolean>}
- */
 function mountResolvedDocsCollectionReport(context, contribution) {
   var root = context && context.reportRoot;
   var reportMeta = context && context.reportMeta ? context.reportMeta : {};
@@ -1433,7 +901,8 @@ function mountResolvedDocsCollectionReport(context, contribution) {
   }
   var state = {
     root: root,
-    mountDocumentContent: context.mountCollectionDocumentContent,
+    collectionProvider: context.collectionProvider,
+    openDocument: context.openDocument,
     mountRelatedLinks: context.mountRelatedLinks,
     mediaRoot: context.mediaRoot,
     viewerBaseUrl: context.viewerBaseUrl,
@@ -1449,7 +918,6 @@ function mountResolvedDocsCollectionReport(context, contribution) {
     collectionId: collectionIdValue,
     manifestUrl: url,
     manifestLoaded: false,
-    byIdUrlBase: byIdUrlBase(collection),
     docs: [],
     docIds: [],
     customisationData: {},
@@ -1462,9 +930,6 @@ function mountResolvedDocsCollectionReport(context, contribution) {
     pageIndex: 0,
     searchTimer: null,
     pager: null,
-    detailRequestVersion: 0,
-    detailPayloads: {},
-    detailPayloadSignatures: {},
     contribution: contribution,
     managementContext: Boolean(context && context.managementContext),
     filterClearNode: refs.filterClearNode,
@@ -1480,7 +945,6 @@ function mountResolvedDocsCollectionReport(context, contribution) {
     statusNode: refs.statusNode,
     tableNode: refs.tableNode,
     rowsNode: refs.rowsNode,
-    validDetailId: "",
     mounted: true
   };
   state.listActionHost.className = "docsViewer__collectionActions";
@@ -1511,19 +975,19 @@ function mountResolvedDocsCollectionReport(context, contribution) {
 
   var parent = root.parentNode;
   var windowRef = root.ownerDocument && root.ownerDocument.defaultView;
+  function dispose() {
+    if (!state.mounted) return;
+    state.mounted = false;
+    if (state.unmountObserver) { state.unmountObserver.disconnect(); state.unmountObserver = null; }
+    if (state.unsubscribeChanges) { state.unsubscribeChanges(); state.unsubscribeChanges = null; }
+    cancelCollectionSearch(state);
+    publishState(state, "unmounted", null, "report-unmount");
+    notifyContribution(state, { type: "unmount", reason: "report-unmount" });
+  }
   if (parent && windowRef && typeof windowRef.MutationObserver === "function") {
     state.unmountObserver = new windowRef.MutationObserver(function () {
       if (root.parentNode === parent) return;
-      state.unmountObserver.disconnect();
-      state.unmountObserver = null;
-      state.mounted = false;
-      cancelCollectionSearch(state);
-      invalidateDetailRequest(state);
-      publishState(state, "unmounted", null, "report-unmount");
-      notifyContribution(state, {
-        type: "unmount",
-        reason: "report-unmount"
-      });
+      dispose();
     });
     state.unmountObserver.observe(parent, { childList: true });
   }
@@ -1559,26 +1023,37 @@ function mountResolvedDocsCollectionReport(context, contribution) {
       return true;
     });
   };
-  var selectedDetailId = currentSubdocId();
-  if (state.collectionId === "catalogue" && selectedDetailId) {
-    if (!/^[0-9]{5}$/.test(selectedDetailId)) {
-      publishState(state, "invalid", null, "invalid-detail-id");
-      renderError(root, "Catalogue document ID must be an exact five-digit Work ID.");
-      return Promise.resolve(true);
+  if (context.registerRetainedView) context.registerRetainedView({
+    id: "collection:" + state.collectionId,
+    dispose: dispose,
+    capture: function () { return { query: state.query, sort: state.sortMode, page: state.pageIndex, filters: new Map(state.filterValues),
+      contribution: state.contribution.captureListState ? state.contribution.captureListState() : null }; },
+    restore: function (saved) {
+      var currentContribution = state.contribution.captureListState ? state.contribution.captureListState() : null;
+      if (state.query === saved.query && state.sortMode === saved.sort && state.pageIndex === saved.page
+        && JSON.stringify(Array.from(state.filterValues)) === JSON.stringify(Array.from(saved.filters)) && currentContribution === saved.contribution) return;
+      cancelCollectionSearch(state);
+      state.query = saved.query; state.sortMode = saved.sort; state.pageIndex = saved.page; state.filterValues = new Map(saved.filters);
+      state.filterInputNode.value = state.query;
+      if (state.contribution.restoreListState) state.contribution.restoreListState(saved.contribution);
+      updateFilterControls(state);
+      renderListProjectionContained(state, "history-restored");
     }
-    return renderDetailById(state, selectedDetailId);
+  });
+  if (state.collectionProvider.subscribeDocumentChanges) {
+    state.unsubscribeChanges = state.collectionProvider.subscribeDocumentChanges(function (change) {
+      if (!state.mounted || change.target.collection !== state.collectionId) return;
+      var docId = change.target.doc_id;
+      state.docs = state.docs.filter(function (doc) { return doc.docId !== docId; });
+      if (!change.deleted) state.docs.push(normalizeDocument(change.record));
+      state.docIds = state.docs.map(function (doc) { return doc.docId; });
+      if (state.browsingData) state.browsingData.prepare(state.docs);
+      publishDocumentsRefresh(state, "document-committed");
+      renderListProjectionContained(state, "document-committed");
+    });
   }
   return state.loadManifest().then(function (loaded) {
-      if (!loaded) return true;
-      if (selectedDetailId) {
-        if (state.docIds.indexOf(selectedDetailId) === -1) {
-          publishState(state, "invalid", null, "unlisted-detail");
-          renderError(root, "Docs collection detail is not listed: " + selectedDetailId);
-          return true;
-        }
-        return renderDetailById(state, selectedDetailId);
-      }
-      renderListView(state);
+      if (loaded) renderListView(state);
       return true;
     })
     .catch(function (error) {

@@ -49,7 +49,7 @@ class BacklinksMixin:
                     continue
                 target_doc_id = str(target.get("doc_id") or "").strip()
                 if (
-                    target.get("subdoc")
+                    target.get("collection", "") != getattr(self, "collection_id", "")
                     or target_doc_id not in current_ids
                     or target_doc_id == source_doc.doc_id
                 ):

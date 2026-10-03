@@ -3,14 +3,14 @@ draft: false
 doc_id: d-20260927-191938-974cc3
 title: Subject Associations To Manifests - Delivery
 added_date: "2026-09-27 19:19:38"
-last_updated: "2026-09-27 20:20:16"
+last_updated: "2026-10-03 17:35:06"
 summary: Retire subject-associations.json from all collections and derive existing report associations and navigation from management manifests without changing front matter or collection ownership.
 ui_status: done
 parent_id: d-20260428-000000-f5ff18
 ---
 # Subject Associations To Manifests - Delivery
 
-Complete under [Planned Features](Planned_Features.md). SM-0 through SM-3 passed, including user confirmation of all three manual interactions. [Subject Associations](data/subject-associations.md) records maintained behavior. This delivery is retained pending a separately authorized archival or deletion decision. The [Catalogue retirement option](Subject_Associations_Retirement_Delivery.md) remains separate.
+Complete under [Planned Features](Planned_Features.md). SM-0 through SM-3 passed, including user confirmation of all three manual interactions. [Subject Associations](data/subject-associations.md) records maintained behavior. This delivery is retained pending a separately authorized archival or deletion decision. The superseded Catalogue retirement proposal was retired on 2026-10-03; Catalogue stays and future Subject work is separate.
 
 ## Requirements
 

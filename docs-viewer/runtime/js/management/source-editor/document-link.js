@@ -12,12 +12,12 @@ function validLocation(record) {
   if (url.origin !== "https://docs.invalid" || url.hash) return false;
   var params = url.searchParams;
   if (Array.from(params.keys()).some(function (key) {
-    return !["doc", "subdoc"].includes(key) || params.getAll(key).length !== 1;
+    return !["doc", "collection"].includes(key) || params.getAll(key).length !== 1;
   })) return false;
   if (url.pathname !== "/docs/") return false;
   return target.collection
-    ? DOC_ID.test(params.get("doc") || "") && params.get("subdoc") === target.doc_id
-    : params.get("doc") === target.doc_id && !params.has("subdoc");
+    ? params.get("collection") === target.collection && params.get("doc") === target.doc_id
+    : params.get("doc") === target.doc_id && !params.has("collection");
 }
 
 /** Validate document locations and complete exact targets. */

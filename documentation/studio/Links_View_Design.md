@@ -5,7 +5,7 @@ title: Links View design
 summary: Accepted design proof; DR closed on 2026-09-10. Shipped behavior is documented in Links View under Runtime, and this mock-up is ready for manual archive.
 ui_status: done
 added_date: "2026-09-10 14:09:11"
-last_updated: "2026-09-10 20:35:22"
+last_updated: "2026-10-03 17:35:06"
 parent_id: d-20260907-125101-d3bde6
 ---
 # Links View design
@@ -24,7 +24,7 @@ The dedicated Links presentation adapter is implemented in the shared host. Medi
 
 The Links adapter reads the displayed document's separate `links-by-id/<doc_id>.json` relationship file. For Analysis Working, this is under `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/analysis/working/generated/documents/links-by-id/`, resolved through scope configuration. The existing document `by-id` payload does not receive a relationship block. One relationship response supplies all entries and labels. The public-safe read path consumes configured static files without local services; public data preparation and activation remain separately owned.
 
-The initial design proof used `links-by-id` files generated for representative test documents. After the user accepted that proof, DR-6 removed the document restriction. Normal Doc Build now maintains the accepted version 1 relationship files across every configured Analysis Working collection. The reference model and JSON serializer remain separate. [View Caching and History - Delivery](View_Caching_And_History_Delivery.md) owns the separately agreed shared data-reuse and browser-history behavior.
+The initial design proof used `links-by-id` files generated for representative test documents. After the user accepted that proof, DR-6 removed the document restriction. Normal Doc Build now maintains the accepted version 1 relationship files across every configured Analysis Working collection. The reference model and JSON serializer remain separate. [Runtime](Docs_Viewer_Runtime.md#exact-document-navigation-and-return) owns current browser-history caller restoration; the superseded View Caching and History delivery is retired and wider resource reuse remains separately scoped.
 
 - “all entries” currently means all relationships admitted by DR’s agreed rules. Non-publishable/Folder endpoints and missing targets are omitted; otherwise eligible drafts remain included in Working.
 

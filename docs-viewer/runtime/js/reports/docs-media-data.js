@@ -69,12 +69,11 @@ function documentSummary(record,  hosts, context) {
   if (!hostId || typeof context.viewerUrlForDocument !== "function") {
     throw new Error("Docs media document location is unavailable.");
   }
-  const url = new URL(context.viewerUrlForDocument(hostId, { manage: true }), "http://docs.local");
+  const url = new URL(context.viewerUrlForDocument(target.doc_id, { collection: target.collection }), "http://docs.local");
   if (url.pathname !== "/docs/"
-    || url.searchParams.get("doc") !== hostId || url.searchParams.has("subdoc")) {
+    || url.searchParams.get("doc") !== target.doc_id || (url.searchParams.get("collection") || "") !== target.collection) {
     throw new Error("Docs media document location does not match its exact target.");
   }
-  if (target.collection) url.searchParams.set("subdoc", target.doc_id);
   return {
     target: {  collection: target.collection, docId: target.doc_id },
     title: record.title,

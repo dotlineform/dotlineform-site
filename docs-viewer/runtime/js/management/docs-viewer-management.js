@@ -297,7 +297,7 @@ export function initDocsViewerManagement(context) {
   }
 
   function publishCollectionReportState(value) {
-    collectionReportState = value && value.parentTarget ? value : null;
+    collectionReportState = value && value.collectionTarget ? value : null;
     renderManagementUi();
   }
 
@@ -329,8 +329,8 @@ export function initDocsViewerManagement(context) {
         services.getActiveSourceEditorContextAdapter().focus();
         return;
       }
-      if (!sourceTarget.collection && selectedDocument.selectedDocId !== sourceTarget.doc_id) {
-        var payload = await context.routeCommands.loadDoc(sourceTarget.doc_id);
+      if (!selectedDocument.documentTarget || !managedDocumentTargetsEqual(selectedDocument.documentTarget, sourceTarget) || !selectedDocument.displayedPayload) {
+        var payload = await context.routeCommands.loadDoc(sourceTarget);
         if (!payload) return;
         if (payload.doc_id !== sourceTarget.doc_id) throw new Error("The document opened did not match the metadata target.");
       }
@@ -571,11 +571,6 @@ export function initDocsViewerManagement(context) {
     return typeof routeCommands[name] === "function" ? routeCommands[name] : null;
   }
 
-  function setRouteHistory(docId, hash, query, mode, reportParams) {
-    var command = routeCommand("setHistory");
-    if (command) command(docId, hash, query, mode, reportParams);
-  }
-
   function loadRouteIndex(options) {
     var command = routeCommand("loadIndex");
     return command ? command(options) : Promise.resolve(null);
@@ -587,42 +582,26 @@ export function initDocsViewerManagement(context) {
     });
   }
 
-  function reloadDocsIndex(targetDocId, _summaryText, reportParams) {
-    selectedDocument.payloadCache.clear();
-    searchRecent.searchIndex = null;
-    searchRecent.searchLoaded = false;
-    searchRecent.searchRequestPromise = null;
-    searchRecent.recentEntries = [];
-    searchRecent.recentLoaded = false;
-    searchRecent.recentRequestPromise = null;
-    selectedDocument.reloadNonce = String(Date.now());
-    selectedDocument.reloadExpectedDocId = String(targetDocId || "").trim();
-    searchRecent.searchQuery = "";
-    searchRecent.searchVisibleCount = context.SEARCH_BATCH_SIZE;
-    context.cancelSearchDebounce();
-    if (context.searchInput) {
-      context.searchInput.value = "";
-    }
-    context.resetIndexLists();
-
-    if (targetDocId) {
-      setRouteHistory(targetDocId, "", "", "replace", reportParams);
-    }
-
-    return loadRouteIndex().then(function () {
-      context.setStatus("", false);
-      renderManagementUi();
-    });
+  async function reloadDocsIndex(targetDocId) {
+    await context.routeCommands.loadIndex({ preserveDocument: true });
+    if (targetDocId) await context.routeCommands.loadDoc(targetDocId, { force: true });
+    context.setStatus("", false);
+    renderManagementUi();
   }
 
-  function displayImportedDocument(detail) {
-    return refreshDocsImportTerminalDestination(detail, {
-      currentCollection: currentImportDisplayContext(),
-      reportState: collectionReportState,
-      reloadParent: function (targetDocId) {
-        return reloadDocsIndex(targetDocId, "");
-      }
+  async function displayImportedDocument(detail) {
+    var results = Array.isArray(detail.results) ? detail.results : [detail.result];
+    results.filter(Boolean).forEach(function (result) {
+      if (result.dry_run || result.preview_only) return;
+      if (result.collection === true) {
+        (result.records || []).forEach(function (item) {
+          if (["created", "overwritten"].includes(item.status) && item.committed_document) context.commitDocumentChange(item.committed_document);
+        });
+      } else if (result.target && result.record) context.commitDocumentChange({ target: result.target, record: result.record });
     });
+    var result = detail.result;
+    if (result && result.collection !== true && result.target) return context.routeCommands.loadDoc(result.target, { force: true });
+    return context.routeCommands.loadIndex({ preserveDocument: true });
   }
 
   function setManagementMessage(message, isError) {
@@ -798,6 +777,7 @@ export function initDocsViewerManagement(context) {
       },
       hideContextMenu: hideContextMenu,
       hideManageActionsMenu: eventRouter.hideManageActionsMenu,
+      onCommittedResult: function (result) { if (!result.dry_run && result.target && result.record) context.commitDocumentChange({ target: result.target, record: result.record }); },
       onImportComplete: displayImportedDocument,
     }
   });

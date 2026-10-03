@@ -298,6 +298,7 @@ def apply_import_content_collection(
             result["status"] = (
                 "created" if document_plan.operation == IMPORT_DOCUMENT_CREATE else "overwritten"
             )
+            result["committed_document"] = {"target": {"doc_id": document_plan.doc_id, **({"collection": document_plan.collection} if document_plan.collection else {})}, "record": dict(document_plan.committed_record)}
             docs_doc_ids.extend(document_plan.docs_doc_ids)
             written_paths.extend(document_plan.changed_paths)
             event_name, event_details = import_document_event(
@@ -562,8 +563,9 @@ def _apply_import_content_collection_atomic(
             event_name=event_name,
         )
 
-    for document_plan in document_plans:
+    for index, document_plan in enumerate(document_plans):
         assert document_plan is not None
+        results[index]["committed_document"] = {"target": {"doc_id": document_plan.doc_id, **({"collection": document_plan.collection} if document_plan.collection else {})}, "record": dict(document_plan.committed_record)}
         event_name, event_details = import_document_event(
             repo_root,
             document_plan,

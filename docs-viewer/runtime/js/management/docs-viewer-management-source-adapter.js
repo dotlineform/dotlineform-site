@@ -5,6 +5,7 @@ import {
   openManagedDiagramSource,
   readManagedDiagramSources,
   readManagedDocSource,
+  readManagedDocMetadata,
   readManagedDocSourceContext,
   readCatalogueMediaTargets,
   readCatalogueMediaConfig,
@@ -49,6 +50,7 @@ export function createDocsViewerManagementSourceAdapter(options) {
     readCatalogueSeriesGalleries: function () {
       return readCatalogueSeriesGalleries(clientOptions());
     },
+    readMetadata: function (target) { return readManagedDocMetadata(target, clientOptions()); },
     readSource: function (target, optionsForRead) {
       return readManagedDocSource(target, clientOptions(optionsForRead));
     },

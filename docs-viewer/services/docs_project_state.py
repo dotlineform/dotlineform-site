@@ -146,7 +146,7 @@ def _subject_documents(
                 "target": {"collection": WORKS_COLLECTION, "doc_id": doc_id},
                 "title": title,
                 "last_updated": str(row.get("last_updated") or "").strip(),
-                "href": management_document_viewer_url(collection_viewer_url, doc_id, collection=True),
+                "href": management_document_viewer_url(collection_viewer_url, doc_id, collection=True, collection_id=WORKS_COLLECTION),
                 "declared_subject": {"kind": kind, "key": key},
             }
         )

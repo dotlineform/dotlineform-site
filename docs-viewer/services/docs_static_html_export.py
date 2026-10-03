@@ -591,7 +591,7 @@ def rewrite_internal_docs_viewer_links(
         if split.scheme or split.netloc or split.path not in {"", "/docs/"}:
             return match.group(0)
         params = parse_qs(split.query, keep_blank_values=True)
-        if "scope" in params or "collection" in params:
+        if {"scope", "collection", "subdoc"} & params.keys():
             return match.group(0)
         if "stage" in params:
             return match.group(0)
@@ -601,7 +601,7 @@ def rewrite_internal_docs_viewer_links(
         if not doc_id:
             return match.group(0)
         validate_doc_id_for_html_filename(doc_id)
-        if "subdoc" in params or included_doc_ids is not None and doc_id not in included_doc_ids:
+        if included_doc_ids is not None and doc_id not in included_doc_ids:
             if split.path:
                 return match.group(0)
             rewritten = f"/docs/{raw_url}"

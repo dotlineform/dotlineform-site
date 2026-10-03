@@ -1,5 +1,5 @@
 import { renderResultEntry } from "./docs-viewer-render.js";
-import { collectRecentDocs, collectSearchMatches, normalizeSearchText } from "./docs-viewer-search.js";
+import { collectRecentDocs, collectSearchMatches, normalizeSearchText, tokenizeSearchValue } from "./docs-viewer-search.js";
 
 /** Give Index lists history and URL commands without document-opening or list-reset authority. */
 export function createDocsViewerSearchRouteCommands(context) {
@@ -94,7 +94,7 @@ export function initDocsViewerSearchController(context) {
       : config.collectionsByReportHostId.get(docId);
     var iconUrl = collectionId ? collection.iconUrl : collection ? collection.iconUrl : "";
     var href = collectionId
-      ? routeCommands.viewerUrl(entry.report_doc_id, "", searchRecent.searchQuery, { subdoc: docId })
+      ? routeCommands.viewerUrl(docId, "", searchRecent.searchQuery, { collection: collectionId })
       : routeCommands.viewerUrl(routeCommands.viewerTargetDocId(docId), "", searchRecent.searchQuery);
     return renderResultEntry({
       docId: docId, title: entry.title, collection: collectionId,
@@ -192,7 +192,7 @@ export function initDocsViewerSearchController(context) {
   function renderSearchRows(query) {
     var changedQuery = renderedQuery !== query || renderedIndex !== searchRecent.searchIndex;
     if (changedQuery) {
-      searchMatches = collectSearchMatches(searchRecent.searchIndex, query);
+      searchMatches = collectSearchMatches(searchRecent.searchIndex, query).filter(function (match) { return !deletedResults.has((match.entry.collection || "") + ":" + match.entry.id); });
       renderedQuery = query;
       renderedIndex = searchRecent.searchIndex;
     }
@@ -210,11 +210,52 @@ export function initDocsViewerSearchController(context) {
     syncSelection();
   }
 
+  function commitDocumentChange(change) {
+    var target = change.target;
+    var matches = function (entry) { return (entry.collection || "") === (target.collection || "") && (entry.id || entry.doc_id) === target.doc_id; };
+    var scroll = resultsView.scrollTop;
+    if (searchRecent.searchLoaded) {
+      var index = searchRecent.searchIndex;
+      var position = index.docs.findIndex(matches);
+      if (position >= 0) {
+        var fields = ["title", "summary", "last_updated"];
+        Object.values(index.terms).forEach(function (posting) {
+          fields.forEach(function (field) { if (posting[field]) posting[field] = posting[field].filter(function (item) { return item !== position; }); });
+        });
+        if (change.deleted) deletedResults.add((target.collection || "") + ":" + target.doc_id);
+        else {
+          deletedResults.delete((target.collection || "") + ":" + target.doc_id);
+          index.docs[position] = Object.assign({}, index.docs[position], change.record, { id: target.doc_id, collection: target.collection || "" });
+          fields.forEach(function (field) {
+            var terms = field === "last_updated" ? [normalizeSearchText(change.record[field])] : tokenizeSearchValue(change.record[field]);
+            terms.filter(Boolean).forEach(function (term) {
+              var posting = index.terms[term] || (index.terms[term] = {});
+              var positions = posting[field] || (posting[field] = []);
+              positions.push(position); positions.sort(function (left, right) { return left - right; });
+            });
+          });
+        }
+        renderedIndex = null;
+      }
+    }
+    if (searchRecent.recentLoaded) {
+      var existing = searchRecent.recentEntries.find(matches);
+      searchRecent.recentEntries = searchRecent.recentEntries.filter(function (entry) { return !matches(entry); });
+      if (!change.deleted && existing) searchRecent.recentEntries.push(Object.assign({}, existing, change.record, { timestamp: change.record.last_updated }));
+    }
+    if (context.activeIndexViewId() === "search-results") renderSearchMode();
+    if (recentActive()) renderRecentMode();
+    resultsView.scrollTop = scroll;
+  }
+  var deletedResults = new Set();
+  if (context.collectionProvider.subscribeDocumentChanges) context.collectionProvider.subscribeDocumentChanges(commitDocumentChange);
+
   function bind() {
     more.addEventListener("click", function (event) {
       if (!event.target.closest("button[data-role='more']")) return;
       searchRecent.searchVisibleCount += context.searchBatchSize;
       renderSearchMode();
+      routeCommands.updateIndexHistory(searchRecent.searchQuery);
     });
   }
 

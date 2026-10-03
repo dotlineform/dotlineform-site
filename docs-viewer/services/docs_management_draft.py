@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Any
 
 import docs_source_model as source_model
-from docs_management_document_target import resolve_managed_document_target
+from docs_management_document_target import committed_document_record, resolve_managed_document_target
 from docs_management_mutations import (
     ManagedDocumentRevisionConflict,
     revision_conflict_payload,
@@ -37,6 +37,7 @@ def set_draft(repo_root: Path, body: dict[str, Any], *, dry_run: bool = False) -
     front_matter = {**document.front_matter, "draft": body["draft"]}
     source = source_model.format_source(front_matter, document.body, collection=resolved.collection)
     changed = document.front_matter["draft"] is not body["draft"]
+    record = committed_document_record(front_matter, document.doc_id, resolved.document_config, collection=resolved.collection, parent_id=document.parent_id)
     if changed and not dry_run:
         # A completed earlier management save must not hide this new watcher write.
         clear_watch_suppressions(repo_root, watch_suppression_owner(
@@ -46,6 +47,6 @@ def set_draft(repo_root: Path, body: dict[str, Any], *, dry_run: bool = False) -
     return {
         "ok": True, "operation": "set_draft", **resolved.request_target(),
         "target": resolved.request_target(),
-        "record": {"doc_id": document.doc_id, "draft": body["draft"]},
+        "record": record,
         "source_revision": source_model.source_revision(source.encode("utf-8")) if changed and not dry_run else revision,
     }
