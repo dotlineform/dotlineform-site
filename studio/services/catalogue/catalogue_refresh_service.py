@@ -16,7 +16,6 @@ from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, SOURCE_FILES, records
 from catalogue.catalogue_works_metadata import generate_catalogue_works_metadata
 from catalogue.catalogue_pending_updates import accumulate_generated_work_changes, read_pending_updates
 from catalogue.generate_work_pages import generate_catalogue_json
-from catalogue.works_collection_metadata import generate_works_collection_metadata
 
 
 RECEIPT_PATH = Path("var/studio/catalogue/refresh-receipt.json")
@@ -105,11 +104,10 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
         pending_counts = accumulate_generated_work_changes(repo_root, pending, output)
         records = records_from_json_source(source_dir)
         report = generate_catalogue_works_metadata(repo_root, records, write=True)
-        titles = generate_works_collection_metadata(repo_root, records, write=True)
         receipt = _write_receipt(repo_root, revision)
         status = {"ok": True, "needed": False, "refreshed_at_utc": receipt["refreshed_at_utc"]}
         return {"ok": True, "output": output, "report_metadata": report,
-                "works_collection_metadata": titles, "pending_updates": pending_counts, "refresh_status": status}
+                "pending_updates": pending_counts, "refresh_status": status}
     except Exception as error:
         try:
             invalidate_refresh_receipt(repo_root)

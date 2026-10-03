@@ -3,13 +3,15 @@ draft: true
 doc_id: d-20260926-181549-53dc58
 title: Works Collection Browsing
 added_date: "2026-09-26 18:15:49"
-last_updated: "2026-09-26 19:47:13"
+last_updated: "2026-10-03 20:38:59"
 summary: Completed Works browsing delivery: Save-maintained Manage metadata, pagination, delayed title search and title/recent sorting, accepted through Site Preview and Save review.
 parent_id: d-20260428-000000-f5ff18
 ---
 # Works Collection Browsing
 
 Status: **complete and closed on 2026-09-26 with user approval**. The user reviewed through Site Preview, accepted the final count/placeholder/heading adjustments, confirmed Save testing and authorized closeout. Studio Save maintains the generated Catalogue metadata needed by Manage Works, and the report simply loads it normally. Preview and Site Preview contain the required `last_updated` values. Retain this completed delivery for manual archive.
+
+Current-state note, 2026-10-03: Context no longer displays a Subject column or Title/Subject heading sorts. The private Catalogue title reader/file/generator are retired, and `working_works` retains document-detail Subject information and actions only. Toolbar sorting is Working-only. The original delivery below records its accepted historical scope; [collection architecture](Sub_Scope_Index_Architecture.md#context-collection-browsing-and-working-subjects) and [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) own current behavior.
 
 The outcome is consistent, responsive browsing of [Works](/docs/?stage=working&doc=d-20260801-073826-8865a8), report `docs_collection`, collection `works`, in Manage, Preview and the public reader. Reuse the browsing behavior established by [Catalogue Collection Browsing](Catalogue_Collection_Browsing.md) while keeping Works' mixed subjects and richer Manage presentation. This delivery does not concern the separate report with registry ID `works` or the Catalogue Works report.
 

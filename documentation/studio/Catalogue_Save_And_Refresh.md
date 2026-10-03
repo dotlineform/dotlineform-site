@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260927-223812-8042fc
 title: Catalogue Save And Refresh
 added_date: "2026-09-27 22:38:12"
-last_updated: "2026-09-29 17:40:52"
+last_updated: "2026-10-03 20:38:59"
 summary: Current Catalogue Save, local Refresh, reader freshness and recovery boundaries.
 ui_status: stable
 parent_id: d-20260401-000000-a11bf3
@@ -32,7 +32,9 @@ The response returns current canonical records, revisions and memberships for th
 
 The **Refresh Catalogue** icon is in the **Catalogue Work Editor** header row, aligned with the Work search. Its result message appears to the right; successful timestamps display in Europe/London time as `YYYY-MM-DD HH:mm`. Refresh is disabled while the editor has unsaved changes or another operation is busy. An unavailable Refresh-status read reports its own error without blocking canonical editor loading.
 
-The awaited server operation first requires a valid private `$DOTLINEFORM_DOCS_BASE_DIR/working/source/collections/catalogue/updates-pending.json`, then invalidates its prior receipt. It performs complete Work/Series/Gallery JSON generation under `$DOTLINEFORM_DOCS_BASE_DIR/working/generated/catalogue/`, reconciles obsolete by-ID records, accumulates the generated Work by-ID `written` and `deleted` IDs in the pending list, and regenerates private `reports/catalogue-works/metadata.json` and `reports/works/manifest.json`. A completed operation writes `var/studio/catalogue/refresh-receipt.json`; it does not run duplicate generator dry runs or complete generated-output read-backs. The pending list, private aggregates and receipt are not public Catalogue artifacts. Refresh does not write the retired persisted Studio lookup files.
+The awaited server operation first requires a valid private `$DOTLINEFORM_DOCS_BASE_DIR/working/source/collections/catalogue/updates-pending.json`, then invalidates its prior receipt. It performs complete Work/Series/Gallery JSON generation under `$DOTLINEFORM_DOCS_BASE_DIR/working/generated/catalogue/`, reconciles obsolete by-ID records, accumulates the generated Work by-ID `written` and `deleted` IDs in the pending list, and regenerates private `reports/catalogue-works/metadata.json`. A completed operation writes `var/studio/catalogue/refresh-receipt.json`; it does not run duplicate generator dry runs or complete generated-output read-backs. The pending list, private report metadata and receipt are not public Catalogue artifacts. Refresh does not write the retired persisted Studio lookup files.
+
+Context's Subject column and heading sorts were removed on 2026-10-03. Their private Work/Series title file `reports/works/manifest.json`, reader, generator and report-serving allowance were retired with the last consumer. Refresh no longer generates or returns `works_collection_metadata`; Subject assignment uses its separate generated Catalogue provider.
 
 The receipt binds exact canonical Works, Series, Galleries and Gallery memberships plus the media-policy configuration. Save invalidates it when source or local media completion changes or fails. A missing or mismatched receipt shows **Refresh needed** after reopening the editor. A missing or malformed pending list stops Refresh before generated writes; it must never be recreated as empty. A failed Refresh can leave partial generated output and pending entries as written, but it leaves no current receipt and reports the incomplete operation. Fix the cause and run Refresh again. Because an output written before failure may no longer appear in the retry's `written` or `deleted` result, inspect the pending list and Work/document inventory, then choose Full reconciliation manually if needed.
 

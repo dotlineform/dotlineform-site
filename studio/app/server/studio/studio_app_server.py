@@ -45,7 +45,6 @@ from catalogue.catalogue_output_paths import (  # noqa: E402
     catalogue_output_workspace, catalogue_workspace_config, output_path,
 )
 from catalogue.catalogue_works_metadata import METADATA_PATH  # noqa: E402
-from catalogue.works_collection_metadata import METADATA_PATH as WORKS_COLLECTION_METADATA_PATH  # noqa: E402
 
 
 STATIC_PREFIXES = (
@@ -291,7 +290,7 @@ class StudioAppRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def send_catalogue_media(self, request_path: str) -> None:
-        report_paths = {CATALOGUE_OUTPUT_ROUTE_PREFIX + path for path in (METADATA_PATH, WORKS_COLLECTION_METADATA_PATH)}
+        report_paths = {CATALOGUE_OUTPUT_ROUTE_PREFIX + METADATA_PATH}
         if request_path.startswith(CATALOGUE_OUTPUT_ROUTE_PREFIX + "reports/"):
             if request_path not in report_paths:
                 self.send_error(HTTPStatus.NOT_FOUND, "Catalogue report not found")

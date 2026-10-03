@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260728-113139-763354
 title: Sub-Scope Index Architecture
 added_date: "2026-07-28 11:31:39"
-last_updated: "2026-10-03 18:45:56"
+last_updated: "2026-10-03 20:38:59"
 summary: Collection-list ownership, exact document identity, registered customisations, retained selection and explicit management adoption.
 parent_id: d-20260801-084127-752d7e
 ---
@@ -84,10 +84,10 @@ No lifecycle or cascade relationship is inferred from a parent document's report
 
 ## Public And Manage Projections
 
-Public mode keeps the existing minimal collection contract:
+Public mode supplies compact collection rows:
 
 ```json
-{"doc_id": "<id>", "title": "<title>"}
+{"doc_id": "<id>", "title": "<title>", "last_updated": "YYYY-MM-DD"}
 ```
 
 Manage mode supplies one compact inventory containing:
@@ -96,56 +96,40 @@ Manage mode supplies one compact inventory containing:
 {
   "doc_id": "<id>",
   "title": "<title>",
-  "ui_status": "<status>",
-  "publishable": false,
+  "draft": true,
   "last_updated": "YYYY-MM-DD"
 }
 ```
 
-`publishable` is false-only and appears only for an excluded row in a publish-capable collection. Included rows and every local collection row omit it.
+Working non-Catalogue rows carry the source's boolean `draft`. Catalogue rows omit it and have fixed document eligibility. Works additionally retains normalized `authoring_subject` metadata and its subject-generation revision for authoring; these fields do not create a Subject column.
 
-The compact inventory supports collection rendering and the Manage recency
-sort. Missing or unusable `last_updated` values sort after dated rows, then by
-title and `doc_id`. Full source metadata and body content remain exact-document
-reads. The report must not issue one full record request per row.
+The compact inventory supports collection rendering and the Working recency sort. Works and Catalogue require valid dates; the other collections sort undated rows after dated rows, then by title and `doc_id`. Full source metadata and body content remain exact-document reads. The report must not issue one full record request per row.
 
 A registered projector may add only namespaced root and row data:
 
 ```json
 {
-  "customisation": {"id": "concepts", "data": {"groups": ["subject"]}},
-  "docs": [{"doc_id": "<id>", "title": "<title>", "customisation": {"group": "subject"}}]
+  "customisation": {"id": "working_works", "data": {}},
+  "docs": [{"doc_id": "<id>", "title": "<title>", "last_updated": "YYYY-MM-DD", "draft": true}]
 }
 ```
 
-The current Analysis/Concepts projector is Manage-only, so its public manifest
-remains the minimal `{doc_id, title}` projection.
-
-Status and non-publishable icons remain private projections from a publish-capable Manage
-inventory. Local collections show no publication-exclusion icon. A missing `ui_status` remains a valid no-icon state unless a later
-UI decision introduces an explicit unclassified icon.
+The configured Works customisation is Working-only and supplies document-detail Subject information and actions. No current collection customisation supplies list rows, column headings or custom list sorting. Public collection declarations and manifests omit this private customisation.
 
 Rows and actions use `doc_id` as identity. Title remains display data; this
 feature introduces no title-uniqueness, collision, or deduplication contract.
 
 ## Row Presentation
 
-Status and the optional non-publishable icon prefix the title text inside the title cell,
-matching the main Index. They are part of the displayed title treatment, not
-separate columns or canonical `title` data. Their icons remain hidden from
-assistive technology while the title control's accessible name includes the
-corresponding status labels.
+Working draft indicators prefix the title text inside the title cell. They are part of the displayed title treatment, not separate columns or canonical `title` data. Their icons remain hidden from assistive technology while the title control's accessible name includes `Draft`.
 
-Checkboxes occupy a dedicated first cell or column before the title. Each
-checkbox remains a sibling of the title navigation control so selection cannot
-also navigate or create nested interactive controls. The checkbox cell is
-contributed only in manage selection mode and is omitted or collapsed
-otherwise; public rows remain title-only and load no selection module.
+Checkboxes occupy a dedicated first cell or column before the title. Each checkbox remains a sibling of the title navigation control so selection cannot also navigate or create nested interactive controls. The checkbox cell is contributed only in Working selection mode and is omitted or collapsed otherwise; public rows load no selection module. Catalogue thumbnails appear inside the title navigation control in both Working and public lists. There are no collection-specific column layouts or Subject heading rows.
 
 ```text
-selection mode:  [checkbox] [status icon + optional Excluded from next Publish icon + title]
-ordinary Manage:            [status icon + optional exclusion icon + title]
+selection mode:  [checkbox] [optional Draft icon + title]
+ordinary Manage:            [optional Draft icon + title]
 public:                     [title]
+Catalogue:                  [thumbnail + title], with Working selection when active
 ```
 
 ## Manage-Only Contribution
@@ -217,19 +201,21 @@ does not make every scope action collection-aware.
 
 ## Context Collection Browsing And Working Subjects
 
-The `works` collection host `d-20260801-073826-8865a8` is displayed as **Context**. Its immutable document identity, internal collection ID, paths and `working_works` customisation remain unchanged. It uses the [shared browsing module](../../docs-viewer/runtime/js/shared/docs-collection-browsing.js) for 20-row pages, normalized case-insensitive title-fragment search after a 180 ms typing pause, immediate clear, and cached full-result filtering/sorting before pagination. Context opens in title A–Z order with the existing numeric-aware collation; a shared toolbar button switches to document `last_updated` descending, with title and exact document ID ties. Manage retains its title/subject heading sorts under the same active sort state. Pending search disables sort/page controls. Search/sort resets page 1; detail return preserves query, sort, page and return position. Select all still covers the complete eligible filtered set across pages. Context retains mixed subjects and has no row thumbnails.
+The `works` collection host `d-20260801-073826-8865a8` is displayed as **Context**. Its immutable document identity, internal collection ID, paths and `working_works` customisation remain unchanged. It uses the [shared browsing module](../../docs-viewer/runtime/js/shared/docs-collection-browsing.js) for 20-row pages, normalized case-insensitive title-fragment search after a 180 ms typing pause, immediate clear, and cached full-result filtering/sorting before pagination. Context opens in title A–Z order with the existing numeric-aware collation; a Working-only shared toolbar button switches to document `last_updated` descending, with title and exact document ID ties. Public lists retain their default order. The Subject column and Title/Subject heading sorts were removed on 2026-10-03. Pending search disables sort/page controls. Search/sort resets page 1; detail return preserves query, sort, page and return position. Select all still covers the complete eligible filtered set across pages. Context uses the standard Working title/draft/selection presentation and has no row thumbnails.
 
-The configured collection display title is `Context`, used by Search/Recent result metadata and the Manage Import destination. Browsing copy uses `documents` for search, paging and empty states. The common reader supplies caller Back independently of the collection label. Collection lists render and announce no total or filtered counts; loading, empty and error messages remain. The search placeholder is `title`, and Manage's title-column heading is `Title`. Browser configuration and Working Search/Recents generation project the configured title; Preview and Site Preview receive snapshot data through their normal lifecycle.
+The configured collection display title is `Context`, used by Search/Recent result metadata and the Manage Import destination. Browsing copy uses `documents` for search, paging and empty states. The common reader supplies caller Back independently of the collection label. Collection lists render and announce no total or filtered counts; loading, empty and error messages remain. The search placeholder is `title`; there is no column-heading row. Browser configuration and Working Search/Recents generation project the configured title; Preview and Site Preview receive snapshot data through their normal lifecycle.
 
-Docs generation owns document membership, titles, dates, readiness and exact subject declarations. Working reads `manage-manifest.json`; Preview/public read `manifest.json`, whose Works rows now require `doc_id`, `title`, `subject` and `last_updated`. Folder declarations stay private. Complete and targeted builds preserve source timestamps; old-shape saved metadata fails visibly. Snapshot adoption remains owned by Prepare Preview and Deploy Repo, separately from Catalogue Save.
+Docs generation owns document membership, titles, dates, readiness and exact subject declarations. Working reads `manage-manifest.json`; Preview/public read `manifest.json`, whose Works rows contain `doc_id`, `title` and date-only `last_updated`. Subject declarations remain in source and authoring metadata without a list column. Complete and targeted builds preserve source timestamps; old-shape saved metadata fails visibly. Snapshot adoption remains owned by Publish, separately from Catalogue Save.
 
-Manage's [private title reader](../../docs-viewer/runtime/js/management/docs-viewer-management-works-metadata.js) loads `reports/works/manifest.json` from configured Working Catalogue output through the existing private local report-asset route with `cache: no-store`. This compact file contains every Work and Series ID/title, including empty Series. [Studio Save completion](Catalogue_Save_And_Refresh.md) maintains affected entries before reporting complete success. The normal list load consumes saved data; it performs no canonical reads, Catalogue-target lookup request or report generation, and needs no separate Works Build after a Catalogue Save. Missing/invalid files fail visibly; a missing subject identity retains its existing unavailable presentation. Docs builds neither generate nor overwrite this Catalogue-owned file. Public runtime/data exclude it. Subject assignment pickers retain their separately owned generated Catalogue provider.
+The retired Subject column used a private Catalogue title reader and `reports/works/manifest.json` to display and sort Work/Series subject titles. With its last consumer removed, the reader, metadata generator, Catalogue Refresh step and private report-serving allowance were removed together. Context list loading requires no Catalogue title-file read. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) retains its other generated-reader and freshness responsibilities.
 
-The Working Works list displays Series subjects as plain text. Work subjects open their exact Work in Media View; the Work presentation exposes its Gallery links only. Folder subjects retain their existing local-folder action. These destinations apply to Working Works; other collections retain their existing subject navigation.
+The `working_works` contribution now supplies only document-detail Subject information, Assign Subject and Open in Finder. Subject assignment pickers retain their separately owned generated Catalogue provider. Removing the list column does not migrate source subjects or restrict the supported Subject kinds.
 
 Local folder links and the Edit menu's Open in Finder action open silently on success; failures still display an error.
 
 Implementation/static review, initial metadata generation, a targeted no-change preview and direct HTTP serving checks passed on 2026-09-26. The user confirmed review through Site Preview, accepted the final count/placeholder/heading changes, confirmed Studio Save testing and authorized closeout. Current Preview/site manifests include the required timestamps. This establishes user manual acceptance; it does not claim browser automation, measured performance, failure injection or exhaustive mutation/selection/subject-action coverage. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns Save freshness and recovery.
+
+The 2026-10-03 Subject-column removal passed explicit lint for the three changed JavaScript modules and two changed Python modules, site-code projection/check, site validation and whitespace review. The obsolete private Working title file was removed. Tests, browser review, Catalogue Refresh, Build, Publish, commit and push were not run. The legacy [Working-subject collection test](../../docs-viewer/tests/js/docs_viewer_processing_working_collection_contract.mjs) still imports a retired module and asserts the removed Subject helpers/styles; it remains unchanged and unreviewed under the separate test-work policy.
 
 ## Catalogue Work Records
 
@@ -262,9 +248,9 @@ Catalogue by-ID document payloads omit both `subject`, including the null projec
 
 Local and public browser configuration expose the configured Catalogue by-ID base. Media View and Catalogue Works compose `?collection=catalogue&doc=<work-id>` without a document lookup. The common reader opens that exact Catalogue payload without loading its list manifest or thumbnail settings. Document Back returns only to its immediate calling document/report, including a retained Catalogue list. A link from Media View uses its underlying document as caller; Media View's own Back returns within that document. Invalid Work IDs and missing or mismatched payloads fail visibly without a replacement target.
 
-The [shared browsing module](../../docs-viewer/runtime/js/shared/docs-collection-browsing.js) prepares normalized title search values, timestamps and Catalogue thumbnail descriptors once per loaded manifest. [The shared collection reader](../../docs-viewer/runtime/js/shared/docs-collection-report.js) opens Catalogue with 20 documents ordered by `last_updated` descending, then title and document ID. Its sort control switches between latest-updated and title order. Search uses normalized case-insensitive substring matching over document titles and exact Work-ID fields across the complete collection. Typing waits for a 180 ms pause; clearing applies immediately. Sorting and paging are disabled while a query is pending, and deferred work is cancelled on detail navigation, refresh, errors or unmount. Search/sort changes reset to page 1; page turns reuse cached matches. There is no persistent search index or change to site Search/Recents.
+The [shared browsing module](../../docs-viewer/runtime/js/shared/docs-collection-browsing.js) prepares normalized title search values, timestamps and Catalogue thumbnail descriptors once per loaded manifest. [The shared collection reader](../../docs-viewer/runtime/js/shared/docs-collection-report.js) opens Catalogue with 20 documents ordered by `last_updated` descending, then title and document ID. Its Working-only sort control switches between latest-updated and title order; public lists retain the default order. Search uses normalized case-insensitive substring matching over document titles and exact Work-ID fields across the complete collection. Typing waits for a 180 ms pause; clearing applies immediately. Sorting and paging are disabled while a query is pending, and deferred work is cancelled on detail navigation, refresh, errors or unmount. Search/sort changes reset to page 1; page turns reuse cached matches. There is no persistent search index or change to site Search/Recents.
 
-Only the current page's rows and thumbnail elements are mounted. The pager shows current/total pages with chevrons disabled at the ends; no matches hide it. Collection totals and filtered counts are neither rendered nor announced. Working selection and Select all use the complete filtered result across pages, while checkboxes exist only on rendered rows. Rows open the common reader. Browser-history return reuses the retained list and restores page, query, sort, selection, scroll and row focus. Manifest replacement or committed-record reconciliation rebuilds prepared values and bounds the page against current matches. Works shares the pager/search timing and return behavior with its separately described ordering, inputs and presentation.
+Only the current page's rows and thumbnail elements are mounted. The pager shows current/total pages when results span multiple pages; single-page and empty results hide the entire pager. Previous is disabled on page 1; Next on the last page returns to page 1 using cached matches. Pending filtering disables paging. On the last of multiple pages, Next's tooltip and accessible label identify the first-page destination. Collection totals and filtered counts are neither rendered nor announced. Working selection and Select all use the complete filtered result across pages, while checkboxes exist only on rendered rows. Rows open the common reader. Browser-history return reuses the retained list and restores page, query, sort, selection, scroll and row focus. Manifest replacement or committed-record reconciliation rebuilds prepared values and bounds the page against current matches. Works shares the pager/search timing and return behavior with its separately described ordering, inputs and presentation.
 
 Each row displays the existing 96px Work thumbnail at 64px beside its title. The existing media provider supplies selected-stage generated media policy, using static files on public routes and the existing generated-data read locally; the shared media helper combines it with the route-owned thumbnail base. There are no runtime server changes or per-row Work JSON reads. Thumbnails use lazy loading and reserved dimensions. The image and title share one document navigation control; an unavailable image leaves title navigation usable. Public code projection and static site validation are required when these shared modules/styles change.
 

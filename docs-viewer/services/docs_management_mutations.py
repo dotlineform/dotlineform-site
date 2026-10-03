@@ -449,6 +449,10 @@ def plan_assign_field_group(
     response["source_revision"] = source_revision(
         updated_source_text.encode("utf-8")
     )
+    response["record"] = committed_document_record(
+        updated_front_matter, target.doc_id, resolved.document_config,
+        collection=resolved.collection, parent_id=target.parent_id,
+    )
     response["summary_text"] = f"Updated {group.group_id} for {target.doc_id}."
     return ManagementMutationPlan(
         collection=resolved.collection,

@@ -60,7 +60,7 @@ export function createCollectionBrowsingData(options) {
         const entry = entries.get(doc.docId);
         return !normalized || entry.title.includes(normalized) || entry.workId.includes(normalized);
       }).sort((left, right) => {
-        if (!["title-asc", "last-updated-desc"].includes(sortMode) && (catalogue || sortMode !== "title-desc")) {
+        if (!["title-asc", "last-updated-desc"].includes(sortMode)) {
           if (typeof compareCustom !== "function") throw new Error("Unsupported collection sort mode: " + sortMode);
           const comparison = compareCustom(left, right);
           if (!Number.isFinite(comparison)) throw new Error("Collection comparator must return a finite number.");
@@ -70,7 +70,7 @@ export function createCollectionBrowsingData(options) {
         const b = entries.get(right.docId);
         if (titleCollator) {
           return (sortMode === "last-updated-desc" ? b.updated - a.updated : 0)
-            || titleCollator.compare(left.title, right.title) * (sortMode === "title-desc" ? -1 : 1)
+            || titleCollator.compare(left.title, right.title)
             || compareText(left.docId, right.docId);
         }
         return (sortMode === "last-updated-desc" ? b.updated - a.updated : 0)
@@ -108,7 +108,8 @@ export async function loadCatalogueCollectionThumbnailSettings(context) {
 }
 
 /**
- * Compact page controls; the collection owner supplies cached results and navigation.
+ * Compact controls over cached results. Next wraps to the first of multiple pages;
+ * Previous stops at the first page. The collection owner supplies navigation.
  * @param {Document} documentRef
  * @param {string} collectionTitle Accessible name of the collection.
  * @param {function(number): void} onPage Receives a zero-based page index.
@@ -119,6 +120,7 @@ export function createCollectionPager(documentRef, collectionTitle, onPage) {
   root.setAttribute("aria-label", collectionTitle + " pages");
   root.hidden = true;
   let pageIndex = 0;
+  let pageCount = 0;
   const label = documentRef.createElement("span");
   label.className = "docsViewerReport__collectionPageLabel";
   function arrow(name, direction, offset) {
@@ -128,7 +130,10 @@ export function createCollectionPager(documentRef, collectionTitle, onPage) {
     button.setAttribute("aria-label", name);
     button.title = name;
     button.appendChild(createDocsViewerToolbarIcon(documentRef, "docsViewer__icon--chevron-" + direction));
-    button.addEventListener("click", () => onPage(pageIndex + offset));
+    button.addEventListener("click", () => {
+      const target = pageIndex + offset;
+      onPage(offset > 0 && target >= pageCount ? 0 : target);
+    });
     return button;
   }
   const previous = arrow("Previous " + collectionTitle + " page", "left", -1);
@@ -138,11 +143,14 @@ export function createCollectionPager(documentRef, collectionTitle, onPage) {
     root,
     update(count, page, pending) {
       pageIndex = page;
-      const pages = Math.ceil(count / COLLECTION_PAGE_SIZE);
-      root.hidden = count === 0;
-      label.textContent = (page + 1) + "/" + pages;
+      pageCount = Math.ceil(count / COLLECTION_PAGE_SIZE);
+      root.hidden = pageCount <= 1;
+      label.textContent = (page + 1) + "/" + pageCount;
       previous.disabled = pending || page === 0;
-      next.disabled = pending || page + 1 >= pages;
+      next.disabled = pending || pageCount <= 1;
+      const nextLabel = (pageCount > 1 && page + 1 >= pageCount ? "First " : "Next ") + collectionTitle + " page";
+      next.setAttribute("aria-label", nextLabel);
+      next.title = nextLabel;
     }
   };
 }

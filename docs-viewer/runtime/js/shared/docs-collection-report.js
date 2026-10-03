@@ -588,8 +588,7 @@ function updateCollectionControls(state) {
   if (button) {
     var recentMode = state.sortMode === "last-updated-desc";
     var currentLabel = {
-      "title-asc": "title A–Z", "title-desc": "title Z–A",
-      "subject-asc": "subject ascending", "subject-desc": "subject descending",
+      "title-asc": "title A–Z",
       "last-updated-desc": "recently updated"
     }[state.sortMode];
     button.disabled = pending;

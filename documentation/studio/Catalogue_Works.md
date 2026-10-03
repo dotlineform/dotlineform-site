@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260401-000000-ebf14a
 title: Catalogue Works
 added_date: "2026-04-01 00:00:00"
-last_updated: "2026-09-30 11:33:27"
+last_updated: "2026-10-03 20:21:11"
 parent_id: d-20260423-000000-d015e6
 
 ---
@@ -15,7 +15,7 @@ Open [Catalogue Works](/docs/?doc=d-20260810-222148-99daec). The report is a loc
 
 Use Working document navigation or the link above to open the report. Editing remains in Studio's Work editor and its shared Series controls.
 
-The report loads generated metadata for all saved Works and shows rows after a search by Work ID, Work title, Series ID or Series title. It searches the full loaded dataset and renders 20 matching rows per page. Beneath the report, `chevron-left.svg` and `chevron-right.svg` surround a compact current/total indicator such as `1/2`; the arrows disable at the first and last page. One-page results show `1/1`; empty results hide the pager. Search and sort changes reset to page 1. The initial list remains empty and the default sort remains ascending Work ID. Catalogue Works and Series have no draft/published state, and the report applies no publication filter. Document workflow and publication decisions are separate from Catalogue record identity.
+The report loads generated metadata for all saved Works and shows rows after a search by Work ID, Work title, Series ID or Series title. It searches the full loaded dataset and renders 20 matching rows per page. Beneath the report, `chevron-left.svg` and `chevron-right.svg` surround a compact current/total indicator such as `1/2`. Previous is disabled on page 1; Next on the last page returns to page 1 using the retained matches, with a first-page tooltip and accessible label. One-page and empty results hide the entire pager. Search and sort changes reset to page 1. The initial list remains empty and the default sort remains ascending Work ID. Catalogue Works and Series have no draft/published state, and the report applies no publication filter. Document workflow and publication decisions are separate from Catalogue record identity.
 
 Each Work has an exact `work_id` and one required `series_id`. Results retain year and curator-only storage context in one seven-column semantic table. Work, Year, Title, Series and Storage are the five embedded and sortable columns. Medium type and Medium caption appear only in Expanded Report View. **Copy table** exports all current sorted matches, across every page, as five-column TSV while embedded and seven-column TSV while expanded.
 

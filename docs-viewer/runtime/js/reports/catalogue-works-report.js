@@ -387,9 +387,13 @@ function updateControls(state) {
   const resultsUnavailable = state.busy || state.failed || state.searchTimer !== null;
   state.searchInputNode.disabled = state.busy || state.failed;
   state.copyButton.disabled = resultsUnavailable || !state.projection.rows.length;
-  state.paginationNode.hidden = !state.projection.rows.length;
+  const pageCount = Math.ceil(state.projection.rows.length / PAGE_SIZE);
+  state.paginationNode.hidden = pageCount <= 1;
   state.previousPageButton.disabled = resultsUnavailable || state.pageIndex === 0;
-  state.nextPageButton.disabled = resultsUnavailable || (state.pageIndex + 1) * PAGE_SIZE >= state.projection.rows.length;
+  state.nextPageButton.disabled = resultsUnavailable || pageCount <= 1;
+  const nextLabel = pageCount > 1 && state.pageIndex + 1 >= pageCount ? "First page" : "Next page";
+  state.nextPageButton.setAttribute("aria-label", nextLabel);
+  state.nextPageButton.title = nextLabel;
   state.headRowNode.querySelectorAll("[data-report-sort]").forEach((button) => {
     button.disabled = resultsUnavailable;
   });
@@ -456,7 +460,8 @@ function attachEvents(state) {
   });
   function changePage(step) {
     if (state.busy || state.failed || state.searchTimer !== null) return;
-    const pageIndex = state.pageIndex + step;
+    const nextPage = state.pageIndex + step;
+    const pageIndex = step > 0 && nextPage * PAGE_SIZE >= state.projection.rows.length ? 0 : nextPage;
     if (pageIndex < 0 || pageIndex * PAGE_SIZE >= state.projection.rows.length) return;
     state.pageIndex = pageIndex;
     renderCurrent(state);

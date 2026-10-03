@@ -1,6 +1,4 @@
 import { createDocsViewerEditMenuItem } from "./docs-viewer-management-edit-menu.js";
-import { mountDocsViewerMediaLinks } from "../shared/docs-viewer-media-detail.js";
-import { loadWorksCollectionSubjectTitles } from "./docs-viewer-management-works-metadata.js";
 import {
   encodeDecodedLocalTarget
 } from "./docs-viewer-management-client.js";
@@ -16,18 +14,9 @@ import {
 import {
   normalizeManagedDocumentCollectionTarget
 } from "./docs-viewer-management-document-target.js";
-import {
-  appendProjectSubjectIcon
-} from "../reports/project-subject-icons.js";
 
 const WORKS_CUSTOMISATION_ID = "working_works";
 const AUTHORING_SUBJECT_GROUP_ID = "authoring_subject";
-const PROJECT_SORT_MODES = Object.freeze([
-  "title-asc",
-  "title-desc",
-  "subject-asc",
-  "subject-desc"
-]);
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -50,201 +39,9 @@ function authoringSubject(documentRecord) {
   );
 }
 
-function subjectTargetIdentity(kind, key) {
-  return cleanString(kind) + ":" + cleanString(key);
-}
-
-export function projectDocsViewerWorkingSubject(documentRecord, targetLookup) {
-  var subject = authoringSubject(documentRecord);
-  if (subject.kind !== "none") {
-    var targetTitles = targetLookup && targetLookup.titles instanceof Map
-      ? targetLookup.titles
-      : new Map();
-    var targetTitle = targetTitles.get(subjectTargetIdentity(subject.kind, subject.key)) || "";
-    var targetUnavailable = (
-      ["work", "series"].includes(subject.kind)
-      && targetLookup
-      && targetLookup.available === true
-      && !targetTitle
-    );
-    return {
-      kind: subject.kind,
-      key: subject.key,
-      label: targetTitle || subject.key,
-      state: targetUnavailable ? "unavailable" : "valid",
-      targetTitle: targetTitle
-    };
-  }
-  return {
-    kind: "none",
-    key: "",
-    label: "",
-    state: "none",
-    targetTitle: ""
-  };
-}
-
-function subjectAccessibleLabel(subject) {
-  var kindLabel = ({ folder: "Folder", work: "Work", series: "Series" })[subject.kind];
-  if (!kindLabel) return "";
-  if (subject.targetTitle) {
-    return kindLabel + " subject " + subject.targetTitle + ", " + subject.key;
-  }
-  return kindLabel + " subject " + subject.key
-    + (subject.state === "unavailable" ? ", unavailable" : "");
-}
-
-function renderSubjectCell(context, options, targetLookup) {
-  var settings = context || {};
-  var host = settings.trailingHost;
-  if (!host) return;
-  var subject = projectDocsViewerWorkingSubject(settings.document, targetLookup);
-  var cell = host.ownerDocument.createElement("span");
-  cell.className = "docsViewerReport__projectSubjectCell";
-  cell.dataset.projectSubjectState = subject.state;
-  if (subject.state === "none") {
-    cell.setAttribute("aria-label", "No subject");
-    host.appendChild(cell);
-    return;
-  }
-  if (subject.state === "unavailable") {
-    var unavailable = host.ownerDocument.createElement("span");
-    unavailable.className = "docsViewerReport__projectSubjectUnavailable";
-    unavailable.dataset.projectSubjectKind = subject.kind;
-    unavailable.dataset.projectSubjectKey = subject.key;
-    appendProjectSubjectIcon(unavailable, subject.kind);
-    var unavailableLabel = host.ownerDocument.createElement("span");
-    unavailableLabel.className = "docsViewerReport__projectSubjectUnavailableLabel";
-    unavailableLabel.textContent = subject.label;
-    unavailable.appendChild(unavailableLabel);
-    unavailable.setAttribute("aria-label", subjectAccessibleLabel(subject));
-    unavailable.title = subjectAccessibleLabel(subject);
-    cell.appendChild(unavailable);
-    host.appendChild(cell);
-    return;
-  }
-  var mediaSubject = subject.kind === "work";
-  var linkedSubject = subject.kind === "folder" || mediaSubject;
-  var link = host.ownerDocument.createElement(mediaSubject ? "button" : linkedSubject ? "a" : "span");
-  link.className = linkedSubject
-    ? "docsViewerReport__cellLink docsViewerReport__projectSubjectLink"
-    : "docsViewerReport__projectSubjectLink";
-  link.dataset.projectSubjectKind = subject.kind;
-  link.dataset.projectSubjectKey = subject.key;
-  appendProjectSubjectIcon(link, subject.kind);
-  var label = host.ownerDocument.createElement("span");
-  label.textContent = subject.label;
-  link.appendChild(label);
-  link.setAttribute("aria-label", subjectAccessibleLabel(subject));
-  if (subject.kind === "folder") {
-    var encodedPath = encodeDecodedLocalTarget(subject.key);
-    if (!encodedPath) throw new Error("Working document Folder subject is invalid.");
-    link.href = "#";
-    link.dataset.docsViewerLocalTarget = encodedPath;
-    link.title = "Open " + subject.key + " in Finder";
-  } else if (mediaSubject) {
-    cell.dataset.docsContentDetail = "media";
-    cell.dataset.docsMediaKind = "catalogue-" + subject.kind;
-    cell.dataset.docsMediaId = subject.key;
-    link.type = "button";
-    link.classList.add("docsViewer__mediaTextLink");
-    link.dataset.docsMediaOpen = "true";
-    link.title = "Open " + subjectAccessibleLabel(subject) + " in Media View";
-  }
-  cell.appendChild(link);
-  host.appendChild(cell);
-  if (mediaSubject) {
-    mountDocsViewerMediaLinks({
-      content: host,
-      documentTarget: options.documentTarget,
-      isCurrentDocument: function () { return options.content.contains(host); },
-      openMediaTarget: options.openMediaTarget
-    });
-  }
-}
-
-function compareText(collator, left, right) {
-  return collator.compare(cleanString(left), cleanString(right));
-}
-
-function compareProjectDocuments(context, targetLookup, collator) {
-  var settings = context || {};
-  var sortMode = cleanString(settings.sortMode);
-  if (!PROJECT_SORT_MODES.includes(sortMode)) {
-    throw new Error("Works list sort mode is invalid: " + sortMode);
-  }
-  var direction = sortMode.endsWith("-desc") ? -1 : 1;
-  var left = settings.left || {};
-  var right = settings.right || {};
-  var comparison;
-  if (sortMode.startsWith("subject-")) {
-    var leftSubject = projectDocsViewerWorkingSubject(left, targetLookup);
-    var rightSubject = projectDocsViewerWorkingSubject(right, targetLookup);
-    var stateOrder = { valid: 0, unavailable: 1, none: 2 };
-    comparison = stateOrder[leftSubject.state] - stateOrder[rightSubject.state];
-    if (comparison) return comparison;
-    comparison = compareText(collator, leftSubject.label, rightSubject.label) * direction;
-    if (comparison) return comparison;
-    comparison = compareText(collator, leftSubject.kind, rightSubject.kind) * direction;
-    if (comparison) return comparison;
-    comparison = compareText(collator, leftSubject.key, rightSubject.key) * direction;
-    if (comparison) return comparison;
-  } else {
-    comparison = compareText(collator, left.title, right.title) * direction;
-    if (comparison) return comparison;
-  }
-  comparison = compareText(collator, left.title, right.title);
-  if (comparison) return comparison;
-  return compareText(collator, left.doc_id, right.doc_id);
-}
-
-function listSortButton(context, key, label) {
-  var settings = context || {};
-  var sort = settings.sort || {};
-  var active = cleanString(sort.mode).startsWith(key + "-");
-  var ascending = cleanString(sort.mode) === key + "-asc";
-  var button = settings.host.ownerDocument.createElement("button");
-  button.className = "docsViewerReport__sortButton";
-  button.type = "button";
-  button.dataset.projectSort = key;
-  button.textContent = label;
-  if (active) button.dataset.state = "active";
-  var indicator = settings.host.ownerDocument.createElement("span");
-  indicator.className = "docsViewerReport__sortIndicator";
-  indicator.setAttribute("aria-hidden", "true");
-  indicator.textContent = active ? (ascending ? "▲" : "▼") : "";
-  button.appendChild(indicator);
-  button.setAttribute(
-    "aria-label",
-    "Sort by " + label + (active ? (ascending ? " descending" : " ascending") : " ascending")
-  );
-  button.addEventListener("click", function () {
-    sort.setMode(key + (active && ascending ? "-desc" : "-asc"));
-  });
-  return button;
-}
-
-function renderListHead(context) {
-  var settings = context || {};
-  var host = settings.host;
-  if (!host || !settings.sort || typeof settings.sort.setMode !== "function") return;
-  var selection = host.ownerDocument.createElement("span");
-  selection.className = "docsViewerReport__projectSelectionHead";
-  selection.setAttribute("aria-hidden", "true");
-  host.appendChild(selection);
-  host.appendChild(listSortButton(settings, "title", settings.collection.collection === "works" ? "Title" : "Doc title"));
-  host.appendChild(listSortButton(settings, "subject", "Subject"));
-
-}
-
 function folderPath(documentRecord) {
   var subject = authoringSubject(documentRecord);
   return subject.kind === "folder" ? subject.key : "";
-}
-
-function renderWorkingSubjectRow(context, options, targetLookup) {
-  renderSubjectCell(context, options, targetLookup);
-  return { accessibleLabels: [] };
 }
 
 function renderOpenInFinder(context, options) {
@@ -379,6 +176,7 @@ function workingSubjectDetailInfo(context, assignSubjectAvailable) {
   });
 }
 
+/** Provide Working subject information and detail actions without list metadata reads. */
 export function createDocsViewerManagementCollectionWorkingWorks(options = {}) {
   var descriptorId = cleanString(options.descriptor && options.descriptor.id);
   if (descriptorId !== WORKS_CUSTOMISATION_ID) {
@@ -386,42 +184,14 @@ export function createDocsViewerManagementCollectionWorkingWorks(options = {}) {
   }
   exactCollection(options.collection);
   var assignSubjectAvailable = hasDocsViewerAssignableFieldGroup(options.descriptor, AUTHORING_SUBJECT_GROUP_ID);
-  var collator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
-  return loadWorksCollectionSubjectTitles(options).then(function (targetLookup) {
-    var contribution = {
-      id: WORKS_CUSTOMISATION_ID,
-      notify: function (event) {
-        if (!event || event.type !== "mount") return;
-        var reportRoot = event.root;
-        if (!reportRoot || !reportRoot.dataset) {
-          throw new Error("Working subject report mount root is invalid.");
-        }
-        reportRoot.dataset.workingSubjectColumns = "subject";
-      },
-      compareListDocuments: function (context) {
-        return compareProjectDocuments(context, targetLookup, collator);
-      },
-      projectDetailInfo: function (context) {
-        return workingSubjectDetailInfo(
-          context,
-          assignSubjectAvailable
-        );
-      },
-      renderDetailToolbar: function (context) {
-        renderAssignSubject(context, options, assignSubjectAvailable);
-        renderOpenInFinder(context, options);
-      },
-      renderListHead: function (context) {
-        renderListHead(context);
-      },
-      renderRow: function (context) {
-        return renderWorkingSubjectRow(
-          context,
-          options,
-          targetLookup
-        );
-      }
-    };
-    return contribution;
-  });
+  return {
+    id: WORKS_CUSTOMISATION_ID,
+    projectDetailInfo: function (context) {
+      return workingSubjectDetailInfo(context, assignSubjectAvailable);
+    },
+    renderDetailToolbar: function (context) {
+      renderAssignSubject(context, options, assignSubjectAvailable);
+      renderOpenInFinder(context, options);
+    }
+  };
 }
