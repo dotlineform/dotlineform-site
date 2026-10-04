@@ -172,6 +172,8 @@ Record: the user accepted the delivered result and explicitly authorized closure
 
 ## Follow On
 
+> update: new token is excluded, including html inserts would require static text extraction, so decided no change needed.
+
 Review Search's image-content policy across semantic image tokens, existing Markdown images, HTML figures and Catalogue images. Use the user's preference to exclude image alt, caption and summary as the proposed policy; establish how the extractor identifies image-owned text while retaining ordinary prose and document front-matter summary. Resolve the temporary difference between existing markup and new tokens through Search's owning extraction boundary, without requiring source-markup conversion. Any resulting code changes, verification selection and complete Search rebuild need their own bounded scope and approval.
 
 Bulk conversion of existing image markup, changes to Catalogue's derived text, thumbnail policy, primary rendition/srcset generation, general media-pipeline work and additional image-token families are outside this delivery. Any later test work requires its own agreed purpose, coverage, cost and acceptance, with a durable coverage record outside this delivery.
