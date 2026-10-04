@@ -23,6 +23,7 @@ from .common import (
 from .source import DocRecord, DocumentIdentity
 from .semantic_tokens import semantic_token_text_ranges
 from docs_local_links import LocalLinkInputError, decode_relative_target
+from docs_image_tokens import encode_image_path
 
 
 LOCAL_FOLDER_LINK_PATTERN = re.compile(r"(?P<image>!)?\[(?P<label>(?:\\.|[^\]\\])*)\]\(\s*dlf-local:(?P<target>[^)\r\n]*?)\s*\)")
@@ -210,6 +211,12 @@ class ContentRenderingMixin:
         media = self.site_config.get("media")
         media_base = str(media.get("base") if isinstance(media, dict) else "").strip()
         return f"/{clean_path}" if not media_base else f"{media_base.rstrip('/')}/{clean_path}"
+
+    def image_token_media_url(self, media_path: str) -> str:
+        """Resolve an exact current-owner image role, with encoded asset identity."""
+        if self.published_media_type_for_reference(media_path) not in {"img", "svg"}:
+            raise ValueError(f"Image token has no configured image owner: {media_path}")
+        return self.resolve_media_url(encode_image_path(media_path))
 
     def resolve_html_media_tokens(self, markdown: str) -> str:
         if "[[html-media:" not in markdown:

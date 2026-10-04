@@ -1,5 +1,5 @@
 import {
-  catalogueTokenAtSelection,
+  sourceTokenAtSelection,
   parseCatalogueTokens
 } from "./catalogue-token-parser.js";
 import { sourceBodyStart } from "./source-buffer.js";
@@ -11,7 +11,7 @@ export function captureCatalogueTokenAction(adapter, selection, presentation) {
   var tokens = parseCatalogueTokens(snapshot.value.slice(bodyStart)).map(function (token) {
     return Object.assign({}, token, { start: token.start + bodyStart, end: token.end + bodyStart });
   });
-  var token = catalogueTokenAtSelection(tokens, selection);
+  var token = sourceTokenAtSelection(tokens, selection);
   if (token && token.presentation !== presentation) token = null;
   return {
     snapshot: snapshot,

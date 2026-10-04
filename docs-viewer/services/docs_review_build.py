@@ -79,6 +79,10 @@ class DocsReviewDataBuilder(DocsDataBuilder):
             raise RuntimeError(f"Review package media asset is not inventoried: {relative_path}")
         return self._asset_url(str(record.get("package_path") or ""))
 
+    def image_token_media_url(self, media_path: str) -> str:
+        """Review resolves the decoded identity against its existing asset inventory."""
+        return self.resolve_media_url(media_path)
+
     def html_media_iframe(self, raw_body: str) -> str:
         token = self.parse_html_media_token(raw_body)
         media_path = token["media_path"]

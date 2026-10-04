@@ -38,7 +38,7 @@ class PayloadBuilderMixin:
             raise ValueError(f"Document {doc.doc_id}: {exc}") from exc
         content_html = add_missing_image_titles(
             self.rewrite_doc_links(
-                self.restore_catalogue_media_html(rendered),
+                self.restore_semantic_media_html(rendered),
                 current_doc=doc, docs=docs,
             )
         )

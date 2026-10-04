@@ -6,6 +6,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 import re
+import sys
 from typing import Iterable, Mapping
 
 from docs_artifact_locations import (
@@ -17,6 +18,12 @@ from docs_artifact_locations import (
 from docs_workspace_config import DocsStageConfig, DocsCollectionConfig
 from docs_document_images import document_thumbnail_filename, has_document_thumbnail
 from docs_source_model import parse_source_text
+
+BUILD_DIR = Path(__file__).resolve().parents[1] / "build"
+if str(BUILD_DIR) not in sys.path:
+    sys.path.insert(0, str(BUILD_DIR))
+
+from docs_builder.semantic_tokens import parse_semantic_tokens  # noqa: E402
 
 
 MEDIA_REFERENCE_PATTERN = re.compile(r"\[\[(?:media|html-media):(?P<path>[^\]\s]+)(?:[^\]]*)\]\]")
@@ -49,13 +56,22 @@ def source_media_references(
 
     found: set[tuple[str, str, str]] = set()
     owner_collection = getattr(config, "collection", "")
+    metadata, body = parse_source_text(source)
+    for token in parse_semantic_tokens(body, registry=None):
+        if token.family != "image":
+            continue
+        for media_type, media in config.media.types.items():
+            prefix = media.reference_prefix.as_posix() + "/"
+            if media_type in {"img", "svg"} and token.media_path.startswith(prefix):
+                found.add((media_type, token.media_path.removeprefix(prefix), token.media_path))
     if document_collection is None or document_collection == owner_collection:
-        metadata, _body = parse_source_text(source)
         if has_document_thumbnail(metadata, collection=owner_collection):
             identity = document_thumbnail_filename(doc_id or metadata.get("doc_id", ""), collection=owner_collection)
             media = config.media.types["thumbs"]
             found.add(("thumbs", identity, f"{media.reference_prefix.as_posix()}/{identity}"))
-    for match in MEDIA_REFERENCE_PATTERN.finditer(source):
+    # New token fields and inactive examples must not leak into legacy path scans.
+    legacy_source = re.sub(r"\[\[image:.*?\]\]", "", source, flags=re.DOTALL)
+    for match in MEDIA_REFERENCE_PATTERN.finditer(legacy_source):
         logical_path = match.group("path").lstrip("/")
         for media_type, media in config.media.types.items():
             prefix = media.reference_prefix.as_posix() + "/"
@@ -68,7 +84,7 @@ def source_media_references(
                 rf"{re.escape(normalized_prefix)}/"
                 rf"(?P<identity>[^\s)\]\"'<>?#]+)"
             )
-            for match in pattern.finditer(source):
+            for match in pattern.finditer(legacy_source):
                 identity = match.group("identity").rstrip(".,;:")
                 if identity:
                     found.add(

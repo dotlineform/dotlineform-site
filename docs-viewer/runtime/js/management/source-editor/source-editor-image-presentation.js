@@ -21,6 +21,7 @@ export function imagePresentationHtml(options = {}) {
         '<span class="docsViewer__fieldLabel">Caption</span>' +
         '<input class="docsViewer__fieldInput" id="' + idPrefix + 'Caption" data-role="staged-media-caption-text" type="text" required>' +
       "</label>" +
+    "</div>" +
       '<label class="docsViewer__field docsViewer__field--textarea" for="' + idPrefix + 'Summary">' +
         '<span class="docsViewer__fieldLabel">Summary</span>' +
         '<textarea class="docsViewer__fieldInput docsViewer__fieldInput--textarea" id="' + idPrefix + 'Summary" data-role="staged-media-summary" rows="3"></textarea>' +
@@ -45,8 +46,7 @@ export function imagePresentationHtml(options = {}) {
       '<label class="docsViewer__field docsViewer__field--checkbox">' +
         '<input class="docsViewer__checkboxInput" data-role="staged-media-fill-width" type="checkbox" checked>' +
         '<span class="docsViewer__fieldLabel">Fill available width</span>' +
-      "</label>" +
-    "</div>";
+      "</label>";
 }
 
 export function setImagePresentationEnabled(host, enabled) {

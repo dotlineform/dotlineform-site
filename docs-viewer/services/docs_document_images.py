@@ -1,4 +1,4 @@
-"""Document image naming and the bounded Docs-owned thumbnail operation."""
+"""Document thumbnail assignment and the bounded Docs-owned generation operation."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ from typing import Any, Mapping
 
 from docs_artifact_locations import artifact_location_adapter
 from docs_document_identity import is_document_id
-from docs_import_common import RASTER_IMAGE_STAGED_SUFFIXES, slugify
+from docs_import_common import RASTER_IMAGE_STAGED_SUFFIXES
 from docs_workspace_config import DocsCollectionConfig, DocsStageConfig, managed_media_config
 
 
@@ -36,34 +36,6 @@ def generated_thumbnail_filename(payload: Mapping[str, Any], *, doc_id: str, col
     if not isinstance(payload["has_thumbnail"], bool):
         raise ValueError("has_thumbnail must be a boolean")
     return document_thumbnail_filename(doc_id, collection=collection) if payload["has_thumbnail"] else ""
-
-
-def next_document_image_filename(
-    repo_root: Path, config: DocsStageConfig | DocsCollectionConfig,
-    *, title: str, doc_id: str, suffix: str, media_type: str = "img",
-) -> str:
-    """Allocate a title/ID basename with numbered suffixes for additional images.
-
-    Existing media is retained. The caller carries this identity through the
-    synchronous insertion; titles are never used to rename earlier images.
-    """
-    collection = getattr(config, "collection", "")
-    if collection == "catalogue" or not is_document_id(doc_id, collection=collection):
-        raise ValueError("image naming requires an exact authored document identity")
-    if not isinstance(title, str) or not title.strip():
-        raise ValueError("image naming requires a document title")
-    if suffix.lower() not in RASTER_IMAGE_STAGED_SUFFIXES | {".svg", ".mmd"}:
-        raise ValueError("image naming requires a supported extension")
-    media = managed_media_config(config, "svg" if media_type == "mermaid" else media_type)
-    adapter = artifact_location_adapter(repo_root, media.asset_location)
-    stem = f"{slugify(title)[:160].rstrip('-')}-{doc_id}"
-    index = 1
-    while True:
-        filename = f"{stem}{'' if index == 1 else '-' + str(index)}{suffix.lower()}"
-        stored_filename = Path(filename).with_suffix(".svg").name if media_type == "mermaid" else filename
-        if adapter.stat(stored_filename) is None:
-            return filename
-        index += 1
 
 
 def write_document_thumbnail(

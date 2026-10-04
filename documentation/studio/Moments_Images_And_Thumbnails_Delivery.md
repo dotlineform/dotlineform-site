@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261003-222607-d910e8
 title: Moments Images And Thumbnails Delivery
 added_date: "2026-10-03 22:26:07"
-last_updated: "2026-10-04 13:04:26"
+last_updated: "2026-10-04 15:02:10"
 summary: Enhance shared Add image with document-based naming and optional thumbnails in a registered thumbs media family, and migrate existing Moments images and references.
 ui_status: done
 parent_id: d-20260428-000000-f5ff18
@@ -12,7 +12,9 @@ parent_id: d-20260428-000000-f5ff18
 
 ## Current And Next State
 
-Completed under [Planned Features](Planned_Features.md) and accepted for closeout by the user on 2026-10-04. Shared image naming and optional thumbnails, media/source migration, Working reconciliation, public runtime/configuration projection and bounded code review are complete. The user ran Publish and reviewed site-preview, confirming public loading and opening Moments after the configuration correction, then accepted the public list-navigation correction and authorized closure. [Media And Asset Handling](Media_And_Asset_Handling.md) owns the shipped behavior, and [Development Checklist](Development_Checklist.md) records the public-config projection guardrail. Retain this completed delivery for manual archive. [Image Token Delivery](Image_Token_Delivery.md) remains a separate proposed follow-on; its implementation has not started. Further Publish, test work, commit, push and deployment remain separately authorized actions.
+Completed under [Planned Features](Planned_Features.md) and accepted for closeout by the user on 2026-10-04. Shared image naming and optional thumbnails, media/source migration, Working reconciliation, public runtime/configuration projection and bounded code review are complete. The user ran Publish and reviewed site-preview, confirming public loading and opening Moments after the configuration correction, then accepted the public list-navigation correction and authorized closure. [Media And Asset Handling](Media_And_Asset_Handling.md) owns the shipped behavior, and [Development Checklist](Development_Checklist.md) records the public-config projection guardrail. Retain this completed delivery for manual archive. The subsequent [Image Token Delivery](Image_Token_Delivery.md) was also accepted and closed on 2026-10-04. Further Publish, test work, commit, push and deployment remain separately authorized actions.
+
+Subsequent naming decision: on 2026-10-04 the user approved normalized original source filenames for future Add image operations, replacing this delivery's title/ID convention and numbered allocation. Image Token Delivery records that revision; this completed record retains the original migration decisions and evidence. Already migrated Moments media and fixed document-thumbnail identities are not renamed again.
 
 The delivery now covers a generic enhancement to **Add image**, usable by Concepts, Moments and other documents with image-authoring capability. Use readable image filenames derived from the document title, optional **Create thumb**, and thumbnail filenames derived from the immutable `doc_id`. Store thumbnails in their own configured `thumbs` media family beside `img`. The imported image is already prepared for display, normally around 800px; Docs Viewer does not create primary size variants or a srcset. The previously requested migration of existing Moments images and references remains included.
 

@@ -40,13 +40,12 @@ from docs_workspace_config import (
     load_docs_media_owner, managed_media_config, require_document_authoring,
 )
 from docs_staged_media_fragments import (
-    build_figure_image_fragment,
     build_file_link_fragment,
-    build_plain_image_fragment,
 )
+from docs_image_tokens import image_text, serialize_image_token
 from docs_svg_sanitizer import SanitizedSvg, sanitize_svg_bytes
 from docs_document_packages.workspace import configured_workspace_paths, marker_path, workspace_status
-from docs_document_images import next_document_image_filename, write_document_thumbnail
+from docs_document_images import write_document_thumbnail
 from docs_management_document_target import managed_document_target_request, resolve_managed_document_target
 from docs_management_source_service import validate_source_candidate
 
@@ -112,9 +111,15 @@ def validate_media_identity(value: Any) -> str:
     return validate_media_filename(str(value or "").strip())
 
 
-def published_media_filename(source_path: Path) -> str:
+def published_media_filename(source_path: Path, *, kind: str) -> str:
+    """Normalize image basenames; preserve already-safe file basenames.
+
+    Image identity comes only from the selected source stem and extension.
+    Naming performs no storage lookup; byte comparison and confirmation own
+    replacement within the configured collection and media family.
+    """
     filename = validate_media_identity(source_path.name)
-    if TOKEN_SAFE_MEDIA_FILENAME_PATTERN.fullmatch(filename):
+    if normalize_media_kind(kind) == STAGED_MEDIA_FILE and TOKEN_SAFE_MEDIA_FILENAME_PATTERN.fullmatch(filename):
         return filename
     return f"{slugify(source_path.stem)}{source_path.suffix.lower()}"
 
@@ -273,7 +278,7 @@ def _staged_media_request_contract(repo_root: Path, body: dict[str, Any]) -> Sta
         if kind == STAGED_MEDIA_IMAGE
         else "files"
     )
-    media_filename = published_media_filename(source_path)
+    media_filename = published_media_filename(source_path, kind=kind)
     doc_id = ""
     create_thumb = body.get("create_thumb", False)
     if not isinstance(create_thumb, bool):
@@ -284,17 +289,13 @@ def _staged_media_request_contract(repo_root: Path, body: dict[str, Any]) -> Sta
         source_text = body.get("source_text")
         if not isinstance(source_text, str):
             raise ValueError("Add image requires the current source_text")
-        _, metadata = validate_source_candidate(repo_root, target, source_text, resolved)
+        validate_source_candidate(repo_root, target, source_text, resolved)
         doc_id = resolved.doc_id
         if create_thumb and media_class != "img":
             raise ValueError("Create thumb requires a raster image")
-        media_filename = next_document_image_filename(
-            repo_root, config, title=metadata["title"], doc_id=doc_id,
-            suffix=source_path.suffix, media_type=media_class,
-        )
         proposed_filename = Path(media_filename).with_suffix(".svg").name if media_class == "mermaid" else media_filename
         if "published_filename" in body and body["published_filename"] != proposed_filename:
-            raise ValueError("published_filename must match the document's proposed image destination")
+            raise ValueError("published_filename must match the normalized source image destination")
     elif create_thumb:
         raise ValueError("Create thumb requires Add image")
     if media_class == "mermaid":
@@ -318,22 +319,26 @@ def _staged_media_request_contract(repo_root: Path, body: dict[str, Any]) -> Sta
 def _source_fragment(
     kind: str,
     label: str,
-    media_token: str,
+    media_path: str,
     *,
     body: dict[str, Any],
 ) -> str:
     if kind == STAGED_MEDIA_FILE:
-        return build_file_link_fragment(label, media_token)
-    if body.get("add_caption") is not True:
-        return build_plain_image_fragment(label, media_token)
-    return build_figure_image_fragment(
-        label,
-        media_token,
-        caption=body.get("caption"),
-        summary=body.get("summary"),
+        return build_file_link_fragment(label, f"[[media:{media_path}]]")
+    if type(body.get("add_caption")) is not bool:
+        raise ValueError("add_caption must be a boolean")
+    if body["add_caption"] and (not isinstance(body.get("caption"), str) or not image_text(body["caption"])):
+        raise ValueError("caption is required when Add caption is checked")
+    token = serialize_image_token(
+        media_path=media_path, alt=label,
+        caption=body.get("caption", "") if body["add_caption"] else "",
+        summary=body.get("summary", ""),
         placement=body.get("placement"),
         fill_width=body.get("fill_width"),
     )
+    if not token:
+        raise ValueError("Image alt, presentation or media identity is invalid")
+    return token
 
 
 def _artifact_status(adapter: ArtifactLocationAdapter, identity: str, data: bytes) -> str:
@@ -448,7 +453,7 @@ def _mermaid_preview_payload(
         "markdown": _source_fragment(
             contract.kind,
             contract.label,
-            plan["media_token"],
+            plan["media_path"],
             body=body,
         ),
         "collision": prepared.collision,
@@ -516,7 +521,7 @@ def _preview_staged_media_contract(repo_root: Path, contract: StagedMediaContrac
             "markdown": _source_fragment(
                 contract.kind,
                 contract.label,
-                plan["media_token"],
+                plan["media_path"],
                 body=body,
             ),
             "collision": collision,
@@ -553,7 +558,7 @@ def apply_staged_media(repo_root: Path, body: dict[str, Any], *, write: bool = T
         confirm_replace = bool(body.get("confirm_replace"))
         if preview["requires_replace_confirmation"] and not confirm_replace:
             raise ValueError("canonical Mermaid source or published SVG bytes differ; confirm replacement or cancel")
-        if write:
+        if write and prepared.source_status != "unchanged":
             prepared.source_adapter.replace(
                 prepared.source_identity,
                 prepared.source_bytes,
@@ -561,6 +566,7 @@ def apply_staged_media(repo_root: Path, body: dict[str, Any], *, write: bool = T
             )
             if not prepared.source_adapter.verify_bytes(prepared.source_identity, prepared.source_bytes):
                 raise RuntimeError("Canonical Mermaid source publication verification failed")
+        if write and prepared.published_status != "unchanged":
             prepared.published_adapter.replace(
                 prepared.published_identity,
                 prepared.published_bytes,

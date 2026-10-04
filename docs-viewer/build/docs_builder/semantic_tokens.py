@@ -5,22 +5,24 @@ import json
 import math
 import re
 from uuid import uuid4
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any, Callable, Iterable
-from urllib.parse import quote, unquote_to_bytes
 
 from .semantic_token_registry import SemanticTokenRegistry
 from docs_workspace_config import location_child
-from docs_staged_media_fragments import (
+from docs_image_tokens import (
     FIGURE_NATURAL_WIDTH_CLASS,
     FIGURE_PLACEMENT_CLASSES,
+    decode_image_value,
+    encode_image_value,
+    parse_image_token,
 )
+from docs_semantic_source import semantic_source_ranges, source_token_spans
 
 
 LEXICAL_KEY_PATTERN = re.compile(r"[a-z][a-z0-9-]*")
 LEXICAL_ID_PATTERN = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*")
-FENCE_PATTERN = re.compile(r"\A {0,3}(`{3,}|~{3,})")
 
 
 @dataclass(frozen=True)
@@ -39,6 +41,9 @@ class SemanticTokenOccurrence:
     summary: str = ""
     placement: str = ""
     fill_width: bool | None = None
+    media_path: str = ""
+    alt: str = ""
+    caption: str = ""
 
     @property
     def source_range(self) -> dict[str, int]:
@@ -76,20 +81,6 @@ def normalize_summary_text(value: Any) -> str:
     return "\n".join(" ".join(line.split()) for line in normalized.split("\n")).strip()
 
 
-def encode_catalogue_image_value(value: str) -> str:
-    return quote(value, safe="-._~")
-
-
-def decode_catalogue_image_value(value: str) -> str | None:
-    if re.search(r"%(?![0-9A-Fa-f]{2})", value):
-        return None
-    try:
-        decoded = unquote_to_bytes(value).decode("utf-8")
-    except UnicodeDecodeError:
-        return None
-    return decoded if encode_catalogue_image_value(decoded) == value else None
-
-
 def serialize_catalogue_image_token(
     *,
     target_type: str,
@@ -124,7 +115,7 @@ def serialize_catalogue_image_token(
         ("fill_width", "true" if fill_width else "false"),
     ))
     query = "&".join(
-        f"{key}={encode_catalogue_image_value(value)}" for key, value in fields
+        f"{key}={encode_image_value(value)}" for key, value in fields
     )
     return f"[[catalogue:image:{target_type}:{target_id}|{query}]]"
 
@@ -142,7 +133,7 @@ def parse_catalogue_image_fields(raw_query: str, *, target_type: str) -> dict[st
             or not encoded_value
         ):
             return None
-        value = decode_catalogue_image_value(encoded_value)
+        value = decode_image_value(encoded_value)
         if value is None:
             return None
         fields[key] = value
@@ -174,24 +165,20 @@ def parse_catalogue_image_fields(raw_query: str, *, target_type: str) -> dict[st
     }
 
 
-def token_closing_index(text: str, start: int) -> int:
-    index = start
-    while index < len(text) - 1:
-        if text[index] == "\\":
-            index += 2
-            continue
-        if text[index:index + 2] == "]]":
-            return index
-        index += 1
-    return -1
-
-
 def parse_semantic_token(
     raw: str,
     *,
     start: int = 0,
     registry: SemanticTokenRegistry | None = None,
 ) -> SemanticTokenOccurrence | None:
+    image = parse_image_token(raw)
+    if image is not None:
+        return SemanticTokenOccurrence(
+            raw=raw, family="image", target_type=image.media_type, target_id=image.media_path,
+            title="", start=start, end=start + len(raw), supported=True, presentation="image",
+            media_path=image.media_path, alt=image.alt, caption=image.caption, summary=image.summary,
+            placement=image.placement, fill_width=image.fill_width,
+        )
     if not raw.startswith("[[") or not raw.endswith("]]") or "\n" in raw or "\r" in raw:
         return None
     body = raw[2:-2]
@@ -266,77 +253,8 @@ def parse_catalogue_token(
     return token if token is not None and token.family == "catalogue" else None
 
 
-def _outside_inline_code_ranges(text: str, start: int, end: int) -> Iterable[tuple[int, int]]:
-    index = start
-    while index < end:
-        tick = re.search(r"`+", text[index:end])
-        if tick is None:
-            yield index, end
-            return
-        tick_start = index + tick.start()
-        tick_end = index + tick.end()
-        if tick_start > index:
-            yield index, tick_start
-        marker = tick.group(0)
-        close = text.find(marker, tick_end, end)
-        if close < 0:
-            return
-        index = close + len(marker)
-
-
-def _outside_comment_ranges(
-    text: str,
-    start: int,
-    end: int,
-    *,
-    in_comment: bool,
-) -> tuple[list[tuple[int, int]], bool]:
-    ranges: list[tuple[int, int]] = []
-    index = start
-    while index < end:
-        if in_comment:
-            close = text.find("-->", index, end)
-            if close < 0:
-                return ranges, True
-            index = close + 3
-            in_comment = False
-            continue
-        open_index = text.find("<!--", index, end)
-        segment_end = open_index if open_index >= 0 else end
-        ranges.extend(_outside_inline_code_ranges(text, index, segment_end))
-        if open_index < 0:
-            return ranges, False
-        index = open_index + 4
-        in_comment = True
-    return ranges, in_comment
-
-
 def semantic_token_text_ranges(markdown: str) -> Iterable[tuple[int, int]]:
-    offset = 0
-    in_fence = False
-    fence_character = ""
-    in_comment = False
-    for line in markdown.splitlines(keepends=True):
-        fence_match = FENCE_PATTERN.match(line)
-        if fence_match:
-            marker = fence_match.group(1)
-            if in_fence and marker[0] == fence_character:
-                in_fence = False
-                fence_character = ""
-            elif not in_fence:
-                in_fence = True
-                fence_character = marker[0]
-            offset += len(line)
-            continue
-        if not in_fence:
-            ranges, in_comment = _outside_comment_ranges(
-                markdown,
-                offset,
-                offset + len(line),
-                in_comment=in_comment,
-            )
-            yield from ranges
-        offset += len(line)
+    return semantic_source_ranges(markdown, parse_token=parse_semantic_token)
 
 
 def parse_semantic_tokens(
@@ -344,24 +262,12 @@ def parse_semantic_tokens(
     *,
     registry: SemanticTokenRegistry | None,
 ) -> list[SemanticTokenOccurrence]:
-    if "[[" not in markdown:
-        return []
-    tokens: list[SemanticTokenOccurrence] = []
-    for range_start, range_end in semantic_token_text_ranges(markdown):
-        index = range_start
-        while index < range_end:
-            opening = markdown.find("[[", index, range_end)
-            if opening < 0:
-                break
-            closing = token_closing_index(markdown, opening + 2)
-            if closing < 0 or closing + 2 > range_end:
-                break
-            raw = markdown[opening:closing + 2]
-            token = parse_semantic_token(raw, start=opening, registry=registry)
-            if token is not None:
-                tokens.append(token)
-            index = closing + 2
-    return tokens
+    return [
+        replace(token, start=start, end=end)
+        for start, end, token in source_token_spans(
+            markdown, lambda raw: parse_semantic_token(raw, registry=registry),
+        )
+    ]
 
 
 def parse_catalogue_tokens(
@@ -488,6 +394,25 @@ def render_catalogue_media_reference(
     )
 
 
+def render_image_reference(token: SemanticTokenOccurrence, src: str, *, svg: bool) -> str:
+    """Render static Docs-owned image presentation without media writes or lookups."""
+    modifiers = [FIGURE_PLACEMENT_CLASSES[token.placement]]
+    if not token.fill_width:
+        modifiers.append(FIGURE_NATURAL_WIDTH_CLASS)
+    diagram = ' data-docs-viewer-diagram-kind="persistent-svg"' if svg else ""
+    blocks = []
+    if token.caption:
+        blocks.append(f'<span class="docsViewerFigure__caption">{html.escape(token.caption)}</span>')
+    if token.summary:
+        blocks.append(f'<span class="docsViewerFigure__summary">{html.escape(token.summary)}</span>')
+    caption = f'<figcaption>{"".join(blocks)}</figcaption>' if blocks else ""
+    return (
+        f'<figure class="docsViewerFigure {" ".join(modifiers)}">'
+        f'<img src="{html.escape(src, quote=True)}" alt="{html.escape(token.alt, quote=True)}"{diagram}>'
+        f'{caption}</figure>'
+    )
+
+
 class SemanticTokensMixin:
     def catalogue_work_for_token(self, work_id: str) -> dict[str, Any]:
         cache = self._catalogue_work_cache
@@ -508,9 +433,9 @@ class SemanticTokensMixin:
         cache[work_id] = work
         return work
 
-    def restore_catalogue_media_html(self, content_html: str) -> str:
+    def restore_semantic_media_html(self, content_html: str) -> str:
         """Restore built fragments after Markdown so authored labels stay literal."""
-        for marker, fragment in self._catalogue_media_html.items():
+        for marker, fragment in self._semantic_media_html.items():
             content_html = content_html.replace(marker, fragment)
         return content_html
 
@@ -518,27 +443,33 @@ class SemanticTokensMixin:
         self,
         markdown: str,
     ) -> str:
-        """Render Catalogue markers and bound image text without a usage index."""
-        self._catalogue_media_html: dict[str, str] = {}
+        """Render static image figures and Catalogue markers without a usage index."""
+        self._semantic_media_html: dict[str, str] = {}
 
         def replace(token: SemanticTokenOccurrence) -> str:
             if not token.supported:
                 return token.raw
-            alt = caption = metadata = ""
-            if token.presentation == "image":
-                work = self.catalogue_work_for_token(token.target_id)
-                alt = work["title"].strip()
-                caption = alt if token.use_work_title_caption else ""
-                metadata = work_metadata_text(work, token.target_id) if token.include_work_metadata else ""
-            fragment = render_catalogue_media_reference(token, alt=alt, caption=caption, metadata=metadata)
+            if token.family == "image":
+                fragment = render_image_reference(
+                    token, self.image_token_media_url(token.media_path),
+                    svg=token.target_type == "svg",
+                )
+            else:
+                alt = caption = metadata = ""
+                if token.presentation == "image":
+                    work = self.catalogue_work_for_token(token.target_id)
+                    alt = work["title"].strip()
+                    caption = alt if token.use_work_title_caption else ""
+                    metadata = work_metadata_text(work, token.target_id) if token.include_work_metadata else ""
+                fragment = render_catalogue_media_reference(token, alt=alt, caption=caption, metadata=metadata)
             marker_id = uuid4().hex
             # Comments start HTML blocks at line beginnings; inline references must not.
             marker = (
-                f"<!--catalogue-media-{marker_id}-->"
+                f"<!--semantic-media-{marker_id}-->"
                 if token.presentation == "image"
-                else f'<span data-catalogue-media-fragment="{marker_id}"></span>'
+                else f'<span data-semantic-media-fragment="{marker_id}"></span>'
             )
-            self._catalogue_media_html[marker] = fragment
+            self._semantic_media_html[marker] = fragment
             return marker
 
         rendered = replace_semantic_tokens(

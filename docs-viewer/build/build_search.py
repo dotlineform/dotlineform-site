@@ -513,7 +513,7 @@ class DocsViewerSearchDataBuilder:
         markdown = replace_semantic_tokens(
             markdown,
             registry=None,
-            replacer=lambda token: html.escape(token.title),
+            replacer=lambda token: " " if token.family == "image" else html.escape(token.title),
         )
         markdown = HTML_MEDIA_TOKEN_PATTERN.sub("", markdown)
         return MEDIA_TOKEN_PATTERN.sub("", markdown)

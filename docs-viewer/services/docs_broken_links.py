@@ -116,6 +116,8 @@ def semantic_token_broken_entries(
     media_policy_available: bool | None = None
     for meta, body in sources:
         for token in parse_semantic_tokens(body, registry=registry):
+            if token.family != "catalogue":
+                continue
             reason = ""
             if not token.supported:
                 reason = "unsupported_kind"

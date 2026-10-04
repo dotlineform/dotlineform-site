@@ -3,8 +3,8 @@ draft: false
 doc_id: d-20260714-234030-434069
 title: Semantic Tokens Architecture
 added_date: "2026-07-14 23:40:30"
-last_updated: "2026-10-01 13:20:00"
-summary: Describe explicit Catalogue tokens, source ownership, document relationships, and local/public media resolution.
+last_updated: "2026-10-04 14:20:12"
+summary: Describe Docs-owned image and explicit Catalogue tokens, source editing, document relationships, and local/public media resolution.
 parent_id: d-20260725-153656-516b61
 ---
 # Semantic Tokens Architecture
@@ -21,19 +21,40 @@ Catalogue tokens retain an exact Catalogue identity and authored occurrence fiel
 
 Media View text links accept an exact five-digit Work ID or an exact Gallery ID. Gallery IDs use three digits or at least four digits without a leading zero. The serializer escapes backslash, pipe and closing bracket in the required single-line label; the parser decodes only those escapes. Work image identity also uses five digits. Detail and Series token forms remain literal and do not open Media View. The existing authored Series tokens in Working source were deliberately left unchanged when support was removed.
 
-Image fields use deterministic percent encoding and canonical field order. Work images require explicit boolean `use_work_title_caption` and `include_work_metadata` choices, placement (`full`, `left` or `right`) and boolean `fill_width`; `summary` is the only optional authored text. The token stores no literal Work title, alt text, caption or metadata. Image tokens support Works only. Gallery grids open through text links, with no inline group image.
+Catalogue image fields use deterministic percent encoding and canonical field order. Work images require explicit boolean `use_work_title_caption` and `include_work_metadata` choices, placement (`full`, `left` or `right`) and boolean `fill_width`; `summary` is the only optional authored text. The token stores no literal Work title, alt text, caption or metadata. Catalogue image tokens support Works only. Gallery grids open through text links, with no inline group image.
 
 Tokens always include their Work or Gallery identity, including Work tokens inserted through Use document subject. Gallery selection is independent of document Subjects. Media View link labels and image summaries are authored literal text; the image choices instruct Build to resolve the exact generated Work record. The experimental omitted-identity forms are retired without compatibility aliases.
 
 The old three-part Catalogue text form and Concept tokens are retired. They have no parser, renderer, authoring control or compatibility alias. Ordinary document references use Markdown links through [Insert doc link](Source_Editor_Scripts.md).
 
+### Docs-Owned Images
+
+Shared Add image emits this separate family for ordinary and authorable named-collection documents:
+
+```md
+[[image:docs/img/example.jpg|alt=Evening%20light&placement=full&fill_width=true]]
+[[image:docs/collections/moments/img/example.jpg|alt=Evening%20light&caption=River&summary=Reflections%0AAt%20dusk&placement=left&fill_width=false]]
+```
+
+The identity is the exact configured `img` or `svg` logical path. Slash separators remain literal; each path segment and field value use canonical UTF-8 percent encoding with uppercase escapes and unreserved `-._~` characters. Paths reject absolute/parent/dot/empty segments, backslash and control characters; rendering also requires the exact document owner's registered image prefix. The source stores no URL, nested media token, Catalogue binding or HTML fragment. Persistent Mermaid output uses its registered sanitized SVG identity, while editable source retains the independent build-source owner.
+
+Field order is required `alt`, optional `caption`, optional `summary`, required `placement`, required `fill_width`. Alt and caption normalize whitespace to single-line literal text; summary normalizes line endings and whitespace within each line while retaining line breaks. Empty optional fields are omitted. Placement is `full`, `left` or `right`; fill width is explicitly `true` or `false`. Parsing accepts only the serializer's canonical form, rejecting unknown/duplicate fields, noncanonical order/encoding, missing required fields and invalid values without supplying defaults. Python grammar lives in `docs_image_tokens.py` and integrates through `docs_builder/semantic_tokens.py`; browser grammar lives in `image-token-parser.js` and reuses the existing semantic source scanner and encoding helpers.
+
+New insertion defaults to caption enabled with suggested alt/caption, empty summary, full-column placement and fill width enabled. Caption and summary are independently optional, and layout controls stay available without a caption. With the caret inside a supported image token, or that exact token selected, Add image opens Edit image using its stored fields. Apply replaces only the captured occurrence in the dirty buffer. Presentation-only editing performs no media operation or source save. Choose replacement image preserves pending text/layout fields and continues through the existing awaited media operation. Create thumb is unchecked by default and available only while selecting raster media; it is absent from the body token. [Media And Asset Handling](Media_And_Asset_Handling.md#assigned-document-thumbnails) owns the independent thumbnail assignment and write boundary.
+
+Build creates an escaped static figure/image with the existing placement and natural-width classes. It omits `figcaption` when both caption and summary are empty. Raster bytes and sanitized SVG dimensions/viewBox supply intrinsic sizing in the browser; the token has no authored dimensions or Build-time dimension scan. Generated images use the existing `docs-media:` identity and SVG diagram marker. Build creates no media, thumbnail or srcset. Existing Markdown images and HTML figures remain normal document content, with their original dimension attributes and no source conversion or editing alias.
+
+Docs Media reads decoded active body occurrences through the same Python semantic parser; field syntax and inactive examples cannot become asset identities through its older path scanners. Preview capture/distribution and static Export reuse rendered image URLs and their existing confined asset collectors. Source-oriented packages preserve the token; rendered package transforms reuse Build, and read-only Review resolves its exact decoded identity against the supplied asset inventory. An image token creates no document relationship and requires no management registry or Catalogue lookup in a public reader.
+
+Search removes each valid active image token entirely, replacing it with whitespace before ordinary text extraction. Alt, caption, image summary, media identity and token syntax contribute no terms. Literal code examples keep their existing code-text treatment. Existing Markdown/HTML image extraction retains its current behavior pending a separate policy review. [Docs Search Index](Docs_Search_Index.md#source-boundary) owns this exclusion and the independent complete Search rebuild; saving, rendering and Publish do not refresh the index.
+
 ## Parsing And Source Mutation
 
-Python Build and browser Source parsing recognize the explicit Catalogue `media` and `image` forms. Parsed occurrences retain raw text and zero-based half-open `[start, end)` range. Inline code, fenced code and HTML comments are inactive. A collapsed caret activates a supported occurrence only when `start < caret < end`; a shared boundary between adjacent tokens activates neither.
+Python Build and browser Source parsing recognize Docs-owned images and the explicit Catalogue `media` and `image` forms. Parsed occurrences retain raw text and zero-based half-open `[start, end)` range. Inline, indented and fenced code, HTML comments and preformatted HTML are inactive. A collapsed caret activates a supported occurrence only when `start < caret < end`; a shared boundary between adjacent tokens activates neither.
 
 Source remains directly editable. Malformed or unsupported strings remain ordinary literal source and do not activate a Catalogue Info view. Parser, source-range and retained media/image behavior have focused Python and JavaScript checks. The old frozen text-token fixture is retired.
 
-The generic Source adapter owns the mounted target, current buffer revision, captured selection, pending occurrence fields and guarded replacement. The source-read response includes the safe Catalogue `subject` projection from that exact document's front matter; the adapter exposes it to the modal for selection. Add modals supply a serialized insertion. The Semantic token panel edits raw session-owned occurrence values that survive panel switches and closure. The single session Save validates and serializes all pending occurrences with metadata and body before one source write. The editor rejects a stale range or a different mounted target before changing the buffer. Neither a modal nor the panel saves or rebuilds independently; watcher generation and viewer refresh remain outside Save completion.
+The generic Source adapter owns the mounted target, current buffer revision, captured selection and guarded replacement. The source-read response includes the safe Catalogue `subject` projection from that exact document's front matter; the adapter exposes it to the Catalogue modal for selection. Shared Add actions capture supported occurrences and hydrate their modal fields; a modal supplies a serialized insertion or occurrence replacement into the complete dirty source buffer. The single Source Save validates and writes combined metadata/body once. The editor rejects a stale range or a different mounted target before changing the buffer. Modals do not save or rebuild independently; watcher generation and viewer refresh remain outside Save completion.
 
 ## Identity And Subject
 
@@ -82,6 +103,8 @@ Public readers consume rendered document HTML, including Related links, and publ
 See [Source Editor UI](Semantic_Tokens_Source_Editor_UI.md) for the authoring and Info surfaces.
 
 ## Focused Grammar Evidence
+
+The Docs-owned image grammar has lint and bounded source-review evidence only; no new or changed tests were authorized. The existing `test_docs_staged_media_fragments.py` still exercises removed Add image Markdown/HTML producers and needs separately scoped test retirement or replacement. Historical Catalogue checks below do not cover the new image family or its consumer integration. Manual insertion/editing and presentation acceptance remain with the user.
 
 The following selection is historical evidence, not validation of the current bound-image grammar. Its literal image fields and Detail assertions, along with subject/media/report fixtures containing retired Detail fields, need a separately approved test update. No test files or fixtures changed during the 2026-09-23 consumer retirement or the bound-image delivery.
 

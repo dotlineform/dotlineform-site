@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260514-184303-7914e2
 title: Media And Asset Handling
 added_date: "2026-05-14 18:43:03"
-last_updated: "2026-10-04 12:42:35"
+last_updated: "2026-10-04 14:53:28"
 summary: Media intake, content interpretation, document representation, storage, link resolution, extension methods, and safety boundaries.
 parent_id: d-20260424-000000-50b63f
 
@@ -24,7 +24,7 @@ Media support is not one capability. A useful description must answer five separ
 
 | intake | content interpretation | document representation | asset handling |
 | --- | --- | --- | --- |
-| Standalone raster image | No image-content analysis; optional thumbnail derivation. | **Add image…** inserts either a plain image reference or a semantic figure with caption, optional summary, placement, and fill-width presentation into the active source buffer, and records an explicitly requested thumbnail assignment. | Unchanged display bytes are managed through `img`; the optional 96px WebP is managed through `thumbs`. |
+| Standalone raster image | No image-content analysis; optional thumbnail derivation. | **Add image…** inserts a semantic image token with alt, optional caption/summary and explicit layout fields into the dirty source buffer, and records an explicitly requested thumbnail assignment. | Unchanged display bytes are managed through `img`; the optional 96px WebP is managed through `thumbs`. |
 | Ordinary PDF, ZIP, CSV, TSV, JSON, JSONL, or supported Office file | None; the file is opaque. | **Add file…** inserts a labelled link into the active source buffer. | Ready bytes are managed through `files`. |
 | Trusted Data Sharing documents JSON/JSONL | Package metadata and document schema are interpreted. | Complete collection plan producing canonical documents. | Embedded raster data URLs can become media; other declared assets need an explicit mapping. |
 | HTML, Markdown, or text | Converted or normalized into Markdown content. | New canonical document. | Markdown-image data URLs become `img`; HTML-inline SVG becomes sanitized `svg`. |
@@ -136,9 +136,11 @@ The preparation phase of Publish captures document/Catalogue JSON and records re
 - Package attachments retain their bytes and receive readable `<doc_id>-attachment-NN.<ext>` names.
 - A replacement `doc_id` retargets generated filenames and source links before write.
 
-Standalone source-editor raster images and opaque files retain their bytes. Standalone SVG is sanitized first. Mermaid source is rendered and sanitized in temporary storage before either canonical build source or managed SVG is written. Add image validates the exact document target and current complete source buffer at the service boundary, then derives `<title-slug>-<doc_id>.<extension>` from its title; additional images use `-2`, `-3` and subsequent numbered suffixes before the extension. Existing files remain in place, earlier image references stay explicit, and later title changes do not rename media. Add file retains its selected-basename naming and collision confirmation. SVG sanitizer removals can still require review. Source subfolders do not become managed subfolders; the existing flat per-type media identity remains authoritative.
+Standalone source-editor raster images and opaque files retain their bytes. Standalone SVG is sanitized first. Mermaid source is rendered and sanitized in temporary storage before either canonical build source or managed SVG is written. Add image validates the exact document target and current complete source buffer at the service boundary, then normalizes the selected source filename to a lowercase websafe stem and lowercase supported extension; `My Photo.JPG` becomes `my-photo.jpg`. Document title and `doc_id` do not contribute to the display-image name, and naming never allocates numbered suffixes. Mermaid retains the normalized stem for its `.mmd` source and rendered `.svg`. Existing filenames and references remain in place; neither source-name normalization nor a later title change renames stored media. Add file retains its selected-basename naming and collision confirmation. SVG sanitizer removals can still require review. Source subfolders do not become managed subfolders; the existing flat per-type media identity remains authoritative.
 
-For an image, unchecked **Add caption** returns the plain Markdown image fragment. Checked **Add caption** sends required caption text, one `full`, `left`, or `right` placement, a required fill-width boolean, and optional plain-text summary. The server validates and escapes those semantic values and returns one image-first `<figure>` / `<figcaption>` fragment through the same preview and apply builder. The portable reader stylesheet owns full-column, equal-column split, and natural-width presentation. Public-composition rules own the narrow-screen image-first fallback; local readers retain the desktop presentation. The browser does not submit HTML, classes, or dimensions.
+Reimporting an image with the same normalized filename addresses the same asset in the exact configured owner and media family. Matching stored bytes are reused without rewriting that artifact; changed bytes require the existing **Replace** confirmation before the awaited write. Mermaid compares and writes its canonical source and rendered SVG independently. Media is shared within its owner, so replacing an asset changes it for every document that references that identity. Different original source names can normalize to the same filename and receive the same collision treatment. Choosing a distinct source basename is the author's way to retain both images. Thumbnail replacement remains the separately selected operation below.
+
+For raster, sanitized SVG and persistent Mermaid SVG images, the server returns one canonical `[[image:<logical-path>|...]]` token through the same preview/apply owner. The token contains required authored alt and explicit placement/fill-width choices, with optional caption and summary. Unchecked **Add caption** omits the caption while preserving independent summary and layout choices. Build creates escaped static figure/image markup; the portable stylesheet owns full-column, equal-column split and natural-width presentation. Public-composition rules own the narrow-screen image-first fallback; local readers retain the desktop presentation. The browser submits no HTML, classes or dimensions. [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md#docs-owned-images) owns the grammar, guarded reopening/editing and consumer boundaries. Existing Markdown/HTML image source remains supported without migration.
 
 Collection records reuse the same inline-raster and per-document apply paths. A declared package asset without an authorized mapping remains a warning and preserves its source reference; a document overwrite decision does not grant asset overwrite authority.
 
@@ -182,7 +184,7 @@ The docs builder owns source-token resolution; the local/public delivery layer o
 
 ### Add Or Change Source-Editor Figure Presentation
 
-Keep semantic request values in the existing **Add image…** modal, validate and escape them in `docs_staged_media_fragments.py`, and route preview and apply through the same explicit builder. Add an allowlisted value and fixed server-owned class only for a concrete presentation contract. Specify any test changes separately under the test policy. Do not accept HTML, arbitrary classes, widths, or styles from the browser, and do not add a general template or fragment registry for one figure format.
+Keep semantic request values in the existing **Add image…** modal, validate/serialize them in `docs_image_tokens.py`, and route preview/apply through the same media owner. Static figure rendering and escaping belong to `docs_builder/semantic_tokens.py`. Add an allowlisted field and fixed builder-owned class only for a concrete presentation contract. Specify any test changes separately under the test policy. Do not accept HTML, arbitrary classes, widths or styles from the browser, or add a general template/fragment registry for one figure format.
 
 ## Why This Structure Exists
 

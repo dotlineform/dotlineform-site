@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260813-214350-4c7a21
 title: Docs Viewer Search Index
 added_date: "2026-08-13 21:43:50"
-last_updated: "2026-09-30 13:33:18"
+last_updated: "2026-10-04 14:20:12"
 summary: Durable structure, field policy, build ownership, ranking inputs, and extension boundary for Docs Viewer search indexes.
 parent_id: d-20260602-160839-6d3cbb
 ---
@@ -45,6 +45,8 @@ The combined index remains one complete artifact and one relevance corpus. Exclu
 ## Source Boundary
 
 Full text is derived from selected canonical Markdown through existing owners. Validated report declarations are projected away, semantic references contribute their visible title, configured media tokens are removed, and the shared Markdown renderer separates non-duplicate headings, readable prose, inline code, and fenced code.
+
+Valid active Docs-owned `[[image:...]]` tokens are replaced with whitespace before Markdown text extraction. Their alt, caption, image summary, identity and source syntax contribute no searchable terms. Literal code examples retain the existing code-field treatment. Existing Markdown image alt, HTML figure text and Catalogue token extraction keep their current behavior pending a separate image-content policy review. This source-extraction change takes effect only at an explicit complete Working Search rebuild; it does not change fields, membership, ranking or rebuild scheduling. [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md#docs-owned-images) owns the new image grammar.
 
 Title and summary are explicit authored front-matter inputs. Ordinary and collection summaries use the same text tokenizer as other text fields; missing or blank summaries contribute no terms. Other front-matter fields remain excluded. Body extraction excludes generated report hosts, link destinations, media paths, raw markup attributes, scripts, and styles; the tokenizer excludes complete document IDs, date fragments, and exact 64-character hexadecimal content digests. Image alt text and visible raw-HTML text remain searchable.
 

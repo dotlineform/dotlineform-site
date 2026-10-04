@@ -17,13 +17,13 @@ function summaryText(value) {
     .trim();
 }
 
-function encodeImageValue(value) {
+export function encodeImageValue(value) {
   return encodeURIComponent(value).replace(/[!'()*]/g, function (character) {
     return "%" + character.charCodeAt(0).toString(16).toUpperCase();
   });
 }
 
-function decodeImageValue(value) {
+export function decodeImageValue(value) {
   try {
     var decoded = decodeURIComponent(value);
     return encodeImageValue(decoded) === value ? decoded : null;
@@ -334,19 +334,20 @@ export function semanticTokenTextRanges(markdown) {
   return ranges;
 }
 
-export function parseCatalogueTokens(markdown, options = {}) {
+/** Scan any semantic family through the shared inactive-source boundaries. */
+export function parseSourceTokens(markdown, parseToken, options = {}) {
   var source = String(markdown || "");
-  if (source.indexOf("[[catalogue:") < 0) return [];
+  if (source.indexOf("[[") < 0) return [];
   var tokens = [];
   semanticTokenTextRanges(source).forEach(function (range) {
     var index = range[0];
     while (index < range[1]) {
-      var opening = source.indexOf("[[catalogue:", index);
+      var opening = source.indexOf("[[", index);
       if (opening < 0 || opening >= range[1]) break;
       if (tokenOpeningIsEscaped(source, opening)) { index = opening + 2; continue; }
       var closing = semanticTokenClosingIndex(source, opening + 2);
       if (closing < 0 || closing + 2 > range[1]) break;
-      var token = parseCatalogueToken(source.slice(opening, closing + 2), {
+      var token = parseToken(source.slice(opening, closing + 2), {
         registry: options.registry,
         start: opening
       });
@@ -357,7 +358,12 @@ export function parseCatalogueTokens(markdown, options = {}) {
   return tokens;
 }
 
-export function catalogueTokenAtSelection(tokens, selection) {
+export function parseCatalogueTokens(markdown, options = {}) {
+  return parseSourceTokens(markdown, parseCatalogueToken, options);
+}
+
+/** Activate an exact occurrence selection or a caret strictly inside one supported token. */
+export function sourceTokenAtSelection(tokens, selection) {
   var start = Number(selection && selection.start);
   var end = Number(selection && selection.end);
   var active = (Array.isArray(tokens) ? tokens : []).filter(function (token) {
