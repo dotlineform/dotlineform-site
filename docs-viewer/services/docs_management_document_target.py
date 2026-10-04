@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any, Mapping
 
 import docs_source_model as source_model
+from docs_document_images import has_document_thumbnail
 from docs_document_identity import doc_updated_date, is_document_id
 from docs_workspace_config import (
     DocsStageConfig,
@@ -321,6 +322,8 @@ def committed_document_record(
         "added_date": doc_updated_date(front_matter.get("added_date")),
         "last_updated": doc_updated_date(front_matter.get("last_updated")),
     }
+    if collection != "catalogue":
+        record["has_thumbnail"] = has_document_thumbnail(front_matter, collection=collection)
     if source_model.collection_supports_draft(document_config):
         record["draft"] = front_matter["draft"]
     if not collection:

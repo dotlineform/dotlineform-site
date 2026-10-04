@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any, Dict, Mapping, Optional
 
 from docs_index_order import read_index_order, tree_parent_ids
+from docs_document_images import has_document_thumbnail
 
 from docs_document_identity import (
     DOC_TIMESTAMP_FORMAT,
@@ -501,6 +502,7 @@ def validate_document_status_front_matter(
 ) -> None:
     """Require explicit source readiness independently of free-text visual status."""
 
+    has_document_thumbnail(front_matter, collection=getattr(collection_config, "collection", ""))
     if "sub-scope" in front_matter or "sub_scope" in front_matter:
         raise ValueError(f"sub-scope front matter is retired; use collection: {source_name}")
     if collection_config.stage not in {"working", "preview"}:

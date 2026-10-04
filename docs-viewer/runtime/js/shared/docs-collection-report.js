@@ -1,7 +1,8 @@
 import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
 import {
-  appendAssetVersion
+  appendAssetVersion,
+  requestUrl
 } from "./docs-viewer-asset-url.js";
 import {
   normalizeDocsCollectionFilterValue,
@@ -13,6 +14,7 @@ import {
 import {
   COLLECTION_PAGE_SIZE,
   COLLECTION_SEARCH_DELAY_MS,
+  appendCollectionThumbnail,
   createCollectionBrowsingData,
   createCollectionPager,
   loadCatalogueCollectionThumbnailSettings
@@ -34,6 +36,8 @@ import {
  * @property {function(Object): (Object|void)} [renderRow]
  * @property {function(Object): void} [renderListHead]
  * @property {function(Object): void} [renderListToolbar]
+ * @property {function(): *} [captureListState] Optional caller-specific restoration state.
+ * @property {function(*): void} [restoreListState] Restore a previously captured caller state.
  */
 
 var filterIdSequence = 0;
@@ -107,6 +111,9 @@ function manifestPayload(payload) {
 function normalizeDocument(record) {
   var docId = cleanString(record && record.doc_id);
   var title = cleanString(record && record.title);
+  if (record && Object.hasOwn(record, "has_thumbnail") && typeof record.has_thumbnail !== "boolean") {
+    throw new Error("Document thumbnail presence must be a boolean.");
+  }
   var normalizedRecord = Object.assign({}, record || {}, {
     doc_id: docId,
     title: title
@@ -244,7 +251,7 @@ function filterValuesPayload(state) {
   return Object.freeze(payload);
 }
 
-function appendDocRow(state, doc) {
+function appendDocRow(state, doc, reserveThumbnailSpace) {
   var docId = doc.docId;
   var row = document.createElement("li");
   row.className = "docsViewerReport__row";
@@ -258,6 +265,16 @@ function appendDocRow(state, doc) {
   title.className = "docsViewerReport__cellLink docsViewerReport__collectionButton";
   title.href = state.collectionProvider.documentHref({ collection: state.collectionId, doc_id: docId });
   if (state.collectionId === "catalogue") state.browsingData.appendThumbnail(title, doc);
+  else if (doc.record.has_thumbnail === true) {
+    if (!state.mediaRoot || !/^d-\d{8}-\d{6}-[a-f0-9]{6}$/.test(docId)) {
+      throw new Error("Document thumbnail requires configured media and an exact document identity.");
+    }
+    var thumbnailUrl = state.mediaRoot.replace(/\/+$/, "") + "/collections/" +
+      encodeURIComponent(state.collectionId) + "/thumbs/" + encodeURIComponent(docId + "-thumb.webp");
+    appendCollectionThumbnail(title, requestUrl(thumbnailUrl, { reloadNonce: state.thumbnailRevisions.get(docId) }));
+  } else if (reserveThumbnailSpace) {
+    appendCollectionThumbnail(title);
+  }
 
   var titlePrefixHost = document.createElement("span");
   titlePrefixHost.className = "docsViewerReport__rowContribution docsViewerReport__rowContribution--titlePrefix";
@@ -701,8 +718,11 @@ function renderRows(state, docs) {
     state.rowsNode.appendChild(empty);
     return;
   }
+  var reserveThumbnailSpace = state.collectionId !== "catalogue" && state.docs.some(function (doc) {
+    return doc.record.has_thumbnail === true;
+  });
   var rows = docs.map(function (doc) {
-    return appendDocRow(state, doc);
+    return appendDocRow(state, doc, reserveThumbnailSpace);
   });
   if (!rows.some(function (record) { return record.hasLeadingContent; })) return;
   state.root.dataset.reportLeadingColumn = "true";
@@ -904,6 +924,7 @@ function mountResolvedDocsCollectionReport(context, contribution) {
     openDocument: context.openDocument,
     mountRelatedLinks: context.mountRelatedLinks,
     mediaRoot: context.mediaRoot,
+    thumbnailRevisions: new Map(),
     viewerBaseUrl: context.viewerBaseUrl,
     onDocumentState: context.onCollectionDocumentState,
     parentDocId: cleanString(context && context.doc && context.doc.doc_id),
@@ -1025,16 +1046,21 @@ function mountResolvedDocsCollectionReport(context, contribution) {
   if (context.registerRetainedView) context.registerRetainedView({
     id: "collection:" + state.collectionId,
     dispose: dispose,
-    capture: function () { return { query: state.query, sort: state.sortMode, page: state.pageIndex, filters: new Map(state.filterValues),
-      contribution: state.contribution.captureListState ? state.contribution.captureListState() : null }; },
+    capture: function () {
+      var captureContribution = contributionCallback(state.contribution, "captureListState");
+      return { query: state.query, sort: state.sortMode, page: state.pageIndex, filters: new Map(state.filterValues),
+        contribution: captureContribution ? captureContribution.call(state.contribution) : null };
+    },
     restore: function (saved) {
-      var currentContribution = state.contribution.captureListState ? state.contribution.captureListState() : null;
+      var captureContribution = contributionCallback(state.contribution, "captureListState");
+      var currentContribution = captureContribution ? captureContribution.call(state.contribution) : null;
       if (state.query === saved.query && state.sortMode === saved.sort && state.pageIndex === saved.page
         && JSON.stringify(Array.from(state.filterValues)) === JSON.stringify(Array.from(saved.filters)) && currentContribution === saved.contribution) return;
       cancelCollectionSearch(state);
       state.query = saved.query; state.sortMode = saved.sort; state.pageIndex = saved.page; state.filterValues = new Map(saved.filters);
       state.filterInputNode.value = state.query;
-      if (state.contribution.restoreListState) state.contribution.restoreListState(saved.contribution);
+      var restoreContribution = contributionCallback(state.contribution, "restoreListState");
+      if (restoreContribution) restoreContribution.call(state.contribution, saved.contribution);
       updateFilterControls(state);
       renderListProjectionContained(state, "history-restored");
     }
@@ -1043,6 +1069,8 @@ function mountResolvedDocsCollectionReport(context, contribution) {
     state.unsubscribeChanges = state.collectionProvider.subscribeDocumentChanges(function (change) {
       if (!state.mounted || change.target.collection !== state.collectionId) return;
       var docId = change.target.doc_id;
+      if (change.deleted) state.thumbnailRevisions.delete(docId);
+      else state.thumbnailRevisions.set(docId, String(Date.now()));
       state.docs = state.docs.filter(function (doc) { return doc.docId !== docId; });
       if (!change.deleted) state.docs.push(normalizeDocument(change.record));
       state.docIds = state.docs.map(function (doc) { return doc.docId; });

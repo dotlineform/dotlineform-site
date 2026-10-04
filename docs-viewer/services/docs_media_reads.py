@@ -55,7 +55,7 @@ def read_media_references(repo_root: Path, *, collection: str = "") -> dict[str,
                 "report_host_doc_id": document_config.report_host_doc_id,
             })
         for document in sources:
-            references = source_media_references(owner, document.source_text, doc_id=document.doc_id)
+            references = source_media_references(owner, document.source_text, doc_id=document.doc_id, document_collection=document_collection)
             if not references:
                 continue
             documents.append({

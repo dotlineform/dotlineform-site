@@ -74,7 +74,9 @@ function chooseStagedMedia(root, kind, listing, draft) {
         '<label class="docsViewer__fieldLabel" for="docsViewerStagedMediaLabel">' + escapeHtml(copy.fieldLabel) + "</label>" +
         '<input class="docsViewer__fieldInput" id="docsViewerStagedMediaLabel" data-role="staged-media-label" type="text" required>' +
       "</div>" +
-      captionHtml,
+      captionHtml + (kind === "image"
+        ? '<label class="docsViewer__field"><span><input class="docsViewer__checkboxInput" data-role="create-thumb" type="checkbox"> Create thumb</span></label>'
+        : ""),
     actions: [
       { role: "modal-primary", label: copy.primary },
       { role: "modal-cancel", label: "Cancel" }
@@ -84,6 +86,8 @@ function chooseStagedMedia(root, kind, listing, draft) {
       var label = api.host.querySelector('[data-role="staged-media-label"]');
       var captionToggle = api.host.querySelector('[data-role="staged-media-caption"]');
       var captionInput = api.host.querySelector('[data-role="staged-media-caption-text"]');
+      var thumbToggle = api.host.querySelector('[data-role="create-thumb"]');
+      if (thumbToggle) thumbToggle.checked = Boolean(draft && draft.createThumb);
       var captionEdited = Boolean(draft);
       label.value = cleanString(draft && draft.label);
       if (kind === "image" && draft) hydrateImagePresentation(api.host, draft);
@@ -97,7 +101,15 @@ function chooseStagedMedia(root, kind, listing, draft) {
           captionInput.value = label.value;
           captionEdited = false;
         }
+        projectThumbnailAvailability();
       }
+      function projectThumbnailAvailability() {
+        if (!thumbToggle) return;
+        var selected = api.host.querySelector('[data-role="staged-media-file"]:checked');
+        thumbToggle.disabled = !/\.(jpg|jpeg|png|webp|gif)$/i.test(selected && selected.value || "");
+        if (thumbToggle.disabled) thumbToggle.checked = false;
+      }
+      projectThumbnailAvailability();
       function projectCaptionSuggestion() {
         if (captionInput && !captionEdited) captionInput.value = label.value;
       }
@@ -125,10 +137,13 @@ function chooseStagedMedia(root, kind, listing, draft) {
       var filename = cleanString(selectedInput && selectedInput.value);
       var labelValue = cleanString(label && label.value);
       var presentation = readImagePresentation(api.host);
+      var thumbToggle = api.host.querySelector('[data-role="create-thumb"]');
+      var createThumb = Boolean(thumbToggle && !thumbToggle.disabled && thumbToggle.checked);
       var addCaption = kind === "image" && presentation.addCaption;
       if (chooseFolderRequested) {
         return {
           chooseFolder: true,
+          createThumb: createThumb,
           stagedFilename: filename,
           label: labelValue,
           addCaption: addCaption,
@@ -154,6 +169,7 @@ function chooseStagedMedia(root, kind, listing, draft) {
       }
       return {
         confirmed: true,
+        createThumb: createThumb,
         sourceDirectory: sourceDirectory,
         stagedFilename: filename,
         label: labelValue,
@@ -251,7 +267,7 @@ export async function publishAndInsertStagedMedia(options = {}) {
     typeof provider.listStagedMedia !== "function" ||
     typeof provider.previewStagedMedia !== "function" ||
     typeof provider.applyStagedMedia !== "function" ||
-    !adapter || typeof adapter.replaceCapturedSelection !== "function" || !options.capture
+    !adapter || typeof adapter.insertStagedMedia !== "function" || !options.capture
   ) {
     throw new Error("Staged media publication is unavailable on this route.");
   }
@@ -285,6 +301,8 @@ export async function publishAndInsertStagedMedia(options = {}) {
     request.source_directory = choice.sourceDirectory;
   }
   if (kind === "image") {
+    request.source_text = adapter.getBufferSnapshot().value;
+    request.create_thumb = choice.createThumb;
     request.add_caption = Boolean(choice.addCaption);
     if (choice.addCaption) {
       request.caption = choice.caption;
@@ -297,9 +315,10 @@ export async function publishAndInsertStagedMedia(options = {}) {
   var confirmed = await confirmStagedMedia(root, kind, preview);
   if (!confirmed) return null;
   var payload = await provider.applyStagedMedia(Object.assign({}, request, {
+    ...(kind === "image" ? { published_filename: preview.published_filename } : {}),
     confirm_replace: Boolean(preview.requires_replace_confirmation)
   }));
-  if (!adapter.replaceCapturedSelection(options.capture, payload.markdown)) {
+  if (!adapter.insertStagedMedia(options.capture, payload)) {
     throw new Error("Media was published, but its Markdown reference could not be inserted.");
   }
   return payload;

@@ -17,6 +17,7 @@ from .common import (
     read_json,
 )
 from docs_document_identity import doc_updated_date, is_document_id, is_immutable_doc_id
+from docs_document_images import has_document_thumbnail
 from docs_document_subjects import validate_document_subject_fields
 from docs_index_order import read_index_order, tree_parent_ids
 from docs_report_source import ReportDescriptor, ReportSourceContractRequired
@@ -343,6 +344,8 @@ class SourceLoadingMixin:
     def by_id_metadata_entry(self, doc: DocRecord, docs: Sequence[DocumentIdentity]) -> dict[str, Any]:
         entry = self.metadata_entry(doc, docs)
         del entry["viewer_url"]
+        if has_document_thumbnail(doc.front_matter, collection=getattr(self, "collection_id", "")):
+            entry["has_thumbnail"] = True
         if doc.report is not None:
             entry["report"] = dict(doc.report.as_payload())
         return entry

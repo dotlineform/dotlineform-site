@@ -46,7 +46,7 @@ export function mountDocsContentHtml(node, htmlText, options) {
         var suffix = value.slice("docs-media:".length);
         var parts = suffix.split("/");
         var mediaType = parts[0] === "workspace" ? parts[1] : parts[0] === "collections" ? parts[2] : "";
-        if (!/^(img|svg|files|html)$/.test(mediaType)
+        if (!/^(img|svg|files|html|thumbs)$/.test(mediaType)
             || parts.length < (parts[0] === "workspace" ? 3 : 4)
             || parts.some(function (part) { return !part || part === "." || part === ".."; })) {
           throw new Error("Invalid Docs media identity.");

@@ -6,7 +6,7 @@ import {
   normalizeManagedDocumentTarget
 } from "../docs-viewer-management-document-target.js";
 import { localFolderPasteReplacement } from "./local-folder-links.js";
-import { sourceBodyStart } from "./source-buffer.js";
+import { sourceBodyStart, sourceWithThumbnail } from "./source-buffer.js";
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -212,6 +212,20 @@ function createSourceEditorContextAdapter(context, state) {
     },
     replaceCapturedSelection: function (capture, value) {
       return isCurrent() && replaceCapturedRange(state, capture, value, "end");
+    },
+    insertStagedMedia: function (capture, payload) {
+      if (!isCurrent() || !replaceCapturedRange(state, capture, payload.markdown, "end")) return false;
+      if (payload.thumbnail) {
+        var start = state.textarea.selectionStart;
+        var end = state.textarea.selectionEnd;
+        var previous = state.textarea.value;
+        var next = sourceWithThumbnail(previous);
+        var offset = next.length - previous.length;
+        state.textarea.value = next;
+        state.textarea.setSelectionRange(start + offset, end + offset);
+        state.textarea.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+      return true;
     },
     replaceCapturedRange: function (capture, value, selectionMode) {
       return isCurrent() && replaceCapturedRange(state, capture, value, selectionMode);

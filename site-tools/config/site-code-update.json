@@ -94,6 +94,12 @@
       ]
     },
     {
+      "id": "docs-viewer-public-config",
+      "source_root": "docs-viewer/config/defaults",
+      "destination_root": "site/docs-viewer/config/defaults",
+      "files": ["docs-viewer-public-config.json"]
+    },
+    {
       "id": "docs-viewer-shared-css",
       "source_root": "docs-viewer/static/css",
       "destination_root": "site/docs-viewer/static/css",

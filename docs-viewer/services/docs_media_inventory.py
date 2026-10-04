@@ -15,6 +15,8 @@ from docs_artifact_locations import (
     local_artifact_path,
 )
 from docs_workspace_config import DocsStageConfig, DocsCollectionConfig
+from docs_document_images import document_thumbnail_filename, has_document_thumbnail
+from docs_source_model import parse_source_text
 
 
 MEDIA_REFERENCE_PATTERN = re.compile(r"\[\[(?:media|html-media):(?P<path>[^\]\s]+)(?:[^\]]*)\]\]")
@@ -41,10 +43,18 @@ def source_media_references(
     source: str,
     *,
     doc_id: str,
+    document_collection: str | None = None,
 ) -> tuple[DocsMediaReference, ...]:
     """Return configured, source-collection-owned media references from one document."""
 
     found: set[tuple[str, str, str]] = set()
+    owner_collection = getattr(config, "collection", "")
+    if document_collection is None or document_collection == owner_collection:
+        metadata, _body = parse_source_text(source)
+        if has_document_thumbnail(metadata, collection=owner_collection):
+            identity = document_thumbnail_filename(doc_id or metadata.get("doc_id", ""), collection=owner_collection)
+            media = config.media.types["thumbs"]
+            found.add(("thumbs", identity, f"{media.reference_prefix.as_posix()}/{identity}"))
     for match in MEDIA_REFERENCE_PATTERN.finditer(source):
         logical_path = match.group("path").lstrip("/")
         for media_type, media in config.media.types.items():

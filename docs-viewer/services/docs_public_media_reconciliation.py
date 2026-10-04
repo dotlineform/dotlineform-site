@@ -27,6 +27,7 @@ from docs_workspace_config import (
     DocsStageConfig, DocsPublicMediaConfig, public_media_bindings,
     load_docs_workspace_config, safe_relative_path,
 )
+from docs_document_images import generated_thumbnail_filename
 
 
 PUBLIC_MEDIA_RECONCILIATION_SCHEMA_VERSION = "docs_public_media_reconciliation_v2"
@@ -91,10 +92,17 @@ def referenced_public_media(
                 payload = json.loads(source_bytes.decode("utf-8"))
             except (UnicodeDecodeError, ValueError):
                 continue
+            reference_label = f"{collection}:{relative_path.stem}" if collection else relative_path.stem
+            if isinstance(payload, dict):
+                thumbnail = generated_thumbnail_filename(payload, doc_id=relative_path.stem, collection=collection)
+                if thumbnail:
+                    key = f"{collection}/thumbs" if collection else "thumbs"
+                    if key not in bindings:
+                        raise ValueError(f"Unconfigured thumbnail owner in {reference_label}")
+                    references.setdefault((key, thumbnail), set()).add(reference_label)
             content_html = payload.get("content_html") if isinstance(payload, dict) else None
             if not isinstance(content_html, str):
                 continue
-            reference_label = f"{collection}:{relative_path.stem}" if collection else relative_path.stem
             for tag in HTML_START_TAG_PATTERN.finditer(content_html):
                 for attribute in MEDIA_URL_ATTRIBUTE_PATTERN.finditer(tag.group("body")):
                     value = (
@@ -103,7 +111,7 @@ def referenced_public_media(
                         else attribute.group("unquoted_value")
                     )
                     owner_prefix = f"collections/{collection}" if collection else "workspace"
-                    for media_type in ("img", "svg", "files", "html"):
+                    for media_type in config.media.types:
                         key = f"{collection}/{media_type}" if collection else media_type
                         if key not in bindings:
                             continue

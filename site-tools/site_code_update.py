@@ -52,6 +52,12 @@ PROJECTION_POLICIES = {
         suffix=".js",
         exact_files=frozenset({"docs-viewer-public-reports.js", "selected-documents-report.js"}),
     ),
+    "docs-viewer-public-config": ProjectionPolicy(
+        source_root="docs-viewer/config/defaults",
+        destination_root="site/docs-viewer/config/defaults",
+        suffix=".json",
+        exact_files=frozenset({"docs-viewer-public-config.json"}),
+    ),
     "docs-viewer-shared-css": ProjectionPolicy(
         source_root="docs-viewer/static/css",
         destination_root="site/docs-viewer/static/css",

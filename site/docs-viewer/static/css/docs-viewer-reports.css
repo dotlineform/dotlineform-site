@@ -161,13 +161,13 @@
   text-align: left;
 }
 
-.docsViewerReport[data-report-collection="catalogue"] .docsViewerReport__collectionButton{
+.docsViewerReport__collectionButton--thumbnail{
   display: flex;
   align-items: center;
   gap: var(--docs-viewer-space-3);
 }
 
-.docsViewerReport__catalogueThumbnail{
+.docsViewerReport__documentThumbnail{
   flex: 0 0 64px;
   width: 64px;
   height: 64px;
@@ -175,7 +175,7 @@
   border-radius: 6px;
 }
 
-.docsViewerReport[data-report-collection="catalogue"] .docsViewerReport__title{
+.docsViewerReport__collectionButton--thumbnail .docsViewerReport__title{
   min-width: 0;
 }
 

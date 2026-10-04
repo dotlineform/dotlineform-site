@@ -80,18 +80,35 @@ export function createCollectionBrowsingData(options) {
     },
     appendThumbnail(button, doc) {
       const thumbnail = entries.get(doc.docId).thumbnail;
-      const image = button.ownerDocument.createElement("img");
-      image.className = "docsViewerReport__catalogueThumbnail";
-      image.alt = "";
-      image.width = 64;
-      image.height = 64;
-      image.loading = "lazy";
-      image.decoding = "async";
-      image.addEventListener("error", () => { image.style.visibility = "hidden"; }, { once: true });
-      image.src = thumbnail.src;
-      button.appendChild(image);
+      appendCollectionThumbnail(button, thumbnail.src);
     }
   };
+}
+
+/**
+ * Append a decorative 64px thumbnail or an empty slot without an image request.
+ * @param {HTMLElement} control Document navigation control.
+ * @param {string} [src] Thumbnail URL; omission reserves the same layout space.
+ */
+export function appendCollectionThumbnail(control, src) {
+  control.classList.add("docsViewerReport__collectionButton--thumbnail");
+  if (!src) {
+    const slot = control.ownerDocument.createElement("span");
+    slot.className = "docsViewerReport__documentThumbnail";
+    slot.setAttribute("aria-hidden", "true");
+    control.appendChild(slot);
+    return;
+  }
+  const image = control.ownerDocument.createElement("img");
+  image.className = "docsViewerReport__documentThumbnail";
+  image.alt = "";
+  image.width = 64;
+  image.height = 64;
+  image.loading = "lazy";
+  image.decoding = "async";
+  image.addEventListener("error", () => { image.style.visibility = "hidden"; }, { once: true });
+  image.src = src;
+  control.appendChild(image);
 }
 
 /**

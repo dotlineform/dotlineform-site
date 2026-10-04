@@ -46,6 +46,9 @@ from docs_staged_media_fragments import (
 )
 from docs_svg_sanitizer import SanitizedSvg, sanitize_svg_bytes
 from docs_document_packages.workspace import configured_workspace_paths, marker_path, workspace_status
+from docs_document_images import next_document_image_filename, write_document_thumbnail
+from docs_management_document_target import managed_document_target_request, resolve_managed_document_target
+from docs_management_source_service import validate_source_candidate
 
 
 STAGED_MEDIA_IMAGE = "image"
@@ -81,6 +84,8 @@ class StagedMediaContract:
     source_directory: str
     source_path_marker: str
     collection: str = ""
+    doc_id: str = ""
+    create_thumb: bool = False
 
 
 def media_owner(repo_root: Path, contract: StagedMediaContract) -> DocsStageConfig | DocsCollectionConfig:
@@ -269,6 +274,29 @@ def _staged_media_request_contract(repo_root: Path, body: dict[str, Any]) -> Sta
         else "files"
     )
     media_filename = published_media_filename(source_path)
+    doc_id = ""
+    create_thumb = body.get("create_thumb", False)
+    if not isinstance(create_thumb, bool):
+        raise ValueError("create_thumb must be a boolean")
+    if kind == STAGED_MEDIA_IMAGE:
+        target = managed_document_target_request(body)
+        resolved = resolve_managed_document_target(repo_root, target)
+        source_text = body.get("source_text")
+        if not isinstance(source_text, str):
+            raise ValueError("Add image requires the current source_text")
+        _, metadata = validate_source_candidate(repo_root, target, source_text, resolved)
+        doc_id = resolved.doc_id
+        if create_thumb and media_class != "img":
+            raise ValueError("Create thumb requires a raster image")
+        media_filename = next_document_image_filename(
+            repo_root, config, title=metadata["title"], doc_id=doc_id,
+            suffix=source_path.suffix, media_type=media_class,
+        )
+        proposed_filename = Path(media_filename).with_suffix(".svg").name if media_class == "mermaid" else media_filename
+        if "published_filename" in body and body["published_filename"] != proposed_filename:
+            raise ValueError("published_filename must match the document's proposed image destination")
+    elif create_thumb:
+        raise ValueError("Create thumb requires Add image")
     if media_class == "mermaid":
         media_filename = Path(media_filename).with_suffix(".mmd").name
     return StagedMediaContract(
@@ -282,6 +310,8 @@ def _staged_media_request_contract(repo_root: Path, body: dict[str, Any]) -> Sta
         source_root=source_root,
         source_directory=source_directory,
         source_path_marker=source_path_marker,
+        doc_id=doc_id,
+        create_thumb=create_thumb,
     )
 
 
@@ -431,8 +461,7 @@ def _mermaid_preview_payload(
     }
 
 
-def preview_staged_media(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
-    contract = _staged_media_request_contract(repo_root, body)
+def _preview_staged_media_contract(repo_root: Path, contract: StagedMediaContract, body: dict[str, Any]) -> dict[str, Any]:
     if contract.media_class == "mermaid":
         prepared = _prepared_mermaid_media(
             repo_root,
@@ -470,6 +499,8 @@ def preview_staged_media(repo_root: Path, body: dict[str, Any]) -> dict[str, Any
         collision = "unchanged" if result.status == "unchanged" else "replace" if result.status == "would_overwrite" else "new"
         return {
             "ok": True,
+            "doc_id": contract.doc_id,
+            "create_thumb": contract.create_thumb,
             "collection": contract.collection,
             "media_kind": contract.kind,
             "staged_filename": contract.source_path.name,
@@ -498,7 +529,13 @@ def preview_staged_media(repo_root: Path, body: dict[str, Any]) -> dict[str, Any
         }
 
 
+def preview_staged_media(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
+    """Validate document/image context and return the proposed media insertion."""
+    return _preview_staged_media_contract(repo_root, _staged_media_request_contract(repo_root, body), body)
+
+
 def apply_staged_media(repo_root: Path, body: dict[str, Any], *, write: bool = True) -> dict[str, Any]:
+    """Complete media writes before returning source-buffer insertion metadata."""
     contract = _staged_media_request_contract(repo_root, body)
     if contract.media_class == "mermaid":
         prepared = _prepared_mermaid_media(
@@ -567,7 +604,7 @@ def apply_staged_media(repo_root: Path, body: dict[str, Any], *, write: bool = T
             ),
         }
 
-    preview = preview_staged_media(repo_root, body)
+    preview = _preview_staged_media_contract(repo_root, contract, body)
     confirm_replace = bool(body.get("confirm_replace"))
     if preview["requires_replace_confirmation"] and not confirm_replace:
         raise ValueError("published media bytes differ; confirm replacement or cancel")
@@ -593,10 +630,19 @@ def apply_staged_media(repo_root: Path, body: dict[str, Any], *, write: bool = T
         )
         if write and not docs_publish_succeeded(results):
             raise RuntimeError(f"Docs media insertion did not complete: {results[0].status}")
+    thumbnail = None
+    if write and contract.create_thumb:
+        try:
+            thumbnail = write_document_thumbnail(
+                repo_root, config, doc_id=contract.doc_id, source_path=contract.source_path,
+            )
+        except (ValueError, RuntimeError, OSError) as error:
+            raise RuntimeError(f"Display image stored as {contract.media_filename}; thumbnail operation failed: {error}") from error
     return {
         **preview,
         "preview_only": not write,
         "publish": asdict(results[0]),
+        "thumbnail": thumbnail,
         "summary_text": (
             f"Added {contract.source_path.name}."
             if write and results[0].status != "unchanged"

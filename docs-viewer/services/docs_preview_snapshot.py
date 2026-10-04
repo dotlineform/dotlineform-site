@@ -20,6 +20,7 @@ from docs_build_manifest import (
 from docs_recent_payload import validate_recent_payload
 from docs_selected_documents import validate_selected_payload
 from docs_public_mermaid_payload import public_mermaid_payload_requires_projection
+from docs_document_images import generated_thumbnail_filename
 from docs_workspace_config import (
     DocsStageConfig,
     DocsWorkspaceConfig,
@@ -275,6 +276,16 @@ def _referenced_media(
                 payload = json.loads(text)
             except json.JSONDecodeError:
                 continue
+            parts = relative_path.parts
+            collection = ""
+            by_id = len(parts) == 3 and parts[:2] == ("documents", "by-id")
+            if len(parts) == 5 and parts[0] == "collections" and parts[2:4] == ("documents", "by-id"):
+                collection, by_id = parts[1], True
+            if by_id and isinstance(payload, dict):
+                thumbnail = generated_thumbnail_filename(payload, doc_id=relative_path.stem, collection=collection)
+                if thumbnail:
+                    key = f"{collection}/thumbs" if collection else "thumbs"
+                    references[key].add(thumbnail)
             content_html = payload.get("content_html") if isinstance(payload, dict) else None
             if not isinstance(content_html, str):
                 continue

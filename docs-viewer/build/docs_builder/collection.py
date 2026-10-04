@@ -34,6 +34,7 @@ from docs_document_subjects import (
 )
 from docs_document_identity import doc_updated_date, is_doc_date, is_doc_timestamp, is_document_id
 from docs_selected_documents import read_selected, refresh_selected_documents
+from docs_document_images import has_document_thumbnail
 
 
 class CollectionDocsBuilder(DocsDataBuilder):
@@ -90,7 +91,10 @@ class CollectionDocsBuilder(DocsDataBuilder):
             raise ValueError(f"{self.collection_id} document {doc.doc_id} requires a valid last_updated timestamp")
         if self.collection_id == "catalogue" and not is_document_id(doc.doc_id, collection="catalogue"):
             raise ValueError(f"Catalogue document {doc.doc_id} requires one exact Work ID")
-        return {"doc_id": doc.doc_id, "title": doc.title, "last_updated": doc_updated_date(doc.last_updated)}
+        row = {"doc_id": doc.doc_id, "title": doc.title, "last_updated": doc_updated_date(doc.last_updated)}
+        if has_document_thumbnail(doc.front_matter, collection=self.collection_id):
+            row["has_thumbnail"] = True
+        return row
 
     def public_manifest_payload(self, ordered_docs: list[DocRecord]) -> dict[str, Any]:
         """Project the existing public list contract for publication builds."""

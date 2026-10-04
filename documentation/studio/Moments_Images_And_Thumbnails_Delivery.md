@@ -3,16 +3,16 @@ draft: false
 doc_id: d-20261003-222607-d910e8
 title: Moments Images And Thumbnails Delivery
 added_date: "2026-10-03 22:26:07"
-last_updated: "2026-10-03 22:58:55"
+last_updated: "2026-10-04 13:04:26"
 summary: Enhance shared Add image with document-based naming and optional thumbnails in a registered thumbs media family, and migrate existing Moments images and references.
-ui_status: planned
+ui_status: done
 parent_id: d-20260428-000000-f5ff18
 ---
 # Moments Images And Thumbnails Delivery
 
 ## Current And Next State
 
-Proposed delivery under [Planned Features](Planned_Features.md). The user requested this document and the migration scope; implementation, migration writes and publication have not been authorized. Next: confirm the remaining main-image naming choice at readiness, then obtain approval for the bounded code and migration change set. Works thumbnail generation parameters, Catalogue row presentation, thumbnail replacement, migration selection and orphan retention are settled requirements below, not readiness decisions.
+Completed under [Planned Features](Planned_Features.md) and accepted for closeout by the user on 2026-10-04. Shared image naming and optional thumbnails, media/source migration, Working reconciliation, public runtime/configuration projection and bounded code review are complete. The user ran Publish and reviewed site-preview, confirming public loading and opening Moments after the configuration correction, then accepted the public list-navigation correction and authorized closure. [Media And Asset Handling](Media_And_Asset_Handling.md) owns the shipped behavior, and [Development Checklist](Development_Checklist.md) records the public-config projection guardrail. Retain this completed delivery for manual archive. [Image Token Delivery](Image_Token_Delivery.md) remains a separate proposed follow-on; its implementation has not started. Further Publish, test work, commit, push and deployment remain separately authorized actions.
 
 The delivery now covers a generic enhancement to **Add image**, usable by Concepts, Moments and other documents with image-authoring capability. Use readable image filenames derived from the document title, optional **Create thumb**, and thumbnail filenames derived from the immutable `doc_id`. Store thumbnails in their own configured `thumbs` media family beside `img`. The imported image is already prepared for display, normally around 800px; Docs Viewer does not create primary size variants or a srcset. The previously requested migration of existing Moments images and references remains included.
 
@@ -37,15 +37,15 @@ The shared collection report renders assigned thumbnails for its document rows, 
 - Main-image references remain explicit. Their title-derived name is chosen when the image is added and is not recomputed on every title edit. A later document title change does not trigger automatic media renaming.
 - Validate the exact collection/document identity and destination filename at the service boundary. A browser naming helper cannot own filesystem renaming or raster generation.
 
-The collision-safe main-image convention is the remaining proposed choice below. Thumbnail generation and row presentation match Works/Catalogue as specified below. An 800px input is an authoring expectation, not permission to silently resize an unsuitable input. Existing input/path handling remains; it does not introduce a separate thumbnail-replacement validation workflow.
+The approved collision-safe main-image convention is recorded below. Thumbnail generation and row presentation match Works/Catalogue as specified below. An 800px input is an authoring expectation, not permission to silently resize an unsuitable input. Existing input/path handling remains; it does not introduce a separate thumbnail-replacement validation workflow.
 
 ### Source Metadata And Collection Rows
 
 The canonical document source must record its thumbnail assignment. Collection generation projects a small `has_thumbnail` flag from that assignment; it does not infer intent by listing files. The list derives the thumbnail filename from `doc_id` and that collection's configured `thumbs` media base, without reading every document or requesting thumbnails for rows whose flag is false. Identical filenames under different collection owners remain separate assets.
 
-Keep source thumbnail metadata small, with exact fields settled during implementation. It records thumbnail presence/reference, not a competing selection history or a rule that can prevent the next image from overwriting the thumbnail. Integrate it with Source editing and the existing committed-record/list update path. A generated flag alone is not authoring authority. Explicitly changing thumbnail metadata updates the next manifest and the retained caller through its existing owner.
+Source metadata is optional boolean `thumbnail`, with `true` assigning the fixed document thumbnail and `false` or omission clearing its presentation. It records thumbnail presence, not a competing selection history or a rule that can prevent the next image from overwriting the thumbnail. Source editing and the existing committed-record/list update path carry the assignment. A generated flag alone is not authoring authority. Explicitly changing thumbnail metadata updates the next manifest and the retained caller through its existing owner.
 
-The list matches Catalogue's existing thumbnail presentation: a reserved 64×64px image box, `object-fit: contain`, 6px rounded corners, vertically centred beside the title with the existing `--docs-viewer-space-3` gap. Use lazy loading, asynchronous decoding, decorative empty alt text and the existing shared image/title navigation control. Generalize the current Catalogue row styling for assigned document thumbnails rather than creating a separate Moments presentation. Documents without thumbnails remain usable text rows. An unavailable image does not prevent navigation. Thumbnail presence does not change a collection's ordering, document identity, dates, readiness, Search membership or navigation behavior.
+The list matches Catalogue's existing thumbnail presentation: a reserved 64×64px image box, `object-fit: contain`, 6px rounded corners, vertically centred beside the title with the existing `--docs-viewer-space-3` gap. Use lazy loading, asynchronous decoding, decorative empty alt text and the existing shared image/title navigation control. Generalize the current Catalogue row styling for assigned document thumbnails rather than creating a separate Moments presentation. When any document in the full collection manifest has an assigned thumbnail, rows without one reserve an empty decorative 64×64px slot with no image request, aligning title offsets and minimum row heights across filtering and paging. Collections without assigned thumbnails retain compact text rows. An unavailable image preserves its slot and does not prevent navigation. Thumbnail presence does not change a collection's ordering, document identity, dates, readiness, Search membership or navigation behavior.
 
 ### Generation And Publication Ownership
 
@@ -104,22 +104,22 @@ The migration removes no local or remote media. Previously prepared 1200/1600px 
 
 Regenerate affected Working document and manifest output through the watcher or the supported targeted collection build when the watcher is unavailable. A complete Moments reconciliation is justified if the manifest/reference contract changes globally or targeted prerequisites are missing. Search remains separately requested. Do not hand-edit generated JSON, Preview or `site/` document payloads.
 
-### Proposed Naming Choice For Readiness
+### Approved Naming Convention
 
 | Choice | Proposed default | Reason or remaining decision |
 | --- | --- | --- |
-| Main-image filename | `<title-slug>-<doc_id>.<extension>`; numbered suffixes for additional images if needed | Retains a readable title and prevents different documents with duplicate title slugs from sharing a write target. The title-plus-ID convention is a proposal beyond the agreed title-derived naming. |
+| Main-image filename | `<title-slug>-<doc_id>.<extension>`; numbered suffixes for additional images if needed | Approved on 2026-10-04. Retains a readable title and prevents different documents with duplicate title slugs from sharing a write target. |
 
 ## Deliverables
 
-- [ ] Generic document-based naming and **Create thumb** in the shared Add image workflow.
-- [ ] A Docs Viewer-owned raster thumbnail service using the current Works 96px crop/encoding recipe and validated media write contract.
-- [ ] Registered ordinary/collection `thumbs` media families with configured local/public paths and relevant lifecycle/reference support.
-- [ ] Canonical thumbnail assignments, projected presence metadata and shared Working/public collection-row rendering with Catalogue's existing 64px thumbnail presentation, including Concepts and Moments.
-- [ ] Preparation and publication reference support for thumbnails outside document body HTML.
-- [ ] Migrated existing display-image names, source references and thumbnails, with affected Working output reconciled.
-- [ ] Shared/public runtime projection and focused validation where those files change.
-- [ ] Shipped behavior documented in [Media And Asset Handling](Media_And_Asset_Handling.md), including generic naming, the `thumbs` role, source assignment and publication ownership.
+- [x] Generic document-based naming and **Create thumb** in the shared Add image workflow.
+- [x] A Docs Viewer-owned raster thumbnail service using the current Works 96px crop/encoding recipe and validated media write contract.
+- [x] Registered ordinary/collection `thumbs` media families with configured local/public paths and relevant lifecycle/reference support.
+- [x] Canonical thumbnail assignments, projected presence metadata and shared Working/public collection-row rendering with Catalogue's existing 64px thumbnail presentation, including Concepts and Moments.
+- [x] Preparation and publication reference support for thumbnails outside document body HTML.
+- [x] Migrated existing display-image names, source references and thumbnails, with affected Working output reconciled.
+- [x] Shared/public runtime projection and focused validation where those files change.
+- [x] Shipped behavior documented in [Media And Asset Handling](Media_And_Asset_Handling.md), including generic naming, the `thumbs` role, source assignment and publication ownership.
 
 ## Process
 
@@ -134,78 +134,88 @@ Regenerate affected Working document and manifest output through the watcher or 
 
 ### MIT 0 Readiness
 
-- [ ] Confirm broad source, shared insertion, collection-list, media registration and publication owners against the current product, including ordinary documents and Concepts.
-- [ ] Confirm the proposed main-image naming convention.
-- [ ] Carry the settled Works generation recipe, Catalogue row presentation, first-image migration, unconditional thumbnail replacement and manual orphan-retention rules into the implementation scope.
-- [ ] State the bounded code/migration change set and obtain implementation approval.
+- [x] Confirm broad source, shared insertion, collection-list, media registration and publication owners against the current product, including ordinary documents and Concepts.
+- [x] Confirm the proposed main-image naming convention.
+- [x] Carry the settled Works generation recipe, Catalogue row presentation, first-image migration, unconditional thumbnail replacement and manual orphan-retention rules into the implementation scope.
+- [x] State the bounded code/migration change set and obtain implementation approval.
 
 Verification budget: read-only owner/config inspection and source review. No prototype, migration writes, media inventory project or executable tests are needed merely to approve readiness.
 
 Gate: stop if destination identity or source metadata cannot be represented through the existing owners, or if the work requires broader Studio/media architecture changes. Do not reopen the settled thumbnail-selection, replacement or orphan-retention policies.
 
-Record: pending. Planning inspection identified the shared staged-media service and collection report/manifest builder, the current four-type media registration, and the body-only public-media reference collector. Concepts uses the same `docs_collection` report as Moments. No implementation readiness or migration inventory is claimed.
+Record: readiness completed on 2026-10-04 through read-only source/config review. Shared staged-media insertion, strict source Save and committed metadata, collection manifests/rows, workspace media registration and Preview reference capture can represent the outcome within existing owners. Concepts uses the same report as Moments. The user approved code, migration and naming; no wider Studio architecture or compatibility layer is required. Migration inventory remains an implementation step.
 
 ### MIT 1 Naming And Thumbnail Authoring
 
-- [ ] Implement the bounded Docs Viewer FFmpeg thumbnail operation with the specified Works parameters and generic document naming within existing Add image owners.
-- [ ] Register the `thumbs` managed media family and resolve ordinary/collection destinations through the existing configuration owner.
-- [ ] Carry the exact document/title context, proposed destination names and opt-in selection through validated requests.
-- [ ] Carry thumbnail presence through Source editing, replace existing thumbnail bytes unconditionally, and retain completed media writes on source cancellation.
-- [ ] Keep primary bytes unchanged and produce no srcset variants or Studio pipeline dependency.
+- [x] Implement the bounded Docs Viewer FFmpeg thumbnail operation with the specified Works parameters and generic document naming within existing Add image owners.
+- [x] Register the `thumbs` managed media family and resolve ordinary/collection destinations through the existing configuration owner.
+- [x] Carry the exact document/title context, proposed destination names and opt-in selection through validated requests.
+- [x] Carry thumbnail presence through Source editing, replace existing thumbnail bytes unconditionally, and retain completed media writes on source cancellation.
+- [x] Keep primary bytes unchanged and produce no srcset variants or Studio pipeline dependency.
 
 Verification budget: targeted Python/JavaScript lint and direct image/file diagnostics for a justified existing input. These establish source validity and actual derivative dimensions/format, not broad workflow coverage. Record the exact targets, writes and cost before execution. User manual review covers dialog behavior; new test code requires its own approved specification.
 
 Gate: the media result and source assignment agree, and failure reporting does not imply rollback or successful insertion after an incomplete operation.
 
-Record: pending; no code or media changed.
+Record: implemented on 2026-10-04. Exact current source and target validation own title/ID naming; the shared modal requests the optional derivative, and insertion sets canonical assignment in the dirty buffer. Targeted lint passed for 11 changed/new Python and 6 JavaScript source files. Actual migration exercised the naming/storage/FFmpeg owners for 36 existing raster inputs; direct diagnostics confirmed unchanged primary bytes and 96×96 WebP derivatives. Generic ordinary/Concepts insertion and cancellation/replacement interaction remain manual review.
 
 ### MIT 2 Collection And Publication Integration
 
-- [ ] Project thumbnail presence from canonical assignment and render assigned thumbnails through the shared collection-list owner using Catalogue's existing 64px presentation, including Concepts and Moments.
-- [ ] Include the registered `thumbs` family and assigned thumbnails in relevant inventory/reference reads, eligible document media capture and completed-snapshot distribution; inspect package/export role handling where affected.
-- [ ] Reuse committed-record reconciliation and existing cache/refresh behavior for changed assignments and replaced thumbnail bytes.
-- [ ] Project changed shared/public code with `bin/site-code-update`, inspect its tracked delta, then run its check and `bin/site-validate`.
+- [x] Project thumbnail presence from canonical assignment and render assigned thumbnails through the shared collection-list owner using Catalogue's existing 64px presentation, including Concepts and Moments.
+- [x] Include the registered `thumbs` family and assigned thumbnails in relevant inventory/reference reads, eligible document media capture and completed-snapshot distribution; inspect package/export role handling where affected.
+- [x] Reuse committed-record reconciliation and existing cache/refresh behavior for changed assignments and replaced thumbnail bytes.
+- [x] Project changed shared/public code with `bin/site-code-update`, inspect its tracked delta, then run its check and `bin/site-validate`.
 
 Verification budget: focused lint, generated metadata/reference diagnostics and required static projection/validation. Inspect any exact existing test selection and its durable coverage before proposing a run; no suite or browser test is automatic. Working/public visual fit remains user manual review. Public transfer behavior is unverified until separately authorized publication.
 
 Gate: ordinary and named-collection thumbnails resolve through their exact registered owners; list-only thumbnails are captured as media, excluded documents contribute no public thumbnails, and rows without thumbnails issue no speculative image requests. Missing images leave document navigation usable. Catalogue retains its own generated-media behavior.
 
-Record: pending; no manifest, runtime projection or publication changed.
+Record: implemented on 2026-10-04. Working and public manifest projection, Preview reference capture, prepared-public distribution references and Docs Media references each identify the 36 assigned Moments thumbnails. These were read-only diagnostics over real generated payloads and configured owners, not a Publish or transfer. Package/static Export role handling is configuration-driven; body-only static exports gain no thumbnail presentation, and content packages retain their existing metadata boundary. Four represented shared JS/CSS files were projected and their exact delta reviewed; projection check and site validation passed. Implementation diagnostics did not Publish; the later user-run Publish and public boot correction are recorded at closeout. Working/public visual fit remains manual review.
 
 ### MIT 3 Existing Image And Source Migration
 
-- [ ] Resolve current Moment identities, image tokens in source order and `img`/`thumbs` destination names; use the first image for each thumbnail without a selection or existing-thumbnail validation pass.
-- [ ] Apply the approved migration through the same naming/generation owner, preserving primary bytes and authored content/metadata.
-- [ ] Update every affected active source reference and thumbnail assignment, then reconcile affected Working output through its owning build path.
-- [ ] Leave old identities, orphaned images, historical variants and public/held assets untouched; use reports for later manual reconciliation.
+- [x] Resolve current Moment identities, image tokens in source order and `img`/`thumbs` destination names; use the first image for each thumbnail without a selection or existing-thumbnail validation pass.
+- [x] Apply the approved migration through the same naming/generation owner, preserving primary bytes and authored content/metadata.
+- [x] Update every affected active source reference and thumbnail assignment, then reconcile affected Working output through its owning build path.
+- [x] Leave old identities, orphaned images, historical variants and public/held assets untouched; use reports for later manual reconciliation.
 
 Verification budget: direct source/reference and file diagnostics, byte comparison for renamed primaries, generated thumbnail dimensions/format, and inspection of affected builder output. A targeted or complete Moments build may write replaceable Working output as justified above. Record actual selection, cost and effects before the migration; no new regression scripts or Search rebuild.
 
 Gate: migrated display references use the new names, each document's first image supplies its thumbnail, dates/body layout remain intact, and original media files remain untouched. The reader uses no alias or fallback to old names.
 
-Record: pending; existing images, source documents and generated payloads are unchanged.
+Record: completed on 2026-10-04. Of 57 Moments, 36 each referenced one WebP (3,074,012 display bytes in total); 21 had no image. The shared naming/materialisation/thumbnail owners wrote 36 new display identities and 36 derivatives, then direct source patches changed only media identities and thumbnail assignment. Receipt-based diagnostics found no unexpected source delta, changed title/date or primary byte mismatch; old display files remain byte-identical. No watcher was running, so the justified complete Moments doc-only reconciliation rendered 57 documents, wrote 36 by-ID payloads and the management manifest, removed none and reported no warnings. Search, Preview and public document/media output were not rebuilt or published.
 
 ### MIT 4 Code Review
 
-- [ ] Review the final bounded code/config/source/generated delta for identity collisions, ownership drift, Studio coupling, duplicated dialogs, speculative thumbnail requests, missed publication references and compatibility residue.
-- [ ] Review migration results against source-order first-image selection and the no-deletion boundary; remove any added thumbnail-selection, replacement-confirmation or orphan-cleanup machinery.
-- [ ] Resolve findings and repeat only evidence affected by corrections.
+- [x] Review the final bounded code/config/source/generated delta for identity collisions, ownership drift, Studio coupling, duplicated dialogs, speculative thumbnail requests, missed publication references and compatibility residue.
+- [x] Review migration results against source-order first-image selection and the no-deletion boundary; remove any added thumbnail-selection, replacement-confirmation or orphan-cleanup machinery.
+- [x] Resolve findings and repeat only evidence affected by corrections.
 
 Verification budget: source/diff review and already selected evidence; additional runs need a concrete remaining risk. Gate: review findings are resolved or explicitly scoped before closeout.
 
-Record: pending; code review is not applicable to this planning-only document creation.
+Record: bounded code/source/projection review completed on 2026-10-04 after selected evidence. Mermaid's proposed SVG destination is validated against its derived source identity; media apply reuses its validated insertion contract. The migration uses the existing prepared-media owner to meet basename validation. Canonical assignment and body-free public references stay explicit, Catalogue keeps its existing media policy, no compatibility aliases or deletion/rollback hooks were added, and missing artwork leaves navigation intact. Read-only reference diagnostics used the actual Preview/public configuration for distribution coverage. No unresolved code finding remains; browser interactions and public transfers remain evidence gaps.
 
 ### MIT 5 Closeout
 
-- [ ] Record user manual review of shared image insertion, thumbnail choice/replacement, Concepts/Moments collection rows and migrated Moments.
-- [ ] Update the durable media owner with the shipped convention and actual replacement/cancellation behavior.
-- [ ] Report exact focused evidence, media/source/generated changes and publication status, with orphaned files left for manual report-based reconciliation.
-- [ ] Present a retain-or-retire recommendation for this delivery document; do not delete it without approval.
+- [x] Record user closeout acceptance and the scope of manual review, including remaining individual scenarios without recorded confirmation.
+- [x] Update the durable media owner with the shipped convention and actual replacement/cancellation behavior.
+- [x] Report exact focused evidence, media/source/generated changes and publication status, with orphaned files left for manual report-based reconciliation.
+- [x] Present a retain-or-retire recommendation for this delivery document; do not delete it without approval.
 
 Verification budget: bounded documentation/result review; no repeated builds or tests solely for closure. Gate: the complete Working outcome is delivered, its public projection/reference contract is ready, and publication status is stated separately.
 
-Record: pending. Publish, remote deletion, deployment, commit and push remain separate explicit actions.
+Record: implementation and migration evidence are recorded above and the durable media owner is updated. User manual review on 2026-10-04 identified unequal title offsets and row heights for Moments without thumbnails; the shared row renderer now reserves an empty slot whenever the full collection contains assigned thumbnails. `bin/lint-js docs-viewer/runtime/js/shared/docs-collection-browsing.js docs-viewer/runtime/js/shared/docs-collection-report.js` passed. The two public projections were updated and their tracked delta reviewed; `bin/site-code-update --check`, `bin/site-validate` and scoped whitespace checks passed. Bounded review confirmed that empty slots reuse the existing 64px styling, remain decorative, create no image request and use the full manifest before filtering/paging.
+
+The user's subsequent Publish exposed a pre-existing public configuration gap from the exact-document navigation change: canonical public config includes `document_url_template`, while the served `site/` copy omitted it. Publish owns document/media distribution and did not refresh this runtime configuration; the code projection inventory also omitted that file. The projection policy and inventory now allowlist only `docs-viewer-public-config.json`, keeping private defaults excluded. `bin/lint-python site-tools/site_code_update.py` passed; code projection changed only that public config, and its exact tracked delta was reviewed. Projection check and site validation passed with 102 projected files, and scoped whitespace checks passed. Direct HTTP reads from site-preview confirmed the exact template in served config and HTTP 200 for the default by-ID document. The user subsequently confirmed that the page loaded and Moments opened. The Development Checklist now records public browser config as part of the runtime projection guardrail.
+
+Public list-item navigation then exposed a retained-list capture/restore assumption that a collection contribution always exists. Both optional callbacks now resolve through the existing null-safe function guard, preserving their receiver when present; public collections with no contribution use null caller-specific state. `bin/lint-js docs-viewer/runtime/js/shared/docs-collection-report.js` passed. Code projection changed only that shared module; its tracked delta was reviewed, and projection check, site validation and scoped whitespace checks passed. Direct HTTP reads confirm the guarded module is served and a representative Moments by-ID document returns HTTP 200. Bounded review covered capture and restoration with absent callbacks and preserved receiver behavior.
+
+Closeout: the user accepted the delivery and authorized closure on 2026-10-04 after reviewing Working rows and the published site-preview, reporting the alignment/public-loading/navigation findings and accepting their fixes. Individual ordinary/Concepts insertion, cancellation, thumbnail replacement and Back scenarios were not separately confirmed, and remote transfer bytes were not independently audited. This acceptance closes the delivery without claiming those individual checks. Durable media documentation and the public-config guardrail are current. The status/documentation closeout uses bounded source review and the recorded implementation evidence; no new code review, rebuild or repeated executable verification is warranted. No tests or browser probes were authored, changed or run. The user performed Publish; Codex performed no further Publish, remote deletion, deployment, commit or push.
+
+Closeout recommendation: retain this completed delivery for manual archive, with shipped media behavior in [Media And Asset Handling](Media_And_Asset_Handling.md) and the runtime projection guardrail in [Development Checklist](Development_Checklist.md). Retain [Image Token Delivery](Image_Token_Delivery.md) as the proposed next change. No planning documents or stored media are deleted by closeout.
 
 ## Follow On
+
+The separately proposed [Image Token Delivery](Image_Token_Delivery.md) will make future Add image insertions store identity and presentation choices in a semantic token with builder-owned markup. Existing Markdown images and HTML figures will remain supported with no source-markup migration. This completed delivery satisfies its scheduling prerequisite; readiness and implementation approval for that refactor remain separate.
 
 Thumbnail presentation in ordinary Index, Search, Recent or unrelated reports, srcset generation, automatic title-change media renaming, a general media pipeline, migration of other collections' existing images and historical variant/remote cleanup are outside this delivery. Generic Add image and shared collection-row support are within this delivery. Test authoring or changes follow [Test Contract Discipline](Test_Contract_Discipline.md) and [Testing](Testing.md), with coverage maintained outside this delivery.

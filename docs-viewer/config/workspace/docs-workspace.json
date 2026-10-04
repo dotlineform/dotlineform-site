@@ -48,6 +48,13 @@
         },
         "served_path_prefix": "https://media.dotlineform.com/docs/analysis/media/workspace/img"
       },
+      "thumbs": {
+        "location": {
+          "provider": "r2",
+          "path": "docs/analysis/media/workspace/thumbs"
+        },
+        "served_path_prefix": "https://media.dotlineform.com/docs/analysis/media/workspace/thumbs"
+      },
       "svg": {
         "location": {
           "provider": "r2",
@@ -76,6 +83,9 @@
       "media": {
         "types": {
           "img": {
+            "build_inputs": []
+          },
+          "thumbs": {
             "build_inputs": []
           },
           "svg": {
