@@ -147,9 +147,11 @@ def list_collection_media(
     client: object | None = None,
     env_files: Iterable[Path] | None = None,
     environ: Mapping[str, str] | None = None,
+    exclude_media_types: frozenset[str] = frozenset(),
 ) -> tuple[DocsMediaFile, ...]:
     """List configured ready media and build sources without reading or joining documents.
 
+    Callers may omit selected ready-media families without listing them.
     Storage placeholders are omitted. Display exclusions and ordering belong to
     consumers; no source bodies, paths or credentials enter the returned records.
     """
@@ -163,6 +165,8 @@ def list_collection_media(
     items: list[DocsMediaFile] = []
     for role, adapters in (("source", published_adapters), ("build-source", build_adapters)):
         for media_type, adapter in adapters.items():
+            if role == "source" and media_type in exclude_media_types:
+                continue
             for artifact in adapter.list():
                 if Path(artifact.identity).name == ".gitkeep":
                     continue

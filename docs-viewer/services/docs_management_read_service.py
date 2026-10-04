@@ -9,7 +9,7 @@ import docs_catalogue_media
 import docs_diagram_source_service
 import docs_import_source_service as import_source_service
 import docs_management_routes as routes
-import docs_media_reads
+import docs_media_metadata
 import docs_unpublishable_report
 from docs_selected_documents import read_selected
 from docs_workspace_config import document_source_path, load_docs_working_config, resolve_workspace_path
@@ -100,14 +100,10 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         if params:
             raise ValueError("Selected Documents reads do not accept parameters")
         return read_selected(load_docs_working_config(repo_root))
-    if path in {routes.MEDIA_FILES_PATH, routes.MEDIA_REFERENCES_PATH}:
-        if set(params) - {"collection"}:
-            raise ValueError("Docs media reads accept an optional collection only")
-        reader = docs_media_reads.read_media_files if path == routes.MEDIA_FILES_PATH else docs_media_reads.read_media_references
-        return reader(
-            repo_root,
-            collection=docs_api_query_value(params, "collection"),
-        )
+    if path == routes.MEDIA_METADATA_PATH:
+        if params:
+            raise ValueError("Docs Media metadata reads do not accept parameters")
+        return docs_media_metadata.read_media_metadata(repo_root)
     if path == routes.DOCUMENT_LINK_TARGETS_PATH:
         return read_document_link_targets(
             repo_root,

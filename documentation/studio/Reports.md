@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260513-105343-6de36b
 title: Reports
 added_date: "2026-05-13 10:53:43"
-last_updated: "2026-10-03 21:27:23"
+last_updated: "2026-10-04 15:58:55"
 parent_id: d-20260424-000000-50b63f
 ---
 # Docs Viewer Reports
@@ -193,7 +193,7 @@ It uses the local Docs API endpoint `POST /docs/broken-links`, scans both render
 
 The Projects report's Series column displays each exact response-owned Series title as plain text in both Folder and Series grouping modes. It does not open a Series Media View. Folder links, document links, search, sorting and copied TSV retain their existing behavior.
 
-`docs_media` is the local, read-only media-to-document report hosted by [Docs Media](/docs/?doc=d-20260812-212735-6d9cf3). It reads `/docs/media-files` and `/docs/media-references` from the fixed Working owner and assembles rows in `docs-media-data.js`. The browser owns associations, document links, document ordering, display exclusions and sortable Type, File name and Documents columns. The toolbar owns refresh and immediate file-name or document-title search. File name posts exact collection, role, media type and identity without stage to `/docs/open-media-source`, which validates the Docs file and uses the shared Finder helper; Documents preserves exact ordinary and collection links. The report and data routes remain absent from the public report registry and executable graph. [Media And Asset Handling](Media_And_Asset_Handling.md) owns the live data and storage boundary.
+`docs_media` is the local media-to-document inspection report hosted by [Docs Media](/docs/?doc=d-20260812-212735-6d9cf3). Opening reads saved metadata; Run/Refresh explicitly regenerates it across ordinary and configured collection owners, excluding derived thumbnails. The browser owns joins, exact document links and sortable Collection, Type, File name and Documents columns, with a collection filter and immediate search. File names retain the confined Finder action. The report remains absent from public metadata and executable loaders. [Media And Asset Handling](Media_And_Asset_Handling.md#docs-media-inventory-report) owns the saved-data, freshness and storage boundary.
 
 `works` is the local, read-only documentation-coverage report. It retains one row for every Series returned by the current Studio Series lookup. The Docs cell contains distinct exact Context documents with Work subjects whose current Catalogue `series_id` identifies that Series; direct Series subjects are unsupported, and Folder/None contribute no coverage. The Series column is plain text and Docs cells retain exact document links. Opening the report reads the existing Series lookup, Work lookup and private Working Works management manifest and composes the complete result; there is no separate Refresh control. Blank rows remain visible. The report adds no server producer, persisted result, public report or mutation path. [Works Report](Works_Report_Concept_And_Architecture.md) owns the current coverage boundary.
 

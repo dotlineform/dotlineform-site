@@ -1,5 +1,28 @@
 /* Local-only Docs Viewer report implementations and controls. */
 
+.docsViewerReport[data-report-id="docs_media"] .docsViewerReport__head,
+.docsViewerReport[data-report-id="docs_media"] .docsViewerReport__row{
+  grid-template-columns: minmax(7rem, 10rem) minmax(4rem, 6rem) minmax(16rem, 1fr) minmax(12rem, 20rem);
+}
+
+.docsViewerReport[data-report-id="docs_media"] .docsViewerReport__table{
+  overflow-x: auto;
+}
+
+.docsViewerReport[data-report-id="docs_media"] .docsViewerReport__status{
+  white-space: pre-line;
+}
+
+.docsViewerReport__collectionSelect{
+  height: var(--docs-viewer-report-control-height);
+  padding: 0 0.4rem;
+  border: 1px solid var(--docs-viewer-border);
+  border-radius: 6px;
+  background: var(--docs-viewer-panel);
+  color: var(--docs-viewer-text);
+  font: inherit;
+}
+
 .docsViewerReport__seriesWorksViewport{
   max-height: 24rem;
   overflow: auto;

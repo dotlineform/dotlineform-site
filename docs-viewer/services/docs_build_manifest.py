@@ -89,6 +89,7 @@ def write_build_manifest(repo_root: Path, config: DocsStageConfig) -> dict[str, 
     if config.stage == "working":
         workspace = load_docs_workspace_config(repo_root, docs_base_dir=config.workspace_root.path)
         excluded.append(workspace.catalogue.working.path.relative_to(generated_root).as_posix())
+        excluded.append(workspace.media_report_metadata.path.parent.relative_to(generated_root).as_posix())
     generated_files = _managed_files(generated_root, excluded=excluded)
     records = [
         {

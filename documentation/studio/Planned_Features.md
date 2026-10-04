@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260428-000000-f5ff18
 title: Planned Features
 added_date: "2026-04-28 00:00:00"
-last_updated: "2026-09-15 10:43:05"
+last_updated: "2026-10-04 16:41:40"
 summary: This explains the delivery model and workflows to implement new repo and application features.
 ui_status: planned
 parent_id: ""
@@ -141,3 +141,9 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 - Feature documents are **not** durable documents. They enter the explicit closeout list when their routing or decision value is exhausted.
 - Close a delivery when the complete result works and its durable owner is current.
 - Feature documents should be updated with useful decisions and future direction without becoming long execution diaries.
+
+## Ad-hoc Deliveries
+
+Store new standalone delivery documents for bounded work that does not need a separate feature parent under `documentation/studio/deliveries/`. Parent them directly to this document and keep implementation state, decisions and completion gates in the delivery. At closeout, transfer lasting details to the durable owner and review whether the delivery and its link should be retained.
+
+- [Docs Media Collections Delivery](deliveries/Docs_Media_Collections_Delivery.md) — Complete and accepted on 2026-10-04. Saved ordinary/collection media report excludes thumbnails and refreshes each document owner once; collection selection controls the orphan/total counts. Retained for recent-delivery lookup pending manual archive.

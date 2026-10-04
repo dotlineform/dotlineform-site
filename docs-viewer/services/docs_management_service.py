@@ -27,6 +27,7 @@ import docs_selected_documents  # noqa: E402
 import docs_import_source_service as import_source_service  # noqa: E402
 import docs_local_links  # noqa: E402
 import docs_media_actions  # noqa: E402
+import docs_media_metadata  # noqa: E402
 import docs_management_mutations as mutations  # noqa: E402
 import docs_management_routes as routes  # noqa: E402
 import docs_publish  # noqa: E402
@@ -129,6 +130,12 @@ def docs_management_post_response(
         return docs_local_links.open_local_target_response(repo_root, body, dry_run=dry_run)
     if path == routes.OPEN_MEDIA_SOURCE_PATH:
         return HTTPStatus.OK, docs_media_actions.open_media_source(repo_root, body, dry_run=dry_run)
+    if path == routes.MEDIA_REFRESH_PATH:
+        if not isinstance(body, dict) or body:
+            raise ValueError("Docs Media refresh requires an empty request object")
+        if dry_run:
+            raise ValueError("Docs Media refresh does not support dry_run")
+        return HTTPStatus.OK, docs_media_metadata.refresh_media_metadata(repo_root)
     if path == routes.BROKEN_LINKS_PATH:
         payload = handle_broken_links(repo_root, body)
         return HTTPStatus.OK, payload

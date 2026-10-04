@@ -35,8 +35,8 @@ OPEN_DIAGRAM_SOURCE_PATH = "/docs/open-diagram-source"
 OPEN_LOCAL_TARGET_PATH = "/docs/open-local-target"
 BROKEN_LINKS_PATH = "/docs/broken-links"
 PROJECT_STATE_PATH = "/docs/project-state"
-MEDIA_FILES_PATH = "/docs/media-files"
-MEDIA_REFERENCES_PATH = "/docs/media-references"
+MEDIA_METADATA_PATH = "/docs/media-metadata"
+MEDIA_REFRESH_PATH = "/docs/media-refresh"
 OPEN_MEDIA_SOURCE_PATH = "/docs/open-media-source"
 UNCATALOGED_FILES_PATH = "/docs/uncataloged-files"
 MISSING_SOURCE_FILES_PATH = "/docs/missing-source-files"
@@ -79,8 +79,7 @@ GET_PATHS = (
     IMPORT_SOURCE_FILES_PATH,
     STAGED_MEDIA_FILES_PATH,
     DIAGRAM_SOURCES_PATH,
-    MEDIA_FILES_PATH,
-    MEDIA_REFERENCES_PATH,
+    MEDIA_METADATA_PATH,
 )
 
 POST_PATHS = (
@@ -94,6 +93,7 @@ POST_PATHS = (
     BROKEN_LINKS_PATH,
     PROJECT_STATE_PATH,
     OPEN_MEDIA_SOURCE_PATH,
+    MEDIA_REFRESH_PATH,
     UNCATALOGED_FILES_PATH,
     MISSING_SOURCE_FILES_PATH,
     SOURCE_CONFIG_SETTINGS_PATH,

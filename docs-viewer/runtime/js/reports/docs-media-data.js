@@ -1,4 +1,4 @@
-/** Validate generic media reads and assemble local report rows in the browser. */
+/** Validate saved media datasets and assemble local report rows in the browser. */
 
 const DOC_ID = /^d-\d{8}-\d{6}-[0-9a-f]{6}$/;
 function documentId(value, collection) {
@@ -27,46 +27,23 @@ function mediaIdentity(value) {
 
 function mediaKey(value) {
   if (!exactString(value.media_type) || !TOKEN.test(value.media_type)
-    || !["source", "build-source"].includes(value.role) || !mediaIdentity(value.identity)) {
+    || value.media_type === "thumbs" || !["source", "build-source"].includes(value.role) || !mediaIdentity(value.identity)) {
     throw new Error("Docs media identity is invalid.");
   }
   return JSON.stringify([value.role, value.media_type, value.identity]);
 }
 
-function validateRead(payload, request, schema, fields) {
-  if (!exactKeys(payload, ["ok", "schema_version", "collection", ...fields])
-    || payload.ok !== true || payload.schema_version !== schema
-    || payload.collection !== request.collection) {
-    throw new Error("Docs media data does not match the requested owner.");
-  }
-}
-
-function collectionHosts(records) {
-  if (!Array.isArray(records)) throw new Error("Docs media collection hosts are invalid.");
-  const hosts = new Map();
-  records.forEach((record) => {
-    if (!exactKeys(record, ["collection", "report_host_doc_id"])
-      || !collectionId(record.collection) || !record.collection
-      || !exactString(record.report_host_doc_id) || !DOC_ID.test(record.report_host_doc_id)
-      || hosts.has(record.collection)) {
-      throw new Error("Docs media collection host is invalid.");
-    }
-    hosts.set(record.collection, record.report_host_doc_id);
-  });
-  return hosts;
-}
-
-function documentSummary(record,  hosts, context) {
+function documentSummary(record, owner, context) {
   const target = record && record.target;
   if (!exactKeys(record, ["target", "title", "references"])
     || !exactKeys(target, ["collection", "doc_id"])
     || !collectionId(target.collection)
+    || target.collection !== owner.collection
     || !exactString(target.doc_id) || !documentId(target.doc_id, target.collection)
     || !exactString(record.title) || !record.title || !Array.isArray(record.references)) {
     throw new Error("Docs media document reference is invalid.");
   }
-  const hostId = target.collection ? hosts.get(target.collection) : target.doc_id;
-  if (!hostId || typeof context.viewerUrlForDocument !== "function") {
+  if (typeof context.viewerUrlForDocument !== "function") {
     throw new Error("Docs media document location is unavailable.");
   }
   const url = new URL(context.viewerUrlForDocument(target.doc_id, { collection: target.collection }), "http://docs.local");
@@ -81,25 +58,11 @@ function documentSummary(record,  hosts, context) {
   };
 }
 
-/** Join one exact owner's live files to source references, without inferring missing files or build relationships.
- * Document links use configured collection host IDs and the viewer's existing route builder.
- * File exclusions, document deduplication and title ordering are report presentation policy.
- */
-export function buildDocsMediaRows(filesPayload, referencesPayload, request, context) {
-  if (!exactKeys(request, ["collection"])
-    || !collectionId(request.collection)) {
-    throw new Error("Docs media requires an exact Working media owner.");
-  }
-  validateRead(filesPayload, request, "docs_media_files_v1", ["files"]);
-  validateRead(referencesPayload, request, "docs_media_references_v1", ["collection_hosts", "documents"]);
-  if (!Array.isArray(filesPayload.files) || !Array.isArray(referencesPayload.documents)) {
-    throw new Error("Docs media files or document references are invalid.");
-  }
-  const hosts = collectionHosts(referencesPayload.collection_hosts);
+function buildOwnerRows(owner, context) {
   const documentsByMedia = new Map();
   const documentIds = new Set();
-  referencesPayload.documents.forEach((record) => {
-    const document = documentSummary(record,  hosts, context);
+  owner.documents.forEach((record) => {
+    const document = documentSummary(record, owner, context);
     const documentKey = JSON.stringify([document.target.collection, document.target.docId]);
     if (documentIds.has(documentKey)) throw new Error("Docs media contains a duplicate document identity.");
     documentIds.add(documentKey);
@@ -115,20 +78,21 @@ export function buildDocsMediaRows(filesPayload, referencesPayload, request, con
   const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
   const fileIds = new Set();
   const rows = [];
-  filesPayload.files.forEach((file) => {
+  owner.files.forEach((file) => {
     if (!exactKeys(file, ["collection", "role", "media_type", "identity"])
-      || file.collection !== request.collection) {
+      || file.collection !== owner.collection) {
       throw new Error("Docs media file does not match its owner.");
     }
     const key = mediaKey(file);
     if (fileIds.has(key)) throw new Error("Docs media contains a duplicate file identity.");
     fileIds.add(key);
-    if (file.identity.split("/").at(-1) === ".DS_Store") return;
+    if ([".DS_Store", ".gitkeep"].includes(file.identity.split("/").at(-1))) return;
     const documents = Array.from(documentsByMedia.get(key)?.values() || []);
     documents.sort((left, right) => collator.compare(left.title, right.title)
       || left.title.localeCompare(right.title) || left.href.localeCompare(right.href));
     rows.push({
       collection: file.collection,
+      collectionTitle: owner.title,
       mediaType: file.media_type,
       identity: file.identity,
       mediaTarget: { ...file },
@@ -136,4 +100,39 @@ export function buildDocsMediaRows(filesPayload, referencesPayload, request, con
     });
   });
   return rows;
+}
+
+/** Validate one complete saved snapshot and join its owners independently.
+ * The browser owns file display exclusions, document ordering and viewer links.
+ * Missing metadata displays an empty report and never requests a live scan.
+ */
+export function buildDocsMediaSnapshot(payload, context) {
+  if (!exactKeys(payload, ["ok", "metadata"]) || payload.ok !== true) {
+    throw new Error("Docs Media metadata response is invalid.");
+  }
+  const metadata = payload.metadata;
+  if (metadata === null) return null;
+  if (!exactKeys(metadata, ["schema_version", "refreshed_at", "owners"])
+    || metadata.schema_version !== "docs_media_metadata_v1"
+    || !exactString(metadata.refreshed_at)
+    || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(metadata.refreshed_at)
+    || !Number.isFinite(Date.parse(metadata.refreshed_at)) || !Array.isArray(metadata.owners)) {
+    throw new Error("Docs Media metadata is invalid. Use Run/Refresh to regenerate it.");
+  }
+  const identities = new Set();
+  const owners = [];
+  const rows = [];
+  metadata.owners.forEach((owner) => {
+    if (!exactKeys(owner, ["collection", "title", "files", "documents"])
+      || !collectionId(owner.collection) || identities.has(owner.collection)
+      || !exactString(owner.title) || !owner.title
+      || !Array.isArray(owner.files) || !Array.isArray(owner.documents)) {
+      throw new Error("Docs Media metadata has an invalid owner.");
+    }
+    identities.add(owner.collection);
+    owners.push({ collection: owner.collection, title: owner.title });
+    rows.push(...buildOwnerRows(owner, context));
+  });
+  if (!identities.has("")) throw new Error("Docs Media metadata requires the ordinary owner.");
+  return { rows, owners, refreshedAt: metadata.refreshed_at };
 }

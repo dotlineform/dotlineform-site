@@ -1,10 +1,11 @@
 import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
-import { buildDocsMediaRows } from "./docs-media-data.js";
+import { buildDocsMediaSnapshot } from "./docs-media-data.js";
 const DEFAULT_SORT_KEY = "type";
 const DEFAULT_SORT_DIR = "asc";
-const SORT_KEYS = Object.freeze(["type", "file", "documents"]);
+const SORT_KEYS = Object.freeze(["collection", "type", "file", "documents"]);
 const COLUMN_LABELS = Object.freeze({
+  collection: "Collection",
   type: "Type",
   file: "File name",
   documents: "Documents"
@@ -50,14 +51,15 @@ function reportService(context) {
   const service = context && context.reportService;
   return (
     service
-    && typeof service.readMediaFiles === "function"
-    && typeof service.readMediaReferences === "function"
+    && typeof service.readMediaMetadata === "function"
+    && typeof service.refreshMediaMetadata === "function"
     && typeof service.openDocsMediaSource === "function"
   ) ? service : null;
 }
 
 function searchableText(row) {
   return [
+    row.collectionTitle,
     row.identity,
     ...row.documents.map((documentRecord) => documentRecord.title)
   ].map(cleanString).join(" ").toLocaleLowerCase();
@@ -77,16 +79,23 @@ function compareDocumentSets(collator, left, right) {
 function compareRows(collator, sortKey, sortDir, left, right) {
   const direction = sortDir === "desc" ? -1 : 1;
   let primary;
-  if (sortKey === "type") primary = collator.compare(left.mediaType, right.mediaType);
+  if (sortKey === "collection") primary = collator.compare(left.collectionTitle, right.collectionTitle);
+  else if (sortKey === "type") primary = collator.compare(left.mediaType, right.mediaType);
   else if (sortKey === "file") primary = collator.compare(left.identity, right.identity);
   else {
     const emptyOrder = Number(left.documents.length === 0) - Number(right.documents.length === 0);
     primary = emptyOrder || compareDocumentSets(collator, left.documents, right.documents);
   }
   if (primary) return primary * direction;
+  const collection = collator.compare(left.collectionTitle, right.collectionTitle)
+    || collator.compare(left.collection, right.collection)
+    || left.collection.localeCompare(right.collection);
+  if (collection) return collection;
   const type = collator.compare(left.mediaType, right.mediaType);
   if (type) return type;
-  return collator.compare(left.identity, right.identity);
+  return collator.compare(left.identity, right.identity)
+    || left.identity.localeCompare(right.identity)
+    || left.mediaTarget.role.localeCompare(right.mediaTarget.role);
 }
 
 export function buildDocsMediaProjection(rows, options) {
@@ -94,8 +103,10 @@ export function buildDocsMediaProjection(rows, options) {
   const sortKey = SORT_KEYS.includes(settings.sortKey) ? settings.sortKey : DEFAULT_SORT_KEY;
   const sortDir = settings.sortDir === "desc" ? "desc" : DEFAULT_SORT_DIR;
   const searchText = cleanString(settings.searchText).toLocaleLowerCase();
+  const collectionFilter = settings.collectionFilter == null ? "*" : settings.collectionFilter;
   const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
   const projectedRows = (Array.isArray(rows) ? rows : [])
+    .filter((row) => collectionFilter === "*" || row.collection === collectionFilter)
     .filter((row) => !searchText || searchableText(row).includes(searchText))
     .sort((left, right) => compareRows(collator, sortKey, sortDir, left, right));
   return { rows: projectedRows, searchText, sortDir, sortKey };
@@ -164,6 +175,7 @@ function appendDocumentsCell(rowNode, row) {
 function currentProjection(state) {
   return buildDocsMediaProjection(state.sourceRows, {
     searchText: state.searchText,
+    collectionFilter: state.collectionFilter,
     sortDir: state.sortDir,
     sortKey: state.sortKey
   });
@@ -173,11 +185,9 @@ function renderRows(state) {
   const projection = currentProjection(state);
   renderHead(state);
   clearNode(state.rowsNode);
-  state.emptyNode.hidden = projection.rows.length > 0;
+  state.emptyNode.hidden = projection.rows.length > 0 || state.sourceRows.length === 0;
   if (!projection.rows.length) {
-    state.emptyNode.textContent = state.sourceRows.length
-      ? "No Docs Media rows match the current search."
-      : "No media files were found.";
+    state.emptyNode.textContent = "No Docs Media rows match the current filters.";
     return;
   }
   projection.rows.forEach((row) => {
@@ -185,6 +195,8 @@ function renderRows(state) {
     rowNode.className = "docsViewerReport__row";
     rowNode.dataset.docsMediaType = row.mediaType;
     rowNode.dataset.docsMediaIdentity = row.identity;
+    rowNode.dataset.docsMediaCollection = row.collection;
+    appendTextCell(rowNode, row.collectionTitle);
     appendTextCell(rowNode, row.mediaType);
     appendFileCell(rowNode, row);
     appendDocumentsCell(rowNode, row);
@@ -193,14 +205,40 @@ function renderRows(state) {
 }
 
 function resultStatus(state) {
-  const count = state.sourceRows.length;
-  return count + (count === 1 ? " media file." : " media files.");
+  const rows = state.sourceRows.filter((row) => state.collectionFilter === "*" || row.collection === state.collectionFilter);
+  const orphans = rows.filter((row) => row.documents.length === 0).length;
+  const counts = orphans + "/" + rows.length + " orphaned files.";
+  if (!state.snapshot) return counts;
+  const refreshedAt = new Date(state.snapshot.refreshedAt).toLocaleString("en-GB", {
+    day: "2-digit", month: "2-digit", year: "numeric",
+    hour: "2-digit", minute: "2-digit", hour12: false
+  });
+  return "Last refreshed: " + refreshedAt + "\n\n" + counts;
+}
+
+function renderResultStatus(state) {
+  const parts = [];
+  if (state.resultMessage) parts.push(state.resultMessage);
+  if (state.snapshot || !state.resultMessage) parts.push(resultStatus(state));
+  state.statusNode.textContent = parts.join("\n\n");
+}
+
+function renderCollectionFilter(state) {
+  clearNode(state.collectionFilterNode);
+  [{ collection: "*", title: "All" }, ...state.snapshot.owners].forEach((owner) => {
+    const option = document.createElement("option");
+    option.value = owner.collection;
+    option.textContent = owner.title;
+    state.collectionFilterNode.appendChild(option);
+  });
+  state.collectionFilterNode.value = state.collectionFilter;
 }
 
 function updateControls(state) {
   state.runButton.disabled = state.busy;
   state.runButton.setAttribute("aria-busy", state.busy ? "true" : "false");
   state.searchInputNode.disabled = state.busy;
+  state.collectionFilterNode.disabled = state.busy || !state.snapshot;
   state.headNode.querySelectorAll("[data-report-sort]").forEach((button) => {
     button.disabled = state.busy;
   });
@@ -211,7 +249,7 @@ function setBusy(state, busy) {
   updateControls(state);
 }
 
-function loadMedia(state) {
+function loadMedia(state, refresh = false) {
   const service = reportService(state.context);
   if (!service) {
     state.statusNode.textContent = "Local docs-management server is not configured.";
@@ -220,27 +258,38 @@ function loadMedia(state) {
     return Promise.resolve();
   }
   setBusy(state, true);
-  state.statusNode.textContent = "Loading Docs Media...";
-  state.sourceRows = [];
-  clearNode(state.rowsNode);
-  state.emptyNode.hidden = true;
-  const request = {  collection: "" };
-  return Promise.all([service.readMediaFiles(request), service.readMediaReferences(request)])
-    .then(([files, references]) => buildDocsMediaRows(files, references, request, state.context))
-    .then((rows) => {
-      state.sourceRows = rows;
-      state.statusNode.textContent = resultStatus(state);
+  state.statusNode.textContent = refresh ? "Refreshing Docs Media..." : "Loading saved Docs Media...";
+  if (!state.snapshot) state.emptyNode.hidden = true;
+  return (refresh ? service.refreshMediaMetadata() : service.readMediaMetadata())
+    .then((payload) => buildDocsMediaSnapshot(payload, state.context))
+    .then((snapshot) => {
+      if (!snapshot) {
+        if (refresh) throw new Error("Docs Media refresh returned no saved metadata.");
+        state.resultMessage = "";
+        renderResultStatus(state);
+        renderRows(state);
+        return;
+      }
+      state.snapshot = snapshot;
+      state.sourceRows = snapshot.rows;
+      if (state.collectionFilter !== "*" && !snapshot.owners.some((owner) => owner.collection === state.collectionFilter)) {
+        state.collectionFilter = "*";
+      }
+      renderCollectionFilter(state);
+      state.resultMessage = "";
+      renderResultStatus(state);
       renderRows(state);
     })
     .catch((error) => {
-      state.sourceRows = [];
-      clearNode(state.rowsNode);
-      renderHead(state);
-      state.statusNode.textContent = error && error.message
+      const message = error && error.message
         ? error.message
-        : "Docs Media refresh failed.";
-      state.emptyNode.hidden = false;
-      state.emptyNode.textContent = "The current Docs Media load could not complete.";
+        : "Docs Media could not complete the request.";
+      state.resultMessage = message + (state.snapshot ? " Showing the saved report." : " Use Run/Refresh to generate the report.");
+      renderResultStatus(state);
+      if (!state.snapshot) {
+        state.emptyNode.hidden = false;
+        state.emptyNode.textContent = "Saved Docs Media is unavailable.";
+      }
     })
     .finally(() => {
       setBusy(state, false);
@@ -255,18 +304,26 @@ function openFile(state, target) {
   }
   return service.openDocsMediaSource(target)
     .then(() => {
-      state.statusNode.textContent = resultStatus(state);
+      state.resultMessage = "";
+      if (state.snapshot) renderResultStatus(state);
     })
     .catch((error) => {
-      state.statusNode.textContent = error && error.message
+      state.resultMessage = error && error.message
         ? error.message
         : "Open in Finder failed.";
+      renderResultStatus(state);
     });
 }
 
 function attachEvents(state) {
   state.runButton.addEventListener("click", () => {
-    if (!state.busy) loadMedia(state);
+    if (!state.busy) loadMedia(state, true);
+  });
+  state.collectionFilterNode.addEventListener("change", () => {
+    state.collectionFilter = state.collectionFilterNode.value;
+    renderResultStatus(state);
+    renderRows(state);
+    updateControls(state);
   });
   state.searchInputNode.addEventListener("input", () => {
     state.searchText = state.searchInputNode.value;
@@ -301,10 +358,11 @@ function attachEvents(state) {
 
 function renderShell(root) {
   root.dataset.reportId = "docs_media";
-  root.dataset.reportColumns = "3";
+  root.dataset.reportColumns = "4";
   root.innerHTML = [
     '<div class="docsViewerReport__toolbar">',
-    '  <button id="docsMediaReportRun" type="button" class="docsViewer__toolbarIconButton" aria-label="Run/Refresh" title="Run/Refresh"></button>',
+    '  <button id="docsMediaReportRun" type="button" class="docsViewer__toolbarIconButton" aria-label="Refresh" title="Refresh"></button>',
+    '  <label class="docsViewerReport__selectLabel">Collection <select id="docsMediaReportCollection" class="docsViewerReport__collectionSelect"><option value="*">All</option></select></label>',
     '  <span class="docsViewerReport__search">',
     '    <input id="docsMediaReportSearch" class="docsViewerReport__searchInput" type="search" placeholder="Search" aria-label="Search Docs Media">',
     "  </span>",
@@ -323,6 +381,7 @@ function renderShell(root) {
     headNode: root.querySelector(".docsViewerReport__head"),
     rowsNode: root.querySelector(".docsViewerReport__rows"),
     runButton: root.querySelector("#docsMediaReportRun"),
+    collectionFilterNode: root.querySelector("#docsMediaReportCollection"),
     searchInputNode: root.querySelector("#docsMediaReportSearch"),
     statusNode: root.querySelector(".docsViewerReport__status")
   };
@@ -334,6 +393,9 @@ export function mountDocsMediaReport(context) {
   const state = Object.assign({
     busy: false,
     context,
+    collectionFilter: "*",
+    snapshot: null,
+    resultMessage: "",
     searchText: "",
     sortDir: routeSort.sortDir,
     sortKey: routeSort.sortKey,
@@ -342,27 +404,17 @@ export function mountDocsMediaReport(context) {
   renderHead(state);
   if (context.registerRetainedView) context.registerRetainedView({
     id: "docs-media",
-    capture: function () { return { query: state.searchText, key: state.sortKey, direction: state.sortDir }; },
+    capture: function () { return { query: state.searchText, collection: state.collectionFilter, key: state.sortKey, direction: state.sortDir }; },
     restore: function (saved) {
-      if (state.searchText === saved.query && state.sortKey === saved.key && state.sortDir === saved.direction) return;
-      state.searchText = saved.query; state.sortKey = saved.key; state.sortDir = saved.direction;
+      if (state.searchText === saved.query && state.collectionFilter === saved.collection && state.sortKey === saved.key && state.sortDir === saved.direction) return;
+      state.searchText = saved.query; state.collectionFilter = saved.collection; state.sortKey = saved.key; state.sortDir = saved.direction;
+      state.collectionFilterNode.value = saved.collection;
       state.searchInputNode.value = saved.query;
+      if (!state.busy) renderResultStatus(state);
       renderRows(state); updateControls(state);
     }
   });
   attachEvents(state);
-  if (context.collectionProvider && context.collectionProvider.subscribeDocumentChanges) context.collectionProvider.subscribeDocumentChanges(function (change) {
-    if (!context.reportRoot.isConnected) return;
-    var changed = false;
-    state.sourceRows.forEach(function (row) {
-      var matches = function (record) { return record.target.docId === change.target.doc_id && record.target.collection === (change.target.collection || ""); };
-      if (row.documents.some(function (record) { return matches(record) && (change.deleted || record.title !== change.record.title); })) changed = true;
-      row.documents = row.documents.filter(function (record) { return !change.deleted || !matches(record); }).map(function (record) {
-        return matches(record) ? Object.assign({}, record, { title: change.record.title }) : record;
-      });
-    });
-    if (changed) { renderRows(state); updateControls(state); }
-  });
   updateControls(state);
   if (!context.managementContext) {
     state.statusNode.textContent = "Docs Media requires Working.";

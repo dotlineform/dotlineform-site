@@ -1,5 +1,6 @@
 {
   "schema_version": "docs_workspace_v4",
+  "media_report_metadata": "working/generated/reports/docs-media/metadata.json",
   "assets": {
     "root": "assets",
     "document_media": "media",
