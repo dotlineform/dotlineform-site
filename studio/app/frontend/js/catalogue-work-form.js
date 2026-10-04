@@ -318,7 +318,9 @@ function renderProjectMediaDisplayField(field, fieldsNode, state, options) {
     button.append(createStudioIcon(document, "folder-open"));
     button.title = formText(options, "project_media_choose_button", "Choose image...");
     button.setAttribute("aria-label", formText(options, "project_media_choose_button", "Choose image..."));
-    button.addEventListener("click", () => {
+    button.addEventListener("click", (event) => {
+      // The opener must not dismiss the folder list when cached folders load immediately.
+      event.stopPropagation();
       openProjectMediaPickerForCurrentDraft(state, options).catch((error) => {
         console.warn("catalogue_work_form: failed to open project image picker", error);
       });
