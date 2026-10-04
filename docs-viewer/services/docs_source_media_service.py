@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
-"""Plan and publish staged media for Docs source-editor insertion."""
+"""Materialise native uploads for Docs source-editor insertion and replacement."""
 
 from __future__ import annotations
 
-import datetime as dt
-import os
 import re
 import shutil
 import tempfile
@@ -44,15 +42,15 @@ from docs_staged_media_fragments import (
 )
 from docs_image_tokens import image_text, serialize_image_token
 from docs_svg_sanitizer import SanitizedSvg, sanitize_svg_bytes
-from docs_document_packages.workspace import configured_workspace_paths, marker_path, workspace_status
+from docs_source_media_upload import MAX_MEDIA_BYTES, MAX_METADATA_BYTES, SourceMediaUpload, validate_upload
 from docs_document_images import write_document_thumbnail
 from docs_management_document_target import managed_document_target_request, resolve_managed_document_target
 from docs_management_source_service import validate_source_candidate
 
 
-STAGED_MEDIA_IMAGE = "image"
-STAGED_MEDIA_FILE = "file"
-STAGED_MEDIA_KINDS = {STAGED_MEDIA_IMAGE, STAGED_MEDIA_FILE}
+MEDIA_IMAGE = "image"
+MEDIA_FILE = "file"
+MEDIA_KINDS = {MEDIA_IMAGE, MEDIA_FILE}
 MERMAID_STAGED_SUFFIXES = {".mmd"}
 TOKEN_SAFE_MEDIA_FILENAME_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
 
@@ -72,29 +70,25 @@ class PreparedMermaidMedia:
 
 
 @dataclass(frozen=True)
-class StagedMediaContract:
+class SourceMediaContract:
     kind: str
     source_path: Path
     label: str
     media_class: str
     media_filename: str
-    source_kind: str
-    source_root: str
-    source_directory: str
-    source_path_marker: str
     collection: str = ""
     doc_id: str = ""
     create_thumb: bool = False
 
 
-def media_owner(repo_root: Path, contract: StagedMediaContract) -> DocsStageConfig | DocsCollectionConfig:
+def media_owner(repo_root: Path, contract: SourceMediaContract) -> DocsStageConfig | DocsCollectionConfig:
     """Resolve the collection validated for this insertion, with no parent fallback."""
     return load_docs_media_owner(repo_root, contract.collection)
 
 
 def normalize_media_kind(value: Any) -> str:
     kind = str(value or "").strip().lower()
-    if kind not in STAGED_MEDIA_KINDS:
+    if kind not in MEDIA_KINDS:
         raise ValueError("media_kind must be image or file")
     return kind
 
@@ -102,7 +96,7 @@ def normalize_media_kind(value: Any) -> str:
 def media_suffixes(kind: str) -> set[str]:
     return (
         RASTER_IMAGE_STAGED_SUFFIXES | SVG_STAGED_SUFFIXES | MERMAID_STAGED_SUFFIXES
-        if normalize_media_kind(kind) == STAGED_MEDIA_IMAGE
+        if normalize_media_kind(kind) == MEDIA_IMAGE
         else FILE_MEDIA_STAGED_SUFFIXES
     )
 
@@ -119,7 +113,7 @@ def published_media_filename(source_path: Path, *, kind: str) -> str:
     replacement within the configured collection and media family.
     """
     filename = validate_media_identity(source_path.name)
-    if normalize_media_kind(kind) == STAGED_MEDIA_FILE and TOKEN_SAFE_MEDIA_FILENAME_PATTERN.fullmatch(filename):
+    if normalize_media_kind(kind) == MEDIA_FILE and TOKEN_SAFE_MEDIA_FILENAME_PATTERN.fullmatch(filename):
         return filename
     return f"{slugify(source_path.stem)}{source_path.suffix.lower()}"
 
@@ -128,122 +122,18 @@ def normalize_label_text(value: Any, *, fallback: str) -> str:
     return " ".join(str(value or "").split()) or fallback
 
 
-def _resolve_staged_media(staging_root: Path, filename: str, kind: str) -> Path:
-    normalized_filename = validate_media_identity(filename)
-    root = staging_root.resolve()
-    unresolved = root / normalized_filename
-    if unresolved.is_symlink():
-        raise ValueError("staged media files must not be symlinks")
-    source_path = unresolved.resolve()
-    if source_path.parent != root or not source_path.is_file():
-        raise FileNotFoundError(f"staged media file does not exist: {normalized_filename}")
-    if source_path.suffix.lower() not in media_suffixes(kind):
-        supported = ", ".join(sorted(media_suffixes(kind)))
-        raise ValueError(f"staged {kind} file must use one of these extensions: {supported}")
-    return source_path
-
-
-def _listed_media_files(
-    directory: Path,
-    *,
-    kind: str,
-    path_marker,
-) -> list[dict[str, Any]]:
-    normalized_kind = normalize_media_kind(kind)
-    suffixes = media_suffixes(normalized_kind)
-    files: list[dict[str, Any]] = []
-    for path in sorted(directory.iterdir(), key=lambda candidate: (candidate.name.casefold(), candidate.name)):
-        if (
-            not path.is_file()
-            or path.is_symlink()
-            or not os.access(path, os.R_OK)
-            or path.suffix.lower() not in suffixes
-        ):
-            continue
-        stat = path.stat()
-        files.append({
-            "filename": path.name,
-            "path": path_marker(path),
-            "media_kind": normalized_kind,
-            "media_format": (
-                "mermaid"
-                if path.suffix.lower() == ".mmd"
-                else "svg"
-                if path.suffix.lower() == ".svg"
-                else "raster"
-                if normalized_kind == STAGED_MEDIA_IMAGE
-                else "file"
-            ),
-            "suggested_label": humanize(path.stem),
-            "size_bytes": stat.st_size,
-            "modified_utc": dt.datetime.fromtimestamp(
-                stat.st_mtime,
-                tz=dt.timezone.utc,
-            ).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        })
-    return files
-
-
-def list_staged_media_files(
-    repo_root: Path,
-    kind: str,
-    *,
-    collection: str = "",
-) -> dict[str, Any]:
-    require_document_authoring(load_docs_media_owner(repo_root, collection))
-    normalized_kind = normalize_media_kind(kind)
-
-    status = workspace_status(repo_root, required_paths=("import_staging",))
-    if not status["available"]:
-        return {
-            "ok": True,
-            "available": False,
-            "staging_root": status["root"],
-            "message": status["message"],
-            "media_kind": normalized_kind,
-            "source_kind": "import_staging",
-            "source_root": status["root"],
-            "current_directory": status["root"],
-            "current_selectable": False,
-            "parent_directory": None,
-            "directories": [],
-            "files": [],
-        }
-    workspace = configured_workspace_paths(repo_root)
-    staging_root = workspace.import_staging.resolve()
-    staging_marker = marker_path(staging_root, workspace_root=workspace.root)
-    return {
-        "ok": True,
-        "available": True,
-        "staging_root": staging_marker,
-        "message": "",
-        "media_kind": normalized_kind,
-        "source_kind": "import_staging",
-        "source_root": staging_marker,
-        "current_directory": staging_marker,
-        "current_selectable": False,
-        "parent_directory": None,
-        "directories": [],
-        "files": _listed_media_files(
-            staging_root,
-            kind=normalized_kind,
-            path_marker=lambda path: marker_path(path, workspace_root=workspace.root),
-        ),
-    }
-
-
 @contextmanager
 def _prepared_media_source(
     source_path: Path,
     kind: str,
     media_filename: str,
 ) -> Iterator[tuple[Path, Path, SanitizedSvg | None]]:
-    is_svg = normalize_media_kind(kind) == STAGED_MEDIA_IMAGE and source_path.suffix.lower() == ".svg"
+    is_svg = normalize_media_kind(kind) == MEDIA_IMAGE and source_path.suffix.lower() == ".svg"
     if not is_svg and media_filename == source_path.name:
         yield source_path, source_path.parent, None
         return
     sanitized = sanitize_svg_bytes(source_path.read_bytes()) if is_svg else None
-    with tempfile.TemporaryDirectory(prefix="docs-staged-media-publish-") as temp_dir:
+    with tempfile.TemporaryDirectory(prefix="docs-source-media-publish-") as temp_dir:
         temp_root = Path(temp_dir).resolve()
         prepared_path = temp_root / media_filename
         if sanitized:
@@ -253,66 +143,49 @@ def _prepared_media_source(
         yield prepared_path, temp_root, sanitized
 
 
-def _staged_media_request_contract(repo_root: Path, body: dict[str, Any]) -> StagedMediaContract:
+def media_options(repo_root: Path, kind: str, *, collection: str = "") -> dict[str, Any]:
+    """Expose only accepted suffixes and the native byte limit to the local chooser."""
+    require_document_authoring(load_docs_media_owner(repo_root, collection))
+    return {
+        "ok": True, "accept": ",".join(sorted(media_suffixes(kind))),
+        "max_file_bytes": MAX_MEDIA_BYTES, "max_metadata_bytes": MAX_METADATA_BYTES,
+    }
+
+
+def _source_media_request_contract(repo_root: Path, body: dict[str, Any], source_path: Path) -> SourceMediaContract:
     kind = normalize_media_kind(body.get("media_kind"))
-    if "scope" in body:
-        raise ValueError("scope is retired; use an optional collection")
-    if "sub_scope" in body:
-        raise ValueError("sub_scope is retired; use collection")
+    if any(key in body for key in ("staged_filename", "source_directory", "source_root", "source_path", "published_filename")):
+        raise ValueError("Source media accepts native file bytes, not staged paths or caller-selected destinations")
     config = load_docs_media_owner(repo_root, body.get("collection", ""))
     require_document_authoring(config)
-    workspace = configured_workspace_paths(repo_root)
-    source_path = _resolve_staged_media(workspace.import_staging, body.get("staged_filename"), kind)
-    source_kind = "import_staging"
-    source_root = marker_path(workspace.import_staging, workspace_root=workspace.root)
-    source_directory = source_root
-    source_path_marker = marker_path(source_path, workspace_root=workspace.root)
-    fallback = humanize(source_path.stem) or ("Image" if kind == STAGED_MEDIA_IMAGE else "File")
+    if source_path.suffix.lower() not in media_suffixes(kind):
+        raise ValueError(f"Unsupported {kind} format; select one of: {', '.join(sorted(media_suffixes(kind)))}")
+    fallback = humanize(source_path.stem) or ("Image" if kind == MEDIA_IMAGE else "File")
     label = normalize_label_text(body.get("label"), fallback=fallback)
     media_class = (
-        "mermaid"
-        if kind == STAGED_MEDIA_IMAGE and source_path.suffix.lower() == ".mmd"
-        else "svg"
-        if kind == STAGED_MEDIA_IMAGE and source_path.suffix.lower() == ".svg"
-        else "img"
-        if kind == STAGED_MEDIA_IMAGE
-        else "files"
+        "mermaid" if kind == MEDIA_IMAGE and source_path.suffix.lower() == ".mmd"
+        else "svg" if kind == MEDIA_IMAGE and source_path.suffix.lower() == ".svg"
+        else "img" if kind == MEDIA_IMAGE else "files"
     )
     media_filename = published_media_filename(source_path, kind=kind)
-    doc_id = ""
+    target = managed_document_target_request(body)
+    resolved = resolve_managed_document_target(repo_root, target)
     create_thumb = body.get("create_thumb", False)
     if not isinstance(create_thumb, bool):
         raise ValueError("create_thumb must be a boolean")
-    if kind == STAGED_MEDIA_IMAGE:
-        target = managed_document_target_request(body)
-        resolved = resolve_managed_document_target(repo_root, target)
+    if create_thumb and media_class != "img":
+        raise ValueError("Create thumb requires a raster image")
+    if kind == MEDIA_IMAGE:
         source_text = body.get("source_text")
         if not isinstance(source_text, str):
             raise ValueError("Add image requires the current source_text")
         validate_source_candidate(repo_root, target, source_text, resolved)
-        doc_id = resolved.doc_id
-        if create_thumb and media_class != "img":
-            raise ValueError("Create thumb requires a raster image")
-        proposed_filename = Path(media_filename).with_suffix(".svg").name if media_class == "mermaid" else media_filename
-        if "published_filename" in body and body["published_filename"] != proposed_filename:
-            raise ValueError("published_filename must match the normalized source image destination")
-    elif create_thumb:
-        raise ValueError("Create thumb requires Add image")
     if media_class == "mermaid":
         media_filename = Path(media_filename).with_suffix(".mmd").name
-    return StagedMediaContract(
-        collection=getattr(config, "collection", ""),
-        kind=kind,
-        source_path=source_path,
-        label=label,
-        media_class=media_class,
-        media_filename=media_filename,
-        source_kind=source_kind,
-        source_root=source_root,
-        source_directory=source_directory,
-        source_path_marker=source_path_marker,
-        doc_id=doc_id,
-        create_thumb=create_thumb,
+    return SourceMediaContract(
+        kind=kind, source_path=source_path, label=label, media_class=media_class,
+        media_filename=media_filename, collection=getattr(config, "collection", ""),
+        doc_id=resolved.doc_id, create_thumb=create_thumb,
     )
 
 
@@ -323,7 +196,7 @@ def _source_fragment(
     *,
     body: dict[str, Any],
 ) -> str:
-    if kind == STAGED_MEDIA_FILE:
+    if kind == MEDIA_FILE:
         return build_file_link_fragment(label, f"[[media:{media_path}]]")
     if type(body.get("add_caption")) is not bool:
         raise ValueError("add_caption must be a boolean")
@@ -379,7 +252,7 @@ def _prepared_mermaid_media(
         remote_client=remote_client,
     )
 
-    with tempfile.TemporaryDirectory(prefix="docs-staged-mermaid-render-") as temp_dir:
+    with tempfile.TemporaryDirectory(prefix="docs-source-mermaid-render-") as temp_dir:
         temp_root = Path(temp_dir).resolve()
         temporary_source = artifact_location_adapter(
             temp_root,
@@ -422,7 +295,7 @@ def _prepared_mermaid_media(
 
 def _mermaid_preview_payload(
     repo_root: Path,
-    contract: StagedMediaContract,
+    contract: SourceMediaContract,
     prepared: PreparedMermaidMedia,
     *,
     body: dict[str, Any],
@@ -439,15 +312,11 @@ def _mermaid_preview_payload(
         "collection": contract.collection,
         "media_kind": contract.kind,
         "media_format": "mermaid",
-        "staged_filename": contract.source_path.name,
-        "source_kind": contract.source_kind,
-        "source_root": contract.source_root,
-        "source_directory": contract.source_directory,
-        "source_path": contract.source_path_marker,
+        "source_filename": contract.source_path.name,
         "source_identity": prepared.source_identity,
         "published_filename": Path(prepared.published_identity).name,
         "label": contract.label,
-        "add_caption": contract.kind == STAGED_MEDIA_IMAGE and body.get("add_caption") is True,
+        "add_caption": contract.kind == MEDIA_IMAGE and body.get("add_caption") is True,
         "media_identity": plan["media_path"],
         "media_token": plan["media_token"],
         "markdown": _source_fragment(
@@ -466,82 +335,40 @@ def _mermaid_preview_payload(
     }
 
 
-def _preview_staged_media_contract(repo_root: Path, contract: StagedMediaContract, body: dict[str, Any]) -> dict[str, Any]:
-    if contract.media_class == "mermaid":
-        prepared = _prepared_mermaid_media(
-            repo_root,
-            media_owner(repo_root, contract),
-            contract.source_path,
-            contract.media_filename,
-        )
-        return _mermaid_preview_payload(
-            repo_root,
-            contract,
-            prepared,
-            body=body,
-        )
-    config = media_owner(repo_root, contract)
-    with _prepared_media_source(
-        contract.source_path,
-        contract.kind,
-        contract.media_filename,
-    ) as (prepared_path, source_root, sanitized):
-        item = docs_media_file(
-            config,
-            media_class=contract.media_class,
-            local_path=prepared_path,
-            source_root=source_root,
-            filename=contract.media_filename,
-        )
-        result = publish_docs_media_files(repo_root, [item], write=False, force=True)[0]
-        plan = build_media_plan(
-            contract.media_class,
-            Path(contract.media_filename),
-            contract.label,
-            repo_root=repo_root,
-            media_config=managed_media_config(config, contract.media_class),
-        )
-        collision = "unchanged" if result.status == "unchanged" else "replace" if result.status == "would_overwrite" else "new"
-        return {
-            "ok": True,
-            "doc_id": contract.doc_id,
-            "create_thumb": contract.create_thumb,
-            "collection": contract.collection,
-            "media_kind": contract.kind,
-            "staged_filename": contract.source_path.name,
-            "source_kind": contract.source_kind,
-            "source_root": contract.source_root,
-            "source_directory": contract.source_directory,
-            "source_path": contract.source_path_marker,
-            "published_filename": contract.media_filename,
-            "label": contract.label,
-            "add_caption": contract.kind == STAGED_MEDIA_IMAGE and body.get("add_caption") is True,
-            "media_identity": plan["media_path"],
-            "media_token": plan["media_token"],
-            "markdown": _source_fragment(
-                contract.kind,
-                contract.label,
-                plan["media_path"],
-                body=body,
-            ),
-            "collision": collision,
-            "requires_replace_confirmation": collision == "replace",
-            "size_bytes": item.size,
-            "svg": {
-                "title": sanitized.title,
-                "diagnostics": sanitized.diagnostics(),
-            } if sanitized else None,
-        }
+def _needs_confirmation(preview: dict[str, Any], body: dict[str, Any]) -> bool:
+    for field in ("confirm_replace", "confirm_sanitization"):
+        if type(body.get(field, False)) is not bool:
+            raise ValueError(f"{field} must be a boolean")
+    diagnostics = (preview.get("svg") or {}).get("diagnostics") or {}
+    return (
+        preview["requires_replace_confirmation"] and not body.get("confirm_replace", False)
+        or bool(diagnostics.get("warnings")) and not body.get("confirm_sanitization", False)
+    )
 
 
-def preview_staged_media(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
-    """Validate document/image context and return the proposed media insertion."""
-    return _preview_staged_media_contract(repo_root, _staged_media_request_contract(repo_root, body), body)
+def apply_source_media(
+    repo_root: Path, body: dict[str, Any], upload: SourceMediaUpload, *, write: bool = True,
+) -> dict[str, Any]:
+    """Await required writes before returning insertion metadata, or ask for a decision.
+
+    Native bytes live only in operation-owned temporary storage. A confirmation
+    response is write-free; the browser resubmits the same File with its decision.
+    Source Save, watcher output and public publication remain independent.
+    """
+    filename = validate_upload(upload)
+    try:
+        with tempfile.TemporaryDirectory(prefix="docs-source-media-upload-") as temp_dir:
+            source_path = Path(temp_dir) / filename
+            source_path.write_bytes(upload.data)
+            contract = _source_media_request_contract(repo_root, body, source_path)
+            return _apply_source_media_contract(repo_root, contract, body, write=write)
+    except OSError as error:
+        raise RuntimeError(f"Media operation for {filename} did not complete: {error}") from error
 
 
-def apply_staged_media(repo_root: Path, body: dict[str, Any], *, write: bool = True) -> dict[str, Any]:
-    """Complete media writes before returning source-buffer insertion metadata."""
-    contract = _staged_media_request_contract(repo_root, body)
+def _apply_source_media_contract(
+    repo_root: Path, contract: SourceMediaContract, body: dict[str, Any], *, write: bool,
+) -> dict[str, Any]:
     if contract.media_class == "mermaid":
         prepared = _prepared_mermaid_media(
             repo_root,
@@ -555,25 +382,31 @@ def apply_staged_media(repo_root: Path, body: dict[str, Any], *, write: bool = T
             prepared,
             body=body,
         )
-        confirm_replace = bool(body.get("confirm_replace"))
-        if preview["requires_replace_confirmation"] and not confirm_replace:
-            raise ValueError("canonical Mermaid source or published SVG bytes differ; confirm replacement or cancel")
-        if write and prepared.source_status != "unchanged":
-            prepared.source_adapter.replace(
-                prepared.source_identity,
-                prepared.source_bytes,
-                content_type="text/plain",
-            )
-            if not prepared.source_adapter.verify_bytes(prepared.source_identity, prepared.source_bytes):
-                raise RuntimeError("Canonical Mermaid source publication verification failed")
-        if write and prepared.published_status != "unchanged":
-            prepared.published_adapter.replace(
-                prepared.published_identity,
-                prepared.published_bytes,
-                content_type="image/svg+xml",
-            )
-            if not prepared.published_adapter.verify_bytes(prepared.published_identity, prepared.published_bytes):
-                raise RuntimeError("Mermaid SVG publication verification failed")
+        if _needs_confirmation(preview, body):
+            return {**preview, "requires_confirmation": True}
+        stored: list[str] = []
+        try:
+            if write and prepared.source_status != "unchanged":
+                prepared.source_adapter.replace(
+                    prepared.source_identity,
+                    prepared.source_bytes,
+                    content_type="text/plain",
+                )
+                stored.append(f"Mermaid source {prepared.source_identity}")
+                if not prepared.source_adapter.verify_bytes(prepared.source_identity, prepared.source_bytes):
+                    raise RuntimeError("Canonical Mermaid source publication verification failed")
+            if write and prepared.published_status != "unchanged":
+                prepared.published_adapter.replace(
+                    prepared.published_identity,
+                    prepared.published_bytes,
+                    content_type="image/svg+xml",
+                )
+                stored.append(f"SVG {prepared.published_identity}")
+                if not prepared.published_adapter.verify_bytes(prepared.published_identity, prepared.published_bytes):
+                    raise RuntimeError("Mermaid SVG publication verification failed")
+        except (OSError, RuntimeError) as error:
+            effects = ", ".join(stored) if stored else "no confirmed new media writes"
+            raise RuntimeError(f"Mermaid operation failed after {effects}: {error}") from error
         published_status = (
             "unchanged"
             if prepared.published_status == "unchanged"
@@ -587,6 +420,7 @@ def apply_staged_media(repo_root: Path, body: dict[str, Any], *, write: bool = T
         )
         return {
             **preview,
+            "requires_confirmation": False,
             "preview_only": not write,
             "source_publish": {
                 "identity": prepared.source_identity,
@@ -610,29 +444,38 @@ def apply_staged_media(repo_root: Path, body: dict[str, Any], *, write: bool = T
             ),
         }
 
-    preview = _preview_staged_media_contract(repo_root, contract, body)
-    confirm_replace = bool(body.get("confirm_replace"))
-    if preview["requires_replace_confirmation"] and not confirm_replace:
-        raise ValueError("published media bytes differ; confirm replacement or cancel")
-
     config = media_owner(repo_root, contract)
     with _prepared_media_source(
-        contract.source_path,
-        contract.kind,
-        contract.media_filename,
-    ) as (prepared_path, source_root, _sanitized):
+        contract.source_path, contract.kind, contract.media_filename,
+    ) as (prepared_path, source_root, sanitized):
         item = docs_media_file(
-            config,
-            media_class=contract.media_class,
-            local_path=prepared_path,
-            source_root=source_root,
-            filename=contract.media_filename,
+            config, media_class=contract.media_class, local_path=prepared_path,
+            source_root=source_root, filename=contract.media_filename,
         )
+        media_type = config.media.types[contract.media_class]
+        adapter = artifact_location_adapter(
+            repo_root, media_type.asset_location, served_path_prefix=media_type.served_path_prefix,
+        )
+        collision = _artifact_status(adapter, contract.media_filename, prepared_path.read_bytes())
+        plan = build_media_plan(
+            contract.media_class, Path(contract.media_filename), contract.label,
+            repo_root=repo_root, media_config=managed_media_config(config, contract.media_class),
+        )
+        preview = {
+            "ok": True, "doc_id": contract.doc_id, "collection": contract.collection,
+            "media_kind": contract.kind, "source_filename": contract.source_path.name,
+            "published_filename": contract.media_filename, "label": contract.label,
+            "create_thumb": contract.create_thumb, "media_identity": plan["media_path"],
+            "media_token": plan["media_token"],
+            "markdown": _source_fragment(contract.kind, contract.label, plan["media_path"], body=body),
+            "collision": collision, "requires_replace_confirmation": collision == "replace",
+            "size_bytes": item.size,
+            "svg": {"title": sanitized.title, "diagnostics": sanitized.diagnostics()} if sanitized else None,
+        }
+        if _needs_confirmation(preview, body):
+            return {**preview, "requires_confirmation": True}
         results = publish_docs_media_files(
-            repo_root,
-            [item],
-            write=write,
-            force=confirm_replace,
+            repo_root, [item], write=write, force=body.get("confirm_replace", False),
         )
         if write and not docs_publish_succeeded(results):
             raise RuntimeError(f"Docs media insertion did not complete: {results[0].status}")
@@ -645,27 +488,12 @@ def apply_staged_media(repo_root: Path, body: dict[str, Any], *, write: bool = T
         except (ValueError, RuntimeError, OSError) as error:
             raise RuntimeError(f"Display image stored as {contract.media_filename}; thumbnail operation failed: {error}") from error
     return {
-        **preview,
-        "preview_only": not write,
-        "publish": asdict(results[0]),
-        "thumbnail": thumbnail,
+        **preview, "requires_confirmation": False, "preview_only": not write,
+        "publish": asdict(results[0]), "thumbnail": thumbnail,
         "summary_text": (
             f"Added {contract.source_path.name}."
             if write and results[0].status != "unchanged"
-            else f"Verified {contract.source_path.name}."
-            if write
+            else f"Verified {contract.source_path.name}." if write
             else f"Prepared insertion preview for {contract.source_path.name}."
         ),
     }
-
-
-__all__ = [
-    "STAGED_MEDIA_FILE",
-    "STAGED_MEDIA_IMAGE",
-    "apply_staged_media",
-    "list_staged_media_files",
-    "normalize_media_kind",
-    "published_media_filename",
-    "preview_staged_media",
-    "validate_media_identity",
-]

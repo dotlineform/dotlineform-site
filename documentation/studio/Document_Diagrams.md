@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260719-123719-fb7565
 title: Document Diagrams
 added_date: "2026-07-19 12:37:19"
-last_updated: "2026-09-15 17:56:48"
+last_updated: "2026-10-04 22:04:08"
 summary: Author, build, publish, render, inspect, and extend scope-owned Mermaid diagrams in Docs Viewer.
 parent_id: d-20260424-000000-50b63f
 
@@ -121,7 +121,7 @@ The repository-pinned persistent-media renderer uses a neutral theme, white back
 - producer implementation: `docs-viewer/services/docs_mermaid_media.py`
 - producer registry and full/targeted invocation: `docs-viewer/build/docs_builder/media_builds.py`
 - scope activation and locations: `docs-viewer/config/scopes/docs_scopes.json`
-- staged author intake: `docs-viewer/services/docs_staged_media_service.py`
+- native author intake: `docs-viewer/services/docs_source_media_service.py`
 - rendered source discovery/opening: `docs-viewer/services/docs_diagram_source_service.py`
 - changed-identity rebuild: `docs-viewer/services/docs_live_rebuild_watcher.py`
 - public fence planner and manifest contract: `docs-viewer/services/docs_public_mermaid_projection.py`

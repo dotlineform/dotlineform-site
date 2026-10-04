@@ -18,237 +18,112 @@ function cleanString(value) {
 
 function actionCopy(kind) {
   return kind === "file"
-    ? { title: "Add file", fieldLabel: "Link label", empty: "No files are available in this folder.", primary: "Add file" }
-    : { title: "Add image", fieldLabel: "Alt text", empty: "No images are available in this folder.", primary: "Add image" };
+    ? { title: "Add file", fieldLabel: "Link label", fileLabel: "File name", primary: "Add file" }
+    : { title: "Add image", fieldLabel: "Alt text", fileLabel: "Image file name", primary: "Add image" };
 }
 
-function byteSize(value) {
-  var size = Number(value);
-  if (!Number.isFinite(size) || size < 0) return "";
-  return size.toLocaleString("en-GB") + (size === 1 ? " byte" : " bytes");
-}
-
-function chooseStagedMedia(root, kind, listing, draft) {
+function chooseSourceMedia(root, kind, mediaOptions, draft) {
   var copy = actionCopy(kind);
-  var editing = kind === "image" && Boolean(draft && draft.mediaPath && !draft.selectReplacement);
+  var editing = kind === "image" && Boolean(draft && draft.mediaPath);
   if (editing) copy = Object.assign({}, copy, { title: "Edit image", primary: "Apply" });
-  var records = Array.isArray(listing && listing.files) ? listing.files : [];
-  var sourceDirectory = cleanString(listing && listing.current_directory);
-  var canChooseFolder = cleanString(listing && listing.source_kind) === "media_source";
-  var sourceCopy = canChooseFolder ? sourceDirectory : "Import staging";
-  var filesHtml = records.map(function (file, index) {
-    var size = byteSize(file && file.size_bytes);
-    var checked = cleanString(draft && draft.stagedFilename) === cleanString(file && file.filename)
-      ? " checked"
-      : "";
-    return '<label class="docsViewer__stagedMediaOption" for="docsViewerStagedMediaFile-' + index + '">' +
-      '<input class="docsViewer__checkboxInput" id="docsViewerStagedMediaFile-' + index + '" data-role="staged-media-file" name="docsViewerStagedMediaFile" type="radio" value="' + escapeHtml(file.filename) + '"' + checked + '>' +
-      '<span class="docsViewer__stagedMediaOptionCopy">' +
-        '<span class="docsViewer__stagedMediaFilename">' + escapeHtml(file.filename) + "</span>" +
-        (size ? '<span class="docsViewer__stagedMediaSize muted small">' + escapeHtml(size) + "</span>" : "") +
-      "</span>" +
-    "</label>";
-  }).join("");
-  if (!filesHtml) {
-    filesHtml = '<p class="docsViewer__modalNote muted small">' + escapeHtml(copy.empty) + "</p>";
-  }
-  var captionHtml = kind === "image" ? imagePresentationHtml() : "";
-  var chooseFolderRequested = false;
-  var chooseReplacementRequested = false;
+  var selectedFile = null;
   return openDocsViewerManagementModal({
-    root: root,
-    title: copy.title,
-    size: "compact",
-    focusSelector: editing ? '[data-role="staged-media-label"]' : records.length
-      ? '[data-role="staged-media-file"]'
-      : canChooseFolder
-      ? '[data-role="choose-media-source-folder"]'
-      : '[data-role="staged-media-label"]',
-    bodyHtml: "" +
-      (editing
-        ? '<p class="docsViewer__modalNote"><strong>Image:</strong> ' + escapeHtml(draft.mediaPath) + '</p>' +
-          '<button class="docsViewer__actionButton" data-role="choose-replacement-image" type="button">Choose replacement image…</button>'
-        : '<div class="docsViewer__stagedMediaSource">' +
-        '<span class="docsViewer__fieldLabel">Source folder</span>' +
-        '<span class="docsViewer__stagedMediaSourcePath">' + escapeHtml(sourceCopy) + "</span>" +
-        (canChooseFolder
-          ? '<button class="docsViewer__actionButton" data-role="choose-media-source-folder" type="button">Choose folder…</button>'
-          : "") +
-      "</div>" +
-      '<div class="docsViewer__field docsViewer__field--listbox">' +
-        '<span class="docsViewer__fieldLabel">Source file</span>' +
-        '<div class="docsViewer__stagedMediaOptions">' + filesHtml + "</div>" +
-      "</div>") +
+    root: root, title: copy.title, size: "compact",
+    focusSelector: editing ? '[data-role="media-label"]' : '[data-role="choose-media-file"]',
+    bodyHtml:
       '<div class="docsViewer__field">' +
-        '<label class="docsViewer__fieldLabel" for="docsViewerStagedMediaLabel">' + escapeHtml(copy.fieldLabel) + "</label>" +
-        '<input class="docsViewer__fieldInput" id="docsViewerStagedMediaLabel" data-role="staged-media-label" type="text" required>' +
-      "</div>" +
-      captionHtml + (kind === "image" && !editing
-        ? '<label class="docsViewer__field"><span><input class="docsViewer__checkboxInput" data-role="create-thumb" type="checkbox"> Create thumb</span></label>'
+        '<label class="docsViewer__fieldLabel" for="docsViewerMediaFilename">' + escapeHtml(copy.fileLabel) + '</label>' +
+        '<div class="docsViewerSourceEditorMedia__file">' +
+          '<input class="docsViewer__fieldInput" id="docsViewerMediaFilename" data-role="media-filename" type="text" readonly>' +
+          '<button class="docsViewer__toolbarIconButton" data-role="choose-media-file" type="button" aria-label="Choose file" title="Choose file">' +
+            '<span class="docsViewer__toolbarIcon docsViewer__icon--folder-open" aria-hidden="true"></span>' +
+          '</button>' +
+        '</div>' +
+        '<input data-role="media-file" type="file" accept="' + escapeHtml(mediaOptions.accept) + '" hidden>' +
+      '</div>' +
+      '<div class="docsViewer__field">' +
+        '<label class="docsViewer__fieldLabel" for="docsViewerMediaLabel">' + escapeHtml(copy.fieldLabel) + '</label>' +
+        '<input class="docsViewer__fieldInput" id="docsViewerMediaLabel" data-role="media-label" type="text" required>' +
+      '</div>' +
+      (kind === "image" ? imagePresentationHtml() : "") +
+      (kind === "image"
+        ? '<label class="docsViewer__field"><span><input class="docsViewer__checkboxInput" data-role="create-thumb" type="checkbox" disabled> Create thumb</span></label>'
         : ""),
-    actions: [
-      { role: "modal-primary", label: copy.primary },
-      { role: "modal-cancel", label: "Cancel" }
-    ],
+    actions: [{ role: "modal-primary", label: copy.primary }, { role: "modal-cancel", label: "Cancel" }],
     onOpen: function (api) {
-      var folderButton = api.host.querySelector('[data-role="choose-media-source-folder"]');
-      var label = api.host.querySelector('[data-role="staged-media-label"]');
-      var captionToggle = api.host.querySelector('[data-role="staged-media-caption"]');
-      var captionInput = api.host.querySelector('[data-role="staged-media-caption-text"]');
+      var input = api.host.querySelector('[data-role="media-file"]');
+      var filename = api.host.querySelector('[data-role="media-filename"]');
+      var label = api.host.querySelector('[data-role="media-label"]');
+      var captionInput = api.host.querySelector('[data-role="media-caption-text"]');
       var thumbToggle = api.host.querySelector('[data-role="create-thumb"]');
-      var replacementButton = api.host.querySelector('[data-role="choose-replacement-image"]');
-      if (thumbToggle) thumbToggle.checked = Boolean(draft && draft.createThumb);
-      var captionEdited = Boolean(draft);
-      var labelEdited = Boolean(draft && draft.label);
+      var labelEdited = editing;
+      var captionEdited = editing;
+      filename.value = editing ? draft.mediaPath.split("/").pop() : "";
       label.value = cleanString(draft && draft.label);
-      if (kind === "image" && draft) hydrateImagePresentation(api.host, draft);
-      function projectSuggestedLabel() {
-        var selectedInput = api.host.querySelector('[data-role="staged-media-file"]:checked');
-        var selected = records.find(function (record) {
-          return selectedInput && record.filename === selectedInput.value;
-        });
-        if (!labelEdited) label.value = cleanString(selected && selected.suggested_label);
-        if (captionInput && !captionEdited) {
-          captionInput.value = label.value;
+      if (kind === "image") {
+        if (draft) hydrateImagePresentation(api.host, draft);
+        bindImagePresentation(api.host);
+      }
+      api.host.querySelector('[data-role="choose-media-file"]').addEventListener("click", function () {
+        input.value = "";
+        input.click();
+      });
+      input.addEventListener("change", function () {
+        var file = input.files && input.files[0];
+        if (!file) return;
+        var suffix = "." + file.name.split(".").pop().toLowerCase();
+        if (!mediaOptions.accept.split(",").includes(suffix)) {
+          api.setStatus("Select a supported " + kind + " file.");
+          return;
         }
-        projectThumbnailAvailability();
-      }
-      function projectThumbnailAvailability() {
-        if (!thumbToggle) return;
-        var selected = api.host.querySelector('[data-role="staged-media-file"]:checked');
-        thumbToggle.disabled = !/\.(jpg|jpeg|png|webp|gif)$/i.test(selected && selected.value || "");
-        if (thumbToggle.disabled) thumbToggle.checked = false;
-      }
-      projectThumbnailAvailability();
-      function projectCaptionSuggestion() {
+        if (!file.size || file.size > mediaOptions.max_file_bytes) {
+          api.setStatus(file.size ? "Selected media exceeds the 64 MiB file limit." : "Selected media file is empty.");
+          return;
+        }
+        selectedFile = file;
+        filename.value = file.name;
+        if (!labelEdited) label.value = file.name.replace(/\.[^.]+$/, "").trim().split(/[_\-\s]+/).map(function (part) {
+          return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
+        }).join(" ");
         if (captionInput && !captionEdited) captionInput.value = label.value;
-      }
-      api.host.querySelectorAll('[data-role="staged-media-file"]').forEach(function (input) {
-        input.addEventListener("change", projectSuggestedLabel);
+        if (thumbToggle) {
+          thumbToggle.disabled = !/\.(jpg|jpeg|png|webp|gif)$/i.test(file.name);
+          if (thumbToggle.disabled) thumbToggle.checked = false;
+        }
+        api.setStatus("");
       });
-      label.addEventListener("input", function () { labelEdited = true; projectCaptionSuggestion(); });
-      if (captionInput) {
-        captionInput.addEventListener("input", function () {
-          captionEdited = true;
-        });
-      }
-      if (captionToggle) bindImagePresentation(api.host);
-      if (replacementButton) replacementButton.addEventListener("click", function () {
-        chooseReplacementRequested = true;
-        api.host.querySelector('[data-role="modal-primary"]').click();
+      label.addEventListener("input", function () {
+        labelEdited = true;
+        if (captionInput && !captionEdited) captionInput.value = label.value;
       });
-      if (folderButton) {
-        folderButton.addEventListener("click", function () {
-          chooseFolderRequested = true;
-          var primary = api.host.querySelector('[data-role="modal-primary"]');
-          if (primary) primary.click();
-        });
-      }
+      if (captionInput) captionInput.addEventListener("input", function () { captionEdited = true; });
     },
     onSubmit: function (api) {
-      var selectedInput = api.host.querySelector('[data-role="staged-media-file"]:checked');
-      var label = api.host.querySelector('[data-role="staged-media-label"]');
-      var filename = cleanString(selectedInput && selectedInput.value);
-      var labelValue = cleanString(label && label.value);
+      var label = cleanString(api.host.querySelector('[data-role="media-label"]').value);
       var presentation = readImagePresentation(api.host);
       var thumbToggle = api.host.querySelector('[data-role="create-thumb"]');
-      var createThumb = Boolean(thumbToggle && !thumbToggle.disabled && thumbToggle.checked);
-      var addCaption = kind === "image" && presentation.addCaption;
-      if (chooseFolderRequested || chooseReplacementRequested) {
-        return {
-          chooseFolder: chooseFolderRequested,
-          chooseReplacement: chooseReplacementRequested,
-          selectReplacement: Boolean(draft && draft.selectReplacement),
-          mediaPath: draft && draft.mediaPath,
-          createThumb: createThumb,
-          stagedFilename: filename,
-          label: labelValue,
-          addCaption: addCaption,
-          caption: presentation.caption,
-          summary: presentation.summary,
-          placement: presentation.placement,
-          fillWidth: presentation.fillWidth
-        };
-      }
-      if ((!editing && !filename) || !labelValue) {
-        api.setStatus("Choose a source file and enter " + copy.fieldLabel.toLowerCase() + ".");
+      if ((!editing && !selectedFile) || !label) {
+        api.setStatus("Choose a file and enter " + copy.fieldLabel.toLowerCase() + ".");
         return false;
       }
-      if (addCaption && !presentation.caption) {
+      if (kind === "image" && presentation.addCaption && !presentation.caption) {
         api.setStatus("Enter caption text or turn off Add caption.");
-        var captionInput = api.host.querySelector('[data-role="staged-media-caption-text"]');
-        if (captionInput) captionInput.focus();
         return false;
       }
       if (kind === "image" && !presentation.placement) {
         api.setStatus("Choose an image placement.");
         return false;
       }
-      return {
-        confirmed: true,
+      return Object.assign({}, presentation, {
+        confirmed: true, file: selectedFile, label: label,
         mediaPath: editing ? draft.mediaPath : "",
-        createThumb: createThumb,
-        sourceDirectory: sourceDirectory,
-        stagedFilename: filename,
-        label: labelValue,
-        addCaption: addCaption,
-        caption: presentation.caption,
-        summary: presentation.summary,
-        placement: presentation.placement,
-        fillWidth: presentation.fillWidth
-      };
+        createThumb: Boolean(thumbToggle && !thumbToggle.disabled && thumbToggle.checked)
+      });
     }
-  }).then(function (result) {
-    return result && (result.confirmed || result.chooseFolder || result.chooseReplacement) ? result : null;
-  });
+  }).then(function (result) { return result && result.confirmed ? result : null; });
 }
 
-async function chooseMediaSourceFolder(root, kind, listing, provider) {
-  var module = await import("/docs-viewer/runtime/js/shared-frontend/folder-picker.js");
-  if (!module || typeof module.createFolderPicker !== "function") {
-    throw new Error("Folder picker module did not expose createFolderPicker().");
-  }
-  var picker = null;
-  var result = await openDocsViewerManagementModal({
-    root: root,
-    title: "Choose source folder",
-    bodyHtml: '<div data-role="media-source-folder-picker"></div>',
-    actions: [
-      { role: "modal-primary", label: "Choose folder" },
-      { role: "modal-cancel", label: "Cancel" }
-    ],
-    onOpen: function (api) {
-      var host = api.host.querySelector('[data-role="media-source-folder-picker"]');
-      picker = module.createFolderPicker(host, {
-        rootDirectory: cleanString(listing.source_root),
-        rootLabel: cleanString(listing.source_root).split("/").slice(-1)[0],
-        initialDirectory: cleanString(listing.current_directory),
-        loadDirectory: function (request) {
-          return provider.listStagedMedia(kind, { sourceDirectory: request.directory });
-        },
-        onError: function (error) {
-          api.setStatus(error && error.message ? error.message : "Folder could not be loaded.");
-        },
-        onSubmit: function (request) {
-          return { confirmed: true, sourceDirectory: request.directory };
-        }
-      });
-      Promise.resolve(picker.ready).then(function () {
-        picker.focusPreferred();
-      }).catch(function (error) {
-        api.setStatus(error && error.message ? error.message : "Folder could not be loaded.");
-      });
-    },
-    onSubmit: function () {
-      if (!picker) return false;
-      return picker.submit();
-    }
-  });
-  if (picker) picker.destroy();
-  return result && result.confirmed ? cleanString(result.sourceDirectory) : "";
-}
-
-function confirmStagedMedia(root, kind, preview) {
+function confirmSourceMedia(root, kind, preview) {
   var copy = actionCopy(kind);
   var collision = cleanString(preview && preview.collision);
   var diagnostics = preview && preview.svg && preview.svg.diagnostics;
@@ -256,7 +131,7 @@ function confirmStagedMedia(root, kind, preview) {
   if (collision !== "replace" && !warnings.length) return Promise.resolve(true);
   var reviewHtml = collision === "replace"
     ? ""
-    : '<p class="docsViewer__modalNote muted small">SVG sanitization changed the staged source. Review the diagnostics before adding it.</p>';
+    : '<p class="docsViewer__modalNote muted small">SVG sanitization changed the selected source. Review the diagnostics before adding it.</p>';
   var warningHtml = warnings.map(function (warning) {
     return '<p class="docsViewer__modalNote muted small">' + escapeHtml(warning) + "</p>";
   }).join("");
@@ -277,20 +152,15 @@ function confirmStagedMedia(root, kind, preview) {
   });
 }
 
-/** Await media writes for insertion/replacement, or apply presentation only to the captured token. */
-export async function publishAndInsertStagedMedia(options = {}) {
+/** Await native media writes before insertion, or apply presentation to the captured token. */
+export async function publishAndInsertSourceMedia(options = {}) {
   var provider = options.provider || {};
   var adapter = options.adapter || null;
   var kind = cleanString(options.mediaKind) === "file" ? "file" : "image";
-  if (
-    typeof provider.listStagedMedia !== "function" ||
-    typeof provider.previewStagedMedia !== "function" ||
-    typeof provider.applyStagedMedia !== "function" ||
-    !adapter || typeof adapter.insertStagedMedia !== "function" || !options.capture
-  ) {
-    throw new Error("Staged media publication is unavailable on this route.");
+  if (typeof provider.readSourceMediaOptions !== "function" || typeof provider.applySourceMedia !== "function"
+      || !adapter || typeof adapter.insertSourceMedia !== "function" || !options.capture) {
+    throw new Error("Native media intake is unavailable on this route.");
   }
-
   var root = options.root || document.body;
   var snapshot = adapter.getBufferSnapshot();
   var bodyStart = sourceBodyStart(snapshot.value);
@@ -302,49 +172,22 @@ export async function publishAndInsertStagedMedia(options = {}) {
   var capture = initialToken
     ? { start: initialToken.start, end: initialToken.end, text: initialToken.raw, revision: snapshot.revision }
     : options.capture;
-  var listing = initialToken ? {} : await provider.listStagedMedia(kind);
-  var choice;
   var draft = initialToken ? Object.assign({}, initialToken, {
-    label: initialToken.alt, addCaption: Boolean(initialToken.caption), createThumb: false
+    label: initialToken.alt, addCaption: Boolean(initialToken.caption)
   }) : null;
-  while (true) {
-    if (listing && listing.available === false && cleanString(listing.message)) {
-      throw new Error(cleanString(listing.message));
-    }
-    choice = await chooseStagedMedia(root, kind, listing || {}, draft);
-    if (!choice) return null;
-    if (!choice.chooseFolder && !choice.chooseReplacement) break;
-    draft = choice;
-    if (choice.chooseReplacement) {
-      draft.selectReplacement = true;
-      listing = await provider.listStagedMedia(kind);
-      continue;
-    }
-    var selectedDirectory = await chooseMediaSourceFolder(root, kind, listing || {}, provider);
-    if (selectedDirectory) {
-      if (selectedDirectory !== cleanString(listing && listing.current_directory)) {
-        draft.stagedFilename = "";
-      }
-      listing = await provider.listStagedMedia(kind, { sourceDirectory: selectedDirectory });
-    }
-  }
-  if (choice.mediaPath) {
+  var mediaOptions = await provider.readSourceMediaOptions(kind, options.target);
+  var choice = await chooseSourceMedia(root, kind, mediaOptions, draft);
+  if (!choice) return null;
+  if (!choice.file && choice.mediaPath) {
     var token = serializeImageToken({ mediaPath: choice.mediaPath, alt: choice.label,
       caption: choice.addCaption ? choice.caption : "", summary: choice.summary,
       placement: choice.placement, fillWidth: choice.fillWidth });
     if (!token) throw new Error("Image fields are invalid.");
     var updated = { markdown: token, summary_text: "Image token updated." };
-    if (!adapter.insertStagedMedia(capture, updated)) throw new Error("The Source image occurrence changed.");
+    if (!adapter.insertSourceMedia(capture, updated)) throw new Error("The Source image occurrence changed.");
     return updated;
   }
-  var request = Object.assign({}, options.target, {
-    media_kind: kind,
-    staged_filename: choice.stagedFilename,
-    label: choice.label
-  });
-  if (cleanString(listing && listing.source_kind) === "media_source") {
-    request.source_directory = choice.sourceDirectory;
-  }
+  var request = Object.assign({}, options.target, { media_kind: kind, label: choice.label });
   if (kind === "image") {
     request.source_text = adapter.getBufferSnapshot().value;
     request.create_thumb = choice.createThumb;
@@ -354,15 +197,19 @@ export async function publishAndInsertStagedMedia(options = {}) {
     request.placement = choice.placement;
     request.fill_width = choice.fillWidth;
   }
-  var preview = await provider.previewStagedMedia(request);
-  var confirmed = await confirmStagedMedia(root, kind, preview);
-  if (!confirmed) return null;
-  var payload = await provider.applyStagedMedia(Object.assign({}, request, {
-    ...(kind === "image" ? { published_filename: preview.published_filename } : {}),
-    confirm_replace: Boolean(preview.requires_replace_confirmation)
-  }));
-  if (!adapter.insertStagedMedia(capture, payload)) {
-    throw new Error("Media was published, but its source reference could not be inserted.");
+  if (new Blob([JSON.stringify(request)]).size > mediaOptions.max_metadata_bytes) {
+    throw new Error("Media metadata exceeds the 1 MiB limit.");
+  }
+  var payload = await provider.applySourceMedia(request, choice.file);
+  if (payload.requires_confirmation) {
+    if (!await confirmSourceMedia(root, kind, payload)) return null;
+    payload = await provider.applySourceMedia(Object.assign({}, request, {
+      confirm_replace: Boolean(payload.requires_replace_confirmation), confirm_sanitization: true
+    }), choice.file);
+  }
+  if (payload.requires_confirmation) throw new Error("Media confirmation did not complete.");
+  if (!adapter.insertSourceMedia(capture, payload)) {
+    throw new Error("Media was stored, but its source reference could not be inserted.");
   }
   return payload;
 }

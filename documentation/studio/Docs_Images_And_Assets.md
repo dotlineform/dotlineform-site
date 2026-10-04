@@ -3,8 +3,8 @@ draft: false
 doc_id: d-20260423-155039-e36925
 title: Docs Images And Assets
 added_date: 2026-04-23 15:50:39
-last_updated: "2026-08-12 17:51:20"
-summary: Link existing media, publish staged images and downloads into an active document, or embed self-contained visuals.
+last_updated: "2026-10-04 22:04:08"
+summary: Link existing media, add native-selected images and downloads to an active document, or embed self-contained visuals.
 parent_id: d-20260424-000000-50b63f
 
 ---
@@ -18,9 +18,9 @@ Use this guide to choose how a document should refer to an image, download, diag
 | --- | --- |
 | Show an existing public-scope image or file. | A `media` token pointing at its R2 object. |
 | Show an existing asset in a local or external-local scope. | A `/docs/media/<scope>/...` link. |
-| Add a staged image, Mermaid source, or download to the document being edited. | Source editor **Add image…** or **Add file…**; it publishes the required output and inserts a logical reference. |
+| Add an image, Mermaid source, or download to the document being edited. | Source editor **Add image…** or **Add file…**; the filename field's folder-open icon selects a file, then confirmation writes required media and inserts a logical reference. |
 | Import the contents of HTML, Markdown, text, or a trusted documents package. | Docs Import; it interprets the supported content and writes document source. |
-| Add a reproducible authored diagram. | Stage `.mmd` for **Add image…**, or author canonical Mermaid source directly in the configured scope. |
+| Add a reproducible authored diagram. | Select `.mmd` through **Add image…**, or author canonical Mermaid source directly in its configured build-source owner. |
 | Keep a small code-owned visual with the explanation. | Inline safe SVG or HTML in the Markdown source. |
 | Run a self-contained interactive example. | Published `html` media with an `html-media` sandbox token. |
 
@@ -84,25 +84,27 @@ Do not put local design documents or working references in `site/`; that tree is
 
 ## Add A New Image Or Download
 
-1. Put the source file in `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/`.
-2. Open the target document's Markdown source editor.
-3. Choose **Add image…** or **Add file…**, select the staged file, and enter useful alt text or a link label.
+1. Open the target document's Markdown source editor and choose **Add image…** or **Add file…**.
+2. Click the folder-open icon beside the filename field. Select one supported file in the native chooser; its basename fills the field. Empty files and files above 64 MiB are rejected. Cancelling preserves the previous selection.
+3. Enter useful alt text or a link label. For an image, review caption, summary and layout settings; optionally select **Create thumb** for a raster image.
 4. Choose **Add image** or **Add file**. New or byte-identical media proceeds directly; changed bytes using the same identity prompt **Replace** or **Cancel**.
-5. Review the inserted Markdown, then use **Rebuild doc** to commit the source edit.
+5. Review the inserted source, then use **Save** to persist the document. Watcher generation and reader refresh follow independently.
 
-The target scope writes the bytes to its external managed-media namespace. The editor never asks the author to choose a provider and does not mutate a configured public repository or R2 projection.
+The exact document/collection owner writes the bytes to its configured shared media namespace. Import staging is unnecessary, and the original selected file stays untouched. The editor never asks the author to choose a provider and does not mutate a public repository or R2 projection.
 
-Managed materialisation completes and is byte-verified before the logical Markdown reference is inserted. The action never creates or replaces a document, and it leaves the staged file in place. Cancelling or abandoning the later source edit can therefore leave unreferenced media, but cannot commit a link to a failed media write.
+Managed materialisation completes and is byte-verified before the logical source reference is inserted. Cancelling or abandoning the later source edit can leave unreferenced media, including an already replaced thumbnail; it does not undo media writes. Public publication remains a separate action.
 
-For Mermaid `.mmd`, **Add image…** renders in temporary storage first, then writes and verifies the canonical source under the scope's configured `media/mermaid/` root and its same-basename published SVG. The inserted Markdown always references the SVG. After intake, use the diagram-title link in rendered Document Info's **Diagrams** section to edit the canonical source; Docs Watcher republishes only that changed identity, so the existing token and document source do not change.
+To edit an existing semantic image token, reopen it in Source. The same filename field initially shows its stored basename; use the adjacent icon to select another file, or edit presentation alone without selecting a file. **Apply** updates the captured occurrence. Image filenames use the normalized selected basename; file naming retains its existing safety normalization. Changed bytes at the same media identity still require replacement confirmation and affect all documents referencing that identity.
 
-The write-free publication preview is internal. Authors see another modal only when changed bytes require replacement confirmation or SVG sanitization removed unsafe content that should be reviewed.
+For Mermaid `.mmd`, **Add image…** renders in temporary storage first, then writes and verifies the canonical source in the configured Mermaid build-source owner and its same-stem managed SVG. The inserted image token references the SVG. After intake, use the diagram-title link in rendered Document Info's **Diagrams** section to edit the canonical source; Docs Watcher republishes only that changed identity, so the existing token and document source do not change.
+
+Authors see another modal only when changed bytes require replacement confirmation or SVG sanitization produces diagnostics to review. These decisions happen before permanent writes.
 
 Markdown package imports are different: one Markdown source becomes one document, package images are converted to readable WebP outputs, and supported attachments are copied and linked. HTML and Markdown imports can also extract raster data URLs written as Markdown images. [Docs Import](Docs_Import.md) owns those operator workflows.
 
 ## SVG, Mermaid, And Interactive Assets
 
-Use **Add image…** for new SVG. It sanitizes the staged SVG and publishes it through the scope's configured `svg` media class before inserting an image reference. Docs Import uses the same sanitizer and class when it extracts inline SVG from imported HTML. Historical SVG tokens beneath `img` and manually authored inline SVG remain supported; they are not migrated automatically.
+Use **Add image…** for new SVG. It sanitizes the selected SVG and writes it through the document owner's configured `svg` media class before inserting an image reference. Docs Import uses the same sanitizer and class when it extracts inline SVG from imported HTML. Historical SVG tokens beneath `img` and manually authored inline SVG remain supported; they are not migrated automatically.
 
 Use Mermaid when the diagram should remain reproducible and editable as source. Canonical `.mmd` is build media rather than reader media; the registered producer renders, sanitizes, publishes, and byte-verifies the SVG. Readers load only that static SVG and never receive Mermaid, Node, or Puppeteer runtime code.
 

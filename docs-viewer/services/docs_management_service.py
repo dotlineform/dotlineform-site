@@ -37,7 +37,8 @@ import docs_uncataloged_files  # noqa: E402
 import docs_work_downloads  # noqa: E402
 import docs_source_config_settings  # noqa: E402
 import docs_static_html_export  # noqa: E402
-import docs_staged_media_service  # noqa: E402
+import docs_source_media_service  # noqa: E402
+from docs_source_media_upload import SourceMediaUpload  # noqa: E402
 import docs_catalogue_regeneration  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
 import docs_write_rebuild as write_rebuild  # noqa: E402
@@ -91,6 +92,7 @@ def docs_management_post_response(
     body: dict[str, Any],
     *,
     dry_run: bool = False,
+    media_upload: SourceMediaUpload | None = None,
 ) -> tuple[HTTPStatus, dict[str, object]]:
     if path == routes.PUBLISH_PATH:
         if dry_run:
@@ -193,17 +195,17 @@ def docs_management_post_response(
     if path == routes.IMPORT_SOURCE_PATH:
         payload = handle_import_source(repo_root, body, dry_run)
         return HTTPStatus.OK, payload
-    if path == routes.STAGED_MEDIA_PREVIEW_PATH:
-        return HTTPStatus.OK, docs_staged_media_service.preview_staged_media(repo_root, body)
-    if path == routes.STAGED_MEDIA_APPLY_PATH:
-        payload = docs_staged_media_service.apply_staged_media(repo_root, body, write=not dry_run)
-        if not dry_run:
+    if path == routes.SOURCE_MEDIA_APPLY_PATH:
+        if media_upload is None:
+            raise ValueError("Source media requires a native file upload")
+        payload = docs_source_media_service.apply_source_media(repo_root, body, media_upload, write=not dry_run)
+        if not dry_run and not payload["requires_confirmation"]:
             log_event(
                 repo_root,
-                "docs-staged-media-publish",
+                "docs-source-media-publish",
                 {
                     "media_kind": payload["media_kind"],
-                    "staged_filename": payload["staged_filename"],
+                    "source_filename": payload["source_filename"],
                     "media_identity": payload["media_identity"],
                     "publish_status": payload["publish"]["status"],
                 },

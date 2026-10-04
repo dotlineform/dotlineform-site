@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260514-184303-7914e2
 title: Media And Asset Handling
 added_date: "2026-05-14 18:43:03"
-last_updated: "2026-10-04 16:35:13"
+last_updated: "2026-10-04 22:23:32"
 summary: Media intake, content interpretation, document representation, storage, link resolution, extension methods, and safety boundaries.
 parent_id: d-20260424-000000-50b63f
 
@@ -42,31 +42,39 @@ The exact document and media suffix allowlists remain in `docs_import_common.py`
 ### Document Import And Source-Editor Media
 
 ```text
-configured media source or import-staging fallback
-    |
-    v
-owning workflow classification
-    |
-    +-- Docs Import document -------> Markdown / collection plan
-    |                                      |
-    |                                      v
-    |                              embedded-media plan
-    |                                      |
-    |                                      v
-    |                         media write -> source write -> rebuild
-    |
-    +-- Add image / Add file -------> managed-media preview
-                                           |
-                                           v
-                                confirmed, verified managed write
-                                           |
-                                           v
-                              reference inserted into dirty buffer
+Docs Import configured source ---> Markdown / collection plan
+                                             |
+                                             v
+                                     embedded-media plan
+                                             |
+                                             v
+                                media write -> source write -> rebuild
+
+Add image / Add file modal ------> filename field + folder-open icon
+                                             |
+                                             v
+                                   native single-file selection
+                                             |
+                                             v
+                                  confirmed bounded byte upload
+                                             |
+                                             v
+                             replacement / sanitization decision if needed
+                                             |
+                                             v
+                                  verified managed-media write
+                                             |
+                                             v
+                             reference inserted into dirty source buffer
 ```
 
 Managed-media materialisation happens before a document import source write or source-editor insertion, so neither workflow commits a new token for bytes it failed to place. Working writes ready media to its exact shared workspace/collection namespace; callers do not select a provider.
 
-Configured Working media-source roots select Projects-owned originals for **Add image…** and **Add file…**; otherwise the workflow uses import staging. The modals list eligible direct-child files from the selected root or confined descendant and leave originals unchanged. Successful materialisation from a configured root records private exact `{media_type, identity, source_root, source_path}` evidence under its Working source owner. Planning does not write evidence, absolute paths are not stored and evidence is not projected publicly.
+**Add image…** and **Add file…** use one filename field with an adjacent `folder-open.svg` icon in their authoring modal. The button uses the standard borderless toolbar icon style and toolbar size setting, including the grey circular hover background. Clicking the icon opens the browser's native single-file input and selection fills the read-only filename display. Existing image-token editing initializes the same field from its current media basename and uses the same icon; a presentation-only edit needs no file, upload or media write. A selected `File` is tracked independently of the displayed name, so selecting replacement bytes with the same filename still invokes intake. The image settings and optional raster thumbnail remain in the same modal. Cancelling the chooser preserves the previous selection and authored fields.
+
+`docs_source_media_upload.py` owns a 64 MiB single-file limit, 1 MiB metadata limit and 1 MiB multipart overhead limit (66 MiB total envelope). Empty files and unsupported suffixes are rejected. `/docs/source/media/options` exposes only accepted suffixes and browser-checkable byte limits; `/docs/source/media` accepts exactly metadata JSON and one native file through the existing local management/origin boundary. Global JSON request limits remain unchanged. Server validation owns the actual basename, format, exact document/collection capability and destination; browser filters and MIME declarations grant no write authority.
+
+Native bytes use operation-owned temporary storage, with no persistent upload stage or dependency on Projects/import-staging availability. Normal insertion completes in one request. Changed target bytes or SVG sanitizer warnings return a write-free decision; after confirmation the browser resubmits the same selected file. Original files remain untouched. The browser supplies no original folder path, and this workflow records no configured-root or Projects provenance. The retired staged listing/preview/apply routes, folder-selection branches and their request fields have no aliases; separately owned Docs Import/package staging remains available.
 
 ### Authored Links
 
@@ -132,7 +140,7 @@ The preparation phase of Publish captures document/Catalogue JSON and records re
 
 ## Import Materialization
 
-`docs_import_media.py` creates logical links and materializes embedded document-import media. `docs_staged_media_service.py` owns standalone source-editor media planning and materialisation.
+`docs_import_media.py` creates logical links and materializes embedded document-import media. `docs_source_media_service.py` owns native source-editor media validation, naming, decisions and materialisation; its existing storage, sanitizer, Mermaid and document-thumbnail owners perform the required writes.
 
 - Inline raster data URLs are decoded to deterministic `<doc_id>-image-NN.<ext>` names.
 - HTML-inline SVG is sanitized from its original fragment to deterministic `<doc_id>-image-NN.svg` names, preserving case-sensitive SVG names and safe stylesheet text rather than reusing HTML-parser serialization.
@@ -205,6 +213,7 @@ Keep semantic request values in the existing **Add image…** modal, validate/se
 - The generic download allowlist proves only suffix acceptance, not content validity, usefulness, or safety beyond download handling.
 - Docs media has no asset registry, reference count, automatic remote deletion, or cache-version contract. Shared or orphaned objects require manual judgment, and changed R2 bytes may remain edge-cached.
 - Interactive companions are discovered across the shared staging root rather than explicitly associated with one selected source.
+- Native source-editor intake has changed-source lint/syntax, service-import diagnostics and bounded code-review evidence. The user accepted the overall delivery on 2026-10-04 after chooser button style/size refinements; individual browser selection, multipart transfer, real media writes and failure scenarios were not itemised. `docs-viewer/tests/python/test_docs_staged_media_service.py` and `test_docs_workflow_stages.py::test_child_media_insertion_replace_build_and_read_stay_in_collection` still import the retired staged service and exercise obsolete staging/scope contracts. They were not changed or run and do not cover native intake; retargeting or retirement requires separately specified test work.
 - A configured media reference can still point at a missing object because normal document rendering is string-based; run the inventory when existence matters.
 - Source evidence exists only for successful manual Add operations from configured roots and evidence carried by exact Copy. Historical, imported, or generated media truthfully remains unrecorded.
 - A source-evidence row records an asserted root and path, not current presence, unchanged bytes, backup health, or automatic repair. Reorganising or removing an original may leave stale evidence until a later report surfaces it.

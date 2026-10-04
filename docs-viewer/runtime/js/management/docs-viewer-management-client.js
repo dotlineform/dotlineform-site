@@ -28,8 +28,12 @@ export function fetchManagementJson(path, method, payload, options) {
     }
   };
   if (payload !== undefined) {
-    requestOptions.headers["Content-Type"] = "application/json";
-    requestOptions.body = JSON.stringify(payload);
+    if (payload instanceof FormData) {
+      requestOptions.body = payload;
+    } else {
+      requestOptions.headers["Content-Type"] = "application/json";
+      requestOptions.body = JSON.stringify(payload);
+    }
   }
   if (settings.cache) requestOptions.cache = settings.cache;
 
@@ -239,29 +243,26 @@ export function openManagedDiagramSource(target, payload, options) {
   }, payload || {})), options);
 }
 
-export function listStagedMedia(mediaKind, options) {
+/** Read server-owned native media suffixes and byte limits without filesystem listing. */
+export function readSourceMediaOptions(mediaKind, options) {
   var settings = options || {};
   var kind = encodeURIComponent(String(mediaKind || "").trim());
   var query = ["media_kind=" + kind];
   if (settings.collection) query.push("collection=" + encodeURIComponent(settings.collection));
-  var sourceDirectory = String(settings.sourceDirectory || "").trim();
-  if (sourceDirectory) {
-    query.push("source_directory=" + encodeURIComponent(sourceDirectory));
-  }
   return fetchManagementJson(
-    "/docs/staged-media-files?" + query.join("&"),
+    "/docs/source/media/options?" + query.join("&"),
     "GET",
     undefined,
     options
   );
 }
 
-export function previewStagedMedia(payload, options) {
-  return fetchManagementJson("/docs/staged-media-preview", "POST", collectionPayload(payload, options), options);
-}
-
-export function applyStagedMedia(payload, options) {
-  return fetchManagementJson("/docs/staged-media-apply", "POST", collectionPayload(payload, options), options);
+/** Await one native media upload, returning either a write-free decision or completed media. */
+export function applySourceMedia(payload, file, options) {
+  var data = new FormData();
+  data.append("metadata", JSON.stringify(collectionPayload(payload, options)));
+  data.append("file", file, file.name);
+  return fetchManagementJson("/docs/source/media", "POST", data, options);
 }
 
 export function readSourceConfigSettings(options) {

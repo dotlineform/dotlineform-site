@@ -15,7 +15,7 @@ from docs_selected_documents import read_selected
 from docs_workspace_config import document_source_path, load_docs_working_config, resolve_workspace_path
 from docs_publication_ignore import WorkingPublicationExclusions, read_publication_ignore_ids
 import docs_source_config_settings
-import docs_staged_media_service
+import docs_source_media_service
 from docs_management_capabilities_service import capabilities_payload
 from docs_management_document_target import managed_document_metadata
 from docs_management_source_service import read_source_document
@@ -161,8 +161,8 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
             repo_root,
             source_directory=source_directory,
         )
-    if path == routes.STAGED_MEDIA_FILES_PATH:
-        return docs_staged_media_service.list_staged_media_files(
+    if path == routes.SOURCE_MEDIA_OPTIONS_PATH:
+        return docs_source_media_service.media_options(
             repo_root,
             docs_api_query_value(params, "media_kind"),
             collection=docs_api_query_value(params, "collection"),

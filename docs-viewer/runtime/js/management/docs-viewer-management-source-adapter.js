@@ -1,7 +1,6 @@
 import {
-  applyStagedMedia,
-  listStagedMedia,
-  previewStagedMedia,
+  applySourceMedia,
+  readSourceMediaOptions,
   openManagedDiagramSource,
   readManagedDiagramSources,
   readManagedDocSource,
@@ -66,14 +65,11 @@ export function createDocsViewerManagementSourceAdapter(options) {
     openDiagramSource: function (target, payload, optionsForOpen) {
       return openManagedDiagramSource(target, payload, clientOptions(optionsForOpen));
     },
-    listStagedMedia: function (mediaKind, optionsForList) {
-      return listStagedMedia(mediaKind, clientOptions(optionsForList));
+    readSourceMediaOptions: function (mediaKind, optionsForRead) {
+      return readSourceMediaOptions(mediaKind, clientOptions(optionsForRead));
     },
-    previewStagedMedia: function (payload, optionsForPreview) {
-      return previewStagedMedia(payload, clientOptions(optionsForPreview));
-    },
-    applyStagedMedia: function (payload, optionsForApply) {
-      return applyStagedMedia(payload, clientOptions(optionsForApply));
+    applySourceMedia: function (payload, file, optionsForApply) {
+      return applySourceMedia(payload, file, clientOptions(optionsForApply));
     }
   };
 }

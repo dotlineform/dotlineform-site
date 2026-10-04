@@ -164,9 +164,9 @@ function createSourceEditorContextAdapter(context, state) {
     captureSelection: function () {
       return Object.assign(sourceSelection(state), { revision: state.bufferRevision });
     },
-    addStagedMedia: function (mediaKind, capture) {
+    addSourceMedia: function (mediaKind, capture) {
       if (!isCurrent() || !capturedRangeIsCurrent(state, capture)) return Promise.resolve(null);
-      return addStagedMedia(context, state, mediaKind, capture);
+      return addSourceMedia(context, state, mediaKind, capture);
     },
     focus: function () {
       if (isCurrent()) state.textarea.focus();
@@ -213,7 +213,7 @@ function createSourceEditorContextAdapter(context, state) {
     replaceCapturedSelection: function (capture, value) {
       return isCurrent() && replaceCapturedRange(state, capture, value, "end");
     },
-    insertStagedMedia: function (capture, payload) {
+    insertSourceMedia: function (capture, payload) {
       if (!isCurrent() || !replaceCapturedRange(state, capture, payload.markdown, "end")) return false;
       if (payload.thumbnail) {
         var start = state.textarea.selectionStart;
@@ -355,14 +355,14 @@ async function confirmNavigation(context, state) {
   return true;
 }
 
-function addStagedMedia(context, state, mediaKind, capture) {
+function addSourceMedia(context, state, mediaKind, capture) {
   if (state.busy || !state.loaded) return Promise.resolve(null);
   var provider = context.collectionProvider || {};
   setBusy(state, true);
   setStatus(state, mediaKind === "file" ? "Loading files..." : "Loading images...", false);
   return import("./source-editor-media.js")
     .then(function (module) {
-      return module.publishAndInsertStagedMedia({
+      return module.publishAndInsertSourceMedia({
         adapter: state.sourceEditorAdapter,
         capture: capture,
         mediaKind: mediaKind,

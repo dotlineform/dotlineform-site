@@ -21,7 +21,7 @@ CATALOGUE_REGENERATE_PATH = "/docs/catalogue/regenerate"
 SOURCE_CONFIG_SETTINGS_PATH = "/docs/source-config-settings"
 IMPORT_SOURCE_DIRECTORIES_PATH = "/docs/import-source-directories"
 IMPORT_SOURCE_FILES_PATH = "/docs/import-source-files"
-STAGED_MEDIA_FILES_PATH = "/docs/staged-media-files"
+SOURCE_MEDIA_OPTIONS_PATH = "/docs/source/media/options"
 DIAGRAM_SOURCES_PATH = "/docs/diagram-sources"
 
 SOURCE_PATH = "/docs/source"
@@ -43,8 +43,7 @@ MISSING_SOURCE_FILES_PATH = "/docs/missing-source-files"
 WORK_DOWNLOADS_PATH = "/docs/work-downloads"
 OPEN_WORK_DOWNLOAD_PATH = "/docs/open-work-download"
 IMPORT_SOURCE_PATH = "/docs/import-source"
-STAGED_MEDIA_PREVIEW_PATH = "/docs/staged-media-preview"
-STAGED_MEDIA_APPLY_PATH = "/docs/staged-media-apply"
+SOURCE_MEDIA_APPLY_PATH = "/docs/source/media"
 SET_DRAFT_PATH = "/docs/set-draft"
 SET_SELECTED_PATH = "/docs/set-selected"
 ASSIGN_FIELD_GROUP_PATH = "/docs/assign-field-group"
@@ -79,7 +78,7 @@ GET_PATHS = (
     METADATA_PATH,
     IMPORT_SOURCE_DIRECTORIES_PATH,
     IMPORT_SOURCE_FILES_PATH,
-    STAGED_MEDIA_FILES_PATH,
+    SOURCE_MEDIA_OPTIONS_PATH,
     DIAGRAM_SOURCES_PATH,
     MEDIA_METADATA_PATH,
 )
@@ -102,8 +101,7 @@ POST_PATHS = (
     OPEN_WORK_DOWNLOAD_PATH,
     SOURCE_CONFIG_SETTINGS_PATH,
     IMPORT_SOURCE_PATH,
-    STAGED_MEDIA_PREVIEW_PATH,
-    STAGED_MEDIA_APPLY_PATH,
+    SOURCE_MEDIA_APPLY_PATH,
     SET_DRAFT_PATH,
     SET_SELECTED_PATH,
     ASSIGN_FIELD_GROUP_PATH,

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261004-183033-8521af
 title: Work Editor Media Delivery
 added_date: "2026-10-04 18:30:33"
-last_updated: "2026-10-04 19:56:33"
+last_updated: "2026-10-04 22:23:32"
 summary: Native Work attachment selection with automatic Work ID naming, explicit image regeneration on confirmed selection, and Finder links for original source locations.
 ui_status: done
 parent_id: d-20260428-000000-f5ff18
@@ -165,4 +165,4 @@ Record: closed on the user's explicit acceptance on 2026-10-04. The durable owne
 
 The separately requested Uncataloged Files image-extension filter was delivered after Work-editor implementation. [Reports](../Reports.md) owns its image-only candidate scope and the existing test's outdated all-file expectations. It does not infer original attachment provenance from Work ID prefixes.
 
-Native selection for Docs Viewer **Add image** and **Add file** remains a separate delivery through its document-media owner. It can reuse the browser input approach while retaining Docs Viewer's own naming, token, thumbnail, storage and Save boundaries; this Work-editor delivery does not authorize that implementation or a shared cross-app upload framework.
+Native selection for Docs Viewer **Add image** and **Add file** is complete and accepted in [Docs Native Media Picker Delivery](Docs_Native_Media_Picker_Delivery.md). Its separately authorized implementation reuses the browser input approach while retaining Docs Viewer's own naming, token, thumbnail, storage and Save boundaries; there is no shared cross-app upload framework.

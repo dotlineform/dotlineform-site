@@ -131,65 +131,19 @@
   tab-size: 2;
 }
 
-.docsViewer__stagedMediaSource{
+.docsViewerSourceEditorMedia__file{
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: 0.3rem 0.75rem;
+  gap: 0.5rem;
 }
 
-.docsViewer__stagedMediaSource .docsViewer__fieldLabel{
-  grid-column: 1 / -1;
-}
-
-.docsViewer__stagedMediaSourcePath{
-  min-width: 0;
-  overflow-wrap: anywhere;
-  font: 0.84rem/1.35 ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-}
-
-.docsViewer__stagedMediaOptions{
-  display: grid;
-  max-height: min(15rem, 38vh);
-  overflow-y: auto;
-  border: 1px solid var(--docs-viewer-border);
-  border-radius: 6px;
-}
-
-.docsViewer__stagedMediaOption{
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
-  min-width: 0;
-  padding: 0.5rem 0.55rem;
-  cursor: pointer;
-}
-
-.docsViewer__stagedMediaOption + .docsViewer__stagedMediaOption{
-  border-top: 1px solid var(--docs-viewer-border);
-}
-
-.docsViewer__stagedMediaOption:hover,
-.docsViewer__stagedMediaOption:has(input:checked){
-  background: var(--docs-viewer-panel-2);
-}
-
-.docsViewer__stagedMediaOptionCopy{
-  display: flex;
-  flex: 1 1 auto;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.75rem;
+.docsViewerSourceEditorMedia__file .docsViewer__fieldInput{
   min-width: 0;
 }
 
-.docsViewer__stagedMediaFilename{
-  min-width: 0;
-  overflow-wrap: anywhere;
-}
-
-.docsViewer__stagedMediaSize{
-  flex: 0 0 auto;
+.docsViewerSourceEditorMedia__file .docsViewer__toolbarIconButton{
+  --docs-viewer-control-height: var(--docs-viewer-toolbar-control-height);
 }
 
 .docsViewerSourceEditorMedia__presentation{

@@ -259,7 +259,7 @@ function runSourceAction(context, controller, actionId) {
   if (!adapter || !capture || adapter !== activeAdapter(context) || !adapter.isCurrent()) return false;
   Promise.resolve().then(function () {
     if (actionId === ACTION_IDS.SOURCE_ADD_IMAGE || actionId === ACTION_IDS.SOURCE_ADD_FILE) {
-      return adapter.addStagedMedia(actionId === ACTION_IDS.SOURCE_ADD_FILE ? "file" : "image", capture);
+      return adapter.addSourceMedia(actionId === ACTION_IDS.SOURCE_ADD_FILE ? "file" : "image", capture);
     }
     if (actionId === ACTION_IDS.SOURCE_ADD_CATALOGUE_IMAGE || actionId === ACTION_IDS.SOURCE_ADD_MEDIA_VIEW_LINK) {
       return openCatalogueMediaModal({
