@@ -91,6 +91,13 @@
       "description": "Lists canonical Works whose complete expected source path does not resolve to a file.",
       "loader_id": "missing_source_files",
       "presets": []
+    },
+    {
+      "report_id": "work_downloads",
+      "title": "Work Downloads",
+      "description": "Matches canonical Work download references with saved local files.",
+      "loader_id": "work_downloads",
+      "presets": []
     }
   ]
 }

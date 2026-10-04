@@ -109,6 +109,20 @@ export function createDocsViewerReportService(options) {
         requireOkEnvelope: true
       }));
     },
+    runWorkDownloads: function () {
+      return fetchReportJson("/docs/work-downloads", Object.assign({}, serviceOptions, {
+        method: "POST",
+        payload: {},
+        requireOkEnvelope: true
+      }));
+    },
+    openWorkDownload: function (filename) {
+      return fetchReportJson("/docs/open-work-download", Object.assign({}, serviceOptions, {
+        method: "POST",
+        payload: { filename: filename },
+        requireOkEnvelope: true
+      }));
+    },
     openLocalTarget: function (target) {
       return fetchReportJson("/docs/open-local-target", Object.assign({}, serviceOptions, {
         method: "POST",

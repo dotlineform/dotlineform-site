@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260513-105343-6de36b
 title: Reports
 added_date: "2026-05-13 10:53:43"
-last_updated: "2026-10-04 19:40:53"
+last_updated: "2026-10-04 20:22:23"
 parent_id: d-20260424-000000-50b63f
 ---
 # Docs Viewer Reports
@@ -194,6 +194,10 @@ It uses the local Docs API endpoint `POST /docs/broken-links`, scans both render
 The Projects report's Series column displays each exact response-owned Series title as plain text in both Folder and Series grouping modes. It does not open a Series Media View. Folder links, document links, search, sorting and copied TSV retain their existing behavior.
 
 `docs_media` is the local media-to-document inspection report hosted by [Docs Media](/docs/?doc=d-20260812-212735-6d9cf3). Opening reads saved metadata; Run/Refresh explicitly regenerates it across ordinary and configured collection owners, excluding derived thumbnails. The browser owns joins, exact document links and sortable Collection, Type, File name and Documents columns, with a collection filter and immediate search. File names retain the confined Finder action. The report remains absent from public metadata and executable loaders. [Media And Asset Handling](Media_And_Asset_Handling.md#docs-media-inventory-report) owns the saved-data, freshness and storage boundary.
+
+`work_downloads`, hosted by [Work Downloads](/docs/?doc=d-20261004-202223-1e2205), complements Docs Media with Catalogue attachment coverage. Opening and Run/Refresh read canonical `studio/data/canonical/catalogue/works.json` and scan direct regular files in the configured Docs workspace `assets.work_files` family, independently of generated Catalogue JSON or Catalogue Refresh. The local service matches exact stored filenames, including legacy names; Work ID prefixes do not infer ownership. `.DS_Store` and `.gitkeep` placeholders are ignored, directories are not traversed, and unavailable storage, invalid data or symlinks fail visibly. No report snapshot is saved.
+
+The report has only Work and File columns. Each canonical download reference has one row: Work displays `<title> [filename]` linking to the exact Catalogue collection Work document, while File displays the matching saved filename or is blank if absent. Shared files repeat for each referencing Work. A saved file with no reference has a blank Work cell. The browser sorts A–Z by displayed Work text, puts blank Work rows last and uses filename/Work-ID tie breaking; there are no search, filters, paging or extra status columns. File activation sends only `{filename}` to the local `/docs/open-work-download` action; the service confines it to that configured direct-file family and delegates reveal to the shared Finder helper. No filesystem paths enter browser payloads. `/docs/work-downloads` accepts an empty request and returns current rows without canonical/media writes, conversion, cleanup, remote checks or publication. Registry, loader and service composition remain local-only.
 
 `works` is the local, read-only documentation-coverage report. It retains one row for every Series returned by the current Studio Series lookup. The Docs cell contains distinct exact Context documents with Work subjects whose current Catalogue `series_id` identifies that Series; direct Series subjects are unsupported, and Folder/None contribute no coverage. The Series column is plain text and Docs cells retain exact document links. Opening the report reads the existing Series lookup, Work lookup and private Working Works management manifest and composes the complete result; there is no separate Refresh control. Blank rows remain visible. The report adds no server producer, persisted result, public report or mutation path. [Works Report](Works_Report_Concept_And_Architecture.md) owns the current coverage boundary.
 

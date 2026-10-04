@@ -93,6 +93,13 @@ const REPORT_LOADERS = {
         return module.mountMissingSourceFilesReport;
       });
     }
+  },
+  work_downloads: {
+    load: function () {
+      return import("./work-downloads-report.js").then(function (module) {
+        return module.mountWorkDownloadsReport;
+      });
+    }
   }
 };
 

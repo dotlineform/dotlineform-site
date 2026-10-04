@@ -40,6 +40,8 @@ MEDIA_REFRESH_PATH = "/docs/media-refresh"
 OPEN_MEDIA_SOURCE_PATH = "/docs/open-media-source"
 UNCATALOGED_FILES_PATH = "/docs/uncataloged-files"
 MISSING_SOURCE_FILES_PATH = "/docs/missing-source-files"
+WORK_DOWNLOADS_PATH = "/docs/work-downloads"
+OPEN_WORK_DOWNLOAD_PATH = "/docs/open-work-download"
 IMPORT_SOURCE_PATH = "/docs/import-source"
 STAGED_MEDIA_PREVIEW_PATH = "/docs/staged-media-preview"
 STAGED_MEDIA_APPLY_PATH = "/docs/staged-media-apply"
@@ -96,6 +98,8 @@ POST_PATHS = (
     MEDIA_REFRESH_PATH,
     UNCATALOGED_FILES_PATH,
     MISSING_SOURCE_FILES_PATH,
+    WORK_DOWNLOADS_PATH,
+    OPEN_WORK_DOWNLOAD_PATH,
     SOURCE_CONFIG_SETTINGS_PATH,
     IMPORT_SOURCE_PATH,
     STAGED_MEDIA_PREVIEW_PATH,
