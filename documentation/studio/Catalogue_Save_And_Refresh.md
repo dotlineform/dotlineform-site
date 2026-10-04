@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260927-223812-8042fc
 title: Catalogue Save And Refresh
 added_date: "2026-09-27 22:38:12"
-last_updated: "2026-10-04 19:14:30"
+last_updated: "2026-10-04 19:56:33"
 summary: Current Catalogue Save, local Refresh, reader freshness and recovery boundaries.
 ui_status: stable
 parent_id: d-20260401-000000-a11bf3
@@ -60,7 +60,7 @@ Refresh is local generation only. Docs Publish does not run Refresh, Regenerate 
 
 ## Delivery Evidence And Remaining Limits
 
-The native attachment, confirmed image-regeneration and Finder changes were implemented on 2026-10-04. Focused changed-source JavaScript/Python lint, Python syntax checks, whitespace checks and bounded source/diff review passed. Safari/Edge chooser behavior, real attachment replacement, image conversion/version outcomes and Finder actions await user manual acceptance after restarting local Studio and reloading the editor. No tests, browser automation, real media writes or Finder launches were performed for this implementation. Existing historical Catalogue tests have not been updated or accepted as coverage for the new multipart and media-intent contracts.
+The user accepted and closed the native attachment, confirmed image-regeneration and Finder delivery on 2026-10-04 after local use, including adding `00008-nerve.docx` to Work `00008`. Focused changed-source JavaScript/Python lint, Python syntax checks, whitespace checks and bounded source/diff review passed. Individual Safari/Edge, replacement, conversion/version, Finder and failure scenarios were not itemised, so exhaustive manual coverage is not claimed. Codex ran no tests, browser automation, real media writes or Finder launches for this implementation. Existing historical Catalogue tests have not been updated or accepted as coverage for the multipart and media-intent contracts.
 
 The user accepted the Save/Refresh interaction and header placement. In a manual Work `00008` image change, Save advanced the canonical image version from 5 to 6, and Refresh then exposed version 6 in the Working generated record. The user reported that tests completed okay, but the exact selection and scenarios were not supplied. Codex's focused lint, syntax, JSON and whitespace diagnostics passed; no test or fixture was changed for this delivery. Browser automation, Docs Publish, public deployment and exhaustive failure-path checks were not performed as part of it.
 

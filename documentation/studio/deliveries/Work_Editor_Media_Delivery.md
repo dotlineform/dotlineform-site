@@ -3,22 +3,22 @@ draft: false
 doc_id: d-20261004-183033-8521af
 title: Work Editor Media Delivery
 added_date: "2026-10-04 18:30:33"
-last_updated: "2026-10-04 19:14:30"
+last_updated: "2026-10-04 19:56:33"
 summary: Native Work attachment selection with automatic Work ID naming, explicit image regeneration on confirmed selection, and Finder links for original source locations.
-ui_status: active
+ui_status: done
 parent_id: d-20260428-000000-f5ff18
 ---
 # Work Editor Media Delivery
 
 ## Current And Next State
 
-Status: active. The user approved the bounded implementation and 64 MiB combined attachment limit on 2026-10-04 after clarification that retained media intent does not imply another Save will fix an unresolved failure. WEM 1 and WEM 2 are implemented, focused lint/syntax checks and WEM 3 code review passed, and the durable Save/authoring owner is updated. Next: restart local Studio, reload the Work editor and complete the user's Safari/Edge, deliberate media-write and Finder acceptance. WEM 4 remains open; no tests, real media writes, Finder launches, generated rebuilds, Publish, commit or push have run.
+Status: complete and accepted on 2026-10-04. The user approved closeout after implementation and local use, including adding `00008-nerve.docx` to Work `00008`. Native attachments with a 64 MiB combined limit, explicit image regeneration and Finder links are delivered; focused lint/syntax checks and bounded code review passed. The durable Save/authoring owner is current. Individual Safari/Edge, replacement, conversion/version and failure scenarios were not itemised in the acceptance, so no exhaustive manual coverage is claimed. Retain this document for recent-work lookup until manual archive. Codex ran no tests, real media writes, Finder launches, generated rebuilds, Publish, commit or push.
 
-The temporary native-file chooser demo was removed at the user's request on 2026-10-04 after manual review. This cleanup does not start the production delivery; the custom image-picker folder-list fix remains in place.
+The temporary native-file chooser demo was removed at the user's request on 2026-10-04 after manual review, before production implementation. The custom image-picker folder-list fix remains in place.
 
 Complete result: the local Studio Work editor adds or replaces attachment files through the native browser chooser, regenerates image renditions after an explicitly confirmed image selection even when its path is unchanged, and opens its recorded source folders or reveals its original image in Finder.
 
-This standalone delivery is parented to [Planned Features](../Planned_Features.md). [Catalogue Save And Refresh](../Catalogue_Save_And_Refresh.md) owns the durable Save/completion boundary and will receive the shipped authoring behavior. [Development Checklist](../Development_Checklist.md) and [Development Workflow](../Development_Workflow.md) govern implementation and closeout.
+This standalone delivery is parented to [Planned Features](../Planned_Features.md). [Catalogue Save And Refresh](../Catalogue_Save_And_Refresh.md) owns the delivered Save/completion and authoring behavior. [Development Checklist](../Development_Checklist.md) and [Development Workflow](../Development_Workflow.md) govern implementation and closeout.
 
 ## Requirements
 
@@ -34,7 +34,7 @@ This standalone delivery is parented to [Planned Features](../Planned_Features.m
 - Normal Save uses the pending native upload when present and otherwise retains the existing managed attachment. Retire automatic matching-file ingestion from Catalogue download staging when this flow replaces it, so an old staged file cannot overwrite a native replacement on this or a later Save. Leave those staged files on disk for manual cleanup; introduce no compatibility fallback.
 - Existing attachment names and references remain valid. There is no bulk rename or migration of previously stored files. Existing downloads continue to load and publish through their current owners.
 
-The current download flow accepts a manually supplied filename and copies a matching staged file into configured shared assets. It does not currently add a Work ID prefix or accept browser file bytes. Extend the Catalogue-owned Save/upload boundary with a bounded file transfer; do not raise the general JSON request limit as a substitute for an owned upload contract. Resolve permanent storage through Docs workspace configuration, independently of the selected file's original folder.
+The previous manually supplied download filename and matching staged-file ingestion were replaced by the bounded Catalogue-owned native upload contract. The general JSON request limit remains unchanged. Permanent storage resolves through Docs workspace configuration, independently of the selected file's original folder.
 
 ### Confirmed Image Selection Requests Regeneration
 
@@ -76,7 +76,7 @@ Docs Viewer native Add image/Add file changes are a separate follow-on. Automati
 - [x] Finder links for the three displayed source values, using configured source identities and shared OS-opening support.
 - [x] Removal of the temporary native chooser demo after manual review.
 - [x] Retirement of code made unused by the production attachment flow, without compatibility aliases.
-- [ ] Focused verification, bounded code review, user manual acceptance and updated durable Save/authoring documentation.
+- [x] Focused verification, bounded code review, user manual acceptance and updated durable Save/authoring documentation.
 
 ## Process
 
@@ -110,7 +110,7 @@ Approved implementation decisions:
 - Resolve folder, subfolder and filename actions from current draft source identity through the local Catalogue service, reuse the confined source resolver and shared OS helper, and preserve busy/bulk restrictions. No Finder launch is needed for implementation verification.
 - Retire normal Save's staged-download ingestion and the superseded manual attachment-filename entry. Source inspection also found redundant Work request shapes (`record`, `work` and top-level fields) and picker-selection aliases; simplify the touched boundaries to their current callers' explicit shapes without adding compatibility aliases. Leave staged bytes and existing managed attachments for manual cleanup.
 
-Selected evidence remains changed-source JavaScript/Python lint and syntax, whitespace checks and a distinct bounded code review. These checks address source errors and ownership/path/lifecycle defects; they do not prove file replacement, conversion or Finder behavior. Safari/Edge chooser review, deliberate real-media saves and Finder actions remain user manual acceptance. No test creation, changes, execution, browser automation, generated output, media writes or OS opening occurred during readiness. The inspected runtime owners are local Studio/service files and require no public projection unless implementation changes a represented shared/public asset.
+Selected evidence was changed-source JavaScript/Python lint and syntax, whitespace checks and a distinct bounded code review. These checks address source errors and ownership/path/lifecycle defects; they do not prove file replacement, conversion or Finder behavior. The user accepted the overall delivery at closeout; individual manual scenarios were not itemised. No test creation, changes, execution, browser automation, generated output, media writes or OS opening occurred during readiness. The changed runtime owners are local Studio/service files and require no public projection.
 
 ### WEM 1 Attachment Selection And Save
 
@@ -122,7 +122,7 @@ Verification budget: focused lint/syntax checks for changed source and bounded s
 
 Gate: adding and replacing files must produce the agreed deterministic identity without duplicate entries, unintended writes on selection, unsafe paths or a premature Save success claim.
 
-Record: implemented. Changed JavaScript/Python lint, Python syntax and whitespace checks passed. Source review confirmed one awaited create/Save transport, server-owned naming and the existing confined media-write owner. Native file bytes stay in the browser draft until Save; contents-only replacement retains the entry and label. New Work exposes the resource panel and follows edits to its Work ID. Safari/Edge chooser, cancellation, new upload and replacement remain unconfirmed manual acceptance; no real attachment was written or replaced during implementation.
+Record: complete and accepted. Changed JavaScript/Python lint, Python syntax and whitespace checks passed. Source review confirmed one awaited create/Save transport, server-owned naming and the existing confined media-write owner. Native file bytes stay in the browser draft until Save; contents-only replacement retains the entry and label. New Work exposes the resource panel and follows edits to its Work ID. The user's local addition of `00008-nerve.docx` was confirmed in the canonical record; other individual browser/replacement scenarios were not itemised. Codex wrote or replaced no real attachment during implementation.
 
 ### WEM 2 Explicit Image Regeneration And Finder Links
 
@@ -134,7 +134,7 @@ Verification budget: focused changed-source lint/syntax and source/diff review. 
 
 Gate: a confirmed same-path selection requests Save and actually converts on Save; cancellation remains clean. Finder targets must match the selected source, and filename activation must reveal the original rather than launch it. Stop for scope drift into automatic watching or report/source migration.
 
-Record: implemented. Focused lint/syntax and source review passed. Confirmed selection carries transient regeneration intent through candidate selection and the converter's force flag; the existing byte-comparison/dimension/version owner remains authoritative. Saved canonical records/revisions are adopted before the optional editor lookup, with unsatisfied requests retained until local media succeeds or the draft is discarded. Finder targets use current draft source identity, exact confined components and the shared open/reveal helper. Real conversion, version outcomes and Finder behavior remain unconfirmed manual acceptance; neither conversion nor Finder was launched during implementation.
+Record: complete and accepted with the overall delivery. Focused lint/syntax and source review passed. Confirmed selection carries transient regeneration intent through candidate selection and the converter's force flag; the existing byte-comparison/dimension/version owner remains authoritative. Saved canonical records/revisions are adopted before the optional editor lookup, with unsatisfied requests retained until local media succeeds or the draft is discarded. Finder targets use current draft source identity, exact confined components and the shared open/reveal helper. Individual conversion/version, Finder and failure scenarios were not itemised by the user; Codex launched neither conversion nor Finder during implementation.
 
 ### WEM 3 Code Review
 
@@ -150,17 +150,19 @@ Record: bounded review complete. Resolved findings: New Work's containing panel 
 
 ### WEM 4 Closeout
 
-- [ ] Record the user's manual acceptance and any remaining limitations.
-- [x] Update Catalogue Save And Refresh with implemented attachment naming/replacement, explicit image-regeneration and Finder behavior, identifying pending manual acceptance.
+- [x] Record the user's manual acceptance and any remaining limitations.
+- [x] Update Catalogue Save And Refresh with accepted attachment naming/replacement, explicit image-regeneration and Finder behavior, identifying evidence limits.
 - [x] Reconcile required local-only/public projection follow-through against the files actually changed; do not run unrelated Build, Search or Publish operations.
-- [ ] Present the delivery's completion evidence and retain-or-retire recommendation. Transfer lasting behavior to the durable owner; deletion/archive requires its own approval.
+- [x] Present the delivery's completion evidence and retain-or-retire recommendation. Transfer lasting behavior to the durable owner; deletion/archive requires its own approval.
 
 Verification budget: bounded documentation/source review and whitespace checks. Reuse accepted implementation evidence unless closeout reveals a concrete gap.
 
 Gate: close only when all three authoring changes work, the durable owner is current and omissions are explicit. Recommend retaining this delivery for recent-work lookup until manual archive.
 
-Record: manual acceptance pending. The durable owner describes the implemented behavior and evidence limits. Restart local Studio and reload the editor before acceptance because the backend routes/request contract changed. Retain this delivery for acceptance and recent-work lookup; do not close or archive it before the user confirms the scoped manual outcomes.
+Record: closed on the user's explicit acceptance on 2026-10-04. The durable owner describes the delivered behavior and evidence limits. Closeout changed documentation only and reused the accepted implementation checks and review; no additional test or runtime operation was required. Retain this delivery and its Planned Features link for recent-work lookup until manual archive. Publish, deployment, commit and push remain separate explicit actions.
 
 ## Follow-on
+
+The separately requested Uncataloged Files image-extension filter was delivered after Work-editor implementation. [Reports](../Reports.md) owns its image-only candidate scope and the existing test's outdated all-file expectations. It does not infer original attachment provenance from Work ID prefixes.
 
 Native selection for Docs Viewer **Add image** and **Add file** remains a separate delivery through its document-media owner. It can reuse the browser input approach while retaining Docs Viewer's own naming, token, thumbnail, storage and Save boundaries; this Work-editor delivery does not authorize that implementation or a shared cross-app upload framework.

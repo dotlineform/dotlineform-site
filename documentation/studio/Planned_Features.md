@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260428-000000-f5ff18
 title: Planned Features
 added_date: "2026-04-28 00:00:00"
-last_updated: "2026-10-04 19:14:30"
+last_updated: "2026-10-04 19:56:33"
 summary: This explains the delivery model and workflows to implement new repo and application features.
 ui_status: planned
 parent_id: ""
@@ -147,4 +147,4 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 Store new standalone delivery documents for bounded work that does not need a separate feature parent under `documentation/studio/deliveries/`. Parent them directly to this document and keep implementation state, decisions and completion gates in the delivery. At closeout, transfer lasting details to the durable owner and review whether the delivery and its link should be retained.
 
 - [Docs Media Collections Delivery](deliveries/Docs_Media_Collections_Delivery.md) — Complete and accepted on 2026-10-04. Saved ordinary/collection media report excludes thumbnails and refreshes each document owner once; collection selection controls the orphan/total counts. Retained for recent-delivery lookup pending manual archive.
-- [Work Editor Media Delivery](deliveries/Work_Editor_Media_Delivery.md) — Active: native attachments with automatic Work ID naming and intentional replacement, confirmed same-path image regeneration and Finder links are implemented. Focused lint/syntax and code review passed; Safari/Edge, deliberate media writes and Finder manual acceptance remain outstanding.
+- [Work Editor Media Delivery](deliveries/Work_Editor_Media_Delivery.md) — Complete and accepted on 2026-10-04. Native attachments with automatic Work ID naming and intentional replacement, confirmed same-path image regeneration and Finder links are delivered. Durable Save/authoring documentation is current; retained for recent-work lookup pending manual archive.
