@@ -25,6 +25,7 @@ from catalogue.catalogue_source import (  # noqa: E402
     normalize_text,
     records_from_json_source,
 )
+from catalogue.catalogue_media_files import IMAGE_EXTENSIONS  # noqa: E402
 from catalogue_work_media_sources import (  # noqa: E402
     WorkMediaSourceRoot,
     resolve_work_media_path,
@@ -171,7 +172,7 @@ def _uncataloged_rows(
         except OSError as exc:
             raise ValueError(f"represented directory could not be listed: {directory}") from exc
         for child in children:
-            if child.name.startswith("."):
+            if child.name.startswith(".") or child.suffix.lower() not in IMAGE_EXTENSIONS:
                 continue
             identity = _file_identity(child)
             if identity is None:

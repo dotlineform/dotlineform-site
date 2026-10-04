@@ -4,12 +4,6 @@
 HEALTH_PATH = "/health"
 WORK_SAVE_PATH = "/catalogue/work/save"
 WORK_CREATE_PATH = "/catalogue/work/create"
-WORK_FILE_SAVE_PATH = "/catalogue/work-file/save"
-WORK_FILE_CREATE_PATH = "/catalogue/work-file/create"
-WORK_FILE_DELETE_PATH = "/catalogue/work-file/delete"
-WORK_LINK_SAVE_PATH = "/catalogue/work-link/save"
-WORK_LINK_CREATE_PATH = "/catalogue/work-link/create"
-WORK_LINK_DELETE_PATH = "/catalogue/work-link/delete"
 CATALOGUE_READ_PATH = "/catalogue/read"
 SERIES_SAVE_PATH = "/catalogue/series/save"
 SERIES_CREATE_PATH = "/catalogue/series/create"
@@ -24,12 +18,6 @@ POST_PATHS = (
     DELETE_PREVIEW_PATH,
     DELETE_APPLY_PATH,
     WORK_SAVE_PATH,
-    WORK_FILE_CREATE_PATH,
-    WORK_FILE_SAVE_PATH,
-    WORK_FILE_DELETE_PATH,
-    WORK_LINK_CREATE_PATH,
-    WORK_LINK_SAVE_PATH,
-    WORK_LINK_DELETE_PATH,
     SERIES_SAVE_PATH,
     SERIES_CREATE_PATH,
     THUMBNAIL_QUALITY_PREVIEW_PATH,

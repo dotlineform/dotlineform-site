@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Mapping
 
 from catalogue.catalogue_output_media import MEDIA_SOURCE_FIELDS, complete_catalogue_media
 from catalogue.catalogue_refresh_service import invalidate_refresh_receipt
@@ -33,6 +33,7 @@ def changed_work_media_ids(
 
 def complete_saved_catalogue_edit(
     context: CatalogueWriteContext, response: dict[str, Any], previous: CatalogueSourceRecords,
+    *, attachment_files: Mapping[str, bytes] | None = None, regenerate_image: bool = False,
 ) -> None:
     """Preserve canonical success when local media or response completion fails."""
     if context.dry_run or not response.get("ok"):
@@ -49,7 +50,9 @@ def complete_saved_catalogue_edit(
             ) if key in current.works
         }
         image_ids, download_ids = changed_work_media_ids(previous, current, candidate_ids)
-        # A staged replacement can reuse an existing download filename.
+        if regenerate_image:
+            image_ids = sorted(set(image_ids) | {response["work_id"]})
+        # Retain validation of ready downloads; pending native bytes replace exact identities.
         download_ids = sorted(set(download_ids) | {
             key for key in candidate_ids if download_filenames(current.works[key])
         })
@@ -59,6 +62,8 @@ def complete_saved_catalogue_edit(
             response["media"] = complete_catalogue_media(
                 context.repo_root, context.source_dir, records=current, previous=previous,
                 work_ids=work_ids, image_work_ids=image_ids, write=True,
+                attachment_files=attachment_files,
+                force_image_ids=[response["work_id"]] if regenerate_image else [],
             )
     except (Exception, SystemExit) as error:
         failures.append(f"Local Save preparation: {error}")
@@ -78,7 +83,7 @@ def complete_saved_catalogue_edit(
                     entry.update(record=record, record_hash=record_hash(record))
     except Exception as error:
         failures.append(f"Editor response: {error}")
-    if response.get("changed") or response.get("created") or response.get("deleted") or response.get("media", {}).get("downloads") or failures:
+    if response.get("changed") or response.get("created") or response.get("deleted") or response.get("media", {}).get("changed") or failures:
         try:
             invalidate_refresh_receipt(context.repo_root)
             response["refresh_needed"] = True

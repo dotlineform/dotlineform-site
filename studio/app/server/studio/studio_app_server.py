@@ -45,6 +45,8 @@ from catalogue.catalogue_output_paths import (  # noqa: E402
     catalogue_output_workspace, catalogue_workspace_config, output_path,
 )
 from catalogue.catalogue_works_metadata import METADATA_PATH  # noqa: E402
+from catalogue.catalogue_work_attachments import MAX_WORK_SAVE_BODY_BYTES  # noqa: E402
+from studio_catalogue_upload import parse_work_save_upload  # noqa: E402
 
 
 STATIC_PREFIXES = (
@@ -211,8 +213,15 @@ class StudioAppRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
 
     def send_catalogue_api_post_json(self, api_path: str) -> None:
         try:
-            body = self.read_json_body()
-            status, payload = catalogue_post_response(self.repo_root, api_path, body)
+            attachments = []
+            content_type = self.headers.get("Content-Type", "")
+            if content_type.split(";", 1)[0].strip().lower() == "multipart/form-data":
+                if api_path not in {"/work/create", "/work/save"}:
+                    raise ValueError("Multipart uploads belong to single Work create/Save")
+                body, attachments = parse_work_save_upload(content_type, self.read_body(MAX_WORK_SAVE_BODY_BYTES))
+            else:
+                body = self.read_json_body()
+            status, payload = catalogue_post_response(self.repo_root, api_path, body, attachments=attachments)
             self.send_json(payload, status)
         except FileNotFoundError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
@@ -220,18 +229,25 @@ class StudioAppRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
         except RuntimeError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
-    def read_json_body(self) -> dict[str, object]:
+
+    def read_body(self, limit: int) -> bytes:
         content_length = self.headers.get("Content-Length", "").strip()
         try:
             length = int(content_length)
         except ValueError as error:
             raise ValueError("Invalid Content-Length") from error
-        if length < 0 or length > MAX_BODY_BYTES:
+        if length < 0 or length > limit:
             raise ValueError("Request body too large")
         raw = self.rfile.read(length)
+        if len(raw) != length:
+            raise ValueError("Incomplete request body")
+        return raw
+
+    def read_json_body(self) -> dict[str, object]:
+        raw = self.read_body(MAX_BODY_BYTES)
         try:
             payload = json.loads(raw.decode("utf-8"))
-        except json.JSONDecodeError as error:
+        except (json.JSONDecodeError, UnicodeDecodeError) as error:
             raise ValueError("Request body must be valid JSON") from error
         if not isinstance(payload, dict):
             raise ValueError("Request body must be a JSON object")

@@ -1,8 +1,17 @@
 import {
   CATALOGUE_WRITE_ENDPOINTS,
   getJson,
-  postJson
+  postJson,
+  postForm
 } from "./studio-transport.js";
+import { buildWorkSaveForm } from "./catalogue-work-attachments.js";
+
+/**
+ * @typedef {Object} WorkSaveMedia
+ * @property {boolean} regenerateImage Confirmed picker intent, outside canonical metadata.
+ * @property {Map<string, File>} pendingAttachments Draft files keyed by their displayed managed identity.
+ * @property {{total_bytes: number, metadata_bytes: number}} attachmentLimits Service-owned limits.
+ */
 
 export function saveCatalogueBulkRecords(payload) {
   return postJson(CATALOGUE_WRITE_ENDPOINTS.bulkSave, payload);
@@ -16,12 +25,32 @@ export function applyCatalogueDelete(payload) {
   return postJson(CATALOGUE_WRITE_ENDPOINTS.deleteApply, payload);
 }
 
-export function createCatalogueWork(payload) {
-  return postJson(CATALOGUE_WRITE_ENDPOINTS.createWork, payload);
+/** Create and complete one Work; canonical success can include a local completion error.
+ * @param {Object} payload Canonical record and Gallery memberships.
+ * @param {WorkSaveMedia} media Draft-held media operations submitted with this Save.
+ */
+export function createCatalogueWork(payload, media) {
+  return postWorkSave(CATALOGUE_WRITE_ENDPOINTS.createWork, payload, media);
 }
 
-export function saveCatalogueWork(payload) {
-  return postJson(CATALOGUE_WRITE_ENDPOINTS.saveWork, payload);
+/** Await a revision-checked Work Save and its local media completion in one request.
+ * @param {Object} payload Canonical draft, Work revision and Gallery revisions.
+ * @param {WorkSaveMedia} media Draft-held media operations submitted with this Save.
+ */
+export function saveCatalogueWork(payload, media) {
+  return postWorkSave(CATALOGUE_WRITE_ENDPOINTS.saveWork, payload, media);
+}
+
+function postWorkSave(url, payload, media) {
+  const request = { ...payload, regenerate_image: media.regenerateImage };
+  return media.pendingAttachments.size
+    ? postForm(url, buildWorkSaveForm(request, media.pendingAttachments, media.attachmentLimits))
+    : postJson(url, request);
+}
+
+/** Resolve a draft's source identity at the local Catalogue owner without saving it. */
+export function openWorkProjectMedia(payload) {
+  return postJson(CATALOGUE_WRITE_ENDPOINTS.openProjectMedia, payload);
 }
 
 export function createCatalogueSeries(payload) {

@@ -6,7 +6,7 @@ from http import HTTPStatus
 from pathlib import Path
 import stat
 import sys
-from typing import Any, Mapping
+from typing import Any, Mapping, Sequence
 
 _BOOTSTRAP_START = Path(__file__).resolve()
 for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
@@ -56,6 +56,8 @@ from catalogue.series_ids import normalize_series_id  # noqa: E402
 from catalogue.catalogue_gallery_service import gallery_record_payload  # noqa: E402
 from catalogue.catalogue_refresh_service import catalogue_refresh_status, refresh_catalogue  # noqa: E402
 from local_env import runtime_env  # noqa: E402
+from catalogue.catalogue_work_attachments import MAX_WORK_ATTACHMENT_BYTES, MAX_WORK_METADATA_BYTES, WorkAttachment  # noqa: E402
+from catalogue.catalogue_work_source_actions import open_work_source_target  # noqa: E402
 
 
 CATALOGUE_READ_KEYS = {
@@ -87,6 +89,7 @@ def catalogue_get_payload(repo_root: Path, api_path: str, query: Mapping[str, li
                 "gallery/save",
                 "gallery/delete",
                 "project-media",
+                "project-media/open",
                 "refresh",
                 "refresh-status",
             ],
@@ -106,7 +109,12 @@ def catalogue_post_response(
     body: dict[str, Any],
     *,
     dry_run: bool = False,
+    attachments: Sequence[WorkAttachment] = (),
 ) -> tuple[HTTPStatus, dict[str, Any]]:
+    if attachments and api_path not in {"/work/create", "/work/save"}:
+        raise ValueError("Attachments belong to single Work create/Save")
+    if api_path == "/project-media/open":
+        return HTTPStatus.OK, open_work_source_target(repo_root, body, dry_run=dry_run)
     if api_path == "/refresh":
         if body:
             raise ValueError("Refresh Catalogue takes an empty request")
@@ -115,7 +123,9 @@ def catalogue_post_response(
         return HTTPStatus.OK, refresh_catalogue(repo_root)
     if api_path in catalogue_write_service.SERVICE_POST_PATHS:
         try:
-            return catalogue_write_service.handle_catalogue_post(repo_root, api_path, body, dry_run=dry_run)
+            return catalogue_write_service.handle_catalogue_post(
+                repo_root, api_path, body, dry_run=dry_run, attachments=attachments,
+            )
         except CatalogueRevisionConflict as exc:
             return HTTPStatus.CONFLICT, {"ok": False, "error": str(exc)}
     raise FileNotFoundError(f"Unknown catalogue API route: {api_path}")
@@ -173,6 +183,7 @@ def project_media_payload(repo_root: Path, query: Mapping[str, list[str]]) -> di
             "mode": mode,
             "default_media_source_id": default_work_media_source_id(PIPELINE_CONFIG),
             "media_source_ids": list(work_media_source_ids(PIPELINE_CONFIG)),
+            "attachment_limits": {"total_bytes": MAX_WORK_ATTACHMENT_BYTES, "metadata_bytes": MAX_WORK_METADATA_BYTES},
         }
     media_source_id = resolve_work_media_source_id(
         PIPELINE_CONFIG,

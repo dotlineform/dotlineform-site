@@ -23,11 +23,8 @@ from catalogue.catalogue_source import WORK_FIELDS, records_from_json_source, sl
 
 
 def work_create_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -> dict[str, Any]:
-    requested_work_id = body.get("work_id")
     work_update = extract_work_update(body)
-    if requested_work_id is None:
-        requested_work_id = work_update.get("work_id")
-    work_id = slug_id(requested_work_id)
+    work_id = slug_id(body.get("work_id"))
     works_payload = load_works_payload(context.works_path)
     works = works_payload["works"]
     if isinstance(works.get(work_id), dict):
@@ -92,7 +89,7 @@ def work_create_payload(context: CatalogueWriteContext, body: Mapping[str, Any])
 def work_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -> dict[str, Any]:
     """Persist validated metadata; the write dispatcher owns output completion."""
     work_update = extract_work_update(body)
-    work_id = slug_id(body.get("work_id") or work_update.get("work_id"))
+    work_id = slug_id(body.get("work_id"))
     works = load_works_payload(context.works_path)["works"]
     current_record = works.get(work_id)
     if not isinstance(current_record, dict):
@@ -141,9 +138,9 @@ def work_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
 
 
 def extract_work_update(body: Mapping[str, Any]) -> dict[str, Any]:
-    raw_record = body.get("record", body.get("work"))
-    if raw_record is None:
-        raw_record = {field: body[field] for field in WORK_FIELDS if field in body}
+    if "work" in body or any(field in body for field in WORK_FIELDS if field != "work_id"):
+        raise ValueError("Work fields must be supplied in record")
+    raw_record = body.get("record")
     if not isinstance(raw_record, dict):
         raise ValueError("record must be an object")
     unknown = sorted(str(key) for key in raw_record.keys() if str(key) not in WORK_FIELDS)

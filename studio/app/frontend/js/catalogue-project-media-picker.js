@@ -81,9 +81,10 @@ function setDraftField(state, fieldKey, value, options = {}) {
 }
 
 function applyProjectMediaSelection(state, selection, options = {}) {
-  setDraftField(state, "project_folder", selection.project_folder || selection.folder, options);
-  setDraftField(state, "project_subfolder", selection.project_subfolder || selection.subfolder || "", options);
-  setDraftField(state, "project_filename", selection.project_filename || selection.filename || "", options);
+  state.regenerateImage = true;
+  setDraftField(state, "project_folder", selection.project_folder, options);
+  setDraftField(state, "project_subfolder", selection.project_subfolder, options);
+  setDraftField(state, "project_filename", selection.project_filename, options);
 }
 
 function renderPickerBody() {

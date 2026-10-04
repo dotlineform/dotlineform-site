@@ -27,7 +27,7 @@ export function closeCatalogueWorkModal(state) {
 }
 
 export function openWorkEmbeddedEntryModal(state, kind, index = null, options = {}) {
-  if (!state || !state.currentRecord || state.mode === "bulk") return Promise.resolve(null);
+  if (!state || (state.mode !== "new" && !state.currentRecord) || state.mode === "bulk") return Promise.resolve(null);
   const text = options.text;
   const descriptor = buildWorkEmbeddedModalDescriptor(kind, index, {
     draft: state.draft,
@@ -43,12 +43,12 @@ export function openWorkEmbeddedEntryModal(state, kind, index = null, options = 
   const controller = activateStudioModalFrame(state.modalHost, {
     cancelRoles: [ENTRY_CANCEL_ROLE],
     submitRoles: [ENTRY_SAVE_ROLE],
-    focusSelector: `#${firstField.fieldId}`,
+    focusSelector: `#${firstField.readOnly ? secondField.fieldId : firstField.fieldId}`,
     selectInitialFocus: true,
     onSubmit(api) {
       const firstNode = state.modalHost.querySelector(`#${firstField.fieldId}`);
       const secondNode = state.modalHost.querySelector(`#${secondField.fieldId}`);
-      const firstValue = normalizeText(firstNode && firstNode.value);
+      const firstValue = firstField.readOnly ? firstField.value : normalizeText(firstNode && firstNode.value);
       const secondValue = normalizeText(secondNode && secondNode.value);
       const validationMessage = validateWorkEmbeddedEntryValues(kind, firstValue, secondValue, { text });
       if (validationMessage) {
@@ -80,7 +80,7 @@ export function openWorkEmbeddedEntryModal(state, kind, index = null, options = 
 }
 
 export async function confirmWorkEmbeddedDeleteModal(state, kind, index, options = {}) {
-  if (!state || !state.currentRecord || state.mode === "bulk") return null;
+  if (!state || (state.mode !== "new" && !state.currentRecord) || state.mode === "bulk") return null;
   const text = options.text;
   const confirmation = buildWorkEmbeddedDeleteConfirmation(kind, state.draft, index, { text });
   if (!confirmation) return null;
@@ -128,11 +128,11 @@ export function renderWorkEmbeddedEntryModalHtml(descriptor, options = {}) {
   });
 }
 
-function modalFieldHtml({ fieldId, label, value, type = "text" }) {
+function modalFieldHtml({ fieldId, label, value, type = "text", readOnly = false }) {
   return `
     <label class="studioForm__field" for="${escapeHtml(fieldId)}">
       <span class="studioForm__label">${escapeHtml(label)}</span>
-      <input class="studioUi__input" id="${escapeHtml(fieldId)}" type="${escapeHtml(type)}" value="${escapeHtml(value)}">
+      <input class="studioUi__input" id="${escapeHtml(fieldId)}" type="${escapeHtml(type)}" value="${escapeHtml(value)}"${readOnly ? " readonly" : ""}>
     </label>
   `;
 }

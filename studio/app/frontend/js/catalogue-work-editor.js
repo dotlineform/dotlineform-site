@@ -42,8 +42,10 @@ import {
   readProjectMediaFiles,
   readProjectMediaFolders,
   readWorkMediaSources,
+  openWorkProjectMedia,
   refreshCatalogue as requestCatalogueRefresh
 } from "./catalogue-editor-service-client.js";
+import { openNativeWorkAttachment, syncPendingAttachmentNames } from "./catalogue-work-attachments.js";
 import {
   renderWorkCurrentPreview,
   renderWorkReadiness,
@@ -63,7 +65,6 @@ import { deleteCurrentWork } from "./catalogue-work-actions.js";
 import {
   applyInitialWorkRouteSelection,
   bindWorkSelectionControls,
-  openWorkById,
   openWorkSelection,
   setWorkSelectionPopupVisibility
 } from "./catalogue-work-selection.js";
@@ -96,6 +97,17 @@ async function loadWorkLookupRecord(workId) {
 }
 
 async function openEmbeddedEntryModal(state, kind, index = null) {
+  if (kind === "download" && index === null) {
+    try {
+      openNativeWorkAttachment(state, {
+        onChange: () => { clearActionMessages(state); updateEditorState(state); },
+        onError: error => state.messageController.setActionTextWithState(state.statusNode, error.message, "error")
+      });
+    } catch (error) {
+      state.messageController.setActionTextWithState(state.statusNode, error.message, "error");
+    }
+    return;
+  }
   const result = await openWorkEmbeddedEntryModal(state, kind, index, {
     text: (key, fallback, tokens) => t(state, key, fallback, tokens)
   });
@@ -115,16 +127,19 @@ async function openEmbeddedEntryModal(state, kind, index = null) {
 }
 
 async function deleteEmbeddedEntry(state, kind, index) {
+  const filename = kind === "download" ? state.draft.downloads[index]?.filename : "";
   const result = await confirmWorkEmbeddedDeleteModal(state, kind, index, {
     text: (key, fallback, tokens) => t(state, key, fallback, tokens)
   });
   if (!result || !result.confirmed) return;
   clearActionMessages(state);
   state.draft[result.entriesKey] = result.entries;
+  if (filename) state.pendingAttachments.delete(filename);
   updateEditorState(state);
 }
 
 function draftHasChanges(state) {
+  if (state.mode !== "bulk" && (state.regenerateImage || state.pendingAttachments.size)) return true;
   return catalogueDraftHasChanges({
     mode: state.mode,
     fields: EDITABLE_FIELDS,
@@ -263,6 +278,7 @@ function renderEditorMessage(state, snapshot = {}) {
 
 
 function updateEditorState(state) {
+  syncPendingAttachmentNames(state);
   const busy = state.isSaving || state.isBuilding || state.isDeleting;
   state.root.dataset.workSaving = String(state.isSaving);
   state.searchNode.disabled = busy;
@@ -338,8 +354,29 @@ function workFormOptions(state) {
     draftHasChanges: () => draftHasChanges(state),
     getMediaSourceId: () => resolvedWorkMediaSourceId(state),
     loadProjectFolders: (sourceId, query) => readProjectMediaFolders(sourceId, query),
-    loadProjectFiles: (request) => readProjectMediaFiles(request)
+    loadProjectFiles: (request) => readProjectMediaFiles(request),
+    onOpenSourceTarget: target => openDraftSourceTarget(state, target)
   };
+}
+
+async function openDraftSourceTarget(state, target) {
+  if (state.mode === "bulk" || state.isSaving || state.isBuilding || state.isDeleting || state.isOpeningSource || !state.serverAvailable) return;
+  state.isOpeningSource = true;
+  setModeFieldAvailability(state);
+  try {
+    await openWorkProjectMedia({
+      target,
+      media_source_id: resolvedWorkMediaSourceId(state),
+      project_folder: state.draft.project_folder,
+      project_subfolder: state.draft.project_subfolder,
+      project_filename: state.draft.project_filename
+    });
+  } catch (error) {
+    state.messageController.setActionTextWithState(state.statusNode, error.message, "error");
+  } finally {
+    state.isOpeningSource = false;
+    setModeFieldAvailability(state);
+  }
 }
 
 function workRouteStateOptions(state, overrides = {}) {
@@ -389,7 +426,6 @@ function workActionOptions(state) {
     workRouteStateOptions: (overrides = {}) => workRouteStateOptions(state, overrides),
     renderCurrentPreview: () => renderCurrentPreview(state),
     renderReadiness: () => renderReadiness(state),
-    openWorkById: (workId) => openWorkById(state, workId, workSelectionOptions(state)),
     noteCatalogueSaved: (response) => noteCatalogueSaved(state, response)
   };
 }
@@ -477,6 +513,12 @@ async function loadInitialWorkEditorData(state) {
   }
   state.galleriesById = new Map(Object.entries(galleryPayload.galleries));
   state.refreshStatus = refreshStatus;
+  const limits = sourcePayload.attachment_limits;
+  if (!limits || !Number.isSafeInteger(limits.total_bytes) || limits.total_bytes < 1
+    || !Number.isSafeInteger(limits.metadata_bytes) || limits.metadata_bytes < 1) {
+    throw new Error("Work attachment limits are unavailable.");
+  }
+  state.attachmentLimits = limits;
   applyWorkMediaSourceConfig(state, sourcePayload);
 }
 

@@ -259,6 +259,7 @@ function renderMediaSourceField(field, fieldsNode, state, options) {
     const nextSourceId = config.sourceIds[(currentIndex + 1) % config.sourceIds.length];
     const storedSourceId = nextSourceId === config.defaultSourceId ? "" : nextSourceId;
     state.draft.media_source_id = storedSourceId;
+    state.regenerateImage = false;
     input.value = storedSourceId;
     ["project_folder", "project_subfolder", "project_filename"].forEach((fieldKey) => {
       state.draft[fieldKey] = "";
@@ -296,11 +297,16 @@ function renderProjectMediaDisplayField(field, fieldsNode, state, options) {
   const control = document.createElement("div");
   control.className = "catalogueProjectMediaPicker__displayControl";
 
-  const display = document.createElement("span");
+  const display = document.createElement("a");
   display.className = "studioUi__input studioUi__input--readonlyDisplay catalogueProjectMediaPicker__displayValue";
   display.id = `catalogueWorkFieldDisplay-${field.key}`;
   display.dataset.projectMediaDisplay = field.key;
   display.textContent = "—";
+  display.addEventListener("click", event => {
+    event.preventDefault();
+    if (display.getAttribute("aria-disabled") === "true") return;
+    options.onOpenSourceTarget(field.key);
+  });
   control.appendChild(display);
 
   const input = document.createElement("input");
@@ -533,6 +539,14 @@ export function setModeFieldAvailability(state) {
   setWorkGalleryPickerAvailability(state);
   const isBulk = state.mode === "bulk";
   const busy = state.isSaving || state.isBuilding || state.isDeleting;
+  state.fieldsNode.querySelectorAll("[data-project-media-display]").forEach(link => {
+    const value = normalizeText(state.draft[link.dataset.projectMediaDisplay]);
+    const disabled = !value || isBulk || busy || state.isOpeningSource || !state.serverAvailable;
+    link.setAttribute("aria-disabled", String(disabled));
+    link.title = value ? (link.dataset.projectMediaDisplay === "project_filename" ? "Reveal original in Finder" : "Open folder in Finder") : "";
+    if (disabled) link.removeAttribute("href");
+    else link.href = "#";
+  });
   state.fieldNodes.forEach(node => {
     if ("readOnly" in node) node.readOnly = isBulk;
     if ("disabled" in node) node.disabled = busy || (isBulk && node.tagName === "SELECT");

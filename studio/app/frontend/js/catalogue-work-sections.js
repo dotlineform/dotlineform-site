@@ -172,7 +172,7 @@ function buildWorkResourceRows(state, options = {}) {
     type: "File",
     label: item.label || "",
     target: item.filename || "",
-    targetHref: buildWorkDownloadHref(state, item.filename, options)
+    targetHref: state.pendingAttachments.has(item.filename) ? "" : buildWorkDownloadHref(state, item.filename, options)
   }));
   const links = getWorkEmbeddedItems(state.draft, "link").map((item, index) => ({
     kind: "link",
@@ -188,12 +188,12 @@ function buildWorkResourceRows(state, options = {}) {
 export function updateWorkResourcesSection(state, options = {}) {
   if (!state.resourcesResultsNode || !state.resourcesMetaNode) return;
   clearRecordListActions(state, "resourcesActionsController", state.resourcesActionsNode);
-  if (!state.currentWorkId) {
+  if (!state.currentWorkId && state.mode !== "new") {
     state.resourcesMetaNode.textContent = "";
     state.resourcesResultsNode.innerHTML = "";
     return;
   }
-  const items = state.currentRecord ? buildWorkResourceRows(state, options) : [];
+  const items = state.currentRecord || state.mode === "new" ? buildWorkResourceRows(state, options) : [];
   const errors = [
     state.validationErrors.get("downloads") || "",
     state.validationErrors.get("links") || ""
@@ -203,7 +203,7 @@ export function updateWorkResourcesSection(state, options = {}) {
   else delete state.resourcesMetaNode.dataset.state;
   state.resourcesMetaNode.textContent = error;
   const actionDisabled = state.isSaving || state.isBuilding || state.isDeleting || state.mode === "bulk";
-  const addDisabled = !state.currentRecord || actionDisabled;
+  const addDisabled = (state.mode !== "new" && !state.currentRecord) || actionDisabled || !state.serverAvailable;
   state.resourcesResultsNode.innerHTML = `
     <section class="catalogueWorkResources__section">
       <div class="catalogueWorkResources__rows" data-role="catalogue-work-resources-list"></div>
@@ -327,13 +327,13 @@ export function updateWorkResourcesSection(state, options = {}) {
 
 export function updateWorkSummary(state, options = {}) {
   if (state.mode === "new") {
-    state.layout.setPreviewAvailable(false);
+    state.layout.setPreviewAvailable(true);
     state.metaNode.hidden = true;
     state.metaNode.textContent = "";
     state.summaryNode.innerHTML = "";
     state.runtimeStateNode.textContent = "";
     setTextWithState(options, state.buildImpactNode, "");
-    if (state.resourcesPanelNode) state.resourcesPanelNode.hidden = true;
+    if (state.resourcesPanelNode) state.resourcesPanelNode.hidden = false;
     updateWorkResourcesSection(state, options);
     renderWorkCurrentPreview(state, options);
     renderWorkReadiness(state, options);

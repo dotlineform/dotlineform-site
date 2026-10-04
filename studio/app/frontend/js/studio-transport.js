@@ -12,6 +12,7 @@ const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
   refresh: "/studio/api/catalogue/refresh",
   refreshStatus: "/studio/api/catalogue/refresh-status",
   projectMedia: "/studio/api/catalogue/project-media",
+  openProjectMedia: "/studio/api/catalogue/project-media/open",
   read: "/studio/api/catalogue/read",
   health: "/studio/api/catalogue/health"
 });
@@ -68,6 +69,17 @@ export async function postJson(url, payload, options = {}) {
     body: JSON.stringify(payload),
     signal: options.signal
   });
+
+  return readWriteResponse(response);
+}
+
+/** Send already shaped Studio form data; the browser supplies the multipart boundary. */
+export async function postForm(url, form) {
+  const response = await fetch(url, { method: "POST", body: form });
+  return readWriteResponse(response);
+}
+
+async function readWriteResponse(response) {
 
   let responsePayload;
   try {

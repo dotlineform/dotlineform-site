@@ -29,6 +29,13 @@ function setTextWithState(context, node, text, state = "") {
   context.setTextWithState(node, text, state);
 }
 
+function workMediaRequest(state) {
+  return {
+    regenerateImage: state.regenerateImage,
+    pendingAttachments: state.pendingAttachments,
+    attachmentLimits: state.attachmentLimits
+  };
+}
 
 function buildPayload(state) {
   const record = buildWorkRecordFromDraft(state.draft, { downloadFields: DOWNLOAD_FIELDS, linkFields: LINK_FIELDS });
@@ -96,7 +103,7 @@ export async function saveCurrentWork(state, context) {
     }
 
     const payload = buildPayload(state);
-    const response = await saveCatalogueWork(payload);
+    const response = await saveCatalogueWork(payload, workMediaRequest(state));
     savedResponse = response;
     context.noteCatalogueSaved(response);
     const record = response && response.record && typeof response.record === "object" && Array.isArray(response.gallery_ids)
@@ -110,14 +117,14 @@ export async function saveCurrentWork(state, context) {
       record,
       recordHash: response.record_hash
     });
-    const lookup = await context.loadWorkLookupRecord(state.currentWorkId);
-    setLoadedWorkRecord(state, state.currentWorkId, record, context.workRouteStateOptions({
-      recordHash: response.record_hash || normalizeText(lookup && lookup.record_hash) || "",
-      keepResult: true,
-      lookup
-    }));
     const completionError = catalogueSaveCompletionError(response);
+    setLoadedWorkRecord(state, state.currentWorkId, record, context.workRouteStateOptions({
+      recordHash: response.record_hash,
+      keepResult: true,
+      preserveMediaIntent: response.media?.status !== "completed"
+    }));
     setTextWithState(context, state.resultNode, completionError || "Saved.", completionError ? "error" : "success");
+    state.currentLookup = await context.loadWorkLookupRecord(state.currentWorkId);
   } catch (error) {
     const isConflict = Number(error && error.status) === 409;
     const message = catalogueSavedActionError(savedResponse, error) || (isConflict
@@ -154,30 +161,29 @@ export async function saveNewWork(state, context) {
   let savedResponse = null;
   try {
     const createPayload = buildCreateWorkPayload(state.draft);
-    const response = await createCatalogueWork(createPayload);
+    const response = await createCatalogueWork(createPayload, workMediaRequest(state));
     savedResponse = response;
     context.noteCatalogueSaved(response);
     const workId = normalizeWorkId(response && response.work_id);
     const record = response && response.record && typeof response.record === "object" && Array.isArray(response.gallery_ids)
       ? { ...response.record, gallery_ids: response.gallery_ids } : null;
-    if (!workId) {
-      throw new Error("create response missing work id");
+    if (workId !== createPayload.work_id || !record) {
+      throw new Error("create response does not match the new Work");
     }
-    if (record) {
-      applyWorkRecordMutation(state, {
-        workId,
-        record,
-        recordHash: response.record_hash
-      });
-    }
-    await context.openWorkById(workId);
+    applyWorkRecordMutation(state, { workId, record, recordHash: response.record_hash });
+    const completionError = catalogueSaveCompletionError(response);
+    setLoadedWorkRecord(state, workId, record, context.workRouteStateOptions({
+      recordHash: response.record_hash,
+      keepResult: true,
+      preserveMediaIntent: response.media?.status !== "completed"
+    }));
     setTextWithState(context, state.resultNode, t(state, context, "new_save_result_success", "Saved work {work_id}.", { work_id: workId }), "success");
     setTextWithState(context, state.statusNode, t(state, context, "new_save_status_success", "Saved work {work_id}.", { work_id: workId }), "success");
-    const completionError = catalogueSaveCompletionError(response);
     if (completionError) {
       setTextWithState(context, state.resultNode, completionError, "error");
       setTextWithState(context, state.statusNode, "", "");
     }
+    state.currentLookup = await context.loadWorkLookupRecord(workId);
   } catch (error) {
     setTextWithState(context, state.statusNode, catalogueSavedActionError(savedResponse, error) || `${t(state, context, "new_save_status_failed", "Work save failed.")} ${normalizeText(error && error.message)}`.trim(), "error");
   } finally {

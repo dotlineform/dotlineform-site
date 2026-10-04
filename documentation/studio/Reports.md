@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260513-105343-6de36b
 title: Reports
 added_date: "2026-05-13 10:53:43"
-last_updated: "2026-10-04 15:58:55"
+last_updated: "2026-10-04 19:40:53"
 parent_id: d-20260424-000000-50b63f
 ---
 # Docs Viewer Reports
@@ -201,7 +201,9 @@ Work Document Coverage displays each Series title as plain text. Document covera
 
 `catalogue_works` is the local, read-only saved-Works inspection report in Working. It reads Studio-generated private report metadata, requires a non-empty Work or Series search before showing rows, preserves exact Series membership, and renders one seven-column semantic table with 20 matching rows per page. Search fields are prepared once per load, typing waits for a short pause, and a compact chevron pager appears below the table. Work, Year, Title, Series, and curator-only Storage remain visible and sortable in the embedded document; Medium type and Medium caption are expanded-only. The report is the first and only Expanded Report View adopter: its successful mount returns the exact table presentation, Manage rehosts the one live root, and temporary widths remain local presentation state. Report-owned Copy table exports every sorted match across pages, using the five embedded columns or all seven expanded columns as TSV. The report is registered and executable only in the local report graph; public report metadata, loaders, data, expansion code, and expansion CSS do not expose it. [Catalogue Works](Catalogue_Works.md) owns its durable data, link, editing, and extension contract.
 
-`uncataloged_files` lists ordinary files in represented Work source folders that are not canonical Work primary sources. `missing_source_files` lists canonical Works whose complete expected source path does not resolve to a file. Both are local inspection reports over existing Catalogue and filesystem authority.
+`uncataloged_files` lists image files in represented Work source folders that are not canonical Work primary sources. Candidates use the same case-insensitive `IMAGE_EXTENSIONS` policy as Studio's Choose image picker; non-image attachments such as PDF and DOCX are excluded. Matching remains based on physical primary-source file identity, independently of managed download names or Work ID prefixes. This is an extension filter, not image-content validation or an attachment-provenance audit. `missing_source_files` lists canonical Works whose complete expected source path does not resolve to a file. Both are local inspection reports over existing Catalogue and filesystem authority.
+
+The existing `docs-viewer/tests/python/test_docs_uncataloged_files.py::test_report_lists_direct_ordinary_uncataloged_files_only` still asserts the former all-file behavior, including PDF, WAV, extensionless and DOCX rows. It is unreviewed for the image-only contract; updating its fixtures and assertions requires separately approved test work. The image filter received focused Python lint/syntax and source/diff review, without test changes or execution.
 
 ## Good Candidates
 

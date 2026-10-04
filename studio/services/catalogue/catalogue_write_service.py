@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from http import HTTPStatus
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any, Mapping, Sequence
 
 from catalogue.catalogue_bulk_service import bulk_save_payload
 from catalogue.catalogue_delete_service import delete_apply_response, delete_preview_payload
@@ -14,6 +14,7 @@ from catalogue.catalogue_service_context import CatalogueWriteContext, build_cat
 from catalogue.catalogue_work_service import work_create_payload, work_save_payload
 from catalogue.catalogue_output_service import complete_saved_catalogue_edit
 from catalogue.catalogue_source import records_from_json_source
+from catalogue.catalogue_work_attachments import WorkAttachment, bind_work_attachments
 
 
 SERVICE_POST_PATHS = {
@@ -36,12 +37,23 @@ def handle_catalogue_post(
     body: Mapping[str, Any],
     *,
     dry_run: bool = False,
+    attachments: Sequence[WorkAttachment] = (),
 ) -> tuple[HTTPStatus, dict[str, Any]]:
+    attachment_files = {}
+    regenerate_image = False
+    if api_path in {"/work/create", "/work/save"}:
+        attachment_files = bind_work_attachments(body, attachments)
+        regenerate_image = body.get("regenerate_image", False)
+    elif attachments or "regenerate_image" in body:
+        raise ValueError("Media requests belong to single Work create/Save")
     context = build_catalogue_write_context(repo_root, dry_run=dry_run)
     previous = records_from_json_source(context.source_dir) if api_path != "/delete-preview" else None
     status, payload = _dispatch_mutation(context, api_path, body)
     if previous is not None:
-        complete_saved_catalogue_edit(context, payload, previous)
+        complete_saved_catalogue_edit(
+            context, payload, previous, attachment_files=attachment_files,
+            regenerate_image=regenerate_image,
+        )
     return status, payload
 
 

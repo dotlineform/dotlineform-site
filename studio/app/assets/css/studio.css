@@ -1552,6 +1552,13 @@ button.studioList__cellLink {
 
 .catalogueProjectMediaPicker__displayValue {
   min-width: 0;
+  min-height: var(--studio-control-height);
+  display: inline-flex;
+  align-items: center;
+}
+
+.catalogueProjectMediaPicker__displayValue[href] {
+  text-decoration: underline;
 }
 
 .catalogueWorkForm__fieldMeta {

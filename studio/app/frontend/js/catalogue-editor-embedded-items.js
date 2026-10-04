@@ -16,8 +16,6 @@ const EMBEDDED_ITEM_DEFINITIONS = Object.freeze({
     firstFieldId: "catalogueWorkDownloadFilename",
     secondFieldId: "catalogueWorkDownloadLabel",
     firstFieldType: "text",
-    addTitleKey: "files_add_modal_title",
-    addTitleFallback: "Add download",
     editTitleKey: "files_edit_modal_title",
     editTitleFallback: "Edit download",
     firstLabelKey: "files_filename_label",
@@ -95,6 +93,7 @@ export function buildWorkEmbeddedModalDescriptor(kind, index, options = {}) {
   const text = options.text;
   const entries = getWorkEmbeddedItems(options.draft, kind);
   const editing = Number.isInteger(index) && index >= 0 && index < entries.length;
+  if (kind === "download" && !editing) return null;
   const current = editing ? entries[index] : {};
   return {
     entriesKey: definition.entriesKey,
@@ -112,7 +111,8 @@ export function buildWorkEmbeddedModalDescriptor(kind, index, options = {}) {
         label: lookupText(text, definition.firstLabelKey, definition.firstLabelFallback),
         key: definition.firstKey,
         value: current[definition.firstKey] || "",
-        type: definition.firstFieldType
+        type: definition.firstFieldType,
+        readOnly: kind === "download"
       },
       {
         fieldId: definition.secondFieldId,

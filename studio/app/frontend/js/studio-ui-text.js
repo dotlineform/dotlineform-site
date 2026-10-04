@@ -120,7 +120,6 @@ export const DEFAULT_STUDIO_UI_TEXT = {
     "files_add_button": "Add file",
     "files_edit_button": "Edit",
     "files_delete_button": "Delete",
-    "files_add_modal_title": "Add download",
     "files_edit_modal_title": "Edit download",
     "files_delete_modal_title": "Delete download",
     "files_delete_modal_body": "Delete download {label}?",

@@ -11,6 +11,7 @@ import {
   WORK_DOWNLOAD_FIELDS as DOWNLOAD_FIELDS,
   WORK_LINK_FIELDS as LINK_FIELDS
 } from "./catalogue-editor-embedded-items.js";
+import { clearWorkMediaIntent } from "./catalogue-work-attachments.js";
 import {
   buildWorkDraftFromRecord,
   WORK_EDITABLE_FIELDS as EDITABLE_FIELDS,
@@ -126,6 +127,7 @@ export function markWorkRouteReady(state, ready) {
 }
 
 export function setLoadedWorkRecord(state, workId, record, options = {}) {
+  if (!options.preserveMediaIntent) clearWorkMediaIntent(state);
   state.mode = "single";
   state.currentWorkId = workId;
   state.currentRecord = record;
@@ -152,6 +154,7 @@ export function setLoadedWorkRecord(state, workId, record, options = {}) {
 }
 
 export function setLoadedBulkWorks(state, workIds, recordsById, recordHashes, options = {}) {
+  clearWorkMediaIntent(state);
   state.mode = "bulk";
   state.currentWorkId = "";
   state.currentRecord = null;
@@ -184,6 +187,7 @@ export function setLoadedBulkWorks(state, workIds, recordsById, recordHashes, op
 }
 
 export function setNewWorkMode(state, options = {}) {
+  clearWorkMediaIntent(state);
   state.mode = "new";
   state.currentWorkId = "";
   state.currentRecord = null;
@@ -217,6 +221,7 @@ export function setNewWorkMode(state, options = {}) {
 }
 
 export function setEmptySearchMode(state, options = {}) {
+  clearWorkMediaIntent(state);
   state.mode = "single";
   state.currentWorkId = "";
   state.currentRecord = null;
