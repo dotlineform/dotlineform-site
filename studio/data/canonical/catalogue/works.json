@@ -69349,7 +69349,12 @@
       "height_px": 3000,
       "provenance": null,
       "artist": null,
-      "links": null
+      "downloads": [
+        {
+          "filename": "03188-composite-for-3-symbols.pdf",
+          "label": "composite for 3 symbols.pdf"
+        }
+      ]
     },
     "03189": {
       "work_id": "03189",

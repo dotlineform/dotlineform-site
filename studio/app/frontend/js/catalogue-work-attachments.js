@@ -17,7 +17,12 @@ function workAttachmentId(state) {
 }
 
 function attachmentFilename(state, file) {
-  return safeFilename(`${workAttachmentId(state)}-${safeFilename(file.name)}`);
+  const original = safeFilename(file.name);
+  const match = /^(.+)\.([A-Za-z0-9]+)$/.exec(original);
+  const stem = (match ? match[1] : original).toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "attachment";
+  const extension = match ? `.${match[2].toLowerCase()}` : "";
+  return safeFilename(`${workAttachmentId(state)}-${stem}${extension}`);
 }
 
 /** Open synchronously from the Add file click so Safari retains native user activation. */

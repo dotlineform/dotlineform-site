@@ -38,13 +38,22 @@ def safe_download_filename(value: Any) -> str:
     return value
 
 
+def _attachment_filename(work_id: str, original: str) -> str:
+    """Normalize a validated basename and validate its prefixed destination."""
+    match = re.fullmatch(r"(.+)\.([A-Za-z0-9]+)", original)
+    stem = match[1] if match else original
+    stem = re.sub(r"[^a-z0-9]+", "-", stem.lower()).strip("-") or "attachment"
+    extension = f".{match[2].lower()}" if match else ""
+    return safe_download_filename(f"{work_id}-{stem}{extension}")
+
+
 def bind_work_attachments(
     body: Mapping[str, Any], attachments: Sequence[WorkAttachment],
 ) -> dict[str, bytes]:
     """Validate upload/reference agreement before mutation; only the server names writes.
 
     Existing references keep their identity. Native replacements target the exact
-    prefixed identity, with labels supplied by the ordinary Work draft.
+    normalized prefixed identity, with labels supplied by the ordinary Work draft.
     """
     work_id = body.get("work_id")
     if not isinstance(work_id, str) or re.fullmatch(r"[0-9]{5}", work_id) is None:
@@ -75,7 +84,7 @@ def bind_work_attachments(
     total = 0
     for attachment in attachments:
         original = safe_download_filename(attachment.original_filename)
-        filename = safe_download_filename(f"{work_id}-{original}")
+        filename = _attachment_filename(work_id, original)
         if filename in files:
             raise ValueError("Duplicate Work attachment upload")
         if filename not in references:

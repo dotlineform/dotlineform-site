@@ -22,7 +22,9 @@ def _previous_payload(workspace: ArtifactLocation, family: str, identity: str) -
     key = f"{family}_id"
     if not isinstance(payload, dict) or not isinstance(payload.get("header"), dict) or not isinstance(payload.get(family), dict):
         raise ValueError(f"Invalid generated {family} payload: {path}")
-    if payload["header"].get(key) != identity or payload[family].get(key) != identity:
+    if payload[family].get(key) != identity or (
+        family == "gallery" and payload["header"].get(key) != identity
+    ):
         raise ValueError(f"Generated {family} identity does not match {path}")
     return payload
 
