@@ -35,6 +35,7 @@ import docs_project_state  # noqa: E402
 import docs_missing_source_files  # noqa: E402
 import docs_uncataloged_files  # noqa: E402
 import docs_work_downloads  # noqa: E402
+import docs_work_links  # noqa: E402
 import docs_source_config_settings  # noqa: E402
 import docs_static_html_export  # noqa: E402
 import docs_source_media_service  # noqa: E402
@@ -139,6 +140,10 @@ def docs_management_post_response(
         if body:
             raise ValueError("Work Downloads request must be empty")
         return HTTPStatus.OK, docs_work_downloads.work_downloads_report(repo_root)
+    if path == routes.WORK_LINKS_PATH:
+        if body:
+            raise ValueError("Work Links request must be empty")
+        return HTTPStatus.OK, docs_work_links.work_links_report(repo_root)
     if path == routes.MEDIA_REFRESH_PATH:
         if not isinstance(body, dict) or body:
             raise ValueError("Docs Media refresh requires an empty request object")

@@ -98,6 +98,13 @@
       "description": "Matches canonical Work download references with saved local files.",
       "loader_id": "work_downloads",
       "presets": []
+    },
+    {
+      "report_id": "work_links",
+      "title": "Work Links",
+      "description": "Lists authored links and their labels for canonical Works.",
+      "loader_id": "work_links",
+      "presets": []
     }
   ]
 }

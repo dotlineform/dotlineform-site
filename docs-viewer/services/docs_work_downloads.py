@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from pathlib import Path
-import re
 import stat
 import sys
 from typing import Any
@@ -17,13 +16,12 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths 
 ensure_studio_python_paths(__file__)
 
 from catalogue.catalogue_output_paths import catalogue_workspace_config, output_path  # noqa: E402
-from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, SCHEMAS, SOURCE_FILES, load_json_file  # noqa: E402
 from docs_artifact_locations import ArtifactLocation  # noqa: E402
 from docs_local_files import open_in_finder  # noqa: E402
 from docs_workspace_config import safe_relative_path  # noqa: E402
+from docs_work_resources import canonical_works  # noqa: E402
 
 REPORT_SCHEMA = "docs_work_downloads_report_v1"
-WORK_ID_PATTERN = re.compile(r"\A[0-9]{5}\Z")
 STORAGE_PLACEHOLDERS = frozenset({".DS_Store", ".gitkeep"})
 
 
@@ -63,20 +61,11 @@ def work_downloads_report(repo_root: Path) -> dict[str, Any]:
     Unassigned files have no Work and absent referenced files have no File.
     Presentation and sorting belong to the browser; no paths enter the payload.
     """
-    try:
-        payload = load_json_file(repo_root / DEFAULT_SOURCE_DIR / SOURCE_FILES["works"])
-    except (OSError, UnicodeError, ValueError) as error:
-        raise ValueError("Canonical Works data is unavailable or invalid") from error
-    header = payload.get("header")
-    works = payload.get("works")
-    if not isinstance(header, dict) or header.get("schema") != SCHEMAS["works"] or not isinstance(works, dict):
-        raise ValueError("Canonical Works data is invalid")
+    works = canonical_works(repo_root)
     files = _saved_files(catalogue_workspace_config(repo_root).assets.work_files)
     referenced = set()
     rows = []
     for work_id, work in works.items():
-        if not WORK_ID_PATTERN.fullmatch(work_id) or not isinstance(work, dict) or work.get("work_id") != work_id:
-            raise ValueError("Canonical Work identity is invalid")
         downloads = work.get("downloads")
         if downloads is None:
             continue

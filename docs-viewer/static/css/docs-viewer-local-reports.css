@@ -14,8 +14,17 @@
 }
 
 .docsViewerReport[data-report-id="work_downloads"] .docsViewerReport__headLabel,
-.docsViewerReport[data-report-id="work_downloads"] .docsViewerReport__cellLink{
+.docsViewerReport[data-report-id="work_downloads"] .docsViewerReport__cellLink,
+.docsViewerReport[data-report-id="work_downloads"] .docsViewerReport__sortButton,
+.docsViewerReport[data-report-id="work_links"] .docsViewerReport__headLabel,
+.docsViewerReport[data-report-id="work_links"] .docsViewerReport__cellLink,
+.docsViewerReport[data-report-id="work_links"] .docsViewerReport__sortButton{
   color: var(--docs-viewer-text);
+}
+
+.docsViewerReport[data-report-id="work_downloads"] .docsViewerReport__sortButton,
+.docsViewerReport[data-report-id="work_links"] .docsViewerReport__sortButton{
+  text-transform: none;
 }
 
 .docsViewerReport__collectionSelect{

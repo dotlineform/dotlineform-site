@@ -123,6 +123,13 @@ export function createDocsViewerReportService(options) {
         requireOkEnvelope: true
       }));
     },
+    runWorkLinks: function () {
+      return fetchReportJson("/docs/work-links", Object.assign({}, serviceOptions, {
+        method: "POST",
+        payload: {},
+        requireOkEnvelope: true
+      }));
+    },
     openLocalTarget: function (target) {
       return fetchReportJson("/docs/open-local-target", Object.assign({}, serviceOptions, {
         method: "POST",

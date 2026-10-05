@@ -41,6 +41,7 @@ OPEN_MEDIA_SOURCE_PATH = "/docs/open-media-source"
 UNCATALOGED_FILES_PATH = "/docs/uncataloged-files"
 MISSING_SOURCE_FILES_PATH = "/docs/missing-source-files"
 WORK_DOWNLOADS_PATH = "/docs/work-downloads"
+WORK_LINKS_PATH = "/docs/work-links"
 OPEN_WORK_DOWNLOAD_PATH = "/docs/open-work-download"
 IMPORT_SOURCE_PATH = "/docs/import-source"
 SOURCE_MEDIA_APPLY_PATH = "/docs/source/media"
@@ -99,6 +100,7 @@ POST_PATHS = (
     UNCATALOGED_FILES_PATH,
     MISSING_SOURCE_FILES_PATH,
     WORK_DOWNLOADS_PATH,
+    WORK_LINKS_PATH,
     OPEN_WORK_DOWNLOAD_PATH,
     SOURCE_CONFIG_SETTINGS_PATH,
     IMPORT_SOURCE_PATH,

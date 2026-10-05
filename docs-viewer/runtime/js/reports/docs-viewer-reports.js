@@ -100,6 +100,13 @@ const REPORT_LOADERS = {
         return module.mountWorkDownloadsReport;
       });
     }
+  },
+  work_links: {
+    load: function () {
+      return import("./work-links-report.js").then(function (module) {
+        return module.mountWorkLinksReport;
+      });
+    }
   }
 };
 
