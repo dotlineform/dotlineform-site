@@ -13,6 +13,11 @@
   white-space: pre-line;
 }
 
+.docsViewerReport[data-report-id="work_downloads"] .docsViewerReport__headLabel,
+.docsViewerReport[data-report-id="work_downloads"] .docsViewerReport__cellLink{
+  color: var(--docs-viewer-text);
+}
+
 .docsViewerReport__collectionSelect{
   height: var(--docs-viewer-report-control-height);
   padding: 0 0.4rem;
