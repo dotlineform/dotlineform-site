@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v9",
-    "version": "blake2b-543decacfbd4c4e7bc921ee5548968cc",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "version": "blake2b-232a41d03eaf95b70dac8e1d793a9cf1",
+    "generated_at_utc": "2026-10-04T19:40:26Z"
   },
   "work": {
     "work_id": "00008",
@@ -28,6 +28,11 @@
         "filename": "00008-nerve.pdf",
         "label": "nerve.pdf",
         "url": "https://media.dotlineform.com/works/files/00008-nerve.pdf"
+      },
+      {
+        "filename": "00008-nerve.docx",
+        "label": "nerve.docx",
+        "url": "https://media.dotlineform.com/works/files/00008-nerve.docx"
       }
     ],
     "documents": [],

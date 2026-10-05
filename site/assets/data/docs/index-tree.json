@@ -106,7 +106,14 @@
           "content_url": "/assets/data/docs/by-id/d-20260809-130120-b96ba9.json"
         }
       ]
+    },
+    {
+      "doc_id": "d-20261004-202223-1e2205",
+      "title": "Work Downloads",
+      "content_url": "/assets/data/docs/by-id/d-20261004-202223-1e2205.json",
+      "ui_status": "report",
+      "report_id": "work_downloads"
     }
   ],
-  "generated_at": "2026-10-04T11:45:56Z"
+  "generated_at": "2026-10-05T08:56:46Z"
 }

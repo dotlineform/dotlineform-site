@@ -3,6 +3,18 @@
   "limit": 20,
   "docs": [
     {
+      "doc_id": "d-20260809-130120-44384d",
+      "title": "Beyond Conscious vs. Subconscious",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library",
+      "timestamp": "2026-10-04"
+    },
+    {
+      "doc_id": "d-20261004-202223-1e2205",
+      "title": "Work Downloads",
+      "timestamp": "2026-10-04"
+    },
+    {
       "doc_id": "d-20260801-212422-43b47c",
       "title": "10,000",
       "collection": "works",
@@ -88,13 +100,6 @@
       "timestamp": "2026-08-09"
     },
     {
-      "doc_id": "d-20260809-130120-44384d",
-      "title": "Beyond Conscious vs. Subconscious",
-      "parent_id": "d-20260809-130120-870cc2",
-      "parent_title": "Library",
-      "timestamp": "2026-08-09"
-    },
-    {
       "doc_id": "d-20260809-130120-d66e0b",
       "title": "Can the Brain Comprehend How It Works?",
       "parent_id": "d-20260809-130120-870cc2",
@@ -128,14 +133,7 @@
       "parent_id": "d-20260809-130120-870cc2",
       "parent_title": "Library",
       "timestamp": "2026-08-09"
-    },
-    {
-      "doc_id": "d-20260809-130120-3054b0",
-      "title": "Entropy & Evolution Under Two Cosmologies",
-      "parent_id": "d-20260809-130120-870cc2",
-      "parent_title": "Library",
-      "timestamp": "2026-08-09"
     }
   ],
-  "generated_at": "2026-10-03T20:45:12Z"
+  "generated_at": "2026-10-05T08:55:42Z"
 }
