@@ -1522,11 +1522,6 @@ button.studioList__cellLink {
   gap: 0.35rem;
 }
 
-.catalogueWorkSeriesPicker__actions {
-  display: flex;
-  gap: 0.35rem;
-}
-
 .catalogueWorkSeriesPicker__searchWrap {
   position: relative;
 }

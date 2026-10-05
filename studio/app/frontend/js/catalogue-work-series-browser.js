@@ -14,7 +14,8 @@ function escapeHtml(value) {
     .replace(/'/g, "&#39;");
 }
 
-/** Browse saved Series membership without changing the Work's editable assignment.
+/** Browse saved Series membership and manage Series definitions.
+ * Browsing preserves Work assignment; creation selects the Series in an editable Work draft.
  * Uses the route's canonical search projections; only opening a Work reads its full record.
  */
 export function createWorkSeriesBrowser(state, elements, options) {

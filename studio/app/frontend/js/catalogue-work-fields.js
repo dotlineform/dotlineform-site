@@ -1,6 +1,6 @@
 const WORK_FIELD_DEFINITIONS = Object.freeze({
   work_id: Object.freeze({ key: "work_id", label: "work id", type: "text" }),
-  series_id: Object.freeze({ key: "series_id", label: "series", type: "text", description: "search by series title" }),
+  series_id: Object.freeze({ key: "series_id", label: "series", type: "text" }),
   gallery_ids: Object.freeze({ key: "gallery_ids", label: "galleries", type: "galleries" }),
   media_source_id: Object.freeze({ key: "media_source_id", label: "media source", type: "media-source" }),
   project_folder: Object.freeze({ key: "project_folder", label: "project folder", type: "text" }),

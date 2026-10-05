@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260422-000000-45a776
 title: Catalogue Work Editor
 added_date: "2026-04-22 00:00:00"
-last_updated: "2026-10-05 17:24:23"
+last_updated: "2026-10-05 17:41:06"
 parent_id: d-20260423-000000-d015e6
 
 ---
@@ -37,15 +37,15 @@ Save validates the form and sends the changed record with its revision. The serv
 
 The pointer shows waiting throughout the Work editor while Save runs, returning to normal on completion or failure. Work search/New, list selection and editing controls follow the operation's busy state. Save success and unsaved-change messages remain visible through the normal status owner.
 
-A Work must belong to exactly one Series. Selecting another Series reassigns it; clearing the required membership cannot be saved. The Series field remains a search input with separate Edit and New buttons; it does not use chips. Membership does not assign a document subject, parent or destination.
+A Work must belong to exactly one Series. Selecting another Series reassigns it; clearing the required membership cannot be saved. The Work editor's Series field is a search input for choosing membership. Series Edit and New live only beside the left-panel Series search. Membership does not assign a document subject, parent or destination.
 
 There is no Work publication state, Publish/Unpublish action or Catalogue Drafts route. Save and Refresh Catalogue are separate awaited actions; there is no media-publish control. Refresh reconciles generated Catalogue readers and private Docs metadata, without publishing documents. The local API must be available; browser edits are not queued for offline saving.
 
 ## Gallery And Series Definitions
 
-New beside the Gallery or Series field opens a New modal with OK and Cancel. Clicking a Gallery pill's title or Series Edit opens an Edit modal with OK, Cancel and Delete. The Series browser also separates New and Edit; Delete is inside Edit. Edit never changes into New.
+New beside the Gallery field or the left-panel Series search opens a New modal with OK and Cancel. Clicking a Gallery pill's title or the left-panel Series Edit opens an Edit modal with OK, Cancel and Delete. Series Edit targets the browsed Series. Delete is inside Edit. Edit never changes into New.
 
-OK saves the shared definition immediately and updates the editor's live canonical views. Creating a Gallery adds its pill to the current Work draft; creating a Series selects it where Series assignment is editable. Work Save persists the assignment, including the existing bulk Gallery replacement semantics. Cancel before OK creates nothing. Discarding the Work draft after OK leaves the saved definition available, potentially unassigned. Title editing changes the shared definition without changing draft membership. Generated readers update on Refresh Catalogue.
+OK saves the shared definition immediately and updates the editor's live canonical views. Creating a Gallery adds its pill to the current Work draft. Creating a Series selects it in the left-panel browser and assigns it to the current new or existing Work draft; bulk Series assignment remains read-only. Work Save persists the assignment, including the existing bulk Gallery replacement semantics. Cancel before OK creates nothing. Discarding the Work draft after OK leaves the saved definition available, potentially unassigned. Title editing changes the shared definition without changing draft membership. Generated readers update on Refresh Catalogue.
 
 The Gallery pill's × only removes membership from the current draft. Delete inside Edit confirms the number of saved associated Works and removes the Gallery definition and all canonical memberships together. The list, loaded saved memberships and draft drop the deleted ID while retaining other unsaved edits. Refresh Catalogue later updates affected generated Works and indexes and removes the deleted Gallery JSON; no subsequent Work Save is required. A failure after canonical persistence is reported as incomplete local completion rather than an unsaved deletion.
 

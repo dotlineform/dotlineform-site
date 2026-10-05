@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260924-120657-a61d92
 title: "Shared Icons: Studio Works Editor Mapping"
 added_date: "2026-09-24 12:06:57"
-last_updated: "2026-09-24 12:30:15"
+last_updated: "2026-10-05 17:41:06"
 summary: Approved Works editor SVG replacements, retained text controls and implementation evidence for reuse of the existing Docs Viewer icon files.
 ui_status: complete
 parent_id: d-20260910-223116-9a1011
@@ -18,7 +18,7 @@ The table includes Works editor action buttons, its modal buttons and the two re
 
 The user approved all recommendations and accepted the visual result on 24 September 2026. SVG rows are adopted; `Keep` rows retain their existing text. All selected SVG files remain under `docs-viewer/static/icons/`; no downloads, new drawings or asset copies were required.
 
-The table is a human-edited selection record, not runtime configuration. An artwork change preserves the existing action, accessible name, tooltip, keyboard interaction, selection rules and disabled/busy state. The same button appears twice where its current artwork changes with state.
+The table is a human-edited selection record, not runtime configuration. An artwork change preserves the existing action, accessible name, tooltip, keyboard interaction, selection rules and disabled/busy state. The same button appears twice where its current artwork changes with state. Series Edit and New now live only in the left-panel browser; their duplicate Work-field controls have been removed from this inventory. Original row numbers are retained.
 
 ## Buttons And Icons
 
@@ -31,8 +31,6 @@ The table is a human-edited selection record, not runtime configuration. An artw
 | 5 | Work toolbar: New | ➕ | DOM `catalogueWorkNew` | `file.svg` | Icon only; starts a new Work draft | Adopted |
 | 6 | Work toolbar: Save | 💾 | DOM `catalogueWorkSave` | `download.svg` | Icon only; follows the existing Docs Viewer Save mapping | Adopted |
 | 7 | Work toolbar: Delete | 🗑️ | DOM `catalogueWorkDelete` | `trash.svg` | Icon only; retain danger action identity | Adopted |
-| 8 | Series field: Edit | Text `Edit` | Within `catalogueWorkFields`, `button[aria-label="Edit Series"]` | `pen.svg` | Icon only; edits the draft's selected Series | Adopted |
-| 9 | Series field: New | Text `New` | Within `catalogueWorkFields`, `button[aria-label="New Series"]` | `file.svg` | Icon only; retain bulk-mode restriction | Adopted |
 | 10 | Galleries field: New | Text `New` | Within `catalogueWorkFields`, `button[aria-label="New Gallery"]` | `file.svg` | Icon only | Adopted |
 | 11 | Gallery pill: Edit definition | Gallery title and ID | `button[data-edit-gallery-id]` | Keep text | Preserve the identifying title and ID as the clickable label | Keep |
 | 12 | Gallery pill: remove membership | `×` | `button[data-remove-gallery-id]` | `x.svg` | Small inline mask; retain the pill's existing hit area | Adopted |
