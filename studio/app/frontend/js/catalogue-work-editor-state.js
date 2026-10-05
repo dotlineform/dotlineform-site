@@ -134,6 +134,7 @@ export function createWorkEditorState(elements, options = {}) {
     fieldsNode,
     readonlyNode,
     searchNode,
+    workSearchClearButton: null,
     popupNode,
     popupListNode,
     newButton,

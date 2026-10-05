@@ -282,6 +282,14 @@ function updateEditorState(state) {
   const busy = state.isSaving || state.isBuilding || state.isDeleting;
   state.root.dataset.workSaving = String(state.isSaving);
   state.searchNode.disabled = busy;
+  if (state.workSearchClearButton) {
+    const label = state.mode === "new"
+      ? t(state, "cancel_new_work_button", "Cancel new Work")
+      : t(state, "clear_search_button", "Clear search");
+    state.workSearchClearButton.title = label;
+    state.workSearchClearButton.setAttribute("aria-label", label);
+    state.workSearchClearButton.disabled = busy;
+  }
   state.newButton.disabled = busy;
   if (busy) state.workSearchController?.close();
   state.seriesBrowser?.sync();

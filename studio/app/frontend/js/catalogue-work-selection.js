@@ -259,8 +259,14 @@ export async function openWorkById(state, requestedWorkId, context) {
   });
 }
 
+/** Bind Work lookup; the explicit × also releases an unsaved New Work draft. */
 export function bindWorkSelectionControls(state, context) {
-  mountSearchField(state.searchNode);
+  const { clearButton } = mountSearchField(state.searchNode);
+  state.workSearchClearButton = clearButton;
+  clearButton.addEventListener("click", () => {
+    if (state.mode !== "new" || state.searchNode.disabled || state.searchNode.readOnly) return;
+    context.setEmptySearchMode();
+  });
   const searchController = bindSearchList(state.searchNode, state.popupListNode, {
     id: "catalogueWorkSearchList",
     maxOptions: SEARCH_LIMIT,

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260422-000000-45a776
 title: Catalogue Work Editor
 added_date: "2026-04-22 00:00:00"
-last_updated: "2026-09-28 13:01:30"
+last_updated: "2026-10-05 17:24:23"
 parent_id: d-20260423-000000-d015e6
 
 ---
@@ -29,7 +29,7 @@ The right-chevron control in the member list's top-right corner expands the list
 
 Expanded view adds a Galleries column with comma-separated titles, wrapping and vertical centring. Two lines fit the normal thumbnail row; additional lines increase its height. The column shows saved memberships. After Save, affected Gallery cells update in place while retaining mounted rows/thumbnails, selection and the visible scroll anchor. Series reassignment may refresh the list.
 
-New mode shows the editable form and Save. The suggested Work ID can be replaced with any valid unused ID, including a deleted ID. Secondary controls appear after the first successful save.
+New mode shows the editable form and Save. The suggested Work ID can be replaced with any valid unused ID, including a deleted ID. The Work ID field's × is labelled **Cancel new Work**: it immediately discards the unsaved Work draft and pending attachments, removes `mode=new` from the URL and returns to empty Work search with focus in the search field. Typing or manually clearing the Work ID keeps New mode active. The × is disabled while Save, Refresh or Delete is busy. Secondary controls appear after the first successful save.
 
 Search uses the live canonical Studio Work search projection. Opening a Work loads its exact canonical record, server-issued revision and related context from the local API. The source record remains the editable baseline.
 
