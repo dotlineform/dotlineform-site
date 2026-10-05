@@ -68,7 +68,7 @@ import {
   openWorkSelection,
   setWorkSelectionPopupVisibility
 } from "./catalogue-work-selection.js";
-import { WORK_DIMENSION_FIELD_KEYS, WORK_EDITABLE_FIELDS as EDITABLE_FIELDS, WORK_FIELD_DEFINITIONS, WORK_SERIES_ID_RE as SERIES_ID_RE, canonicalizeWorkScalar as canonicalizeScalar, embeddedEntriesEqual, isWorkFieldRequired, normalizeSeriesId, normalizeText, normalizeWorkId, suggestNextWorkId } from "./catalogue-work-fields.js";
+import { NEW_WORK_EDITABLE_FIELDS, WORK_DIMENSION_FIELD_KEYS, WORK_EDITABLE_FIELDS as EDITABLE_FIELDS, WORK_FIELD_DEFINITIONS, WORK_SERIES_ID_RE as SERIES_ID_RE, canonicalizeWorkScalar as canonicalizeScalar, embeddedEntriesEqual, isWorkFieldRequired, normalizeSeriesId, normalizeText, normalizeWorkId, suggestNextWorkId } from "./catalogue-work-fields.js";
 import {
   bindWorkEditorEvents
 } from "./catalogue-work-editor-events.js";
@@ -140,15 +140,11 @@ function draftHasChanges(state) {
   if (state.mode !== "bulk" && (state.regenerateImage || state.pendingAttachments.size)) return true;
   return catalogueDraftHasChanges({
     mode: state.mode,
-    fields: EDITABLE_FIELDS,
+    fields: state.mode === "new" ? NEW_WORK_EDITABLE_FIELDS : EDITABLE_FIELDS,
     draft: state.draft,
     baselineDraft: state.baselineDraft,
     touchedFields: state.bulkTouchedFields,
     canonicalizeScalar,
-    newModeChanged: () => Boolean(
-      normalizeWorkId(state.draft.work_id) ||
-      EDITABLE_FIELDS.some((field) => normalizeText(state.draft[field.key]))
-    ),
     extraComparisons: [
       {
         key: "downloads",

@@ -17,11 +17,9 @@ export function catalogueDraftFieldsChanged(options = {}) {
   return catalogueDraftChangedFieldNames(options).length > 0;
 }
 
+/** Compare single/New drafts with their saved or initial baseline; bulk changes use explicit field intent. */
 export function catalogueDraftHasChanges(options = {}) {
   const mode = normalizeText(options.mode);
-  if (mode === "new") {
-    return typeof options.newModeChanged === "function" ? Boolean(options.newModeChanged()) : true;
-  }
   if (mode === "bulk") {
     return typeof options.bulkModeChanged === "function"
       ? Boolean(options.bulkModeChanged())
@@ -38,6 +36,7 @@ export function catalogueDirtyWarningText(options = {}) {
 
 export function catalogueSaveDisabled(options = {}) {
   return !options.hasRecord
+    || !options.dirty
     || Boolean(options.isSaving)
     || Boolean(options.hasErrors)
     || !options.serverAvailable;

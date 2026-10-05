@@ -60,6 +60,7 @@ function buildPayload(state) {
 
 
 export async function saveCurrentWork(state, context) {
+  if (!context.draftHasChanges()) return;
   if (state.mode === "new") {
     await saveNewWork(state, context);
     return;
