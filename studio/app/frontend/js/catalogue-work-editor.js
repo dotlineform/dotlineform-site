@@ -1,7 +1,7 @@
 import { saveCurrentWork } from "./catalogue-work-actions.js";
 import { createWorkSeriesBrowser } from "./catalogue-work-series-browser.js";
 import { createWorkEditorLayout } from "./catalogue-work-layout.js";
-import { editWorkDefinition } from "./catalogue-work-definitions.js";
+import { editWorkDefinition, offerEmptyGalleryCleanup } from "./catalogue-work-definitions.js";
 import { applyWorkRecordMutation } from "./catalogue-work-action-records.js";
 import {
   getStudioText
@@ -342,17 +342,22 @@ function t(state, key, fallback, tokens = null) {
   return getStudioText(state.config, `catalogue_work_editor.${key}`, fallback, tokens);
 }
 
+function workDefinitionOptions(state) {
+  return {
+    noteCatalogueSaved: (response) => noteCatalogueSaved(state, response),
+    refresh: () => {
+      applyDraftToInputs(state);
+      updateEditorState(state);
+    }
+  };
+}
+
 function workFormOptions(state) {
   return {
     text: (key, fallback, tokens) => t(state, key, fallback, tokens),
     onFieldInput: (fieldKey) => onFieldInput(state, fieldKey),
     onEditDefinition: (kind, id, restoreFocus) => editWorkDefinition(state, {
-      kind, id, restoreFocus,
-      noteCatalogueSaved: (response) => noteCatalogueSaved(state, response),
-      refresh: () => {
-        applyDraftToInputs(state);
-        updateEditorState(state);
-      }
+      ...workDefinitionOptions(state), kind, id, restoreFocus
     }),
     onStateChange: () => {
       clearActionMessages(state);
@@ -433,7 +438,10 @@ function workActionOptions(state) {
     workRouteStateOptions: (overrides = {}) => workRouteStateOptions(state, overrides),
     renderCurrentPreview: () => renderCurrentPreview(state),
     renderReadiness: () => renderReadiness(state),
-    noteCatalogueSaved: (response) => noteCatalogueSaved(state, response)
+    noteCatalogueSaved: (response) => noteCatalogueSaved(state, response),
+    offerEmptyGalleryCleanup: (galleryIds) => offerEmptyGalleryCleanup(state, {
+      ...workDefinitionOptions(state), galleryIds, restoreFocus: state.saveButton
+    })
   };
 }
 

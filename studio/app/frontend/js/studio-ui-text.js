@@ -31,7 +31,7 @@ export const DEFAULT_STUDIO_UI_TEXT = {
     "new_save_status_failed": "Work save failed.",
     "new_save_result_success": "Saved work {work_id}.",
     "save_status_loaded": "",
-    "bulk_status_loaded": "Loaded {count} work records.",
+    "bulk_status_loaded": "",
     "save_status_no_changes": "No changes to save.",
     "save_status_validation_error": "Fix validation errors before saving.",
     "save_status_saving": "Saving source record…",

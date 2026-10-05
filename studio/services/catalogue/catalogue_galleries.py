@@ -6,7 +6,7 @@ import json
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any, Iterable, Mapping
 
 from catalogue.catalogue_revisions import CatalogueRevisionConflict
 
@@ -106,3 +106,19 @@ def with_work_memberships(
         else:
             del memberships[work_id]
     return updated
+
+
+def newly_empty_gallery_ids(
+    before: CatalogueGalleries, after: CatalogueGalleries, work_ids: Iterable[str],
+) -> list[str]:
+    """Find Galleries emptied by the selected Works' accepted membership removals."""
+    removed: set[str] = set()
+    for work_id in work_ids:
+        removed.update(set(before.works.get(work_id, [])) - set(after.works.get(work_id, [])))
+    if not removed:
+        return []
+    for gallery_ids in after.works.values():
+        removed.difference_update(gallery_ids)
+        if not removed:
+            break
+    return sorted(removed)

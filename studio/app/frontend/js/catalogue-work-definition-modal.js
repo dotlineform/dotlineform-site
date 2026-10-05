@@ -4,7 +4,8 @@ import { activateStudioModalFrame, renderStudioModalFrame } from "./studio-modal
 /** Edit one shared definition; deletion replaces the form with an explicit confirmation. */
 export async function openWorkDefinitionModal(state, {
   kind, id = "", title = "", deleteMessage = "", deleteBlocked = "",
-  checkbox = null, save, remove, restoreFocus, onBusyChange
+  checkbox = null, save, remove, restoreFocus, onBusyChange,
+  deleteOnly = false, cancelLabel = "Cancel"
 }) {
   const host = state.modalHost;
   let saving = false;
@@ -31,7 +32,7 @@ export async function openWorkDefinitionModal(state, {
     includeStatus: true,
     actions: [
       { role: "modal-primary", label: "OK", primary: true },
-      { role: "modal-cancel", label: "Cancel" },
+      { role: "modal-cancel", label: cancelLabel },
       ...(id ? [{ role: "definition-delete", label: "Delete", disabled: Boolean(deleteBlocked) }] : [])
     ]
   });
@@ -83,7 +84,7 @@ export async function openWorkDefinitionModal(state, {
       }
     }
   });
-  deleteButton?.addEventListener("click", () => {
+  function showDeleteConfirmation() {
     if (saving || deleteBlocked) return;
     confirmingDelete = true;
     host.querySelector('[data-role="definition-field"]').hidden = true;
@@ -101,7 +102,8 @@ export async function openWorkDefinitionModal(state, {
     controller.api.setStatus("", "");
     syncControls();
     cancel.focus();
-  });
+  }
+  deleteButton?.addEventListener("click", showDeleteConfirmation);
   input.addEventListener("keydown", event => {
     if (event.key !== "Enter" || confirmingDelete) return;
     event.preventDefault();
@@ -110,6 +112,7 @@ export async function openWorkDefinitionModal(state, {
   input.addEventListener("input", syncControls);
   syncControls();
   state.activeModalController = controller;
+  if (deleteOnly) showDeleteConfirmation();
   return controller.promise.finally(() => {
     if (state.activeModalController === controller) state.activeModalController = null;
   });

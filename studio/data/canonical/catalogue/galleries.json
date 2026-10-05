@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_source_galleries_v1",
-    "count": 303
+    "count": 299
   },
   "galleries": {
     "001": {
@@ -14,7 +14,7 @@
     },
     "004": {
       "gallery_id": "004",
-      "title": "2 bodies"
+      "title": "bodies"
     },
     "005": {
       "gallery_id": "005",
@@ -610,11 +610,11 @@
     },
     "156": {
       "gallery_id": "156",
-      "title": "dotlineform (details)"
+      "title": "dotlineform (2023) [details]"
     },
     "157": {
       "gallery_id": "157",
-      "title": "dotlineform (work in progress)"
+      "title": "dotlineform (2023) [work in progress]"
     },
     "158": {
       "gallery_id": "158",
@@ -708,14 +708,6 @@
       "gallery_id": "180",
       "title": "body (details)"
     },
-    "181": {
-      "gallery_id": "181",
-      "title": "body (details)"
-    },
-    "182": {
-      "gallery_id": "182",
-      "title": "body (details)"
-    },
     "183": {
       "gallery_id": "183",
       "title": "body residue (details)"
@@ -734,10 +726,6 @@
     },
     "187": {
       "gallery_id": "187",
-      "title": "2 bodies monoprint (details)"
-    },
-    "188": {
-      "gallery_id": "188",
       "title": "2 bodies monoprint (details)"
     },
     "189": {
@@ -918,7 +906,7 @@
     },
     "233": {
       "gallery_id": "233",
-      "title": "dotlineform (details)"
+      "title": "dotlineform (2021) [details]"
     },
     "234": {
       "gallery_id": "234",
@@ -1211,10 +1199,6 @@
     "306": {
       "gallery_id": "306",
       "title": "pond (details)"
-    },
-    "307": {
-      "gallery_id": "307",
-      "title": "test"
     }
   }
 }

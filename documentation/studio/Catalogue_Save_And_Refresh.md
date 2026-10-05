@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260927-223812-8042fc
 title: Catalogue Save And Refresh
 added_date: "2026-09-27 22:38:12"
-last_updated: "2026-10-05 15:02:31"
+last_updated: "2026-10-05 20:38:13"
 summary: Current Catalogue Save, local Refresh, reader freshness and recovery boundaries.
 ui_status: stable
 parent_id: d-20260401-000000-a11bf3
@@ -29,6 +29,14 @@ Save prepares an image for a new Work, a changed media source or an explicitly c
 Missing originals or managed downloads, conversion errors and destination-write failures are reported as incomplete local Save completion after any successful canonical transaction. The editor adopts the saved record and revision while retaining unsatisfied native uploads and image intent. A successfully created Work becomes an existing Work even if media completion fails. Successful local media completion clears the pending operations; deliberate draft discard clears them too. Diagnose and correct the reported cause before another user-initiated Save: preserving the request does not imply that retrying alone will fix the failure. No automatic retry or persisted recovery marker is used.
 
 The response returns current canonical records, revisions and memberships for the editor's search, list, labels and reopened Work. Live Studio service reads remain authoritative for Work and Series search, focused records and Gallery definitions. Save does not generate consumer Catalogue JSON or private Docs report metadata. It makes no R2 request and does not run Docs Build, Search, Publish or deployment.
+
+## Empty Gallery Cleanup
+
+Single and bulk Work Save responses carry `newly_empty_gallery_ids`: exact Gallery IDs whose accepted membership removals leave no members anywhere in the Catalogue. The [membership owner](../../studio/services/catalogue/catalogue_galleries.py) derives this list from the already loaded before-and-after maps, without another file read or persisted count/index. Galleries that were already empty and Galleries with any remaining members are excluded. New Work creation does not remove memberships and does not trigger this workflow.
+
+After Work Save and its required local/editor completion succeed, the editor opens the existing Gallery delete confirmation directly for each reported ID, one at a time. The prompt names the Gallery and states that the Work changes are saved and the Gallery has no Works. Gallery delete confirmations omit Series-association counts. **Keep Gallery** retains the definition. **Delete** invokes the existing Gallery delete owner with the current exact record revision and an empty expected-member list; the owning lookup validates that the candidate is empty. Removal from the Work draft alone does not prompt or delete anything.
+
+The confirmation loads its exact Gallery definition and Series associations through the existing Gallery-record read. Deletion reconciles definition and membership references into the editor and invalidates Catalogue Refresh through its existing owner. Incomplete Work Save or editor adoption stops before cleanup. Cleanup failure preserves the completed Work Save and stops the remaining prompts; an error inside the confirmation remains visible until the user retries or closes it. Keeping every Gallery needs no further Save. Generated Catalogue readers and publication retain the normal separate Refresh/Publish timing.
 
 ## Work Media Authoring
 

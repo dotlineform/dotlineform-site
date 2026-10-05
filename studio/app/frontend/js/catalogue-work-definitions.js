@@ -54,9 +54,9 @@ function validateResponse(kind, requestedId, response) {
 }
 
 /** Keep the Work draft while a shared definition saves; refresh saved labels and membership baselines. */
-export async function editWorkDefinition(state, { kind, id = "", restoreFocus, refresh, noteCatalogueSaved }) {
+export async function editWorkDefinition(state, { kind, id = "", restoreFocus, refresh, noteCatalogueSaved, deleteEmpty = false }) {
   if (state.isEditingDefinition || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable) return null;
-  state.messageController.clearActionMessages();
+  if (!deleteEmpty) state.messageController.clearActionMessages();
   state.isEditingDefinition = true;
   const panels = [...state.root.children].filter(node => node !== state.modalHost);
   const previousInert = panels.map(node => node.inert);
@@ -73,7 +73,7 @@ export async function editWorkDefinition(state, { kind, id = "", restoreFocus, r
     };
     const modalOptions = { restoreFocus, onBusyChange };
     result = kind === "Gallery"
-      ? await openWorkGalleryModal(state, { ...modalOptions, galleryId: id })
+      ? await openWorkGalleryModal(state, { ...modalOptions, galleryId: id, deleteEmpty })
       : await openWorkSeriesTitleModal(state, { ...modalOptions, seriesId: id });
     if (result.confirmed) {
       response = result.response;
@@ -99,7 +99,20 @@ export async function editWorkDefinition(state, { kind, id = "", restoreFocus, r
     }
     restoreFocus?.focus({ preventScroll: true });
   }
-  if (errorMessage) state.messageController.setActionTextWithState(state.statusNode, errorMessage, "error");
-  else if (result?.confirmed) state.messageController.setActionTextWithState(state.statusNode, "Saved.", "success");
+  if (errorMessage) {
+    const message = deleteEmpty ? `Work changes saved, but Gallery cleanup did not finish. ${errorMessage}` : errorMessage;
+    state.messageController.setActionTextWithState(state.statusNode, message, "error");
+  } else if (result?.confirmed) {
+    if (deleteEmpty) state.messageController.clearActionMessages();
+    state.messageController.setActionTextWithState(state.statusNode, deleteEmpty ? "Deleted Gallery." : "Saved.", "success");
+  }
   return result;
+}
+
+/** Offer each Gallery emptied by a completed Work Save as its own explicit deletion. */
+export async function offerEmptyGalleryCleanup(state, { galleryIds, ...options }) {
+  for (const id of galleryIds) {
+    const result = await editWorkDefinition(state, { ...options, kind: "Gallery", id, deleteEmpty: true });
+    if (!result || catalogueSaveCompletionError(result.response)) break;
+  }
 }

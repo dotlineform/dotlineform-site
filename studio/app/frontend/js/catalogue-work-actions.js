@@ -58,6 +58,14 @@ function buildPayload(state) {
   return payload;
 }
 
+function newlyEmptyGalleryIds(response) {
+  const ids = response.newly_empty_gallery_ids;
+  if (!Array.isArray(ids) || ids.some(id => typeof id !== "string" || !id) || new Set(ids).size !== ids.length) {
+    throw new Error("Saved Work response is missing distinct newly empty Gallery IDs.");
+  }
+  return ids;
+}
+
 
 export async function saveCurrentWork(state, context) {
   if (!context.draftHasChanges()) return;
@@ -89,6 +97,7 @@ export async function saveCurrentWork(state, context) {
   setTextWithState(context, state.resultNode, "");
 
   let savedResponse = null;
+  let cleanupGalleryIds = [];
   try {
     if (state.mode === "bulk") {
       const response = await saveCatalogueBulkRecords(buildPayload(state));
@@ -102,32 +111,33 @@ export async function saveCurrentWork(state, context) {
       setLoadedBulkWorks(state, state.bulkWorkIds, state.bulkRecords, state.bulkRecordHashes, context.workRouteStateOptions({keepResult: true}));
       const completionError = catalogueSaveCompletionError(response);
       setTextWithState(context, state.resultNode, completionError || "Saved " + (response.changed_count || 0) + " work records.", completionError ? "error" : "success");
-      return;
+      if (!completionError) cleanupGalleryIds = newlyEmptyGalleryIds(response);
+    } else {
+      const payload = buildPayload(state);
+      const response = await saveCatalogueWork(payload, workMediaRequest(state));
+      savedResponse = response;
+      context.noteCatalogueSaved(response);
+      const record = response && response.record && typeof response.record === "object" && Array.isArray(response.gallery_ids)
+        ? { ...response.record, gallery_ids: response.gallery_ids }
+        : null;
+      if (!record) {
+        throw new Error("save response missing record");
+      }
+      applyWorkRecordMutation(state, {
+        workId: state.currentWorkId,
+        record,
+        recordHash: response.record_hash
+      });
+      const completionError = catalogueSaveCompletionError(response);
+      setLoadedWorkRecord(state, state.currentWorkId, record, context.workRouteStateOptions({
+        recordHash: response.record_hash,
+        keepResult: true,
+        preserveMediaIntent: response.media?.status !== "completed"
+      }));
+      setTextWithState(context, state.resultNode, completionError || "Saved.", completionError ? "error" : "success");
+      state.currentLookup = await context.loadWorkLookupRecord(state.currentWorkId);
+      if (!completionError) cleanupGalleryIds = newlyEmptyGalleryIds(response);
     }
-
-    const payload = buildPayload(state);
-    const response = await saveCatalogueWork(payload, workMediaRequest(state));
-    savedResponse = response;
-    context.noteCatalogueSaved(response);
-    const record = response && response.record && typeof response.record === "object" && Array.isArray(response.gallery_ids)
-      ? { ...response.record, gallery_ids: response.gallery_ids }
-      : null;
-    if (!record) {
-      throw new Error("save response missing record");
-    }
-    applyWorkRecordMutation(state, {
-      workId: state.currentWorkId,
-      record,
-      recordHash: response.record_hash
-    });
-    const completionError = catalogueSaveCompletionError(response);
-    setLoadedWorkRecord(state, state.currentWorkId, record, context.workRouteStateOptions({
-      recordHash: response.record_hash,
-      keepResult: true,
-      preserveMediaIntent: response.media?.status !== "completed"
-    }));
-    setTextWithState(context, state.resultNode, completionError || "Saved.", completionError ? "error" : "success");
-    state.currentLookup = await context.loadWorkLookupRecord(state.currentWorkId);
   } catch (error) {
     const isConflict = Number(error && error.status) === 409;
     const message = catalogueSavedActionError(savedResponse, error) || (isConflict
@@ -138,6 +148,7 @@ export async function saveCurrentWork(state, context) {
     state.isSaving = false;
     context.updateEditorState();
   }
+  if (cleanupGalleryIds.length) await context.offerEmptyGalleryCleanup(cleanupGalleryIds);
 }
 
 export async function saveNewWork(state, context) {
