@@ -1,14 +1,14 @@
 const WORK_FIELD_DEFINITIONS = Object.freeze({
-  work_id: Object.freeze({ key: "work_id", label: "work id", type: "text" }),
-  series_id: Object.freeze({ key: "series_id", label: "series", type: "text" }),
+  work_id: Object.freeze({ key: "work_id", label: "work id", type: "text", required: "new" }),
+  series_id: Object.freeze({ key: "series_id", label: "series", type: "text", required: true }),
   gallery_ids: Object.freeze({ key: "gallery_ids", label: "galleries", type: "galleries" }),
   media_source_id: Object.freeze({ key: "media_source_id", label: "media source", type: "media-source" }),
   project_folder: Object.freeze({ key: "project_folder", label: "project folder", type: "text" }),
   project_subfolder: Object.freeze({ key: "project_subfolder", label: "project subfolder", type: "text" }),
   project_filename: Object.freeze({ key: "project_filename", label: "project filename", type: "text" }),
-  title: Object.freeze({ key: "title", label: "title", type: "text" }),
-  year: Object.freeze({ key: "year", label: "year", type: "number", step: "1" }),
-  year_display: Object.freeze({ key: "year_display", label: "year display", type: "text" }),
+  title: Object.freeze({ key: "title", label: "title", type: "text", required: "new" }),
+  year: Object.freeze({ key: "year", label: "year", type: "number", step: "1", required: "new" }),
+  year_display: Object.freeze({ key: "year_display", label: "year display", type: "text", required: "new" }),
   medium_type: Object.freeze({ key: "medium_type", label: "medium type", type: "text" }),
   medium_caption: Object.freeze({ key: "medium_caption", label: "medium caption", type: "text" }),
   duration: Object.freeze({ key: "duration", label: "duration", type: "text" }),
@@ -67,6 +67,16 @@ const WORK_READONLY_FIELDS = Object.freeze([]);
 
 const WORK_SERIES_ID_RE = /^\d+$/;
 const WORK_DIMENSION_FIELD_KEYS = Object.freeze(["height_cm", "width_cm", "depth_cm"]);
+
+/**
+ * Required metadata applies to editable Work modes; bulk fields retain their saved values.
+ * @param {{required?: boolean | "new"}} field True requires the field in single/New mode; "new" limits it to creation.
+ * @param {"single" | "new" | "bulk"} mode Current Work editor mode.
+ * @returns {boolean} Whether the editable field must have a value before Save.
+ */
+function isWorkFieldRequired(field, mode) {
+  return mode !== "bulk" && (field.required === true || (field.required === "new" && mode === "new"));
+}
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -182,4 +192,4 @@ function suggestNextWorkId(workItems) {
   return String(maxNumericId + 1).padStart(5, "0");
 }
 
-export { NEW_WORK_EDITABLE_FIELDS, WORK_DIMENSION_FIELD_KEYS, WORK_EDITABLE_FIELDS, WORK_FIELD_DEFINITIONS, WORK_READONLY_FIELDS, WORK_SERIES_ID_RE, buildCreateWorkPayload, buildWorkDraftFromRecord, buildWorkRecordFromDraft, canonicalizeWorkScalar, cloneEmbeddedEntries, embeddedEntriesEqual, formatNumberText, normalizeEmbeddedEntries, normalizeSeriesId, normalizeText, normalizeWorkId, suggestNextWorkId };
+export { NEW_WORK_EDITABLE_FIELDS, WORK_DIMENSION_FIELD_KEYS, WORK_EDITABLE_FIELDS, WORK_FIELD_DEFINITIONS, WORK_READONLY_FIELDS, WORK_SERIES_ID_RE, buildCreateWorkPayload, buildWorkDraftFromRecord, buildWorkRecordFromDraft, canonicalizeWorkScalar, cloneEmbeddedEntries, embeddedEntriesEqual, formatNumberText, isWorkFieldRequired, normalizeEmbeddedEntries, normalizeSeriesId, normalizeText, normalizeWorkId, suggestNextWorkId };

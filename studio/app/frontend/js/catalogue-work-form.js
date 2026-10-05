@@ -3,7 +3,7 @@ import { displayValue } from "./catalogue-editor-records.js";
 import { createStudioIcon } from "./studio-icon.js";
 import { createWorkGalleryPicker, renderWorkGalleryPicker, setWorkGalleryPickerAvailability } from "./catalogue-work-gallery-picker.js";
 import { bindSearchList } from "/shared/frontend/js/search-list.js";
-import { WORK_EDITABLE_FIELDS as EDITABLE_FIELDS, WORK_READONLY_FIELDS as READONLY_FIELDS, normalizeSeriesId, normalizeText } from "./catalogue-work-fields.js";
+import { WORK_EDITABLE_FIELDS as EDITABLE_FIELDS, WORK_FIELD_DEFINITIONS, WORK_READONLY_FIELDS as READONLY_FIELDS, isWorkFieldRequired, normalizeSeriesId, normalizeText } from "./catalogue-work-fields.js";
 import {
   openProjectMediaPickerForCurrentDraft,
   resetProjectMediaFolders
@@ -521,10 +521,20 @@ export function setModeFieldAvailability(state) {
     if (disabled) link.removeAttribute("href");
     else link.href = "#";
   });
-  state.fieldNodes.forEach(node => {
+  state.fieldNodes.forEach((node, key) => {
     if ("readOnly" in node) node.readOnly = isBulk;
     if ("disabled" in node) node.disabled = busy || (isBulk && node.tagName === "SELECT");
+    const required = isWorkFieldRequired(WORK_FIELD_DEFINITIONS[key], state.mode);
+    const label = node.closest(".catalogueWorkForm__field")?.querySelector(":scope > .studioForm__label");
+    label?.classList.toggle("studioForm__label--required", required);
+    const control = key === "series_id" ? state.seriesPicker.searchInput : node;
+    if (required) control.setAttribute("aria-required", "true");
+    else control.removeAttribute("aria-required");
   });
+  const workIdRequired = isWorkFieldRequired(WORK_FIELD_DEFINITIONS.work_id, state.mode);
+  for (const label of state.searchNode.labels) label.classList.toggle("studioForm__label--required", workIdRequired);
+  if (workIdRequired) state.searchNode.setAttribute("aria-required", "true");
+  else state.searchNode.removeAttribute("aria-required");
   if (state.seriesPicker) {
     state.seriesPicker.pickerNode.hidden = false;
     state.seriesPicker.searchWrap.hidden = false;

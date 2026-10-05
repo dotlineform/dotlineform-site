@@ -68,7 +68,7 @@ import {
   openWorkSelection,
   setWorkSelectionPopupVisibility
 } from "./catalogue-work-selection.js";
-import { WORK_DIMENSION_FIELD_KEYS, WORK_EDITABLE_FIELDS as EDITABLE_FIELDS, WORK_SERIES_ID_RE as SERIES_ID_RE, canonicalizeWorkScalar as canonicalizeScalar, embeddedEntriesEqual, normalizeSeriesId, normalizeText, normalizeWorkId, suggestNextWorkId } from "./catalogue-work-fields.js";
+import { WORK_DIMENSION_FIELD_KEYS, WORK_EDITABLE_FIELDS as EDITABLE_FIELDS, WORK_FIELD_DEFINITIONS, WORK_SERIES_ID_RE as SERIES_ID_RE, canonicalizeWorkScalar as canonicalizeScalar, embeddedEntriesEqual, isWorkFieldRequired, normalizeSeriesId, normalizeText, normalizeWorkId, suggestNextWorkId } from "./catalogue-work-fields.js";
 import {
   bindWorkEditorEvents
 } from "./catalogue-work-editor-events.js";
@@ -82,8 +82,6 @@ import {
   createWorkEditorState,
   createWorkRouteStateOptions
 } from "./catalogue-work-editor-state.js";
-
-const REQUIRED_WORK_FIELDS = ["title", "year", "year_display"];
 
 function setOpenInputMode(state) {
   state.searchNode.placeholder = t(state, "search_placeholder", "find work id(s): 00001, 00003-00005");
@@ -167,17 +165,22 @@ function draftHasChanges(state) {
 function validateDraft(state) {
   const errors = new Map();
   const active = key => state.mode !== "bulk" || state.bulkTouchedFields.has(key);
+  for (const field of Object.values(WORK_FIELD_DEFINITIONS)) {
+    if (isWorkFieldRequired(field, state.mode) && !normalizeText(state.draft[field.key])) {
+      // Missing required values block Save; bold labels convey the requirement.
+      errors.set(field.key, "");
+    }
+  }
   if (state.mode === "new") {
     const workId = normalizeWorkId(state.draft.work_id);
-    if (!workId) errors.set("work_id", "Enter a work id.");
+    if (!workId) errors.set("work_id", "");
     else if (state.workSearchById.has(workId)) errors.set("work_id", "Work id already exists.");
-    for (const key of REQUIRED_WORK_FIELDS) if (!normalizeText(state.draft[key])) errors.set(key, "Enter " + key.replaceAll("_", " ") + ".");
   }
-  if (active("year") && normalizeText(state.draft.year) && !/^-?\d+$/.test(state.draft.year)) errors.set("year", "Use a whole year or leave blank.");
+  if (active("year") && normalizeText(state.draft.year) && !/^-?\d+$/.test(state.draft.year)) errors.set("year", "Use a whole year.");
   for (const key of WORK_DIMENSION_FIELD_KEYS) if (active(key) && normalizeText(state.draft[key]) && !Number.isFinite(Number(state.draft[key]))) errors.set(key, "Use a number or leave blank.");
   const series = normalizeText(state.draft.series_id);
   if (active("series_id") && series) {
-    if (!SERIES_ID_RE.test(series)) errors.set("series_id", "Use one numeric Series id or leave blank.");
+    if (!SERIES_ID_RE.test(series)) errors.set("series_id", "Use one numeric Series id.");
     else if (!state.seriesById.has(normalizeSeriesId(series))) errors.set("series_id", "Unknown Series id: " + series + ".");
   }
   if (active("gallery_ids")) {

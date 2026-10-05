@@ -1,4 +1,5 @@
 import { buildStudioRouteUrl } from "./studio-config.js";
+import { firstCatalogueValidationMessage } from "./catalogue-editor-message-controller.js";
 import { catalogueSaveCompletionError, catalogueSavedActionError } from "./catalogue-save-result.js";
 import { applyCatalogueDelete, createCatalogueWork, previewCatalogueDelete, saveCatalogueBulkRecords, saveCatalogueWork } from "./catalogue-editor-service-client.js";
 
@@ -71,7 +72,8 @@ export async function saveCurrentWork(state, context) {
   const errors = context.validateDraft();
   context.updateFieldMessages(errors);
   if (errors.size > 0) {
-    setTextWithState(context, state.statusNode, t(state, context, "save_status_validation_error", "Fix validation errors before saving."), "error");
+    const message = firstCatalogueValidationMessage(errors);
+    if (message) setTextWithState(context, state.statusNode, message, "error");
     context.updateEditorState();
     return;
   }
@@ -142,13 +144,8 @@ export async function saveNewWork(state, context) {
   const errors = context.validateDraft();
   context.updateFieldMessages(errors);
   if (errors.size > 0) {
-    const workIdError = errors.get("work_id") || "";
-    setTextWithState(
-      context,
-      state.statusNode,
-      workIdError || t(state, context, "new_save_status_validation_error", "Fix validation errors before saving the work."),
-      "error"
-    );
+    const message = firstCatalogueValidationMessage(errors);
+    if (message) setTextWithState(context, state.statusNode, message, "error");
     context.updateEditorState();
     return;
   }

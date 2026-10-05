@@ -46,10 +46,14 @@ export function firstCatalogueEditorMessage(messages) {
   return messages.find((message) => message && message.text) || null;
 }
 
+/** Missing-field blockers may have blank messages; return the first visible validation error. */
 export function firstCatalogueValidationMessage(errors) {
   if (!errors || !errors.size) return "";
-  const first = errors.values().next();
-  return first.done ? "" : normalizeText(first.value);
+  for (const value of errors.values()) {
+    const message = normalizeText(value);
+    if (message) return message;
+  }
+  return "";
 }
 
 export function clearCatalogueFieldStatusMessages(fieldStatusNodes, setTextWithState = setCatalogueEditorTextWithState) {

@@ -1201,6 +1201,10 @@ button.studioList__cellLink {
   text-transform: lowercase;
 }
 
+.studioForm__label--required {
+  font-weight: 700;
+}
+
 .studioForm__descriptionInput {
   min-height: 5.2rem;
   resize: vertical;
