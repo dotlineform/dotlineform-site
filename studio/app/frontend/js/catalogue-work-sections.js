@@ -337,6 +337,7 @@ export function updateWorkSummary(state, options = {}) {
     const selectedCount = state.bulkWorkIds.length;
     const selectedRecords = state.bulkWorkIds.map((workId) => state.bulkRecords.get(workId)).filter(Boolean);
     const seriesIds = Array.from(new Set(selectedRecords.map(record => normalizeText(record.series_id)).filter(Boolean)));
+    const seriesTitles = seriesIds.map(seriesId => normalizeText(state.seriesById.get(seriesId)?.title) || "—");
     state.metaNode.hidden = false;
     state.metaNode.textContent = selectedCount
       ? text(state, options, "bulk_meta", "{count} works selected", { count: String(selectedCount) })
@@ -352,7 +353,7 @@ export function updateWorkSummary(state, options = {}) {
       </div>
       <div class="studioForm__field">
         <span class="studioForm__label">${escapeHtml(text(state, options, "summary_series_label", "series"))}</span>
-        <div class="studioUi__input studioUi__input--readonlyDisplay catalogueWorkSummary__series">${escapeHtml(seriesIds.length ? formatWorkSelectionList(seriesIds) : "—")}</div>
+        <div class="studioUi__input studioUi__input--readonlyDisplay catalogueWorkSummary__series">${escapeHtml(seriesTitles.length ? seriesTitles.join(", ") : "—")}</div>
       </div>
     `;
     state.runtimeStateNode.textContent = state.rebuildPending

@@ -99,12 +99,7 @@ export function applyWorkMediaSourceConfig(state, payload) {
 
 function seriesDisplayTitle(state, seriesId) {
   const record = state.seriesById.get(seriesId);
-  return normalizeText(record && record.title) || seriesId;
-}
-
-function formatSeriesChoice(state, seriesId) {
-  const title = seriesDisplayTitle(state, seriesId);
-  return title === seriesId ? seriesId : `${title} (${seriesId})`;
+  return normalizeText(record && record.title) || "—";
 }
 
 function seriesSearchMatches(state, queryText) {
@@ -136,7 +131,7 @@ export function renderSeriesPicker(state) {
   if (!state.seriesPicker) return;
   const seriesId = normalizeSeriesId(state.draft?.series_id);
   state.seriesPicker.hiddenInput.value = seriesId;
-  state.seriesPicker.searchInput.value = seriesId ? formatSeriesChoice(state, seriesId) : "";
+  state.seriesPicker.searchInput.value = seriesId ? seriesDisplayTitle(state, seriesId) : "";
   state.seriesPicker.searchController.close();
 }
 
@@ -364,7 +359,7 @@ function renderSeriesField(field, fieldsNode, state, options) {
   pickerNode.className = "catalogueWorkSeriesPicker__control";
 
   const searchWrap = document.createElement("div");
-  searchWrap.className = "catalogueWorkSeriesPicker__searchWrap";
+  searchWrap.className = "sharedSearchList__control";
   const searchInput = document.createElement("input");
   searchInput.className = "studioUi__input catalogueWorkSeriesPicker__search";
   searchInput.type = "text";
@@ -372,7 +367,6 @@ function renderSeriesField(field, fieldsNode, state, options) {
   searchInput.placeholder = formText(options, "series_picker_placeholder", "find series by title");
   searchInput.setAttribute("aria-label", formText(options, "series_picker_label", "Find series by title"));
   const popupNode = document.createElement("div");
-  popupNode.className = "studioUi__popupInner catalogueWorkSeriesPicker__popup";
   popupNode.hidden = true;
   searchWrap.appendChild(searchInput);
   mountSearchField(searchInput);
@@ -399,12 +393,10 @@ function renderSeriesField(field, fieldsNode, state, options) {
     shouldOpen: () => !searchInput.disabled,
     loadOptions: () => Array.from(state.seriesById.entries()),
     filterOptions: (_items, query) => seriesSearchMatches(state, query),
-    getOptionValue: ([seriesId]) => formatSeriesChoice(state, seriesId),
+    getOptionValue: ([seriesId]) => seriesDisplayTitle(state, seriesId),
     renderOption: ([seriesId]) => `
-      <span class="studioSuggest__workTitle">${escapeHtml(seriesDisplayTitle(state, seriesId))}</span>
-      <span class="studioSuggest__workMeta">${escapeHtml(seriesId)}</span>
+      <span class="catalogueSeriesSearch__title">${escapeHtml(seriesDisplayTitle(state, seriesId))}</span>
     `,
-    classNames: { option: "studioSuggest__workButton catalogueWorkSeriesPicker__option" },
     noResultsText: "No matching series.",
     onCommit: ([seriesId]) => {
       if (searchInput.disabled) return;

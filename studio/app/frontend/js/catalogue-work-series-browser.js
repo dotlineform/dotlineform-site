@@ -38,7 +38,7 @@ export function createWorkSeriesBrowser(state, elements, options) {
 
   function seriesLabel(id) {
     const record = state.seriesById.get(id);
-    return record ? `${record.title} (${id})` : "";
+    return record ? record.title : "";
   }
 
   function restoreSearch() {
@@ -187,11 +187,9 @@ export function createWorkSeriesBrowser(state, elements, options) {
     loadOptions: query => getSeriesSearchMatches(state.seriesById, query),
     filterOptions: records => records,
     getOptionValue: option => seriesLabel(option.seriesId),
-    renderOption: ({ seriesId, record }) => `
-      <span class="catalogueSeriesSearch__id">${escapeHtml(seriesId)}</span>
+    renderOption: ({ record }) => `
       <span class="catalogueSeriesSearch__title">${escapeHtml(record.title)}</span>
     `,
-    classNames: { option: "catalogueSeriesSearch__option" },
     onCommit: option => selectSeries(option.seriesId),
     onCancel: restoreSearch,
     noResultsText: "No matching series."

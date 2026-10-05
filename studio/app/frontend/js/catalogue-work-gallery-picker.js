@@ -31,10 +31,10 @@ function renderMatches(state) {
     return;
   }
   for (const [id, record] of matches(state)) {
-    const button = node("button", "studioSuggest__workButton catalogueWorkSeriesPicker__option");
+    const button = node("button", "sharedSearchList__option");
     button.type = "button";
     button.dataset.galleryId = id;
-    button.append(node("span", "studioSuggest__workTitle", record.title), node("span", "studioSuggest__workMeta", id));
+    button.append(node("span", "catalogueGallerySearch__title", record.title));
     picker.popupNode.append(button);
   }
   picker.popupNode.hidden = !picker.popupNode.childElementCount;
@@ -47,19 +47,18 @@ export function renderWorkGalleryPicker(state) {
   picker.chipsNode.replaceChildren();
   const ids = state.draft.gallery_ids || [];
   for (const id of ids) {
-    const title = state.galleriesById.get(id)?.title || id;
+    const title = state.galleriesById.get(id)?.title || "—";
     const chip = node("span", "studioUi__chip catalogueWorkSeriesPicker__chip");
     const edit = node("button", "catalogueWorkSeriesPicker__edit", title);
     edit.type = "button";
     edit.dataset.editGalleryId = id;
-    edit.setAttribute("aria-label", `Edit Gallery ${title} (${id})`);
+    edit.setAttribute("aria-label", `Edit Gallery ${title}`);
     const remove = node("button", "studioUi__chipRemove");
     remove.append(createStudioIcon(document, "x"));
     remove.type = "button";
     remove.dataset.removeGalleryId = id;
-    remove.setAttribute("aria-label", `Remove ${title} (${id})`);
-    remove.title = `Remove ${title} (${id})`;
-    edit.append(node("span", "catalogueWorkSeriesPicker__chipId", id));
+    remove.setAttribute("aria-label", `Remove ${title}`);
+    remove.title = `Remove ${title}`;
     chip.append(edit, remove);
     picker.chipsNode.append(chip);
   }
@@ -86,13 +85,14 @@ export function createWorkGalleryPicker(field, fieldsNode, state, options) {
   label.htmlFor = "catalogueWorkGallerySearch";
   const control = node("div", "catalogueWorkSeriesPicker__control");
   const chipsNode = node("div", "catalogueWorkSeriesPicker__chips");
-  const searchWrap = node("div", "catalogueWorkSeriesPicker__searchWrap");
+  const searchWrap = node("div", "sharedSearchList__control");
   const searchInput = node("input", "studioUi__input catalogueWorkSeriesPicker__search");
   searchInput.id = label.htmlFor;
   searchInput.type = "text";
   searchInput.autocomplete = "off";
   searchInput.placeholder = "find galleries by title or id";
-  const popupNode = node("div", "studioUi__popupInner catalogueWorkSeriesPicker__popup");
+  const popupNode = node("div", "sharedSearchList__popup");
+  popupNode.dataset.navigation = "pointer";
   popupNode.hidden = true;
   searchWrap.append(searchInput, popupNode);
   mountSearchField(searchInput);

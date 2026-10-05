@@ -869,6 +869,7 @@ def validate_source_records(
     errors: list[str] = []
     all_work_ids: set[str] = set()
     all_series_ids: set[str] = set()
+    series_title_ids: Dict[str, str] = {}
     work_series_by_work_id: Dict[str, str] = {}
 
     for key, record in records.works.items():
@@ -933,6 +934,17 @@ def validate_source_records(
         if key != series_id:
             errors.append(f"series {key}: key does not match normalized series_id {series_id}")
         all_series_ids.add(series_id)
+        title = record.get("title")
+        if isinstance(title, str) and title.strip():
+            title_key = " ".join(title.split()).casefold()
+            other_id = series_title_ids.get(title_key)
+            if other_id is not None:
+                errors.append(
+                    f'Series titles must be unique: “{records.series[other_id]["title"]}” ({other_id}) '
+                    f'matches “{title}” ({key}).'
+                )
+            else:
+                series_title_ids[title_key] = key
 
     for work_id, series_id in work_series_by_work_id.items():
         if series_id not in all_series_ids:

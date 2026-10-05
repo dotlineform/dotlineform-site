@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260422-000000-45a776
 title: Catalogue Work Editor
 added_date: "2026-04-22 00:00:00"
-last_updated: "2026-10-05 18:45:20"
+last_updated: "2026-10-05 21:58:47"
 parent_id: d-20260423-000000-d015e6
 
 ---
@@ -39,11 +39,13 @@ Save remains disabled for an unchanged draft, including immediately after loadin
 
 The pointer shows waiting throughout the Work editor while Save runs, returning to normal on completion or failure. Work search/New, list selection and editing controls follow the operation's busy state. Save success and unsaved-change messages remain visible through the normal status owner.
 
-A Work must belong to exactly one Series. Selecting another Series reassigns it; clearing the required membership cannot be saved. The Work editor's Series field is a search input for choosing membership. Series Edit and New live only beside the left-panel Series search. Membership does not assign a document subject, parent or destination.
+A Work must belong to exactly one Series. Selecting another Series reassigns it; clearing the required membership cannot be saved. The Work editor's Series field is a search input for choosing membership. Both Series searches display titles only in their selected values and results, with the same popup and result-row styling. The bulk summary also displays Series titles. Series Edit and New live only beside the left-panel Series search. Membership does not assign a document subject, parent or destination.
 
 There is no Work publication state, Publish/Unpublish action or Catalogue Drafts route. Save and Refresh Catalogue are separate awaited actions; there is no media-publish control. Refresh reconciles generated Catalogue readers and private Docs metadata, without publishing documents. The local API must be available; browser edits are not queued for offline saving.
 
 ## Gallery And Series Definitions
+
+Gallery pills and search results display titles only. The Gallery dropdown shares the Series dropdown's popup and result-row styling.
 
 New beside the Gallery field or the left-panel Series search opens a New modal with OK and Cancel. Clicking a Gallery pill's title or the left-panel Series Edit opens an Edit modal with OK, Cancel and Delete. Series Edit targets the browsed Series. Delete is inside Edit. Edit never changes into New.
 

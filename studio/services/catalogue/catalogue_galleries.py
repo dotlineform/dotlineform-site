@@ -42,7 +42,8 @@ def validate_gallery_id(gallery_id: str) -> None:
 
 
 def validate_galleries(data: CatalogueGalleries, works: Mapping[str, Any]) -> None:
-    """Reject ambiguous identities, copied metadata and dangling membership."""
+    """Require distinct identities/titles, exact metadata and valid membership."""
+    title_ids: dict[str, str] = {}
     for gid, gallery in data.galleries.items():
         validate_gallery_id(gid)
         if not isinstance(gallery, dict) or set(gallery) != {"gallery_id", "title"}:
@@ -52,6 +53,14 @@ def validate_galleries(data: CatalogueGalleries, works: Mapping[str, Any]) -> No
         title = gallery["title"]
         if not isinstance(title, str) or not title.strip() or title != title.strip():
             raise ValueError(f"Gallery {gid} needs a non-empty trimmed title")
+        title_key = " ".join(title.split()).casefold()
+        other_id = title_ids.get(title_key)
+        if other_id is not None:
+            raise ValueError(
+                f'Gallery titles must be unique: “{data.galleries[other_id]["title"]}” ({other_id}) '
+                f'matches “{title}” ({gid}). Choose a different title.'
+            )
+        title_ids[title_key] = gid
     for wid, ids in data.works.items():
         if not isinstance(wid, str) or not re.fullmatch(r"[0-9]{5}", wid) or wid not in works:
             raise ValueError(f"Gallery membership references unknown exact Work ID: {wid!r}")

@@ -719,24 +719,6 @@ span.studioUi__input--readonlyDisplay {
   -webkit-appearance: none;
 }
 
-.studioSuggest__workButton {
-  border: 1px solid var(--line, var(--studio-line-chip));
-  border-radius: var(--studio-radius-md);
-  background: var(--surface, var(--studio-surface));
-  color: inherit;
-  font: inherit;
-  text-align: left;
-  padding: 0.45rem 0.55rem;
-  display: grid;
-  gap: 0.12rem;
-  cursor: pointer;
-}
-
-.studioSuggest__workTitle {
-  font-size: var(--font-caption);
-  color: var(--muted, var(--studio-muted-body));
-}
-
 .studioUi__contextHint,
 .studioUi__status,
 .studioUi__saveWarning,
@@ -1417,24 +1399,29 @@ button.studioList__cellLink {
   }
 }
 
-.catalogueWorkSearch__option,
-.catalogueSeriesSearch__option {
+.catalogueWorkSearch__option {
   grid-template-columns: auto minmax(0, 1fr);
   align-items: baseline;
   column-gap: 0.85rem;
 }
 
-.catalogueWorkSearch__id,
-.catalogueSeriesSearch__id {
+.catalogueWorkSearch__id {
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
 .catalogueWorkSearch__title,
-.catalogueSeriesSearch__title {
+.catalogueSeriesSearch__title,
+.catalogueGallerySearch__title {
   min-width: 0;
   overflow-wrap: anywhere;
   color: var(--muted, var(--studio-muted-body));
+}
+
+.catalogueSeriesSearch__title,
+.catalogueGallerySearch__title {
+  font-size: var(--font-small);
+  line-height: var(--line-snug);
 }
 
 .catalogueWorkPage__updateToggle {
@@ -1502,11 +1489,6 @@ button.studioList__cellLink {
   align-items: center;
 }
 
-.catalogueWorkSeriesPicker__chipId {
-  color: var(--muted, var(--studio-muted));
-  font-size: var(--font-caption);
-}
-
 .catalogueWorkSeriesPicker__edit {
   display: inline-flex;
   align-items: center;
@@ -1528,21 +1510,6 @@ button.studioList__cellLink {
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 0.35rem;
-}
-
-.catalogueWorkSeriesPicker__searchWrap {
-  position: relative;
-}
-
-.catalogueWorkSeriesPicker__popup {
-  top: calc(100% + 0.25rem);
-  display: grid;
-  gap: 0.35rem;
-  width: min(30rem, 100%);
-}
-
-.catalogueWorkSeriesPicker__option {
-  width: 100%;
 }
 
 .catalogueProjectMediaPicker__displayControl {

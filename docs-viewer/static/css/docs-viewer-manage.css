@@ -310,6 +310,14 @@
   display: none;
 }
 
+.docsViewerReport[data-report-collection="works"] .docsViewerReport__rowContribution--leading{
+  align-self: center;
+}
+
+.docsViewerReport[data-report-collection="works"] .docsViewerReport__collectionSelectionGutter:not([hidden]){
+  display: inline-flex;
+}
+
 .docsViewerReport__collectionSelectionCheckbox{
   box-sizing: border-box;
   width: 0.82rem;

@@ -43,7 +43,7 @@ def series_create_payload(context: CatalogueWriteContext, body: Mapping[str, Any
         work_updates_request,
     )
     if mutation_plan.validation_errors:
-        raise ValueError("source validation failed: " + "; ".join(mutation_plan.validation_errors[:20]))
+        raise ValueError("; ".join(mutation_plan.validation_errors[:20]))
 
     changed_work_ids = mutation_plan.changed_work_ids
     target_payloads: dict[Path, dict[str, Any]] = {
@@ -105,7 +105,7 @@ def series_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any])
         series_id, current_record, update, extract_series_work_updates(body),
     )
     if plan.validation_errors:
-        raise ValueError("source validation failed: " + "; ".join(plan.validation_errors[:20]))
+        raise ValueError("; ".join(plan.validation_errors[:20]))
     payloads: dict[Path, Any] = {}
     if plan.changed_fields:
         payloads[context.series_path.resolve()] = plan.payload
