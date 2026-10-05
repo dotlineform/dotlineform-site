@@ -171,7 +171,6 @@ function buildWorkResourceRows(state, options = {}) {
     index,
     type: "File",
     label: item.label || "",
-    target: item.filename || "",
     targetHref: state.pendingAttachments.has(item.filename) ? "" : buildWorkDownloadHref(state, item.filename, options)
   }));
   const links = getWorkEmbeddedItems(state.draft, "link").map((item, index) => ({
@@ -179,7 +178,6 @@ function buildWorkResourceRows(state, options = {}) {
     index,
     type: "Link",
     label: item.label || "",
-    target: item.url || "",
     targetHref: item.url || ""
   }));
   return downloads.concat(links);
@@ -229,13 +227,7 @@ export function updateWorkResourcesSection(state, options = {}) {
       {
         key: "label",
         label: "label",
-        width: "minmax(4.5rem, 0.7fr)",
-        truncate: true
-      },
-      {
-        key: "target",
-        label: "file / URL",
-        width: "minmax(9rem, 1.3fr)",
+        width: "minmax(0, 1fr)",
         type: "link",
         hrefKey: "targetHref",
         truncate: true

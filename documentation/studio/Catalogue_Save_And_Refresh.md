@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260927-223812-8042fc
 title: Catalogue Save And Refresh
 added_date: "2026-09-27 22:38:12"
-last_updated: "2026-10-05 14:50:09"
+last_updated: "2026-10-05 15:02:31"
 summary: Current Catalogue Save, local Refresh, reader freshness and recovery boundaries.
 ui_status: stable
 parent_id: d-20260401-000000-a11bf3
@@ -31,6 +31,8 @@ Missing originals or managed downloads, conversion errors and destination-write 
 The response returns current canonical records, revisions and memberships for the editor's search, list, labels and reopened Work. Live Studio service reads remain authoritative for Work and Series search, focused records and Gallery definitions. Save does not generate consumer Catalogue JSON or private Docs report metadata. It makes no R2 request and does not run Docs Build, Search, Publish or deployment.
 
 ## Work Media Authoring
+
+The Work editor's **links** section shows a file or link icon followed by one linked label for each attachment or added URL. Clicking the label opens its destination in a new tab. The label uses the remaining row width; filenames and URLs are visible through **Edit** rather than a separate destination column. Row selection still enables **Edit** and **Delete**. Pending attachment labels remain plain text until Save completes because their selected bytes are not yet in managed storage.
 
 **Add file** opens the browser's native single-file chooser in existing and New Work editors. Selection holds the file in the current browser draft, uses its original filename including extension as the initial label and marks the draft unsaved; cancellation leaves it unchanged. **Edit** changes the label while keeping the filename read-only. The Catalogue write owner derives `<five-digit-work-id>-<normalized-filename>` from a safe basename. The stem becomes lowercase ASCII letters and digits, with runs of spaces or punctuation replaced by one hyphen and edge hyphens removed; an empty normalized stem becomes `attachment`. The last alphanumeric extension is retained in lowercase; names without that extension are normalized as one stem. Work `03188` selecting `composite for 3 symbols.PDF` stores `03188-composite-for-3-symbols.pdf`, while its initial label retains the selected spelling. The browser previews the same naming rule; the server derives and validates the actual destination independently.
 
