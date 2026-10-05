@@ -272,6 +272,8 @@ function appendDocRow(state, doc, reserveThumbnailSpace) {
     var thumbnailUrl = state.mediaRoot.replace(/\/+$/, "") + "/collections/" +
       encodeURIComponent(state.collectionId) + "/thumbs/" + encodeURIComponent(docId + "-thumb.webp");
     appendCollectionThumbnail(title, requestUrl(thumbnailUrl, { reloadNonce: state.thumbnailRevisions.get(docId) }));
+  } else if (state.collectionId === "works" && state.browsingData.thumbnailForDocument(doc)) {
+    state.browsingData.appendThumbnail(title, doc);
   } else if (reserveThumbnailSpace) {
     appendCollectionThumbnail(title);
   }
@@ -719,7 +721,8 @@ function renderRows(state, docs) {
     return;
   }
   var reserveThumbnailSpace = state.collectionId !== "catalogue" && state.docs.some(function (doc) {
-    return doc.record.has_thumbnail === true;
+    return doc.record.has_thumbnail === true
+      || state.collectionId === "works" && Boolean(state.browsingData.thumbnailForDocument(doc));
   });
   var rows = docs.map(function (doc) {
     return appendDocRow(state, doc, reserveThumbnailSpace);
@@ -1020,12 +1023,13 @@ function mountResolvedDocsCollectionReport(context, contribution) {
   state.loadManifest = function () {
     return Promise.all([
       fetchJson(url, "Failed to load docs collection manifest").then(manifestPayload),
-      state.collectionId === "catalogue" ? loadCatalogueCollectionThumbnailSettings(context) : null
+      state.pagedBrowsing ? loadCatalogueCollectionThumbnailSettings(context) : null
     ]).then(function (loaded) {
       if (!state.mounted || !root.isConnected) return false;
       if (state.pagedBrowsing) {
         state.browsingData = createCollectionBrowsingData({
           collectionId: state.collectionId,
+          managementContext: state.managementContext,
           thumbnailSettings: loaded[1],
           updatedTimestamp: lastUpdatedTimestamp,
           workIdForDocument: context.catalogueWorkIdForDocument

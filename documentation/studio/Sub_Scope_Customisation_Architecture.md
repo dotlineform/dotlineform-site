@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260731-155053-3929e2
 title: Sub-Scope Customisation Architecture
 added_date: "2026-07-31 15:50:53"
-last_updated: "2026-10-03 21:27:23"
+last_updated: "2026-10-05 09:43:48"
 summary: define the default docs_subscope report, unified registered aspects, access-safe projection, exact targets, browser composition, and extension checks
 parent_id: d-20260801-084127-752d7e
 ---
@@ -187,11 +187,11 @@ The descriptor and manifest IDs agree exactly. Custom row data targets supplied 
 
 The current `authoring_subject` field group contains exactly `folder_path` and `work_id`. Series assignment, its document `series_id` field and direct-Series report placement were retired on 2026-10-03 after all declarations were reassigned. Detail assignment, `detail_uid` subject projection and Detail report cues were previously retired on 2026-09-23. The exact collection capability controls Folder availability. Project State accepts Folder and Work subjects and derives Series associations from canonical Work membership; its physical folder scan and plain-text Series column remain. Gallery remains a media token target, not a document Subject.
 
-The shared source reader projects one exact `folder_path` or `work_id` declaration into an `authoring_subject` object containing only `kind` and `key`. Assigned kinds are `folder` and `work`; no assignment is `{kind: "none", key: ""}`. Source validation requires at most one declaration, an exact five-digit Work ID or an accepted relative Folder path in a collection that supports Folder subjects. Management/import and Build source parsers share the retired-field check, so document `series_id` is rejected even if blank. Normalized Series records and old three-field assignment requests also fail. Target availability is resolved separately against generated Catalogue Work targets.
+The shared source reader validates one exact `folder_path` or `work_id` declaration; generated metadata projects optional scalar `subject`, omitted for None. Five ASCII digits identify a Work; other valid decoded relative targets identify supported Folders, and a bare five-digit Folder declaration is rejected. The retired generated object is rejected without aliases. Management/import and Build source parsers share source validation, including rejection of document `series_id` even if blank. Assignment target availability remains separately resolved against generated Catalogue Work targets. [Subject Associations](data/subject-associations.md) owns the scalar contract and exact validation rules.
 
-Private collection management manifests carry normalized `authoring_subject` rows and top-level `subject_generation` when subject projection is enabled. Works requires this projection independently of existing generated files. Reports derive associations in memory: Project State retains every assigned Works row for each `{kind, key}`, while Works coverage joins member-Work documents to Studio Series. Document links use the configured collection report host and immutable `doc_id`; titles, filenames and current route selection never supply identity. Context's collection contribution now supplies document-detail Subject information and actions only. [Subject Associations](data/subject-associations.md) owns the current inventory and update boundaries.
+Private collection management manifests carry optional scalar `subject` and top-level `subject_generation` when projection is enabled. Works requires this projection independently of existing generated files. Reports derive typed associations in memory: Project State retains every assigned Works row, while Works coverage joins member-Work documents to Studio Series. Document links use the configured collection report host and immutable `doc_id`; titles, filenames and current route selection never supply identity. Context's collection contribution supplies document-detail Subject information and actions; the shared collection reader owns thumbnails.
 
-The builder maintains subjects and generation in the management manifest; targeted builds merge selected rows with saved metadata and preserve unselected rows. The separate association product and cross-file receipt comparison are retired. Reader manifests and by-ID schemas omit `subject`; private Subject metadata, local paths and assignment capability remain with Manage. Links document summaries use the same `{kind, key}` Subject shape. Completed Preview and public distribution exclude management manifests.
+The builder maintains Subjects and generation in the management manifest; targeted builds merge selected rows with validated scalar metadata and preserve unselected rows. Retired saved shapes require a complete collection Build. The separate association product and cross-file receipt comparison remain retired. Publish's public Context rows select authored `has_thumbnail: true`, otherwise Work-only `subject`, otherwise neither; they expose no Folder values or assignment capability. By-ID rendering inputs and purpose-specific Links summaries retain their existing owners. Completed Preview and public distribution exclude management manifests.
 
 ## Browser Contribution Contract
 
@@ -246,7 +246,7 @@ For assignable workflows, the registered `DocsSubScopeAssignableFieldGroup` is t
 | Config validation and configured collection model | `docs-viewer/services/docs_scope_config.py` |
 | Definition registry, aspects, settings, access, and safe descriptor projection | `docs-viewer/services/docs_subscope_customisations.py` |
 | Private exact Working-to-Editorial lineage workflows and Working-owned tables | `docs-viewer/services/docs_document_publication_lineage.py` and each configured Working collection's external `source/sub-scopes/<id>/data/document-publication-lineage.json` |
-| Normalized subject state, generation receipts, and private associations | `docs-viewer/services/docs_document_subjects.py` |
+| Source Subject validation, scalar projection and deterministic generation | `docs-viewer/services/docs_document_subjects.py` |
 | Projects validation, metadata, manifest, and import adapters | `docs-viewer/services/docs_dotlineform_projects_customisation.py` |
 | Processing validation, metadata, manifest, lineage projection, and import adapters | `docs-viewer/services/docs_dotlineform_processing_customisation.py` |
 | Exact assignable-field-group mutation | `docs-viewer/services/docs_management_mutations.py`, `docs_management_mutation_service.py`, and `docs_management_service.py` |
@@ -260,7 +260,7 @@ For assignable workflows, the registered `DocsSubScopeAssignableFieldGroup` is t
 | Manage default/custom composition | `docs-viewer/runtime/js/management/docs-viewer-management-subscope-default-contribution.js` and `docs-viewer-management-subscope-composition.js` |
 | Analysis Concepts Group Info, action, and modal | `docs-viewer/runtime/js/management/docs-viewer-management-subscope-concepts.js` and `docs-viewer-management-concept-fields-modal.js` |
 | Projects subject Info, action, and modal | `docs-viewer/runtime/js/management/docs-viewer-management-subscope-dotlineform-projects.js` and `docs-viewer-management-project-subject-modal.js` |
-| Browser subject-object validation | `docs-viewer/runtime/js/management/docs-viewer-management-document-subject.js` |
+| Shared browser scalar Subject classification | `docs-viewer/runtime/js/shared/docs-document-subject.js` |
 | Exact managed target resolution | `docs-viewer/runtime/js/management/docs-viewer-management-document-target.js` and `docs-viewer/services/docs_management_document_target.py` |
 | Exact collection transfer planning and receipt | `docs-viewer/services/docs_document_transfer.py` |
 

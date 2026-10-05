@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260605-125108-c68916
 title: Generated Data Contracts
 added_date: "2026-06-05 12:51:08"
-last_updated: "2026-10-03 00:44:36"
+last_updated: "2026-10-05 09:43:48"
 summary: Public and manage Docs Viewer payload schemas, registered publication roots, read authority, publishing, and builder ownership contracts.
 parent_id: d-20260331-000000-c313fd
 ---
@@ -49,9 +49,9 @@ The [collection builder](../../docs-viewer/build/docs_builder/collection.py) pro
 
 The watcher passes changed/deleted document identities to the builder. Targeted Working builds read only the saved management manifest, validate its required metadata, merge selected rows, and use its membership and titles as rendering context. Unselected rows and document payloads remain intact. The manifest is written only when its projected contents change. Missing/invalid required management metadata fails with a complete collection Build instruction; no public-manifest agreement check or full-source fallback remains.
 
-Publish selects eligible source inputs and invokes the same builder in its temporary Preview workspace. Those collection builds generate only the existing public `manifest.json` projection. They do not construct private authoring-subject metadata or a management manifest. The completed snapshot and distribution retain the existing public filename, fields and validation, and the snapshot boundary continues excluding management artifacts. Publish has no dependency on Working's public-manifest output.
+Publish selects eligible source inputs and invokes the same builder in its temporary Preview workspace. Those collection builds generate only public `manifest.json`, without a management manifest. Context rows project only the selected thumbnail's field: authored `has_thumbnail: true`, otherwise Work-only scalar `subject`, otherwise neither. Folder values and private metadata remain excluded. The completed snapshot and distribution retain the public filename and the snapshot boundary excludes management artifacts. Publish has no dependency on a Working public manifest. [Subject Associations](data/subject-associations.md#subject-and-association-shape) owns scalar validation, management omission semantics and the distinction between a public thumbnail-selection row and a complete Subject inventory.
 
-Identity, date and field meanings remain unchanged. Collection diagnostics report the selected `manifest_filename` and one `manifest_changed` count; the former separate management-manifest count is retired.
+Identity and date contracts remain unchanged. Targeted reconstruction rejects retired Subject shapes in saved metadata; a complete collection Build owns reconciliation. Collection diagnostics report the selected `manifest_filename` and one `manifest_changed` count; the former separate management-manifest count is retired.
 
 ## Route Payload Contract
 

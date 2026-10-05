@@ -9,8 +9,8 @@ import {
   openDocsViewerProjectSubjectModal
 } from "./docs-viewer-management-project-subject-modal.js";
 import {
-  normalizeDocsViewerAuthoringSubject
-} from "./docs-viewer-management-document-subject.js";
+  classifyDocsDocumentSubject
+} from "../shared/docs-document-subject.js";
 import {
   normalizeManagedDocumentCollectionTarget
 } from "./docs-viewer-management-document-target.js";
@@ -31,10 +31,11 @@ function exactCollection(value) {
 }
 
 function authoringSubject(documentRecord) {
-  return normalizeDocsViewerAuthoringSubject(
-    documentRecord && documentRecord.authoring_subject,
+  return classifyDocsDocumentSubject(
+    documentRecord,
     {
-      errorMessage: "Working document authoring_subject must be a normalized object."
+      folderSupported: true,
+      errorMessage: "Working document subject must be an optional scalar string."
     }
   );
 }

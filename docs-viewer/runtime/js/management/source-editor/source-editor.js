@@ -7,6 +7,7 @@ import {
 } from "../docs-viewer-management-document-target.js";
 import { localFolderPasteReplacement } from "./local-folder-links.js";
 import { sourceBodyStart, sourceWithThumbnail } from "./source-buffer.js";
+import { classifyDocsDocumentSubject } from "../../shared/docs-document-subject.js";
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -186,7 +187,7 @@ function createSourceEditorContextAdapter(context, state) {
       var payload = await state.collectionProvider.readSourceContext(target, { source_text: snapshot.value });
       if (!isCurrent() || snapshot.revision !== state.bufferRevision
         || !responseMatchesTarget(payload, target)) throw new Error("The Source context changed.");
-      return payload.subject;
+      return classifyDocsDocumentSubject(payload);
     },
     readCatalogueMediaTargets: function () {
       return state.collectionProvider.readCatalogueMediaTargets();

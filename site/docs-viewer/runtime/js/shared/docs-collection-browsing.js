@@ -1,6 +1,7 @@
 import { normalizeDocsCollectionFilterValue } from "./docs-collection-report-filter.js";
 import { catalogueWorkThumbnail } from "./docs-viewer-catalogue-media.js";
 import { catalogueThumbnailSettings } from "./docs-viewer-catalogue-media-policy.js";
+import { classifyDocsDocumentSubject } from "./docs-document-subject.js";
 import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
 export const COLLECTION_PAGE_SIZE = 20;
 export const COLLECTION_SEARCH_DELAY_MS = 180;
@@ -17,11 +18,13 @@ function publicWorkId(record) {
 }
 
 /**
- * Prepare Works/Catalogue search values and dates once per manifest. Catalogue
- * alone adds Work-ID matching and thumbnails; public rows never read authoring data.
+ * Prepare Works/Catalogue search values, dates and Work thumbnails once per manifest.
+ * Catalogue adds Work-ID matching. Context uses scalar Subjects only when no
+ * authored thumbnail is assigned; public Context rows contain one selected field.
  * @param {Object} options
  * @param {string} options.collectionId Exact works or catalogue collection.
  * @param {{base_url: string, size: number, suffix: string, format: string}} [options.thumbnailSettings]
+ * @param {boolean} [options.managementContext=false] Permit Context Folder Subjects and both input assignments.
  * @param {function(Object): number} options.updatedTimestamp Validated document timestamp reader.
  * @param {function(Object): string} [options.workIdForDocument] Working-only authoring adapter.
  */
@@ -40,13 +43,20 @@ export function createCollectionBrowsingData(options) {
       const next = new Map();
       documents.forEach((doc) => {
         const workId = catalogue ? workIdForDocument(doc.record) : "";
+        const subject = catalogue ? null : classifyDocsDocumentSubject(doc.record, {
+          folderSupported: options.managementContext === true
+        });
+        if (!catalogue && options.managementContext !== true && doc.record.has_thumbnail === true && subject.kind !== "none") {
+          throw new Error("Public Context rows must contain only the selected thumbnail field.");
+        }
         const updated = options.updatedTimestamp(doc);
         if (!(catalogue ? /^[0-9]{5}$/.test(doc.docId) : /^d-\d{8}-\d{6}-[a-f0-9]{6}$/.test(doc.docId))
           || (catalogue && workId !== doc.docId)
           || !doc.title || next.has(doc.docId) || !Number.isFinite(updated)) {
           throw new Error(name + " list data requires distinct document IDs, titles and valid last_updated dates. Rebuild its manifest.");
         }
-        const thumbnail = catalogue ? catalogueWorkThumbnail(workId, doc.title, settings) : null;
+        const thumbnailWorkId = catalogue ? workId : doc.record.has_thumbnail !== true && subject.kind === "work" ? subject.key : "";
+        const thumbnail = thumbnailWorkId ? catalogueWorkThumbnail(thumbnailWorkId, doc.title, settings) : null;
         next.set(doc.docId, {
           workId, updated, thumbnail,
           title: normalizeDocsCollectionFilterValue(doc.title)
@@ -80,7 +90,10 @@ export function createCollectionBrowsingData(options) {
     },
     appendThumbnail(button, doc) {
       const thumbnail = entries.get(doc.docId).thumbnail;
-      appendCollectionThumbnail(button, thumbnail.src);
+      appendCollectionThumbnail(button, thumbnail ? thumbnail.src : undefined);
+    },
+    thumbnailForDocument(doc) {
+      return entries.get(doc.docId).thumbnail;
     }
   };
 }

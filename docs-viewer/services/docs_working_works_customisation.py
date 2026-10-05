@@ -8,7 +8,6 @@ from typing import Any, Mapping, Sequence
 
 from docs_local_links import (
     configured_base_dir,
-    normalize_decoded_relative_target,
     normalize_structured_local_target_input,
 )
 from docs_document_subjects import (
@@ -32,8 +31,7 @@ def publication_front_matter(front_matter: Mapping[str, Any]) -> dict[str, Any]:
     for field in AUTHORING_SUBJECT_FIELDS:
         prepared.pop(field, None)
     if subject is not None:
-        field = next(field for field, kind in SUBJECT_KIND_BY_FIELD.items() if kind == subject["kind"])
-        prepared[field] = subject["key"]
+        prepared[WORK_ID_FIELD] = subject
     return prepared
 
 
@@ -126,6 +124,9 @@ def normalize_metadata_update(
             )
         except ValueError as error:
             raise ValueError(f"customisation.folder_path is invalid: {error}") from error
+    normalize_authoring_subject(
+        {field: value for field, value in values.items() if value}, folder_supported=folder_supported,
+    )
     current = metadata_record(settings, front_matter, doc_id=doc_id, folder_supported=folder_supported)
     changed = values != current
     return {
@@ -163,22 +164,13 @@ def normalize_import_front_matter(
         raise ValueError(
             f"custom import authoring subject is conflicting for {doc_id!r}"
         )
-    if values[WORK_ID_FIELD] and not subject_key_is_canonical("work", values[WORK_ID_FIELD]):
-        raise ValueError(f"custom import {WORK_ID_FIELD} must be one canonical work id")
-    if values[FOLDER_PATH_FIELD]:
-        try:
-            values[FOLDER_PATH_FIELD] = normalize_decoded_relative_target(
-                values[FOLDER_PATH_FIELD]
-            )
-        except ValueError as error:
-            raise ValueError(
-                f"custom import folder_path is invalid for {doc_id!r}: {error}"
-            ) from error
-    return {
+    declarations = {
         field_name: value
         for field_name, value in values.items()
         if value
     }
+    normalize_authoring_subject(declarations, folder_supported=True)
+    return declarations
 
 
 __all__ = [

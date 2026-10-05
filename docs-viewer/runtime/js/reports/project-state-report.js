@@ -1,4 +1,5 @@
 import { mountSearchField } from "/shared/frontend/js/search-field.js";
+import { classifyDocsDocumentSubject } from "../shared/docs-document-subject.js";
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
 import {
   appendProjectSubjectIcon
@@ -473,7 +474,7 @@ function runReport(state) {
 /** Reproject committed Works metadata against the last explicit scan's memberships. */
 function commitDocumentChange(state, change) {
   if (change.target.collection !== "works") return;
-  const subject = change.record && change.record.authoring_subject;
+  const subject = change.deleted ? null : classifyDocsDocumentSubject(change.record, { folderSupported: true });
   const docId = change.target.doc_id;
   const existing = state.sourceRows.flatMap(function (row) { return row.documents; }).filter(function (record) { return record.target.doc_id === docId; });
   if (change.deleted && !existing.length) return;

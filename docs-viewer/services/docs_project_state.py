@@ -26,6 +26,7 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths 
 ensure_studio_python_paths(__file__)
 
 from docs_document_identity import is_immutable_doc_id  # noqa: E402
+from docs_document_subjects import subject_from_record  # noqa: E402
 from docs_document_location import canonical_document_viewer_url, management_document_viewer_url  # noqa: E402
 from docs_local_links import encode_relative_target  # noqa: E402
 from docs_workspace_config import generated_documents_path, load_docs_working_config, resolve_workspace_path  # noqa: E402
@@ -131,13 +132,10 @@ def _subject_documents(
         if not is_immutable_doc_id(doc_id) or doc_id in seen_doc_ids:
             raise ValueError("Projects Manage manifest contains an invalid or duplicate doc_id")
         seen_doc_ids.add(doc_id)
-        subject = row.get("authoring_subject")
-        if not isinstance(subject, dict) or subject.get("kind") == "none":
+        subject = subject_from_record(row, folder_supported=True)
+        if subject["kind"] == "none":
             continue
-        kind = str(subject.get("kind") or "").strip()
-        key = str(subject.get("key") or "").strip()
-        if kind not in {"folder", "work"} or not key:
-            raise ValueError("Projects Manage manifest contains an invalid subject")
+        kind, key = subject["kind"], subject["key"]
         title = str(row.get("title") or "").strip()
         if not title:
             raise ValueError("Project document has invalid presentation")

@@ -29,7 +29,9 @@ from docs_collection_customisations import (
 from docs_document_subjects import (
     AUTHORING_SUBJECT_FIELDS,
     FOLDER_PATH_FIELD,
-    normalize_authoring_subject,
+    project_document_subject,
+    project_reader_subject,
+    subject_from_record,
     subject_projection_generation,
 )
 from docs_document_identity import doc_updated_date, is_doc_date, is_doc_timestamp, is_document_id
@@ -97,10 +99,15 @@ class CollectionDocsBuilder(DocsDataBuilder):
         return row
 
     def public_manifest_payload(self, ordered_docs: list[DocRecord]) -> dict[str, Any]:
-        """Project the existing public list contract for publication builds."""
+        """Select authored-first Context thumbnail fields without private Subject data."""
         payload: dict[str, Any] = {
             "docs": [self.manifest_row(doc) for doc in ordered_docs]
         }
+        if self.collection_id == "works":
+            for doc, row in zip(ordered_docs, payload["docs"], strict=True):
+                subject = project_reader_subject(doc.front_matter)
+                if row.get("has_thumbnail") is not True and subject is not None:
+                    row["subject"] = subject
         projected = project_collection_customisation_manifest(
             self.collection_config.collection_customisation,
             ordered_docs,
@@ -121,7 +128,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
         self,
         ordered_docs: list[DocRecord],
         *,
-        subjects_by_doc_id: dict[str, dict[str, Any]] | None = None,
+        subjects_by_doc_id: dict[str, str | None] | None = None,
         subject_generation: str = "",
     ) -> dict[str, Any]:
         """Project private list metadata without filtering requested documents."""
@@ -135,7 +142,9 @@ class CollectionDocsBuilder(DocsDataBuilder):
         if subjects_by_doc_id is not None:
             payload["subject_generation"] = subject_generation
             for row in payload["docs"]:
-                row["authoring_subject"] = subjects_by_doc_id[row["doc_id"]]
+                subject = subjects_by_doc_id[row["doc_id"]]
+                if subject is not None:
+                    row["subject"] = subject
         projected = project_collection_customisation_manifest(
             self.collection_config.collection_customisation,
             ordered_docs,
@@ -171,7 +180,8 @@ class CollectionDocsBuilder(DocsDataBuilder):
     def private_authoring_subjects(
         self,
         ordered_docs: list[DocRecord],
-    ) -> dict[str, dict[str, Any]] | None:
+    ) -> dict[str, str | None] | None:
+        """Preserve existing projection opt-in and exact Folder capability for scalar rows."""
         if self.collection_id == "catalogue":
             return None
         folder_supported = self.folder_subject_supported()
@@ -184,7 +194,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
         ):
             return None
         return {
-            doc.doc_id: normalize_authoring_subject(
+            doc.doc_id: project_document_subject(
                 doc.front_matter,
                 folder_supported=folder_supported,
             )
@@ -195,6 +205,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
         """Load only the current operation's list metadata for a targeted update."""
         manifest = read_collection_manifest(self.output_dir / self.manifest_filename, collection=self.collection_id)
         for row in manifest["docs"]:
+            subject_from_record(row, folder_supported=self.folder_subject_supported())
             updated = row.get("last_updated")
             undated_allowed = self.collection_id not in {"catalogue", "works"} and updated == ""
             if "added_date" in row or not (undated_allowed or is_doc_date(updated)):
@@ -253,9 +264,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
         }
         if self.config.stage == "working" and (subjects_by_doc_id is not None or "subject_generation" in manifest_payload):
             subjects_by_doc_id = {
-                row["doc_id"]: row.setdefault(
-                    "authoring_subject", normalize_authoring_subject({}, folder_supported=self.folder_subject_supported())
-                )
+                row["doc_id"]: row.get("subject")
                 for row in manifest_payload["docs"]
             }
             subject_generation = subject_projection_generation(

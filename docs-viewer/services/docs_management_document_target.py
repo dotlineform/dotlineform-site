@@ -23,8 +23,9 @@ from docs_collection_customisations import (
     collection_customisation_metadata_record,
 )
 from docs_document_subjects import (
+    AUTHORING_SUBJECT_FIELDS,
     FOLDER_PATH_FIELD,
-    normalize_authoring_subject,
+    project_document_subject,
 )
 from docs_report_source import ReportSourceContract
 
@@ -330,8 +331,10 @@ def committed_document_record(
         record.update(ui_status=str(front_matter.get("ui_status") or ""), parent_id=parent_id)
     else:
         fields = collection_customisation_authoring_subject_fields(document_config.collection_customisation)
-        if fields:
-            record["authoring_subject"] = normalize_authoring_subject(front_matter, folder_supported=FOLDER_PATH_FIELD in fields)
+        if collection != "catalogue" and (fields or collection == "works" or any(field in front_matter for field in AUTHORING_SUBJECT_FIELDS)):
+            subject = project_document_subject(front_matter, folder_supported=FOLDER_PATH_FIELD in fields)
+            if subject is not None:
+                record["subject"] = subject
         customisation = collection_customisation_metadata_record(document_config.collection_customisation, front_matter, doc_id=doc_id)
         if customisation is not None:
             record["customisation"] = customisation

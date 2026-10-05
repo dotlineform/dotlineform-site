@@ -9,8 +9,8 @@ import {
 } from "./docs-viewer-management-document-target.js";
 import {
   AUTHORING_SUBJECT_FIELDS,
-  normalizeDocsViewerAuthoringSubject
-} from "./docs-viewer-management-document-subject.js";
+  classifyDocsDocumentSubject
+} from "../shared/docs-document-subject.js";
 import {
   collectCatalogueTargetMatches,
   findCatalogueTargetByIdentity,
@@ -38,10 +38,11 @@ function exactResponseTarget(response, target) {
   }
 }
 
-function normalizedSubject(record) {
-  return normalizeDocsViewerAuthoringSubject(
-    record && record.authoring_subject,
+function normalizedSubject(record, folderSupported) {
+  return classifyDocsDocumentSubject(
+    record,
     {
+      folderSupported: folderSupported,
       errorMessage: "Loaded Document subject metadata is invalid."
     }
   );
@@ -81,7 +82,7 @@ export function subjectMetadataFromResponse(response, target) {
     throw new Error("Document Folder subject capability could not be loaded.");
   }
   return Object.freeze({
-    subject: normalizedSubject(response.record),
+    subject: normalizedSubject(response.record, response.folder_subject_supported),
     folderSupported: response.folder_subject_supported,
     sourceRevision: revision
   });

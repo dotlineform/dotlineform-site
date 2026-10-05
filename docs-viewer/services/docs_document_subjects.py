@@ -21,7 +21,7 @@ SUBJECT_KIND_BY_FIELD = {
     FOLDER_PATH_FIELD: "folder",
     WORK_ID_FIELD: "work",
 }
-WORK_ID_PATTERN = re.compile(r"\A\d{5}\Z")
+WORK_ID_PATTERN = re.compile(r"\A[0-9]{5}\Z")
 
 
 def subject_key_is_canonical(kind: str, key: str) -> bool:
@@ -64,30 +64,63 @@ def normalize_authoring_subject(
         if not folder_supported:
             raise ValueError("This collection does not support Folder subjects")
         value = normalize_decoded_relative_target(value)
+        if subject_key_is_canonical("work", value):
+            raise ValueError("A bare five-digit Folder subject is reserved for Work identity")
     elif not subject_key_is_canonical(kind, value):
         raise ValueError(f"Document {field_name} must be one canonical {kind} ID")
     return {"kind": kind, "key": value}
 
 
-def project_reader_subject(front_matter: Mapping[str, Any]) -> dict[str, str] | None:
-    """Project Work identity for source authoring and publication inputs."""
+def project_document_subject(
+    front_matter: Mapping[str, Any], *, folder_supported: bool,
+) -> str | None:
+    """Project an optional scalar; callers omit the field for an unassigned source."""
+    subject = normalize_authoring_subject(front_matter, folder_supported=folder_supported)
+    return subject["key"] if subject["kind"] != "none" else None
+
+
+def subject_from_record(
+    record: Mapping[str, Any], *, folder_supported: bool,
+) -> dict[str, str]:
+    """Classify optional scalar metadata, rejecting present invalid or retired shapes.
+
+    Absence means None only in management inputs. Public Context may omit a Work
+    subject because an authored thumbnail takes precedence. No registry is read.
+    """
+    if "authoring_subject" in record:
+        raise ValueError("Generated authoring_subject is retired; run a complete collection Build")
+    if "subject" not in record:
+        return {"kind": "none", "key": ""}
+    value = record["subject"]
+    if not isinstance(value, str) or not value or value != value.strip():
+        raise ValueError("Document subject must be one exact nonblank string")
+    if subject_key_is_canonical("work", value):
+        return {"kind": "work", "key": value}
+    if not folder_supported:
+        raise ValueError("This collection does not support Folder subjects")
+    return {"kind": "folder", "key": normalize_decoded_relative_target(value)}
+
+
+def project_reader_subject(front_matter: Mapping[str, Any]) -> str | None:
+    """Project the optional Work scalar for source context and publication inputs."""
     subject = normalize_authoring_subject(front_matter, folder_supported=True)
     if subject["kind"] != "work":
         return None
-    return subject
+    return subject["key"]
 
 
 def subject_projection_generation(
     *,
     collection: str,
-    subjects_by_doc_id: Mapping[str, Mapping[str, Any]],
+    subjects_by_doc_id: Mapping[str, str | None],
 ) -> str:
+    """Hash collection identity and scalar Subjects, including unassigned document IDs."""
     source = {
         "collection": collection,
         "documents": [
             {
                 "doc_id": doc_id,
-                "authoring_subject": subjects_by_doc_id[doc_id],
+                **({"subject": subjects_by_doc_id[doc_id]} if subjects_by_doc_id[doc_id] is not None else {}),
             }
             for doc_id in sorted(subjects_by_doc_id)
         ],
@@ -108,6 +141,8 @@ __all__ = [
     "subject_key_is_canonical",
     "validate_document_subject_fields",
     "normalize_authoring_subject",
+    "project_document_subject",
+    "subject_from_record",
     "project_reader_subject",
     "subject_projection_generation",
 ]

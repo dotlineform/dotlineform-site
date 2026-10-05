@@ -1,4 +1,4 @@
-import { normalizeDocsViewerAuthoringSubject } from "../management/docs-viewer-management-document-subject.js";
+import { classifyDocsDocumentSubject } from "../shared/docs-document-subject.js";
 import { appendProjectSubjectIcon } from "./project-subject-icons.js";
 const SERIES_SCHEMA = "studio_catalogue_lookup_series_search_v2";
 const WORK_SCHEMA = "studio_catalogue_lookup_work_search_v2";
@@ -83,12 +83,15 @@ export function normalizeWorksWorkLookup(payload) {
 
 function normalizeWorkDocument(value) {
   const keys = value && typeof value === "object" && !Array.isArray(value)
-    ? Object.keys(value).filter((key) => key !== "draft").sort().join(",")
+    ? Object.keys(value).filter((key) => !["draft", "has_thumbnail", "subject"].includes(key)).sort().join(",")
     : "";
-  if (keys !== "authoring_subject,doc_id,last_updated,title") {
+  if (keys !== "doc_id,last_updated,title") {
     throw new Error("Working Works manifest is invalid.");
   }
   if (Object.hasOwn(value, "draft") && typeof value.draft !== "boolean") {
+    throw new Error("Working Works manifest is invalid.");
+  }
+  if (Object.hasOwn(value, "has_thumbnail") && typeof value.has_thumbnail !== "boolean") {
     throw new Error("Working Works manifest is invalid.");
   }
   const docId = cleanString(value.doc_id);
@@ -101,7 +104,8 @@ function normalizeWorkDocument(value) {
   ) {
     throw new Error("Working Works manifest is invalid.");
   }
-  const subject = normalizeDocsViewerAuthoringSubject(value.authoring_subject, {
+  const subject = classifyDocsDocumentSubject(value, {
+    folderSupported: true,
     errorMessage: "Working Works manifest is invalid."
   });
   return { docId, subject, title };
@@ -354,7 +358,7 @@ export function mountWorksReport(context) {
     if (!context.reportRoot.isConnected || !state.inputs || change.target.collection !== "works") return;
     var previous = state.inputs[2].find(function (record) { return record.docId === change.target.doc_id; });
     if (change.deleted && !previous) return;
-    var subject = change.deleted ? null : normalizeDocsViewerAuthoringSubject(change.record.authoring_subject);
+    var subject = change.deleted ? null : classifyDocsDocumentSubject(change.record, { folderSupported: true });
     if (previous && !change.deleted && previous.title === change.record.title && previous.subject.kind === subject.kind && previous.subject.key === subject.key) return;
     state.inputs[2] = state.inputs[2].filter(function (record) { return record.docId !== change.target.doc_id; });
     if (!change.deleted) state.inputs[2].push({ docId: change.target.doc_id, title: change.record.title,

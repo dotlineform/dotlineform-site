@@ -144,7 +144,11 @@ def read_source_context(repo_root: Path, body: Dict[str, Any]) -> Dict[str, Any]
     target = source_candidate_target(body)
     resolved = resolve_managed_document_collection(repo_root, collection=target.get("collection"))
     _, metadata = validate_source_candidate(repo_root, target, body["source_text"], resolved)
-    return {"ok": True, **target, "subject": project_reader_subject(metadata)}
+    payload: Dict[str, Any] = {"ok": True, **target}
+    subject = project_reader_subject(metadata)
+    if subject is not None:
+        payload["subject"] = subject
+    return payload
 
 
 def save_source_document(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
