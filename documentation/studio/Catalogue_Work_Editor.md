@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260422-000000-45a776
 title: Catalogue Work Editor
 added_date: "2026-04-22 00:00:00"
-last_updated: "2026-10-05 18:08:18"
+last_updated: "2026-10-05 18:19:13"
 parent_id: d-20260423-000000-d015e6
 
 ---
@@ -31,7 +31,7 @@ Expanded view adds a Galleries column with comma-separated titles, wrapping and 
 
 New mode shows the editable form and Save. The suggested Work ID can be replaced with any valid unused ID, including a deleted ID. The Work ID field's × is labelled **Cancel new Work**: it immediately discards the unsaved Work draft and pending attachments, removes `mode=new` from the URL and returns to empty Work search with focus in the search field. Typing or manually clearing the Work ID keeps New mode active. The × is disabled while Save, Refresh or Delete is busy. Secondary controls appear after the first successful save.
 
-Required fields have bold labels and expose their requirement to assistive technology. Series is required when creating or individually editing a Work; Work ID, Title, Year and Year display are additionally required in New mode. Missing values keep Save disabled and block Enter-to-save without missing-field prompts. Invalid values, duplicate Work IDs and save failures retain visible messages. The Series search keeps its existing `find series by title` placeholder. Bulk mode retains saved required fields as read-only and permits Gallery membership editing.
+Field labels use the normal text colour; required fields also have bold labels and expose their requirement to assistive technology. Series is required when creating or individually editing a Work; Work ID, Title, Year and Year display are additionally required in New mode. Missing values keep Save disabled and block Enter-to-save without missing-field prompts. Invalid values, duplicate Work IDs and save failures retain visible messages. The Series search keeps its existing `find series by title` placeholder. Bulk mode retains saved required fields as read-only and permits Gallery membership editing.
 
 Search uses the live canonical Studio Work search projection. Opening a Work loads its exact canonical record, server-issued revision and related context from the local API. The source record remains the editable baseline.
 
@@ -71,7 +71,7 @@ Bulk Work creation from selected images remains a separate capability. No Detail
 
 ## Media And Runtime Ownership
 
-The media picker resolves the Work's configured source, folder, optional direct subfolder and filename. The server validates paths without exposing absolute filesystem locations. Catalogue staging uses `catalogue/media-staging/` beneath the configured Projects base. Save prepares required primary renditions and thumbnails in shared Docs `assets/works/`. The preview uses the saved Work's media version; an unavailable image is reported separately from missing preview configuration.
+The media picker resolves the Work's configured source, folder, optional direct subfolder and filename. Empty folder, subfolder and filename values display as plain `—` placeholders with no hover underline. The server validates paths without exposing absolute filesystem locations. Catalogue staging uses `catalogue/media-staging/` beneath the configured Projects base. Save prepares required primary renditions and thumbnails in shared Docs `assets/works/`. The preview uses the saved Work's media version; an unavailable image is reported separately from missing preview configuration.
 
 Browser modules under `studio/app/frontend/js/` divide the route into fields/form, selection, actions, record state, resources and media picking. `catalogue-editor-service-client.js` owns transport; `studio_catalogue_api.py` dispatches to the focused services under `studio/services/catalogue/`. Field definitions and current code own the exact editable inventory.
 

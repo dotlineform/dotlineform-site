@@ -26,6 +26,7 @@
   --font-heading-4: var(--text-md);
   --text: #111;
   --muted: #444;
+  --studio-disabled: #777;
   --bg: #fbfaf7;
   --panel: #fafafa;
   --panel-2: #f6f6f6;
@@ -56,6 +57,7 @@
   .studio-local-app {
     --text: #f2f2f2;
     --muted: #c7c7c7;
+    --studio-disabled: #85858c;
     --bg: #0f0f10;
     --panel: #161618;
     --panel-2: #1c1c1f;
@@ -71,6 +73,7 @@
 html[data-theme="light"] .studio-local-app {
   --text: #111;
   --muted: #444;
+  --studio-disabled: #777;
   --bg: #fbfaf7;
   --panel: #fafafa;
   --panel-2: #f6f6f6;
@@ -85,6 +88,7 @@ html[data-theme="light"] .studio-local-app {
 html[data-theme="dark"] .studio-local-app {
   --text: #f2f2f2;
   --muted: #c7c7c7;
+  --studio-disabled: #85858c;
   --bg: #0f0f10;
   --panel: #161618;
   --panel-2: #1c1c1f;
@@ -593,12 +597,12 @@ span.studioUi__input--readonlyDisplay {
 }
 
 .studioUi__button:disabled {
-  color: var(--muted, var(--studio-muted));
+  color: var(--studio-disabled);
   cursor: not-allowed;
 }
 
 .studioUi__button[aria-disabled="true"] {
-  color: var(--muted, var(--studio-muted));
+  color: var(--studio-disabled);
   cursor: not-allowed;
   pointer-events: none;
 }
@@ -634,7 +638,7 @@ span.studioUi__input--readonlyDisplay {
 }
 
 .studio-local-app .studioUi__iconButton:disabled {
-  color: var(--muted, var(--studio-muted));
+  color: var(--studio-disabled);
   cursor: default;
   opacity: 1;
 }
@@ -1197,7 +1201,7 @@ button.studioList__cellLink {
 
 .studioForm__label {
   font-size: var(--font-small);
-  color: var(--muted, var(--studio-muted));
+  color: var(--text);
   text-transform: lowercase;
 }
 
@@ -1558,6 +1562,10 @@ button.studioList__cellLink {
 
 .catalogueProjectMediaPicker__displayValue[href] {
   text-decoration: underline;
+}
+
+.studio-local-app .catalogueProjectMediaPicker__displayValue:not([href]) {
+  text-decoration: none;
 }
 
 .catalogueWorkForm__fieldMeta {

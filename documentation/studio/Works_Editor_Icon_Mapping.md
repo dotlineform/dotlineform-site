@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260924-120657-a61d92
 title: "Shared Icons: Studio Works Editor Mapping"
 added_date: "2026-09-24 12:06:57"
-last_updated: "2026-10-05 17:41:06"
+last_updated: "2026-10-05 18:16:31"
 summary: Approved Works editor SVG replacements, retained text controls and implementation evidence for reuse of the existing Docs Viewer icon files.
 ui_status: complete
 parent_id: d-20260910-223116-9a1011
@@ -56,7 +56,7 @@ The table is a human-edited selection record, not runtime configuration. An artw
 
 ## Implementation
 
-The artwork remains in `docs-viewer/static/icons/`. The existing Studio HTTP server permits SVG requests beneath that directory through its normal repository static-file handler. `studio.css` supplies CSS masks and `currentColor`, adapted to Studio's theme variables: 20px artwork inside 32px icon buttons, transparent/borderless resting state, enabled hover background, visible keyboard focus and disabled tint. Gallery removal uses 12px artwork within the existing pill control; resource type cues use 16px. Full Docs Viewer stylesheets and runtime JavaScript are not loaded.
+The artwork remains in `docs-viewer/static/icons/`. The existing Studio HTTP server permits SVG requests beneath that directory through its normal repository static-file handler. `studio.css` supplies CSS masks and `currentColor`, adapted to Studio's theme variables: 20px artwork inside 32px icon buttons, transparent/borderless resting state, enabled hover background, visible keyboard focus and disabled tint. Disabled Studio text buttons and toolbar icons use `--studio-disabled`, matching the Docs Viewer Actions-menu palette: `#777` in light mode and `#85858c` in dark mode. Gallery removal uses 12px artwork within the existing pill control; resource type cues use 16px. Full Docs Viewer stylesheets and runtime JavaScript are not loaded.
 
 `studio-icon.js` creates decorative spans for generated controls; route markup supplies the same classes for static buttons. The layout renderer switches chevron classes without replacing the control. The shared [Record List And Actions](Record_List_And_Actions.md) renderer accepts optional caller-owned icon classes for resource actions and type cells. Icon actions require an accessible name; resource type values supply the File/Link accessible labels. Other record-list consumers retain their existing rendering.
 
