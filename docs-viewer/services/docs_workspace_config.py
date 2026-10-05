@@ -241,6 +241,7 @@ class DocsWorkspaceConfig:
     assets: DocsAssetsConfig
     catalogue: DocsCatalogueConfig
     media_report_metadata: ArtifactLocation
+    broken_links_report: ArtifactLocation
 
 
 def default_repo_root() -> Path:
@@ -573,7 +574,7 @@ def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: 
         raise ValueError(f"invalid Docs workspace JSON: {exc}") from exc
     payload = _object(raw, field="Docs workspace", required={
         "schema_version", "public_viewer_base_url", "public_projection", "search_fields", "recent_limit", "stages", "preview",
-        "assets", "catalogue", "media_report_metadata",
+        "assets", "catalogue", "media_report_metadata", "broken_links_report",
     })
     if payload["schema_version"] != SCHEMA_VERSION:
         raise ValueError(f"Docs workspace schema_version must be {SCHEMA_VERSION}")
@@ -596,6 +597,10 @@ def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: 
     if not media_report_path.is_relative_to(Path("working/generated/reports")) or media_report_path.name != "metadata.json":
         raise ValueError("media_report_metadata must name metadata.json within working/generated/reports")
     media_report_metadata = location_child(workspace_root, media_report_path)
+    broken_links_path = safe_relative_path(payload["broken_links_report"], field="broken_links_report")
+    if not broken_links_path.is_relative_to(Path("working/generated/reports")) or broken_links_path.name != "report.json":
+        raise ValueError("broken_links_report must name report.json within working/generated/reports")
+    broken_links_report = location_child(workspace_root, broken_links_path)
     preview = _preview(location_child(workspace_root, Path("preview")))
     projection = _public_projection(payload["public_projection"])
     working = _object(settings["working"], field="stages.working", required={
@@ -644,6 +649,7 @@ def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: 
         assets,
         _catalogue(payload["catalogue"], workspace_root=workspace_root),
         media_report_metadata,
+        broken_links_report,
     )
 
 

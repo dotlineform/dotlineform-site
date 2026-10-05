@@ -3,54 +3,61 @@ draft: false
 doc_id: d-20260423-165116-c83a81
 title: Broken Links Script
 added_date: "2026-04-23 16:51:16"
-last_updated: "2026-09-28 15:14:52"
+last_updated: "2026-10-05 14:26:00"
 parent_id: d-20260424-000000-50b63f
 
 ---
 # Docs Broken Links Script
 
-The shared audit reports missing document destinations and supported Catalogue-token problems for one selected source scope. It reads authored sources and generated document output independently of relationship data. Findings are read-only: they do not correct documents or block Save, Build, Pre-Publish or Publish.
+The shared audit reports missing document destinations and supported Catalogue-token problems across ordinary Working documents and every configured collection. It reads authored sources and generated document output independently of relationship data and publication eligibility. Findings do not correct documents or block Save, Build or Publish.
 
-## Local Reports
+## Saved Local Report
 
-- [Analysis Working Broken Links](/docs/?scope=analysis&stage=working&doc=d-20260909-140121-53c381) audits the scope-level documents and every configured Working sub-scope, currently Works, Concepts, Processing and Moments. Documents with `publishable: false` or `folder:` are included.
-- [Studio Broken Links](Broken_Links.md) offers configured non-Analysis source scopes and preserves their scope-level source collection boundary. A stale `report_scope=analysis` selection returns to Studio. Analysis destinations remain available when checking links authored in another scope.
+[Broken Links](/docs/?doc=d-20260909-140121-53c381) opens the last saved scan without auditing source documents or destinations. Its Refresh button explicitly runs the audit and saves the completed result before displaying it. The configured `broken_links_report` in `docs-viewer/config/workspace/docs-workspace.json` resolves to private `working/generated/reports/broken-links/report.json` beneath the existing Docs workspace.
 
-Open a finding's source document, correct the reference and Save. Wait for the normal document build to finish, then rerun the audit. The report is a local management capability and is not included in the public runtime.
+The toolbar displays **Last scanned** immediately beside Refresh, vertically centred on the same row, without a broken-link count. Documents whose rendered links were not scanned remain visible as individual rows. Source, media, collection, Catalogue and generated-output changes do not automatically refresh it. Open a finding's source document, correct the reference and Save; after its normal document build finishes, use Refresh for current results.
+
+A missing snapshot gives an empty report with no first-refresh prompt and no automatic scan. Invalid or unreadable snapshots display an error and can be regenerated with Refresh. Refresh retains the previous loaded results and sort order while the request runs. The refresh icon remains visible, controls are disabled and the report uses a progress cursor with accessible `aria-busy`; no running/loading message replaces the saved status. A failed scan leaves the prior snapshot untouched, and a failed refresh keeps any already loaded results visible with their original timestamp and an error. The existing single-file replacement helper saves validated results; a failed audit never replaces the snapshot with accumulated partial findings.
+
+Working document builds preserve this snapshot and exclude its directory from build-completion inventories. Prepare Preview, Publish, export and Search do not refresh or distribute the report data. Its service, executable report and stylesheet remain local management capabilities.
 
 ## Command Line
 
 Run from the repository root with the project's configured environment:
 
 ```bash
-python3 docs-viewer/services/docs_broken_links.py --scope studio
-python3 docs-viewer/services/docs_broken_links.py --scope analysis --stage working --json
+python3 docs-viewer/services/docs_broken_links.py
+python3 docs-viewer/services/docs_broken_links.py --json
 ```
 
-`--scope` is required. Staged source scopes require an explicit `--stage`; the reusable command can inspect a configured stage, while the Analysis report is restricted to Working. `--json` prints the structured report payload and `--repo-root PATH` overrides repository-root detection.
+The command scans the configured Working workspace and prints current results without reading or writing the saved report. `--json` prints the structured audit payload and `--repo-root PATH` overrides repository-root detection. It accepts no scope or stage selector.
 
 ## Inputs And Destination Checks
 
-Scope configuration resolves the external lifecycle beneath `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-viewer/scopes/<scope>/`, with `working/` or `pre-publish/` beneath Analysis. Source inventory comes from `source/documents/` and, for Analysis, the configured `source/sub-scopes/<sub-scope>/documents/` collections. There is no repository-scope fallback.
+Workspace configuration resolves Working storage beneath the explicit existing `$DOTLINEFORM_DOCS_BASE_DIR`. Source inventory comes from ordinary `working/source/documents/` and configured collection owners. Draft and unpublishable documents remain within the audit; there is no repository fallback or replacement workspace.
 
-Rendered anchors come from each source document's `generated/documents/by-id/<doc_id>.json` or `generated/sub-scopes/<sub-scope>/documents/by-id/<doc_id>.json` payload. Catalogue-token diagnosis reads source Markdown using the existing token registry and target resolver, independently of resolved usage or relationships. Retired Detail syntax is no longer parsed or reported as a Catalogue target.
+Rendered anchors come from each source document's configured generated by-ID payload. Catalogue-token diagnosis reads source Markdown using the existing token registry, independently of resolved usage or relationships. Retired Detail syntax is no longer parsed or reported as a Catalogue target.
 
 Work Media View links and Work image tokens read current generated Catalogue consumer records through the owner described in [Catalogue Media View](Catalogue_Media_View.md). They do not require a Work document or use the older text-target lookup to establish media availability. Missing or invalid Work media reports `missing_media`; unavailable Gallery records report `missing_gallery`. Series tokens are unsupported and remain literal source. This validates supplied records and media references, without fetching R2 image bytes.
 
 If a source by-ID payload is absent, its rendered links are listed as unscanned; other findings and that source's token diagnosis remain available. Generated anchors reflect the last completed document build.
 
-A document destination must have its exact generated by-ID file. Index membership or a payload in another stage or collection cannot satisfy it. Child routes retain the parent report-host ID and `subdoc` ID; the host's generated `docs_subscope` report identifies the configured destination collection. An omitted Analysis destination stage uses Working, matching the viewer. Unknown explicit scopes or stages remain unresolved.
+A document destination must have its exact generated by-ID file in the addressed owner. Index membership or a payload in another collection cannot satisfy it. Ordinary correction links use `/docs/?doc=<id>`; named-collection correction links use `/docs/?collection=<id>&doc=<id>`. Local destination lookup uses Working output; configured public destinations use their repository projection. Retired scope/stage parameters and host-plus-`subdoc` routes are broken rather than inferred.
 
 Link labels may differ from the current target title. Links in rendered code, fragment-only references and same-document viewer or source-Markdown fragment links are ignored. Other unresolved `.md` links are reported. The audit does not crawl external websites, check fragment existence or validate front matter.
 
 ## Request And Result
 
-The report calls `POST /docs/broken-links` through the configured local Docs management service. The Analysis request is:
+`GET /docs/broken-links` accepts no parameters and reads only the configured saved artifact. `POST /docs/broken-links` accepts exactly an empty object and awaits the current audit, validation and snapshot write. Dry-run refresh is rejected. Both methods use the configured local Docs management service and return an `ok` envelope with `report`; the saved read returns `report: null` when no snapshot exists.
 
 ```json
-{"scope":"analysis","stage":"working","report_context":{"scope":"analysis","stage":"working"}}
+{}
 ```
 
-Studio sends the selected non-Analysis `scope` and `report_context: {"scope":"studio"}`. Both the report and service enforce this source partition; destination lookup remains independent. Analysis requests must select Working and match their owning report context.
+The saved report has `schema_version: "docs_broken_links_report_v1"`, UTC `scanned_at`, `summary.total`, `entries` and `unavailable_sources`. These record the completed audit; reopening does not revalidate destination existence. Saved reads validate schema, timestamp, row types, source identities, safe links and the total count without reading current documents.
 
-The JSON result contains `ok`, `scope`, optional `stage`, `summary.total`, `entries` and `unavailable_sources`. Every finding identifies its source through `from_page_text`, `from_page_url`, `from_page_scope`, `from_page_stage`, `from_page_sub_scope` and `from_page_doc_id`, alongside `link_text` and `link_url`. The browser uses the supplied exact correction URL, including the Working stage and child route where applicable. Token findings also retain the raw token, source range, target identity and diagnosis reason. Unscanned sources carry the same correction-location fields and are displayed separately from the broken-link count.
+Every finding identifies its source through `from_page_text`, `from_page_url`, `from_page_collection` and `from_page_doc_id`, alongside `link_text` and `link_url`. Token findings also retain the raw token, source range, target identity and diagnosis reason. Unscanned sources carry the same correction-location fields and appear as separate explanatory rows. A completed audit may record unavailable generated sources; that explicit partial coverage remains visible in the saved result. Refresh errors appear below the toolbar, retaining the saved timestamp beside Refresh.
+
+## Evidence Limits
+
+The saved-report change received focused Python/JavaScript lint, Python syntax, JSON parsing, a read-only configuration-load diagnostic and bounded source/diff review. Persistence, failed-refresh branches and cursor presentation have not received runtime or browser verification. Restart an already running local Docs service and reload the viewer to activate the changed route handlers and assets. Existing `docs-viewer/tests/python/test_docs_broken_links.py` still contains retired scope/stage/report-context requests and is unreviewed for this workspace and saved-report contract; test changes and runs remain separately scoped work.

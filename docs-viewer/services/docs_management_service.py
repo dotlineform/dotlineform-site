@@ -146,6 +146,8 @@ def docs_management_post_response(
             raise ValueError("Docs Media refresh does not support dry_run")
         return HTTPStatus.OK, docs_media_metadata.refresh_media_metadata(repo_root)
     if path == routes.BROKEN_LINKS_PATH:
+        if dry_run:
+            raise ValueError("Broken Links refresh does not support dry_run")
         payload = handle_broken_links(repo_root, body)
         return HTTPStatus.OK, payload
     if path == routes.PROJECT_STATE_PATH:

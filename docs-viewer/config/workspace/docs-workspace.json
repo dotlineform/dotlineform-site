@@ -1,6 +1,7 @@
 {
   "schema_version": "docs_workspace_v4",
   "media_report_metadata": "working/generated/reports/docs-media/metadata.json",
+  "broken_links_report": "working/generated/reports/broken-links/report.json",
   "assets": {
     "root": "assets",
     "document_media": "media",

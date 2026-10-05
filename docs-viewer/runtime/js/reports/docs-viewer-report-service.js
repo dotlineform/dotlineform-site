@@ -68,13 +68,13 @@ export function createDocsViewerReportService(options) {
         requireOkEnvelope: true
       }));
     },
-    runBrokenLinksAudit: function (request) {
-      var payload = {
-        report_context: request && request.report_context
-      };
+    readBrokenLinks: function () {
+      return fetchReportJson("/docs/broken-links", Object.assign({}, serviceOptions, { requireOkEnvelope: true }));
+    },
+    runBrokenLinksAudit: function () {
       return fetchReportJson("/docs/broken-links", Object.assign({}, serviceOptions, {
         method: "POST",
-        payload: payload,
+        payload: {},
         requireOkEnvelope: true
       }));
     },

@@ -2,7 +2,7 @@
 doc_id: d-20260919-102340-25979d
 title: Toolbar Icons
 added_date: "2026-09-19 10:23:40"
-last_updated: "2026-09-20 09:46:57"
+last_updated: "2026-10-05 14:15:00"
 summary: Maintained Docs Viewer toolbar and list icon sizing, shared mask styles, rendering helpers, artwork ownership and extension method.
 parent_id: d-20260331-000000-c313fd
 draft: false
@@ -96,7 +96,7 @@ Theme artwork describes the current theme: sun for light, moon for dark. Draft/R
 
 Report state owners apply the same approach. Project State displays `folder.svg` while grouped by Folder and `dlf-series.svg` while grouped by Series; its accessible name describes the current grouping and next action, and `data-group-target` continues to identify the next group. Collection detail Subject assignment displays `dlf-subject-assigned.svg` for a valid authoring Subject declaration and `dlf-subject.svg` for missing, malformed or conflicting declarations. An unavailable referenced target does not erase a valid declaration. The existing assignment action refreshes and reopens the exact detail after a confirmed change, updating the icon and its Assign/Change Subject label.
 
-Broken Links uses `refresh-cw.svg` when idle and plain disabled `Running...` text with no border or background while busy; its owner supplies `aria-busy` and an accessible running label. Project State's Copy Markdown control and serializer are retired; Copy table retains the existing TSV output. List artwork remains independently sized as described below. Broken Links now uses the same ascending/descending triangles as the other sortable reports, retaining empty inactive indicators.
+Broken Links retains `refresh-cw.svg` and its Refresh accessible name while busy; its owner disables the control, supplies `aria-busy` and applies a progress cursor across the report without running text. Project State's Copy Markdown control and serializer are retired; Copy table retains the existing TSV output. List artwork remains independently sized as described below. Broken Links uses the same ascending/descending triangles as the other sortable reports, retaining empty inactive indicators.
 
 The shared button class retains an explicit hidden rule so flex layout does not reveal hidden controls, a keyboard focus ring, and disabled text/cursor styling. Keep these states when adding consumers.
 

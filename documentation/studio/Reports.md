@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260513-105343-6de36b
 title: Reports
 added_date: "2026-05-13 10:53:43"
-last_updated: "2026-10-04 20:22:23"
+last_updated: "2026-10-05 14:26:00"
 parent_id: d-20260424-000000-50b63f
 ---
 # Docs Viewer Reports
@@ -182,8 +182,7 @@ The durable source, payload, URL, manifest, and lifecycle contract is documented
 
 The Source Config Report (`source_config`) was retired on 2026-09-26. Its JavaScript renderer, Python report builder, `GET /docs/source-config` endpoint, capability flag, registry entry, loader, client method, dedicated styles and Working host document were removed. Configuration editing remains owned by `/docs/source-config-settings`.
 
-`docs_broken_links` runs the Docs Viewer broken-links audit for a selected scope in manage mode.
-It uses the local Docs API endpoint `POST /docs/broken-links`, scans both rendered document links and semantic-token source occurrences, and links each issue to the owning document in Markdown source mode.
+`docs_broken_links` opens the saved Working audit through `GET /docs/broken-links`. Refresh explicitly scans ordinary and configured collection sources and saves a new private JSON snapshot through an empty-object `POST` to the same route. Last scanned time sits beside Refresh, vertically centred, without a broken-link count; unscanned sources remain explanatory rows. Missing data gives an empty report without a first-refresh prompt. Refresh retains loaded results and uses a progress cursor without running messages. [Broken Links Script](Broken_Links_Script.md) owns audit coverage, persistence, failure behavior and the local-only boundary.
 
 `docs_backlinks` renders the generated same-scope incoming-link rows for the exact current report-host document. Parent-scope Docs builds write `backlinks.json` from rendered anchors; targeted builds overlay selected new by-ID payloads on unchanged existing payloads before regenerating the reverse mapping. The report target is only `{ viewerScope, payload.doc_id }`. Code examples, self-links, external links, missing targets, and cross-scope targets are excluded. Local repository-backed browser config uses the static payload URL, external-local config uses the scope-validated generated-read route, the local report registry and loader own execution, and Publish excludes the index.
 

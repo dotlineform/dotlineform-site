@@ -2,7 +2,7 @@
 doc_id: d-20260919-100234-038395
 title: "Shared Icons: Toolbar Mapping"
 added_date: "2026-09-19 10:02:34"
-last_updated: "2026-10-02 13:52:21"
+last_updated: "2026-10-05 14:15:00"
 summary: Editable mappings for Docs Viewer toolbars, report toolbars and report list icons, including code identifiers, state variants and replacement artwork choices.
 ui_status: planned
 parent_id: d-20260910-223116-9a1011
@@ -122,8 +122,8 @@ Identifiers marked `DOM` are element IDs; `selector` entries are exact attribute
 | Links: refresh | `workspace_links`; `mountWorkspaceLinksReport(): refresh`; selector `[aria-label="Refresh links"]` | Rereads the saved Links report | 🔄 | refresh-cw.svg | — | Implemented; review pending |
 | Unpublishable: refresh | `unpublishable`; `mountUnpublishableReport(): refresh` | Rereads the publication-ignore list | Text `Refresh` | refresh-cw.svg | — | Implemented; review pending |
 | Unpublishable: edit source | `unpublishable`; `mountUnpublishableReport(): open` | Opens `unpublishable.json` in VS Code | Text `Open in VS Code` | file-code-corner.svg | 20px theme-tinted mask; shared 32px borderless button and hover colour | Implemented; review pending |
-| Broken Links: run | DOM `docsBrokenLinksReportRun` | Idle; click starts the audit | Text `Run audit` | refresh-cw.svg | Icon only | Implemented; review pending |
-| Broken Links: run | DOM `docsBrokenLinksReportRun` | Audit running; disabled | Text `Running...` | Text `Running...` | Plain disabled text; no border or background; accessible busy state | Implemented; review pending |
+| Broken Links: refresh | DOM `docsBrokenLinksReportRun` | Idle; click scans and saves the report | Text `Run audit` | refresh-cw.svg | Icon only; accessible name and tooltip Refresh | Implemented; review pending |
+| Broken Links: refresh | DOM `docsBrokenLinksReportRun` | Audit running; disabled | Text `Running...` | refresh-cw.svg | Icon retained; progress cursor and accessible busy state; no running text | Implemented; review pending |
 | Project State: run | DOM `docsProjectStateReportRun` | Runs/refreshes reconciliation | 🔄 | refresh-cw.svg | — | Implemented; review pending |
 | Project State: group | DOM `docsProjectStateReportGroup`; selector `[data-group-target="series"]` | Currently grouped by Folder; click groups by Series | Inline three-row list SVG; `CONTROL_ICON_MARKUP.list` | folder.svg | Artwork shows active grouping | Implemented; review pending; accessible name gives current group and next action; data-group-target remains the next group |
 | Project State: group | DOM `docsProjectStateReportGroup`; selector `[data-group-target="folder"]` | Currently grouped by Series; click groups by Folder | Inline folder SVG; `CONTROL_ICON_MARKUP.folder` | dlf-series.svg | Artwork shows active grouping | Implemented; review pending; accessible name gives current group and next action; data-group-target remains the next group |

@@ -10,21 +10,11 @@ function clearNode(node) {
   while (node.firstChild) node.removeChild(node.firstChild);
 }
 
-/** Partition audit sources by the owning report, independently of destination URLs. */
 function reportService(context) {
-  return context && context.reportService && typeof context.reportService.runBrokenLinksAudit === "function"
-    ? context.reportService
+  const service = context && context.reportService;
+  return service && typeof service.readBrokenLinks === "function" && typeof service.runBrokenLinksAudit === "function"
+    ? service
     : null;
-}
-
-function postBrokenLinks(state) {
-  const service = reportService(state.context);
-  if (!service) {
-    return Promise.reject(new Error("Local docs-management server is not configured."));
-  }
-  return service.runBrokenLinksAudit({
-    report_context: state.reportContext
-  });
 }
 
 function appendLinkCell(row, _state, className, label, href) {
@@ -102,13 +92,20 @@ function renderHead(state) {
 function renderRows(state) {
   clearNode(state.rowsNode);
   renderHead(state);
-  const entries = state.entries.slice().sort((left, right) => compareEntries(state, left, right));
-  state.statusNode.textContent = entries.length === 1
-    ? "1 broken link"
-    : entries.length + " broken links";
-  if (state.unavailableSources.length) {
-    state.statusNode.textContent += "; " + state.unavailableSources.length + " documents not scanned";
+  state.messageNode.textContent = state.resultMessage;
+  state.messageNode.hidden = !state.resultMessage;
+  state.statusNode.hidden = !state.report;
+  if (!state.report) {
+    state.statusNode.textContent = "";
+    state.emptyNode.hidden = true;
+    return;
   }
+  const entries = state.entries.slice().sort((left, right) => compareEntries(state, left, right));
+  const scannedAt = new Date(state.report.scanned_at).toLocaleString("en-GB", {
+    day: "2-digit", month: "2-digit", year: "numeric",
+    hour: "2-digit", minute: "2-digit", hour12: false
+  });
+  state.statusNode.textContent = "Last scanned: " + scannedAt;
   state.emptyNode.hidden = entries.length > 0 || state.unavailableSources.length > 0;
   if (!entries.length && !state.unavailableSources.length) {
     state.emptyNode.textContent = "No broken links found.";
@@ -136,36 +133,47 @@ function renderRows(state) {
 function setBusy(state, busy) {
   state.isBusy = Boolean(busy);
   state.runButton.disabled = state.isBusy;
-  state.runButton.classList.toggle("docsViewerReport__runText", state.isBusy);
   state.runButton.setAttribute("aria-busy", String(state.isBusy));
-  state.runButton.setAttribute("aria-label", state.isBusy ? "Running audit" : "Run audit");
-  state.runButton.title = state.isBusy ? "Running audit" : "Run audit";
-  if (state.isBusy) state.runButton.textContent = "Running...";
-  else state.runButton.replaceChildren(createDocsViewerToolbarIcon(state.runButton.ownerDocument, "docsViewer__icon--refresh-cw"));
+  state.context.reportRoot.setAttribute("aria-busy", String(state.isBusy));
+  state.headNode.querySelectorAll("[data-report-sort]").forEach((button) => {
+    button.disabled = state.isBusy;
+  });
 }
 
-function runAudit(state) {
+function loadReport(state, refresh = false) {
   if (state.isBusy) return Promise.resolve();
+  const service = reportService(state.context);
+  if (!service) {
+    state.resultMessage = "Local docs-management server is not configured.";
+    renderRows(state);
+    return Promise.resolve();
+  }
+  state.resultMessage = "";
+  renderRows(state);
   setBusy(state, true);
-  state.statusNode.textContent = "Running broken-links audit...";
-  clearNode(state.rowsNode);
-  state.emptyNode.hidden = true;
-  return postBrokenLinks(state)
+  return (refresh ? service.runBrokenLinksAudit() : service.readBrokenLinks())
     .then((payload) => {
-      state.entries = Array.isArray(payload && payload.entries) ? payload.entries : [];
-      state.unavailableSources = Array.isArray(payload && payload.unavailable_sources) ? payload.unavailable_sources : [];
-      state.sortKey = DEFAULT_SORT_KEY;
-      state.sortDir = DEFAULT_SORT_DIR;
+      if (!payload || !Object.prototype.hasOwnProperty.call(payload, "report")) {
+        throw new Error("Broken Links returned no saved report.");
+      }
+      const report = payload.report;
+      if (report !== null && (
+        report.schema_version !== "docs_broken_links_report_v1"
+        || !Array.isArray(report.entries) || !Array.isArray(report.unavailable_sources)
+        || !Number.isFinite(Date.parse(report.scanned_at))
+      )) {
+        throw new Error("Saved Broken Links report is invalid.");
+      }
+      if (refresh && !report) throw new Error("Broken Links refresh returned no saved report.");
+      state.report = report;
+      state.entries = report ? report.entries : [];
+      state.unavailableSources = report ? report.unavailable_sources : [];
       renderRows(state);
     })
     .catch((error) => {
-      state.entries = [];
-      state.unavailableSources = [];
-      state.statusNode.textContent = error && error.message ? error.message : "Failed to run broken-links audit.";
-      state.emptyNode.hidden = false;
-      state.emptyNode.textContent = "The audit could not run in this viewer context.";
-      clearNode(state.rowsNode);
-      renderHead(state);
+      const message = error && error.message ? error.message : "Broken Links could not complete the request.";
+      state.resultMessage = message + (state.report ? " Showing the saved report." : "");
+      renderRows(state);
     })
     .finally(() => {
       setBusy(state, false);
@@ -174,7 +182,7 @@ function runAudit(state) {
 
 function attachEvents(state) {
   state.runButton.addEventListener("click", () => {
-    runAudit(state);
+    loadReport(state, true);
   });
   state.headNode.addEventListener("click", (event) => {
     const button = event.target instanceof Element ? event.target.closest("[data-report-sort]") : null;
@@ -203,14 +211,18 @@ function renderShell(root) {
   runButton.id = "docsBrokenLinksReportRun";
   runButton.type = "button";
   runButton.className = "docsViewer__toolbarIconButton";
-  runButton.setAttribute("aria-label", "Run audit");
-  runButton.title = "Run audit";
+  runButton.setAttribute("aria-label", "Refresh");
+  runButton.title = "Refresh";
   runButton.appendChild(createDocsViewerToolbarIcon(document, "docsViewer__icon--refresh-cw"));
 
-  const status = document.createElement("p");
+  const status = document.createElement("span");
   status.className = "docsViewerReport__status";
   toolbar.appendChild(runButton);
   toolbar.appendChild(status);
+
+  const message = document.createElement("p");
+  message.className = "docsViewerReport__status";
+  message.hidden = true;
 
   const table = document.createElement("div");
   table.className = "docsViewerReport__table";
@@ -230,12 +242,14 @@ function renderShell(root) {
   table.appendChild(head);
   table.appendChild(rows);
   root.appendChild(toolbar);
+  root.appendChild(message);
   root.appendChild(table);
   root.appendChild(empty);
 
   return {
     runButton,
     statusNode: status,
+    messageNode: message,
     headNode: head,
     rowsNode: rows,
     emptyNode: empty
@@ -244,11 +258,11 @@ function renderShell(root) {
 
 export function mountDocsBrokenLinksReport(context) {
   if (!context.managementContext) throw new Error("Broken Links requires local management.");
-  const reportContext = {  };
   const nodes = renderShell(context.reportRoot);
   const state = Object.assign({
     context,
-    reportContext,
+    report: null,
+    resultMessage: "",
     entries: [],
     unavailableSources: [],
     sortKey: DEFAULT_SORT_KEY,
@@ -267,5 +281,5 @@ export function mountDocsBrokenLinksReport(context) {
 
   renderHead(state);
   attachEvents(state);
-  return runAudit(state);
+  return loadReport(state);
 }

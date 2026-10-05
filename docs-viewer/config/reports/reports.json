@@ -39,7 +39,7 @@
     {
       "report_id": "docs_broken_links",
       "title": "Docs Broken Links",
-      "description": "Runs the Docs Viewer broken-links audit for Working.",
+      "description": "Shows the saved Working broken-links audit; Refresh scans and saves current results.",
       "loader_id": "docs_broken_links",
       "presets": []
     },

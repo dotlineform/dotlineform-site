@@ -117,12 +117,6 @@
   outline-offset: 2px;
 }
 
-.docsViewerReport__runText[aria-busy="true"]{
-  width: auto;
-  padding: 0 0.35rem;
-  background: transparent;
-}
-
 .docsViewerReport[data-report-id="reports_list"] .docsViewerReport__head,
 .docsViewerReport[data-report-id="reports_list"] .docsViewerReport__row{
   grid-template-columns: repeat(2, minmax(12rem, 1fr));
@@ -131,6 +125,19 @@
 .docsViewerReport[data-report-id="docs_broken_links"] .docsViewerReport__head,
 .docsViewerReport[data-report-id="docs_broken_links"] .docsViewerReport__row{
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.docsViewerReport[data-report-id="docs_broken_links"] .docsViewerReport__toolbar{
+  flex-wrap: nowrap;
+}
+
+.docsViewerReport[data-report-id="docs_broken_links"] .docsViewerReport__toolbar .docsViewerReport__status{
+  white-space: nowrap;
+}
+
+.docsViewerReport[data-report-id="docs_broken_links"][aria-busy="true"],
+.docsViewerReport[data-report-id="docs_broken_links"][aria-busy="true"] *{
+  cursor: progress;
 }
 
 .docsViewerReport[data-report-id="semantic_tokens"] .docsViewerReport__head,
