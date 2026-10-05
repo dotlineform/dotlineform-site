@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260428-000000-f5ff18
 title: Planned Features
 added_date: "2026-04-28 00:00:00"
-last_updated: "2026-10-05 09:51:01"
+last_updated: "2026-10-05 10:00:12"
 summary: This explains the delivery model and workflows to implement new repo and application features.
 ui_status: planned
 parent_id: ""
@@ -150,4 +150,4 @@ Store new standalone delivery documents for bounded work that does not need a se
 - [Work Editor Media Delivery](deliveries/Work_Editor_Media_Delivery.md) — Complete and accepted on 2026-10-04. Native attachments with automatic Work ID naming and intentional replacement, confirmed same-path image regeneration and Finder links are delivered. Durable Save/authoring documentation is current; retained for recent-work lookup pending manual archive.
 - [Docs Native Media Picker Delivery](deliveries/Docs_Native_Media_Picker_Delivery.md) — Complete and accepted on 2026-10-04. Shared filename/folder-open controls, standard toolbar hover style/size and native single-file upload retain Docs-owned naming, decisions, thumbnails and Source Save. Durable intake documentation is current; retained for recent-work lookup pending manual archive.
 - [Work Downloads Report Delivery](deliveries/Work_Downloads_Report_Delivery.md) — Implemented and reviewed; awaiting user manual review and acceptance. Two-column local reconciliation of canonical Work download references and saved files, with Catalogue document links and Finder reveal actions. Reports is current and the report host has its watcher-generated payload.
-- [Subject And Context Thumbnails Delivery](deliveries/Subject_And_Context_Thumbnails_Delivery.md) — Implemented and reviewed on 2026-10-05; awaiting local manual acceptance, separately authorized Publish and public review. Scalar Subjects, authored-first Context thumbnails, Working Works docs-only reconciliation and shared/runtime projection are complete. New public manifest data remains pending Publish, so release and delivery closeout stay on hold.
+- [Subject And Context Thumbnails Delivery](deliveries/Subject_And_Context_Thumbnails_Delivery.md) — Complete and accepted on 2026-10-05. Scalar Subjects, authored-first Context thumbnails, Working reconciliation and runtime projection are delivered; the user confirmed successful Publish and accepted the result. Retained for recent-work lookup pending manual archive.

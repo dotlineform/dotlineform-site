@@ -3,16 +3,16 @@ draft: false
 doc_id: d-20261004-225006-3e9736
 title: Subject And Context Thumbnails Delivery
 added_date: "2026-10-04 22:50:06"
-last_updated: "2026-10-05 09:51:01"
+last_updated: "2026-10-05 10:00:12"
 summary: Replace generated authoring-subject objects with one optional scalar subject field and display Work thumbnails in local and public Context lists.
-ui_status: active
+ui_status: complete
 parent_id: d-20260428-000000-f5ff18
 ---
 # Subject And Context Thumbnails Delivery
 
 ## Current And Next State
 
-Status: active; approved implementation, Working reconciliation, runtime projection and bounded code review are complete. The user authorized the bounded implementation on 2026-10-05 after SCT-0 readiness. Local user review, separately authorized Publish and public user review remain open, so this delivery is not complete. No tests, Search rebuild, Publish, commit, push or deployment ran.
+Status: complete and accepted on 2026-10-05. Approved implementation, Working reconciliation, runtime projection and bounded code review are complete. The user confirmed successful Publish, accepted the result and authorized closeout. Publication and manual acceptance are user-confirmed; Codex did not independently inspect the published result or run browser automation. No test work or Search rebuild was performed in this delivery.
 
 Complete result: subject-enabled management rows and management response records use one optional `subject` string independently of authored-thumbnail assignments. Publish resolves thumbnail precedence for each public Context row and emits either `has_thumbnail: true`, a Work-valued `subject`, or neither. Local and public Context prefer an explicitly authored document thumbnail, then use the existing Work thumbnail when no authored assignment exists and the document has a Work subject. Source thumbnail metadata and Subject assignment update a retained local Context list through the existing committed-record notification.
 
@@ -20,9 +20,9 @@ Approved precedence on 2026-10-04: authored thumbnail first, otherwise Work thum
 
 Public manifest refinement on 2026-10-04: Publish emits only the selected thumbnail's field. Management rows may retain both fields; public Context rows never need both. An authored-thumbnail public row omits its Work subject even when the source declares one, so the reader manifest is not a complete public Work-association inventory.
 
-Next: restart local Studio to load the changed Python services, reload the viewer and manually review Context's thumbnail selection/navigation and retained Subject/Source changes. Then obtain separate Publish authorization and review its public result through site-preview. Public verification requires new public manifest data from that Publish; shared runtime projection alone does not deliver it.
+Next: no remaining delivery work. Retain this document for recent-work lookup until manual archive. Git commit, push and Deploy Public remain separate actions and were not performed by Codex during closeout.
 
-Approved implementation scope: scalar generation and consumer cutover without aliases; shared validation preserving source declarations/capabilities; targeted reconstruction, Subject details/assignment, Projects/Works reports and committed notifications; mutually exclusive public Context thumbnail projection; authored-first list presentation using configured media owners; one complete Working Works docs-only reconciliation; changed-path lint, shared/runtime projection, site validation, bounded review and directly affected durable documentation. The completed 244-document build and individual diagnostics each took under a second. Test work, browser automation, Search rebuild and Publish were excluded. Keep public release on hold until runtime and new public manifest data are paired through an authorized Publish.
+Completed implementation scope: scalar generation and consumer cutover without aliases; shared validation preserving source declarations/capabilities; targeted reconstruction, Subject details/assignment, Projects/Works reports and committed notifications; mutually exclusive public Context thumbnail projection; authored-first list presentation using configured media owners; one complete Working Works docs-only reconciliation; changed-path lint, shared/runtime projection, site validation, bounded review and directly affected durable documentation. The completed 244-document build and individual diagnostics each took under a second. Test work, browser automation and Search rebuild were excluded. The user subsequently completed Publish and accepted the local/public outcome.
 
 This standalone delivery is parented to [Planned Features](../Planned_Features.md). [Subject Associations](../data/subject-associations.md) owns Subject meaning and consumers, [Generated Data Contracts](../Generated_Data_Contracts.md#collection-manifest-ownership) owns manifest lifecycle, and [Media And Asset Handling](../Media_And_Asset_Handling.md) owns thumbnail storage and existing presentation. Follow [Development Checklist](../Development_Checklist.md) and [Development Workflow](../Development_Workflow.md).
 
@@ -89,9 +89,9 @@ This delivery adds no Subject column, Series subject, folder assignment capabili
 
 - [x] Shared scalar Subject projection and validation in management manifests and response records, with all existing Subject consumers cut over and the old generated representation removed.
 - [x] Publish-owned public Context thumbnail selection, emitting either `has_thumbnail: true`, Work-only scalar `subject`, or neither through existing preparation and distribution owners.
-- [x] Configured local/public Context thumbnail implementation with authored-first precedence, Work-subject alternative and committed Subject/thumbnail-change reconciliation using shared collection presentation; manual acceptance remains below.
+- [x] Configured local/public Context thumbnails with authored-first precedence, Work-subject alternative and committed Subject/thumbnail-change reconciliation using shared collection presentation; user accepted the result.
 - [x] Complete docs-only Working reconciliation for affected subject-enabled collection manifests, preserving canonical source and media.
-- [ ] Required shared/public runtime projection, focused evidence, user manual review and distinct bounded code review.
+- [x] Required shared/public runtime projection, focused evidence, user manual acceptance and distinct bounded code review.
 - [x] Current durable Subject documentation, with manifest/media references updated only where the changed contract requires it.
 
 ## Process
@@ -129,33 +129,33 @@ Verification budget: changed-path Python/JavaScript lint and bounded source revi
 
 Gate: production consumers agree on the scalar contract, absent management Subjects mean None, and public Context rows contain only the selected thumbnail field without Folder values. Do not leave old/new shape fallbacks to bridge an incomplete cutover.
 
-Record: implemented on 2026-10-05. The Python Subject owner validates source declarations and scalar metadata; generation hashes scalar assignments and unassigned document identities. Targeted saved rows reject the retired field rather than converting it. Management metadata and committed records follow current collection projection rules; unsaved Source context returns an optional Work scalar and its picker derives its typed internal input through the shared classifier. Subject details/assignment, Project State and Works coverage consume that classifier/owner. The temporary public Works builder selects only the thumbnail field while preserving by-ID rendering/media capture. Changed-path Python lint passed for `docs_document_subjects.py`, `collection.py`, `docs_management_document_target.py`, `docs_management_source_service.py`, `docs_working_works_customisation.py` and `docs_project_state.py`; the six-file command took under a second. Public projection has source-review evidence only until Publish.
+Record: implemented on 2026-10-05. The Python Subject owner validates source declarations and scalar metadata; generation hashes scalar assignments and unassigned document identities. Targeted saved rows reject the retired field rather than converting it. Management metadata and committed records follow current collection projection rules; unsaved Source context returns an optional Work scalar and its picker derives its typed internal input through the shared classifier. Subject details/assignment, Project State and Works coverage consume that classifier/owner. The temporary public Works builder selects only the thumbnail field while preserving by-ID rendering/media capture. Changed-path Python lint passed for `docs_document_subjects.py`, `collection.py`, `docs_management_document_target.py`, `docs_management_source_service.py`, `docs_working_works_customisation.py` and `docs_project_state.py`; the six-file command took under a second. The user subsequently confirmed successful Publish and accepted the result; no additional automated public-field audit ran.
 
 ### SCT-2 — Context Thumbnails And Retained Changes
 
 - [x] Select authored document thumbnails first, then resolve Work alternatives from scalar Subjects with configured policy/routes and the existing collection thumbnail helper.
 - [x] Preserve empty-slot alignment, missing-image navigation without request-based fallback and other collection-thumbnail behavior.
 - [x] Reconcile committed Subject and authored-thumbnail assignment changes, clearing and filtered/paged list state through the existing caller owner.
-- [ ] User manually reviews local selection, aligned slots, navigation and retained Subject/Source changes after service restart and viewer reload.
+- [x] User accepts the local Context thumbnail and retained-change outcome.
 
 Verification budget: changed-path JavaScript lint and bounded source review of local/public policy transport, row identity and committed-change wiring. Visual alignment, click behavior and retained-list interaction remain user manual review; no browser test is added or run automatically.
 
 Gate: local and public readers use the same authored-first thumbnail rule through their configured routes, preserving `has_thumbnail` meaning and both media owners without per-row record reads, image generation or navigation ownership changes.
 
-Record: implemented on 2026-10-05. Shared collection browsing caches the Work alternative selected from metadata and one configured policy read; authored document URLs retain their exact owner and commit revision. The full retained manifest drives alignment and committed records recompute its projection without discovery reads. Existing missing-image behavior and Catalogue/other collection thumbnails remain with their shared helper. Changed-path JavaScript lint passed for `docs-document-subject.js`, `docs-collection-browsing.js`, `docs-collection-report.js`, `docs-viewer-management-collection-working-subjects.js`, `docs-viewer-management-project-subject-modal.js`, `source-editor.js`, `works-report.js` and `project-state-report.js`; commands took under a second. The initial new-classifier control-character regex failed lint and was replaced with character-code validation. Local interaction remains unconfirmed; no browser automation or tests ran.
+Record: implemented on 2026-10-05. Shared collection browsing caches the Work alternative selected from metadata and one configured policy read; authored document URLs retain their exact owner and commit revision. The full retained manifest drives alignment and committed records recompute its projection without discovery reads. Existing missing-image behavior and Catalogue/other collection thumbnails remain with their shared helper. Changed-path JavaScript lint passed for `docs-document-subject.js`, `docs-collection-browsing.js`, `docs-collection-report.js`, `docs-viewer-management-collection-working-subjects.js`, `docs-viewer-management-project-subject-modal.js`, `source-editor.js`, `works-report.js` and `project-state-report.js`; commands took under a second. The initial new-classifier control-character regex failed lint and was replaced with character-code validation. The user accepted the local/public outcome on 2026-10-05; individual interaction scenarios were not separately reported. No browser automation or tests ran.
 
 ### SCT-3 — Generated Follow-Through And Public Review
 
 - [x] Reconcile affected Working collection output through justified complete docs-only collection builds, selecting the exact owners first. A global manifest-contract change justifies complete reconciliation; skip registered media producers and preserve source dates.
 - [x] Run `bin/site-code-update` for represented changed runtime/configuration files, inspect its exact tracked delta, then run `bin/site-code-update --check` and `bin/site-validate`.
 - [x] Record Working scalar/None/report evidence and the limits of static public verification. Leave Search unchanged and do not edit generated JSON as authority.
-- [ ] When separately authorized, run Publish and review eligible public Context rows and their thumbnails through site-preview, including mutually exclusive fields for authored-only, Work-only and both-assignment inputs, omission of both fields for unassigned Folder/None rows, and navigation.
+- [x] Complete Publish and obtain user acceptance of the public Context result; the review scope includes thumbnail selection, field privacy and navigation.
 
 Verification budget: the selected docs-only Working builds write replaceable output only for named affected collections; cost depends on their source volume and must be stated before running. Runtime projection writes only configured tracked destinations; projection/site validation are existing diagnostics with expected seconds-to-minutes cost. Before any Publish, state its real Preview, repository and remote-media effects. No test execution or browser automation is implied.
 
 Gate: old management rows are fully reconciled and the public runtime is paired with new public manifest data before release. Public capability remains unverified until the separately authorized Publish and manual review; that gate cannot be replaced by a source diff or runtime projection check.
 
-Record: local/static follow-through complete on 2026-10-05. With `.env.local` exported, `build_docs.py --stage working --collection works --write --skip-media-builds --skip-browser-config` rendered 244 documents in under a second, wrote only the management manifest, changed no by-ID/Links payloads and reported zero warnings. Read-only diagnostics found 25 Work, 208 Folder and 11 omitted Subjects, no retired field or null Subject, and one independent both-assignment row. The existing Project State grouping reader accepted all 244 rows and grouped the 233 assigned documents; the full physical-folder/Catalogue report workflow was not run. Runtime projection added `shared/docs-document-subject.js` and updated `shared/docs-collection-browsing.js` and `shared/docs-collection-report.js` in the tracked site; projection check and site validation passed. No public document payload, Preview, Search or media bytes changed. Publish and public review remain pending separate authorization.
+Record: generated follow-through and user acceptance complete on 2026-10-05. With `.env.local` exported, `build_docs.py --stage working --collection works --write --skip-media-builds --skip-browser-config` rendered 244 documents in under a second, wrote only the management manifest, changed no by-ID/Links payloads and reported zero warnings. Read-only diagnostics found 25 Work, 208 Folder and 11 omitted Subjects, no retired field or null Subject, and one independent both-assignment row. The existing Project State grouping reader accepted all 244 rows and grouped the 233 assigned documents; the full physical-folder/Catalogue report workflow was not run. Runtime projection added `shared/docs-document-subject.js` and updated `shared/docs-collection-browsing.js` and `shared/docs-collection-report.js` in the tracked site; projection check and site validation passed. That implementation batch did not change public document payloads, Preview, Search or media. The user subsequently reported successful Publish and accepted the published result. Publication is user-confirmed; no additional Codex Publish, browser run or scenario-by-scenario public-data inspection was performed.
 
 ### SCT-4 — Code Review
 
@@ -167,19 +167,19 @@ Verification budget: focused source/diff review, with no repository-wide audit o
 
 Gate: the complete Subject-to-thumbnail flow has clear owners, runtime/data cutover is coherent and no old generated representation remains active. Distinguish source/static evidence from user-confirmed local/public behavior.
 
-Record: bounded review complete on 2026-10-05. Review found a JavaScript/Python Unicode boundary-whitespace disagreement and corrected the shared classifier to match the source owner's `str.strip()` behavior. A stale architecture reference to the retired browser object validator was corrected alongside its directly affected Subject section. Reviewed scalar omission/invalid-present rejection, five-ASCII-digit Folder reservation, saved-row validation/generation, public authored-first privacy, by-ID thumbnail capture, configured Catalogue transport, full-manifest alignment and committed caller reconciliation. No unresolved production finding remains within this diff. Only affected classifier/builder lint and runtime projection/site validation were repeated after review changes; whitespace checks passed. Older test fixtures/imports still refer to retired contracts and remain unreviewed, unchanged and unexecuted. Local manual acceptance, live service responses and Publish/public data remain evidence limits.
+Record: bounded review complete on 2026-10-05. Review found a JavaScript/Python Unicode boundary-whitespace disagreement and corrected the shared classifier to match the source owner's `str.strip()` behavior. A stale architecture reference to the retired browser object validator was corrected alongside its directly affected Subject section. Reviewed scalar omission/invalid-present rejection, five-ASCII-digit Folder reservation, saved-row validation/generation, public authored-first privacy, by-ID thumbnail capture, configured Catalogue transport, full-manifest alignment and committed caller reconciliation. No unresolved production finding remains within the reviewed diff. Only affected classifier/builder lint and runtime projection/site validation were repeated after review changes; whitespace checks passed. Older test fixtures/imports still refer to retired contracts and remain unreviewed, unchanged and unexecuted. User acceptance subsequently completed the manual/public gates; live service and browser automation remain outside the evidence. Status-only closeout code review is not applicable because no code/configuration changed; bounded documentation review reuses the accepted implementation evidence.
 
 ### SCT-5 — Closeout
 
 - [x] Transfer implemented Subject shape, classification, privacy and consumer rules to Subject Associations; correct directly affected manifest/media documentation without duplicating the specification.
-- [ ] Record exact completed evidence, manual acceptance, public publication status and material omissions; close only the complete local/public outcome.
-- [ ] Update Planned Features and recommend retaining this delivery for recent-work lookup until manual archive. Do not delete it without approval.
+- [x] Record exact completed evidence, manual acceptance, public publication status and material omissions; close only the complete local/public outcome.
+- [x] Update Planned Features and recommend retaining this delivery for recent-work lookup until manual archive. Do not delete it without approval.
 
 Verification budget: bounded documentation/source review and completion-evidence reconciliation. Do not repeat implementation checks merely for status bookkeeping.
 
 Gate: no unfinished consumer cutover, generated reconciliation or public review is hidden inside a completed delivery. Commit, push and public deployment remain separately authorized.
 
-Record: durable Subject, manifest and media documentation is current for the implemented contract, and Planned Features records the remaining acceptance/publication gates. Closeout remains open until local manual review, authorized Publish and public manual review complete. Retain this delivery for the pending work; no commit, push or public deployment is implied.
+Record: complete and accepted on 2026-10-05 after the user reported successful Publish and explicitly authorized closeout. Durable Subject, manifest and media documentation is current, the obsolete publication-pending statement is removed and Planned Features records completion. Prior implementation evidence was reused; closeout edits only documentation and adds no rebuild, test or publication run. Retain this delivery for recent-work lookup until manual archive. No commit, push or public deployment was performed by Codex during closeout.
 
 ## Follow-on
 

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260927-135604-05446e
 title: Subject Associations
 added_date: "2026-09-27 13:56:04"
-last_updated: "2026-10-05 09:43:48"
+last_updated: "2026-10-05 10:00:12"
 summary: Manifest-owned subjects, in-memory report associations, exact navigation, and private/public generation boundaries.
 parent_id: d-20260423-000000-d015e6
 ---
@@ -89,7 +89,7 @@ Obsolete association files were removed from configured Working and Preview coll
 
 Context's Subject column and its private `reports/works/manifest.json` reader/generator were retired on 2026-10-03. Series-subject retirement then removed the picker choice, field support, detail label/icon and direct report placement branches. Working source inspection found no Series declarations; its 244 Context rows contained 24 Work, 208 Folder and 12 None subjects. The existing complete Works docs-only dry-run rendered all 244 documents with zero proposed writes/removals, zero manifest changes and zero warnings, so no generated reconciliation was required. Tests and browser review remain separately scoped; no test or fixture was changed for this retirement.
 
-The scalar cutover on 2026-10-05 retired generated authoring-subject objects and their production readers together. One complete Working Works docs-only build reconciled its 244 rows without source/media writes or by-ID changes. The current manifest has 25 Work, 208 Folder and 11 unassigned Subjects; one Work-subject row retains an independent authored-thumbnail flag. Public manifest data still requires a separately authorized Publish and user review. Older test fixtures still refer to retired representations; they were neither run nor changed and do not establish scalar-contract coverage.
+The scalar cutover on 2026-10-05 retired generated authoring-subject objects and their production readers together. One complete Working Works docs-only build reconciled its 244 rows without source/media writes or by-ID changes. Its reconciled manifest contained 25 Work, 208 Folder and 11 unassigned Subjects; one Work-subject row retained an independent authored-thumbnail flag. The user subsequently confirmed successful Publish and accepted the local/public result on 2026-10-05. Older test fixtures still refer to retired representations; they were neither run nor changed and do not establish scalar-contract coverage.
 
 ## Questions For The Relationship Review
 
