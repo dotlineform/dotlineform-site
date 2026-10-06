@@ -55,6 +55,9 @@ export function createDocsViewerReportService(options) {
 
   return {
     baseUrl: serviceOptions.baseUrl,
+    readSeriesGalleries: function () {
+      return fetchReportJson("/docs/series-galleries-report", serviceOptions);
+    },
     readWorkspaceLinks: function () {
       return fetchReportJson("/docs/workspace-links", serviceOptions);
     },

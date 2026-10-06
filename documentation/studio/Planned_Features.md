@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260428-000000-f5ff18
 title: Planned Features
 added_date: "2026-04-28 00:00:00"
-last_updated: "2026-10-06 15:37:37"
+last_updated: "2026-10-06 16:00:17"
 summary: This explains the delivery model and workflows to implement new repo and application features.
 ui_status: planned
 parent_id: ""
@@ -146,6 +146,7 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 Store new standalone delivery documents for bounded work that does not need a separate feature parent under `documentation/studio/deliveries/`. Parent them directly to this document and keep implementation state, decisions and completion gates in the delivery. At closeout, transfer lasting details to the durable owner and review whether the delivery and its link should be retained.
 
+- [Series Galleries Report Delivery](deliveries/Series_Galleries_Report_Delivery.md) — Implemented and reviewed; awaiting user manual review and acceptance. Private Refresh-generated data and a local host display all saved Series–Gallery pairs, empty Series and unassociated Galleries, with sortable columns and Gallery Media View links. Initial metadata and the host are generated; restart Docs Viewer to load the new endpoint, then review sorting and Media View/Back.
 - [Work Subfolder Import Delivery](deliveries/Work_Subfolder_Import_Delivery.md) — Complete and accepted on 2026-10-06. New Work imports all direct supported images from a selected subfolder through shared folder confirmation and one awaited creation/media operation; IDs advance above the highest canonical ID and manual import tracking stays with existing reports. Retained for recent-work lookup pending manual archive.
 - [Docs Static Image Conversion Delivery](deliveries/Docs_Static_Image_Conversion_Delivery.md) — Complete and accepted on 2026-10-06. Docs-owned 800px-long-edge WebP conversion is delivered; the user confirmed a successful Add image saved at 800px. Retained for recent-work lookup pending manual archive.
 - [Broken Links Snapshot Delivery](deliveries/Broken_Links_Snapshot_Delivery.md) — Implemented and reviewed; awaiting user manual review and acceptance. Saved scans load on open, Refresh audits and saves, and a progress cursor replaces running messages. Persistence and presentation remain manual review gates.

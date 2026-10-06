@@ -3,6 +3,13 @@ import {
 } from "../shared/docs-viewer-asset-url.js";
 
 const REPORT_LOADERS = {
+  series_galleries: {
+    load: function () {
+      return import("./series-galleries-report.js").then(function (module) {
+        return module.mountSeriesGalleriesReport;
+      });
+    }
+  },
   selected_documents: {
     load: function () {
       return import("./selected-documents-report.js").then(function (module) {

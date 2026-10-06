@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260519-202931-b05d27
 title: Catalogue Indexes And Payloads
 added_date: "2026-05-19 20:29:31"
-last_updated: "2026-09-30 12:44:47"
+last_updated: "2026-10-06 16:00:17"
 parent_id: d-20260401-000000-a11bf3
 
 ---
@@ -23,7 +23,9 @@ Refresh Catalogue owns the complete replaceable consumer output beneath `$DOTLIN
 | `galleries/galleries_index.json` | Compact Gallery identities, titles and member count for Add Media View link search |
 | `series-galleries-index.json` | Exact Series IDs mapped to associated Gallery IDs/current titles, including an empty list for a Series without associations |
 
-Work thumbnails and primary renditions are shared local assets under `$DOTLINEFORM_DOCS_BASE_DIR/assets/works/`, prepared by Save rather than stored in the generated JSON tree. Private Docs Catalogue Works report metadata and Works collection title metadata also live beneath Working generated Catalogue output, but are outside the public Catalogue artifact inventory.
+Work thumbnails and primary renditions are shared local assets under `$DOTLINEFORM_DOCS_BASE_DIR/assets/works/`, prepared by Save rather than stored in the generated JSON tree. Private Catalogue Works and Series–Gallery report metadata also live beneath Working generated Catalogue output, outside the public Catalogue artifact inventory. The retired Works collection title metadata has no current producer or consumer.
+
+`reports/series-galleries/metadata.json` uses `catalogue_series_galleries_report_v1` with a content-versioned header, generation time, row count and `rows`. Each row has `series: {series_id, title} | null` and `gallery: {gallery_id, title} | null`. The producer uses the same in-memory mapping emitted to `series-galleries-index.json`, adds current Series titles from the already validated records, includes every Series with no Galleries and appends every unassociated Gallery. No row has two null cells. [The focused report owner](../../studio/services/catalogue/catalogue_series_galleries_report.py) owns projection and saved-row validation; the existing Catalogue generator writes it during explicit Refresh. It requires neither new public Series files nor a runtime canonical/title join. [Reports](Reports.md) owns display and exact Gallery Media View behavior.
 
 Each Work may have one Series or no Series, and zero or more direct Gallery memberships; empty Series and Galleries remain valid in canonical Catalogue data. The producer reads Gallery identities/titles from canonical `galleries.json` and Work membership from `galleries-by-work.json`. `work.galleries` is always an array of `{gallery_id, title}` entries, ordered by Gallery ID; absent memberships produce `[]`. Gallery records contain `gallery: {gallery_id, title}` and compact Work ID/title/year/year-display `member_works` rows. The separate canonical `series-galleries.json` owns explicit Series–Gallery relevance pairs, independent of Work membership after its one-time seed. Refresh derives `series-galleries-index.json` from those pairs and current Gallery titles, keyed by every valid Series ID and ordered by Series and Gallery ID. It has no Work member lists or per-Work related arrays. No image paths, rendition arrays or canonical inverse membership map are duplicated. There is no Catalogue publication filter, primary-Work requirement, Recent projection or Catalogue Search output in this producer. Generated Series by-ID records and the compact Series member-Works index remain retired; no Gallery relationship is inferred from Series membership.
 

@@ -2,6 +2,13 @@
   "schema": "docs_viewer_reports_v1",
   "reports": [
     {
+      "report_id": "series_galleries",
+      "title": "Series and Galleries",
+      "description": "Lists saved Series–Gallery associations, empty Series and unassociated Galleries.",
+      "loader_id": "series_galleries",
+      "presets": []
+    },
+    {
       "report_id": "selected_documents",
       "title": "Selected Documents",
       "description": "Lists starred documents by last updated date, newest first.",

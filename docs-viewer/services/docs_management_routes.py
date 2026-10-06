@@ -17,6 +17,7 @@ CATALOGUE_MEDIA_CONFIG_PATH = "/docs/catalogue-media-config"
 CATALOGUE_WORK_PATH = "/docs/catalogue-work"
 CATALOGUE_GALLERY_PATH = "/docs/catalogue-gallery"
 CATALOGUE_SERIES_GALLERIES_PATH = "/docs/catalogue-series-galleries"
+SERIES_GALLERIES_REPORT_PATH = "/docs/series-galleries-report"
 CATALOGUE_REGENERATE_PATH = "/docs/catalogue/regenerate"
 SOURCE_CONFIG_SETTINGS_PATH = "/docs/source-config-settings"
 IMPORT_SOURCE_DIRECTORIES_PATH = "/docs/import-source-directories"
@@ -74,6 +75,7 @@ GET_PATHS = (
     CATALOGUE_MEDIA_CONFIG_PATH,
     CATALOGUE_GALLERY_PATH,
     CATALOGUE_SERIES_GALLERIES_PATH,
+    SERIES_GALLERIES_REPORT_PATH,
     SOURCE_CONFIG_SETTINGS_PATH,
     SOURCE_PATH,
     DOCUMENT_LINK_TARGETS_PATH,

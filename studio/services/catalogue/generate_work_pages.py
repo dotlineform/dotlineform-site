@@ -16,6 +16,7 @@ from catalogue.catalogue_media_policy import catalogue_media_policy
 from catalogue.catalogue_output_paths import catalogue_output_workspace, output_path
 from catalogue.catalogue_output_selection import selected_output_paths
 from catalogue.catalogue_series_galleries import CatalogueSeriesGalleries, read_series_galleries, validate_series_galleries
+from catalogue.catalogue_series_galleries_report import METADATA_PATH as SERIES_GALLERIES_REPORT_PATH, series_galleries_report_payload
 from catalogue.catalogue_source import CatalogueSourceRecords, records_from_json_source, validate_source_records
 
 
@@ -71,13 +72,17 @@ def catalogue_payloads(
         gid: {"gallery_id": gid, "title": galleries.galleries[gid]["title"], "work_count": len(works_by_gallery[gid])}
         for gid in sorted(galleries.galleries)
     }, timestamp)
-    payloads["series-galleries-index.json"] = _index("series_galleries", {
+    series_galleries = {
         sid: [
             {"gallery_id": gid, "title": galleries.galleries[gid]["title"]}
             for gid in pairs.pairs_by_series.get(sid, ())
         ]
         for sid in sorted(records.series)
-    }, timestamp)
+    }
+    payloads["series-galleries-index.json"] = _index("series_galleries", series_galleries, timestamp)
+    payloads[SERIES_GALLERIES_REPORT_PATH] = series_galleries_report_payload(
+        records.series, galleries.galleries, series_galleries, timestamp=timestamp,
+    )
     return payloads
 
 
