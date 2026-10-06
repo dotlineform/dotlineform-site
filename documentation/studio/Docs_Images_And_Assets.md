@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260423-155039-e36925
 title: Docs Images And Assets
 added_date: 2026-04-23 15:50:39
-last_updated: "2026-10-04 22:04:08"
+last_updated: "2026-10-06 12:21:35"
 summary: Link existing media, add native-selected images and downloads to an active document, or embed self-contained visuals.
 parent_id: d-20260424-000000-50b63f
 
@@ -86,15 +86,17 @@ Do not put local design documents or working references in `site/`; that tree is
 
 1. Open the target document's Markdown source editor and choose **Add image…** or **Add file…**.
 2. Click the folder-open icon beside the filename field. Select one supported file in the native chooser; its basename fills the field. Empty files and files above 64 MiB are rejected. Cancelling preserves the previous selection.
-3. Enter useful alt text or a link label. For an image, review caption, summary and layout settings; optionally select **Create thumb** for a raster image.
-4. Choose **Add image** or **Add file**. New or byte-identical media proceeds directly; changed bytes using the same identity prompt **Replace** or **Cancel**.
+3. Enter useful alt text or a link label. For an image, review caption, summary and layout settings; optionally select **Create thumb** for a static raster image.
+4. Choose **Add image** or **Add file**. Raster images are converted before comparison. New or byte-identical stored media proceeds directly; changed bytes using the same identity prompt **Replace** or **Cancel**.
 5. Review the inserted source, then use **Save** to persist the document. Watcher generation and reader refresh follow independently.
 
 The exact document/collection owner writes the bytes to its configured shared media namespace. Import staging is unnecessary, and the original selected file stays untouched. The editor never asks the author to choose a provider and does not mutate a public repository or R2 projection.
 
+JPEG, PNG, static WebP and single-frame GIF selections become one proportional WebP with an exactly 800px long edge, scaling up or down without cropping. `My Photo.JPG` becomes `my-photo.webp`; selecting `My Photo.png` addresses that same managed identity. Already-WebP selections use the same conversion. Animated inputs are rejected with a request to choose a static image. SVG and Mermaid retain their vector workflows, and downloads retain their bytes. Optional thumbnails are generated from the original upload as 96px square WebP images. Upscaling cannot recover detail, and fine text or large display areas may look softer at 800px.
+
 Managed materialisation completes and is byte-verified before the logical source reference is inserted. Cancelling or abandoning the later source edit can leave unreferenced media, including an already replaced thumbnail; it does not undo media writes. Public publication remains a separate action.
 
-To edit an existing semantic image token, reopen it in Source. The same filename field initially shows its stored basename; use the adjacent icon to select another file, or edit presentation alone without selecting a file. **Apply** updates the captured occurrence. Image filenames use the normalized selected basename; file naming retains its existing safety normalization. Changed bytes at the same media identity still require replacement confirmation and affect all documents referencing that identity.
+To edit an existing semantic image token, reopen it in Source. The same filename field initially shows its stored basename; use the adjacent icon to select another file, or edit presentation alone without selecting a file. **Apply** updates the captured occurrence. Selecting a raster replacement applies the 800px WebP conversion and normalized stem naming; presentation-only edits leave media alone. Changed bytes at the same media identity still require replacement confirmation and affect all documents referencing that identity. Existing stored images are not migrated or deleted when a token changes.
 
 For Mermaid `.mmd`, **Add image…** renders in temporary storage first, then writes and verifies the canonical source in the configured Mermaid build-source owner and its same-stem managed SVG. The inserted image token references the SVG. After intake, use the diagram-title link in rendered Document Info's **Diagrams** section to edit the canonical source; Docs Watcher republishes only that changed identity, so the existing token and document source do not change.
 

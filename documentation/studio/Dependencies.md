@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260514-180120-b23811
 title: Dependencies
 added_date: "2026-05-14 18:01:20"
-last_updated: "2026-09-07 17:23:59"
+last_updated: "2026-10-06 12:21:35"
 summary: Docs Viewer-specific Python and Node dependency boundaries, including import parsers and repository-side diagram rendering.
 parent_id: d-20260424-000000-50b63f
 
@@ -51,11 +51,13 @@ The current checked-in Python packages are:
 | `lxml` | Parser backend selected by `BeautifulSoup(source_html, "lxml")`. | Using Docs Import for staged HTML. |
 | `bleach` | Sanitization boundary for the Docs HTML import feature. | Using or extending HTML sanitization rules for Docs Import. |
 | `mammoth` | Converts staged Word `.docx` packages to semantic HTML and conversion messages. | Using Docs Import for Word documents. |
-| `Pillow` | Opens, resizes, and writes package images as 800px-max WebP outputs. | Using Docs Import for Markdown packages with local images. |
+| `Pillow` | Opens, resizes, and writes package images as 800px-max WebP outputs; validates native raster uploads and rejects animation before FFmpeg conversion. | Using Docs Import for Markdown packages with local images, or adding/replacing a raster image in Source. |
 | `pytest` | Test runner used by the repo check profiles. | Running Python tests through the repo check workflow. |
 | `markdown-it-py` | CommonMark Markdown renderer selected for Docs Viewer payload generation. | Building or testing the Python Markdown renderer or Docs Viewer payloads. |
 
 `docs-viewer/services/docs_import_docx.py` owns the pinned Mammoth adapter and its repository style/image policy. `docs-viewer/services/docs_html_markdown.py` owns reusable HTML parsing, sanitization, and HTML-to-Markdown conversion. `docs-viewer/services/docs_import_media.py` owns import-media conversion, including Pillow-backed image work. [Docs Import Architecture](Docs_Import_Architecture.md) owns the wider workflow and module boundaries.
+
+`docs-viewer/services/docs_source_image_conversion.py` independently owns native static-image validation and 800px-long-edge display conversion. It uses Pillow for content/animation validation and FFmpeg for resizing and WebP encoding; FFmpeg is now required for native raster addition/replacement even when **Create thumb** is unchecked. [Media And Asset Handling](Media_And_Asset_Handling.md#import-materialization) owns the sizing, encoding, naming and completion contract. Neither this converter nor document thumbnail generation imports Studio media-pipeline settings.
 
 - The shared Python Markdown renderer lives at `studio/shared/python/markdown_renderer.py`. It starts from `MarkdownIt("commonmark")`, enables the built-in `table` rule because authored Studio docs already use Markdown tables, and enables no external renderer plugins.
 - Raw HTML is allowed by default for the current authored content model, but the helper does not sanitize HTML; imported or untrusted HTML must still pass through explicit sanitization boundaries such as `bleach`.

@@ -43,6 +43,7 @@ from docs_staged_media_fragments import (
 from docs_image_tokens import image_text, serialize_image_token
 from docs_svg_sanitizer import SanitizedSvg, sanitize_svg_bytes
 from docs_source_media_upload import MAX_MEDIA_BYTES, MAX_METADATA_BYTES, SourceMediaUpload, validate_upload
+from docs_source_image_conversion import convert_source_image_to_webp
 from docs_document_images import write_document_thumbnail
 from docs_management_document_target import managed_document_target_request, resolve_managed_document_target
 from docs_management_source_service import validate_source_candidate
@@ -106,16 +107,20 @@ def validate_media_identity(value: Any) -> str:
 
 
 def published_media_filename(source_path: Path, *, kind: str) -> str:
-    """Normalize image basenames; preserve already-safe file basenames.
+    """Name converted raster WebP, normalize vector names and preserve safe file names.
 
-    Image identity comes only from the selected source stem and extension.
+    Image identity comes from the selected source stem and the stored format.
     Naming performs no storage lookup; byte comparison and confirmation own
     replacement within the configured collection and media family.
     """
     filename = validate_media_identity(source_path.name)
-    if normalize_media_kind(kind) == MEDIA_FILE and TOKEN_SAFE_MEDIA_FILENAME_PATTERN.fullmatch(filename):
+    kind = normalize_media_kind(kind)
+    if kind == MEDIA_FILE and TOKEN_SAFE_MEDIA_FILENAME_PATTERN.fullmatch(filename):
         return filename
-    return f"{slugify(source_path.stem)}{source_path.suffix.lower()}"
+    suffix = source_path.suffix.lower()
+    if kind == MEDIA_IMAGE and suffix in RASTER_IMAGE_STAGED_SUFFIXES:
+        suffix = ".webp"
+    return f"{slugify(source_path.stem)}{suffix}"
 
 
 def normalize_label_text(value: Any, *, fallback: str) -> str:
@@ -128,15 +133,19 @@ def _prepared_media_source(
     kind: str,
     media_filename: str,
 ) -> Iterator[tuple[Path, Path, SanitizedSvg | None]]:
-    is_svg = normalize_media_kind(kind) == MEDIA_IMAGE and source_path.suffix.lower() == ".svg"
-    if not is_svg and media_filename == source_path.name:
+    is_image = normalize_media_kind(kind) == MEDIA_IMAGE
+    is_svg = is_image and source_path.suffix.lower() == ".svg"
+    is_raster = is_image and source_path.suffix.lower() in RASTER_IMAGE_STAGED_SUFFIXES
+    if not is_svg and not is_raster and media_filename == source_path.name:
         yield source_path, source_path.parent, None
         return
     sanitized = sanitize_svg_bytes(source_path.read_bytes()) if is_svg else None
     with tempfile.TemporaryDirectory(prefix="docs-source-media-publish-") as temp_dir:
         temp_root = Path(temp_dir).resolve()
         prepared_path = temp_root / media_filename
-        if sanitized:
+        if is_raster:
+            convert_source_image_to_webp(source_path, prepared_path)
+        elif sanitized:
             prepared_path.write_bytes(sanitized.bytes)
         else:
             shutil.copyfile(source_path, prepared_path)
