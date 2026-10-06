@@ -34,6 +34,7 @@ import docs_publish  # noqa: E402
 import docs_project_state  # noqa: E402
 import docs_missing_source_files  # noqa: E402
 import docs_uncataloged_files  # noqa: E402
+import docs_folders_without_works  # noqa: E402
 import docs_work_downloads  # noqa: E402
 import docs_work_links  # noqa: E402
 import docs_source_config_settings  # noqa: E402
@@ -169,6 +170,10 @@ def docs_management_post_response(
         payload["dry_run"] = dry_run
         payload["summary_text"] = "Uncataloged Files refreshed."
         return HTTPStatus.OK, payload
+    if path == routes.FOLDERS_WITHOUT_WORKS_PATH:
+        if body:
+            raise ValueError("Folders Without Works request must be empty")
+        return HTTPStatus.OK, docs_folders_without_works.folders_without_works_report(repo_root)
     if path == routes.MISSING_SOURCE_FILES_PATH:
         if body:
             raise ValueError("Missing Source Files request must be empty")

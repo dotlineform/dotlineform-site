@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260513-105343-6de36b
 title: Reports
 added_date: "2026-05-13 10:53:43"
-last_updated: "2026-10-05 15:32:52"
+last_updated: "2026-10-05 23:52:42"
 parent_id: d-20260424-000000-50b63f
 ---
 # Docs Viewer Reports
@@ -212,6 +212,10 @@ Work Document Coverage displays each Series title as plain text. Document covera
 
 The existing `docs-viewer/tests/python/test_docs_uncataloged_files.py::test_report_lists_direct_ordinary_uncataloged_files_only` still asserts the former all-file behavior, including PDF, WAV, extensionless and DOCX rows. It is unreviewed for the image-only contract; updating its fixtures and assertions requires separately approved test work. The image filter received focused Python lint/syntax and source/diff review, without test changes or execution.
 
+`folders_without_works`, hosted by [Folders Without Works](/docs/?doc=d-20261005-234748-d69c84), complements Uncataloged Images and immediate-only Projects with a fresh recursive scan of every configured Work media source root, currently `projects/` and `processing/`. It includes every physical descendant folder with no directly registered canonical Work primary source, independently of folder contents or image extensions. Empty, non-image and ordinary hidden folders remain visible; symbolic links and source-root containers are omitted. Each distinct folder is scanned once. Unavailable roots or unreadable folders fail the whole run visibly rather than producing a partial inventory. No report snapshot, file-content read or filesystem mutation is involved.
+
+Direct membership uses exact canonical Work source declarations and physical folder identity, including filesystem-equivalent case/Unicode spellings. A registered primary source counts even when its filename is missing, provided its folder exists; records without a project folder or primary filename have no source-folder membership. Works below counts canonical Works in scanned descendant folders, accumulated once through the directory tree. Folder and Works below are the only columns; full paths relative to the configured Projects base are sorted A–Z and folder links use the existing confined `/docs/open-local-target` Finder action. Zero identifies a branch without registered Works; a positive count identifies a container with catalogued descendants. Opening and Run/Refresh use an empty-object `POST /docs/folders-without-works`; retained Back navigation keeps its existing mounted results until refreshed. Registry, loader, service and report styles remain local-only, and the ordinary host is explicitly excluded through `unpublishable.json`. Presentation and real Finder opening are manual review; [Testing](Testing.md) owns separately approved regression work.
+
 ## Good Candidates
 
 Good report candidates are compact, read-oriented views over generated docs data:
@@ -243,6 +247,8 @@ Poor report candidates are workflows with writes, long-running operations, broad
 - `docs-viewer/runtime/js/reports/docs-viewer-reports.js`
 - `docs-viewer/runtime/js/reports/docs-viewer-report-presentation.js`
 - `docs-viewer/runtime/js/reports/catalogue-works-report.js`
+- `docs-viewer/runtime/js/reports/folders-without-works-report.js`
+- `docs-viewer/services/docs_folders_without_works.py`
 - `docs-viewer/runtime/js/management/docs-viewer-managed-table-tools.js`
 - `site/docs-viewer/runtime/js/public/docs-viewer-public-document-reports.js`
 - `site/docs-viewer/runtime/js/reports/docs-viewer-public-reports.js`

@@ -39,6 +39,7 @@ MEDIA_METADATA_PATH = "/docs/media-metadata"
 MEDIA_REFRESH_PATH = "/docs/media-refresh"
 OPEN_MEDIA_SOURCE_PATH = "/docs/open-media-source"
 UNCATALOGED_FILES_PATH = "/docs/uncataloged-files"
+FOLDERS_WITHOUT_WORKS_PATH = "/docs/folders-without-works"
 MISSING_SOURCE_FILES_PATH = "/docs/missing-source-files"
 WORK_DOWNLOADS_PATH = "/docs/work-downloads"
 WORK_LINKS_PATH = "/docs/work-links"
@@ -98,6 +99,7 @@ POST_PATHS = (
     OPEN_MEDIA_SOURCE_PATH,
     MEDIA_REFRESH_PATH,
     UNCATALOGED_FILES_PATH,
+    FOLDERS_WITHOUT_WORKS_PATH,
     MISSING_SOURCE_FILES_PATH,
     WORK_DOWNLOADS_PATH,
     WORK_LINKS_PATH,

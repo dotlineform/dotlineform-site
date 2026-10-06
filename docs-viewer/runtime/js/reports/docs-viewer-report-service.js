@@ -109,6 +109,13 @@ export function createDocsViewerReportService(options) {
         requireOkEnvelope: true
       }));
     },
+    runFoldersWithoutWorks: function () {
+      return fetchReportJson("/docs/folders-without-works", Object.assign({}, serviceOptions, {
+        method: "POST",
+        payload: {},
+        requireOkEnvelope: true
+      }));
+    },
     runWorkDownloads: function () {
       return fetchReportJson("/docs/work-downloads", Object.assign({}, serviceOptions, {
         method: "POST",

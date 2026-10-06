@@ -86,6 +86,13 @@
       "presets": []
     },
     {
+      "report_id": "folders_without_works",
+      "title": "Folders Without Works",
+      "description": "Recursively lists folders without directly registered Works, with descendant Work counts.",
+      "loader_id": "folders_without_works",
+      "presets": []
+    },
+    {
       "report_id": "missing_source_files",
       "title": "Missing Source Files",
       "description": "Lists canonical Works whose complete expected source path does not resolve to a file.",
