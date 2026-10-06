@@ -22,6 +22,6 @@ export function projectDocsCollectionDocuments(documents, filterState = {}) {
   return (Array.isArray(documents) ? documents : []).filter(function (documentRecord) {
     return !query || normalizeDocsCollectionFilterValue(
       documentTitle(documentRecord)
-    ).startsWith(query);
+    ).includes(query);
   });
 }

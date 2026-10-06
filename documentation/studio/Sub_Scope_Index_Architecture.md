@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260728-113139-763354
 title: Sub-Scope Index Architecture
 added_date: "2026-07-28 11:31:39"
-last_updated: "2026-10-03 21:27:23"
+last_updated: "2026-10-06 14:05:51"
 summary: Collection-list ownership, exact document identity, registered customisations, retained selection and explicit management adoption.
 parent_id: d-20260801-084127-752d7e
 ---
@@ -65,6 +65,8 @@ import path to its implementation.
 
 A configured collection record with its ordinary fields selects the default. The shared list supplies title search, title-ascending initial order, normal empty/error states and exact document links. Manage adds status and, only for a publish-capable collection, publishability row treatment, plus the title/recency sort toggle, selection and Prepare Package. New uses the main Actions menu. The common exact-document context mounts supported collection contributions in Edit, including Copy Link, Delete, Subject and Finder actions. Unsupported items remain disabled.
 
+Default title search, including Moments and Concepts, matches the query anywhere in the title, consistently with Context. Both title and query use Unicode NFKC normalization, collapsed whitespace and case-insensitive comparison; `test` therefore matches `1 test`. An empty query retains every document. This filters the loaded collection titles without using the overall Docs Viewer Search index.
+
 An optional strict `sub_scope_customisation: {id, settings}` selects one known registry entry. The builder may project only a namespaced `customisation` root and per-row `customisation` data; the access-specific browser registry resolves its module. Unknown, unavailable, or mismatched identities fail as contained report errors and retain the selected collection's error state.
 
 Manage composes the default first and the selected customisation second in separate hosts. The engine and dispatcher consume registered definitions and exact supplied targets. The current `concepts` customisation adds ordered group filtering and optional Concept ID metadata, and `dotlineform_projects` adds folder presentation, metadata, and its exact-detail action. Both are Manage-only; their public routes retain the shared reader.
@@ -124,6 +126,8 @@ feature introduces no title-uniqueness, collision, or deduplication contract.
 Working draft indicators prefix the title text inside the title cell. They are part of the displayed title treatment, not separate columns or canonical `title` data. Their icons remain hidden from assistive technology while the title control's accessible name includes `Draft`.
 
 Checkboxes occupy a dedicated first cell or column before the title. Each checkbox remains a sibling of the title navigation control so selection cannot also navigate or create nested interactive controls. The checkbox cell is contributed only in Working selection mode and is omitted or collapsed otherwise; public rows load no selection module. Catalogue thumbnails appear inside the title navigation control in both Working and public lists. There are no collection-specific column layouts or Subject heading rows.
+
+When Working selection is inactive, the shared management stylesheet hides the outer leading-cell host as well as its checkbox gutter. This prevents an empty grid row from adding space above the thumbnail/title. Every collection row retains equal `0.65rem` top and bottom padding; active selection restores the checkbox column and centers the checkbox beside the thumbnail/title across all local collection reports.
 
 ```text
 selection mode:  [checkbox] [optional Draft icon + title]
