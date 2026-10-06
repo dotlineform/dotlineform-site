@@ -1868,6 +1868,11 @@ main.container:has(> .docsViewer){
   text-decoration: none;
 }
 
+.docsViewer__resultTitle > .docsViewer__listIcon{
+  /* Flex baseline alignment ignores the inline list icon's vertical-align. */
+  transform: translateY(0.125em);
+}
+
 .docsViewer__resultTitle:visited{
   color: var(--docs-viewer-text);
 }
