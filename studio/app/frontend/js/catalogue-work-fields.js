@@ -136,7 +136,9 @@ function embeddedEntriesEqual(a, b, fields) {
 
 function buildWorkDraftFromRecord(record, options = {}) {
   const fields = Array.isArray(options.fields) ? options.fields : WORK_EDITABLE_FIELDS;
-  const draft = Object.fromEntries(fields.map(field => [field.key, formatNumberText(record && record[field.key])]));
+  const draft = Object.fromEntries(fields.map(field => [field.key,
+    field.key.startsWith("project_") ? record?.[field.key] || "" : formatNumberText(record && record[field.key])
+  ]));
   draft.gallery_ids = Array.isArray(record?.gallery_ids) ? record.gallery_ids.slice().sort() : [];
   if (options.downloadFields) draft.downloads = cloneEmbeddedEntries(record && record.downloads, options.downloadFields);
   if (options.linkFields) draft.links = cloneEmbeddedEntries(record && record.links, options.linkFields);
@@ -151,9 +153,9 @@ function buildWorkRecordFromDraft(draft, options = {}) {
 
   record.series_id = normalizeSeriesId(draft.series_id) || null;
   record.media_source_id = normalizeText(draft.media_source_id) || null;
-  record.project_folder = normalizeText(draft.project_folder) || null;
-  record.project_subfolder = normalizeText(draft.project_subfolder) || null;
-  record.project_filename = normalizeText(draft.project_filename) || null;
+  record.project_folder = draft.project_folder || null;
+  record.project_subfolder = draft.project_subfolder || null;
+  record.project_filename = draft.project_filename || null;
   record.title = normalizeText(draft.title) || null;
   record.year = normalizeText(draft.year) ? Number(draft.year) : null;
   record.year_display = normalizeText(draft.year_display) || null;

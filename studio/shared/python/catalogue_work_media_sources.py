@@ -100,7 +100,7 @@ def resolve_work_media_source_root(
 def _safe_relative_path(parts: tuple[Any, ...]) -> Path:
     text_parts: list[str] = []
     for value in parts:
-        text = str(value or "").strip()
+        text = str(value or "")
         if text:
             if "\\" in text or any(ord(character) < 32 or ord(character) == 127 for character in text):
                 raise ValueError("Work media path must be a canonical relative POSIX path")

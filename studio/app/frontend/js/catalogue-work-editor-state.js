@@ -109,6 +109,8 @@ export function createWorkEditorState(elements, options = {}) {
     draft: {},
     pendingAttachments: new Map(),
     regenerateImage: false,
+    /** @type {import("./catalogue-work-batch.js").PendingWorkBatch | null} */
+    pendingWorkBatch: null,
     attachmentLimits: null,
     validationErrors: new Map(),
     mediaConfig: mediaConfigLoader(root),

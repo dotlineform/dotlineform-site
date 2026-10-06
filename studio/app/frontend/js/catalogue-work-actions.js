@@ -1,4 +1,5 @@
 import { buildStudioRouteUrl } from "./studio-config.js";
+import { saveNewWorkBatch } from "./catalogue-work-batch.js";
 import { firstCatalogueValidationMessage } from "./catalogue-editor-message-controller.js";
 import { catalogueSaveCompletionError, catalogueSavedActionError } from "./catalogue-save-result.js";
 import { applyCatalogueDelete, createCatalogueWork, previewCatalogueDelete, saveCatalogueBulkRecords, saveCatalogueWork } from "./catalogue-editor-service-client.js";
@@ -153,6 +154,10 @@ export async function saveCurrentWork(state, context) {
 
 export async function saveNewWork(state, context) {
   if (state.mode !== "new") return;
+  if (state.pendingWorkBatch) {
+    await saveNewWorkBatch(state, context);
+    return;
+  }
   const errors = context.validateDraft();
   context.updateFieldMessages(errors);
   if (errors.size > 0) {

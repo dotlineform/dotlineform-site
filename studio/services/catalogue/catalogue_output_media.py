@@ -69,7 +69,7 @@ def complete_catalogue_media(
         source, reason, base, error = media.resolve_work_media_source(records, item_id, env=env)
         if error or reason or source is None or base is None or not source.is_file():
             raise ValueError(f"{item_id}: {error or reason or 'source media file is missing'}")
-        force = item_id in force_image_ids or (
+        force = old is None or item_id in force_image_ids or (
             old is not None and any(old.get(field) != record.get(field) for field in MEDIA_SOURCE_FIELDS)
         )
         tasks.append(media.build_local_media_task(

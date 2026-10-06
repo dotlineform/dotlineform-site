@@ -3,6 +3,7 @@ const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
   deletePreview: "/studio/api/catalogue/delete-preview",
   deleteApply: "/studio/api/catalogue/delete-apply",
   createWork: "/studio/api/catalogue/work/create",
+  createWorkBatch: "/studio/api/catalogue/work/create-batch",
   saveWork: "/studio/api/catalogue/work/save",
   createSeries: "/studio/api/catalogue/series/create",
   saveSeries: "/studio/api/catalogue/series/save",

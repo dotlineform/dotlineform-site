@@ -137,6 +137,7 @@ async function deleteEmbeddedEntry(state, kind, index) {
 }
 
 function draftHasChanges(state) {
+  if (state.pendingWorkBatch) return true;
   if (state.mode !== "bulk" && (state.regenerateImage || state.pendingAttachments.size)) return true;
   return catalogueDraftHasChanges({
     mode: state.mode,
@@ -162,12 +163,13 @@ function validateDraft(state) {
   const errors = new Map();
   const active = key => state.mode !== "bulk" || state.bulkTouchedFields.has(key);
   for (const field of Object.values(WORK_FIELD_DEFINITIONS)) {
+    if (state.pendingWorkBatch && ["work_id", "title"].includes(field.key)) continue;
     if (isWorkFieldRequired(field, state.mode) && !normalizeText(state.draft[field.key])) {
       // Missing required values block Save; bold labels convey the requirement.
       errors.set(field.key, "");
     }
   }
-  if (state.mode === "new") {
+  if (state.mode === "new" && !state.pendingWorkBatch) {
     const workId = normalizeWorkId(state.draft.work_id);
     if (!workId) errors.set("work_id", "");
     else if (state.workSearchById.has(workId)) errors.set("work_id", "Work id already exists.");

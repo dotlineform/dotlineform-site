@@ -14,7 +14,7 @@ from local_env import runtime_env
 def _source_component(body: Mapping[str, Any], field: str) -> str:
     value = body.get(field)
     if (
-        not isinstance(value, str) or not value or value != value.strip()
+        not isinstance(value, str) or not value
         or value in {".", ".."} or "/" in value or "\\" in value
     ):
         raise ValueError(f"{field} must be one exact source path segment")

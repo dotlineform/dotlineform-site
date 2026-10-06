@@ -58,6 +58,7 @@ STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
         "delete_preview": "/studio/api/catalogue/delete-preview",
         "delete_apply": "/studio/api/catalogue/delete-apply",
         "create_work": "/studio/api/catalogue/work/create",
+        "create_work_batch": "/studio/api/catalogue/work/create-batch",
         "save_work": "/studio/api/catalogue/work/save",
         "create_series": "/studio/api/catalogue/series/create",
         "save_series": "/studio/api/catalogue/series/save",

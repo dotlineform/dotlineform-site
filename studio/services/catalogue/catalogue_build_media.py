@@ -69,7 +69,7 @@ def display_source_path(path: Path | None, projects_base_dir: Path | None = None
 
 
 def normalize_filename(value: Any) -> str:
-    text = str(value or "").strip()
+    text = str(value or "")
     if not text:
         return ""
     path = Path(text)
@@ -145,8 +145,8 @@ def resolve_work_media_source(
         raise ValueError(f"work_id not found: {work_id}")
 
     source_root, projects_base_dir, availability_error = resolve_record_work_media_root(work_record, env=env)
-    project_folder = str(work_record.get("project_folder") or "").strip()
-    project_subfolder = str(work_record.get("project_subfolder") or "").strip()
+    project_folder = str(work_record.get("project_folder") or "")
+    project_subfolder = str(work_record.get("project_subfolder") or "")
     project_filename = normalize_filename(work_record.get("project_filename"))
     if project_folder and project_filename and source_root is not None:
         try:

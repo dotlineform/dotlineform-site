@@ -12,6 +12,7 @@ from catalogue.catalogue_series_service import series_create_payload, series_sav
 from catalogue.catalogue_gallery_service import mutate_gallery_payload
 from catalogue.catalogue_service_context import CatalogueWriteContext, build_catalogue_write_context
 from catalogue.catalogue_work_service import work_create_payload, work_save_payload
+from catalogue.catalogue_work_batch_service import work_batch_create_payload
 from catalogue.catalogue_output_service import complete_saved_catalogue_edit
 from catalogue.catalogue_source import records_from_json_source
 from catalogue.catalogue_work_attachments import WorkAttachment, bind_work_attachments
@@ -20,6 +21,7 @@ from catalogue.catalogue_work_attachments import WorkAttachment, bind_work_attac
 SERVICE_POST_PATHS = {
     "/bulk-save",
     "/work/create",
+    "/work/create-batch",
     "/work/save",
     "/series/create",
     "/series/save",
@@ -47,6 +49,10 @@ def handle_catalogue_post(
     elif attachments or "regenerate_image" in body:
         raise ValueError("Media requests belong to single Work create/Save")
     context = build_catalogue_write_context(repo_root, dry_run=dry_run)
+    if api_path == "/work/create-batch":
+        payload, previous, current = work_batch_create_payload(context, body)
+        complete_saved_catalogue_edit(context, payload, previous, current_records=current)
+        return HTTPStatus.OK, payload
     previous = records_from_json_source(context.source_dir) if api_path != "/delete-preview" else None
     status, payload = _dispatch_mutation(context, api_path, body)
     if previous is not None:

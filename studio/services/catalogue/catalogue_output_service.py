@@ -34,16 +34,23 @@ def changed_work_media_ids(
 def complete_saved_catalogue_edit(
     context: CatalogueWriteContext, response: dict[str, Any], previous: CatalogueSourceRecords,
     *, attachment_files: Mapping[str, bytes] | None = None, regenerate_image: bool = False,
+    current_records: CatalogueSourceRecords | None = None,
 ) -> None:
-    """Preserve canonical success when local media or response completion fails."""
+    """Preserve canonical success when local media or response completion fails.
+
+    A creation owner may pass its already validated current records to avoid an
+    initial reread. Media promotion still owns dimensions/revisions, so editor
+    completion reads their final canonical state after media has been attempted.
+    """
     if context.dry_run or not response.get("ok"):
         return
     response["saved"] = True
     failures: list[str] = []
-    current: CatalogueSourceRecords | None = None
+    current = current_records
     media_attempted = False
     try:
-        current = records_from_json_source(context.source_dir)
+        if current is None:
+            current = records_from_json_source(context.source_dir)
         candidate_ids = {
             key for key in (
                 response.get("work_id"), *response.get("selected_ids", ()), *response.get("changed_work_ids", ()),
@@ -94,3 +101,7 @@ def complete_saved_catalogue_edit(
             "status": "failed", "error": "; ".join(failures),
             "message": "Data saved, but local Save completion did not finish.",
         }
+        if response.get("created_ids"):
+            response["save_completion"]["message"] = (
+                "Works created (" + ", ".join(response["created_ids"]) + "), but local Save completion did not finish."
+            )

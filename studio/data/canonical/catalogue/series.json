@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_source_series_v2",
-    "count": 139
+    "count": 140
   },
   "series": {
     "001": {
@@ -559,6 +559,10 @@
     "143": {
       "series_id": "143",
       "title": "simultaneous equations"
+    },
+    "144": {
+      "series_id": "144",
+      "title": "test"
     }
   }
 }

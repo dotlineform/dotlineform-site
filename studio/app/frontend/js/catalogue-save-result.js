@@ -8,6 +8,8 @@ export function catalogueSaveCompletionError(response) {
 /** Keep a confirmed mutation distinct from a later editor refresh failure. */
 export function catalogueSavedActionError(response, error) {
   if (!response?.saved) return "";
-  const message = catalogueSaveCompletionError(response) || "Changes saved, but the editor could not refresh.";
+  const message = catalogueSaveCompletionError(response) || (response.created_ids?.length
+    ? `Works created (${response.created_ids.join(", ")}), but the editor could not refresh.`
+    : "Changes saved, but the editor could not refresh.");
   return `${message} ${error?.message || ""}`.trim();
 }

@@ -80,6 +80,7 @@ export function syncPendingAttachmentNames(state) {
 export function clearWorkMediaIntent(state) {
   state.pendingAttachments = new Map();
   state.regenerateImage = false;
+  state.pendingWorkBatch = null;
   if (state.attachmentInput) state.attachmentInput.value = "";
 }
 

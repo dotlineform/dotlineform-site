@@ -264,7 +264,7 @@ export function bindWorkSelectionControls(state, context) {
   const { clearButton } = mountSearchField(state.searchNode);
   state.workSearchClearButton = clearButton;
   clearButton.addEventListener("click", () => {
-    if (state.mode !== "new" || state.searchNode.disabled || state.searchNode.readOnly) return;
+    if (state.mode !== "new" || state.searchNode.disabled) return;
     context.setEmptySearchMode();
   });
   const searchController = bindSearchList(state.searchNode, state.popupListNode, {

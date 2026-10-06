@@ -41,7 +41,6 @@ from catalogue.catalogue_source import (  # noqa: E402
     DEFAULT_SOURCE_DIR,
     SOURCE_FILES,
     load_json_file,
-    normalize_text,
     records_from_json_source,
     slug_id,
 )
@@ -82,6 +81,7 @@ def catalogue_get_payload(repo_root: Path, api_path: str, query: Mapping[str, li
                 "delete-preview",
                 "delete-apply",
                 "work/create",
+                "work/create-batch",
                 "work/save",
                 "series/create",
                 "series/save",
@@ -233,13 +233,13 @@ def query_text(query: Mapping[str, list[str]]) -> str:
 
 
 def normalize_project_media_segment(value: str, *, field: str, required: bool) -> str:
-    text = normalize_text(value)
+    text = value
     if not text:
         if required:
             raise ValueError(f"{field} is required")
         return ""
     path = Path(text)
-    if path.is_absolute() or len(path.parts) != 1:
+    if path.is_absolute() or len(path.parts) != 1 or "\\" in text:
         raise ValueError(f"{field} must be a single path segment")
     part = path.parts[0]
     if part in {"", ".", ".."} or part.startswith("."):

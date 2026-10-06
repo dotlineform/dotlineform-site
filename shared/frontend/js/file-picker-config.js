@@ -9,6 +9,7 @@ export const FILE_PICKER_DEFAULT_CONFIG = Object.freeze({
   }),
   text: Object.freeze({
     modalTitle: "select file",
+    folderModalTitle: "Select folder",
     cancelButton: "cancel",
     confirmButton: "ok",
     folderLabel: "folder",
@@ -23,6 +24,8 @@ export const FILE_PICKER_DEFAULT_CONFIG = Object.freeze({
     subfolderUnavailable: "Already used.",
     fileNotFound: "file not found",
     folderRequired: "Select a folder.",
+    subfolderRequired: "Select a subfolder.",
+    folderFilesRequired: "The folder must finish loading and contain supported images.",
     fileRequired: "Select a file."
   })
 });

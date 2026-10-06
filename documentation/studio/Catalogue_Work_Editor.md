@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260422-000000-45a776
 title: Catalogue Work Editor
 added_date: "2026-04-22 00:00:00"
-last_updated: "2026-10-05 21:58:47"
+last_updated: "2026-10-06 15:30:37"
 parent_id: d-20260423-000000-d015e6
 
 ---
@@ -11,7 +11,7 @@ parent_id: d-20260423-000000-d015e6
 
 ## What It Does
 
-Use `/studio/catalogue-work/` to create, find, edit or delete canonical Works, including images converted from former Details. Work downloads, links and project-media selection belong to this editor. The Detail browser and section-entry workflow are retired.
+Use `/studio/catalogue-work/` to create, find, edit or delete canonical Works, including a batch from one project subfolder and images converted from former Details. Work downloads, links and project-media selection belong to this editor. The Detail browser and section-entry workflow are retired.
 
 - `?work=<work_id>` opens one Work.
 - `?mode=new` starts a new canonical record; optional `?series=<series_id>` preselects a Series.
@@ -43,6 +43,18 @@ A Work must belong to exactly one Series. Selecting another Series reassigns it;
 
 There is no Work publication state, Publish/Unpublish action or Catalogue Drafts route. Save and Refresh Catalogue are separate awaited actions; there is no media-publish control. Refresh reconciles generated Catalogue readers and private Docs metadata, without publishing documents. The local API must be available; browser edits are not queued for offline saving.
 
+## Import A Project Subfolder
+
+In New Work mode, the **Open subfolder** icon button beside project subfolder opens the shared **Select folder** modal. It uses the same folder-open artwork and icon-button styling as Choose image; its tooltip and accessible label remain **Open subfolder**. Choose a project folder and one direct subfolder. The existing file list shows every supported direct image as read-only filename text. **OK** remains unavailable during loading, after failure, for the project parent or for an empty subfolder. Cancel leaves the draft unchanged. Source originals stay in their configured Projects or Processing locations.
+
+Confirmation retains the loaded filenames internally and updates the existing folder fields. It adds no pending list, count or confirmation. Work ID and Title become read-only placeholders because each Work gets a server-assigned ID and its own filename-stem title. Series, Year and Year display remain required; Galleries and other form metadata apply to every addition. Choosing an individual image returns to ordinary single creation; changing media source releases the pending batch. Cancel new Work and normal draft-discard protection also release it.
+
+**Save** makes one awaited batch request. The server orders exact filenames deterministically, assigns consecutive five-digit Work IDs starting one above the highest current canonical Work ID and validates all shared records and memberships before one combined canonical transaction. Lower unused IDs may be reserved, so batch creation leaves those gaps untouched; fill one deliberately through ordinary single-Work creation when needed. An empty Catalogue starts at `00001`; a batch that would exceed `99999` fails before writing and does not fall back to gaps. Save then completes normal primary renditions and thumbnails for all created Works. The confirmed list defines membership through Save: no second directory listing occurs, new files require reopening the picker, and missing/unreadable images produce visible incomplete media completion after canonical creation. Source names remain exact, including case differences and surrounding spaces; path confinement and symlink rejection still apply when images are accessed.
+
+Successful creation adds every returned Work to the live editor search and member-list data and opens the first Work for individual editing. Canonical success releases the pending creation batch even if media or editor completion fails. The failure names the created IDs and unfinished step; correct the cause and use ordinary individual Work editing or confirmed image regeneration. The editor never automatically recreates the batch. Validation errors before persistence retain it. If the response is unavailable, the editor reports an unconfirmed outcome; inspect canonical Works before another user-initiated batch Save.
+
+Every import includes every supported direct image, including a repeated import of the same folder. There is no duplicate-image detection, source-path comparison, hash or import ledger. Track completed imports with the existing reports. Refresh Catalogue remains a separate action.
+
 ## Gallery And Series Definitions
 
 Gallery pills and search results display titles only. The Gallery dropdown shares the Series dropdown's popup and result-row styling.
@@ -69,7 +81,7 @@ Bulk Save uses one request and one combined canonical transaction. Each selected
 
 Work deletion uses a server preview and confirmation, then repeats validation and checks the Work revision before applying. It deletes the canonical Work and its Gallery membership entry in the same transaction. Refresh Catalogue later removes its generated record and updates indexes and former Series/Gallery memberships. Shared or remote media cleanup is separate. Successful deletion returns to the Work editor; an incomplete local response retains the deleted canonical state. Deletion does not write retired Detail storage.
 
-Bulk Work creation from selected images remains a separate capability. No Detail-specific browser, modal or service is retained for that future work. Shared file-picker, record-list, modal and media-preview components remain available.
+Subfolder batch creation uses New Work mode; saved bulk editing remains limited to Gallery memberships. Shared file-picker, record-list, modal and media-preview components remain available without restoring Detail-specific browsers, modals or services.
 
 ## Media And Runtime Ownership
 

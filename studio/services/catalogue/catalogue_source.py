@@ -437,6 +437,12 @@ def normalize_source_record(
             entries = normalize_links(value)
             if entries:
                 out[field] = entries
+        elif field in {"project_folder", "project_subfolder", "project_filename"}:
+            # Source path components are identities, not prose to trim or unquote.
+            if value is not None and value != "":
+                out[field] = value
+            elif field not in OMIT_EMPTY_SOURCE_FIELDS:
+                out[field] = None
         elif field in {"sort_order", "section_order", MEDIA_VERSION_FIELD}:
             normalized_int = normalize_optional_int(value)
             if normalized_int is not None:

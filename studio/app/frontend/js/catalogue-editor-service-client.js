@@ -33,6 +33,11 @@ export function createCatalogueWork(payload, media) {
   return postWorkSave(CATALOGUE_WRITE_ENDPOINTS.createWork, payload, media);
 }
 
+/** Await creation and normal media completion for exactly the confirmed filenames. */
+export function createCatalogueWorkBatch(payload) {
+  return postJson(CATALOGUE_WRITE_ENDPOINTS.createWorkBatch, payload);
+}
+
 /** Await a revision-checked Work Save and its local media completion in one request.
  * @param {Object} payload Canonical draft, Work revision and Gallery revisions.
  * @param {WorkSaveMedia} media Draft-held media operations submitted with this Save.
@@ -84,7 +89,8 @@ export function readCatalogueRefreshStatus() {
 function queryString(params = {}) {
   const search = new URLSearchParams();
   Object.entries(params).forEach(([key, value]) => {
-    const text = String(value == null ? "" : value).trim();
+    const raw = String(value == null ? "" : value);
+    const text = key.startsWith("project_") ? raw : raw.trim();
     if (text) search.set(key, text);
   });
   return search.toString();

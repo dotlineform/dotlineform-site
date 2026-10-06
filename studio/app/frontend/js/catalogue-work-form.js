@@ -6,6 +6,7 @@ import { bindSearchList } from "/shared/frontend/js/search-list.js";
 import { WORK_EDITABLE_FIELDS as EDITABLE_FIELDS, WORK_FIELD_DEFINITIONS, WORK_READONLY_FIELDS as READONLY_FIELDS, isWorkFieldRequired, normalizeSeriesId, normalizeText } from "./catalogue-work-fields.js";
 import {
   openProjectMediaPickerForCurrentDraft,
+  openProjectMediaFolderForCurrentDraft,
   resetProjectMediaFolders
 } from "./catalogue-project-media-picker.js";
 
@@ -253,6 +254,11 @@ function renderMediaSourceField(field, fieldsNode, state, options) {
     const storedSourceId = nextSourceId === config.defaultSourceId ? "" : nextSourceId;
     state.draft.media_source_id = storedSourceId;
     state.regenerateImage = false;
+    if (state.pendingWorkBatch) {
+      state.pendingWorkBatch = null;
+      state.draft.work_id = state.nextSuggestedWorkId;
+      state.searchNode.value = state.draft.work_id;
+    }
     input.value = storedSourceId;
     ["project_folder", "project_subfolder", "project_filename"].forEach((fieldKey) => {
       state.draft[fieldKey] = "";
@@ -308,6 +314,23 @@ function renderProjectMediaDisplayField(field, fieldsNode, state, options) {
   input.dataset.displayTarget = display.id;
   input.type = "hidden";
   control.appendChild(input);
+
+  if (field.key === "project_subfolder") {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "studioUi__iconButton";
+    button.append(createStudioIcon(document, "folder-open"));
+    button.title = "Open subfolder";
+    button.setAttribute("aria-label", "Open subfolder");
+    button.addEventListener("click", event => {
+      event.stopPropagation();
+      openProjectMediaFolderForCurrentDraft(state, options).catch(error => {
+        console.warn("catalogue_work_form: failed to open project folder picker", error);
+      });
+    });
+    control.appendChild(button);
+    state.projectMediaFolderButton = button;
+  }
 
   if (field.key === "project_filename") {
     const button = document.createElement("button");
@@ -454,7 +477,7 @@ export function applyWorkFormText(state, options = {}) {
 }
 
 export function setFieldNodeValue(node, value) {
-  const text = normalizeText(value);
+  const text = node.dataset.field?.startsWith("project_") ? value || "" : normalizeText(value);
   if ("value" in node) {
     node.value = text;
     if (node.dataset && node.dataset.displayTarget) {
@@ -481,7 +504,7 @@ export function applyDraftToInputs(state) {
       renderSeriesPicker(state);
       return;
     }
-    setFieldNodeValue(node, normalizeText(state.draft[field.key]));
+    setFieldNodeValue(node, field.key.startsWith("project_") ? state.draft[field.key] || "" : normalizeText(state.draft[field.key]));
   });
   updateMediaSourceButton(state);
 }
@@ -514,16 +537,20 @@ export function setModeFieldAvailability(state) {
     else link.href = "#";
   });
   state.fieldNodes.forEach((node, key) => {
-    if ("readOnly" in node) node.readOnly = isBulk;
+    const batchAssigned = Boolean(state.pendingWorkBatch) && key === "title";
+    if ("readOnly" in node) node.readOnly = isBulk || batchAssigned;
     if ("disabled" in node) node.disabled = busy || (isBulk && node.tagName === "SELECT");
-    const required = isWorkFieldRequired(WORK_FIELD_DEFINITIONS[key], state.mode);
+    const required = !batchAssigned && isWorkFieldRequired(WORK_FIELD_DEFINITIONS[key], state.mode);
+    if (key === "title") node.placeholder = batchAssigned ? "From filenames" : "";
     const label = node.closest(".catalogueWorkForm__field")?.querySelector(":scope > .studioForm__label");
     label?.classList.toggle("studioForm__label--required", required);
     const control = key === "series_id" ? state.seriesPicker.searchInput : node;
     if (required) control.setAttribute("aria-required", "true");
     else control.removeAttribute("aria-required");
   });
-  const workIdRequired = isWorkFieldRequired(WORK_FIELD_DEFINITIONS.work_id, state.mode);
+  const workIdRequired = !state.pendingWorkBatch && isWorkFieldRequired(WORK_FIELD_DEFINITIONS.work_id, state.mode);
+  state.searchNode.readOnly = Boolean(state.pendingWorkBatch);
+  if (state.mode === "new") state.searchNode.placeholder = state.pendingWorkBatch ? "Assigned on Save" : "new work id";
   for (const label of state.searchNode.labels) label.classList.toggle("studioForm__label--required", workIdRequired);
   if (workIdRequired) state.searchNode.setAttribute("aria-required", "true");
   else state.searchNode.removeAttribute("aria-required");
@@ -537,6 +564,10 @@ export function setModeFieldAvailability(state) {
   }
   if (state.projectMediaChooseButton) {
     state.projectMediaChooseButton.disabled = state.mode === "bulk" || state.isSaving || state.isBuilding || state.isDeleting;
+  }
+  if (state.projectMediaFolderButton) {
+    state.projectMediaFolderButton.hidden = state.mode !== "new";
+    state.projectMediaFolderButton.disabled = busy || !state.serverAvailable;
   }
   if (state.mediaSourceButton) {
     state.mediaSourceButton.disabled = state.mode === "bulk"

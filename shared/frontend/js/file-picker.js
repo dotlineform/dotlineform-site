@@ -28,30 +28,25 @@ function escapeHtml(value) {
     .replace(/'/g, "&#39;");
 }
 
-function optionValue(record, keys) {
-  if (record && typeof record === "object") {
-    for (const key of keys) {
-      const value = normalizeText(record[key]);
-      if (value) return value;
-    }
-  }
-  return normalizeText(record);
+function optionValue(record, key) {
+  const value = record && typeof record === "object" ? record[key] : record;
+  return typeof value === "string" ? value : "";
 }
 
 function folderValue(record) {
-  return optionValue(record, ["folder", "project_folder", "value"]);
+  return optionValue(record, "folder");
 }
 
 function subfolderValue(record) {
-  return optionValue(record, ["subfolder", "project_subfolder", "value"]);
+  return optionValue(record, "subfolder");
 }
 
 function fileValue(record) {
-  return optionValue(record, ["filename", "file", "value"]);
+  return optionValue(record, "filename");
 }
 
 function fileStem(filename) {
-  const value = normalizeText(filename);
+  const value = filename;
   const dotIndex = value.lastIndexOf(".");
   return dotIndex > 0 ? value.slice(0, dotIndex) : value;
 }
@@ -61,9 +56,8 @@ function normalizeList(records, valueForRecord) {
   const values = [];
   (Array.isArray(records) ? records : []).forEach((record) => {
     const value = valueForRecord(record);
-    const key = value.toLowerCase();
-    if (!value || seen.has(key)) return;
-    seen.add(key);
+    if (!value || seen.has(value)) return;
+    seen.add(value);
     values.push(value);
   });
   return values;
@@ -105,7 +99,7 @@ function listboxOptionId(listboxNode, index) {
 
 function listboxItem(item) {
   if (item && typeof item === "object") {
-    const value = normalizeText(item.value);
+    const value = typeof item.value === "string" ? item.value : "";
     return {
       className: normalizeText(item.className),
       disabled: Boolean(item.disabled),
@@ -114,7 +108,7 @@ function listboxItem(item) {
       value
     };
   }
-  const value = normalizeText(item);
+  const value = typeof item === "string" ? item : "";
   return { className: "", disabled: false, label: value, title: "", value };
 }
 
@@ -122,7 +116,7 @@ function renderListboxOptions(listboxNode, options, selectedValue, renderOptions
   if (!listboxNode) return;
   const items = (Array.isArray(options) ? options : []).map(listboxItem);
   const multipleSelected = renderOptions.multipleSelected instanceof Set ? renderOptions.multipleSelected : null;
-  const selected = multipleSelected ? "" : normalizeText(selectedValue);
+  const selected = multipleSelected ? "" : selectedValue;
   const selectedIndex = multipleSelected
     ? items.findIndex((item) => !item.disabled)
     : items.findIndex((item) => item.value === selected && !item.disabled);
@@ -151,7 +145,7 @@ function renderListboxOptions(listboxNode, options, selectedValue, renderOptions
 }
 
 function selectedListboxValue(listboxNode) {
-  return normalizeText(listboxNode && listboxNode.dataset.selectedValue);
+  return listboxNode?.dataset.selectedValue || "";
 }
 
 function listboxItemAt(listboxNode, index) {
@@ -231,7 +225,7 @@ function disabledValueSet(values) {
 }
 
 function subfolderListOptions(folder, subfolders, config, disabledSubfolders = new Set()) {
-  const parentFolder = normalizeText(folder);
+  const parentFolder = folder;
   const subfolderConfig = config && config.subfolders ? config.subfolders : {};
   const prefix = normalizeText(subfolderConfig.prefix) || "⨽";
   const disabledTitle = filePickerText(config, "subfolderUnavailable");
@@ -322,6 +316,16 @@ function setPrimaryDisabled(primaryNode, disabled) {
   if (primaryNode) primaryNode.disabled = Boolean(disabled);
 }
 
+/**
+ * Own bounded folder navigation and transient selection. Folder mode returns the
+ * complete loaded filename list; rows are informational and never select files.
+ * Loaders use strings or direct folder/subfolder/filename records. The caller
+ * owns persistence and validates returned relative identities when used.
+ * @param {HTMLElement} rootNode Mounted picker host.
+ * @param {Object} options Loader callbacks, modal controls and initial selection.
+ * @param {"single" | "multiple" | "folder"} [options.selectionMode="single"] Confirmation contract.
+ * @param {boolean} [options.requireSubfolder=false] Limit folder confirmation to a direct subfolder.
+ */
 export function createFilePicker(rootNode, options = {}) {
   if (!rootNode) {
     throw new Error("createFilePicker requires a root node");
@@ -329,6 +333,7 @@ export function createFilePicker(rootNode, options = {}) {
   const id = normalizeText(options.id) || `sharedFilePicker-${++pickerId}`;
   const config = createFilePickerConfig(options.config);
   const multipleFiles = options.selectionMode === "multiple";
+  const folderSelection = options.selectionMode === "folder";
   const fileOptions = options.files && typeof options.files === "object" ? options.files : {};
   const selectAllEnabled = multipleFiles && fileOptions.selectAll !== false;
   const defaultFileSelection = normalizeText(fileOptions.defaultSelection || (multipleFiles ? "all" : "first"));
@@ -338,15 +343,18 @@ export function createFilePicker(rootNode, options = {}) {
   const initial = options.initialSelection || {};
   const selected = {
     scope: normalizeText(initial.scope || options.scope),
-    folder: normalizeText(initial.folder || initial.project_folder),
-    subfolder: normalizeText(initial.subfolder || initial.project_subfolder),
-    filename: normalizeText(initial.filename || initial.project_filename),
-    filenames: new Set(Array.isArray(initial.filenames) ? initial.filenames.map(normalizeText).filter(Boolean) : [])
+    folder: initial.folder || "",
+    subfolder: initial.subfolder || "",
+    filename: initial.filename || "",
+    filenames: new Set(Array.isArray(initial.filenames) ? initial.filenames.filter(value => typeof value === "string" && value) : [])
   };
   const state = {
     folders: [],
     subfolders: [],
-    files: []
+    files: [],
+    loading: false,
+    filesLoaded: false,
+    loadId: 0
   };
 
   const folderInput = rootNode.querySelector('[data-role="file-picker-folder-input"]');
@@ -359,6 +367,7 @@ export function createFilePicker(rootNode, options = {}) {
   const deselectAllNode = rootNode.querySelector('[data-role="file-picker-deselect-all"]');
   const selectionCountNode = rootNode.querySelector('[data-role="file-picker-selection-count"]');
   const primaryNode = options.primaryNode || null;
+  if (folderSelection) fileNode.setAttribute("role", "list");
 
   function setStatus(kind, message) {
     const text = normalizeText(message);
@@ -372,14 +381,18 @@ export function createFilePicker(rootNode, options = {}) {
   function setListboxesDisabled(disabled) {
     setListboxDisabled(subfolderNode, Boolean(disabled));
     setListboxDisabled(fileNode, Boolean(disabled));
+    if (folderSelection) fileNode.tabIndex = -1;
   }
 
   function selectedFileCount() {
+    if (folderSelection) return state.files.length;
     return multipleFiles ? selected.filenames.size : (selected.filename ? 1 : 0);
   }
 
   function setPrimaryForFileSelection() {
-    setPrimaryDisabled(primaryNode, selectedFileCount() <= 0);
+    const invalidFolder = folderSelection && options.requireSubfolder && !selected.subfolder;
+    setPrimaryDisabled(primaryNode, state.loading || !state.filesLoaded || invalidFolder || selectedFileCount() <= 0
+      || (folderInput && folderInput.value !== selected.folder));
   }
 
   function updateFileSelectionToolbar() {
@@ -395,6 +408,11 @@ export function createFilePicker(rootNode, options = {}) {
   }
 
   function renderFileList() {
+    if (folderSelection) {
+      fileNode.innerHTML = state.files.map(filename => `<div class="sharedFilePicker__option" role="listitem"><span class="sharedFilePicker__optionText">${escapeHtml(filename)}</span></div>`).join("");
+      setPrimaryForFileSelection();
+      return;
+    }
     if (multipleFiles) {
       renderListboxOptions(fileNode, state.files, "", { multipleSelected: selected.filenames });
       updateFileSelectionToolbar();
@@ -406,8 +424,9 @@ export function createFilePicker(rootNode, options = {}) {
   }
 
   function resetFileSelectionForLoadedFiles(loadOptions = {}) {
+    if (folderSelection) return false;
     if (!multipleFiles) {
-      const requestedFilename = normalizeText(loadOptions.filename);
+      const requestedFilename = loadOptions.filename || "";
       if (requestedFilename && state.files.includes(requestedFilename)) {
         selected.filename = requestedFilename;
       } else if (loadOptions.autoSelectFirst) {
@@ -418,7 +437,7 @@ export function createFilePicker(rootNode, options = {}) {
       return Boolean(requestedFilename && !selected.filename);
     }
 
-    const requestedFilenames = Array.isArray(loadOptions.filenames) ? loadOptions.filenames.map(normalizeText).filter(Boolean) : [];
+    const requestedFilenames = Array.isArray(loadOptions.filenames) ? loadOptions.filenames.filter(value => typeof value === "string" && value) : [];
     selected.filenames.clear();
     requestedFilenames.forEach((filename) => {
       if (state.files.includes(filename)) selected.filenames.add(filename);
@@ -457,13 +476,15 @@ export function createFilePicker(rootNode, options = {}) {
       scope: selected.scope,
       query: ""
     });
-    const records = Array.isArray(payload) ? payload : payload && (payload.folders || payload.project_folders);
+    const records = Array.isArray(payload) ? payload : payload && payload.folders;
     state.folders = normalizeList(records, folderValue);
     return state.folders;
   }
 
   async function loadFilesForSelection(loadOptions = {}) {
-    const folder = normalizeText(selected.folder);
+    const folder = selected.folder;
+    const loadId = ++state.loadId;
+    state.filesLoaded = false;
     if (!folder || typeof options.loadFiles !== "function") {
       state.subfolders = [];
       state.files = [];
@@ -474,6 +495,7 @@ export function createFilePicker(rootNode, options = {}) {
       return;
     }
 
+    state.loading = true;
     setPrimaryDisabled(primaryNode, true);
     setListboxesDisabled(true);
     try {
@@ -483,8 +505,11 @@ export function createFilePicker(rootNode, options = {}) {
         subfolder: selected.subfolder,
         query: ""
       });
+      if (loadId !== state.loadId) return;
       state.subfolders = normalizeList(payload && payload.subfolders, subfolderValue);
       state.files = normalizeList(payload && payload.files, fileValue);
+      state.loading = false;
+      state.filesLoaded = true;
 
       const missingRequestedFile = resetFileSelectionForLoadedFiles(loadOptions);
       if (missingRequestedFile) {
@@ -498,6 +523,8 @@ export function createFilePicker(rootNode, options = {}) {
       setListboxesDisabled(false);
       setPrimaryForFileSelection();
     } catch (error) {
+      if (loadId !== state.loadId) return;
+      state.loading = false;
       state.files = [];
       selected.filename = "";
       selected.filenames.clear();
@@ -510,13 +537,13 @@ export function createFilePicker(rootNode, options = {}) {
   }
 
   async function selectFolder(folder, loadOptions = {}) {
-    selected.folder = normalizeText(folder);
+    selected.folder = folder;
     selected.subfolder = "";
     selected.filename = "";
     selected.filenames.clear();
     if (folderInput) folderInput.value = selected.folder;
     await loadFilesForSelection({ autoSelectFirst: loadOptions.autoSelectFirst !== false });
-    if (loadOptions.focusFiles !== false && fileNode && !fileNode.disabled) {
+    if (!folderSelection && loadOptions.focusFiles !== false && fileNode && !fileNode.disabled) {
       fileNode.focus();
     }
   }
@@ -536,7 +563,8 @@ export function createFilePicker(rootNode, options = {}) {
     renderNoResults: () => `<p class="sharedSearchList__empty">${escapeHtml(filePickerText(config, "noFolderMatch"))}</p>`,
     renderError: (error) => `<p class="sharedSearchList__empty">${escapeHtml(normalizeText(error && error.message) || filePickerText(config, "foldersFailed"))}</p>`,
     onTransientInput: ({ value }) => {
-      setPrimaryDisabled(primaryNode, normalizeText(value) !== selected.folder || selectedFileCount() <= 0);
+      setPrimaryForFileSelection();
+      if (value !== selected.folder) setPrimaryDisabled(primaryNode, true);
     },
     onCancel: () => {
       setPrimaryForFileSelection();
@@ -558,7 +586,7 @@ export function createFilePicker(rootNode, options = {}) {
     bindListbox(subfolderNode);
   }
 
-  if (fileNode) {
+  if (fileNode && !folderSelection) {
     fileNode.addEventListener("change", () => {
       selected.filename = selectedListboxValue(fileNode);
       setPrimaryForFileSelection();
@@ -622,7 +650,7 @@ export function createFilePicker(rootNode, options = {}) {
   }
 
   function submit() {
-    const folderText = normalizeText(folderInput && folderInput.value);
+    const folderText = folderInput && folderInput.value;
     if (!selected.folder || folderText !== selected.folder) {
       return {
         ok: false,
@@ -630,11 +658,14 @@ export function createFilePicker(rootNode, options = {}) {
         status: filePickerText(config, "folderRequired")
       };
     }
-    if (selectedFileCount() <= 0) {
+    if (folderSelection && options.requireSubfolder && !selected.subfolder) {
+      return { ok: false, statusKind: "error", status: filePickerText(config, "subfolderRequired") };
+    }
+    if (state.loading || !state.filesLoaded || selectedFileCount() <= 0) {
       return {
         ok: false,
         statusKind: "error",
-        status: filePickerText(config, "fileRequired")
+        status: filePickerText(config, folderSelection ? "folderFilesRequired" : "fileRequired")
       };
     }
     return {
@@ -643,7 +674,7 @@ export function createFilePicker(rootNode, options = {}) {
         folder: selected.folder,
         subfolder: selected.subfolder,
         filename: selected.filename,
-        filenames: multipleFiles ? [...selected.filenames] : (selected.filename ? [selected.filename] : []),
+        filenames: folderSelection ? state.files.slice() : multipleFiles ? [...selected.filenames] : (selected.filename ? [selected.filename] : []),
         file_titles: multipleFiles ? [...selected.filenames].map((filename) => ({
           filename,
           title: fileStem(filename)
@@ -673,12 +704,13 @@ export function createFilePicker(rootNode, options = {}) {
       }
     },
     destroy() {
+      state.loadId += 1;
       if (searchController && typeof searchController.destroy === "function") searchController.destroy();
     },
     getSelection() {
       return {
         ...selected,
-        filenames: [...selected.filenames]
+        filenames: folderSelection ? state.files.slice() : [...selected.filenames]
       };
     }
   };
