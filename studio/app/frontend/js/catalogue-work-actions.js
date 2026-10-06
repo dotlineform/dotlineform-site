@@ -1,4 +1,3 @@
-import { buildStudioRouteUrl } from "./studio-config.js";
 import { saveNewWorkBatch } from "./catalogue-work-batch.js";
 import { firstCatalogueValidationMessage } from "./catalogue-editor-message-controller.js";
 import { catalogueSaveCompletionError, catalogueSavedActionError } from "./catalogue-save-result.js";
@@ -8,6 +7,7 @@ import { formatCatalogueDeletePreview } from "./catalogue-editor-modal-formatter
 import { confirmCatalogueActionModal } from "./catalogue-editor-action-modals.js";
 import { extractCatalogueActionPreview, getCataloguePreviewBlocker } from "./catalogue-editor-action-workflow.js";
 import {
+  setEmptySearchMode,
   setLoadedBulkWorks,
   setLoadedWorkRecord
 } from "./catalogue-work-route-state.js";
@@ -16,7 +16,7 @@ import {
   WORK_LINK_FIELDS as LINK_FIELDS
 } from "./catalogue-editor-embedded-items.js";
 
-import { buildCreateWorkPayload, buildWorkRecordFromDraft, normalizeText, normalizeWorkId } from "./catalogue-work-fields.js";
+import { buildCreateWorkPayload, buildWorkRecordFromDraft, normalizeText, normalizeWorkId, suggestNextWorkId } from "./catalogue-work-fields.js";
 import {
   applyBulkWorkRecordMutations,
   applyWorkRecordMutation
@@ -227,8 +227,6 @@ export async function deleteCurrentWork(state, context) {
       fallback: t(state, context, "delete_status_blocked", "Delete is blocked.")
     });
     if (blocker) {
-      state.isDeleting = false;
-      context.updateEditorState();
       setTextWithState(context, state.statusNode, blocker, "error");
       return;
     }
@@ -256,21 +254,22 @@ export async function deleteCurrentWork(state, context) {
     const response = await applyCatalogueDelete(request);
     savedResponse = response;
     context.noteCatalogueSaved(response);
-    const completionError = catalogueSaveCompletionError(response);
-    if (completionError) {
-      state.currentRecord = null;
-      state.isDeleting = false;
-      context.updateEditorState();
-      setTextWithState(context, state.resultNode, completionError, "error");
-      return;
+    if (response.kind !== "work" || response.id !== request.work_id || response.deleted !== true) {
+      throw new Error("Delete response does not match the selected Work.");
     }
-    window.location.assign(buildStudioRouteUrl(state.config, "catalogue_work_editor"));
+    state.sourceWorkRecordsById.delete(request.work_id);
+    state.workSearchById.delete(request.work_id);
+    state.nextSuggestedWorkId = suggestNextWorkId([...state.workSearchById.values()]);
+    setEmptySearchMode(state, context.workRouteStateOptions());
+    const completionError = catalogueSaveCompletionError(response);
+    setTextWithState(context, state.resultNode, completionError || t(state, context, "delete_result_success", "Deleted work {work_id}.", { work_id: request.work_id }), completionError ? "error" : "success");
   } catch (error) {
     const message = catalogueSavedActionError(savedResponse, error) || (Number(error && error.status) === 409
       ? t(state, context, "delete_status_conflict", "Source record changed since this page loaded. Reload before deleting again.")
       : `${t(state, context, "delete_status_failed", "Source delete failed.")} ${normalizeText(error && error.message)}`.trim());
+    setTextWithState(context, state.statusNode, message, "error");
+  } finally {
     state.isDeleting = false;
     context.updateEditorState();
-    setTextWithState(context, state.statusNode, message, "error");
   }
 }

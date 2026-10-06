@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260422-000000-45a776
 title: Catalogue Work Editor
 added_date: "2026-04-22 00:00:00"
-last_updated: "2026-10-06 15:30:37"
+last_updated: "2026-10-06 15:41:56"
 parent_id: d-20260423-000000-d015e6
 
 ---
@@ -79,7 +79,9 @@ Bulk Save uses one request and one combined canonical transaction. Each selected
 
 ## Delete
 
-Work deletion uses a server preview and confirmation, then repeats validation and checks the Work revision before applying. It deletes the canonical Work and its Gallery membership entry in the same transaction. Refresh Catalogue later removes its generated record and updates indexes and former Series/Gallery memberships. Shared or remote media cleanup is separate. Successful deletion returns to the Work editor; an incomplete local response retains the deleted canonical state. Deletion does not write retired Detail storage.
+Work deletion uses a server preview and confirmation, then repeats validation and checks the Work revision before applying. It deletes the canonical Work and its Gallery membership entry in the same transaction. The editor then removes the deleted Work from its live search and Series member list, updates the member count, and clears the Work selection, form, preview and Work URL parameter without reloading the page. The selected Series and expanded-list layout remain in place, including when the last member is deleted. A confirmed canonical deletion with incomplete local completion still clears the deleted Work and displays the completion error. Cancellation or an unconfirmed deletion leaves the current Work selected. Refresh Catalogue later removes its generated record and updates indexes and former Series/Gallery memberships. Shared or remote media cleanup is separate. Deletion does not write retired Detail storage.
+
+The 2026-10-06 deletion-state correction passed focused JavaScript lint for `catalogue-work-actions.js` and repository whitespace checks. Bounded source/diff review traced confirmed deletion through the live maps, empty Work state, retained Series browser, member count, preview/layout and final busy-state release; no findings remained. Cancellation, last-member deletion and incomplete local completion received source review only. No tests, browser automation or real Work deletion ran; manual interaction confirmation remains with the user.
 
 Subfolder batch creation uses New Work mode; saved bulk editing remains limited to Gallery memberships. Shared file-picker, record-list, modal and media-preview components remain available without restoring Detail-specific browsers, modals or services.
 
