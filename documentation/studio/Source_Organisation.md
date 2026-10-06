@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260423-000000-8fd731
 title: Source Organisation
 added_date: "2026-04-23 00:00:00"
-last_updated: "2026-10-02 12:15:13"
+last_updated: "2026-10-06 21:51:44"
 summary: Working source and generated storage, one read-only Preview snapshot, and exact collection and media ownership.
 parent_id: d-20260424-000000-50b63f
 ---
@@ -97,6 +97,14 @@ Document-level New, Edit and Delete operate within an existing configured collec
 
 ## Authoring And Publish
 
+### Recent Exclusions
+
+`working/source/documents/recent-exclusions.json` controls every Recent-specific exclusion. It is an editable JSON array of exact targets: ordinary pages use `{ "doc_id": "d-20260426-164043-e14f49" }`; collection documents also name their owner, for example `{ "collection": "works", "doc_id": "d-20260801-212422-df11f3" }`. Use exact configured collection IDs, omit `collection` for ordinary pages, and use `[]` for no exclusions. Duplicate targets, extra fields, invalid identities, missing files and invalid JSON fail visibly. The list may retain valid targets for documents that no longer exist.
+
+Exclusions affect only the named document's Recent membership; descendants, Search, navigation and publication eligibility retain their existing rules. Collection hosts have no automatic exclusion. The initial list contains dotlineform and the Context, Concepts, Moments and Catalogue landing pages. Local Recent exposes **Open Recent exclusions in VS Code**, using an empty-body `/docs/open-recent-exclusions` action that opens only this configured file, including malformed JSON for repair. The file and control are local-only.
+
+Save the file, then run a full Build or Publish to refresh Recent. Publish already performs a full eligible document build in temporary storage and now derives fresh Recent candidates from the source metadata it loads for that operation. It applies publication eligibility and this list before sorting and taking the configured limit, then writes the same prepared bytes to Working and Preview. Search retains its separate explicit rebuild policy. [Generated Data Contracts](Generated_Data_Contracts.md#recent-contract) owns the generated payload and failure semantics.
+
 ### Selected Documents
 
 `working/source/documents/selected.json` owns star membership for ordinary documents and collection sub-documents. Its `docs_selected_v1` payload contains `docs` rows with exact `doc_id`, `title` and `last_updated`; collection rows also carry their configured `collection` and `report_doc_id`. Missing or malformed selection data fails visibly. Membership is the flag; there is no second editable front-matter value. The Working Actions menu's Star/Remove star item uses an outline when unset, a filled yellow star when set and an explicit menu checkbox state. It writes through `/docs/set-selected` without changing document Markdown or its modification date.
@@ -118,7 +126,7 @@ Publish preparation intersects selections with its exact eligible document set, 
 
 Ordinary and other collection source documents require explicit boolean `draft`. Catalogue source rejects that field, its generated document metadata omit it and every Catalogue document has fixed eligibility. Prepare Preview excludes draft roots and descendants, roots in ordinary `working/source/documents/unpublishable.json` and their descendants, and collections whose report host is excluded, including Catalogue. An intentionally empty ignore file contains `[]`; missing or invalid policy fails visibly. The eligible set is captured before building, with a pruned copy of `index-order.json` in the temporary inputs. Surviving branches retain their relative order; excluded children are not promoted. Working retains the complete tree.
 
-`POST /docs/publish` accepts an empty object. `docs_publish.py` awaits `docs_prepare_preview.py`, then distributes the returned completed snapshot through `docs_deploy_repo.py`. Preparation captures current eligible source, saved Search/Recents and selected Catalogue JSON, builds documents in temporary storage, validates the finished output and replaces Preview. `docs_preview_snapshot.py` writes `preview-manifest.json` after byte verification. A build failure leaves the previous Preview intact; failure during replacement leaves no valid completion receipt. A fresh Publish is the recovery operation. There is no intermediate confirmation, change-list modal or separate acceptance action.
+`POST /docs/publish` accepts an empty object. `docs_publish.py` awaits `docs_prepare_preview.py`, then distributes the returned completed snapshot through `docs_deploy_repo.py`. Preparation captures current eligible source, saved Search and selected Catalogue JSON, generates fresh shared Recents from the eligible metadata and captured exclusion list, builds documents in temporary storage, validates the finished output, refreshes Working Recents and replaces Preview. `docs_preview_snapshot.py` writes `preview-manifest.json` after byte verification. A build failure leaves the previous Preview intact; failure during replacement leaves no valid completion receipt. A fresh Publish is the recovery operation. There is no intermediate confirmation, change-list modal or separate acceptance action.
 
 Ordinary Working edits and deletions reach Preview and the repository through the next Publish. Source Save writes validated source; the watcher rebuilds document projections independently. Source saves, draft changes and ordinary watcher updates do not rebuild Search. Rebuild docs and Search remains an explicit operation. Links and Broken Links remain Working-owned.
 

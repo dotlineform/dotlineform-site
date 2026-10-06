@@ -386,9 +386,8 @@ export function startDocsViewerRuntime(options) {
     returnToDocument: documentViewCoordinator.returnToDocument,
     openPresentation: documentViewCoordinator.openPresentation,
     projectBack: renderMainViewControls,
-    activeIndexViewId: function () { return panelLayout.projectViewState().index.activeViewId; },
-    syncIndexRoute: function (query, viewId) {
-      if (searchController) searchController.applyRoute(query, viewId);
+    syncIndexRoute: function (query) {
+      if (searchController) searchController.applyRoute(query);
     },
     confirmDocumentNavigation: documentViewCoordinator.confirmDocumentNavigation,
     activeViewState: documentViewCoordinator.activeViewState,
@@ -551,6 +550,7 @@ export function startDocsViewerRuntime(options) {
       },
       nav: nav,
       renderRecentMode: renderRecentMode,
+      refreshRecent: refreshRecent,
       renderSearchMode: renderSearchMode,
       renderSidebar: renderSidebar,
       root: root,
@@ -876,6 +876,10 @@ export function startDocsViewerRuntime(options) {
 
   function renderRecentMode() {
     if (searchController) searchController.renderRecentMode();
+  }
+
+  function refreshRecent() {
+    if (searchController) searchController.refreshRecent();
   }
 
   function renderSearchMode() {

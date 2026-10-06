@@ -261,7 +261,7 @@ def rebuild_stage_outputs(
     if include_search and stage != "working":
         raise ValueError("Search rebuilds require Working; Preview copies the existing index")
     if (copied_search_index is None) != (copied_recent_payload is None):
-        raise ValueError("Preview requires both captured Working Search and Recents")
+        raise ValueError("Preview requires both captured Working Search and freshly prepared Recents")
     if copied_search_index is not None:
         if stage != "preview":
             raise ValueError("Only Preview copies an existing Search index")

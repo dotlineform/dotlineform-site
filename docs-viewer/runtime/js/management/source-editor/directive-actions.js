@@ -38,6 +38,13 @@ export const DIRECTIVE_ACTIONS = Object.freeze([
     source: ICON_DIRECTIVE_SOURCE,
     inline: true,
     placeholder: Object.freeze({ start: "[[icon:".length, end: ICON_DIRECTIVE_SOURCE.length - 2 })
+  }),
+  Object.freeze({
+    artwork: "docsViewer__icon--summary",
+    id: "insert-summary",
+    label: "Summary",
+    source: "[[summary]]",
+    blankLines: true
   })
 ]);
 
@@ -75,6 +82,13 @@ function trailingNewlines(source, insertionPoint) {
   return "\n".repeat(2 - count);
 }
 
+function leadingNewlines(source, insertionPoint, requiredCount) {
+  if (insertionPoint === 0) return "";
+  var count = 0;
+  while (count < requiredCount && source.charAt(insertionPoint - count - 1) === "\n") count += 1;
+  return "\n".repeat(requiredCount - count);
+}
+
 export function createDirectiveInsertionPlan(options = {}) {
   var snapshot = options.snapshot || {};
   var capture = options.capture;
@@ -83,7 +97,7 @@ export function createDirectiveInsertionPlan(options = {}) {
   var directive = directiveById(String(options.directiveId || ""));
   if (!range || !directive) return null;
 
-  var leading = !directive.inline && range.start > 0 && source.charAt(range.start - 1) !== "\n" ? "\n" : "";
+  var leading = directive.inline ? "" : leadingNewlines(source, range.start, directive.blankLines ? 2 : 1);
   var trailing = directive.inline ? "" : trailingNewlines(source, range.start);
   var insertedText = leading + directive.source + trailing;
   var selectionStart = directive.placeholder

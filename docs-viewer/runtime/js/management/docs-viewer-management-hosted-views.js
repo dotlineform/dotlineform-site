@@ -23,6 +23,16 @@ export function createDocsViewerManagementViewDefinitions() {
     }],
     controls: [
       {
+        id: "open-recent-exclusions",
+        label: "Open Recent exclusions in VS Code",
+        ownerType: "view",
+        ownerViewId: "recent-results",
+        surfaceId: "index-view",
+        appKinds: ["manage"],
+        features: ["management", "recent"],
+        renderer: "recent-exclusions-open"
+      },
+      {
         id: "manage-actions",
         label: "Actions",
         ownerType: "app",

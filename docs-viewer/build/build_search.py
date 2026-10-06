@@ -41,6 +41,7 @@ from build_docs import (  # noqa: E402
 )
 from docs_builder.common import DOCS_INDEX_TREE_SCHEMA_VERSION  # noqa: E402
 from docs_builder.semantic_tokens import replace_semantic_tokens  # noqa: E402
+from docs_builder.summary_directive import omit_summary_directives  # noqa: E402
 from docs_workspace_config import (  # noqa: E402
     DocsCollectionConfig,
     DocsStageConfig,
@@ -510,6 +511,7 @@ class DocsViewerSearchDataBuilder:
             doc.report,
             include_host=False,
         )
+        markdown = omit_summary_directives(markdown)
         markdown = replace_semantic_tokens(
             markdown,
             registry=None,

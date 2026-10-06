@@ -518,6 +518,7 @@ export function createDocsViewerManagementActionController(options) {
     } finally {
       setManagementBusy(false);
       renderManagementUi();
+      context.refreshRecent();
     }
   }
 

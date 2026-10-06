@@ -336,3 +336,7 @@ export function openManagedDocSource(target, editor, options) {
 export function publishManagedDocs(options) {
   return fetchManagementJson("/docs/publish", "POST", {}, options);
 }
+
+export function openRecentExclusions(options) {
+  return fetchManagementJson("/docs/open-recent-exclusions", "POST", {}, options);
+}

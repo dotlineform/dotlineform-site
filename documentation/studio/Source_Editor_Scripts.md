@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-704641
 title: Source Editor Scripts
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-03 16:57:58"
+last_updated: "2026-10-06 21:18:11"
 parent_id: d-20260607-222033-2a494e
 ---
 # Docs Viewer Source Editor Scripts
@@ -67,9 +67,11 @@ The Directives menu provides **Add image**, **Add Catalogue image**, **Add file*
 
 `directive-actions.js` owns the Source action menu, its disclosure, keyboard navigation and captured adapter/range. Opening the menu captures the current selection before moving focus; choosing an action closes it before opening a modal or invoking a workflow. Catalogue image/Media View and document-link items reuse their existing modal owners with that capture. Add image/file calls the mounted adapter's `addStagedMedia` operation, which keeps Source busy through the existing media workflow and inserts using the captured range and revision. VS Code invokes the existing management source-opening workflow with the captured adapter's exact target; it does not save the buffer. The old standalone insertion-control definitions/renderers and image/file dispatch events are retired.
 
-The final menu group contains Table detail, Insert related links and Insert icon. **Insert icon** inserts `[[icon:refresh-cw]]` inline and selects `refresh-cw` for manual filename-stem editing. It adds no line breaks and preserves any selected source text after the new token. The existing Table detail directive retains its block insertion.
+The final menu group contains Table detail, Insert related links, Insert icon and **Summary**, in that order. **Insert icon** inserts `[[icon:refresh-cw]]` inline and selects `refresh-cw` for manual filename-stem editing. It adds no line breaks and preserves any selected source text after the new token. The existing Table detail directive retains its block insertion.
 
 **Insert related links** inserts `[[links|related links]]` as a block directive and selects its plain-text heading for editing. It preserves selected source text after the token. [Related Links](Related_Links.md) owns the generated sorted list, icons, empty-section suppression and full-build freshness.
+
+**Summary** uses the local `summary.svg` toolbar mask and inserts `[[summary]]` as a standalone block, supplying the blank-line separation needed around surrounding prose and preserving selected text after the token. It opens no modal and changes no front matter. [Builder](Builder.md#summary-block) owns expansion of the document's current Summary, empty-block suppression and presentation.
 
 Insertion changes only the dirty buffer through the current Source adapter and revision guard. Save persists source; the watcher independently generates the document. [Icon Tokens](Icon_Tokens.md) owns exact SVG lookup, portable rendering, literal examples and export behaviour.
 

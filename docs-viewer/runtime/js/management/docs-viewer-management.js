@@ -478,6 +478,7 @@ export function initDocsViewerManagement(context) {
     if (!routeSession.managementContext) {
       syncManagementStatus("", false);
       hideAppManagementControls();
+      context.projectIndexViewControlState("open-recent-exclusions", { hidden: true });
       projectDocumentActionButtons(true, true);
       eventRouter.hideManageActionsMenu();
       return;
@@ -504,6 +505,11 @@ export function initDocsViewerManagement(context) {
       noteIsError = management.managementMessageIsError;
     }
     syncManagementStatus(noteText, noteIsError);
+
+    context.projectIndexViewControlState("open-recent-exclusions", {
+      hidden: managementActionsHidden,
+      disabled: management.managementBusy || !management.managementAvailable
+    });
 
     if (!manageRebuildButton || !manageNewButton) return;
 
@@ -809,6 +815,7 @@ export function initDocsViewerManagement(context) {
       return editMenuController.handleKeydown(event) || eventRouter.handleDocumentKeydown(event);
     },
     handleAppManagementControl: handleAppManagementControl,
+    handleIndexViewControl: indexController.handleIndexViewControl,
     handleIndexViewChange: function (viewId) {
       if (viewId !== "index-tree") hideContextMenu();
     },

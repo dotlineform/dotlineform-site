@@ -1,4 +1,4 @@
-"""Validate the saved, stage-independent Recents artifact before copying it."""
+"""Build and validate the shared, stage-independent Recents artifact."""
 
 from typing import Any
 
@@ -11,6 +11,33 @@ RECENT_FIELDS = frozenset({
     "doc_id", "title", "timestamp", "parent_id", "parent_title",
     "collection", "report_doc_id", "collection_title",
 })
+
+
+def build_recent_payload(
+    candidates: list[dict[str, Any]], *, limit: int, generated_at: str,
+    exclusions: frozenset[tuple[str, str]],
+) -> dict[str, Any]:
+    """Exclude exact targets, then sort the complete dated set before limiting."""
+    for row in candidates:
+        if row.get("last_updated") != "" and not is_doc_date(row.get("last_updated")):
+            raise ValueError("Recents requires date-only last_updated metadata")
+    ordered = sorted(
+        (row for row in candidates if row["last_updated"] and (row.get("collection", ""), row["doc_id"]) not in exclusions),
+        key=lambda row: (row["title"].lower(), row["doc_id"], row.get("collection", "")),
+    )
+    ordered.sort(key=lambda row: row["last_updated"], reverse=True)
+    fields = RECENT_FIELDS - {"timestamp"}
+    payload = {
+        "schema": DOCS_RECENT_SCHEMA_VERSION,
+        "limit": limit,
+        "generated_at": generated_at,
+        "docs": [
+            {**{key: row[key] for key in sorted(fields) if key in row}, "timestamp": row["last_updated"]}
+            for row in ordered[:limit]
+        ],
+    }
+    validate_recent_payload(payload)
+    return payload
 
 
 def validate_recent_payload(payload: dict[str, Any]) -> None:

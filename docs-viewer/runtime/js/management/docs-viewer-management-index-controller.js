@@ -8,6 +8,7 @@ import {
 import {
   openStaticHtmlSnapshotExportWorkflow
 } from "./docs-viewer-static-html-export-workflow.js";
+import { openRecentExclusions } from "./docs-viewer-management-client.js";
 
 export function docsViewerPreparePackageActionControlState(options = {}) {
   var resolution = options.resolution || null;
@@ -237,6 +238,27 @@ export function createDocsViewerManagementIndexController(options = {}) {
     });
   }
 
+  async function handleOpenRecentExclusions() {
+    setManagementBusy(true);
+    setManagementMessage("", false);
+    renderManagementUi();
+    try {
+      await openRecentExclusions(managementClientOptions());
+    } catch (error) {
+      setManagementMessage(error.message || "Could not open Recent exclusions in VS Code.", true);
+    } finally {
+      setManagementBusy(false);
+      renderManagementUi();
+    }
+  }
+
+  function handleIndexViewControl(detail) {
+    if (!detail || detail.controlId !== "open-recent-exclusions" || activeIndexViewId() !== "recent-results") return false;
+    if (!management.managementChecked || !management.managementAvailable || management.managementBusy) return false;
+    handleOpenRecentExclusions();
+    return true;
+  }
+
   function handleAction(actionId, targetDocId, restoreFocus) {
     if (activeIndexViewId() !== "index-tree") return false;
     if (management.managementBusy) return false;
@@ -262,6 +284,7 @@ export function createDocsViewerManagementIndexController(options = {}) {
   return {
     actionControlState: actionControlState,
     actionStates: actionStates,
-    handleAction: handleAction
+    handleAction: handleAction,
+    handleIndexViewControl: handleIndexViewControl
   };
 }

@@ -1165,6 +1165,17 @@ main.container:has(> .docsViewer){
   margin-bottom: 0;
 }
 
+.docsViewer__content .docsViewer__summary{
+  box-sizing: border-box;
+  margin: var(--docs-viewer-space-4) 0;
+  padding: var(--docs-viewer-space-3) var(--docs-viewer-space-4);
+  background: var(--docs-viewer-panel-2);
+}
+
+.docsViewer__content .docsViewer__summary > p{
+  margin: 0;
+}
+
 .docsViewer__content pre[data-docs-viewer-inline-mermaid-state="rendering"]{
   border-inline-start: 3px solid var(--docs-viewer-border-strong);
 }

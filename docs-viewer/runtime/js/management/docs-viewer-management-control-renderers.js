@@ -20,6 +20,12 @@ function renderDocumentActionButton(context, options) {
 
 export function createDocsViewerManagementControlRenderers() {
   return {
+    "recent-exclusions-open": function (context) {
+      return renderDocumentActionButton(context, {
+        id: "docsViewerRecentExclusionsOpenButton",
+        artwork: "docsViewer__icon--file-code-corner"
+      });
+    },
     "manage-edit": renderDocsViewerEditMenu,
     "return-to-doc": function (context) {
       return renderDocumentActionButton(context, {

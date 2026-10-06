@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260602-160839-6d3cbb
 title: Docs Viewer Search
 added_date: "2026-06-02 16:08:39"
-last_updated: "2026-10-03 18:45:56"
+last_updated: "2026-10-06 22:13:31"
 parent_id: d-20260331-000000-5dcf32
 
 ---
@@ -52,7 +52,7 @@ Search and Recent controls occupy the first Index row in Public and Manage. Thei
 
 Opening a result, pinned Related link or in-app document-content link preserves the active list, query, paging and list scroll. Only exact ordinary or collection/document identity determines the highlighted row; a destination outside the displayed results leaves no row active. These links leave the tree's explicit selection, expansion and position intact. Related links retain their independent Info capture and lifecycle, including release on Source entry. Clearing Search or toggling Recent off reveals the retained tree and keeps the current exact document and heading. Recent clears an active query; typing a non-empty query switches from Recent to Search.
 
-The URL's `q` and the navigation owner's page-session Index state apply independently of document loading. Control adjustments update the current history entry. Back restores the immediate caller's Index view, visible count, position and exact document target, then consumes that return context. Native browser destinations outside the current/caller pair reload by exact URL. A view-only change does not remount the document. Matching query/index state reuses mounted rows and cached matches, and More slices that ranking in memory. Switching visibility reloads neither the Index nor either list. Committed metadata updates an existing retained Search record's title/summary/update-date postings and Recent label/order; Delete removes the target from their projections. This changes no saved Search file, body postings, coverage or membership policy. Explicit Search rebuild and authoritative Index refresh keep their separate owners.
+The Index panel owns its active tree/Search/Recent view, query, visible count, tree selection/expansion and list scroll independently of document navigation. Control adjustments replace the current URL without adding a document history entry. Back restores the immediate caller's exact document/report and reading position, consumes that return context and preserves the panel as currently configured; it cannot reopen Recent or reinstate an earlier Search query. Result highlighting follows the restored target using existing mounted rows. The restored document URL retains the panel's current `q`; initial/reloaded routes apply their URL query once. Native browser destinations outside the current/caller pair reload by exact URL. A view-only change does not remount the document. Matching query/index state reuses mounted rows and cached matches, and More slices that ranking in memory. Switching visibility reloads neither the Index nor either list. Committed metadata updates an existing retained Search record's title/summary/update-date postings and Recent label/order; Delete removes the target from their projections. This changes no saved Search file, body postings, coverage or membership policy. Explicit Search rebuild and authoritative Index refresh keep their separate owners.
 
 ## Extension Boundary
 

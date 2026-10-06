@@ -1,139 +1,135 @@
 {
   "schema": "docs_recent_v2",
   "limit": 20,
+  "generated_at": "2026-10-06T21:08:52Z",
   "docs": [
     {
-      "doc_id": "d-20260809-130120-44384d",
-      "title": "Beyond Conscious vs. Subconscious",
+      "collection": "works",
+      "collection_title": "Context",
+      "doc_id": "d-20260801-212422-df11f3",
+      "report_doc_id": "d-20260801-073826-8865a8",
+      "title": "3 symbols",
+      "timestamp": "2026-10-06"
+    },
+    {
+      "doc_id": "d-20260809-130120-461754",
       "parent_id": "d-20260809-130120-870cc2",
       "parent_title": "Library",
+      "title": "Abstract Thought and Physical Processes",
+      "timestamp": "2026-10-06"
+    },
+    {
+      "doc_id": "d-20260809-130120-44384d",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library",
+      "title": "Beyond Conscious vs. Subconscious",
       "timestamp": "2026-10-04"
     },
     {
-      "doc_id": "d-20261004-202223-1e2205",
-      "title": "Work Downloads",
-      "timestamp": "2026-10-04"
-    },
-    {
-      "doc_id": "d-20260801-212422-43b47c",
-      "title": "10,000",
       "collection": "works",
-      "report_doc_id": "d-20260801-073826-8865a8",
       "collection_title": "Context",
+      "doc_id": "d-20260801-212422-43b47c",
+      "report_doc_id": "d-20260801-073826-8865a8",
+      "title": "10,000",
       "timestamp": "2026-10-03"
     },
     {
       "doc_id": "d-20260809-130120-837891",
-      "title": "Beauty",
       "parent_id": "d-20260809-130120-870cc2",
       "parent_title": "Library",
+      "title": "Beauty",
       "timestamp": "2026-10-03"
     },
     {
-      "doc_id": "d-20260624-213316-478639",
-      "title": "Concepts",
-      "timestamp": "2026-10-01"
-    },
-    {
-      "doc_id": "d-20260907-180859-c425b2",
-      "title": "Moments",
-      "timestamp": "2026-10-01"
-    },
-    {
-      "doc_id": "d-20260801-212422-df11f3",
-      "title": "3 symbols",
       "collection": "works",
-      "report_doc_id": "d-20260801-073826-8865a8",
       "collection_title": "Context",
-      "timestamp": "2026-09-28"
-    },
-    {
       "doc_id": "d-20260801-212422-d91151",
+      "report_doc_id": "d-20260801-073826-8865a8",
       "title": "a poem divided into 4 parts",
-      "collection": "works",
-      "report_doc_id": "d-20260801-073826-8865a8",
-      "collection_title": "Context",
       "timestamp": "2026-09-28"
     },
     {
+      "collection": "works",
+      "collection_title": "Context",
       "doc_id": "d-20260801-212422-186a69",
-      "title": "a theory of happiness",
-      "collection": "works",
       "report_doc_id": "d-20260801-073826-8865a8",
-      "collection_title": "Context",
+      "title": "a theory of happiness",
       "timestamp": "2026-09-28"
-    },
-    {
-      "doc_id": "d-20260801-073826-8865a8",
-      "title": "Context",
-      "timestamp": "2026-09-26"
-    },
-    {
-      "doc_id": "d-20260426-164043-e14f49",
-      "title": "dotlineform",
-      "timestamp": "2026-09-26"
-    },
-    {
-      "doc_id": "d-20260916-161504-f8c947",
-      "title": "Catalogue",
-      "timestamp": "2026-09-16"
-    },
-    {
-      "doc_id": "d-20260809-130120-461754",
-      "title": "Abstract Thought and Physical Processes",
-      "parent_id": "d-20260809-130120-870cc2",
-      "parent_title": "Library",
-      "timestamp": "2026-08-09"
     },
     {
       "doc_id": "d-20260809-130120-91c97f",
-      "title": "Bayesian Reasoning",
       "parent_id": "d-20260809-130120-870cc2",
       "parent_title": "Library",
+      "title": "Bayesian Reasoning",
       "timestamp": "2026-08-09"
     },
     {
       "doc_id": "d-20260809-130120-28fb85",
-      "title": "Beauty × Memory × Meaning",
       "parent_id": "d-20260809-130120-870cc2",
       "parent_title": "Library",
+      "title": "Beauty × Memory × Meaning",
       "timestamp": "2026-08-09"
     },
     {
       "doc_id": "d-20260809-130120-d66e0b",
-      "title": "Can the Brain Comprehend How It Works?",
       "parent_id": "d-20260809-130120-870cc2",
       "parent_title": "Library",
+      "title": "Can the Brain Comprehend How It Works?",
       "timestamp": "2026-08-09"
     },
     {
       "doc_id": "d-20260809-130120-c5c511",
-      "title": "Coincidence Inevitability",
       "parent_id": "d-20260809-130120-870cc2",
       "parent_title": "Library",
+      "title": "Coincidence Inevitability",
       "timestamp": "2026-08-09"
     },
     {
       "doc_id": "d-20260809-130120-ed5b30",
-      "title": "Coincidence Salience Worksheet",
       "parent_id": "d-20260809-130120-870cc2",
       "parent_title": "Library",
+      "title": "Coincidence Salience Worksheet",
       "timestamp": "2026-08-09"
     },
     {
       "doc_id": "d-20260809-130120-e6793d",
-      "title": "Defining \"Information\" for Cross‑Boundary Comparisons",
       "parent_id": "d-20260809-130120-870cc2",
       "parent_title": "Library",
+      "title": "Defining \"Information\" for Cross‑Boundary Comparisons",
       "timestamp": "2026-08-09"
     },
     {
       "doc_id": "d-20260809-130120-afeb4d",
-      "title": "Dreaming is Active",
       "parent_id": "d-20260809-130120-870cc2",
       "parent_title": "Library",
+      "title": "Dreaming is Active",
+      "timestamp": "2026-08-09"
+    },
+    {
+      "doc_id": "d-20260809-130120-3054b0",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library",
+      "title": "Entropy & Evolution Under Two Cosmologies",
+      "timestamp": "2026-08-09"
+    },
+    {
+      "doc_id": "d-20260809-130120-a7bc91",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library",
+      "title": "Evolutionary Psychology — Overview",
+      "timestamp": "2026-08-09"
+    },
+    {
+      "doc_id": "d-20260809-130120-b96ba9",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library",
+      "title": "From 3D Space to Many Dimensions",
+      "timestamp": "2026-08-09"
+    },
+    {
+      "doc_id": "d-20260809-130120-870cc2",
+      "title": "Library",
       "timestamp": "2026-08-09"
     }
-  ],
-  "generated_at": "2026-10-05T08:55:42Z"
+  ]
 }

@@ -32,6 +32,7 @@ METADATA_PATH = "/docs/metadata"
 SOURCE_SAVE_PATH = "/docs/source/save"
 OPEN_SOURCE_PATH = "/docs/open-source"
 OPEN_PUBLICATION_IGNORE_PATH = "/docs/open-publication-ignore"
+OPEN_RECENT_EXCLUSIONS_PATH = "/docs/open-recent-exclusions"
 OPEN_DIAGRAM_SOURCE_PATH = "/docs/open-diagram-source"
 OPEN_LOCAL_TARGET_PATH = "/docs/open-local-target"
 BROKEN_LINKS_PATH = "/docs/broken-links"
@@ -94,6 +95,7 @@ POST_PATHS = (
     SOURCE_CONTEXT_PATH,
     OPEN_SOURCE_PATH,
     OPEN_PUBLICATION_IGNORE_PATH,
+    OPEN_RECENT_EXCLUSIONS_PATH,
     OPEN_DIAGRAM_SOURCE_PATH,
     OPEN_LOCAL_TARGET_PATH,
     BROKEN_LINKS_PATH,

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260423-000000-c9f3ea
 title: Builder
 added_date: "2026-04-23 00:00:00"
-last_updated: "2026-10-01 16:39:11"
+last_updated: "2026-10-06 21:51:44"
 parent_id: d-20260424-000000-50b63f
 ---
 # Builder
@@ -100,7 +100,7 @@ Complete Working Build applies this same refresh to the documents it builds and 
 
 ## Publish Preparation
 
-Working owns authoring. The preparation phase of **Publish** captures the complete eligible Working set and saved Search, Recents and inventory-selected Catalogue JSON. `docs_prepare_preview.py` invokes the document, collection and registered media builders synchronously through `build_preview.py` in a temporary workspace; Search and Recents are copied without rebuilding. `docs_preview_snapshot.py` validates the completed build and assembles reader payloads with exact shared asset references. There is no user-facing preparation plan or confirmation.
+Working owns authoring. The preparation phase of **Publish** captures the complete eligible Working set, saved Search and inventory-selected Catalogue JSON. `docs_prepare_preview.py` derives fresh Recents from the eligible source metadata it already loads and the captured Recent exclusion policy, then invokes the document, collection and registered media builders synchronously through `build_preview.py` in a temporary workspace. Saved Search and freshly prepared Recents are copied unchanged into that build. After validation, the same Recent bytes refresh Working before Preview replacement. `docs_preview_snapshot.py` assembles reader payloads with exact shared asset references. There is no user-facing preparation plan or confirmation.
 
 Draft documents and their descendants are excluded. Ordinary roots listed in `working/source/documents/unpublishable.json` and their descendants are also excluded; an excluded collection report host excludes its collection. An intentionally empty policy contains `[]`; missing or invalid policy fails visibly. Prepared sources retain explicit boolean readiness. Collection owners project their own fields; ordinary source bytes remain unchanged. Empty eligible collections are valid.
 
@@ -148,10 +148,32 @@ Authoring extensions supported by the renderer include:
 - <code>&#91;&#91;media:...&#93;&#93;</code> for configured docs media
 - <code>&#91;&#91;html-media:docs/html/...&#93;&#93;</code> for ordinary HTML media, with <code>docs/sub-scopes/&lt;id&gt;/html/...</code> for an exact child owner
 - explicit Catalogue `media` and `image` tokens for Media View links and Catalogue images; the retired three-part Catalogue text form has no compatibility alias
+- standalone `[[summary]]` blocks for the current document's front-matter Summary
 
 Ordinary Markdown document links are the relationship input. Local document href rewriting preserves explicit child selection, fragments and HTML escaping; URLs with a hostname, including protocol-relative external URLs, retain their authored destination.
 
 Use [Docs Images And Assets](Docs_Images_And_Assets.md) for authoring guidance and `docs-viewer/build/docs_builder/` for the exact token rules.
+
+### Summary Block
+
+In Source, choose **Directives → Summary** to insert the token with block spacing, or place `[[summary]]` on its own Markdown line, separated from surrounding prose by blank lines, wherever the current document's Summary should appear:
+
+```md
+---
+summary: A short introduction maintained once in document metadata.
+---
+# Document title
+
+[[summary]]
+
+Main document text…
+```
+
+This example shows only the relevant metadata; normal document identity, dates and readiness fields are still required. The shared ordinary/collection payload builder supplies its normalized `summary` to `summary_directive.py` through the Markdown renderer. Each standalone occurrence becomes a paragraph inside `.docsViewer__summary`, with the quote style's theme-aware panel background, spacing and padding, and no quote border. The text is HTML-escaped plain text: Markdown, HTML and tokens inside Summary are displayed literally. A missing or blank Summary produces no block. Inline occurrences, escaped tokens, fenced/indented code, comments and raw HTML retain normal literal behavior. No token options or automatic placement are supported.
+
+Source retains the token and front matter. Working document builds and the temporary publication build expand the Summary captured for that document; readers need no runtime lookup. Static Export consumes the expanded by-ID content. Search continues to index Summary as its existing metadata field and omits active standalone directives from body terms without expanding them a second time; literal code examples remain searchable. No Search rebuild accompanies an ordinary document edit. Adding the token or changing Summary follows the normal Source Save and watcher flow; Publish updates public document data separately.
+
+The 2026-10-06 implementation has focused Python lint/syntax, public stylesheet projection, site validation and bounded source-review evidence. No automated behavior tests or browser checks were authorized or run; expansion, escaping, empty/literal cases, Export and visual presentation remain manually unconfirmed.
 
 ## Preview And Deployment Boundary
 
@@ -163,9 +185,9 @@ Search is a stage-independent `docs_viewer_search_index_v4` artifact built only 
 
 Manage offers one Publish action, remains busy until preparation and distribution finish and shows complete or phase-specific failure feedback. The stage selector, separate preparation/distribution endpoints, change-review modal and intermediate confirmation are retired. Review the repository result through `bin/site-preview`. Historical lifecycle tests remain unchanged and unreviewed for the current contract; manual success and static source review do not establish exercised failure recovery or measured performance.
 
-Working alone generates Recents with the same coverage and eligibility as Search. It reuses ordinary metadata already loaded by the full document build and reads only included, eligible-host collection management manifests, including their effective added/updated dates. It does not reopen collection Markdown or by-ID bodies. Manage Rebuild refreshes included collection metadata before the ordinary build generates Recents once, leaving excluded collections in their existing position afterwards. Direct full Working document builds require saved current collection metadata. Targeted builds and authoring follow-through preserve Recents; watcher/service fallback builds pass `--skip-recent`.
+Full Working Builds generate Recents from Search's base coverage and publication eligibility, additionally removing exact targets in `source/documents/recent-exclusions.json` before sorting and limiting. They reuse ordinary metadata already loaded by the build and read only included, eligible-host collection management manifests and their projected update dates. They do not reopen collection Markdown or by-ID bodies. Manage Rebuild refreshes included collection metadata before the ordinary build generates Recents once, leaving excluded collections in their existing position afterwards. Direct full Working document builds require saved current collection metadata. Targeted builds and authoring follow-through preserve Recents; watcher/service fallback builds pass `--skip-recent`.
 
-Prepare Preview captures saved Search and Recents, binds both byte sequences into its plan and copies them before recording completion. Neither is regenerated during the temporary Preview build. Snapshot assembly and Deploy Repo preserve the exact bytes, and readers resolve navigation from IDs in their own context. Recents' separate publication variant and stored content URLs are retired. The next full Working build removes the old `.publish/recent.json`. [Generated Data Contracts](Generated_Data_Contracts.md#recent-contract) owns the maintained Recents fields and lifecycle.
+Publish preparation refreshes the shared Recents from current eligible source titles/dates and the captured exclusion list, without another source scan or a separate full Working Build. It binds saved Search and freshly generated Recent bytes into its plan and copies both before recording temporary build completion. Snapshot assembly and Deploy Repo preserve those exact bytes; readers resolve navigation from IDs in their own context. Search is not regenerated. Recents' separate publication variant and stored content URLs remain retired. [Generated Data Contracts](Generated_Data_Contracts.md#recent-contract) owns the maintained fields and lifecycle, and [Source Organisation](Source_Organisation.md#recent-exclusions) owns the editable policy.
 
 ## Diagnostics And Safety
 
@@ -174,7 +196,7 @@ Prepare Preview captures saved Search and Recents, binds both byte sequences int
 - targeted writes require an existing full-scope output tree
 - renderer output allows raw HTML and is not a sanitization boundary
 - management/service writes validate source and paths before calling builders
-- the live watcher rebuilds document projections after source changes; Search and Recents retain their independent full-build ownership
+- the live watcher rebuilds document projections after source changes; Search retains explicit rebuild ownership and Recents refreshes on full Working Build or Publish
 
 ## Change Guide
 

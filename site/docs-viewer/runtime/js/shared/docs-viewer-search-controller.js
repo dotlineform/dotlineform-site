@@ -146,6 +146,14 @@ export function initDocsViewerSearchController(context) {
     }
   }
 
+  /** Discard cached Recent data and errors after its owner refreshes the artifact. */
+  function refreshRecent() {
+    searchRecent.recentLoaded = false;
+    searchRecent.recentEntries = [];
+    recentError = "";
+    if (recentActive()) renderRecentMode();
+  }
+
   function renderRecentRows() {
     var docs = collectRecentDocs(searchRecent.recentEntries, searchRecent.recentLimit);
     setResultsStatus(docs.length ? "" : "No recently edited docs.", false);
@@ -268,20 +276,19 @@ export function initDocsViewerSearchController(context) {
     searchRecent.searchVisibleCount = context.searchBatchSize;
     context.setSearchInput("");
     setView(viewId);
-    routeCommands.updateIndexHistory("", viewId, "push");
+    routeCommands.updateIndexHistory("");
     if (viewId === "recent-results") renderRecentMode();
   }
 
   function handleSearchInput(value) {
     if (!enabled("search")) return;
     var query = String(value || "").trim();
-    var wasSearching = context.hasActiveQuery();
     cancelSearchDebounce();
     searchRecent.searchQuery = query;
     searchRecent.searchVisibleCount = context.searchBatchSize;
     var viewId = normalizeSearchText(query) ? "search-results" : "index-tree";
     setView(viewId);
-    routeCommands.updateIndexHistory(query, viewId, wasSearching ? "replace" : "push");
+    routeCommands.updateIndexHistory(query);
     if (viewId === "index-tree") return;
     renderSearchPendingState();
     searchRecent.searchDebounceId = window.setTimeout(function () {
@@ -290,14 +297,13 @@ export function initDocsViewerSearchController(context) {
     }, context.searchDebounceMs);
   }
 
-  /** Apply URL/history view state separately from opening the route's document. */
-  function applyRoute(query, indexViewId) {
+  /** Apply the initial URL's Search query separately from opening its document. */
+  function applyRoute(query) {
     var nextQuery = enabled("search") ? String(query || "").trim() : "";
     if (searchRecent.searchQuery !== nextQuery) searchRecent.searchVisibleCount = context.searchBatchSize;
     searchRecent.searchQuery = nextQuery;
     context.setSearchInput(nextQuery);
     if (normalizeSearchText(nextQuery)) renderSearchMode();
-    else if (enabled("recent") && indexViewId === "recent-results") renderRecentMode();
     else setView("index-tree");
   }
 
@@ -320,6 +326,7 @@ export function initDocsViewerSearchController(context) {
     handleRecentControl: handleRecentControl,
     handleSearchInput: handleSearchInput,
     renderRecentMode: renderRecentMode,
+    refreshRecent: refreshRecent,
     renderSearchMode: renderSearchMode,
     resetForReload: resetForReload,
     syncSelection: syncSelection

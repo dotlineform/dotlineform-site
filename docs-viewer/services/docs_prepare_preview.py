@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 import json
@@ -19,10 +20,14 @@ from docs_preview_snapshot import (
     _files_from_root, _lifecycle_root, _validate_generated_manifest, _validate_prepared_index, files_revision,
     build_preview_snapshot_files, write_preview_snapshot,
 )
-from docs_source_model import SourceDoc, format_source, load_document_collection_docs_for_config
+from docs_source_model import SourceDoc, format_source, load_document_collection_docs_for_config, write_bytes_atomic
+from docs_document_identity import doc_updated_date
 from docs_index_order import INDEX_ORDER_FILENAME, exclude_nodes, index_order_text, read_index_order
 from docs_collection_customisations import prepare_collection_publication
 from docs_publication_ignore import read_publication_ignore_ids
+from docs_build_manifest import remove_build_manifest
+from docs_recent_exclusions import parse_recent_exclusions, recent_exclusions_path
+from docs_recent_payload import build_recent_payload
 from docs_selected_documents import read_selected, selected_row, selected_text
 from docs_catalogue_artifacts import (
     CONFIG_REL_PATH as CATALOGUE_CONFIG_REL_PATH, load_catalogue_artifact_inventory,
@@ -35,9 +40,9 @@ class PreparationInputs:
     """Inputs captured once for the synchronous preparation operation."""
 
     working: DocsStageConfig
+    recent_limit: int
     source_files: dict[Path, bytes]
     search_index: bytes
-    recent_payload: bytes
     catalogue: dict[str, bytes]
     related_links: dict[Path, bytes]
     preview_files: dict[Path, bytes]
@@ -78,11 +83,6 @@ def _capture_inputs(repo_root: Path) -> PreparationInputs:
         raise FileNotFoundError("Working Search index is unavailable; rebuild Search in Working before preparing Preview")
     search_index = search_path.read_bytes()
     _validate_prepared_index(Path("search/index.json"), search_index)
-    recent_path = generated_documents_path(working) / "recent.json"
-    if recent_path.is_symlink() or not recent_path.is_file():
-        raise FileNotFoundError("Working Recents is unavailable; run a full Working Build before preparing Preview")
-    recent_payload = recent_path.read_bytes()
-    _validate_prepared_index(Path("documents/recent.json"), recent_payload)
     workspace = load_docs_workspace_config(repo_root)
     catalogue = read_catalogue_artifacts(workspace.catalogue, load_catalogue_artifact_inventory(repo_root), stage="working")
     links_root = generated_documents_path(working) / "links-by-id"
@@ -100,18 +100,21 @@ def _capture_inputs(repo_root: Path) -> PreparationInputs:
         Path("working"): files_revision(source_files).encode(),
         Path("preview"): files_revision(current).encode(),
         Path("working-search"): search_index,
-        Path("working-recent"): recent_payload,
         **{Path("working-links") / path: data for path, data in related_links.items()},
         **{Path("catalogue") / path: data for path, data in catalogue.items()},
     }
-    return PreparationInputs(working, source_files, search_index, recent_payload, catalogue, related_links, current, basis)
+    return PreparationInputs(working, workspace.recent_limit, source_files, search_index, catalogue, related_links, current, basis)
 
 
-def _plan(repo_root: Path) -> tuple[dict[str, Any], dict[Path, bytes], PreparationInputs]:
+def _plan(repo_root: Path) -> tuple[dict[str, Any], dict[Path, bytes], PreparationInputs, bytes]:
     inputs = _capture_inputs(repo_root)
     working, source_files = inputs.working, inputs.source_files
     source_revision = inputs.revision_basis[Path("working")].decode()
     source_root = _lifecycle_root(repo_root, working, "source")
+    exclusions_file = recent_exclusions_path(working).relative_to(source_root)
+    if exclusions_file not in source_files:
+        raise FileNotFoundError("Working recent-exclusions.json is unavailable")
+    recent_exclusions = parse_recent_exclusions(source_files[exclusions_file], working)
     ordinary = load_document_collection_docs_for_config(repo_root, working, working)
     ordinary_excluded = excluded_documents(ordinary, ignored_ids=read_publication_ignore_ids(repo_root))
     excluded = set(ordinary_excluded)
@@ -126,6 +129,7 @@ def _plan(repo_root: Path) -> tuple[dict[str, Any], dict[Path, bytes], Preparati
     selected = read_selected(working)
     selected_targets = {(row.get("collection", ""), row["doc_id"]) for row in selected["docs"]}
     selected_rows = []
+    recent_candidates = []
     for collection in (working, *working.collections):
         child = str(getattr(collection, "collection", ""))
         docs = ordinary if not child else load_document_collection_docs_for_config(repo_root, working, collection)
@@ -139,6 +143,18 @@ def _plan(repo_root: Path) -> tuple[dict[str, Any], dict[Path, bytes], Preparati
             rejected.update(doc.doc_id for doc in docs)
         excluded.update(rejected)
         accepted = [doc for doc in docs if doc.doc_id not in rejected]
+        if not child or collection.include_in_site_search:
+            titles = {doc.doc_id: doc.title for doc in accepted}
+            for doc in accepted:
+                row = {
+                    "doc_id": doc.doc_id, "title": doc.title,
+                    "last_updated": doc_updated_date(doc.front_matter.get("last_updated", "")),
+                }
+                if child:
+                    row.update(collection=child, report_doc_id=collection.report_host_doc_id, collection_title=collection.title)
+                elif doc.parent_id in titles:
+                    row.update(parent_id=doc.parent_id, parent_title=titles[doc.parent_id])
+                recent_candidates.append(row)
         counts[child or "documents"] = len(accepted)
         eligible.extend(doc.doc_id for doc in accepted)
         for doc in accepted:
@@ -149,9 +165,15 @@ def _plan(repo_root: Path) -> tuple[dict[str, Any], dict[Path, bytes], Preparati
         if accepted:
             desired.update({path: data for path, data in source_files.items() if path.is_relative_to(prefix / "build-source") or path == prefix / "media-source-evidence.json"})
     desired[Path("documents/selected.json")] = selected_text({**selected, "docs": selected_rows}).encode("utf-8")
+    recent = build_recent_payload(
+        recent_candidates, limit=inputs.recent_limit,
+        generated_at=datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), exclusions=recent_exclusions,
+    )
+    recent_payload = (json.dumps(recent, indent=2, ensure_ascii=False) + "\n").encode("utf-8")
     plan_revision = files_revision({
         **inputs.revision_basis,
         Path("prepared-source"): files_revision(desired).encode(),
+        Path("prepared-recent"): recent_payload,
     })
     return {
         "ok": True, "stage": "working", "plan_revision": plan_revision,
@@ -160,7 +182,7 @@ def _plan(repo_root: Path) -> tuple[dict[str, Any], dict[Path, bytes], Preparati
         "eligible_doc_ids": sorted(eligible), "excluded_doc_ids": sorted(excluded),
         "catalogue_file_count": len(inputs.catalogue),
         "summary_text": f"Prepare Preview with {len(eligible)} documents and {len(inputs.catalogue)} Catalogue JSON files.",
-    }, desired, inputs
+    }, desired, inputs, recent_payload
 
 
 def build_captured_preview(
@@ -181,7 +203,7 @@ def build_captured_preview(
         generated_root = config.generated.documents.location.path.parent
         captured_search = build_root / "working-search.json"
         captured_search.write_bytes(search_index)
-        captured_recent = build_root / "working-recent.json"
+        captured_recent = build_root / "prepared-recent.json"
         captured_recent.write_bytes(recent_payload)
         captured_links = build_root / "related-links"
         captured_links.mkdir()
@@ -236,12 +258,17 @@ def build_captured_preview(
 
 def _complete_preview(
     repo_root: Path, plan: dict[str, Any], desired: dict[Path, bytes],
-    inputs: PreparationInputs,
+    inputs: PreparationInputs, recent_payload: bytes,
 ) -> CompletedPreview:
     files, build_manifest = build_captured_preview(
-        repo_root, desired, inputs.search_index, inputs.recent_payload, inputs.catalogue,
+        repo_root, desired, inputs.search_index, recent_payload, inputs.catalogue,
         inputs.related_links, plan["eligible_doc_ids"],
     )
+    recent_path = generated_documents_path(inputs.working) / "recent.json"
+    if recent_path.is_symlink():
+        raise ValueError("Working Recents output must not be a symlink")
+    remove_build_manifest(repo_root, inputs.working)
+    write_bytes_atomic(recent_path, recent_payload)
     return write_preview_snapshot(
         repo_root, files=files, generated_revision=build_manifest["generated_revision"],
         source_revision=plan["source_revision"], asset_references=build_manifest["asset_references"],

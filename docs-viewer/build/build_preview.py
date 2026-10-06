@@ -1,4 +1,4 @@
-"""Build captured Preview documents and copy captured Working Search and Recents."""
+"""Build captured Preview documents and copy saved Search and freshly prepared Recents."""
 
 from pathlib import Path
 import argparse
@@ -12,7 +12,7 @@ def main() -> None:
     parser.add_argument("--docs-base-dir", type=Path, required=True)
     parser.add_argument("--assets-base-dir", type=Path, required=True)
     parser.add_argument("--search-index", type=Path, required=True, help="Captured Working Search index to copy unchanged.")
-    parser.add_argument("--recent-payload", type=Path, required=True, help="Captured Working Recents to copy unchanged.")
+    parser.add_argument("--recent-payload", type=Path, required=True, help="Freshly prepared Recents to copy unchanged.")
     parser.add_argument("--related-links-dir", type=Path, required=True, help="Captured eligible persisted relationship records.")
     args = parser.parse_args()
     repo_root = Path(__file__).resolve().parents[2]

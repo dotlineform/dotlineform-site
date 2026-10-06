@@ -25,10 +25,11 @@ from docs_management_document_target import (  # noqa: E402
     resolve_managed_document_collection,
     resolve_managed_document_target,
 )
-from docs_workspace_config import path_label, require_document_authoring  # noqa: E402
+from docs_workspace_config import load_docs_stage, path_label, require_document_authoring  # noqa: E402
 from local_env import runtime_env  # noqa: E402
 from markdown_renderer import normalize_markdown_blank_lines  # noqa: E402
 from docs_publication_ignore import publication_ignore_path  # noqa: E402
+from docs_recent_exclusions import recent_exclusions_path  # noqa: E402
 from docs_document_subjects import project_reader_subject  # noqa: E402
 from docs_collection_customisations import collection_customisation_metadata_record  # noqa: E402
 
@@ -195,6 +196,17 @@ def open_publication_ignore(repo_root: Path, body: Dict[str, Any], dry_run: bool
     path = publication_ignore_path(repo_root)
     if not path.is_file():
         raise FileNotFoundError("Working unpublishable.json is unavailable")
+    open_source_path(repo_root, path, editor="vscode", dry_run=dry_run)
+    return {"ok": True, "editor": "vscode", "dry_run": dry_run}
+
+
+def open_recent_exclusions(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
+    """Open the exact Recent policy file in VS Code, including invalid JSON for repair."""
+    if body:
+        raise ValueError("Opening Recent exclusions requires an empty request")
+    path = recent_exclusions_path(load_docs_stage(repo_root, "working"))
+    if not path.is_file():
+        raise FileNotFoundError("Working recent-exclusions.json is unavailable")
     open_source_path(repo_root, path, editor="vscode", dry_run=dry_run)
     return {"ok": True, "editor": "vscode", "dry_run": dry_run}
 

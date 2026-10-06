@@ -2,7 +2,7 @@
 doc_id: d-20260919-100234-038395
 title: "Shared Icons: Toolbar Mapping"
 added_date: "2026-09-19 10:02:34"
-last_updated: "2026-10-05 14:15:00"
+last_updated: "2026-10-06 21:51:44"
 summary: Editable mappings for Docs Viewer toolbars, report toolbars and report list icons, including code identifiers, state variants and replacement artwork choices.
 ui_status: planned
 parent_id: d-20260910-223116-9a1011
@@ -70,6 +70,7 @@ Code identifiers below are exact **renderer keys**, except entries explicitly ma
 | Directives menu: table detail | directive `table-detail` | Inserts table-detail marker | ⊞ | table.svg | - | Implemented; review pending |
 | Directives menu: related links | directive `insert-related-links` | Inserts the related-links token and selects its heading | Relationship cue | waypoints.svg | Icon and text | Flat directive group below the separator; review pending |
 | Directives menu: icon | directive `insert-icon` | Inserts the icon token and selects its filename stem | Picture cue | image.svg | Icon and text | Flat directive group below the separator; review pending |
+| Directives menu: Summary | directive `insert-summary` | Inserts a standalone Summary token into the dirty Source buffer | New item | summary.svg | Icon and text | Last item in the flat directive group; implemented, review pending |
 | Directives menu: backlinks | directive `docs-backlinks` | Inserts Documents linking here report | ↩ | — | — | Retired from insertion menu; related-links token remains follow-up work |
 | Content detail: return | `content-detail-back` | Returns from content detail to document | Text `Back to document` | arrow-left.svg | — | Implemented; review pending |
 | Content detail: open | `content-detail-open-new-tab` | Opens supported detail target in another tab | Inline external-link SVG | external-link.svg | — | Implemented; review pending |
@@ -122,6 +123,7 @@ Identifiers marked `DOM` are element IDs; `selector` entries are exact attribute
 | Links: refresh | `workspace_links`; `mountWorkspaceLinksReport(): refresh`; selector `[aria-label="Refresh links"]` | Rereads the saved Links report | 🔄 | refresh-cw.svg | — | Implemented; review pending |
 | Unpublishable: refresh | `unpublishable`; `mountUnpublishableReport(): refresh` | Rereads the publication-ignore list | Text `Refresh` | refresh-cw.svg | — | Implemented; review pending |
 | Unpublishable: edit source | `unpublishable`; `mountUnpublishableReport(): open` | Opens `unpublishable.json` in VS Code | Text `Open in VS Code` | file-code-corner.svg | 20px theme-tinted mask; shared 32px borderless button and hover colour | Implemented; review pending |
+| Recent: edit exclusions | control `open-recent-exclusions`; DOM `docsViewerRecentExclusionsOpenButton` | Opens the configured `recent-exclusions.json` in VS Code | New item | file-code-corner.svg | Index-view toolbar icon; accessible name and tooltip Open Recent exclusions in VS Code | Local Recent view only; implemented, manual review pending |
 | Broken Links: refresh | DOM `docsBrokenLinksReportRun` | Idle; click scans and saves the report | Text `Run audit` | refresh-cw.svg | Icon only; accessible name and tooltip Refresh | Implemented; review pending |
 | Broken Links: refresh | DOM `docsBrokenLinksReportRun` | Audit running; disabled | Text `Running...` | refresh-cw.svg | Icon retained; progress cursor and accessible busy state; no running text | Implemented; review pending |
 | Project State: run | DOM `docsProjectStateReportRun` | Runs/refreshes reconciliation | 🔄 | refresh-cw.svg | — | Implemented; review pending |

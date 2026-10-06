@@ -17,6 +17,7 @@ from markdown_it.rules_inline import StateInline
 
 from .common import render_markdown_to_html
 from .related_links_directive import RELATED_LINKS_PREFIX, install_related_links_rule
+from .summary_directive import SUMMARY_DIRECTIVE, install_summary_rule
 from markdown_renderer import build_markdown_renderer, normalize_markdown_blank_lines
 from docs_svg_sanitizer import sanitize_svg_bytes
 from docs_icon_assets import icon_asset_path
@@ -98,15 +99,17 @@ class InlineIconRenderer:
         state.pos = closing + 2
         return True
 
-    def render_markdown(self, markdown: str, *, related_links: Callable[[str], str] | None = None) -> str:
-        """Expand icons only in Markdown inline content, preserving literal code.
+    def render_markdown(self, markdown: str, *, related_links: Callable[[str], str] | None = None, summary: str = "") -> str:
+        """Expand inline icons and document blocks, preserving literal code.
 
         Normal Markdown parsing also protects fences, indented code, comments,
         escaped text and raw HTML attributes. Icon tokens create no relationships.
         """
-        if ICON_TOKEN_PREFIX not in markdown and RELATED_LINKS_PREFIX not in markdown:
+        if ICON_TOKEN_PREFIX not in markdown and RELATED_LINKS_PREFIX not in markdown and SUMMARY_DIRECTIVE not in markdown:
             return render_markdown_to_html(markdown)
         renderer = build_markdown_renderer()
+        if SUMMARY_DIRECTIVE in markdown:
+            install_summary_rule(renderer, summary=summary)
         if RELATED_LINKS_PREFIX in markdown:
             if related_links is None:
                 raise ValueError("Related links require a prepared document relationship context")

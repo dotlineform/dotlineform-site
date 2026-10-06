@@ -52,15 +52,10 @@ export function initDocsViewerRouteWorkflow(context) {
     for (var node = context.activeMount(); node; node = node.parentElement) {
       positions.push({ node: node, top: node.scrollTop, left: node.scrollLeft });
     }
-    context.root.querySelectorAll(".docsViewer__nav, .docsViewer__results, [data-docs-viewer-index-panel]").forEach(function (node) {
-      positions.push({ node: node, top: node.scrollTop, left: node.scrollLeft });
-    });
     return positions;
   }
   async function capture() {
     return { document: context.captureDocument(), hash: displayedHash,
-      indexDocId: index.indexSelectedDocId, expanded: new Set(index.expandedDocIds),
-      query: search.searchQuery, count: search.searchVisibleCount, indexView: context.activeIndexViewId(),
       positions: capturePositions(), x: window.scrollX, y: window.scrollY,
       focus: context.root.ownerDocument.activeElement,
       focusHref: context.root.ownerDocument.activeElement && context.root.ownerDocument.activeElement.href || "" };
@@ -69,18 +64,14 @@ export function initDocsViewerRouteWorkflow(context) {
     if (!record) throw new Error("This navigation entry is unavailable.");
     context.restoreDocument(record.document);
     displayedHash = record.hash;
-    var treeChanged = index.indexSelectedDocId !== record.indexDocId || JSON.stringify(Array.from(index.expandedDocIds).sort()) !== JSON.stringify(Array.from(record.expanded).sort());
-    index.indexSelectedDocId = index.docsById.has(record.indexDocId) ? record.indexDocId : "";
-    index.expandedDocIds = new Set(Array.from(record.expanded).filter(function (docId) { return index.docsById.has(docId); }));
-    search.searchVisibleCount = record.count;
-    search.searchQuery = record.query;
-    if (treeChanged) context.renderSidebar();
-    context.syncIndexRoute(record.query, record.indexView);
+    // Index state belongs to the panel; align the restored route with its current query.
+    var target = selected.documentTarget;
+    if (target) navigation.replaceUrl(viewerUrl(target.doc_id, displayedHash, search.searchQuery, target));
     record.positions.forEach(function (position) {
       if (position.node.isConnected) { position.node.scrollTop = position.top; position.node.scrollLeft = position.left; }
     });
     window.scrollTo(record.x, record.y);
-    var focus = record.focus && record.focus.isConnected ? record.focus :
+    var focus = record.focus && record.focus.isConnected && !record.focus.closest("[hidden]") ? record.focus :
       Array.from(context.root.querySelectorAll("a[href]")).find(function (node) { return record.focusHref && node.href === record.focusHref && !node.closest("[hidden]"); });
     if (focus) focus.focus({ preventScroll: true });
   }

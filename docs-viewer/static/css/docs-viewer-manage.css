@@ -171,6 +171,10 @@
   mask-image: url("../icons/square-arrow-right-exit.svg");
 }
 
+.docsViewer__icon--summary{
+  mask-image: url("../icons/summary.svg");
+}
+
 .docsViewer__icon--table{
   mask-image: url("../icons/table.svg");
 }

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260331-000000-c313fd
 title: Runtime
 added_date: "2026-03-31 00:00:00"
-last_updated: "2026-10-03 19:40:37"
+last_updated: "2026-10-06 22:13:31"
 summary: Public, manage, and review execution paths; browser/server authority boundaries; extension method; rationale; and known weak spots.
 parent_id: d-20260424-000000-50b63f
 ---
@@ -63,11 +63,13 @@ The sidebar owns an explicit tree selection independently of the displayed docum
 
 Visible navigation scrolls the current row only when needed; hidden tracking neither scrolls results nor moves focus. Revealing the tree scrolls its already current selection without fetching the Index, rebuilding nodes or reloading a document. Search and Recent keep query/ranking/paging and mounted results independent of document navigation and Info capture. [Docs Viewer Search](Docs_Viewer_Search.md#index-results-and-navigation) owns list acquisition, compact rows, history and clearing/toggling behavior.
 
+Back to a retained caller restores the document/report and its reading position while preserving the Index panel's current tree/Search/Recent view, query, paging, tree selection/expansion and list scroll. The panel is not part of a document restoration record. Existing result highlighting follows the restored exact target without rerendering rows or moving the list; focus restoration ignores invocation controls that are now hidden. The restored document URL uses the panel's current query. Initial/reloaded routes still apply their URL query once.
+
 ## Exact Document Navigation And Return
 
 The [route workflow](../../docs-viewer/runtime/js/shared/docs-viewer-route-workflow.js) opens ordinary `?doc=<id>` and named `?collection=<owner>&doc=<id>` targets through one provider and renderer. Collection configuration selects by-ID storage; browser configuration provides an explicit ordinary document URL template. No full collection manifest or Index record is a document-loading prerequisite. Host-plus-`subdoc`, scope and stage routes are rejected without aliases. Copy Link identifies only the document. Review preserves the selected package and its membership checks; package-local source identities remain supported within that authority.
 
-The [navigation owner](../../docs-viewer/runtime/js/shared/docs-viewer-navigation.js) retains only the current document/report and one immediate caller, identified by browser entries. Each entry carries a page-session ID, entry ID, browser position and caller ID. Small restoration records hold controls, independent Index state, scroll and focus; document roots and report models stay with their owners. Opening another document drops the older caller. Back restores the immediate caller, consumes that return context and releases the document being left; toolbar Back is then hidden. There is no retained Forward destination, `from` parameter, independent ordered return stack, persistent cache or expiry policy. Direct loads, new tabs and reloads begin without a caller.
+The [navigation owner](../../docs-viewer/runtime/js/shared/docs-viewer-navigation.js) retains only the current document/report and one immediate caller, identified by browser entries. Each entry carries a page-session ID, entry ID, browser position and caller ID. Small restoration records hold document/report controls, reading position and focus; document roots and report models stay with their owners, while Index panel state remains independent. Opening another document drops the older caller. Back restores the immediate caller, consumes that return context and releases the document being left; toolbar Back is then hidden. There is no retained Forward destination, `from` parameter, independent ordered return stack, persistent cache or expiry policy. Direct loads, new tabs and reloads begin without a caller.
 
 Document openings push browser entries. Same-document heading changes and filter/sort/group/page/Search/Recent adjustments update the current entry. Repeated list → document → Back cycles reuse the same list model and mount without loading an unchanged manifest or rerunning Projects. List → Doc A → Doc B releases the list; Back returns to Doc A with no earlier toolbar Back. Opening that discarded list through Index loads it again. Browser-native Back/Forward outside the retained pair reloads the exact URL and starts a fresh page session. Changed metadata can move or remove an invocation row; focus resolves its current link when possible. Missing or deleted targets display an error without substituting a collection host. Deleting the displayed document returns to its immediate caller, or uses the existing surviving ordinary-root/empty destination when none exists.
 

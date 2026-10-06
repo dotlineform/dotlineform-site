@@ -11,10 +11,11 @@ from .common import (
 from .rendering import add_missing_image_titles
 from .source import DocRecord, DocumentIdentity
 from .related_links import render_related_links
-from docs_document_identity import doc_updated_date, is_doc_date
+from docs_document_identity import doc_updated_date
 from docs_discovery_selection import select_collection_documents, select_ordinary_documents
 from docs_publication_ignore import read_publication_ignore_ids
-from docs_recent_payload import DOCS_RECENT_SCHEMA_VERSION, validate_recent_payload
+from docs_recent_exclusions import read_recent_exclusions
+from docs_recent_payload import build_recent_payload
 from docs_report_source import project_report_markdown
 
 
@@ -33,7 +34,9 @@ class PayloadBuilderMixin:
             projected_markdown,
         )
         try:
-            rendered = self.inline_icons.render_markdown(resolved, related_links=lambda heading: render_related_links(self, doc, heading))
+            rendered = self.inline_icons.render_markdown(
+                resolved, related_links=lambda heading: render_related_links(self, doc, heading), summary=doc.summary,
+            )
         except ValueError as exc:
             raise ValueError(f"Document {doc.doc_id}: {exc}") from exc
         content_html = add_missing_image_titles(
@@ -146,7 +149,7 @@ class PayloadBuilderMixin:
         index are never opened; missing metadata must be rebuilt by its owner.
         """
         if self.config.stage != "working":
-            raise ValueError("Recents generation requires Working; Preview copies the saved payload")
+            raise ValueError("Recents generation requires Working; Preview copies the prepared payload")
         selected = select_ordinary_documents(
             tree, read_publication_ignore_ids(self.repo_root), field="Working Recents tree",
         )
@@ -172,29 +175,10 @@ class PayloadBuilderMixin:
         output_path: Path,
     ) -> dict[str, Any]:
         """Sort the complete candidate set before limiting a reader projection."""
-        limit = self.recent_limit()
-        for row in candidates:
-            if row.get("last_updated") != "" and not is_doc_date(row.get("last_updated")):
-                raise ValueError("Recents requires date-only last_updated metadata")
-        ordered = sorted(
-            (row for row in candidates if row["last_updated"]),
-            key=lambda row: (row["title"].lower(), row["doc_id"], row.get("collection", "")),
+        payload = build_recent_payload(
+            candidates, limit=self.recent_limit(), generated_at=utc_timestamp(),
+            exclusions=read_recent_exclusions(self.config),
         )
-        ordered.sort(key=lambda row: row["last_updated"], reverse=True)
-        fields = ("doc_id", "title", "parent_id", "parent_title",
-                  "collection", "report_doc_id", "collection_title")
-        rows = [
-            {**{key: row[key] for key in fields if key in row}, "timestamp": row["last_updated"]}
-            for row in ordered
-        ][:limit]
-        comparable = {
-            "schema": DOCS_RECENT_SCHEMA_VERSION,
-            "limit": limit,
-            "docs": rows,
-        }
-        payload = {
-            **comparable,
-            "generated_at": self.effective_generated_at_for_payload(output_path, comparable),
-        }
-        validate_recent_payload(payload)
+        comparable = {key: value for key, value in payload.items() if key != "generated_at"}
+        payload["generated_at"] = self.effective_generated_at_for_payload(output_path, comparable)
         return payload
