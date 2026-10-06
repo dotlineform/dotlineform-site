@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v9",
-    "version": "blake2b-61f108e4b5b0fb727fb990ae11a7e806",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "version": "blake2b-4493cda39968b3b637efeeb06c112db3",
+    "generated_at_utc": "2026-10-05T13:45:32Z"
   },
   "work": {
     "work_id": "03188",
@@ -15,6 +15,13 @@
     "height_px": 3000,
     "media_version": 1,
     "series_id": "005",
+    "downloads": [
+      {
+        "filename": "03188-composite-for-3-symbols.pdf",
+        "label": "composite for 3 symbols.pdf",
+        "url": "https://media.dotlineform.com/works/files/03188-composite-for-3-symbols.pdf"
+      }
+    ],
     "documents": [],
     "galleries": [
       {

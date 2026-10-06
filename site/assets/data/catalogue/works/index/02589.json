@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v9",
-    "version": "blake2b-71aca3e4dac28af83aac93230dd8f610",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "version": "blake2b-0e666071b9054d31ce9db1ccc0b73a2e",
+    "generated_at_utc": "2026-10-05T21:28:41Z"
   },
   "work": {
     "work_id": "02589",
@@ -19,7 +19,7 @@
     "galleries": [
       {
         "gallery_id": "157",
-        "title": "dotlineform (work in progress)"
+        "title": "dotlineform (2023) [work in progress]"
       }
     ]
   }

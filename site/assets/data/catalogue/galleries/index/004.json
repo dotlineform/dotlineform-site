@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "gallery_record_v1",
-    "version": "blake2b-7d7585b7cb80e9bc1c7800164f5f00d5",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "version": "blake2b-7ad4453744b707476ac57d93cbc5a297",
+    "generated_at_utc": "2026-10-05T21:28:41Z",
     "gallery_id": "004",
     "count": 9
   },
   "gallery": {
     "gallery_id": "004",
-    "title": "2 bodies"
+    "title": "bodies"
   },
   "member_works": [
     {

@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "gallery_record_v1",
-    "version": "blake2b-cda7ee8d39eab7491437f224d7806cb5",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "version": "blake2b-be7a00c2047216d517103acd0a92e4e4",
+    "generated_at_utc": "2026-10-05T21:28:41Z",
     "gallery_id": "233",
     "count": 5
   },
   "gallery": {
     "gallery_id": "233",
-    "title": "dotlineform (details)"
+    "title": "dotlineform (2021) [details]"
   },
   "member_works": [
     {

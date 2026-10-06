@@ -133,6 +133,10 @@
   border-bottom: 1px solid var(--docs-viewer-border);
 }
 
+.docsViewerReport[data-report-collection] .docsViewerReport__row{
+  margin: 0;
+}
+
 .docsViewerReport__cellLink{
   min-width: 0;
   color: var(--docs-viewer-link);

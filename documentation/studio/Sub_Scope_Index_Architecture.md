@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260728-113139-763354
 title: Sub-Scope Index Architecture
 added_date: "2026-07-28 11:31:39"
-last_updated: "2026-10-06 14:05:51"
+last_updated: "2026-10-06 16:21:43"
 summary: Collection-list ownership, exact document identity, registered customisations, retained selection and explicit management adoption.
 parent_id: d-20260801-084127-752d7e
 ---
@@ -128,6 +128,8 @@ Working draft indicators prefix the title text inside the title cell. They are p
 Checkboxes occupy a dedicated first cell or column before the title. Each checkbox remains a sibling of the title navigation control so selection cannot also navigate or create nested interactive controls. The checkbox cell is contributed only in Working selection mode and is omitted or collapsed otherwise; public rows load no selection module. Catalogue thumbnails appear inside the title navigation control in both Working and public lists. There are no collection-specific column layouts or Subject heading rows.
 
 When Working selection is inactive, the shared management stylesheet hides the outer leading-cell host as well as its checkbox gutter. This prevents an empty grid row from adding space above the thumbnail/title. Every collection row retains equal `0.65rem` top and bottom padding; active selection restores the checkbox column and centers the checkbox beside the thumbnail/title across all local collection reports.
+
+The shared report stylesheet resets collection-row margins to zero in both local and public compositions. The public site's base `li` rule otherwise contributes a bottom margin between row borders, making the next row appear to have more space above its thumbnail. Row padding remains symmetric, and the tracked public stylesheet receives this rule through `bin/site-code-update`. The 2026-10-06 correction received source/diff review and projection/site/whitespace validation; visual review remains user-owned.
 
 ```text
 selection mode:  [checkbox] [optional Draft icon + title]

@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v9",
-    "version": "blake2b-3f2e4726885b5810cabde68c4bcc2189",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "version": "blake2b-94996886cdf51307392d38bb55e2f4c7",
+    "generated_at_utc": "2026-10-05T21:28:41Z"
   },
   "work": {
     "work_id": "03082",
@@ -18,7 +18,7 @@
     "documents": [],
     "galleries": [
       {
-        "gallery_id": "182",
+        "gallery_id": "180",
         "title": "body (details)"
       }
     ]

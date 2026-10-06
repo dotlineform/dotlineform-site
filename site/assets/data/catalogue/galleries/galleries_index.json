@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "catalogue_galleries_index_v1",
-    "version": "blake2b-2980d86937c2009d7637120adb05bf3e",
-    "generated_at_utc": "2026-09-28T17:14:10Z",
-    "count": 303
+    "version": "blake2b-0aea89dcbe25e941ba784693aa05d2ed",
+    "generated_at_utc": "2026-10-05T21:28:41Z",
+    "count": 299
   },
   "galleries": {
     "001": {
@@ -18,7 +18,7 @@
     },
     "004": {
       "gallery_id": "004",
-      "title": "2 bodies",
+      "title": "bodies",
       "work_count": 9
     },
     "005": {
@@ -763,12 +763,12 @@
     },
     "156": {
       "gallery_id": "156",
-      "title": "dotlineform (details)",
+      "title": "dotlineform (2023) [details]",
       "work_count": 6
     },
     "157": {
       "gallery_id": "157",
-      "title": "dotlineform (work in progress)",
+      "title": "dotlineform (2023) [work in progress]",
       "work_count": 44
     },
     "158": {
@@ -884,17 +884,7 @@
     "180": {
       "gallery_id": "180",
       "title": "body (details)",
-      "work_count": 3
-    },
-    "181": {
-      "gallery_id": "181",
-      "title": "body (details)",
-      "work_count": 3
-    },
-    "182": {
-      "gallery_id": "182",
-      "title": "body (details)",
-      "work_count": 3
+      "work_count": 9
     },
     "183": {
       "gallery_id": "183",
@@ -919,12 +909,7 @@
     "187": {
       "gallery_id": "187",
       "title": "2 bodies monoprint (details)",
-      "work_count": 5
-    },
-    "188": {
-      "gallery_id": "188",
-      "title": "2 bodies monoprint (details)",
-      "work_count": 4
+      "work_count": 9
     },
     "189": {
       "gallery_id": "189",
@@ -1148,7 +1133,7 @@
     },
     "233": {
       "gallery_id": "233",
-      "title": "dotlineform (details)",
+      "title": "dotlineform (2021) [details]",
       "work_count": 5
     },
     "234": {
@@ -1515,11 +1500,6 @@
       "gallery_id": "306",
       "title": "pond (details)",
       "work_count": 4
-    },
-    "307": {
-      "gallery_id": "307",
-      "title": "test",
-      "work_count": 0
     }
   }
 }

@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "gallery_record_v1",
-    "version": "blake2b-ba59af90caea43e8dd01c7f618ac94b2",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "version": "blake2b-5ab8a7f0726afce4e2f0a900696d41ab",
+    "generated_at_utc": "2026-10-05T21:28:41Z",
     "gallery_id": "157",
     "count": 44
   },
   "gallery": {
     "gallery_id": "157",
-    "title": "dotlineform (work in progress)"
+    "title": "dotlineform (2023) [work in progress]"
   },
   "member_works": [
     {

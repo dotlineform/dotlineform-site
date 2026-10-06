@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "catalogue_series_galleries_index_v1",
-    "version": "blake2b-6cae80b8786b84e6e6263470cc0845a6",
-    "generated_at_utc": "2026-09-28T17:14:10Z",
-    "count": 139
+    "version": "blake2b-af3ec42d80003b1ec8654b2e87fb2d0b",
+    "generated_at_utc": "2026-10-06T14:32:29Z",
+    "count": 140
   },
   "series_galleries": {
     "001": [
@@ -45,18 +45,10 @@
     "004": [
       {
         "gallery_id": "004",
-        "title": "2 bodies"
+        "title": "bodies"
       },
       {
         "gallery_id": "180",
-        "title": "body (details)"
-      },
-      {
-        "gallery_id": "181",
-        "title": "body (details)"
-      },
-      {
-        "gallery_id": "182",
         "title": "body (details)"
       },
       {
@@ -77,10 +69,6 @@
       },
       {
         "gallery_id": "187",
-        "title": "2 bodies monoprint (details)"
-      },
-      {
-        "gallery_id": "188",
         "title": "2 bodies monoprint (details)"
       }
     ],
@@ -435,7 +423,7 @@
       },
       {
         "gallery_id": "233",
-        "title": "dotlineform (details)"
+        "title": "dotlineform (2021) [details]"
       }
     ],
     "043": [
@@ -445,11 +433,11 @@
       },
       {
         "gallery_id": "156",
-        "title": "dotlineform (details)"
+        "title": "dotlineform (2023) [details]"
       },
       {
         "gallery_id": "157",
-        "title": "dotlineform (work in progress)"
+        "title": "dotlineform (2023) [work in progress]"
       }
     ],
     "044": [
@@ -1491,6 +1479,7 @@
         "gallery_id": "143",
         "title": "simultaneous equations"
       }
-    ]
+    ],
+    "144": []
   }
 }
