@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260428-000000-f5ff18
 title: Planned Features
 added_date: "2026-04-28 00:00:00"
-last_updated: "2026-10-06 12:35:24"
+last_updated: "2026-10-06 14:34:27"
 summary: This explains the delivery model and workflows to implement new repo and application features.
 ui_status: planned
 parent_id: ""
@@ -146,6 +146,7 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 Store new standalone delivery documents for bounded work that does not need a separate feature parent under `documentation/studio/deliveries/`. Parent them directly to this document and keep implementation state, decisions and completion gates in the delivery. At closeout, transfer lasting details to the durable owner and review whether the delivery and its link should be retained.
 
+- [Work Subfolder Import Delivery](deliveries/Work_Subfolder_Import_Delivery.md) — Proposed. New Work folder import creates one Work per direct supported image, with filename-stem titles, shared form metadata and manual import tracking through existing reports. Implementation approval and readiness completion remain pending.
 - [Docs Static Image Conversion Delivery](deliveries/Docs_Static_Image_Conversion_Delivery.md) — Complete and accepted on 2026-10-06. Docs-owned 800px-long-edge WebP conversion is delivered; the user confirmed a successful Add image saved at 800px. Retained for recent-work lookup pending manual archive.
 - [Broken Links Snapshot Delivery](deliveries/Broken_Links_Snapshot_Delivery.md) — Implemented and reviewed; awaiting user manual review and acceptance. Saved scans load on open, Refresh audits and saves, and a progress cursor replaces running messages. Persistence and presentation remain manual review gates.
 - [Docs Media Collections Delivery](deliveries/Docs_Media_Collections_Delivery.md) — Complete and accepted on 2026-10-04. Saved ordinary/collection media report excludes thumbnails and refreshes each document owner once; collection selection controls the orphan/total counts. Retained for recent-delivery lookup pending manual archive.
