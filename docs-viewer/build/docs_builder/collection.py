@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
@@ -82,8 +82,8 @@ class CollectionDocsBuilder(DocsDataBuilder):
         url = f"{self.viewer_base_url}?{'&'.join(pairs)}"
         return f"{url}#{anchor}" if anchor else url
 
-    def by_id_metadata_entry(self, doc: DocRecord, docs: Sequence[DocumentIdentity]) -> dict[str, Any]:
-        entry = super().by_id_metadata_entry(doc, docs)
+    def by_id_metadata_entry(self, doc: DocRecord, docs_by_id: Mapping[str, DocumentIdentity]) -> dict[str, Any]:
+        entry = super().by_id_metadata_entry(doc, docs_by_id)
         entry.pop("ui_status", None)
         return entry
 
@@ -244,9 +244,9 @@ class CollectionDocsBuilder(DocsDataBuilder):
             CollectionDocumentSummary(row["doc_id"], row["title"])
             for row in manifest_payload["docs"]
         ]
-        known_ids = {row.doc_id for row in summaries}
+        docs_by_id = {doc.doc_id: doc for doc in summaries}
         for doc in docs:
-            if doc.parent_id and doc.parent_id not in known_ids and not self.allow_unresolved_parent_ids:
+            if doc.parent_id and doc.parent_id not in docs_by_id and not self.allow_unresolved_parent_ids:
                 raise RuntimeError(f"Unknown parent_id {doc.parent_id!r} for doc {doc.doc_id!r}")
         media_snapshot = (
             None if self.skip_media_builds or self.targeted_build
@@ -254,12 +254,14 @@ class CollectionDocsBuilder(DocsDataBuilder):
         )
         built_doc_ids = [doc.doc_id for doc in ordered_docs]
         stale_item_ids = self.stale_doc_payload_ids(built_doc_ids, target_doc_ids=self.only_doc_ids)
-        links_plan = prepare_document_links(self, docs, built_doc_ids, stale_item_ids)
+        links_plan = prepare_document_links(
+            self, docs, built_doc_ids, stale_item_ids, document_identities=docs_by_id,
+        )
         related_records = {}
         links_build = build_document_links(self, links_plan, write=write, related_records=related_records)
         prepare_related_links(self, docs, related_records)
         item_payloads = {
-            doc.doc_id: self.item_entry(doc, summaries)
+            doc.doc_id: self.item_entry(doc, docs_by_id)
             for doc in ordered_docs
         }
         if self.config.stage == "working" and (subjects_by_doc_id is not None or "subject_generation" in manifest_payload):

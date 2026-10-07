@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
 from typing import Any
 
 from .common import read_json
-from .source import DocRecord
+from .source import DocumentIdentity
 from docs_rendered_links import collect_anchors, parse_docs_target, resolve_href
 
 
@@ -13,13 +14,11 @@ DOCS_BACKLINKS_SCHEMA_VERSION = "docs_backlinks_v2"
 class BacklinksMixin:
     def backlinks_payload(
         self,
-        docs: list[DocRecord],
+        docs_by_id: Mapping[str, DocumentIdentity],
         item_payloads: dict[str, dict[str, Any]],
     ) -> dict[str, Any]:
-        current_ids = {doc.doc_id for doc in docs}
-        docs_by_id = {doc.doc_id: doc for doc in docs}
         payloads_by_id: dict[str, dict[str, Any]] = {}
-        for doc in docs:
+        for doc in docs_by_id.values():
             payload = item_payloads.get(doc.doc_id)
             if payload is None:
                 payload = read_json(self.items_dir / f"{doc.doc_id}.json")
@@ -32,7 +31,7 @@ class BacklinksMixin:
 
         source_ids_by_target: dict[str, set[str]] = {}
         viewer_routes = (self.viewer_base_url, self.workspace.public_viewer_base_url)
-        for source_doc in docs:
+        for source_doc in docs_by_id.values():
             content_html = str(
                 payloads_by_id[source_doc.doc_id].get("content_html") or ""
             )
@@ -50,7 +49,7 @@ class BacklinksMixin:
                 target_doc_id = str(target.get("doc_id") or "").strip()
                 if (
                     target.get("collection", "") != getattr(self, "collection_id", "")
-                    or target_doc_id not in current_ids
+                    or target_doc_id not in docs_by_id
                     or target_doc_id == source_doc.doc_id
                 ):
                     continue

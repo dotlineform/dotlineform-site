@@ -32,6 +32,8 @@ def tree_parent_ids(tree: list[dict[str, Any]]) -> dict[str, str]:
 
     def visit(nodes: list[dict[str, Any]], parent_id: str) -> None:
         for node in nodes:
+            if node["doc_id"] in parents:
+                raise ValueError(f"Duplicate document ID in index-order.json: {node['doc_id']}")
             parents[node["doc_id"]] = parent_id
             visit(node["children"], node["doc_id"])
 

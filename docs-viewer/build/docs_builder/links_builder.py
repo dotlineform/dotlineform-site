@@ -7,7 +7,7 @@ Records are created only when a document relationship needs either endpoint.
 
 from __future__ import annotations
 
-from collections.abc import Collection
+from collections.abc import Collection, Mapping
 import fcntl
 import json
 from pathlib import Path
@@ -19,7 +19,7 @@ from .links_model import DocumentLinks, DocumentSummary, DocumentTarget
 from .links_schema import read_relationship_payload, relationship_payload
 from .semantic_tokens import SemanticTokenOccurrence, replace_semantic_tokens
 from .related_links_directive import RELATED_LINKS_PREFIX, render_without_related_links
-from .source import DocRecord
+from .source import DocRecord, DocumentIdentity
 from docs_document_identity import is_document_id
 from docs_document_location import canonical_document_viewer_url
 from docs_rendered_links import collect_anchors, parse_docs_target, resolve_href
@@ -55,13 +55,14 @@ def _safe_path(root: Path, name: str) -> Path:
 def prepare_document_links(
     builder: DocsDataBuilder, docs: list[DocRecord], built_doc_ids: Collection[str],
     stale_doc_ids: Collection[str],
+    *, document_identities: Mapping[str, DocumentIdentity],
 ) -> dict[str, Any] | None:
     """Keep exact changed/deleted identities independent of ordinary rendering."""
     if not links_enabled(builder.repo_root, builder.config):
         return None
     selected = builder.links_doc_ids if builder.links_doc_ids is not None else builder.only_doc_ids
     doc_ids = set(selected if selected is not None else set(built_doc_ids) | set(stale_doc_ids))
-    return {"documents": docs, "doc_ids": doc_ids}
+    return {"documents": docs, "doc_ids": doc_ids, "document_identities": document_identities}
 
 
 class _DocumentRefresh:
@@ -79,6 +80,7 @@ class _DocumentRefresh:
         self.output = self.outputs[""].parent / "links-by-id"
         self.routes = ("/docs/", builder.workspace.public_viewer_base_url)
         self.docs = {self.key(doc.doc_id): doc for doc in plan["documents"]}
+        self.identities = plan["document_identities"]
         self.metadata = {target: doc.front_matter for target, doc in self.docs.items()}
         self.records: dict[DocumentTarget, DocumentLinks | None] = {}
         self.original: dict[DocumentTarget, str | None] = {}
@@ -108,6 +110,8 @@ class _DocumentRefresh:
         """
         if doc is not None:
             return DocumentSummary(target, doc.title)
+        if target.collection == self.collection and (known := self.identities.get(target.doc_id)) is not None:
+            return DocumentSummary(target, known.title)
         metadata = self.metadata.get(target)
         if metadata is None:
             source = _safe_path(self.sources[target.collection], f"{target.doc_id}.md")

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 from .common import (
@@ -10,6 +10,7 @@ from .common import (
 )
 from .rendering import add_missing_image_titles
 from .source import DocRecord, DocumentIdentity
+from .ordinary_metadata import OrdinaryDocumentSummary
 from .related_links import render_related_links
 from docs_document_identity import doc_updated_date
 from docs_discovery_selection import select_collection_documents, select_ordinary_documents
@@ -23,7 +24,7 @@ class PayloadBuilderMixin:
     def item_entry(
         self,
         doc: DocRecord,
-        docs: Sequence[DocumentIdentity],
+        docs_by_id: Mapping[str, DocumentIdentity],
     ) -> dict[str, Any]:
         projected_markdown = project_report_markdown(
             doc.body_markdown,
@@ -42,10 +43,10 @@ class PayloadBuilderMixin:
         content_html = add_missing_image_titles(
             self.rewrite_doc_links(
                 self.restore_semantic_media_html(rendered),
-                current_doc=doc, docs=docs,
+                current_doc=doc, docs_by_id=docs_by_id,
             )
         )
-        entry = self.by_id_metadata_entry(doc, docs)
+        entry = self.by_id_metadata_entry(doc, docs_by_id)
         entry["content_html"] = content_html
         return entry
 
@@ -58,8 +59,10 @@ class PayloadBuilderMixin:
             return sorted(docs, key=self.doc_sort_key)
         return docs
 
-    def effective_generated_at_for_payload(self, path: Path, comparable_payload: dict[str, Any]) -> str:
-        existing = read_json(path)
+    def effective_generated_at_for_payload(
+        self, path: Path, comparable_payload: dict[str, Any], *, existing_payload: dict[str, Any] | None = None,
+    ) -> str:
+        existing = read_json(path) if existing_payload is None else existing_payload
         if not isinstance(existing, dict):
             return utc_timestamp()
         generated_at = str(existing.get("generated_at") or "").strip()
@@ -68,7 +71,9 @@ class PayloadBuilderMixin:
             return generated_at
         return utc_timestamp()
 
-    def tree_entry(self, doc: DocRecord) -> dict[str, Any]:
+    def tree_entry(self, doc: DocRecord | OrdinaryDocumentSummary) -> dict[str, Any]:
+        if isinstance(doc, OrdinaryDocumentSummary):
+            return dict(doc.navigation_entry)
         entry: dict[str, Any] = {
             "doc_id": doc.doc_id,
             "title": doc.title,
@@ -82,19 +87,21 @@ class PayloadBuilderMixin:
             entry["report_id"] = doc.report.id
         return entry
 
-    def index_tree_payload(self, docs: list[DocRecord], viewer_options: dict[str, Any]) -> dict[str, Any]:
-        included_docs = self.ordered_docs_for_index(docs)
-        included_ids = {doc.doc_id for doc in included_docs}
-        included_by_parent: dict[str, list[DocRecord]] = {}
+    def index_tree_payload(
+        self, docs_by_id: Mapping[str, DocRecord | OrdinaryDocumentSummary], viewer_options: dict[str, Any],
+        *, previous_payload: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        included_docs = list(docs_by_id.values())
+        included_by_parent: dict[str, list[DocRecord | OrdinaryDocumentSummary]] = {}
         for doc in included_docs:
-            parent_id = self.effective_parent_id(doc, docs)
-            if parent_id not in included_ids:
+            parent_id = self.effective_parent_id(doc.parent_id, docs_by_id)
+            if parent_id not in docs_by_id:
                 parent_id = ""
             included_by_parent.setdefault(parent_id, []).append(doc)
 
         emitted_ids: set[str] = set()
 
-        def node_for(doc: DocRecord, active_ids: set[str] | None = None) -> dict[str, Any]:
+        def node_for(doc: DocRecord | OrdinaryDocumentSummary, active_ids: set[str] | None = None) -> dict[str, Any]:
             active = active_ids or set()
             active.add(doc.doc_id)
             emitted_ids.add(doc.doc_id)
@@ -119,7 +126,9 @@ class PayloadBuilderMixin:
         }
         return {
             **comparable,
-            "generated_at": self.effective_generated_at_for_payload(self.output_dir / "index-tree.json", comparable),
+            "generated_at": self.effective_generated_at_for_payload(
+                self.output_dir / "index-tree.json", comparable, existing_payload=previous_payload,
+            ),
         }
 
     def recent_limit(self) -> int:
@@ -128,7 +137,6 @@ class PayloadBuilderMixin:
     def recent_entry(
         self,
         doc: DocRecord,
-        docs: list[DocRecord],
         title_by_id: dict[str, str],
     ) -> dict[str, Any]:
         entry: dict[str, Any] = {
@@ -136,7 +144,7 @@ class PayloadBuilderMixin:
             "title": doc.title,
             "last_updated": doc_updated_date(doc.last_updated),
         }
-        parent_id = self.effective_parent_id(doc, docs)
+        parent_id = self.effective_parent_id(doc.parent_id, title_by_id)
         if parent_id and parent_id in title_by_id:
             entry["parent_id"] = parent_id
             entry["parent_title"] = title_by_id[parent_id]
@@ -155,7 +163,7 @@ class PayloadBuilderMixin:
         )
         eligible_docs = [doc for doc in docs if doc.doc_id in selected]
         title_by_id = {doc.doc_id: doc.title for doc in eligible_docs}
-        rows = [self.recent_entry(doc, eligible_docs, title_by_id) for doc in eligible_docs]
+        rows = [self.recent_entry(doc, title_by_id) for doc in eligible_docs]
         for collection, children in select_collection_documents(self.repo_root, self.config, set(selected)):
             for doc_id, child in children.items():
                 rows.append({

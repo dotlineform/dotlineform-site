@@ -24,7 +24,9 @@ from .rendering import ContentRenderingMixin
 from .semantic_token_registry import load_semantic_token_registry
 from .semantic_tokens import SemanticTokensMixin
 from .source import SourceLoadingMixin
+from .ordinary_metadata import targeted_document_metadata
 from .write_plan import WritePlanMixin
+from docs_index_order import read_index_order, tree_parent_ids
 from docs_selected_documents import read_selected, refresh_selected_documents, selected_path
 
 
@@ -79,39 +81,52 @@ class DocsDataBuilder(
         started_at = monotonic_time()
         self.inline_icons = InlineIconRenderer(self.repo_root)
         self._catalogue_work_cache = {}
-        docs = self.load_docs()
+        parent_ids = tree_parent_ids(read_index_order(self.source_dir))
+        source_ids = None if self.only_doc_ids is None else list(set(self.only_doc_ids) | set(self.links_doc_ids or []))
+        capture_media_sources = self.targeted_build and not self.skip_media_builds
+        docs = self.load_docs(source_ids, parent_ids=parent_ids, capture_source_text=capture_media_sources)
         self.validate_canonical_doc_ids(docs)
-        self.validate_docs(docs)
+        self.validate_docs(docs, known_doc_ids=parent_ids)
+        documents = docs
+        previous_tree = None
+        previous_tree_text = None
+        if self.targeted_build:
+            documents, previous_tree, previous_tree_text = targeted_document_metadata(self, docs, parent_ids)
+        docs_by_id = {doc.doc_id: doc for doc in documents}
         read_selected(self.config)
         media_snapshot = (
             None
             if self.skip_media_builds
-            else build_collection_media_snapshot(self.repo_root, self.media_owner, write=write)
+            else build_collection_media_snapshot(
+                self.repo_root, self.media_owner, write=write,
+                markdown_sources=[doc.source_text for doc in docs if doc.source_text is not None] if capture_media_sources else None,
+            )
         )
         media_builds = [] if media_snapshot is None else media_snapshot["producer_builds"]
         target_doc_ids = self.only_doc_ids if self.only_doc_ids is not None else [doc.doc_id for doc in docs]
-        if self.targeted_build:
-            self.validate_targeted_build_prerequisites(docs, target_doc_ids)
-        docs_for_item_build = [doc for doc in docs if doc.doc_id in target_doc_ids]
+        target_set = set(target_doc_ids)
+        docs_for_item_build = [doc for doc in docs if doc.doc_id in target_set]
         stale_item_ids = self.stale_doc_payload_ids(
             [doc.doc_id for doc in docs_for_item_build],
             target_doc_ids=target_doc_ids if self.targeted_build else None,
         )
-        links_plan = prepare_document_links(self, docs, target_doc_ids, stale_item_ids)
+        links_plan = prepare_document_links(
+            self, docs, target_doc_ids, stale_item_ids, document_identities=docs_by_id,
+        )
         related_records = {}
         links_build = build_document_links(self, links_plan, write=write, related_records=related_records)
-        prepare_related_links(self, docs, related_records)
+        prepare_related_links(self, docs_for_item_build, related_records)
 
         item_payloads = {
             doc.doc_id: self.item_entry(
                 doc,
-                docs,
+                docs_by_id,
             )
             for doc in docs_for_item_build
         }
 
         viewer_options = self.viewer_options_payload()
-        index_tree_payload = self.index_tree_payload(docs, viewer_options)
+        index_tree_payload = self.index_tree_payload(docs_by_id, viewer_options, previous_payload=previous_tree)
         # Preview, targeted builds and authoring follow-through preserve saved Recents.
         recent_payload = None
         if self.config.stage == "working" and not self.targeted_build and not self.skip_recent:
@@ -120,16 +135,18 @@ class DocsDataBuilder(
                 recent_candidates,
                 output_path=self.output_dir / "recent.json",
             )
-        backlinks_payload = self.backlinks_payload(docs, item_payloads)
+        backlinks_payload = self.backlinks_payload(docs_by_id, item_payloads)
         write_plan = self.build_write_plan(
             index_tree_payload,
             recent_payload,
             item_payloads,
             stale_item_ids=stale_item_ids,
             backlinks_payload=backlinks_payload,
+            existing_tree_text=previous_tree_text,
         )
         diagnostics = self.diagnostics_payload(
-            docs=docs,
+            docs_total=len(documents),
+            docs_emitted=len(item_payloads),
             write_plan=write_plan,
             elapsed_seconds=round(monotonic_time() - started_at, 3),
             target_doc_ids=target_doc_ids if self.targeted_build else None,
@@ -137,7 +154,7 @@ class DocsDataBuilder(
         if write:
             self.write_outputs(
                 write_plan,
-                docs_total=len(docs),
+                docs_total=len(documents),
                 tree_total=len(index_tree_payload["docs"]),
                 recent_total=len(recent_payload["docs"]) if recent_payload is not None else None,
             )
@@ -145,7 +162,7 @@ class DocsDataBuilder(
             self.print_human_summary(
                 write_plan,
                 mode="dry-run",
-                docs_total=len(docs),
+                docs_total=len(documents),
                 tree_total=len(index_tree_payload["docs"]),
                 recent_total=len(recent_payload["docs"]) if recent_payload is not None else None,
             )

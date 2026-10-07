@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
+from collections.abc import Mapping
 import html
 import re
 from pathlib import Path
@@ -66,9 +66,9 @@ class ContentRenderingMixin:
             markdown = markdown[:match.start()] + replacement + markdown[match.end():]
         return markdown
 
-    def rewrite_doc_links(self, content_html: str, *, current_doc: DocRecord, docs: Sequence[DocumentIdentity]) -> str:
-        docs_by_id = {doc.doc_id: doc for doc in docs}
-
+    def rewrite_doc_links(
+        self, content_html: str, *, current_doc: DocRecord, docs_by_id: Mapping[str, DocumentIdentity],
+    ) -> str:
         def replace_href(match: re.Match[str]) -> str:
             quote_char = match.group(1)
             href = match.group(2)

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Collection, Mapping
 import json
 import re
 from dataclasses import dataclass, field
@@ -44,6 +44,9 @@ class DocumentIdentity(Protocol):
     @property
     def doc_id(self) -> str: ...
 
+    @property
+    def title(self) -> str: ...
+
 
 @dataclass(frozen=True)
 class DocRecord:
@@ -61,6 +64,7 @@ class DocRecord:
     content_url: str
     report: ReportDescriptor | None
     body_markdown: str
+    source_text: str | None
     front_matter: dict[str, Any] = field(default_factory=dict)
 def parse_front_matter_value(raw_value: str) -> Any:
     value = raw_value.strip()
@@ -136,18 +140,23 @@ def extract_title(markdown: str) -> str:
 
 
 class SourceLoadingMixin:
-    def load_docs(self, doc_ids: list[str] | None = None) -> list[DocRecord]:
+    def load_docs(
+        self, doc_ids: list[str] | None = None, *, parent_ids: dict[str, str] | None = None,
+        capture_source_text: bool = False,
+    ) -> list[DocRecord]:
         """Read all sources or only exact canonical filenames selected by ID."""
         if not self.source_dir.is_dir():
             raise FileNotFoundError(f"Docs source directory is unavailable: {self.source_dir}")
         ordinary = getattr(self, "collection_config", None) is None
-        parent_ids = tree_parent_ids(read_index_order(self.source_dir)) if ordinary else {}
+        if parent_ids is None:
+            parent_ids = tree_parent_ids(read_index_order(self.source_dir)) if ordinary else {}
+        selected_ids = None if doc_ids is None else set(doc_ids)
         if ordinary:
             paths = []
             for doc_id in parent_ids:
                 if not is_immutable_doc_id(doc_id):
                     raise InvalidDocIdError(f"Invalid document ID in index-order.json: {doc_id}")
-                if doc_ids is None or doc_id in doc_ids:
+                if selected_ids is None or doc_id in selected_ids:
                     path = self.source_dir / f"{doc_id}.md"
                     if path.is_symlink():
                         raise ValueError(f"Document source must not be a symlink: {path.name}")
@@ -241,6 +250,7 @@ class SourceLoadingMixin:
                     content_url=self.content_url_for(doc_id),
                     report=report,
                     body_markdown=body_markdown,
+                    source_text=source_text if capture_source_text else None,
                     front_matter=dict(front_matter),
                 )
             )
@@ -253,7 +263,7 @@ class SourceLoadingMixin:
                     f"doc_id must use the immutable document ID format in {doc.source_path}"
                 )
 
-    def validate_docs(self, docs: list[DocRecord]) -> None:
+    def validate_docs(self, docs: list[DocRecord], *, known_doc_ids: Collection[str] | None = None) -> None:
         by_id: dict[str, DocRecord] = {}
         duplicates: list[str] = []
         for doc in docs:
@@ -262,32 +272,10 @@ class SourceLoadingMixin:
             by_id[doc.doc_id] = doc
         if duplicates:
             raise RuntimeError(f"Duplicate doc_id values: {', '.join(sorted(set(duplicates)))}")
+        known_ids = by_id if known_doc_ids is None else known_doc_ids
         for doc in docs:
-            if doc.parent_id and doc.parent_id not in by_id and not self.allow_unresolved_parent_ids:
+            if doc.parent_id and doc.parent_id not in known_ids and not self.allow_unresolved_parent_ids:
                 raise RuntimeError(f"Unknown parent_id {doc.parent_id!r} for doc {doc.doc_id!r}")
-
-    def validate_targeted_build_prerequisites(self, docs: list[DocRecord], target_doc_ids: list[str]) -> None:
-        index_tree_path = self.output_dir / "index-tree.json"
-        try:
-            index_payload = json.loads(index_tree_path.read_text(encoding="utf-8"))
-        except (OSError, UnicodeError, json.JSONDecodeError) as exc:
-            raise RuntimeError(
-                "Targeted docs build requires a readable index tree; run a full Build first: "
-                f"{exc}"
-            ) from exc
-        tree_docs = index_payload.get("docs") if isinstance(index_payload, dict) else None
-        if not isinstance(tree_docs, list) or any(not isinstance(doc, dict) for doc in tree_docs):
-            raise RuntimeError("Targeted docs build requires a valid index tree; run a full Build first")
-        target_set = set(target_doc_ids)
-        missing = [
-            doc.doc_id for doc in docs
-            if doc.doc_id not in target_set and not (self.items_dir / f"{doc.doc_id}.json").exists()
-        ]
-        if missing:
-            raise RuntimeError(
-                "Targeted docs build requires existing payloads for unselected docs; "
-                f"run a full Build first: {', '.join(missing)}"
-            )
 
     def viewer_url_for(self, doc_id: str, anchor: str = "") -> str:
         pairs: list[str] = []
@@ -306,14 +294,14 @@ class SourceLoadingMixin:
         suffix = f"/{quote(child.collection)}" if child is not None else ""
         return f"/docs/generated/external{suffix}"
 
-    def effective_parent_id(self, doc: DocRecord, docs: Sequence[DocumentIdentity]) -> str:
-        if not doc.parent_id:
+    def effective_parent_id(self, parent_id: str, known_doc_ids: Collection[str]) -> str:
+        if not parent_id:
             return ""
-        if any(candidate.doc_id == doc.parent_id for candidate in docs):
-            return doc.parent_id
-        return "" if self.allow_unresolved_parent_ids else doc.parent_id
+        if parent_id in known_doc_ids:
+            return parent_id
+        return "" if self.allow_unresolved_parent_ids else parent_id
 
-    def metadata_entry(self, doc: DocRecord, docs: Sequence[DocumentIdentity]) -> dict[str, Any]:
+    def metadata_entry(self, doc: DocRecord, docs_by_id: Mapping[str, DocumentIdentity]) -> dict[str, Any]:
         entry = {
             "doc_id": doc.doc_id,
             "title": doc.title,
@@ -325,7 +313,7 @@ class SourceLoadingMixin:
             entry["date"] = doc.date
         if doc.date_display:
             entry["date_display"] = doc.date_display
-        parent_id = self.effective_parent_id(doc, docs)
+        parent_id = self.effective_parent_id(doc.parent_id, docs_by_id)
         if parent_id:
             entry["parent_id"] = parent_id
         if self.config.stage == "working" and getattr(self, "collection_id", "") != "catalogue":
@@ -349,8 +337,8 @@ class SourceLoadingMixin:
             entry["summary"] = doc.summary
         return entry
 
-    def by_id_metadata_entry(self, doc: DocRecord, docs: Sequence[DocumentIdentity]) -> dict[str, Any]:
-        entry = self.metadata_entry(doc, docs)
+    def by_id_metadata_entry(self, doc: DocRecord, docs_by_id: Mapping[str, DocumentIdentity]) -> dict[str, Any]:
+        entry = self.metadata_entry(doc, docs_by_id)
         del entry["viewer_url"]
         if has_document_thumbnail(doc.front_matter, collection=getattr(self, "collection_id", "")):
             entry["has_thumbnail"] = True

@@ -192,10 +192,11 @@ def build_collection_media_snapshot(
     *,
     write: bool,
     producers: Mapping[str, MediaProducer] | None = None,
+    markdown_sources: Iterable[str] | None = None,
 ) -> dict[str, object]:
     """Produce referenced build outputs and record shared identities without media copies."""
 
-    markdown_sources = collection_markdown_sources(repo_root, config)
+    markdown_sources = collection_markdown_sources(repo_root, config) if markdown_sources is None else tuple(markdown_sources)
     referenced = referenced_media_identities(config, markdown_sources)
     requested_builds = referenced_build_media_identities(config, markdown_sources)
     producer_builds = run_registered_media_builds(

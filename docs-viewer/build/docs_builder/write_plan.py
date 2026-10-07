@@ -7,7 +7,6 @@ from pathlib import Path
 from typing import Any
 
 from .common import json, json_text, read_text, write_text
-from .source import DocRecord
 
 
 class WritePlanMixin:
@@ -37,6 +36,7 @@ class WritePlanMixin:
         *,
         stale_item_ids: list[str],
         backlinks_payload: dict[str, Any] | None = None,
+        existing_tree_text: str | None = None,
     ) -> dict[str, Any]:
         """Return exact writes and removals without mutating generated output.
 
@@ -46,6 +46,8 @@ class WritePlanMixin:
         """
 
         index_tree_text = json_text(index_tree_payload)
+        if existing_tree_text is None:
+            existing_tree_text = read_text(self.output_dir / "index-tree.json")
         recent_text = json_text(recent_payload) if recent_payload is not None else ""
         item_text_by_id: dict[str, str] = {}
         changed_item_ids: list[str] = []
@@ -60,7 +62,7 @@ class WritePlanMixin:
             else ""
         )
         return {
-            "index_tree_write": read_text(self.output_dir / "index-tree.json") != index_tree_text,
+            "index_tree_write": existing_tree_text != index_tree_text,
             "index_tree_text": index_tree_text,
             "recent_write": recent_payload is not None and read_text(self.output_dir / "recent.json") != recent_text,
             "recent_text": recent_text,
@@ -142,7 +144,8 @@ class WritePlanMixin:
     def diagnostics_payload(
         self,
         *,
-        docs: list[DocRecord],
+        docs_total: int,
+        docs_emitted: int,
         write_plan: dict[str, Any],
         elapsed_seconds: float,
         target_doc_ids: list[str] | None,
@@ -152,7 +155,8 @@ class WritePlanMixin:
             "build_mode": "targeted" if target_doc_ids is not None else "full",
             "only_doc_ids": target_doc_ids or [],
             "source_files_scanned": self.source_files_scanned,
-            "docs_emitted": len(docs),
+            "docs_total": docs_total,
+            "docs_emitted": docs_emitted,
             "doc_payloads_changed": len(write_plan["changed_item_ids"]),
             "doc_payloads_removed": len(write_plan["stale_item_ids"]),
             "index_tree_changed": 1 if write_plan["index_tree_write"] else 0,
