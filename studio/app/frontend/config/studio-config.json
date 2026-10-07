@@ -1,11 +1,11 @@
 {
   "studio_config_version": "studio_config_v1",
-  "updated_at_utc": "2026-09-28T09:17:58Z",
+  "updated_at_utc": "2026-10-07T16:01:55Z",
   "app": {
     "routes": {
       "catalogue_work_editor": {
         "label": "work editor",
-        "title": "Catalogue Work Editor",
+        "title": "Catalogue Editor",
         "path": "/studio/catalogue-work/",
         "template": "/studio/app/frontend/routes/catalogue-work.html",
         "script": "/studio/app/frontend/js/catalogue-work-editor.js",

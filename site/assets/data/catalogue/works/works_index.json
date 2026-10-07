@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "catalogue_works_index_v1",
-    "version": "blake2b-97e61e42310e1926dd9e66a75133d8fb",
-    "generated_at_utc": "2026-09-29T16:27:23Z",
-    "count": 4616
+    "version": "blake2b-8cc403ed8dce76f969590ac2b409de63",
+    "generated_at_utc": "2026-10-07T13:42:33Z",
+    "count": 4618
   },
   "works": {
     "00001": {
@@ -32317,6 +32317,20 @@
       "year": 2023,
       "year_display": "2023",
       "series_id": "142"
+    },
+    "04624": {
+      "work_id": "04624",
+      "title": "10,000 (2.4)",
+      "year": 2026,
+      "year_display": "2026",
+      "series_id": "001"
+    },
+    "04625": {
+      "work_id": "04625",
+      "title": "10,000 (1.4)",
+      "year": 2026,
+      "year_display": "2026",
+      "series_id": "001"
     }
   }
 }

@@ -1,10 +1,10 @@
 {
   "header": {
     "schema": "gallery_record_v1",
-    "version": "blake2b-d50208497568ecb6963c423b47de4602",
-    "generated_at_utc": "2026-09-23T09:02:45Z",
+    "version": "blake2b-5f2ff5bb251c4db7c7ae7e30ae153355",
+    "generated_at_utc": "2026-10-07T13:42:33Z",
     "gallery_id": "201",
-    "count": 3
+    "count": 4
   },
   "gallery": {
     "gallery_id": "201",
@@ -28,6 +28,12 @@
       "title": "10,000 (1.3)",
       "year": 2009,
       "year_display": "2009"
+    },
+    {
+      "work_id": "04625",
+      "title": "10,000 (1.4)",
+      "year": 2026,
+      "year_display": "2026"
     }
   ]
 }
