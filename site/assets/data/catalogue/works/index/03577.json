@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-4e06949eb75f7008bda86f921f4805ec",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-3af62f47f6238f2140622486532542b5",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "03577",
     "title": "dots (first normal form) [detail 3]",
     "year": 2010,
     "year_display": "2010",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 5906,
     "height_px": 5906,
     "media_version": 1,
     "series_id": "044",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "235",

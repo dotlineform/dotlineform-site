@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-00c1edef93f45ce3215727e87a603915",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-16e4b1610eaefdf0e7ab56cc2ce5e6d4",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "03074",
     "title": "body detail",
     "year": 2025,
     "year_display": "2025",
-    "medium_type": "drawing",
-    "medium_caption": "ink on paper",
+    "medium": "ink on paper",
     "width_px": 4032,
     "height_px": 3024,
     "media_version": 1,
     "series_id": "004",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "180",

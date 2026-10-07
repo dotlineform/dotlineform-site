@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-03cf05b61a67cf836d6247c2a4a085f0",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-465ae29ce7983521c3c2c8b3d5262a39",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "01588",
     "title": "untitled",
     "year": 2025,
     "year_display": "2025",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 27.0,
     "width_cm": 48.0,
     "width_px": 5669,
     "height_px": 3189,
     "media_version": 1,
     "series_id": "117",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "117",

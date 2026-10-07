@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-ac7c99916449d75390e0baeb645757fd",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-5374966cb37042e3a1542669d201269f",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00196",
     "title": "nude frame e",
     "year": 1992,
     "year_display": "1992",
-    "medium_type": "photocopy",
-    "medium_caption": "photocopy",
+    "medium": "photocopy",
     "height_cm": 29.7,
     "width_cm": 21.0,
     "width_px": 2380,
     "height_px": 3396,
     "media_version": 1,
     "series_id": "026",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "026",

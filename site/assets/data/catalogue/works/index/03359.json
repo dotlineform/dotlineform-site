@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-b043571913673edfaa40fb9535fe5e70",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-2b94761ace0c84052a1f3d91894bccd6",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "03359",
     "title": "all the little cracks - detail 1",
     "year": 2010,
     "year_display": "2010",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 3000,
     "height_px": 3000,
     "media_version": 1,
     "series_id": "012",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "213",

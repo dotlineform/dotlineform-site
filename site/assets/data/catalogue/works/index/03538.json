@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-ebd71f75437035a78ca9d479d0ba5db0",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-c627275f488ffb41a95203923c2f8a11",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "03538",
     "title": "dots 8",
     "year": 2020,
     "year_display": "2020",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 3024,
     "height_px": 3024,
     "media_version": 1,
     "series_id": "035",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "227",

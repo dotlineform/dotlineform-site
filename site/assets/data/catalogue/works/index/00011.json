@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-8065ad09fe4198a58d389caa4f8aac6d",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-8ec3c14bf254b4ed44b553876a0a3142",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00011",
     "title": "prototype for repeating pattern",
     "year": 1989,
     "year_display": "c. 1989-98",
-    "medium_type": "photocopy",
-    "medium_caption": "photocopy",
+    "medium": "photocopy",
     "height_cm": 29.7,
     "width_cm": 21.0,
     "width_px": 5152,
     "height_px": 7152,
     "media_version": 1,
     "series_id": "026",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "026",

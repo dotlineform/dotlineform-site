@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-54c4c86eddc765306033f9927f4f7ce3",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-3bc092b013fffe9e829f4fef5bcacaac",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00630",
     "title": "quantum random number theory (version)",
     "year": 2010,
     "year_display": "2010",
-    "medium_type": "digital print",
-    "medium_caption": "giclée print",
+    "medium": "giclée print",
     "height_cm": 61.0,
     "width_cm": 61.0,
     "width_px": 7200,
     "height_px": 7200,
     "media_version": 1,
     "series_id": "118",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "118",

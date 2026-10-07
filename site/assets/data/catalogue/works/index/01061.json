@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-003f317b8aea1c68e50c386406607636",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-800c33eb091896030b98599530a90b1b",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "01061",
     "title": "fluid form 7",
     "year": 2012,
     "year_display": "2012",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 20.0,
     "width_cm": 30.0,
     "width_px": 3543,
     "height_px": 2362,
     "media_version": 1,
     "series_id": "053",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "053",

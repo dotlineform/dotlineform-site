@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-bd7b9e4730527b6ed23f4c482be8b8a8",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-7c3512666d11c6d1bd868e9e825dfe40",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "03626",
     "title": "2024-06-03 00-45",
     "year": 2024,
     "year_display": "2024",
-    "medium_type": "painting",
-    "medium_caption": "ink on paper",
+    "medium": "ink on paper",
     "width_px": 2268,
     "height_px": 4032,
     "media_version": 1,
     "series_id": "046",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "240",

@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-3e1af47ccfadf7254a78dcc7df8d52a3",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-daf50386227c168f9908020d3c1555fd",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "03533",
     "title": "dots 3",
     "year": 2020,
     "year_display": "2020",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 3024,
     "height_px": 3024,
     "media_version": 1,
     "series_id": "035",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "227",

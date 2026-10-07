@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-a877d3f2aaff79439421c60578a23a5e",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-0589a54af75196b5718e07c9ff7e1818",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "03502",
     "title": "colours 1958-2001.1",
     "year": 2008,
     "year_display": "2008",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 5906,
     "height_px": 5906,
     "media_version": 1,
     "series_id": "029",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "221",

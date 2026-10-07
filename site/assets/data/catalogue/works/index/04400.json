@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-37ad7f109dead7843c1c55611e285b3b",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-d9f1dee9df3ae3b95d59c73962e3bd4d",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "04400",
     "title": "impossible",
     "year": 2008,
     "year_display": "2008",
-    "medium_type": "digital print",
-    "medium_caption": "giclée print",
+    "medium": "giclée print",
     "width_px": 1600,
     "height_px": 1507,
     "media_version": 1,
     "series_id": "126",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "287",

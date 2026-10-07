@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-4a85eda025dc145f8e1ca6ec6a9581bd",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-6cb15d80aa493a215aff35b1f7822d3a",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "02011",
     "title": "the eye - detail 1",
     "year": 2025,
     "year_display": "2025",
-    "medium_type": "drawing",
-    "medium_caption": "ink and pencil on paper",
+    "medium": "ink and pencil on paper",
     "width_px": 3024,
     "height_px": 3024,
     "media_version": 1,
     "series_id": "036",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "152",

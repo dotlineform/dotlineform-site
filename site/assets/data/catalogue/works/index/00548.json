@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-bf0c6d55bd7904791c4c2734284fe7b6",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-6f65801bea2daa4434c57f3a51e31ff4",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00548",
     "title": "tree source",
     "year": 2024,
     "year_display": "2024",
-    "medium_type": "digital composite",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 24.0,
     "width_cm": 44.0,
     "width_px": 5197,
     "height_px": 2835,
     "media_version": 1,
     "series_id": "136",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "136",

@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-1bf23483b07f55f96085870af34e28ab",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-75b30d8982d1d9c362b2f792f225d0d8",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "02163",
     "title": "2012-02-06 07꞉52",
     "year": 2026,
     "year_display": "2001-26",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 3264,
     "height_px": 2448,
     "media_version": 1,
     "series_id": "023",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "154",

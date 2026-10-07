@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-a15e9bfef22c0d7405385c4fc5b95797",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-2b9fa8c6496a1f799845d2d3546ebb08",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "01771",
     "title": "2006-05-21 21꞉33꞉39",
     "year": 2006,
     "year_display": "2006",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 30.0,
     "width_cm": 40.0,
     "width_px": 4724,
     "height_px": 3543,
     "media_version": 1,
     "series_id": "135",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "135",

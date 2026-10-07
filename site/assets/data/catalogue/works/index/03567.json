@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-b2daa0417b25708d41f9f59401bd6e69",
-    "generated_at_utc": "2026-10-05T21:28:41Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-5e5203700cc7b252d5671c5806581752",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "03567",
     "title": "003 - 2021-08-27 20꞉07",
     "year": 2021,
     "year_display": "2021",
-    "medium_type": "painting",
-    "medium_caption": "acrylic on canvas",
+    "medium": "acrylic on canvas",
     "width_px": 4032,
     "height_px": 2268,
     "media_version": 1,
     "series_id": "042",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "233",

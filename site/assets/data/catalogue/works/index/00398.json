@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-1d5a8a37040eb7f837deafd01a5f626b",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-e98a4664d781d2d098ea84616cb35f39",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00398",
     "title": "wa (7)",
     "year": 2008,
     "year_display": "2008",
-    "medium_type": "drawing",
-    "medium_caption": "ink on paper",
+    "medium": "ink on paper",
     "height_cm": 33.2,
     "width_cm": 24.3,
     "width_px": 2870,
     "height_px": 3921,
     "media_version": 1,
     "series_id": "140",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "140",

@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-c7a085df66077d44cbfda2b8e8f6e901",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-9b9818b2782dda348ac0d74c9c28e399",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "03593",
     "title": "egg forms - detail 6",
     "year": 2024,
     "year_display": "2024",
-    "medium_type": "painting",
-    "medium_caption": "ink on paper",
+    "medium": "ink on paper",
     "width_px": 4032,
     "height_px": 2268,
     "media_version": 1,
     "series_id": "046",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "239",

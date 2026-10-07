@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-0ae4704ccb746ed9c3d62a551938177e",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-9eb558a1f026ab83254bd4e395a1256c",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00057",
     "title": "joining forms 1",
     "year": 1989,
     "year_display": "c. 1989-98",
-    "medium_type": "photocopy",
-    "medium_caption": "photocopy",
+    "medium": "photocopy",
     "height_cm": 29.7,
     "width_cm": 21.0,
     "width_px": 4961,
     "height_px": 7016,
     "media_version": 1,
     "series_id": "026",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "026",

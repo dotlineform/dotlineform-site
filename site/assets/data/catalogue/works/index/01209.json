@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-ddd1f6ee80bab1bebb5f8df6b2fc3e10",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-3865d3ce7494e4cdd776cd4854eac8d1",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "01209",
     "title": "fragment 08",
     "year": 1990,
     "year_display": "1990",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 30.0,
     "width_cm": 30.0,
     "width_px": 3543,
     "height_px": 3543,
     "media_version": 1,
     "series_id": "068",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "068",

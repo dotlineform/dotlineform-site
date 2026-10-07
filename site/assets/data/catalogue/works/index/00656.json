@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-aca648e12c3db97b69f5dc01ac96e2c8",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-2b4bc59b73fb419d555d128df51676ba",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00656",
     "title": "a doll story - doll 16",
     "year": 2024,
     "year_display": "2024",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 30.0,
     "width_cm": 42.0,
     "width_px": 4960,
     "height_px": 3543,
     "media_version": 1,
     "series_id": "006",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "006",

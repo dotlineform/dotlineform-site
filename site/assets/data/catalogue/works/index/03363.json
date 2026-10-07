@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-fb5498e7b559bc97fc6540f11639c5e5",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-be90a4648e327a2ed740e0f727beeee4",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "03363",
     "title": "all the little cracks again - detail 1",
     "year": 2016,
     "year_display": "2016",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 3000,
     "height_px": 3307,
     "media_version": 1,
     "series_id": "012",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "214",

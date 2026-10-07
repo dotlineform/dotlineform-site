@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-83d735feb01912463eadaaeb9b007019",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-3a1781fac9629768a151e2ef8601f363",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00013",
     "title": "frame (negative)",
     "year": 1989,
     "year_display": "c. 1989-98",
-    "medium_type": "photocopy",
-    "medium_caption": "photocopy",
+    "medium": "photocopy",
     "height_cm": 29.7,
     "width_cm": 21.0,
     "width_px": 4961,
     "height_px": 7016,
     "media_version": 1,
     "series_id": "026",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "026",

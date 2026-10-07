@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-ea4980d6115a0b50b9d6ae4f33815495",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-484ed8f23df4ee91656d08cc6bef7673",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "04319",
     "title": "k particles grid - detail 3",
     "year": 2008,
     "year_display": "2008",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 3000,
     "height_px": 3000,
     "media_version": 1,
     "series_id": "083",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "277",

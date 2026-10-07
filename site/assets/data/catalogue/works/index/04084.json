@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-72e398ea6d88e953b0143a55daf0c031",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-9c2bafc7da8d1b5f53d5afe104074b6c",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "04084",
     "title": "form space noise 21",
     "year": 2007,
     "year_display": "2007",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 4880,
     "height_px": 3660,
     "media_version": 1,
     "series_id": "064",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "253",

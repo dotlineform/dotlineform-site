@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-092fda6f96481b567fce5bf6a9fcf1e4",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-525fe3e6aca258a6e723391a70f3f30a",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "03735",
     "title": "particle 64",
     "year": 2023,
     "year_display": "2023",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 1890,
     "height_px": 1890,
     "media_version": 1,
     "series_id": "051",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "247",

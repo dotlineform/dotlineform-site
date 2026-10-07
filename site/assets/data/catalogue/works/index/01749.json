@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-432c634ba51eeb98eb7b90b2ee91c89b",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-a0011808a933968cfdf58256ea7385ef",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "01749",
     "title": "2006-12-27 - 14-01-54",
     "year": 2006,
     "year_display": "2006",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 22.5,
     "width_cm": 30.0,
     "width_px": 3543,
     "height_px": 2657,
     "media_version": 1,
     "series_id": "133",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "133",

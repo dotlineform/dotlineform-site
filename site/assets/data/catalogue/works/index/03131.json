@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-120318fc1d1372649092b2b6868621d3",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-277a5de750057f5c6a9e0fad36603640",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "03131",
     "title": "k crystals (transparent) - detail 1",
     "year": 2009,
     "year_display": "2009",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 5906,
     "height_px": 4134,
     "media_version": 1,
     "series_id": "082",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "193",

@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-813c0ba44ad9d652a736bcf8df5fdf99",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-c77d815f9676a04ea2c7a50b71965002",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "01995",
     "title": "nerve (formaldehyde form) - 4",
     "year": 1993,
     "year_display": "1993",
-    "medium_type": "writing",
-    "medium_caption": "bound printed pages, edition 9 [extant]",
+    "medium": "bound printed pages, edition 9 [extant]",
     "width_px": 3566,
     "height_px": 2594,
     "media_version": 1,
     "series_id": "105",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "150",

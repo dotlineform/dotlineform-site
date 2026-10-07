@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-8f62d546befb1178a25948027be025ca",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-b4210a8ff93a347e3e65971e8432df1c",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "04232",
     "title": "heaven and earth (cyan)",
     "year": 2011,
     "year_display": "2011",
-    "medium_type": "photograph",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 5906,
     "height_px": 4429,
     "media_version": 1,
     "series_id": "076",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "260",

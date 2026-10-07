@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-7b7ab3192a3dabee5778c76649acb3f2",
-    "generated_at_utc": "2026-10-05T21:28:41Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-bc73e1d7182c00019a462e9ccc0c0745",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "02549",
     "title": "dotlineform - detail 2",
     "year": 2023,
     "year_display": "2023",
-    "medium_type": "mixed media",
-    "medium_caption": "mixed media on board",
+    "medium": "mixed media on board",
     "width_px": 2953,
     "height_px": 2953,
     "media_version": 1,
     "series_id": "043",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "156",

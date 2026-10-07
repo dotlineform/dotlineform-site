@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-3c4b31cbc781a7b2c223aec74ef02be6",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-567b3bc8d5354a94590dfd42e939dd93",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "04347",
     "title": "poa 1 - 1700",
     "year": 2001,
     "year_display": "2001-04",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 3000,
     "height_px": 2398,
     "media_version": 1,
     "series_id": "115",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "282",

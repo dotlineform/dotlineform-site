@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-9a44d18bebc7a25ded19a95ff6cba013",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-682ad84740a18fa55289d3a129ed9528",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "04509",
     "title": "state of mind - source 66",
     "year": 2023,
     "year_display": "2023",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 4288,
     "height_px": 2848,
     "media_version": 1,
     "series_id": "127",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "290",

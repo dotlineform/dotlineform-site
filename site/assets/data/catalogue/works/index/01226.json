@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-7db18a88188837c7cd8a6f8d11a7f82a",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-3cfd8f37cc381572533e8d602f5981a4",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "01226",
     "title": "fragment 25",
     "year": 1990,
     "year_display": "1990",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 30.0,
     "width_cm": 30.0,
     "width_px": 3543,
     "height_px": 3543,
     "media_version": 1,
     "series_id": "068",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "068",

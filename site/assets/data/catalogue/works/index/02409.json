@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-2250420e4ac8b961ea801608207e4c3d",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-3f7b758f69c9c45fbf1f6c1e9eabb445",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "02409",
     "title": "2015-10-04 12꞉47",
     "year": 2026,
     "year_display": "2001-26",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 2180,
     "height_px": 2180,
     "media_version": 1,
     "series_id": "023",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "154",

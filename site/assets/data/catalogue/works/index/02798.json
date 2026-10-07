@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-943d822548ff6304e6418b7a57e2c5ad",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-fd1df68a0d0f39449fc5f94110300f39",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "02798",
     "title": "molecule form 196 (2013-04-06)",
     "year": 2013,
     "year_display": "2013",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 4724,
     "height_px": 4724,
     "media_version": 1,
     "series_id": "100",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "159",

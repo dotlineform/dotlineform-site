@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-aca9dae96ef8e3964ee53840b04b2736",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-c360cddd9cbb21e9769d7e1e6bcdba97",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00948",
     "title": "dot theory (strings)",
     "year": 2009,
     "year_display": "2009",
-    "medium_type": "digital print",
-    "medium_caption": "giclée print",
+    "medium": "giclée print",
     "height_cm": 30.0,
     "width_cm": 100.0,
     "width_px": 11811,
     "height_px": 3543,
     "media_version": 1,
     "series_id": "041",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "041",

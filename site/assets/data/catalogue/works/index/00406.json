@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-03f66b18b76d0806f1098315495f8bab",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-8a8bf8328d00c5dff87d036dc156f167",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00406",
     "title": "found form (2017-07-29)",
     "year": 2017,
     "year_display": "2017",
-    "medium_type": "photograph",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 30.0,
     "width_cm": 30.0,
     "width_px": 3543,
     "height_px": 3543,
     "media_version": 1,
     "series_id": "067",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "067",

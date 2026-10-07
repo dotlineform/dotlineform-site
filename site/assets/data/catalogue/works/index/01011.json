@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-b064440878642e4423f3d2d4e2f19fba",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-8a0799a3eba1fda4eeaa802268e2a089",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "01011",
     "title": "droplets (2014-06-22 - 13-57-44)",
     "year": 2014,
     "year_display": "2014",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 60.0,
     "width_cm": 60.0,
     "width_px": 7087,
     "height_px": 7087,
     "media_version": 1,
     "series_id": "045",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "045",

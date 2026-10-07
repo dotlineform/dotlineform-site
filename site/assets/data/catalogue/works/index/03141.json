@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-d99ddd1e7846bdbbe79fd45837a4dab0",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-06b093f161e50165e7fd8c7387781e2f",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "03141",
     "title": "quantum random number theory (10,000) 5",
     "year": 2009,
     "year_display": "2009",
-    "medium_type": "digital print",
-    "medium_caption": "giclée print",
+    "medium": "giclée print",
     "width_px": 4800,
     "height_px": 4800,
     "media_version": 1,
     "series_id": "118",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "195",

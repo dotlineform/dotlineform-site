@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-a85395ebea383977e1fb3b9f3647d72e",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-30668f40912f2cd26cba635df53816b5",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "04547",
     "title": "state of mind - source 104",
     "year": 2023,
     "year_display": "2023",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 4032,
     "height_px": 3024,
     "media_version": 1,
     "series_id": "127",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "290",

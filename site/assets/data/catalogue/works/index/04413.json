@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-c9fa8256b8bf38c41a163141e5358bd5",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-562a2d4881ce8d810c4daad7e4d3d09d",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "04413",
     "title": "muddle [2]",
     "year": 2008,
     "year_display": "2008",
-    "medium_type": "digital print",
-    "medium_caption": "giclée print",
+    "medium": "giclée print",
     "width_px": 1600,
     "height_px": 1442,
     "media_version": 1,
     "series_id": "126",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "287",

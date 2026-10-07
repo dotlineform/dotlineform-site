@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-357b1545d1c28ed05a9ce261b9f53e40",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-7e96dada0b602a54e5286803ac2d1e90",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "03638",
     "title": "espresso 10",
     "year": 2012,
     "year_display": "2012",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 3543,
     "height_px": 3543,
     "media_version": 1,
     "series_id": "049",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "242",

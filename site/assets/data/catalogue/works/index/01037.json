@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-c4fc854cbc6bd9b9f525c5d0eac218c4",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-12394dcdb651281a3bc6527176faf111",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "01037",
     "title": "egg forms",
     "year": 2024,
     "year_display": "2024",
-    "medium_type": "painting",
-    "medium_caption": "ink on paper",
+    "medium": "ink on paper",
     "height_cm": 61.0,
     "width_cm": 45.0,
     "width_px": 1803,
     "height_px": 2444,
     "media_version": 1,
     "series_id": "046",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "046",

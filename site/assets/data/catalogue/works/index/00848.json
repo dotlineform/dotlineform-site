@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-775fb1b1e5363a372f74b85251380a0f",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-369b12d2b2374881c6f827d03391da76",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00848",
     "title": "structure v",
     "year": 2011,
     "year_display": "2011",
-    "medium_type": "digital print",
-    "medium_caption": "giclée print",
+    "medium": "giclée print",
     "height_cm": 75.0,
     "width_cm": 75.0,
     "width_px": 8858,
     "height_px": 8858,
     "media_version": 1,
     "series_id": "033",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "033",

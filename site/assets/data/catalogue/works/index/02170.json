@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-b38b939d949f26331db14c242e097cd4",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-9f2e55bc931043b1919dd02f7b67e5bb",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "02170",
     "title": "2012-03-28 11꞉02",
     "year": 2026,
     "year_display": "2001-26",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 3264,
     "height_px": 2448,
     "media_version": 1,
     "series_id": "023",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "154",

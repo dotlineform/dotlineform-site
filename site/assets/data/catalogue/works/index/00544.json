@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-20af12f74dd4557bd09057cd038d6d61",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-342fc775b0c1db01c140a5ebdb53b41a",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00544",
     "title": "model 10",
     "year": 1994,
     "year_display": "1994",
-    "medium_type": "ink on paper",
-    "medium_caption": "ink on photo",
+    "medium": "ink on photo",
     "height_cm": 19.7,
     "width_cm": 24.0,
     "width_px": 2835,
     "height_px": 2327,
     "media_version": 1,
     "series_id": "099",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "099",

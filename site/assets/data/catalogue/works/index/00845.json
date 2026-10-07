@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-60f08e9b61d22a8e7985e8ed375eb236",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-2e37cdfe347bbaa83bbfc5841ec0eb23",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00845",
     "title": "structure iii",
     "year": 2011,
     "year_display": "2011",
-    "medium_type": "digital print",
-    "medium_caption": "giclée print",
+    "medium": "giclée print",
     "height_cm": 75.0,
     "width_cm": 60.0,
     "width_px": 7087,
     "height_px": 8858,
     "media_version": 1,
     "series_id": "033",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "033",

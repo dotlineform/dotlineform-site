@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-d5607c66e4eb9a5228b52b4aaf9f0cfd",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-0e9e1244a01b9370277b5db039c6f9d4",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00650",
     "title": "a doll story - doll 10",
     "year": 2024,
     "year_display": "2024",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 25.0,
     "width_cm": 35.0,
     "width_px": 4134,
     "height_px": 2953,
     "media_version": 1,
     "series_id": "006",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "006",

@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-1d9e2e48fb3a2376695543e575ccd7c6",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-0d0fad8085c3d7dce12fe5f83fe24fed",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "01523",
     "title": "pi",
     "year": 2012,
     "year_display": "2012",
-    "medium_type": "digital print",
-    "medium_caption": "giclée print",
+    "medium": "giclée print",
     "height_cm": 75.0,
     "width_cm": 75.0,
     "width_px": 11811,
     "height_px": 11811,
     "media_version": 1,
     "series_id": "113",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "113",

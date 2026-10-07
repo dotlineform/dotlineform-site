@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-627a5ee4589e11b2e9274f2d3b31ec5c",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-61cac0cfa7c5d09af6d802e58a93b998",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "01430",
     "title": "melancholy hope cell (2017-04-26 17-19-12)",
     "year": 2017,
     "year_display": "2017",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 70.0,
     "width_cm": 70.0,
     "width_px": 8268,
     "height_px": 8268,
     "media_version": 1,
     "series_id": "095",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "095",

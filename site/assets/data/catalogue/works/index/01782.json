@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-2dcc228cbf9545af454f73870bf85760",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-afb250437d102f09be3e286e019167e8",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "01782",
     "title": "2010-02-03 08꞉32꞉05",
     "year": 2010,
     "year_display": "2010",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 30.0,
     "width_cm": 40.0,
     "width_px": 4724,
     "height_px": 3543,
     "media_version": 1,
     "series_id": "135",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "135",

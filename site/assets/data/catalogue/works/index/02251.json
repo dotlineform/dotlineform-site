@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-f4df6d49f64b48ca9e62f6bf6076c966",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-6f94ac6d63d55d37ed50b295fcfe3d75",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "02251",
     "title": "2013-03-10 13꞉19",
     "year": 2026,
     "year_display": "2001-26",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 3264,
     "height_px": 2448,
     "media_version": 1,
     "series_id": "023",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "154",

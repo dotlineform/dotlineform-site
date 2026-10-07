@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-5abc102aea9f71fb1de45a622140d3c8",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-a7491f6d48b3b05a8a691355adff5a4a",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "04207",
     "title": "particle (nerve text)",
     "year": 2011,
     "year_display": "2011",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 3543,
     "height_px": 3543,
     "media_version": 1,
     "series_id": "065",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "257",

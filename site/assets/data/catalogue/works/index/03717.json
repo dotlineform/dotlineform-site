@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-d8a33da9e00cff1208f41b158b6e3324",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-2a0febe6d9f5caf0ca03475f72014bd7",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "03717",
     "title": "particle 46",
     "year": 2023,
     "year_display": "2023",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 1890,
     "height_px": 1890,
     "media_version": 1,
     "series_id": "051",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "247",

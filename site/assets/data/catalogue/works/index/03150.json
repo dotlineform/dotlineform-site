@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-dbf2bb8bfb3c014c0a3379a44135c480",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-1356eb99c17f4ce9a9b734f5814e3145",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "03150",
     "title": "qrnt form (2015-06-06)",
     "year": 2015,
     "year_display": "2015",
-    "medium_type": "digital print",
-    "medium_caption": "pencil on giclée print",
+    "medium": "pencil on giclée print",
     "width_px": 3088,
     "height_px": 3088,
     "media_version": 1,
     "series_id": "118",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "197",

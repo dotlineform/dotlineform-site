@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-a4bd14f33e02c8f14de518f3cc0d3759",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-aecbff36bf73a34be158d4d9e3c22d2a",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "01026",
     "title": "droplets (2015-07-13 - 12-46-24)",
     "year": 2015,
     "year_display": "2015",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 60.0,
     "width_cm": 60.0,
     "width_px": 7087,
     "height_px": 7087,
     "media_version": 1,
     "series_id": "045",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "045",

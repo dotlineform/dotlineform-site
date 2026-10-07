@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-4fa6df37c0a3a889142855cf59d503a6",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-d640efe67c78cf43c6202f140003c94b",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "01538",
     "title": "poa 2.1",
     "year": 2004,
     "year_display": "2001-04",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 30.5,
     "width_cm": 30.5,
     "width_px": 3600,
     "height_px": 3600,
     "media_version": 1,
     "series_id": "115",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "115",

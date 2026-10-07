@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-64c7a4f7fe460ccb35b37c1eab0aa8b3",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-616c09ad6c7720a3bb46060f0f8d3239",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "02671",
     "title": "molecule form 69 (2010-05-30)",
     "year": 2013,
     "year_display": "2013",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 4724,
     "height_px": 4724,
     "media_version": 1,
     "series_id": "100",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "159",

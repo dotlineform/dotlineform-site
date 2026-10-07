@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-1b88b3d73d191dca104289b605449ff6",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-8c113b1e078a7b4a947b4e2a5823f13d",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00847",
     "title": "structure v composite",
     "year": 2011,
     "year_display": "2011",
-    "medium_type": "digital print",
-    "medium_caption": "giclée print",
+    "medium": "giclée print",
     "height_cm": 70.0,
     "width_cm": 70.0,
     "width_px": 8269,
     "height_px": 8269,
     "media_version": 1,
     "series_id": "033",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "033",

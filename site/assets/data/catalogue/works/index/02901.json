@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-a4a894b0075760776c036a3b1e0ae79e",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-30184075c7e3a524209354bc5520913b",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "02901",
     "title": "memory - 4.3",
     "year": 2023,
     "year_display": "2023",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 2362,
     "height_px": 2362,
     "media_version": 1,
     "series_id": "061",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "165",

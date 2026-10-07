@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-d7b7a17c31ffdd56d2c5ef24c4aa70dd",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-fc0a2366c5bd838526901061b3164b45",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "01953",
     "title": "a poem divided into 4 parts - end 11",
     "year": 2025,
     "year_display": "2025",
-    "medium_type": "drawing",
-    "medium_caption": "pencil on tracing paper",
+    "medium": "pencil on tracing paper",
     "width_px": 4028,
     "height_px": 2266,
     "media_version": 1,
     "series_id": "009",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "144",

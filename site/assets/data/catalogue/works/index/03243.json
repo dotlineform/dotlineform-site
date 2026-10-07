@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-5f41a5ba76cff410e5aa170030cb1a24",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-e4d28b5ac50e106d0a6dd480f876136e",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "03243",
     "title": "form 2",
     "year": 2023,
     "year_display": "2023",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 2362,
     "height_px": 2362,
     "media_version": 1,
     "series_id": "003",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "209",

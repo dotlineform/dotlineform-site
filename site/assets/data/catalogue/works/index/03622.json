@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-16a1ab76d3fa0f834e5668685154929a",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-4fb14a29c5ac65e91e55a00c90e6e061",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "03622",
     "title": "2024-06-02 23-29 2",
     "year": 2024,
     "year_display": "2024",
-    "medium_type": "painting",
-    "medium_caption": "ink on paper",
+    "medium": "ink on paper",
     "width_px": 4032,
     "height_px": 2268,
     "media_version": 1,
     "series_id": "046",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "240",

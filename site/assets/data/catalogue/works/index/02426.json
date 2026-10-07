@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-b21fb70d373df299a6914b87ca7729fc",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-bee5913f81b9581799a4f86d7ad2f3bf",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "02426",
     "title": "2016-12-27 14꞉10",
     "year": 2026,
     "year_display": "2001-26",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 3088,
     "height_px": 3088,
     "media_version": 1,
     "series_id": "023",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "154",

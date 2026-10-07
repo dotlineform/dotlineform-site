@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-e39e32357b3b37db251e25d607e601a7",
-    "generated_at_utc": "2026-10-05T21:28:41Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-ee47388d72b7ada98061e9601c9788b9",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "02585",
     "title": "2023-10-08 00꞉22",
     "year": 2023,
     "year_display": "2023",
-    "medium_type": "mixed media",
-    "medium_caption": "mixed media on board",
+    "medium": "mixed media on board",
     "width_px": 3024,
     "height_px": 3024,
     "media_version": 1,
     "series_id": "043",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "157",

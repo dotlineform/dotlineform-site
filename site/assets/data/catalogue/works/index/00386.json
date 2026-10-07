@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-6059eb8f1ae943fbd530734a4cf546f0",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-e3833e290769bfc1e0c785f5ebceebfa",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00386",
     "title": "nerve 3",
     "year": 2004,
     "year_display": "2004",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 30.0,
     "width_cm": 40.0,
     "width_px": 4800,
     "height_px": 3600,
     "media_version": 1,
     "series_id": "106",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "106",

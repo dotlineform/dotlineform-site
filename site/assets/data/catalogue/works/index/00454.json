@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-af027979871be6ce2f25cdc09b07e59e",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-b8b11ba0b1de89300ce73ea5bd6e19c0",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00454",
     "title": "I bet you look good on the dancefloor",
     "year": 2025,
     "year_display": "2025",
-    "medium_type": "drawing",
-    "medium_caption": "pencil and ink on paper",
+    "medium": "pencil and ink on paper",
     "height_cm": 29.7,
     "width_cm": 42.0,
     "width_px": 3966,
     "height_px": 2818,
     "media_version": 1,
     "series_id": "036",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "036",

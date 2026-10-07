@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-4616544bc15d7d6abdd358ec166116d4",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-281c985f709ae8a42f89ec0fb8418c0b",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "03556",
     "title": "doll still life 1 (version 1)",
     "year": 2005,
     "year_display": "2005",
-    "medium_type": "digital print",
-    "medium_caption": "giclée print",
+    "medium": "giclée print",
     "width_px": 3543,
     "height_px": 3543,
     "media_version": 1,
     "series_id": "037",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "231",

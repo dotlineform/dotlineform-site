@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-43fb076574cb06f3d0d9e4d6d44d52ee",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-36f356c1ef8e203d5aa690601e5781c6",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "01632",
     "title": "room 4",
     "year": 2008,
     "year_display": "2008",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 25.0,
     "width_cm": 100.0,
     "width_px": 11811,
     "height_px": 2953,
     "media_version": 1,
     "series_id": "122",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "122",

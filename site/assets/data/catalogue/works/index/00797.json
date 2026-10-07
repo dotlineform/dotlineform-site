@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-164c62d5009193a961d819739754f77a",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-3c77c37a8755272fd67b7c0585289adb",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00797",
     "title": "body space (reclining state) 6",
     "year": 2019,
     "year_display": "2019",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 20.0,
     "width_cm": 20.0,
     "width_px": 2362,
     "height_px": 2362,
     "media_version": 1,
     "series_id": "020",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "020",

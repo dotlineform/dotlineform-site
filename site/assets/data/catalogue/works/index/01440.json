@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-8ead69a2c0fcb04f717b7f4ff04f314b",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-348da4d4994375dc6481a2c1abf8fc40",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "01440",
     "title": "melancholy hope cell (version 2022-10-16 18꞉11꞉11)",
     "year": 2022,
     "year_display": "2022",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 40.0,
     "width_cm": 40.0,
     "width_px": 4724,
     "height_px": 4724,
     "media_version": 1,
     "series_id": "095",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "095",

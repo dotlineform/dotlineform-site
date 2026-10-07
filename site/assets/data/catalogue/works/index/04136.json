@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-ccc0d3c5288688a4006135e74a1f4d56",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-510820e843287891dc4d25e2fdaddff1",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "04136",
     "title": "form 28",
     "year": 2011,
     "year_display": "2011",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 2000,
     "height_px": 2000,
     "media_version": 1,
     "series_id": "065",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "255",

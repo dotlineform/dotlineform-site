@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-03c45260e5f0e6da9f093737b30feb9c",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-f61230618ed000c47e28e00d8c8cf3c2",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "01597",
     "title": "reduce 2",
     "year": 2005,
     "year_display": "2005-07",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 40.0,
     "width_cm": 40.0,
     "width_px": 4724,
     "height_px": 4724,
     "media_version": 1,
     "series_id": "120",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "120",

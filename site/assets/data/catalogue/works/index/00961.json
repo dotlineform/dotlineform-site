@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-18ab49ede2f4c8078865c607fe29db4d",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-f12fae7e2ebe8c72a284b2656d029d70",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00961",
     "title": "dotlineform surface (12)",
     "year": 2021,
     "year_display": "2021",
-    "medium_type": "painting",
-    "medium_caption": "acrylic on canvas",
+    "medium": "acrylic on canvas",
     "height_cm": 18.0,
     "width_cm": 32.0,
     "width_px": 3780,
     "height_px": 2126,
     "media_version": 1,
     "series_id": "042",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "042",

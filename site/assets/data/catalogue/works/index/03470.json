@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-c3e004f187b864e0e8e81d1ec7697b24",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-69cc0edcc88f70a44b732ba3d7918e61",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "03470",
     "title": "book dna 49",
     "year": 2010,
     "year_display": "2010",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 1200,
     "height_px": 1200,
     "media_version": 1,
     "series_id": "021",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "220",

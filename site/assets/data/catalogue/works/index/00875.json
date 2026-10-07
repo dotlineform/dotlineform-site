@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-9deee2827f9ab3e7ebc8daaa35254ba0",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-d33b95e3e83d5b92be391014a45ec40a",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00875",
     "title": "doll cell",
     "year": 2007,
     "year_display": "2007",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 30.0,
     "width_cm": 40.0,
     "width_px": 4724,
     "height_px": 3543,
     "media_version": 1,
     "series_id": "037",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "037",

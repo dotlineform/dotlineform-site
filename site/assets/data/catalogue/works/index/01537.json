@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-29eda5fbd5657dc8c9b252e59fea9c08",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-a182ff10c1bc5700f284772a88738bee",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "01537",
     "title": "poa 1 (map 1501-2000)",
     "year": 2001,
     "year_display": "2001-04",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 40.0,
     "width_cm": 50.0,
     "width_px": 5906,
     "height_px": 4724,
     "media_version": 1,
     "series_id": "115",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "115",

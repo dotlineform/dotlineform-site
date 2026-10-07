@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-6ed06acbe9764dd564703d5fc3efc321",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-8377a5ce0ab948d1b7a0da24b8c2437e",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "02879",
     "title": "living surface hand form (original painting, 1989)",
     "year": 2004,
     "year_display": "1989, 2004",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 2169,
     "height_px": 2830,
     "media_version": 1,
     "series_id": "092",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "162",

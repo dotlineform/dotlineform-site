@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-ac2e3171c1375e6a81999960db0c555e",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-07b0bf594906da3ab1af3e86f9d6a61d",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "03562",
     "title": "edges 1.1",
     "year": 2009,
     "year_display": "2009",
-    "medium_type": "digital print",
-    "medium_caption": "giclée print",
+    "medium": "giclée print",
     "width_px": 4724,
     "height_px": 4724,
     "media_version": 1,
     "series_id": "041",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "232",

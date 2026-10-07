@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-664c7d441a71459bfb8b60d61e832ec4",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-c480fef5c5def32c093afc502a2b8634",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "02666",
     "title": "molecule form 64 (2010-02-09)",
     "year": 2013,
     "year_display": "2013",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 4724,
     "height_px": 4724,
     "media_version": 1,
     "series_id": "100",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "159",

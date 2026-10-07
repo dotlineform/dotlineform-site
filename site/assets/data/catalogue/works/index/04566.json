@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-95963c67314c091d0f501e51965eaead",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-3fb20e7a8423242408fa65dbbe449f46",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "04566",
     "title": "tabula rasa - source",
     "year": 2008,
     "year_display": "2008",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 3543,
     "height_px": 3543,
     "media_version": 1,
     "series_id": "132",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "292",

@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-31adfd0928b3797aef1a553554a20dd9",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-612d96c888b0a3150289f043648563d4",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "03462",
     "title": "book dna 41",
     "year": 2010,
     "year_display": "2010",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 1200,
     "height_px": 1200,
     "media_version": 1,
     "series_id": "021",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "220",

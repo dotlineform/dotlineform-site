@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-3309dc62e6bdf9ddf9ea907eb513bf58",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-d80f61fa2f0a22fcb7a6d96cda1bac6c",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "01397",
     "title": "kylie wax model 4.0",
     "year": 2024,
     "year_display": "2024",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 40.0,
     "width_cm": 40.0,
     "width_px": 4724,
     "height_px": 4724,
     "media_version": 1,
     "series_id": "085",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "085",

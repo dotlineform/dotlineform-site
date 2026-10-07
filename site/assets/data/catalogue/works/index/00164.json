@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-5d71a3e4c94714d4164796ebecdb5430",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-0708f4b3bf05d0ed9714be32c557c11f",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00164",
     "title": "unrelated commentaries",
     "year": 1997,
     "year_display": "1997",
-    "medium_type": "writing",
-    "medium_caption": "printed 3 pages",
+    "medium": "printed 3 pages",
     "height_cm": 29.7,
     "width_cm": 21.0,
     "width_px": 3815,
     "height_px": 5411,
     "media_version": 1,
     "series_id": "026",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "026",

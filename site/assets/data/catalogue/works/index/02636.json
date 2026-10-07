@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-eb32d5cca6a60eb53bbc36eceac06f05",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-7f400e6a1a1fb1dd1284740ed0e6797f",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "02636",
     "title": "molecule form 34 (2007-04-28)",
     "year": 2013,
     "year_display": "2013",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 4724,
     "height_px": 4724,
     "media_version": 1,
     "series_id": "100",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "159",

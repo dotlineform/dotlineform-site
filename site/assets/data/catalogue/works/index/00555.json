@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-f6ea0ec423c2922ffde98f7eac601d75",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-c47bad830e3a7ffd74cda5e272004563",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00555",
     "title": "string theory 2",
     "year": 2005,
     "year_display": "2005",
-    "medium_type": "paper collage",
-    "medium_caption": "paper collage",
+    "medium": "paper collage",
     "height_cm": 34.7,
     "width_cm": 25.3,
     "width_px": 2737,
     "height_px": 3754,
     "media_version": 1,
     "series_id": "129",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "129",

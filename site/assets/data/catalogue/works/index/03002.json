@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-17e60715ad19b06dd9d9e1db2c6a1e52",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-11e1256079f384022762f37e4510c584",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "03002",
     "title": "version dall-e - 4.4",
     "year": 2022,
     "year_display": "c. 2022?",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 3543,
     "height_px": 3543,
     "media_version": 1,
     "series_id": "089",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "175",

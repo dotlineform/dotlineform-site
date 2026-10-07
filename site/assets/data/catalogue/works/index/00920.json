@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-6f6a6e5411fea61452437610ecd87ba5",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-08ca97def002879016dfd4d1511cdb96",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00920",
     "title": "doll sees everything (12)",
     "year": 2023,
     "year_display": "2023",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 32.0,
     "width_cm": 32.0,
     "width_px": 3780,
     "height_px": 3780,
     "media_version": 1,
     "series_id": "039",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "039",

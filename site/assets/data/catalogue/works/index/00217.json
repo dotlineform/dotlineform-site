@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-8bf88c2c37c676a78e065847be2fa53b",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-423cb9983c124ed7d0040923b3b2b3cf",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00217",
     "title": "colouring book 1",
     "year": 1996,
     "year_display": "1996",
-    "medium_type": "drawing",
-    "medium_caption": "pen on paper",
+    "medium": "pen on paper",
     "height_cm": 29.7,
     "width_cm": 21.0,
     "width_px": 1200,
     "height_px": 1707,
     "media_version": 1,
     "series_id": "028",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "028",

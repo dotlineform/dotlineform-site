@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-b1307dae00d545bd2723fa0a68ddd852",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-943b32568b1c62ddbb6d7e5264a1c57e",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00347",
     "title": "untitled",
     "year": 2025,
     "year_display": "2025",
-    "medium_type": "drawing",
-    "medium_caption": "ink on paper",
+    "medium": "ink on paper",
     "height_cm": 42.0,
     "width_cm": 29.7,
     "width_px": 3508,
     "height_px": 4960,
     "media_version": 1,
     "series_id": "036",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "036",

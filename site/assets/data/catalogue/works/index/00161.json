@@ -1,16 +1,15 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-da19f4527236c36ca18d7fa84cedeb1a",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-f0be1c6e9cd8f859e08566b6b5d84a1b",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00161",
     "title": "mouse story (extended version)",
     "year": 1993,
     "year_display": "1993",
-    "medium_type": "writing",
-    "medium_caption": "photocopied printed pages, 13 pages",
+    "medium": "photocopied printed pages, 13 pages",
     "height_cm": 29.7,
     "width_cm": 21.0,
     "width_px": 3115,
@@ -24,7 +23,6 @@
         "url": "https://media.dotlineform.com/works/files/00161-mouse-story-extended-version.pdf"
       }
     ],
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "104",

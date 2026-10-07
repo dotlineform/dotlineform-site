@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-54a6ad0d0df0b952f79eceadc5469b2d",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-f03c843acdb5f7207a36c0ce42b918ea",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "01983",
     "title": "nerve (abattoir) - 1",
     "year": 1995,
     "year_display": "1990-95",
-    "medium_type": "mixed media",
-    "medium_caption": "bound photocopied printed pages, canvas cover",
+    "medium": "bound photocopied printed pages, canvas cover",
     "width_px": 2869,
     "height_px": 2008,
     "media_version": 1,
     "series_id": "105",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "149",

@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-fa5ecd72f0afef7266e001e156f4bb40",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-b68e80b46a8e84026b63b81d7710b2da",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00165",
     "title": "angels",
     "year": 1989,
     "year_display": "c. 1989-98",
-    "medium_type": "writing",
-    "medium_caption": "printed page",
+    "medium": "printed page",
     "height_cm": 29.7,
     "width_cm": 21.0,
     "width_px": 2862,
     "height_px": 4061,
     "media_version": 1,
     "series_id": "026",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "026",

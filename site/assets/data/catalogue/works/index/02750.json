@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-08a2ca904acf7ec8e0edad1587eed401",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-1e4d7da036d95da2a199dd0fae750843",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "02750",
     "title": "molecule form 148 (2012-12-22)",
     "year": 2013,
     "year_display": "2013",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 4724,
     "height_px": 4724,
     "media_version": 1,
     "series_id": "100",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "159",

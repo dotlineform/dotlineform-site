@@ -1,16 +1,15 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-232a41d03eaf95b70dac8e1d793a9cf1",
-    "generated_at_utc": "2026-10-04T19:40:26Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-35bb812e0dffecebbe9d038c065724e2",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00008",
     "title": "nerve",
     "year": 1995,
     "year_display": "July 1990 – January 1995",
-    "medium_type": "writing",
-    "medium_caption": "loose bound book, 48p",
+    "medium": "loose bound book, 48p",
     "height_cm": 29.7,
     "width_cm": 21.0,
     "width_px": 1600,
@@ -35,7 +34,6 @@
         "url": "https://media.dotlineform.com/works/files/00008-nerve.docx"
       }
     ],
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "105",

@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-a2b9e0c072fd7eae577e4117d830b9ec",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-86c88d0545fd666058d1400ff8e5fd8a",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "03274",
     "title": "transformed form 2",
     "year": 2023,
     "year_display": "2023",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 1600,
     "height_px": 1600,
     "media_version": 1,
     "series_id": "003",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "210",

@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-5707f6920a21fcd275436212928a9f66",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-bd0e20b2a016c8b1b5002e3719e610ea",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "03127",
     "title": "k crystals bits - screenshot - detail",
     "year": 2009,
     "year_display": "2009",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 800,
     "height_px": 500,
     "media_version": 1,
     "series_id": "082",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "192",

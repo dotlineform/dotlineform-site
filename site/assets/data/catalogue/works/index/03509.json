@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-d8f2ef48e6caf5f79e9f7cedd7895f8b",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-3d061b7d57a7482a35b196cb700610f1",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "03509",
     "title": "colours kylie.1",
     "year": 2008,
     "year_display": "2008",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 5906,
     "height_px": 5906,
     "media_version": 1,
     "series_id": "029",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "224",

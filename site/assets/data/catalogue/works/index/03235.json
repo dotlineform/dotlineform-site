@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-049fce0a314b0b33dcdb9f8bd64861cf",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-c052122965f3d29a9f2c088297d4353e",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "03235",
     "title": "composite - rarefied",
     "year": 2007,
     "year_display": "2007",
-    "medium_type": "mixed media",
-    "medium_caption": "enamel paint on c-type print, aluminium mount",
+    "medium": "enamel paint on c-type print, aluminium mount",
     "width_px": 3000,
     "height_px": 3000,
     "media_version": 1,
     "series_id": "005",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "207",

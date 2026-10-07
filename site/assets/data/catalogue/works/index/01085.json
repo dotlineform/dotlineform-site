@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-059318bc97833fe08f062bff7ffa2b88",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-ab9fb2b40657c9d1b5708fb60de25b79",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "01085",
     "title": "fog 15",
     "year": 2013,
     "year_display": "2013",
-    "medium_type": "digital print",
-    "medium_caption": "giclée print",
+    "medium": "giclée print",
     "height_cm": 60.0,
     "width_cm": 45.0,
     "width_px": 5315,
     "height_px": 7087,
     "media_version": 1,
     "series_id": "055",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "055",

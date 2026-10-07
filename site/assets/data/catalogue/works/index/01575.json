@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-50b30db362976e081ab62138073eab0d",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-137a79b2c3bbcbd04d86cc9bf0e9e25d",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "01575",
     "title": "pole vault (grigorieva 1)",
     "year": 2004,
     "year_display": "2004",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 30.0,
     "width_cm": 50.0,
     "width_px": 5906,
     "height_px": 3543,
     "media_version": 1,
     "series_id": "116",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "116",

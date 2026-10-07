@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-e626ee419c255f6d4197ecc8f3ca75b6",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-5faf0ed37cb6ba43aeabbceeff81c7d8",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "01373",
     "title": "land",
     "year": 2021,
     "year_display": "2021",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 45.0,
     "width_cm": 80.0,
     "width_px": 9449,
     "height_px": 5317,
     "media_version": 1,
     "series_id": "078",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "078",

@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-7ed8bc56c3e8212499d3eb297c15c3d5",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-64fafe4ea83be0f301ef0b1072bc33be",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "04358",
     "title": "room 2 - detail 3",
     "year": 2007,
     "year_display": "2007",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 3000,
     "height_px": 3000,
     "media_version": 1,
     "series_id": "122",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "284",

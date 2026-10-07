@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-5424fa965febe736de7f995c531d36d2",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-36125ee17f7db557c77140f33f46ec08",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00180",
     "title": "body cast 2",
     "year": 1989,
     "year_display": "c. 1989-98",
-    "medium_type": "digital print",
-    "medium_caption": "laserjet print",
+    "medium": "laserjet print",
     "height_cm": 21.0,
     "width_cm": 29.7,
     "width_px": 3508,
     "height_px": 2480,
     "media_version": 1,
     "series_id": "026",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "026",

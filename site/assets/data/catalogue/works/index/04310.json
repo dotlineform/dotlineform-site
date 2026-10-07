@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-cb177a7e0a70ca2ac46f5279ddfda66d",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-9ddd64667057a1c4eeb328bfe13580a8",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "04310",
     "title": "olive tree - detail 2",
     "year": 2012,
     "year_display": "2012",
-    "medium_type": "digital print",
-    "medium_caption": "giclée print",
+    "medium": "giclée print",
     "width_px": 4000,
     "height_px": 4000,
     "media_version": 1,
     "series_id": "108",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "275",

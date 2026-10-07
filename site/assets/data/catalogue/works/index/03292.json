@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-74553989926dbeef97136ea48d6f096b",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-46289aed91441e79a56c057bb1020514",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "03292",
     "title": "music",
     "year": 2008,
     "year_display": "2008",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 8858,
     "height_px": 8858,
     "media_version": 1,
     "series_id": "010",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "211",

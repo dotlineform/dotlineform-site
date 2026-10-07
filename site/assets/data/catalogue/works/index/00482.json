@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-4245cae095f3529e1634cd09667a2dbd",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-7280f79c966bdddd4ec17bb95e57a8ce",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00482",
     "title": "mm particles 1",
     "year": 2009,
     "year_display": "2009",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 40.0,
     "width_cm": 30.0,
     "width_px": 3543,
     "height_px": 4724,
     "media_version": 1,
     "series_id": "098",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "098",

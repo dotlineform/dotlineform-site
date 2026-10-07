@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-50b2a08623dd7b6fbee20d017023d85e",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-cba75b76e8f1337412e11affba43cdd0",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00549",
     "title": "particle theory (1 layer - partial)",
     "year": 2008,
     "year_display": "2008",
-    "medium_type": "paper collage",
-    "medium_caption": "paper collage",
+    "medium": "paper collage",
     "height_cm": 29.7,
     "width_cm": 41.0,
     "width_px": 4843,
     "height_px": 3508,
     "media_version": 1,
     "series_id": "110",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "110",

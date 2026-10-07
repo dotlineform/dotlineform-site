@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-176423114199e49d8a6abaaa6ef7c346",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-d80806e83150b7a4f8153470dceb9959",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "04376",
     "title": "clever funny wrong'",
     "year": 2008,
     "year_display": "2008",
-    "medium_type": "digital print",
-    "medium_caption": "giclée print",
+    "medium": "giclée print",
     "width_px": 1600,
     "height_px": 1553,
     "media_version": 1,
     "series_id": "126",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "287",

@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-f4b2901831d9f85cf8fcc25303209c44",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-335ea1f3768740e436b6028a5489252b",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "01628",
     "title": "residues 2.13",
     "year": 2021,
     "year_display": "2021",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 30.0,
     "width_cm": 40.0,
     "width_px": 4724,
     "height_px": 3543,
     "media_version": 1,
     "series_id": "121",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "121",

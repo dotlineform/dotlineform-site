@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-0a1433f2295350552f4a7b091c58fa80",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-00b8cac00ff2c7f45675dfa34b1f3a7d",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "02542",
     "title": "spiders (2006-06-08 - 21-26-10)",
     "year": 2006,
     "year_display": "2006",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 2816,
     "height_px": 2112,
     "media_version": 1,
     "series_id": "125",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "155",

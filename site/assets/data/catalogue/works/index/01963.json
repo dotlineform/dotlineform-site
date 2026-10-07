@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-bf295299f2ae1ee301ad0935a8372d14",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-776d7764a947631bcec5172251bdee0c",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "01963",
     "title": "grid dissection - detail 3",
     "year": 1990,
     "year_display": "1990",
-    "medium_type": "photocopy",
-    "medium_caption": "photocopy, booklet",
+    "medium": "photocopy, booklet",
     "width_px": 4038,
     "height_px": 5712,
     "media_version": 1,
     "series_id": "026",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "145",

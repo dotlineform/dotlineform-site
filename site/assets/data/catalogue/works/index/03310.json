@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-18f5ff71030de844fadb4a9b2056060f",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-181460ae5c20f2366e5c5af868c8dde1",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "03310",
     "title": "happiness 16°",
     "year": 2010,
     "year_display": "2010",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 2362,
     "height_px": 2362,
     "media_version": 1,
     "series_id": "010",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "212",

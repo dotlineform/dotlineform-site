@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-074d1eabc55b493c6f5eba9ba346deaf",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-57d1417c34468e36e10b99f0fd148197",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00509",
     "title": "mm quantum 2.7",
     "year": 2009,
     "year_display": "2009",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 30.0,
     "width_cm": 50.0,
     "width_px": 8268,
     "height_px": 3543,
     "media_version": 1,
     "series_id": "098",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "098",

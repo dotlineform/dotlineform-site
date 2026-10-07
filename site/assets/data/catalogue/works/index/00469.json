@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-bb7f48deb4c3a195a608bbb97b4cbe49",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-7d79d0d924364a9e2089fdf315ea8ad4",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00469",
     "title": "heaven and earth",
     "year": 2011,
     "year_display": "2011",
-    "medium_type": "photograph",
-    "medium_caption": "giclée print",
+    "medium": "giclée print",
     "height_cm": 75.0,
     "width_cm": 50.0,
     "width_px": 5906,
     "height_px": 8859,
     "media_version": 1,
     "series_id": "076",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "076",

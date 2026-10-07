@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-5f67aa5cf530efbf115b60aff61c61f5",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-11bc83967c374951c1610a5be42be148",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "04233",
     "title": "heaven and earth (green)",
     "year": 2011,
     "year_display": "2011",
-    "medium_type": "photograph",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 5906,
     "height_px": 4429,
     "media_version": 1,
     "series_id": "076",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "260",

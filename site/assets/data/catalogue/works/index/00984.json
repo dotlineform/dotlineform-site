@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-0286e90fccee867fec42cbd521d8b681",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-18f9313eb04fe44e2c7ed3a2f289b94f",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00984",
     "title": "dotlineform - monoprint 1",
     "year": 2023,
     "year_display": "2023",
-    "medium_type": "painting",
-    "medium_caption": "ink on paper",
+    "medium": "ink on paper",
     "height_cm": 22.0,
     "width_cm": 25.0,
     "width_px": 2953,
     "height_px": 2599,
     "media_version": 1,
     "series_id": "043",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "043",

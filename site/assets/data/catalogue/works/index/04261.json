@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-1679ae02b44a344e3db5c6e973aa4ecd",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-cfcbad72124365bae0a381df3b29420e",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "04261",
     "title": "interior design 3 - detail 2",
     "year": 2005,
     "year_display": "2005",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 3000,
     "height_px": 3000,
     "media_version": 1,
     "series_id": "080",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "268",

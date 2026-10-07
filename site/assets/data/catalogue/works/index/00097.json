@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-9d8f085bf8824bdb4e99c25ee0b34eb5",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-a0c9565a97cf88b1b3de36f1ffef4c04",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00097",
     "title": "dissection (prepared body 2)",
     "year": 1989,
     "year_display": "c. 1989-98",
-    "medium_type": "painting",
-    "medium_caption": "ink and watercolour on paper",
+    "medium": "ink and watercolour on paper",
     "height_cm": 29.7,
     "width_cm": 21.0,
     "width_px": 4961,
     "height_px": 7016,
     "media_version": 1,
     "series_id": "026",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "026",

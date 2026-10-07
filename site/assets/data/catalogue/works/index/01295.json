@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-e5d4c3f42b3cb047e61aec7d72f2a80c",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-0e5dffa34046a6f00349c0a4983e14ab",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "01295",
     "title": "grid field 32",
     "year": 2018,
     "year_display": "2018",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 80.0,
     "width_cm": 80.0,
     "width_px": 9449,
     "height_px": 9449,
     "media_version": 1,
     "series_id": "073",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "073",

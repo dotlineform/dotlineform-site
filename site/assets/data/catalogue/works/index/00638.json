@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-8990ffe2b47bd7c25458f29678fd2be2",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-1af08606b92d13685f1489716941edf7",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00638",
     "title": "3 symbols",
     "year": 2007,
     "year_display": "2007",
-    "medium_type": "mixed media",
-    "medium_caption": "enamel paint on c-type print, aluminium mount",
+    "medium": "enamel paint on c-type print, aluminium mount",
     "height_cm": 75.0,
     "width_cm": 75.0,
     "width_px": 1804,
     "height_px": 1804,
     "media_version": 1,
     "series_id": "005",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "005",

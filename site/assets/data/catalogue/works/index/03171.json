@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-e01d6135cc61861a26e11177f6ce433d",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-97dc48eecb51b73db11010e6605a7290",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "03171",
     "title": "bits symbols 1.1.2",
     "year": 2009,
     "year_display": "2009",
-    "medium_type": "digital print",
-    "medium_caption": "giclée print",
+    "medium": "giclée print",
     "width_px": 1536,
     "height_px": 1536,
     "media_version": 1,
     "series_id": "118",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "200",

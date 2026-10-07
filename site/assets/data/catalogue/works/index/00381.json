@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-7d5c87177ac36e1207dd4c6c73c4d6f3",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-45ee800aa343320376ea96e5691f2314",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00381",
     "title": "harmony 2",
     "year": 2009,
     "year_display": "2009",
-    "medium_type": "drawing",
-    "medium_caption": "pen on paper",
+    "medium": "pen on paper",
     "height_cm": 21.0,
     "width_cm": 29.7,
     "width_px": 3508,
     "height_px": 2480,
     "media_version": 1,
     "series_id": "075",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "075",

@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-0b745492abec2324edc53510955cc482",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-9263db1ffc2f906b5c0dc59cf0b8ed1d",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "04339",
     "title": "poa 1 - 0519",
     "year": 2001,
     "year_display": "2001-04",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 3000,
     "height_px": 2398,
     "media_version": 1,
     "series_id": "115",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "282",

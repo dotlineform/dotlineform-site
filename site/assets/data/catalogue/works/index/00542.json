@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-7e2cd74f6911a5716884f32d487af7e5",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-4c9d7f0aac641fc18fbd379fc1e5dc96",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00542",
     "title": "model 8",
     "year": 1994,
     "year_display": "1994",
-    "medium_type": "mixed media",
-    "medium_caption": "paint on photo",
+    "medium": "paint on photo",
     "height_cm": 27.9,
     "width_cm": 22.6,
     "width_px": 2669,
     "height_px": 3295,
     "media_version": 1,
     "series_id": "099",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "099",

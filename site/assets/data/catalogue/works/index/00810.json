@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-e2f6affbbbca94c646ecf1edf060eec1",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-bcc5ce3e10da7a0a66b4ddac6bbffe68",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00810",
     "title": "book of curves 9 and 11",
     "year": 2011,
     "year_display": "2011",
-    "medium_type": "digital print",
-    "medium_caption": "giclée print",
+    "medium": "giclée print",
     "height_cm": 60.0,
     "width_cm": 60.0,
     "width_px": 7087,
     "height_px": 7087,
     "media_version": 1,
     "series_id": "022",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "022",

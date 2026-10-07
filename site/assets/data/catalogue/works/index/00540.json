@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-81bc7ecb3482718a615bf92b103fdea3",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-e42019423f4ca617962c85ac2ad10f96",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00540",
     "title": "model 6",
     "year": 1994,
     "year_display": "1994",
-    "medium_type": "photocopy",
-    "medium_caption": "magazine collage",
+    "medium": "magazine collage",
     "height_cm": 40.2,
     "width_cm": 27.9,
     "width_px": 2906,
     "height_px": 4187,
     "media_version": 1,
     "series_id": "099",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "099",

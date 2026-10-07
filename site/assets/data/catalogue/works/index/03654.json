@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-a0441164961a7558ef8cde150a583655",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-97a214bdd8b24f34321b20f241fb70ff",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "03654",
     "title": "field I - detail 1",
     "year": 2025,
     "year_display": "2025",
-    "medium_type": "painting",
-    "medium_caption": "acrylic on canvas",
+    "medium": "acrylic on canvas",
     "width_px": 2000,
     "height_px": 1125,
     "media_version": 1,
     "series_id": "050",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "243",

@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-6b6f5ea16a18710d877d39deeeb5263c",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-4b676357314aac64c4688f9f0ec38a58",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "04561",
     "title": "tabula rasa - detail 1",
     "year": 2008,
     "year_display": "2008",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 3600,
     "height_px": 3600,
     "media_version": 1,
     "series_id": "132",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "291",

@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-abb8450c0772240ad9e50d9f7738d4da",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-0b2018661e74f87a7ca35497b912a4fd",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "01910",
     "title": "2005-08-20 - 19-02-53",
     "year": 2005,
     "year_display": "2005",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 30.0,
     "width_cm": 40.0,
     "width_px": 4724,
     "height_px": 3545,
     "media_version": 1,
     "series_id": "141",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "141",

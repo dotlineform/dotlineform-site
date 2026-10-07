@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-bd1eac3bfdaa63043908ed4a404b3633",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-3aec8c9990f21615a613361c0a5d52ab",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00543",
     "title": "model 9",
     "year": 1994,
     "year_display": "1994",
-    "medium_type": "mixed media",
-    "medium_caption": "paint on photo",
+    "medium": "paint on photo",
     "height_cm": 30.3,
     "width_cm": 24.7,
     "width_px": 2917,
     "height_px": 3579,
     "media_version": 1,
     "series_id": "099",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "099",

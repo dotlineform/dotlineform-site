@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-27f939c1fb79bab80c906da5098e1caa",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-6d619db604de596798c380b6c6d8f25b",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "01960",
     "title": "grid dissection - cover",
     "year": 1990,
     "year_display": "1990",
-    "medium_type": "photocopy",
-    "medium_caption": "photocopy, booklet",
+    "medium": "photocopy, booklet",
     "width_px": 2138,
     "height_px": 3024,
     "media_version": 1,
     "series_id": "026",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "145",

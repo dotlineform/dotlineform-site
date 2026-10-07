@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-7be72137fa357d2eea87a77eb8fbc91a",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-d98730515d5ab58a60653c8ac71f4ca0",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00341",
     "title": "untitled",
     "year": 2024,
     "year_display": "2024",
-    "medium_type": "drawing",
-    "medium_caption": "pencil on paper",
+    "medium": "pencil on paper",
     "height_cm": 42.0,
     "width_cm": 29.7,
     "width_px": 3508,
     "height_px": 4960,
     "media_version": 1,
     "series_id": "036",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "036",

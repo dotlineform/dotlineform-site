@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-2ac71d96636006052d1936006baac6ec",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-472fde262d683fd537f98f3e85c7d440",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00005",
     "title": "untitled forms",
     "year": 1998,
     "year_display": "c. 1989-98",
-    "medium_type": "painting",
-    "medium_caption": "mixed meda",
+    "medium": "pencil, ink and acrylic on paper",
     "height_cm": 18.0,
     "width_cm": 16.5,
     "width_px": 2074,
     "height_px": 2262,
     "media_version": 1,
     "series_id": "026",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "026",

@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-e5531612c8fe0f8812ec6e985eeb6db6",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-820af19934a4919b8aa0325c52e23b6f",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00535",
     "title": "form mobile",
     "year": 2021,
     "year_display": "2021",
-    "medium_type": "sculpture",
-    "medium_caption": "wire",
+    "medium": "wire",
     "height_cm": 41.8,
     "width_cm": 59.8,
     "width_px": 7063,
     "height_px": 4937,
     "media_version": 1,
     "series_id": "063",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "063",

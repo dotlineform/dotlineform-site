@@ -1,16 +1,15 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-5791e8df345f79d4dc4740c7ac915343",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-ea0eecbca40212c6e625b7b923ba604c",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00457",
     "title": "intuition (2020)",
     "year": 2020,
     "year_display": "c. 2001-11",
-    "medium_type": "music",
-    "medium_caption": "audio files (mp3/FLAC/wav)",
+    "medium": "audio files (mp3/FLAC/wav)",
     "height_cm": 11.8,
     "width_cm": 11.8,
     "width_px": 3543,
@@ -23,7 +22,6 @@
         "label": "Bandcamp"
       }
     ],
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "081",

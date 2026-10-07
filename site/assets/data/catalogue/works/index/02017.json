@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-3abb3a3b57a059aee1283e58a5cdace6",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-74423b507017b4764cf855cd03a42506",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "02017",
     "title": "glass forms 003",
     "year": 2010,
     "year_display": "c. 2010?",
-    "medium_type": "mixed media",
-    "medium_caption": "glass on paper",
+    "medium": "glass on paper",
     "width_px": 4032,
     "height_px": 3024,
     "media_version": 1,
     "series_id": "070",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "153",

@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-fcffdb16d5af29769f7c411ca715cff8",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-455db1c650ca323678f9e7cd4404a6b8",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "03197",
     "title": "3 symbols (detail 8)",
     "year": 2007,
     "year_display": "2007",
-    "medium_type": "mixed media",
-    "medium_caption": "enamel paint on c-type print, aluminium mount",
+    "medium": "enamel paint on c-type print, aluminium mount",
     "width_px": 2816,
     "height_px": 2112,
     "media_version": 1,
     "series_id": "005",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "205",

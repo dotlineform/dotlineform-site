@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-86cb1029ed9cf2650a4bc317c1d60a93",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-e2837d4a6be5dbc4b402f9a2f6f88226",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "03492",
     "title": "book dna 71",
     "year": 2010,
     "year_display": "2010",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "width_px": 1200,
     "height_px": 1200,
     "media_version": 1,
     "series_id": "021",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "220",

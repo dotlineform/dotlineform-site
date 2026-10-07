@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-263148c1b5f84824da92f02c667b965b",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-cc668e89b9e5a05c6e418f6d3a2837dc",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "03551",
     "title": "doll moiré (version 4.4)",
     "year": 2008,
     "year_display": "c. 2008",
-    "medium_type": "drawing",
-    "medium_caption": "pencil on paper",
+    "medium": "pencil on paper",
     "width_px": 3543,
     "height_px": 3543,
     "media_version": 1,
     "series_id": "037",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "229",

@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-82aa8c6436adb95fb9f12dada55729d0",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-2860d34f0c60db80d668a9aa08c81d32",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00865",
     "title": "curl version",
     "year": 2022,
     "year_display": "2022",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 28.0,
     "width_cm": 28.0,
     "width_px": 3307,
     "height_px": 3307,
     "media_version": 1,
     "series_id": "034",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "034",

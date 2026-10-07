@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-fea07265d1bcc78d27de84e0d1f2e55d",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-14efba0e9d5a413e460dfe0a5bdc670e",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "01387",
     "title": "in the end we'll know [13]",
     "year": 2024,
     "year_display": "2024",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 22.5,
     "width_cm": 40.0,
     "width_px": 4724,
     "height_px": 2658,
     "media_version": 1,
     "series_id": "079",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "079",

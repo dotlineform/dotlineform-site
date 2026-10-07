@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-a8f4a3974c10777b16b88a6de2479057",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-decf42a770579ac2846adde10988e454",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00627",
     "title": "k-crystals squared source",
     "year": 2009,
     "year_display": "2009",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 60.0,
     "width_cm": 60.0,
     "width_px": 7087,
     "height_px": 7087,
     "media_version": 1,
     "series_id": "082",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "082",

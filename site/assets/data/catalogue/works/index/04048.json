@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-2d24f9f2ea9ae9d5627575ef039f8766",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-cf4800dd92b3e4c32feae6af96a5db9c",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "04048",
     "title": "forest detail 1",
     "year": 2024,
     "year_display": "2024",
-    "medium_type": "painting",
-    "medium_caption": "mixed media on board",
+    "medium": "mixed media on board",
     "width_px": 3543,
     "height_px": 3543,
     "media_version": 1,
     "series_id": "060",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "252",

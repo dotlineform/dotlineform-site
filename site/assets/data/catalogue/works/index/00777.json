@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-2f2da56a47ce049e42375fc83769f738",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-7176a8c9f861e2b9a90e91a7782dd9e4",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00777",
     "title": "birds [4]",
     "year": 2020,
     "year_display": "2020",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 56.0,
     "width_cm": 100.0,
     "width_px": 11811,
     "height_px": 6643,
     "media_version": 1,
     "series_id": "016",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "016",

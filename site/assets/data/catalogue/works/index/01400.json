@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-4dac684957742b202c06bf8a27a9bb10",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-25bc9d5d2ad5360fbf9780339ae0fba2",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "01400",
     "title": "landscape for symbols",
     "year": 2021,
     "year_display": "2021",
-    "medium_type": "painting",
-    "medium_caption": "mixed media on board",
+    "medium": "mixed media on board",
     "height_cm": 50.0,
     "width_cm": 70.0,
     "width_px": 3869,
     "height_px": 2964,
     "media_version": 1,
     "series_id": "086",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "086",

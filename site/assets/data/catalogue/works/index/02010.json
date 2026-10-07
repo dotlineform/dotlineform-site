@@ -1,21 +1,19 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-d36327c6f4fc03fbe03556c1c051601c",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-9cc960a76166d4a79b10455a6c7991db",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "02010",
     "title": "untitled [227] reverse",
     "year": 1998,
     "year_display": "c. 1998",
-    "medium_type": "digital print",
-    "medium_caption": "laserjet print",
+    "medium": "laserjet print",
     "width_px": 2480,
     "height_px": 3508,
     "media_version": 1,
     "series_id": "027",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "151",

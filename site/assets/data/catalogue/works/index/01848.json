@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-cbe406b3603d6c40d94b2ca72fc0d319",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-7ccb452fab884c8b25e568fb20712d2e",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "01848",
     "title": "2018-03-18 11꞉04꞉35",
     "year": 2018,
     "year_display": "2018",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 22.5,
     "width_cm": 40.0,
     "width_px": 4724,
     "height_px": 2657,
     "media_version": 1,
     "series_id": "135",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "135",

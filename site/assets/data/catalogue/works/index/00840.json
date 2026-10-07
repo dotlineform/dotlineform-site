@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-b1eea139365fb04d9667d64b0ca11dd8",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-0cbd324b11706d4a0ee7fde1d849fd90",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00840",
     "title": "structure c",
     "year": 2011,
     "year_display": "2011",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 40.0,
     "width_cm": 40.0,
     "width_px": 4724,
     "height_px": 4724,
     "media_version": 1,
     "series_id": "033",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "033",

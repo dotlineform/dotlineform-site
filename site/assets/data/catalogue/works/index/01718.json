@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-3344d0678b4327c6b982a32c4a9bddaf",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-f6f362c3f71b2b419727bea0dd0ff8aa",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "01718",
     "title": "spider webs distillation 17",
     "year": 2023,
     "year_display": "2023-24",
-    "medium_type": "digital print",
-    "medium_caption": "digital c-type print",
+    "medium": "digital c-type print",
     "height_cm": 30.0,
     "width_cm": 30.0,
     "width_px": 3543,
     "height_px": 3543,
     "media_version": 1,
     "series_id": "124",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "124",

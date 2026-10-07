@@ -1,23 +1,21 @@
 {
   "header": {
-    "schema": "work_record_v9",
-    "version": "blake2b-0c081c8ea5f7a638cfbcc7cab45bc001",
-    "generated_at_utc": "2026-09-30T11:46:22Z"
+    "schema": "work_record_v11",
+    "version": "blake2b-9b3208cf67dd1cfc91912f3c432876bc",
+    "generated_at_utc": "2026-10-07T17:29:05Z"
   },
   "work": {
     "work_id": "00002",
     "title": "a poem divided into 4 parts (\"there must be hope\")",
     "year": 2025,
     "year_display": "2025",
-    "medium_type": "drawing",
-    "medium_caption": "pencil on tracing paper",
+    "medium": "pencil on tracing paper",
     "height_cm": 21.0,
     "width_cm": 29.7,
     "width_px": 3508,
     "height_px": 2480,
     "media_version": 1,
     "series_id": "009",
-    "documents": [],
     "galleries": [
       {
         "gallery_id": "009",
