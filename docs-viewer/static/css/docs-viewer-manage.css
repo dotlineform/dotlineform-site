@@ -406,20 +406,18 @@
   outline-offset: -2px;
 }
 
-.docsViewer[data-management-busy="true"],
-.docsViewer[data-management-busy="true"] button,
-.docsViewer[data-management-busy="true"] input,
-.docsViewer[data-management-busy="true"] select,
-.docsViewer[data-management-busy="true"] textarea{
-  cursor: progress;
+/* Busy feedback overrides link, text, disabled-control and resize cursors. */
+.docsViewer:is(.is-busy, [data-management-busy="true"]),
+.docsViewer:is(.is-busy, [data-management-busy="true"]) :not(.docsViewer__modal[data-suppress-busy-cursor="true"], .docsViewer__modal[data-suppress-busy-cursor="true"] *){
+  cursor: wait !important;
 }
 
-.docsViewer[data-management-busy="true"] .docsViewer__modal[data-suppress-busy-cursor="true"],
-.docsViewer[data-management-busy="true"] .docsViewer__modal[data-suppress-busy-cursor="true"] :is(button, input, select, textarea){
+.docsViewer:is(.is-busy, [data-management-busy="true"]) .docsViewer__modal[data-suppress-busy-cursor="true"],
+.docsViewer:is(.is-busy, [data-management-busy="true"]) .docsViewer__modal[data-suppress-busy-cursor="true"] :is(button, input, select, textarea){
   cursor: auto;
 }
 
-.docsViewer[data-management-busy="true"] .docsViewer__modal[data-suppress-busy-cursor="true"] :is(button, input[type="radio"]):not(:disabled){
+.docsViewer:is(.is-busy, [data-management-busy="true"]) .docsViewer__modal[data-suppress-busy-cursor="true"] :is(button, input[type="radio"]):not(:disabled){
   cursor: pointer;
 }
 

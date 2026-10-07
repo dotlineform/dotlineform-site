@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260331-000000-c313fd
 title: Runtime
 added_date: "2026-03-31 00:00:00"
-last_updated: "2026-10-06 22:13:31"
+last_updated: "2026-10-07 07:08:44"
 summary: Public, manage, and review execution paths; browser/server authority boundaries; extension method; rationale; and known weak spots.
 parent_id: d-20260424-000000-50b63f
 ---
@@ -172,6 +172,8 @@ If the committed record cannot be reconciled with the current browser model, the
 `GET /docs/source` supplies the full loaded front matter and body. The session owns Title/Summary, typed Markdown and raw pending semantic-token occurrence fields, including invalid values. Panel mounts only project that state. Switching context or closing the panel preserves the draft, and leaving Source asks for one discard decision covering all edits. The [Info Panel](Info_Panel.md) owner describes the context table.
 
 The single `POST /docs/source/save` validates the complete draft and performs one atomic source write, preserving non-edited metadata and exact document/collection identity. It has no disk-revision or external-merge workflow. Save completes at source persistence; it does not run or await document/Links generation, suppress the watcher, rebuild Search or await viewer refresh. Source-write failure retains the draft; later generated-output failure belongs to its own owner. [Source Editor Endpoints](Source_Editor_Endpoints.md) defines the request and response.
+
+Source Save uses the viewer's shared busy state while the source request completes. Save and management Build show a waiting cursor throughout the local viewer, including links, editor text and disabled controls; the cursor clears on success or failure. Modals that explicitly suppress the page busy cursor retain their ordinary control cursors.
 
 Source mounts beside the existing rendered content and hides that content with management-only CSS. It does not detach a collection report and trigger its unmount observer. Successful Save removes only the editor and restores rendered display immediately, with read-only Info when the panel is open. The existing rendering can briefly lag behind source until independent generation and refresh complete.
 

@@ -297,6 +297,7 @@ function saveSource(context, state) {
   if (!state.loaded || state.busy || typeof provider.writeSource !== "function") return Promise.resolve(false);
   setBusy(state, true);
   state.saving = true;
+  var stopBusy = typeof services.startBusy === "function" ? services.startBusy() : null;
   setStatus(state, "Saving doc...", false);
   var adapter = state.sourceEditorAdapter;
   return provider.writeSource(state.target, { source_text: normalizeSource(state.textarea.value) })
@@ -328,6 +329,7 @@ function saveSource(context, state) {
       return false;
     })
     .finally(function () {
+      if (stopBusy) stopBusy();
       if (state.sourceEditorAdapter === adapter) {
         state.saving = false;
         setBusy(state, false);
