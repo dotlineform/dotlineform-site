@@ -54,7 +54,6 @@ def write_semantic_token_contract(root: Path) -> None:
         root / "docs-viewer/config/semantic-tokens/registry.json",
         {
             "schema_version": "docs_semantic_token_registry_v1",
-            "target_lookup_url": "/docs-viewer/data/generated/semantic-tokens/target-lookup.json",
             "families": [
                 {
                     "schema_version": "docs_semantic_token_family_definition_v1",
@@ -72,27 +71,9 @@ def write_semantic_token_contract(root: Path) -> None:
                                 "input_pattern": "^\\d{1,5}$",
                                 "canonical_pattern": "^\\d{5}$",
                             },
-                            "lookup_adapter": "catalogue-work-target-lookup",
-                            "lookup_fields": ["title", "href"],
                         }
                     ],
                 },
-            ],
-        },
-    )
-    write_json(
-        root / "docs-viewer/data/generated/semantic-tokens/target-lookup.json",
-        {
-            "schema_version": "docs_semantic_token_target_lookup_v2",
-            "targets": [
-                {
-                    "family": "catalogue",
-                    "target_type": "work",
-                    "target_id": "00638",
-                    "title": "3 symbols",
-                    "href": "/works/?work=00638",
-                    "meta": [],
-                }
             ],
         },
     )

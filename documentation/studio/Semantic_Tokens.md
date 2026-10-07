@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260725-153656-516b61
 title: Semantic Tokens
 added_date: "2026-07-25 15:36:56"
-last_updated: "2026-09-28 15:14:52"
+last_updated: "2026-10-07 16:05:28"
 summary: Explain current Catalogue media and image tokens, authoring, generated usage, ownership, and the public boundary.
 parent_id: d-20260424-000000-50b63f
 ---
@@ -35,7 +35,7 @@ Malformed or retired token forms remain literal and produce no usage row. Existi
 - Subject metadata owns what a document is about. A body token is an authored occurrence and never creates or changes a Subject association.
 - The checked registry at `docs-viewer/config/semantic-tokens/registry.json` declares Catalogue Work/Gallery definitions and the Info contribution. It is not a target store or a per-scope toolbar policy.
 - Working collection Subject labels and assignment choices use the existing stage-bound Catalogue provider and its generated Work/Series targets. Work Save completes those indexes; reloading the collection page or reopening its Subject picker reads the saved titles. Subject identity and document navigation remain separate from those display labels.
-- The private lookup at `docs-viewer/data/generated/semantic-tokens/target-lookup.json` retains Work discovery rows and no Series target rows. Subject display and assignment do not read it. [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md) owns its remaining boundary.
+- Catalogue target discovery reads current generated indexes through `/docs/catalogue-media-targets`. The former private discovery file, builder and browser file loader are retired; no separate lookup refresh is required. [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md) owns this boundary.
 - Each configured scope or stage owns `generated/documents/semantic-tokens/index.json`. Work media occurrences carry identity with an empty `href`; runtime resolution supplies their media presentation. The [Semantic Tokens Report](Semantic_Tokens_Report.md) consumes this generated inventory.
 
 Public readers use rendered HTML and public generated Catalogue data. They do not load the private token registry, management lookup or local usage index. Publish and deployment remain separate operations.

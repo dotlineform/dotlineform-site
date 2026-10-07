@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260802-205912-16bc10
 title: Cross-System Relationship Map
 added_date: "2026-08-02 20:59:12"
-last_updated: "2026-09-07 15:57:21"
+last_updated: "2026-10-07 16:05:28"
 summary: distinguish subject aboutness, semantic mentions, Tag associations, Project State, Working-owned Copy/Delete/Publish lineage, and Projects publication cues
 ui_status: stable
 parent_id: d-20260802-123451-d0e52e
@@ -32,11 +32,12 @@ flowchart TB
 
     subgraph semantic["Shipped: catalogue semantic mentions"]
         direction TB
-        catalogue["Catalogue records + published Moments Docs<br/>canonical or published input"]
-        targetLookup["target-lookup.json<br/>generated management projection"]
-        docsBuild["Scope Docs build<br/>consumer + producer"]
-        rendered["Resolved links + usage index<br/>generated mention projection"]
-        catalogue --> targetLookup --> docsBuild --> rendered
+        catalogue["Generated Catalogue records<br/>configured Working or captured input"]
+        catalogueTargets["Catalogue targets service<br/>management authoring choices"]
+        docsBuild["Document Build<br/>exact Work image text + token markers"]
+        rendered["Rendered media markers + Work document relationships"]
+        catalogue --> catalogueTargets
+        catalogue --> docsBuild --> rendered
     end
 
     subgraph concepts["Shipped: document-owned Concepts"]
@@ -80,9 +81,9 @@ flowchart TB
 | artefact or family | meaning and state | producer or owner | primary consumer | refresh |
 | --- | --- | --- | --- | --- |
 | private `authoring_subject` and `subject-associations.json` | shipped exact aboutness projection | document source and sub-scope build | Project State, curator coverage, and exact public metadata builds | source/collection build |
-| `docs-viewer/data/generated/semantic-tokens/target-lookup.json` | shipped semantic target projection | `SemanticTargetLookupBuilder` | managed Docs semantic-token rendering and authoring | explicit target refresh |
-| scope `published/documents/semantic-tokens/index.json` | shipped semantic mention/usage projection | scope Docs build | Semantic Tokens report and later analysis | document build; targeted builds preserve untouched rows |
-| exact Concept document `concept_id` | canonical Concept definition | Analysis document source | private Concept projection and semantic lookup | document edit and owning build |
+| `/docs/catalogue-media-targets` | current Work/Gallery discovery response | Catalogue generated-reader service | managed Catalogue authoring and Works Subject picker | read current generated indexes |
+| rendered Catalogue token markers and Work document relationships | current media identity and direct document links | Document Build and Links owner | Media View and document relationships | document build |
+| exact Concept document `concept_id` | canonical Concept definition | Analysis document source | private Concept projection | document edit and owning build |
 | `concept-associations.json` | private stage-specific definition projection | Concepts collection build | definition consumers | Concepts collection build |
 | `docs_project_state_report_v2` response | shipped ephemeral Folder relationship report | Project State producer | local Project State report | report mount or Run/Refresh |
 | `docs-viewer/data/canonical/document-publication-lineage.json` | shipped strict v3 Working records with zero-to-many current Editorial children and nullable `published_url` | configured Copy, confirmed document Delete, and successful scope Publish through `docs_document_publication_lineage.py` | Projects publication-state cue and exact child detail | successful New/Replace Copy, relevant Working/Editorial Delete, or scope Publish |
@@ -113,4 +114,4 @@ flowchart TB
 
 ## Authorities
 
-Concept implementation evidence is `docs-viewer/services/docs_concept_documents.py`, `docs-viewer/build/docs_builder/semantic_target_lookup.py`, `docs-viewer/tests/python/test_docs_concept_documents.py` and `docs-viewer/tests/python/test_semantic_target_lookup.py`. Subject, Project State and lineage ownership remain in their respective Docs Viewer services.
+Concept implementation evidence is `docs-viewer/services/docs_concept_documents.py` and `docs-viewer/tests/python/test_docs_concept_documents.py`. Catalogue discovery is owned by `docs-viewer/services/docs_catalogue_media.py`; the former persisted semantic target lookup is retired. Subject, Project State and lineage ownership remain in their respective Docs Viewer services.

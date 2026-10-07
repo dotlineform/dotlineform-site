@@ -55,7 +55,6 @@ def test_python_docs_builder_scripts_load_repo_local_env_before_scope_config() -
                 "build_docs.py",
                 "build_search.py",
                 "build_document_locations.py",
-                "build_semantic_target_lookup.py",
             )
         ]
 

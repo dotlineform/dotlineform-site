@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260925-151229-341ee0
 title: Catalogue Authoring In Docs Viewer End State
 added_date: "2026-09-25 15:12:29"
-last_updated: "2026-09-28 15:55:05"
+last_updated: "2026-10-07 16:05:28"
 summary: Establish shared local assets and stage-owned Catalogue JSON before report changes; Save prepares Working data, Prepare Preview captures JSON, Publish copies to the repository and R2, and Deploy runs GitHub Actions.
 parent_id: d-20260925-134621-42c838
 ---
@@ -338,7 +338,7 @@ Tests are a separately specified delivery under [Test Contract Discipline](Test_
 
 After this delivery, convert Catalogue Works to generated reader files with saved-data freshness, then introduce descending Work ID order, 20-row pagination and the agreed search improvements. Apply the same front-end/data-owner approach to other reports and collections without assuming identical record membership.
 
-Retire old Catalogue lookups in a separate follow-on: inventory the remaining consumers of `docs-viewer/data/generated/semantic-tokens/target-lookup.json` and `studio/data/generated/catalogue-lookup/`, then move each to its appropriate generated Catalogue reader or explicitly owned report projection. The Subject column and picker have moved in CSI-5; remaining consumers, including Series image build-time resolution and Studio readers, need their own bounded migration. Remove each superseded lookup, producer, loader, configuration reference and refresh instruction once its last consumer has moved. Preserve exact identities and required private/public boundaries, with no compatibility reads or new Save dependency. Any affected tests or fixtures need a separately agreed test specification.
+The private semantic target-lookup retirement follow-on is complete. Catalogue discovery, Subject choices and token rendering use generated Catalogue data; the superseded discovery file, producer, browser file loader and registry lookup declarations are removed, without compatibility reads or a new Save dependency. [Target Lookup](Target_Lookup.md) records the surviving discovery boundary and separately approved obsolete-test cleanup. Other Catalogue readers and report projections retain their own delivery owners.
 
 Investigate stage-loading latency separately. The user reports that switching stages, for example selecting Preview, feels slow. Trace the actual requests, server work and browser rendering before choosing an optimisation; no cause or performance result is established by CSI-5, and this delivery does not add profiling or caching changes.
 

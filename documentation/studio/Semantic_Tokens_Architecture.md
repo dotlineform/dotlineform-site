@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260714-234030-434069
 title: Semantic Tokens Architecture
 added_date: "2026-07-14 23:40:30"
-last_updated: "2026-10-04 14:20:12"
+last_updated: "2026-10-07 16:05:28"
 summary: Describe Docs-owned image and explicit Catalogue tokens, source editing, document relationships, and local/public media resolution.
 parent_id: d-20260725-153656-516b61
 ---
@@ -64,11 +64,11 @@ Catalogue owns canonical identities and media. Tokens select Catalogue media ind
 
 ## Registry And Lookups
 
-The checked configuration is `docs-viewer/config/semantic-tokens/registry.json`. It declares the Catalogue family, Work/Gallery target definitions, identity policy, named lookup fields, occurrence metadata and the Catalogue Info contribution. The retired text action and modal contributions have been removed.
+The checked configuration is `docs-viewer/config/semantic-tokens/registry.json`. It declares the Catalogue family, Work/Gallery target definitions, identity policy, occurrence metadata and the Catalogue Info contribution. Target-store URLs and lookup-generator adapter/field declarations are retired, together with the old text action and modal contributions.
 
 The registry does not control which Source buttons a scope exposes. That proposed layer belongs to [Scope-configured Authoring Controls](Scope_Configured_Authoring_Controls.md). Parser, resolver and presentation implementations remain code-owned.
 
-The private generated lookup is `docs-viewer/data/generated/semantic-tokens/target-lookup.json`. It contains Work rows and is not the authoring, Info, Build or Broken Links authority for the supported Catalogue tokens. Series rows were removed with the Series token target definition.
+The private generated `docs-viewer/data/generated/semantic-tokens/target-lookup.json`, its standalone builder/CLI and browser file loader are retired. Authoring, Subject choices, Info, Build and Broken Links use generated Catalogue data through their existing owners, with no persisted lookup fallback or separate refresh operation. The current `/docs/catalogue-media-targets` response retains `docs_semantic_token_target_lookup_v2`; its browser normalization and matching helpers remain active. [Target Lookup](Target_Lookup.md) records the current discovery boundary and approved test cleanup.
 
 Media authoring and Info use generated Catalogue Work/Gallery data through the configured media provider. The shared Catalogue media modal offers Works for images and Work/Gallery selection for text links. Gallery search reads Studio's generated `galleries/galleries_index.json` through `/docs/catalogue-media-targets`; Gallery resolution reads the selected `galleries/index/<gallery_id>.json` through `/docs/catalogue-gallery`. Neither needs the private target lookup or a Gallery document. Current media validation precedes guarded insertion or Info updates; provider failures remain visible and Source Save revalidates pending token edits.
 

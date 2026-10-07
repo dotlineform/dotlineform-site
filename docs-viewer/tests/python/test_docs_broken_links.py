@@ -130,31 +130,7 @@ def write_semantic_token_contract(repo_root: Path) -> None:
         repo_root / "docs-viewer/config/semantic-tokens/registry.json",
         {
             "schema_version": "docs_semantic_token_registry_v1",
-            "target_lookup_url": "/docs-viewer/data/generated/semantic-tokens/target-lookup.json",
             "families": families,
-        },
-    )
-    write_json(
-        repo_root / "docs-viewer/data/generated/semantic-tokens/target-lookup.json",
-        {
-            "schema_version": "docs_semantic_token_target_lookup_v2",
-            "targets": [
-                {
-                    "family": "catalogue",
-                    "target_type": "series",
-                    "target_id": "00638",
-                    "title": "3 symbols",
-                    "href": "/series/?series=00638",
-                    "image": {"src": "https://media.example.test/series.webp"},
-                },
-                {
-                    "family": "catalogue",
-                    "target_type": "series",
-                    "target_id": "00008",
-                    "title": "nerve",
-                    "href": "",
-                },
-            ],
         },
     )
 

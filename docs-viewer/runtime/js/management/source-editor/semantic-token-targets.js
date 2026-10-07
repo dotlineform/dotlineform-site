@@ -93,20 +93,6 @@ export function normalizeSemanticTokenTargets(payload, registry) {
   }).filter(Boolean);
 }
 
-export function loadSemanticTokenTargets(registry, options = {}) {
-  var fetchImpl = typeof options.fetch === "function" ? options.fetch : window.fetch.bind(window);
-  var url = cleanString(options.url) || cleanString(registry && registry.targetLookupUrl);
-  if (!url) return Promise.reject(new Error("Semantic token target lookup URL is unavailable."));
-  return fetchImpl(url, { cache: "no-store" })
-    .then(function (response) {
-      if (!response || !response.ok) throw new Error("Semantic token target lookup is unavailable.");
-      return response.json();
-    })
-    .then(function (payload) {
-      return normalizeSemanticTokenTargets(payload, registry);
-    });
-}
-
 export function collectSemanticTokenTargetMatches(targets, query, registry, limit) {
   var normalizedQuery = normalizeSearchText(query);
   var tokens = normalizedQuery.split(" ").filter(Boolean);

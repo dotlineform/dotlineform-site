@@ -20,10 +20,6 @@ function normalizeTargetType(record, order) {
       normalizer: cleanString(idPolicy.normalizer),
       width: Number(idPolicy.width || 0)
     },
-    lookupAdapter: cleanString(source.lookup_adapter),
-    lookupFields: Array.isArray(source.lookup_fields)
-      ? source.lookup_fields.map(cleanString).filter(Boolean)
-      : [],
     order: order
   };
 }
@@ -57,7 +53,6 @@ export function normalizeSemanticTokenRegistry(payload) {
     : [];
   return {
     schemaVersion: cleanString(source.schema_version),
-    targetLookupUrl: cleanString(source.target_lookup_url),
     families: families,
     familiesById: new Map(families.map(function (family) { return [family.key, family]; }))
   };

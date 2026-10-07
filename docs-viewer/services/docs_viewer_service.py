@@ -60,7 +60,6 @@ STATIC_PREFIXES = (
     "/assets/data/",
     "/assets/docs/",
     "/docs-viewer/config/",
-    "/docs-viewer/data/generated/",
     "/docs-viewer/static/",
 )
 RUNTIME_STATIC_ROUTES = (

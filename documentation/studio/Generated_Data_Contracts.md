@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260605-125108-c68916
 title: Generated Data Contracts
 added_date: "2026-06-05 12:51:08"
-last_updated: "2026-10-07 11:49:40"
+last_updated: "2026-10-07 16:05:28"
 summary: Public and manage Docs Viewer payload schemas, registered publication roots, read authority, publishing, and builder ownership contracts.
 parent_id: d-20260331-000000-c313fd
 ---
@@ -41,7 +41,7 @@ Docs Review retains its separate package owner. No Preview browser provider or f
 
 Working builders and management follow-through write local generated output. One Publish action captures eligible inputs, builds and verifies a fresh Preview artifact, then distributes that exact snapshot. There is no intermediate confirmation. Site-preview and public routes read the repository/public projection. Named collections use their configured `collections/<id>/documents/` generated/prepared roots and `site/assets/data/docs/<id>/` public destinations.
 
-Scope-independent generated data has a separate owner. The semantic-token target lookup is reproducible application data at `docs-viewer/data/generated/semantic-tokens/target-lookup.json`, registered to the manage-only browser URL `/docs-viewer/data/generated/semantic-tokens/target-lookup.json`. It combines catalogue inputs into a focused target projection, so it is neither one scope's publication nor a public projection. `data/generated/` is not a fallback location for scope payloads.
+Manage-only Catalogue target discovery is the `/docs/catalogue-media-targets` response over configured Working Catalogue indexes. It retains `docs_semantic_token_target_lookup_v2` without a persisted application lookup file or target-refresh builder. Authoring and Subject pickers normalize this response through their existing Catalogue provider. `docs-viewer/data/generated/` is not a payload fallback or a served static family. [Target Lookup](Target_Lookup.md) owns the discovery boundary.
 
 ## Collection Manifest Ownership
 

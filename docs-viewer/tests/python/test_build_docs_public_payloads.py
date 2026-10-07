@@ -15,7 +15,6 @@ from build_docs_test_support import (
     read_json,
     write_public_scope_config,
     write_public_source_docs,
-    write_json,
     write_site_tools_config,
     write_text,
 )
@@ -36,22 +35,6 @@ def test_python_docs_builder_public_generated_payloads_include_manage_rows() -> 
             (
                 REPO_ROOT / "docs-viewer/config/semantic-tokens/registry.json"
             ).read_text(encoding="utf-8"),
-        )
-        write_json(
-            root / "docs-viewer/data/generated/semantic-tokens/target-lookup.json",
-            {
-                "schema_version": "docs_semantic_token_target_lookup_v2",
-                "targets": [
-                    {
-                        "family": "catalogue",
-                        "target_type": "work",
-                        "target_id": "00638",
-                        "title": "3 symbols",
-                        "href": "/works/?work=00638",
-                        "meta": [],
-                    }
-                ],
-            },
         )
         child_source_path = (
             root

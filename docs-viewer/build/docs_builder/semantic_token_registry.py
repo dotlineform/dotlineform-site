@@ -26,8 +26,6 @@ class SemanticTokenTargetType:
     key: str
     label: str
     id_policy: SemanticTokenIdPolicy
-    lookup_adapter: str
-    lookup_fields: tuple[str, ...]
     order: int
 
 
@@ -50,7 +48,6 @@ class SemanticTokenFamily:
 
 @dataclass(frozen=True)
 class SemanticTokenRegistry:
-    target_lookup_url: str
     families: tuple[SemanticTokenFamily, ...]
 
     def family(self, key: str) -> SemanticTokenFamily | None:
@@ -72,9 +69,8 @@ def load_semantic_token_registry(repo_root: Path) -> SemanticTokenRegistry | Non
 def parse_semantic_token_registry(payload: Any) -> SemanticTokenRegistry | None:
     if not isinstance(payload, dict) or payload.get("schema_version") != SEMANTIC_TOKEN_REGISTRY_SCHEMA_VERSION:
         return None
-    target_lookup_url = str(payload.get("target_lookup_url") or "").strip()
     raw_families = payload.get("families")
-    if not target_lookup_url.startswith("/") or not isinstance(raw_families, list):
+    if not isinstance(raw_families, list):
         return None
     families: list[SemanticTokenFamily] = []
     seen: set[str] = set()
@@ -84,7 +80,7 @@ def parse_semantic_token_registry(payload: Any) -> SemanticTokenRegistry | None:
             return None
         seen.add(family.key)
         families.append(family)
-    return SemanticTokenRegistry(target_lookup_url=target_lookup_url, families=tuple(families))
+    return SemanticTokenRegistry(families=tuple(families))
 
 
 def parse_semantic_token_family(payload: Any, order: int) -> SemanticTokenFamily | None:
@@ -129,26 +125,17 @@ def parse_semantic_token_target_type(payload: Any, order: int) -> SemanticTokenT
         return None
     key = str(payload.get("key") or "").strip().lower()
     label = str(payload.get("label") or "").strip()
-    lookup_adapter = str(payload.get("lookup_adapter") or "").strip()
-    lookup_fields = payload.get("lookup_fields")
     id_policy = parse_semantic_token_id_policy(payload.get("id_policy"))
     if (
         not re.fullmatch(r"[a-z][a-z0-9-]*", key)
         or not label
-        or not lookup_adapter
-        or not isinstance(lookup_fields, list)
         or id_policy is None
     ):
-        return None
-    fields = tuple(str(field).strip() for field in lookup_fields if str(field).strip())
-    if not {"title", "href"}.issubset(fields):
         return None
     return SemanticTokenTargetType(
         key=key,
         label=label,
         id_policy=id_policy,
-        lookup_adapter=lookup_adapter,
-        lookup_fields=fields,
         order=order,
     )
 

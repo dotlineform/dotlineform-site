@@ -1,6 +1,5 @@
 {
   "schema_version": "docs_semantic_token_registry_v1",
-  "target_lookup_url": "/docs-viewer/data/generated/semantic-tokens/target-lookup.json",
   "families": [
     {
       "schema_version": "docs_semantic_token_family_definition_v1",
@@ -19,9 +18,7 @@
             "width": 3,
             "input_pattern": "^(?:[0-9]{3}|[1-9][0-9]{3,})$",
             "canonical_pattern": "^(?:[0-9]{3}|[1-9][0-9]{3,})$"
-          },
-          "lookup_adapter": "catalogue-gallery-target-lookup",
-          "lookup_fields": ["title", "href", "meta"]
+          }
         },
         {
           "key": "work",
@@ -31,14 +28,7 @@
             "width": 5,
             "input_pattern": "^\\d{1,5}$",
             "canonical_pattern": "^\\d{5}$"
-          },
-          "lookup_adapter": "catalogue-work-target-lookup",
-          "lookup_fields": [
-            "title",
-            "href",
-            "meta",
-            "image"
-          ]
+          }
         }
       ]
     }
