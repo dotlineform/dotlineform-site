@@ -267,16 +267,26 @@ class SourceLoadingMixin:
                 raise RuntimeError(f"Unknown parent_id {doc.parent_id!r} for doc {doc.doc_id!r}")
 
     def validate_targeted_build_prerequisites(self, docs: list[DocRecord], target_doc_ids: list[str]) -> None:
-        if not (self.output_dir / "index-tree.json").exists():
-            raise RuntimeError("Targeted docs build requires existing stage index tree; run a full-stage build first")
+        index_tree_path = self.output_dir / "index-tree.json"
+        try:
+            index_payload = json.loads(index_tree_path.read_text(encoding="utf-8"))
+        except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+            raise RuntimeError(
+                "Targeted docs build requires a readable index tree; run a full Build first: "
+                f"{exc}"
+            ) from exc
+        tree_docs = index_payload.get("docs") if isinstance(index_payload, dict) else None
+        if not isinstance(tree_docs, list) or any(not isinstance(doc, dict) for doc in tree_docs):
+            raise RuntimeError("Targeted docs build requires a valid index tree; run a full Build first")
+        target_set = set(target_doc_ids)
         missing = [
             doc.doc_id for doc in docs
-            if doc.doc_id not in target_doc_ids and not (self.items_dir / f"{doc.doc_id}.json").exists()
+            if doc.doc_id not in target_set and not (self.items_dir / f"{doc.doc_id}.json").exists()
         ]
         if missing:
             raise RuntimeError(
                 "Targeted docs build requires existing payloads for unselected docs; "
-                f"run a full-stage build first: {', '.join(missing)}"
+                f"run a full Build first: {', '.join(missing)}"
             )
 
     def viewer_url_for(self, doc_id: str, anchor: str = "") -> str:

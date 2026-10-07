@@ -3,12 +3,12 @@ draft: false
 doc_id: d-20260911-232134-ec1ba8
 title: Save/Build optimisations
 added_date: "2026-09-11 23:21:34"
-last_updated: "2026-10-07 10:02:41"
+last_updated: "2026-10-07 10:16:17"
 parent_id: d-20260428-000000-f5ff18
 ---
 # Save/Build optimisations
 
-Status: **steps 1–2 complete; steps 3–5 proposed**. The current-state review below was refreshed on 2026-10-07. Delivery order reflects identifiable unnecessary work; timing gains have not been measured. The next implementation slice is step 3, after its timing scope and prerequisite failure policy are agreed.
+Status: **steps 1–3 complete; steps 4–5 proposed**. The current-state review below was refreshed on 2026-10-07. Delivery order reflects identifiable unnecessary work; timing gains have not been measured. The next implementation slice is step 4, with saved tree metadata and hierarchy ownership defining selected-source loading.
 
 ## Requirements
 
@@ -24,8 +24,8 @@ Source Save does not await Build. The main remaining opportunities affect ordina
 
 | Owner or output | Current work | Remaining opportunity |
 | --- | --- | --- |
-| Ordinary watcher snapshot | `parsed_doc_snapshot()` reparses the complete ordinary collection. Named-collection snapshots already merge changed-file records into their prior snapshot. | Extend changed-file processing to ordinary documents while retaining canonical membership and hierarchy. |
-| Targeted-build prerequisites | Service/watcher preflight loads ordinary source and checks unchanged generated payloads; the builder loads the source again and repeats prerequisite checks. | Give prerequisite validation one owner and report missing targeted prerequisites explicitly. |
+| Ordinary watcher snapshot | Startup seeds the collection; subsequent ordinary and named-collection snapshots merge changed-file records. Ordinary source loading retains canonical hierarchy ownership. | Step 3 complete. |
+| Targeted-build prerequisites | The ordinary builder checks the saved tree and unselected payloads using source records it already loaded. Service/watcher preflight and automatic prerequisite fallback have been removed. | Step 3 complete. Missing prerequisites require an explicit full Build. |
 | Ordinary rendering and tree | The builder loads all ordinary Markdown, renders selected documents, and derives the complete tree. Link rewriting constructs identity lookups from the loaded records. | Read selected Markdown and merge navigation metadata using existing hierarchy and saved tree records; construct required lookups once per operation. |
 | Document-count reporting | Counts come directly from loaded source records; the unused flat `index_payload`, rendered-file reads and plain-text extraction have been removed. | Step 1 complete. Legacy test consumers need separately scoped modernisation through the current workspace contract. |
 | Watcher render selection | Changed files' before/after IDs select ordinary payloads; parent-title changes no longer add unchanged children. Tree projection and direct-neighbour relationship maintenance retain their own owners. | Step 2 complete. Unselected Related Links sections retain their existing document/full-Build snapshot refresh boundary. |
@@ -49,15 +49,15 @@ Test creation or changes require a separately agreed specification under [Test C
 
 ### 0 — Readiness And Timing Scope
 
-- [x] Confirm steps 1–2's outcomes, broad owners, write boundaries and credible blast radius against current code. Repeat readiness for the next proposed slice.
-- [ ] Before steps 3–5, agree a bounded timing baseline using existing logs and diagnostics first. Separate source persistence, watcher scheduling, builder execution and viewer refresh.
-- [ ] Select representative unchanged Save, ordinary body edit, named-collection edit and explicit Build cases only where they answer the current performance question. Record the exact workspace/write boundary and expected cost before execution; use isolated storage for changes made solely to gather evidence.
+- [x] Confirm steps 1–3's outcomes, broad owners, write boundaries and credible blast radius against current code. Repeat readiness for the next proposed slice.
+- [x] Bound step 3's evidence to source-call inspection and available diagnostics. Existing historical builder logs report builder totals, without separate watcher/preflight timings; they cannot establish a current elapsed-time comparison. No source edits, generated writes or benchmark runs were needed solely for evidence.
+- [ ] Before steps 4–5, choose useful timing cases from unchanged Save, ordinary body edit, named-collection edit and explicit Build. Separate persistence, scheduling, builder execution and viewer refresh; use existing diagnostics first. Record workspace/write boundaries and expected cost before execution, with isolated storage for changes made solely to gather evidence.
 
 Verification budget: read-only owner inspection and available diagnostics. Additional runs or instrumentation require a concrete question and a proportionate execution scope; runtime cost is currently unmeasured.
 
-Gate: the slice is coherent and finishable, with no unresolved ownership decision. A missing timing baseline does not block removal of demonstrably unused computation in step 1.
+Gate: the slice is coherent and finishable, with no unresolved ownership decision. Source-call evidence can establish a removed pass; elapsed-time claims require a representative runtime comparison.
 
-Record: steps 1–2 readiness complete. Step 1 removed unused ordinary-builder reporting; step 2 confined watcher render selection and removed its unused child-order helpers. The current Related Links contract explicitly defers unselected sections to their own or a full Build, so no broader freshness change was needed. Both slices edit repository source/documentation only. Timing scope and later-slice readiness remain pending.
+Record: steps 1–3 readiness complete. Step 1 removed unused ordinary-builder reporting; step 2 confined watcher rendering under the existing Related Links snapshot contract; step 3 extended selected watcher reads and assigned prerequisites to the builder. The approved step 3 policy replaces missing-prerequisite fallback with explicit full-Build recovery. All three slices edit repository source/documentation only; runtime timings remain unmeasured.
 
 ### 1 — Remove Unused Flat-Index Construction
 
@@ -85,15 +85,15 @@ Record: complete. The watcher and source-model helper boundary no longer compute
 
 ### 3 — Remove Repeated Ordinary Source Reads
 
-- [ ] Extend the watcher's changed-file snapshot merge to ordinary documents, including creation and deletion under canonical hierarchy ownership.
-- [ ] Put targeted prerequisite validation in one owner, using the operation's required inputs without a duplicate whole-source preflight.
-- [ ] Preserve explicit full Build requests. Missing targeted prerequisites should report the need for a full Build instead of silently expanding one document edit into a complete rebuild.
+- [x] Extend the watcher's changed-file snapshot merge to ordinary documents, including creation and deletion under canonical hierarchy ownership.
+- [x] Put targeted prerequisite validation in one owner, using the operation's required inputs without a duplicate whole-source preflight.
+- [x] Preserve explicit full Build requests. Missing targeted prerequisites report the need for a full Build instead of silently expanding one document edit into a complete rebuild; empty targeted selections fail explicitly.
 
-Verification budget: compare source-file counts and phase timings within the agreed baseline; inspect selected-ID, deletion and missing-prerequisite paths. Use focused lint/syntax checks and an approved, reviewed existing service/generator selection where needed.
+Verification budget: inspect source-call counts, selected-ID, deletion and missing-prerequisite paths; run focused lint/syntax/whitespace checks. Available historical diagnostics do not separate the removed phases, so runtime comparisons and behavior tests were not selected for this slice.
 
 Gate: ordinary watcher/preflight processing no longer repeats a complete source parse, failures are actionable, and targeted requests preserve their scope. The tradeoff is explicit manual full-Build recovery when required generated state is unavailable.
 
-Record: proposed; timing scope and failure-policy confirmation precede implementation.
+Record: complete. For a normal ordinary edit with an existing watcher snapshot, snapshot parsing reads the changed surviving sources and prerequisite validation reuses the builder's records. This replaces two additional complete source parses with changed-file parsing; the builder still loads all ordinary sources once. Startup snapshot loading, canonical hierarchy validation, explicit full requests, watcher bulk/unavailable-snapshot policies and separately owned Links reads remain. Focused Python lint, `py_compile` and `git diff --check` passed for the three changed Python files. Source/diff review covered creation/deletion merge, suppression adoption, selector forwarding, empty selections and missing/invalid prerequisite failures. Tests, live watcher/build execution and timing measurements were not run; affected obsolete test consumers are recorded in Builder without aliases.
 
 ### 4 — Read Only Selected Ordinary Markdown
 
@@ -123,20 +123,20 @@ Record: proposed; potentially substantial benefit, with a larger ownership and s
 
 ### 6 — Code Review For The Delivered Slice
 
-- [x] Review steps 1–2's final bounded diffs for ownership drift, unnecessary reads, duplicated state, compatibility residue, stale consumers and missing failure behavior. Repeat for later delivered slices.
-- [x] Confirm steps 1–2 made no test changes; affected legacy consumers are recorded separately. Review future test changes against their separately approved specification.
-- [x] Limit performance claims to the removed flat-index pass and child-render expansion; timing gains remain unmeasured. Rerun only checks affected by later review changes.
+- [x] Review steps 1–3's final bounded diffs for ownership drift, unnecessary reads, duplicated state, compatibility residue, stale consumers and missing failure behavior. Repeat for later delivered slices.
+- [x] Confirm steps 1–3 made no test changes; affected legacy consumers are recorded separately. Review future test changes against their separately approved specification.
+- [x] Limit performance claims to removed flat-index work, child-render expansion and repeated source passes; timing gains remain unmeasured. Rerun only checks affected by later review changes.
 
 Gate: review findings are resolved and completion claims match the inspected and exercised surface.
 
-Record: steps 1–2 review complete with no unresolved production findings. Reporting counts and required mutation boundaries remain intact; step 2 preserves exact changed identities and the existing Related Links snapshot policy. Removed sorting helpers have no remaining production callers. Legacy test limits are documented in Builder, and no alias was introduced. Repeat this review for the next slice.
+Record: steps 1–3 review complete with no unresolved production findings. Reporting counts, canonical source ownership and required mutation boundaries remain intact. Changed identities and the existing Related Links snapshot policy are retained; prerequisite validation has one production owner and removed helpers have no remaining production callers. Legacy test limits are documented in Builder, and no alias was introduced. Repeat this review for the next slice.
 
 ### 7 — Closeout For The Delivered Slice
 
-- [x] Update Builder for reporting, returned results, watcher render selection, Related Links refresh boundaries and legacy test limits.
-- [x] Mark steps 1–2 complete and step 3 next; keep later work proposed and timing gains unmeasured.
+- [x] Update Builder for reporting, returned results, watcher render selection and incremental snapshots, targeted prerequisite failures, Related Links refresh boundaries and legacy test limits.
+- [x] Mark steps 1–3 complete and step 4 next; keep later work proposed and timing gains unmeasured.
 - [x] Keep this feature document for the remaining proposed slices. Documentation is maintained directly in the repository and needs no Docs or Search rebuild.
 
 Gate: the delivered outcome is complete and reviewable; subsequent work remains explicitly proposed.
 
-Record: steps 1–2 delivered and closed. Builder is the durable owner; this plan remains useful for steps 3–5. Watcher runtime activation requires a restart; timing runs and separately specified test modernisation remain pending.
+Record: steps 1–3 delivered and closed. Builder is the durable owner; this plan remains useful for steps 4–5. Watcher and service runtime activation requires restarting their owning processes; timing runs and separately specified test modernisation remain pending.

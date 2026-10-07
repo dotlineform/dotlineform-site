@@ -23,7 +23,7 @@ from docs_workspace_config import (
 from docs_build_manifest import remove_build_manifest, write_build_manifest
 from docs_mermaid_preparation import prepare_stage_mermaid
 from docs_workspace_links import write_workspace_links
-from docs_source_model import load_stage_docs_for_config, parse_source, write_bytes_atomic
+from docs_source_model import parse_source, write_bytes_atomic
 from docs_watch_suppression import (
     DEFAULT_COMPLETE_TTL_SECONDS,
     DEFAULT_PENDING_TTL_SECONDS,
@@ -124,55 +124,6 @@ def links_write_arguments(before: list[str] | None, paths: list[Path]) -> dict[s
     return {"links_doc_ids": sorted(set(before) | after)}
 
 
-def iter_docs_tree_records(docs: Any) -> list[Dict[str, Any]]:
-    if not isinstance(docs, list):
-        return []
-    records: list[Dict[str, Any]] = []
-    stack = [doc for doc in docs if isinstance(doc, dict)]
-    while stack:
-        record = stack.pop(0)
-        records.append(record)
-        children = record.get("children")
-        if isinstance(children, list):
-            stack.extend(child for child in children if isinstance(child, dict))
-    return records
-
-
-def targeted_docs_build_fallback_reason(repo_root: Path, target_doc_ids: list[str], stage: str | None = None) -> str:
-    try:
-        config = load_docs_stage(repo_root, stage)
-    except (KeyError, FileNotFoundError, ValueError) as exc:
-        return f"full-stage fallback: Docs workspace config unavailable: {exc}"
-
-    output_dir = resolve_workspace_path(repo_root, generated_documents_path(config))
-    index_tree_path = output_dir / "index-tree.json"
-    if not index_tree_path.exists():
-        return "full-stage fallback: existing docs index tree missing"
-
-    try:
-        index_payload = json.loads(index_tree_path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
-        return f"full-stage fallback: existing docs index tree unreadable: {exc}"
-    docs = index_payload.get("docs") if isinstance(index_payload, dict) else None
-    if not iter_docs_tree_records(docs):
-        return "full-stage fallback: existing docs index tree has no docs array"
-
-    try:
-        current_docs = load_stage_docs_for_config(repo_root, config)
-    except (OSError, ValueError) as exc:
-        return f"full-stage fallback: current source docs unavailable: {exc}"
-
-    target_set = set(target_doc_ids)
-    missing_payload_ids = [
-        doc.doc_id
-        for doc in current_docs
-        if doc.doc_id not in target_set and not (output_dir / "by-id" / f"{doc.doc_id}.json").exists()
-    ]
-    if missing_payload_ids:
-        return "full-stage fallback: existing payloads missing for unselected docs"
-    return ""
-
-
 def extract_docs_builder_diagnostics(stdout: str) -> list[Dict[str, Any]]:
     diagnostics: list[Dict[str, Any]] = []
     for line in stdout.splitlines():
@@ -262,6 +213,9 @@ def rebuild_stage_outputs(
         raise ValueError("Search rebuilds require Working; Preview copies the existing index")
     if (copied_search_index is None) != (copied_recent_payload is None):
         raise ValueError("Preview requires both captured Working Search and freshly prepared Recents")
+    docs_target_doc_ids = ordered_docs_doc_ids(docs_doc_ids or [])
+    if docs_doc_ids is not None and not docs_target_doc_ids:
+        raise ValueError("Targeted docs build requires at least one document ID")
     if copied_search_index is not None:
         if stage != "preview":
             raise ValueError("Only Preview copies an existing Search index")
@@ -275,8 +229,7 @@ def rebuild_stage_outputs(
         raise ValueError(f"stage {stage!r} is not configured") from exc
     remove_build_manifest(repo_root, stage_config)
     docs_mode = "full"
-    docs_target_doc_ids: list[str] = []
-    docs_reason = "full-stage fallback: no targeted docs payload ids provided"
+    docs_reason = "full document build requested"
     docs_command = python_builder_command(DOCS_BUILDER_SCRIPT, "--write", "--diagnostics")
     if not include_search:
         docs_command.append("--skip-recent")
@@ -287,17 +240,9 @@ def rebuild_stage_outputs(
         if selected_links is not None:
             docs_command.extend(["--links-doc-ids", ",".join(ordered_docs_doc_ids(selected_links))])
     if docs_doc_ids is not None:
-        docs_target_doc_ids = ordered_docs_doc_ids(docs_doc_ids)
-        if docs_target_doc_ids:
-            fallback_reason = targeted_docs_build_fallback_reason(repo_root, docs_target_doc_ids, stage)
-            if fallback_reason:
-                docs_reason = fallback_reason
-            else:
-                docs_mode = "targeted"
-                docs_reason = "targeted docs payload ids provided"
-                docs_command.extend(["--only-doc-ids", ",".join(docs_target_doc_ids)])
-        else:
-            docs_reason = "full-stage fallback: targeted docs payload ids normalized empty"
+        docs_mode = "targeted"
+        docs_reason = "targeted docs payload ids provided"
+        docs_command.extend(["--only-doc-ids", ",".join(docs_target_doc_ids)])
     if skip_media_builds:
         docs_command.append("--skip-media-builds")
     commands = [("docs", docs_command)]

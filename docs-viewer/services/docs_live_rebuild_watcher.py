@@ -62,7 +62,6 @@ from docs_workspace_config import (
     select_workspace_stage,
 )
 from docs_build_manifest import remove_build_manifest
-from docs_write_rebuild import targeted_docs_build_fallback_reason
 from docs_watch_suppression import (
     SUPPRESSION_COMPLETE,
     clear_watch_suppressions,
@@ -312,7 +311,7 @@ def parsed_doc_snapshot(
     previous_docs: Optional[Dict[str, Dict[str, Any]]] = None,
     changed_files: list[str] | None = None,
 ) -> Dict[str, Dict[str, Any]]:
-    """Seed source metadata once, then replace changed named-collection entries."""
+    """Seed source metadata once, then replace changed collection entries."""
     normalized_collection = str(collection or "").strip().lower()
     parent_config = load_docs_stage(repo_root, stage)
     document_config = parent_config
@@ -327,7 +326,7 @@ def parsed_doc_snapshot(
                 f"unknown collection {normalized_collection!r} in stage {stage!r}"
             )
         document_config = matching[0]
-    incremental = bool(normalized_collection) and previous_docs is not None and changed_files is not None
+    incremental = previous_docs is not None and changed_files is not None
     docs = load_document_collection_docs_for_config(
         repo_root, parent_config, document_config,
         filenames=changed_files if incremental else None,
@@ -695,6 +694,10 @@ def rebuild_stage(
     docs_doc_ids: Optional[list[str]] = None,
     *, stage: str | None = None, links_doc_ids: Optional[list[str]] = None,
 ) -> bool:
+    docs_target_doc_ids = ordered_unique(docs_doc_ids or [])
+    if docs_doc_ids is not None and not docs_target_doc_ids:
+        log(f"{stage} targeted docs rebuild failed: no document IDs selected")
+        return False
     try:
         remove_build_manifest(repo_root, load_docs_stage(repo_root, stage))
     except (KeyError, FileNotFoundError, ValueError) as exc:
@@ -705,13 +708,8 @@ def rebuild_stage(
         docs_command.extend(["--stage", stage, "--skip-browser-config", "--skip-media-builds"])
     if stage == "working" and links_doc_ids is not None:
         docs_command.extend(["--links-doc-ids", ",".join(ordered_unique(links_doc_ids))])
-    docs_target_doc_ids = ordered_unique(docs_doc_ids or [])
-    if docs_doc_ids is not None and docs_target_doc_ids:
-        fallback_reason = targeted_docs_build_fallback_reason(repo_root, docs_target_doc_ids, stage=stage)
-        if fallback_reason:
-            log(f"{stage} targeted docs fallback: {fallback_reason}")
-        else:
-            docs_command.extend(["--only-doc-ids", ",".join(docs_target_doc_ids)])
+    if docs_doc_ids is not None:
+        docs_command.extend(["--only-doc-ids", ",".join(docs_target_doc_ids)])
     commands = [("docs", docs_command)]
     log(f"Rebuilding {stage} docs. Search remains explicit via Rebuild.")
 
