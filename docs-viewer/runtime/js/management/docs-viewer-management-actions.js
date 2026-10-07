@@ -7,6 +7,7 @@ import {
   openManagedDocSource,
   previewManagedDocDelete,
   rebuildManagedDocs,
+  rebuildManagedDocument,
   updateSourceConfigSettings
 } from "./docs-viewer-management-client.js";
 import {
@@ -482,6 +483,28 @@ export function createDocsViewerManagementActionController(options) {
     }
   }
 
+  /** Keep Rebuild busy through the targeted build and the fresh exact-document reload. */
+  async function handleRebuildDocument(value) {
+    var target = normalizeManagedDocumentTarget(value);
+    setManagementBusy(true);
+    setManagementMessage("Rebuilding document...", false);
+    try {
+      var payload = await rebuildManagedDocument(target, managementClientOptions());
+      var completedTarget = normalizeManagedDocumentTarget(payload.target);
+      if (completedTarget.doc_id !== target.doc_id || completedTarget.collection !== target.collection) {
+        throw new Error("Rebuild response does not match the displayed document.");
+      }
+      var loaded = await context.routeCommands.loadDoc(completedTarget, { force: true, historyMode: "replace" });
+      if (!loaded) throw new Error("Document rebuilt, but it could not be reloaded.");
+      setManagementMessage("", false);
+    } catch (error) {
+      setManagementMessage(error.message || "Document rebuild failed.", true);
+    } finally {
+      setManagementBusy(false);
+      renderManagementUi();
+    }
+  }
+
   function handleRebuildDocs() {
     var target = normalizeManagedDocumentTarget(selectedDocument.documentTarget || {
       doc_id: context.defaultRouteDocId() || context.defaultDocId()
@@ -739,6 +762,7 @@ export function createDocsViewerManagementActionController(options) {
     handleOpenSource: handleOpenSource,
     handlePublish: handlePublish,
     handleRebuildDocs: handleRebuildDocs,
+    handleRebuildDocument: handleRebuildDocument,
     handleSettingsSubmit: handleSettingsSubmit
   };
 }

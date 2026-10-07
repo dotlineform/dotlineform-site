@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260930-195002-b3417e
 title: Related Links
 added_date: "2026-09-30 19:50:02"
-last_updated: "2026-10-07 21:13:20"
+last_updated: "2026-10-07 21:31:31"
 summary: Author-inserted related-links directive, a sorted list with collection icons, and build-time relationship snapshots in document JSON.
 ui_status: in-progress
 parent_id: d-20260428-000000-f5ff18
@@ -80,6 +80,8 @@ Each Working document build first runs the existing incremental Links maintenanc
 Supported Catalogue Work image, Entry and Media View tokens contribute ordinary document relationships to their Work's Catalogue subdocument. Gallery Media View tokens contribute none. Catalogue sources use the Work's Entry, a blank line and `[[links|context]]`; the self-targeting Entry is omitted from the graph. `context` supplies only the Catalogue heading for the existing directive and does not change relationship ownership or the ordinary authoring default. A Catalogue page can therefore show the documents that reference its Work through incoming links without generating outgoing relationships from the displayed list. Downloads and external `work.links` stay in Entry's combined resource list and do not supply document relationships. A directive alone creates no Links record, and an empty list produces no section. Full Docs rebuilds render Catalogue after the contributing documents and use the final document-JSON comparison to detect changes in the embedded list; no separate Links-file change detector is needed.
 
 Targeted saves rebuild only their selected document content, after refreshing its relationship record and affected neighbours. A document build includes all incoming links already recorded when it runs. Later edits to other documents can change that incoming list without rebuilding this document's content; a subsequent document build or full Docs Build refreshes its embedded section. Working relationships do not filter sources or targets by draft state, ordinary `unpublishable.json` membership or inherited publication exclusion. Removing an old filter requires an explicit complete relationship reconciliation to restore suppressed references; panel opening adds no scan or rebuild.
+
+Use **Edit doc → Rebuild** in the local rendered reader to refresh the displayed document's embedded Related links from current relationship records without a source edit. The action preserves source dates, rebuilds only that document, omits Search and reloads the exact ordinary or collection target after completion. It does not rebuild neighbouring document content; [Runtime](Docs_Viewer_Runtime.md#document-action-context-and-toolbar-placement) owns the action and service contract.
 
 Generated related-links sections must not contribute authored relationships. Otherwise an incoming-link listing could manufacture a reciprocal relationship. Literal directive examples in code remain examples and do not render a section.
 

@@ -3,6 +3,7 @@ import { DOCS_VIEWER_ACTION_IDS as ACTION_IDS } from "./docs-viewer-action-defin
 
 var EDIT_ITEMS = [
   { actionId: ACTION_IDS.EDIT_DOCUMENT, label: "Source editor", artwork: "docsViewer__icon--square-code" },
+  { actionId: ACTION_IDS.REBUILD_DOCUMENT, label: "Rebuild", artwork: "docsViewer__icon--refresh-cw" },
   { actionId: ACTION_IDS.OPEN_VSCODE, label: "Open in VS Code", artwork: "docsViewer__icon--file-code-corner", contextAction: true },
   { actionId: ACTION_IDS.SET_DRAFT, label: "Mark as draft", artwork: "docsViewer__icon--circle-check", checked: false, contextAction: true },
   { actionId: ACTION_IDS.SET_SELECTED, label: "Star", artwork: "docsViewer__icon--star", checked: false, contextAction: true },
@@ -111,7 +112,7 @@ export function createDocsViewerEditMenuController(options) {
     EDIT_ITEMS.forEach(function (item) {
       if (item.contextAction) return;
       var button = current.menu.querySelector(':scope > [data-docs-viewer-action="' + item.actionId + '"]');
-      var enabled = item.actionId === ACTION_IDS.EDIT_DOCUMENT ? state.available
+      var enabled = item.actionId === ACTION_IDS.EDIT_DOCUMENT || item.actionId === ACTION_IDS.REBUILD_DOCUMENT ? state.available
         : item.actionId === ACTION_IDS.COPY_LINK ? ordinary
           : item.actionId === ACTION_IDS.DELETE ? ordinary && deleteState && !deleteState.disabled && !deleteState.hidden : false;
       button.disabled = !enabled;
@@ -147,6 +148,7 @@ export function createDocsViewerEditMenuController(options) {
     if (detail.actionTarget?.dataset.docsViewerEditContribution === "true") return true;
     if (detail.actionTarget?.disabled) return false;
     if (actionId === ACTION_IDS.EDIT_DOCUMENT) options.openSource(state.target);
+    else if (actionId === ACTION_IDS.REBUILD_DOCUMENT) options.rebuildDocument(state.target);
     else if (options.contextActions.owns(actionId)) options.contextActions.invoke(actionId);
     else if (!state.target.collection && actionId === ACTION_IDS.COPY_LINK) options.copyLink(state.target.doc_id);
     else if (!state.target.collection && actionId === ACTION_IDS.DELETE) {

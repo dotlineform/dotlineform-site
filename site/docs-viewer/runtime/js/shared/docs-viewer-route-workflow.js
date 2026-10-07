@@ -82,7 +82,7 @@ export function initDocsViewerRouteWorkflow(context) {
       index.indexSelectedDocId = destination.indexDocId;
       context.trackSidebarSelection();
     }
-    if (context.restoreRetainedDocument(target, displayedHash)) return target;
+    if (!destination.force && context.restoreRetainedDocument(target, displayedHash)) return target;
     selected.documentTarget = target;
     selected.displayedRecord = null;
     selected.displayedPayload = null;
@@ -131,7 +131,7 @@ export function initDocsViewerRouteWorkflow(context) {
         return target;
       })();
     }
-    var promise = navigation.open({ target: target, hash: hash, indexDocId: options.indexDocId,
+    var promise = navigation.open({ target: target, hash: hash, indexDocId: options.indexDocId, force: options.force === true,
       url: viewerUrl(target.doc_id, hash, search.searchQuery, target) }, { replace: options.historyMode === "replace" });
     pendingDocumentOpen = { key: key, promise: promise };
     return promise.finally(function () {

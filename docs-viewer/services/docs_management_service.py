@@ -42,6 +42,7 @@ import docs_static_html_export  # noqa: E402
 import docs_source_media_service  # noqa: E402
 from docs_source_media_upload import SourceMediaUpload  # noqa: E402
 import docs_catalogue_regeneration  # noqa: E402
+import docs_document_rebuild  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
 import docs_write_rebuild as write_rebuild  # noqa: E402
 from docs_management_broken_links_service import handle_broken_links  # noqa: E402
@@ -237,6 +238,10 @@ def docs_management_post_response(
             return HTTPStatus.OK, handle_create(repo_root, body, dry_run)
         except DocumentCreateCommittedError as error:
             return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
+    if path == routes.REBUILD_DOCUMENT_PATH:
+        if dry_run:
+            raise ValueError("Rebuild document does not support dry_run")
+        return HTTPStatus.OK, docs_document_rebuild.rebuild_document(repo_root, body)
     if path == routes.REBUILD_PATH:
         payload = write_rebuild.rebuild_working_outputs(
             repo_root,

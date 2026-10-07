@@ -160,6 +160,11 @@ export function rebuildManagedDocs(options) {
   return fetchManagementJson("/docs/rebuild", "POST", collectionPayload({}, options), options);
 }
 
+/** Rebuild one exact ordinary or collection document from its saved inputs. */
+export function rebuildManagedDocument(target, options) {
+  return fetchManagementJson("/docs/rebuild-document", "POST", targetPayload(target), options);
+}
+
 export function previewManagedDocsStaticHtmlExport(docIds, options) {
   return fetchManagementJson("/docs/export/static-html/preview", "POST", collectionPayload({
     doc_ids: Array.isArray(docIds) ? docIds.slice() : []

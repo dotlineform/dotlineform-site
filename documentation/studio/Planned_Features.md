@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260428-000000-f5ff18
 title: Planned Features
 added_date: "2026-04-28 00:00:00"
-last_updated: "2026-10-07 21:13:20"
+last_updated: "2026-10-07 21:31:31"
 summary: This explains the delivery model and workflows to implement new repo and application features.
 ui_status: planned
 parent_id: ""
@@ -146,8 +146,8 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 Store new standalone delivery documents for bounded work that does not need a separate feature parent under `documentation/studio/deliveries/`. Parent them directly to this document and keep implementation state, decisions and completion gates in the delivery. At closeout, transfer lasting details to the durable owner and review whether the delivery and its link should be retained.
 
-- [Rebuild Displayed Document](Catalogue_Documents_And_Metadata.md#follow-on) — Proposed follow-on: rebuild and reload the exact displayed document without a harmless source edit, refreshing embedded Related links and image-token rendering while preserving source dates. Media generation, Search and Publish retain their existing owners.
-- [Catalogue Documents And Metadata](Catalogue_Documents_And_Metadata.md) — Complete and accepted on 2026-10-07. The refined Entry pilot is accepted and Full reconciliation converted all 4,618 Working Catalogue documents to Entry plus `context`, with no additions, retitles, deletions or warnings. Retained for metadata decisions and the proposed Rebuild document follow-on; Publish and Git actions remain separate.
+- [Rebuild Displayed Document Delivery](deliveries/Rebuild_Displayed_Document_Delivery.md) — Implemented and reviewed; awaiting user manual menu/reload acceptance. Edit doc → Rebuild targets the displayed ordinary or collection document, preserves source dates and omits Search/media production. Direct service builds, lint/syntax and shared forced-reload projection/site validation passed; restart the Docs Viewer service and hard-refresh the local reader.
+- [Catalogue Documents And Metadata](Catalogue_Documents_And_Metadata.md) — Complete and accepted on 2026-10-07. The refined Entry pilot is accepted and Full reconciliation converted all 4,618 Working Catalogue documents to Entry plus `context`, with no additions, retitles, deletions or warnings. Retained for metadata decisions and recent-work lookup pending manual archive; Publish and Git actions remain separate.
 - [Multiline Summary Delivery](deliveries/Multiline_Summary_Delivery.md) — Complete and accepted on 2026-10-07. Summary supports `|`/`|-`, safe source rewrites and multiline reader/HTML Export output; Package Prepare consistently flattens both fields and expanded Summary content with matching return comparison. Shared runtime projection/site validation and all Working document/collection reconciliation passed; tests, real package/Import/Export actions and Publish were not run by Codex. Retained for consequence lookup pending manual archive.
 - [Series Galleries Report Delivery](deliveries/Series_Galleries_Report_Delivery.md) — Implemented and reviewed; awaiting user manual review and acceptance. Private Refresh-generated data and a local host display all saved Series–Gallery pairs, empty Series and unassociated Galleries, with sortable columns and Gallery Media View links. Initial metadata and the host are generated; restart Docs Viewer to load the new endpoint, then review sorting and Media View/Back.
 - [Work Subfolder Import Delivery](deliveries/Work_Subfolder_Import_Delivery.md) — Complete and accepted on 2026-10-06. New Work imports all direct supported images from a selected subfolder through shared folder confirmation and one awaited creation/media operation; IDs advance above the highest canonical ID and manual import tracking stays with existing reports. Retained for recent-work lookup pending manual archive.

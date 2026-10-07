@@ -3,14 +3,14 @@ draft: false
 doc_id: d-20261002-214356-1ea4a2
 title: Catalogue Documents And Metadata
 added_date: "2026-10-02 21:43:56"
-last_updated: "2026-10-07 21:13:20"
+last_updated: "2026-10-07 21:31:31"
 summary: Define a Regenerate-owned Catalogue Entry token with a Work H1, metadata and resource list, followed by the separate Related links directive.
 ui_status: done
 parent_id: d-20260428-000000-f5ff18
 ---
 # Catalogue Documents And Metadata
 
-Status: complete and accepted on 2026-10-07, parented to [Planned Features](Planned_Features.md). The user accepted the refined `00008` pilot and authorized continuation; final code review and Full reconciliation are complete. All 4,618 Working Catalogue documents use `[[catalogue:entry:work:<work_id>]]` followed by `[[links|context]]`. Catalogue Entry is Regenerate-owned, without an authoring UI or modal. It retains the current visible metadata, private storage context and technical image dimensions; duration and depth remain supported fields for future use. Series and Gallery navigation stays with reports and Media View. The separately requested `provenance` and `artist` retirement, single `medium` migration and unused generated Work `documents` retirement are complete. Duration presentation, EPUB/export mappings and Rebuild document remain follow-on work. Publish and Git actions were not run.
+Status: complete and accepted on 2026-10-07, parented to [Planned Features](Planned_Features.md). The user accepted the refined `00008` pilot and authorized continuation; final code review and Full reconciliation are complete. All 4,618 Working Catalogue documents use `[[catalogue:entry:work:<work_id>]]` followed by `[[links|context]]`. Catalogue Entry is Regenerate-owned, without an authoring UI or modal. It retains the current visible metadata, private storage context and technical image dimensions; duration and depth remain supported fields for future use. Series and Gallery navigation stays with reports and Media View. The separately requested `provenance` and `artist` retirement, single `medium` migration and unused generated Work `documents` retirement are complete. Duration presentation and EPUB/export mappings remain follow-on work; Rebuild document is implemented in its separate delivery. Publish and Git actions were not run.
 
 ## Intended Outcome
 
@@ -264,13 +264,11 @@ Rebuild reload correction: after the successful Full rebuild, management reopene
 
 The initial result is complete when new and existing Catalogue documents use the Entry token followed by the separate Related links directive, each rendered document has its Work H1, agreed metadata, populated resource list without a heading and H2 relationship section when present, and image space is reserved before media loading. Storage stays private, duration and depth remain supported fields, and retained consumers read the agreed model. Entry has no authoring UI or modal, and ordinary Catalogue Image semantics remain intact. Field removal must leave no active editor, projection or report references; generated data must be reconciled after schema changes. Manual review owns visual fit. Any executable verification or test work will be selected and specified proportionately when implementation is approved, following [Test Contract Discipline](Test_Contract_Discipline.md).
 
-Closeout documentation: retain this delivery for its accepted metadata decisions, reconciliation evidence and proposed Rebuild document follow-on. [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md), [Sub-Scope Index Architecture](Sub_Scope_Index_Architecture.md) and [Related Links](Related_Links.md) own the lasting renderer, body-generation and relationship contracts. No temporary sibling documents were introduced or deleted; review this delivery for retirement after its follow-on is moved to its own delivery or declined.
+Closeout documentation: retain this delivery for its accepted metadata decisions, reconciliation evidence and recent-work lookup pending manual archive. [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md), [Sub-Scope Index Architecture](Sub_Scope_Index_Architecture.md) and [Related Links](Related_Links.md) own the lasting renderer, body-generation and relationship contracts. Rebuild document has its own delivery below. No temporary sibling documents were introduced or deleted during the Catalogue Entry delivery.
 
 ## Follow-on
 
-Proposed for a separate delivery. The local reader currently offers a complete Docs and Search rebuild, with no rebuild action for the displayed document. A harmless source edit can trigger its targeted build, but introduces an unrelated source change and can advance `last_updated`. Add a local **Rebuild document** action that rebuilds the exact displayed ordinary or collection document and reloads that same target when the operation completes, preserving its canonical source and dates.
-
-The useful cases are refreshing the embedded Related links list from current relationship records and rerendering image tokens, captions, metadata and image dimensions from current generated inputs. Keep this action document-only, without rebuilding Search or publishing. Catalogue reader data still comes from Refresh Catalogue; regeneration of actual image files and other media remains with the owning media workflow. Specify any media-producer or reader-cache behavior needed by this action before implementation. This follow-on is recorded as a proposal; code and test work have not started.
+**Edit doc → Rebuild** is implemented in [Rebuild Displayed Document Delivery](deliveries/Rebuild_Displayed_Document_Delivery.md), with local menu/reload acceptance pending. It rebuilds and reloads the exact displayed ordinary or collection document, preserving source bytes/dates and leaving Search unchanged. This refreshes embedded Related links and rendered image tokens/captions/metadata/dimensions from current generated inputs. Catalogue Refresh and actual media generation retain their existing owners. [Runtime](Docs_Viewer_Runtime.md#document-action-context-and-toolbar-placement) owns the lasting action contract.
 
 ## Inspection Basis
 

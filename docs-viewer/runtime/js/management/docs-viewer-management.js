@@ -746,6 +746,7 @@ export function initDocsViewerManagement(context) {
     editControl: function () { return projectedReportControls?.editDocument; },
     deleteState: function (docId) { return indexController.actionControlState(DOCS_VIEWER_ACTION_IDS.DELETE, docId); },
     openSource: openDocumentEditor,
+    rebuildDocument: actionController.handleRebuildDocument,
     copyLink: actionController.handleCopyLink,
     deleteDocument: actionController.handleDeleteDoc,
     closeOtherMenus: function () { hideContextMenu(); eventRouter.hideManageActionsMenu(); }

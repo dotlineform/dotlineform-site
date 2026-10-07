@@ -52,6 +52,7 @@ SET_SELECTED_PATH = "/docs/set-selected"
 ASSIGN_FIELD_GROUP_PATH = "/docs/assign-field-group"
 CREATE_PATH = "/docs/create"
 REBUILD_PATH = "/docs/rebuild"
+REBUILD_DOCUMENT_PATH = "/docs/rebuild-document"
 PUBLISH_PATH = "/docs/publish"
 MOVE_PATH = "/docs/move"
 DELETE_PREVIEW_PATH = "/docs/delete-preview"
@@ -114,6 +115,7 @@ POST_PATHS = (
     ASSIGN_FIELD_GROUP_PATH,
     CREATE_PATH,
     REBUILD_PATH,
+    REBUILD_DOCUMENT_PATH,
     PUBLISH_PATH,
     MOVE_PATH,
     DELETE_PREVIEW_PATH,
