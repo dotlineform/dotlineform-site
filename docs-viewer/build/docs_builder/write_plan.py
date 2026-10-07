@@ -111,21 +111,6 @@ class WritePlanMixin:
             recent_total=recent_total,
         )
 
-    def print_dry_run(
-        self,
-        index_payload: dict[str, Any],
-        index_tree_payload: dict[str, Any],
-        recent_payload: dict[str, Any] | None,
-        write_plan: dict[str, Any],
-    ) -> None:
-        self.print_human_summary(
-            write_plan,
-            mode="dry-run",
-            docs_total=len(index_payload["docs"]),
-            tree_total=len(index_tree_payload["docs"]),
-            recent_total=len(recent_payload["docs"]) if recent_payload is not None else None,
-        )
-
     def print_human_summary(
         self,
         write_plan: dict[str, Any],

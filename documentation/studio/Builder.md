@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260423-000000-c9f3ea
 title: Builder
 added_date: "2026-04-23 00:00:00"
-last_updated: "2026-10-06 21:51:44"
+last_updated: "2026-10-07 09:52:51"
 parent_id: d-20260424-000000-50b63f
 ---
 # Builder
@@ -28,6 +28,10 @@ Dry-run is the default. Document Build and Search require an explicit stage and 
 Named collections use the same builder for full and targeted operations. New, Save, metadata, Delete, imports, collection moves and watcher changes pass exact before/after source document IDs through `--collection <id> --only-doc-ids <ids>`. The builder reads and renders only selected surviving source files, merges their reader/manage rows into the saved manifests, and removes selected deleted entries. Saved identities provide membership and link destinations; saved authoring subjects supply unchanged entries when recomputing the subject association index. Unselected customisation rows and by-ID files are preserved. Targeted collection builds skip registered media producers. Links receives exact changed/deleted identities separately and owns lazy record creation; its direct-neighbour reads and updates do not broaden document rendering. Complete Build, Prepare Preview and initial collection creation omit the selector and retain full source loading and rendering.
 
 Targeted collection builds require readable reader/manage manifests with agreeing document membership. Missing or invalid saved metadata fails; a complete Build owns reconstruction, with no automatic full-source fallback. Targeted builds do not scan unselected by-ID files. Diagnostics distinguish `targeted_collection` from `collection` and report source files scanned, total saved documents, rendered documents and selected IDs separately. Ordinary targeted builds retain their existing complete source read for index projection. The retired semantic usage index is not a build prerequisite.
+
+Ordinary builds derive document counts directly from loaded source records. The [pipeline](../../docs-viewer/build/docs_builder/pipeline.py) returns its required tree, Recent, by-ID, backlinks and write-plan results without constructing a separate flat `index_payload` or extracting plain text from every rendered payload for reporting. Backlinks still owns a complete rendered-payload scan, so that collection-wide read remains until its own generation strategy changes. Document-package export computes `content_text_length` through its separate source-context owner.
+
+The legacy tests `test_build_docs_payloads.py`, `test_build_docs_recent.py` and `test_build_docs_subscopes.py` under `docs-viewer/tests/python/` consume the removed flat return value and also use retired scope/stage fixtures. They are unreviewed for the current workspace contract. Their separately specified modernisation should assert required generated outputs and reporting counts through current workspace fixtures; they do not justify retaining unused production computation or a compatibility return value.
 
 ## Workspace And Owners
 

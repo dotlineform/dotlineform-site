@@ -3,12 +3,12 @@ draft: false
 doc_id: d-20260911-232134-ec1ba8
 title: Save/Build optimisations
 added_date: "2026-09-11 23:21:34"
-last_updated: "2026-10-07 09:46:07"
+last_updated: "2026-10-07 09:52:51"
 parent_id: d-20260428-000000-f5ff18
 ---
 # Save/Build optimisations
 
-Status: **proposed implementation**. The current-state review below was refreshed on 2026-10-07. Delivery order reflects identifiable unnecessary work; timing gains have not been measured. The next implementation slice is step 1.
+Status: **step 1 complete; steps 2–5 proposed**. The current-state review below was refreshed on 2026-10-07. Delivery order reflects identifiable unnecessary work; timing gains have not been measured. The next implementation slice is step 2.
 
 ## Requirements
 
@@ -27,7 +27,7 @@ Source Save does not await Build. The main remaining opportunities affect ordina
 | Ordinary watcher snapshot | `parsed_doc_snapshot()` reparses the complete ordinary collection. Named-collection snapshots already merge changed-file records into their prior snapshot. | Extend changed-file processing to ordinary documents while retaining canonical membership and hierarchy. |
 | Targeted-build prerequisites | Service/watcher preflight loads ordinary source and checks unchanged generated payloads; the builder loads the source again and repeats prerequisite checks. | Give prerequisite validation one owner and report missing targeted prerequisites explicitly. |
 | Ordinary rendering and tree | The builder loads all ordinary Markdown, renders selected documents, and derives the complete tree. Link rewriting constructs identity lookups from the loaded records. | Read selected Markdown and merge navigation metadata using existing hierarchy and saved tree records; construct required lookups once per operation. |
-| Flat `index_payload` | The builder reads unchanged rendered JSON and extracts plain text to populate `content_text_length`. The production CLI discards the returned rows and uses their count in reporting. Existing tests consume the return shape. | Remove the unused production computation and use document counts directly; reconcile affected tests as separately specified work. |
+| Document-count reporting | Counts come directly from loaded source records; the unused flat `index_payload`, rendered-file reads and plain-text extraction have been removed. | Step 1 complete. Legacy test consumers need separately scoped modernisation through the current workspace contract. |
 | Parent-title render expansion | The watcher adds direct children when a parent's title changes. Current by-ID metadata carries `parent_id`; `parent_title` belongs to Recent, which targeted builds preserve. | Review this expansion against actual output dependencies and remove unnecessary child rendering. |
 | `backlinks.json` | The ordinary builder reads every rendered payload and scans anchors to reconstruct same-collection incoming links. | Reuse suitable per-document relationship data or update backlink contributions incrementally after agreeing the report semantics. |
 
@@ -49,7 +49,7 @@ Test creation or changes require a separately agreed specification under [Test C
 
 ### 0 — Readiness And Timing Scope
 
-- [ ] Confirm the next slice's outcome, broad owner, write boundary and credible blast radius against current code.
+- [x] Confirm step 1's outcome, broad owner, write boundary and credible blast radius against current code. Repeat readiness for the next proposed slice.
 - [ ] Before steps 3–5, agree a bounded timing baseline using existing logs and diagnostics first. Separate source persistence, watcher scheduling, builder execution and viewer refresh.
 - [ ] Select representative unchanged Save, ordinary body edit, named-collection edit and explicit Build cases only where they answer the current performance question. Record the exact workspace/write boundary and expected cost before execution; use isolated storage for changes made solely to gather evidence.
 
@@ -57,19 +57,19 @@ Verification budget: read-only owner inspection and available diagnostics. Addit
 
 Gate: the slice is coherent and finishable, with no unresolved ownership decision. A missing timing baseline does not block removal of demonstrably unused computation in step 1.
 
-Record: proposed; current-state source review is available, implementation readiness and timing execution remain pending.
+Record: step 1 readiness complete. Its boundary was ordinary-builder reporting, the unused flat return value and dead helpers, with repository source/documentation edits only. No production caller required the removed rows. Timing scope and later-slice readiness remain pending.
 
 ### 1 — Remove Unused Flat-Index Construction
 
-- [ ] Remove flat `index_payload` row construction and its whole-collection rendered-file reads and plain-text extraction.
-- [ ] Use the actual document count directly for summaries and diagnostics; retain required tree, by-ID, Recent and backlinks outputs.
-- [ ] Identify affected test consumers and specify any necessary test changes separately. Do not retain an unused production return shape solely for existing tests.
+- [x] Remove flat `index_payload` row construction and its whole-collection rendered-file reads and plain-text extraction.
+- [x] Use the actual document count directly for summaries and diagnostics; retain required tree, by-ID, Recent and backlinks outputs.
+- [x] Identify affected legacy test consumers and record their separately scoped modernisation need in [Builder](Builder.md#commands). The production path retains no compatibility return value; test work requires its own agreed specification.
 
 Verification budget: focused source/call-site review, changed Python lint/syntax and whitespace checks. Select existing output/count evidence only if its reviewed coverage addresses a remaining risk.
 
 Gate: production reporting remains correct and the removed flat-index pass has no remaining production consumer. Review and close this slice through steps 6 and 7.
 
-Record: proposed; lowest-complexity first implementation.
+Record: complete. The ordinary pipeline, source mixin and write-plan reporting now omit the flat index and its unused helpers. Focused Python lint, `py_compile` and `git diff --check` passed for the changed boundary. Source/diff review confirmed equivalent document counts and unchanged required write planning; generated builds, timings and legacy tests were not run.
 
 ### 2 — Remove Unnecessary Render Expansion
 
@@ -123,20 +123,20 @@ Record: proposed; potentially substantial benefit, with a larger ownership and s
 
 ### 6 — Code Review For The Delivered Slice
 
-- [ ] Review the final bounded diff for ownership drift, unnecessary reads, duplicated state, compatibility residue, stale consumers and missing failure behavior.
-- [ ] Review test changes only against their separately approved specification; resolve findings within the delivered boundary.
-- [ ] Reconcile performance claims with measured evidence and rerun only checks affected by review changes.
+- [x] Review step 1's final bounded diff for ownership drift, unnecessary reads, duplicated state, compatibility residue, stale consumers and missing failure behavior. Repeat for later delivered slices.
+- [x] Confirm step 1 made no test changes; affected legacy consumers are recorded separately. Review future test changes against their separately approved specification.
+- [x] Limit step 1's performance claim to removal of the inspected pass; timing gains remain unmeasured. Rerun only checks affected by later review changes.
 
 Gate: review findings are resolved and completion claims match the inspected and exercised surface.
 
-Record: pending for each implementation slice.
+Record: step 1 review complete with no unresolved production findings. Write and dry-run counts both use the same loaded-document count; required payload construction and mutation boundaries remain intact. The legacy test-consumer gap is documented in Builder, and no alias was introduced. Repeat this review for the next slice.
 
 ### 7 — Closeout For The Delivered Slice
 
-- [ ] Update the appropriate durable owner, normally Builder for changed generation behavior, and record selected evidence and remaining limits.
-- [ ] Mark only the completed slice done and name the next proposed step. Keep unmeasured gains distinct from observed savings.
-- [ ] Confirm the documentation follow-through and present any retain/retire recommendation without repeating unrelated builds or checks.
+- [x] Update Builder for step 1's reporting and returned-result behavior, selected evidence and legacy test limits.
+- [x] Mark step 1 complete and step 2 next; keep later work proposed and timing gains unmeasured.
+- [x] Keep this feature document for the remaining proposed slices. Documentation is maintained directly in the repository and needs no Docs or Search rebuild.
 
 Gate: the delivered outcome is complete and reviewable; subsequent work remains explicitly proposed.
 
-Record: this documentation refresh is complete. Runtime optimisation, timing runs and test work remain proposed.
+Record: step 1 delivered and closed. Builder is the durable owner; this plan remains useful for steps 2–5. Timing runs and separately specified test modernisation remain pending.

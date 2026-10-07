@@ -17,7 +17,6 @@ from .common import (
     normalize_doc_ids,
     normalize_viewer_base_url,
     resolve_workspace_path,
-    utc_timestamp,
 )
 from .media_builds import build_collection_media_snapshot
 from .payloads import PayloadBuilderMixin
@@ -111,15 +110,7 @@ class DocsDataBuilder(
             for doc in docs_for_item_build
         }
 
-        flat_doc_rows = [
-            self.index_entry(doc, docs, item_payloads.get(doc.doc_id)) for doc in self.ordered_docs_for_index(docs)
-        ]
         viewer_options = self.viewer_options_payload()
-        index_payload = {
-            "generated_at": utc_timestamp(),
-            "viewer_options": viewer_options,
-            "docs": flat_doc_rows,
-        }
         index_tree_payload = self.index_tree_payload(docs, viewer_options)
         # Preview, targeted builds and authoring follow-through preserve saved Recents.
         recent_payload = None
@@ -146,16 +137,17 @@ class DocsDataBuilder(
         if write:
             self.write_outputs(
                 write_plan,
-                docs_total=len(index_payload["docs"]),
+                docs_total=len(docs),
                 tree_total=len(index_tree_payload["docs"]),
                 recent_total=len(recent_payload["docs"]) if recent_payload is not None else None,
             )
         else:
-            self.print_dry_run(
-                index_payload,
-                index_tree_payload,
-                recent_payload,
+            self.print_human_summary(
                 write_plan,
+                mode="dry-run",
+                docs_total=len(docs),
+                tree_total=len(index_tree_payload["docs"]),
+                recent_total=len(recent_payload["docs"]) if recent_payload is not None else None,
             )
         if self.config.stage == "working":
             refresh_selected_documents(self.config, self.config, docs_for_item_build, write=write)
@@ -165,7 +157,6 @@ class DocsDataBuilder(
         if emit_diagnostics:
             self.print_diagnostics(diagnostics)
         return {
-            "index_payload": index_payload,
             "index_tree_payload": index_tree_payload,
             "recent_payload": recent_payload,
             "item_payloads": item_payloads,
