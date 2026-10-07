@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260925-151229-341ee0
 title: Catalogue Authoring In Docs Viewer End State
 added_date: "2026-09-25 15:12:29"
-last_updated: "2026-10-07 16:05:28"
+last_updated: "2026-10-07 16:26:39"
 summary: Establish shared local assets and stage-owned Catalogue JSON before report changes; Save prepares Working data, Prepare Preview captures JSON, Publish copies to the repository and R2, and Deploy runs GitHub Actions.
 parent_id: d-20260925-134621-42c838
 ---
@@ -65,7 +65,7 @@ A generated report can represent the latest saved values without reading the can
 
 The first storage delivery does not convert Catalogue Works to that model. It preserves existing report list/search/copy behavior and does not introduce its proposed metadata/index files. Shared image and stage-data readers do change to use the new locations. Report conversion and descending Work ID browsing with 20-row pages follow this delivery.
 
-Canonical Catalogue records stay in `studio/data/canonical/catalogue/`. Private Studio lookups stay in `studio/data/generated/catalogue-lookup/`. Original Work images remain at their configured project sources. This delivery moves generated reader data and ready-to-read assets, not canonical records, project originals or the editor UI.
+Canonical Catalogue records stay in `studio/data/canonical/catalogue/`. Studio Work/Series lookup APIs now build live canonical read projections; the historical persisted lookup files are retired and removed. Original Work images remain at their configured project sources. This delivery moves generated reader data and ready-to-read assets, not canonical records, project originals or the editor UI.
 
 `work_id` identifies a Catalogue Work; `doc_id` identifies a document. The Works document collection is also distinct from canonical Catalogue Works. Exact generated associations connect them where an associated document exists. Co-locating output does not turn these identities into aliases or duplicate their editable fields.
 

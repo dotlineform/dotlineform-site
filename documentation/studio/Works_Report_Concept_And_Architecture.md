@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260810-115737-741620
 title: Works Report Concept And Architecture
 added_date: "2026-08-10 11:57:37"
-last_updated: "2026-10-03 21:27:23"
+last_updated: "2026-10-07 16:26:39"
 summary: Studio Series row authority and exact member-Work documentation coverage for the local Works report.
 parent_id: d-20260424-000000-50b63f
 ---
@@ -71,7 +71,7 @@ The browser loads three existing local read projections:
 
 The two Catalogue reads use the existing Local Studio Catalogue read boundary resolved from the configured `studioBaseUrl`. They reuse the current lookup builders and loopback-origin transport; Works adds no Catalogue or Docs Viewer endpoint. The Projects manifest is already the complete browser input used by its own sub-scope report, so Works does not also read `subject-associations.json` or introduce a matching-generation join.
 
-Repository co-location does not itself make a file browser-addressable. Server-side code can read a repository path directly, but browser JavaScript can fetch only a served URL; Docs Viewer and Local Studio also use different local ports and are therefore different browser origins. Local Studio's static-file response does not provide the loopback cross-origin headers used by its JSON read response, so the mere presence of `studio/data/generated/catalogue-lookup/{series_search,work_search}.json` is not sufficient for a direct Docs Viewer static fetch. This is an ordinary HTTP addressability/origin boundary, not evidence of a filesystem failure.
+Work and Series lookup APIs build their responses from current canonical records. The historical persisted lookup files are retired and removed. Docs Viewer and Local Studio use different local ports; the existing Catalogue JSON read transport supplies the configured loopback-origin access required by this report.
 
 Works avoids a new static mapping or report endpoint by using the existing `catalogue_lookup_series_search` and `catalogue_lookup_work_search` read keys, whose JSON responses already support the configured loopback-origin access. The server transports existing browser-safe Catalogue projections; the Works browser still owns all filtering, joining, de-duplication, ordering, and presentation. If that existing Local Studio read transport is unavailable, the report fails as one contained current mount rather than falling back to public JSON or moving the join server-side.
 

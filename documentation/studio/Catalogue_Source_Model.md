@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260519-000000-a0da45
 title: Catalogue Source Model
 added_date: "2026-05-19 00:00:00"
-last_updated: "2026-09-28 14:56:18"
+last_updated: "2026-10-07 16:26:39"
 parent_id: d-20260401-000000-a11bf3
 
 ---
@@ -75,7 +75,7 @@ When changing a field, update its source definition, serializer, validation, edi
 
 ## Output Boundary
 
-Ordinary Studio Catalogue production is available. Save maintains canonical source and required local Work media; Refresh Catalogue reconciles generated Work, Series and Gallery records, indexes and private Docs metadata beneath `$DOTLINEFORM_DOCS_BASE_DIR/working/generated/catalogue/`. The generator reads both canonical Gallery sources, writes individual `galleries/index/<gallery_id>.json` records and embeds Gallery IDs/titles in `work.galleries`. Gallery changes appear in current and former member Works after Refresh. Download staging resolves through `catalogue/media-staging/` under the configured Projects workspace; ready thumbnails use shared Docs `assets/works/thumbs/`. Docs Viewer reads the refreshed Gallery lookup and individual records for exact Gallery tokens, search and Media View. The historical `studio/data/generated/catalogue-lookup/` files have no active producer or reader.
+Ordinary Studio Catalogue production is available. Save maintains canonical source and required local Work media; Refresh Catalogue reconciles generated Work, Series and Gallery records, indexes and private Docs metadata beneath `$DOTLINEFORM_DOCS_BASE_DIR/working/generated/catalogue/`. The generator reads both canonical Gallery sources, writes individual `galleries/index/<gallery_id>.json` records and embeds Gallery IDs/titles in `work.galleries`. Gallery changes appear in current and former member Works after Refresh. Download staging resolves through `catalogue/media-staging/` under the configured Projects workspace; ready thumbnails use shared Docs `assets/works/thumbs/`. Docs Viewer reads the refreshed Gallery lookup and individual records for exact Gallery tokens, search and Media View. The historical `studio/data/generated/catalogue-lookup/` files are retired and removed; Studio lookup APIs read live canonical projections.
 
 Refresh Catalogue is the explicit local generated-reader action; there is no separate media-publish or per-record publication action. Full JSON maintenance is available without media conversion or upload. The frozen site and media archive remain outside active writes. Docs Publish owns public acceptance; Save alone does not make a record public or refresh Docs semantic lookups, and Publish does not run Refresh or enforce its receipt.
 

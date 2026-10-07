@@ -65,13 +65,11 @@
       "id": "catalogue_studio_lookup_projections",
       "classification": "studio_projection",
       "repo_paths": [
-        "studio/data/generated/catalogue-lookup/**",
         "studio/data/config/catalogue/catalogue-field-registry.json"
       ],
       "public_output": {
         "policy": "forbidden",
         "paths": [
-          "studio/data/generated/catalogue-lookup",
           "studio/data/config/catalogue/catalogue-field-registry.json"
         ]
       },

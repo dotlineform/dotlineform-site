@@ -3,8 +3,8 @@ draft: false
 doc_id: d-20260424-000000-315c1c
 title: Studio Config JSON
 added_date: "2026-04-24 00:00:00"
-last_updated: "2026-09-23 18:47:31"
-summary: Checked-in Local Studio route registry and browser-safe data-path source, plus its validated runtime projection.
+last_updated: "2026-10-07 16:26:39"
+summary: Checked-in Local Studio route registry, live Catalogue read addresses, and the validated runtime projection.
 parent_id: d-20260424-000000-15b6f2
 
 ---
@@ -14,11 +14,7 @@ parent_id: d-20260424-000000-15b6f2
 
 `studio/app/frontend/config/studio-config.json` is the checked-in browser bootstrap source for Local Studio.
 
-It owns:
-
-- `app.routes` — the Studio route registry
-- `paths.data.studio` — browser-safe Studio data paths
-- `paths.data.site` — public catalogue indexes consumed by Studio workflows
+It owns `app.routes`, the Studio route registry. The current source declares no Catalogue fallback data paths. Catalogue read keys and transport belong to the Studio API and browser data helpers.
 
 It does not own Docs Viewer routes, public catalogue route policy, catalogue or
 tag write endpoints, canonical schemas, generated payload schemas, or
@@ -39,25 +35,22 @@ Each `app.routes` record declares:
 
 `studio_app_config.py` validates the registry before it is served. The Work editor at `/studio/catalogue-work/` is the sole current route. [Local Studio Routes](Local_Studio_Routes.md) is the readable exact inventory; the JSON owns the mounted route set.
 
-## Browser-Safe Data Paths
+## Catalogue Read Addresses
 
-Current `paths.data.studio` keys are:
+`studio-data.js` uses the allowlisted Catalogue server-read keys below. `studio_catalogue_api.py` builds their live canonical projections; no persisted lookup directory is a fallback.
 
 | key | role |
 | --- | --- |
-| `catalogue_works` | canonical works fallback read |
-| `catalogue_series` | canonical series fallback read |
-| `catalogue_lookup_work_search` | generated work search fallback |
-| `catalogue_lookup_series_search` | generated series search fallback |
-| `catalogue_lookup_series_base` | generated per-series lookup base |
-| `catalogue_work_record` | focused work read URL |
-| `catalogue_work_detail_record` | focused detail read URL |
+| `catalogue_works` | current canonical Works |
+| `catalogue_series` | current canonical Series |
+| `catalogue_galleries` | current canonical Gallery definitions |
+| `catalogue_gallery_record` | exact Gallery definition and relevance pairs |
+| `catalogue_lookup_work_search` | live Work search projection |
+| `catalogue_lookup_series_search` | live Series search projection |
+| `catalogue_lookup_series_base` | exact live Series and member-Work projection |
+| `catalogue_work_record` | exact live Work record |
 
-These are read addresses, not source-write contracts. Server-backed workflows should use allowlisted catalogue reads when available. Do not add source paths, write targets, adapter configuration, operation logs, or inactive generated outputs.
-
-`paths.data.site` exposes only the public Series and Work indexes required for
-catalogue context and tag-assignment membership. Those indexes remain public
-catalogue projections, not Studio config or tag source.
+These are read addresses, not source-write contracts or generated-file URLs. Do not add source paths, write targets, adapter configuration, operation logs, or inactive generated outputs to browser configuration.
 
 ## Runtime Projection
 
@@ -70,7 +63,7 @@ The source JSON is not the final browser payload. `studio_app_config.py` injects
 - tag group and coverage/RAG policy loaded from
   `studio/data/config/tags/tag-management.json`
 - public-preview and production site bases
-- the `paths.data` projection
+- the data-path projection, empty for the current checked source
 - media and thumbnail settings
 - pipeline variants and encoding settings
 - route records copied as runtime views
@@ -105,7 +98,7 @@ For a data-path change:
 
 - Runtime route records are duplicated into `app.runtime.views`.
 - Runtime catalogue services and hardcoded browser endpoint constants are overlapping discovery surfaces.
-- Some paths can be used as static fallback while focused record reads are server URLs, so the key family is not semantically uniform.
+- Catalogue editor/search reads and refreshed Catalogue reader JSON have separate owners and freshness boundaries; configuration must not introduce a persisted-file fallback between them.
 
 Focused runtime-config tests in
 `studio/tests/python/test_studio_app_runtime_config.py` protect the route

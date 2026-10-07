@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260519-202931-b05d27
 title: Catalogue Indexes And Payloads
 added_date: "2026-05-19 20:29:31"
-last_updated: "2026-10-06 16:00:17"
+last_updated: "2026-10-07 16:26:39"
 parent_id: d-20260401-000000-a11bf3
 
 ---
@@ -53,7 +53,7 @@ Work `documents` arrays are currently empty. Studio does not derive document ass
 
 ## Consumer Boundaries
 
-Studio Work and Series search, focused records and Gallery definitions read live canonical service projections. The historical `studio/data/generated/catalogue-lookup/` files have no active producer or reader. Studio serves shared local thumbnails through the configured `/docs/assets/` route; `/studio/catalogue-output/` serves generated Catalogue data and private report metadata.
+Studio Work and Series search, focused records and Gallery definitions read live canonical service projections. The historical `studio/data/generated/catalogue-lookup/` files are retired and removed; the live API payload builders remain. Studio serves shared local thumbnails through the configured `/docs/assets/` route; `/studio/catalogue-output/` serves generated Catalogue data and private report metadata.
 
 Local Docs Viewer reads the latest refreshed Work and Gallery records, shared media configuration and `/docs/catalogue-series-galleries` through its Catalogue service; Work reads include direct Gallery memberships. Exact Gallery tokens and Work Gallery links open the individual Gallery through `/docs/catalogue-gallery?gallery_id=<gallery_id>`. Series remains a document Subject and canonical Catalogue grouping, without a generated Series by-ID reader or Media View target. Studio edits Gallery definitions, Work memberships and explicit Series–Gallery pairs through the Works editor. `docs-viewer/config/workspace/catalogue-artifacts.json` selects the new index with the other Catalogue JSON for Preview and repository distribution; the public reader uses `/assets/data/catalogue/series-galleries-index.json` from route configuration. Refreshing local Catalogue data alone does not deploy it. The frozen legacy payloads under `site/archive/` have their own historical shape and are outside active generation.
 

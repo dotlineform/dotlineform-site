@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260802-205910-533be0
 title: Catalogue Data Model Map
 added_date: "2026-08-02 20:59:10"
-last_updated: "2026-09-28 14:56:18"
+last_updated: "2026-10-07 16:26:39"
 summary: Current Catalogue canonical relationships, live Studio views and explicitly refreshed Docs and public projections.
 ui_status: stable
 parent_id: d-20260802-123451-d0e52e
@@ -55,7 +55,7 @@ flowchart TB
 | Working `reports/catalogue-works/metadata.json` and `reports/works/manifest.json` | Private metadata generators through Refresh Catalogue | Local Docs report and Works collection readers; complete explicit Refresh |
 | `site/assets/data/catalogue/` and configured R2 media | Docs Publish distribution from completed Preview and current shared assets | Public readers after explicit Git/public deployment |
 
-The historical `studio/data/generated/catalogue-lookup/` files have no active producer or reader and are not a fallback authority. Public Catalogue payloads currently carry empty `documents` arrays; document subject associations have their own Docs owner and do not establish Series or Gallery membership.
+The historical `studio/data/generated/catalogue-lookup/` files are retired and removed. Live Studio lookup APIs build canonical read projections without a persisted-file fallback. Public Catalogue payloads currently carry empty `documents` arrays; document subject associations have their own Docs owner and do not establish Series or Gallery membership.
 
 ## Change And Recovery
 

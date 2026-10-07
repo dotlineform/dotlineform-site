@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260523-222005-1085b2
 title: Projection Contract
 added_date: "2026-05-23 22:20:05"
-last_updated: "2026-09-07 14:25:32"
+last_updated: "2026-10-07 16:26:39"
 parent_id: d-20260331-000000-4a16b0
 
 ---
@@ -106,7 +106,6 @@ The public static build should not include:
 - local published Studio docs payloads under `docs-viewer/scopes/studio/published/documents/`
 - local published Studio docs search under `docs-viewer/scopes/studio/published/search/`
 - canonical catalogue source data under `studio/data/canonical/catalogue/`
-- Studio catalogue lookup data under `studio/data/generated/catalogue-lookup/`
 - local scripts, tests, logs, or `var/` output
 - footer or nav links that point public users to `/studio/` or `/docs/`
 
