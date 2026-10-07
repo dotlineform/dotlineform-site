@@ -56,7 +56,6 @@ def catalogue_payloads(
                 {**download, "url": f"{media_config['base'].rstrip('/')}/{media_config['files_works'].strip('/')}/{quote(download['filename'], safe='')}"}
                 for download in source["downloads"]
             ]
-        work["documents"] = []
         work["galleries"] = [dict(galleries.galleries[gid]) for gid in sorted(galleries.works.get(wid, []))]
         payloads[f"works/index/{wid}.json"] = projection.build_work_json_payload(
             work_record=work, generated_at_utc=timestamp,

@@ -3,14 +3,14 @@ draft: false
 doc_id: d-20261002-214356-1ea4a2
 title: Catalogue Documents And Metadata
 added_date: "2026-10-02 21:43:56"
-last_updated: "2026-10-07 17:39:42"
+last_updated: "2026-10-07 18:27:57"
 summary: Define a distinct Catalogue Entry token and review Work metadata so Catalogue documents provide complete public records with proper document semantics.
 ui_status: planned
 parent_id: d-20260428-000000-f5ff18
 ---
 # Catalogue Documents And Metadata
 
-Status: proposed feature, parented to [Planned Features](Planned_Features.md). This document records the intended outcome, the current gaps and decisions needed before implementation. The separately requested `provenance` and `artist` retirement and single `medium` migration are complete; the remaining proposal does not approve token implementation, further field removal, data migration or publication.
+Status: proposed feature, parented to [Planned Features](Planned_Features.md). This document records the intended outcome, the current gaps and decisions needed before implementation. The separately requested `provenance` and `artist` retirement, single `medium` migration and unused generated Work `documents` retirement are complete; the remaining proposal does not approve token implementation, further field removal, data migration or publication.
 
 ## Intended Outcome
 
@@ -54,7 +54,7 @@ This inventory was checked against the canonical Work fields, active editor defi
 | `width_px`, `height_px` | Present when populated | Omitted | Decide whether these are reader-facing image properties or technical rendition inputs. Their role must be explicit; do not confuse image pixels with physical Work dimensions. |
 | `media_source_id`, `project_folder`, `project_subfolder`, `project_filename` | Omitted | Omitted | These resolve the source image for the production pipeline. Review under the technical-data boundary below; they are not a reason to keep descriptive Work metadata private. |
 | `media_version` | Present when populated | Omitted | Retain the technical image revision needed by media readers; it is not a descriptive Catalogue line. |
-| Docs Viewer document relationships | Maintained by the separate Links owner; Work JSON currently initializes `documents` empty | Rendered by the Related links directive | Preserve the existing Links authority. Do not create a second manually maintained relationship list inside the Entry token or reinterpret external `links` as document relationships. |
+| Docs Viewer document relationships | Maintained by the separate Links owner; the unused Work `documents` array is retired | Rendered by the Related links directive | Preserve the existing Links authority. Do not create a second manually maintained relationship list inside the Entry token or reinterpret external `links` as document relationships. |
 
 ### Population Snapshot
 
@@ -120,6 +120,7 @@ The existing Work image markup is populated by the interactive media reader. A s
 - [ ] Review `storage_location`; decide retain publicly, remove, or move administration out of this system.
 - [ ] Decide whether duration and depth have a real supported purpose despite currently being empty.
 - [x] Migrate corrected `medium_caption` descriptions to one `medium` field labelled Medium and retire `medium_type` throughout active source, editor, generated projections and readers.
+- [x] Retire the unused generated Work `documents` array and URL/title normalization; retain document relationships under the existing Links owner.
 - [ ] Agree readable dates, duration units and partial-dimension display without collapsing useful numeric/display distinctions.
 - [ ] Agree the Entry's metadata order, section hierarchy, resource presentation and treatment of direct versus Series-related Galleries.
 - [ ] Confirm token syntax, honest modal labels, principal-Entry authoring rule and the independent title style.
@@ -138,3 +139,5 @@ The result is complete when every retained descriptive field has a defined publi
 The field and ownership findings come from [canonical Work fields](../../studio/services/catalogue/catalogue_source.py), [Work editor definitions](../../studio/app/frontend/js/catalogue-work-fields.js), [public scalar projection](../../studio/services/catalogue/catalogue_generation_records.py), [complete Work assembly](../../studio/services/catalogue/generate_work_pages.py), [private report projection](../../studio/services/catalogue/catalogue_works_metadata.py), [Catalogue body generation](../../docs-viewer/services/docs_catalogue_work_record.py), [token rendering](../../docs-viewer/build/docs_builder/semantic_tokens.py), [regeneration](../../docs-viewer/services/docs_catalogue_regeneration.py) and [rendered heading extraction](../../docs-viewer/services/docs_document_packages/rendered_content.py). The 2026-10-02 population counts came from a read-only inspection of canonical `works.json`. The separately authorized 2026-10-07 retirements and Medium migration changed canonical source, field owners and documentation. The [Catalogue Source Model](Catalogue_Source_Model.md#validation-and-field-changes) records the delivered field boundary.
 
 Medium migration evidence: all 4,618 corrected descriptions were preserved exactly and all unrelated canonical metadata, IDs, ordering and the header were unchanged. The read-only canonical and field-inventory validators, explicit changed-source JavaScript/Python lint, Python syntax and whitespace checks passed. Local Refresh wrote 4,618 Work JSON records, regenerated private report metadata, deleted no generated files and queued all 4,618 Works for document Regenerate. A focused generated Work/report read confirmed the new schema and Medium shape. The single shared Media View runtime change was projected to `site/`; `bin/site-code-update --check` and `bin/site-validate` passed. Bounded code review traced current field ownership, exact request allowlists, generator/report agreement, six-column presentation and metadata readers, with no remaining findings. Tests and fixtures retain old field references and were neither changed nor run under the separate test-work policy; visual review remains manual. Restart Local Studio and hard-refresh the editor/Docs Viewer to load the changed server modules and browser assets. Regenerate, Publish, commit/push and public deployment remain separate actions; release the new public runtime together with the matching published Work JSON.
+
+Generated Work `documents` retirement evidence: changed-source Python lint, syntax compilation and whitespace checks passed. Local Refresh wrote all 4,618 Work records as `work_record_v11`, changed no other generated payloads or private report metadata, deleted no files and queued all Works for Regenerate. A focused read of Work `00008` confirmed omission of `documents` and retained Series, links, downloads and direct Galleries. Bounded code review found no remaining active helper references or consumers requiring the retired field; document relationships retain the existing Links owner. Historical tests still reference the retired helper and field and were neither changed nor run. No shared runtime or tracked public projection changed; Regenerate, Publish, commit and push did not run.

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260904-204816-0f31be
 title: UAC 3 - Explore Tokens, Reports And The Consumer Data Model
 added_date: "2026-09-04 20:48:16"
-last_updated: "2026-09-28 15:55:05"
+last_updated: "2026-10-07 18:27:57"
 summary: Further token and specialised-tool design waits for Analysis stage structure/UI and resolution of the possible Catalogue schema change.
 ui_status: planned
 parent_id: d-20260902-102745-8379ea
@@ -54,7 +54,7 @@ The single-Work view and Series 143 gallery extension in [UAC 3A - Implement A S
 
 The user accepted the main conclusions on 5 September: the consumer JSON needs no immediate structural change; existing tokens remain useful but need destinations beyond the old site pages, most likely explicitly selected subject-assigned documents; subject editing is available in Projects and Analysis Works; document Gallery Lists need a toolbar insertion button; thumbnail galleries belong only in Media View.
 
-Stages 4 and 5 are complete. Acceptance verified 1,935 Works, 139 Series, 2,681 Details and all 4,616 required thumbnails. [Catalogue Indexes And Payloads](Catalogue_Indexes_And_Payloads.md) describes Work v6, Series v5, compact indexes and explicit media references. `documents` arrays are currently empty; they do not select associated or canonical documents.
+Stages 4 and 5 are complete. Acceptance verified 1,935 Works, 139 Series, 2,681 Details and all 4,616 required thumbnails. At that handoff, [Catalogue Indexes And Payloads](Catalogue_Indexes_And_Payloads.md) described Work v6, Series v5, compact indexes and explicit media references. The `documents` arrays were empty and did not select associated or canonical documents. The unused Work field and its normalization were retired on 2026-10-07; current Work payloads use `work_record_v11`, with document relationships owned by Docs Viewer Links.
 
 When the current hold is resolved, use Working and the full data to evaluate selection, large Detail collections and Works without images against the accepted stage structure and Catalogue schema. The coordinated reader switch was excluded from Stage 5 and remains later work in [Delivery Sequence](Analysis_Catalogue_Delivery_Sequence.md). The remaining checklist and branch-specific manual reviews are still open; no new implementation branch starts as part of the Stage 5 closeout.
 
@@ -124,7 +124,7 @@ Assess current reports as reusable owners before proposing replacements. In part
 ### 3.2 — Test And Refine The Consumer JSON
 
 - [ ] Trace every field needed by the accepted examples to the prepared Work and Series JSON, Analysis document data or derived build data.
-- [ ] Decide whether Series `member_works`, nested Work `sections/details`, `documents`, download filenames and copied header/version fields are useful in their current form.
+- [ ] Decide whether any remaining download filename and copied header/version fields need changes. Series `member_works`, nested Work `sections/details` and the unused Work `documents` array are retired.
 - [ ] Define browser-safe media and thumbnail information without coupling consumers to archive paths or private workspace locations.
 - [ ] Use isolated fixtures to demonstrate any proposed payload change; keep maintained generated JSON producer-owned and record an agreed producer change in the Change Backlog.
 - [ ] List canonical/editor implications separately from projection-only or Analysis-derived fields.

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260519-202931-b05d27
 title: Catalogue Indexes And Payloads
 added_date: "2026-05-19 20:29:31"
-last_updated: "2026-10-07 16:26:39"
+last_updated: "2026-10-07 18:27:57"
 parent_id: d-20260401-000000-a11bf3
 
 ---
@@ -35,7 +35,7 @@ The Gallery search index contains a `galleries` map keyed by exact Gallery ID, w
 
 ## Exact Identity And Versions
 
-Work payloads use `work_record_v9`. Each contains only `header` and `work`; the header carries schema, content version and generation time, while `work.work_id` carries the exact Work identity. The retired Detail count and sections are absent, and the header does not duplicate the Work ID. Gallery payloads use `gallery_record_v1`; their headers also carry the exact Gallery ID and member count. Index headers use `catalogue_works_index_v1`, `catalogue_galleries_index_v1` and `catalogue_series_galleries_index_v1`; index counts are their entry counts, including all valid Series in the Series–Gallery index. Shared media policy uses `catalogue_media_config_v1` with a content version and generation time.
+Work payloads use `work_record_v11`. Each contains only `header` and `work`; the header carries schema, content version and generation time, while `work.work_id` carries the exact Work identity. The retired Detail count, sections and `documents` array are absent, and the header does not duplicate the Work ID. Gallery payloads use `gallery_record_v1`; their headers also carry the exact Gallery ID and member count. Index headers use `catalogue_works_index_v1`, `catalogue_galleries_index_v1` and `catalogue_series_galleries_index_v1`; index counts are their entry counts, including all valid Series in the Series–Gallery index. Shared media policy uses `catalogue_media_config_v1` with a content version and generation time.
 
 Detail folders and their discovery indexes are retired. Active generation neither recreates an empty Detail index nor scans retired thumbnails. Series `sort_fields` is retired; both Studio's Series lookup and consumer members use ascending exact Work IDs. No relationship is inferred from a document, title, route or thumbnail filename.
 
@@ -49,7 +49,7 @@ Every Work represents a primary image. Records retain exact Work identity, `medi
 
 The shared Docs Viewer resolver constructs filenames from policy and exact identity. Responsive candidates use actual width descriptors capped at source width, with duplicate widths removed because the producer does not upscale. Raw-image links use the largest configured filename independently of the embedded resource. Thumbnail existence reporting and reconciliation enumerate expected derivatives from canonical records and pipeline policy, independently of consumer JSON arrays. The shared media-policy change preserved filenames; the separately owned Gallery conversion renames former Detail media into the Work family while preserving bytes and versions. [Catalogue Media View](Catalogue_Media_View.md) owns responsive display and reader behavior.
 
-Work `documents` arrays are currently empty. Studio does not derive document associations or choose a canonical document. Accepted document dependencies and public associations belong to the later Docs integration. Catalogue prose has no parallel Markdown source or `content_html` field.
+Work `documents` arrays and their URL/title normalization are retired as of 2026-10-07. Refresh omits the field rather than emitting an empty placeholder. Docs Viewer document relationships belong to the separate Links owner and render through Related links; neither Work JSON nor the proposed Catalogue Entry maintains a second relationship list. Studio does not derive document associations or choose a canonical document. Catalogue prose has no parallel Markdown source or `content_html` field.
 
 ## Consumer Boundaries
 

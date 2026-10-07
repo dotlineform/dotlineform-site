@@ -14,7 +14,7 @@ from catalogue.catalogue_generation_common import (
 
 
 
-WORK_RECORD_SCHEMA_VERSION = "work_record_v10"
+WORK_RECORD_SCHEMA_VERSION = "work_record_v11"
 GALLERY_RECORD_SCHEMA_VERSION = "gallery_record_v1"
 
 
@@ -65,29 +65,6 @@ def build_canonical_detail_record(
     return compact_json_object(dfm)
 
 
-def normalize_catalogue_documents(values: Sequence[Mapping[str, Any]]) -> List[Dict[str, str]]:
-    if isinstance(values, (str, bytes)):
-        raise ValueError("documents must be an array")
-    documents_by_url: Dict[str, str] = {}
-    for index, value in enumerate(values):
-        if not isinstance(value, Mapping) or set(value) != {"url", "title"}:
-            raise ValueError(f"documents[{index}] must contain only url and title")
-        url = value.get("url")
-        title = value.get("title")
-        if not isinstance(url, str) or not url or url != url.strip():
-            raise ValueError(f"documents[{index}].url must be a non-empty trimmed string")
-        if not isinstance(title, str) or not title or title != title.strip():
-            raise ValueError(f"documents[{index}].title must be a non-empty trimmed string")
-        existing_title = documents_by_url.get(url)
-        if existing_title is not None and existing_title != title:
-            raise ValueError(f"documents contains conflicting titles for {url!r}")
-        documents_by_url[url] = title
-    return [
-        {"url": url, "title": title}
-        for url, title in sorted(documents_by_url.items())
-    ]
-
-
 def build_work_json_payload(
     *,
     work_record: Mapping[str, Any],
@@ -98,10 +75,6 @@ def build_work_json_payload(
     public_record = dict(work_record)
     if not isinstance(public_record.get("galleries"), list):
         raise ValueError("work.galleries must be an array")
-    raw_documents = public_record.get("documents", [])
-    if not isinstance(raw_documents, list):
-        raise ValueError("work.documents must be an array")
-    public_record["documents"] = normalize_catalogue_documents(raw_documents)
     version_input = {"schema": WORK_RECORD_SCHEMA_VERSION, "work": public_record}
     return compact_json_object(
         {
