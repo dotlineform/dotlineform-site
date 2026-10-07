@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260422-000000-45a776
 title: Catalogue Work Editor
 added_date: "2026-04-22 00:00:00"
-last_updated: "2026-10-06 15:41:56"
+last_updated: "2026-10-07 15:47:03"
 parent_id: d-20260423-000000-d015e6
 
 ---
@@ -23,7 +23,7 @@ The [Catalogue Source Model](Catalogue_Source_Model.md) owns the data boundary. 
 
 The Work search and New, Save and Delete icon buttons share the top toolbar inside the editor panel. Press Enter or choose a search result to open a Work; there is no separate Open button. Save status remains below the toolbar. The Refresh Catalogue icon sits in the Catalogue Work Editor header row, aligned with the Work search, with its freshness/result message to the right. The Series member list, editor and preview panels align at the top, with the preview stacking below the editor when its available width is narrow.
 
-In the member list, click selects one Work, Shift-click selects a continuous range, and Command-click adds or removes individual Works. The selection field compresses consecutive IDs into ranges, for example `01981-01983, 01985`. Selecting one Work uses the normal editor; selecting multiple Works opens bulk Gallery editing.
+The Series member list shows thumbnails and Work titles, ordered by title with case-insensitive numeric-aware collation. Work IDs remain the row identities for selection and opening but are not displayed as a list column. Click selects one Work, Shift-click selects a continuous range in title order, and Command-click adds or removes individual Works. The selection field compresses consecutive IDs into ranges, for example `01981-01983, 01985`. Selecting one Work uses the normal editor; selecting multiple Works opens bulk Gallery editing.
 
 The right-chevron control in the member list's top-right corner expands the list, moves the editor to the right and hides the preview. It becomes a left chevron to restore the normal layout. At full desktop width the editor keeps its original width and the list takes the released preview space. Expansion remains selected while opening and saving Works, and resets when the page reloads. Toggling changes presentation only: the mounted list, scroll position, selection and unsaved draft remain intact. New and empty editor states continue to omit the preview when the list is restored.
 

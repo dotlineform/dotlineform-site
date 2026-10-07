@@ -5,6 +5,8 @@ import { confirmCatalogueActionModal } from "./catalogue-editor-action-modals.js
 import { buildWorkThumbPreview } from "./catalogue-media-preview.js";
 import { getSeriesSearchMatches } from "./catalogue-series-records.js";
 
+const workTitleCollator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
+
 function escapeHtml(value) {
   return String(value ?? "")
     .replace(/&/g, "&amp;")
@@ -60,7 +62,7 @@ export function createWorkSeriesBrowser(state, elements, options) {
   function renderMembers() {
     const records = Array.from(state.workSearchById.values())
       .filter(record => seriesId && record.series_id === seriesId)
-      .sort((a, b) => a.work_id.localeCompare(b.work_id))
+      .sort((a, b) => workTitleCollator.compare(a.title || "", b.title || ""))
       .map(record => {
         const preview = buildWorkThumbPreview(state.mediaConfig, record.work_id);
         return {
@@ -93,7 +95,6 @@ export function createWorkSeriesBrowser(state, elements, options) {
           widthKey: "thumbWidth", heightKey: "thumbHeight", altKey: "thumbAlt",
           fallbackTextKey: "thumbFallback", truncate: false
         },
-        { key: "workId", label: "work", width: "minmax(3.5rem, 4.9rem)", truncate: false },
         { key: "title", label: "title", width: "minmax(0, 1fr)", truncate: true },
         { key: "galleries", label: "galleries", width: "minmax(0, 1fr)", truncate: false }
       ],

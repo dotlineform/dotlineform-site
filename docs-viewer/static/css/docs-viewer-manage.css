@@ -139,10 +139,6 @@
   mask-image: url("../icons/import.svg");
 }
 
-.docsViewer__icon--list{
-  mask-image: url("../icons/list.svg");
-}
-
 .docsViewer__icon--package{
   mask-image: url("../icons/package.svg");
 }

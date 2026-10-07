@@ -50,8 +50,11 @@ export function initDocsViewerDocumentController(context) {
     var record = retained.get(documentTargetKey(target));
     if (!record) return false;
     activate(record);
+    // A list owner may resume its last visible state independently of this entry.
+    var resumed = false;
+    record.viewOwners.forEach(function (owner) { if (owner.resume) { owner.resume(); resumed = true; } });
     if (hash) scrollToHash(hash);
-    else window.scrollTo(0, 0);
+    else if (!resumed) window.scrollTo(0, 0);
     return true;
   }
 

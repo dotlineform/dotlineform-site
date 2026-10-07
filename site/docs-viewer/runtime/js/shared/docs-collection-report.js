@@ -1,5 +1,6 @@
 import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
+import { createDocsCollectionReportState } from "./docs-collection-report-state.js";
 import {
   appendAssetVersion,
   requestUrl
@@ -36,7 +37,7 @@ import {
  * @property {function(Object): (Object|void)} [renderRow]
  * @property {function(Object): void} [renderListHead]
  * @property {function(Object): void} [renderListToolbar]
- * @property {function(): *} [captureListState] Optional caller-specific restoration state.
+ * @property {function(): *} [captureListState] Optional JSON-safe list restoration state.
  * @property {function(*): void} [restoreListState] Restore a previously captured caller state.
  */
 
@@ -804,6 +805,31 @@ function renderListProjectionContained(state, reason) {
   }
 }
 
+function captureListControls(state) {
+  var captureContribution = contributionCallback(state.contribution, "captureListState");
+  return { query: state.query, sort: state.sortMode,
+    page: state.searchTimer !== null ? 0 : state.pageIndex,
+    filters: Array.from(state.filterValues),
+    contribution: captureContribution ? captureContribution.call(state.contribution) : null };
+}
+
+/** Restore controls against current filters and inventory, never a saved payload. */
+function restoreListControls(state, saved) {
+  if (JSON.stringify(captureListControls(state)) === JSON.stringify(saved)) return;
+  cancelCollectionSearch(state);
+  if (typeof saved.query === "string") state.query = saved.query;
+  if (typeof saved.sort === "string" && (["title-asc", "last-updated-desc"].includes(saved.sort)
+    || contributionCallback(state.contribution, "compareListDocuments"))) state.sortMode = saved.sort;
+  state.pageIndex = Number.isInteger(saved.page) && saved.page >= 0 ? saved.page : 0;
+  if (Array.isArray(saved.filters)) saved.filters.forEach(function (filter) {
+    if (Array.isArray(filter) && filter.length === 2 && state.filterValues.has(filter[0])
+      && typeof filter[1] === "string") state.filterValues.set(filter[0], filter[1]);
+  });
+  var restoreContribution = contributionCallback(state.contribution, "restoreListState");
+  if (restoreContribution) restoreContribution.call(state.contribution, saved.contribution);
+  state.listNeedsRender = true;
+}
+
 /** Reveal the retained list, rebuilding only when its document data changed. */
 function renderListView(state) {
   state.root.dataset.reportState = "list";
@@ -998,8 +1024,21 @@ function mountResolvedDocsCollectionReport(context, contribution) {
 
   var parent = root.parentNode;
   var windowRef = root.ownerDocument && root.ownerDocument.defaultView;
+  var remembered = createDocsCollectionReportState({
+    root: root, collectionId: state.collectionId, hostDocId: state.parentDocId,
+    isReady: function () { return state.mounted && state.manifestLoaded && root.dataset.reportState === "list"; },
+    captureControls: function () { return captureListControls(state); },
+    restoreControls: function (saved) { restoreListControls(state, saved); }
+  });
+  function restoreRememberedList() {
+    if (!state.manifestLoaded || !state.mounted) return;
+    remembered.restore();
+    renderListView(state);
+    remembered.restorePosition();
+  }
   function dispose() {
     if (!state.mounted) return;
+    remembered.dispose();
     state.mounted = false;
     if (state.unmountObserver) { state.unmountObserver.disconnect(); state.unmountObserver = null; }
     if (state.unsubscribeChanges) { state.unsubscribeChanges(); state.unsubscribeChanges = null; }
@@ -1050,24 +1089,9 @@ function mountResolvedDocsCollectionReport(context, contribution) {
   if (context.registerRetainedView) context.registerRetainedView({
     id: "collection:" + state.collectionId,
     dispose: dispose,
-    capture: function () {
-      var captureContribution = contributionCallback(state.contribution, "captureListState");
-      return { query: state.query, sort: state.sortMode, page: state.pageIndex, filters: new Map(state.filterValues),
-        contribution: captureContribution ? captureContribution.call(state.contribution) : null };
-    },
-    restore: function (saved) {
-      var captureContribution = contributionCallback(state.contribution, "captureListState");
-      var currentContribution = captureContribution ? captureContribution.call(state.contribution) : null;
-      if (state.query === saved.query && state.sortMode === saved.sort && state.pageIndex === saved.page
-        && JSON.stringify(Array.from(state.filterValues)) === JSON.stringify(Array.from(saved.filters)) && currentContribution === saved.contribution) return;
-      cancelCollectionSearch(state);
-      state.query = saved.query; state.sortMode = saved.sort; state.pageIndex = saved.page; state.filterValues = new Map(saved.filters);
-      state.filterInputNode.value = state.query;
-      var restoreContribution = contributionCallback(state.contribution, "restoreListState");
-      if (restoreContribution) restoreContribution.call(state.contribution, saved.contribution);
-      updateFilterControls(state);
-      renderListProjectionContained(state, "history-restored");
-    }
+    capture: remembered.save,
+    restore: restoreRememberedList,
+    resume: restoreRememberedList
   });
   if (state.collectionProvider.subscribeDocumentChanges) {
     state.unsubscribeChanges = state.collectionProvider.subscribeDocumentChanges(function (change) {
@@ -1084,7 +1108,11 @@ function mountResolvedDocsCollectionReport(context, contribution) {
     });
   }
   return state.loadManifest().then(function (loaded) {
-      if (loaded) renderListView(state);
+      if (loaded) {
+        // Filters and contribution inventory must exist before restoring saved controls.
+        root.dataset.reportState = "list";
+        restoreRememberedList();
+      }
       return true;
     })
     .catch(function (error) {

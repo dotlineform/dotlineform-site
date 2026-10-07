@@ -37,17 +37,19 @@ export function renderDocsViewerMainView(options = {}) {
   actions.setAttribute("data-docs-viewer-control-surface-mount", "main-view");
 
   if (toolbar) {
-    const back = documentRef.createElement("button");
-    back.type = "button";
-    back.className = "docsViewer__toolbarIconButton docsViewer__collectionBack";
-    back.hidden = true;
-    back.appendChild(createDocsViewerToolbarIcon(documentRef, "docsViewer__icon--arrow-left"));
+    const index = documentRef.createElement("button");
+    index.type = "button";
+    index.className = "docsViewer__toolbarIconButton docsViewer__collectionIndex";
+    index.hidden = true;
+    index.title = "index";
+    index.setAttribute("aria-label", "index");
+    index.appendChild(createDocsViewerToolbarIcon(documentRef, "docsViewer__icon--list"));
     const controlGroup = documentRef.createElement("div");
     controlGroup.className = "docsViewer__mainViewToolbarControlGroup";
     const collectionActions = documentRef.createElement("div");
     collectionActions.className = "docsViewer__collectionActionMount";
     controlGroup.append(actions, collectionActions);
-    toolbar.append(back, controlGroup);
+    toolbar.append(index, controlGroup);
   }
   if (toolbarMount && toolbar) {
     toolbarMount.replaceChildren(toolbar);
@@ -74,7 +76,7 @@ export function findDocsViewerMainViewRefs(options = {}) {
   return {
     main: root.querySelector(".docsViewer__main"),
     toolbar: root.querySelector("#docsViewerMainViewToolbar"),
-    collectionBack: root.querySelector(".docsViewer__collectionBack"),
+    collectionIndex: root.querySelector(".docsViewer__collectionIndex"),
     collectionActions: root.querySelector(".docsViewer__collectionActionMount"),
     content: root.querySelector("#docsViewerContent")
   };

@@ -416,7 +416,7 @@ main.container:has(> .docsViewer){
   position: relative;
 }
 
-.docsViewer__topRow:has(.docsViewer__collectionBack:not([hidden])),
+.docsViewer__topRow:has(.docsViewer__collectionIndex:not([hidden])),
 .docsViewer:has(.docsViewer__contentDetail--media) .docsViewer__topRow{
   grid-template-columns:
     auto
@@ -426,12 +426,12 @@ main.container:has(> .docsViewer){
     auto;
 }
 
-.docsViewer__topRow:has(.docsViewer__collectionBack:not([hidden])) .docsViewer__topBar,
+.docsViewer__topRow:has(.docsViewer__collectionIndex:not([hidden])) .docsViewer__topBar,
 .docsViewer:has(.docsViewer__contentDetail--media) .docsViewer__topRow .docsViewer__topBar{
   display: contents;
 }
 
-.docsViewer__topRow:has(.docsViewer__collectionBack:not([hidden])) .docsViewer__viewerToolbar,
+.docsViewer__topRow:has(.docsViewer__collectionIndex:not([hidden])) .docsViewer__viewerToolbar,
 .docsViewer:has(.docsViewer__contentDetail--media) .docsViewer__topRow .docsViewer__viewerToolbar{
   grid-column: 2;
   grid-row: 1;
@@ -439,19 +439,19 @@ main.container:has(> .docsViewer){
   width: auto;
 }
 
-.docsViewer__topRow:has(.docsViewer__collectionBack:not([hidden])) .docsViewer__mainViewToolbar,
+.docsViewer__topRow:has(.docsViewer__collectionIndex:not([hidden])) .docsViewer__mainViewToolbar,
 .docsViewer:has(.docsViewer__contentDetail--media) .docsViewer__topRow .docsViewer__mainViewToolbar{
   grid-column: 3;
   grid-row: 1;
 }
 
-.docsViewer__topRow:has(.docsViewer__collectionBack:not([hidden])) .docsViewer__manageToolbarMount,
+.docsViewer__topRow:has(.docsViewer__collectionIndex:not([hidden])) .docsViewer__manageToolbarMount,
 .docsViewer:has(.docsViewer__contentDetail--media) .docsViewer__topRow .docsViewer__manageToolbarMount{
   grid-column: 4;
   grid-row: 1;
 }
 
-.docsViewer__topRow:has(.docsViewer__collectionBack:not([hidden])) > [data-docs-viewer-theme-toggle],
+.docsViewer__topRow:has(.docsViewer__collectionIndex:not([hidden])) > [data-docs-viewer-theme-toggle],
 .docsViewer:has(.docsViewer__contentDetail--media) .docsViewer__topRow > [data-docs-viewer-theme-toggle]{
   grid-column: 5;
   grid-row: 1;
@@ -616,14 +616,14 @@ main.container:has(> .docsViewer){
   display: none !important;
 }
 
-.docsViewer .docsViewer__mainViewToolbar:has(> .docsViewer__collectionBack:not([hidden])){
+.docsViewer .docsViewer__mainViewToolbar:has(> .docsViewer__collectionIndex:not([hidden])){
   display: grid;
   grid-template-columns: calc(3 * var(--docs-viewer-control-height)) minmax(0, 1fr);
   align-items: start;
   gap: 0;
 }
 
-.docsViewer__mainViewToolbar:has(> .docsViewer__collectionBack:not([hidden])) > .docsViewer__mainViewToolbarControlGroup{
+.docsViewer__mainViewToolbar:has(> .docsViewer__collectionIndex:not([hidden])) > .docsViewer__mainViewToolbarControlGroup{
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -700,6 +700,10 @@ main.container:has(> .docsViewer){
 
 .docsViewer__icon--arrow-left{
   mask-image: url("../icons/arrow-left.svg");
+}
+
+.docsViewer__icon--list{
+  mask-image: url("../icons/list.svg");
 }
 
 .docsViewer__icon--arrow-down-a-z{
@@ -1967,18 +1971,18 @@ main.container:has(> .docsViewer){
     align-items: flex-start;
   }
 
-  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__topRow:has(.docsViewer__collectionBack:not([hidden])),
+  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__topRow:has(.docsViewer__collectionIndex:not([hidden])),
   .docsViewer[data-docs-viewer-app-kind="public"]:has(.docsViewer__contentDetail--media) .docsViewer__topRow{
     grid-template-columns: auto minmax(0, 1fr) auto;
   }
 
-  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__topRow:has(.docsViewer__collectionBack:not([hidden])) .docsViewer__mainViewToolbar,
+  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__topRow:has(.docsViewer__collectionIndex:not([hidden])) .docsViewer__mainViewToolbar,
   .docsViewer[data-docs-viewer-app-kind="public"]:has(.docsViewer__contentDetail--media) .docsViewer__topRow .docsViewer__mainViewToolbar{
     grid-column: 1 / -1;
     grid-row: 2;
   }
 
-  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__topRow:has(.docsViewer__collectionBack:not([hidden])) > [data-docs-viewer-theme-toggle],
+  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__topRow:has(.docsViewer__collectionIndex:not([hidden])) > [data-docs-viewer-theme-toggle],
   .docsViewer[data-docs-viewer-app-kind="public"]:has(.docsViewer__contentDetail--media) .docsViewer__topRow > [data-docs-viewer-theme-toggle]{
     grid-column: 3;
   }

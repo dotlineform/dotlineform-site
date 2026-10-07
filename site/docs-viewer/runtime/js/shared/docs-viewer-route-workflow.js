@@ -107,7 +107,7 @@ export function initDocsViewerRouteWorkflow(context) {
     prepare: context.prepareDocumentNavigation,
     retain: function (records) { context.retainDocuments(records.map(function (record) { return record.document; })); },
     confirm: context.confirmDocumentNavigation, open: open, restore: restore,
-    projectBack: context.projectBack, reportError: function (error) { setStatus(error.message, true); } });
+    onNavigationChange: context.onNavigationChange, reportError: function (error) { setStatus(error.message, true); } });
   function loadDoc(value, options = {}) {
     var target = documentTarget(typeof value === "string" ? { doc_id: value, collection: options.collection || "" } : value, { review: currentValue(context.viewerPathname) === "/docs-review/" });
     var key = documentTargetKey(target);
@@ -120,8 +120,14 @@ export function initDocsViewerRouteWorkflow(context) {
         if (options.indexDocId) { index.indexSelectedDocId = options.indexDocId; context.trackSidebarSelection(); }
         displayedHash = hash;
         navigation.replaceUrl(viewerUrl(target.doc_id, hash, search.searchQuery, target));
-        context.scrollToHash(hash);
-        await navigation.update();
+        if (!hash && selected.displayedPayload && selected.displayedPayload.report
+          && selected.displayedPayload.report.id === "docs_collection") {
+          await navigation.update();
+          context.restoreRetainedDocument(target, "");
+        } else {
+          context.scrollToHash(hash);
+          await navigation.update();
+        }
         return target;
       })();
     }
@@ -137,6 +143,15 @@ export function initDocsViewerRouteWorkflow(context) {
     await context.prepareDocumentNavigation();
     await navigation.update();
     return context.openPresentation(targetContext);
+  }
+  function collectionIndexTarget() {
+    var target = selected.documentTarget;
+    var collection = target && target.collection && context.collectionConfig(target.collection);
+    return collection ? { doc_id: collection.reportHostDocId } : null;
+  }
+  function openCollectionIndex() {
+    var target = collectionIndexTarget();
+    return target ? loadDoc(target, { indexDocId: target.doc_id }) : Promise.resolve(null);
   }
   async function returnToDocument() {
     await context.returnToDocument();
@@ -240,7 +255,8 @@ export function initDocsViewerRouteWorkflow(context) {
   var commands = { applyCurrentRoute: applyCurrentRoute, loadDoc: loadDoc, loadIndex: loadIndex,
     resolveDocId: currentDocId, updateIndexHistory: updateIndexHistory,
     viewerUrl: viewerUrl, viewerUrlForDocument: viewerUrlForDocument,
-    openPresentation: openPresentation, returnToDocument: returnToDocument, back: navigation.back, hasCaller: navigation.hasCaller,
+    openPresentation: openPresentation, returnToDocument: returnToDocument,
+    collectionIndexTarget: collectionIndexTarget, openCollectionIndex: openCollectionIndex,
     commitDeletedDocument: commitDeletedDocument };
   return { commands: commands, bindPopstate: navigation.bind, bindRouteLinks: bindRouteLinks,
     currentDocId: currentDocId, currentHash: currentHash, currentQuery: currentQuery,

@@ -1355,7 +1355,7 @@ button.studioList__cellLink {
 }
 
 .catalogueWorkSeriesBrowser__members {
-  --shared-record-list-columns: 48px minmax(3.5rem, 4.9rem) minmax(0, 1fr);
+  --shared-record-list-columns: 48px minmax(0, 1fr);
   min-height: 0;
   overflow-y: auto;
   overflow-anchor: none;
@@ -1372,7 +1372,7 @@ button.studioList__cellLink {
 }
 
 .catalogueWorkPage[data-work-layout="expanded-list"] .catalogueWorkSeriesBrowser__members {
-  --shared-record-list-columns: 48px minmax(3.5rem, 4.9rem) minmax(0, 1fr) minmax(0, 1fr);
+  --shared-record-list-columns: 48px minmax(0, 1fr) minmax(0, 1fr);
 }
 
 .catalogueWorkPage[data-work-layout="expanded-list"] [data-record-list-cell="galleries"] {

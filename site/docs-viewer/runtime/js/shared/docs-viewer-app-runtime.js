@@ -264,10 +264,10 @@ export function startDocsViewerRuntime(options) {
       routeWorkflowCommands.returnToDocument().catch(function (error) { statusController.setStatus(error.message, true); });
     });
   }
-  if (mainViewRefs.collectionBack) {
-    mainViewRefs.collectionBack.addEventListener("click", function () {
-      if (mainViewRefs.collectionBack.hidden || mainViewRefs.collectionBack.disabled) return;
-      routeWorkflowCommands.back();
+  if (mainViewRefs.collectionIndex) {
+    mainViewRefs.collectionIndex.addEventListener("click", function () {
+      if (mainViewRefs.collectionIndex.hidden || mainViewRefs.collectionIndex.disabled) return;
+      routeWorkflowCommands.openCollectionIndex().catch(function (error) { statusController.setStatus(error.message, true); });
     });
   }
   appViewerControlHost.render();
@@ -385,7 +385,11 @@ export function startDocsViewerRuntime(options) {
     prepareDocumentNavigation: documentViewCoordinator.prepareDocumentNavigation,
     returnToDocument: documentViewCoordinator.returnToDocument,
     openPresentation: documentViewCoordinator.openPresentation,
-    projectBack: renderMainViewControls,
+    onNavigationChange: renderMainViewControls,
+    collectionConfig: function (collectionId) {
+      var config = appSession.domains.workspaceConfig.activeConfig;
+      return config && config.collectionsById.get(collectionId);
+    },
     syncIndexRoute: function (query) {
       if (searchController) searchController.applyRoute(query);
     },
@@ -704,12 +708,9 @@ export function startDocsViewerRuntime(options) {
     var rendered = activeState.activeViewId === "rendered-document"
       && activeState.activeModeId === "rendered-document";
     var report = latestCollectionReportState;
-    if (mainViewRefs.collectionBack) {
-      mainViewRefs.collectionBack.hidden = !rendered || !routeWorkflow || !routeWorkflow.commands.hasCaller();
-      mainViewRefs.collectionBack.disabled = root.dataset.managementBusy === "true";
-      var label = "Back";
-      mainViewRefs.collectionBack.title = label;
-      mainViewRefs.collectionBack.setAttribute("aria-label", label);
+    if (mainViewRefs.collectionIndex) {
+      mainViewRefs.collectionIndex.hidden = !rendered || !routeWorkflow || !routeWorkflow.commands.collectionIndexTarget();
+      mainViewRefs.collectionIndex.disabled = root.dataset.managementBusy === "true";
     }
     var mount = mainViewRefs.collectionActions;
     if (mount) {

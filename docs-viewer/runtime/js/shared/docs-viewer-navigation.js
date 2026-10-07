@@ -16,7 +16,7 @@ export function createDocsViewerNavigation(options) {
   }
 
   function project() {
-    options.projectBack(Boolean(active && active.callerId && records.has(active.callerId)));
+    options.onNavigationChange();
   }
 
   function retainPair() {
@@ -84,6 +84,7 @@ export function createDocsViewerNavigation(options) {
     }
     var destination = event.state;
     if (!destination || destination.session !== session) {
+      await capture();
       window.location.reload();
       return;
     }
@@ -99,11 +100,12 @@ export function createDocsViewerNavigation(options) {
         window.history.go(active.position - destination.position);
         return;
       }
+      await options.prepare();
+      await capture();
       if (!owned(destination)) {
         window.location.reload();
         return;
       }
-      await options.prepare();
       active = Object.assign({}, destination, { callerId: "" });
       window.history.replaceState(active, "", window.location.href);
       await options.restore(records.get(active.entryId));
