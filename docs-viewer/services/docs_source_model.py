@@ -654,13 +654,6 @@ def validate_collection_docs(docs: list[SourceDoc], *, allow_unknown_parent_ids:
             raise ValueError(f"Unknown parent_id {doc.parent_id!r} for doc {doc.doc_id!r}")
 
 
-def document_sort_key(doc: SourceDoc) -> tuple[Any, ...]:
-    return (
-        doc.title.lower(),
-        doc.doc_id,
-    )
-
-
 def subtree_docs_in_tree_order(docs: list[SourceDoc], root_doc_id: str) -> list[SourceDoc]:
     docs_by_id = {doc.doc_id: doc for doc in docs}
     root = docs_by_id.get(root_doc_id)

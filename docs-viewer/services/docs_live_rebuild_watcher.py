@@ -41,7 +41,6 @@ from docs_source_model import (
     load_document_collection_docs_for_config,
     recent_edit_content,
     rewrite_front_matter_source_timestamp,
-    document_sort_key,
     source_revision,
     split_source_text,
     strictly_later_doc_timestamp,
@@ -343,12 +342,10 @@ def parsed_doc_snapshot(
             "filename": doc.path.relative_to(root).as_posix(),
             "doc_id": doc.doc_id,
             "title": doc.title,
-            "parent_id": doc.parent_id,
             "added_date": str(doc.front_matter.get("added_date") or "").strip(),
             "last_updated": str(doc.front_matter.get("last_updated") or "").strip(),
             "recent_edit_content": recent_edit_content(doc.front_matter, doc.body),
             "source_revision": source_revision(doc.source_text.encode("utf-8")),
-            "sort_key": document_sort_key(doc),
         }
         snapshot[doc.path.relative_to(root).as_posix()] = row
     return snapshot
@@ -370,18 +367,13 @@ def try_parsed_doc_snapshot(
         return None, str(exc)
 
 
-def direct_child_doc_ids(snapshot: Dict[str, Dict[str, Any]], parent_doc_id: str) -> list[str]:
-    children = [row for row in snapshot.values() if row.get("parent_id") == parent_doc_id]
-    children.sort(key=lambda row: row.get("sort_key") or (True, 0, str(row.get("title") or "").lower(), row.get("doc_id")))
-    return [str(row.get("doc_id") or "").strip() for row in children]
-
-
 def affected_doc_ids(
     previous_docs: Optional[Dict[str, Dict[str, Any]]],
     current_docs: Dict[str, Dict[str, Any]],
     changed_files: list[str],
     threshold: int,
 ) -> tuple[Optional[list[str]], str]:
+    """Select changed/deleted identities without expanding title edits to children."""
     if previous_docs is None:
         return None, "missing previous parsed docs snapshot"
     if threshold >= 0 and len(changed_files) > threshold:
@@ -406,8 +398,6 @@ def affected_doc_ids(
         affected.append(current_doc_id)
         if previous_doc_id != current_doc_id:
             affected.append(previous_doc_id)
-        if str(previous.get("title") or "") != str(current.get("title") or ""):
-            affected.extend(direct_child_doc_ids(current_docs, current_doc_id))
 
     return ordered_unique(affected), ""
 

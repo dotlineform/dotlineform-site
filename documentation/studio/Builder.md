@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260423-000000-c9f3ea
 title: Builder
 added_date: "2026-04-23 00:00:00"
-last_updated: "2026-10-07 09:52:51"
+last_updated: "2026-10-07 10:02:41"
 parent_id: d-20260424-000000-50b63f
 ---
 # Builder
@@ -30,6 +30,8 @@ Named collections use the same builder for full and targeted operations. New, Sa
 Targeted collection builds require readable reader/manage manifests with agreeing document membership. Missing or invalid saved metadata fails; a complete Build owns reconstruction, with no automatic full-source fallback. Targeted builds do not scan unselected by-ID files. Diagnostics distinguish `targeted_collection` from `collection` and report source files scanned, total saved documents, rendered documents and selected IDs separately. Ordinary targeted builds retain their existing complete source read for index projection. The retired semantic usage index is not a build prerequisite.
 
 Ordinary builds derive document counts directly from loaded source records. The [pipeline](../../docs-viewer/build/docs_builder/pipeline.py) returns its required tree, Recent, by-ID, backlinks and write-plan results without constructing a separate flat `index_payload` or extracting plain text from every rendered payload for reporting. Backlinks still owns a complete rendered-payload scan, so that collection-wide read remains until its own generation strategy changes. Document-package export computes `content_text_length` through its separate source-context owner.
+
+The ordinary watcher's targeted payload selection uses changed files' before/after document identities, including creation, deletion and identity replacement. A parent's title change does not select unchanged children: by-ID metadata carries `parent_id`, the ordinary builder reprojects the navigation tree, and targeted builds preserve saved Recent and Search. Links separately updates the changed/deleted documents' contributions and affected neighbours' relationship records. Selected documents render their Related Links section from those refreshed records; unselected embedded sections retain their saved snapshot until their own document build or a full Build, as defined by [Related Links freshness](Related_Links.md#generated-data-and-freshness). Renaming a parent therefore does not incidentally refresh an unchanged child's embedded section. An already running watcher needs restarting to load changes to its Python module.
 
 The legacy tests `test_build_docs_payloads.py`, `test_build_docs_recent.py` and `test_build_docs_subscopes.py` under `docs-viewer/tests/python/` consume the removed flat return value and also use retired scope/stage fixtures. They are unreviewed for the current workspace contract. Their separately specified modernisation should assert required generated outputs and reporting counts through current workspace fixtures; they do not justify retaining unused production computation or a compatibility return value.
 
