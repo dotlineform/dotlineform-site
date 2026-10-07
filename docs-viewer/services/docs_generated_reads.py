@@ -58,10 +58,6 @@ def generated_recent_path(repo_root: Path) -> Path:
     return generated_docs_output_root(repo_root) / "recent.json"
 
 
-def generated_backlinks_path(repo_root: Path) -> Path:
-    return generated_docs_output_root(repo_root) / "backlinks.json"
-
-
 def generated_doc_payload_path(repo_root: Path, doc_id: str) -> Path:
     if not is_immutable_doc_id(doc_id):
         raise ValueError("doc_id must use the immutable document ID format")
@@ -120,13 +116,6 @@ def read_generated_recent(repo_root: Path) -> Dict[str, Any]:
     return read_generated_json(
         generated_recent_path(repo_root),
         "generated Recent docs",
-    )
-
-
-def read_generated_backlinks(repo_root: Path) -> Dict[str, Any]:
-    return read_generated_json(
-        generated_backlinks_path(repo_root),
-        "generated backlinks",
     )
 
 

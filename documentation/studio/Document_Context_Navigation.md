@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260903-160226-5c6a3e
 title: Context Navigation
 added_date: "2026-09-03 16:02:26"
-last_updated: "2026-09-26 20:49:58"
+last_updated: "2026-10-07 11:57:54"
 summary: Propose previous/next navigation through the scope-level document hierarchy; sub-scope and Catalogue navigation are separate and deferred.
 parent_id: d-20260903-220300-694ee5
 ---
@@ -21,7 +21,7 @@ Scope-level means documents belonging to the scope's own index hierarchy, includ
 
 Sub-scope documents, report rows, Catalogue Series and Works, and Content Detail presentations are outside this proposal. A scope-level document hosting a sub-scope report can participate as a document in the tree, but navigation must not descend into its report rows. Showing a sub-scope child through that host must not present the host's scope-level previous/next controls as navigation for the child.
 
-Search, backlinks and authored links remain independent ways to reach documents. Their result order does not define this navigation sequence.
+Search, [Related Links](Related_Links.md) and authored links remain independent ways to reach documents. Their result order does not define this navigation sequence.
 
 ## Ordering And Traversal
 

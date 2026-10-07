@@ -60,7 +60,6 @@
         "manifest_url": "/docs/generated/external/catalogue/manage-manifest.json",
         "by_id_url_base": "/docs/generated/external/catalogue/by-id"
       }
-    ],
-    "backlinks_url": "/docs/backlinks"
+    ]
   }
 }

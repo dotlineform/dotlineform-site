@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260523-190651-7157ec
 title: Development Checklist
 added_date: "2026-05-23 19:06:51"
-last_updated: "2026-10-06 22:13:31"
+last_updated: "2026-10-07 11:49:40"
 parent_id: d-20260419-000000-d2e47b
 
 ---
@@ -196,6 +196,4 @@ For every material code/config delivery, include a distinct code-review step aft
 - [ ] Close only a complete outcome; reshape the feature delivery rather than leaving it half-finished.
 - [ ] Treat closeout as proportional bookkeeping: confirm the status edit and expected watcher output, and add rebuilds, generated-record audits, lint, tests, or diff checks only when they address a concrete risk introduced by that edit.
 
-:::report
-id: docs_backlinks
-:::
+[[links|related links]]

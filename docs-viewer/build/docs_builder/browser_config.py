@@ -25,10 +25,6 @@ def browser_docs_recent_url(config: DocsStageConfig, *, published: bool = False)
     return f"{public_document_base(config)}/recent.json" if published else "/docs/recent"
 
 
-def browser_docs_backlinks_url(config: DocsStageConfig, *, published: bool = False) -> str:
-    return "" if published else "/docs/backlinks"
-
-
 def browser_search_index_url(config: DocsStageConfig, *, published: bool = False) -> str:
     if not published:
         return "/docs/search"
@@ -90,8 +86,6 @@ def browser_workspace_record(repo_root: Path, config: DocsStageConfig, *, public
         "search": browser_search_policy_payload(config, published=published),
         "collections": browser_collection_records(repo_root, config, published=published),
     }
-    if not published:
-        record.update(backlinks_url=browser_docs_backlinks_url(config))
     return record
 
 

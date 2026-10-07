@@ -2,7 +2,7 @@
 doc_id: d-20260919-100234-038395
 title: "Shared Icons: Toolbar Mapping"
 added_date: "2026-09-19 10:02:34"
-last_updated: "2026-10-06 21:51:44"
+last_updated: "2026-10-07 11:49:40"
 summary: Editable mappings for Docs Viewer toolbars, report toolbars and report list icons, including code identifiers, state variants and replacement artwork choices.
 ui_status: planned
 parent_id: d-20260910-223116-9a1011
@@ -309,7 +309,7 @@ Report inventory owners:
 
 ## Implementation Review
 
-The Tree/Graph index switch, Graph placeholder and index-panel collapse/expand controls are retired. The backlinks insertion-menu entry is retired; existing authored `docs_backlinks` reports remain supported. The proposed image-modal combination and related-links token need their own implementation work.
+The Tree/Graph index switch, Graph placeholder and index-panel collapse/expand controls are retired. Documents Linking Here, its backlinks insertion entry and report runtime are retired. The Related links directive is the maintained relationship presentation. The proposed image-modal combination needs its own implementation work.
 
 For the earlier viewer-toolbar migration, selected JavaScript lint (16 changed canonical modules), Python lint for the projection tool, `bin/site-code-update --check`, `bin/site-validate`, and `git diff --check` passed. The public projection adds 13 SVG assets and updates nine shared JavaScript modules plus the shared stylesheet. Visual fit, hover, state changes and light/dark appearance remain manual review; no browser or test-suite run is claimed.
 

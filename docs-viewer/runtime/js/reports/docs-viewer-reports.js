@@ -52,13 +52,6 @@ const REPORT_LOADERS = {
       });
     }
   },
-  docs_backlinks: {
-    load: function () {
-      return import("./docs-backlinks-report.js").then(function (module) {
-        return module.mountDocsBacklinksReport;
-      });
-    }
-  },
   project_state: {
     load: function () {
       return import("./project-state-report.js").then(function (module) {

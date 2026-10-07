@@ -3,7 +3,6 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from .backlinks import BacklinksMixin
 from .inline_icons import InlineIconRenderer
 from .related_links import prepare_related_links
 from .links_builder import build_document_links, prepare_document_links
@@ -36,7 +35,6 @@ class DocsDataBuilder(
     ContentRenderingMixin,
     SemanticTokensMixin,
     WritePlanMixin,
-    BacklinksMixin,
 ):
     def __init__(
         self,
@@ -135,13 +133,11 @@ class DocsDataBuilder(
                 recent_candidates,
                 output_path=self.output_dir / "recent.json",
             )
-        backlinks_payload = self.backlinks_payload(docs_by_id, item_payloads)
         write_plan = self.build_write_plan(
             index_tree_payload,
             recent_payload,
             item_payloads,
             stale_item_ids=stale_item_ids,
-            backlinks_payload=backlinks_payload,
             existing_tree_text=previous_tree_text,
         )
         diagnostics = self.diagnostics_payload(
@@ -177,7 +173,6 @@ class DocsDataBuilder(
             "index_tree_payload": index_tree_payload,
             "recent_payload": recent_payload,
             "item_payloads": item_payloads,
-            "backlinks_payload": backlinks_payload,
             "write_plan": write_plan,
             "diagnostics": diagnostics,
             "media_builds": media_builds,

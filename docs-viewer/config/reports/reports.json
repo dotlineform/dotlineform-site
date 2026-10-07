@@ -51,13 +51,6 @@
       "presets": []
     },
     {
-      "report_id": "docs_backlinks",
-      "title": "Documents Linking Here",
-      "description": "Lists current documents in the selected stage linking to the exact report host document.",
-      "loader_id": "docs_backlinks",
-      "presets": []
-    },
-    {
       "report_id": "project_state",
       "title": "Project State",
       "description": "Reconciles immediate project folders with canonical Works, Series, and Project documents.",

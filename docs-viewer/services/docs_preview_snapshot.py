@@ -212,16 +212,10 @@ def _validate_prepared_index(path: Path, data: bytes) -> None:
         validate_recent_payload(_read_json_bytes(data, "saved Recents payload"))
     elif path == Path("documents/selected.json"):
         validate_selected_payload(_read_json_bytes(data, "Selected Documents payload"))
-    else:
-        key = ""
-        if child_index and path.name == "manifest.json":
-            key = "docs"
-        elif path == Path("documents/backlinks.json"):
-            key = "by_target"
-        if key:
-            payload = _read_json_bytes(data, f"generated {path}")
-            if not isinstance(payload.get(key), dict if key == "by_target" else list):
-                raise RuntimeError(f"generated {path} is missing {key}")
+    elif child_index and path.name == "manifest.json":
+        payload = _read_json_bytes(data, f"generated {path}")
+        if not isinstance(payload.get("docs"), list):
+            raise RuntimeError(f"generated {path} is missing docs")
 
 
 def _media_identity_from_url(value: str, prefix: str) -> str:

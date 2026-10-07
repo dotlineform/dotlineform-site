@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260331-000000-c313fd
 title: Runtime
 added_date: "2026-03-31 00:00:00"
-last_updated: "2026-10-07 07:08:44"
+last_updated: "2026-10-07 11:49:40"
 summary: Public, manage, and review execution paths; browser/server authority boundaries; extension method; rationale; and known weak spots.
 parent_id: d-20260424-000000-50b63f
 ---
@@ -231,7 +231,7 @@ Capabilities describe what the current service can do after environment flags, c
 
 ### Links Presentation
 
-[Related Links](Related_Links.md) owns the author-inserted `[[links|related links]]` directive. Its plain heading, sorted incoming/outgoing list and decorative collection icons are embedded in `content_html` at build time. Rendering uses the normal document mount, with no relationship request or additional manifest read. Generated anchors carry `data-docs-related-link` so authored-link collection and backlinks omit them.
+[Related Links](Related_Links.md) owns the author-inserted `[[links|related links]]` directive. Its plain heading, sorted incoming/outgoing list and decorative collection icons are embedded in `content_html` at build time. Rendering uses the normal document mount, with no relationship request or additional manifest read. Generated anchors carry `data-docs-related-link` so authored-link collection omits them. Documents Linking Here and its separate backlinks loader, payload, browser setting and API are retired.
 
 The per-document Links control, adapter, hosted presentation and `/docs/links` generated-read endpoint are removed. The separate local workspace Links diagnostic report remains. Content Detail continues to host Table, Diagram, Media and Report presentations. [Builder](Builder.md) owns persisted-record expansion and existing relationship maintenance; [Source Editor Scripts](Source_Editor_Scripts.md#directives) owns insertion.
 

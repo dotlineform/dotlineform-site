@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260930-195002-b3417e
 title: Related Links
 added_date: "2026-09-30 19:50:02"
-last_updated: "2026-10-01 16:39:11"
+last_updated: "2026-10-07 11:49:40"
 summary: Author-inserted related-links directive, a sorted list with collection icons, and build-time relationship snapshots in document JSON.
 ui_status: in-progress
 parent_id: d-20260428-000000-f5ff18
@@ -81,7 +81,9 @@ Supported Catalogue Work image and Media View tokens contribute ordinary documen
 
 Targeted saves rebuild only their selected document content, after refreshing its relationship record and affected neighbours. A document build includes all incoming links already recorded when it runs. Later edits to other documents can change that incoming list without rebuilding this document's content; a subsequent document build or full Docs Build refreshes its embedded section. Working relationships do not filter sources or targets by draft state, ordinary `unpublishable.json` membership or inherited publication exclusion. Removing an old filter requires an explicit complete relationship reconciliation to restore suppressed references; panel opening adds no scan or rebuild.
 
-Generated related-links sections must not contribute authored relationships or backlinks. Otherwise an incoming-link listing could manufacture a reciprocal relationship. Literal directive examples in code remain examples and do not render a section.
+Generated related-links sections must not contribute authored relationships. Otherwise an incoming-link listing could manufacture a reciprocal relationship. Literal directive examples in code remain examples and do not render a section.
+
+Related Links supersedes Documents Linking Here and its separate backlinks concept. The `docs_backlinks` report, reverse-link builder and payload, browser setting and local API are retired. Incoming and outgoing presentation continues to use the existing persisted per-document Links records and build-time section snapshot; no replacement reverse-link index is maintained.
 
 Publish captures the persisted relationship JSON alongside its existing inputs. Body eligibility selects the records whose owners are prepared, while their incoming/outgoing target rows remain intact. The temporary Preview build expands those captured records without target-readiness reads, filtering or warnings; distribution copies the completed content without deriving relationships again. A public section may retain a title/link for a destination whose body was omitted by draft or ignore policy. Following it uses the normal unavailable-document response. The author owns the decision to finish/include the destination or change the reference.
 

@@ -73,8 +73,6 @@ def docs_generated_read_payload(repo_root: Path, path: str, params: dict[str, li
         return read_management_docs_index_tree(repo_root)
     if path == routes.GENERATED_RECENT_PATH:
         return docs_generated_reads.read_generated_recent(repo_root)
-    if path == routes.GENERATED_BACKLINKS_PATH:
-        return docs_generated_reads.read_generated_backlinks(repo_root)
     if path == routes.GENERATED_SEARCH_PATH:
         return docs_generated_reads.read_generated_search_index(repo_root)
     if path == routes.GENERATED_WORKSPACE_LINKS_PATH:
@@ -139,7 +137,6 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
     if path in {
         routes.GENERATED_INDEX_TREE_PATH,
         routes.GENERATED_RECENT_PATH,
-        routes.GENERATED_BACKLINKS_PATH,
         routes.GENERATED_PAYLOAD_PATH,
         routes.GENERATED_WORKSPACE_LINKS_PATH,
         routes.GENERATED_SEARCH_PATH,

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260513-105343-6de36b
 title: Reports
 added_date: "2026-05-13 10:53:43"
-last_updated: "2026-10-06 16:00:17"
+last_updated: "2026-10-07 11:49:40"
 parent_id: d-20260424-000000-50b63f
 ---
 # Docs Viewer Reports
@@ -104,7 +104,7 @@ A successful local report mount may return an optional validated `expandedPresen
 
 Direct Source editing retains a report block and validates the complete candidate before writing. Metadata and Draft edits preserve and revalidate the existing block.
 
-In Markdown source mode, **Directives → Documents linking here** inserts the exact local `docs_backlinks` report block at the captured editor position. Normal source validation remains authoritative and rejects a second report block.
+In Markdown source mode, **Directives → Related links** inserts `[[links|related links]]` at the captured editor position. This is a build-rendered document section owned by [Related Links](Related_Links.md).
 
 Generic Import rejects incoming report blocks and replacement of an existing report host. Document Transfer copies or moves report-host source unchanged and does not interpret report semantics; each report resolves or reports an error in its destination context. Returned-content Review cannot replace a report host. Rendered document-content packages omit the empty inert host, while static HTML export retains it as inert markup and exports no report registry, executable loader, service, or report JavaScript.
 
@@ -184,7 +184,9 @@ The Source Config Report (`source_config`) was retired on 2026-09-26. Its JavaSc
 
 `docs_broken_links` opens the saved Working audit through `GET /docs/broken-links`. Refresh explicitly scans ordinary and configured collection sources and saves a new private JSON snapshot through an empty-object `POST` to the same route. Last scanned time sits beside Refresh, vertically centred, without a broken-link count; unscanned sources remain explanatory rows. Missing data gives an empty report without a first-refresh prompt. Refresh retains loaded results and uses a progress cursor without running messages. [Broken Links Script](Broken_Links_Script.md) owns audit coverage, persistence, failure behavior and the local-only boundary.
 
-`docs_backlinks` renders the generated same-scope incoming-link rows for the exact current report-host document. Parent-scope Docs builds write `backlinks.json` from rendered anchors; targeted builds overlay selected new by-ID payloads on unchanged existing payloads before regenerating the reverse mapping. The report target is only `{ viewerScope, payload.doc_id }`. Code examples, self-links, external links, missing targets, and cross-scope targets are excluded. Local repository-backed browser config uses the static payload URL, external-local config uses the scope-validated generated-read route, the local report registry and loader own execution, and Publish excludes the index.
+`docs_backlinks` (Documents Linking Here), its executable loader, generated `backlinks.json`, browser setting and `/docs/backlinks` endpoint are retired. [Related Links](Related_Links.md) presents persisted incoming and outgoing document relationships through the author-inserted directive. The retired report ID has no registry entry or compatibility alias; old authored report blocks require conversion to the directive and otherwise fail normal unknown-report validation.
+
+The dedicated `docs-viewer/tests/python/test_docs_backlinks_report_contract.py`, backlinks cases in `test_build_docs_payloads.py` and the route list in `docs-viewer/tests/js/docs_viewer_stage_target_contract.mjs` still target retired report/output or scope contracts. They remain unchanged and were not run during retirement. Separately approved cleanup should remove obsolete backlinks coverage while preserving unrelated current coverage; these test consumers do not require a production alias.
 
 `semantic_tokens` and its generated usage index are retired. Work image and Work Media View text tokens now contribute ordinary document relationships to Catalogue subdocuments, presented by [Related Links](Related_Links.md). Gallery Media View tokens create no document relationship. `docs_broken_links` remains the independent authoring audit.
 
@@ -241,9 +243,7 @@ Poor report candidates are workflows with writes, long-running operations, broad
 - `docs-viewer/services/docs_source_model.py`
 - `docs-viewer/build/docs_builder/source.py`
 - `docs-viewer/build/docs_builder/payloads.py`
-- `docs-viewer/build/docs_builder/backlinks.py`
 - `docs-viewer/services/docs_rendered_links.py`
-- `docs-viewer/scopes/<scope>/published/documents/backlinks.json`
 - `docs-viewer/runtime/js/management/docs-viewer-management-document-reports.js`
 - `docs-viewer/runtime/js/management/docs-viewer-management-subscope-default-contribution.js`
 - `docs-viewer/runtime/js/management/docs-viewer-management-subscope-composition.js`

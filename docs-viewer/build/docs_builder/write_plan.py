@@ -35,7 +35,6 @@ class WritePlanMixin:
         item_payloads: dict[str, dict[str, Any]],
         *,
         stale_item_ids: list[str],
-        backlinks_payload: dict[str, Any] | None = None,
         existing_tree_text: str | None = None,
     ) -> dict[str, Any]:
         """Return exact writes and removals without mutating generated output.
@@ -56,11 +55,6 @@ class WritePlanMixin:
             item_text_by_id[doc_id] = text
             if read_text(self.items_dir / f"{doc_id}.json") != text:
                 changed_item_ids.append(doc_id)
-        backlinks_text = (
-            json_text(backlinks_payload)
-            if backlinks_payload is not None
-            else ""
-        )
         return {
             "index_tree_write": existing_tree_text != index_tree_text,
             "index_tree_text": index_tree_text,
@@ -70,11 +64,6 @@ class WritePlanMixin:
             "changed_item_ids": sorted(changed_item_ids),
             "stale_item_ids": stale_item_ids,
             "item_text_by_id": item_text_by_id,
-            "backlinks_write": (
-                backlinks_payload is not None
-                and read_text(self.output_dir / "backlinks.json") != backlinks_text
-            ),
-            "backlinks_text": backlinks_text,
         }
 
     def write_outputs(
@@ -96,8 +85,6 @@ class WritePlanMixin:
             write_text(self.output_dir / "recent.json", write_plan["recent_text"])
         if write_plan["retired_recent_remove"]:
             (self.output_dir / ".publish/recent.json").unlink(missing_ok=True)
-        if write_plan["backlinks_write"]:
-            write_text(self.output_dir / "backlinks.json", write_plan["backlinks_text"])
         for doc_id in write_plan["changed_item_ids"]:
             write_text(self.items_dir / f"{doc_id}.json", write_plan["item_text_by_id"][doc_id])
         for doc_id in write_plan["stale_item_ids"]:
@@ -127,7 +114,6 @@ class WritePlanMixin:
         index_write_count = (
             (1 if write_plan["index_tree_write"] else 0)
             + (1 if write_plan["recent_write"] else 0)
-            + (1 if write_plan["backlinks_write"] else 0)
         )
         verb = "would write" if mode == "dry-run" else "wrote"
         remove_verb = "would remove" if mode == "dry-run" else "removed"
@@ -161,7 +147,6 @@ class WritePlanMixin:
             "doc_payloads_removed": len(write_plan["stale_item_ids"]),
             "index_tree_changed": 1 if write_plan["index_tree_write"] else 0,
             "recent_changed": 1 if write_plan["recent_write"] else 0,
-            "backlinks_changed": 1 if write_plan["backlinks_write"] else 0,
             "warning_count": len(self.warnings),
             "warnings": self.warnings,
             "elapsed_seconds": elapsed_seconds,
