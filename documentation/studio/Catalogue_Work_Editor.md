@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260422-000000-45a776
 title: Catalogue Work Editor
 added_date: "2026-04-22 00:00:00"
-last_updated: "2026-10-07 15:47:03"
+last_updated: "2026-10-07 17:11:09"
 parent_id: d-20260423-000000-d015e6
 
 ---
@@ -11,7 +11,7 @@ parent_id: d-20260423-000000-d015e6
 
 ## What It Does
 
-Use `/studio/catalogue-work/` to create, find, edit or delete canonical Works, including a batch from one project subfolder and images converted from former Details. Work downloads, links and project-media selection belong to this editor. The Detail browser and section-entry workflow are retired.
+Use `/studio/catalogue-work/` to create, find, edit or delete canonical Works, including a batch from one project subfolder and images converted from former Details. Work downloads, links and project-media selection belong to this editor. The Detail browser and section-entry workflow are retired. The retired `provenance` and `artist` fields have no editor controls or create/save payload entries.
 
 - `?work=<work_id>` opens one Work.
 - `?mode=new` starts a new canonical record; optional `?series=<series_id>` preselects a Series.

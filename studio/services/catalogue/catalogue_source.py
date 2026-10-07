@@ -57,8 +57,6 @@ WORK_FIELDS = [
     "depth_cm",
     "width_px",
     "height_px",
-    "provenance",
-    "artist",
     "downloads",
     "links",
 ]

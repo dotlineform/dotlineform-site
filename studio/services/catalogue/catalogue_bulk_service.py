@@ -46,8 +46,6 @@ BULK_WORK_EDITABLE_FIELDS = {
     "width_cm",
     "depth_cm",
     "storage_location",
-    "provenance",
-    "artist",
 }
 
 

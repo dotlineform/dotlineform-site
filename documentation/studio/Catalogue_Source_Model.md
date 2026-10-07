@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260519-000000-a0da45
 title: Catalogue Source Model
 added_date: "2026-05-19 00:00:00"
-last_updated: "2026-10-07 16:26:39"
+last_updated: "2026-10-07 17:11:09"
 parent_id: d-20260401-000000-a11bf3
 
 ---
@@ -72,6 +72,8 @@ $HOME/miniconda3/bin/python3 studio/services/catalogue/validate_catalogue_source
 It checks allowed fields, exact IDs and map keys, required Series membership, media metadata and the two canonical Gallery sources. Work imports require `series_id` and reject retired Work columns.
 
 When changing a field, update its source definition, serializer, validation, editor and affected read projections together. The [Catalogue Field Registry](Catalogue_Field_Registry.md) inventories current source fields and output families; it does not plan Save or own serialization.
+
+Work `provenance` and `artist` are retired. Neither field belongs in canonical `works.json`, the Work editor, create/save requests, bulk updates or generated Work projections. The 2026-10-07 retirement removed both keys from all 4,618 canonical Works, including the one populated provenance value; all artist values were empty. Other metadata and Work identities remain intact.
 
 ## Output Boundary
 

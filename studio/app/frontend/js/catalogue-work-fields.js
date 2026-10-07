@@ -15,9 +15,7 @@ const WORK_FIELD_DEFINITIONS = Object.freeze({
   height_cm: Object.freeze({ key: "height_cm", label: "height cm", type: "number", step: "any" }),
   width_cm: Object.freeze({ key: "width_cm", label: "width cm", type: "number", step: "any" }),
   depth_cm: Object.freeze({ key: "depth_cm", label: "depth cm", type: "number", step: "any" }),
-  storage_location: Object.freeze({ key: "storage_location", label: "storage location", type: "text" }),
-  provenance: Object.freeze({ key: "provenance", label: "provenance", type: "textarea" }),
-  artist: Object.freeze({ key: "artist", label: "artist", type: "text" })
+  storage_location: Object.freeze({ key: "storage_location", label: "storage location", type: "text" })
 });
 
 const WORK_EDITABLE_FIELDS = Object.freeze([
@@ -36,9 +34,7 @@ const WORK_EDITABLE_FIELDS = Object.freeze([
   WORK_FIELD_DEFINITIONS.height_cm,
   WORK_FIELD_DEFINITIONS.width_cm,
   WORK_FIELD_DEFINITIONS.depth_cm,
-  WORK_FIELD_DEFINITIONS.storage_location,
-  WORK_FIELD_DEFINITIONS.provenance,
-  WORK_FIELD_DEFINITIONS.artist
+  WORK_FIELD_DEFINITIONS.storage_location
 ]);
 
 const NEW_WORK_EDITABLE_FIELDS = Object.freeze([
@@ -58,9 +54,7 @@ const NEW_WORK_EDITABLE_FIELDS = Object.freeze([
   WORK_FIELD_DEFINITIONS.height_cm,
   WORK_FIELD_DEFINITIONS.width_cm,
   WORK_FIELD_DEFINITIONS.depth_cm,
-  WORK_FIELD_DEFINITIONS.storage_location,
-  WORK_FIELD_DEFINITIONS.provenance,
-  WORK_FIELD_DEFINITIONS.artist
+  WORK_FIELD_DEFINITIONS.storage_location
 ]);
 
 const WORK_READONLY_FIELDS = Object.freeze([]);
@@ -166,8 +160,6 @@ function buildWorkRecordFromDraft(draft, options = {}) {
   record.width_cm = normalizeText(draft.width_cm) ? Number(draft.width_cm) : null;
   record.depth_cm = normalizeText(draft.depth_cm) ? Number(draft.depth_cm) : null;
   record.storage_location = normalizeText(draft.storage_location) || null;
-  record.provenance = normalizeText(draft.provenance) || null;
-  record.artist = normalizeText(draft.artist) || null;
 
   if (options.downloadFields) {
     record.downloads = normalizeEmbeddedEntries(draft.downloads, options.downloadFields);

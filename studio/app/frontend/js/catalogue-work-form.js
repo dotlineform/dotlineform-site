@@ -164,7 +164,6 @@ function renderField(field, fieldsNode, state, options) {
 
   const wrapper = document.createElement(field.readonly ? "div" : "label");
   wrapper.className = "studioForm__field catalogueWorkForm__field";
-  if (field.type === "textarea") wrapper.classList.add("studioForm__field--topAligned", "catalogueWorkForm__field--topAligned");
   if (!field.readonly) wrapper.htmlFor = `catalogueWorkField-${field.key}`;
 
   const label = document.createElement("span");
@@ -176,10 +175,6 @@ function renderField(field, fieldsNode, state, options) {
   if (field.readonly) {
     input = document.createElement("span");
     input.className = "studioUi__input studioUi__input--readonlyDisplay";
-  } else if (field.type === "textarea") {
-    input = document.createElement("textarea");
-    input.className = "studioUi__input studioForm__descriptionInput";
-    input.rows = 4;
   } else if (field.type === "select") {
     input = document.createElement("select");
     input.className = "studioUi__input";

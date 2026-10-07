@@ -1,7 +1,7 @@
 {
   "schema": "catalogue_field_registry_v2",
   "status": "active",
-  "last_updated": "2026-09-05",
+  "last_updated": "2026-10-07",
   "description": "Current source fields and output ownership. Save completes the affected Catalogue output; no field fallback or record publication planner.",
   "artifact_families": {
     "source-json": "Canonical Studio Catalogue records.",
@@ -36,8 +36,6 @@
         "depth_cm",
         "width_px",
         "height_px",
-        "provenance",
-        "artist",
         "downloads",
         "links"
       ],

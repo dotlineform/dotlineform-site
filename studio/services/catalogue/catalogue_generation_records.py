@@ -21,7 +21,6 @@ GALLERY_RECORD_SCHEMA_VERSION = "gallery_record_v1"
 # Define the Works source-record projection once so adding a new field is a one-line change.
 # Each entry is: (record_key, source_column_name, coercer)
 WORKS_SCHEMA: List[tuple[str, str, Any]] = [
-    ("artist", "artist", coerce_string),
     ("title", "title", coerce_string),
     ("year", "year", coerce_int),
     ("year_display", "year_display", coerce_string),
