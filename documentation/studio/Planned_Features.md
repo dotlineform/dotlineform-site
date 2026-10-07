@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260428-000000-f5ff18
 title: Planned Features
 added_date: "2026-04-28 00:00:00"
-last_updated: "2026-10-07 21:31:31"
+last_updated: "2026-10-07 23:27:56"
 summary: This explains the delivery model and workflows to implement new repo and application features.
 ui_status: planned
 parent_id: ""
@@ -141,6 +141,10 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 - Feature documents are **not** durable documents. They enter the explicit closeout list when their routing or decision value is exhausted.
 - Close a delivery when the complete result works and its durable owner is current.
 - Feature documents should be updated with useful decisions and future direction without becoming long execution diaries.
+
+## Reviews
+
+- [Public Work JSON Review](Public_Work_JSON_Review.md) — Review of a Studio Refresh aggregate/report handoff, Working and public Work records, baked media and consistent updates. Refresh supplies Catalogue inputs without direct Studio reads by Docs; Regenerate reconciles Catalogue sources and calls shared Full Rebuild; Rebuild applies document-only changes. Full Rebuild optimisation benefits every caller. Work `00008`, nerve defines the presentation target. External Studio-owned media with incremental Refresh copies is an optional extension; routine Refresh must skip unchanged images. Input contracts, shared rebuild optimisation, Gallery loading and token migration remain open; implementation is not yet approved.
 
 ## Ad-hoc Deliveries
 
