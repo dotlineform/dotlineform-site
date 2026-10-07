@@ -23,8 +23,8 @@ from catalogue.catalogue_source import CatalogueSourceRecords, DEFAULT_SOURCE_DI
 
 
 METADATA_PATH = "reports/catalogue-works/metadata.json"
-METADATA_SCHEMA = "catalogue_works_report_metadata_v1"
-WORK_FIELDS = ("work_id", "title", "year", "year_display", "storage_location", "medium_type", "medium_caption")
+METADATA_SCHEMA = "catalogue_works_report_metadata_v2"
+WORK_FIELDS = ("work_id", "title", "year", "year_display", "storage_location", "medium")
 
 
 def _work_id(value: str) -> str:
@@ -42,7 +42,7 @@ def _project_work(records: CatalogueSourceRecords, work_id: str) -> dict[str, An
     for field in ("title", "year_display"):
         if not isinstance(row[field], str) or not row[field].strip():
             raise ValueError(f"Invalid Catalogue Works metadata {field}: {work_id}")
-    for field in ("storage_location", "medium_type", "medium_caption"):
+    for field in ("storage_location", "medium"):
         if row[field] is not None and not isinstance(row[field], str):
             raise ValueError(f"Invalid Catalogue Works metadata {field}: {work_id}")
     row["series"] = []

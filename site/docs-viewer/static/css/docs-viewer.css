@@ -406,7 +406,7 @@ main.container:has(> .docsViewer){
   gap: var(--docs-viewer-top-row-gap);
 }
 
-/* Keep collection and Media View back controls on the document's shared axis. */
+/* Keep collection controls and Media View back on the document's shared axis. */
 .docsViewer:has(.docsViewer__contentDetail--media) .docsViewer__topRow{
   --docs-viewer-document-width: min(
     100%,
@@ -416,7 +416,7 @@ main.container:has(> .docsViewer){
   position: relative;
 }
 
-.docsViewer__topRow:has(.docsViewer__collectionIndex:not([hidden])),
+.docsViewer__topRow:has(.docsViewer__collectionIndex:not([hidden]), [data-docs-collection-regenerate]),
 .docsViewer:has(.docsViewer__contentDetail--media) .docsViewer__topRow{
   grid-template-columns:
     auto
@@ -426,12 +426,12 @@ main.container:has(> .docsViewer){
     auto;
 }
 
-.docsViewer__topRow:has(.docsViewer__collectionIndex:not([hidden])) .docsViewer__topBar,
+.docsViewer__topRow:has(.docsViewer__collectionIndex:not([hidden]), [data-docs-collection-regenerate]) .docsViewer__topBar,
 .docsViewer:has(.docsViewer__contentDetail--media) .docsViewer__topRow .docsViewer__topBar{
   display: contents;
 }
 
-.docsViewer__topRow:has(.docsViewer__collectionIndex:not([hidden])) .docsViewer__viewerToolbar,
+.docsViewer__topRow:has(.docsViewer__collectionIndex:not([hidden]), [data-docs-collection-regenerate]) .docsViewer__viewerToolbar,
 .docsViewer:has(.docsViewer__contentDetail--media) .docsViewer__topRow .docsViewer__viewerToolbar{
   grid-column: 2;
   grid-row: 1;
@@ -439,19 +439,19 @@ main.container:has(> .docsViewer){
   width: auto;
 }
 
-.docsViewer__topRow:has(.docsViewer__collectionIndex:not([hidden])) .docsViewer__mainViewToolbar,
+.docsViewer__topRow:has(.docsViewer__collectionIndex:not([hidden]), [data-docs-collection-regenerate]) .docsViewer__mainViewToolbar,
 .docsViewer:has(.docsViewer__contentDetail--media) .docsViewer__topRow .docsViewer__mainViewToolbar{
   grid-column: 3;
   grid-row: 1;
 }
 
-.docsViewer__topRow:has(.docsViewer__collectionIndex:not([hidden])) .docsViewer__manageToolbarMount,
+.docsViewer__topRow:has(.docsViewer__collectionIndex:not([hidden]), [data-docs-collection-regenerate]) .docsViewer__manageToolbarMount,
 .docsViewer:has(.docsViewer__contentDetail--media) .docsViewer__topRow .docsViewer__manageToolbarMount{
   grid-column: 4;
   grid-row: 1;
 }
 
-.docsViewer__topRow:has(.docsViewer__collectionIndex:not([hidden])) > [data-docs-viewer-theme-toggle],
+.docsViewer__topRow:has(.docsViewer__collectionIndex:not([hidden]), [data-docs-collection-regenerate]) > [data-docs-viewer-theme-toggle],
 .docsViewer:has(.docsViewer__contentDetail--media) .docsViewer__topRow > [data-docs-viewer-theme-toggle]{
   grid-column: 5;
   grid-row: 1;

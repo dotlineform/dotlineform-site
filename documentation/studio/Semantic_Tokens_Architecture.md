@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260714-234030-434069
 title: Semantic Tokens Architecture
 added_date: "2026-07-14 23:40:30"
-last_updated: "2026-10-07 16:05:28"
+last_updated: "2026-10-07 17:39:42"
 summary: Describe Docs-owned image and explicit Catalogue tokens, source editing, document relationships, and local/public media resolution.
 parent_id: d-20260725-153656-516b61
 ---
@@ -78,7 +78,7 @@ Both Add Catalogue image and Add Media View link offer Use document subject, ini
 
 Work and Gallery text links and Work images are rendered as HTML markers carrying exact Catalogue identity. A Gallery marker uses `data-docs-media-kind="catalogue-gallery"` and its exact Gallery ID. The media provider resolves the presentation at runtime. The Links builder separately extracts Work document relationships from the authored tokens before rendering.
 
-For each Work image, the shared document builder reads `works/index/<work_id>.json` from the configured stage, validates the exact Work identity and required title, and reuses that record within one build. A missing or invalid media record fails image rendering; this is separate from document-link construction, which does not check the Catalogue document. The current `work.title` always supplies image alt text; `use_work_title_caption` controls its separate visible bold caption. When `include_work_metadata` is true, Build renders nonempty `year_display`, nonempty `medium_caption`, positive height × width × optional depth in centimetres, and `cat. <work_id>` as separate escaped lines in that order. It omits the dimensions line without both height and width. Authored `summary` follows the metadata with the existing figure gap; the figure also supports metadata or summary without a visible title caption. Generated HTML contains static text, including explicit metadata line breaks. Targeted and full Working builds use this path. Publish copies its already-captured Catalogue JSON into the temporary Preview build workspace before the same renderer runs; it does not reread live Working JSON during that build.
+For each Work image, the shared document builder reads `works/index/<work_id>.json` from the configured stage, validates the exact Work identity and required title, and reuses that record within one build. A missing or invalid media record fails image rendering; this is separate from document-link construction, which does not check the Catalogue document. The current `work.title` always supplies image alt text; `use_work_title_caption` controls its separate visible bold caption. When `include_work_metadata` is true, Build renders nonempty `year_display`, nonempty `medium`, positive height × width × optional depth in centimetres, and `cat. <work_id>` as separate escaped lines in that order. It omits the dimensions line without both height and width. Authored `summary` follows the metadata with the existing figure gap; the figure also supports metadata or summary without a visible title caption. Generated HTML contains static text, including explicit metadata line breaks. Targeted and full Working builds use this path. Publish copies its already-captured Catalogue JSON into the temporary Preview build workspace before the same renderer runs; it does not reread live Working JSON during that build.
 
 The browser resolves those markers using generated Catalogue data and the shared [Media View](Catalogue_Media_View.md) presentation. This is also the public path: it requires public generated Catalogue data, not local authoring endpoints or document existence.
 

@@ -349,7 +349,7 @@ def work_metadata_text(work: dict[str, Any], work_id: str) -> str:
     dimensions = " × ".join(value for value in (height, width, depth) if value) + " cm" if height and width else ""
     return "\n".join(value for value in (
         str(work.get("year_display") or "").strip(),
-        str(work.get("medium_caption") or "").strip(),
+        str(work.get("medium") or "").strip(),
         dimensions,
         f"cat. {work_id}",
     ) if value)

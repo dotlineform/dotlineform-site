@@ -3,20 +3,20 @@ draft: false
 doc_id: d-20261002-214356-1ea4a2
 title: Catalogue Documents And Metadata
 added_date: "2026-10-02 21:43:56"
-last_updated: "2026-10-07 17:11:09"
+last_updated: "2026-10-07 17:39:42"
 summary: Define a distinct Catalogue Entry token and review Work metadata so Catalogue documents provide complete public records with proper document semantics.
 ui_status: planned
 parent_id: d-20260428-000000-f5ff18
 ---
 # Catalogue Documents And Metadata
 
-Status: proposed feature, parented to [Planned Features](Planned_Features.md). This document records the intended outcome, the current gaps and decisions needed before implementation. The separately requested `provenance` and `artist` retirement is complete; the remaining proposal does not approve token implementation, further field removal, data migration or publication.
+Status: proposed feature, parented to [Planned Features](Planned_Features.md). This document records the intended outcome, the current gaps and decisions needed before implementation. The separately requested `provenance` and `artist` retirement and single `medium` migration are complete; the remaining proposal does not approve token implementation, further field removal, data migration or publication.
 
 ## Intended Outcome
 
 A Catalogue document is the definitive document for a Work. Its title defines the document, its image illustrates the Work, and its metadata describes the Work. It should remain meaningful when read on the public site or exported outside Docs Viewer.
 
-Retained descriptive Work metadata should be available in the public Catalogue document. A field appearing only in a Manage report is a gap to resolve, rather than a reason to keep it private. For a field that cannot reasonably be public, first ask whether it belongs in this system at all. Remove unnecessary fields; make useful retained fields public. The user requested retirement of `provenance` and `artist` on 2026-10-07; no other field removal has been agreed.
+Retained descriptive Work metadata should be available in the public Catalogue document. A field appearing only in a Manage report is a gap to resolve, rather than a reason to keep it private. For a field that cannot reasonably be public, first ask whether it belongs in this system at all. Remove unnecessary fields; make useful retained fields public. On 2026-10-07 the user requested retirement of `provenance` and `artist`, then migration of corrected `medium_caption` descriptions to `medium` and retirement of the separate `medium_type` category. No other field removal has been agreed.
 
 The authoring and rendering model should express this purpose explicitly through a separate **Catalogue Entry** token. **Catalogue Image** remains an image inserted into body content, with an optional figure caption. The builder executes each token's declared meaning without changing an image token's semantics according to the collection hosting the document.
 
@@ -24,23 +24,23 @@ The authoring and rendering model should express this purpose explicitly through
 
 Catalogue regeneration currently produces a Work image token followed by `[[links|related links]]`. The Work title is repeated in document front matter and the figure caption, but the caption renders as a styled span inside `figcaption`, rather than a document heading. The figure's selected metadata is limited to displayed year, medium description, physical dimensions and Catalogue number.
 
-The local [Catalogue Works report](/docs/?doc=d-20260810-222148-99daec) has Work, Year, Title, Series and Storage columns, plus Medium type and Medium caption in its expanded presentation. Its generated metadata is local-only. [Catalogue Works](Catalogue_Works.md) describes this current contract; its instructions to keep storage context private are current implementation guidance that this proposal would replace if a different field policy is approved.
+The local [Catalogue Works report](/docs/?doc=d-20260810-222148-99daec) has Work, Year, Title, Series and Storage columns, plus Medium in its expanded presentation. Its generated metadata is local-only. [Catalogue Works](Catalogue_Works.md) describes this current contract; its instructions to keep storage context private are current implementation guidance that this proposal would replace if a different field policy is approved.
 
-The public consumer Work JSON contains more information than the Catalogue document renders. Duration, medium type, pixel dimensions, links and downloads are already projected when populated. Storage location is omitted from that projection. Artist and provenance are retired. Series identity is projected, but a Series title is not included in the complete Work record. These are different problems: missing presentation, missing projection, and separately resolved relationship labels.
+The public consumer Work JSON contains more information than the Catalogue document renders. Duration, pixel dimensions, links and downloads are already projected when populated. The single descriptive `medium` field is projected and displayed in the Catalogue body and Media View. Storage location is omitted from the projection. Artist, provenance and the separate Medium category are retired. Series identity is projected, but a Series title is not included in the complete Work record. These are different problems: missing presentation, missing projection, and separately resolved relationship labels.
 
 “Public consumer projection” below means the generated Work JSON intended for public readers. It does not establish that the latest generated values have been published or deployed. Empty optional values are omitted from that JSON.
 
 ## Work Metadata Inventory
 
-This inventory was checked against the canonical Work fields, active editor definitions, generated Work projection, private report projection and image-token renderer on 2026-10-02, with the `artist` and `provenance` rows updated after their 2026-10-07 retirement. “Catalogue body” refers to the generated figure and Related links content, rather than all metadata used elsewhere in Docs Viewer.
+This inventory was checked against the canonical Work fields, active editor definitions, generated Work projection, private report projection and image-token renderer on 2026-10-02, with the retired fields and single Medium model updated on 2026-10-07. “Catalogue body” refers to the generated figure and Related links content, rather than all metadata used elsewhere in Docs Viewer.
 
 | Field or relationship | Public consumer projection today | Catalogue body today | Proposed treatment or decision |
 | --- | --- | --- | --- |
 | `work_id` | Exact five-digit identity | Catalogue number | Retain as the document identity and visible Catalogue number; preserve leading zeroes. |
 | `title` | Work title | Figure caption; also document metadata title | Retain as the document's H1, with its visual style controlled separately. |
 | `year`, `year_display` | Numeric year and display text | Display text only | Retain the distinction if numeric sorting and a richer displayed date are both needed; show the readable date without duplicating it as another visible number. |
-| `medium_type` | Present when populated | Omitted; available in expanded Manage report | Decide whether the category has a distinct browsing/classification purpose. If retained, expose it as Work metadata; if redundant, remove it through its consumers. |
-| `medium_caption` | Present when populated | Medium description | Retain useful medium description. Label it **Medium** or **Medium description** in an Entry, rather than treating it as the document's caption. Decide separately whether the source field name needs changing. |
+| `medium_type` | Retired | Omitted | Separate category removed on 2026-10-07. |
+| `medium` | Present when populated | Medium description | Corrected `medium_caption` values migrated exactly on 2026-10-07. Use **Medium** as the label; the old field name is retired without an alias. |
 | `height_cm`, `width_cm`, `depth_cm` | Present when populated | Height × width, with depth when supplied; requires height and width | Retain supported physical measurements with clear units and dimension order. Decide how partial measurements should display and whether depth is needed. |
 | `duration` | Present when populated | Omitted | Decide whether time-based Works are in scope. If retained, display duration and define its units/format; otherwise remove the unused field. |
 | `artist` | Retired | Omitted | Removed from canonical data, editor and public projection on 2026-10-07. |
@@ -60,7 +60,7 @@ This inventory was checked against the canonical Work fields, active editor defi
 
 The 2026-10-02 read-only canonical snapshot contained 4,616 Works. Storage location was populated for 481 Works; provenance for one. Artist, duration and depth were empty for every Work. Both medium fields and both year fields were populated for every Work. Physical height and width were each populated for 1,935 Works. Four Works had downloads and three had external links. The 2026-10-07 retirement removed `provenance` and `artist` from the then-current 4,618 Works; these historical population counts do not describe the current source shape.
 
-These counts describe populated values, not usefulness, validity or permission to publish. Empty fields are candidates for removal only after deciding their intended capability. Populated fields require a value review before removal or wider publication; no storage or provenance values are reproduced in this planning document. In particular, `medium_type` and `medium_caption` can serve different purposes even though both are populated.
+These historical counts describe populated values, not usefulness, validity or permission to publish. Empty fields are candidates for removal only after deciding their intended capability. Populated fields require a value review before removal or wider publication; no storage or provenance values are reproduced in this planning document. Before the Medium migration, the user corrected the two empty descriptions and the typo; all 4,618 corrected descriptions are retained exactly, while the category distinction is deliberately removed.
 
 ### Technical Data Boundary To Agree
 
@@ -119,7 +119,7 @@ The existing Work image markup is populated by the interactive media reader. A s
 - [x] Retire `provenance` and `artist` from canonical Works, the Work editor and affected field/projection owners, including removal of the populated provenance value.
 - [ ] Review `storage_location`; decide retain publicly, remove, or move administration out of this system.
 - [ ] Decide whether duration and depth have a real supported purpose despite currently being empty.
-- [ ] Decide whether medium type and medium description remain separate fields, and whether any labels or source names need changing.
+- [x] Migrate corrected `medium_caption` descriptions to one `medium` field labelled Medium and retire `medium_type` throughout active source, editor, generated projections and readers.
 - [ ] Agree readable dates, duration units and partial-dimension display without collapsing useful numeric/display distinctions.
 - [ ] Agree the Entry's metadata order, section hierarchy, resource presentation and treatment of direct versus Series-related Galleries.
 - [ ] Confirm token syntax, honest modal labels, principal-Entry authoring rule and the independent title style.
@@ -135,4 +135,6 @@ The result is complete when every retained descriptive field has a defined publi
 
 ## Inspection Basis
 
-The field and ownership findings come from [canonical Work fields](../../studio/services/catalogue/catalogue_source.py), [Work editor definitions](../../studio/app/frontend/js/catalogue-work-fields.js), [public scalar projection](../../studio/services/catalogue/catalogue_generation_records.py), [complete Work assembly](../../studio/services/catalogue/generate_work_pages.py), [private report projection](../../studio/services/catalogue/catalogue_works_metadata.py), [Catalogue body generation](../../docs-viewer/services/docs_catalogue_work_record.py), [token rendering](../../docs-viewer/build/docs_builder/semantic_tokens.py), [regeneration](../../docs-viewer/services/docs_catalogue_regeneration.py) and [rendered heading extraction](../../docs-viewer/services/docs_document_packages/rendered_content.py). The 2026-10-02 population counts came from a read-only inspection of canonical `works.json`. The separately authorized 2026-10-07 retirement changed canonical source, field owners and documentation; it did not run Refresh Catalogue or Publish. The [Catalogue Source Model](Catalogue_Source_Model.md#validation-and-field-changes) records the delivered field boundary.
+The field and ownership findings come from [canonical Work fields](../../studio/services/catalogue/catalogue_source.py), [Work editor definitions](../../studio/app/frontend/js/catalogue-work-fields.js), [public scalar projection](../../studio/services/catalogue/catalogue_generation_records.py), [complete Work assembly](../../studio/services/catalogue/generate_work_pages.py), [private report projection](../../studio/services/catalogue/catalogue_works_metadata.py), [Catalogue body generation](../../docs-viewer/services/docs_catalogue_work_record.py), [token rendering](../../docs-viewer/build/docs_builder/semantic_tokens.py), [regeneration](../../docs-viewer/services/docs_catalogue_regeneration.py) and [rendered heading extraction](../../docs-viewer/services/docs_document_packages/rendered_content.py). The 2026-10-02 population counts came from a read-only inspection of canonical `works.json`. The separately authorized 2026-10-07 retirements and Medium migration changed canonical source, field owners and documentation. The [Catalogue Source Model](Catalogue_Source_Model.md#validation-and-field-changes) records the delivered field boundary.
+
+Medium migration evidence: all 4,618 corrected descriptions were preserved exactly and all unrelated canonical metadata, IDs, ordering and the header were unchanged. The read-only canonical and field-inventory validators, explicit changed-source JavaScript/Python lint, Python syntax and whitespace checks passed. Local Refresh wrote 4,618 Work JSON records, regenerated private report metadata, deleted no generated files and queued all 4,618 Works for document Regenerate. A focused generated Work/report read confirmed the new schema and Medium shape. The single shared Media View runtime change was projected to `site/`; `bin/site-code-update --check` and `bin/site-validate` passed. Bounded code review traced current field ownership, exact request allowlists, generator/report agreement, six-column presentation and metadata readers, with no remaining findings. Tests and fixtures retain old field references and were neither changed nor run under the separate test-work policy; visual review remains manual. Restart Local Studio and hard-refresh the editor/Docs Viewer to load the changed server modules and browser assets. Regenerate, Publish, commit/push and public deployment remain separate actions; release the new public runtime together with the matching published Work JSON.

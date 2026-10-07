@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260925-134621-42c838
 title: Catalogue Works Front-End Browsing And Search
 added_date: "2026-09-25 13:46:21"
-last_updated: "2026-09-30 11:33:27"
+last_updated: "2026-10-07 17:39:42"
 summary: Refactor Catalogue Works to Studio-generated metadata with targeted entry updates after Save; Docs Viewer owns filtering and sorting, with a persistent search index considered only if performance requires it.
 parent_id: d-20260428-000000-f5ff18
 ---
@@ -67,7 +67,7 @@ The initial conversion preserved visible behavior. After reviewing its search de
 - Once browsing without search is adopted, clearing search should restore the initial descending Work ID listing. The current search-required report clears the results instead.
 - Returning from a Work preserves the list page, query, sort and return position.
 - Preserve five-digit Work IDs as strings, including leading zeros. Resolve identity from explicit generated fields, never from a title, filename or list position.
-- Use Work ID, title, Series ID and Series title as the starting search fields. Any additional field filters need a Catalogue Works requirement; whether a Medium filter uses `medium_type`, `medium_caption` or both remains a later field-policy decision.
+- Use Work ID, title, Series ID and Series title as the starting search fields. Any additional field filters need a Catalogue Works requirement; a Medium filter would use the single descriptive `medium` field and needs an agreed matching/grouping policy.
 
 Catalogue Works retains normalized substring matching across Work/Series IDs and titles, using values prepared once when the metadata loads. Later search changes should use generated report fields without fetching document bodies or reconstructing searchable fields from rendered HTML.
 

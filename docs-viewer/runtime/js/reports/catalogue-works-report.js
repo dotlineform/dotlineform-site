@@ -1,7 +1,7 @@
 import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
 import { buildViewerUrl } from "../shared/docs-viewer-router.js";
-const METADATA_SCHEMA = "catalogue_works_report_metadata_v1";
+const METADATA_SCHEMA = "catalogue_works_report_metadata_v2";
 const WORK_ID_PATTERN = /^[0-9]{5}$/;
 const SERIES_ID_PATTERN = /^[0-9]{3}$/;
 const PAGE_SIZE = 20;
@@ -13,8 +13,7 @@ const COLUMN_MODEL = Object.freeze([
   { id: "title", label: "Title", visibility: "both", sortable: true, copy: "both" },
   { id: "series", label: "Series", visibility: "both", sortable: true, copy: "both" },
   { id: "storage", label: "Storage", visibility: "both", sortable: true, copy: "both" },
-  { id: "medium_type", label: "Medium type", visibility: "expanded", sortable: false, copy: "expanded" },
-  { id: "medium_caption", label: "Medium caption", visibility: "expanded", sortable: false, copy: "expanded" }
+  { id: "medium", label: "Medium", visibility: "expanded", sortable: false, copy: "expanded" }
 ].map((column) => Object.freeze(column)));
 const SORTABLE_COLUMN_IDS = Object.freeze(COLUMN_MODEL.filter((column) => column.sortable).map((column) => column.id));
 const COPY_COLUMNS = Object.freeze(COLUMN_MODEL.filter((column) => column.copy === "both"));
@@ -70,7 +69,7 @@ export function normalizeCatalogueWorksMetadata(payload) {
 }
 
 function normalizeWorkRecord(key, value) {
-  if (!exactKeys(value, ["work_id", "title", "year", "year_display", "storage_location", "medium_type", "medium_caption", "series"])) {
+  if (!exactKeys(value, ["work_id", "title", "year", "year_display", "storage_location", "medium", "series"])) {
     throw new Error("Catalogue Works metadata row is invalid.");
   }
   const workId = cleanString(value && value.work_id);
@@ -78,8 +77,7 @@ function normalizeWorkRecord(key, value) {
   const year = value.year;
   const yearDisplay = visibleString(value && value.year_display);
   const storage = visibleString(value && value.storage_location);
-  const mediumType = visibleString(value && value.medium_type);
-  const mediumCaption = visibleString(value && value.medium_caption);
+  const medium = visibleString(value && value.medium);
   if (
     !WORK_ID_PATTERN.test(key)
     || value.work_id !== key
@@ -89,8 +87,7 @@ function normalizeWorkRecord(key, value) {
     || typeof value.year_display !== "string"
     || !yearDisplay
     || (value.storage_location !== null && typeof value.storage_location !== "string")
-    || (value.medium_type !== null && typeof value.medium_type !== "string")
-    || (value.medium_caption !== null && typeof value.medium_caption !== "string")
+    || (value.medium !== null && typeof value.medium !== "string")
     || !Array.isArray(value.series)
     || value.series.length > 1
   ) {
@@ -106,7 +103,7 @@ function normalizeWorkRecord(key, value) {
   });
   const searchValues = [workId, title, ...series.flatMap((record) => [record.seriesId, record.title])].map(searchString);
   const seriesSortValue = series.map((record) => record.title + " " + record.seriesId).join(" ");
-  return { mediumCaption, mediumType, searchValues, series, seriesSortValue, storage, title, workId, year, yearDisplay };
+  return { medium, searchValues, series, seriesSortValue, storage, title, workId, year, yearDisplay };
 }
 
 function rowMatches(row, query) {
@@ -162,8 +159,7 @@ function copyCellText(row, columnId) {
     title: row.title,
     series: seriesCellText(row),
     storage: storageCellText(row),
-    medium_type: row.mediumType || "—",
-    medium_caption: row.mediumCaption || "—"
+    medium: row.medium || "—"
   };
   return values[columnId] || "";
 }
@@ -297,8 +293,7 @@ function appendRow(state, row) {
   appendSeriesCell(rowNode, row);
 
   appendTextCell(rowNode, "storage", storageCellText(row), "catalogueWorksReport__cellMeta");
-  appendTextCell(rowNode, "medium_type", row.mediumType || "—", "catalogueWorksReport__cellMeta");
-  appendTextCell(rowNode, "medium_caption", row.mediumCaption || "—", "catalogueWorksReport__cellMeta");
+  appendTextCell(rowNode, "medium", row.medium || "—", "catalogueWorksReport__cellMeta");
   state.rowsNode.appendChild(rowNode);
 }
 

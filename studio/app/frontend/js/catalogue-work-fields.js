@@ -9,8 +9,7 @@ const WORK_FIELD_DEFINITIONS = Object.freeze({
   title: Object.freeze({ key: "title", label: "title", type: "text", required: true }),
   year: Object.freeze({ key: "year", label: "year", type: "number", step: "1", required: true }),
   year_display: Object.freeze({ key: "year_display", label: "year display", type: "text", required: true }),
-  medium_type: Object.freeze({ key: "medium_type", label: "medium type", type: "text" }),
-  medium_caption: Object.freeze({ key: "medium_caption", label: "medium caption", type: "text" }),
+  medium: Object.freeze({ key: "medium", label: "medium", type: "text" }),
   duration: Object.freeze({ key: "duration", label: "duration", type: "text" }),
   height_cm: Object.freeze({ key: "height_cm", label: "height cm", type: "number", step: "any" }),
   width_cm: Object.freeze({ key: "width_cm", label: "width cm", type: "number", step: "any" }),
@@ -28,8 +27,7 @@ const WORK_EDITABLE_FIELDS = Object.freeze([
   WORK_FIELD_DEFINITIONS.title,
   WORK_FIELD_DEFINITIONS.year,
   WORK_FIELD_DEFINITIONS.year_display,
-  WORK_FIELD_DEFINITIONS.medium_type,
-  WORK_FIELD_DEFINITIONS.medium_caption,
+  WORK_FIELD_DEFINITIONS.medium,
   WORK_FIELD_DEFINITIONS.duration,
   WORK_FIELD_DEFINITIONS.height_cm,
   WORK_FIELD_DEFINITIONS.width_cm,
@@ -48,8 +46,7 @@ const NEW_WORK_EDITABLE_FIELDS = Object.freeze([
   WORK_FIELD_DEFINITIONS.project_filename,
   WORK_FIELD_DEFINITIONS.year,
   WORK_FIELD_DEFINITIONS.year_display,
-  WORK_FIELD_DEFINITIONS.medium_type,
-  WORK_FIELD_DEFINITIONS.medium_caption,
+  WORK_FIELD_DEFINITIONS.medium,
   WORK_FIELD_DEFINITIONS.duration,
   WORK_FIELD_DEFINITIONS.height_cm,
   WORK_FIELD_DEFINITIONS.width_cm,
@@ -153,8 +150,7 @@ function buildWorkRecordFromDraft(draft, options = {}) {
   record.title = normalizeText(draft.title) || null;
   record.year = normalizeText(draft.year) ? Number(draft.year) : null;
   record.year_display = normalizeText(draft.year_display) || null;
-  record.medium_type = normalizeText(draft.medium_type) || null;
-  record.medium_caption = normalizeText(draft.medium_caption) || null;
+  record.medium = normalizeText(draft.medium) || null;
   record.duration = normalizeText(draft.duration) || null;
   record.height_cm = normalizeText(draft.height_cm) ? Number(draft.height_cm) : null;
   record.width_cm = normalizeText(draft.width_cm) ? Number(draft.width_cm) : null;

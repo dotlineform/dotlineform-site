@@ -14,7 +14,7 @@ from catalogue.catalogue_generation_common import (
 
 
 
-WORK_RECORD_SCHEMA_VERSION = "work_record_v9"
+WORK_RECORD_SCHEMA_VERSION = "work_record_v10"
 GALLERY_RECORD_SCHEMA_VERSION = "gallery_record_v1"
 
 
@@ -24,8 +24,7 @@ WORKS_SCHEMA: List[tuple[str, str, Any]] = [
     ("title", "title", coerce_string),
     ("year", "year", coerce_int),
     ("year_display", "year_display", coerce_string),
-    ("medium_type", "medium_type", coerce_string),
-    ("medium_caption", "medium_caption", coerce_string),
+    ("medium", "medium", coerce_string),
     ("duration", "duration", coerce_string),
     ("height_cm", "height_cm", coerce_numeric),
     ("width_cm", "width_cm", coerce_numeric),

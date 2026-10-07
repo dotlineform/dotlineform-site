@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260519-000000-a0da45
 title: Catalogue Source Model
 added_date: "2026-05-19 00:00:00"
-last_updated: "2026-10-07 17:11:09"
+last_updated: "2026-10-07 17:39:42"
 parent_id: d-20260401-000000-a11bf3
 
 ---
@@ -74,6 +74,8 @@ It checks allowed fields, exact IDs and map keys, required Series membership, me
 When changing a field, update its source definition, serializer, validation, editor and affected read projections together. The [Catalogue Field Registry](Catalogue_Field_Registry.md) inventories current source fields and output families; it does not plan Save or own serialization.
 
 Work `provenance` and `artist` are retired. Neither field belongs in canonical `works.json`, the Work editor, create/save requests, bulk updates or generated Work projections. The 2026-10-07 retirement removed both keys from all 4,618 canonical Works, including the one populated provenance value; all artist values were empty. Other metadata and Work identities remain intact.
+
+`medium` is the single descriptive text field for a Work's materials, process and support. The 2026-10-07 migration renamed each corrected `medium_caption` value to `medium` and removed `medium_type` from all 4,618 Works. It preserves descriptions exactly and deliberately retires the separate category distinction. The editor, request validation, field inventory, Work JSON, private report and document/Media View metadata use only `medium`, without old-field aliases. Generated Work JSON uses `work_record_v10`; the private Works report uses `catalogue_works_report_metadata_v2` and one expanded Medium column.
 
 ## Output Boundary
 

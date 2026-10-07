@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260728-113139-763354
 title: Sub-Scope Index Architecture
 added_date: "2026-07-28 11:31:39"
-last_updated: "2026-10-07 15:53:51"
+last_updated: "2026-10-07 17:51:20"
 summary: Collection-list ownership, exact document identity, registered customisations, retained selection and explicit management adoption.
 parent_id: d-20260801-084127-752d7e
 ---
@@ -225,6 +225,8 @@ The 2026-10-03 Subject-column removal passed explicit lint for the three changed
 
 ## Catalogue Work Records
 
+Regenerate sits in the shared document toolbar, aligned with the document view's left edge. The top-row layout uses the same document axis when Regenerate is present as it does for the collection Index control and Media View Back.
+
 Working Catalogue's management contribution replaces New with Regenerate and omits independent document Delete. Studio Works editor owns Work creation, metadata and generated JSON. [Regeneration service](../../docs-viewer/services/docs_catalogue_regeneration.py) reads the generated Work index and selected `works/index/<work_id>.json` records through the configured Catalogue output reader. Each Catalogue document uses the exact five-digit Work ID as its one immutable `doc_id`: quoted front matter, `<work_id>.md`, `by-id/<work_id>.json`, manifest membership and direct viewer child identity all agree. Source and manifests have no separate `work_id`, old document-ID alias or mapping file. Regenerate inventories source once and creates, updates, deletes and selects Build targets by that same ID. Updates retain identity, filename, added date and existing Links unless their source relationships change. Ordinary documents, other collections and the ordinary Catalogue report host retain `d-...` IDs; numeric document IDs are valid only in Catalogue context. Direct Catalogue New/Delete management requests are rejected; other collections retain their actions.
 
 Catalogue documents represent Works with generated content and are always publishable at the document level. Their source, management metadata, list manifests and by-ID payloads omit `draft`; creation and Regenerate do not seed it. Their Draft control is omitted, Set Draft is rejected, and source reads for owning writes or Build reject any `draft` field. Build, Publish, Search and Recents use fixed Catalogue eligibility. Publication still depends on the ordinary report host's eligibility. Other document collections retain their required boolean draft fields, controls and defaults.
@@ -239,7 +241,7 @@ New Catalogue documents receive their normal creation and update timestamps. For
 
 ```text
 <year_display>
-<medium_caption>
+<medium>
 <height × width × optional depth cm>
 cat. <work_id>
 ```

@@ -99,7 +99,7 @@ export function catalogueWorkMediaPresentation(payload, workId, mediaPolicy, ser
   }
   var image = catalogueImageCandidates(target, work, mediaPolicy);
   var metadata = [];
-  [["Year", "year_display"], ["Medium", "medium_caption"]].forEach(function (entry) {
+  [["Year", "year_display"], ["Medium", "medium"]].forEach(function (entry) {
     if (typeof work[entry[1]] === "string" && work[entry[1]].trim()) {
       metadata.push({ label: entry[0], value: work[entry[1]].trim() });
     }

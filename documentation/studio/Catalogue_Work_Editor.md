@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260422-000000-45a776
 title: Catalogue Work Editor
 added_date: "2026-04-22 00:00:00"
-last_updated: "2026-10-07 17:11:09"
+last_updated: "2026-10-07 17:39:42"
 parent_id: d-20260423-000000-d015e6
 
 ---
@@ -18,6 +18,8 @@ Use `/studio/catalogue-work/` to create, find, edit or delete canonical Works, i
 - Explicit IDs, numeric ranges or a mixture open bulk edit mode.
 
 The [Catalogue Source Model](Catalogue_Source_Model.md) owns the data boundary. Ordinary Save completes the canonical edit and required local media; [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns the separate generated-reader boundary.
+
+Medium is one descriptive text field for materials, process and support. It saves as `medium`; the former `medium_caption` name and separate `medium_type` field are retired.
 
 ## Create And Save
 

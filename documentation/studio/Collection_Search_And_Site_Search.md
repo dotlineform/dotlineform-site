@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260924-135214-baa9ec
 title: Collection Search And Site Search
 added_date: "2026-09-24 13:52:14"
-last_updated: "2026-09-27 15:28:26"
+last_updated: "2026-10-07 17:39:42"
 summary: Separate collection search, shared site-search and Recents coverage, and proposed editorial stars for a curated home-page report.
 parent_id: d-20260428-000000-f5ff18
 ---
@@ -173,7 +173,7 @@ Relevant lifecycle owners are [Prepare Preview](../../docs-viewer/services/docs_
 
 Represent the three search decisions independently in collection policy, with site search and Recents consuming the same inclusion decision. Keep membership selection separate from query matching and ranking. Reuse the existing full-text extraction and query engine for readable collections, while letting each search surface select its exact corpus. Separate collection indexes loaded on demand are a candidate design; choose their physical layout and shared build work during delivery specification rather than freezing that architecture here. Editorial stars form a separate selection across all collections.
 
-Catalogue should use a compact generated search projection of its selected fields, linked to the exact collection document and canonical Work identity. Resolve Series and Medium from their authoritative Catalogue fields. Search should not fetch every document body or scrape rendered content to reconstruct metadata. A Medium filter should preferably use a structured classification such as `medium_type`; confirm whether readers also need the descriptive `medium_caption`.
+Catalogue should use a compact generated search projection of its selected fields, linked to the exact collection document and canonical Work identity. Resolve Series and Medium from their authoritative Catalogue fields. Search should not fetch every document body or scrape rendered content to reconstruct metadata. A Medium filter would use the single descriptive `medium` field; any normalization or grouping needs its own agreed requirement now that the separate category is retired.
 
 For Catalogue, start with an empty result list and show a bounded page of matches after a query or useful filter selection. Decide separately whether to load the compact search data on opening or on first use. Distinguish initial transfer and parsing, query work, and result rendering when assessing speed. Payload measurements identify plausible costs, but browser responsiveness has not been measured and no performance target is yet agreed.
 
