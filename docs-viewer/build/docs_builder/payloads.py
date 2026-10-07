@@ -33,6 +33,7 @@ class PayloadBuilderMixin:
         )
         resolved = self.resolve_content_tokens(
             projected_markdown,
+            document_id=doc.doc_id,
         )
         try:
             rendered = self.inline_icons.render_markdown(

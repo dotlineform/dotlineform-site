@@ -588,9 +588,11 @@ export function initDocsViewerManagement(context) {
     });
   }
 
-  async function reloadDocsIndex(targetDocId) {
+  /** Reload reader data while retaining the exact ordinary or collection owner. */
+  async function reloadDocsIndex(target) {
+    var reloadTarget = target ? normalizeManagedDocumentTarget(target) : null;
     await context.routeCommands.loadIndex({ preserveDocument: true });
-    if (targetDocId) await context.routeCommands.loadDoc(targetDocId, { force: true });
+    if (reloadTarget) await context.routeCommands.loadDoc(reloadTarget, { force: true });
     context.setStatus("", false);
     renderManagementUi();
   }

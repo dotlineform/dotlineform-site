@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260331-000000-c313fd
 title: Runtime
 added_date: "2026-03-31 00:00:00"
-last_updated: "2026-10-07 15:53:51"
+last_updated: "2026-10-07 20:13:53"
 summary: Public, manage, and review execution paths; browser/server authority boundaries; extension method; rationale; and known weak spots.
 parent_id: d-20260424-000000-50b63f
 ---
@@ -44,6 +44,8 @@ Right-click or Shift+F10/the context-menu key opens the menu for its row. A temp
 ## Document Action Context And Toolbar Placement
 
 The [document controller](../../docs-viewer/runtime/js/shared/docs-viewer-document-controller.js) owns the exact displayed target and record for ordinary and named-collection documents. The [collection list](../../docs-viewer/runtime/js/shared/docs-collection-report.js) contributes its host document and containing collection context while that list is displayed; it owns no document detail reader. Named documents obtain their supported Manage actions and private metadata through the existing collection contribution owner, independently of a manifest or calling report. Loading, invalid and error states supply no action target. A retained hidden report cannot replace the active document's context.
+
+Full Rebuild and changed Settings refresh retain the displayed `{collection, doc_id}` target, or `{doc_id}` for an ordinary document. After reloading the Index, management forwards that same exact target to the reader. Reducing it to a document ID would send named-collection documents through the ordinary `/docs/doc` route and produce a false missing-document error after a successful operation.
 
 The [management control resolver](../../docs-viewer/runtime/js/management/docs-viewer-management-report-controls.js) and [collection action composition](../../docs-viewer/runtime/js/management/docs-viewer-management-collection-composition.js) consume the common reader's resolved targets. Edit, Open in VS Code, Draft/Ready and named-document actions use the displayed document; New and Regenerate use the containing collection; checked-row actions use the explicit collection selection. Source keeps its captured target, including when opening that source in VS Code. Management operations retain capability, busy, service and committed-result checks. Lists retain filtering, sorting, selection and reconciliation.
 

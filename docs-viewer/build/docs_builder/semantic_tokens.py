@@ -5,11 +5,13 @@ import json
 import math
 import re
 from uuid import uuid4
+from urllib.parse import urlsplit
 from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any, Callable, Iterable
 
 from .semantic_token_registry import SemanticTokenRegistry
+from .inline_icons import InlineIconRenderer
 from docs_workspace_config import location_child
 from docs_image_tokens import (
     FIGURE_NATURAL_WIDTH_CLASS,
@@ -79,6 +81,13 @@ def normalize_summary_text(value: Any) -> str:
         return ""
     normalized = value.replace("\r\n", "\n").replace("\r", "\n")
     return "\n".join(" ".join(line.split()) for line in normalized.split("\n")).strip()
+
+
+def serialize_catalogue_entry_token(work_id: str) -> str:
+    """Bind a generated Catalogue document to its exact Work, without options."""
+    if not isinstance(work_id, str) or not re.fullmatch(r"[0-9]{5}", work_id):
+        return ""
+    return f"[[catalogue:entry:work:{work_id}]]"
 
 
 def serialize_catalogue_image_token(
@@ -185,6 +194,17 @@ def parse_semantic_token(
     identity, separator, raw_fields = body.partition("|")
     parts = identity.split(":")
     family = parts[0] if parts else ""
+    is_entry = family == "catalogue" and len(parts) == 4 and parts[1] == "entry"
+    if is_entry:
+        if separator or parts[2] != "work" or not serialize_catalogue_entry_token(parts[3]):
+            return None
+        definition = registry.family(family) if registry else None
+        return SemanticTokenOccurrence(
+            raw=raw, family=family, target_type="work", target_id=parts[3], title="",
+            start=start, end=start + len(raw),
+            supported=definition is not None and definition.target_type("work") is not None,
+            presentation="entry",
+        )
     is_image = (
         family == "catalogue"
         and len(parts) == 4
@@ -370,12 +390,7 @@ def render_catalogue_media_reference(
             f'<span {attrs}><button type="button" class="docsViewer__mediaTextLink" data-docs-media-open>'
             f'{html.escape(token.title)}</button></span>'
         )
-    opener = (
-        f'<button type="button" class="docsViewer__mediaImageLink docsViewerFigure__imageLink" data-docs-media-open '
-        f'aria-label="{html.escape("Open " + alt + " in Media View", quote=True)}">'
-        f'<img data-docs-media-image alt="{html.escape(alt, quote=True)}" hidden>'
-        f'<span data-docs-media-placeholder>{html.escape(alt)}</span></button>'
-    )
+    opener = catalogue_image_control(alt)
     modifiers = [FIGURE_PLACEMENT_CLASSES[token.placement]]
     if not token.fill_width:
         modifiers.append(FIGURE_NATURAL_WIDTH_CLASS)
@@ -391,6 +406,77 @@ def render_catalogue_media_reference(
     return (
         f'<figure class="docsViewerFigure {" ".join(modifiers)}" {attrs}>{opener}'
         f'{figcaption}</figure>'
+    )
+
+
+def catalogue_image_control(alt: str, *, width: int | None = None, height: int | None = None) -> str:
+    """Reuse Media View activation; Entry supplies validated intrinsic dimensions."""
+    frame = ' docsViewerCatalogueEntry__frame' if width and height else ""
+    ratio = f' style="aspect-ratio: {width} / {height};"' if width and height else ""
+    dimensions = f' width="{width}" height="{height}"' if width and height else ""
+    return (
+        f'<button type="button" class="docsViewer__mediaImageLink docsViewerFigure__imageLink{frame}"{ratio} data-docs-media-open '
+        f'aria-label="{html.escape("Open " + alt + " in Media View", quote=True)}">'
+        f'<img data-docs-media-image alt="{html.escape(alt, quote=True)}"{dimensions} hidden>'
+        f'<span data-docs-media-placeholder>{html.escape(alt)}</span></button>'
+    )
+
+
+def catalogue_resource_url(value: Any) -> str:
+    """Require absolute HTTP(S) reader resources without credentials or controls."""
+    if not isinstance(value, str) or not value or re.search(r"[\s\x00-\x1f\x7f\\]", value):
+        raise ValueError("Catalogue resource URL is invalid")
+    try:
+        target = urlsplit(value)
+        port = target.port
+        if (target.scheme not in {"http", "https"} or not target.hostname
+                or target.username is not None or target.password is not None
+                or (port is not None and port <= 0)):
+            raise ValueError("Catalogue resource URL requires an absolute HTTP(S) target")
+    except ValueError as error:
+        raise ValueError("Catalogue resource URL is invalid") from error
+    return value
+
+
+def render_catalogue_entry(
+    token: SemanticTokenOccurrence, work: dict[str, Any], *, icons: InlineIconRenderer,
+) -> str:
+    """Render public Work content; omit the resource section when both lists are empty.
+
+    Build fails on malformed populated resources or image dimensions.
+    """
+    width, height = work.get("width_px"), work.get("height_px")
+    if type(width) is not int or type(height) is not int or width <= 0 or height <= 0:
+        raise ValueError(f"Catalogue Work {token.target_id} image dimensions are unavailable")
+    title = work["title"].strip()
+    image = catalogue_image_control(title, width=width, height=height)
+    metadata_lines = work_metadata_text(work, token.target_id).splitlines()
+    if len(metadata_lines) > 1:
+        metadata_lines.insert(-1, "")
+    metadata = "<br>".join(html.escape(line) for line in metadata_lines)
+    link_rows: list[str] = []
+    for key in ("downloads", "links"):
+        resources = work.get(key, [])
+        if not isinstance(resources, list):
+            raise ValueError(f"Catalogue Work {token.target_id} {key} list is invalid")
+        for resource in resources:
+            label = resource.get("label") if isinstance(resource, dict) else None
+            if not isinstance(label, str) or not label.strip():
+                raise ValueError(f"Catalogue Work {token.target_id} {key} label is unavailable")
+            href = catalogue_resource_url(resource.get("url"))
+            icon = icons.render("file" if key == "downloads" else "link", decorative=True)
+            link = f'{icon} <a href="{html.escape(href, quote=True)}" target="_blank" rel="noopener noreferrer">{html.escape(label)}</a>'
+            link_rows.append(f"<li>{link}</li>")
+    resources_html = (
+        '<div class="docsViewerCatalogueEntry__resources"><section data-catalogue-resource="links">'
+        f'<ul>{"".join(link_rows)}</ul></section></div>'
+    ) if link_rows else ""
+    return (
+        '<article class="docsViewerCatalogueEntry"><div class="docsViewerCatalogueEntry__record">'
+        f'<h1>{html.escape(title)}</h1>'
+        f'<figure class="docsViewerCatalogueEntry__image" data-docs-content-detail="media" '
+        f'data-docs-media-kind="catalogue-work" data-docs-media-id="{token.target_id}">{image}</figure>'
+        f'<p class="docsViewerCatalogueEntry__metadata">{metadata}</p></div>{resources_html}</article>'
     )
 
 
@@ -442,17 +528,27 @@ class SemanticTokensMixin:
     def resolve_semantic_tokens(
         self,
         markdown: str,
+        *, document_id: str = "",
     ) -> str:
-        """Render static image figures and Catalogue markers without a usage index."""
+        """Render media without writes; Entry needs its exact Catalogue document ID."""
         self._semantic_media_html: dict[str, str] = {}
+        entry_seen = False
 
         def replace(token: SemanticTokenOccurrence) -> str:
+            nonlocal entry_seen
             if not token.supported:
                 return token.raw
             if token.family == "image":
                 fragment = render_image_reference(
                     token, self.image_token_media_url(token.media_path),
                     svg=token.target_type == "svg",
+                )
+            elif token.presentation == "entry":
+                if getattr(self, "collection_id", "") != "catalogue" or token.target_id != document_id or entry_seen:
+                    raise ValueError("Catalogue Entry requires one token matching its Catalogue document identity")
+                entry_seen = True
+                fragment = render_catalogue_entry(
+                    token, self.catalogue_work_for_token(token.target_id), icons=self.inline_icons,
                 )
             else:
                 alt = caption = metadata = ""
@@ -466,7 +562,7 @@ class SemanticTokensMixin:
             # Comments start HTML blocks at line beginnings; inline references must not.
             marker = (
                 f"<!--semantic-media-{marker_id}-->"
-                if token.presentation == "image"
+                if token.presentation in {"image", "entry"}
                 else f'<span data-semantic-media-fragment="{marker_id}"></span>'
             )
             self._semantic_media_html[marker] = fragment

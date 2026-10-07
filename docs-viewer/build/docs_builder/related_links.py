@@ -76,5 +76,6 @@ def render_related_links(builder: DocsDataBuilder, doc: DocRecord, heading: str)
             href = (builder.rendered_viewer_target_for(destination.doc_id) if builder.config.stage == "review"
                     else "?" + canonical_document_viewer_url(destination.doc_id).split("?", 1)[1])
         rows.append(f'<li>{builder.inline_icons.render(icon, decorative=True)} <a data-docs-related-link="true" href="{html.escape(href, quote=True)}">{html.escape(summary.title)}</a></li>')
-    title = f'<h3>{html.escape(heading)}</h3>\n' if heading else ""
+    level = 2 if target.collection == "catalogue" else 3
+    title = f'<h{level}>{html.escape(heading)}</h{level}>\n' if heading else ""
     return f'<section data-docs-related-links="true">{title}<ul>\n' + "\n".join(rows) + "\n</ul></section>\n"

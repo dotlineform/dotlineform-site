@@ -131,9 +131,11 @@ class ContentRenderingMixin:
     def resolve_content_tokens(
         self,
         markdown: str,
+        *, document_id: str = "",
     ) -> str:
         resolved = self.resolve_semantic_tokens(
             markdown,
+            document_id=document_id,
         )
         return self.resolve_html_media_tokens(self.resolve_media_tokens(self.resolve_local_folder_links(resolved)))
 

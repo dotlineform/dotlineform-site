@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260714-234030-434069
 title: Semantic Tokens Architecture
 added_date: "2026-07-14 23:40:30"
-last_updated: "2026-10-07 17:39:42"
+last_updated: "2026-10-07 21:13:20"
 summary: Describe Docs-owned image and explicit Catalogue tokens, source editing, document relationships, and local/public media resolution.
 parent_id: d-20260725-153656-516b61
 ---
@@ -17,11 +17,14 @@ Catalogue tokens retain an exact Catalogue identity and authored occurrence fiel
 [[catalogue:media:work:00638|3 symbols]]
 [[catalogue:media:gallery:179|kylie structure 4 (details)]]
 [[catalogue:image:work:00638|use_work_title_caption=true&include_work_metadata=true&placement=left&fill_width=true]]
+[[catalogue:entry:work:00638]]
 ```
 
 Media View text links accept an exact five-digit Work ID or an exact Gallery ID. Gallery IDs use three digits or at least four digits without a leading zero. The serializer escapes backslash, pipe and closing bracket in the required single-line label; the parser decodes only those escapes. Work image identity also uses five digits. Detail and Series token forms remain literal and do not open Media View. The existing authored Series tokens in Working source were deliberately left unchanged when support was removed.
 
 Catalogue image fields use deterministic percent encoding and canonical field order. Work images require explicit boolean `use_work_title_caption` and `include_work_metadata` choices, placement (`full`, `left` or `right`) and boolean `fill_width`; `summary` is the only optional authored text. The token stores no literal Work title, alt text, caption or metadata. Catalogue image tokens support Works only. Gallery grids open through text links, with no inline group image.
+
+Catalogue Entry is Regenerate-owned and accepts only an exact five-digit Work identity, without fields or presentation options. It has no insertion action, editing modal or browser authoring parser. Build permits one Entry only in the Catalogue document with the same identity; a mismatched, repeated or ordinary-document Entry fails rendering. Catalogue Image retains its independent illustration and caption controls.
 
 Tokens always include their Work or Gallery identity, including Work tokens inserted through Use document subject. Gallery selection is independent of document Subjects. Media View link labels and image summaries are authored literal text; the image choices instruct Build to resolve the exact generated Work record. The experimental omitted-identity forms are retired without compatibility aliases.
 
@@ -50,7 +53,7 @@ Search removes each valid active image token entirely, replacing it with whitesp
 
 ## Parsing And Source Mutation
 
-Python Build and browser Source parsing recognize Docs-owned images and the explicit Catalogue `media` and `image` forms. Parsed occurrences retain raw text and zero-based half-open `[start, end)` range. Inline, indented and fenced code, HTML comments and preformatted HTML are inactive. A collapsed caret activates a supported occurrence only when `start < caret < end`; a shared boundary between adjacent tokens activates neither.
+Python Build and browser Source parsing recognize Docs-owned images and the explicit Catalogue `media` and `image` forms. Python also recognizes the generated Catalogue `entry` form for rendering, relationship extraction and audits. Parsed occurrences retain raw text and zero-based half-open `[start, end)` range. Inline, indented and fenced code, HTML comments and preformatted HTML are inactive. A collapsed caret activates a supported authorable occurrence only when `start < caret < end`; a shared boundary between adjacent tokens activates neither.
 
 Source remains directly editable. Malformed or unsupported strings remain ordinary literal source and do not activate a Catalogue Info view. Parser, source-range and retained media/image behavior have focused Python and JavaScript checks. The old frozen text-token fixture is retired.
 
@@ -82,17 +85,21 @@ For each Work image, the shared document builder reads `works/index/<work_id>.js
 
 The browser resolves those markers using generated Catalogue data and the shared [Media View](Catalogue_Media_View.md) presentation. This is also the public path: it requires public generated Catalogue data, not local authoring endpoints or document existence.
 
+Entry reuses that cached Work resolution and Media View image control, and emits an H1 from `work.title`, the same metadata lines, then a populated resource list without a heading. Gallery navigation stays with Media View, reached through the Context document's media links; Entry does not read or render Gallery memberships. The combined resource list contains downloads first, then external links, each in its stored order. Downloads use the canonical `file.svg` artwork and external links use `link.svg`, matching the Work editor. The build's existing cached inline icon renderer emits self-contained decorative masks. Downloads and external links use escaped labels and absolute HTTP(S) targets, rejecting credentials, whitespace, controls and backslashes. Malformed populated resources fail Build; the combined resource wrapper and its spacing are omitted only when both resource lists are empty. Storage, Series, duration and visible pixel dimensions are excluded from Entry content. Positive integer `width_px`/`height_px` are required for intrinsic image attributes and the proportional frame present in initial HTML. Catalogue CSS preserves that frame while the image is hidden and places loading/error status inside it. The H1 and metadata occupy the text column; resources follow below the image column. Public narrow layouts stack the content; local readers retain desktop presentation. No new media pipeline or Work store is introduced.
+
+Entry uses Body (16px, semibold) for its H1 and Small (14px) for metadata and resource lists. The following H2 `context` heading uses Small semibold. The combined resource list has no heading, bullets or indentation and uses `target="_blank"` with `rel="noopener noreferrer"`. Its wrapper adds one Small-text line of CSS padding in place of the former `links` heading, retaining roughly the same image-to-list gap. A blank metadata line separates descriptive values from `cat. <work_id>`; ordinary Catalogue Image metadata keeps its existing spacing.
+
 Empty Galleries open an empty grid. A missing Gallery or selected image produces runtime failure feedback without replacing its identity. Series token forms and Gallery image forms remain literal source.
 
 The builder escapes authored labels, Work-derived text and presentation fields. Media fragments are restored after Markdown processing so authored labels remain literal text. Build does not mutate authored source or choose a replacement identity. The browser still resolves the actual image and Media View from the marker's exact Work identity and current Catalogue consumer data.
 
 ## Document Relationships And Audit
 
-Supported Work image and Work Media View text tokens create an outgoing relationship to `{collection: "catalogue", doc_id: "<work_id>"}` through the existing [Document Build](Builder.md) Links owner. Repeated references produce one relationship and maintain the reciprocal incoming summary. Gallery Media View tokens produce no document relationship. A Catalogue document's token for its own Work renders normally and contributes no self-relationship.
+Supported Work image, Entry and Work Media View text tokens create an outgoing relationship to `{collection: "catalogue", doc_id: "<work_id>"}` through the existing [Document Build](Builder.md) Links owner. Repeated references produce one relationship and maintain the reciprocal incoming summary. Gallery Media View tokens produce no document relationship. A Catalogue document's token for its own Work renders normally and contributes no self-relationship.
 
 The Links builder constructs document relationships without checking destination existence or link validity. Saved records and current source metadata supply titles where available; missing metadata falls back to the authored label or document ID and never prevents relationship creation. Explicit document deletion removes its record and associated relationships. Existing Working publication exclusions remain owned by the Links policy. Subjects do not create these token relationships.
 
-Catalogue sources end with their Work image token, a blank line and `[[links|related links]]`. Related links renders recorded incoming and outgoing document relationships from the same refreshed in-memory records. The directive alone creates no graph record. [Related Links](Related_Links.md) describes the rebuild sequence and sparse record behavior.
+Generated Catalogue bodies use an Entry token, a blank line and `[[links|context]]`. The `context` text is the Catalogue heading for the independent Related links directive; ordinary insertion still defaults to `related links`. Regenerate Pending updates rebuilds existing unchanged-title sources without rewriting their bodies; Full reconciliation replaces generated bodies while preserving dates unless the Work-derived title changes. Related links renders recorded incoming and outgoing document relationships from the same refreshed in-memory records, with H2 in Catalogue and H3 in ordinary documents. The directive alone creates no graph record. [Related Links](Related_Links.md) describes the rebuild sequence and sparse record behavior.
 
 The stored semantic occurrence index and [Semantic Tokens report](Semantic_Tokens_Report.md) are retired. Raw text and source positions remain in the live parsers for Source editing and audits; Build no longer stores occurrence rows. The read-only [Docs Broken Links](Broken_Links.md) audit independently scans source and checks current generated Catalogue Work media or exact Gallery membership records. It distinguishes `missing_gallery` from `missing_media`. The audit does not retarget source or change publication state.
 
@@ -103,6 +110,8 @@ Public readers consume rendered document HTML, including Related links, and publ
 See [Source Editor UI](Semantic_Tokens_Source_Editor_UI.md) for the authoring and Info surfaces.
 
 ## Focused Grammar Evidence
+
+Entry has changed-source lint, syntax, bounded source review and a real `00008` targeted Build with generated-HTML inspection. It has no automated grammar or resource-validation tests. Pilot visual/loading/interaction acceptance remains manual; full-collection conversion and exhaustive malformed-input evidence are pending.
 
 The Docs-owned image grammar has lint and bounded source-review evidence only; no new or changed tests were authorized. The existing `test_docs_staged_media_fragments.py` still exercises removed Add image Markdown/HTML producers and needs separately scoped test retirement or replacement. Historical Catalogue checks below do not cover the new image family or its consumer integration. Manual insertion/editing and presentation acceptance remain with the user.
 

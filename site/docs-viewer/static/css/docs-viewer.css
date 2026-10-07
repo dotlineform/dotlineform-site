@@ -968,9 +968,13 @@ main.container:has(> .docsViewer){
   font-size: inherit;
 }
 
+.docsViewer__content .docsViewer__relatedLinksHeader > h2,
 .docsViewer__content .docsViewer__relatedLinksHeader > h3{
   min-width: 0;
   margin: 0;
+}
+
+.docsViewer__content .docsViewer__relatedLinksHeader > h3{
   font-size: var(--docs-viewer-font-heading-3);
   line-height: var(--docs-viewer-line-heading-3);
 }
@@ -1825,6 +1829,125 @@ main.container:has(> .docsViewer){
   .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__content .docsViewerFigure--image-right.docsViewerFigure--natural-width > img,
   .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__content .docsViewerFigure--image-right.docsViewerFigure--natural-width > .docsViewerFigure__imageLink{
     justify-self: start;
+  }
+}
+
+/* Regenerate-owned Work records keep headings outside the image figure. */
+.docsViewer__content .docsViewerCatalogueEntry{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--docs-viewer-space-5);
+  margin: var(--docs-viewer-space-5) 0;
+  font-size: var(--docs-viewer-font-small);
+}
+
+.docsViewer__content .docsViewerCatalogueEntry__record{
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: auto 1fr;
+  align-items: start;
+  column-gap: var(--docs-viewer-space-5);
+  row-gap: var(--docs-viewer-space-2);
+}
+
+.docsViewer__content .docsViewerCatalogueEntry__record > h1{
+  grid-column: 2;
+  grid-row: 1;
+  margin: 0;
+  font-size: var(--docs-viewer-font-body);
+  font-weight: 600;
+  line-height: var(--docs-viewer-line-normal);
+}
+
+.docsViewer__content .docsViewerCatalogueEntry__metadata{
+  grid-column: 2;
+  grid-row: 2;
+  margin: 0;
+  font-size: var(--docs-viewer-font-small);
+  line-height: var(--docs-viewer-line-normal);
+}
+
+.docsViewer__content .docsViewerCatalogueEntry__image{
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+.docsViewer__content .docsViewerCatalogueEntry__frame{
+  position: relative;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+}
+
+.docsViewer__content .docsViewerCatalogueEntry__frame > img,
+.docsViewer__content .docsViewerCatalogueEntry__frame > [data-docs-media-placeholder]{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+.docsViewer__content .docsViewerCatalogueEntry__frame > img{
+  display: block;
+  object-fit: contain;
+}
+
+.docsViewer__content .docsViewerCatalogueEntry__frame > [data-docs-media-placeholder]:not([hidden]){
+  display: grid;
+  align-items: center;
+}
+
+.docsViewer__content .docsViewerCatalogueEntry__image > [role="status"]{
+  position: absolute;
+  inset: auto 0 0;
+  background: var(--docs-viewer-bg);
+  font-size: var(--docs-viewer-font-caption);
+}
+
+.docsViewer__content .docsViewerCatalogueEntry__resources{
+  grid-column: 1;
+  min-width: 0;
+  padding-top: calc(var(--docs-viewer-font-small) * var(--docs-viewer-line-normal));
+}
+
+.docsViewer__content .docsViewerCatalogueEntry__resources > section > ul{
+  font-size: var(--docs-viewer-font-small);
+  line-height: var(--docs-viewer-line-normal);
+}
+
+.docsViewer__content .docsViewerCatalogueEntry + [data-docs-related-links] h2{
+  font-size: var(--docs-viewer-font-small);
+  font-weight: 600;
+  line-height: var(--docs-viewer-line-normal);
+}
+
+.docsViewer__content .docsViewerCatalogueEntry + [data-docs-related-links]{
+  font-size: var(--docs-viewer-font-small);
+}
+
+.docsViewer__content .docsViewerCatalogueEntry__resources > [data-catalogue-resource="links"] > ul{
+  list-style: none;
+  padding: 0;
+}
+
+@media (max-width: 820px){
+  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__content .docsViewerCatalogueEntry,
+  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__content .docsViewerCatalogueEntry__record{
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__content .docsViewerCatalogueEntry__record > h1,
+  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__content .docsViewerCatalogueEntry__metadata,
+  .docsViewer[data-docs-viewer-app-kind="public"] .docsViewer__content .docsViewerCatalogueEntry__image{
+    grid-column: 1;
+    grid-row: auto;
   }
 }
 

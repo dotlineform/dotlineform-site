@@ -32,7 +32,7 @@ export function mountDocsViewerRelatedLinks(options) {
     var list = section.querySelector(":scope > ul");
     if (!list || !list.querySelector("a[data-docs-related-link]") || section.querySelector("[data-docs-related-pin]")) return;
     var documentRef = content.ownerDocument;
-    var heading = section.querySelector(":scope > h3");
+    var heading = section.querySelector(":scope > h2, :scope > h3");
     var header = documentRef.createElement("div");
     header.className = "docsViewer__relatedLinksHeader";
     var button = documentRef.createElement("button");

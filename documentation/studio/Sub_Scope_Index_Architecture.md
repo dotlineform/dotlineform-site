@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260728-113139-763354
 title: Sub-Scope Index Architecture
 added_date: "2026-07-28 11:31:39"
-last_updated: "2026-10-07 17:51:20"
+last_updated: "2026-10-07 21:13:20"
 summary: Collection-list ownership, exact document identity, registered customisations, retained selection and explicit management adoption.
 parent_id: d-20260801-084127-752d7e
 ---
@@ -237,7 +237,7 @@ Full reconciliation repairs missing, changed and orphaned Catalogue documents fr
 
 New Catalogue documents receive their normal creation and update timestamps. For an existing document, Regenerate advances `last_updated` only when the Work-derived front-matter title changes. Generated-body/template changes and source-format normalization preserve both `added_date` and `last_updated`, even when Full reconciliation rewrites the Markdown. Build-only work also preserves those source dates. Publish copies the resulting source metadata and does not advance document timestamps. This policy applies to subsequent regeneration; it does not restore dates already advanced by earlier operations.
 
-[Work-record generator](../../docs-viewer/services/docs_catalogue_work_record.py) defines the body in code. Each body contains one ordinary `catalogue:image:work` token containing the explicit Work ID, `use_work_title_caption=true`, `include_work_metadata=true`, `placement=left` and `fill_width=true`, followed by a blank line and `[[links|related links]]`. Regenerate maintains that complete body for existing and newly created documents. The Work's own token creates no self-relationship; Related links displays recorded document references and creates no graph record by itself. [Related Links](Related_Links.md) owns the rebuild sequence. The front-matter title also comes from the Work title, while the token stores no literal Work-derived text. The document builder resolves the current generated Work title and selected metadata on each Build, in this order:
+[Work-record generator](../../docs-viewer/services/docs_catalogue_work_record.py) defines the body in code. New bodies contain one identity-only `[[catalogue:entry:work:<work_id>]]` token, followed by a blank line and the separate `[[links|context]]` directive. Entry has no authoring UI or presentation fields. Its Work H1 and metadata sit alongside the proportional image frame. A combined resource list without a heading contains downloads with file icons and external links with link icons, with one Small-text line of CSS spacing above it. Gallery navigation stays with Media View through the Context document's media links. Related links uses H2 `context` in Catalogue documents. The Work's own token creates no self-relationship; Related links displays recorded document references and creates no graph record by itself. [Related Links](Related_Links.md) owns the rebuild sequence. The front-matter title also comes from the Work title, while the token stores no literal Work-derived text. The document builder resolves the current generated Work title and selected metadata on each Build, in this order:
 
 ```text
 <year_display>
@@ -246,7 +246,7 @@ New Catalogue documents receive their normal creation and update timestamps. For
 cat. <work_id>
 ```
 
-Empty optional metadata lines are omitted. Dimensions use positive numeric `height_cm`, `width_cm` and optional `depth_cm`; the whole dimensions line is omitted if height or width is missing, and whole numbers omit `.0`. There are no Markdown templates or JSON field definitions. Regenerate creates or replaces the bound token and updates a changed front-matter title on the existing document; other pending Work changes build without rewriting Markdown. To refresh rendered Work metadata, first Refresh Catalogue so generated JSON is current, then run Pending updates for Catalogue documents. A broader Docs Build is required to refresh bound Work tokens in other collections. [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md) owns the bound token grammar and rendering contract.
+Empty optional metadata lines and resource sections are omitted. Dimensions use positive numeric `height_cm`, `width_cm` and optional `depth_cm`; the whole dimensions line is omitted if height or width is missing, and whole numbers omit `.0`. Technical `width_px` and `height_px` supply intrinsic image attributes and reserve the frame before runtime media loading. Storage stays private; Series and duration are not Entry content. There are no Markdown templates or JSON field definitions. Generated Catalogue bodies use Entry followed by `[[links|context]]`. Regenerate creates or replaces that body and updates a changed front-matter title on the existing document; other pending Work changes build without rewriting Markdown. Full reconciliation replaces all generated bodies and preserves their dates when Work-derived titles are unchanged. To refresh rendered Work metadata, first Refresh Catalogue so generated JSON is current, then run Pending updates for Catalogue documents. Refresh bound Work tokens in other collections by rebuilding those documents separately. [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md) owns token grammar and rendering.
 
 ### Catalogue Collection Browsing
 

@@ -293,8 +293,8 @@ export function createDocsViewerManagementActionController(options) {
     if (callbacks.renderManagementUi) callbacks.renderManagementUi();
   }
 
-  function reloadDocsIndex(targetDocId, summaryText) {
-    return callbacks.reloadDocsIndex ? callbacks.reloadDocsIndex(targetDocId, summaryText) : Promise.resolve();
+  function reloadDocsIndex(target) {
+    return callbacks.reloadDocsIndex ? callbacks.reloadDocsIndex(target) : Promise.resolve();
   }
 
   function reloadViewerConfiguration() {
@@ -483,14 +483,16 @@ export function createDocsViewerManagementActionController(options) {
   }
 
   function handleRebuildDocs() {
+    var target = normalizeManagedDocumentTarget(selectedDocument.documentTarget || {
+      doc_id: context.defaultRouteDocId() || context.defaultDocId()
+    });
     setManagementBusy(true);
     setManagementMessage("Rebuilding docs and Search...", false);
 
     rebuildManagedDocs(managementClientOptions())
       .then(function () {
-        var targetDocId = selectedDocument.selectedDocId || context.defaultRouteDocId() || context.defaultDocId();
         setManagementMessage("", false);
-        return reloadDocsIndex(targetDocId, "");
+        return reloadDocsIndex(target);
       })
       .catch(function (error) {
         setManagementMessage(error.message || "Docs and Search rebuild failed.", true);
@@ -566,10 +568,12 @@ export function createDocsViewerManagementActionController(options) {
         setManagementMessage(ACTION_TEXT.settingsSaved, false);
         var defaultDocChange = payload && payload.changes ? payload.changes.default_doc_id : null;
         var proposedDefaultDocId = defaultDocChange ? String(defaultDocChange.proposed_value || "").trim() : "";
-        var targetDocId = selectedDocument.selectedDocId || proposedDefaultDocId || context.defaultDocId();
+        var target = normalizeManagedDocumentTarget(selectedDocument.documentTarget || {
+          doc_id: proposedDefaultDocId || context.defaultDocId()
+        });
         if (payload && payload.changed) {
           return reloadViewerConfiguration().then(function () {
-            return callbacks.reloadDocsIndex ? callbacks.reloadDocsIndex(targetDocId) : null;
+            return reloadDocsIndex(target);
           });
         }
         if (callbacks.renderManagementUi) callbacks.renderManagementUi();
