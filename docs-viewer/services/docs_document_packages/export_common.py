@@ -21,6 +21,11 @@ def normalize_text(value: Any) -> str:
     return PUNCTUATION_SPACING_RE.sub(r"\1", text)
 
 
+def flatten_summary(value: Any) -> str:
+    """Package Summary is one paragraph, without changing its punctuation."""
+    return TEXT_WHITESPACE_RE.sub(" ", str(value or "")).strip()
+
+
 def trim_blank_lines(lines: list[str]) -> list[str]:
     start = 0
     end = len(lines)

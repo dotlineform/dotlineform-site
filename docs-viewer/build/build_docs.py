@@ -63,7 +63,6 @@ from docs_builder.source import (
     FrontMatterSyntaxError,
     extract_title,
     front_matter_boolean,
-    parse_front_matter_value,
     parse_source,
 )
 

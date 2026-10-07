@@ -9,6 +9,7 @@ from typing import Any
 
 from docs_document_packages import source_context as docs_source_context
 from docs_document_packages.returned_common import issue, normalize_text
+from docs_document_packages.export_common import flatten_summary
 from docs_workspace_config import path_label
 
 
@@ -100,9 +101,11 @@ def add_current_source_report(
         }
         if current_doc:
             current_state["source_renderable"] = doc_id in renderable_ids
-            current_state["current_summary"] = current_doc.summary
+            current_state["current_summary"] = flatten_summary(current_doc.summary)
             if "current_summary" in metadata:
-                current_state["staged_current_summary_matches"] = str(metadata.get("current_summary") or "") == current_doc.summary
+                current_state["staged_current_summary_matches"] = (
+                    flatten_summary(metadata.get("current_summary")) == current_state["current_summary"]
+                )
         record["current_source"] = current_state
 
         if not doc_id:

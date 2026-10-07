@@ -47,7 +47,7 @@ export function mountDocsViewerRelatedLinks(options) {
       settings.onPin(Object.freeze({
         target: Object.freeze({ collection: target.collection || "", doc_id: target.doc_id }),
         title: String(payload.title || ""),
-        summary: String(payload.summary || "").trim(),
+        summary: String(payload.summary || "").replace(/\r\n?/g, "\n").trim(),
         list: list.cloneNode(true)
       }));
     });
@@ -71,9 +71,14 @@ export function createDocsViewerRelatedLinksView() {
     var body = mount.ownerDocument.createElement("div");
     body.className = "docsViewer__relatedLinksBody";
     if (capture.summary) {
-      var summary = mount.ownerDocument.createElement("p");
-      summary.textContent = capture.summary;
-      body.appendChild(summary);
+      capture.summary.split(/\n[ \t]*\n+/).forEach(function (paragraph) {
+        var summary = mount.ownerDocument.createElement("p");
+        paragraph.split("\n").forEach(function (line, index) {
+          if (index) summary.appendChild(mount.ownerDocument.createElement("br"));
+          summary.appendChild(mount.ownerDocument.createTextNode(line));
+        });
+        body.appendChild(summary);
+      });
     }
     if (capture.list) body.appendChild(capture.list.cloneNode(true));
     if (body.childNodes.length) mount.appendChild(body);

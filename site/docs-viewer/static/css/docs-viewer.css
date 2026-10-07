@@ -1176,6 +1176,10 @@ main.container:has(> .docsViewer){
   margin: 0;
 }
 
+.docsViewer__content .docsViewer__summary > p + p{
+  margin-top: var(--docs-viewer-space-3);
+}
+
 .docsViewer__content pre[data-docs-viewer-inline-mermaid-state="rendering"]{
   border-inline-start: 3px solid var(--docs-viewer-border-strong);
 }

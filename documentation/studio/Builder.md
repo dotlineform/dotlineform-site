@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260423-000000-c9f3ea
 title: Builder
 added_date: "2026-04-23 00:00:00"
-last_updated: "2026-10-07 11:49:40"
+last_updated: "2026-10-07 14:42:04"
 parent_id: d-20260424-000000-50b63f
 ---
 # Builder
@@ -157,7 +157,7 @@ Save, watcher builds and individual-document rebuilds update the prepared record
 
 The common front matter is `doc_id`, `title`, `parent_id`, `added_date`, `last_updated`, and optional `summary`. Ordinary and other named-collection sources additionally require `draft` as an explicit boolean in Working and captured preparation input. Catalogue sources reject that field and have fixed document eligibility; Catalogue creation, Regenerate, management metadata, list manifests and by-ID payloads omit it. Source loading, Search, preparation and Source Save validate the owning collection's readiness rule before using or writing the document. New ordinary and other collection documents, imported documents and collection report hosts start with `draft: true`. Prepared sources retain applicable captured readiness fields, while public reader payloads omit authoring readiness. An excluded ordinary collection host still excludes its collection, including Catalogue. Ordinary workspace documents additionally support free-text `ui_status`, without a fixed value enumeration; this includes the text `draft`, which has no publication effect. Named collection documents do not use that field: source formatting and collection-placement rewrites remove it, collection management manifests and by-ID metadata omit it, and the metadata endpoint omits it for collection targets. The reader's optional status artwork is a separate presentation mapping. `publishable` is retired and rejected. The ignore list is separate Working source policy data and is not copied into prepared content. Source validation is owned by the builder/source model.
 
-- new documents give `added_date` and `last_updated` one captured full timestamp; after creation, only body, `title`, or `summary` changes advance `last_updated`.
+- new documents give `added_date` and `last_updated` one captured full timestamp; after creation, only body, `title`, or `summary` changes advance `last_updated`. Summary comparison normalizes line endings and outer whitespace while retaining internal breaks; equivalent quoted/literal-block representations do not create a content change.
 - edited Recent includes only full `last_updated` timestamps; legacy date-only values become eligible after the next qualifying edit.
 - Ordinary ignore roots, draft state and inherited descendant exclusions select document bodies for Preview; they do not filter Working relationships, picker targets or captured related-list destinations.
 - `draft: true` records temporary authoring readiness. An omitted destination's title/link remains visible without adding its body or a publication warning/gate.
@@ -182,7 +182,11 @@ In Source, choose **Directives → Summary** to insert the token with block spac
 
 ```md
 ---
-summary: A short introduction maintained once in document metadata.
+summary: |-
+  First supporting line.
+  Second supporting line.
+
+  Another paragraph.
 ---
 # Document title
 
@@ -191,11 +195,17 @@ summary: A short introduction maintained once in document metadata.
 Main document text…
 ```
 
-This example shows only the relevant metadata; normal document identity, dates and readiness fields are still required. The shared ordinary/collection payload builder supplies its normalized `summary` to `summary_directive.py` through the Markdown renderer. Each standalone occurrence becomes a paragraph inside `.docsViewer__summary`, with the quote style's theme-aware panel background, spacing and padding, and no quote border. The text is HTML-escaped plain text: Markdown, HTML and tokens inside Summary are displayed literally. A missing or blank Summary produces no block. Inline occurrences, escaped tokens, fenced/indented code, comments and raw HTML retain normal literal behavior. No token options or automatic placement are supported.
+This example shows only the relevant metadata; normal document identity, dates and readiness fields are still required. Summary accepts the existing single-line scalar syntax, double-quoted `\n` escapes, and space-indented YAML literal blocks using `|` or `|-`. `|` clips the value to one final newline; `|-` removes it. The shared `docs-viewer/services/docs_front_matter.py` owner retains the existing scalar field types and adds literal blocks only for Summary; this is not general YAML support. Folded blocks, other chomping/indentation modifiers and nested YAML are outside this grammar.
 
-Source retains the token and front matter. Working document builds and the temporary publication build expand the Summary captured for that document; readers need no runtime lookup. Static Export consumes the expanded by-ID content. Search continues to index Summary as its existing metadata field and omits active standalone directives from body terms without expanding them a second time; literal code examples remain searchable. No Search rebuild accompanies an ordinary document edit. Adding the token or changing Summary follows the normal Source Save and watcher flow; Publish updates public document data separately.
+In Source, type two spaces at the start of each Summary content line; Tab is not needed. Leave blank paragraph lines empty and keep `summary:` and the next metadata field unindented. Use the same space indentation for every content line.
 
-The 2026-10-06 implementation has focused Python lint/syntax, public stylesheet projection, site validation and bounded source-review evidence. No automated behavior tests or browser checks were authorized or run; expansion, escaping, empty/literal cases, Export and visual presentation remain manually unconfirmed.
+Summary normalization converts CRLF/CR to LF and trims outer whitespace, retaining internal text, newlines and blank lines. General source serialization writes multiline Summary using `|-`; targeted Source normalization leaves an already normalized authored representation intact. Source rewrites operate on complete field spans, so indented `#`, colons, field-looking lines and `---` inside a literal block remain text instead of becoming metadata or delimiters. Metadata changes and timestamp updates do not rewrite Summary content inadvertently.
+
+The shared ordinary/collection payload builder supplies this string to `summary_directive.py` through the Markdown renderer. Each standalone occurrence becomes escaped paragraphs inside `.docsViewer__summary`; a newline within a paragraph becomes `<br>`, and blank-line runs separate paragraphs. The panel retains the quote style's theme-aware background, spacing and padding without its border. Markdown, HTML and tokens inside Summary are displayed literally. A missing or blank Summary produces no block. Inline occurrences, escaped tokens, fenced/indented code, comments and raw HTML retain normal literal behavior. No token options or automatic placement are supported. The Info panel displays the same paragraph/line-break meaning from its captured metadata string using safe text nodes.
+
+Source retains the token and front matter. Working document builds and the temporary publication build expand the Summary captured for that document; readers need no runtime lookup. Static Export consumes the expanded by-ID content, retaining its explicit HTML breaks in both outputs. [Package Prepare](Package_Prepare.md) consistently flattens Summary to one paragraph in `summary`, `current_summary` and any expanded body occurrence without changing canonical source. Supported returned Import applies the supplied Summary string, so a flattened returned value can remove canonical breaks; an externally supplied multiline value is serialized with `|-`. Search separately normalizes whitespace for its existing Summary metadata field and omits active standalone directives from body terms without expanding them a second time; literal code examples remain searchable. No Search rebuild accompanies an ordinary document edit. Adding the token or changing Summary follows the normal Source Save and watcher flow; Publish updates public document data separately.
+
+The multiline extension on 2026-10-07 has focused Python/JavaScript lint, Python syntax/import diagnostics, shared runtime projection/site validation, Working docs-only reconciliation and bounded source-review evidence. The user accepted the delivery on 2026-10-07 after spaces-based authoring guidance. No behavior tests, browser checks, real package preparation/Import or Export actions were run by Codex, and detailed manual outcomes were not recorded; acceptance does not add behavioral evidence. Public document data awaits separately authorized Publish.
 
 ## Preview And Deployment Boundary
 

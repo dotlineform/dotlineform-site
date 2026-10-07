@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import re
 import subprocess
 import sys
 from pathlib import Path
@@ -15,7 +14,8 @@ if str(SHARED_PYTHON_DIR) not in sys.path:
 
 import docs_source_model as source_model  # noqa: E402
 from docs_management_context import DEFAULT_MARKDOWN_APP_ENV, log_event  # noqa: E402
-from docs_management_mutations import normalize_metadata_text, normalize_summary  # noqa: E402
+from docs_management_mutations import normalize_metadata_text  # noqa: E402
+from docs_front_matter import normalize_summary, rewrite_front_matter_fields  # noqa: E402
 from docs_management_document_target import (  # noqa: E402
     committed_document_record,
     ManagedDocumentCollection,
@@ -67,8 +67,8 @@ def read_source_document(repo_root: Path, params: Dict[str, list[str]]) -> Dict[
 
 def normalize_source_metadata(front_matter_source: str, front_matter: Dict[str, Any]) -> str:
     """Normalize Title/Summary without rewriting unrelated authored lines."""
-    lines = front_matter_source.splitlines(keepends=True)
-    newline = "\r\n" if lines[0].endswith("\r\n") else "\n"
+    updates: Dict[str, str] = {}
+    removed: list[str] = []
     for key in ("title", "summary"):
         if key not in front_matter and key == "summary":
             continue
@@ -81,13 +81,12 @@ def normalize_source_metadata(front_matter_source: str, front_matter: Dict[str, 
             raise ValueError("title is required")
         if value and value == raw_value:
             continue
-        pattern = re.compile(rf"^[ \t]*{key}[ \t]*:")
-        indices = [index for index, line in enumerate(lines) if pattern.match(line)]
-        insertion = indices[0] if indices else len(lines) - 1
-        lines = [line for index, line in enumerate(lines) if index not in indices]
         if value:
-            lines.insert(insertion, f"{key}: {source_model.format_front_matter_value(value)}{newline}")
-    result = "".join(lines)
+            updates[key] = value
+        else:
+            removed.append(key)
+    newline = "\r\n" if front_matter_source.startswith("---\r\n") else "\n"
+    result = rewrite_front_matter_fields(front_matter_source, updates, remove_fields=removed)
     return result if result.endswith("\n") else result + newline
 
 

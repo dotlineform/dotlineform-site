@@ -3,36 +3,36 @@ draft: false
 doc_id: d-20261007-122704-b0389d
 title: Multiline Summary Delivery
 added_date: "2026-10-07 12:27:04"
-last_updated: "2026-10-07 12:27:04"
-summary: Proposed preservation of Summary line and paragraph breaks through front matter, source rewrites, document rendering, packages and HTML Export.
-ui_status: proposed
+last_updated: "2026-10-07 14:42:04"
+summary: Accepted multiline Summary source and rendering with consistent Package Prepare flattening, retained HTML Export breaks and recorded verification limits.
+ui_status: complete
 parent_id: d-20260428-000000-f5ff18
 ---
 # Multiline Summary Delivery
 
 ## Current And Next State
 
-Status: proposed; documentation only. The user requested this delivery to retain the consequences and separate implementation pieces discussed on 2026-10-07. Code implementation, tests, generated-data changes and publication have not been authorized by that request. Next: confirm the bounded syntax and whitespace rules at readiness, then obtain implementation approval. This delivery is parented to [Planned Features](../Planned_Features.md) and extends the existing [Summary block](../Builder.md#summary-block).
+Status: complete and accepted by the user on 2026-10-07, after spaces-based Summary authoring guidance. Source, document/Info rendering and HTML Export retain breaks; packages flatten both Summary fields and expanded Summary body text, with matching comparison normalization, as the user requested. Focused static checks, service import diagnostics, public runtime projection/site validation and Working docs-only reconciliation passed. No tests, browser automation, real package/Import/Export actions, Search rebuild, Publish, commit or push were run by Codex; detailed manual package/Export outcomes were not supplied. Retain this delivery for consequence lookup pending manual archive. This delivery is parented to [Planned Features](../Planned_Features.md) and extends [Builder's Summary block](../Builder.md#summary-block).
 
-Current source inspection found separate front-matter readers in the builder and source model, builder whitespace normalization that flattens Summary, source-rewrite helpers that scan individual lines, escaped single-paragraph Summary rendering, and an Info panel that assigns Summary to one paragraph's text content. Package Prepare takes Summary from the builder's source record; its Summary field mappings and returned-record handling already carry strings without their own whitespace flattening. Package body conversion starts from rendered HTML, while [Export](../Export.md) starts from saved generated HTML and writes both a browseable snapshot and `portable.html`. This records the starting point, not implementation readiness or behavioral verification.
+The shared front-matter owner now reads scalar fields and Summary literal-block spans for the builder, source services and relevant Import readers. General formatting, targeted Source normalization, timestamps, collection placement and Review materialization use that owner. Builder metadata preserves internal newlines; reader/Info output represents them safely. Package source records and package-only rendering use one whitespace-flattening policy, and returned current-summary comparison uses the same policy. Export consumes generated HTML with shared snapshot/portable Summary styling. There is no full YAML migration, new package shape or added return authority.
 
 ## Requirements
 
-The complete result lets an author maintain line and paragraph breaks once in front-matter Summary and retain that meaning through source edits, document builds, the reader, packages, returned import and HTML Export.
+The complete result lets an author maintain line and paragraph breaks once in front-matter Summary, retain them through source edits, document builds, readers and HTML Export, and deliberately flatten them at the Package Prepare boundary.
 
-- Accept standard YAML literal-block authoring for `summary`. The proposed bounded syntax is `|` and `|-`; generated multiline front matter uses `|-`. Confirm this limit at readiness. Folded `>` blocks, `|+`, explicit indentation indicators, nested YAML, anchors, tags and a full YAML migration are separate scope decisions.
-- Preserve internal line breaks and blank lines as plain-text content. Normalize line endings consistently and define treatment of outer whitespace and the final newline before implementation; the proposed display behavior omits outer blank lines and preserves internal line/paragraph boundaries. Keep existing single-line values and double-quoted `\n` input valid, without compatibility aliases or a bulk source conversion.
+- Accept standard YAML literal-block authoring for `summary` using `|` and `|-`; generated multiline front matter uses `|-`. Folded `>` blocks, `|+`, explicit indentation indicators, nested YAML, anchors, tags and a full YAML migration remain separate scope decisions.
+- Preserve internal line breaks and blank lines as plain-text content. Normalize CRLF/CR to LF and trim outer whitespace, including the final newline; blank-line runs represent paragraph boundaries in rendered output. Keep existing single-line values and double-quoted `\n` input valid, without compatibility aliases or a bulk source conversion.
 - Keep parsing, validation and serialization consistent across ordinary and configured collection sources, Source Save, metadata/body rewrites, package Review and supported returned Import. Literal-block contents may contain colons, `#`, field-looking text or indented `---`; those are Summary text, not metadata fields, comments or closing delimiters. Malformed blocks must produce useful source errors rather than silently becoming unrelated fields.
 - Preserve Summary's string type in by-ID and list metadata. Apply Summary-specific text handling without changing whitespace or field-type behavior for titles, identities, dates, readiness, Subject or other metadata. A change to actual Summary content or internal breaks follows existing `last_updated`/Recent rules; changing between equivalent source representations should not manufacture a content change.
 - Render escaped plain text with explicit HTML line breaks within paragraphs and paragraph elements for blank-line boundaries. Markdown, HTML and directive-looking text inside Summary remain literal. Keep the existing Summary panel style and empty-summary omission. The Info panel must display the same line/paragraph meaning safely, without adding another Markdown interpretation path.
-- Preserve line/paragraph meaning in Package Prepare's `summary` and `current_summary`, rendered-derived Markdown/plain-text `content`, supported returned-package review/import, and both HTML Export outputs. YAML syntax belongs in Markdown front matter; structured package fields contain decoded strings, and HTML contains rendered text. No package schema change is proposed solely because strings contain newlines.
+- Flatten whitespace consistently in Package Prepare's `summary`, `current_summary` and expanded `[[summary]]` content while preserving unrelated body paragraphs. Normalize both values for returned current-summary comparison. Supported returned Import applies the supplied string: a flattened return can remove source breaks, while an externally authored multiline return is written using `|-`. Both HTML Export outputs preserve reader breaks. YAML syntax belongs in Markdown front matter; structured package fields contain strings, and HTML contains rendered text. These policies require no package schema change.
 - Search continues to normalize whitespace for indexing its Summary metadata field and omit active `[[summary]]` directives from body terms. Multiline authoring does not add YAML markers to searchable Summary text, change Search membership or require an automatic Search rebuild.
 
 ## Deliverables
 
 - Consistent literal-block reading and source writing through the existing source/build owners, with shared parsing responsibility where practical instead of two independently extended grammars. The implementation must preserve existing scalar field semantics; introducing a full YAML parser requires a separate decision if it changes those semantics.
 - Summary-specific metadata preservation, multiline `[[summary]]` output and safe Info-panel presentation in local and public readers. Do not change image-token or Catalogue-image summaries under this document-Summary feature.
-- Package Prepare and supported return handling that preserve multiline strings, plus rendered-content conversion that retains explicit breaks. Existing selection, missing-summary filtering, provenance and collection return-eligibility rules continue through their current owners.
+- Package Prepare that flattens Summary before field mapping and before body rendering, with matching returned baseline comparison and unchanged existing conversion for unrelated content. Supported return handling retains the supplied value rather than reconstructing discarded breaks. Selection, missing-summary filtering, provenance and collection return eligibility continue through their current owners.
 - HTML Export and `portable.html` that retain the generated Summary's breaks, with any necessary snapshot styling contained in the existing Export owner. Export remains a consumer of generated content and does not begin reading or rebuilding canonical source.
 - Required shared/public runtime projection, an explicitly scoped Working generated-output reconciliation, and durable authoring/package/Export guidance. Public document data updates through the existing separately authorized Publish operation.
 
@@ -42,10 +42,11 @@ The complete result lets an author maintain line and paragraph breaks once in fr
 | --- | --- |
 | Markdown source | `summary: \|` or `summary: \|-` followed by indented literal text; canonical multiline writes use `\|-`. |
 | Parsed/source/build metadata | One string with real newline characters; do not carry the `\|` marker or indentation used only to delimit the block. |
-| JSON/JSONL packages and generated JSON | A string encoded with JSON `\n` escapes. JSON parsing restores newlines; keep each JSONL record on one physical line. |
+| Generated JSON | A string encoded with JSON `\n` escapes; JSON parsing restores newlines. |
+| JSON/JSONL packages | Flattened `summary` and `current_summary` strings; no YAML markers or Summary line breaks. Each JSONL record remains one physical line. |
 | Generated document and Export HTML | Escaped text with explicit paragraph/line-break markup; preserve meaning without relying on `white-space` CSS alone. |
-| Package Markdown/plain-text body | Converted rendered content retains line/paragraph meaning, even when its textual representation differs from canonical source. |
-| Supported returned package applied to source | Preserve decoded Summary breaks and serialize multiline front matter using `\|-`; preserve existing Import authority and field ownership. |
+| Package Markdown/plain-text body | Expanded Summary is one paragraph because the package-only renderer receives a flattened value; unrelated body paragraphs retain their existing conversion behavior. |
+| Supported returned package applied to source | Apply the supplied string. A flat return removes breaks; an externally supplied multiline value is written using `\|-`. Import authority and field ownership are unchanged. |
 | Search | Normalized text for indexing; literal-block markers and source indentation are not content. |
 
 ## Process
@@ -64,70 +65,70 @@ summary: |-
 [[summary]]
 ```
 
-This excerpt omits normal identity, dates and readiness fields. Summary remains plain text. `|` includes a final newline in the parsed YAML value; `|-` removes it. The agreed normalization rules determine whether that outer newline has any display or Recent significance. The literal-block syntax reference is the [YAML block scalar specification](https://yaml.org/spec/1.2.2/#81-block-scalar-styles).
+This excerpt omits normal identity, dates and readiness fields. Summary remains plain text. `|` includes a final newline in the parsed value; `|-` removes it. Summary normalization trims outer whitespace, so that final newline has no display or Recent significance. The literal-block syntax reference is the [YAML block scalar specification](https://yaml.org/spec/1.2.2/#81-block-scalar-styles).
 
-Source Save retains its current completion boundary and the watcher performs normal document projection work. Metadata-only operations must preserve the Summary value and must not edit field-looking lines inside it. A returned supported package carries, for example, `"summary": "First line.\nSecond line.\n\nAnother paragraph."`; existing whole-package Import applies the string and writes readable multiline source.
+Source Save retains its current completion boundary and the watcher performs normal document projection work. Metadata-only operations preserve the Summary value and do not edit field-looking lines inside it. Package Prepare emits, for example, `"summary": "First line. Second line. Another paragraph."` and the same normalized `current_summary`. Existing whole-package Import applies the supplied Summary rather than restoring the original breaks. Externally supplied newline-containing values remain supported and are written as readable multiline source.
 
-Package Prepare reads current source, so it must receive the newline-preserving Summary through its existing builder-backed source context. Its body may contain the expanded Summary only when the document actually includes `[[summary]]`; this feature adds no automatic placement or deduplication between body text and Summary fields. HTML Export reads generated payloads, so it reflects multiline output only after the owning document build has produced it. Existing exported folders, already prepared packages and saved public document data do not change when runtime code changes.
+Package Prepare reads current source through its builder-backed context, then projects flattened Summary into source records and a temporary document value for package rendering without mutating canonical source. Its body contains expanded Summary only when the document actually includes `[[summary]]`; there is no automatic placement or deduplication between body text and Summary fields. HTML Export reads generated payloads, so it reflects multiline output only after the owning document build has produced it. Existing exported folders, already prepared packages and saved public document data do not change when runtime code changes.
 
 ## Delivery Steps
 
 ### MS-0 — Readiness
 
-- [ ] Confirm `|`/`|-` support, Summary-only scope, newline/outer-whitespace semantics, existing scalar preservation and the complete source → render → package/Export outcome.
-- [ ] Confirm the implementation order and broad ownership across source/build, reader, package and Export. Stop for an explicit scope decision if a full YAML migration, new package schema/profile, new return authority or unrelated multiline field support becomes necessary.
+- [x] Confirm `|`/`|-` support, Summary-only scope, newline/outer-whitespace semantics, existing scalar preservation and the complete source → render → package/Export outcome.
+- [x] Confirm the implementation order and broad ownership across source/build, reader, package and Export. No full YAML migration, new package schema/profile, return authority or unrelated multiline field support was needed.
 
-Verification budget: concise read-only inspection of the owning boundaries and current policy; no prototypes, generated writes or executable tests. Gate: the specification is coherent and implementation is explicitly approved. Record: proposed; the discussion and source observations are captured above, but this gate has not been completed.
+Verification budget: concise read-only inspection of the owning boundaries and current policy. Gate: specification coherent and implementation approved. Record: complete; user approval and subsequent package-flattening choice define the implemented scope.
 
 ### MS-1 — Parsing And Source Rewrites
 
-- [ ] Implement consistent literal-block parsing and validation without changing unrelated scalar types or accepted single-line authoring.
-- [ ] Preserve Summary through Source Save, general formatting, timestamp updates, collection-placement rewrites and supported Import writes. Field detection must identify top-level metadata and ignore indented Summary content; generic source rewrites must not leave orphaned block lines.
-- [ ] Compare semantic Summary content under the agreed whitespace rules for existing edit timestamps and Recent behavior; preserve body text and unrelated fields.
+- [x] Implement consistent literal-block parsing and validation without changing unrelated scalar types or accepted single-line authoring.
+- [x] Preserve Summary through Source Save, general formatting, timestamp updates, collection-placement rewrites and supported Import writes. Field detection identifies complete field spans and ignores indented Summary content.
+- [x] Compare semantic Summary content under the agreed whitespace rules for existing edit timestamps and Recent behavior; preserve body text and unrelated fields.
 
-Verification budget: focused changed-Python lint/syntax and bounded source review for indentation, blank lines, field-looking text and rewrite safety; normally seconds for diagnostics, with source-review cost dependent on the final diff. Tests or temporary regression scripts require their own approved specification. Gate: parsing and all in-scope write paths agree on the same Summary value; any behavioral evidence gaps are named. Record: not started.
+Verification budget: focused changed-Python lint/syntax and bounded review of indentation, blank lines, field-looking text and rewrite safety; static diagnostics took less than a second and wrote only normal caches. Gate: source/build/write owners share the same field parser and serializer. Record: complete; `docs_front_matter.py` replaces duplicate scalar parsing and line-scanned mutation with literal-block spans. Ordinary Markdown import retains its existing policy of ignoring metadata other than Title while safely reading Summary blocks; supported package intake uses the shared grammar. Real Source Save/rewrite edge cases remain manually unconfirmed.
 
 ### MS-2 — Metadata And Reader Rendering
 
-- [ ] Replace Summary's blanket whitespace flattening at its owning builder boundary while retaining Search's separate normalization and other metadata semantics.
-- [ ] Render Summary paragraphs and intra-paragraph breaks explicitly and safely; retain empty/literal-token behavior and existing panel styling.
-- [ ] Update Info-panel Summary presentation and any in-scope reader consumer that would otherwise flatten or misinterpret the multiline string. Check ordinary and configured collection payloads through their shared owners.
+- [x] Replace Summary's blanket whitespace flattening at its owning builder boundary while retaining Search's separate normalization and other metadata semantics.
+- [x] Render Summary paragraphs and intra-paragraph breaks explicitly and safely; retain empty/literal-token behavior and existing panel styling.
+- [x] Update Info-panel Summary presentation through safe text nodes and explicit elements, sharing ordinary/collection payload semantics.
 
-Verification budget: changed-source lint/syntax and bounded review of escaping, metadata handoff and generated HTML shape; inexpensive static diagnostics do not prove rendering behavior. User manual review covers line/paragraph spacing, Info-panel presentation and empty/literal content. No browser automation is implied. Gate: document and Info-panel behavior is coherent, and visual acceptance or its pending state is recorded. Record: not started.
+Verification budget: changed-source lint/syntax and bounded review of escaping and metadata handoff. Gate: implementation coherent; user accepted delivery closeout. Record: complete; `summary_directive.py` emits escaped paragraphs/`<br>`, related-links presentation builds safe DOM nodes, and shared CSS supplies paragraph spacing. JS lint and Python syntax passed. Codex exercised no browser or multiline rendering behavior; no detailed manual rendering results were recorded.
 
 ### MS-3 — Packages, Review And Returned Import
 
-- [ ] Preserve `summary` and `current_summary` as JSON strings with newline escapes, retain missing-summary filtering for whitespace-only values, and keep existing tree/profile mappings within their current contracts.
-- [ ] Inspect rendered HTML → Markdown/plain-text conversion and change it only where necessary to retain the Summary's explicit line/paragraph breaks. CSS-only preservation is insufficient for these converters.
-- [ ] Carry multiline strings through supported returned-record normalization, read-only Docs Review materialization and whole-package Import, then serialize readable multiline Summary source. Check any retained canonical-Markdown package intake against the same source parser without introducing a new export profile or return path.
+- [x] Flatten `summary` and `current_summary` consistently before existing package mappings, retaining missing-summary filtering and tree/profile contracts.
+- [x] Flatten package-only Summary rendering before existing HTML → Markdown/plain-text conversion, without changing unrelated body content or converter semantics.
+- [x] Normalize both sides of current-summary comparison; retain supplied return values through existing read-only Review and whole-package Import. Multiline Review/source formatting uses `|-`, and retained canonical-Markdown intake reads complete field spans without a new export profile or return path.
 
-Verification budget: focused static diagnostics and bounded review of field mapping, conversion, JSON/JSONL serialization and existing review/import ownership. Real package preparation writes exports/provenance; review materialization writes review output; Import mutates canonical source. Record exact selections, effects and costs before exercising these operations. Tests, new fixtures and executable regression scripts remain separately approved work. Gate: the package string and rendered-body boundaries preserve meaning without changing eligibility or mutation authority; behavioral evidence limits are explicit. Record: not started.
+Verification budget: focused static/import diagnostics and bounded review of mappings, package-only rendering, comparison and Import ownership. Gate: consistent flattening without changed eligibility/mutation authority; evidence limits explicit. Record: complete; package source records and rendering use one `flatten_summary` helper, and returned comparison uses the same whitespace policy. A read-only import diagnostic for source management, package routes, ordinary import preview and HTML Export passed with `.env.local` exported; it took less than a second and launched no server. No real package, Review materialization or Import action was run; those write external artifacts or canonical source and remain manual verification gates.
 
 ### MS-4 — Export, Projection And Generated Follow-Through
 
-- [ ] Preserve explicit Summary breaks in the browseable HTML snapshot and `portable.html`, accounting for their own rendering/styles. Do not add source reads, automatic rebuilds or YAML syntax to HTML Export.
-- [ ] For changed inventoried shared runtime files, run `bin/site-code-update`, inspect the exact `site/` delta, then run `bin/site-code-update --check` and `bin/site-validate`. Update the inventory only if a file's public status actually changes.
-- [ ] Agree the necessary Working document reconciliation because a global parser/renderer contract is changing. Use an intentional docs-only reconciliation with `--skip-media-builds` when authorized; avoid source migration and registered-media work. Record that Search stays unchanged until separately requested and public document data awaits authorized Publish.
+- [x] Preserve explicit Summary breaks in both HTML Export outputs and their own styles, without source reads, automatic rebuilds or YAML syntax in Export.
+- [x] Run shared runtime projection, review the exact two-file `site/` delta, then run projection check and site validation; no inventory update was needed.
+- [x] Reconcile ordinary Working documents and all four configured collections using intentional full docs-only builds with `--skip-media-builds --skip-browser-config`; avoid source migration and registered-media work. Search and public document data remain separately requested operations.
 
-Verification budget: public projection/check/site validation for actual shared changes; runtime/cost depends on the final inventory and should be recorded before running. Existing Export actions write external snapshot folders, and generated reconciliation writes Working output, so define the real selection and write effects before execution. User manual review covers both Export representations and public presentation. Gate: required runtime projection is verified, generated follow-through is accounted for, and existing packages/exports/public data are not represented as automatically updated. Record: not started.
+Verification budget: projection/check/site validation and the authorized global parser/renderer reconciliation across the configured existing Working source owners; no media production, browser startup or network effects. Gate: runtime projection verified and generated/public boundaries accounted for. Record: complete; `bin/site-code-update` changed only projected `docs-viewer-related-links.js` and `docs-viewer.css`; its `--check` and `bin/site-validate` passed. `build_docs.py --stage working --write --skip-media-builds --skip-browser-config` completed for ordinary documents (33), then with `--collection` for works (238), concepts (246), moments (58) and catalogue (4,616), totaling 5,191 documents with zero warnings. These builds took seconds, wrote one ordinary Recent/index output and two existing Catalogue by-ID payloads, removed nothing and changed no collection manifests/relationships. No real HTML Export or public-data Publish was run.
 
 ### MS-5 — Code Review
 
-- [ ] Review the final bounded diff for duplicated parser rules, accidental full-YAML semantics, block-content mistaken for metadata, unsafe HTML insertion, newline loss in conversions, unrelated Summary fields, compatibility residue and publication ownership drift.
-- [ ] Reconcile completion claims with exact evidence and resolve in-scope findings; rerun only checks affected by review changes.
+- [x] Review the bounded final diff for duplicated parser rules, accidental full-YAML semantics, block-content mistaken for metadata, unsafe HTML insertion, unrelated Summary fields, compatibility residue and publication ownership drift.
+- [x] Reconcile completion claims with exact evidence and resolve in-scope findings; rerun only affected checks.
 
-Verification budget: bounded final-diff review and only justified follow-up diagnostics; no repository audit or automatic suite. Gate: findings are resolved or explicitly scoped for later work, and material evidence gaps remain visible. Record: not started.
+Verification budget: bounded final-diff/source review; no repository audit or automatic suite. Gate: no blocking review finding remains, with behavioral limits explicit. Record: complete; review covered shared grammar/scalar preservation, complete block replacement, delimiter/field-looking content, semantic edit dates, escaped HTML/safe DOM, package-only flattening and comparison, return authority and exact public projection. The package decision avoided unnecessary changes to the general HTML-to-Markdown converter. One unused import found by lint was removed; subsequent Python lint/syntax passed. Tests/browser automation were not run; user acceptance does not extend the recorded verification coverage.
 
 ### MS-6 — Documentation And Closeout
 
-- [ ] Transfer shipped syntax and normalization/rendering rules to [Builder](../Builder.md), source rewrite/edit semantics to their durable owner, and package/Export consequences to [Package Prepare](../Package_Prepare.md), [Docs Review](../Docs_Review.md) and [Export](../Export.md) where their contracts changed.
-- [ ] Record selected evidence, user acceptance or pending manual gates, Working/public generated status and separately requested Publish/commit/push outcomes.
-- [ ] Update this delivery and Planned Features, then present a retain-or-retire recommendation after durable transfer. Keep the delivery for consequence lookup while useful; do not delete it without approval.
+- [x] Transfer syntax/source semantics to [Builder](../Builder.md) and [Source Editor Endpoints](../Source_Editor_Endpoints.md), reader presentation to [Info Panel](../Info_Panel.md), and package/Export consequences to [Package Prepare](../Package_Prepare.md), [Docs Review](../Docs_Review.md) and [Export](../Export.md).
+- [x] Record selected evidence, user acceptance on 2026-10-07, Working reconciliation and separate public-data/commit/push outcomes.
+- [x] Update this delivery and Planned Features; retain both for consequence lookup pending manual archive. No document deletion is proposed now.
 
-Verification budget: documentation/source/diff review, with no repeated runtime checks solely for closeout. Gate: one complete multiline-Summary outcome is delivered and durable owners are current; publication and manual-review limits are explicit. Record: not started.
+Verification budget: documentation/source/diff review without repeating runtime checks solely for closeout. Gate: complete and accepted; durable owners current and publication remains separate. Record: user authorized closure on 2026-10-07 after the spaces-based indentation guidance; Builder now records that guidance. Code review is not applicable to this final documentation-only status edit; a bounded source/diff review reuses the implementation evidence above. No tests/fixtures/harnesses were changed or run, and no Docs/Search rebuild was triggered by repository documentation edits. Retain the delivery and Planned Features link for the user-requested consequence record until manual archive.
 
 ## Follow-on And Verification Policy
 
-Full YAML adoption, additional block-scalar forms or multiline metadata fields, rich-text Summary content, new package profiles, and broader test-suite cleanup are separate proposals if needed. There is no proposed requirement to retrofit existing package/export artifacts or rebuild Search for this feature.
+Full YAML adoption, additional block-scalar forms or multiline metadata fields, rich-text Summary content, new package profiles, and broader test-suite cleanup remain separate proposals if needed. Existing package/export artifacts are not retrofitted, and Search is not rebuilt for this feature.
 
 [Development Checklist](../Development_Checklist.md), [Testing](../Testing.md) and [Test Contract Discipline](../Test_Contract_Discipline.md) govern implementation and evidence selection. No tests, fixtures, harnesses, profile changes, temporary regression scripts or browser automation are approved by this planning document. Any proposed test work needs its own bounded specification and durable coverage record outside this delivery. Existing checks must be inspected for actual coverage and cost before selection; static evidence and manual review should be reported at their actual limits.

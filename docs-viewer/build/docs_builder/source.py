@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from collections.abc import Collection, Mapping
-import json
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -10,13 +9,12 @@ from urllib.parse import quote
 
 from .common import (
     FRONT_MATTER_PATTERN,
-    INTEGER_PATTERN,
     humanize,
-    normalize_text,
 )
 from docs_document_identity import is_document_id, is_immutable_doc_id
 from docs_document_images import has_document_thumbnail
 from docs_document_subjects import validate_document_subject_fields
+from docs_front_matter import normalize_summary, read_front_matter_fields
 from docs_index_order import read_index_order, tree_parent_ids
 from docs_report_source import ReportDescriptor, ReportSourceContractRequired
 from docs_source_model import (
@@ -66,29 +64,6 @@ class DocRecord:
     body_markdown: str
     source_text: str | None
     front_matter: dict[str, Any] = field(default_factory=dict)
-def parse_front_matter_value(raw_value: str) -> Any:
-    value = raw_value.strip()
-    if value == '""':
-        return ""
-    lowered = value.lower()
-    if lowered == "true":
-        return True
-    if lowered == "false":
-        return False
-    if INTEGER_PATTERN.fullmatch(value):
-        try:
-            return int(value)
-        except ValueError:
-            return value
-    if len(value) >= 2 and value[0] == value[-1] and value[0] in {"'", '"'}:
-        if value[0] == '"':
-            try:
-                parsed = json.loads(value)
-                return parsed if isinstance(parsed, str) else value[1:-1]
-            except json.JSONDecodeError:
-                return value[1:-1]
-        return value[1:-1].replace("\\'", "'")
-    return value
 
 
 def parse_source_text(raw: str, *, source_name: str) -> tuple[dict[str, Any], str]:
@@ -96,19 +71,10 @@ def parse_source_text(raw: str, *, source_name: str) -> tuple[dict[str, Any], st
     if not match:
         return {}, raw
 
-    front_matter: dict[str, Any] = {}
-    for index, line in enumerate(match.group(1).splitlines(), start=2):
-        stripped = line.strip()
-        if not stripped or stripped.startswith("#"):
-            continue
-        if ":" not in stripped:
-            raise FrontMatterSyntaxError(f"problem with front-matter on doc {source_name} at line {index}: expected key: value")
-        key, value = stripped.split(":", 1)
-        key = key.strip()
-        if not key:
-            raise FrontMatterSyntaxError(f"problem with front-matter on doc {source_name} at line {index}: empty key")
-        front_matter[key] = parse_front_matter_value(value)
     try:
+        front_matter = {field.key: field.value for field in read_front_matter_fields(
+            match.group(1), source_name=source_name, require_pairs=True,
+        )}
         validate_document_subject_fields(front_matter)
     except ValueError as error:
         raise FrontMatterSyntaxError(f"problem with front-matter on doc {source_name}: {error}") from error
@@ -199,7 +165,7 @@ class SourceLoadingMixin:
             date_display = str(front_matter.get("date_display") or "").strip()
             last_updated = str(front_matter.get("last_updated") or "").strip()
             added_date = str(front_matter.get("added_date") or last_updated).strip()
-            summary = normalize_text(front_matter.get("summary"))
+            summary = normalize_summary(front_matter.get("summary"))
             ui_status = str(front_matter.get("ui_status") or "").strip()
             document_config = getattr(self, "collection_config", self.config)
             try:

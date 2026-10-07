@@ -32,6 +32,7 @@ from docs_workspace_config import (  # noqa: E402
 )
 from docs_artifact_locations import local_artifact_path, normalize_artifact_identity  # noqa: E402
 from markdown_renderer import plain_text_from_html, render_markdown_to_html  # noqa: E402
+from docs_front_matter import FRONT_MATTER_PATTERN, INTEGER_PATTERN  # noqa: E402
 
 
 DOCS_VIEWER_BROWSER_CONFIG_PATH = Path("docs-viewer/config/defaults/docs-viewer-config.json")
@@ -40,14 +41,12 @@ SITE_DOCS_VIEWER_PUBLIC_BROWSER_CONFIG_PATH = Path("site/docs-viewer/config/defa
 DOCS_VIEWER_BROWSER_CONFIG_SCHEMA_VERSION = "docs_viewer_config_v4"
 DOCS_INDEX_TREE_SCHEMA_VERSION = "docs_index_tree_v1"
 DEFAULT_RECENT_LIMIT = 20
-FRONT_MATTER_PATTERN = re.compile(r"\A---\s*\n(.*?)\n---\s*\n?", re.DOTALL)
 MEDIA_TOKEN_PATTERN = re.compile(r"\[\[media:(.+?)\]\]")
 MEDIA_IMAGE_TOKEN_PATTERN = re.compile(r"!\[(?P<alt>(?:\\.|[^\]\\])*)\]\(\s*\[\[media:(?P<body>.+?)\]\]\s*\)")
 HTML_MEDIA_TOKEN_PATTERN = re.compile(r"\[\[html-media:(.+?)\]\]")
 HTML_MEDIA_HEIGHT_PATTERN = re.compile(r"\A[1-9][0-9]{0,3}\Z")
 IMG_PATTERN = re.compile(r"<img\b([^>]*)>", re.IGNORECASE)
 HTML_ATTR_PATTERN_TEMPLATE = r"\b{}\s*=\s*([\"'])(.*?)\1"
-INTEGER_PATTERN = re.compile(r"^-?\d+$")
 MEDIA_TOKEN_ALLOWED_ATTRS = {"width", "height"}
 MEDIA_TOKEN_DIMENSION_PATTERN = re.compile(r"\A[1-9][0-9]{0,5}\Z")
 

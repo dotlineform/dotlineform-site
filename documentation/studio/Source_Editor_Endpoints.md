@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-4b1d77
 title: Source Editor Endpoints
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-01 17:58:55"
+last_updated: "2026-10-07 13:50:13"
 parent_id: d-20260607-222033-647b52
 ---
 # Docs Viewer Source Editor Endpoints
@@ -107,7 +107,7 @@ Actions:
 - resolves the fixed Working target and confines its source path before interpreting editable metadata
 - parses the complete candidate through the source model's strict front-matter splitter, rejecting missing delimiters, malformed lines, duplicate keys and invalid quoted values
 - requires candidate `doc_id` and any declared `collection` to match the mounted target; edited metadata cannot rename, relocate or select a different file
-- normalizes Title and Summary, rejects an empty Title and removes a blank Summary
+- normalizes Title and Summary, rejects an empty Title and removes a blank Summary; Summary normalizes line endings and outer whitespace while preserving internal line/paragraph breaks, with `|`/`|-` literal-block support owned by [Builder](Builder.md#summary-block)
 - validates required readiness, collection report rules and Subject customisation through their current owners; Catalogue retains fixed eligibility and rejects `draft`
 - preserves other authored metadata lines and the existing canonical membership policy; ordinary hierarchy/order remains owned by `index-order.json`
 - normalizes submitted body line endings to `\n`

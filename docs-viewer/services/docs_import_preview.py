@@ -54,7 +54,7 @@ from docs_import_media import (  # noqa: E402
     apply_inline_raster_media_plans,
     apply_inline_svg_media_plans,
 )
-from docs_source_model import parse_front_matter_value  # noqa: E402
+from docs_front_matter import STRICT_FRONT_MATTER_PATTERN, read_front_matter_fields  # noqa: E402
 from docs_document_packages.workspace import configured_workspace_paths  # noqa: E402
 from studio.shared.python.projects_directories import projects_path_marker  # noqa: E402
 
@@ -398,44 +398,28 @@ def normalize_ordinary_markdown_front_matter(
             "the opening delimiter must be a line containing only ---.",
         )
 
-    closing_index = next(
-        (
-            index
-            for index, line in enumerate(lines[1:], start=1)
-            if line.strip() == "---"
-        ),
-        None,
-    )
-    if closing_index is None:
+    match = STRICT_FRONT_MATTER_PATTERN.match(markdown)
+    if match is None:
         raise ValueError(
             f"Ordinary Markdown front matter is unterminated in {source_name}.",
         )
 
     fields: dict[str, Any] = {}
     raw_values: dict[str, str] = {}
-    for line_number, line in enumerate(lines[1:closing_index], start=2):
-        stripped = line.strip()
-        if not stripped or stripped.startswith("#"):
-            continue
-        if ":" not in stripped:
-            raise ValueError(
-                f"Ordinary Markdown front matter is malformed in {source_name} "
-                f"at line {line_number}: expected a key and scalar value.",
-            )
-        key, raw_value = stripped.split(":", 1)
-        key = key.strip()
+    for field in read_front_matter_fields(match.group(1), source_name=source_name, require_pairs=True):
+        key = field.key
         if not ORDINARY_FRONT_MATTER_KEY_PATTERN.fullmatch(key):
             raise ValueError(
                 f"Ordinary Markdown front matter is malformed in {source_name} "
-                f"at line {line_number}: invalid field name {key!r}.",
+                f"at field {key!r}: invalid field name.",
             )
         if key in fields:
             raise ValueError(
                 f"Ordinary Markdown front matter is malformed in {source_name}: "
                 f"duplicate field {key!r}.",
             )
-        raw_values[key] = raw_value.strip()
-        fields[key] = parse_front_matter_value(raw_value)
+        raw_values[key] = field.raw_value.strip()
+        fields[key] = field.value
 
     title = ""
     warnings: list[str] = []
@@ -459,7 +443,7 @@ def normalize_ordinary_markdown_front_matter(
             + ".",
         )
 
-    body = "".join(lines[closing_index + 1 :])
+    body = markdown[match.end():]
     diagnostics = {
         "stripped": True,
         "fields": list(fields),

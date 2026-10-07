@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260629-152159-ac1af9
 title: Export
 added_date: "2026-06-29 15:21:59"
-last_updated: "2026-10-02 10:19:41"
+last_updated: "2026-10-07 13:50:13"
 summary: create guarded dated self-contained HTML snapshots from the displayed document subtree and its referenced media
 parent_id: d-20260424-000000-50b63f
 ---
@@ -41,6 +41,8 @@ A configured scope is eligible when:
 Generated-path resolution supports repo-local, public, and external-local scope providers. Canonical-source ownership and source writability are not capability gates. Non-publishable documents already present in a publish-capable Manage tree remain eligible; local collections have no publication gate.
 
 Export reads generated hierarchy, titles, and `content_html`. It does not parse canonical Markdown, rebuild documents, or apply a second publishability filter.
+
+An expanded `[[summary]]` remains escaped plain text with explicit `<br>` and paragraph elements. Both the browseable snapshot and `portable.html` retain those breaks and include Summary panel/paragraph styling; YAML syntax is not part of either HTML output. Export does not place a metadata-only Summary into the body automatically. Rebuild the owning generated documents to obtain changed rendering before creating a new snapshot. Existing exported folders are unchanged until explicitly exported/replaced. [Package Prepare](Package_Prepare.md#package-output) separately flattens Summary for its text-oriented packages.
 
 From the exact selected generated HTML, Export recognizes media only when a supported URL attribute maps beneath an exact configured served prefix for that scope and media type. It then reads the confined identity through that media type's configured repository, external-local, or R2 artifact location. Missing, invalid, escaping, or unreadable owned media blocks preview. Unmatched media references remain external and unchanged; Export does not fetch their served URLs or inventory unrelated scope media.
 

@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_source_works_v2",
-    "count": 4616
+    "count": 4618
   },
   "works": {
     "00001": {
@@ -102359,6 +102359,50 @@
       "provenance": null,
       "artist": null,
       "links": null
+    },
+    "04624": {
+      "work_id": "04624",
+      "series_id": "001",
+      "project_folder": "10000",
+      "project_subfolder": "details",
+      "project_filename": "10000 (2.4).jpg",
+      "media_version": 2,
+      "title": "10,000 (2.4)",
+      "width_cm": 50,
+      "height_cm": 40,
+      "year": 2026,
+      "year_display": "2026",
+      "medium_type": "digital c-type print",
+      "medium_caption": null,
+      "storage_location": null,
+      "duration": null,
+      "depth_cm": null,
+      "width_px": 5906,
+      "height_px": 4725,
+      "provenance": null,
+      "artist": null
+    },
+    "04625": {
+      "work_id": "04625",
+      "series_id": "001",
+      "project_folder": "10000",
+      "project_subfolder": "details",
+      "project_filename": "10000 (1.4).jpg",
+      "media_version": 2,
+      "title": "10,000 (1.4)",
+      "width_cm": 30,
+      "height_cm": 20.5,
+      "year": 2026,
+      "year_display": "2026",
+      "medium_type": null,
+      "medium_caption": null,
+      "storage_location": null,
+      "duration": null,
+      "depth_cm": null,
+      "width_px": 3544,
+      "height_px": 2421,
+      "provenance": null,
+      "artist": null
     }
   }
 }

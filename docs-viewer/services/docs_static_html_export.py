@@ -766,6 +766,20 @@ pre code {
   border: 0;
   border-top: 1px solid var(--border);
 }
+
+.docsViewer__summary {
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  background: var(--code-bg);
+}
+
+.docsViewer__summary > p {
+  margin: 0;
+}
+
+.docsViewer__summary > p + p {
+  margin-top: 0.75rem;
+}
 """
 
 

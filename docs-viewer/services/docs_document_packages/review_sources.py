@@ -11,6 +11,7 @@ import re
 from typing import Any, Callable
 
 import docs_source_model as source_model
+from docs_front_matter import format_front_matter_field
 from docs_import_content import (
     CONTENT_INTENT_EMPTY_NEW,
     CONTENT_INTENT_PRESERVE_EXISTING,
@@ -341,7 +342,7 @@ def source_markdown(body: str, front_matter: dict[str, Any]) -> str:
     ordered_keys.extend(sorted(key for key in front_matter.keys() if key not in ordered_keys))
     lines = ["---"]
     for key in ordered_keys:
-        lines.append(f"{key}: {source_model.format_front_matter_value(front_matter[key])}")
+        lines.append(format_front_matter_field(key, front_matter[key]))
     lines.append("---")
     return "\n".join(lines) + "\n" + body
 

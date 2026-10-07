@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260722-151224-7b61c4
 title: Package Prepare
 added_date: "2026-07-22 15:12:24"
-last_updated: "2026-10-02 10:53:54"
+last_updated: "2026-10-07 13:50:13"
 parent_id: d-20260424-000000-50b63f
 ---
 # Package Prepare
@@ -55,6 +55,10 @@ The displayed total is the final effective target for the loaded source snapshot
 ## Package Output
 
 A successful request reports the generated package and metadata paths. The selected profile determines JSON or JSONL shape, included fields, supported format choices, and descendant requirements. [Documents Prepare Profiles](Package_Prepare_Profiles.md) records those profile contracts.
+
+Package Summary is consistently one paragraph: whitespace, including line and paragraph breaks, is collapsed to spaces in `summary`, `current_summary` and any expanded `[[summary]]` body text. Preparation renders a package-only flattened Summary value; it does not alter canonical source or flatten the document's unrelated body paragraphs. Structured fields contain normal JSON strings without YAML markers, and each JSONL record remains one physical line. Missing-summary filtering still treats whitespace-only source values as empty. Returned-package comparison flattens both the staged `current_summary` and current source value, so presentation-only breaks do not create a mismatch.
+
+Supported returned Import applies the supplied Summary string. Returning the prepared single-paragraph value can therefore remove source line/paragraph breaks; they are not reconstructed. An externally supplied multiline Summary remains a multiline string and is written using `|-` when source is serialized. Docs Review retains the returned value under its existing read-only authority. [Builder](Builder.md#summary-block) owns source syntax and newline-preserving reader/HTML Export behavior. Existing prepared files are not rewritten by this policy; prepare a new package to obtain current output.
 
 Configured collection packages are export-only unless both the collection and profile enable returned-package import. Requests retain the exact optional `collection`; the owning service resolves Working.
 

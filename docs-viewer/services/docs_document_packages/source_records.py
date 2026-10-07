@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from docs_workspace_config import path_label
+from docs_document_packages.export_common import flatten_summary
 
 
 @dataclass(frozen=True)
@@ -41,7 +42,7 @@ def source_record_from_doc(
     return DocumentPackageSourceRecord(
         doc_id=doc.doc_id,
         title=doc.title,
-        summary=doc.summary,
+        summary=flatten_summary(doc.summary),
         added_date=doc.added_date,
         last_updated=doc.last_updated,
         parent_id=doc.parent_id,

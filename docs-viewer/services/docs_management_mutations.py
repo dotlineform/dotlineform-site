@@ -70,10 +70,6 @@ def relative_path(repo_root: Path, path: Path) -> str:
         raise ValueError("source path is outside the repo and external Docs Viewer root") from exc
 
 
-def normalize_summary(value: Any) -> str:
-    return re.sub(r"\s+", " ", str(value or "")).strip()
-
-
 def normalize_metadata_text(value: Any) -> str:
     return str(value or "").strip()
 

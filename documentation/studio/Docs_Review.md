@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260711-214307-b4c800
 title: Docs Review
 added_date: 2026-07-11 21:43:07
-last_updated: "2026-09-16 07:51:41"
+last_updated: "2026-10-07 13:50:13"
 summary: Durable product, workflow, persistent package, explicit Build, source-open, and authority contract for the local returned-package review route.
 parent_id: d-20260424-000000-50b63f
 
@@ -93,6 +93,8 @@ The single Docs Viewer toolbar row contains:
 - the document information control
 
 The index panel renders the hierarchy supplied by the validated package. Document metadata retains returned summaries. Docs Review does not provide parent, summary, or hierarchy editing. Managed Docs Import maps package parents and applies supplied summary metadata without making the review route an editor.
+
+Package Prepare flattens both Summary fields and expanded Summary body text consistently. Returned current-summary comparison ignores line/paragraph whitespace. Review materialization retains the supplied returned Summary string and writes a multiline value as `|-` front matter when needed; the shared builder preserves its breaks. Import applies that supplied value, so a flattened package Summary can replace canonical breaks. Review does not infer the original presentation or acquire canonical write authority. [Package Prepare](Package_Prepare.md#package-output) owns the output policy and [Builder](Builder.md#summary-block) owns the source grammar.
 
 Validated-package publication builds and retains the package-local generated
 preview before exposing the timestamped package. Ordinary navigation reads that

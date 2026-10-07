@@ -35,6 +35,14 @@ from docs_workspace_config import (
     resolve_workspace_path,
 )
 from docs_document_subjects import validate_document_subject_fields
+from docs_front_matter import (
+    FRONT_MATTER_PATTERN,
+    STRICT_FRONT_MATTER_PATTERN,
+    format_front_matter_field,
+    normalize_summary,
+    read_front_matter_fields,
+    rewrite_front_matter_fields,
+)
 from docs_report_source import (
     ReportDescriptor,
     ReportSourceContractRequired,
@@ -44,11 +52,7 @@ from docs_report_source import (
 )
 
 
-FRONT_MATTER_PATTERN = re.compile(r"\A---\s*\n(.*?)\n---\s*\n?", re.DOTALL)
-STRICT_FRONT_MATTER_PATTERN = re.compile(r"\A---[ \t]*\r?\n(.*?)\r?\n---[ \t]*(?:\r?\n|$)", re.DOTALL)
-INTEGER_PATTERN = re.compile(r"^-?\d+$")
 SLUG_SEP_PATTERN = re.compile(r"[^a-z0-9]+")
-SAFE_PLAIN_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 .,&()/_'-]*$")
 RECENT_EDIT_FRONT_MATTER_FIELDS = ("title", "summary")
 
 
@@ -74,31 +78,6 @@ def slugify(value: str) -> str:
     return normalized or "new-doc"
 
 
-def parse_front_matter_value(raw_value: str) -> Any:
-    value = raw_value.strip()
-    if value == '""':
-        return ""
-    if value.lower() == "true":
-        return True
-    if value.lower() == "false":
-        return False
-    if INTEGER_PATTERN.match(value):
-        try:
-            return int(value)
-        except ValueError:
-            return value
-    if len(value) >= 2 and value[0] == value[-1] and value[0] in {'"', "'"}:
-        quote = value[0]
-        inner = value[1:-1]
-        if quote == '"':
-            try:
-                return json.loads(value)
-            except json.JSONDecodeError:
-                return inner
-        return inner.replace("\\'", "'")
-    return value
-
-
 def parse_source_text(raw: str, *, source_name: str = "source", strict: bool = False) -> tuple[Dict[str, Any], str]:
     match = (STRICT_FRONT_MATTER_PATTERN if strict else FRONT_MATTER_PATTERN).match(raw)
     if not match:
@@ -106,30 +85,9 @@ def parse_source_text(raw: str, *, source_name: str = "source", strict: bool = F
             raise ValueError(f"front matter could not be parsed in {source_name}")
         return {}, raw
 
-    front_matter: Dict[str, Any] = {}
-    for line_number, line in enumerate(match.group(1).splitlines(), start=2):
-        stripped = line.strip()
-        if not stripped or stripped.startswith("#"):
-            continue
-        if ":" not in stripped:
-            if strict:
-                raise ValueError(f"front matter line {line_number} is not a key/value pair in {source_name}")
-            continue
-        key, raw_value = stripped.split(":", 1)
-        key = key.strip()
-        if strict:
-            if not key or key in front_matter:
-                raise ValueError(f"front matter line {line_number} has a blank or duplicate key in {source_name}")
-            value = raw_value.strip()
-            if value.startswith(('"', "'")):
-                if len(value) < 2 or value[-1] != value[0]:
-                    raise ValueError(f"front matter line {line_number} has an unclosed quoted value in {source_name}")
-                if value[0] == '"':
-                    try:
-                        json.loads(value)
-                    except json.JSONDecodeError as error:
-                        raise ValueError(f"front matter line {line_number} has an invalid quoted value in {source_name}") from error
-        front_matter[key] = parse_front_matter_value(raw_value)
+    front_matter = {field.key: field.value for field in read_front_matter_fields(
+        match.group(1), source_name=source_name, strict=strict,
+    )}
     try:
         validate_document_subject_fields(front_matter)
     except ValueError as error:
@@ -219,25 +177,6 @@ def split_source_text(
     return raw[: match.end()], front_matter, body
 
 
-def format_front_matter_value(value: Any) -> str:
-    if value is None:
-        return '""'
-    if value is True:
-        return "true"
-    if value is False:
-        return "false"
-    if isinstance(value, int):
-        return str(value)
-    text = str(value)
-    if (
-        SAFE_PLAIN_PATTERN.match(text)
-        and text not in {"true", "false"}
-        and not INTEGER_PATTERN.fullmatch(text)
-    ):
-        return text
-    return json.dumps(text, ensure_ascii=False)
-
-
 def document_collection_front_matter(front_matter: Mapping[str, Any], collection: str) -> Dict[str, Any]:
     """Apply resolved membership and omit ordinary-only status in named collections."""
     updated = dict(front_matter)
@@ -255,16 +194,10 @@ def rewrite_source_collection(source_text: str, collection: str) -> str:
     updated = document_collection_front_matter(front_matter, collection)
     if updated == front_matter:
         return source_text
-    lines = prefix.splitlines(keepends=True)
-    closing = next(index for index, line in enumerate(lines[1:], 1) if line.strip() == "---")
-    removed_fields = r"(?:collection|ui_status)" if collection else r"collection"
-    header = [line for line in lines[:closing] if not re.match(rf"^[ \t]*{removed_fields}[ \t]*:", line)]
-    if collection:
-        while header and not header[-1].strip():
-            header.pop()
-        newline = "\r\n" if lines[0].endswith("\r\n") else "\n"
-        header.append(f"collection: {format_front_matter_value(collection)}{newline}")
-    return "".join(header + lines[closing:]) + body
+    return rewrite_front_matter_fields(
+        prefix, {"collection": collection} if collection else {},
+        remove_fields=("ui_status",) if collection else ("collection",),
+    ) + body
 
 
 def format_source(front_matter: Dict[str, Any], body: str, *, collection: str | None = None) -> str:
@@ -289,7 +222,7 @@ def format_source(front_matter: Dict[str, Any], body: str, *, collection: str | 
     ordered_keys.extend(sorted(key for key in front_matter.keys() if key not in ordered_keys))
     lines = ["---"]
     for key in ordered_keys:
-        lines.append(f"{key}: {format_front_matter_value(front_matter[key])}")
+        lines.append(format_front_matter_field(key, front_matter[key]))
     lines.append("---")
     normalized_body = body if body.startswith("\n") else "\n" + body
     return "\n".join(lines) + normalized_body
@@ -380,7 +313,7 @@ def recent_edit_content(front_matter: Dict[str, Any], body: str) -> tuple[str, s
     return (
         str(body),
         str(front_matter.get(RECENT_EDIT_FRONT_MATTER_FIELDS[0]) or "").strip(),
-        str(front_matter.get(RECENT_EDIT_FRONT_MATTER_FIELDS[1]) or "").strip(),
+        normalize_summary(front_matter.get(RECENT_EDIT_FRONT_MATTER_FIELDS[1])),
     )
 
 
@@ -431,48 +364,9 @@ def rewrite_front_matter_source_timestamp(
     """Advance timestamp fields while preserving other raw front-matter lines."""
 
     updated_front_matter = advance_doc_front_matter(front_matter, timestamp=timestamp)
-    lines = front_matter_source.splitlines(keepends=True)
-    if len(lines) < 2:
-        raise ValueError("source front matter could not be updated")
-
-    field_indices: Dict[str, int] = {}
-    closing_index = -1
-    for index, line in enumerate(lines):
-        stripped = line.strip()
-        if index > 0 and stripped.startswith("---"):
-            closing_index = index
-        for key in ("added_date", "last_updated"):
-            if re.match(rf"^[ \t]*{re.escape(key)}[ \t]*:", line):
-                field_indices[key] = index
-    if closing_index < 1:
-        raise ValueError("source front matter closing delimiter could not be found")
-
-    default_newline = "\r\n" if any(line.endswith("\r\n") for line in lines) else "\n"
-    for key in ("added_date", "last_updated"):
-        rendered = (
-            f"{key}: {format_front_matter_value(updated_front_matter[key])}"
-            f"{default_newline}"
-        )
-        index = field_indices.get(key)
-        if index is not None:
-            newline = "\r\n" if lines[index].endswith("\r\n") else "\n"
-            lines[index] = rendered.rstrip("\r\n") + newline
-            continue
-        if key == "added_date" and "last_updated" in field_indices:
-            insert_at = field_indices["last_updated"]
-        elif key == "last_updated" and "added_date" in field_indices:
-            insert_at = field_indices["added_date"] + 1
-        else:
-            insert_at = closing_index
-        lines.insert(insert_at, rendered)
-        closing_index += 1
-        field_indices = {
-            field: (field_index + 1 if field_index >= insert_at else field_index)
-            for field, field_index in field_indices.items()
-        }
-        field_indices[key] = insert_at
-
-    return "".join(lines)
+    return rewrite_front_matter_fields(front_matter_source, {
+        key: updated_front_matter[key] for key in ("added_date", "last_updated")
+    })
 
 
 def front_matter_boolean(front_matter: Dict[str, Any], key: str, default: bool) -> bool:

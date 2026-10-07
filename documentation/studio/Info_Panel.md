@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260623-000000-c99cef
 title: Info Panel
 added_date: "2026-06-23 00:00:00"
-last_updated: "2026-10-01 17:58:55"
+last_updated: "2026-10-07 13:50:13"
 parent_id: d-20260424-000000-50b63f
 
 ---
@@ -15,7 +15,7 @@ The Docs Viewer Info panel retains a document's related context beside the main 
 
 - A pin appears beside the section's optional authored H3 heading. A heading-free directive still has a pin. Empty generated sections and documents without the directive have no pin.
 - The shell's top row shows the captured document title and a right-hand **Close** control. Long titles wrap before the vertically centred close button.
-- The body contains only a non-empty, uncaptioned summary and a copy of the generated related list. It has no repeated heading, pin, IDs, dates, operational fields, diagram-source links or empty-state messages.
+- The body contains only a non-empty, uncaptioned summary and a copy of the generated related list. Summary retains authored line and paragraph breaks through safe text nodes, `<br>` elements and separate paragraphs; Markdown, HTML and tokens remain literal text. It has no repeated heading, pin, IDs, dates, operational fields, diagram-source links or empty-state messages.
 - The list retains its collection icons, title ordering, deduplication and exact destinations. Concepts use the same list. The panel body uses the document's loose line spacing and the public list's row gap on both public and Manage surfaces. Links share the document's blue unvisited and purple visited colours, with no underline until hover or keyboard focus.
 - Following a panel link or navigating elsewhere changes the main pane while preserving the capture. Another document's pin replaces the capture; repeating the captured document's pin leaves it open.
 - Close releases the capture. Navigation does not reopen the panel. Reload clears the capture; persistence, cross-tab synchronization and bookmarkable panel state are outside this workflow.

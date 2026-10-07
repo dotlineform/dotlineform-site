@@ -25,10 +25,8 @@ from docs_import_content import (  # noqa: E402
     CONTENT_INTENT_REPLACE,
     ImportContent,
 )
-from docs_source_model import (  # noqa: E402
-    STRICT_FRONT_MATTER_PATTERN,
-    split_source_text,
-)
+from docs_source_model import split_source_text  # noqa: E402
+from docs_front_matter import STRICT_FRONT_MATTER_PATTERN, read_front_matter_fields  # noqa: E402
 
 
 COMPACT_PROFILE_ID = "document-content"
@@ -109,11 +107,8 @@ def duplicate_front_matter_fields(source_text: str) -> list[str]:
         return []
     seen: set[str] = set()
     duplicates: list[str] = []
-    for line in match.group(1).splitlines():
-        stripped = line.strip()
-        if not stripped or stripped.startswith("#") or ":" not in stripped:
-            continue
-        key = stripped.split(":", 1)[0].strip()
+    for field in read_front_matter_fields(match.group(1), require_pairs=True):
+        key = field.key
         if key in seen and key not in duplicates:
             duplicates.append(key)
         seen.add(key)

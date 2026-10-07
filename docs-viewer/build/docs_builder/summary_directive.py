@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import html
+import re
 from typing import Any
 
 from markdown_it.rules_block import StateBlock
@@ -36,7 +37,12 @@ def install_summary_rule(renderer: Any, *, summary: str) -> None:
         del tokens, index, options, env
         if not summary:
             return ""
-        return f'<div class="docsViewer__summary"><p>{html.escape(summary)}</p></div>\n'
+        paragraphs = re.split(r"\n[ \t]*\n+", summary)
+        content = "".join(
+            "<p>" + "<br>\n".join(html.escape(line) for line in paragraph.split("\n")) + "</p>"
+            for paragraph in paragraphs
+        )
+        return f'<div class="docsViewer__summary">{content}</div>\n'
 
     # Do not interrupt a paragraph: its inline code may span this entire line.
     renderer.block.ruler.before("paragraph", "docs_summary", parse, {"alt": ["reference", "blockquote", "list"]})
