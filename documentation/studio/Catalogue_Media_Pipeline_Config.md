@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260331-154730-b019e0
 title: Catalogue Media Pipeline Config
 added_date: "2026-03-31 15:47:30"
-last_updated: "2026-09-26 10:16:08"
+last_updated: "2026-10-07 16:38:30"
 parent_id: d-20260423-000000-d015e6
 
 ---
@@ -60,6 +60,10 @@ python3 studio/services/media/make_srcset_images.py INPUT_DIR OUTPUT_DIR JOBS
 Omitting the directories uses the configured Work staging and output roots. `--dry-run` previews derivative writes and staged-source cleanup. Optional selected-ID and success-ID manifests plus the default worker count use names defined in `_data/pipeline.json`; run `--help` for the exact current argument and environment contract.
 
 The builder owns image decoding, scaling and cropping, encoding, variant filenames, parallel execution, and staged-source cleanup. It does not read or write canonical catalogue records, select publication scope, generate public JSON or search, copy final assets to R2, or advance canonical media versions. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns local completion/versioning; [Catalogue Deployment](Catalogue_Deployment.md) owns normal public distribution. [Publish Media To R2](Publish_Media_To_R2.md) describes the separate maintenance transport. Full JSON maintenance does not invoke this derivative builder.
+
+## Retired Comparison Tool
+
+The former Studio thumbnail-quality comparison tool and its generated preview images/JSON are retired and removed, together with the unused preview endpoint entry. Normal thumbnail generation continues through the active derivative builders and `_data/pipeline.json` encoding settings. There is no retained comparison tool or preview-output dependency.
 
 ## Why Changes Are Broad
 

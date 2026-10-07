@@ -10,7 +10,6 @@ SERIES_CREATE_PATH = "/catalogue/series/create"
 BULK_SAVE_PATH = "/catalogue/bulk-save"
 DELETE_PREVIEW_PATH = "/catalogue/delete-preview"
 DELETE_APPLY_PATH = "/catalogue/delete-apply"
-THUMBNAIL_QUALITY_PREVIEW_PATH = "/catalogue/thumbnail-quality-preview"
 
 POST_PATHS = (
     WORK_CREATE_PATH,
@@ -20,7 +19,6 @@ POST_PATHS = (
     WORK_SAVE_PATH,
     SERIES_SAVE_PATH,
     SERIES_CREATE_PATH,
-    THUMBNAIL_QUALITY_PREVIEW_PATH,
 )
 
 OPTIONS_PATHS = (*POST_PATHS, CATALOGUE_READ_PATH)

@@ -16,7 +16,6 @@
     "site/assets/data/**",
     "site/docs-viewer/runtime/js/**",
     "studio/data/canonical/**",
-    "studio/data/generated/**",
     "studio/retired/**",
     "var/**"
   ],

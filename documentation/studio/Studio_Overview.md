@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260715-084611-ae9636
 title: Studio Overview
 added_date: "2026-07-15 08:46:11"
-last_updated: "2026-08-14 21:18:02"
+last_updated: "2026-10-07 16:46:38"
 summary: Local Studio capabilities, execution path, authority boundaries, extension method, and known weak spots.
 parent_id: d-20260423-000000-d015e6
 
@@ -72,7 +72,7 @@ The browser may use checked-in or generated JSON for safe fallback reads. Writes
 
 - `studio/data/config/` owns checked-in Studio domain config.
 - `studio/data/canonical/` owns canonical catalogue and tag records.
-- `studio/data/generated/` owns rebuildable local lookup projections.
+- Refresh Catalogue owns rebuildable Catalogue reader projections under `$DOTLINEFORM_DOCS_BASE_DIR/working/generated/catalogue/`; see [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md).
 - `site/` owns tracked public output; it is not a Studio source tree.
 - external project and media roots come from environment-backed workspace helpers, never browser config absolute paths.
 

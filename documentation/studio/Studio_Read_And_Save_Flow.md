@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260422-000000-c3135c
 title: Studio Read And Save Flow
 added_date: "2026-04-22 00:00:00"
-last_updated: "2026-09-07 17:23:59"
+last_updated: "2026-10-07 16:46:38"
 summary: How Studio runtime config, safe reads, validated catalogue writes, optional builds, publication, and media fit together.
 parent_id: d-20260423-000000-d015e6
 
@@ -82,7 +82,7 @@ The browser may compute record hashes and patches, but the service validates cur
 ## Authority And Failure Rules
 
 - `studio/data/canonical/` is catalogue source authority.
-- `studio/data/generated/` and public files are rebuildable projections.
+- Refresh Catalogue owns rebuildable reader projections under `$DOTLINEFORM_DOCS_BASE_DIR/working/generated/catalogue/`; public files are separately published projections. See [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md).
 - runtime config and browser paths do not authorize writes.
 - source validation occurs before mutation; confirmed apply rechecks current state.
 - server unavailability is visible and disables writes.

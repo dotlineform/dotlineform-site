@@ -79,7 +79,6 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert not any(view["id"] in {"data_sharing_prepare", "data_sharing_review"} for view in runtime["views"])
     assert not any(view["id"] in {"studio_audits", "studio_risk", "activity"} for view in runtime["views"])
     assert not any(view["id"] == "project_state" or view["path"] == "/studio/project-state/" for view in runtime["views"])
-    assert not any(view["id"] == "thumbnail_quality" for view in runtime["views"])
     assert not any("doc_id" in view for view in runtime["views"])
     assert not any("docId" in view for view in runtime["views"])
     assert any(view["id"] == "catalogue_field_registry" and view["path"] == "/studio/catalogue-field-registry/" for view in runtime["views"])
@@ -125,9 +124,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["services"]["catalogue"]["save_series"] == "/studio/api/catalogue/series/save"
     assert "project_state_report" not in runtime["services"]["catalogue"]
     assert "project_state_open_report" not in runtime["services"]["catalogue"]
-    assert "thumbnail_quality_preview" not in runtime["services"]["catalogue"]
     assert "tag_assignments" not in runtime["data_paths"]["studio"]
-    assert "thumbnail_quality_preview" not in runtime["data_paths"]["studio"]
     assert "data_sharing_adapters" not in runtime["data_paths"]["studio"]
     assert "catalogue_lookup_meta" not in runtime["data_paths"]["studio"]
     assert runtime["media"]["thumbs"]["works"] == "/studio/catalogue-output/works/thumbs"
@@ -257,7 +254,6 @@ def test_static_path_policy_serves_current_studio_allowlists() -> None:
     assert allowed("/docs-viewer/config/document-packages/profiles.json") is False
     assert allowed("/assets/works/img/00001.jpg") is True
     assert allowed("/assets/js/work.js") is True
-    assert allowed("/studio/data/generated/private/report.json") is False
 
     assert allowed("/assets/studio/js/catalogue-work-editor.js") is False
     assert allowed("/assets/studio/css/studio.css") is False

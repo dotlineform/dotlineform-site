@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260524-214228-7247ef
 title: Source Tree Ownership
 added_date: "2026-05-24 21:42:28"
-last_updated: "2026-09-04 17:42:53"
+last_updated: "2026-10-07 16:46:38"
 parent_id: d-20260331-000000-4a16b0
 
 ---
@@ -15,7 +15,7 @@ The repository contains several local apps, shared domain services, and one trac
 
 | Root | Owns |
 | --- | --- |
-| `studio/` | catalogue and tag authoring app; catalogue, media, and tag services; canonical catalogue/tag data; generated Studio read models; Studio/public-catalogue tests |
+| `studio/` | catalogue and tag authoring app; catalogue, media, and tag services; canonical catalogue/tag data; live Studio read projections; Studio/public-catalogue tests |
 | `docs-viewer/` | Docs Viewer canonical runtime and stylesheets, services, checked configuration, builders, import/export, integrated document packages, and tests; scope-owned source and lifecycle output remain external |
 | `processing/` | separate Java/Processing project source, pinned sketchbook libraries, project scripts, and project-owned tests |
 | `shared/` | reviewed app-neutral frontend modules and styles used across routes or apps, including explicitly accepted one-consumer cross-app primitives |
@@ -38,9 +38,10 @@ Machine-owned projects, catalogue media staging, Docs Viewer external scopes, an
 | `studio/services/media/` | derivative generation and remote media transport |
 | `studio/data/canonical/` | authoritative catalogue metadata, optional catalogue Markdown, and canonical tag vocabulary/assignments |
 | `studio/data/config/` | checked Studio, catalogue, runtime, and tag policy |
-| `studio/data/generated/` | rebuildable Local Studio read models |
 | `studio/shared/` | Python helpers shared by Studio-owned services and commands |
 | `studio/tests/` | Studio and public-catalogue contracts |
+
+Studio services provide live read projections from canonical source. Refresh Catalogue separately owns replaceable Catalogue reader output under `$DOTLINEFORM_DOCS_BASE_DIR/working/generated/catalogue/`; see [Catalogue Architecture](Catalogue_Architecture.md).
 
 Studio entrypoints establish service and shared-module paths through `studio/shared/python/studio_python_paths.py`. Catalogue/media modules use the established `catalogue.*`, `tags.*` and shared-module imports directly. Missing dependencies, including failures inside imported modules, propagate without retrying under another package name. The bootstrap is retained; import cleanup does not resume paused Catalogue operations.
 

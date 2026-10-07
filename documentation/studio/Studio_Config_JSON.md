@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260424-000000-315c1c
 title: Studio Config JSON
 added_date: "2026-04-24 00:00:00"
-last_updated: "2026-10-07 16:26:39"
+last_updated: "2026-10-07 16:46:38"
 summary: Checked-in Local Studio route registry, live Catalogue read addresses, and the validated runtime projection.
 parent_id: d-20260424-000000-15b6f2
 
@@ -113,3 +113,7 @@ The approved Series editor retirement removes only three obsolete route assertio
 The first selector reads the real checked Studio registry through `runtime_config` with temporary environment overrides for local service addresses. The second reads the real registry JSON directly. The maintained route evidence concerns the surviving Work editor registration, not browser interaction, HTTP serving, Series mutations or generated outputs. Test support and temporary-workspace fixtures are unchanged; no service startup or canonical-data write is part of these route assertions.
 
 This bounded edit uses source review and Python lint only; no suite run was approved or performed. A later justified focused run can select either exact node ID above with `python3 -m pytest <node-id> -q` after exporting `.env.local`. Import/fixture costs and unrelated legacy assertions remain unreviewed; expanding execution or cleanup needs its own selection. Maintenance is limited to the three-line deletion and review, with no added runtime or network cost.
+
+The separately approved thumbnail-quality comparison cleanup removes exactly three obsolete absence assertions from `studio/tests/python/test_studio_app_runtime_config.py::test_runtime_config_exposes_adapter_contract`: the retired runtime view, Catalogue service key and Studio data-path key. This selector reads the real registry through `runtime_config` with temporary environment overrides; the remaining Work editor, service and pipeline assertions and all fixtures are unchanged and unreviewed. No replacement cases, fixtures, harnesses, profile changes or test runs are included. Maintenance uses Python lint, syntax and bounded diff review at low local cost, without service startup, browser/network work or canonical/workspace writes; it establishes no new runtime coverage.
+
+The separately approved generated-directory reference cleanup removes exactly one obsolete private generated-file path assertion from `studio/tests/python/test_studio_app_runtime_config.py::test_static_path_policy_serves_current_studio_allowlists`. That assertion calls the real static-path policy directly with an inert handler object and a synthetic URL; it does not exercise filesystem serving or HTTP. All remaining assertions and fixtures are unchanged and unreviewed. No replacement cases, harnesses, profile changes or test runs are included. Maintenance uses Python lint, syntax and bounded diff review at low local cost, without service startup, browser/network work or canonical/workspace writes; it establishes no new runtime coverage.

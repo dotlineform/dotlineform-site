@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260423-000000-d015e6
 title: Studio
 added_date: "2026-04-23 00:00:00"
-last_updated: "2026-09-07 17:25:34"
+last_updated: "2026-10-07 16:46:38"
 summary: Entry point for using, operating, and changing the local catalogue authoring app.
 parent_id: ""
 
@@ -45,7 +45,7 @@ Verify exact current behavior in:
 - `studio/app/frontend/` for the shell, templates, route scripts, and shared browser helpers
 - `studio/app/server/studio/` for local HTTP routing and Catalogue API adaptation
 - `studio/services/catalogue/` for domain behavior and write authority
-- `studio/data/config/`, `studio/data/canonical/`, and `studio/data/generated/` for config and data ownership
+- `studio/data/config/` and `studio/data/canonical/` for config and canonical data ownership
 - `studio/tests/python/` for focused deterministic evidence
 - `studio/tests/smoke/` for the retained route-integration boundaries
 

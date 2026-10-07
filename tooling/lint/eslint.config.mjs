@@ -15,7 +15,6 @@ export default [
       "site/assets/data/**",
       "site/docs-viewer/runtime/vendor/**",
       "studio/data/canonical/**",
-      "studio/data/generated/**",
       "studio/retired/**",
       "var/**"
     ]
