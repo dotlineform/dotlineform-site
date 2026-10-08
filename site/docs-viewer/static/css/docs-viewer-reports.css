@@ -133,7 +133,8 @@
   border-bottom: 1px solid var(--docs-viewer-border);
 }
 
-.docsViewerReport[data-report-collection] .docsViewerReport__row{
+.docsViewerReport[data-report-collection] .docsViewerReport__row,
+.docsViewerReport[data-report-id="selected_documents"] .docsViewerReport__row{
   margin: 0;
 }
 

@@ -292,6 +292,7 @@ export function mountDocsViewerManageDocumentExtras(context) {
       openMediaTarget: settings.openMediaTarget,
       loadMediaTarget: settings.loadMediaTarget,
       onCollectionDocumentState: settings.onCollectionDocumentState,
+      routeContext: routeContext,
       publicPreviewBase: cleanString(routeContext.publicPreviewBase),
       selectedUrl: settings.workspaceConfigState.activeConfig.selectedUrl,
       studioBaseUrl: cleanString(routeContext.studioBaseUrl),
