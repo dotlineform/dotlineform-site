@@ -44,7 +44,6 @@ export function catalogueSaveDisabled(options = {}) {
 
 export function catalogueDeleteDisabled(options = {}) {
   return !options.hasRecord
-    || normalizeText(options.mode) === "bulk"
     || Boolean(options.isSaving)
     || Boolean(options.isBuilding)
     || Boolean(options.isDeleting)

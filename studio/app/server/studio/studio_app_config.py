@@ -55,7 +55,6 @@ STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
         "health": "/studio/api/catalogue/health",
         "read": "/studio/api/catalogue/read",
         "bulk_save": "/studio/api/catalogue/bulk-save",
-        "delete_preview": "/studio/api/catalogue/delete-preview",
         "delete_apply": "/studio/api/catalogue/delete-apply",
         "create_work": "/studio/api/catalogue/work/create",
         "create_work_batch": "/studio/api/catalogue/work/create-batch",

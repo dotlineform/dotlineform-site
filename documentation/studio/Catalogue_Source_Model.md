@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260519-000000-a0da45
 title: Catalogue Source Model
 added_date: "2026-05-19 00:00:00"
-last_updated: "2026-10-07 18:27:57"
+last_updated: "2026-10-08 11:05:40"
 parent_id: d-20260401-000000-a11bf3
 
 ---
@@ -43,7 +43,7 @@ Series source records contain only `series_id` and a non-empty `title`. Series `
 
 ## Save And Delete
 
-Services validate the combined canonical state and use the existing source transaction writer. Saves and deletes use opaque server-issued record revisions; a stale edit is rejected. A combined Series/member save checks the Series and every changed Work before writing either family.
+Services validate the combined canonical state and use the existing source transaction writer. Saves use opaque server-issued record revisions; a stale edit is rejected. Single and multiple Work deletion instead use exact selected IDs and current canonical memberships, without loaded revision comparisons. Series deletion retains its revision and empty-membership requirements. A combined Series/member save checks the Series and every changed Work before writing either family.
 
 The single/New Work Series field displays its selected title and ID in the search box. Typing searches for a replacement; choosing an exact result updates the one `series_id`. Leaving or cancelling an uncommitted search restores the selected label. Series has no separate selected pill.
 
@@ -57,7 +57,7 @@ The Work editor places a multiple-selection Galleries field below Series for sin
 
 Save completes required local media after the canonical transaction and returns current canonical records and revisions to the editor. Membership reassignment updates canonical source immediately; generated Work, Series, Gallery and Docs metadata readers update on explicit Refresh Catalogue. A local media or editor-response failure preserves the saved canonical change and reports incomplete Save completion. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns the workflow.
 
-Deleting a Series with assigned Works is blocked by the required-Series rule; reassign those Works first. Deleting a Work removes its entry from `galleries-by-work.json` in the same canonical transaction; Refresh Catalogue later removes its obsolete generated record and updates former memberships. Shared or remote media cleanup is separate. The Studio Detail browser, section service, Detail read target and Detail mutation paths are retired. Studio's write context allows Works, Series, Gallery definitions and Work Gallery memberships. Bulk creation of ordinary Works belongs to a separate delivery.
+Deleting a Series with assigned Works is blocked by the required-Series rule; reassign those Works first. Deleting one or multiple Works removes their current entries from `galleries-by-work.json` in the same canonical transaction; Refresh Catalogue later removes obsolete generated records and updates former memberships. Work deletion leaves Gallery/Series definitions and shared media intact. The Studio Detail browser, section service, Detail read target and Detail mutation paths are retired. Studio's write context allows Works, Series, Gallery definitions and Work Gallery memberships. Bulk creation of ordinary Works belongs to a separate delivery.
 
 Canonical files use stable schema headers and deterministic record ordering. Optional empty fields follow the source serializer's omission rules. Volatile write timestamps belong in operation logs, not source records.
 

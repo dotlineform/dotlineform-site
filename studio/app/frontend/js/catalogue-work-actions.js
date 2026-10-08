@@ -1,11 +1,9 @@
 import { saveNewWorkBatch } from "./catalogue-work-batch.js";
 import { firstCatalogueValidationMessage } from "./catalogue-editor-message-controller.js";
 import { catalogueSaveCompletionError, catalogueSavedActionError } from "./catalogue-save-result.js";
-import { applyCatalogueDelete, createCatalogueWork, previewCatalogueDelete, saveCatalogueBulkRecords, saveCatalogueWork } from "./catalogue-editor-service-client.js";
+import { applyCatalogueDelete, createCatalogueWork, saveCatalogueBulkRecords, saveCatalogueWork } from "./catalogue-editor-service-client.js";
 
-import { formatCatalogueDeletePreview } from "./catalogue-editor-modal-formatters.js";
 import { confirmCatalogueActionModal } from "./catalogue-editor-action-modals.js";
-import { extractCatalogueActionPreview, getCataloguePreviewBlocker } from "./catalogue-editor-action-workflow.js";
 import {
   setEmptySearchMode,
   setLoadedBulkWorks,
@@ -207,39 +205,23 @@ export async function saveNewWork(state, context) {
 }
 
 
+/** Confirm the selected identities once, then delete current canonical Works and memberships. */
 export async function deleteCurrentWork(state, context) {
-  if (!state.currentRecord || state.mode === "bulk" || !state.serverAvailable) return;
-  state.isDeleting = true;
-  context.updateEditorState();
-  setTextWithState(context, state.statusNode, t(state, context, "delete_status_running", "Preparing delete preview…"));
-  setTextWithState(context, state.resultNode, "");
+  const workIds = state.mode === "bulk" ? state.bulkWorkIds.slice()
+    : state.currentRecord ? [state.currentWorkId] : [];
+  if (!workIds.length || !state.serverAvailable || state.isSaving || state.isBuilding
+    || state.isDeleting || state.isEditingDefinition) return;
   let savedResponse = null;
   try {
-    const request = {
-      kind: "work",
-      work_id: state.currentWorkId,
-      expected_record_hash: state.currentRecordHash
-    };
-    const previewResponse = await previewCatalogueDelete(request);
-    const preview = extractCatalogueActionPreview(previewResponse);
-    const blocker = getCataloguePreviewBlocker(preview, {
-      includeValidationErrors: true,
-      fallback: t(state, context, "delete_status_blocked", "Delete is blocked.")
-    });
-    if (blocker) {
-      setTextWithState(context, state.statusNode, blocker, "error");
-      return;
-    }
-    const summary = formatCatalogueDeletePreview(preview, {
-      text: (key, fallback, tokens) => t(state, context, key, fallback, tokens),
-      defaultText: "Delete this source record?"
-    });
-    state.isDeleting = false;
-    context.updateEditorState();
+    const tokens = { count: String(workIds.length), work_ids: workIds.join(", "), work_id: workIds[0] };
+    const summary = workIds.length === 1
+      ? t(state, context, "delete_work_confirm", "Delete Work {work_id} and its Gallery memberships?", tokens)
+      : t(state, context, "delete_works_confirm", "Delete these {count} Works and their Gallery memberships?\n{work_ids}", tokens);
     const confirmed = await confirmCatalogueActionModal(state, {
       title: t(state, context, "delete_confirm_title", "Confirm delete"),
-      message: summary,
-      primaryLabel: t(state, context, "delete_confirm_button", "Delete"),
+      message: `${summary}\n${t(state, context, "delete_media_retained", "Shared images and files will be kept.")}`,
+      primaryLabel: workIds.length === 1 ? t(state, context, "delete_confirm_button", "Delete")
+        : t(state, context, "delete_works_confirm_button", "Delete {count} Works", tokens),
       cancelLabel: t(state, context, "confirm_cancel_button", "Cancel"),
       defaultAction: "cancel",
       restoreFocus: state.deleteButton
@@ -250,23 +232,31 @@ export async function deleteCurrentWork(state, context) {
     }
     state.isDeleting = true;
     context.updateEditorState();
-    setTextWithState(context, state.statusNode, t(state, context, "delete_status_running", "Deleting source record…"));
-    const response = await applyCatalogueDelete(request);
+    setTextWithState(context, state.resultNode, "");
+    setTextWithState(context, state.statusNode, t(state, context, "delete_works_status_running", "Deleting selected Works…"));
+    const response = await applyCatalogueDelete({ kind: "works", ids: workIds });
     savedResponse = response;
     context.noteCatalogueSaved(response);
-    if (response.kind !== "work" || response.id !== request.work_id || response.deleted !== true) {
-      throw new Error("Delete response does not match the selected Work.");
+    if (response.kind !== "works" || response.deleted !== true || !Array.isArray(response.ids)
+      || response.ids.some(id => typeof id !== "string")
+      || response.ids.length !== workIds.length
+      || response.ids.slice().sort().join(",") !== workIds.slice().sort().join(",")) {
+      throw new Error("Delete response does not match the selected Works.");
     }
-    state.sourceWorkRecordsById.delete(request.work_id);
-    state.workSearchById.delete(request.work_id);
+    for (const workId of workIds) {
+      state.sourceWorkRecordsById.delete(workId);
+      state.workSearchById.delete(workId);
+    }
     state.nextSuggestedWorkId = suggestNextWorkId([...state.workSearchById.values()]);
     setEmptySearchMode(state, context.workRouteStateOptions());
     const completionError = catalogueSaveCompletionError(response);
-    setTextWithState(context, state.resultNode, completionError || t(state, context, "delete_result_success", "Deleted work {work_id}.", { work_id: request.work_id }), completionError ? "error" : "success");
+    const success = workIds.length === 1
+      ? t(state, context, "delete_result_success", "Deleted work {work_id}.", tokens)
+      : t(state, context, "delete_works_result_success", "Deleted {count} Works.", tokens);
+    setTextWithState(context, state.resultNode, completionError || success, completionError ? "error" : "success");
   } catch (error) {
-    const message = catalogueSavedActionError(savedResponse, error) || (Number(error && error.status) === 409
-      ? t(state, context, "delete_status_conflict", "Source record changed since this page loaded. Reload before deleting again.")
-      : `${t(state, context, "delete_status_failed", "Source delete failed.")} ${normalizeText(error && error.message)}`.trim());
+    const message = catalogueSavedActionError(savedResponse, error)
+      || `${t(state, context, "delete_status_failed", "Source delete failed.")} ${normalizeText(error && error.message)}`.trim();
     setTextWithState(context, state.statusNode, message, "error");
   } finally {
     state.isDeleting = false;

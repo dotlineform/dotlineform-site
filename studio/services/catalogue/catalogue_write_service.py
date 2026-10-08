@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 from catalogue.catalogue_bulk_service import bulk_save_payload
-from catalogue.catalogue_delete_service import delete_apply_response, delete_preview_payload
+from catalogue.catalogue_delete_service import delete_apply_response
 from catalogue.catalogue_series_service import series_create_payload, series_save_payload
 from catalogue.catalogue_gallery_service import mutate_gallery_payload
 from catalogue.catalogue_service_context import CatalogueWriteContext, build_catalogue_write_context
@@ -28,7 +28,6 @@ SERVICE_POST_PATHS = {
     "/gallery/create",
     "/gallery/save",
     "/gallery/delete",
-    "/delete-preview",
     "/delete-apply",
 }
 
@@ -49,17 +48,18 @@ def handle_catalogue_post(
     elif attachments or "regenerate_image" in body:
         raise ValueError("Media requests belong to single Work create/Save")
     context = build_catalogue_write_context(repo_root, dry_run=dry_run)
+    if api_path == "/delete-apply":
+        return delete_apply_response(context, body)
     if api_path == "/work/create-batch":
         payload, previous, current = work_batch_create_payload(context, body)
         complete_saved_catalogue_edit(context, payload, previous, current_records=current)
         return HTTPStatus.OK, payload
-    previous = records_from_json_source(context.source_dir) if api_path != "/delete-preview" else None
+    previous = records_from_json_source(context.source_dir)
     status, payload = _dispatch_mutation(context, api_path, body)
-    if previous is not None:
-        complete_saved_catalogue_edit(
-            context, payload, previous, attachment_files=attachment_files,
-            regenerate_image=regenerate_image,
-        )
+    complete_saved_catalogue_edit(
+        context, payload, previous, attachment_files=attachment_files,
+        regenerate_image=regenerate_image,
+    )
     return status, payload
 
 
@@ -76,8 +76,4 @@ def _dispatch_mutation(context: CatalogueWriteContext, api_path: str, body: Mapp
         return HTTPStatus.OK, series_save_payload(context, body)
     if api_path in {"/gallery/create", "/gallery/save", "/gallery/delete"}:
         return HTTPStatus.OK, mutate_gallery_payload(context, api_path.rsplit("/", 1)[1], body)
-    if api_path == "/delete-preview":
-        return HTTPStatus.OK, delete_preview_payload(context, body)
-    if api_path == "/delete-apply":
-        return delete_apply_response(context, body)
     raise FileNotFoundError(f"Unknown catalogue service route: {api_path}")

@@ -8,13 +8,11 @@ CATALOGUE_READ_PATH = "/catalogue/read"
 SERIES_SAVE_PATH = "/catalogue/series/save"
 SERIES_CREATE_PATH = "/catalogue/series/create"
 BULK_SAVE_PATH = "/catalogue/bulk-save"
-DELETE_PREVIEW_PATH = "/catalogue/delete-preview"
 DELETE_APPLY_PATH = "/catalogue/delete-apply"
 
 POST_PATHS = (
     WORK_CREATE_PATH,
     BULK_SAVE_PATH,
-    DELETE_PREVIEW_PATH,
     DELETE_APPLY_PATH,
     WORK_SAVE_PATH,
     SERIES_SAVE_PATH,

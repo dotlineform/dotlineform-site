@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260428-000000-f5ff18
 title: Planned Features
 added_date: "2026-04-28 00:00:00"
-last_updated: "2026-10-07 23:27:56"
+last_updated: "2026-10-08 11:05:40"
 summary: This explains the delivery model and workflows to implement new repo and application features.
 ui_status: planned
 parent_id: ""
@@ -149,6 +149,8 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 ## Ad-hoc Deliveries
 
 Store new standalone delivery documents for bounded work that does not need a separate feature parent under `documentation/studio/deliveries/`. Parent them directly to this document and keep implementation state, decisions and completion gates in the delivery. At closeout, transfer lasting details to the durable owner and review whether the delivery and its link should be retained.
+
+- [Work Deletion Delivery](deliveries/Work_Deletion_Delivery.md) — Implemented and reviewed; awaiting user manual acceptance. Single and multiple Work deletion share exact-ID intent, one confirmation and a combined canonical Work/membership write. Lint, syntax and import diagnostics passed; tests remain pending separate review and untouched. Restart Local Studio and force-reload the editor for manual review.
 
 - [Rebuild Displayed Document Delivery](deliveries/Rebuild_Displayed_Document_Delivery.md) — Implemented and reviewed; awaiting user manual menu/reload acceptance. Edit doc → Rebuild targets the displayed ordinary or collection document, preserves source dates and omits Search/media production. Direct service builds, lint/syntax and shared forced-reload projection/site validation passed; restart the Docs Viewer service and hard-refresh the local reader.
 - [Catalogue Documents And Metadata](Catalogue_Documents_And_Metadata.md) — Complete and accepted on 2026-10-07. The refined Entry pilot is accepted and Full reconciliation converted all 4,618 Working Catalogue documents to Entry plus `context`, with no additions, retitles, deletions or warnings. Retained for metadata decisions and recent-work lookup pending manual archive; Publish and Git actions remain separate.

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260602-111803-019594
 title: Local Studio APIs
 added_date: "2026-06-02 11:18:03"
-last_updated: "2026-09-23 14:19:53"
+last_updated: "2026-10-08 11:05:40"
 summary: Exact loopback Studio app and catalogue API inventory, adapter boundaries, and extension rules.
 parent_id: d-20260522-080600-a2b102
 
@@ -38,9 +38,9 @@ The `read` endpoint accepts only server-owned keys and any required record id. I
 | work | `/work/create`, `/work/save` |
 | series | `/series/create`, `/series/save` |
 | bulk edit | `/bulk-save` |
-| delete | `/delete-preview`, `/delete-apply` |
+| delete | `/delete-apply` |
 
-Every path is beneath `/studio/api/catalogue`. Successful mutations run the shared Catalogue output-completion service after canonical persistence. Bulk edit accepts Works only; delete accepts Work or Series only. Detail create/save, bulk-edit and delete operations are retired. Responses distinguish saved data from output failure; there are no separate publication, Build or media-publish endpoints.
+Every path is beneath `/studio/api/catalogue`. Successful mutations run shared local completion after canonical persistence. Bulk edit accepts Works only. Work deletion uses `{ "kind": "works", "ids": ["00001", "00002"] }` for one or many selected Works, without revision fields; IDs must be distinct exact five-digit strings. It returns the same `kind` and exact `ids` with `deleted: true`. Series deletion uses `{ "kind": "series", "series_id": "009", "expected_record_hash": "<revision>" }` and retains the empty-Series rule. Generic `id` request aliases, singular Work-delete requests and the preliminary Catalogue delete-preview route are retired without fallbacks. Detail mutation operations are also retired. Responses distinguish saved data from incomplete local completion; generated Catalogue readers still update through Refresh Catalogue. There are no separate publication, Build or media-publish endpoints.
 
 Generated Catalogue thumbnail reads use the confined local `/studio/catalogue-output/` route, separate from mutation APIs.
 
@@ -57,7 +57,7 @@ The adapter does not own source schemas, mutation policy, build planning, or pub
 
 - endpoints are loopback-only and accept explicit JSON objects or allowlisted query keys
 - filesystem and environment paths are resolved on the server
-- preview endpoints remain write-free; apply endpoints revalidate
+- destructive requests validate exact selected IDs, current canonical data and allowed write targets before writing
 - source writes use focused validation and atomic catalogue transactions
 - browser visibility or a runtime-config service entry does not grant authority
 

@@ -17,10 +17,7 @@ export function saveCatalogueBulkRecords(payload) {
   return postJson(CATALOGUE_WRITE_ENDPOINTS.bulkSave, payload);
 }
 
-export function previewCatalogueDelete(payload) {
-  return postJson(CATALOGUE_WRITE_ENDPOINTS.deletePreview, payload);
-}
-
+/** Delete exact Work IDs or one empty Series; Work deletion does not compare revisions. */
 export function applyCatalogueDelete(payload) {
   return postJson(CATALOGUE_WRITE_ENDPOINTS.deleteApply, payload);
 }

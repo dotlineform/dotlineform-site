@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260422-000000-45a776
 title: Catalogue Work Editor
 added_date: "2026-04-22 00:00:00"
-last_updated: "2026-10-08 10:39:09"
+last_updated: "2026-10-08 11:05:40"
 parent_id: d-20260423-000000-d015e6
 
 ---
@@ -77,7 +77,7 @@ Series Delete is disabled with an explanation while saved Works belong to the Se
 
 ## Bulk Editing
 
-Gallery membership is the only editable field in bulk mode, whether selection comes from list rows or the ID/range search. Other Work fields are read-only; download, link, media and delete controls are unavailable.
+Gallery membership is the only editable field in bulk mode, whether selection comes from list rows or the ID/range search. Other Work fields are read-only; download, link and media controls are unavailable. Delete is available for the selected saved Works and uses the same identity-based operation as single-Work deletion.
 
 The Gallery picker initially shows the intersection of the selected Works' memberships. Editing that pill set and saving replaces every selected Work's memberships with the final set. For Works in `{A, B}` and `{B, C}`, the picker shows `{B}`; adding `D` and saving gives both Works `{B, D}`. Works in `{A}` and `{B}` show no initial pills; adding `D` and saving gives both Works only `{D}`.
 
@@ -87,9 +87,13 @@ Bulk Save uses one request and one combined canonical transaction. Each selected
 
 ## Delete
 
-Work deletion uses a server preview and confirmation, then repeats validation and checks the Work revision before applying. It deletes the canonical Work and its Gallery membership entry in the same transaction. The editor then removes the deleted Work from its live search and Series member list, updates the member count, and clears the Work selection, form, preview and Work URL parameter without reloading the page. The selected Series and expanded-list layout remain in place, including when the last member is deleted. A confirmed canonical deletion with incomplete local completion still clears the deleted Work and displays the completion error. Cancellation or an unconfirmed deletion leaves the current Work selected. Refresh Catalogue later removes its generated record and updates indexes and former Series/Gallery memberships. Shared or remote media cleanup is separate. Deletion does not write retired Detail storage.
+Delete applies to one or all selected saved Works, including selections made through the ID/range search. One browser confirmation names a single Work ID or lists the selected count and exact IDs for multiple Works. Cancel is the default and retains the selection and draft. The confirmation uses the selected identities directly, without a preliminary server preview.
 
-The 2026-10-06 deletion-state correction passed focused JavaScript lint for `catalogue-work-actions.js` and repository whitespace checks. Bounded source/diff review traced confirmed deletion through the live maps, empty Work state, retained Series browser, member count, preview/layout and final busy-state release; no findings remained. Cancellation, last-member deletion and incomplete local completion received source review only. No tests, browser automation or real Work deletion ran; manual interaction confirmation remains with the user.
+Single and multiple Work deletion share one request containing exact IDs, without loaded Work or Gallery revision comparisons. Apply reads current canonical data once, removes the selected Works and their current Gallery membership entries, validates the resulting Catalogue and writes Works and memberships through the existing combined transaction owner. Invalid or duplicate IDs, an absent Work or invalid resulting data fail before writes. Metadata or image changes since loading do not invalidate deletion by identity. Gallery and Series definitions remain, including definitions made empty by deletion; shared images and files are retained.
+
+The editor then removes all confirmed deleted Works from its live search and Series member list, updates the member count, and clears the Work selection, form, preview and Work URL parameter without reloading the page. The displayed Series and expanded-list layout remain in place, including when the last member is deleted. A confirmed canonical deletion with incomplete local completion still removes those Works from the editor and displays the completion error. Cancellation or an unconfirmed deletion retains the selection. Refresh Catalogue later removes obsolete generated records and updates former memberships; publication and media cleanup retain their separate owners.
+
+The 2026-10-08 deletion delivery implements this shared single/multiple contract. Focused Python/JavaScript lint, Python syntax, service/configuration import diagnostics and whitespace checks passed. Code review covered current-data ownership, failure and editor-state paths; response-ID string validation and removal of unused plan fields resolved the review findings, with no blocking findings remaining. These are static/import and source-review evidence, not runtime mutation verification. Tests remain pending separate review and were not changed or run. No browser automation, real Work deletion, Catalogue Refresh, Publish, commit or push ran. Restart Local Studio and force-reload the editor to adopt the updated service and browser code; interaction and mutation confirmation remain manual.
 
 Subfolder batch creation uses New Work mode; saved bulk editing remains limited to Gallery memberships. Shared file-picker, record-list, modal and media-preview components remain available without restoring Detail-specific browsers, modals or services.
 

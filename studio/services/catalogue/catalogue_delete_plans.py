@@ -1,104 +1,79 @@
-"""Plan canonical Catalogue deletion without touching media or public output."""
+"""Plan exact Catalogue deletions from current canonical data without media cleanup."""
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
 
-from catalogue.catalogue_source import (
-    CatalogueSourceRecords,
-    SOURCE_FILES,
-    payload_for_map,
-    records_from_json_source,
-    validate_source_records,
-    load_json_file,
+from catalogue.catalogue_galleries import (
+    CatalogueGalleries, MEMBERSHIPS_FILE, read_galleries, validate_galleries,
 )
-from catalogue.catalogue_galleries import read_galleries, validate_galleries, MEMBERSHIPS_FILE
 from catalogue.catalogue_series_galleries import (
-    SERIES_GALLERIES_FILE, CatalogueSeriesGalleries, read_series_galleries, without_series,
+    SERIES_GALLERIES_FILE, read_series_galleries, without_series,
+)
+from catalogue.catalogue_source import (
+    CatalogueSourceRecords, SOURCE_FILES, payload_for_map, records_from_json_source,
+    validate_source_records,
 )
 
 
 @dataclass(frozen=True)
 class DeleteApplyPlan:
-    """Exact source writes and affected identities for one validated deletion."""
+    """Carry current inputs and validated resulting records through one combined write."""
 
-    kind: str
-    record_id: str
     payloads: dict[Path, dict[str, Any]]
     affected: dict[str, list[str]]
-
-
-def _delete_records(
-    source_dir: Path, kind: str, record_id: str,
-) -> tuple[CatalogueSourceRecords, dict[str, Any], dict[str, list[str]], CatalogueSeriesGalleries | None]:
-    source = records_from_json_source(source_dir)
-    families = {"work": source.works, "series": source.series}
-    if kind not in families:
-        raise ValueError("delete kind must be work or series")
-    original = families[kind].get(record_id)
-    if original is None:
-        raise ValueError(f"{kind} not found: {record_id}")
-    pairs = None
-    if kind == "series":
-        galleries = read_galleries(source_dir, source.works)
-        pairs = read_series_galleries(source_dir, source.series, galleries.galleries)
-    affected: dict[str, list[str]] = {"works": [], "series": []}
-    if kind == "series":
-        del source.series[record_id]
-        affected["series"] = [record_id]
-        for work_id, work in source.works.items():
-            if work.get("series_id") == record_id:
-                work.pop("series_id")
-                affected["works"].append(work_id)
-    elif kind == "work":
-        affected["works"] = [record_id]
-        affected["series"] = [original["series_id"]] if original.get("series_id") else []
-        del source.works[record_id]
-    return source, dict(original), {key: sorted(values) for key, values in affected.items()}, pairs
-
-
-def build_delete_preview(
-    source_dir: Path, kind: str, record_id: str,
-) -> dict[str, Any]:
-    """Describe the exact canonical deletion; output and media remain paused."""
-    source, original, affected, pairs = _delete_records(source_dir, kind, record_id)
-    errors = validate_source_records(source)
-    summary = f"Delete {kind} {record_id} from canonical Catalogue data."
-    if kind == "series" and affected["works"]:
-        summary += f" Clear the Series assignment on {len(affected['works'])} Work(s), keeping those Works."
-    if kind == "series" and pairs is not None:
-        count = len(pairs.pairs_by_series.get(record_id, ()))
-        if count:
-            summary += f" Remove its {count} Gallery association(s)."
-    summary += " Media and output are unchanged."
-    return {
-        "kind": kind, "id": record_id, "record": original, "affected": affected,
-        "blockers": [], "validation_errors": errors, "blocked": bool(errors),
-        "summary": summary,
-        "cleanup": {},
-    }
+    previous: CatalogueSourceRecords
+    current: CatalogueSourceRecords
 
 
 def build_delete_apply_plan(
-    source_dir: Path, kind: str, record_id: str,
+    source_dir: Path, kind: str, record_ids: list[str],
 ) -> DeleteApplyPlan:
-    """Recompute and validate source writes instead of trusting the preview payload."""
-    source, _original, affected, pairs = _delete_records(source_dir, kind, record_id)
-    errors = validate_source_records(source)
+    """Read canonical inputs once and remove exact identities and their owned references.
+
+    Work metadata revisions do not qualify deletion intent. Unknown identities,
+    invalid resulting data and a Series with member Works fail before writes.
+    """
+    source = records_from_json_source(source_dir)
+    payloads: dict[Path, dict[str, Any]] = {}
+    if kind == "works":
+        works = dict(source.works)
+        series_ids: set[str] = set()
+        for work_id in record_ids:
+            original = works.pop(work_id, None)
+            if original is None:
+                raise ValueError(f"Work not found: {work_id}")
+            if original.get("series_id"):
+                series_ids.add(original["series_id"])
+        galleries = read_galleries(source_dir, source.works)
+        remaining_memberships = CatalogueGalleries(
+            galleries=galleries.galleries,
+            works={wid: ids for wid, ids in galleries.works.items() if wid in works},
+        )
+        validate_galleries(remaining_memberships, works)
+        current = replace(source, works=works)
+        payloads[(source_dir / SOURCE_FILES["works"]).resolve()] = payload_for_map("works", works)
+        payloads[(source_dir / MEMBERSHIPS_FILE).resolve()] = remaining_memberships.payloads()[MEMBERSHIPS_FILE]
+        affected = {"works": record_ids, "series": sorted(series_ids)}
+    elif kind == "series" and len(record_ids) == 1:
+        series_id = record_ids[0]
+        series = dict(source.series)
+        if series.pop(series_id, None) is None:
+            raise ValueError(f"Series not found: {series_id}")
+        if any(work.get("series_id") == series_id for work in source.works.values()):
+            raise ValueError("Only Series with no member Works can be deleted.")
+        galleries = read_galleries(source_dir, source.works)
+        pairs = read_series_galleries(source_dir, source.series, galleries.galleries)
+        current = replace(source, series=series)
+        payloads[(source_dir / SOURCE_FILES["series"]).resolve()] = payload_for_map("series", series)
+        if series_id in pairs.pairs_by_series:
+            payloads[(source_dir / SERIES_GALLERIES_FILE).resolve()] = without_series(pairs, series_id).payload()
+        affected = {"works": [], "series": record_ids}
+    else:
+        raise ValueError("delete kind must be works or one series")
+    errors = validate_source_records(current)
     if errors:
         raise ValueError("source validation failed: " + "; ".join(errors[:20]))
-    payloads: dict[Path, dict[str, Any]] = {}
-    if kind in {"work", "series"}:
-        payloads[(source_dir / SOURCE_FILES["works"]).resolve()] = payload_for_map("works", source.works)
-    if kind == "series":
-        payloads[(source_dir / SOURCE_FILES["series"]).resolve()] = payload_for_map("series", source.series)
-        if pairs is not None and record_id in pairs.pairs_by_series:
-            payloads[(source_dir / SERIES_GALLERIES_FILE).resolve()] = without_series(pairs, record_id).payload()
-    if kind == "work":
-        galleries = read_galleries(source_dir, load_json_file(source_dir / "works.json")["works"])
-        galleries.works.pop(record_id, None)
-        validate_galleries(galleries, source.works)
-        payloads[(source_dir / MEMBERSHIPS_FILE).resolve()] = galleries.payloads()[MEMBERSHIPS_FILE]
-    return DeleteApplyPlan(kind, record_id, payloads, affected)
+    return DeleteApplyPlan(payloads, affected, source, current)

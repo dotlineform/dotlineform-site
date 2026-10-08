@@ -320,8 +320,7 @@ function updateEditorState(state) {
     serverAvailable: state.serverAvailable
   });
   state.deleteButton.disabled = catalogueDeleteDisabled({
-    hasRecord: Boolean(state.currentRecord),
-    mode: state.mode,
+    hasRecord: state.mode === "bulk" ? state.bulkWorkIds.length > 0 : Boolean(state.currentRecord),
     isSaving: state.isSaving,
     isBuilding: state.isBuilding,
     isDeleting: state.isDeleting,

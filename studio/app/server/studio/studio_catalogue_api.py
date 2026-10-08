@@ -78,7 +78,6 @@ def catalogue_get_payload(repo_root: Path, api_path: str, query: Mapping[str, li
             "routes": [
                 "read",
                 "bulk-save",
-                "delete-preview",
                 "delete-apply",
                 "work/create",
                 "work/create-batch",

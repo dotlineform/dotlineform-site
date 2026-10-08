@@ -38,7 +38,7 @@ def complete_saved_catalogue_edit(
 ) -> None:
     """Preserve canonical success when local media or response completion fails.
 
-    A creation owner may pass its already validated current records to avoid an
+    Creation and deletion owners may pass validated current records to avoid an
     initial reread. Media promotion still owns dimensions/revisions, so editor
     completion reads their final canonical state after media has been attempted.
     """
