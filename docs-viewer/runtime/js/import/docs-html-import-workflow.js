@@ -200,6 +200,7 @@ export async function runDocsHtmlImportWorkflow(
       });
     } catch (error) {
       console.warn("docs_import_source: terminal result projection failed", error);
+      setStatus(state.statusNode, "error", "Documents imported, but reader refresh failed: " + error.message);
     }
   } catch (error) {
     console.warn("docs_import_source: import failed", error);

@@ -343,6 +343,7 @@ export function createDocsImportCollectionController(options = {}) {
             }
           } catch (error) {
             console.warn("docs_import_collection: terminal result projection failed", error);
+            if (!state.collection) setStatus(statusNode, "error", "Documents imported, but reader refresh failed: " + error.message);
           }
         }
       } else {

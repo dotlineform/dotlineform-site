@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260331-000000-c313fd
 title: Runtime
 added_date: "2026-03-31 00:00:00"
-last_updated: "2026-10-08 19:24:55"
+last_updated: "2026-10-08 19:40:52"
 summary: Public, manage, and review execution paths; browser/server authority boundaries; extension method; rationale; and known weak spots.
 parent_id: d-20260424-000000-50b63f
 ---
@@ -127,7 +127,7 @@ The Docs Viewer service uses browser-private HTTP caching for normal browsing. `
 
 Requested-file responses use weak validators based on nanosecond modification/change times and size. Unchanged conditional reads return `304` without opening or transferring the file. Transformed HTML and JSON API responses use an ETag of their actual response bytes. They still perform the owning read and validation before comparison, so missing files and failed requests remain errors rather than cached success. API cache responses vary by Origin and retain their allowed CORS headers on `304`.
 
-Generated-data, collection refresh, Catalogue presentation and generated-report clients use browser revalidation rather than `no-store`. The browser handles `304` and supplies the cached body to the existing renderer. Working's independent two-second refresh remains in place. Awaited Save output and Prepare Preview changes produce current responses through their existing workflows; document editing requires no manual cache clearing. Source/management clients and Studio canonical-data reports retain their own freshness boundaries. Docs Review package endpoints retain their existing policy.
+Generated-data, collection refresh, Catalogue presentation and generated-report clients use browser revalidation rather than `no-store`. The browser handles `304` and supplies the cached body to the existing renderer. Initial loads, navigation and completed application actions request their required current data explicitly; an idle Working viewer makes no recurring index or document reads. Source/management clients and Studio canonical-data reports retain their own freshness boundaries. Docs Review package endpoints retain their existing policy.
 
 App code URLs currently use a fixed shell version marker, not automatic code-version invalidation. After developing JavaScript, CSS or icons, use a forced reload or clear cached files as needed. Browser history need not be removed. Do not apply the one-day app policy to generated JSON or authored media, and do not treat an arbitrary query parameter on an unversioned asset as a Catalogue media version. Public hosting keeps its own response-header policy; shared client changes reach the tracked site through the runtime projection.
 
@@ -181,17 +181,32 @@ The single `POST /docs/source/save` validates the complete draft and performs on
 
 Source Save uses the viewer's shared busy state through persistence, generation, fresh payload read and rendered display. Save and management Build show a waiting cursor throughout the local viewer, including links, editor text and disabled controls; the cursor clears on success or failure. Modals that explicitly suppress the page busy cursor retain their ordinary control cursors.
 
-Successful Source Save is silent; persistence, generation, display and retained-list errors remain visible. On 2026-10-08 the user confirmed normal and collection document authoring, Draft and starred changes, and reported a much quicker experience after watcher retirement. Detailed navigation/position cases, partial failures and persistent-media regeneration were not separately confirmed; no measured speedup is claimed. Browser polling remains independent of awaited Save.
+Successful Source Save is silent; persistence, generation, display and retained-list errors remain visible. On 2026-10-08 the user confirmed normal and collection document authoring, Draft and starred changes, and reported a much quicker experience after watcher retirement. Detailed navigation/position cases, partial failures and persistent-media regeneration were not separately confirmed; no measured speedup is claimed.
 
 Source mounts beside the existing rendered content and hides that content with management-only CSS. It does not detach a collection report and trigger its unmount observer. Successful Save reads the newly generated payload, removes the editor and refreshes the retained document mount without changing route, history or reading position. The reader panel stays closed until a pin is used. If the fresh read fails, the saved buffer remains clean and the display error is reported; recovery uses reload or the existing explicit Rebuild.
 
-## Automatic Working Refresh
+## Explicit Working Refresh
 
-The filesystem watcher is retired. Application writes await their own required generation, and deliberate external Markdown edits require explicit Rebuild. Source Save loads its fresh result through `docs-viewer-route-workflow.js`; the existing two-second Working poll remains for independent generated changes. Polling runs only while the page is visible, management is idle and Source is inactive.
+The filesystem watcher and browser refresh timer are retired. Application completion owns required view updates through the existing route workflow, workspace provider and list owners. There is no server push, recurring freshness read or cross-tab synchronization. Initial loads, explicit reloads, ordinary navigation and browser Back/Forward retain their existing owners.
 
-Each poll reads the index and the exact displayed generated payload independently, so a token-only edit can refresh even when the parent index is unchanged. Ordinary payloads use the collection provider; a validated collection detail uses its own generated by-ID reader in `docs-collection-report.js`. Unchanged payloads are left mounted. Before applying a response, the reader verifies the captured route, request, displayed document and rendered mode; collection reads also retain their exact detail identity. Late reads cannot replace another target or a reopened Source session.
+| Completed action | Owned view update |
+| --- | --- |
+| Source Save | Project the complete committed metadata to Index and retained lists, then read and display the fresh exact generated document. |
+| Draft/ready | Project the changed front-matter record to the menu and retained lists; do not reload the document body. |
+| Assign Subject | Project its committed record and refresh the same exact displayed document; no-change results reuse the current view. |
+| Create | Project the committed record, refresh the ordinary Index where required, and open the exact created target in Source through the existing ordinary or collection owner. |
+| Edit doc → Rebuild | Reload ordinary Index metadata where applicable, read exact current management metadata for retained lists, and refresh the displayed generated payload. |
+| Rebuild docs and Search / changed Settings | Reload the ordinary Index and refresh the exact displayed document/report. Rebuild also invalidates loaded Search and Recent inputs and awaits the currently visible list; the next activation reads inactive lists. Query, Index view and list scroll remain independent of the document refresh. |
+| Import | Forward confirmed committed records, including individually completed files before later cancellation/failure. Refresh an overwritten displayed target, reload the ordinary Index at terminal completion, and refresh the current named collection report for a completed collection import. Open the selected single-file result through the existing route owner. |
+| Delete / Position | Commit confirmed deletions to retained list owners and reload the ordinary Index after an ordinary mutation, including before returning to a caller after deleting the displayed document. Keep a surviving main-pane target in place; Position changes tree order only. |
+| Catalogue Regenerate | Await the owning collection's explicit manifest/report refresh. |
+| Publish | Await the existing Recent invalidation/visible-list refresh before releasing management busy state. Search retains its separate rebuild policy. |
 
-Changed content updates the rendered body and open Info while retaining route, selection and reading position. A collection detail's action mount is created once when opening its detail shell and presented in the shared top row. Content refresh does not create, replace or remove that mount. Refresh errors have their own status and cannot reverse or repeat a successful Source Save. Pre-publish, Published and public routes remain read-only and do not join this Working authoring poll.
+`docs-viewer-route-workflow.js` owns the shared `refreshDocument` completion command. It preserves Source's existing leave/discard confirmation; only the Source Save service adapter marks its already persisted source as safe to leave directly. It reads the exact ordinary or named-collection by-ID payload from the generated-data owner, verifies the request, displayed target, current route and mode, then refreshes the retained mount and current browser entry without adding history or resetting reading position. Retained payloads do not satisfy this fresh-result read. Read, display and retained-list failures remain visible after a completed write/build; recovery is explicit reload or Rebuild, without background retry.
+
+The [Info Panel](Info_Panel.md) is an intentional detached capture of a pinned document, independent of the main pane and its updates. Navigation or content refresh does not retarget or reopen it. Source entry closes it. Draft changes affect operational metadata absent from the capture. These owners require no polling-based Info update.
+
+For a deliberate external Markdown change, rebuild the exact document and refresh/reopen the relevant view. A targeted CLI build changes generated files without notifying existing browser models; browser reload starts a fresh view, while navigation may reuse a retained caller. Changes made in another tab/window likewise need explicit reload or reopen. Persistent-media edits retain the separately selected full Rebuild docs and Search workflow in [Source Organisation](Source_Organisation.md#explicit-external-edit-and-media-rebuilds). Public and Review retain read-only authority and their ordinary explicit loads.
 
 ## Review Execution Path
 

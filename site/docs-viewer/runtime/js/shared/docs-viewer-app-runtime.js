@@ -17,6 +17,7 @@ import {
 import {
   initDocsViewerRouteWorkflow
 } from "./docs-viewer-route-workflow.js";
+import { documentTargetKey } from "./docs-viewer-document-target.js";
 import {
   escapeHtml
 } from "./docs-viewer-render.js";
@@ -347,9 +348,17 @@ export function startDocsViewerRuntime(options) {
       }
     },
     mountDocumentExtras: settings.mountDocumentExtras,
-    openDocument: function (target, response) {
-      if (response && response.record) collectionProvider.commitDocumentChange({ target: target, record: response.record });
-      return routeWorkflowCommands.loadDoc(target);
+    openDocument: async function (target, response) {
+      var projectionErrors = response && response.record
+        ? collectionProvider.commitDocumentChange({ target: target, record: response.record }) : [];
+      var loaded;
+      if (response && response.record && appSession.domains.selectedDocument.documentTarget
+        && documentTargetKey(target) === documentTargetKey(appSession.domains.selectedDocument.documentTarget)) {
+        await routeWorkflowCommands.refreshDocument(target);
+        loaded = target;
+      } else loaded = await routeWorkflowCommands.loadDoc(target);
+      if (projectionErrors.length) throw new Error("Document updated, but a retained list could not be updated: " + projectionErrors.map(function (error) { return error.message; }).join("; "));
+      return loaded;
     },
     commitDeletedDocument: function (target) { return routeWorkflowCommands.commitDeletedDocument(target); },
     mountRelatedLinks: documentViewCoordinator.mountRelatedLinks,
@@ -468,7 +477,11 @@ export function startDocsViewerRuntime(options) {
     if (change.target.collection) return;
     var index = appSession.domains.documentIndex;
     if (change.deleted) index.allDocs = index.allDocs.filter(function (doc) { return doc.doc_id !== change.target.doc_id; });
-    else index.allDocs = index.allDocs.map(function (doc) { return doc.doc_id === change.target.doc_id ? Object.assign({}, doc, change.record) : doc; });
+    else {
+      var existing = index.allDocs.find(function (doc) { return doc.doc_id === change.target.doc_id; });
+      if (existing) index.allDocs = index.allDocs.map(function (doc) { return doc === existing ? Object.assign({}, doc, change.record) : doc; });
+      else index.allDocs.push(change.record);
+    }
     documentIndex.applyDocVisibility();
     renderSidebar();
   });
@@ -555,6 +568,7 @@ export function startDocsViewerRuntime(options) {
       nav: nav,
       renderRecentMode: renderRecentMode,
       refreshRecent: refreshRecent,
+      refreshSearch: function () { return searchController ? searchController.refreshSearch() : Promise.resolve(); },
       renderSearchMode: renderSearchMode,
       renderSidebar: renderSidebar,
       root: root,
@@ -737,7 +751,7 @@ export function startDocsViewerRuntime(options) {
   function sourceEditorServices() {
     return {
       commitDocumentChange: collectionProvider.commitDocumentChange,
-      refreshSavedDocument: function (target) { return routeWorkflowCommands.refreshSavedDocument(target); },
+      refreshDocument: function (target) { return routeWorkflowCommands.refreshDocument(target, { sourceSaved: true }); },
       localFolderLinksCapability: function () {
         var capabilities = appSession.domains.management.managementCapabilities;
         return capabilities ? capabilities.local_folder_links || null : null;
@@ -881,7 +895,7 @@ export function startDocsViewerRuntime(options) {
   }
 
   function refreshRecent() {
-    if (searchController) searchController.refreshRecent();
+    return searchController ? searchController.refreshRecent() : Promise.resolve();
   }
 
   function renderSearchMode() {

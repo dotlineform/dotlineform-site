@@ -11,9 +11,6 @@ export function initDocsViewerRouteWorkflow(context) {
   var index = context.documentIndex;
   var selected = context.selectedDocument;
   var search = context.searchRecent;
-  var loadedIndex = "";
-  var timer = null;
-  var refreshing = false;
   var displayedHash = "";
   var initialized = false;
   var pendingDocumentOpen = null;
@@ -180,7 +177,6 @@ export function initDocsViewerRouteWorkflow(context) {
     } catch (error) { context.handlePayloadError(error); return null; }
   }
   function replaceIndex(payload) {
-    loadedIndex = JSON.stringify(payload);
     context.routeSession.managementContext = managementUiEnabled();
     var options = payload.viewer_options || {};
     index.nonLoadableDocIds = normalizeDocIdSet(options.non_loadable_doc_ids, []);
@@ -189,51 +185,32 @@ export function initDocsViewerRouteWorkflow(context) {
     context.applyDocVisibility();
     context.renderSidebar();
   }
-  function idle() { return managementUiEnabled() && !context.root.ownerDocument.hidden
-    && context.root.dataset.managementBusy !== "true" && context.activeViewState().activeModeId === "rendered-document"; }
-  async function refreshSavedDocument(target) {
+  /** Application completion reads the exact generated result without opening a history entry. */
+  async function refreshDocument(target, options = {}) {
     var request = selected.requestId;
     var key = documentTargetKey(target);
+    var mode = context.activeViewState().activeModeId;
     if (!selected.documentTarget || key !== documentTargetKey(selected.documentTarget)) {
-      throw new Error("The saved document is no longer displayed.");
+      throw new Error("The document to refresh is no longer displayed.");
     }
-    // This read always reaches the generated-data owner; retained payloads cannot satisfy Save.
+    if (!options.sourceSaved && !await context.confirmDocumentNavigation()) {
+      throw new Error("Updated document output was not displayed; Source edits were retained.");
+    }
+    // Retained payloads cannot satisfy an action's fresh-result read.
     var payload = await context.collectionProvider.readDocument(target);
     if (request !== selected.requestId || !selected.documentTarget
-      || key !== documentTargetKey(selected.documentTarget)) throw new Error("The saved document target changed.");
-    if (!payload || payload.doc_id !== target.doc_id) throw new Error("Document payload did not match the saved target.");
+      || key !== documentTargetKey(selected.documentTarget)
+      || key !== documentTargetKey(requestedTarget())
+      || mode !== context.activeViewState().activeModeId) throw new Error("The document refresh target changed.");
+    if (!payload || payload.doc_id !== target.doc_id) throw new Error("Document payload did not match the refresh target.");
     await context.prepareDocumentNavigation();
     await context.refreshRenderedPayload(Object.assign({}, selected.displayedRecord, payload, target), payload);
     await navigation.update();
-  }
-  async function refreshDisplayedDocument() {
-    var target = selected.documentTarget;
-    if (!target || !selected.displayedPayload || context.activeViewState().activeViewId !== "rendered-document") return;
-    var request = selected.requestId;
-    var payload = await context.collectionProvider.readDocument(target);
-    if (!idle() || request !== selected.requestId || target !== selected.documentTarget
-      || context.activeViewState().activeViewId !== "rendered-document") return;
-    if (JSON.stringify(payload) === JSON.stringify(selected.displayedPayload)) return;
-    selected.payloadCache.set(documentTargetKey(target), payload);
-    context.refreshRenderedPayload(Object.assign({}, selected.displayedRecord, payload, target), payload);
-  }
-  async function refreshWorkingIndex() {
-    if (refreshing || !idle()) return;
-    refreshing = true;
-    try {
-      var results = await Promise.allSettled([context.collectionProvider.readIndex(), refreshDisplayedDocument()]);
-      if (!idle()) return;
-      if (results[0].status === "fulfilled" && JSON.stringify(results[0].value) !== loadedIndex) {
-        replaceIndex(results[0].value); context.renderManagementUi();
-      }
-      results.forEach(function (result) { if (result.status === "rejected") throw result.reason; });
-    } catch (error) { setStatus(error.message, true); } finally { refreshing = false; }
   }
   async function loadIndex(options = {}) {
     var stop = context.statusCommands.startBusy();
     try {
       replaceIndex(await context.collectionProvider.readIndex());
-      if (timer === null && managementUiEnabled()) timer = window.setInterval(refreshWorkingIndex, 2000);
       if (!options.preserveDocument) return await applyCurrentRoute();
     } finally { stop(); }
   }
@@ -260,19 +237,18 @@ export function initDocsViewerRouteWorkflow(context) {
   }
   async function commitDeletedDocument(target) {
     context.collectionProvider.commitDocumentChange({ target: target, deleted: true });
+    if (!target.collection) await loadIndex({ preserveDocument: true });
     if (navigation.hasCaller()) { navigation.back(); return; }
-    await loadIndex({ preserveDocument: true });
     var docId = context.defaultDocId();
     if (docId) return loadDoc(docId, { historyMode: "replace", force: true });
     context.hideDocPane();
   }
-  window.addEventListener("pagehide", function () { window.clearInterval(timer); timer = null; });
   var commands = { applyCurrentRoute: applyCurrentRoute, loadDoc: loadDoc, loadIndex: loadIndex,
     resolveDocId: currentDocId, updateIndexHistory: updateIndexHistory,
     viewerUrl: viewerUrl, viewerUrlForDocument: viewerUrlForDocument,
     openPresentation: openPresentation, returnToDocument: returnToDocument,
     collectionIndexTarget: collectionIndexTarget, openCollectionIndex: openCollectionIndex,
-    commitDeletedDocument: commitDeletedDocument, refreshSavedDocument: refreshSavedDocument };
+    commitDeletedDocument: commitDeletedDocument, refreshDocument: refreshDocument };
   return { commands: commands, bindPopstate: navigation.bind, bindRouteLinks: bindRouteLinks,
     currentDocId: currentDocId, currentHash: currentHash, currentQuery: currentQuery,
     hasDisallowedModeInUrl: function () { return new URLSearchParams(window.location.search).has("mode"); },

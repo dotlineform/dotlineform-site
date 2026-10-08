@@ -592,24 +592,53 @@ export function initDocsViewerManagement(context) {
   async function reloadDocsIndex(target) {
     var reloadTarget = target ? normalizeManagedDocumentTarget(target) : null;
     await context.routeCommands.loadIndex({ preserveDocument: true });
-    if (reloadTarget) await context.routeCommands.loadDoc(reloadTarget, { force: true });
+    if (reloadTarget) {
+      if (selectedDocument.documentTarget && managedDocumentTargetsEqual(reloadTarget, selectedDocument.documentTarget)) {
+        await context.routeCommands.refreshDocument(reloadTarget);
+      } else {
+        var loaded = await context.routeCommands.loadDoc(reloadTarget, { force: true, historyMode: "replace" });
+        if (!loaded) throw new Error("Updated document could not be displayed.");
+      }
+    }
     context.setStatus("", false);
     renderManagementUi();
   }
 
   async function displayImportedDocument(detail) {
     var results = Array.isArray(detail.results) ? detail.results : [detail.result];
+    var displayedChanged = false;
+    var projectionErrors = [];
     results.filter(Boolean).forEach(function (result) {
       if (result.dry_run || result.preview_only) return;
       if (result.collection === true) {
         (result.records || []).forEach(function (item) {
-          if (["created", "overwritten"].includes(item.status) && item.committed_document) context.commitDocumentChange(item.committed_document);
+          if (["created", "overwritten"].includes(item.status) && item.committed_document) {
+            projectionErrors.push(...(context.commitDocumentChange(item.committed_document) || []));
+            if (selectedDocument.documentTarget && managedDocumentTargetsEqual(item.committed_document.target, selectedDocument.documentTarget)) displayedChanged = true;
+          }
         });
-      } else if (result.target && result.record) context.commitDocumentChange({ target: result.target, record: result.record });
+      }
     });
+    if (results.some(function (result) { return result && !result.target?.collection; })) {
+      await context.routeCommands.loadIndex({ preserveDocument: true });
+    }
     var result = detail.result;
-    if (result && result.collection !== true && result.target) return context.routeCommands.loadDoc(result.target, { force: true });
-    return context.routeCommands.loadIndex({ preserveDocument: true });
+    var loaded;
+    if (result && result.collection !== true && result.target) {
+      loaded = selectedDocument.documentTarget && managedDocumentTargetsEqual(result.target, selectedDocument.documentTarget)
+        ? result.target : await context.routeCommands.loadDoc(result.target, { force: true });
+      if (!loaded) throw new Error("Imported document could not be displayed.");
+    } else if (displayedChanged) {
+      await context.routeCommands.refreshDocument(selectedDocument.documentTarget);
+    } else {
+      var report = context.documentActionContext();
+      if (result && result.collection === true && report && report.state === "list"
+        && (report.collectionTarget?.collection || "") === (result.target?.collection || "")) {
+        await report.refreshCollection(result.target);
+      }
+    }
+    if (projectionErrors.length) throw new Error("Documents imported, but a retained list could not be updated: " + projectionErrors.map(function (error) { return error.message; }).join("; "));
+    return loaded;
   }
 
   function setManagementMessage(message, isError) {
@@ -786,7 +815,18 @@ export function initDocsViewerManagement(context) {
       },
       hideContextMenu: hideContextMenu,
       hideManageActionsMenu: eventRouter.hideManageActionsMenu,
-      onCommittedResult: function (result) { if (!result.dry_run && result.target && result.record) context.commitDocumentChange({ target: result.target, record: result.record }); },
+      onCommittedResult: async function (result) {
+        if (result.dry_run || result.preview_only || !result.target || !result.record) return;
+        var projectionErrors = context.commitDocumentChange({ target: result.target, record: result.record }) || [];
+        if (selectedDocument.documentTarget && managedDocumentTargetsEqual(result.target, selectedDocument.documentTarget)) {
+          try {
+            await context.routeCommands.refreshDocument(result.target);
+          } catch (error) {
+            throw new Error("Document imported, but reader refresh failed: " + error.message, { cause: error });
+          }
+        }
+        if (projectionErrors.length) throw new Error("Document imported, but a retained list could not be updated: " + projectionErrors.map(function (error) { return error.message; }).join("; "));
+      },
       onImportComplete: displayImportedDocument,
     }
   });

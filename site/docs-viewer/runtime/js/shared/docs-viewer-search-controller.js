@@ -147,11 +147,33 @@ export function initDocsViewerSearchController(context) {
   }
 
   /** Discard cached Recent data and errors after its owner refreshes the artifact. */
-  function refreshRecent() {
+  async function refreshRecent() {
+    if (!enabled("recent")) return;
+    var scroll = resultsView.scrollTop;
     searchRecent.recentLoaded = false;
     searchRecent.recentEntries = [];
     recentError = "";
-    if (recentActive()) renderRecentMode();
+    if (recentActive()) {
+      await loadRecentEntries();
+      renderRecentMode();
+      resultsView.scrollTop = scroll;
+    }
+  }
+
+  /** The explicit Search rebuild owns invalidation; ordinary edits keep metadata projection. */
+  async function refreshSearch() {
+    if (!enabled("search")) return;
+    var scroll = resultsView.scrollTop;
+    searchRecent.searchLoaded = false;
+    searchRecent.searchIndex = null;
+    renderedIndex = null;
+    searchError = "";
+    deletedResults.clear();
+    if (context.activeIndexViewId() === "search-results") {
+      await loadSearchIndex();
+      renderSearchMode();
+      resultsView.scrollTop = scroll;
+    }
   }
 
   function renderRecentRows() {
@@ -327,6 +349,7 @@ export function initDocsViewerSearchController(context) {
     handleSearchInput: handleSearchInput,
     renderRecentMode: renderRecentMode,
     refreshRecent: refreshRecent,
+    refreshSearch: refreshSearch,
     renderSearchMode: renderSearchMode,
     resetForReload: resetForReload,
     syncSelection: syncSelection

@@ -6,6 +6,7 @@ import {
   moveManagedDoc,
   openManagedDocSource,
   previewManagedDocDelete,
+  readManagedDocMetadata,
   rebuildManagedDocs,
   rebuildManagedDocument,
   updateSourceConfigSettings
@@ -494,8 +495,14 @@ export function createDocsViewerManagementActionController(options) {
       if (completedTarget.doc_id !== target.doc_id || completedTarget.collection !== target.collection) {
         throw new Error("Rebuild response does not match the displayed document.");
       }
-      var loaded = await context.routeCommands.loadDoc(completedTarget, { force: true, historyMode: "replace" });
-      if (!loaded) throw new Error("Document rebuilt, but it could not be reloaded.");
+      if (!target.collection) await context.routeCommands.loadIndex({ preserveDocument: true });
+      var metadata = await readManagedDocMetadata(completedTarget, managementClientOptions());
+      if (!metadata || metadata.doc_id !== target.doc_id || (metadata.collection || "") !== (target.collection || "") || !metadata.record) {
+        throw new Error("Document rebuilt, but its metadata did not match the displayed target.");
+      }
+      var projectionErrors = context.commitDocumentChange({ target: completedTarget, record: metadata.record }) || [];
+      await context.routeCommands.refreshDocument(completedTarget);
+      if (projectionErrors.length) throw new Error("Document rebuilt, but a retained list could not be updated: " + projectionErrors.map(function (error) { return error.message; }).join("; "));
       setManagementMessage("", false);
     } catch (error) {
       setManagementMessage(error.message || "Document rebuild failed.", true);
@@ -513,9 +520,11 @@ export function createDocsViewerManagementActionController(options) {
     setManagementMessage("Rebuilding docs and Search...", false);
 
     rebuildManagedDocs(managementClientOptions())
-      .then(function () {
+      .then(async function () {
+        await reloadDocsIndex(target);
+        await context.refreshSearch();
+        await context.refreshRecent();
         setManagementMessage("", false);
-        return reloadDocsIndex(target);
       })
       .catch(function (error) {
         setManagementMessage(error.message || "Docs and Search rebuild failed.", true);
@@ -541,9 +550,13 @@ export function createDocsViewerManagementActionController(options) {
       setManagementMessage(payload && payload.summary_text || error.message || "Publish failed.", true);
       return null;
     } finally {
+      try {
+        await context.refreshRecent();
+      } catch (error) {
+        setManagementMessage((management.managementMessage ? management.managementMessage + " " : "") + "Recent could not refresh: " + error.message, true);
+      }
       setManagementBusy(false);
       renderManagementUi();
-      context.refreshRecent();
     }
   }
 

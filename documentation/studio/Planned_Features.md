@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260428-000000-f5ff18
 title: Planned Features
 added_date: "2026-04-28 00:00:00"
-last_updated: "2026-10-08 19:24:55"
+last_updated: "2026-10-08 19:54:24"
 summary: This explains the delivery model and workflows to implement new repo and application features.
 ui_status: planned
 parent_id: ""
@@ -150,8 +150,8 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 Store new standalone delivery documents for bounded work that does not need a separate feature parent under `documentation/studio/deliveries/`. Parent them directly to this document and keep implementation state, decisions and completion gates in the delivery. At closeout, transfer lasting details to the durable owner and review whether the delivery and its link should be retained.
 
-- [Source Save And Watcher Retirement Delivery](deliveries/Source_Save_And_Watcher_Retirement_Delivery.md) — Complete; user accepted normal and collection document authoring, Draft and starred changes on 2026-10-08 and reported a much quicker experience. Save awaits exact document/Links generation and fresh display silently; the filesystem watcher is retired. Rare media edits use Rebuild docs and Search; browser polling remains. Retained as the optional polling delivery's prerequisite.
-- [Browser Polling Retirement Delivery](deliveries/Browser_Polling_Retirement_Delivery.md) — Optional proposed follow-on after Source Save And Watcher Retirement. Remove recurring Working viewer reads once relevant application actions explicitly refresh their affected views; complete the preceding delivery independently with polling retained.
+- [Source Save And Watcher Retirement Delivery](deliveries/Source_Save_And_Watcher_Retirement_Delivery.md) — Complete; user accepted normal and collection document authoring, Draft and starred changes on 2026-10-08 and reported a much quicker experience. Save awaits exact document/Links generation and fresh display silently; the filesystem watcher is retired. Rare media edits use Rebuild docs and Search. Retained for recent-delivery/evidence lookup pending manual archive alongside the completed polling follow-on.
+- [Browser Polling Retirement Delivery](deliveries/Browser_Polling_Retirement_Delivery.md) — Complete; user accepted closeout on 2026-10-08. Recurring Working reads are removed; content-changing actions own exact refreshes, while Draft retains metadata projection. Changed-source lint, whitespace, shared/public projection and site validation passed; acceptance did not itemise individual manual scenarios. External/other-tab changes require explicit rebuild and refresh/reopen. Retained for recent-delivery/evidence lookup pending manual archive.
 
 - [Work Deletion Delivery](deliveries/Work_Deletion_Delivery.md) — Implemented and reviewed; awaiting user manual acceptance. Single and multiple Work deletion share exact-ID intent, one confirmation and a combined canonical Work/membership write. Lint, syntax and import diagnostics passed; tests remain pending separate review and untouched. Restart Local Studio and force-reload the editor for manual review.
 

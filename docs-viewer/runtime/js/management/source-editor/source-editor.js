@@ -318,8 +318,8 @@ function saveSource(context, state) {
       acceptSavedSource(payload);
       if (payload.generation_complete !== true) throw new Error("Source saved, but document generation did not complete.");
       generated = true;
-      if (typeof services.refreshSavedDocument !== "function") throw new Error("Fresh document display is unavailable.");
-      await services.refreshSavedDocument(state.target);
+      if (typeof services.refreshDocument !== "function") throw new Error("Fresh document display is unavailable.");
+      await services.refreshDocument(state.target);
       if (services.setStatus) {
         var projectionErrors = payload.projection_errors || [];
         services.setStatus(projectionErrors.length

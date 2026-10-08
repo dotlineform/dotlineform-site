@@ -3,14 +3,14 @@ draft: false
 doc_id: d-20261008-184804-84d5c2
 title: Browser Polling Retirement Delivery
 added_date: "2026-10-08 18:48:04"
-last_updated: "2026-10-08 19:24:55"
-summary: Optionally replace recurring Working viewer reads with explicit refreshes owned by completed application actions.
-ui_status: proposed
+last_updated: "2026-10-08 19:54:24"
+summary: Replace recurring Working viewer reads with explicit refreshes owned by completed application actions.
+ui_status: done
 parent_id: d-20260428-000000-f5ff18
 ---
 # Browser Polling Retirement Delivery
 
-Status: optional proposed delivery, parented to [Planned Features](../Planned_Features.md). Depends on completed [Source Save And Watcher Retirement](Source_Save_And_Watcher_Retirement_Delivery.md). It is a separate complete outcome and is not required to finish the preceding delivery.
+Status: complete; user accepted closeout on 2026-10-08. Parented to [Planned Features](../Planned_Features.md). Follows completed [Source Save And Watcher Retirement](Source_Save_And_Watcher_Retirement_Delivery.md).
 
 ## Requirements
 
@@ -36,46 +36,47 @@ Use Save, Rebuild and other application management actions normally. Their compl
 ### BP-0 Readiness
 
 - [x] Confirm the preceding delivery is complete and Source Save awaits its fresh displayed result.
-- [ ] Check broad management completion, route loading and retained-view owners for reliance on polling, including index/collection/report and open information updates.
-- [ ] Confirm external-edit and other-tab/window expectations and the existing explicit refresh/reopen path.
-- [ ] Identify the shared/public projection boundary and agree the bounded remaining action-refresh work.
+- [x] Check broad management completion, route loading and retained-view owners for reliance on polling, including index/collection/report and open information updates.
+- [x] Confirm external-edit and other-tab/window expectations and the existing explicit refresh/reopen path.
+- [x] Identify the shared/public projection boundary and agree the bounded remaining action-refresh work.
 
 Gate: promote to planned only when every required view update has an explicit owner and external/cross-tab automatic synchronization is not required. If a broader synchronization feature is needed, separate that requirement before removing polling. Readiness remains read-only.
 
-Record: prerequisite complete and user-accepted on 2026-10-08. Source Save now awaits its fresh displayed result. The current shared route workflow still starts a two-second refresh timer for the local management-enabled rendered view and compares fetched Working index/document data. Remaining action-to-view coverage and external/cross-tab expectations require read-only readiness before this optional delivery can be promoted; implementation is not authorized by the preceding acceptance.
+Record: complete. Read-only readiness confirmed the accepted Save prerequisite, existing route/provider/list ownership and the shared/public projection boundary. The user's start request authorizes this delivery. Remaining work is bounded to content-changing action completion, exact Rebuild metadata/Index refresh, Import completion and loaded Search/Recent invalidation after their owning actions. Draft already projects its front-matter change to the menu and retained collection report; the user confirmed that scope, so no body reload is added. Info retains its existing detached capture. External/CLI changes and other tabs/windows retain this delivery's explicit rebuild and refresh/reopen expectation; continuous synchronization is outside scope. No new event framework or server mechanism is needed.
 
 ### BP-1 Explicit Refresh And Polling Removal
 
-- [ ] Complete any remaining action-owned refreshes identified during readiness, reusing existing exact-target loading and retained-state owners.
-- [ ] Remove the polling timer and exclusive refresh machinery while preserving initial, navigational and explicit loads.
-- [ ] Update [Docs Viewer Runtime](../Docs_Viewer_Runtime.md) and other affected durable action owners with shipped refresh behavior.
-- [ ] Project changed shared/public runtime files through `bin/site-code-update`, inspect the exact tracked `site/` delta, then run `bin/site-code-update --check` and `bin/site-validate`.
+- [x] Complete any remaining action-owned refreshes identified during readiness, reusing existing exact-target loading and retained-state owners.
+- [x] Remove the polling timer and exclusive refresh machinery while preserving initial, navigational and explicit loads.
+- [x] Update [Docs Viewer Runtime](../Docs_Viewer_Runtime.md) and other affected durable action owners with shipped refresh behavior.
+- [x] Project changed shared/public runtime files through `bin/site-code-update`, inspect the exact tracked `site/` delta, then run `bin/site-code-update --check` and `bin/site-validate`.
 
 Verification budget: bounded completion/load/caller review, changed-source JavaScript lint and whitespace checks, plus the required projection/site validation. Expected static-check cost is seconds; site validation cost follows the existing command. User manual review covers the changed action results, navigation/retained state and an idle viewer without recurring Working refresh reads. No browser automation, temporary regression scripts or test changes are authorized; any proposed test work follows [Testing](../Testing.md) and [Test Contract Discipline](../Test_Contract_Discipline.md). No document, media, Search or Publish build is required merely to remove a timer.
 
 Gate: required action results are fresh without the timer, idle refresh traffic is gone, and ordinary navigation/public loading remain intact.
 
-Record: not started.
+Record: implementation complete. The exact Save refresh is generalized to the existing shared document-completion command, with no compatibility alias. Rebuild preserves current history/position and forwards exact metadata; changed Subject and Import results receive fresh displayed payloads; ordinary Index creation/deletion and named collection Import use explicit owners. Full Rebuild refreshes loaded Search/Recent data without resetting the Index query/view/scroll, and Publish awaits visible Recent refresh. Draft's metadata-only completion and Info's detached capture remain intact. All eight changed canonical JavaScript files passed explicit lint; whitespace checks passed. The three changed shared/public files were projected, the exact site delta reviewed, and projection check plus site validation passed. No tests, browser automation, document/media/Search Build or Publish have run. Static evidence does not establish live interaction, request traffic or failure recovery.
 
 ### BP-2 Code Review
 
-- [ ] Review action-to-view coverage, failure outcomes, exact-target reads, history/retained state and open information updates.
-- [ ] Check for unused polling state, duplicated refreshes, unintended background replacements and public capability leakage.
-- [ ] Resolve findings and rerun only affected checks.
+- [x] Review action-to-view coverage, failure outcomes, exact-target reads, history/retained state and open information updates.
+- [x] Check for unused polling state, duplicated refreshes, unintended background replacements and public capability leakage.
+- [x] Resolve findings and rerun only affected checks.
 
 Gate: no material unresolved finding; record remaining manual evidence limits.
 
-Record: not started.
+Record: complete. Bounded source/diff review covered initial/navigation loads, exact identity/route/mode guards, retained metadata and caller ownership, Source completion, document-only Rebuild, full Rebuild, Settings, Create, Import, Delete/Position, Subject, Draft, Regenerate, Publish/Recent and the pinned Info capture. Resolved duplicate single-file Import projections, missing Index insertion for individually committed new imports, surfaced Import/retained-list refresh failures and preserved the underlying caught error. General refresh preserves Source's leave/discard confirmation; only completed Source Save bypasses it, keeping unsaved Source safe when another action refreshes generated output. Polling-only state, comparisons and pagehide cleanup are removed without a replacement mechanism; management reads remain outside the public projection. Affected lint and required projection/site checks passed after review fixes. No material source-review finding remains. Live action completion, native history/reading-position behavior, idle network traffic and partial-failure recovery remain unexercised manual evidence limits.
 
 ### BP-3 Closeout
 
-- [ ] Record the delivered outcome, selected evidence and user manual acceptance.
-- [ ] Confirm durable refresh documentation and Planned Features are current.
-- [ ] Recommend retaining or retiring this delivery and its prerequisite link once their routing value is exhausted.
+- [x] Record the implemented outcome and selected evidence.
+- [x] Record user acceptance and the limits of itemised manual evidence.
+- [x] Confirm durable refresh documentation and Planned Features are current.
+- [x] Recommend retaining or retiring this delivery and its prerequisite link once their routing value is exhausted.
 
 Gate: relevant application actions own view freshness and recurring browser refresh reads are removed. Publish, deployment, commit and push remain separate actions.
 
-Record: not started. This document is an option for later implementation, not authorization to remove polling now.
+Record: complete. On 2026-10-08 the user accepted the delivered outcome and authorized closeout with “great ok to close”. Acceptance was not accompanied by an itemised record of action, navigation/reading-position, idle-network or partial-failure scenarios; retain that evidence limit without claiming separate confirmation of each case. Full Rebuild and Publish completion paths were reviewed without invoking those broader operations. Existing changed-source lint, whitespace, shared/public projection and site-validation evidence is reused for this status-only closeout. No tests, browser automation, document/media/Search Build, Publish, deployment, commit or push were performed by Codex. Durable runtime and Source documentation describe explicit completion and external-change refreshes. Retain this delivery and its prerequisite for recent-delivery/evidence lookup pending manual archive; recommend archiving both when that routing value is exhausted.
 
 ## Follow-on
 
