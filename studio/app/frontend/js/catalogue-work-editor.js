@@ -586,7 +586,9 @@ async function init() {
       renderEditorMessage: () => renderEditorMessage(state),
       openEmbeddedEntryModal: (kind, index) => openEmbeddedEntryModal(state, kind, index),
       deleteEmbeddedEntry: (kind, index) => deleteEmbeddedEntry(state, kind, index),
-      setNewWorkMode: () => setNewWorkMode(state, workRouteStateOptions(state)),
+      setNewWorkMode: () => setNewWorkMode(state, workRouteStateOptions(state, {
+        seriesId: state.seriesBrowser.getSelectedSeriesId()
+      })),
       saveCurrentWork: () => saveCurrentWork(state, workActionOptions(state)),
       refreshCatalogue: () => runCatalogueRefresh(state),
       deleteCurrentWork: () => deleteCurrentWork(state, workActionOptions(state))

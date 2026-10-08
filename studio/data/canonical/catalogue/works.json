@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_source_works_v2",
-    "count": 4618
+    "count": 4620
   },
   "works": {
     "00001": {
@@ -88548,6 +88548,44 @@
       "depth_cm": null,
       "width_px": 5906,
       "height_px": 3544
+    },
+    "04626": {
+      "work_id": "04626",
+      "series_id": "144",
+      "project_folder": "3 symbols",
+      "project_subfolder": "test",
+      "project_filename": " before - back.jpg",
+      "media_version": 1,
+      "title": " before - back",
+      "width_cm": null,
+      "height_cm": null,
+      "year": 2026,
+      "year_display": "2026",
+      "medium": "digital",
+      "storage_location": null,
+      "duration": null,
+      "depth_cm": null,
+      "width_px": 1220,
+      "height_px": 1220
+    },
+    "04627": {
+      "work_id": "04627",
+      "series_id": "144",
+      "project_folder": "3 symbols",
+      "project_subfolder": "test",
+      "project_filename": " before - face.jpg",
+      "media_version": 1,
+      "title": " before - face",
+      "width_cm": null,
+      "height_cm": null,
+      "year": 2026,
+      "year_display": "2026",
+      "medium": "digital",
+      "storage_location": null,
+      "duration": null,
+      "depth_cm": null,
+      "width_px": 1220,
+      "height_px": 1220
     }
   }
 }

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260422-000000-45a776
 title: Catalogue Work Editor
 added_date: "2026-04-22 00:00:00"
-last_updated: "2026-10-08 10:30:12"
+last_updated: "2026-10-08 10:39:09"
 parent_id: d-20260423-000000-d015e6
 
 ---
@@ -35,7 +35,9 @@ The right-chevron control in the member list's top-right corner expands the list
 
 Expanded view adds a Galleries column with comma-separated titles, wrapping and vertical centring. Two lines fit the normal thumbnail row; additional lines increase its height. The column shows saved memberships. After Save, affected Gallery cells update in place while retaining mounted rows/thumbnails, selection and the visible scroll anchor. Series reassignment may refresh the list.
 
-New mode shows the editable form and Save. The suggested Work ID can be replaced with any valid unused ID, including a deleted ID. The suggested ID and any preselected Series form the initial draft baseline and do not count as edits. Selecting a Work from the member list immediately after New opens it without a discard prompt. Actual field changes, pending attachments or confirmed image regeneration trigger the existing selection-change confirmation; Cancel retains the draft. The Work ID field's × is labelled **Cancel new Work**: it immediately discards the unsaved Work draft and pending attachments, removes `mode=new` from the URL and returns to empty Work search with focus in the search field. Typing or manually clearing the Work ID keeps New mode active. The × is disabled while Save, Refresh or Delete is busy. Secondary controls appear after the first successful save.
+New mode shows the editable form and Save. Clicking New preselects the Series currently displayed in the left panel; with no displayed Series, the field starts empty. This is an initial editable default: subsequently browsing another Series does not overwrite the new Work's draft. The suggested Work ID can be replaced with any valid unused ID, including a deleted ID. The suggested ID and any preselected Series form the initial draft baseline and do not count as edits. Selecting a Work from the member list immediately after New opens it without a discard prompt. Actual field changes, pending attachments or confirmed image regeneration trigger the existing selection-change confirmation; Cancel retains the draft. The Work ID field's × is labelled **Cancel new Work**: it immediately discards the unsaved Work draft and pending attachments, removes `mode=new` from the URL and returns to empty Work search with focus in the search field. Typing or manually clearing the Work ID keeps New mode active. The × is disabled while Save, Refresh or Delete is busy. Secondary controls appear after the first successful save.
+
+The 2026-10-08 New Work Series default passed focused JavaScript lint for `catalogue-work-editor.js` and `catalogue-work-series-browser.js` and repository whitespace checks. Bounded code review confirmed that New reads the displayed Series rather than the loaded Work or uncommitted search text, passes it through the existing pristine-draft baseline and leaves URL-driven initial Series selection intact; no findings remained. No tests, browser automation or canonical writes ran; manual interaction confirmation remains with the user.
 
 Field labels use the normal text colour; required fields also have bold labels and expose their requirement to assistive technology. Series, Title, Year and Year display are required when creating or individually editing a Work, so their labels stay bold in both modes. Work ID is additionally required in New mode. Missing values keep Save disabled and block Enter-to-save without missing-field prompts. Invalid values, duplicate Work IDs and save failures retain visible messages. The Series search keeps its existing `find series by title` placeholder. Bulk mode retains saved required fields as read-only and permits Gallery membership editing.
 

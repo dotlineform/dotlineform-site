@@ -226,6 +226,8 @@ export function createWorkSeriesBrowser(state, elements, options) {
   sync();
   return {
     sync,
+    /** Return the displayed Series independently of the loaded Work or draft. */
+    getSelectedSeriesId: () => seriesId,
     refresh() {
       if (seriesId && !state.seriesById.has(seriesId)) seriesId = "";
       restoreSearch();
