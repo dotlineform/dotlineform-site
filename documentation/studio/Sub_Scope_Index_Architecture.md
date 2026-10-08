@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260728-113139-763354
 title: Sub-Scope Index Architecture
 added_date: "2026-07-28 11:31:39"
-last_updated: "2026-10-07 21:13:20"
+last_updated: "2026-10-08 12:00:58"
 summary: Collection-list ownership, exact document identity, registered customisations, retained selection and explicit management adoption.
 parent_id: d-20260801-084127-752d7e
 ---
@@ -129,7 +129,7 @@ Checkboxes occupy a dedicated first cell or column before the title. Each checkb
 
 When Working selection is inactive, the shared management stylesheet hides the outer leading-cell host as well as its checkbox gutter. This prevents an empty grid row from adding space above the thumbnail/title. Every collection row retains equal `0.65rem` top and bottom padding; active selection restores the checkbox column and centers the checkbox beside the thumbnail/title across all local collection reports.
 
-The shared report stylesheet resets collection-row margins to zero in both local and public compositions. The public site's base `li` rule otherwise contributes a bottom margin between row borders, making the next row appear to have more space above its thumbnail. Row padding remains symmetric, and the tracked public stylesheet receives this rule through `bin/site-code-update`. The 2026-10-06 correction received source/diff review and projection/site/whitespace validation; visual review remains user-owned.
+The shared report stylesheet resets collection-row margins to zero in both local and public compositions. The public site's base `li` rule otherwise contributes a bottom margin between rows, making the next row appear to have more space above its thumbnail. Catalogue, Concepts, Context and Moments rows, along with dotlineform's Selected Documents rows, omit bottom borders in both compositions. Row padding remains symmetric, and the tracked public stylesheet receives these rules through `bin/site-code-update`. Visual review remains user-owned.
 
 ```text
 selection mode:  [checkbox] [optional Draft icon + title]

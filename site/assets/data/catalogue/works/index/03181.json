@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-5e26a1a622cd9daf22149b55e018dfd8",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-26665e18f887a4c8c7330edbdef4e9fe",
+    "generated_at_utc": "2026-10-08T09:34:59Z"
   },
   "work": {
     "work_id": "03181",
@@ -10,9 +10,11 @@
     "year": 2009,
     "year_display": "2009",
     "medium": "digital c-type print",
-    "width_px": 5906,
-    "height_px": 5906,
-    "media_version": 1,
+    "height_cm": 30.0,
+    "width_cm": 30.0,
+    "width_px": 3544,
+    "height_px": 3544,
+    "media_version": 4,
     "series_id": "001",
     "galleries": [
       {

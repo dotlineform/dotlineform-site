@@ -138,6 +138,14 @@
   margin: 0;
 }
 
+.docsViewerReport[data-report-collection="catalogue"] .docsViewerReport__row,
+.docsViewerReport[data-report-collection="concepts"] .docsViewerReport__row,
+.docsViewerReport[data-report-collection="works"] .docsViewerReport__row,
+.docsViewerReport[data-report-collection="moments"] .docsViewerReport__row,
+.docsViewerReport[data-report-id="selected_documents"] .docsViewerReport__row{
+  border-bottom: 0;
+}
+
 .docsViewerReport__cellLink{
   min-width: 0;
   color: var(--docs-viewer-link);

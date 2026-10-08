@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-90da5b23a50097f8a5eb326dc844d454",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-647df3c9bb7d8ed90361bd483b6250bf",
+    "generated_at_utc": "2026-10-08T09:34:59Z"
   },
   "work": {
     "work_id": "04625",
@@ -10,11 +10,11 @@
     "year": 2026,
     "year_display": "2026",
     "medium": "digital c-type print",
-    "height_cm": 20.5,
-    "width_cm": 30.0,
-    "width_px": 3544,
-    "height_px": 2421,
-    "media_version": 2,
+    "height_cm": 30.0,
+    "width_cm": 50.0,
+    "width_px": 5906,
+    "height_px": 3544,
+    "media_version": 3,
     "series_id": "001",
     "galleries": [
       {
