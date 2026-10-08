@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260623-000000-c99cef
 title: Info Panel
 added_date: "2026-06-23 00:00:00"
-last_updated: "2026-10-07 13:50:13"
+last_updated: "2026-10-08 20:09:21"
 parent_id: d-20260424-000000-50b63f
 
 ---
@@ -14,10 +14,10 @@ The Docs Viewer Info panel retains a document's related context beside the main 
 ## Reader Workflow
 
 - A pin appears beside the section's optional authored H3 heading. A heading-free directive still has a pin. Empty generated sections and documents without the directive have no pin.
-- The shell's top row shows the captured document title and a right-hand **Close** control. Long titles wrap before the vertically centred close button.
+- The shell's top row shows the captured document title as a link back to that exact document and a right-hand **Close** control. Long titles wrap before the vertically centred close button. The title uses the same link colours, hover underline and keyboard-focus styling as the related list.
 - The body contains only a non-empty, uncaptioned summary and a copy of the generated related list. Summary retains authored line and paragraph breaks through safe text nodes, `<br>` elements and separate paragraphs; Markdown, HTML and tokens remain literal text. It has no repeated heading, pin, IDs, dates, operational fields, diagram-source links or empty-state messages.
 - The list retains its collection icons, title ordering, deduplication and exact destinations. Concepts use the same list. The panel body uses the document's loose line spacing and the public list's row gap on both public and Manage surfaces. Links share the document's blue unvisited and purple visited colours, with no underline until hover or keyboard focus.
-- Following a panel link or navigating elsewhere changes the main pane while preserving the capture. Another document's pin replaces the capture; repeating the captured document's pin leaves it open.
+- Following the title link returns to the pinned document in the main pane while preserving the capture. Following a related link or navigating elsewhere also preserves the capture. Another document's pin replaces the capture; repeating the captured document's pin leaves it open.
 - Close releases the capture. Navigation does not reopen the panel. Reload clears the capture; persistence, cross-tab synchronization and bookmarkable panel state are outside this workflow.
 
 The rendered-document toolbar has no **i** action. The related section's pin is the reader's only opening control. A summary alone does not make a document eligible to open the panel.
@@ -26,7 +26,7 @@ The rendered-document toolbar has no **i** action. The related section's pin is 
 
 Pins capture title and summary from the already loaded by-ID payload and a detached copy of that section's resolved list. Ordinary mounts supply their document ID; collection-detail mounts supply their own exact `{collection, doc_id}` and payload. The selected report host never substitutes for its detail document.
 
-The panel does not fetch relationship records, collection manifests or neighbouring documents. The detached capture survives removal or refresh of the original mount, and normal main-document updates cannot retarget it. The existing root route listener activates panel links through the current local/public reader route, retaining exact report-host and sub-document destinations.
+The panel does not fetch relationship records, collection manifests or neighbouring documents. The detached capture survives removal or refresh of the original mount, and normal main-document updates cannot retarget it. The title destination is resolved from the captured exact target through the existing configured document-link provider. The existing root route listener activates title and related links through the current local/public reader route, retaining exact report-host and sub-document destinations; modified clicks retain native browser behavior.
 
 [Builder](Builder.md) owns relationship construction and generated-section freshness. Link targets are the author's references, independently of draft, ordinary ignore membership, inherited publication exclusion or prepared-document membership. A public list can therefore retain a destination whose body was omitted. Following it receives the ordinary unavailable-document response; opening the panel adds no target-readiness scan, warning or publication gate.
 
@@ -34,7 +34,7 @@ The panel does not fetch relationship records, collection manifests or neighbour
 
 The shared panel retains three focused owners:
 
-- `docs-viewer/runtime/js/shared/docs-viewer-info-panel-renderer.js` creates the shell and projects title, visibility and Close.
+- `docs-viewer/runtime/js/shared/docs-viewer-info-panel-renderer.js` creates the shell and projects the linked title, visibility and Close.
 - `docs-viewer/runtime/js/shared/docs-viewer-info-panel-controller.js` owns the detached reader capture, replacement, repeated-pin behavior and Close.
 - `docs-viewer/runtime/js/shared/docs-viewer-info-panel-host.js` loads and mounts the chosen view, invalidating pending loads and shell updates after replacement or Close.
 

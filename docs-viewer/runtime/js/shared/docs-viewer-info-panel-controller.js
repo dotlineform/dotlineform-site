@@ -11,7 +11,9 @@ export function createDocsViewerInfoPanelController(options) {
     refs: refs,
     registry: settings.registry,
     project: function (projection) {
-      settings.projectInfoPanel(projection || {});
+      settings.projectInfoPanel(Object.assign({}, projection || {}, {
+        titleHref: capture ? settings.documentHref(capture.target) : ""
+      }));
       if (panelView && typeof settings.projectViewState === "function") {
         panelView.viewState = settings.projectViewState();
       }

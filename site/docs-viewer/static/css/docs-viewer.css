@@ -1029,33 +1029,38 @@ main.container:has(> .docsViewer){
 }
 
 .docsViewer__content :where(a:not(.docsViewer__diagramDetailControl, .docsViewer__contentDetailOpenNewTab, .docsViewerReport__cellLink)):link,
-.docsViewer__relatedLinksBody :where(a):link{
+.docsViewer__relatedLinksBody :where(a):link,
+.docsViewer__infoPanelTitle :where(a):link{
   color: var(--docs-viewer-content-link);
   text-decoration: none;
 }
 
 .docsViewer__content :where(a:not(.docsViewer__diagramDetailControl, .docsViewer__contentDetailOpenNewTab, .docsViewerReport__cellLink)):visited,
-.docsViewer__relatedLinksBody :where(a):visited{
+.docsViewer__relatedLinksBody :where(a):visited,
+.docsViewer__infoPanelTitle :where(a):visited{
   color: var(--docs-viewer-content-link-visited);
   text-decoration: none;
 }
 
 .docsViewer__content :where(a:not(.docsViewer__diagramDetailControl, .docsViewer__contentDetailOpenNewTab, .docsViewerReport__cellLink)):link:hover,
-.docsViewer__relatedLinksBody :where(a):link:hover{
+.docsViewer__relatedLinksBody :where(a):link:hover,
+.docsViewer__infoPanelTitle :where(a):link:hover{
   color: var(--docs-viewer-content-link);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
 .docsViewer__content :where(a:not(.docsViewer__diagramDetailControl, .docsViewer__contentDetailOpenNewTab, .docsViewerReport__cellLink)):visited:hover,
-.docsViewer__relatedLinksBody :where(a):visited:hover{
+.docsViewer__relatedLinksBody :where(a):visited:hover,
+.docsViewer__infoPanelTitle :where(a):visited:hover{
   color: var(--docs-viewer-content-link-visited);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
 .docsViewer__content :where(a:not(.docsViewer__diagramDetailControl, .docsViewer__contentDetailOpenNewTab, .docsViewerReport__cellLink)):focus-visible,
-.docsViewer__relatedLinksBody :where(a):focus-visible{
+.docsViewer__relatedLinksBody :where(a):focus-visible,
+.docsViewer__infoPanelTitle :where(a):focus-visible{
   outline: 2px solid var(--docs-viewer-focus-ring);
   outline-offset: 2px;
   text-decoration: underline;

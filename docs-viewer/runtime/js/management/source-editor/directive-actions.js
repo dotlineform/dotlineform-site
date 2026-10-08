@@ -6,7 +6,7 @@ import { openDocumentLinkModal } from "./document-link-contribution.js";
 export const DIRECTIVE_ACTIONS_CONTROL_ID = "source-directives";
 
 const ICON_DIRECTIVE_SOURCE = "[[icon:refresh-cw]]";
-const LINKS_DIRECTIVE_SOURCE = "[[links|related links]]";
+const LINKS_DIRECTIVE_SOURCE = "[[links|]]";
 
 const SOURCE_ACTIONS = [
   { actionId: ACTION_IDS.SOURCE_ADD_IMAGE, artwork: "docsViewer__icon--image", label: "Add image" },

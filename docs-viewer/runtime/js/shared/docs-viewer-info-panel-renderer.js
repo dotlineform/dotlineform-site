@@ -28,7 +28,9 @@ export function renderDocsViewerInfoPanelShell(options = {}) {
   const title = documentRef.createElement("h2");
   title.className = "docsViewer__infoPanelTitle";
   title.id = "docsViewerInfoPanelTitle";
-  title.textContent = "Info";
+  const titleLink = documentRef.createElement("a");
+  titleLink.textContent = "Info";
+  title.appendChild(titleLink);
 
   copy.append(title);
 
@@ -63,7 +65,7 @@ export function findDocsViewerInfoPanelRefs(options = {}) {
   const root = options.root || documentRef;
   return {
     panel: root.querySelector("#docsViewerInfoPanel"),
-    title: root.querySelector("#docsViewerInfoPanelTitle"),
+    titleLink: root.querySelector("#docsViewerInfoPanelTitle > a"),
     closeButton: root.querySelector("#docsViewerInfoPanelClose"),
     status: root.querySelector("#docsViewerInfoPanelStatus"),
     body: root.querySelector("#docsViewerInfoPanelBody")
@@ -87,8 +89,10 @@ export function applyDocsViewerInfoPanelProjection(options = {}) {
     refs.panel.dataset.infoPanelState = state;
     refs.panel.dataset.activeViewId = projection.activeViewId || "";
   }
-  if (refs.title && Object.prototype.hasOwnProperty.call(projection, "title")) {
-    refs.title.textContent = projection.title || "Info";
+  if (refs.titleLink && Object.prototype.hasOwnProperty.call(projection, "title")) {
+    refs.titleLink.textContent = projection.title || "Info";
+    if (projection.titleHref) refs.titleLink.setAttribute("href", projection.titleHref);
+    else refs.titleLink.removeAttribute("href");
   }
   if (refs.status) {
     if (Object.prototype.hasOwnProperty.call(projection, "statusText")) {

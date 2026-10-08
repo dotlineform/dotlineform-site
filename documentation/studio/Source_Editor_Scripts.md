@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-704641
 title: Source Editor Scripts
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-08 19:40:52"
+last_updated: "2026-10-08 20:05:36"
 parent_id: d-20260607-222033-2a494e
 ---
 # Docs Viewer Source Editor Scripts
@@ -69,7 +69,7 @@ The Directives menu provides **Add image**, **Add Catalogue image**, **Add file*
 
 The final menu group contains Table detail, Insert related links, Insert icon and **Summary**, in that order. **Insert icon** inserts `[[icon:refresh-cw]]` inline and selects `refresh-cw` for manual filename-stem editing. It adds no line breaks and preserves any selected source text after the new token. The existing Table detail directive retains its block insertion.
 
-**Insert related links** inserts `[[links|related links]]` as a block directive and selects its plain-text heading for editing. It preserves selected source text after the token. [Related Links](Related_Links.md) owns the generated sorted list, icons, empty-section suppression and full-build freshness.
+**Insert related links** inserts `[[links|]]` as a block directive with an empty heading and places the caret between `|` and `]]` for optional heading text. It preserves selected source text after the token. [Related Links](Related_Links.md) owns the generated sorted list, icons, empty-section suppression and full-build freshness.
 
 **Summary** uses the local `summary.svg` toolbar mask and inserts `[[summary]]` as a standalone block, supplying the blank-line separation needed around surrounding prose and preserving selected text after the token. It opens no modal and changes no front matter. [Builder](Builder.md#summary-block) owns expansion of the document's current Summary, empty-block suppression and presentation.
 
