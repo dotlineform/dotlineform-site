@@ -3,12 +3,14 @@ draft: false
 doc_id: d-20260928-203519-3b7793
 title: Catalogue Image Token Metadata - Delivery
 added_date: "2026-09-28 20:35:19"
-last_updated: "2026-09-28 22:28:02"
+last_updated: "2026-10-08 17:14:37"
 summary: Work-derived alt text, optional title caption and metadata for Catalogue images across targeted, full and captured Preview builds, with action-level and Search follow-ons.
 ui_status: done
 parent_id: d-20260428-000000-f5ff18
 ---
 # Catalogue Image Token Metadata - Delivery
+
+Historical delivery record. On 2026-10-08, the self-contained [Catalogue Image metadata removal](Public_Work_JSON_Review.md#catalogue-image-metadata-change) retired the metadata choice and migrated existing Working tokens. [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md) owns the current grammar and presentation; the metadata-selection requirements and examples below describe the completed 2026-09-28 delivery.
 
 Completed under [Planned Features](Planned_Features.md). This delivery makes one `catalogue:image:work` occurrence capable of selecting current generated Work title and the defined display metadata whenever that document is built. Targeted Working builds, full Working rebuilds and Publish's full Preview build use the same token renderer. The source stores the exact Work identity, selection choices, image presentation settings and optional authored summary; it stores no Work metadata, image alt text or caption. The resulting page still contains static rendered text. The existing browser image and Media View resolution remain separate and current-data driven.
 

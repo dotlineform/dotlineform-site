@@ -39,7 +39,6 @@ class SemanticTokenOccurrence:
     supported: bool
     presentation: str
     use_work_title_caption: bool | None = None
-    include_work_metadata: bool | None = None
     summary: str = ""
     placement: str = ""
     fill_width: bool | None = None
@@ -95,16 +94,15 @@ def serialize_catalogue_image_token(
     target_type: str,
     target_id: str,
     use_work_title_caption: Any,
-    include_work_metadata: Any,
     summary: Any = "",
     placement: Any,
     fill_width: Any = None,
 ) -> str:
+    """Serialize a Work image's caption choice, authored summary and layout."""
     if (
         target_type != "work"
         or not re.fullmatch(r"[0-9]{5}", str(target_id or ""))
         or type(use_work_title_caption) is not bool
-        or type(include_work_metadata) is not bool
         or type(fill_width) is not bool
         or not isinstance(summary, str)
     ):
@@ -114,7 +112,6 @@ def serialize_catalogue_image_token(
         return ""
     fields: list[tuple[str, str]] = [
         ("use_work_title_caption", "true" if use_work_title_caption else "false"),
-        ("include_work_metadata", "true" if include_work_metadata else "false"),
     ]
     summary_text = normalize_summary_text(summary)
     if summary_text:
@@ -137,7 +134,7 @@ def parse_catalogue_image_fields(raw_query: str, *, target_type: str) -> dict[st
         key, separator, encoded_value = pair.partition("=")
         if (
             not separator
-            or key not in {"use_work_title_caption", "include_work_metadata", "summary", "placement", "fill_width"}
+            or key not in {"use_work_title_caption", "summary", "placement", "fill_width"}
             or key in fields
             or not encoded_value
         ):
@@ -146,16 +143,15 @@ def parse_catalogue_image_fields(raw_query: str, *, target_type: str) -> dict[st
         if value is None:
             return None
         fields[key] = value
-    required = ("use_work_title_caption", "include_work_metadata", "placement", "fill_width")
+    required = ("use_work_title_caption", "placement", "fill_width")
     if any(key not in fields for key in required):
         return None
-    if any(fields[key] not in {"true", "false"} for key in ("use_work_title_caption", "include_work_metadata", "fill_width")):
+    if any(fields[key] not in {"true", "false"} for key in ("use_work_title_caption", "fill_width")):
         return None
     token = serialize_catalogue_image_token(
         target_type=target_type,
         target_id="00000",
         use_work_title_caption=fields["use_work_title_caption"] == "true",
-        include_work_metadata=fields["include_work_metadata"] == "true",
         summary=fields.get("summary", ""),
         placement=fields["placement"],
         fill_width=fields["fill_width"] == "true",
@@ -167,7 +163,6 @@ def parse_catalogue_image_fields(raw_query: str, *, target_type: str) -> dict[st
         return None
     return {
         "use_work_title_caption": fields["use_work_title_caption"] == "true",
-        "include_work_metadata": fields["include_work_metadata"] == "true",
         "summary": normalize_summary_text(fields.get("summary", "")),
         "placement": normalize_plain_text(fields["placement"], required=True),
         "fill_width": fields["fill_width"] == "true",
@@ -256,7 +251,6 @@ def parse_semantic_token(
         supported=supported,
         presentation="image" if is_image else "media",
         use_work_title_caption=image_fields["use_work_title_caption"] if image_fields else None,
-        include_work_metadata=image_fields["include_work_metadata"] if image_fields else None,
         summary=image_fields["summary"] if image_fields else "",
         placement=image_fields["placement"] if image_fields else "",
         fill_width=image_fields["fill_width"] if image_fields else None,
@@ -359,7 +353,7 @@ def replace_catalogue_tokens(
 
 
 def work_metadata_text(work: dict[str, Any], work_id: str) -> str:
-    """Format the defined Work lines without adding absent optional values."""
+    """Format Catalogue Entry metadata without adding absent optional values."""
     def dimension(value: Any) -> str:
         if type(value) not in (int, float) or not math.isfinite(value) or value <= 0:
             return ""
@@ -376,9 +370,9 @@ def work_metadata_text(work: dict[str, Any], work_id: str) -> str:
 
 
 def render_catalogue_media_reference(
-    token: SemanticTokenOccurrence, *, alt: str = "", caption: str = "", metadata: str = "",
+    token: SemanticTokenOccurrence, *, alt: str = "", caption: str = "",
 ) -> str:
-    """Render a resolved Work figure or an authored Media View text link."""
+    """Render a Work figure with title/summary or an authored Media View link."""
     kind = f"catalogue-{token.target_type}"
     identity = token.target_id
     attrs = (
@@ -397,9 +391,6 @@ def render_catalogue_media_reference(
     blocks = []
     if caption:
         blocks.append(f'<span class="docsViewerFigure__caption">{html.escape(caption)}</span>')
-    if metadata:
-        lines = "<br>".join(html.escape(line) for line in metadata.splitlines())
-        blocks.append(f'<span class="docsViewerFigure__metadata">{lines}</span>')
     if token.summary:
         blocks.append(f'<span class="docsViewerFigure__summary">{html.escape(token.summary)}</span>')
     figcaption = f'<figcaption>{"".join(blocks)}</figcaption>' if blocks else ""
@@ -551,13 +542,12 @@ class SemanticTokensMixin:
                     token, self.catalogue_work_for_token(token.target_id), icons=self.inline_icons,
                 )
             else:
-                alt = caption = metadata = ""
+                alt = caption = ""
                 if token.presentation == "image":
                     work = self.catalogue_work_for_token(token.target_id)
                     alt = work["title"].strip()
                     caption = alt if token.use_work_title_caption else ""
-                    metadata = work_metadata_text(work, token.target_id) if token.include_work_metadata else ""
-                fragment = render_catalogue_media_reference(token, alt=alt, caption=caption, metadata=metadata)
+                fragment = render_catalogue_media_reference(token, alt=alt, caption=caption)
             marker_id = uuid4().hex
             # Comments start HTML blocks at line beginnings; inline references must not.
             marker = (

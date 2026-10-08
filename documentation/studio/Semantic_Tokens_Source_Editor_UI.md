@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260623-180405-631ef4
 title: Semantic Tokens Source Editor UI
 added_date: "2026-06-23 18:04:05"
-last_updated: "2026-10-01 17:58:55"
+last_updated: "2026-10-08 18:18:38"
 summary: Create and edit supported Catalogue occurrences through their modals in one complete Markdown Source buffer.
 parent_id: d-20260725-153656-516b61
 ---
@@ -15,7 +15,7 @@ The manage-only Source editor provides actions for document references and Catal
 | --- | --- |
 | **Insert doc link** | Select an exact document from the workspace's eligible collections; insert its title and ordinary Markdown document location. |
 | **Add Media View link** | Select an exact Catalogue Work or Gallery and link text; create or edit its Media View opener. |
-| **Add Catalogue Image** | Select an exact Catalogue Work; create or edit its image identity, title-caption and metadata choices, optional static summary, placement and width. |
+| **Add Catalogue Image** | Select an exact Catalogue Work; create or edit its image identity, title-caption choice, optional static summary, placement and width. |
 | **Add image** | Insert Docs-owned staged media through its existing media publication workflow. |
 
 **Add Catalogue Token**, **Insert Subject Link** and Concept-token authoring are retired. Subject assignment and ordinary local-folder paste/open remain independent supported workflows. Scope-specific button policy is proposed separately in [Scope-configured Authoring Controls](Scope_Configured_Authoring_Controls.md).
@@ -25,6 +25,10 @@ The manage-only Source editor provides actions for document references and Catal
 Opening a document or Catalogue selection modal captures the source selection, mounted adapter and buffer revision before focus moves. Confirmation validates the chosen target and required occurrence fields, then replaces that captured selection or inserts at the captured cursor. A stale buffer or changed editor leaves source unchanged with a contained error.
 
 The Catalogue actions use Catalogue identity and generated media independently of whether a related document exists. They do not filter candidates by document collections or Subject associations.
+
+Selecting a Catalogue target, including through **Use document subject**, validates its media without a transient loading message. Confirmation remains disabled until validation completes; failures appear in the status area.
+
+The modal starts with search status and results hidden. Results appear only when the query has matches; an empty result container contributes no padding or grid gap. Initial Catalogue loading and subject selection add no transient status row.
 
 The modal changes the ordinary dirty buffer. The session's Save owns the complete source write; watcher generation and displayed-output refresh run independently. Cancellation leaves source unchanged. The generic editor owns focus, selection and dirty-state projection. **Use document subject** reads a safe projection of the captured unsaved buffer through the source service. Invalid front matter leaves that optional choice unavailable with a visible error; it does not reset existing token fields or prevent choosing a Catalogue target.
 
@@ -36,7 +40,7 @@ Activation opens that exact Work or Gallery in Media View. Series is not a token
 
 ## Catalogue Image
 
-The image modal uses the same generated Work target source and validates the selected primary image. It shows the current Work title as derived alt text, offers independent **Use Work title for caption** and **Include Work metadata** choices, and accepts an optional static summary, placement and fill-width setting. The visible caption can be absent while metadata or the authored summary remains.
+The image modal uses the same generated Work target source and validates the selected primary image. **Use document subject** and the search field share one row. Search retains its accessible name without a visible Search Catalogue label. The image fields are **Title caption**, **Summary** and **Layout**; Summary remains optional authored text. The search input, summary box and layout controls share a fixed label column and left edge; the search input and summary box have equal widths. The search icon sits immediately before that shared field edge. The image modal uses a narrower 48rem card, bounded by the available window width. **Full**, **Left** and **Right** form the layout radio group, followed by **Fill available width** on the same row. The modal displays no derived-alt value or caption preview. Build still derives alt text from the current Work title and includes the title caption only when selected. The visible caption can be absent while the authored summary remains. Add and Edit expose the same fields; illustrative images have no Work-metadata option.
 
 The stored `catalogue:image:work` token contains exact Work identity, explicit choices and presentation settings, plus any authored summary. It stores no literal Work title, alt text, caption, metadata or resolved media URL, and it does not acquire document identity. The modal validates the selected current media presentation before insertion; document Build derives the selected text from the generated Work record.
 
@@ -48,7 +52,7 @@ Use the corresponding Catalogue action with the caret strictly inside a supporte
 
 Recognition reads the current unsaved body, excluding front matter, fenced/inline/indented code, comments, `<pre>` blocks and escaped literal examples. Valid token fields are treated atomically, so plain authored link text containing backticks or comment markers does not change the surrounding context. Captured occurrence offsets include the current header length. Malformed or unsupported token-like text remains literal.
 
-A Media View-link occurrence retains its authored link text. An image retains caption/metadata choices, optional static summary, placement and fill-width. Derived Work title/alt updates independently and cannot overwrite stored choices. The same picker allows selecting another supported target. Unavailable identities and failed media reads remain visible while the source and entered presentation values remain available.
+A Media View-link occurrence retains its authored link text. An image retains its title-caption choice, optional static summary, placement and fill-width. Build derives Work title/alt from generated data without changing stored choices. The same picker allows selecting another supported target. Unavailable identities and failed media reads remain visible while the source and entered presentation values remain available.
 
 Ordinary Markdown links have no editing modal in this workflow. Title/Summary and other valid metadata are edited directly in the complete Source buffer. The rendered reader panel retains its independent related-links pinning owner.
 

@@ -10,7 +10,7 @@ import { serializeCatalogueImageToken, serializeCatalogueMediaToken } from "./ca
 import { captureCatalogueTokenAction } from "./catalogue-token-contribution.js";
 import { createCatalogueTargetPickerList } from "./catalogue-target-picker.js";
 import {
-  bindCatalogueImageDerivedTitle, catalogueImagePresentationHtml,
+  catalogueImagePresentationHtml,
   hydrateCatalogueImagePresentation, readCatalogueImagePresentation
 } from "./catalogue-image-presentation.js";
 
@@ -21,17 +21,18 @@ var SUBJECT_INPUT_ID = "docsViewerCatalogueUseDocumentSubject";
 
 function modalBody(searchQuery, linkText, imageMode) {
   return (
-    '<div class="docsViewerCatalogueTokenModal docsViewerCatalogueImageModal">' +
+    '<div class="docsViewerCatalogueTokenModal' + (imageMode ? ' docsViewerCatalogueImageModal' : '') + '">' +
+      (imageMode ? '<div class="docsViewerCatalogueTokenModal__selection">' : '') +
       '<label class="docsViewer__field docsViewer__field--checkbox" for="' + SUBJECT_INPUT_ID + '">' +
         '<input class="docsViewer__checkboxInput" id="' + SUBJECT_INPUT_ID + '" type="checkbox" disabled>' +
         '<span class="docsViewer__fieldLabel">Use document subject</span>' +
       '</label>' +
-      '<div class="docsViewer__field">' +
-        '<label class="docsViewer__fieldLabel" for="' + SEARCH_INPUT_ID + '">Search Catalogue</label>' +
-        '<input class="docsViewer__fieldInput" id="' + SEARCH_INPUT_ID + '" type="search" role="combobox" aria-autocomplete="list" aria-controls="' + RESULTS_ID + '" aria-expanded="false" autocomplete="off" spellcheck="false" value="' + escapeHtml(searchQuery) + '" disabled>' +
+      (imageMode ? '' : '<div class="docsViewer__field">' +
+        '<label class="docsViewer__fieldLabel" for="' + SEARCH_INPUT_ID + '">Search Catalogue</label>') +
+        '<input class="docsViewer__fieldInput" id="' + SEARCH_INPUT_ID + '" type="search" role="combobox" aria-label="Search Catalogue" aria-autocomplete="list" aria-controls="' + RESULTS_ID + '" aria-expanded="false" autocomplete="off" spellcheck="false" value="' + escapeHtml(searchQuery) + '" disabled>' +
       "</div>" +
       '<p class="muted small" data-role="document-subject-status" hidden></p>' +
-      '<p class="docsViewerCatalogueTokenModal__searchStatus muted small" data-role="catalogue-search-status">Loading Catalogue…</p>' +
+      '<p class="docsViewerCatalogueTokenModal__searchStatus muted small" data-role="catalogue-search-status" hidden></p>' +
       '<div class="docsViewerCatalogueTargetPicker__results docsViewerCatalogueTokenModal__results" id="' + RESULTS_ID + '" role="listbox" aria-label="' + (imageMode ? "Catalogue Works" : "Catalogue Works and Galleries") + '" data-role="catalogue-results" tabindex="0" hidden></div>' +
       (imageMode ? catalogueImagePresentationHtml({ idPrefix: "docsViewerCatalogueImage" }) :
         '<label class="docsViewer__field" for="' + LINK_INPUT_ID + '">' +
@@ -52,7 +53,7 @@ export function openCatalogueMediaModal(options = {}) {
   var subjectTarget = null;
   var selectionText = initialToken ? initialToken.title : selectedTextForCatalogueTitle(capture && capture.text);
   var state = { disposed: false, request: 0, list: null, support: null, target: null,
-    linkDefault: "", showDerivedTitle: null, replaceDefaults: null,
+    linkDefault: "", replaceDefaults: null,
     useDocumentSubject: false };
   return openDocsViewerManagementModal({
     root: options.root,
@@ -79,9 +80,8 @@ export function openCatalogueMediaModal(options = {}) {
       if (modalRoot) modalRoot.id = imageMode ? "catalogue-image-add-modal" : "catalogue-media-link-modal";
       if (imageMode) {
         hydrateCatalogueImagePresentation(api.host, initialToken || {
-          useWorkTitleCaption: true, includeWorkMetadata: true, placement: "full", fillWidth: true
+          useWorkTitleCaption: true, placement: "full", fillWidth: true
         });
-        state.showDerivedTitle = bindCatalogueImageDerivedTitle(api.host);
       }
 
       function showResults(visible) {
@@ -94,11 +94,7 @@ export function openCatalogueMediaModal(options = {}) {
         status.classList.toggle("is-error", error);
       }
       state.replaceDefaults = function (title) {
-        if (imageMode) {
-          state.showDerivedTitle(title);
-          return;
-        }
-        if (initialToken) return;
+        if (imageMode || initialToken) return;
         linkInput.value = catalogueMediaLinkLabel(
           { title: title }, linkInput.value, { title: state.linkDefault }, Boolean(selectionText)
         );
@@ -108,11 +104,10 @@ export function openCatalogueMediaModal(options = {}) {
         var request = ++state.request;
         state.target = target;
         primary.disabled = true;
-        if (imageMode) state.showDerivedTitle("");
         search.value = target.title;
         state.list.setTargets([]);
         showResults(false);
-        message(target.targetType === "gallery" ? "Loading Gallery…" : "Loading Work image…");
+        message("");
         try {
           var presentation = await readCatalogueTokenPresentation(adapter, target);
           if (state.disposed || request !== state.request) return;
@@ -128,11 +123,10 @@ export function openCatalogueMediaModal(options = {}) {
         state.request += 1;
         state.target = null;
         primary.disabled = true;
-        if (imageMode) state.showDerivedTitle("");
         var targets = imageMode ? state.support.targets.filter(function (target) { return target.targetType === "work"; }) : state.support.targets;
         var matches = collectSemanticTokenTargetMatches(targets, search.value, state.support.registry, 20);
         state.list.setTargets(matches);
-        showResults(true);
+        showResults(matches.length > 0);
         message(search.value.trim() && !matches.length ? (imageMode ? "No matching Catalogue Works." : "No matching Catalogue Works or Galleries.") : "");
       }
       function selectSubject() {
@@ -143,7 +137,6 @@ export function openCatalogueMediaModal(options = {}) {
         state.request += 1;
         state.target = null;
         primary.disabled = true;
-        if (imageMode) state.showDerivedTitle("");
         message("The selected Catalogue target is unavailable.", true);
       }
       state.list = createCatalogueTargetPickerList(results, {

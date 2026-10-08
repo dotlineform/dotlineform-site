@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261007-221414-48ff3f
 title: Public Work JSON Review
 added_date: "2026-10-07 22:14:14"
-last_updated: "2026-10-07 23:27:56"
+last_updated: "2026-10-08 17:14:37"
 summary: Review the Studio Refresh handoff, complete rendered Work media, consistent updates and shared Full Rebuild optimisation.
 ui_status: proposed
 parent_id: d-20260428-000000-f5ff18
@@ -16,7 +16,7 @@ Review whether readers or generation need separate Work by-ID JSON in either Wor
 
 Full Rebuild performance is a shared concern regardless of what calls it. Regenerate would reconcile Catalogue sources and invoke that same operation. Optimising Full Rebuild therefore benefits both direct rebuilds and Catalogue regeneration; this review does not require a separate Regenerate-specific rendering strategy.
 
-This is a proposed feature review, not an approved implementation specification. No runtime, authoring, token, publication or existing document behaviour has changed. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md), [Catalogue Deployment](Catalogue_Deployment.md) and [Catalogue Documents And Metadata](Catalogue_Documents_And_Metadata.md) describe the current workflow and agreed Catalogue Entry presentation.
+The broader data, publication and rebuild proposals remain a feature review rather than an approved implementation specification. The self-contained Catalogue Image metadata removal was approved and implemented on 2026-10-08, as recorded below. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md), [Catalogue Deployment](Catalogue_Deployment.md) and [Catalogue Documents And Metadata](Catalogue_Documents_And_Metadata.md) describe the current workflow and agreed Catalogue Entry presentation.
 
 ## Agreed Studio And Docs Boundary
 
@@ -72,7 +72,7 @@ Exact completion ordering and partial-failure handling must preserve that distin
 | Illustrative Catalogue Image token | Work-title caption and optional authored summary text; no full Work metadata or additional `cat.` display. |
 | Work Media View link token | Its authored link label opens the Media View described above; no full metadata expansion. |
 
-Gallery links remain navigation rather than descriptive Work metadata. Catalogue Entry is the principal-record token inside a Catalogue document and remains the explicit owner of full metadata; the restricted token display applies to illustrative images and Work media references. Keep the current title-caption, authored-summary and placement controls. The clarified reference design retains `cat.` in Media View and does not propose a new optional `cat.` control for Catalogue Image tokens. Treatment of existing full-metadata tokens still needs specification.
+Gallery links remain navigation rather than descriptive Work metadata. Catalogue Entry is the principal-record token inside a Catalogue document and remains the explicit owner of full metadata; the restricted token display applies to illustrative images and Work media references. Keep the current title-caption, authored-summary and placement controls. The clarified reference design retains `cat.` in Media View and does not propose a new optional `cat.` control for Catalogue Image tokens. Existing Working image tokens have received the one-time metadata-field removal recorded below.
 
 ### Reference Work: 00008, nerve
 
@@ -84,7 +84,7 @@ The user identified these existing local presentations as the target design:
 | Media View for Work 00008 | Open the Work image or its Media View link | Title, `cat. 00008` link and Gallery links. |
 | Context document, nerve | `/docs/?collection=works&doc=d-20260801-073846-e0a9ec` | Catalogue Image with title and optional authored summary; no descriptive Work metadata. |
 
-The current Context source has `use_work_title_caption=true`, `include_work_metadata=false` and populated summary text. Its Working rendered figure contains the title and summary without a Work-metadata block. This is an existing Working reference, not a claim that the draft Context document is published. The proposed presentation change generalises this example by removing the full metadata option; baking and update consistency remain separate architectural decisions.
+At the 2026-10-07 review, the Context source had `use_work_title_caption=true`, `include_work_metadata=false` and populated summary text. The 2026-10-08 migration removed the retired metadata field and retained its caption and summary. Its Working rendered figure contains the title and summary without a Work-metadata block. This is an existing Working reference, not a claim that the draft Context document is published. The completed image simplification generalises this example; baking and update consistency remain separate architectural decisions.
 
 ## Current Public Data And Consumers
 
@@ -205,13 +205,15 @@ Public inventory, route configuration, shared runtime projection and generated p
 
 ## Catalogue Image Metadata Change
 
-The current Add/Edit Catalogue image control is **Include Work metadata**, enabled by default for a new image. It serializes `include_work_metadata` into the source token. Build resolves displayed year, medium, supported physical dimensions and Catalogue number into the figure when enabled; the optional Work-title caption is a separate control. This is selected descriptive metadata, rather than every field in a Work record.
+Implemented on 2026-10-08 as a self-contained simplification. Add and Edit Catalogue image no longer expose **Include Work metadata**. Python and JavaScript parsing/serialization no longer accept or emit `include_work_metadata`, and the illustrative-image renderer no longer builds its metadata block. Title-derived alt text, the optional Work-title caption, authored static summary, placement and fill-width controls remain.
 
-Under the agreed presentation direction, remove this full metadata option so illustrative figures follow the nerve Context example: image, Work-title caption and optional authored static summary. Full descriptive information remains in the Catalogue Entry, reached through the existing `cat.` link in Media View. This would reduce repeated Work metadata in ordinary documents and narrow the set of information whose freshness needs coordination.
+The one-time source migration removed the field from 19 tokens in 15 Working documents: one ordinary document and 14 Context documents. Eleven occurrences previously selected metadata and eight omitted it. Exact Work identities, caption choices, authored summaries and layout fields were preserved. The existing watcher rebuilt their document projections; no manual document or Search rebuild was invoked. Tokens containing the retired field are unsupported literal source if reintroduced, without a compatibility alias.
 
-The display boundary is agreed; its implementation is still open. Apply the boundary consistently to Add and Edit, and decide how existing figures move to the new presentation. Existing `include_work_metadata=true` and `false` tokens require an explicit source migration or another agreed retirement policy; hiding the checkbox alone would leave an active token contract and inconsistent old/new authoring behaviour. Preserve title-caption, summary and placement controls. A new Catalogue number/link control for the illustrative token is outside this clarified target.
+Illustrative figures now follow the nerve Context example: image, optional Work-title caption and optional authored static summary. Full descriptive information remains in Catalogue Entry, reached through the existing `cat.` link in Media View. Existing Preview and published snapshots retain their previously generated HTML until a separate Publish. The broader Work JSON, media baking, Media View contract and rebuild proposals remain open.
 
-Catalogue Entry has its own fixed principal-record purpose. Removing metadata from illustrative Catalogue images or the unused Media View array does not remove the agreed Entry metadata/resources or the retained canonical fields. [Source Editor Scripts](Source_Editor_Scripts.md) owns authoring controls; [Catalogue Documents And Metadata](Catalogue_Documents_And_Metadata.md) records the Entry/Image distinction.
+Catalogue Entry has its own fixed principal-record purpose and retains its metadata/resources and canonical fields. [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md) owns the reduced grammar and rendering; [Semantic Tokens Source Editor UI](Semantic_Tokens_Source_Editor_UI.md) owns Add/Edit controls; [Catalogue Documents And Metadata](Catalogue_Documents_And_Metadata.md) records the Entry/Image distinction. The historical [Catalogue Image Token Metadata delivery](Catalogue_Image_Token_Metadata_Delivery.md) is superseded for its metadata choice.
+
+Verification: lint passed for the changed Python builder module and three management JavaScript modules. Read-only inspection found no retired fields in Working Markdown or active code and no metadata blocks in the 15 rebuilt payloads. The inspected formerly metadata-enabled figures retain title captions; nerve retains its authored summary; the captionless ordinary example omits figcaption. Code review covered parser/serializer agreement, shared Add/Edit hydration and insertion, source migration and the retained Catalogue Entry helper; no unresolved code finding remains. Management-only JavaScript and Python builder changes require no public runtime projection. Tests, browser interaction, Publish, commit and push were not performed. Existing Python/JavaScript token tests inspected during this change still describe older literal-alt/Detail grammar and were left unchanged under the separate test-work policy. Restart Local Studio and hard-refresh Docs Viewer before manual Add/Edit review.
 
 ## Decisions Before A Delivery
 
@@ -225,7 +227,7 @@ Catalogue Entry has its own fixed principal-record purpose. Removing metadata fr
 - [ ] Choose the baked document media representation and the Gallery-member loading path.
 - [ ] Specify replacement of Working Work by-ID JSON with the Refresh-supplied private aggregate input, its storage and accompanying relationships/policy, authoring/validation providers, exact change tracking and completion timing.
 - [ ] Specify retirement of the unused descriptive Media View metadata contract while preserving its title, `cat.` link and Gallery navigation.
-- [ ] Specify removal of Include Work metadata from Add/Edit Catalogue image and treatment of existing tokens, preserving title-caption and optional summary behaviour.
+- [x] Remove Include Work metadata from Add/Edit Catalogue image and its token/build contract; migrate existing Working tokens while preserving title-caption, optional summary and layout behaviour.
 - [ ] Establish the smallest public Catalogue inventory that still supports all approved readers and publication asset selection.
 - [ ] Define a bounded implementation outcome, migration, durable documentation updates and proportionate verification. Test changes require their own agreed specification; ordinary UI presentation remains a user manual-review gate.
 

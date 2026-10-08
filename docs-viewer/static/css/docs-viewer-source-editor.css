@@ -285,6 +285,46 @@
   min-height: 0;
 }
 
+.docsViewer__modalCard--document:has(.docsViewerCatalogueImageModal){
+  --docs-viewer-modal-width: 48rem;
+}
+
+.docsViewerCatalogueTokenModal__selection{
+  display: grid;
+  align-items: center;
+  min-width: 0;
+}
+
+.docsViewerCatalogueTokenModal__selection,
+.docsViewerCatalogueImageModal .docsViewer__field.docsViewer__field--textarea,
+.docsViewerCatalogueImageModal .docsViewerSourceEditorMedia__placement{
+  grid-template-columns: 12rem minmax(0, 1fr);
+  column-gap: 0.9rem;
+}
+
+.docsViewerCatalogueTokenModal__selection > .sharedSearchField{
+  position: relative;
+  display: block;
+}
+
+.docsViewerCatalogueTokenModal__selection > .sharedSearchField > .sharedSearchField__icon{
+  position: absolute;
+  right: calc(100% + 0.5rem);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.docsViewerCatalogueImageModal__layoutControls{
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  min-width: 0;
+}
+
+.docsViewerCatalogueImageModal__layoutControls > .docsViewer__field--checkbox{
+  flex: 0 0 auto;
+}
+
 .docsViewerCatalogueTokenModal__searchStatus{
   min-height: 1.2rem;
   margin: 0;

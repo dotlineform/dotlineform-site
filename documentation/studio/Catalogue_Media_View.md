@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260903-154141-7c9e4b
 title: Catalogue Media View
 added_date: "2026-09-03 15:41:41"
-last_updated: "2026-10-03 21:27:23"
+last_updated: "2026-10-08 17:14:37"
 summary: Exact Work and Gallery links, direct and Series-related Gallery navigation, responsive Work images and paginated Media View, with static-consumer and public-data limits.
 ui_status: done
 parent_id: d-20260903-222617-28475e
@@ -29,23 +29,23 @@ The authored label remains literal text and does not change when the Catalogue t
 
 Gallery IDs use the exact canonical spelling: three digits, or at least four digits without a leading zero. Gallery tokens allow no image presentation. The picker inserts `catalogue:media:gallery`; token Info reads the current Gallery title, and Broken Links checks the exact generated Gallery record. Subject assignment offers None, Work and, where the collection supports it, Folder. Series document Subjects were retired on 2026-10-03; Gallery tokens do not imply a new document Subject kind.
 
-**Add Catalogue Image** searches Catalogue Works and uses the selected Work's image. Its token stores Work-title caption and metadata choices, optional static summary, placement and width settings:
+**Add Catalogue Image** searches Catalogue Works and uses the selected Work's image. Its token stores the Work-title caption choice, optional static summary, placement and width settings:
 
 ```text
-[[catalogue:image:work:03072|use_work_title_caption=true&include_work_metadata=true&placement=full&fill_width=true]]
+[[catalogue:image:work:03072|use_work_title_caption=true&placement=full&fill_width=true]]
 ```
 
 Insertion and token Info edits validate current selected media before changing the captured Source range. Token edits join the existing combined Source session; Save ends at canonical source persistence and the watcher refreshes document output independently. Closing Source releases its token Info ownership; delayed lookups cannot reopen or overwrite a released panel.
 
 ## Document Build And Presentation
 
-Document Build preserves exact Catalogue references and authored presentation. For a Work image it reads the exact generated Work record and embeds selected title and metadata as static, escaped figure text; it embeds no Catalogue record or image URL. A Work has `catalogue-work` identity and its five-digit ID; a Gallery has `catalogue-gallery` identity and its exact canonical Gallery ID. Gallery entry remains a text link in document content; thumbnail grids exist only inside Media View.
+Document Build preserves exact Catalogue references and authored presentation. For a Work image it reads the exact generated Work record and embeds the selected title-caption and optional authored summary as static, escaped figure text; it embeds no descriptive Work metadata, Catalogue record or image URL. A Work has `catalogue-work` identity and its five-digit ID; a Gallery has `catalogue-gallery` identity and its exact canonical Gallery ID. Gallery entry remains a text link in document content; thumbnail grids exist only inside Media View.
 
-Text links preserve surrounding Markdown even at the start of a paragraph or list item. Authored labels remain escaped literal text. Work images are block-level figures, including when their visible title caption is omitted; selected metadata and any authored summary remain available.
+Text links preserve surrounding Markdown even at the start of a paragraph or list item. Authored labels remain escaped literal text. Work images are block-level figures, including when their visible title caption is omitted; any authored summary remains available. Without a title-caption or summary, Build omits the figcaption.
 
 Opening a document resolves inline images through current Catalogue consumer data. Selecting a text link reads the exact Work or Gallery and opens Media View. Selecting an image reads its Work again, updates the inline image and opens Media View from that record. Retired Detail and Series markers do not open Media View.
 
-Media View shows the selected image, title and ordered metadata as real text. Work presentation includes available year, medium and dimensions plus a `cat. <work_id>` reference: `cat.` is plain text and only the five-digit Work ID links to the definitive Catalogue document. The link opens the exact `?doc=<report-host-id>&subdoc=<work-id>` destination in a new tab, leaving the invoking document and Media View in place; the destination loads its by-ID payload before the searchable Catalogue list manifest. Open in new tab targets the supplied selected image. Back to document restores the invoking document, scroll and focus through Content Detail, preserving child-document context.
+Work Media View shows the selected image, title, `cat. <work_id>` reference and Gallery links. Direct Gallery links precede a separate related group from Series–Gallery relationships. `cat.` is plain text and only the five-digit Work ID links to the definitive Catalogue document at `?collection=catalogue&doc=<work-id>`, opened in a new tab. The current presentation contract still constructs and validates descriptive metadata, but the Work view does not display it; retiring that unused contract remains separate work in [Public Work JSON Review](Public_Work_JSON_Review.md). Open in new tab targets the supplied selected image. Back to document restores the invoking document, scroll and focus through Content Detail.
 
 Build retains valid text-link references when Catalogue data is unavailable, allowing later runtime recovery. A Work image requires its generated record at Build and fails visibly if the exact identity or title is unavailable. Runtime loading and failure feedback for the image and Media View still appears beside the opener and permits retry. Replaced documents, released mounts, changed child selections and superseded requests cannot apply a late response.
 

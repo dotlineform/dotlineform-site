@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260428-000000-f5ff18
 title: Planned Features
 added_date: "2026-04-28 00:00:00"
-last_updated: "2026-10-08 11:05:40"
+last_updated: "2026-10-08 18:48:04"
 summary: This explains the delivery model and workflows to implement new repo and application features.
 ui_status: planned
 parent_id: ""
@@ -144,11 +144,14 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 ## Reviews
 
-- [Public Work JSON Review](Public_Work_JSON_Review.md) — Review of a Studio Refresh aggregate/report handoff, Working and public Work records, baked media and consistent updates. Refresh supplies Catalogue inputs without direct Studio reads by Docs; Regenerate reconciles Catalogue sources and calls shared Full Rebuild; Rebuild applies document-only changes. Full Rebuild optimisation benefits every caller. Work `00008`, nerve defines the presentation target. External Studio-owned media with incremental Refresh copies is an optional extension; routine Refresh must skip unchanged images. Input contracts, shared rebuild optimisation, Gallery loading and token migration remain open; implementation is not yet approved.
+- [Public Work JSON Review](Public_Work_JSON_Review.md) — Review of a Studio Refresh aggregate/report handoff, Working and public Work records, baked media and consistent updates. Refresh supplies Catalogue inputs without direct Studio reads by Docs; Regenerate reconciles Catalogue sources and calls shared Full Rebuild; Rebuild applies document-only changes. Full Rebuild optimisation benefits every caller. Work `00008`, nerve defines the presentation target. The self-contained Catalogue Image metadata option/field removal and Working token migration were implemented and reviewed on 2026-10-08; manual Add/Edit review remains. External Studio-owned media with incremental Refresh copies is an optional extension; routine Refresh must skip unchanged images. Input contracts, shared rebuild optimisation, Gallery loading and Media View contract retirement remain open; the broader implementation is not yet approved.
 
 ## Ad-hoc Deliveries
 
 Store new standalone delivery documents for bounded work that does not need a separate feature parent under `documentation/studio/deliveries/`. Parent them directly to this document and keep implementation state, decisions and completion gates in the delivery. At closeout, transfer lasting details to the durable owner and review whether the delivery and its link should be retained.
+
+- [Source Save And Watcher Retirement Delivery](deliveries/Source_Save_And_Watcher_Retirement_Delivery.md) — Proposed; direction agreed, implementation not started. Await exact document/Links generation and fresh display during Save, retire the filesystem watcher, and choose the simplest explicit rare media rebuild with no media overhead on normal saves.
+- [Browser Polling Retirement Delivery](deliveries/Browser_Polling_Retirement_Delivery.md) — Optional proposed follow-on after Source Save And Watcher Retirement. Remove recurring Working viewer reads once relevant application actions explicitly refresh their affected views; complete the preceding delivery independently with polling retained.
 
 - [Work Deletion Delivery](deliveries/Work_Deletion_Delivery.md) — Implemented and reviewed; awaiting user manual acceptance. Single and multiple Work deletion share exact-ID intent, one confirmation and a combined canonical Work/membership write. Lint, syntax and import diagnostics passed; tests remain pending separate review and untouched. Restart Local Studio and force-reload the editor for manual review.
 
