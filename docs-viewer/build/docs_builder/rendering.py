@@ -22,7 +22,7 @@ from .common import (
 )
 from .source import DocRecord, DocumentIdentity
 from .semantic_tokens import semantic_token_text_ranges
-from docs_local_links import LocalLinkInputError, decode_relative_target
+from docs_local_links import LocalLinkInputError, decode_local_link_target
 from docs_image_tokens import encode_image_path
 
 
@@ -58,7 +58,7 @@ class ContentRenderingMixin:
             if not match.group("image") and self.config.stage != "preview":
                 target = match.group("target")
                 try:
-                    decode_relative_target(target)
+                    decode_local_link_target(target)
                 except LocalLinkInputError:
                     pass
                 else:

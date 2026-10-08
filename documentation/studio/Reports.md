@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260513-105343-6de36b
 title: Reports
 added_date: "2026-05-13 10:53:43"
-last_updated: "2026-10-07 11:49:40"
+last_updated: "2026-10-08 15:40:34"
 parent_id: d-20260424-000000-50b63f
 ---
 # Docs Viewer Reports
@@ -138,11 +138,11 @@ Preset validation uses the selected report's registered preset IDs. No current r
 
 ## Current Reports
 
-`workspace_links` is a local, read-only report hosted by [Links](/docs/?doc=d-20260910-214604-f9e841), whose ordinary ID is in the publication ignore file. `GET /docs/workspace-links` reads only saved `working/generated/documents/links.json` from the configured workspace. Stage/scope parameters are rejected. The report is absent from public metadata and executable loaders. [Builder](Builder.md) owns the complete **Rebuild docs and Search** operation that refreshes this aggregate.
+`workspace_links` is a local diagnostic report hosted by [Links](/docs/?doc=d-20260910-214604-f9e841), whose ordinary ID is in the publication ignore file. `GET /docs/workspace-links` reads only saved `working/generated/documents/links.json` from the configured workspace. An empty-object `POST` to the same route calls `docs_workspace_links.write_workspace_links` to rebuild the aggregate from current `links-by-id` records and returns the saved result. It requires Working authoring capability and rejects dry-run requests; no document rendering, Search rebuild, source writes or watcher/freshness checks occur. Stage/scope parameters are rejected. The report is absent from public metadata and executable loaders. [Builder](Builder.md) owns relationship maintenance and the complete **Rebuild docs and Search** operation, which also refreshes this aggregate.
 
 Links has exactly two columns, **from** and **to**, with one row per directed document pair from each record's outgoing entries. Incoming mirrors add no rows; reciprocal links produce two rows, while repeated authored links produce one pair. Both headers toggle ascending/descending title sorting. Initial order is from, then to; the other title and exact endpoint identities break ties. Version 4 uses flat `{collection, doc_id, title}` summaries directly in each incoming/outgoing array, with no occurrence details or stored counts. Each cell displays the prepared title and derives navigation from exact identity and the configured viewer route/collection report host through the shared Links navigation helper. Distinct documents with identical titles remain distinct.
 
-The compact **🔄** Refresh button sits immediately left of the links count on the same row. Initial load and Refresh reread the saved snapshot without scanning individual records, rebuilding data or writing sources. A valid aggregate with no outgoing links displays an empty state; missing, invalid or unreadable data displays an error with the rebuild instruction. An ordinary document edit appears after the next complete Working workspace rebuild.
+The compact **🔄** Refresh button sits immediately left of the links count on the same row. Initial load reads the saved snapshot. Refresh awaits the aggregation POST and displays its returned data, keeping the button disabled until completion. It acts immediately on the current relationship records; document edits and deletions already processed by their owning build appear without a full workspace rebuild. A valid aggregate with no outgoing links displays an empty state; missing, invalid or unreadable data displays an error with the Refresh instruction. Catalogue pages' embedded Related links sections still update through their own document builds.
 
 `workspace-links-report.js` owns the table and sorting, using the local report service and shared Links presentation. Exact targets contain collection/document identity without stage; navigation keeps the local route and exact report-host/subdocument IDs. The historical scope-bearing test files have not been accepted as evidence for this contract; changes require their own test specification.
 

@@ -22,13 +22,18 @@ function shellUnescape(value) {
   return output;
 }
 
-export function createLocalFolderLink(value) {
+export function createLocalFolderLink(value, root = "projects") {
+  if (!["projects", "docs"].includes(root)) return null;
   var target = typeof value === "string" ? value : "";
   var encodedTarget = encodeDecodedLocalTarget(target);
   if (!encodedTarget) return null;
   var parts = target.split("/");
   var label = parts[parts.length - 1];
   var escapedLabel = label.replace(/\\/g, "\\\\").replace(/\[/g, "\\[").replace(/\]/g, "\\]");
+  if (root === "docs") {
+    target = "docs:" + target;
+    encodedTarget = "docs:" + encodedTarget;
+  }
   return {
     target: target,
     encodedTarget: encodedTarget,
@@ -37,7 +42,7 @@ export function createLocalFolderLink(value) {
   };
 }
 
-export function normalizeLocalFolderPath(value, basePath) {
+export function normalizeLocalFolderPath(value, basePath, root = "projects") {
   if (typeof value !== "string" || !value || value !== value.trim() || hasControl(value)) return null;
   var absolute;
   if (/^file:/i.test(value)) {
@@ -55,7 +60,7 @@ export function normalizeLocalFolderPath(value, basePath) {
   if (!candidate || !base || candidate.length === base.length) return null;
   if (!base.every(function (part, index) { return candidate[index] === part; })) return null;
   var relativeParts = candidate.slice(base.length);
-  return createLocalFolderLink(relativeParts.join("/"));
+  return createLocalFolderLink(relativeParts.join("/"), root);
 }
 
 export function markdownRangeIsOrdinary(markdown, start, end) {
@@ -84,6 +89,9 @@ export function markdownRangeIsOrdinary(markdown, start, end) {
 export function localFolderPasteReplacement(options) {
   var settings = options || {};
   var normalized = normalizeLocalFolderPath(settings.text, settings.basePath);
+  var docsTarget = normalizeLocalFolderPath(settings.text, settings.docsBasePath, "docs");
+  if (normalized && docsTarget) return "";
+  normalized = docsTarget || normalized;
   return normalized && markdownRangeIsOrdinary(settings.markdown, settings.start, settings.end) ? normalized.markdown : "";
 }
 

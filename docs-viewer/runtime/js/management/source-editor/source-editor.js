@@ -400,12 +400,13 @@ function bindEvents(context, state) {
   };
   state.onPaste = function (event) {
     var capability = typeof services.localFolderLinksCapability === "function" ? services.localFolderLinksCapability() : null;
-    if (!state.loaded || state.busy || !capability || capability.authoring !== true || !capability.base_path) return;
+    if (!state.loaded || state.busy || !capability || capability.authoring !== true) return;
     var selection = sourceSelection(state);
     if (selection.start < sourceBodyStart(state.textarea.value)) return;
     var replacement = localFolderPasteReplacement({
       text: event.clipboardData ? event.clipboardData.getData("text/plain") : "",
       basePath: capability.base_path,
+      docsBasePath: capability.docs_base_path,
       markdown: state.textarea.value,
       start: selection.start,
       end: selection.end

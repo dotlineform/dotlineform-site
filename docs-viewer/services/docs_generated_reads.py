@@ -70,7 +70,7 @@ def generated_search_index_path(repo_root: Path) -> Path:
 
 
 def read_generated_workspace_links(repo_root: Path) -> Dict[str, Any]:
-    """Read the last completed Working aggregate without building or scanning records."""
+    """Read the saved Working aggregate without building or scanning records."""
     output = generated_docs_output_root(repo_root).resolve()
     path = output / "links.json"
     if path.is_symlink():

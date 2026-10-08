@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260423-000000-c9f3ea
 title: Builder
 added_date: "2026-04-23 00:00:00"
-last_updated: "2026-10-07 14:42:04"
+last_updated: "2026-10-08 15:40:34"
 parent_id: d-20260424-000000-50b63f
 ---
 # Builder
@@ -149,9 +149,9 @@ The **Rebuild docs and Search** action calls `/docs/rebuild` without a stage fie
 
 `docs-viewer/services/docs_workspace_links.py` combines every prepared `links-by-id/<doc_id>.json` beneath the configured Working generated documents root into the sibling `links.json`. Its version 4 envelope contains `schema_version` and `documents`; each record carries flat document summaries with `collection`, `doc_id` and `title` directly in its incoming/outgoing arrays. Included records remain unchanged in deterministic file order. Only records with both incoming and outgoing lists empty are omitted; incoming-only records remain. Document Build owns authored relationship maintenance; destination validity and readiness belong to authoring.
 
-Aggregation reads all inputs before writing and replaces the saved snapshot only when its serialized content changes. An empty prepared directory produces a valid empty aggregate. Missing or unreadable input, invalid JSON, stale schema/target identity or malformed list fields fail the rebuild visibly before completion is recorded; aggregation does not silently skip an input or save a partial result. Removed upstream records disappear on the next completed workspace rebuild.
+Aggregation reads all inputs before writing and replaces the saved snapshot only when its serialized content changes. An empty prepared directory produces a valid empty aggregate. Missing or unreadable input, invalid JSON, stale schema/target identity or malformed list fields fail the rebuild visibly before completion is recorded; aggregation does not silently skip an input or save a partial result. Removed upstream records disappear on the next aggregation, through either a complete workspace rebuild or Links report Refresh.
 
-Save, watcher builds and individual-document rebuilds update the prepared records but leave `links.json` at the last completed workspace rebuild. Opening or refreshing the local Links report only reads that saved snapshot. [Reports](Reports.md) owns its presentation and navigation. The existing files `test_docs_scope_links.py`, `test_docs_write_rebuild.py`, `test_build_search_python.py` and `test_docs_workflow_stages.py` under `docs-viewer/tests/python/` still target the old contracts; they have not been migrated or run as Retire Scopes evidence. Test migration requires its separately approved specification.
+Save's watcher builds and individual-document rebuilds update the prepared records but leave `links.json` unchanged. Opening the local Links report reads that saved snapshot; its Refresh action independently aggregates the current per-document records and displays the result without document rendering, Search or freshness checks. [Reports](Reports.md) owns its local read/refresh routes, presentation and navigation. The existing files `test_docs_scope_links.py`, `test_docs_write_rebuild.py`, `test_build_search_python.py` and `test_docs_workflow_stages.py` under `docs-viewer/tests/python/` still target the old contracts; they have not been migrated or run as Retire Scopes evidence. Test migration requires its separately approved specification.
 
 ## Source Contract
 

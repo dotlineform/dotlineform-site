@@ -67,14 +67,14 @@ function documentCell(documentRef, summary, config) {
 }
 
 /** Mount the local Working report and await its initial snapshot read.
- * Refresh only rereads links.json. Late responses cannot update a departed host.
+ * Refresh rebuilds the aggregate from current records. Late responses cannot update a departed host.
  */
 export function mountWorkspaceLinksReport(context) {
   if (!context.managementContext) {
     throw new Error("Links is available only in Working.");
   }
   const service = context.reportService;
-  if (!service || typeof service.readWorkspaceLinks !== "function") {
+  if (!service || typeof service.readWorkspaceLinks !== "function" || typeof service.refreshWorkspaceLinks !== "function") {
     throw new Error("Links requires the local report service.");
   }
   const root = context.reportRoot;
@@ -137,7 +137,7 @@ export function mountWorkspaceLinksReport(context) {
       body.appendChild(tr);
     });
     table.hidden = rows.length === 0;
-    status.textContent = rows.length ? `${rows.length} ${rows.length === 1 ? "link" : "links"}` : "No document links in the last workspace rebuild.";
+    status.textContent = rows.length ? `${rows.length} ${rows.length === 1 ? "link" : "links"}` : "No document links in the saved report.";
   }
 
   function current(version) {
@@ -164,26 +164,26 @@ export function mountWorkspaceLinksReport(context) {
     render();
   });
 
-  async function load() {
+  async function load(rebuild = false) {
     const version = ++requestVersion;
     refresh.disabled = true;
     table.hidden = true;
     body.replaceChildren();
-    status.textContent = "Loading links…";
+    status.textContent = rebuild ? "Refreshing links…" : "Loading links…";
     try {
-      const payload = await service.readWorkspaceLinks({  });
+      const payload = await (rebuild ? service.refreshWorkspaceLinks() : service.readWorkspaceLinks());
       if (!current(version)) return;
       rows = readWorkspaceLinksRows(payload);
       render();
     } catch (error) {
       if (current(version)) {
         rows = [];
-        status.textContent = `${error.message} Run Rebuild docs and Search, then Refresh.`;
+        status.textContent = `${error.message} Use Refresh to rebuild the Links report.`;
       }
     } finally {
       if (current(version)) refresh.disabled = false;
     }
   }
-  refresh.addEventListener("click", load);
+  refresh.addEventListener("click", function () { load(true); });
   return load();
 }

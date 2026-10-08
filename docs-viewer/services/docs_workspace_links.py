@@ -1,4 +1,4 @@
-"""Combine completed Working relationship records without deriving relationships."""
+"""Combine current Working relationship records without deriving relationships."""
 
 from pathlib import Path
 from typing import Any
@@ -9,7 +9,7 @@ from docs_workspace_config import DocsStageConfig, generated_documents_path, res
 
 
 def write_workspace_links(repo_root: Path, config: DocsStageConfig) -> dict[str, Any]:
-    """Replace the Working aggregate after all contributing builds finish.
+    """Replace the Working aggregate from current per-document records.
 
     Only records with both lists empty are omitted. Read every input before
     writing so an unreadable record cannot produce a successful partial result.

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-4b1d77
 title: Source Editor Endpoints
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-07 13:50:13"
+last_updated: "2026-10-08 16:59:29"
 parent_id: d-20260607-222033-647b52
 ---
 # Docs Viewer Source Editor Endpoints
@@ -61,23 +61,15 @@ Manage Source authoring consumes the current runtime-only capability:
   "local_folder_links": {
     "authoring": true,
     "activation": true,
-    "base_path": "/configured/absolute/base"
+    "base_path": "/configured/projects/base",
+    "docs_base_path": "/configured/docs/base"
   }
 }
 ```
 
-`base_path` is used only to recognize one complete `text/plain` paste. An
-absolute POSIX path, shell-backslash-escaped absolute path, or local `file:` URL
-strictly below that base becomes a canonical marked link such as
-`[3 symbols](dlf-local:projects/3%20symbols)`. The absolute base is not inserted
-into source or generated output, and authoring does not require the target to
-exist.
+`base_path` and `docs_base_path` are used only to recognize one complete `text/plain` paste. Each is empty when its configured root is unavailable; authoring is available when either root is available. An absolute POSIX path, shell-backslash-escaped absolute path, or local `file:` URL strictly below the Projects base becomes a canonical marked link such as `[3 symbols](dlf-local:projects/3%20symbols)`. A path below the Docs base becomes a Docs-selected target such as `[links.json](dlf-local:docs:working/generated/documents/links.json)`. The absolute base is not inserted into source or generated output, and authoring does not require the target to exist.
 
-Conversion runs only in ordinary Markdown prose. Code, comments, `<pre>`,
-outside-root, mixed, multiline, or ambiguous input retains normal browser paste
-behaviour. Successful conversion is silent, marks the buffer dirty, and makes
-no claim on the browser's native Undo history. It calls no management endpoint;
-activation occurs only from a rendered valid link.
+Conversion runs only in ordinary Markdown prose. Code, comments, `<pre>`, outside-root, mixed, multiline, or ambiguous input, including a path matching both roots, retains normal browser paste behaviour. Successful conversion is silent, marks the buffer dirty, and makes no claim on the browser's native Undo history. It calls no management endpoint; activation occurs only from a rendered valid link. `POST /docs/open-local-target` receives only the canonical encoded target, resolves its selected existing root, validates confinement and reveals a file or opens a directory in Finder. It never falls back to the other root.
 
 ## `GET /docs/document-link-targets`
 

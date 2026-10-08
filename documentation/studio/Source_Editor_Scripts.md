@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-704641
 title: Source Editor Scripts
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-06 21:18:11"
+last_updated: "2026-10-08 16:59:29"
 parent_id: d-20260607-222033-2a494e
 ---
 # Docs Viewer Source Editor Scripts
@@ -103,6 +103,6 @@ The old three-part Catalogue text grammar has no compatibility alias. Its exclus
 
 Purpose: own browser-side local-path recognition, canonical Markdown encoding, Markdown-context exclusion, and rendered Manage activation.
 
-The module accepts only one exact supported absolute path below the supplied base. It performs no shell, variable, home, filesystem, or existence expansion. Paste authoring does not require the target to exist. Rendered activation uses the local-link service's existing confinement and existence checks before opening the exact folder.
+The module recognizes one exact supported absolute path below the supplied Projects or Docs workspace base. Unqualified `dlf-local:<encoded-relative-path>` targets belong to `DOTLINEFORM_PROJECTS_BASE_DIR`; `dlf-local:docs:<encoded-relative-path>` targets belong to `DOTLINEFORM_DOCS_BASE_DIR`. Each root has one maintained target form; an absolute path is never stored in the token. Paths matching both supplied roots retain normal paste behavior. The module performs no variable, home, filesystem, or existence expansion. Paste authoring does not require the target to exist. Rendered activation uses the local-link service's canonical path validation, exact configured root, existence and resolved-path confinement before opening a directory or revealing a file in Finder. An unavailable selected root fails without fallback. Preview renders either form as plain text.
 
-Its delegated rendered-link handler sends only the canonical encoded relative target through the management client; it supplies no scope, document, selected parent, label, URL, or fallback target.
+Its delegated rendered-link handler sends only the canonical target, including the `docs:` selector when present, through the management client; it supplies no scope, document, selected parent, label, URL, or fallback target. The document renderer and activation service share `docs_local_links.decode_local_link_target`; Project-owned Subject fields continue using the separate Projects-relative path grammar.

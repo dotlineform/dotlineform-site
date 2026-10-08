@@ -43,8 +43,10 @@ import docs_source_media_service  # noqa: E402
 from docs_source_media_upload import SourceMediaUpload  # noqa: E402
 import docs_catalogue_regeneration  # noqa: E402
 import docs_document_rebuild  # noqa: E402
+import docs_generated_reads  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
 import docs_write_rebuild as write_rebuild  # noqa: E402
+import docs_workspace_links  # noqa: E402
 from docs_management_broken_links_service import handle_broken_links  # noqa: E402
 from docs_management_capabilities_service import capabilities_payload as build_capabilities_payload  # noqa: E402
 from docs_management_context import (  # noqa: E402
@@ -108,6 +110,15 @@ def docs_management_post_response(
         raise ValueError("scope is retired; use an optional collection")
     if "sub_scope" in body:
         raise ValueError("sub_scope is retired; use collection")
+    if path == routes.GENERATED_WORKSPACE_LINKS_PATH:
+        if body:
+            raise ValueError("Links refresh requires an empty request object")
+        if dry_run:
+            raise ValueError("Links refresh does not support dry_run")
+        config = load_docs_working_config(repo_root)
+        require_document_authoring(config)
+        docs_workspace_links.write_workspace_links(repo_root, config)
+        return HTTPStatus.OK, docs_generated_reads.read_generated_workspace_links(repo_root)
     if path == routes.CATALOGUE_REGENERATE_PATH:
         if dry_run:
             raise ValueError("Catalogue Regenerate does not support dry_run")

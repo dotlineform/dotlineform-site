@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Normalize and safely open Docs Viewer local-folder links."""
+"""Normalize and safely open local links within configured Projects or Docs roots."""
 
 from __future__ import annotations
 
@@ -60,6 +60,17 @@ def decode_relative_target(value: Any) -> str:
     if encode_relative_target(decoded) != value:
         raise LocalLinkInputError("target is not canonically encoded")
     return decoded
+
+
+def decode_local_link_target(value: Any) -> tuple[str, str]:
+    """Select the explicit Docs root or the unqualified Projects root.
+
+    The path in either form retains the same canonical relative-path grammar.
+    Root selection never permits an absolute path or a fallback workspace.
+    """
+    if isinstance(value, str) and value.startswith("docs:"):
+        return "docs", decode_relative_target(value.removeprefix("docs:"))
+    return "projects", decode_relative_target(value)
 
 
 def normalize_decoded_relative_target(value: Any) -> str:
@@ -148,12 +159,25 @@ def configured_base_dir(repo_root: Path) -> Path:
     return base
 
 
+def configured_docs_base_dir() -> Path:
+    """Resolve Docs at runtime; workspace config loads this module's Subject helpers."""
+    from docs_workspace_config import resolve_external_data_root
+
+    return resolve_external_data_root()
+
+
 def local_folder_links_capability(repo_root: Path) -> dict[str, object]:
-    try:
-        base = configured_base_dir(repo_root)
-    except (OSError, ValueError):
-        return {"authoring": False, "activation": False, "base_path": ""}
-    return {"authoring": True, "activation": sys.platform == "darwin", "base_path": str(base)}
+    paths = {}
+    for field, resolve_root in (
+        ("base_path", lambda: configured_base_dir(repo_root)),
+        ("docs_base_path", configured_docs_base_dir),
+    ):
+        try:
+            paths[field] = str(resolve_root())
+        except (OSError, ValueError):
+            paths[field] = ""
+    available = any(paths.values())
+    return {"authoring": available, "activation": available and sys.platform == "darwin", **paths}
 
 
 def _response(status: HTTPStatus, state: str, *, target: str = "") -> tuple[HTTPStatus, dict[str, object]]:
@@ -178,13 +202,13 @@ def _validated_local_target(
         status, payload = _response(HTTPStatus.BAD_REQUEST, "invalid_target")
         return status, payload, None
     try:
-        decoded = decode_relative_target(body["target"])
+        root, decoded = decode_local_link_target(body["target"])
     except LocalLinkInputError:
         status, payload = _response(HTTPStatus.BAD_REQUEST, "invalid_target")
         return status, payload, None
-    target = encode_relative_target(decoded)
+    target = ("docs:" if root == "docs" else "") + encode_relative_target(decoded)
     try:
-        base = configured_base_dir(repo_root).resolve(strict=True)
+        base = (configured_docs_base_dir() if root == "docs" else configured_base_dir(repo_root)).resolve(strict=True)
     except (OSError, ValueError):
         status, payload = _response(HTTPStatus.SERVICE_UNAVAILABLE, "base_unavailable", target=target)
         return status, payload, None

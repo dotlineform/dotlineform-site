@@ -61,6 +61,12 @@ export function createDocsViewerReportService(options) {
     readWorkspaceLinks: function () {
       return fetchReportJson("/docs/workspace-links", serviceOptions);
     },
+    refreshWorkspaceLinks: function () {
+      return fetchReportJson("/docs/workspace-links", Object.assign({}, serviceOptions, {
+        method: "POST",
+        payload: {}
+      }));
+    },
     readUnpublishable: function () {
       return fetchReportJson("/docs/unpublishable-report", Object.assign({}, serviceOptions, { requireOkEnvelope: true }));
     },
