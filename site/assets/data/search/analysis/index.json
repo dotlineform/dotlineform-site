@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "docs_viewer_search_index_v4",
-    "version": "blake2b-b10471072f0ca09e0fdf8429d9fa9df9",
-    "generated_at_utc": "2026-10-07T15:54:14Z",
-    "count": 23
+    "version": "blake2b-a1c9551ef9023bacd3ca5526952423c4",
+    "generated_at_utc": "2026-10-08T13:52:29Z",
+    "count": 24
   },
   "fields": [
     "title",
@@ -16,8 +16,8 @@
     {
       "id": "d-20260426-164043-e14f49",
       "title": "dotlineform",
-      "last_updated": "2026-09-26",
-      "display_meta": "2026-09-26"
+      "last_updated": "2026-10-08",
+      "display_meta": "2026-10-08"
     },
     {
       "id": "d-20260624-213316-478639",
@@ -188,6 +188,12 @@
       "title": "Catalogue",
       "last_updated": "2026-09-16",
       "display_meta": "2026-09-16"
+    },
+    {
+      "id": "d-20261008-144244-8f40af",
+      "title": "about",
+      "last_updated": "2026-10-08",
+      "display_meta": "2026-10-08"
     }
   ],
   "terms": {
@@ -269,6 +275,9 @@
       ]
     },
     "about": {
+      "title": [
+        23
+      ],
       "summary": [
         4
       ],
@@ -1092,6 +1101,11 @@
         6
       ]
     },
+    "bandcamp": {
+      "body": [
+        23
+      ]
+    },
     "bang": {
       "body": [
         8
@@ -1224,6 +1238,11 @@
     "beginning": {
       "body": [
         6
+      ]
+    },
+    "behance": {
+      "body": [
+        23
       ]
     },
     "behaves": {
@@ -2192,7 +2211,8 @@
     },
     "collected": {
       "body": [
-        6
+        6,
+        23
       ]
     },
     "collective": {
@@ -3084,7 +3104,8 @@
     },
     "davies": {
       "body": [
-        6
+        6,
+        23
       ]
     },
     "day": {
@@ -7427,7 +7448,8 @@
     },
     "michael": {
       "body": [
-        6
+        6,
+        23
       ]
     },
     "micro": {
@@ -13162,6 +13184,11 @@
         10
       ]
     },
+    "vimeo": {
+      "body": [
+        23
+      ]
+    },
     "violence": {
       "body": [
         6
@@ -13516,7 +13543,8 @@
         10,
         11,
         13,
-        18
+        18,
+        23
       ]
     },
     "working": {
@@ -13635,6 +13663,11 @@
         7,
         13,
         14
+      ]
+    },
+    "youtube": {
+      "body": [
+        23
       ]
     },
     "zacks": {

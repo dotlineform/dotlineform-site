@@ -12,9 +12,9 @@
       "report_id": "selected_documents"
     },
     {
-      "doc_id": "d-20260916-161504-f8c947",
-      "title": "Catalogue",
-      "content_url": "/assets/data/docs/by-id/d-20260916-161504-f8c947.json",
+      "doc_id": "d-20260801-073826-8865a8",
+      "title": "Context",
+      "content_url": "/assets/data/docs/by-id/d-20260801-073826-8865a8.json",
       "report_id": "docs_collection"
     },
     {
@@ -24,9 +24,9 @@
       "report_id": "docs_collection"
     },
     {
-      "doc_id": "d-20260801-073826-8865a8",
-      "title": "Context",
-      "content_url": "/assets/data/docs/by-id/d-20260801-073826-8865a8.json",
+      "doc_id": "d-20260916-161504-f8c947",
+      "title": "Catalogue",
+      "content_url": "/assets/data/docs/by-id/d-20260916-161504-f8c947.json",
       "report_id": "docs_collection"
     },
     {
@@ -106,7 +106,12 @@
           "content_url": "/assets/data/docs/by-id/d-20260809-130120-b96ba9.json"
         }
       ]
+    },
+    {
+      "doc_id": "d-20261008-144244-8f40af",
+      "title": "about",
+      "content_url": "/assets/data/docs/by-id/d-20261008-144244-8f40af.json"
     }
   ],
-  "generated_at": "2026-10-08T11:02:41Z"
+  "generated_at": "2026-10-08T13:54:52Z"
 }

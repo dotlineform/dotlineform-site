@@ -1,8 +1,13 @@
 {
   "schema": "docs_recent_v2",
   "limit": 20,
-  "generated_at": "2026-10-08T11:02:37Z",
+  "generated_at": "2026-10-08T13:54:49Z",
   "docs": [
+    {
+      "doc_id": "d-20261008-144244-8f40af",
+      "title": "about",
+      "timestamp": "2026-10-08"
+    },
     {
       "collection": "works",
       "collection_title": "Context",
