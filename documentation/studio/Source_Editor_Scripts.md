@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-704641
 title: Source Editor Scripts
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-08 16:59:29"
+last_updated: "2026-10-08 19:10:43"
 parent_id: d-20260607-222033-2a494e
 ---
 # Docs Viewer Source Editor Scripts
@@ -23,14 +23,14 @@ Responsibilities:
 - preserves unaffected authored metadata lines, normalizes Title/Summary and applies the normal source timestamp on changed writes
 - normalizes body line endings and Unicode-whitespace-only prose lines outside literal blocks
 - projects the validated unsaved buffer's Subject through a write-free context request for Catalogue modals
-- completes Save at source persistence; the watcher independently owns targeted document and Links generation
+- awaits exact document/Links generation through `docs_document_rebuild.py` after persistence, carrying saved-source and generation outcomes separately
 - opens source docs with the configured or preferred local Markdown editor
 - logs open-source events
 
 Not responsible for:
 
 - source-revision checks, external-edit merging, document placement or Subject assignment
-- document/Links builds, watcher suppression, Search rebuilding or viewer-refresh waits during Save
+- Search rebuilding, media production, Publish or browser display during Save
 - staged import conversion
 - route path constants
 
@@ -49,7 +49,7 @@ If none are installed, macOS Launch Services chooses the default application for
 
 ## `docs-viewer/runtime/js/management/source-editor/source-editor.js`
 
-Purpose: own the exact mounted Working target and one complete Markdown buffer, including front matter. The session owns dirty/busy state, a single Save and one leave/discard decision; the service owns candidate validation and persistence.
+Purpose: own the exact mounted Working target and one complete Markdown buffer, including front matter. The session owns dirty/busy state, a single Save and one leave/discard decision; the service owns candidate validation, persistence and exact generation; the editor awaits fresh display.
 
 **Source editor** in Edit opens the complete buffer without a side panel. It targets the ordinary document, the report host from a collection list, or the exact validated document from a collection detail. A detail does not offer a separate parent Source action. Source's toolbar contains Return to doc, Save Markdown source and Directives, in that order, on one row beginning at the document's left edge. VS Code remains in Edit for rendered documents and is also available inside Source's Directives menu using the adapter's immutable document target.
 
@@ -57,7 +57,7 @@ Title, Summary and other valid authored fields are edited directly in the same b
 
 The exact splitter lives in `docs_source_model.py`, including the strict key/value and quoted-scalar checks used by Source and existing Import/Review consumers. It uses the maintained front-matter value grammar rather than YAML or a separate browser field parser. `source-buffer.js` locates only the body boundary for buffer contributions; it does not interpret metadata. The modal's write-free context request projects the current buffer's Subject through the service and the owning collection customisation.
 
-Source mounts beside the existing rendered DOM inside the common reader's active `.docsViewer__documentMount`. Management CSS keeps that mount and the editor visible while hiding only the mount's rendered children; inactive retained document mounts stay hidden. It does not detach the collection report or end its lifecycle. Successful Save removes the editor and returns to the existing rendered view immediately. [Runtime](Docs_Viewer_Runtime.md#automatic-working-refresh) owns the independent polling that later refreshes generated content and Info while retaining the report toolbar.
+Source mounts beside the existing rendered DOM inside the common reader's active `.docsViewer__documentMount`. Management CSS keeps that mount and the editor visible while hiding only the mount's rendered children; inactive retained document mounts stay hidden. It does not detach the collection report or end its lifecycle. Successful Save awaits a fresh generated payload, removes the editor and refreshes the current retained mount while preserving its route, history and reading position. Persistence, generation and display failures remain distinct; persisted source is marked clean even when generation fails. [Runtime](Docs_Viewer_Runtime.md#automatic-working-refresh) owns the retained independent polling.
 
 For local-folder authoring it reads the latest runtime capability only during a `paste` event. A recognized replacement is applied to the current range and emits the normal dirty-buffer `input` path. Conversion is silent and does not implement or intercept Undo.
 
@@ -73,7 +73,7 @@ The final menu group contains Table detail, Insert related links, Insert icon an
 
 **Summary** uses the local `summary.svg` toolbar mask and inserts `[[summary]]` as a standalone block, supplying the blank-line separation needed around surrounding prose and preserving selected text after the token. It opens no modal and changes no front matter. [Builder](Builder.md#summary-block) owns expansion of the document's current Summary, empty-block suppression and presentation.
 
-Insertion changes only the dirty buffer through the current Source adapter and revision guard. Save persists source; the watcher independently generates the document. [Icon Tokens](Icon_Tokens.md) owns exact SVG lookup, portable rendering, literal examples and export behaviour.
+Insertion changes only the dirty buffer through the current Source adapter and revision guard. Save persists source, awaits exact generation and displays the fresh result. [Icon Tokens](Icon_Tokens.md) owns exact SVG lookup, portable rendering, literal examples and export behaviour.
 
 ## Insert Doc Link
 

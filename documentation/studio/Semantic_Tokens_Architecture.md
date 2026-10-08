@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260714-234030-434069
 title: Semantic Tokens Architecture
 added_date: "2026-07-14 23:40:30"
-last_updated: "2026-10-08 17:14:37"
+last_updated: "2026-10-08 19:10:43"
 summary: Describe Docs-owned image and explicit Catalogue tokens, source editing, document relationships, and local/public media resolution.
 parent_id: d-20260725-153656-516b61
 ---
@@ -59,7 +59,7 @@ Python Build and browser Source parsing recognize Docs-owned images and the expl
 
 Source remains directly editable. Malformed or unsupported strings remain ordinary literal source and do not activate a Catalogue Info view. Parser, source-range and retained media/image behavior have focused Python and JavaScript checks. The old frozen text-token fixture is retired.
 
-The generic Source adapter owns the mounted target, current buffer revision, captured selection and guarded replacement. The source-read response includes the safe Catalogue `subject` projection from that exact document's front matter; the adapter exposes it to the Catalogue modal for selection. Shared Add actions capture supported occurrences and hydrate their modal fields; a modal supplies a serialized insertion or occurrence replacement into the complete dirty source buffer. The single Source Save validates and writes combined metadata/body once. The editor rejects a stale range or a different mounted target before changing the buffer. Modals do not save or rebuild independently; watcher generation and viewer refresh remain outside Save completion.
+The generic Source adapter owns the mounted target, current buffer revision, captured selection and guarded replacement. The source-read response includes the safe Catalogue `subject` projection from that exact document's front matter; the adapter exposes it to the Catalogue modal for selection. Shared Add actions capture supported occurrences and hydrate their modal fields; a modal supplies a serialized insertion or occurrence replacement into the complete dirty source buffer. The single Source Save validates and writes combined metadata/body once. The editor rejects a stale range or a different mounted target before changing the buffer. Modals do not save or rebuild independently; Source Save awaits exact document/Links generation and fresh rendered display.
 
 ## Identity And Subject
 

@@ -37,8 +37,7 @@
             "base_url",
             "management_enabled",
             "review_enabled",
-            "generated_reads_enabled",
-            "watch_enabled"
+            "generated_reads_enabled"
           ],
           "properties": {
             "host": { "const": "DOCS_VIEWER_HOST" },
@@ -46,8 +45,7 @@
             "base_url": { "const": "DOCS_VIEWER_BASE_URL" },
             "management_enabled": { "const": "DOCS_VIEWER_MANAGEMENT_ENABLED" },
             "review_enabled": { "const": "DOCS_VIEWER_REVIEW_ENABLED" },
-            "generated_reads_enabled": { "const": "DOCS_VIEWER_GENERATED_READS_ENABLED" },
-            "watch_enabled": { "const": "DOCS_VIEWER_WATCH_ENABLED" }
+            "generated_reads_enabled": { "const": "DOCS_VIEWER_GENERATED_READS_ENABLED" }
           }
         }
       }
@@ -58,14 +56,12 @@
       "required": [
         "management_enabled_default",
         "review_enabled_default",
-        "generated_reads_enabled_default",
-        "watch_enabled_default"
+        "generated_reads_enabled_default"
       ],
       "properties": {
         "management_enabled_default": { "type": "boolean" },
         "review_enabled_default": { "type": "boolean" },
-        "generated_reads_enabled_default": { "type": "boolean" },
-        "watch_enabled_default": { "type": "boolean" }
+        "generated_reads_enabled_default": { "type": "boolean" }
       }
     },
     "routes": {
@@ -79,12 +75,10 @@
     "local_state": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["import_staging", "backups", "logs", "watch_suppressions"],
+      "required": ["backups", "logs"],
       "properties": {
-        "import_staging": { "type": "string" },
         "backups": { "type": "string" },
-        "logs": { "type": "string" },
-        "watch_suppressions": { "type": "string" }
+        "logs": { "type": "string" }
       }
     }
   }

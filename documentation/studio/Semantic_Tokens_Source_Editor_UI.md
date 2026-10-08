@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260623-180405-631ef4
 title: Semantic Tokens Source Editor UI
 added_date: "2026-06-23 18:04:05"
-last_updated: "2026-10-08 18:18:38"
+last_updated: "2026-10-08 19:10:43"
 summary: Create and edit supported Catalogue occurrences through their modals in one complete Markdown Source buffer.
 parent_id: d-20260725-153656-516b61
 ---
@@ -30,7 +30,7 @@ Selecting a Catalogue target, including through **Use document subject**, valida
 
 The modal starts with search status and results hidden. Results appear only when the query has matches; an empty result container contributes no padding or grid gap. Initial Catalogue loading and subject selection add no transient status row.
 
-The modal changes the ordinary dirty buffer. The session's Save owns the complete source write; watcher generation and displayed-output refresh run independently. Cancellation leaves source unchanged. The generic editor owns focus, selection and dirty-state projection. **Use document subject** reads a safe projection of the captured unsaved buffer through the source service. Invalid front matter leaves that optional choice unavailable with a visible error; it does not reset existing token fields or prevent choosing a Catalogue target.
+The modal changes the ordinary dirty buffer. The session's Save owns the complete source write and awaits exact generation and fresh display. Cancellation leaves source unchanged. The generic editor owns focus, selection and dirty-state projection. **Use document subject** reads a safe projection of the captured unsaved buffer through the source service. Invalid front matter leaves that optional choice unavailable with a visible error; it does not reset existing token fields or prevent choosing a Catalogue target.
 
 ## Media View Link
 

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261002-214356-1ea4a2
 title: Catalogue Documents And Metadata
 added_date: "2026-10-02 21:43:56"
-last_updated: "2026-10-07 21:31:31"
+last_updated: "2026-10-08 19:10:43"
 summary: Define a Regenerate-owned Catalogue Entry token with a Work H1, metadata and resource list, followed by the separate Related links directive.
 ui_status: done
 parent_id: d-20260428-000000-f5ff18
@@ -192,7 +192,7 @@ The refinement loop depends on the change:
 | --- | --- |
 | User edits Work metadata or resources | Save in the Work editor, Refresh Catalogue, then Pending updates when only `00008` is queued; otherwise use the exact targeted Build |
 | Entry token/parser/renderer changes | Rebuild `00008` directly; code changes alone do not add a pending Work |
-| Pilot Markdown changes | Let the running source watcher rebuild it and inspect that output; use the targeted Build only if the watcher is unavailable |
+| Pilot Markdown changes | Use explicit exact-document Rebuild or the targeted CLI Build and inspect its required output |
 | Catalogue CSS changes | Reload the viewer to load the changed stylesheet; document regeneration is unnecessary for styling alone |
 
 The existing targeted Build command runs from the repository root:
@@ -204,7 +204,7 @@ set +a
 $HOME/miniconda3/bin/python3 docs-viewer/build/build_docs.py --stage working --write --collection catalogue --only-doc-ids 00008 --skip-media-builds
 ```
 
-This is a document-generation action, not a new automated test. It writes the selected Working document and affected saved collection metadata through the existing builder, skips registered media producers and does not rebuild Search or Publish. Do not repeat it solely to confirm a watcher or Pending updates Build that already succeeded.
+This is a document-generation action, not a new automated test. It writes the selected Working document and affected saved collection metadata through the existing builder, skips registered media producers and does not rebuild Search or Publish. Do not repeat it solely to confirm an owning document or Pending updates Build that already succeeded.
 
 Selected implementation evidence is manual pilot review, focused generated HTML/source inspection, changed-source lint and relevant syntax checks, plus `git diff --check`. These address semantic markup, safe resource rendering, parser/module mistakes and accidental changes outside the intended owners. Manual review costs a few minutes per iteration, with total time dependent on refinement; single-document and final collection Build durations have not been measured. No new or changed automated tests, fixtures, harnesses, temporary regression scripts or browser smokes are prescribed. Any later test-code work needs its own agreed specification under [Test Contract Discipline](Test_Contract_Discipline.md).
 

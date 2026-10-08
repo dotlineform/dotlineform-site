@@ -9,11 +9,12 @@ from docs_management_mutations import (
     ManagedDocumentRevisionConflict,
     revision_conflict_payload,
 )
-from docs_watch_suppression import clear_watch_suppressions, watch_suppression_owner
+from docs_document_rebuild import rebuild_resolved_document
+from docs_workspace_config import require_document_authoring
 
 
 def set_draft(repo_root: Path, body: dict[str, Any], *, dry_run: bool = False) -> dict[str, Any]:
-    """Save one revision-checked boolean; the normal watcher owns its build."""
+    """Save one revision-checked boolean and await its exact document generation."""
     required = { "doc_id", "draft", "source_revision"}
     if set(body) - {"collection"} != required:
         raise ValueError("Set Draft requires doc_id, draft and source_revision, with optional collection")
@@ -21,6 +22,7 @@ def set_draft(repo_root: Path, body: dict[str, Any], *, dry_run: bool = False) -
         raise ValueError("draft must be true or false")
     target = {key: body[key] for key in ( "collection", "doc_id") if key in body}
     resolved = resolve_managed_document_target(repo_root, target)
+    require_document_authoring(resolved.parent_config)
     if resolved.collection == "catalogue":
         raise ValueError("Catalogue documents are always ready")
     if not source_model.collection_supports_draft(resolved.document_config):
@@ -39,14 +41,20 @@ def set_draft(repo_root: Path, body: dict[str, Any], *, dry_run: bool = False) -
     changed = document.front_matter["draft"] is not body["draft"]
     record = committed_document_record(front_matter, document.doc_id, resolved.document_config, collection=resolved.collection, parent_id=document.parent_id)
     if changed and not dry_run:
-        # A completed earlier management save must not hide this new watcher write.
-        clear_watch_suppressions(repo_root, watch_suppression_owner(
-            resolved.collection,
-        ), [document.path.relative_to(resolved.source_root).as_posix()])
         source_model.write_text_atomic(document.path, source)
-    return {
+    payload = {
         "ok": True, "operation": "set_draft", **resolved.request_target(),
         "target": resolved.request_target(),
         "record": record,
         "source_revision": source_model.source_revision(source.encode("utf-8")) if changed and not dry_run else revision,
     }
+    if not dry_run:
+        payload["source_saved"] = True
+        payload["generation_complete"] = False
+        try:
+            payload["rebuild"] = rebuild_resolved_document(repo_root, resolved)["rebuild"]
+        except Exception as error:
+            payload.update(ok=False, error=f"Draft readiness saved, but document generation failed: {error}")
+            return payload
+        payload["generation_complete"] = True
+    return payload

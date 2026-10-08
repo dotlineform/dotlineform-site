@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260519-210908-69d0e9
 title: Search Build Pipeline
 added_date: "2026-05-19 21:09:08"
-last_updated: "2026-08-07 22:25:51"
+last_updated: "2026-10-08 19:10:43"
 parent_id: d-20260331-000000-5dcf32
 
 ---
@@ -43,7 +43,7 @@ $HOME/miniconda3/bin/python3 docs-viewer/build/build_search.py --scope studio --
 - local/published output: configured per scope
 - runtime: shared Docs Viewer search modules under `site/docs-viewer/runtime/js/shared/`
 
-Targeted Docs updates use `--only-doc-ids`. Deleting, renaming, or excluding a target from a publish-capable collection also requires `--remove-missing`. The local watcher calculates affected ids and falls back to a full same-scope build when it cannot prove a safe target set. Local collections have no publishability filter.
+Targeted Docs updates use exact `--only-doc-ids`, with optional `--collection`, and preserve saved Search. Application writes own their required document output; external edits require explicit Rebuild. Missing targeted prerequisites require an explicit complete document Build. Search remains a complete, separately requested Working product.
 
 ## Build Guarantees
 
@@ -59,6 +59,6 @@ Targeted Docs updates use `--only-doc-ids`. Deleting, renaming, or excluding a t
 - ranking or match behaviour: start in the domain runtime
 - scope/output path: start in Docs scope config or Catalogue public-path/build config
 - UI timing/copy: start in Catalogue search policy or Docs Viewer config/controller
-- write orchestration: inspect the owning catalogue build command or Docs watcher/service
+- write orchestration: inspect the owning catalogue build command or Docs service
 
 Do not maintain field tables or score tables here. Read the builder/runtime when exact behaviour matters.

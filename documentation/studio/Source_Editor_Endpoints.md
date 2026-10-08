@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-4b1d77
 title: Source Editor Endpoints
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-08 16:59:29"
+last_updated: "2026-10-08 19:10:43"
 parent_id: d-20260607-222033-647b52
 ---
 # Docs Viewer Source Editor Endpoints
@@ -50,7 +50,7 @@ The editor mounts that target once and uses it for source read, Save, Open in VS
 
 One **Edit document** action opens the complete Markdown buffer without a metadata/token panel or **i** control. It targets the displayed ordinary document, the host from a collection list, or the exact validated collection detail. A detail offers no parent Source action.
 
-The session owns one complete text buffer. Title/Summary and other valid front matter are edited there; token Apply serializes directly into that buffer. One Save validates and persists the complete draft. **Return to doc** is the explicit non-save exit; one discard decision covers the whole draft, and cancellation retains it. Successful Save returns to the unchanged rendered route at source-write completion. Independent Working polling later updates generated content without replacing the mounted report toolbar or an active Source session. Entering Source closes the reader capture; returning leaves the reader panel closed until a pin is used.
+The session owns one complete text buffer. Title/Summary and other valid front matter are edited there; token Apply serializes directly into that buffer. One Save validates and persists the complete draft, rebuilds its exact document/Links and loads the fresh rendered result. **Return to doc** is the explicit non-save exit; one discard decision covers the whole draft, and cancellation retains it. Successful Save keeps busy state until fresh rendered display at the unchanged route and reading position. Independent Working polling remains for other generated changes. Entering Source closes the reader capture; returning leaves the reader panel closed until a pin is used.
 
 ## Local folder-link paste
 
@@ -106,10 +106,11 @@ Actions:
 - replaces Unicode-whitespace-only lines with empty lines outside fenced code and explicit `<pre>` blocks
 - applies the normal source timestamp for changed, non-dry-run writes
 - validates the complete candidate through the source schema before one atomic source write
+- awaits the existing exact-target document/Links rebuild using prepared media, without Search, Publish or registered media production
 
-Returned data includes `ok`, the exact target, saved complete `source_text`, provider-safe `path`, `source_changed`, `summary_text` and `dry_run`. An unchanged source is a successful no-op. Validation or write failure leaves the complete browser draft available for correction.
+Returned data includes `ok`, the exact target, saved complete `source_text`, provider-safe `path`, `source_changed`, `summary_text` and `dry_run`. An unchanged source skips the write but still rebuilds its exact document and loads the result. Validation or write failure leaves the complete browser draft available for correction. Non-dry-run responses also carry `source_saved`, `generation_complete`, `committed_document` and, on successful generation, `rebuild`.
 
-This is a single-editor snapshot save: there is no disk revision check, external-edit merge or placement operation. Save ends at source persistence. It does not build documents or Links, suppress or await the watcher, rebuild Search, or wait for the viewer. The watcher independently observes changed source and maintains targeted document/Links output; generated-output failure cannot turn the completed source write into a failed Save.
+This is a single-editor snapshot save: there is no disk revision check, external-edit merge or placement operation. The service completes after exact document/Links generation. The editor then awaits a fresh generated read and display before releasing busy state. A generation failure returns HTTP 500 with `ok: false`, `source_saved: true`, `generation_complete: false`, saved `source_text`, committed metadata and a specific `error`. The editor marks that persisted buffer clean and retains it for diagnosis. A display failure is reported separately as completed saving/generation with failed display. Recovery uses explicit Rebuild or reload; there is no source rollback or automatic retry. The filesystem watcher and its suppression machinery are retired.
 
 `POST /docs/source/rebuild` and `POST /docs/update-metadata` are removed without compatibility aliases. Title/Summary editing now uses this combined session write.
 

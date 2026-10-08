@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260719-123719-fb7565
 title: Document Diagrams
 added_date: "2026-07-19 12:37:19"
-last_updated: "2026-10-04 22:04:08"
+last_updated: "2026-10-08 19:10:43"
 summary: Author, build, publish, render, inspect, and extend scope-owned Mermaid diagrams in Docs Viewer.
 parent_id: d-20260424-000000-50b63f
 
@@ -94,7 +94,7 @@ Repository authors and Codex can work directly:
 python3 docs-viewer/build/build_docs.py --scope <scope> --stage working --only-doc-ids <doc-id> --write
 ```
 
-The producer runs before document payloads are rendered. The ordinary media snapshot builds referenced Mermaid identities and reconciles generated media. The watcher, staged intake, targeted builds, and full builds use the same producer. An ordinary document-only save may skip registered media builds; saving a watched `.mmd` source or running the owning Build produces its changed SVG.
+The producer runs before document payloads are rendered. The ordinary media snapshot builds referenced Mermaid identities and reconciles generated media. Staged intake and media-capable full builds use the same producer. Source Save and exact-document Rebuild always skip registered media work. After an external persistent `.mmd` edit, use **Rebuild docs and Search** to regenerate referenced SVGs across configured owners. Unreferenced `.mmd` files are not rendered. [Source Organisation](Source_Organisation.md#explicit-external-edit-and-media-rebuilds) owns the selected action, extra writes and cost.
 
 ## Source And Publication Contract
 
@@ -123,7 +123,7 @@ The repository-pinned persistent-media renderer uses a neutral theme, white back
 - scope activation and locations: `docs-viewer/config/scopes/docs_scopes.json`
 - native author intake: `docs-viewer/services/docs_source_media_service.py`
 - rendered source discovery/opening: `docs-viewer/services/docs_diagram_source_service.py`
-- changed-identity rebuild: `docs-viewer/services/docs_live_rebuild_watcher.py`
+- explicit persistent-source rebuild: Manage **Rebuild docs and Search**, through `docs-viewer/services/docs_write_rebuild.py`
 - public fence planner and manifest contract: `docs-viewer/services/docs_public_mermaid_projection.py`
 - prepared pair producer and complete-build integration: `docs-viewer/services/docs_public_mermaid_producer.py`, `docs-viewer/services/docs_mermaid_preparation.py`, and `docs-viewer/services/docs_write_rebuild.py`
 - prepared payload projection and publication boundaries: `docs-viewer/services/docs_public_mermaid_payload.py`, `docs-viewer/services/docs_scope_publish.py`, and `docs-viewer/services/docs_deploy_repo.py`
@@ -131,9 +131,9 @@ The repository-pinned persistent-media renderer uses a neutral theme, white back
 - exact diagram target, presentation, and temporary-resource lifecycle: `docs-viewer/runtime/js/shared/docs-viewer-diagram-detail.js`
 - maintained publication verification: [Mermaid Publication Test Coverage](Mermaid_Publication_Test_Coverage.md)
 - external-local browser loading boundary: `docs_viewer_external_inline_mermaid_route.py`
-- focused contracts: `docs-viewer/tests/python/test_docs_mermaid_media.py`, `test_docs_staged_media_service.py`, `test_docs_diagram_source_service.py`, and `test_docs_live_rebuild_watcher.py`
+- focused contracts: `docs-viewer/tests/python/test_docs_mermaid_media.py`, `test_docs_staged_media_service.py`, `test_docs_diagram_source_service.py`, with watcher tests now unreviewed retirement residue
 
-To add another build-source type, register one code-owned producer and managed target, add the reciprocal `media.types.<type>.build_inputs` declaration, and test full builds, targeted builds, intake, watcher invalidation, materialisation verification, and reader-runtime exclusion together.
+To add another build-source type, register one code-owned producer and managed target, add the reciprocal `media.types.<type>.build_inputs` declaration, and test full builds, targeted builds, intake, explicit regeneration, materialisation verification, and reader-runtime exclusion together.
 
 ## Examples
 

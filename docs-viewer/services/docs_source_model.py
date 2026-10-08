@@ -433,7 +433,7 @@ def load_document_collection_docs_for_config(
     *,
     filenames: list[str] | None = None,
 ) -> list[SourceDoc]:
-    """Load a configured collection or selected filenames for a watcher snapshot.
+    """Load a configured collection or selected filenames through its source owner.
 
     A selected read omits deleted paths and leaves whole-collection parent
     validation to the builder, which has the saved membership metadata.

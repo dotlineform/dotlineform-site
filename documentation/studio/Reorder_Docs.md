@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260903-195713-4c8f2a
 title: Reorder docs
 added_date: "2026-09-03 19:57:13"
-last_updated: "2026-09-26 21:36:29"
+last_updated: "2026-10-08 19:10:43"
 summary: Use one canonical nested index-order.json for ordinary document hierarchy and order, edited through a combined Position modal with Before, After and Inside placement.
 ui_status: done
 parent_id: d-20260903-220300-694ee5
@@ -73,7 +73,7 @@ The modal replaces separate ordering/reparenting interactions for this tree, inc
 
 New uses the displayed ordinary document's ID as its insertion anchor. A collection subdocument is not an ordinary insertion anchor. Without a displayed ordinary anchor, New appends at root. Existing New child and New sibling actions use Inside and After respectively.
 
-Import appends newly created ordinary documents inside the selected parent and preserves placement on overwrite. Batch creation writes new parents before their children, retaining sibling sequence. Ordinary content edits, including external-editor changes handled by the watcher, preserve tree placement.
+Import appends newly created ordinary documents inside the selected parent and preserves placement on overwrite. Batch creation writes new parents before their children, retaining sibling sequence. Ordinary content edits, including external-editor changes followed by explicit Rebuild, preserve tree placement.
 
 ## Preview And Publication
 

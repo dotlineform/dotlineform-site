@@ -92,7 +92,7 @@ class ImportDocumentPlan:
         return self.record.doc_id
 
     @property
-    def suppression_reason(self) -> str:
+    def event_name(self) -> str:
         return f"docs-import-source-{self.operation}"
 
     @property
@@ -450,7 +450,7 @@ def import_document_event(
     """Return the current per-document operation event name and details."""
 
     return (
-        plan.suppression_reason,
+        plan.event_name,
         {
             "staged_filename": source_label,
             "source_format": plan.import_preview.get("source_format"),

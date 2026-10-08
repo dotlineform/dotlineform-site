@@ -300,32 +300,43 @@ function saveSource(context, state) {
   var stopBusy = typeof services.startBusy === "function" ? services.startBusy() : null;
   setStatus(state, "Saving doc...", false);
   var adapter = state.sourceEditorAdapter;
+  var saved = false;
+  var generated = false;
+  function acceptSavedSource(payload) {
+    if (!responseMatchesTarget(payload, state.target) || typeof payload.source_text !== "string") {
+      throw new Error("Source service did not return the saved document.");
+    }
+    state.lastCleanSource = normalizeSource(payload.source_text);
+    if (state.textarea) state.textarea.value = state.lastCleanSource;
+    saved = true;
+    projectDirty(state);
+  }
   return provider.writeSource(state.target, { source_text: normalizeSource(state.textarea.value) })
-    .then(function (payload) {
+    .then(async function (payload) {
       if (state.sourceEditorAdapter !== adapter) return true;
-      if (!responseMatchesTarget(payload, state.target) || typeof payload.source_text !== "string") {
-        throw new Error("Source service did not return the saved document.");
+      if (payload.source_saved !== true) throw new Error("Source service did not confirm persistence.");
+      acceptSavedSource(payload);
+      if (payload.generation_complete !== true) throw new Error("Source saved, but document generation did not complete.");
+      generated = true;
+      if (typeof services.refreshSavedDocument !== "function") throw new Error("Fresh document display is unavailable.");
+      await services.refreshSavedDocument(state.target);
+      if (services.setStatus) {
+        var projectionErrors = payload.projection_errors || [];
+        services.setStatus(projectionErrors.length
+          ? "Source saved. A retained list could not be updated: " + projectionErrors.join("; ")
+          : "", projectionErrors.length > 0);
       }
-      state.lastCleanSource = normalizeSource(payload.source_text);
-      if (state.textarea) state.textarea.value = state.lastCleanSource;
-      state.saving = false;
-      setBusy(state, false);
-      setStatus(state, payload.summary_text || "Doc saved.", false);
-      if (payload.projection_errors && payload.projection_errors.length && services.setStatus) services.setStatus("Doc saved. A retained list could not be updated: " + payload.projection_errors.join("; "), true);
-      // Rendering is independent of a successful source write and cannot fail Save.
-      Promise.resolve().then(function () {
-        return context.documentView.requestMode("rendered-document", { force: true, warn: false });
-      }).catch(function (error) {
-        if (typeof services.setStatus === "function") {
-          services.setStatus("Doc saved. Could not return to rendered view: " + error.message, true);
-        }
-      });
       return true;
     })
     .catch(function (error) {
-      if (state.sourceEditorAdapter !== adapter) return false;
+      if (state.sourceEditorAdapter === adapter && error.payload && error.payload.source_saved === true) {
+        try { acceptSavedSource(error.payload); }
+        catch (validationError) { error = validationError; }
+      }
       var message = error && error.message ? error.message : "Save failed.";
+      if (saved && generated) message = "Source saved and document rebuilt, but display failed: " + message;
       setStatus(state, message, true);
+      if (services.setStatus) services.setStatus(message, true);
       return false;
     })
     .finally(function () {

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261003-000734-6cff69
 title: Document Rendering And Projection
 added_date: "2026-10-03 00:07:34"
-last_updated: "2026-10-03 00:48:08"
+last_updated: "2026-10-08 19:10:43"
 summary: Remove redundant Working public-manifest generation and dependencies while preserving existing rendering and field contracts.
 ui_status: done
 parent_id: d-20260428-000000-f5ff18
@@ -43,7 +43,7 @@ Shared code still validates the supplied identities, content and output contract
 
 ## Watcher And Targeted Collection Builds
 
-The [watcher](../../docs-viewer/services/docs_live_rebuild_watcher.py) detects source changes and passes the affected document IDs to the collection builder. The watcher does not read or merge collection manifests. Document rendering and any required index update belong to the invoked build operation.
+Application writes pass exact affected document IDs to the collection builder and await required generation. Source Save reuses the [exact-document rebuild owner](../../docs-viewer/services/docs_document_rebuild.py); external Markdown edits require explicit Rebuild. Document rendering and any required manifest update belong to the invoked build operation.
 
 `manage-manifest.json` is the local collection index used by the collection list. A targeted build renders the selected documents, merges their list metadata into that saved index, removes selected entries and generated payloads for deleted documents, and preserves unselected document payloads. Reading the saved management manifest preserves rows for documents outside the requested build; keeping the list complete means retaining those rows, rather than rendering their sources again.
 

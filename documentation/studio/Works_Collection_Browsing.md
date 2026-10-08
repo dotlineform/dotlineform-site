@@ -3,7 +3,7 @@ draft: true
 doc_id: d-20260926-181549-53dc58
 title: Works Collection Browsing
 added_date: "2026-09-26 18:15:49"
-last_updated: "2026-10-03 20:38:59"
+last_updated: "2026-10-08 19:10:43"
 summary: Completed Works browsing delivery: Save-maintained Manage metadata, pagination, delayed title search and title/recent sorting, accepted through Site Preview and Save review.
 parent_id: d-20260428-000000-f5ff18
 ---
@@ -29,7 +29,7 @@ Follow the [Catalogue Works Save-maintained metadata approach](Catalogue_Works_B
 
 The frontend still owns searching, sorting, pagination and rendering. It consumes generated files rather than reading canonical Catalogue records, querying Studio for list data, or rebuilding a projection when the report opens. Existing generated Catalogue associations retain exact Work-document navigation; Folder activation retains its existing local Finder helper.
 
-Refresh ownership is now decided: **the relevant generated Catalogue report data is refreshed as part of Save, before Save reports complete success**. Afterward, normal Works list loading shows that latest data. There is no additional user operation. This does not require unsolicited live updates to an already-open list or change the existing Docs source-save/watcher lifecycle.
+Refresh ownership is now decided: **the relevant generated Catalogue report data is refreshed as part of Save, before Save reports complete success**. Afterward, normal Works list loading shows that latest data. There is no additional user operation. This does not require unsolicited live updates to an already-open list or change the independently owned Docs Source Save lifecycle.
 
 The private Catalogue output `reports/works/manifest.json` contains all Work and Series IDs mapped to their current titles, including empty Series. Its `works_collection_metadata_v1` envelope carries a content revision. Studio Save updates only affected identities using its already-loaded canonical records, removes explicitly deleted identities, and skips unchanged writes. This separate Catalogue-owned file survives Docs builds without copying titles into `manage-manifest.json`. Initial population and explicit repair use `studio/services/catalogue/works_collection_metadata.py`; ordinary Saves need no separate operation.
 

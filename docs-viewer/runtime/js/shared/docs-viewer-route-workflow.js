@@ -191,6 +191,21 @@ export function initDocsViewerRouteWorkflow(context) {
   }
   function idle() { return managementUiEnabled() && !context.root.ownerDocument.hidden
     && context.root.dataset.managementBusy !== "true" && context.activeViewState().activeModeId === "rendered-document"; }
+  async function refreshSavedDocument(target) {
+    var request = selected.requestId;
+    var key = documentTargetKey(target);
+    if (!selected.documentTarget || key !== documentTargetKey(selected.documentTarget)) {
+      throw new Error("The saved document is no longer displayed.");
+    }
+    // This read always reaches the generated-data owner; retained payloads cannot satisfy Save.
+    var payload = await context.collectionProvider.readDocument(target);
+    if (request !== selected.requestId || !selected.documentTarget
+      || key !== documentTargetKey(selected.documentTarget)) throw new Error("The saved document target changed.");
+    if (!payload || payload.doc_id !== target.doc_id) throw new Error("Document payload did not match the saved target.");
+    await context.prepareDocumentNavigation();
+    await context.refreshRenderedPayload(Object.assign({}, selected.displayedRecord, payload, target), payload);
+    await navigation.update();
+  }
   async function refreshDisplayedDocument() {
     var target = selected.documentTarget;
     if (!target || !selected.displayedPayload || context.activeViewState().activeViewId !== "rendered-document") return;
@@ -257,7 +272,7 @@ export function initDocsViewerRouteWorkflow(context) {
     viewerUrl: viewerUrl, viewerUrlForDocument: viewerUrlForDocument,
     openPresentation: openPresentation, returnToDocument: returnToDocument,
     collectionIndexTarget: collectionIndexTarget, openCollectionIndex: openCollectionIndex,
-    commitDeletedDocument: commitDeletedDocument };
+    commitDeletedDocument: commitDeletedDocument, refreshSavedDocument: refreshSavedDocument };
   return { commands: commands, bindPopstate: navigation.bind, bindRouteLinks: bindRouteLinks,
     currentDocId: currentDocId, currentHash: currentHash, currentQuery: currentQuery,
     hasDisallowedModeInUrl: function () { return new URLSearchParams(window.location.search).has("mode"); },

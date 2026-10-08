@@ -254,7 +254,6 @@ def apply_import_content_collection(
 
     write_order = sorted(enumerate(plan.document_plans), key=parent_depth)
     docs_doc_ids: list[str] = []
-    written_paths: list[Path] = []
     source_failed = False
     def write_collection_documents() -> None:
         nonlocal source_failed
@@ -300,7 +299,6 @@ def apply_import_content_collection(
             )
             result["committed_document"] = {"target": {"doc_id": document_plan.doc_id, **({"collection": document_plan.collection} if document_plan.collection else {})}, "record": dict(document_plan.committed_record)}
             docs_doc_ids.extend(document_plan.docs_doc_ids)
-            written_paths.extend(document_plan.changed_paths)
             event_name, event_details = import_document_event(
                 repo_root,
                 document_plan,
@@ -330,9 +328,7 @@ def apply_import_content_collection(
                 repo_root,
                 changed_paths,
                 write_collection_documents,
-                suppression_reason="docs-import-collection-apply",
                 docs_doc_ids=docs_doc_ids,
-                written_paths=written_paths,
             )
             generation = {"status": "completed", "rebuild": rebuild, "error": ""}
         except NoAppliedCollectionWrites:
@@ -615,7 +611,6 @@ def apply_import_content_collection_atomic(
             collection.collection,
             changed_paths,
             write_operation,
-            suppression_reason="docs-import-collection-collection-apply",
             source_snapshots=snapshots,
         )
 
@@ -665,7 +660,6 @@ def apply_import_content_collection_document_atomic(
             repo_root,
             changed_paths,
             write_operation,
-            suppression_reason="docs-import-reviewed-stage-collection-apply",
             source_snapshots=snapshots,
             docs_doc_ids=docs_doc_ids,
         )

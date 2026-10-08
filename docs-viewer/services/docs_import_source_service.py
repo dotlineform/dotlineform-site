@@ -558,14 +558,12 @@ def handle_import_source(
             collection,
             plan.changed_paths,
             write_import_document,
-            suppression_reason=plan.suppression_reason,
         )
     else:
         rebuild = dependencies.perform_source_write_and_rebuild(
             repo_root,
             plan.changed_paths,
             write_import_document,
-            suppression_reason=plan.suppression_reason,
             docs_doc_ids=plan.docs_doc_ids,
         )
     event_name, event_details = import_document_event(

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260424-000000-04d75e
 title: Management Services
 added_date: 2026-04-24 00:00:00
-last_updated: "2026-08-14 21:18:02"
+last_updated: "2026-10-08 19:10:43"
 parent_id: d-20260424-000000-50b63f
 
 ---
@@ -51,7 +51,6 @@ DOCS_VIEWER_BASE_URL
 DOCS_VIEWER_MANAGEMENT_ENABLED
 DOCS_VIEWER_REVIEW_ENABLED
 DOCS_VIEWER_GENERATED_READS_ENABLED
-DOCS_VIEWER_WATCH_ENABLED
 ```
 
 `DOCS_VIEWER_HOST` and `DOCS_VIEWER_BASE_URL` must remain loopback-only. If the configured port is unavailable, startup fails instead of silently choosing another port.

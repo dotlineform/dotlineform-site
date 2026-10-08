@@ -3,88 +3,17 @@ draft: false
 doc_id: d-20260607-222033-dd2265
 title: Rebuild Follow-Through Scripts
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-08-14 20:31:55"
+last_updated: "2026-10-08 19:10:43"
 parent_id: d-20260607-222033-2a494e
 ---
 # Docs Viewer Rebuild Follow-Through Scripts
 
-## `docs-viewer/services/docs_write_rebuild.py`
+`docs-viewer/services/docs_document_rebuild.py` resolves one exact Working document and requires authoring capability before calling the shared document/Links rebuild owner. Source Save and Draft reuse its resolved-target helper without a second source-resolution pass. Ordinary targets use `rebuild_working_outputs` with one ID, Search excluded and media skipped; named targets use `rebuild_collection_outputs` with the same exact document and Links selection.
 
-Purpose: source-write Docs follow-through and explicit Docs/Search rebuild orchestration.
+`docs-viewer/services/docs_write_rebuild.py` owns awaited builder command shapes, source-write follow-through, existing mutation-specific recovery and diagnostics. Normal writes rebuild required document/Links outputs without Search or media production. Multi-collection relocation writes once and builds the destination before the former owner processes its Links deletion. The filesystem watcher, suppression markers and suppression-only arguments are retired.
 
-Ownership: owns command shapes, automatic targeted-Docs follow-through, explicit complete Search refresh, diagnostics parsing, and watcher-suppression coordination for management writes.
+The explicit **Rebuild docs and Search** action calls the same orchestration owner with a complete Working request. It builds the ordinary owner and every configured collection, regenerates referenced registered media through their producer owners, updates Recents and aggregate Links, builds Search, and records completion after required outputs succeed. [Source Organisation](Source_Organisation.md#explicit-external-edit-and-media-rebuilds) owns the agreed rare persistent-media workflow and its broader writes/cost.
 
-Responsibilities:
+`docs-viewer/build/build_docs.py` owns document rendering, management/tree metadata and document relationships. Exact selectors preserve unselected payloads and saved discovery outputs; missing targeted prerequisites request an explicit complete Build. `--skip-media-builds` prevents registered media inventory and producer work. `--diagnostics` adds machine-readable details to the normal compact console summary. [Builder](Builder.md) owns these contracts.
 
-- builds Python commands for `docs-viewer/build/build_docs.py` and `docs-viewer/build/build_search.py`
-- keeps ordinary management writes Docs-only
-- supports the explicit Manage Rebuild control's full same-scope Docs and whole-index Search rebuild
-- supports targeted docs payload rebuilds with `--only-doc-ids`
-- falls back to full docs rebuilds when existing local published output is not safe for targeted mode
-- parses docs builder diagnostics lines
-- parses search builder output counts when available
-- wraps source writes with watcher-suppression markers
-- returns rebuild mode, affected ids, command steps, diagnostics, and elapsed times
-
-Not responsible for:
-
-- deciding mutation-specific targeted Docs ids
-- builder implementation details
-- serving HTTP requests
-
-## `docs-viewer/build/build_docs.py`
-
-Purpose: generated Docs Viewer payload builder.
-
-Ownership: owns generated docs output formats under configured published document roots.
-
-Responsibilities:
-
-- parses source Markdown scopes
-- emits generated tree, Recent, per-doc payload, and local semantic-token usage artifacts
-- supports full and targeted write modes
-- emits machine-readable diagnostics when called with `--diagnostics`
-
-Not responsible for:
-
-- docs-search output
-- local HTTP routing
-- source mutation validation
-
-## `docs-viewer/build/build_search.py`
-
-Purpose: docs-search builder for Docs Viewer scopes.
-
-Ownership: owns generated search index output at configured published search locations.
-
-Responsibilities:
-
-- builds deterministic `docs_viewer_search_index_v2` indexes
-- rebuilds each scope search index as one complete product
-- skips an identical content version unless forced
-- reports the search document count and write or skip result
-
-Not responsible for:
-
-- generated Docs Viewer document payloads
-- source mutation planning
-
-## `docs-viewer/services/docs_live_rebuild_watcher.py`
-
-Purpose: live rebuild watcher for source changes outside direct management endpoint writes.
-
-Ownership: owns polling/debounce behavior for changed docs source files while local Studio is running.
-
-Responsibilities:
-
-- watches configured document source roots
-- watches `docs_scopes.json` and reconciles added, changed, renamed, and removed scope/sub-scope states
-- pauses rather than exiting when a still-configured source root is unavailable, and resumes change detection if that root returns
-- rebuilds docs/search output after detected source changes
-- respects short-lived suppression markers written by management endpoints
-- avoids duplicate rebuilds for files that were already rebuilt by a management write
-
-Not responsible for:
-
-- handling browser API requests
-- validating source mutation payloads
+`docs-viewer/build/build_search.py` independently produces the complete stage-independent `docs_viewer_search_index_v4` Working index. Source Save and other normal authoring writes leave Search unchanged. Publish copies its existing bytes; it does not rebuild Search. Browser display/navigation remains owned by [Runtime](Docs_Viewer_Runtime.md), and source candidate validation remains owned by [Source Editor Endpoints](Source_Editor_Endpoints.md).

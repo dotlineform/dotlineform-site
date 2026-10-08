@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260602-160839-6d3cbb
 title: Docs Viewer Search
 added_date: "2026-06-02 16:08:39"
-last_updated: "2026-10-06 22:13:31"
+last_updated: "2026-10-08 19:10:43"
 parent_id: d-20260331-000000-5dcf32
 
 ---
@@ -34,7 +34,7 @@ Collection results retain exact `{collection, doc_id}` identity plus `report_doc
 
 ## Build And Publication
 
-The builder reconstructs the complete Working index. Ordinary source saves and watcher passes rebuild document projections only. Manage Rebuild builds document outputs before Search; `build_search.py --stage working --write` uses those existing outputs directly. No path patches postings or maintains a separate collection index. The content version excludes generation time, so an identical rebuild skips its write.
+The builder reconstructs the complete Working index. Ordinary source saves await exact document/Links projections only. Manage Rebuild builds document outputs before Search; `build_search.py --stage working --write` uses those existing outputs directly. No path patches postings or maintains a separate collection index. The content version excludes generation time, so an identical rebuild skips its write.
 
 The Working index lives at its configured generated-search location. Prepare Preview captures the saved file and copies its exact bytes into Preview; Deploy Repo copies that file to the public repository destination. Neither rebuilds Search nor applies a second coverage filter. Ordinary source edits may leave Search stale, and prepared document membership need not equal Search membership. Field and coverage policy changes take effect on the next complete Working Search build; rebuilding does not prepare or deploy them.
 

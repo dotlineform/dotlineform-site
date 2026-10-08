@@ -149,7 +149,6 @@ class DocsViewerServiceConfig:
     base_url: str
     management_enabled: bool
     generated_reads_enabled: bool
-    watch_enabled: bool
     review_enabled: bool = False
     public_preview_base: str = "http://127.0.0.1:4000"
     studio_base_url: str = "http://127.0.0.1:8765"
@@ -197,7 +196,6 @@ def service_defaults(repo_root: Path) -> dict[str, bool]:
     return {
         "management_enabled": capabilities.get("management_enabled_default") is True,
         "generated_reads_enabled": capabilities.get("generated_reads_enabled_default") is not False,
-        "watch_enabled": capabilities.get("watch_enabled_default") is not False,
         "review_enabled": capabilities.get("review_enabled_default") is True,
     }
 
@@ -239,7 +237,6 @@ def load_service_config(
         base_url=base_url,
         management_enabled=env_bool(env, "DOCS_VIEWER_MANAGEMENT_ENABLED", defaults["management_enabled"]),
         generated_reads_enabled=env_bool(env, "DOCS_VIEWER_GENERATED_READS_ENABLED", defaults["generated_reads_enabled"]),
-        watch_enabled=env_bool(env, "DOCS_VIEWER_WATCH_ENABLED", defaults["watch_enabled"]),
         review_enabled=env_bool(env, "DOCS_VIEWER_REVIEW_ENABLED", defaults["review_enabled"]),
         public_preview_base=public_preview_base,
         studio_base_url=studio_base_url,

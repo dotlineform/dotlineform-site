@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-2a494e
 title: Scripts Overview
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-09-18 19:02:44"
+last_updated: "2026-10-08 19:10:43"
 parent_id: d-20260424-000000-04d75e
 ---
 # Docs Viewer Management Script Overview
@@ -24,7 +24,7 @@ This is the ownership map for the scripts and service modules behind Docs Viewer
 - [Source Mutation Scripts](Source_Mutation_Scripts.md): create, placement, delete and focused mutation apply helpers; common Title/Summary editing belongs to Source Save
 - [Import Scripts](Import_Scripts.md): staged source import service and format conversion helpers
 - [Source Editor Scripts](Source_Editor_Scripts.md): full source-session read, combined metadata/body Save and local editor open helpers
-- [Rebuild Follow-Through Scripts](Rebuild_Follow_Through_Scripts.md): builder command orchestration and live-watcher suppression helpers
+- [Rebuild Follow-Through Scripts](Rebuild_Follow_Through_Scripts.md): awaited document/Links and explicit Search build orchestration
 - [Audit Scripts](Audit_Scripts.md): broken-link route adapter and CLI audit engine
 
 ## Ownership Rule

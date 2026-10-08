@@ -129,7 +129,7 @@ export function createDocsViewerDocumentViewCoordinator(options) {
 
   function leaveSource() {
     return new Promise(function (resolve, reject) {
-      if (!documentDisplayModeHost.requestMode("rendered-document", { force: true, warn: false, onAccepted: resolve, onFailed: reject })) resolve(false);
+      if (!documentDisplayModeHost.requestMode("rendered-document", { force: true, warn: false, onAccepted: resolve, onFailed: reject })) reject(new Error("Rendered document mode is unavailable."));
     });
   }
 

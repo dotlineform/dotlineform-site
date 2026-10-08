@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-ce5515
 title: Source Mutation Endpoints
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-09-23 14:39:19"
+last_updated: "2026-10-08 19:10:43"
 parent_id: d-20260607-222033-647b52
 ---
 # Docs Viewer Source Mutation Endpoints
@@ -167,7 +167,6 @@ Actions:
 - after any required public cleanup succeeds, applies exact Working-owned v3 lineage follow-through for a matched configured child collection: Working Delete removes its record, while Editorial Delete removes only exact children and drops an empty record
 - rebuilds only the exact Working collection when lineage changed; direct non-lineage and unrelated collection deletes leave the table byte-identical and add no lineage receipt
 - returns non-success with `committed: true` and `retry_delete: false` if required public or Catalogue cleanup fails after source commit
-- writes watcher-suppression markers for every deleted source path
 
 Returned data includes requested and effective-root ids and counts, `deleted_doc_ids`, deletion counts and paths, rebuild diagnostics, applied `public_cleanup`, an applicable nested `lineage` receipt with status, matched role, affected Working ids, record count, and focused rebuild result, summary text, and `dry_run`.
 

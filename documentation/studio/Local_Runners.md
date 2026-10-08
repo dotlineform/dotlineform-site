@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260422-174736-9bd0fc
 title: Local Runners
 added_date: "2026-04-22 17:47:36"
-last_updated: "2026-08-14 21:24:49"
+last_updated: "2026-10-08 19:10:43"
 parent_id: d-20260413-000000-d314b7
 
 ---
@@ -13,7 +13,7 @@ parent_id: d-20260413-000000-d314b7
 
 | Command | Starts |
 | --- | --- |
-| `bin/local-studio` | Local Studio catalogue/tag routes and the docs live-rebuild watcher |
+| `bin/local-studio` | Local Studio catalogue/tag routes |
 | `docs-viewer/bin/docs-viewer` | Docs Viewer management, document-package routes, and Docs Review when enabled |
 | `bin/site-preview` | checked-in public `site/` preview |
 | `bin/local-all` | all enabled services above under one supervisor |
@@ -38,10 +38,9 @@ Each app owns its own pages and APIs. `bin/local-all` supervises siblings; it do
 2. chooses `$HOME/miniconda3/bin/python3` when available;
 3. verifies the configured Studio port before starting;
 4. starts `studio/app/server/studio/studio_app_server.py` when enabled;
-5. starts `docs-viewer/services/docs_live_rebuild_watcher.py` when enabled;
-6. stops both children on interrupt, termination, or runner exit.
+5. stops its child on interrupt, termination, or runner exit.
 
-The watcher rebuilds generated Docs Viewer document payloads after source Markdown changes. It leaves Search unchanged; the Manage Rebuild control explicitly refreshes the active scope's Docs and complete Search index. The watcher is not the Docs Viewer web service. Studio catalogue writes refresh their own derived lookups; the runner does not perform startup catalogue or docs rebuilds.
+The filesystem watcher is retired. Docs application writes complete their own required generation through the Docs Viewer service. External Markdown edits require exact-document Rebuild; rare persistent media edits use the explicit Rebuild docs and Search action. [Source Organisation](Source_Organisation.md#explicit-external-edit-and-media-rebuilds) owns those workflows. Studio Catalogue Save and explicit Refresh retain their own boundaries; the runner performs no startup Catalogue or document rebuild.
 
 ## All-Services Runner
 
@@ -60,8 +59,7 @@ Local overrides belong in `.env.local`. The main variable families are:
 
 - `STUDIO_APP_*` for enablement, host, port, and access logging;
 - `SITE_*` for public preview enablement and binding;
-- `DOCS_VIEWER_*` for the Docs Viewer binding/base URL and optional review surface;
-- `DOCS_WATCH_*` for watcher enablement and timing.
+- `DOCS_VIEWER_*` for the Docs Viewer binding/base URL and optional review surface.
 
 The runner scripts are the authority for exact names and defaults. Avoid copying the full variable inventory into app documentation; it changes whenever local services are split or renamed.
 
@@ -78,5 +76,4 @@ Studio public links use the configured preview base, so the preview must be runn
 - Add a new long-running app as its own runner first, then make `local-all` supervise it.
 - Keep port preflight and shutdown behavior symmetrical when adding a child.
 - Keep app routes with their owner; a runner should not provide old-path aliases.
-- `local-studio` starting the cross-scope docs watcher is operationally convenient but couples documentation rebuild activity to Studio sessions.
 - Environment settings are spread across sibling runners rather than described by one checked schema; inspect the scripts before changing cross-runner defaults.

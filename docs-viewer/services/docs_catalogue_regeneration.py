@@ -177,9 +177,7 @@ def regenerate_catalogue(repo_root: Path, body: dict[str, Any]) -> dict[str, Any
     try:
         rebuild = perform_collection_source_write_and_rebuild(
             repo_root, "catalogue", changed_paths, write_operation,
-            suppression_reason="docs-catalogue-regenerate",
             links_doc_ids=None if mode == "full" else sorted(link_doc_ids),
-            source_writes_committed=lambda: bool(committed_records or selection_updated),
             build_doc_ids=sorted(build_doc_ids),
             complete_build=mode == "full",
         )

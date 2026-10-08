@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261008-184804-84d5c2
 title: Browser Polling Retirement Delivery
 added_date: "2026-10-08 18:48:04"
-last_updated: "2026-10-08 18:48:04"
+last_updated: "2026-10-08 19:24:55"
 summary: Optionally replace recurring Working viewer reads with explicit refreshes owned by completed application actions.
 ui_status: proposed
 parent_id: d-20260428-000000-f5ff18
@@ -35,14 +35,14 @@ Use Save, Rebuild and other application management actions normally. Their compl
 
 ### BP-0 Readiness
 
-- [ ] Confirm the preceding delivery is complete and Source Save awaits its fresh displayed result.
+- [x] Confirm the preceding delivery is complete and Source Save awaits its fresh displayed result.
 - [ ] Check broad management completion, route loading and retained-view owners for reliance on polling, including index/collection/report and open information updates.
 - [ ] Confirm external-edit and other-tab/window expectations and the existing explicit refresh/reopen path.
 - [ ] Identify the shared/public projection boundary and agree the bounded remaining action-refresh work.
 
 Gate: promote to planned only when every required view update has an explicit owner and external/cross-tab automatic synchronization is not required. If a broader synchronization feature is needed, separate that requirement before removing polling. Readiness remains read-only.
 
-Record: pending prerequisite. The current shared route workflow starts a two-second refresh timer for the local management-enabled rendered view and compares fetched Working index/document data. Its removal is separable from watcher retirement once application completion owns required refreshes.
+Record: prerequisite complete and user-accepted on 2026-10-08. Source Save now awaits its fresh displayed result. The current shared route workflow still starts a two-second refresh timer for the local management-enabled rendered view and compares fetched Working index/document data. Remaining action-to-view coverage and external/cross-tab expectations require read-only readiness before this optional delivery can be promoted; implementation is not authorized by the preceding acceptance.
 
 ### BP-1 Explicit Refresh And Polling Removal
 

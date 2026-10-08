@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260908-184516-f87fc8
 title: Document Sub-scope Metadata
 added_date: "2026-09-08 18:45:16"
-last_updated: "2026-09-08 20:34:41"
+last_updated: "2026-10-08 19:10:43"
 summary: Automatically record sub-scope membership in document front matter across every scope, with destination-owned create, copy and import behavior and a one-off backfill.
 ui_status: done
 parent_id: d-20260908-171728-3c539a
@@ -38,7 +38,7 @@ This delivery only creates and maintains the Markdown front-matter field. No exi
 
 The author uses the existing New, Copy and Import workflows. Saving into a sub-scope supplies `sub-scope` automatically from the resolved destination. Copying between sub-scopes replaces the source collection value; copying into the normal scope clears it. Supported Move writes follow the destination too. Existing body saves and actual metadata, Subject and publishability writes maintain the same rule. Missing or stale membership is repaired when those source writes occur; metadata no-op requests remain no-ops. Existing documents have received the field through the one-off backfill.
 
-Import retains its existing supported destinations; this delivery does not enable staged Import authoring. Pre-publish remains read-only through authoring services. Its retained source documents were included only in the explicitly authorised one-off backfill. Direct filesystem edits remain the author's responsibility; the watcher does not infer or move collection storage from metadata.
+Import retains its existing supported destinations; this delivery does not enable staged Import authoring. Pre-publish remains read-only through authoring services. Its retained source documents were included only in the explicitly authorised one-off backfill. Direct filesystem edits remain the author's responsibility; explicit Rebuild does not infer or move collection storage from metadata.
 
 ## Delivery Steps
 

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260423-000000-8fd731
 title: Source Organisation
 added_date: "2026-04-23 00:00:00"
-last_updated: "2026-10-08 11:54:36"
+last_updated: "2026-10-08 19:10:43"
 summary: Working source and generated storage, one read-only Preview snapshot, and exact collection and media ownership.
 parent_id: d-20260424-000000-50b63f
 ---
@@ -11,7 +11,7 @@ parent_id: d-20260424-000000-50b63f
 
 `docs-viewer/config/workspace/docs-workspace.json` is the storage authority, using `docs_workspace_v4`. `docs_workspace_config.py` resolves the single existing root selected by `DOTLINEFORM_DOCS_BASE_DIR`. An unavailable configured root is an unavailable workspace; no repository or alternate root is inferred. The earlier scope registry and nested scope storage are retired.
 
-`DOTLINEFORM_DOCS_BASE_DIR` selects the Docs Viewer folder directly. It is independent of `DOTLINEFORM_PROJECTS_BASE_DIR`, which owns Catalogue, Processing, Data Sharing and other project workspaces. Both settings live in `.env.local`; neither is an alias or fallback for the other. To relocate Docs storage, stop services and the watcher, move the complete Working and Preview trees to the explicitly selected root, change the setting, verify the resolved locations, and restart.
+`DOTLINEFORM_DOCS_BASE_DIR` selects the Docs Viewer folder directly. It is independent of `DOTLINEFORM_PROJECTS_BASE_DIR`, which owns Catalogue, Processing, Data Sharing and other project workspaces. Both settings live in `.env.local`; neither is an alias or fallback for the other. To relocate Docs storage, stop services, move the complete Working and Preview trees to the explicitly selected root, change the setting, verify the resolved locations, and restart.
 
 ## Storage And Roles
 
@@ -70,7 +70,7 @@ Concepts and Moments are document collections rather than separate Concept/Momen
 
 The Position button beside Index Actions uses `arrow-up-down.svg`. Its synchronous modal moves the displayed ordinary document and its whole subtree Before, After or Inside a chosen ordinary destination. Inside appends the last child; Inside Root appends a root. All ordinary documents are available regardless of draft/unpublishable state, except the moved subtree. Save writes the JSON and refreshes the tree; Cancel writes nothing. Drag positioning is retired.
 
-New inserts after the displayed ordinary document as its sibling. With no ordinary anchor it appends at root. New child and New sibling retain their explicit destinations. Import appends new documents inside the selected parent and preserves existing placement on overwrite; batch creation writes parents before their children while retaining sibling sequence. Delete removes the complete subtree from JSON and source. Renaming or editing content does not reposition documents. Hand edits to the JSON take effect on the next Build; the Markdown watcher does not watch that file.
+New inserts after the displayed ordinary document as its sibling. With no ordinary anchor it appends at root. New child and New sibling retain their explicit destinations. Import appends new documents inside the selected parent and preserves existing placement on overwrite; batch creation writes parents before their children while retaining sibling sequence. Delete removes the complete subtree from JSON and source. Renaming or editing content does not reposition documents. Hand edits to the JSON take effect on the next explicit Build.
 
 ## Collection Icons
 
@@ -96,6 +96,14 @@ For each delivery, identify the collection ID and host, source/generated/shared-
 Document-level New, Edit and Delete operate within an existing configured collection. Collection browsing, Regenerate and package workflows retain their own owners. Removing a document or report host does not deregister the collection or perform a whole-collection cleanup.
 
 ## Authoring And Publish
+
+### Explicit External Edit And Media Rebuilds
+
+The filesystem watcher is retired. Application writes await their required document/Links output. For a deliberate external Markdown edit, supply the intended full `last_updated` timestamp for a qualifying body, Title or Summary change, then open the exact document and choose **Edit doc → Rebuild**, reloading if needed. Rebuild does not rewrite source or capture filesystem edit time; [Document Identity](Document_Identity.md#date-provenance) owns timestamp evidence. A CLI author can run `python3 docs-viewer/build/build_docs.py --stage working --write --only-doc-ids <ids> --skip-media-builds`; add `--collection <id>` for a configured named collection. Use a complete document Build only when global changes or missing targeted prerequisites require reconciliation. Search remains separately requested.
+
+After an infrequent edit to persistent `working/source/media/build-source/mermaid/*.mmd` or the corresponding configured collection source, use Manage **Rebuild docs and Search**. This existing awaited action builds every configured document collection, regenerates registered Mermaid SVGs referenced by those documents into shared assets with byte verification, updates Links and Recents, and rebuilds Search. It leaves unreferenced `.mmd` sources alone. It does not Refresh Catalogue, Regenerate Catalogue sources or Publish. Cost includes all document rendering and Search plus one Mermaid render per referenced persistent diagram; no runtime estimate is claimed without running it. A later explicit reload shows changed media if an already mounted image needs refreshing.
+
+Normal Source Save and exact-document Rebuild use already prepared media and perform no media inventory, hashing, producer readiness check or generation. Inline Mermaid fences retain their existing document/browser rendering owner. Media intake continues to prepare its own required ready bytes before inserting a dirty source reference. [Document Diagrams](Document_Diagrams.md) owns persistent Mermaid production and [Media And Asset Handling](Media_And_Asset_Handling.md) owns storage.
 
 ### Recent Exclusions
 
@@ -128,7 +136,7 @@ Ordinary and other collection source documents require explicit boolean `draft`.
 
 `POST /docs/publish` accepts an empty object. `docs_publish.py` awaits `docs_prepare_preview.py`, then distributes the returned completed snapshot through `docs_deploy_repo.py`. Preparation captures current eligible source, saved Search and selected Catalogue JSON, generates fresh shared Recents from the eligible metadata and captured exclusion list, builds documents in temporary storage, validates the finished output, refreshes Working Recents and replaces Preview. `docs_preview_snapshot.py` writes `preview-manifest.json` after byte verification. A build failure leaves the previous Preview intact; failure during replacement leaves no valid completion receipt. A fresh Publish is the recovery operation. There is no intermediate confirmation, change-list modal or separate acceptance action.
 
-Ordinary Working edits and deletions reach Preview and the repository through the next Publish. Source Save writes validated source; the watcher rebuilds document projections independently. Source saves, draft changes and ordinary watcher updates do not rebuild Search. Rebuild docs and Search remains an explicit operation. Links and Broken Links remain Working-owned.
+Ordinary Working edits and deletions reach Preview and the repository through the next Publish. Source Save awaits validated persistence, exact document/Links generation and fresh display. Draft changes await their exact build; creation, deletion, imports and Regenerate retain their own generation owners. Source saves and draft changes do not rebuild Search. Rebuild docs and Search remains an explicit operation. Links and Broken Links remain Working-owned.
 
 Local generated reads resolve the configured Working owner without a stage parameter. Ordinary document reads open the exact generated by-ID file without reading the document index or validating its stored URL. Exact immutable identity, configured ownership, path confinement and payload parsing remain required. Stage-bearing URLs/requests and `/docs/preview/*` browsing are retired without aliases. Management capabilities remain distinct from public read-only access.
 

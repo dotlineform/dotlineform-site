@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260927-135604-05446e
 title: Subject Associations
 added_date: "2026-09-27 13:56:04"
-last_updated: "2026-10-05 10:00:12"
+last_updated: "2026-10-08 19:10:43"
 summary: Manifest-owned subjects, in-memory report associations, exact navigation, and private/public generation boundaries.
 parent_id: d-20260423-000000-d015e6
 ---
@@ -48,7 +48,7 @@ Several documents may share a subject. That is valid for Project State. Every cu
 | UI Action | Effect On Subject Data | Completion Or Freshness Boundary |
 | --- | --- | --- |
 | Assign Subject / Change Subject, including clearing it | Writes the exact document's configured front-matter field group, then rebuilds its collection outputs. | The management operation awaits its source-write and collection-build follow-through. Current assignment rejects non-empty Folder subjects, although existing Working Works folder declarations remain readable. |
-| Open Source and edit canonical Markdown | A declaration change updates normalized subjects in the management manifest. | The Working watcher rebuilds affected document output independently after the file changes. |
+| Open Source and edit canonical Markdown | A declaration change updates normalized subjects in the management manifest. | Application Source Save awaits the exact document build and fresh display; external edits require explicit Rebuild. |
 | Source Editor Save | Saves validated source and supplies scalar committed metadata, including independent Subject and authored-thumbnail assignments, to retained readers. | Save completes at canonical source persistence; watcher generation is independent. |
 | Working document Build or collection document rebuild | Recomputes normalized subjects and manifest generation. | A successful build owns the result. Targeted collection builds use merged saved metadata, preserving unselected documents. |
 | Collection Regenerate | Rewrites collection-owned generated source and rebuilds document outputs and manifests. | Source regeneration and its owning rebuild are separate from Studio Work Save. |

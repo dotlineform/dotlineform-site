@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260907-125101-d3bde6
 title: Doc Relationships
 added_date: "2026-09-07 12:51:01"
-last_updated: "2026-10-03 21:27:23"
+last_updated: "2026-10-08 19:10:43"
 summary: Record eligible document relationships in separate links-by-id files during Working, including drafts, with coordinated Document Build updates and aggregation of prepared records.
 ui_status: done
 parent_id: d-20260908-171728-3c539a
@@ -52,7 +52,7 @@ Selection preserves the exact document target: scope, collection and `doc_id`. A
 
 Manually pasted and manually edited document links receive the same Build treatment as links inserted by the button. There is no special token syntax or hidden insertion metadata. The link label remains ordinary authored text; a later target-title change updates generated relationship data without silently rewriting the referring document's Markdown.
 
-The links-builder compares current authored references with its last completed reference baseline to detect additions, removals and occurrence changes during normal Doc Build. This supports Source Save, watcher builds and builds without an open editor. Link creation and deletion do not require dedicated controls; **Insert doc link** is a selection convenience and shares the same Save/Build path as typing, pasting or deleting a link.
+The links-builder compares current authored references with its last completed reference baseline to detect additions, removals and occurrence changes during normal Doc Build. This supports Source Save and explicit builds without an open editor. Link creation and deletion do not require dedicated controls; **Insert doc link** is a selection convenience and shares the same Save/Build path as typing, pasting or deleting a link.
 
 ### Document Identity And Stage Context
 

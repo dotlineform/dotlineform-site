@@ -362,7 +362,7 @@ def apply_source_media(
 
     Native bytes live only in operation-owned temporary storage. A confirmation
     response is write-free; the browser resubmits the same File with its decision.
-    Source Save, watcher output and public publication remain independent.
+    Source Save and public publication remain independent.
     """
     filename = validate_upload(upload)
     try:

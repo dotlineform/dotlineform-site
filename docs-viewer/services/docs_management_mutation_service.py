@@ -103,7 +103,6 @@ def recover_collection_document_delete(
             plan.collection,
             [source_delete.path],
             restore_operation,
-            suppression_reason="docs-collection-document-delete-recovery",
         )
     except Exception as recovery_error:
         source_restored = source_matches_original()
@@ -194,21 +193,19 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
         try:
             if plan.collection:
                 # The shared selection file is written with the mutation, but
-                # only collection-owned sources belong to its watcher/build.
+                # only collection-owned sources belong to its build.
                 selection_file = selected_path(load_docs_working_config(repo_root))
                 rebuild = write_rebuild.perform_collection_source_write_and_rebuild(
                     repo_root,
                     plan.collection,
                     [path for path in plan.changed_paths if path != selection_file],
                     write_operation,
-                    suppression_reason=plan.suppression_reason or "docs-management",
                 )
             else:
                 rebuild = write_rebuild.perform_source_write_and_rebuild(
                     repo_root,
                     plan.changed_paths,
                     write_operation,
-                    suppression_reason=plan.suppression_reason or "docs-management",
                     docs_doc_ids=plan.build_doc_ids,
                 )
         except mutations.ManagedDocumentRevisionConflict:

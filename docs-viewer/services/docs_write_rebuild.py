@@ -24,15 +24,6 @@ from docs_build_manifest import remove_build_manifest, write_build_manifest
 from docs_mermaid_preparation import prepare_stage_mermaid
 from docs_workspace_links import write_workspace_links
 from docs_source_model import parse_source, write_bytes_atomic
-from docs_watch_suppression import (
-    DEFAULT_COMPLETE_TTL_SECONDS,
-    DEFAULT_PENDING_TTL_SECONDS,
-    SUPPRESSION_COMPLETE,
-    SUPPRESSION_PENDING,
-    clear_watch_suppressions,
-    set_watch_suppressions,
-    watch_suppression_owner,
-)
 
 DOCS_BUILDER_DIAGNOSTICS_PREFIX = "Docs builder diagnostics: "
 FRONT_MATTER_ERROR_PREFIX = "problem with front-matter on doc "
@@ -426,70 +417,29 @@ def rebuild_collection_outputs(
     }
 
 
+def validate_changed_source_paths(root: Path, paths: list[Path]) -> None:
+    """Keep write follow-through confined to its configured source owner."""
+    for path in paths:
+        path.resolve().relative_to(root.resolve())
+
+
 def perform_source_write_and_rebuild(
     repo_root: Path,
     changed_paths: list[Path],
     write_operation: Callable[[], Any],
     *,
-    suppression_reason: str,
     docs_doc_ids: Optional[list[str]] = None,
-    written_paths: Optional[list[Path]] = None,
     skip_media_builds: bool = True,
 ) -> Dict[str, Any]:
     require_document_authoring(load_docs_working_config(repo_root))
-    suppression_owner = watch_suppression_owner()
-    root = current_document_source_root(repo_root)
-    filenames = sorted(
-        {
-            path.resolve().relative_to(root.resolve()).as_posix()
-            for path in changed_paths
-            if isinstance(path, Path)
-        }
-    )
+    validate_changed_source_paths(current_document_source_root(repo_root), changed_paths)
     links_before = changed_source_document_ids(changed_paths)
-    if filenames:
-        set_watch_suppressions(
-            repo_root,
-            suppression_owner,
-            filenames,
-            status=SUPPRESSION_PENDING,
-            reason=suppression_reason,
-            ttl_seconds=DEFAULT_PENDING_TTL_SECONDS,
-        )
-    try:
-        write_operation()
-        rebuild = rebuild_working_outputs(
-            repo_root,
-            include_search=False,
-            docs_doc_ids=docs_doc_ids,
-            skip_media_builds=skip_media_builds,
-            **links_write_arguments(links_before, changed_paths),
-        )
-    except Exception:
-        if filenames:
-            clear_watch_suppressions(repo_root, suppression_owner, filenames)
-        raise
-    completion_filenames = filenames
-    if written_paths is not None:
-        completion_filenames = sorted(
-            {
-                path.resolve().relative_to(root.resolve()).as_posix()
-                for path in written_paths
-                if isinstance(path, Path)
-            }
-        )
-        if filenames:
-            clear_watch_suppressions(repo_root, suppression_owner, filenames)
-    if completion_filenames:
-        set_watch_suppressions(
-            repo_root,
-            suppression_owner,
-            completion_filenames,
-            status=SUPPRESSION_COMPLETE,
-            reason=suppression_reason,
-            ttl_seconds=DEFAULT_COMPLETE_TTL_SECONDS,
-        )
-    return rebuild
+    write_operation()
+    return rebuild_working_outputs(
+        repo_root, include_search=False, docs_doc_ids=docs_doc_ids,
+        skip_media_builds=skip_media_builds,
+        **links_write_arguments(links_before, changed_paths),
+    )
 
 
 def perform_source_write_and_rebuild_atomic(
@@ -497,58 +447,23 @@ def perform_source_write_and_rebuild_atomic(
     changed_paths: list[Path],
     write_operation: Callable[[], Any],
     *,
-    suppression_reason: str,
     source_snapshots: Mapping[Path, bytes],
     docs_doc_ids: Optional[list[str]] = None,
 ) -> Dict[str, Any]:
     """Write/rebuild one exact parent stage or restore its source snapshot there."""
-
     require_document_authoring(load_docs_working_config(repo_root))
     root = current_document_source_root(repo_root)
-    suppression_owner = watch_suppression_owner()
-    resolved_changed_paths = {
-        path.resolve()
-        for path in changed_paths
-        if isinstance(path, Path)
-    }
-    normalized_snapshots = {
-        path.resolve(): source_bytes
-        for path, source_bytes in source_snapshots.items()
-    }
+    resolved_changed_paths = {path.resolve() for path in changed_paths}
+    normalized_snapshots = {path.resolve(): source_bytes for path, source_bytes in source_snapshots.items()}
     if set(normalized_snapshots) != resolved_changed_paths:
-        raise ValueError(
-            "document rollback snapshot must cover every changed source exactly",
-        )
-    if any(
-        not isinstance(source_bytes, bytes)
-        for source_bytes in normalized_snapshots.values()
-    ):
+        raise ValueError("document rollback snapshot must cover every changed source exactly")
+    if any(not isinstance(source_bytes, bytes) for source_bytes in normalized_snapshots.values()):
         raise ValueError("document rollback snapshot values must be bytes")
-    for path in normalized_snapshots:
-        try:
-            path.relative_to(root.resolve())
-        except ValueError as exc:
-            raise ValueError(
-                "document rollback snapshot escapes configured source root",
-            ) from exc
-    filenames = sorted(
-        path.relative_to(root.resolve()).as_posix()
-        for path in resolved_changed_paths
-    )
+    validate_changed_source_paths(root, list(normalized_snapshots))
     links_before = changed_source_document_ids(changed_paths)
-    if filenames:
-        set_watch_suppressions(
-            repo_root,
-            suppression_owner,
-            filenames,
-            status=SUPPRESSION_PENDING,
-            reason=suppression_reason,
-            ttl_seconds=DEFAULT_PENDING_TTL_SECONDS,
-        )
     try:
         changed_before_write = [
-            path.name
-            for path, source_bytes in normalized_snapshots.items()
+            path.name for path, source_bytes in normalized_snapshots.items()
             if path.read_bytes() != source_bytes
         ]
         if changed_before_write:
@@ -558,15 +473,10 @@ def perform_source_write_and_rebuild_atomic(
             )
         write_operation()
         rebuild = rebuild_working_outputs(
-            repo_root,
-            include_search=False,
-            docs_doc_ids=docs_doc_ids,
-            skip_media_builds=True,
-            **links_write_arguments(links_before, changed_paths),
+            repo_root, include_search=False, docs_doc_ids=docs_doc_ids,
+            skip_media_builds=True, **links_write_arguments(links_before, changed_paths),
         )
     except DocumentSourceSnapshotChanged:
-        if filenames:
-            clear_watch_suppressions(repo_root, suppression_owner, filenames)
         raise
     except Exception as exc:
         restoration_errors: list[str] = []
@@ -574,62 +484,26 @@ def perform_source_write_and_rebuild_atomic(
             try:
                 write_bytes_atomic(path, source_bytes)
             except Exception as restore_exc:
-                restoration_errors.append(
-                    str(restore_exc).strip() or restore_exc.__class__.__name__,
-                )
+                restoration_errors.append(str(restore_exc).strip() or restore_exc.__class__.__name__)
         recovery_rebuild: dict[str, Any] | None = None
         recovery_error = ""
         if not restoration_errors:
             try:
                 recovery_rebuild = rebuild_working_outputs(
-                    repo_root,
-                    include_search=False,
-                    docs_doc_ids=docs_doc_ids,
-                    skip_media_builds=True,
-                    **({"links_doc_ids": links_before} if links_before is not None else {}),
+                    repo_root, include_search=False, docs_doc_ids=docs_doc_ids,
+                    skip_media_builds=True, links_doc_ids=links_before,
                 )
             except Exception as recovery_exc:
-                recovery_error = (
-                    str(recovery_exc).strip()
-                    or recovery_exc.__class__.__name__
-                )
-        rollback_status = (
-            "failed"
-            if restoration_errors or recovery_error
-            else "completed"
-        )
-        if filenames:
-            if rollback_status == "completed":
-                set_watch_suppressions(
-                    repo_root,
-                    suppression_owner,
-                    filenames,
-                    status=SUPPRESSION_COMPLETE,
-                    reason=f"{suppression_reason}-rollback",
-                    ttl_seconds=DEFAULT_COMPLETE_TTL_SECONDS,
-                )
-            else:
-                clear_watch_suppressions(repo_root, suppression_owner, filenames)
+                recovery_error = str(recovery_exc).strip() or recovery_exc.__class__.__name__
+        rollback_status = "failed" if restoration_errors or recovery_error else "completed"
         raise DocumentWriteRebuildFailure(
             str(exc).strip() or exc.__class__.__name__,
             rollback={
-                "status": rollback_status,
-                "sources_restored": not restoration_errors,
+                "status": rollback_status, "sources_restored": not restoration_errors,
                 "rebuild": recovery_rebuild,
-                "error": "; ".join(
-                    [*restoration_errors, recovery_error],
-                ).strip("; "),
+                "error": "; ".join([*restoration_errors, recovery_error]).strip("; "),
             },
         ) from exc
-    if filenames:
-        set_watch_suppressions(
-            repo_root,
-            suppression_owner,
-            filenames,
-            status=SUPPRESSION_COMPLETE,
-            reason=suppression_reason,
-            ttl_seconds=DEFAULT_COMPLETE_TTL_SECONDS,
-        )
     return rebuild
 
 
@@ -639,69 +513,29 @@ def perform_collection_source_write_and_rebuild(
     changed_paths: list[Path],
     write_operation: Callable[[], Any],
     *,
-    suppression_reason: str,
     source_snapshots: Mapping[Path, bytes] | None = None,
     links_doc_ids: list[str] | None = None,
-    source_writes_committed: Callable[[], bool] | None = None,
     build_doc_ids: list[str] | None = None,
     complete_build: bool = False,
 ) -> Dict[str, Any]:
-    """Await a selected or complete collection build and its Links update.
-
-    A caller reporting partial commits can supply its write receipt. On failure,
-    committed writes remain suppressed so the watcher does not retry the build.
-    """
+    """Await a selected or complete collection build and its Links update."""
     require_document_authoring(load_docs_working_config(repo_root))
     root = current_collection_source_root(repo_root, collection)
-    resolved_changed_paths = {
-        path.resolve()
-        for path in changed_paths
-        if isinstance(path, Path)
-    }
+    resolved_changed_paths = {path.resolve() for path in changed_paths}
+    validate_changed_source_paths(root, changed_paths)
     normalized_snapshots: dict[Path, bytes] | None = None
     if source_snapshots is not None:
-        normalized_snapshots = {
-            path.resolve(): source_bytes
-            for path, source_bytes in source_snapshots.items()
-        }
+        normalized_snapshots = {path.resolve(): source_bytes for path, source_bytes in source_snapshots.items()}
         if set(normalized_snapshots) != resolved_changed_paths:
-            raise ValueError(
-                "collection rollback snapshot must cover every changed source exactly"
-            )
+            raise ValueError("collection rollback snapshot must cover every changed source exactly")
         if any(not isinstance(source_bytes, bytes) for source_bytes in normalized_snapshots.values()):
             raise ValueError("collection rollback snapshot values must be bytes")
-        for path in normalized_snapshots:
-            try:
-                path.relative_to(root.resolve())
-            except ValueError as exc:
-                raise ValueError(
-                    "collection rollback snapshot escapes configured source root"
-                ) from exc
-    filenames = sorted(
-        {
-            path.resolve().relative_to(root.resolve()).as_posix()
-            for path in changed_paths
-            if isinstance(path, Path)
-        }
-    )
-    suppression_owner = watch_suppression_owner(collection)
     source_doc_ids_before = changed_source_document_ids(changed_paths)
     docs_doc_ids = source_doc_ids_before
-    links_before = source_doc_ids_before
-    if filenames:
-        set_watch_suppressions(
-            repo_root,
-            suppression_owner,
-            filenames,
-            status=SUPPRESSION_PENDING,
-            reason=suppression_reason,
-            ttl_seconds=DEFAULT_PENDING_TTL_SECONDS,
-        )
     try:
         if normalized_snapshots is not None:
             changed_before_write = [
-                path.name
-                for path, source_bytes in normalized_snapshots.items()
+                path.name for path, source_bytes in normalized_snapshots.items()
                 if path.read_bytes() != source_bytes
             ]
             if changed_before_write:
@@ -712,31 +546,19 @@ def perform_collection_source_write_and_rebuild(
         write_operation()
         docs_doc_ids = sorted(set(source_doc_ids_before) | set(changed_source_document_ids(changed_paths))
                               | set(build_doc_ids or []))
-        links_arguments = links_write_arguments(links_before, changed_paths)
+        links_arguments = links_write_arguments(source_doc_ids_before, changed_paths)
         if links_doc_ids is not None:
             links_arguments["links_doc_ids"] = links_doc_ids
         if complete_build:
             links_arguments.pop("links_doc_ids", None)
         rebuild = rebuild_collection_outputs(
-            repo_root, collection,
-            docs_doc_ids=None if complete_build else docs_doc_ids,
+            repo_root, collection, docs_doc_ids=None if complete_build else docs_doc_ids,
             **links_arguments,
         )
     except CollectionSourceSnapshotChanged:
-        if filenames:
-            clear_watch_suppressions(repo_root, suppression_owner, filenames)
         raise
     except Exception as exc:
         if normalized_snapshots is None:
-            if filenames:
-                if source_writes_committed is not None and source_writes_committed():
-                    set_watch_suppressions(
-                        repo_root, suppression_owner, filenames,
-                        status=SUPPRESSION_COMPLETE, reason=suppression_reason,
-                        ttl_seconds=DEFAULT_COMPLETE_TTL_SECONDS,
-                    )
-                else:
-                    clear_watch_suppressions(repo_root, suppression_owner, filenames)
             raise
         restoration_errors: list[str] = []
         for path, source_bytes in normalized_snapshots.items():
@@ -749,44 +571,20 @@ def perform_collection_source_write_and_rebuild(
         if not restoration_errors:
             try:
                 recovery_rebuild = rebuild_collection_outputs(
-                    repo_root,
-                    collection,
-                    docs_doc_ids=docs_doc_ids,
-                    **({"links_doc_ids": links_before if links_doc_ids is None else links_doc_ids} if links_before is not None else {}),
+                    repo_root, collection, docs_doc_ids=docs_doc_ids,
+                    links_doc_ids=source_doc_ids_before if links_doc_ids is None else links_doc_ids,
                 )
             except Exception as recovery_exc:
                 recovery_error = str(recovery_exc).strip() or recovery_exc.__class__.__name__
         rollback_status = "failed" if restoration_errors or recovery_error else "completed"
-        if filenames:
-            if rollback_status == "completed":
-                set_watch_suppressions(
-                    repo_root,
-                    suppression_owner,
-                    filenames,
-                    status=SUPPRESSION_COMPLETE,
-                    reason=f"{suppression_reason}-rollback",
-                    ttl_seconds=DEFAULT_COMPLETE_TTL_SECONDS,
-                )
-            else:
-                clear_watch_suppressions(repo_root, suppression_owner, filenames)
         raise CollectionWriteRebuildFailure(
             str(exc).strip() or exc.__class__.__name__,
             rollback={
-                "status": rollback_status,
-                "sources_restored": not restoration_errors,
+                "status": rollback_status, "sources_restored": not restoration_errors,
                 "rebuild": recovery_rebuild,
                 "error": "; ".join([*restoration_errors, recovery_error]).strip("; "),
             },
         ) from exc
-    if filenames:
-        set_watch_suppressions(
-            repo_root,
-            suppression_owner,
-            filenames,
-            status=SUPPRESSION_COMPLETE,
-            reason=suppression_reason,
-            ttl_seconds=DEFAULT_COMPLETE_TTL_SECONDS,
-        )
     return rebuild
 
 
@@ -794,83 +592,41 @@ def perform_multi_collection_source_write_and_rebuild(
     repo_root: Path,
     rebuild_plans: list[Dict[str, Any]],
     write_operation: Callable[[], Any],
-    *,
-    suppression_reason: str,
 ) -> Dict[str, Any]:
-    """Write once under exact collection suppressions and await every rebuild."""
-    suppressions: list[tuple[str, list[str]]] = []
+    """Write once and await each exact collection's document/Links rebuild."""
+    require_document_authoring(load_docs_working_config(repo_root))
     links_before: dict[str, list[str]] = {}
     for plan in rebuild_plans:
         collection = str(plan.get("collection") or "")
-        require_document_authoring(load_docs_working_config(repo_root))
         root = current_collection_source_root(repo_root, collection) if collection else current_document_source_root(repo_root)
-        owner = watch_suppression_owner(collection)
-        links_before[owner] = changed_source_document_ids(plan.get("changed_paths", []))
-        filenames = sorted(
-            {
-                path.resolve().relative_to(root.resolve()).as_posix()
-                for path in plan.get("changed_paths", [])
-                if isinstance(path, Path)
-            }
-        )
-        if filenames:
-            suppressions.append((owner, filenames))
-    try:
-        for owner, filenames in suppressions:
-            set_watch_suppressions(
-                repo_root,
-                owner,
-                filenames,
-                status=SUPPRESSION_PENDING,
-                reason=suppression_reason,
-                ttl_seconds=DEFAULT_PENDING_TTL_SECONDS,
+        changed_paths = plan.get("changed_paths", [])
+        validate_changed_source_paths(root, changed_paths)
+        links_before[collection] = changed_source_document_ids(changed_paths)
+    write_operation()
+    rebuilds: Dict[str, Any] = {}
+    prepared_rebuilds = []
+    for plan in rebuild_plans:
+        collection = str(plan.get("collection") or "")
+        changed_paths = plan.get("changed_paths", [])
+        docs_doc_ids = ordered_docs_doc_ids([
+            *(plan.get("docs_doc_ids") or []), *links_before[collection],
+            *changed_source_document_ids(changed_paths),
+        ])
+        links_arguments = links_write_arguments(links_before[collection], changed_paths)
+        has_destination = bool(set(links_arguments.get("links_doc_ids", [])) - set(links_before[collection]))
+        prepared_rebuilds.append((plan, links_arguments, docs_doc_ids, has_destination))
+    # Transfer a moved document's prior Links record to its destination before deletion.
+    prepared_rebuilds.sort(key=lambda item: not item[3])
+    for plan, links_arguments, docs_doc_ids, _has_destination in prepared_rebuilds:
+        collection = str(plan.get("collection") or "")
+        owner = f"documents__collection__{collection}" if collection else "documents"
+        if collection:
+            rebuilds[owner] = rebuild_collection_outputs(
+                repo_root, collection, docs_doc_ids=docs_doc_ids, **links_arguments,
             )
-        write_operation()
-        rebuilds: Dict[str, Any] = {}
-        prepared_rebuilds = []
-        for plan in rebuild_plans:
-            owner = watch_suppression_owner(str(plan.get("collection") or ""))
-            changed_paths = plan.get("changed_paths", [])
-            docs_doc_ids = ordered_docs_doc_ids([
-                *(plan.get("docs_doc_ids") or []),
-                *links_before.get(owner, []),
-                *changed_source_document_ids(changed_paths),
-            ])
-            links_arguments = links_write_arguments(links_before.get(owner), changed_paths)
-            has_destination = bool(set(links_arguments.get("links_doc_ids", [])) - set(links_before.get(owner, [])))
-            prepared_rebuilds.append((plan, links_arguments, docs_doc_ids, has_destination))
-        # A collection move keeps its immutable ID and shared Links filename.
-        # Prepare the destination first so it can transfer the exact prior
-        # record before the former collection processes its deletion identity.
-        prepared_rebuilds.sort(key=lambda item: not item[3])
-        for plan, links_arguments, docs_doc_ids, _has_destination in prepared_rebuilds:
-            collection = str(plan.get("collection") or "")
-            owner = watch_suppression_owner(collection)
-            if collection:
-                rebuilds[owner] = rebuild_collection_outputs(
-                    repo_root, collection, docs_doc_ids=docs_doc_ids, **links_arguments,
-                )
-            else:
-                rebuilds[owner] = rebuild_working_outputs(
-                    repo_root, include_search=False,
-                    docs_doc_ids=plan.get("docs_doc_ids"),
-                    **links_arguments,
-                    skip_media_builds=True,
-                )
-    except Exception:
-        for owner, filenames in suppressions:
-            clear_watch_suppressions(repo_root, owner, filenames)
-        raise
-    for owner, filenames in suppressions:
-        set_watch_suppressions(
-            repo_root,
-            owner,
-            filenames,
-            status=SUPPRESSION_COMPLETE,
-            reason=suppression_reason,
-            ttl_seconds=DEFAULT_COMPLETE_TTL_SECONDS,
-        )
-    return {
-        "ok": True,
-        "collections": rebuilds,
-    }
+        else:
+            rebuilds[owner] = rebuild_working_outputs(
+                repo_root, include_search=False, docs_doc_ids=plan.get("docs_doc_ids"),
+                **links_arguments, skip_media_builds=True,
+            )
+    return {"ok": True, "collections": rebuilds}

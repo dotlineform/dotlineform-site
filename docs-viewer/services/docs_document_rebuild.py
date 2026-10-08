@@ -3,7 +3,7 @@
 from pathlib import Path
 from typing import Any
 
-from docs_management_document_target import resolve_managed_document_target
+from docs_management_document_target import ManagedDocumentTarget, resolve_managed_document_target
 from docs_workspace_config import require_document_authoring
 from docs_write_rebuild import rebuild_collection_outputs, rebuild_working_outputs
 
@@ -11,6 +11,11 @@ from docs_write_rebuild import rebuild_collection_outputs, rebuild_working_outpu
 def rebuild_document(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     """Await document/Links rendering from current inputs; omit Search and media production."""
     resolved = resolve_managed_document_target(repo_root, body)
+    return rebuild_resolved_document(repo_root, resolved)
+
+
+def rebuild_resolved_document(repo_root: Path, resolved: ManagedDocumentTarget) -> dict[str, Any]:
+    """Reuse an operation's validated exact target without resolving its source again."""
     require_document_authoring(resolved.parent_config)
     if resolved.collection:
         rebuild = rebuild_collection_outputs(

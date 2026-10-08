@@ -23,13 +23,9 @@ STUDIO_APP_ENABLED="${STUDIO_APP_ENABLED:-1}"
 STUDIO_APP_HOST="${STUDIO_APP_HOST:-127.0.0.1}"
 STUDIO_APP_PORT="${STUDIO_APP_PORT:-8765}"
 STUDIO_APP_ACCESS_LOG="${STUDIO_APP_ACCESS_LOG:-0}"
-DOCS_WATCH_ENABLED="${DOCS_WATCH_ENABLED:-1}"
-DOCS_WATCH_POLL_SECONDS="${DOCS_WATCH_POLL_SECONDS:-1.0}"
-DOCS_WATCH_DEBOUNCE_SECONDS="${DOCS_WATCH_DEBOUNCE_SECONDS:-1.0}"
 RUNNER_NAME="bin/local-studio"
 
 STUDIO_APP_PID=""
-DOCS_WATCHER_PID=""
 
 port_available() {
   local host="$1"
@@ -88,14 +84,8 @@ cleanup() {
   if [ -n "$STUDIO_APP_PID" ] && kill -0 "$STUDIO_APP_PID" 2>/dev/null; then
     kill "$STUDIO_APP_PID" 2>/dev/null || true
   fi
-  if [ -n "$DOCS_WATCHER_PID" ] && kill -0 "$DOCS_WATCHER_PID" 2>/dev/null; then
-    kill "$DOCS_WATCHER_PID" 2>/dev/null || true
-  fi
   if [ -n "$STUDIO_APP_PID" ]; then
     wait "$STUDIO_APP_PID" 2>/dev/null || true
-  fi
-  if [ -n "$DOCS_WATCHER_PID" ]; then
-    wait "$DOCS_WATCHER_PID" 2>/dev/null || true
   fi
 }
 
@@ -118,11 +108,6 @@ fi
 echo "Catalogue APIs: handled by Local Studio App"
 echo "Tag routes/APIs: handled by Local Studio App"
 echo "Docs Viewer links/API: handled by configured Docs Viewer service (${DOCS_VIEWER_BASE_URL:-http://${DOCS_VIEWER_HOST:-127.0.0.1}:${DOCS_VIEWER_PORT:-8776}})"
-if [ "$DOCS_WATCH_ENABLED" != "0" ]; then
-  echo "Docs Live Watcher: enabled"
-else
-  echo "Docs Live Watcher: disabled"
-fi
 echo
 
 if [ "$STUDIO_APP_ENABLED" != "0" ]; then
@@ -143,14 +128,7 @@ if [ "$STUDIO_APP_ENABLED" != "0" ]; then
   STUDIO_APP_PID=$!
 fi
 
-if [ "$DOCS_WATCH_ENABLED" != "0" ]; then
-  "$PYTHON_BIN" docs-viewer/services/docs_live_rebuild_watcher.py \
-    --poll-seconds "$DOCS_WATCH_POLL_SECONDS" \
-    --debounce-seconds "$DOCS_WATCH_DEBOUNCE_SECONDS" &
-  DOCS_WATCHER_PID=$!
-fi
-
-if [ -z "$STUDIO_APP_PID" ] && [ -z "$DOCS_WATCHER_PID" ]; then
+if [ -z "$STUDIO_APP_PID" ]; then
   echo "No long-running Local Studio processes are enabled; exiting."
   exit 0
 fi
@@ -158,10 +136,6 @@ fi
 while true; do
   if [ -n "$STUDIO_APP_PID" ] && ! kill -0 "$STUDIO_APP_PID" 2>/dev/null; then
     wait "$STUDIO_APP_PID"
-    break
-  fi
-  if [ -n "$DOCS_WATCHER_PID" ] && ! kill -0 "$DOCS_WATCHER_PID" 2>/dev/null; then
-    wait "$DOCS_WATCHER_PID"
     break
   fi
   sleep 1

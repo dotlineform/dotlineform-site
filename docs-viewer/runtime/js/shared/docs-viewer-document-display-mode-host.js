@@ -118,6 +118,9 @@ export function createDocsViewerDocumentDisplayModeHost(options) {
     if (resolved.mode.id === "rendered-document" || !resolved.mode.load) {
       unmountActive().then(function () {
         if (typeof requestSettings.onAccepted === "function") requestSettings.onAccepted(resolved.mode);
+      }).catch(function (error) {
+        showWarning(error && error.message ? error.message : "Document mode failed to close.", true);
+        if (typeof requestSettings.onFailed === "function") requestSettings.onFailed(error, resolved.mode);
       });
       return true;
     }

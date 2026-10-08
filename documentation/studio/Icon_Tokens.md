@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260930-202255-229278
 title: Icon Tokens
 added_date: "2026-09-30 20:22:55"
-last_updated: "2026-09-30 20:25:33"
+last_updated: "2026-10-08 19:10:43"
 summary: Manual extensionless SVG icon tokens, inline Source insertion, portable rendering and export behaviour.
 parent_id: d-20260331-000000-c313fd
 ---
@@ -21,7 +21,7 @@ The name is the exact filename stem from [the canonical icon folder](../../docs-
 
 Place the cursor and choose **Directives → Insert icon**. The action inserts `[[icon:refresh-cw]]` inline and selects `refresh-cw`, ready for replacement with another filename stem. It adds no line breaks or spaces. If source text is selected, the directive is inserted before that text and preserves it.
 
-The action changes only the editor buffer through its existing captured-range and revision guard. Save persists the source; the Working watcher independently rebuilds the document. There is no picker, modal or icon-specific Info editor.
+The action changes only the editor buffer through its existing captured-range and revision guard. Save persists the source, awaits exact document/Links generation and displays the fresh result. There is no picker, modal or icon-specific Info editor.
 
 ## Rendering
 

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260428-000000-f5ff18
 title: Planned Features
 added_date: "2026-04-28 00:00:00"
-last_updated: "2026-10-08 18:48:04"
+last_updated: "2026-10-08 19:24:55"
 summary: This explains the delivery model and workflows to implement new repo and application features.
 ui_status: planned
 parent_id: ""
@@ -126,7 +126,7 @@ After the complete feature ships:
 - A review hold does not need a new lifecycle status. The feature may point to the shipped durable owner while the source documents remain available for comparison or reuse. The feature parent may be kept if immediately useful for subsequent features to refer to.
 - When needing to retain the concept, rewrite in current-state language and remove resolved options or proposal history.
 
-Delivery closeout uses evidence proportional to the change. A status-only documentation closeout may need only source review and confirmation that expected watcher output landed. Rebuilds, generated-record audits, broad test profiles, lint sweeps, and repository-wide diff checks belong only when the changed contract or uncertain generated state gives them a concrete failure to catch.
+Delivery closeout uses evidence proportional to the change. A status-only documentation closeout may need only source review and confirmation that required generated follow-through completed. Rebuilds, generated-record audits, broad test profiles, lint sweeps, and repository-wide diff checks belong only when the changed contract or uncertain generated state gives them a concrete failure to catch.
 
 ## Working Rules
 
@@ -150,7 +150,7 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 Store new standalone delivery documents for bounded work that does not need a separate feature parent under `documentation/studio/deliveries/`. Parent them directly to this document and keep implementation state, decisions and completion gates in the delivery. At closeout, transfer lasting details to the durable owner and review whether the delivery and its link should be retained.
 
-- [Source Save And Watcher Retirement Delivery](deliveries/Source_Save_And_Watcher_Retirement_Delivery.md) — Proposed; direction agreed, implementation not started. Await exact document/Links generation and fresh display during Save, retire the filesystem watcher, and choose the simplest explicit rare media rebuild with no media overhead on normal saves.
+- [Source Save And Watcher Retirement Delivery](deliveries/Source_Save_And_Watcher_Retirement_Delivery.md) — Complete; user accepted normal and collection document authoring, Draft and starred changes on 2026-10-08 and reported a much quicker experience. Save awaits exact document/Links generation and fresh display silently; the filesystem watcher is retired. Rare media edits use Rebuild docs and Search; browser polling remains. Retained as the optional polling delivery's prerequisite.
 - [Browser Polling Retirement Delivery](deliveries/Browser_Polling_Retirement_Delivery.md) — Optional proposed follow-on after Source Save And Watcher Retirement. Remove recurring Working viewer reads once relevant application actions explicitly refresh their affected views; complete the preceding delivery independently with polling retained.
 
 - [Work Deletion Delivery](deliveries/Work_Deletion_Delivery.md) — Implemented and reviewed; awaiting user manual acceptance. Single and multiple Work deletion share exact-ID intent, one confirmation and a combined canonical Work/membership write. Lint, syntax and import diagnostics passed; tests remain pending separate review and untouched. Restart Local Studio and force-reload the editor for manual review.

@@ -11,15 +11,13 @@
       "base_url": "DOCS_VIEWER_BASE_URL",
       "management_enabled": "DOCS_VIEWER_MANAGEMENT_ENABLED",
       "review_enabled": "DOCS_VIEWER_REVIEW_ENABLED",
-      "generated_reads_enabled": "DOCS_VIEWER_GENERATED_READS_ENABLED",
-      "watch_enabled": "DOCS_VIEWER_WATCH_ENABLED"
+      "generated_reads_enabled": "DOCS_VIEWER_GENERATED_READS_ENABLED"
     }
   },
   "capabilities": {
     "management_enabled_default": false,
     "review_enabled_default": false,
-    "generated_reads_enabled_default": true,
-    "watch_enabled_default": true
+    "generated_reads_enabled_default": true
   },
   "routes": {
     "health": "/health",
@@ -55,7 +53,6 @@
   },
   "local_state": {
     "backups": "var/docs/backups",
-    "logs": "var/docs/logs",
-    "watch_suppressions": "var/docs/watch-suppressions"
+    "logs": "var/docs/logs"
   }
 }

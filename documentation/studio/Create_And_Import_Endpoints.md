@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-78a47c
 title: Create And Import Endpoints
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-08-14 21:18:02"
+last_updated: "2026-10-08 19:10:43"
 parent_id: d-20260607-222033-647b52
 ---
 # Docs Viewer Create And Import Endpoints
@@ -30,7 +30,6 @@ Actions:
 - writes matching second-resolution `added_date` and `last_updated` values
 - omits `publishable` for every new document; omission means included in the next Publish for publish-capable targets and has no publication meaning for local targets
 - rebuilds targeted generated docs payloads and targeted docs search for the new doc
-- writes watcher-suppression markers for the new source file
 
 Returned data includes the created doc identity, source path, viewer URL, mutation flags, rebuild diagnostics, summary text, and `dry_run`.
 

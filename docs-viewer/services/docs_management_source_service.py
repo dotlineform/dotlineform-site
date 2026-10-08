@@ -32,6 +32,7 @@ from docs_publication_ignore import publication_ignore_path  # noqa: E402
 from docs_recent_exclusions import recent_exclusions_path  # noqa: E402
 from docs_document_subjects import project_reader_subject  # noqa: E402
 from docs_collection_customisations import collection_customisation_metadata_record  # noqa: E402
+from docs_document_rebuild import rebuild_resolved_document  # noqa: E402
 
 
 def normalize_source_body(value: Any) -> str:
@@ -152,7 +153,7 @@ def read_source_context(repo_root: Path, body: Dict[str, Any]) -> Dict[str, Any]
 
 
 def save_source_document(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    """Persist one validated complete buffer; the watcher independently observes the write."""
+    """Persist one validated buffer and await its exact document/Links generation."""
     request_target = source_candidate_target(body)
     resolved = resolve_managed_document_target(repo_root, request_target)
     next_source_text, _ = validate_source_candidate(repo_root, request_target, body["source_text"], resolved)
@@ -185,6 +186,16 @@ def save_source_document(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
         payload["committed_document"] = {"target": resolved.request_target(), "record": committed_document_record(metadata, target.doc_id, resolved.document_config, collection=resolved.collection, parent_id=target.parent_id)}
     if source_changed and not dry_run:
         source_model.write_text_atomic(target.path, next_source_text)
+    if not dry_run:
+        payload["source_saved"] = True
+        payload["generation_complete"] = False
+        try:
+            payload["rebuild"] = rebuild_resolved_document(repo_root, resolved)["rebuild"]
+        except Exception as error:
+            payload.update(ok=False, error=f"Source saved, but document generation failed: {error}")
+            return payload
+        payload["generation_complete"] = True
+        payload["summary_text"] = "Source saved and document rebuilt."
     return payload
 
 

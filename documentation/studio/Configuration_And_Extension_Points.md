@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260512-142027-54b354
 title: Configuration And Extension Points
 added_date: "2026-05-12 14:20:27"
-last_updated: "2026-10-07 16:05:28"
+last_updated: "2026-10-08 19:10:43"
 summary: Map of the configuration, registries, generated projections, code definitions, and capability checks that drive Docs Viewer workflows.
 parent_id: d-20260424-000000-50b63f
 
@@ -72,7 +72,7 @@ Catalogue Regenerate creates each document with the exact five-digit Work ID as 
 
 `docs_viewer_config_v4` supplies one `workspace` per local/public composition, without a stages array or default stage. Browser config contains URLs/display policy, never private paths or write authority. Its tracked projections are produced by `browser_config.py`.
 
-Document Build accepts `--stage working`. Optional `--collection` selects one registered owner; `--only-doc-ids` limits document rendering. Named-collection targeted builds merge selected metadata into saved manifests; the [Builder](Builder.md) owns prerequisites and output behavior. The watcher observes Working ordinary/collection source, suppresses duplicate owning writes and never watches Preview. Ordinary edits do not automatically rebuild Search.
+Document Build accepts `--stage working`. Optional `--collection` selects one registered owner; `--only-doc-ids` limits document rendering. Named-collection targeted builds merge selected metadata into saved manifests; the [Builder](Builder.md) owns prerequisites and output behavior. Application writes await their required Working generation; the filesystem watcher and suppression settings are retired. External edits require explicit Rebuild. Ordinary edits do not automatically rebuild Search.
 
 | Reader or operation | Current contract |
 | --- | --- |
@@ -84,7 +84,7 @@ Document Build accepts `--stage working`. Optional `--collection` selects one re
 | Working aggregate Links | `/docs/workspace-links` |
 | Publish | `POST /docs/publish` with `{}` |
 
-Source/Create/metadata/placement/Delete/Draft operations resolve Working and require exact identity. Working Delete does not prune Preview or public output. Source-only Draft updates return readiness to the mounted reader while watcher generation remains independent. Media insertion writes shared local assets through the exact Working collection/type owner; the standalone tool uses `--scope docs` with optional `--docs-collection`, without a Docs stage flag.
+Source/Create/metadata/placement/Delete/Draft operations resolve Working and require exact identity. Working Delete does not prune Preview or public output. Draft updates await exact-document generation and return committed readiness to the mounted reader. Media insertion writes shared local assets through the exact Working collection/type owner; the standalone tool uses `--scope docs` with optional `--docs-collection`, without a Docs stage flag.
 
 ### Publication And Downstream Ownership
 

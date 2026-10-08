@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260501-174746-efd581
 title: Testing
 added_date: 2026-05-01 17:47:46
-last_updated: "2026-09-15 10:43:05"
+last_updated: "2026-10-08 19:24:55"
 parent_id: ""
 ---
 # Testing
@@ -94,6 +94,12 @@ Report the selected command/profile, result, and the summary path when the profi
 Do not repair unrelated brittle test behavior inside a focused feature slice without explicitly widening scope.
 
 ## Limits
+
+### Source Save And Watcher Retirement
+
+The current awaited Source Save and Draft generation paths have source/diff review and lint/syntax evidence. On 2026-10-08 the user confirmed normal and collection document authoring, changing Draft and starred state, and a much quicker experience. This is manual acceptance without measured timing; detailed route/history/reading-position cases were not separately itemised. No automated test selection has been adopted or executed for this change. Failure branches, other application-write workflows, explicit external-edit Rebuild and real persistent-media regeneration were not separately exercised as acceptance evidence.
+
+`docs-viewer/tests/python/test_docs_live_rebuild_watcher.py` imports a retired production file and is unreviewed retirement residue. `test_docs_write_rebuild.py` and `test_docs_management_source_service.py` in the same directory still contain suppression hooks and obsolete request/build contracts; they cannot establish current Save coverage without separately approved review and test work. `test_docs_viewer_service_config.py`, `docs-viewer/tests/smoke/docs_viewer_route_smoke_support.py` and `tests/run_checks.py` still refer to the removed watcher configuration or selection. Other mutation/import tests also retain suppression-only arguments. These files, fixtures and profile memberships were left unchanged; their contents are neither implementation contracts nor claimed evidence. Any removal or replacement needs its own bounded specification and approval.
 
 - Some Python tests retain direct-script compatibility and process-global assumptions.
 - Profile membership is manually curated and can lag current ownership.

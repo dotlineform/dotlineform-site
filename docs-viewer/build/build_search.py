@@ -336,7 +336,7 @@ class DocsViewerSearchDataBuilder:
     ) -> dict[str, SourceDoc]:
         """Load exact selected IDs and fail on missing or stale selected sources.
 
-        The shared filename loader omits deleted files for watcher use. Search
+        The shared filename loader omits deleted files. Search
         requires every selected file and does not infer replacements or scan.
         """
         if not selected:

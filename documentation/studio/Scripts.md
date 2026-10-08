@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260423-000000-d274d3
 title: Scripts
 added_date: "2026-04-23 00:00:00"
-last_updated: "2026-08-14 21:25:46"
+last_updated: "2026-10-08 19:10:43"
 parent_id: d-20260419-000000-d2e47b
 ---
 # Scripts
@@ -41,7 +41,7 @@ Focused standalone audit commands:
 ## Docs Viewer
 
 - [Docs Viewer Builder](Builder.md) covers docs and search payload builds for configured Docs Viewer scopes.
-- [Docs Live Rebuild Watcher](Live_Rebuild_Watcher.md) covers local source watching and same-scope rebuild behavior.
+- [Source Organisation](Source_Organisation.md#explicit-external-edit-and-media-rebuilds) covers explicit external-edit and persistent-media rebuilds; the filesystem watcher is retired.
 - [Docs Management Service](Management_Services.md) is the parent page for generated reads, import/rebuild, write actions, operations, and retired Data Sharing management endpoints.
 - [Docs Broken Links Audit](Broken_Links_Script.md) covers docs link checks.
 - [Documents Package Preparation Script](Package_Prepare_Script.md) and [Documents Returned Package Script](Package_Return_Parser.md) cover documents Data Sharing package export/import flows.

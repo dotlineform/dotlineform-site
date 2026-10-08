@@ -397,7 +397,7 @@ export function startDocsViewerRuntime(options) {
     activeViewState: documentViewCoordinator.activeViewState,
     managedDocumentContext: function () { return latestCollectionReportState; },
     refreshRenderedPayload: function (doc, payload) {
-      documentController.renderPayload(doc, payload, "", { preservePosition: true });
+      return documentController.renderPayload(doc, payload, "", { preservePosition: true });
     },
     managementUiEnabled: function () { return managementUiEnabled; },
     applyDocVisibility: documentIndex.applyDocVisibility,
@@ -737,6 +737,7 @@ export function startDocsViewerRuntime(options) {
   function sourceEditorServices() {
     return {
       commitDocumentChange: collectionProvider.commitDocumentChange,
+      refreshSavedDocument: function (target) { return routeWorkflowCommands.refreshSavedDocument(target); },
       localFolderLinksCapability: function () {
         var capabilities = appSession.domains.management.managementCapabilities;
         return capabilities ? capabilities.local_folder_links || null : null;

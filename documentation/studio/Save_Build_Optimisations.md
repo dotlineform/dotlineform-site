@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260911-232134-ec1ba8
 title: Save/Build optimisations
 added_date: "2026-09-11 23:21:34"
-last_updated: "2026-10-07 11:57:54"
+last_updated: "2026-10-08 19:10:43"
 parent_id: d-20260428-000000-f5ff18
 ---
 # Save/Build optimisations
@@ -12,36 +12,36 @@ Status: **complete**. Steps 1–5 are delivered and reviewed. On 2026-10-07 the 
 
 ## Requirements
 
-- Reduce ordinary-document watcher and Build work by removing unused computation, repeated source reads and unnecessary rendering.
-- Preserve Source Save's completion boundary: one validated canonical source write, with unchanged saves remaining successful no-ops. Independent watcher generation and viewer refresh retain their own outcomes. [Runtime](Docs_Viewer_Runtime.md#source-editing-and-save) owns that contract.
+- Reduce ordinary-document Build work by removing unused computation, repeated source reads and unnecessary rendering.
+- Use the current Source Save boundary: validated persistence, exact document/Links generation and fresh display. The later watcher retirement supersedes this delivery's original persistence-only Save boundary. [Runtime](Docs_Viewer_Runtime.md#source-editing-and-save) owns the current contract.
 - Keep exact document identity, canonical membership and hierarchy, selected-source validation, path confinement, and required generated-output checks at their owning boundaries.
 - Keep full Build as complete reconciliation. Targeted work should use the selected documents and the metadata needed by their outputs; aggregate JSON files may remain complete files when their processing cost is proportionate.
 - Preserve the separately owned Search, Recent, Links, media and publication workflows described by [Builder](Builder.md) and [Source Organisation](Source_Organisation.md).
 
 ## Current Implementation
 
-Source Save does not await Build. These reductions affect ordinary-document generation cost and the delay before generated content refreshes, rather than the Save response itself.
+Source Save now awaits exact Build and fresh display. The selected-source reductions below reduce the generation work inside that awaited operation. Watcher-specific reductions are historical: that production owner is now retired.
 
 | Owner or output | Current work | Remaining opportunity |
 | --- | --- | --- |
-| Ordinary watcher snapshot | Startup seeds the collection; subsequent ordinary and named-collection snapshots merge changed-file records. Ordinary source loading retains canonical hierarchy ownership. | Step 3 complete. |
-| Targeted-build prerequisites | The ordinary builder checks canonical membership, required saved tree metadata and unselected payloads. Service/watcher preflight and automatic prerequisite fallback have been removed. | Step 3 complete. Missing prerequisites require an explicit full Build. |
+| Ordinary watcher snapshot | Retired with the filesystem watcher. | Historical step 3 work no longer runs. |
+| Targeted-build prerequisites | The ordinary builder checks canonical membership, required saved tree metadata and unselected payloads. Service preflight and automatic prerequisite fallback have been removed. | Step 3 complete. Missing prerequisites require an explicit full Build. |
 | Ordinary rendering and tree | Targeted builds read selected Markdown and merge unchanged saved navigation records under current canonical hierarchy. Rendering, parent membership and tree reuse one identity lookup. | Step 4 complete. Full Build still validates and reconciles all canonical sources. |
 | Document-count reporting | Counts distinguish canonical documents, source files read and rendered payloads; the unused flat `index_payload`, rendered-file reads and plain-text extraction have been removed. | Step 1 complete. Legacy test consumers need separately scoped modernisation through the current workspace contract. |
-| Watcher render selection | Changed files' before/after IDs select ordinary payloads; parent-title changes no longer add unchanged children. Tree projection and direct-neighbour relationship maintenance retain their own owners. | Step 2 complete. Unselected Related Links sections retain their existing document/full-Build snapshot refresh boundary. |
+| Exact rendering selection | Source Save selects its exact document; other writes carry before/after IDs. Parent-title changes do not add unchanged children. Tree projection and direct-neighbour relationship maintenance retain their own owners. | Step 2 complete. Unselected Related Links sections retain their existing document/full-Build snapshot refresh boundary. |
 | Documents Linking Here and `backlinks.json` | Retired, including generation, whole rendered-payload scanning, write planning, diagnostics, report loading, browser configuration and the local API. Related Links remains the relationship presentation. | Step 5 complete. No replacement reverse-link payload or compatibility alias. |
 
-The relevant owners are the [ordinary pipeline](../../docs-viewer/build/docs_builder/pipeline.py), [source and metadata loader](../../docs-viewer/build/docs_builder/source.py), [watcher](../../docs-viewer/services/docs_live_rebuild_watcher.py), [write/rebuild service](../../docs-viewer/services/docs_write_rebuild.py), and [Related Links](Related_Links.md).
+The relevant owners are the [ordinary pipeline](../../docs-viewer/build/docs_builder/pipeline.py), [source and metadata loader](../../docs-viewer/build/docs_builder/source.py), [write/rebuild service](../../docs-viewer/services/docs_write_rebuild.py), and [Related Links](Related_Links.md).
 
 Named collections already have targeted builds: [CollectionDocsBuilder](../../docs-viewer/build/docs_builder/collection.py) reads selected sources, merges their metadata into the saved management manifest and preserves unselected by-ID payloads. Working writes `manage-manifest.json`; temporary publication builds write the public manifest. Collection host associations come from configuration, and exact document routes do not require a parent Markdown scan. Targeted deletion already checks exact generated IDs instead of listing all by-ID files.
 
-Targeted, collection-only and watcher builds preserve saved Recent. Full Working Build and Publish own its refresh. Source Save and watcher work omit Search; complete docs-and-Search Build also aggregates prepared Links records into the saved workspace `links.json` and records completion. Registered media work depends on the actual invocation; watcher and targeted collection rebuilds skip media producers. The inspected pipeline does not produce the previously described semantic-token usage index, so usage-index maintenance is not included in this performance baseline.
+Targeted and collection-only builds preserve saved Recent. Full Working Build and Publish own its refresh. Source Save omits Search; complete docs-and-Search Build also aggregates prepared Links records into the saved workspace `links.json` and records completion. Registered media work depends on the actual invocation; Source Save, exact-document Rebuild and targeted collection rebuilds skip media producers. The inspected pipeline does not produce the previously described semantic-token usage index, so usage-index maintenance is not included in this performance baseline.
 
 ## Deliverables And Process
 
 Deliver independently complete reductions in ordinary Build work, followed by updated durable owner documentation and bounded verification evidence. Keep this document to current state, decisions and completion gates. [Development Checklist](Development_Checklist.md) and [Development Workflow](Development_Workflow.md) govern implementation and closeout.
 
-Each implementation step is a separate finishable slice, reviewed and closed through steps 6 and 7. Source Save continues to return after persistence, the watcher independently maintains projections, and explicit Build remains awaited through its required outcome.
+Each implementation step is a separate finishable slice, reviewed and closed through steps 6 and 7. Source Save and explicit Build are awaited through their current required outcomes. Earlier watcher evidence below records the historical delivery; it does not imply a retained watcher mode.
 
 Test creation or changes require a separately agreed specification under [Test Contract Discipline](Test_Contract_Discipline.md). Delivery approval does not authorize changing tests, fixtures or temporary regression scripts. Record maintained coverage outside this plan and select only relevant existing checks after reviewing their actual coverage and cost.
 
@@ -141,4 +141,4 @@ Record: steps 1–5 review complete with no unresolved production findings. Curr
 
 Gate: the delivered outcome is complete and reviewable; evidence limits and any separately scoped follow-up are explicit.
 
-Record: steps 1–5 delivered and closed. Builder, Reports and Related Links are the durable owners. Restart an already running Docs service/watcher and reload the viewer to activate changed service/runtime modules; builder subprocesses load current modules on their next invocation. Separately specified test cleanup remains pending. No Publish, commit or push was performed.
+Record: steps 1–5 delivered and closed. Builder, Reports and Related Links are the durable owners. Restart an already running Docs service and reload the viewer to activate changed service/runtime modules; builder subprocesses load current modules on their next invocation. Separately specified test cleanup remains pending. No Publish, commit or push was performed.

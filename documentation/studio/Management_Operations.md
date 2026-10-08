@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260519-202931-66c794
 title: Management Operations
 added_date: "2026-05-19 20:29:31"
-last_updated: "2026-09-24 20:53:46"
+last_updated: "2026-10-08 19:10:43"
 parent_id: d-20260424-000000-04d75e
 ---
 # Docs Viewer Management Operations
@@ -31,7 +31,6 @@ Local operational write targets include:
 ```text
 $DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/
 var/docs/logs/
-var/docs/watch-suppressions/
 docs-viewer/scopes/*/published/
 site/assets/data/docs/scopes/<scope>/media/<type>/
 ```
@@ -42,7 +41,7 @@ site/assets/data/docs/scopes/<scope>/media/<type>/
 - `docs-viewer/bin/docs-viewer` serves `/docs/`, Docs Viewer static/runtime/config files, generated-data reads, and management endpoints.
 - The old standalone `docs-viewer/services/docs_management_server.py` HTTP entrypoint remains removed.
 - If the local service is unavailable, normal Docs Viewer reads can fall back to static generated JSON; manage mode remains read-only and shows an unavailable message.
-- Successful source writes create short-lived suppression markers under `var/docs/watch-suppressions/` so the live watcher can skip duplicate same-scope rebuilds for files already rebuilt by management endpoints.
+- Application source writes await their required generated output through the existing build owners. The filesystem watcher and suppression markers are retired.
 
 ## Confirmed Document Delete
 

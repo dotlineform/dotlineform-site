@@ -152,13 +152,17 @@ export function createDocsViewerWorkspaceProvider(options) {
     };
   }
   if (source && typeof source.writeSource === "function") {
+    function projectSavedSource(response) {
+      if (response && response.source_saved && response.committed_document) {
+        try { response.projection_errors = commitDocumentChange(response.committed_document).map(function (error) { return error.message; }); }
+        catch (error) { response.projection_errors = [error.message]; }
+      }
+      return response;
+    }
     provider.writeSource = function (target, payload, optionsForWrite) {
-      return source.writeSource(target, payload, optionsForWrite || {}).then(function (response) {
-        if (response.committed_document) {
-          try { response.projection_errors = commitDocumentChange(response.committed_document).map(function (error) { return error.message; }); }
-          catch (error) { response.projection_errors = [error.message]; }
-        }
-        return response;
+      return source.writeSource(target, payload, optionsForWrite || {}).then(projectSavedSource).catch(function (error) {
+        projectSavedSource(error.payload);
+        throw error;
       });
     };
   }

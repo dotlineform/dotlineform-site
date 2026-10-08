@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-71d1be
 title: Route Dispatch Scripts
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-08-14 20:31:29"
+last_updated: "2026-10-08 19:10:43"
 parent_id: d-20260607-222033-2a494e
 ---
 # Docs Viewer Route Dispatch Scripts
@@ -57,7 +57,7 @@ Ownership: owns repo/root detection, origin checks, path formatting, compact log
 Responsibilities:
 
 - finds and validates the repo root
-- exposes local write-service constants such as log and watcher-suppression directories
+- exposes local write-service constants such as log directories
 - validates allowed origins for browser requests
 - formats repo-relative paths for JSON responses
 - writes compact management logs through `log_event`

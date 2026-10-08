@@ -128,13 +128,15 @@ def docs_management_post_response(
             return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
     if path == routes.SET_DRAFT_PATH:
         try:
-            return HTTPStatus.OK, docs_management_draft.set_draft(repo_root, body, dry_run=dry_run)
+            payload = docs_management_draft.set_draft(repo_root, body, dry_run=dry_run)
+            return (HTTPStatus.OK if payload["ok"] else HTTPStatus.INTERNAL_SERVER_ERROR), payload
         except mutations.ManagedDocumentRevisionConflict as error:
             return HTTPStatus.CONFLICT, error.payload
     if path == routes.SET_SELECTED_PATH:
         return HTTPStatus.OK, docs_selected_documents.set_selected(repo_root, body, dry_run=dry_run)
     if path == routes.SOURCE_SAVE_PATH:
-        return HTTPStatus.OK, save_source_document(repo_root, body, dry_run)
+        payload = save_source_document(repo_root, body, dry_run)
+        return (HTTPStatus.OK if payload["ok"] else HTTPStatus.INTERNAL_SERVER_ERROR), payload
     if path == routes.SOURCE_CONTEXT_PATH:
         return HTTPStatus.OK, read_source_context(repo_root, body)
     if path == routes.OPEN_SOURCE_PATH:

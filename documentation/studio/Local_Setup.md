@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260413-000000-d314b7
 title: Local Setup
 added_date: 2026-04-13 00:00:00
-last_updated: "2026-08-14 21:18:02"
+last_updated: "2026-10-08 19:10:43"
 parent_id: ""
 
 ---
@@ -21,7 +21,7 @@ All commands assume you are in `dotlineform-site/` unless stated otherwise.
 The local development stack is split into sibling services:
 
 - `bin/site-preview` for the public static-site preview
-- `bin/local-studio` for Local Studio catalogue/tag workflows and the docs live rebuild watcher
+- `bin/local-studio` for Local Studio catalogue/tag workflows
 - `docs-viewer/bin/docs-viewer` for Docs Viewer `/docs/` manage mode, document-package routes, and docs management APIs
 - `bin/local-all` when one terminal should supervise the sibling services together
 

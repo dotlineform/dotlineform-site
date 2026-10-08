@@ -172,7 +172,6 @@ class ManagementMutationPlan:
     collection: str = ""
     source_writes: tuple[SourceWrite, ...] = ()
     source_deletes: tuple[SourceDelete, ...] = ()
-    suppression_reason: Optional[str] = None
     build_doc_ids: Optional[list[str]] = None
     log_event_name: Optional[str] = None
     log_details: Dict[str, Any] = field(default_factory=dict)
@@ -291,7 +290,6 @@ def plan_create(
             ),
             *((SourceWrite(target_root / INDEX_ORDER_FILENAME, index_order_text(tree)),) if not collection else ()),
         ),
-        suppression_reason="docs-create",
         build_doc_ids=[] if collection else [doc_id],
         log_event_name="docs-create",
         log_details=log_details,
@@ -460,7 +458,6 @@ def plan_assign_field_group(
                 original_bytes=source_bytes,
             ),
         ),
-        suppression_reason="docs-assign-field-group",
         log_event_name="docs-assign-field-group",
         log_details={
             "collection": resolved.collection,
@@ -493,7 +490,6 @@ def plan_move(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
             "summary_text": f"Positioned {doc_id}.",
         },
         source_writes=(SourceWrite(root / INDEX_ORDER_FILENAME, index_order_text(tree)),),
-        suppression_reason="docs-position",
         build_doc_ids=[doc_id],
         include_write_result_keys=True,
     )
@@ -591,7 +587,6 @@ def plan_delete_apply(repo_root: Path, body: Dict[str, Any]) -> ManagementMutati
             document_source_path(config) / INDEX_ORDER_FILENAME,
             index_order_text(exclude_nodes(read_index_order(document_source_path(config)), set(delete_doc_ids))),
         ), *selected_delete_writes(config, delete_doc_ids)),
-        suppression_reason="docs-delete",
         build_doc_ids=delete_doc_ids,
         log_event_name="docs-delete",
         log_details={
@@ -769,7 +764,6 @@ def plan_collection_delete_apply(
         },
         source_deletes=(SourceDelete(document.path, original_bytes=source_bytes),),
         source_writes=selected_delete_writes(resolved.parent_config, [document.doc_id], resolved.collection),
-        suppression_reason="docs-collection-document-delete",
         revision_conflict_operation="apply",
         revision_conflict_error="collection document source changed after delete preview",
         log_event_name="docs-delete",
