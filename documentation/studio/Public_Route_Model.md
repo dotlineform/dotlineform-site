@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260602-192905-260208
 title: Public Route Model
 added_date: "2026-06-02 19:29:05"
-last_updated: "2026-08-09 22:00:00"
+last_updated: "2026-10-08 15:07:56"
 summary: Stable public catalogue shells, URLs, query state, URL ownership, and extension rules.
 ui_status: stable
 parent_id: d-20260720-161656-1357d0
@@ -11,7 +11,7 @@ parent_id: d-20260720-161656-1357d0
 ---
 # Public Route Model
 
-This document is the durable route contract for the public catalogue. Public Docs Viewer routes are a separate runtime boundary.
+This document records the public Catalogue route contract before relocation beneath `/archive/`; [Catalogue Archive](Catalogue_Archive.md) owns current archive availability. The active homepage is `/analysis/`. Public Docs Viewer routes are a separate runtime boundary.
 
 ## Route Principles
 
@@ -30,7 +30,6 @@ This document is the durable route contract for the public catalogue. Public Doc
 
 ```text
 /                                  tracked redirect shell to `/series/`
-/about/                            about page
 /recent/                           recent public catalogue updates
 
 /series/                           Works home grouped by Series
@@ -56,6 +55,7 @@ Do not add compatibility redirects, aliases, or broad fallback tables for retire
 
 Retired first-party public routes include:
 
+- `/about/`
 - `/works/<work_id>/`
 - `/series/<series_id>/`
 - `/work_details/<detail_uid>/`

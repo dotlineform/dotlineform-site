@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260902-122221-9f08aa
 title: Architecture
 added_date: "2026-09-02 12:22:21"
-last_updated: "2026-09-05 16:44:47"
+last_updated: "2026-10-08 15:07:56"
 summary: Define the frozen Catalogue archive and the proposed document, token, projection, Search and publication architecture for one mutable Analysis site.
 parent_id: d-20260902-102745-8379ea
 ---
@@ -21,7 +21,7 @@ The complete existing public Catalogue is physically relocated during the freeze
 
 Archive dependencies are deliberately copied rather than read from mutable active asset paths. After the reviewed transition, the active `site/assets/` boundary contains no legacy Catalogue-only runtime, payload or local-media family, and no Studio generator, cleanup operation, shared-code projection, Docs Publish operation or Deploy Repo reconciliation may write, clean or regenerate `site/archive/`. A recorded archive manifest and Git history identify the accepted bytes.
 
-Archiving does not depend on the replacement Analysis presentation being ready. Until public cutover, the homepage or primary Works link may point to the archived presentation. Once the replacement is accepted, `/analysis/` becomes the sole mutable publishing destination and the primary site destination, while a permanent site-footer link keeps `/archive/` discoverable. GitHub Pages continues to deploy the complete tracked site containing both the frozen archive and the current Analysis projection.
+Archiving does not depend on the replacement Analysis presentation being ready. Until public cutover, the homepage or primary Works link may point to the archived presentation. Once the replacement is accepted, `/analysis/` becomes the sole mutable publishing destination and the primary site destination. `/archive/` remains published without direct site links, and the public site has no footer. GitHub Pages continues to deploy the complete tracked site containing both the frozen archive and the current Analysis projection.
 
 The archive owns immutable copies of its required remote media beneath `media.dotlineform.com/archive/catalogue/`, divided into `works/img/`, `works/files/` and `work_details/img/`. Stage 1 copies the exact currently referenced R2 objects once, verifies their bytes, records their keys and checksums in the archive manifest, and rewrites the archived snapshot to the new bases. Active upload, replacement and cleanup operations must reject this prefix; later Catalogue media continues under active non-archive ownership.
 

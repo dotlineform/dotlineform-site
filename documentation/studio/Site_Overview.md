@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260720-161657-0f6696
 title: Site Overview
 added_date: "2026-07-20 16:16:57"
-last_updated: "2026-08-09 22:00:00"
+last_updated: "2026-10-08 15:07:56"
 summary: Public catalogue capabilities, static execution path, ownership boundaries, extension method, and known weak spots.
 parent_id: d-20260720-161656-1357d0
 
@@ -14,7 +14,7 @@ parent_id: d-20260720-161656-1357d0
 
 Site is the public dotlineform website. It is a tracked static artifact served directly from `site/`; there is no deploy-time build or copy step.
 
-The catalogue experience is centred on `/series/`. `/` redirects there, Series organise Works, and selected Work and detail views continue through fixed query-driven route shells.
+The active homepage is `/analysis/`, and `/` redirects there. The legacy Catalogue experience remains beneath `/archive/`; Series organise Works, and selected Work and detail views continue through fixed query-driven route shells.
 
 Public Analysis is a Docs Viewer scope. It shares site navigation and presentation where appropriate but does not become a catalogue runtime module.
 
@@ -25,7 +25,9 @@ Public Analysis is a Docs Viewer scope. It shares site navigation and presentati
 - `/work-details/?detail=<detail_uid>` — selected nested Work detail and sibling context.
 - `/recent/` — recent publication snapshots.
 - `/catalogue/search/` — public Work and Series search.
-- `/about/` and `404.html` — small supporting pages.
+- `404.html` — supporting recovery page. `/about/` is retired.
+
+The legacy Catalogue routes listed here describe the presentation before relocation beneath `/archive/`, as recorded in [Catalogue Archive](Catalogue_Archive.md). The public site has no footer or direct link to `/archive/`.
 
 A Series containing one Work links directly to that Work rather than adding an intermediate Series view.
 
@@ -76,7 +78,7 @@ Do not introduce a public server, per-record HTML pages, duplicated URL construc
 
 ## Known Weak Spots
 
-- Shared head, header, navigation, and footer markup is repeated across tracked route shells.
+- Shared head, header, and navigation markup is repeated across tracked route shells.
 - `main.css` still mixes global shell rules with older catalogue route styles while `catalogue.css` owns newer components.
 - `/series/` is publicly labelled Works, so filenames and product vocabulary do not always align.
 - Route context is split between query parameters and local storage; restoration rules need care when changing navigation.

@@ -799,7 +799,7 @@ th{ background: var(--panel-2); }
 }
 
 
-/* 5.	Site chrome: header, footer, navigation */
+/* 5.	Site chrome: header and navigation */
 
 .site-header{
   border-bottom: 1px solid var(--border);
@@ -1289,29 +1289,9 @@ body:not(.studio-local-app) .site-header .container{
   display: none;
 }
 
-.site-footer{
-  border-top: 1px solid var(--border);
-  margin-top: 40px;
-}
-.home .site-footer{
-  margin-top: 0;
-}
 .home main.container{
   padding-bottom: 0;
 }
-.site-footer .container{
-  padding-top: 18px;
-  padding-bottom: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  font-size: var(--font-caption);
-  line-height: 1.2;
-  text-align: center;
-}
-
-.site-footer .muted{ font-size: var(--font-caption); line-height: 1.2; }
 
 /* 6.	Shared content components */
 
@@ -1589,95 +1569,6 @@ figure.diagram figcaption{
 
 /* 7.	Page-type sections and overrides */
 
-/* About page hero + links */
-.about-hero{
-  width: 100vw;
-  margin-top: 0;
-  margin-bottom: 0;
-  margin-left: calc(50% - 50vw);
-  margin-right: calc(50% - 50vw);
-}
-
-.about-hero--flush{
-  margin-top: calc(-1 * var(--space-6));
-}
-
-.about-hero img{
-  display: block;
-  width: 100%;
-  height: auto;
-}
-.about-hero-caption{
-  max-width: var(--container);
-  margin: 8px auto 0;
-  padding: 0 18px;
-}
-
-/* About links styled similar to Notes index links */
-.about-links{
-  margin-top: var(--space-5);
-  max-width: 640px;     /* adjust to taste */
-  margin-left: auto;
-  margin-right: auto;
-  transform: translateX(-6px); /* add a small left nudge (optical correction) - try -2px to -6px */
-}
-
-/* .about-link is for interactive anchors; .about-link-text is for non-interactive fallback text in the same slot. */
-.about-link{
-  font-size: var(--font-body);
-  display: inline-block;
-  justify-self: start;
-  width: fit-content;
-}
-.about-link-text{
-  font-size: var(--font-small);
-  font-weight: 600; 
-  color: var(--text); 
-  display: inline-block;
-  justify-self: start;
-  width: fit-content;
-}
-.about-link-prefix{
-  font-size: var(--font-small);
-  color: var(--muted);
-  white-space: nowrap;
-  text-align: right;     /* right-align text inside the prefix */
-  justify-self: end;     /* push prefix to the right edge of the left column */
-}
-
-/* link stays naturally left-aligned in the right column; no change needed */
-.about-link-item{
-  display: grid;
-  grid-template-columns: 1fr 1fr;  /* split the row around centre */
-  align-items: baseline;
-  column-gap: 10px;  /* “little gap” between prefix + link, 8-14px*/
-  padding: 8px 0;
-}
-
-.about-link:link,
-.about-link:active,
-.about-link:focus{
-  text-decoration: none !important;
-  color: var(--link);
-  font-weight: 500;
-}
-.about-link:visited{
-  text-decoration: none !important;
-  color: var(--link-visited);
-  font-weight: 500;
-}
-
-.about-link:hover{
-  color: var(--link-hover);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-.about-link:focus-visible{
-  outline: 2px solid var(--border-strong);
-  outline-offset: 2px;
-}
-
 /* Supplements: links should read like prose by default */
 .supplements a:link,
 .supplements a:visited{
@@ -1706,8 +1597,6 @@ pre.theme-text{
 @media (max-width: 640px){
   .index__item { grid-template-columns: 1fr; }
   .index__work_id { text-align: left; }
-  .about-link-item{ grid-template-columns: 1fr; }
-  .about-link-prefix{ justify-self: start; text-align: left; }
 }
 
 

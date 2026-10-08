@@ -30,7 +30,6 @@
     "required_files": [
       ".nojekyll",
       "index.html",
-      "about/index.html",
       "archive/recent/index.html",
       "archive/series/index.html",
       "archive/works/index.html",

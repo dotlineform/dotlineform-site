@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260904-173415-b28651
 title: Catalogue Archive
 added_date: "2026-09-04 17:34:15"
-last_updated: "2026-09-04 17:34:15"
+last_updated: "2026-10-08 15:07:56"
 summary: How the legacy Catalogue site and R2 media were frozen on 4 September 2026.
 parent_id: d-20260720-161656-1357d0
 ---
@@ -15,7 +15,9 @@ The legacy Catalogue was frozen on 4 September 2026 in [UAC 1](UAC_1_Freeze_Lega
 
 The pre-archive Git revision is `519c49bbaa43ddfcdddc2521ef95bf2c4eccf95f`. Catalogue pages, payloads, Search/Recent indexes, browser code and thumbnails moved into `site/archive/`. Shared styles, scripts and icons were copied so later active-site edits do not change the archive.
 
-`/archive/` opens the frozen Series index, with routes beneath it for Series, Works, Work Details, Recent and Search. Search and Recent retain their existing data; they are not rebuilt from changing canonical data. The active homepage is `/analysis/`, and its footer links to the archive. Former Catalogue routes have no redirects.
+`/archive/` opens the frozen Series index, with routes beneath it for Series, Works, Work Details, Recent and Search. Search and Recent retain their existing data; they are not rebuilt from changing canonical data. The active homepage is `/analysis/`. The archive remains in the published site, with no direct links to `/archive/`. Former Catalogue routes have no redirects.
+
+On 8 October 2026, `/about/` and every site footer were removed, including the archived page footers and the public Docs route template. Archive header labels no longer link directly to `/archive/`; the archive's internal Series, Works, Work Details, Recent and Search navigation remains available. The About page has no redirect or replacement route.
 
 ## R2 Copy
 
