@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260810-115737-741620
 title: Works Report Concept And Architecture
 added_date: "2026-08-10 11:57:37"
-last_updated: "2026-10-07 16:26:39"
+last_updated: "2026-10-08 11:32:22"
 summary: Studio Series row authority and exact member-Work documentation coverage for the local Works report.
 parent_id: d-20260424-000000-50b63f
 ---
@@ -66,7 +66,7 @@ Only returned Series lookup records establish rows. A Work subject contributes o
 The browser loads three existing local read projections:
 
 - the Studio `catalogue_lookup_series_search` read, schema `studio_catalogue_lookup_series_search_v2`, containing exact Series ID, title and record revision;
-- the Studio `catalogue_lookup_work_search` read, schema `studio_catalogue_lookup_work_search_v2`, containing exact Work ID, title, optional `series_id`, Gallery IDs, displayed year and record revision; and
+- the Studio `catalogue_lookup_work_search` read, schema `studio_catalogue_lookup_work_search_v2`, containing exact Work ID, title, optional `series_id`, Gallery IDs, displayed year, media version and record revision; coverage uses only Work ID, title and Series membership; and
 - the configured private Working `works` management manifest, containing current document identity, title, date, optional draft flag and normalized `authoring_subject`, with `working_works` identity and `subject_generation`.
 
 The two Catalogue reads use the existing Local Studio Catalogue read boundary resolved from the configured `studioBaseUrl`. They reuse the current lookup builders and loopback-origin transport; Works adds no Catalogue or Docs Viewer endpoint. The Projects manifest is already the complete browser input used by its own sub-scope report, so Works does not also read `subject-associations.json` or introduce a matching-generation join.

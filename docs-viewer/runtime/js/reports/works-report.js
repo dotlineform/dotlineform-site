@@ -50,7 +50,7 @@ function normalizeSeriesItem(value) {
 
 function normalizeWorkItem(value) {
   if (
-    !exactKeys(value, ["gallery_ids", "record_hash", "series_id", "title", "work_id", "year_display"])
+    !exactKeys(value, ["gallery_ids", "media_version", "record_hash", "series_id", "title", "work_id", "year_display"])
     || !Array.isArray(value.gallery_ids)
     || value.gallery_ids.some((id) => typeof id !== "string" || !id)
     || !WORK_ID_PATTERN.test(value.work_id)
