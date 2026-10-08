@@ -3,6 +3,7 @@ import {
   normalizeWorkId
 } from "./catalogue-work-fields.js";
 
+/** Carry saved fields and media version into the live search and Series member list. */
 export function projectWorkSearchRecord(workId, record, recordHash = "") {
   const normalizedWorkId = normalizeWorkId(workId);
   return {
@@ -10,6 +11,7 @@ export function projectWorkSearchRecord(workId, record, recordHash = "") {
     title: normalizeText(record && record.title),
     year_display: normalizeText(record && record.year_display),
     series_id: normalizeText(record?.series_id),
+    media_version: record.media_version,
     gallery_ids: record.gallery_ids.slice(),
     record_hash: normalizeText(recordHash)
   };

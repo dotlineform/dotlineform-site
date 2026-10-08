@@ -66,15 +66,20 @@ export function buildWorkPrimaryPreview(config, workId, options = {}) {
   };
 }
 
-export function buildWorkThumbPreview(config, workId) {
+/** Version every thumbnail candidate so saved image changes request current pixels. */
+export function buildWorkThumbPreview(config, workId, options = {}) {
   const stem = normalizeText(workId);
   const sizes = Array.isArray(config && config.thumbSizes) && config.thumbSizes.length ? config.thumbSizes : [96, 192];
   const format = normalizeText(config && config.assetFormat) || "webp";
   const suffix = normalizeText(config && config.thumbSuffix) || "thumb";
   const primarySize = sizes[0];
   return {
-    src: joinAssetPath(config && config.worksThumbBase, stem, suffix, primarySize, format),
-    srcset: buildSrcset((size) => joinAssetPath(config && config.worksThumbBase, stem, suffix, size, format), sizes),
+    src: appendVersionQuery(
+      joinAssetPath(config && config.worksThumbBase, stem, suffix, primarySize, format), options.mediaVersion
+    ),
+    srcset: buildSrcset((size) => appendVersionQuery(
+      joinAssetPath(config && config.worksThumbBase, stem, suffix, size, format), options.mediaVersion
+    ), sizes),
     width: primarySize,
     height: primarySize
   };

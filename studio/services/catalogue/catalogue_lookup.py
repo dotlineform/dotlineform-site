@@ -13,7 +13,7 @@ SCHEMAS = {
     "series_record": "studio_catalogue_lookup_series_record_v3",
 }
 
-WORK_SEARCH_FIELDS = frozenset({"work_id", "title", "year_display", "series_id"})
+WORK_SEARCH_FIELDS = frozenset({"work_id", "title", "year_display", "series_id", "media_version"})
 SERIES_MEMBER_WORK_FIELDS = frozenset({
     "work_id",
     "title",
@@ -37,12 +37,14 @@ def normalize_optional_int(value: Any) -> int | None:
 
 
 def build_work_search_item(work_id: str, record: Mapping[str, Any]) -> Dict[str, Any]:
+    """Project canonical fields for Work search and versioned Series thumbnails."""
     return {
         "work_id": work_id,
         "record_hash": record_hash(record),
         "title": normalize_text(record.get("title")),
         "year_display": normalize_text(record.get("year_display")),
         "series_id": normalize_text(record.get("series_id")) or None,
+        "media_version": record.get("media_version"),
     }
 
 
