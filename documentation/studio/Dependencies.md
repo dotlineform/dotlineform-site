@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260514-180120-b23811
 title: Dependencies
 added_date: "2026-05-14 18:01:20"
-last_updated: "2026-10-06 12:21:35"
+last_updated: "2026-10-08 22:39:42"
 summary: Docs Viewer-specific Python and Node dependency boundaries, including import parsers and repository-side diagram rendering.
 parent_id: d-20260424-000000-50b63f
 
@@ -61,6 +61,7 @@ The current checked-in Python packages are:
 
 - The shared Python Markdown renderer lives at `studio/shared/python/markdown_renderer.py`. It starts from `MarkdownIt("commonmark")`, enables the built-in `table` rule because authored Studio docs already use Markdown tables, and enables no external renderer plugins.
 - Raw HTML is allowed by default for the current authored content model, but the helper does not sanitize HTML; imported or untrusted HTML must still pass through explicit sanitization boundaries such as `bleach`.
+- Image-token summaries use the same `markdown-it-py` library through `render_image_summary` in `docs-viewer/build/docs_builder/semantic_tokens.py`. Its independent `zero` preset enables only `emphasis` and `escape` and uses inline rendering, with no plugins, raw HTML, links, images or code interpretation. The normal document renderer keeps its existing configuration. [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md#build-and-runtime-resolution) owns this restricted field syntax.
 - Later syntax additions must record their enabled rules/plugins in this document and in the renderer fixtures.
 - Acceptance fixtures in `studio/tests/python/test_markdown_renderer_acceptance.py` assert rendered HTML semantics and generated plain text directly.
 - Python app builders protect generated app contracts.

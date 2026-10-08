@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260714-234030-434069
 title: Semantic Tokens Architecture
 added_date: "2026-07-14 23:40:30"
-last_updated: "2026-10-08 19:10:43"
+last_updated: "2026-10-08 22:39:42"
 summary: Describe Docs-owned image and explicit Catalogue tokens, source editing, document relationships, and local/public media resolution.
 parent_id: d-20260725-153656-516b61
 ---
@@ -28,7 +28,7 @@ The **Include Work metadata** choice and `include_work_metadata` field were reti
 
 Catalogue Entry is Regenerate-owned and accepts only an exact five-digit Work identity, without fields or presentation options. It has no insertion action, editing modal or browser authoring parser. Build permits one Entry only in the Catalogue document with the same identity; a mismatched, repeated or ordinary-document Entry fails rendering. Catalogue Image retains its independent illustration and caption controls.
 
-Tokens always include their Work or Gallery identity, including Work tokens inserted through Use document subject. Gallery selection is independent of document Subjects. Media View link labels and image summaries are authored literal text; the image choices instruct Build to resolve the exact generated Work record. The experimental omitted-identity forms are retired without compatibility aliases.
+Tokens always include their Work or Gallery identity, including Work tokens inserted through Use document subject. Gallery selection is independent of document Subjects. Media View link labels are authored literal text; image summaries support the restricted emphasis described below. The image choices instruct Build to resolve the exact generated Work record. The experimental omitted-identity forms are retired without compatibility aliases.
 
 The old three-part Catalogue text form and Concept tokens are retired. They have no parser, renderer, authoring control or compatibility alias. Ordinary document references use Markdown links through [Insert doc link](Source_Editor_Scripts.md).
 
@@ -84,6 +84,10 @@ Both Add Catalogue image and Add Media View link offer Use document subject, ini
 Work and Gallery text links and Work images are rendered as HTML markers carrying exact Catalogue identity. A Gallery marker uses `data-docs-media-kind="catalogue-gallery"` and its exact Gallery ID. The media provider resolves the presentation at runtime. The Links builder separately extracts Work document relationships from the authored tokens before rendering.
 
 For each Work image, the shared document builder reads `works/index/<work_id>.json` from the configured stage, validates the exact Work identity and required title, and reuses that record within one build. A missing or invalid media record fails image rendering; this is separate from document-link construction, which does not check the Catalogue document. The current `work.title` always supplies image alt text; `use_work_title_caption` controls its separate visible bold caption. An optional authored `summary` follows the caption, or appears alone when the title-caption choice is false. Build omits `figcaption` when both are absent. Illustrative figures contain no descriptive Work metadata or `cat.` line. Targeted and full Working builds use this path. Publish copies its already-captured Catalogue JSON into the temporary Preview build workspace before the same renderer runs; it does not reread live Working JSON during that build.
+
+Docs-owned and Catalogue image tokens share the viewer's `figcaption` styling. Caption and summary text use Small (14px at the default root size); captions and bold summary spans are semibold (600), while other summary text retains normal weight. The shared CSS controls this presentation on public and Manage readers.
+
+Both image-token Summary fields accept inline Markdown emphasis: `*italic*`, `**bold**` and `***bold italic***`, with the equivalent underscore forms and normal nesting. Backslash escapes such as `\*` preserve literal punctuation. The unchanged token format stores the authored summary as canonical percent-encoded text. `render_image_summary` in `docs_builder/semantic_tokens.py` uses a separate `MarkdownIt("zero")` instance with only `emphasis` and `escape` enabled, rendering the decoded summary inline before constructing the figure fragment. Line breaks are retained. HTML, links, images, code, headings and other Markdown features remain ordinary escaped text; captions, alt text and Media View labels retain their literal-text rendering. Source modals remain plain textareas without formatting hints or controls. Source Save, an exact document Rebuild or a later full Build renders the current summary; existing generated content keeps its previous rendering until rebuilt. The normal document Markdown renderer and Search exclusion policy are unchanged.
 
 The browser resolves those markers using generated Catalogue data and the shared [Media View](Catalogue_Media_View.md) presentation. This is also the public path: it requires public generated Catalogue data, not local authoring endpoints or document existence.
 

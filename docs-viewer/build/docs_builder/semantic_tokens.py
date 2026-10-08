@@ -10,6 +10,8 @@ from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any, Callable, Iterable
 
+from markdown_it import MarkdownIt
+
 from .semantic_token_registry import SemanticTokenRegistry
 from .inline_icons import InlineIconRenderer
 from docs_workspace_config import location_child
@@ -25,6 +27,7 @@ from docs_semantic_source import semantic_source_ranges, source_token_spans
 
 LEXICAL_KEY_PATTERN = re.compile(r"[a-z][a-z0-9-]*")
 LEXICAL_ID_PATTERN = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*")
+_IMAGE_SUMMARY_RENDERER = MarkdownIt("zero").enable(["emphasis", "escape"])
 
 
 @dataclass(frozen=True)
@@ -369,6 +372,11 @@ def work_metadata_text(work: dict[str, Any], work_id: str) -> str:
     ) if value)
 
 
+def render_image_summary(summary: str) -> str:
+    """Render image-summary emphasis and escapes with literal HTML and retained line breaks."""
+    return _IMAGE_SUMMARY_RENDERER.renderInline(summary)
+
+
 def render_catalogue_media_reference(
     token: SemanticTokenOccurrence, *, alt: str = "", caption: str = "",
 ) -> str:
@@ -392,7 +400,7 @@ def render_catalogue_media_reference(
     if caption:
         blocks.append(f'<span class="docsViewerFigure__caption">{html.escape(caption)}</span>')
     if token.summary:
-        blocks.append(f'<span class="docsViewerFigure__summary">{html.escape(token.summary)}</span>')
+        blocks.append(f'<span class="docsViewerFigure__summary">{render_image_summary(token.summary)}</span>')
     figcaption = f'<figcaption>{"".join(blocks)}</figcaption>' if blocks else ""
     return (
         f'<figure class="docsViewerFigure {" ".join(modifiers)}" {attrs}>{opener}'
@@ -481,7 +489,7 @@ def render_image_reference(token: SemanticTokenOccurrence, src: str, *, svg: boo
     if token.caption:
         blocks.append(f'<span class="docsViewerFigure__caption">{html.escape(token.caption)}</span>')
     if token.summary:
-        blocks.append(f'<span class="docsViewerFigure__summary">{html.escape(token.summary)}</span>')
+        blocks.append(f'<span class="docsViewerFigure__summary">{render_image_summary(token.summary)}</span>')
     caption = f'<figcaption>{"".join(blocks)}</figcaption>' if blocks else ""
     return (
         f'<figure class="docsViewerFigure {" ".join(modifiers)}">'
