@@ -82,10 +82,7 @@ function compareRows(collator, sortKey, sortDir, left, right) {
   if (sortKey === "collection") primary = collator.compare(left.collectionTitle, right.collectionTitle);
   else if (sortKey === "type") primary = collator.compare(left.mediaType, right.mediaType);
   else if (sortKey === "file") primary = collator.compare(left.identity, right.identity);
-  else {
-    const emptyOrder = Number(left.documents.length === 0) - Number(right.documents.length === 0);
-    primary = emptyOrder || compareDocumentSets(collator, left.documents, right.documents);
-  }
+  else primary = compareDocumentSets(collator, left.documents, right.documents);
   if (primary) return primary * direction;
   const collection = collator.compare(left.collectionTitle, right.collectionTitle)
     || collator.compare(left.collection, right.collection)
