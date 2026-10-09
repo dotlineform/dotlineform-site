@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260423-000000-c9f3ea
 title: Builder
 added_date: "2026-04-23 00:00:00"
-last_updated: "2026-10-08 19:10:43"
+last_updated: "2026-10-09 19:34:39"
 parent_id: d-20260424-000000-50b63f
 ---
 # Builder
@@ -224,6 +224,7 @@ Publish preparation refreshes the shared Recents from current eligible source ti
 ## Diagnostics And Safety
 
 - the builder prints a compact human summary; `--diagnostics` adds machine-readable console diagnostics
+- document token-resolution and Markdown-rendering validation errors identify the document ID, title, ordinary/collection owner and source Markdown filename alongside the underlying cause. This applies to full and targeted builds; the build stops at the first failure, and the rebuild service retains that detail in its error response
 - unchanged content is skipped unless forced
 - targeted writes require an existing full-scope output tree
 - renderer output allows raw HTML and is not a sanitization boundary

@@ -26,21 +26,25 @@ class PayloadBuilderMixin:
         doc: DocRecord,
         docs_by_id: Mapping[str, DocumentIdentity],
     ) -> dict[str, Any]:
-        projected_markdown = project_report_markdown(
-            doc.body_markdown,
-            doc.report,
-            include_host=True,
-        )
-        resolved = self.resolve_content_tokens(
-            projected_markdown,
-            document_id=doc.doc_id,
-        )
         try:
+            projected_markdown = project_report_markdown(
+                doc.body_markdown,
+                doc.report,
+                include_host=True,
+            )
+            resolved = self.resolve_content_tokens(
+                projected_markdown,
+                document_id=doc.doc_id,
+            )
             rendered = self.inline_icons.render_markdown(
                 resolved, related_links=lambda heading: render_related_links(self, doc, heading), summary=doc.summary,
             )
         except ValueError as exc:
-            raise ValueError(f"Document {doc.doc_id}: {exc}") from exc
+            collection = getattr(self, "collection_id", "")
+            owner = f"collection {collection}" if collection else "ordinary documents"
+            raise ValueError(
+                f"Document {doc.doc_id} ({doc.title!r}; {owner}; source {doc.source_path}): {exc}"
+            ) from exc
         content_html = add_missing_image_titles(
             self.rewrite_doc_links(
                 self.restore_semantic_media_html(rendered),
