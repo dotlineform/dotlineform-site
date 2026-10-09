@@ -5,7 +5,7 @@ title: Empty Gallery Cleanup Delivery
 added_date: "2026-10-05 20:20:51"
 last_updated: "2026-10-05 20:38:13"
 summary: Offer explicit deletion when saved Work membership removals empty a Gallery.
-ui_status: active
+ui_status: done
 parent_id: d-20260428-000000-f5ff18
 ---
 # Empty Gallery Cleanup Delivery

@@ -5,7 +5,7 @@ title: Folders Without Works Report Delivery
 added_date: "2026-10-05 23:47:48"
 last_updated: "2026-10-05 23:52:42"
 summary: Recursive local inspection of folders with no directly registered Work primary source.
-ui_status: active
+ui_status: done
 parent_id: d-20260428-000000-f5ff18
 ---
 # Folders Without Works Report Delivery
@@ -31,7 +31,7 @@ Complete result: Folders Without Works lists every physical folder below the con
 - [x] Create the Working host, register its index placement and explicit publication exclusion, and inspect its watcher projection or use the approved targeted fallback if unavailable.
 - [x] Update durable Reports documentation and Planned Features routing.
 - [x] Complete focused evidence and final code review.
-- [ ] Record user manual review and acceptance.
+- [x] Record user manual review and acceptance.
 
 ## Verification Budget
 
