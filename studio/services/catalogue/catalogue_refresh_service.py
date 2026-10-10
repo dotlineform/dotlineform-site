@@ -25,7 +25,7 @@ from catalogue.catalogue_source import payload_for_map
 from catalogue.catalogue_revisions import record_hash
 from catalogue.catalogue_shared_changes import REFRESH_FIELDS, WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, empty_shared_changes, shared_changes
 from catalogue.catalogue_pending_publication import merge_completed_shared
-from catalogue.catalogue_report_inputs import INPUT_SCHEMAS, catalogue_report_input_payloads
+from catalogue.catalogue_report_inputs import INPUT_SCHEMAS, SERIES_PATH, catalogue_report_input_payloads, merge_catalogue_report_input
 from docs_artifact_locations import ArtifactLocation
 
 
@@ -246,7 +246,7 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
             repo_root, records, galleries, pairs, timestamp=timestamp,
             work_ids=set(selected["current_works"]),
             gallery_ids=set(),
-            shared_outputs=set(shared["shared_outputs"]) - {WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT},
+            shared_outputs=set(shared["shared_outputs"]) - {WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, *INPUT_SCHEMAS},
         )
         if set(shared["deleted_galleries"]) & galleries.galleries.keys() or set(shared["deleted_series"]) & records.series.keys():
             raise ValueError("Queued shared deletion still has a canonical definition")
@@ -300,7 +300,21 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
                 phase = "readiness"
                 entry["refreshed"] = True
                 write_pending_updates(repo_root, pending)
-        work_id, phase = "", "shared output"
+        work_id, phase = "", "private report input handoff"
+        for identity in sorted(set(shared["shared_outputs"]) & INPUT_SCHEMAS.keys()):
+            is_series = identity == SERIES_PATH
+            payload = merge_catalogue_report_input(
+                output_path(workspace.catalogue.working, identity), relative=identity,
+                sources=records.series if is_series else records.works,
+                current_ids=shared["current_series"] if is_series else [
+                    wid for wid, entry in pending["current_works"].items() if entry["metadata"]
+                ],
+                deleted_ids=shared["deleted_series"] if is_series else pending["deleted_works"],
+                timestamp=timestamp,
+            )
+            if payload is not None:
+                row_payloads[identity] = payload
+        phase = "shared output"
         output["written"].extend(_write_shared_payloads(workspace.catalogue.working, {
             identity: payload for identity, payload in payloads.items() if not identity.startswith("works/index/")
         }))
