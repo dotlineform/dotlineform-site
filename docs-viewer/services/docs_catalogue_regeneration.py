@@ -19,6 +19,7 @@ from docs_write_rebuild import perform_collection_source_write_and_rebuild
 from studio.services.catalogue.catalogue_pending_updates import read_pending_updates, remove_pending_update, write_pending_updates
 from studio.services.catalogue.catalogue_pending_publication import merge_completed_works, read_pending_publication
 from studio.services.catalogue.catalogue_pending_state import pending_counts
+from studio.services.catalogue.catalogue_shared_changes import SHARED_FIELDS
 
 
 TARGET = {"collection": "catalogue"}
@@ -62,6 +63,8 @@ def reconcile_catalogue_design(repo_root: Path) -> dict[str, Any]:
 
 def _regenerate(repo_root: Path, *, design_maintenance: bool) -> dict[str, Any]:
     pending = read_pending_updates(repo_root)
+    if any(pending[field] for field in SHARED_FIELDS):
+        raise ValueError("Complete queued Catalogue shared Refresh before Regenerate.")
     read_pending_publication(repo_root)
     collection = resolve_managed_document_collection(repo_root, **TARGET)
     require_document_authoring(collection.parent_config)

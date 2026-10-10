@@ -10,6 +10,7 @@ from urllib.parse import quote
 
 from catalogue import catalogue_generation_indexes as indexes
 from catalogue import catalogue_generation_records as projection
+from catalogue.catalogue_compact_indexes import build_compact_index
 from catalogue.catalogue_galleries import CatalogueGalleries, read_galleries, validate_galleries
 from catalogue.catalogue_generation_common import compact_json_object, compute_payload_version
 from catalogue.catalogue_media_policy import catalogue_media_policy
@@ -24,7 +25,7 @@ from catalogue.catalogue_report_inputs import INPUT_SCHEMAS, catalogue_report_in
 
 
 def _index(family: str, items: Mapping[str, Any], timestamp: str) -> dict[str, Any]:
-    schema = f"catalogue_{family}_index_v{2 if family in ('works', 'galleries') else 1}"
+    schema = f"catalogue_{family}_index_v1"
     return {"header": {"schema": schema, "version": compute_payload_version({"schema": schema, family: items}),
                        "generated_at_utc": timestamp, "count": len(items)}, family: dict(items)}
 
@@ -82,15 +83,9 @@ def catalogue_payloads(
             member_works=indexes.build_member_work_records(work_records=records.works, work_ids=works_by_gallery[gid]), generated_at_utc=timestamp,
         )
     if WORK_INDEX in shared:
-        payloads[WORK_INDEX] = _index("works", {
-            wid: indexes.build_work_index_row(work_id=wid, work_record=records.works[wid])
-            for wid in sorted(records.works)
-        }, timestamp)
+        payloads[WORK_INDEX] = build_compact_index("works", records.works, timestamp=timestamp)
     if GALLERY_INDEX in shared:
-        payloads[GALLERY_INDEX] = _index("galleries", {
-            gid: {"gallery_id": gid, "title": galleries.galleries[gid]["title"]}
-            for gid in sorted(galleries.galleries)
-        }, timestamp)
+        payloads[GALLERY_INDEX] = build_compact_index("galleries", galleries.galleries, timestamp=timestamp)
     series_galleries = {
         sid: [
             {"gallery_id": gid, "title": galleries.galleries[gid]["title"]}

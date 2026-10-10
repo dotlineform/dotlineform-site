@@ -1,9 +1,7 @@
 {
   "header": {
-    "schema": "catalogue_works_index_v2",
-    "version": "blake2b-f8ae1ed88336a542e2dd95aa71c76dc8",
-    "generated_at_utc": "2026-10-10T16:33:57Z",
-    "count": 4619
+    "schema": "catalogue_works_index_v3",
+    "generated_at_utc": "2026-10-10T19:12:44Z"
   },
   "works": {
     "00001": {

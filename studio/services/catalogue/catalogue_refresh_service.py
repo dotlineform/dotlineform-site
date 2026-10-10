@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, SOURCE_FILES, records_from_json_source, validate_source_records
+from catalogue.catalogue_compact_indexes import build_compact_index, merge_compact_index
 from catalogue.catalogue_works_metadata import update_catalogue_works_metadata
 from catalogue.catalogue_pending_updates import read_pending_updates, write_pending_updates
 from catalogue.catalogue_pending_state import pending_counts
@@ -18,7 +19,7 @@ from catalogue.catalogue_output_paths import catalogue_workspace_config, output_
 from catalogue.catalogue_staged_media import catalogue_staging_assets, work_image_paths
 from catalogue.catalogue_source import payload_for_map
 from catalogue.catalogue_revisions import record_hash
-from catalogue.catalogue_shared_changes import SHARED_FIELDS, shared_changes
+from catalogue.catalogue_shared_changes import SHARED_FIELDS, WORK_INDEX, GALLERY_INDEX, empty_shared_changes, shared_changes
 from catalogue.catalogue_pending_publication import merge_completed_shared
 from catalogue.catalogue_report_inputs import INPUT_SCHEMAS, catalogue_report_input_payloads
 from docs_artifact_locations import ArtifactLocation
@@ -67,6 +68,32 @@ def refresh_private_report_inputs(repo_root: Path) -> dict[str, Any]:
     return {"ok": True, "output": {"status": "completed", "written": written, "deleted": []}}
 
 
+def refresh_compact_indexes(repo_root: Path) -> dict[str, Any]:
+    """Explicit whole-index baseline/repair; preserve unrelated lifecycle work.
+
+    This maintenance authority is never invoked by normal Refresh or a reader.
+    Forward the two completed public indexes before clearing their selections.
+    Work readiness and both lifecycle timestamps retain their existing owners.
+    """
+    pending = read_pending_updates(repo_root)
+    records = records_from_json_source(repo_root / DEFAULT_SOURCE_DIR)
+    errors = validate_source_records(records)
+    if errors:
+        raise ValueError("Catalogue source validation failed: " + "; ".join(errors[:20]))
+    galleries = read_galleries(repo_root / DEFAULT_SOURCE_DIR, records.works)
+    timestamp = utc_timestamp()
+    payloads = {
+        WORK_INDEX: build_compact_index("works", records.works, timestamp=timestamp),
+        GALLERY_INDEX: build_compact_index("galleries", galleries.galleries, timestamp=timestamp),
+    }
+    written = _write_shared_payloads(catalogue_workspace_config(repo_root).catalogue.working, payloads)
+    merge_completed_shared(repo_root, {**empty_shared_changes(), "shared_outputs": sorted(payloads)})
+    if set(pending["shared_outputs"]) & payloads.keys():
+        pending["shared_outputs"] = [name for name in pending["shared_outputs"] if name not in payloads]
+        write_pending_updates(repo_root, pending)
+    return {"ok": True, "output": {"status": "completed", "written": written, "deleted": []}}
+
+
 def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
     """Handoff queued Works, preserve completed readiness and return final editor records.
 
@@ -91,10 +118,25 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
             for family in ("current_works", "deleted_works")
         }
         phase = "shared output"
+        timestamp = utc_timestamp()
+        compact_payloads = {}
+        for identity, family, sources, current_ids, deleted_ids in (
+            (WORK_INDEX, "works", records.works,
+             [wid for wid, entry in pending["current_works"].items() if entry["metadata"]], pending["deleted_works"]),
+            (GALLERY_INDEX, "galleries", galleries.galleries, shared["current_galleries"], shared["deleted_galleries"]),
+        ):
+            if identity in shared["shared_outputs"]:
+                payload = merge_compact_index(
+                    output_path(workspace.catalogue.working, identity), family=family, sources=sources,
+                    current_ids=current_ids, deleted_ids=deleted_ids, timestamp=timestamp,
+                )
+                if payload is not None:
+                    compact_payloads[identity] = payload
         payloads = catalogue_payloads(
-            repo_root, records, galleries, pairs, timestamp=utc_timestamp(),
+            repo_root, records, galleries, pairs, timestamp=timestamp,
             work_ids=set(selected["current_works"]),
-            gallery_ids=set(shared["current_galleries"]), shared_outputs=set(shared["shared_outputs"]),
+            gallery_ids=set(shared["current_galleries"]),
+            shared_outputs=set(shared["shared_outputs"]) - {WORK_INDEX, GALLERY_INDEX},
         )
         if set(shared["deleted_galleries"]) & galleries.galleries.keys() or set(shared["deleted_series"]) & records.series.keys():
             raise ValueError("Queued shared deletion still has a canonical definition")
@@ -152,6 +194,9 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
         output["written"].extend(_write_shared_payloads(workspace.catalogue.working, {
             identity: payload for identity, payload in payloads.items() if not identity.startswith("works/index/")
         }))
+        for identity, payload in compact_payloads.items():
+            _write_payload(output_path(workspace.catalogue.working, identity), payload)
+            output["written"].append(identity)
         for gallery_id in shared["deleted_galleries"]:
             identity = f"galleries/index/{gallery_id}.json"
             path = output_path(workspace.catalogue.working, identity)

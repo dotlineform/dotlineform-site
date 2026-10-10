@@ -1,9 +1,7 @@
 {
   "header": {
-    "schema": "catalogue_galleries_index_v2",
-    "version": "blake2b-26c15caba3be2b91c208faad0705605a",
-    "generated_at_utc": "2026-10-10T14:35:54Z",
-    "count": 300
+    "schema": "catalogue_galleries_index_v3",
+    "generated_at_utc": "2026-10-10T19:12:44Z"
   },
   "galleries": {
     "001": {

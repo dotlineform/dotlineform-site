@@ -14,6 +14,7 @@ from urllib.parse import quote, urlsplit
 
 from studio.services.catalogue.catalogue_output_paths import catalogue_workspace_config, catalogue_output_workspace, output_path
 from studio.services.catalogue.catalogue_generation_common import compute_payload_version
+from studio.services.catalogue.catalogue_compact_indexes import validate_compact_index
 from studio.services.catalogue.series_ids import normalize_series_id
 
 
@@ -97,18 +98,7 @@ def validate_catalogue_media_config(payload: dict[str, Any]) -> dict[str, Any]:
 
 def read_catalogue_work_index(repo_root: Path) -> dict[str, dict[str, Any]]:
     """Read the generated Work inventory without loading Series or by-ID records."""
-    payload = _read_generated(repo_root, "works/works_index.json")
-    works, header = payload.get("works"), payload.get("header")
-    if (not isinstance(works, dict) or not isinstance(header, dict)
-            or header.get("schema") != "catalogue_works_index_v2"
-            or type(header.get("count")) is not int or header["count"] != len(works)):
-        raise ValueError("Generated Catalogue Work index is unavailable")
-    for key, work in works.items():
-        work_id = _work_identity(key)
-        if not isinstance(work, dict) or set(work) != {"work_id", "title"} or work.get("work_id") != work_id:
-            raise ValueError("Generated Work index identity is mismatched")
-        _text(work["title"], "title")
-    return works
+    return validate_compact_index(_read_generated(repo_root, "works/works_index.json"), family="works")["works"]
 
 
 def validate_catalogue_series_galleries_index(payload: dict[str, Any]) -> dict[str, Any]:
@@ -155,20 +145,11 @@ def read_catalogue_media_targets(repo_root: Path) -> dict[str, Any]:
             "title": _text(work.get("title"), "title"),
             "meta": [],
         })
-    payload = _read_generated(repo_root, "galleries/galleries_index.json")
-    galleries, header = payload.get("galleries"), payload.get("header")
-    if not isinstance(galleries, dict) or not isinstance(header, dict) or header.get("schema") != "catalogue_galleries_index_v2" or type(header.get("count")) is not int or header["count"] != len(galleries):
-        raise ValueError("Generated Catalogue Gallery index is unavailable")
+    galleries = validate_compact_index(_read_generated(repo_root, "galleries/galleries_index.json"), family="galleries")["galleries"]
     for gallery_id, record in galleries.items():
-        _gallery_identity(gallery_id)
-        if not isinstance(record, dict) or set(record) != {"gallery_id", "title"} or record.get("gallery_id") != gallery_id:
-            raise ValueError("Generated Gallery index identity is mismatched")
-        title = record.get("title")
-        if not isinstance(title, str) or not title.strip():
-            raise ValueError("Generated Gallery title is unavailable")
         targets.append({
             "family": "catalogue", "target_type": "gallery", "target_id": gallery_id,
-            "title": title.strip(), "meta": [],
+            "title": record["title"].strip(), "meta": [],
         })
     return {"ok": True, "schema_version": "docs_semantic_token_target_lookup_v2", "targets": targets}
 
