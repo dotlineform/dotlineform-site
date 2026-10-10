@@ -11,7 +11,7 @@ sys.path.insert(0, str(ROOT))
 from studio.shared.python.studio_python_paths import ensure_studio_python_paths  # noqa: E402
 
 ensure_studio_python_paths(__file__)
-from catalogue.catalogue_refresh_service import refresh_catalogue, refresh_compact_indexes, refresh_private_report_inputs  # noqa: E402
+from catalogue.catalogue_refresh_service import refresh_catalogue, refresh_compact_indexes, refresh_private_report_inputs, refresh_series_galleries  # noqa: E402
 
 
 def main() -> None:
@@ -20,8 +20,11 @@ def main() -> None:
     maintenance = parser.add_mutually_exclusive_group()
     maintenance.add_argument("--private-report-inputs", action="store_true", help="Refresh only the three private report inputs; preserve unrelated queue work")
     maintenance.add_argument("--compact-indexes", action="store_true", help="Explicitly generate/repair both compact indexes and queue their publication")
+    maintenance.add_argument("--series-galleries", action="store_true", help="Explicitly generate/repair the relationship index and private report")
     args = parser.parse_args()
-    if args.compact_indexes:
+    if args.series_galleries:
+        result = refresh_series_galleries(ROOT)
+    elif args.compact_indexes:
         result = refresh_compact_indexes(ROOT)
     elif args.private_report_inputs:
         result = refresh_private_report_inputs(ROOT)

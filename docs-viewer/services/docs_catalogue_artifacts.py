@@ -13,9 +13,7 @@ from pathlib import Path
 from typing import Iterable
 
 from docs_workspace_config import DocsCatalogueConfig, location_child, safe_relative_path
-from docs_catalogue_media import (
-    validate_catalogue_series_galleries_index,
-)
+from studio.services.catalogue.catalogue_series_galleries_index import validate_catalogue_series_galleries_index
 
 
 CONFIG_REL_PATH = Path("docs-viewer/config/workspace/catalogue-artifacts.json")

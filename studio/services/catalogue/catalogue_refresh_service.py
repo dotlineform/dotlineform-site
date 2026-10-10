@@ -15,11 +15,13 @@ from catalogue.catalogue_pending_state import pending_counts
 from catalogue.generate_work_pages import catalogue_payloads, same_generated_content
 from catalogue.catalogue_galleries import read_galleries
 from catalogue.catalogue_series_galleries import read_series_galleries
+from catalogue.catalogue_series_galleries_index import merge_series_galleries_index, series_gallery_links, series_galleries_index_payload
+from catalogue.catalogue_series_galleries_report import merge_series_galleries_report, series_galleries_report_payload
 from catalogue.catalogue_output_paths import catalogue_workspace_config, output_path
 from catalogue.catalogue_staged_media import catalogue_staging_assets, work_image_paths
 from catalogue.catalogue_source import payload_for_map
 from catalogue.catalogue_revisions import record_hash
-from catalogue.catalogue_shared_changes import SHARED_FIELDS, WORK_INDEX, GALLERY_INDEX, empty_shared_changes, shared_changes
+from catalogue.catalogue_shared_changes import SHARED_FIELDS, WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, empty_shared_changes, shared_changes
 from catalogue.catalogue_pending_publication import merge_completed_shared
 from catalogue.catalogue_report_inputs import INPUT_SCHEMAS, catalogue_report_input_payloads
 from docs_artifact_locations import ArtifactLocation
@@ -94,6 +96,31 @@ def refresh_compact_indexes(repo_root: Path) -> dict[str, Any]:
     return {"ok": True, "output": {"status": "completed", "written": written, "deleted": []}}
 
 
+def refresh_series_galleries(repo_root: Path) -> dict[str, Any]:
+    """Explicit relationship index/report baseline or repair, without other generation."""
+    pending = read_pending_updates(repo_root)
+    source_dir = repo_root / DEFAULT_SOURCE_DIR
+    records = records_from_json_source(source_dir)
+    errors = validate_source_records(records)
+    if errors:
+        raise ValueError("Catalogue source validation failed: " + "; ".join(errors[:20]))
+    galleries = read_galleries(source_dir, records.works)
+    pairs = read_series_galleries(source_dir, records.series, galleries.galleries)
+    timestamp = utc_timestamp()
+    mapping = {sid: series_gallery_links(sid, records.series, galleries.galleries, pairs)
+               for sid in sorted(records.series)}
+    payloads = {
+        RELATIONSHIP_INDEX: series_galleries_index_payload(mapping, timestamp=timestamp),
+        RELATIONSHIP_REPORT: series_galleries_report_payload(records.series, galleries.galleries, mapping, timestamp=timestamp),
+    }
+    written = _write_shared_payloads(catalogue_workspace_config(repo_root).catalogue.working, payloads)
+    merge_completed_shared(repo_root, {**empty_shared_changes(), "shared_outputs": sorted(payloads)})
+    if set(pending["shared_outputs"]) & payloads.keys():
+        pending["shared_outputs"] = [name for name in pending["shared_outputs"] if name not in payloads]
+        write_pending_updates(repo_root, pending)
+    return {"ok": True, "output": {"status": "completed", "written": written, "deleted": []}}
+
+
 def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
     """Handoff queued Works, preserve completed readiness and return final editor records.
 
@@ -119,7 +146,7 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
         }
         phase = "shared output"
         timestamp = utc_timestamp()
-        compact_payloads = {}
+        row_payloads = {}
         for identity, family, sources, current_ids, deleted_ids in (
             (WORK_INDEX, "works", records.works,
              [wid for wid, entry in pending["current_works"].items() if entry["metadata"]], pending["deleted_works"]),
@@ -131,12 +158,27 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
                     current_ids=current_ids, deleted_ids=deleted_ids, timestamp=timestamp,
                 )
                 if payload is not None:
-                    compact_payloads[identity] = payload
+                    row_payloads[identity] = payload
+        if RELATIONSHIP_INDEX in shared["shared_outputs"]:
+            payload = merge_series_galleries_index(
+                output_path(workspace.catalogue.working, RELATIONSHIP_INDEX), records.series, galleries.galleries, pairs,
+                current_ids=shared["current_series"], deleted_ids=shared["deleted_series"], timestamp=timestamp,
+            )
+            if payload is not None:
+                row_payloads[RELATIONSHIP_INDEX] = payload
+        if RELATIONSHIP_REPORT in shared["shared_outputs"]:
+            payload = merge_series_galleries_report(
+                output_path(workspace.catalogue.working, RELATIONSHIP_REPORT), records.series, galleries.galleries, pairs,
+                current_series=shared["current_series"], deleted_series=shared["deleted_series"],
+                current_galleries=shared["current_galleries"], deleted_galleries=shared["deleted_galleries"], timestamp=timestamp,
+            )
+            if payload is not None:
+                row_payloads[RELATIONSHIP_REPORT] = payload
         payloads = catalogue_payloads(
             repo_root, records, galleries, pairs, timestamp=timestamp,
             work_ids=set(selected["current_works"]),
             gallery_ids=set(shared["current_galleries"]),
-            shared_outputs=set(shared["shared_outputs"]) - {WORK_INDEX, GALLERY_INDEX},
+            shared_outputs=set(shared["shared_outputs"]) - {WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT},
         )
         if set(shared["deleted_galleries"]) & galleries.galleries.keys() or set(shared["deleted_series"]) & records.series.keys():
             raise ValueError("Queued shared deletion still has a canonical definition")
@@ -194,7 +236,7 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
         output["written"].extend(_write_shared_payloads(workspace.catalogue.working, {
             identity: payload for identity, payload in payloads.items() if not identity.startswith("works/index/")
         }))
-        for identity, payload in compact_payloads.items():
+        for identity, payload in row_payloads.items():
             _write_payload(output_path(workspace.catalogue.working, identity), payload)
             output["written"].append(identity)
         for gallery_id in shared["deleted_galleries"]:

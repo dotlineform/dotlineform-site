@@ -72,8 +72,12 @@ async function readReport(state) {
   try {
     const payload = await state.context.reportService.readSeriesGalleries();
     if (!current(state)) return;
-    if (payload?.header?.schema !== "catalogue_series_galleries_report_v1"
-      || !Array.isArray(payload.rows) || payload.header.count !== payload.rows.length) {
+    const header = payload?.header;
+    const headerKeys = header && typeof header === "object" && !Array.isArray(header) ? Object.keys(header) : [];
+    if (headerKeys.length !== 2 || !headerKeys.includes("schema") || !headerKeys.includes("generated_at_utc")
+      || header.schema !== "catalogue_series_galleries_report_v2"
+      || typeof header.generated_at_utc !== "string" || !header.generated_at_utc.trim()
+      || !Array.isArray(payload.rows)) {
       throw new Error("Invalid saved Series and Galleries data.");
     }
     state.rows = payload.rows;

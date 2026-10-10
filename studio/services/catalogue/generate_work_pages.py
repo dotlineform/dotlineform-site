@@ -5,29 +5,24 @@ from __future__ import annotations
 import datetime as dt
 import json
 from pathlib import Path
-from typing import Any, Mapping, Sequence
+from typing import Any, Sequence
 from urllib.parse import quote
 
 from catalogue import catalogue_generation_indexes as indexes
 from catalogue import catalogue_generation_records as projection
 from catalogue.catalogue_compact_indexes import build_compact_index
 from catalogue.catalogue_galleries import CatalogueGalleries, read_galleries, validate_galleries
-from catalogue.catalogue_generation_common import compact_json_object, compute_payload_version
+from catalogue.catalogue_generation_common import compact_json_object
 from catalogue.catalogue_media_policy import catalogue_media_policy
 from catalogue.catalogue_output_paths import catalogue_output_workspace, output_path
 from catalogue.catalogue_output_selection import selected_output_paths
 from catalogue.catalogue_series_galleries import CatalogueSeriesGalleries, read_series_galleries, validate_series_galleries
+from catalogue.catalogue_series_galleries_index import series_gallery_links, series_galleries_index_payload
 from catalogue.catalogue_series_galleries_report import METADATA_PATH as SERIES_GALLERIES_REPORT_PATH, series_galleries_report_payload
 from catalogue.catalogue_source import CatalogueSourceRecords, records_from_json_source, validate_source_records
 from catalogue.catalogue_shared_changes import WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, WORK_DOCUMENT_COVERAGE_MANIFEST
 from catalogue.catalogue_work_document_coverage import work_document_coverage_manifest
 from catalogue.catalogue_report_inputs import INPUT_SCHEMAS, catalogue_report_input_payloads
-
-
-def _index(family: str, items: Mapping[str, Any], timestamp: str) -> dict[str, Any]:
-    schema = f"catalogue_{family}_index_v1"
-    return {"header": {"schema": schema, "version": compute_payload_version({"schema": schema, family: items}),
-                       "generated_at_utc": timestamp, "count": len(items)}, family: dict(items)}
 
 
 def catalogue_payloads(
@@ -87,14 +82,11 @@ def catalogue_payloads(
     if GALLERY_INDEX in shared:
         payloads[GALLERY_INDEX] = build_compact_index("galleries", galleries.galleries, timestamp=timestamp)
     series_galleries = {
-        sid: [
-            {"gallery_id": gid, "title": galleries.galleries[gid]["title"]}
-            for gid in pairs.pairs_by_series.get(sid, ())
-        ]
+        sid: series_gallery_links(sid, records.series, galleries.galleries, pairs)
         for sid in sorted(records.series)
     } if {RELATIONSHIP_INDEX, RELATIONSHIP_REPORT} & shared else {}
     if RELATIONSHIP_INDEX in shared:
-        payloads[RELATIONSHIP_INDEX] = _index("series_galleries", series_galleries, timestamp)
+        payloads[RELATIONSHIP_INDEX] = series_galleries_index_payload(series_galleries, timestamp=timestamp)
     if RELATIONSHIP_REPORT in shared:
         payloads[SERIES_GALLERIES_REPORT_PATH] = series_galleries_report_payload(
             records.series, galleries.galleries, series_galleries, timestamp=timestamp,

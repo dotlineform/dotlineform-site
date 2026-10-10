@@ -199,9 +199,14 @@ export async function readPublicCatalogueGallery(baseUrl, galleryId, fetchImpl) 
 export function validateCatalogueSeriesGalleriesIndex(payload) {
   var header = payload && payload.header;
   var mapping = payload && payload.series_galleries;
-  if (!header || header.schema !== "catalogue_series_galleries_index_v1"
+  var payloadKeys = payload && typeof payload === "object" && !Array.isArray(payload) ? Object.keys(payload) : [];
+  var headerKeys = header && typeof header === "object" && !Array.isArray(header) ? Object.keys(header) : [];
+  if (payloadKeys.length !== 2 || !payloadKeys.includes("header") || !payloadKeys.includes("series_galleries")
+    || headerKeys.length !== 2 || !headerKeys.includes("schema") || !headerKeys.includes("generated_at_utc")
+    || header.schema !== "catalogue_series_galleries_index_v2"
+    || typeof header.generated_at_utc !== "string" || !header.generated_at_utc.trim()
     || !mapping || typeof mapping !== "object" || Array.isArray(mapping)
-    || !Number.isInteger(header.count) || header.count !== Object.keys(mapping).length) {
+  ) {
     throw new Error("Catalogue Series-Gallery index is unavailable.");
   }
   Object.keys(mapping).forEach(function (seriesId) {
@@ -210,7 +215,11 @@ export function validateCatalogueSeriesGalleriesIndex(payload) {
     }
     var previousGalleryId = "";
     mapping[seriesId].forEach(function (gallery) {
-      var galleryId = gallery && gallery.gallery_id;
+      var keys = gallery && typeof gallery === "object" && !Array.isArray(gallery) ? Object.keys(gallery) : [];
+      if (keys.length !== 2 || !keys.includes("gallery_id") || !keys.includes("title")) {
+        throw new Error("Catalogue Series-Gallery link requires exactly Gallery ID and title.");
+      }
+      var galleryId = gallery.gallery_id;
       catalogueGalleryTarget(galleryId);
       if (galleryId <= previousGalleryId || typeof gallery.title !== "string" || !gallery.title.trim()) {
         throw new Error("Catalogue Series-Gallery link is invalid or out of order.");

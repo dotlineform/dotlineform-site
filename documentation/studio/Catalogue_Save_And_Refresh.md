@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260927-223812-8042fc
 title: Catalogue Save And Refresh
 added_date: "2026-09-27 22:38:12"
-last_updated: "2026-10-10 20:12:44"
+last_updated: "2026-10-10 20:24:57"
 summary: Current Catalogue Save, local Refresh, reader freshness and recovery boundaries.
 ui_status: stable
 parent_id: d-20260401-000000-a11bf3
@@ -91,6 +91,8 @@ An empty Work map can still require Refresh because a Gallery/Series array or `s
 
 Compact Work candidates include every metadata-selected queued current Work and every queued deletion, independently of `refreshed`. A shared-output failure can therefore be retried after individual Work handoffs completed. Regenerate and document-design reconciliation require all shared selections to be empty before source/Build work, preserving candidate Work identities until shared Refresh and its publication handoff succeed. Missing/malformed selected compact output fails explicitly; normal Refresh does not create a baseline or repair it.
 
+The selected Series–Gallery index replaces only queued current Series' association lists and removes queued deleted Series. The private Series/Galleries report replaces only rows touching queued Series/Gallery endpoints, retaining empty-Series and unassociated-Gallery placeholders from final canonical associations. Mutation owners already capture former endpoints before removal, including empty definitions. Each saved aggregate is read once and unaffected rows retain their values; unchanged candidate lists/rows avoid writes. Both outputs use minimal v2 schema/time headers without counts or hashes. One temporary lookup over loaded associations serves selected current Gallery endpoints; there is no persistent inverse map or complete relationship reconstruction during normal Refresh. Missing/malformed saved output requires explicit relationship maintenance.
+
 ## Empty Gallery Cleanup
 
 Single and bulk Work Save responses carry `newly_empty_gallery_ids`: exact Gallery IDs whose accepted membership removals leave no members anywhere in the Catalogue. The [membership owner](../../studio/services/catalogue/catalogue_galleries.py) derives this list from the already loaded before-and-after maps, without another file read or persisted count/index. Galleries that were already empty and Galleries with any remaining members are excluded. New Work creation does not remove memberships and does not trigger this workflow.
@@ -146,6 +148,16 @@ python3 studio/services/catalogue/catalogue_json_build.py --write --compact-inde
 ```
 
 This whole-output operation validates canonical inputs and generates only `works/works_index.json` and `galleries/galleries_index.json` with the same ID/title projectors used by normal Refresh. It forwards both completed indexes to the existing publication queue before clearing only those index selections from updates. Unrelated Work/Gallery/Series/private selections, Work readiness and both lifecycle timestamps retain their owners. There is no media handoff/production, document/Search build or Publish. A schema cutover uses a completed lifecycle baseline; the 2026-10-10 v3 conversion started from empty queues and wrote only those two files. Normal Refresh and readers never invoke maintenance as a fallback; a failure leaves completed effects for diagnosis and explicit retry.
+
+## Series And Galleries Maintenance
+
+For an intentional relationship schema/projection change or saved-output repair, explicitly run:
+
+```bash
+python3 studio/services/catalogue/catalogue_json_build.py --write --series-galleries
+```
+
+This whole-output operation generates only `series-galleries-index.json` and private `reports/series-galleries/metadata.json` with the same definition/link projectors used by selected Refresh. It forwards only the public index before clearing those two output selectors from updates. Work readiness, Gallery/Series identity families, unrelated selections and both lifecycle timestamps retain their owners. It performs no Work/Gallery by-ID or compact-index generation, media handoff/production, document/Search build or Publish. Normal Refresh and readers never invoke it as a fallback. The 2026-10-10 v2 conversion started from empty queues after the user-confirmed compact-index Publish; it wrote only those two outputs and queued only the relationship index. Restart the owning services and reload Docs Viewer after adopting the changed modules; the projected public v2 reader needs the next explicit Publish to adopt matching data.
 
 ## Regenerate Timing
 

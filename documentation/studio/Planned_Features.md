@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260428-000000-f5ff18
 title: Planned Features
 added_date: "2026-04-28 00:00:00"
-last_updated: "2026-10-10 20:12:44"
+last_updated: "2026-10-10 20:24:57"
 summary: This explains the delivery model and workflows to implement new repo and application features.
 ui_status: planned
 parent_id: ""
@@ -151,7 +151,7 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 Store new standalone delivery documents for bounded work that does not need a separate feature parent under `documentation/studio/deliveries/`. Parent them directly to this document and keep implementation state, decisions and completion gates in the delivery. At closeout, transfer lasting details to the durable owner and review whether the delivery and its link should be retained.
 
-- [Catalogue Refresh Index Updates](deliveries/Catalogue_Refresh_Index_Updates.md) — Compact ID/title rows, simplified Catalogue token pickers, direct Gallery members and minimal Gallery headers are delivered; the user confirmed the Gallery Publish. Work Document Coverage uses a private Refresh-owned manifest. Compact Works/Gallery indexes now merge queued rows under minimal v3 headers, with a completed Working baseline and two-file publication selection; Publish is pending for this slice. Relationship/report and Gallery-member merging and broader loading/validation remain proposed; their header removals are identified. UI behavior remains manual review.
+- [Catalogue Refresh Index Updates](deliveries/Catalogue_Refresh_Index_Updates.md) — Compact ID/title rows, simplified pickers, direct Gallery members and minimal Gallery headers are delivered; Gallery and compact-index v3 Publish are user-confirmed. Work Document Coverage uses a private Refresh-owned manifest. Series–Gallery index/report now merge queued endpoints under minimal v2 headers; their Working baseline is complete, with only the public index queued for Publish and one shared reader projected. Gallery-member merging, broader loading/validation and Catalogue Works report header cleanup remain proposed. UI behavior remains manual review.
 
 - [Source Save And Watcher Retirement Delivery](deliveries/Source_Save_And_Watcher_Retirement_Delivery.md) — Complete; user accepted normal and collection document authoring, Draft and starred changes on 2026-10-08 and reported a much quicker experience. Save awaits exact document/Links generation and fresh display silently; the filesystem watcher is retired. Rare media edits use Rebuild docs and Search. Retained for recent-delivery/evidence lookup pending manual archive alongside the completed polling follow-on.
 - [Browser Polling Retirement Delivery](deliveries/Browser_Polling_Retirement_Delivery.md) — Complete; user accepted closeout on 2026-10-08. Recurring Working reads are removed; content-changing actions own exact refreshes, while Draft retains metadata projection. Changed-source lint, whitespace, shared/public projection and site validation passed; acceptance did not itemise individual manual scenarios. External/other-tab changes require explicit rebuild and refresh/reopen. Retained for recent-delivery/evidence lookup pending manual archive.
