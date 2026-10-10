@@ -9,6 +9,7 @@ from docs_catalogue_artifacts import load_catalogue_artifact_inventory
 from studio.services.catalogue.catalogue_galleries import validate_gallery_id
 from studio.services.catalogue.series_ids import normalize_series_id
 from studio.services.catalogue.catalogue_work_document_coverage import MANIFEST_PATH as WORK_DOCUMENT_COVERAGE_MANIFEST
+from studio.services.catalogue.catalogue_report_inputs import INPUT_SCHEMAS, changed_work_report_inputs
 
 
 SHARED_FIELDS = ("current_galleries", "deleted_galleries", "current_series", "deleted_series", "shared_outputs")
@@ -33,7 +34,7 @@ def public_shared_outputs(repo_root: Path) -> set[str]:
 def validate_shared_changes(repo_root: Path, changes: Any, *, publishing: bool) -> None:
     if not isinstance(changes, dict) or set(changes) != set(SHARED_FIELDS):
         raise ValueError("Catalogue shared selection requires Gallery/Series identities and shared_outputs")
-    allowed = public_shared_outputs(repo_root) | (set() if publishing else {RELATIONSHIP_REPORT, WORK_DOCUMENT_COVERAGE_MANIFEST})
+    allowed = public_shared_outputs(repo_root) | (set() if publishing else {RELATIONSHIP_REPORT, WORK_DOCUMENT_COVERAGE_MANIFEST, *INPUT_SCHEMAS})
     for field in SHARED_FIELDS:
         values = changes[field]
         if not isinstance(values, list) or any(not isinstance(value, str) for value in values):
@@ -70,6 +71,7 @@ def work_shared_changes(
     galleries, series, outputs = set(), set(), set()
     for work_id in work_ids:
         old, new = previous.get(work_id), current.get(work_id)
+        outputs.update(changed_work_report_inputs(old, new))
         before, after = set(previous_memberships.get(work_id, [])), set(current_memberships.get(work_id, []))
         identity_changed = old is None or new is None
         member_changed = identity_changed or (old or {}).get("title") != (new or {}).get("title")

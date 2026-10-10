@@ -30,12 +30,10 @@ from docs_document_subjects import subject_from_record  # noqa: E402
 from docs_document_location import canonical_document_viewer_url, management_document_viewer_url  # noqa: E402
 from docs_local_links import encode_relative_target  # noqa: E402
 from docs_workspace_config import generated_documents_path, load_docs_working_config, resolve_workspace_path  # noqa: E402
-from catalogue.catalogue_source import (  # noqa: E402
-    DEFAULT_SOURCE_DIR,
-    normalize_text,
-    records_from_json_source,
-)
-from catalogue.series_ids import normalize_series_id  # noqa: E402
+from catalogue.catalogue_source import normalize_text  # noqa: E402
+from catalogue.catalogue_output_paths import catalogue_output_workspace  # noqa: E402
+from catalogue.catalogue_report_inputs import WORK_SOURCES_PATH, SERIES_PATH, read_catalogue_report_input  # noqa: E402
+from docs_artifact_locations import ArtifactLocation  # noqa: E402
 from studio.shared.python.projects_directories import (  # noqa: E402
     PROJECTS_BASE_DIR_ENV,
     configured_projects_base,
@@ -46,7 +44,6 @@ from studio.shared.python.projects_directories import (  # noqa: E402
 REPORT_SCHEMA_VERSION = "docs_project_state_report_v4"
 WORKS_COLLECTION = "works"
 GENERATION_PATTERN = re.compile(r"\Asha256:[0-9a-f]{64}\Z")
-WORK_ID_PATTERN = re.compile(r"\A[0-9]{5}\Z")
 
 
 @dataclass(frozen=True)
@@ -54,7 +51,7 @@ class ProjectStatePaths:
     projects_base_dir: Path
     manage_manifest_path: Path
     collection_viewer_url: str
-    catalogue_source_dir: Path
+    catalogue_workspace: ArtifactLocation
 
 
 def utc_timestamp() -> str:
@@ -73,7 +70,7 @@ def default_project_state_paths(repo_root: Path) -> ProjectStatePaths:
         projects_base_dir=configured_projects_base(),
         manage_manifest_path=generated_root / "manage-manifest.json",
         collection_viewer_url=canonical_document_viewer_url(collection.report_host_doc_id),
-        catalogue_source_dir=root / DEFAULT_SOURCE_DIR,
+        catalogue_workspace=catalogue_output_workspace(root),
     )
 
 
@@ -153,45 +150,33 @@ def _subject_documents(
     return generation, dict(by_subject), len(seen_doc_ids)
 
 
-def _catalogue_indexes(source_dir: Path) -> tuple[
+def _catalogue_indexes(workspace: ArtifactLocation) -> tuple[
     dict[str, dict[str, str]],
     dict[str, list[dict[str, Any]]],
     dict[str, dict[str, Any]],
     dict[str, list[str]],
-    dict[str, list[dict[str, Any]]],
     int,
 ]:
-    records = records_from_json_source(source_dir)
+    works = read_catalogue_report_input(workspace, WORK_SOURCES_PATH)
+    series = read_catalogue_report_input(workspace, SERIES_PATH)
     series_by_id: dict[str, dict[str, str]] = {}
-    for source_id, series in records.series.items():
-        series_id = normalize_series_id(series.get("series_id") or source_id)
-        title = normalize_text(series.get("title"))
-        if series_id != source_id or series_id in series_by_id or not title:
-            raise ValueError("Canonical Series contains invalid identity or presentation")
+    for series_id, record in series.items():
+        title = normalize_text(record["title"])
         series_by_id[series_id] = {"series_id": series_id, "title": title}
 
     works_by_folder: dict[str, list[dict[str, Any]]] = defaultdict(list)
     work_placement_by_id: dict[str, dict[str, Any]] = {}
     folder_keys_by_series: dict[str, set[str]] = defaultdict(set)
-    issues_by_work: dict[str, list[dict[str, Any]]] = defaultdict(list)
-    for source_id, work in records.works.items():
-        work_id = normalize_text(work.get("work_id") or source_id)
-        if work_id != source_id or not WORK_ID_PATTERN.fullmatch(work_id):
-            raise ValueError("Canonical Works contains an invalid work_id")
+    for work_id, work in works.items():
         try:
             folder_key = normalize_projects_directory_marker(
                 f"projects/{normalize_text(work.get('project_folder'))}"
             )
         except ValueError as exc:
-            raise ValueError(f"Canonical Work {work_id} has an invalid project_folder") from exc
+            raise ValueError(f"Refreshed Work {work_id} has an invalid project_folder") from exc
         if len(folder_key.split("/")) != 2:
-            raise ValueError(f"Canonical Work {work_id} project_folder must identify one first-level project")
-        series_ids: list[str] = []
-        if "series_id" in work:
-            try:
-                series_ids.append(normalize_series_id(work["series_id"]))
-            except ValueError:
-                issues_by_work[work_id].append({"state": "malformed_series_id", "work_id": work_id})
+            raise ValueError(f"Refreshed Work {work_id} project_folder must identify one first-level project")
+        series_ids = [work["series_id"]] if "series_id" in work else []
         report_work = {
             "target": {"family": "catalogue", "target_type": "work", "target_id": work_id},
             "series_ids": series_ids,
@@ -214,8 +199,7 @@ def _catalogue_indexes(source_dir: Path) -> tuple[
             series_id: sorted(folder_keys, key=lambda value: (value.casefold(), value))
             for series_id, folder_keys in folder_keys_by_series.items()
         },
-        dict(issues_by_work),
-        len(records.works),
+        len(works),
     )
 
 
@@ -296,7 +280,6 @@ def _rows(
     documents_by_folder: Mapping[str, list[dict[str, Any]]],
     works_by_folder: Mapping[str, list[dict[str, Any]]],
     series_by_id: Mapping[str, Mapping[str, str]],
-    issues_by_work: Mapping[str, list[dict[str, Any]]],
 ) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     for folder_key in folder_keys:
@@ -306,7 +289,6 @@ def _rows(
         issues: list[dict[str, Any]] = []
         for work in works:
             work_id = work["target"]["target_id"]
-            issues.extend(dict(issue) for issue in issues_by_work.get(work_id, []))
             for series_id in work["series_ids"]:
                 if series_id in series_by_id:
                     work_ids_by_series[series_id].add(work_id)
@@ -468,16 +450,15 @@ class ProjectStateProducer:
             works_by_folder,
             work_placement_by_id,
             folder_keys_by_series,
-            issues_by_work,
             work_count,
-        ) = _catalogue_indexes(self.paths.catalogue_source_dir)
+        ) = _catalogue_indexes(self.paths.catalogue_workspace)
         documents_by_folder, document_diagnostics = _place_documents(
             folder_keys,
             documents_by_subject,
             work_placement_by_id,
             folder_keys_by_series,
         )
-        rows = _rows(folder_keys, documents_by_folder, works_by_folder, series_by_id, issues_by_work)
+        rows = _rows(folder_keys, documents_by_folder, works_by_folder, series_by_id)
         generation = _generation(subject_generation, rows)
         diagnostics = {
             "scanned_folder_count": len(folder_keys),

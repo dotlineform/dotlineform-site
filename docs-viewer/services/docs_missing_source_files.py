@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-import re
 import stat
 import sys
 from dataclasses import dataclass
@@ -21,11 +20,10 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths 
 
 ensure_studio_python_paths(__file__)
 
-from catalogue.catalogue_source import (  # noqa: E402
-    DEFAULT_SOURCE_DIR,
-    normalize_text,
-    records_from_json_source,
-)
+from catalogue.catalogue_source import normalize_text  # noqa: E402
+from catalogue.catalogue_output_paths import catalogue_output_workspace  # noqa: E402
+from catalogue.catalogue_report_inputs import WORK_SOURCES_PATH, read_catalogue_report_input  # noqa: E402
+from docs_artifact_locations import ArtifactLocation  # noqa: E402
 from catalogue_work_media_sources import (  # noqa: E402
     WorkMediaSourceRoot,
     resolve_work_media_path,
@@ -37,14 +35,13 @@ from studio.shared.python.projects_directories import configured_projects_base  
 
 
 REPORT_SCHEMA_VERSION = "docs_missing_source_files_report_v1"
-WORK_ID_PATTERN = re.compile(r"\A[0-9]{5}\Z")
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
 
 
 @dataclass(frozen=True)
 class MissingSourceFilesPaths:
     projects_base_dir: Path
-    catalogue_source_dir: Path
+    catalogue_workspace: ArtifactLocation
 
 
 @dataclass(frozen=True)
@@ -63,7 +60,7 @@ def default_missing_source_files_paths(
 ) -> MissingSourceFilesPaths:
     return MissingSourceFilesPaths(
         projects_base_dir=configured_projects_base(environ=environ),
-        catalogue_source_dir=repo_root.resolve() / DEFAULT_SOURCE_DIR,
+        catalogue_workspace=catalogue_output_workspace(repo_root, environ=environ),
     )
 
 
@@ -81,20 +78,17 @@ def _canonical_parts(value: Any, label: str, *, single: bool = False) -> tuple[s
     return parts
 
 
-def collect_work_sources(records: Any) -> list[WorkSource]:
+def collect_work_sources(works: Mapping[str, Mapping[str, Any]]) -> list[WorkSource]:
+    """Resolve all refreshed registrations; physical existence belongs to the run."""
     sources: list[WorkSource] = []
-    for source_id, record in sorted(records.works.items()):
+    for source_id, record in sorted(works.items()):
         work_id = str(source_id)
         folder = normalize_text(record.get("project_folder"))
         subfolder = normalize_text(record.get("project_subfolder"))
         filename = normalize_text(record.get("project_filename"))
         if not folder or not filename:
             continue
-        if not WORK_ID_PATTERN.fullmatch(work_id):
-            raise ValueError("Canonical Work contains an invalid work_id")
         work_title = normalize_text(record.get("title"))
-        if not work_title:
-            raise ValueError(f"Canonical Work {work_id} has no title")
         path_parts = list(_canonical_parts(folder, f"work {work_id} project_folder", single=True))
         if subfolder:
             path_parts.extend(_canonical_parts(subfolder, f"work {work_id} project_subfolder"))
@@ -175,8 +169,8 @@ class MissingSourceFilesProducer:
         self.paths = paths or default_missing_source_files_paths(self.repo_root, environ=environ)
 
     def run(self) -> dict[str, object]:
-        records = records_from_json_source(self.paths.catalogue_source_dir)
-        sources = collect_work_sources(records)
+        works = read_catalogue_report_input(self.paths.catalogue_workspace, WORK_SOURCES_PATH)
+        sources = collect_work_sources(works)
         rows = missing_source_rows(sources, _source_roots(self.paths, sources))
         return {
             "report": {

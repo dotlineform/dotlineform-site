@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, SOURCE_FILES, records_from_json_source
+from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, SOURCE_FILES, records_from_json_source, validate_source_records
 from catalogue.catalogue_works_metadata import update_catalogue_works_metadata
 from catalogue.catalogue_pending_updates import read_pending_updates, write_pending_updates
 from catalogue.catalogue_pending_state import pending_counts
@@ -20,6 +20,8 @@ from catalogue.catalogue_source import payload_for_map
 from catalogue.catalogue_revisions import record_hash
 from catalogue.catalogue_shared_changes import SHARED_FIELDS, shared_changes
 from catalogue.catalogue_pending_publication import merge_completed_shared
+from catalogue.catalogue_report_inputs import INPUT_SCHEMAS, catalogue_report_input_payloads
+from docs_artifact_locations import ArtifactLocation
 
 
 def catalogue_refresh_status(repo_root: Path) -> dict[str, Any]:
@@ -37,6 +39,32 @@ def catalogue_refresh_status(repo_root: Path) -> dict[str, Any]:
     if header["last_refreshed_at_utc"] is not None:
         status["refreshed_at_utc"] = header["last_refreshed_at_utc"]
     return status
+
+
+def refresh_private_report_inputs(repo_root: Path) -> dict[str, Any]:
+    """Explicit maintenance of the three private inputs, preserving unrelated work.
+
+    Validate the updates queue and canonical inputs before projection. Complete
+    only these private output selections; retain Work readiness, other selections
+    and the last full Refresh timestamp. No media, documents or Publish handoff.
+    Unrefreshed Works must complete normal Refresh first so staged references
+    cannot precede their required metadata/media handoff.
+    """
+    pending = read_pending_updates(repo_root)
+    if any(not entry["refreshed"] for family in ("current_works", "deleted_works") for entry in pending[family].values()):
+        raise ValueError("Complete queued Work Refresh before private report-input maintenance.")
+    records = records_from_json_source(repo_root / DEFAULT_SOURCE_DIR)
+    errors = validate_source_records(records)
+    if errors:
+        raise ValueError("Catalogue source validation failed: " + "; ".join(errors[:20]))
+    payloads = catalogue_report_input_payloads(
+        records.works, records.series, timestamp=utc_timestamp(), selected=set(INPUT_SCHEMAS),
+    )
+    written = _write_shared_payloads(catalogue_workspace_config(repo_root).catalogue.working, payloads)
+    if set(pending["shared_outputs"]) & INPUT_SCHEMAS.keys():
+        pending["shared_outputs"] = [name for name in pending["shared_outputs"] if name not in INPUT_SCHEMAS]
+        write_pending_updates(repo_root, pending)
+    return {"ok": True, "output": {"status": "completed", "written": written, "deleted": []}}
 
 
 def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
@@ -121,18 +149,9 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
                 entry["refreshed"] = True
                 write_pending_updates(repo_root, pending)
         work_id, phase = "", "shared output"
-        for identity, payload in payloads.items():
-            if identity.startswith("works/index/"):
-                continue
-            path = output_path(workspace.catalogue.working, identity)
-            try:
-                previous = json.loads(path.read_text(encoding="utf-8"))
-            except (OSError, ValueError):
-                previous = None
-            if same_generated_content(previous, payload):
-                continue
-            _write_payload(path, payload)
-            output["written"].append(identity)
+        output["written"].extend(_write_shared_payloads(workspace.catalogue.working, {
+            identity: payload for identity, payload in payloads.items() if not identity.startswith("works/index/")
+        }))
         for gallery_id in shared["deleted_galleries"]:
             identity = f"galleries/index/{gallery_id}.json"
             path = output_path(workspace.catalogue.working, identity)
@@ -158,6 +177,21 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
 
 def utc_timestamp() -> str:
     return dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _write_shared_payloads(workspace: ArtifactLocation, payloads: dict[str, dict[str, Any]]) -> list[str]:
+    written = []
+    for identity, payload in payloads.items():
+        path = output_path(workspace, identity)
+        try:
+            previous = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            previous = None
+        if same_generated_content(previous, payload):
+            continue
+        _write_payload(path, payload)
+        written.append(identity)
+    return written
 
 
 def _write_payload(path: Path, payload: dict[str, Any]) -> None:

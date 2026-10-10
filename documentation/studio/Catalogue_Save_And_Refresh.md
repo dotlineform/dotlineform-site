@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260927-223812-8042fc
 title: Catalogue Save And Refresh
 added_date: "2026-09-27 22:38:12"
-last_updated: "2026-10-10 18:25:26"
+last_updated: "2026-10-10 19:35:17"
 summary: Current Catalogue Save, local Refresh, reader freshness and recovery boundaries.
 ui_status: stable
 parent_id: d-20260401-000000-a11bf3
@@ -83,7 +83,7 @@ Both maps use exact five-digit Work IDs and are disjoint. A current entry has `m
 | Change selections | Save, Create, bulk, relationship and Delete owners merge their known effects once. Current flags accumulate with OR and filenames retain only still-referenced downloads. Deletion replaces current selection; recreation replaces deletion. |
 | `refreshed` | A mutation resets its affected Work to false. Refresh sets true only after that Work's Working metadata/media handoff and staging-flag clears succeed. Completed true entries survive until Regenerate finishes their document work and publication merge. |
 | Gallery/Series arrays | Sorted distinct exact current/deleted IDs, disjoint within each family. Refresh completes their selected records/relationships, merges publication selection and then removes the shared unit. They have no media or document-Regenerate flags. |
-| `shared_outputs` | Sorted distinct Catalogue-relative system-file identities plus private `reports/series-galleries/metadata.json` and `reports/work-document-coverage/manifest.json`. Mutations select dependencies, not every index. Refresh completes selected builders once and forwards only public system files from the artifact inventory. Private Catalogue Works report rows remain part of the selected Work handoff. |
+| `shared_outputs` | Sorted distinct Catalogue-relative system-file identities plus private `reports/series-galleries/metadata.json`, `reports/work-document-coverage/manifest.json` and the three shared `private/` report inputs. Mutations select dependencies, not every index. Refresh completes selected builders once and forwards only public system files from the artifact inventory. Private Catalogue Works report rows remain part of the selected Work handoff. |
 | `header.last_refreshed_at_utc` | Null until a successful Refresh; then its UTC completion time. Mutations, partial failures and Regenerate preserve the previous successful time. |
 | Entry removal | Regenerate removes one true Work entry only after source/Build completion and publication merge. Refresh removes the selected shared unit only after all required Working output and shared publication merge complete. |
 
@@ -119,9 +119,21 @@ Context's Subject column and heading sorts were removed on 2026-10-03. Their pri
 
 Work Document Coverage has a separate minimal `reports/work-document-coverage/manifest.json`, selected by Work Series assignment/removal/reassignment, assigned Work creation/deletion, and Series creation/rename/deletion, including empty Series. It contains only Series IDs/titles and member Work IDs, with schema and generation time in its header. Work title/year/media and Gallery-only edits do not select it. Refresh projects the selected complete manifest from already loaded records, compares content without generation time and excludes it from public output handoff. The report's Docs Viewer endpoint reads only this saved Working file; Save and report opening never generate it or consult canonical Catalogue lookups. Generated Context documents retain their separate Save/Build ownership. [Works Report](Works_Report_Concept_And_Architecture.md) owns coverage composition and current evidence.
 
+The three [shared private report inputs](Catalogue_Indexes_And_Payloads.md#shared-private-report-inputs) use the same selected shared-output mechanism and the records already loaded by Refresh. Work creation/deletion selects both Work aggregates; Work title changes select both; source declarations and Work Series membership select `private/work-sources.json`; authored link changes and exact download-filename changes select `private/work-resources.json`. Download labels/staging flags and Work media revisions, year, medium or Gallery-only changes select neither. Series creation/deletion and title changes select `private/series.json`, including empty definitions. Single, batch and bulk Work mutations and Series member edits share the old/new Work-fact selector; deletion captures those effects before removal. Normal Refresh generates selected aggregates without checking source-file existence, preserves unchanged bytes and excludes all three from public handoff. A private-only shared selection leaves publication queue bytes unchanged while retaining its ordinary validation. Generated Context documents keep their separate Save/Build owner.
+
 Refresh status reads only `working/catalogue-updates-pending.json`: any current/deleted Work with `refreshed: false`, any Gallery/Series selection or any shared output needs Refresh. True Work entries await Regenerate. The header is written first, with `schema` and nullable `last_refreshed_at_utc`. The timestamp survives later mutations and Regenerate. Missing/malformed queues make status unavailable and stop operations without an empty fallback. Failed Refresh identifies the Work/shared step and retains completed effects for the next explicit Refresh. Shared queue merge precedes updates removal; a failure between those writes can leave the same selection in both files, and the next explicit Refresh merges it again without duplicating identities.
 
 Only selected Gallery records and shared outputs are constructed and compared with their saved Working payloads using the existing generated-content comparison. Only `header.generated_at_utc` is ignored. Unchanged selected outputs retain exact bytes/timestamps and are omitted from the written-files result; new, changed or invalid selected outputs are written from canonical inputs. Unselected Gallery records are retained without regeneration. Selected aggregate indexes are still assembled as complete JSON once; deeper row-merging optimisation remains separate. The queue timestamp advances after every fully successful Refresh. Content comparison prevents redundant writes; it neither discovers selection nor determines readiness.
+
+### Private Report Input Maintenance
+
+Initial population or explicit repair of the three shared inputs uses the scoped Catalogue Refresh maintenance command:
+
+```bash
+python3 studio/services/catalogue/catalogue_json_build.py --write --private-report-inputs
+```
+
+This validates the existing updates queue and canonical Catalogue records, projects only `private/work-sources.json`, `private/work-resources.json` and `private/series.json`, and completes only those output selections after all three writes succeed. Unrefreshed current/deleted Works stop maintenance before generation: finish their normal Refresh first so private references cannot precede required Work metadata/media handoff. Already refreshed Works may remain queued for Regenerate. Maintenance preserves Work readiness, unrelated selections, the last full Refresh timestamp and the entire publication queue. It performs no media handoff/production, document or Search build, filesystem inventory, broader Catalogue reconciliation or Publish. Failure leaves completed file writes and unconsumed selections for diagnosis and an explicit retry. Missing or invalid saved input never triggers this command from a report run. Normal Refresh remains queue-only; an unselected missing/invalid input requires this explicit maintenance action.
 
 ## Regenerate Timing
 

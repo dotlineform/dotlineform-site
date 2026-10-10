@@ -17,6 +17,7 @@ from catalogue.catalogue_service_context import (
 )
 from catalogue.catalogue_source import SERIES_FIELDS, records_from_json_source, slug_id
 from catalogue.series_ids import normalize_series_id
+from catalogue.catalogue_report_inputs import SERIES_PATH
 from catalogue.catalogue_galleries import read_galleries
 from catalogue.catalogue_shared_changes import (
     empty_shared_changes, merge_shared_changes, work_shared_changes, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT,
@@ -56,7 +57,7 @@ def series_create_payload(context: CatalogueWriteContext, body: Mapping[str, Any
         works_map, {**works_map, **mutation_plan.work_updates}, galleries.works, galleries.works, changed_work_ids,
     )
     merge_shared_changes(shared, {**empty_shared_changes(), "current_series": [series_id],
-                                 "shared_outputs": sorted([RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, WORK_DOCUMENT_COVERAGE_MANIFEST])})
+                                 "shared_outputs": sorted([RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, WORK_DOCUMENT_COVERAGE_MANIFEST, SERIES_PATH])})
     target_payloads: dict[Path, dict[str, Any]] = {
         context.series_path.resolve(): mutation_plan.payload,
     }
@@ -123,7 +124,7 @@ def series_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any])
     if plan.changed_fields:
         outputs = {RELATIONSHIP_REPORT}
         if "title" in plan.changed_fields:
-            outputs.add(WORK_DOCUMENT_COVERAGE_MANIFEST)
+            outputs.update({WORK_DOCUMENT_COVERAGE_MANIFEST, SERIES_PATH})
         merge_shared_changes(shared, {**empty_shared_changes(), "current_series": [series_id],
                                      "shared_outputs": sorted(outputs)})
     payloads: dict[Path, Any] = {}

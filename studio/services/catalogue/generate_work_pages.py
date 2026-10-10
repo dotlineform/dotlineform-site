@@ -20,6 +20,7 @@ from catalogue.catalogue_series_galleries_report import METADATA_PATH as SERIES_
 from catalogue.catalogue_source import CatalogueSourceRecords, records_from_json_source, validate_source_records
 from catalogue.catalogue_shared_changes import WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, WORK_DOCUMENT_COVERAGE_MANIFEST
 from catalogue.catalogue_work_document_coverage import work_document_coverage_manifest
+from catalogue.catalogue_report_inputs import INPUT_SCHEMAS, catalogue_report_input_payloads
 
 
 def _index(family: str, items: Mapping[str, Any], timestamp: str) -> dict[str, Any]:
@@ -39,7 +40,7 @@ def catalogue_payloads(
         raise ValueError("Catalogue source validation failed: " + "; ".join(errors[:20]))
     validate_galleries(galleries, records.works)
     validate_series_galleries(pairs, records.series, galleries.galleries)
-    supported_shared = {"media-config.json", WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, WORK_DOCUMENT_COVERAGE_MANIFEST}
+    supported_shared = {"media-config.json", WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, WORK_DOCUMENT_COVERAGE_MANIFEST, *INPUT_SCHEMAS}
     shared = supported_shared if shared_outputs is None else shared_outputs
     if shared - supported_shared:
         raise ValueError("Catalogue generation selected an output without a builder")
@@ -107,6 +108,9 @@ def catalogue_payloads(
         payloads[WORK_DOCUMENT_COVERAGE_MANIFEST] = work_document_coverage_manifest(
             records.series, records.works, timestamp=timestamp,
         )
+    payloads.update(catalogue_report_input_payloads(
+        records.works, records.series, timestamp=timestamp, selected=shared & INPUT_SCHEMAS.keys(),
+    ))
     return payloads
 
 

@@ -19,6 +19,7 @@ from catalogue.catalogue_source import (
 from catalogue.catalogue_shared_changes import (
     empty_shared_changes, work_shared_changes, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, WORK_DOCUMENT_COVERAGE_MANIFEST,
 )
+from catalogue.catalogue_report_inputs import SERIES_PATH
 
 
 @dataclass(frozen=True)
@@ -78,7 +79,7 @@ def build_delete_apply_plan(
         affected = {"works": [], "series": record_ids}
         shared = {**empty_shared_changes(), "deleted_series": record_ids,
                   "current_galleries": list(pairs.pairs_by_series.get(series_id, ())),
-                  "shared_outputs": sorted([RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, WORK_DOCUMENT_COVERAGE_MANIFEST])}
+                  "shared_outputs": sorted([RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, WORK_DOCUMENT_COVERAGE_MANIFEST, SERIES_PATH])}
     else:
         raise ValueError("delete kind must be works or one series")
     errors = validate_source_records(current)

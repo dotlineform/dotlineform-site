@@ -1,4 +1,4 @@
-"""Inspect canonical Work download references and their shared local files."""
+"""Join refreshed Work download references with their current shared local files."""
 
 from __future__ import annotations
 
@@ -19,7 +19,7 @@ from catalogue.catalogue_output_paths import catalogue_workspace_config, output_
 from docs_artifact_locations import ArtifactLocation  # noqa: E402
 from docs_local_files import open_in_finder  # noqa: E402
 from docs_workspace_config import safe_relative_path  # noqa: E402
-from docs_work_resources import canonical_works  # noqa: E402
+from catalogue.catalogue_report_inputs import read_work_resources  # noqa: E402
 
 REPORT_SCHEMA = "docs_work_downloads_report_v1"
 STORAGE_PLACEHOLDERS = frozenset({".DS_Store", ".gitkeep"})
@@ -55,32 +55,21 @@ def _saved_files(location: ArtifactLocation) -> set[str]:
 
 
 def work_downloads_report(repo_root: Path) -> dict[str, Any]:
-    """Scan exact canonical references and direct files once without writing.
+    """Read refreshed references and scan direct files once without writing.
 
     Each reference retains its Work; files shared by Works appear on each row.
     Unassigned files have no Work and absent referenced files have no File.
     Presentation and sorting belong to the browser; no paths enter the payload.
     """
-    works = canonical_works(repo_root)
+    works = read_work_resources(repo_root)
     files = _saved_files(catalogue_workspace_config(repo_root).assets.work_files)
     referenced = set()
     rows = []
     for work_id, work in works.items():
-        downloads = work.get("downloads")
-        if downloads is None:
-            continue
-        if not isinstance(downloads, list):
-            raise ValueError(f"Work {work_id} downloads must be an array")
-        title = work.get("title")
-        if downloads and (not isinstance(title, str) or not title.strip()):
-            raise ValueError(f"Work {work_id} has no title")
-        for download in downloads:
-            if not isinstance(download, dict):
-                raise ValueError(f"Work {work_id} download is invalid")
-            filename = _filename(download.get("filename"))
+        for filename in work["download_filenames"]:
             referenced.add(filename)
             rows.append({
-                "work": {"work_id": work_id, "title": title, "filename": filename},
+                "work": {"work_id": work_id, "title": work["title"], "filename": filename},
                 "file": filename if filename in files else None,
             })
     rows.extend({"work": None, "file": filename} for filename in sorted(files - referenced))

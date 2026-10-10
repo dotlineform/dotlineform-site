@@ -20,11 +20,10 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths 
 
 ensure_studio_python_paths(__file__)
 
-from catalogue.catalogue_source import (  # noqa: E402
-    DEFAULT_SOURCE_DIR,
-    normalize_text,
-    records_from_json_source,
-)
+from catalogue.catalogue_source import normalize_text  # noqa: E402
+from catalogue.catalogue_output_paths import catalogue_output_workspace  # noqa: E402
+from catalogue.catalogue_report_inputs import WORK_SOURCES_PATH, read_catalogue_report_input  # noqa: E402
+from docs_artifact_locations import ArtifactLocation  # noqa: E402
 from catalogue.catalogue_media_files import IMAGE_EXTENSIONS  # noqa: E402
 from catalogue_work_media_sources import (  # noqa: E402
     WorkMediaSourceRoot,
@@ -44,7 +43,7 @@ PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
 @dataclass(frozen=True)
 class UncatalogedFilesPaths:
     projects_base_dir: Path
-    catalogue_source_dir: Path
+    catalogue_workspace: ArtifactLocation
 
 
 @dataclass(frozen=True)
@@ -62,7 +61,7 @@ def default_uncataloged_files_paths(
 ) -> UncatalogedFilesPaths:
     return UncatalogedFilesPaths(
         projects_base_dir=configured_projects_base(environ=environ),
-        catalogue_source_dir=repo_root.resolve() / DEFAULT_SOURCE_DIR,
+        catalogue_workspace=catalogue_output_workspace(repo_root, environ=environ),
     )
 
 
@@ -80,9 +79,10 @@ def _canonical_parts(value: Any, label: str, *, single: bool = False) -> tuple[s
     return parts
 
 
-def collect_work_sources(records: Any) -> list[WorkSource]:
+def collect_work_sources(works: Mapping[str, Mapping[str, Any]]) -> list[WorkSource]:
+    """Resolve refreshed declarations without removing registrations for absent files."""
     sources: list[WorkSource] = []
-    for work_id, record in sorted(records.works.items()):
+    for work_id, record in sorted(works.items()):
         folder = normalize_text(record.get("project_folder"))
         subfolder = normalize_text(record.get("project_subfolder"))
         filename = normalize_text(record.get("project_filename"))
@@ -211,8 +211,8 @@ class UncatalogedFilesProducer:
         self.paths = paths or default_uncataloged_files_paths(self.repo_root, environ=environ)
 
     def run(self) -> dict[str, object]:
-        records = records_from_json_source(self.paths.catalogue_source_dir)
-        sources = collect_work_sources(records)
+        works = read_catalogue_report_input(self.paths.catalogue_workspace, WORK_SOURCES_PATH)
+        sources = collect_work_sources(works)
         source_roots = _source_roots(self.paths, sources)
         rows = _uncataloged_rows(sources, source_roots)
         return {

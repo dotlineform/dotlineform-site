@@ -25,7 +25,7 @@ from catalogue_work_media_sources import (  # noqa: E402
     resolve_work_media_source_root,
 )
 from docs_local_links import encode_relative_target  # noqa: E402
-from docs_work_resources import canonical_works  # noqa: E402
+from catalogue.catalogue_report_inputs import read_work_sources  # noqa: E402
 from pipeline_config import load_pipeline_config, work_media_source_ids  # noqa: E402
 
 REPORT_SCHEMA = "docs_folders_without_works_report_v1"
@@ -122,14 +122,14 @@ def folders_without_works_report(repo_root: Path) -> dict[str, Any]:
     """Scan all configured roots afresh, returning zero-direct-membership folders.
 
     Physical folder identity handles filesystem case/Unicode equivalence.
-    Membership counts canonical primary-source declarations, including missing
+    Membership counts refreshed primary-source declarations, including missing
     images in existing folders. Descendant counts cover scanned physical folders;
     root containers and symlinks are omitted, while hidden/empty folders remain.
     Any unreadable input fails the whole run. No file content or saved report is
     read or written; Finder receives only encoded paths relative to Projects.
     """
     config = load_pipeline_config(repo_root=repo_root)
-    works = canonical_works(repo_root)
+    works = read_work_sources(repo_root)
     roots = {
         source_id: resolve_work_media_source_root(config, source_id, require_exists=True)
         for source_id in work_media_source_ids(config)

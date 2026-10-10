@@ -27,6 +27,8 @@ def merge_completed_shared(repo_root: Path, completed: dict[str, list[str]]) -> 
     pending = read_pending_publication(repo_root)
     public = public_shared_outputs(repo_root)
     selection = {**completed, "shared_outputs": [name for name in completed["shared_outputs"] if name in public]}
+    if not any(selection.values()):
+        return
     merge_shared_changes(pending, selection)
     write_pending_publication(repo_root, pending)
 

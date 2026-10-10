@@ -53,7 +53,7 @@
     {
       "report_id": "project_state",
       "title": "Project State",
-      "description": "Reconciles immediate project folders with canonical Works, Series, and Project documents.",
+      "description": "Reconciles live immediate project folders with refreshed Catalogue Works and Series, and generated Context documents.",
       "loader_id": "project_state",
       "presets": []
     },
@@ -81,35 +81,35 @@
     {
       "report_id": "uncataloged_files",
       "title": "Uncataloged Files",
-      "description": "Lists ordinary files in represented Work source folders that are not canonical Work primary sources.",
+      "description": "Lists live images in represented source folders that are absent from refreshed Work source registrations.",
       "loader_id": "uncataloged_files",
       "presets": []
     },
     {
       "report_id": "folders_without_works",
       "title": "Folders Without Works",
-      "description": "Recursively lists folders without directly registered Works, with descendant Work counts.",
+      "description": "Recursively scans live folders without directly registered refreshed Works, with descendant Work counts.",
       "loader_id": "folders_without_works",
       "presets": []
     },
     {
       "report_id": "missing_source_files",
       "title": "Missing Source Files",
-      "description": "Lists canonical Works whose complete expected source path does not resolve to a file.",
+      "description": "Lists refreshed Work source registrations whose complete expected path currently has no file.",
       "loader_id": "missing_source_files",
       "presets": []
     },
     {
       "report_id": "work_downloads",
       "title": "Work Downloads",
-      "description": "Matches canonical Work download references with saved local files.",
+      "description": "Matches refreshed Work download references with current saved local files.",
       "loader_id": "work_downloads",
       "presets": []
     },
     {
       "report_id": "work_links",
       "title": "Work Links",
-      "description": "Lists authored links and their labels for canonical Works.",
+      "description": "Lists refreshed authored Work links and their labels.",
       "loader_id": "work_links",
       "presets": []
     }

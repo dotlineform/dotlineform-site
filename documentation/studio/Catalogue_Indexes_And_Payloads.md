@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260519-202931-b05d27
 title: Catalogue Indexes And Payloads
 added_date: "2026-05-19 20:29:31"
-last_updated: "2026-10-10 18:25:26"
+last_updated: "2026-10-10 19:35:17"
 parent_id: d-20260401-000000-a11bf3
 
 ---
@@ -23,12 +23,31 @@ Refresh Catalogue owns the complete replaceable consumer output beneath `$DOTLIN
 | `galleries/galleries_index.json` | Compact Gallery identities and titles for Add Media View link search |
 | `series-galleries-index.json` | Exact Series IDs mapped to associated Gallery IDs/current titles, including an empty list for a Series without associations |
 | `reports/work-document-coverage/manifest.json` | Private refreshed Series IDs/titles and member Work IDs for local documentation coverage, including empty Series |
+| `private/work-sources.json` | Shared private Work placement, titles, optional Series identity and portable source declarations |
+| `private/work-resources.json` | Shared private Work identities/titles, authored links and exact download filenames |
+| `private/series.json` | Shared private Series definitions, including empty Series |
 
 Work thumbnails and primary renditions are shared local assets under `$DOTLINEFORM_DOCS_BASE_DIR/assets/works/`, prepared by Save rather than stored in the generated JSON tree. Private Catalogue Works and Series–Gallery report metadata also live beneath Working generated Catalogue output, outside the public Catalogue artifact inventory. The retired Works collection title metadata has no current producer or consumer.
 
 `reports/series-galleries/metadata.json` uses `catalogue_series_galleries_report_v1` with a content-versioned header, generation time, row count and `rows`. Each row has `series: {series_id, title} | null` and `gallery: {gallery_id, title} | null`. The producer uses the same in-memory mapping emitted to `series-galleries-index.json`, adds current Series titles from the already validated records, includes every Series with no Galleries and appends every unassociated Gallery. No row has two null cells. [The focused report owner](../../studio/services/catalogue/catalogue_series_galleries_report.py) owns projection and saved-row validation; the existing Catalogue generator writes it during explicit Refresh. It requires neither new public Series files nor a runtime canonical/title join. [Reports](Reports.md) owns display and exact Gallery Media View behavior.
 
 `reports/work-document-coverage/manifest.json` uses `catalogue_work_document_coverage_v1`, with only schema and generation time in its header. Its `series` array contains exact `series_id`, `title` and ascending distinct `work_ids`, ordered by Series ID and including empty Series. Refresh projects it only when membership or Series-definition changes select it; Work title/year/media and Gallery-only edits do not. [Its focused owner](../../studio/services/catalogue/catalogue_work_document_coverage.py) builds the minimal facts and validates the saved file. Docs Viewer serves it through the read-only local `/docs/work-document-coverage` endpoint, without reading canonical records. It stays outside the public artifact inventory and publication queue. [Works Report](Works_Report_Concept_And_Architecture.md) owns the browser join with generated Context documents.
+
+## Shared Private Report Inputs
+
+[The Catalogue report-input owner](../../studio/services/catalogue/catalogue_report_inputs.py) serializes and validates the three `private/` aggregates independently of any final report output. Each payload has exactly `header` and its record map; the header contains only `schema` and `generated_at_utc`, supporting Refresh's existing comparison that ignores generation time. Maps use exact identity keys and repeat the same identity in each row. They contain no absolute workspace roots, public URLs, media revisions, counts or content hashes.
+
+| Input/schema | Record contract | Consumers |
+| --- | --- | --- |
+| `work-sources.json` / `catalogue_work_sources_v1` | `works` map; required `work_id` and `title`; optional `series_id`, `media_source_id`, `project_folder`, `project_subfolder` and `project_filename`, preserving authored declarations and their absence/null values where valid | Projects, Uncataloged Images, Missing Source Files, Folders Without Works |
+| `work-resources.json` / `catalogue_work_resources_v1` | `works` map; `work_id`, `title`, `links: [{label, url}]` and `download_filenames: [filename]`; arrays retain authored order and may be empty | Work Links, Work Downloads |
+| `series.json` / `catalogue_series_definitions_v1` | `series` map; `series_id` and `title` for every definition, including Series without Works | Projects |
+
+Every Work remains in both Work aggregates. Physical existence never decides whether a source declaration or download reference is projected. Saved-input readers validate only their own minimal schema and facts, resolve the configured Working Catalogue root and open those files once. Reports do not read canonical Catalogue records, generate missing inputs or borrow another report's metadata. Missing or invalid inputs fail with the owning Refresh instruction; [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md#private-report-input-maintenance) documents explicit repair of an unselected input. Runtime configuration continues to own media-root resolution and each report retains its separate live filesystem scope.
+
+These files are absent from `catalogue-artifacts.json`, Preview, repository distribution and publication selections. Studio's general Catalogue output route rejects `private/`; only local report services consume the saved files. [Reports](Reports.md) owns their joins and presentation. Work Document Coverage retains its separate manifest.
+
+## Work And Gallery Projections
 
 Each Work may have one Series or no Series, and zero or more direct Gallery memberships; empty Series and Galleries remain valid in canonical Catalogue data. The producer reads Gallery identities/titles from canonical `galleries.json` and Work membership from `galleries-by-work.json`. `work.galleries` is always an array of `{gallery_id, title}` entries, ordered by Gallery ID; absent memberships produce `[]`. Gallery records contain `gallery: {gallery_id, title}` and exact Work ID/title-only `member_works` rows. Member rows read the already loaded canonical Works map directly; Gallery generation builds no Series/Work context, enriched Work copies or project-folder groups. Work year fields remain in canonical Work records and full by-ID payloads. The separate canonical `series-galleries.json` owns explicit Series–Gallery relevance pairs, independent of Work membership after its one-time seed. Refresh derives `series-galleries-index.json` from those pairs and current Gallery titles, keyed by every valid Series ID and ordered by Series and Gallery ID. It has no Work member lists or per-Work related arrays. No image paths, rendition arrays or canonical inverse membership map are duplicated. There is no Catalogue publication filter, primary-Work requirement, Recent projection or Catalogue Search output in this producer. Generated Series by-ID records and the compact Series member-Works index remain retired; no Gallery relationship is inferred from Series membership.
 

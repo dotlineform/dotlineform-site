@@ -306,6 +306,9 @@ class StudioAppRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def send_catalogue_media(self, request_path: str) -> None:
+        if request_path.startswith(CATALOGUE_OUTPUT_ROUTE_PREFIX + "private/"):
+            self.send_error(HTTPStatus.NOT_FOUND, "Catalogue private input is not a browser asset")
+            return
         report_paths = {CATALOGUE_OUTPUT_ROUTE_PREFIX + METADATA_PATH}
         if request_path.startswith(CATALOGUE_OUTPUT_ROUTE_PREFIX + "reports/"):
             if request_path not in report_paths:
