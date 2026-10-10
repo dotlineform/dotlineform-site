@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260716-204013-3be4e1
 title: Button Placement
 added_date: "2026-07-16 20:40:13"
-last_updated: "2026-10-02 13:52:21"
+last_updated: "2026-10-10 16:57:25"
 parent_id: d-20260424-000000-50b63f
 ---
 # Button Placement
@@ -21,7 +21,8 @@ This feature owns that user-facing mental model. The control registry, action ta
 | The displayed document and its parent/child structure | Index panel toolbar |
 | The right-clicked row, with deliberately secondary discovery | Index panel context menu |
 | New for the displayed document/collection | Manage Actions |
-| Source editor, VS Code, Draft/Ready, Star, Copy link, Delete, Assign Subject or Open in Finder for the displayed document | Edit dropdown at the document's right edge |
+| Source editor, Rebuild, VS Code, Draft/Ready, Star, Copy link or Delete for the displayed document | Edit dropdown at the document's right edge |
+| Assign Subject or Open Subject folder for the unsaved document buffer | Source editor Directives menu |
 | Rendered document presentation, editing, or display mode | Document toolbar |
 | The workspace or application as a whole | Workspace group in Manage Actions |
 
@@ -66,11 +67,11 @@ These placements invoke the same source-opening service. The Index context menu 
 
 ### Edit Document
 
-The pen button opens **Edit document** beside the document's right edge. Its menu opens to the left and contains Source editor, Open in VS Code, Draft/Ready, Star, Copy link, Delete, Assign Subject and Open in Finder. Unavailable items remain disabled. A collection detail supplies its exact document actions to this menu; it has no duplicate detail toolbar buttons. The menu is hidden during Source editing and expanded views. [Toolbar Model](Toolbar_Model.md#main-view-toolbar) owns eligibility and action lifecycle.
+The pen button opens **Edit document** beside the document's right edge. Its menu opens to the left and contains Source editor, Rebuild, Open in VS Code, Draft/Ready, Star, Copy link and Delete. Unavailable items remain disabled. A collection detail supplies its exact document actions to this menu; it has no duplicate detail toolbar buttons. The menu is hidden during Source editing and expanded views. [Toolbar Model](Toolbar_Model.md#main-view-toolbar) owns eligibility and action lifecycle.
 
 ### Source Toolbar
 
-Source places Return to doc, Save Markdown source and Directives on one row starting at the document's left edge. Directives opens to the right. All remaining insertion actions and VS Code appear in its flat menu; a separator keeps Table detail, Insert related links and Insert icon together without another submenu. Unavailable entries remain disabled. [Source Editor Scripts](Source_Editor_Scripts.md#directives) owns captured selections, workflows and Source targets.
+Source places Return to doc, Save Markdown source and Directives on one row starting at the document's left edge. Directives opens to the right. All remaining insertion actions, Assign Subject, Open Subject folder and VS Code appear in its flat menu; a separator keeps Table detail, Insert related links, Insert icon and Summary together without another submenu. Unavailable entries remain disabled. Assign Subject changes the unsaved front matter and uses the ordinary Save/discard lifecycle. Open Subject folder uses the buffer's current Folder subject and is disabled for Work or None. [Source Editor Scripts](Source_Editor_Scripts.md#directives) owns captured selections, workflows and Source targets.
 
 ## Current Boundary
 

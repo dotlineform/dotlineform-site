@@ -3,8 +3,8 @@ draft: false
 doc_id: d-20261010-143841-fba69a
 title: Catalogue Refresh Index Updates
 added_date: "2026-10-10 14:38:41"
-last_updated: "2026-10-10 15:36:48"
-summary: Gallery index count and picker subtitle removed; broader selected-row Catalogue Refresh remains proposed.
+last_updated: "2026-10-10 17:17:24"
+summary: Gallery index count removed and Catalogue token pickers simplified to grey ID-first rows without subtitles; broader selected-row Refresh remains proposed.
 ui_status: proposed
 parent_id: d-20260428-000000-f5ff18
 ---
@@ -52,17 +52,17 @@ Before the cleanup, Gallery index `work_count`, in `working/generated/catalogue/
 
 ### Compact Work Rows
 
-The current Work index, `working/generated/catalogue/works/works_index.json`, supplies Work ID/title and displayed year to the shared local Catalogue target lookup. Its exact consumers are:
+The current Work index, `working/generated/catalogue/works/works_index.json`, supplies Work ID/title to the shared local Catalogue target lookup. Its exact consumers are:
 
 - [Add/Edit Catalogue image](../../../docs-viewer/runtime/js/management/source-editor/catalogue-media-modal.js),
 - [Add/Edit Media View link](../../../docs-viewer/runtime/js/management/source-editor/catalogue-media-modal.js),
-- [document Work-subject selection](../../../docs-viewer/runtime/js/management/docs-viewer-management-project-subject-modal.js).
+- [document Work-subject selection](../../../docs-viewer/runtime/js/management/source-editor/subject-modal.js).
 - Catalogue image and Work-subject selection offer Works only;
 - Media View links offer Works and Galleries. Gallery targets come from `working/generated/catalogue/galleries/galleries_index.json` without subtitle metadata. Both Work-only pickers currently fetch the combined Work/Gallery lookup and filter it in the browser; this shared loading is not a reason to restore Gallery counts.
 
 Explicit Catalogue design maintenance also uses the Work index's Work-ID inventory, then reads each selected Work's by-ID payload at `working/generated/catalogue/works/index/<work_id>.json`. The inspected production consumers do not use the compact index row's numeric `year` or `series_id`. Insert doc link reuses the list presentation component but reads a separate document-target lookup; it does not consume these Catalogue indexes. Other directives do not acquire a Catalogue lookup dependency merely because they are tokens.
 
-**Proposed decision:** keep `work_id`, `title` and `year_display`; remove index-row `year` and `series_id` after confirming the same consumer boundary at implementation. These fields remain in their authoritative and by-ID owners where used. A Series assignment change would no longer select the Work search index solely to maintain a duplicated Series identity. Project the retained compact fields directly, rather than constructing a full Work record and discarding most of it.
+**Proposed decision:** retain `work_id` and `title`; confirm the remaining compact-field decisions at implementation. The inspected consumers do not need index-row `year` or `series_id`; these fields remain in their authoritative and by-ID owners where used. A Series assignment change would no longer select the Work search index solely to maintain a duplicated Series identity. Project the retained compact fields directly, rather than constructing a full Work record and discarding most of it.
 
 ### Headers, Versions And Other Derived Fields
 
@@ -118,6 +118,10 @@ Field removals require explicit output schema changes and one agreed baseline co
 ## Delivery Steps
 
 [x] **RI-UI — Gallery Count And Subtitle Cleanup:** user approved this subset on 2026-10-10. Generator, target reader and membership-change selection are updated; a focused Refresh from empty queues converted only the Working Gallery index to v2 and queued it for the next Publish. Changed-source lint, syntax and source review passed. The production reader accepted all 300 ID/title rows and returned empty Gallery subtitle metadata while retaining Work year metadata. No tests, browser interaction or Publish ran. Restart the owning services and reload their pages for manual modal review. Broader steps below remain proposed.
+
+[x] **RI-UI-2 — Catalogue Token Picker Rows:** user requested grey ID-first rows, removal of visible type labels and Work year subtitles in Catalogue image and Media View link on 2026-10-10. Both Add/Edit modes now opt into the shared picker's ID/title layout; its default presentation remains with subject/document-link callers. Two changed JavaScript modules passed lint and bounded source review; whitespace checks passed. Local source-editor CSS supplies the two-column layout; the follow-up uses the search icon's theme colour and the smaller caption font size for IDs. These management modules/styles are outside the public projection inventory. No generated data, queues, tests or browser interaction were changed/run for this UI subset; force-reload Docs Viewer for manual visual review.
+
+[x] **RI-UI-3 — Numeric ID Search:** user requested searches that ignore leading zeroes on 2026-10-10. The shared `semantic-token-targets.js` matcher normalises numeric IDs and numeric query tokens for identity comparisons, including type-qualified and prefix matching, while retaining exact-match priority and existing title matching. Catalogue image, Media View link and Work-subject selection share this behaviour. Canonical/displayed IDs and saved token identities retain their leading zeroes. Changed-source lint, bounded source review and whitespace checks passed; no generated data, queues, tests or browser interaction were changed/run. Force-reload Docs Viewer for manual review.
 
 **RI-0 — Readiness:**
 

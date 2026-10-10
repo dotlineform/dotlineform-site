@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261002-135221-f16b64
 title: Source Editor Toolbar
 added_date: "2026-10-02 13:52:21"
-last_updated: "2026-10-02 13:52:21"
+last_updated: "2026-10-10 16:57:25"
 parent_id: d-20260428-000000-f5ff18
 ui_status: done
 summary: Align Source controls at the document's left edge and consolidate insertion actions and VS Code in Directives.
@@ -12,7 +12,7 @@ summary: Align Source controls at the document's left edge and consolidate inser
 
 ## Requirements
 
-Place Return to doc, Save Markdown source and Directives on one row beginning at the document's left edge. Move all other Source toolbar actions into Directives: Add image, Add Catalogue image, Add file, Add Media View link and Insert doc link. Add Open in VS Code using the mounted editor's immutable document target. The existing Table detail, Insert related links and Insert icon actions remain together below a separator in the same flat menu. Keep existing icons and workflows; unavailable items remain disabled.
+Place Return to doc, Save Markdown source and Directives on one row beginning at the document's left edge. Move all other Source toolbar actions into Directives: Add image, Add Catalogue image, Add file, Add Media View link and Insert doc link. Assign Subject also lives in Directives and updates the unsaved front matter; Open Subject folder follows it and opens the buffer's valid Folder subject in Finder, remaining disabled for Work or None. [Assign Subject In Source Editor](deliveries/Assign_Subject_In_Source_Editor.md) records their 2026-10-10 move from Edit and ordinary Source ownership. Open in VS Code uses the mounted editor's immutable document target. The existing Table detail, Insert related links, Insert icon and Summary actions remain together below a separator in the same flat menu. Keep existing icons and workflows; unavailable items remain disabled.
 
 Return, Save, insertion and modal semantics remain with their existing owners. Opening the menu must preserve the selected source range; a menu item must never insert into a replaced editor or use edited front matter to choose a different Source file. This delivery does not combine modals, add token types or change persistence/publication policies.
 

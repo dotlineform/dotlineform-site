@@ -2,109 +2,22 @@ import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import {
   escapeHtml,
   openDocsViewerManagementModal
-} from "./docs-viewer-management-modal-shell.js";
-import {
-  managedDocumentTargetsEqual,
-  normalizeManagedDocumentTarget
-} from "./docs-viewer-management-document-target.js";
+} from "../docs-viewer-management-modal-shell.js";
 import {
   AUTHORING_SUBJECT_FIELDS,
   classifyDocsDocumentSubject
-} from "../shared/docs-document-subject.js";
+} from "../../shared/docs-document-subject.js";
 import {
   collectCatalogueTargetMatches,
   findCatalogueTargetByIdentity,
   loadCatalogueTargetSupport
-} from "./source-editor/catalogue-token-targets.js";
+} from "./catalogue-token-targets.js";
 import {
   createCatalogueTargetPickerList
-} from "./source-editor/catalogue-target-picker.js";
+} from "./catalogue-target-picker.js";
 
-const AUTHORING_SUBJECT_GROUP_ID = "authoring_subject";
 const SEARCH_INPUT_ID = "docsViewerProjectSubjectCatalogueSearch";
 const RESULTS_ID = "docsViewerProjectSubjectCatalogueResults";
-
-function cleanString(value) {
-  return String(value == null ? "" : value).trim();
-}
-
-function exactResponseTarget(response, target) {
-  var candidate = {
-    collection: response && response.collection,
-    doc_id: response && response.doc_id
-  };
-  if (!managedDocumentTargetsEqual(candidate, target)) {
-    throw new Error("Loaded subject metadata did not match its exact target.");
-  }
-}
-
-function normalizedSubject(record, folderSupported) {
-  return classifyDocsDocumentSubject(
-    record,
-    {
-      folderSupported: folderSupported,
-      errorMessage: "Loaded Document subject metadata is invalid."
-    }
-  );
-}
-
-function exactSubjectFields(fields) {
-  return (
-    fields
-    && typeof fields === "object"
-    && !Array.isArray(fields)
-    && Object.keys(fields).sort().join(",")
-      === AUTHORING_SUBJECT_FIELDS.slice().sort().join(",")
-    && AUTHORING_SUBJECT_FIELDS.every(function (field) {
-      return typeof fields[field] === "string";
-    })
-  );
-}
-
-export function subjectMetadataFromResponse(response, target) {
-  if (!response || typeof response !== "object" || Array.isArray(response)) {
-    throw new Error("Document subject metadata could not be loaded.");
-  }
-  exactResponseTarget(response, target);
-  if (
-    !response.record
-    || typeof response.record !== "object"
-    || Array.isArray(response.record)
-    || cleanString(response.record.doc_id) !== target.doc_id
-  ) {
-    throw new Error("Loaded Document subject record did not match its target.");
-  }
-  var revision = cleanString(response.source_revision);
-  if (!/^sha256:[0-9a-f]{64}$/.test(revision)) {
-    throw new Error("Document subject source revision could not be loaded.");
-  }
-  if (typeof response.folder_subject_supported !== "boolean") {
-    throw new Error("Document Folder subject capability could not be loaded.");
-  }
-  return Object.freeze({
-    subject: normalizedSubject(response.record, response.folder_subject_supported),
-    folderSupported: response.folder_subject_supported,
-    sourceRevision: revision
-  });
-}
-
-function assignedSubject(response, target) {
-  if (!response || typeof response !== "object" || Array.isArray(response)) {
-    throw new Error("Document subject assignment returned an invalid response.");
-  }
-  if (!managedDocumentTargetsEqual(response.target, target)) {
-    throw new Error("Document subject assignment did not match its exact target.");
-  }
-  var fields = response.fields;
-  if (
-    cleanString(response.field_group) !== AUTHORING_SUBJECT_GROUP_ID
-    || !exactSubjectFields(fields)
-    || !/^sha256:[0-9a-f]{64}$/.test(cleanString(response.source_revision))
-  ) {
-    throw new Error("Document subject assignment response is invalid.");
-  }
-  return response;
-}
 
 function radio(value, label, selected) {
   return '<label class="docsViewer__field docsViewer__field--checkbox">' +
@@ -120,9 +33,9 @@ function modalBody(subject, folderSupported) {
   return "" +
     '<fieldset class="docsViewer__fieldGroup" data-project-subject-options>' +
       '<legend class="visually-hidden">Subject</legend>' +
-      radio("none", "None", selected) +
-      (folderSupported ? radio("folder", "Folder", selected) : "") +
-      radio("work", "Work", selected) +
+      radio("none", "None", subject.kind) +
+      (folderSupported ? radio("folder", "Folder", subject.kind) : "") +
+      radio("work", "Work", subject.kind) +
     "</fieldset>" +
     '<label class="docsViewer__field" data-project-subject-folder' +
       (selected === "folder" ? "" : " hidden") + ">" +
@@ -136,12 +49,12 @@ function modalBody(subject, folderSupported) {
         '<label class="docsViewer__fieldLabel" for="' + SEARCH_INPUT_ID + '">Search Catalogue</label>' +
         '<input class="docsViewer__fieldInput" id="' + SEARCH_INPUT_ID + '" type="search" role="combobox" aria-autocomplete="list" aria-controls="' + RESULTS_ID + '" aria-expanded="false" autocomplete="off" spellcheck="false" disabled>' +
       "</div>" +
-      '<p class="docsViewerCatalogueTokenModal__searchStatus muted small" data-project-subject-search-status>Choose Work to load Catalogue targets.</p>' +
+      '<p class="docsViewerCatalogueTokenModal__searchStatus muted small" data-project-subject-search-status hidden></p>' +
       '<div class="docsViewerCatalogueTargetPicker__results docsViewerCatalogueTokenModal__results" id="' + RESULTS_ID + '" role="listbox" aria-label="Work targets" data-project-subject-results tabindex="0" hidden></div>' +
     "</section>";
 }
 
-function openSubjectModal(options, target, loaded) {
+function openSubjectModal(options, snapshot, loaded) {
   var state = {
     disposed: false,
     list: null,
@@ -152,12 +65,12 @@ function openSubjectModal(options, target, loaded) {
   var modalPromise = openDocsViewerManagementModal({
     root: options.root,
     restoreFocus: options.restoreFocus,
-    title: "Assign subject",
+    title: "Assign Subject",
     size: "document",
     bodyHtml: modalBody(loaded.subject, loaded.folderSupported),
     focusSelector: 'input[name="docs-project-subject"]:checked',
     actions: [
-      { role: "modal-primary", label: "OK" },
+      { role: "modal-primary", label: "Apply" },
       { role: "modal-cancel", label: "Cancel" }
     ],
     onOpen: function (api) {
@@ -238,10 +151,7 @@ function openSubjectModal(options, target, loaded) {
 
       function loadSupport() {
         if (state.supportPromise) return state.supportPromise;
-        if (searchStatus) {
-          searchStatus.textContent = "Loading Catalogue…";
-          searchStatus.hidden = false;
-        }
+        clearSearchStatus();
         state.supportPromise = loadCatalogueTargetSupport(options.catalogueProvider, {
           fetch: options.fetch,
           allowedTargetTypes: ["work"]
@@ -264,7 +174,7 @@ function openSubjectModal(options, target, loaded) {
 
       function projectChoice() {
         var kind = chosenKind();
-        var form = folderField && folderField.closest("form");
+        var form = api.host.querySelector("form");
         var busy = Boolean(form && form.dataset.busy === "true");
         var folderSelected = kind === "folder";
         var catalogueSelected = kind === "work";
@@ -285,6 +195,7 @@ function openSubjectModal(options, target, loaded) {
       }
 
       state.list = createCatalogueTargetPickerList(results, {
+        layout: "id-title",
         onActiveChange: function (_target, optionId) {
           [searchInput, results].filter(Boolean).forEach(function (owner) {
             if (optionId) owner.setAttribute("aria-activedescendant", optionId);
@@ -294,7 +205,6 @@ function openSubjectModal(options, target, loaded) {
         kind: function (record) { return record.targetType; },
         id: function (record) { return record.targetId; },
         title: function (record) { return record.title; },
-        meta: function (record) { return record.meta; },
         onSelect: function (record) { selectCatalogueTarget(record, true); }
       });
       api.host.querySelectorAll('input[name="docs-project-subject"]').forEach(function (radioNode) {
@@ -316,15 +226,15 @@ function openSubjectModal(options, target, loaded) {
     },
     onSubmit: function (api) {
       var selected = api.host.querySelector('input[name="docs-project-subject"]:checked');
-      var folderInput = api.host.querySelector("[data-project-subject-folder-input]");
       if (!selected) {
         api.setStatus("Choose a subject or None.");
         return false;
       }
       var fields = Object.fromEntries(AUTHORING_SUBJECT_FIELDS.map(function (field) { return [field, ""]; }));
       if (selected.value === "folder") {
+        var folderInput = api.host.querySelector("[data-project-subject-folder-input]");
         fields.folder_path = folderInput ? folderInput.value : "";
-        if (!cleanString(fields.folder_path)) {
+        if (!fields.folder_path.trim()) {
           api.setStatus("Paste a folder path or file URL.");
           if (folderInput) folderInput.focus();
           return false;
@@ -337,13 +247,12 @@ function openSubjectModal(options, target, loaded) {
         }
         fields.work_id = state.selectedTarget.targetId;
       }
-      return options.assignFieldGroup(target, {
-        source_revision: loaded.sourceRevision,
-        field_group: AUTHORING_SUBJECT_GROUP_ID,
-        fields: fields,
-        confirm: true
-      }).then(function (response) {
-        return { confirmed: true, payload: assignedSubject(response, target) };
+      return options.adapter.readSubjectAssignment(snapshot, fields).then(function (response) {
+        if (typeof response.source_text !== "string") throw new Error("Subject source could not be prepared.");
+        if (!options.adapter.applySubjectSource(snapshot, response.source_text)) {
+          throw new Error("Markdown source changed while this modal was open. Cancel and try again.");
+        }
+        return { confirmed: true };
       });
     }
   });
@@ -354,15 +263,24 @@ function openSubjectModal(options, target, loaded) {
   });
 }
 
-export function openDocsViewerProjectSubjectModal(options = {}) {
-  var target = normalizeManagedDocumentTarget(options.target);
-  if (!target.collection) {
-    return Promise.reject(new Error("Document subject assignment requires a collection document target."));
+/** Edit the captured Source buffer's Subject; the editor's Save owns persistence. */
+export function openSourceSubjectModal(options = {}) {
+  var adapter = options.adapter;
+  if (!adapter || !adapter.canAssignSubject()) {
+    return Promise.reject(new Error("Subject assignment is unavailable for this document."));
   }
-  if (typeof options.readMetadata !== "function" || typeof options.assignFieldGroup !== "function") {
-    return Promise.reject(new Error("Document subject assignment service is unavailable."));
-  }
-  return Promise.resolve(options.readMetadata(target)).then(function (response) {
-    return openSubjectModal(options, target, subjectMetadataFromResponse(response, target));
+  var snapshot = adapter.getBufferSnapshot();
+  return adapter.readSubjectAssignment(snapshot).then(function (response) {
+    if (typeof response.folder_subject_supported !== "boolean") {
+      throw new Error("Folder subject capability could not be loaded.");
+    }
+    return openSubjectModal(Object.assign({}, options, {
+      catalogueProvider: adapter,
+      restoreFocus: function () { adapter.focus(); }
+    }), snapshot, {
+      subject: classifyDocsDocumentSubject(response, { folderSupported: response.folder_subject_supported }),
+      folderSupported: response.folder_subject_supported
+    });
   });
 }
+

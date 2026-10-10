@@ -7,14 +7,6 @@ import {
 import {
   normalizeManagedDocumentTarget
 } from "./docs-viewer-management-document-target.js";
-import {
-  assignManagedDocFieldGroup,
-  openLocalTarget,
-  readManagedDocMetadata
-} from "./docs-viewer-management-client.js";
-import {
-  hasDocsViewerAssignableFieldGroup
-} from "../shared/docs-viewer-config-controller.js";
 
 /** Adapt the Working manifest's declared authoring field to public-safe browsing input. */
 function catalogueWorkIdForDocument(record) {
@@ -111,18 +103,9 @@ export function loadDocsViewerCollectionContribution(settings, parent, collectio
       "Docs collection is not configured: " + collection
     ));
   }
-  var descriptor = collectionConfig.collectionCustomisation;
-  var workingCustomisationAvailable = settings.managementContext
-    && hasDocsViewerAssignableFieldGroup(descriptor, "authoring_subject");
-  var mutationAvailable = Boolean(
-    workingCustomisationAvailable
-    && settings.managementContext
-    && cleanString(clientOptions.baseUrl)
-  );
   return Promise.all([
     import("./docs-viewer-management-collection-default-contribution.js"),
-    import("./docs-viewer-management-collection-composition.js"),
-    import("./docs-viewer-management-collection-customisation-registry.js")
+    import("./docs-viewer-management-collection-composition.js")
   ]).then(function (modules) {
     var defaultContribution = modules[0].createDocsViewerManagementCollectionDefaultContribution({
       clientOptions: clientOptions,
@@ -145,42 +128,8 @@ export function loadDocsViewerCollectionContribution(settings, parent, collectio
       root: managementModalRoot(settings),
       setStatus: settings.setStatus
     });
-    if (!workingCustomisationAvailable) {
-      return modules[1].composeDocsViewerManagementCollectionContributions({
-        defaultContribution: defaultContribution
-      });
-    }
-    return modules[2].resolveManagementDocsCollectionCustomisation(
-      collectionConfig.collectionCustomisation,
-      {
-        assignFieldGroup: mutationAvailable
-          ? function (target, payload) {
-              return assignManagedDocFieldGroup(target, payload, clientOptions);
-            }
-          : null,
-        clientOptions: clientOptions,
-        catalogueProvider: settings.collectionProvider,
-        collection: {  collection: collection },
-        content: settings.content,
-        documentTarget: { collection: settings.documentTarget && settings.documentTarget.collection || "", docId: parent.doc_id },
-        openMediaTarget: settings.openMediaTarget,
-        openLocalTarget: openLocalTarget,
-        publicPreviewBase: cleanString(settings.routeContext && settings.routeContext.publicPreviewBase),
-        studioBaseUrl: cleanString(settings.routeContext && settings.routeContext.studioBaseUrl),
-        workspaceConfig: settings.workspaceConfigState.activeConfig,
-        readMetadata: mutationAvailable
-          ? function (target) {
-              return readManagedDocMetadata(target, clientOptions);
-            }
-          : null,
-        root: managementModalRoot(settings),
-        setStatus: settings.setStatus
-      }
-    ).then(function (customisationContribution) {
-      return modules[1].composeDocsViewerManagementCollectionContributions({
-        customisationContribution: customisationContribution,
-        defaultContribution: defaultContribution
-      });
+    return modules[1].composeDocsViewerManagementCollectionContributions({
+      defaultContribution: defaultContribution
     });
   });
 }
@@ -232,9 +181,6 @@ function mountCollectionDocumentActions(settings) {
     host.className = "docsViewer__collectionActions";
     function project() {
       var actionContext = Object.assign({}, settings.documentActionContext, { documentRecord: record, actionHost: host });
-      if (contribution.projectDetailInfo) actionContext.documentInfo = contribution.projectDetailInfo({
-        collection: { collection: target.collection }, target: target, document: record, metadata: record, payload: settings.payload, data: {}
-      });
       settings.onDocumentActionState(actionContext);
       host.replaceChildren();
       if (contribution.renderDetailToolbar) contribution.renderDetailToolbar({

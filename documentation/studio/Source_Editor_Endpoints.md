@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-4b1d77
 title: Source Editor Endpoints
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-08 19:40:52"
+last_updated: "2026-10-10 17:12:00"
 parent_id: d-20260607-222033-647b52
 ---
 # Docs Viewer Source Editor Endpoints
@@ -116,7 +116,9 @@ This is a single-editor snapshot save: there is no disk revision check, external
 
 ## `POST /docs/source/context`
 
-This write-free request accepts the same exact target and complete `source_text` as Save. The source service validates the unsaved candidate through the same parser, identity and collection owners and returns `{ok, doc_id, collection?, subject}`. It resolves the configured collection without rereading document sources; Save independently resolves the actual file before persistence. The safe Work/Series Subject projection powers **Use document subject** in Catalogue modals; it is derived from the captured current buffer, not a loaded metadata draft. Invalid source disables that optional choice with a visible error while the modal preserves its token values and Catalogue picker. The adapter rejects a late context response after the buffer or mounted editor changes. This endpoint performs no source write, timestamp advancement, generation, Search rebuild or Publish.
+This write-free request accepts the same exact target and complete `source_text` as Save, plus optional `subject_fields` containing exactly `folder_path` and `work_id`. The source service validates the unsaved candidate through the same parser, identity and collection owners and returns `ok`, exact `doc_id`/optional `collection`, `subject_assignment_available`, `folder_subject_supported` and optional scalar `subject`. Its private authoring projection includes both Folder and Work; omission means None. The public Work-only reader projection is separately owned and must not supply this context. It resolves the configured collection without rereading document sources; Save independently resolves the actual file before persistence.
+
+Assign Subject initializes from that current Subject and the exact collection's capabilities. With replacement fields, the service uses the registered metadata owner and span-preserving front-matter writer to return prepared `source_text`; Apply updates only the current buffer. Folder input uses the existing Projects-root path normaliser. Open Subject folder reads this same context when Directives opens. **Use document subject** in Catalogue modals accepts only Work targets; a valid Folder response leaves that optional shortcut disabled without reporting an invalid Subject. Invalid source reports a visible error while those modals preserve their token values and Catalogue picker. The adapter rejects a late context response after the buffer or mounted editor changes. This endpoint performs no source write, timestamp advancement, generation, Search rebuild or Publish. [Assign Subject In Source Editor](deliveries/Assign_Subject_In_Source_Editor.md) records the delivery and evidence.
 
 ## `GET /docs/staged-media-files`
 

@@ -224,16 +224,7 @@ export function setManagedDocDraft(target, payload, options) {
   return fetchManagementJson("/docs/set-draft", "POST", targetPayload(target, payload), options);
 }
 
-export function assignManagedDocFieldGroup(target, payload, options) {
-  return fetchManagementJson(
-    "/docs/assign-field-group",
-    "POST",
-    targetPayload(target, payload),
-    options
-  );
-}
-
-/** Persist one loaded source session; generated output is owned by the watcher. */
+/** Persist the complete source session; the service awaits exact generation. */
 export function saveManagedDocSource(target, payload, options) {
   return fetchManagementJson("/docs/source/save", "POST", targetPayload(target, payload), options);
 }

@@ -8,6 +8,7 @@ import {
 import { localFolderPasteReplacement } from "./local-folder-links.js";
 import { sourceBodyStart, sourceWithThumbnail } from "./source-buffer.js";
 import { classifyDocsDocumentSubject } from "../../shared/docs-document-subject.js";
+import { encodeDecodedLocalTarget } from "../docs-viewer-management-client.js";
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -160,8 +161,19 @@ function replaceCapturedRange(state, capture, value, selectionMode) {
 
 function createSourceEditorContextAdapter(context, state) {
   function isCurrent() { return state.sourceEditorAdapter === adapter && state.loaded && Boolean(state.textarea); }
+  async function readSourceContext(snapshot, fields) {
+    if (!isCurrent()) throw new Error("The Source editor was replaced.");
+    var target = adapter.getDocumentTarget();
+    var body = { source_text: snapshot.value };
+    if (fields !== undefined) body.subject_fields = fields;
+    var payload = await state.collectionProvider.readSourceContext(target, body);
+    if (!isCurrent() || snapshot.revision !== state.bufferRevision
+      || !responseMatchesTarget(payload, target)) throw new Error("The Source context changed.");
+    return payload;
+  }
   var adapter = {
     isCurrent: isCurrent,
+    canAssignSubject: function () { return isCurrent() && !state.busy && state.subjectAssignmentAvailable; },
     captureSelection: function () {
       return Object.assign(sourceSelection(state), { revision: state.bufferRevision });
     },
@@ -182,12 +194,53 @@ function createSourceEditorContextAdapter(context, state) {
       return state.target ? Object.assign({}, state.target) : null;
     },
     readDocumentSubject: async function (snapshot) {
-      if (!isCurrent()) throw new Error("The Source editor was replaced.");
-      var target = adapter.getDocumentTarget();
-      var payload = await state.collectionProvider.readSourceContext(target, { source_text: snapshot.value });
-      if (!isCurrent() || snapshot.revision !== state.bufferRevision
-        || !responseMatchesTarget(payload, target)) throw new Error("The Source context changed.");
-      return classifyDocsDocumentSubject(payload);
+      return classifyDocsDocumentSubject(await readSourceContext(snapshot), { folderSupported: true });
+    },
+    readSubjectAssignment: async function (snapshot, fields) {
+      var payload = await readSourceContext(snapshot, fields);
+      if (!adapter.canAssignSubject() || payload.subject_assignment_available !== true) throw new Error("Subject assignment is unavailable for this document.");
+      return payload;
+    },
+    readSubjectFolder: async function (snapshot) {
+      var payload = await adapter.readSubjectAssignment(snapshot);
+      var subject = classifyDocsDocumentSubject(payload, { folderSupported: true });
+      return subject.kind === "folder" ? subject.key : "";
+    },
+    openSubjectFolder: async function (snapshot, path) {
+      if (!adapter.canAssignSubject() || snapshot.revision !== state.bufferRevision) {
+        throw new Error("The Source context changed.");
+      }
+      var target = encodeDecodedLocalTarget(path);
+      if (!target || typeof state.collectionProvider.openLocalTarget !== "function") {
+        throw new Error("The Subject folder is unavailable.");
+      }
+      setBusy(state, true);
+      try {
+        await state.collectionProvider.openLocalTarget(target);
+      } finally {
+        if (isCurrent()) setBusy(state, false);
+      }
+    },
+    applySubjectSource: function (snapshot, sourceText) {
+      var capture = { start: 0, end: snapshot.value.length, text: snapshot.value, revision: snapshot.revision };
+      if (!isCurrent() || state.saving || typeof sourceText !== "string" || !capturedRangeIsCurrent(state, capture)) return false;
+      var oldBodyStart = sourceBodyStart(snapshot.value);
+      var newBodyStart = sourceBodyStart(sourceText);
+      var offset = newBodyStart - oldBodyStart;
+      function nextPosition(position) {
+        return position >= oldBodyStart ? position + offset : Math.min(position, newBodyStart);
+      }
+      var start = nextPosition(state.textarea.selectionStart);
+      var end = nextPosition(state.textarea.selectionEnd);
+      var scrollTop = state.textarea.scrollTop;
+      if (sourceText !== snapshot.value) {
+        state.textarea.value = sourceText;
+        state.textarea.setSelectionRange(start, end);
+        state.textarea.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+      state.textarea.focus({ preventScroll: true });
+      state.textarea.scrollTop = scrollTop;
+      return true;
     },
     readCatalogueMediaTargets: function () {
       return state.collectionProvider.readCatalogueMediaTargets();
@@ -271,6 +324,7 @@ function loadSource(context, state) {
         throw new Error("Source service did not return the complete document.");
       }
       state.lastCleanSource = normalizeSource(payload.source_text);
+      state.subjectAssignmentAvailable = payload.subject_assignment_available === true;
       state.loaded = true;
       if (state.textarea) {
         state.textarea.value = state.lastCleanSource;
@@ -482,6 +536,7 @@ export function createDocsViewerSourceEditorMode() {
     dirtyValue: false,
     lastCleanSource: "",
     loaded: false,
+    subjectAssignmentAvailable: false,
     collectionProvider: null,
     root: null,
     renderedScrollTop: 0,
@@ -501,6 +556,7 @@ export function createDocsViewerSourceEditorMode() {
       state.dirtyValue = false;
       state.lastCleanSource = "";
       state.loaded = false;
+      state.subjectAssignmentAvailable = false;
       state.collectionProvider = context.collectionProvider || null;
       state.renderedScrollTop = context.mount.scrollTop;
       // Keep the rendered report mounted so its collection target survives Source.

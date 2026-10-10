@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261002-130225-c46d18
 title: Document Edit Menu
 added_date: "2026-10-02 13:02:25"
-last_updated: "2026-10-02 13:52:21"
+last_updated: "2026-10-10 16:57:25"
 parent_id: d-20260428-000000-f5ff18
 ui_status: done
 summary: Consolidate displayed-document editing actions into the right-aligned Edit dropdown.
@@ -12,13 +12,13 @@ summary: Consolidate displayed-document editing actions into the right-aligned E
 
 ## Requirements
 
-Replace the direct Edit action with a dropdown containing Source editor, Open in VS Code, Draft/Ready, Star, Copy link, Delete, Assign Subject and Open in Finder, in that order. Source editor uses `square-code.svg` and retains the existing Source workflow. VS Code, Draft/Ready and Star move from workspace Actions and keep their context-aware targets, handlers, changing labels, checkbox state and artwork. New remains in Actions. All items remain visible; existing eligibility makes unsupported operations disabled. The pen trigger retains its document-right-edge placement and the menu opens left. Source and expanded views hide Edit; [Source Editor Toolbar](Source_Editor_Toolbar.md) separately supplies VS Code inside Source's Directives menu.
+Replace the direct Edit action with a dropdown containing Source editor, Rebuild, Open in VS Code, Draft/Ready, Star, Copy link and Delete, in that order. Source editor uses `square-code.svg` and retains the existing Source workflow. VS Code, Draft/Ready and Star move from workspace Actions and keep their context-aware targets, handlers, changing labels, checkbox state and artwork. New remains in Actions. All items remain visible; existing eligibility makes unsupported operations disabled. The pen trigger retains its document-right-edge placement and the menu opens left. Source and expanded views hide Edit; [Source Editor Toolbar](Source_Editor_Toolbar.md) separately supplies VS Code inside Source's Directives menu. Assign Subject moved into Source on 2026-10-10 and now updates the unsaved buffer. Open in Finder also moved into Source as Open Subject folder and uses that buffer's Folder subject; [Assign Subject In Source Editor](deliveries/Assign_Subject_In_Source_Editor.md) owns these revisions.
 
 Collection detail actions keep their validated targets, existing workflows and live availability, with no duplicate detail toolbar buttons. Ordinary Copy/Delete use the existing handlers and deletion confirmation. Source editor toolbar changes remain a later outcome.
 
 ## Deliverables And Process
 
-A local Edit menu owner renders the dropdown and dispatches ordinary actions. The existing context-actions owner supplies New's state/dispatch to Actions and VS Code, Draft/Ready and Star to Edit. State projection runs after Edit controls mount so returning from Source restores current labels and checkbox state. Keyboard navigation includes ordinary and checkbox items. The retained collection detail action host mounts inside the menu while rendered, and in the existing hidden collection-action mount during Source or expanded views. This preserves contribution lifecycle and asynchronous availability without another set of collection handlers. Delete and Subject modal focus returns to the Edit trigger.
+A local Edit menu owner renders the dropdown and dispatches ordinary actions. The existing context-actions owner supplies New's state/dispatch to Actions and VS Code, Draft/Ready and Star to Edit. State projection runs after Edit controls mount so returning from Source restores current labels and checkbox state. Keyboard navigation includes ordinary and checkbox items. The retained collection detail action host mounts inside the menu while rendered, and in the existing hidden collection-action mount during Source or expanded views. This preserves contribution lifecycle and asynchronous availability without another set of collection handlers. Delete restores focus to the Edit trigger; the Source Subject helper restores focus to the buffer.
 
 [Toolbar Model](Toolbar_Model.md), [Runtime Module Ownership](Runtime_Module_Ownership.md) and [Toolbar Icon Mapping](Toolbar_Icon_Mapping.md) own shipped placement, ownership and artwork. The shared runtime's Manage-specific mounting change receives the normal tracked public projection; the menu module, stylesheet changes and Source editor artwork remain local.
 

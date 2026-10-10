@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260531-152622-ed2451
 title: Toolbar Model
 added_date: 2026-05-31 15:26:22
-last_updated: "2026-10-02 13:52:21"
+last_updated: "2026-10-10 16:57:25"
 summary: Placement and ownership rules for app, active-view, docs_subscope, management, and context-panel controls.
 parent_id: d-20260424-000000-50b63f
 
@@ -37,15 +37,15 @@ Surface: `app-viewer`, mounted by `docs-viewer-viewer-toolbar-renderer.js` and r
 
 Use the main-view toolbar for controls belonging to the active central view, its content, or its current display mode.
 
-For `rendered-document`, this includes its breadcrumb, info control and manage-only **Edit document** dropdown. Its items are Source editor, Open in VS Code, Draft/Ready, Star, Copy link, Delete, Assign Subject and Open in Finder, in that order. Source editor opens the complete Markdown buffer for the exact ordinary document, collection-list host or validated collection detail. Copy link uses that same displayed identity. Delete retains ordinary subtree confirmation or the collection's singular validated-detail workflow; Catalogue detail deletion stays disabled. Assign Subject and Open in Finder retain the configured subject-aware collection rules, with Finder requiring a valid Folder subject. Unsupported items remain visible and disabled. Collection detail contributions supply their existing live state and handlers inside this menu instead of duplicate toolbar buttons. A detail has no parent Source action.
+For `rendered-document`, this includes its breadcrumb and manage-only **Edit document** dropdown. Its items are Source editor, Rebuild, Open in VS Code, Draft/Ready, Star, Copy link and Delete, in that order. Source editor opens the complete Markdown buffer for the exact ordinary document, collection-list host or validated collection detail. Copy link uses that same displayed identity. Delete retains ordinary subtree confirmation or the collection's singular validated-detail workflow; Catalogue detail deletion stays disabled. Unsupported items remain visible and disabled. Collection detail contributions supply their existing live state and handlers inside this menu instead of duplicate toolbar buttons. A detail has no parent Source action. The former Document Info control and metadata projection are retired; the reader panel opens only through Pin related links.
 
-New stays in the Manage Actions menu. Source mode registers only Return to doc, Save Markdown source and Directives, in that order on one row at the document's left edge. Directives opens to the right and contains Add image, Add Catalogue image, Add file, Add Media View link, Insert doc link and Open in VS Code. A separator groups Table detail, Insert related links and Insert icon in the same flat list. Source and management owners project loaded/busy availability; unavailable entries remain disabled. The menu captures the mounted adapter and selection, while VS Code uses that adapter's immutable target. There are no duplicate standalone insertion buttons. [Source Editor Scripts](Source_Editor_Scripts.md) owns the workflows.
+New stays in the Manage Actions menu. Source mode registers only Return to doc, Save Markdown source and Directives, in that order on one row at the document's left edge. Directives opens to the right and contains Add image, Add Catalogue image, Add file, Add Media View link, Insert doc link, Assign Subject, Open Subject folder and Open in VS Code. A separator groups Table detail, Insert related links, Insert icon and Summary in the same flat list. Source and management owners project loaded/busy availability; unavailable entries remain disabled. Assign Subject requires the exact collection's registered capability and applies only to the unsaved buffer. Open Subject folder reads that buffer and enables only for a valid Folder subject, opening it beneath the configured Projects root. The menu captures the mounted adapter and selection, while VS Code uses that adapter's immutable target. There are no duplicate standalone insertion buttons. [Source Editor Scripts](Source_Editor_Scripts.md) owns the workflows.
 
 For `content-detail`, the same surface supplies the public-safe **Back to document** control and presentation label; later Manage-only table tools may contribute beside them without creating another toolbar.
 
 The shared renderer creates one stable `main-view` mount. Shared and manage entrypoints contribute eligible controls to the same host in definition order.
 
-In Manage, Edit document retains the pen artwork and aligns to the right edge of the centered document and collection report using the shared document-width token. Its dropdown opens to the left; Source editor uses `square-code.svg`. Its existing view/mode eligibility hides it in expanded content views and Source mode. Disclosure closes when the target or availability changes. Delete and Subject modals restore focus to the Edit trigger. Actions retains its app-toolbar position.
+In Manage, Edit document retains the pen artwork and aligns to the right edge of the centered document and collection report using the shared document-width token. Its dropdown opens to the left; Source editor uses `square-code.svg`. Its existing view/mode eligibility hides it in expanded content views and Source mode. Disclosure closes when the target or availability changes. Delete restores focus to the Edit trigger; Assign Subject restores focus to the Source buffer. Actions retains its app-toolbar position.
 
 Owners: `site/docs-viewer/runtime/js/shared/docs-viewer-main-view-renderer.js`, shared control renderers, and manage-owned `docs-viewer-management-control-renderers.js`.
 
@@ -74,7 +74,7 @@ Surface: `app-management`. Manage definitions, renderer contributions, focused c
 
 ## Sub-Scope Report Controls
 
-Collection-specific list controls stay in the report. The shared report owns title search and Back. Its standard Manage contribution owns the title/recency sort toggle, collection Actions and selection commands, Prepare Package, Copy Link, and validated-detail Delete. Copy Link and Delete are contributed to Edit; configured Subject and Finder actions join them there. New uses Actions; Draft/Ready uses Edit. Both consume the report's published context, and Import consumes its explicitly published collection.
+Collection-specific list controls stay in the report. The shared report owns title search and Back. Its standard Manage contribution owns the title/recency sort toggle, collection Actions and selection commands, Prepare Package, Copy Link, and validated-detail Delete. Copy Link and Delete are contributed to Edit. Assign Subject and Open Subject folder belong to Source's Directives menu. New uses Actions; Draft/Ready uses Edit. Both consume the report's published context, and Import consumes its explicitly published collection.
 
 The collection list's package-selection Actions menu stays in the report's filter toolbar alongside sort and selection commands. It does not mount beside Home in the top row. Its checkbox-based subdocument package preparation remains separate from the Index right-click menu's ordinary-document package preparation.
 

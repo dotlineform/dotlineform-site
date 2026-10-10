@@ -26,6 +26,10 @@ function normalizeSearchText(value) {
     .trim();
 }
 
+function normalizeIdentityToken(value) {
+  return /^\d+$/.test(value) ? value.replace(/^0+(?=\d)/, "") : value;
+}
+
 function normalizeTarget(record, registry) {
   var row = record && typeof record === "object" && !Array.isArray(record) ? record : {};
   var family = cleanString(row.family);
@@ -37,7 +41,7 @@ function normalizeTarget(record, registry) {
     : null;
   if (!familyDefinition || !familyDefinition.targetTypesById.has(targetType) || !targetId || !title) return null;
   var titleNorm = normalizeSearchText(title);
-  var targetIdNorm = normalizeSearchText(targetId);
+  var targetIdNorm = normalizeIdentityToken(normalizeSearchText(targetId));
   var targetTypeNorm = normalizeSearchText(targetType);
   return {
     family: family,
@@ -97,11 +101,13 @@ export function collectSemanticTokenTargetMatches(targets, query, registry, limi
   var normalizedQuery = normalizeSearchText(query);
   var tokens = normalizedQuery.split(" ").filter(Boolean);
   if (!normalizedQuery || !tokens.length) return [];
+  var identityTokens = tokens.map(normalizeIdentityToken);
+  var identityQuery = identityTokens.join(" ");
   var matches = [];
   (Array.isArray(targets) ? targets : []).forEach(function (target) {
     if (!target || !target.titleNorm) return;
     var qualifiedIdentity = [target.targetTypeNorm, target.targetIdNorm].filter(Boolean).join(" ");
-    var allIdentityTokens = tokens.every(function (token) {
+    var allIdentityTokens = identityTokens.every(function (token) {
       return (
         target.targetTypeNorm === token
         || target.targetIdNorm === token
@@ -123,11 +129,11 @@ export function collectSemanticTokenTargetMatches(targets, query, registry, limi
       && target.titleNorm.indexOf(normalizedQuery) < 0
     ) return;
     var score = 100;
-    if (qualifiedIdentity === normalizedQuery) score = 1300;
-    else if (target.targetIdNorm === normalizedQuery) score = 1200;
+    if (qualifiedIdentity === identityQuery) score = 1300;
+    else if (target.targetIdNorm === identityQuery) score = 1200;
     else if (target.titleNorm === normalizedQuery) score = 1000;
     else if (allIdentityTokens && tokens.length > 1) score = 920;
-    else if (target.targetIdNorm.indexOf(normalizedQuery) === 0) score = 880;
+    else if (target.targetIdNorm.indexOf(identityQuery) === 0) score = 880;
     else if (target.targetTypeNorm === normalizedQuery) score = 860;
     else if (target.titleNorm.indexOf(normalizedQuery) === 0) score = 850;
     else if (allTitleTokens) score = 720;

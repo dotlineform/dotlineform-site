@@ -30,8 +30,14 @@ from local_env import runtime_env  # noqa: E402
 from markdown_renderer import normalize_markdown_blank_lines  # noqa: E402
 from docs_publication_ignore import publication_ignore_path  # noqa: E402
 from docs_recent_exclusions import recent_exclusions_path  # noqa: E402
-from docs_document_subjects import project_reader_subject  # noqa: E402
-from docs_collection_customisations import collection_customisation_metadata_record  # noqa: E402
+from docs_document_subjects import project_document_subject  # noqa: E402
+from docs_collection_customisations import (  # noqa: E402
+    collection_customisation_assignable_field_groups,
+    collection_customisation_authoring_subject_fields,
+    collection_customisation_metadata_record,
+    normalize_collection_customisation_metadata_update,
+)
+from docs_document_subjects import AUTHORING_SUBJECT_FIELDS, FOLDER_PATH_FIELD  # noqa: E402
 from docs_document_rebuild import rebuild_resolved_document  # noqa: E402
 
 
@@ -41,6 +47,14 @@ def normalize_source_body(value: Any) -> str:
 
 def normalize_source_body_for_write(value: Any) -> str:
     return normalize_markdown_blank_lines(normalize_source_body(value))
+
+
+def source_subject_assignment_available(resolved: ManagedDocumentCollection | ManagedDocumentTarget) -> bool:
+    """Use the exact collection's registered Subject assignment capability."""
+    return bool(resolved.collection) and any(
+        group.group_id == "authoring_subject"
+        for group in collection_customisation_assignable_field_groups(resolved.document_config.collection_customisation)
+    )
 
 
 def read_source_document(repo_root: Path, params: Dict[str, list[str]]) -> Dict[str, Any]:
@@ -59,6 +73,7 @@ def read_source_document(repo_root: Path, params: Dict[str, list[str]]) -> Dict[
         "ok": True,
         **resolved.request_target(),
         "source_text": source_text,
+        "subject_assignment_available": source_subject_assignment_available(resolved),
         "path": path_label(repo_root, target.path),
     }
     if resolved.collection:
@@ -132,7 +147,7 @@ def validate_source_candidate(
         collection_customisation_metadata_record(
             resolved.document_config.collection_customisation, next_metadata, doc_id=target["doc_id"],
         )
-    project_reader_subject(next_metadata)
+    project_document_subject(next_metadata, folder_supported=True)
     source_model.parse_collection_document_report(
         repo_root, resolved.parent_config, resolved.document_config,
         next_source_text, source_name=source_name,
@@ -141,12 +156,38 @@ def validate_source_candidate(
 
 
 def read_source_context(repo_root: Path, body: Dict[str, Any]) -> Dict[str, Any]:
-    """Project validated unsaved authoring context without a write or browser parser."""
-    target = source_candidate_target(body)
+    """Project or update an unsaved Subject buffer without persistence or a browser parser."""
+    target = source_candidate_target({key: value for key, value in body.items() if key != "subject_fields"})
     resolved = resolve_managed_document_collection(repo_root, collection=target.get("collection"))
     _, metadata = validate_source_candidate(repo_root, target, body["source_text"], resolved)
-    payload: Dict[str, Any] = {"ok": True, **target}
-    subject = project_reader_subject(metadata)
+    available = source_subject_assignment_available(resolved)
+    payload: Dict[str, Any] = {
+        "ok": True, **target, "subject_assignment_available": available,
+        "folder_subject_supported": FOLDER_PATH_FIELD in collection_customisation_authoring_subject_fields(
+            resolved.document_config.collection_customisation,
+        ),
+    }
+    if "subject_fields" in body:
+        if not available:
+            raise ValueError("Subject assignment is unavailable for this document collection")
+        fields = body["subject_fields"]
+        if not isinstance(fields, dict) or set(fields) != set(AUTHORING_SUBJECT_FIELDS):
+            raise ValueError("subject_fields must contain exactly folder_path and work_id")
+        update = normalize_collection_customisation_metadata_update(
+            resolved.document_config.collection_customisation, fields, provided=True,
+            repo_root=repo_root, front_matter=metadata, doc_id=target["doc_id"],
+        )
+        if update is None or set(update["front_matter_updates"]) != set(AUTHORING_SUBJECT_FIELDS):
+            raise ValueError("Subject assignment returned fields outside its declaration")
+        prefix, _, source_body = source_model.split_source_text(body["source_text"], strict=True)
+        replacements = update["front_matter_updates"]
+        source_text = rewrite_front_matter_fields(
+            prefix, {key: value for key, value in replacements.items() if value is not None},
+            remove_fields=[key for key, value in replacements.items() if value is None],
+        ) + source_body
+        _, metadata = validate_source_candidate(repo_root, target, source_text, resolved)
+        payload["source_text"] = source_text
+    subject = project_document_subject(metadata, folder_supported=True)
     if subject is not None:
         payload["subject"] = subject
     return payload

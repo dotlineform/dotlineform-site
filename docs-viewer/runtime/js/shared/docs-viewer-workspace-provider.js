@@ -169,6 +169,9 @@ export function createDocsViewerWorkspaceProvider(options) {
   if (source && typeof source.readSourceContext === "function") {
     provider.readSourceContext = function (target, payload) { return source.readSourceContext(target, payload); };
   }
+  if (source && typeof source.openLocalTarget === "function") {
+    provider.openLocalTarget = function (target) { return source.openLocalTarget(target); };
+  }
   if (source && typeof source.readDiagramSources === "function") {
     provider.readDiagramSources = function (target, optionsForRead) {
       return source.readDiagramSources(target, optionsForRead || {});

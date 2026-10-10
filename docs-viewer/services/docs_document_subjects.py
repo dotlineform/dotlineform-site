@@ -102,7 +102,7 @@ def subject_from_record(
 
 
 def project_reader_subject(front_matter: Mapping[str, Any]) -> str | None:
-    """Project the optional Work scalar for source context and publication inputs."""
+    """Project the optional Work scalar for public-reader and publication inputs."""
     subject = normalize_authoring_subject(front_matter, folder_supported=True)
     if subject["kind"] != "work":
         return None

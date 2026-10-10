@@ -65,7 +65,6 @@ from docs_management_mutation_service import (  # noqa: E402
     DocumentCreateCommittedError,
     CollectionDocumentDeleteApplyError,
     execute_management_mutation_plan,
-    handle_assign_field_group,
     handle_create,
     handle_delete_apply,
     handle_move,
@@ -239,11 +238,6 @@ def docs_management_post_response(
                 },
             )
         return HTTPStatus.OK, payload
-    if path == routes.ASSIGN_FIELD_GROUP_PATH:
-        try:
-            return HTTPStatus.OK, handle_assign_field_group(repo_root, body, dry_run)
-        except mutations.ManagedDocumentRevisionConflict as error:
-            return HTTPStatus.CONFLICT, error.payload
     if path == routes.CREATE_PATH:
         if str(body.get("collection") or "").strip().lower() == "catalogue":
             raise ValueError("Catalogue documents are created through Regenerate")

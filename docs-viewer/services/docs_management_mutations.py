@@ -27,10 +27,6 @@ from docs_workspace_config import (
     resolve_external_data_root,
     resolve_workspace_path,
 )
-from docs_collection_customisations import (
-    normalize_collection_customisation_metadata_update,
-    collection_customisation_assignable_field_groups,
-)
 
 
 COLLECTION_DELETE_PREVIEW_KEYS = frozenset({ "collection", "doc_id"})
@@ -38,16 +34,6 @@ COLLECTION_DELETE_APPLY_KEYS = frozenset(
     { "collection", "doc_id", "source_revision", "confirm"}
 )
 SOURCE_REVISION_PATTERN = re.compile(r"^sha256:[0-9a-f]{64}$")
-ASSIGN_FIELD_GROUP_KEYS = frozenset(
-    {
-        "collection",
-        "doc_id",
-        "source_revision",
-        "field_group",
-        "fields",
-        "confirm",
-    }
-)
 
 
 class ManagedDocumentRevisionConflict(ValueError):
@@ -295,181 +281,6 @@ def plan_create(
         log_details=log_details,
         include_write_result_keys=True,
         report_create_commit_on_rebuild_failure=True,
-    )
-
-
-def _assignable_field_groups(resolved: ManagedDocumentTarget) -> tuple[Any, ...]:
-    if not resolved.collection:
-        return ()
-    return collection_customisation_assignable_field_groups(
-        resolved.document_config.collection_customisation
-    )
-
-
-def plan_assign_field_group(
-    repo_root: Path,
-    body: Dict[str, Any],
-) -> ManagementMutationPlan:
-    if frozenset(body) != ASSIGN_FIELD_GROUP_KEYS:
-        required = ", ".join(sorted(ASSIGN_FIELD_GROUP_KEYS))
-        raise ValueError(
-            "assign field group must contain exactly " + required
-        )
-    if body.get("confirm") is not True:
-        raise ValueError("assign field group requires confirm=true")
-
-    resolved = resolve_managed_document_target(
-        repo_root,
-        managed_document_target_request(body),
-    )
-    require_document_authoring(resolved.parent_config)
-    if not resolved.collection:
-        raise ValueError("assign field group requires a collection document")
-
-    requested_revision = str(body.get("source_revision") or "").strip()
-    if not SOURCE_REVISION_PATTERN.fullmatch(requested_revision):
-        raise ValueError(
-            "source_revision is required for assignable field group updates"
-        )
-    raw_group_id = body.get("field_group")
-    if (
-        not isinstance(raw_group_id, str)
-        or raw_group_id != raw_group_id.strip()
-        or raw_group_id != raw_group_id.lower()
-        or not raw_group_id
-    ):
-        raise ValueError("field_group must be one exact configured identity")
-    group_id = raw_group_id
-    groups = [
-        group
-        for group in _assignable_field_groups(resolved)
-        if group.group_id == group_id
-    ]
-    if len(groups) != 1:
-        raise ValueError(
-            f"assignable field group is not configured: {group_id or 'missing identity'}"
-        )
-    group = groups[0]
-    raw_fields = body.get("fields")
-    if not isinstance(raw_fields, dict):
-        raise ValueError("assign field group fields must be an object")
-    if set(raw_fields) != set(group.field_names):
-        raise ValueError(
-            "assign field group fields must contain exactly "
-            + ", ".join(group.field_names)
-        )
-    if group.group_id == "authoring_subject" and raw_fields.get("folder_path"):
-        raise ValueError("Folder subjects are unavailable in this workspace")
-
-    target = resolved.document
-    source_bytes = target.source_text.encode("utf-8")
-    current_revision = source_revision(source_bytes)
-    if requested_revision != current_revision:
-        raise ManagedDocumentRevisionConflict(
-            revision_conflict_payload(
-                target=resolved.request_target(),
-                requested_revision=requested_revision,
-                current_revision=current_revision,
-                operation="assign_field_group",
-                error="managed document source changed before field group assignment",
-            )
-        )
-
-    customisation_update = normalize_collection_customisation_metadata_update(
-        resolved.document_config.collection_customisation,
-        raw_fields,
-        provided=True,
-        repo_root=repo_root,
-        front_matter=target.front_matter,
-        doc_id=target.doc_id,
-    )
-    if customisation_update is None:
-        raise ValueError("assignable field group customisation is unavailable")
-    expected_fields = set(group.field_names)
-    if (
-        set(customisation_update.get("front_matter_updates") or {})
-        != expected_fields
-        or set(customisation_update.get("record") or {}) != expected_fields
-    ):
-        raise ValueError(
-            "assignable field group normalizer returned fields outside its declaration"
-        )
-
-    response: Dict[str, Any] = {
-        "ok": True,
-        "operation": "assign_field_group",
-        "target": resolved.request_target(),
-        "collection": resolved.collection,
-        "doc_id": target.doc_id,
-        "field_group": group.group_id,
-        "fields": customisation_update["record"],
-        "changes": customisation_update["changes"],
-        "path": relative_path(repo_root, target.path),
-        "source_revision": current_revision,
-    }
-    if not any(customisation_update["changes"].values()):
-        response["summary_text"] = f"No {group.group_id} changes for {target.doc_id}."
-        return ManagementMutationPlan(
-            collection=resolved.collection,
-            response=response,
-        )
-
-    updated_front_matter = dict(target.front_matter)
-    for field_name, field_value in customisation_update[
-        "front_matter_updates"
-    ].items():
-        if field_value is None:
-            updated_front_matter.pop(field_name, None)
-        else:
-            updated_front_matter[field_name] = field_value
-    updated_front_matter = source_model.advance_front_matter_for_recent_edit(
-        target.front_matter,
-        target.body,
-        updated_front_matter,
-        target.body,
-    )
-    updated_source_text = source_model.format_source(
-        updated_front_matter,
-        target.body,
-        collection=resolved.collection,
-    )
-    source_model.parse_collection_document_report(
-        repo_root,
-        resolved.parent_config,
-        resolved.document_config,
-        updated_source_text,
-        source_name=target.path.as_posix(),
-    )
-    response["source_revision"] = source_revision(
-        updated_source_text.encode("utf-8")
-    )
-    response["record"] = committed_document_record(
-        updated_front_matter, target.doc_id, resolved.document_config,
-        collection=resolved.collection, parent_id=target.parent_id,
-    )
-    response["summary_text"] = f"Updated {group.group_id} for {target.doc_id}."
-    return ManagementMutationPlan(
-        collection=resolved.collection,
-        response=response,
-        source_writes=(
-            SourceWrite(
-                target.path,
-                updated_source_text,
-                original_bytes=source_bytes,
-            ),
-        ),
-        log_event_name="docs-assign-field-group",
-        log_details={
-            "collection": resolved.collection,
-            "doc_id": target.doc_id,
-            "field_group": group.group_id,
-            **customisation_update["changes"],
-        },
-        include_write_result_keys=True,
-        revision_conflict_operation="assign_field_group",
-        revision_conflict_error=(
-            "managed document source changed before field group assignment"
-        ),
     )
 
 

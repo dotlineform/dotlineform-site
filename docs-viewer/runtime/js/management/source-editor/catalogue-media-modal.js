@@ -140,6 +140,7 @@ export function openCatalogueMediaModal(options = {}) {
         message("The selected Catalogue target is unavailable.", true);
       }
       state.list = createCatalogueTargetPickerList(results, {
+        layout: "id-title",
         onActiveChange: function (_target, optionId) {
           [search, results].forEach(function (owner) {
             if (optionId) owner.setAttribute("aria-activedescendant", optionId);
@@ -149,7 +150,6 @@ export function openCatalogueMediaModal(options = {}) {
         kind: function (target) { return target.targetType; },
         id: function (target) { return target.targetId; },
         title: function (target) { return target.title; },
-        meta: function (target) { return target.meta; },
         onSelect: function (target) { selectTarget(target); }
       });
       search.addEventListener("input", updateMatches);

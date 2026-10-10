@@ -11,32 +11,6 @@ function objectRecord(value) {
   return value && typeof value === "object" && !Array.isArray(value) ? value : null;
 }
 
-function normalizeMetadataInfo(value) {
-  var record = objectRecord(value);
-  if (!record) return null;
-  var fields = (Array.isArray(record.fields) ? record.fields : []).map(function (rawField) {
-    var field = objectRecord(rawField);
-    var id = cleanString(field && field.id);
-    var label = cleanString(field && field.label);
-    var valueText = cleanString(field && field.value);
-    if (!/^[a-z][a-z0-9_]*$/.test(id) || !label || !valueText) return null;
-    return Object.freeze({
-      detail: cleanString(field.detail),
-      id: id,
-      label: label,
-      state: cleanString(field.state),
-      value: valueText
-    });
-  }).filter(Boolean);
-  var actions = objectRecord(record.actions);
-  return Object.freeze({
-    actions: Object.freeze({
-      assignSubject: Boolean(actions && actions.assignSubject === true)
-    }),
-    fields: Object.freeze(fields)
-  });
-}
-
 function activeManagedDocument(value) {
   var context = objectRecord(value);
   var target = objectRecord(context && context.documentTarget);
@@ -48,7 +22,6 @@ function activeManagedDocument(value) {
     || cleanString(record && record.doc_id) !== docId
   ) return null;
   return Object.freeze({
-    info: normalizeMetadataInfo(context.documentInfo),
     record: Object.freeze(Object.assign({}, record, { doc_id: docId })),
     target: Object.freeze(collection ? { collection: collection, doc_id: docId } : { doc_id: docId })
   });
@@ -127,7 +100,6 @@ export function createDocsViewerHostedViewContext(options = {}) {
     canonicalUrl: canonicalUrl,
     collectionProvider: options.collectionProvider || null,
     managedDocumentTarget: managedDocument ? managedDocument.target : null,
-    metadataInfo: managedDocument ? managedDocument.info : null,
     parentTrail: trail,
     payload: payload,
     selectedDoc: selectedDoc,

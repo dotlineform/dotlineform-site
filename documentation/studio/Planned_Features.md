@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260428-000000-f5ff18
 title: Planned Features
 added_date: "2026-04-28 00:00:00"
-last_updated: "2026-10-10 15:36:48"
+last_updated: "2026-10-10 16:57:25"
 summary: This explains the delivery model and workflows to implement new repo and application features.
 ui_status: planned
 parent_id: ""
@@ -172,4 +172,5 @@ Store new standalone delivery documents for bounded work that does not need a se
 - [Folders Without Works Report Delivery](deliveries/Folders_Without_Works_Report_Delivery.md) — Implemented and reviewed; awaiting user manual review and acceptance. Recursive local folder inspection across configured Work source roots, including empty/non-image folders and a descendant Work count. The host is generated; restart Docs Viewer to load the new endpoint, then review usefulness and presentation.
 - [Subject And Context Thumbnails Delivery](deliveries/Subject_And_Context_Thumbnails_Delivery.md) — Complete and accepted on 2026-10-05. Scalar Subjects, authored-first Context thumbnails, Working reconciliation and runtime projection are delivered; the user confirmed successful Publish and accepted the result. Retained for recent-work lookup pending manual archive.
 - [Summary Token Delivery](deliveries/Summary_Token_Delivery.md) — Implemented and reviewed; awaiting user manual review and acceptance. Summary expansion, dedicated grey-panel styling, public stylesheet projection and the final Directives **Summary** menu item are delivered; Builder owns expansion and Source Editor Scripts owns insertion. No document/Search build or Publish was performed.
+- [Assign Subject In Source Editor](deliveries/Assign_Subject_In_Source_Editor.md) — User approved on 2026-10-10. Implemented as a Source Directives helper over the current unsaved front matter; Apply prepares/replaces that buffer, while Save owns persistence and generation. Open Subject folder also uses the current buffer in Directives, remaining disabled for Work or None. The separate immediate-write path and unused Document Info metadata plumbing/browser contribution are retired. Static checks passed; manual Source/Subject/Finder review remains.
 - [Recent Exclusions Delivery](deliveries/Recent_Exclusions_Delivery.md) — Implemented and reviewed; awaiting user manual review and acceptance. Editable exact-target exclusions, local Recent VS Code action and fresh shared Recents during Publish preparation; Source Organisation and Generated Data Contracts own the durable behavior. Initial policy applies on the next full Build or Publish; neither was performed.

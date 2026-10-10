@@ -6,6 +6,7 @@ import {
   readManagedDocSource,
   readManagedDocMetadata,
   readManagedDocSourceContext,
+  openLocalTarget,
   readCatalogueMediaTargets,
   readCatalogueMediaConfig,
   readCatalogueWork,
@@ -55,6 +56,9 @@ export function createDocsViewerManagementSourceAdapter(options) {
     },
     readSourceContext: function (target, payload) {
       return readManagedDocSourceContext(target, payload, clientOptions());
+    },
+    openLocalTarget: function (target) {
+      return openLocalTarget(target, clientOptions());
     },
     writeSource: function (target, payload, optionsForWrite) {
       return saveManagedDocSource(target, payload, clientOptions(optionsForWrite));

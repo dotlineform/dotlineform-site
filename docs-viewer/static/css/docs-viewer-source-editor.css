@@ -263,6 +263,18 @@
   min-width: 0;
 }
 
+.docsViewerCatalogueTargetPicker__rowMain--idTitle{
+  display: grid;
+  grid-template-columns: minmax(5ch, max-content) minmax(0, 1fr);
+  column-gap: 0.65rem;
+}
+
+.docsViewerCatalogueTargetPicker__rowMain--idTitle .docsViewerCatalogueTargetPicker__rowId{
+  color: var(--docs-viewer-theme-text-placeholder);
+  font-size: var(--docs-viewer-font-caption, 0.75rem);
+  font-variant-numeric: tabular-nums;
+}
+
 .docsViewerCatalogueTargetPicker__rowTitle{
   flex: 1 1 auto;
   min-width: 0;

@@ -38,15 +38,20 @@ function rowMarkup(target, index, activeIndex, selectedIndex, settings) {
   var active = index === activeIndex;
   var selected = index === selectedIndex;
   var presentation = presentationFor(target, settings);
+  var idTitleLayout = settings.layout === "id-title";
+  var main = idTitleLayout
+    ? '<span class="docsViewerCatalogueTargetPicker__rowId">' + escapeHtml(presentation.id) + "</span>" +
+      '<span class="docsViewerCatalogueTargetPicker__rowTitle">' + escapeHtml(presentation.title) + "</span>"
+    : '<span class="docsViewerCatalogueTargetPicker__rowTitle">' + escapeHtml(presentation.title) + "</span>" +
+      '<span class="docsViewerCatalogueTargetPicker__rowKind">' + escapeHtml(presentation.kind) + "</span>" +
+      '<span class="docsViewerCatalogueTargetPicker__rowId">' + escapeHtml(presentation.id) + "</span>";
   return (
     '<div class="docsViewerCatalogueTargetPicker__row' + (active ? " is-active" : "") + (selected ? " is-selected" : "") + '" ' +
       'id="' + id + '" role="option" aria-selected="' + (selected ? "true" : "false") + '" data-target-index="' + index + '">' +
-      '<span class="docsViewerCatalogueTargetPicker__rowMain">' +
-        '<span class="docsViewerCatalogueTargetPicker__rowTitle">' + escapeHtml(presentation.title) + "</span>" +
-        '<span class="docsViewerCatalogueTargetPicker__rowKind">' + escapeHtml(presentation.kind) + "</span>" +
-        '<span class="docsViewerCatalogueTargetPicker__rowId">' + escapeHtml(presentation.id) + "</span>" +
+      '<span class="docsViewerCatalogueTargetPicker__rowMain' + (idTitleLayout ? " docsViewerCatalogueTargetPicker__rowMain--idTitle" : "") + '">' +
+        main +
       "</span>" +
-      renderMeta(presentation) +
+      (idTitleLayout ? "" : renderMeta(presentation)) +
     "</div>"
   );
 }

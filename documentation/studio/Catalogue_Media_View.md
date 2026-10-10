@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260903-154141-7c9e4b
 title: Catalogue Media View
 added_date: "2026-09-03 15:41:41"
-last_updated: "2026-10-08 17:14:37"
+last_updated: "2026-10-10 15:56:00"
 summary: Exact Work and Gallery links, direct and Series-related Gallery navigation, responsive Work images and paginated Media View, with static-consumer and public-data limits.
 ui_status: done
 parent_id: d-20260903-222617-28475e
@@ -18,7 +18,7 @@ The Gallery conversion retired canonical Details. Detail subject assignment, tok
 
 ## Authoring
 
-**Add Media View link** is the eye icon in Markdown Source, with the action name retained as its tooltip and accessible label. It shares the Catalogue image modal's selection design and searches generated Catalogue Work and Gallery titles or identities. Gallery results come from `galleries/galleries_index.json` and show their Work count. Selecting a Work resolves that Work's image directly; selecting a Gallery resolves its membership. Selected or edited text remains the editable label; an untouched default follows the chosen record title. The source forms are:
+**Add Media View link** searches generated Catalogue Work and Gallery titles or identities through the shared Catalogue image modal. Result rows show the exact `work_id` or `gallery_id` first in grey, then the title, without a `work`/`gallery` label or year/count subtitle. Gallery results come from `galleries/galleries_index.json`, whose v2 rows contain only ID/title. Selecting a Work resolves that Work's image directly; selecting a Gallery resolves its membership. Selected or edited text remains the editable label; an untouched default follows the chosen record title. The source forms are:
 
 ```text
 [[catalogue:media:work:00523|kylie structure 4]]
@@ -29,7 +29,7 @@ The authored label remains literal text and does not change when the Catalogue t
 
 Gallery IDs use the exact canonical spelling: three digits, or at least four digits without a leading zero. Gallery tokens allow no image presentation. The picker inserts `catalogue:media:gallery`; token Info reads the current Gallery title, and Broken Links checks the exact generated Gallery record. Subject assignment offers None, Work and, where the collection supports it, Folder. Series document Subjects were retired on 2026-10-03; Gallery tokens do not imply a new document Subject kind.
 
-**Add Catalogue Image** searches Catalogue Works and uses the selected Work's image. Its token stores the Work-title caption choice, optional static summary, placement and width settings:
+**Add Catalogue Image** searches Catalogue Works and uses the selected Work's image. Its result rows use the same grey ID-first presentation, without the `work` label or `year_display` subtitle. Add and Edit modes share this presentation. Its token stores the Work-title caption choice, optional static summary, placement and width settings:
 
 ```text
 [[catalogue:image:work:03072|use_work_title_caption=true&placement=full&fill_width=true]]

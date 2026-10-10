@@ -3,13 +3,13 @@ draft: false
 doc_id: d-20260731-155053-3929e2
 title: Sub-Scope Customisation Architecture
 added_date: "2026-07-31 15:50:53"
-last_updated: "2026-10-05 09:43:48"
+last_updated: "2026-10-10 16:57:25"
 summary: define the default docs_subscope report, unified registered aspects, access-safe projection, exact targets, browser composition, and extension checks
 parent_id: d-20260801-084127-752d7e
 ---
 # Sub-Scope Customisation Architecture
 
-Current workspace note: the scope/lineage examples below describe the historical registration design. The configured Working Works collection owns current Subject assignment; [Subject Associations](data/subject-associations.md) records its current field, report and publication boundaries. Series document Subjects and Context's Subject list column were retired on 2026-10-03.
+Current workspace note: the scope/lineage examples and browser contribution registrations below describe the historical registration design. The configured Working Works server registration owns current Subject validation, assignment capability and private manifest projection. Assign Subject and Open Subject folder use Source's current buffer. The unused Document Info projection, Working Subject browser contribution and its Manage loader were retired on 2026-10-10; the shared reader panel hosts pinned Related Links. [Subject Associations](data/subject-associations.md) records current field, report and publication boundaries. Series document Subjects and Context's Subject list column were retired on 2026-10-03.
 
 ## Purpose
 
@@ -158,7 +158,7 @@ Projects and Processing additionally project their assignable group and exact li
 }
 ```
 
-The shared config controller normalizes these as `capabilities.assignableFieldGroups` and `capabilities.lineageCopy`. `hasDocsViewerAssignableFieldGroup()` remains the browser availability check for focused assignment actions and modals. The fixed Copy capability changes presentation and destination selection only; concrete lineage authority remains with the server registry and workflow discovery.
+The shared config controller normalizes capability descriptors. Current Source assignment availability comes from the exact configured collection's registered group through the source service's `subject_assignment_available`, rather than the retired `hasDocsViewerAssignableFieldGroup()` browser helper. The fixed Copy capability example describes the historical lineage design; concrete lineage authority remains with the server registry and workflow discovery.
 
 The public manifest contains publishable `{doc_id, title}` rows. The Manage manifest contains complete collection rows plus compact lifecycle metadata. Child publishability controls the next child projection only; it does not activate or publish a non-publishable parent report host. Local collections carry no publishability field. An access-enabled `manifest_projection` may add the existing strict `customisation` data envelope:
 
@@ -189,13 +189,13 @@ The current `authoring_subject` field group contains exactly `folder_path` and `
 
 The shared source reader validates one exact `folder_path` or `work_id` declaration; generated metadata projects optional scalar `subject`, omitted for None. Five ASCII digits identify a Work; other valid decoded relative targets identify supported Folders, and a bare five-digit Folder declaration is rejected. The retired generated object is rejected without aliases. Management/import and Build source parsers share source validation, including rejection of document `series_id` even if blank. Assignment target availability remains separately resolved against generated Catalogue Work targets. [Subject Associations](data/subject-associations.md) owns the scalar contract and exact validation rules.
 
-Private collection management manifests carry optional scalar `subject` and top-level `subject_generation` when projection is enabled. Works requires this projection independently of existing generated files. Reports derive typed associations in memory: Project State retains every assigned Works row, while Works coverage joins member-Work documents to Studio Series. Document links use the configured collection report host and immutable `doc_id`; titles, filenames and current route selection never supply identity. Context's collection contribution supplies document-detail Subject information and actions; the shared collection reader owns thumbnails.
+Private collection management manifests carry optional scalar `subject` and top-level `subject_generation` when projection is enabled. Works requires this projection independently of existing generated files. Reports derive typed associations in memory: Project State retains every assigned Works row, while Works coverage joins member-Work documents to Studio Series. Document links use the configured collection report host and immutable `doc_id`; titles, filenames and current route selection never supply identity. Context uses the shared reader's thumbnails and standard Manage contribution; Subject assignment and Folder opening belong to Source.
 
 The builder maintains Subjects and generation in the management manifest; targeted builds merge selected rows with validated scalar metadata and preserve unselected rows. Retired saved shapes require a complete collection Build. The separate association product and cross-file receipt comparison remain retired. Publish's public Context rows select authored `has_thumbnail: true`, otherwise Work-only `subject`, otherwise neither; they expose no Folder values or assignment capability. By-ID rendering inputs and purpose-specific Links summaries retain their existing owners. Completed Preview and public distribution exclude management manifests.
 
 ## Browser Contribution Contract
 
-The access-specific JavaScript registry resolves the descriptor ID to one lazy factory. The factory validates the descriptor and returns only its needed contribution callbacks:
+The following is the historical extension contract. The current Manage composition loads the standard contribution only; its former customisation registry and sole Working Subject factory are retired. Server registrations still own validation and access-safe manifest data. Any new browser contribution requires its own approved implementation rather than restoring the unused loader automatically. The former factory callbacks were:
 
 | Callback | Ownership |
 | --- | --- |
@@ -237,7 +237,7 @@ Current public descriptors and custom manifest namespaces are empty for Analysis
 5. Inspect the default collection, descriptor, public/Manage manifests, by-ID payloads, exact targets, access registries, and report host.
 6. Add focused pure/service, builder, registry-boundary, module, and route coverage proportional to the new behavior.
 
-For assignable workflows, the registered `DocsSubScopeAssignableFieldGroup` is the availability and server field authority. The browser consumes its projected group ID; `POST /docs/assign-field-group` resolves the exact collection again, accepts only the registered server-owned fields and values normalized by its metadata aspect, requires the current source revision, and performs the exact atomic source write and sub-scope rebuild. The focused collection contribution owns value acquisition and response validation. Generic **Edit metadata** owns only common document fields and must reject fields reserved by an assignable group. A registration's read-only `DocsSubScopeAuthoringSubjectAspect` enables Folder meaning for that exact collection without granting assignment; raw `work_id` and `series_id` continue to use the collection-independent subject reader. For transfer workflows, `DocsSubScopeTransferAspect` remains server-side, validates an explicitly matching contract against target settings, and cannot own shared subject fields.
+For Subject assignment, the registered `DocsCollectionAssignableFieldGroup` owns availability and the server field set. Source projects that capability when it loads. Its Assign Subject helper sends the captured buffer and exact target to the write-free `POST /docs/source/context` endpoint, with optional `subject_fields` for Work or None. The collection's metadata aspect validates values and the shared front-matter writer prepares only those changes. Apply guards the current buffer revision; ordinary Source Save owns atomic persistence and exact document/Links generation. The former separate assignment endpoint and rendered-document modal are retired. A registration's read-only authoring-Subject aspect enables Folder meaning for that exact collection without granting new Folder assignment. Source `series_id` is retired as a document Subject. [Subject Associations](data/subject-associations.md) owns the current declarations and [Source Editor Scripts](Source_Editor_Scripts.md) owns the buffer helper.
 
 ## Code Authority
 

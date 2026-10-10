@@ -146,7 +146,6 @@ export function startDocsViewerRuntime(options) {
     collectionLabel: "",
     documentTarget: null,
     documentRecord: null,
-    documentInfo: null,
     refreshDocument: null,
     refreshCollection: null
   };
@@ -171,7 +170,6 @@ export function startDocsViewerRuntime(options) {
           collectionLabel: "",
           documentTarget: null,
           documentRecord: null,
-          documentInfo: null,
           refreshDocument: null,
           refreshCollection: null
         };

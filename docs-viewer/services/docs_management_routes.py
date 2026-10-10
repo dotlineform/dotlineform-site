@@ -49,7 +49,6 @@ IMPORT_SOURCE_PATH = "/docs/import-source"
 SOURCE_MEDIA_APPLY_PATH = "/docs/source/media"
 SET_DRAFT_PATH = "/docs/set-draft"
 SET_SELECTED_PATH = "/docs/set-selected"
-ASSIGN_FIELD_GROUP_PATH = "/docs/assign-field-group"
 CREATE_PATH = "/docs/create"
 REBUILD_PATH = "/docs/rebuild"
 REBUILD_DOCUMENT_PATH = "/docs/rebuild-document"
@@ -113,7 +112,6 @@ POST_PATHS = (
     SOURCE_MEDIA_APPLY_PATH,
     SET_DRAFT_PATH,
     SET_SELECTED_PATH,
-    ASSIGN_FIELD_GROUP_PATH,
     CREATE_PATH,
     REBUILD_PATH,
     REBUILD_DOCUMENT_PATH,

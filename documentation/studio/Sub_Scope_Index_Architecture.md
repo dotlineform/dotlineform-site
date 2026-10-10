@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260728-113139-763354
 title: Sub-Scope Index Architecture
 added_date: "2026-07-28 11:31:39"
-last_updated: "2026-10-09 20:38:00"
+last_updated: "2026-10-10 17:06:58"
 summary: Collection-list ownership, exact document identity, registered customisations, retained selection and explicit management adoption.
 parent_id: d-20260801-084127-752d7e
 ---
@@ -116,7 +116,7 @@ A registered projector may add only namespaced root and row data:
 }
 ```
 
-The configured Works customisation is Working-only and supplies document-detail Subject information and actions. No current collection customisation supplies list rows, column headings or custom list sorting. Public collection declarations and manifests omit this private customisation.
+The configured Works customisation is Working-only and supplies Subject validation, source assignment capability and private manifest projection. No current collection customisation supplies browser contribution callbacks, list rows, column headings or custom list sorting. Public collection declarations and manifests omit this private customisation.
 
 Rows and actions use `doc_id` as identity. Title remains display data; this
 feature introduces no title-uniqueness, collision, or deduplication contract.
@@ -215,9 +215,9 @@ Docs generation owns document membership, titles, dates, readiness and exact sub
 
 The retired Subject column used a private Catalogue title reader and `reports/works/manifest.json` to display and sort Work/Series subject titles. With its last consumer removed, the reader, metadata generator, Catalogue Refresh step and private report-serving allowance were removed together. Context list loading requires no Catalogue title-file read. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) retains its other generated-reader and freshness responsibilities.
 
-The `working_works` contribution supplies only document-detail Subject information, Assign Subject and Open in Finder. Subject assignment offers Work, configured Folder and None through its separately owned generated Catalogue provider. On 2026-10-03 Series was separately retired as a document Subject after all Working declarations were reassigned. Document `series_id` fields and normalized Series subject records fail explicitly, while Studio Series, report columns and Work-derived Series associations remain supported. [Subject Associations](data/subject-associations.md) owns the current field and report boundaries.
+The `working_works` server registration supplies Subject validity, source assignment capability and private manifest projection. Its former browser contribution and Manage customisation loader are retired with the unused Document Info projection. Assign Subject is in Source's Directives menu, offering Folder, Work and None and updating the unsaved buffer. Work selection uses its separately owned generated Catalogue provider; Folder input uses the collection's existing path normaliser and registered authoring-field capability. Open Subject folder follows it, reads the current buffer and enables only for a valid Folder subject. On 2026-10-03 Series was separately retired as a document Subject after all Working declarations were reassigned. Document `series_id` fields and normalized Series subject records fail explicitly, while Studio Series, report columns and Work-derived Series associations remain supported. [Subject Associations](data/subject-associations.md) owns the current field and report boundaries.
 
-Local folder links and the Edit menu's Open in Finder action open silently on success; failures still display an error.
+Local folder links and Source's Open Subject folder action open silently on success; failures still display an error.
 
 Implementation/static review, initial metadata generation, a targeted no-change preview and direct HTTP serving checks passed on 2026-09-26. The user confirmed review through Site Preview, accepted the final count/placeholder/heading changes, confirmed Studio Save testing and authorized closeout. Current Preview/site manifests include the required timestamps. This establishes user manual acceptance; it does not claim browser automation, measured performance, failure injection or exhaustive mutation/selection/subject-action coverage. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns Save freshness and recovery.
 

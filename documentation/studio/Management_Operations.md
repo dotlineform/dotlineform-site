@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260519-202931-66c794
 title: Management Operations
 added_date: "2026-05-19 20:29:31"
-last_updated: "2026-10-08 19:10:43"
+last_updated: "2026-10-10 17:06:58"
 parent_id: d-20260424-000000-04d75e
 ---
 # Docs Viewer Management Operations
@@ -55,21 +55,15 @@ Public or Catalogue cleanup failure after source commit is a non-success with `c
 
 Scope-wide **Publish** remains the only positive public promotion. Its negative plan removes only current explicit `publishable: false` exclusions and reports `excluded`/`excluded_count`. Public files absent from canonical source for any other reason are retained and unreported; supported document Delete has already completed its own exact negative cleanup.
 
-## Assignable Field Group Mutations
+## Subject Assignment In Source
 
-`POST /docs/assign-field-group` is the focused management mutation for a field group declared by the exact configured sub-scope customisation. Its request contains the exact `{scope, sub_scope, doc_id}` target, current `source_revision`, exact `field_group`, the declared `fields` object, and `confirm: true`.
+**Assign Subject** belongs to the Source editor's Directives menu. `docs-viewer/runtime/js/management/source-editor/subject-modal.js` reads the captured unsaved buffer through `POST /docs/source/context`, then sends its selected Folder, Work or None as `subject_fields: {folder_path: "<path-or-empty>", work_id: "<five-digit-id-or-empty>"}` with that same buffer and its immutable document target. Only the selected field is nonempty. The exact configured collection's registered `authoring_subject` group owns availability and its metadata aspect owns value validation; `folder_subject_supported` projects whether its authoring fields include `folder_path`.
 
-The service resolves the configured definition again, accepts the group ID and field names owned by that definition, normalizes the values through its customisation adapter, checks the source revision during planning and immediately before replacement, writes atomically, and rebuilds the exact sub-scope. A stale receipt returns a conflict for explicit reload and retry. Fields reserved by an assignable group are handled by this endpoint; **Edit metadata** retains universal document fields and independently configured owners.
+`docs-viewer/services/docs_management_source_service.py` uses the shared strict front-matter parser and span-preserving field writer to return the candidate `source_text`. It updates or clears only the Subject fields, preserves other metadata, body and timestamps, and performs no source write or generation. Apply replaces the current editor buffer only when its captured revision and mounted adapter still match. Cancel leaves it unchanged. Save owns canonical persistence, timestamps, exact document/Links generation and retained-list/display updates.
 
-Projects declares `authoring_subject` over the exact `folder_path`, `work_id`, and `series_id` field set. The focused modal offers None, Folder, Work, or Series and submits all three fields through one strict group mutation. None clears the group. Folder accepts a decoded relative path, absolute POSIX path, or local `file:` URL beneath `DOTLINEFORM_PROJECTS_BASE_DIR`; the stored value is the normalized POSIX path relative to that base. Any child of the configured base is valid, while `projects/` remains the ordinary current convention rather than an additional resolver root. Assignment may record a prospective path; **Open in Finder** resolves an existing contained Folder target when invoked.
+Work selection reuses the generated Catalogue provider and keeps exact five-digit identity strings. Folder preselects/prefills an existing declaration and accepts a decoded relative target, absolute path or file URL under the configured Projects root. The existing collection normaliser canonicalises it to a relative `folder_path` and clears `work_id`; unsupported collections omit the Folder choice and reject a Folder write through their metadata owner. None removes both declarations. The former blanket workspace rejection of Folder assignment is removed. Malformed/conflicting source must be corrected before its context can be read. Existing missing Work targets require a current Work, Folder or None before Apply.
 
-Work and Series reuse the Catalogue target support and accessible picker while filtering results to those two target types. Work keeps one exact five-digit string and Series keeps one exact lowercase alphanumeric-or-hyphen string. A structurally valid current identity remains visible when its Catalogue target is unavailable and requires an explicit replacement or clear before saving. Malformed and conflicting source is read-only evidence until the user explicitly resolves it; opening or cancelling the modal leaves source unchanged. Digit-only strings are quoted during canonical source formatting so leading zeroes survive.
-
-The Projects detail action is present when the exact Manage browser descriptor projects the `authoring_subject` group. Read and mutation service availability controls whether it can run. The modal loads the current revision and normalized value, contains validation and service errors, leaves source unchanged on cancellation, and refreshes the same exact detail after success. Routine success is represented by the refreshed subject cue without adding a global success message.
-
-Analysis Concepts declares `concept_fields` over exactly `group` and `concept_id`. The **Concept fields** modal uses the configured group order and an optional Concept ID input, loads the exact stage/document and source revision, and submits both fields together. **No group** clears group; an empty ID clears the Concept declaration. The action requires the exact Manage capability and read/mutation services, contains service errors, leaves source unchanged on cancellation, and refreshes the same detail after success.
-
-Generic **Edit metadata** does not own Concept fields. The document owns its Concept ID and group; Studio registry reads and writes are retired. Build accepts absent, empty or null Concept IDs and rejects duplicate nonempty IDs within a stage. The assignment endpoint accepts exactly the server-declared field set, so the declaration, normalizer, modal and read-only projection must change together.
+The separate immediate-write `POST /docs/assign-field-group` endpoint, its client helper and mutation plan are retired without aliases. Source's ordinary Save/discard lifecycle handles Subject changes. **Open Subject folder** follows Assign Subject in Directives. Menu opening reads the current unsaved buffer through the same context service; only a valid Folder subject enables it. Activation awaits the existing local-link service to open that folder beneath the configured Projects root, with silent success and visible failures. Work, None, unsupported documents and invalid source remain disabled. The former Edit Finder item and unused Document Info metadata contribution/normalisation are retired. [Assign Subject In Source Editor](deliveries/Assign_Subject_In_Source_Editor.md) records this change and its evidence.
 
 ## Verification
 

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-704641
 title: Source Editor Scripts
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-08 20:05:36"
+last_updated: "2026-10-10 17:12:00"
 parent_id: d-20260607-222033-2a494e
 ---
 # Docs Viewer Source Editor Scripts
@@ -23,13 +23,14 @@ Responsibilities:
 - preserves unaffected authored metadata lines, normalizes Title/Summary and applies the normal source timestamp on changed writes
 - normalizes body line endings and Unicode-whitespace-only prose lines outside literal blocks
 - projects the validated unsaved buffer's Subject through a write-free context request for Catalogue modals
+- prepares Subject-only front-matter changes in that unsaved buffer through the same context endpoint, using the exact collection's registered assignment group and shared field writer
 - awaits exact document/Links generation through `docs_document_rebuild.py` after persistence, carrying saved-source and generation outcomes separately
 - opens source docs with the configured or preferred local Markdown editor
 - logs open-source events
 
 Not responsible for:
 
-- source-revision checks, external-edit merging, document placement or Subject assignment
+- source-revision checks, external-edit merging or document placement
 - Search rebuilding, media production, Publish or browser display during Save
 - staged import conversion
 - route path constants
@@ -57,11 +58,17 @@ Title, Summary and other valid authored fields are edited directly in the same b
 
 The exact splitter lives in `docs_source_model.py`, including the strict key/value and quoted-scalar checks used by Source and existing Import/Review consumers. It uses the maintained front-matter value grammar rather than YAML or a separate browser field parser. `source-buffer.js` locates only the body boundary for buffer contributions; it does not interpret metadata. The modal's write-free context request projects the current buffer's Subject through the service and the owning collection customisation.
 
+Source context uses `docs_document_subjects.py`'s complete authoring projection, including Folder and Work, with omission for None. Its public Work-only projection remains separate. Assign Subject initializes from that private scalar; Open Subject folder uses it for eligibility. Catalogue modals accept the same Folder response while their Use document subject shortcut selects only Work targets.
+
 Source mounts beside the existing rendered DOM inside the common reader's active `.docsViewer__documentMount`. Management CSS keeps that mount and the editor visible while hiding only the mount's rendered children; inactive retained document mounts stay hidden. It does not detach the collection report or end its lifecycle. Successful Save awaits a fresh generated payload, removes the editor and refreshes the current retained mount while preserving its route, history and reading position. Persistence, generation and display failures remain distinct; persisted source is marked clean even when generation fails. [Runtime](Docs_Viewer_Runtime.md#explicit-working-refresh) owns application completion and explicit external-change refreshes; no browser timer remains.
 
 For local-folder authoring it reads the latest runtime capability only during a `paste` event. A recognized replacement is applied to the current range and emits the normal dirty-buffer `input` path. Conversion is silent and does not implement or intercept Undo.
 
-The Directives menu provides **Add image**, **Add Catalogue image**, **Add file**, **Add Media View link**, **Insert doc link** and **Open in VS Code**, followed by a separator and the existing directive insertion items. These are flat menu items rather than nested menus or duplicate toolbar controls. Source loaded/busy state and management availability gate the menu; unavailable items stay disabled. **Add Catalogue Token** and **Insert Subject Link**, their exclusive handlers and their old text-token serializer are retired. Subject metadata retains its independent read/assignment owners.
+The Directives menu provides **Add image**, **Add Catalogue image**, **Add file**, **Add Media View link**, **Insert doc link**, **Assign Subject**, **Open Subject folder** and **Open in VS Code**, followed by a separator and the existing directive insertion items. These are flat menu items rather than nested menus or duplicate toolbar controls. Source loaded/busy state and management availability gate the menu; unavailable items stay disabled. Assign Subject additionally requires the exact collection's registered assignment capability, supplied when Source loads. **Add Catalogue Token** and **Insert Subject Link**, their exclusive handlers and their old text-token serializer are retired.
+
+**Assign Subject** uses `source-editor/subject-modal.js` and the current complete buffer. The modal reads its current Subject through `/docs/source/context`; Work selection uses the generated Catalogue provider, while None clears `folder_path` and `work_id`. The response's `folder_subject_supported` comes from the exact collection's registered authoring fields and controls the Folder option. Folder preselects/prefills an existing declaration and accepts a decoded relative path, absolute path or file URL beneath the configured Projects root; the existing collection normaliser returns the canonical relative `folder_path` and clears `work_id`. Apply requests a write-free Subject rewrite from `docs_management_source_service.py` and replaces the editor text only if the same adapter and captured revision remain current. Python validates the fixed target and collection contract and uses `docs_front_matter.py` to preserve unrelated authored lines, body and timestamps. The editor retains its body selection and scroll position and marks changed text dirty. Cancellation leaves the buffer unchanged. Save owns persistence and generation; returning without Save follows the ordinary discard prompt. The former rendered-menu action, immediate-write endpoint and `docs-viewer-management-project-subject-modal.js` are retired. [Assign Subject In Source Editor](deliveries/Assign_Subject_In_Source_Editor.md) records this delivery.
+
+**Open Subject folder** follows Assign Subject in Directives. Opening the menu reads the current complete buffer through the same write-free Source-context service; a valid Folder subject enables the item. Work, None, unsupported documents and invalid source leave it disabled. Activation uses the captured Folder path and buffer revision, encodes the decoded relative path and awaits the existing `/docs/local-link/open` service through the management Source adapter and workspace provider. Finder opens that Subject folder beneath the configured Projects root, including unsaved Folder changes; it does not open the Markdown file's parent. Success is silent, failures remain actionable and no source or generated output is written.
 
 ## Directives
 
@@ -90,6 +97,10 @@ The watcher observes the source write and independently invokes targeted documen
 ## Catalogue Media And Image Contributions
 
 The Directives menu's Catalogue items author explicit Work/Gallery Media View tokens and Work images through `catalogue-media-modal.js`, the same generated Catalogue picker and validation of the selected current media presentation; neither requires a related document. Their former standalone toolbar wrapper modules are retired.
+
+Add/Edit Catalogue image, Add/Edit Media View link and Assign Subject select the shared picker's `id-title` layout: the exact Work/Gallery ID is the first column in the same light grey as the search icon and the smaller caption font size, followed by its title, with no type label or subtitle. IDs retain their leading zeroes. `catalogue-target-picker.js` keeps Work/Gallery type in selection identity while omitting its visible label in this layout; the document-link caller uses its existing presentation. The Work year remains in the shared lookup for its other consumers. Styling is local-only in `docs-viewer/static/css/docs-viewer-source-editor.css`.
+
+`semantic-token-targets.js` ignores leading zeroes in numeric ID searches: `8`, `008` and `00008` all match Work `00008`; `work:8` and `gallery:8` support type-qualified searches. Exact numeric matches rank above ID-prefix and title matches. Title matching retains its existing rules. The shared matcher also supplies Work-subject selection. Normalisation affects search comparisons only; displayed IDs, selection identity and saved tokens retain the exact canonical strings.
 
 `catalogue-token-parser.js` owns the supported explicit Catalogue `media` and `image` forms, literal-context exclusions, ranges and serializers. `catalogue-token-contribution.js` captures a corresponding occurrence only when its explicit action is used with the caret inside it or its exact range selected. Recognition is limited to the body; ranges include the current front-matter offset. The shared modal initializes every authored field and the stored target, allows target changes through its existing picker, and uses **Apply** to replace only that occurrence in the unsaved buffer. Creation keeps its insertion action. Cancellation and failed validation retain source unchanged; failed media reads retain the stored identity and entered fields.
 

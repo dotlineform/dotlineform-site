@@ -102,14 +102,6 @@ export function normalizeDocsViewerCollectionCustomisation(rawCustomisation) {
   });
 }
 
-export function hasDocsViewerAssignableFieldGroup(descriptor, groupId) {
-  var value = String(groupId || "").trim();
-  var groups = descriptor
-    && descriptor.capabilities
-    && descriptor.capabilities.assignableFieldGroups;
-  return Boolean(value && Array.isArray(groups) && groups.includes(value));
-}
-
 export function initDocsViewerConfigController(context) {
   var workspaceConfig = context.workspaceConfig || {};
   var documentIndex = context.documentIndex || {};

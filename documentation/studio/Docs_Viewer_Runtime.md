@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260331-000000-c313fd
 title: Runtime
 added_date: "2026-03-31 00:00:00"
-last_updated: "2026-10-09 20:51:46"
+last_updated: "2026-10-10 16:57:25"
 summary: Public, manage, and review execution paths; browser/server authority boundaries; extension method; rationale; and known weak spots.
 parent_id: d-20260424-000000-50b63f
 ---
@@ -85,7 +85,7 @@ Discarding or refreshing a document releases its report subscriptions, collectio
 
 Source confirms dirty navigation before the view changes. Cancelling browser traversal returns to the active browser position with its buffer intact, without pushing a duplicate entry. Source Save awaits canonical persistence, exact document/Links generation and fresh display in the current browser entry.
 
-Committed Save, Assign Subject, readiness, Create, confirmed Delete and Import records pass through the workspace provider to retained list owners. Full Source Save summaries come from the validated in-memory metadata, including complete supported list fields, date-only list precision and private Subject/customisation fields. A changed Assign Subject response supplies the same complete record from its validated updated metadata; the existing document action completion forwards it to retained lists before returning. Omitted metadata clears previous values. Collection lists, Selected Documents, Index and retained Search/Recent projections update their own data; Projects and Works reproject title and Subject placement against retained folder, Work and Series inputs. Docs Media and workspace Links update known document labels and remove confirmed deletions without rediscovering references. Confirmed partial Import items are forwarded individually; rolled-back or uncommitted items are excluded. Projection failures are reported separately from successful source persistence. The saved Search index is unchanged; metadata-only in-session Search projection does not refresh body postings or expand Search membership.
+Committed Save, readiness, Create, confirmed Delete and Import records pass through the workspace provider to retained list owners. Full Source Save summaries come from the validated in-memory metadata, including complete supported list fields, date-only list precision and private Subject/customisation fields. Assign Subject applies only to the unsaved Source buffer; its eventual Save supplies the complete committed record through this same path. Omitted metadata clears previous values. Collection lists, Selected Documents, Index and retained Search/Recent projections update their own data; Projects and Works reproject title and Subject placement against retained folder, Work and Series inputs. Docs Media and workspace Links update known document labels and remove confirmed deletions without rediscovering references. Confirmed partial Import items are forwarded individually; rolled-back or uncommitted items are excluded. Projection failures are reported separately from successful source persistence. The saved Search index is unchanged; metadata-only in-session Search projection does not refresh body postings or expand Search membership.
 
 On 2026-10-03 the user confirmed the original general navigation, Source editor opening, title changes and list updates, then reopened the delivery to approve the two-view follow-on and accepted its closeout. Further testing continues during normal work; individual two-view scenarios and detailed failure/cancellation, Delete/Import and public/Review cases were not separately confirmed. Acceptance and static diagnostics do not establish those individual interactions. Public runtime and the newly prepared document/configuration snapshot must be released together through an explicitly authorized Publish; runtime projection alone does not migrate existing public data.
 
@@ -193,7 +193,8 @@ The filesystem watcher and browser refresh timer are retired. Application comple
 | --- | --- |
 | Source Save | Project the complete committed metadata to Index and retained lists, then read and display the fresh exact generated document. |
 | Draft/ready | Project the changed front-matter record to the menu and retained lists; do not reload the document body. |
-| Assign Subject | Project its committed record and refresh the same exact displayed document; no-change results reuse the current view. |
+| Source Assign Subject | Apply its prepared front-matter changes to the unsaved editor only; Source Save owns committed metadata projection and fresh display. |
+| Source Open Subject folder | Read the current buffer's Folder subject when Directives opens and await the existing local-link opener on activation. Work, None and invalid source remain disabled. No source or generated write. |
 | Create | Project the committed record, refresh the ordinary Index where required, and open the exact created target in Source through the existing ordinary or collection owner. |
 | Edit doc → Rebuild | Reload ordinary Index metadata where applicable, read exact current management metadata for retained lists, and refresh the displayed generated payload. |
 | Rebuild docs and Search / changed Settings | Reload the ordinary Index and refresh the exact displayed document/report. Rebuild also invalidates loaded Search and Recent inputs and awaits the currently visible list; the next activation reads inactive lists. Query, Index view and list scroll remain independent of the document refresh. |

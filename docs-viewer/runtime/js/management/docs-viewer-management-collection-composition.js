@@ -331,19 +331,12 @@ export function composeDocsViewerManagementCollectionContributions(options = {})
     });
   }
 
-  function projectDetailInfo(context) {
-    var project = callback(customisationContribution, "projectDetailInfo");
-    if (!project) return null;
-    return project(Object.assign({}, context, { access: "manage" }));
-  }
-
   var composed = {
     id: "management_composition",
     captureListState: function () { return defaultContribution.captureListState ? defaultContribution.captureListState() : null; },
     restoreListState: function (saved) { if (defaultContribution.restoreListState) defaultContribution.restoreListState(saved); },
     createFilters: createFilters,
     notify: notify,
-    projectDetailInfo: projectDetailInfo,
     renderDetailToolbar: renderDetailToolbar,
     renderListToolbar: renderListToolbar,
     renderRow: renderRow

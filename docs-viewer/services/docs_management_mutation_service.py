@@ -243,18 +243,6 @@ def handle_create(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[
     return execute_management_mutation_plan(repo_root, mutations.plan_create(repo_root, body), dry_run)
 
 
-def handle_assign_field_group(
-    repo_root: Path,
-    body: Dict[str, Any],
-    dry_run: bool,
-) -> Dict[str, Any]:
-    return execute_management_mutation_plan(
-        repo_root,
-        mutations.plan_assign_field_group(repo_root, body),
-        dry_run,
-    )
-
-
 def handle_move(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
     return execute_management_mutation_plan(repo_root, mutations.plan_move(repo_root, body), dry_run)
 
