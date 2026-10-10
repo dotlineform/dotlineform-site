@@ -5,7 +5,7 @@ import {
   appendProjectSubjectIcon
 } from "./project-subject-icons.js";
 
-const REPORT_SCHEMA = "docs_project_state_report_v4";
+const REPORT_SCHEMA = "docs_project_state_report_v5";
 const LOCAL_TARGET_PREFIX = "dlf-local:";
 const GROUP_KEYS = Object.freeze(["folder", "series"]);
 const COLUMN_KEYS = Object.freeze(["folder", "series", "docs"]);
@@ -145,7 +145,6 @@ function normalizeRow(value) {
 /** Accept the live folder report with exact Analysis/Working/Works document targets. */
 export function normalizeProjectStateResponse(payload) {
   const report = payload && payload.report;
-  const generation = cleanString(report && report.generation);
   const generatedAt = cleanString(report && report.generated_at);
   const inputs = report && report.inputs;
   if (
@@ -154,14 +153,12 @@ export function normalizeProjectStateResponse(payload) {
     || !report
     || report.schema_version !== REPORT_SCHEMA
     || cleanString(inputs && inputs.collection) !== "works"
-    || !generation
     || !generatedAt
   ) {
     throw new Error("Project State report is invalid.");
   }
   return {
     generatedAt,
-    generation,
     summary: report.summary && typeof report.summary === "object" ? report.summary : {},
     rows: requireArray(report.rows, "rows").map(normalizeRow)
   };

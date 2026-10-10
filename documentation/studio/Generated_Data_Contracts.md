@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260605-125108-c68916
 title: Generated Data Contracts
 added_date: "2026-06-05 12:51:08"
-last_updated: "2026-10-08 19:10:43"
+last_updated: "2026-10-11 00:00:00"
 summary: Public and manage Docs Viewer payload schemas, registered publication roots, read authority, publishing, and builder ownership contracts.
 parent_id: d-20260331-000000-c313fd
 ---
@@ -45,7 +45,7 @@ Manage-only Catalogue target discovery is the `/docs/catalogue-media-targets` re
 
 ## Collection Manifest Ownership
 
-The [collection builder](../../docs-viewer/build/docs_builder/collection.py) produces one list manifest for the operation's existing build role. Working full and targeted collection builds generate only `manage-manifest.json`, including requested draft documents and the existing management metadata. Working does not generate, read or require a public `manifest.json`. The local generated collection route serves the management manifest and exact by-ID documents; public-manifest reads through that route are retired without a fallback.
+The [collection builder](../../docs-viewer/build/docs_builder/collection.py) produces one list manifest for the operation's existing build role. Each manifest contains exactly one root `docs` array; collection identity comes from the configured owner and route. Working full and targeted collection builds generate only `manage-manifest.json`, including requested draft documents and the existing management metadata. Subject-enabled rows retain scalar `subject`; no customisation envelope or Subject generation hash remains. Browser collection configuration supplies list/by-ID locations without customisation descriptors or loader registries. Working does not generate, read or require a public `manifest.json`. The local generated collection route serves the management manifest and exact by-ID documents; public-manifest reads through that route are retired without a fallback.
 
 Application writes pass exact changed/deleted document identities to the builder. Targeted Working builds read only the saved management manifest, validate its required metadata, merge selected rows, and use its membership and titles as rendering context. Unselected rows and document payloads remain intact. The manifest is written only when its projected contents change. Missing/invalid required management metadata fails with a complete collection Build instruction; no public-manifest agreement check or full-source fallback remains.
 

@@ -2,7 +2,6 @@ import { classifyDocsDocumentSubject } from "../shared/docs-document-subject.js"
 import { appendProjectSubjectIcon } from "./project-subject-icons.js";
 const CATALOGUE_SCHEMA = "catalogue_work_document_coverage_v1";
 const WORKS_COLLECTION = "works";
-const WORKS_CUSTOMISATION = "working_works";
 const SERIES_ID_PATTERN = /^[0-9]{3}$/;
 const WORK_ID_PATTERN = /^[0-9]{5}$/;
 const DOC_ID_PATTERN = /^d-[0-9]{8}-[0-9]{6}-[0-9a-f]{6}$/;
@@ -77,14 +76,7 @@ function normalizeWorkDocument(value) {
 
 export function normalizeWorksDocumentsManifest(payload) {
   if (
-    !exactKeys(payload, ["customisation", "docs", "subject_generation"])
-    || !exactKeys(payload.customisation, ["data", "id"])
-    || payload.customisation.id !== WORKS_CUSTOMISATION
-    || !payload.customisation.data
-    || typeof payload.customisation.data !== "object"
-    || Array.isArray(payload.customisation.data)
-    || typeof payload.subject_generation !== "string"
-    || !payload.subject_generation.startsWith("sha256:")
+    !exactKeys(payload, ["docs"])
     || !Array.isArray(payload.docs)
   ) {
     throw new Error("Working Works manifest is invalid.");

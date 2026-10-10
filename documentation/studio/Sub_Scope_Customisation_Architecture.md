@@ -3,17 +3,17 @@ draft: false
 doc_id: d-20260731-155053-3929e2
 title: Sub-Scope Customisation Architecture
 added_date: "2026-07-31 15:50:53"
-last_updated: "2026-10-10 16:57:25"
+last_updated: "2026-10-11 00:00:00"
 summary: define the default docs_subscope report, unified registered aspects, access-safe projection, exact targets, browser composition, and extension checks
 parent_id: d-20260801-084127-752d7e
 ---
 # Sub-Scope Customisation Architecture
 
-Current workspace note: the scope/lineage examples and browser contribution registrations below describe the historical registration design. The configured Working Works server registration owns current Subject validation, assignment capability and private manifest projection. Assign Subject and Open Subject folder use Source's current buffer. The unused Document Info projection, Working Subject browser contribution and its Manage loader were retired on 2026-10-10; the shared reader panel hosts pinned Related Links. [Subject Associations](data/subject-associations.md) records current field, report and publication boundaries. Series document Subjects and Context's Subject list column were retired on 2026-10-03.
+Current workspace note: the scope/lineage examples, manifest customisation envelopes and browser contribution registrations below describe the historical registration design. The configured Working Works server registration owns current Subject validation, assignment capability and publication preparation. Assign Subject and Open Subject folder use Source's current buffer. Collection manifest projection aspects, browser descriptors/loaders and unused report extension hooks were retired on 2026-10-11; manifests now contain only `docs`, with scalar Subjects in rows. The unused Document Info projection, Working Subject browser contribution and its Manage loader were previously retired; the shared reader panel hosts pinned Related Links. [Subject Associations](data/subject-associations.md) and [collection browsing](Sub_Scope_Index_Architecture.md) own current contracts. Series document Subjects and Context's Subject list column were retired on 2026-10-03.
 
 ## Purpose
 
-This document is the current implementation reference for the default `docs_subscope` report and its optional registered collection extensions. It fixes configuration, aspect ownership, generated data, browser composition, exact targets, access projection, and the checks required when a registration changes.
+This document retains the historical registered collection-extension design. Current implementation contracts live with the owners linked in the workspace note above.
 
 ```text
 configured sub-scope
@@ -189,7 +189,7 @@ The current `authoring_subject` field group contains exactly `folder_path` and `
 
 The shared source reader validates one exact `folder_path` or `work_id` declaration; generated metadata projects optional scalar `subject`, omitted for None. Five ASCII digits identify a Work; other valid decoded relative targets identify supported Folders, and a bare five-digit Folder declaration is rejected. The retired generated object is rejected without aliases. Management/import and Build source parsers share source validation, including rejection of document `series_id` even if blank. Assignment target availability remains separately resolved against generated Catalogue Work targets. [Subject Associations](data/subject-associations.md) owns the scalar contract and exact validation rules.
 
-Private collection management manifests carry optional scalar `subject` and top-level `subject_generation` when projection is enabled. Works requires this projection independently of existing generated files. Reports derive typed associations in memory: Project State retains every assigned Works row, while Works coverage joins member-Work documents to Studio Series. Document links use the configured collection report host and immutable `doc_id`; titles, filenames and current route selection never supply identity. Context uses the shared reader's thumbnails and standard Manage contribution; Subject assignment and Folder opening belong to Source.
+Private collection management manifests carry optional scalar `subject` in their `docs` rows when projection is enabled. Works requires this projection independently of existing generated files. Reports derive typed associations in memory: Project State retains every assigned Works row, while Works coverage joins member-Work documents to Studio Series. Document links use the configured collection report host and immutable `doc_id`; titles, filenames and current route selection never supply identity. Context uses the shared reader's thumbnails and standard Manage contribution; Subject assignment and Folder opening belong to Source. No manifest customisation envelope or Subject generation hash remains.
 
 The builder maintains Subjects and generation in the management manifest; targeted builds merge selected rows with validated scalar metadata and preserve unselected rows. Retired saved shapes require a complete collection Build. The separate association product and cross-file receipt comparison remain retired. Publish's public Context rows select authored `has_thumbnail: true`, otherwise Work-only `subject`, otherwise neither; they expose no Folder values or assignment capability. By-ID rendering inputs and purpose-specific Links summaries retain their existing owners. Completed Preview and public distribution exclude management manifests.
 

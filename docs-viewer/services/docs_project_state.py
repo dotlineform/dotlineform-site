@@ -3,9 +3,7 @@
 
 from __future__ import annotations
 
-import hashlib
 import json
-import re
 import sys
 from collections import defaultdict
 from dataclasses import dataclass
@@ -41,9 +39,8 @@ from studio.shared.python.projects_directories import (  # noqa: E402
     normalize_projects_directory_marker,
 )
 
-REPORT_SCHEMA_VERSION = "docs_project_state_report_v4"
+REPORT_SCHEMA_VERSION = "docs_project_state_report_v5"
 WORKS_COLLECTION = "works"
-GENERATION_PATTERN = re.compile(r"\Asha256:[0-9a-f]{64}\Z")
 
 
 @dataclass(frozen=True)
@@ -109,15 +106,14 @@ def _folder_keys(projects_base_dir: Path) -> list[str]:
 
 def _subject_documents(
     manifest: Mapping[str, Any], collection_viewer_url: str
-) -> tuple[str, dict[tuple[str, str], list[dict[str, Any]]], int]:
+) -> tuple[dict[tuple[str, str], list[dict[str, Any]]], int]:
     """Group valid Works subjects directly from private rows with configured links.
 
     Keep every document for a subject; unassigned documents contribute only to
     the document count, not report placement.
     """
-    generation = str(manifest.get("subject_generation") or "").strip()
     manifest_rows = manifest.get("docs")
-    if not GENERATION_PATTERN.fullmatch(generation) or not isinstance(manifest_rows, list):
+    if set(manifest) != {"docs"} or not isinstance(manifest_rows, list):
         raise ValueError("Projects Manage manifest has an invalid subject projection")
     seen_doc_ids: set[str] = set()
     by_subject: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
@@ -147,7 +143,7 @@ def _subject_documents(
         )
     for values in by_subject.values():
         values.sort(key=lambda value: (value["title"].casefold(), value["title"], value["target"]["doc_id"]))
-    return generation, dict(by_subject), len(seen_doc_ids)
+    return dict(by_subject), len(seen_doc_ids)
 
 
 def _catalogue_indexes(workspace: ArtifactLocation) -> tuple[
@@ -331,29 +327,17 @@ def _rows(
     return rows
 
 
-def _generation(subject_generation: str, rows: list[dict[str, Any]]) -> str:
-    source = json.dumps(
-        {"subject_generation": subject_generation, "rows": rows},
-        ensure_ascii=False,
-        separators=(",", ":"),
-        sort_keys=True,
-    ).encode("utf-8")
-    return "sha256:" + hashlib.sha256(source).hexdigest()
-
-
 def validate_report(report: Mapping[str, Any]) -> None:
     rows = report.get("rows")
     summary = report.get("summary")
     inputs = report.get("inputs")
     if (
         report.get("schema_version") != REPORT_SCHEMA_VERSION
-        or not GENERATION_PATTERN.fullmatch(str(report.get("generation") or ""))
         or not str(report.get("generated_at") or "").strip()
         or not isinstance(inputs, dict)
         or "scope" in inputs
         or "stage" in inputs
         or inputs.get("collection") != WORKS_COLLECTION
-        or not GENERATION_PATTERN.fullmatch(str(inputs.get("subject_generation") or ""))
         or inputs.get("folder_scan") != {"root": "projects", "depth": "immediate_children"}
         or not isinstance(rows, list)
         or not isinstance(summary, dict)
@@ -441,7 +425,7 @@ class ProjectStateProducer:
 
     def build(self, *, generated_at: str) -> tuple[dict[str, Any], dict[str, Any]]:
         folder_keys = _folder_keys(self.paths.projects_base_dir)
-        subject_generation, documents_by_subject, manifest_count = _subject_documents(
+        documents_by_subject, manifest_count = _subject_documents(
             _read_json(self.paths.manage_manifest_path, "Projects Manage manifest"),
             self.paths.collection_viewer_url,
         )
@@ -459,7 +443,6 @@ class ProjectStateProducer:
             folder_keys_by_series,
         )
         rows = _rows(folder_keys, documents_by_folder, works_by_folder, series_by_id)
-        generation = _generation(subject_generation, rows)
         diagnostics = {
             "scanned_folder_count": len(folder_keys),
             **document_diagnostics,
@@ -473,11 +456,9 @@ class ProjectStateProducer:
         }
         report = {
             "schema_version": REPORT_SCHEMA_VERSION,
-            "generation": generation,
             "generated_at": generated_at,
             "inputs": {
                 "collection": WORKS_COLLECTION,
-                "subject_generation": subject_generation,
                 "folder_scan": {"root": "projects", "depth": "immediate_children"},
             },
             "summary": dict(diagnostics),

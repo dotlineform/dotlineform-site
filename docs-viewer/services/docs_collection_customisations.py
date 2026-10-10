@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from functools import partial
 from pathlib import Path
 import re
-from typing import Any, Callable, Mapping, Sequence
+from typing import Any, Callable, Mapping
 
 import docs_working_works_customisation as working_works
 from docs_document_subjects import AUTHORING_SUBJECT_FIELDS, FOLDER_PATH_FIELD
@@ -15,9 +15,6 @@ from docs_document_subjects import AUTHORING_SUBJECT_FIELDS, FOLDER_PATH_FIELD
 CUSTOMISATION_ID_PATTERN = re.compile(r"\A[a-z][a-z0-9_]*\Z")
 PREVIEW_WORKS_CUSTOMISATION_ID = "preview_works"
 WORKING_WORKS_CUSTOMISATION_ID = working_works.CUSTOMISATION_ID
-PUBLIC_ACCESS = "public"
-MANAGE_ACCESS = "manage"
-SUPPORTED_BROWSER_ACCESSES = frozenset({PUBLIC_ACCESS, MANAGE_ACCESS})
 LINEAGE_SOURCE_ROLE = "source"
 LINEAGE_EDITORIAL_ROLE = "editorial"
 SUPPORTED_LINEAGE_ROLES = frozenset({LINEAGE_SOURCE_ROLE, LINEAGE_EDITORIAL_ROLE})
@@ -30,14 +27,6 @@ class DocsCollectionCustomisationConfig:
 
 
 @dataclass(frozen=True)
-class DocsCollectionManifestProjectionAspect:
-    project: Callable[
-        [Mapping[str, Any], Sequence[Any], Path, str],
-        dict[str, Any],
-    ]
-
-
-@dataclass(frozen=True)
 class DocsCollectionMetadataAspect:
     read_record: Callable[..., dict[str, Any]]
     normalize_update: Callable[..., dict[str, Any]] | None = None
@@ -46,11 +35,6 @@ class DocsCollectionMetadataAspect:
 @dataclass(frozen=True)
 class DocsCollectionImportFrontMatterAspect:
     normalize: Callable[..., dict[str, Any]]
-
-
-@dataclass(frozen=True)
-class DocsCollectionBrowserCompositionAspect:
-    accesses: frozenset[str]
 
 
 @dataclass(frozen=True)
@@ -74,10 +58,8 @@ class DocsCollectionDocumentLineageAspect:
 class DocsCollectionCustomisationDefinition:
     customisation_id: str
     normalize_settings: Callable[[Any, str], Mapping[str, Any]]
-    manifest_projection: DocsCollectionManifestProjectionAspect | None = None
     metadata: DocsCollectionMetadataAspect | None = None
     import_front_matter: DocsCollectionImportFrontMatterAspect | None = None
-    browser_composition: DocsCollectionBrowserCompositionAspect | None = None
     assignable_field_groups: tuple[DocsCollectionAssignableFieldGroup, ...] = ()
     authoring_subject: DocsCollectionAuthoringSubjectAspect | None = None
     document_lineages: tuple[DocsCollectionDocumentLineageAspect, ...] = ()
@@ -102,13 +84,6 @@ def _strict_object(raw: Any, *, field: str, keys: set[str]) -> dict[str, Any]:
     return raw
 
 
-def _project_preview_works_manifest(
-    settings: Mapping[str, Any], documents: Sequence[Any], repo_root: Path, collection: str,
-) -> dict[str, Any]:
-    """Identify the Manage subject contribution; shared subject projection owns its rows."""
-    return {"root": {"id": PREVIEW_WORKS_CUSTOMISATION_ID, "data": {}}, "rows": {}}
-
-
 def _normalize_empty_settings(raw: Any, field: str) -> Mapping[str, Any]:
     settings = _strict_object(raw, field=field, keys=set())
     return settings
@@ -118,16 +93,12 @@ COLLECTION_CUSTOMISATION_DEFINITIONS = {
     PREVIEW_WORKS_CUSTOMISATION_ID: DocsCollectionCustomisationDefinition(
         customisation_id=PREVIEW_WORKS_CUSTOMISATION_ID,
         normalize_settings=_normalize_empty_settings,
-        manifest_projection=DocsCollectionManifestProjectionAspect(project=_project_preview_works_manifest),
         authoring_subject=DocsCollectionAuthoringSubjectAspect(
             field_names=tuple(field for field in AUTHORING_SUBJECT_FIELDS if field != FOLDER_PATH_FIELD),
         ),
         metadata=DocsCollectionMetadataAspect(
             read_record=partial(working_works.metadata_record, folder_supported=False),
             normalize_update=partial(working_works.normalize_metadata_update, folder_supported=False),
-        ),
-        browser_composition=DocsCollectionBrowserCompositionAspect(
-            accesses=frozenset({MANAGE_ACCESS}),
         ),
         assignable_field_groups=(
             DocsCollectionAssignableFieldGroup(
@@ -141,18 +112,12 @@ COLLECTION_CUSTOMISATION_DEFINITIONS = {
         customisation_id=WORKING_WORKS_CUSTOMISATION_ID,
         prepare_publication=working_works.publication_front_matter,
         normalize_settings=working_works.normalize_settings,
-        manifest_projection=DocsCollectionManifestProjectionAspect(
-            project=working_works.project_manifest,
-        ),
         metadata=DocsCollectionMetadataAspect(
             read_record=working_works.metadata_record,
             normalize_update=working_works.normalize_metadata_update,
         ),
         import_front_matter=DocsCollectionImportFrontMatterAspect(
             normalize=working_works.normalize_import_front_matter,
-        ),
-        browser_composition=DocsCollectionBrowserCompositionAspect(
-            accesses=frozenset({MANAGE_ACCESS}),
         ),
         assignable_field_groups=(
             DocsCollectionAssignableFieldGroup(
@@ -198,21 +163,11 @@ def _validate_definition(
         raise ValueError(f"{field} prepare_publication must be callable")
 
     aspect_types = (
-        (
-            "manifest_projection",
-            definition.manifest_projection,
-            DocsCollectionManifestProjectionAspect,
-        ),
         ("metadata", definition.metadata, DocsCollectionMetadataAspect),
         (
             "import_front_matter",
             definition.import_front_matter,
             DocsCollectionImportFrontMatterAspect,
-        ),
-        (
-            "browser_composition",
-            definition.browser_composition,
-            DocsCollectionBrowserCompositionAspect,
         ),
         (
             "authoring_subject",
@@ -225,12 +180,6 @@ def _validate_definition(
             raise ValueError(f"{field} {aspect_name} contains an invalid aspect")
 
     aspect_callbacks = (
-        (
-            "manifest_projection.project",
-            definition.manifest_projection.project
-            if definition.manifest_projection is not None
-            else None,
-        ),
         (
             "metadata.read_record",
             definition.metadata.read_record
@@ -255,30 +204,6 @@ def _validate_definition(
     ):
         raise ValueError(f"{field} metadata.normalize_update must be callable")
 
-    browser = definition.browser_composition
-    manifest = definition.manifest_projection
-    if browser is None:
-        if manifest is not None:
-            raise ValueError(f"{field} manifest_projection requires browser_composition")
-    else:
-        accesses = browser.accesses
-        if not isinstance(accesses, frozenset) or not accesses:
-            raise ValueError(
-                f"{field} browser_composition accesses must be a non-empty frozenset"
-            )
-        if any(not isinstance(access, str) for access in accesses):
-            raise ValueError(
-                f"{field} browser_composition contains an invalid access"
-            )
-        unknown_accesses = sorted(accesses - SUPPORTED_BROWSER_ACCESSES)
-        if unknown_accesses:
-            raise ValueError(
-                f"{field} browser_composition contains unknown access: "
-                f"{', '.join(unknown_accesses)}"
-            )
-        if manifest is None:
-            raise ValueError(f"{field} browser_composition requires manifest_projection")
-
     if not isinstance(definition.assignable_field_groups, tuple):
         raise ValueError(f"{field} assignable_field_groups must be a tuple")
     seen_group_ids: set[str] = set()
@@ -298,11 +223,6 @@ def _validate_definition(
             group.field_names,
             field=f"{group_field} {group.group_id!r} field_names",
         )
-    if definition.assignable_field_groups and (
-        browser is None or MANAGE_ACCESS not in browser.accesses
-    ):
-        raise ValueError(f"{field} assignable_field_groups require Manage browser access")
-
     authoring_subject = definition.authoring_subject
     if authoring_subject is not None:
         _validate_owned_field_names(
@@ -382,29 +302,6 @@ def normalize_docs_collection_customisation(
     )
 
 
-def browser_collection_customisation_payload(
-    customisation: DocsCollectionCustomisationConfig | None,
-    *,
-    published: bool,
-) -> dict[str, Any] | None:
-    if customisation is None:
-        return None
-    definition = _definition_for(customisation)
-    browser = definition.browser_composition
-    access = PUBLIC_ACCESS if published else MANAGE_ACCESS
-    if browser is None or access not in browser.accesses:
-        return None
-    payload: dict[str, Any] = {"id": customisation.customisation_id}
-    assignable_groups = definition.assignable_field_groups
-    if not published and assignable_groups:
-        payload["capabilities"] = {
-            "assignable_field_groups": [
-                group.group_id for group in assignable_groups
-            ]
-        }
-    return payload
-
-
 def collection_customisation_assignable_field_groups(
     customisation: DocsCollectionCustomisationConfig | None,
 ) -> tuple[DocsCollectionAssignableFieldGroup, ...]:
@@ -437,35 +334,6 @@ def collection_customisation_document_lineage_contracts(
     if customisation is None:
         return ()
     return _definition_for(customisation).document_lineages
-
-
-def project_collection_customisation_manifest(
-    customisation: DocsCollectionCustomisationConfig | None,
-    documents: Sequence[Any],
-    *,
-    published: bool,
-    repo_root: Path,
-    collection: str,
-) -> dict[str, Any] | None:
-    if customisation is None:
-        return None
-    definition = _definition_for(customisation)
-    browser = definition.browser_composition
-    access = PUBLIC_ACCESS if published else MANAGE_ACCESS
-    if browser is None or access not in browser.accesses:
-        return None
-    aspect = definition.manifest_projection
-    if aspect is None:
-        raise ValueError(
-            "Docs collection customisation browser access has no manifest projection: "
-            f"{customisation.customisation_id}"
-        )
-    return aspect.project(
-        customisation.settings,
-        documents,
-        repo_root,
-        collection,
-    )
 
 
 def collection_customisation_metadata_record(
@@ -533,35 +401,17 @@ def normalize_collection_customisation_import_front_matter(
     )
 
 
-def registered_collection_customisation_access() -> dict[str, tuple[str, ...]]:
-    access_by_id: dict[str, tuple[str, ...]] = {}
-    for customisation_id, raw_definition in sorted(
-        COLLECTION_CUSTOMISATION_DEFINITIONS.items()
-    ):
-        definition = _validate_definition(customisation_id, raw_definition)
-        browser = definition.browser_composition
-        access_by_id[customisation_id] = tuple(
-            sorted(browser.accesses if browser is not None else ())
-        )
-    return access_by_id
-
-
 __all__ = [
     "PREVIEW_WORKS_CUSTOMISATION_ID",
     "WORKING_WORKS_CUSTOMISATION_ID",
     "DocsCollectionAssignableFieldGroup",
     "DocsCollectionAuthoringSubjectAspect",
-    "DocsCollectionBrowserCompositionAspect",
     "DocsCollectionCustomisationConfig",
     "DocsCollectionCustomisationDefinition",
     "DocsCollectionDocumentLineageAspect",
     "DocsCollectionImportFrontMatterAspect",
-    "DocsCollectionManifestProjectionAspect",
     "DocsCollectionMetadataAspect",
-    "browser_collection_customisation_payload",
     "normalize_docs_collection_customisation",
-    "project_collection_customisation_manifest",
-    "registered_collection_customisation_access",
     "normalize_collection_customisation_metadata_update",
     "normalize_collection_customisation_import_front_matter",
     "collection_customisation_assignable_field_groups",

@@ -2,10 +2,6 @@ function cleanString(value) {
   return String(value == null ? "" : value).trim();
 }
 
-function callback(owner, name) {
-  return owner && typeof owner[name] === "function" ? owner[name] : null;
-}
-
 function frozenIds(values) {
   var seen = new Set();
   return Object.freeze((Array.isArray(values) ? values : []).map(cleanString).filter(function (value) {
@@ -120,232 +116,69 @@ function appendWhenPopulated(parent, host) {
   if (host.childNodes.length) parent.appendChild(host);
 }
 
-function contributionId(contribution, fallback) {
-  return cleanString(contribution && contribution.id) || fallback;
-}
-
-export function composeDocsViewerManagementCollectionContributions(options = {}) {
-  var defaultContribution = options.defaultContribution || null;
-  var customisationContribution = options.customisationContribution || null;
-  var owners = [defaultContribution, customisationContribution].filter(Boolean);
-  var currentList = null;
-  var selectionSnapshot = Object.freeze({
-    active: false,
-    checkedDocIds: Object.freeze([]),
-    eligibleDocIds: Object.freeze([])
-  });
-
-  function containFailure(error, reason) {
-    var handler = currentList
-      && currentList.context
-      && currentList.context.handleContributionError;
-    if (typeof handler !== "function") throw error;
-    handler(error, cleanString(reason) || "customisation-callback-failed");
-  }
-
-  function normalizedSelection(value) {
-    var snapshot = value && typeof value === "object" ? value : {};
-    return Object.freeze({
-      active: snapshot.active === true,
-      checkedDocIds: frozenIds(snapshot.checkedDocIds),
-      eligibleDocIds: frozenIds(snapshot.eligibleDocIds)
-    });
-  }
-
-  function renderSelectionContribution(reason) {
-    if (!currentList || !customisationContribution) return;
-    var renderSelection = callback(customisationContribution, "renderSelectionToolbar");
-    var host = currentList.selectionHost;
-    host.replaceChildren();
-    if (!renderSelection) return;
-    renderSelection({
-      access: "manage",
-      collection: currentList.context.collection,
-      documents: currentList.context.documents,
-      host: host,
-      reason: cleanString(reason),
-      registerAction: actionRegistrar({
-        actionContext: currentList.context.actionContext,
-        refreshAndOpenDocument: currentList.context.refreshAndOpenDocument,
-        refreshCollection: currentList.context.refreshCollection,
-        selection: selectionSnapshot
-      }, "selection"),
-      selection: selectionSnapshot
-    });
-    if (host.childNodes.length && !host.parentNode) {
-      currentList.host.appendChild(host);
-    } else if (!host.childNodes.length && host.parentNode) {
-      host.remove();
-    }
-  }
-
-  function publishSelection(value, reason) {
-    selectionSnapshot = normalizedSelection(value);
-    try {
-      if (customisationContribution) {
-        var notify = callback(customisationContribution, "notify");
-        if (notify && currentList) {
-          notify({
-            type: "selection",
-            access: "manage",
-            collection: currentList.context.collection,
-            selection: selectionSnapshot,
-            reason: cleanString(reason) || "selection-projected"
-          });
-        }
-      }
-      renderSelectionContribution(reason);
-    } catch (error) {
-      containFailure(error, "selection-callback-failed");
-    }
-  }
-
-  function notify(event) {
-    owners.forEach(function (owner) {
-      var handler = callback(owner, "notify");
-      if (handler) handler(event);
-    });
-    if (event && event.type === "unmount") currentList = null;
-  }
-
-  function createFilters(context) {
-    var filters = [];
-    owners.forEach(function (owner) {
-      var create = callback(owner, "createFilters");
-      if (!create) return;
-      var created = create(context);
-      if (!Array.isArray(created)) {
-        throw new Error("Collection customisation filters must be an array.");
-      }
-      filters.push.apply(filters, created);
-    });
-    return filters;
-  }
-
-  function compareListDocuments(context) {
-    var compare = callback(customisationContribution, "compareListDocuments");
-    if (!compare) return 0;
-    return compare(Object.assign({}, context, { access: "manage" }));
-  }
-
-  function renderListHead(context) {
-    owners.forEach(function (owner, index) {
-      var render = callback(owner, "renderListHead");
-      if (!render) return;
-      var ownerId = contributionId(owner, index === 0 ? "default" : "customisation");
-      var child = createHost(context.host, "span", ownerId, "list-head");
-      render(Object.assign({}, context, {
-        access: "manage",
-        host: child
-      }));
-      appendWhenPopulated(context.host, child);
-    });
-  }
-
+export function createDocsViewerManagementCollectionContribution(options) {
+  var defaultContribution = options.defaultContribution;
   function renderRow(context) {
-    var accessibleLabels = [];
-    owners.forEach(function (owner, index) {
-      var render = callback(owner, "renderRow");
-      if (!render) return;
-      var ownerId = contributionId(owner, index === 0 ? "default" : "customisation");
-      var leading = createHost(context.leadingHost, "span", ownerId, "row-leading");
-      var titlePrefix = createHost(context.titlePrefixHost, "span", ownerId, "row-title-prefix");
-      var trailing = createHost(context.trailingHost, "span", ownerId, "row-trailing");
-      var result = render(Object.assign({}, context, {
-        access: "manage",
-        documents: currentList ? currentList.context.documents : [],
-        leadingHost: leading,
-        titlePrefixHost: titlePrefix,
-        trailingHost: trailing
-      })) || {};
-      appendWhenPopulated(context.leadingHost, leading);
-      appendWhenPopulated(context.titlePrefixHost, titlePrefix);
-      appendWhenPopulated(context.trailingHost, trailing);
-      if (Array.isArray(result.accessibleLabels)) {
-        accessibleLabels.push.apply(
-          accessibleLabels,
-          result.accessibleLabels.map(cleanString).filter(Boolean)
-        );
-      }
-    });
-    return { accessibleLabels: accessibleLabels };
+    var leading = createHost(context.leadingHost, "span", "default", "row-leading");
+    var titlePrefix = createHost(context.titlePrefixHost, "span", "default", "row-title-prefix");
+    var trailing = createHost(context.trailingHost, "span", "default", "row-trailing");
+    var result = defaultContribution.renderRow(Object.assign({}, context, {
+      access: "manage",
+      leadingHost: leading,
+      titlePrefixHost: titlePrefix,
+      trailingHost: trailing
+    }));
+    appendWhenPopulated(context.leadingHost, leading);
+    appendWhenPopulated(context.titlePrefixHost, titlePrefix);
+    appendWhenPopulated(context.trailingHost, trailing);
+    return result;
   }
 
   function renderListToolbar(context) {
-    var host = context.host;
-    var customListHead = callback(customisationContribution, "renderListHead");
-    currentList = {
-      context: context,
-      host: host,
-      selectionHost: createHost(host, "div", "customisation", "selection")
-    };
-    owners.forEach(function (owner, index) {
-      var render = callback(owner, "renderListToolbar");
-      if (!render) return;
-      var ownerId = contributionId(owner, index === 0 ? "default" : "customisation");
-      var child = createHost(host, "div", ownerId, "list-toolbar");
-      var actions = createHost(context.actionHost, "div", ownerId, "list-actions");
-      render(Object.assign({}, context, {
-        access: "manage",
-        host: child,
-        actionHost: actions,
-        publishSelection: publishSelection,
-        sort: index === 0 && customListHead ? null : context.sort,
-        registerAction: actionRegistrar({
+    var child = createHost(context.host, "div", "default", "list-toolbar");
+    var actions = createHost(context.actionHost, "div", "default", "list-actions");
+    defaultContribution.renderListToolbar(Object.assign({}, context, {
+      access: "manage",
+      host: child,
+      actionHost: actions,
+      registerAction: actionRegistrar({
+        actionContext: context.actionContext,
+        refreshAndOpenDocument: context.refreshAndOpenDocument,
+        refreshCollection: context.refreshCollection
+      }, "list-toolbar"),
+      registerSelectionAction: function (definition, snapshot) {
+        return actionRegistrar({
           actionContext: context.actionContext,
           refreshAndOpenDocument: context.refreshAndOpenDocument,
           refreshCollection: context.refreshCollection,
-          selection: selectionSnapshot
-        }, "list-toolbar"),
-        registerSelectionAction: function (definition, snapshot) {
-          return actionRegistrar({
-            actionContext: context.actionContext,
-            refreshAndOpenDocument: context.refreshAndOpenDocument,
-            refreshCollection: context.refreshCollection,
-            selection: normalizedSelection(snapshot)
-          }, "selection")(definition);
-        }
-      }));
-      appendWhenPopulated(host, child);
-      appendWhenPopulated(context.actionHost, actions);
-    });
-    renderSelectionContribution("list-toolbar-rendered");
+          selection: snapshot
+        }, "selection")(definition);
+      }
+    }));
+    appendWhenPopulated(context.host, child);
+    appendWhenPopulated(context.actionHost, actions);
   }
 
   function renderDetailToolbar(context) {
-    owners.forEach(function (owner, index) {
-      var render = callback(owner, "renderDetailToolbar");
-      if (!render) return;
-      var ownerId = contributionId(owner, index === 0 ? "default" : "customisation");
-      var child = createHost(context.host, "div", ownerId, "detail-toolbar");
-      render(Object.assign({}, context, {
-        access: "manage",
-        host: child,
-        registerAction: actionRegistrar({
-          actionContext: context.actionContext,
-          refreshAndOpenDocument: context.refreshAndOpenDocument,
-          refreshCollection: context.refreshCollection
-        }, "detail-toolbar")
-      }));
-      appendWhenPopulated(context.host, child);
-    });
+    var child = createHost(context.host, "div", "default", "detail-toolbar");
+    defaultContribution.renderDetailToolbar(Object.assign({}, context, {
+      access: "manage",
+      host: child,
+      registerAction: actionRegistrar({
+        actionContext: context.actionContext,
+        refreshAndOpenDocument: context.refreshAndOpenDocument,
+        refreshCollection: context.refreshCollection
+      }, "detail-toolbar")
+    }));
+    appendWhenPopulated(context.host, child);
   }
 
-  var composed = {
-    id: "management_composition",
-    captureListState: function () { return defaultContribution.captureListState ? defaultContribution.captureListState() : null; },
-    restoreListState: function (saved) { if (defaultContribution.restoreListState) defaultContribution.restoreListState(saved); },
-    createFilters: createFilters,
-    notify: notify,
+  return {
+    captureListState: defaultContribution.captureListState,
+    restoreListState: defaultContribution.restoreListState,
+    notify: defaultContribution.notify,
     renderDetailToolbar: renderDetailToolbar,
     renderListToolbar: renderListToolbar,
     renderRow: renderRow
   };
-  if (callback(customisationContribution, "compareListDocuments")) {
-    composed.compareListDocuments = compareListDocuments;
-  }
-  if (callback(customisationContribution, "renderListHead")) {
-    composed.renderListHead = renderListHead;
-  }
-  return composed;
 }

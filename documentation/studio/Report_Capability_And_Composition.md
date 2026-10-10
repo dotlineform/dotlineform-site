@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260810-173738-703ecd
 title: Report Capability and Composition
 added_date: "2026-08-10 17:37:38"
-last_updated: "2026-09-13 21:19:16"
+last_updated: "2026-10-11 00:00:00"
 summary: durable module, data, contribution, and stylesheet boundaries for shared, public, and local Docs Viewer reports
 parent_id: d-20260513-105343-6de36b
 ---
@@ -25,9 +25,9 @@ That graph cannot be determined from a module's path alone. Public safety, publi
 
 The current public report registry and executable loader allowlist expose only `docs_subscope`. Its shared report reads a public manifest and exact by-ID payloads, owns collection membership and detail validation, and imports no management module.
 
-Manage loads the same shared sub-scope report and explicitly supplies management contributions. Those contributions own private inventory presentation, selection, actions, source and metadata bridges, packages, and collection-specific browser customisations.
+Manage loads the same shared collection report and explicitly supplies its standard management contribution. It owns private inventory presentation, selection, actions and packages. Source owns Subject assignment through the server registration, independently of report composition.
 
-The public sub-scope customisation loader registry is empty. `analysis_tags` and `dotlineform_projects` have Manage-only browser contributions. `analysis_works` has service-owned subject and lineage aspects but no browser report contribution.
+Collection customisation browser descriptors, loader registries, manifest envelopes and unused filter/heading/comparator/selection hooks are retired. Shared collection reports read only the configured `docs` inventory; public callers supply no management contribution. [Collection browsing](Sub_Scope_Index_Architecture.md) owns the current adapter and [Subject Associations](data/subject-associations.md) owns retained server capabilities.
 
 Report blocks and generated descriptors do not carry `access`. Environment-owned metadata and the explicit executable loader allowlist determine availability. Publishing the containing document does not project report metadata, install a loader, grant service access or move CSS. An unsupported report keeps its document and shows an unavailable state.
 
@@ -126,16 +126,15 @@ Public report promotion therefore requires a data decision as well as a module d
 
 ## Customisation And Contribution
 
-`sub_scope_customisation` is a collection-level service definition. Depending on its registered aspects, it may own manifest projection, document groups, validation, metadata, import front matter, assignable fields, subject fields, transfer, lineage, or browser composition.
+`collection_customisation` is a collection-level server definition. Its retained aspects own validation, metadata, import front matter, assignable fields, Subject fields, lineage declarations and publication preparation. It has no manifest projection or browser-composition aspect.
 
-A **report contribution** is only the optional browser-composition aspect. The terms are not interchangeable.
+A **report contribution** is caller-supplied browser behaviour, independent of the server registration.
 
 - A **public report contribution** is a separately allowlisted read-only module over public projection data.
 - A **management report contribution** is a local module that may compose private data and local actions.
-- A customisation with no browser-composition aspect contributes nothing to report rendering.
-- Declaring browser access in service configuration does not create an executable browser loader.
+- Server registrations contribute no browser rendering or loader configuration.
 
-The current browser exposure is:
+The former scope-specific browser exposure below is historical; those contributions are retired:
 
 | Customisation | Browser report contribution | Other registered ownership |
 |---|---|---|
@@ -191,7 +190,6 @@ Promoting a reusable capability to public composition is a complete ownership mi
 Changes to this boundary should verify, in proportion to the slice:
 
 - projected public report ids have matching public loader entries;
-- projected public customisation ids have matching public contribution loaders and manifest data;
 - public entrypoints and their transitive report imports contain no local management dependency;
 - every publicly composed optional capability has a named current public adopter, or is recorded explicitly as accepted application-level public behavior rather than inferred from its path;
 - public report requests remain within public projections and never request private inventory or local APIs;

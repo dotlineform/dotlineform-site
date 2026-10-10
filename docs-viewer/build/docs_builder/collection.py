@@ -23,7 +23,6 @@ from .links_builder import build_document_links, prepare_document_links
 from .media_builds import build_collection_media_snapshot
 from .source import DocRecord, DocumentIdentity
 from docs_collection_customisations import (
-    project_collection_customisation_manifest,
     collection_customisation_authoring_subject_fields,
 )
 from docs_document_subjects import (
@@ -32,7 +31,6 @@ from docs_document_subjects import (
     project_document_subject,
     project_reader_subject,
     subject_from_record,
-    subject_projection_generation,
 )
 from docs_document_identity import doc_updated_date, is_doc_date, is_doc_timestamp, is_document_id
 from docs_selected_documents import read_selected, refresh_selected_documents
@@ -108,20 +106,6 @@ class CollectionDocsBuilder(DocsDataBuilder):
                 subject = project_reader_subject(doc.front_matter)
                 if row.get("has_thumbnail") is not True and subject is not None:
                     row["subject"] = subject
-        projected = project_collection_customisation_manifest(
-            self.collection_config.collection_customisation,
-            ordered_docs,
-            published=True,
-            repo_root=self.repo_root,
-            collection=self.collection_id,
-        )
-        if projected is not None:
-            payload["customisation"] = projected["root"]
-            rows_by_id = projected["rows"]
-            for row in payload["docs"]:
-                row_customisation = rows_by_id.get(row["doc_id"])
-                if row_customisation is not None:
-                    row["customisation"] = row_customisation
         return payload
 
     def manage_manifest_payload(
@@ -129,7 +113,6 @@ class CollectionDocsBuilder(DocsDataBuilder):
         ordered_docs: list[DocRecord],
         *,
         subjects_by_doc_id: dict[str, str | None] | None = None,
-        subject_generation: str = "",
     ) -> dict[str, Any]:
         """Project private list metadata without filtering requested documents."""
         rows: list[dict[str, Any]] = []
@@ -140,36 +123,10 @@ class CollectionDocsBuilder(DocsDataBuilder):
             rows.append(row)
         payload: dict[str, Any] = {"docs": rows}
         if subjects_by_doc_id is not None:
-            payload["subject_generation"] = subject_generation
             for row in payload["docs"]:
                 subject = subjects_by_doc_id[row["doc_id"]]
                 if subject is not None:
                     row["subject"] = subject
-        projected = project_collection_customisation_manifest(
-            self.collection_config.collection_customisation,
-            ordered_docs,
-            published=False,
-            repo_root=self.repo_root,
-            collection=self.collection_id,
-        )
-        if projected is not None:
-            payload["customisation"] = projected["root"]
-            rows_by_id = projected["rows"]
-            unknown_ids = sorted(set(rows_by_id) - {doc.doc_id for doc in ordered_docs})
-            if unknown_ids:
-                raise RuntimeError(
-                    "Docs collection customisation projected unknown document IDs: "
-                    + ", ".join(unknown_ids)
-                )
-            for row in payload["docs"]:
-                row_customisation = rows_by_id.get(row["doc_id"])
-                if row_customisation is not None:
-                    if "customisation" in row:
-                        raise RuntimeError(
-                            "Docs collection customisation row namespace collision: "
-                            + row["doc_id"]
-                        )
-                    row["customisation"] = row_customisation
         return payload
 
     def folder_subject_supported(self) -> bool:
@@ -264,16 +221,6 @@ class CollectionDocsBuilder(DocsDataBuilder):
             doc.doc_id: self.item_entry(doc, docs_by_id)
             for doc in ordered_docs
         }
-        if self.config.stage == "working" and (subjects_by_doc_id is not None or "subject_generation" in manifest_payload):
-            subjects_by_doc_id = {
-                row["doc_id"]: row.get("subject")
-                for row in manifest_payload["docs"]
-            }
-            subject_generation = subject_projection_generation(
-                collection=self.collection_id,
-                subjects_by_doc_id=subjects_by_doc_id,
-            )
-            manifest_payload["subject_generation"] = subject_generation
         write_plan = self.build_collection_write_plan(
             manifest_payload,
             item_payloads,

@@ -26,15 +26,7 @@
         "icon": "dlf-context",
         "report_host_doc_id": "d-20260801-073826-8865a8",
         "manifest_url": "/docs/generated/external/works/manage-manifest.json",
-        "by_id_url_base": "/docs/generated/external/works/by-id",
-        "collection_customisation": {
-          "id": "working_works",
-          "capabilities": {
-            "assignable_field_groups": [
-              "authoring_subject"
-            ]
-          }
-        }
+        "by_id_url_base": "/docs/generated/external/works/by-id"
       },
       {
         "collection": "concepts",

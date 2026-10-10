@@ -3,15 +3,15 @@ draft: false
 doc_id: d-20260728-113139-763354
 title: Sub-Scope Index Architecture
 added_date: "2026-07-28 11:31:39"
-last_updated: "2026-10-10 17:06:58"
-summary: Collection-list ownership, exact document identity, registered customisations, retained selection and explicit management adoption.
+last_updated: "2026-10-11 00:00:00"
+summary: Collection-list ownership, exact document identity, standard management controls, retained selection and explicit management adoption.
 parent_id: d-20260801-084127-752d7e
 ---
 # Sub-Scope Index Architecture
 
 ## Architecture Outcome
 
-`docs_collection` is the generic collection index and default report for a configured named collection. The shared public-safe report owns list browsing. All rows open the common document reader. Manage composes standard controls and workflows plus at most one registered collection customisation without loading management modules on public routes.
+`docs_collection` is the generic collection index and default report for a configured named collection. The shared public-safe report owns list browsing. All rows open the common document reader. Manage supplies standard controls and workflows through its explicit contribution without loading management modules on public routes.
 
 The report owns its list model, filtering, sorting, pagination, selection and collection actions. [Runtime](Docs_Viewer_Runtime.md#exact-document-navigation-and-return) owns exact document rendering, actions and browser-history caller return. Management workflows remain owned by the management host and validated local services.
 
@@ -61,15 +61,15 @@ An extension host exists only when the caller supplies a contribution.
 Public mode therefore receives neither an empty management toolbar nor an
 import path to its implementation.
 
-## Default And Registered Customisations
+## Standard Collection Behaviour
 
-A configured collection record with its ordinary fields selects the default. The shared list supplies title search, title-ascending initial order, normal empty/error states and exact document links. Manage adds status and, only for a publish-capable collection, publishability row treatment, plus the title/recency sort toggle, selection and Prepare Package. New uses the main Actions menu. The common exact-document context mounts supported collection contributions in Edit, including Copy Link, Delete, Subject and Finder actions. Unsupported items remain disabled.
+A configured collection record selects the shared list's title search, standard title/date sorting, normal empty/error states and exact document links. Manage adds draft indicators, supported sort controls, selection and Prepare Package. New uses the main Actions menu. The common exact-document context mounts supported collection actions in Edit, including Copy Link and Delete. Subject assignment and Folder opening belong to Source. Action availability follows the current document/collection policy.
 
 Default title search, including Moments and Concepts, matches the query anywhere in the title, consistently with Context. Both title and query use Unicode NFKC normalization, collapsed whitespace and case-insensitive comparison; `test` therefore matches `1 test`. An empty query retains every document. This filters the loaded collection titles without using the overall Docs Viewer Search index.
 
-An optional strict `sub_scope_customisation: {id, settings}` selects one known registry entry. The builder may project only a namespaced `customisation` root and per-row `customisation` data; the access-specific browser registry resolves its module. Unknown, unavailable, or mismatched identities fail as contained report errors and retain the selected collection's error state.
+The server-only `collection_customisation: {id, settings}` selects one known authoring registration. It owns Subject validation, assignment, import and publication preparation, independently of report composition. Browser configuration and manifests carry no customisation identity or data.
 
-Manage composes the default first and the selected customisation second in separate hosts. The engine and dispatcher consume registered definitions and exact supplied targets. The current `concepts` customisation adds ordered group filtering and optional Concept ID metadata, and `dotlineform_projects` adds folder presentation, metadata, and its exact-detail action. Both are Manage-only; their public routes retain the shared reader.
+Manage uses one standard adapter for selection, row status and supported actions against exact supplied targets. Collection-specific filter, heading, comparator and selection extension hooks are retired. Subject assignment and Folder opening live in Source, rather than the list or detail contribution. Public routes retain the shared reader without management controls.
 
 ## Reachability Is Not Ownership
 
@@ -103,20 +103,19 @@ Manage mode supplies one compact inventory containing:
 }
 ```
 
-Working non-Catalogue rows carry the source's boolean `draft`. Catalogue rows omit it and have fixed document eligibility. Works additionally retains normalized `authoring_subject` metadata and its subject-generation revision for authoring; these fields do not create a Subject column.
+Working non-Catalogue rows carry the source's boolean `draft`. Catalogue rows omit it and have fixed document eligibility. Works additionally retains optional scalar `subject` metadata; this field does not create a Subject column.
 
 The compact inventory supports collection rendering and the Working recency sort. Works and Catalogue require valid dates; the other collections sort undated rows after dated rows, then by title and `doc_id`. Full source metadata and body content remain exact-document reads. The report must not issue one full record request per row.
 
-A registered projector may add only namespaced root and row data:
+Every collection manifest contains only its `docs` inventory:
 
 ```json
 {
-  "customisation": {"id": "working_works", "data": {}},
   "docs": [{"doc_id": "<id>", "title": "<title>", "last_updated": "YYYY-MM-DD", "draft": true}]
 }
 ```
 
-The configured Works customisation is Working-only and supplies Subject validation, source assignment capability and private manifest projection. No current collection customisation supplies browser contribution callbacks, list rows, column headings or custom list sorting. Public collection declarations and manifests omit this private customisation.
+The configured Works server registration supplies Subject validation, source assignment capability and publication preparation. Collection manifest customisation projection, browser descriptors/loaders, custom filters, headings and comparators are retired. Readers use the configured collection and standard title/date sorting directly.
 
 Rows and actions use `doc_id` as identity. Title remains display data; this
 feature introduces no title-uniqueness, collision, or deduplication contract.
@@ -140,8 +139,7 @@ Catalogue:                  [thumbnail + title], with Working selection when act
 
 ## Manage-Only Contribution
 
-A focused manage-owned composition contributes the standard default and at
-most one registered customisation. The default owns:
+A focused manage-owned adapter supplies the standard collection controls. It owns:
 
 - exact-document actions mounted by the common reader inside Edit after target validation;
 - a list toolbar for deterministic sorting, collection actions, and
@@ -157,7 +155,7 @@ The list and common reader pass explicit hosts, records and validated targets to
 Presentation for these controls belongs in the manage stylesheet. Public CSS
 may retain only the shared report layout required for public reading.
 
-The shared list loads the configured manifest and accepts one composed collection contribution. Owners receive separate filter, leading, title-prefix, trailing, list and selection positions plus collection-scoped mount, state, refresh and unmount events. The default publishes the mounted collection and explicit collection refresh callback to the app-level Import owner. The common reader separately supplies exact document actions, metadata and refresh callbacks after by-ID identity validation. Empty hosts are not mounted. Registered actions consume only an explicit collection, checked IDs or validated document target and declare their empty-state and refresh effects.
+The shared list loads the configured manifest and accepts the standard management contribution supplied by its caller. It receives leading, title-prefix, trailing and list hosts plus collection-scoped mount, state, refresh and unmount events. It publishes the mounted collection and explicit collection refresh callback to the app-level Import owner. The common reader separately supplies exact document actions, metadata and refresh callbacks after by-ID identity validation. Empty hosts are not mounted. Registered actions consume only an explicit collection, checked IDs or validated document target and declare their empty-state and refresh effects. Selection stays with the default owner; no collection customisation selection callbacks remain.
 
 ## Selection Lifecycle
 
@@ -351,16 +349,12 @@ management service.
 ## Likely Authorities To Inspect
 
 - shared report:
-  `site/docs-viewer/runtime/js/shared/docs-subscope-report.js`
-- config/projector registry: `docs-viewer/services/docs_subscope_customisations.py`
-- public and Manage registries:
-  `site/docs-viewer/runtime/js/shared/docs-subscope-customisation-registry.js`
-  and
-  `docs-viewer/runtime/js/management/docs-viewer-management-subscope-customisation-registry.js`
+  `docs-viewer/runtime/js/shared/docs-collection-report.js`
+- server authoring registry: `docs-viewer/services/docs_collection_customisations.py`
 - manage bridge, default, and composition:
   `docs-viewer-management-document-reports.js`,
-  `docs-viewer-management-subscope-default-contribution.js`, and
-  `docs-viewer-management-subscope-composition.js`
+  `docs-viewer-management-collection-default-contribution.js`, and
+  `docs-viewer-management-collection-composition.js`
 - managed target normalization and resolution:
   `docs-viewer-management-document-target.js` and
   `docs_management_document_target.py`

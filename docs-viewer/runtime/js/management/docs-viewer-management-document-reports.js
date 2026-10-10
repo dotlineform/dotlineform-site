@@ -129,7 +129,7 @@ export function loadDocsViewerCollectionContribution(settings, parent, collectio
       root: managementModalRoot(settings),
       setStatus: settings.setStatus
     });
-    return modules[1].composeDocsViewerManagementCollectionContributions({
+    return modules[1].createDocsViewerManagementCollectionContribution({
       defaultContribution: defaultContribution
     });
   });

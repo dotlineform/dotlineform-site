@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260428-000000-f5ff18
 title: Planned Features
 added_date: "2026-04-28 00:00:00"
-last_updated: "2026-10-10 22:51:38"
+last_updated: "2026-10-11 00:00:00"
 summary: This explains the delivery model and workflows to implement new repo and application features.
 ui_status: planned
 parent_id: ""
@@ -151,6 +151,7 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 Store new standalone delivery documents for bounded work that does not need a separate feature parent under `documentation/studio/deliveries/`. Parent them directly to this document and keep implementation state, decisions and completion gates in the delivery. At closeout, transfer lasting details to the durable owner and review whether the delivery and its link should be retained.
 
+- [Collection Report Simplification](deliveries/Collection_Report_Simplification.md) — Complete on 2026-10-11. Retired unused manifest customisation and Subject/report hashes, browser descriptors/loaders and custom report hooks; server-owned Subject authoring and standard collection controls remain. Working Works was reconciled and shared runtime projected; focused diagnostics and required checks passed. Manual interactions and legacy tests remain unverified. Retained temporarily for recent evidence and restart/reload guidance.
 - [Document Action Policy](deliveries/Document_Action_Policy.md) — Complete; user accepted closeout on 2026-10-10. Central configuration restricts Catalogue Work, collection-host and private-report actions. Future unlisted public reports retain Star; host restrictions use configured identities without hierarchy validation. Focused implementation checks and source review passed; acceptance does not extend the recorded unexercised operation/failure evidence or itemise manual UI scenarios. Retained for recent-delivery lookup pending manual archive.
 
 - [Catalogue Refresh Index Updates](deliveries/Catalogue_Refresh_Index_Updates.md) — Complete; user accepted closeout on 2026-10-10. All planned production slices are delivered: minimal projections/headers and queued merging for compact indexes, Series–Gallery index/report, Gallery members, private inputs and Work Document Coverage. Normal Refresh loads dependencies once and trusts Save; explicit maintenance owns complete validation and repair. Required earlier public conversions are user-published; the final private/server slices need no conversion or Publish. Focused implementation evidence and code review passed; acceptance does not extend the recorded unexercised mutation/failure and UI evidence. Further test work requires separate approval. Retained for recent-delivery/evidence lookup pending manual archive.

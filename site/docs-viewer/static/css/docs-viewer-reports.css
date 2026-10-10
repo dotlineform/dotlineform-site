@@ -30,13 +30,6 @@
   gap: 0.35rem 0.55rem;
 }
 
-.docsViewerReport__filters{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  align-items: center;
-}
-
 .docsViewerReport__button:focus-visible,
 .docsViewerReport__cellLink:focus-visible{
   outline: 2px solid var(--docs-viewer-focus-ring);

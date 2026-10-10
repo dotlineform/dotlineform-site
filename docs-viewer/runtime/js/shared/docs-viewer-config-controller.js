@@ -35,73 +35,6 @@ export function formatText(template, tokens) {
   return text;
 }
 
-export function normalizeDocsViewerCollectionCustomisation(rawCustomisation) {
-  if (!rawCustomisation || typeof rawCustomisation !== "object" || Array.isArray(rawCustomisation)) {
-    throw new Error("Docs Viewer collection_customisation must be an object.");
-  }
-  var customisationKeys = Object.keys(rawCustomisation).sort();
-  if (
-    customisationKeys.length < 1
-    || customisationKeys.length > 2
-    || !customisationKeys.includes("id")
-    || customisationKeys.some(function (key) {
-      return key !== "id" && key !== "capabilities";
-    })
-  ) {
-    throw new Error(
-      "Docs Viewer collection_customisation must contain id and optional capabilities."
-    );
-  }
-  var customisationId = String(rawCustomisation.id || "").trim();
-  if (!/^[a-z][a-z0-9_]*$/.test(customisationId)) {
-    throw new Error("Docs Viewer collection_customisation id is invalid.");
-  }
-  if (!Object.prototype.hasOwnProperty.call(rawCustomisation, "capabilities")) {
-    return Object.freeze({ id: customisationId });
-  }
-
-  var rawCapabilities = rawCustomisation.capabilities;
-  if (!rawCapabilities || typeof rawCapabilities !== "object" || Array.isArray(rawCapabilities)) {
-    throw new Error("Docs Viewer collection_customisation capabilities must be an object.");
-  }
-  var capabilityKeys = Object.keys(rawCapabilities).sort();
-  if (
-    !capabilityKeys.length
-    || capabilityKeys.some(function (key) {
-      return key !== "assignable_field_groups";
-    })
-  ) {
-    throw new Error(
-      "Docs Viewer collection_customisation capabilities contains an invalid field."
-    );
-  }
-  var capabilities = {};
-  if (Object.prototype.hasOwnProperty.call(rawCapabilities, "assignable_field_groups")) {
-    var rawGroups = rawCapabilities.assignable_field_groups;
-    if (!Array.isArray(rawGroups) || !rawGroups.length) {
-      throw new Error(
-        "Docs Viewer collection_customisation assignable_field_groups must be a non-empty array."
-      );
-    }
-    var seen = new Set();
-    capabilities.assignableFieldGroups = Object.freeze(rawGroups.map(function (rawGroup) {
-      var groupId = String(rawGroup || "").trim();
-      if (!/^[a-z][a-z0-9_]*$/.test(groupId) || seen.has(groupId)) {
-        throw new Error(
-          "Docs Viewer collection_customisation assignable_field_groups contains an invalid or duplicate id."
-        );
-      }
-      seen.add(groupId);
-      return groupId;
-    }));
-  }
-
-  return Object.freeze({
-    id: customisationId,
-    capabilities: Object.freeze(capabilities)
-  });
-}
-
 export function initDocsViewerConfigController(context) {
   var workspaceConfig = context.workspaceConfig || {};
   var documentIndex = context.documentIndex || {};
@@ -126,12 +59,6 @@ export function initDocsViewerConfigController(context) {
     if (typeof reportHostDocId !== "string" || !/^d-[0-9]{8}-[0-9]{6}-[0-9a-f]{6}$/.test(reportHostDocId)) {
       throw new Error("Collection requires a configured immutable report host ID.");
     }
-    var collectionCustomisation = null;
-    if (Object.prototype.hasOwnProperty.call(rawCollection, "collection_customisation")) {
-      collectionCustomisation = normalizeDocsViewerCollectionCustomisation(
-        rawCollection.collection_customisation
-      );
-    }
     var record = {
       collection: collection,
       title: String(rawCollection.title || "").trim(),
@@ -139,8 +66,7 @@ export function initDocsViewerConfigController(context) {
       iconUrl: new URL("../../../static/icons/" + icon + ".svg", import.meta.url).href,
       reportHostDocId: reportHostDocId,
       manifestUrl: manifestUrl,
-      byIdUrlBase: byIdUrlBase,
-      collectionCustomisation: collectionCustomisation
+      byIdUrlBase: byIdUrlBase
     };
     return record;
   }

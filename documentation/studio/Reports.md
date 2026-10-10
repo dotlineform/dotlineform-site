@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260513-105343-6de36b
 title: Reports
 added_date: "2026-05-13 10:53:43"
-last_updated: "2026-10-10 20:01:05"
+last_updated: "2026-10-11 00:00:00"
 parent_id: d-20260424-000000-50b63f
 ---
 # Docs Viewer Reports
@@ -154,13 +154,13 @@ The Analysis Documents report (`docs_index_table`) was retired on 2026-09-26. It
 This document uses it so the list of configured reports stays visible from the Docs Viewer.
 
 `docs_collection` renders a manifest-ordered list for a configured Docs Viewer collection. It reads `report.collection`, validates that exact owner against the composition's single workspace configuration, loads its configured manifest and renders ordered document identity/title records. Manage reads `manage-manifest.json`; the public reader uses `manifest.json`.
-Selecting a row sets `subdoc`, loads the selected collection by-ID payload and renders its `content_html` while the report host remains selected. Collection documents carry no `publishable` field. Working inventories retain boolean `draft`, and drafts remain visible and loadable. The report exposes a validated `{collection, doc_id}` action target only after manifest membership, payload loading and `doc_id` checks succeed. Optional root customisation has exactly `id` and `data`; it is independent of the collection action target.
+Selecting a row opens the selected collection document through its exact by-ID reader. Collection documents carry no `publishable` field. Working inventories retain boolean `draft`, and drafts remain visible and loadable. The shared reader exposes a validated `{collection, doc_id}` action target after payload identity checks succeed. Collection manifests contain exactly one root `docs` array. Their former customisation envelope and Subject generation hash are retired; report identity comes from the configured collection.
 
 The shared report accepts an optional caller-owned contribution with detached leading-cell/title-prefix row hosts, list/detail toolbar hosts and collection-owned mount, state, refresh and unmount events. It inserts only populated hosts and offers the detail toolbar only after by-ID identity is valid. The Manage contribution renders shared visual status and an additional 📝 indicator only for `draft: true`. It owns collection-keyed checkbox selection, the compact 🔧 Actions and Select all/Clear/Done controls and the lazy Prepare Package bridge. That bridge supplies exact checked IDs plus `{collection}`, never a selected parent or displayed child fallback. Public callers import no management module.
 
 The local sub-scope Actions menu remains available in every configured collection, including empty lists. Copy and Prepare package remain visible when unavailable, with disabled controls and explanatory tooltips. Set Publishable and its sub-scope callbacks, request handling and service support are removed. Missing workflow support takes precedence over selection prompts; exposing the menu does not enable an unsupported operation.
 
-A registered Manage contribution also receives the validated customisation root data from the loaded manifest. The Working Works contribution owns Subject display and actions. The empty Processing Docs collection was retired on 2026-09-27: its registration, report host, dedicated customisation and collection storage were removed. The separate repository `processing/` project and Projects-owned Processing media remain independent owners.
+Manage supplies the standard collection controls directly, without collection customisation loaders, root data, custom filters/headings/comparators or selection callbacks. Source owns Subject assignment and Folder opening through the current buffer and server-owned authoring capability. Project State reads the validated Works rows directly and returns `docs_project_state_report_v5` with assembly time, input ownership, summary and rows, without generation hashes. The empty Processing Docs collection was retired on 2026-09-27: its registration, report host, dedicated customisation and collection storage were removed. The separate repository `processing/` project and Projects-owned Processing media remain independent owners.
 
 The shared report does not perform writes or package service calls. The
 management host projects
@@ -247,9 +247,8 @@ Poor report candidates are workflows with writes, long-running operations, broad
 - `docs-viewer/build/docs_builder/payloads.py`
 - `docs-viewer/services/docs_rendered_links.py`
 - `docs-viewer/runtime/js/management/docs-viewer-management-document-reports.js`
-- `docs-viewer/runtime/js/management/docs-viewer-management-subscope-default-contribution.js`
-- `docs-viewer/runtime/js/management/docs-viewer-management-subscope-composition.js`
-- `docs-viewer/runtime/js/management/docs-viewer-management-subscope-customisation-registry.js`
+- `docs-viewer/runtime/js/management/docs-viewer-management-collection-default-contribution.js`
+- `docs-viewer/runtime/js/management/docs-viewer-management-collection-composition.js`
 - `docs-viewer/runtime/js/reports/docs-viewer-reports.js`
 - `docs-viewer/runtime/js/reports/docs-viewer-report-presentation.js`
 - `docs-viewer/runtime/js/reports/catalogue-works-report.js`

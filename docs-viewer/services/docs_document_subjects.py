@@ -3,8 +3,6 @@
 
 from __future__ import annotations
 
-import hashlib
-import json
 import re
 from typing import Any, Mapping
 
@@ -109,31 +107,6 @@ def project_reader_subject(front_matter: Mapping[str, Any]) -> str | None:
     return subject["key"]
 
 
-def subject_projection_generation(
-    *,
-    collection: str,
-    subjects_by_doc_id: Mapping[str, str | None],
-) -> str:
-    """Hash collection identity and scalar Subjects, including unassigned document IDs."""
-    source = {
-        "collection": collection,
-        "documents": [
-            {
-                "doc_id": doc_id,
-                **({"subject": subjects_by_doc_id[doc_id]} if subjects_by_doc_id[doc_id] is not None else {}),
-            }
-            for doc_id in sorted(subjects_by_doc_id)
-        ],
-    }
-    encoded = json.dumps(
-        source,
-        ensure_ascii=False,
-        separators=(",", ":"),
-        sort_keys=True,
-    ).encode("utf-8")
-    return "sha256:" + hashlib.sha256(encoded).hexdigest()
-
-
 __all__ = [
     "AUTHORING_SUBJECT_FIELDS",
     "FOLDER_PATH_FIELD",
@@ -144,5 +117,4 @@ __all__ = [
     "project_document_subject",
     "subject_from_record",
     "project_reader_subject",
-    "subject_projection_generation",
 ]

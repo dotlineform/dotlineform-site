@@ -24,8 +24,8 @@ def read_collection_manifest(path: Path, *, collection: str) -> dict[str, Any]:
         payload = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, ValueError) as exc:
         raise RuntimeError(f"Targeted collection build requires readable {path.name}; run a complete Build first") from exc
-    if not isinstance(payload, dict) or not isinstance(payload.get("docs"), list):
-        raise ValueError(f"Invalid collection manifest: {path.name}")
+    if not isinstance(payload, dict) or set(payload) != {"docs"} or not isinstance(payload["docs"], list):
+        raise ValueError(f"Invalid collection manifest: {path.name}; run a complete collection Build first")
     seen: set[str] = set()
     for row in payload["docs"]:
         if (
@@ -50,7 +50,5 @@ def merge_collection_manifest(
     rows = [dict(row) for row in previous["docs"] if row["doc_id"] not in selected]
     rows.extend(replacement["docs"])
     return {
-        **previous,
-        **replacement,
         "docs": sorted(rows, key=lambda row: (row["title"].lower(), row["doc_id"])),
     }

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260810-115737-741620
 title: Works Report Concept And Architecture
 added_date: "2026-08-10 11:57:37"
-last_updated: "2026-10-10 21:39:15"
+last_updated: "2026-10-11 00:00:00"
 summary: Refresh-owned Series membership and generated Context documents supply local Work Document Coverage.
 parent_id: d-20260424-000000-50b63f
 ---
@@ -63,7 +63,7 @@ Only saved manifest Series establish rows, including Series with no Works. Unkno
 The browser loads two local generated projections:
 
 - the private coverage manifest through parameter-free `GET /docs/work-document-coverage`, using `catalogue_work_document_coverage_v1`; and
-- the configured private Working `works` management manifest, containing current document identity, title, date, optional draft/thumbnail flags and optional scalar `subject`, with `working_works` identity and `subject_generation`.
+- the configured private Working `works` management manifest, containing only a root `docs` array with current document identity, title, date, optional draft/thumbnail flags and optional scalar `subject`.
 
 The coverage manifest has a header containing only `schema` and `generated_at_utc`, followed by a `series` array. Each Series contains exactly `series_id`, `title` and ascending distinct `work_ids`. Series are ordered by exact ID, every defined Series is included, and a Work belongs to at most one Series. No Work title, year, Gallery, media, revision, count or content-version fields are persisted.
 

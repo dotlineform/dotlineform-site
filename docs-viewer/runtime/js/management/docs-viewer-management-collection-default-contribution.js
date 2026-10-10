@@ -85,7 +85,6 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
   var rowSelections = new Map();
   var activeDeleteWorkflow = null;
   var deleteWorkflowRequest = 0;
-  var publishSelection = null;
 
   function prepareResolution() {
     var docIds = selectionOwner.selectedDocIds();
@@ -139,14 +138,6 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     });
     var root = reportRoot();
     if (root) root.dataset.reportCollectionSelection = active ? "active" : "inactive";
-    var contributionSnapshot = {
-      active: active,
-      checkedDocIds: snapshot.selectedDocIds.slice(),
-      eligibleDocIds: eligible.slice()
-    };
-    if (publishSelection) {
-      publishSelection(contributionSnapshot, "selection-projected");
-    }
     if (!listToolbar) return snapshot;
 
     listToolbar.actionsHost.hidden = resolution.policy.hidden;
@@ -180,7 +171,6 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     listToolbar.document.removeEventListener("click", listToolbar.handleDocumentClick);
     listToolbar.document.removeEventListener("keydown", listToolbar.handleDocumentKeydown);
     listToolbar = null;
-    publishSelection = null;
   }
 
   function clearDeleteWorkflow() {
@@ -274,9 +264,6 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     clearListToolbar();
     rowSelections.clear();
     currentDocuments = Array.isArray(settings.documents) ? settings.documents.slice() : [];
-    publishSelection = typeof settings.publishSelection === "function"
-      ? settings.publishSelection
-      : null;
     selectionOwner.syncContext({
       collection: settings.collection,
       managementContext: managementContext,

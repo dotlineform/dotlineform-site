@@ -10,9 +10,6 @@ import {
   projectDocsCollectionDocuments
 } from "./docs-collection-report-filter.js";
 import {
-  resolvePublicDocsCollectionCustomisation
-} from "./docs-collection-customisation-registry.js";
-import {
   COLLECTION_PAGE_SIZE,
   COLLECTION_SEARCH_DELAY_MS,
   appendCollectionThumbnail,
@@ -32,10 +29,7 @@ import {
  *
  * @typedef {Object} DocsCollectionReportContribution
  * @property {function(Object): void} [notify]
- * @property {function(Object): Array<Object>} [createFilters]
- * @property {function(Object): number} [compareListDocuments]
  * @property {function(Object): (Object|void)} [renderRow]
- * @property {function(Object): void} [renderListHead]
  * @property {function(Object): void} [renderListToolbar]
  * @property {function(): *} [captureListState] Optional JSON-safe list restoration state.
  * @property {function(*): void} [restoreListState] Restore a previously captured caller state.
@@ -73,40 +67,10 @@ function fetchJson(url, failureMessage, options) {
 }
 
 function manifestDocs(payload) {
-  if (!payload || !Array.isArray(payload.docs)) {
+  if (!payload || Object.keys(payload).length !== 1 || !Array.isArray(payload.docs)) {
     throw new Error("Docs collection manifest requires a docs array.");
   }
   return normalizeDocuments(payload.docs);
-}
-
-function manifestCustomisation(payload) {
-  var value = payload && payload.customisation;
-  if (value == null) return null;
-  if (!value || typeof value !== "object" || Array.isArray(value)) {
-    throw new Error("Docs collection manifest customisation must be an object.");
-  }
-  var keys = Object.keys(value).sort();
-  var customisationId = cleanId(value.id);
-  var data = value.data;
-  if (
-    keys.length !== 2
-    || keys[0] !== "data"
-    || keys[1] !== "id"
-    || !customisationId
-    || !data
-    || typeof data !== "object"
-    || Array.isArray(data)
-  ) {
-    throw new Error("Docs collection manifest customisation is invalid.");
-  }
-  return { id: customisationId, data: Object.assign({}, data) };
-}
-
-function manifestPayload(payload) {
-  return {
-    documents: manifestDocs(payload),
-    customisation: manifestCustomisation(payload)
-  };
 }
 
 function normalizeDocument(record) {
@@ -119,15 +83,6 @@ function normalizeDocument(record) {
     doc_id: docId,
     title: title
   });
-  if (
-    normalizedRecord.customisation
-    && typeof normalizedRecord.customisation === "object"
-    && !Array.isArray(normalizedRecord.customisation)
-  ) {
-    normalizedRecord.customisation = Object.freeze(
-      Object.assign({}, normalizedRecord.customisation)
-    );
-  }
   return {
     docId: docId,
     title: title,
@@ -152,19 +107,6 @@ function resolveReportContribution(context) {
   var contribution = hasSuppliedContribution
     ? context.collectionReportContributionPromise
     : context && context.collectionReportContribution;
-  if (!hasSuppliedContribution && contribution == null) {
-    var reportMeta = context && context.reportMeta ? context.reportMeta : {};
-    var collectionIdValue = cleanId(reportMeta.collection);
-    var collection = findCollection(context, collectionIdValue);
-    contribution = resolvePublicDocsCollectionCustomisation(
-      collection && collection.collectionCustomisation,
-      {
-        collection: collectionTarget(
-          collectionIdValue
-        )
-      }
-    );
-  }
   return Promise.resolve(contribution).then(function (resolved) {
     if (resolved == null) return null;
     if (typeof resolved !== "object" || Array.isArray(resolved)) {
@@ -242,14 +184,6 @@ function notifyContribution(state, detail) {
     access: state.managementContext ? "manage" : "public",
     collection: collectionTarget(state.collectionId)
   }, detail || {}));
-}
-
-function filterValuesPayload(state) {
-  var payload = {};
-  state.filterValues.forEach(function (value, filterId) {
-    payload[filterId] = cleanString(value);
-  });
-  return Object.freeze(payload);
 }
 
 function appendDocRow(state, doc, reserveThumbnailSpace) {
@@ -343,16 +277,10 @@ function renderFilterShell(context, collection) {
   search.appendChild(input);
   var clear = mountSearchField(input).clearButton;
 
-  var extensions = document.createElement("div");
-  extensions.className = "docsViewerReport__filters";
-  extensions.hidden = true;
-
   toolbar.appendChild(searchLabel);
-  toolbar.appendChild(extensions);
   toolbar.appendChild(search);
   return {
     clearNode: clear,
-    extensionsNode: extensions,
     inputNode: input,
     toolbarNode: toolbar
   };
@@ -374,15 +302,10 @@ function renderShell(context, collection) {
   var table = document.createElement("div");
   table.className = "docsViewerReport__table";
 
-  var head = document.createElement("div");
-  head.className = "docsViewerReport__head";
-  head.hidden = true;
-
   var rows = document.createElement("ul");
   rows.className = "docsViewerReport__rows";
   rows.setAttribute("aria-label", collectionItemsLabel(collection));
 
-  table.appendChild(head);
   table.appendChild(rows);
   root.appendChild(filters.toolbarNode);
   root.appendChild(status);
@@ -400,66 +323,12 @@ function renderShell(context, collection) {
   return {
     collectionSortNode: collectionSort,
     filterClearNode: filters.clearNode,
-    filterExtensionsNode: filters.extensionsNode,
     filterInputNode: filters.inputNode,
     filterToolbarNode: filters.toolbarNode,
-    headNode: head,
     rowsNode: rows,
     statusNode: status,
     tableNode: table
   };
-}
-
-function configureContributionFilters(state) {
-  state.filters = [];
-  state.filterValues = new Map();
-  var createFilters = contributionCallback(state.contribution, "createFilters");
-  if (!createFilters) return;
-  var created = createFilters({
-    access: state.managementContext ? "manage" : "public",
-    collection: collectionTarget(state.collectionId),
-    data: state.customisationData,
-    documents: Object.freeze(state.docs.map(documentRecord))
-  });
-  if (!Array.isArray(created)) {
-    throw new Error("Docs collection customisation filters must be an array.");
-  }
-  var seen = new Set();
-  state.filters = created.map(function (filter) {
-    var filterId = cleanId(filter && filter.id);
-    if (
-      !filterId
-      || seen.has(filterId)
-      || typeof filter.matches !== "function"
-      || typeof filter.render !== "function"
-    ) {
-      throw new Error("Docs collection customisation filter is invalid.");
-    }
-    seen.add(filterId);
-    state.filterValues.set(filterId, cleanString(filter.initialValue));
-    return filter;
-  });
-}
-
-function renderContributionFilters(state) {
-  clearNode(state.filterExtensionsNode);
-  state.filterExtensionsNode.hidden = state.filters.length === 0;
-  state.filters.forEach(function (filter) {
-    var filterId = cleanId(filter.id);
-    var host = document.createElement("div");
-    host.dataset.docsCollectionCustomFilter = filterId;
-    filter.render({
-      collection: collectionTarget(state.collectionId),
-      host: host,
-      value: state.filterValues.get(filterId) || "",
-      setValue: function (value) {
-        state.filterValues.set(filterId, cleanString(value));
-        renderListProjectionContained(state, "custom-filter");
-      }
-    });
-    if (host.childNodes.length) state.filterExtensionsNode.appendChild(host);
-  });
-  state.filterExtensionsNode.hidden = !state.filterExtensionsNode.childNodes.length;
 }
 
 function updateFilterControls(state) {
@@ -472,7 +341,6 @@ function updateFilterControls(state) {
       : "Clear " + collectionItemsLabel(state.collection) + (state.pagedBrowsing ? " search" : " title filter")
   );
   state.filterClearNode.title = state.filterClearNode.getAttribute("aria-label");
-  renderContributionFilters(state);
 }
 
 function compareText(left, right) {
@@ -524,47 +392,12 @@ function compareLastUpdatedDescending(left, right) {
 }
 
 function visibleDocuments(state) {
-  var compareCustom = contributionCallback(state.contribution, "compareListDocuments");
-  var compare = compareCustom ? function (left, right) {
-    return compareCustom({
-      collection: collectionTarget(state.collectionId),
-      left: documentRecord(left),
-      right: documentRecord(right),
-      sortMode: state.sortMode
-    });
-  } : null;
-  var candidates = state.browsingData
-    ? state.browsingData.project(state.docs, state.query, state.sortMode, compare)
-    : projectDocsCollectionDocuments(state.docs, { query: state.query });
-  var visible = candidates.filter(function (doc) {
-    return state.filters.every(function (filter) {
-      var filterId = cleanId(filter.id);
-      var matches = filter.matches({
-        collection: collectionTarget(state.collectionId),
-        document: documentRecord(doc),
-        value: state.filterValues.get(filterId) || ""
-      });
-      if (typeof matches !== "boolean") {
-        throw new Error(
-          "Docs collection customisation filter must return a boolean: " + filterId
-        );
-      }
-      return matches;
-    });
-  });
-  if (state.browsingData) return visible;
-  return visible.slice().sort(function (left, right) {
-    if (!compareCustom) {
-      return state.sortMode === "last-updated-desc"
-        ? compareLastUpdatedDescending(left, right)
-        : compareTitleAscending(left, right);
-    }
-    var comparison = compare(left, right);
-    if (!Number.isFinite(comparison)) {
-      throw new Error("Docs collection custom list comparator must return a finite number.");
-    }
-    return comparison;
-  });
+  if (state.browsingData) {
+    return state.browsingData.project(state.docs, state.query, state.sortMode);
+  }
+  return projectDocsCollectionDocuments(state.docs, { query: state.query })
+    .sort(state.sortMode === "last-updated-desc"
+      ? compareLastUpdatedDescending : compareTitleAscending);
 }
 
 function bindFilterControls(state) {
@@ -619,9 +452,6 @@ function updateCollectionControls(state) {
       + (recentMode ? "title A–Z." : "recently updated.");
     button.setAttribute("aria-label", button.title);
   }
-  state.headNode.querySelectorAll("button").forEach(function (heading) {
-    heading.disabled = pending;
-  });
   state.pager.update(state.matches.length, state.pageIndex, pending);
 }
 
@@ -631,14 +461,7 @@ function listSortContext(state) {
     setMode: function (mode) {
       if (state.pagedBrowsing && (state.searchTimer !== null || !state.browsingData)) return state.sortMode;
       var nextMode = cleanString(mode);
-      var compareCustom = contributionCallback(state.contribution, "compareListDocuments");
-      if (
-        !nextMode
-        || (
-          !["title-asc", "last-updated-desc"].includes(nextMode)
-          && !compareCustom
-        )
-      ) {
+      if (!["title-asc", "last-updated-desc"].includes(nextMode)) {
         throw new Error("Docs collection sort mode is invalid: " + nextMode);
       }
       state.sortMode = nextMode;
@@ -647,20 +470,6 @@ function listSortContext(state) {
       return nextMode;
     }
   };
-}
-
-function renderListHead(state, documents) {
-  clearNode(state.headNode);
-  state.headNode.hidden = true;
-  var renderHead = contributionCallback(state.contribution, "renderListHead");
-  if (!renderHead) return;
-  renderHead({
-    collection: collectionTarget(state.collectionId),
-    documents: Object.freeze(documents.map(documentRecord)),
-    host: state.headNode,
-    sort: listSortContext(state)
-  });
-  state.headNode.hidden = !state.headNode.childNodes.length;
 }
 
 function renderListToolbar(state, documents) {
@@ -678,19 +487,6 @@ function renderListToolbar(state, documents) {
     actionContext: state.actionContext,
     collection: state.actionContext.collectionTarget,
     documents: Object.freeze(documents.map(documentRecord)),
-    handleContributionError: function (error, reason) {
-      try {
-        publishState(state, "error", null, cleanString(reason));
-      } catch (_notifyError) {
-        // The contained report error below remains authoritative.
-      }
-      renderError(
-        state.root,
-        error && error.message
-          ? error.message
-          : "Failed to render docs collection customisation."
-      );
-    },
     host: host,
     actionHost: state.listActionHost,
     refreshAndOpenDocument: function (target) {
@@ -763,7 +559,6 @@ function renderListProjection(state) {
   notifyContribution(state, {
     type: "projection",
     documents: Object.freeze(documents.map(documentRecord)),
-    filterValues: filterValuesPayload(state),
     sort: state.sortMode,
     reason: "filters-projected"
   });
@@ -778,7 +573,6 @@ function renderListPage(state) {
   }
   updateFilterControls(state);
   renderListToolbar(state, documents);
-  renderListHead(state, documents);
   renderRows(state, state.pagedBrowsing
     ? documents.slice(state.pageIndex * COLLECTION_PAGE_SIZE, (state.pageIndex + 1) * COLLECTION_PAGE_SIZE)
     : documents);
@@ -799,7 +593,7 @@ function renderListProjectionContained(state, reason) {
       state.root,
       error && error.message
         ? error.message
-        : "Failed to render docs collection customisation."
+        : "Failed to render docs collection report."
     );
     return false;
   }
@@ -809,22 +603,16 @@ function captureListControls(state) {
   var captureContribution = contributionCallback(state.contribution, "captureListState");
   return { query: state.query, sort: state.sortMode,
     page: state.searchTimer !== null ? 0 : state.pageIndex,
-    filters: Array.from(state.filterValues),
     contribution: captureContribution ? captureContribution.call(state.contribution) : null };
 }
 
-/** Restore controls against current filters and inventory, never a saved payload. */
+/** Restore controls against the current inventory, never a saved payload. */
 function restoreListControls(state, saved) {
   if (JSON.stringify(captureListControls(state)) === JSON.stringify(saved)) return;
   cancelCollectionSearch(state);
   if (typeof saved.query === "string") state.query = saved.query;
-  if (typeof saved.sort === "string" && (["title-asc", "last-updated-desc"].includes(saved.sort)
-    || contributionCallback(state.contribution, "compareListDocuments"))) state.sortMode = saved.sort;
+  if (["title-asc", "last-updated-desc"].includes(saved.sort)) state.sortMode = saved.sort;
   state.pageIndex = Number.isInteger(saved.page) && saved.page >= 0 ? saved.page : 0;
-  if (Array.isArray(saved.filters)) saved.filters.forEach(function (filter) {
-    if (Array.isArray(filter) && filter.length === 2 && state.filterValues.has(filter[0])
-      && typeof filter[1] === "string") state.filterValues.set(filter[0], filter[1]);
-  });
   var restoreContribution = contributionCallback(state.contribution, "restoreListState");
   if (restoreContribution) restoreContribution.call(state.contribution, saved.contribution);
   state.listNeedsRender = true;
@@ -867,33 +655,16 @@ function publishDocumentsRefresh(state, reason) {
   state.listNeedsRender = true;
   notifyContribution(state, {
     type: "refresh",
-    data: state.customisationData,
     documents: Object.freeze(state.docs.map(documentRecord)),
     reason: cleanString(reason)
   });
 }
 
-function applyManifest(state, manifest) {
+function applyManifest(state, documents) {
   cancelCollectionSearch(state);
-  var descriptorId = cleanId(
-    state.collection
-    && state.collection.collectionCustomisation
-    && state.collection.collectionCustomisation.id
-  );
-  var manifestCustomisation = manifest.customisation;
-  var manifestId = cleanId(manifestCustomisation && manifestCustomisation.id);
-  if (descriptorId !== manifestId) {
-    throw new Error(
-      "Docs collection customisation identity did not match its manifest projection."
-    );
-  }
-  if (state.browsingData) state.browsingData.prepare(manifest.documents);
-  state.docs = manifest.documents;
+  if (state.browsingData) state.browsingData.prepare(documents);
+  state.docs = documents;
   state.listNeedsRender = true;
-  state.customisationData = manifestCustomisation
-    ? Object.freeze(Object.assign({}, manifestCustomisation.data))
-    : Object.freeze({});
-  configureContributionFilters(state);
   state.docIds = state.docs.map(function (doc) { return doc.docId; });
 }
 
@@ -969,7 +740,6 @@ function mountResolvedDocsCollectionReport(context, contribution) {
     manifestLoaded: false,
     docs: [],
     docIds: [],
-    customisationData: {},
     query: "",
     sortMode: collectionIdValue === "catalogue" ? "last-updated-desc" : "title-asc",
     pagedBrowsing: ["catalogue", "works"].includes(collectionIdValue),
@@ -982,12 +752,8 @@ function mountResolvedDocsCollectionReport(context, contribution) {
     contribution: contribution,
     managementContext: Boolean(context && context.managementContext),
     filterClearNode: refs.filterClearNode,
-    filterExtensionsNode: refs.filterExtensionsNode,
     filterInputNode: refs.filterInputNode,
     filterToolbarNode: refs.filterToolbarNode,
-    filters: [],
-    filterValues: new Map(),
-    headNode: refs.headNode,
     listToolbarNode: null,
     listNeedsRender: true,
     listReturnPosition: null,
@@ -1061,7 +827,7 @@ function mountResolvedDocsCollectionReport(context, contribution) {
   publishState(state, "loading", null, "report-loading");
   state.loadManifest = function () {
     return Promise.all([
-      fetchJson(url, "Failed to load docs collection manifest").then(manifestPayload),
+      fetchJson(url, "Failed to load docs collection manifest").then(manifestDocs),
       state.pagedBrowsing ? loadCatalogueCollectionThumbnailSettings(context) : null
     ]).then(function (loaded) {
       if (!state.mounted || !root.isConnected) return false;
@@ -1079,7 +845,6 @@ function mountResolvedDocsCollectionReport(context, contribution) {
       state.manifestLoaded = true;
       notifyContribution(state, {
         type: "refresh",
-        data: state.customisationData,
         documents: Object.freeze(state.docs.map(documentRecord)),
         reason: "documents-loaded"
       });
@@ -1109,7 +874,7 @@ function mountResolvedDocsCollectionReport(context, contribution) {
   }
   return state.loadManifest().then(function (loaded) {
       if (loaded) {
-        // Filters and contribution inventory must exist before restoring saved controls.
+        // The document inventory must exist before restoring saved controls.
         root.dataset.reportState = "list";
         restoreRememberedList();
       }
@@ -1143,7 +908,7 @@ export function mountDocsCollectionReport(context) {
         root,
         error && error.message
           ? error.message
-          : "Failed to resolve docs collection customisation."
+          : "Failed to resolve docs collection controls."
       );
       if (typeof context.onCollectionDocumentState === "function") {
         context.onCollectionDocumentState({

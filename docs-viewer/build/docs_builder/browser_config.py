@@ -7,7 +7,6 @@ from urllib.parse import quote
 
 from .common import DOCS_VIEWER_BROWSER_CONFIG_SCHEMA_VERSION, browser_path_for_repo_relative, json_text
 from docs_workspace_config import DocsStageConfig, DocsCollectionConfig, DocsWorkspaceConfig, public_documents_path, public_search_path, select_workspace_stage
-from docs_collection_customisations import browser_collection_customisation_payload
 
 
 def public_document_base(config: DocsStageConfig | DocsCollectionConfig) -> str:
@@ -57,9 +56,6 @@ def browser_collection_records(repo_root: Path, config: DocsStageConfig, *, publ
             "manifest_url": f"{base}/manifest.json" if published else f"{base}/manage-manifest.json",
             "by_id_url_base": f"{base}/by-id",
         }
-        customisation = browser_collection_customisation_payload(child.collection_customisation, published=published)
-        if customisation is not None:
-            record["collection_customisation"] = customisation
         records.append(record)
     return records
 

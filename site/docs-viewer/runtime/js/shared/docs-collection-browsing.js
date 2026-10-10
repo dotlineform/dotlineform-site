@@ -64,18 +64,15 @@ export function createCollectionBrowsingData(options) {
       });
       entries = next;
     },
-    project(documents, query, sortMode, compareCustom) {
+    project(documents, query, sortMode) {
+      if (!["title-asc", "last-updated-desc"].includes(sortMode)) {
+        throw new Error("Unsupported collection sort mode: " + sortMode);
+      }
       const normalized = normalizeDocsCollectionFilterValue(query);
       return documents.filter((doc) => {
         const entry = entries.get(doc.docId);
         return !normalized || entry.title.includes(normalized) || entry.workId.includes(normalized);
       }).sort((left, right) => {
-        if (!["title-asc", "last-updated-desc"].includes(sortMode)) {
-          if (typeof compareCustom !== "function") throw new Error("Unsupported collection sort mode: " + sortMode);
-          const comparison = compareCustom(left, right);
-          if (!Number.isFinite(comparison)) throw new Error("Collection comparator must return a finite number.");
-          return comparison;
-        }
         const a = entries.get(left.docId);
         const b = entries.get(right.docId);
         if (titleCollator) {

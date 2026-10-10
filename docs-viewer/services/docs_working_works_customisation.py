@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Manage-only Working Works report and authoring-subject customisation."""
+"""Working Works Subject authoring and publication preparation."""
 
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Mapping, Sequence
+from typing import Any, Mapping
 
 from docs_local_links import (
     configured_base_dir,
@@ -44,21 +44,6 @@ def normalize_settings(raw: Any, field: str) -> Mapping[str, Any]:
             + ", ".join(sorted(str(key) for key in raw))
         )
     return {}
-
-
-def project_manifest(
-    settings: Mapping[str, Any],
-    documents: Sequence[Any],
-    repo_root: Path,
-    collection: str,
-) -> dict[str, Any]:
-    """Project the collection-wide Working Works browser descriptor."""
-    if settings:
-        raise ValueError("working_works settings must be empty")
-    return {
-        "root": {"id": CUSTOMISATION_ID, "data": {}},
-        "rows": {},
-    }
 
 
 def metadata_record(
@@ -181,5 +166,4 @@ __all__ = [
     "normalize_metadata_update",
     "normalize_import_front_matter",
     "normalize_settings",
-    "project_manifest",
 ]
