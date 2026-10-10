@@ -12,6 +12,7 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 ensure_studio_python_paths(__file__)
 
 from catalogue.catalogue_output_paths import catalogue_workspace_config  # noqa: E402
+from catalogue.catalogue_staged_media import catalogue_staging_assets  # noqa: E402
 
 STUDIO_ROUTE_REQUIRED_FIELDS: tuple[str, ...] = (
     "label",
@@ -41,11 +42,14 @@ STUDIO_ROUTE_COPY_FIELDS: tuple[str, ...] = (
 )
 
 def studio_media_config(repo_root: Path) -> dict[str, object]:
-    """Project current shared local assets into Studio's existing reader contract."""
+    """Project independent staging/Working families into Studio's media readers."""
     assets = catalogue_workspace_config(repo_root).assets
+    staging = catalogue_staging_assets(repo_root)
     return {
         "thumbs": {"base": "", "works": assets.url(assets.work_thumbnails)},
         "media": {"base": "", "works_images": assets.url(assets.work_primary), "works_files": assets.url(assets.work_files)},
+        "staged": {"works_images": staging.url(staging.work_primary), "works_thumbs": staging.url(staging.work_thumbnails),
+                   "works_files": staging.url(staging.work_files)},
     }
 
 

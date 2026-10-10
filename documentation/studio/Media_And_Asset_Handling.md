@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260514-184303-7914e2
 title: Media And Asset Handling
 added_date: "2026-05-14 18:43:03"
-last_updated: "2026-10-08 19:10:43"
+last_updated: "2026-10-10 10:42:03"
 summary: Media intake, content interpretation, document representation, storage, link resolution, extension methods, and safety boundaries.
 parent_id: d-20260424-000000-50b63f
 
@@ -92,11 +92,21 @@ Markdown package folders and interactive HTML companions are also classified out
 
 ## Workspace Configuration And Storage
 
-`docs-viewer/config/workspace/docs-workspace.json` uses `docs_workspace_v4`. Working registers document media types and code-owned build producers once; Preview derives that configuration. Each media type has one shared `asset_location`, with `asset_root` supplying confined relative identities. [Configuration And Extension Points](Configuration_And_Extension_Points.md) owns the full workspace contract.
+`docs-viewer/config/workspace/docs-workspace.json` uses `docs_workspace_v5`. Document media keeps shared configured `asset_location` and confined `asset_root` identities. Work media has separate configured Working/Preview roots. [Configuration And Extension Points](Configuration_And_Extension_Points.md) owns configuration; [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns staged handoff.
 
 Current managed types are `img`, `thumbs`, `svg`, `files` and `html`; `mermaid` is an editable build-source type. Ordinary ready bytes live in `assets/media/workspace/<type>/`; collection bytes live in `assets/media/collections/<id>/<type>/`. The `thumbs` type is document-owned derivative media, with configured local and public projections; it is not an input chooser or editable build-source format. Editable build inputs and private source evidence remain under Working source. There are no ready-media copies under Working source/generated or Preview.
 
-Catalogue uses the same shared asset root with separately owned `works/primary/`, `works/thumbs/` and `works/media/files/` families. Studio owns their local preparation; Projects-owned originals remain separate. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns dimensions/version completion.
+Catalogue prepares media in Projects staging, hands selected bytes to `working/assets/works/` during Refresh and to `preview/assets/works/` during per-Work Publish. Both stage roots retain `primary/`, `thumbs/` and `media/files/` families. Studio flags independently select the image set and each download; public projections omit them. Preview snapshot replacement preserves and does not inventory/hash this media tree. Work deletion uses its retained exact descriptor through staging, Working, Preview, repository and R2; document media retains its existing separate policy.
+
+| Catalogue family | Projects staging, below `$DOTLINEFORM_PROJECTS_BASE_DIR` | Working/Preview, below `$DOTLINEFORM_DOCS_BASE_DIR/<stage>` |
+| --- | --- | --- |
+| Primary renditions | `catalogue/media-staging/works/srcset_images/primary/<id>-primary-<width>.webp` | `assets/works/primary/<id>-primary-<width>.webp` |
+| Thumbnails | `catalogue/media-staging/works/srcset_images/thumb/<id>-thumb-<size>.webp` | `assets/works/thumbs/<id>-thumb-<size>.webp` |
+| Managed downloads | `catalogue/media-staging/works/files/<filename>` | `assets/works/media/files/<filename>` |
+
+These are the current configured layout and rendition policy, resolved through the pipeline/workspace owners. Studio staging URLs begin `/studio/media/catalogue/`; Working URLs begin `/docs/assets/works/`. Save can display a new image through the staging route while Working and Preview still contain older bytes. Refresh copies the selected complete image set or exact download basenames into Working, clears their location flags and returns current editor records. Regenerate consumes that Working input; Publish transfers selected bytes into Preview and then its configured repository/R2 destinations. Unchanged Work media is not recopied or enumerated for publication.
+
+Initial Work media population was a user-confirmed manual copy. Historical unreferenced files from that baseline are outside automatic queue discovery; a reused Work ID can therefore encounter old renditions until its queued Refresh replaces them. New Works always prepare their selected image. A new ID without prior files starts at media version 1; differing old bytes at a reused ID can advance its first version. Versioned URLs reflect prepared image changes, and transfers do not advance the version. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns staging/readiness, and [Catalogue Deployment](Catalogue_Deployment.md) owns deletion and publication completion.
 
 | Provider | Current use | Policy |
 | --- | --- | --- |

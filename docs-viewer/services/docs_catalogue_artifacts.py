@@ -11,9 +11,9 @@ from dataclasses import dataclass
 import json
 from pathlib import Path
 
-from docs_workspace_config import DocsCatalogueConfig, DocsWorkspaceConfig, location_child, safe_relative_path
+from docs_workspace_config import DocsCatalogueConfig, location_child, safe_relative_path
 from docs_catalogue_media import (
-    catalogue_media_record, validate_catalogue_media_config, validate_catalogue_series_galleries_index,
+    validate_catalogue_series_galleries_index,
 )
 
 
@@ -95,37 +95,3 @@ def select_catalogue_artifacts(
     if missing:
         raise ValueError("Required Catalogue JSON is missing: " + ", ".join(sorted(missing)))
     return selected
-
-
-def catalogue_asset_references(workspace: DocsWorkspaceConfig, files: dict[str, bytes]) -> list[str]:
-    """Derive exact current asset identities solely from captured Catalogue JSON."""
-    policy = validate_catalogue_media_config(json.loads(files["media-config.json"]))
-    assets = workspace.assets
-    references = set()
-    for identity, data in files.items():
-        path = Path(identity)
-        if path.parent != Path("works/index") or path.suffix != ".json":
-            continue
-        payload = json.loads(data)
-        work = payload.get("work")
-        if not isinstance(work, dict) or work.get("work_id") != path.stem:
-            raise ValueError(f"Catalogue Work identity does not match {identity}")
-        image_fields = ("width_px", "height_px", "media_version")
-        if any(field in work for field in image_fields):
-            catalogue_media_record(payload, path.stem)
-            for family, settings, size_key in (
-                (assets.work_primary, policy["primary"], "widths"),
-                (assets.work_thumbnails, policy["thumbnails"], "sizes"),
-            ):
-                prefix = family.path.relative_to(assets.root.path)
-                for size in settings[size_key]:
-                    references.add((prefix / f"{path.stem}-{settings['suffix']}-{size}.{policy['format']}").as_posix())
-        for download in work.get("downloads", []):
-            filename = safe_relative_path(download["filename"], field="Catalogue download filename")
-            if len(filename.parts) != 1:
-                raise ValueError(f"Catalogue download filename must be a direct file: {identity}")
-            references.add((assets.work_files.path.relative_to(assets.root.path) / filename).as_posix())
-    for identity in sorted(references):
-        if not assets.resolve_reference(identity).path.is_file():
-            raise FileNotFoundError(f"Required Catalogue asset is missing: {identity}")
-    return sorted(references)

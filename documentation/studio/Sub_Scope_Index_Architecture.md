@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260728-113139-763354
 title: Sub-Scope Index Architecture
 added_date: "2026-07-28 11:31:39"
-last_updated: "2026-10-08 12:00:58"
+last_updated: "2026-10-09 20:38:00"
 summary: Collection-list ownership, exact document identity, registered customisations, retained selection and explicit management adoption.
 parent_id: d-20260801-084127-752d7e
 ---
@@ -231,9 +231,9 @@ Working Catalogue's management contribution replaces New with Regenerate and omi
 
 Catalogue documents represent Works with generated content and are always publishable at the document level. Their source, management metadata, list manifests and by-ID payloads omit `draft`; creation and Regenerate do not seed it. Their Draft control is omitted, Set Draft is rejected, and source reads for owning writes or Build reject any `draft` field. Build, Publish, Search and Recents use fixed Catalogue eligibility. Publication still depends on the ordinary report host's eligibility. Other document collections retain their required boolean draft fields, controls and defaults.
 
-The existing collection action registration supplies the exact Working Catalogue target and report-refresh callback. The management host opens a modal with Pending updates selected by default and Full reconciliation as the other choice. One Run action awaits source writes, document builds, Links cleanup or initialization, pending-list updates and report refresh. The result displays Updated, Created and Deleted counts as separate lines; Updated counts existing documents processed through retitle, body regeneration or Build-only work once each. Busy state covers the operation while input and result display remain ready. Successful results stay in the modal with one Close button. Failures report committed sources and incomplete work without automatically retrying.
+The collection action supplies the exact Working Catalogue target and report-refresh callback. The modal has one Run and consumes refreshed queued Works without a mode selector. It awaits each required source/document Build, publication-queue merge and updates-entry removal, then refreshes the report. Counts remain Updated, Created and Deleted. Busy and committed-failure handling remain with the existing owners.
 
-Full reconciliation repairs missing, changed and orphaned Catalogue documents from the current Work index and source inventory. The pending list must remain present and valid; a missing or malformed list stops Refresh and Regenerate for diagnosis. After a failed Refresh, diagnose and retry Refresh. A retry can miss changes already written before the failure, so inspect the list and Work/document inventory and use Full reconciliation if needed. The pending list remains valid and empty after successful processing.
+Explicit design maintenance reconciles source templates and completes one full Catalogue document build, then queues completed document changes without inventing media transfers. It leaves false-readiness entries unconsumed. Normal Regenerate reads only exact queued sources. Missing or malformed private queues stop operations without empty-state fallback; failed operations retain completed effects and identify the Work/step. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns maintenance commands and queue transitions.
 
 New Catalogue documents receive their normal creation and update timestamps. For an existing document, Regenerate advances `last_updated` only when the Work-derived front-matter title changes. Generated-body/template changes and source-format normalization preserve both `added_date` and `last_updated`, even when Full reconciliation rewrites the Markdown. Build-only work also preserves those source dates. Publish copies the resulting source metadata and does not advance document timestamps. This policy applies to subsequent regeneration; it does not restore dates already advanced by earlier operations.
 
@@ -246,7 +246,7 @@ New Catalogue documents receive their normal creation and update timestamps. For
 cat. <work_id>
 ```
 
-Empty optional metadata lines and resource sections are omitted. Dimensions use positive numeric `height_cm`, `width_cm` and optional `depth_cm`; the whole dimensions line is omitted if height or width is missing, and whole numbers omit `.0`. Technical `width_px` and `height_px` supply intrinsic image attributes and reserve the frame before runtime media loading. Storage stays private; Series and duration are not Entry content. There are no Markdown templates or JSON field definitions. Generated Catalogue bodies use Entry followed by `[[links|context]]`. Regenerate creates or replaces that body and updates a changed front-matter title on the existing document; other pending Work changes build without rewriting Markdown. Full reconciliation replaces all generated bodies and preserves their dates when Work-derived titles are unchanged. To refresh rendered Work metadata, first Refresh Catalogue so generated JSON is current, then run Pending updates for Catalogue documents. Refresh bound Work tokens in other collections by rebuilding those documents separately. [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md) owns token grammar and rendering.
+Catalogue Entry omits empty metadata/resources, uses positive physical dimensions and technical intrinsic image dimensions, and keeps storage private. Generated source contains Entry plus `[[links|context]]`. Normal Regenerate updates Work-derived titles and builds selected queued documents; explicit design maintenance replaces templates while preserving dates when titles are unchanged. Referring documents require their own Rebuild. [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md) owns rendering.
 
 ### Catalogue Collection Browsing
 

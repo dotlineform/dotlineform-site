@@ -15,9 +15,9 @@ export function openCatalogueRegenerate(options) {
     root: options.root,
     restoreFocus: options.restoreFocus,
     onBusyChange: options.onBusyChange,
-    run: async function (mode) {
-      var payload = await runCatalogueRegeneration({ ...target, mode: mode }, options.clientOptions);
-      if (mode === "full" || payload.counts.built || payload.counts.delete || payload.counts.create) {
+    run: async function () {
+      var payload = await runCatalogueRegeneration(target, options.clientOptions);
+      if (payload.counts.built || payload.counts.delete || payload.counts.create) {
         try {
           await options.refreshCollection(target);
         } catch (cause) {

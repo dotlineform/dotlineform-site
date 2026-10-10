@@ -106,10 +106,12 @@ def mutate_gallery_payload(
         raise ValueError("write target not allowlisted")
     if writes:
         execute_source_json_write(writes, dry_run=context.dry_run, repo_root=context.repo_root)
+    affected_series = set(related_series_ids(pairs, gallery_id)) | set(related_series_ids(updated_pairs, gallery_id))
+    affected_works = set(members) | {wid for wid, record in works.items() if record.get("series_id") in affected_series}
     response = {
         "ok": True, "gallery_id": gallery_id, "changed": bool(writes),
         "created": operation == "create", "deleted": operation == "delete",
-        "affected_work_ids": members, "affected_gallery_ids": [gallery_id],
+        "affected_work_ids": sorted(affected_works), "affected_gallery_ids": [gallery_id],
     }
     if operation != "delete":
         response.update(gallery_record_payload(updated, updated_pairs, gallery_id))

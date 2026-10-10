@@ -52,6 +52,15 @@ class SeriesPlan(SourceRecordPlan):
 def normalize_work_update(work_id: str, current_record: Mapping[str, Any], update: Mapping[str, Any]) -> Dict[str, Any]:
     merged = dict(current_record)
     merged.update(update)
+    # Operational location flags remain server-owned across metadata edits.
+    merged["image_staged"] = current_record.get("image_staged", False)
+    if merged["image_staged"] is None:
+        merged["image_staged"] = False
+    prior_downloads = {item["filename"]: item for item in current_record.get("downloads") or []}
+    merged["downloads"] = [
+        {**item, "staged": prior_downloads.get(item.get("filename"), {}).get("staged", False)}
+        for item in merged.get("downloads") or []
+    ]
     merged["work_id"] = slug_id(merged.get("work_id") or work_id)
     if merged["work_id"] != work_id:
         raise ValueError("record.work_id must match work_id")

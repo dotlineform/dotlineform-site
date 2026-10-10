@@ -29,6 +29,11 @@ def delete_apply_response(
         require_record_revision(plan.previous.series[record_ids[0]], body.get("expected_record_hash"))
     if not set(plan.payloads).issubset(context.allowed_write_paths):
         raise ValueError("write target not allowlisted")
+    deleted_media = {
+        wid: {"image": bool(plan.previous.works[wid].get("project_filename")),
+              "file_names": sorted(item["filename"] for item in plan.previous.works[wid].get("downloads") or [])}
+        for wid in record_ids if kind == "works"
+    }
     transactions.execute_source_json_write(plan.payloads, dry_run=context.dry_run, repo_root=context.repo_root)
     identity = {"ids": record_ids} if kind == "works" else {"id": record_ids[0]}
     payload: dict[str, Any] = {
@@ -38,7 +43,7 @@ def delete_apply_response(
         payload.update(dry_run=True, would_write=True)
     else:
         payload["saved_at_utc"] = utc_now()
-    complete_saved_catalogue_edit(context, payload, plan.previous, current_records=plan.current)
+    complete_saved_catalogue_edit(context, payload, plan.previous, current_records=plan.current, deleted_media=deleted_media)
     return HTTPStatus.OK, payload
 
 

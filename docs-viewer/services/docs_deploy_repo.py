@@ -482,7 +482,7 @@ def desired_repository_projection(
         for path, data in published_files.items() if path.is_relative_to(prefix)
     }, load_catalogue_artifact_inventory(repo_root))
     destination = repository_path(repo_root, workspace.catalogue.public_projection.location.path)
-    desired.update({destination / identity: data for identity, data in catalogue.items()})
+    desired.update({destination / identity: data for identity, data in catalogue.items() if Path(identity).parent != Path("works/index")})
     return desired, media_references, document_ids
 
 
@@ -537,6 +537,8 @@ def current_repository_projection(
     inventory = load_catalogue_artifact_inventory(repo_root)
     selected = [catalogue_root / path for path in inventory.system_files]
     for relative in inventory.by_id_directories:
+        if relative == Path("works/index"):
+            continue
         directory = catalogue_root / relative
         if directory.is_symlink():
             raise ValueError("Catalogue repository directories must not be symlinks")

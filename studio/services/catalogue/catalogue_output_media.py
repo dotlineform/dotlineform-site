@@ -12,6 +12,7 @@ from catalogue.catalogue_media_version import finalize_catalogue_media_versions
 from catalogue.catalogue_output_paths import catalogue_workspace_config, output_path
 from catalogue.catalogue_source import CatalogueSourceRecords, slug_id, validate_source_records
 from catalogue.catalogue_work_attachments import safe_download_filename
+from catalogue.catalogue_staged_media import catalogue_staging_assets
 from local_env import runtime_env
 
 
@@ -26,8 +27,8 @@ def complete_catalogue_media(
     """Prepare current images/downloads and their metadata, with no network dependency.
 
     Pending native bytes replace exact download identities; otherwise the existing
-    shared download is retained. Missing local downloads fail. Removed
-    references leave bytes for manual cleanup. Dry runs inspect and plan only.
+    download stays in its flag-selected staging or Working location. Missing
+    downloads fail. Removed references leave bytes for manual cleanup.
     """
     errors = validate_source_records(records)
     if errors:
@@ -40,25 +41,28 @@ def complete_catalogue_media(
         raise ValueError("Forced image IDs must be included in image work IDs")
     if not work_ids:
         return {"status": "completed" if write else "planned", "targets": []}
-    assets = catalogue_workspace_config(repo_root).assets
+    working = catalogue_workspace_config(repo_root).assets
+    staging = catalogue_staging_assets(repo_root)
     env = runtime_env(repo_root=repo_root)
     downloads = {
-        safe_download_filename(item["filename"]) for wid in work_ids
+        safe_download_filename(item["filename"]): item for wid in work_ids
         for item in (records.works.get(wid, {}).get("downloads") or [])
     }
     download_files = {}
     if not set(attachment_files or {}).issubset(downloads):
         raise ValueError("Attachment bytes must match the selected Work downloads")
     for filename in sorted(downloads):
-        destination = output_path(assets.work_files, filename)
+        destination = output_path(staging.work_files, filename)
         if filename in (attachment_files or {}):
             data = attachment_files[filename]
             if not data:
                 raise ValueError(f"Catalogue download is empty: {filename}")
-            if not destination.is_file() or destination.read_bytes() != data:
-                download_files[destination] = data
-        elif not destination.is_file() or not destination.stat().st_size:
-            raise ValueError(f"Required local Catalogue download is unavailable: {filename}")
+            download_files[destination] = data
+        else:
+            selected = staging if downloads[filename]["staged"] else working
+            existing = output_path(selected.work_files, filename)
+            if not existing.is_file() or not existing.stat().st_size:
+                raise ValueError(f"Required local Catalogue download is unavailable: {filename}")
 
     tasks = []
     for item_id in image_work_ids:
@@ -75,6 +79,7 @@ def complete_catalogue_media(
         tasks.append(media.build_local_media_task(
             repo_root=repo_root, kind="work", item_id=item_id, source_path=source,
             projects_base_dir=base, force=force,
+            destination_assets=staging, comparison_assets=staging if record["image_staged"] else working,
         ))
     pending = [task["id"] for task in tasks if task["status"] == "pending"]
     if not write:
@@ -95,6 +100,10 @@ def complete_catalogue_media(
                 changed_images.add(task["id"])
         finalized = finalize_catalogue_media_versions(
             source_dir, tasks, changed_images=changed_images, media_files=prepared,
+            staged_downloads_by_work={
+                wid: {item["filename"] for item in records.works[wid].get("downloads") or []} & set(attachment_files or {})
+                for wid in work_ids
+            },
         )
     return {"status": "completed", "targets": work_ids, "prepared_images": pending,
             "changed": bool(download_files or changed_images or dimensions_changed),

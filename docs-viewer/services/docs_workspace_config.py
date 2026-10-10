@@ -7,7 +7,7 @@ There is no scope registry, process-global configuration, or alternate root.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 import json
 import os
 from pathlib import Path
@@ -32,7 +32,7 @@ from docs_collection_customisations import (
 
 
 CONFIG_REL_PATH = Path("docs-viewer/config/workspace/docs-workspace.json")
-SCHEMA_VERSION = "docs_workspace_v4"
+SCHEMA_VERSION = "docs_workspace_v5"
 DOTLINEFORM_DOCS_BASE_DIR_ENV = "DOTLINEFORM_DOCS_BASE_DIR"
 EXTERNAL_DATA_ROOT_MARKER = f"${DOTLINEFORM_DOCS_BASE_DIR_ENV}"
 STAGES = ("working", "preview")
@@ -162,9 +162,11 @@ class DocsStageConfig:
 
 @dataclass(frozen=True)
 class DocsAssetsConfig:
-    """Shared current reader bytes; stages record identities relative to root."""
+    """Shared document media and independently owned Working/Preview Work media."""
 
     root: ArtifactLocation
+    work_root: ArtifactLocation
+    work_roots: Mapping[str, ArtifactLocation]
     document_media: ArtifactLocation
     work_primary: ArtifactLocation
     work_thumbnails: ArtifactLocation
@@ -174,9 +176,24 @@ class DocsAssetsConfig:
     media_types: tuple[str, ...]
 
     def url(self, location: ArtifactLocation) -> str:
-        """Return the one local URL for a configured shared asset location."""
-        relative = location.path.relative_to(self.root.path)
+        """Local routes serve Working Works and shared Docs media by family identity."""
+        relative = self.reference_identity(location.path)
         return self.served_path_prefix.rstrip("/") + "/" + relative.as_posix()
+
+    def for_stage(self, stage: str) -> DocsAssetsConfig:
+        """Select an explicit Work-media owner without changing document media."""
+        if stage not in self.work_roots:
+            raise ValueError("Work media stage must be working or preview")
+        root = self.work_roots[stage]
+        return replace(self, work_root=root, **{
+            name: location_child(root, getattr(self, name).path.relative_to(self.work_root.path))
+            for name in ("work_primary", "work_thumbnails", "work_files")
+        })
+
+    def reference_identity(self, path: Path) -> Path:
+        """Keep Work-family identities stable while their physical owner advances."""
+        owner = self.work_root if path.is_relative_to(self.work_root.path) else self.root
+        return path.relative_to(owner.path)
 
     def document_media_location(self, *, collection: str | None, media_type: str) -> ArtifactLocation:
         """Select the workspace or an exact registered collection's asset family."""
@@ -195,7 +212,9 @@ class DocsAssetsConfig:
         relative = safe_relative_path(identity, field="asset reference")
         if relative.as_posix() != identity:
             raise ValueError("asset reference must use its exact workspace-relative identity")
-        path = self.root.path / relative
+        work_families = [self.work_primary.path, self.work_thumbnails.path, self.work_files.path]
+        is_work = any(relative.is_relative_to(family.relative_to(self.work_root.path)) for family in work_families)
+        path = (self.work_root.path if is_work else self.root.path) / relative
         families = [self.work_primary.path, self.work_thumbnails.path, self.work_files.path]
         families.extend(
             self.document_media.path / owner / media_type
@@ -209,7 +228,8 @@ class DocsAssetsConfig:
     def resolve_reference(self, identity: str) -> ArtifactLocation:
         """Resolve a confined current file, rejecting filesystem redirects."""
         path = self.reference_path(identity)
-        return location_child(self.root, path.relative_to(self.root.path))
+        owner = self.work_root if path.is_relative_to(self.work_root.path) else self.root
+        return location_child(owner, path.relative_to(owner.path))
 
 
 @dataclass(frozen=True)
@@ -515,9 +535,10 @@ def _collections(raw: Any, *, repo_root: Path, workspace_root: ArtifactLocation,
 
 
 def _assets(raw: Any, *, workspace_root: ArtifactLocation,
-            collection_ids: tuple[str, ...], media_types: tuple[str, ...], assets_base_dir: Path | None) -> DocsAssetsConfig:
+            collection_ids: tuple[str, ...], media_types: tuple[str, ...], assets_base_dir: Path | None,
+            work_assets_base_dir: Path | None) -> DocsAssetsConfig:
     item = _object(raw, field="assets", required={
-        "root", "document_media", "work_primary", "work_thumbnails", "work_files", "served_path_prefix",
+        "root", "work_roots", "document_media", "work_primary", "work_thumbnails", "work_files", "served_path_prefix",
     })
     relative_root = safe_relative_path(item["root"], field="assets.root")
     if relative_root.parts[0] != "assets":
@@ -531,6 +552,21 @@ def _assets(raw: Any, *, workspace_root: ArtifactLocation,
         key: safe_relative_path(item[key], field=f"assets.{key}")
         for key in ("document_media", "work_primary", "work_thumbnails", "work_files")
     }
+    raw_roots = _object(item["work_roots"], field="assets.work_roots", required=set(STAGES))
+    work_roots = {}
+    for stage in STAGES:
+        relative = safe_relative_path(raw_roots[stage], field=f"assets.work_roots.{stage}")
+        if not relative.is_relative_to(Path(stage) / "assets"):
+            raise ValueError(f"Work media must stay inside {stage}/assets")
+        work_roots[stage] = location_child(workspace_root, relative)
+    if work_assets_base_dir is not None:
+        if (not work_assets_base_dir.is_absolute() or ".." in work_assets_base_dir.parts
+                or work_assets_base_dir.is_symlink() or not work_assets_base_dir.is_dir()):
+            raise ValueError("Temporary Work media must name an existing absolute asset directory")
+        work_roots = {stage: ArtifactLocation(EXTERNAL_LOCAL_PROVIDER, work_assets_base_dir) for stage in STAGES}
+    work_root = work_roots["working"]
+    if any(not path.is_relative_to(Path("works")) for key, path in paths.items() if key != "document_media"):
+        raise ValueError("Work media families must stay inside works/")
     for key, path in paths.items():
         if any(path.is_relative_to(other) or other.is_relative_to(path) for other_key, other in paths.items() if key != other_key):
             raise ValueError("asset families must have distinct, non-overlapping destinations")
@@ -538,7 +574,8 @@ def _assets(raw: Any, *, workspace_root: ArtifactLocation,
     if not prefix.startswith("/"):
         raise ValueError("assets.served_path_prefix must be a local URL prefix")
     return DocsAssetsConfig(
-        root=root, **{key: location_child(root, path) for key, path in paths.items()},
+        root=root, work_root=work_root, work_roots=work_roots,
+        **{key: location_child(root if key == "document_media" else work_root, path) for key, path in paths.items()},
         served_path_prefix=prefix, collection_ids=collection_ids, media_types=media_types,
     )
 
@@ -560,7 +597,8 @@ def _catalogue(raw: Any, *, workspace_root: ArtifactLocation) -> DocsCatalogueCo
     )
 
 
-def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: Path | None = None, assets_base_dir: Path | None = None) -> DocsWorkspaceConfig:
+def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: Path | None = None,
+                               assets_base_dir: Path | None = None, work_assets_base_dir: Path | None = None) -> DocsWorkspaceConfig:
     """Read checked workspace settings and resolve the existing external root.
 
     Stage paths are derived without creating them. Callers must check the
@@ -617,9 +655,11 @@ def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: 
     # derives from the workspace. No assets are copied into the temporary root.
     if assets_base_dir is None and os.environ.get("DOTLINEFORM_DOCS_BUILD_ASSETS_DIR"):
         assets_base_dir = Path(os.environ["DOTLINEFORM_DOCS_BUILD_ASSETS_DIR"])
+    if work_assets_base_dir is None and os.environ.get("DOTLINEFORM_DOCS_BUILD_WORK_ASSETS_DIR"):
+        work_assets_base_dir = Path(os.environ["DOTLINEFORM_DOCS_BUILD_WORK_ASSETS_DIR"])
     assets = _assets(payload["assets"], workspace_root=workspace_root,
                      collection_ids=collection_ids, media_types=tuple(projection.media),
-                     assets_base_dir=assets_base_dir)
+                     assets_base_dir=assets_base_dir, work_assets_base_dir=work_assets_base_dir)
     stages = []
     for stage in STAGES:
         field = f"stages.{stage}"

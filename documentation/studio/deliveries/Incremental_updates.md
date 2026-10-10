@@ -3,25 +3,43 @@ draft: false
 doc_id: d-20261009-110914-712f45
 title: Incremental Updates
 added_date: "2026-10-09 11:09:14"
-last_updated: "2026-10-09 19:37:39"
-summary: Proposed incremental Catalogue mutation, Refresh and Regenerate steps, with Work-by-Work Preview and Deploy, one publication progress flag and a final shared-output pass.
-ui_status: proposed
+last_updated: "2026-10-10 11:03:37"
+summary: Active delivery of incremental Catalogue mutation, Refresh and Regenerate steps, with Work-by-Work Preview and Deploy, one publication progress flag and a final shared-output pass.
+ui_status: active
 parent_id: d-20261007-221414-48ff3f
 ---
 # Incremental Updates
 
 We need to make incremental updates to the Catalogue metadata **and** media, and apply the same principle to Publish. This is a self-contained delivery separate from [Public Work JSON Review](../Public_Work_JSON_Review.md), which will need to be updated following delivery.
 
+## Delivery State
+
+- [x] User approved IU-1–IU-4 implementation, queue-only normal Regenerate and a separate design-maintenance command on 2026-10-09.
+- [x] Implemented staged Save, mutation-owned updates, selected Refresh/Regenerate and per-Work Preview/Deploy followed by shared output.
+- [x] User resolved the old document queue with Refresh/Regenerate and ran the old Publish for Works `00639` and `04625`. That Publish predates the new incremental workflow.
+- [x] User copied the initial Working/Preview Work media. The old Publish removed the first Preview copy; snapshot replacement now prunes stage-local media, and the user confirmed the repeated Preview copy.
+- [x] Cutover initialized 4,618 Work image flags and six download flags false, created empty updates/publication queues and retired the empty old queue. Original shared media remains retained; active Work readers now use Working or Preview.
+- [x] User approved direct Catalogue Source Save/Rebuild as a metadata-only publication contributor. Editing remains available for this delivery; removing Catalogue editing from the UI is a follow-on.
+- [x] On 2026-10-10, replaced hash-based Refresh status with Work readiness flags and the updates queue header. Schema `catalogue_updates_pending_v3` stores `schema`, `last_refreshed_at_utc` and `shared_refresh_pending` in a header at the top. The separate receipt is removed; Save/Refresh/Regenerate preserve the agreed header ownership. Existing entries were preserved during migration; at migration the queue was empty with a null timestamp and shared pending true. Exact Gallery/Series queue selections remain a follow-on.
+- [x] On 2026-10-10, moved publication schema into a header written first, then added nullable `last_published_at_utc` using `catalogue_publish_pending_v3`. It records completion of a nonempty Catalogue Work queue independently of the later shared-output pass. Contributors, partial failures and initially empty queues preserve the previous timestamp. Migration preserved the current/deleted selections and initialized `preview_done` progress; at migration the saved queue was empty and its timestamp was initialized null.
+- [x] Focused lint (35 Python and eight JavaScript files), Python syntax, module imports, field registry, current canonical/queue diagnostics, projection check, site validation and whitespace checks passed. Bounded source review covered mutation contributions, selected handoffs, deletion descriptors and retained Preview media/documents. No tests or browser automation ran.
+- [x] On 2026-10-10, the user confirmed new Work creation through Save → Refresh → Regenerate → Publish to R2, followed by deletion through to R2. Publish seemed quicker in this Catalogue queue case; this is qualitative feedback, with no timing measurement.
+- [x] Durable Catalogue editor, services, Save/Refresh, deployment, media and storage owners now describe the implemented workflow, both queue schemas/timestamps, selected deletion and retained-progress behavior, and the confirmed/remaining evidence. Documentation transfer is complete independently of further manual testing.
+- [x] On 2026-10-10, removed timestamp-only shared Refresh writes by reusing the existing generated-content comparison. Unchanged Gallery records, indexes, media policy and Series/Galleries report retain their bytes/timestamps; written-file reporting includes only actual writes. Changed-module lint and Python syntax passed. Live Refresh/Publish confirmation remains pending; Gallery/Series queues remain separately scoped.
+- [ ] User completes remaining manual acceptance. Managed-file, timestamp-retention and other unexercised variants remain unverified.
+
+The next gate is user manual acceptance under IU-6. Test work remains separately scoped under [Test Contract Discipline](../Test_Contract_Discipline.md). Live Publish, real media deletion and Git actions remain explicit actions. Detailed changed-owner and command context is retained in the temporary [implementation handoff](Incremental_updates_handoff.md).
+
 ## Current State
 
-- Media is saved in `assets/works/` and updated by Studio when a Work's media is edited and Saved. Working and Preview share these media files, so both consume the latest saved bytes.
-- `catalogue/media-staging/` remains configured under the Projects base root, but the current Save implementation prepares image conversions in operation-local temporary storage and commits completed images, thumbnails and downloads directly into shared Docs assets. Persistent Studio staging is not the active Save destination.
-- Metadata is generated by Studio Refresh in `working/generated/catalogue/`; each Work is stored in `working/generated/catalogue/works/index/<work_id>.json`. It is current in Working after Refresh and current in Preview after Publish.
-- `working/source/collections/catalogue/updates-pending.json` accumulates changed/deleted Work IDs from Studio Refresh's generated-file writes/deletions and clears them only after the required Catalogue Regenerate source/Build work completes.
-- Current Work Delete retains prepared images, thumbnails and downloads; Publish retains shared and remote media. The media deletion lifecycle below is a proposed change to that behaviour.
-- Current Publish completes the whole Preview snapshot before Deploy copies repository output and transfers configured public media, including R2. The Work-by-Work publication lifecycle below is a proposed change to that ordering.
+- Studio Save writes complete prepared image/thumbnail sets and new/replacement downloads into Projects-owned `catalogue/media-staging/`. Independent canonical flags select staging or Working for each media family/file.
+- Known mutation effects accumulate in `working/catalogue-updates-pending.json`; Refresh completes selected false-readiness metadata/media handoffs and clears staging flags before readiness becomes true.
+- Queue-only Regenerate completes refreshed Catalogue sources/documents, merges publication selections and removes completed updates entries. Explicit design maintenance performs full source/document reconciliation without inventing media changes.
+- Direct Catalogue Source Save/Rebuild queues the completed document as metadata only, preserving already queued media and initialized publication progress.
+- Publish completes each queued Work's Preview/Deploy, then builds/deploys shared output once. Unchanged Catalogue documents and Work metadata are retained from completed Preview; stage-local media is excluded from snapshot scanning/replacement.
+- Catalogue prose survives ordinary Regenerate unless the Work title changes. A title change or explicit design maintenance replaces the body with its generated template.
 
-## Proposed Direction
+## Agreed Workflow
 
 - Studio Save retains prepared images, thumbnails and new/replacement downloads in `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media-staging/`.
 - `works.json` carries a separate Work-level image staging flag and a `staged` flag on each download. Studio selects the media location independently for the image set and each file.
@@ -36,7 +54,7 @@ We need to make incremental updates to the Catalogue metadata **and** media, and
 
 ## Data Files And Handoffs
 
-Paths beginning with `working/` or `preview/` are relative to the configured `$DOTLINEFORM_DOCS_BASE_DIR`. Paths beginning with `studio/`, `site/`, `site-tools/` or `docs-viewer/` are repository-relative. Studio staging is explicitly rooted at `$DOTLINEFORM_PROJECTS_BASE_DIR`. `<work_id>` is the exact five-digit Work ID; `<filename>` is a managed download basename. The Working/Preview media paths below describe this proposal; the current implementation still uses shared `assets/` as described under Current State.
+Paths beginning with `working/` or `preview/` are relative to the configured `$DOTLINEFORM_DOCS_BASE_DIR`. Paths beginning with `studio/`, `site/`, `site-tools/` or `docs-viewer/` are repository-relative. Studio staging is explicitly rooted at `$DOTLINEFORM_PROJECTS_BASE_DIR`. `<work_id>` is the exact five-digit Work ID; `<filename>` is a managed download basename. Working and Preview use their separate configured Work-media roots; shared ordinary document media retains its existing owner.
 
 | Data | File or location | Writer and consumer |
 | --- | --- | --- |
@@ -45,10 +63,10 @@ Paths beginning with `working/` or `preview/` are relative to the configured `$D
 | Prepared Studio media awaiting Refresh | `$DOTLINEFORM_PROJECTS_BASE_DIR/catalogue/media-staging/` | Studio Save writes prepared images/thumbnails/downloads; Refresh copies the selected bytes into Working. |
 | Working handoff/regeneration selection | `working/catalogue-updates-pending.json` | Studio mutations accumulate changes/deletion descriptors; Refresh updates `refreshed`; Regenerate consumes completed handoffs and removes completed entries. |
 | Refreshed Work metadata | `working/generated/catalogue/works/index/<work_id>.json` | Refresh writes the by-ID JSON. Regenerate reads its `work` object, including `work.downloads[].filename`, for the Catalogue document and publication merge. Preview reads the selected metadata for publication. |
-| Catalogue document source | `working/source/collections/catalogue/documents/<work_id>.md` | Regenerate creates/updates/deletes the source; the document builder renders it. |
+| Catalogue document source | `working/source/collections/catalogue/documents/<work_id>.md` | Regenerate creates/updates/deletes the source; the document builder renders it. Direct Source Save remains available. |
 | Rendered Working Catalogue document | `working/generated/collections/catalogue/documents/by-id/<work_id>.json` | The document Build writes it; the Work's Preview step consumes the completed document presentation. |
 | Working prepared media | `working/assets/works/primary/`, `working/assets/works/thumbs/`, `working/assets/works/media/files/<filename>` | Refresh supplies prepared bytes; Regenerate/Build consume them, and Preview copies selected media. The stage-local roots retain the currently configured relative media-family layout. |
-| Publication selection and progress | `working/catalogue-publish-pending.json` | Regenerate initialises/merges each Work's changes; only Publish checks or changes an initialised `preview_done` flag and removes completed entries. |
+| Publication selection and progress | `working/catalogue-publish-pending.json` | Regenerate, design maintenance and completed direct Catalogue Source Save/Rebuild merge changes; only Publish checks or changes an initialised `preview_done` flag and removes completed entries. |
 | Preview Work metadata | `preview/catalogue/works/index/<work_id>.json` | The Work's Preview step applies metadata changes/deletion; Deploy copies/removes `site/assets/data/catalogue/works/index/<work_id>.json`. |
 | Preview Catalogue document | `preview/collections/catalogue/documents/by-id/<work_id>.json` | The Work's Preview step applies the document change/deletion; Deploy projects/copies/removes `site/assets/data/docs/catalogue/by-id/<work_id>.json`. |
 | Preview prepared media | `preview/assets/works/primary/`, `preview/assets/works/thumbs/`, `preview/assets/works/media/files/<filename>` | The Work's Preview step applies selected media changes/deletions; Deploy uploads primary images/downloads to R2 and copies thumbnails to the repository's `site/assets/data/catalogue/works/thumbs/` destination. |
@@ -127,7 +145,7 @@ Paths remain configuration-owned; full filesystem paths are not stored in Work r
 - A metadata-only Save preserves all existing staging flags.
 - Save records the exact changed Work and media selection in `working/catalogue-updates-pending.json` as part of its completion.
 - Refresh selects entries with `refreshed: false`, copies their staged media and completes the matching Working handoff and canonical staging-flag clears before setting each successful entry to `refreshed: true`. Failed or unprocessed entries remain false. Refresh retains the change flags and filenames for Regenerate.
-- Refresh returns the updated Studio records so the editor adopts the Working locations. Its completion receipt must reflect the final flag-cleared `works.json` state.
+- Refresh returns the updated Studio records so the editor adopts Working locations. Only complete success advances `header.last_refreshed_at_utc` and clears `header.shared_refresh_pending`; status uses that header and queued readiness without canonical/configuration hashing.
 
 Staging flags select where Studio reads media. Pending `image` and `file_names` separately record which media changed for regeneration/publication. Save records the exact changed download basenames in `file_names` when downloads are staged. Those filenames remain queued after Refresh clears the per-download staging flags. Clearing a staging flag must not clear the document/publication pending change or enqueue another authored change.
 
@@ -163,26 +181,19 @@ Entries survive successful Refresh with `refreshed: true` because the required d
 
 ### Pending Record Shape
 
-Current `updates-pending.json`:
+Current `working/catalogue-updates-pending.json`:
 
-```json
-{
-  "schema": "catalogue_updates_pending_v1",
-  "current_work_ids": [
-    "03181",
-    "04625"
-  ],
-  "deleted_work_ids": []
-}
-```
-
-Proposed complete v2 shape. `current_works` and `deleted_works` are objects keyed by exact Work ID. A Work cannot occur in both. All flags are explicit booleans; `file_names` contains sorted distinct download basenames, with no paths. These schema and field names are proposed.
+Current v3 shape. `header` is the first section, with schema, nullable last successful UTC Refresh time and shared pending boolean. `current_works` and `deleted_works` are objects keyed by exact Work ID. A Work cannot occur in both. Work flags are explicit booleans; `file_names` contains sorted distinct download basenames, with no paths.
 
 `file_names` alone selects download operations: an empty list means no download operation; a populated list selects those exact downloads for transfer on current Works or deletion on deleted Works. The same rule applies to both pending queues.
 
 ```json
 {
-  "schema": "catalogue_updates_pending_v2",
+  "header": {
+    "schema": "catalogue_updates_pending_v3",
+    "last_refreshed_at_utc": null,
+    "shared_refresh_pending": true
+  },
   "current_works": {
     "00008": {
       "metadata": true,
@@ -225,7 +236,9 @@ In this example, Work `00008` still needs Refresh, Work `04625` is ready for Reg
 | Deleted `file_names` | Exact owned download basenames to delete, retained after canonical deletion. | Studio Delete captures them before removing the record; Regenerate removes the list with the completed entry. | Studio Delete cleans selected staged downloads; Refresh deletes selected Working files; Regenerate forwards their identities for Preview/R2 deletion. |
 | Deleted `refreshed` | False means Working metadata/media deletion is pending; true means all required Working deletion completed. | Delete creates false; Refresh sets true after deletion succeeds; Regenerate removes the entry after required document deletion and publication-queue merge. | Refresh processes false deletions; Regenerate processes true deletions. |
 | `current_works` / `deleted_works` membership | Identifies current updates versus Work deletions. | Mutation owners add/replace the relevant entry; Regenerate removes completed entries. | Refresh and Regenerate select exact Work IDs and the operation. |
-| `schema` | Identifies the proposed queue format. | Initialisation/migration establishes the version. | Queue readers validate it before processing. |
+| `header.schema` | Identifies the updates queue format. | Initialization/migration establishes the version. | Queue readers validate it before processing. |
+| `header.last_refreshed_at_utc` | Last complete successful Refresh time, or null before one exists. | Full Refresh completion advances it; mutations and Regenerate preserve it. | Studio displays the time independently of later pending changes. |
+| `header.shared_refresh_pending` | Shared output still needs Refresh, including changes without Work entries or interrupted Refresh. | Mutations/Refresh start set true; only full Refresh completion clears it. | Refresh status combines it with false Work readiness. |
 
 Staging flags are cleared by Refresh, but `metadata`, `image` and `file_names` remain unchanged through that handoff. They are still needed by Regenerate and Publish. A same-Work Save after successful Refresh retains those accumulated changes and sets only readiness back to false alongside its new changes. A Save that makes no actual change need not reset readiness.
 
@@ -298,13 +311,18 @@ On failure, stop and report the affected Work and whether Preview or Deploy fail
 
 If Preview failed, the entry remains false and the next explicit Publish repeats its Preview step before Deploy. If repository copying completed but R2 failed, the entry remains true and the next explicit Publish repeats the Work's combined Deploy step. Already absent owned files/objects count as successfully deleted. If the shared-output pass fails after all Works completed, the Work queue remains empty; the next Publish still runs the shared-output pass. Publish reports complete success only after that pass succeeds.
 
+The publication header's nullable `last_published_at_utc` refers to this Catalogue Work queue. The final queued Work's successful Deploy removes its entry and advances the timestamp in the same queue write. A partial queue failure preserves the previous successful queue time; a later shared-output failure retains the new Catalogue completion time. An initially empty queue leaves the timestamp unchanged.
+
 ### Pending Record Shape
 
-Proposed publication queue after the example changes have successfully completed their required Refresh and Regenerate work, shown after Work `00008` has completed Preview but its Deploy has failed:
+Publication queue after the example changes have successfully completed their required Refresh and Regenerate work, shown after Work `00008` has completed Preview but its Deploy has failed:
 
 ```json
 {
-  "schema": "catalogue_publish_pending_v1",
+  "header": {
+    "schema": "catalogue_publish_pending_v3",
+    "last_published_at_utc": null
+  },
   "current_works": {
     "00008": {
       "metadata": true,
@@ -347,13 +365,16 @@ Current Work change fields and deleted Work media fields match the updates queue
 | Deleted `file_names` | Exact download basenames to delete, captured before canonical deletion. | Regenerate forwards the deletion list; Publish removes it with the entry after that Work's Deploy succeeds. | Preview removes the selected files; Deploy removes their configured public objects using the retained identities. |
 | `deleted_works` membership | Required Working/document deletion completed and must be applied to Preview and Deploy, including indicated media. | Regenerate adds deletion descriptors or replaces them on completed recreation; Publish removes the entry after that Work's Deploy succeeds. | Publish removes the Work's owned Catalogue metadata/document and selected media at each destination. |
 | Current/deleted `preview_done` | False means this queued Work change still needs Preview; true means Preview completed and Deploy remains outstanding. Outside active Publish, true records interrupted Deploy progress. | Regenerate initialises false only on a new Work record and ignores it on existing records. Publish alone changes the initialised flag, setting true after required Preview work completes and removing the entry after Deploy succeeds. | Only Publish checks the flag: false requires Preview, while true proceeds directly to combined repository/R2 Deploy. |
-| `schema` | Identifies the proposed publication queue format. | Initialisation/migration establishes the version. | Publish and the Regenerate merge owner validate it. |
+| `header.schema` | Identifies the publication queue format; the header is written before Work maps. | Initialisation/migration establishes the version; every contributor and Publish preserves it. | Publish and the Regenerate merge owner validate it. |
+| `header.last_published_at_utc` | Nullable UTC time of the last completed nonempty Catalogue Work publication queue. | The final Work's successful Deploy records it with entry removal; upstream contributors, partial failures and initially empty queues preserve it. The later shared pass does not own this time. | Queue readers validate it; inspection reports completed Catalogue queue publication. |
 
 `preview_done` is the only publication progress flag. There are no separate repository, R2 or Deploy completion flags: successful Deploy removes the entry immediately. An empty Work queue means all queued Works completed, but overall Publish still needs its shared-output pass. Changes between successful Publishes are passed forward and accumulated by the upstream owners, which are responsible for keeping the queued selections and supplied Working metadata, documents and media aligned. Publish acts on those supplied instructions and inputs; it does not look back at canonical records or the updates queue to discover changes or infer readiness.
 
-## Proposed Per-Work Processing
+## Per-Work Processing
 
 ### Regenerate
+
+Successful direct Catalogue Source Save/Rebuild also contributes a completed metadata/document update to the publication queue, with no new media selection. It preserves existing media and initialized progress and does not consume updates entries. Editing remains available in this delivery. Normal Regenerate preserves the source body unless the Work title changes; a title change or design maintenance restores the generated template and can replace added prose.
 
 1. Select current/deleted entries with `refreshed: true`, then regenerate one Work at a time using supplied Working metadata and media: reconcile its Catalogue source and complete its required Catalogue document regeneration. Entries with false readiness remain pending for Refresh. Referring documents are updated by the separate manual Full Rebuild described below.
 2. After the required processing completes, pass the Work's changes or full deletion descriptor, including the image flag and exact download filenames, into `working/catalogue-publish-pending.json`. Initialise a record with `preview_done: false` if the Work is absent; otherwise merge its changes without inspecting or modifying the existing flag.
@@ -380,6 +401,11 @@ The awaited operation does not make its individual filesystem writes atomic, but
 ### Mutation Coverage
 
 - Each owner records its known effects as part of completion; missing coverage must not be compensated for by a routine Refresh discovery scan.
+- Single Work Save/Create and subfolder batch creation supply exact changed/created Work IDs, metadata/resource changes, completed image changes and exact staged download basenames. Same-name download replacement is a media change even when canonical reference fields are unchanged.
+- Bulk Work metadata and Gallery-membership edits supply only their actually changed Work IDs. Unchanged selected Works do not acquire new pending changes or lose completed readiness.
+- Gallery definition, deletion and membership owners supply the affected member Work IDs when their embedded Gallery metadata or relationships change. Series definition, membership and Series–Gallery association owners supply the exact Works whose metadata or Catalogue presentation depends on the change; shared indexes and reports must still update when a definition has no affected Works.
+- Work Delete supplies its exact deleted Work IDs and the captured media deletion descriptors; empty Series deletion preserves the independent Gallery definitions and updates the remaining shared relationships/reports.
+- Refresh's staging-flag clears are completion bookkeeping and must not be routed back through authored-change recording.
 - Deliberate external canonical edits are outside the scope of this delivery.
 - Initial media population uses the baseline following manual copying of current media.
 - Queue flags and filenames solely determine changes; `image_staged` and per-download `staged` flags identify the current media location for those selected inputs.
@@ -413,24 +439,26 @@ Stop and ask for clarification and discussion if any issues arise during impleme
 
 ### Manual Initial Media Setup
 
-The user will copy the existing prepared Work image renditions, thumbnails and managed downloads into the configured `working/assets/works/` and `preview/assets/works/` destinations once. These copies establish the initial media baseline. Existing Works can then use false staging flags and read their media from Working; Studio stages subsequent edits as they occur. A full initial copy into Studio staging is unnecessary.
+The user completed the initial Working/Preview media copies on 2026-10-09. The old Publish removed the first Preview copy; the new snapshot owner excludes stage-local Work assets, and the user confirmed the repeated Preview copy. Existing Works now have false staging flags and read Working media. Studio stages subsequent edits; no initial staging copy is needed. The original shared media remains retained.
 
-Implementation provides the configured media locations and the simple flag/queue initialisation needed for cutover. Existing pending Catalogue work must be resolved through its current workflow before empty new queues are initialised; pending changes must not be discarded. The initial media copies remain a user action and are not yet recorded as complete.
+Cutover completed after the dependent implementation: 4,618 Work image flags and six download flags were initialized false; both new queues are empty and the empty old queue was retired. Canonical authored values were preserved. The user's old Publish resolved the previously regenerated Works; new per-Work publication has not yet been exercised.
 
 No automated corpus reconciliation, source/destination comparison, bulk hashing, ownership scan or historical-media migration is needed for this setup. Normal operation validates selected inputs and acts on explicitly queued changes.
 
-### [ ] IU-0 — Readiness and initial setup
+### [x] IU-0 — Readiness and initial setup
 
-- Confirm the required Studio staging, Working and Preview locations and the queue contracts.
-- Confirm every canonical mutation owner's queue contribution, including Work Save/Create/Delete, bulk changes and Gallery/Series relationship changes.
-- Ensure this document contains these details ready for the implementation steps.
+- [x] Confirm the required Studio staging, Working and Preview locations and the queue contracts.
+- [x] Confirm every canonical mutation owner's required queue contribution, including Work Save/Create/Delete, subfolder batch creation, bulk changes and Gallery/Series relationship changes.
+- [x] Ensure this document contains these details ready for the implementation steps.
+- [x] User completed Refresh/Regenerate and confirmed the initial Working/Preview media copies.
+- [x] Complete cutover after dependent implementation; initialize flags/new queues and retire the empty old queue.
 
 Gate:
 
-- the user performs the initial Working/Preview media copies at cutover after existing pending work is resolved.
-- the media baseline and new state files are ready without automated reconciliation.
+- the initial Working/Preview media baseline is user-confirmed and the old document-pending queue is empty.
+- the dependent implementation and new state files are ready without automated reconciliation.
 
-### [ ] IU-1 — Save and other mutation actions
+### [x] IU-1 — Save and other mutation actions
 
 - redirect prepared images/downloads to Studio staging;
 - add the Work image flag and per-download staging flags and wire editor/list/download readers.
@@ -439,14 +467,16 @@ Gate:
 
 Gate: each mutation returns with complete editor/state updates or a clear saved-but-incomplete result, and its known changes remain queued.
 
-### [ ] IU-2 — Refresh
+### [x] IU-2 — Refresh
 
 - consume only queued current/deleted entries with `refreshed: false`; apply their matching Working metadata/media updates or deletions, complete required relationship/report output and clear transferred canonical staging flags.
 - Set each entry true only after its required handoff succeeds; skip entries already true.
 
 Gate: successfully processed Works are aligned in Working and ready for Regenerate, while failed/unprocessed entries remain false and no change-discovery scan is introduced.
 
-### [ ] IU-3 — Regenerate
+### [x] IU-3 — Regenerate
+
+- [x] Direct Catalogue Source Save/Rebuild queues completed document changes as metadata only, preserving existing media selections and initialized progress.
 
 - consume only refreshed entries, create/update/delete the corresponding Catalogue sources and complete the agreed document Build scope.
 - Pass current changes or full deletion descriptors into the publication queue before removing updates entries. Initialise a new Work record with `preview_done: false`, or merge into its existing record without inspecting or modifying the flag. Publish alone owns the initialised flag.
@@ -454,7 +484,7 @@ Gate: successfully processed Works are aligned in Working and ready for Regenera
 
 Gate: completed required documents and their publication selections are ready; false-readiness, failed and unprocessed entries remain pending, with the failing Work/step reported.
 
-### [ ] IU-4 — Publish
+### [x] IU-4 — Publish
 
 - consume the publication queue one Work at a time; apply selected Preview changes/deletions only when `preview_done` is false, then persist true.
 - Complete that Work's combined repository/R2 Deploy using Preview bytes and retained deletion identities; remove its entry only after Deploy succeeds, then process the next Work.
@@ -464,7 +494,9 @@ Gate: completed required documents and their publication selections are ready; f
 
 Gate: each Work completes Preview and Deploy before the next begins; one final shared-output pass completes overall Publish. Failures retain only unfinished Work entries with accurate Preview completion, allow temporary differences between destinations and support an explicit rerun without automatic recovery or full media reconciliation.
 
-### [ ] IU-5 — Code review and selected evidence
+### [x] IU-5 — Code review and selected evidence
+
+Selected evidence passed on 2026-10-09: explicit-path Python/JavaScript lint, Python syntax, configured service imports, field registry/canonical/queue diagnostics, runtime projection check, site validation and whitespace. Review corrected Preview asset pruning, metadata-only document queue coverage and configured Preview document path resolution. These checks provided static and diagnostic evidence; subsequent user manual evidence is recorded under IU-6. No automated workflow tests ran.
 
 - review the bounded production/configuration/documentation changes for complete mutation coverage, flag transitions, file selection, deletion ownership and partial-failure reporting.
 - Select proportionate existing lint, syntax and direct diagnostics, and resolve findings. Test creation, changes and runs require their own agreed scope; ordinary UI/manual media review remains with the user.
@@ -473,13 +505,17 @@ Gate: review findings are resolved and evidence limits are explicit.
 
 ### [ ] IU-6 — Manual acceptance and closeout
 
-- the user reviews Save/staged media, queued Refresh, regeneration and Publish/deletion behaviour after the initial copies and local restart/reload as needed.
-- Update the durable Catalogue editor, services, Save/Refresh, document and deployment owners, then record the complete/remaining state and document retention recommendation.
+- [x] User confirmed new Work creation and subsequent deletion through the complete workflow to R2 on 2026-10-10, and reported a quicker Publish in this Catalogue queue case.
+- [ ] Remaining manual acceptance covers managed-file and other unexercised variants; no exhaustive scenario coverage or measured performance is claimed.
+- [x] Update durable workflow and ownership documentation now, with confirmed/remaining evidence; full manual testing may continue later.
+- [ ] Resolve final acceptance and document retention recommendation. Keep this delivery and temporary handoff while that state remains open; document deletion needs approval.
 - Publish, real media deletion, commit and push remain explicit actions.
 
 Gate: the complete agreed workflow is accepted and durable ownership documentation is current.
 
 ## Follow-ons
 
+- Remove Catalogue document editing from the UI so Catalogue content is authored through Work edits and generated templates. Determine the complete editing surface in that bounded follow-on; exact-document Rebuild remains useful for applying current generated inputs.
+- Introduce similar mutation-owned queue tracking for Gallery/Series definitions and relationship changes, including changes with zero affected Works. Preserve known affected-Work contributions; define exact change/deletion selections and completion before choosing a separate queue or additional families. Replace the coarse shared pending flag with those agreed selections as appropriate; no Catalogue discovery scans.
 - Incremental Publish of normal and non-Catalogue collection docs.
 - Optimisation of index and lookup JSON build, validation and Publishing.

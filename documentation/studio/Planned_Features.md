@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260428-000000-f5ff18
 title: Planned Features
 added_date: "2026-04-28 00:00:00"
-last_updated: "2026-10-08 19:54:24"
+last_updated: "2026-10-10 10:42:03"
 summary: This explains the delivery model and workflows to implement new repo and application features.
 ui_status: planned
 parent_id: ""
@@ -144,7 +144,7 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 ## Reviews
 
-- [Public Work JSON Review](Public_Work_JSON_Review.md) — Review of a Studio Refresh aggregate/report handoff, Working and public Work records, baked media and consistent updates. Refresh supplies Catalogue inputs without direct Studio reads by Docs; Regenerate reconciles Catalogue sources and calls shared Full Rebuild; Rebuild applies document-only changes. Full Rebuild optimisation benefits every caller. Work `00008`, nerve defines the presentation target. The self-contained Catalogue Image metadata option/field removal and Working token migration were implemented and reviewed on 2026-10-08; manual Add/Edit review remains. External Studio-owned media with incremental Refresh copies is an optional extension; routine Refresh must skip unchanged images. Input contracts, shared rebuild optimisation, Gallery loading and Media View contract retirement remain open; the broader implementation is not yet approved.
+- [Public Work JSON Review](Public_Work_JSON_Review.md) — Broader Work-payload/presentation and shared rebuild proposals remain separately scoped. Its active [Incremental Updates](deliveries/Incremental_updates.md) delivery implements staged media, mutation-owned queues, queue-only Regenerate and per-Work Publish with a final shared pass. Durable workflow/ownership documentation is current independently of further testing. Focused verification passed; the user confirmed new Work addition and subsequent deletion through to R2 on 2026-10-10 and perceived quicker Publish. Managed-file and other manual variants remain unverified. Removing Catalogue document editing and introducing similar queues for Gallery/Series changes are follow-ons. Aggregate handoff, baked media, Gallery loading and Media View contract retirement remain open. The Catalogue Image metadata option/field removal and Working token migration were delivered independently.
 
 ## Ad-hoc Deliveries
 

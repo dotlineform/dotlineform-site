@@ -171,25 +171,28 @@ def thumb_output_paths(repo_root: Path, kind: str, item_id: str) -> list[Path]:
 
 def build_local_media_task(
     *, repo_root: Path, kind: str, item_id: str, source_path: Path,
-    projects_base_dir: Path, force: bool = False,
+    projects_base_dir: Path, force: bool = False, destination_assets: Any = None, comparison_assets: Any = None,
 ) -> Dict[str, Any]:
     """Plan one complete local rendition set; mtimes select conversion, bytes decide version."""
     if kind != "work":
         raise ValueError(f"unsupported local media kind: {kind}")
     if not source_path.is_file():
         raise ValueError(f"{item_id}: source image is unavailable")
-    assets = catalogue_workspace_config(repo_root).assets
+    assets = destination_assets if destination_assets is not None else catalogue_workspace_config(repo_root).assets
+    comparison = comparison_assets if comparison_assets is not None else assets
     outputs = [
         {"variant": "thumb", "size": size,
-         "path": output_path(assets.work_thumbnails, f"{item_id}-{THUMB_SUFFIX}-{size}.{ASSET_FORMAT}")}
+         "path": output_path(assets.work_thumbnails, f"{item_id}-{THUMB_SUFFIX}-{size}.{ASSET_FORMAT}"),
+         "comparison_path": output_path(comparison.work_thumbnails, f"{item_id}-{THUMB_SUFFIX}-{size}.{ASSET_FORMAT}")}
         for size in THUMB_SIZES
     ] + [
         {"variant": "primary", "size": width,
-         "path": output_path(assets.work_primary, f"{item_id}-{PRIMARY_SUFFIX}-{width}.{ASSET_FORMAT}")}
+         "path": output_path(assets.work_primary, f"{item_id}-{PRIMARY_SUFFIX}-{width}.{ASSET_FORMAT}"),
+         "comparison_path": output_path(comparison.work_primary, f"{item_id}-{PRIMARY_SUFFIX}-{width}.{ASSET_FORMAT}")}
         for width in PRIMARY_WIDTHS
     ]
     source_mtime = source_path.stat().st_mtime
-    pending = force or any(not item["path"].is_file() or item["path"].stat().st_mtime < source_mtime for item in outputs)
+    pending = force or any(not item["comparison_path"].is_file() or item["comparison_path"].stat().st_mtime < source_mtime for item in outputs)
     width, height = read_image_dims_px(source_path)
     if width is None or height is None or width < 1 or height < 1:
         raise ValueError(f"{item_id}: source image dimensions are unavailable")
@@ -278,7 +281,8 @@ def prepare_local_media_task(task: Mapping[str, Any], temporary_root: Path) -> t
         if code or not temporary.is_file() or not temporary.stat().st_size:
             raise RuntimeError(f"Local media generation failed for {task['id']}: {error or 'empty rendition'}")
         data = temporary.read_bytes()
-        if destination.is_file() and destination.read_bytes() != data:
+        comparison = output["comparison_path"]
+        if comparison.is_file() and comparison.read_bytes() != data:
             changed = True
         prepared[destination] = data
     return prepared, changed

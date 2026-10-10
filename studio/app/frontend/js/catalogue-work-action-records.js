@@ -12,6 +12,7 @@ export function projectWorkSearchRecord(workId, record, recordHash = "") {
     year_display: normalizeText(record && record.year_display),
     series_id: normalizeText(record?.series_id),
     media_version: record.media_version,
+    image_staged: record.image_staged,
     gallery_ids: record.gallery_ids.slice(),
     record_hash: normalizeText(recordHash)
   };

@@ -3,7 +3,7 @@ import {
   openDocsViewerManagementModal
 } from "./docs-viewer-management-modal-shell.js";
 
-/** Let the user choose one mode, then keep the modal busy through Run and report refresh. */
+/** Keep the modal busy through queued regeneration and report refresh. */
 export function openCatalogueRegenerateModal(options) {
   var result = null;
   var phase = "ready";
@@ -11,7 +11,6 @@ export function openCatalogueRegenerateModal(options) {
   var primary;
   var closeButton;
   var content;
-  var choices;
 
   function setBusy(busy) {
     api.setBusy(busy);
@@ -20,7 +19,6 @@ export function openCatalogueRegenerateModal(options) {
 
   function finish() {
     setBusy(false);
-    choices.forEach(function (choice) { choice.disabled = true; });
     closeButton.hidden = true;
     primary.textContent = "Close";
     primary.disabled = false;
@@ -31,8 +29,7 @@ export function openCatalogueRegenerateModal(options) {
     api.setStatus("");
     setBusy(true);
     content.textContent = "Reconciling Catalogue documents…";
-    var mode = api.host.querySelector('[name="catalogue-regenerate-mode"]:checked').value;
-    options.run(mode).then(function (payload) {
+    options.run().then(function (payload) {
       result = payload;
       phase = "result";
       var counts = payload.counts;
@@ -57,23 +54,18 @@ export function openCatalogueRegenerateModal(options) {
     root: options.root,
     restoreFocus: options.restoreFocus,
     title: "Regenerate Catalogue",
-    bodyHtml: '<fieldset class="docsViewer__fieldGroup"><legend class="visually-hidden">Catalogue regeneration mode</legend>'
-      + '<label class="docsViewer__field docsViewer__field--checkbox"><input class="docsViewer__checkboxInput" type="radio" name="catalogue-regenerate-mode" value="pending" checked><span class="docsViewer__fieldLabel">Pending updates</span></label>'
-      + '<label class="docsViewer__field docsViewer__field--checkbox"><input class="docsViewer__checkboxInput" type="radio" name="catalogue-regenerate-mode" value="full"><span class="docsViewer__fieldLabel">Full reconciliation</span></label>'
-      + '</fieldset>'
-      + '<div data-regenerate-result aria-live="polite"></div>',
+    bodyHtml: '<p>Regenerate refreshed Catalogue updates.</p><div data-regenerate-result aria-live="polite"></div>',
     actions: [
       { role: "modal-primary", label: "Run" },
       { role: "modal-cancel", label: "Close" }
     ],
-    focusSelector: '[name="catalogue-regenerate-mode"][value="pending"]',
+    focusSelector: '[data-role="modal-primary"]',
     onOpen: function (modalApi) {
       api = modalApi;
       api.host.querySelector('[data-role="docs-viewer-management-modal"]').dataset.suppressBusyCursor = "true";
       primary = api.host.querySelector('[data-role="modal-primary"]');
       closeButton = api.host.querySelector('button[data-role="modal-cancel"]');
       content = api.host.querySelector("[data-regenerate-result]");
-      choices = Array.from(api.host.querySelectorAll('[name="catalogue-regenerate-mode"]'));
     },
     onSubmit: function () {
       if (phase === "result" || phase === "error") return { confirmed: true };

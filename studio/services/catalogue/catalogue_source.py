@@ -45,6 +45,7 @@ WORK_FIELDS = [
     "project_subfolder",
     "project_filename",
     MEDIA_VERSION_FIELD,
+    "image_staged",
     "title",
     "width_cm",
     "height_cm",
@@ -88,10 +89,11 @@ DETAIL_SECTION_FIELDS = [
 
 DETAIL_SECTION_SORT_MODES = {"detail_id", "title"}
 
-DOWNLOAD_FIELDS = ["filename", "label"]
+DOWNLOAD_FIELDS = ["filename", "label", "staged"]
 WORK_LINK_ENTRY_FIELDS = ["url", "label"]
 
 WORK_TEXT_FIELDS = set(WORK_FIELDS) - {
+    "image_staged",
     "downloads",
     "links",
     "width_cm",
@@ -126,7 +128,7 @@ SOURCE_IDENTITY_FIELDS_BY_RECORD_FAMILY = {
 }
 
 SOURCE_DERIVED_FIELDS_BY_RECORD_FAMILY = {
-    "work": ("width_px", "height_px", MEDIA_VERSION_FIELD),
+    "work": ("width_px", "height_px", MEDIA_VERSION_FIELD, "image_staged"),
     "work_detail": ("width_px", "height_px", MEDIA_VERSION_FIELD),
     "series": (),
 }
@@ -390,8 +392,9 @@ def normalize_downloads(value: Any) -> list[Dict[str, Any]]:
         return []
     out: list[Dict[str, Any]] = []
     for item in value:
-        entry = normalize_embedded_entry(item, DOWNLOAD_FIELDS)
+        entry = normalize_embedded_entry(item, ("filename", "label"))
         if entry is not None:
+            entry["staged"] = item.get("staged")
             out.append(entry)
     return out
 
@@ -879,6 +882,8 @@ def validate_source_records(
         validate_record_fields(errors, kind="works", key=key, record=record, allowed_fields=WORK_FIELDS)
         validate_work_media_source(errors, key=key, record=record)
         validate_media_version(errors, kind="works", key=key, record=record)
+        if type(record.get("image_staged")) is not bool:
+            errors.append(f"works {key}: image_staged must be an explicit boolean")
         try:
             work_id = slug_id(record.get("work_id") or key)
         except ValueError as exc:
@@ -913,6 +918,8 @@ def validate_source_records(
                         errors.append(f"works {key}: downloads item {idx} missing filename")
                     if is_empty(download.get("label")):
                         errors.append(f"works {key}: downloads item {idx} missing label")
+                    if type(download.get("staged")) is not bool:
+                        errors.append(f"works {key}: downloads item {idx} staged must be an explicit boolean")
         links = record.get("links")
         if links is not None:
             if not isinstance(links, list):

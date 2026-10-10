@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260422-000000-45a776
 title: Catalogue Work Editor
 added_date: "2026-04-22 00:00:00"
-last_updated: "2026-10-08 11:05:40"
+last_updated: "2026-10-10 10:42:03"
 parent_id: d-20260423-000000-d015e6
 
 ---
@@ -20,6 +20,19 @@ Use `/studio/catalogue-work/` to create, find, edit or delete canonical Works, i
 The [Catalogue Source Model](Catalogue_Source_Model.md) owns the data boundary. Ordinary Save completes the canonical edit and required local media; [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns the separate generated-reader boundary.
 
 Medium is one descriptive text field for materials, process and support. It saves as `medium`; the former `medium_caption` name and separate `medium_type` field are retired.
+
+## Catalogue Update Sequence
+
+| Action | Completed result |
+| --- | --- |
+| Save | Canonical Work change, required prepared media in staging, exact updates selection and current editor display. |
+| Refresh Catalogue | Selected Working metadata/media, cleared staging flags and true queue readiness; shared reader indexes update. |
+| Regenerate in Docs | Catalogue source/document generation for refreshed entries; completed changes move into the publication queue. |
+| Docs Publish | Each queued Work completes Preview and repository/R2 Deploy, then shared output publishes once. |
+
+For deletion, start with Delete and continue through Refresh, Regenerate and Publish. The editor's immediate image display reflects saved staged media; it does not show that Working, Preview or public output has been updated. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns the operational steps and updates queue; [Catalogue Deployment](Catalogue_Deployment.md) owns publication and its retained progress. Git commit/push and GitHub Actions deployment remain separate.
+
+“Catalogue readers need Refresh before Docs Publish.” means that the updates header has `shared_refresh_pending: true` or an affected Work still has `refreshed: false`. Empty Work maps can still require a shared Refresh. A successful Refresh records its UTC completion time and clears shared pending; mutations preserve that time while marking new work pending. Status reads the queue flags without Catalogue/configuration hashing or a separate receipt.
 
 ## Create And Save
 
@@ -89,17 +102,19 @@ Bulk Save uses one request and one combined canonical transaction. Each selected
 
 Delete applies to one or all selected saved Works, including selections made through the ID/range search. One browser confirmation names a single Work ID or lists the selected count and exact IDs for multiple Works. Cancel is the default and retains the selection and draft. The confirmation uses the selected identities directly, without a preliminary server preview.
 
-Single and multiple Work deletion share one request containing exact IDs, without loaded Work or Gallery revision comparisons. Apply reads current canonical data once, removes the selected Works and their current Gallery membership entries, validates the resulting Catalogue and writes Works and memberships through the existing combined transaction owner. Invalid or duplicate IDs, an absent Work or invalid resulting data fail before writes. Metadata or image changes since loading do not invalidate deletion by identity. Gallery and Series definitions remain, including definitions made empty by deletion; shared images and files are retained.
+Single and multiple Work deletion share one request containing exact IDs, without loaded Work or Gallery revision comparisons. Apply reads current canonical data once, removes the selected Works and their current Gallery membership entries, validates the resulting Catalogue and writes Works and memberships through the existing combined transaction owner. Invalid or duplicate IDs, an absent Work or invalid resulting data fail before writes. Metadata or image changes since loading do not invalidate deletion by identity. Gallery and Series definitions remain, including definitions made empty by deletion. The deletion descriptor retains the Work's exact image set and current download basenames; local completion queues it and removes those owned staged bytes. Project originals and unselected historical files retain their owners.
 
-The editor then removes all confirmed deleted Works from its live search and Series member list, updates the member count, and clears the Work selection, form, preview and Work URL parameter without reloading the page. The displayed Series and expanded-list layout remain in place, including when the last member is deleted. A confirmed canonical deletion with incomplete local completion still removes those Works from the editor and displays the completion error. Cancellation or an unconfirmed deletion retains the selection. Refresh Catalogue later removes obsolete generated records and updates former memberships; publication and media cleanup retain their separate owners.
+The editor then removes all confirmed deleted Works from its live search and Series member list, updates the member count, and clears the Work selection, form, preview and Work URL parameter without reloading the page. The displayed Series and expanded-list layout remain in place, including when the last member is deleted. A confirmed canonical deletion with incomplete local completion still removes those Works from the editor and displays the completion error. Cancellation or an unconfirmed deletion retains the selection. Refresh removes the selected Working metadata/media and updates shared reader output. Regenerate removes the Catalogue source/document and forwards the deletion descriptor. Publish removes its exact Preview and configured repository/R2 output. Earlier completed effects remain after failure; correct the cause and rerun the owning operation.
 
-The 2026-10-08 deletion delivery implements this shared single/multiple contract. Focused Python/JavaScript lint, Python syntax, service/configuration import diagnostics and whitespace checks passed. Code review covered current-data ownership, failure and editor-state paths; response-ID string validation and removal of unused plan fields resolved the review findings, with no blocking findings remaining. These are static/import and source-review evidence, not runtime mutation verification. Tests remain pending separate review and were not changed or run. No browser automation, real Work deletion, Catalogue Refresh, Publish, commit or push ran. Restart Local Studio and force-reload the editor to adopt the updated service and browser code; interaction and mutation confirmation remain manual.
+The shared deletion owner passed focused Python/JavaScript lint, Python syntax, service/configuration imports, whitespace checks and source review. On 2026-10-10, the user confirmed new Work creation and subsequent deletion through the complete incremental workflow to R2. Multiple-selection deletion, managed-file and live failure/retry variants were not separately confirmed in that report. No automated workflow tests or browser automation ran for the incremental delivery; further manual coverage can continue during ordinary use.
 
 Subfolder batch creation uses New Work mode; saved bulk editing remains limited to Gallery memberships. Shared file-picker, record-list, modal and media-preview components remain available without restoring Detail-specific browsers, modals or services.
 
 ## Media And Runtime Ownership
 
-The media picker resolves the Work's configured source, folder, optional direct subfolder and filename. Empty folder, subfolder and filename values display as plain `—` placeholders with no hover underline. The server validates paths without exposing absolute filesystem locations. Catalogue staging uses `catalogue/media-staging/` beneath the configured Projects base. Save prepares required primary renditions and thumbnails in shared Docs `assets/works/`. The preview uses the saved Work's media version; an unavailable image is reported separately from missing preview configuration.
+The media picker resolves the configured Projects source, folder, optional subfolder and filename. Save prepares required primary renditions, thumbnails and native uploads in Projects-owned `catalogue/media-staging/`. The editor preview and Series thumbnails select staging when `image_staged` is true, otherwise Working; each download selects its independent `staged` flag. Refresh returns cleared flags and current revisions so the open editor, list and download links adopt Working locations. Image URLs retain the saved media version. Absolute filesystem paths stay server-side.
+
+Staged image URLs use `/studio/media/catalogue/works/srcset_images/primary/`; their files are under the configured Projects root's `catalogue/media-staging/` tree. Working images are under the Docs root's `working/assets/works/primary/` family and use `/docs/assets/works/primary/`. [Media And Asset Handling](Media_And_Asset_Handling.md#workspace-configuration-and-storage) maps all image, thumbnail and download locations. A reused ID can have older Working files until Refresh replaces them; its first Save may advance media version if those bytes differ. A fresh ID with no rendition files starts at version 1.
 
 Browser modules under `studio/app/frontend/js/` divide the route into fields/form, selection, actions, record state, resources and media picking. `catalogue-editor-service-client.js` owns transport; `studio_catalogue_api.py` dispatches to the focused services under `studio/services/catalogue/`. Field definitions and current code own the exact editable inventory.
 

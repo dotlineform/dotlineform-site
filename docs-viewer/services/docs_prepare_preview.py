@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -31,7 +31,7 @@ from docs_recent_payload import build_recent_payload
 from docs_selected_documents import read_selected, selected_row, selected_text
 from docs_catalogue_artifacts import (
     CONFIG_REL_PATH as CATALOGUE_CONFIG_REL_PATH, load_catalogue_artifact_inventory,
-    read_catalogue_artifacts, catalogue_asset_references,
+    read_catalogue_artifacts,
 )
 
 
@@ -84,7 +84,6 @@ def _capture_inputs(repo_root: Path) -> PreparationInputs:
     search_index = search_path.read_bytes()
     _validate_prepared_index(Path("search/index.json"), search_index)
     workspace = load_docs_workspace_config(repo_root)
-    catalogue = read_catalogue_artifacts(workspace.catalogue, load_catalogue_artifact_inventory(repo_root), stage="working")
     links_root = generated_documents_path(working) / "links-by-id"
     if links_root.is_symlink():
         raise ValueError("Working related-links inputs must not be a symlink")
@@ -95,6 +94,14 @@ def _capture_inputs(repo_root: Path) -> PreparationInputs:
     if preview_root.is_symlink() or (preview_root.exists() and not preview_root.is_dir()):
         raise ValueError("Preview root must be a directory without symlinks")
     current = _files_from_root(preview_root) if preview_root.is_dir() else {}
+    inventory = load_catalogue_artifact_inventory(repo_root)
+    shared_inventory = replace(inventory, by_id_directories=tuple(path for path in inventory.by_id_directories if path != Path("works/index")))
+    catalogue = read_catalogue_artifacts(workspace.catalogue, shared_inventory, stage="working")
+    catalogue_prefix = workspace.catalogue.preview.path.relative_to(preview_root)
+    catalogue.update({
+        path.relative_to(catalogue_prefix).as_posix(): data for path, data in current.items()
+        if path.parent == catalogue_prefix / "works/index" and path.suffix == ".json"
+    })
     basis = {
         **configuration,
         Path("working"): files_revision(source_files).encode(),
@@ -189,15 +196,16 @@ def build_captured_preview(
     repo_root: Path, source_files: dict[Path, bytes], search_index: bytes, recent_payload: bytes,
     catalogue: dict[str, bytes],
     related_links: dict[Path, bytes], eligible_doc_ids: list[str],
+    retained_preview: dict[Path, bytes],
 ) -> tuple[dict[Path, bytes], dict[str, Any]]:
     """Build captured inputs in temporary storage without replacing live Preview."""
     workspace = load_docs_workspace_config(repo_root)
-    references = catalogue_asset_references(workspace, catalogue)
     build_parent = repo_root / "var"
     build_parent.mkdir(exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="preview-build-", dir=build_parent) as directory:
         build_root = Path(directory)
-        captured_workspace = load_docs_workspace_config(repo_root, docs_base_dir=build_root, assets_base_dir=workspace.assets.root.path)
+        work_assets = workspace.assets.for_stage("preview").work_root.path
+        captured_workspace = load_docs_workspace_config(repo_root, docs_base_dir=build_root, assets_base_dir=workspace.assets.root.path, work_assets_base_dir=work_assets)
         config = select_workspace_stage(captured_workspace, "preview")
         source_root = config.source.location.path
         generated_root = config.generated.documents.location.path.parent
@@ -208,6 +216,27 @@ def build_captured_preview(
         captured_links = build_root / "related-links"
         captured_links.mkdir()
         eligible = set(eligible_doc_ids)
+        catalogue_documents = generated_root / "collections/catalogue/documents"
+        catalogue_rows = []
+        catalogue_source_prefix = Path("collections/catalogue/documents")
+        for relative in sorted(source_files):
+            if relative.parent != catalogue_source_prefix or relative.suffix != ".md":
+                continue
+            document = catalogue_source_prefix / "by-id" / (relative.stem + ".json")
+            if document not in retained_preview:
+                raise FileNotFoundError(f"Catalogue {relative.stem} has no completed Preview document; Regenerate its refreshed queue or run explicit Catalogue design maintenance")
+            data = retained_preview[document]
+            payload = json.loads(data)
+            if payload.get("doc_id") != relative.stem:
+                raise ValueError("Retained Catalogue document identity does not match its file")
+            target = generated_root / document
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(data)
+            catalogue_rows.append({"doc_id": payload["doc_id"], "title": payload["title"],
+                                   "last_updated": doc_updated_date(payload["last_updated"])})
+        catalogue_documents.mkdir(parents=True, exist_ok=True)
+        catalogue_rows.sort(key=lambda row: (row["title"].lower(), row["doc_id"]))
+        (catalogue_documents / "manifest.json").write_bytes((json.dumps({"docs": catalogue_rows}, indent=2, ensure_ascii=False) + "\n").encode())
         for relative, data in related_links.items():
             if relative.parent != Path(".") or relative.suffix != ".json":
                 raise ValueError("Related-links inputs require flat JSON records")
@@ -243,6 +272,7 @@ def build_captured_preview(
             [sys.executable, str(repo_root / "docs-viewer/build/build_preview.py"),
              "--docs-base-dir", str(build_root), "--search-index", str(captured_search),
              "--recent-payload", str(captured_recent), "--assets-base-dir", str(workspace.assets.root.path),
+             "--work-assets-base-dir", str(work_assets),
              "--related-links-dir", str(captured_links)],
             cwd=repo_root, capture_output=True, text=True, check=False,
         )
@@ -252,7 +282,7 @@ def build_captured_preview(
         files, eligibility = build_preview_snapshot_files(repo_root, config, generated_files)
         catalogue_prefix = workspace.catalogue.preview.path.relative_to(workspace.workspace_root.path / "preview")
         files.update({catalogue_prefix / identity: data for identity, data in catalogue.items()})
-        references = sorted(set(references) | set(eligibility["asset_references"]))
+        references = eligibility["asset_references"]
     return files, {**build_manifest, "asset_references": references}
 
 
@@ -263,6 +293,7 @@ def _complete_preview(
     files, build_manifest = build_captured_preview(
         repo_root, desired, inputs.search_index, recent_payload, inputs.catalogue,
         inputs.related_links, plan["eligible_doc_ids"],
+        inputs.preview_files,
     )
     recent_path = generated_documents_path(inputs.working) / "recent.json"
     if recent_path.is_symlink():

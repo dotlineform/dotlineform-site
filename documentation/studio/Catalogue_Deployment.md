@@ -3,66 +3,85 @@ draft: false
 doc_id: d-20260909-205938-3569d6
 title: Catalogue Deployment
 added_date: "2026-09-09 20:59:38"
-last_updated: "2026-09-28 15:55:05"
-summary: Catalogue Save and Refresh, single Publish and public deployment ownership, selected JSON inventory and shared media distribution.
+last_updated: "2026-10-10 10:42:03"
+summary: Queued Work publication, separate Preview media, exact repository/R2 deployment and final shared output.
 parent_id: d-20260902-102745-8379ea
 ---
 # Catalogue Deployment
 
 ## Current Lifecycle
 
-Catalogue Save updates canonical records and required local media. Refresh Catalogue separately completes Working Catalogue JSON and private Docs metadata. One Publish action prepares eligible documents with the selected Working Catalogue JSON and then distributes that completed Preview and referenced current assets to the configured repository and R2 destinations. The operation remains busy through both phases, without intermediate confirmation. Git commit/push and the GitHub Actions public deployment remain separate explicit operations.
+Studio Save persists canonical metadata, stages prepared media and queues known changes. Refresh transfers selected false-readiness entries to Working. Regenerate completes refreshed Catalogue documents and forwards their selections to the publication queue. Successful direct Catalogue Source Save/Rebuild contributes a metadata/document-only selection through the same merge owner, preserving existing media selections and progress. The single empty-body `POST /docs/publish` operation processes each queued Work through Preview and Deploy, then prepares and distributes shared output once. Git commit/push and GitHub Actions deployment remain separate explicit operations.
 
-Catalogue has no per-record draft/published state or separate Studio report Publish action. Canonical records remain in `studio/data/canonical/catalogue/`; the [Save and Refresh owner](Catalogue_Save_And_Refresh.md) prepares local media and dimensions/versions during Save, then generated Working readers during Refresh. Document draft/unpublishable policy selects eligible documents, without applying that policy to Catalogue record membership.
+`docs_publish.py` owns orchestration. `docs_catalogue_publication.py` owns per-Work publication; `docs_prepare_preview.py` and `docs_deploy_repo.py` own the final shared pass. Publish does not run Refresh or Regenerate, inspect the updates queue, infer upstream readiness or advance image versions. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns upstream completion and explicit design maintenance.
 
-```text
-Studio Save --------> canonical Catalogue + shared current local assets
-Refresh Catalogue --> Working Catalogue JSON + private Docs metadata
-                              |
-Publish preparation ---------> Preview document/Catalogue JSON + asset identities
-                              |
-Publish distribution --------> tracked site JSON/thumbnails + referenced R2 media
-                              |
-explicit Git commit/push ----> GitHub Actions deployment of site/
+## Storage And Selection
+
+[Workspace configuration](../../docs-viewer/config/workspace/docs-workspace.json), schema `docs_workspace_v5`, owns storage beneath the existing Docs root. Work media has independent `assets.work_roots.working` and `assets.work_roots.preview`; ordinary document media remains shared.
+
+| Material | Working/Preview owner | Public destination |
+| --- | --- | --- |
+| Work metadata | `working/generated/catalogue/works/index/<id>.json`, then `preview/catalogue/works/index/<id>.json` | `site/assets/data/catalogue/works/index/<id>.json` |
+| Catalogue document | Working generated collection document, then `preview/collections/catalogue/documents/by-id/<id>.json` | `site/assets/data/docs/catalogue/by-id/<id>.json` |
+| Primary images | `<stage>/assets/works/primary/` | Configured R2 `works/img/` |
+| Thumbnails | `<stage>/assets/works/thumbs/` | `site/assets/data/catalogue/works/thumbs/` |
+| Downloads | `<stage>/assets/works/media/files/` | Configured R2 `works/files/` |
+| Document/collection media | Shared `assets/media/workspace/<type>/` and `assets/media/collections/<id>/<type>/` | Configured document repository/R2 bindings |
+
+Studio staging is Projects-owned `catalogue/media-staging/`; project originals retain their owner. Local readers resolve Working media through unchanged `/docs/assets/works/...` identities. Public readers use repository thumbnails and configured R2 primary/download URLs. Operational staging and queue fields are private.
+
+The [artifact inventory](../../docs-viewer/config/workspace/catalogue-artifacts.json) declares Work/Gallery by-ID directories and shared media policy, Work/Gallery indexes and Series–Gallery relation index. The final pass captures shared Working JSON and retains completed Preview Work by-ID bytes. It does not recopy all Working Work records or enumerate/hash Work media. Undeclared Catalogue files and the archive stay outside publication.
+
+## Per-Work Publish
+
+`working/catalogue-publish-pending.json` uses `catalogue_publish_pending_v3`. Its header is written first, with `schema` followed by nullable `last_published_at_utc`. Current and deleted maps are keyed by exact five-digit Work ID. Each entry retains an image-set selection, sorted exact download basenames and `preview_done`; current entries also carry `metadata`.
+
+`last_published_at_utc` records completion of a nonempty Catalogue Work publication queue. The final queued Work's successful Deploy removes its entry and records that UTC time in the same queue write. Contributors, intermediate Work completions, an initially empty queue and partial failures preserve the previous timestamp. A later shared-output failure leaves the completed Catalogue timestamp intact. It starts null until the first queued Catalogue publication completes; it does not represent completion of the whole Docs Publish.
+
+Example of completed upstream changes awaiting publication:
+
+```json
+{
+  "header": {
+    "schema": "catalogue_publish_pending_v3",
+    "last_published_at_utc": null
+  },
+  "current_works": {
+    "00008": {
+      "metadata": true,
+      "image": true,
+      "file_names": ["00008-notes.pdf"],
+      "preview_done": false
+    }
+  },
+  "deleted_works": {}
+}
 ```
 
-`docs_publish.py` owns `POST /docs/publish` with an empty request object. It awaits `docs_prepare_preview.py`, then passes the exact completed snapshot to the existing `docs_deploy_repo.py` distribution owner. Split `/docs/deploy-repo/*` and preparation endpoints are retired. Publish does not save Catalogue editor drafts, run Refresh Catalogue or advance media versions. If Refresh is needed, Publish can capture older Working Catalogue JSON; the Works editor shows that status before Publish.
+Current entries have exactly `metadata`, `image`, `file_names` and `preview_done`; deletion entries omit `metadata`. The current and deleted maps are disjoint. Flags are explicit booleans and filenames are sorted distinct safe basenames. A missing or malformed queue stops publication; no old-format alias or empty fallback is provided. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md#updates-queue) owns the upstream queue and readiness.
 
-## Storage And Inventory
+Regenerate merges completed changes before removing their updates entry. Design maintenance and successful direct Catalogue Source Save/Rebuild use the same [publication merge owner](../../studio/services/catalogue/catalogue_pending_publication.py). Current metadata/image flags accumulate with OR; filename selections combine and retain only references in the supplied refreshed Work metadata. A new record receives `preview_done: false`; an existing record keeps its initialized flag without inspection. Completed deletion or recreation replaces the opposite family's selection while preserving initialized progress. Every upstream contribution preserves the header and its last successful queue time.
 
-[Workspace configuration](../../docs-viewer/config/workspace/docs-workspace.json) is the authority for the following paths beneath the existing `DOTLINEFORM_DOCS_BASE_DIR`:
+Removing a download reference cancels its outstanding transfer selection and publishes the updated document/metadata. It does not automatically remove previously stored unreferenced media. Work deletion carries the exact image set and retained current download identities through Preview and Deploy. A true `preview_done` flag records interrupted Deploy, so finish that Publish before resuming authoring, Refresh or Regenerate.
 
-| Material | Local owner | Public destination |
-| --- | --- | --- |
-| Current Catalogue JSON | `working/generated/catalogue/` | Captured through Preview before distribution. |
-| Prepared Catalogue JSON | `preview/catalogue/` | `site/assets/data/catalogue/`. |
-| Work primary renditions | `assets/works/primary/` | Configured R2 `works/img/` objects. |
-| Work thumbnails | `assets/works/thumbs/` | `site/assets/data/catalogue/works/thumbs/`. |
-| Work downloads | `assets/works/media/files/` | Configured R2 `works/files/` objects. |
-| Document/collection ready media | `assets/media/workspace/<type>/` and `assets/media/collections/<id>/<type>/` | Existing configured document/collection repository or R2 bindings. |
+When false, Preview copies the Work's refreshed metadata, completed Catalogue document and only selected image/download bytes, or removes its exact owned files for deletion. Completion sets the flag true after required Preview writes succeed. The completion receipt is invalidated before partial Preview mutation.
 
-Original project media and editable document build inputs retain their own owners. Historical persisted Studio lookup files have no active producer or reader. There is no Projects-generated Catalogue fallback, local Published tree or media copy beneath Preview. [Configuration And Extension Points](Configuration_And_Extension_Points.md) and [Media And Asset Handling](Media_And_Asset_Handling.md) describe the shared workspace.
+Deploy uses Preview bytes and the retained selection. It copies/removes exact repository metadata, documents and thumbnails, then uploads/deletes selected R2 primaries/downloads using configured prefixes. It uses no remote listing, ownership scan or newer Working media. Missing owned deletion targets count as success. Required upload inputs must exist and be nonempty; completed transfers/deletions are verified.
 
-The design-time [Catalogue artifact inventory](../../docs-viewer/config/workspace/catalogue-artifacts.json), read by [docs_catalogue_artifacts.py](../../docs-viewer/services/docs_catalogue_artifacts.py), selects direct by-ID JSON beneath `works/index/` and `galleries/index/`, plus `media-config.json`, `works/works_index.json` and `galleries/galleries_index.json`. It does not copy arbitrary files in the Catalogue tree. Generated Series by-ID files and the old Series index are retired; a future Series-to-Galleries index would need a separate design and explicit inventory decision. Future report projections also need an explicit inventory/public-field decision before being included.
+Only successful combined repository/R2 deployment removes the entry. Each Work completes before the next begins. A retained true flag means interrupted Deploy: correct and complete that Publish before resuming normal authoring. All upstream queue contributors preserve initialized progress without inspecting or resetting it.
 
-Publish preparation copies these selected Working bytes unchanged and records their revision with the document snapshot. Its `docs_preview_manifest_v2` also records sorted, unique shared asset identities. Asset bytes remain current and shared; Preview does not freeze an image's historical appearance. Each Publish captures fresh inputs. No asset hash history, retained rendition versions or automatic Preview invalidation is maintained.
+## Final Shared Output
 
-## Publish And Public Readers
+Once the queue is empty, including an initially empty queue, Publish captures eligible ordinary/collection sources, saved Search and relationship inputs. It rebuilds ordinary and other collection documents in temporary storage while retaining already completed Catalogue by-ID documents. The Catalogue list manifest is derived from retained document metadata with date-only updates. Shared Catalogue indexes and Gallery records update once. Preparation eligibility, including excluded report hosts, still owns the complete prepared document set.
 
-Publish takes no stage argument. Preparation returns verified snapshot bytes and a completion receipt; distribution compares destinations once and carries that comparison into apply. The synchronous workflow prevents edits until completion, so it adds no intermediate freshness checks or repeated snapshot scans. It reconciles owned repository JSON, copies selected thumbnails and transfers only referenced current shared media, verifying completed output. Missing required local assets fail visibly; existing R2 objects cannot substitute for local source bytes.
+Preview snapshot replacement prunes the stage-local `assets/` subtree from its file inventory. It neither scans, hashes nor deletes Work media. The completion receipt verifies snapshot JSON and document-media references; per-Work completion owns Work media effects. Distribution compares shared repository/document-media destinations once and applies its retained plan. Search bytes are copied unchanged; Recents is freshly prepared by its existing owner. Missing retained Catalogue documents require their queued regeneration or explicit design maintenance before Publish can finish.
 
-The public Catalogue JSON is byte-equal to Preview. Public document payloads use public URLs without a publishing-stage discriminator. Search and Recents copy unchanged. The public destination remains `/analysis/`, with document data under `site/assets/data/docs/` and Search at `site/assets/data/search/analysis/index.json`.
+Public document payloads retain query-only Docs links and logical `docs-media:` references. The public section remains `/analysis/`. Publish preserves independently owned `public-reports.json` and the configured archive.
 
-The independently owned `site/assets/data/docs/public-reports.json` is preserved during Publish. Public collection registrations use `docs_collection` with exact configured collection identity; the generated public browser configuration must also contain that collection. Registration, prepared document data and runtime projection are separate requirements for a working public report.
+## Failure And Timing
 
-The [route configuration](../../docs-viewer/config/routes/docs-viewer-routes.json) supplies exact Work and Gallery record bases, thumbnail policy and media policy. Local Catalogue readers resolve Working and use shared `/docs/assets/` media without a stage parameter. Public readers use deployed Catalogue JSON, repository thumbnails and configured R2 primary/download URLs. Active Series and Detail payloads and destinations are retired.
+Failures report the Work and Preview/Deploy step, or the final shared-output step. Completed effects remain. Failed/unprocessed queue entries retain their selection and accurate progress; no automatic retry, rollback, backup tree or separate R2 ledger is introduced. Final-pass failure can occur after all Work entries have completed; the next explicit Publish still runs the final pass.
 
-Publish neither deletes shared assets nor automatically removes remote media. Frozen `site/archive/` and its media stay outside active reconciliation. Obsolete shared/remote bytes require separately reviewed cleanup.
+Repository and R2 effects are not atomic. R2 transfers precede later GitHub Actions deployment, so existing public pages may show new image bytes with older deployed commentary. That timing gap remains accepted. Review successful output through `bin/site-preview`. On 2026-10-10, the user confirmed new Work addition and subsequent deletion through the complete workflow to R2. Managed-file and other variants remain unverified, and live failure/retry behavior received source review only. The user perceived a quicker Catalogue queue Publish; no timing measurement is claimed.
 
-## Publication Timing And Recovery
-
-R2 transfers happen during Publish, before a later GitHub Actions deployment. Existing public pages can therefore show changed image bytes while the deployed JSON or document commentary is older. This timing gap is accepted. Public consumers read the deployed Catalogue revision; document preparation does not retain an independent historical copy of Catalogue assets. Update commentary deliberately when a Catalogue change alters its meaning.
-
-Publish is not an atomic transaction across repository files and remote objects. A failed transfer can leave completed effects; correct the cause and run a fresh Publish. Preparation failure prevents distribution and preserves the previous Preview until replacement begins; failure during replacement leaves no valid completion receipt. Distribution failure retains completed Preview and reports incomplete publication. Recovery uses canonical source, ordinary owning operations and Git history, without automatic backup trees or retry-state stores. Review successful output through `bin/site-preview`.
-
-A possible future move of public JSON to R2 remains a separate decision. No measured hosting or repository constraint currently requires it. Such a change must preserve generation and preparation ownership while specifying destination configuration, caching, public access, coherent releases and recovery; this document authorizes no second deployment implementation.
+These are current implemented operations. Remaining manual coverage is recorded as an evidence limit rather than a proposed workflow. Missing retained Catalogue documents require queued Regenerate or explicit design maintenance; ordinary document Rebuild, Catalogue Refresh and publication remain separate owners. Removing Catalogue document editing, exact Gallery/Series queues and incremental ordinary-document Publish are separate follow-ons.

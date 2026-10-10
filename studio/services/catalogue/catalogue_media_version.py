@@ -23,7 +23,7 @@ class MediaVersionFinalization:
 
 def finalize_catalogue_media_versions(
     source_dir: Path, tasks: Sequence[Mapping[str, Any]], *, changed_images: set[str],
-    media_files: Mapping[Path, bytes],
+    media_files: Mapping[Path, bytes], staged_downloads_by_work: Mapping[str, set[str]],
 ) -> list[MediaVersionFinalization]:
     """Commit prepared local bytes and their metadata together; transfers never call this."""
     records = records_from_json_source(source_dir)
@@ -41,10 +41,18 @@ def finalize_catalogue_media_versions(
         work_id = item_id
         version = previous_version + int(advance)
         updates = {"media_version": version, "width_px": task["source_width_px"], "height_px": task["source_height_px"]}
+        if task["status"] == "pending":
+            updates["image_staged"] = True
         if any(record.get(key) != value for key, value in updates.items()):
             record.update(updates)
             changed_works = True
         finalized.append(MediaVersionFinalization("works", item_id, work_id, previous_version, version, advance, f"works/index/{work_id}.json"))
+    for work_id, names in staged_downloads_by_work.items():
+        record = records.works[work_id]
+        for download in record.get("downloads") or []:
+            if download["filename"] in names and download["staged"] is not True:
+                download["staged"] = True
+                changed_works = True
     errors = validate_source_records(records)
     if errors:
         raise ValueError("Catalogue source validation failed: " + "; ".join(errors[:20]))

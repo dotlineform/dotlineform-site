@@ -39,6 +39,8 @@ export function loadCatalogueMediaConfig(root) {
   return {
     worksPrimaryBase: normalizeText(dataset.worksPrimaryBase),
     worksThumbBase: normalizeText(dataset.thumbWorksBase),
+    stagedWorksPrimaryBase: normalizeText(dataset.stagedWorksPrimaryBase),
+    stagedWorksThumbBase: normalizeText(dataset.stagedThumbWorksBase),
     primaryDisplayWidth: Number(dataset.primaryDisplayWidth || 800) || 800,
     primaryFullWidth: Number(dataset.primaryFullWidth || dataset.primaryDisplayWidth || 1600) || 1600,
     primarySuffix: normalizeText(dataset.primarySuffix) || "primary",
@@ -54,7 +56,7 @@ export function buildWorkPrimaryPreview(config, workId, options = {}) {
   const fullWidth = Number(config && config.primaryFullWidth) || width;
   const suffix = normalizeText(config && config.primarySuffix) || "primary";
   const format = normalizeText(config && config.assetFormat) || "webp";
-  const base = normalizeText(config && config.worksPrimaryBase);
+  const base = normalizeText(options.imageStaged ? config?.stagedWorksPrimaryBase : config?.worksPrimaryBase);
   const src = appendVersionQuery(joinAssetPath(base, stem, suffix, width, format), options.mediaVersion);
   const fullSrc = appendVersionQuery(joinAssetPath(base, stem, suffix, fullWidth, format), options.mediaVersion);
   return {
@@ -73,12 +75,13 @@ export function buildWorkThumbPreview(config, workId, options = {}) {
   const format = normalizeText(config && config.assetFormat) || "webp";
   const suffix = normalizeText(config && config.thumbSuffix) || "thumb";
   const primarySize = sizes[0];
+  const base = options.imageStaged ? config?.stagedWorksThumbBase : config?.worksThumbBase;
   return {
     src: appendVersionQuery(
-      joinAssetPath(config && config.worksThumbBase, stem, suffix, primarySize, format), options.mediaVersion
+      joinAssetPath(base, stem, suffix, primarySize, format), options.mediaVersion
     ),
     srcset: buildSrcset((size) => appendVersionQuery(
-      joinAssetPath(config && config.worksThumbBase, stem, suffix, size, format), options.mediaVersion
+      joinAssetPath(base, stem, suffix, size, format), options.mediaVersion
     ), sizes),
     width: primarySize,
     height: primarySize

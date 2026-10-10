@@ -19,6 +19,7 @@ export function readCatalogueEditorMediaAttrs(config) {
   const media = readObject(runtime.media);
   const mediaConfig = readObject(media.media);
   const thumbsConfig = readObject(media.thumbs);
+  const staged = readObject(media.staged);
   const pipeline = readObject(runtime.pipeline);
   const variants = readObject(pipeline.variants);
   const primary = readObject(variants.primary);
@@ -32,6 +33,8 @@ export function readCatalogueEditorMediaAttrs(config) {
   return {
     worksPrimaryBase: joinBasePath(mediaConfig.base, mediaConfig.works_images),
     thumbWorksBase: joinBasePath(thumbsConfig.base, thumbsConfig.works),
+    stagedWorksPrimaryBase: joinBasePath("", staged.works_images),
+    stagedThumbWorksBase: joinBasePath("", staged.works_thumbs),
     primaryDisplayWidth: displayWidth,
     primaryFullWidth: fullWidth,
     primarySuffix: normalizeText(primary.suffix) || "primary",

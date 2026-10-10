@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260512-142027-54b354
 title: Configuration And Extension Points
 added_date: "2026-05-12 14:20:27"
-last_updated: "2026-10-08 19:10:43"
+last_updated: "2026-10-09 20:38:00"
 summary: Map of the configuration, registries, generated projections, code definitions, and capability checks that drive Docs Viewer workflows.
 parent_id: d-20260424-000000-50b63f
 
@@ -45,7 +45,7 @@ Generated browser config sits between source-side workspace config and the runti
 
 ### Workspace And Target Contracts
 
-`docs-viewer/config/workspace/docs-workspace.json`, schema `docs_workspace_v4`, and `docs_workspace_config.py` define one existing external `DOTLINEFORM_DOCS_BASE_DIR`. Working owns source and replaceable generated output. Preview is a read-only prepared snapshot with derived collection/media configuration. Pre-publish, local Published and scope-nested storage are retired.
+`docs-viewer/config/workspace/docs-workspace.json`, schema `docs_workspace_v5`, defines the existing external Docs root. Working owns source/generated output and its Work media; Preview owns the prepared snapshot and independently retained Work media. Retired scope/stage storage and fallback roots remain prohibited.
 
 `load_docs_workspace_config(repo_root)` resolves the workspace. Local readers and authoring services use `load_docs_working_config(repo_root)` at their storage boundary. Build/publication code may select explicit `working` or `preview` internally with `load_docs_stage` or `select_workspace_stage`; ordinary APIs do not accept stage selection. The loader creates no directories; unavailable configured storage, traversal and symlink escapes fail without repository or Projects-root fallback.
 
@@ -57,10 +57,10 @@ Generated browser config sits between source-side workspace config and the runti
 | Current Catalogue JSON | `working/generated/catalogue/` |
 | Prepared documents, collections, Search and Catalogue | `preview/documents/`, `preview/collections/<id>/documents/`, `preview/search/index.json` and `preview/catalogue/` |
 | Shared document ready media | `assets/media/workspace/<type>/` and `assets/media/collections/<id>/<type>/` |
-| Shared Work primary, thumbnail and download bytes | `assets/works/primary/`, `assets/works/thumbs/` and `assets/works/media/files/` |
+| Working/Preview Work media | Configured `assets.work_roots` select `<stage>/assets/`, with `works/{primary,thumbs,media/files}/` families. |
 | Editable media build inputs and private provenance | Their Working ordinary/collection source owner, including `media/build-source/mermaid/` |
 
-Each managed media type has one `asset_location`; its owner retains `asset_root` for relative reference identities. Working and Preview resolve the same current assets through `/docs/assets/`. Ready bytes are not duplicated under source, generated output or Preview. Temporary preparation builds receive the explicit existing shared asset root; they cannot invent another one.
+Document media types retain one shared `asset_location` and confined identities. Work media resolves through an explicit stage root; local `/docs/assets/works/...` routes serve Working. Temporary Preview builds receive independent `--assets-base-dir` and `--work-assets-base-dir` bindings to existing shared document and Preview Work media; no substitute root is inferred.
 
 Managed document targets use immutable `doc_id` and optional exact registered `collection`; collection targets are empty objects or contain only `collection`. Retired `stage`, `scope` and `sub_scope` selectors are rejected. Ordinary and other collection source records require boolean `draft`; Catalogue source records reject that field and have fixed document eligibility. Collection documents are flat and do not inherit ordinary hierarchy. Reports use `id: docs_collection` with an exact collection selector.
 
@@ -90,9 +90,9 @@ Source/Create/metadata/placement/Delete/Draft operations resolve Working and req
 
 `docs_prepare_preview.py` selects eligible Working sources under boolean draft and `unpublishable.json` policy, including inherited ordinary exclusions and excluded collection hosts. Catalogue documents have fixed document eligibility and no draft field; an excluded Catalogue report host still excludes its collection. Preparation builds captured inputs in temporary storage, validates and replaces Preview, writes `docs_preview_manifest_v2` after verification, then removes temporary inputs. Preview has no persistent source/generated authoring tree.
 
-`catalogue-artifacts.json` and `docs_catalogue_artifacts.py` select Catalogue JSON independently of document eligibility. Prepare Preview copies that JSON, Search v4 and Recents unchanged. The completion manifest binds snapshot bytes and sorted shared asset identities; it does not freeze mutable asset bytes or keep asset hashes/history. Failure before replacement preserves the previous snapshot; failure during replacement requires preparation again.
+`catalogue-artifacts.json` inventories Catalogue JSON independently of document eligibility. Per-Work publication advances selected Work records; final preparation retains those Preview bytes and captures shared Working indexes/Gallery records. Search copies unchanged and Recents retains its existing preparation owner. The final snapshot receipt binds document/Catalogue JSON and document-media identities; Work media completion belongs to the selected per-Work operation, without corpus hashes/history.
 
-**Publish** is one awaited empty-body `/docs/publish` operation owned by `docs_publish.py`: prepare fresh captured inputs, then pass the exact completed snapshot to `docs_deploy_repo.py`. Split preparation/distribution endpoints and intermediate confirmation are retired. The distribution owner compares destinations once, carries the operation-local plan into apply and verifies completed repository/media writes. It does not reread source/generated output, rebuild, refilter the prepared set, advance versions or automatically delete shared/remote assets. The synchronous operation needs no intermediate freshness checks. Review its result through site-preview; Preview remains an independently inspectable artifact.
+**Publish** remains one awaited empty-body `/docs/publish` operation. `docs_catalogue_publication.py` completes each queued Work's Preview and combined repository/R2 deployment before the next. The final shared pass then prepares eligible documents while retaining completed Catalogue bodies and deploys its completed snapshot. Failures preserve completed effects and queue progress with the failed Work/stage or shared step. Shared distribution still compares once and carries its plan into apply; it adds no upstream readiness scans or automatic recovery. [Catalogue Deployment](Catalogue_Deployment.md) owns exact selection and deletion.
 
 `docs_publication_payloads.py` projects public document metadata URLs without a publishing-stage field. By-ID content keeps query-only Docs links and `docs-media:` identities; the local and public readers compose their own viewer routes and media roots. Catalogue, Search and Recents bytes remain unchanged. The public section is `/analysis/`; documents use `site/assets/data/docs/`, Search uses `site/assets/data/search/analysis/index.json`, and Catalogue uses `site/assets/data/catalogue/`. Configured R2 Docs media uses `docs/analysis/media/workspace/<type>/` and `docs/analysis/media/collections/<collection>/<type>/`.
 

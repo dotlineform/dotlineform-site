@@ -5,10 +5,11 @@ from __future__ import annotations
 from typing import Any, Mapping
 
 from catalogue.catalogue_output_media import MEDIA_SOURCE_FIELDS, complete_catalogue_media
-from catalogue.catalogue_refresh_service import invalidate_refresh_receipt
 from catalogue.catalogue_revisions import record_hash
 from catalogue.catalogue_service_context import CatalogueWriteContext
 from catalogue.catalogue_source import CatalogueSourceRecords, records_from_json_source
+from catalogue.catalogue_pending_updates import accumulate_work_changes
+from catalogue.catalogue_staged_media import clear_staged_work
 
 
 def download_filenames(record: dict[str, Any]) -> set[str]:
@@ -35,6 +36,7 @@ def complete_saved_catalogue_edit(
     context: CatalogueWriteContext, response: dict[str, Any], previous: CatalogueSourceRecords,
     *, attachment_files: Mapping[str, bytes] | None = None, regenerate_image: bool = False,
     current_records: CatalogueSourceRecords | None = None,
+    deleted_media: Mapping[str, Mapping[str, Any]] | None = None,
 ) -> None:
     """Preserve canonical success when local media or response completion fails.
 
@@ -48,6 +50,9 @@ def complete_saved_catalogue_edit(
     failures: list[str] = []
     current = current_records
     media_attempted = False
+    refresh_needed = False
+    image_ids: list[str] = []
+    candidate_ids: set[str] = set()
     try:
         if current is None:
             current = records_from_json_source(context.source_dir)
@@ -90,12 +95,41 @@ def complete_saved_catalogue_edit(
                     entry.update(record=record, record_hash=record_hash(record))
     except Exception as error:
         failures.append(f"Editor response: {error}")
-    if response.get("changed") or response.get("created") or response.get("deleted") or response.get("media", {}).get("changed") or failures:
-        try:
-            invalidate_refresh_receipt(context.repo_root)
-            response["refresh_needed"] = True
-        except (OSError, ValueError) as error:
-            failures.append(f"Refresh status: {error}")
+    try:
+        if current is None:
+            raise ValueError("Saved canonical records are unavailable for queue completion")
+        changed_ids = set()
+        if response.get("changed") or response.get("created"):
+            for field in ("changed_work_ids", "changed_ids", "affected_work_ids", "created_ids"):
+                changed_ids.update(response.get(field, []))
+            if response.get("work_id"):
+                changed_ids.add(response["work_id"])
+        image_changes = {wid for wid in image_ids if current.works[wid].get("project_filename")}
+        file_changes = {
+            wid: (download_filenames(current.works[wid]) - download_filenames(previous.works.get(wid, {})))
+                 | (download_filenames(current.works[wid]) & set(attachment_files or {}))
+            for wid in candidate_ids
+        }
+        targets = (changed_ids | image_changes | {wid for wid, names in file_changes.items() if names}) & current.works.keys()
+        selections = {
+            wid: {"metadata": wid in changed_ids or wid in image_changes,
+                  "image": wid in image_changes, "file_names": sorted(file_changes.get(wid, set()))}
+            for wid in targets
+        }
+        refresh_needed = bool(selections or deleted_media or response.get("changed") or response.get("created")
+                              or response.get("deleted") or response.get("media", {}).get("changed") or failures)
+        accumulate_work_changes(
+            context.repo_root, selections, deleted_media or {},
+            downloads_by_work={wid: download_filenames(current.works[wid]) for wid in targets},
+            shared_refresh_pending=refresh_needed,
+        )
+        for wid, selection in (deleted_media or {}).items():
+            clear_staged_work(context.repo_root, wid, dict(selection))
+    except Exception as error:
+        identities = sorted(set(deleted_media or {}) | set(response.get("affected_work_ids", [])))
+        failures.append(f"Catalogue queue/staging completion ({', '.join(identities)}): {error}")
+    if refresh_needed or failures:
+        response["refresh_needed"] = True
     if failures:
         response["save_completion"] = {
             "status": "failed", "error": "; ".join(failures),

@@ -92,7 +92,7 @@ export function renderWorkCurrentPreview(state, options = {}) {
   }
   const record = state.currentRecord;
   const preview = buildWorkPrimaryPreview(state.mediaConfig, record.work_id, {
-    mediaVersion: record.media_version
+    mediaVersion: record.media_version, imageStaged: record.image_staged
   });
   const fallback = {
     fallbackState: preview.src ? "unavailable" : "not-configured",
@@ -160,7 +160,9 @@ function buildWorkDownloadHref(state, filename) {
   const mediaConfig = runtime && runtime.media && typeof runtime.media === "object" ? runtime.media : {};
   const media = mediaConfig.media && typeof mediaConfig.media === "object" ? mediaConfig.media : mediaConfig;
   const base = normalizeText(media.base).replace(/\/+$/, "");
-  const worksFiles = normalizeText(media.works_files).replace(/^\/?/, "/").replace(/\/+$/, "");
+  const download = state.currentRecord?.downloads?.find(item => item.filename === filename);
+  const selected = download?.staged ? mediaConfig.staged?.works_files : media.works_files;
+  const worksFiles = normalizeText(selected).replace(/^\/?/, "/").replace(/\/+$/, "");
   if (!worksFiles) return "";
   return `${base}${worksFiles}/${encodeURIComponent(normalizeText(filename))}`;
 }

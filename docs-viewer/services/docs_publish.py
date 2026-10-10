@@ -1,4 +1,4 @@
-"""Publish fresh Working content through one completed Preview snapshot."""
+"""Publish queued Catalogue Works, then complete one shared Preview snapshot."""
 
 from __future__ import annotations
 
@@ -7,6 +7,7 @@ from typing import Any, Iterable, Mapping
 
 from docs_deploy_repo import apply_deploy_repo_plan, build_deploy_repo_plan, utc_now
 from docs_prepare_preview import prepare_preview
+from docs_catalogue_publication import CataloguePublicationError, publish_catalogue_works
 
 
 def publish_docs(
@@ -17,11 +18,12 @@ def publish_docs(
     env_files: Iterable[Path] | None = None,
     environ: Mapping[str, str] | None = None,
 ) -> dict[str, Any]:
-    """Await fresh preparation and distribution without caller-selected stages.
+    """Await per-Work publication and shared output without caller-selected stages.
 
-    The request is an empty object. A preparation failure prevents distribution;
-    a distribution failure retains completed Preview and reports incomplete
-    publication, including any non-atomic repository/remote effects. No retries,
+    The request is empty. Each Work finishes Preview/Deploy before shared
+    preparation starts. Shared preparation failure prevents shared distribution;
+    earlier Work effects remain. Distribution failure retains completed Preview
+    and reports incomplete publication, including non-atomic effects. No retries,
     rollback, Git actions or public-site deployment are performed here.
     """
     if not isinstance(body, dict) or body:
@@ -30,10 +32,12 @@ def publish_docs(
     result: dict[str, Any] = {
         "ok": False,
         "complete": False,
-        "phase": "preparation",
+        "phase": "catalogue",
         "preview_prepared": False,
     }
     try:
+        result["catalogue"] = publish_catalogue_works(repo_root, client=client, env_files=env_files, environ=environ)
+        result["phase"] = "shared preparation"
         snapshot = prepare_preview(repo_root)
         result.update(
             phase="distribution", preview_prepared=True,
@@ -54,11 +58,13 @@ def publish_docs(
             result["summary_text"] = "Preview prepared; publication is incomplete. " + result["error"]
             return result
     except Exception as error:
+        if isinstance(error, CataloguePublicationError):
+            result.update(work_id=error.work_id, phase=error.phase)
         result["error"] = str(error)
         result["summary_text"] = (
             "Preview prepared; publication is incomplete. "
             if result["preview_prepared"]
-            else "Preparation failed; distribution did not start. "
+            else "Publish stopped; completed effects were retained. "
         ) + str(error)
         return result
 

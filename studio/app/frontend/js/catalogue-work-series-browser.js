@@ -65,7 +65,7 @@ export function createWorkSeriesBrowser(state, elements, options) {
       .sort((a, b) => workTitleCollator.compare(a.title || "", b.title || ""))
       .map(record => {
         const preview = buildWorkThumbPreview(state.mediaConfig, record.work_id, {
-          mediaVersion: record.media_version
+          mediaVersion: record.media_version, imageStaged: record.image_staged
         });
         return {
           workId: record.work_id, title: record.title || "—",

@@ -247,6 +247,18 @@ async function runCatalogueRefresh(state) {
   try {
     const response = await requestCatalogueRefresh();
     if (!response.refresh_status || response.refresh_status.needed) throw new Error("Refresh completion was not verified.");
+    for (const item of response.records) {
+      const record = { ...item.record, gallery_ids: item.gallery_ids };
+      applyWorkRecordMutation(state, {
+        workId: item.work_id, record, recordHash: item.record_hash, updateBulk: state.mode === "bulk"
+      });
+      if (state.mode === "single" && state.currentWorkId === item.work_id) {
+        state.currentRecord = record;
+        state.currentRecordHash = item.record_hash;
+        state.currentLookup = { ...state.currentLookup, work: record, record_hash: item.record_hash, downloads: record.downloads || [] };
+      }
+    }
+    renderWorkCurrentPreview(state);
     state.refreshStatus = response.refresh_status;
   } catch (error) {
     state.refreshStatus = { ok: true, needed: true, error: error.message || String(error) };
@@ -490,6 +502,8 @@ async function configureWorkEditorRuntime(state, elements) {
       applyCatalogueEditorMediaAttrs(elements.root, config, [
         "worksPrimaryBase",
         "thumbWorksBase",
+        "stagedWorksPrimaryBase",
+        "stagedThumbWorksBase",
         "primaryDisplayWidth",
         "primaryFullWidth",
         "primarySuffix",

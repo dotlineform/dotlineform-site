@@ -137,11 +137,12 @@ def publication_media_bindings(repo_root: Path, config: DocsStageConfig) -> dict
         for key, (collection, public) in public_media_bindings(config).items()
     }
     workspace = load_docs_workspace_config(repo_root)
+    assets = workspace.assets.for_stage("preview")
     settings = json.loads((repo_root / "site-tools/config/site-tools.json").read_bytes())["media"]
     # Catalogue families must not collide with <collection>/<media_type> bindings.
     for key, source, prefix_key in (
-        ("catalogue/works/primary", workspace.assets.work_primary, "image_works"),
-        ("catalogue/works/files", workspace.assets.work_files, "files_works"),
+        ("catalogue/works/primary", assets.work_primary, "image_works"),
+        ("catalogue/works/files", assets.work_files, "files_works"),
     ):
         prefix = safe_relative_path(settings[prefix_key].strip("/"), field=f"media.{prefix_key}")
         if prefix.parts[0] == "archive":
@@ -151,7 +152,7 @@ def publication_media_bindings(repo_root: Path, config: DocsStageConfig) -> dict
             settings["base"].rstrip("/") + "/" + prefix.as_posix(),
         ))
     destination = workspace.catalogue.public_projection.location
-    bindings["catalogue/works/thumbs"] = (workspace.assets.work_thumbnails, DocsPublicMediaConfig(
+    bindings["catalogue/works/thumbs"] = (assets.work_thumbnails, DocsPublicMediaConfig(
         "catalogue/works/thumbs", Path("works/thumbs"),
         ArtifactLocation(destination.provider, destination.path / "works/thumbs"),
         "/" + (destination.path / "works/thumbs").relative_to("site").as_posix(),
@@ -161,7 +162,7 @@ def publication_media_bindings(repo_root: Path, config: DocsStageConfig) -> dict
 
 def publication_asset_references(repo_root: Path, config: DocsStageConfig, identities: list[str]) -> dict[tuple[str, str], tuple[str, ...]]:
     """Resolve exactly the identities recorded by Prepare Preview."""
-    assets = load_docs_workspace_config(repo_root).assets
+    assets = load_docs_workspace_config(repo_root).assets.for_stage("preview")
     bindings = publication_media_bindings(repo_root, config)
     references = {}
     for identity in identities:

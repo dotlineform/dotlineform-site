@@ -1,4 +1,4 @@
-"""Reconcile exact Catalogue Work documents in one awaited operation."""
+"""Per-Work Catalogue document generation and explicit design maintenance."""
 
 from __future__ import annotations
 
@@ -16,197 +16,164 @@ from docs_selected_documents import selected_path, selected_text, validate_selec
 import docs_source_model as source_model
 from docs_workspace_config import require_document_authoring
 from docs_write_rebuild import perform_collection_source_write_and_rebuild
-from studio.services.catalogue.catalogue_pending_updates import clear_pending_updates, read_pending_updates
+from studio.services.catalogue.catalogue_pending_updates import read_pending_updates, remove_pending_update, write_pending_updates
+from studio.services.catalogue.catalogue_pending_publication import merge_completed_works, read_pending_publication
+from studio.services.catalogue.catalogue_pending_state import pending_counts
 
 
 TARGET = {"collection": "catalogue"}
-MODES = frozenset({"pending", "full"})
 
 
 class CatalogueRegenerationError(RuntimeError):
-    """Report an incomplete write, Build or pending-list update without rollback."""
+    """Retain completed source/build effects and identify the unfinished Work/step."""
 
     def __init__(self, payload: dict[str, Any]) -> None:
         super().__init__(payload["error"])
         self.payload = payload
 
 
-def _request_mode(body: dict[str, Any]) -> str:
-    if (not isinstance(body, dict) or set(body) != {"collection", "mode"}
-            or body.get("collection") != "catalogue"
-            or not isinstance(body.get("mode"), str) or body["mode"] not in MODES):
-        raise ValueError("Regenerate requires the Working Catalogue collection and pending or full mode")
-    return body["mode"]
-
-
-def _selection_write(config: Any, *, removed_doc_ids: set[str], full_keep_ids: set[str] | None) -> SourceWrite | None:
+def _selection_write(config: Any, work_id: str) -> SourceWrite | None:
     path = selected_path(config)
     original = path.read_bytes()
     payload = json.loads(original)
     validate_selected_payload(payload)
-    rows = [
-        row for row in payload["docs"]
-        if row.get("collection") != "catalogue"
-        or (row["doc_id"] not in removed_doc_ids
-            and (full_keep_ids is None or row["doc_id"] in full_keep_ids))
-    ]
+    rows = [row for row in payload["docs"] if row.get("collection") != "catalogue" or row["doc_id"] != work_id]
     if rows == payload["docs"]:
         return None
     return SourceWrite(path, selected_text({**payload, "docs": rows}), original_bytes=original)
 
 
 def regenerate_catalogue(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
-    """Reconcile one requested mode and clear pending IDs only after its Build succeeds."""
-    mode = _request_mode(body)
+    """Regenerate only refreshed entries; caller-selected modes are retired."""
+    if not isinstance(body, dict) or body != TARGET:
+        raise ValueError("Regenerate requires only the Working Catalogue collection")
+    return _regenerate(repo_root, design_maintenance=False)
+
+
+def reconcile_catalogue_design(repo_root: Path) -> dict[str, Any]:
+    """Explicitly rebuild supplied Catalogue sources/documents after design changes.
+
+    False-readiness Works are excluded. Unqueued repairs become document-only
+    publication changes; queued ready entries retain their exact media selections.
+    Orphan source cleanup has no authority to reconstruct media deletions.
+    """
+    return _regenerate(repo_root, design_maintenance=True)
+
+
+def _regenerate(repo_root: Path, *, design_maintenance: bool) -> dict[str, Any]:
     pending = read_pending_updates(repo_root)
+    read_pending_publication(repo_root)
     collection = resolve_managed_document_collection(repo_root, **TARGET)
     require_document_authoring(collection.parent_config)
-    if mode == "pending" and not pending["current_work_ids"] and not pending["deleted_work_ids"]:
-        counts = {"create": 0, "retitle": 0, "regenerate_body": 0, "build_only": 0, "delete": 0, "built": 0, "updated": 0}
-        return {"ok": True, **TARGET, "mode": mode, "counts": counts,
-                "pending_updates": {"current": 0, "deleted": 0}, "summary_text": "No pending Catalogue updates."}
-    documents = catalogue_source_documents(repo_root)
-    works = read_catalogue_work_index(repo_root)
-    current_ids = sorted(works if mode == "full" else pending["current_work_ids"])
-    deleted_ids = sorted(
-        set(documents) - set(works) if mode == "full" else pending["deleted_work_ids"]
-    )
-    for work_id in current_ids:
-        if work_id not in works:
-            raise ValueError(f"Pending Work {work_id} is absent from the generated index; run Refresh Catalogue")
-    for work_id in deleted_ids:
-        if work_id in works:
-            raise ValueError(f"Deleted Work {work_id} remains in the generated index; run Refresh Catalogue")
-
-    timestamp = source_model.current_doc_timestamp()
-    writes: list[tuple[str, str, SourceWrite]] = []
-    deletes: list[tuple[str, str, Path]] = []
-    build_doc_ids: set[str] = set()
-    current_doc_ids: set[str] = set()
-    deleted_doc_ids: set[str] = set()
-    link_doc_ids: set[str] = set()
-    counts = {"create": 0, "retitle": 0, "regenerate_body": 0, "build_only": 0, "delete": 0}
-
-    for work_id in current_ids:
-        try:
-            record = catalogue_work_record(read_catalogue_work(repo_root, work_id)["work"])
-        except (OSError, ValueError) as error:
-            raise ValueError(f"Work {work_id}: {error}") from error
-        document = documents.get(work_id)
-        if document is None:
-            create = plan_create(repo_root, {**TARGET, "work_id": work_id, "title": record.title},
-                                 body_markdown=record.body)
-            doc_id = create.response["doc_id"]
-            writes.append((work_id, doc_id, create.source_writes[0]))
-            link_doc_ids.add(doc_id)
-            counts["create"] += 1
-        else:
-            doc_id = document.doc_id
-            title_changed = document.front_matter["title"] != record.title
-            if mode == "full" or title_changed:
-                metadata = {**document.front_matter, "title": record.title}
-                content = source_model.format_source(metadata, record.body, collection="catalogue")
-                if content != document.source_text:
-                    # Generated body/format maintenance preserves document dates.
-                    if title_changed:
-                        content = source_model.format_source(
-                            source_model.advance_doc_front_matter(
-                                metadata,
-                                timestamp=source_model.strictly_later_doc_timestamp(
-                                    document.front_matter["last_updated"], timestamp,
-                                ),
-                            ),
-                            record.body, collection="catalogue",
-                        )
-                    writes.append((work_id, doc_id, SourceWrite(document.path, content)))
-                    link_doc_ids.add(doc_id)
-                    counts["retitle" if title_changed else "regenerate_body"] += 1
-                else:
-                    counts["build_only"] += 1
-            else:
-                counts["build_only"] += 1
-        build_doc_ids.add(doc_id)
-        current_doc_ids.add(doc_id)
-
-    for work_id in deleted_ids:
-        document = documents.get(work_id)
-        doc_id = work_id
-        deleted_doc_ids.add(doc_id)
-        if document is not None:
-            deletes.append((work_id, doc_id, document.path))
-        build_doc_ids.add(doc_id)
-        link_doc_ids.add(doc_id)
-        counts["delete"] += 1
-
-    full_keep_ids = current_doc_ids if mode == "full" else None
-    selection_write = _selection_write(collection.parent_config, removed_doc_ids=deleted_doc_ids,
-                                       full_keep_ids=full_keep_ids)
-
-    if mode == "pending" and not build_doc_ids:
-        remaining = clear_pending_updates(repo_root, pending, current=set(current_ids), deleted=set(deleted_ids))
-        return {"ok": True, **TARGET, "mode": mode, "counts": {**counts, "built": 0, "updated": 0},
-                "pending_updates": remaining, "summary_text": "No Catalogue documents required a Build."}
-
-    committed_records: list[dict[str, str]] = []
+    selections = {family: {wid: dict(entry) for wid, entry in pending[family].items() if entry["refreshed"]}
+                  for family in ("current_works", "deleted_works")}
+    if design_maintenance:
+        works = read_catalogue_work_index(repo_root)
+        documents = catalogue_source_documents(repo_root)
+        unfinished = {wid for family in ("current_works", "deleted_works")
+                      for wid, entry in pending[family].items() if not entry["refreshed"]}
+        for wid in sorted(set(works) - unfinished):
+            selections["current_works"].setdefault(wid, {"metadata": True, "image": False, "file_names": [], "refreshed": True})
+        for wid in sorted(set(documents) - set(works) - unfinished):
+            selections["deleted_works"].setdefault(wid, {"image": False, "file_names": [], "refreshed": True})
+    else:
+        documents = catalogue_source_documents(repo_root, sorted(set(selections["current_works"]) | set(selections["deleted_works"])))
+    counts = {"create": 0, "retitle": 0, "regenerate_body": 0, "build_only": 0, "delete": 0, "built": 0, "updated": 0}
+    committed: list[dict[str, str]] = []
     selection_updated = False
-    failed_work_id = ""
-    phase = "source"
-
-    def write_operation() -> None:
-        nonlocal selection_updated, failed_work_id, phase
-        for work_id, doc_id, write in writes:
-            failed_work_id = work_id
-            if write.create_only:
-                source_model.write_text_atomic_new(write.path, write.text)
-            else:
-                source_model.write_text_atomic(write.path, write.text)
-            committed_records.append({"work_id": work_id, "doc_id": doc_id, "operation": "create" if write.create_only else "update"})
-        if selection_write is not None:
-            failed_work_id = ""
-            source_model.write_text_atomic(selection_write.path, selection_write.text)
-            selection_updated = True
-        for work_id, doc_id, path in deletes:
-            failed_work_id = work_id
-            path.unlink()
-            committed_records.append({"work_id": work_id, "doc_id": doc_id, "operation": "delete"})
-        failed_work_id = ""
-        phase = "build"
-
-    changed_paths = [write.path for _work_id, _doc_id, write in writes]
-    changed_paths.extend(path for _work_id, _doc_id, path in deletes)
+    maintenance_paths: list[Path] = []
+    maintenance_completed = []
+    timestamp = source_model.current_doc_timestamp()
+    work_id, phase = "", "source"
     try:
-        rebuild = perform_collection_source_write_and_rebuild(
-            repo_root, "catalogue", changed_paths, write_operation,
-            links_doc_ids=None if mode == "full" else sorted(link_doc_ids),
-            build_doc_ids=sorted(build_doc_ids),
-            complete_build=mode == "full",
-        )
-        phase = "pending-list"
-        remaining = clear_pending_updates(
-            repo_root, pending,
-            current=set(pending["current_work_ids"]) if mode == "full" else set(current_ids),
-            deleted=set(pending["deleted_work_ids"]) if mode == "full" else set(deleted_ids),
-        )
+        for family in ("current_works", "deleted_works"):
+            for work_id, selection in sorted(selections[family].items()):
+                phase = "source"
+                document = documents.get(work_id)
+                writes: list[SourceWrite] = []
+                download_names: set[str] = set()
+                operation = "delete"
+                if family == "current_works":
+                    work = read_catalogue_work(repo_root, work_id)["work"]
+                    record = catalogue_work_record(work)
+                    download_names = {item["filename"] for item in work.get("downloads", [])}
+                    if document is None:
+                        create = plan_create(repo_root, {**TARGET, "work_id": work_id, "title": record.title}, body_markdown=record.body)
+                        writes.extend(create.source_writes)
+                        counts["create"] += 1
+                        operation = "create"
+                    else:
+                        title_changed = document.title != record.title
+                        if title_changed or design_maintenance:
+                            metadata = {**document.front_matter, "title": record.title}
+                            if title_changed:
+                                metadata = source_model.advance_doc_front_matter(
+                                    metadata, timestamp=source_model.strictly_later_doc_timestamp(document.front_matter["last_updated"], timestamp),
+                                )
+                            text = source_model.format_source(metadata, record.body, collection="catalogue")
+                            if text != document.source_text:
+                                writes.append(SourceWrite(document.path, text))
+                                counts["retitle" if title_changed else "regenerate_body"] += 1
+                        if not writes:
+                            counts["build_only"] += 1
+                        operation = "update"
+                    selection = {**selection, "metadata": selection["metadata"] or design_maintenance}
+                    selection_write = None
+                else:
+                    selection_write = _selection_write(collection.parent_config, work_id)
+                    counts["delete"] += 1
+
+                def write_operation() -> None:
+                    nonlocal phase, selection_updated
+                    for write in writes:
+                        writer = source_model.write_text_atomic_new if write.create_only else source_model.write_text_atomic
+                        writer(write.path, write.text)
+                        committed.append({"work_id": work_id, "doc_id": work_id, "operation": operation})
+                    if family == "deleted_works" and document is not None:
+                        document.path.unlink(missing_ok=True)
+                        committed.append({"work_id": work_id, "doc_id": work_id, "operation": "delete"})
+                    if selection_write is not None:
+                        source_model.write_text_atomic(selection_write.path, selection_write.text)
+                        selection_updated = True
+                    phase = "build"
+
+                paths = [write.path for write in writes]
+                if family == "deleted_works" and document is not None:
+                    paths.append(document.path)
+                completed = (family, work_id, selection, download_names)
+                if design_maintenance:
+                    write_operation()
+                    maintenance_paths.extend(paths)
+                    maintenance_completed.append(completed)
+                    continue
+                perform_collection_source_write_and_rebuild(repo_root, "catalogue", paths, write_operation,
+                                                            links_doc_ids=[work_id], build_doc_ids=[work_id])
+                phase = "publication queue"
+                merge_completed_works(repo_root, [completed])
+                phase = "updates queue"
+                if work_id in pending[family]:
+                    remove_pending_update(repo_root, pending, family, work_id)
+                if family == "current_works":
+                    counts["built"] += 1
+        if design_maintenance:
+            work_id, phase = "Catalogue maintenance", "build"
+            perform_collection_source_write_and_rebuild(repo_root, "catalogue", maintenance_paths, lambda: None, complete_build=True)
+            phase = "publication queue"
+            merge_completed_works(repo_root, maintenance_completed)
+            phase = "updates queue"
+            for family, wid, _selection, _names in maintenance_completed:
+                pending[family].pop(wid, None)
+            write_pending_updates(repo_root, pending)
+            counts["built"] = len(selections["current_works"])
     except Exception as error:
-        message = f"{f'Work {failed_work_id}: ' if failed_work_id else ''}{error}"
-        if phase == "build" and deletes:
-            message += "; inspect the partial deletion and run Full reconciliation if needed"
-        payload = {"ok": False, **TARGET, "mode": mode, "failed_phase": phase,
-                   "failed_work_id": failed_work_id, "completed_records": committed_records,
-                   "selection_updated": selection_updated, "build_completed": phase == "pending-list",
-                   "committed_source_operations": len(committed_records) + int(selection_updated),
-                   "error": message}
-        log_event(repo_root, "docs-catalogue-regenerate-failed", {
-            "mode": mode, "failed_phase": phase, "failed_work_id": failed_work_id,
-            "committed_source_operations": payload["committed_source_operations"],
-        })
+        payload = {"ok": False, **TARGET, "failed_phase": phase, "failed_work_id": work_id,
+                   "completed_records": committed, "selection_updated": selection_updated,
+                   "committed_source_operations": len(committed) + int(selection_updated),
+                   "error": f"Work {work_id}, {phase}: {error}"}
+        log_event(repo_root, "docs-catalogue-regenerate-failed", {"failed_phase": phase, "failed_work_id": work_id})
         raise CatalogueRegenerationError(payload) from error
-    counts["built"] = len(current_ids)
     counts["updated"] = counts["retitle"] + counts["regenerate_body"] + counts["build_only"]
-    result = {"ok": True, **TARGET, "mode": mode, "counts": counts, "pending_updates": remaining,
-              "rebuild": rebuild,
-              "summary_text": (
-                  f"Updated {counts['updated']}, created {counts['create']}, deleted {counts['delete']} Catalogue documents."
-              )}
-    log_event(repo_root, "docs-catalogue-regenerate", {**TARGET, "mode": mode, "counts": counts})
+    result = {"ok": True, **TARGET, "counts": counts, "pending_updates": pending_counts(pending),
+              "summary_text": f"Updated {counts['updated']}, created {counts['create']}, deleted {counts['delete']} Catalogue documents."}
+    log_event(repo_root, "docs-catalogue-regenerate", {"counts": counts, "design_maintenance": design_maintenance})
     return result

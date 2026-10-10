@@ -28,7 +28,7 @@ def _index(family: str, items: Mapping[str, Any], timestamp: str) -> dict[str, A
 
 def catalogue_payloads(
     repo_root: Path, records: CatalogueSourceRecords, galleries: CatalogueGalleries,
-    pairs: CatalogueSeriesGalleries, *, timestamp: str,
+    pairs: CatalogueSeriesGalleries, *, timestamp: str, work_ids: set[str] | None = None,
 ) -> dict[str, dict[str, Any]]:
     """Build Work and Gallery records plus compact discovery indexes."""
     errors = validate_source_records(records)
@@ -49,18 +49,21 @@ def catalogue_payloads(
         work = compact_json_object({"work_id": wid, **projection.build_work_record_projection(source)})
         if source.get("series_id"):
             work["series_id"] = source["series_id"]
+        works_index[wid] = {key: work[key] for key in ("work_id", "title", "year", "year_display", "series_id") if key in work}
+        if work_ids is not None and wid not in work_ids:
+            continue
         if source.get("links"):
             work["links"] = source["links"]
         if source.get("downloads"):
             work["downloads"] = [
-                {**download, "url": f"{media_config['base'].rstrip('/')}/{media_config['files_works'].strip('/')}/{quote(download['filename'], safe='')}"}
+                {"filename": download["filename"], "label": download["label"],
+                 "url": f"{media_config['base'].rstrip('/')}/{media_config['files_works'].strip('/')}/{quote(download['filename'], safe='')}"}
                 for download in source["downloads"]
             ]
         work["galleries"] = [dict(galleries.galleries[gid]) for gid in sorted(galleries.works.get(wid, []))]
         payloads[f"works/index/{wid}.json"] = projection.build_work_json_payload(
             work_record=work, generated_at_utc=timestamp,
         )
-        works_index[wid] = {key: work[key] for key in ("work_id", "title", "year", "year_display", "series_id") if key in work}
     for gid, source in galleries.galleries.items():
         payloads[f"galleries/index/{gid}.json"] = projection.build_gallery_json_payload(
             gallery_id=gid, gallery_record=source,
@@ -85,7 +88,7 @@ def catalogue_payloads(
     return payloads
 
 
-def _same_generated_content(actual: Any, expected: dict[str, Any]) -> bool:
+def same_generated_content(actual: Any, expected: dict[str, Any]) -> bool:
     """Ignore only the generation timestamp when comparing complete output."""
     if (not isinstance(actual, dict) or not isinstance(actual.get("header"), dict)
             or not isinstance(actual["header"].get("generated_at_utc"), str)
@@ -132,7 +135,7 @@ def generate_catalogue_json(
                 if not complete:
                     raise
                 old = None
-            if (complete and _same_generated_content(old, payload)) or (
+            if (complete and same_generated_content(old, payload)) or (
                 not complete and isinstance(old, dict) and old.get("header", {}).get("version") == payload["header"]["version"]
             ):
                 continue

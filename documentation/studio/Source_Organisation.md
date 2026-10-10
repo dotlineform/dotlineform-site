@@ -3,13 +3,13 @@ draft: false
 doc_id: d-20260423-000000-8fd731
 title: Source Organisation
 added_date: "2026-04-23 00:00:00"
-last_updated: "2026-10-08 19:10:43"
+last_updated: "2026-10-10 10:42:03"
 summary: Working source and generated storage, one read-only Preview snapshot, and exact collection and media ownership.
 parent_id: d-20260424-000000-50b63f
 ---
 # Docs Viewer Source Organisation
 
-`docs-viewer/config/workspace/docs-workspace.json` is the storage authority, using `docs_workspace_v4`. `docs_workspace_config.py` resolves the single existing root selected by `DOTLINEFORM_DOCS_BASE_DIR`. An unavailable configured root is an unavailable workspace; no repository or alternate root is inferred. The earlier scope registry and nested scope storage are retired.
+`docs-viewer/config/workspace/docs-workspace.json` is the storage authority, using `docs_workspace_v5`. The loader resolves the existing root selected by `DOTLINEFORM_DOCS_BASE_DIR` without inferred or fallback storage. Work media resolves independently beneath configured Working and Preview asset roots; ordinary document media remains shared.
 
 `DOTLINEFORM_DOCS_BASE_DIR` selects the Docs Viewer folder directly. It is independent of `DOTLINEFORM_PROJECTS_BASE_DIR`, which owns Catalogue, Processing, Data Sharing and other project workspaces. Both settings live in `.env.local`; neither is an alias or fallback for the other. To relocate Docs storage, stop services, move the complete Working and Preview trees to the explicitly selected root, change the setting, verify the resolved locations, and restart.
 
@@ -18,6 +18,9 @@ parent_id: d-20260424-000000-50b63f
 ```text
 $DOTLINEFORM_DOCS_BASE_DIR/
   working/
+    catalogue-updates-pending.json
+    catalogue-publish-pending.json
+    assets/works/{primary,thumbs,media/files}/
     source/
       documents/<doc_id>.md
       documents/index-order.json
@@ -32,6 +35,7 @@ $DOTLINEFORM_DOCS_BASE_DIR/
       collections/<collection>/documents/
       catalogue/
   preview/
+    assets/works/{primary,thumbs,media/files}/
     preview-manifest.json
     documents/{index-tree.json,recent.json,by-id/,...}
     search/index.json
@@ -40,19 +44,23 @@ $DOTLINEFORM_DOCS_BASE_DIR/
   assets/
     media/workspace/{img,svg,files,html}/
     media/collections/<collection>/{img,svg,files,html}/
-    works/{primary,thumbs,media/files}/
 ```
 
 | Role | Ownership |
 | --- | --- |
 | Working Source | Canonical Markdown, ordinary hierarchy/order, media provenance and registered producer input. |
 | Working Generated | Replaceable document, Search and Catalogue JSON used by the local reader. |
-| Shared assets | Current document and Work media, without per-stage copies. |
+| Private Catalogue queues | Persisted Working selections/readiness and completed publication progress, with owner-specific timestamps; ordinary document builds do not replace or reset them. |
+| Shared document assets | Current ordinary/collection document media. |
+| Working Work assets | Refresh-owned prepared media used by local Docs readers. |
+| Preview Work assets | Per-Work Publish output retained between operations. |
 | Preview | One complete read-only prepared snapshot retained by Publish, independently inspectable on disk. |
 | Public projection | Downstream repository/R2 output served by the website. |
 | Rendered view | Presentation of document payloads and media; it is not source. |
 
-Working registers ordinary documents, collection hosts, collection customisations and media once. Preview derives the same collection/media owners for preparation. Current named collections are Works, Concepts, Moments and Catalogue. Preview has no persistent source/generated tree or Docs Viewer browsing route. The preparation phase of Publish uses temporary input/output and removes it when the operation finishes.
+Working registers documents, collection hosts, customisations and media once. Preview derives the same owners, has no persistent source/generated tree and has no browsing route. Publish builds ordinary and other collection documents in temporary storage, retains completed Catalogue documents, then replaces the snapshot while preserving `preview/assets/`. Private incremental queues live directly in `working/`; [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) and [Catalogue Deployment](Catalogue_Deployment.md) own them.
+
+Both private Catalogue queue schemas are version 3 and place their header first. Updates retain the last successful Refresh time, shared pending state and per-Work readiness. Publication retains the last completed nonempty Catalogue Work queue time and per-Work Preview progress. These files are private workflow state, independent of generated-output replacement and public projection; missing or malformed queues stop their owning operation. Projects-owned `catalogue/media-staging/` remains outside the Docs root, with its current family layout mapped in [Media And Asset Handling](Media_And_Asset_Handling.md#workspace-configuration-and-storage).
 
 Durable Studio development documentation is maintained in repository `documentation/studio/`, independently of these external document collections. The native App and Processing projects retain their own build and release boundaries.
 

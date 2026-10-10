@@ -1,14 +1,14 @@
 {
   "schema": "catalogue_field_registry_v2",
   "status": "active",
-  "last_updated": "2026-10-07",
-  "description": "Current source fields and output ownership. Save completes the affected Catalogue output; no field fallback or record publication planner.",
+  "last_updated": "2026-10-09",
+  "description": "Canonical and operational field ownership. Save stages media and queues known changes; Refresh, Regenerate and Publish complete their separate handoffs.",
   "artifact_families": {
     "source-json": "Canonical Studio Catalogue records.",
     "studio-lookup": "Private editor read projections.",
     "work-json": "catalogue/generated/works/index/<work_id>.json, including ordered Detail sections.",
     "catalogue-indexes": "Compact Work and Gallery indexes beneath catalogue/generated.",
-    "local-media": "Shared local Work primary images, thumbnails and downloads in the Docs workspace.",
+    "local-media": "Studio staging and distinct Working/Preview Work primary images, thumbnails and downloads.",
     "remote-media": "Active Work/Detail primary variants and downloads; the archive is excluded."
   },
   "rules": [
@@ -24,6 +24,7 @@
         "project_subfolder",
         "project_filename",
         "media_version",
+        "image_staged",
         "title",
         "width_cm",
         "height_cm",
@@ -46,7 +47,7 @@
         "local-media",
         "remote-media"
       ],
-      "reason": "Refresh the exact Work, affected Gallery membership, indexes and required media. Private Series metadata stays in Studio."
+      "reason": "Save owns image_staged and per-download staged booleans; Refresh clears completed location flags. Known Work changes select downstream metadata/documents and exact media through private queues. Public JSON omits operational flags."
     },
     {
       "id": "series",

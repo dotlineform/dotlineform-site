@@ -120,6 +120,10 @@ def series_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any])
         "changed_fields": plan.changed_fields, "record": plan.updated_record,
         "record_hash": record_hash(plan.updated_record),
         "changed_work_ids": plan.changed_work_ids, "work_records": plan.work_records,
+        "affected_work_ids": sorted(
+            set(plan.changed_work_ids) | ({wid for wid, record in works_map.items() if record.get("series_id") == series_id}
+                                         if plan.changed_fields else set())
+        ),
     }
     if context.dry_run:
         payload.update(dry_run=True, would_write=plan.changed)

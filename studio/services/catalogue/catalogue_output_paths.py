@@ -1,4 +1,4 @@
-"""Resolve Working Catalogue JSON and shared assets in the configured Docs workspace."""
+"""Resolve Working Catalogue JSON and Work assets in the configured Docs workspace."""
 
 from pathlib import Path
 from typing import Mapping

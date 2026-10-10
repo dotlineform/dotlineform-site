@@ -7,6 +7,7 @@ import datetime as dt
 import hashlib
 import html
 import json
+import os
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -109,18 +110,20 @@ def _lifecycle_root(repo_root: Path, config: DocsStageConfig | DocsWorkspaceConf
 def _managed_paths(root: Path, *, excluded: Iterable[str] = ()) -> list[Path]:
     excluded_set = set(excluded)
     paths: list[Path] = []
-    for path in sorted(root.rglob("*")):
-        if path.is_symlink():
-            raise ValueError(
-                "Docs lifecycle output must not contain symlinks: "
-                f"{path.relative_to(root).as_posix()}"
-            )
-        if not path.is_file() or path.name in IGNORED_FILENAMES:
-            continue
-        if path.relative_to(root).as_posix() in excluded_set:
-            continue
-        paths.append(path)
-    return paths
+    for directory, child_dirs, names in os.walk(root):
+        parent = Path(directory)
+        # Stage-local Work assets have their own per-Work publication owner.
+        # Prune the subtree rather than enumerating or hashing the media corpus.
+        child_dirs[:] = sorted(name for name in child_dirs if not (parent == root and name == "assets"))
+        for name in (*child_dirs, *sorted(names)):
+            path = parent / name
+            if path.is_symlink():
+                raise ValueError("Docs lifecycle output must not contain symlinks: " + path.relative_to(root).as_posix())
+            if not path.is_file() or name in IGNORED_FILENAMES:
+                continue
+            if path.relative_to(root).as_posix() not in excluded_set:
+                paths.append(path)
+    return sorted(paths)
 
 
 def _files_from_root(root: Path, *, excluded: Iterable[str] = ()) -> dict[Path, bytes]:

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261007-221414-48ff3f
 title: Public Work JSON Review
 added_date: "2026-10-07 22:14:14"
-last_updated: "2026-10-08 17:14:37"
+last_updated: "2026-10-09 20:38:00"
 summary: Review the Studio Refresh handoff, complete rendered Work media, consistent updates and shared Full Rebuild optimisation.
 ui_status: proposed
 parent_id: d-20260428-000000-f5ff18
@@ -16,7 +16,7 @@ Review whether readers or generation need separate Work by-ID JSON in either Wor
 
 Full Rebuild performance is a shared concern regardless of what calls it. Regenerate would reconcile Catalogue sources and invoke that same operation. Optimising Full Rebuild therefore benefits both direct rebuilds and Catalogue regeneration; this review does not require a separate Regenerate-specific rendering strategy.
 
-The broader data, publication and rebuild proposals remain a feature review rather than an approved implementation specification. The self-contained Catalogue Image metadata removal was approved and implemented on 2026-10-08, as recorded below. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md), [Catalogue Deployment](Catalogue_Deployment.md) and [Catalogue Documents And Metadata](Catalogue_Documents_And_Metadata.md) describe the current workflow and agreed Catalogue Entry presentation.
+The broader Work-payload and full-rebuild proposals remain a review, not implementation authority. [Incremental Updates](deliveries/Incremental_updates.md) now implements staged media, queue-only normal Regenerate and per-Work Publish followed by shared output. Its explicit referring-document Rebuild decision supersedes the automatic full-workspace Regenerate direction below. By-ID Work JSON remains in use; aggregate handoff/presentation changes and shared Full Rebuild optimisation remain separately scoped. The earlier Catalogue Image metadata removal was delivered independently. Current owners are [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) and [Catalogue Deployment](Catalogue_Deployment.md).
 
 ## Agreed Studio And Docs Boundary
 

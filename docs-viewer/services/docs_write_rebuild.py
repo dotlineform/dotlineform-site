@@ -192,6 +192,7 @@ def rebuild_stage_outputs(
     copied_search_index: bytes | None = None,
     copied_recent_payload: bytes | None = None,
     related_links_dir: Path | None = None,
+    retained_catalogue: bool = False,
 ) -> Dict[str, Any]:
     """Await document work and built/copied discovery data before completion.
 
@@ -200,6 +201,8 @@ def rebuild_stage_outputs(
     """
     if stage == "preview" and docs_base_dir is None:
         raise ValueError("Preview builds require an explicit temporary workspace")
+    if retained_catalogue and (stage != "preview" or copied_search_index is None):
+        raise ValueError("Retained Catalogue documents require a captured Preview build")
     if include_search and stage != "working":
         raise ValueError("Search rebuilds require Working; Preview copies the existing index")
     if (copied_search_index is None) != (copied_recent_payload is None):
@@ -254,6 +257,7 @@ def rebuild_stage_outputs(
                 ),
             ))
             for collection in stage_config.collections
+            if not (retained_catalogue and collection.collection == "catalogue")
         ]
         if stage_config.stage == "working":
             # Recents consumes current collection metadata inside the ordinary build.
