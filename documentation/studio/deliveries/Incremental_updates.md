@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261009-110914-712f45
 title: Incremental Updates
 added_date: "2026-10-09 11:09:14"
-last_updated: "2026-10-10 11:03:37"
+last_updated: "2026-10-10 12:39:52"
 summary: Active delivery of incremental Catalogue mutation, Refresh and Regenerate steps, with Work-by-Work Preview and Deploy, one publication progress flag and a final shared-output pass.
 ui_status: active
 parent_id: d-20261007-221414-48ff3f
@@ -516,6 +516,6 @@ Gate: the complete agreed workflow is accepted and durable ownership documentati
 ## Follow-ons
 
 - Remove Catalogue document editing from the UI so Catalogue content is authored through Work edits and generated templates. Determine the complete editing surface in that bounded follow-on; exact-document Rebuild remains useful for applying current generated inputs.
-- Introduce similar mutation-owned queue tracking for Gallery/Series definitions and relationship changes, including changes with zero affected Works. Preserve known affected-Work contributions; define exact change/deletion selections and completion before choosing a separate queue or additional families. Replace the coarse shared pending flag with those agreed selections as appropriate; no Catalogue discovery scans.
+- Introduce similar mutation-owned queue tracking for Gallery/Series definitions and relationship changes, including changes with zero affected Works. [Gallery And Series Incremental Updates](Gallery_And_Series_Incremental_Updates.md) proposes extending both existing queue files with exact Gallery/Series and shared-output selections, preserving affected-Work contributions and replacing the coarse shared pending flag; no Catalogue discovery scans. Its schemas and completion boundaries remain proposed until implementation approval.
 - Incremental Publish of normal and non-Catalogue collection docs.
 - Optimisation of index and lookup JSON build, validation and Publishing.
