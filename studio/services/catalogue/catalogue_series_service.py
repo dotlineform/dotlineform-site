@@ -18,7 +18,7 @@ from catalogue.catalogue_service_context import (
 from catalogue.catalogue_source import SERIES_FIELDS, records_from_json_source, slug_id
 from catalogue.series_ids import normalize_series_id
 from catalogue.catalogue_report_inputs import SERIES_PATH
-from catalogue.catalogue_galleries import read_galleries
+from catalogue.catalogue_galleries import read_galleries, validate_galleries
 from catalogue.catalogue_shared_changes import (
     empty_shared_changes, merge_shared_changes, work_shared_changes, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT,
     WORK_DOCUMENT_COVERAGE_MANIFEST,
@@ -52,7 +52,8 @@ def series_create_payload(context: CatalogueWriteContext, body: Mapping[str, Any
         raise ValueError("; ".join(mutation_plan.validation_errors[:20]))
 
     changed_work_ids = mutation_plan.changed_work_ids
-    galleries = read_galleries(context.source_dir, works_map)
+    galleries = read_galleries(context.source_dir)
+    validate_galleries(galleries, works_map)
     shared = work_shared_changes(
         works_map, {**works_map, **mutation_plan.work_updates}, galleries.works, galleries.works, changed_work_ids,
     )
@@ -119,7 +120,8 @@ def series_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any])
     )
     if plan.validation_errors:
         raise ValueError("; ".join(plan.validation_errors[:20]))
-    galleries = read_galleries(context.source_dir, works_map)
+    galleries = read_galleries(context.source_dir)
+    validate_galleries(galleries, works_map)
     shared = work_shared_changes(works_map, {**works_map, **plan.work_updates}, galleries.works, galleries.works, plan.changed_work_ids)
     if plan.changed_fields:
         outputs = {RELATIONSHIP_REPORT}

@@ -20,6 +20,8 @@ REPO_ROOT = ensure_studio_python_paths(__file__)
 SCRIPTS_DIR = REPO_ROOT / "scripts"
 
 from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, records_from_json_source, validate_source_records
+from catalogue.catalogue_galleries import read_galleries, validate_galleries
+from catalogue.catalogue_series_galleries import read_series_galleries, validate_series_galleries
 
 from display_paths import format_display_path
 
@@ -33,6 +35,16 @@ def main() -> int:
     source_dir = Path(args.source_dir).expanduser()
     records = records_from_json_source(source_dir)
     errors = validate_source_records(records)
+    galleries = read_galleries(source_dir)
+    pairs = read_series_galleries(source_dir)
+    for audit, arguments in (
+        (validate_galleries, (galleries, records.works)),
+        (validate_series_galleries, (pairs, records.series, galleries.galleries)),
+    ):
+        try:
+            audit(*arguments)
+        except ValueError as error:
+            errors.append(str(error))
     print(f"Catalogue source validation: {format_display_path(source_dir, repo_root=repo_root)}")
     for kind, record_map in records.as_maps().items():
         print(f"- {kind}: {len(record_map)} records")

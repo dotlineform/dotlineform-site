@@ -12,6 +12,7 @@ from catalogue.catalogue_galleries import (
     MEMBERSHIPS_FILE,
     newly_empty_gallery_ids,
     read_galleries,
+    validate_galleries,
     require_work_membership_revision,
     with_work_memberships,
 )
@@ -64,7 +65,7 @@ def bulk_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
 
     works_payload = load_works_payload(context.works_path)
     works_map = works_payload["works"]
-    galleries = read_galleries(context.source_dir, works_map)
+    galleries = read_galleries(context.source_dir)
     updated_galleries = galleries
     if "gallery_ids" in body:
         expected = body.get("expected_gallery_ids_by_work")
@@ -75,6 +76,8 @@ def bulk_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
         updated_galleries = with_work_memberships(
             galleries, works_map, dict.fromkeys(selected_ids, body["gallery_ids"]),
         )
+    else:
+        validate_galleries(galleries, works_map)
     pending_updates: dict[str, dict[str, Any]] = {}
     for work_id in selected_ids:
         current_record = works_map.get(work_id)

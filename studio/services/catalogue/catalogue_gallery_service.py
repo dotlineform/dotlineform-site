@@ -45,8 +45,8 @@ def mutate_gallery_payload(
         raise ValueError("Unsupported Gallery operation")
     works = load_works_payload(context.works_path)["works"]
     series = load_series_payload(context.series_path)["series"]
-    data = read_galleries(context.source_dir, works)
-    pairs = read_series_galleries(context.source_dir, series, data.galleries)
+    data = read_galleries(context.source_dir)
+    pairs = read_series_galleries(context.source_dir)
     if operation == "create":
         gallery_id = f"{max((int(gid) for gid in data.galleries), default=0) + 1:03d}"
         members = []

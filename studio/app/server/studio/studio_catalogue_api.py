@@ -27,7 +27,7 @@ for candidate in (SCRIPTS_DIR, STUDIO_DIR):
 
 from catalogue import catalogue_write_service  # noqa: E402
 from catalogue.catalogue_revisions import CatalogueRevisionConflict  # noqa: E402
-from catalogue.catalogue_galleries import read_galleries  # noqa: E402
+from catalogue.catalogue_galleries import read_galleries, read_gallery_definitions, read_gallery_memberships  # noqa: E402
 from catalogue.catalogue_series_galleries import read_series_galleries  # noqa: E402
 from catalogue.catalogue_build_media import PIPELINE_CONFIG  # noqa: E402
 from catalogue.catalogue_lookup import (  # noqa: E402
@@ -142,19 +142,18 @@ def catalogue_read_payload(repo_root: Path, query: Mapping[str, list[str]]) -> d
     if key == "catalogue_series":
         return load_source_payload(paths["series_path"], "series")
 
-    source_records = records_from_json_source(paths["source_dir"])
     if key == "catalogue_galleries":
-        galleries = read_galleries(paths["source_dir"], source_records.works)
-        return {"galleries": galleries.galleries}
+        return {"galleries": read_gallery_definitions(paths["source_dir"])}
     if key == "catalogue_gallery_record":
-        galleries = read_galleries(paths["source_dir"], source_records.works)
-        pairs = read_series_galleries(paths["source_dir"], source_records.series, galleries.galleries)
+        galleries = read_galleries(paths["source_dir"])
+        pairs = read_series_galleries(paths["source_dir"])
         return gallery_record_payload(galleries, pairs, record_id)
+    source_records = records_from_json_source(paths["source_dir"])
     if key == "catalogue_lookup_work_search":
         payload = build_work_search_payload(source_records)
-        galleries = read_galleries(paths["source_dir"], source_records.works)
+        memberships = read_gallery_memberships(paths["source_dir"])
         for item in payload["items"]:
-            item["gallery_ids"] = sorted(galleries.works.get(item["work_id"], []))
+            item["gallery_ids"] = sorted(memberships.get(item["work_id"], []))
         return payload
     if key == "catalogue_lookup_series_search":
         return build_series_search_payload(source_records)
@@ -163,8 +162,8 @@ def catalogue_read_payload(repo_root: Path, query: Mapping[str, list[str]]) -> d
         if not work_id:
             raise ValueError("record_id is required for work lookup reads")
         payload = build_work_lookup_payload(source_records, work_id)
-        galleries = read_galleries(paths["source_dir"], source_records.works)
-        payload["gallery_ids"] = sorted(galleries.works.get(work_id, []))
+        memberships = read_gallery_memberships(paths["source_dir"])
+        payload["gallery_ids"] = sorted(memberships.get(work_id, []))
         return payload
     if key == "catalogue_lookup_series_base":
         series_id = normalize_series_id(record_id)

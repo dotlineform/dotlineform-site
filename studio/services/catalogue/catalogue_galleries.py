@@ -73,25 +73,31 @@ def validate_galleries(data: CatalogueGalleries, works: Mapping[str, Any]) -> No
                 raise ValueError(f"Work {wid} references unknown Gallery {gid!r}")
 
 
-def read_galleries(source_dir: Path, works: Mapping[str, Any]) -> CatalogueGalleries:
-    """Read the two authorities; missing data is an error, never Series-derived."""
-    maps = []
-    for name, schema, key in (
-        (GALLERIES_FILE, GALLERIES_SCHEMA, "galleries"),
-        (MEMBERSHIPS_FILE, MEMBERSHIPS_SCHEMA, "works"),
-    ):
-        payload = json.loads((source_dir / name).read_text(encoding="utf-8"))
-        if not isinstance(payload, dict) or set(payload) != {"header", key}:
-            raise ValueError(f"Invalid canonical Gallery payload: {name}")
-        header, records = payload["header"], payload[key]
-        if not isinstance(records, dict) or not isinstance(header, dict):
-            raise ValueError(f"Invalid canonical Gallery objects: {name}")
-        if header.get("schema") != schema or header.get("count") != len(records):
-            raise ValueError(f"Invalid canonical Gallery header: {name}")
-        maps.append(records)
-    data = CatalogueGalleries(galleries=maps[0], works=maps[1])
-    validate_galleries(data, works)
-    return data
+def _read_map(source_dir: Path, name: str, schema: str, key: str) -> dict[str, Any]:
+    payload = json.loads((source_dir / name).read_text(encoding="utf-8"))
+    if not isinstance(payload, dict) or set(payload) != {"header", key}:
+        raise ValueError(f"Invalid canonical Gallery payload: {name}")
+    header, records = payload["header"], payload[key]
+    if not isinstance(records, dict) or not isinstance(header, dict):
+        raise ValueError(f"Invalid canonical Gallery objects: {name}")
+    if header.get("schema") != schema or header.get("count") != len(records):
+        raise ValueError(f"Invalid canonical Gallery header: {name}")
+    return records
+
+
+def read_gallery_definitions(source_dir: Path) -> dict[str, dict[str, str]]:
+    """Read definitions without membership reads or a title-uniqueness audit."""
+    return _read_map(source_dir, GALLERIES_FILE, GALLERIES_SCHEMA, "galleries")
+
+
+def read_gallery_memberships(source_dir: Path) -> dict[str, list[str]]:
+    """Read Work-owned memberships without joining the complete Work corpus."""
+    return _read_map(source_dir, MEMBERSHIPS_FILE, MEMBERSHIPS_SCHEMA, "works")
+
+
+def read_galleries(source_dir: Path) -> CatalogueGalleries:
+    """Load both authorities; Save/maintenance explicitly validate their result."""
+    return CatalogueGalleries(read_gallery_definitions(source_dir), read_gallery_memberships(source_dir))
 
 
 def require_work_membership_revision(data: CatalogueGalleries, work_id: str, expected: Any) -> None:

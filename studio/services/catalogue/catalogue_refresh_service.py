@@ -13,9 +13,10 @@ from catalogue.catalogue_works_metadata import update_catalogue_works_metadata
 from catalogue.catalogue_pending_updates import read_pending_updates, write_pending_updates
 from catalogue.catalogue_pending_state import pending_counts
 from catalogue.generate_work_pages import catalogue_payloads, same_generated_content
-from catalogue.catalogue_galleries import read_galleries
+from catalogue.catalogue_galleries import read_galleries, validate_galleries
+from catalogue.catalogue_refresh_inputs import read_refresh_inputs
 from catalogue.catalogue_gallery_records import merge_gallery_record
-from catalogue.catalogue_series_galleries import read_series_galleries
+from catalogue.catalogue_series_galleries import read_series_galleries, validate_series_galleries
 from catalogue.catalogue_series_galleries_index import merge_series_galleries_index, series_gallery_links, series_galleries_index_payload
 from catalogue.catalogue_series_galleries_report import merge_series_galleries_report, series_galleries_report_payload
 from catalogue.catalogue_output_paths import catalogue_workspace_config, output_path
@@ -83,7 +84,8 @@ def refresh_compact_indexes(repo_root: Path) -> dict[str, Any]:
     errors = validate_source_records(records)
     if errors:
         raise ValueError("Catalogue source validation failed: " + "; ".join(errors[:20]))
-    galleries = read_galleries(repo_root / DEFAULT_SOURCE_DIR, records.works)
+    galleries = read_galleries(repo_root / DEFAULT_SOURCE_DIR)
+    validate_galleries(galleries, records.works)
     timestamp = utc_timestamp()
     payloads = {
         WORK_INDEX: build_compact_index("works", records.works, timestamp=timestamp),
@@ -105,8 +107,10 @@ def refresh_series_galleries(repo_root: Path) -> dict[str, Any]:
     errors = validate_source_records(records)
     if errors:
         raise ValueError("Catalogue source validation failed: " + "; ".join(errors[:20]))
-    galleries = read_galleries(source_dir, records.works)
-    pairs = read_series_galleries(source_dir, records.series, galleries.galleries)
+    galleries = read_galleries(source_dir)
+    pairs = read_series_galleries(source_dir)
+    validate_galleries(galleries, records.works)
+    validate_series_galleries(pairs, records.series, galleries.galleries)
     timestamp = utc_timestamp()
     mapping = {sid: series_gallery_links(sid, records.series, galleries.galleries, pairs)
                for sid in sorted(records.series)}
@@ -133,8 +137,13 @@ def refresh_gallery_records(repo_root: Path) -> dict[str, Any]:
     pending = read_pending_updates(repo_root)
     source_dir = repo_root / DEFAULT_SOURCE_DIR
     records = records_from_json_source(source_dir)
-    galleries = read_galleries(source_dir, records.works)
-    pairs = read_series_galleries(source_dir, records.series, galleries.galleries)
+    galleries = read_galleries(source_dir)
+    pairs = read_series_galleries(source_dir)
+    errors = validate_source_records(records)
+    if errors:
+        raise ValueError("Catalogue source validation failed: " + "; ".join(errors[:20]))
+    validate_galleries(galleries, records.works)
+    validate_series_galleries(pairs, records.series, galleries.galleries)
     if set(pending["deleted_galleries"]) & galleries.galleries.keys():
         raise ValueError("Queued Gallery deletion still has a canonical definition")
     payloads = catalogue_payloads(
@@ -175,9 +184,7 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
         pending = read_pending_updates(repo_root)
         shared = shared_changes(pending)
         source_dir = repo_root / DEFAULT_SOURCE_DIR
-        records = records_from_json_source(source_dir)
-        galleries = read_galleries(source_dir, records.works)
-        pairs = read_series_galleries(source_dir, records.series, galleries.galleries)
+        records, galleries, pairs = read_refresh_inputs(source_dir, pending)
         workspace = catalogue_workspace_config(repo_root)
         working, staging = workspace.assets, catalogue_staging_assets(repo_root)
         selected = {

@@ -30,12 +30,7 @@ def catalogue_payloads(
     pairs: CatalogueSeriesGalleries, *, timestamp: str, work_ids: set[str] | None = None,
     gallery_ids: set[str] | None = None, shared_outputs: set[str] | None = None,
 ) -> dict[str, dict[str, Any]]:
-    """Build Work and Gallery records plus compact discovery indexes."""
-    errors = validate_source_records(records)
-    if errors:
-        raise ValueError("Catalogue source validation failed: " + "; ".join(errors[:20]))
-    validate_galleries(galleries, records.works)
-    validate_series_galleries(pairs, records.series, galleries.galleries)
+    """Project selected loaded inputs; Save and complete maintenance own audits."""
     supported_shared = {"media-config.json", WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, WORK_DOCUMENT_COVERAGE_MANIFEST, *INPUT_SCHEMAS}
     shared = supported_shared if shared_outputs is None else shared_outputs
     if shared - supported_shared:
@@ -50,7 +45,7 @@ def catalogue_payloads(
                 if gid in works_by_gallery:
                     works_by_gallery[gid].append(wid)
     payloads: dict[str, dict[str, Any]] = {}
-    media_config = json.loads((repo_root / "site-tools/config/site-tools.json").read_text())["media"]
+    media_config = None
     if "media-config.json" in shared:
         payloads["media-config.json"] = catalogue_media_policy(repo_root, timestamp=timestamp)
     projection_ids = records.works.keys() if work_ids is None else sorted(work_ids)
@@ -62,6 +57,8 @@ def catalogue_payloads(
         if source.get("links"):
             work["links"] = source["links"]
         if source.get("downloads"):
+            if media_config is None:
+                media_config = json.loads((repo_root / "site-tools/config/site-tools.json").read_text())["media"]
             work["downloads"] = [
                 {"filename": download["filename"], "label": download["label"],
                  "url": f"{media_config['base'].rstrip('/')}/{media_config['files_works'].strip('/')}/{quote(download['filename'], safe='')}"}
@@ -124,8 +121,13 @@ def generate_catalogue_json(
     """
     workspace = catalogue_output_workspace(repo_root)
     records = records_from_json_source(source_dir)
-    galleries = read_galleries(source_dir, records.works)
-    pairs = read_series_galleries(source_dir, records.series, galleries.galleries)
+    galleries = read_galleries(source_dir)
+    pairs = read_series_galleries(source_dir)
+    errors = validate_source_records(records)
+    if errors:
+        raise ValueError("Catalogue source validation failed: " + "; ".join(errors[:20]))
+    validate_galleries(galleries, records.works)
+    validate_series_galleries(pairs, records.series, galleries.galleries)
     timestamp = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     payloads = catalogue_payloads(repo_root, records, galleries, pairs, timestamp=timestamp)
     complete = work_ids is None

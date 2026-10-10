@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260401-000000-ebf14a
 title: Catalogue Works
 added_date: "2026-04-01 00:00:00"
-last_updated: "2026-10-10 20:51:41"
+last_updated: "2026-10-10 20:56:58"
 parent_id: d-20260423-000000-d015e6
 
 ---
@@ -17,7 +17,7 @@ Use Working document navigation or the link above to open the report. Editing re
 
 The report loads generated metadata for all saved Works and shows rows after a search by Work ID, Work title, Series ID or Series title. It searches the full loaded dataset and renders 20 matching rows per page. Beneath the report, `chevron-left.svg` and `chevron-right.svg` surround a compact current/total indicator such as `1/2`. Previous is disabled on page 1; Next on the last page returns to page 1 using the retained matches, with a first-page tooltip and accessible label. One-page and empty results hide the entire pager. Search and sort changes reset to page 1. The initial list remains empty and the default sort remains ascending Work ID. Catalogue Works and Series have no draft/published state, and the report applies no publication filter. Document workflow and publication decisions are separate from Catalogue record identity.
 
-Each Work has an exact `work_id` and optional Series membership. Results retain year and curator-only storage context in one six-column semantic table. Work, Year, Title, Series and Storage are the five embedded and sortable columns. Medium appears only in Expanded Report View. **Copy table** exports all current sorted matches, across every page, as five-column TSV while embedded and six-column TSV while expanded.
+Each canonical Work has an exact `work_id` and one required Series membership. Results retain year and curator-only storage context in one six-column semantic table. Work, Year, Title, Series and Storage are the five embedded and sortable columns. Medium appears only in Expanded Report View. **Copy table** exports all current sorted matches, across every page, as five-column TSV while embedded and six-column TSV while expanded.
 
 ## Data And Ownership
 

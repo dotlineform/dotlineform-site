@@ -15,7 +15,6 @@ from catalogue_work_media_sources import (
 from pipeline_config import load_pipeline_config
 
 from catalogue.series_ids import normalize_series_id, parse_series_ids
-from catalogue.catalogue_galleries import read_galleries
 
 
 DEFAULT_SOURCE_DIR = Path("studio/data/canonical/catalogue")
@@ -741,26 +740,24 @@ def load_json_file(path: Path) -> Dict[str, Any]:
     return payload
 
 
+def read_source_map(source_dir: Path, kind: str) -> Dict[str, Dict[str, Any]]:
+    """Load one Work/Series authority; mutation and maintenance own semantic audits."""
+    if kind not in {"works", "series"}:
+        raise ValueError(f"Unsupported Catalogue source family: {kind!r}")
+    path = source_dir / SOURCE_FILES[kind]
+    record_map = load_json_file(path).get(kind)
+    if not isinstance(record_map, dict):
+        raise ValueError(f"Invalid source file shape in {path}: missing object key {kind!r}")
+    return record_map
+
+
 def records_from_json_source(source_dir: Path) -> CatalogueSourceRecords:
-    """Read current Catalogue authorities without probing retired Detail storage."""
-    maps: Dict[str, Dict[str, Dict[str, Any]]] = {}
-    for kind in ["works", "series"]:
-        path = source_dir / SOURCE_FILES[kind]
-        payload = load_json_file(path)
-        record_map = payload.get(kind)
-        if not isinstance(record_map, dict):
-            raise ValueError(f"Invalid source file shape in {path}: missing object key {kind!r}")
-        maps[kind] = {
-            str(record_id): dict(record)
-            for record_id, record in record_map.items()
-            if isinstance(record, dict)
-        }
-    read_galleries(source_dir, maps["works"])
+    """Read Work/Series authorities without loading unrelated Gallery data."""
     return CatalogueSourceRecords(
-        works=sort_record_map(maps["works"]),
+        works=read_source_map(source_dir, "works"),
         work_detail_sections={},
         work_details={},
-        series=sort_record_map(maps["series"]),
+        series=read_source_map(source_dir, "series"),
     )
 
 

@@ -10,7 +10,7 @@ from catalogue.catalogue_galleries import (
     CatalogueGalleries, MEMBERSHIPS_FILE, read_galleries, validate_galleries,
 )
 from catalogue.catalogue_series_galleries import (
-    SERIES_GALLERIES_FILE, read_series_galleries, without_series,
+    SERIES_GALLERIES_FILE, read_series_galleries, validate_series_galleries, without_series,
 )
 from catalogue.catalogue_source import (
     CatalogueSourceRecords, SOURCE_FILES, payload_for_map, records_from_json_source,
@@ -52,7 +52,7 @@ def build_delete_apply_plan(
                 raise ValueError(f"Work not found: {work_id}")
             if original.get("series_id"):
                 series_ids.add(original["series_id"])
-        galleries = read_galleries(source_dir, source.works)
+        galleries = read_galleries(source_dir)
         remaining_memberships = CatalogueGalleries(
             galleries=galleries.galleries,
             works={wid: ids for wid, ids in galleries.works.items() if wid in works},
@@ -70,12 +70,15 @@ def build_delete_apply_plan(
             raise ValueError(f"Series not found: {series_id}")
         if any(work.get("series_id") == series_id for work in source.works.values()):
             raise ValueError("Only Series with no member Works can be deleted.")
-        galleries = read_galleries(source_dir, source.works)
-        pairs = read_series_galleries(source_dir, source.series, galleries.galleries)
+        galleries = read_galleries(source_dir)
+        pairs = read_series_galleries(source_dir)
+        validate_galleries(galleries, source.works)
         current = replace(source, series=series)
+        remaining_pairs = without_series(pairs, series_id)
+        validate_series_galleries(remaining_pairs, series, galleries.galleries)
         payloads[(source_dir / SOURCE_FILES["series"]).resolve()] = payload_for_map("series", series)
         if series_id in pairs.pairs_by_series:
-            payloads[(source_dir / SERIES_GALLERIES_FILE).resolve()] = without_series(pairs, series_id).payload()
+            payloads[(source_dir / SERIES_GALLERIES_FILE).resolve()] = remaining_pairs.payload()
         affected = {"works": [], "series": record_ids}
         shared = {**empty_shared_changes(), "deleted_series": record_ids,
                   "current_galleries": list(pairs.pairs_by_series.get(series_id, ())),

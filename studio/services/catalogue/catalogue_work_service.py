@@ -9,6 +9,7 @@ from catalogue.catalogue_galleries import (
     MEMBERSHIPS_FILE,
     newly_empty_gallery_ids,
     read_galleries,
+    validate_galleries,
     require_work_membership_revision,
     with_work_memberships,
 )
@@ -41,7 +42,7 @@ def work_create_payload(context: CatalogueWriteContext, body: Mapping[str, Any])
     if mutation_plan.validation_errors:
         raise ValueError("source validation failed: " + "; ".join(mutation_plan.validation_errors[:20]))
 
-    galleries = read_galleries(context.source_dir, works)
+    galleries = read_galleries(context.source_dir)
     updated_galleries = with_work_memberships(
         galleries, {**works, work_id: mutation_plan.updated_record}, {work_id: body.get("gallery_ids", [])},
     )
@@ -100,11 +101,13 @@ def work_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
     if not isinstance(current_record, dict):
         raise ValueError(f"work_id not found: {work_id}")
     require_record_revision(current_record, body.get("expected_record_hash"))
-    galleries = read_galleries(context.source_dir, works)
+    galleries = read_galleries(context.source_dir)
     updated_galleries = galleries
     if "gallery_ids" in body:
         require_work_membership_revision(galleries, work_id, body.get("expected_gallery_ids"))
         updated_galleries = with_work_memberships(galleries, works, {work_id: body["gallery_ids"]})
+    else:
+        validate_galleries(galleries, works)
     plan = source_mutation.plan_work_save(
         records_from_json_source(context.source_dir), works, work_id, current_record, work_update,
     )

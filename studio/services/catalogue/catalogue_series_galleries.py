@@ -97,12 +97,8 @@ def _unique_object_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
     return result
 
 
-def read_series_galleries(
-    source_dir: Path,
-    series: Mapping[str, Any],
-    galleries: Mapping[str, Any],
-) -> CatalogueSeriesGalleries:
-    """Read only the pair authority; missing or stale identities are errors."""
+def read_series_galleries(source_dir: Path) -> CatalogueSeriesGalleries:
+    """Load the pair authority without auditing every canonical relationship."""
     payload = json.loads(
         (source_dir / SERIES_GALLERIES_FILE).read_text(encoding="utf-8"),
         object_pairs_hook=_unique_object_keys,
@@ -114,10 +110,13 @@ def read_series_galleries(
         raise ValueError("Invalid canonical Series-Gallery objects")
     if header["schema"] != SERIES_GALLERIES_SCHEMA or type(header["count"]) is not int:
         raise ValueError("Invalid canonical Series-Gallery header")
-    if any(not isinstance(ids, list) or any(not isinstance(gid, str) for gid in ids) for ids in pairs.values()):
-        raise ValueError("Series-Gallery pairs must be arrays of exact Gallery IDs")
-    data = CatalogueSeriesGalleries({sid: tuple(ids) for sid, ids in pairs.items()})
-    validate_series_galleries(data, series, galleries)
-    if header["count"] != sum(len(ids) for ids in data.pairs_by_series.values()):
+    pair_map = {}
+    count = 0
+    for sid, ids in pairs.items():
+        if not isinstance(ids, list):
+            raise ValueError("Series-Gallery pairs must be arrays of exact Gallery IDs")
+        pair_map[sid] = tuple(ids)
+        count += len(ids)
+    if header["count"] != count:
         raise ValueError("Canonical Series-Gallery pair count does not match header")
-    return data
+    return CatalogueSeriesGalleries(pair_map)
