@@ -94,12 +94,13 @@ function renderManagementActionsMenu(context) {
   return { root: root, interactive: root.querySelector("#docsViewerManageActionsButton") };
 }
 
-/** Project a visible menu action; disabled reasons belong to its tooltip. */
+/** Project configured visibility and transient availability for one menu action. */
 export function projectDocsViewerManagementActionMenuItem(menu, actionId, state) {
   if (!menu) return;
   var button = menu.querySelector('[data-docs-viewer-action="' + actionId + '"]');
   if (!button) return;
   button.disabled = Boolean(state.disabled);
+  button.hidden = Boolean(state.hidden);
   button.title = state.reason || state.label;
   button.setAttribute("aria-label", state.label);
   button.querySelector(".docsViewer__actionMenuLabel").textContent = state.label;

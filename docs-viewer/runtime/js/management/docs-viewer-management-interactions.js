@@ -1,3 +1,5 @@
+import { DOCS_VIEWER_ACTION_IDS } from "./docs-viewer-action-definitions.js";
+
 export function createDocsViewerManagementInteractionController(options) {
   var nav = options.nav;
   var documentIndex = options.documentIndex || {};
@@ -112,6 +114,7 @@ export function createDocsViewerManagementInteractionController(options) {
   function requestEditDoc(docId) {
     var normalizedDocId = String(docId || "");
     if (!normalizedDocId || !documentIndex.docsById.has(normalizedDocId)) return;
+    if (callbacks.documentActionState(DOCS_VIEWER_ACTION_IDS.EDIT_DOCUMENT, { doc_id: normalizedDocId }).disabled) return;
     var now = Date.now();
     if (lastEditRequestDocId === normalizedDocId && now - lastEditRequestTime < 500) return;
     lastEditRequestDocId = normalizedDocId;

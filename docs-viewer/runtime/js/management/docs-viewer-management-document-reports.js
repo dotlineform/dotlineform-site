@@ -7,6 +7,7 @@ import {
 import {
   normalizeManagedDocumentTarget
 } from "./docs-viewer-management-document-target.js";
+import { DOCS_VIEWER_ACTION_IDS } from "./docs-viewer-action-definitions.js";
 
 /** Adapt the Working manifest's declared authoring field to public-safe browsing input. */
 function catalogueWorkIdForDocument(record) {
@@ -119,7 +120,7 @@ export function loadDocsViewerCollectionContribution(settings, parent, collectio
           documentRecord
         );
       },
-      allowDelete: collection !== "catalogue",
+      documentActionState: settings.managementDocumentActions.documentActionState,
       onRegenerateCatalogue: settings.managementContext
         && collection === "catalogue" && cleanString(clientOptions.baseUrl)
         ? settings.managementDocumentActions?.regenerateCatalogue
@@ -154,6 +155,8 @@ function loadPreparePackageWorkflow() {
 
 function openCollectionPreparePackage(settings, request, context) {
   var actionContext = context || {};
+  var policy = settings.managementDocumentActions.documentActionState(DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE, request);
+  if (policy.disabled) return Promise.reject(new Error(policy.reason));
   return loadPreparePackageWorkflow().then(function (module) {
     return module.openDocumentPackagePrepareWorkflow({
       root: managementModalRoot(settings),
@@ -253,12 +256,16 @@ export function mountDocsViewerManageDocumentExtras(context) {
   }
 
   var parent = parentTarget(settings);
+  var contributionOwner;
   var contribution = loadDocsViewerCollectionContribution(settings, parent, collection, {
     onPreparePackage: settings.managementContext && reportManagementBaseUrl
       ? function (request, context) {
           return openCollectionPreparePackage(settings, request, context);
         }
       : null
+  }).then(function (owner) {
+    contributionOwner = owner;
+    return owner;
   });
   return mountDocsViewerReport({
     appContext: settings.appContext,
@@ -279,7 +286,11 @@ export function mountDocsViewerManageDocumentExtras(context) {
     openMediaPresentation: settings.openMediaPresentation,
     openMediaTarget: settings.openMediaTarget,
     loadMediaTarget: settings.loadMediaTarget,
-    onCollectionDocumentState: settings.onCollectionDocumentState,
+    onCollectionDocumentState: function (state) {
+      settings.onCollectionDocumentState(Object.assign({}, state, {
+        projectDocumentActions: function () { contributionOwner.notify({ type: "action-policy" }); }
+      }));
+    },
     publicPreviewBase: cleanString(routeContext.publicPreviewBase),
     selectedUrl: settings.workspaceConfigState.activeConfig.selectedUrl,
     studioBaseUrl: cleanString(routeContext.studioBaseUrl),

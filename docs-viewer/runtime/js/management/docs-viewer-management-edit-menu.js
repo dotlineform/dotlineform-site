@@ -30,7 +30,7 @@ export function createDocsViewerEditMenuItem(documentRef, item) {
   return button;
 }
 
-/** Render one stable Edit control with visible disabled fallbacks for unsupported actions. */
+/** Render one stable Edit control; its controller projects action visibility. */
 export function renderDocsViewerEditMenu(context) {
   var root = context.existingRoot;
   if (!root || !root.querySelector("#docsViewerManageEditMenu")) {
@@ -105,19 +105,23 @@ export function createDocsViewerEditMenuController(options) {
     var mount = current.menu.querySelector(".docsViewer__editMenuCollectionActions");
     var host = state.context.state === "detail" ? state.context.actionHost : null;
     if (mount.firstChild !== host) mount.replaceChildren(...(host ? [host] : []));
+    mount.querySelectorAll("[data-docs-viewer-action]").forEach(function (button) {
+      button.hidden = options.documentActionState(button.dataset.docsViewerAction, state.target).hidden;
+    });
     var ordinary = state.available && !state.target.collection;
     var deleteState = ordinary ? options.deleteState(state.target.doc_id) : null;
     EDIT_ITEMS.forEach(function (item) {
       if (item.contextAction) return;
       var button = current.menu.querySelector(':scope > [data-docs-viewer-action="' + item.actionId + '"]');
+      var policy = options.documentActionState(item.actionId, state.target);
       var enabled = item.actionId === ACTION_IDS.EDIT_DOCUMENT || item.actionId === ACTION_IDS.REBUILD_DOCUMENT ? state.available
         : item.actionId === ACTION_IDS.COPY_LINK ? ordinary
           : item.actionId === ACTION_IDS.DELETE ? ordinary && deleteState && !deleteState.disabled && !deleteState.hidden : false;
-      button.disabled = !enabled;
-      button.title = enabled ? item.label
+      button.hidden = policy.hidden;
+      button.disabled = !enabled || policy.disabled;
+      button.title = policy.reason || (enabled ? item.label
         : item.actionId === ACTION_IDS.DELETE && deleteState ? deleteState.disabledReason
-          : item.actionId === ACTION_IDS.DELETE && state.target?.collection === "catalogue" ? "Catalogue documents are managed through regeneration."
-            : "This action is unavailable for the displayed document.";
+          : "This action is unavailable for the displayed document.");
     });
   }
   function enabledItems(menu) {
@@ -143,6 +147,7 @@ export function createDocsViewerEditMenuController(options) {
       return true;
     }
     close(false);
+    if (options.documentActionState(actionId, state.target).disabled) return false;
     if (detail.actionTarget?.dataset.docsViewerEditContribution === "true") return true;
     if (detail.actionTarget?.disabled) return false;
     if (actionId === ACTION_IDS.EDIT_DOCUMENT) options.openSource(state.target);

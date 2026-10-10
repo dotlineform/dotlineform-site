@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260927-223812-8042fc
 title: Catalogue Save And Refresh
 added_date: "2026-09-27 22:38:12"
-last_updated: "2026-10-10 21:39:15"
+last_updated: "2026-10-10 22:44:42"
 summary: Current Catalogue Save, local Refresh, reader freshness and recovery boundaries.
 ui_status: stable
 parent_id: d-20260401-000000-a11bf3
@@ -199,7 +199,7 @@ It requires empty v4 updates and publication queues, writes only the updates que
 
 Regenerate requires shared Refresh completion and consumes only true-readiness Work entries. Each selected Work completes source creation/title update/deletion and exact Catalogue document Build, then merges its selection into `working/catalogue-publish-pending.json` (`header.schema: catalogue_publish_pending_v4`) before removal from updates. False Works remain untouched. New publication Work records receive `preview_done: false`; merging preserves shared families, the header and existing progress without inspecting it. Current media flags merge with OR and filenames are filtered against refreshed download references. Failure reports the Work/step and retains unfinished entries. Definition-only changes with no affected Works use Save/Delete → Refresh → Publish; complete relevant Work Regenerate before publishing shared changes that also affect Work documents.
 
-Catalogue documents remain editable. Successful Source Save or **Edit doc → Rebuild** queues the completed document as `metadata: true`, contributes no image/download transfers and preserves existing publication selections/progress. This action does not consume the updates queue. Normal Regenerate preserves an existing body unless the Work title changes; a title change or explicit design maintenance replaces it with the generated Catalogue Entry/Links template. Added prose is therefore not guaranteed to survive regeneration; durable commentary belongs in a separate document linked to the Work.
+Catalogue Work document actions now offer only Star and Copy link under the [central document-action policy](Docs_Viewer_Runtime.md#document-action-policy). Source editing/opening, Draft, independent Rebuild and independent creation/deletion are unavailable through the UI and corresponding direct management operations. Regenerate already builds each completed Work; design maintenance owns deliberate template changes. The shared authoring builder retains document-only publication integration for a future explicitly permitted action, separate from current availability. Normal Regenerate preserves an existing body unless the Work title changes; a title change or explicit design maintenance replaces it with the generated Catalogue Entry/Links template. Durable commentary belongs in a separate document linked to the Work.
 
 Full reconciliation is absent from the normal modal/request. After a deliberate design change, run `python3 docs-viewer/build/reconcile_catalogue_design.py --write` from the repository root using the configured project interpreter. Maintenance reconciles sources, completes one full Catalogue document build and queues completed document changes without inventing image/file transfers. It leaves false-readiness entries unconsumed. Referring ordinary/Context documents require their separate explicit Rebuild. Neither Regenerate nor maintenance rebuilds Search or publishes.
 

@@ -8,6 +8,7 @@ from typing import Any, Dict
 import docs_deploy_repo
 import docs_local_links
 import docs_static_html_export
+from docs_document_actions import load_document_action_policy
 from docs_workspace_config import (
     load_docs_workspace_config,
     select_workspace_stage,
@@ -60,6 +61,7 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
             "source_config_settings_reads": True,
             "source_config_settings_writes": True,
             "source_editor": True,
+            "document_actions": load_document_action_policy(repo_root, selected),
             "local_folder_links": docs_local_links.local_folder_links_capability(repo_root),
             "html_import": docs_import_workspace["available"],
             "docs_export": True,

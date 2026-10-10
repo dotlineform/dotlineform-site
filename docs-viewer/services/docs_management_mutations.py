@@ -11,6 +11,7 @@ from typing import Any, Dict, Optional
 
 import docs_source_model as source_model
 from docs_document_subjects import subject_key_is_canonical
+from docs_document_actions import load_document_action_policy, require_document_action
 from docs_index_order import INDEX_ORDER_FILENAME, exclude_nodes, index_order_text, insert_node, move_node, read_index_order, tree_parent_ids
 from docs_management_document_target import (
     committed_document_record,
@@ -201,6 +202,8 @@ def plan_create(
         require_existing_source_root=False,
     )
     require_document_authoring(resolved_collection.parent_config)
+    if body_markdown is None:
+        require_document_action(repo_root, resolved_collection.parent_config, "new", resolved_collection.request_target())
     collection = resolved_collection.collection
     title = str(body.get("title") or "New Doc").strip() or "New Doc"
     if collection == "catalogue":
@@ -310,6 +313,9 @@ def plan_delete_preview(repo_root: Path, doc_ids: list[str]) -> Dict[str, Any]:
     config = load_docs_working_config(repo_root)
     require_document_authoring(config)
     requested_doc_ids = require_delete_doc_ids(doc_ids)
+    policy = load_document_action_policy(repo_root, config)
+    for doc_id in requested_doc_ids:
+        require_document_action(repo_root, config, "delete", {"doc_id": doc_id}, policy=policy)
     docs = source_model.load_stage_docs_for_config(repo_root, config)
     effective_root_doc_ids, delete_docs = delete_selection_docs(docs, requested_doc_ids)
     delete_documents = [
@@ -471,6 +477,7 @@ def plan_collection_delete_preview(
     require_document_authoring(resolved.parent_config)
     if not resolved.collection:
         raise ValueError("collection is required for collection document delete")
+    require_document_action(repo_root, resolved.parent_config, "delete", resolved.request_target())
 
     document = resolved.document
     source_bytes = document.source_text.encode("utf-8")
@@ -542,6 +549,7 @@ def plan_collection_delete_apply(
     require_document_authoring(resolved.parent_config)
     if not resolved.collection:
         raise ValueError("collection is required for collection document delete")
+    require_document_action(repo_root, resolved.parent_config, "delete", resolved.request_target())
 
     document = resolved.document
     source_bytes = document.source_text.encode("utf-8")

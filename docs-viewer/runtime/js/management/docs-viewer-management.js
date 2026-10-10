@@ -3,6 +3,7 @@ import { staticHtmlExportCapability } from "./docs-viewer-management-capabilitie
 import { createDocsViewerEditMenuController } from "./docs-viewer-management-edit-menu.js";
 import { createDocsViewerManagementContextActions } from "./docs-viewer-management-context-actions.js";
 import { projectDocsViewerManagementActionMenuItem } from "./docs-viewer-management-actions-renderer.js";
+import { managedDocumentActionState } from "./docs-viewer-management-document-actions.js";
 import {
   createDocsViewerManagementCapabilityController,
   publishSupported
@@ -89,10 +90,21 @@ export function createDocsViewerManagementActionResolver(options = {}) {
       selectedDocument: selectedDocument
     };
     if (arguments.length > 1) contextOptions.invocationDocId = targetDocId;
-    return resolveDocsViewerAction(
+    var resolution = resolveDocsViewerAction(
       actionId,
       createDocsViewerManagementActionContext(contextOptions)
     );
+    if (definition && definition.target !== DOCS_VIEWER_ACTION_TARGETS.WORKSPACE) {
+      var target = arguments.length > 1 ? { doc_id: targetDocId }
+        : selectedDocument.documentTarget || { doc_id: selectedDocument.selectedDocId };
+      var policy = options.documentActionState(actionId, target);
+      resolution.hidden = policy.hidden;
+      if (policy.disabled) {
+        resolution.enabled = false;
+        resolution.disabledReason = policy.reason;
+      }
+    }
+    return resolution;
   };
 }
 
@@ -162,6 +174,9 @@ export function initDocsViewerManagement(context) {
   var searchRecent = domains.searchRecent || {};
   var selectedDocument = domains.selectedDocument || {};
   var serviceClient = context.serviceClient || {};
+  function documentActionState(actionId, target) {
+    return managedDocumentActionState(management.managementCapabilities, actionId, target);
+  }
   var routeReload = context.routeReload || {};
   context = Object.assign({}, context, {
     docsViewerConfigUrl: serviceClient.docsViewerConfigUrl || context.docsViewerConfigUrl,
@@ -202,6 +217,7 @@ export function initDocsViewerManagement(context) {
     root: root,
     management: management,
     callbacks: {
+      documentActionState: documentActionState,
       sourceEditingActive: function () {
         return selectedDocument.displayMode === "markdown-source";
       },
@@ -231,7 +247,8 @@ export function initDocsViewerManagement(context) {
   });
   resolveAction = createDocsViewerManagementActionResolver({
     documentIndex: documentIndex,
-    selectedDocument: selectedDocument
+    selectedDocument: selectedDocument,
+    documentActionState: documentActionState
   });
 
   function currentImportDisplayContext() {
@@ -322,6 +339,7 @@ export function initDocsViewerManagement(context) {
   async function openDocumentEditor(target) {
     try {
       var sourceTarget = normalizeManagedDocumentTarget(target);
+      if (documentActionState(DOCS_VIEWER_ACTION_IDS.EDIT_DOCUMENT, sourceTarget).disabled) return;
       hideContextMenu();
       var services = typeof context.sourceEditorServices === "function" ? context.sourceEditorServices() : context.sourceEditorServices;
       var activeTarget = activeSourceTarget();
@@ -513,10 +531,9 @@ export function initDocsViewerManagement(context) {
 
     if (!manageRebuildButton || !manageNewButton) return;
 
-    var editAction = resolveAction(DOCS_VIEWER_ACTION_IDS.EDIT_DOCUMENT);
     var editDisabled = (
       management.managementBusy ||
-      !editAction.enabled
+      !context.documentActionContext().documentTarget
     );
     var publishAvailable = management.managementAvailable && publishSupported(
       management.managementCapabilities
@@ -551,6 +568,7 @@ export function initDocsViewerManagement(context) {
     }
     var authoringAvailable = management.managementAvailable;
     projectDocumentActionButtons(!management.managementChecked || !authoringAvailable, !authoringAvailable || editDisabled);
+    context.documentActionContext().projectDocumentActions?.();
     if (settingsWorkflow) settingsWorkflow.render();
   }
 
@@ -674,8 +692,10 @@ export function initDocsViewerManagement(context) {
     },
     callbacks: {
       contextActionStates: indexController.actionStates,
+      documentActionState: documentActionState,
       onContextAction: function (actionId, targetDocId, restoreFocus) {
         if (!actionController) return;
+        if (documentActionState(actionId, { doc_id: targetDocId }).disabled) return;
         if (indexController.handleAction(actionId, targetDocId, restoreFocus)) return;
         if (actionId === DOCS_VIEWER_ACTION_IDS.NEW_SIBLING) {
           actionController.handleCreateRelatedDoc("sibling", targetDocId);
@@ -730,6 +750,7 @@ export function initDocsViewerManagement(context) {
     context: context,
     refs: {},
     resolveAction: resolveAction,
+    documentActionState: documentActionState,
     callbacks: {
       getSettingsWorkflow: function () {
         return settingsWorkflow;
@@ -752,6 +773,7 @@ export function initDocsViewerManagement(context) {
     selectedDocument: selectedDocument,
     documentIndex: documentIndex,
     actions: actionController,
+    documentActionState: documentActionState,
     documentActionContext: context.documentActionContext,
     activeViewState: context.activeViewState,
     isManagementContext: context.isManagementContext,
@@ -770,6 +792,7 @@ export function initDocsViewerManagement(context) {
   editMenuController = createDocsViewerEditMenuController({
     root: root,
     contextActions: contextActions,
+    documentActionState: documentActionState,
     documentActionContext: context.documentActionContext,
     activeViewState: context.activeViewState,
     editControl: function () { return projectedReportControls?.editDocument; },
@@ -853,6 +876,7 @@ export function initDocsViewerManagement(context) {
 
   return {
     applyConfig: applyConfig,
+    documentActionState: documentActionState,
     regenerateCatalogue: actionController.handleRegenerateCatalogue,
     handleDocumentKeydown: function (event) {
       return editMenuController.handleKeydown(event) || eventRouter.handleDocumentKeydown(event);

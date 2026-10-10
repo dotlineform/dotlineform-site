@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260602-234732-ea94b3
 title: Configuration Map
 added_date: "2026-06-02 23:47:32"
-last_updated: "2026-08-14 21:18:02"
+last_updated: "2026-10-10 22:37:48"
 parent_id: d-20260419-000000-d2e47b
 
 ---
@@ -18,6 +18,7 @@ parent_id: d-20260419-000000-d2e47b
 | Tag group order and coverage/RAG policy | `studio/data/config/tags/tag-management.json` | [Tag Source Data](Tag_Source_Data.md) |
 | Catalogue media/source pipeline | `_data/pipeline.json` | [Catalogue Media Pipeline Config](Catalogue_Media_Pipeline_Config.md) |
 | Docs Viewer scopes, routes, defaults, reports, and service schema | `docs-viewer/config/` plus the public route subset in `site/docs-viewer/config/` | [Docs Viewer Configuration](Configuration_And_Extension_Points.md) |
+| Docs Viewer document-action restrictions | `docs-viewer/config/management/document-actions.json` | [Runtime: Document Action Policy](Docs_Viewer_Runtime.md#document-action-policy) |
 | Integrated document-package profiles | `docs-viewer/config/document-packages/profiles.json` | [Documents Prepare Profiles](Package_Prepare_Profiles.md) |
 | Public-site validation and shared settings | `site-tools/config/site-tools.json` | source file and consumers |
 | Catalogue search build/runtime policy | `studio/services/catalogue/search/build_config.json` and `site/assets/data/search/policy.json` | focused search config docs |

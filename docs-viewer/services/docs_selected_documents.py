@@ -9,6 +9,7 @@ from docs_document_images import has_document_thumbnail
 from docs_document_subjects import project_reader_subject, subject_key_is_canonical
 from docs_source_model import write_text_atomic
 from docs_workspace_config import COLLECTION_ID_PATTERN, document_source_path
+from docs_document_actions import require_document_action
 
 
 SELECTED_FILENAME = "selected.json"
@@ -123,6 +124,7 @@ def set_selected(repo_root: Path, body: dict[str, Any], *, dry_run: bool = False
         raise ValueError("Set Selected requires doc_id and boolean selected, with optional collection")
     resolved = resolve_managed_document_target(repo_root, {key: value for key, value in body.items() if key != "selected"})
     require_document_authoring(resolved.parent_config)
+    require_document_action(repo_root, resolved.parent_config, "set-selected", resolved.request_target())
     payload = read_selected(resolved.parent_config)
     rows = [row for row in payload["docs"] if (row.get("collection", ""), row["doc_id"]) != (resolved.collection, resolved.doc_id)]
     if body["selected"]:

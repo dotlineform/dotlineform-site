@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261009-110914-712f45
 title: Incremental Updates
 added_date: "2026-10-09 11:09:14"
-last_updated: "2026-10-10 21:46:36"
+last_updated: "2026-10-10 22:51:38"
 summary: Active delivery of incremental Catalogue mutation, Refresh and Regenerate steps, with Work-by-Work Preview and Deploy, one publication progress flag and a final shared-output pass.
 ui_status: active
 parent_id: d-20261007-221414-48ff3f
@@ -32,12 +32,14 @@ The next gate is user manual acceptance under IU-6. Test work remains separately
 
 ## Current State
 
+The Catalogue editing follow-on is complete and accepted under [Document Action Policy](Document_Action_Policy.md) on 2026-10-10; individual manual menu scenarios were not itemised. Catalogue Work documents now offer only Star and Copy link; their direct editing/Rebuild operations are excluded by the central management policy. References below to direct Source Save/Rebuild record this original delivery's supported behavior.
+
 The exact Gallery/Series queue follow-on is complete and accepted on 2026-10-10 under [Gallery And Series Incremental Updates](Gallery_And_Series_Incremental_Updates.md). The user confirmed the Refresh queue handoff; shared Publish and partial failures were not itemised as tested. Current queues use v4 and explicit shared selections. The v3 schemas/shared-flag descriptions below record this original Work delivery; current durable queue ownership is [Catalogue Save And Refresh](../Catalogue_Save_And_Refresh.md) and [Catalogue Deployment](../Catalogue_Deployment.md).
 
 - Studio Save writes complete prepared image/thumbnail sets and new/replacement downloads into Projects-owned `catalogue/media-staging/`. Independent canonical flags select staging or Working for each media family/file.
 - Known mutation effects accumulate in `working/catalogue-updates-pending.json`; Refresh completes selected false-readiness metadata/media handoffs and clears staging flags before readiness becomes true.
 - Queue-only Regenerate completes refreshed Catalogue sources/documents, merges publication selections and removes completed updates entries. Explicit design maintenance performs full source/document reconciliation without inventing media changes.
-- Direct Catalogue Source Save/Rebuild queues the completed document as metadata only, preserving already queued media and initialized publication progress.
+- Catalogue document generation and queue completion are owned by Regenerate and explicit design maintenance; direct Source Save/Rebuild is excluded by the current central action policy.
 - Publish completes each queued Work's Preview/Deploy, then builds/deploys shared output once. Unchanged Catalogue documents and Work metadata are retained from completed Preview; stage-local media is excluded from snapshot scanning/replacement.
 - Catalogue prose survives ordinary Regenerate unless the Work title changes. A title change or explicit design maintenance replaces the body with its generated template.
 
@@ -517,6 +519,6 @@ Gate: the complete agreed workflow is accepted and durable ownership documentati
 
 ## Follow-ons
 
-- Remove Catalogue document editing from the UI so Catalogue content is authored through Work edits and generated templates. Determine the complete editing surface in that bounded follow-on; exact-document Rebuild remains useful for applying current generated inputs.
+- [Document Action Policy](Document_Action_Policy.md) is complete and accepted on 2026-10-10, covering Catalogue editing removal and the wider collection-host/private-report restrictions. Catalogue Work documents retain only Star and Copy link; Regenerate/design maintenance own their document builds. Individual manual menu scenarios were not itemised.
 - Incremental Publish of normal and non-Catalogue collection docs.
 - [Catalogue Refresh Index Updates](Catalogue_Refresh_Index_Updates.md) is complete and accepted on 2026-10-10: normal Refresh merges queued rows, retains only justified projection fields and trusts Save-owned canonical checks. Further Publishing/storage optimisation remains separate.

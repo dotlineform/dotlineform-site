@@ -150,12 +150,22 @@ export function createDocsViewerManagementIndexController(options = {}) {
   }
 
   function actionStates(targetDocId) {
-    return {
+    var states = {
       [DOCS_VIEWER_ACTION_IDS.EXPORT_DOCS]: snapshotExportActionControlState(targetDocId),
       [DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE]: preparePackageActionControlState(targetDocId),
       [DOCS_VIEWER_ACTION_IDS.DELETE]: mutationActionControlState(DOCS_VIEWER_ACTION_IDS.DELETE, targetDocId),
       [DOCS_VIEWER_ACTION_IDS.POSITION]: mutationActionControlState(DOCS_VIEWER_ACTION_IDS.POSITION, targetDocId)
     };
+    Object.values(DOCS_VIEWER_ACTION_IDS).forEach(function (actionId) {
+      var policy = callbacks.documentActionState(actionId, { doc_id: targetDocId });
+      var state = states[actionId] || {};
+      states[actionId] = {
+        hidden: policy.hidden || Boolean(state.hidden),
+        disabled: policy.disabled || Boolean(state.disabled),
+        disabledReason: policy.reason || state.disabledReason || ""
+      };
+    });
+    return states;
   }
 
   function loadPreparePackageWorkflow() {

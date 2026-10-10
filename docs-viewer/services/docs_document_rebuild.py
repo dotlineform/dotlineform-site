@@ -3,6 +3,7 @@
 from pathlib import Path
 from typing import Any
 
+from docs_document_actions import require_document_action
 from docs_catalogue_media import read_catalogue_work
 from docs_management_document_target import ManagedDocumentTarget, resolve_managed_document_target
 from docs_workspace_config import require_document_authoring
@@ -13,14 +14,16 @@ from studio.services.catalogue.catalogue_pending_publication import merge_comple
 def rebuild_document(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     """Await document/Links rendering from current inputs; omit Search and media production."""
     resolved = resolve_managed_document_target(repo_root, body)
+    require_document_action(repo_root, resolved.parent_config, "rebuild-document", resolved.request_target())
     return rebuild_resolved_document(repo_root, resolved)
 
 
 def rebuild_resolved_document(repo_root: Path, resolved: ManagedDocumentTarget) -> dict[str, Any]:
-    """Build the validated target and queue completed Catalogue document changes.
+    """Build an authorized authoring target; Source Save/Draft own their guards.
 
-    Source Save uses this same owner. Document-only publication contributes no
-    media changes and preserves existing media selections and Publish progress.
+    The configured policy currently excludes Catalogue direct authoring. Retain
+    its document-only queue integration if a later policy explicitly allows it;
+    generation and publication completion remain coupled for an allowed action.
     """
     require_document_authoring(resolved.parent_config)
     if resolved.collection:

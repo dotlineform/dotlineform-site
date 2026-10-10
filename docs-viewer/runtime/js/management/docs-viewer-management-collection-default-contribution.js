@@ -78,7 +78,6 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     ? options.markdownLinkForDocument
     : null;
   var managementContext = Boolean(options.managementContext);
-  var allowDelete = options.allowDelete !== false;
   var selectionOwner = options.selectionOwner || createDocsViewerCollectionSelectionOwner();
   var currentDocuments = [];
   var listToolbar = null;
@@ -90,9 +89,11 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
 
   function prepareResolution() {
     var docIds = selectionOwner.selectedDocIds();
+    var policy = options.documentActionState(DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE, selectionOwner.collection());
     return {
-      enabled: docIds.length > 0,
-      disabledReason: docIds.length ? "" : "Select one or more documents.",
+      enabled: !policy.disabled && docIds.length > 0,
+      disabledReason: policy.reason || (docIds.length ? "" : "Select one or more documents."),
+      policy: policy,
       targetDocIds: docIds
     };
   }
@@ -124,7 +125,8 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
   function projectSelection() {
     var snapshot = selectionOwner.snapshot();
     var available = selectionOwner.available();
-    var active = available && snapshot.selectionModeActive;
+    var resolution = prepareResolution();
+    var active = available && snapshot.selectionModeActive && !resolution.policy.hidden;
     var eligible = eligibleDocIds();
     var selected = new Set(snapshot.selectedDocIds);
     var allSelected = eligible.length > 0 && eligible.every(function (docId) {
@@ -147,13 +149,13 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     }
     if (!listToolbar) return snapshot;
 
-    listToolbar.actionsButton.disabled = !available;
+    listToolbar.actionsHost.hidden = resolution.policy.hidden;
+    listToolbar.actionsButton.disabled = !available || resolution.policy.disabled;
     listToolbar.selectionControl.hidden = !active;
     listToolbar.selectAllButton.disabled = !active || allSelected || eligible.length === 0;
     listToolbar.clearButton.disabled = !active || selected.size === 0;
     listToolbar.doneButton.disabled = !active;
 
-    var resolution = prepareResolution();
     var disabledReason = !onPreparePackage
       ? "Collection package preparation is unavailable."
       : !resolution.enabled
@@ -161,6 +163,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
         : prepareInFlight ? "Collection package preparation is in progress." : "";
     var label = "Prepare package…";
     var accessibleLabel = disabledReason ? label + " " + disabledReason : label;
+    listToolbar.prepareButton.hidden = resolution.policy.hidden;
     listToolbar.prepareButton.disabled = Boolean(disabledReason);
     listToolbar.prepareButton.title = accessibleLabel;
     listToolbar.prepareButton.setAttribute("aria-label", accessibleLabel);
@@ -391,6 +394,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
 
     listToolbar = {
       actionsButton: actionsButton,
+      actionsHost: actionsHost,
       clearButton: clearButton,
       document: documentRef,
       doneButton: doneButton,
@@ -475,7 +479,8 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     var target = settings.target;
     if (!host || !target) return;
 
-    if (markdownLinkForDocument && typeof settings.registerAction === "function") {
+    var copyPolicy = options.documentActionState(DOCS_VIEWER_ACTION_IDS.COPY_LINK, target);
+    if (!copyPolicy.hidden && markdownLinkForDocument && typeof settings.registerAction === "function") {
       var copyRegistration = settings.registerAction({
         id: DOCS_VIEWER_ACTION_IDS.COPY_LINK,
         placement: "detail-toolbar",
@@ -484,6 +489,8 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
         emptyState: "omitted",
         refreshEffect: "none",
         handler: function (actionTarget) {
+          var policy = options.documentActionState(DOCS_VIEWER_ACTION_IDS.COPY_LINK, actionTarget);
+          if (policy.disabled) throw new Error(policy.reason);
           var markdownLink = markdownLinkForDocument(
             actionTarget,
             settings.document || {}
@@ -515,9 +522,10 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
       host.appendChild(copyButton);
     }
 
+    var deletePolicy = options.documentActionState(DOCS_VIEWER_ACTION_IDS.DELETE, target);
     if (
       !managementContext
-      || !allowDelete
+      || deletePolicy.hidden
       || typeof settings.commitDeletedDocument !== "function"
       || typeof settings.registerAction !== "function"
     ) return;
@@ -525,7 +533,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
       id: DOCS_VIEWER_ACTION_IDS.DELETE,
       placement: "detail-toolbar",
       targetKind: "validated-detail",
-      capability: true,
+      capability: { available: !deletePolicy.disabled, reason: deletePolicy.reason },
       emptyState: "omitted",
       refreshEffect: "commit-deleted-document",
       handler: function (actionTarget) {

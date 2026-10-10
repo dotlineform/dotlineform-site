@@ -39,6 +39,7 @@ from docs_collection_customisations import (  # noqa: E402
 )
 from docs_document_subjects import AUTHORING_SUBJECT_FIELDS, FOLDER_PATH_FIELD  # noqa: E402
 from docs_document_rebuild import rebuild_resolved_document  # noqa: E402
+from docs_document_actions import require_document_action  # noqa: E402
 
 
 def normalize_source_body(value: Any) -> str:
@@ -61,6 +62,7 @@ def read_source_document(repo_root: Path, params: Dict[str, list[str]]) -> Dict[
     """Load the complete source snapshot for one exact editor session."""
     request_target = managed_document_target_request({key: values[0] if values else "" for key, values in params.items()})
     resolved = resolve_managed_document_target(repo_root, request_target)
+    require_document_action(repo_root, resolved.parent_config, "edit-document", resolved.request_target())
     target = resolved.document
     source_text = target.source_text
     _, front_matter, _ = source_model.split_source_text(source_text, source_name=target.path.name, strict=True)
@@ -159,6 +161,7 @@ def read_source_context(repo_root: Path, body: Dict[str, Any]) -> Dict[str, Any]
     """Project or update an unsaved Subject buffer without persistence or a browser parser."""
     target = source_candidate_target({key: value for key, value in body.items() if key != "subject_fields"})
     resolved = resolve_managed_document_collection(repo_root, collection=target.get("collection"))
+    require_document_action(repo_root, resolved.parent_config, "edit-document", target)
     _, metadata = validate_source_candidate(repo_root, target, body["source_text"], resolved)
     available = source_subject_assignment_available(resolved)
     payload: Dict[str, Any] = {
@@ -197,6 +200,7 @@ def save_source_document(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
     """Persist one validated buffer and await its exact document/Links generation."""
     request_target = source_candidate_target(body)
     resolved = resolve_managed_document_target(repo_root, request_target)
+    require_document_action(repo_root, resolved.parent_config, "markdown-save", resolved.request_target())
     next_source_text, _ = validate_source_candidate(repo_root, request_target, body["source_text"], resolved)
     target = resolved.document
     # Textareas normalize line endings; retain the loaded header's newline convention.
@@ -312,6 +316,7 @@ def open_source_doc(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dic
         repo_root,
         managed_document_target_request(body),
     )
+    require_document_action(repo_root, resolved.parent_config, "open-vscode" if editor == "vscode" else "open", resolved.request_target())
     target = resolved.document
     preferred_app = open_source_path(
         repo_root,
