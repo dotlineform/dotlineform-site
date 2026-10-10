@@ -98,13 +98,16 @@ def validate_catalogue_media_config(payload: dict[str, Any]) -> dict[str, Any]:
 def read_catalogue_work_index(repo_root: Path) -> dict[str, dict[str, Any]]:
     """Read the generated Work inventory without loading Series or by-ID records."""
     payload = _read_generated(repo_root, "works/works_index.json")
-    works = payload.get("works")
-    if not isinstance(works, dict):
+    works, header = payload.get("works"), payload.get("header")
+    if (not isinstance(works, dict) or not isinstance(header, dict)
+            or header.get("schema") != "catalogue_works_index_v2"
+            or type(header.get("count")) is not int or header["count"] != len(works)):
         raise ValueError("Generated Catalogue Work index is unavailable")
     for key, work in works.items():
         work_id = _work_identity(key)
-        if not isinstance(work, dict) or work.get("work_id") != work_id:
+        if not isinstance(work, dict) or set(work) != {"work_id", "title"} or work.get("work_id") != work_id:
             raise ValueError("Generated Work index identity is mismatched")
+        _text(work["title"], "title")
     return works
 
 
@@ -147,11 +150,10 @@ def read_catalogue_media_targets(repo_root: Path) -> dict[str, Any]:
     """Expose Work and Gallery search identities from generated indexes."""
     targets = []
     for work_id, work in read_catalogue_work_index(repo_root).items():
-        year = work.get("year_display")
         targets.append({
             "family": "catalogue", "target_type": "work", "target_id": work_id,
             "title": _text(work.get("title"), "title"),
-            "meta": [year] if isinstance(year, str) and year else [],
+            "meta": [],
         })
     payload = _read_generated(repo_root, "galleries/galleries_index.json")
     galleries, header = payload.get("galleries"), payload.get("header")

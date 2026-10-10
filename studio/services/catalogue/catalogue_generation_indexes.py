@@ -20,6 +20,14 @@ class CatalogueGenerationIndexError(ValueError):
     """Raised when source records cannot produce valid generated indexes."""
 
 
+def build_work_index_row(*, work_id: str, work_record: Mapping[str, Any]) -> Dict[str, Any]:
+    """Project only the identity and title consumed by Work target lookup."""
+    title = coerce_string(work_record.get("title"))
+    if title is None:
+        raise CatalogueGenerationIndexError(f"Catalogue Work {work_id} has no index title")
+    return {"work_id": work_id, "title": title}
+
+
 @dataclass(frozen=True)
 class SeriesWorkIndexContext:
     series_title_by_id: Dict[str, str]

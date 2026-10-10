@@ -3,8 +3,8 @@ draft: false
 doc_id: d-20261010-143841-fba69a
 title: Catalogue Refresh Index Updates
 added_date: "2026-10-10 14:38:41"
-last_updated: "2026-10-10 17:17:24"
-summary: Gallery index count removed and Catalogue token pickers simplified to grey ID-first rows without subtitles; broader selected-row Refresh remains proposed.
+last_updated: "2026-10-10 17:33:57"
+summary: Work index reduced to ID/title, Gallery index count removed and Catalogue token pickers simplified; broader selected-row Refresh remains proposed.
 ui_status: proposed
 parent_id: d-20260428-000000-f5ff18
 ---
@@ -14,7 +14,7 @@ parent_id: d-20260428-000000-f5ff18
 
 Make normal Refresh update the rows affected by supplied Catalogue mutations, preserving unaffected rows. Remove fields and dependency updates whose consumer benefit does not justify maintaining them. A single changed record should not trigger projection of the complete Catalogue or complete relationship report.
 
-This is a proposed delivery, parented to [Planned Features](../Planned_Features.md), following the accepted [Gallery And Series Incremental Updates](Gallery_And_Series_Incremental_Updates.md). The user requested this proposal on 2026-10-10 and subsequently approved the Gallery count/subtitle cleanup first; that subset is delivered below. Broader row-update implementation, remaining field decisions and test work are not approved by that cleanup request. [Catalogue Save And Refresh](../Catalogue_Save_And_Refresh.md) and [Catalogue Indexes And Payloads](../Catalogue_Indexes_And_Payloads.md) own current behavior and receive the lasting changes at delivery.
+This is a proposed delivery, parented to [Planned Features](../Planned_Features.md), following the accepted [Gallery And Series Incremental Updates](Gallery_And_Series_Incremental_Updates.md). The user requested this proposal on 2026-10-10 and subsequently approved the Gallery count/subtitle cleanup, picker refinements and removal of unused compact Work fields; those subsets are delivered below. Broader row-update implementation, remaining header decisions and test work remain proposed. [Catalogue Save And Refresh](../Catalogue_Save_And_Refresh.md) and [Catalogue Indexes And Payloads](../Catalogue_Indexes_And_Payloads.md) own current behavior and receive the lasting changes at delivery.
 
 The reason for this work is an operation whose scope follows its supplied changes. A measured slowdown is not a prerequisite for removing unnecessary rebuilding. Performance claims still require evidence; this proposal makes no measured speedup claim.
 
@@ -34,7 +34,7 @@ Paths starting with `working/` or `preview/` are relative to the configured `$DO
     - Unselected aggregate files are skipped.
     - Shared output is compared with saved content ignoring generation time; unchanged output retains its bytes and timestamp. This avoids unnecessary writes after complete construction, but does not avoid that construction.
 
-The [generator](../../../studio/services/catalogue/generate_work_pages.py) projects every Work through the full scalar Work projection when the compact Works index is selected. After the Gallery count cleanup, it constructs a temporary member map only for selected Gallery by-ID output; index-only Refresh does not need that membership pass. For selected Gallery records it still builds a general Series/Work context, including Series titles, project-folder groups and Series membership maps, although the emitted member rows contain only Work identity, title and year fields.
+The [generator](../../../studio/services/catalogue/generate_work_pages.py) projects the complete compact Works index directly from canonical Work ID/title when selected; full scalar Work projection runs only for selected by-ID records. After the Gallery count cleanup, it constructs a temporary member map only for selected Gallery by-ID output; index-only Refresh does not need that membership pass. For selected Gallery records it still builds a general Series/Work context, including Series titles, project-folder groups and Series membership maps, although the emitted member rows contain only Work identity, title and year fields.
 
 The [Refresh owner](../../../studio/services/catalogue/catalogue_refresh_service.py), source loader and generator also repeat Gallery loading/validation: the Work/Series source loader reads and validates Galleries, Refresh reads them again, and the generator validates the loaded structures again. Full Work/Series source validation precedes projection. These passes must be assessed by their purpose, rather than automatically retained around a smaller row updater.
 
@@ -60,9 +60,9 @@ The current Work index, `working/generated/catalogue/works/works_index.json`, su
 - Catalogue image and Work-subject selection offer Works only;
 - Media View links offer Works and Galleries. Gallery targets come from `working/generated/catalogue/galleries/galleries_index.json` without subtitle metadata. Both Work-only pickers currently fetch the combined Work/Gallery lookup and filter it in the browser; this shared loading is not a reason to restore Gallery counts.
 
-Explicit Catalogue design maintenance also uses the Work index's Work-ID inventory, then reads each selected Work's by-ID payload at `working/generated/catalogue/works/index/<work_id>.json`. The inspected production consumers do not use the compact index row's numeric `year` or `series_id`. Insert doc link reuses the list presentation component but reads a separate document-target lookup; it does not consume these Catalogue indexes. Other directives do not acquire a Catalogue lookup dependency merely because they are tokens.
+Explicit Catalogue design maintenance also uses the Work index's Work-ID inventory, then reads each selected Work's by-ID payload at `working/generated/catalogue/works/index/<work_id>.json`. The inspected production consumers did not use the compact index row's numeric `year` or `series_id`. The target service copied `year_display` into subtitle metadata, but all three Catalogue pickers now use ID/title rows and search matching ignores metadata, so that field had no remaining functional purpose in the compact index. Insert doc link reuses the list presentation component but reads a separate document-target lookup; it does not consume these Catalogue indexes. Other directives do not acquire a Catalogue lookup dependency merely because they are tokens.
 
-**Proposed decision:** retain `work_id` and `title`; confirm the remaining compact-field decisions at implementation. The inspected consumers do not need index-row `year` or `series_id`; these fields remain in their authoritative and by-ID owners where used. A Series assignment change would no longer select the Work search index solely to maintain a duplicated Series identity. Project the retained compact fields directly, rather than constructing a full Work record and discarding most of it.
+**Implemented decision:** user approved removal of compact-row `year`, `year_display` and `series_id` on 2026-10-10. Rows retain only `work_id` and `title` under `catalogue_works_index_v2`; the lookup reader requires v2 and exact ID/title rows without a v1 fallback. Work lookup metadata is empty. The removed fields remain in their authoritative and by-ID owners where used. Work create/delete/title changes select this index; year and Series-only changes no longer select it. The retained fields are projected directly without constructing a full Work record. Selected-row merging remains proposed.
 
 ### Headers, Versions And Other Derived Fields
 
@@ -119,15 +119,19 @@ Field removals require explicit output schema changes and one agreed baseline co
 
 [x] **RI-UI — Gallery Count And Subtitle Cleanup:** user approved this subset on 2026-10-10. Generator, target reader and membership-change selection are updated; a focused Refresh from empty queues converted only the Working Gallery index to v2 and queued it for the next Publish. Changed-source lint, syntax and source review passed. The production reader accepted all 300 ID/title rows and returned empty Gallery subtitle metadata while retaining Work year metadata. No tests, browser interaction or Publish ran. Restart the owning services and reload their pages for manual modal review. Broader steps below remain proposed.
 
-[x] **RI-UI-2 — Catalogue Token Picker Rows:** user requested grey ID-first rows, removal of visible type labels and Work year subtitles in Catalogue image and Media View link on 2026-10-10. Both Add/Edit modes now opt into the shared picker's ID/title layout; its default presentation remains with subject/document-link callers. Two changed JavaScript modules passed lint and bounded source review; whitespace checks passed. Local source-editor CSS supplies the two-column layout; the follow-up uses the search icon's theme colour and the smaller caption font size for IDs. These management modules/styles are outside the public projection inventory. No generated data, queues, tests or browser interaction were changed/run for this UI subset; force-reload Docs Viewer for manual visual review.
+[x] **RI-UI-2 — Catalogue Token Picker Rows:** user requested grey ID-first rows, removal of visible type labels and Work year subtitles in Catalogue image and Media View link on 2026-10-10. Both Add/Edit modes now opt into the shared picker's ID/title layout; Work-subject selection also uses that layout, while document-link callers retain the default presentation. Two changed JavaScript modules passed lint and bounded source review; whitespace checks passed. Local source-editor CSS supplies the two-column layout; the follow-up uses the search icon's theme colour and the smaller caption font size for IDs. These management modules/styles are outside the public projection inventory. No generated data, queues, tests or browser interaction were changed/run for this UI subset; force-reload Docs Viewer for manual visual review.
 
 [x] **RI-UI-3 — Numeric ID Search:** user requested searches that ignore leading zeroes on 2026-10-10. The shared `semantic-token-targets.js` matcher normalises numeric IDs and numeric query tokens for identity comparisons, including type-qualified and prefix matching, while retaining exact-match priority and existing title matching. Catalogue image, Media View link and Work-subject selection share this behaviour. Canonical/displayed IDs and saved token identities retain their leading zeroes. Changed-source lint, bounded source review and whitespace checks passed; no generated data, queues, tests or browser interaction were changed/run. Force-reload Docs Viewer for manual review.
+
+[x] **RI-WI — Compact Work Fields:** user approved removal of `year`, `year_display` and `series_id` on 2026-10-10. Generator and strict v2 reader now use ID/title only, lookup metadata is empty, and year/Series-only changes no longer select the index. Changed-source lint and syntax passed. A focused Refresh converted only the Working Work index; the production reader accepted 4,619 Work rows and the existing 300 Gallery rows. The Work index is queued for the next Publish. No tests, browser interaction or Publish ran; restart the owning services and reload their pages.
+
+[x] **RI-WI-R — Code Review:** bounded final-diff review covered direct compact projection, producer/reader schema agreement, shared mutation selectors and the existing Refresh/publication handoff. No unresolved findings or compatibility paths were found within this slice. Source review confirmed that Gallery member year fields and full by-ID Work projection retain their owners; year/Series mutation execution and failure paths were not exercised.
 
 **RI-0 — Readiness:**
 
 - agree the bounded row-update outcome, consumer-backed field removals, validation ownership and cutover.
 
-Gate: the user approves the implementation slice and the Gallery subtitle/header decisions are explicit. Read-only review has identified current consumers and repeated construction; no runtime changes have been made.
+Gate: the user approves the broader row-update implementation slice and the remaining header decisions are explicit. Review has identified current consumers and repeated construction; delivered runtime changes are limited to the subsets above.
 
 [ ] **RI-1 — Implement:**
 
@@ -148,4 +152,4 @@ Gate: selected evidence and remaining limits are recorded; existing tests are in
 
 Gate: the complete outcome is accepted, schema/publication consequences are accounted for and no implicit full-rebuild fallback remains. Live Publish, Git actions and public deployment retain their explicit-action boundaries.
 
-Current record: Gallery count/subtitle cleanup is implemented and its focused Working conversion completed at `2026-10-10T14:35:54Z`. Only `galleries/galleries_index.json` was written; no Work/report/media handoff was selected. The updates queue is empty and the publication queue selects that Gallery index, preserving its prior Work-publication timestamp. No canonical data, documents, Search, Preview or repository public payloads were changed, and no tests, browser interaction, Publish, commit or push ran. Remaining row-update and field/header proposals are unchanged.
+Current record: compact Work-field cleanup is implemented and its focused Working conversion completed at `2026-10-10T16:33:57Z`. Only `works/works_index.json` was written; no Work/report/media handoff was selected. The updates queue is empty and the publication queue selects only that Work index, preserving its prior Work-publication timestamp. No canonical data, documents, Search, Preview or repository public payloads were changed, and no tests, browser interaction, Publish, commit or push ran. Broader row updates and aggregate-header decisions remain proposed.

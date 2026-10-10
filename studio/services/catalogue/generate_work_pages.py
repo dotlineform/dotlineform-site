@@ -22,7 +22,7 @@ from catalogue.catalogue_shared_changes import WORK_INDEX, GALLERY_INDEX, RELATI
 
 
 def _index(family: str, items: Mapping[str, Any], timestamp: str) -> dict[str, Any]:
-    schema = "catalogue_galleries_index_v2" if family == "galleries" else f"catalogue_{family}_index_v1"
+    schema = f"catalogue_{family}_index_v{2 if family in ('works', 'galleries') else 1}"
     return {"header": {"schema": schema, "version": compute_payload_version({"schema": schema, family: items}),
                        "generated_at_utc": timestamp, "count": len(items)}, family: dict(items)}
 
@@ -54,20 +54,15 @@ def catalogue_payloads(
     member_records = {wid: records.works[wid] for gid in selected_galleries for wid in works_by_gallery[gid]}
     context = indexes.build_series_work_index_context(series_records=records.series, work_records=member_records) if selected_galleries else None
     payloads: dict[str, dict[str, Any]] = {}
-    works_index: dict[str, Any] = {}
     media_config = json.loads((repo_root / "site-tools/config/site-tools.json").read_text())["media"]
     if "media-config.json" in shared:
         payloads["media-config.json"] = catalogue_media_policy(repo_root, timestamp=timestamp)
-    projection_ids = records.works.keys() if work_ids is None or WORK_INDEX in shared else sorted(work_ids)
+    projection_ids = records.works.keys() if work_ids is None else sorted(work_ids)
     for wid in projection_ids:
         source = records.works[wid]
         work = compact_json_object({"work_id": wid, **projection.build_work_record_projection(source)})
         if source.get("series_id"):
             work["series_id"] = source["series_id"]
-        if WORK_INDEX in shared:
-            works_index[wid] = {key: work[key] for key in ("work_id", "title", "year", "year_display", "series_id") if key in work}
-        if work_ids is not None and wid not in work_ids:
-            continue
         if source.get("links"):
             work["links"] = source["links"]
         if source.get("downloads"):
@@ -87,7 +82,10 @@ def catalogue_payloads(
             member_works=indexes.build_member_work_records(context=context, work_ids=works_by_gallery[gid]), generated_at_utc=timestamp,
         )
     if WORK_INDEX in shared:
-        payloads[WORK_INDEX] = _index("works", works_index, timestamp)
+        payloads[WORK_INDEX] = _index("works", {
+            wid: indexes.build_work_index_row(work_id=wid, work_record=records.works[wid])
+            for wid in sorted(records.works)
+        }, timestamp)
     if GALLERY_INDEX in shared:
         payloads[GALLERY_INDEX] = _index("galleries", {
             gid: {"gallery_id": gid, "title": galleries.galleries[gid]["title"]}
