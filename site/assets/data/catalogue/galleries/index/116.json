@@ -1,10 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v2",
-    "version": "blake2b-cac70d905a15babf97170c0c8d0c0081",
-    "generated_at_utc": "2026-10-10T16:48:32Z",
-    "gallery_id": "116",
-    "count": 17
+    "schema": "gallery_record_v3",
+    "generated_at_utc": "2026-10-10T17:00:02Z",
+    "gallery_id": "116"
   },
   "gallery": {
     "gallery_id": "116",

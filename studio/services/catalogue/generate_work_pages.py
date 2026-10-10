@@ -152,9 +152,7 @@ def generate_catalogue_json(
                 if not complete:
                     raise
                 old = None
-            if (complete and same_generated_content(old, payload)) or (
-                not complete and isinstance(old, dict) and old.get("header", {}).get("version") == payload["header"]["version"]
-            ):
+            if same_generated_content(old, payload):
                 continue
         written.append(relative)
         if write:

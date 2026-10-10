@@ -15,7 +15,7 @@ from catalogue.catalogue_generation_common import (
 
 
 WORK_RECORD_SCHEMA_VERSION = "work_record_v11"
-GALLERY_RECORD_SCHEMA_VERSION = "gallery_record_v2"
+GALLERY_RECORD_SCHEMA_VERSION = "gallery_record_v3"
 
 
 # Define the Works source-record projection once so adding a new field is a one-line change.
@@ -100,14 +100,11 @@ def build_gallery_json_payload(
     if public_record.get("gallery_id") != gallery_id:
         raise ValueError(f"gallery.gallery_id must match exact payload target {gallery_id}")
     public_member_works = [compact_json_object(dict(work)) for work in member_works]
-    version_input = {"schema": GALLERY_RECORD_SCHEMA_VERSION, "gallery": public_record, "member_works": public_member_works}
     return {
         "header": {
             "schema": GALLERY_RECORD_SCHEMA_VERSION,
-            "version": compute_payload_version(version_input),
             "generated_at_utc": generated_at_utc,
             "gallery_id": gallery_id,
-            "count": len(public_member_works),
         },
         "gallery": public_record,
         "member_works": public_member_works,

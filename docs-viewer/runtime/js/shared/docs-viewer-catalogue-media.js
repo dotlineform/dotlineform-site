@@ -37,10 +37,15 @@ function galleryRecord(payload, galleryId) {
   catalogueGalleryTarget(galleryId);
   var gallery = payload && payload.gallery;
   var header = payload && payload.header;
-  if (!gallery || gallery.gallery_id !== galleryId || !header || header.gallery_id !== galleryId
-    || header.schema !== "gallery_record_v2") throw new Error("Catalogue data does not match the selected Gallery.");
+  var headerKeys = header && typeof header === "object" && !Array.isArray(header) ? Object.keys(header) : [];
+  if (!gallery || gallery.gallery_id !== galleryId || headerKeys.length !== 3
+    || !headerKeys.includes("schema") || !headerKeys.includes("generated_at_utc") || !headerKeys.includes("gallery_id")
+    || header.gallery_id !== galleryId || header.schema !== "gallery_record_v3"
+    || typeof header.generated_at_utc !== "string" || !header.generated_at_utc.trim()) {
+    throw new Error("Catalogue data does not match the selected Gallery.");
+  }
   if (typeof gallery.title !== "string" || !gallery.title.trim()) throw new Error("Catalogue Gallery title is unavailable.");
-  if (!Array.isArray(payload.member_works) || header.count !== payload.member_works.length) {
+  if (!Array.isArray(payload.member_works)) {
     throw new Error("Catalogue Gallery membership is unavailable.");
   }
   var previousId = "";

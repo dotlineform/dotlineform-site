@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260519-202931-b05d27
 title: Catalogue Indexes And Payloads
 added_date: "2026-05-19 20:29:31"
-last_updated: "2026-10-10 17:48:32"
+last_updated: "2026-10-10 18:00:02"
 parent_id: d-20260401-000000-a11bf3
 
 ---
@@ -37,15 +37,15 @@ The Gallery search index at `working/generated/catalogue/galleries/galleries_ind
 
 ## Exact Identity And Versions
 
-Work payloads use `work_record_v11`. Each contains only `header` and `work`; the header carries schema, content version and generation time, while `work.work_id` carries the exact Work identity. The retired Detail count, sections and `documents` array are absent, and the header does not duplicate the Work ID. Gallery payloads use `gallery_record_v2`; their headers also carry the exact Gallery ID and member count. Gallery v2 removes member-row `year` and `year_display`; local and public readers require v2 and exactly `work_id`/`title` per member, without a v1 fallback. Index headers use `catalogue_works_index_v2`, `catalogue_galleries_index_v2` and `catalogue_series_galleries_index_v1`; index counts are their entry counts, including all valid Series in the Series–Gallery index. Work index v2 removes row `year`, `year_display` and `series_id`; Gallery index v2 removes row `work_count`. Both lookup readers require v2 and exact ID/title rows, with no v1 fallback. Shared media policy uses `catalogue_media_config_v1` with a content version and generation time.
+Work payloads use `work_record_v11`. Each contains only `header` and `work`; the header carries schema, content version and generation time, while `work.work_id` carries the exact Work identity. The retired Detail count, sections and `documents` array are absent, and the header does not duplicate the Work ID. Gallery payloads use `gallery_record_v3`; their headers contain exactly `schema`, `generated_at_utc` and `gallery_id`, with no member count or content version. Local and public readers require v3, the exact three header fields with a nonempty generation time, and exactly `work_id`/`title` per member, without an older-schema fallback. Member totals come from the already loaded list; Gallery generation computes no payload hash. Index headers use `catalogue_works_index_v2`, `catalogue_galleries_index_v2` and `catalogue_series_galleries_index_v1`; index counts are their entry counts, including all valid Series in the Series–Gallery index. Work index v2 removes row `year`, `year_display` and `series_id`; Gallery index v2 removes row `work_count`. Both lookup readers require v2 and exact ID/title rows, with no v1 fallback. Shared media policy uses `catalogue_media_config_v1` with a content version and generation time.
 
 The 2026-10-10 Work compact-field cleanup passed changed-source lint and syntax checks. From empty v4 queues, a focused Refresh wrote only `works/works_index.json` and queued that file for publication. The production lookup reader accepted all 4,619 Work ID/title rows and the existing 300 Gallery rows; Work and Gallery lookup metadata are empty. No tests, browser interaction or Publish ran for this cleanup. Restart Local Studio and the Docs management service and reload their pages to adopt the changed Python modules. Preview/repository counterparts advance through the next explicit Publish.
 
-The Gallery member cleanup subsequently converted only the 300 current Working Gallery by-ID records, containing 4,619 member references. The strict production reader accepted every v2 record. Changed-source lint/syntax, public projection check and site structural validation passed; no tests or browser interaction ran. Gallery records are queued for publication. Publish must distribute the converted records before committing/deploying the projected v2 reader, which rejects existing v1 public Gallery data. Site structural validation does not establish runtime/data schema agreement before that Publish.
+The Gallery header cleanup converted only the 300 current Working Gallery by-ID records, containing 4,619 member references. The strict production reader accepted every v3 record and its three-field header. Changed-source lint/syntax, public projection check and site structural validation passed; no tests or browser interaction ran. Gallery records are queued for publication. Publish must distribute the converted records before committing/deploying the projected v3 reader, which rejects existing v2 public Gallery data. Site structural validation does not establish runtime/data schema agreement before that Publish.
 
 Detail folders and their discovery indexes are retired. Active generation neither recreates an empty Detail index nor scans retired thumbnails. Series `sort_fields` is retired; both Studio's Series lookup and consumer members use ascending exact Work IDs. No relationship is inferred from a document, title, route or thumbnail filename.
 
-Content versions include schema and projected content. A generation timestamp alone does not force a rewrite. Confirmed per-image `media_version` is separate from the payload version.
+Where emitted, content versions include schema and projected content. Normal Refresh and the standalone generator compare projected content directly while ignoring generation time, so unchanged Gallery output retains its bytes without a persisted hash. A generation timestamp alone does not force a rewrite. Publish verifies artifact bytes separately from payload fields. Confirmed per-image `media_version` is separate from the payload version.
 
 ## Media And Documents
 

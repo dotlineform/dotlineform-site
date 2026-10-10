@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260903-154141-7c9e4b
 title: Catalogue Media View
 added_date: "2026-09-03 15:41:41"
-last_updated: "2026-10-10 17:48:32"
+last_updated: "2026-10-10 18:00:02"
 summary: Exact Work and Gallery links, direct and Series-related Gallery navigation, responsive Work images and paginated Media View, with static-consumer and public-data limits.
 ui_status: done
 parent_id: d-20260903-222617-28475e
@@ -79,7 +79,7 @@ The implementation owners are `docs-viewer/services/docs_catalogue_media.py`, `d
 
 ## Gallery Presentations
 
-Exact Gallery entry uses `galleries/index/<gallery_id>.json` under `gallery_record_v2`, read locally through `/docs/catalogue-gallery?gallery_id=<gallery_id>`. Its metadata and ordered Work references drive the grid, pagination and selected-Work loading. Each member contains exactly `work_id` and `title`; year metadata comes from the selected Work's own by-ID record. Empty Galleries display an empty state without pagination. The local and public readers require v2 without a v1 fallback and validate matching header/body IDs, member count, exact member fields, distinct exact Work IDs and ascending Work-ID order. Public readers use the explicit `catalogue_paths.gallery_records_base_url`, currently `/assets/data/catalogue/galleries/index/`; public Catalogue distribution remains separately owned.
+Exact Gallery entry uses `galleries/index/<gallery_id>.json` under `gallery_record_v3`, read locally through `/docs/catalogue-gallery?gallery_id=<gallery_id>`. Its metadata and ordered Work references drive the grid, pagination and selected-Work loading. The header contains exactly schema, generation time and Gallery ID; no persisted count or content version is required. Each member contains exactly `work_id` and `title`; year metadata comes from the selected Work's own by-ID record. Empty Galleries display an empty state without pagination. The local and public readers require v3 without an older-schema fallback and validate matching header/body IDs, a nonempty generation time, the member list and exact member fields, distinct exact Work IDs and ascending Work-ID order. Display/pagination totals derive from the loaded member list. Public readers use the explicit `catalogue_paths.gallery_records_base_url`, currently `/assets/data/catalogue/galleries/index/`; public Catalogue distribution remains separately owned.
 
 Work presentations show **Related galleries**. Direct `work.galleries` links come first and carry **Contains this Work**; distinct links from the Work's exact Series–Gallery index entry follow with **Related to this Series**. The projector removes duplicates by exact Gallery ID, so a Gallery that contains the Work appears once as direct. A Work without a Series shows only direct links and does not request the index. A Work reached from a Gallery retains a return link to that Gallery. The Work reader does not fetch a Series by-ID record or supply a Series link. Selecting a Gallery link then reads its exact by-ID presentation in the same Content Detail mount. Previous/next follows that Gallery's complete Work order; returning to it restores the page containing the selected Work. Failed or superseded Gallery reads preserve the current presentation.
 
