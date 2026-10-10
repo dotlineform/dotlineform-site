@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261009-110914-712f45
 title: Incremental Updates
 added_date: "2026-10-09 11:09:14"
-last_updated: "2026-10-10 14:19:12"
+last_updated: "2026-10-10 14:38:41"
 summary: Active delivery of incremental Catalogue mutation, Refresh and Regenerate steps, with Work-by-Work Preview and Deploy, one publication progress flag and a final shared-output pass.
 ui_status: active
 parent_id: d-20261007-221414-48ff3f
@@ -519,4 +519,4 @@ Gate: the complete agreed workflow is accepted and durable ownership documentati
 
 - Remove Catalogue document editing from the UI so Catalogue content is authored through Work edits and generated templates. Determine the complete editing surface in that bounded follow-on; exact-document Rebuild remains useful for applying current generated inputs.
 - Incremental Publish of normal and non-Catalogue collection docs.
-- Optimisation of index and lookup JSON build, validation and Publishing.
+- [Catalogue Refresh Index Updates](Catalogue_Refresh_Index_Updates.md) proposes selected row updates and consumer-backed removal of derived fields for normal Refresh. Further Publishing/storage optimisation remains separate.
