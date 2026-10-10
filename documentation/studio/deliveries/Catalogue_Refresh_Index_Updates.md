@@ -3,9 +3,9 @@ draft: false
 doc_id: d-20261010-143841-fba69a
 title: Catalogue Refresh Index Updates
 added_date: "2026-10-10 14:38:41"
-last_updated: "2026-10-10 21:39:15"
-summary: All planned production slices are implemented; manual acceptance and delivery closeout remain.
-ui_status: active
+last_updated: "2026-10-10 21:46:36"
+summary: Complete and accepted queued Catalogue row merging, minimal projections and Save-owned canonical validation.
+ui_status: done
 parent_id: d-20260428-000000-f5ff18
 ---
 # Catalogue Refresh Index Updates
@@ -14,9 +14,9 @@ parent_id: d-20260428-000000-f5ff18
 
 Make normal Refresh update the rows affected by supplied Catalogue mutations, preserving unaffected rows. Remove fields and dependency updates whose consumer benefit does not justify maintaining them. A single changed record should not trigger projection of the complete Catalogue or complete relationship report.
 
-This delivery is parented to [Planned Features](../Planned_Features.md), following the accepted [Gallery And Series Incremental Updates](Gallery_And_Series_Incremental_Updates.md). The user requested this proposal on 2026-10-10 and approved the delivered subsets below, including Work Document Coverage as the final row-merging slice. Gallery-member merging uses private updates v5 for explicit creation/member candidates; publication remains v4 and Gallery output remains v3. Catalogue Works report cleanup removes redundant count/hash fields under a schema-only v3 header, with its private conversion complete. Normal Refresh loads selected dependencies once and trusts canonical checks completed by Save, as explicitly directed by the user. The three private report inputs and Work Document Coverage now merge queued candidates under their unchanged v1 schemas. All planned production slices are implemented; manual acceptance and delivery closeout remain. Test work is separately scoped and unapproved. [Catalogue Save And Refresh](../Catalogue_Save_And_Refresh.md), [Catalogue Indexes And Payloads](../Catalogue_Indexes_And_Payloads.md), [Catalogue Works](../Catalogue_Works.md) and [Works Report](../Works_Report_Concept_And_Architecture.md) own current behavior and evidence limits.
+This delivery is parented to [Planned Features](../Planned_Features.md), following the accepted [Gallery And Series Incremental Updates](Gallery_And_Series_Incremental_Updates.md). The user approved each production slice and accepted closeout on 2026-10-10, including Work Document Coverage as the final row merger. Gallery-member merging uses private updates v5 for explicit creation/member candidates; publication remains v4 and Gallery output remains v3. Catalogue Works metadata uses a schema-only v3 header. Normal Refresh loads selected dependencies once and trusts canonical checks completed by Save, as explicitly directed by the user. The three private report inputs and Work Document Coverage merge queued candidates under unchanged v1 schemas. All planned production work is complete. Acceptance does not add runtime evidence: unexercised mutation/failure and UI variants retain the recorded limits, and further test work requires separate approval. [Catalogue Save And Refresh](../Catalogue_Save_And_Refresh.md), [Catalogue Indexes And Payloads](../Catalogue_Indexes_And_Payloads.md), [Catalogue Works](../Catalogue_Works.md) and [Works Report](../Works_Report_Concept_And_Architecture.md) own shipped behavior and evidence limits. Retain this delivery for recent evidence lookup pending manual archive.
 
-The reason for this work is an operation whose scope follows its supplied changes. A measured slowdown is not a prerequisite for removing unnecessary rebuilding. Performance claims still require evidence; this proposal makes no measured speedup claim.
+The reason for this work is an operation whose scope follows its supplied changes. A measured slowdown is not a prerequisite for removing unnecessary rebuilding. Performance claims still require evidence; this delivery makes no measured speedup claim.
 
 Paths starting with `working/` or `preview/` are relative to the configured `$DOTLINEFORM_DOCS_BASE_DIR`. Paths starting with `studio/`, `docs-viewer/` or `site/` are repository-relative. `<work_id>` and `<gallery_id>` stand for exact canonical identities. [Workspace configuration](../../../docs-viewer/config/workspace/docs-workspace.json) owns these locations.
 
@@ -41,7 +41,7 @@ The private [Catalogue Works metadata producer](../../../studio/services/catalog
 
 Publish consumes completed Working output, retains unselected Preview output and applies selected destinations. This delivery changes Refresh construction, not that publication ownership.
 
-## Consumer Findings And Proposed Field Decisions
+## Consumer Findings And Field Decisions
 
 ### Gallery Counts
 
@@ -225,10 +225,12 @@ Gate: a one-record change performs no unrelated row projection or complete aggre
 
 Gate met with changed-source checks, real saved/full projection diagnostics and bounded code review, with the execution limits recorded below and in durable owners. No tests were relied on or modified. Browser presentation and live mutation/failure behavior remain manual review unless separate automation is approved.
 
-[ ] **RI-3 — Cutover And Closeout:**
+[x] **RI-3 — Cutover And Closeout:**
 
 - apply the agreed output-only baseline conversion, confirm the picker and Refresh behavior, and transfer current contracts to the durable owners.
 
-Gate: the complete outcome is accepted, schema/publication consequences are accounted for and no implicit full-rebuild fallback remains. Live Publish, Git actions and public deployment retain their explicit-action boundaries.
+Gate met: the user accepted closeout on 2026-10-10. Required earlier schema conversions and user-confirmed public Publish are recorded above; the final private-input/coverage and loading slices require no conversion or Publish. Durable owners describe shipped behavior, explicit maintenance and the remaining evidence limits. No implicit full-rebuild fallback remains. Further testing during normal use is separate from this completed delivery. Live Publish, Git actions and public deployment retain their explicit-action boundaries.
 
-Current record: all planned production slices are implemented and reviewed. Gallery by-ID v3, compact-index v3 and relationship v2 Publish are user-confirmed. Gallery-member merging uses private updates v5; publication stays v4. Catalogue Works metadata uses v3. Normal Refresh loads dependencies once and trusts Save. The three private report inputs and Work Document Coverage merge queued rows under unchanged v1 schemas; complete real-data projections match their saved content. Both queues remain empty with lifecycle times preserved. Restart Local Studio and Docs Viewer services; this final Python-only slice needs no public projection, baseline conversion or Publish. Next is manual acceptance during normal Catalogue edits and report use, then delivery closeout; no further row-merging implementation remains proposed. Live mutation/no-op/failure paths have source-review evidence only; no tests or browser interaction ran. No generated output, queues, media, documents or Search were written, and no Publish, commit or push ran for this slice.
+Current record: complete and accepted on 2026-10-10. All production slices are implemented and reviewed, with durable contracts current and no remaining implementation phase. Reuse the recorded lint/syntax, projection, source-review and earlier user-confirmed Publish evidence; acceptance does not imply execution of the unexercised mutation/no-op/failure or UI variants. The final implementation diagnostics found both queues empty with lifecycle times preserved; this closeout does not reread runtime state. Retain the delivery pending manual archive.
+
+Closeout review: code review is not applicable because this step changes only documentation status and routing. Bounded source/diff review and whitespace checking confirm the completion edits; no implementation verification was repeated. No code/config, generated artifacts, queues, media, documents or Search were changed by closeout, and no tests, rebuild, Publish, commit or push ran.
