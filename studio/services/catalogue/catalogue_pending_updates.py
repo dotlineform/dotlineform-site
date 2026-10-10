@@ -11,7 +11,7 @@ from studio.services.catalogue.catalogue_pending_state import (
 from studio.services.catalogue.catalogue_shared_changes import merge_shared_changes, validate_shared_changes
 
 
-SCHEMA = "catalogue_updates_pending_v4"
+SCHEMA = "catalogue_updates_pending_v5"
 FILENAME = "catalogue-updates-pending.json"
 
 

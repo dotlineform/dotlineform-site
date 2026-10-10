@@ -12,7 +12,7 @@ from typing import Any
 
 from studio.services.catalogue.catalogue_output_paths import catalogue_workspace_config
 from studio.services.catalogue.catalogue_work_attachments import safe_download_filename
-from studio.services.catalogue.catalogue_shared_changes import SHARED_FIELDS, shared_changes, validate_shared_changes
+from studio.services.catalogue.catalogue_shared_changes import SHARED_FIELDS, REFRESH_FIELDS, shared_changes, validate_shared_changes
 
 
 WORK_ID = re.compile(r"[0-9]{5}\Z")
@@ -32,7 +32,9 @@ def pending_path(repo_root: Path, filename: str) -> Path:
 
 def validate_pending_state(repo_root: Path, value: Any, *, schema: str, progress: str) -> dict[str, Any]:
     """Validate headers, exact Work records and shared family/output selections."""
-    if not isinstance(value, dict) or set(value) != {"header", "current_works", "deleted_works", *SHARED_FIELDS}:
+    publishing = progress == "preview_done"
+    selection_fields = SHARED_FIELDS if publishing else REFRESH_FIELDS
+    if not isinstance(value, dict) or set(value) != {"header", "current_works", "deleted_works", *selection_fields}:
         raise ValueError(f"Catalogue queue requires {schema}")
     header = value["header"]
     timestamp_field = "last_refreshed_at_utc" if progress == "refreshed" else "last_published_at_utc"
@@ -65,7 +67,9 @@ def validate_pending_state(repo_root: Path, value: Any, *, schema: str, progress
                 raise ValueError(f"Work {work_id}: file_names must be sorted and distinct")
     if value["current_works"].keys() & value["deleted_works"].keys():
         raise ValueError("A queued Work cannot be both current and deleted")
-    validate_shared_changes(repo_root, {field: value[field] for field in SHARED_FIELDS}, publishing=progress == "preview_done")
+    validate_shared_changes(repo_root, shared_changes(value, publishing=publishing), publishing=publishing)
+    if not publishing and set(value["gallery_member_works"]) - (value["current_works"].keys() | value["deleted_works"].keys()):
+        raise ValueError("Gallery member candidates require a retained queued Work")
     return value
 
 
@@ -88,7 +92,7 @@ def write_pending_state(repo_root: Path, filename: str, value: dict[str, Any], *
         "header": {key: value["header"][key] for key in header_keys},
         **{family: {wid: value[family][wid] for wid in sorted(value[family])}
            for family in ("current_works", "deleted_works")},
-        **shared_changes(value),
+        **shared_changes(value, publishing=progress == "preview_done"),
     }
     data = json.dumps(value, ensure_ascii=False, indent=2) + "\n"
     fd, name = tempfile.mkstemp(prefix="catalogue-pending-", suffix=".tmp", dir=path.parent)
@@ -103,4 +107,4 @@ def write_pending_state(repo_root: Path, filename: str, value: dict[str, Any], *
 
 def pending_counts(value: dict[str, Any]) -> dict[str, int]:
     return {"current": len(value["current_works"]), "deleted": len(value["deleted_works"]),
-            **{field: len(value[field]) for field in SHARED_FIELDS}}
+            **{field: len(value[field]) for field in REFRESH_FIELDS}}

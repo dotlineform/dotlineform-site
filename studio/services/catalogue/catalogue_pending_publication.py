@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from studio.services.catalogue.catalogue_pending_state import read_pending_state, write_pending_state
-from studio.services.catalogue.catalogue_shared_changes import merge_shared_changes, public_shared_outputs, validate_shared_changes
+from studio.services.catalogue.catalogue_shared_changes import SHARED_FIELDS, merge_shared_changes, public_shared_outputs, validate_shared_changes
 
 
 SCHEMA = "catalogue_publish_pending_v4"
@@ -26,10 +26,11 @@ def merge_completed_shared(repo_root: Path, completed: dict[str, list[str]]) -> 
     validate_shared_changes(repo_root, completed, publishing=False)
     pending = read_pending_publication(repo_root)
     public = public_shared_outputs(repo_root)
-    selection = {**completed, "shared_outputs": [name for name in completed["shared_outputs"] if name in public]}
+    selection = {field: completed[field] for field in SHARED_FIELDS}
+    selection["shared_outputs"] = [name for name in completed["shared_outputs"] if name in public]
     if not any(selection.values()):
         return
-    merge_shared_changes(pending, selection)
+    merge_shared_changes(pending, selection, publishing=True)
     write_pending_publication(repo_root, pending)
 
 

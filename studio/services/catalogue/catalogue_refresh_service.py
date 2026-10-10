@@ -14,6 +14,7 @@ from catalogue.catalogue_pending_updates import read_pending_updates, write_pend
 from catalogue.catalogue_pending_state import pending_counts
 from catalogue.generate_work_pages import catalogue_payloads, same_generated_content
 from catalogue.catalogue_galleries import read_galleries
+from catalogue.catalogue_gallery_records import merge_gallery_record
 from catalogue.catalogue_series_galleries import read_series_galleries
 from catalogue.catalogue_series_galleries_index import merge_series_galleries_index, series_gallery_links, series_galleries_index_payload
 from catalogue.catalogue_series_galleries_report import merge_series_galleries_report, series_galleries_report_payload
@@ -21,7 +22,7 @@ from catalogue.catalogue_output_paths import catalogue_workspace_config, output_
 from catalogue.catalogue_staged_media import catalogue_staging_assets, work_image_paths
 from catalogue.catalogue_source import payload_for_map
 from catalogue.catalogue_revisions import record_hash
-from catalogue.catalogue_shared_changes import SHARED_FIELDS, WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, empty_shared_changes, shared_changes
+from catalogue.catalogue_shared_changes import REFRESH_FIELDS, WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, empty_shared_changes, shared_changes
 from catalogue.catalogue_pending_publication import merge_completed_shared
 from catalogue.catalogue_report_inputs import INPUT_SCHEMAS, catalogue_report_input_payloads
 from docs_artifact_locations import ArtifactLocation
@@ -34,7 +35,7 @@ def catalogue_refresh_status(repo_root: Path) -> dict[str, Any]:
     except (OSError, ValueError) as error:
         raise RuntimeError(f"Catalogue Refresh status is unavailable: {error}") from error
     header = pending["header"]
-    needed = any(pending[field] for field in SHARED_FIELDS) or any(
+    needed = any(pending[field] for field in REFRESH_FIELDS) or any(
         not entry["refreshed"] for family in ("current_works", "deleted_works")
         for entry in pending[family].values()
     )
@@ -121,6 +122,45 @@ def refresh_series_galleries(repo_root: Path) -> dict[str, Any]:
     return {"ok": True, "output": {"status": "completed", "written": written, "deleted": []}}
 
 
+def refresh_gallery_records(repo_root: Path) -> dict[str, Any]:
+    """Explicit complete Gallery-record baseline/repair; preserve other output work.
+
+    Complete queued Gallery deletions too, forward this family's public selection
+    before clearing its creation/member candidates. Retain common Gallery IDs
+    for other selected aggregates, Work readiness and both lifecycle times.
+    Normal Refresh and readers never call this maintenance authority.
+    """
+    pending = read_pending_updates(repo_root)
+    source_dir = repo_root / DEFAULT_SOURCE_DIR
+    records = records_from_json_source(source_dir)
+    galleries = read_galleries(source_dir, records.works)
+    pairs = read_series_galleries(source_dir, records.series, galleries.galleries)
+    if set(pending["deleted_galleries"]) & galleries.galleries.keys():
+        raise ValueError("Queued Gallery deletion still has a canonical definition")
+    payloads = catalogue_payloads(
+        repo_root, records, galleries, pairs, timestamp=utc_timestamp(), work_ids=set(), shared_outputs=set(),
+    )
+    working = catalogue_workspace_config(repo_root).catalogue.working
+    written = _write_shared_payloads(working, payloads)
+    deleted = []
+    for gid in pending["deleted_galleries"]:
+        identity = f"galleries/index/{gid}.json"
+        path = output_path(working, identity)
+        if path.exists():
+            path.unlink()
+            deleted.append(identity)
+    merge_completed_shared(repo_root, {
+        **empty_shared_changes(), "current_galleries": sorted(galleries.galleries),
+        "deleted_galleries": pending["deleted_galleries"],
+    })
+    fields = ("created_galleries", "gallery_member_works")
+    if any(pending[field] for field in fields):
+        for field in fields:
+            pending[field] = []
+        write_pending_updates(repo_root, pending)
+    return {"ok": True, "output": {"status": "completed", "written": written, "deleted": deleted}}
+
+
 def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
     """Handoff queued Works, preserve completed readiness and return final editor records.
 
@@ -174,10 +214,31 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
             )
             if payload is not None:
                 row_payloads[RELATIONSHIP_REPORT] = payload
+        if set(shared["current_galleries"]) - galleries.galleries.keys():
+            raise ValueError("Queued current Gallery is unavailable")
+        initial_members = {gid: [] for gid in shared["created_galleries"]}
+        if initial_members:
+            for wid, ids in galleries.works.items():
+                for gid in ids:
+                    if gid in initial_members:
+                        initial_members[gid].append(wid)
+        member_candidates = set(shared["gallery_member_works"])
+        current_members = member_candidates & pending["current_works"].keys()
+        deleted_members = member_candidates & pending["deleted_works"].keys()
+        for gid in shared["current_galleries"]:
+            identity = f"galleries/index/{gid}.json"
+            payload = merge_gallery_record(
+                output_path(workspace.catalogue.working, identity), gallery_id=gid, gallery_record=galleries.galleries[gid],
+                work_records=records.works, memberships=galleries.works,
+                current_work_ids=current_members, deleted_work_ids=deleted_members, timestamp=timestamp,
+                initial_member_ids=initial_members.get(gid),
+            )
+            if payload is not None:
+                row_payloads[identity] = payload
         payloads = catalogue_payloads(
             repo_root, records, galleries, pairs, timestamp=timestamp,
             work_ids=set(selected["current_works"]),
-            gallery_ids=set(shared["current_galleries"]),
+            gallery_ids=set(),
             shared_outputs=set(shared["shared_outputs"]) - {WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT},
         )
         if set(shared["deleted_galleries"]) & galleries.galleries.keys() or set(shared["deleted_series"]) & records.series.keys():
@@ -249,7 +310,7 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
             phase = "shared publication queue"
             merge_completed_shared(repo_root, shared)
             phase = "shared updates queue"
-            for field in SHARED_FIELDS:
+            for field in REFRESH_FIELDS:
                 pending[field] = []
             write_pending_updates(repo_root, pending)
         work_id, phase = "", "completion"

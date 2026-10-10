@@ -40,7 +40,7 @@ def publish_docs(
     try:
         result["catalogue"] = publish_catalogue_works(repo_root, client=client, env_files=env_files, environ=environ)
         pending = read_pending_publication(repo_root)
-        selection = shared_changes(pending)
+        selection = shared_changes(pending, publishing=True)
         result["phase"] = "shared preparation"
         snapshot = prepare_preview(repo_root, catalogue_selection=selection)
         result.update(

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import re
 from typing import Any, Iterable, Mapping
 
 from docs_catalogue_artifacts import load_catalogue_artifact_inventory
@@ -13,6 +14,7 @@ from studio.services.catalogue.catalogue_report_inputs import INPUT_SCHEMAS, cha
 
 
 SHARED_FIELDS = ("current_galleries", "deleted_galleries", "current_series", "deleted_series", "shared_outputs")
+REFRESH_FIELDS = (*SHARED_FIELDS, "created_galleries", "gallery_member_works")
 WORK_INDEX = "works/works_index.json"
 GALLERY_INDEX = "galleries/galleries_index.json"
 RELATIONSHIP_INDEX = "series-galleries-index.json"
@@ -20,11 +22,13 @@ RELATIONSHIP_REPORT = "reports/series-galleries/metadata.json"
 
 
 def empty_shared_changes() -> dict[str, list[str]]:
-    return {field: [] for field in SHARED_FIELDS}
+    """Initialize mutation/Refresh effects, including its private Gallery candidates."""
+    return {field: [] for field in REFRESH_FIELDS}
 
 
-def shared_changes(pending: Mapping[str, Any]) -> dict[str, list[str]]:
-    return {field: list(pending[field]) for field in SHARED_FIELDS}
+def shared_changes(pending: Mapping[str, Any], *, publishing: bool = False) -> dict[str, list[str]]:
+    """Copy the queue's exact selections; Publish has no creation/member candidates."""
+    return {field: list(pending[field]) for field in (SHARED_FIELDS if publishing else REFRESH_FIELDS)}
 
 
 def public_shared_outputs(repo_root: Path) -> set[str]:
@@ -32,10 +36,11 @@ def public_shared_outputs(repo_root: Path) -> set[str]:
 
 
 def validate_shared_changes(repo_root: Path, changes: Any, *, publishing: bool) -> None:
-    if not isinstance(changes, dict) or set(changes) != set(SHARED_FIELDS):
+    fields = SHARED_FIELDS if publishing else REFRESH_FIELDS
+    if not isinstance(changes, dict) or set(changes) != set(fields):
         raise ValueError("Catalogue shared selection requires Gallery/Series identities and shared_outputs")
     allowed = public_shared_outputs(repo_root) | (set() if publishing else {RELATIONSHIP_REPORT, WORK_DOCUMENT_COVERAGE_MANIFEST, *INPUT_SCHEMAS})
-    for field in SHARED_FIELDS:
+    for field in fields:
         values = changes[field]
         if not isinstance(values, list) or any(not isinstance(value, str) for value in values):
             raise ValueError(f"Catalogue {field} must be an array of strings")
@@ -47,19 +52,30 @@ def validate_shared_changes(repo_root: Path, changes: Any, *, publishing: bool) 
             elif field.endswith("series"):
                 if normalize_series_id(value) != value:
                     raise ValueError("Catalogue shared selection requires exact Series identities")
+            elif field == "gallery_member_works":
+                if not re.fullmatch(r"[0-9]{5}", value):
+                    raise ValueError("Gallery member selection requires exact five-digit Work IDs")
             elif value not in allowed:
                 raise ValueError(f"Unknown Catalogue shared output: {value}")
     for family in ("galleries", "series"):
         if set(changes[f"current_{family}"]) & set(changes[f"deleted_{family}"]):
             raise ValueError(f"A queued {family} identity cannot be current and deleted")
+    if not publishing and set(changes["created_galleries"]) - set(changes["current_galleries"]):
+        raise ValueError("Created Galleries must also be selected as current")
 
 
-def merge_shared_changes(pending: dict[str, Any], changes: Mapping[str, list[str]]) -> None:
+def merge_shared_changes(pending: dict[str, Any], changes: Mapping[str, list[str]], *, publishing: bool = False) -> None:
+    """Retain mutation effects until completion; Gallery deletion cancels creation."""
     for family in ("galleries", "series"):
         current, deleted = f"current_{family}", f"deleted_{family}"
         pending[current] = sorted((set(pending[current]) | set(changes[current])) - set(changes[deleted]))
         pending[deleted] = sorted((set(pending[deleted]) | set(changes[deleted])) - set(changes[current]))
     pending["shared_outputs"] = sorted(set(pending["shared_outputs"]) | set(changes["shared_outputs"]))
+    if not publishing:
+        pending["created_galleries"] = sorted(
+            (set(pending["created_galleries"]) | set(changes["created_galleries"])) - set(changes["deleted_galleries"])
+        )
+        pending["gallery_member_works"] = sorted(set(pending["gallery_member_works"]) | set(changes["gallery_member_works"]))
 
 
 def work_shared_changes(
@@ -67,8 +83,8 @@ def work_shared_changes(
     previous_memberships: Mapping[str, list[str]], current_memberships: Mapping[str, list[str]],
     work_ids: Iterable[str],
 ) -> dict[str, list[str]]:
-    """Select from the mutation's exact candidates and already loaded relationships."""
-    galleries, series, outputs = set(), set(), set()
+    """Select known ID/title/membership effects independently of Work handoff flags."""
+    galleries, series, outputs, members = set(), set(), set(), set()
     for work_id in work_ids:
         old, new = previous.get(work_id), current.get(work_id)
         outputs.update(changed_work_report_inputs(old, new))
@@ -77,6 +93,8 @@ def work_shared_changes(
         member_changed = identity_changed or (old or {}).get("title") != (new or {}).get("title")
         if before != after or member_changed:
             galleries.update(before | after)
+            if before | after:
+                members.add(work_id)
         if member_changed:
             outputs.add(WORK_INDEX)
         if identity_changed or (old or {}).get("series_id") != (new or {}).get("series_id"):
@@ -84,4 +102,4 @@ def work_shared_changes(
         if (old or {}).get("series_id") != (new or {}).get("series_id"):
             outputs.add(WORK_DOCUMENT_COVERAGE_MANIFEST)
     return {**empty_shared_changes(), "current_galleries": sorted(galleries),
-            "current_series": sorted(series), "shared_outputs": sorted(outputs)}
+            "current_series": sorted(series), "shared_outputs": sorted(outputs), "gallery_member_works": sorted(members)}

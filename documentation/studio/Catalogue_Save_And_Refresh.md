@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260927-223812-8042fc
 title: Catalogue Save And Refresh
 added_date: "2026-09-27 22:38:12"
-last_updated: "2026-10-10 20:24:57"
+last_updated: "2026-10-10 20:42:00"
 summary: Current Catalogue Save, local Refresh, reader freshness and recovery boundaries.
 ui_status: stable
 parent_id: d-20260401-000000-a11bf3
@@ -41,7 +41,7 @@ Missing originals or managed downloads, conversion errors and destination-write 
 
 Save persists completed image renditions, thumbnails and native uploads below Projects-owned `catalogue/media-staging/`. Work `image_staged` selects the complete image set; each download's independent `staged` boolean selects that file. False selects Working media. Metadata edits preserve flags, image edits preserve download flags, and same-name replacements remain explicit queued transfers. Public Work JSON omits these operational fields.
 
-Mutation owners merge exact known Work IDs, metadata/image flags and filenames into `working/catalogue-updates-pending.json` (`catalogue_updates_pending_v4`), resetting affected Work entries to `refreshed: false`. Flags merge with OR; filenames accumulate while still referenced. The same write merges current/deleted Gallery and Series ID arrays and exact shared-output identities. Owners capture former memberships/association endpoints before deletion; Work title changes select their Galleries because member rows embed the title. Empty definitions contribute their own identity and required outputs without inventing a Work. Deletion replaces current selection; recreation replaces deletion. Mutations preserve the last successful Refresh time. Queue persistence is required completion; failures report saved-but-incomplete results.
+Mutation owners merge exact known Work IDs, metadata/image flags and filenames into `working/catalogue-updates-pending.json` (`catalogue_updates_pending_v5`), resetting affected Work entries to `refreshed: false`. Flags merge with OR; filenames accumulate while still referenced. The same write merges current/deleted Gallery and Series ID arrays, exact shared-output identities, explicit Gallery creations and Work candidates for member-row changes. Owners capture former memberships/association endpoints before deletion; Work title changes select their Galleries because member rows embed the title. Empty definitions contribute their own identity and required outputs without inventing a Work. Deletion replaces current selection; recreation replaces deletion. Mutations preserve the last successful Refresh time. Queue persistence is required completion; failures report saved-but-incomplete results.
 
 Work Delete captures its image-set flag and exact download basenames before canonical removal, persists its deletion descriptor and removes those owned staged bytes. Already absent bytes succeed. It does not scan other Works for ownership. Refresh and Publish retain descriptors for downstream removal; project originals and Gallery/Series definitions retain their owners.
 
@@ -49,14 +49,14 @@ The response returns current canonical records, revisions and memberships for ed
 
 ## Updates Queue
 
-`working/catalogue-updates-pending.json` is private to the configured Docs workspace and uses `catalogue_updates_pending_v4`. [The strict queue owner](../../studio/services/catalogue/catalogue_pending_state.py) validates its exact header, Work entries and shared selections. The file must already exist; missing or malformed state stops operations without creating an empty fallback. The retired collection-source queue and separate Refresh receipt have no runtime compatibility path.
+`working/catalogue-updates-pending.json` is private to the configured Docs workspace and uses `catalogue_updates_pending_v5`. [The strict queue owner](../../studio/services/catalogue/catalogue_pending_state.py) validates its exact header, Work entries and shared selections. The file must already exist; missing or malformed state stops operations without creating an empty fallback. The retired collection-source queue, separate Refresh receipt and v4 updates reader have no runtime compatibility path. The publication queue retains v4 and excludes the two Refresh-only Gallery candidate arrays.
 
 Example of a changed Work awaiting Refresh:
 
 ```json
 {
   "header": {
-    "schema": "catalogue_updates_pending_v4",
+    "schema": "catalogue_updates_pending_v5",
     "last_refreshed_at_utc": null
   },
   "current_works": {
@@ -72,7 +72,9 @@ Example of a changed Work awaiting Refresh:
   "deleted_galleries": [],
   "current_series": [],
   "deleted_series": [],
-  "shared_outputs": ["galleries/galleries_index.json", "works/works_index.json"]
+  "shared_outputs": ["works/works_index.json"],
+  "created_galleries": [],
+  "gallery_member_works": ["00008"]
 }
 ```
 
@@ -83,6 +85,8 @@ Both maps use exact five-digit Work IDs and are disjoint. A current entry has `m
 | Change selections | Save, Create, bulk, relationship and Delete owners merge their known effects once. Current flags accumulate with OR and filenames retain only still-referenced downloads. Deletion replaces current selection; recreation replaces deletion. |
 | `refreshed` | A mutation resets its affected Work to false. Refresh sets true only after that Work's Working metadata/media handoff and staging-flag clears succeed. Completed true entries survive until Regenerate finishes their document work and publication merge. |
 | Gallery/Series arrays | Sorted distinct exact current/deleted IDs, disjoint within each family. Refresh completes their selected records/relationships, merges publication selection and then removes the shared unit. They have no media or document-Regenerate flags. |
+| `created_galleries` | Sorted distinct exact Gallery IDs, a subset of `current_galleries`. Only Gallery Create contributes them. They permit initial complete-member projection and creation of a missing by-ID file, including an empty new Gallery. Later edits retain the marker; deletion cancels it. Refresh clears it after shared completion. |
+| `gallery_member_works` | Sorted distinct exact Work IDs with known title/identity or direct Gallery membership changes, each retained in a current/deleted Work queue entry. They accumulate independently of Work handoff readiness. Gallery rename/association edits and Year/Series-only Work edits contribute no member candidates. Refresh clears this array after shared completion. |
 | `shared_outputs` | Sorted distinct Catalogue-relative system-file identities plus private `reports/series-galleries/metadata.json`, `reports/work-document-coverage/manifest.json` and the three shared `private/` report inputs. Mutations select dependencies, not every index. Refresh completes selected builders once and forwards only public system files from the artifact inventory. Private Catalogue Works report rows remain part of the selected Work handoff. |
 | `header.last_refreshed_at_utc` | Null until a successful Refresh; then its UTC completion time. Mutations, partial failures and Regenerate preserve the previous successful time. |
 | Entry removal | Regenerate removes one true Work entry only after source/Build completion and publication merge. Refresh removes the selected shared unit only after all required Working output and shared publication merge complete. |
@@ -92,6 +96,10 @@ An empty Work map can still require Refresh because a Gallery/Series array or `s
 Compact Work candidates include every metadata-selected queued current Work and every queued deletion, independently of `refreshed`. A shared-output failure can therefore be retried after individual Work handoffs completed. Regenerate and document-design reconciliation require all shared selections to be empty before source/Build work, preserving candidate Work identities until shared Refresh and its publication handoff succeed. Missing/malformed selected compact output fails explicitly; normal Refresh does not create a baseline or repair it.
 
 The selected Series–Gallery index replaces only queued current Series' association lists and removes queued deleted Series. The private Series/Galleries report replaces only rows touching queued Series/Gallery endpoints, retaining empty-Series and unassociated-Gallery placeholders from final canonical associations. Mutation owners already capture former endpoints before removal, including empty definitions. Each saved aggregate is read once and unaffected rows retain their values; unchanged candidate lists/rows avoid writes. Both outputs use minimal v2 schema/time headers without counts or hashes. One temporary lookup over loaded associations serves selected current Gallery endpoints; there is no persistent inverse map or complete relationship reconstruction during normal Refresh. Missing/malformed saved output requires explicit relationship maintenance.
+
+For each selected existing Gallery, [the Gallery-record owner](../../studio/services/catalogue/catalogue_gallery_records.py) reads and validates its saved record once, forming a temporary member map during validation. It upserts only `gallery_member_works` still in that Gallery's final canonical membership and removes queued deleted Works or current candidates no longer belonging there. Unrelated member rows retain their values without canonical Work joins. A Gallery rename replaces only its definition; associated Work by-ID updates retain their ordinary owner without turning into member candidates. Unchanged Gallery content avoids a write and preserves generation time. Saved JSON validation, changed-list ordering and full-file serialization still scale with member count.
+
+Only queued `created_galleries` receive an initial complete list from current canonical membership. Refresh builds one temporary member-ID map for those new definitions, including empty lists; a new incarnation of a reused Gallery ID replaces any former members. Missing existing or malformed selected records fail visibly and require explicit maintenance. Creation/member candidates survive partial shared failure even when their Work entries already have true readiness; Regenerate requires every Refresh selection to be empty before consuming those Works. The public `gallery_record_v3` shape and publication of complete files are unchanged.
 
 ## Empty Gallery Cleanup
 
@@ -157,7 +165,25 @@ For an intentional relationship schema/projection change or saved-output repair,
 python3 studio/services/catalogue/catalogue_json_build.py --write --series-galleries
 ```
 
-This whole-output operation generates only `series-galleries-index.json` and private `reports/series-galleries/metadata.json` with the same definition/link projectors used by selected Refresh. It forwards only the public index before clearing those two output selectors from updates. Work readiness, Gallery/Series identity families, unrelated selections and both lifecycle timestamps retain their owners. It performs no Work/Gallery by-ID or compact-index generation, media handoff/production, document/Search build or Publish. Normal Refresh and readers never invoke it as a fallback. The 2026-10-10 v2 conversion started from empty queues after the user-confirmed compact-index Publish; it wrote only those two outputs and queued only the relationship index. Restart the owning services and reload Docs Viewer after adopting the changed modules; the projected public v2 reader needs the next explicit Publish to adopt matching data.
+This whole-output operation generates only `series-galleries-index.json` and private `reports/series-galleries/metadata.json` with the same definition/link projectors used by selected Refresh. It forwards only the public index before clearing those two output selectors from updates. Work readiness, Gallery/Series identity families, unrelated selections and both lifecycle timestamps retain their owners. It performs no Work/Gallery by-ID or compact-index generation, media handoff/production, document/Search build or Publish. Normal Refresh and readers never invoke it as a fallback. The 2026-10-10 v2 conversion started from empty queues after the user-confirmed compact-index Publish; it wrote only those two outputs and queued only the relationship index. The user's subsequent Publish confirmation closed that cutover; the current Working and public index both carry v2.
+
+## Gallery Record Maintenance And Queue Cutover
+
+For deliberate complete Gallery by-ID generation or saved-output repair, explicitly run:
+
+```bash
+python3 studio/services/catalogue/catalogue_json_build.py --write --gallery-records
+```
+
+This operation uses the complete generator and the same member/envelope projectors as merging. It generates only current `galleries/index/<gallery_id>.json` files, removes explicitly queued Gallery deletions and forwards those public Gallery identities. After the publication merge it clears only creation/member candidates. It retains common Gallery identities needed by other selected aggregates, unrelated selections, Work readiness and lifecycle timestamps; complete the remaining normal Refresh. It does no Work by-ID, compact-index or report generation, media handoff/production, document/Search build or Publish. Normal Refresh and readers never invoke it automatically.
+
+The v5 updates conversion is an explicit completed-baseline operation:
+
+```bash
+python3 studio/services/catalogue/catalogue_incremental_cutover.py --write
+```
+
+It requires empty v4 updates and publication queues, writes only the updates queue under v5 with empty creation/member arrays and preserves the Refresh time. Publication remains v4 without a write. It is a one-time conversion, with no normal runtime v4 acceptance or automatic repair. The 2026-10-10 member-merging adoption completed this conversion after user-confirmed relationship Publish. Existing v3 Gallery files require no output conversion or publication for this server-only change. Restart Local Studio and Docs Viewer services to adopt the changed queue owners together.
 
 ## Regenerate Timing
 

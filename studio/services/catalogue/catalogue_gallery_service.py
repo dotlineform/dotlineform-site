@@ -112,6 +112,8 @@ def mutate_gallery_payload(
     shared = empty_shared_changes()
     if writes:
         shared["deleted_galleries" if operation == "delete" else "current_galleries"] = [gallery_id]
+        if operation == "create":
+            shared["created_galleries"] = [gallery_id]
         shared["current_series"] = sorted(affected_series)
         outputs = {RELATIONSHIP_REPORT}
         if definitions != data.galleries:

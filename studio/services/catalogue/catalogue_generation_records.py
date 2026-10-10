@@ -92,14 +92,13 @@ def build_gallery_json_payload(
     *,
     gallery_id: str,
     gallery_record: Mapping[str, Any],
-    member_works: Sequence[Mapping[str, Any]],
+    member_works: Sequence[dict[str, Any]],
     generated_at_utc: str,
 ) -> Dict[str, Any]:
-    """Project one independent Gallery and its compact member rows."""
+    """Wrap already projected member rows without reprojecting retained members."""
     public_record = dict(gallery_record)
     if public_record.get("gallery_id") != gallery_id:
         raise ValueError(f"gallery.gallery_id must match exact payload target {gallery_id}")
-    public_member_works = [compact_json_object(dict(work)) for work in member_works]
     return {
         "header": {
             "schema": GALLERY_RECORD_SCHEMA_VERSION,
@@ -107,5 +106,5 @@ def build_gallery_json_payload(
             "gallery_id": gallery_id,
         },
         "gallery": public_record,
-        "member_works": public_member_works,
+        "member_works": list(member_works),
     }
