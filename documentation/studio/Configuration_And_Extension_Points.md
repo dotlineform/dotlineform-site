@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260512-142027-54b354
 title: Configuration And Extension Points
 added_date: "2026-05-12 14:20:27"
-last_updated: "2026-10-09 20:38:00"
+last_updated: "2026-10-11 00:00:00"
 summary: Map of the configuration, registries, generated projections, code definitions, and capability checks that drive Docs Viewer workflows.
 parent_id: d-20260424-000000-50b63f
 
@@ -137,7 +137,7 @@ Historical scope-bearing tests and fixtures remain unreviewed against the curren
 | `docs-viewer/config/routes/docs-viewer-routes.json` | App kind, route features, access intent, payload/config URLs, panel defaults, view policy, and named service surfaces. | Full local route registry. The service injects enabled loopback URLs when it serves local routes. |
 | `site/docs-viewer/config/routes/docs-viewer-public-routes.json` | Public-only route records served from the deploy root. | Checked-in public projection kept separate so local/manage and review routes are never exposed publicly. |
 | `docs-viewer/config/defaults/docs-viewer-service.json` plus `.env.local` | Loopback binding, endpoint names, enabled service families, watch behaviour, and local state roots. | Defaults describe the service; environment settings select the current host instance. |
-| `docs-viewer/config/reports/reports.json` | Report metadata, access defaults, presets, and a `loader_id`. | Config describes known reports; `docs-viewer/runtime/js/reports/docs-viewer-reports.js` owns the executable loader allowlist. |
+| `docs-viewer/config/reports/reports.json` | Report identity, title, description and `loader_id`. | Config describes known reports; `docs-viewer/runtime/js/reports/docs-viewer-reports.js` owns the executable loader allowlist. Presets are retired; environment-specific registries and allowlists own availability. |
 | `docs-viewer/config/semantic-tokens/registry.json` | Supported token families, target types, identifier rules, occurrence metadata, and UI contribution ids. | Data declares the accepted contract; generated Catalogue discovery and UI behavior remain code-owned. |
 
 Two other important registries are deliberately code-owned:
@@ -209,7 +209,7 @@ A new app kind or shell authority boundary is an architecture change, not a rout
 
 ### Add A Report
 
-A new preset for an existing report type can be config-only. A new report type needs both a registry record and an allowlisted loader implementation. Config metadata cannot name an arbitrary JavaScript module.
+A new report type needs both a registry record and an allowlisted loader implementation. Config metadata cannot name an arbitrary JavaScript module. A document declares its report ID and, for `docs_collection`, the configured collection; preset declarations and registry arrays are retired.
 
 ### Add A View, Mode, Control, Or Action
 

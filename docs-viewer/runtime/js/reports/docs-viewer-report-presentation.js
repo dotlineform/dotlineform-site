@@ -24,7 +24,6 @@ function sameReportTarget(left, right) {
   var first = left || {};
   var second = right || {};
   return cleanString(first.reportId) === cleanString(second.reportId)
-    && cleanString(first.preset) === cleanString(second.preset)
     && cleanString(first.collection) === cleanString(second.collection);
 }
 
@@ -225,7 +224,6 @@ export function createDocsViewerReportPresentationAdapter(options) {
       reportRoot: reportRoot,
       unsubscribeControl: null,
       reportTarget: {
-        preset: cleanString(reportMeta.preset),
         reportId: cleanString(reportMeta.reportId),
         collection: cleanString(reportMeta.collection)
       },

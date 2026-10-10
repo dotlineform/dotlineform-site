@@ -5,113 +5,97 @@
       "report_id": "series_galleries",
       "title": "Series and Galleries",
       "description": "Lists saved Series–Gallery associations, empty Series and unassociated Galleries.",
-      "loader_id": "series_galleries",
-      "presets": []
+      "loader_id": "series_galleries"
     },
     {
       "report_id": "selected_documents",
       "title": "Selected Documents",
       "description": "Lists starred documents by last updated date, newest first.",
-      "loader_id": "selected_documents",
-      "presets": []
+      "loader_id": "selected_documents"
     },
     {
       "report_id": "workspace_links",
       "title": "Links",
       "description": "Lists directed document links from the last Working Links rebuild.",
-      "loader_id": "workspace_links",
-      "presets": []
+      "loader_id": "workspace_links"
     },
     {
       "report_id": "unpublishable",
       "title": "Unpublishable",
       "description": "Reads ordinary document IDs from Working source/documents/unpublishable.json.",
-      "loader_id": "unpublishable",
-      "presets": []
+      "loader_id": "unpublishable"
     },
     {
       "report_id": "reports_list",
       "title": "Reports List",
       "description": "Displays the configured Docs Viewer report metadata from the report registry.",
-      "loader_id": "reports_list",
-      "presets": []
+      "loader_id": "reports_list"
     },
     {
       "report_id": "docs_collection",
       "title": "Docs Collection",
       "description": "Displays a report-owned list over a configured Docs Viewer collection.",
-      "loader_id": "docs_collection",
-      "presets": []
+      "loader_id": "docs_collection"
     },
     {
       "report_id": "docs_broken_links",
       "title": "Docs Broken Links",
       "description": "Shows the saved Working broken-links audit; Refresh scans and saves current results.",
-      "loader_id": "docs_broken_links",
-      "presets": []
+      "loader_id": "docs_broken_links"
     },
     {
       "report_id": "project_state",
       "title": "Project State",
       "description": "Reconciles live immediate project folders with refreshed Catalogue Works and Series, and generated Context documents.",
-      "loader_id": "project_state",
-      "presets": []
+      "loader_id": "project_state"
     },
     {
       "report_id": "docs_media",
       "title": "Docs Media",
       "description": "Lists each live ready-media and build-source file with its exact referencing documents.",
-      "loader_id": "docs_media",
-      "presets": []
+      "loader_id": "docs_media"
     },
     {
       "report_id": "works",
       "title": "Works",
       "description": "Shows documentation coverage for every Series.",
-      "loader_id": "works",
-      "presets": []
+      "loader_id": "works"
     },
     {
       "report_id": "catalogue_works",
       "title": "Catalogue Works",
       "description": "Searches every canonical Work with exact Series and storage context.",
-      "loader_id": "catalogue_works",
-      "presets": []
+      "loader_id": "catalogue_works"
     },
     {
       "report_id": "uncataloged_files",
       "title": "Uncataloged Files",
       "description": "Lists live images in represented source folders that are absent from refreshed Work source registrations.",
-      "loader_id": "uncataloged_files",
-      "presets": []
+      "loader_id": "uncataloged_files"
     },
     {
       "report_id": "folders_without_works",
       "title": "Folders Without Works",
       "description": "Recursively scans live folders without directly registered refreshed Works, with descendant Work counts.",
-      "loader_id": "folders_without_works",
-      "presets": []
+      "loader_id": "folders_without_works"
     },
     {
       "report_id": "missing_source_files",
       "title": "Missing Source Files",
       "description": "Lists refreshed Work source registrations whose complete expected path currently has no file.",
-      "loader_id": "missing_source_files",
-      "presets": []
+      "loader_id": "missing_source_files"
     },
     {
       "report_id": "work_downloads",
       "title": "Work Downloads",
       "description": "Matches refreshed Work download references with current saved local files.",
-      "loader_id": "work_downloads",
-      "presets": []
+      "loader_id": "work_downloads"
     },
     {
       "report_id": "work_links",
       "title": "Work Links",
       "description": "Lists refreshed authored Work links and their labels.",
-      "loader_id": "work_links",
-      "presets": []
+      "loader_id": "work_links"
     }
   ]
 }

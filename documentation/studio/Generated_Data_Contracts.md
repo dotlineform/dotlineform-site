@@ -112,6 +112,8 @@ Public reader-facing by-id metadata for the info panel is:
 Public by-id payloads should not expose source path, visibility state, UI status internals, management-only fields, or editable metadata concepts for the public info panel.
 Manage mode can keep a richer metadata surface, but it should hydrate selected-document metadata from selected by-id payloads rather than public tree/index rows.
 
+A report host carries `report` with required `id` and `collection` only for `docs_collection`. Other reports omit `collection`; no `preset` or null placeholder fields are generated. Local and public report readers select the renderer by `id` and collection storage by the configured collection identity. The full descriptor stays in by-ID payloads, while the Index projects only `report_id`. [Reports](Reports.md#build-and-payload-flow) owns source validation and registry/loader boundaries.
+
 ## Search Contract
 
 Search runtime reads the separate search payload through `search_index_url`, such as:

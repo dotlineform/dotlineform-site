@@ -24,7 +24,7 @@ RETIRED_REPORT_KEYS = frozenset(
         "viewer_report_subscope",
     }
 )
-_KEYS = frozenset({"id", "preset", "collection"})
+_KEYS = frozenset({"id", "collection"})
 _ID = re.compile(r"[a-z0-9][a-z0-9_-]*\Z")
 _ATTRIBUTE = re.compile(r"([a-z_]+): ([a-z0-9][a-z0-9_-]*)\Z")
 _MARKDOWN = MarkdownIt("commonmark")
@@ -41,18 +41,14 @@ class ReportSourceRange:
 @dataclass(frozen=True)
 class ReportDescriptor:
     id: str
-    preset: str | None
     collection: str | None
     source_range: ReportSourceRange
 
-    def as_payload(self) -> Mapping[str, str | None]:
-        return MappingProxyType(
-            {
-                "id": self.id,
-                "preset": self.preset,
-                "collection": self.collection,
-            }
-        )
+    def as_payload(self) -> Mapping[str, str]:
+        payload = {"id": self.id}
+        if self.collection is not None:
+            payload["collection"] = self.collection
+        return MappingProxyType(payload)
 
 
 def project_report_markdown(
@@ -73,19 +69,10 @@ def project_report_markdown(
 
 
 @dataclass(frozen=True)
-class ReportDefinition:
-    report_id: str
-    preset_ids: frozenset[str]
-
-
-@dataclass(frozen=True)
 class ReportSourceContract:
-    reports: tuple[ReportDefinition, ...]
+    report_ids: frozenset[str]
     configured_collection_ids: frozenset[str]
     source_collection_id: str = ""
-
-    def report(self, report_id: str) -> ReportDefinition | None:
-        return next((item for item in self.reports if item.report_id == report_id), None)
 
 
 class ReportSourceError(ValueError):
@@ -136,7 +123,6 @@ def build_report_source_contract(
     raw_reports = registry_payload.get("reports") if isinstance(registry_payload, Mapping) else None
     if not isinstance(raw_reports, list):
         raise ValueError("report registry reports must be an array")
-    reports: list[ReportDefinition] = []
     seen: set[str] = set()
     for index, raw_report in enumerate(raw_reports):
         if not isinstance(raw_report, Mapping):
@@ -145,24 +131,12 @@ def build_report_source_contract(
         if report_id in seen:
             raise ValueError(f"duplicate report_id: {report_id}")
         seen.add(report_id)
-        raw_presets = raw_report.get("presets")
-        if not isinstance(raw_presets, list):
-            raise ValueError(f"report {report_id} presets must be an array")
-        presets: set[str] = set()
-        for raw_preset in raw_presets:
-            if not isinstance(raw_preset, Mapping):
-                raise ValueError(f"report {report_id} presets must contain objects")
-            preset_id = _identifier(raw_preset.get("preset_id"), "preset_id")
-            if preset_id in presets:
-                raise ValueError(f"report {report_id} has duplicate preset_id: {preset_id}")
-            presets.add(preset_id)
-        reports.append(ReportDefinition(report_id, frozenset(presets)))
 
     children = frozenset(_identifier(value, "collection id") for value in configured_collection_ids)
     child_source = _identifier(source_collection_id, "source_collection_id") if source_collection_id else ""
     if child_source and child_source not in children:
         raise ValueError(f"source_collection_id is not configured: {child_source}")
-    return ReportSourceContract(tuple(reports), children, child_source)
+    return ReportSourceContract(frozenset(seen), children, child_source)
 
 
 def _lines(markdown: str) -> list[_Line]:
@@ -274,13 +248,10 @@ def _descriptor(
         if required not in attributes:
             raise _invalid(f"missing required report attribute: {required}", "missing_attribute", source_name, source_range)
     report_id = attributes["id"]
-    definition = contract.report(report_id)
-    if definition is None:
+    if report_id not in contract.report_ids:
         raise _invalid(f"unknown report id: {report_id}", "unknown_report", source_name, source_range)
 
-    preset, collection = (attributes.get(key) for key in ("preset", "collection"))
-    if preset is not None and preset not in definition.preset_ids:
-        raise _invalid(f"preset is not registered for {report_id}: {preset}", "invalid_preset", source_name, source_range)
+    collection = attributes.get("collection")
     if report_id == "docs_collection":
         if collection is None:
             raise _invalid("docs_collection requires collection", "invalid_collection", source_name, source_range)
@@ -289,7 +260,7 @@ def _descriptor(
             raise _invalid(message, "invalid_collection", source_name, source_range)
     elif collection is not None:
         raise _invalid(f"collection is not allowed for report: {report_id}", "invalid_collection", source_name, source_range)
-    return ReportDescriptor(report_id, preset, collection, source_range)
+    return ReportDescriptor(report_id, collection, source_range)
 
 
 def parse_report_source(

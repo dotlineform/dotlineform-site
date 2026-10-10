@@ -30,12 +30,6 @@ function appendReportCell(row, report) {
   cell.appendChild(id);
 }
 
-function presetLabel(report) {
-  const presets = Array.isArray(report && report.presets) ? report.presets : [];
-  if (!presets.length) return "";
-  return presets.map((preset) => cleanString(preset.presetId)).filter(Boolean).join(", ");
-}
-
 export function mountReportsListReport(context) {
   const root = context.reportRoot;
   const reports = context.reportRegistry && Array.isArray(context.reportRegistry.reports)
@@ -43,7 +37,7 @@ export function mountReportsListReport(context) {
     : [];
 
   clearNode(root);
-  root.dataset.reportColumns = "3";
+  root.dataset.reportColumns = "1";
 
   const status = document.createElement("p");
   status.className = "docsViewerReport__status";
@@ -55,7 +49,6 @@ export function mountReportsListReport(context) {
   const head = document.createElement("div");
   head.className = "docsViewerReport__head";
   appendHeaderCell(head, "report");
-  appendHeaderCell(head, "presets");
 
   const rows = document.createElement("ul");
   rows.className = "docsViewerReport__rows";
@@ -71,7 +64,6 @@ export function mountReportsListReport(context) {
       row.className = "docsViewerReport__row";
       row.dataset.reportDocId = cleanString(report.reportId);
       appendReportCell(row, report);
-      appendTextCell(row, "docsViewerReport__cellMeta", presetLabel(report));
       rows.appendChild(row);
     });
 

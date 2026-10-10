@@ -33,8 +33,9 @@ The opener is exactly `:::report` and the closer is exactly `:::` at column one.
 The attributes are:
 
 - `id`: required registered report token
-- `preset`: optional registered preset; no current report registers presets
 - `collection`: required configured collection for `docs_collection` and forbidden for other reports
+
+`preset` is retired and fails as an unknown report attribute. There is no preset registration or selection path.
 
 A document contains zero or one report block. Report-like examples inside fenced or indented code, inline code, HTML comments, and raw `<pre>` or `<code>` regions remain literal examples. A structural declaration outside those contexts must be complete and valid. The five retired `viewer_report*` front-matter fields are rejected; there is no compatibility or precedence path.
 
@@ -50,17 +51,24 @@ The builder replaces that exact source range with one inert host:
 <section class="docsViewerReport" data-docs-viewer-report-host aria-label="Document report"></section>
 ```
 
-Only by-ID payloads receive the fixed-shape `report` object:
+Only by-ID payloads receive the complete `report` descriptor. It contains required `id` and includes `collection` only when the report uses it; absent optional fields are omitted rather than written as null:
 
 ```json
 {
-  "id": "reports_list",
-  "preset": null,
-  "collection": null
+  "id": "reports_list"
 }
 ```
 
-Manage, prepared and public by-ID payloads retain the report descriptor and generated host. Publication does not strip reports or infer eligibility from report type. Index, Recent, Search and manifests do not carry report metadata.
+For a collection host:
+
+```json
+{
+  "id": "docs_collection",
+  "collection": "works"
+}
+```
+
+Manage, prepared and public by-ID payloads retain the report descriptor and generated host. Publication does not strip reports or infer eligibility from report type. The Index carries only `report_id` for report-host navigation; Recent, Search and manifests do not carry the complete descriptor.
 
 ## Report Availability
 
@@ -90,7 +98,7 @@ The report controller:
 - reads the normalized descriptor from `payload.report`
 - requires exactly one generated host inside the current document content and never creates or appends a second root
 - loads the report metadata registry supplied by the route config
-- normalizes report and preset metadata
+- normalizes report identity and optional collection metadata
 - checks the requested report id against the executable module allowlist
 - imports the allowed report module and calls its mount function
 
@@ -118,7 +126,7 @@ The browser-visible public projection is:
 
 - `site/assets/data/docs/public-reports.json`
 
-The source registry describes report ids, titles, descriptions, loader ids, and presets.
+The source registry describes report ids, titles, descriptions and loader ids. The Reports List displays each report's title and ID in one column; the empty Presets column is retired.
 The public projection includes only report metadata that has been explicitly promoted for public static routes.
 The local manage route reads the source registry directly.
 Public `/analysis/` and any other public route configs reference only the public projection.
@@ -132,9 +140,11 @@ The JSON registry does not define arbitrary import paths.
 Adding a JSON entry without a matching allowlisted loader does not make a new report executable.
 This keeps the registry useful as user-facing metadata without turning it into an open-ended code-loading surface.
 
-## Presets
+## Validation And Retirement
 
-Preset validation uses the selected report's registered preset IDs. No current report registers presets; a supplied preset is rejected.
+The parser validates registered report IDs against one immutable set and validates `docs_collection` against configured collection identities. Other reports reject `collection`. The former per-report preset definitions, registry arrays, payload field, browser normalization and expanded-presentation identity field are retired without aliases. The existing rejection of legacy `viewer_report*` front matter remains.
+
+On 2026-10-11, changed-owner lint and Python syntax, the ordinary Working docs-only build, saved descriptor diagnostics, public runtime projection/check and site validation passed. The build processed 34 documents and rewrote 19 report payloads without Index, Links or Recents writes; Search and media were not rebuilt. Bounded source review covered parser validation, collection loading and report/presentation identity. Tests and fixtures remain unchanged and unexecuted, including historical preset expectations; their review requires separate test approval. Manual report mounting and presentation remain unverified. Restart Docs Viewer services and reload the browser to adopt the parser and runtime. Prepared/public document payloads acquire the sparse descriptor on the next explicitly requested Publish.
 
 ## Current Reports
 

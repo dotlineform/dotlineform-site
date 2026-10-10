@@ -23,22 +23,6 @@ function cleanString(value) {
   return String(value || "").trim();
 }
 
-function normalizeList(value) {
-  if (!Array.isArray(value)) return [];
-  return value.map(cleanString).filter(Boolean);
-}
-
-function normalizePreset(raw) {
-  return {
-    presetId: cleanString(raw && raw.preset_id),
-    title: cleanString(raw && raw.title),
-    description: cleanString(raw && raw.description),
-    columns: normalizeList(raw && raw.columns),
-    filters: normalizeList(raw && raw.filters),
-    sortable: normalizeList(raw && raw.sortable)
-  };
-}
-
 function normalizeReport(raw) {
   const reportId = cleanString(raw && raw.report_id);
   if (!reportId) return null;
@@ -46,10 +30,7 @@ function normalizeReport(raw) {
     reportId,
     title: cleanString(raw && raw.title) || reportId,
     description: cleanString(raw && raw.description),
-    loaderId: cleanString(raw && raw.loader_id) || reportId,
-    presets: Array.isArray(raw && raw.presets)
-      ? raw.presets.map(normalizePreset).filter(function (preset) { return preset.presetId; })
-      : []
+    loaderId: cleanString(raw && raw.loader_id) || reportId
   };
 }
 
@@ -90,7 +71,6 @@ function normalizeReportMetadata(payload) {
   if (!reportId) return null;
   return {
     reportId,
-    preset: cleanString(report.preset),
     collection: cleanString(report.collection)
   };
 }
