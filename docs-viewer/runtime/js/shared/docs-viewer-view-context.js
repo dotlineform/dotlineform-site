@@ -59,7 +59,7 @@ function selectedPayloadMetadata(payload, appContext, docId) {
 export function resolveDocsViewerSelectedDoc(options = {}) {
   const selectedDocId = cleanString(options.selectedDocId);
   if (!selectedDocId) return null;
-  return mapGet(options.docsById, selectedDocId) || mapGet(options.allDocsById, selectedDocId) || null;
+  return mapGet(options.docsById, selectedDocId) || null;
 }
 
 export function docsViewerStatusLabel(value, uiStatusByValue) {
@@ -88,11 +88,8 @@ export function createDocsViewerHostedViewContext(options = {}) {
   const trail = selectedDoc && !(managedDocument && managedDocument.target.collection) && typeof options.buildTrail === "function"
     ? options.buildTrail(docId).slice(0, -1)
     : [];
-  const targetDocId = selectedDoc && !managedDocument && typeof options.viewerTargetDocId === "function"
-    ? options.viewerTargetDocId(docId)
-    : docId;
   const canonicalUrl = selectedDoc && typeof options.viewerUrl === "function"
-    ? options.viewerUrl(targetDocId, "", "", managedDocument ? managedDocument.target : {})
+    ? options.viewerUrl(docId, "", "", managedDocument ? managedDocument.target : {})
     : "";
 
   return {

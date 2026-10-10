@@ -7,7 +7,6 @@ export function createDocsViewerSearchRouteCommands(context) {
   var routeCommands = settings.routeCommands;
   return {
     updateIndexHistory: routeCommands.updateIndexHistory,
-    viewerTargetDocId: settings.viewerTargetDocId,
     viewerUrl: routeCommands.viewerUrl
   };
 }
@@ -95,7 +94,7 @@ export function initDocsViewerSearchController(context) {
     var iconUrl = collectionId ? collection.iconUrl : collection ? collection.iconUrl : "";
     var href = collectionId
       ? routeCommands.viewerUrl(docId, "", searchRecent.searchQuery, { collection: collectionId })
-      : routeCommands.viewerUrl(routeCommands.viewerTargetDocId(docId), "", searchRecent.searchQuery);
+      : routeCommands.viewerUrl(docId, "", searchRecent.searchQuery);
     return renderResultEntry({
       docId: docId, title: entry.title, collection: collectionId,
       iconUrl: iconUrl, href: href

@@ -59,8 +59,6 @@ class DocsDataBuilder(
         self.output_dir = resolve_workspace_path(self.repo_root, output_dir or generated_documents_path(config))
         self.items_dir = self.output_dir / "by-id"
         self.viewer_base_url = normalize_viewer_base_url(viewer_base_url)
-        self.non_loadable_doc_ids = normalize_doc_ids(list(config.non_loadable_doc_ids))
-        self.manage_only_tree_root_ids = normalize_doc_ids(list(config.manage_only_tree_root_ids))
         self.allow_unresolved_parent_ids = config.allow_unresolved_parent_ids is True
         self.only_doc_ids = None if only_doc_ids is None else normalize_doc_ids(only_doc_ids)
         self.links_doc_ids = None if links_doc_ids is None else normalize_doc_ids(links_doc_ids)
@@ -123,8 +121,7 @@ class DocsDataBuilder(
             for doc in docs_for_item_build
         }
 
-        viewer_options = self.viewer_options_payload()
-        index_tree_payload = self.index_tree_payload(docs_by_id, viewer_options, previous_payload=previous_tree)
+        index_tree_payload = self.index_tree_payload(docs_by_id, previous_payload=previous_tree)
         # Preview, targeted builds and authoring follow-through preserve saved Recents.
         recent_payload = None
         if self.config.stage == "working" and not self.targeted_build and not self.skip_recent:
@@ -183,9 +180,3 @@ class DocsDataBuilder(
     @property
     def targeted_build(self) -> bool:
         return self.only_doc_ids is not None
-
-    def viewer_options_payload(self) -> dict[str, Any]:
-        return {
-            "non_loadable_doc_ids": self.non_loadable_doc_ids,
-            "manage_only_tree_root_ids": self.manage_only_tree_root_ids,
-        }

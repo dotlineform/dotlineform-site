@@ -139,8 +139,6 @@ class DocsStageConfig:
     preview: DocsPreviewConfig
     public_projection: DocsPublicProjectionConfig | None
     default_doc_id: str
-    non_loadable_doc_ids: tuple[str, ...]
-    manage_only_tree_root_ids: tuple[str, ...]
     allow_unresolved_parent_ids: bool
     collections: tuple[DocsCollectionConfig, ...]
     search_fields: tuple[str, ...]
@@ -363,10 +361,6 @@ def _doc_id(raw: Any, *, field: str, allow_empty: bool = False) -> str:
     if isinstance(raw, str) and ((allow_empty and raw == "") or is_immutable_doc_id(raw)):
         return raw
     raise ValueError(f"{field} must use immutable document identity")
-
-
-def _doc_ids(raw: Any, *, field: str) -> tuple[str, ...]:
-    return tuple(_doc_id(value, field=field) for value in _strings(raw, field=field))
 
 
 def normalize_collection_id(raw: Any, *, field: str) -> str:
@@ -642,8 +636,7 @@ def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: 
     preview = _preview(location_child(workspace_root, Path("preview")))
     projection = _public_projection(payload["public_projection"])
     working = _object(settings["working"], field="stages.working", required={
-        "media", "default_doc_id", "collections", "non_loadable_doc_ids",
-        "manage_only_tree_root_ids", "allow_unresolved_parent_ids",
+        "media", "default_doc_id", "collections", "allow_unresolved_parent_ids",
     })
     if not isinstance(working["collections"], list):
         raise ValueError("stages.working.collections must be an array")
@@ -666,7 +659,6 @@ def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: 
         item = working
         if stage == "preview":
             item = {**item, "default_doc_id": preview_settings["default_doc_id"],
-                    "non_loadable_doc_ids": [], "manage_only_tree_root_ids": [],
                     "allow_unresolved_parent_ids": False}
         source_root = location_child(workspace_root, Path(stage) / "source")
         generated_root = location_child(workspace_root, Path(stage) / "generated")
@@ -678,8 +670,6 @@ def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: 
             workspace_root=workspace_root, stage=stage, source=DocsSourceConfig(source_root),
             generated=_generated(generated_root), media=media, preview=preview, public_projection=stage_projection,
             default_doc_id=_doc_id(item["default_doc_id"], field=f"{field}.default_doc_id", allow_empty=True),
-            non_loadable_doc_ids=_doc_ids(item["non_loadable_doc_ids"], field=f"{field}.non_loadable_doc_ids"),
-            manage_only_tree_root_ids=_doc_ids(item["manage_only_tree_root_ids"], field=f"{field}.manage_only_tree_root_ids"),
             allow_unresolved_parent_ids=_boolean(item["allow_unresolved_parent_ids"], field=f"{field}.allow_unresolved_parent_ids"),
             collections=_collections(item["collections"], repo_root=root, workspace_root=workspace_root, stage=stage,
                                    media_settings=item["media"], assets=assets, projection=stage_projection), search_fields=fields,

@@ -91,13 +91,9 @@ export function normalizeDocsIndexTreePayload(payload) {
   if (!Array.isArray(payload.docs)) {
     throw new Error("Docs index tree payload requires docs array.");
   }
-  var viewerOptions = payload.viewer_options && typeof payload.viewer_options === "object" && !Array.isArray(payload.viewer_options)
-    ? payload.viewer_options
-    : {};
   return {
     schema: "docs_index_tree_v1",
     generated_at: cleanString(payload.generated_at),
-    viewer_options: viewerOptions,
     docs: flattenTreeDocs(payload.docs, "", [], 0)
   };
 }

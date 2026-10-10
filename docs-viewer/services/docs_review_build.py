@@ -149,8 +149,6 @@ def synthetic_review_config(
         ),
         public_projection=None,
         default_doc_id=default_doc_id,
-        non_loadable_doc_ids=(),
-        manage_only_tree_root_ids=(),
         allow_unresolved_parent_ids=False,
         collections=(),
         search_fields=(),

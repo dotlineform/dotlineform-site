@@ -291,7 +291,6 @@ export function startDocsViewerRuntime(options) {
     workspaceConfig: appSession.domains.workspaceConfig,
     selectedDocument: appSession.domains.selectedDocument,
     statusForIndexDoc: documentIndex.statusForIndexDoc,
-    viewerTargetDocId: documentIndex.viewerTargetDocId,
     viewerUrl: viewerUrl
   });
   documentViewCoordinator = createDocsViewerDocumentViewCoordinator({
@@ -323,7 +322,6 @@ export function startDocsViewerRuntime(options) {
     },
     showWarning: statusController.setStatus,
     viewRegistry: viewRegistry,
-    viewerTargetDocId: documentIndex.viewerTargetDocId,
     viewerUrl: viewerUrl
   });
   documentController = initDocsViewerDocumentController({
@@ -412,7 +410,7 @@ export function startDocsViewerRuntime(options) {
       return documentController.renderPayload(doc, payload, "", { preservePosition: true });
     },
     managementUiEnabled: function () { return managementUiEnabled; },
-    applyDocVisibility: documentIndex.applyDocVisibility,
+    updateDocumentIndex: documentIndex.updateDocumentIndex,
     cancelSearchDebounce: cancelSearchDebounce,
     clearManagementMessageForDocChange: clearManagementMessageForDocChange,
     content: content,
@@ -434,7 +432,6 @@ export function startDocsViewerRuntime(options) {
     renderSidebar: renderSidebar,
     trackSidebarSelection: trackSidebarSelection,
     toggleSidebarBranch: sidebarRenderer.toggleBranch,
-    resolveLoadableDocId: documentIndex.resolveLoadableDocId,
     root: root,
     routeSession: appSession.domains.routeSession,
     documentIndex: appSession.domains.documentIndex,
@@ -450,8 +447,7 @@ export function startDocsViewerRuntime(options) {
   });
   var routeWorkflowCommands = routeWorkflow.commands;
   var searchRouteCommands = createDocsViewerSearchRouteCommands({
-    routeCommands: routeWorkflowCommands,
-    viewerTargetDocId: documentIndex.viewerTargetDocId
+    routeCommands: routeWorkflowCommands
   });
   searchController = searchEnabled || recentEnabled ? initDocsViewerSearchController({
     setSearchInput: function (query) {
@@ -479,13 +475,13 @@ export function startDocsViewerRuntime(options) {
   if (collectionProvider.subscribeDocumentChanges) collectionProvider.subscribeDocumentChanges(function (change) {
     if (change.target.collection) return;
     var index = appSession.domains.documentIndex;
-    if (change.deleted) index.allDocs = index.allDocs.filter(function (doc) { return doc.doc_id !== change.target.doc_id; });
+    if (change.deleted) index.docs = index.docs.filter(function (doc) { return doc.doc_id !== change.target.doc_id; });
     else {
-      var existing = index.allDocs.find(function (doc) { return doc.doc_id === change.target.doc_id; });
-      if (existing) index.allDocs = index.allDocs.map(function (doc) { return doc === existing ? Object.assign({}, doc, change.record) : doc; });
-      else index.allDocs.push(change.record);
+      var existing = index.docs.find(function (doc) { return doc.doc_id === change.target.doc_id; });
+      if (existing) index.docs = index.docs.map(function (doc) { return doc === existing ? Object.assign({}, doc, change.record) : doc; });
+      else index.docs.push(change.record);
     }
-    documentIndex.applyDocVisibility();
+    documentIndex.updateDocumentIndex();
     renderSidebar();
   });
   var configController = initDocsViewerConfigController({
@@ -528,7 +524,6 @@ export function startDocsViewerRuntime(options) {
           ? latestIndexProjection.activeViewId
           : panelLayout.projectViewState().index.activeViewId;
       },
-      applyDocVisibility: documentIndex.applyDocVisibility,
       cancelSearchDebounce: cancelSearchDebounce,
       cssEscape: cssEscape,
       currentViewerConfig: function () { return appSession.domains.workspaceConfig.viewerConfig || {}; },
@@ -536,7 +531,6 @@ export function startDocsViewerRuntime(options) {
       defaultRouteDocId: function () { return defaultRouteDocId; },
       docsViewerConfigUrl: docsViewerConfigUrl,
       escapeHtml: escapeHtml,
-      findAllDocById: documentIndex.findAllDocById,
       formatText: formatText,
       getConfigText: getConfigText,
       getConfigValue: getConfigValue,
@@ -801,7 +795,7 @@ export function startDocsViewerRuntime(options) {
   function markdownDocLink(doc) {
     if (!doc || !doc.doc_id) return "";
     var title = escapeMarkdownLinkText(doc.title || doc.doc_id);
-    var url = viewerUrlForDocument(documentIndex.viewerTargetDocId(doc.doc_id), { manage: false });
+    var url = viewerUrlForDocument(doc.doc_id, { manage: false });
     return "[" + title + "](" + url + ")";
   }
 

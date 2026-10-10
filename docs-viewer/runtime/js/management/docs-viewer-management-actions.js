@@ -226,31 +226,6 @@ export function runInteractiveDocumentCreate(options) {
     );
 }
 
-export function firstRemainingRootDocId(docs, deletedDocIds, resolveLoadableDocId) {
-  var records = Array.isArray(docs) ? docs : [];
-  var deletedIds = new Set(
-    (Array.isArray(deletedDocIds) ? deletedDocIds : [deletedDocIds]).map(function (docId) {
-      return String(docId || "").trim();
-    }).filter(Boolean)
-  );
-  var remaining = records.filter(function (doc) {
-    return doc && !deletedIds.has(String(doc.doc_id || "").trim());
-  });
-  var roots = remaining.filter(function (doc) {
-    return !String(doc.parent_id || "").trim();
-  });
-  var candidates = roots.length ? roots : remaining;
-  for (var i = 0; i < candidates.length; i += 1) {
-    var docId = String(candidates[i].doc_id || "").trim();
-    if (!docId) continue;
-    var loadableDocId = typeof resolveLoadableDocId === "function"
-      ? String(resolveLoadableDocId(docId) || "").trim()
-      : docId;
-    if (loadableDocId) return loadableDocId;
-  }
-  return "";
-}
-
 export function createDocsViewerManagementActionController(options) {
   var root = options.root;
   var documentIndex = options.documentIndex || {};
@@ -713,7 +688,7 @@ export function createDocsViewerManagementActionController(options) {
       root: root,
       restoreFocus: restoreFocus,
       doc: doc,
-      docs: documentIndex.allDocs,
+      docs: documentIndex.docs,
       onSave: async function (targetDocId, placement) {
         setManagementBusy(true);
         try {

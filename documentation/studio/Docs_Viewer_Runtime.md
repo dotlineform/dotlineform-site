@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260331-000000-c313fd
 title: Runtime
 added_date: "2026-03-31 00:00:00"
-last_updated: "2026-10-10 22:51:38"
+last_updated: "2026-10-11 00:00:00"
 summary: Public, manage, and review execution paths; browser/server authority boundaries; extension method; rationale; and known weak spots.
 parent_id: d-20260424-000000-50b63f
 ---
@@ -76,6 +76,8 @@ On 2026-10-10, focused changed-source lint, Python syntax/import diagnostics, th
 ## Retained Index Views
 
 The shared view registry registers Index tree, Search results and Recent results in the Index panel. Panel layout alone selects their visibility. The Index shell mounts controls, the retained tree and one results area; the main shell owns only document content and its toolbar. Review retains its existing top-row package-control surface, with Search and Recent gated by its route features.
+
+The ordinary Index keeps one document list and ID map, with parent relationships derived from the nested tree. Every row links to its exact document; the earlier non-loadable containers, descendant redirects and Manage-only subtree filtering are retired together with their configuration and `viewer_options` payload. Publish owns eligible snapshot membership at the server. A route without a configured or requested document opens the first Index root, or the first entry if no root exists.
 
 The sidebar owns an explicit tree selection independently of the displayed document. Clicking a tree row selects it and deliberately reveals its ancestors; double-click Source uses the clicked row. The named document's index shortcut also explicitly selects its configured report host and reveals its ancestors. Initial default or direct ordinary-document loading selects its matching visible Index row once; direct named-document loading selects no collection host. Later document links from reports, body content, Related links, Search or Recent neither select a collection host nor move tree expansion or scroll. Branch toggles retain their mounted child lists. Initial loading, authoritative Index replacement and actual hierarchy changes retain their existing rendering owners.
 

@@ -72,7 +72,9 @@ Recency sorting uses the projected update date; entries updated on the same day 
 
 ## `index-tree.json` Contract
 
-Public and Manage `index-tree.json` use the same nested document structure. A publish-capable Manage projection may additionally carry `publishable: false` on excluded rows; included rows and every local collection row omit the field. The public Publish projection strips this management field.
+Public and Manage `index-tree.json` use the same nested document structure. The root fields are `generated_at`, `schema` and `docs`, with the timestamp written first. The timestamp changes only when projected contents change. The retired `viewer_options`, `non_loadable_doc_ids` and `manage_only_tree_root_ids` have no configuration, payload or runtime role.
+
+Working contains the complete ordinary document inventory, including drafts. Publish selects eligible source inputs before building the prepared tree. Browser navigation uses exact document IDs from one Index list and does not hide subtrees or redirect container rows to descendants. Default navigation uses the configured document or the first Index root.
 
 `docs` is an array of root nodes. Child relationships are expressed with each node's optional `children` array.
 Generated tree nodes do not carry `parent_id`; `docs-viewer-tree-payload-adapter.js` derives runtime-only parent ids while normalizing the nested payload for existing renderer and management state.
@@ -82,7 +84,6 @@ Public `index-tree.json` nodes should stay as close as possible to:
 - `doc_id`
 - `title`
 - `children`, only when non-empty
-- `publishable: false`, only in a publish-capable private Manage projection
 - `ui_status`
 - `content_url`
 - `report_id`, only when the document hosts a registered report
@@ -95,7 +96,7 @@ Fields excluded from public `index-tree.json`:
 - `content_text_length`
 - default or derivable values
 
-`publishable` is a public-projection gate, not a generic tree field. It is absent from local and public reader projections. `ui_status` remains separate presentation metadata. `report_id` is projected directly from the document's validated report descriptor so the shared index renderer can identify exact report-host roles without loading every by-ID payload; it does not carry report configuration or grant loader access.
+Working tree nodes additionally carry boolean `draft`. The local management read service adds `publication_ignored` from the current server-owned exclusions for management controls; neither field filters the browser Index or appears in the public tree. `ui_status` remains separate presentation metadata. `report_id` is projected directly from the document's validated report descriptor so the shared index renderer can identify exact report-host roles without loading every by-ID payload; it does not carry report configuration or grant loader access.
 
 ## By-Id Payload Contract
 

@@ -9,13 +9,3 @@ export function buildChildrenMap(docs) {
   });
   return childrenByParent;
 }
-
-export function normalizeDocIdSet(values, fallback) {
-  var source = Array.isArray(values) ? values : fallback;
-  var ids = Array.isArray(source) ? source : [];
-  return new Set(
-    ids
-      .map(function (value) { return String(value || "").trim(); })
-      .filter(Boolean)
-  );
-}

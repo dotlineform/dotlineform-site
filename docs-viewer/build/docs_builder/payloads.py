@@ -93,7 +93,7 @@ class PayloadBuilderMixin:
         return entry
 
     def index_tree_payload(
-        self, docs_by_id: Mapping[str, DocRecord | OrdinaryDocumentSummary], viewer_options: dict[str, Any],
+        self, docs_by_id: Mapping[str, DocRecord | OrdinaryDocumentSummary],
         *, previous_payload: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         included_docs = list(docs_by_id.values())
@@ -126,14 +126,13 @@ class PayloadBuilderMixin:
                 tree.append(node_for(doc))
         comparable = {
             "schema": DOCS_INDEX_TREE_SCHEMA_VERSION,
-            "viewer_options": viewer_options,
             "docs": tree,
         }
         return {
-            **comparable,
             "generated_at": self.effective_generated_at_for_payload(
                 self.output_dir / "index-tree.json", comparable, existing_payload=previous_payload,
             ),
+            **comparable,
         }
 
     def recent_limit(self) -> int:

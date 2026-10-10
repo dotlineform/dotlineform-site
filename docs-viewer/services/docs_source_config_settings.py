@@ -32,7 +32,7 @@ EDITABLE_WORKSPACE_FIELDS: dict[str, EditableWorkspaceField] = {
         source_path=f"{CONFIG_REL_PATH.as_posix()} stages.working.default_doc_id",
         generated_path="docs-viewer/config/defaults/docs-viewer-config.json workspace.default_doc_id",
         requires_rebuild=True,
-        description="Default document id opened when no document is requested. Leave blank to use the first loadable document.",
+        description="Default document id opened when no document is requested. Leave blank to use the first Index root.",
     ),
 }
 
@@ -41,8 +41,6 @@ BLOCKED_WORKSPACE_FIELDS = {
     "preview": "Preview artifact roles and locations are install-time config and affect builders and imports.",
     "public_projection": "Public projections are install-time config and affect publication and public routes.",
     "viewer_base_url": "Route bases are install-time config and affect public URLs.",
-    "non_loadable_doc_ids": "Tree loading behavior depends on published docs structure.",
-    "manage_only_tree_root_ids": "Manage-only tree behavior depends on published docs structure.",
     "allow_unresolved_parent_ids": "Parent validation policy affects source validation.",
     "collections": "Collection registration and retirement require an explicitly scoped development delivery.",
 }
@@ -120,8 +118,6 @@ def _validate_default_doc_id(repo_root: Path, config: Any, value: str) -> list[s
     doc = docs_by_id.get(value)
     if doc is None:
         raise ValueError(f"default_doc_id must match a document in the workspace: {value}")
-    if value in set(config.non_loadable_doc_ids):
-        raise ValueError(f"default_doc_id must be loadable in the workspace: {value}")
     return []
 
 

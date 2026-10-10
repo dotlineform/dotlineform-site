@@ -45,8 +45,6 @@ function createStateDefaults(settings) {
   var panelLayout = options.panelLayout || null;
 
   return {
-    allDocs: [],
-    allDocsById: new Map(),
     docs: [],
     docsById: new Map(),
     childrenByParent: new Map(),
@@ -96,8 +94,6 @@ function createStateDefaults(settings) {
     reloadNonce: "",
     reloadExpectedDocId: "",
     pendingBusyCount: 0,
-    nonLoadableDocIds: new Set(),
-    manageOnlyTreeRootIds: new Set(),
     viewState: panelLayout && typeof panelLayout.projectViewState === "function"
       ? panelLayout.projectViewState()
       : null
@@ -146,15 +142,11 @@ function createStateDomains(state, settings) {
       "recentLimit",
     ]),
     documentIndex: stateDomain("documentIndex", "generated static data or local generated-read service", state, [
-      "allDocs",
-      "allDocsById",
       "docs",
       "docsById",
       "childrenByParent",
       "indexSelectedDocId",
-      "expandedDocIds",
-      "nonLoadableDocIds",
-      "manageOnlyTreeRootIds"
+      "expandedDocIds"
     ]),
     selectedDocument: stateDomain("selectedDocument", "generated static data or local generated-read service", state, [
       "selectedDocId",

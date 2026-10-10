@@ -23,7 +23,6 @@ export function createDocsViewerDocumentViewCoordinator(options) {
 
   function sharedContextOptions() {
     return {
-      allDocsById: settings.documentIndex.allDocsById,
       docsById: settings.documentIndex.docsById,
       payloadCache: settings.selectedDocument.payloadCache,
       appContext: typeof settings.appContext === "function" ? settings.appContext() : settings.appContext,
@@ -32,7 +31,6 @@ export function createDocsViewerDocumentViewCoordinator(options) {
       managedDocumentContext: typeof settings.managedDocumentContext === "function" ? settings.managedDocumentContext() : null,
       sourceTarget: settings.selectedDocument.documentTarget,
       uiStatusByValue: settings.workspaceConfig.uiStatusByValue,
-      viewerTargetDocId: settings.viewerTargetDocId,
       viewerUrl: settings.viewerUrl
     };
   }

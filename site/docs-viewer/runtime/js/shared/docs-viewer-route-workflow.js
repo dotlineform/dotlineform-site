@@ -1,4 +1,3 @@
-import { normalizeDocIdSet } from "./docs-viewer-tree.js";
 import { buildViewerUrl, routeFromAnchorHref } from "./docs-viewer-router.js";
 import { documentTarget, documentTargetKey } from "./docs-viewer-document-target.js";
 import { createDocsViewerNavigation } from "./docs-viewer-navigation.js";
@@ -178,11 +177,8 @@ export function initDocsViewerRouteWorkflow(context) {
   }
   function replaceIndex(payload) {
     context.routeSession.managementContext = managementUiEnabled();
-    var options = payload.viewer_options || {};
-    index.nonLoadableDocIds = normalizeDocIdSet(options.non_loadable_doc_ids, []);
-    index.manageOnlyTreeRootIds = normalizeDocIdSet(options.manage_only_tree_root_ids, []);
-    index.allDocs = Array.isArray(payload.docs) ? payload.docs.slice() : [];
-    context.applyDocVisibility();
+    index.docs = Array.isArray(payload.docs) ? payload.docs.slice() : [];
+    context.updateDocumentIndex();
     context.renderSidebar();
   }
   /** Application completion reads the exact generated result without opening a history entry. */

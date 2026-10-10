@@ -126,7 +126,7 @@ export function initDocsViewerSidebarRenderer(context) {
 
       var link = document.createElement("a");
       link.className = "docsViewer__navLink";
-      link.href = context.viewerUrl(context.viewerTargetDocId(doc.doc_id));
+      link.href = context.viewerUrl(doc.doc_id);
       link.dataset.docId = doc.doc_id;
       link.draggable = false;
       link.textContent = "";

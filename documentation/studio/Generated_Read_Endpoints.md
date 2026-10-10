@@ -3,40 +3,38 @@ draft: false
 doc_id: d-20260607-222033-d06f35
 title: Generated Read Endpoints
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-08-14 21:18:02"
+last_updated: "2026-10-11 00:00:00"
 parent_id: d-20260607-222033-647b52
 ---
 # Docs Viewer Generated Read Endpoints
 
-Generated read endpoints return existing Docs Viewer JSON artifacts without mutating source or public files. They are used by the local `/docs/` shell so Manage can read the complete private projection, including non-publishable documents that remain available to management. Local collections have no publishability field.
+Generated read endpoints return existing Docs Viewer JSON artifacts without mutating source or generated files. The local `/docs/` shell reads Working through its owning service, including documents excluded from publication. [Generated Data Contracts](Generated_Data_Contracts.md) owns payload shapes and roots; [Docs Viewer Runtime](Docs_Viewer_Runtime.md) owns navigation and reader authority.
 
-All endpoints require `scope=<scope>`. `scope` must be configured in `docs-viewer/config/scopes/docs_scopes.json`.
+The service resolves Working from `docs-viewer/config/workspace/docs-workspace.json`. Requests reject retired `scope`, `stage` and `sub_scope` selectors. Named-collection artifacts use their configured `/docs/generated/external/<collection>/...` route rather than a selector on these ordinary generated reads. Public routes read the prepared repository/public projection directly.
 
 ## Tree Reads
 
 Endpoints:
 
 ```text
-GET /docs/index-tree?scope=studio
+GET /docs/index-tree
 ```
 
-Returned data: the raw generated `index-tree.json` payload for the scope, including the docs tree, viewer options, scope metadata, and per-doc tree records.
+Returned data: Working's generated `index-tree.json` with current server-owned `publication_ignored` values added to nodes for management controls. Root fields are `generated_at`, `schema` and `docs`. There is no `viewer_options` or browser subtree/loadability policy.
 
 Payload shape:
 
 ```json
 {
+  "generated_at": "2026-10-11T00:00:00Z",
   "schema": "docs_index_tree_v1",
-  "viewer_options": {
-    "non_loadable_doc_ids": [],
-    "manage_only_tree_root_ids": []
-  },
   "docs": [
     {
-      "doc_id": "docs-viewer",
+      "doc_id": "d-20260424-000000-50b63f",
       "title": "Docs Viewer",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/docs-viewer.json",
-      "children": []
+      "content_url": "/docs/doc?doc_id=d-20260424-000000-50b63f",
+      "draft": false,
+      "publication_ignored": false
     }
   ]
 }
@@ -46,32 +44,30 @@ Used for:
 
 - rendering the Docs Viewer navigation tree
 - resolving parent/child relationships in manage mode
-- exposing generated `viewer_options` to the browser
 
 ## Recent Reads
 
 Endpoints:
 
 ```text
-GET /docs/recent?scope=studio
+GET /docs/recent
 ```
 
-Returned data: the raw local published `recent.json` payload for the scope. The manage route declares the edited basis used by this endpoint.
+Returned data: Working's saved `recent.json`, used by the route-configured Recent view. Readers own exact document navigation. [Generated Data Contracts](Generated_Data_Contracts.md#recent-contract) owns the payload contract.
 
 Payload shape:
 
 ```json
 {
-  "schema": "docs_recent_v1",
-  "basis": "edited",
-  "limit": 10,
+  "schema": "docs_recent_v2",
+  "limit": 20,
+  "generated_at": "2026-10-11T00:00:00Z",
   "docs": [
     {
-      "doc_id": "docs-viewer",
+      "doc_id": "d-20260424-000000-50b63f",
       "title": "Docs Viewer",
-      "content_url": "/docs-viewer/scopes/studio/published/documents/by-id/docs-viewer.json",
-      "timestamp": "2026-07-16 12:34:56",
-      "parent_id": "docs-viewer",
+      "timestamp": "2026-07-16",
+      "parent_id": "d-20260419-000000-d2e47b",
       "parent_title": "Docs Viewer"
     }
   ]
@@ -81,15 +77,14 @@ Payload shape:
 Used for:
 
 - rendering the route-configured Recent panel
-- checking whether generated recent-doc metadata is present for a scope
+- reading saved Recent metadata without rebuilding it
 
 ## Document Payload Reads
 
 Endpoints:
 
 ```text
-GET /docs/doc?scope=studio&doc_id=docs-viewer
-GET /docs/doc?scope=studio&doc=docs-viewer
+GET /docs/doc?doc_id=d-20260424-000000-50b63f
 ```
 
 Returned data: the raw generated `by-id/<doc_id>.json` payload for the selected doc.
@@ -98,26 +93,25 @@ Payload shape:
 
 ```json
 {
-  "doc_id": "docs-viewer",
+  "doc_id": "d-20260424-000000-50b63f",
   "title": "Docs Viewer",
   "added_date": "2026-06-07",
   "last_updated": "2026-06-07",
-  "viewer_url": "/docs/?scope=studio&doc=d-20260424-000000-50b63f",
-  "parent_id": "docs-viewer-overview",
+  "viewer_url": "/docs/?doc=d-20260424-000000-50b63f",
+  "parent_id": "d-20260419-000000-d2e47b",
   "content_html": "<h1>Docs Viewer</h1>\n"
 }
 ```
 
 Validation and resolution:
 
-- `doc_id` must contain only letters, numbers, underscores, and hyphens.
-- the doc must exist in the generated scope tree before its payload path is read
-- the payload path must match the content URL recorded in the generated tree
+- `doc_id` is required and must use the immutable document ID format.
+- The service reads the exact configured Working `by-id/<doc_id>.json` path without consulting the Index or substituting another document.
 
 Used for:
 
 - loading selected document content in Docs Viewer
-- inspecting non-publishable generated docs in Manage for a publish-capable collection
+- inspecting Working documents excluded from publication
 - refreshing a selected document after source edits
 
 ## Search Reads
@@ -125,36 +119,12 @@ Used for:
 Endpoints:
 
 ```text
-GET /docs/search?scope=studio
+GET /docs/search
 ```
 
-Returned data: the raw docs-search index JSON at the configured published search location.
+Returned data: the saved Working Search index at its configured generated location. Reads do not rebuild Search or infer freshness from the document tree.
 
-Payload shape:
-
-```json
-{
-  "header": {
-    "schema": "search_index_studio_v1",
-    "scope": "studio",
-    "version": "blake2b-...",
-    "generated_at_utc": "2026-06-07T00:00:00Z",
-    "count": 1
-  },
-  "entries": [
-    {
-      "id": "docs-viewer",
-      "kind": "doc",
-      "title": "Docs Viewer",
-      "href": "/docs/?scope=studio&doc=d-20260424-000000-50b63f",
-      "last_updated": "2026-06-07",
-      "display_meta": "2026-06-07",
-      "search_terms": [],
-      "search_text": "docs viewer"
-    }
-  ]
-}
-```
+The current schema is `docs_viewer_search_index_v4`, carrying document/collection/report-host identities and postings without stage or result URLs. [Docs Viewer Search](Docs_Viewer_Search.md) owns the maintained payload and reader contract.
 
 Used for:
 
@@ -163,4 +133,4 @@ Used for:
 
 ## Error Behavior
 
-Generated read endpoints reject unsupported scopes, unsafe ids, missing published files, invalid JSON, and unexpected payload paths. They do not write source, published data, operation logs, or watcher-suppression files.
+Generated read endpoints reject retired selectors, unsafe IDs, missing generated files, invalid JSON and unexpected payload paths. They do not write source, generated data or operation logs.
