@@ -6,9 +6,10 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from studio.services.catalogue.catalogue_pending_state import read_pending_state, write_pending_state
+from studio.services.catalogue.catalogue_shared_changes import merge_shared_changes, public_shared_outputs, validate_shared_changes
 
 
-SCHEMA = "catalogue_publish_pending_v3"
+SCHEMA = "catalogue_publish_pending_v4"
 FILENAME = "catalogue-publish-pending.json"
 
 
@@ -18,6 +19,16 @@ def read_pending_publication(repo_root: Path) -> dict[str, Any]:
 
 def write_pending_publication(repo_root: Path, value: dict[str, Any]) -> None:
     write_pending_state(repo_root, FILENAME, value, schema=SCHEMA, progress="preview_done")
+
+
+def merge_completed_shared(repo_root: Path, completed: dict[str, list[str]]) -> None:
+    """Forward completed shared output, excluding private reports and preserving Works."""
+    validate_shared_changes(repo_root, completed, publishing=False)
+    pending = read_pending_publication(repo_root)
+    public = public_shared_outputs(repo_root)
+    selection = {**completed, "shared_outputs": [name for name in completed["shared_outputs"] if name in public]}
+    merge_shared_changes(pending, selection)
+    write_pending_publication(repo_root, pending)
 
 
 def merge_completed_works(

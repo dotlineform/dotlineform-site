@@ -1,8 +1,8 @@
 """One design-time selection of Catalogue JSON for preparation and distribution.
 
-Selection reads an explicit stage and preserves its bytes. It neither joins
-canonical data nor filters by document eligibility. Unknown files are excluded;
-required directories/system files and malformed selected JSON fail visibly.
+Selection reads exact configured artifacts from an explicit stage and preserves
+their bytes. It neither joins canonical data nor discovers queue membership.
+Missing or malformed selected JSON fails; complete snapshots require system files.
 """
 
 from __future__ import annotations
@@ -10,6 +10,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import json
 from pathlib import Path
+from typing import Iterable
 
 from docs_workspace_config import DocsCatalogueConfig, location_child, safe_relative_path
 from docs_catalogue_media import (
@@ -50,7 +51,7 @@ def load_catalogue_artifact_inventory(repo_root: Path) -> CatalogueArtifactInven
 
 
 def read_catalogue_artifacts(
-    catalogue: DocsCatalogueConfig, inventory: CatalogueArtifactInventory, *, stage: str,
+    catalogue: DocsCatalogueConfig, inventory: CatalogueArtifactInventory, *, stage: str, identities: Iterable[Path],
 ) -> dict[str, bytes]:
     """Read selected JSON unchanged, keyed by its Catalogue-relative identity.
 
@@ -59,12 +60,11 @@ def read_catalogue_artifacts(
     or fall back to another stage; symlinks cannot redirect an artifact.
     """
     root = catalogue.stage_location(stage)
-    selected = list(inventory.system_files)
-    for relative in inventory.by_id_directories:
-        directory = location_child(root, relative).path
-        if not directory.is_dir():
-            raise ValueError(f"Catalogue {stage} directory is unavailable: {relative.as_posix()}")
-        selected.extend(relative / entry.name for entry in sorted(directory.iterdir()) if entry.suffix == ".json")
+    selected = set(identities)
+    if any(path not in inventory.system_files and not (
+        path.parent in inventory.by_id_directories and path.suffix == ".json"
+    ) for path in selected):
+        raise ValueError("Catalogue selection is outside the public artifact inventory")
     result = {}
     for relative in sorted(selected):
         identity = relative.as_posix()
@@ -78,6 +78,11 @@ def read_catalogue_artifacts(
             raise ValueError(f"Catalogue {stage} JSON must be an object: {identity}")
         if identity == "series-galleries-index.json":
             validate_catalogue_series_galleries_index(payload)
+        if relative.parent == Path("galleries/index") and (
+            not isinstance(payload.get("gallery"), dict) or not isinstance(payload.get("header"), dict)
+            or payload["gallery"].get("gallery_id") != relative.stem or payload["header"].get("gallery_id") != relative.stem
+        ):
+            raise ValueError(f"Catalogue Gallery identity does not match {identity}")
         result[identity] = data
     return result
 

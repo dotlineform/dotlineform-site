@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "catalogue_works_index_v1",
-    "version": "blake2b-8cc403ed8dce76f969590ac2b409de63",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
-    "count": 4618
+    "version": "blake2b-1645ebe0c70c25714d4797a971619ab6",
+    "generated_at_utc": "2026-10-10T13:12:03Z",
+    "count": 4619
   },
   "works": {
     "00001": {
@@ -32331,6 +32331,13 @@
       "year": 2026,
       "year_display": "2026",
       "series_id": "001"
+    },
+    "04626": {
+      "work_id": "04626",
+      "title": "100 hands",
+      "year": 2026,
+      "year_display": "2026",
+      "series_id": "144"
     }
   }
 }

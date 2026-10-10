@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260927-223812-8042fc
 title: Catalogue Save And Refresh
 added_date: "2026-09-27 22:38:12"
-last_updated: "2026-10-10 11:03:37"
+last_updated: "2026-10-10 14:19:12"
 summary: Current Catalogue Save, local Refresh, reader freshness and recovery boundaries.
 ui_status: stable
 parent_id: d-20260401-000000-a11bf3
@@ -41,7 +41,7 @@ Missing originals or managed downloads, conversion errors and destination-write 
 
 Save persists completed image renditions, thumbnails and native uploads below Projects-owned `catalogue/media-staging/`. Work `image_staged` selects the complete image set; each download's independent `staged` boolean selects that file. False selects Working media. Metadata edits preserve flags, image edits preserve download flags, and same-name replacements remain explicit queued transfers. Public Work JSON omits these operational fields.
 
-Mutation owners merge exact known Work IDs, metadata/image flags and filenames into `working/catalogue-updates-pending.json` (`catalogue_updates_pending_v3`), resetting affected entries to `refreshed: false`. Flags merge with OR; filenames accumulate while still referenced. Create, batch creation, bulk changes and Gallery/Series relationships contribute their known affected IDs. Deletion replaces a current entry; recreation replaces deletion. Mutations also set `header.shared_refresh_pending: true`, including shared changes with no Work entries, while preserving the last successful Refresh time. Queue persistence is required completion; failures report saved-but-incomplete results.
+Mutation owners merge exact known Work IDs, metadata/image flags and filenames into `working/catalogue-updates-pending.json` (`catalogue_updates_pending_v4`), resetting affected Work entries to `refreshed: false`. Flags merge with OR; filenames accumulate while still referenced. The same write merges current/deleted Gallery and Series ID arrays and exact shared-output identities. Owners capture former memberships/association endpoints before deletion; Work title/year changes select their Galleries because member rows embed those fields. Empty definitions contribute their own identity and required outputs without inventing a Work. Deletion replaces current selection; recreation replaces deletion. Mutations preserve the last successful Refresh time. Queue persistence is required completion; failures report saved-but-incomplete results.
 
 Work Delete captures its image-set flag and exact download basenames before canonical removal, persists its deletion descriptor and removes those owned staged bytes. Already absent bytes succeed. It does not scan other Works for ownership. Refresh and Publish retain descriptors for downstream removal; project originals and Gallery/Series definitions retain their owners.
 
@@ -49,16 +49,15 @@ The response returns current canonical records, revisions and memberships for ed
 
 ## Updates Queue
 
-`working/catalogue-updates-pending.json` is private to the configured Docs workspace and uses `catalogue_updates_pending_v3`. [The strict queue owner](../../studio/services/catalogue/catalogue_pending_state.py) validates its exact header and entries. The file must already exist; missing or malformed state stops operations without creating an empty fallback. The retired collection-source queue and separate Refresh receipt have no runtime compatibility path.
+`working/catalogue-updates-pending.json` is private to the configured Docs workspace and uses `catalogue_updates_pending_v4`. [The strict queue owner](../../studio/services/catalogue/catalogue_pending_state.py) validates its exact header, Work entries and shared selections. The file must already exist; missing or malformed state stops operations without creating an empty fallback. The retired collection-source queue and separate Refresh receipt have no runtime compatibility path.
 
 Example of a changed Work awaiting Refresh:
 
 ```json
 {
   "header": {
-    "schema": "catalogue_updates_pending_v3",
-    "last_refreshed_at_utc": null,
-    "shared_refresh_pending": true
+    "schema": "catalogue_updates_pending_v4",
+    "last_refreshed_at_utc": null
   },
   "current_works": {
     "00008": {
@@ -68,7 +67,12 @@ Example of a changed Work awaiting Refresh:
       "refreshed": false
     }
   },
-  "deleted_works": {}
+  "deleted_works": {},
+  "current_galleries": ["003"],
+  "deleted_galleries": [],
+  "current_series": [],
+  "deleted_series": [],
+  "shared_outputs": ["galleries/galleries_index.json", "works/works_index.json"]
 }
 ```
 
@@ -78,11 +82,12 @@ Both maps use exact five-digit Work IDs and are disjoint. A current entry has `m
 | --- | --- |
 | Change selections | Save, Create, bulk, relationship and Delete owners merge their known effects once. Current flags accumulate with OR and filenames retain only still-referenced downloads. Deletion replaces current selection; recreation replaces deletion. |
 | `refreshed` | A mutation resets its affected Work to false. Refresh sets true only after that Work's Working metadata/media handoff and staging-flag clears succeed. Completed true entries survive until Regenerate finishes their document work and publication merge. |
-| `header.shared_refresh_pending` | Mutations mark shared output pending, including Gallery/Series changes with no affected Work entries. Refresh retains true while processing; only full successful Refresh clears it. |
+| Gallery/Series arrays | Sorted distinct exact current/deleted IDs, disjoint within each family. Refresh completes their selected records/relationships, merges publication selection and then removes the shared unit. They have no media or document-Regenerate flags. |
+| `shared_outputs` | Sorted distinct Catalogue-relative system-file identities plus private `reports/series-galleries/metadata.json`. Mutations select dependencies, not every index. Refresh completes selected builders once and forwards only public system files from the artifact inventory. Private Work-report rows remain part of the selected Work handoff. |
 | `header.last_refreshed_at_utc` | Null until a successful Refresh; then its UTC completion time. Mutations, partial failures and Regenerate preserve the previous successful time. |
-| Entry removal | Regenerate removes one true entry only after required source/Build work and its publication-queue merge complete. |
+| Entry removal | Regenerate removes one true Work entry only after source/Build completion and publication merge. Refresh removes the selected shared unit only after all required Working output and shared publication merge complete. |
 
-An empty Work map can still require Refresh because shared output is pending. The editor's warning reads this header flag and the Work readiness flags. It does not hash Catalogue/configuration files or infer readiness from the timestamp. Exact Gallery/Series queue selections remain a follow-on; the shared flag covers their current Refresh requirement.
+An empty Work map can still require Refresh because a Gallery/Series array or `shared_outputs` is nonempty. Status combines those selections with false Work readiness; it does not hash Catalogue/configuration files or infer readiness from the timestamp. Gallery create/delete/rename and association changes select the relevant Gallery/relation indexes and private Series/Galleries report. Work membership changes select old/new Galleries and counts; title/year changes select member-row records and the Work index. Series title changes preserve member-Work contributions for private Work-report rows but do not rewrite the public relationship index, which contains no Series title. Media policy is selected only by explicit configuration maintenance through the same accumulation owner.
 
 ## Empty Gallery Cleanup
 
@@ -108,17 +113,17 @@ File bytes travel with Work create/Save as multipart data; UTF-8 metadata carrie
 
 The **Refresh Catalogue** icon is in the **Catalogue Work Editor** header row, aligned with the Work search. Its result message appears to the right; successful timestamps display in Europe/London time as `YYYY-MM-DD HH:mm`. Refresh is disabled while the editor has unsaved changes or another operation is busy. An unavailable Refresh-status read reports its own error without blocking canonical editor loading.
 
-The awaited operation requires the private updates queue and persists `header.shared_refresh_pending: true` before processing. It selects only `refreshed: false` entries, writes current Work by-ID records, copies selected image/download bytes to `working/assets/works/`, clears completed canonical staging flags and only then marks each entry true. Deletions remove exact Working metadata/media using retained descriptors. True entries are skipped. Shared Work/Gallery/relation indexes are written once; private Work report metadata merges selected IDs. Only complete success clears shared pending state and advances `header.last_refreshed_at_utc`. A failure preserves the previous timestamp and completed per-Work readiness. Refresh discovers no changes through corpus comparison and generates no images; returned records update editor locations and revisions.
+The awaited operation requires the private updates queue. It selects only `refreshed: false` Works, completes their private report-row handoff, writes current Work by-ID records, copies selected image/download bytes to `working/assets/works/`, clears completed canonical staging flags and only then marks each Work true. Deletions remove exact Working metadata/media using retained descriptors. True Works are skipped. Selected current Gallery records and aggregate outputs are generated; exact queued Gallery deletions remove their by-ID files without scanning the output directory. After the complete shared unit succeeds, Refresh merges its public selections into the publication queue, then removes its updates selections. Only complete action success advances `header.last_refreshed_at_utc`. A failure preserves the previous timestamp, completed per-Work readiness and uncompleted shared selections. Refresh discovers no changes through corpus comparison and generates no images; returned records update editor locations and revisions.
 
 Context's Subject column and heading sorts were removed on 2026-10-03. Their private Work/Series title file `reports/works/manifest.json`, reader, generator and report-serving allowance were retired with the last consumer. Refresh no longer generates or returns `works_collection_metadata`; Subject assignment uses its separate generated Catalogue provider.
 
-Refresh status reads only `working/catalogue-updates-pending.json`: any current/deleted entry with `refreshed: false`, or `header.shared_refresh_pending: true`, needs Refresh. True Work entries await Regenerate. The header is written first, with `schema`, nullable `last_refreshed_at_utc` and boolean `shared_refresh_pending` in that order. The timestamp is the last successful Refresh time and survives later mutations and Regenerate. The shared flag covers Gallery/Series changes without affected Works until those changes receive exact queue selections. No separate receipt or canonical/configuration hashing remains. Missing/malformed queues make status unavailable and stop operations without an empty fallback. Failed Refresh identifies the Work/step and retains completed effects for the next explicit Refresh.
+Refresh status reads only `working/catalogue-updates-pending.json`: any current/deleted Work with `refreshed: false`, any Gallery/Series selection or any shared output needs Refresh. True Work entries await Regenerate. The header is written first, with `schema` and nullable `last_refreshed_at_utc`. The timestamp survives later mutations and Regenerate. Missing/malformed queues make status unavailable and stop operations without an empty fallback. Failed Refresh identifies the Work/shared step and retains completed effects for the next explicit Refresh. Shared queue merge precedes updates removal; a failure between those writes can leave the same selection in both files, and the next explicit Refresh merges it again without duplicating identities.
 
-Shared Gallery records, discovery indexes, media policy and the Series/Galleries report are generated once per Refresh and compared with their saved Working payloads using the existing generated-content comparison. Only `header.generated_at_utc` is ignored. Unchanged outputs retain their exact bytes and timestamp and are omitted from the written-files result; new, changed or invalid outputs are written from canonical inputs. Publish copies those saved shared bytes, so a later Refresh/Publish no longer introduces timestamp-only changes for otherwise unchanged shared output. The queue's `last_refreshed_at_utc` still advances after every fully successful Refresh. This comparison does not select Work changes or determine readiness. Exact Gallery/Series queue selection remains separate follow-on work.
+Only selected Gallery records and shared outputs are constructed and compared with their saved Working payloads using the existing generated-content comparison. Only `header.generated_at_utc` is ignored. Unchanged selected outputs retain exact bytes/timestamps and are omitted from the written-files result; new, changed or invalid selected outputs are written from canonical inputs. Unselected Gallery records are retained without regeneration. Selected aggregate indexes are still assembled as complete JSON once; deeper row-merging optimisation remains separate. The queue timestamp advances after every fully successful Refresh. Content comparison prevents redundant writes; it neither discovers selection nor determines readiness.
 
 ## Regenerate Timing
 
-Regenerate consumes only true-readiness entries. Each selected Work completes source creation/title update/deletion and exact Catalogue document Build, then merges its selection into `working/catalogue-publish-pending.json` (`header.schema: catalogue_publish_pending_v3`) before removal from updates. False entries remain untouched. New publication records receive `preview_done: false`; merging preserves the header, including `last_published_at_utc`, and existing flags without inspecting them. Current media flags merge with OR and filenames are filtered against refreshed download references. Failure reports the Work/step and retains unfinished entries.
+Regenerate consumes only true-readiness Work entries. Each selected Work completes source creation/title update/deletion and exact Catalogue document Build, then merges its selection into `working/catalogue-publish-pending.json` (`header.schema: catalogue_publish_pending_v4`) before removal from updates. False Works and shared selections remain untouched. New publication Work records receive `preview_done: false`; merging preserves shared families, the header and existing progress without inspecting it. Current media flags merge with OR and filenames are filtered against refreshed download references. Failure reports the Work/step and retains unfinished entries. Definition-only changes with no affected Works use Save/Delete → Refresh → Publish; complete relevant Work Regenerate before publishing shared changes that also affect Work documents.
 
 Catalogue documents remain editable. Successful Source Save or **Edit doc → Rebuild** queues the completed document as `metadata: true`, contributes no image/download transfers and preserves existing publication selections/progress. This action does not consume the updates queue. Normal Regenerate preserves an existing body unless the Work title changes; a title change or explicit design maintenance replaces it with the generated Catalogue Entry/Links template. Added prose is therefore not guaranteed to survive regeneration; durable commentary belongs in a separate document linked to the Work.
 
@@ -131,6 +136,8 @@ The editor shows saved staged media immediately. Docs readers use Working metada
 Publish consumes completed publication selections and performs no upstream readiness inference, Refresh or Regenerate. Complete Save → Refresh → Regenerate before publishing those changes. Publish, Git commit/push and public deployment remain separate explicit actions.
 
 ## Delivery Evidence And Remaining Limits
+
+The Gallery/Series extension migrated both empty queues to v4 from the user's completed publication baseline, retaining their Refresh and Work publication times. Focused changed-source lint, Python syntax/import diagnostics, strict live-queue/status inspection and bounded source review provide static/current-state evidence. The user accepted the extension on 2026-10-10 after confirming the Refresh handoff: Gallery/Series/shared-output selections had moved to the publication queue, while a refreshed Work remained in the updates queue for Regenerate. This confirms the reported queue transition; shared Publish, deletion and partial failures were not itemised as tested, and no automated workflow tests ran. Restart the owning services and reload their pages after adopting changed server modules.
 
 The incremental workflow's Python/JavaScript lint, syntax, configured imports, field/queue diagnostics, runtime projection, site validation and whitespace checks passed. The user manually confirmed new Work staging/display, Refresh, Regenerate and publication through to R2, then deletion through the same lifecycle on 2026-10-10. The quicker Publish report is qualitative, with no measured speedup. Managed-download additions/replacements/removals and other variants were not itemised as tested. Live partial-failure/retry behavior remains unverified; its retained-progress handling received source review. No automated workflow tests were created, changed or run for this delivery.
 

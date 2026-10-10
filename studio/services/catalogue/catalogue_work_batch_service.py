@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from catalogue.catalogue_galleries import MEMBERSHIPS_FILE, read_galleries, with_work_memberships
+from catalogue.catalogue_shared_changes import work_shared_changes
 from catalogue.catalogue_media_files import IMAGE_EXTENSIONS
 from catalogue.catalogue_revisions import record_hash
 from catalogue.catalogue_service_context import CatalogueWriteContext, load_works_payload, log_event, utc_now
@@ -128,6 +129,9 @@ def work_batch_create_payload(
             "gallery_ids": updated_galleries.works.get(work_id, []),
         } for work_id, record in additions.items()],
         "affected_gallery_ids": sorted(body.get("gallery_ids", [])),
+        "_shared_changes": work_shared_changes(
+            previous.works, current.works, galleries.works, updated_galleries.works, additions,
+        ),
     }
     if context.dry_run:
         response.update(dry_run=True, would_write=True)

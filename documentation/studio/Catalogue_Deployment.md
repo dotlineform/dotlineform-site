@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260909-205938-3569d6
 title: Catalogue Deployment
 added_date: "2026-09-09 20:59:38"
-last_updated: "2026-10-10 10:42:03"
+last_updated: "2026-10-10 13:14:28"
 summary: Queued Work publication, separate Preview media, exact repository/R2 deployment and final shared output.
 parent_id: d-20260902-102745-8379ea
 ---
@@ -30,11 +30,11 @@ Studio Save persists canonical metadata, stages prepared media and queues known 
 
 Studio staging is Projects-owned `catalogue/media-staging/`; project originals retain their owner. Local readers resolve Working media through unchanged `/docs/assets/works/...` identities. Public readers use repository thumbnails and configured R2 primary/download URLs. Operational staging and queue fields are private.
 
-The [artifact inventory](../../docs-viewer/config/workspace/catalogue-artifacts.json) declares Work/Gallery by-ID directories and shared media policy, Work/Gallery indexes and Series–Gallery relation index. The final pass captures shared Working JSON and retains completed Preview Work by-ID bytes. It does not recopy all Working Work records or enumerate/hash Work media. Undeclared Catalogue files and the archive stay outside publication.
+The [artifact inventory](../../docs-viewer/config/workspace/catalogue-artifacts.json) declares Work/Gallery by-ID directories and shared media policy, Work/Gallery indexes and Series–Gallery relation index. The final pass retains unselected Catalogue JSON from completed Preview, applies exact queued Gallery updates/deletions and copies only selected aggregate/policy Working bytes. It does not capture every Working Gallery record or recopy all Working Work records. Undeclared Catalogue files, private Catalogue reports and the archive stay outside this Catalogue publication inventory.
 
 ## Per-Work Publish
 
-`working/catalogue-publish-pending.json` uses `catalogue_publish_pending_v3`. Its header is written first, with `schema` followed by nullable `last_published_at_utc`. Current and deleted maps are keyed by exact five-digit Work ID. Each entry retains an image-set selection, sorted exact download basenames and `preview_done`; current entries also carry `metadata`.
+`working/catalogue-publish-pending.json` uses `catalogue_publish_pending_v4`. Its header is written first, with `schema` followed by nullable `last_published_at_utc`. Current and deleted Work maps are keyed by exact five-digit Work ID. Each Work retains an image-set selection, sorted exact download basenames and `preview_done`; current Works also carry `metadata`. Sorted distinct current/deleted Gallery and Series ID arrays and `shared_outputs` carry completed shared selections independently of the Work maps.
 
 `last_published_at_utc` records completion of a nonempty Catalogue Work publication queue. The final queued Work's successful Deploy removes its entry and records that UTC time in the same queue write. Contributors, intermediate Work completions, an initially empty queue and partial failures preserve the previous timestamp. A later shared-output failure leaves the completed Catalogue timestamp intact. It starts null until the first queued Catalogue publication completes; it does not represent completion of the whole Docs Publish.
 
@@ -43,7 +43,7 @@ Example of completed upstream changes awaiting publication:
 ```json
 {
   "header": {
-    "schema": "catalogue_publish_pending_v3",
+    "schema": "catalogue_publish_pending_v4",
     "last_published_at_utc": null
   },
   "current_works": {
@@ -54,7 +54,12 @@ Example of completed upstream changes awaiting publication:
       "preview_done": false
     }
   },
-  "deleted_works": {}
+  "deleted_works": {},
+  "current_galleries": ["003"],
+  "deleted_galleries": [],
+  "current_series": [],
+  "deleted_series": [],
+  "shared_outputs": ["galleries/galleries_index.json", "works/works_index.json"]
 }
 ```
 
@@ -72,7 +77,11 @@ Only successful combined repository/R2 deployment removes the entry. Each Work c
 
 ## Final Shared Output
 
-Once the queue is empty, including an initially empty queue, Publish captures eligible ordinary/collection sources, saved Search and relationship inputs. It rebuilds ordinary and other collection documents in temporary storage while retaining already completed Catalogue by-ID documents. The Catalogue list manifest is derived from retained document metadata with date-only updates. Shared Catalogue indexes and Gallery records update once. Preparation eligibility, including excluded report hosts, still owns the complete prepared document set.
+Once the Work maps are empty, including initially empty maps, Publish carries a detached shared selection from the same publication queue through preparation and distribution. It captures eligible ordinary/collection sources, saved Search and relationship inputs, and rebuilds ordinary and other collection documents in temporary storage while retaining completed Catalogue by-ID documents. The Catalogue list manifest is derived from retained document metadata with date-only updates. Preparation eligibility, including excluded report hosts, still owns the complete prepared document set.
+
+Refresh contributes Gallery/Series selections directly after their complete Working output succeeds; these families have no document-Regenerate step or `preview_done` field. Current Gallery IDs select `galleries/index/<id>.json` replacement; deleted IDs select exact removal. Series identities represent effects in complete aggregate files, with no new Series by-ID artifact. `shared_outputs` is restricted to the public inventory's system files and is resolved relative to the configured Catalogue root. Private Series/Galleries and Work report metadata is never forwarded as public output.
+
+Shared preparation retains unselected Catalogue files from Preview and applies selected Working bytes/deletions to produce a complete validated snapshot. Distribution receives that snapshot and the same selection, compares only selected Catalogue repository destinations and carries its plan into apply/verification. It neither reads newer Working data nor derives Gallery deletion from a directory listing. Shared arrays/output selections are removed only after the complete shared distribution succeeds. The final pass still runs for ordinary documents and existing owners when these Catalogue selections are empty. Gallery/Series-only publication preserves the Work-specific `last_published_at_utc`.
 
 Preview snapshot replacement prunes the stage-local `assets/` subtree from its file inventory. It neither scans, hashes nor deletes Work media. The completion receipt verifies snapshot JSON and document-media references; per-Work completion owns Work media effects. Distribution compares shared repository/document-media destinations once and applies its retained plan. Search bytes are copied unchanged; Recents is freshly prepared by its existing owner. Missing retained Catalogue documents require their queued regeneration or explicit design maintenance before Publish can finish.
 
@@ -80,8 +89,8 @@ Public document payloads retain query-only Docs links and logical `docs-media:` 
 
 ## Failure And Timing
 
-Failures report the Work and Preview/Deploy step, or the final shared-output step. Completed effects remain. Failed/unprocessed queue entries retain their selection and accurate progress; no automatic retry, rollback, backup tree or separate R2 ledger is introduced. Final-pass failure can occur after all Work entries have completed; the next explicit Publish still runs the final pass.
+Failures report the Work and Preview/Deploy step, or the final shared-output step. Completed effects remain. Failed/unprocessed Work entries retain their selection and progress; failed shared publication retains its Gallery/Series/output selections. No automatic retry, rollback, backup tree or separate R2 ledger is introduced. Final-pass failure can occur after all Work entries have completed; the next explicit Publish still runs the required final pass. Finish an interrupted Publish before resuming authoring, Refresh or Regenerate.
 
 Repository and R2 effects are not atomic. R2 transfers precede later GitHub Actions deployment, so existing public pages may show new image bytes with older deployed commentary. That timing gap remains accepted. Review successful output through `bin/site-preview`. On 2026-10-10, the user confirmed new Work addition and subsequent deletion through the complete workflow to R2. Managed-file and other variants remain unverified, and live failure/retry behavior received source review only. The user perceived a quicker Catalogue queue Publish; no timing measurement is claimed.
 
-These are current implemented operations. Remaining manual coverage is recorded as an evidence limit rather than a proposed workflow. Missing retained Catalogue documents require queued Regenerate or explicit design maintenance; ordinary document Rebuild, Catalogue Refresh and publication remain separate owners. Removing Catalogue document editing, exact Gallery/Series queues and incremental ordinary-document Publish are separate follow-ons.
+These are current implemented operations. The Gallery/Series extension received focused lint, syntax/import diagnostics, strict live-queue/status inspection and bounded source review; it has not received live definition/membership publication or automated workflow testing. Both empty queues were migrated to v4 from the user's completed publication baseline, preserving their timestamps. Missing retained Catalogue documents require queued Regenerate or explicit design maintenance; ordinary document Rebuild, Catalogue Refresh and publication remain separate owners. Removing Catalogue document editing and incremental ordinary-document Publish remain separate follow-ons.

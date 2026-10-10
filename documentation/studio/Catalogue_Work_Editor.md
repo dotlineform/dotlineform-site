@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260422-000000-45a776
 title: Catalogue Work Editor
 added_date: "2026-04-22 00:00:00"
-last_updated: "2026-10-10 10:42:03"
+last_updated: "2026-10-10 13:14:28"
 parent_id: d-20260423-000000-d015e6
 
 ---
@@ -32,7 +32,7 @@ Medium is one descriptive text field for materials, process and support. It save
 
 For deletion, start with Delete and continue through Refresh, Regenerate and Publish. The editor's immediate image display reflects saved staged media; it does not show that Working, Preview or public output has been updated. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns the operational steps and updates queue; [Catalogue Deployment](Catalogue_Deployment.md) owns publication and its retained progress. Git commit/push and GitHub Actions deployment remain separate.
 
-“Catalogue readers need Refresh before Docs Publish.” means that the updates header has `shared_refresh_pending: true` or an affected Work still has `refreshed: false`. Empty Work maps can still require a shared Refresh. A successful Refresh records its UTC completion time and clears shared pending; mutations preserve that time while marking new work pending. Status reads the queue flags without Catalogue/configuration hashing or a separate receipt.
+“Catalogue readers need Refresh before Docs Publish.” means that an affected Work has `refreshed: false` or a Gallery/Series/shared-output selection is pending in the updates queue. Empty Work maps can still require Refresh. A successful Refresh records its UTC completion time and forwards completed shared selections to publication; mutations preserve that time while queuing new effects. Definition-only changes with no affected Works use Save/Delete → Refresh → Publish. Changes that also affect Work documents require Regenerate before Publish. Status reads only the queue without Catalogue/configuration hashing or a separate receipt.
 
 ## Create And Save
 

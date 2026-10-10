@@ -57,6 +57,7 @@ class DeployRepoPlan:
     lineage_workflows: tuple[publication_lineage.DocumentLineageWorkflow, ...]
     current_lineages: Mapping[str, publication_lineage.DocumentLineageTable | None]
     desired_lineages: Mapping[str, publication_lineage.DocumentLineageTable | None]
+    catalogue_selection: Mapping[str, list[str]]
 
 
 def utc_now() -> str:
@@ -435,6 +436,7 @@ def desired_repository_projection(
     repo_root: Path,
     config: DocsStageConfig,
     published_files: Mapping[Path, bytes],
+    catalogue_selection: Mapping[str, list[str]],
 ) -> tuple[
     dict[Path, bytes],
     dict[tuple[str, str], tuple[str, ...]],
@@ -482,7 +484,13 @@ def desired_repository_projection(
         for path, data in published_files.items() if path.is_relative_to(prefix)
     }, load_catalogue_artifact_inventory(repo_root))
     destination = repository_path(repo_root, workspace.catalogue.public_projection.location.path)
-    desired.update({destination / identity: data for identity, data in catalogue.items() if Path(identity).parent != Path("works/index")})
+    selected = set(catalogue_selection["shared_outputs"]) | {
+        f"galleries/index/{gid}.json" for gid in catalogue_selection["current_galleries"]
+    }
+    missing = selected - catalogue.keys()
+    if missing:
+        raise ValueError("Completed Preview is missing selected Catalogue output: " + ", ".join(sorted(missing)))
+    desired.update({destination / identity: catalogue[identity] for identity in selected})
     return desired, media_references, document_ids
 
 
@@ -499,6 +507,7 @@ def iter_managed_files(root: Path) -> Iterable[Path]:
 def current_repository_projection(
     repo_root: Path,
     config: DocsStageConfig,
+    catalogue_selection: Mapping[str, list[str]],
 ) -> dict[Path, bytes]:
     parent_path = public_documents_path(config)
     search_path = public_search_path(config)
@@ -534,18 +543,11 @@ def current_repository_projection(
         current[search_target] = search_target.read_bytes()
     workspace = load_docs_workspace_config(repo_root)
     catalogue_root = repository_path(repo_root, workspace.catalogue.public_projection.location.path)
-    inventory = load_catalogue_artifact_inventory(repo_root)
-    selected = [catalogue_root / path for path in inventory.system_files]
-    for relative in inventory.by_id_directories:
-        if relative == Path("works/index"):
-            continue
-        directory = catalogue_root / relative
-        if directory.is_symlink():
-            raise ValueError("Catalogue repository directories must not be symlinks")
-        if directory.is_dir():
-            selected.extend(path for path in directory.iterdir() if path.suffix == ".json")
+    selected = [catalogue_root / path for path in catalogue_selection["shared_outputs"]]
+    selected.extend(catalogue_root / f"galleries/index/{gid}.json"
+                    for field in ("current_galleries", "deleted_galleries") for gid in catalogue_selection[field])
     for path in selected:
-        if path.is_symlink():
+        if path.resolve() != path:
             raise ValueError("Catalogue repository JSON must not be symlinks")
         if path.is_file():
             current[path] = path.read_bytes()
@@ -682,6 +684,7 @@ def build_deploy_repo_plan(
     snapshot: CompletedPreview,
     *,
     deployment_timestamp: str,
+    catalogue_selection: Mapping[str, list[str]],
     client: object | None = None,
     env_files: Iterable[Path] | None = None,
     environ: Mapping[str, str] | None = None,
@@ -696,7 +699,7 @@ def build_deploy_repo_plan(
     manifest, published_files = snapshot.manifest, snapshot.files
     timestamp = deployment_timestamp
     desired, media_references, document_ids = (
-        desired_repository_projection(repo_root, config, published_files)
+        desired_repository_projection(repo_root, config, published_files, catalogue_selection)
     )
     # The completion manifest owns selection; public HTML extraction only checks
     # that document projection did not introduce an uncaptured managed reference.
@@ -704,7 +707,7 @@ def build_deploy_repo_plan(
     if not media_references.keys() <= captured_references.keys():
         raise ValueError("Preview is missing required document asset references; prepare again")
     media_references = captured_references
-    current = current_repository_projection(repo_root, config)
+    current = current_repository_projection(repo_root, config, catalogue_selection)
     repository = repository_diff(repo_root, current, desired)
     media_plan = plan_public_media_reconciliation(
         repo_root,
@@ -777,6 +780,7 @@ def build_deploy_repo_plan(
         lineage_workflows=lineage_workflows,
         current_lineages=current_lineages,
         desired_lineages=desired_lineages,
+        catalogue_selection=catalogue_selection,
     )
 
 
@@ -795,7 +799,7 @@ def apply_repository_projection(repo_root: Path, plan: DeployRepoPlan) -> None:
         if path.is_symlink():
             raise ValueError(f"repository deployment target must not be a symlink: {repo_relative(repo_root, path)}")
         path.write_bytes(expected)
-    actual = current_repository_projection(repo_root, plan.config)
+    actual = current_repository_projection(repo_root, plan.config, plan.catalogue_selection)
     if set(actual) != set(desired):
         raise RuntimeError("repository deployment file set did not verify")
     for path, expected in desired.items():

@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_source_galleries_v1",
-    "count": 299
+    "count": 300
   },
   "galleries": {
     "001": {
@@ -1199,6 +1199,10 @@
     "306": {
       "gallery_id": "306",
       "title": "pond (details)"
+    },
+    "307": {
+      "gallery_id": "307",
+      "title": "100 hands"
     }
   }
 }

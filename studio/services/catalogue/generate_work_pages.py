@@ -18,6 +18,7 @@ from catalogue.catalogue_output_selection import selected_output_paths
 from catalogue.catalogue_series_galleries import CatalogueSeriesGalleries, read_series_galleries, validate_series_galleries
 from catalogue.catalogue_series_galleries_report import METADATA_PATH as SERIES_GALLERIES_REPORT_PATH, series_galleries_report_payload
 from catalogue.catalogue_source import CatalogueSourceRecords, records_from_json_source, validate_source_records
+from catalogue.catalogue_shared_changes import WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT
 
 
 def _index(family: str, items: Mapping[str, Any], timestamp: str) -> dict[str, Any]:
@@ -29,6 +30,7 @@ def _index(family: str, items: Mapping[str, Any], timestamp: str) -> dict[str, A
 def catalogue_payloads(
     repo_root: Path, records: CatalogueSourceRecords, galleries: CatalogueGalleries,
     pairs: CatalogueSeriesGalleries, *, timestamp: str, work_ids: set[str] | None = None,
+    gallery_ids: set[str] | None = None, shared_outputs: set[str] | None = None,
 ) -> dict[str, dict[str, Any]]:
     """Build Work and Gallery records plus compact discovery indexes."""
     errors = validate_source_records(records)
@@ -36,20 +38,32 @@ def catalogue_payloads(
         raise ValueError("Catalogue source validation failed: " + "; ".join(errors[:20]))
     validate_galleries(galleries, records.works)
     validate_series_galleries(pairs, records.series, galleries.galleries)
-    context = indexes.build_series_work_index_context(series_records=records.series, work_records=records.works)
+    supported_shared = {"media-config.json", WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT}
+    shared = supported_shared if shared_outputs is None else shared_outputs
+    if shared - supported_shared:
+        raise ValueError("Catalogue generation selected an output without a builder")
+    selected_galleries = set(galleries.galleries) if gallery_ids is None else gallery_ids
+    if selected_galleries - galleries.galleries.keys() or (work_ids is not None and work_ids - records.works.keys()):
+        raise ValueError("Catalogue generation selected an unavailable current identity")
     works_by_gallery: dict[str, list[str]] = {gid: [] for gid in galleries.galleries}
     for wid, ids in galleries.works.items():
         for gid in ids:
             works_by_gallery[gid].append(wid)
+    member_records = {wid: records.works[wid] for gid in selected_galleries for wid in works_by_gallery[gid]}
+    context = indexes.build_series_work_index_context(series_records=records.series, work_records=member_records) if selected_galleries else None
     payloads: dict[str, dict[str, Any]] = {}
     works_index: dict[str, Any] = {}
     media_config = json.loads((repo_root / "site-tools/config/site-tools.json").read_text())["media"]
-    payloads["media-config.json"] = catalogue_media_policy(repo_root, timestamp=timestamp)
-    for wid, source in records.works.items():
+    if "media-config.json" in shared:
+        payloads["media-config.json"] = catalogue_media_policy(repo_root, timestamp=timestamp)
+    projection_ids = records.works.keys() if work_ids is None or WORK_INDEX in shared else sorted(work_ids)
+    for wid in projection_ids:
+        source = records.works[wid]
         work = compact_json_object({"work_id": wid, **projection.build_work_record_projection(source)})
         if source.get("series_id"):
             work["series_id"] = source["series_id"]
-        works_index[wid] = {key: work[key] for key in ("work_id", "title", "year", "year_display", "series_id") if key in work}
+        if WORK_INDEX in shared:
+            works_index[wid] = {key: work[key] for key in ("work_id", "title", "year", "year_display", "series_id") if key in work}
         if work_ids is not None and wid not in work_ids:
             continue
         if source.get("links"):
@@ -64,27 +78,32 @@ def catalogue_payloads(
         payloads[f"works/index/{wid}.json"] = projection.build_work_json_payload(
             work_record=work, generated_at_utc=timestamp,
         )
-    for gid, source in galleries.galleries.items():
+    for gid in sorted(selected_galleries):
+        source = galleries.galleries[gid]
         payloads[f"galleries/index/{gid}.json"] = projection.build_gallery_json_payload(
             gallery_id=gid, gallery_record=source,
             member_works=indexes.build_member_work_records(context=context, work_ids=works_by_gallery[gid]), generated_at_utc=timestamp,
         )
-    payloads["works/works_index.json"] = _index("works", works_index, timestamp)
-    payloads["galleries/galleries_index.json"] = _index("galleries", {
-        gid: {"gallery_id": gid, "title": galleries.galleries[gid]["title"], "work_count": len(works_by_gallery[gid])}
-        for gid in sorted(galleries.galleries)
-    }, timestamp)
+    if WORK_INDEX in shared:
+        payloads[WORK_INDEX] = _index("works", works_index, timestamp)
+    if GALLERY_INDEX in shared:
+        payloads[GALLERY_INDEX] = _index("galleries", {
+            gid: {"gallery_id": gid, "title": galleries.galleries[gid]["title"], "work_count": len(works_by_gallery[gid])}
+            for gid in sorted(galleries.galleries)
+        }, timestamp)
     series_galleries = {
         sid: [
             {"gallery_id": gid, "title": galleries.galleries[gid]["title"]}
             for gid in pairs.pairs_by_series.get(sid, ())
         ]
         for sid in sorted(records.series)
-    }
-    payloads["series-galleries-index.json"] = _index("series_galleries", series_galleries, timestamp)
-    payloads[SERIES_GALLERIES_REPORT_PATH] = series_galleries_report_payload(
-        records.series, galleries.galleries, series_galleries, timestamp=timestamp,
-    )
+    } if {RELATIONSHIP_INDEX, RELATIONSHIP_REPORT} & shared else {}
+    if RELATIONSHIP_INDEX in shared:
+        payloads[RELATIONSHIP_INDEX] = _index("series_galleries", series_galleries, timestamp)
+    if RELATIONSHIP_REPORT in shared:
+        payloads[SERIES_GALLERIES_REPORT_PATH] = series_galleries_report_payload(
+            records.series, galleries.galleries, series_galleries, timestamp=timestamp,
+        )
     return payloads
 
 

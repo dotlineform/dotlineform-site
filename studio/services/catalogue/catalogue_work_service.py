@@ -21,6 +21,7 @@ from catalogue.catalogue_service_context import (
     utc_now,
 )
 from catalogue.catalogue_source import WORK_FIELDS, records_from_json_source, slug_id
+from catalogue.catalogue_shared_changes import work_shared_changes
 
 
 def work_create_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -> dict[str, Any]:
@@ -68,6 +69,9 @@ def work_create_payload(context: CatalogueWriteContext, body: Mapping[str, Any])
         "record": mutation_plan.updated_record,
         "gallery_ids": updated_galleries.works.get(work_id, []),
         "affected_gallery_ids": updated_galleries.works.get(work_id, []),
+        "_shared_changes": work_shared_changes(
+            works, {**works, work_id: mutation_plan.updated_record}, galleries.works, updated_galleries.works, [work_id],
+        ),
     }
     if context.dry_run:
         payload["dry_run"] = True
@@ -127,6 +131,9 @@ def work_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
         "gallery_ids": sorted(updated_galleries.works.get(work_id, [])),
         "affected_gallery_ids": sorted(set(galleries.works.get(work_id, [])) | set(updated_galleries.works.get(work_id, []))),
         "newly_empty_gallery_ids": newly_empty_gallery_ids(galleries, updated_galleries, [work_id]),
+        "_shared_changes": work_shared_changes(
+            works, {**works, work_id: plan.updated_record}, galleries.works, updated_galleries.works, [work_id],
+        ),
     }
     if context.dry_run:
         payload.update(dry_run=True, would_write=changed)

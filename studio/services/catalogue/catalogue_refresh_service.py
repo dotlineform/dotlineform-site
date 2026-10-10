@@ -18,6 +18,8 @@ from catalogue.catalogue_output_paths import catalogue_workspace_config, output_
 from catalogue.catalogue_staged_media import catalogue_staging_assets, work_image_paths
 from catalogue.catalogue_source import payload_for_map
 from catalogue.catalogue_revisions import record_hash
+from catalogue.catalogue_shared_changes import SHARED_FIELDS, shared_changes
+from catalogue.catalogue_pending_publication import merge_completed_shared
 
 
 def catalogue_refresh_status(repo_root: Path) -> dict[str, Any]:
@@ -27,7 +29,7 @@ def catalogue_refresh_status(repo_root: Path) -> dict[str, Any]:
     except (OSError, ValueError) as error:
         raise RuntimeError(f"Catalogue Refresh status is unavailable: {error}") from error
     header = pending["header"]
-    needed = header["shared_refresh_pending"] or any(
+    needed = any(pending[field] for field in SHARED_FIELDS) or any(
         not entry["refreshed"] for family in ("current_works", "deleted_works")
         for entry in pending[family].values()
     )
@@ -42,16 +44,14 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
 
     Mutation owners supply selection. Shared output retains unchanged content;
     Work metadata/media and canonical flag clears complete before readiness.
-    Failure retains completed effects and shared pending state. Only full
-    completion clears shared readiness and advances the last successful time.
+    Failure retains completed effects and exact shared selections. Only full
+    completion advances the last successful time.
     """
     work_id = ""
     phase = "queue"
     try:
         pending = read_pending_updates(repo_root)
-        if not pending["header"]["shared_refresh_pending"]:
-            pending["header"]["shared_refresh_pending"] = True
-            write_pending_updates(repo_root, pending)
+        shared = shared_changes(pending)
         source_dir = repo_root / DEFAULT_SOURCE_DIR
         records = records_from_json_source(source_dir)
         galleries = read_galleries(source_dir, records.works)
@@ -66,30 +66,18 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
         payloads = catalogue_payloads(
             repo_root, records, galleries, pairs, timestamp=utc_timestamp(),
             work_ids=set(selected["current_works"]),
+            gallery_ids=set(shared["current_galleries"]), shared_outputs=set(shared["shared_outputs"]),
         )
+        if set(shared["deleted_galleries"]) & galleries.galleries.keys() or set(shared["deleted_series"]) & records.series.keys():
+            raise ValueError("Queued shared deletion still has a canonical definition")
+        if set(shared["current_series"]) - records.series.keys():
+            raise ValueError("Queued current Series is unavailable")
         output = {"status": "completed", "written": [], "deleted": []}
-        for identity, payload in payloads.items():
-            if identity.startswith("works/index/"):
-                continue
-            path = output_path(workspace.catalogue.working, identity)
-            try:
-                previous = json.loads(path.read_text(encoding="utf-8"))
-            except (OSError, ValueError):
-                previous = None
-            if same_generated_content(previous, payload):
-                continue
-            _write_payload(path, payload)
-            output["written"].append(identity)
-        gallery_root = output_path(workspace.catalogue.working, "galleries/index")
-        for path in sorted(gallery_root.glob("*.json")):
-            identity = path.relative_to(workspace.catalogue.working.path).as_posix()
-            if identity not in payloads:
-                output_path(workspace.catalogue.working, identity).unlink()
-                output["deleted"].append(identity)
+        phase = "Work report handoff"
         report = update_catalogue_works_metadata(
             repo_root, records, work_ids=sorted(selected["current_works"]),
             deleted_work_ids=sorted(selected["deleted_works"]), write=True,
-        )
+        ) if any(selected.values()) else None
         editor_records = []
         for family in ("current_works", "deleted_works"):
             for work_id, entry in sorted(selected[family].items()):
@@ -132,8 +120,34 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
                 phase = "readiness"
                 entry["refreshed"] = True
                 write_pending_updates(repo_root, pending)
+        work_id, phase = "", "shared output"
+        for identity, payload in payloads.items():
+            if identity.startswith("works/index/"):
+                continue
+            path = output_path(workspace.catalogue.working, identity)
+            try:
+                previous = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                previous = None
+            if same_generated_content(previous, payload):
+                continue
+            _write_payload(path, payload)
+            output["written"].append(identity)
+        for gallery_id in shared["deleted_galleries"]:
+            identity = f"galleries/index/{gallery_id}.json"
+            path = output_path(workspace.catalogue.working, identity)
+            if path.exists():
+                path.unlink()
+                output["deleted"].append(identity)
+        if any(shared.values()):
+            phase = "shared publication queue"
+            merge_completed_shared(repo_root, shared)
+            phase = "shared updates queue"
+            for field in SHARED_FIELDS:
+                pending[field] = []
+            write_pending_updates(repo_root, pending)
         work_id, phase = "", "completion"
-        pending["header"].update(last_refreshed_at_utc=utc_timestamp(), shared_refresh_pending=False)
+        pending["header"]["last_refreshed_at_utc"] = utc_timestamp()
         write_pending_updates(repo_root, pending)
         status = {"ok": True, "needed": False, "refreshed_at_utc": pending["header"]["last_refreshed_at_utc"]}
         return {"ok": True, "output": output, "report_metadata": report,

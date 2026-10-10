@@ -1,0 +1,23 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-435b6f958be1f3c5c4503e70aa2cfd27",
+    "generated_at_utc": "2026-10-10T13:12:03Z"
+  },
+  "work": {
+    "work_id": "04626",
+    "title": "100 hands",
+    "year": 2026,
+    "year_display": "2026",
+    "width_px": 2148,
+    "height_px": 2765,
+    "media_version": 1,
+    "series_id": "144",
+    "galleries": [
+      {
+        "gallery_id": "307",
+        "title": "100 hands"
+      }
+    ]
+  }
+}

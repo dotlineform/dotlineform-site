@@ -16,6 +16,7 @@ from catalogue.catalogue_source import (
     CatalogueSourceRecords, SOURCE_FILES, payload_for_map, records_from_json_source,
     validate_source_records,
 )
+from catalogue.catalogue_shared_changes import empty_shared_changes, work_shared_changes, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT
 
 
 @dataclass(frozen=True)
@@ -26,6 +27,7 @@ class DeleteApplyPlan:
     affected: dict[str, list[str]]
     previous: CatalogueSourceRecords
     current: CatalogueSourceRecords
+    shared: dict[str, list[str]]
 
 
 def build_delete_apply_plan(
@@ -57,6 +59,7 @@ def build_delete_apply_plan(
         payloads[(source_dir / SOURCE_FILES["works"]).resolve()] = payload_for_map("works", works)
         payloads[(source_dir / MEMBERSHIPS_FILE).resolve()] = remaining_memberships.payloads()[MEMBERSHIPS_FILE]
         affected = {"works": record_ids, "series": sorted(series_ids)}
+        shared = work_shared_changes(source.works, works, galleries.works, remaining_memberships.works, record_ids)
     elif kind == "series" and len(record_ids) == 1:
         series_id = record_ids[0]
         series = dict(source.series)
@@ -71,9 +74,12 @@ def build_delete_apply_plan(
         if series_id in pairs.pairs_by_series:
             payloads[(source_dir / SERIES_GALLERIES_FILE).resolve()] = without_series(pairs, series_id).payload()
         affected = {"works": [], "series": record_ids}
+        shared = {**empty_shared_changes(), "deleted_series": record_ids,
+                  "current_galleries": list(pairs.pairs_by_series.get(series_id, ())),
+                  "shared_outputs": sorted([RELATIONSHIP_INDEX, RELATIONSHIP_REPORT])}
     else:
         raise ValueError("delete kind must be works or one series")
     errors = validate_source_records(current)
     if errors:
         raise ValueError("source validation failed: " + "; ".join(errors[:20]))
-    return DeleteApplyPlan(payloads, affected, source, current)
+    return DeleteApplyPlan(payloads, affected, source, current, shared)

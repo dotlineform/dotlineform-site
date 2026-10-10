@@ -8,6 +8,8 @@ from typing import Any, Iterable, Mapping
 from docs_deploy_repo import apply_deploy_repo_plan, build_deploy_repo_plan, utc_now
 from docs_prepare_preview import prepare_preview
 from docs_catalogue_publication import CataloguePublicationError, publish_catalogue_works
+from studio.services.catalogue.catalogue_pending_publication import read_pending_publication, write_pending_publication
+from studio.services.catalogue.catalogue_shared_changes import SHARED_FIELDS, shared_changes
 
 
 def publish_docs(
@@ -37,14 +39,17 @@ def publish_docs(
     }
     try:
         result["catalogue"] = publish_catalogue_works(repo_root, client=client, env_files=env_files, environ=environ)
+        pending = read_pending_publication(repo_root)
+        selection = shared_changes(pending)
         result["phase"] = "shared preparation"
-        snapshot = prepare_preview(repo_root)
+        snapshot = prepare_preview(repo_root, catalogue_selection=selection)
         result.update(
             phase="distribution", preview_prepared=True,
             preview_revision=snapshot.manifest["preview_revision"],
         )
         plan = build_deploy_repo_plan(
             repo_root, snapshot, deployment_timestamp=utc_now(),
+            catalogue_selection=selection,
             client=client, env_files=env_files, environ=environ,
         )
         distribution = apply_deploy_repo_plan(repo_root, plan)
@@ -57,6 +62,11 @@ def publish_docs(
             result["error"] = "; ".join(errors)
             result["summary_text"] = "Preview prepared; publication is incomplete. " + result["error"]
             return result
+        result["phase"] = "shared queue completion"
+        if any(selection.values()):
+            for field in SHARED_FIELDS:
+                pending[field] = []
+            write_pending_publication(repo_root, pending)
     except Exception as error:
         if isinstance(error, CataloguePublicationError):
             result.update(work_id=error.work_id, phase=error.phase)

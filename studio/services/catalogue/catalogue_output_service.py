@@ -44,6 +44,7 @@ def complete_saved_catalogue_edit(
     initial reread. Media promotion still owns dimensions/revisions, so editor
     completion reads their final canonical state after media has been attempted.
     """
+    shared = response.pop("_shared_changes", None)
     if context.dry_run or not response.get("ok"):
         return
     response["saved"] = True
@@ -98,6 +99,8 @@ def complete_saved_catalogue_edit(
     try:
         if current is None:
             raise ValueError("Saved canonical records are unavailable for queue completion")
+        if shared is None:
+            raise ValueError("Canonical mutation did not supply its shared Catalogue effects")
         changed_ids = set()
         if response.get("changed") or response.get("created"):
             for field in ("changed_work_ids", "changed_ids", "affected_work_ids", "created_ids"):
@@ -116,12 +119,11 @@ def complete_saved_catalogue_edit(
                   "image": wid in image_changes, "file_names": sorted(file_changes.get(wid, set()))}
             for wid in targets
         }
-        refresh_needed = bool(selections or deleted_media or response.get("changed") or response.get("created")
-                              or response.get("deleted") or response.get("media", {}).get("changed") or failures)
+        refresh_needed = bool(selections or deleted_media or any(shared.values()) or failures)
         accumulate_work_changes(
             context.repo_root, selections, deleted_media or {},
             downloads_by_work={wid: download_filenames(current.works[wid]) for wid in targets},
-            shared_refresh_pending=refresh_needed,
+            shared=shared,
         )
         for wid, selection in (deleted_media or {}).items():
             clear_staged_work(context.repo_root, wid, dict(selection))

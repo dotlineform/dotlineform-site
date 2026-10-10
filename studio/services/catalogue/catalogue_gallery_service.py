@@ -15,6 +15,7 @@ from catalogue.catalogue_series_galleries import (
 )
 from catalogue.catalogue_service_context import CatalogueWriteContext, load_series_payload, load_works_payload, log_event, utc_now
 from catalogue.catalogue_transactions import execute_source_json_write
+from catalogue.catalogue_shared_changes import empty_shared_changes, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT
 
 
 def gallery_record_payload(
@@ -108,10 +109,21 @@ def mutate_gallery_payload(
         execute_source_json_write(writes, dry_run=context.dry_run, repo_root=context.repo_root)
     affected_series = set(related_series_ids(pairs, gallery_id)) | set(related_series_ids(updated_pairs, gallery_id))
     affected_works = set(members) | {wid for wid, record in works.items() if record.get("series_id") in affected_series}
+    shared = empty_shared_changes()
+    if writes:
+        shared["deleted_galleries" if operation == "delete" else "current_galleries"] = [gallery_id]
+        shared["current_series"] = sorted(affected_series)
+        outputs = {RELATIONSHIP_REPORT}
+        if definitions != data.galleries:
+            outputs.add(GALLERY_INDEX)
+        if updated_pairs.pairs_by_series != pairs.pairs_by_series or (definitions != data.galleries and affected_series):
+            outputs.add(RELATIONSHIP_INDEX)
+        shared["shared_outputs"] = sorted(outputs)
     response = {
         "ok": True, "gallery_id": gallery_id, "changed": bool(writes),
         "created": operation == "create", "deleted": operation == "delete",
         "affected_work_ids": sorted(affected_works), "affected_gallery_ids": [gallery_id],
+        "_shared_changes": shared,
     }
     if operation != "delete":
         response.update(gallery_record_payload(updated, updated_pairs, gallery_id))

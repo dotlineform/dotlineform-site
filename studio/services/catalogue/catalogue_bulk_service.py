@@ -29,6 +29,7 @@ from catalogue.catalogue_source import (
     sort_record_map,
     validate_source_records,
 )
+from catalogue.catalogue_shared_changes import work_shared_changes
 
 
 BULK_WORK_EDITABLE_FIELDS = {
@@ -146,6 +147,9 @@ def bulk_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
         "affected_series_ids": sorted(affected_series_ids),
         "affected_gallery_ids": sorted(affected_gallery_ids),
         "newly_empty_gallery_ids": newly_empty_gallery_ids(galleries, updated_galleries, selected_ids),
+        "_shared_changes": work_shared_changes(
+            works_map, updated_works, galleries.works, updated_galleries.works, changed_ids,
+        ),
     }
     _finish_bulk_payload(
         context,

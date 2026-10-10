@@ -17,6 +17,10 @@ from catalogue.catalogue_service_context import (
 )
 from catalogue.catalogue_source import SERIES_FIELDS, records_from_json_source, slug_id
 from catalogue.series_ids import normalize_series_id
+from catalogue.catalogue_galleries import read_galleries
+from catalogue.catalogue_shared_changes import (
+    empty_shared_changes, merge_shared_changes, work_shared_changes, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT,
+)
 
 
 def series_create_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -> dict[str, Any]:
@@ -46,6 +50,12 @@ def series_create_payload(context: CatalogueWriteContext, body: Mapping[str, Any
         raise ValueError("; ".join(mutation_plan.validation_errors[:20]))
 
     changed_work_ids = mutation_plan.changed_work_ids
+    galleries = read_galleries(context.source_dir, works_map)
+    shared = work_shared_changes(
+        works_map, {**works_map, **mutation_plan.work_updates}, galleries.works, galleries.works, changed_work_ids,
+    )
+    merge_shared_changes(shared, {**empty_shared_changes(), "current_series": [series_id],
+                                 "shared_outputs": sorted([RELATIONSHIP_INDEX, RELATIONSHIP_REPORT])})
     target_payloads: dict[Path, dict[str, Any]] = {
         context.series_path.resolve(): mutation_plan.payload,
     }
@@ -70,6 +80,7 @@ def series_create_payload(context: CatalogueWriteContext, body: Mapping[str, Any
         "changed_work_ids": changed_work_ids,
         "record": mutation_plan.updated_record,
         "work_records": mutation_plan.work_records,
+        "_shared_changes": shared,
     }
     if context.dry_run:
         payload["dry_run"] = True
@@ -106,6 +117,11 @@ def series_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any])
     )
     if plan.validation_errors:
         raise ValueError("; ".join(plan.validation_errors[:20]))
+    galleries = read_galleries(context.source_dir, works_map)
+    shared = work_shared_changes(works_map, {**works_map, **plan.work_updates}, galleries.works, galleries.works, plan.changed_work_ids)
+    if plan.changed_fields:
+        merge_shared_changes(shared, {**empty_shared_changes(), "current_series": [series_id],
+                                     "shared_outputs": [RELATIONSHIP_REPORT]})
     payloads: dict[Path, Any] = {}
     if plan.changed_fields:
         payloads[context.series_path.resolve()] = plan.payload
@@ -120,6 +136,7 @@ def series_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any])
         "changed_fields": plan.changed_fields, "record": plan.updated_record,
         "record_hash": record_hash(plan.updated_record),
         "changed_work_ids": plan.changed_work_ids, "work_records": plan.work_records,
+        "_shared_changes": shared,
         "affected_work_ids": sorted(
             set(plan.changed_work_ids) | ({wid for wid, record in works_map.items() if record.get("series_id") == series_id}
                                          if plan.changed_fields else set())

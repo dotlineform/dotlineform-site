@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, replace
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -31,7 +31,7 @@ from docs_recent_payload import build_recent_payload
 from docs_selected_documents import read_selected, selected_row, selected_text
 from docs_catalogue_artifacts import (
     CONFIG_REL_PATH as CATALOGUE_CONFIG_REL_PATH, load_catalogue_artifact_inventory,
-    read_catalogue_artifacts,
+    read_catalogue_artifacts, select_catalogue_artifacts,
 )
 
 
@@ -72,7 +72,7 @@ def promoted_source(doc: SourceDoc, collection: Any) -> bytes:
     return format_source(front_matter, doc.body).encode("utf-8")
 
 
-def _capture_inputs(repo_root: Path) -> PreparationInputs:
+def _capture_inputs(repo_root: Path, catalogue_selection: dict[str, list[str]]) -> PreparationInputs:
     configuration = {
         Path("configuration"): (repo_root / CONFIG_REL_PATH).read_bytes(),
         Path("catalogue-inventory"): (repo_root / CATALOGUE_CONFIG_REL_PATH).read_bytes(),
@@ -95,13 +95,17 @@ def _capture_inputs(repo_root: Path) -> PreparationInputs:
         raise ValueError("Preview root must be a directory without symlinks")
     current = _files_from_root(preview_root) if preview_root.is_dir() else {}
     inventory = load_catalogue_artifact_inventory(repo_root)
-    shared_inventory = replace(inventory, by_id_directories=tuple(path for path in inventory.by_id_directories if path != Path("works/index")))
-    catalogue = read_catalogue_artifacts(workspace.catalogue, shared_inventory, stage="working")
     catalogue_prefix = workspace.catalogue.preview.path.relative_to(preview_root)
-    catalogue.update({
+    catalogue = {
         path.relative_to(catalogue_prefix).as_posix(): data for path, data in current.items()
-        if path.parent == catalogue_prefix / "works/index" and path.suffix == ".json"
-    })
+        if path.is_relative_to(catalogue_prefix)
+    }
+    identities = {Path(name) for name in catalogue_selection["shared_outputs"]}
+    identities.update(Path("galleries/index") / f"{gid}.json" for gid in catalogue_selection["current_galleries"])
+    catalogue.update(read_catalogue_artifacts(workspace.catalogue, inventory, stage="working", identities=identities))
+    for gallery_id in catalogue_selection["deleted_galleries"]:
+        catalogue.pop(f"galleries/index/{gallery_id}.json", None)
+    catalogue = select_catalogue_artifacts(catalogue, inventory)
     basis = {
         **configuration,
         Path("working"): files_revision(source_files).encode(),
@@ -113,8 +117,8 @@ def _capture_inputs(repo_root: Path) -> PreparationInputs:
     return PreparationInputs(working, workspace.recent_limit, source_files, search_index, catalogue, related_links, current, basis)
 
 
-def _plan(repo_root: Path) -> tuple[dict[str, Any], dict[Path, bytes], PreparationInputs, bytes]:
-    inputs = _capture_inputs(repo_root)
+def _plan(repo_root: Path, catalogue_selection: dict[str, list[str]]) -> tuple[dict[str, Any], dict[Path, bytes], PreparationInputs, bytes]:
+    inputs = _capture_inputs(repo_root, catalogue_selection)
     working, source_files = inputs.working, inputs.source_files
     source_revision = inputs.revision_basis[Path("working")].decode()
     source_root = _lifecycle_root(repo_root, working, "source")
@@ -307,10 +311,10 @@ def _complete_preview(
     )
 
 
-def prepare_preview(repo_root: Path) -> CompletedPreview:
+def prepare_preview(repo_root: Path, *, catalogue_selection: dict[str, list[str]]) -> CompletedPreview:
     """Capture fresh eligible Working inputs and complete Preview synchronously.
 
     The synchronous workflow prevents edits while captured inputs are consumed.
     Failure prevents distribution; snapshot replacement retains its receipt semantics.
     """
-    return _complete_preview(repo_root, *_plan(repo_root))
+    return _complete_preview(repo_root, *_plan(repo_root, catalogue_selection))

@@ -12,6 +12,7 @@ from typing import Any
 
 from studio.services.catalogue.catalogue_output_paths import catalogue_workspace_config
 from studio.services.catalogue.catalogue_work_attachments import safe_download_filename
+from studio.services.catalogue.catalogue_shared_changes import SHARED_FIELDS, shared_changes, validate_shared_changes
 
 
 WORK_ID = re.compile(r"[0-9]{5}\Z")
@@ -29,18 +30,15 @@ def pending_path(repo_root: Path, filename: str) -> Path:
     return path
 
 
-def validate_pending_state(value: Any, *, schema: str, progress: str) -> dict[str, Any]:
-    """Validate queue headers and exact Work selections."""
-    if not isinstance(value, dict) or set(value) != {"header", "current_works", "deleted_works"}:
+def validate_pending_state(repo_root: Path, value: Any, *, schema: str, progress: str) -> dict[str, Any]:
+    """Validate headers, exact Work records and shared family/output selections."""
+    if not isinstance(value, dict) or set(value) != {"header", "current_works", "deleted_works", *SHARED_FIELDS}:
         raise ValueError(f"Catalogue queue requires {schema}")
     header = value["header"]
     timestamp_field = "last_refreshed_at_utc" if progress == "refreshed" else "last_published_at_utc"
-    header_fields = {"schema", timestamp_field} | ({"shared_refresh_pending"} if progress == "refreshed" else set())
+    header_fields = {"schema", timestamp_field}
     if not isinstance(header, dict) or set(header) != header_fields or header["schema"] != schema:
         raise ValueError(f"Catalogue queue header requires {schema}")
-    if progress == "refreshed":
-        if type(header["shared_refresh_pending"]) is not bool:
-            raise ValueError(f"Catalogue updates header requires {schema}, timestamp and shared readiness")
     timestamp = header[timestamp_field]
     if timestamp is not None:
         if not isinstance(timestamp, str) or not re.fullmatch(r"[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z", timestamp):
@@ -67,6 +65,7 @@ def validate_pending_state(value: Any, *, schema: str, progress: str) -> dict[st
                 raise ValueError(f"Work {work_id}: file_names must be sorted and distinct")
     if value["current_works"].keys() & value["deleted_works"].keys():
         raise ValueError("A queued Work cannot be both current and deleted")
+    validate_shared_changes(repo_root, {field: value[field] for field in SHARED_FIELDS}, publishing=progress == "preview_done")
     return value
 
 
@@ -77,18 +76,19 @@ def read_pending_state(repo_root: Path, filename: str, *, schema: str, progress:
         value = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, ValueError) as error:
         raise ValueError(f"Catalogue queue {filename} is unavailable: {error}") from error
-    return validate_pending_state(value, schema=schema, progress=progress)
+    return validate_pending_state(repo_root, value, schema=schema, progress=progress)
 
 
 def write_pending_state(repo_root: Path, filename: str, value: dict[str, Any], *, schema: str, progress: str) -> None:
     """Replace one validated queue after the caller's required work completes."""
-    validate_pending_state(value, schema=schema, progress=progress)
+    validate_pending_state(repo_root, value, schema=schema, progress=progress)
     path = pending_path(repo_root, filename)
-    header_keys = ("schema", "last_refreshed_at_utc", "shared_refresh_pending") if progress == "refreshed" else ("schema", "last_published_at_utc")
+    header_keys = ("schema", "last_refreshed_at_utc") if progress == "refreshed" else ("schema", "last_published_at_utc")
     value = {
         "header": {key: value["header"][key] for key in header_keys},
         **{family: {wid: value[family][wid] for wid in sorted(value[family])}
            for family in ("current_works", "deleted_works")},
+        **shared_changes(value),
     }
     data = json.dumps(value, ensure_ascii=False, indent=2) + "\n"
     fd, name = tempfile.mkstemp(prefix="catalogue-pending-", suffix=".tmp", dir=path.parent)
@@ -102,4 +102,5 @@ def write_pending_state(repo_root: Path, filename: str, value: dict[str, Any], *
 
 
 def pending_counts(value: dict[str, Any]) -> dict[str, int]:
-    return {"current": len(value["current_works"]), "deleted": len(value["deleted_works"])}
+    return {"current": len(value["current_works"]), "deleted": len(value["deleted_works"]),
+            **{field: len(value[field]) for field in SHARED_FIELDS}}

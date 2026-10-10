@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "catalogue_galleries_index_v1",
-    "version": "blake2b-0477417322c9d83e04ebf2c1a306388a",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
-    "count": 299
+    "version": "blake2b-8a159060addc24383b778dead6925f0e",
+    "generated_at_utc": "2026-10-10T13:12:03Z",
+    "count": 300
   },
   "galleries": {
     "001": {
@@ -1500,6 +1500,11 @@
       "gallery_id": "306",
       "title": "pond (details)",
       "work_count": 4
+    },
+    "307": {
+      "gallery_id": "307",
+      "title": "100 hands",
+      "work_count": 1
     }
   }
 }

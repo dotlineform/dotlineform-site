@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261009-110914-712f45
 title: Incremental Updates
 added_date: "2026-10-09 11:09:14"
-last_updated: "2026-10-10 12:39:52"
+last_updated: "2026-10-10 14:19:12"
 summary: Active delivery of incremental Catalogue mutation, Refresh and Regenerate steps, with Work-by-Work Preview and Deploy, one publication progress flag and a final shared-output pass.
 ui_status: active
 parent_id: d-20261007-221414-48ff3f
@@ -31,6 +31,8 @@ We need to make incremental updates to the Catalogue metadata **and** media, and
 The next gate is user manual acceptance under IU-6. Test work remains separately scoped under [Test Contract Discipline](../Test_Contract_Discipline.md). Live Publish, real media deletion and Git actions remain explicit actions. Detailed changed-owner and command context is retained in the temporary [implementation handoff](Incremental_updates_handoff.md).
 
 ## Current State
+
+The exact Gallery/Series queue follow-on is complete and accepted on 2026-10-10 under [Gallery And Series Incremental Updates](Gallery_And_Series_Incremental_Updates.md). The user confirmed the Refresh queue handoff; shared Publish and partial failures were not itemised as tested. Current queues use v4 and explicit shared selections. The v3 schemas/shared-flag descriptions below record this original Work delivery; current durable queue ownership is [Catalogue Save And Refresh](../Catalogue_Save_And_Refresh.md) and [Catalogue Deployment](../Catalogue_Deployment.md).
 
 - Studio Save writes complete prepared image/thumbnail sets and new/replacement downloads into Projects-owned `catalogue/media-staging/`. Independent canonical flags select staging or Working for each media family/file.
 - Known mutation effects accumulate in `working/catalogue-updates-pending.json`; Refresh completes selected false-readiness metadata/media handoffs and clears staging flags before readiness becomes true.
@@ -516,6 +518,5 @@ Gate: the complete agreed workflow is accepted and durable ownership documentati
 ## Follow-ons
 
 - Remove Catalogue document editing from the UI so Catalogue content is authored through Work edits and generated templates. Determine the complete editing surface in that bounded follow-on; exact-document Rebuild remains useful for applying current generated inputs.
-- Introduce similar mutation-owned queue tracking for Gallery/Series definitions and relationship changes, including changes with zero affected Works. [Gallery And Series Incremental Updates](Gallery_And_Series_Incremental_Updates.md) proposes extending both existing queue files with exact Gallery/Series and shared-output selections, preserving affected-Work contributions and replacing the coarse shared pending flag; no Catalogue discovery scans. Its schemas and completion boundaries remain proposed until implementation approval.
 - Incremental Publish of normal and non-Catalogue collection docs.
 - Optimisation of index and lookup JSON build, validation and Publishing.

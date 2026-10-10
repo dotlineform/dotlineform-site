@@ -38,6 +38,7 @@ def delete_apply_response(
     identity = {"ids": record_ids} if kind == "works" else {"id": record_ids[0]}
     payload: dict[str, Any] = {
         "ok": True, "kind": kind, **identity, "deleted": True, "affected": plan.affected,
+        "_shared_changes": plan.shared,
     }
     if context.dry_run:
         payload.update(dry_run=True, would_write=True)

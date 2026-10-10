@@ -8,9 +8,10 @@ from typing import Any, Mapping
 from studio.services.catalogue.catalogue_pending_state import (
     pending_path, read_pending_state, validate_pending_state, write_pending_state,
 )
+from studio.services.catalogue.catalogue_shared_changes import merge_shared_changes, validate_shared_changes
 
 
-SCHEMA = "catalogue_updates_pending_v3"
+SCHEMA = "catalogue_updates_pending_v4"
 FILENAME = "catalogue-updates-pending.json"
 
 
@@ -18,8 +19,8 @@ def pending_updates_path(repo_root: Path) -> Path:
     return pending_path(repo_root, FILENAME)
 
 
-def validate_pending_updates(value: Any) -> dict[str, Any]:
-    return validate_pending_state(value, schema=SCHEMA, progress="refreshed")
+def validate_pending_updates(repo_root: Path, value: Any) -> dict[str, Any]:
+    return validate_pending_state(repo_root, value, schema=SCHEMA, progress="refreshed")
 
 
 def read_pending_updates(repo_root: Path) -> dict[str, Any]:
@@ -30,22 +31,17 @@ def write_pending_updates(repo_root: Path, value: dict[str, Any]) -> None:
     write_pending_state(repo_root, FILENAME, value, schema=SCHEMA, progress="refreshed")
 
 
-def initial_pending_updates() -> dict[str, Any]:
-    """Cutover starts without a successful Refresh time and requires shared output."""
-    return {"header": {"schema": SCHEMA, "last_refreshed_at_utc": None, "shared_refresh_pending": True},
-            "current_works": {}, "deleted_works": {}}
-
-
 def accumulate_work_changes(
     repo_root: Path, current: Mapping[str, Mapping[str, Any]], deleted: Mapping[str, Mapping[str, Any]],
     *, downloads_by_work: Mapping[str, set[str]],
-    shared_refresh_pending: bool = False,
+    shared: dict[str, list[str]],
 ) -> dict[str, Any]:
     """Merge known mutation effects and reset only changed entries' readiness.
 
     Deletion replaces current selection; recreation replaces deletion selection.
     Removed references cancel their pending transfers without losing other media.
     """
+    validate_shared_changes(repo_root, shared, publishing=False)
     pending = read_pending_updates(repo_root)
     for work_id, changes in current.items():
         old = pending["current_works"].get(work_id, {})
@@ -59,8 +55,8 @@ def accumulate_work_changes(
     for work_id, selection in deleted.items():
         pending["current_works"].pop(work_id, None)
         pending["deleted_works"][work_id] = {**selection, "refreshed": False}
-    if current or deleted or shared_refresh_pending:
-        pending["header"]["shared_refresh_pending"] = True
+    if current or deleted or any(shared.values()):
+        merge_shared_changes(pending, shared)
         write_pending_updates(repo_root, pending)
     return pending
 

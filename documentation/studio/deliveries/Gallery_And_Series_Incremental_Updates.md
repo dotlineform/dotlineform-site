@@ -3,14 +3,14 @@ draft: false
 doc_id: d-20261010-123952-19d2f9
 title: Gallery And Series Incremental Updates
 added_date: "2026-10-10 12:39:52"
-last_updated: "2026-10-10 12:39:52"
-summary: Proposed Gallery and Series selections in the existing Catalogue updates and publication queues, with explicit shared-output ownership and completion.
-ui_status: proposed
+last_updated: "2026-10-10 14:19:12"
+summary: Complete and accepted Gallery and Series selections in the existing Catalogue queues, with selected shared Refresh and Publish.
+ui_status: done
 parent_id: d-20260428-000000-f5ff18
 ---
 # Gallery And Series Incremental Updates
 
-This is the Gallery/Series follow-on to [Incremental Updates](Incremental_updates.md), parented to [Planned Features](../Planned_Features.md). Extend the existing two Catalogue queue files with exact Gallery and Series selections and the shared output that their mutations require. The queue structure below is a proposal for review; documenting it does not approve implementation or migrate the live v3 queues.
+This is the Gallery/Series follow-on to [Incremental Updates](Incremental_updates.md), parented to [Planned Features](../Planned_Features.md). The user approved implementation on 2026-10-10 and confirmed no Studio/document edits since the last Publish. Both existing Catalogue queue files now include exact Gallery/Series and shared-output selections. Implementation and the completed-baseline v4 cutover are delivered and accepted on 2026-10-10 after the user reviewed the Refresh queue handoff and confirmed it works. Shared Publish and partial failures were not itemised as exercised; acceptance does not extend the recorded evidence. Retain this delivery pending manual archive.
 
 ## Requirements
 
@@ -31,7 +31,7 @@ Separate Gallery/Series queue files would add cross-file coordination and separa
 
 The families retain different completion rules. A Work needs metadata/media handoff, document Regenerate and per-Work Preview/Deploy. A Gallery has by-ID JSON and shared relationships but no Catalogue Markdown document of its own. Series definitions contribute to existing indexes, private reports and affected Work presentation; there is currently no generated Series by-ID JSON artifact.
 
-## Proposed Workflow
+## Implemented Workflow
 
 ```text
 Studio mutation   canonical definitions/memberships + exact updates selections
@@ -77,9 +77,9 @@ Gallery and Series entries do not own images or downloads. A Work media change k
 
 File: `working/catalogue-updates-pending.json`.
 
-### Proposed JSON Shape
+### JSON Shape
 
-Propose `catalogue_updates_pending_v4`. Preserve the existing Work entry fields and the last successful Refresh timestamp. Remove `shared_refresh_pending`, and add current/deleted Gallery and Series ID arrays plus `shared_outputs`.
+Schema `catalogue_updates_pending_v4` preserves the existing Work entry fields and last successful Refresh timestamp. It replaces `shared_refresh_pending` with current/deleted Gallery and Series ID arrays plus `shared_outputs`.
 
 ```json
 {
@@ -194,9 +194,9 @@ Earlier successful Work handoffs retain `refreshed: true` if a later shared step
 
 File: `working/catalogue-publish-pending.json`.
 
-### Proposed JSON Shape
+### JSON Shape
 
-Propose `catalogue_publish_pending_v4`. Preserve the existing Work entries and per-Work `preview_done` behavior. Add the same Gallery/Series identity arrays and `shared_outputs`, with the latter restricted to files in the public Catalogue artifact inventory.
+Schema `catalogue_publish_pending_v4` preserves the existing Work entries and per-Work `preview_done` behavior. It adds Gallery/Series identity arrays and `shared_outputs`, with the latter restricted to files in the public Catalogue artifact inventory.
 
 ```json
 {
@@ -303,42 +303,42 @@ An empty `shared_outputs` array selects no additional shared aggregate work; Wor
 
 ## Cutover And Scope
 
-The proposed v4 migration preserves current/deleted Work selections, readiness/progress and both existing timestamps. It introduces empty Gallery/Series/output selections only where the prior state is known complete. A live v3 `shared_refresh_pending: true` does not identify the missing Gallery/Series operations, so it cannot simply be discarded or guessed into an empty v4 queue. Resolve that state through an explicitly approved complete shared reconciliation/baseline before switching readers/writers together.
+The implemented one-time cutover requires both v3 Work queues to be empty and shared Refresh to be complete. It preserves both existing timestamps and creates empty Gallery/Series/output selections only at that completed baseline. A v3 `shared_refresh_pending: true` cannot be discarded or guessed into an empty v4 queue; the command refuses that state and requires completion of the old lifecycle before cutover. No canonical/media baseline regeneration is performed by migration.
 
 There are no runtime v3 aliases or fallback queues after cutover. Required missing or malformed v4 state fails visibly. One-time reconciliation is distinct from normal mutation-owned queue processing.
 
-The proposal requires mutation contributions, queue validation/serialization/status, selected shared Refresh, completed shared publication merging and selected Catalogue handling inside Preview/distribution. Existing canonical schema, Work media, public artifact inventory, document eligibility and Search workflow remain with their current owners. Ordinary/non-Catalogue incremental publication and deeper index-row optimisation remain the separate follow-ons recorded in [Incremental Updates](Incremental_updates.md#follow-ons).
+Implementation covers mutation contributions, queue validation/serialization/status, selected shared Refresh, completed shared publication merging and selected Catalogue handling inside Preview/distribution. Existing canonical schema, Work media, public artifact inventory, document eligibility and Search workflow retain their current owners. Ordinary/non-Catalogue incremental publication and deeper index-row optimisation remain the separate follow-ons recorded in [Incremental Updates](Incremental_updates.md#follow-ons).
 
-## Proposed Delivery Steps
+## Delivery Steps
 
-[ ] **GS-0 — Readiness:**
+[x] **GS-0 — Readiness:**
 
 - review the proposed schema, dependency selections, completion boundaries and cutover handling.
 - Confirm the retained Work-only publication timestamp meaning.
 
-Gate: approve one bounded implementation change set; this document alone is not implementation approval.
+Gate passed: user approved implementation on 2026-10-10. Read-only inspection confirmed empty v3 Work maps and `shared_refresh_pending: false`; the existing Work-only publication timestamp meaning is retained.
 
-[ ] **GS-1 — Implementation:** 
+[x] **GS-1 — Implementation:**
 - extend both queue owners and mutation contributions
-- implement selected shared Refresh/publication completion, and 
-- carry selection through the existing Preview/distribution owners. 
+- implement selected shared Refresh/publication completion, and
+- carry selection through the existing Preview/distribution owners.
 
-Gate: all agreed families complete without discovery scans or new independent lifecycle owners.
+Gate passed for implementation/source ownership: current/deleted identity arrays and allowed shared outputs extend both v4 queues. Every mutation owner supplies known effects, Refresh completes selected Gallery/shared output, and final Publish carries that selection through snapshot preparation and distribution. The cutover command migrated the live empty queues, preserving Refresh time `2026-10-10T09:27:29Z` and Work publication time `2026-10-10T09:28:06Z`.
 
-[ ] **GS-2 — Evidence and code review:** 
+[x] **GS-2 — Evidence and code review:**
 
 - select proportionate existing lint/syntax/whitespace diagnostics and bounded source review for the changed contracts.
 
 - Review empty definitions, old/new membership capture, Work title/year propagation, private/public separation, queue preservation, retained output and partial failures.
 - Test creation/updates and non-trivial test runs require their separately agreed specification/budget under [Test Contract Discipline](../Test_Contract_Discipline.md).
 
-Gate: evidence and omissions are recorded at their actual scope.
+Gate passed for the agreed diagnostic/source-review scope: `bin/lint-python` and `python3 -m py_compile` passed for all 19 changed Python owners; configured Save/Refresh/cutover/Regenerate/Publish imports passed. Both delivery queue examples and the durable Save/Deployment queue examples passed JSON parsing, and `git diff --check` passed. Bounded source review covered empty definitions, old/new membership contributions, Work title/year propagation, private/public output selection, preserved Work progress, retained unselected Preview output, exact repository destinations and failure completion boundaries. Review also removed an unused queue initializer, limited Gallery member projection to selected members, rejected unsupported output builders and kept selected destination symlinks confined. This is static/current-state evidence; real workflow and partial-failure behavior remain unexercised.
 
-[ ] **GS-3 — Manual acceptance and closeout:** 
+[x] **GS-3 — Manual acceptance and closeout:**
 
-- review representative real definition/membership operations through the required Refresh/Regenerate/Publish actions, 
-- then transfer shipped behavior to [Catalogue Save And Refresh](../Catalogue_Save_And_Refresh.md), [Catalogue Deployment](../Catalogue_Deployment.md) and the relevant durable queue guardrails. 
+- The user accepted the implementation on 2026-10-10 after reviewing the completed Refresh handoff: Gallery `307`, Series `144` and selected Gallery/Work indexes were in the publication queue, while refreshed Work `04626` remained in the updates queue for Regenerate. This confirms that reported queue transition; shared Publish, deletion and partial failures were not itemised as tested.
+- Durable behavior has been transferred to [Catalogue Save And Refresh](../Catalogue_Save_And_Refresh.md), [Catalogue Deployment](../Catalogue_Deployment.md), [Catalogue Services](../Catalogue_Services.md), the Work editor owner and Development Checklist guardrails; acceptance and documentation closeout are complete.
 
-Live Publish, real deletion, Git actions and public deployment retain their explicit-action boundaries. Gate: the complete outcome is accepted and durable ownership documentation reflects the implementation.
+Live Publish, real deletion, Git actions and public deployment retain their explicit-action boundaries. Gate passed: the user accepted the outcome and durable ownership documentation reflects the implementation and its evidence limits.
 
-Current record: proposal documentation only. The existing v3 queues and implementation remain unchanged. No generated payloads, canonical records, media, tests, publication or Git commits were changed by creating this document.
+Current record: implementation, live completed-baseline queue migration, focused diagnostics, source review and user acceptance are complete. Strict readers accepted both live v4 queues and initial Refresh status returned `needed: false` with the preserved time. Codex ran no real Save/Delete/Refresh/Regenerate/Publish, generated document/media rebuild, automated workflow test, browser interaction, commit or push. The later user-confirmed Refresh queue transition is recorded above. No further build or runtime check ran for this documentation-only closeout.
