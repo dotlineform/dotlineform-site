@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260428-000000-f5ff18
 title: Planned Features
 added_date: "2026-04-28 00:00:00"
-last_updated: "2026-10-10 18:25:26"
+last_updated: "2026-10-10 18:46:15"
 summary: This explains the delivery model and workflows to implement new repo and application features.
 ui_status: planned
 parent_id: ""
@@ -144,6 +144,7 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 ## Reviews
 
+- [Catalogue Report Inputs](Catalogue_Report_Inputs.md) — Proposed Catalogue-owned private inputs for the six reports that still read live canonical Catalogue records. Explains the Refresh boundary, independent report outputs, live filesystem scans and the recommendation for every registered report. Runtime migration remains proposed.
 - [Public Work JSON Review](Public_Work_JSON_Review.md) — Broader Work-payload/presentation and shared rebuild proposals remain separately scoped. Its active [Incremental Updates](deliveries/Incremental_updates.md) delivery implements staged media, mutation-owned queues, queue-only Regenerate and per-Work Publish with a final shared pass. Durable workflow/ownership documentation is current independently of further testing. Focused verification passed; the user confirmed new Work addition and subsequent deletion through to R2 on 2026-10-10 and perceived quicker Publish. Managed-file and other manual variants remain unverified. [Gallery And Series Incremental Updates](deliveries/Gallery_And_Series_Incremental_Updates.md) extends both queues to v4 and is complete and accepted on 2026-10-10 after the user confirmed the Refresh queue handoff; shared Publish and failure variants were not itemised as tested. Removing Catalogue document editing remains a follow-on. Aggregate handoff, baked media, Gallery loading and Media View contract retirement remain open. The Catalogue Image metadata option/field removal and Working token migration were delivered independently.
 
 ## Ad-hoc Deliveries
