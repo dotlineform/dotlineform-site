@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-f7ce503d7219fc56ffbd67af78670749",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-e7d90bb2ccf7b28e3791e1dcd46e1ee5",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "060",
     "count": 1
   },
@@ -13,9 +13,7 @@
   "member_works": [
     {
       "work_id": "01175",
-      "title": "forest",
-      "year": 2024,
-      "year_display": "2024"
+      "title": "forest"
     }
   ]
 }

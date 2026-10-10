@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-d81646c707fccb53aec7e977562757f1",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-c6e6e585d681ec2feee1f017f5b0b0ef",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "152",
     "count": 4
   },
@@ -13,27 +13,19 @@
   "member_works": [
     {
       "work_id": "02011",
-      "title": "the eye - detail 1",
-      "year": 2025,
-      "year_display": "2025"
+      "title": "the eye - detail 1"
     },
     {
       "work_id": "02012",
-      "title": "the eye - detail 2",
-      "year": 2025,
-      "year_display": "2025"
+      "title": "the eye - detail 2"
     },
     {
       "work_id": "02013",
-      "title": "the eye - detail 3",
-      "year": 2025,
-      "year_display": "2025"
+      "title": "the eye - detail 3"
     },
     {
       "work_id": "02014",
-      "title": "the eye - detail 4",
-      "year": 2025,
-      "year_display": "2025"
+      "title": "the eye - detail 4"
     }
   ]
 }

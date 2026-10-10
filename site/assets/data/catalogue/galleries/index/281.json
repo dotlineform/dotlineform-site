@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-5034a324a43b96d198f3287498ff9665",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-6e46baddd61f94ba3d0c534dcbf271f1",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "281",
     "count": 4
   },
@@ -13,27 +13,19 @@
   "member_works": [
     {
       "work_id": "04332",
-      "title": "all the particles are connected - detail 1",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "all the particles are connected - detail 1"
     },
     {
       "work_id": "04333",
-      "title": "all the particles are connected - detail 2",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "all the particles are connected - detail 2"
     },
     {
       "work_id": "04334",
-      "title": "all the particles are connected - detail 3",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "all the particles are connected - detail 3"
     },
     {
       "work_id": "04335",
-      "title": "all the particles are connected - detail 4",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "all the particles are connected - detail 4"
     }
   ]
 }

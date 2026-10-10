@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-5db4a3c560148e1963790274b51b3f79",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-700df2a726b3d212eef2d667e796c7e2",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "192",
     "count": 6
   },
@@ -13,39 +13,27 @@
   "member_works": [
     {
       "work_id": "03125",
-      "title": "k source",
-      "year": 2009,
-      "year_display": "2009"
+      "title": "k source"
     },
     {
       "work_id": "03126",
-      "title": "k crystals bits - detail",
-      "year": 2009,
-      "year_display": "2009"
+      "title": "k crystals bits - detail"
     },
     {
       "work_id": "03127",
-      "title": "k crystals bits - screenshot - detail",
-      "year": 2009,
-      "year_display": "2009"
+      "title": "k crystals bits - screenshot - detail"
     },
     {
       "work_id": "03128",
-      "title": "k crystals bits - screenshot",
-      "year": 2009,
-      "year_display": "2009"
+      "title": "k crystals bits - screenshot"
     },
     {
       "work_id": "03129",
-      "title": "k crystals bits",
-      "year": 2009,
-      "year_display": "2009"
+      "title": "k crystals bits"
     },
     {
       "work_id": "03130",
-      "title": "k crystals colours",
-      "year": 2009,
-      "year_display": "2009"
+      "title": "k crystals colours"
     }
   ]
 }

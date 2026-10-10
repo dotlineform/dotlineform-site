@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-4ea4bd7d5ddd2c6be5d942635a0fbded",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-9c386e0d3da68a7eef12439a89a24665",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "030",
     "count": 3
   },
@@ -13,21 +13,15 @@
   "member_works": [
     {
       "work_id": "00391",
-      "title": "composite (blue)",
-      "year": 2004,
-      "year_display": "2004"
+      "title": "composite (blue)"
     },
     {
       "work_id": "00616",
-      "title": "composite (smoke)",
-      "year": 2004,
-      "year_display": "2004"
+      "title": "composite (smoke)"
     },
     {
       "work_id": "00617",
-      "title": "composite (red)",
-      "year": 2004,
-      "year_display": "2004"
+      "title": "composite (red)"
     }
   ]
 }

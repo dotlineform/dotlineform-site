@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-5758e14151aa566f0e086d6bd1b94235",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-64988d6837a48c64161ef1757d5461d0",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "134",
     "count": 7
   },
@@ -13,45 +13,31 @@
   "member_works": [
     {
       "work_id": "01763",
-      "title": "through a glass clearly (1)",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "through a glass clearly (1)"
     },
     {
       "work_id": "01764",
-      "title": "through a glass clearly (2)",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "through a glass clearly (2)"
     },
     {
       "work_id": "01765",
-      "title": "through a glass clearly (3)",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "through a glass clearly (3)"
     },
     {
       "work_id": "01766",
-      "title": "through a glass clearly (4)",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "through a glass clearly (4)"
     },
     {
       "work_id": "01767",
-      "title": "through a glass clearly (5)",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "through a glass clearly (5)"
     },
     {
       "work_id": "01768",
-      "title": "through a glass clearly (6)",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "through a glass clearly (6)"
     },
     {
       "work_id": "01769",
-      "title": "through a glass clearly (7)",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "through a glass clearly (7)"
     }
   ]
 }

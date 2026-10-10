@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-413198eeb831bc2d2009d0ea953e5231",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-118cfeb2c821a5dd55bc9c83e88a7093",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "113",
     "count": 4
   },
@@ -13,27 +13,19 @@
   "member_works": [
     {
       "work_id": "01523",
-      "title": "pi",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "pi"
     },
     {
       "work_id": "01524",
-      "title": "pi molecule grid",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "pi molecule grid"
     },
     {
       "work_id": "01525",
-      "title": "pi circle",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "pi circle"
     },
     {
       "work_id": "01526",
-      "title": "all the particles are connected",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "all the particles are connected"
     }
   ]
 }

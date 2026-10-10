@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-7f91307e4f4b5c2076a6f19c4f79d4ca",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-30d0e12ed83ac5b1fd394bc665ae1879",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "136",
     "count": 3
   },
@@ -13,21 +13,15 @@
   "member_works": [
     {
       "work_id": "00546",
-      "title": "tree",
-      "year": 2024,
-      "year_display": "2024"
+      "title": "tree"
     },
     {
       "work_id": "00547",
-      "title": "tree (tint)",
-      "year": 2024,
-      "year_display": "2024"
+      "title": "tree (tint)"
     },
     {
       "work_id": "00548",
-      "title": "tree source",
-      "year": 2024,
-      "year_display": "2024"
+      "title": "tree source"
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-6dd41ca8c0aa9ea05506098af3ca1273",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-5411afebb85a9514e7a2a78e54acbfd5",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "193",
     "count": 3
   },
@@ -13,21 +13,15 @@
   "member_works": [
     {
       "work_id": "03131",
-      "title": "k crystals (transparent) - detail 1",
-      "year": 2009,
-      "year_display": "2009"
+      "title": "k crystals (transparent) - detail 1"
     },
     {
       "work_id": "03132",
-      "title": "k crystals (transparent) - detail 2",
-      "year": 2009,
-      "year_display": "2009"
+      "title": "k crystals (transparent) - detail 2"
     },
     {
       "work_id": "03133",
-      "title": "k crystals (transparent) - detail 3",
-      "year": 2009,
-      "year_display": "2009"
+      "title": "k crystals (transparent) - detail 3"
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-c2796de0d50461ca88dafe04c3e9c369",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-4d0921325f6a800962ad79e54dfe7a33",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "166",
     "count": 8
   },
@@ -13,51 +13,35 @@
   "member_works": [
     {
       "work_id": "02938",
-      "title": "memories 1-6",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "memories 1-6"
     },
     {
       "work_id": "02939",
-      "title": "memories 7-12",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "memories 7-12"
     },
     {
       "work_id": "02940",
-      "title": "memories 13-18",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "memories 13-18"
     },
     {
       "work_id": "02941",
-      "title": "memories 19-24",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "memories 19-24"
     },
     {
       "work_id": "02942",
-      "title": "memories 25-30",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "memories 25-30"
     },
     {
       "work_id": "02943",
-      "title": "memories 31-36",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "memories 31-36"
     },
     {
       "work_id": "02944",
-      "title": "memories 37-42",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "memories 37-42"
     },
     {
       "work_id": "02945",
-      "title": "memories 43-48",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "memories 43-48"
     }
   ]
 }

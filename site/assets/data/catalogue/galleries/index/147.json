@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-5f77618b134e17ef27445e02201b6f9a",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-f97ff8e9777fe09370321f63cea85e2f",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "147",
     "count": 5
   },
@@ -13,33 +13,23 @@
   "member_works": [
     {
       "work_id": "01971",
-      "title": "mouse story - 1",
-      "year": 1991,
-      "year_display": "1991"
+      "title": "mouse story - 1"
     },
     {
       "work_id": "01972",
-      "title": "mouse story - 2",
-      "year": 1991,
-      "year_display": "1991"
+      "title": "mouse story - 2"
     },
     {
       "work_id": "01973",
-      "title": "mouse story - 3",
-      "year": 1991,
-      "year_display": "1991"
+      "title": "mouse story - 3"
     },
     {
       "work_id": "01974",
-      "title": "mouse story - 4",
-      "year": 1991,
-      "year_display": "1991"
+      "title": "mouse story - 4"
     },
     {
       "work_id": "01975",
-      "title": "mouse story - 5",
-      "year": 1991,
-      "year_display": "1991"
+      "title": "mouse story - 5"
     }
   ]
 }

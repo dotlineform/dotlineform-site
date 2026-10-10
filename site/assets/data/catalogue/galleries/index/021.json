@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-1267843898e95156186a186cf6f9417a",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-344f5675aad5ab335f2c399788a953ae",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "021",
     "count": 5
   },
@@ -13,33 +13,23 @@
   "member_works": [
     {
       "work_id": "00801",
-      "title": "book dna",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna"
     },
     {
       "work_id": "00802",
-      "title": "book atomic",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book atomic"
     },
     {
       "work_id": "00803",
-      "title": "book diagrams 1",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book diagrams 1"
     },
     {
       "work_id": "00804",
-      "title": "book diagrams 2",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book diagrams 2"
     },
     {
       "work_id": "00805",
-      "title": "book dna sequence",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna sequence"
     }
   ]
 }

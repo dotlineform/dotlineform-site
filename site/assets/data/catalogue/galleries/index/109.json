@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-c97721bcdb7ba70c3b650efa2aa14a0c",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-71b43bf8fd9e0b269c53be20d4a762cf",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "109",
     "count": 11
   },
@@ -13,69 +13,47 @@
   "member_works": [
     {
       "work_id": "01480",
-      "title": "particle path 1",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "particle path 1"
     },
     {
       "work_id": "01481",
-      "title": "particle path 2",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "particle path 2"
     },
     {
       "work_id": "01482",
-      "title": "particle path 3",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "particle path 3"
     },
     {
       "work_id": "01483",
-      "title": "particle path 4",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "particle path 4"
     },
     {
       "work_id": "01484",
-      "title": "particle path 5",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "particle path 5"
     },
     {
       "work_id": "01485",
-      "title": "surface 1",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "surface 1"
     },
     {
       "work_id": "01486",
-      "title": "surface 2",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "surface 2"
     },
     {
       "work_id": "01487",
-      "title": "surface 3",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "surface 3"
     },
     {
       "work_id": "01488",
-      "title": "surface 4",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "surface 4"
     },
     {
       "work_id": "01489",
-      "title": "surface 5",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "surface 5"
     },
     {
       "work_id": "01490",
-      "title": "surface 6",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "surface 6"
     }
   ]
 }

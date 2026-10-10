@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-8e70db5174bf4e7c449a7b0c6d7d67b3",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-861f2950e70f9a24fb7fddb6a38c3662",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "072",
     "count": 2
   },
@@ -13,15 +13,11 @@
   "member_works": [
     {
       "work_id": "01363",
-      "title": "grid cells",
-      "year": 2013,
-      "year_display": "2013"
+      "title": "grid cells"
     },
     {
       "work_id": "01364",
-      "title": "grid",
-      "year": 2013,
-      "year_display": "2013"
+      "title": "grid"
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-9a8308f8ad6b61f8813a7059a2376253",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-30958c8847b0630ddffb61cabbd8bb73",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "178",
     "count": 2
   },
@@ -13,15 +13,11 @@
   "member_works": [
     {
       "work_id": "03070",
-      "title": "kylie structure 3.1",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "kylie structure 3.1"
     },
     {
       "work_id": "03071",
-      "title": "kylie structure 3.2",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "kylie structure 3.2"
     }
   ]
 }

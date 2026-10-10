@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-84c77567bbafa5735e86c179899c6383",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-6a2cb7642e41a8e2b2560d7a1e3edcfc",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "084",
     "count": 4
   },
@@ -13,27 +13,19 @@
   "member_works": [
     {
       "work_id": "00520",
-      "title": "kylie structure 1",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "kylie structure 1"
     },
     {
       "work_id": "00521",
-      "title": "kylie structure 2",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "kylie structure 2"
     },
     {
       "work_id": "00522",
-      "title": "kylie structure 3",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "kylie structure 3"
     },
     {
       "work_id": "00523",
-      "title": "kylie structure 4",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "kylie structure 4"
     }
   ]
 }

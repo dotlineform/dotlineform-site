@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-e056757022c2983903afef8208a72742",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-e7af6729cab5f5cd2bf59b3dda1ba03b",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "117",
     "count": 13
   },
@@ -13,81 +13,55 @@
   "member_works": [
     {
       "work_id": "01583",
-      "title": "untitled",
-      "year": 2025,
-      "year_display": "2025"
+      "title": "untitled"
     },
     {
       "work_id": "01584",
-      "title": "untitled",
-      "year": 2025,
-      "year_display": "2025"
+      "title": "untitled"
     },
     {
       "work_id": "01585",
-      "title": "untitled",
-      "year": 2025,
-      "year_display": "2025"
+      "title": "untitled"
     },
     {
       "work_id": "01586",
-      "title": "untitled",
-      "year": 2025,
-      "year_display": "2025"
+      "title": "untitled"
     },
     {
       "work_id": "01587",
-      "title": "untitled",
-      "year": 2025,
-      "year_display": "2025"
+      "title": "untitled"
     },
     {
       "work_id": "01588",
-      "title": "untitled",
-      "year": 2025,
-      "year_display": "2025"
+      "title": "untitled"
     },
     {
       "work_id": "01589",
-      "title": "untitled",
-      "year": 2025,
-      "year_display": "2025"
+      "title": "untitled"
     },
     {
       "work_id": "01590",
-      "title": "untitled",
-      "year": 2025,
-      "year_display": "2025"
+      "title": "untitled"
     },
     {
       "work_id": "01591",
-      "title": "untitled",
-      "year": 2025,
-      "year_display": "2025"
+      "title": "untitled"
     },
     {
       "work_id": "01592",
-      "title": "untitled",
-      "year": 2025,
-      "year_display": "2025"
+      "title": "untitled"
     },
     {
       "work_id": "01593",
-      "title": "untitled",
-      "year": 2025,
-      "year_display": "2025"
+      "title": "untitled"
     },
     {
       "work_id": "01594",
-      "title": "untitled",
-      "year": 2025,
-      "year_display": "2025"
+      "title": "untitled"
     },
     {
       "work_id": "01595",
-      "title": "untitled",
-      "year": 2025,
-      "year_display": "2025"
+      "title": "untitled"
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-440a225cc279aab04396b94d788daf73",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-0efe328b467e21b2c9cbf66791c7c277",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "031",
     "count": 14
   },
@@ -13,87 +13,59 @@
   "member_works": [
     {
       "work_id": "00818",
-      "title": "concrete [1]",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "concrete [1]"
     },
     {
       "work_id": "00819",
-      "title": "concrete [2]",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "concrete [2]"
     },
     {
       "work_id": "00820",
-      "title": "concrete [3]",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "concrete [3]"
     },
     {
       "work_id": "00821",
-      "title": "concrete [4]",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "concrete [4]"
     },
     {
       "work_id": "00822",
-      "title": "concrete [5]",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "concrete [5]"
     },
     {
       "work_id": "00823",
-      "title": "concrete [6]",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "concrete [6]"
     },
     {
       "work_id": "00824",
-      "title": "concrete [7]",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "concrete [7]"
     },
     {
       "work_id": "00825",
-      "title": "concrete [8]",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "concrete [8]"
     },
     {
       "work_id": "00826",
-      "title": "concrete [9]",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "concrete [9]"
     },
     {
       "work_id": "00827",
-      "title": "concrete [10]",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "concrete [10]"
     },
     {
       "work_id": "00828",
-      "title": "concrete [11]",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "concrete [11]"
     },
     {
       "work_id": "00829",
-      "title": "concrete [12]",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "concrete [12]"
     },
     {
       "work_id": "00830",
-      "title": "concrete [13]",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "concrete [13]"
     },
     {
       "work_id": "00831",
-      "title": "concrete [14]",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "concrete [14]"
     }
   ]
 }

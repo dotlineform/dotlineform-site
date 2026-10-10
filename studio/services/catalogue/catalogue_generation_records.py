@@ -15,7 +15,7 @@ from catalogue.catalogue_generation_common import (
 
 
 WORK_RECORD_SCHEMA_VERSION = "work_record_v11"
-GALLERY_RECORD_SCHEMA_VERSION = "gallery_record_v1"
+GALLERY_RECORD_SCHEMA_VERSION = "gallery_record_v2"
 
 
 # Define the Works source-record projection once so adding a new field is a one-line change.

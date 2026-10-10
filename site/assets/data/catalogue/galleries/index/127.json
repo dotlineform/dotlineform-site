@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-a08abb5ea2dd9d5f3229907819363afd",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-44fb2ad85dcd11ea671b7037552f0705",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "127",
     "count": 1
   },
@@ -13,9 +13,7 @@
   "member_works": [
     {
       "work_id": "01721",
-      "title": "state of mind",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "state of mind"
     }
   ]
 }

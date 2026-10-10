@@ -71,12 +71,10 @@ def work_shared_changes(
         old, new = previous.get(work_id), current.get(work_id)
         before, after = set(previous_memberships.get(work_id, [])), set(current_memberships.get(work_id, []))
         identity_changed = old is None or new is None
-        member_changed = identity_changed or any(
-            (old or {}).get(field) != (new or {}).get(field) for field in ("title", "year", "year_display")
-        )
+        member_changed = identity_changed or (old or {}).get("title") != (new or {}).get("title")
         if before != after or member_changed:
             galleries.update(before | after)
-        if identity_changed or (old or {}).get("title") != (new or {}).get("title"):
+        if member_changed:
             outputs.add(WORK_INDEX)
         if identity_changed or (old or {}).get("series_id") != (new or {}).get("series_id"):
             series.update(record["series_id"] for record in (old, new) if record and record.get("series_id"))

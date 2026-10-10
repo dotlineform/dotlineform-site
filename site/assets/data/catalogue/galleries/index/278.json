@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-14935dcf2a3c4cf80d61d597c2cadb33",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-5c2863348e22782d3a654c017082ec4e",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "278",
     "count": 5
   },
@@ -13,33 +13,23 @@
   "member_works": [
     {
       "work_id": "04321",
-      "title": "pi - detail 1",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "pi - detail 1"
     },
     {
       "work_id": "04322",
-      "title": "pi - detail 2",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "pi - detail 2"
     },
     {
       "work_id": "04323",
-      "title": "pi - detail 3",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "pi - detail 3"
     },
     {
       "work_id": "04324",
-      "title": "pi - detail 4",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "pi - detail 4"
     },
     {
       "work_id": "04325",
-      "title": "pi - detail 5",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "pi - detail 5"
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-d33e3b06478fd7589326740127bf3b0a",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-4d77fbad49cc0a5598858e0ce237e24e",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "208",
     "count": 1
   },
@@ -13,9 +13,7 @@
   "member_works": [
     {
       "work_id": "03241",
-      "title": "16 forms - source photo",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "16 forms - source photo"
     }
   ]
 }

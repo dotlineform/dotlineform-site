@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-531b1c6ad16c5d6ec00916483285469b",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-05d902450d390e465165891deaa7ad18",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "029",
     "count": 5
   },
@@ -13,33 +13,23 @@
   "member_works": [
     {
       "work_id": "00813",
-      "title": "colours 1958-2001",
-      "year": 2008,
-      "year_display": "2008"
+      "title": "colours 1958-2001"
     },
     {
       "work_id": "00814",
-      "title": "colours belsen",
-      "year": 2008,
-      "year_display": "2008"
+      "title": "colours belsen"
     },
     {
       "work_id": "00815",
-      "title": "colours dachau",
-      "year": 2008,
-      "year_display": "2008"
+      "title": "colours dachau"
     },
     {
       "work_id": "00816",
-      "title": "colours kylie",
-      "year": 2008,
-      "year_display": "2008"
+      "title": "colours kylie"
     },
     {
       "work_id": "00817",
-      "title": "colours marilyn",
-      "year": 2008,
-      "year_display": "2008"
+      "title": "colours marilyn"
     }
   ]
 }

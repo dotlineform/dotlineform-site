@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-f67d0a8a5dcaad4972a9239ad6960944",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-27c6ad9d58b9b358cc851948985d0569",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "241",
     "count": 2
   },
@@ -13,15 +13,11 @@
   "member_works": [
     {
       "work_id": "03627",
-      "title": "entangled form' - spider",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "entangled form' - spider"
     },
     {
       "work_id": "03628",
-      "title": "entangled form' - spider (detail)",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "entangled form' - spider (detail)"
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-23786e4a22a6d9ea596e393839fa6563",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-d523c40c582736c57b673f70f57e9777",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "145",
     "count": 9
   },
@@ -13,57 +13,39 @@
   "member_works": [
     {
       "work_id": "01960",
-      "title": "grid dissection - cover",
-      "year": 1990,
-      "year_display": "1990"
+      "title": "grid dissection - cover"
     },
     {
       "work_id": "01961",
-      "title": "grid dissection - detail 1",
-      "year": 1990,
-      "year_display": "1990"
+      "title": "grid dissection - detail 1"
     },
     {
       "work_id": "01962",
-      "title": "grid dissection - detail 2",
-      "year": 1990,
-      "year_display": "1990"
+      "title": "grid dissection - detail 2"
     },
     {
       "work_id": "01963",
-      "title": "grid dissection - detail 3",
-      "year": 1990,
-      "year_display": "1990"
+      "title": "grid dissection - detail 3"
     },
     {
       "work_id": "01964",
-      "title": "grid dissection - detail 4",
-      "year": 1990,
-      "year_display": "1990"
+      "title": "grid dissection - detail 4"
     },
     {
       "work_id": "01965",
-      "title": "grid dissection - detail 5",
-      "year": 1990,
-      "year_display": "1990"
+      "title": "grid dissection - detail 5"
     },
     {
       "work_id": "01966",
-      "title": "grid dissection - detail 6",
-      "year": 1990,
-      "year_display": "1990"
+      "title": "grid dissection - detail 6"
     },
     {
       "work_id": "01967",
-      "title": "grid dissection - detail 7",
-      "year": 1990,
-      "year_display": "1990"
+      "title": "grid dissection - detail 7"
     },
     {
       "work_id": "01968",
-      "title": "grid dissection - detail 8",
-      "year": 1990,
-      "year_display": "1990"
+      "title": "grid dissection - detail 8"
     }
   ]
 }

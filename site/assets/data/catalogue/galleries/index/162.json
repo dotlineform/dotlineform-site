@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-9211f1d5a12b524f4f9a6fdd8c0ebd20",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-576673caeaf4fa8664c511c672cc1484",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "162",
     "count": 1
   },
@@ -13,9 +13,7 @@
   "member_works": [
     {
       "work_id": "02879",
-      "title": "living surface hand form (original painting, 1989)",
-      "year": 2004,
-      "year_display": "1989, 2004"
+      "title": "living surface hand form (original painting, 1989)"
     }
   ]
 }

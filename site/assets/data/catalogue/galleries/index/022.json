@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-ca9e4abc88b83ef876e4a42b34fa58fd",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-76d90d76c3516562468901703ced51eb",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "022",
     "count": 5
   },
@@ -13,33 +13,23 @@
   "member_works": [
     {
       "work_id": "00806",
-      "title": "book of curves 0",
-      "year": 2011,
-      "year_display": "2011"
+      "title": "book of curves 0"
     },
     {
       "work_id": "00807",
-      "title": "book of curves 1 and 10",
-      "year": 2011,
-      "year_display": "2011"
+      "title": "book of curves 1 and 10"
     },
     {
       "work_id": "00808",
-      "title": "book of curves 2-6",
-      "year": 2011,
-      "year_display": "2011"
+      "title": "book of curves 2-6"
     },
     {
       "work_id": "00809",
-      "title": "book of curves 7 and 8",
-      "year": 2011,
-      "year_display": "2011"
+      "title": "book of curves 7 and 8"
     },
     {
       "work_id": "00810",
-      "title": "book of curves 9 and 11",
-      "year": 2011,
-      "year_display": "2011"
+      "title": "book of curves 9 and 11"
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-5fc1885a13c69c137da0bd65348eb19a",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-1b42be59866d1611f8310cfb4ac90dd4",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "094",
     "count": 1
   },
@@ -13,9 +13,7 @@
   "member_works": [
     {
       "work_id": "01422",
-      "title": "matter",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "matter"
     }
   ]
 }

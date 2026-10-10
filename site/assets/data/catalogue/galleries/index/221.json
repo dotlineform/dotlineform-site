@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-a9492789f18edf854c86a6d24e6e6c87",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-06dbb46177bad51fbb8642eda598aca1",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "221",
     "count": 5
   },
@@ -13,33 +13,23 @@
   "member_works": [
     {
       "work_id": "03502",
-      "title": "colours 1958-2001.1",
-      "year": 2008,
-      "year_display": "2008"
+      "title": "colours 1958-2001.1"
     },
     {
       "work_id": "03503",
-      "title": "colours 1958-2001.2",
-      "year": 2008,
-      "year_display": "2008"
+      "title": "colours 1958-2001.2"
     },
     {
       "work_id": "03504",
-      "title": "colours 1958-2001.3",
-      "year": 2008,
-      "year_display": "2008"
+      "title": "colours 1958-2001.3"
     },
     {
       "work_id": "03505",
-      "title": "colours 1958-2001.4",
-      "year": 2008,
-      "year_display": "2008"
+      "title": "colours 1958-2001.4"
     },
     {
       "work_id": "03506",
-      "title": "colours 1958-2001.5",
-      "year": 2008,
-      "year_display": "2008"
+      "title": "colours 1958-2001.5"
     }
   ]
 }

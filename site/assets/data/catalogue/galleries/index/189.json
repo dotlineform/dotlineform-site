@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-f0fb353ba32948004bda3a86bf254c27",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-4ec0a60adf6a921d1bde6b63611ba678",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "189",
     "count": 1
   },
@@ -13,9 +13,7 @@
   "member_works": [
     {
       "work_id": "03110",
-      "title": "model 2 - 001",
-      "year": 1994,
-      "year_display": "1994"
+      "title": "model 2 - 001"
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-8aaf35551f6a45b61937d7cba744a758",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-3b2e0a41b959ae712c5d63dd51ecd0bc",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "108",
     "count": 1
   },
@@ -13,9 +13,7 @@
   "member_works": [
     {
       "work_id": "01479",
-      "title": "olive tree",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "olive tree"
     }
   ]
 }

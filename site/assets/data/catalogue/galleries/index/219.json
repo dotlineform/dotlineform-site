@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-1fa2ffcf99a018cfaf036040ebcc3298",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-8c961a9169b7f3cd23fe9920858ee660",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "219",
     "count": 42
   },
@@ -13,255 +13,171 @@
   "member_works": [
     {
       "work_id": "03380",
-      "title": "birth of forms (generation 3 version 1)",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of forms (generation 3 version 1)"
     },
     {
       "work_id": "03381",
-      "title": "birth of forms (generation 3 version 2)",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of forms (generation 3 version 2)"
     },
     {
       "work_id": "03382",
-      "title": "birth of forms (generation 3 version 3)",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of forms (generation 3 version 3)"
     },
     {
       "work_id": "03383",
-      "title": "birth of forms (generation 3 version 4)",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of forms (generation 3 version 4)"
     },
     {
       "work_id": "03384",
-      "title": "birth of healing forms - 1.01",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 1.01"
     },
     {
       "work_id": "03385",
-      "title": "birth of healing forms - 1.02",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 1.02"
     },
     {
       "work_id": "03386",
-      "title": "birth of healing forms - 1.03",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 1.03"
     },
     {
       "work_id": "03387",
-      "title": "birth of healing forms - 1.04",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 1.04"
     },
     {
       "work_id": "03388",
-      "title": "birth of healing forms - 2.01",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 2.01"
     },
     {
       "work_id": "03389",
-      "title": "birth of healing forms - 2.02",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 2.02"
     },
     {
       "work_id": "03390",
-      "title": "birth of healing forms - 2.03",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 2.03"
     },
     {
       "work_id": "03391",
-      "title": "birth of healing forms - 2.04",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 2.04"
     },
     {
       "work_id": "03392",
-      "title": "birth of healing forms - 2.05",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 2.05"
     },
     {
       "work_id": "03393",
-      "title": "birth of healing forms - 2.06",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 2.06"
     },
     {
       "work_id": "03394",
-      "title": "birth of healing forms - 2.07",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 2.07"
     },
     {
       "work_id": "03395",
-      "title": "birth of healing forms - 2.09",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 2.09"
     },
     {
       "work_id": "03396",
-      "title": "birth of healing forms - 2.10",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 2.10"
     },
     {
       "work_id": "03397",
-      "title": "birth of healing forms - 2.11",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 2.11"
     },
     {
       "work_id": "03398",
-      "title": "birth of healing forms - 2.12",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 2.12"
     },
     {
       "work_id": "03399",
-      "title": "birth of healing forms - 2.13",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 2.13"
     },
     {
       "work_id": "03400",
-      "title": "birth of healing forms - 2.14",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 2.14"
     },
     {
       "work_id": "03401",
-      "title": "birth of healing forms - 2.15",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 2.15"
     },
     {
       "work_id": "03402",
-      "title": "birth of healing forms - 2.16",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 2.16"
     },
     {
       "work_id": "03403",
-      "title": "birth of healing forms - 2.17",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 2.17"
     },
     {
       "work_id": "03404",
-      "title": "birth of healing forms - 2.18",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 2.18"
     },
     {
       "work_id": "03405",
-      "title": "birth of healing forms - 2.19",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 2.19"
     },
     {
       "work_id": "03406",
-      "title": "birth of healing forms - 2.20",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 2.20"
     },
     {
       "work_id": "03407",
-      "title": "birth of healing forms - 2.25",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 2.25"
     },
     {
       "work_id": "03408",
-      "title": "birth of healing forms - 2.26",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 2.26"
     },
     {
       "work_id": "03409",
-      "title": "birth of healing forms - 2.27",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 2.27"
     },
     {
       "work_id": "03410",
-      "title": "birth of healing forms - 2.28",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 2.28"
     },
     {
       "work_id": "03411",
-      "title": "birth of healing forms - 2.29",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 2.29"
     },
     {
       "work_id": "03412",
-      "title": "birth of healing forms - 2.30",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 2.30"
     },
     {
       "work_id": "03413",
-      "title": "birth of healing forms - 2.31",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 2.31"
     },
     {
       "work_id": "03414",
-      "title": "birth of healing forms - 2.32",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 2.32"
     },
     {
       "work_id": "03415",
-      "title": "birth of healing forms - 3.01",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 3.01"
     },
     {
       "work_id": "03416",
-      "title": "birth of healing forms - 3.02",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 3.02"
     },
     {
       "work_id": "03417",
-      "title": "birth of healing forms - 3.04",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 3.04"
     },
     {
       "work_id": "03418",
-      "title": "birth of healing forms - 3.05",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 3.05"
     },
     {
       "work_id": "03419",
-      "title": "birth of healing forms - 3.06",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 3.06"
     },
     {
       "work_id": "03420",
-      "title": "birth of healing forms - 3.07",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 3.07"
     },
     {
       "work_id": "03421",
-      "title": "birth of healing forms - 3.08",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of healing forms - 3.08"
     }
   ]
 }

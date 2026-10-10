@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-e2fb1ba355b50fcfa63e9624d4fd98c4",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-53d313869d86a48fab62cd910b7b63a8",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "286",
     "count": 3
   },
@@ -13,21 +13,15 @@
   "member_works": [
     {
       "work_id": "04362",
-      "title": "room 4 - detail 1",
-      "year": 2008,
-      "year_display": "2008"
+      "title": "room 4 - detail 1"
     },
     {
       "work_id": "04363",
-      "title": "room 4 - detail 2",
-      "year": 2008,
-      "year_display": "2008"
+      "title": "room 4 - detail 2"
     },
     {
       "work_id": "04364",
-      "title": "room 4 - detail 3",
-      "year": 2008,
-      "year_display": "2008"
+      "title": "room 4 - detail 3"
     }
   ]
 }

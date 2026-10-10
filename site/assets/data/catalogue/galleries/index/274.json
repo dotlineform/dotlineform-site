@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-f4c2e8bf938b51148c4bc40ce5651b13",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-7e79dcf45774829907159fbb330c6b87",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "274",
     "count": 9
   },
@@ -13,57 +13,39 @@
   "member_works": [
     {
       "work_id": "04300",
-      "title": "matter - detail 1",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "matter - detail 1"
     },
     {
       "work_id": "04301",
-      "title": "matter - detail 2",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "matter - detail 2"
     },
     {
       "work_id": "04302",
-      "title": "matter - detail 3",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "matter - detail 3"
     },
     {
       "work_id": "04303",
-      "title": "matter - detail 4",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "matter - detail 4"
     },
     {
       "work_id": "04304",
-      "title": "matter - detail 5",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "matter - detail 5"
     },
     {
       "work_id": "04305",
-      "title": "matter - detail 6",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "matter - detail 6"
     },
     {
       "work_id": "04306",
-      "title": "matter - detail 7",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "matter - detail 7"
     },
     {
       "work_id": "04307",
-      "title": "matter - detail 8",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "matter - detail 8"
     },
     {
       "work_id": "04308",
-      "title": "matter - detail 9",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "matter - detail 9"
     }
   ]
 }

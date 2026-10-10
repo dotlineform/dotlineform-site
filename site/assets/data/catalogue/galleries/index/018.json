@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-608479e0d60a216619a50d0ca44a497f",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-007da2844ccc1d97affbe5c8ca95ae3c",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "018",
     "count": 1
   },
@@ -13,9 +13,7 @@
   "member_works": [
     {
       "work_id": "01633",
-      "title": "body form",
-      "year": 2008,
-      "year_display": "2008"
+      "title": "body form"
     }
   ]
 }

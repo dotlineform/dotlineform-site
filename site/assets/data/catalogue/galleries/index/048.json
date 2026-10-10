@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-6a6e590623e48578d73ee1559048f1fe",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-562edeec67202597292157e84fc55509",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "048",
     "count": 2
   },
@@ -13,15 +13,11 @@
   "member_works": [
     {
       "work_id": "01044",
-      "title": "entangled form",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "entangled form"
     },
     {
       "work_id": "01045",
-      "title": "entangled form'",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "entangled form'"
     }
   ]
 }

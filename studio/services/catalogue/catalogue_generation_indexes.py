@@ -6,9 +6,7 @@ from dataclasses import dataclass
 from typing import Any, Dict, List, Mapping, Sequence
 
 from catalogue.catalogue_generation_common import (
-    coerce_int,
     coerce_string,
-    compact_json_object,
     is_empty,
     slug_id,
 )
@@ -30,9 +28,7 @@ def build_work_index_row(*, work_id: str, work_record: Mapping[str, Any]) -> Dic
 
 @dataclass(frozen=True)
 class SeriesWorkIndexContext:
-    series_title_by_id: Dict[str, str]
     series_project_folders_by_id: Dict[str, List[str]]
-    work_meta_by_id: Dict[str, Dict[str, Any]]
     work_ids_by_series_all: Dict[str, List[str]]
 
 
@@ -41,7 +37,6 @@ def build_series_work_index_context(
     series_records: Mapping[str, Mapping[str, Any]],
     work_records: Mapping[str, Mapping[str, Any]],
 ) -> SeriesWorkIndexContext:
-    series_title_by_id: Dict[str, str] = {}
     seen_series_ids: set[str] = set()
     for series_record in series_records.values():
         sid_raw = series_record.get("series_id")
@@ -51,9 +46,6 @@ def build_series_work_index_context(
         if sid in seen_series_ids:
             raise CatalogueGenerationIndexError(f"Catalogue source has duplicate series_id: {sid}")
         seen_series_ids.add(sid)
-        title = coerce_string(series_record.get("title"))
-        if title is not None:
-            series_title_by_id[sid] = title
 
     series_project_folders_by_id: Dict[str, List[str]] = {}
     project_folder_sets_by_series: Dict[str, set[str]] = {}
@@ -67,27 +59,18 @@ def build_series_work_index_context(
     for sid, folder_set in project_folder_sets_by_series.items():
         series_project_folders_by_id[sid] = sorted(folder_set, key=lambda value: value.lower())
 
-    work_meta_by_id: Dict[str, Dict[str, Any]] = {}
     work_ids_by_series_all: Dict[str, List[str]] = {}
     for work_record in work_records.values():
         wid_raw = work_record.get("work_id")
         if is_empty(wid_raw):
             continue
         wid = slug_id(wid_raw)
-        meta = dict(work_record)
         series_ids = [normalize_series_id(work_record["series_id"])] if work_record.get("series_id") else []
-        sid = series_ids[0] if series_ids else ""
-        meta["work_id"] = wid
-        meta["series_id"] = sid
-        meta["series_title"] = series_title_by_id.get(sid) if sid else None
-        work_meta_by_id[wid] = meta
         for series_id in series_ids:
             work_ids_by_series_all.setdefault(series_id, []).append(wid)
 
     return SeriesWorkIndexContext(
-        series_title_by_id=series_title_by_id,
         series_project_folders_by_id=series_project_folders_by_id,
-        work_meta_by_id=work_meta_by_id,
         work_ids_by_series_all=work_ids_by_series_all,
     )
 
@@ -97,20 +80,13 @@ def ordered_work_ids_by_series(context: SeriesWorkIndexContext) -> Dict[str, Lis
 
 
 def build_member_work_records(
-    *, context: SeriesWorkIndexContext, work_ids: Sequence[str],
+    *, work_records: Mapping[str, Mapping[str, Any]], work_ids: Sequence[str],
 ) -> List[Dict[str, Any]]:
-    """Share the compact, ascending Work-ID member projection across groupings."""
-    member_works: List[Dict[str, Any]] = []
-    for work_id in sorted(work_ids):
-        work_meta = context.work_meta_by_id[work_id]
-        year = coerce_int(work_meta.get("year"))
-        year_display = coerce_string(work_meta.get("year_display"))
-        if year_display is None:
-            year_display = str(year) if year is not None else None
-        member_works.append(compact_json_object({
+    """Project Gallery member identities/titles directly in ascending Work-ID order."""
+    return [
+        {
             "work_id": work_id,
-            "title": coerce_string(work_meta.get("title")) or work_id,
-            "year": year,
-            "year_display": year_display,
-        }))
-    return member_works
+            "title": coerce_string(work_records[work_id].get("title")) or work_id,
+        }
+        for work_id in sorted(work_ids)
+    ]

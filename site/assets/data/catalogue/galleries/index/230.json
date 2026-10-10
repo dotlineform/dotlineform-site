@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-8ed31ad37d846e13e13ca8d85dded800",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-f6b3e4bdab7cfe3cca37e8bb7ed1ade8",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "230",
     "count": 4
   },
@@ -13,27 +13,19 @@
   "member_works": [
     {
       "work_id": "03552",
-      "title": "doll moiré reduced (version 1)",
-      "year": 2008,
-      "year_display": "c. 2008"
+      "title": "doll moiré reduced (version 1)"
     },
     {
       "work_id": "03553",
-      "title": "doll moiré reduced (version 2)",
-      "year": 2008,
-      "year_display": "c. 2008"
+      "title": "doll moiré reduced (version 2)"
     },
     {
       "work_id": "03554",
-      "title": "doll moiré reduced (version 3)",
-      "year": 2008,
-      "year_display": "c. 2008"
+      "title": "doll moiré reduced (version 3)"
     },
     {
       "work_id": "03555",
-      "title": "doll moiré reduced (version 4)",
-      "year": 2008,
-      "year_display": "c. 2008"
+      "title": "doll moiré reduced (version 4)"
     }
   ]
 }

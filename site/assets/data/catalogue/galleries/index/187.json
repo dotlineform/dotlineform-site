@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-3dc3f05ddaaf0258394e22f75ddb673a",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-20e18007560bec6b65d90fc3d2fd895f",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "187",
     "count": 9
   },
@@ -13,57 +13,39 @@
   "member_works": [
     {
       "work_id": "03101",
-      "title": "body detail",
-      "year": 2025,
-      "year_display": "2025"
+      "title": "body detail"
     },
     {
       "work_id": "03102",
-      "title": "body detail",
-      "year": 2025,
-      "year_display": "2025"
+      "title": "body detail"
     },
     {
       "work_id": "03103",
-      "title": "body detail",
-      "year": 2025,
-      "year_display": "2025"
+      "title": "body detail"
     },
     {
       "work_id": "03104",
-      "title": "body detail",
-      "year": 2025,
-      "year_display": "2025"
+      "title": "body detail"
     },
     {
       "work_id": "03105",
-      "title": "body detail",
-      "year": 2025,
-      "year_display": "2025"
+      "title": "body detail"
     },
     {
       "work_id": "03106",
-      "title": "body detail",
-      "year": 2025,
-      "year_display": "2025"
+      "title": "body detail"
     },
     {
       "work_id": "03107",
-      "title": "body detail",
-      "year": 2025,
-      "year_display": "2025"
+      "title": "body detail"
     },
     {
       "work_id": "03108",
-      "title": "body detail",
-      "year": 2025,
-      "year_display": "2025"
+      "title": "body detail"
     },
     {
       "work_id": "03109",
-      "title": "body detail",
-      "year": 2025,
-      "year_display": "2025"
+      "title": "body detail"
     }
   ]
 }

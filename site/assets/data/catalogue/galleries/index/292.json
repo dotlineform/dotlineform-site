@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-13fe57cb963cfb75fd50da531ddfeaa5",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-7f54243ead1bfaf922c886bc77de0464",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "292",
     "count": 1
   },
@@ -13,9 +13,7 @@
   "member_works": [
     {
       "work_id": "04566",
-      "title": "tabula rasa - source",
-      "year": 2008,
-      "year_display": "2008"
+      "title": "tabula rasa - source"
     }
   ]
 }

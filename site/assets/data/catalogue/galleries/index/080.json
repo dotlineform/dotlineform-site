@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-27fdf74ff57087b12f2567575640a8c5",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-c2ce110e4978c04f7d7ebe7c2bdcb6f8",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "080",
     "count": 3
   },
@@ -13,21 +13,15 @@
   "member_works": [
     {
       "work_id": "01391",
-      "title": "interior design 1",
-      "year": 2005,
-      "year_display": "2005"
+      "title": "interior design 1"
     },
     {
       "work_id": "01392",
-      "title": "interior design 2",
-      "year": 2005,
-      "year_display": "2005"
+      "title": "interior design 2"
     },
     {
       "work_id": "01393",
-      "title": "interior design 3",
-      "year": 2005,
-      "year_display": "2005"
+      "title": "interior design 3"
     }
   ]
 }

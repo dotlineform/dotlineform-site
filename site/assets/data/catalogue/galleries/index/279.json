@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-5a267a83bed7c1ae6740474b4e9f0c64",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-df65bf4f4546fe90d89e8bd22d4f9e65",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "279",
     "count": 3
   },
@@ -13,21 +13,15 @@
   "member_works": [
     {
       "work_id": "04326",
-      "title": "pi molecule grid - detail 1",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "pi molecule grid - detail 1"
     },
     {
       "work_id": "04327",
-      "title": "pi molecule grid - detail 2",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "pi molecule grid - detail 2"
     },
     {
       "work_id": "04328",
-      "title": "pi molecule grid - detail 3",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "pi molecule grid - detail 3"
     }
   ]
 }

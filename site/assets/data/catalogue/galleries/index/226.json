@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-6c3a0b7d5dbb27974d7373b60b030e81",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-55db0ae2becd2ce86b41295762cb995c",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "226",
     "count": 12
   },
@@ -13,75 +13,51 @@
   "member_works": [
     {
       "work_id": "03519",
-      "title": "curve machine [1]",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "curve machine [1]"
     },
     {
       "work_id": "03520",
-      "title": "curve machine [2]",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "curve machine [2]"
     },
     {
       "work_id": "03521",
-      "title": "curve machine [3]",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "curve machine [3]"
     },
     {
       "work_id": "03522",
-      "title": "curve machine [4]",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "curve machine [4]"
     },
     {
       "work_id": "03523",
-      "title": "curve machine [5]",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "curve machine [5]"
     },
     {
       "work_id": "03524",
-      "title": "curve machine [6]",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "curve machine [6]"
     },
     {
       "work_id": "03525",
-      "title": "curve machine [7]",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "curve machine [7]"
     },
     {
       "work_id": "03526",
-      "title": "curve machine [8]",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "curve machine [8]"
     },
     {
       "work_id": "03527",
-      "title": "curve machine [9]",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "curve machine [9]"
     },
     {
       "work_id": "03528",
-      "title": "curve machine [10]",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "curve machine [10]"
     },
     {
       "work_id": "03529",
-      "title": "curve machine [11]",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "curve machine [11]"
     },
     {
       "work_id": "03530",
-      "title": "curve machine [12]",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "curve machine [12]"
     }
   ]
 }

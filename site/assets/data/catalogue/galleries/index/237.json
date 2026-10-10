@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-1091762ec5bd56a6723a32f4a5784897",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-eb5d2caec903f26466a1520180921c5a",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "237",
     "count": 4
   },
@@ -13,27 +13,19 @@
   "member_works": [
     {
       "work_id": "03581",
-      "title": "dots (equations) [detail 1]",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "dots (equations) [detail 1]"
     },
     {
       "work_id": "03582",
-      "title": "dots (equations) [detail 2]",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "dots (equations) [detail 2]"
     },
     {
       "work_id": "03583",
-      "title": "dots (equations) [detail 3]",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "dots (equations) [detail 3]"
     },
     {
       "work_id": "03584",
-      "title": "dots (equations) [detail 4]",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "dots (equations) [detail 4]"
     }
   ]
 }

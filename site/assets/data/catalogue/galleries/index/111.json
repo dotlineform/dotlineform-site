@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-3fd31618c44fca8adf933caa4ff74fa8",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-b8a2501296402b23b98d844222626fd3",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "111",
     "count": 7
   },
@@ -13,45 +13,31 @@
   "member_works": [
     {
       "work_id": "01491",
-      "title": "particles 1",
-      "year": 2013,
-      "year_display": "2013"
+      "title": "particles 1"
     },
     {
       "work_id": "01492",
-      "title": "particles 2",
-      "year": 2013,
-      "year_display": "2013"
+      "title": "particles 2"
     },
     {
       "work_id": "01493",
-      "title": "particles 3",
-      "year": 2013,
-      "year_display": "2013"
+      "title": "particles 3"
     },
     {
       "work_id": "01494",
-      "title": "particles 4",
-      "year": 2013,
-      "year_display": "2013"
+      "title": "particles 4"
     },
     {
       "work_id": "01495",
-      "title": "particles 5",
-      "year": 2013,
-      "year_display": "2013"
+      "title": "particles 5"
     },
     {
       "work_id": "01496",
-      "title": "particles 6",
-      "year": 2013,
-      "year_display": "2013"
+      "title": "particles 6"
     },
     {
       "work_id": "01497",
-      "title": "particles 7",
-      "year": 2013,
-      "year_display": "2013"
+      "title": "particles 7"
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-920aca53699b212b62dbdce5e84aeb13",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-45f23b3c928a909d10cfe8088dd76f10",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "271",
     "count": 6
   },
@@ -13,39 +13,27 @@
   "member_works": [
     {
       "work_id": "04279",
-      "title": "kylie wax model - iteration 3.0",
-      "year": 2024,
-      "year_display": "2024"
+      "title": "kylie wax model - iteration 3.0"
     },
     {
       "work_id": "04280",
-      "title": "kylie wax model - iteration 3.1",
-      "year": 2024,
-      "year_display": "2024"
+      "title": "kylie wax model - iteration 3.1"
     },
     {
       "work_id": "04281",
-      "title": "kylie wax model - iteration 3.2",
-      "year": 2024,
-      "year_display": "2024"
+      "title": "kylie wax model - iteration 3.2"
     },
     {
       "work_id": "04282",
-      "title": "kylie wax model - iteration 3.3",
-      "year": 2024,
-      "year_display": "2024"
+      "title": "kylie wax model - iteration 3.3"
     },
     {
       "work_id": "04283",
-      "title": "kylie wax model - iteration 3.4",
-      "year": 2024,
-      "year_display": "2024"
+      "title": "kylie wax model - iteration 3.4"
     },
     {
       "work_id": "04284",
-      "title": "kylie wax model - iteration 3.5",
-      "year": 2024,
-      "year_display": "2024"
+      "title": "kylie wax model - iteration 3.5"
     }
   ]
 }

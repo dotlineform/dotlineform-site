@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-e0da46e1571c8f5a3e632186c4589b1c",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-ba906bb0a46f371ba2143f9382b4db52",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "044",
     "count": 7
   },
@@ -13,45 +13,31 @@
   "member_works": [
     {
       "work_id": "00456",
-      "title": "dots",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "dots"
     },
     {
       "work_id": "01001",
-      "title": "dots (inside)",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "dots (inside)"
     },
     {
       "work_id": "01002",
-      "title": "dots (first normal form)",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "dots (first normal form)"
     },
     {
       "work_id": "01003",
-      "title": "dots (second normal form)",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "dots (second normal form)"
     },
     {
       "work_id": "01004",
-      "title": "dots (equations)",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "dots (equations)"
     },
     {
       "work_id": "01005",
-      "title": "dots (equations particles)",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "dots (equations particles)"
     },
     {
       "work_id": "01006",
-      "title": "dots (equations sample grid)",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "dots (equations sample grid)"
     }
   ]
 }

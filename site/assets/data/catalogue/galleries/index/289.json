@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-572b9c22148c6ec884e6ac8fd06eb2ae",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-82f97eefe0f53486421c3cfee3e7e96e",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "289",
     "count": 6
   },
@@ -13,39 +13,27 @@
   "member_works": [
     {
       "work_id": "04438",
-      "title": "state of mind - detail (jewels)",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "state of mind - detail (jewels)"
     },
     {
       "work_id": "04439",
-      "title": "state of mind - detail (leaf)",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "state of mind - detail (leaf)"
     },
     {
       "work_id": "04440",
-      "title": "state of mind - detail (thorns)",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "state of mind - detail (thorns)"
     },
     {
       "work_id": "04441",
-      "title": "state of mind - detail 1",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "state of mind - detail 1"
     },
     {
       "work_id": "04442",
-      "title": "state of mind - detail 2",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "state of mind - detail 2"
     },
     {
       "work_id": "04443",
-      "title": "state of mind - detail 3",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "state of mind - detail 3"
     }
   ]
 }

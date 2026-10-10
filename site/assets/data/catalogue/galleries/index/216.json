@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-bb98150e5d8209be960cc44a17cfa941",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-93b3f767a5c26996dce0002a87fd311c",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "216",
     "count": 3
   },
@@ -13,21 +13,15 @@
   "member_works": [
     {
       "work_id": "03370",
-      "title": "assembly code 2 (detail 1)",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "assembly code 2 (detail 1)"
     },
     {
       "work_id": "03371",
-      "title": "assembly code 2 (detail 2)",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "assembly code 2 (detail 2)"
     },
     {
       "work_id": "03372",
-      "title": "assembly code 2 (detail 3)",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "assembly code 2 (detail 3)"
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-fd85ca8b13d48e36b3ca0a574f894c56",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-4fecc8ceaada312f99bc80d659766f06",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "038",
     "count": 8
   },
@@ -13,51 +13,35 @@
   "member_works": [
     {
       "work_id": "00901",
-      "title": "doll face 1",
-      "year": 2024,
-      "year_display": "2024"
+      "title": "doll face 1"
     },
     {
       "work_id": "00902",
-      "title": "doll face 2",
-      "year": 2024,
-      "year_display": "2024"
+      "title": "doll face 2"
     },
     {
       "work_id": "00903",
-      "title": "doll face 3",
-      "year": 2024,
-      "year_display": "2024"
+      "title": "doll face 3"
     },
     {
       "work_id": "00904",
-      "title": "doll face 4",
-      "year": 2024,
-      "year_display": "2024"
+      "title": "doll face 4"
     },
     {
       "work_id": "00905",
-      "title": "doll face 5",
-      "year": 2024,
-      "year_display": "2024"
+      "title": "doll face 5"
     },
     {
       "work_id": "00906",
-      "title": "doll face 6",
-      "year": 2024,
-      "year_display": "2024"
+      "title": "doll face 6"
     },
     {
       "work_id": "00907",
-      "title": "doll face 7",
-      "year": 2024,
-      "year_display": "2024"
+      "title": "doll face 7"
     },
     {
       "work_id": "00908",
-      "title": "doll face 8",
-      "year": 2024,
-      "year_display": "2024"
+      "title": "doll face 8"
     }
   ]
 }

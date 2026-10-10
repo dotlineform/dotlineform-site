@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-57ed0d828ca537b923842ffec2c92c1b",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-1b77d3ecfecbc37e4da19886e24cd18c",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "008",
     "count": 12
   },
@@ -13,75 +13,51 @@
   "member_works": [
     {
       "work_id": "00722",
-      "title": "a humid home full of light [1]",
-      "year": 2013,
-      "year_display": "2013"
+      "title": "a humid home full of light [1]"
     },
     {
       "work_id": "00723",
-      "title": "a humid home full of light [2]",
-      "year": 2013,
-      "year_display": "2013"
+      "title": "a humid home full of light [2]"
     },
     {
       "work_id": "00724",
-      "title": "a humid home full of light [3]",
-      "year": 2013,
-      "year_display": "2013"
+      "title": "a humid home full of light [3]"
     },
     {
       "work_id": "00725",
-      "title": "a humid home full of light [4]",
-      "year": 2013,
-      "year_display": "2013"
+      "title": "a humid home full of light [4]"
     },
     {
       "work_id": "00726",
-      "title": "a humid home full of light [5]",
-      "year": 2013,
-      "year_display": "2013"
+      "title": "a humid home full of light [5]"
     },
     {
       "work_id": "00727",
-      "title": "a humid home full of light [6]",
-      "year": 2013,
-      "year_display": "2013"
+      "title": "a humid home full of light [6]"
     },
     {
       "work_id": "00728",
-      "title": "a humid home full of light [7]",
-      "year": 2013,
-      "year_display": "2013"
+      "title": "a humid home full of light [7]"
     },
     {
       "work_id": "00729",
-      "title": "a humid home full of light [8]",
-      "year": 2013,
-      "year_display": "2013"
+      "title": "a humid home full of light [8]"
     },
     {
       "work_id": "00730",
-      "title": "a humid home full of light [9]",
-      "year": 2013,
-      "year_display": "2013"
+      "title": "a humid home full of light [9]"
     },
     {
       "work_id": "00731",
-      "title": "a humid home full of light [10]",
-      "year": 2013,
-      "year_display": "2013"
+      "title": "a humid home full of light [10]"
     },
     {
       "work_id": "00732",
-      "title": "a humid home full of light [11]",
-      "year": 2013,
-      "year_display": "2013"
+      "title": "a humid home full of light [11]"
     },
     {
       "work_id": "00733",
-      "title": "a humid home full of light [12]",
-      "year": 2013,
-      "year_display": "2013"
+      "title": "a humid home full of light [12]"
     }
   ]
 }

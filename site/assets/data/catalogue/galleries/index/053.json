@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-019d9aa4a7db70dca533941fa7ef5c31",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-a05f1cf0f7664a6136974143fddcb52f",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "053",
     "count": 16
   },
@@ -13,99 +13,67 @@
   "member_works": [
     {
       "work_id": "01055",
-      "title": "fluid form 1",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "fluid form 1"
     },
     {
       "work_id": "01056",
-      "title": "fluid form 2",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "fluid form 2"
     },
     {
       "work_id": "01057",
-      "title": "fluid form 3",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "fluid form 3"
     },
     {
       "work_id": "01058",
-      "title": "fluid form 4",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "fluid form 4"
     },
     {
       "work_id": "01059",
-      "title": "fluid form 5",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "fluid form 5"
     },
     {
       "work_id": "01060",
-      "title": "fluid form 6",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "fluid form 6"
     },
     {
       "work_id": "01061",
-      "title": "fluid form 7",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "fluid form 7"
     },
     {
       "work_id": "01062",
-      "title": "fluid form 8",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "fluid form 8"
     },
     {
       "work_id": "01063",
-      "title": "fluid form 9",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "fluid form 9"
     },
     {
       "work_id": "01064",
-      "title": "fluid form 10",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "fluid form 10"
     },
     {
       "work_id": "01065",
-      "title": "fluid form 11",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "fluid form 11"
     },
     {
       "work_id": "01066",
-      "title": "fluid form 12",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "fluid form 12"
     },
     {
       "work_id": "01067",
-      "title": "fluid form 13",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "fluid form 13"
     },
     {
       "work_id": "01068",
-      "title": "fluid form 14",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "fluid form 14"
     },
     {
       "work_id": "01069",
-      "title": "fluid form 15",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "fluid form 15"
     },
     {
       "work_id": "01070",
-      "title": "fluid form 16",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "fluid form 16"
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-e8ec3e1b3acaae8ed3ca37bb976ec475",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-139af3dc068080813e551fa0905436d9",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "034",
     "count": 17
   },
@@ -13,105 +13,71 @@
   "member_works": [
     {
       "work_id": "00850",
-      "title": "curl",
-      "year": 2017,
-      "year_display": "2017"
+      "title": "curl"
     },
     {
       "work_id": "00851",
-      "title": "curl",
-      "year": 2017,
-      "year_display": "2017"
+      "title": "curl"
     },
     {
       "work_id": "00852",
-      "title": "curl",
-      "year": 2017,
-      "year_display": "2017"
+      "title": "curl"
     },
     {
       "work_id": "00853",
-      "title": "curl",
-      "year": 2017,
-      "year_display": "2017"
+      "title": "curl"
     },
     {
       "work_id": "00854",
-      "title": "curl",
-      "year": 2017,
-      "year_display": "2017"
+      "title": "curl"
     },
     {
       "work_id": "00855",
-      "title": "curl",
-      "year": 2017,
-      "year_display": "2017"
+      "title": "curl"
     },
     {
       "work_id": "00856",
-      "title": "curl",
-      "year": 2017,
-      "year_display": "2017"
+      "title": "curl"
     },
     {
       "work_id": "00857",
-      "title": "curl",
-      "year": 2017,
-      "year_display": "2017"
+      "title": "curl"
     },
     {
       "work_id": "00858",
-      "title": "curl version",
-      "year": 2022,
-      "year_display": "2022"
+      "title": "curl version"
     },
     {
       "work_id": "00859",
-      "title": "curl version",
-      "year": 2022,
-      "year_display": "2022"
+      "title": "curl version"
     },
     {
       "work_id": "00860",
-      "title": "curl version",
-      "year": 2022,
-      "year_display": "2022"
+      "title": "curl version"
     },
     {
       "work_id": "00861",
-      "title": "curl version",
-      "year": 2022,
-      "year_display": "2022"
+      "title": "curl version"
     },
     {
       "work_id": "00862",
-      "title": "curl version",
-      "year": 2022,
-      "year_display": "2022"
+      "title": "curl version"
     },
     {
       "work_id": "00863",
-      "title": "curl version",
-      "year": 2022,
-      "year_display": "2022"
+      "title": "curl version"
     },
     {
       "work_id": "00864",
-      "title": "curl version",
-      "year": 2022,
-      "year_display": "2022"
+      "title": "curl version"
     },
     {
       "work_id": "00865",
-      "title": "curl version",
-      "year": 2022,
-      "year_display": "2022"
+      "title": "curl version"
     },
     {
       "work_id": "00866",
-      "title": "curl version",
-      "year": 2022,
-      "year_display": "2022"
+      "title": "curl version"
     }
   ]
 }

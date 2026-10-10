@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-3fca04f369c388848a94f888402d3a77",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-b0ce9d1f80718537c29f867b032b6f5b",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "198",
     "count": 4
   },
@@ -13,27 +13,19 @@
   "member_works": [
     {
       "work_id": "03154",
-      "title": "bits symbols 1",
-      "year": 2009,
-      "year_display": "2009"
+      "title": "bits symbols 1"
     },
     {
       "work_id": "03155",
-      "title": "bits symbols 2",
-      "year": 2009,
-      "year_display": "2009"
+      "title": "bits symbols 2"
     },
     {
       "work_id": "03156",
-      "title": "bits symbols 3",
-      "year": 2009,
-      "year_display": "2009"
+      "title": "bits symbols 3"
     },
     {
       "work_id": "03157",
-      "title": "bits symbols 4",
-      "year": 2009,
-      "year_display": "2009"
+      "title": "bits symbols 4"
     }
   ]
 }

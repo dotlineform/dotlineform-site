@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-725a4318e52f5b1c30adb8ef170e4793",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-8e2d6fc8ebf0263af3753793db5e1c9c",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "238",
     "count": 3
   },
@@ -13,21 +13,15 @@
   "member_works": [
     {
       "work_id": "03585",
-      "title": "dots (equations particles) [detail 1]",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "dots (equations particles) [detail 1]"
     },
     {
       "work_id": "03586",
-      "title": "dots (equations particles) [detail 2]",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "dots (equations particles) [detail 2]"
     },
     {
       "work_id": "03587",
-      "title": "dots (equations particles) [detail 3]",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "dots (equations particles) [detail 3]"
     }
   ]
 }

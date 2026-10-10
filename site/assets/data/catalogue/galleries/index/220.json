@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-855a134620c5be327f22ded4a31f5400",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-175485e516b156872d5356b193475abd",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "220",
     "count": 80
   },
@@ -13,483 +13,323 @@
   "member_works": [
     {
       "work_id": "03422",
-      "title": "book dna 1",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 1"
     },
     {
       "work_id": "03423",
-      "title": "book dna 2",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 2"
     },
     {
       "work_id": "03424",
-      "title": "book dna 3",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 3"
     },
     {
       "work_id": "03425",
-      "title": "book dna 4",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 4"
     },
     {
       "work_id": "03426",
-      "title": "book dna 5",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 5"
     },
     {
       "work_id": "03427",
-      "title": "book dna 6",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 6"
     },
     {
       "work_id": "03428",
-      "title": "book dna 7",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 7"
     },
     {
       "work_id": "03429",
-      "title": "book dna 8",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 8"
     },
     {
       "work_id": "03430",
-      "title": "book dna 9",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 9"
     },
     {
       "work_id": "03431",
-      "title": "book dna 10",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 10"
     },
     {
       "work_id": "03432",
-      "title": "book dna 11",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 11"
     },
     {
       "work_id": "03433",
-      "title": "book dna 12",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 12"
     },
     {
       "work_id": "03434",
-      "title": "book dna 13",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 13"
     },
     {
       "work_id": "03435",
-      "title": "book dna 14",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 14"
     },
     {
       "work_id": "03436",
-      "title": "book dna 15",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 15"
     },
     {
       "work_id": "03437",
-      "title": "book dna 16",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 16"
     },
     {
       "work_id": "03438",
-      "title": "book dna 17",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 17"
     },
     {
       "work_id": "03439",
-      "title": "book dna 18",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 18"
     },
     {
       "work_id": "03440",
-      "title": "book dna 19",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 19"
     },
     {
       "work_id": "03441",
-      "title": "book dna 20",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 20"
     },
     {
       "work_id": "03442",
-      "title": "book dna 21",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 21"
     },
     {
       "work_id": "03443",
-      "title": "book dna 22",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 22"
     },
     {
       "work_id": "03444",
-      "title": "book dna 23",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 23"
     },
     {
       "work_id": "03445",
-      "title": "book dna 24",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 24"
     },
     {
       "work_id": "03446",
-      "title": "book dna 25",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 25"
     },
     {
       "work_id": "03447",
-      "title": "book dna 26",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 26"
     },
     {
       "work_id": "03448",
-      "title": "book dna 27",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 27"
     },
     {
       "work_id": "03449",
-      "title": "book dna 28",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 28"
     },
     {
       "work_id": "03450",
-      "title": "book dna 29",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 29"
     },
     {
       "work_id": "03451",
-      "title": "book dna 30",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 30"
     },
     {
       "work_id": "03452",
-      "title": "book dna 31",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 31"
     },
     {
       "work_id": "03453",
-      "title": "book dna 32",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 32"
     },
     {
       "work_id": "03454",
-      "title": "book dna 33",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 33"
     },
     {
       "work_id": "03455",
-      "title": "book dna 34",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 34"
     },
     {
       "work_id": "03456",
-      "title": "book dna 35",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 35"
     },
     {
       "work_id": "03457",
-      "title": "book dna 36",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 36"
     },
     {
       "work_id": "03458",
-      "title": "book dna 37",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 37"
     },
     {
       "work_id": "03459",
-      "title": "book dna 38",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 38"
     },
     {
       "work_id": "03460",
-      "title": "book dna 39",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 39"
     },
     {
       "work_id": "03461",
-      "title": "book dna 40",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 40"
     },
     {
       "work_id": "03462",
-      "title": "book dna 41",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 41"
     },
     {
       "work_id": "03463",
-      "title": "book dna 42",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 42"
     },
     {
       "work_id": "03464",
-      "title": "book dna 43",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 43"
     },
     {
       "work_id": "03465",
-      "title": "book dna 44",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 44"
     },
     {
       "work_id": "03466",
-      "title": "book dna 45",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 45"
     },
     {
       "work_id": "03467",
-      "title": "book dna 46",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 46"
     },
     {
       "work_id": "03468",
-      "title": "book dna 47",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 47"
     },
     {
       "work_id": "03469",
-      "title": "book dna 48",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 48"
     },
     {
       "work_id": "03470",
-      "title": "book dna 49",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 49"
     },
     {
       "work_id": "03471",
-      "title": "book dna 50",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 50"
     },
     {
       "work_id": "03472",
-      "title": "book dna 51",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 51"
     },
     {
       "work_id": "03473",
-      "title": "book dna 52",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 52"
     },
     {
       "work_id": "03474",
-      "title": "book dna 53",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 53"
     },
     {
       "work_id": "03475",
-      "title": "book dna 54",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 54"
     },
     {
       "work_id": "03476",
-      "title": "book dna 55",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 55"
     },
     {
       "work_id": "03477",
-      "title": "book dna 56",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 56"
     },
     {
       "work_id": "03478",
-      "title": "book dna 57",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 57"
     },
     {
       "work_id": "03479",
-      "title": "book dna 58",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 58"
     },
     {
       "work_id": "03480",
-      "title": "book dna 59",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 59"
     },
     {
       "work_id": "03481",
-      "title": "book dna 60",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 60"
     },
     {
       "work_id": "03482",
-      "title": "book dna 61",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 61"
     },
     {
       "work_id": "03483",
-      "title": "book dna 62",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 62"
     },
     {
       "work_id": "03484",
-      "title": "book dna 63",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 63"
     },
     {
       "work_id": "03485",
-      "title": "book dna 64",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 64"
     },
     {
       "work_id": "03486",
-      "title": "book dna 65",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 65"
     },
     {
       "work_id": "03487",
-      "title": "book dna 66",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 66"
     },
     {
       "work_id": "03488",
-      "title": "book dna 67",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 67"
     },
     {
       "work_id": "03489",
-      "title": "book dna 68",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 68"
     },
     {
       "work_id": "03490",
-      "title": "book dna 69",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 69"
     },
     {
       "work_id": "03491",
-      "title": "book dna 70",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 70"
     },
     {
       "work_id": "03492",
-      "title": "book dna 71",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 71"
     },
     {
       "work_id": "03493",
-      "title": "book dna 72",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 72"
     },
     {
       "work_id": "03494",
-      "title": "book dna 73",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 73"
     },
     {
       "work_id": "03495",
-      "title": "book dna 74",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 74"
     },
     {
       "work_id": "03496",
-      "title": "book dna 75",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 75"
     },
     {
       "work_id": "03497",
-      "title": "book dna 76",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 76"
     },
     {
       "work_id": "03498",
-      "title": "book dna 77",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 77"
     },
     {
       "work_id": "03499",
-      "title": "book dna 78",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 78"
     },
     {
       "work_id": "03500",
-      "title": "book dna 79",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 79"
     },
     {
       "work_id": "03501",
-      "title": "book dna 80",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "book dna 80"
     }
   ]
 }

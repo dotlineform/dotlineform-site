@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-a010543f4cebb22f0b30c94829307785",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-7347ba57bd0631a47706525b3fb14ecc",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "277",
     "count": 4
   },
@@ -13,27 +13,19 @@
   "member_works": [
     {
       "work_id": "04317",
-      "title": "k particles grid - detail 1",
-      "year": 2008,
-      "year_display": "2008"
+      "title": "k particles grid - detail 1"
     },
     {
       "work_id": "04318",
-      "title": "k particles grid - detail 2",
-      "year": 2008,
-      "year_display": "2008"
+      "title": "k particles grid - detail 2"
     },
     {
       "work_id": "04319",
-      "title": "k particles grid - detail 3",
-      "year": 2008,
-      "year_display": "2008"
+      "title": "k particles grid - detail 3"
     },
     {
       "work_id": "04320",
-      "title": "k particles grid - detail 4",
-      "year": 2008,
-      "year_display": "2008"
+      "title": "k particles grid - detail 4"
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-2eef76ad5bfefdf4aedf4ef87d87d4ec",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-22bebb27a31a3c51397d4427d0607db5",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "081",
     "count": 1
   },
@@ -13,9 +13,7 @@
   "member_works": [
     {
       "work_id": "00457",
-      "title": "intuition (2020)",
-      "year": 2020,
-      "year_display": "c. 2001-11"
+      "title": "intuition (2020)"
     }
   ]
 }

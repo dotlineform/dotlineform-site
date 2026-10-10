@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-93fe1ca6cfa7d43663c0f4ee9d8bf5ef",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-f86789f082a0b30eee24402341d3a890",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "065",
     "count": 4
   },
@@ -13,27 +13,19 @@
   "member_works": [
     {
       "work_id": "01196",
-      "title": "forms",
-      "year": 2011,
-      "year_display": "2011"
+      "title": "forms"
     },
     {
       "work_id": "01197",
-      "title": "form paths",
-      "year": 2011,
-      "year_display": "2011"
+      "title": "form paths"
     },
     {
       "work_id": "01198",
-      "title": "4 form paths",
-      "year": 2011,
-      "year_display": "2011"
+      "title": "4 form paths"
     },
     {
       "work_id": "01199",
-      "title": "form particles",
-      "year": 2011,
-      "year_display": "2011"
+      "title": "form particles"
     }
   ]
 }

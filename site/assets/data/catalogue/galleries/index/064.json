@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-1b88eb6cd41883b6799cae3c3b27dcab",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-36aa6669e48ff77026eb218e37fc5f09",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "064",
     "count": 20
   },
@@ -13,123 +13,83 @@
   "member_works": [
     {
       "work_id": "01176",
-      "title": "form space 1",
-      "year": 2007,
-      "year_display": "2007"
+      "title": "form space 1"
     },
     {
       "work_id": "01177",
-      "title": "form space 2",
-      "year": 2007,
-      "year_display": "2007"
+      "title": "form space 2"
     },
     {
       "work_id": "01178",
-      "title": "form space 3",
-      "year": 2007,
-      "year_display": "2007"
+      "title": "form space 3"
     },
     {
       "work_id": "01179",
-      "title": "form space 4",
-      "year": 2007,
-      "year_display": "2007"
+      "title": "form space 4"
     },
     {
       "work_id": "01180",
-      "title": "form space 5",
-      "year": 2007,
-      "year_display": "2007"
+      "title": "form space 5"
     },
     {
       "work_id": "01181",
-      "title": "form space 6",
-      "year": 2007,
-      "year_display": "2007"
+      "title": "form space 6"
     },
     {
       "work_id": "01182",
-      "title": "form space 7",
-      "year": 2007,
-      "year_display": "2007"
+      "title": "form space 7"
     },
     {
       "work_id": "01183",
-      "title": "form space 8",
-      "year": 2007,
-      "year_display": "2007"
+      "title": "form space 8"
     },
     {
       "work_id": "01184",
-      "title": "form space 9",
-      "year": 2007,
-      "year_display": "2007"
+      "title": "form space 9"
     },
     {
       "work_id": "01185",
-      "title": "form space 10",
-      "year": 2007,
-      "year_display": "2007"
+      "title": "form space 10"
     },
     {
       "work_id": "01186",
-      "title": "form space 11",
-      "year": 2007,
-      "year_display": "2007"
+      "title": "form space 11"
     },
     {
       "work_id": "01187",
-      "title": "form space 12",
-      "year": 2007,
-      "year_display": "2007"
+      "title": "form space 12"
     },
     {
       "work_id": "01188",
-      "title": "form space 13",
-      "year": 2007,
-      "year_display": "2007"
+      "title": "form space 13"
     },
     {
       "work_id": "01189",
-      "title": "form space 14",
-      "year": 2007,
-      "year_display": "2007"
+      "title": "form space 14"
     },
     {
       "work_id": "01190",
-      "title": "form space 15",
-      "year": 2007,
-      "year_display": "2007"
+      "title": "form space 15"
     },
     {
       "work_id": "01191",
-      "title": "form space 16",
-      "year": 2007,
-      "year_display": "2007"
+      "title": "form space 16"
     },
     {
       "work_id": "01192",
-      "title": "form space 17",
-      "year": 2007,
-      "year_display": "2007"
+      "title": "form space 17"
     },
     {
       "work_id": "01193",
-      "title": "form space 18",
-      "year": 2007,
-      "year_display": "2007"
+      "title": "form space 18"
     },
     {
       "work_id": "01194",
-      "title": "form space 19",
-      "year": 2007,
-      "year_display": "2007"
+      "title": "form space 19"
     },
     {
       "work_id": "01195",
-      "title": "form space 20",
-      "year": 2007,
-      "year_display": "2007"
+      "title": "form space 20"
     }
   ]
 }

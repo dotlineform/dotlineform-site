@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-21ae9c9e27feb0507fac3cc2474c8a3c",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-dfd4175c8438d124042568e1e8690cd8",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "033",
     "count": 12
   },
@@ -13,75 +13,51 @@
   "member_works": [
     {
       "work_id": "00838",
-      "title": "structure a",
-      "year": 2011,
-      "year_display": "2011"
+      "title": "structure a"
     },
     {
       "work_id": "00839",
-      "title": "structure b",
-      "year": 2011,
-      "year_display": "2011"
+      "title": "structure b"
     },
     {
       "work_id": "00840",
-      "title": "structure c",
-      "year": 2011,
-      "year_display": "2011"
+      "title": "structure c"
     },
     {
       "work_id": "00841",
-      "title": "structure d",
-      "year": 2011,
-      "year_display": "2011"
+      "title": "structure d"
     },
     {
       "work_id": "00842",
-      "title": "structure i",
-      "year": 2011,
-      "year_display": "2011"
+      "title": "structure i"
     },
     {
       "work_id": "00843",
-      "title": "structure ii ~",
-      "year": 2011,
-      "year_display": "2011"
+      "title": "structure ii ~"
     },
     {
       "work_id": "00844",
-      "title": "structure ii",
-      "year": 2011,
-      "year_display": "2011"
+      "title": "structure ii"
     },
     {
       "work_id": "00845",
-      "title": "structure iii",
-      "year": 2011,
-      "year_display": "2011"
+      "title": "structure iii"
     },
     {
       "work_id": "00846",
-      "title": "structure iv",
-      "year": 2011,
-      "year_display": "2011"
+      "title": "structure iv"
     },
     {
       "work_id": "00847",
-      "title": "structure v composite",
-      "year": 2011,
-      "year_display": "2011"
+      "title": "structure v composite"
     },
     {
       "work_id": "00848",
-      "title": "structure v",
-      "year": 2011,
-      "year_display": "2011"
+      "title": "structure v"
     },
     {
       "work_id": "00849",
-      "title": "structure vi",
-      "year": 2011,
-      "year_display": "2011"
+      "title": "structure vi"
     }
   ]
 }

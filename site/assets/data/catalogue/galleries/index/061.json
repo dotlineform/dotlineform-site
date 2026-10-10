@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-7b133473ebfcf362f910b3a416f0da19",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-6f744e8ce6c7b33152f2b3ae18634198",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "061",
     "count": 1
   },
@@ -13,9 +13,7 @@
   "member_works": [
     {
       "work_id": "00464",
-      "title": "forest memories 1-48",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "forest memories 1-48"
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-bfc2ad2da71ad47722d35278f76e5a94",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-0030c1c85b2bb8e0c1fd9663d05d10fd",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "118",
     "count": 7
   },
@@ -13,45 +13,31 @@
   "member_works": [
     {
       "work_id": "00383",
-      "title": "qrnt",
-      "year": 2009,
-      "year_display": "2009"
+      "title": "qrnt"
     },
     {
       "work_id": "00629",
-      "title": "quantum random number theory",
-      "year": 2009,
-      "year_display": "2009"
+      "title": "quantum random number theory"
     },
     {
       "work_id": "00630",
-      "title": "quantum random number theory (version)",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "quantum random number theory (version)"
     },
     {
       "work_id": "00631",
-      "title": "quantum random number theory (form)",
-      "year": 2015,
-      "year_display": "2015"
+      "title": "quantum random number theory (form)"
     },
     {
       "work_id": "00632",
-      "title": "quantum random number theory (circle)",
-      "year": 2009,
-      "year_display": "2009"
+      "title": "quantum random number theory (circle)"
     },
     {
       "work_id": "00633",
-      "title": "quantum random number theory (4 circles)",
-      "year": 2009,
-      "year_display": "2009"
+      "title": "quantum random number theory (4 circles)"
     },
     {
       "work_id": "00634",
-      "title": "bits symbols 1",
-      "year": 2009,
-      "year_display": "2009"
+      "title": "bits symbols 1"
     }
   ]
 }

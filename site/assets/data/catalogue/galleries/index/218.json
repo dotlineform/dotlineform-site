@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-3cf09d9f5d74b871f0b26cf6217bda46",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-706a093f5996b6c4506cde8c8781a360",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "218",
     "count": 4
   },
@@ -13,27 +13,19 @@
   "member_works": [
     {
       "work_id": "03376",
-      "title": "birth of forms - detail 1",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of forms - detail 1"
     },
     {
       "work_id": "03377",
-      "title": "birth of forms - detail 2",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of forms - detail 2"
     },
     {
       "work_id": "03378",
-      "title": "birth of forms - detail 3",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of forms - detail 3"
     },
     {
       "work_id": "03379",
-      "title": "birth of forms - detail 4",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "birth of forms - detail 4"
     }
   ]
 }

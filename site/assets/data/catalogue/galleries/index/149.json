@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-e6e02f5bc67a055b2c8c44c34679c277",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-fcd4b24f999ffc41d6b2665eebb9b637",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "149",
     "count": 10
   },
@@ -13,63 +13,43 @@
   "member_works": [
     {
       "work_id": "01981",
-      "title": "nerve (abattoir) - front cover",
-      "year": 1995,
-      "year_display": "1990-95"
+      "title": "nerve (abattoir) - front cover"
     },
     {
       "work_id": "01982",
-      "title": "nerve (abattoir) - inside cover",
-      "year": 1995,
-      "year_display": "1990-95"
+      "title": "nerve (abattoir) - inside cover"
     },
     {
       "work_id": "01983",
-      "title": "nerve (abattoir) - 1",
-      "year": 1995,
-      "year_display": "1990-95"
+      "title": "nerve (abattoir) - 1"
     },
     {
       "work_id": "01984",
-      "title": "nerve (abattoir) - 2",
-      "year": 1995,
-      "year_display": "1990-95"
+      "title": "nerve (abattoir) - 2"
     },
     {
       "work_id": "01985",
-      "title": "nerve (abattoir) - 3",
-      "year": 1995,
-      "year_display": "1990-95"
+      "title": "nerve (abattoir) - 3"
     },
     {
       "work_id": "01986",
-      "title": "nerve (abattoir) - 4",
-      "year": 1995,
-      "year_display": "1990-95"
+      "title": "nerve (abattoir) - 4"
     },
     {
       "work_id": "01987",
-      "title": "nerve (abattoir) - 5",
-      "year": 1995,
-      "year_display": "1990-95"
+      "title": "nerve (abattoir) - 5"
     },
     {
       "work_id": "01988",
-      "title": "nerve (abattoir) - 6",
-      "year": 1995,
-      "year_display": "1990-95"
+      "title": "nerve (abattoir) - 6"
     },
     {
       "work_id": "01989",
-      "title": "nerve (abattoir) - 7",
-      "year": 1995,
-      "year_display": "1990-95"
+      "title": "nerve (abattoir) - 7"
     },
     {
       "work_id": "01990",
-      "title": "nerve (abattoir) - back cover",
-      "year": 1995,
-      "year_display": "1990-95"
+      "title": "nerve (abattoir) - back cover"
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-34c828127d114e18fb54b5449b3fa8d2",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-2689a83b5388f9651eef0c329f8a220c",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "242",
     "count": 25
   },
@@ -13,153 +13,103 @@
   "member_works": [
     {
       "work_id": "03629",
-      "title": "espresso 1",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "espresso 1"
     },
     {
       "work_id": "03630",
-      "title": "espresso 2",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "espresso 2"
     },
     {
       "work_id": "03631",
-      "title": "espresso 3",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "espresso 3"
     },
     {
       "work_id": "03632",
-      "title": "espresso 4",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "espresso 4"
     },
     {
       "work_id": "03633",
-      "title": "espresso 5",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "espresso 5"
     },
     {
       "work_id": "03634",
-      "title": "espresso 6",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "espresso 6"
     },
     {
       "work_id": "03635",
-      "title": "espresso 7",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "espresso 7"
     },
     {
       "work_id": "03636",
-      "title": "espresso 8",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "espresso 8"
     },
     {
       "work_id": "03637",
-      "title": "espresso 9",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "espresso 9"
     },
     {
       "work_id": "03638",
-      "title": "espresso 10",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "espresso 10"
     },
     {
       "work_id": "03639",
-      "title": "espresso 11",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "espresso 11"
     },
     {
       "work_id": "03640",
-      "title": "espresso 12",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "espresso 12"
     },
     {
       "work_id": "03641",
-      "title": "espresso 13",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "espresso 13"
     },
     {
       "work_id": "03642",
-      "title": "espresso 14",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "espresso 14"
     },
     {
       "work_id": "03643",
-      "title": "espresso 15",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "espresso 15"
     },
     {
       "work_id": "03644",
-      "title": "espresso 16",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "espresso 16"
     },
     {
       "work_id": "03645",
-      "title": "espresso 17",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "espresso 17"
     },
     {
       "work_id": "03646",
-      "title": "espresso 18",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "espresso 18"
     },
     {
       "work_id": "03647",
-      "title": "espresso 19",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "espresso 19"
     },
     {
       "work_id": "03648",
-      "title": "espresso 20",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "espresso 20"
     },
     {
       "work_id": "03649",
-      "title": "espresso 21",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "espresso 21"
     },
     {
       "work_id": "03650",
-      "title": "espresso 22",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "espresso 22"
     },
     {
       "work_id": "03651",
-      "title": "espresso 23",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "espresso 23"
     },
     {
       "work_id": "03652",
-      "title": "espresso 24",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "espresso 24"
     },
     {
       "work_id": "03653",
-      "title": "espresso 25",
-      "year": 2012,
-      "year_display": "2012"
+      "title": "espresso 25"
     }
   ]
 }

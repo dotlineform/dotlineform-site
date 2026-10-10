@@ -189,7 +189,7 @@ def read_catalogue_gallery(repo_root: Path, gallery_id: str) -> dict[str, Any]:
     gallery_id = _gallery_identity(gallery_id)
     payload = _read_generated(repo_root, f"galleries/index/{gallery_id}.json")
     gallery, header = payload.get("gallery"), payload.get("header")
-    if not isinstance(gallery, dict) or gallery.get("gallery_id") != gallery_id or not isinstance(header, dict) or header.get("gallery_id") != gallery_id or header.get("schema") != "gallery_record_v1":
+    if not isinstance(gallery, dict) or gallery.get("gallery_id") != gallery_id or not isinstance(header, dict) or header.get("gallery_id") != gallery_id or header.get("schema") != "gallery_record_v2":
         raise ValueError("Generated Gallery data does not match the selected Gallery")
     if not isinstance(gallery.get("title"), str) or not gallery["title"].strip():
         raise ValueError("Generated Gallery title is unavailable")
@@ -198,8 +198,8 @@ def read_catalogue_gallery(repo_root: Path, gallery_id: str) -> dict[str, Any]:
         raise ValueError("Generated Gallery membership is unavailable")
     previous_id = ""
     for member in members:
-        if not isinstance(member, dict):
-            raise ValueError("Generated Gallery member must be an object")
+        if not isinstance(member, dict) or set(member) != {"work_id", "title"}:
+            raise ValueError("Generated Gallery member requires exactly Work ID and title")
         work_id = _work_identity(member.get("work_id"))
         if work_id <= previous_id:
             raise ValueError("Generated Gallery Works must be distinct and in ascending ID order")

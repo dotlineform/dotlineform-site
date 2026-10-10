@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-45ffc9ba0933fec705eb3c118966125b",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-b9f6dc1bc0fc1866840d061e44eec964",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "223",
     "count": 1
   },
@@ -13,9 +13,7 @@
   "member_works": [
     {
       "work_id": "03508",
-      "title": "colours dachau.1",
-      "year": 2008,
-      "year_display": "2008"
+      "title": "colours dachau.1"
     }
   ]
 }

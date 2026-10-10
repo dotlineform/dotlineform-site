@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-57260f686811f59ce347c7702405f8a0",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-bafc7a1686068afa1397e1125ac1a627",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "106",
     "count": 5
   },
@@ -13,33 +13,23 @@
   "member_works": [
     {
       "work_id": "00385",
-      "title": "nerve 1",
-      "year": 2004,
-      "year_display": "2004"
+      "title": "nerve 1"
     },
     {
       "work_id": "00386",
-      "title": "nerve 3",
-      "year": 2004,
-      "year_display": "2004"
+      "title": "nerve 3"
     },
     {
       "work_id": "00387",
-      "title": "nerve 3",
-      "year": 2004,
-      "year_display": "2004"
+      "title": "nerve 3"
     },
     {
       "work_id": "00525",
-      "title": "nerve 2",
-      "year": 2004,
-      "year_display": "2004"
+      "title": "nerve 2"
     },
     {
       "work_id": "00581",
-      "title": "nerve forms",
-      "year": 2004,
-      "year_display": "2004"
+      "title": "nerve forms"
     }
   ]
 }

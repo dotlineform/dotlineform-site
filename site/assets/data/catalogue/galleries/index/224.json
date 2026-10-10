@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-713ede8a1d4483430b8af20d7d47611e",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-a3002d6cdba2eb18787b9803c80a8195",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "224",
     "count": 5
   },
@@ -13,33 +13,23 @@
   "member_works": [
     {
       "work_id": "03509",
-      "title": "colours kylie.1",
-      "year": 2008,
-      "year_display": "2008"
+      "title": "colours kylie.1"
     },
     {
       "work_id": "03510",
-      "title": "colours kylie.2",
-      "year": 2008,
-      "year_display": "2008"
+      "title": "colours kylie.2"
     },
     {
       "work_id": "03511",
-      "title": "colours kylie.3",
-      "year": 2008,
-      "year_display": "2008"
+      "title": "colours kylie.3"
     },
     {
       "work_id": "03512",
-      "title": "colours kylie.4",
-      "year": 2008,
-      "year_display": "2008"
+      "title": "colours kylie.4"
     },
     {
       "work_id": "03513",
-      "title": "colours kylie.5",
-      "year": 2008,
-      "year_display": "2008"
+      "title": "colours kylie.5"
     }
   ]
 }

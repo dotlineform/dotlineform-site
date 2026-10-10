@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-ed18f10964673703fcddc91edfb10168",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-26cf6e88df34687dc58795431278a9b3",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "153",
     "count": 4
   },
@@ -13,27 +13,19 @@
   "member_works": [
     {
       "work_id": "02015",
-      "title": "glass forms 001",
-      "year": 2010,
-      "year_display": "c. 2010?"
+      "title": "glass forms 001"
     },
     {
       "work_id": "02016",
-      "title": "glass forms 002",
-      "year": 2010,
-      "year_display": "c. 2010?"
+      "title": "glass forms 002"
     },
     {
       "work_id": "02017",
-      "title": "glass forms 003",
-      "year": 2010,
-      "year_display": "c. 2010?"
+      "title": "glass forms 003"
     },
     {
       "work_id": "02018",
-      "title": "glass forms 004",
-      "year": 2010,
-      "year_display": "c. 2010?"
+      "title": "glass forms 004"
     }
   ]
 }

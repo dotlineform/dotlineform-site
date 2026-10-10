@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-fa50cfb653959dea53aacea80c87ca91",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-b117021b0499eb80a7f0f542d322b089",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "012",
     "count": 2
   },
@@ -13,15 +13,11 @@
   "member_works": [
     {
       "work_id": "00751",
-      "title": "all the little cracks",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "all the little cracks"
     },
     {
       "work_id": "00752",
-      "title": "all the little cracks again",
-      "year": 2016,
-      "year_display": "2016"
+      "title": "all the little cracks again"
     }
   ]
 }

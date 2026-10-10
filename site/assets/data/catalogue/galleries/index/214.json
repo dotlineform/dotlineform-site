@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-64b68810aea7e68d309ef0eeaa967246",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-5e02dcd5eba8dacaff5ed00a3f4de103",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "214",
     "count": 4
   },
@@ -13,27 +13,19 @@
   "member_works": [
     {
       "work_id": "03363",
-      "title": "all the little cracks again - detail 1",
-      "year": 2016,
-      "year_display": "2016"
+      "title": "all the little cracks again - detail 1"
     },
     {
       "work_id": "03364",
-      "title": "all the little cracks again - detail 2",
-      "year": 2016,
-      "year_display": "2016"
+      "title": "all the little cracks again - detail 2"
     },
     {
       "work_id": "03365",
-      "title": "all the little cracks again - detail 3",
-      "year": 2016,
-      "year_display": "2016"
+      "title": "all the little cracks again - detail 3"
     },
     {
       "work_id": "03366",
-      "title": "all the little cracks again - detail 4",
-      "year": 2016,
-      "year_display": "2016"
+      "title": "all the little cracks again - detail 4"
     }
   ]
 }

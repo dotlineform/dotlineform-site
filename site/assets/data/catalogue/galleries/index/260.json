@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-ba4300f33c650773c310012c220b35a7",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-b88ab9207b70dac1e10e2f99d9cf634e",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "260",
     "count": 3
   },
@@ -13,21 +13,15 @@
   "member_works": [
     {
       "work_id": "04231",
-      "title": "heaven and earth (blue)",
-      "year": 2011,
-      "year_display": "2011"
+      "title": "heaven and earth (blue)"
     },
     {
       "work_id": "04232",
-      "title": "heaven and earth (cyan)",
-      "year": 2011,
-      "year_display": "2011"
+      "title": "heaven and earth (cyan)"
     },
     {
       "work_id": "04233",
-      "title": "heaven and earth (green)",
-      "year": 2011,
-      "year_display": "2011"
+      "title": "heaven and earth (green)"
     }
   ]
 }

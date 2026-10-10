@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-f0d1484cc33b264789b1695eb71e91d1",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-8cc9e94cf866229cc5b421d0602978ba",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "138",
     "count": 9
   },
@@ -13,57 +13,39 @@
   "member_works": [
     {
       "work_id": "01874",
-      "title": "untitled composites (source)",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "untitled composites (source)"
     },
     {
       "work_id": "01875",
-      "title": "untitled composite 1",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "untitled composite 1"
     },
     {
       "work_id": "01876",
-      "title": "untitled composite 2",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "untitled composite 2"
     },
     {
       "work_id": "01877",
-      "title": "untitled composite 3",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "untitled composite 3"
     },
     {
       "work_id": "01878",
-      "title": "untitled composite 4",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "untitled composite 4"
     },
     {
       "work_id": "01879",
-      "title": "untitled composite 5",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "untitled composite 5"
     },
     {
       "work_id": "01880",
-      "title": "untitled composite 6",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "untitled composite 6"
     },
     {
       "work_id": "01881",
-      "title": "untitled composites 1-3",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "untitled composites 1-3"
     },
     {
       "work_id": "01882",
-      "title": "untitled composites 4-6",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "untitled composites 4-6"
     }
   ]
 }

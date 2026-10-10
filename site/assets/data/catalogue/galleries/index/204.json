@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-28da859d9fa1ecb4ad7d7ea9fbe7ee39",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-43a9eb7f24e657c1f2873e885c86e510",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "204",
     "count": 2
   },
@@ -13,15 +13,11 @@
   "member_works": [
     {
       "work_id": "03188",
-      "title": "3 symbols (composite)",
-      "year": 2007,
-      "year_display": "2007"
+      "title": "3 symbols (composite)"
     },
     {
       "work_id": "03189",
-      "title": "3 symbols (untreated)",
-      "year": 2007,
-      "year_display": "2007"
+      "title": "3 symbols (untreated)"
     }
   ]
 }

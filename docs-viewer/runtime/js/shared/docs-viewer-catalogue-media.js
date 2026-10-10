@@ -38,14 +38,21 @@ function galleryRecord(payload, galleryId) {
   var gallery = payload && payload.gallery;
   var header = payload && payload.header;
   if (!gallery || gallery.gallery_id !== galleryId || !header || header.gallery_id !== galleryId
-    || header.schema !== "gallery_record_v1") throw new Error("Catalogue data does not match the selected Gallery.");
+    || header.schema !== "gallery_record_v2") throw new Error("Catalogue data does not match the selected Gallery.");
   if (typeof gallery.title !== "string" || !gallery.title.trim()) throw new Error("Catalogue Gallery title is unavailable.");
   if (!Array.isArray(payload.member_works) || header.count !== payload.member_works.length) {
     throw new Error("Catalogue Gallery membership is unavailable.");
   }
   var previousId = "";
   payload.member_works.forEach(function (member) {
-    var target = catalogueMediaTarget(member && member.work_id);
+    var keys = member && typeof member === "object" && !Array.isArray(member) ? Object.keys(member) : [];
+    if (keys.length !== 2 || !keys.includes("work_id") || !keys.includes("title")) {
+      throw new Error("Catalogue Gallery member requires exactly Work ID and title.");
+    }
+    if (typeof member.title !== "string" || !member.title.trim()) {
+      throw new Error("Catalogue member Work title is unavailable.");
+    }
+    var target = catalogueMediaTarget(member.work_id);
     if (target.id <= previousId) throw new Error("Catalogue Gallery Works must be distinct and in ascending ID order.");
     previousId = target.id;
   });
@@ -78,9 +85,6 @@ function groupMediaPresentation(payload, target, title, metadata, mediaPolicy, t
     schema_version: "docs_media_gallery_v1", target: target,
     gallery: { target: target, label: title, metadata: metadata,
       members: payload.member_works.map(function (member) {
-        if (!member || typeof member.title !== "string" || !member.title.trim()) {
-          throw new Error("Catalogue member Work title is unavailable.");
-        }
         return { target: catalogueMediaTarget(member.work_id), label: member.title,
           thumbnail: catalogueWorkThumbnail(member.work_id, member.title, thumbnailSettings) };
       }) }

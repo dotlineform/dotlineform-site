@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-58c354dd26261ecdc48f83b46b186764",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-a237865e97d4a95e74e0a801c8676bb0",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "093",
     "count": 5
   },
@@ -13,33 +13,23 @@
   "member_works": [
     {
       "work_id": "01417",
-      "title": "fur map",
-      "year": 2004,
-      "year_display": "2004, 2011"
+      "title": "fur map"
     },
     {
       "work_id": "01418",
-      "title": "hudf (black)",
-      "year": 2004,
-      "year_display": "2004, 2011"
+      "title": "hudf (black)"
     },
     {
       "work_id": "01419",
-      "title": "hudf (white)",
-      "year": 2004,
-      "year_display": "2004, 2011"
+      "title": "hudf (white)"
     },
     {
       "work_id": "01420",
-      "title": "kylie grid map",
-      "year": 2004,
-      "year_display": "2004, 2011"
+      "title": "kylie grid map"
     },
     {
       "work_id": "01421",
-      "title": "kylie map",
-      "year": 2004,
-      "year_display": "2004, 2011"
+      "title": "kylie map"
     }
   ]
 }

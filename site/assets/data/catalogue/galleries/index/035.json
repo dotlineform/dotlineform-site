@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-c840679be5b3412d13af49de3ef72138",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-2389297ed13bbfb731b00e5249165369",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "035",
     "count": 5
   },
@@ -13,33 +13,23 @@
   "member_works": [
     {
       "work_id": "00867",
-      "title": "curve machine",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "curve machine"
     },
     {
       "work_id": "00868",
-      "title": "curve machine (off)",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "curve machine (off)"
     },
     {
       "work_id": "00869",
-      "title": "curves",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "curves"
     },
     {
       "work_id": "00870",
-      "title": "holes",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "holes"
     },
     {
       "work_id": "00871",
-      "title": "loops",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "loops"
     }
   ]
 }

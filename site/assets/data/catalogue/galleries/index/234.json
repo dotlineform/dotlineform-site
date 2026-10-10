@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-777154371f0688ec887b31732df22b08",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-e2515db6bf2c6d4c490a5edc3b3ec36a",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "234",
     "count": 5
   },
@@ -13,33 +13,23 @@
   "member_works": [
     {
       "work_id": "03570",
-      "title": "dots (inside) [detail 1]",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "dots (inside) [detail 1]"
     },
     {
       "work_id": "03571",
-      "title": "dots (inside) [detail 2]",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "dots (inside) [detail 2]"
     },
     {
       "work_id": "03572",
-      "title": "dots (inside) [detail 3]",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "dots (inside) [detail 3]"
     },
     {
       "work_id": "03573",
-      "title": "dots (inside) [detail 4]",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "dots (inside) [detail 4]"
     },
     {
       "work_id": "03574",
-      "title": "dots (inside) [detail 5]",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "dots (inside) [detail 5]"
     }
   ]
 }

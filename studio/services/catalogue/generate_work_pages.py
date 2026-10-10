@@ -51,8 +51,6 @@ def catalogue_payloads(
             for gid in ids:
                 if gid in works_by_gallery:
                     works_by_gallery[gid].append(wid)
-    member_records = {wid: records.works[wid] for gid in selected_galleries for wid in works_by_gallery[gid]}
-    context = indexes.build_series_work_index_context(series_records=records.series, work_records=member_records) if selected_galleries else None
     payloads: dict[str, dict[str, Any]] = {}
     media_config = json.loads((repo_root / "site-tools/config/site-tools.json").read_text())["media"]
     if "media-config.json" in shared:
@@ -79,7 +77,7 @@ def catalogue_payloads(
         source = galleries.galleries[gid]
         payloads[f"galleries/index/{gid}.json"] = projection.build_gallery_json_payload(
             gallery_id=gid, gallery_record=source,
-            member_works=indexes.build_member_work_records(context=context, work_ids=works_by_gallery[gid]), generated_at_utc=timestamp,
+            member_works=indexes.build_member_work_records(work_records=records.works, work_ids=works_by_gallery[gid]), generated_at_utc=timestamp,
         )
     if WORK_INDEX in shared:
         payloads[WORK_INDEX] = _index("works", {

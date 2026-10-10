@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-471d4f6412ee4c649360a25df1b81dd4",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-4b7a3bb6fc37af209f4ab0b4ac63a8e8",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "205",
     "count": 8
   },
@@ -13,51 +13,35 @@
   "member_works": [
     {
       "work_id": "03190",
-      "title": "3 symbols (detail 1)",
-      "year": 2007,
-      "year_display": "2007"
+      "title": "3 symbols (detail 1)"
     },
     {
       "work_id": "03191",
-      "title": "3 symbols (detail 2)",
-      "year": 2007,
-      "year_display": "2007"
+      "title": "3 symbols (detail 2)"
     },
     {
       "work_id": "03192",
-      "title": "3 symbols (detail 3)",
-      "year": 2007,
-      "year_display": "2007"
+      "title": "3 symbols (detail 3)"
     },
     {
       "work_id": "03193",
-      "title": "3 symbols (detail 4)",
-      "year": 2007,
-      "year_display": "2007"
+      "title": "3 symbols (detail 4)"
     },
     {
       "work_id": "03194",
-      "title": "3 symbols (detail 5)",
-      "year": 2007,
-      "year_display": "2007"
+      "title": "3 symbols (detail 5)"
     },
     {
       "work_id": "03195",
-      "title": "3 symbols (detail 6)",
-      "year": 2007,
-      "year_display": "2007"
+      "title": "3 symbols (detail 6)"
     },
     {
       "work_id": "03196",
-      "title": "3 symbols (detail 7)",
-      "year": 2007,
-      "year_display": "2007"
+      "title": "3 symbols (detail 7)"
     },
     {
       "work_id": "03197",
-      "title": "3 symbols (detail 8)",
-      "year": 2007,
-      "year_display": "2007"
+      "title": "3 symbols (detail 8)"
     }
   ]
 }

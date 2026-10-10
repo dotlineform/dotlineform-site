@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-7d135dfe098c3c16ecc55aa6100148c8",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-d467a085f2a3cff21a6db487d6d3b434",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "236",
     "count": 3
   },
@@ -13,21 +13,15 @@
   "member_works": [
     {
       "work_id": "03578",
-      "title": "dots (second normal form) [detail 1]",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "dots (second normal form) [detail 1]"
     },
     {
       "work_id": "03579",
-      "title": "dots (second normal form) [detail 2]",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "dots (second normal form) [detail 2]"
     },
     {
       "work_id": "03580",
-      "title": "dots (second normal form) [detail 3]",
-      "year": 2010,
-      "year_display": "2010"
+      "title": "dots (second normal form) [detail 3]"
     }
   ]
 }

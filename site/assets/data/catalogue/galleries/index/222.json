@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-7c18b65b394b10b30de1d441526209de",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-a3d2d971ee8f9b4649cbc9319ffcadde",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "222",
     "count": 1
   },
@@ -13,9 +13,7 @@
   "member_works": [
     {
       "work_id": "03507",
-      "title": "colours belsen.1",
-      "year": 2008,
-      "year_display": "2008"
+      "title": "colours belsen.1"
     }
   ]
 }

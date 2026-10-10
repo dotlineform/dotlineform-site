@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-61f60553aa3e32c68d5eadfaec971410",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-f02c2bf52e6ff298903d31152bca483c",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "097",
     "count": 4
   },
@@ -13,27 +13,19 @@
   "member_works": [
     {
       "work_id": "01443",
-      "title": "memory loss vessels I",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "memory loss vessels I"
     },
     {
       "work_id": "01444",
-      "title": "memory loss vessels II",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "memory loss vessels II"
     },
     {
       "work_id": "01445",
-      "title": "memory loss vessels III",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "memory loss vessels III"
     },
     {
       "work_id": "01446",
-      "title": "memory loss",
-      "year": 2023,
-      "year_display": "2023"
+      "title": "memory loss"
     }
   ]
 }

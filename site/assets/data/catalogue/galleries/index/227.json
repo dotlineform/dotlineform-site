@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "gallery_record_v1",
-    "version": "blake2b-97af61a0a3d2bf502078123a38a6eb8e",
-    "generated_at_utc": "2026-10-10T09:27:29Z",
+    "schema": "gallery_record_v2",
+    "version": "blake2b-d9a770bf40e4e57f2bf162c81c348962",
+    "generated_at_utc": "2026-10-10T16:48:32Z",
     "gallery_id": "227",
     "count": 9
   },
@@ -13,57 +13,39 @@
   "member_works": [
     {
       "work_id": "03531",
-      "title": "dots 1",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "dots 1"
     },
     {
       "work_id": "03532",
-      "title": "dots 2",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "dots 2"
     },
     {
       "work_id": "03533",
-      "title": "dots 3",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "dots 3"
     },
     {
       "work_id": "03534",
-      "title": "dots 4",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "dots 4"
     },
     {
       "work_id": "03535",
-      "title": "dots 5",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "dots 5"
     },
     {
       "work_id": "03536",
-      "title": "dots 6",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "dots 6"
     },
     {
       "work_id": "03537",
-      "title": "dots 7",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "dots 7"
     },
     {
       "work_id": "03538",
-      "title": "dots 8",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "dots 8"
     },
     {
       "work_id": "03539",
-      "title": "dots 9",
-      "year": 2020,
-      "year_display": "2020"
+      "title": "dots 9"
     }
   ]
 }
