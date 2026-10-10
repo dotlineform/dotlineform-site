@@ -27,8 +27,11 @@ def read_refresh_inputs(
     deleted_works = any(not entry["refreshed"] for entry in pending["deleted_works"].values())
     relationships = bool(outputs & {RELATIONSHIP_INDEX, RELATIONSHIP_REPORT})
     member_rows = bool(pending["created_galleries"] or (pending["current_galleries"] and pending["gallery_member_works"]))
-    works_needed = current_works or deleted_works or member_rows or bool(outputs & {
-        WORK_INDEX, WORK_DOCUMENT_COVERAGE_MANIFEST, WORK_SOURCES_PATH, WORK_RESOURCES_PATH,
+    coverage_members = WORK_DOCUMENT_COVERAGE_MANIFEST in outputs and (
+        any(entry["metadata"] for entry in pending["current_works"].values()) or bool(pending["deleted_works"])
+    )
+    works_needed = current_works or deleted_works or member_rows or coverage_members or bool(outputs & {
+        WORK_INDEX, WORK_SOURCES_PATH, WORK_RESOURCES_PATH,
     })
     series_needed = current_works or relationships or bool(pending["current_series"] or pending["deleted_series"]) or bool(outputs & {
         WORK_DOCUMENT_COVERAGE_MANIFEST, SERIES_PATH,

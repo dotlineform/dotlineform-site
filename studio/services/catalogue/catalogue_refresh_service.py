@@ -26,6 +26,7 @@ from catalogue.catalogue_revisions import record_hash
 from catalogue.catalogue_shared_changes import REFRESH_FIELDS, WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, empty_shared_changes, shared_changes
 from catalogue.catalogue_pending_publication import merge_completed_shared
 from catalogue.catalogue_report_inputs import INPUT_SCHEMAS, SERIES_PATH, catalogue_report_input_payloads, merge_catalogue_report_input
+from catalogue.catalogue_work_document_coverage import MANIFEST_PATH as COVERAGE_MANIFEST, merge_work_document_coverage_manifest, work_document_coverage_manifest
 from docs_artifact_locations import ArtifactLocation
 
 
@@ -95,6 +96,28 @@ def refresh_compact_indexes(repo_root: Path) -> dict[str, Any]:
     merge_completed_shared(repo_root, {**empty_shared_changes(), "shared_outputs": sorted(payloads)})
     if set(pending["shared_outputs"]) & payloads.keys():
         pending["shared_outputs"] = [name for name in pending["shared_outputs"] if name not in payloads]
+        write_pending_updates(repo_root, pending)
+    return {"ok": True, "output": {"status": "completed", "written": written, "deleted": []}}
+
+
+def refresh_work_document_coverage(repo_root: Path) -> dict[str, Any]:
+    """Explicit complete private coverage baseline/repair, preserving other work.
+
+    Complete normal Work handoffs first. Clear only this output selection after
+    success; retain candidates, shared endpoints, lifecycle times and Publish.
+    Normal Refresh and saved readers never invoke this maintenance authority.
+    """
+    pending = read_pending_updates(repo_root)
+    if any(not entry["refreshed"] for family in ("current_works", "deleted_works") for entry in pending[family].values()):
+        raise ValueError("Complete queued Work Refresh before Work Document Coverage maintenance.")
+    records = records_from_json_source(repo_root / DEFAULT_SOURCE_DIR)
+    errors = validate_source_records(records)
+    if errors:
+        raise ValueError("Catalogue source validation failed: " + "; ".join(errors[:20]))
+    payload = work_document_coverage_manifest(records.series, records.works, timestamp=utc_timestamp())
+    written = _write_shared_payloads(catalogue_workspace_config(repo_root).catalogue.working, {COVERAGE_MANIFEST: payload})
+    if COVERAGE_MANIFEST in pending["shared_outputs"]:
+        pending["shared_outputs"].remove(COVERAGE_MANIFEST)
         write_pending_updates(repo_root, pending)
     return {"ok": True, "output": {"status": "completed", "written": written, "deleted": []}}
 
@@ -194,9 +217,9 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
         phase = "shared output"
         timestamp = utc_timestamp()
         row_payloads = {}
+        metadata_work_ids = [wid for wid, entry in pending["current_works"].items() if entry["metadata"]]
         for identity, family, sources, current_ids, deleted_ids in (
-            (WORK_INDEX, "works", records.works,
-             [wid for wid, entry in pending["current_works"].items() if entry["metadata"]], pending["deleted_works"]),
+            (WORK_INDEX, "works", records.works, metadata_work_ids, pending["deleted_works"]),
             (GALLERY_INDEX, "galleries", galleries.galleries, shared["current_galleries"], shared["deleted_galleries"]),
         ):
             if identity in shared["shared_outputs"]:
@@ -246,7 +269,7 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
             repo_root, records, galleries, pairs, timestamp=timestamp,
             work_ids=set(selected["current_works"]),
             gallery_ids=set(),
-            shared_outputs=set(shared["shared_outputs"]) - {WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, *INPUT_SCHEMAS},
+            shared_outputs=set(shared["shared_outputs"]) - {WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, COVERAGE_MANIFEST, *INPUT_SCHEMAS},
         )
         if set(shared["deleted_galleries"]) & galleries.galleries.keys() or set(shared["deleted_series"]) & records.series.keys():
             raise ValueError("Queued shared deletion still has a canonical definition")
@@ -306,14 +329,21 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
             payload = merge_catalogue_report_input(
                 output_path(workspace.catalogue.working, identity), relative=identity,
                 sources=records.series if is_series else records.works,
-                current_ids=shared["current_series"] if is_series else [
-                    wid for wid, entry in pending["current_works"].items() if entry["metadata"]
-                ],
+                current_ids=shared["current_series"] if is_series else metadata_work_ids,
                 deleted_ids=shared["deleted_series"] if is_series else pending["deleted_works"],
                 timestamp=timestamp,
             )
             if payload is not None:
                 row_payloads[identity] = payload
+        if COVERAGE_MANIFEST in shared["shared_outputs"]:
+            phase = "Work Document Coverage handoff"
+            payload = merge_work_document_coverage_manifest(
+                output_path(workspace.catalogue.working, COVERAGE_MANIFEST), records.series, records.works,
+                current_series=shared["current_series"], deleted_series=shared["deleted_series"],
+                current_work_ids=metadata_work_ids, deleted_work_ids=pending["deleted_works"], timestamp=timestamp,
+            )
+            if payload is not None:
+                row_payloads[COVERAGE_MANIFEST] = payload
         phase = "shared output"
         output["written"].extend(_write_shared_payloads(workspace.catalogue.working, {
             identity: payload for identity, payload in payloads.items() if not identity.startswith("works/index/")

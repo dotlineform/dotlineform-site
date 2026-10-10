@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260810-115737-741620
 title: Works Report Concept And Architecture
 added_date: "2026-08-10 11:57:37"
-last_updated: "2026-10-10 18:25:26"
+last_updated: "2026-10-10 21:39:15"
 summary: Refresh-owned Series membership and generated Context documents supply local Work Document Coverage.
 parent_id: d-20260424-000000-50b63f
 ---
@@ -67,15 +67,29 @@ The browser loads two local generated projections:
 
 The coverage manifest has a header containing only `schema` and `generated_at_utc`, followed by a `series` array. Each Series contains exactly `series_id`, `title` and ascending distinct `work_ids`. Series are ordered by exact ID, every defined Series is included, and a Work belongs to at most one Series. No Work title, year, Gallery, media, revision, count or content-version fields are persisted.
 
-The saved-file reader validates this minimal schema and membership identities within Working storage. The browser validates the Catalogue schema and the IDs, labels and memberships it consumes; it does not validate unused Studio editor fields. Context manifest validation retains its existing owner. Docs Viewer serves the saved coverage file without consulting canonical records, generating output, or requiring Local Studio to be running. Missing data asks for an explicit Refresh; there is no canonical or public fallback.
+The saved-file reader validates this minimal schema and membership identities within Working storage. The browser validates the Catalogue schema and the IDs, labels and memberships it consumes; it does not validate unused Studio editor fields. Context manifest validation retains its existing owner. Docs Viewer serves the saved coverage file without consulting canonical records, generating output, or requiring Local Studio to be running. Missing or invalid data asks for [explicit coverage maintenance](#coverage-maintenance); there is no canonical or public fallback.
 
 ## Refresh Selection
 
-Work creation/deletion with Series membership, assignment/removal/reassignment, and Series creation/rename/deletion select the manifest in the existing v4 updates queue's `shared_outputs`. This includes empty Series definitions. Year, Work title, image and Gallery-only edits do not select it. Existing mutation owners supply these known effects; Refresh does not rediscover them.
+Work creation/deletion and Series reassignment, plus Series creation/rename/deletion, select the manifest in the existing v5 updates queue's `shared_outputs`. Every canonical Work requires one Series; empty Series definitions remain valid. Work mutations capture both former and new Series endpoints before persistence/removal. Year, Work title, image and Gallery-only edits do not select this file. Existing mutation owners supply these known effects; Refresh does not rediscover them.
 
-When selected, Refresh projects the complete minimal manifest from its already loaded validated Catalogue records. Content comparison ignores generation time and preserves unchanged bytes. The normal completed-shared handoff excludes this private file from public selection, then removes its updates selection. Refresh retains its existing partial-failure and explicit-rerun behavior; no freshness receipt, rollback or automatic recovery is added. Complete baseline generation remains an explicit maintenance operation.
+When selected, Refresh reads/validates the saved manifest once and keys its Series rows and existing Work membership in that same pass. It updates only queued current Series definitions, removes explicit deleted Series and merges metadata-selected queued current Works plus every queued Work deletion. Candidates include already-refreshed Works until shared completion. For each candidate, the saved membership supplies its former Series and the loaded current Work supplies its final Series; a changed membership requires its former/new endpoints to be queued. Refresh removes that candidate from the former row and inserts it into the final row without scanning canonical Works for complete member lists. New Series start with empty membership plus their queued assignments. A rename preserves members, removal of the last Work retains an empty Series row, and unrelated saved rows retain their values without canonical joins.
+
+Only changed selected row values/removals produce an ordered complete JSON write. Unchanged candidates preserve bytes and generation time. A Series-definition-only coverage selection needs Series but no canonical Works, unless another selected output requires them. Saved-file parsing/validation, selected member-list ordering and changed-file serialization remain costs proportional to their inputs. Normal Refresh trusts Save-owned canonical checks and excludes coverage from full generation. Missing/invalid saved input fails after required Work handoffs and retains shared selections; there is no full-projection fallback. The completed-shared handoff excludes this private file from public selection, then removes its updates selection. Refresh retains completed effects on failure for diagnosis and an explicit rerun.
 
 The 2026-10-10 cutover queued only this manifest from empty queues and ran Refresh, writing one file at `2026-10-10T17:25:07Z`; publication selection remained empty. Ordinary sources, documents, media and Search were not regenerated.
+
+## Coverage Maintenance
+
+Complete baseline generation or repair of missing/invalid saved coverage is explicit:
+
+```bash
+python3 studio/services/catalogue/catalogue_json_build.py --write --work-document-coverage
+```
+
+This validates the existing updates queue and complete canonical Work/Series inputs, then projects only the private coverage manifest using the same Series row builder as merging. All queued current/deleted Works must already be refreshed; normal Refresh attempts coverage merging after their handoffs, so a coverage-file failure leaves this prerequisite reachable. The command clears only the coverage output selector after success, preserving Work candidates/readiness, shared Series/Gallery endpoints, unrelated selectors, both lifecycle times and the entire publication queue. It performs no media handoff/production, document/Search build or Publish. Failure retains completed effects and unconsumed selection for diagnosis and explicit retry. Readers and ordinary Refresh never invoke maintenance automatically.
+
+## Subject Composition
 
 The browser accepts Work, Folder and None subject records from the shared reader. Only an exact Work present in saved Series membership contributes a document. Invalid or retired subject data fails manifest validation; unknown Work targets, missing Series membership, Folder and None supply no coverage.
 
@@ -113,6 +127,8 @@ Compact Work/Gallery indexes and full Work by-ID data retain their own consumers
 ## Verification And Limits
 
 Changed-source Python/JavaScript lint and Python syntax passed. The production GET dispatcher read the newly generated manifest, and the existing browser normalization/composition functions accepted 140 Series, 4,619 member Works and 235 Context documents, producing 140 rows, 20 with coverage. This is current-data diagnostic evidence; browser transport/presentation, committed-document subscriptions, empty Series, mutation execution and partial failures were not exercised. Restart Local Studio and Docs Viewer services and force-reload Docs Viewer to adopt the changed owners; no Publish is required.
+
+The subsequent 2026-10-10 row-merging slice passed lint/syntax for its five changed Python modules, CLI help/import startup and whitespace checks. Read-only real-data projection through the shared full builder matched the saved v1 manifest: 140 Series and 4,619 member Works, with no empty Series in this data. The production saved reader accepted it; both queues were empty and lifecycle times were preserved. No schema conversion or generated-output write was needed. Bounded code review covered queued creation/reassignment/deletion, empty Series, definition-only rename, reused identities, final-value no-ops, readiness-independent retries, exact endpoint agreement, single saved read/direct changed write, maintenance ordering and private/public ownership. These mutation/no-op/failure paths, the maintenance write command and HTTP/browser behavior were not executed; tests were neither created, changed nor run. Restart Local Studio and Docs Viewer services to adopt the shared Python validator and changed handoff. No public projection or Publish is required.
 
 The existing `docs-viewer/tests/python/test_works_report_contract.py` still asserts former live lookup inputs and retired scope/target plumbing. It is unreviewed for the current report boundary and was neither changed nor run. Test work requires separate approval under [Testing](Testing.md).
 

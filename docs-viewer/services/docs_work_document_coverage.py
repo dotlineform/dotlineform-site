@@ -9,8 +9,9 @@ from studio.services.catalogue.catalogue_work_document_coverage import MANIFEST_
 
 
 def read_work_document_coverage_manifest(repo_root: Path) -> dict[str, Any]:
-    """Read only Working output; missing data requires an explicit Studio Refresh."""
+    """Read only Working output; unavailable data requires explicit maintenance."""
     path = output_path(catalogue_output_workspace(repo_root), MANIFEST_PATH)
-    if not path.exists():
-        raise ValueError("Work Document Coverage data is unavailable; run Refresh Catalogue in Studio.")
-    return validate_work_document_coverage_manifest(read_generated_json(path, "Work Document Coverage manifest"))
+    try:
+        return validate_work_document_coverage_manifest(read_generated_json(path, "Work Document Coverage manifest"))
+    except (OSError, UnicodeError, ValueError, RuntimeError) as error:
+        raise ValueError("Work Document Coverage data is unavailable or invalid; run explicit Work Document Coverage maintenance.") from error
