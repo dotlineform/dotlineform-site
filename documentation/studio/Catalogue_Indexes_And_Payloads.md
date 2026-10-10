@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260519-202931-b05d27
 title: Catalogue Indexes And Payloads
 added_date: "2026-05-19 20:29:31"
-last_updated: "2026-10-10 20:42:00"
+last_updated: "2026-10-10 20:51:41"
 parent_id: d-20260401-000000-a11bf3
 
 ---
@@ -28,6 +28,8 @@ Refresh Catalogue owns the complete replaceable consumer output beneath `$DOTLIN
 | `private/series.json` | Shared private Series definitions, including empty Series |
 
 Work thumbnails and primary renditions are shared local assets under `$DOTLINEFORM_DOCS_BASE_DIR/assets/works/`, prepared by Save rather than stored in the generated JSON tree. Private Catalogue Works and Series–Gallery report metadata also live beneath Working generated Catalogue output, outside the public Catalogue artifact inventory. The retired Works collection title metadata has no current producer or consumer.
+
+`reports/catalogue-works/metadata.json` uses `catalogue_works_report_metadata_v3`, with exactly `header: {schema}` and its unchanged `works` map. The producer computes no whole-map hash or persisted count; there is no demonstrated diagnostic need for a generation timestamp. Normal Refresh retains selected Work-row projection and explicit deletion, skipping unchanged writes; complete-file serialization remains necessary on change. The saved updater and local browser require v3 without a v2 fallback. [Catalogue Works](Catalogue_Works.md#data-and-ownership) owns the row contract, explicit private-only maintenance command and cutover evidence. The 2026-10-10 conversion wrote only this private report; saved/browser readers accepted 4,619 Works and 140 represented Series, with both queues empty and lifecycle times preserved. No public runtime projection or Publish was required.
 
 Normal Refresh reads each selected existing Gallery record once and keys its saved `member_works` during strict validation. [The Gallery-record owner](../../studio/services/catalogue/catalogue_gallery_records.py) projects only explicit queued Work member candidates that remain in the Gallery's final membership, removes queued deletions or candidates no longer belonging there and preserves unrelated rows without joining their canonical Works. Gallery rename updates only the definition; unchanged candidates preserve saved bytes and generation time. The v5 updates queue distinguishes member candidates from broad Work metadata handoff and carries explicit new-Gallery identities. Only those creations receive complete initial-member projection, including empty lists or replacement of a former incarnation's members. Missing existing/malformed saved records require separately invoked complete Gallery-record maintenance. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns the queue lifetime, repair and cutover commands; Publish continues to consume complete v3 files.
 

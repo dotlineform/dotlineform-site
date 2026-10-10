@@ -1,4 +1,4 @@
-"""Own private Catalogue Works metadata; Save updates selected rows, never the corpus."""
+"""Own private Catalogue Works metadata; Refresh updates supplied Work rows."""
 
 from __future__ import annotations
 
@@ -18,12 +18,11 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths 
 REPO_ROOT = ensure_studio_python_paths(__file__)
 
 from catalogue.catalogue_output_paths import catalogue_output_workspace, output_path  # noqa: E402
-from catalogue.catalogue_revisions import record_hash  # noqa: E402
 from catalogue.catalogue_source import CatalogueSourceRecords, DEFAULT_SOURCE_DIR, records_from_json_source  # noqa: E402
 
 
 METADATA_PATH = "reports/catalogue-works/metadata.json"
-METADATA_SCHEMA = "catalogue_works_report_metadata_v2"
+METADATA_SCHEMA = "catalogue_works_report_metadata_v3"
 WORK_FIELDS = ("work_id", "title", "year", "year_display", "storage_location", "medium")
 
 
@@ -58,7 +57,7 @@ def _project_work(records: CatalogueSourceRecords, work_id: str) -> dict[str, An
 
 
 def _payload(works: dict[str, Any]) -> dict[str, Any]:
-    return {"header": {"schema": METADATA_SCHEMA, "count": len(works), "version": record_hash(works)}, "works": works}
+    return {"header": {"schema": METADATA_SCHEMA}, "works": works}
 
 
 def _read_metadata(path: Path) -> dict[str, Any]:
@@ -69,10 +68,8 @@ def _read_metadata(path: Path) -> dict[str, Any]:
     if not isinstance(payload, dict) or set(payload) != {"header", "works"}:
         raise ValueError("Invalid Catalogue Works metadata envelope; regenerate explicitly.")
     header, works = payload["header"], payload["works"]
-    if (not isinstance(header, dict) or set(header) != {"schema", "count", "version"}
-            or header["schema"] != METADATA_SCHEMA or not isinstance(works, dict)
-            or type(header["count"]) is not int or header["count"] != len(works)
-            or not isinstance(header["version"], str) or not re.fullmatch(r"[0-9a-f]{64}", header["version"])):
+    if (not isinstance(header, dict) or set(header) != {"schema"}
+            or header["schema"] != METADATA_SCHEMA or not isinstance(works, dict)):
         raise ValueError("Invalid Catalogue Works metadata header; regenerate explicitly.")
     return payload
 
@@ -107,7 +104,8 @@ def update_catalogue_works_metadata(
     """Project only named saved Works and remove only explicitly deleted IDs.
 
     Unaffected rows are preserved. Missing/invalid metadata fails without a full
-    rebuild; unchanged rows avoid both aggregate writes and revision changes.
+    rebuild; unchanged rows avoid aggregate writes. Headers carry only schema;
+    report totals derive from the map and no complete-content hash is computed.
     """
     selected = sorted({_work_id(value) for value in work_ids})
     deleted = sorted({_work_id(value) for value in deleted_work_ids})

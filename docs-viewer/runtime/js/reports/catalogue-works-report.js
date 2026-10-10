@@ -1,7 +1,7 @@
 import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
 import { buildViewerUrl } from "../shared/docs-viewer-router.js";
-const METADATA_SCHEMA = "catalogue_works_report_metadata_v2";
+const METADATA_SCHEMA = "catalogue_works_report_metadata_v3";
 const WORK_ID_PATTERN = /^[0-9]{5}$/;
 const SERIES_ID_PATTERN = /^[0-9]{3}$/;
 const PAGE_SIZE = 20;
@@ -52,16 +52,11 @@ function clearNode(node) {
 export function normalizeCatalogueWorksMetadata(payload) {
   if (
     !exactKeys(payload, ["header", "works"])
-    || !exactKeys(payload.header, ["schema", "count", "version"])
+    || !exactKeys(payload.header, ["schema"])
     || payload.header.schema !== METADATA_SCHEMA
-    || !Number.isInteger(payload.header.count)
-    || payload.header.count < 0
-    || typeof payload.header.version !== "string"
-    || !/^[0-9a-f]{64}$/.test(payload.header.version)
     || !payload.works
     || typeof payload.works !== "object"
     || Array.isArray(payload.works)
-    || payload.header.count !== Object.keys(payload.works).length
   ) {
     throw new Error("Catalogue Works metadata is invalid.");
   }
