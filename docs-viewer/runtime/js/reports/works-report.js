@@ -1,7 +1,6 @@
 import { classifyDocsDocumentSubject } from "../shared/docs-document-subject.js";
 import { appendProjectSubjectIcon } from "./project-subject-icons.js";
-const SERIES_SCHEMA = "studio_catalogue_lookup_series_search_v2";
-const WORK_SCHEMA = "studio_catalogue_lookup_work_search_v2";
+const CATALOGUE_SCHEMA = "catalogue_work_document_coverage_v1";
 const WORKS_COLLECTION = "works";
 const WORKS_CUSTOMISATION = "working_works";
 const SERIES_ID_PATTERN = /^[0-9]{3}$/;
@@ -20,64 +19,29 @@ function clearNode(node) {
   while (node.firstChild) node.removeChild(node.firstChild);
 }
 
-function normalizeLookupPayload(payload, options) {
-  const settings = options || {};
-  if (
-    !exactKeys(payload, ["header", "items"])
-    || !exactKeys(payload.header, ["count", "schema"])
-    || payload.header.schema !== settings.schema
-    || !Number.isInteger(payload.header.count)
-    || payload.header.count < 0
-    || !Array.isArray(payload.items)
-    || payload.header.count !== payload.items.length
-  ) {
-    throw new Error(settings.errorMessage);
+/** Normalize only the refreshed Catalogue identities, labels and membership used here. */
+export function normalizeWorksCatalogueManifest(payload) {
+  const message = "Work Document Coverage manifest is invalid.";
+  if (payload?.header?.schema !== CATALOGUE_SCHEMA || !Array.isArray(payload.series)) {
+    throw new Error(message);
   }
-  const seen = new Set();
-  return payload.items.map((value) => {
-    const item = settings.normalizeItem(value);
-    const identity = item[settings.identityKey];
-    if (seen.has(identity)) throw new Error(settings.errorMessage);
-    seen.add(identity);
-    return item;
-  });
-}
-
-function normalizeSeriesItem(value) {
-  if (!exactKeys(value, ["record_hash", "series_id", "title"]) || !SERIES_ID_PATTERN.test(value.series_id) || !cleanString(value.title) || !cleanString(value.record_hash)) throw new Error("Works Series lookup is invalid.");
-  return {seriesId: value.series_id, title: value.title};
-}
-
-function normalizeWorkItem(value) {
-  if (
-    !exactKeys(value, ["gallery_ids", "media_version", "record_hash", "series_id", "title", "work_id", "year_display"])
-    || !Array.isArray(value.gallery_ids)
-    || value.gallery_ids.some((id) => typeof id !== "string" || !id)
-    || !WORK_ID_PATTERN.test(value.work_id)
-    || !cleanString(value.title)
-    || (value.series_id !== null && typeof value.series_id !== "string")
-    || (value.series_id && !SERIES_ID_PATTERN.test(value.series_id))
-    || typeof value.year_display !== "string"
-    || !cleanString(value.record_hash)
-  ) throw new Error("Works Work lookup is invalid.");
-  return {seriesId: value.series_id, title: value.title, workId: value.work_id};
-}
-
-export function normalizeWorksSeriesLookup(payload) {
-  return normalizeLookupPayload(payload, {
-    errorMessage: "Works Series lookup is invalid.",
-    identityKey: "seriesId",
-    normalizeItem: normalizeSeriesItem,
-    schema: SERIES_SCHEMA
-  });
-}
-
-export function normalizeWorksWorkLookup(payload) {
-  return normalizeLookupPayload(payload, {
-    errorMessage: "Works Work lookup is invalid.",
-    identityKey: "workId",
-    normalizeItem: normalizeWorkItem,
-    schema: WORK_SCHEMA
+  const seenSeries = new Set();
+  const seenWorks = new Set();
+  return payload.series.map((value) => {
+    if (!value || typeof value.series_id !== "string" || !SERIES_ID_PATTERN.test(value.series_id)
+      || typeof value.title !== "string" || !cleanString(value.title)
+      || !Array.isArray(value.work_ids) || seenSeries.has(value.series_id)) {
+      throw new Error(message);
+    }
+    seenSeries.add(value.series_id);
+    const workIds = value.work_ids.map((workId) => {
+      if (typeof workId !== "string" || !WORK_ID_PATTERN.test(workId) || seenWorks.has(workId)) {
+        throw new Error(message);
+      }
+      seenWorks.add(workId);
+      return workId;
+    });
+    return { seriesId: value.series_id, title: value.title, workIds };
   });
 }
 
@@ -147,30 +111,27 @@ function compareDocuments(collator, left, right) {
     || compareText(collator, left.docId, right.docId);
 }
 
-export function composeWorksProjection(seriesRecords, workRecords, workDocuments) {
+/** Join generated Context subjects to refreshed Series membership, retaining empty rows. */
+export function composeWorksProjection(seriesRecords, workDocuments) {
   const collator = new Intl.Collator("en", { numeric: true, sensitivity: "base" });
   const catalogueSeries = new Map();
   seriesRecords.forEach((series) => {
     catalogueSeries.set(series.seriesId, series);
   });
   const catalogueWorks = new Map();
-  workRecords.forEach((work) => {
-    catalogueWorks.set(work.workId, work);
+  seriesRecords.forEach((series) => {
+    series.workIds.forEach((workId) => catalogueWorks.set(workId, series.seriesId));
   });
   const documentsBySeries = new Map();
   catalogueSeries.forEach((_series, seriesId) => documentsBySeries.set(seriesId, new Map()));
   workDocuments.forEach((documentRecord) => {
     const subject = documentRecord.subject;
     if (subject.kind !== "work" || !catalogueWorks.has(subject.key)) return;
-    const seriesIds = [catalogueWorks.get(subject.key).seriesId].filter((seriesId) => {
-      return catalogueSeries.has(seriesId);
-    });
-    seriesIds.forEach((seriesId) => {
-      documentsBySeries.get(seriesId).set(documentRecord.docId, {
-        docId: documentRecord.docId,
-        subject: { kind: subject.kind, key: subject.key },
-        title: documentRecord.title
-      });
+    const seriesId = catalogueWorks.get(subject.key);
+    documentsBySeries.get(seriesId).set(documentRecord.docId, {
+      docId: documentRecord.docId,
+      subject: { kind: subject.kind, key: subject.key },
+      title: documentRecord.title
     });
   });
   const rows = Array.from(catalogueSeries.values()).map((series) => {
@@ -198,30 +159,6 @@ function configuredWorkingWorksManifestUrl(context) {
   return url;
 }
 
-function studioReadUrl(context, key) {
-  const base = cleanString(context && context.studioBaseUrl).replace(/\/+$/, "");
-  let studio;
-  try {
-    studio = new URL(base);
-  } catch (error) {
-    throw new Error("Local Studio is not configured.", { cause: error });
-  }
-  if (
-    studio.protocol !== "http:"
-    || !["127.0.0.1", "localhost", "::1", "[::1]"].includes(studio.hostname)
-    || studio.username
-    || studio.password
-    || studio.pathname !== "/"
-    || studio.search
-    || studio.hash
-  ) {
-    throw new Error("Local Studio is not configured.");
-  }
-  const url = new URL("/studio/api/catalogue/read", studio.origin);
-  url.searchParams.set("key", key);
-  return url.toString();
-}
-
 function fetchJson(url, message) {
   return fetch(url, {
     cache: "no-store",
@@ -236,14 +173,7 @@ function fetchJson(url, message) {
 
 function loadWorksInputs(context) {
   return Promise.all([
-    fetchJson(
-      studioReadUrl(context, "catalogue_lookup_series_search"),
-      "Failed to load Works Series lookup."
-    ).then(normalizeWorksSeriesLookup),
-    fetchJson(
-      studioReadUrl(context, "catalogue_lookup_work_search"),
-      "Failed to load Works Work lookup."
-    ).then(normalizeWorksWorkLookup),
+    context.reportService.readWorkDocumentCoverage().then(normalizeWorksCatalogueManifest),
     fetchJson(
       configuredWorkingWorksManifestUrl(context),
       "Failed to load Working Works manifest."
@@ -298,7 +228,7 @@ function appendDocumentsCell(state, rowNode, row) {
 function renderProjection(state, projection) {
   clearNode(state.rowsNode);
   state.emptyNode.hidden = projection.rows.length > 0;
-  state.emptyNode.textContent = projection.rows.length ? "" : "No published Series were found.";
+  state.emptyNode.textContent = projection.rows.length ? "" : "No Series were found in refreshed Catalogue data.";
   projection.rows.forEach((row) => {
     const rowNode = state.rowsNode.ownerDocument.createElement("li");
     rowNode.className = "docsViewerReport__row";
@@ -312,8 +242,8 @@ function renderProjection(state, projection) {
     state.rowsNode.appendChild(rowNode);
   });
   state.statusNode.textContent = projection.rowCount === 1
-    ? "1 published Series"
-    : projection.rowCount + " published Series";
+    ? "1 Series"
+    : projection.rowCount + " Series";
 }
 
 function loadWorksReport(state) {
@@ -322,7 +252,7 @@ function loadWorksReport(state) {
   state.statusNode.textContent = "Loading Works...";
   return loadWorksInputs(state.context).then((inputs) => {
     state.inputs = inputs;
-    renderProjection(state, composeWorksProjection(inputs[0], inputs[1], inputs[2]));
+    renderProjection(state, composeWorksProjection(inputs[0], inputs[1]));
   }).catch((error) => {
     clearNode(state.rowsNode);
     state.statusNode.textContent = error && error.message
@@ -356,14 +286,14 @@ export function mountWorksReport(context) {
   const state = Object.assign({ context }, nodes);
   if (context.collectionProvider && context.collectionProvider.subscribeDocumentChanges) context.collectionProvider.subscribeDocumentChanges(function (change) {
     if (!context.reportRoot.isConnected || !state.inputs || change.target.collection !== "works") return;
-    var previous = state.inputs[2].find(function (record) { return record.docId === change.target.doc_id; });
+    var previous = state.inputs[1].find(function (record) { return record.docId === change.target.doc_id; });
     if (change.deleted && !previous) return;
     var subject = change.deleted ? null : classifyDocsDocumentSubject(change.record, { folderSupported: true });
     if (previous && !change.deleted && previous.title === change.record.title && previous.subject.kind === subject.kind && previous.subject.key === subject.key) return;
-    state.inputs[2] = state.inputs[2].filter(function (record) { return record.docId !== change.target.doc_id; });
-    if (!change.deleted) state.inputs[2].push({ docId: change.target.doc_id, title: change.record.title,
+    state.inputs[1] = state.inputs[1].filter(function (record) { return record.docId !== change.target.doc_id; });
+    if (!change.deleted) state.inputs[1].push({ docId: change.target.doc_id, title: change.record.title,
       subject: subject });
-    renderProjection(state, composeWorksProjection(state.inputs[0], state.inputs[1], state.inputs[2]));
+    renderProjection(state, composeWorksProjection(state.inputs[0], state.inputs[1]));
   });
   return loadWorksReport(state);
 }

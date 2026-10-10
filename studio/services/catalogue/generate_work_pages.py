@@ -18,7 +18,8 @@ from catalogue.catalogue_output_selection import selected_output_paths
 from catalogue.catalogue_series_galleries import CatalogueSeriesGalleries, read_series_galleries, validate_series_galleries
 from catalogue.catalogue_series_galleries_report import METADATA_PATH as SERIES_GALLERIES_REPORT_PATH, series_galleries_report_payload
 from catalogue.catalogue_source import CatalogueSourceRecords, records_from_json_source, validate_source_records
-from catalogue.catalogue_shared_changes import WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT
+from catalogue.catalogue_shared_changes import WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, WORK_DOCUMENT_COVERAGE_MANIFEST
+from catalogue.catalogue_work_document_coverage import work_document_coverage_manifest
 
 
 def _index(family: str, items: Mapping[str, Any], timestamp: str) -> dict[str, Any]:
@@ -38,7 +39,7 @@ def catalogue_payloads(
         raise ValueError("Catalogue source validation failed: " + "; ".join(errors[:20]))
     validate_galleries(galleries, records.works)
     validate_series_galleries(pairs, records.series, galleries.galleries)
-    supported_shared = {"media-config.json", WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT}
+    supported_shared = {"media-config.json", WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, WORK_DOCUMENT_COVERAGE_MANIFEST}
     shared = supported_shared if shared_outputs is None else shared_outputs
     if shared - supported_shared:
         raise ValueError("Catalogue generation selected an output without a builder")
@@ -101,6 +102,10 @@ def catalogue_payloads(
     if RELATIONSHIP_REPORT in shared:
         payloads[SERIES_GALLERIES_REPORT_PATH] = series_galleries_report_payload(
             records.series, galleries.galleries, series_galleries, timestamp=timestamp,
+        )
+    if WORK_DOCUMENT_COVERAGE_MANIFEST in shared:
+        payloads[WORK_DOCUMENT_COVERAGE_MANIFEST] = work_document_coverage_manifest(
+            records.series, records.works, timestamp=timestamp,
         )
     return payloads
 

@@ -8,6 +8,7 @@ from typing import Any, Iterable, Mapping
 from docs_catalogue_artifacts import load_catalogue_artifact_inventory
 from studio.services.catalogue.catalogue_galleries import validate_gallery_id
 from studio.services.catalogue.series_ids import normalize_series_id
+from studio.services.catalogue.catalogue_work_document_coverage import MANIFEST_PATH as WORK_DOCUMENT_COVERAGE_MANIFEST
 
 
 SHARED_FIELDS = ("current_galleries", "deleted_galleries", "current_series", "deleted_series", "shared_outputs")
@@ -32,7 +33,7 @@ def public_shared_outputs(repo_root: Path) -> set[str]:
 def validate_shared_changes(repo_root: Path, changes: Any, *, publishing: bool) -> None:
     if not isinstance(changes, dict) or set(changes) != set(SHARED_FIELDS):
         raise ValueError("Catalogue shared selection requires Gallery/Series identities and shared_outputs")
-    allowed = public_shared_outputs(repo_root) | (set() if publishing else {RELATIONSHIP_REPORT})
+    allowed = public_shared_outputs(repo_root) | (set() if publishing else {RELATIONSHIP_REPORT, WORK_DOCUMENT_COVERAGE_MANIFEST})
     for field in SHARED_FIELDS:
         values = changes[field]
         if not isinstance(values, list) or any(not isinstance(value, str) for value in values):
@@ -78,5 +79,7 @@ def work_shared_changes(
             outputs.add(WORK_INDEX)
         if identity_changed or (old or {}).get("series_id") != (new or {}).get("series_id"):
             series.update(record["series_id"] for record in (old, new) if record and record.get("series_id"))
+        if (old or {}).get("series_id") != (new or {}).get("series_id"):
+            outputs.add(WORK_DOCUMENT_COVERAGE_MANIFEST)
     return {**empty_shared_changes(), "current_galleries": sorted(galleries),
             "current_series": sorted(series), "shared_outputs": sorted(outputs)}

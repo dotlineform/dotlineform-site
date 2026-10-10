@@ -7,6 +7,7 @@ from pathlib import Path
 import docs_generated_reads
 import docs_catalogue_media
 from docs_series_galleries_report import read_series_galleries_report
+from docs_work_document_coverage import read_work_document_coverage_manifest
 import docs_diagram_source_service
 import docs_import_source_service as import_source_service
 import docs_management_routes as routes
@@ -130,6 +131,10 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         if params:
             raise ValueError("Series and Galleries report reads do not accept parameters")
         return read_series_galleries_report(repo_root)
+    if path == routes.WORK_DOCUMENT_COVERAGE_PATH:
+        if params:
+            raise ValueError("Work Document Coverage reads do not accept parameters")
+        return read_work_document_coverage_manifest(repo_root)
     if path == routes.UNPUBLISHABLE_REPORT_PATH:
         return docs_unpublishable_report.build_unpublishable_report(
             repo_root,
