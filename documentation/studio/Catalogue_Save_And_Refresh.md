@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260927-223812-8042fc
 title: Catalogue Save And Refresh
 added_date: "2026-09-27 22:38:12"
-last_updated: "2026-10-10 14:19:12"
+last_updated: "2026-10-10 15:36:48"
 summary: Current Catalogue Save, local Refresh, reader freshness and recovery boundaries.
 ui_status: stable
 parent_id: d-20260401-000000-a11bf3
@@ -87,7 +87,7 @@ Both maps use exact five-digit Work IDs and are disjoint. A current entry has `m
 | `header.last_refreshed_at_utc` | Null until a successful Refresh; then its UTC completion time. Mutations, partial failures and Regenerate preserve the previous successful time. |
 | Entry removal | Regenerate removes one true Work entry only after source/Build completion and publication merge. Refresh removes the selected shared unit only after all required Working output and shared publication merge complete. |
 
-An empty Work map can still require Refresh because a Gallery/Series array or `shared_outputs` is nonempty. Status combines those selections with false Work readiness; it does not hash Catalogue/configuration files or infer readiness from the timestamp. Gallery create/delete/rename and association changes select the relevant Gallery/relation indexes and private Series/Galleries report. Work membership changes select old/new Galleries and counts; title/year changes select member-row records and the Work index. Series title changes preserve member-Work contributions for private Work-report rows but do not rewrite the public relationship index, which contains no Series title. Media policy is selected only by explicit configuration maintenance through the same accumulation owner.
+An empty Work map can still require Refresh because a Gallery/Series array or `shared_outputs` is nonempty. Status combines those selections with false Work readiness; it does not hash Catalogue/configuration files or infer readiness from the timestamp. Gallery create/delete/rename and association changes select the relevant Gallery/relation indexes and private Series/Galleries report. Work membership changes select old/new Gallery member records; the Gallery search index contains only ID/title under `catalogue_galleries_index_v2` and is not selected for membership changes. Title/year changes select member-row records and the Work index. Series title changes preserve member-Work contributions for private Work-report rows but do not rewrite the public relationship index, which contains no Series title. Media policy is selected only by explicit configuration maintenance through the same accumulation owner.
 
 ## Empty Gallery Cleanup
 

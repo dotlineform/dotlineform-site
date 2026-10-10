@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260519-202931-b05d27
 title: Catalogue Indexes And Payloads
 added_date: "2026-05-19 20:29:31"
-last_updated: "2026-10-07 18:27:57"
+last_updated: "2026-10-10 15:36:48"
 parent_id: d-20260401-000000-a11bf3
 
 ---
@@ -20,7 +20,7 @@ Refresh Catalogue owns the complete replaceable consumer output beneath `$DOTLIN
 | `works/index/<work_id>.json` | Work metadata, optional `series_id`, direct Gallery IDs/titles in `work.galleries`, links, downloads and image facts |
 | `galleries/index/<gallery_id>.json` | Independent Gallery ID/title and lightweight `member_works` in ascending Work-ID order |
 | `works/works_index.json` | Compact Work identities, labels and Series membership |
-| `galleries/galleries_index.json` | Compact Gallery identities, titles and member count for Add Media View link search |
+| `galleries/galleries_index.json` | Compact Gallery identities and titles for Add Media View link search |
 | `series-galleries-index.json` | Exact Series IDs mapped to associated Gallery IDs/current titles, including an empty list for a Series without associations |
 
 Work thumbnails and primary renditions are shared local assets under `$DOTLINEFORM_DOCS_BASE_DIR/assets/works/`, prepared by Save rather than stored in the generated JSON tree. Private Catalogue Works and Series–Gallery report metadata also live beneath Working generated Catalogue output, outside the public Catalogue artifact inventory. The retired Works collection title metadata has no current producer or consumer.
@@ -29,13 +29,15 @@ Work thumbnails and primary renditions are shared local assets under `$DOTLINEFO
 
 Each Work may have one Series or no Series, and zero or more direct Gallery memberships; empty Series and Galleries remain valid in canonical Catalogue data. The producer reads Gallery identities/titles from canonical `galleries.json` and Work membership from `galleries-by-work.json`. `work.galleries` is always an array of `{gallery_id, title}` entries, ordered by Gallery ID; absent memberships produce `[]`. Gallery records contain `gallery: {gallery_id, title}` and compact Work ID/title/year/year-display `member_works` rows. The separate canonical `series-galleries.json` owns explicit Series–Gallery relevance pairs, independent of Work membership after its one-time seed. Refresh derives `series-galleries-index.json` from those pairs and current Gallery titles, keyed by every valid Series ID and ordered by Series and Gallery ID. It has no Work member lists or per-Work related arrays. No image paths, rendition arrays or canonical inverse membership map are duplicated. There is no Catalogue publication filter, primary-Work requirement, Recent projection or Catalogue Search output in this producer. Generated Series by-ID records and the compact Series member-Works index remain retired; no Gallery relationship is inferred from Series membership.
 
-The Gallery search index contains a `galleries` map keyed by exact Gallery ID, with each entry containing only `gallery_id`, `title` and `work_count`. It includes empty Galleries with count zero, orders keys by Gallery ID and carries no member lists. Add Media View link searches this generated lookup by ID/title through the Catalogue media-target service, then reads the selected Gallery's individual record.
+The Gallery search index at `working/generated/catalogue/galleries/galleries_index.json` contains a `galleries` map keyed by exact Gallery ID, with each entry containing only `gallery_id` and `title`. It includes empty Galleries, orders keys by Gallery ID and carries no member lists or persisted Work counts. Add Media View link searches this generated lookup by ID/title through the Catalogue media-target service, then reads the selected Gallery's individual record. Gallery target metadata is empty, so the picker renders no count subtitle; Work year subtitles keep their existing behavior. Gallery create/rename/delete selects this index; Work membership changes update affected Gallery member records without selecting it. The generator builds a temporary member lookup only when Gallery by-ID records are selected.
 
 `studio/services/catalogue/generate_work_pages.py` owns the complete projection. `catalogue_series_galleries.py` validates and reads the canonical pair authority; `catalogue_generation_records.py` and `catalogue_generation_indexes.py` own Work/Gallery record and index shaping. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns refresh and cleanup.
 
 ## Exact Identity And Versions
 
-Work payloads use `work_record_v11`. Each contains only `header` and `work`; the header carries schema, content version and generation time, while `work.work_id` carries the exact Work identity. The retired Detail count, sections and `documents` array are absent, and the header does not duplicate the Work ID. Gallery payloads use `gallery_record_v1`; their headers also carry the exact Gallery ID and member count. Index headers use `catalogue_works_index_v1`, `catalogue_galleries_index_v1` and `catalogue_series_galleries_index_v1`; index counts are their entry counts, including all valid Series in the Series–Gallery index. Shared media policy uses `catalogue_media_config_v1` with a content version and generation time.
+Work payloads use `work_record_v11`. Each contains only `header` and `work`; the header carries schema, content version and generation time, while `work.work_id` carries the exact Work identity. The retired Detail count, sections and `documents` array are absent, and the header does not duplicate the Work ID. Gallery payloads use `gallery_record_v1`; their headers also carry the exact Gallery ID and member count. Index headers use `catalogue_works_index_v1`, `catalogue_galleries_index_v2` and `catalogue_series_galleries_index_v1`; index counts are their entry counts, including all valid Series in the Series–Gallery index. Gallery index v2 removes row `work_count`; the target reader requires v2 and exact ID/title rows, with no v1 fallback. Shared media policy uses `catalogue_media_config_v1` with a content version and generation time.
+
+The 2026-10-10 Gallery count/subtitle cleanup passed changed-source lint, syntax and bounded source review. From empty v4 queues, a focused Refresh wrote only `galleries/galleries_index.json` and queued that file for publication. The current generated index contains 300 ID/title rows under v2; the production target reader returned Gallery `meta: []` and retained a Work's year metadata. No tests, browser interaction or Publish ran for this cleanup; modal presentation remains for user review. Restart Local Studio and the Docs management service and reload their pages to adopt the changed Python modules. Preview/repository counterparts advance through the next explicit Publish.
 
 Detail folders and their discovery indexes are retired. Active generation neither recreates an empty Detail index nor scans retired thumbnails. Series `sort_fields` is retired; both Studio's Series lookup and consumer members use ascending exact Work IDs. No relationship is inferred from a document, title, route or thumbnail filename.
 

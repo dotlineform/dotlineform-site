@@ -22,7 +22,7 @@ from catalogue.catalogue_shared_changes import WORK_INDEX, GALLERY_INDEX, RELATI
 
 
 def _index(family: str, items: Mapping[str, Any], timestamp: str) -> dict[str, Any]:
-    schema = f"catalogue_{family}_index_v1"
+    schema = "catalogue_galleries_index_v2" if family == "galleries" else f"catalogue_{family}_index_v1"
     return {"header": {"schema": schema, "version": compute_payload_version({"schema": schema, family: items}),
                        "generated_at_utc": timestamp, "count": len(items)}, family: dict(items)}
 
@@ -45,10 +45,12 @@ def catalogue_payloads(
     selected_galleries = set(galleries.galleries) if gallery_ids is None else gallery_ids
     if selected_galleries - galleries.galleries.keys() or (work_ids is not None and work_ids - records.works.keys()):
         raise ValueError("Catalogue generation selected an unavailable current identity")
-    works_by_gallery: dict[str, list[str]] = {gid: [] for gid in galleries.galleries}
-    for wid, ids in galleries.works.items():
-        for gid in ids:
-            works_by_gallery[gid].append(wid)
+    works_by_gallery: dict[str, list[str]] = {gid: [] for gid in selected_galleries}
+    if selected_galleries:
+        for wid, ids in galleries.works.items():
+            for gid in ids:
+                if gid in works_by_gallery:
+                    works_by_gallery[gid].append(wid)
     member_records = {wid: records.works[wid] for gid in selected_galleries for wid in works_by_gallery[gid]}
     context = indexes.build_series_work_index_context(series_records=records.series, work_records=member_records) if selected_galleries else None
     payloads: dict[str, dict[str, Any]] = {}
@@ -88,7 +90,7 @@ def catalogue_payloads(
         payloads[WORK_INDEX] = _index("works", works_index, timestamp)
     if GALLERY_INDEX in shared:
         payloads[GALLERY_INDEX] = _index("galleries", {
-            gid: {"gallery_id": gid, "title": galleries.galleries[gid]["title"], "work_count": len(works_by_gallery[gid])}
+            gid: {"gallery_id": gid, "title": galleries.galleries[gid]["title"]}
             for gid in sorted(galleries.galleries)
         }, timestamp)
     series_galleries = {

@@ -155,18 +155,18 @@ def read_catalogue_media_targets(repo_root: Path) -> dict[str, Any]:
         })
     payload = _read_generated(repo_root, "galleries/galleries_index.json")
     galleries, header = payload.get("galleries"), payload.get("header")
-    if not isinstance(galleries, dict) or not isinstance(header, dict) or header.get("schema") != "catalogue_galleries_index_v1" or type(header.get("count")) is not int or header["count"] != len(galleries):
+    if not isinstance(galleries, dict) or not isinstance(header, dict) or header.get("schema") != "catalogue_galleries_index_v2" or type(header.get("count")) is not int or header["count"] != len(galleries):
         raise ValueError("Generated Catalogue Gallery index is unavailable")
     for gallery_id, record in galleries.items():
         _gallery_identity(gallery_id)
-        if not isinstance(record, dict) or record.get("gallery_id") != gallery_id:
+        if not isinstance(record, dict) or set(record) != {"gallery_id", "title"} or record.get("gallery_id") != gallery_id:
             raise ValueError("Generated Gallery index identity is mismatched")
-        title, count = record.get("title"), record.get("work_count")
-        if not isinstance(title, str) or not title.strip() or type(count) is not int or count < 0:
-            raise ValueError("Generated Gallery title or Work count is unavailable")
+        title = record.get("title")
+        if not isinstance(title, str) or not title.strip():
+            raise ValueError("Generated Gallery title is unavailable")
         targets.append({
             "family": "catalogue", "target_type": "gallery", "target_id": gallery_id,
-            "title": title.strip(), "meta": [f"{count} Work" + ("s" if count != 1 else "")],
+            "title": title.strip(), "meta": [],
         })
     return {"ok": True, "schema_version": "docs_semantic_token_target_lookup_v2", "targets": targets}
 

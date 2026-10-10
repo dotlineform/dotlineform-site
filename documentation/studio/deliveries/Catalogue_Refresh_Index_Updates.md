@@ -3,8 +3,8 @@ draft: false
 doc_id: d-20261010-143841-fba69a
 title: Catalogue Refresh Index Updates
 added_date: "2026-10-10 14:38:41"
-last_updated: "2026-10-10 15:24:51"
-summary: Proposed removal of unnecessary derived index fields and replacement of normal Catalogue Refresh aggregate rebuilding with selected row updates.
+last_updated: "2026-10-10 15:36:48"
+summary: Gallery index count and picker subtitle removed; broader selected-row Catalogue Refresh remains proposed.
 ui_status: proposed
 parent_id: d-20260428-000000-f5ff18
 ---
@@ -14,7 +14,7 @@ parent_id: d-20260428-000000-f5ff18
 
 Make normal Refresh update the rows affected by supplied Catalogue mutations, preserving unaffected rows. Remove fields and dependency updates whose consumer benefit does not justify maintaining them. A single changed record should not trigger projection of the complete Catalogue or complete relationship report.
 
-This is a proposed delivery, parented to [Planned Features](../Planned_Features.md), following the accepted [Gallery And Series Incremental Updates](Gallery_And_Series_Incremental_Updates.md). The user requested this proposal on 2026-10-10; implementation and test work are not approved by its creation. [Catalogue Save And Refresh](../Catalogue_Save_And_Refresh.md) and [Catalogue Indexes And Payloads](../Catalogue_Indexes_And_Payloads.md) own current behavior and will receive the lasting changes at delivery.
+This is a proposed delivery, parented to [Planned Features](../Planned_Features.md), following the accepted [Gallery And Series Incremental Updates](Gallery_And_Series_Incremental_Updates.md). The user requested this proposal on 2026-10-10 and subsequently approved the Gallery count/subtitle cleanup first; that subset is delivered below. Broader row-update implementation, remaining field decisions and test work are not approved by that cleanup request. [Catalogue Save And Refresh](../Catalogue_Save_And_Refresh.md) and [Catalogue Indexes And Payloads](../Catalogue_Indexes_And_Payloads.md) own current behavior and receive the lasting changes at delivery.
 
 The reason for this work is an operation whose scope follows its supplied changes. A measured slowdown is not a prerequisite for removing unnecessary rebuilding. Performance claims still require evidence; this proposal makes no measured speedup claim.
 
@@ -34,7 +34,7 @@ Paths starting with `working/` or `preview/` are relative to the configured `$DO
     - Unselected aggregate files are skipped.
     - Shared output is compared with saved content ignoring generation time; unchanged output retains its bytes and timestamp. This avoids unnecessary writes after complete construction, but does not avoid that construction.
 
-The [generator](../../../studio/services/catalogue/generate_work_pages.py) projects every Work through the full scalar Work projection when the compact Works index is selected. It builds an inverse Work-membership map for every Gallery even when that input is unnecessary. For selected Gallery records it builds a general Series/Work context, including Series titles, project-folder groups and Series membership maps, although the emitted member rows contain only Work identity, title and year fields.
+The [generator](../../../studio/services/catalogue/generate_work_pages.py) projects every Work through the full scalar Work projection when the compact Works index is selected. After the Gallery count cleanup, it constructs a temporary member map only for selected Gallery by-ID output; index-only Refresh does not need that membership pass. For selected Gallery records it still builds a general Series/Work context, including Series titles, project-folder groups and Series membership maps, although the emitted member rows contain only Work identity, title and year fields.
 
 The [Refresh owner](../../../studio/services/catalogue/catalogue_refresh_service.py), source loader and generator also repeat Gallery loading/validation: the Work/Series source loader reads and validates Galleries, Refresh reads them again, and the generator validates the loaded structures again. Full Work/Series source validation precedes projection. These passes must be assessed by their purpose, rather than automatically retained around a smaller row updater.
 
@@ -46,9 +46,9 @@ Publish consumes completed Working output, retains unselected Preview output and
 
 ### Gallery Counts
 
-Gallery index `work_count`, in `working/generated/catalogue/galleries/galleries_index.json`, has a current consumer. The [Catalogue media-target service](../../../docs-viewer/services/docs_catalogue_media.py) turns it into an “N Work(s)” subtitle, and the [local Add Media View link picker](../../../docs-viewer/runtime/js/management/source-editor/catalogue-media-modal.js) displays that target metadata. The search target uses Gallery ID and title; the count does not determine Gallery identity, link resolution or member browsing. Gallery browsing reads `working/generated/catalogue/galleries/index/<gallery_id>.json` and its `member_works` rows.
+Before the cleanup, Gallery index `work_count`, in `working/generated/catalogue/galleries/galleries_index.json`, supplied an “N Work(s)” subtitle through the [Catalogue media-target service](../../../docs-viewer/services/docs_catalogue_media.py) to the [local Add Media View link picker](../../../docs-viewer/runtime/js/management/source-editor/catalogue-media-modal.js). The search target uses Gallery ID and title; the count did not determine Gallery identity, link resolution or member browsing. Gallery browsing continues to read `working/generated/catalogue/galleries/index/<gallery_id>.json` and its `member_works` rows.
 
-**Agreed decision:** remove the picker count subtitle and persisted Gallery index `work_count`. Keep Gallery ID and title. Gallery membership changes would then update affected Gallery member output without selecting the Gallery search index. Gallery create, rename and delete would still update that index. Do not replace the removed count with per-Gallery file reads, a runtime canonical join, another count file or a persistent counter cache.
+**Implemented decision:** the picker count subtitle and persisted Gallery index `work_count` are removed. Gallery index rows contain only ID/title under `catalogue_galleries_index_v2`; the target reader requires that schema and emits empty Gallery metadata. Gallery membership changes update affected Gallery member output without selecting the Gallery search index. Gallery create, rename and delete still update that index. No count lookup, counter cache or v1 reader alias replaces the removed field. Aggregate header and Gallery by-ID member counts remain separately proposed for review.
 
 ### Compact Work Rows
 
@@ -58,7 +58,7 @@ The current Work index, `working/generated/catalogue/works/works_index.json`, su
 - [Add/Edit Media View link](../../../docs-viewer/runtime/js/management/source-editor/catalogue-media-modal.js),
 - [document Work-subject selection](../../../docs-viewer/runtime/js/management/docs-viewer-management-project-subject-modal.js).
 - Catalogue image and Work-subject selection offer Works only;
-- Media View links offer Works and Galleries. Gallery targets come from `working/generated/catalogue/galleries/galleries_index.json`, and the count subtitle is displayed only for those Gallery choices. Both Work-only pickers currently fetch the combined Work/Gallery lookup and filter it in the browser; this shared loading is not a reason to retain Gallery counts.
+- Media View links offer Works and Galleries. Gallery targets come from `working/generated/catalogue/galleries/galleries_index.json` without subtitle metadata. Both Work-only pickers currently fetch the combined Work/Gallery lookup and filter it in the browser; this shared loading is not a reason to restore Gallery counts.
 
 Explicit Catalogue design maintenance also uses the Work index's Work-ID inventory, then reads each selected Work's by-ID payload at `working/generated/catalogue/works/index/<work_id>.json`. The inspected production consumers do not use the compact index row's numeric `year` or `series_id`. Insert doc link reuses the list presentation component but reads a separate document-target lookup; it does not consume these Catalogue indexes. Other directives do not acquire a Catalogue lookup dependency merely because they are tokens.
 
@@ -117,6 +117,8 @@ Field removals require explicit output schema changes and one agreed baseline co
 
 ## Delivery Steps
 
+[x] **RI-UI — Gallery Count And Subtitle Cleanup:** user approved this subset on 2026-10-10. Generator, target reader and membership-change selection are updated; a focused Refresh from empty queues converted only the Working Gallery index to v2 and queued it for the next Publish. Changed-source lint, syntax and source review passed. The production reader accepted all 300 ID/title rows and returned empty Gallery subtitle metadata while retaining Work year metadata. No tests, browser interaction or Publish ran. Restart the owning services and reload their pages for manual modal review. Broader steps below remain proposed.
+
 **RI-0 — Readiness:**
 
 - agree the bounded row-update outcome, consumer-backed field removals, validation ownership and cutover.
@@ -142,4 +144,4 @@ Gate: selected evidence and remaining limits are recorded; existing tests are in
 
 Gate: the complete outcome is accepted, schema/publication consequences are accounted for and no implicit full-rebuild fallback remains. Live Publish, Git actions and public deployment retain their explicit-action boundaries.
 
-Current record: proposal only. Consumer and owning-source inspection informed the recommendations. No runtime, canonical data, queues or generated output were changed; no tests, build, Refresh or Publish ran for this proposal.
+Current record: Gallery count/subtitle cleanup is implemented and its focused Working conversion completed at `2026-10-10T14:35:54Z`. Only `galleries/galleries_index.json` was written; no Work/report/media handoff was selected. The updates queue is empty and the publication queue selects that Gallery index, preserving its prior Work-publication timestamp. No canonical data, documents, Search, Preview or repository public payloads were changed, and no tests, browser interaction, Publish, commit or push ran. Remaining row-update and field/header proposals are unchanged.

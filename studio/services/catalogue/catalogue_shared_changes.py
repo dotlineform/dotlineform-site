@@ -76,8 +76,6 @@ def work_shared_changes(
         )
         if before != after or member_changed:
             galleries.update(before | after)
-        if before != after:
-            outputs.add(GALLERY_INDEX)
         if identity_changed or member_changed or (old or {}).get("series_id") != (new or {}).get("series_id"):
             outputs.add(WORK_INDEX)
         if identity_changed or (old or {}).get("series_id") != (new or {}).get("series_id"):
