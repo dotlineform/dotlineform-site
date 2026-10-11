@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260424-000000-315c1c
 title: Studio Config JSON
 added_date: "2026-04-24 00:00:00"
-last_updated: "2026-10-07 16:46:38"
+last_updated: "2026-10-11 00:00:00"
 summary: Checked-in Local Studio route registry, live Catalogue read addresses, and the validated runtime projection.
 parent_id: d-20260424-000000-15b6f2
 
@@ -16,9 +16,7 @@ parent_id: d-20260424-000000-15b6f2
 
 It owns `app.routes`, the Studio route registry. The current source declares no Catalogue fallback data paths. Catalogue read keys and transport belong to the Studio API and browser data helpers.
 
-It does not own Docs Viewer routes, public catalogue route policy, catalogue or
-tag write endpoints, canonical schemas, generated payload schemas, or
-route-local UI copy.
+It does not own Docs Viewer routes, public catalogue route policy, catalogue write endpoints, canonical schemas, generated payload schemas, or route-local UI copy.
 
 ## Route Registry
 
@@ -59,9 +57,6 @@ The source JSON is not the final browser payload. `studio_app_config.py` injects
 - host and asset version
 - health and runtime-config paths
 - a catalogue service endpoint map
-- a tag service endpoint map
-- tag group and coverage/RAG policy loaded from
-  `studio/data/config/tags/tag-management.json`
 - public-preview and production site bases
 - the data-path projection, empty for the current checked source
 - media and thumbnail settings
@@ -100,9 +95,7 @@ For a data-path change:
 - Runtime catalogue services and hardcoded browser endpoint constants are overlapping discovery surfaces.
 - Catalogue editor/search reads and refreshed Catalogue reader JSON have separate owners and freshness boundaries; configuration must not introduce a persisted-file fallback between them.
 
-Focused runtime-config tests in
-`studio/tests/python/test_studio_app_runtime_config.py` protect the route
-registry, allowed data keys, tag-policy projection, and current service maps.
+Focused runtime-config tests in `studio/tests/python/test_studio_app_runtime_config.py` protect the route registry, allowed data keys, and current service maps.
 
 ## Bounded Route Assertion Maintenance
 

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260501-174746-efd581
 title: Testing
 added_date: 2026-05-01 17:47:46
-last_updated: "2026-10-08 19:24:55"
+last_updated: "2026-10-11 00:00:00"
 parent_id: ""
 ---
 # Testing
@@ -94,6 +94,23 @@ Report the selected command/profile, result, and the summary path when the profi
 Do not repair unrelated brittle test behavior inside a focused feature slice without explicitly widening scope.
 
 ## Limits
+
+### Catalogue Service Retirement
+
+The user approved removal of the inspected unused Studio services/helpers, stale caches and their related obsolete tests/references on 2026-10-11. The approved scope is implemented. This retires obsolete coverage, with no replacement tests, new cases, harnesses or profile expansion.
+
+| Retired test file | Former scenarios and reason for removal |
+| --- | --- |
+| `studio/tests/python/test_catalogue_routes.py` | Uniqueness and preflight membership of a disconnected route-constant table. The mounted Studio API no longer consumes that table, so these assertions provide no current routing evidence. |
+| `studio/tests/python/test_catalogue_output.py` | Full/selected generation, stale-output cleanup, old external output-root confinement, thumbnail population, immediate Save/delete output completion, Detail sections, Save-time remote transfers, media versions and controlled upload/delete failures. The file imports the removed population API and the unused generator, constructs retired Detail records, and assumes pre-Refresh output/remote-transfer ownership. Its fake repository/Projects output root, local image-conversion substitutions and in-memory transport do not establish current Docs workspace or queue coverage. |
+| `studio/tests/python/test_catalogue_delete_plans.py` | A non-mutating Series deletion preview that automatically clears Work membership, through the removed preview API. Current deletion requires an empty Series and has no such preview contract. |
+| `studio/tests/python/test_catalogue_delete_service.py` | Revision rejection and canonical deletion of a Series, Work, Detail section or Detail while preserving independent rows and a frozen archive file. The request shapes, Detail families, populated-Series deletion and paused output contract are retired. The former temporary repository fixture does not model current queue/workspace completion. |
+
+`studio/tests/fixtures/catalogue_factory.py` retains its two-Work/two-Series source fixture for the unchanged `studio/tests/python/test_studio_catalogue_write_routes.py`. It writes those maps with the current schema-only serializer and its existing local JSON helper; the retired Detail rows, production source-writer dependency and unused JSON reader are removed. No assertions are added or rewritten in the surviving route file. Its legacy response/workspace assumptions remain unreviewed, and it is not executed or adopted as current workflow evidence by this cleanup. The existing `write_json` helper and its other consumers remain available.
+
+The `quick` profile's `python-syntax` command drops the two deleted service paths and the three explicitly listed deleted test paths; `quick-python-pytest` drops the deleted route and delete-preview files. The `studio` profile still selects the surviving Python test directory. Other profile members and test fixtures are unchanged and unreviewed. This scope does not repair or certify the broader profiles.
+
+Verification is bounded source/import-reference review, changed-path Python lint, syntax compilation, configured read-only imports and whitespace checks. It uses no pytest/profile/browser run, production mutation, generation, media conversion, service startup or network transfer. Syntax checks may create local bytecode; stale source-less bytecode is cleared afterward. Expected execution cost is seconds locally; maintenance removes obsolete cases and adds only this coverage record, with no new repeated test runtime. Completion requires no surviving executable import or check registration for the retired code. This cleanup provides no new behavioral coverage for Save/Refresh/Regenerate/Publish or their failure paths.
 
 ### Source Save And Watcher Retirement
 

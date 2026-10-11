@@ -9,7 +9,7 @@ import subprocess
 from pathlib import Path
 from typing import Any, Dict, Mapping
 
-from catalogue.catalogue_output_paths import catalogue_workspace_config, output_path, thumbnail_directory
+from catalogue.catalogue_output_paths import catalogue_workspace_config, output_path
 from catalogue_work_media_sources import (
     WorkMediaSourceRoot,
     resolve_work_media_path,
@@ -126,13 +126,6 @@ def read_image_dims_px(path: Path | None) -> tuple[int | None, int | None]:
     return parse_sips_pixel_dims(proc.stdout)
 
 
-def repo_relative_path(path: Path, repo_root: Path) -> str:
-    try:
-        return str(path.resolve().relative_to(repo_root.resolve())).replace(os.sep, "/")
-    except ValueError:
-        return str(path.resolve())
-
-
 def resolve_work_media_source(
     records: Any,
     work_id: str,
@@ -162,11 +155,6 @@ def resolve_work_media_source(
     if project_filename:
         return None, "missing_project_folder", projects_base_dir, availability_error
     return None, "missing_project_filename", projects_base_dir, availability_error
-
-
-def thumb_output_paths(repo_root: Path, kind: str, item_id: str) -> list[Path]:
-    root = thumbnail_directory(repo_root, kind)
-    return [root / f"{item_id}-{THUMB_SUFFIX}-{size}.{ASSET_FORMAT}" for size in THUMB_SIZES]
 
 
 def build_local_media_task(

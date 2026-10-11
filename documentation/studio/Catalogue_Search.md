@@ -3,13 +3,13 @@ draft: false
 doc_id: d-20260602-160839-4ebe27
 title: Catalogue Search
 added_date: 2026-06-02 16:08:39
-last_updated: 2026-07-15
+last_updated: "2026-10-11 00:00:00"
 parent_id: d-20260331-000000-5dcf32
 
 ---
 # Catalogue Search
 
-Catalogue Search is the public known-item and metadata lookup for works and series at `/catalogue/search/`.
+This page records the historical known-item and metadata lookup for Works and Series. Its static runtime and data now belong to the frozen `site/archive/` snapshot; [Catalogue Archive](Catalogue_Archive.md) owns current archive availability. The source search builder and legacy Python public-path table are retired.
 
 ## Execution Path
 
@@ -37,7 +37,6 @@ The exact score bands and entry fields are code. `search_text` is broad fallback
 
 - [Search Build Config](Catalogue_Search_Build_Config.md) owns build dependencies and targeted-update policy.
 - [Catalogue Search Policy](Catalogue_Search_Policy.md) owns the public route's timing, labels, messages, and index URL.
-- `studio/services/catalogue/catalogue_public_paths.py` owns public catalogue/search paths used by Python services.
 
 ## Extension Method
 

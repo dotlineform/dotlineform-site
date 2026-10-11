@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261010-143841-fba69a
 title: Catalogue Refresh Index Updates
 added_date: "2026-10-10 14:38:41"
-last_updated: "2026-10-10 21:46:36"
+last_updated: "2026-10-11 00:00:00"
 summary: Complete and accepted queued Catalogue row merging, minimal projections and Save-owned canonical validation.
 ui_status: done
 parent_id: d-20260428-000000-f5ff18
@@ -134,7 +134,7 @@ The explicit `studio/services/catalogue/catalogue_json_build.py --write --compac
 
 The separate `--write --series-galleries` maintenance operation generates/repairs only the complete relationship index and private report using the shared relationship projectors. It forwards only the public index, clears only these two output selectors and preserves identity families, unrelated queued work and lifecycle timestamps. The v2 conversion starts from empty queues after the user-confirmed compact-index Publish. The changed shared browser module is projected through the public inventory; the report module remains local-only. Normal Refresh never invokes this maintenance path.
 
-The separate `--write --gallery-records` maintenance operation generates only complete current Gallery by-ID records, removes explicit queued Gallery deletions and forwards those identities. It clears creation/member candidates after publication merge while retaining common Gallery IDs for other selected outputs, Work readiness, unrelated selections and timestamps. Normal Refresh never invokes it. The member-slice cutover uses `catalogue_incremental_cutover.py --write` to convert only empty updates v4 to v5 after checking empty publication v4. It adds empty candidate arrays, preserves lifecycle times and writes no generated output. The existing Gallery/public schema needs no baseline regeneration or Publish for this server-only change.
+The separate `--write --gallery-records` maintenance operation generates only complete current Gallery by-ID records, removes explicit queued Gallery deletions and forwards those identities. It clears creation/member candidates after publication merge while retaining common Gallery IDs for other selected outputs, Work readiness, unrelated selections and timestamps. Normal Refresh never invokes it. The completed member-slice cutover converted only empty updates v4 to v5 after checking empty publication v4. It added empty candidate arrays, preserved lifecycle times and wrote no generated output; its one-time migration utility is now retired. The existing Gallery/public schema needs no baseline regeneration or Publish for this server-only change.
 
 ## Delivery Steps
 

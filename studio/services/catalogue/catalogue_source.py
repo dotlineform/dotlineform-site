@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import argparse
 import json
 import re
 from dataclasses import dataclass
@@ -14,7 +13,7 @@ from catalogue_work_media_sources import (
 )
 from pipeline_config import load_pipeline_config
 
-from catalogue.series_ids import normalize_series_id, parse_series_ids
+from catalogue.series_ids import normalize_series_id
 
 
 DEFAULT_SOURCE_DIR = Path("studio/data/canonical/catalogue")
@@ -146,10 +145,6 @@ def normalize_text(value: Any) -> str:
     return text
 
 
-def normalize_status(value: Any) -> str:
-    return normalize_text(value).lower()
-
-
 def is_empty(value: Any) -> bool:
     if value is None:
         return True
@@ -167,22 +162,6 @@ def slug_id(raw: Any, width: int = 5) -> str:
     if not text:
         raise ValueError(f"Invalid id value: {raw!r}")
     return text.zfill(width)
-
-
-def normalize_series_ids_value(value: Any) -> list[str]:
-    if value is None:
-        return []
-    if isinstance(value, list):
-        out: list[str] = []
-        seen: set[str] = set()
-        for raw in value:
-            series_id = normalize_series_id(raw)
-            if series_id in seen:
-                continue
-            seen.add(series_id)
-            out.append(series_id)
-        return out
-    return parse_series_ids(value)
 
 
 def normalize_json_value(value: Any) -> Any:
@@ -300,42 +279,6 @@ def payload_for_map(kind: str, records: Mapping[str, Dict[str, Any]]) -> Dict[st
         "header": {"schema": SCHEMAS[kind]},
         kind: sort_record_map(records),
     }
-
-
-def payloads_from_records(records: CatalogueSourceRecords) -> Dict[str, Dict[str, Any]]:
-    return {
-        kind: payload_for_map(kind, record_map)
-        for kind, record_map in records.as_maps().items()
-    }
-
-
-def write_payloads(source_dir: Path, payloads: Mapping[str, Mapping[str, Any]]) -> list[Path]:
-    source_dir.mkdir(parents=True, exist_ok=True)
-    written: list[Path] = []
-    for kind in ["works", "series"]:
-        path = source_dir / SOURCE_FILES[kind]
-        path.write_text(json.dumps(payloads[kind], ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        written.append(path)
-    return written
-
-
-def write_source_record_payloads(
-    source_dir: Path,
-    records: CatalogueSourceRecords,
-    *,
-    kinds: Iterable[str] = ("works", "series"),
-) -> list[Path]:
-    source_dir.mkdir(parents=True, exist_ok=True)
-    record_maps = records.as_maps()
-    written: list[Path] = []
-    for kind in kinds:
-        if kind not in record_maps:
-            raise ValueError(f"Unknown source record kind: {kind}")
-        path = source_dir / SOURCE_FILES[kind]
-        payload = payload_for_map(kind, record_maps[kind])
-        path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        written.append(path)
-    return written
 
 
 def load_json_file(path: Path) -> Dict[str, Any]:
@@ -492,7 +435,3 @@ def validate_source_records(
             errors.append(f"works {work_id}: references unknown series_id {series_id!r}")
 
     return sorted(dict.fromkeys(errors))
-
-
-def add_common_source_args(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument("--source-dir", default=str(DEFAULT_SOURCE_DIR), help="Catalogue source JSON directory")

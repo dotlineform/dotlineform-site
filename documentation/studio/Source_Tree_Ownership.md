@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260524-214228-7247ef
 title: Source Tree Ownership
 added_date: "2026-05-24 21:42:28"
-last_updated: "2026-10-07 16:46:38"
+last_updated: "2026-10-11 00:00:00"
 parent_id: d-20260331-000000-4a16b0
 
 ---
@@ -15,7 +15,7 @@ The repository contains several local apps, shared domain services, and one trac
 
 | Root | Owns |
 | --- | --- |
-| `studio/` | catalogue and tag authoring app; catalogue, media, and tag services; canonical catalogue/tag data; live Studio read projections; Studio/public-catalogue tests |
+| `studio/` | catalogue authoring app; catalogue and media services; canonical Catalogue data; live Studio read projections; Studio/public-catalogue tests |
 | `docs-viewer/` | Docs Viewer canonical runtime and stylesheets, services, checked configuration, builders, import/export, integrated document packages, and tests; scope-owned source and lifecycle output remain external |
 | `processing/` | separate Java/Processing project source, pinned sketchbook libraries, project scripts, and project-owned tests |
 | `shared/` | reviewed app-neutral frontend modules and styles used across routes or apps, including explicitly accepted one-consumer cross-app primitives |
@@ -34,28 +34,23 @@ Machine-owned projects, catalogue media staging, Docs Viewer external scopes, an
 | `studio/app/server/` | loopback server, HTTP routing, runtime config projection, API adapters |
 | `studio/app/assets/` | Studio-only CSS and static assets |
 | `studio/services/catalogue/` | catalogue validation, mutation, lookup, build, publication, cleanup, import, and reports |
-| `studio/services/tags/` | tag validation, mutation planning, direct assignment saves, transactions, and rollback |
 | `studio/services/media/` | derivative generation and remote media transport |
-| `studio/data/canonical/` | authoritative catalogue metadata, optional catalogue Markdown, and canonical tag vocabulary/assignments |
-| `studio/data/config/` | checked Studio, catalogue, runtime, and tag policy |
+| `studio/data/canonical/` | authoritative Work, Series, Gallery and relationship metadata |
+| `studio/data/config/` | checked Catalogue field and output inventory |
 | `studio/shared/` | Python helpers shared by Studio-owned services and commands |
 | `studio/tests/` | Studio and public-catalogue contracts |
 
 Studio services provide live read projections from canonical source. Refresh Catalogue separately owns replaceable Catalogue reader output under `$DOTLINEFORM_DOCS_BASE_DIR/working/generated/catalogue/`; see [Catalogue Architecture](Catalogue_Architecture.md).
 
-Studio entrypoints establish service and shared-module paths through `studio/shared/python/studio_python_paths.py`. Catalogue/media modules use the established `catalogue.*`, `tags.*` and shared-module imports directly. Missing dependencies, including failures inside imported modules, propagate without retrying under another package name. The bootstrap is retained; import cleanup does not resume paused Catalogue operations.
+Studio entrypoints establish service and shared-module paths through `studio/shared/python/studio_python_paths.py`. Catalogue/media modules use the established `catalogue.*`, `media.*` and shared-module imports directly. Missing dependencies, including failures inside imported modules, propagate without retrying under another package name. The bootstrap is retained; module retirement does not change operation ownership.
 
-The legacy Catalogue pages, payloads, Search/Recent indexes, runtime and thumbnails now live in `site/archive/`. Shared shell styles, scripts and icons have independent archive copies. Studio Catalogue authoring/build/media operations remain unused until the new projection is implemented; their machinery and canonical data remain in place. Docs Catalogue write follow-through returns paused. Active Docs projection and code-update destinations exclude the archive. Archived remote media is served from `https://media.dotlineform.com/archive/catalogue/`, with full copies of the R2 `works/` and `work_details/` prefixes; the original source objects remain intact. [Catalogue Archive](Catalogue_Archive.md) records how the snapshot and rclone copy were made.
+The legacy Catalogue pages, payloads, Search/Recent indexes, runtime and thumbnails now live in `site/archive/`. Shared shell styles, scripts and icons have independent archive copies. Active Studio Catalogue operations use the current Save → Refresh → Regenerate → Publish workflow and configured Docs workspace, independently of that archive. Active Docs projection and code-update destinations exclude the archive. Archived remote media is served from `https://media.dotlineform.com/archive/catalogue/`, with full copies of the R2 `works/` and `work_details/` prefixes; the original source objects remain intact. [Catalogue Archive](Catalogue_Archive.md) records how the snapshot and rclone copy were made.
 
 ## App Boundaries
 
 ### Retired Analytics Boundary
 
-The standalone Analytics source tree, runner, routes, APIs, configuration,
-checks, and tests are retired. Studio owns the retained tag capability; Docs
-Viewer owns integrated document packages. Do not restore `/analytics/...`,
-`/studio/analytics/...`, `/studio/data-sharing/...`, or
-`/analytics/data-sharing/...` compatibility paths.
+The standalone Analytics source tree, runner, routes, APIs, configuration, checks, and tests are retired. Studio Tag services were subsequently retired; Concept definitions belong to Docs documents. Docs Viewer owns integrated document packages. Do not restore `/analytics/...`, `/studio/analytics/...`, `/studio/data-sharing/...`, or `/analytics/data-sharing/...` compatibility paths.
 
 The public `/analysis/` Docs Viewer scope is unaffected and is not an
 application namespace.

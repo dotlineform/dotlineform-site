@@ -2,12 +2,11 @@
 
 from __future__ import annotations
 
-import datetime as dt
 import hashlib
 import json
 import math
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 
 
 def normalize_text(value: Any) -> str:
@@ -30,49 +29,6 @@ def slug_id(raw: Any, width: int = 5) -> str:
     if not s:
         raise ValueError(f"Invalid id value: {raw!r}")
     return s.zfill(width)
-
-
-def normalize_status(value: Any) -> str:
-    if value is None:
-        return ""
-    return normalize_text(value).lower()
-
-
-def numeric_aware_sort_key(value: Any, width: int = 3) -> str:
-    """
-    Build a numeric-aware string sort key by left-padding each run of digits.
-    Example (width=3): "test 2.10" -> "test 002.010"
-    """
-    s = normalize_text(value)
-    if not s:
-        return ""
-    return re.sub(r"\d+", lambda m: m.group(0).zfill(width), s)
-
-
-def parse_date(raw: Any) -> Optional[str]:
-    if raw is None or str(raw).strip() == "":
-        return None
-    if isinstance(raw, dt.datetime):
-        return raw.date().isoformat()
-    if isinstance(raw, dt.date):
-        return raw.isoformat()
-    s = normalize_text(raw)
-    # Accept YYYY-M-D and normalise to YYYY-MM-DD if possible
-    m = re.match(r"^(\d{4})-(\d{1,2})-(\d{1,2})$", s)
-    if m:
-        y, mo, d = map(int, m.groups())
-        return dt.date(y, mo, d).isoformat()
-    # Last resort: leave as-is (but upstream should be fixed)
-    return s
-
-
-def parse_list(raw: Any, sep: str = ",") -> List[str]:
-    if raw is None:
-        return []
-    s = normalize_text(raw)
-    if not s:
-        return []
-    return [item.strip() for item in s.split(sep) if item.strip()]
 
 
 def is_empty(value: Any) -> bool:

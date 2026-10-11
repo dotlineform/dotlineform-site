@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260715-084611-ae9636
 title: Studio Overview
 added_date: "2026-07-15 08:46:11"
-last_updated: "2026-10-07 16:46:38"
+last_updated: "2026-10-11 00:00:00"
 summary: Local Studio capabilities, execution path, authority boundaries, extension method, and known weak spots.
 parent_id: d-20260423-000000-d015e6
 
@@ -14,9 +14,7 @@ parent_id: d-20260423-000000-d015e6
 
 Studio is the local catalogue authoring and maintenance app. It provides a browser shell for catalogue workflows and a loopback Python service for validated reads, writes, builds, publication plans, media operations, and local report links.
 
-Studio is not part of the deployed public site. Docs Viewer remains a sibling
-local app. The retired Analytics app has no runtime or route
-authority; its retained tag capabilities now belong to Studio.
+Studio is not part of the deployed public site. Docs Viewer remains a sibling local app. The retired Analytics app and Studio Tag services have no runtime or route authority; Concept definitions belong to Docs documents.
 
 ## Capabilities
 
@@ -28,8 +26,6 @@ Studio currently supports:
 - reviewing the catalogue field registry
 - previewing and applying catalogue deletes, builds, publication, and media publication
 - linking to public catalogue results through the configured public-preview base
-- maintaining tag groups, canonical tags, aliases, Series coverage, Series
-  assignments, and per-Work override deltas
 
 The checked-in route registry is the exact authority for mounted browser pages. The Catalogue API and service code own available mutations; focused tests provide regression evidence.
 
@@ -43,7 +39,7 @@ browser requests /studio/... route
   -> configured HTML template is mounted
   -> configured route script boots
   -> static fallback read or focused /studio/api/... request
-  -> catalogue or tag API validates and delegates
+  -> catalogue API validates and delegates
   -> focused Studio service reads or changes canonical data
   -> required generated catalogue, search, media, or public output follows
 ```
@@ -64,14 +60,12 @@ The browser may use checked-in or generated JSON for safe fallback reads. Writes
 - `studio-data.js` and route-specific clients own browser reads and response shaping.
 - `studio-transport.js` and focused editor service clients own browser transport.
 - `studio_catalogue_api.py` is the narrow HTTP adapter for catalogue reads and writes.
-- `studio_tags_api.py` and `studio_tag_api/` adapt tag reads and writes.
 - `studio/services/catalogue/` owns validation, plans, source mutation, build follow-through, publication, media, and generated catalogue behavior.
-- `studio/services/tags/` owns tag validation, planning, transactions, and rollback.
 
 ### Data
 
 - `studio/data/config/` owns checked-in Studio domain config.
-- `studio/data/canonical/` owns canonical catalogue and tag records.
+- `studio/data/canonical/` owns canonical Catalogue records.
 - Refresh Catalogue owns rebuildable Catalogue reader projections under `$DOTLINEFORM_DOCS_BASE_DIR/working/generated/catalogue/`; see [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md).
 - `site/` owns tracked public output; it is not a Studio source tree.
 - external project and media roots come from environment-backed workspace helpers, never browser config absolute paths.
@@ -112,8 +106,6 @@ Docs Viewer scope is unrelated to the retired Analytics app.
 - `studio_app_config.py` retains one route compatibility key for catalogue field registry lookup.
 - Static fallback reads and server-backed reads coexist. A route change must confirm which path is authoritative for that workflow.
 - The catalogue API adapter still imports a broad catalogue service surface; exact domain ownership lives below it rather than in the adapter.
-- The retained `analytics-tag-editor*.js` filenames are historical internal
-  names under Studio ownership; they do not imply a second runtime or API.
 
 ## Where To Look First
 
@@ -122,6 +114,5 @@ Docs Viewer scope is unrelated to the retired Analytics app.
 - [Local Studio Routes](Local_Studio_Routes.md) — exact mounted route inventory.
 - [Local Studio APIs](Local_Studio_APIs.md) — exact endpoint groups and adapters.
 - [Config And Save Flow](Studio_Read_And_Save_Flow.md) — current read/write and build workflow.
-- [Tag Source Data](Tag_Source_Data.md) — canonical tag ownership and durable workflow routes.
 - `studio/tests/python/` — focused deterministic evidence for service and data contracts.
 - `studio/tests/smoke/` — three retained route-integration boundaries, not product specification.

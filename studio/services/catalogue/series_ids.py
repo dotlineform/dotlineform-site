@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import re
-from typing import Any, List
+from typing import Any
 
 
 SERIES_ID_WIDTH = 3
@@ -29,25 +29,3 @@ def normalize_series_id(raw: Any, *, allow_slug_id: bool = True, width: int = SE
     if allow_slug_id and SLUG_SERIES_ID_RE.fullmatch(s):
         return s
     raise ValueError(f"Invalid series_id value: {raw!r}")
-
-
-def parse_series_ids(raw: Any, *, allow_slug_id: bool = True, width: int = SERIES_ID_WIDTH) -> List[str]:
-    values: List[str] = []
-    seen: set[str] = set()
-    for part in normalize_text(raw).split(","):
-        if normalize_text(part) == "":
-            continue
-        sid = normalize_series_id(part, allow_slug_id=allow_slug_id, width=width)
-        if sid in seen:
-            continue
-        seen.add(sid)
-        values.append(sid)
-    return values
-
-
-def is_valid_series_id(raw: Any, *, allow_slug_id: bool = True, width: int = SERIES_ID_WIDTH) -> bool:
-    try:
-        normalize_series_id(raw, allow_slug_id=allow_slug_id, width=width)
-    except ValueError:
-        return False
-    return True

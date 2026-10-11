@@ -3,8 +3,8 @@ draft: false
 doc_id: d-20260331-000000-643429
 title: Series Tag Editor
 added_date: 2026-03-31 00:00:00
-last_updated: "2026-09-07 14:17:59"
-parent_id: d-20260419-000000-86255c
+last_updated: "2026-10-11 00:00:00"
+parent_id: d-20260423-000000-d015e6
 ---
 # Series Tag Editor
 

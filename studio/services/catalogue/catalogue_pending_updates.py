@@ -6,21 +6,13 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from studio.services.catalogue.catalogue_pending_state import (
-    pending_path, read_pending_state, validate_pending_state, write_pending_state,
+    read_pending_state, write_pending_state,
 )
 from studio.services.catalogue.catalogue_shared_changes import merge_shared_changes, validate_shared_changes
 
 
 SCHEMA = "catalogue_updates_pending_v5"
 FILENAME = "catalogue-updates-pending.json"
-
-
-def pending_updates_path(repo_root: Path) -> Path:
-    return pending_path(repo_root, FILENAME)
-
-
-def validate_pending_updates(repo_root: Path, value: Any) -> dict[str, Any]:
-    return validate_pending_state(repo_root, value, schema=SCHEMA, progress="refreshed")
 
 
 def read_pending_updates(repo_root: Path) -> dict[str, Any]:

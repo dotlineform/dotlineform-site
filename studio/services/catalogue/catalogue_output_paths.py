@@ -30,10 +30,3 @@ def catalogue_output_workspace(repo_root: Path, *, environ: Mapping[str, str] | 
 def output_path(workspace: ArtifactLocation, relative: str | Path) -> Path:
     """Resolve an owned descendant without traversal or symlinks."""
     return location_child(workspace, safe_relative_path(str(relative), field="Catalogue output")).path
-
-
-def thumbnail_directory(repo_root: Path, kind: str) -> Path:
-    """Return the Work thumbnail destination used by Studio."""
-    if kind != "work":
-        raise ValueError(f"unsupported Catalogue media kind: {kind}")
-    return catalogue_workspace_config(repo_root).assets.work_thumbnails.path

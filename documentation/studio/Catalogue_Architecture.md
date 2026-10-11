@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260401-000000-a11bf3
 title: Catalogue Architecture
 added_date: "2026-04-01 00:00:00"
-last_updated: "2026-10-07 16:26:39"
+last_updated: "2026-10-11 00:00:00"
 parent_id: d-20260423-000000-d015e6
 ---
 
@@ -11,7 +11,7 @@ parent_id: d-20260423-000000-d015e6
 
 ## Current Shape
 
-Studio owns canonical Catalogue editing. One Work belongs to exactly one Series and may belong to multiple Galleries; Series and Galleries may be empty. Canonical Work, Series, Gallery and membership sources live under `studio/data/canonical/catalogue/`. Detail records, Catalogue publication state and parallel Catalogue Markdown prose are retired.
+Studio owns canonical Catalogue editing. A Work belongs to at most one Series and may belong to multiple Galleries; Series and Galleries may be empty. Canonical Work, Series, Gallery and membership sources live under `studio/data/canonical/catalogue/`. Detail records, source-owned publication state and parallel Catalogue Markdown prose are retired.
 
 ```text
 canonical Works, Series, Galleries and memberships
@@ -27,15 +27,19 @@ canonical Works, Series, Galleries and memberships
 
 The canonical source is the editable authority. Studio Work/Series search and focused editor reads are live projections of that source, so Save does not depend on a persisted lookup export. Save prepares required primary images, thumbnails and downloads in the configured shared Docs assets; those bytes and canonical image versions can be current before generated JSON is refreshed.
 
-Refresh Catalogue reconciles complete replaceable Work, Series and Gallery records, compact discovery indexes, media policy and private Docs report metadata under `$DOTLINEFORM_DOCS_BASE_DIR/working/generated/catalogue/`. Generated output is a reader projection, not another editable source. Docs Viewer local Catalogue, subject and report readers can lag behind Save until Refresh completes. Public readers use the separately published Catalogue revision; Docs Publish does not run Refresh or enforce its receipt.
+Refresh Catalogue updates selected replaceable Catalogue records, compact indexes, media policy and private Docs report inputs under `$DOTLINEFORM_DOCS_BASE_DIR/working/generated/catalogue/`, using the supplied mutation queue. Generated output is a reader projection, not another editable source. Docs Viewer local Catalogue, subject and report readers can lag behind Save until Refresh completes. Public readers use the separately published Catalogue revision; Docs Publish does not run Refresh or Regenerate.
 
 The historical `studio/data/generated/catalogue-lookup/` files are retired and removed. The persisted lookup exporter and completed one-time Gallery converter are also removed; live Work and Series lookup payload builders remain in the Studio API. They build current canonical projections at read time without persisted-file fallbacks or a Save export dependency. The frozen legacy `site/archive/` payloads and media are outside active generation.
+
+Unused legacy public-path and route tables, the old Markdown title-sort repair script and the completed v5 queue migration are removed. The old full/selected generator and its previous-membership output selector are also removed; normal Refresh uses the supplied queue, and explicit family repair remains in the current Refresh CLI. Pure Catalogue payload builders and unchanged-content comparison remain shared by the current Refresh paths. Source writes retain the canonical transaction owner; unused direct-writer and parser helpers are removed.
+
+The related obsolete tests, fixture dependency and profile registrations are retired within the approved [Catalogue Service Retirement](Testing.md#catalogue-service-retirement) scope. Remaining historical tests are not accepted current workflow evidence merely because they remain in the repository.
 
 ## Change Method And Weak Spots
 
 Change canonical fields through the source definition, serializer, validation, editor and affected projections together. Keep exact IDs and one owner for each relationship; do not infer Gallery or document associations from titles, filenames or routes. Use focused service/generator evidence for the changed boundary.
 
-Canonical validation and complete Refresh still process the full corpus. Save and Refresh latency has not been measured. A failed Refresh can leave partial generated files but no current receipt; rerun it after fixing the cause. Publishing while Refresh is needed can capture older Catalogue JSON with current media. Shared and remote media cleanup is separate from Save, Refresh and Publish.
+Save validates canonical mutations; normal Refresh reads the authorities needed by the supplied queue. Explicit canonical validation and family repair retain complete audits. Save and Refresh latency has not been measured. A failed Refresh can leave partial generated files and unfinished selections; fix the cause and rerun the owning operation. Complete Save → Refresh → Regenerate before publishing those changes. Shared and remote media cleanup is separate from Save, Refresh and Publish.
 
 ## Approved Persisted Lookup Test Cleanup
 

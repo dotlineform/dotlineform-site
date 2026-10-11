@@ -19,7 +19,7 @@ WORK_ID = re.compile(r"[0-9]{5}\Z")
 
 
 def pending_path(repo_root: Path, filename: str) -> Path:
-    """Resolve existing Working storage; queue creation belongs only to cutover."""
+    """Resolve existing Working storage without creating missing queues."""
     workspace = catalogue_workspace_config(repo_root)
     root = workspace.workspace_root.path / "working"
     if root.is_symlink() or not root.is_dir():

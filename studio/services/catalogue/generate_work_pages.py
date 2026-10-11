@@ -2,24 +2,21 @@
 
 from __future__ import annotations
 
-import datetime as dt
 import json
 from pathlib import Path
-from typing import Any, Sequence
+from typing import Any
 from urllib.parse import quote
 
 from catalogue import catalogue_generation_indexes as indexes
 from catalogue import catalogue_generation_records as projection
 from catalogue.catalogue_compact_indexes import build_compact_index
-from catalogue.catalogue_galleries import CatalogueGalleries, read_galleries, validate_galleries
+from catalogue.catalogue_galleries import CatalogueGalleries
 from catalogue.catalogue_generation_common import compact_json_object
 from catalogue.catalogue_media_policy import catalogue_media_policy
-from catalogue.catalogue_output_paths import catalogue_output_workspace, output_path
-from catalogue.catalogue_output_selection import selected_output_paths
-from catalogue.catalogue_series_galleries import CatalogueSeriesGalleries, read_series_galleries, validate_series_galleries
+from catalogue.catalogue_series_galleries import CatalogueSeriesGalleries
 from catalogue.catalogue_series_galleries_index import series_gallery_links, series_galleries_index_payload
 from catalogue.catalogue_series_galleries_report import METADATA_PATH as SERIES_GALLERIES_REPORT_PATH, series_galleries_report_payload
-from catalogue.catalogue_source import CatalogueSourceRecords, records_from_json_source, validate_source_records
+from catalogue.catalogue_source import CatalogueSourceRecords
 from catalogue.catalogue_shared_changes import WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, WORK_DOCUMENT_COVERAGE_MANIFEST
 from catalogue.catalogue_work_document_coverage import work_document_coverage_manifest
 from catalogue.catalogue_report_inputs import INPUT_SCHEMAS, catalogue_report_input_payloads
@@ -107,54 +104,3 @@ def same_generated_content(actual: Any, expected: dict[str, Any]) -> bool:
     actual_content = {**actual, "header": {key: value for key, value in actual["header"].items() if key != "generated_at_utc"}}
     expected_content = {**expected, "header": {key: value for key, value in expected["header"].items() if key != "generated_at_utc"}}
     return actual_content == expected_content
-
-
-def generate_catalogue_json(
-    repo_root: Path, source_dir: Path, *, write: bool,
-    work_ids: Sequence[str] | None = None, gallery_ids: Sequence[str] = (),
-) -> dict[str, Any]:
-    """Refresh selected records and every index, or reconcile the complete owned JSON set.
-
-    Pass work_ids=() for a Gallery-only refresh. Missing selected IDs mean deletion.
-    Gallery edits refresh current and former members; Work edits refresh current
-    and former Galleries. Canonical records always own the written content.
-    """
-    workspace = catalogue_output_workspace(repo_root)
-    records = records_from_json_source(source_dir)
-    galleries = read_galleries(source_dir)
-    pairs = read_series_galleries(source_dir)
-    errors = validate_source_records(records)
-    if errors:
-        raise ValueError("Catalogue source validation failed: " + "; ".join(errors[:20]))
-    validate_galleries(galleries, records.works)
-    validate_series_galleries(pairs, records.series, galleries.galleries)
-    timestamp = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    payloads = catalogue_payloads(repo_root, records, galleries, pairs, timestamp=timestamp)
-    complete = work_ids is None
-    selected = selected_output_paths(workspace, records, galleries, work_ids=work_ids, gallery_ids=gallery_ids)
-    selected.update(path for path in payloads if "/index/" not in path)
-    written, deleted = [], []
-    for relative in sorted(selected):
-        path = output_path(workspace, relative)
-        payload = payloads.get(relative)
-        if payload is None:
-            if path.exists():
-                deleted.append(relative)
-                if write:
-                    path.unlink()
-            continue
-        if path.exists():
-            try:
-                old = json.loads(path.read_text(encoding="utf-8"))
-            except (OSError, ValueError):
-                if not complete:
-                    raise
-                old = None
-            if same_generated_content(old, payload):
-                continue
-        written.append(relative)
-        if write:
-            path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    return {"status": "completed", "write": write, "written": written, "deleted": deleted,
-            "counts": {"works": len(records.works), "series": len(records.series), "galleries": len(galleries.galleries)}}

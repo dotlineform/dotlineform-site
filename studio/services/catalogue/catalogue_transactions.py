@@ -8,23 +8,12 @@ import os
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, Iterable, Mapping
+from typing import Any, Dict, Mapping
 
 
 @dataclass(frozen=True)
 class SourceJsonWriteResult:
     written_paths: list[Path]
-
-
-def rel_response_path(path: Path, repo_root: Path) -> str:
-    try:
-        return str(path.resolve().relative_to(repo_root.resolve()))
-    except ValueError:
-        return path.name
-
-
-def response_written_paths(paths: Iterable[Path], repo_root: Path) -> list[str]:
-    return [rel_response_path(path, repo_root) for path in paths]
 
 
 def validate_json_payloads_by_path(payloads_by_path: Mapping[Path, Mapping[str, Any]]) -> Dict[Path, Dict[str, Any]]:
