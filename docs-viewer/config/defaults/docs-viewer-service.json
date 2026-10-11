@@ -1,57 +1,7 @@
 {
-  "schema_version": "docs_viewer_service_config_v1",
-  "service": {
-    "bind_policy": "loopback_only",
-    "manage_route": "/docs/",
-    "review_route": "/docs-review/",
-    "api_base_path": "",
-    "env": {
-      "host": "DOCS_VIEWER_HOST",
-      "port": "DOCS_VIEWER_PORT",
-      "base_url": "DOCS_VIEWER_BASE_URL",
-      "management_enabled": "DOCS_VIEWER_MANAGEMENT_ENABLED",
-      "review_enabled": "DOCS_VIEWER_REVIEW_ENABLED",
-      "generated_reads_enabled": "DOCS_VIEWER_GENERATED_READS_ENABLED"
-    }
-  },
   "capabilities": {
     "management_enabled_default": false,
     "review_enabled_default": false,
     "generated_reads_enabled_default": true
-  },
-  "routes": {
-    "health": "/health",
-    "capabilities": "/capabilities",
-    "review_capabilities": "/docs-review/capabilities",
-    "review_packages": "/docs-review/packages",
-    "review_manifest": "/docs-review/packages/manifest",
-    "review_assets": "/docs-review/packages/assets",
-    "review_asset_content": "/docs-review/packages/assets-content/",
-    "review_index_tree": "/docs-review/packages/index-tree",
-    "review_payload": "/docs-review/packages/payload",
-    "review_build": "/docs-review/packages/build",
-    "review_open_source": "/docs-review/packages/open-source",
-    "generated_index_tree": "/docs/index-tree",
-    "generated_payload": "/docs/doc",
-    "generated_search": "/docs/search",
-    "source_config_settings": "/docs/source-config-settings",
-    "source_body": "/docs/source",
-    "document_link_targets": "/docs/document-link-targets",
-    "metadata": "/docs/metadata",
-    "source_save": "/docs/source/save",
-    "import_source_directories": "/docs/import-source-directories",
-    "import_source_files": "/docs/import-source-files",
-    "open_source": "/docs/open-source",
-    "broken_links": "/docs/broken-links",
-    "import_source": "/docs/import-source",
-    "create": "/docs/create",
-    "rebuild": "/docs/rebuild",
-    "move": "/docs/move",
-    "delete_preview": "/docs/delete-preview",
-    "delete_apply": "/docs/delete-apply"
-  },
-  "local_state": {
-    "backups": "var/docs/backups",
-    "logs": "var/docs/logs"
   }
 }

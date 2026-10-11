@@ -33,11 +33,6 @@ def browser_search_index_url(config: DocsStageConfig, *, published: bool = False
     return browser_path_for_repo_relative(output)
 
 
-def browser_search_policy_payload(config: DocsStageConfig, *, published: bool = False) -> dict[str, Any]:
-    return {"domain": "docs_viewer", "schema": "docs_viewer_search_index_v4",
-            "index_url": browser_search_index_url(config, published=published), "rebuild_policy": "whole_index"}
-
-
 def browser_collection_output_url_base(config: DocsStageConfig, collection: DocsCollectionConfig, *, published: bool = False) -> str:
     if published:
         return public_document_base(collection)
@@ -79,7 +74,6 @@ def browser_workspace_record(repo_root: Path, config: DocsStageConfig, *, public
         "recent_url": browser_docs_recent_url(config, published=published),
         "selected_url": f"{public_document_base(config)}/selected.json" if published else "/docs/selected",
         "search_index_url": browser_search_index_url(config, published=published),
-        "search": browser_search_policy_payload(config, published=published),
         "collections": browser_collection_records(repo_root, config, published=published),
     }
     return record

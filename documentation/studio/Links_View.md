@@ -3,11 +3,13 @@ draft: false
 doc_id: d-20260910-202325-53b5f9
 title: Links View
 added_date: "2026-09-10 20:23:25"
-last_updated: "2026-09-30 19:01:32"
-summary: The single-document Links presentation, exact generated-data reads, Content Detail hosting and navigation boundaries.
+last_updated: "2026-10-11 00:00:00"
+summary: Historical single-document Links presentation, superseded by Related Links in generated document content.
 parent_id: d-20260331-000000-c313fd
 ---
 # Links View
+
+The single-document Links view, its read endpoint and browser availability configuration are retired. The sections below retain its historical design. [Related Links](Related_Links.md) owns the current presentation, and [Builder](Builder.md#document-relationship-maintenance) owns current Working-only relationship maintenance without a separate Links configuration file.
 
 Links displays the documents related to the exact displayed document. It uses the shared Content Detail host alongside Media View, with its own adapter and presentation module. The current enabled context is Working, including its configured collections. [Builder](Builder.md) owns extraction, eligibility, both-end updates and the separate relationship records; [Source Editor Scripts](Source_Editor_Scripts.md) owns ordinary document-link insertion.
 

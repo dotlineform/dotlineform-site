@@ -16,7 +16,6 @@ from docs_builder.browser_config import (
     browser_workspace_config_payload,
     browser_workspace_record,
     browser_search_index_url,
-    browser_search_policy_payload,
     write_browser_config,
 )
 from docs_builder.cli import main, parse_args

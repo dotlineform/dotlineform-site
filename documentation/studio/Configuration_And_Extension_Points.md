@@ -136,7 +136,7 @@ Historical scope-bearing tests and fixtures remain unreviewed against the curren
 | `docs-viewer/runtime/js/shared/docs-viewer-code-config.js` | Universal metadata statuses. | Product-owned browser code, projected to `site/` through the public code inventory. Scope-type labels and badges are retired. |
 | `docs-viewer/config/routes/docs-viewer-routes.json` | App kind, route features, access intent, payload/config URLs, panel defaults, view policy, and named service surfaces. | Full local route registry. The service injects enabled loopback URLs when it serves local routes. |
 | `site/docs-viewer/config/routes/docs-viewer-public-routes.json` | Public-only route records served from the deploy root. | Checked-in public projection kept separate so local/manage and review routes are never exposed publicly. |
-| `docs-viewer/config/defaults/docs-viewer-service.json` plus `.env.local` | Loopback binding, endpoint names, enabled service families, watch behaviour, and local state roots. | Defaults describe the service; environment settings select the current host instance. |
+| `docs-viewer/config/defaults/docs-viewer-service.json` plus `.env.local` | Management, Review and generated-read capability defaults, with environment overrides for the current host instance. | The JSON contains only the three capability defaults consumed by `docs_viewer_service.py`. The service owns loopback validation and shell routes; endpoint modules and the management context own endpoint and local-state paths. |
 | `docs-viewer/config/reports/reports.json` | Report identity, title, description and `loader_id`. | Config describes known reports; `docs-viewer/runtime/js/reports/docs-viewer-reports.js` owns the executable loader allowlist. Presets are retired; environment-specific registries and allowlists own availability. |
 | `docs-viewer/config/semantic-tokens/registry.json` | Supported token families, target types, identifier rules, occurrence metadata, and UI contribution ids. | Data declares the accepted contract; generated Catalogue discovery and UI behavior remain code-owned. |
 
@@ -165,7 +165,7 @@ docs-workspace.json
       v
 browser_config.py
       |
-      +--> local browser config: explicit stages and collections for `/docs/`
+      +--> local browser config: Working reader URLs and collections for `/docs/`
       |
       +--> public browser config: accepted public destinations and browser-safe fields only
                    |
@@ -173,6 +173,10 @@ browser_config.py
 ```
 
 Use [Builder](Builder.md) for the build commands.
+
+Browser Search configuration carries its reader URL in `workspace.search_index_url`. Search schema and complete-index rebuild behavior belong to the Search builder/runtime; the unused nested `workspace.search` policy block is retired. Manage preserves no snapshot query parameter; Docs Review still preserves its required `package` identity.
+
+Links maintenance belongs directly to Working document builds, without a separate configuration file. Service defaults no longer repeat ignored service, route or local-state declarations, and the unused service JSON schema is retired. Historical tests referencing those removed declarations and Links policy remain separate, unreviewed test work.
 
 ## How A Workflow Becomes Available
 

@@ -23,26 +23,11 @@ from .source import DocRecord, DocumentIdentity
 from docs_document_identity import is_document_id
 from docs_document_location import canonical_document_viewer_url
 from docs_rendered_links import collect_anchors, parse_docs_target, resolve_href
-from docs_workspace_config import DocsStageConfig, document_source_path, generated_documents_path, resolve_workspace_path
+from docs_workspace_config import document_source_path, generated_documents_path, resolve_workspace_path
 from docs_source_model import parse_source, write_text_atomic
-
-CONFIG_PATH = Path("docs-viewer/config/links-builder.json")
 
 if TYPE_CHECKING:
     from .pipeline import DocsDataBuilder
-
-
-def links_enabled(repo_root: Path, config: DocsStageConfig) -> bool:
-    """Enable the configured Working collections; other stages do not own Links."""
-    path = repo_root / CONFIG_PATH
-    if not path.is_file():
-        return False
-    policy = json.loads(path.read_text())
-    if not isinstance(policy, dict) or set(policy) != {"stage"}:
-        raise ValueError("Links configuration requires only stage")
-    if policy["stage"] != "working":
-        raise ValueError("Links configuration requires an explicit Working stage")
-    return policy["stage"] == config.stage
 
 
 def _safe_path(root: Path, name: str) -> Path:
@@ -57,8 +42,8 @@ def prepare_document_links(
     stale_doc_ids: Collection[str],
     *, document_identities: Mapping[str, DocumentIdentity],
 ) -> dict[str, Any] | None:
-    """Keep exact changed/deleted identities independent of ordinary rendering."""
-    if not links_enabled(builder.repo_root, builder.config):
+    """Maintain Working Links with exact changed/deleted document identities."""
+    if builder.config.stage != "working":
         return None
     selected = builder.links_doc_ids if builder.links_doc_ids is not None else builder.only_doc_ids
     doc_ids = set(selected if selected is not None else set(built_doc_ids) | set(stale_doc_ids))

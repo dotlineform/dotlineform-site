@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260423-000000-c9f3ea
 title: Builder
 added_date: "2026-04-23 00:00:00"
-last_updated: "2026-10-09 19:34:39"
+last_updated: "2026-10-11 00:00:00"
 parent_id: d-20260424-000000-50b63f
 ---
 # Builder
@@ -85,7 +85,7 @@ Manifest rows do not repeat `sub_scope`: their configured report supplies exact 
 
 ## Document Relationship Maintenance
 
-Ordinary and collection Doc Build call `docs-viewer/build/docs_builder/links_builder.py` before rendering document output and await its completion. The same refreshed records supply related-links sections in that build. Determine generated document removals once before relationship maintenance and carry those IDs into the final output plan. `docs-viewer/config/links-builder.json` selects Working, including its configured collections. Source-write operations pass exact changed/deleted document IDs separately from the ordinary renderer's target set. A full collection render or an ordinary-renderer fallback does not expand an ordinary save's Links target set.
+Ordinary and collection Doc Build call `docs-viewer/build/docs_builder/links_builder.py` before rendering document output and await its completion. The same refreshed records supply related-links sections in that build. Determine generated document removals once before relationship maintenance and carry those IDs into the final output plan. Links maintenance is a fixed Working-stage responsibility, including its configured collections; Preview builds use captured Links records without refreshing relationships. There is no separate Links configuration or file-presence enablement gate. Source-write operations pass exact changed/deleted document IDs separately from the ordinary renderer's target set. A full collection render or an ordinary-renderer fallback does not expand an ordinary save's Links target set.
 
 Resolve local document ownership through configured Working storage and exact `doc_id`, with `collection` only for a named owner. Collection viewer links identify their owner through the configured report host. Relationship identity is `{collection, doc_id}`, with an empty collection for ordinary documents. Readers derive navigation from that identity and their configured viewer route/report hosts. Stage/scope-bearing targets are invalid. Authored Markdown/HTML document links and supported Catalogue Work image/media tokens supply references. Work tokens name `{collection: "catalogue", doc_id: "<work_id>"}` directly; Gallery Media View tokens contribute no document relationship. A Catalogue document's token referencing its own Work is omitted from the graph.
 

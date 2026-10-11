@@ -13,12 +13,6 @@
     "recent_url": "/docs/recent",
     "selected_url": "/docs/selected",
     "search_index_url": "/docs/search",
-    "search": {
-      "domain": "docs_viewer",
-      "schema": "docs_viewer_search_index_v4",
-      "index_url": "/docs/search",
-      "rebuild_policy": "whole_index"
-    },
     "collections": [
       {
         "collection": "works",

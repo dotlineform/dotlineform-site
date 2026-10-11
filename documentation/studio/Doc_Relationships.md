@@ -3,12 +3,14 @@ draft: false
 doc_id: d-20260907-125101-d3bde6
 title: Doc Relationships
 added_date: "2026-09-07 12:51:01"
-last_updated: "2026-10-08 19:10:43"
+last_updated: "2026-10-11 00:00:00"
 summary: Record eligible document relationships in separate links-by-id files during Working, including drafts, with coordinated Document Build updates and aggregation of prepared records.
 ui_status: done
 parent_id: d-20260908-171728-3c539a
 ---
 # Doc Relationships
+
+This page retains the original relationship rollout and design history. [Builder](Builder.md#document-relationship-maintenance) owns the current relationship algorithm and version-4 records; [Related Links](Related_Links.md) owns their current presentation. Links maintenance is now a fixed Working-build responsibility across configured collections. The former scope/stage configuration file and the single-document Links view described below are retired.
 
 ## Summary
 
