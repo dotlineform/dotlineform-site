@@ -95,6 +95,12 @@ Do not repair unrelated brittle test behavior inside a focused feature slice wit
 
 ## Limits
 
+### Shared Helper Retirement
+
+The user approved removal of unused `studio/shared/python/` helpers, obsolete prose configuration, one Markdown test case and two orphaned bytecode files on 2026-10-11. The approved scope is implemented. The bounded test work removes `studio/tests/python/test_markdown_renderer.py::test_separator_only_normalizer_preserves_unicode_blank_lines`, its import and its direct-script `main()` registration. That case passed `Before\n\u00a0\nAfter\u2028Next` to the otherwise unused separator-only helper and asserted preservation of the Unicode-only blank line plus a Markdown hard break. It used the real pure normalizer without fixtures, mocks, file writes, services or network access. No replacement case, fixture, harness or profile change is included; other test cases and registrations remain unchanged.
+
+The retained verification selection is `studio/tests/python/test_markdown_renderer.py::test_normalizes_unicode_space_only_lines_outside_literal_blocks`, `::test_normalizes_unicode_line_and_paragraph_separators` and `::test_normalizes_unicode_separators_without_markdown_spaces_in_literal_blocks`. These exercise the real pure normalizer with inline strings and assert Unicode blank-line conversion outside fenced/preformatted content, hard-break/paragraph conversion and literal-block line-ending preservation. They address the removal of the internal normalization switch and do not prove service, import, Search-build or browser behavior. Run them by passing those three full selectors to `python3 -m pytest`; focused source lint, syntax, configured read-only imports, JSON parsing and whitespace checks provide removal/wiring evidence. Studio test setup only establishes import paths; pytest and syntax checks may update ignored local caches. The local execution budget is seconds with no service startup, generation, media conversion or network transfer; setup and maintenance are limited to the existing test file and this record.
+
 ### Catalogue Service Retirement
 
 The user approved removal of the inspected unused Studio services/helpers, stale caches and their related obsolete tests/references on 2026-10-11. The approved scope is implemented. This retires obsolete coverage, with no replacement tests, new cases, harnesses or profile expansion.

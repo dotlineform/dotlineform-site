@@ -15,9 +15,6 @@
         }
       }
     },
-    "source_subdirs": {
-      "prose": "site text"
-    },
     "media": {
       "root_subdir": "catalogue/media-staging",
       "work": {

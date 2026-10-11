@@ -149,14 +149,3 @@ def resolve_work_media_path(
     if not path_is_relative_to(resolved, source_root.root):
         raise ValueError(f"Work media path resolves outside {source_root.marker}")
     return resolved
-
-
-def work_media_display_path(path: Path, source_root: WorkMediaSourceRoot) -> str:
-    """Return a machine-independent path below DOTLINEFORM_PROJECTS_BASE_DIR."""
-
-    resolved = path.resolve(strict=False)
-    if not path_is_relative_to(resolved, source_root.root):
-        raise ValueError(f"Work media path is outside {source_root.marker}")
-    relative = resolved.relative_to(source_root.root)
-    suffix = "" if str(relative) == "." else f"/{relative.as_posix()}"
-    return f"{source_root.root_subdir.as_posix()}{suffix}"

@@ -17,7 +17,6 @@ from markdown_renderer import (  # noqa: E402
     MarkdownRenderOptions,
     markdown_renderer_contract,
     normalize_markdown_blank_lines,
-    normalize_markdown_unicode_separators,
     render_markdown_to_html,
 )
 
@@ -218,12 +217,6 @@ def test_normalizes_unicode_line_and_paragraph_separators() -> None:
     assert_contains(html, "</p>\n<p>Second paragraph</p>", "Unicode paragraph separator")
 
 
-def test_separator_only_normalizer_preserves_unicode_blank_lines() -> None:
-    normalized = normalize_markdown_unicode_separators("Before\n\u00a0\nAfter\u2028Next")
-
-    assert_equal(normalized, "Before\n\u00a0\nAfter  \nNext", "separator-only normalization")
-
-
 def test_normalizes_unicode_separators_without_markdown_spaces_in_literal_blocks() -> None:
     source = (
         "```text\u2028first\u2029second\u2028```\n"
@@ -253,7 +246,6 @@ def main() -> None:
     test_normalizes_unicode_space_only_lines_outside_literal_blocks()
     test_unicode_space_only_line_ends_raw_html_block()
     test_normalizes_unicode_line_and_paragraph_separators()
-    test_separator_only_normalizer_preserves_unicode_blank_lines()
     test_normalizes_unicode_separators_without_markdown_spaces_in_literal_blocks()
     print("Markdown renderer tests OK")
 

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260331-154730-b019e0
 title: Catalogue Media Pipeline Config
 added_date: "2026-03-31 15:47:30"
-last_updated: "2026-10-07 16:38:30"
+last_updated: "2026-10-11 00:00:00"
 parent_id: d-20260423-000000-d015e6
 
 ---
@@ -28,6 +28,8 @@ _data/pipeline.json
 ```
 
 The external source roots and `catalogue/media-staging` staging root have no repo-local fallback. Environment variables provide machine-specific base locations and secrets; pipeline JSON provides checked relative policy.
+
+The unused prose-source subdirectory setting and its shared helper are retired. Pipeline configuration owns Work media; document source locations belong to the configured Docs workspace and collections.
 
 ## Work Media Sources
 

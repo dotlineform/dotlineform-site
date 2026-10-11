@@ -57,10 +57,6 @@ def default_site_env_path(repo_root: str | Path | None = None) -> Path:
     return root / SITE_ENV_REL_PATH
 
 
-def load_site_env(repo_root: str | Path | None = None) -> Dict[str, str]:
-    return load_env_file(default_site_env_path(repo_root))
-
-
 def runtime_env(
     *,
     repo_root: str | Path | None = None,

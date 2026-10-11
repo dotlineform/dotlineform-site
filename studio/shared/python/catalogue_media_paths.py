@@ -11,7 +11,6 @@ try:
         ExternalWorkspaceRoot,
         resolve_external_workspace_root,
         resolve_workspace_path,
-        workspace_marker_path,
     )
     from .local_env import runtime_env
     from .pipeline_config import load_pipeline_config, media_root_subdir
@@ -20,28 +19,12 @@ except ImportError:  # pragma: no cover - direct sys.path import fallback
         ExternalWorkspaceRoot,
         resolve_external_workspace_root,
         resolve_workspace_path,
-        workspace_marker_path,
     )
     from local_env import runtime_env
     from pipeline_config import load_pipeline_config, media_root_subdir
 
 
 CATALOGUE_MEDIA_ROUTE_PREFIX = "/studio/media/catalogue/"
-
-
-def catalogue_media_workspace_from_projects_base(
-    config: Mapping[str, object],
-    base_dir: Path,
-) -> ExternalWorkspaceRoot:
-    return resolve_external_workspace_root(
-        media_root_subdir(config),
-        environ={"DOTLINEFORM_PROJECTS_BASE_DIR": str(base_dir)},
-        require_exists=False,
-    )
-
-
-def catalogue_media_root_from_projects_base(config: Mapping[str, object], base_dir: Path) -> Path:
-    return catalogue_media_workspace_from_projects_base(config, base_dir).root
 
 
 def configured_catalogue_media_workspace(
@@ -64,10 +47,6 @@ def configured_catalogue_media_root(
     environ: Mapping[str, str] | None = None,
 ) -> Path:
     return configured_catalogue_media_workspace(repo_root, environ=environ).root
-
-
-def catalogue_media_display_path(path: Path, workspace: ExternalWorkspaceRoot) -> str:
-    return workspace_marker_path(path, workspace)
 
 
 def resolve_catalogue_media_request_path(workspace: ExternalWorkspaceRoot, request_path: str) -> Path:

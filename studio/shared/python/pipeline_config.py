@@ -33,9 +33,6 @@ DEFAULT_PIPELINE_CONFIG: Dict[str, Any] = {
                 },
             },
         },
-        "source_subdirs": {
-            "prose": "site text",
-        },
         "media": {
             "root_subdir": "catalogue/media-staging",
             "work": {
@@ -198,7 +195,3 @@ def work_media_source_root_subdir(config: Mapping[str, Any], source_id: str) -> 
     if normalized_source_id not in source_config["roots"]:
         raise ValueError(f"unknown Work media source identity: {normalized_source_id or '(empty)'}")
     return Path(str(source_config["roots"][normalized_source_id]))
-
-
-def source_works_prose_subdir(config: Mapping[str, Any]) -> Path:
-    return Path(str(config["paths"]["source_subdirs"]["prose"]))

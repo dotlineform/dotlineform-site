@@ -77,23 +77,8 @@ def normalize_plain_text(value: str | None) -> str:
     return re.sub(r"\s+", " ", value or "").strip()
 
 
-def normalize_markdown_unicode_separators(markdown: str | None) -> str:
-    """Convert Unicode line separators to explicit Markdown line boundaries."""
-
-    return _normalize_markdown_line_boundaries(markdown, normalize_unicode_blank_lines=False)
-
-
 def normalize_markdown_blank_lines(markdown: str | None) -> str:
     """Normalize Unicode Markdown line boundaries outside literal blocks."""
-
-    return _normalize_markdown_line_boundaries(markdown, normalize_unicode_blank_lines=True)
-
-
-def _normalize_markdown_line_boundaries(
-    markdown: str | None,
-    *,
-    normalize_unicode_blank_lines: bool,
-) -> str:
 
     source = markdown or ""
     parts = MARKDOWN_LINE_ENDING_PATTERN.split(source)
@@ -142,8 +127,7 @@ def _normalize_markdown_line_boundaries(
             continue
 
         is_unicode_space_only = (
-            normalize_unicode_blank_lines
-            and bool(line)
+            bool(line)
             and line.isspace()
             and any(character not in " \t" for character in line)
         )
