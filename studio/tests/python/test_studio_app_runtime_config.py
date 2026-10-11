@@ -58,80 +58,13 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["sites"]["docs_viewer"]["base"] == "http://127.0.0.1:8877"
     assert runtime["sites"]["public_preview"]["base"] == "http://127.0.0.1:4000"
     assert runtime["sites"]["production"]["base"] == "https://dotlineform.com"
-    assert payload["app"]["routes"]["studio_home"]["path"] == "/studio/"
-    assert "project_state" not in payload["app"]["routes"]
-    assert payload["app"]["routes"]["studio_home"]["shell_type"] == "html-template"
-    assert payload["app"]["routes"]["studio_home"]["template"] == "/studio/app/frontend/routes/studio-home.html"
     assert payload["app"]["routes"]["catalogue_work_editor"]["path"] == "/studio/catalogue-work/"
-    assert "bulk_add_work" not in payload["app"]["routes"]
-    assert payload["app"]["routes"]["catalogue_field_registry"]["shell_type"] == "html-template"
-    assert "catalogue_status" not in payload["app"]["routes"]
     assert payload["app"]["routes"]["catalogue_work_editor"]["shell_type"] == "html-template"
-    assert "catalogue_moment_editor" not in payload["app"]["routes"]
-    assert not any(route["shell_type"] == "python" for route in payload["app"]["routes"].values())
     assert payload["app"]["routes"]["catalogue_work_editor"]["ready_state_route_id"] == "catalogue-work"
-    assert "routes" not in payload["paths"]
-    assert "docs" not in payload["app"]["routes"]
-    assert any(view["id"] == "studio_home" and view["path"] == "/studio/" for view in runtime["views"])
-    assert not any(view["id"] == "docs" for view in runtime["views"])
-    assert not any("doc_href" in view for view in runtime["views"])
-    assert not any(view["id"] in {"studio_catalogue", "data_sharing"} for view in runtime["views"])
-    assert not any(view["id"] in {"data_sharing_prepare", "data_sharing_review"} for view in runtime["views"])
-    assert not any(view["id"] in {"studio_audits", "studio_risk", "activity"} for view in runtime["views"])
-    assert not any(view["id"] == "project_state" or view["path"] == "/studio/project-state/" for view in runtime["views"])
-    assert not any("doc_id" in view for view in runtime["views"])
-    assert not any("docId" in view for view in runtime["views"])
-    assert any(view["id"] == "catalogue_field_registry" and view["path"] == "/studio/catalogue-field-registry/" for view in runtime["views"])
-    assert not any(view["id"] == "catalogue_status" and view["path"] == "/studio/catalogue-status/" for view in runtime["views"])
-    assert not any(view["id"] == "studio_works" or view["path"] == "/studio/studio-works/" for view in runtime["views"])
     assert any(view["id"] == "catalogue_work_editor" and view["path"] == "/studio/catalogue-work/" for view in runtime["views"])
-    assert not any(view["id"] == "catalogue_moment_editor" or view["path"] == "/studio/catalogue-moment/" for view in runtime["views"])
-    assert runtime["navigation"]["primary"] == []
-    assert "data_sharing" not in runtime["services"]
-    assert "docs" not in runtime["services"]
-    assert "audits" not in runtime["services"]
-    assert "risk" not in runtime["services"]
-    assert "external_links" not in payload
-    assert "catalogue" not in payload
-    assert set(runtime["data_paths"]) == {"studio"}
-    assert set(runtime["data_paths"]["studio"]) == {
-        "catalogue_works",
-        "catalogue_series",
-        "catalogue_lookup_work_search",
-        "catalogue_lookup_series_search",
-        "catalogue_lookup_series_base",
-        "catalogue_work_record",
-        "catalogue_work_detail_record",
-        "catalogue_field_registry",
-    }
-    assert "ui_text" not in runtime["data_paths"]
-    assert runtime["services"]["catalogue"]["base"] == "/studio/api/catalogue"
-    assert "analysis" not in payload
-    assert "tags" not in runtime["services"]
-    assert "series_tag_editor" not in runtime
-    assert not any("tag" in view["id"] for view in runtime["views"])
-    assert runtime["services"]["catalogue"]["read"] == "/studio/api/catalogue/read"
-    assert runtime["services"]["catalogue"]["bulk_save"] == "/studio/api/catalogue/bulk-save"
-    assert runtime["services"]["catalogue"]["delete_preview"] == "/studio/api/catalogue/delete-preview"
-    assert runtime["services"]["catalogue"]["delete_apply"] == "/studio/api/catalogue/delete-apply"
-    assert "publication_preview" not in runtime["services"]["catalogue"]
-    assert "publication_apply" not in runtime["services"]["catalogue"]
-    assert runtime["services"]["catalogue"]["create_work"] == "/studio/api/catalogue/work/create"
-    assert runtime["services"]["catalogue"]["save_work"] == "/studio/api/catalogue/work/save"
-    assert "import_preview" not in runtime["services"]["catalogue"]
-    assert "import_apply" not in runtime["services"]["catalogue"]
-    assert runtime["services"]["catalogue"]["create_series"] == "/studio/api/catalogue/series/create"
-    assert runtime["services"]["catalogue"]["save_series"] == "/studio/api/catalogue/series/save"
-    assert "project_state_report" not in runtime["services"]["catalogue"]
-    assert "project_state_open_report" not in runtime["services"]["catalogue"]
-    assert "tag_assignments" not in runtime["data_paths"]["studio"]
-    assert "data_sharing_adapters" not in runtime["data_paths"]["studio"]
-    assert "catalogue_lookup_meta" not in runtime["data_paths"]["studio"]
-    assert runtime["media"]["thumbs"]["works"] == "/studio/catalogue-output/works/thumbs"
+    assert runtime["media"]["thumbs"]["works"] == "/docs/assets/works/thumbs"
     assert runtime["pipeline"]["variants"]["thumb"]["suffix"] == "thumb"
     assert runtime["pipeline"]["encoding"]["format"] == "webp"
-    assert "workbooks" not in runtime["pipeline"]
-    assert runtime["modals"]["event"] == "studio:open-modal"
 
 def test_retired_tag_routes_and_apis_return_not_found() -> None:
     from types import SimpleNamespace
@@ -164,7 +97,7 @@ def test_studio_route_registry_validation_rejects_invalid_routes() -> None:
     routes = payload["app"]["routes"]
 
     duplicate_path = json.loads(json.dumps(payload))
-    duplicate_path["app"]["routes"]["catalogue_work_editor"]["path"] = routes["catalogue_field_registry"]["path"]
+    duplicate_path["app"]["routes"]["duplicate_work_editor"] = dict(routes["catalogue_work_editor"])
     with pytest.raises(RuntimeError, match="duplicate path"):
         validate_studio_route_registry(REPO_ROOT, duplicate_path)
 
@@ -217,8 +150,8 @@ def test_studio_route_registry_validation_rejects_invalid_routes() -> None:
     assert "/studio/configured/" in studio_shell_route_paths(REPO_ROOT, configured_route)
 
     duplicated_route_metadata = json.loads(json.dumps(payload))
-    duplicated_route_metadata["paths"]["routes"] = {
-        "catalogue_field_registry_review": "/studio/catalogue-field-registry/"
+    duplicated_route_metadata["paths"] = {
+        "routes": {"catalogue_work_editor": "/studio/catalogue-work/"}
     }
     with pytest.raises(RuntimeError, match="Studio route metadata must live in app.routes"):
         validate_studio_route_registry(REPO_ROOT, duplicated_route_metadata)

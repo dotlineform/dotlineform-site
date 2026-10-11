@@ -26,7 +26,6 @@ STUDIO_ROUTE_REQUIRED_FIELDS: tuple[str, ...] = (
 )
 
 STUDIO_SHELL_ROUTE_TYPES: frozenset[str] = frozenset(("html-template",))
-STUDIO_SUPPORTED_SHELL_TYPES: frozenset[str] = STUDIO_SHELL_ROUTE_TYPES
 
 STUDIO_ROUTE_REGISTRY_PATH = ("app", "routes")
 
@@ -52,23 +51,6 @@ def studio_media_config(repo_root: Path) -> dict[str, object]:
                    "works_files": staging.url(staging.work_files)},
     }
 
-
-STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
-    "catalogue": {
-        "base": "/studio/api/catalogue",
-        "health": "/studio/api/catalogue/health",
-        "read": "/studio/api/catalogue/read",
-        "bulk_save": "/studio/api/catalogue/bulk-save",
-        "delete_apply": "/studio/api/catalogue/delete-apply",
-        "create_work": "/studio/api/catalogue/work/create",
-        "create_work_batch": "/studio/api/catalogue/work/create-batch",
-        "save_work": "/studio/api/catalogue/work/save",
-        "create_series": "/studio/api/catalogue/series/create",
-        "save_series": "/studio/api/catalogue/series/save",
-    },
-}
-
-STUDIO_MODAL_EVENT = "studio:open-modal"
 
 PRODUCTION_SITE_BASE = "https://dotlineform.com"
 
@@ -100,11 +82,6 @@ def studio_route_registry(repo_root: Path, payload: dict[str, object] | None = N
     }
 
 
-def studio_top_nav_view_ids(repo_root: Path, payload: dict[str, object] | None = None) -> tuple[str, ...]:
-    routes = studio_route_registry(repo_root, payload)
-    return tuple(route_id for route_id, route in routes.items() if route.get("nav") is True)
-
-
 def validate_studio_route_registry(repo_root: Path, payload: dict[str, object]) -> None:
     raw_routes = payload
     for key in STUDIO_ROUTE_REGISTRY_PATH:
@@ -128,7 +105,7 @@ def validate_studio_route_registry(repo_root: Path, payload: dict[str, object]) 
                 errors.append(f"{route_id}: missing required field {field}")
 
         shell_type = route.get("shell_type")
-        if shell_type not in STUDIO_SUPPORTED_SHELL_TYPES:
+        if shell_type not in STUDIO_SHELL_ROUTE_TYPES:
             errors.append(f"{route_id}: unsupported shell_type {shell_type!r}")
 
         path = route.get("path")
@@ -180,10 +157,6 @@ def normalize_route_path(path: str) -> str:
     return normalized
 
 
-def studio_views(repo_root: Path, payload: dict[str, object] | None = None) -> dict[str, dict[str, object]]:
-    return studio_route_registry(repo_root, payload)
-
-
 def studio_shell_route_paths(repo_root: Path, payload: dict[str, object] | None = None) -> frozenset[str]:
     routes = studio_route_registry(repo_root, payload)
     return frozenset(
@@ -193,12 +166,6 @@ def studio_shell_route_paths(repo_root: Path, payload: dict[str, object] | None 
         and isinstance(route.get("path"), str)
         and str(route.get("path")).strip()
     )
-
-
-def studio_service_endpoints(repo_root: Path) -> dict[str, object]:
-    del repo_root
-    endpoints = {service: dict(values) for service, values in STUDIO_SERVICE_ENDPOINTS.items()}
-    return endpoints
 
 
 def asset_version(repo_root: Path) -> str:
@@ -230,7 +197,7 @@ def asset_version(repo_root: Path) -> str:
 def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
     pipeline_path = repo_root / "_data" / "pipeline.json"
     payload = load_studio_config(repo_root)
-    views = studio_views(repo_root, payload)
+    views = studio_route_registry(repo_root, payload)
     try:
         pipeline_payload = json.loads(pipeline_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
@@ -247,8 +214,6 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
     if not isinstance(app_config, dict):
         app_config = {}
         payload["app"] = app_config
-    paths_config = payload.get("paths") if isinstance(payload.get("paths"), dict) else {}
-    data_paths = paths_config.get("data") if isinstance(paths_config, dict) and isinstance(paths_config.get("data"), dict) else {}
     app_config["runtime"] = {
         "host": "local-studio-app",
         "asset_version": version,
@@ -256,9 +221,7 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
             "health": "/health",
             "runtime_config": "/studio/runtime-config.json",
         },
-        "services": studio_service_endpoints(repo_root),
         "sites": runtime_site_bases(),
-        "data_paths": data_paths,
         "media": studio_media_config(repo_root),
         "pipeline": {
             "variants": pipeline_variants,
@@ -268,13 +231,6 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
             {"id": view_id, **view}
             for view_id, view in views.items()
         ],
-        "navigation": {
-            "primary": list(studio_top_nav_view_ids(repo_root, payload)),
-        },
-        "modals": {
-            "event": STUDIO_MODAL_EVENT,
-            "registered": [],
-        },
     }
     return payload
 

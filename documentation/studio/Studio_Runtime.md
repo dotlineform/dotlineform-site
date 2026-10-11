@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260424-000000-15b6f2
 title: Studio Runtime
 added_date: 2026-04-24 00:00:00
-last_updated: "2026-09-23 18:47:31"
+last_updated: "2026-10-11 00:00:00"
 summary: Browser shell, route registry, template, route-script, shared-helper, and sibling-app runtime boundaries for Local Studio.
 parent_id: d-20260423-000000-d015e6
 
@@ -60,9 +60,9 @@ The server also copies route records into `app.runtime.views`. Current navigatio
 
 ## Shared Runtime Boundaries
 
-- `studio-config.js` loads the runtime payload and exposes route, data-path, and code-owned text accessors.
+- `studio-config.js` loads the runtime payload and exposes route, URL and code-owned text accessors.
 - `studio-route-state.js` owns `data-studio-ready` and `data-studio-busy` projection.
-- `studio-data.js` owns shared JSON loading and selected static/server read routing.
+- `studio-data.js` owns shared JSON loading and allowlisted Catalogue server reads.
 - `studio-transport.js` owns the current catalogue endpoint constants, health probes, and JSON transport.
 - `studio-navigation.js` owns Studio route URLs, public-preview URLs, and modal event dispatch.
 - focused catalogue editor modules own editor state, selection, fields, actions, modals, media, and services.
@@ -90,7 +90,5 @@ For shared browser behavior, add or extend the smallest owner. Do not turn the r
 ## Weak Spots
 
 - `app.routes` and `app.runtime.views` duplicate the same route records at runtime.
-- `studio-transport.js` hardcodes catalogue endpoints even though runtime config also projects a partial catalogue service map.
-- Static and server-backed read helpers coexist; each workflow must state which is authoritative and what happens when the service is unavailable.
 
 Exact code ownership for catalogue routes belongs in their workflow documents and modules, not another runtime module inventory here.

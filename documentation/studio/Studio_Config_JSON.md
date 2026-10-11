@@ -56,13 +56,10 @@ The source JSON is not the final browser payload. `studio_app_config.py` injects
 
 - host and asset version
 - health and runtime-config paths
-- a catalogue service endpoint map
 - public-preview and production site bases
-- the data-path projection, empty for the current checked source
 - media and thumbnail settings
 - pipeline variants and encoding settings
 - route records copied as runtime views
-- navigation and modal metadata
 
 Those values come from Python constants, environment, `_data/pipeline.json`, filesystem mtimes, and the checked-in source config. Do not copy runtime-injected values back into `studio-config.json`.
 
@@ -73,7 +70,7 @@ Those values come from Python constants, environment, `_data/pipeline.json`, fil
 - requires the runtime-config URL from the outer shell meta tag
 - fetches and caches the runtime payload
 - resolves repo-rooted asset paths
-- exposes focused route and data-path accessors
+- exposes focused route and URL accessors
 - supplies code-owned Studio UI text through `studio-ui-text.js`
 
 It is an accessor layer, not a second config registry or route controller. Local write transport remains in `studio-transport.js`.
@@ -82,31 +79,17 @@ It is an accessor layer, not a second config registry or route controller. Local
 
 For route changes, update the record, template, script and server validation together. Test maintenance and execution require their own approved scope.
 
-For a data-path change:
-
-1. verify active browser and service consumers
-2. classify the value as browser-safe static read, focused server URL, server-only path, or generated output
-3. keep only browser-safe or intentionally projected read values here
-4. update the positive allowed-key tests
+For Catalogue reads, keep the allowed key and response shape in the Catalogue adapter and browser data helper. Named browser endpoint addresses belong to `studio-transport.js`. Runtime config carries the values required by its site/media/pipeline/route consumers.
 
 ## Weak Spots
 
 - Runtime route records are duplicated into `app.runtime.views`.
-- Runtime catalogue services and hardcoded browser endpoint constants are overlapping discovery surfaces.
 - Catalogue editor/search reads and refreshed Catalogue reader JSON have separate owners and freshness boundaries; configuration must not introduce a persisted-file fallback between them.
 
-Focused runtime-config tests in `studio/tests/python/test_studio_app_runtime_config.py` protect the route registry, allowed data keys, and current service maps.
+The maintained runtime-config and route-validation selection is recorded under [Studio Server Config Cleanup](Testing.md#studio-server-config-cleanup). Other cases in `studio/tests/python/test_studio_app_runtime_config.py` remain separately scoped and unreviewed.
 
 ## Bounded Route Assertion Maintenance
 
-Home and field-registry route retirement leaves the existing tests and route-ready audit unchanged by explicit user choice. Their obsolete route expectations are deferred to a later full test review; they are not evidence for the current single-page registry. No test suite was run for this retirement.
-
-The approved Series editor retirement removes only three obsolete route assertions: two in `studio/tests/python/test_studio_app_runtime_config.py::test_runtime_config_exposes_adapter_contract` (the route's shell type and runtime view) and one in `docs-viewer/tests/python/test_catalogue_works_report_contract.py::test_catalogue_drafts_removed_and_exact_editors_remain_registered` (its path). Existing positive assertions for the Work editor remain. No new assertions, fixtures, harnesses or profile changes are included, and this maintenance does not certify the other assertions in either test.
-
-The first selector reads the real checked Studio registry through `runtime_config` with temporary environment overrides for local service addresses. The second reads the real registry JSON directly. The maintained route evidence concerns the surviving Work editor registration, not browser interaction, HTTP serving, Series mutations or generated outputs. Test support and temporary-workspace fixtures are unchanged; no service startup or canonical-data write is part of these route assertions.
-
-This bounded edit uses source review and Python lint only; no suite run was approved or performed. A later justified focused run can select either exact node ID above with `python3 -m pytest <node-id> -q` after exporting `.env.local`. Import/fixture costs and unrelated legacy assertions remain unreviewed; expanding execution or cleanup needs its own selection. Maintenance is limited to the three-line deletion and review, with no added runtime or network cost.
-
-The separately approved thumbnail-quality comparison cleanup removes exactly three obsolete absence assertions from `studio/tests/python/test_studio_app_runtime_config.py::test_runtime_config_exposes_adapter_contract`: the retired runtime view, Catalogue service key and Studio data-path key. This selector reads the real registry through `runtime_config` with temporary environment overrides; the remaining Work editor, service and pipeline assertions and all fixtures are unchanged and unreviewed. No replacement cases, fixtures, harnesses, profile changes or test runs are included. Maintenance uses Python lint, syntax and bounded diff review at low local cost, without service startup, browser/network work or canonical/workspace writes; it establishes no new runtime coverage.
+The 2026-10-11 server cleanup supersedes earlier deferred Home/field-registry expectations and narrow Series/thumbnail-comparison assertion removals in `test_runtime_config_exposes_adapter_contract`. Its current positive config coverage and the repaired route-validation fixtures are maintained in the linked Testing record. The Docs Viewer route-ready audit and `docs-viewer/tests/python/test_catalogue_works_report_contract.py::test_catalogue_drafts_removed_and_exact_editors_remain_registered` are unchanged by this cleanup and are not claimed as current route evidence.
 
 The separately approved generated-directory reference cleanup removes exactly one obsolete private generated-file path assertion from `studio/tests/python/test_studio_app_runtime_config.py::test_static_path_policy_serves_current_studio_allowlists`. That assertion calls the real static-path policy directly with an inert handler object and a synthetic URL; it does not exercise filesystem serving or HTTP. All remaining assertions and fixtures are unchanged and unreviewed. No replacement cases, harnesses, profile changes or test runs are included. Maintenance uses Python lint, syntax and bounded diff review at low local cost, without service startup, browser/network work or canonical/workspace writes; it establishes no new runtime coverage.

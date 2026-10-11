@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260422-000000-c3135c
 title: Studio Read And Save Flow
 added_date: "2026-04-22 00:00:00"
-last_updated: "2026-10-07 16:46:38"
+last_updated: "2026-10-11 00:00:00"
 summary: How Studio runtime config, safe reads, validated catalogue writes, optional builds, publication, and media fit together.
 parent_id: d-20260423-000000-d015e6
 
@@ -14,7 +14,7 @@ parent_id: d-20260423-000000-d015e6
 
 ```text
 studio-config.json
-  -> studio_app_config.py validates routes and data paths
+  -> studio_app_config.py validates routes
   + environment, pipeline.json, Python runtime constants
   -> /studio/runtime-config.json
   -> studio-config.js caches the browser payload
@@ -31,13 +31,12 @@ Studio routes probe catalogue health before server-owned work:
 route boots
   -> health probe
   -> server available: use allowlisted /studio/api/catalogue/read
-  -> supported fallback workflow: use configured safe JSON path
   -> unavailable workflow: show unavailable state and disable mutation controls
 ```
 
-`studio-data.js` owns the shared choice between server reads and configured static paths. Active editors and Catalogue Drafts require the local service for their current workflow; there is no offline editing or offline save mode.
+`studio-data.js` owns allowlisted Catalogue server reads through the browser transport's named endpoint. The Work editor requires the local service for its current workflow; there is no offline editing or offline save mode.
 
-Static paths are browser-safe reads, not canonical write targets. Focused record reads and current source truth come from the server when the workflow requires them.
+Focused record reads and current source truth come from the server. Catalogue reader JSON separately follows the Refresh-owned generated-output boundary.
 
 ## Save Flow
 

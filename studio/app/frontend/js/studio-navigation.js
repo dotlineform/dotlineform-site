@@ -8,11 +8,6 @@ export function getStudioRuntime(config) {
   return runtime && typeof runtime === "object" && !Array.isArray(runtime) ? runtime : {};
 }
 
-export function getStudioServices(config) {
-  const services = getStudioRuntime(config).services;
-  return services && typeof services === "object" && !Array.isArray(services) ? services : {};
-}
-
 export function getStudioSites(config) {
   const sites = getStudioRuntime(config).sites;
   return sites && typeof sites === "object" && !Array.isArray(sites) ? sites : {};

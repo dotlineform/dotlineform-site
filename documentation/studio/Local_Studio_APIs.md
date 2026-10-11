@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260602-111803-019594
 title: Local Studio APIs
 added_date: "2026-06-02 11:18:03"
-last_updated: "2026-10-08 11:05:40"
+last_updated: "2026-10-11 00:00:00"
 summary: Exact loopback Studio app and catalogue API inventory, adapter boundaries, and extension rules.
 parent_id: d-20260522-080600-a2b102
 
@@ -59,10 +59,10 @@ The adapter does not own source schemas, mutation policy, build planning, or pub
 - filesystem and environment paths are resolved on the server
 - destructive requests validate exact selected IDs, current canonical data and allowed write targets before writing
 - source writes use focused validation and atomic catalogue transactions
-- browser visibility or a runtime-config service entry does not grant authority
+- browser visibility does not grant authority
 
 To add an operation, define its domain owner first, add one narrow adapter branch, expose a browser client method only when needed, and cover the service contract directly. Update this inventory when the HTTP surface changes.
 
-## Known Weak Spot
+## Browser Transport
 
-`studio-transport.js` currently hardcodes the Catalogue browser endpoint set, while `studio_app_config.py` publishes a Catalogue service map. The executable paths agree for shared entries, but endpoint discovery is not yet owned by one projection.
+`studio-transport.js` owns the browser's named Catalogue endpoint constants. The server dispatches those requests through the focused Catalogue adapter and domain services. Runtime config supplies site/media/pipeline/route values; it does not publish a second service endpoint map.

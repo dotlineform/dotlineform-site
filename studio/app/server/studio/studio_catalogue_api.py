@@ -19,11 +19,9 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 
 
 REPO_ROOT = ensure_studio_python_paths(__file__)
-SCRIPTS_DIR = REPO_ROOT / "scripts"
 STUDIO_DIR = Path(__file__).resolve().parent
-for candidate in (SCRIPTS_DIR, STUDIO_DIR):
-    if str(candidate) not in sys.path:
-        sys.path.insert(0, str(candidate))
+if str(STUDIO_DIR) not in sys.path:
+    sys.path.insert(0, str(STUDIO_DIR))
 
 from catalogue import catalogue_write_service  # noqa: E402
 from catalogue.catalogue_revisions import CatalogueRevisionConflict  # noqa: E402

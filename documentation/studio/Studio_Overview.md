@@ -38,20 +38,20 @@ browser requests /studio/... route
   -> app.routes resolves the route
   -> configured HTML template is mounted
   -> configured route script boots
-  -> static fallback read or focused /studio/api/... request
+  -> focused /studio/api/... request
   -> catalogue API validates and delegates
   -> focused Studio service reads or changes canonical data
   -> required generated catalogue, search, media, or public output follows
 ```
 
-The browser may use checked-in or generated JSON for safe fallback reads. Writes never use those browser paths as authority; they go through named local endpoints and server-side validation.
+Catalogue editor reads and writes use named local endpoints and server-side validation. Refreshed Catalogue reader output belongs to its separately configured Docs workspace.
 
 ## Authority Boundaries
 
 ### Routes And Browser Boot
 
-- `studio/app/frontend/config/studio-config.json` owns source route records and browser-safe data paths.
-- `studio/app/server/studio/studio_app_config.py` validates the route registry and injects runtime endpoints, site bases, media settings, pipeline values, and the resolved view list.
+- `studio/app/frontend/config/studio-config.json` owns source route records.
+- `studio/app/server/studio/studio_app_config.py` validates the route registry and injects runtime metadata, site bases, media settings, pipeline values, and the resolved view list.
 - `studio/app/frontend/studio-shell.html` is the stable outer shell.
 - `studio-app.js` composes the shell; the configured route template owns stable route markup; the route script owns behavior and dynamic state.
 
@@ -84,7 +84,7 @@ To add a catalogue operation:
 
 1. define the focused catalogue service or extend its current owner
 2. expose a narrow API adapter path only when browser access is needed
-3. project the endpoint through runtime config when the browser must discover it
+3. add its named browser endpoint to `studio-transport.js` when needed
 4. keep mutation validation and file authority on the server
 5. update the workflow’s durable owner and focused tests
 
@@ -101,10 +101,8 @@ Docs Viewer scope is unrelated to the retired Analytics app.
 
 ## Known Weak Spots
 
-- Runtime config is assembled from checked-in Studio config, Python-owned endpoint/media constants, environment, and `_data/pipeline.json`; there is no single source file showing the final payload.
+- Runtime config is assembled from checked-in Studio config, Python-owned media constants, environment, and `_data/pipeline.json`; there is no single source file showing the final payload.
 - The route registry is copied into `app.runtime.views` for current helpers and tests, so two runtime projections describe the same routes.
-- `studio_app_config.py` retains one route compatibility key for catalogue field registry lookup.
-- Static fallback reads and server-backed reads coexist. A route change must confirm which path is authoritative for that workflow.
 - The catalogue API adapter still imports a broad catalogue service surface; exact domain ownership lives below it rather than in the adapter.
 
 ## Where To Look First
