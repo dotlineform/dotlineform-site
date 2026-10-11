@@ -33,8 +33,6 @@ class SemanticTokenTargetType:
 class SemanticTokenFamily:
     key: str
     labels: dict[str, str]
-    occurrence_fields: tuple[dict[str, Any], ...]
-    ui_contributions: dict[str, str]
     target_types: tuple[SemanticTokenTargetType, ...]
     order: int
 
@@ -91,14 +89,10 @@ def parse_semantic_token_family(payload: Any, order: int) -> SemanticTokenFamily
         return None
     key = str(payload.get("key") or "").strip().lower()
     labels = payload.get("labels")
-    occurrence_fields = payload.get("occurrence_fields")
-    ui_contributions = payload.get("ui_contributions")
     raw_target_types = payload.get("target_types")
     if (
         not re.fullmatch(r"[a-z][a-z0-9-]*", key)
         or not isinstance(labels, dict)
-        or not isinstance(occurrence_fields, list)
-        or not isinstance(ui_contributions, dict)
         or not isinstance(raw_target_types, list)
     ):
         return None
@@ -113,8 +107,6 @@ def parse_semantic_token_family(payload: Any, order: int) -> SemanticTokenFamily
     return SemanticTokenFamily(
         key=key,
         labels={str(name): str(value) for name, value in labels.items()},
-        occurrence_fields=tuple(dict(field) for field in occurrence_fields if isinstance(field, dict)),
-        ui_contributions={str(name): str(value) for name, value in ui_contributions.items()},
         target_types=tuple(target_types),
         order=order,
     )

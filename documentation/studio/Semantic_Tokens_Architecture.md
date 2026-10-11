@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260714-234030-434069
 title: Semantic Tokens Architecture
 added_date: "2026-07-14 23:40:30"
-last_updated: "2026-10-08 22:39:42"
+last_updated: "2026-10-11 00:00:00"
 summary: Describe Docs-owned image and explicit Catalogue tokens, source editing, document relationships, and local/public media resolution.
 parent_id: d-20260725-153656-516b61
 ---
@@ -69,7 +69,7 @@ Catalogue owns canonical identities and media. Tokens select Catalogue media ind
 
 ## Registry And Lookups
 
-The checked configuration is `docs-viewer/config/semantic-tokens/registry.json`. It declares the Catalogue family, Work/Gallery target definitions, identity policy, occurrence metadata and the Catalogue Info contribution. Target-store URLs and lookup-generator adapter/field declarations are retired, together with the old text action and modal contributions.
+The shared checked definition registry is `docs-viewer/config/semantic-tokens/registry.json`. Python builders/audits and the browser Source editor consume its Catalogue family, labels, Work/Gallery target definitions and identity policy. Authored occurrence fields and executable Info/presentation behavior belong to the token parser and Source code; the registry's unused occurrence-metadata and UI-contribution slots are retired. Target-store URLs and lookup-generator adapter/field declarations are retired, together with the old text action and modal contributions.
 
 The registry does not control which Source buttons a scope exposes. That proposed layer belongs to [Scope-configured Authoring Controls](Scope_Configured_Authoring_Controls.md). Parser, resolver and presentation implementations remain code-owned.
 

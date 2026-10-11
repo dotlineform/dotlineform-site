@@ -7,8 +7,6 @@
       "labels": {
         "family": "Catalogue"
       },
-      "occurrence_fields": [],
-      "ui_contributions": {},
       "target_types": [
         {
           "key": "gallery",

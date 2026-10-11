@@ -34,15 +34,11 @@ function normalizeFamily(record, order) {
   return {
     key: key,
     labels: Object.assign({}, objectRecord(source.labels) || {}),
-    occurrenceFields: Array.isArray(source.occurrence_fields)
-      ? source.occurrence_fields.filter(objectRecord).map(function (field) { return Object.assign({}, field); })
-      : [],
     order: order,
     targetTypes: targetTypes,
     targetTypesById: new Map(targetTypes.map(function (targetType) {
       return [targetType.key, targetType];
-    })),
-    uiContributions: Object.assign({}, objectRecord(source.ui_contributions) || {})
+    }))
   };
 }
 
