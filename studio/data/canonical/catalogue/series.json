@@ -1,7 +1,6 @@
 {
   "header": {
-    "schema": "catalogue_source_series_v2",
-    "count": 140
+    "schema": "catalogue_source_series_v2"
   },
   "series": {
     "001": {

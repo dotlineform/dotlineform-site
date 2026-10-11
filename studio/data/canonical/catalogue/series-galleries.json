@@ -1,7 +1,6 @@
 {
   "header": {
-    "schema": "catalogue_source_series_galleries_v1",
-    "count": 299
+    "schema": "catalogue_source_series_galleries_v1"
   },
   "pairs_by_series": {
     "001": [

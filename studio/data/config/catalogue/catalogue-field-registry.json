@@ -1,15 +1,15 @@
 {
   "schema": "catalogue_field_registry_v2",
   "status": "active",
-  "last_updated": "2026-10-09",
+  "last_updated": "2026-10-11",
   "description": "Canonical and operational field ownership. Save stages media and queues known changes; Refresh, Regenerate and Publish complete their separate handoffs.",
   "artifact_families": {
     "source-json": "Canonical Studio Catalogue records.",
     "studio-lookup": "Private editor read projections.",
-    "work-json": "catalogue/generated/works/index/<work_id>.json, including ordered Detail sections.",
+    "work-json": "Generated Catalogue Work by-ID records.",
     "catalogue-indexes": "Compact Work and Gallery indexes beneath catalogue/generated.",
     "local-media": "Studio staging and distinct Working/Preview Work primary images, thumbnails and downloads.",
-    "remote-media": "Active Work/Detail primary variants and downloads; the archive is excluded."
+    "remote-media": "Active Work primary variants and downloads; the archive is excluded."
   },
   "rules": [
     {
@@ -62,53 +62,6 @@
         "studio-lookup"
       ],
       "reason": "Refresh this Series' private metadata. Explicit membership changes also refresh affected Works through their ordinary owner."
-    },
-    {
-      "id": "work_detail",
-      "record_family": "work_detail",
-      "operation": "save_create_delete",
-      "fields": [
-        "detail_uid",
-        "work_id",
-        "detail_id",
-        "section_id",
-        "project_filename",
-        "media_version",
-        "title",
-        "width_px",
-        "height_px"
-      ],
-      "artifacts": [
-        "source-json",
-        "studio-lookup",
-        "work-json",
-        "catalogue-indexes",
-        "local-media",
-        "remote-media"
-      ],
-      "reason": "Refresh the owning Work aggregate and exact Detail media; Detail identity remains composite."
-    },
-    {
-      "id": "work_detail_section",
-      "record_family": "work_detail_section",
-      "operation": "save_create_delete",
-      "fields": [
-        "section_id",
-        "work_id",
-        "details_subfolder",
-        "section_title",
-        "section_order",
-        "detail_sort"
-      ],
-      "artifacts": [
-        "source-json",
-        "studio-lookup",
-        "work-json",
-        "catalogue-indexes",
-        "local-media",
-        "remote-media"
-      ],
-      "reason": "Refresh section ordering and the owning Work. A source-folder change refreshes its exact Detail media."
     }
   ]
 }

@@ -21,10 +21,7 @@ class CatalogueSeriesGalleries:
 
     def payload(self) -> dict[str, Any]:
         return {
-            "header": {
-                "schema": SERIES_GALLERIES_SCHEMA,
-                "count": sum(len(ids) for ids in self.pairs_by_series.values()),
-            },
+            "header": {"schema": SERIES_GALLERIES_SCHEMA},
             "pairs_by_series": {sid: list(ids) for sid, ids in sorted(self.pairs_by_series.items())},
         }
 
@@ -98,7 +95,7 @@ def _unique_object_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
 
 
 def read_series_galleries(source_dir: Path) -> CatalogueSeriesGalleries:
-    """Load the pair authority without auditing every canonical relationship."""
+    """Load schema-only pairs without a pair-count requirement or full relationship audit."""
     payload = json.loads(
         (source_dir / SERIES_GALLERIES_FILE).read_text(encoding="utf-8"),
         object_pairs_hook=_unique_object_keys,
@@ -106,17 +103,13 @@ def read_series_galleries(source_dir: Path) -> CatalogueSeriesGalleries:
     if not isinstance(payload, dict) or set(payload) != {"header", "pairs_by_series"}:
         raise ValueError("Invalid canonical Series-Gallery payload")
     header, pairs = payload["header"], payload["pairs_by_series"]
-    if not isinstance(header, dict) or set(header) != {"schema", "count"} or not isinstance(pairs, dict):
+    if not isinstance(header, dict) or not isinstance(pairs, dict):
         raise ValueError("Invalid canonical Series-Gallery objects")
-    if header["schema"] != SERIES_GALLERIES_SCHEMA or type(header["count"]) is not int:
+    if header != {"schema": SERIES_GALLERIES_SCHEMA}:
         raise ValueError("Invalid canonical Series-Gallery header")
     pair_map = {}
-    count = 0
     for sid, ids in pairs.items():
         if not isinstance(ids, list):
             raise ValueError("Series-Gallery pairs must be arrays of exact Gallery IDs")
         pair_map[sid] = tuple(ids)
-        count += len(ids)
-    if header["count"] != count:
-        raise ValueError("Canonical Series-Gallery pair count does not match header")
     return CatalogueSeriesGalleries(pair_map)

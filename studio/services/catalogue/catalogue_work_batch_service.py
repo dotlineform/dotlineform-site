@@ -91,7 +91,7 @@ def work_batch_create_payload(
     series = load_json_file(context.series_path).get("series")
     if not isinstance(series, dict):
         raise ValueError("Series source must contain a series object")
-    previous = CatalogueSourceRecords(works=works, series=series, work_detail_sections={}, work_details={})
+    previous = CatalogueSourceRecords(works=works, series=series)
     galleries = read_galleries(context.source_dir)
     next_work_number = max((int(work_id) for work_id in works), default=0) + 1
     if next_work_number + len(filenames) - 1 > 99999:

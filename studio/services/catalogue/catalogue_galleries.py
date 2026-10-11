@@ -25,11 +25,11 @@ class CatalogueGalleries:
     def payloads(self) -> dict[str, dict[str, Any]]:
         return {
             GALLERIES_FILE: {
-                "header": {"schema": GALLERIES_SCHEMA, "count": len(self.galleries)},
+                "header": {"schema": GALLERIES_SCHEMA},
                 "galleries": dict(sorted(self.galleries.items())),
             },
             MEMBERSHIPS_FILE: {
-                "header": {"schema": MEMBERSHIPS_SCHEMA, "count": len(self.works)},
+                "header": {"schema": MEMBERSHIPS_SCHEMA},
                 "works": {wid: sorted(ids) for wid, ids in sorted(self.works.items())},
             },
         }
@@ -80,7 +80,7 @@ def _read_map(source_dir: Path, name: str, schema: str, key: str) -> dict[str, A
     header, records = payload["header"], payload[key]
     if not isinstance(records, dict) or not isinstance(header, dict):
         raise ValueError(f"Invalid canonical Gallery objects: {name}")
-    if header.get("schema") != schema or header.get("count") != len(records):
+    if header != {"schema": schema}:
         raise ValueError(f"Invalid canonical Gallery header: {name}")
     return records
 
@@ -91,7 +91,7 @@ def read_gallery_definitions(source_dir: Path) -> dict[str, dict[str, str]]:
 
 
 def read_gallery_memberships(source_dir: Path) -> dict[str, list[str]]:
-    """Read Work-owned memberships without joining the complete Work corpus."""
+    """Read memberships with a schema-only header and no Work-count requirement."""
     return _read_map(source_dir, MEMBERSHIPS_FILE, MEMBERSHIPS_SCHEMA, "works")
 
 

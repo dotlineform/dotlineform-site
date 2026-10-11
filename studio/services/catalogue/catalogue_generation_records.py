@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Mapping, Optional, Sequence
+from typing import Any, Dict, List, Mapping, Sequence
 
 from catalogue.catalogue_generation_common import (
     coerce_int,
@@ -42,27 +42,6 @@ def build_work_record_projection(work_record: Mapping[str, Any]) -> Dict[str, An
         raw = work_record.get(col_name)
         fm[fm_key] = coercer(raw)
     return fm
-
-
-def build_canonical_detail_record(
-    wid: str,
-    did: str,
-    title: Optional[str],
-    width_px: Optional[int],
-    height_px: Optional[int],
-    media_version: Optional[int],
-) -> Dict[str, Any]:
-    detail_uid = f"{wid}-{did}"
-    dfm: Dict[str, Any] = {
-        "work_id": wid,
-        "detail_id": did,
-        "detail_uid": detail_uid,
-        "title": title,
-        "width_px": width_px,
-        "height_px": height_px,
-        "media_version": media_version,
-    }
-    return compact_json_object(dfm)
 
 
 def build_work_json_payload(

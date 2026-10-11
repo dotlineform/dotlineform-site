@@ -10,8 +10,6 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Iterable, Mapping
 
-from catalogue.catalogue_source import SOURCE_FILES, work_detail_payloads_for_maps
-
 
 @dataclass(frozen=True)
 class SourceJsonWriteResult:
@@ -55,57 +53,18 @@ def execute_source_json_write(
     payloads = validate_json_payloads_by_path(payloads_by_path)
     written_paths: list[Path] = []
     if not dry_run:
-        expanded_payloads, delete_paths = expand_source_payloads(payloads)
-        written_paths = atomic_write_many(expanded_payloads, delete_paths=delete_paths)
+        written_paths = atomic_write_many(payloads)
     return SourceJsonWriteResult(written_paths=written_paths)
 
 
-def expand_source_payloads(payloads_by_path: Mapping[Path, Dict[str, Any]]) -> tuple[Dict[Path, Dict[str, Any]], list[Path]]:
-    expanded: Dict[Path, Dict[str, Any]] = {}
-    delete_paths: list[Path] = []
-    for path, payload in payloads_by_path.items():
-        if path.name == SOURCE_FILES["work_details"] and isinstance(payload.get("work_details"), Mapping):
-            detail_dir = path
-            source_dir = detail_dir.parent
-            details_payloads = work_detail_payloads_for_maps(
-                source_dir,
-                payload.get("work_detail_sections") if isinstance(payload.get("work_detail_sections"), Mapping) else {},
-                payload.get("work_details") if isinstance(payload.get("work_details"), Mapping) else {},
-            )
-            expanded.update(details_payloads)
-            expected_paths = {target.resolve() for target in details_payloads}
-            if detail_dir.exists():
-                for current_path in sorted(detail_dir.glob("*.json")):
-                    if current_path.name == "index.json":
-                        continue
-                    if current_path.resolve() not in expected_paths:
-                        delete_paths.append(current_path.resolve())
-            continue
-        expanded[path] = payload
-    return expanded, delete_paths
-
-
-def unique_paths(paths: Iterable[Path]) -> list[Path]:
-    seen: set[Path] = set()
-    out: list[Path] = []
-    for path in paths:
-        resolved = path.resolve()
-        if resolved in seen:
-            continue
-        seen.add(resolved)
-        out.append(path)
-    return out
-
-
 def atomic_write_many(
-    payloads_by_path: Dict[Path, Dict[str, Any]], *, delete_paths: Iterable[Path] = (),
+    payloads_by_path: Dict[Path, Dict[str, Any]], *,
     media_files: Mapping[Path, bytes] | None = None,
 ) -> list[Path]:
     """Commit Catalogue JSON and any prepared current media through the same rollback owner."""
     temp_paths: Dict[Path, Path] = {}
     replaced_paths: list[Path] = []
     originals: Dict[Path, bytes | None] = {}
-    deleted_originals: Dict[Path, bytes] = {}
 
     try:
         data_by_path = {
@@ -128,10 +87,6 @@ def atomic_write_many(
         for path, temp_path in temp_paths.items():
             os.replace(temp_path, path)
             replaced_paths.append(path)
-        for delete_path in unique_paths(delete_paths):
-            if delete_path.exists() and delete_path.is_file():
-                deleted_originals[delete_path] = delete_path.read_bytes()
-                delete_path.unlink()
     except Exception:
         for path in reversed(replaced_paths):
             try:
@@ -140,12 +95,6 @@ def atomic_write_many(
                     path.write_bytes(original)
                 elif path.exists():
                     path.unlink()
-            except Exception:
-                pass
-        for path, original in deleted_originals.items():
-            try:
-                path.parent.mkdir(parents=True, exist_ok=True)
-                path.write_bytes(original)
             except Exception:
                 pass
         raise

@@ -41,8 +41,7 @@ def build_catalogue_write_context(repo_root: Path, *, dry_run: bool = False) -> 
         series_path=(source_dir / SOURCE_FILES["series"]).resolve(),
         allowed_write_paths={
             (source_dir / filename).resolve()
-            for kind, filename in SOURCE_FILES.items()
-            if kind in {"works", "series"}
+            for filename in SOURCE_FILES.values()
         } | {(source_dir / filename).resolve() for filename in (GALLERIES_FILE, MEMBERSHIPS_FILE, SERIES_GALLERIES_FILE)},
         allowed_write_roots=set(),
         dry_run=dry_run,

@@ -42,7 +42,6 @@ def read_refresh_inputs(
     records = CatalogueSourceRecords(
         works=read_source_map(source_dir, "works") if works_needed else {},
         series=read_source_map(source_dir, "series") if series_needed else {},
-        work_detail_sections={}, work_details={},
     )
     galleries = CatalogueGalleries(
         galleries=read_gallery_definitions(source_dir) if galleries_needed else {},

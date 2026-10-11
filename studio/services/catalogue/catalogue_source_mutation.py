@@ -106,8 +106,6 @@ def validate_work_records(
     works[work_id] = work_record
     normalized_records = CatalogueSourceRecords(
         works=sort_record_map(works),
-        work_detail_sections=source_records.work_detail_sections,
-        work_details=source_records.work_details,
         series=source_records.series,
     )
     return validate_source_records(normalized_records)
@@ -126,8 +124,6 @@ def validate_series_records(
         works[work_id] = work_record
     normalized_records = CatalogueSourceRecords(
         works=sort_record_map(works),
-        work_detail_sections=source_records.work_detail_sections,
-        work_details=source_records.work_details,
         series=sort_record_map(series),
     )
     return validate_source_records(normalized_records)

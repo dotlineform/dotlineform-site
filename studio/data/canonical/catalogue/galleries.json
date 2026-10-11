@@ -1,7 +1,6 @@
 {
   "header": {
-    "schema": "catalogue_source_galleries_v1",
-    "count": 300
+    "schema": "catalogue_source_galleries_v1"
   },
   "galleries": {
     "001": {

@@ -1,7 +1,6 @@
 {
   "header": {
-    "schema": "catalogue_source_galleries_by_work_v1",
-    "count": 4619
+    "schema": "catalogue_source_galleries_by_work_v1"
   },
   "works": {
     "00001": [

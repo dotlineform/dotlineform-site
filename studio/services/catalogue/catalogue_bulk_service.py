@@ -246,8 +246,6 @@ def validate_bulk_records(
             source_records.works[work_id] = work_record
     normalized_records = CatalogueSourceRecords(
         works=sort_record_map(source_records.works),
-        work_detail_sections=source_records.work_detail_sections,
-        work_details=sort_record_map(source_records.work_details),
         series=source_records.series,
     )
     errors.extend(validate_source_records(normalized_records))

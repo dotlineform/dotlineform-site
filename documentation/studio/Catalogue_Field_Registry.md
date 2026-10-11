@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260501-172902-96e85d
 title: Catalogue Field Registry
 added_date: "2026-05-01 17:29:02"
-last_updated: "2026-09-23 18:47:31"
+last_updated: "2026-10-11 00:00:00"
 parent_id: d-20260602-234732-8a5aae
 
 ---
@@ -12,7 +12,7 @@ parent_id: d-20260602-234732-8a5aae
 
 ## Purpose
 
-`studio/data/config/catalogue/catalogue-field-registry.json` lists current source fields and the artifact families owned by Work, Series, Detail and Detail-section operations. Read and maintain the file directly. The former read-only `/studio/catalogue-field-registry/` page is retired.
+`studio/data/config/catalogue/catalogue-field-registry.json` lists current source fields and the artifact families owned by Work and Series operations. Detail and Detail-section families are removed. Read and maintain the file directly. The former read-only `/studio/catalogue-field-registry/` page is retired.
 
 The registry uses `catalogue_field_registry_v2`. It does not plan Save, classify publication eligibility or provide compatibility fallbacks. `catalogue_output_service.py` selects affected records; the producer and media services own completion. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) describes that workflow.
 
@@ -24,7 +24,7 @@ The registry uses `catalogue_field_registry_v2`. It does not plan Save, classify
 
 When adding or changing a field, update the canonical owner, editor, consuming projections and inventory together. Do not restore the retired field-aware Build planner or duplicate rules in the browser.
 
-`media_source_id` remains optional Work metadata: omission means the configured default, and an explicit value must name a configured source. Details inherit the parent Work's identity. The registry records the affected media/output family; source resolution remains with the shared media resolver.
+`media_source_id` remains optional Work metadata: omission means the configured default, and an explicit value must name a configured source. The registry records the affected media/output family; source resolution remains with the shared media resolver.
 
 ## Verification
 

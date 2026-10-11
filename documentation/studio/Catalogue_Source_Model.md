@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260519-000000-a0da45
 title: Catalogue Source Model
 added_date: "2026-05-19 00:00:00"
-last_updated: "2026-10-08 11:05:40"
+last_updated: "2026-10-11 00:00:00"
 parent_id: d-20260401-000000-a11bf3
 
 ---
@@ -19,10 +19,13 @@ Catalogue authoring source lives below `studio/data/canonical/catalogue/`:
 | Series | `series.json` | Series identity and title |
 | Galleries | `galleries.json` | Independent Gallery IDs and titles |
 | Gallery membership | `galleries-by-work.json` | Sole canonical Work → Gallery ID arrays; no copied titles |
+| Series–Gallery associations | `series-galleries.json` | Explicit Series → Gallery relevance arrays, independent of Work membership |
 
-`studio/services/catalogue/catalogue_source.py` owns exact fields, normalization, omit-empty rules, serialization and validation. Works and Series use schema v2. Catalogue prose has no parallel Markdown source family.
+`studio/services/catalogue/catalogue_source.py` owns exact fields, normalization, omit-empty rules, serialization and validation. Works and Series use schema v2 with schema-only headers. Readers consume their record maps without count validation; serializers emit no record totals. Catalogue prose has no parallel Markdown source family.
 
-`catalogue_galleries.py` owns the Gallery schemas `catalogue_source_galleries_v1` and `catalogue_source_galleries_by_work_v1`. Both sources have a schema/count header. Gallery records contain exactly `gallery_id` and `title`. IDs are exact strings, using at least three digits for Galleries and five digits for Works. Membership arrays contain distinct known Gallery IDs; missing Work entries mean no memberships. Missing source files, unknown Work/Gallery IDs and inconsistent headers fail validation. No membership is inferred from matching Series IDs.
+`catalogue_galleries.py` owns the Gallery schemas `catalogue_source_galleries_v1` and `catalogue_source_galleries_by_work_v1`. Both headers contain only `schema`; readers and writers impose no record-count or complete-coverage requirement. Gallery records contain exactly `gallery_id` and `title`. IDs are exact strings, using at least three digits for Galleries and five digits for Works. Membership arrays contain distinct known Gallery IDs; missing Work entries mean no memberships. Missing source files, unknown Work/Gallery IDs and invalid headers fail validation. No membership is inferred from matching Series IDs.
+
+`catalogue_series_galleries.py` owns `catalogue_source_series_galleries_v1`. Its header contains only `schema`; readers and writers impose no association-count requirement. `pairs_by_series` contains explicit Gallery ID arrays keyed by exact Series ID. Canonical validation checks current definition identities and sorted, unique relationships.
 
 ## Relationships And Identity
 
@@ -31,7 +34,7 @@ Catalogue authoring source lives below `studio/data/canonical/catalogue/`:
 - Catalogue membership, document subjects, document `parent_id` and token composition are independent. None establishes another relationship.
 - Catalogue Works and Series have no `status` or `published_date`. Series have no `primary_work_id` or `series_type`.
 - A Work may belong to multiple independent Galleries, including Galleries spanning Series. The initial Series overview Galleries retain their original selections; later Series membership changes do not synchronise them.
-- Former Details became ordinary Works. Canonical Detail aggregate files are retired and rejected by the runtime loader; the completed one-time converter that read them has been removed. No parent identity, section order or former-parent Gallery association is retained.
+- Former Details became ordinary Works. Canonical Detail data, schemas, source helpers and the completed one-time converter are removed. No parent identity, section order or former-parent Gallery association is retained.
 
 ## Metadata And Ordering
 
@@ -85,7 +88,7 @@ Ordinary Studio Catalogue production is available. Save maintains canonical sour
 
 Refresh Catalogue is the explicit local generated-reader action; there is no separate media-publish or per-record publication action. Full JSON maintenance is available without media conversion or upload. The frozen site and media archive remain outside active writes. Docs Publish owns public acceptance; Save alone does not make a record public or refresh Docs semantic lookups, and Publish does not run Refresh or enforce its receipt.
 
-Generated output is replaceable data, not another canonical source. Empty internal Detail maps and residual consumer contracts remain outside the retired Studio editor boundary; they do not load old source data or resolve old identities to converted Works. Studio's focused Work projection contains no Detail sections.
+Generated output is replaceable data, not another canonical source. The Work/Series source model contains only those two record maps. Detail serialization, parsing, validation, sorting and transaction expansion are removed, along with the unused generated Detail projection and Detail field-registry families. Studio's focused Work projection contains no Detail sections. Historical test fixtures still describe the retired Detail model and require separately agreed test maintenance; [Catalogue Per-Work Detail Source](Catalogue_Per_Work_Detail_Source.md) records that evidence boundary.
 
 ## One-time Gallery Conversion
 
