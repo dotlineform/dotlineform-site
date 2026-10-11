@@ -42,6 +42,34 @@ function actionDefinition(id, target) {
 var TARGETS = DOCS_VIEWER_ACTION_TARGETS;
 var IDS = DOCS_VIEWER_ACTION_IDS;
 
+// Product availability belongs with the actions, independently of local services.
+// Explicit private-report identities leave future public reports unrestricted.
+var PRIVATE_REPORT_DOC_IDS = new Set([
+  "d-20260426-164043-e14f49", "d-20260810-222148-99daec", "d-20261006-160017-e6589d",
+  "d-20260812-212735-6d9cf3", "d-20261004-202223-1e2205", "d-20261005-153252-541ac3",
+  "d-20260910-214604-f9e841", "d-20260805-155400-4c341f", "d-20260810-150346-bc7cdc",
+  "d-20260807-175649-62020b", "d-20260909-140121-53c381", "d-20260807-163356-b376d7",
+  "d-20261005-234748-d69c84", "d-20260909-160530-224efe", "d-20260915-181648-d1e356"
+]);
+var CATALOGUE_ACTION_IDS = new Set([IDS.SET_SELECTED, IDS.COPY_LINK]);
+var STRUCTURAL_DOCUMENT_ACTION_IDS = new Set([IDS.DELETE, IDS.SET_SELECTED, IDS.SET_DRAFT]);
+
+function documentActionRestriction(actionId, target, collectionHostDocIds) {
+  if (!target) return "";
+  if (target.collection === "catalogue" && !CATALOGUE_ACTION_IDS.has(actionId)) {
+    return "Catalogue Work documents are managed through Work edits and Regenerate.";
+  }
+  if (!target.collection && STRUCTURAL_DOCUMENT_ACTION_IDS.has(actionId)) {
+    if (collectionHostDocIds.includes(target.doc_id)) {
+      return "Collection hosts are maintained parts of the site structure.";
+    }
+    if (PRIVATE_REPORT_DOC_IDS.has(target.doc_id)) {
+      return "Private reports are maintained parts of the local site structure.";
+    }
+  }
+  return "";
+}
+
 export const DOCS_VIEWER_ACTION_DEFINITIONS = Object.freeze({
   [IDS.COPY_LINK]: actionDefinition(IDS.COPY_LINK, TARGETS.DOCUMENT),
   [IDS.DELETE]: actionDefinition(IDS.DELETE, TARGETS.DOCUMENT_SUBTREE),
@@ -96,12 +124,10 @@ export function listDocsViewerActionDefinitions() {
 }
 
 export function createDocsViewerActionContext(options = {}) {
-  var activeDocId = normalizeId(options.activeDocId);
-  var invocationDocId = normalizeId(options.invocationDocId);
   return {
-    activeDocId: activeDocId,
-    invocationDocId: invocationDocId,
-    subtreeDocIds: normalizeIds(options.subtreeDocIds)
+    documentTarget: options.documentTarget || null,
+    subtreeDocIds: normalizeIds(options.subtreeDocIds),
+    collectionHostDocIds: normalizeIds(options.collectionHostDocIds)
   };
 }
 
@@ -111,29 +137,36 @@ export function resolveDocsViewerAction(actionId, context = {}) {
     throw new Error("Unknown Docs Viewer action: " + normalizeId(actionId));
   }
 
-  var activeDocId = normalizeId(context.activeDocId);
-  var invocationDocId = normalizeId(context.invocationDocId);
+  var documentTarget = context.documentTarget;
+  var documentId = normalizeId(documentTarget && documentTarget.doc_id);
   var subtreeDocIds = normalizeIds(context.subtreeDocIds);
   var targetDocIds = [];
   var disabledReason = "";
 
   if (definition.target === TARGETS.ACTIVE_DOCUMENT) {
-    if (activeDocId) targetDocIds = [activeDocId];
+    if (documentId) targetDocIds = [documentId];
     else disabledReason = "No active document.";
   } else if (definition.target === TARGETS.DOCUMENT) {
-    var documentId = invocationDocId || activeDocId;
     if (documentId) targetDocIds = [documentId];
     else disabledReason = "No document.";
   } else if (definition.target === TARGETS.DOCUMENT_SUBTREE) {
-    if (!invocationDocId || subtreeDocIds.indexOf(invocationDocId) === -1) {
+    if (documentTarget && documentTarget.collection) {
+      targetDocIds = documentId ? [documentId] : normalizeIds(documentTarget.doc_ids);
+      if (!targetDocIds.length) disabledReason = "Select one or more documents.";
+    } else if (!documentId || subtreeDocIds.indexOf(documentId) === -1) {
       disabledReason = "No Index target document.";
     } else targetDocIds = subtreeDocIds;
   }
 
+  var restriction = definition.target !== TARGETS.WORKSPACE || definition.id === IDS.NEW
+    ? documentActionRestriction(definition.id, documentTarget, normalizeIds(context.collectionHostDocIds)) : "";
+  if (restriction) disabledReason = restriction;
   return {
     actionId: definition.id,
     disabledReason: disabledReason,
+    disabled: Boolean(disabledReason),
     enabled: !disabledReason,
+    hidden: Boolean(restriction),
     target: definition.target,
     targetDocIds: targetDocIds
   };

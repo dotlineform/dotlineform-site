@@ -334,10 +334,10 @@ export function startDocsViewerRuntime(options) {
     mediaDetailAdapter: settings.mediaDetailAdapter,
     managementService: managementService,
     managementDocumentActions: {
-      documentActionState: function (actionId, target) {
+      resolveAction: function (actionId, target) {
         var controller = managementRuntime ? managementRuntime.controller() : null;
-        return controller ? controller.documentActionState(actionId, target)
-          : { hidden: false, disabled: true, reason: "Document action policy is unavailable." };
+        return controller ? controller.resolveAction(actionId, target)
+          : { hidden: false, disabled: true, enabled: false, disabledReason: "Docs management is unavailable." };
       },
       regenerateCatalogue: function (collection, options) {
         return loadManagementController().then(function (controller) {

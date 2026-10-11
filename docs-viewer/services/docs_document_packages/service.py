@@ -31,7 +31,6 @@ from docs_document_packages.workspace import configured_workspace_paths, workspa
 from docs_import_document_package_content import normalize_documents_import_content
 from docs_management_context import log_event
 from docs_management_document_target import resolve_managed_document_collection
-from docs_document_actions import load_document_action_policy, require_document_action
 
 
 DOCUMENTS_DATA_DOMAIN = "documents"
@@ -263,12 +262,6 @@ def prepare_package(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
         raise ValueError("collection package preparation requires select_all false")
     dry_run = dry_run_value(body)
     missing_summary_only = optional_boolean_value(body, "missing_summary_only")
-    policy = load_document_action_policy(repo_root, resolved_collection.parent_config)
-    for doc_id in doc_ids or [None]:
-        target = resolved_collection.request_target()
-        if doc_id is not None:
-            target["doc_id"] = str(doc_id or "").strip()
-        require_document_action(repo_root, resolved_collection.parent_config, "prepare-document-package", target, policy=policy)
     roots = configured_workspace_paths(repo_root)
     payload = build_document_package(
         repo_root,

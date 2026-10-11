@@ -462,7 +462,7 @@ export function createDocsViewerManagementActionController(options) {
   /** Keep Rebuild busy through the targeted build and the fresh exact-document reload. */
   async function handleRebuildDocument(value) {
     var target = normalizeManagedDocumentTarget(value);
-    if (options.documentActionState(DOCS_VIEWER_ACTION_IDS.REBUILD_DOCUMENT, target).disabled) return;
+    if (options.resolveAction(DOCS_VIEWER_ACTION_IDS.REBUILD_DOCUMENT, target).disabled) return;
     setManagementBusy(true);
     setManagementMessage("Rebuilding document...", false);
     try {
@@ -704,7 +704,7 @@ export function createDocsViewerManagementActionController(options) {
 
   function handleOpenSource(editor, target, title) {
     var sourceTarget = normalizeManagedDocumentTarget(target);
-    if (options.documentActionState(editor === "vscode" ? DOCS_VIEWER_ACTION_IDS.OPEN_VSCODE : DOCS_VIEWER_ACTION_IDS.OPEN, sourceTarget).disabled) return;
+    if (options.resolveAction(editor === "vscode" ? DOCS_VIEWER_ACTION_IDS.OPEN_VSCODE : DOCS_VIEWER_ACTION_IDS.OPEN, sourceTarget).disabled) return;
     var targetTitle = String(title || sourceTarget.doc_id).trim() || sourceTarget.doc_id;
 
     setManagementBusy(true);

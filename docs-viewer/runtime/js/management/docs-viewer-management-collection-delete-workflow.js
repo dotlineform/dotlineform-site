@@ -6,7 +6,6 @@ import {
 import {
   normalizeManagedDocumentTarget
 } from "./docs-viewer-management-document-target.js";
-import { managedDocumentActionState } from "./docs-viewer-management-document-actions.js";
 import { DOCS_VIEWER_ACTION_IDS } from "./docs-viewer-action-definitions.js";
 import {
   buildDocsViewerDeletePreviewBody,
@@ -150,9 +149,9 @@ export function createDocsViewerManagementCollectionDeleteWorkflow(options = {})
     try {
       var payload = await readCapabilities(clientOptions);
       if (!active) return false;
-      var policy = managedDocumentActionState(payload.capabilities, DOCS_VIEWER_ACTION_IDS.DELETE, target);
-      available = collectionDetailDeleteCapability(payload) && !policy.disabled;
-      button.hidden = policy.hidden;
+      var resolution = options.resolveAction(DOCS_VIEWER_ACTION_IDS.DELETE, target);
+      available = collectionDetailDeleteCapability(payload) && resolution.enabled;
+      button.hidden = resolution.hidden;
       projectButton(available ? "" : "Collection detail Delete is unavailable.");
       return available;
     } catch (error) {

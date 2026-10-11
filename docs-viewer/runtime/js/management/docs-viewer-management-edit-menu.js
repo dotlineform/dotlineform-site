@@ -106,20 +106,20 @@ export function createDocsViewerEditMenuController(options) {
     var host = state.context.state === "detail" ? state.context.actionHost : null;
     if (mount.firstChild !== host) mount.replaceChildren(...(host ? [host] : []));
     mount.querySelectorAll("[data-docs-viewer-action]").forEach(function (button) {
-      button.hidden = options.documentActionState(button.dataset.docsViewerAction, state.target).hidden;
+      button.hidden = options.resolveAction(button.dataset.docsViewerAction, state.target).hidden;
     });
     var ordinary = state.available && !state.target.collection;
     var deleteState = ordinary ? options.deleteState(state.target.doc_id) : null;
     EDIT_ITEMS.forEach(function (item) {
       if (item.contextAction) return;
       var button = current.menu.querySelector(':scope > [data-docs-viewer-action="' + item.actionId + '"]');
-      var policy = options.documentActionState(item.actionId, state.target);
+      var resolution = options.resolveAction(item.actionId, state.target);
       var enabled = item.actionId === ACTION_IDS.EDIT_DOCUMENT || item.actionId === ACTION_IDS.REBUILD_DOCUMENT ? state.available
         : item.actionId === ACTION_IDS.COPY_LINK ? ordinary
           : item.actionId === ACTION_IDS.DELETE ? ordinary && deleteState && !deleteState.disabled && !deleteState.hidden : false;
-      button.hidden = policy.hidden;
-      button.disabled = !enabled || policy.disabled;
-      button.title = policy.reason || (enabled ? item.label
+      button.hidden = resolution.hidden;
+      button.disabled = !enabled || resolution.disabled;
+      button.title = resolution.disabledReason || (enabled ? item.label
         : item.actionId === ACTION_IDS.DELETE && deleteState ? deleteState.disabledReason
           : "This action is unavailable for the displayed document.");
     });
@@ -147,7 +147,7 @@ export function createDocsViewerEditMenuController(options) {
       return true;
     }
     close(false);
-    if (options.documentActionState(actionId, state.target).disabled) return false;
+    if (options.resolveAction(actionId, state.target).disabled) return false;
     if (detail.actionTarget?.dataset.docsViewerEditContribution === "true") return true;
     if (detail.actionTarget?.disabled) return false;
     if (actionId === ACTION_IDS.EDIT_DOCUMENT) options.openSource(state.target);

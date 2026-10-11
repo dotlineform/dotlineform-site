@@ -3,7 +3,6 @@ import { staticHtmlExportCapability } from "./docs-viewer-management-capabilitie
 import { createDocsViewerEditMenuController } from "./docs-viewer-management-edit-menu.js";
 import { createDocsViewerManagementContextActions } from "./docs-viewer-management-context-actions.js";
 import { projectDocsViewerManagementActionMenuItem } from "./docs-viewer-management-actions-renderer.js";
-import { managedDocumentActionState } from "./docs-viewer-management-document-actions.js";
 import {
   createDocsViewerManagementCapabilityController,
   publishSupported
@@ -53,10 +52,14 @@ var MANAGEMENT_TEXT = {
 export function createDocsViewerManagementActionContext(options = {}) {
   var selectedDocument = options.selectedDocument || {};
   var documentIndex = options.documentIndex || {};
-  var invocationDocId = String(options.invocationDocId || "").trim();
+  var documentTarget = Object.prototype.hasOwnProperty.call(options, "documentTarget")
+    ? options.documentTarget : selectedDocument.documentTarget || { doc_id: selectedDocument.selectedDocId };
+  var invocationDocId = Object.prototype.hasOwnProperty.call(options, "documentTarget")
+    ? String(documentTarget && documentTarget.doc_id || "").trim() : "";
   var subtreeDocIds = [];
   if (
-    options.includeSubtree && invocationDocId && documentIndex.docsById.has(invocationDocId)
+    options.includeSubtree && documentTarget && !documentTarget.collection
+    && invocationDocId && documentIndex.docsById.has(invocationDocId)
   ) {
     var pending = [invocationDocId];
     var seen = new Set();
@@ -70,41 +73,31 @@ export function createDocsViewerManagementActionContext(options = {}) {
     }
   }
   var contextOptions = {
-    activeDocId: selectedDocument.selectedDocId,
-    subtreeDocIds: subtreeDocIds
+    documentTarget: documentTarget,
+    subtreeDocIds: subtreeDocIds,
+    collectionHostDocIds: options.collectionHostDocIds
   };
-  if (Object.prototype.hasOwnProperty.call(options, "invocationDocId")) {
-    contextOptions.invocationDocId = options.invocationDocId;
-  }
   return createDocsViewerActionContext(contextOptions);
 }
 
 export function createDocsViewerManagementActionResolver(options = {}) {
   var selectedDocument = options.selectedDocument || {};
 
-  return function resolveAction(actionId, targetDocId) {
+  return function resolveAction(actionId, target) {
     var definition = getDocsViewerActionDefinition(actionId);
     var contextOptions = {
       documentIndex: options.documentIndex,
       includeSubtree: definition && definition.target === DOCS_VIEWER_ACTION_TARGETS.DOCUMENT_SUBTREE,
-      selectedDocument: selectedDocument
+      selectedDocument: selectedDocument,
+      collectionHostDocIds: options.collectionHostDocIds()
     };
-    if (arguments.length > 1) contextOptions.invocationDocId = targetDocId;
-    var resolution = resolveDocsViewerAction(
+    if (arguments.length > 1) {
+      contextOptions.documentTarget = typeof target === "string" ? { doc_id: target } : target;
+    }
+    return resolveDocsViewerAction(
       actionId,
       createDocsViewerManagementActionContext(contextOptions)
     );
-    if (definition && definition.target !== DOCS_VIEWER_ACTION_TARGETS.WORKSPACE) {
-      var target = arguments.length > 1 ? { doc_id: targetDocId }
-        : selectedDocument.documentTarget || { doc_id: selectedDocument.selectedDocId };
-      var policy = options.documentActionState(actionId, target);
-      resolution.hidden = policy.hidden;
-      if (policy.disabled) {
-        resolution.enabled = false;
-        resolution.disabledReason = policy.reason;
-      }
-    }
-    return resolution;
   };
 }
 
@@ -174,9 +167,6 @@ export function initDocsViewerManagement(context) {
   var searchRecent = domains.searchRecent || {};
   var selectedDocument = domains.selectedDocument || {};
   var serviceClient = context.serviceClient || {};
-  function documentActionState(actionId, target) {
-    return managedDocumentActionState(management.managementCapabilities, actionId, target);
-  }
   var routeReload = context.routeReload || {};
   context = Object.assign({}, context, {
     docsViewerConfigUrl: serviceClient.docsViewerConfigUrl || context.docsViewerConfigUrl,
@@ -217,7 +207,6 @@ export function initDocsViewerManagement(context) {
     root: root,
     management: management,
     callbacks: {
-      documentActionState: documentActionState,
       sourceEditingActive: function () {
         return selectedDocument.displayMode === "markdown-source";
       },
@@ -248,7 +237,10 @@ export function initDocsViewerManagement(context) {
   resolveAction = createDocsViewerManagementActionResolver({
     documentIndex: documentIndex,
     selectedDocument: selectedDocument,
-    documentActionState: documentActionState
+    collectionHostDocIds: function () {
+      var config = domains.workspaceConfig.activeConfig;
+      return config ? config.collections.map(function (collection) { return collection.reportHostDocId; }) : [];
+    }
   });
 
   function currentImportDisplayContext() {
@@ -339,7 +331,7 @@ export function initDocsViewerManagement(context) {
   async function openDocumentEditor(target) {
     try {
       var sourceTarget = normalizeManagedDocumentTarget(target);
-      if (documentActionState(DOCS_VIEWER_ACTION_IDS.EDIT_DOCUMENT, sourceTarget).disabled) return;
+      if (resolveAction(DOCS_VIEWER_ACTION_IDS.EDIT_DOCUMENT, sourceTarget).disabled) return;
       hideContextMenu();
       var services = typeof context.sourceEditorServices === "function" ? context.sourceEditorServices() : context.sourceEditorServices;
       var activeTarget = activeSourceTarget();
@@ -568,7 +560,6 @@ export function initDocsViewerManagement(context) {
     }
     var authoringAvailable = management.managementAvailable;
     projectDocumentActionButtons(!management.managementChecked || !authoringAvailable, !authoringAvailable || editDisabled);
-    context.documentActionContext().projectDocumentActions?.();
     if (settingsWorkflow) settingsWorkflow.render();
   }
 
@@ -692,10 +683,10 @@ export function initDocsViewerManagement(context) {
     },
     callbacks: {
       contextActionStates: indexController.actionStates,
-      documentActionState: documentActionState,
+      resolveAction: resolveAction,
       onContextAction: function (actionId, targetDocId, restoreFocus) {
         if (!actionController) return;
-        if (documentActionState(actionId, { doc_id: targetDocId }).disabled) return;
+        if (resolveAction(actionId, { doc_id: targetDocId }).disabled) return;
         if (indexController.handleAction(actionId, targetDocId, restoreFocus)) return;
         if (actionId === DOCS_VIEWER_ACTION_IDS.NEW_SIBLING) {
           actionController.handleCreateRelatedDoc("sibling", targetDocId);
@@ -750,7 +741,6 @@ export function initDocsViewerManagement(context) {
     context: context,
     refs: {},
     resolveAction: resolveAction,
-    documentActionState: documentActionState,
     callbacks: {
       getSettingsWorkflow: function () {
         return settingsWorkflow;
@@ -773,7 +763,7 @@ export function initDocsViewerManagement(context) {
     selectedDocument: selectedDocument,
     documentIndex: documentIndex,
     actions: actionController,
-    documentActionState: documentActionState,
+    resolveAction: resolveAction,
     documentActionContext: context.documentActionContext,
     activeViewState: context.activeViewState,
     isManagementContext: context.isManagementContext,
@@ -792,7 +782,7 @@ export function initDocsViewerManagement(context) {
   editMenuController = createDocsViewerEditMenuController({
     root: root,
     contextActions: contextActions,
-    documentActionState: documentActionState,
+    resolveAction: resolveAction,
     documentActionContext: context.documentActionContext,
     activeViewState: context.activeViewState,
     editControl: function () { return projectedReportControls?.editDocument; },
@@ -876,7 +866,7 @@ export function initDocsViewerManagement(context) {
 
   return {
     applyConfig: applyConfig,
-    documentActionState: documentActionState,
+    resolveAction: resolveAction,
     regenerateCatalogue: actionController.handleRegenerateCatalogue,
     handleDocumentKeydown: function (event) {
       return editMenuController.handleKeydown(event) || eventRouter.handleDocumentKeydown(event);

@@ -182,12 +182,15 @@ For views, modes, controls, and management actions, availability is the intersec
 code registration
   + matching app kind
   + enabled route feature
-  + required backend capability
+  + required backend capability for service-backed operations
   + route policy does not hide it
+  + frontend document-action availability
   = available workflow
 ```
 
 This is why `management_ui: true` or a service URL never grants authority by itself. The manage entrypoint must register the behaviour, route config must enable its feature, and the live backend must advertise the required capability before the UI can offer the operation.
+
+Document restrictions use the existing frontend action resolver and exact targets; they do not create server policy or capability fields. Public controls use the shared route/view/control mechanism without local management services. Services validate their actual operation inputs, paths and source/schema requirements. [Runtime: Document Action Policy](Docs_Viewer_Runtime.md#document-action-policy) owns the current restrictions and extension guidance.
 
 When a control is unexpectedly missing, inspect those gates in that order. [Runtime](Docs_Viewer_Runtime.md) owns the public/manage/review security boundary; [Runtime Module Ownership](Runtime_Module_Ownership.md) identifies the code owners.
 
@@ -213,7 +216,7 @@ A new report type needs both a registry record and an allowlisted loader impleme
 
 ### Add A View, Mode, Control, Or Action
 
-Add a code definition through the owning shared or route-specific entrypoint. Declare app kinds, route features, and backend capability requirements explicitly. Route config may hide known ids but cannot invent or widen executable definitions.
+Add a code definition through the owning shared or route-specific entrypoint. Declare app kinds, route features, and backend capability requirements explicitly. Route config may hide known ids but cannot invent or widen executable definitions. Extend the existing action resolver for document/collection availability and return one visibility/enablement result to its consumers; do not duplicate editorial restrictions in service guards.
 
 ### Add An Import Source
 

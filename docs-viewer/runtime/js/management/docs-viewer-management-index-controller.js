@@ -29,6 +29,7 @@ export function docsViewerPreparePackageActionControlState(options = {}) {
     }
   }
   return {
+    hidden: Boolean(resolution && resolution.hidden),
     disabled: Boolean(disabledReason),
     disabledReason: disabledReason
   };
@@ -51,6 +52,7 @@ export function docsViewerStaticHtmlExportActionControlState(options = {}) {
     }
   }
   return {
+    hidden: Boolean(resolution && resolution.hidden),
     disabled: Boolean(disabledReason),
     disabledReason: disabledReason
   };
@@ -157,12 +159,12 @@ export function createDocsViewerManagementIndexController(options = {}) {
       [DOCS_VIEWER_ACTION_IDS.POSITION]: mutationActionControlState(DOCS_VIEWER_ACTION_IDS.POSITION, targetDocId)
     };
     Object.values(DOCS_VIEWER_ACTION_IDS).forEach(function (actionId) {
-      var policy = callbacks.documentActionState(actionId, { doc_id: targetDocId });
-      var state = states[actionId] || {};
+      if (states[actionId]) return;
+      var resolution = resolveAction(actionId, targetDocId);
       states[actionId] = {
-        hidden: policy.hidden || Boolean(state.hidden),
-        disabled: policy.disabled || Boolean(state.disabled),
-        disabledReason: policy.reason || state.disabledReason || ""
+        hidden: resolution.hidden,
+        disabled: resolution.disabled,
+        disabledReason: resolution.disabledReason
       };
     });
     return states;

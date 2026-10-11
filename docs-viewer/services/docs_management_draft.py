@@ -10,7 +10,6 @@ from docs_management_mutations import (
     revision_conflict_payload,
 )
 from docs_document_rebuild import rebuild_resolved_document
-from docs_document_actions import require_document_action
 from docs_workspace_config import require_document_authoring
 
 
@@ -24,7 +23,6 @@ def set_draft(repo_root: Path, body: dict[str, Any], *, dry_run: bool = False) -
     target = {key: body[key] for key in ( "collection", "doc_id") if key in body}
     resolved = resolve_managed_document_target(repo_root, target)
     require_document_authoring(resolved.parent_config)
-    require_document_action(repo_root, resolved.parent_config, "set-draft", resolved.request_target())
     if not source_model.collection_supports_draft(resolved.document_config):
         raise ValueError("Set Draft is available only in Working")
     document = resolved.document
