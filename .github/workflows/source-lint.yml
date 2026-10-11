@@ -27,7 +27,6 @@ on:
       - "site-tools/site_validate.py"
       - "studio/app/frontend/js/**"
       - "studio/app/server/**"
-      - "studio/checks/**"
       - "studio/commands/**"
       - "studio/services/**"
       - "studio/shared/python/**"

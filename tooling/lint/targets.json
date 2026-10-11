@@ -37,7 +37,6 @@
     "studio": {
       "python": [
         "studio/app/server",
-        "studio/checks",
         "studio/commands",
         "studio/services",
         "studio/shared/python"
