@@ -44,19 +44,6 @@ export function readCatalogueEditorMediaAttrs(config) {
   };
 }
 
-export function renderMediaAttrs(attrs, keys) {
-  const values = attrs || {};
-  const output = [];
-  keys.forEach((key) => {
-    const value = values[key];
-    if (value == null) return;
-    const attr = key.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`);
-    const rendered = Array.isArray(value) ? JSON.stringify(value) : String(value);
-    output.push(`data-${attr}="${escapeHtml(rendered, true)}"`);
-  });
-  return output.join("\n          ");
-}
-
 export function applyCatalogueEditorMediaAttrs(root, config, keys) {
   if (!root || !root.dataset) return;
   const attrs = readCatalogueEditorMediaAttrs(config);
@@ -69,15 +56,4 @@ export function applyCatalogueEditorMediaAttrs(root, config, keys) {
     }
     root.dataset[datasetKey] = Array.isArray(value) ? JSON.stringify(value) : String(value);
   });
-}
-
-export function escapeHtml(value, attribute = false) {
-  const text = String(value == null ? "" : value);
-  const escaped = text
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
-  return attribute
-    ? escaped.replace(/"/g, "&quot;").replace(/'/g, "&#39;")
-    : escaped;
 }

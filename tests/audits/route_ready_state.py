@@ -21,7 +21,6 @@ class AppConfig:
     ready_attr: str
     busy_attr: str
     excluded_paths: frozenset[str] = frozenset()
-    allow_initial_ready_true: frozenset[str] = frozenset()
 
 
 @dataclass(frozen=True)
@@ -70,7 +69,6 @@ APP_CONFIGS = (
         path_patterns=("studio/app/frontend/routes/*.html",),
         ready_attr="data-studio-ready",
         busy_attr="data-studio-busy",
-        allow_initial_ready_true=frozenset({"studio/app/frontend/routes/studio-home.html"}),
     ),
     AppConfig(
         app_id="docs-viewer",
@@ -119,7 +117,6 @@ def audit_template(config: AppConfig, path: Path) -> tuple[list[Finding], int]:
     text = path.read_text(encoding="utf-8")
     findings: list[Finding] = []
     roots = parse_ready_roots(text, config.ready_attr)
-    relative = rel_path(path)
 
     if not roots:
         findings.append(
@@ -146,7 +143,7 @@ def audit_template(config: AppConfig, path: Path) -> tuple[list[Finding], int]:
                     f"{config.ready_attr} should be true or false on {location}",
                 )
             )
-        elif ready_value == "true" and relative not in config.allow_initial_ready_true:
+        elif ready_value == "true":
             findings.append(
                 Finding(
                     "error",

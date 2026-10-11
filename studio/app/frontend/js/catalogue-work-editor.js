@@ -46,11 +46,7 @@ import {
   refreshCatalogue as requestCatalogueRefresh
 } from "./catalogue-editor-service-client.js";
 import { openNativeWorkAttachment, syncPendingAttachmentNames } from "./catalogue-work-attachments.js";
-import {
-  renderWorkCurrentPreview,
-  renderWorkReadiness,
-  updateWorkSummary
-} from "./catalogue-work-sections.js";
+import { renderWorkCurrentPreview, updateWorkSummary } from "./catalogue-work-sections.js";
 import { applyDraftToInputs, applyWorkMediaSourceConfig, applyReadonly, applyWorkFormText, clearReadonlyFields, getFieldNodeValue, renderWorkEditorFields, resolvedWorkMediaSourceId, setModeFieldAvailability, updateFieldMessages } from "./catalogue-work-form.js";
 import {
   initializeWorkRouteState,
@@ -312,7 +308,6 @@ function updateEditorState(state) {
   updateFieldMessages(state, errors, workFormOptions(state));
   setModeFieldAvailability(state);
   updateSummary(state);
-  setNodeTextWithState(state.buildImpactNode, "");
 
   const dirty = hasRecord && draftHasChanges(state);
   state.refreshButton.disabled = busy || state.isEditingDefinition || dirty || !state.serverAvailable;
@@ -338,7 +333,6 @@ function updateEditorState(state) {
     isDeleting: state.isDeleting,
     serverAvailable: state.serverAvailable
   });
-  renderReadiness(state);
   syncWorkRouteBusyState(state);
 }
 
@@ -449,8 +443,6 @@ function workActionOptions(state) {
     updateEditorState: () => updateEditorState(state),
     loadWorkLookupRecord,
     workRouteStateOptions: (overrides = {}) => workRouteStateOptions(state, overrides),
-    renderCurrentPreview: () => renderCurrentPreview(state),
-    renderReadiness: () => renderReadiness(state),
     noteCatalogueSaved: (response) => noteCatalogueSaved(state, response),
     offerEmptyGalleryCleanup: (galleryIds) => offerEmptyGalleryCleanup(state, {
       ...workDefinitionOptions(state), galleryIds, restoreFocus: state.saveButton
@@ -461,19 +453,9 @@ function workActionOptions(state) {
 function workSectionOptions(state) {
   return {
     text: (key, fallback, tokens) => t(state, key, fallback, tokens),
-    draftHasChanges,
     openEmbeddedEntryModal: (kind, index) => openEmbeddedEntryModal(state, kind, index),
-    deleteEmbeddedEntry: (kind, index) => deleteEmbeddedEntry(state, kind, index),
-    setTextWithState: (node, text, tone) => state.messageController.setActionTextWithState(node, text, tone)
+    deleteEmbeddedEntry: (kind, index) => deleteEmbeddedEntry(state, kind, index)
   };
-}
-
-function renderCurrentPreview(state) {
-  renderWorkCurrentPreview(state, workSectionOptions(state));
-}
-
-function renderReadiness(state) {
-  renderWorkReadiness(state, workSectionOptions(state));
 }
 
 function updateSummary(state) {

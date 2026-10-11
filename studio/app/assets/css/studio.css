@@ -887,28 +887,8 @@ span.studioUi__input--readonlyDisplay {
   font-size: var(--font-small);
 }
 
-.studioModal__choices {
-  display: grid;
-  gap: 0.45rem;
-}
-
-.studioModal__choice {
-  grid-template-columns: max-content minmax(0, 1fr);
-  align-items: center;
-}
-
 .studioModal__label {
   margin: 0.55rem 0 0.35rem;
-  font-size: var(--font-small);
-}
-
-.studioModal__pre {
-  margin: 0;
-  border: 1px solid var(--line, var(--studio-line-modal));
-  border-radius: var(--studio-radius-md);
-  padding: 0.65rem;
-  overflow: auto;
-  background: var(--studio-surface-code);
   font-size: var(--font-small);
 }
 
@@ -1544,28 +1524,6 @@ button.studioList__cellLink {
   min-height: 1.2rem;
   font-size: var(--font-caption);
   color: var(--studio-danger);
-}
-
-.catalogueReadiness__body {
-  display: grid;
-  gap: 0.3rem;
-}
-
-.catalogueReadiness__summary[data-tone="ready"] {
-  color: var(--studio-success);
-}
-
-.catalogueReadiness__summary[data-tone="warning"] {
-  color: var(--studio-warn);
-}
-
-.catalogueReadiness__summary[data-tone="error"] {
-  color: var(--studio-danger);
-}
-
-.catalogueReadiness__path {
-  font-family: var(--font-mono, monospace);
-  word-break: break-word;
 }
 
 .catalogueRecordPreview {

@@ -95,6 +95,14 @@ Do not repair unrelated brittle test behavior inside a focused feature slice wit
 
 ## Limits
 
+### Studio Frontend Retirement
+
+The user approved removal of the inspected unused Studio frontend modules/helpers, obsolete build-preview/readiness code and styles, unreferenced text entries, related references and the stale route-ready audit exception on 2026-10-11. The approved scope is implemented. Test maintenance is limited to `tests/audits/route_ready_state.py`: remove the deleted `studio-home.html` initial-ready exception, its otherwise unused `AppConfig.allow_initial_ready_true` option and the corresponding allowlist branch. Every configured template must start ready and busy as `false`. No test case, fixture, browser harness or profile membership is added, removed or expanded; other test files remain unchanged and unreviewed by this cleanup.
+
+The retained focused selection is `python3 tests/audits/route_ready_state.py --strict --app studio`. It reads the real current `studio/app/frontend/routes/*.html` files and uses the existing HTML parser to check exactly one Studio ready-state root, boolean readiness, initially false readiness and matching initially false busy state. It uses no fixtures or mocks, starts no service/browser, performs no generation or media conversion, and writes no repository/workspace data or network traffic. Broader Docs Viewer template membership remains unchanged and is not part of this run. A pass proves the static template baseline, not browser boot, modal interaction, API responses or Save/Refresh/Publish behavior.
+
+Verification is limited to the existing focused audit, changed-path JavaScript/Python lint, Python syntax, read-only module/import and retired-reference inspection, and whitespace checks. Expected local cost is seconds; authoring/maintenance removes one obsolete exception and its support code, without adding repeated test work. Syntax checks may update ignored Python bytecode. No pytest/profile/browser run, live write or publication is included. [Studio Runtime](Studio_Runtime.md#frontend-retirement) records the retired browser ownership.
+
 ### Studio Server Config Cleanup
 
 The user approved removal of unused Studio server config projections/helpers, related obsolete assertions/references and orphaned bytecode on 2026-10-11. The approved scope is implemented. Test maintenance is limited to `studio/tests/python/test_studio_app_runtime_config.py::test_runtime_config_exposes_adapter_contract` and `::test_studio_route_registry_validation_rejects_invalid_routes`. No new cases, assertions, fixtures, harnesses or profile membership are included. The remaining tests in that file and broader Studio selections remain unchanged and unreviewed.

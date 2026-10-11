@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260625-174523-74cf61
 title: Route Ready-State Audit
 added_date: "2026-06-25 17:45:23"
-last_updated: "2026-08-14 21:07:57"
+last_updated: "2026-10-11 00:00:00"
 parent_id: d-20260501-174746-efd581
 ---
 # Route Ready-State Audit
@@ -17,13 +17,13 @@ The audit validates the static template baseline. It does not prove that every c
 ## Run It
 
 ```bash
-$HOME/miniconda3/bin/python3 tests/audits/route_ready_state.py --strict
+python3 tests/audits/route_ready_state.py --strict
 ```
 
 Limit investigation to one or more apps:
 
 ```bash
-$HOME/miniconda3/bin/python3 tests/audits/route_ready_state.py --strict --app studio
+python3 tests/audits/route_ready_state.py --strict --app studio
 ```
 
 Valid IDs come from `APP_CONFIGS` in the script. Use `--json` when a structured result is useful for automation or focused diagnosis.
@@ -35,9 +35,9 @@ For each configured template the audit expects:
 - exactly one app-prefixed ready-state root;
 - the matching busy attribute on that same element;
 - busy initially `false`;
-- ready initially `false`, except for explicitly allowlisted static home templates.
+- ready initially `false`.
 
-Template globs, attribute names, and initial-ready exceptions are code-owned in `APP_CONFIGS`. The broader lifecycle and controller responsibilities are explained in [Route Ready State](Route_Ready_State.md).
+Template globs and attribute names are code-owned in `APP_CONFIGS`. There is no initial-ready exception. The broader lifecycle and controller responsibilities are explained in [Route Ready State](Route_Ready_State.md); [Studio Frontend Retirement](Testing.md#studio-frontend-retirement) records the approved removal of the obsolete home-route exception and the current focused coverage.
 
 ## Interpretation
 

@@ -1,7 +1,4 @@
-import {
-  getStudioRouteEntry,
-  getStudioRouteRegistry
-} from "./studio-config.js";
+import { getStudioRouteRegistry } from "./studio-config.js";
 
 const SHELL_ROUTE_TYPES = new Set(["html-template"]);
 
@@ -9,12 +6,6 @@ export function listStudioRoutes(config) {
   return Object.entries(getStudioRouteRegistry(config))
     .filter(([routeId, route]) => routeId && isPlainObject(route))
     .map(([routeId, route]) => normalizeRoute(routeId, route));
-}
-
-export function findStudioRoute(config, routeId) {
-  const normalizedRouteId = normalizeRouteId(routeId);
-  const route = getStudioRouteEntry(config, normalizedRouteId);
-  return route ? normalizeRoute(normalizedRouteId, route) : null;
 }
 
 export function resolveStudioRoute(config, locationLike = currentLocation()) {

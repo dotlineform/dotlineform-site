@@ -1,10 +1,6 @@
 import {
-  catalogueEditorRecordLoaded,
-  catalogueEditorRouteMode,
-  catalogueEditorRouteStateDetail,
   createCatalogueEditorRouteStateOptions,
   initializeCatalogueEditorRoute,
-  markCatalogueEditorRouteReady,
   syncCatalogueEditorRouteBusyState
 } from "./catalogue-editor-route-boot.js";
 import {
@@ -87,13 +83,6 @@ function resetBulkState(state) {
   state.bulkRecords = new Map();
   state.bulkRecordHashes = new Map();
   state.bulkTouchedFields = new Set();
-  state.bulkBuildTargets = [];
-}
-
-function clearBuildState(state) {
-  state.pendingBuildExtraSeriesIds = [];
-  state.rebuildPending = false;
-  state.buildPreview = null;
 }
 
 const WORK_ROUTE_STATE = createCatalogueEditorRouteStateOptions({
@@ -106,24 +95,8 @@ export function initializeWorkRouteState(root) {
   initializeCatalogueEditorRoute(root, "catalogue-work");
 }
 
-export function routeModeForWorkState(state) {
-  return catalogueEditorRouteMode(state, WORK_ROUTE_STATE);
-}
-
-export function routeRecordLoadedForWorkState(state) {
-  return catalogueEditorRecordLoaded(state, WORK_ROUTE_STATE);
-}
-
-export function workRouteStateDetail(state) {
-  return catalogueEditorRouteStateDetail(state, WORK_ROUTE_STATE);
-}
-
 export function syncWorkRouteBusyState(state) {
   syncCatalogueEditorRouteBusyState(state, WORK_ROUTE_STATE);
-}
-
-export function markWorkRouteReady(state, ready) {
-  markCatalogueEditorRouteReady(state, ready, WORK_ROUTE_STATE);
 }
 
 export function setLoadedWorkRecord(state, workId, record, options = {}) {
@@ -163,7 +136,6 @@ export function setLoadedBulkWorks(state, workIds, recordsById, recordHashes, op
   state.bulkWorkIds = workIds.slice();
   state.bulkRecords = new Map(recordsById);
   state.bulkRecordHashes = new Map(recordHashes);
-  state.bulkBuildTargets = Array.isArray(options.buildTargets) ? options.buildTargets.slice() : [];
   const records = workIds.map((workId) => recordsById.get(workId)).filter(Boolean);
   const bulkDraft = buildBulkDraftFromRecords(records);
   state.baselineDraft = { ...bulkDraft };
@@ -208,7 +180,6 @@ export function setNewWorkMode(state, options = {}) {
   state.searchNode.value = state.draft.work_id;
   state.searchNode.placeholder = text(options, "new_work_id_placeholder", "new work id");
   state.searchNode.setAttribute("aria-label", text(options, "new_work_id_label", "New work id"));
-  clearBuildState(state);
   callback(options, "applyDraftToInputs");
   callback(options, "clearReadonlyFields");
   callback(options, "setPopupVisibility", false);
@@ -237,7 +208,6 @@ export function setEmptySearchMode(state, options = {}) {
   state.draft.gallery_ids = [];
   state.draft.downloads = [];
   state.draft.links = [];
-  clearBuildState(state);
   callback(options, "setOpenInputMode");
   if (!options.keepSearchValue) {
     state.searchNode.value = "";

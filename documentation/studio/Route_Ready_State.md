@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260625-162242-b0b6c7
 title: Route Ready State
 added_date: "2026-06-25 16:22:42"
-last_updated: "2026-08-14 21:18:02"
+last_updated: "2026-10-11 00:00:00"
 parent_id: d-20260419-000000-d2e47b
 
 ---
@@ -41,7 +41,7 @@ The nested Docs Import root currently uses Studio-prefixed attributes inside the
 4. Every success or stable failure path sets ready true.
 5. Commands set busy true before work and clear it in a reliable final path.
 
-Static Studio routes may use `studio-static-route.js`. Once a route gains async data, service checks, or commands, it needs a route-specific lifecycle owner.
+Studio's Catalogue Editor owns its async initialization and commands through the focused editor lifecycle helpers and shared Studio route-state projection.
 
 ## Testing Method
 
@@ -61,8 +61,6 @@ Do not maintain a second table of every route/root here. App route registries, t
 $HOME/miniconda3/bin/python3 tests/audits/route_ready_state.py --strict
 ```
 
-The audit checks active Studio and Docs Viewer templates for missing or
-duplicate roots and invalid initial attributes. The quick check profile
-includes it.
+The audit checks active Studio and Docs Viewer templates for missing or duplicate roots and invalid initial attributes. The quick check profile includes it.
 
 Use [Testing](Testing.md) for verification selection and [Route Ready-State Audit](Route_Ready_State_Audit.md) for the focused audit command. Route docs may name their root and meaningful busy operations but should not redefine this contract.

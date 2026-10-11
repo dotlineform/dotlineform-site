@@ -6,7 +6,6 @@ import {
   createRecordListActions
 } from "/shared/frontend/js/record-list.js";
 
-import { catalogueReadinessItems, catalogueReadinessItemSummary, catalogueReadinessTone } from "./catalogue-editor-readiness.js";
 import {
   getWorkEmbeddedItems
 } from "./catalogue-editor-embedded-items.js";
@@ -32,17 +31,6 @@ function text(state, options, key, fallback, tokens = null) {
     return options.text(key, fallback, tokens);
   }
   return getStudioText(state.config, `catalogue_work_editor.${key}`, fallback, tokens);
-}
-
-function setTextWithState(options, node, value, state = "") {
-  if (options && typeof options.setTextWithState === "function") {
-    options.setTextWithState(node, value, state);
-    return;
-  }
-  if (!node) return;
-  node.textContent = value || "";
-  if (state) node.dataset.state = state;
-  else delete node.dataset.state;
 }
 
 function runMaybeAsync(result, label) {
@@ -123,35 +111,6 @@ export function renderWorkCurrentPreview(state, options = {}) {
     </figure>
   `;
   bindPreviewImages(state.previewNode);
-}
-
-export function renderWorkReadiness(state, _options = {}) {
-  if (!state.readinessNode) return;
-  if (state.mode === "bulk" || !state.currentRecord) {
-    state.readinessNode.innerHTML = "";
-    return;
-  }
-  const items = catalogueReadinessItems(state.buildPreview)
-    .filter((item) => normalizeText(item && item.key) !== "work_media");
-  if (!items.length) {
-    state.readinessNode.innerHTML = "";
-    return;
-  }
-
-  state.readinessNode.innerHTML = items.map((item) => {
-    const summaryItem = catalogueReadinessItemSummary(item, { fallbackSummary: "—" });
-    const tone = catalogueReadinessTone(summaryItem.status);
-    return `
-      <div class="studioForm__field">
-        <span class="studioForm__label">${escapeHtml(summaryItem.title)}</span>
-        <div class="studioUi__input studioUi__input--readonlyDisplay catalogueReadiness__body">
-          <span class="catalogueReadiness__summary" data-tone="${escapeHtml(tone)}">${escapeHtml(summaryItem.summary)}</span>
-          ${summaryItem.sourcePath ? `<span class="studioForm__meta catalogueReadiness__path">${escapeHtml(summaryItem.sourcePath)}</span>` : ""}
-          ${summaryItem.nextStep ? `<span class="studioForm__meta">${escapeHtml(summaryItem.nextStep)}</span>` : ""}
-        </div>
-      </div>
-    `;
-  }).join("");
 }
 
 function buildWorkDownloadHref(state, filename) {
@@ -325,12 +284,9 @@ export function updateWorkSummary(state, options = {}) {
     state.metaNode.hidden = true;
     state.metaNode.textContent = "";
     state.summaryNode.innerHTML = "";
-    state.runtimeStateNode.textContent = "";
-    setTextWithState(options, state.buildImpactNode, "");
     if (state.resourcesPanelNode) state.resourcesPanelNode.hidden = false;
     updateWorkResourcesSection(state, options);
     renderWorkCurrentPreview(state, options);
-    renderWorkReadiness(state, options);
     return;
   }
 
@@ -358,12 +314,8 @@ export function updateWorkSummary(state, options = {}) {
         <div class="studioUi__input studioUi__input--readonlyDisplay catalogueWorkSummary__series">${escapeHtml(seriesTitles.length ? seriesTitles.join(", ") : "—")}</div>
       </div>
     `;
-    state.runtimeStateNode.textContent = state.rebuildPending
-      ? text(state, options, "summary_rebuild_needed", "public update failed in this session")
-      : "";
     if (state.resourcesPanelNode) state.resourcesPanelNode.hidden = true;
     renderWorkCurrentPreview(state, options);
-    renderWorkReadiness(state, options);
     return;
   }
 
@@ -373,11 +325,7 @@ export function updateWorkSummary(state, options = {}) {
 
   state.summaryNode.innerHTML = "";
 
-  state.runtimeStateNode.textContent = state.rebuildPending
-    ? text(state, options, "summary_rebuild_needed", "public update failed in this session")
-    : "";
   if (state.resourcesPanelNode) state.resourcesPanelNode.hidden = !state.currentRecord;
   updateWorkResourcesSection(state, options);
   renderWorkCurrentPreview(state, options);
-  renderWorkReadiness(state, options);
 }

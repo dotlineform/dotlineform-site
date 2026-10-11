@@ -48,11 +48,6 @@ function renderStatus(status) {
   return `<p class="studioForm__status studioModal__status" data-role="modal-status"${stateAttr}${hiddenAttr}>${escapeHtml(message)}</p>`;
 }
 
-function renderSnippet(snippet) {
-  if (!snippet) return "";
-  return `<pre class="studioModal__pre" data-role="modal-snippet">${escapeHtml(snippet)}</pre>`;
-}
-
 function renderActions(options = {}) {
   const primaryLabel = String(options.primaryLabel || "OK");
   const cancelLabel = String(options.cancelLabel || "Cancel");
@@ -72,15 +67,6 @@ function renderActions(options = {}) {
     <div class="studioModal__actions">
       <button type="button" class="${escapeHtml(cancelClass)}" data-role="modal-cancel">${escapeHtml(cancelLabel)}</button>
       <button type="button" class="${escapeHtml(primaryClass)}" data-role="modal-primary"${primaryAttrs}>${escapeHtml(primaryLabel)}</button>
-    </div>
-  `;
-}
-
-function renderCloseAction(options = {}) {
-  const closeLabel = String(options.closeLabel || options.cancelLabel || "Close");
-  return `
-    <div class="studioModal__actions">
-      <button type="button" class="studioUi__button studioUi__button--defaultWidth" data-role="modal-cancel">${escapeHtml(closeLabel)}</button>
     </div>
   `;
 }
@@ -304,15 +290,11 @@ export function activateStudioModalFrame(host, options = {}) {
   };
 }
 
-function renderModal(type, options = {}) {
+function renderConfirmModal(options = {}) {
   const title = String(options.title || "");
   const bodyHtml = options.bodyHtml ? String(options.bodyHtml) : renderBodyText(options.body);
-  const statusHtml = type === "confirm-detail" || options.includeStatus ? renderStatus(options.status) : "";
-  const impactHtml = type === "confirm-detail" && options.impact
-    ? `<p class="studioForm__impact" data-role="modal-impact">${escapeHtml(options.impact)}</p>`
-    : "";
-  const snippetHtml = type === "patch-preview" ? renderSnippet(options.snippet) : "";
-  const actionsHtml = type === "notice" ? renderCloseAction(options) : renderActions(options);
+  const statusHtml = options.includeStatus ? renderStatus(options.status) : "";
+  const actionsHtml = renderActions(options);
 
   return renderStudioModalFrame({
     hidden: false,
@@ -323,7 +305,7 @@ function renderModal(type, options = {}) {
     title,
     meta: options.meta,
     size: options.size,
-    bodyHtml: `${bodyHtml}${impactHtml}${snippetHtml}`,
+    bodyHtml,
     statusHtml,
     actionsHtml
   });
@@ -357,11 +339,11 @@ function focusableNodes(root) {
   ].join(","))).filter((node) => node.getClientRects().length);
 }
 
-function openModal(type, options = {}) {
+export function openConfirmModal(options = {}) {
   const host = ensureHost(options);
   const restoreFocus = options.restoreFocus || document.activeElement;
   closeActiveModal(host);
-  host.innerHTML = renderModal(type, options);
+  host.innerHTML = renderConfirmModal(options);
 
   const controller = activateStudioModalFrame(host, {
     ...options,
@@ -370,117 +352,12 @@ function openModal(type, options = {}) {
       if (typeof options.onSubmit === "function") {
         return options.onSubmit(api);
       }
-      if (type === "patch-preview") return {};
       return {};
     }
   });
   return controller.promise;
 }
 
-function fieldId(options, fallback) {
-  return escapeHtml(normalizeText(options.inputId) || fallback);
-}
-
-function renderTextInputBody(options = {}) {
-  const inputId = fieldId(options, "studioModalInput");
-  const bodyHtml = options.bodyHtml ? String(options.bodyHtml) : renderBodyText(options.body);
-  return `
-    ${bodyHtml}
-    <label class="studioForm__field" for="${inputId}">
-      <span class="studioForm__label">${escapeHtml(options.label || "Title")}</span>
-      <input class="studioUi__input" id="${inputId}" type="text" autocomplete="off" spellcheck="false" value="${escapeHtml(options.initialValue || "")}">
-    </label>
-  `;
-}
-
-function renderChoiceBody(options = {}) {
-  const name = escapeHtml(normalizeText(options.name) || "studioModalChoice");
-  const selected = normalizeText(options.value);
-  const choices = Array.isArray(options.choices) ? options.choices : [];
-  const bodyHtml = options.bodyHtml ? String(options.bodyHtml) : renderBodyText(options.body);
-  return `
-    ${bodyHtml}
-    <div class="studioModal__choices">
-      ${choices.map((choice) => {
-        const value = normalizeText(choice && choice.value);
-        const label = normalizeText(choice && choice.label) || value;
-        const checkedAttr = value === selected ? " checked" : "";
-        return `
-          <label class="studioForm__field studioModal__choice">
-            <input type="radio" name="${name}" value="${escapeHtml(value)}"${checkedAttr}>
-            <span>${escapeHtml(label)}</span>
-          </label>
-        `;
-      }).join("")}
-    </div>
-  `;
-}
-
 export function createStudioModalHost(options = {}) {
   return ensureHost(options);
-}
-
-export function openConfirmModal(options = {}) {
-  return openModal("confirm", options);
-}
-
-export function openConfirmDetailModal(options = {}) {
-  return openModal("confirm-detail", options);
-}
-
-export function openPatchPreviewModal(options = {}) {
-  return openModal("patch-preview", options);
-}
-
-export function openNoticeModal(options = {}) {
-  return openModal("notice", options);
-}
-
-export function openTextInputModal(options = {}) {
-  const inputId = normalizeText(options.inputId) || "studioModalInput";
-  return openModal("text-input", {
-    ...options,
-    title: options.title,
-    bodyHtml: renderTextInputBody({ ...options, inputId }),
-    includeStatus: true,
-    focusSelector: `#${inputId}`,
-    selectInitialFocus: options.selectInitialFocus !== false,
-    async onSubmit(api) {
-      const input = api.host.querySelector(`#${inputId}`);
-      const value = normalizeText(input && input.value) || normalizeText(options.defaultValue);
-      if (options.required && !value) {
-        api.setStatus("error", options.requiredMessage || "Enter a value.");
-        if (input) input.focus();
-        return false;
-      }
-      if (typeof options.onSubmit === "function") {
-        const result = await options.onSubmit({ ...api, value, input });
-        return result === undefined ? { value } : result;
-      }
-      return { value };
-    }
-  });
-}
-
-export function openChoiceModal(options = {}) {
-  const name = normalizeText(options.name) || "studioModalChoice";
-  return openModal("choice", {
-    ...options,
-    bodyHtml: renderChoiceBody({ ...options, name }),
-    includeStatus: true,
-    focusSelector: `input[name="${name}"]`,
-    async onSubmit(api) {
-      const input = api.host.querySelector(`input[name="${name}"]:checked`);
-      const value = normalizeText(input && input.value);
-      if (options.required !== false && !value) {
-        api.setStatus("error", options.requiredMessage || "Choose an option.");
-        return false;
-      }
-      if (typeof options.onSubmit === "function") {
-        const result = await options.onSubmit({ ...api, value, input });
-        return result === undefined ? { value } : result;
-      }
-      return { value };
-    }
-  });
 }

@@ -163,23 +163,6 @@ export function renderWorkSearchMatches(state, matches, message = "") {
   setWorkSelectionPopupVisibility(state, true);
 }
 
-export function renderWorkSearchSuggestions(state, context, rawQuery) {
-  if (!normalizeText(rawQuery)) {
-    renderWorkSearchMatches(state, [], "");
-    return;
-  }
-  if (isWorkBulkQuery(rawQuery)) {
-    renderWorkSearchMatches(state, [], "");
-    return;
-  }
-  const matches = getWorkSearchMatches(state, rawQuery);
-  if (!matches.length) {
-    renderWorkSearchMatches(state, [], text(context, "search_no_match", "No matching work ids."));
-    return;
-  }
-  renderWorkSearchMatches(state, matches);
-}
-
 export async function openWorkSelection(state, requestedValue, context) {
   let workIds;
   try {
@@ -206,8 +189,6 @@ export async function openWorkSelection(state, requestedValue, context) {
 
   state.searchNode.value = formatWorkSelection(workIds);
   setWorkSelectionPopupVisibility(state, false);
-  state.pendingBuildExtraSeriesIds = [];
-  state.rebuildPending = false;
   const lookups = await Promise.all(workIds.map((workId) => context.loadWorkLookupRecord(workId)));
   const recordsById = new Map();
   const recordHashes = new Map();
@@ -245,8 +226,6 @@ export async function openWorkById(state, requestedWorkId, context) {
 
   state.searchNode.value = workId;
   setWorkSelectionPopupVisibility(state, false);
-  state.pendingBuildExtraSeriesIds = [];
-  state.rebuildPending = false;
   const lookup = await context.loadWorkLookupRecord(workId);
   const fallbackRecord = lookup && lookup.work && typeof lookup.work === "object" ? lookup.work : null;
   const record = fallbackRecord;

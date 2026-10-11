@@ -35,39 +35,11 @@ export function getStudioRouteRegistry(config) {
   return routes && typeof routes === "object" && !Array.isArray(routes) ? routes : {};
 }
 
-export function getStudioRouteEntry(config, key) {
-  const normalizedKey = normalizeRouteKey(key);
-  const routes = getStudioRouteRegistry(config);
-  const entry = routes[normalizedKey];
-  return entry && typeof entry === "object" && !Array.isArray(entry) ? entry : null;
-}
-
-export function getStudioRoute(config, key) {
-  const routeEntry = getStudioRouteEntry(config, key);
-  if (routeEntry && typeof routeEntry.path === "string" && routeEntry.path.trim()) {
-    return resolveSitePath(routeEntry.path);
-  }
-  return "";
-}
-
-export function buildStudioRouteUrl(config, key, params = {}) {
-  const route = getStudioRoute(config, key);
-  if (!route) return "";
-  return appendRouteParams(route, params);
-}
-
 export function getStudioText(config, key, fallback = "", tokens = null) {
   const pathKeys = String(key || "").split(".").filter(Boolean);
   const value = pathValue(DEFAULT_STUDIO_UI_TEXT, pathKeys);
   const source = typeof value === "string" ? value : fallback;
   return applyTextTokens(source, tokens);
-}
-
-function normalizeRouteKey(value) {
-  return String(value || "")
-    .trim()
-    .replace(/-/g, "_")
-    .toLowerCase();
 }
 
 function deriveSiteBasePath(importUrl) {
@@ -95,23 +67,6 @@ function buildAssetUrl(path) {
   const [base, hash = ""] = resolvedPath.split("#", 2);
   const separator = base.includes("?") ? "&" : "?";
   return `${base}${separator}v=${encodeURIComponent(assetVersion)}${hash ? `#${hash}` : ""}`;
-}
-
-function appendRouteParams(route, params = {}) {
-  const origin = currentOrigin();
-  const url = new URL(String(route || "/"), origin);
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (!key || value == null || value === "") return;
-    url.searchParams.set(key, String(value));
-  });
-  return url.origin === origin ? `${url.pathname}${url.search}${url.hash}` : url.href;
-}
-
-function currentOrigin() {
-  if (typeof window !== "undefined" && window.location && window.location.origin) {
-    return window.location.origin;
-  }
-  return "http://127.0.0.1";
 }
 
 function readAssetVersion(importUrl = "") {

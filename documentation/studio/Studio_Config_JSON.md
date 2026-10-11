@@ -70,7 +70,7 @@ Those values come from Python constants, environment, `_data/pipeline.json`, fil
 - requires the runtime-config URL from the outer shell meta tag
 - fetches and caches the runtime payload
 - resolves repo-rooted asset paths
-- exposes focused route and URL accessors
+- exposes the route registry used by shell route resolution
 - supplies code-owned Studio UI text through `studio-ui-text.js`
 
 It is an accessor layer, not a second config registry or route controller. Local write transport remains in `studio-transport.js`.

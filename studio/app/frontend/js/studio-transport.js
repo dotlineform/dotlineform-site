@@ -18,7 +18,6 @@ const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
 });
 
 const CATALOGUE_READ_ENDPOINTS = Object.freeze({
-  catalogueHealth: "/studio/api/catalogue/health",
   read: "/studio/api/catalogue/read"
 });
 
@@ -27,16 +26,8 @@ export {
   CATALOGUE_WRITE_ENDPOINTS,
 };
 
-export function configureStudioTransport(config) {
-  void config;
-}
-
 export async function probeCatalogueHealth(timeoutMs = 500) {
   return probeHealth(CATALOGUE_WRITE_ENDPOINTS.health, timeoutMs);
-}
-
-export async function probeCatalogueReadHealth(timeoutMs = 500) {
-  return probeHealth(CATALOGUE_READ_ENDPOINTS.catalogueHealth, timeoutMs);
 }
 
 async function probeHealth(url, timeoutMs = 500) {
@@ -105,35 +96,6 @@ export async function getJson(url, options = {}) {
   }
 
   const response = await fetch(url, {
-    cache: "no-store",
-    signal: options.signal
-  });
-
-  let responsePayload;
-  try {
-    responsePayload = await response.json();
-  } catch (error) {
-    throw new Error(`HTTP ${response.status}`, { cause: error });
-  }
-
-  if (!response.ok || !responsePayload || !responsePayload.ok) {
-    const message = responsePayload && responsePayload.error ? responsePayload.error : `HTTP ${response.status}`;
-    const error = new Error(message);
-    error.status = response.status;
-    error.payload = responsePayload;
-    throw error;
-  }
-
-  return responsePayload;
-}
-
-export async function deleteJson(url, options = {}) {
-  if (!url) {
-    throw new Error("Missing service endpoint");
-  }
-
-  const response = await fetch(url, {
-    method: "DELETE",
     cache: "no-store",
     signal: options.signal
   });

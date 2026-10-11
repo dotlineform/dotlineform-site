@@ -56,14 +56,6 @@ export function firstCatalogueValidationMessage(errors) {
   return "";
 }
 
-export function clearCatalogueFieldStatusMessages(fieldStatusNodes, setTextWithState = setCatalogueEditorTextWithState) {
-  if (!fieldStatusNodes || typeof fieldStatusNodes.forEach !== "function") return;
-  fieldStatusNodes.forEach((node) => {
-    setTextWithState(node, "");
-    node.hidden = true;
-  });
-}
-
 export function createCatalogueEditorMessageController(options) {
   const statusNode = options.statusNode;
   const setNodeTextWithState = options.setTextWithState || setCatalogueEditorTextWithState;
@@ -150,15 +142,6 @@ export function createCatalogueEditorMessageController(options) {
     setDefaultMessage: (text, tone = "") => {
       defaultMessage = makeCatalogueEditorMessage(text, tone);
       render();
-    },
-    get defaultMessage() {
-      return defaultMessage;
-    },
-    get actionStatusMessage() {
-      return actionStatusMessage;
-    },
-    get actionResultMessage() {
-      return actionResultMessage;
     },
     get hasActionMessages() {
       return Boolean(actionStatusMessage.text || actionResultMessage.text);
