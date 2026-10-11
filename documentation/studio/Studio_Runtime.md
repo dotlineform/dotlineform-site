@@ -60,7 +60,7 @@ The server also copies route records into `app.runtime.views`; the current brows
 
 ## Shared Runtime Boundaries
 
-- `studio-config.js` loads the runtime payload and exposes the route registry and code-owned text accessors.
+- `studio-config.js` loads the runtime payload and exposes the route registry.
 - `studio-route-state.js` owns `data-studio-ready` and `data-studio-busy` projection.
 - `studio-data.js` owns shared JSON loading and allowlisted Catalogue server reads.
 - `studio-transport.js` owns the current Catalogue endpoint constants, route health probe, JSON reads/writes and multipart writes.
@@ -81,6 +81,14 @@ The 2026-10-11 cleanup removed six unused or obsolete modules, unused route/tran
 The old build-preview/readiness state had no producer. Its empty readiness/runtime/build-impact mounts, rendering calls and readiness styles are removed together with the unused build-target fields. Ready/busy lifecycle projection remains in `studio-route-state.js` and the active Catalogue route owners. [Testing](Testing.md#studio-frontend-retirement) records the approved removal of the stale static-home audit exception and the bounded verification selection.
 
 Verification and final review on 2026-10-11: changed-source JavaScript/Python lint, Python syntax, the Studio-only static ready-state audit and whitespace checks passed. Read-only source tracing reached all 43 retained frontend modules with no missing imports/exports or unreferenced module bindings. The live Refresh preview import was restored after lint identified it; final diff review confirmed the active confirmation modal and ready/busy owners remain connected, with no unresolved findings in this cleanup. Browser boot/interaction, live Save/Refresh/Publish, pytest and broad profiles were not exercised. No frontend cache directory was present. These local-only assets have no tracked public-code projection.
+
+## UI Text Retirement
+
+Studio UI copy lives directly in the owning route, form, renderer, action, validator or modal. The 2026-10-11 cleanup retired the remaining text registry, keyed accessors, token formatters and text callbacks, including the redundant form-label reapplication and config retry used only to display an initialization error. Dynamic messages use template literals; loaded single/bulk Work statuses remain blank and empty search results retain their current wording. The server asset-version inventory and projection audit no longer reference the retired module.
+
+Docs Viewer also retires its import text table and formatter, four management/settings/modal copy tables and the unused shared text-config accessor/formatter exposed to management. Import, collection-preview, management-action and modal callers own their literal copy and dynamic messages. Startup is named for viewer settings alone. The three affected public shared runtime modules require their tracked projection; import and management modules remain local-only. [Testing](Testing.md#ui-text-retirement) records the approved audit-manifest maintenance and bounded static verification.
+
+Verification and final review on 2026-10-11: lint passed for all 23 changed canonical JavaScript modules and the changed Python config owner; Python syntax, edited-contract JSON parsing, public-code projection checking, site validation and whitespace checking passed. Public-code update changed exactly three tracked files. Read-only source tracing covered 143 reachable modules, including all 42 retained Studio modules, with no missing imports/exports or unreferenced module bindings in changed modules; it accounted for the existing exact folder-picker static route. No retired text module, lookup or formatter reference remains in maintained source. Final diff review confirmed the blank loaded statuses, current empty-search wording, literal/template copy, dynamic HTML escaping, updated helper signatures/callers and unchanged media/config/health startup order, with no unresolved findings. The only test artifact change removes the two approved obsolete manifest paths. Browser interaction, live writes, pytest and profiles were not run. No Publish, commit, push or deployment was performed; hard-refresh Studio and Docs Viewer to load the updated browser modules.
 
 ## Extension Method
 

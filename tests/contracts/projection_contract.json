@@ -79,14 +79,12 @@
       "id": "studio_config_and_route_ui",
       "classification": "studio_projection",
       "repo_paths": [
-        "studio/app/frontend/config/studio-config.json",
-        "studio/app/frontend/js/studio-ui-text.js"
+        "studio/app/frontend/config/studio-config.json"
       ],
       "public_output": {
         "policy": "forbidden",
         "paths": [
-          "studio/app/frontend/config/studio-config.json",
-          "studio/app/frontend/js/studio-ui-text.js"
+          "studio/app/frontend/config/studio-config.json"
         ]
       },
       "owner_doc": "config-studio-config-json"

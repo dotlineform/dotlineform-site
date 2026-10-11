@@ -4,9 +4,6 @@ import { createWorkEditorLayout } from "./catalogue-work-layout.js";
 import { editWorkDefinition, offerEmptyGalleryCleanup } from "./catalogue-work-definitions.js";
 import { applyWorkRecordMutation } from "./catalogue-work-action-records.js";
 import {
-  getStudioText
-} from "./studio-config.js";
-import {
   applyCatalogueEditorMediaAttrs
 } from "./catalogue-editor-shell-media.js";
 import {
@@ -19,8 +16,7 @@ import {
   configureCatalogueEditorRouteRuntime,
   loadCatalogueEditorLookupMaps,
   revealCatalogueEditorRoute,
-  setCatalogueEditorTextWithState as setNodeTextWithState,
-  showCatalogueEditorInitError
+  setCatalogueEditorTextWithState as setNodeTextWithState
 } from "./catalogue-editor-route-boot.js";
 import {
   catalogueDeleteDisabled,
@@ -47,7 +43,7 @@ import {
 } from "./catalogue-editor-service-client.js";
 import { openNativeWorkAttachment, syncPendingAttachmentNames } from "./catalogue-work-attachments.js";
 import { renderWorkCurrentPreview, updateWorkSummary } from "./catalogue-work-sections.js";
-import { applyDraftToInputs, applyWorkMediaSourceConfig, applyReadonly, applyWorkFormText, clearReadonlyFields, getFieldNodeValue, renderWorkEditorFields, resolvedWorkMediaSourceId, setModeFieldAvailability, updateFieldMessages } from "./catalogue-work-form.js";
+import { applyDraftToInputs, applyWorkMediaSourceConfig, applyReadonly, clearReadonlyFields, getFieldNodeValue, renderWorkEditorFields, resolvedWorkMediaSourceId, setModeFieldAvailability, updateFieldMessages } from "./catalogue-work-form.js";
 import {
   initializeWorkRouteState,
   setEmptySearchMode,
@@ -80,8 +76,8 @@ import {
 } from "./catalogue-work-editor-state.js";
 
 function setOpenInputMode(state) {
-  state.searchNode.placeholder = t(state, "search_placeholder", "find work id(s): 00001, 00003-00005");
-  state.searchNode.setAttribute("aria-label", t(state, "search_label", "Find work by id"));
+  state.searchNode.placeholder = "find work id(s): 00001, 00003-00005";
+  state.searchNode.setAttribute("aria-label", "Find work by id");
 }
 
 async function loadWorkLookupRecord(workId) {
@@ -102,9 +98,7 @@ async function openEmbeddedEntryModal(state, kind, index = null) {
     }
     return;
   }
-  const result = await openWorkEmbeddedEntryModal(state, kind, index, {
-    text: (key, fallback, tokens) => t(state, key, fallback, tokens)
-  });
+  const result = await openWorkEmbeddedEntryModal(state, kind, index);
   if (!result || !result.confirmed) return;
   clearActionMessages(state);
   state.draft[result.entriesKey] = result.entries;
@@ -122,9 +116,7 @@ async function openEmbeddedEntryModal(state, kind, index = null) {
 
 async function deleteEmbeddedEntry(state, kind, index) {
   const filename = kind === "download" ? state.draft.downloads[index]?.filename : "";
-  const result = await confirmWorkEmbeddedDeleteModal(state, kind, index, {
-    text: (key, fallback, tokens) => t(state, key, fallback, tokens)
-  });
+  const result = await confirmWorkEmbeddedDeleteModal(state, kind, index);
   if (!result || !result.confirmed) return;
   clearActionMessages(state);
   state.draft[result.entriesKey] = result.entries;
@@ -186,7 +178,7 @@ function validateDraft(state) {
   if (state.mode !== "bulk") {
     const sources = state.workMediaSourceConfig?.mediaSourceIds || [];
     if (!sources.includes(resolvedWorkMediaSourceId(state))) errors.set("media_source_id", "Select a configured media source.");
-    validateWorkEmbeddedItems(state.draft, {text: (key, fallback, tokens) => t(state, key, fallback, tokens)}).forEach((message, key) => errors.set(key, message));
+    validateWorkEmbeddedItems(state.draft).forEach((message, key) => errors.set(key, message));
   }
   return errors;
 }
@@ -280,7 +272,7 @@ function renderEditorMessage(state, snapshot = {}) {
     dirtyMessage: state.mode === "new" ? "" : catalogueDirtyWarningText({
       dirty,
       mode: state.mode,
-      message: t(state, "dirty_warning", "Unsaved source changes.")
+      message: "Unsaved source changes."
     })
   });
 }
@@ -293,8 +285,8 @@ function updateEditorState(state) {
   state.searchNode.disabled = busy;
   if (state.workSearchClearButton) {
     const label = state.mode === "new"
-      ? t(state, "cancel_new_work_button", "Cancel new Work")
-      : t(state, "clear_search_button", "Clear search");
+      ? "Cancel new Work"
+      : "Clear search";
     state.workSearchClearButton.title = label;
     state.workSearchClearButton.setAttribute("aria-label", label);
     state.workSearchClearButton.disabled = busy;
@@ -312,10 +304,8 @@ function updateEditorState(state) {
   const dirty = hasRecord && draftHasChanges(state);
   state.refreshButton.disabled = busy || state.isEditingDefinition || dirty || !state.serverAvailable;
   renderCatalogueRefreshStatus(state);
-  if (state.mode === "bulk" && hasRecord) {
-    state.messageController.setDefaultMessage(t(state, "bulk_status_loaded", "Loaded {count} work records.", { count: String(state.bulkWorkIds.length) }));
-  } else if (state.mode === "single" && hasRecord) {
-    state.messageController.setDefaultMessage(t(state, "save_status_loaded", "Loaded work {work_id}.", { work_id: state.currentWorkId }));
+  if ((state.mode === "bulk" || state.mode === "single") && hasRecord) {
+    state.messageController.setDefaultMessage("");
   }
   renderEditorMessage(state, { hasRecord, dirty, errors });
 
@@ -345,10 +335,6 @@ function onFieldInput(state, fieldKey) {
   updateEditorState(state);
 }
 
-function t(state, key, fallback, tokens = null) {
-  return getStudioText(state.config, `catalogue_work_editor.${key}`, fallback, tokens);
-}
-
 function workDefinitionOptions(state) {
   return {
     noteCatalogueSaved: (response) => noteCatalogueSaved(state, response),
@@ -361,7 +347,6 @@ function workDefinitionOptions(state) {
 
 function workFormOptions(state) {
   return {
-    text: (key, fallback, tokens) => t(state, key, fallback, tokens),
     onFieldInput: (fieldKey) => onFieldInput(state, fieldKey),
     onEditDefinition: (kind, id, restoreFocus) => editWorkDefinition(state, {
       ...workDefinitionOptions(state), kind, id, restoreFocus
@@ -400,7 +385,6 @@ async function openDraftSourceTarget(state, target) {
 
 function workRouteStateOptions(state, overrides = {}) {
   return createWorkRouteStateOptions(state, {
-    text: (key, fallback, tokens) => t(state, key, fallback, tokens),
     setTextWithState: (node, text, tone) => state.messageController.setRouteTextWithState(node, text, tone),
     setOpenInputMode: () => setOpenInputMode(state),
     setPopupVisibility: (visible) => setWorkSelectionPopupVisibility(state, visible),
@@ -413,7 +397,6 @@ function workRouteStateOptions(state, overrides = {}) {
 
 function workSelectionOptions(state) {
   return {
-    text: (key, fallback, tokens) => t(state, key, fallback, tokens),
     loadWorkLookupRecord,
     setLoadedBulkWorks: (workIds, recordsById, recordHashes) => {
       for (const workId of workIds) {
@@ -435,7 +418,6 @@ function workSelectionOptions(state) {
 
 function workActionOptions(state) {
   return {
-    text: (key, fallback, tokens) => t(state, key, fallback, tokens),
     setTextWithState: (node, text, tone) => state.messageController.setActionTextWithState(node, text, tone),
     validateDraft: () => validateDraft(state),
     updateFieldMessages: (errors) => updateFieldMessages(state, errors, workFormOptions(state)),
@@ -452,7 +434,6 @@ function workActionOptions(state) {
 
 function workSectionOptions(state) {
   return {
-    text: (key, fallback, tokens) => t(state, key, fallback, tokens),
     openEmbeddedEntryModal: (kind, index) => openEmbeddedEntryModal(state, kind, index),
     deleteEmbeddedEntry: (kind, index) => deleteEmbeddedEntry(state, kind, index)
   };
@@ -464,14 +445,12 @@ function updateSummary(state) {
 
 function applyWorkEditorText(state, elements) {
   setOpenInputMode(state);
-  applyWorkFormText(state, workFormOptions(state));
-  for (const [button, key, fallback] of [
-    [elements.newButton, "new_button", "New"],
-    [elements.saveButton, "save_button", "Save"],
-    [elements.deleteButton, "delete_button", "Delete"],
-    [elements.refreshButton, "refresh_button", "Refresh Catalogue"]
+  for (const [button, label] of [
+    [elements.newButton, "New"],
+    [elements.saveButton, "Save"],
+    [elements.deleteButton, "Delete"],
+    [elements.refreshButton, "Refresh Catalogue"]
   ]) {
-    const label = t(state, key, fallback);
     button.title = label;
     button.setAttribute("aria-label", label);
   }
@@ -479,8 +458,7 @@ function applyWorkEditorText(state, elements) {
 
 async function configureWorkEditorRuntime(state, elements) {
   return configureCatalogueEditorRouteRuntime(state, {
-    namespace: "catalogue_work_editor",
-    applyText: (config) => {
+    applyConfig: (config) => {
       applyCatalogueEditorMediaAttrs(elements.root, config, [
         "worksPrimaryBase",
         "thumbWorksBase",
@@ -592,11 +570,7 @@ async function init() {
     markWorkEditorLoaded(state, elements);
   } catch (error) {
     console.warn("catalogue_work_editor: init failed", error);
-    await showCatalogueEditorInitError(
-      elements.loadingNode,
-      "catalogue_work_editor",
-      "Failed to load catalogue source data for the work editor."
-    );
+    elements.loadingNode.textContent = "Failed to load catalogue source data for the work editor.";
   }
 }
 

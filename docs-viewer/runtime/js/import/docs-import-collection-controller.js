@@ -5,9 +5,6 @@ import {
   renderDocsImportCollectionView
 } from "./docs-import-collection-view.js";
 import {
-  importText
-} from "./docs-html-import-text.js";
-import {
   docsImportResultDestination
 } from "../management/docs-viewer-management-import-result.js";
 
@@ -119,7 +116,7 @@ export function createDocsImportCollectionController(options = {}) {
     }
     if (type === "cancel" && state.phase === "confirmation") {
       state.phase = "cancelled";
-      setStatus(statusNode, "", importText("collectionCancelledStatus"));
+      setStatus(statusNode, "", "Collection import cancelled before apply.");
       render();
       return;
     }
@@ -141,20 +138,18 @@ export function createDocsImportCollectionController(options = {}) {
     state.terminalDetail = detail;
     if (retry) {
       setBusy(true);
-      setStatus(statusNode, "busy", importText("collectionRefreshingReportStatus"));
+      setStatus(statusNode, "busy", "Refreshing the imported collection report...");
       render();
     }
     try {
       await onTerminalResult(detail);
       state.phase = "result";
-      setStatus(statusNode, "success", importText("collectionResultStatus", {
-        outcome: normalizeText(state.result && state.result.outcome) || "unknown"
-      }));
+      setStatus(statusNode, "success", `Collection import finished with outcome: ${normalizeText(state.result && state.result.outcome) || "unknown"}.`);
       render();
       return true;
     } catch (error) {
       state.phase = "projection_error";
-      setStatus(statusNode, "error", importText("collectionRefreshFailedStatus"));
+      setStatus(statusNode, "error", "Package import completed, but the collection report refresh failed. Retry the report refresh without importing again.");
       render();
       throw error;
     } finally {
@@ -203,7 +198,7 @@ export function createDocsImportCollectionController(options = {}) {
       || !normalizedSourceDirectory
       || !isDocsImportCollectionRecord(file)
     ) {
-      throw new Error(importText("collectionRequired"));
+      throw new Error("A supported staged collection file is required.");
     }
     if (
       normalizedCollection
@@ -212,7 +207,7 @@ export function createDocsImportCollectionController(options = {}) {
         || file.supports_return_import !== true
       )
     ) {
-      throw new Error(importText("collectionRequired"));
+      throw new Error("A supported staged collection file is required.");
     }
     state.active = true;
     state.phase = "preview";
@@ -224,7 +219,7 @@ export function createDocsImportCollectionController(options = {}) {
     state.plan = null;
     state.result = null;
     setBusy(true);
-    setStatus(previewStatusNode, "busy", importText("collectionPlanningStatus", { filename: stagedFilename }));
+    setStatus(previewStatusNode, "busy", `Planning collection ${stagedFilename}...`);
     if (previewStatusNode !== statusNode) setStatus(statusNode, "", "");
     render();
     try {
@@ -239,16 +234,16 @@ export function createDocsImportCollectionController(options = {}) {
         || payload.collection !== true
         || normalizeText(payload.source_format) !== state.sourceFormat
       ) {
-        throw new Error(importText("collectionUnsupportedPreview"));
+        throw new Error("Docs Import returned an unsupported collection preview.");
       }
       exactCollectionTarget(payload, "preview");
       state.plan = payload;
       if (Array.isArray(payload.blockers) && payload.blockers.length) {
         state.phase = "blocked";
-        setStatus(statusNode, "error", importText("collectionBlockedStatus"));
+        setStatus(statusNode, "error", "Collection plan is blocked. Review the reported package issues.");
       } else {
         state.phase = "confirmation";
-        setStatus(statusNode, "success", importText("collectionReadyStatus"));
+        setStatus(statusNode, "success", "Collection plan is ready for confirmation.");
       }
       if (previewStatusNode !== statusNode) setStatus(previewStatusNode, "", "");
       render();
@@ -260,7 +255,7 @@ export function createDocsImportCollectionController(options = {}) {
       setStatus(
         previewStatusNode,
         "error",
-        normalizeText(error && error.message) || importText("collectionFailedStatus")
+        normalizeText(error && error.message) || "Collection preview failed."
       );
       throw error;
     } finally {
@@ -275,7 +270,7 @@ export function createDocsImportCollectionController(options = {}) {
       : {};
     state.phase = "applying";
     setBusy(true);
-    setStatus(statusNode, "busy", importText("collectionApplyingStatus"));
+    setStatus(statusNode, "busy", "Applying the confirmed collection plan...");
     render();
     try {
       const payload = await fetchManagementJson("/docs/import-source", "POST", {
@@ -298,7 +293,7 @@ export function createDocsImportCollectionController(options = {}) {
       }, managementOptions(state.managementBaseUrl));
       if (payload && payload.preview_only === true) {
         if (normalizeText(payload.source_format) !== state.sourceFormat) {
-          throw new Error(importText("collectionUnsupportedPreview"));
+          throw new Error("Docs Import returned an unsupported collection preview.");
         }
         exactCollectionTarget(payload, "refreshed preview");
         state.plan = payload;
@@ -307,11 +302,11 @@ export function createDocsImportCollectionController(options = {}) {
         setStatus(
           statusNode,
           blocked ? "error" : "warn",
-          blocked ? importText("collectionBlockedStatus") : importText("collectionRefreshedStatus")
+          blocked ? "Collection plan is blocked. Review the reported package issues." : "Target facts changed. Review the refreshed collection plan before confirming again."
         );
       } else if (payload && payload.collection === true) {
         if (normalizeText(payload.source_format) !== state.sourceFormat) {
-          throw new Error(importText("collectionUnsupportedPreview"));
+          throw new Error("Docs Import returned an unsupported collection preview.");
         }
         const target = exactCollectionTarget(payload, "result");
         const destination = docsImportResultDestination(
@@ -321,9 +316,7 @@ export function createDocsImportCollectionController(options = {}) {
         state.result = payload;
         const completed = payload.outcome === "completed";
         state.phase = state.collection && !completed ? "confirmation" : "result";
-        setStatus(statusNode, completed ? "success" : "error", importText("collectionResultStatus", {
-          outcome: normalizeText(payload.outcome) || "unknown"
-        }));
+        setStatus(statusNode, completed ? "success" : "error", `Collection import finished with outcome: ${normalizeText(payload.outcome) || "unknown"}.`);
         if (!state.collection || completed) {
           const displayedRecord = (Array.isArray(payload.records) ? payload.records : []).find((record) => (
             record && (record.status === "created" || record.status === "overwritten") && normalizeText(record.doc_id)
@@ -347,13 +340,13 @@ export function createDocsImportCollectionController(options = {}) {
           }
         }
       } else {
-        throw new Error(importText("collectionUnsupportedPreview"));
+        throw new Error("Docs Import returned an unsupported collection preview.");
       }
       render();
       return payload;
     } catch (error) {
       state.phase = "confirmation";
-      setStatus(statusNode, "error", normalizeText(error && error.message) || importText("collectionApplyFailedStatus"));
+      setStatus(statusNode, "error", normalizeText(error && error.message) || "Collection apply failed.");
       render();
       throw error;
     } finally {

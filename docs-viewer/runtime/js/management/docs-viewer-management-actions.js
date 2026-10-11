@@ -25,24 +25,6 @@ import {
   openDocsViewerTextInputModal
 } from "./docs-viewer-management-modals.js";
 
-var ACTION_TEXT = {
-  cancelButton: "Cancel",
-  createDocTitle: "New doc title",
-  createCollectionDocTitle: "New",
-  createChildDocTitle: "New child title",
-  createSiblingDocTitle: "New sibling title",
-  createDocLabel: "title",
-  createDocDefaultTitle: "New Doc",
-  createDocButton: "Create",
-  createFailed: "Create failed.",
-  createCommittedOpenFailed: "Document created, but could not be opened in Source.",
-  settingsSaving: "Saving settings...",
-  settingsSaved: "Settings saved.",
-  settingsSaveFailed: "Settings save failed.",
-  deployFailed: "Publish failed.",
-  copyLinkFailed: "Copy link failed."
-};
-
 export function committedDocumentCreateTarget(payload) {
   var response = payload && typeof payload === "object" ? payload : {};
   var target = normalizeManagedDocumentTarget(response.target);
@@ -141,7 +123,7 @@ export function requestCommittedDocumentSource(target, requestDocumentMode) {
 
 function committedCreatePresentationError(target, error) {
   var detail = error && error.message ? String(error.message).trim() : "";
-  var message = ACTION_TEXT.createCommittedOpenFailed;
+  var message = "Document created, but could not be opened in Source.";
   if (detail && detail !== message) message += " " + detail;
   var presentationError = new Error(message);
   presentationError.committed = true;
@@ -153,10 +135,10 @@ function committedCreatePresentationError(target, error) {
 export function interactiveDocumentCreateErrorMessage(error) {
   var detail = error && error.message ? String(error.message).trim() : "";
   if (error && error.committed === true) {
-    return detail || ACTION_TEXT.createCommittedOpenFailed;
+    return detail || "Document created, but could not be opened in Source.";
   }
-  if (!detail || detail === ACTION_TEXT.createFailed) return ACTION_TEXT.createFailed;
-  return ACTION_TEXT.createFailed + " " + detail;
+  if (!detail || detail === "Create failed.") return "Create failed.";
+  return "Create failed. " + detail;
 }
 
 export function continueCommittedDocumentCreate(payload, options) {
@@ -324,12 +306,12 @@ export function createDocsViewerManagementActionController(options) {
       root: root,
       title: title,
       body: modalSettings.body,
-      label: ACTION_TEXT.createDocLabel,
-      initialValue: ACTION_TEXT.createDocDefaultTitle,
-      defaultValue: ACTION_TEXT.createDocDefaultTitle,
+      label: "title",
+      initialValue: "New Doc",
+      defaultValue: "New Doc",
       compactLabel: Boolean(modalSettings.compactLabel),
-      primaryLabel: ACTION_TEXT.createDocButton,
-      cancelLabel: ACTION_TEXT.cancelButton
+      primaryLabel: "Create",
+      cancelLabel: "Cancel"
     });
   }
 
@@ -350,7 +332,7 @@ export function createDocsViewerManagementActionController(options) {
       textarea.select();
       try {
         if (!document.execCommand("copy")) {
-          throw new Error(ACTION_TEXT.copyLinkFailed);
+          throw new Error("Copy link failed.");
         }
         resolve();
       } catch (error) {
@@ -364,10 +346,10 @@ export function createDocsViewerManagementActionController(options) {
   async function handleCreateDoc(target) {
     var anchor = target ? normalizeManagedDocumentTarget(target) : null;
     if (anchor && anchor.collection) throw new Error("Ordinary document creation requires an ordinary target.");
-    var titleResult = await openCreateTitleModal(ACTION_TEXT.createDocTitle);
+    var titleResult = await openCreateTitleModal("New doc title");
     if (!titleResult || !titleResult.confirmed) return;
 
-    var title = String(titleResult.value || "").trim() || ACTION_TEXT.createDocDefaultTitle;
+    var title = String(titleResult.value || "").trim() || "New Doc";
     setManagementBusy(true);
     setManagementMessage("Creating doc...", false);
 
@@ -385,13 +367,13 @@ export function createDocsViewerManagementActionController(options) {
 
     var titleResult = await openCreateTitleModal(
       kind === "child"
-        ? ACTION_TEXT.createChildDocTitle
-        : ACTION_TEXT.createSiblingDocTitle,
+        ? "New child title"
+        : "New sibling title",
       { body: "Relative to: " + baseDoc.title + " (" + baseDoc.doc_id + ")." }
     );
     if (!titleResult || !titleResult.confirmed) return;
 
-    var title = String(titleResult.value || "").trim() || ACTION_TEXT.createDocDefaultTitle;
+    var title = String(titleResult.value || "").trim() || "New Doc";
     var payload = {
       title: title
     };
@@ -416,11 +398,11 @@ export function createDocsViewerManagementActionController(options) {
     }
 
     var titleResult = await openCreateTitleModal(
-      ACTION_TEXT.createCollectionDocTitle,
+      "New",
       { compactLabel: true }
     );
     if (!titleResult || !titleResult.confirmed) return null;
-    var fields = { title: String(titleResult.value || "").trim() || ACTION_TEXT.createDocDefaultTitle };
+    var fields = { title: String(titleResult.value || "").trim() || "New Doc" };
     setManagementBusy(true);
     setManagementMessage("Creating doc...", false);
     return createDocumentAndOpenSource(
@@ -574,10 +556,10 @@ export function createDocsViewerManagementActionController(options) {
     }
     settingsWorkflow.close();
     setManagementBusy(true);
-    setManagementMessage(ACTION_TEXT.settingsSaving, false);
+    setManagementMessage("Saving settings...", false);
     updateSourceConfigSettings(changes, managementClientOptions())
       .then(function (payload) {
-        setManagementMessage(ACTION_TEXT.settingsSaved, false);
+        setManagementMessage("Settings saved.", false);
         var defaultDocChange = payload && payload.changes ? payload.changes.default_doc_id : null;
         var proposedDefaultDocId = defaultDocChange ? String(defaultDocChange.proposed_value || "").trim() : "";
         var target = normalizeManagedDocumentTarget(selectedDocument.documentTarget || {
@@ -592,7 +574,7 @@ export function createDocsViewerManagementActionController(options) {
         return null;
       })
       .catch(function (error) {
-        setManagementMessage(error && error.message ? error.message : ACTION_TEXT.settingsSaveFailed, true);
+        setManagementMessage(error && error.message ? error.message : "Settings save failed.", true);
       })
       .finally(function () {
         setManagementBusy(false);
@@ -641,7 +623,7 @@ export function createDocsViewerManagementActionController(options) {
           primaryLabel: "Delete " + deleteLabel,
           primaryTone: "danger",
           initialFocus: "cancel",
-          cancelLabel: ACTION_TEXT.cancelButton
+          cancelLabel: "Cancel"
         }).then(function (confirmed) {
           if (!confirmed) {
             setManagementMessage("", false);
@@ -734,7 +716,7 @@ export function createDocsViewerManagementActionController(options) {
     hideContextMenu();
     writeClipboardText(markdownLink)
       .catch(function (error) {
-        var message = error && error.message ? error.message : ACTION_TEXT.copyLinkFailed;
+        var message = error && error.message ? error.message : "Copy link failed.";
         setManagementMessage(message, true);
       });
   }

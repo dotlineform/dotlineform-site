@@ -19,16 +19,6 @@ function escapeHtml(value) {
     .replace(/'/g, "&#39;");
 }
 
-function formText(options, key, fallback, tokens = null) {
-  if (options && typeof options.text === "function") {
-    return options.text(key, fallback, tokens);
-  }
-  if (!tokens) return fallback;
-  return Object.entries(tokens).reduce((text, [token, value]) => {
-    return text.replace(new RegExp(`\\{${token}\\}`, "g"), value);
-  }, fallback);
-}
-
 function notifyFieldInput(options, fieldKey) {
   if (options && typeof options.onFieldInput === "function") {
     options.onFieldInput(fieldKey);
@@ -333,8 +323,8 @@ function renderProjectMediaDisplayField(field, fieldsNode, state, options) {
     button.className = "studioUi__iconButton";
     button.dataset.projectMediaChoose = "work";
     button.append(createStudioIcon(document, "folder-open"));
-    button.title = formText(options, "project_media_choose_button", "Choose image...");
-    button.setAttribute("aria-label", formText(options, "project_media_choose_button", "Choose image..."));
+    button.title = "Choose image...";
+    button.setAttribute("aria-label", "Choose image...");
     button.addEventListener("click", (event) => {
       // The opener must not dismiss the folder list when cached folders load immediately.
       event.stopPropagation();
@@ -382,8 +372,8 @@ function renderSeriesField(field, fieldsNode, state, options) {
   searchInput.className = "studioUi__input catalogueWorkSeriesPicker__search";
   searchInput.type = "text";
   searchInput.autocomplete = "off";
-  searchInput.placeholder = formText(options, "series_picker_placeholder", "find series by title");
-  searchInput.setAttribute("aria-label", formText(options, "series_picker_label", "Find series by title"));
+  searchInput.placeholder = "find series by title";
+  searchInput.setAttribute("aria-label", "Find series by title");
   const popupNode = document.createElement("div");
   popupNode.hidden = true;
   searchWrap.appendChild(searchInput);
@@ -457,18 +447,6 @@ function renderReadonlyField(field, readonlyNode, state) {
 export function renderWorkEditorFields(state, elements, options = {}) {
   EDITABLE_FIELDS.forEach((field) => renderField(field, elements.fieldsNode, state, options));
   READONLY_FIELDS.forEach((field) => renderReadonlyField(field, elements.readonlyNode, state));
-}
-
-export function applyWorkFormText(state, options = {}) {
-  if (state.seriesPicker) {
-    state.seriesPicker.searchInput.placeholder = formText(options, "series_picker_placeholder", "find series by title");
-    state.seriesPicker.searchInput.setAttribute("aria-label", formText(options, "series_picker_label", "Find series by title"));
-  }
-  if (state.projectMediaChooseButton) {
-    state.projectMediaChooseButton.title = formText(options, "project_media_choose_button", "Choose image...");
-    state.projectMediaChooseButton.setAttribute("aria-label", formText(options, "project_media_choose_button", "Choose image..."));
-  }
-  updateMediaSourceButton(state);
 }
 
 export function setFieldNodeValue(node, value) {

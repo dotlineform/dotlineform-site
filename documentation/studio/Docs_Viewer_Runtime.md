@@ -255,6 +255,8 @@ Route config chooses from known features and may narrow known views, modes, or c
 
 Views, modes, controls, actions, report loaders, and import formats are code-owned because they connect to executable lifecycle, rendering, parsing, or mutation behaviour. Entrypoints contribute the definitions appropriate to their app kind.
 
+UI copy lives directly in the calling renderer, action, controller or modal, with template literals for dynamic messages. Browser configuration supplies viewer settings and data addresses; it has no text registry or keyed text lookup. The 2026-10-11 cleanup retires the import text table and formatter, management/settings/modal copy tables and the unused text accessor/formatter exposed by the shared config controller and management context. Startup is labelled for viewer-settings loading. The three affected public shared modules use the existing tracked projection; import and management modules remain local-only. [Studio Runtime](Studio_Runtime.md#ui-text-retirement) records the joint cleanup and its focused evidence.
+
 ### Named Service Surfaces
 
 Generated reads, source reads/writes, and management workflows have separate browser service contexts. Local generated reads do not logically depend on management UI, and source authority is not inferred from the current route name.

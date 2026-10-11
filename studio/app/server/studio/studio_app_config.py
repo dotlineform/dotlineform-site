@@ -179,7 +179,6 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "studio" / "app" / "frontend" / "studio-shell.html",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-theme.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-app.js",
-        repo_root / "studio" / "app" / "frontend" / "js" / "studio-ui-text.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-route-registry.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-route-templates.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "catalogue-editor-shell-media.js",

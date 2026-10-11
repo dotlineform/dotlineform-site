@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260613-115624-3d377c
 title: Docs Viewer Public Route Shell Template
 added_date: "2026-06-13 11:56:24"
-last_updated: "2026-08-09 13:25:06"
+last_updated: "2026-10-11 00:00:00"
 summary: describes the lifecycle-generated public site shell
 parent_id: d-20260424-000000-50b63f
 ---
@@ -40,7 +40,7 @@ The renderer injects only route-shell values:
 - search aria label
 
 Scope behavior stays in config records rather than in copied shell logic.
-The public route config owns the fixed scope, default document, viewer base URL, public generated payload URLs, UI text config, and panel settings.
+The public route config owns the fixed scope, default document, viewer base URL, public generated payload URLs, and panel settings. UI copy lives directly in the calling runtime modules.
 
 ## Shell Contract
 
@@ -92,7 +92,7 @@ The initial local docs/search outputs are synced into the configured public `sit
 Delete Scope may remove a user-created public route shell only when the scope manifest records it as owned by that lifecycle action.
 It also removes user-created public route records and scope-owned public docs/search payloads.
 
-Delete Scope must not remove shared public runtime files, shared CSS, UI text, route registry files themselves, or unrelated route shells.
+Delete Scope must not remove shared public runtime files, shared CSS, route registry files themselves, or unrelated route shells.
 Delete Scope also must not remove a scope that is the `default_scope_id` for a management route.
 That guard protects portable installs where public scopes may all be user-created, while the original management entry scope remains route-owned.
 

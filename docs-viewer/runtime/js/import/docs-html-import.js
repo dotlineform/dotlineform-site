@@ -19,9 +19,6 @@ import {
   runDocsHtmlImportWorkflow
 } from "./docs-html-import-workflow.js";
 import {
-  importText
-} from "./docs-html-import-text.js";
-import {
   DOCS_IMPORT_CANDIDATE_EDITED_REVIEW_SOURCE,
   DOCS_IMPORT_CANDIDATE_ORDINARY,
   DOCS_IMPORT_CANDIDATE_RETURNED_PACKAGE,
@@ -274,8 +271,8 @@ function syncImportInputControls(state) {
   state.includePromptMeta.disabled = state.isRunning || !actionable || !supportsPromptMeta;
   if (!supportsPromptMeta) state.includePromptMeta.checked = false;
   state.runButton.textContent = collection
-    ? importText("collectionPreviewButton")
-    : importText("importButton");
+    ? "Preview collection"
+    : "Import";
   state.runButton.disabled = state.isRunning || !actionable;
   state.reviewButton.disabled = state.isRunning || !reviewable;
   state.collectionController.setActive(Boolean(collection && actionable));
@@ -297,7 +294,7 @@ function renderCandidateList(state, candidates) {
   resetImportView(state);
   syncImportInputControls(state);
   if (!state.candidates.length) {
-    setStatus(state.statusNode, "warn", importText("noFiles"));
+    setStatus(state.statusNode, "warn", "No supported staged documents or reviewed packages found in the shared import drop-zone.");
   }
   markRouteReady(state, true);
 }
@@ -339,7 +336,7 @@ function refreshSourceDirectory(state, sourceDirectory) {
       setStatus(
         state.statusNode,
         "error",
-        normalizeText(error && error.message) || importText("loadFilesFailed")
+        normalizeText(error && error.message) || "Failed to load staged documents."
       );
       markRouteReady(state, true);
       return state.candidates;
@@ -368,7 +365,7 @@ async function openResultSource(state, link) {
     setStatus(
       state.statusNode,
       "error",
-      normalizeText(error && error.message) || importText("resultOpenSourceFailed")
+      normalizeText(error && error.message) || "Failed to open source doc."
     );
   }
 }
@@ -522,7 +519,7 @@ function bindImportEvents(state) {
       return;
     }
     resetDocsHtmlImportWarning(state);
-    setStatus(state.statusNode, "", importText("overwriteCancelled"));
+    setStatus(state.statusNode, "", "Overwrite cancelled.");
   });
   state.sourceChooseButton.addEventListener("click", () => {
     if (!state.sourceSelection || state.isRunning) return;
@@ -672,9 +669,9 @@ export async function initDocsHtmlImport(options = {}) {
     setImportDestination(state, options.initialDestination || null, {
       label: options.initialDestinationLabel
     });
-    setText(state.includePromptMetaLabelNode, importText("includePromptMetaLabel"));
-    setText(state.confirmButton, importText("confirmOverwriteButton"));
-    setText(state.cancelButton, importText("cancelOverwriteButton"));
+    setText(state.includePromptMetaLabelNode, "Include obvious prompt/meta blocks");
+    setText(state.confirmButton, "Confirm overwrite");
+    setText(state.cancelButton, "Cancel");
     state.includePromptMeta.checked = false;
     bindImportEvents(state);
 
@@ -715,7 +712,7 @@ export async function initDocsHtmlImport(options = {}) {
       setStatus(
         state.statusNode,
         "error",
-        normalizeText(error && error.message) || importText("loadFilesFailed")
+        normalizeText(error && error.message) || "Failed to load staged documents."
       );
       syncImportInputControls(state);
       markRouteReady(state, true);
@@ -724,7 +721,7 @@ export async function initDocsHtmlImport(options = {}) {
   } catch (error) {
     console.warn("docs_import_source: init failed", error);
     bootStatus.hidden = false;
-    setStatus(bootStatus, "error", importText("loadFilesFailed"));
+    setStatus(bootStatus, "error", "Failed to load staged documents.");
     root.hidden = false;
     state.serviceAvailable = false;
     markRouteReady(state, true);

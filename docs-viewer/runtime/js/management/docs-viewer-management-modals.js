@@ -18,14 +18,6 @@ export {
 
 export { openDocsViewerNoticeModal };
 
-var MODAL_TEXT = {
-  importCancelButton: "Cancel",
-  importCloseButton: "Close",
-  settingsLoading: "Loading settings...",
-  settingsEmpty: "No editable settings are available for this scope.",
-  settingsLoadFailed: "Settings unavailable."
-};
-
 function publicCleanupCounts(payload) {
   var cleanup = payload && payload.public_cleanup;
   if (!cleanup || cleanup.applicable !== true) {
@@ -147,7 +139,7 @@ export function createDocsViewerManagementModalController(options = {}) {
     importModalCancelButton.type = "button";
     importModalCancelButton.className = "docsViewerImport__button docsViewerImport__button--defaultWidth docsViewerImport__modalCancel";
     importModalCancelButton.id = "docsViewerImportCancelButton";
-    importModalCancelButton.textContent = MODAL_TEXT.importCancelButton;
+    importModalCancelButton.textContent = "Cancel";
     actions.insertBefore(importModalCancelButton, runButton);
     return importModalCancelButton;
   }
@@ -338,14 +330,14 @@ export function createDocsViewerManagementModalController(options = {}) {
     var runButton = document.getElementById("docsHtmlImportRun");
     if (runButton) runButton.hidden = true;
     if (!cancelButton) return;
-    cancelButton.textContent = MODAL_TEXT.importCloseButton;
+    cancelButton.textContent = "Close";
     focusImportModalEntry();
   }
 
   function projectImportBusy(busy) {
     var cancelButton = ensureImportModalCancelButton();
     if (cancelButton) cancelButton.disabled = Boolean(busy);
-    if (!busy && cancelButton && cancelButton.textContent === MODAL_TEXT.importCloseButton) {
+    if (!busy && cancelButton && cancelButton.textContent === "Close") {
       focusImportModalEntry();
     }
   }
@@ -356,7 +348,7 @@ export function createDocsViewerManagementModalController(options = {}) {
     if (runButton) runButton.hidden = false;
     if (cancelButton) {
       cancelButton.disabled = false;
-      cancelButton.textContent = MODAL_TEXT.importCancelButton;
+      cancelButton.textContent = "Cancel";
     }
   }
 
@@ -579,7 +571,7 @@ export function createDocsViewerManagementModalController(options = {}) {
     settingsFieldState = null;
     if (refs.settingsSaveButton) refs.settingsSaveButton.disabled = true;
     renderSettingsField(null);
-    setSettingsStatus(MODAL_TEXT.settingsLoading, "busy");
+    setSettingsStatus("Loading settings...", "busy");
     renderSettingsWarnings([]);
     refs.settingsModal.hidden = false;
     if (settingsLifecycle) {
@@ -599,7 +591,7 @@ export function createDocsViewerManagementModalController(options = {}) {
       if (refs.settingsSaveButton) refs.settingsSaveButton.disabled = true;
       renderSettingsField(null);
       renderSettingsWarnings([]);
-      setSettingsStatus(MODAL_TEXT.settingsEmpty, "");
+      setSettingsStatus("No editable settings are available for this scope.", "");
       window.requestAnimationFrame(function () {
         focusWithoutScroll(refs.settingsCancelButton || refs.settingsModal);
       });
@@ -636,7 +628,7 @@ export function createDocsViewerManagementModalController(options = {}) {
     if (!settingsModalOpen()) return;
     if (refs.settingsSaveButton) refs.settingsSaveButton.disabled = true;
     renderSettingsWarnings([]);
-    setSettingsStatus(message || MODAL_TEXT.settingsLoadFailed, "error");
+    setSettingsStatus(message || "Settings unavailable.", "error");
   }
 
   function closeSettingsModal() {

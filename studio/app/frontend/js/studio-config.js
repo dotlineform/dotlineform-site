@@ -1,7 +1,3 @@
-import {
-  DEFAULT_STUDIO_UI_TEXT
-} from "./studio-ui-text.js";
-
 const SITE_BASE_PATH = deriveSiteBasePath(import.meta.url);
 let studioConfigPromise = null;
 
@@ -33,13 +29,6 @@ function readConfiguredStudioConfigUrl() {
 export function getStudioRouteRegistry(config) {
   const routes = pathValue(config, ["app", "routes"]);
   return routes && typeof routes === "object" && !Array.isArray(routes) ? routes : {};
-}
-
-export function getStudioText(config, key, fallback = "", tokens = null) {
-  const pathKeys = String(key || "").split(".").filter(Boolean);
-  const value = pathValue(DEFAULT_STUDIO_UI_TEXT, pathKeys);
-  const source = typeof value === "string" ? value : fallback;
-  return applyTextTokens(source, tokens);
 }
 
 function deriveSiteBasePath(importUrl) {
@@ -93,14 +82,4 @@ function pathValue(obj, keys) {
     current = current[key];
   }
   return current;
-}
-
-function applyTextTokens(text, tokens) {
-  const template = typeof text === "string" ? text : "";
-  if (!tokens || typeof tokens !== "object") return template;
-  return template.replace(/\{([a-z0-9_]+)\}/gi, (match, key) => {
-    if (!(key in tokens)) return match;
-    const value = tokens[key];
-    return value == null ? "" : String(value);
-  });
 }

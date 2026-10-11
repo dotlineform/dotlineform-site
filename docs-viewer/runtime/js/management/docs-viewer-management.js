@@ -45,10 +45,6 @@ import {
   resolveDocsViewerAction
 } from "./docs-viewer-action-definitions.js";
 
-var MANAGEMENT_TEXT = {
-  unavailableNote: "Docs management service unavailable."
-};
-
 export function createDocsViewerManagementActionContext(options = {}) {
   var selectedDocument = options.selectedDocument || {};
   var documentIndex = options.documentIndex || {};
@@ -508,7 +504,7 @@ export function initDocsViewerManagement(context) {
     if (!management.managementChecked) {
       noteText = "";
     } else if (!management.managementAvailable) {
-      noteText = management.managementCapabilityError || MANAGEMENT_TEXT.unavailableNote;
+      noteText = management.managementCapabilityError || "Docs management service unavailable.";
       noteIsError = true;
     } else {
       noteText = management.managementMessage || "";

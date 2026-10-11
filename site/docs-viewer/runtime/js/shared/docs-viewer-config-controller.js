@@ -22,19 +22,6 @@ export function getConfigValue(config, path) {
   return current;
 }
 
-export function getConfigText(config, path, fallback) {
-  var value = getConfigValue(config, "ui_text." + path);
-  return String(value == null ? fallback == null ? "" : fallback : value);
-}
-
-export function formatText(template, tokens) {
-  var text = String(template || "");
-  Object.keys(tokens || {}).forEach(function (key) {
-    text = text.replace(new RegExp("\\{" + key + "\\}", "g"), tokens[key]);
-  });
-  return text;
-}
-
 export function initDocsViewerConfigController(context) {
   var workspaceConfig = context.workspaceConfig || {};
   var documentIndex = context.documentIndex || {};

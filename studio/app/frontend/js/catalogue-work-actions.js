@@ -21,10 +21,6 @@ import {
 } from "./catalogue-work-action-records.js";
 
 
-function t(state, context, key, fallback, tokens = null) {
-  return context.text(key, fallback, tokens);
-}
-
 function setTextWithState(context, node, text, state = "") {
   context.setTextWithState(node, text, state);
 }
@@ -91,7 +87,7 @@ export async function saveCurrentWork(state, context) {
   setTextWithState(
     context,
     state.statusNode,
-    t(state, context, "save_status_saving", "Saving source record…")
+    "Saving source record…"
   );
   setTextWithState(context, state.resultNode, "");
 
@@ -140,8 +136,8 @@ export async function saveCurrentWork(state, context) {
   } catch (error) {
     const isConflict = Number(error && error.status) === 409;
     const message = catalogueSavedActionError(savedResponse, error) || (isConflict
-      ? t(state, context, "save_status_conflict", "Source record changed since this page loaded. Reload the work before saving again.")
-      : `${t(state, context, "save_status_failed", "Source save failed.")} ${normalizeText(error && error.message)}`.trim());
+      ? "Source record changed since this page loaded. Reload the work before saving again."
+      : `Source save failed. ${normalizeText(error && error.message)}`.trim());
     setTextWithState(context, state.statusNode, message, "error");
   } finally {
     state.isSaving = false;
@@ -167,7 +163,7 @@ export async function saveNewWork(state, context) {
 
   state.isSaving = true;
   context.updateEditorState();
-  setTextWithState(context, state.statusNode, t(state, context, "new_save_status_saving", "Saving new work…"));
+  setTextWithState(context, state.statusNode, "Saving new work…");
   setTextWithState(context, state.resultNode, "");
 
   let savedResponse = null;
@@ -189,15 +185,15 @@ export async function saveNewWork(state, context) {
       keepResult: true,
       preserveMediaIntent: response.media?.status !== "completed"
     }));
-    setTextWithState(context, state.resultNode, t(state, context, "new_save_result_success", "Saved work {work_id}.", { work_id: workId }), "success");
-    setTextWithState(context, state.statusNode, t(state, context, "new_save_status_success", "Saved work {work_id}.", { work_id: workId }), "success");
+    setTextWithState(context, state.resultNode, `Saved work ${workId}.`, "success");
+    setTextWithState(context, state.statusNode, `Saved work ${workId}.`, "success");
     if (completionError) {
       setTextWithState(context, state.resultNode, completionError, "error");
       setTextWithState(context, state.statusNode, "", "");
     }
     state.currentLookup = await context.loadWorkLookupRecord(workId);
   } catch (error) {
-    setTextWithState(context, state.statusNode, catalogueSavedActionError(savedResponse, error) || `${t(state, context, "new_save_status_failed", "Work save failed.")} ${normalizeText(error && error.message)}`.trim(), "error");
+    setTextWithState(context, state.statusNode, catalogueSavedActionError(savedResponse, error) || `Work save failed. ${normalizeText(error && error.message)}`.trim(), "error");
   } finally {
     state.isSaving = false;
     context.updateEditorState();
@@ -213,27 +209,26 @@ export async function deleteCurrentWork(state, context) {
     || state.isDeleting || state.isEditingDefinition) return;
   let savedResponse = null;
   try {
-    const tokens = { count: String(workIds.length), work_ids: workIds.join(", "), work_id: workIds[0] };
     const summary = workIds.length === 1
-      ? t(state, context, "delete_work_confirm", "Delete Work {work_id} and its Gallery memberships?", tokens)
-      : t(state, context, "delete_works_confirm", "Delete these {count} Works and their Gallery memberships?\n{work_ids}", tokens);
+      ? `Delete Work ${workIds[0]} and its Gallery memberships?`
+      : `Delete these ${workIds.length} Works and their Gallery memberships?\n${workIds.join(", ")}`;
     const confirmed = await confirmCatalogueActionModal(state, {
-      title: t(state, context, "delete_confirm_title", "Confirm delete"),
-      message: `${summary}\n${t(state, context, "delete_media_retained", "Shared images and files will be kept.")}`,
-      primaryLabel: workIds.length === 1 ? t(state, context, "delete_confirm_button", "Delete")
-        : t(state, context, "delete_works_confirm_button", "Delete {count} Works", tokens),
-      cancelLabel: t(state, context, "confirm_cancel_button", "Cancel"),
+      title: "Confirm delete",
+      message: `${summary}\nShared images and files will be kept.`,
+      primaryLabel: workIds.length === 1 ? "Delete"
+        : `Delete ${workIds.length} Works`,
+      cancelLabel: "Cancel",
       defaultAction: "cancel",
       restoreFocus: state.deleteButton
     });
     if (!confirmed) {
-      setTextWithState(context, state.statusNode, t(state, context, "delete_status_cancelled", "Delete cancelled."));
+      setTextWithState(context, state.statusNode, "Delete cancelled.");
       return;
     }
     state.isDeleting = true;
     context.updateEditorState();
     setTextWithState(context, state.resultNode, "");
-    setTextWithState(context, state.statusNode, t(state, context, "delete_works_status_running", "Deleting selected Works…"));
+    setTextWithState(context, state.statusNode, "Deleting selected Works…");
     const response = await applyCatalogueDelete({ kind: "works", ids: workIds });
     savedResponse = response;
     context.noteCatalogueSaved(response);
@@ -251,12 +246,12 @@ export async function deleteCurrentWork(state, context) {
     setEmptySearchMode(state, context.workRouteStateOptions());
     const completionError = catalogueSaveCompletionError(response);
     const success = workIds.length === 1
-      ? t(state, context, "delete_result_success", "Deleted work {work_id}.", tokens)
-      : t(state, context, "delete_works_result_success", "Deleted {count} Works.", tokens);
+      ? `Deleted work ${workIds[0]}.`
+      : `Deleted ${workIds.length} Works.`;
     setTextWithState(context, state.resultNode, completionError || success, completionError ? "error" : "success");
   } catch (error) {
     const message = catalogueSavedActionError(savedResponse, error)
-      || `${t(state, context, "delete_status_failed", "Source delete failed.")} ${normalizeText(error && error.message)}`.trim();
+      || `Source delete failed. ${normalizeText(error && error.message)}`.trim();
     setTextWithState(context, state.statusNode, message, "error");
   } finally {
     state.isDeleting = false;

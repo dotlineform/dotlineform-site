@@ -1,7 +1,4 @@
 import {
-  importText
-} from "./docs-html-import-text.js";
-import {
   docsImportResultDestination
 } from "../management/docs-viewer-management-import-result.js";
 
@@ -62,27 +59,12 @@ function resultDocLinksHtml(payload) {
 function resultCountsText(preview) {
   const stats = preview.source_stats && typeof preview.source_stats === "object" ? preview.source_stats : {};
   if (preview.source_format === "markdown" || preview.source_format === "markdown_package") {
-    return importText(
-      preview.source_format === "markdown_package"
-        ? "resultMarkdownPackageCounts"
-        : "resultMarkdownCounts",
-      {
-        chars: Number(stats.chars || 0),
-        links: Number(stats.links || 0),
-        images: Number(stats.images || 0),
-        attachments: Number(stats.attachments || 0)
-      }
-    );
+    const counts = `${Number(stats.chars || 0)} chars, ${Number(stats.links || 0)} links, ${Number(stats.images || 0)} images`;
+    return preview.source_format === "markdown_package"
+      ? `${counts}, ${Number(stats.attachments || 0)} attachments`
+      : counts;
   }
-  return importText(
-    "resultSummaryCounts",
-    {
-      links: Number(stats.links || 0),
-      images: Number(stats.images || 0),
-      svg: Number(stats.svg || 0),
-      details: Number(stats.details || 0)
-    }
-  );
+  return `${Number(stats.links || 0)} links, ${Number(stats.images || 0)} images, ${Number(stats.svg || 0)} SVG, ${Number(stats.details || 0)} details blocks`;
 }
 
 function resultRowsForPayload(payload, includeFilename) {
@@ -110,7 +92,7 @@ function resultRowsForPayload(payload, includeFilename) {
       || normalizeText(item && item.target_path).split("/").pop().replace(/\.html$/i, "");
     return [
       escapeHtml(displayName),
-      escapeHtml(importText("scriptFileResultType"))
+      "script file"
     ];
   })).concat(mediaPlans.map((item) => {
     const sourcePath = normalizeText(item && item.source_path);
@@ -118,14 +100,8 @@ function resultRowsForPayload(payload, includeFilename) {
     const kind = normalizeText(item && item.kind) || (normalizeText(item && item.media_path).includes("/files/") ? "attachment" : "image");
     const conversion = item && item.conversion && typeof item.conversion === "object" ? item.conversion : {};
     const typeText = kind === "image" && normalizeText(conversion.format)
-      ? importText(
-        "imageMediaResultType",
-        {
-          format: normalizeText(conversion.format).toUpperCase(),
-          max_width: Number(conversion.max_width || 800)
-        }
-      )
-      : importText("attachmentMediaResultType");
+      ? `image, ${normalizeText(conversion.format).toUpperCase()} <= ${Number(conversion.max_width || 800)}px`
+      : "attachment";
     const mediaPath = normalizeText(item && (item.media_path || item.media_link || item.media_token));
     return [
       escapeHtml(`${title}${sourcePath && sourcePath !== title ? ` (${sourcePath})` : ""}`),
@@ -168,7 +144,7 @@ export function renderDocsHtmlImportWarnings(state, warnings) {
   }
   setText(
     state.warningsHeading,
-    importText("warningsHeading")
+    "Warnings"
   );
   state.warningsList.innerHTML = items.map((warning) => `<li>${escapeHtml(warning)}</li>`).join("");
   state.warningsWrap.hidden = false;
@@ -180,8 +156,8 @@ export function renderDocsHtmlImportResult(state, payloadOrPayloads) {
   setText(
     state.resultTitleNode,
     includeFilename
-      ? importText("resultTitleAll", { count: payloads.length })
-      : importText("resultTitle")
+      ? `Imported ${payloads.length} files`
+      : "Imported"
   );
   const rows = payloads.flatMap((payload) => resultRowsForPayload(payload, includeFilename));
   setHtml(
@@ -209,20 +185,15 @@ export function renderDocsHtmlImportInteractiveOverwriteWarning(state, payload) 
     : `${interactivePlans.length} script files`;
   setText(
     state.collisionHeadingNode,
-    importText("interactiveAssetCollisionHeading")
+    "Replace interactive HTML asset"
   );
   setText(
     state.collisionBodyNode,
-    importText("interactiveAssetCollisionBody")
+    "This import includes an interactive HTML companion that matches an existing asset. Confirm overwrite to replace that asset."
   );
   setText(
     state.collisionMetaNode,
-    importText(
-      "interactiveAssetOverwriteRequired",
-      {
-        path: interactiveTargetText
-      }
-    )
+    `Interactive asset overwrite required: ${interactiveTargetText}. Review the warning and confirm if you want to replace it.`
   );
   state.warningNode.hidden = false;
   state.confirmButton.hidden = false;

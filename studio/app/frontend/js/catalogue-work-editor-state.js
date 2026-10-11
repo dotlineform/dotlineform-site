@@ -149,7 +149,6 @@ export function createWorkEditorState(elements, options = {}) {
 
 export function createWorkRouteStateOptions(state, callbacks = {}, overrides = {}) {
   return {
-    text: callbacks.text,
     setTextWithState: callbacks.setTextWithState,
     setOpenInputMode: callbacks.setOpenInputMode,
     setPopupVisibility: callbacks.setPopupVisibility,

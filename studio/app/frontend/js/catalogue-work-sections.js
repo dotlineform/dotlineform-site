@@ -1,7 +1,4 @@
 import {
-  getStudioText
-} from "./studio-config.js";
-import {
   createRecordList,
   createRecordListActions
 } from "/shared/frontend/js/record-list.js";
@@ -24,13 +21,6 @@ function escapeHtml(value) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
-}
-
-function text(state, options, key, fallback, tokens = null) {
-  if (options && typeof options.text === "function") {
-    return options.text(key, fallback, tokens);
-  }
-  return getStudioText(state.config, `catalogue_work_editor.${key}`, fallback, tokens);
 }
 
 function runMaybeAsync(result, label) {
@@ -72,7 +62,7 @@ export function formatWorkSelectionList(ids) {
   return `${items.join(", ")}${suffix}`;
 }
 
-export function renderWorkCurrentPreview(state, options = {}) {
+export function renderWorkCurrentPreview(state) {
   if (!state.previewNode) return;
   if (state.mode === "bulk" || !state.currentRecord) {
     state.previewNode.innerHTML = "";
@@ -85,8 +75,8 @@ export function renderWorkCurrentPreview(state, options = {}) {
   const fallback = {
     fallbackState: preview.src ? "unavailable" : "not-configured",
     fallbackText: preview.src
-      ? text(state, options, "preview_unavailable", "Preview image unavailable.")
-      : text(state, options, "preview_not_configured", "Preview not configured.")
+      ? "Preview image unavailable."
+      : "Preview not configured."
   };
   const caption = buildWorkRecordSummary(record);
   const dimensionCaption = buildWorkImageDimensionSummary(record);
@@ -201,8 +191,8 @@ export function updateWorkResourcesSection(state, options = {}) {
       key: "edit",
       className: "studioUi__iconButton",
       iconClass: "studioUi__icon studioUi__icon--pen",
-      title: text(state, options, "files_edit_button", "Edit"),
-      ariaLabel: text(state, options, "files_edit_button", "Edit"),
+      title: "Edit",
+      ariaLabel: "Edit",
       appearance: "icon",
       disabled: () => actionDisabled
     },
@@ -210,8 +200,8 @@ export function updateWorkResourcesSection(state, options = {}) {
       key: "delete",
       className: "studioUi__iconButton",
       iconClass: "studioUi__icon studioUi__icon--trash",
-      title: text(state, options, "files_delete_button", "Delete"),
-      ariaLabel: text(state, options, "files_delete_button", "Delete"),
+      title: "Delete",
+      ariaLabel: "Delete",
       appearance: "icon",
       tone: "danger",
       disabled: () => actionDisabled
@@ -226,8 +216,8 @@ export function updateWorkResourcesSection(state, options = {}) {
         key: "new-download",
         className: "studioUi__iconButton",
         iconClass: "studioUi__icon studioUi__icon--paperclip",
-        title: text(state, options, "files_add_button", "Add file"),
-        ariaLabel: text(state, options, "files_add_button", "Add file"),
+        title: "Add file",
+        ariaLabel: "Add file",
         appearance: "icon",
         requiresSelection: false,
         disabled: () => addDisabled
@@ -236,8 +226,8 @@ export function updateWorkResourcesSection(state, options = {}) {
         key: "new-link",
         className: "studioUi__iconButton",
         iconClass: "studioUi__icon studioUi__icon--link",
-        title: text(state, options, "links_add_button", "Add link"),
-        ariaLabel: text(state, options, "links_add_button", "Add link"),
+        title: "Add link",
+        ariaLabel: "Add link",
         appearance: "icon",
         requiresSelection: false,
         disabled: () => addDisabled
@@ -286,7 +276,7 @@ export function updateWorkSummary(state, options = {}) {
     state.summaryNode.innerHTML = "";
     if (state.resourcesPanelNode) state.resourcesPanelNode.hidden = false;
     updateWorkResourcesSection(state, options);
-    renderWorkCurrentPreview(state, options);
+    renderWorkCurrentPreview(state);
     return;
   }
 
@@ -298,24 +288,24 @@ export function updateWorkSummary(state, options = {}) {
     const seriesTitles = seriesIds.map(seriesId => normalizeText(state.seriesById.get(seriesId)?.title) || "—");
     state.metaNode.hidden = false;
     state.metaNode.textContent = selectedCount
-      ? text(state, options, "bulk_meta", "{count} works selected", { count: String(selectedCount) })
+      ? `${selectedCount} works selected`
       : "";
     state.summaryNode.innerHTML = `
       <div class="studioForm__field">
-        <span class="studioForm__label">${escapeHtml(text(state, options, "bulk_summary_selected", "selected works"))}</span>
+        <span class="studioForm__label">selected works</span>
         <div class="studioUi__input studioUi__input--readonlyDisplay">${escapeHtml(formatWorkSelectionList(state.bulkWorkIds) || "—")}</div>
       </div>
       <div class="studioForm__field">
-        <span class="studioForm__label">${escapeHtml(text(state, options, "bulk_summary_count", "record count"))}</span>
+        <span class="studioForm__label">record count</span>
         <div class="studioUi__input studioUi__input--readonlyDisplay">${escapeHtml(String(selectedCount || 0))}</div>
       </div>
       <div class="studioForm__field">
-        <span class="studioForm__label">${escapeHtml(text(state, options, "summary_series_label", "series"))}</span>
+        <span class="studioForm__label">series</span>
         <div class="studioUi__input studioUi__input--readonlyDisplay catalogueWorkSummary__series">${escapeHtml(seriesTitles.length ? seriesTitles.join(", ") : "—")}</div>
       </div>
     `;
     if (state.resourcesPanelNode) state.resourcesPanelNode.hidden = true;
-    renderWorkCurrentPreview(state, options);
+    renderWorkCurrentPreview(state);
     return;
   }
 
@@ -327,5 +317,5 @@ export function updateWorkSummary(state, options = {}) {
 
   if (state.resourcesPanelNode) state.resourcesPanelNode.hidden = !state.currentRecord;
   updateWorkResourcesSection(state, options);
-  renderWorkCurrentPreview(state, options);
+  renderWorkCurrentPreview(state);
 }

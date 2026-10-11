@@ -15,21 +15,7 @@ const EMBEDDED_ITEM_DEFINITIONS = Object.freeze({
     modalRole: "download-modal",
     firstFieldId: "catalogueWorkDownloadFilename",
     secondFieldId: "catalogueWorkDownloadLabel",
-    firstFieldType: "text",
-    editTitleKey: "files_edit_modal_title",
-    editTitleFallback: "Edit download",
-    firstLabelKey: "files_filename_label",
-    firstLabelFallback: "filename",
-    secondLabelKey: "files_label_label",
-    secondLabelFallback: "label",
-    missingFirstKey: "files_invalid_filename",
-    missingFirstFallback: "Each download needs a filename.",
-    missingSecondKey: "files_invalid_label",
-    missingSecondFallback: "Each download needs a label.",
-    deleteTitleKey: "files_delete_modal_title",
-    deleteTitleFallback: "Delete download",
-    deleteBodyKey: "files_delete_modal_body",
-    deleteBodyFallback: "Delete download {label}?"
+    firstFieldType: "text"
   }),
   link: Object.freeze({
     entriesKey: "links",
@@ -41,23 +27,7 @@ const EMBEDDED_ITEM_DEFINITIONS = Object.freeze({
     modalRole: "link-modal",
     firstFieldId: "catalogueWorkLinkUrl",
     secondFieldId: "catalogueWorkLinkLabel",
-    firstFieldType: "url",
-    addTitleKey: "links_add_modal_title",
-    addTitleFallback: "Add link",
-    editTitleKey: "links_edit_modal_title",
-    editTitleFallback: "Edit link",
-    firstLabelKey: "links_url_label",
-    firstLabelFallback: "URL",
-    secondLabelKey: "links_label_label",
-    secondLabelFallback: "label",
-    missingFirstKey: "links_invalid_url",
-    missingFirstFallback: "Each link needs a URL.",
-    missingSecondKey: "links_invalid_label",
-    missingSecondFallback: "Each link needs a label.",
-    deleteTitleKey: "links_delete_modal_title",
-    deleteTitleFallback: "Delete link",
-    deleteBodyKey: "links_delete_modal_body",
-    deleteBodyFallback: "Delete link {label}?"
+    firstFieldType: "url"
   })
 });
 
@@ -68,30 +38,16 @@ function definitionForKind(kind) {
   return EMBEDDED_ITEM_DEFINITIONS[normalizeText(kind)] || null;
 }
 
-function interpolateText(template, tokens = null) {
-  let text = normalizeText(template);
-  if (!tokens || typeof tokens !== "object") return text;
-  Object.entries(tokens).forEach(([key, value]) => {
-    text = text.replaceAll(`{${key}}`, String(value == null ? "" : value));
-  });
-  return text;
-}
-
-function lookupText(text, key, fallback, tokens = null) {
-  return typeof text === "function" ? text(key, fallback, tokens) : interpolateText(fallback, tokens);
-}
-
 export function getWorkEmbeddedItems(draft, kind) {
   const definition = definitionForKind(kind);
   if (!definition) return [];
   return cloneEmbeddedEntries(draft && draft[definition.entriesKey], definition.fields);
 }
 
-export function buildWorkEmbeddedModalDescriptor(kind, index, options = {}) {
+export function buildWorkEmbeddedModalDescriptor(kind, index, draft) {
   const definition = definitionForKind(kind);
   if (!definition) return null;
-  const text = options.text;
-  const entries = getWorkEmbeddedItems(options.draft, kind);
+  const entries = getWorkEmbeddedItems(draft, kind);
   const editing = Number.isInteger(index) && index >= 0 && index < entries.length;
   if (kind === "download" && !editing) return null;
   const current = editing ? entries[index] : {};
@@ -99,16 +55,14 @@ export function buildWorkEmbeddedModalDescriptor(kind, index, options = {}) {
     entriesKey: definition.entriesKey,
     entries,
     editing,
-    title: editing
-      ? lookupText(text, definition.editTitleKey, definition.editTitleFallback)
-      : lookupText(text, definition.addTitleKey, definition.addTitleFallback),
+    title: kind === "download" ? "Edit download" : editing ? "Edit link" : "Add link",
     titleId: definition.titleId,
     modalRole: definition.modalRole,
     statusId: definition.statusId,
     fields: [
       {
         fieldId: definition.firstFieldId,
-        label: lookupText(text, definition.firstLabelKey, definition.firstLabelFallback),
+        label: kind === "download" ? "filename" : "URL",
         key: definition.firstKey,
         value: current[definition.firstKey] || "",
         type: definition.firstFieldType,
@@ -116,7 +70,7 @@ export function buildWorkEmbeddedModalDescriptor(kind, index, options = {}) {
       },
       {
         fieldId: definition.secondFieldId,
-        label: lookupText(text, definition.secondLabelKey, definition.secondLabelFallback),
+        label: "label",
         key: definition.secondKey,
         value: current[definition.secondKey] || "",
         type: "text"
@@ -125,15 +79,14 @@ export function buildWorkEmbeddedModalDescriptor(kind, index, options = {}) {
   };
 }
 
-export function validateWorkEmbeddedEntryValues(kind, firstValue, secondValue, options = {}) {
+export function validateWorkEmbeddedEntryValues(kind, firstValue, secondValue) {
   const definition = definitionForKind(kind);
   if (!definition) return "";
-  const text = options.text;
   if (!normalizeText(firstValue)) {
-    return lookupText(text, definition.missingFirstKey, definition.missingFirstFallback);
+    return kind === "download" ? "Each download needs a filename." : "Each link needs a URL.";
   }
   if (!normalizeText(secondValue)) {
-    return lookupText(text, definition.missingSecondKey, definition.missingSecondFallback);
+    return kind === "download" ? "Each download needs a label." : "Each link needs a label.";
   }
   return "";
 }
@@ -147,33 +100,31 @@ export function buildWorkEmbeddedEntry(kind, firstValue, secondValue) {
   };
 }
 
-export function buildWorkEmbeddedDeleteConfirmation(kind, draft, index, options = {}) {
+export function buildWorkEmbeddedDeleteConfirmation(kind, draft, index) {
   const definition = definitionForKind(kind);
   if (!definition) return null;
   const entries = getWorkEmbeddedItems(draft, kind);
   if (!Number.isInteger(index) || index < 0 || index >= entries.length) return null;
   const item = entries[index];
-  const text = options.text;
   const label = definition.entriesKey === "downloads"
     ? normalizeText(item.label || item.filename)
     : normalizeText(item.label || item.url);
   return {
     entriesKey: definition.entriesKey,
     entries,
-    title: lookupText(text, definition.deleteTitleKey, definition.deleteTitleFallback),
-    body: lookupText(text, definition.deleteBodyKey, definition.deleteBodyFallback, { label })
+    title: kind === "download" ? "Delete download" : "Delete link",
+    body: kind === "download" ? `Delete download ${label}?` : `Delete link ${label}?`
   };
 }
 
-export function validateWorkEmbeddedItems(draft, options = {}) {
+export function validateWorkEmbeddedItems(draft) {
   const errors = new Map();
-  const text = options.text;
   normalizeEmbeddedEntries(draft && draft.downloads, WORK_DOWNLOAD_FIELDS).forEach((item) => {
-    const message = validateWorkEmbeddedEntryValues("download", item.filename, item.label, { text });
+    const message = validateWorkEmbeddedEntryValues("download", item.filename, item.label);
     if (message) errors.set("downloads", message);
   });
   normalizeEmbeddedEntries(draft && draft.links, WORK_LINK_FIELDS).forEach((item) => {
-    const message = validateWorkEmbeddedEntryValues("link", item.url, item.label, { text });
+    const message = validateWorkEmbeddedEntryValues("link", item.url, item.label);
     if (message) errors.set("links", message);
   });
   return errors;

@@ -25,16 +25,6 @@ function callback(options, name, ...args) {
   return undefined;
 }
 
-function text(options, key, fallback, tokens = null) {
-  if (options && typeof options.text === "function") {
-    return options.text(key, fallback, tokens);
-  }
-  if (!tokens) return fallback;
-  return Object.entries(tokens).reduce((value, [token, replacement]) => {
-    return value.replace(new RegExp(`\\{${token}\\}`, "g"), () => replacement == null ? "" : String(replacement));
-  }, fallback);
-}
-
 function buildDraftFromRecord(record) {
   return buildWorkDraftFromRecord(record, {
     fields: EDITABLE_FIELDS,
@@ -117,7 +107,7 @@ export function setLoadedWorkRecord(state, workId, record, options = {}) {
     options,
     "setTextWithState",
     state.statusNode,
-    text(options, "save_status_loaded", "Loaded work {work_id}.", { work_id: workId })
+    ""
   );
   callback(options, "setTextWithState", state.warningNode, "");
   if (!options.keepResult) {
@@ -149,7 +139,7 @@ export function setLoadedBulkWorks(state, workIds, recordsById, recordHashes, op
     options,
     "setTextWithState",
     state.statusNode,
-    text(options, "bulk_status_loaded", "Loaded {count} work records.", { count: String(workIds.length) })
+    ""
   );
   callback(options, "setTextWithState", state.warningNode, "");
   if (!options.keepResult) {
@@ -178,13 +168,13 @@ export function setNewWorkMode(state, options = {}) {
   state.draft.work_id = normalizeWorkId(options.workId) || state.nextSuggestedWorkId || suggestNextWorkId(Array.from(state.workSearchById.values()));
   state.baselineDraft = { ...buildDraftFromRecord(state.draft), work_id: state.draft.work_id };
   state.searchNode.value = state.draft.work_id;
-  state.searchNode.placeholder = text(options, "new_work_id_placeholder", "new work id");
-  state.searchNode.setAttribute("aria-label", text(options, "new_work_id_label", "New work id"));
+  state.searchNode.placeholder = "new work id";
+  state.searchNode.setAttribute("aria-label", "New work id");
   callback(options, "applyDraftToInputs");
   callback(options, "clearReadonlyFields");
   callback(options, "setPopupVisibility", false);
   syncUrl("", "new");
-  callback(options, "setTextWithState", state.statusNode, text(options, "new_status_loaded", ""));
+  callback(options, "setTextWithState", state.statusNode, "");
   callback(options, "setTextWithState", state.warningNode, "");
   if (!options.keepResult) {
     callback(options, "setTextWithState", state.resultNode, "");
@@ -216,7 +206,7 @@ export function setEmptySearchMode(state, options = {}) {
   callback(options, "clearReadonlyFields");
   callback(options, "setPopupVisibility", false);
   syncUrl("");
-  callback(options, "setTextWithState", state.statusNode, text(options, "missing_work_param", "Search for a work by work id."));
+  callback(options, "setTextWithState", state.statusNode, "Search for a work by work id.");
   callback(options, "setTextWithState", state.warningNode, "");
   if (!options.keepResult) {
     callback(options, "setTextWithState", state.resultNode, "");

@@ -2,8 +2,6 @@ import {
   normalizeSearchText
 } from "./docs-viewer-search.js";
 import {
-  formatText,
-  getConfigText,
   getConfigValue,
   initDocsViewerConfigController
 } from "./docs-viewer-config-controller.js";
@@ -531,8 +529,6 @@ export function startDocsViewerRuntime(options) {
       defaultRouteDocId: function () { return defaultRouteDocId; },
       docsViewerConfigUrl: docsViewerConfigUrl,
       escapeHtml: escapeHtml,
-      formatText: formatText,
-      getConfigText: getConfigText,
       getConfigValue: getConfigValue,
       isManagementContext: function () { return routeWorkflow.managementUiEnabled(); },
       serviceClient: {

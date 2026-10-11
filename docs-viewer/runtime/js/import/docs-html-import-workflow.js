@@ -9,9 +9,6 @@ import {
   resetDocsHtmlImportWarning
 } from "./docs-html-import-render.js";
 import {
-  importText
-} from "./docs-html-import-text.js";
-import {
   docsImportResultDestination
 } from "../management/docs-viewer-management-import-result.js";
 
@@ -54,7 +51,7 @@ function awaitInteractiveHtmlConfirmation(state, payload) {
   setStatus(
     state.statusNode,
     "warn",
-    payload.summary_text || importText("interactiveAssetCollisionHeading")
+    payload.summary_text || "Replace interactive HTML asset"
   );
   state.confirmButton.disabled = false;
   state.cancelButton.disabled = false;
@@ -100,11 +97,7 @@ async function importFileWithPrompts(state, file, context = {}) {
       setStatus(
         state.statusNode,
         "busy",
-        importText("runningStatusAll", {
-          index: Number(context.index || 0) + 1,
-          total,
-          filename: stagedFilename
-        })
+        `Importing ${Number(context.index || 0) + 1} of ${total}: ${stagedFilename}`
       );
     }
     const payload = await requestImport(file, {
@@ -153,7 +146,7 @@ export async function runDocsHtmlImportWorkflow(
   state.confirmButton.disabled = true;
   state.cancelButton.disabled = true;
   resetImportView(state, "");
-  setStatus(state.statusNode, "busy", importText("runningStatus"));
+  setStatus(state.statusNode, "busy", "Converting and validating staged source...");
   state.isRunning = true;
   onRunningChange(true);
 
@@ -171,8 +164,8 @@ export async function runDocsHtmlImportWorkflow(
           state.statusNode,
           "",
           files.length > 1
-            ? importText("importCancelledPartial", { count: results.length, total: files.length })
-            : importText("overwriteCancelled")
+            ? `Import cancelled after ${results.length} of ${files.length} files.`
+            : "Overwrite cancelled."
         );
         return;
       }
@@ -184,7 +177,7 @@ export async function runDocsHtmlImportWorkflow(
       state.statusNode,
       "success",
       results.length > 1
-        ? importText("importAllSuccess", { count: results.length })
+        ? `Imported ${results.length} staged documents.`
         : normalizeText(results[0] && results[0].summary_text)
     );
     const displayedResult = results.slice().reverse().find((result) => normalizeText(result && result.doc_id)) || null;
@@ -208,7 +201,7 @@ export async function runDocsHtmlImportWorkflow(
     setStatus(
       state.statusNode,
       "error",
-      normalizeText(error && error.message) || importText("importFailed")
+      normalizeText(error && error.message) || "Import failed."
     );
   } finally {
     state.isRunning = false;

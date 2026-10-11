@@ -23,16 +23,6 @@ function escapeHtml(value) {
     .replace(/'/g, "&#39;");
 }
 
-function text(context, key, fallback, tokens = null) {
-  if (context && typeof context.text === "function") {
-    return context.text(key, fallback, tokens);
-  }
-  if (!tokens) return fallback;
-  return Object.entries(tokens).reduce((value, [token, replacement]) => {
-    return value.replace(new RegExp(`\\{${token}\\}`, "g"), () => replacement == null ? "" : String(replacement));
-  }, fallback);
-}
-
 function buildSearchToken(value) {
   const normalized = normalizeText(value);
   if (!normalized) return "";
@@ -168,12 +158,12 @@ export async function openWorkSelection(state, requestedValue, context) {
   try {
     workIds = parseWorkSelection(requestedValue);
   } catch (error) {
-    renderWorkSearchMatches(state, [], normalizeText(error && error.message) || text(context, "search_empty", "Enter a work id."));
+    renderWorkSearchMatches(state, [], normalizeText(error && error.message) || "Enter a work id.");
     return;
   }
 
   if (!workIds.length) {
-    renderWorkSearchMatches(state, [], text(context, "search_empty", "Enter a work id."));
+    renderWorkSearchMatches(state, [], "Enter a work id.");
     return;
   }
   if (workIds.length === 1) {
@@ -183,7 +173,7 @@ export async function openWorkSelection(state, requestedValue, context) {
 
   const unknown = workIds.find((workId) => !state.workSearchById.has(workId));
   if (unknown) {
-    renderWorkSearchMatches(state, [], text(context, "unknown_work_error", "Unknown work id: {work_id}.", { work_id: unknown }));
+    renderWorkSearchMatches(state, [], `Unknown work id: ${unknown}.`);
     return;
   }
 
@@ -209,7 +199,7 @@ export async function openWorkSelection(state, requestedValue, context) {
 export async function openWorkById(state, requestedWorkId, context) {
   const workId = normalizeWorkId(requestedWorkId);
   if (!workId) {
-    renderWorkSearchMatches(state, [], text(context, "search_empty", "Enter a work id."));
+    renderWorkSearchMatches(state, [], "Enter a work id.");
     return;
   }
 
@@ -219,7 +209,7 @@ export async function openWorkById(state, requestedWorkId, context) {
     if (matches.length) {
       renderWorkSearchMatches(state, matches);
     } else {
-      renderWorkSearchMatches(state, [], text(context, "unknown_work_error", "Unknown work id: {work_id}.", { work_id: workId }));
+      renderWorkSearchMatches(state, [], `Unknown work id: ${workId}.`);
     }
     return;
   }
@@ -265,7 +255,7 @@ export function bindWorkSelectionControls(state, context) {
       <span class="catalogueWorkSearch__id">${escapeHtml(workId)}</span>
       <span class="catalogueWorkSearch__title">${escapeHtml(normalizeText(record && record.title) || buildRecordSummary(record))}</span>
     `,
-    renderNoResults: () => `<p class="sharedSearchList__empty">${escapeHtml(text(context, "search_no_match", "No matching work records."))}</p>`,
+    renderNoResults: () => '<p class="sharedSearchList__empty">No matching work ids.</p>',
     classNames: {
       option: "catalogueWorkSearch__option"
     },
@@ -321,7 +311,7 @@ export async function applyInitialWorkRouteSelection(state, context) {
       context.setEmptySearchMode({ keepSearchValue: true });
       context.setTextWithState(
         state.statusNode,
-        `${text(context, "load_requested_work_failed", "Failed to load the requested work.")} ${normalizeText(error && error.message)}`.trim(),
+        `Failed to load the requested work. ${normalizeText(error && error.message)}`.trim(),
         "error"
       );
     }
@@ -333,8 +323,8 @@ export async function applyInitialWorkRouteSelection(state, context) {
       context.setTextWithState(
         state.statusNode,
         requestedSeriesId
-          ? text(context, "unknown_series_error", "Unknown series id: {series_id}.", { series_id: requestedSeriesId })
-          : text(context, "invalid_series_error", "Invalid series id."),
+          ? `Unknown series id: ${requestedSeriesId}.`
+          : "Invalid series id.",
         "error"
       );
     }

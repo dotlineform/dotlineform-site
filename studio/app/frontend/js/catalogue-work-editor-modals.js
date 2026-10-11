@@ -26,19 +26,15 @@ export function closeCatalogueWorkModal(state) {
   if (state && state.modalHost) state.modalHost.innerHTML = "";
 }
 
-export function openWorkEmbeddedEntryModal(state, kind, index = null, options = {}) {
+export function openWorkEmbeddedEntryModal(state, kind, index = null) {
   if (!state || (state.mode !== "new" && !state.currentRecord) || state.mode === "bulk") return Promise.resolve(null);
-  const text = options.text;
-  const descriptor = buildWorkEmbeddedModalDescriptor(kind, index, {
-    draft: state.draft,
-    text
-  });
+  const descriptor = buildWorkEmbeddedModalDescriptor(kind, index, state.draft);
   if (!descriptor) return Promise.resolve(null);
   const firstField = descriptor.fields[0];
   const secondField = descriptor.fields[1];
 
   closeCatalogueWorkModal(state);
-  state.modalHost.innerHTML = renderWorkEmbeddedEntryModalHtml(descriptor, { text });
+  state.modalHost.innerHTML = renderWorkEmbeddedEntryModalHtml(descriptor);
 
   const controller = activateStudioModalFrame(state.modalHost, {
     cancelRoles: [ENTRY_CANCEL_ROLE],
@@ -50,7 +46,7 @@ export function openWorkEmbeddedEntryModal(state, kind, index = null, options = 
       const secondNode = state.modalHost.querySelector(`#${secondField.fieldId}`);
       const firstValue = firstField.readOnly ? firstField.value : normalizeText(firstNode && firstNode.value);
       const secondValue = normalizeText(secondNode && secondNode.value);
-      const validationMessage = validateWorkEmbeddedEntryValues(kind, firstValue, secondValue, { text });
+      const validationMessage = validateWorkEmbeddedEntryValues(kind, firstValue, secondValue);
       if (validationMessage) {
         api.setStatus("error", validationMessage);
         if (firstNode && !firstValue) firstNode.focus();
@@ -79,17 +75,16 @@ export function openWorkEmbeddedEntryModal(state, kind, index = null, options = 
   });
 }
 
-export async function confirmWorkEmbeddedDeleteModal(state, kind, index, options = {}) {
+export async function confirmWorkEmbeddedDeleteModal(state, kind, index) {
   if (!state || (state.mode !== "new" && !state.currentRecord) || state.mode === "bulk") return null;
-  const text = options.text;
-  const confirmation = buildWorkEmbeddedDeleteConfirmation(kind, state.draft, index, { text });
+  const confirmation = buildWorkEmbeddedDeleteConfirmation(kind, state.draft, index);
   if (!confirmation) return null;
   const result = await openConfirmModal({
     root: state.root,
     title: confirmation.title,
     body: confirmation.body,
-    primaryLabel: lookupText(text, "entry_modal_delete_button", "Delete"),
-    cancelLabel: lookupText(text, "entry_modal_cancel_button", "Cancel"),
+    primaryLabel: "Delete",
+    cancelLabel: "Cancel",
     defaultAction: "cancel",
     size: "compact"
   });
@@ -104,8 +99,7 @@ export async function confirmWorkEmbeddedDeleteModal(state, kind, index, options
   };
 }
 
-export function renderWorkEmbeddedEntryModalHtml(descriptor, options = {}) {
-  const text = options.text;
+export function renderWorkEmbeddedEntryModalHtml(descriptor) {
   const firstField = descriptor.fields[0];
   const secondField = descriptor.fields[1];
   return renderStudioModalFrame({
@@ -122,8 +116,8 @@ export function renderWorkEmbeddedEntryModalHtml(descriptor, options = {}) {
       <p class="studioForm__status studioModal__status" data-role="modal-status" id="${escapeHtml(descriptor.statusId)}" hidden></p>
     `,
     actions: [
-      { role: ENTRY_CANCEL_ROLE, label: lookupText(text, "entry_modal_cancel_button", "Cancel") },
-      { role: ENTRY_SAVE_ROLE, label: lookupText(text, "entry_modal_save_button", "Save"), primary: true }
+      { role: ENTRY_CANCEL_ROLE, label: "Cancel" },
+      { role: ENTRY_SAVE_ROLE, label: "Save", primary: true }
     ]
   });
 }
@@ -135,19 +129,6 @@ function modalFieldHtml({ fieldId, label, value, type = "text", readOnly = false
       <input class="studioUi__input" id="${escapeHtml(fieldId)}" type="${escapeHtml(type)}" value="${escapeHtml(value)}"${readOnly ? " readonly" : ""}>
     </label>
   `;
-}
-
-function lookupText(text, key, fallback, tokens = null) {
-  return typeof text === "function" ? text(key, fallback, tokens) : interpolateText(fallback, tokens);
-}
-
-function interpolateText(template, tokens = null) {
-  let text = normalizeText(template);
-  if (!tokens || typeof tokens !== "object") return text;
-  Object.entries(tokens).forEach(([key, value]) => {
-    text = text.replaceAll(`{${key}}`, String(value == null ? "" : value));
-  });
-  return text;
 }
 
 function escapeHtml(value) {

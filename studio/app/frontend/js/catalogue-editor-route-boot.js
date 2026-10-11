@@ -1,5 +1,4 @@
 import {
-  getStudioText,
   loadStudioConfig
 } from "./studio-config.js";
 import { loadStudioServerReadJson } from "./studio-data.js";
@@ -102,7 +101,7 @@ export async function configureCatalogueEditorRouteRuntime(state, options) {
   const healthProbe = options.healthProbe || probeCatalogueHealth;
   const config = await configLoader();
   state.config = config;
-  if (typeof options.applyText === "function") options.applyText(config);
+  if (typeof options.applyConfig === "function") options.applyConfig(config);
   state.serverAvailable = Boolean(await healthProbe());
   return state.serverAvailable;
 }
@@ -131,15 +130,4 @@ export function revealCatalogueEditorRoute(state, options) {
   if (options.loadingNode) options.loadingNode.hidden = true;
   if (state.root) state.root.hidden = false;
   markCatalogueEditorRouteReady(state, true, options.routeState);
-}
-
-export async function showCatalogueEditorInitError(loadingNode, namespace, fallback, options = {}) {
-  const configLoader = options.configLoader || loadStudioConfig;
-  const textGetter = options.textGetter || getStudioText;
-  try {
-    const config = await configLoader();
-    loadingNode.textContent = textGetter(config, `${namespace}.load_failed_error`, fallback);
-  } catch (_configError) {
-    loadingNode.textContent = fallback;
-  }
 }

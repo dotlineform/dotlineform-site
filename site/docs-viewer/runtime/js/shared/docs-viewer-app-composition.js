@@ -96,7 +96,7 @@ var STARTUP_PHASES = [
     feature: "workspace-configuration"
   },
   {
-    id: "load-viewer-settings-ui-text",
+    id: "load-viewer-settings",
     authority: "browser-safe config asset"
   },
   {
@@ -154,7 +154,7 @@ function startupAuthorityRecords(routeContext, serviceContext) {
       authority: "browser route/config context"
     },
     {
-      phase: "viewer settings and UI text load",
+      phase: "viewer settings load",
       authority: serviceContext.config.authority
     },
     {

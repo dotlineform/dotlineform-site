@@ -2,10 +2,6 @@ import {
   readSourceConfigSettings
 } from "./docs-viewer-management-client.js";
 
-var SETTINGS_TEXT = {
-  loadFailed: "Settings unavailable."
-};
-
 export function createDocsViewerManagementSettingsWorkflow(options = {}) {
   var management = options.management || {};
   var refs = options.refs || {};
@@ -33,7 +29,7 @@ export function createDocsViewerManagementSettingsWorkflow(options = {}) {
         return field;
       })
       .catch(function (error) {
-        modal.setSettingsLoadError(error && error.message ? error.message : SETTINGS_TEXT.loadFailed);
+        modal.setSettingsLoadError(error && error.message ? error.message : "Settings unavailable.");
         return null;
       });
   }

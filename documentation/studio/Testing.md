@@ -95,6 +95,12 @@ Do not repair unrelated brittle test behavior inside a focused feature slice wit
 
 ## Limits
 
+### UI Text Retirement
+
+The user approved retirement of the Studio text registry and inclusion of Docs Viewer in the same cleanup on 2026-10-11. The approved scope is implemented. Test maintenance is limited to removing the retired Studio text-module path from `artifact_families[id=studio_config_and_route_ui].repo_paths` and `.public_output.paths` in `tests/contracts/projection_contract.json`. The retained Studio config path and its forbidden public-output policy remain in that family. No test case, assertion, fixture, harness or profile membership changes are included, and no wording assertions are added.
+
+Verification uses changed-source JavaScript/Python lint, Python syntax, read-only import/export and retired-reference inspection, JSON parsing of the edited contract, `bin/site-code-update --check`, `bin/site-validate` and whitespace review. These checks address broken module wiring, malformed configuration and stale public runtime copies; they do not establish browser interaction or exact visible wording. The public update command writes only inventory-owned tracked runtime copies before validation. Expected local cost is seconds, with no service/browser startup, network work, canonical document generation or publication; Python syntax may update ignored bytecode. No pytest, browser or profile run is included. [Studio Runtime](Studio_Runtime.md#ui-text-retirement) records the implementation and evidence.
+
 ### Studio Frontend Retirement
 
 The user approved removal of the inspected unused Studio frontend modules/helpers, obsolete build-preview/readiness code and styles, unreferenced text entries, related references and the stale route-ready audit exception on 2026-10-11. The approved scope is implemented. Test maintenance is limited to `tests/audits/route_ready_state.py`: remove the deleted `studio-home.html` initial-ready exception, its otherwise unused `AppConfig.allow_initial_ready_true` option and the corresponding allowlist branch. Every configured template must start ready and busy as `false`. No test case, fixture, browser harness or profile membership is added, removed or expanded; other test files remain unchanged and unreviewed by this cleanup.
