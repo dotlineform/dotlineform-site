@@ -8,9 +8,6 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable, Mapping
 
-from catalogue.catalogue_revisions import CatalogueRevisionConflict
-
-
 GALLERIES_FILE = "galleries.json"
 MEMBERSHIPS_FILE = "galleries-by-work.json"
 GALLERIES_SCHEMA = "catalogue_source_galleries_v1"
@@ -42,8 +39,7 @@ def validate_gallery_id(gallery_id: str) -> None:
 
 
 def validate_galleries(data: CatalogueGalleries, works: Mapping[str, Any]) -> None:
-    """Require distinct identities/titles, exact metadata and valid membership."""
-    title_ids: dict[str, str] = {}
+    """Require exact identities/metadata and valid membership; titles may repeat."""
     for gid, gallery in data.galleries.items():
         validate_gallery_id(gid)
         if not isinstance(gallery, dict) or set(gallery) != {"gallery_id", "title"}:
@@ -53,14 +49,6 @@ def validate_galleries(data: CatalogueGalleries, works: Mapping[str, Any]) -> No
         title = gallery["title"]
         if not isinstance(title, str) or not title.strip() or title != title.strip():
             raise ValueError(f"Gallery {gid} needs a non-empty trimmed title")
-        title_key = " ".join(title.split()).casefold()
-        other_id = title_ids.get(title_key)
-        if other_id is not None:
-            raise ValueError(
-                f'Gallery titles must be unique: “{data.galleries[other_id]["title"]}” ({other_id}) '
-                f'matches “{title}” ({gid}). Choose a different title.'
-            )
-        title_ids[title_key] = gid
     for wid, ids in data.works.items():
         if not isinstance(wid, str) or not re.fullmatch(r"[0-9]{5}", wid) or wid not in works:
             raise ValueError(f"Gallery membership references unknown exact Work ID: {wid!r}")
@@ -86,7 +74,7 @@ def _read_map(source_dir: Path, name: str, schema: str, key: str) -> dict[str, A
 
 
 def read_gallery_definitions(source_dir: Path) -> dict[str, dict[str, str]]:
-    """Read definitions without membership reads or a title-uniqueness audit."""
+    """Read the saved definition map with header/envelope validation."""
     return _read_map(source_dir, GALLERIES_FILE, GALLERIES_SCHEMA, "galleries")
 
 
@@ -100,27 +88,19 @@ def read_galleries(source_dir: Path) -> CatalogueGalleries:
     return CatalogueGalleries(read_gallery_definitions(source_dir), read_gallery_memberships(source_dir))
 
 
-def require_work_membership_revision(data: CatalogueGalleries, work_id: str, expected: Any) -> None:
-    """Check the editor's exact membership set independently of Work metadata."""
-    if not isinstance(expected, list) or any(not isinstance(gid, str) for gid in expected):
-        raise ValueError("expected_gallery_ids must be an array of Gallery IDs")
-    if sorted(expected) != sorted(data.works.get(work_id, [])):
-        raise CatalogueRevisionConflict("Work Gallery membership changed; reload before saving.")
-
-
 def with_work_memberships(
-    data: CatalogueGalleries, works: Mapping[str, Any], replacements: Mapping[str, Any],
+    data: CatalogueGalleries, replacements: Mapping[str, Any],
 ) -> CatalogueGalleries:
-    """Validate all replacements together; empty selections remove their entries."""
-    memberships = {**data.works, **replacements}
-    updated = CatalogueGalleries(data.galleries, memberships)
-    validate_galleries(updated, works)
+    """Apply UI-authored sets without endpoint checks or a whole-Catalogue audit."""
+    memberships = dict(data.works)
     for work_id, gallery_ids in replacements.items():
+        if not isinstance(gallery_ids, list) or any(not isinstance(gid, str) for gid in gallery_ids):
+            raise ValueError("gallery_ids must be an array of Gallery ID strings")
         if gallery_ids:
             memberships[work_id] = sorted(gallery_ids)
         else:
-            del memberships[work_id]
-    return updated
+            memberships.pop(work_id, None)
+    return CatalogueGalleries(data.galleries, memberships)
 
 
 def newly_empty_gallery_ids(

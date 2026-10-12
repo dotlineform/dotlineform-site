@@ -93190,6 +93190,25 @@
       "depth_cm": null,
       "width_px": 2148,
       "height_px": 2765
+    },
+    "04627": {
+      "work_id": "04627",
+      "series_id": "144",
+      "project_folder": "10000",
+      "project_filename": "10000 (1).jpg",
+      "media_version": 2,
+      "image_staged": true,
+      "title": "10000-1",
+      "width_cm": null,
+      "height_cm": null,
+      "year": 2026,
+      "year_display": "2026",
+      "medium": null,
+      "storage_location": null,
+      "duration": null,
+      "depth_cm": null,
+      "width_px": 5906,
+      "height_px": 5906
     }
   }
 }

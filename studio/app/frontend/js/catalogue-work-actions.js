@@ -37,18 +37,14 @@ function buildPayload(state) {
   const record = buildWorkRecordFromDraft(state.draft, { downloadFields: DOWNLOAD_FIELDS, linkFields: LINK_FIELDS });
   if (state.mode !== "bulk") return {
     work_id: state.currentWorkId,
-    expected_record_hash: state.currentRecordHash,
     record,
-    gallery_ids: state.draft.gallery_ids.slice(),
-    expected_gallery_ids: state.baselineDraft.gallery_ids.slice()
+    gallery_ids: state.draft.gallery_ids.slice()
   };
   const payload = {
-    kind: "works", ids: state.bulkWorkIds.slice(),
-    expected_record_hashes: Object.fromEntries(state.bulkRecordHashes)
+    kind: "works", ids: state.bulkWorkIds.slice()
   };
   if (state.bulkTouchedFields.has("gallery_ids")) {
     payload.gallery_ids = state.draft.gallery_ids.slice();
-    payload.expected_gallery_ids_by_work = Object.fromEntries(state.bulkWorkIds.map(id => [id, state.bulkRecords.get(id).gallery_ids.slice()]));
   }
   return payload;
 }
@@ -134,10 +130,8 @@ export async function saveCurrentWork(state, context) {
       if (!completionError) cleanupGalleryIds = newlyEmptyGalleryIds(response);
     }
   } catch (error) {
-    const isConflict = Number(error && error.status) === 409;
-    const message = catalogueSavedActionError(savedResponse, error) || (isConflict
-      ? "Source record changed since this page loaded. Reload the work before saving again."
-      : `Source save failed. ${normalizeText(error && error.message)}`.trim());
+    const message = catalogueSavedActionError(savedResponse, error)
+      || `Source save failed. ${normalizeText(error && error.message)}`.trim();
     setTextWithState(context, state.statusNode, message, "error");
   } finally {
     state.isSaving = false;

@@ -2,6 +2,12 @@ import { createCatalogueGallery, saveCatalogueGallery, deleteCatalogueGallery } 
 import { loadStudioServerReadJson } from "./studio-data.js";
 import { openWorkDefinitionModal } from "./catalogue-work-definition-modal.js";
 
+function nextGalleryId(galleriesById) {
+  let highestId = 0;
+  for (const id of galleriesById.keys()) highestId = Math.max(highestId, Number(id));
+  return String(highestId + 1).padStart(3, "0");
+}
+
 /** Load exact Gallery definitions and saved Series relevance for this Work context. */
 export async function openWorkGalleryModal(state, { galleryId = "", restoreFocus, onBusyChange, deleteEmpty = false } = {}) {
   const seriesId = deleteEmpty ? null : state.draft.series_id || null;
@@ -37,9 +43,9 @@ export async function openWorkGalleryModal(state, { galleryId = "", restoreFocus
       ? `Delete “${lookup.record.title}” (${galleryId})? This removes it from ${lookup.member_work_ids.length} Works.`
       : "",
     save: (title, related) => galleryId
-      ? saveCatalogueGallery({ gallery_id: galleryId, expected_record_hash: lookup.record_hash,
-        title, series_id: seriesId, related_to_series: related })
-      : createCatalogueGallery({ title, series_id: seriesId, related_to_series: related }),
+      ? saveCatalogueGallery({ gallery_id: galleryId, title, series_id: seriesId, related_to_series: related })
+      : createCatalogueGallery({ gallery_id: nextGalleryId(state.galleriesById),
+        title, series_id: seriesId, related_to_series: related }),
     async remove() {
       try {
         return await deleteCatalogueGallery({

@@ -10,7 +10,7 @@ from typing import Any, Mapping, Sequence
 from catalogue import catalogue_build_media as media
 from catalogue.catalogue_media_version import finalize_catalogue_media_versions
 from catalogue.catalogue_output_paths import catalogue_workspace_config, output_path
-from catalogue.catalogue_source import CatalogueSourceRecords, slug_id, validate_source_records
+from catalogue.catalogue_source import CatalogueSourceRecords, slug_id
 from catalogue.catalogue_work_attachments import safe_download_filename
 from catalogue.catalogue_staged_media import catalogue_staging_assets
 from local_env import runtime_env
@@ -30,9 +30,6 @@ def complete_catalogue_media(
     download stays in its flag-selected staging or Working location. Missing
     downloads fail. Removed references leave bytes for manual cleanup.
     """
-    errors = validate_source_records(records)
-    if errors:
-        raise ValueError("Catalogue source validation failed: " + "; ".join(errors[:20]))
     work_ids = sorted({slug_id(wid) for wid in work_ids})
     image_work_ids = sorted({slug_id(wid) for wid in image_work_ids})
     if not set(image_work_ids).issubset(work_ids):

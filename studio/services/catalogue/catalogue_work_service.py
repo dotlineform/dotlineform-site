@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from typing import Any, Mapping
 
 from catalogue import catalogue_source_mutation as source_mutation
@@ -9,11 +10,9 @@ from catalogue.catalogue_galleries import (
     MEMBERSHIPS_FILE,
     newly_empty_gallery_ids,
     read_galleries,
-    validate_galleries,
-    require_work_membership_revision,
     with_work_memberships,
 )
-from catalogue.catalogue_revisions import record_hash, require_record_revision
+from catalogue.catalogue_revisions import record_hash
 from catalogue import catalogue_transactions as transactions
 from catalogue.catalogue_service_context import (
     CatalogueWriteContext,
@@ -21,30 +20,28 @@ from catalogue.catalogue_service_context import (
     log_event,
     utc_now,
 )
-from catalogue.catalogue_source import WORK_FIELDS, records_from_json_source, slug_id
+from catalogue.catalogue_source import WORK_FIELDS
 from catalogue.catalogue_shared_changes import work_shared_changes
 
 
 def work_create_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -> dict[str, Any]:
     work_update = extract_work_update(body)
-    work_id = slug_id(body.get("work_id"))
+    work_id = body.get("work_id")
+    if not isinstance(work_id, str) or re.fullmatch(r"[0-9]{5}", work_id) is None:
+        raise ValueError("work_id must be exactly five digits")
     works_payload = load_works_payload(context.works_path)
     works = works_payload["works"]
-    if isinstance(works.get(work_id), dict):
+    if work_id in works:
         raise ValueError(f"work_id already exists: {work_id}")
 
     mutation_plan = source_mutation.plan_work_create(
-        records_from_json_source(context.source_dir),
         works,
         work_id,
         work_update,
     )
-    if mutation_plan.validation_errors:
-        raise ValueError("source validation failed: " + "; ".join(mutation_plan.validation_errors[:20]))
-
     galleries = read_galleries(context.source_dir)
     updated_galleries = with_work_memberships(
-        galleries, {**works, work_id: mutation_plan.updated_record}, {work_id: body.get("gallery_ids", [])},
+        galleries, {work_id: body.get("gallery_ids", [])},
     )
     membership_changed = galleries.works != updated_galleries.works
     changed_fields = mutation_plan.changed_fields + (["gallery_ids"] if membership_changed else [])
@@ -93,26 +90,22 @@ def work_create_payload(context: CatalogueWriteContext, body: Mapping[str, Any])
 
 
 def work_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -> dict[str, Any]:
-    """Persist validated metadata; the write dispatcher owns output completion."""
+    """Persist UI-authored metadata; the dispatcher owns required media/effects."""
     work_update = extract_work_update(body)
-    work_id = slug_id(body.get("work_id"))
+    work_id = body.get("work_id")
+    if not isinstance(work_id, str):
+        raise ValueError("work_id must identify an existing exact Work")
     works = load_works_payload(context.works_path)["works"]
     current_record = works.get(work_id)
     if not isinstance(current_record, dict):
         raise ValueError(f"work_id not found: {work_id}")
-    require_record_revision(current_record, body.get("expected_record_hash"))
     galleries = read_galleries(context.source_dir)
     updated_galleries = galleries
     if "gallery_ids" in body:
-        require_work_membership_revision(galleries, work_id, body.get("expected_gallery_ids"))
-        updated_galleries = with_work_memberships(galleries, works, {work_id: body["gallery_ids"]})
-    else:
-        validate_galleries(galleries, works)
+        updated_galleries = with_work_memberships(galleries, {work_id: body["gallery_ids"]})
     plan = source_mutation.plan_work_save(
-        records_from_json_source(context.source_dir), works, work_id, current_record, work_update,
+        works, work_id, current_record, work_update,
     )
-    if plan.validation_errors:
-        raise ValueError("source validation failed: " + "; ".join(plan.validation_errors[:20]))
     membership_changed = galleries.works != updated_galleries.works
     changed = plan.changed or membership_changed
     changed_fields = plan.changed_fields + (["gallery_ids"] if membership_changed else [])

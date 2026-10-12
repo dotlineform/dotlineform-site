@@ -16,7 +16,6 @@ from catalogue.catalogue_source import (
     normalize_text,
     is_empty,
     payload_for_map,
-    slug_id,
     sort_record_map,
     validate_source_records,
 )
@@ -29,7 +28,6 @@ class SourceRecordPlan:
     baseline_record: Dict[str, Any]
     updated_record: Dict[str, Any]
     changed_fields: list[str]
-    validation_errors: list[str]
     payload: Dict[str, Any]
 
     @property
@@ -39,6 +37,7 @@ class SourceRecordPlan:
 
 @dataclass(frozen=True)
 class SeriesPlan(SourceRecordPlan):
+    validation_errors: list[str]
     changed_work_ids: list[str]
     work_updates: Dict[str, Dict[str, Any]]
     work_records: list[Dict[str, Any]]
@@ -61,12 +60,10 @@ def normalize_work_update(work_id: str, current_record: Mapping[str, Any], updat
         {**item, "staged": prior_downloads.get(item.get("filename"), {}).get("staged", False)}
         for item in merged.get("downloads") or []
     ]
-    merged["work_id"] = slug_id(merged.get("work_id") or work_id)
-    if merged["work_id"] != work_id:
+    if "work_id" in update and update["work_id"] != work_id:
         raise ValueError("record.work_id must match work_id")
+    merged["work_id"] = work_id
 
-    if "series_id" in update:
-        merged["series_id"] = normalize_series_id(update["series_id"]) if not is_empty(update["series_id"]) else None
     if not is_empty(merged.get("project_filename")) and is_empty(merged.get(MEDIA_VERSION_FIELD)):
         merged[MEDIA_VERSION_FIELD] = 1
 
@@ -97,20 +94,6 @@ def changed_fields(before: Mapping[str, Any], after: Mapping[str, Any]) -> list[
     return [field for field in sorted(set(before.keys()) | set(after.keys())) if before.get(field) != after.get(field)]
 
 
-def validate_work_records(
-    source_records: CatalogueSourceRecords,
-    work_id: str,
-    work_record: Dict[str, Any],
-) -> list[str]:
-    works = dict(source_records.works)
-    works[work_id] = work_record
-    normalized_records = CatalogueSourceRecords(
-        works=sort_record_map(works),
-        series=source_records.series,
-    )
-    return validate_source_records(normalized_records)
-
-
 def validate_series_records(
     source_records: CatalogueSourceRecords,
     series_id: str,
@@ -130,7 +113,6 @@ def validate_series_records(
 
 
 def plan_work_save(
-    source_records: CatalogueSourceRecords,
     works: Mapping[str, Dict[str, Any]],
     work_id: str,
     current_record: Mapping[str, Any],
@@ -144,13 +126,11 @@ def plan_work_save(
         baseline_record=dict(current_record),
         updated_record=updated_record,
         changed_fields=fields_changed,
-        validation_errors=validate_work_records(source_records, work_id, updated_record),
         payload=payload_for_map("works", updated_works),
     )
 
 
 def plan_work_create(
-    source_records: CatalogueSourceRecords,
     works: Mapping[str, Dict[str, Any]],
     work_id: str,
     update: Mapping[str, Any],
@@ -159,15 +139,12 @@ def plan_work_create(
     blank_record["work_id"] = work_id
     normalized_update = dict(update)
     created_record = normalize_work_update(work_id, blank_record, normalized_update)
-    if not str(created_record.get("title") or "").strip():
-        raise ValueError("work title is required")
     updated_works = dict(works)
     updated_works[work_id] = created_record
     return SourceRecordPlan(
         baseline_record=blank_record,
         updated_record=created_record,
         changed_fields=changed_fields(blank_record, created_record),
-        validation_errors=validate_work_records(source_records, work_id, created_record),
         payload=payload_for_map("works", updated_works),
     )
 

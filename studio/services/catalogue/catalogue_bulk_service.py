@@ -2,18 +2,15 @@
 
 from __future__ import annotations
 
-from pathlib import Path
 from typing import Any, Mapping
 
 from catalogue import catalogue_source_mutation as source_mutation
-from catalogue.catalogue_revisions import record_hash, require_record_revision
+from catalogue.catalogue_revisions import record_hash
 from catalogue import catalogue_transactions as transactions
 from catalogue.catalogue_galleries import (
     MEMBERSHIPS_FILE,
     newly_empty_gallery_ids,
     read_galleries,
-    validate_galleries,
-    require_work_membership_revision,
     with_work_memberships,
 )
 from catalogue.catalogue_service_context import (
@@ -22,14 +19,7 @@ from catalogue.catalogue_service_context import (
     log_event,
     utc_now,
 )
-from catalogue.catalogue_source import (
-    CatalogueSourceRecords,
-    payload_for_map,
-    records_from_json_source,
-    slug_id,
-    sort_record_map,
-    validate_source_records,
-)
+from catalogue.catalogue_source import payload_for_map
 from catalogue.catalogue_shared_changes import work_shared_changes
 
 
@@ -51,7 +41,7 @@ BULK_WORK_EDITABLE_FIELDS = {
 
 
 def bulk_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -> dict[str, Any]:
-    """Validate every selected revision before one metadata/membership transaction."""
+    """Persist the UI's selected metadata/memberships in one transaction."""
     request = extract_bulk_save_request(body)
     kind = request["kind"]
     selected_ids: list[str] = request["ids"]
@@ -68,30 +58,18 @@ def bulk_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
     galleries = read_galleries(context.source_dir)
     updated_galleries = galleries
     if "gallery_ids" in body:
-        expected = body.get("expected_gallery_ids_by_work")
-        if not isinstance(expected, dict) or set(expected) != set(selected_ids):
-            raise ValueError("expected_gallery_ids_by_work must cover exactly the selected Works")
-        for work_id in selected_ids:
-            require_work_membership_revision(galleries, work_id, expected[work_id])
         updated_galleries = with_work_memberships(
-            galleries, works_map, dict.fromkeys(selected_ids, body["gallery_ids"]),
+            galleries, dict.fromkeys(selected_ids, body["gallery_ids"]),
         )
-    else:
-        validate_galleries(galleries, works_map)
     pending_updates: dict[str, dict[str, Any]] = {}
     for work_id in selected_ids:
         current_record = works_map.get(work_id)
         if not isinstance(current_record, dict):
             raise ValueError(f"work_id not found: {work_id}")
-        require_record_revision(current_record, (body.get("expected_record_hashes") or {}).get(work_id))
         pending_updates[work_id] = (
             source_mutation.normalize_work_update(work_id, current_record, set_fields)
             if set_fields else dict(current_record)
         )
-
-    validation_errors = validate_bulk_records(context.source_dir, work_updates=pending_updates)
-    if validation_errors:
-        raise ValueError("source validation failed: " + "; ".join(validation_errors[:20]))
 
     updated_works = dict(works_map)
     metadata_changed = False
@@ -204,16 +182,8 @@ def extract_bulk_save_request(body: Mapping[str, Any]) -> dict[str, Any]:
     if not isinstance(raw_ids, list) or not raw_ids:
         raise ValueError("bulk save ids must be a non-empty array")
 
-    ids: list[str] = []
-    seen_ids: set[str] = set()
-    for raw in raw_ids:
-        record_id = slug_id(raw)
-        if record_id in seen_ids:
-            continue
-        seen_ids.add(record_id)
-        ids.append(record_id)
-    if not ids:
-        raise ValueError("bulk save ids must include at least one valid id")
+    if any(not isinstance(work_id, str) for work_id in raw_ids):
+        raise ValueError("bulk save ids must be exact Work ID strings")
 
     raw_set_fields = body.get("set_fields") or {}
     if not isinstance(raw_set_fields, dict):
@@ -229,24 +199,6 @@ def extract_bulk_save_request(body: Mapping[str, Any]) -> dict[str, Any]:
 
     return {
         "kind": kind,
-        "ids": ids,
+        "ids": raw_ids,
         "set_fields": set_fields,
     }
-
-
-def validate_bulk_records(
-    source_dir: Path,
-    *,
-    work_updates: Mapping[str, dict[str, Any]] | None = None,
-) -> list[str]:
-    errors: list[str] = []
-    source_records = records_from_json_source(source_dir)
-    if work_updates:
-        for work_id, work_record in work_updates.items():
-            source_records.works[work_id] = work_record
-    normalized_records = CatalogueSourceRecords(
-        works=sort_record_map(source_records.works),
-        series=source_records.series,
-    )
-    errors.extend(validate_source_records(normalized_records))
-    return sorted(dict.fromkeys(errors))

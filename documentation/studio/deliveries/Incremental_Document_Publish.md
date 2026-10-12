@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261012-112453-211357
 title: Incremental Document Publish
 added_date: "2026-10-12 11:24:53"
-last_updated: "2026-10-12 12:23:11"
+last_updated: "2026-10-12 15:18:39"
 summary: Proposed queue-only Publish for ordinary and non-Catalogue collection documents, with completed public artifacts and eligibility, dependency, media and shared-output effects supplied upstream.
 ui_status: proposed
 parent_id: d-20260428-000000-f5ff18
@@ -16,7 +16,7 @@ This is the ordinary and non-Catalogue collection document follow-on to [Increme
 
 Status: proposed on 2026-10-12. The user requested this delivery write-up; implementation is not approved. No code, configuration, tests, external documents or generated payloads have been changed for this proposal.
 
-Prerequisite set on 2026-10-12: review [User Facing Rules](../data/User_Facing_Rules.md), agree the required data/UI/workflow rules and complete the identified necessary cleanup before this delivery proceeds. Documented design choices, including root-level collection hosts, do not automatically require enforcement. Candidate UI improvements, including broader bulk Work metadata editing, receive their own bounded scope. Reconcile this proposal's assumptions with the accepted review outcome before implementation.
+Prerequisite set on 2026-10-12: use [User Facing Rules](../data/User_Facing_Rules.md) as the target definition, review the relevant targets and complete required cleanup through functional delivery groups before this delivery proceeds. Each cleanup delivery records the actual implementation comparison, changes and evidence; the target index does not carry that inventory or require a separate delivery per entry. Documented design conventions and authoring preferences do not automatically require server enforcement. Candidate UI improvements, including broader bulk Work metadata editing, receive their own bounded scope. Reconcile this proposal's assumptions with the accepted targets and completed cleanup before implementation.
 
 Current Publish completes queued Catalogue Works, then captures ordinary and collection sources, resolves publication eligibility, rebuilds ordinary and other collection documents in temporary storage and distributes a complete prepared snapshot. Catalogue Gallery/shared selections are already explicit, but the enclosing pass still processes ordinary documents and discovery data even when those selections are empty.
 
@@ -133,7 +133,7 @@ External Markdown and policy edits require explicit owning generation before Pub
 
 ### [ ] IDP.0 — Readiness And Implementation Approval
 
-- [ ] Complete the prerequisite User Facing Rules review and agreed necessary cleanup, then reconcile the eligibility/dependency assumptions with its accepted outcome.
+- [ ] Review the relevant User Facing Rules targets and complete required functional cleanup deliveries, then reconcile the eligibility/dependency assumptions with the accepted targets.
 - [ ] Confirm the complete queue-only boundary against the current generation, eligibility, dependency, media and publication owners, including shared Catalogue publication.
 - [ ] Confirm saved metadata prerequisites, the upstream Recent decision and a deliberate cutover/baseline approach that does not silently reconcile during Publish.
 - [ ] Obtain explicit implementation approval before code/configuration work. Agree any proposed test work separately under [Test Contract Discipline](../Test_Contract_Discipline.md).

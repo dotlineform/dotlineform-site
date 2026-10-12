@@ -1,6 +1,10 @@
 import { catalogueSavedActionError } from "./catalogue-save-result.js";
 import { activateStudioModalFrame, renderStudioModalFrame } from "./studio-modal.js";
 
+function titleComparisonKey(value) {
+  return String(value ?? "").trim().replace(/\s+/g, " ").toLowerCase();
+}
+
 /** Edit one shared definition; deletion replaces the form with an explicit confirmation. */
 export async function openWorkDefinitionModal(state, {
   kind, id = "", title = "", deleteMessage = "", deleteBlocked = "",
@@ -17,8 +21,9 @@ export async function openWorkDefinitionModal(state, {
     bodyHtml: `
       <label class="studioForm__field" data-role="definition-field" for="catalogueDefinitionTitle">
         <span class="studioForm__label">title</span>
-        <input class="studioUi__input" id="catalogueDefinitionTitle" type="text" autocomplete="off">
+        <input class="studioUi__input" id="catalogueDefinitionTitle" type="text" autocomplete="off" aria-describedby="catalogueDefinitionTitleWarning">
       </label>
+      <p class="studioForm__status studioUi__status" id="catalogueDefinitionTitleWarning" data-role="definition-title-warning" data-state="warn" aria-live="polite" hidden></p>
       ${checkbox ? `<div class="catalogueDefinition__relation" data-role="definition-checkbox-field">
         <label class="catalogueDefinition__checkboxRow" for="catalogueDefinitionCheckbox">
           <input id="catalogueDefinitionCheckbox" type="checkbox" aria-describedby="catalogueDefinitionSeriesContext">
@@ -37,6 +42,8 @@ export async function openWorkDefinitionModal(state, {
     ]
   });
   const input = host.querySelector("#catalogueDefinitionTitle");
+  const titleWarning = host.querySelector('[data-role="definition-title-warning"]');
+  const definitions = kind === "Series" ? state.seriesById : state.galleriesById;
   const checkboxInput = host.querySelector("#catalogueDefinitionCheckbox");
   const primary = host.querySelector('[data-role="modal-primary"]');
   const cancel = host.querySelector('button[data-role="modal-cancel"]');
@@ -52,6 +59,23 @@ export async function openWorkDefinitionModal(state, {
   reason.textContent = deleteBlocked;
   reason.hidden = !deleteBlocked;
 
+  function syncTitleWarning() {
+    const key = titleComparisonKey(input.value);
+    let duplicateId = "";
+    if (key && !confirmingDelete) {
+      for (const [otherId, record] of definitions) {
+        if (otherId !== id && titleComparisonKey(record.title) === key) {
+          duplicateId = otherId;
+          break;
+        }
+      }
+    }
+    titleWarning.textContent = duplicateId
+      ? `Another ${kind} uses this title (${duplicateId}). You can still save.`
+      : "";
+    titleWarning.hidden = !duplicateId;
+  }
+
   function syncControls() {
     input.disabled = saving;
     if (checkboxInput) checkboxInput.disabled = saving || checkbox.disabled;
@@ -59,6 +83,7 @@ export async function openWorkDefinitionModal(state, {
     cancel.disabled = saving;
     if (deleteButton) deleteButton.disabled = saving || Boolean(deleteBlocked);
     dialog.setAttribute("aria-busy", String(saving));
+    syncTitleWarning();
   }
 
   const controller = activateStudioModalFrame(host, {

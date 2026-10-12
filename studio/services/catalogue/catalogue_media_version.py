@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 from catalogue import catalogue_transactions as transactions
-from catalogue.catalogue_source import SOURCE_FILES, payload_for_map, records_from_json_source, validate_source_records
+from catalogue.catalogue_source import SOURCE_FILES, payload_for_map, read_source_map
 
 
 @dataclass(frozen=True)
@@ -26,13 +26,13 @@ def finalize_catalogue_media_versions(
     media_files: Mapping[Path, bytes], staged_downloads_by_work: Mapping[str, set[str]],
 ) -> list[MediaVersionFinalization]:
     """Commit prepared local bytes and their metadata together; transfers never call this."""
-    records = records_from_json_source(source_dir)
+    works = read_source_map(source_dir, "works")
     finalized = []
     changed_works = False
     for task in tasks:
         item_id = task["id"]
         advance = item_id in changed_images
-        record = records.works.get(item_id)
+        record = works.get(item_id)
         if not record or not record.get("project_filename"):
             raise ValueError(f"Work {item_id}: source image is required before local completion")
         previous_version = record.get("media_version")
@@ -48,17 +48,14 @@ def finalize_catalogue_media_versions(
             changed_works = True
         finalized.append(MediaVersionFinalization("works", item_id, work_id, previous_version, version, advance, f"works/index/{work_id}.json"))
     for work_id, names in staged_downloads_by_work.items():
-        record = records.works[work_id]
+        record = works[work_id]
         for download in record.get("downloads") or []:
             if download["filename"] in names and download["staged"] is not True:
                 download["staged"] = True
                 changed_works = True
-    errors = validate_source_records(records)
-    if errors:
-        raise ValueError("Catalogue source validation failed: " + "; ".join(errors[:20]))
     payloads = {}
     if changed_works:
-        payloads[source_dir / SOURCE_FILES["works"]] = payload_for_map("works", records.works)
+        payloads[source_dir / SOURCE_FILES["works"]] = payload_for_map("works", works)
     if payloads or media_files:
         transactions.atomic_write_many(payloads, media_files=media_files)
     return finalized

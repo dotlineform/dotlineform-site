@@ -36,25 +36,33 @@ def gallery_record_payload(
 def mutate_gallery_payload(
     context: CatalogueWriteContext, operation: str, body: Mapping[str, Any],
 ) -> dict[str, Any]:
-    """Persist a definition and its exact Series relevance in one source transaction.
+    """Persist the UI-authored definition/relevance with create/save integrity checks.
 
+    Create uses the supplied exact ID and cannot replace a saved definition.
+    Save addresses an existing identity without repeating authoring validation or
+    auditing the Catalogue. The UI owns title completion and Series selection.
     Delete retains the existing definition and complete-member confirmation checks.
     Work metadata is untouched; completion receives all former member identities.
     """
     if operation not in {"create", "save", "delete"}:
         raise ValueError("Unsupported Gallery operation")
+    if operation != "delete" and set(body) != {"gallery_id", "title", "series_id", "related_to_series"}:
+        raise ValueError("Gallery Create/Save requires gallery_id, title, series_id and related_to_series")
     works = load_works_payload(context.works_path)["works"]
-    series = load_series_payload(context.series_path)["series"]
     data = read_galleries(context.source_dir)
     pairs = read_series_galleries(context.source_dir)
+    gallery_id = body.get("gallery_id")
+    validate_gallery_id(gallery_id)
     if operation == "create":
-        gallery_id = f"{max((int(gid) for gid in data.galleries), default=0) + 1:03d}"
+        if gallery_id in data.galleries:
+            raise ValueError(f"gallery_id already exists: {gallery_id}")
         members = []
     else:
-        gallery_id = body.get("gallery_id")
-        current = gallery_record_payload(data, pairs, gallery_id)
-        require_record_revision(current["record"], body.get("expected_record_hash"))
-        members = current["member_work_ids"]
+        if gallery_id not in data.galleries:
+            raise ValueError(f"gallery_id not found: {gallery_id}")
+        if operation == "delete":
+            require_record_revision(data.galleries[gallery_id], body.get("expected_record_hash"))
+        members = sorted(wid for wid, ids in data.works.items() if gallery_id in ids)
 
     definitions = dict(data.galleries)
     memberships = dict(data.works)
@@ -74,27 +82,25 @@ def mutate_gallery_payload(
             else:
                 del memberships[wid]
     else:
-        if "series_id" not in body or "related_to_series" not in body:
-            raise ValueError("series_id and related_to_series are required")
         series_id, related = body["series_id"], body["related_to_series"]
         if type(related) is not bool:
             raise ValueError("related_to_series must be a boolean")
-        if series_id is not None:
-            series_record = series.get(series_id) if isinstance(series_id, str) else None
-            if not isinstance(series_record, dict) or series_record.get("series_id") != series_id:
-                raise ValueError(f"Unknown exact Series context: {series_id!r}")
-        elif related:
+        if series_id is not None and not isinstance(series_id, str):
+            raise ValueError("series_id must be a string or null")
+        if series_id is None and related:
             raise ValueError("A Gallery cannot relate to an unavailable Series")
-        title = body.get("title")
-        if not isinstance(title, str) or not title.strip():
-            raise ValueError("Gallery title is required")
-        definitions[gallery_id] = {"gallery_id": gallery_id, "title": title.strip()}
+        title = body["title"]
+        if not isinstance(title, str):
+            raise ValueError("title must be a string")
+        definitions[gallery_id] = {"gallery_id": gallery_id, "title": title}
         if series_id is not None:
             updated_pairs = with_gallery_relation(pairs, series_id, gallery_id, related)
 
     updated = CatalogueGalleries(definitions, memberships)
-    validate_galleries(updated, works)
-    validate_series_galleries(updated_pairs, series, definitions)
+    if operation == "delete":
+        series = load_series_payload(context.series_path)["series"]
+        validate_galleries(updated, works)
+        validate_series_galleries(updated_pairs, series, definitions)
     payloads = updated.payloads()
     writes = {}
     if definitions != data.galleries:
