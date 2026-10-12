@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261009-110914-712f45
 title: Incremental Updates
 added_date: "2026-10-09 11:09:14"
-last_updated: "2026-10-11 00:00:00"
+last_updated: "2026-10-12 11:24:53"
 summary: Active delivery of incremental Catalogue mutation, Refresh and Regenerate steps, with Work-by-Work Preview and Deploy, one publication progress flag and a final shared-output pass.
 ui_status: active
 parent_id: d-20261007-221414-48ff3f
@@ -520,5 +520,5 @@ Gate: the complete agreed workflow is accepted and durable ownership documentati
 ## Follow-ons
 
 - [Document Action Policy](Document_Action_Policy.md) originally delivered Catalogue editing removal and wider collection-host/private-report restrictions on 2026-10-10. Its 2026-10-11 simplification preserves the restrictions in the existing frontend action resolver and removes server editorial-policy enforcement. Regenerate/design maintenance remain the normal document-build owners. Individual manual menu scenarios were not itemised.
-- Incremental Publish of normal and non-Catalogue collection docs.
+- [Incremental Document Publish](Incremental_Document_Publish.md) is proposed on 2026-10-12 for normal and non-Catalogue collection docs. It replaces the unconditional corpus/shared preparation pass with queued completed artifacts and exact effects, keeps Publish free of corpus reconciliation and data validation, and gives upstream eligibility/dependency resolution its own section. No implementation is authorized yet.
 - [Catalogue Refresh Index Updates](Catalogue_Refresh_Index_Updates.md) is complete and accepted on 2026-10-10: normal Refresh merges queued rows, retains only justified projection fields and trusts Save-owned canonical checks. Further Publishing/storage optimisation remains separate.

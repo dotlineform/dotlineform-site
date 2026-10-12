@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260428-000000-f5ff18
 title: Planned Features
 added_date: "2026-04-28 00:00:00"
-last_updated: "2026-10-11 00:00:00"
+last_updated: "2026-10-12 12:23:11"
 summary: This explains the delivery model and workflows to implement new repo and application features.
 ui_status: planned
 parent_id: ""
@@ -151,6 +151,7 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 Store new standalone delivery documents for bounded work that does not need a separate feature parent under `documentation/studio/deliveries/`. Parent them directly to this document and keep implementation state, decisions and completion gates in the delivery. At closeout, transfer lasting details to the durable owner and review whether the delivery and its link should be retained.
 
+- [Incremental Document Publish](deliveries/Incremental_Document_Publish.md) — Proposed follow-on to [Incremental Updates](deliveries/Incremental_updates.md) for ordinary and non-Catalogue collection documents. Review [User Facing Rules](data/User_Facing_Rules.md), agree the required rules/responsibilities and complete necessary cleanup before this delivery proceeds; document site-design conventions without automatically adding enforcement. Publish consumes only queued completed artifacts and exact effects, with no corpus reconciliation or data validation. Eligibility and dependencies have a distinct upstream section; media and shared discovery output are explicitly queued and empty queues are a no-op. Documentation only is authorized; implementation approval and cutover decisions remain pending.
 - [Report Descriptor Simplification](deliveries/Report_Descriptor_Simplification.md) — Complete on 2026-10-11. Retired unused presets throughout report parsing, registries and readers, removed the empty Reports List column and omitted absent descriptor fields. Working's 19 report payloads are reconciled and the public reader projected; focused diagnostics, required checks and bounded review passed. Tests and manual report presentation remain unverified. Retained temporarily for recent evidence and restart/reload guidance.
 - [Index Option Retirement](deliveries/Index_Option_Retirement.md) — Complete on 2026-10-11. Retired obsolete Index options and their browser filtering/redirects while keeping exact document navigation and the timestamp header. Working's ordinary tree is reconciled and shared runtime projected; focused diagnostics, required checks and bounded review passed. Tests and manual navigation remain unverified. Retained temporarily for recent evidence and restart/reload guidance.
 - [Collection Report Simplification](deliveries/Collection_Report_Simplification.md) — Complete on 2026-10-11. Retired unused manifest customisation and Subject/report hashes, browser descriptors/loaders and custom report hooks; server-owned Subject authoring and standard collection controls remain. Working Works was reconciled and shared runtime projected; focused diagnostics and required checks passed. Manual interactions and legacy tests remain unverified. Retained temporarily for recent evidence and restart/reload guidance.
