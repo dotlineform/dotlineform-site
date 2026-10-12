@@ -94,20 +94,16 @@ function formatNumberText(value) {
   return normalizeText(value);
 }
 
-function normalizeEmbeddedEntries(value, fields) {
-  if (!Array.isArray(value)) return [];
-  return value.map((item) => {
-    const entry = {};
-    fields.forEach((field) => {
-      const text = normalizeText(item && item[field]);
-      if (text) entry[field] = text;
-    });
-    return entry;
-  }).filter((entry) => fields.some((field) => normalizeText(entry[field])));
-}
-
+/** Copy authored fields unchanged; absence is optional, malformed arrays/entries fail. */
 function cloneEmbeddedEntries(value, fields) {
-  return normalizeEmbeddedEntries(value, fields).map((entry) => ({ ...entry }));
+  if (value === undefined) return [];
+  if (!Array.isArray(value)) throw new Error("Work resource entries must be an array.");
+  return value.map((item) => {
+    if (!item || typeof item !== "object" || Array.isArray(item)) {
+      throw new Error("Each Work resource entry must be an object.");
+    }
+    return Object.fromEntries(fields.map(field => [field, item[field]]));
+  });
 }
 
 function stableStringify(value) {
@@ -122,7 +118,7 @@ function stableStringify(value) {
 }
 
 function embeddedEntriesEqual(a, b, fields) {
-  return stableStringify(normalizeEmbeddedEntries(a, fields)) === stableStringify(normalizeEmbeddedEntries(b, fields));
+  return stableStringify(cloneEmbeddedEntries(a, fields)) === stableStringify(cloneEmbeddedEntries(b, fields));
 }
 
 function buildWorkDraftFromRecord(record, options = {}) {
@@ -131,8 +127,8 @@ function buildWorkDraftFromRecord(record, options = {}) {
     field.key.startsWith("project_") ? record?.[field.key] || "" : formatNumberText(record && record[field.key])
   ]));
   draft.gallery_ids = Array.isArray(record?.gallery_ids) ? record.gallery_ids.slice().sort() : [];
-  if (options.downloadFields) draft.downloads = cloneEmbeddedEntries(record && record.downloads, options.downloadFields);
-  if (options.linkFields) draft.links = cloneEmbeddedEntries(record && record.links, options.linkFields);
+  if (options.downloadFields) draft.downloads = cloneEmbeddedEntries(record?.downloads, options.downloadFields);
+  if (options.linkFields) draft.links = cloneEmbeddedEntries(record?.links, options.linkFields);
   return draft;
 }
 
@@ -158,10 +154,10 @@ function buildWorkRecordFromDraft(draft, options = {}) {
   record.storage_location = normalizeText(draft.storage_location) || null;
 
   if (options.downloadFields) {
-    record.downloads = normalizeEmbeddedEntries(draft.downloads, options.downloadFields);
+    record.downloads = cloneEmbeddedEntries(draft.downloads, options.downloadFields);
   }
   if (options.linkFields) {
-    record.links = normalizeEmbeddedEntries(draft.links, options.linkFields);
+    record.links = cloneEmbeddedEntries(draft.links, options.linkFields);
   }
   return record;
 }
@@ -182,4 +178,4 @@ function suggestNextWorkId(workItems) {
   return String(maxNumericId + 1).padStart(5, "0");
 }
 
-export { NEW_WORK_EDITABLE_FIELDS, WORK_DIMENSION_FIELD_KEYS, WORK_EDITABLE_FIELDS, WORK_FIELD_DEFINITIONS, WORK_READONLY_FIELDS, WORK_SERIES_ID_RE, buildCreateWorkPayload, buildWorkDraftFromRecord, buildWorkRecordFromDraft, canonicalizeWorkScalar, cloneEmbeddedEntries, embeddedEntriesEqual, formatNumberText, isWorkFieldRequired, normalizeEmbeddedEntries, normalizeSeriesId, normalizeText, normalizeWorkId, suggestNextWorkId };
+export { NEW_WORK_EDITABLE_FIELDS, WORK_DIMENSION_FIELD_KEYS, WORK_EDITABLE_FIELDS, WORK_FIELD_DEFINITIONS, WORK_READONLY_FIELDS, WORK_SERIES_ID_RE, buildCreateWorkPayload, buildWorkDraftFromRecord, buildWorkRecordFromDraft, canonicalizeWorkScalar, cloneEmbeddedEntries, embeddedEntriesEqual, formatNumberText, isWorkFieldRequired, normalizeSeriesId, normalizeText, normalizeWorkId, suggestNextWorkId };

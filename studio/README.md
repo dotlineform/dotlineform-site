@@ -73,7 +73,7 @@ The normal workflow is:
 | Regenerate in Docs Viewer | Refreshed queued Catalogue Work sources/documents and completed selections forwarded to publication. |
 | Docs Publish | Each queued Work's Preview/repository/R2 output, followed by shared Preview preparation and distribution. |
 
-Each application operation is awaited through its required completion. Save validates exact identities, current record revisions and relationships through focused services and the canonical transaction owner. New media is prepared in Projects-owned staging and can display there immediately; Refresh transfers selected bytes into Working. Save does not publish public data or upload media to R2.
+Each application operation is awaited through its required completion. Create/Save/Delete check exact targets and their operation-specific requirements through focused services and the canonical transaction owner, without complete canonical family audits. Work and Gallery Save trust the UI's authoring choices; Series writes and definition deletions retain their stated title/revision/member checks. New media is prepared in Projects-owned staging and can display there immediately; Refresh transfers selected bytes into Working. Save does not publish public data or upload media to R2.
 
 `working/catalogue-updates-pending.json` and `working/catalogue-publish-pending.json` are private workflow state beneath the Docs root. Mutations record known Work, Gallery, Series, media and shared-output effects. Normal operations consume those supplied selections; missing or malformed queues stop rather than becoming an empty queue or triggering discovery. Full reconciliation and repair remain explicitly selected maintenance.
 
@@ -99,10 +99,17 @@ python3 studio/services/catalogue/catalogue_json_build.py --write
 
 This command writes to the configured Working workspace; it is not a dry-run or full reconciliation. Its mutually exclusive `--compact-indexes`, `--series-galleries`, `--gallery-records`, `--private-report-inputs` and `--work-document-coverage` flags select explicit family repair. Choose a family only when its baseline or design needs maintenance, and follow its owning prerequisites.
 
-For an intentional read-only canonical or field-inventory audit:
+For the intentional read-only **Catalogue source audit**, run from the repository root:
 
 ```bash
 python3 studio/services/catalogue/validate_catalogue_source.py
+```
+
+This audits all five canonical stores, with optional `--source-dir <path>` and no family selector. It prints validation results and exits `0` for valid data or nonzero for invalid/unreadable input, without generating output, changing queues, scanning media or requesting remote URLs. Download/link labels are UI guidance rather than model requirements. Ordinary Create/Save/Delete and normal Refresh never call the complete audit functions; the five explicit family-repair modes above retain their documented input audits. [Catalogue Source Model](../documentation/studio/Catalogue_Source_Model.md#catalogue-source-audit) owns the full CLI contract and audit scopes.
+
+The separate read-only field-inventory audit is:
+
+```bash
 python3 studio/services/catalogue/verify_catalogue_field_registry.py
 ```
 

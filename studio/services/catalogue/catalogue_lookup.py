@@ -4,7 +4,7 @@ from typing import Any, Dict, Mapping
 
 from catalogue import catalogue_generation_indexes as generation_indexes
 from catalogue.catalogue_revisions import record_hash
-from catalogue.catalogue_source import CatalogueSourceRecords, normalize_text
+from catalogue.catalogue_source import CatalogueSourceRecords, normalize_text, work_resource_entries
 
 SCHEMAS = {
     "work_search": "studio_catalogue_lookup_work_search_v2",
@@ -93,8 +93,8 @@ def build_work_lookup_payload(records: CatalogueSourceRecords, work_id: str) -> 
         },
         "work": dict(record),
         "record_hash": record_hash(record),
-        "downloads": list(record.get("downloads", [])) if isinstance(record.get("downloads"), list) else [],
-        "links": list(record.get("links", [])) if isinstance(record.get("links"), list) else [],
+        "downloads": list(work_resource_entries(record, "downloads")),
+        "links": list(work_resource_entries(record, "links")),
         "series_summary": series_summary,
     }
 

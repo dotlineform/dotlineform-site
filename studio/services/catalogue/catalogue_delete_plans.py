@@ -7,14 +7,13 @@ from pathlib import Path
 from typing import Any
 
 from catalogue.catalogue_galleries import (
-    CatalogueGalleries, MEMBERSHIPS_FILE, read_galleries, validate_galleries,
+    CatalogueGalleries, MEMBERSHIPS_FILE, read_galleries,
 )
 from catalogue.catalogue_series_galleries import (
-    SERIES_GALLERIES_FILE, read_series_galleries, validate_series_galleries, without_series,
+    SERIES_GALLERIES_FILE, read_series_galleries, without_series,
 )
 from catalogue.catalogue_source import (
     CatalogueSourceRecords, SOURCE_FILES, payload_for_map, records_from_json_source,
-    validate_source_records,
 )
 from catalogue.catalogue_shared_changes import (
     empty_shared_changes, work_shared_changes, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, WORK_DOCUMENT_COVERAGE_MANIFEST,
@@ -24,7 +23,7 @@ from catalogue.catalogue_report_inputs import SERIES_PATH
 
 @dataclass(frozen=True)
 class DeleteApplyPlan:
-    """Carry current inputs and validated resulting records through one combined write."""
+    """Carry exact removals and their resulting records through one combined write."""
 
     payloads: dict[Path, dict[str, Any]]
     affected: dict[str, list[str]]
@@ -38,8 +37,9 @@ def build_delete_apply_plan(
 ) -> DeleteApplyPlan:
     """Read canonical inputs once and remove exact identities and their owned references.
 
-    Work metadata revisions do not qualify deletion intent. Unknown identities,
-    invalid resulting data and a Series with member Works fail before writes.
+    Work metadata revisions do not qualify deletion intent. Unknown identities
+    and a Series with member Works fail before writes. Unrelated records and
+    references remain untouched; complete canonical audits have explicit owners.
     """
     source = records_from_json_source(source_dir)
     payloads: dict[Path, dict[str, Any]] = {}
@@ -53,11 +53,11 @@ def build_delete_apply_plan(
             if original.get("series_id"):
                 series_ids.add(original["series_id"])
         galleries = read_galleries(source_dir)
+        deleted_work_ids = set(record_ids)
         remaining_memberships = CatalogueGalleries(
             galleries=galleries.galleries,
-            works={wid: ids for wid, ids in galleries.works.items() if wid in works},
+            works={wid: ids for wid, ids in galleries.works.items() if wid not in deleted_work_ids},
         )
-        validate_galleries(remaining_memberships, works)
         current = replace(source, works=works)
         payloads[(source_dir / SOURCE_FILES["works"]).resolve()] = payload_for_map("works", works)
         payloads[(source_dir / MEMBERSHIPS_FILE).resolve()] = remaining_memberships.payloads()[MEMBERSHIPS_FILE]
@@ -70,12 +70,9 @@ def build_delete_apply_plan(
             raise ValueError(f"Series not found: {series_id}")
         if any(work.get("series_id") == series_id for work in source.works.values()):
             raise ValueError("Only Series with no member Works can be deleted.")
-        galleries = read_galleries(source_dir)
         pairs = read_series_galleries(source_dir)
-        validate_galleries(galleries, source.works)
         current = replace(source, series=series)
         remaining_pairs = without_series(pairs, series_id)
-        validate_series_galleries(remaining_pairs, series, galleries.galleries)
         payloads[(source_dir / SOURCE_FILES["series"]).resolve()] = payload_for_map("series", series)
         if series_id in pairs.pairs_by_series:
             payloads[(source_dir / SERIES_GALLERIES_FILE).resolve()] = remaining_pairs.payload()
@@ -85,7 +82,4 @@ def build_delete_apply_plan(
                   "shared_outputs": sorted([RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, WORK_DOCUMENT_COVERAGE_MANIFEST, SERIES_PATH])}
     else:
         raise ValueError("delete kind must be works or one series")
-    errors = validate_source_records(current)
-    if errors:
-        raise ValueError("source validation failed: " + "; ".join(errors[:20]))
     return DeleteApplyPlan(payloads, affected, source, current, shared)

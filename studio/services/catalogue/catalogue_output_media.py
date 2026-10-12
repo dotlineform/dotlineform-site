@@ -10,7 +10,7 @@ from typing import Any, Mapping, Sequence
 from catalogue import catalogue_build_media as media
 from catalogue.catalogue_media_version import finalize_catalogue_media_versions
 from catalogue.catalogue_output_paths import catalogue_workspace_config, output_path
-from catalogue.catalogue_source import CatalogueSourceRecords, slug_id
+from catalogue.catalogue_source import CatalogueSourceRecords, slug_id, work_resource_entries
 from catalogue.catalogue_work_attachments import safe_download_filename
 from catalogue.catalogue_staged_media import catalogue_staging_assets
 from local_env import runtime_env
@@ -41,9 +41,10 @@ def complete_catalogue_media(
     working = catalogue_workspace_config(repo_root).assets
     staging = catalogue_staging_assets(repo_root)
     env = runtime_env(repo_root=repo_root)
+    downloads_by_work = {wid: work_resource_entries(records.works[wid], "downloads") for wid in work_ids}
     downloads = {
         safe_download_filename(item["filename"]): item for wid in work_ids
-        for item in (records.works.get(wid, {}).get("downloads") or [])
+        for item in downloads_by_work[wid]
     }
     download_files = {}
     if not set(attachment_files or {}).issubset(downloads):
@@ -98,7 +99,7 @@ def complete_catalogue_media(
         finalized = finalize_catalogue_media_versions(
             source_dir, tasks, changed_images=changed_images, media_files=prepared,
             staged_downloads_by_work={
-                wid: {item["filename"] for item in records.works[wid].get("downloads") or []} & set(attachment_files or {})
+                wid: {item["filename"] for item in downloads_by_work[wid]} & set(attachment_files or {})
                 for wid in work_ids
             },
         )

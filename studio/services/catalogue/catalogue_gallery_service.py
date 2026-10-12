@@ -6,14 +6,14 @@ from typing import Any, Mapping
 
 from catalogue.catalogue_galleries import (
     GALLERIES_FILE, MEMBERSHIPS_FILE, CatalogueGalleries, read_galleries,
-    validate_galleries, validate_gallery_id,
+    validate_gallery_id,
 )
 from catalogue.catalogue_revisions import CatalogueRevisionConflict, record_hash, require_record_revision
 from catalogue.catalogue_series_galleries import (
     SERIES_GALLERIES_FILE, CatalogueSeriesGalleries, read_series_galleries,
-    related_series_ids, validate_series_galleries, with_gallery_relation, without_gallery,
+    related_series_ids, with_gallery_relation, without_gallery,
 )
-from catalogue.catalogue_service_context import CatalogueWriteContext, load_series_payload, load_works_payload, log_event, utc_now
+from catalogue.catalogue_service_context import CatalogueWriteContext, load_works_payload, log_event, utc_now
 from catalogue.catalogue_transactions import execute_source_json_write
 from catalogue.catalogue_shared_changes import empty_shared_changes, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT
 
@@ -41,7 +41,8 @@ def mutate_gallery_payload(
     Create uses the supplied exact ID and cannot replace a saved definition.
     Save addresses an existing identity without repeating authoring validation or
     auditing the Catalogue. The UI owns title completion and Series selection.
-    Delete retains the existing definition and complete-member confirmation checks.
+    Delete retains the existing definition and complete-member confirmation checks
+    without a complete canonical audit or a Series-definition lookup.
     Work metadata is untouched; completion receives all former member identities.
     """
     if operation not in {"create", "save", "delete"}:
@@ -97,10 +98,6 @@ def mutate_gallery_payload(
             updated_pairs = with_gallery_relation(pairs, series_id, gallery_id, related)
 
     updated = CatalogueGalleries(definitions, memberships)
-    if operation == "delete":
-        series = load_series_payload(context.series_path)["series"]
-        validate_galleries(updated, works)
-        validate_series_galleries(updated_pairs, series, definitions)
     payloads = updated.payloads()
     writes = {}
     if definitions != data.galleries:

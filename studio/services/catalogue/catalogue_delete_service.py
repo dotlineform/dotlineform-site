@@ -9,6 +9,7 @@ from typing import Any, Mapping
 from catalogue.catalogue_delete_plans import build_delete_apply_plan
 from catalogue.catalogue_output_service import complete_saved_catalogue_edit
 from catalogue.catalogue_revisions import require_record_revision
+from catalogue.catalogue_source import work_resource_entries
 from catalogue import catalogue_transactions as transactions
 from catalogue.catalogue_service_context import CatalogueWriteContext, utc_now
 from catalogue.series_ids import normalize_series_id
@@ -31,7 +32,7 @@ def delete_apply_response(
         raise ValueError("write target not allowlisted")
     deleted_media = {
         wid: {"image": bool(plan.previous.works[wid].get("project_filename")),
-              "file_names": sorted(item["filename"] for item in plan.previous.works[wid].get("downloads") or [])}
+              "file_names": sorted(item["filename"] for item in work_resource_entries(plan.previous.works[wid], "downloads"))}
         for wid in record_ids if kind == "works"
     }
     transactions.execute_source_json_write(plan.payloads, dry_run=context.dry_run, repo_root=context.repo_root)

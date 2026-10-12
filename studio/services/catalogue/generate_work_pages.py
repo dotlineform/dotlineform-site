@@ -16,7 +16,7 @@ from catalogue.catalogue_media_policy import catalogue_media_policy
 from catalogue.catalogue_series_galleries import CatalogueSeriesGalleries
 from catalogue.catalogue_series_galleries_index import series_gallery_links, series_galleries_index_payload
 from catalogue.catalogue_series_galleries_report import METADATA_PATH as SERIES_GALLERIES_REPORT_PATH, series_galleries_report_payload
-from catalogue.catalogue_source import CatalogueSourceRecords
+from catalogue.catalogue_source import CatalogueSourceRecords, work_resource_entries
 from catalogue.catalogue_shared_changes import WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, WORK_DOCUMENT_COVERAGE_MANIFEST
 from catalogue.catalogue_work_document_coverage import work_document_coverage_manifest
 from catalogue.catalogue_report_inputs import INPUT_SCHEMAS, catalogue_report_input_payloads
@@ -27,7 +27,11 @@ def catalogue_payloads(
     pairs: CatalogueSeriesGalleries, *, timestamp: str, work_ids: set[str] | None = None,
     gallery_ids: set[str] | None = None, shared_outputs: set[str] | None = None,
 ) -> dict[str, dict[str, Any]]:
-    """Project selected loaded inputs; Save and complete maintenance own audits."""
+    """Project selected inputs; explicit validation and maintenance own corpus audits.
+
+    Resource projections consume UI-authored labels unchanged, without label
+    completeness checks, coercion or substitute display text.
+    """
     supported_shared = {"media-config.json", WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, WORK_DOCUMENT_COVERAGE_MANIFEST, *INPUT_SCHEMAS}
     shared = supported_shared if shared_outputs is None else shared_outputs
     if shared - supported_shared:
@@ -51,15 +55,17 @@ def catalogue_payloads(
         work = compact_json_object({"work_id": wid, **projection.build_work_record_projection(source)})
         if source.get("series_id"):
             work["series_id"] = source["series_id"]
-        if source.get("links"):
-            work["links"] = source["links"]
-        if source.get("downloads"):
+        links = work_resource_entries(source, "links")
+        downloads = work_resource_entries(source, "downloads")
+        if links:
+            work["links"] = links
+        if downloads:
             if media_config is None:
                 media_config = json.loads((repo_root / "site-tools/config/site-tools.json").read_text())["media"]
             work["downloads"] = [
                 {"filename": download["filename"], "label": download["label"],
                  "url": f"{media_config['base'].rstrip('/')}/{media_config['files_works'].strip('/')}/{quote(download['filename'], safe='')}"}
-                for download in source["downloads"]
+                for download in downloads
             ]
         work["galleries"] = [dict(galleries.galleries[gid]) for gid in sorted(galleries.works.get(wid, []))]
         payloads[f"works/index/{wid}.json"] = projection.build_work_json_payload(

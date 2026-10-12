@@ -8,6 +8,7 @@ import re
 from typing import Any, Iterable, Mapping
 
 from catalogue.catalogue_output_paths import catalogue_output_workspace, output_path
+from catalogue.catalogue_source import work_resource_entries
 from catalogue.catalogue_work_attachments import safe_download_filename
 from docs_artifact_locations import ArtifactLocation
 
@@ -28,10 +29,11 @@ def _source_row(record: Mapping[str, Any]) -> dict[str, Any]:
 
 
 def _resource_row(record: Mapping[str, Any]) -> dict[str, Any]:
+    """Project resource references with the UI-authored labels unchanged."""
     return {
         "work_id": record["work_id"], "title": record["title"],
-        "links": [{"label": item["label"], "url": item["url"]} for item in record.get("links") or []],
-        "download_filenames": [item["filename"] for item in record.get("downloads") or []],
+        "links": [{"label": item["label"], "url": item["url"]} for item in work_resource_entries(record, "links")],
+        "download_filenames": [item["filename"] for item in work_resource_entries(record, "downloads")],
     }
 
 
@@ -120,8 +122,6 @@ def _validate_row(relative: str, key: str, row: Any) -> None:
         for link in row["links"]:
             if not isinstance(link, dict) or set(link) != {"label", "url"}:
                 raise ValueError(f"Work {key} has an invalid link")
-            _text(link["label"], f"Work {key} link label")
-            _text(link["url"], f"Work {key} link URL")
         for filename in row["download_filenames"]:
             safe_download_filename(filename)
 

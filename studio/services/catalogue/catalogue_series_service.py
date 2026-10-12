@@ -15,10 +15,10 @@ from catalogue.catalogue_service_context import (
     log_event,
     utc_now,
 )
-from catalogue.catalogue_source import SERIES_FIELDS, records_from_json_source, slug_id
+from catalogue.catalogue_source import SERIES_FIELDS, slug_id
 from catalogue.series_ids import normalize_series_id
 from catalogue.catalogue_report_inputs import SERIES_PATH
-from catalogue.catalogue_galleries import read_galleries, validate_galleries
+from catalogue.catalogue_galleries import read_galleries
 from catalogue.catalogue_shared_changes import (
     empty_shared_changes, merge_shared_changes, work_shared_changes, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT,
     WORK_DOCUMENT_COVERAGE_MANIFEST,
@@ -41,7 +41,6 @@ def series_create_payload(context: CatalogueWriteContext, body: Mapping[str, Any
     works_payload = load_works_payload(context.works_path)
     works_map = works_payload["works"]
     mutation_plan = source_mutation.plan_series_create(
-        records_from_json_source(context.source_dir),
         series_map,
         works_map,
         series_id,
@@ -53,7 +52,6 @@ def series_create_payload(context: CatalogueWriteContext, body: Mapping[str, Any
 
     changed_work_ids = mutation_plan.changed_work_ids
     galleries = read_galleries(context.source_dir)
-    validate_galleries(galleries, works_map)
     shared = work_shared_changes(
         works_map, {**works_map, **mutation_plan.work_updates}, galleries.works, galleries.works, changed_work_ids,
     )
@@ -115,13 +113,12 @@ def series_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any])
     require_record_revision(current_record, body.get("expected_record_hash"))
     works_map = load_works_payload(context.works_path)["works"]
     plan = source_mutation.plan_series_save(
-        records_from_json_source(context.source_dir), series_map, works_map,
+        series_map, works_map,
         series_id, current_record, update, extract_series_work_updates(body),
     )
     if plan.validation_errors:
         raise ValueError("; ".join(plan.validation_errors[:20]))
     galleries = read_galleries(context.source_dir)
-    validate_galleries(galleries, works_map)
     shared = work_shared_changes(works_map, {**works_map, **plan.work_updates}, galleries.works, galleries.works, plan.changed_work_ids)
     if plan.changed_fields:
         outputs = {RELATIONSHIP_REPORT}

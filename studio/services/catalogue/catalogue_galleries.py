@@ -84,7 +84,7 @@ def read_gallery_memberships(source_dir: Path) -> dict[str, list[str]]:
 
 
 def read_galleries(source_dir: Path) -> CatalogueGalleries:
-    """Load both authorities; Save/maintenance explicitly validate their result."""
+    """Load both envelopes; explicit validation and maintenance own corpus audits."""
     return CatalogueGalleries(read_gallery_definitions(source_dir), read_gallery_memberships(source_dir))
 
 

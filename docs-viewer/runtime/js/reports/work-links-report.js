@@ -21,7 +21,7 @@ function safeLinkUrl(value) {
   }
 }
 
-/** Keep authored labels/URLs intact while validating safe browser navigation. */
+/** Trust UI-authored labels; validate the response shape and safe browser navigation. */
 export function normalizeWorkLinksResponse(payload) {
   const report = payload && payload.report;
   if (!payload || payload.ok !== true || !exactKeys(report, "rows,schema_version")
@@ -32,7 +32,7 @@ export function normalizeWorkLinksResponse(payload) {
     if (!exactKeys(row, "link,work") || !exactKeys(row.work, "title,work_id")
       || typeof row.work.work_id !== "string" || !WORK_ID_PATTERN.test(row.work.work_id)
       || typeof row.work.title !== "string" || !row.work.title.trim()
-      || !exactKeys(row.link, "label,url") || typeof row.link.label !== "string" || !row.link.label.trim()
+      || !exactKeys(row.link, "label,url")
       || !safeLinkUrl(row.link.url)) {
       throw new Error("Work Links row is invalid.");
     }

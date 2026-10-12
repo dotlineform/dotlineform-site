@@ -7,13 +7,13 @@ from typing import Any, Mapping
 from catalogue.catalogue_output_media import MEDIA_SOURCE_FIELDS, complete_catalogue_media
 from catalogue.catalogue_revisions import record_hash
 from catalogue.catalogue_service_context import CatalogueWriteContext
-from catalogue.catalogue_source import CatalogueSourceRecords, records_from_json_source
+from catalogue.catalogue_source import CatalogueSourceRecords, records_from_json_source, work_resource_entries
 from catalogue.catalogue_pending_updates import accumulate_work_changes
 from catalogue.catalogue_staged_media import clear_staged_work
 
 
 def download_filenames(record: dict[str, Any]) -> set[str]:
-    return {item["filename"] for item in record.get("downloads") or []}
+    return {item["filename"] for item in work_resource_entries(record, "downloads")}
 
 
 def changed_work_media_ids(

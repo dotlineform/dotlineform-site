@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261010-184615-e471b8
 title: Catalogue Report Inputs
 added_date: "2026-10-10 18:46:15"
-last_updated: "2026-10-10 20:01:05"
+last_updated: "2026-10-12 20:09:28"
 summary: Refresh-owned Catalogue report inputs implemented, reviewed and closed; further verification continues during normal report use.
 ui_status: done
 parent_id: d-20260428-000000-f5ff18
@@ -81,7 +81,7 @@ Read refreshed Work IDs, titles and download filenames from the Catalogue resour
 
 ### Work Links (`work_links`)
 
-Work Links now reads refreshed Work IDs/titles and authored link labels/URLs through `docs_work_links.py`. It performs no filesystem scan or destination request. The former shared canonical resource loader is removed.
+Work Links reads refreshed Work IDs/titles and authored link labels/URLs through `docs_work_links.py`. The UI owns complete resource input; effect comparison, Save/Refresh projection and server/browser report readers use labels and URLs unchanged, without resource-text normalization or substitutions. Private resource-input validation does not repeat label-completeness or nonempty-URL checks. Optional canonical resource fields may be absent; explicit fields must be arrays of objects, with no malformed-array or null-to-empty repair. Structural response/input checks, file-processing basename/path checks and safe browser URL validation remain separate operation requirements. [Catalogue Source Model](Catalogue_Source_Model.md#catalogue-source-audit) owns this authoring/audit boundary. The report performs no filesystem scan or destination request. The former shared canonical resource loader is removed.
 
 Read those same minimal facts from the refreshed Catalogue resource projection. Retain one row per authored link, exact Catalogue document navigation and the existing safe browser URL action. Do not add network link checking or a saved final-report snapshot to this migration.
 

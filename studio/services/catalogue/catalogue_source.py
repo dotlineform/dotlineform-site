@@ -61,9 +61,6 @@ SERIES_FIELDS = [
     "title",
 ]
 
-DOWNLOAD_FIELDS = ["filename", "label", "staged"]
-WORK_LINK_ENTRY_FIELDS = ["url", "label"]
-
 WORK_TEXT_FIELDS = set(WORK_FIELDS) - {
     "image_staged",
     "downloads",
@@ -181,38 +178,19 @@ def normalize_json_value(value: Any) -> Any:
     return text if text else None
 
 
-def normalize_embedded_entry(value: Any, fields: Iterable[str]) -> Dict[str, Any] | None:
-    if not isinstance(value, Mapping):
-        return None
-    out: Dict[str, Any] = {}
-    for field in fields:
-        normalized = normalize_scalar_text(value.get(field))
-        if normalized is not None:
-            out[field] = normalized
-    return out if out else None
+def work_resource_entries(record: Mapping[str, Any], field: str) -> list[Dict[str, Any]]:
+    """Read an optional resource array without repairing or normalizing its data.
 
-
-def normalize_downloads(value: Any) -> list[Dict[str, Any]]:
-    if not isinstance(value, list):
-        return []
-    out: list[Dict[str, Any]] = []
-    for item in value:
-        entry = normalize_embedded_entry(item, ("filename", "label"))
-        if entry is not None:
-            entry["staged"] = item.get("staged")
-            out.append(entry)
-    return out
-
-
-def normalize_links(value: Any) -> list[Dict[str, Any]]:
-    if not isinstance(value, list):
-        return []
-    out: list[Dict[str, Any]] = []
-    for item in value:
-        entry = normalize_embedded_entry(item, WORK_LINK_ENTRY_FIELDS)
-        if entry is not None:
-            out.append(entry)
-    return out
+    Only an absent field means no entries. Explicit non-arrays and non-object
+    entries fail; authored values remain untouched. The returned objects belong
+    to the record, allowing media owners to update their server-owned flags.
+    """
+    entries = record.get(field, [])
+    if not isinstance(entries, list):
+        raise ValueError(f"Work {field} must be an array")
+    if any(not isinstance(entry, dict) for entry in entries):
+        raise ValueError(f"Each Work {field} entry must be an object")
+    return entries
 
 
 def normalize_scalar_text(value: Any) -> str | None:
@@ -234,14 +212,10 @@ def normalize_source_record(
             source_id = work_media_source_id_for_storage(PIPELINE_CONFIG, value)
             if source_id is not None:
                 out[field] = source_id
-        elif field == "downloads":
-            entries = normalize_downloads(value)
+        elif field in {"downloads", "links"}:
+            entries = work_resource_entries(record, field)
             if entries:
-                out[field] = entries
-        elif field == "links":
-            entries = normalize_links(value)
-            if entries:
-                out[field] = entries
+                out[field] = [dict(entry) for entry in entries]
         elif field in {"project_folder", "project_subfolder", "project_filename"}:
             # Source path components are identities, not prose to trim or unquote.
             if value is not None and value != "":
@@ -294,7 +268,7 @@ def load_json_file(path: Path) -> Dict[str, Any]:
 
 
 def read_source_map(source_dir: Path, kind: str) -> Dict[str, Dict[str, Any]]:
-    """Load one Work/Series map without count validation; mutations and maintenance own audits."""
+    """Load one Work/Series map; explicit validation and maintenance own corpus audits."""
     if kind not in {"works", "series"}:
         raise ValueError(f"Unsupported Catalogue source family: {kind!r}")
     path = source_dir / SOURCE_FILES[kind]
@@ -348,6 +322,11 @@ def validate_work_media_source(errors: list[str], *, key: str, record: Mapping[s
 def validate_source_records(
     records: CatalogueSourceRecords,
 ) -> list[str]:
+    """Audit every supplied Work/Series for explicit validation and maintenance.
+
+    Resource identities and staging representation are model checks; labels are
+    UI authoring guidance. This audit does not inspect bytes or remote targets.
+    """
     errors: list[str] = []
     all_series_ids: set[str] = set()
     work_series_by_work_id: Dict[str, str] = {}
@@ -379,7 +358,7 @@ def validate_source_records(
             except ValueError as exc:
                 errors.append(f"works {key}: {exc}")
         downloads = record.get("downloads")
-        if downloads is not None:
+        if "downloads" in record:
             if not isinstance(downloads, list):
                 errors.append(f"works {key}: downloads must be an array")
             else:
@@ -389,12 +368,10 @@ def validate_source_records(
                         continue
                     if is_empty(download.get("filename")):
                         errors.append(f"works {key}: downloads item {idx} missing filename")
-                    if is_empty(download.get("label")):
-                        errors.append(f"works {key}: downloads item {idx} missing label")
                     if type(download.get("staged")) is not bool:
                         errors.append(f"works {key}: downloads item {idx} staged must be an explicit boolean")
         links = record.get("links")
-        if links is not None:
+        if "links" in record:
             if not isinstance(links, list):
                 errors.append(f"works {key}: links must be an array")
             else:
@@ -404,8 +381,6 @@ def validate_source_records(
                         continue
                     if is_empty(link.get("url")):
                         errors.append(f"works {key}: links item {idx} missing url")
-                    if is_empty(link.get("label")):
-                        errors.append(f"works {key}: links item {idx} missing label")
 
     for key, record in records.series.items():
         validate_record_fields(errors, kind="series", key=key, record=record, allowed_fields=SERIES_FIELDS)

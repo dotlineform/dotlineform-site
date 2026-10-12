@@ -1,6 +1,5 @@
 import {
   cloneEmbeddedEntries,
-  normalizeEmbeddedEntries,
   normalizeText
 } from "./catalogue-work-fields.js";
 
@@ -41,7 +40,7 @@ function definitionForKind(kind) {
 export function getWorkEmbeddedItems(draft, kind) {
   const definition = definitionForKind(kind);
   if (!definition) return [];
-  return cloneEmbeddedEntries(draft && draft[definition.entriesKey], definition.fields);
+  return cloneEmbeddedEntries(draft?.[definition.entriesKey], definition.fields);
 }
 
 export function buildWorkEmbeddedModalDescriptor(kind, index, draft) {
@@ -119,11 +118,11 @@ export function buildWorkEmbeddedDeleteConfirmation(kind, draft, index) {
 
 export function validateWorkEmbeddedItems(draft) {
   const errors = new Map();
-  normalizeEmbeddedEntries(draft && draft.downloads, WORK_DOWNLOAD_FIELDS).forEach((item) => {
+  cloneEmbeddedEntries(draft?.downloads, WORK_DOWNLOAD_FIELDS).forEach((item) => {
     const message = validateWorkEmbeddedEntryValues("download", item.filename, item.label);
     if (message) errors.set("downloads", message);
   });
-  normalizeEmbeddedEntries(draft && draft.links, WORK_LINK_FIELDS).forEach((item) => {
+  cloneEmbeddedEntries(draft?.links, WORK_LINK_FIELDS).forEach((item) => {
     const message = validateWorkEmbeddedEntryValues("link", item.url, item.label);
     if (message) errors.set("links", message);
   });

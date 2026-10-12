@@ -11,13 +11,11 @@ from catalogue.catalogue_source import (
     SERIES_TEXT_FIELDS,
     WORK_FIELDS,
     WORK_TEXT_FIELDS,
-    CatalogueSourceRecords,
     normalize_source_record,
     normalize_text,
     is_empty,
     payload_for_map,
-    sort_record_map,
-    validate_source_records,
+    work_resource_entries,
 )
 from catalogue.series_ids import normalize_series_id
 from catalogue.catalogue_revisions import record_hash, require_record_revision
@@ -55,10 +53,10 @@ def normalize_work_update(work_id: str, current_record: Mapping[str, Any], updat
     merged["image_staged"] = current_record.get("image_staged", False)
     if merged["image_staged"] is None:
         merged["image_staged"] = False
-    prior_downloads = {item["filename"]: item for item in current_record.get("downloads") or []}
+    prior_downloads = {item["filename"]: item for item in work_resource_entries(current_record, "downloads")}
     merged["downloads"] = [
-        {**item, "staged": prior_downloads.get(item.get("filename"), {}).get("staged", False)}
-        for item in merged.get("downloads") or []
+        {**item, "staged": prior_downloads.get(item["filename"], {}).get("staged", False)}
+        for item in work_resource_entries(merged, "downloads")
     ]
     if "work_id" in update and update["work_id"] != work_id:
         raise ValueError("record.work_id must match work_id")
@@ -94,24 +92,6 @@ def changed_fields(before: Mapping[str, Any], after: Mapping[str, Any]) -> list[
     return [field for field in sorted(set(before.keys()) | set(after.keys())) if before.get(field) != after.get(field)]
 
 
-def validate_series_records(
-    source_records: CatalogueSourceRecords,
-    series_id: str,
-    series_record: Dict[str, Any],
-    work_updates: Mapping[str, Dict[str, Any]],
-) -> list[str]:
-    works = dict(source_records.works)
-    series = dict(source_records.series)
-    series[series_id] = series_record
-    for work_id, work_record in work_updates.items():
-        works[work_id] = work_record
-    normalized_records = CatalogueSourceRecords(
-        works=sort_record_map(works),
-        series=sort_record_map(series),
-    )
-    return validate_source_records(normalized_records)
-
-
 def plan_work_save(
     works: Mapping[str, Dict[str, Any]],
     work_id: str,
@@ -135,7 +115,7 @@ def plan_work_create(
     work_id: str,
     update: Mapping[str, Any],
 ) -> SourceRecordPlan:
-    blank_record = {field: None for field in WORK_FIELDS}
+    blank_record = {field: None for field in WORK_FIELDS if field not in {"downloads", "links"}}
     blank_record["work_id"] = work_id
     normalized_update = dict(update)
     created_record = normalize_work_update(work_id, blank_record, normalized_update)
@@ -173,7 +153,6 @@ def _plan_series_work_updates(
 
 
 def plan_series_save(
-    source_records: CatalogueSourceRecords,
     series: Mapping[str, Dict[str, Any]],
     works: Mapping[str, Dict[str, Any]],
     series_id: str,
@@ -181,14 +160,10 @@ def plan_series_save(
     update: Mapping[str, Any],
     work_updates_request: list[Dict[str, Any]],
 ) -> SeriesPlan:
+    """Plan the exact Series/member changes without a canonical family audit."""
     updated_record = normalize_series_update(series_id, current_record, update)
-    save_validation_errors = validate_series_save_record(updated_record)
+    validation_errors = validate_series_save_record(updated_record)
     pending_work_updates, changed_work_ids, work_records = _plan_series_work_updates(works, work_updates_request)
-    validation_errors = (
-        save_validation_errors
-        if save_validation_errors
-        else validate_series_records(source_records, series_id, updated_record, pending_work_updates)
-    )
 
     updated_series = dict(series)
     updated_series[series_id] = updated_record
@@ -214,13 +189,13 @@ def plan_series_save(
 
 
 def plan_series_create(
-    source_records: CatalogueSourceRecords,
     series: Mapping[str, Dict[str, Any]],
     works: Mapping[str, Dict[str, Any]],
     series_id: str,
     update: Mapping[str, Any],
     work_updates_request: list[Dict[str, Any]],
 ) -> SeriesPlan:
+    """Plan the new Series and supplied member changes without a family audit."""
     blank_record = {field: None for field in SERIES_FIELDS}
     blank_record["series_id"] = series_id
     normalized_update = dict(update)
@@ -228,13 +203,8 @@ def plan_series_create(
     if not str(created_record.get("title") or "").strip():
         raise ValueError("series title is required")
 
-    save_validation_errors = validate_series_save_record(created_record)
+    validation_errors = validate_series_save_record(created_record)
     pending_work_updates, changed_work_ids, work_records = _plan_series_work_updates(works, work_updates_request)
-    validation_errors = (
-        save_validation_errors
-        if save_validation_errors
-        else validate_series_records(source_records, series_id, created_record, pending_work_updates)
-    )
 
     updated_series = dict(series)
     updated_series[series_id] = created_record

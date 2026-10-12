@@ -83,7 +83,7 @@ def work_batch_create_payload(
     additions = {}
     for number, filename in enumerate(filenames, start=next_work_number):
         work_id = f"{number:05d}"
-        record = normalize_work_update(work_id, {field: None for field in WORK_FIELDS}, {
+        record = normalize_work_update(work_id, {field: None for field in WORK_FIELDS if field not in {"downloads", "links"}}, {
             **shared, "work_id": work_id, "title": Path(filename).stem,
             "media_source_id": source_id, "project_folder": folder,
             "project_subfolder": subfolder, "project_filename": filename,

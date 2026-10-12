@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260519-202931-b05d27
 title: Catalogue Indexes And Payloads
 added_date: "2026-05-19 20:29:31"
-last_updated: "2026-10-10 21:39:15"
+last_updated: "2026-10-12 20:09:28"
 parent_id: d-20260401-000000-a11bf3
 
 ---
@@ -46,6 +46,8 @@ Normal Refresh reads each selected existing Gallery record once and keys its sav
 | `work-sources.json` / `catalogue_work_sources_v1` | `works` map; required `work_id` and `title`; optional `series_id`, `media_source_id`, `project_folder`, `project_subfolder` and `project_filename`, preserving authored declarations and their absence/null values where valid | Projects, Uncataloged Images, Missing Source Files, Folders Without Works |
 | `work-resources.json` / `catalogue_work_resources_v1` | `works` map; `work_id`, `title`, `links: [{label, url}]` and `download_filenames: [filename]`; arrays retain authored order and may be empty | Work Links, Work Downloads |
 | `series.json` / `catalogue_series_definitions_v1` | `series` map; `series_id` and `title` for every definition, including Series without Works | Projects |
+
+Resource-input link labels/URLs and public Work resource filename/URL/label values are copied from UI-authored data unchanged. Save and lookup do not normalize resource text or drop entries. Optional canonical arrays may be absent; explicit nulls, non-arrays and non-object entries fail without empty-array repair. The UI owns resource completion; private resource-input validation repeats neither label completeness nor the nonempty-URL check. Structural payload checks, file processing and browser URL safety retain their operation owners. [Catalogue Source Model](Catalogue_Source_Model.md#catalogue-source-audit) owns this authoring/audit boundary.
 
 Normal Refresh reads each selected saved aggregate once and validates its existing schema and rows without canonical joins. The two Work inputs project metadata-selected queued current Works and remove queued deletions; Series Definitions projects queued current Series and removes queued deleted Series, including empty definitions. Candidates remain available after Work readiness becomes true, until shared completion permits Regenerate to consume them. Unaffected rows retain their saved values. Only changed candidate rows/removals produce a deterministically ordered complete JSON write; unchanged candidates preserve bytes and generation time. These three files are excluded from normal complete generation and are written directly after merging, without a second saved-file read.
 

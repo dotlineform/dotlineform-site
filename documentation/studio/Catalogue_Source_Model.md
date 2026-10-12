@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260519-000000-a0da45
 title: Catalogue Source Model
 added_date: "2026-05-19 00:00:00"
-last_updated: "2026-10-11 00:00:00"
+last_updated: "2026-10-12 20:09:28"
 parent_id: d-20260401-000000-a11bf3
 
 ---
@@ -38,7 +38,11 @@ Catalogue authoring source lives below `studio/data/canonical/catalogue/`:
 
 ## Metadata And Ordering
 
-Project-media references identify a configured source, project folder, optional direct subfolder and filename without storing an absolute path. `media_source_id` is omitted for the configured default. Dimensions and `media_version` remain maintained media fields. Downloads and links remain optional Work-owned arrays.
+Project-media references identify a configured source, project folder, optional direct subfolder and filename without storing an absolute path. `media_source_id` is omitted for the configured default. Dimensions and `media_version` remain maintained media fields. Downloads and links remain optional Work-owned arrays. Supplied downloads identify a filename and explicit staging state; supplied links identify a URL. The UI supplies valid authored labels and complete resource input. Label completion belongs to UI authoring, not canonical model validation, and neither establishes that bytes or remote destinations are available. Save serialization and resource effect comparison, public Work generation and private Work Links projection/readers consume supplied filenames, URLs and labels unchanged, without repeated authoring-completeness checks, coercion, trimming, leading-apostrophe removal or substitute text. Missing required input surfaces at the operation that consumes it.
+
+An omitted resource field means no entries; an explicit field must be an array of objects. Explicit nulls, other non-arrays and non-object entries fail instead of becoming empty arrays or being dropped. The Studio resource reader checks only this representation for the records actually consumed, without a complete Catalogue audit. Save copies every entry, while download staging state remains server-owned. The editor copies authored fields for draft comparison and Save without re-normalizing or filtering them. New/batch server baselines omit these optional fields rather than initializing them; the UI draft uses empty arrays for its list controls. Canonical serialization retains its existing omission of genuinely empty arrays. The private Work Resources input does not repeat the editor's nonempty-URL check; the browser retains URL-safety checks, and file-processing owners retain basename/path, upload/reference, byte-limit and required-file checks.
+
+The approved 2026-10-12 one-time cleanup removed 2,678 existing `links: null` fields from `works.json`, preserving every actual link/download entry and all other source values. Absence now represents those empty groups explicitly; runtime readers have no null-to-empty compatibility fallback. This representation-only cleanup requires no resource-generation or publication effects.
 
 Series and Gallery members use ascending `work_id` order. Series `sort_fields` and the Series editor's sort field are retired. The shared ordering calculation feeds both Studio's exact Series lookup and generated Series member records.
 
@@ -46,7 +50,7 @@ Series source records contain only `series_id` and a non-empty `title`. Series `
 
 ## Save And Delete
 
-Services validate the combined canonical state and use the existing source transaction writer. Saves use opaque server-issued record revisions; a stale edit is rejected. Single and multiple Work deletion instead use exact selected IDs and current canonical memberships, without loaded revision comparisons. Series deletion retains its revision and empty-membership requirements. A combined Series/member save checks the Series and every changed Work before writing either family.
+Ordinary Create/Save/Delete services check their request and operation requirements and use the existing source transaction writer without complete canonical family audits. Work persistence trusts UI-authored metadata and Series/Gallery choices; individual creation checks exact ID spelling/collision and existing saves require exact targets. Series Create/Save retain their target/identity and nonblank-title checks; Save checks the Series revision, and a combined Series/member write checks each supplied Work target and revision. Single and multiple Work deletion use exact selected IDs and remove only those Works' membership entries, preserving unrelated references. Series deletion retains its revision and saved-member guard. Gallery deletion retains its definition revision and complete saved-member confirmation. Required file envelopes, path/write confinement, local media completion and known-effect queues remain operation requirements. Reading, merging and serializing complete JSON maps or inspecting membership to determine an operation's scope are not complete validation audits.
 
 The single/New Work Series field displays its selected title and ID in the search box. Typing searches for a replacement; choosing an exact result updates the one `series_id`. Leaving or cancelling an uncommitted search restores the selected label. Series has no separate selected pill.
 
@@ -56,7 +60,7 @@ An edit icon beside the browser's Series search opens a title-only modal with OK
 
 A delete icon beside Edit is enabled only for a selected Series with no saved member Works, while the editor is available. It previews and confirms the exact Series deletion; the service rechecks the record revision and required-Series membership rule before writing. Success removes the Series from search and clears the browser selection. The current Work draft is preserved and revalidated, including any unsaved assignment to the deleted Series. Output failures remain visible after the canonical deletion.
 
-The Work editor places a multiple-selection Galleries field below Series for single and New Work editing. It searches canonical `galleries.json` by title or exact ID and displays removable selected pills. The service reads current membership from `galleries-by-work.json`; the editor sends replacement `gallery_ids` separately from the Work record, with `expected_gallery_ids` holding the loaded membership set. Save rejects stale membership, duplicates and unknown Gallery IDs before writing. Metadata and membership changes share one canonical transaction; clearing the selection removes that Work's membership entry. Gallery IDs/titles are never copied into `works.json`. Bulk Gallery editing uses the same canonical membership owner.
+The Work editor places a multiple-selection Galleries field below Series for single and New Work editing. It searches canonical `galleries.json` by title or exact ID and displays removable selected pills. The service reads current membership from `galleries-by-work.json`; the editor sends UI-validated replacement `gallery_ids` separately from the Work record. Persistence checks the array representation without another endpoint/duplicate audit or membership revision comparison. Metadata and membership changes share one canonical transaction; clearing the selection removes that Work's membership entry. Gallery IDs/titles are never copied into `works.json`. Bulk Gallery editing uses the same canonical membership owner.
 
 Save completes required local media after the canonical transaction and returns current canonical records and revisions to the editor. Membership reassignment updates canonical source immediately; generated Work, Series, Gallery and Docs metadata readers update on explicit Refresh Catalogue. A local media or editor-response failure preserves the saved canonical change and reports incomplete Save completion. [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns the workflow.
 
@@ -66,13 +70,37 @@ Canonical files use stable schema headers and deterministic record ordering. Opt
 
 ## Validation And Field Changes
 
-Run the read-only canonical validator with:
+### Catalogue Source Audit
+
+A complete canonical audit checks every record or relationship in its supplied families, including identities unrelated to any selected authoring action. The **Catalogue source audit** is the existing read-only CLI; run it deliberately from the repository root after external canonical edits, during model/configuration maintenance or when diagnosing source integrity:
 
 ```bash
 $HOME/miniconda3/bin/python3 studio/services/catalogue/validate_catalogue_source.py
 ```
 
-It checks allowed fields, exact IDs and map keys, required Series membership, media metadata and the two canonical Gallery sources. Work imports require `series_id` and reject retired Work columns.
+The default source directory is `studio/data/canonical/catalogue/`. `--source-dir <path>` selects another existing source directory, resolved relative to the command's working directory when relative. There is no family selector: each invocation reads and audits all five stores listed under Canonical Families.
+
+- Work/Series validation checks allowed record fields, normalized identities and map-key agreement, exactly one existing Series reference per Work, configured media-source identity, required positive whole-number media versions and explicit image/download staging booleans. Optional downloads/links may be omitted; explicit fields must have array/object representation (including rejecting null) and a nonempty filename/URL respectively. The explicit audit does not check label completeness.
+- Gallery validation checks exact IDs, definition shape/identity, nonempty trimmed titles and every Work–Gallery membership's representation, distinct Gallery IDs and existing endpoints. Duplicate Gallery titles remain valid.
+- Series–Gallery validation checks exact existing definition endpoints and sorted, unique, nonempty relationship arrays and sorted Series keys.
+
+Successful validation prints the source location, Work/Series counts and `Validation passed.` and exits `0`. Reported validation errors print `Validation failed:` and their messages, then exit `1`; missing/unreadable/malformed input stops with a nonzero error. Gallery and relationship audits report their first failure each. The command writes no canonical data, generated artifacts or queues, scans no media directories, checks no download bytes and makes no remote URL/network requests. It does not run Refresh, Regenerate, Search or Publish. Python imports may populate local ignored bytecode caches.
+
+Ordinary Create/Save/Delete and normal queue-selected Refresh never invoke the complete audit functions. Explicit repair commands retain the following audits before projecting their selected output family:
+
+| CLI selection | Complete canonical audit scope |
+| --- | --- |
+| `catalogue_json_build.py --write --private-report-inputs` | All Works and Series |
+| `catalogue_json_build.py --write --work-document-coverage` | All Works and Series |
+| `catalogue_json_build.py --write --compact-indexes` | All Works/Series and Gallery definitions/memberships |
+| `catalogue_json_build.py --write --series-galleries` | All five canonical stores |
+| `catalogue_json_build.py --write --gallery-records` | All five canonical stores |
+
+The full repair command shape is `python3 studio/services/catalogue/catalogue_json_build.py --write <one-repair-flag>`, using the project interpreter. These are mutually exclusive write operations, not read-only audit selectors; their queue prerequisites and Working/output/publication handoffs remain documented under [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md#refresh-boundary). Running `catalogue_json_build.py --write` without a repair selector performs normal queued Refresh without complete canonical audits. No automatic audit schedule or new command alias is introduced.
+
+### Field Changes
+
+Work imports require `series_id` and reject retired Work columns.
 
 When changing a field, update its source definition, serializer, validation, editor and affected read projections together. The [Catalogue Field Registry](Catalogue_Field_Registry.md) inventories current source fields and output families; it does not plan Save or own serialization.
 

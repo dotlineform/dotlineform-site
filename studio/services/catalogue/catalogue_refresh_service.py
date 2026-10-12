@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, SOURCE_FILES, records_from_json_source, validate_source_records
+from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, SOURCE_FILES, records_from_json_source, validate_source_records, work_resource_entries
 from catalogue.catalogue_compact_indexes import build_compact_index, merge_compact_index
 from catalogue.catalogue_works_metadata import update_catalogue_works_metadata
 from catalogue.catalogue_pending_updates import read_pending_updates, write_pending_updates
@@ -301,7 +301,7 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
                         sources = work_image_paths(repo_root, work_id, staging if record["image_staged"] else working)
                         for source, destination in zip(sources, destinations, strict=True):
                             _handoff_file(source, destination)
-                    downloads = {item["filename"]: item for item in record.get("downloads") or []}
+                    downloads = {item["filename"]: item for item in work_resource_entries(record, "downloads")}
                     for name in entry["file_names"]:
                         download = downloads[name]
                         source = output_path((staging if download["staged"] else working).work_files, name)

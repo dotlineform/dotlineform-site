@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 from catalogue import catalogue_transactions as transactions
-from catalogue.catalogue_source import SOURCE_FILES, payload_for_map, read_source_map
+from catalogue.catalogue_source import SOURCE_FILES, payload_for_map, read_source_map, work_resource_entries
 
 
 @dataclass(frozen=True)
@@ -49,7 +49,7 @@ def finalize_catalogue_media_versions(
         finalized.append(MediaVersionFinalization("works", item_id, work_id, previous_version, version, advance, f"works/index/{work_id}.json"))
     for work_id, names in staged_downloads_by_work.items():
         record = works[work_id]
-        for download in record.get("downloads") or []:
+        for download in work_resource_entries(record, "downloads"):
             if download["filename"] in names and download["staged"] is not True:
                 download["staged"] = True
                 changed_works = True
