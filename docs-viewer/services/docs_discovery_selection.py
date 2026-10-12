@@ -33,8 +33,8 @@ def _validate_row(row: Any, *, field: str, seen_ids: set[str], collection: str =
     if doc_id in seen_ids:
         raise ValueError(f"{field} contains duplicate doc_id {doc_id!r}")
     seen_ids.add(doc_id)
-    if not isinstance(row.get("title"), str) or not row["title"].strip():
-        raise ValueError(f"{field}.title must not be empty")
+    if not isinstance(row.get("title"), str) or (collection != "catalogue" and not row["title"].strip()):
+        raise ValueError(f"{field}.title has invalid representation or authoring metadata")
     if collection == "catalogue":
         if "draft" in row:
             raise ValueError(f"{field}: Catalogue metadata must omit draft")

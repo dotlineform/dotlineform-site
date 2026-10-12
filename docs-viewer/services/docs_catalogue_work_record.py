@@ -25,8 +25,8 @@ def catalogue_work_record(work: dict[str, Any]) -> CatalogueWorkRecord:
     """Return the identity-only Entry and separate related-links directive."""
     work_id = work.get("work_id")
     title = work.get("title")
-    if not isinstance(title, str) or not title.strip():
-        raise ValueError("Generated Work title is unavailable")
+    if not isinstance(title, str):
+        raise ValueError("Generated Work title must be a string")
     token = serialize_catalogue_entry_token(work_id)
     if not token:
         raise ValueError("Generated Work cannot produce a Catalogue Entry token")

@@ -52,7 +52,8 @@ export function createCollectionBrowsingData(options) {
         const updated = options.updatedTimestamp(doc);
         if (!(catalogue ? /^[0-9]{5}$/.test(doc.docId) : /^d-\d{8}-\d{6}-[a-f0-9]{6}$/.test(doc.docId))
           || (catalogue && workId !== doc.docId)
-          || !doc.title || next.has(doc.docId) || !Number.isFinite(updated)) {
+          || typeof doc.title !== "string" || (!catalogue && !doc.title)
+          || next.has(doc.docId) || !Number.isFinite(updated)) {
           throw new Error(name + " list data requires distinct document IDs, titles and valid last_updated dates. Rebuild its manifest.");
         }
         const thumbnailWorkId = catalogue ? workId : doc.record.has_thumbnail !== true && subject.kind === "work" ? subject.key : "";

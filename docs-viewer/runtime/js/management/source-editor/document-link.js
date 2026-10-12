@@ -36,7 +36,8 @@ export function normalizeDocumentLinkTargets(payload) {
     if (!target || Object.keys(target).sort().join(",") !== "collection,doc_id"
       || !documentId(target.doc_id, target.collection)
       || (target.collection !== "" && !collections.includes(target.collection))
-      || typeof record.title !== "string" || !record.title.trim() || !validLocation(record)) {
+      || typeof record.title !== "string" || (target.collection !== "catalogue" && !record.title.trim())
+      || !validLocation(record)) {
       throw new Error("A document target or location is invalid.");
     }
     var key = target.collection + ":" + target.doc_id;

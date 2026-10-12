@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261010-184615-e471b8
 title: Catalogue Report Inputs
 added_date: "2026-10-10 18:46:15"
-last_updated: "2026-10-12 20:09:28"
+last_updated: "2026-10-12 21:48:26"
 summary: Refresh-owned Catalogue report inputs implemented, reviewed and closed; further verification continues during normal report use.
 ui_status: done
 parent_id: d-20260428-000000-f5ff18
@@ -62,6 +62,8 @@ The proposed folder, filenames and grouping are confirmed. The combined resource
 Store portable source declarations, resolving absolute project roots through the existing runtime configuration. Do not add private paths to public Work payloads or put unused fields back into the recently simplified Work/Gallery lookup and member rows.
 
 Validate the generated schema, exact identities and the facts each reader needs. Do not make a report require unrelated canonical Work fields such as year, medium, image dimensions or editor state. Shared producer validation belongs to the projection's owner; reports should not copy the Studio editor's full-record validator. Add header fields only for an actual consumer need, rather than default counts or content hashes.
+
+Work titles and source registrations pass through these projections and report readers literally, without repeated title-completeness checks, trimming, leading-apostrophe removal, text coercion or path repair. Genuine optional absence remains valid; it supplies no registration to inspect. Explicit media-source identities resolve exactly, while documented absence selects the configured default. Structural saved-input checks, confined paths, symlink/file inspection and URL escaping retain their owners. Missing Source Files preserves the supplied Work title and exact expected path in its browser rows. [User Facing Rules](data/User_Facing_Rules.md) D.03 records this preservation boundary and the 2026-10-12 implementation evidence.
 
 Work Document Coverage's dedicated manifest remains a valid independent input. Projects must not borrow it, Catalogue Works metadata or Series and Galleries metadata to obtain convenient fields. If membership later becomes a shared Catalogue contract, explicitly promote that contract and migrate its consumers together; reuse is not implicit merely because a report manifest contains the desired information.
 

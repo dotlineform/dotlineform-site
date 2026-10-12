@@ -1,9 +1,6 @@
 
 import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import {
-  buildWorkRecordSummary as buildRecordSummary
-} from "./catalogue-work-sections.js";
-import {
   normalizeSeriesId,
   normalizeText,
   normalizeWorkId
@@ -15,7 +12,7 @@ import {
 const SEARCH_LIMIT = 20;
 
 function escapeHtml(value) {
-  return normalizeText(value)
+  return String(value ?? "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
@@ -146,7 +143,7 @@ export function renderWorkSearchMatches(state, matches, message = "") {
   const rows = matches.map(({ workId, record }) => `
     <button type="button" class="sharedSearchList__option catalogueWorkSearch__option" data-work-id="${escapeHtml(workId)}">
       <span class="catalogueWorkSearch__id">${escapeHtml(workId)}</span>
-      <span class="catalogueWorkSearch__title">${escapeHtml(normalizeText(record && record.title) || buildRecordSummary(record))}</span>
+      <span class="catalogueWorkSearch__title">${escapeHtml(record.title)}</span>
     </button>
   `);
   state.popupListNode.innerHTML = rows.join("");
@@ -253,7 +250,7 @@ export function bindWorkSelectionControls(state, context) {
     getOptionValue: (option) => option.workId,
     renderOption: ({ workId, record }) => `
       <span class="catalogueWorkSearch__id">${escapeHtml(workId)}</span>
-      <span class="catalogueWorkSearch__title">${escapeHtml(normalizeText(record && record.title) || buildRecordSummary(record))}</span>
+      <span class="catalogueWorkSearch__title">${escapeHtml(record.title)}</span>
     `,
     renderNoResults: () => '<p class="sharedSearchList__empty">No matching work ids.</p>',
     classNames: {

@@ -68,14 +68,14 @@ def display_source_path(path: Path | None, projects_base_dir: Path | None = None
     return str(normalized)
 
 
-def normalize_filename(value: Any) -> str:
-    text = str(value or "")
-    if not text:
-        return ""
-    path = Path(text)
-    if path.is_absolute() or len(path.parts) != 1 or text in {".", ".."} or "\\" in text:
+def validate_project_filename(value: Any) -> str | None:
+    """Keep an optional filename literal while requiring one safe path segment."""
+    if value is None or value == "":
+        return value
+    if (not isinstance(value, str) or "/" in value or "\\" in value or value in {".", ".."}
+            or any(ord(char) < 32 or ord(char) == 127 for char in value)):
         raise ValueError("project_filename must be a single safe path segment")
-    return path.name
+    return value
 
 
 def resolve_record_work_media_root(
@@ -138,10 +138,12 @@ def resolve_work_media_source(
         raise ValueError(f"work_id not found: {work_id}")
 
     source_root, projects_base_dir, availability_error = resolve_record_work_media_root(work_record, env=env)
-    project_folder = str(work_record.get("project_folder") or "")
-    project_subfolder = str(work_record.get("project_subfolder") or "")
-    project_filename = normalize_filename(work_record.get("project_filename"))
-    if project_folder and project_filename and source_root is not None:
+    project_folder = work_record.get("project_folder")
+    project_subfolder = work_record.get("project_subfolder")
+    project_filename = validate_project_filename(work_record.get("project_filename"))
+    if any(value is not None and not isinstance(value, str) for value in (project_folder, project_subfolder)):
+        raise ValueError("Work media path components must be strings or absent")
+    if project_folder not in (None, "") and project_filename not in (None, "") and source_root is not None:
         try:
             media_path = resolve_work_media_path(
                 source_root,
@@ -152,7 +154,7 @@ def resolve_work_media_source(
         except ValueError as exc:
             return None, "", projects_base_dir, str(exc)
         return media_path, "", projects_base_dir, availability_error
-    if project_filename:
+    if project_filename not in (None, ""):
         return None, "missing_project_folder", projects_base_dir, availability_error
     return None, "missing_project_filename", projects_base_dir, availability_error
 

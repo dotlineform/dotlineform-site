@@ -74,6 +74,10 @@ WORK_TEXT_FIELDS = set(WORK_FIELDS) - {
     MEDIA_VERSION_FIELD,
 }
 SERIES_TEXT_FIELDS = set(SERIES_FIELDS)
+WORK_PRESERVED_VALUE_FIELDS = frozenset({
+    "work_id", "series_id", "title", "medium", "duration", "storage_location",
+    "year", "year_display", "height_cm", "width_cm", "depth_cm", "width_px", "height_px",
+})
 OMIT_EMPTY_SOURCE_FIELDS = {
     "series_id",
     MEDIA_SOURCE_FIELD,
@@ -204,6 +208,9 @@ def normalize_source_record(
     *,
     text_fields: set[str] | None = None,
 ) -> Dict[str, Any]:
+    """Serialize Work values unchanged; Series definitions retain their own text handling."""
+    field_order = tuple(field_order)
+    is_work = "work_id" in field_order
     text_fields = text_fields or set()
     out: Dict[str, Any] = {}
     for field in field_order:
@@ -230,6 +237,10 @@ def normalize_source_record(
                 out[field] = normalize_text(value)
             elif field not in OMIT_EMPTY_SOURCE_FIELDS:
                 out[field] = None
+        elif is_work and field in WORK_PRESERVED_VALUE_FIELDS:
+            # The UI owns authored values; Save measures intrinsic pixels from the file.
+            if value is not None or field not in OMIT_EMPTY_SOURCE_FIELDS:
+                out[field] = value
         elif isinstance(value, list):
             out[field] = [normalize_json_value(item) for item in value]
         elif field in text_fields:

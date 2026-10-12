@@ -34,9 +34,11 @@ class WorkMediaSourceRoot:
 def resolve_work_media_source_id(config: Mapping[str, Any], value: Any = None) -> str:
     """Apply the configured default and reject every unknown explicit identity."""
 
-    source_id = str(value or "").strip()
-    if not source_id:
+    if value is None:
         return default_work_media_source_id(config)
+    if not isinstance(value, str):
+        raise ValueError("Work media source identity must be a string or absent")
+    source_id = value
     if source_id not in work_media_source_ids(config):
         raise ValueError(f"unknown Work media source identity: {source_id}")
     return source_id
@@ -100,11 +102,14 @@ def resolve_work_media_source_root(
 def _safe_relative_path(parts: tuple[Any, ...]) -> Path:
     text_parts: list[str] = []
     for value in parts:
-        text = str(value or "")
-        if text:
-            if "\\" in text or any(ord(character) < 32 or ord(character) == 127 for character in text):
-                raise ValueError("Work media path must be a canonical relative POSIX path")
-            text_parts.append(text)
+        if value is None or value == "":
+            continue
+        if not isinstance(value, str):
+            raise ValueError("Work media path components must be strings or absent")
+        if ("\\" in value or any(part in {"", ".", ".."} for part in value.split("/"))
+                or any(ord(character) < 32 or ord(character) == 127 for character in value)):
+            raise ValueError("Work media path must be a canonical relative POSIX path")
+        text_parts.append(value)
     relative = Path(*text_parts)
     if (
         not relative.parts

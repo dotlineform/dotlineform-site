@@ -63,7 +63,7 @@ export function buildWorkEmbeddedModalDescriptor(kind, index, draft) {
         fieldId: definition.firstFieldId,
         label: kind === "download" ? "filename" : "URL",
         key: definition.firstKey,
-        value: current[definition.firstKey] || "",
+        value: editing ? current[definition.firstKey] : "",
         type: definition.firstFieldType,
         readOnly: kind === "download"
       },
@@ -71,7 +71,7 @@ export function buildWorkEmbeddedModalDescriptor(kind, index, draft) {
         fieldId: definition.secondFieldId,
         label: "label",
         key: definition.secondKey,
-        value: current[definition.secondKey] || "",
+        value: editing ? current[definition.secondKey] : "",
         type: "text"
       }
     ]
@@ -105,9 +105,7 @@ export function buildWorkEmbeddedDeleteConfirmation(kind, draft, index) {
   const entries = getWorkEmbeddedItems(draft, kind);
   if (!Number.isInteger(index) || index < 0 || index >= entries.length) return null;
   const item = entries[index];
-  const label = definition.entriesKey === "downloads"
-    ? normalizeText(item.label || item.filename)
-    : normalizeText(item.label || item.url);
+  const label = item.label;
   return {
     entriesKey: definition.entriesKey,
     entries,

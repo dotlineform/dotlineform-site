@@ -60,7 +60,7 @@ import {
   openWorkSelection,
   setWorkSelectionPopupVisibility
 } from "./catalogue-work-selection.js";
-import { NEW_WORK_EDITABLE_FIELDS, WORK_DIMENSION_FIELD_KEYS, WORK_EDITABLE_FIELDS as EDITABLE_FIELDS, WORK_FIELD_DEFINITIONS, WORK_SERIES_ID_RE as SERIES_ID_RE, canonicalizeWorkScalar as canonicalizeScalar, embeddedEntriesEqual, isWorkFieldRequired, normalizeSeriesId, normalizeText, normalizeWorkId, suggestNextWorkId } from "./catalogue-work-fields.js";
+import { NEW_WORK_EDITABLE_FIELDS, WORK_DIMENSION_FIELD_KEYS, WORK_EDITABLE_FIELDS as EDITABLE_FIELDS, WORK_FIELD_DEFINITIONS, WORK_SERIES_ID_RE as SERIES_ID_RE, canonicalizeWorkScalar as canonicalizeScalar, cloneEmbeddedEntries, embeddedEntriesEqual, isWorkFieldRequired, normalizeSeriesId, normalizeText, normalizeWorkId, suggestNextWorkId } from "./catalogue-work-fields.js";
 import {
   bindWorkEditorEvents
 } from "./catalogue-work-editor-events.js";
@@ -243,7 +243,7 @@ async function runCatalogueRefresh(state) {
       if (state.mode === "single" && state.currentWorkId === item.work_id) {
         state.currentRecord = record;
         state.currentRecordHash = item.record_hash;
-        state.currentLookup = { ...state.currentLookup, work: record, record_hash: item.record_hash, downloads: record.downloads || [] };
+        state.currentLookup = { ...state.currentLookup, work: record, record_hash: item.record_hash, downloads: cloneEmbeddedEntries(record.downloads) };
       }
     }
     renderWorkCurrentPreview(state);

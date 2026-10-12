@@ -172,7 +172,7 @@ class PayloadBuilderMixin:
             for doc_id, child in children.items():
                 rows.append({
                     "doc_id": doc_id,
-                    "title": child["title"].strip(),
+                    "title": child["title"] if collection.collection == "catalogue" else child["title"].strip(),
                     "last_updated": child["last_updated"].strip(),
                     "collection": collection.collection,
                     "report_doc_id": collection.report_host_doc_id,

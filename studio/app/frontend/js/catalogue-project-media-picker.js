@@ -3,9 +3,6 @@ import {
   renderStudioModalFrame
 } from "./studio-modal.js";
 import {
-  normalizeText
-} from "./catalogue-work-fields.js";
-import {
   createFilePicker,
   createFilePickerConfig,
   filePickerText
@@ -24,9 +21,9 @@ function projectMediaState(state) {
 
 function selectedMediaSourceId(state, options = {}) {
   if (typeof options.getMediaSourceId === "function") {
-    return normalizeText(options.getMediaSourceId());
+    return options.getMediaSourceId();
   }
-  return normalizeText(options.mediaSourceId || (state.draft && state.draft.media_source_id));
+  return options.mediaSourceId ?? state.draft.media_source_id;
 }
 
 export function resetProjectMediaFolders(state) {
@@ -65,12 +62,14 @@ async function loadProjectFolders(state, options = {}) {
 
 function setDraftField(state, fieldKey, value, options = {}) {
   if (!state.draft) state.draft = {};
-  state.draft[fieldKey] = fieldKey.startsWith("project_") ? value || "" : normalizeText(value);
+  const text = value ?? "";
+  if (typeof text !== "string") throw new Error("Work source fields must be text or absent.");
+  state.draft[fieldKey] = text;
   const node = state.fieldNodes && state.fieldNodes.get ? state.fieldNodes.get(fieldKey) : null;
   if (node && "value" in node) node.value = state.draft[fieldKey];
   if (node && node.dataset && node.dataset.displayTarget) {
     const displayNode = node.ownerDocument.getElementById(node.dataset.displayTarget);
-    if (displayNode) displayNode.textContent = state.draft[fieldKey] || "—";
+    if (displayNode) displayNode.textContent = state.draft[fieldKey];
   }
   if (state.mode === "bulk" && state.bulkTouchedFields) state.bulkTouchedFields.add(fieldKey);
   if (typeof options.onFieldInput === "function") {

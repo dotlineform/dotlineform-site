@@ -27,14 +27,14 @@ function normalizeRow(value) {
   const keys = value && typeof value === "object" && !Array.isArray(value)
     ? Object.keys(value).sort()
     : [];
-  const workId = cleanString(value && value.work_id);
-  const workTitle = cleanString(value && value.work_title);
-  const expectedSourcePath = cleanString(value && value.expected_source_path);
+  const workId = value && value.work_id;
+  const workTitle = value && value.work_title;
+  const expectedSourcePath = value && value.expected_source_path;
   if (
     keys.join(",") !== "expected_source_path,work_id,work_title"
-    || !WORK_ID_PATTERN.test(workId)
-    || !workTitle
-    || !isCanonicalExpectedPath(expectedSourcePath)
+    || typeof workId !== "string" || !WORK_ID_PATTERN.test(workId)
+    || typeof workTitle !== "string"
+    || typeof expectedSourcePath !== "string" || !isCanonicalExpectedPath(expectedSourcePath)
   ) {
     throw new Error("Missing Source Files row is invalid.");
   }

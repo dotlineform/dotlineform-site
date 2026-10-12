@@ -207,8 +207,8 @@ def plan_create(
         work_id = body.get("work_id")
         if not isinstance(work_id, str) or not work_id.isascii() or not subject_key_is_canonical("work", work_id):
             raise ValueError("Catalogue New requires work_id as an exact five-digit string")
-        if not isinstance(body.get("title"), str) or not body["title"].strip():
-            raise ValueError("Catalogue New requires a non-blank title")
+        if not isinstance(body.get("title"), str):
+            raise ValueError("Catalogue New title must be a string")
         title = body["title"]
     elif "work_id" in body:
         raise ValueError("work_id is only accepted when creating a Catalogue collection document")

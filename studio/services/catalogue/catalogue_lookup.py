@@ -26,24 +26,14 @@ SERIES_SEARCH_FIELDS = frozenset({"series_id", "title"})
 WORK_SERIES_SUMMARY_FIELDS = frozenset({"title"})
 
 
-def normalize_optional_int(value: Any) -> int | None:
-    text = normalize_text(value)
-    if not text:
-        return None
-    try:
-        return int(text)
-    except ValueError:
-        return None
-
-
 def build_work_search_item(work_id: str, record: Mapping[str, Any]) -> Dict[str, Any]:
     """Project canonical fields for Work search and versioned Series thumbnails."""
     return {
         "work_id": work_id,
         "record_hash": record_hash(record),
-        "title": normalize_text(record.get("title")),
-        "year_display": normalize_text(record.get("year_display")),
-        "series_id": normalize_text(record.get("series_id")) or None,
+        "title": record["title"],
+        "year_display": record["year_display"],
+        "series_id": record.get("series_id"),
         "media_version": record.get("media_version"),
         "image_staged": record["image_staged"],
     }
@@ -53,11 +43,11 @@ def build_series_member_work_item(work_id: str, record: Mapping[str, Any]) -> Di
     return {
         "work_id": work_id,
         "record_hash": record_hash(record),
-        "title": normalize_text(record.get("title")),
-        "year": normalize_optional_int(record.get("year")),
-        "year_display": normalize_text(record.get("year_display")),
-        "series_id": normalize_text(record.get("series_id")) or None,
-        "project_folder": normalize_text(record.get("project_folder")),
+        "title": record["title"],
+        "year": record["year"],
+        "year_display": record["year_display"],
+        "series_id": record.get("series_id"),
+        "project_folder": record.get("project_folder"),
     }
 
 
@@ -82,9 +72,9 @@ def build_work_lookup_payload(records: CatalogueSourceRecords, work_id: str) -> 
     series_summary = [
         {
             "series_id": series_id,
-            "title": series_title_by_id.get(series_id, ""),
+            "title": series_title_by_id[series_id],
         }
-        for series_id in ([record["series_id"]] if record.get("series_id") else [])
+        for series_id in ([record["series_id"]] if record.get("series_id") is not None else [])
     ]
 
     return {

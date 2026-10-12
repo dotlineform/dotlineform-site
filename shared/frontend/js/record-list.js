@@ -10,10 +10,12 @@ function valueText(value) {
 }
 
 function safeUrl(value) {
-  const href = normalizeText(value);
+  if (value === undefined || value === null) return "";
+  if (typeof value !== "string") throw new Error("Record list URLs must be text or absent.");
+  const href = value.trim();
   if (!href) return "";
   if (/^(javascript|data):/i.test(href)) return "";
-  return href;
+  return value;
 }
 
 function safeSrcset(value) {
@@ -38,6 +40,14 @@ function positiveInteger(value) {
 function columnValue(column, record, index) {
   if (typeof column.value === "function") return column.value(record, { index, column });
   return record && column.key ? record[column.key] : "";
+}
+
+/** A column may format supplied text explicitly without the default display normalization. */
+function columnText(column, rawValue, record, index) {
+  const text = typeof column.formatText === "function"
+    ? column.formatText(rawValue, { record, index, column }) : valueText(rawValue);
+  if (typeof text !== "string") throw new Error("Record list text formatters must return text.");
+  return text;
 }
 
 function columnRecordValue(column, record, index, optionKey) {
@@ -143,7 +153,7 @@ function appendCell(rowNode, column, record, index, role) {
   cell.dataset.recordListCell = column.key || String(index);
 
   const rawValue = columnValue(column, record, index);
-  const text = valueText(rawValue);
+  const text = columnText(column, rawValue, record, index);
   if (column.type === "icon") {
     const iconClass = typeof column.iconClass === "function"
       ? column.iconClass(record, { index, column }) : column.iconClass;
@@ -500,7 +510,7 @@ export function createRecordList(rootNode, options = {}) {
             const column = controller.options.columns.find(item => item.key === key);
             if (!column || (column.type && column.type !== "text")) throw new Error(`Not a text column: ${key}`);
             const cell = [...row.children].find(node => node.dataset.recordListCell === key);
-            const text = valueText(columnValue(column, record, index));
+            const text = columnText(column, columnValue(column, record, index), record, index);
             cell.textContent = text;
             if (column.truncate !== false) cell.title = text;
           }

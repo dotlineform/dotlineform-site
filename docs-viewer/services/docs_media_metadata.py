@@ -76,7 +76,10 @@ def validate_media_metadata(metadata: Any) -> dict[str, Any]:
             _keys(document, {"target", "title", "references"})
             _keys(document["target"], {"collection", "doc_id"})
             target = document["target"]
-            if target["collection"] != collection or not _text(target["doc_id"]) or not is_document_id(target["doc_id"], collection=collection) or target["doc_id"] in documents or not _text(document["title"]):
+            if (target["collection"] != collection or not _text(target["doc_id"])
+                    or not is_document_id(target["doc_id"], collection=collection) or target["doc_id"] in documents
+                    or not isinstance(document["title"], str)
+                    or (collection != "catalogue" and not _text(document["title"]))):
                 raise ValueError("Docs Media metadata has an invalid or duplicate document")
             documents.add(target["doc_id"])
             if not isinstance(document["references"], list) or not document["references"]:

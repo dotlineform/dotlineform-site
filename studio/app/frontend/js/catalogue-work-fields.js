@@ -90,8 +90,14 @@ function canonicalizeWorkScalar(field, value) {
   return field.key === "series_id" ? normalizeSeriesId(value) : normalizeText(value);
 }
 
-function formatNumberText(value) {
-  return normalizeText(value);
+function draftScalarValue(field, value) {
+  if (value === undefined || value === null) return "";
+  if (field.type === "number") {
+    if (typeof value !== "number") throw new Error("Saved Work " + field.key + " must be numeric or absent.");
+    return String(value);
+  }
+  if (typeof value !== "string") throw new Error("Saved Work " + field.key + " must be text or absent.");
+  return value;
 }
 
 /** Copy authored fields unchanged; absence is optional, malformed arrays/entries fail. */
@@ -102,6 +108,7 @@ function cloneEmbeddedEntries(value, fields) {
     if (!item || typeof item !== "object" || Array.isArray(item)) {
       throw new Error("Each Work resource entry must be an object.");
     }
+    if (fields === undefined) return { ...item };
     return Object.fromEntries(fields.map(field => [field, item[field]]));
   });
 }
@@ -121,12 +128,17 @@ function embeddedEntriesEqual(a, b, fields) {
   return stableStringify(cloneEmbeddedEntries(a, fields)) === stableStringify(cloneEmbeddedEntries(b, fields));
 }
 
+/** Load saved values into controls unchanged; numeric controls need text and optional absence is blank. */
 function buildWorkDraftFromRecord(record, options = {}) {
   const fields = Array.isArray(options.fields) ? options.fields : WORK_EDITABLE_FIELDS;
-  const draft = Object.fromEntries(fields.map(field => [field.key,
-    field.key.startsWith("project_") ? record?.[field.key] || "" : formatNumberText(record && record[field.key])
+  const galleryIds = record?.gallery_ids;
+  if (galleryIds !== undefined && (!Array.isArray(galleryIds) || galleryIds.some(id => typeof id !== "string"))) {
+    throw new Error("Saved Work Gallery IDs must be an array of strings.");
+  }
+  const draft = Object.fromEntries(fields.filter(field => field.key !== "gallery_ids").map(field => [field.key,
+    draftScalarValue(field, record?.[field.key])
   ]));
-  draft.gallery_ids = Array.isArray(record?.gallery_ids) ? record.gallery_ids.slice().sort() : [];
+  draft.gallery_ids = galleryIds === undefined ? [] : galleryIds.slice().sort();
   if (options.downloadFields) draft.downloads = cloneEmbeddedEntries(record?.downloads, options.downloadFields);
   if (options.linkFields) draft.links = cloneEmbeddedEntries(record?.links, options.linkFields);
   return draft;
@@ -178,4 +190,4 @@ function suggestNextWorkId(workItems) {
   return String(maxNumericId + 1).padStart(5, "0");
 }
 
-export { NEW_WORK_EDITABLE_FIELDS, WORK_DIMENSION_FIELD_KEYS, WORK_EDITABLE_FIELDS, WORK_FIELD_DEFINITIONS, WORK_READONLY_FIELDS, WORK_SERIES_ID_RE, buildCreateWorkPayload, buildWorkDraftFromRecord, buildWorkRecordFromDraft, canonicalizeWorkScalar, cloneEmbeddedEntries, embeddedEntriesEqual, formatNumberText, isWorkFieldRequired, normalizeSeriesId, normalizeText, normalizeWorkId, suggestNextWorkId };
+export { NEW_WORK_EDITABLE_FIELDS, WORK_DIMENSION_FIELD_KEYS, WORK_EDITABLE_FIELDS, WORK_FIELD_DEFINITIONS, WORK_READONLY_FIELDS, WORK_SERIES_ID_RE, buildCreateWorkPayload, buildWorkDraftFromRecord, buildWorkRecordFromDraft, canonicalizeWorkScalar, cloneEmbeddedEntries, embeddedEntriesEqual, isWorkFieldRequired, normalizeSeriesId, normalizeText, normalizeWorkId, suggestNextWorkId };

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260614-201632-79c9cb
 title: Record List And Actions
 added_date: 2026-06-14 20:16:32
-last_updated: "2026-09-24 12:22:06"
+last_updated: "2026-10-12 21:48:26"
 parent_id: d-20260505-181739-bb5223
 
 ---
@@ -40,6 +40,8 @@ The route owns:
 - re-rendering from canonical route state after an action
 
 The component never mutates a route record.
+
+Columns that consume supplied text can define `formatText(value, {record, index, column})`; its result must be a string and passes directly to escaped DOM text and tooltips. Initial rendering and `updateCells` use the same formatter. The Work member Title/Gallery columns and resource Label column use literal text, without the component's default trimming/dash display convention. Optional absence is the owning column's decision; malformed formatter results fail. Link/image URL handling retains safety checks and requires string or absent targets, preserving accepted supplied URL strings rather than trimming them. This local shared component is outside the public code-projection inventory.
 
 Icon rendering is opt-in. An icon column supplies `type: "icon"` and `iconClass` as a class string or record callback; the column value supplies its accessible type label. An action's `iconClass` creates decorative artwork and requires `ariaLabel` on the button. The caller owns the artwork classes and CSS, including asset location, tint and size. Text-only `updateCells` does not update icon columns. The Works editor resource list uses these options; existing text and image consumers retain their rendering.
 

@@ -1,5 +1,4 @@
 import { mountSearchField } from "/shared/frontend/js/search-field.js";
-import { displayValue } from "./catalogue-editor-records.js";
 import { createStudioIcon } from "./studio-icon.js";
 import { createWorkGalleryPicker, renderWorkGalleryPicker, setWorkGalleryPickerAvailability } from "./catalogue-work-gallery-picker.js";
 import { bindSearchList } from "/shared/frontend/js/search-list.js";
@@ -11,7 +10,7 @@ import {
 } from "./catalogue-project-media-picker.js";
 
 function escapeHtml(value) {
-  return normalizeText(value)
+  return String(value ?? "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
@@ -44,12 +43,12 @@ function mediaSourceConfig(state) {
 
 export function resolvedWorkMediaSourceId(state) {
   const config = mediaSourceConfig(state);
-  return normalizeText(state.draft && state.draft.media_source_id) || config.defaultSourceId;
+  const sourceId = state.draft.media_source_id;
+  return sourceId === undefined || sourceId === null || sourceId === "" ? config.defaultSourceId : sourceId;
 }
 
 function mediaSourceLabel(sourceId) {
-  const value = normalizeText(sourceId);
-  return value ? `${value.slice(0, 1).toUpperCase()}${value.slice(1)}` : "—";
+  return `${sourceId.slice(0, 1).toUpperCase()}${sourceId.slice(1)}`;
 }
 
 function updateMediaSourceButton(state) {
@@ -120,7 +119,7 @@ function setSeriesDraftId(state, seriesId, options) {
 /** Refresh the selected Series label without applying or resetting the Work draft. */
 export function renderSeriesPicker(state) {
   if (!state.seriesPicker) return;
-  const seriesId = normalizeSeriesId(state.draft?.series_id);
+  const seriesId = state.draft.series_id;
   state.seriesPicker.hiddenInput.value = seriesId;
   state.seriesPicker.searchInput.value = seriesId ? seriesDisplayTitle(state, seriesId) : "";
   state.seriesPicker.searchController.close();
@@ -437,7 +436,7 @@ function renderReadonlyField(field, readonlyNode, state) {
   const value = document.createElement("div");
   value.className = "studioUi__input studioUi__input--readonlyDisplay";
   value.dataset.readonlyField = field.key;
-  value.textContent = "—";
+  value.textContent = "";
   wrapper.appendChild(value);
 
   readonlyNode.appendChild(wrapper);
@@ -450,21 +449,22 @@ export function renderWorkEditorFields(state, elements, options = {}) {
 }
 
 export function setFieldNodeValue(node, value) {
-  const text = node.dataset.field?.startsWith("project_") ? value || "" : normalizeText(value);
+  const text = value ?? "";
+  if (typeof text !== "string") throw new Error("Work control values must be text or absent.");
   if ("value" in node) {
     node.value = text;
     if (node.dataset && node.dataset.displayTarget) {
       const displayNode = node.ownerDocument.getElementById(node.dataset.displayTarget);
-      if (displayNode) displayNode.textContent = displayValue(text);
+      if (displayNode) displayNode.textContent = text;
     }
   } else {
-    node.textContent = displayValue(text);
+    node.textContent = text;
   }
 }
 
 export function getFieldNodeValue(node) {
   if ("value" in node) return node.value;
-  return normalizeText(node.textContent);
+  return node.textContent;
 }
 
 export function applyDraftToInputs(state) {
@@ -473,11 +473,11 @@ export function applyDraftToInputs(state) {
     const node = state.fieldNodes.get(field.key);
     if (!node) return;
     if (field.key === "series_id") {
-      node.value = normalizeText(state.draft[field.key]);
+      node.value = state.draft[field.key];
       renderSeriesPicker(state);
       return;
     }
-    setFieldNodeValue(node, field.key.startsWith("project_") ? state.draft[field.key] || "" : normalizeText(state.draft[field.key]));
+    setFieldNodeValue(node, state.draft[field.key]);
   });
   updateMediaSourceButton(state);
 }
@@ -486,14 +486,14 @@ export function applyReadonly(state) {
   READONLY_FIELDS.forEach((field) => {
     const node = state.readonlyNodes.get(field.key);
     if (!node) return;
-    node.textContent = displayValue(state.currentRecord ? state.currentRecord[field.key] : "");
+    node.textContent = state.currentRecord?.[field.key] ?? "";
   });
 }
 
 export function clearReadonlyFields(state) {
   READONLY_FIELDS.forEach((field) => {
     const node = state.readonlyNodes.get(field.key);
-    if (node) node.textContent = "—";
+    if (node) node.textContent = "";
   });
 }
 
@@ -502,7 +502,7 @@ export function setModeFieldAvailability(state) {
   const isBulk = state.mode === "bulk";
   const busy = state.isSaving || state.isBuilding || state.isDeleting;
   state.fieldsNode.querySelectorAll("[data-project-media-display]").forEach(link => {
-    const value = normalizeText(state.draft[link.dataset.projectMediaDisplay]);
+    const value = state.draft[link.dataset.projectMediaDisplay];
     const disabled = !value || isBulk || busy || state.isOpeningSource || !state.serverAvailable;
     link.setAttribute("aria-disabled", String(disabled));
     link.title = value ? (link.dataset.projectMediaDisplay === "project_filename" ? "Reveal original in Finder" : "Open folder in Finder") : "";

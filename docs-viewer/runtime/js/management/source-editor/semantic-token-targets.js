@@ -35,11 +35,14 @@ function normalizeTarget(record, registry) {
   var family = cleanString(row.family);
   var targetType = cleanString(row.target_type);
   var targetId = cleanString(row.target_id);
-  var title = cleanString(row.title);
+  var isCatalogueWork = family === "catalogue" && targetType === "work";
+  if (isCatalogueWork && typeof row.title !== "string") throw new Error("Catalogue Work title must be a string.");
+  var title = isCatalogueWork ? row.title : cleanString(row.title);
   var familyDefinition = registry && registry.familiesById
     ? registry.familiesById.get(family)
     : null;
-  if (!familyDefinition || !familyDefinition.targetTypesById.has(targetType) || !targetId || !title) return null;
+  if (!familyDefinition || !familyDefinition.targetTypesById.has(targetType) || !targetId
+    || (!isCatalogueWork && !title)) return null;
   var titleNorm = normalizeSearchText(title);
   var targetIdNorm = normalizeIdentityToken(normalizeSearchText(targetId));
   var targetTypeNorm = normalizeSearchText(targetType);
@@ -105,7 +108,7 @@ export function collectSemanticTokenTargetMatches(targets, query, registry, limi
   var identityQuery = identityTokens.join(" ");
   var matches = [];
   (Array.isArray(targets) ? targets : []).forEach(function (target) {
-    if (!target || !target.titleNorm) return;
+    if (!target || (!target.titleNorm && !(target.family === "catalogue" && target.targetType === "work"))) return;
     var qualifiedIdentity = [target.targetTypeNorm, target.targetIdNorm].filter(Boolean).join(" ");
     var allIdentityTokens = identityTokens.every(function (token) {
       return (

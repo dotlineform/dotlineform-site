@@ -40,7 +40,9 @@ function documentSummary(record, owner, context) {
     || !collectionId(target.collection)
     || target.collection !== owner.collection
     || !exactString(target.doc_id) || !documentId(target.doc_id, target.collection)
-    || !exactString(record.title) || !record.title || !Array.isArray(record.references)) {
+    || typeof record.title !== "string"
+    || (target.collection !== "catalogue" && (!exactString(record.title) || !record.title))
+    || !Array.isArray(record.references)) {
     throw new Error("Docs media document reference is invalid.");
   }
   if (typeof context.viewerUrlForDocument !== "function") {

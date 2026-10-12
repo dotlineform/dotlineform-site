@@ -26,8 +26,6 @@ def catalogue_source_documents(repo_root: Path, work_ids: list[str] | None = Non
             raise ValueError(f"Catalogue source {path.name} has invalid document or collection identity")
         if "work_id" in fields:
             raise ValueError(f"Catalogue document {document.doc_id} has redundant work_id")
-        if not isinstance(fields.get("title"), str) or not fields["title"].strip():
-            raise ValueError(f"Catalogue document {document.doc_id} requires a title")
         if (not is_doc_timestamp(fields.get("added_date"))
                 or not is_doc_timestamp(fields.get("last_updated"))):
             raise ValueError(f"Catalogue document {document.doc_id} has invalid timestamps")

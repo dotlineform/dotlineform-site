@@ -62,7 +62,8 @@ def validate_recent_payload(payload: dict[str, Any]) -> None:
         if not isinstance(row, dict) or set(row) - RECENT_FIELDS:
             raise ValueError("Recents rows must contain only identity and display metadata; rebuild Working Recents")
         for key in ("doc_id", "title", "timestamp"):
-            if not isinstance(row.get(key), str) or not row[key].strip():
+            if (not isinstance(row.get(key), str)
+                    or (not (key == "title" and row.get("collection") == "catalogue") and not row[key].strip())):
                 raise ValueError(f"Recents row requires {key}")
         for key in ("doc_id", "parent_id", "report_doc_id"):
             owner = row.get("collection", "") if key == "doc_id" else ""

@@ -2,11 +2,6 @@ function cleanString(value) {
   return String(value == null ? "" : value).trim();
 }
 
-function positiveInteger(value) {
-  var number = Number(value);
-  return Number.isInteger(number) && number > 0 ? number : 0;
-}
-
 /** Return a supported browser media target without resolving or rewriting it. */
 export function docsViewerSafeMediaTarget(value) {
   var target = cleanString(value);
@@ -33,6 +28,11 @@ function normalizedTextField(value, fieldName) {
   return normalized;
 }
 
+function suppliedTextField(value, fieldName) {
+  if (typeof value !== "string") throw new Error("Media View " + fieldName + " must be a string.");
+  return value;
+}
+
 function normalizedMetadata(value) {
   if (!Array.isArray(value)) throw new Error("Media View requires ordered metadata.");
   return Object.freeze(value.map(function (entry) {
@@ -41,7 +41,7 @@ function normalizedMetadata(value) {
     }
     return Object.freeze({
       label: normalizedTextField(entry.label, "a metadata label"),
-      value: normalizedTextField(entry.value, "a metadata value")
+      value: suppliedTextField(entry.value, "metadata value")
     });
   }));
 }
@@ -70,23 +70,19 @@ function normalizeWorkPresentation(value) {
     throw new Error("Media View requires image metadata.");
   }
   var imageSrc = docsViewerSafeMediaTarget(imageSource.src);
-  var imageWidth = positiveInteger(imageSource.width_px);
-  var imageHeight = positiveInteger(imageSource.height_px);
+  var imageWidth = imageSource.width_px;
+  var imageHeight = imageSource.height_px;
   if (!imageSrc) throw new Error("Media View image target is unsupported.");
-  if (!imageWidth || !imageHeight) throw new Error("Media View image dimensions must be positive integers.");
   var candidates = imageSource.candidates;
   var srcset = "";
   if (candidates !== undefined) {
-    var seenWidths = new Set();
     if (!Array.isArray(candidates) || !candidates.length) throw new Error("Media View image candidates are unavailable.");
     srcset = candidates.map(function (candidate) {
       var src = candidate && candidate.src;
       var width = candidate && candidate.width_px;
-      if (typeof src !== "string" || /[\s,]/.test(src) || !docsViewerSafeMediaTarget(src)
-        || !Number.isInteger(width) || width <= 0 || width > imageWidth || seenWidths.has(width)) {
-        throw new Error("Media View image candidate is unsafe or has invalid dimensions.");
+      if (typeof src !== "string" || /[\s,]/.test(src) || !docsViewerSafeMediaTarget(src)) {
+        throw new Error("Media View image candidate is unsafe.");
       }
-      seenWidths.add(width);
       return src + " " + width + "w";
     }).join(", ");
   }
@@ -113,11 +109,11 @@ function normalizeWorkPresentation(value) {
   return Object.freeze({
     schemaVersion: "docs_media_view_v1",
     target: Object.freeze({ kind: targetKind, id: targetId }),
-    label: normalizedTextField(value.label, "a label"),
+    label: suppliedTextField(value.label, "Work title"),
     image: Object.freeze({
       src: imageSrc,
       srcset: srcset,
-      alt: normalizedTextField(imageSource.alt, "image alternative text"),
+      alt: suppliedTextField(imageSource.alt, "Work title"),
       widthPx: imageWidth,
       heightPx: imageHeight
     }),
@@ -138,14 +134,12 @@ export function normalizeDocsViewerCatalogueGroupTarget(value) {
 
 function normalizeThumbnail(value) {
   var src = value && docsViewerSafeMediaTarget(value.src);
-  var width = value && positiveInteger(value.width_px);
-  var height = value && positiveInteger(value.height_px);
-  if (!src || !width || !height) throw new Error("Media View requires a safe thumbnail and dimensions.");
+  if (!src) throw new Error("Media View requires a safe thumbnail.");
   return Object.freeze({
     src: src,
-    alt: normalizedTextField(value.alt, "thumbnail alternative text"),
-    widthPx: width,
-    heightPx: height
+    alt: suppliedTextField(value.alt, "Work title"),
+    widthPx: value.width_px,
+    heightPx: value.height_px
   });
 }
 
@@ -166,6 +160,8 @@ export function docsViewerMediaPresentationForTarget(supplied, target) {
 /**
  * Freeze a Work or an ordered gallery. Gallery members explicitly supply either a complete
  * Work presentation (existing supplied callers) or an exact reference for on-demand loading.
+ * Work titles and title-derived labels/alt text retain their supplied strings; the UI owns completion.
+ * Intrinsic image pixels and derived candidate widths are consumed without validating Save's measurements.
  */
 export function normalizeDocsViewerMediaPresentation(value) {
   if (!value || value.schema_version !== "docs_media_gallery_v1") {
@@ -187,7 +183,7 @@ export function normalizeDocsViewerMediaPresentation(value) {
     if (ids.has(target.id)) throw new Error("Media View gallery has a duplicate Work target.");
     ids.add(target.id);
     return Object.freeze({ target: Object.freeze({ kind: target.kind, id: target.id }),
-      label: work ? work.label : normalizedTextField(entry.label, "a Work label"),
+      label: work ? work.label : suppliedTextField(entry.label, "Work title"),
       work: work, thumbnail: normalizeThumbnail(entry.thumbnail) });
   });
   var gallery = Object.freeze({

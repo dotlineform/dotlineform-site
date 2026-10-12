@@ -20,7 +20,7 @@ function workRecord(payload, workId) {
   if (typeof workId !== "string" || !/^\d{5}$/.test(workId) || !work || work.work_id !== workId) {
     throw new Error("Catalogue data does not match the selected Work.");
   }
-  if (typeof work.title !== "string" || !work.title.trim()) throw new Error("Catalogue Work title is unavailable.");
+  if (typeof work.title !== "string") throw new Error("Catalogue Work title must be a string.");
   return work;
 }
 
@@ -54,8 +54,8 @@ function galleryRecord(payload, galleryId) {
     if (keys.length !== 2 || !keys.includes("work_id") || !keys.includes("title")) {
       throw new Error("Catalogue Gallery member requires exactly Work ID and title.");
     }
-    if (typeof member.title !== "string" || !member.title.trim()) {
-      throw new Error("Catalogue member Work title is unavailable.");
+    if (typeof member.title !== "string") {
+      throw new Error("Catalogue member Work title must be a string.");
     }
     var target = catalogueMediaTarget(member.work_id);
     if (target.id <= previousId) throw new Error("Catalogue Gallery Works must be distinct and in ascending ID order.");
@@ -102,21 +102,16 @@ function groupMediaPresentation(payload, target, title, metadata, mediaPolicy, t
 export function catalogueWorkMediaPresentation(payload, workId, mediaPolicy, seriesGalleriesIndex) {
   var work = workRecord(payload, workId);
   var target = catalogueMediaTarget(workId);
-  if (!Number.isInteger(work.width_px) || work.width_px <= 0
-    || !Number.isInteger(work.height_px) || work.height_px <= 0) {
-    throw new Error("Catalogue image dimensions are unavailable.");
-  }
   var image = catalogueImageCandidates(target, work, mediaPolicy);
-  var metadata = [];
-  [["Year", "year_display"], ["Medium", "medium"]].forEach(function (entry) {
-    if (typeof work[entry[1]] === "string" && work[entry[1]].trim()) {
-      metadata.push({ label: entry[0], value: work[entry[1]].trim() });
-    }
+  var metadata = [{ label: "Year", value: work.year_display }];
+  if (work.medium !== undefined && work.medium !== null) {
+    metadata.push({ label: "Medium", value: work.medium });
+  }
+  var dimensions = [work.height_cm, work.width_cm, work.depth_cm].filter(function (value) {
+    return value !== undefined && value !== null;
   });
-  var dimensions = [work.height_cm, work.width_cm, work.depth_cm];
-  function dimension(value) { return typeof value === "number" && Number.isFinite(value) && value > 0; }
-  if (dimensions.slice(0, 2).every(dimension)) {
-    metadata.push({ label: "Dimensions", value: dimensions.filter(dimension).join(" × ") + " cm" });
+  if (dimensions.length) {
+    metadata.push({ label: "Dimensions", value: dimensions.join(" × ") + " cm" });
   }
   metadata.push({ label: "Catalogue number", value: workId });
   if (!Array.isArray(work.galleries)) throw new Error("Catalogue Work Gallery memberships are unavailable.");

@@ -227,7 +227,12 @@ def source_doc_from_path(
             f"managed source front-matter doc_id {existing_doc_id!r} "
             f"does not match requested doc_id {requested_doc_id!r}"
         )
-    title = str(front_matter.get("title") or source_model.humanize(existing_doc_id)).strip()
+    if front_matter.get("collection") == "catalogue":
+        title = front_matter["title"]
+        if not isinstance(title, str):
+            raise ValueError("Catalogue document title must be a string")
+    else:
+        title = str(front_matter.get("title") or source_model.humanize(existing_doc_id)).strip() or existing_doc_id
     report = (
         source_model.parse_document_report(
             source_text,
@@ -245,7 +250,7 @@ def source_doc_from_path(
         front_matter=dict(front_matter),
         body=body,
         doc_id=existing_doc_id,
-        title=title or existing_doc_id,
+        title=title,
         ui_status=source_model.normalize_ui_status(front_matter.get("ui_status")),
         parent_id="",
         report=report,
@@ -316,7 +321,8 @@ def committed_document_record(
 ) -> dict[str, object]:
     """Project a complete committed summary from validated in-memory source metadata."""
     record: dict[str, object] = {
-        "doc_id": doc_id, "title": str(front_matter.get("title") or doc_id).strip(),
+        "doc_id": doc_id,
+        "title": front_matter["title"] if collection == "catalogue" else str(front_matter.get("title") or doc_id).strip(),
         "summary": " ".join(str(front_matter.get("summary") or "").split()),
         "date": str(front_matter.get("date") or "").strip(),
         "date_display": str(front_matter.get("date_display") or "").strip(),

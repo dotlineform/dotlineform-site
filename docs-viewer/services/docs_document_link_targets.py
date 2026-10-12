@@ -38,7 +38,12 @@ def read_document_link_targets(repo_root: Path) -> dict[str, object]:
             doc_id = metadata.get("doc_id")
             if not isinstance(doc_id, str) or not is_document_id(doc_id, collection=collection) or doc_id != path.stem:
                 raise ValueError("Document link targets require an immutable doc_id.")
-            title = str(metadata.get("title") or source_model.humanize(doc_id)).strip() or doc_id
+            if collection == "catalogue":
+                title = metadata["title"]
+                if not isinstance(title, str):
+                    raise ValueError("Catalogue document target title must be a string")
+            else:
+                title = str(metadata.get("title") or source_model.humanize(doc_id)).strip() or doc_id
             href = canonical_document_viewer_url(
                 doc_id, collection=collection,
             )

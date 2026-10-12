@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260519-202931-b05d27
 title: Catalogue Indexes And Payloads
 added_date: "2026-05-19 20:29:31"
-last_updated: "2026-10-12 20:09:28"
+last_updated: "2026-10-12 21:48:26"
 parent_id: d-20260401-000000-a11bf3
 
 ---
@@ -28,6 +28,12 @@ Refresh Catalogue owns the complete replaceable consumer output beneath `$DOTLIN
 | `private/series.json` | Shared private Series definitions, including empty Series |
 
 Work thumbnails and primary renditions are shared local assets under `$DOTLINEFORM_DOCS_BASE_DIR/assets/works/`, prepared by Save rather than stored in the generated JSON tree. Private Catalogue Works and Series–Gallery report metadata also live beneath Working generated Catalogue output, outside the public Catalogue artifact inventory. The retired Works collection title metadata has no current producer or consumer.
+
+Work title completeness belongs to UI authoring. Work by-ID, compact, Gallery-member and private Work projections copy the supplied title; their saved readers retain string/field representation checks without rejecting blank text or substituting the Work ID. Work consumers, including Catalogue documents, image/Entry Build and Media View, do not repeat this completion check. Series/Gallery title rules retain their separate scope. [User Facing Rules](data/User_Facing_Rules.md) D.03 owns the agreed boundary and current evidence.
+
+Work Year/Year-display and physical dimensions are copied from UI-authored data without downstream coercion, trimming, invalid-to-null repair or completeness/integer/positivity validation. Basic numeric/string report representation remains checked. Physical-dimension rendering omits only absent/null values, preserving zero, negative and independent single values. Work by-ID `width_px`/`height_px` come from Save's file measurement; generation and downstream Build/media presentation use them without validation or numeric repair. Optional null metadata retains its existing public omission rule, and media-version/configured-rendition policy retains its separate owner.
+
+Work Title, Medium and Duration are likewise copied literally into their public projections; Storage location remains private report metadata. Saved readers retain structural string/nullable-string checks without trimming, leading-apostrophe removal or substitute text. Optional absent text displays empty, and report TSV escapes tabs/line breaks without collapsing other whitespace. Work Series/source references are preserved in lookup and private source inputs; path/URL safety and exact media-source resolution remain, with the configured default selected only by documented absence. Query matching may normalize a separate search value without changing supplied display/copy data.
 
 `reports/catalogue-works/metadata.json` uses `catalogue_works_report_metadata_v3`, with exactly `header: {schema}` and its unchanged `works` map. The producer computes no whole-map hash or persisted count; there is no demonstrated diagnostic need for a generation timestamp. Normal Refresh retains selected Work-row projection and explicit deletion, skipping unchanged writes; complete-file serialization remains necessary on change. The saved updater and local browser require v3 without a v2 fallback. [Catalogue Works](Catalogue_Works.md#data-and-ownership) owns the row contract, explicit private-only maintenance command and cutover evidence. The 2026-10-10 conversion wrote only this private report; saved/browser readers accepted 4,619 Works and 140 represented Series, with both queues empty and lifecycle times preserved. No public runtime projection or Publish was required.
 

@@ -168,7 +168,7 @@ def build_search_index(
     search_fields: tuple[str, ...],
     generated_at_utc: str | None = None,
 ) -> dict[str, Any]:
-    """Build one stage-independent document table and its atomic term postings."""
+    """Build one stage-independent table/postings, preserving UI-owned Catalogue titles."""
     doc_fields = (
         "id",
         "title",
@@ -188,14 +188,20 @@ def build_search_index(
             normalize(document.get("report_doc_id")),
         ),
     )
-    docs = [
-        {
-            key: normalize_text(document.get(key))
-            for key in doc_fields
-            if normalize_text(document.get(key))
-        }
-        for document in ordered_documents
-    ]
+    docs = []
+    for document in ordered_documents:
+        row = {}
+        for key in doc_fields:
+            if key == "title" and document.get("collection") == "catalogue":
+                title = document[key]
+                if not isinstance(title, str):
+                    raise ValueError("Catalogue Search title must be a string")
+                row[key] = title
+            else:
+                text = normalize_text(document.get(key))
+                if text:
+                    row[key] = text
+        docs.append(row)
     document_targets = [
         (
             normalize_text(document.get("collection")),
@@ -208,7 +214,7 @@ def build_search_index(
         or len(document_targets) != len(set(document_targets))
     ):
         raise ValueError("Search documents require unique non-empty exact targets")
-    if any(not normalize_text(document.get("title")) for document in docs):
+    if any(document.get("collection") != "catalogue" and not normalize_text(document.get("title")) for document in docs):
         raise ValueError("Search documents require title")
     for document in docs:
         collection = normalize_text(document.get("collection"))
@@ -454,7 +460,7 @@ class DocsViewerSearchDataBuilder:
         collection_title = normalize_text(collection.title)
         records: list[SearchDocRecord] = []
         for doc_id, row in selected.items():
-            title = normalize_text(row["title"])
+            title = row["title"] if collection.collection == "catalogue" else normalize_text(row["title"])
             source_doc = source_by_id[doc_id]
             by_id_path = output_root / "by-id" / f"{doc_id}.json"
             try:
@@ -466,7 +472,7 @@ class DocsViewerSearchDataBuilder:
             if not isinstance(by_id, dict):
                 raise ValueError(f"collection by-id payload must be an object: {by_id_path}")
 
-            by_id_title = normalize_text(by_id.get("title"))
+            by_id_title = by_id.get("title") if collection.collection == "catalogue" else normalize_text(by_id.get("title"))
             if title != by_id_title:
                 raise ValueError(
                     f"collection manifest, source, and by-id titles must match for "

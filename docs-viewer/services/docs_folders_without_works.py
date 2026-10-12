@@ -17,7 +17,6 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths 
 
 ensure_studio_python_paths(__file__)
 
-from catalogue.catalogue_source import normalize_text  # noqa: E402
 from catalogue_work_media_sources import (  # noqa: E402
     WorkMediaSourceRoot,
     resolve_work_media_path,
@@ -44,13 +43,13 @@ def _registered_directories(
 ) -> Counter[tuple[str, str]]:
     directories: Counter[tuple[str, str]] = Counter()
     for work_id, work in works.items():
-        folder = normalize_text(work.get("project_folder"))
-        filename = normalize_text(work.get("project_filename"))
-        if not folder or not filename:
+        folder = work.get("project_folder")
+        filename = work.get("project_filename")
+        if folder in (None, "") or filename in (None, ""):
             continue
         parts = list(_relative_parts(folder, f"Work {work_id} project_folder", single=True))
-        subfolder = normalize_text(work.get("project_subfolder"))
-        if subfolder:
+        subfolder = work.get("project_subfolder")
+        if subfolder not in (None, ""):
             parts.extend(_relative_parts(subfolder, f"Work {work_id} project_subfolder"))
         _relative_parts(filename, f"Work {work_id} project_filename", single=True)
         source_id = resolve_work_media_source_id(config, work.get("media_source_id"))

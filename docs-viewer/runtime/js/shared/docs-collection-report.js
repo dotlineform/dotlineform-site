@@ -66,16 +66,17 @@ function fetchJson(url, failureMessage, options) {
   });
 }
 
-function manifestDocs(payload) {
+function manifestDocs(payload, collection) {
   if (!payload || Object.keys(payload).length !== 1 || !Array.isArray(payload.docs)) {
     throw new Error("Docs collection manifest requires a docs array.");
   }
-  return normalizeDocuments(payload.docs);
+  return normalizeDocuments(payload.docs, collection);
 }
 
-function normalizeDocument(record) {
+function normalizeDocument(record, collection) {
   var docId = cleanString(record && record.doc_id);
-  var title = cleanString(record && record.title);
+  if (collection === "catalogue" && typeof record.title !== "string") throw new Error("Catalogue title must be a string.");
+  var title = collection === "catalogue" ? record.title : cleanString(record && record.title);
   if (record && Object.hasOwn(record, "has_thumbnail") && typeof record.has_thumbnail !== "boolean") {
     throw new Error("Document thumbnail presence must be a boolean.");
   }
@@ -90,12 +91,12 @@ function normalizeDocument(record) {
   };
 }
 
-function normalizeDocuments(records) {
+function normalizeDocuments(records, collection) {
   return records.map(function (record) {
     if (!record || typeof record.doc_id !== "string" || !record.doc_id.trim()) {
       throw new Error("Docs collection manifest row requires a document ID.");
     }
-    return normalizeDocument(record);
+    return normalizeDocument(record, collection);
   });
 }
 
@@ -219,7 +220,7 @@ function appendDocRow(state, doc, reserveThumbnailSpace) {
 
   var titleText = document.createElement("span");
   titleText.className = "docsViewerReport__title";
-  titleText.textContent = doc.title || humanize(docId) || docId;
+  titleText.textContent = state.collectionId === "catalogue" ? doc.title : doc.title || humanize(docId) || docId;
 
   var trailingHost = document.createElement("span");
   trailingHost.className = "docsViewerReport__rowContribution docsViewerReport__rowContribution--trailing";
@@ -827,7 +828,9 @@ function mountResolvedDocsCollectionReport(context, contribution) {
   publishState(state, "loading", null, "report-loading");
   state.loadManifest = function () {
     return Promise.all([
-      fetchJson(url, "Failed to load docs collection manifest").then(manifestDocs),
+      fetchJson(url, "Failed to load docs collection manifest").then(function (payload) {
+        return manifestDocs(payload, state.collectionId);
+      }),
       state.pagedBrowsing ? loadCatalogueCollectionThumbnailSettings(context) : null
     ]).then(function (loaded) {
       if (!state.mounted || !root.isConnected) return false;
@@ -865,7 +868,7 @@ function mountResolvedDocsCollectionReport(context, contribution) {
       if (change.deleted) state.thumbnailRevisions.delete(docId);
       else state.thumbnailRevisions.set(docId, String(Date.now()));
       state.docs = state.docs.filter(function (doc) { return doc.docId !== docId; });
-      if (!change.deleted) state.docs.push(normalizeDocument(change.record));
+      if (!change.deleted) state.docs.push(normalizeDocument(change.record, state.collectionId));
       state.docIds = state.docs.map(function (doc) { return doc.docId; });
       if (state.browsingData) state.browsingData.prepare(state.docs);
       publishDocumentsRefresh(state, "document-committed");

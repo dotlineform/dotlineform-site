@@ -15,7 +15,7 @@ import { normalizeText } from "./catalogue-work-fields.js";
 const BULK_PREVIEW_LIMIT = 12;
 
 function escapeHtml(value) {
-  return normalizeText(value)
+  return String(value ?? "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
@@ -42,17 +42,13 @@ function clearRecordListActions(state, key, rootNode) {
 }
 
 
+/** Display completed Work fields directly; authoring owns their completion. */
 export function buildWorkRecordSummary(record) {
-  const title = normalizeText(record && record.title);
-  const yearDisplay = normalizeText(record && record.year_display);
-  if (title && yearDisplay) return `${title} · ${yearDisplay}`;
-  return title || yearDisplay || "—";
+  return `${record.title} · ${record.year_display}`;
 }
 
 function buildWorkImageDimensionSummary(record) {
-  const height = normalizeText(record && record.height_px);
-  const width = normalizeText(record && record.width_px);
-  return height && width ? `${height} x ${width} px` : "";
+  return `${record.height_px} x ${record.width_px} px`;
 }
 
 
@@ -104,7 +100,6 @@ export function renderWorkCurrentPreview(state) {
 }
 
 function buildWorkDownloadHref(state, filename) {
-  if (!normalizeText(filename)) return "";
   const runtime = state.config && state.config.app && state.config.app.runtime;
   const mediaConfig = runtime && runtime.media && typeof runtime.media === "object" ? runtime.media : {};
   const media = mediaConfig.media && typeof mediaConfig.media === "object" ? mediaConfig.media : mediaConfig;
@@ -113,7 +108,7 @@ function buildWorkDownloadHref(state, filename) {
   const selected = download?.staged ? mediaConfig.staged?.works_files : media.works_files;
   const worksFiles = normalizeText(selected).replace(/^\/?/, "/").replace(/\/+$/, "");
   if (!worksFiles) return "";
-  return `${base}${worksFiles}/${encodeURIComponent(normalizeText(filename))}`;
+  return `${base}${worksFiles}/${encodeURIComponent(filename)}`;
 }
 
 function buildWorkResourceRows(state, options = {}) {
@@ -121,15 +116,15 @@ function buildWorkResourceRows(state, options = {}) {
     kind: "download",
     index,
     type: "File",
-    label: item.label || "",
+    label: item.label,
     targetHref: state.pendingAttachments.has(item.filename) ? "" : buildWorkDownloadHref(state, item.filename, options)
   }));
   const links = getWorkEmbeddedItems(state.draft, "link").map((item, index) => ({
     kind: "link",
     index,
     type: "Link",
-    label: item.label || "",
-    targetHref: item.url || ""
+    label: item.label,
+    targetHref: item.url
   }));
   return downloads.concat(links);
 }
@@ -178,6 +173,7 @@ export function updateWorkResourcesSection(state, options = {}) {
       {
         key: "label",
         label: "label",
+        formatText: value => value,
         width: "minmax(0, 1fr)",
         type: "link",
         hrefKey: "targetHref",
@@ -283,9 +279,9 @@ export function updateWorkSummary(state, options = {}) {
   if (state.mode === "bulk") {
     state.layout.setPreviewAvailable(true);
     const selectedCount = state.bulkWorkIds.length;
-    const selectedRecords = state.bulkWorkIds.map((workId) => state.bulkRecords.get(workId)).filter(Boolean);
-    const seriesIds = Array.from(new Set(selectedRecords.map(record => normalizeText(record.series_id)).filter(Boolean)));
-    const seriesTitles = seriesIds.map(seriesId => normalizeText(state.seriesById.get(seriesId)?.title) || "—");
+    const selectedRecords = state.bulkWorkIds.map((workId) => state.bulkRecords.get(workId));
+    const seriesIds = Array.from(new Set(selectedRecords.map(record => record.series_id).filter(id => id !== null && id !== undefined)));
+    const seriesTitles = seriesIds.map(seriesId => state.seriesById.get(seriesId).title);
     state.metaNode.hidden = false;
     state.metaNode.textContent = selectedCount
       ? `${selectedCount} works selected`

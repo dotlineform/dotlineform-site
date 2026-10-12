@@ -34,7 +34,8 @@ def read_relationship_payload(payload: Any, target: DocumentTarget) -> DocumentL
         if (not all(isinstance(item, str) for item in identity.values())
                 or not is_document_id(identity["doc_id"], collection=identity["collection"])):
             raise ValueError("Links document identity does not match Working")
-        if not isinstance(value["title"], str) or not value["title"].strip():
+        if (not isinstance(value["title"], str)
+                or (identity["collection"] != "catalogue" and not value["title"].strip())):
             raise ValueError("Links document summary is invalid")
         return DocumentSummary(DocumentTarget(**identity), value["title"])
 

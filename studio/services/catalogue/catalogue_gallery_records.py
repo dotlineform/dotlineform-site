@@ -31,7 +31,7 @@ def _validated_members(payload: Any, gallery_id: str) -> dict[str, dict[str, str
     for row in members:
         if (not isinstance(row, dict) or set(row) != {"work_id", "title"}
                 or not isinstance(row["work_id"], str) or not re.fullmatch(r"[0-9]{5}", row["work_id"])
-                or not isinstance(row["title"], str) or not row["title"].strip()):
+                or not isinstance(row["title"], str)):
             raise ValueError("Generated Gallery member requires an exact Work ID and title")
         identity = row["work_id"]
         if identity <= previous:

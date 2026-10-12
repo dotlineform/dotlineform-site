@@ -42,10 +42,11 @@ def _gallery_identity(value: Any) -> str:
     return value
 
 
-def _text(value: Any, label: str) -> str:
-    if not isinstance(value, str) or not value.strip():
-        raise ValueError(f"Generated Work {label} is unavailable")
-    return value.strip()
+def _work_title(value: Any) -> str:
+    """Require the consumed string representation; title completion is UI-owned."""
+    if not isinstance(value, str):
+        raise ValueError("Generated Work title must be a string")
+    return value
 
 
 def _positive_integer(value: Any) -> bool:
@@ -112,7 +113,7 @@ def read_catalogue_media_targets(repo_root: Path) -> dict[str, Any]:
     for work_id, work in read_catalogue_work_index(repo_root).items():
         targets.append({
             "family": "catalogue", "target_type": "work", "target_id": work_id,
-            "title": _text(work.get("title"), "title"),
+            "title": work["title"],
             "meta": [],
         })
     galleries = validate_compact_index(_read_generated(repo_root, "galleries/galleries_index.json"), family="galleries")["galleries"]
@@ -131,7 +132,7 @@ def read_catalogue_work(repo_root: Path, work_id: str) -> dict[str, Any]:
     work = payload.get("work")
     if not isinstance(work, dict) or work.get("work_id") != work_id:
         raise ValueError(f"Generated data does not match Work {work_id}")
-    _text(work.get("title"), "title")
+    _work_title(work.get("title"))
     return payload
 
 
@@ -159,14 +160,12 @@ def local_catalogue_work(repo_root: Path, work_id: str) -> dict[str, Any]:
 
 
 def catalogue_media_record(payload: dict[str, Any], work_id: str) -> dict[str, Any]:
-    """Validate the exact requested Work image without inferring another identity."""
+    """Read the exact requested Work image, trusting Save's measured pixel dimensions."""
     work_id = _work_identity(work_id)
     record = payload.get("work")
     if not isinstance(record, dict) or record.get("work_id") != work_id:
         raise ValueError(f"Generated data does not match Work {work_id}")
-    _text(record.get("title"), "image title")
-    if not all(_positive_integer(record.get(field)) for field in ("width_px", "height_px")):
-        raise ValueError("Generated image dimensions are unavailable")
+    _work_title(record.get("title"))
     if not _positive_integer(record.get("media_version")):
         raise ValueError(f"Generated media version for Work {work_id} is unavailable")
     return record

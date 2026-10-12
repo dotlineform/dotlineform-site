@@ -105,9 +105,11 @@ def _validate_row(relative: str, key: str, row: Any) -> None:
     if relative == WORK_RESOURCES_PATH:
         required |= {"links", "download_filenames"}
     if (not isinstance(row, dict) or row.get(identity) != key
-            or not required <= set(row) or set(row) - required - optional):
+            or not required <= set(row) or set(row) - required - optional
+            or not isinstance(row["title"], str)):
         raise ValueError("Invalid private Catalogue identity or fields")
-    _text(row["title"], f"Catalogue {key} title")
+    if relative == SERIES_PATH:
+        _text(row["title"], f"Catalogue {key} title")
     if relative == WORK_SOURCES_PATH:
         if "series_id" in row and (not isinstance(row["series_id"], str) or not re.fullmatch(r"[0-9]{3}", row["series_id"])):
             raise ValueError(f"Work {key} requires an exact Series ID")

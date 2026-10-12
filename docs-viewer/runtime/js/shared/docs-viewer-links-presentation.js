@@ -17,7 +17,9 @@ export function docsViewerLinksDocumentSummary(value) {
     throw new Error("Links requires a flat document summary.");
   }
   var target = identity({ collection: value.collection, doc_id: value.doc_id });
-  if (typeof value.title !== "string" || !value.title.trim()) throw new Error("Links document title is missing.");
+  if (typeof value.title !== "string" || (target.collection !== "catalogue" && !value.title.trim())) {
+    throw new Error("Links document title has invalid representation or authoring metadata.");
+  }
   return { ...target, title: value.title };
 }
 

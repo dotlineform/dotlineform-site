@@ -52,9 +52,11 @@ function flattenTreeDocs(rows, parentId, docs, depth) {
 function normalizeRecentDoc(row) {
   if (!row || typeof row !== "object" || Array.isArray(row)) return null;
   var docId = cleanString(row.doc_id);
-  var title = cleanString(row.title);
+  var catalogue = row.collection === "catalogue";
+  if (catalogue && typeof row.title !== "string") throw new Error("Recent Catalogue title must be a string.");
+  var title = catalogue ? row.title : cleanString(row.title);
   var timestamp = cleanString(row.timestamp);
-  if (!docId || !title || !timestamp) return null;
+  if (!docId || (!catalogue && !title) || !timestamp) return null;
   if (!/^\d{4}-\d{2}-\d{2}$/.test(timestamp)) {
     throw new Error("Recent document updates must be calendar dates.");
   }

@@ -166,7 +166,7 @@ export function setNewWorkMode(state, options = {}) {
   state.draft.links = [];
   state.draft.series_id = normalizeSeriesId(options.seriesId);
   state.draft.work_id = normalizeWorkId(options.workId) || state.nextSuggestedWorkId || suggestNextWorkId(Array.from(state.workSearchById.values()));
-  state.baselineDraft = { ...buildDraftFromRecord(state.draft), work_id: state.draft.work_id };
+  state.baselineDraft = { ...state.draft, gallery_ids: [], downloads: [], links: [] };
   state.searchNode.value = state.draft.work_id;
   state.searchNode.placeholder = "new work id";
   state.searchNode.setAttribute("aria-label", "New work id");

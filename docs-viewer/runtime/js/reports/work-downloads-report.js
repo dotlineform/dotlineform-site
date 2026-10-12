@@ -27,7 +27,7 @@ export function normalizeWorkDownloadsResponse(payload) {
     }
     if (row.work !== null && (!exactKeys(row.work, "filename,title,work_id")
       || typeof row.work.work_id !== "string" || !WORK_ID_PATTERN.test(row.work.work_id)
-      || typeof row.work.title !== "string" || !row.work.title.trim() || !isFilename(row.work.filename)
+      || typeof row.work.title !== "string" || !isFilename(row.work.filename)
       || (row.file !== null && row.file !== row.work.filename))) {
       throw new Error("Work Downloads Work reference is invalid.");
     }

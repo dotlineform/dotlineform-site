@@ -164,14 +164,11 @@ def _catalogue_indexes(workspace: ArtifactLocation) -> tuple[
     work_placement_by_id: dict[str, dict[str, Any]] = {}
     folder_keys_by_series: dict[str, set[str]] = defaultdict(set)
     for work_id, work in works.items():
-        try:
-            folder_key = normalize_projects_directory_marker(
-                f"projects/{normalize_text(work.get('project_folder'))}"
-            )
-        except ValueError as exc:
-            raise ValueError(f"Refreshed Work {work_id} has an invalid project_folder") from exc
-        if len(folder_key.split("/")) != 2:
-            raise ValueError(f"Refreshed Work {work_id} project_folder must identify one first-level project")
+        folder = work.get("project_folder")
+        if folder in (None, ""):
+            continue
+        # The shared saved-input reader already checks exact portable source declarations.
+        folder_key = f"projects/{folder}"
         series_ids = [work["series_id"]] if "series_id" in work else []
         report_work = {
             "target": {"family": "catalogue", "target_type": "work", "target_id": work_id},

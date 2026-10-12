@@ -68,19 +68,17 @@ function normalizeWorkRecord(key, value) {
     throw new Error("Catalogue Works metadata row is invalid.");
   }
   const workId = cleanString(value && value.work_id);
-  const title = visibleString(value && value.title);
+  const title = value.title;
   const year = value.year;
-  const yearDisplay = visibleString(value && value.year_display);
-  const storage = visibleString(value && value.storage_location);
-  const medium = visibleString(value && value.medium);
+  const yearDisplay = value.year_display;
+  const storage = value.storage_location;
+  const medium = value.medium;
   if (
     !WORK_ID_PATTERN.test(key)
     || value.work_id !== key
     || typeof value.title !== "string"
-    || !title
-    || !Number.isInteger(year)
+    || typeof year !== "number"
     || typeof value.year_display !== "string"
-    || !yearDisplay
     || (value.storage_location !== null && typeof value.storage_location !== "string")
     || (value.medium !== null && typeof value.medium !== "string")
     || !Array.isArray(value.series)
@@ -139,12 +137,10 @@ function seriesCellText(row) {
     : "—";
 }
 
-function storageCellText(row) {
-  return row.storage || "—";
-}
-
 function tsvCell(value) {
-  return visibleString(value).replace(/\t/g, " ");
+  if (value === null) return "";
+  if (typeof value !== "string") throw new Error("Catalogue Works copy cell must be text or absent.");
+  return value.replace(/\r\n|[\t\r\n]/g, " ");
 }
 
 function copyCellText(row, columnId) {
@@ -153,10 +149,10 @@ function copyCellText(row, columnId) {
     year: row.yearDisplay,
     title: row.title,
     series: seriesCellText(row),
-    storage: storageCellText(row),
-    medium: row.medium || "—"
+    storage: row.storage,
+    medium: row.medium
   };
-  return values[columnId] || "";
+  return values[columnId];
 }
 
 export function serializeCatalogueWorksTsv(projection) {
@@ -287,8 +283,8 @@ function appendRow(state, row) {
 
   appendSeriesCell(rowNode, row);
 
-  appendTextCell(rowNode, "storage", storageCellText(row), "catalogueWorksReport__cellMeta");
-  appendTextCell(rowNode, "medium", row.medium || "—", "catalogueWorksReport__cellMeta");
+  appendTextCell(rowNode, "storage", row.storage ?? "", "catalogueWorksReport__cellMeta");
+  appendTextCell(rowNode, "medium", row.medium ?? "", "catalogueWorksReport__cellMeta");
   state.rowsNode.appendChild(rowNode);
 }
 

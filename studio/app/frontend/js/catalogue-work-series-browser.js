@@ -62,14 +62,14 @@ export function createWorkSeriesBrowser(state, elements, options) {
   function renderMembers() {
     const records = Array.from(state.workSearchById.values())
       .filter(record => seriesId && record.series_id === seriesId)
-      .sort((a, b) => workTitleCollator.compare(a.title || "", b.title || ""))
+      .sort((a, b) => workTitleCollator.compare(a.title, b.title))
       .map(record => {
         const preview = buildWorkThumbPreview(state.mediaConfig, record.work_id, {
           mediaVersion: record.media_version, imageStaged: record.image_staged
         });
         return {
-          workId: record.work_id, title: record.title || "—",
-          galleries: record.gallery_ids.map(id => state.galleriesById.get(id)?.title || id).join(", "),
+          workId: record.work_id, title: record.title,
+          galleries: record.gallery_ids.map(id => state.galleriesById.get(id).title).join(", "),
           thumbSrc: preview.src, thumbSrcset: preview.srcset, thumbSizes: "48px",
           thumbWidth: 48, thumbHeight: 48, thumbAlt: "", thumbFallback: "No preview"
         };
@@ -97,8 +97,8 @@ export function createWorkSeriesBrowser(state, elements, options) {
           widthKey: "thumbWidth", heightKey: "thumbHeight", altKey: "thumbAlt",
           fallbackTextKey: "thumbFallback", truncate: false
         },
-        { key: "title", label: "title", width: "minmax(0, 1fr)", truncate: true },
-        { key: "galleries", label: "galleries", width: "minmax(0, 1fr)", truncate: false }
+        { key: "title", label: "title", formatText: value => value, width: "minmax(0, 1fr)", truncate: true },
+        { key: "galleries", label: "galleries", formatText: value => value, width: "minmax(0, 1fr)", truncate: false }
       ],
       showHeader: false,
       emptyText: seriesId ? "No works currently belong to this series." : "Find a series to see its works.",

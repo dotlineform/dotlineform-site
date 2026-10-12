@@ -106,6 +106,10 @@ class _DocumentRefresh:
                 metadata = {}
             self.metadata[target] = metadata
         title = metadata.get("title")
+        if target.collection == "catalogue" and metadata:
+            if not isinstance(title, str):
+                raise ValueError("Catalogue Links source title must be a string")
+            return DocumentSummary(target, title)
         return DocumentSummary(target, title.strip() if isinstance(title, str) and title.strip() else label or target.doc_id)
 
     def location(self, target: DocumentTarget) -> str:

@@ -39,20 +39,8 @@ def is_empty(value: Any) -> bool:
     return False
 
 
-def coerce_numeric(value: Any) -> Optional[float]:
-    """Best-effort numeric coercion for dimension fields; returns None if not parseable."""
-    if is_empty(value):
-        return None
-    if isinstance(value, (int, float)):
-        return float(value)
-    try:
-        return float(str(value).strip())
-    except Exception:
-        return None
-
-
 def coerce_int(value: Any) -> Optional[int]:
-    """Best-effort integer coercion for year; returns None if not parseable."""
+    """Integer coercion for remaining operational metadata; None if unparseable."""
     if is_empty(value):
         return None
     if isinstance(value, int):
@@ -63,14 +51,6 @@ def coerce_int(value: Any) -> Optional[int]:
         return int(str(value).strip())
     except Exception:
         return None
-
-
-def coerce_string(value: Any) -> Optional[str]:
-    """Coerce any non-empty value to a trimmed string."""
-    if is_empty(value):
-        return None
-    s = normalize_text(value)
-    return s if s != "" else None
 
 
 def canonicalize_for_hash(value: Any) -> Any:

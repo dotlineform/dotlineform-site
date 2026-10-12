@@ -20,7 +20,6 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths 
 
 ensure_studio_python_paths(__file__)
 
-from catalogue.catalogue_source import normalize_text  # noqa: E402
 from catalogue.catalogue_output_paths import catalogue_output_workspace  # noqa: E402
 from catalogue.catalogue_report_inputs import WORK_SOURCES_PATH, read_catalogue_report_input  # noqa: E402
 from docs_artifact_locations import ArtifactLocation  # noqa: E402
@@ -65,10 +64,9 @@ def default_missing_source_files_paths(
 
 
 def _canonical_parts(value: Any, label: str, *, single: bool = False) -> tuple[str, ...]:
-    text = normalize_text(value)
-    if not text or text.startswith("/") or text.endswith("/") or "\\" in text:
+    if not isinstance(value, str) or not value or value.startswith("/") or value.endswith("/") or "\\" in value:
         raise ValueError(f"{label} must be a canonical relative POSIX path")
-    parts = tuple(text.split("/"))
+    parts = tuple(value.split("/"))
     if (
         any(not part or part in {".", ".."} for part in parts)
         or any(any(ord(character) < 32 or ord(character) == 127 for character in part) for part in parts)
@@ -82,15 +80,15 @@ def collect_work_sources(works: Mapping[str, Mapping[str, Any]]) -> list[WorkSou
     """Resolve all refreshed registrations; physical existence belongs to the run."""
     sources: list[WorkSource] = []
     for source_id, record in sorted(works.items()):
-        work_id = str(source_id)
-        folder = normalize_text(record.get("project_folder"))
-        subfolder = normalize_text(record.get("project_subfolder"))
-        filename = normalize_text(record.get("project_filename"))
-        if not folder or not filename:
+        work_id = source_id
+        folder = record.get("project_folder")
+        subfolder = record.get("project_subfolder")
+        filename = record.get("project_filename")
+        if folder in (None, "") or filename in (None, ""):
             continue
-        work_title = normalize_text(record.get("title"))
+        work_title = record["title"]
         path_parts = list(_canonical_parts(folder, f"work {work_id} project_folder", single=True))
-        if subfolder:
+        if subfolder not in (None, ""):
             path_parts.extend(_canonical_parts(subfolder, f"work {work_id} project_subfolder"))
         path_parts.extend(_canonical_parts(filename, f"work {work_id} project_filename", single=True))
         media_source_id = resolve_work_media_source_id(PIPELINE_CONFIG, record.get("media_source_id"))

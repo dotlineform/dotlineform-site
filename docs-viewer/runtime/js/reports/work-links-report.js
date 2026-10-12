@@ -31,7 +31,7 @@ export function normalizeWorkLinksResponse(payload) {
   return report.rows.map(row => {
     if (!exactKeys(row, "link,work") || !exactKeys(row.work, "title,work_id")
       || typeof row.work.work_id !== "string" || !WORK_ID_PATTERN.test(row.work.work_id)
-      || typeof row.work.title !== "string" || !row.work.title.trim()
+      || typeof row.work.title !== "string"
       || !exactKeys(row.link, "label,url")
       || !safeLinkUrl(row.link.url)) {
       throw new Error("Work Links row is invalid.");

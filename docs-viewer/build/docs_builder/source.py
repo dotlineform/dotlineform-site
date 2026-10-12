@@ -159,7 +159,12 @@ class SourceLoadingMixin:
                 raise MissingDocIdError(f"Missing required doc_id in {relative_path}")
             if doc_id != path.stem:
                 raise InvalidDocIdError(f"Selected source identity does not match its filename: {relative_path}")
-            title = str(front_matter.get("title") or extract_title(body_markdown) or humanize(stem)).strip()
+            if getattr(self, "collection_id", "") == "catalogue":
+                title = front_matter["title"]
+                if not isinstance(title, str):
+                    raise ValueError(f"Catalogue document {doc_id} title must be a string")
+            else:
+                title = str(front_matter.get("title") or extract_title(body_markdown) or humanize(stem)).strip()
             parent_id = parent_ids[doc_id] if ordinary else ""
             date = str(front_matter.get("date") or "").strip()
             date_display = str(front_matter.get("date_display") or "").strip()

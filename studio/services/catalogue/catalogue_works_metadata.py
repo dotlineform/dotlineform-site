@@ -36,11 +36,12 @@ def _project_work(records: CatalogueSourceRecords, work_id: str) -> dict[str, An
     _work_id(work_id)
     source = records.works[work_id]
     row = {field: source[field] for field in WORK_FIELDS}
-    if row["work_id"] != work_id or type(row["year"]) is not int:
+    if row["work_id"] != work_id or type(row["year"]) not in (int, float):
         raise ValueError(f"Invalid Catalogue Works metadata identity/year: {work_id}")
-    for field in ("title", "year_display"):
-        if not isinstance(row[field], str) or not row[field].strip():
-            raise ValueError(f"Invalid Catalogue Works metadata {field}: {work_id}")
+    if not isinstance(row["title"], str):
+        raise ValueError(f"Invalid Catalogue Works metadata title representation: {work_id}")
+    if not isinstance(row["year_display"], str):
+        raise ValueError(f"Invalid Catalogue Works metadata year_display: {work_id}")
     for field in ("storage_location", "medium"):
         if row[field] is not None and not isinstance(row[field], str):
             raise ValueError(f"Invalid Catalogue Works metadata {field}: {work_id}")

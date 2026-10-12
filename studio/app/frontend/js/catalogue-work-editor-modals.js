@@ -132,7 +132,7 @@ function modalFieldHtml({ fieldId, label, value, type = "text", readOnly = false
 }
 
 function escapeHtml(value) {
-  return normalizeText(value)
+  return String(value ?? "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")

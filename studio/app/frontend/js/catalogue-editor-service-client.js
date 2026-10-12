@@ -87,7 +87,7 @@ function queryString(params = {}) {
   const search = new URLSearchParams();
   Object.entries(params).forEach(([key, value]) => {
     const raw = String(value == null ? "" : value);
-    const text = key.startsWith("project_") ? raw : raw.trim();
+    const text = key.startsWith("project_") || key === "media_source_id" ? raw : raw.trim();
     if (text) search.set(key, text);
   });
   return search.toString();

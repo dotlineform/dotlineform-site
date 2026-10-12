@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import html
 import json
-import math
 import re
 from uuid import uuid4
 from urllib.parse import urlsplit
@@ -356,20 +355,18 @@ def replace_catalogue_tokens(
 
 
 def work_metadata_text(work: dict[str, Any], work_id: str) -> str:
-    """Format Catalogue Entry metadata without adding absent optional values."""
-    def dimension(value: Any) -> str:
-        if type(value) not in (int, float) or not math.isfinite(value) or value <= 0:
-            return ""
-        return str(int(value)) if value == int(value) else str(value)
-
-    height, width, depth = (dimension(work.get(key)) for key in ("height_cm", "width_cm", "depth_cm"))
-    dimensions = " × ".join(value for value in (height, width, depth) if value) + " cm" if height and width else ""
-    return "\n".join(value for value in (
-        str(work.get("year_display") or "").strip(),
-        str(work.get("medium") or "").strip(),
-        dimensions,
-        f"cat. {work_id}",
-    ) if value)
+    """Render supplied Year display/dimensions; only absent optional dimensions are omitted."""
+    lines = [work["year_display"]]
+    medium = work.get("medium")
+    if medium is not None:
+        if not isinstance(medium, str):
+            raise ValueError("Catalogue Work medium must be a string or absent")
+        lines.append(medium)
+    dimensions = [work[key] for key in ("height_cm", "width_cm", "depth_cm") if key in work and work[key] is not None]
+    if dimensions:
+        lines.append(" × ".join(str(value) for value in dimensions) + " cm")
+    lines.append(f"cat. {work_id}")
+    return "\n".join(lines)
 
 
 def render_image_summary(summary: str) -> str:
@@ -409,10 +406,13 @@ def render_catalogue_media_reference(
 
 
 def catalogue_image_control(alt: str, *, width: int | None = None, height: int | None = None) -> str:
-    """Reuse Media View activation; Entry supplies validated intrinsic dimensions."""
-    frame = ' docsViewerCatalogueEntry__frame' if width and height else ""
-    ratio = f' style="aspect-ratio: {width} / {height};"' if width and height else ""
-    dimensions = f' width="{width}" height="{height}"' if width and height else ""
+    """Reuse Media View activation; Entry supplies Save-measured intrinsic dimensions."""
+    supplied_dimensions = width is not None and height is not None
+    width_attr = html.escape(str(width), quote=True)
+    height_attr = html.escape(str(height), quote=True)
+    frame = ' docsViewerCatalogueEntry__frame' if supplied_dimensions else ""
+    ratio = f' style="aspect-ratio: {width_attr} / {height_attr};"' if supplied_dimensions else ""
+    dimensions = f' width="{width_attr}" height="{height_attr}"' if supplied_dimensions else ""
     return (
         f'<button type="button" class="docsViewer__mediaImageLink docsViewerFigure__imageLink{frame}"{ratio} data-docs-media-open '
         f'aria-label="{html.escape("Open " + alt + " in Media View", quote=True)}">'
@@ -442,12 +442,10 @@ def render_catalogue_entry(
 ) -> str:
     """Render public Work content; omit the resource section when both lists are empty.
 
-    Build fails on malformed populated resources or image dimensions.
+    Resources retain structural/URL safety; intrinsic pixels are consumed from Save.
     """
-    width, height = work.get("width_px"), work.get("height_px")
-    if type(width) is not int or type(height) is not int or width <= 0 or height <= 0:
-        raise ValueError(f"Catalogue Work {token.target_id} image dimensions are unavailable")
-    title = work["title"].strip()
+    width, height = work["width_px"], work["height_px"]
+    title = work["title"]
     image = catalogue_image_control(title, width=width, height=height)
     metadata_lines = work_metadata_text(work, token.target_id).splitlines()
     if len(metadata_lines) > 1:
@@ -459,9 +457,9 @@ def render_catalogue_entry(
         if not isinstance(resources, list):
             raise ValueError(f"Catalogue Work {token.target_id} {key} list is invalid")
         for resource in resources:
-            label = resource.get("label") if isinstance(resource, dict) else None
-            if not isinstance(label, str) or not label.strip():
-                raise ValueError(f"Catalogue Work {token.target_id} {key} label is unavailable")
+            if not isinstance(resource, dict):
+                raise ValueError(f"Catalogue Work {token.target_id} {key} entry must be an object")
+            label = resource["label"]
             href = catalogue_resource_url(resource.get("url"))
             icon = icons.render("file" if key == "downloads" else "link", decorative=True)
             link = f'{icon} <a href="{html.escape(href, quote=True)}" target="_blank" rel="noopener noreferrer">{html.escape(label)}</a>'
@@ -513,8 +511,8 @@ class SemanticTokensMixin:
         if not isinstance(work, dict) or work.get("work_id") != work_id:
             raise ValueError(f"Catalogue Work {work_id} generated identity is invalid")
         title = work.get("title")
-        if not isinstance(title, str) or not title.strip():
-            raise ValueError(f"Catalogue Work {work_id} generated title is unavailable")
+        if not isinstance(title, str):
+            raise ValueError(f"Catalogue Work {work_id} generated title must be a string")
         cache[work_id] = work
         return work
 
@@ -553,7 +551,7 @@ class SemanticTokensMixin:
                 alt = caption = ""
                 if token.presentation == "image":
                     work = self.catalogue_work_for_token(token.target_id)
-                    alt = work["title"].strip()
+                    alt = work["title"]
                     caption = alt if token.use_work_title_caption else ""
                 fragment = render_catalogue_media_reference(token, alt=alt, caption=caption)
             marker_id = uuid4().hex

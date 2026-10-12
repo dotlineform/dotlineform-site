@@ -25,7 +25,8 @@ def _validate_row(family: str, identity: str, row: Any) -> None:
     field = IDENTITY_FIELDS[family]
     _identity(family, identity)
     if (not isinstance(row, dict) or set(row) != {field, "title"} or row[field] != identity
-            or not isinstance(row["title"], str) or not row["title"].strip()):
+            or not isinstance(row["title"], str)
+            or (family == "galleries" and not row["title"].strip())):
         raise ValueError(f"Invalid compact {family} index row: {identity}")
 
 

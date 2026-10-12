@@ -481,7 +481,12 @@ def load_document_collection_docs_for_config(
             raise ValueError(f"Selected source identity does not match its filename: {path.name}")
         if not is_document_id(doc_id, collection=collection):
             raise ValueError(f"Invalid document ID in {path.name}")
-        title = str(front_matter.get("title") or humanize(doc_id or path.stem)).strip() or doc_id
+        if collection == "catalogue":
+            title = front_matter["title"]
+            if not isinstance(title, str):
+                raise ValueError(f"Catalogue document {doc_id} title must be a string")
+        else:
+            title = str(front_matter.get("title") or humanize(doc_id or path.stem)).strip() or doc_id
         ui_status = normalize_ui_status(front_matter.get("ui_status"))
         parent_id = parent_ids[doc_id] if not collection else ""
         validate_document_status_front_matter(

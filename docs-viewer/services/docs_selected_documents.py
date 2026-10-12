@@ -46,7 +46,7 @@ def validate_selected_payload(payload: Any) -> None:
             if key in row and (not isinstance(row[key], str) or row[key] != row[key].strip()
                                or not is_document_id(row[key], collection=owner)):
                 raise ValueError(f"Selected Documents requires an immutable {key}")
-        if (not isinstance(row["title"], str) or not row["title"].strip()
+        if (not isinstance(row["title"], str) or (row.get("collection") != "catalogue" and not row["title"].strip())
                 or not is_doc_date(row["last_updated"])):
             raise ValueError("Selected Documents requires a title and date-only last_updated")
         target = (row.get("collection", ""), row["doc_id"])
