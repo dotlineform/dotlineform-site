@@ -8,7 +8,6 @@ import re
 from typing import Any, Iterable, Mapping
 
 from catalogue.catalogue_output_paths import catalogue_output_workspace, output_path
-from catalogue.catalogue_source import work_resource_entries
 from catalogue.catalogue_work_attachments import safe_download_filename
 from docs_artifact_locations import ArtifactLocation
 
@@ -32,8 +31,8 @@ def _resource_row(record: Mapping[str, Any]) -> dict[str, Any]:
     """Project resource references with the UI-authored labels unchanged."""
     return {
         "work_id": record["work_id"], "title": record["title"],
-        "links": [{"label": item["label"], "url": item["url"]} for item in work_resource_entries(record, "links")],
-        "download_filenames": [item["filename"] for item in work_resource_entries(record, "downloads")],
+        "links": [{"label": item["label"], "url": item["url"]} for item in record.get("links", [])],
+        "download_filenames": [item["filename"] for item in record.get("downloads", [])],
     }
 
 
@@ -129,19 +128,14 @@ def _validate_row(relative: str, key: str, row: Any) -> None:
 
 
 def _project_row(relative: str, key: str, source: Mapping[str, Any]) -> dict[str, Any]:
-    identity = "series_id" if relative == SERIES_PATH else "work_id"
-    if source.get(identity) != key:
-        raise ValueError(f"Private Catalogue source identity is mismatched: {key}")
     if relative == SERIES_PATH:
         row = {"series_id": key, "title": source["title"]}
     else:
         row = _source_row(source) if relative == WORK_SOURCES_PATH else _resource_row(source)
-    _validate_row(relative, key, row)
     return row
 
 
 def _payload(relative: str, rows: dict[str, Any], timestamp: str) -> dict[str, Any]:
-    _text(timestamp, "Catalogue input generation time")
     family = "series" if relative == SERIES_PATH else "works"
     return {"header": {"schema": INPUT_SCHEMAS[relative], "generated_at_utc": timestamp},
             family: dict(sorted(rows.items()))}
@@ -172,18 +166,15 @@ def merge_catalogue_report_input(
 ) -> dict[str, Any] | None:
     """Read once, project supplied rows and remove only explicit deletions.
 
-    Unaffected saved rows do not join canonical records. None preserves bytes
-    and generation time. Missing/invalid output requires explicit private-input
-    maintenance, never an implicit complete projection or filesystem inventory.
+    Trust queued identities and saved contents without row/schema validation.
+    Unaffected rows do not join canonical records. None preserves bytes/time;
+    unreadable output never triggers a complete projection or filesystem scan.
     """
     if relative not in INPUT_SCHEMAS:
         raise ValueError("Unknown private Catalogue report input")
-    current = {_record_id(relative, key) for key in current_ids}
-    deleted = {_record_id(relative, key) for key in deleted_ids}
-    if current & deleted or current - sources.keys() or deleted & sources.keys():
-        raise ValueError(f"Private Catalogue selection disagrees with canonical identities: {relative}")
+    current, deleted = set(current_ids), set(deleted_ids)
     try:
-        payload = validate_catalogue_report_input(relative, json.loads(path.read_text(encoding="utf-8")))
+        payload = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, UnicodeError, ValueError) as error:
         raise ValueError(
             f"Catalogue report input {relative} is unavailable or invalid; run explicit private report-input maintenance: {error}"

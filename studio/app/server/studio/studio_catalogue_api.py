@@ -24,7 +24,7 @@ if str(STUDIO_DIR) not in sys.path:
     sys.path.insert(0, str(STUDIO_DIR))
 
 from catalogue import catalogue_write_service  # noqa: E402
-from catalogue.catalogue_galleries import read_galleries, read_gallery_definitions, read_gallery_memberships  # noqa: E402
+from catalogue.catalogue_galleries import read_gallery_definitions, read_gallery_memberships  # noqa: E402
 from catalogue.catalogue_series_galleries import read_series_galleries  # noqa: E402
 from catalogue.catalogue_build_media import PIPELINE_CONFIG  # noqa: E402
 from catalogue.catalogue_lookup import (  # noqa: E402
@@ -136,9 +136,9 @@ def catalogue_read_payload(repo_root: Path, query: Mapping[str, list[str]]) -> d
     if key == "catalogue_galleries":
         return {"galleries": read_gallery_definitions(paths["source_dir"])}
     if key == "catalogue_gallery_record":
-        galleries = read_galleries(paths["source_dir"])
+        definitions = read_gallery_definitions(paths["source_dir"])
         pairs = read_series_galleries(paths["source_dir"])
-        return gallery_record_payload(galleries, pairs, record_id)
+        return gallery_record_payload(definitions, pairs, record_id)
     source_records = records_from_json_source(paths["source_dir"])
     if key == "catalogue_lookup_work_search":
         payload = build_work_search_payload(source_records)

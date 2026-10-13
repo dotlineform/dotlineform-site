@@ -103,18 +103,14 @@ def merge_series_galleries_report(
 
     Current empty Series and unassociated Galleries get explicit placeholders.
     One relationship pass looks up only the selected current Gallery endpoints.
-    Missing/invalid saved output stops without invoking full generation.
+    Parse saved rows without auditing their contents or the queued endpoints.
+    Unreadable output stops without invoking full generation.
     """
-    current_s = {exact_series_id(value) for value in current_series}
-    deleted_s = {exact_series_id(value) for value in deleted_series}
+    current_s, deleted_s = set(current_series), set(deleted_series)
     current_g, deleted_g = set(current_galleries), set(deleted_galleries)
-    for gallery_id in current_g | deleted_g:
-        validate_gallery_id(gallery_id)
-    if (current_s & deleted_s or current_g & deleted_g or current_s - series.keys()
-            or current_g - galleries.keys() or deleted_s & series.keys() or deleted_g & galleries.keys()):
-        raise ValueError("Series–Gallery report selection disagrees with canonical identities")
     try:
-        rows = _validated_rows(json.loads(path.read_text(encoding="utf-8")))
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        rows = {_row_key(row): row for row in payload["rows"]}
     except (OSError, ValueError) as error:
         raise ValueError(f"Series–Gallery report is unavailable; run explicit relationship maintenance: {error}") from error
     selected_s, selected_g = current_s | deleted_s, current_g | deleted_g

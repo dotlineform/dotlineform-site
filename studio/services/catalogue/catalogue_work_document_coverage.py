@@ -18,14 +18,6 @@ def _record_id(value: Any, *, work: bool = False) -> str:
     return value
 
 
-def _work_series(work_id: str, record: Mapping[str, Any], series: Mapping[str, Any]) -> str:
-    _record_id(work_id, work=True)
-    series_id = _record_id(record.get("series_id"))
-    if record.get("work_id") != work_id or series_id not in series:
-        raise ValueError(f"Work Document Coverage Work {work_id} has a mismatched identity or unavailable Series")
-    return series_id
-
-
 def _validate_row(row: Any, *, memberships: dict[str, str] | None = None) -> None:
     if (not isinstance(row, dict) or set(row) != {"series_id", "title", "work_ids"}
             or not isinstance(row["title"], str) or not row["title"].strip()
@@ -43,16 +35,10 @@ def _validate_row(row: Any, *, memberships: dict[str, str] | None = None) -> Non
 
 
 def _series_row(series_id: str, record: Mapping[str, Any], work_ids: Iterable[str]) -> dict[str, Any]:
-    if record.get("series_id") != series_id:
-        raise ValueError(f"Work Document Coverage Series identity is mismatched: {series_id}")
-    row = {"series_id": series_id, "title": record["title"], "work_ids": sorted(work_ids)}
-    _validate_row(row)
-    return row
+    return {"series_id": series_id, "title": record["title"], "work_ids": sorted(work_ids)}
 
 
 def _payload(rows: Mapping[str, Any], timestamp: str) -> dict[str, Any]:
-    if not isinstance(timestamp, str) or not timestamp.strip():
-        raise ValueError("Work Document Coverage generation time must be nonempty text")
     return {"header": {"schema": MANIFEST_SCHEMA, "generated_at_utc": timestamp},
             "series": [rows[series_id] for series_id in sorted(rows)]}
 
@@ -67,7 +53,9 @@ def work_document_coverage_manifest(
     """
     members: dict[str, list[str]] = {series_id: [] for series_id in series}
     for work_id, record in works.items():
-        members[_work_series(work_id, record, series)].append(work_id)
+        series_id = record.get("series_id")
+        if series_id is not None:
+            members[series_id].append(work_id)
     rows = {series_id: _series_row(series_id, record, members[series_id]) for series_id, record in series.items()}
     return _payload(rows, timestamp)
 
@@ -105,30 +93,24 @@ def merge_work_document_coverage_manifest(
 ) -> dict[str, Any] | None:
     """Merge queued Series endpoints and Work memberships, preserving other rows.
 
-    Read/validate saved membership once; never scan canonical Works to rebuild
-    affected Series. Retained candidates include already-refreshed Works. None
-    preserves bytes/time; missing or invalid input requires explicit maintenance.
+    Parse and key saved membership once without validating its contents or the
+    queued endpoints; never rebuild membership from canonical Works. Retained
+    candidates include ready Works. None preserves bytes/time.
     """
-    current = {_record_id(key) for key in current_series}
-    deleted = {_record_id(key) for key in deleted_series}
-    current_works = {_record_id(key, work=True) for key in current_work_ids}
-    deleted_works = {_record_id(key, work=True) for key in deleted_work_ids}
-    if (current & deleted or current - series.keys() or deleted & series.keys()
-            or current_works & deleted_works or current_works - works.keys() or deleted_works & works.keys()):
-        raise ValueError("Work Document Coverage selection disagrees with canonical identities")
+    current, deleted = set(current_series), set(deleted_series)
+    current_works, deleted_works = set(current_work_ids), set(deleted_work_ids)
     try:
-        rows, previous_memberships = _validated_rows(json.loads(path.read_text(encoding="utf-8")))
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        rows = {row["series_id"]: row for row in payload["series"]}
+        previous_memberships = {wid: sid for sid, row in rows.items() for wid in row["work_ids"]}
     except (OSError, UnicodeError, ValueError) as error:
         raise ValueError(
             f"Work Document Coverage is unavailable or invalid; run explicit Work Document Coverage maintenance: {error}"
         ) from error
     members = {key: set(rows[key]["work_ids"]) if key in rows else set() for key in current}
-    endpoints = current | deleted
     for work_id in sorted(current_works | deleted_works):
         old = previous_memberships.get(work_id)
-        new = _work_series(work_id, works[work_id], series) if work_id in current_works else None
-        if old != new and ({key for key in (old, new) if key is not None} - endpoints):
-            raise ValueError(f"Work Document Coverage membership endpoints are not queued for Work {work_id}")
+        new = works[work_id].get("series_id") if work_id in current_works else None
         if old in members:
             members[old].discard(work_id)
         if new in members:

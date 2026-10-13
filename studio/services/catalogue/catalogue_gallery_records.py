@@ -56,16 +56,14 @@ def merge_gallery_record(
 
     Initial members are supplied only for explicit queued Gallery creation; a
     missing existing record fails and requires deliberate Gallery maintenance.
-    Creation replaces any former incarnation's members. None preserves saved
-    bytes and time. Unselected saved rows never join canonical Work data.
+    Creation replaces any former incarnation's members. Saved contents and queue
+    identities are not revalidated. None preserves saved bytes/time; unselected
+    rows never join canonical Work data.
     """
-    validate_gallery_id(gallery_id)
     current, deleted = set(current_work_ids), set(deleted_work_ids)
-    if current & deleted or current - work_records.keys() or deleted & work_records.keys():
-        raise ValueError("Gallery member selection disagrees with canonical Work identities")
     try:
         previous = json.loads(path.read_text(encoding="utf-8"))
-        rows = _validated_members(previous, gallery_id)
+        rows = {row["work_id"]: row for row in previous["member_works"]}
     except FileNotFoundError as error:
         if initial_member_ids is None:
             raise ValueError(f"Gallery {gallery_id} is unavailable; run explicit Gallery-record maintenance") from error

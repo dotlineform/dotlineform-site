@@ -49,13 +49,8 @@ def validate_compact_index(payload: Any, *, family: str) -> dict[str, Any]:
 
 
 def _project_row(family: str, identity: str, source: Mapping[str, Any]) -> dict[str, str]:
-    field = IDENTITY_FIELDS[family]
-    if source.get(field) != identity:
-        raise ValueError(f"Compact {family} source identity is mismatched: {identity}")
-    row = (build_work_index_row(work_id=identity, work_record=source) if family == "works"
-           else {"gallery_id": identity, "title": source.get("title")})
-    _validate_row(family, identity, row)
-    return row
+    return (build_work_index_row(work_id=identity, work_record=source) if family == "works"
+            else {"gallery_id": identity, "title": source["title"]})
 
 
 def _payload(family: str, rows: dict[str, Any], timestamp: str) -> dict[str, Any]:
@@ -75,15 +70,12 @@ def merge_compact_index(
 ) -> dict[str, Any] | None:
     """Read once, project supplied current rows and remove explicit deletions.
 
-    None means no write, preserving the saved bytes and generation time. Missing
-    or invalid saved output fails without invoking complete generation.
+    Trust the queued identities and saved rows without content validation. None
+    preserves saved bytes/time; unreadable output fails without full generation.
     """
-    current = {_identity(family, identity) for identity in current_ids}
-    deleted = {_identity(family, identity) for identity in deleted_ids}
-    if current & deleted or current - sources.keys() or deleted & sources.keys():
-        raise ValueError(f"Compact {family} selection disagrees with canonical identities")
+    current, deleted = set(current_ids), set(deleted_ids)
     try:
-        payload = validate_compact_index(json.loads(path.read_text(encoding="utf-8")), family=family)
+        payload = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, ValueError) as error:
         raise ValueError(f"Compact {family} index is unavailable; run explicit compact-index maintenance: {error}") from error
     rows = payload[family]

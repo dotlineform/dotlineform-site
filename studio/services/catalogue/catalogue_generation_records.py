@@ -23,10 +23,7 @@ def build_work_record_projection(work_record: Mapping[str, Any]) -> Dict[str, An
             fm[field] = work_record[field]
     for field in ("medium", "duration"):
         if field in work_record:
-            value = work_record[field]
-            if value is not None and not isinstance(value, str):
-                raise ValueError(f"Work {field} must be a string or null")
-            fm[field] = value
+            fm[field] = work_record[field]
     fm["media_version"] = coerce_int(work_record.get("media_version"))
     return fm
 
@@ -39,8 +36,6 @@ def build_work_json_payload(
     """Finalize one complete generated Work by-ID payload."""
 
     public_record = dict(work_record)
-    if not isinstance(public_record.get("galleries"), list):
-        raise ValueError("work.galleries must be an array")
     version_input = {"schema": WORK_RECORD_SCHEMA_VERSION, "work": public_record}
     return compact_json_object(
         {
@@ -63,8 +58,6 @@ def build_gallery_json_payload(
 ) -> Dict[str, Any]:
     """Wrap already projected member rows without reprojecting retained members."""
     public_record = dict(gallery_record)
-    if public_record.get("gallery_id") != gallery_id:
-        raise ValueError(f"gallery.gallery_id must match exact payload target {gallery_id}")
     return {
         "header": {
             "schema": GALLERY_RECORD_SCHEMA_VERSION,

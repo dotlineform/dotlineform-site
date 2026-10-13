@@ -46,12 +46,21 @@ def with_gallery_relation(
     return CatalogueSeriesGalleries(dict(sorted(pairs.items())))
 
 
-def without_gallery(data: CatalogueSeriesGalleries, gallery_id: str) -> CatalogueSeriesGalleries:
-    pairs = {
-        sid: remaining for sid, ids in data.pairs_by_series.items()
-        if (remaining := tuple(gid for gid in ids if gid != gallery_id))
-    }
-    return CatalogueSeriesGalleries(pairs)
+def without_gallery(
+    data: CatalogueSeriesGalleries, gallery_id: str,
+) -> tuple[CatalogueSeriesGalleries, list[str]]:
+    """Remove the exact Gallery and capture former Series endpoints in one pass."""
+    pairs = {}
+    affected_series = []
+    for sid, ids in data.pairs_by_series.items():
+        remaining = tuple(gid for gid in ids if gid != gallery_id)
+        if len(remaining) == len(ids):
+            pairs[sid] = ids
+        else:
+            affected_series.append(sid)
+            if remaining:
+                pairs[sid] = remaining
+    return CatalogueSeriesGalleries(pairs), affected_series
 
 
 def without_series(data: CatalogueSeriesGalleries, series_id: str) -> CatalogueSeriesGalleries:

@@ -7,11 +7,11 @@ import json
 from pathlib import Path
 from typing import Any
 
-from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, SOURCE_FILES, records_from_json_source, validate_source_records, work_resource_entries
+from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, SOURCE_FILES, records_from_json_source, validate_source_records
 from catalogue.catalogue_compact_indexes import build_compact_index, merge_compact_index
 from catalogue.catalogue_works_metadata import update_catalogue_works_metadata
-from catalogue.catalogue_pending_updates import read_pending_updates, write_pending_updates
-from catalogue.catalogue_pending_state import pending_counts
+from catalogue.catalogue_pending_updates import FILENAME as UPDATES_FILENAME, read_pending_updates, write_pending_updates
+from catalogue.catalogue_pending_state import load_pending_queue, pending_counts, pending_path, persist_pending_queue
 from catalogue.generate_work_pages import catalogue_payloads, same_generated_content
 from catalogue.catalogue_galleries import read_galleries, validate_galleries
 from catalogue.catalogue_refresh_inputs import read_refresh_inputs
@@ -20,7 +20,7 @@ from catalogue.catalogue_series_galleries import read_series_galleries, validate
 from catalogue.catalogue_series_galleries_index import merge_series_galleries_index, series_gallery_links, series_galleries_index_payload
 from catalogue.catalogue_series_galleries_report import merge_series_galleries_report, series_galleries_report_payload
 from catalogue.catalogue_output_paths import catalogue_workspace_config, output_path
-from catalogue.catalogue_staged_media import catalogue_staging_assets, work_image_paths
+from catalogue.catalogue_staged_media import catalogue_staging_assets, work_rendition_paths
 from catalogue.catalogue_source import payload_for_map
 from catalogue.catalogue_revisions import record_hash
 from catalogue.catalogue_shared_changes import REFRESH_FIELDS, WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, empty_shared_changes, shared_changes
@@ -28,12 +28,13 @@ from catalogue.catalogue_pending_publication import merge_completed_shared
 from catalogue.catalogue_report_inputs import INPUT_SCHEMAS, SERIES_PATH, catalogue_report_input_payloads, merge_catalogue_report_input
 from catalogue.catalogue_work_document_coverage import MANIFEST_PATH as COVERAGE_MANIFEST, merge_work_document_coverage_manifest, work_document_coverage_manifest
 from docs_artifact_locations import ArtifactLocation
+from pipeline_config import load_pipeline_config
 
 
 def catalogue_refresh_status(repo_root: Path) -> dict[str, Any]:
     """Read Work/shared readiness and last successful time from the updates queue."""
     try:
-        pending = read_pending_updates(repo_root)
+        pending = load_pending_queue(pending_path(repo_root, UPDATES_FILENAME))
     except (OSError, ValueError) as error:
         raise RuntimeError(f"Catalogue Refresh status is unavailable: {error}") from error
     header = pending["header"]
@@ -135,7 +136,7 @@ def refresh_series_galleries(repo_root: Path) -> dict[str, Any]:
     validate_galleries(galleries, records.works)
     validate_series_galleries(pairs, records.series, galleries.galleries)
     timestamp = utc_timestamp()
-    mapping = {sid: series_gallery_links(sid, records.series, galleries.galleries, pairs)
+    mapping = {sid: series_gallery_links(sid, galleries.galleries, pairs)
                for sid in sorted(records.series)}
     payloads = {
         RELATIONSHIP_INDEX: series_galleries_index_payload(mapping, timestamp=timestamp),
@@ -196,7 +197,8 @@ def refresh_gallery_records(repo_root: Path) -> dict[str, Any]:
 def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
     """Handoff queued Works, preserve completed readiness and return final editor records.
 
-    Mutation owners supply selection. Shared output retains unchanged content;
+    Follow the app-generated queue without validating queue or saved contents.
+    Shared output retains unchanged content;
     Work metadata/media and canonical flag clears complete before readiness.
     Failure retains completed effects and exact shared selections. Only full
     completion advances the last successful time.
@@ -204,16 +206,19 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
     work_id = ""
     phase = "queue"
     try:
-        pending = read_pending_updates(repo_root)
+        workspace = catalogue_workspace_config(repo_root)
+        queue_path = pending_path(repo_root, UPDATES_FILENAME, workspace=workspace)
+        pending = load_pending_queue(queue_path)
         shared = shared_changes(pending)
         source_dir = repo_root / DEFAULT_SOURCE_DIR
         records, galleries, pairs = read_refresh_inputs(source_dir, pending)
-        workspace = catalogue_workspace_config(repo_root)
-        working, staging = workspace.assets, catalogue_staging_assets(repo_root)
+        working = workspace.assets
         selected = {
             family: {wid: entry for wid, entry in pending[family].items() if not entry["refreshed"]}
             for family in ("current_works", "deleted_works")
         }
+        media_config = None
+        staging = None
         phase = "shared output"
         timestamp = utc_timestamp()
         row_payloads = {}
@@ -231,7 +236,7 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
                     row_payloads[identity] = payload
         if RELATIONSHIP_INDEX in shared["shared_outputs"]:
             payload = merge_series_galleries_index(
-                output_path(workspace.catalogue.working, RELATIONSHIP_INDEX), records.series, galleries.galleries, pairs,
+                output_path(workspace.catalogue.working, RELATIONSHIP_INDEX), galleries.galleries, pairs,
                 current_ids=shared["current_series"], deleted_ids=shared["deleted_series"], timestamp=timestamp,
             )
             if payload is not None:
@@ -244,8 +249,6 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
             )
             if payload is not None:
                 row_payloads[RELATIONSHIP_REPORT] = payload
-        if set(shared["current_galleries"]) - galleries.galleries.keys():
-            raise ValueError("Queued current Gallery is unavailable")
         initial_members = {gid: [] for gid in shared["created_galleries"]}
         if initial_members:
             for wid, ids in galleries.works.items():
@@ -265,31 +268,32 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
             )
             if payload is not None:
                 row_payloads[identity] = payload
+        if "media-config.json" in shared["shared_outputs"]:
+            media_config = load_pipeline_config(repo_root=repo_root)
         payloads = catalogue_payloads(
             repo_root, records, galleries, pairs, timestamp=timestamp,
             work_ids=set(selected["current_works"]),
             gallery_ids=set(),
             shared_outputs=set(shared["shared_outputs"]) - {WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, COVERAGE_MANIFEST, *INPUT_SCHEMAS},
+            pipeline=media_config,
         )
-        if set(shared["deleted_galleries"]) & galleries.galleries.keys() or set(shared["deleted_series"]) & records.series.keys():
-            raise ValueError("Queued shared deletion still has a canonical definition")
-        if set(shared["current_series"]) - records.series.keys():
-            raise ValueError("Queued current Series is unavailable")
         output = {"status": "completed", "written": [], "deleted": []}
         phase = "Work report handoff"
         report = update_catalogue_works_metadata(
             repo_root, records, work_ids=sorted(selected["current_works"]),
-            deleted_work_ids=sorted(selected["deleted_works"]), write=True,
+            deleted_work_ids=sorted(selected["deleted_works"]), write=True, workspace=workspace.catalogue.working,
         ) if any(selected.values()) else None
         editor_records = []
         for family in ("current_works", "deleted_works"):
             for work_id, entry in sorted(selected[family].items()):
                 phase = "media handoff"
                 path = output_path(workspace.catalogue.working, f"works/index/{work_id}.json")
+                if entry["image"] and media_config is None:
+                    media_config = load_pipeline_config(repo_root=repo_root)
                 if family == "deleted_works":
                     path.unlink(missing_ok=True)
                     if entry["image"]:
-                        for image in work_image_paths(repo_root, work_id, working):
+                        for image in work_rendition_paths(work_id, working, config=media_config):
                             image.unlink(missing_ok=True)
                     for name in entry["file_names"]:
                         output_path(working.work_files, name).unlink(missing_ok=True)
@@ -297,13 +301,19 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
                 else:
                     record = records.works[work_id]
                     if entry["image"]:
-                        destinations = work_image_paths(repo_root, work_id, working)
-                        sources = work_image_paths(repo_root, work_id, staging if record["image_staged"] else working)
+                        if record["image_staged"] and staging is None:
+                            staging = catalogue_staging_assets(repo_root, config=media_config)
+                        destinations = work_rendition_paths(work_id, working, config=media_config)
+                        sources = work_rendition_paths(work_id, staging if record["image_staged"] else working, config=media_config)
                         for source, destination in zip(sources, destinations, strict=True):
                             _handoff_file(source, destination)
-                    downloads = {item["filename"]: item for item in work_resource_entries(record, "downloads")}
+                    downloads = {item["filename"]: item for item in record.get("downloads", [])} if entry["file_names"] else {}
                     for name in entry["file_names"]:
                         download = downloads[name]
+                        if download["staged"] and staging is None:
+                            if media_config is None:
+                                media_config = load_pipeline_config(repo_root=repo_root)
+                            staging = catalogue_staging_assets(repo_root, config=media_config)
                         source = output_path((staging if download["staged"] else working).work_files, name)
                         _handoff_file(source, output_path(working.work_files, name))
                     phase = "metadata handoff"
@@ -322,7 +332,7 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
                                            "record_hash": record_hash(record), "gallery_ids": galleries.works.get(work_id, [])})
                 phase = "readiness"
                 entry["refreshed"] = True
-                write_pending_updates(repo_root, pending)
+                persist_pending_queue(queue_path, pending, progress="refreshed")
         work_id, phase = "", "private report input handoff"
         for identity in sorted(set(shared["shared_outputs"]) & INPUT_SCHEMAS.keys()):
             is_series = identity == SERIES_PATH
@@ -359,14 +369,14 @@ def refresh_catalogue(repo_root: Path) -> dict[str, Any]:
                 output["deleted"].append(identity)
         if any(shared.values()):
             phase = "shared publication queue"
-            merge_completed_shared(repo_root, shared)
+            merge_completed_shared(repo_root, shared, workspace=workspace)
             phase = "shared updates queue"
             for field in REFRESH_FIELDS:
                 pending[field] = []
-            write_pending_updates(repo_root, pending)
+            persist_pending_queue(queue_path, pending, progress="refreshed")
         work_id, phase = "", "completion"
         pending["header"]["last_refreshed_at_utc"] = utc_timestamp()
-        write_pending_updates(repo_root, pending)
+        persist_pending_queue(queue_path, pending, progress="refreshed")
         status = {"ok": True, "needed": False, "refreshed_at_utc": pending["header"]["last_refreshed_at_utc"]}
         return {"ok": True, "output": output, "report_metadata": report,
                 "pending_updates": pending_counts(pending), "refresh_status": status, "records": editor_records}
@@ -401,11 +411,9 @@ def _write_payload(path: Path, payload: dict[str, Any]) -> None:
 
 
 def _handoff_file(source: Path, destination: Path) -> None:
-    if source.is_symlink() or not source.is_file() or not source.stat().st_size:
-        raise FileNotFoundError(f"Prepared Catalogue media is unavailable: {source.name}")
     if source == destination:
         return
-    if destination.is_symlink():
-        raise ValueError("Working media must not target a symlink")
+    if source.is_symlink() or destination.is_symlink():
+        raise ValueError("Catalogue media handoff must not use a symlink")
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_bytes(source.read_bytes())

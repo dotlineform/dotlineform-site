@@ -5,7 +5,6 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
-import re
 import sys
 from typing import Any, Sequence
 
@@ -19,6 +18,7 @@ REPO_ROOT = ensure_studio_python_paths(__file__)
 
 from catalogue.catalogue_output_paths import catalogue_output_workspace, output_path  # noqa: E402
 from catalogue.catalogue_source import CatalogueSourceRecords, DEFAULT_SOURCE_DIR, records_from_json_source  # noqa: E402
+from docs_artifact_locations import ArtifactLocation  # noqa: E402
 
 
 METADATA_PATH = "reports/catalogue-works/metadata.json"
@@ -26,35 +26,15 @@ METADATA_SCHEMA = "catalogue_works_report_metadata_v3"
 WORK_FIELDS = ("work_id", "title", "year", "year_display")
 
 
-def _work_id(value: str) -> str:
-    if not isinstance(value, str) or not re.fullmatch(r"[0-9]{5}", value):
-        raise ValueError("Catalogue Works metadata requires an exact five-digit Work ID")
-    return value
-
-
 def _project_work(records: CatalogueSourceRecords, work_id: str) -> dict[str, Any]:
-    _work_id(work_id)
     source = records.works[work_id]
     row = {field: source[field] for field in WORK_FIELDS}
-    if row["work_id"] != work_id or type(row["year"]) not in (int, float):
-        raise ValueError(f"Invalid Catalogue Works metadata identity/year: {work_id}")
-    if not isinstance(row["title"], str):
-        raise ValueError(f"Invalid Catalogue Works metadata title representation: {work_id}")
-    if not isinstance(row["year_display"], str):
-        raise ValueError(f"Invalid Catalogue Works metadata year_display: {work_id}")
     for field in ("storage_location", "medium"):
-        value = source.get(field)
-        if value is not None and not isinstance(value, str):
-            raise ValueError(f"Invalid Catalogue Works metadata {field}: {work_id}")
-        row[field] = value
+        row[field] = source.get(field)
     row["series"] = []
     if "series_id" in source:
         series_id = source["series_id"]
-        if not isinstance(series_id, str) or not re.fullmatch(r"[0-9]{3}", series_id):
-            raise ValueError(f"Invalid Catalogue Works Series ID: {work_id}")
         series = records.series[series_id]
-        if series["series_id"] != series_id or not isinstance(series["title"], str) or not series["title"].strip():
-            raise ValueError(f"Invalid Catalogue Works Series: {series_id}")
         row["series"] = [{"series_id": series_id, "title": series["title"]}]
     return row
 
@@ -68,12 +48,6 @@ def _read_metadata(path: Path) -> dict[str, Any]:
         payload = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, ValueError) as error:
         raise ValueError("Catalogue Works metadata is unavailable; run explicit metadata generation.") from error
-    if not isinstance(payload, dict) or set(payload) != {"header", "works"}:
-        raise ValueError("Invalid Catalogue Works metadata envelope; regenerate explicitly.")
-    header, works = payload["header"], payload["works"]
-    if (not isinstance(header, dict) or set(header) != {"schema"}
-            or header["schema"] != METADATA_SCHEMA or not isinstance(works, dict)):
-        raise ValueError("Invalid Catalogue Works metadata header; regenerate explicitly.")
     return payload
 
 
@@ -102,19 +76,17 @@ def generate_catalogue_works_metadata(repo_root: Path, records: CatalogueSourceR
 
 def update_catalogue_works_metadata(
     repo_root: Path, records: CatalogueSourceRecords, *, work_ids: Sequence[str],
-    deleted_work_ids: Sequence[str] = (), write: bool,
+    deleted_work_ids: Sequence[str] = (), write: bool, workspace: ArtifactLocation | None = None,
 ) -> dict[str, Any]:
     """Project only named saved Works and remove only explicitly deleted IDs.
 
-    Unaffected rows are preserved. Missing/invalid metadata fails without a full
-    rebuild; unchanged rows avoid aggregate writes. Headers carry only schema;
-    report totals derive from the map and no complete-content hash is computed.
+    Trust supplied identities and authored/saved values without content checks.
+    Unaffected rows survive and unchanged rows avoid writes. Unreadable metadata
+    fails without full rebuilding; no complete-content hash is computed.
     """
-    selected = sorted({_work_id(value) for value in work_ids})
-    deleted = sorted({_work_id(value) for value in deleted_work_ids})
-    if set(selected).intersection(deleted) or any(value in records.works for value in deleted):
-        raise ValueError("Catalogue Works metadata deletion must name deleted Works only")
-    path = output_path(catalogue_output_workspace(repo_root), METADATA_PATH)
+    selected, deleted = work_ids, deleted_work_ids
+    workspace = catalogue_output_workspace(repo_root) if workspace is None else workspace
+    path = output_path(workspace, METADATA_PATH)
     payload = _read_metadata(path)
     works = payload["works"]
     updated, removed = [], []

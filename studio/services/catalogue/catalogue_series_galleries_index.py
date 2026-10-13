@@ -22,25 +22,15 @@ def exact_series_id(value: Any) -> str:
 
 def definition_cell(kind: str, identity: str, definitions: Mapping[str, Any]) -> dict[str, str]:
     """Project the ID/title facts shared by relationship links and report cells."""
-    if kind == "series":
-        exact_series_id(identity)
-    else:
-        validate_gallery_id(identity)
     field = f"{kind}_id"
     source = definitions[identity]
-    if (not isinstance(source, dict) or source.get(field) != identity
-            or not isinstance(source.get("title"), str) or not source["title"].strip()):
-        raise ValueError(f"Invalid Series–Gallery {kind} definition: {identity}")
     return {field: identity, "title": source["title"]}
 
 
 def series_gallery_links(
-    series_id: str, series: Mapping[str, Any], galleries: Mapping[str, Any],
+    series_id: str, galleries: Mapping[str, Any],
     pairs: CatalogueSeriesGalleries,
 ) -> list[dict[str, str]]:
-    exact_series_id(series_id)
-    if series[series_id].get("series_id") != series_id:
-        raise ValueError(f"Invalid Series–Gallery Series definition: {series_id}")
     return [definition_cell("gallery", gallery_id, galleries)
             for gallery_id in pairs.pairs_by_series.get(series_id, ())]
 
@@ -78,21 +68,18 @@ def validate_catalogue_series_galleries_index(payload: Any) -> dict[str, Any]:
 
 
 def merge_series_galleries_index(
-    path: Path, series: Mapping[str, Any], galleries: Mapping[str, Any], pairs: CatalogueSeriesGalleries,
+    path: Path, galleries: Mapping[str, Any], pairs: CatalogueSeriesGalleries,
     *, current_ids: Iterable[str], deleted_ids: Iterable[str], timestamp: str,
 ) -> dict[str, Any] | None:
-    current = {exact_series_id(value) for value in current_ids}
-    deleted = {exact_series_id(value) for value in deleted_ids}
-    if current & deleted or current - series.keys() or deleted & series.keys():
-        raise ValueError("Series–Gallery index selection disagrees with canonical identities")
+    current, deleted = set(current_ids), set(deleted_ids)
     try:
-        payload = validate_catalogue_series_galleries_index(json.loads(path.read_text(encoding="utf-8")))
+        payload = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, ValueError) as error:
         raise ValueError(f"Series–Gallery index is unavailable; run explicit relationship maintenance: {error}") from error
     mapping = payload["series_galleries"]
     changed = False
     for series_id in sorted(current):
-        links = series_gallery_links(series_id, series, galleries, pairs)
+        links = series_gallery_links(series_id, galleries, pairs)
         if mapping.get(series_id) != links:
             mapping[series_id] = links
             changed = True

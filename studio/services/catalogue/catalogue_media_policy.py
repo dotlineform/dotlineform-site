@@ -4,16 +4,19 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 from catalogue.catalogue_generation_common import compute_payload_version
 from pipeline_config import load_pipeline_config
 
 
-def catalogue_media_policy(repo_root: Path, *, timestamp: str) -> dict[str, Any]:
+def catalogue_media_policy(
+    repo_root: Path, *, timestamp: str, pipeline: Mapping[str, Any] | None = None,
+    media: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
     """Expose only rendition policy; routes supply their own thumbnail base URL."""
-    pipeline = load_pipeline_config(repo_root=repo_root)
-    media = json.loads((repo_root / "site-tools/config/site-tools.json").read_text())["media"]
+    pipeline = load_pipeline_config(repo_root=repo_root) if pipeline is None else pipeline
+    media = json.loads((repo_root / "site-tools/config/site-tools.json").read_text())["media"] if media is None else media
     prefix = str(media["image_works"]).strip("/")
     if prefix == "archive" or prefix.startswith("archive/") or ".." in prefix.split("/"):
         raise ValueError(f"invalid active Catalogue media prefix: {prefix}")

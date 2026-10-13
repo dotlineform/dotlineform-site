@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 from urllib.parse import quote
 
 from catalogue import catalogue_generation_indexes as indexes
@@ -16,7 +16,7 @@ from catalogue.catalogue_media_policy import catalogue_media_policy
 from catalogue.catalogue_series_galleries import CatalogueSeriesGalleries
 from catalogue.catalogue_series_galleries_index import series_gallery_links, series_galleries_index_payload
 from catalogue.catalogue_series_galleries_report import METADATA_PATH as SERIES_GALLERIES_REPORT_PATH, series_galleries_report_payload
-from catalogue.catalogue_source import CatalogueSourceRecords, work_resource_entries
+from catalogue.catalogue_source import CatalogueSourceRecords
 from catalogue.catalogue_shared_changes import WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, WORK_DOCUMENT_COVERAGE_MANIFEST
 from catalogue.catalogue_work_document_coverage import work_document_coverage_manifest
 from catalogue.catalogue_report_inputs import INPUT_SCHEMAS, catalogue_report_input_payloads
@@ -26,6 +26,7 @@ def catalogue_payloads(
     repo_root: Path, records: CatalogueSourceRecords, galleries: CatalogueGalleries,
     pairs: CatalogueSeriesGalleries, *, timestamp: str, work_ids: set[str] | None = None,
     gallery_ids: set[str] | None = None, shared_outputs: set[str] | None = None,
+    pipeline: Mapping[str, Any] | None = None,
 ) -> dict[str, dict[str, Any]]:
     """Project selected inputs; explicit validation and maintenance own corpus audits.
 
@@ -37,8 +38,6 @@ def catalogue_payloads(
     if shared - supported_shared:
         raise ValueError("Catalogue generation selected an output without a builder")
     selected_galleries = set(galleries.galleries) if gallery_ids is None else gallery_ids
-    if selected_galleries - galleries.galleries.keys() or (work_ids is not None and work_ids - records.works.keys()):
-        raise ValueError("Catalogue generation selected an unavailable current identity")
     works_by_gallery: dict[str, list[str]] = {gid: [] for gid in selected_galleries}
     if selected_galleries:
         for wid, ids in galleries.works.items():
@@ -48,15 +47,16 @@ def catalogue_payloads(
     payloads: dict[str, dict[str, Any]] = {}
     media_config = None
     if "media-config.json" in shared:
-        payloads["media-config.json"] = catalogue_media_policy(repo_root, timestamp=timestamp)
+        media_config = json.loads((repo_root / "site-tools/config/site-tools.json").read_text())["media"]
+        payloads["media-config.json"] = catalogue_media_policy(repo_root, timestamp=timestamp, pipeline=pipeline, media=media_config)
     projection_ids = records.works.keys() if work_ids is None else sorted(work_ids)
     for wid in projection_ids:
         source = records.works[wid]
         work = compact_json_object({"work_id": wid, **projection.build_work_record_projection(source)})
         if source.get("series_id"):
             work["series_id"] = source["series_id"]
-        links = work_resource_entries(source, "links")
-        downloads = work_resource_entries(source, "downloads")
+        links = [dict(link) for link in source.get("links", [])]
+        downloads = list(source.get("downloads", []))
         if links:
             work["links"] = links
         if downloads:
@@ -82,7 +82,7 @@ def catalogue_payloads(
     if GALLERY_INDEX in shared:
         payloads[GALLERY_INDEX] = build_compact_index("galleries", galleries.galleries, timestamp=timestamp)
     series_galleries = {
-        sid: series_gallery_links(sid, records.series, galleries.galleries, pairs)
+        sid: series_gallery_links(sid, galleries.galleries, pairs)
         for sid in sorted(records.series)
     } if {RELATIONSHIP_INDEX, RELATIONSHIP_REPORT} & shared else {}
     if RELATIONSHIP_INDEX in shared:

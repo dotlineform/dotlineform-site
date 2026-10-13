@@ -8,6 +8,14 @@ function nextGalleryId(galleriesById) {
   return String(highestId + 1).padStart(3, "0");
 }
 
+function savedGalleryMemberCount(workSearchById, galleryId) {
+  let count = 0;
+  for (const work of workSearchById.values()) {
+    if (work.gallery_ids.includes(galleryId)) count += 1;
+  }
+  return count;
+}
+
 /** Edit saved Gallery relevance, or confirm UI-detected cleanup from the loaded definition. */
 export async function openWorkGalleryModal(state, { galleryId = "", restoreFocus, onBusyChange, deleteEmpty = false } = {}) {
   const seriesId = deleteEmpty ? null : state.draft.series_id || null;
@@ -20,8 +28,8 @@ export async function openWorkGalleryModal(state, { galleryId = "", restoreFocus
     lookup = await loadStudioServerReadJson("catalogue_gallery_record", galleryId, { cache: "no-store" });
     if (lookup.gallery_id !== galleryId || lookup.record?.gallery_id !== galleryId
       || typeof lookup.record.title !== "string"
-      || !Array.isArray(lookup.member_work_ids) || !Array.isArray(lookup.related_series_ids)) {
-      throw new Error("Gallery lookup is missing its exact record, members or Series associations.");
+      || !Array.isArray(lookup.related_series_ids)) {
+      throw new Error("Gallery lookup is missing its exact record or Series associations.");
     }
   }
   const gallery = deleteEmpty ? state.galleriesById.get(galleryId) : lookup?.record;
@@ -38,7 +46,7 @@ export async function openWorkGalleryModal(state, { galleryId = "", restoreFocus
     deleteMessage: deleteEmpty
       ? `Your Work changes were saved. “${gallery.title}” (${galleryId}) now has no Works. Delete this Gallery?`
       : lookup
-      ? `Delete “${lookup.record.title}” (${galleryId})? This removes it from ${lookup.member_work_ids.length} Works.`
+      ? `Delete “${lookup.record.title}” (${galleryId})? This removes it from ${savedGalleryMemberCount(state.workSearchById, galleryId)} Works.`
       : "",
     save: (title, related) => galleryId
       ? saveCatalogueGallery({ gallery_id: galleryId, title, series_id: seriesId, related_to_series: related })

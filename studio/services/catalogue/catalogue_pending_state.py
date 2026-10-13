@@ -1,4 +1,4 @@
-"""Strict private Catalogue queues under the configured Working owner."""
+"""Catalogue queue persistence and explicit validation under the Working owner."""
 
 from __future__ import annotations
 
@@ -9,6 +9,7 @@ from pathlib import Path
 import re
 import tempfile
 from typing import Any
+from docs_workspace_config import DocsWorkspaceConfig
 
 from studio.services.catalogue.catalogue_output_paths import catalogue_workspace_config
 from studio.services.catalogue.catalogue_work_attachments import safe_download_filename
@@ -18,9 +19,9 @@ from studio.services.catalogue.catalogue_shared_changes import SHARED_FIELDS, RE
 WORK_ID = re.compile(r"[0-9]{5}\Z")
 
 
-def pending_path(repo_root: Path, filename: str) -> Path:
+def pending_path(repo_root: Path, filename: str, *, workspace: DocsWorkspaceConfig | None = None) -> Path:
     """Resolve existing Working storage without creating missing queues."""
-    workspace = catalogue_workspace_config(repo_root)
+    workspace = catalogue_workspace_config(repo_root) if workspace is None else workspace
     root = workspace.workspace_root.path / "working"
     if root.is_symlink() or not root.is_dir():
         raise FileNotFoundError("Working Catalogue queue directory is unavailable")
@@ -73,20 +74,20 @@ def validate_pending_state(repo_root: Path, value: Any, *, schema: str, progress
     return value
 
 
-def read_pending_state(repo_root: Path, filename: str, *, schema: str, progress: str) -> dict[str, Any]:
-    """Missing or malformed queues stop the caller; never manufacture empty state."""
-    path = pending_path(repo_root, filename)
+def load_pending_queue(path: Path) -> dict[str, Any]:
+    """Parse an app-generated queue without auditing its contents or adding defaults."""
+    if path.is_symlink():
+        raise ValueError("Catalogue queue must not be a symlink")
     try:
-        value = json.loads(path.read_text(encoding="utf-8"))
+        return json.loads(path.read_text(encoding="utf-8"))
     except (OSError, ValueError) as error:
-        raise ValueError(f"Catalogue queue {filename} is unavailable: {error}") from error
-    return validate_pending_state(repo_root, value, schema=schema, progress=progress)
+        raise ValueError(f"Catalogue queue {path.name} is unavailable: {error}") from error
 
 
-def write_pending_state(repo_root: Path, filename: str, value: dict[str, Any], *, schema: str, progress: str) -> None:
-    """Replace one validated queue after the caller's required work completes."""
-    validate_pending_state(repo_root, value, schema=schema, progress=progress)
-    path = pending_path(repo_root, filename)
+def persist_pending_queue(path: Path, value: dict[str, Any], *, progress: str) -> None:
+    """Record operation progress without revalidating the app-generated queue."""
+    if path.is_symlink():
+        raise ValueError("Catalogue queue must not be a symlink")
     header_keys = ("schema", "last_refreshed_at_utc") if progress == "refreshed" else ("schema", "last_published_at_utc")
     value = {
         "header": {key: value["header"][key] for key in header_keys},
@@ -103,6 +104,18 @@ def write_pending_state(repo_root: Path, filename: str, value: dict[str, Any], *
         os.replace(temporary, path)
     finally:
         temporary.unlink(missing_ok=True)
+
+
+def read_pending_state(repo_root: Path, filename: str, *, schema: str, progress: str) -> dict[str, Any]:
+    """Read and validate a queue for owners that require the explicit audit."""
+    value = load_pending_queue(pending_path(repo_root, filename))
+    return validate_pending_state(repo_root, value, schema=schema, progress=progress)
+
+
+def write_pending_state(repo_root: Path, filename: str, value: dict[str, Any], *, schema: str, progress: str) -> None:
+    """Validate and persist a queue at its owning producer/consumer boundary."""
+    validate_pending_state(repo_root, value, schema=schema, progress=progress)
+    persist_pending_queue(pending_path(repo_root, filename), value, progress=progress)
 
 
 def pending_counts(value: dict[str, Any]) -> dict[str, int]:

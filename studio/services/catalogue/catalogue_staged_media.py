@@ -47,6 +47,11 @@ def work_image_paths(
     if len(work_id) != 5 or not work_id.isascii() or not work_id.isdigit():
         raise ValueError("Work rendition identity must be exactly five digits")
     config = load_pipeline_config(repo_root=repo_root) if config is None else config
+    return work_rendition_paths(work_id, assets, config=config)
+
+
+def work_rendition_paths(work_id: str, assets: Any, *, config: Mapping[str, Any]) -> list[Path]:
+    """Derive confined paths using the supplied identity and operation's media policy."""
     return [
         location_child(family, Path(f"{work_id}-{policy['suffix']}-{size}.{config['encoding']['format']}")).path
         for family, policy, sizes in (

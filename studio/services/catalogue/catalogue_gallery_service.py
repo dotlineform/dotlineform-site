@@ -19,16 +19,15 @@ from catalogue.catalogue_shared_changes import empty_shared_changes, GALLERY_IND
 
 
 def gallery_record_payload(
-    data: CatalogueGalleries, pairs: CatalogueSeriesGalleries, gallery_id: str,
+    definitions: Mapping[str, dict[str, str]], pairs: CatalogueSeriesGalleries, gallery_id: str,
 ) -> dict[str, Any]:
-    """Return the exact definition, members and saved Series associations."""
+    """Return the exact definition and saved Series associations."""
     validate_gallery_id(gallery_id)
-    if gallery_id not in data.galleries:
+    if gallery_id not in definitions:
         raise ValueError(f"gallery_id not found: {gallery_id}")
-    record = data.galleries[gallery_id]
+    record = definitions[gallery_id]
     return {
         "gallery_id": gallery_id, "record": record,
-        "member_work_ids": sorted(wid for wid, ids in data.works.items() if gallery_id in ids),
         "related_series_ids": related_series_ids(pairs, gallery_id),
     }
 
@@ -42,8 +41,10 @@ def mutate_gallery_payload(
     Save addresses an existing identity without repeating authoring validation or
     auditing the Catalogue. The UI owns title completion, Series selection and
     the relationship checkbox's boolean/available-Series validation.
-    Delete addresses the supplied exact Gallery identity and removes its current
-    references without revision/member preconditions or a complete canonical audit.
+    Delete trusts the UI's saved-ID selection, requires its exact existing target
+    and removes current references without spelling/revision/member preconditions
+    or a complete canonical audit. Removal captures its changed stores and former
+    relevance endpoints without complete-map comparisons or relation rescans.
     Work metadata is untouched; completion receives all former member identities.
     """
     if operation not in {"create", "save", "delete"}:
@@ -52,11 +53,15 @@ def mutate_gallery_payload(
         raise ValueError("Gallery Delete requires only gallery_id")
     if operation != "delete" and set(body) != {"gallery_id", "title", "series_id", "related_to_series"}:
         raise ValueError("Gallery Create/Save requires gallery_id, title, series_id and related_to_series")
+    gallery_id = body["gallery_id"]
+    if operation == "delete":
+        if not isinstance(gallery_id, str):
+            raise ValueError("Gallery Delete requires an exact Gallery ID string")
+    else:
+        validate_gallery_id(gallery_id)
     works = load_works_payload(context.works_path)["works"]
     data = read_galleries(context.source_dir)
     pairs = read_series_galleries(context.source_dir)
-    gallery_id = body.get("gallery_id")
-    validate_gallery_id(gallery_id)
     if operation == "create":
         if gallery_id in data.galleries:
             raise ValueError(f"gallery_id already exists: {gallery_id}")
@@ -72,24 +77,30 @@ def mutate_gallery_payload(
     if operation == "delete":
         memberships = dict(data.works)
         del definitions[gallery_id]
-        updated_pairs = without_gallery(pairs, gallery_id)
+        updated_pairs, previous_related_series = without_gallery(pairs, gallery_id)
         for wid in members:
             remaining = [gid for gid in memberships[wid] if gid != gallery_id]
             if remaining:
                 memberships[wid] = remaining
             else:
                 del memberships[wid]
+        definitions_changed = True
+        memberships_changed = bool(members)
+        relations_changed = bool(previous_related_series)
+        saved_related_series = []
     else:
         series_id, related = body["series_id"], body["related_to_series"]
         title = body["title"]
         definitions[gallery_id] = {"gallery_id": gallery_id, "title": title}
         if series_id is not None:
             updated_pairs = with_gallery_relation(pairs, series_id, gallery_id, related)
+        definitions_changed = definitions != data.galleries
+        memberships_changed = False
+        relations_changed = updated_pairs.pairs_by_series != pairs.pairs_by_series
+        previous_related_series = related_series_ids(pairs, gallery_id)
+        saved_related_series = related_series_ids(updated_pairs, gallery_id) if relations_changed else previous_related_series
 
     updated = CatalogueGalleries(definitions, memberships)
-    definitions_changed = definitions != data.galleries
-    memberships_changed = memberships != data.works
-    relations_changed = updated_pairs.pairs_by_series != pairs.pairs_by_series
     writes = {}
     if definitions_changed:
         writes[(context.source_dir / GALLERIES_FILE).resolve()] = updated.definitions_payload()
@@ -101,8 +112,6 @@ def mutate_gallery_payload(
         raise ValueError("write target not allowlisted")
     if writes:
         execute_source_json_write(writes, dry_run=context.dry_run, repo_root=context.repo_root)
-    previous_related_series = related_series_ids(pairs, gallery_id)
-    saved_related_series = related_series_ids(updated_pairs, gallery_id) if relations_changed else previous_related_series
     affected_series = set(previous_related_series) | set(saved_related_series)
     affected_works = set(members) | {wid for wid, record in works.items() if record.get("series_id") in affected_series}
     shared = empty_shared_changes()
@@ -124,7 +133,7 @@ def mutate_gallery_payload(
         "_shared_changes": shared,
     }
     if operation != "delete":
-        response.update(record=definitions[gallery_id], member_work_ids=members, related_series_ids=saved_related_series)
+        response.update(record=definitions[gallery_id], related_series_ids=saved_related_series)
     if context.dry_run:
         response.update(dry_run=True, would_write=bool(writes))
     elif writes:
