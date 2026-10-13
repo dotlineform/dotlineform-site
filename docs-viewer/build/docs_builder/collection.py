@@ -20,6 +20,8 @@ from .related_links import prepare_related_links
 from .collection_metadata import CollectionDocumentSummary, merge_collection_manifest, read_collection_manifest
 from .links_builder import build_document_links, prepare_document_links
 from .media_builds import build_collection_media_snapshot
+from .links_model import DocumentLinks, DocumentTarget
+from .rendering_inputs import RenderingInputs
 from .source import DocRecord, DocumentIdentity
 from docs_collection_customisations import (
     collection_customisation_authoring_subject_fields,
@@ -50,6 +52,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
         links_doc_ids: list[str] | None = None,
         related_links_dir: Path | None = None,
         workspace: DocsWorkspaceConfig | None = None,
+        rendering_inputs: RenderingInputs | None = None,
     ) -> None:
         self.collection_config = collection
         super().__init__(
@@ -62,6 +65,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
             links_doc_ids=links_doc_ids,
             related_links_dir=related_links_dir,
             workspace=workspace,
+            rendering_inputs=rendering_inputs,
         )
         self.collection_id = collection.collection
         self.manifest_filename = "manage-manifest.json" if config.stage == "working" else "manifest.json"
@@ -173,13 +177,20 @@ class CollectionDocsBuilder(DocsDataBuilder):
         self, *, write: bool, emit_diagnostics: bool = False,
         documents: list[DocRecord] | None = None,
         catalogue_works: dict[str, dict[str, Any]] | None = None,
+        related_records: dict[DocumentTarget, DocumentLinks | None] | None = None,
+        stale_item_ids: list[str] | None = None,
+        update_selected: bool = True,
     ) -> dict[str, Any]:
-        """Render requested sources and update the operation's collection manifest."""
+        """Render sources and update this operation's collection manifest.
+
+        Complete Working generation supplies final relationship records and
+        stale IDs, and owns the single cross-collection Selected refresh.
+        """
         started_at = monotonic_time()
         self.warnings = []
         self._catalogue_work_cache = {} if catalogue_works is None else catalogue_works
         previous_manifest = self.saved_collection_metadata() if self.targeted_build else None
-        docs = self.load_docs(self.only_doc_ids) if documents is None else documents
+        docs = self.load_docs(self.only_doc_ids, capture_source_text=not self.skip_media_builds) if documents is None else documents
         if documents is not None:
             self.source_files_scanned = 0
         if not self.targeted_build and documents is None:
@@ -202,20 +213,23 @@ class CollectionDocsBuilder(DocsDataBuilder):
             for row in manifest_payload["docs"]
         ]
         docs_by_id = {doc.doc_id: doc for doc in summaries}
-        for doc in docs:
-            if doc.parent_id and doc.parent_id not in docs_by_id and not self.allow_unresolved_parent_ids:
-                raise RuntimeError(f"Unknown parent_id {doc.parent_id!r} for doc {doc.doc_id!r}")
         media_snapshot = (
             None if self.skip_media_builds or self.targeted_build
-            else build_collection_media_snapshot(self.repo_root, self.media_owner, write=write)
+            else build_collection_media_snapshot(
+                self.repo_root, self.media_owner, write=write,
+                markdown_sources=[doc.source_text for doc in docs if doc.source_text is not None],
+            )
         )
         built_doc_ids = [doc.doc_id for doc in ordered_docs]
-        stale_item_ids = self.stale_doc_payload_ids(built_doc_ids, target_doc_ids=self.only_doc_ids)
-        links_plan = prepare_document_links(
-            self, docs, built_doc_ids, stale_item_ids, document_identities=docs_by_id,
-        )
-        related_records = {}
-        links_build = build_document_links(self, links_plan, write=write, related_records=related_records)
+        if stale_item_ids is None:
+            stale_item_ids = self.stale_doc_payload_ids(built_doc_ids, target_doc_ids=self.only_doc_ids)
+        links_build = None
+        if related_records is None:
+            links_plan = prepare_document_links(
+                self, docs, built_doc_ids, stale_item_ids, document_identities=docs_by_id,
+            )
+            related_records = {}
+            links_build = build_document_links(self, links_plan, write=write, related_records=related_records)
         prepare_related_links(self, docs, related_records)
         item_payloads = {
             doc.doc_id: self.item_entry(doc, docs_by_id)
@@ -237,7 +251,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
             self.collection_manifest = manifest_payload
         else:
             self.print_collection_summary(write_plan, mode="dry-run", docs_total=len(summaries))
-        if self.config.stage == "working":
+        if self.config.stage == "working" and update_selected:
             selected = refresh_selected_documents(
                 self.config, self.collection_config, docs, write=write,
                 payload=self.selected_documents(),

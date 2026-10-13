@@ -158,7 +158,7 @@ export function createManagedDoc(payload, options) {
 }
 
 export function rebuildManagedDocs(options) {
-  return fetchManagementJson("/docs/rebuild", "POST", collectionPayload({}, options), options);
+  return fetchManagementJson("/docs/rebuild", "POST", {}, options);
 }
 
 /** Rebuild one exact ordinary or collection document from its saved inputs. */

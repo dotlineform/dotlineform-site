@@ -70,7 +70,11 @@ def run_registered_media_builds(
     requested_generated_identities: Mapping[str, Iterable[str]] | None = None,
     replace_existing: bool = True,
 ) -> list[dict[str, object]]:
-    """Run explicitly configured media producers directly into shared assets."""
+    """Run configured producers, which return their completed, verified outputs.
+
+    Producers own source discovery and publication verification. Referenced
+    media consumption separately checks assets not produced by this operation.
+    """
 
     if not config.media.build_sources:
         return []
@@ -111,7 +115,6 @@ def run_registered_media_builds(
             served_path_prefix=generated_media.served_path_prefix,
             remote_client=remote_client,
         )
-        source_inventory = source.list()
         requested = (
             None
             if requested_generated_identities is None
@@ -144,18 +147,11 @@ def run_registered_media_builds(
             raise RuntimeError(
                 f"Docs media producer {build.producer!r} returned duplicate published identities"
             )
-        if write:
-            missing = [identity for identity in output_identities if generated.stat(identity) is None]
-            if missing:
-                raise RuntimeError(
-                    f"Docs media producer {build.producer!r} did not publish: {', '.join(missing)}"
-                )
         results.append(
             {
                 "build_type": build_type,
                 "producer": build.producer,
                 "publishes_to": build.publishes_to,
-                "source_count": len(source_inventory),
                 "output_identities": list(output_identities),
                 "write": write,
             }
@@ -221,7 +217,7 @@ def build_collection_media_snapshot(
         assets = artifact_location_adapter(repo_root, media.asset_location)
         available = []
         for identity in referenced[media_type]:
-            if assets.stat(identity) is None and (write or identity not in produced_by_type[media_type]):
+            if identity not in produced_by_type[media_type] and assets.stat(identity) is None:
                 missing.append(f"{media.reference_prefix.as_posix()}/{identity}")
                 continue
             available.append(identity)

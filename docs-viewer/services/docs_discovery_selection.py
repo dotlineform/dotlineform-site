@@ -6,11 +6,20 @@ not include a collection. Callers supply current ordinary metadata in memory.
 """
 
 from pathlib import Path
+from dataclasses import dataclass
 from typing import Any
 import json
 
 from docs_document_identity import is_doc_date, is_document_id
 from docs_workspace_config import DocsCollectionConfig, DocsStageConfig, generated_documents_path, resolve_workspace_path
+
+
+@dataclass(frozen=True)
+class DiscoverySelection:
+    """One eligible candidate set shared by complete Working Search and Recents."""
+
+    ordinary: dict[str, dict[str, Any]]
+    collections: list[tuple[DocsCollectionConfig, dict[str, dict[str, Any]]]]
 
 
 def read_discovery_metadata(path: Path) -> dict[str, Any]:
@@ -47,22 +56,66 @@ def select_ordinary_documents(
     rows: list[Any], ignored_ids: frozenset[str], *, field: str,
 ) -> dict[str, dict[str, Any]]:
     """Prune ordinary draft/unpublishable branches in one traversal."""
+    return _select_ordinary_rows(rows, ignored_ids, field=field)
+
+
+def _select_ordinary_rows(
+    rows: list[Any], ignored_ids: frozenset[str], *, field: str | None,
+) -> dict[str, dict[str, Any]]:
     selected: dict[str, dict[str, Any]] = {}
     seen_ids: set[str] = set()
 
     def visit(nodes: list[Any], parent_id: str) -> None:
         for row in nodes:
-            doc_id = _validate_row(row, field=field, seen_ids=seen_ids)
+            doc_id = row["doc_id"] if field is None else _validate_row(row, field=field, seen_ids=seen_ids)
             if row["draft"] or doc_id in ignored_ids:
                 continue
             selected[doc_id] = {**row, "parent_id": parent_id}
             children = row.get("children", [])
-            if not isinstance(children, list):
+            if field is not None and not isinstance(children, list):
                 raise ValueError(f"{field}: children must be an array for {doc_id}")
             visit(children, doc_id)
 
     visit(rows, "")
     return selected
+
+
+def _select_collection_rows(
+    rows: list[Any], collection: DocsCollectionConfig, *, field: str | None,
+) -> dict[str, dict[str, Any]]:
+    selected: dict[str, dict[str, Any]] = {}
+    seen_ids: set[str] = set()
+    for index, row in enumerate(rows):
+        row_field = f"{field}.docs[{index}]" if field is not None else None
+        doc_id = row["doc_id"] if row_field is None else _validate_row(
+            row, field=row_field, seen_ids=seen_ids, collection=collection.collection,
+        )
+        if collection.collection != "catalogue" and row["draft"]:
+            continue
+        if row_field is not None and (
+            "added_date" in row or (row.get("last_updated") != "" and not is_doc_date(row.get("last_updated")))
+        ):
+            raise ValueError(f"{row_field} requires date-only last_updated and no added_date; rebuild the collection")
+        selected[doc_id] = row
+    return selected
+
+
+def select_built_discovery_documents(
+    config: DocsStageConfig, tree: list[dict[str, Any]],
+    manifests: dict[str, dict[str, Any]], ignored_ids: frozenset[str],
+) -> DiscoverySelection:
+    """Select completed in-memory builder metadata without saved-file audits.
+
+    Source loading owns identity/readiness validation. Discovery preserves its
+    configured coverage, inherited exclusions and eligible collection hosts.
+    """
+    ordinary = _select_ordinary_rows(tree, ignored_ids, field=None)
+    collections = [
+        (collection, _select_collection_rows(manifests[collection.collection]["docs"], collection, field=None))
+        for collection in sorted(config.site_search_collections, key=lambda item: item.collection)
+        if collection.report_host_doc_id in ordinary
+    ]
+    return DiscoverySelection(ordinary, collections)
 
 
 def select_collection_documents(
@@ -77,15 +130,6 @@ def select_collection_documents(
             continue
         path = resolve_workspace_path(repo_root, generated_documents_path(collection)) / "manage-manifest.json"
         manifest = read_discovery_metadata(path)
-        selected: dict[str, dict[str, Any]] = {}
-        seen_ids: set[str] = set()
-        for index, row in enumerate(manifest["docs"]):
-            field = f"{path}.docs[{index}]"
-            doc_id = _validate_row(row, field=field, seen_ids=seen_ids, collection=collection.collection)
-            if collection.collection != "catalogue" and row["draft"]:
-                continue
-            if "added_date" in row or (row.get("last_updated") != "" and not is_doc_date(row.get("last_updated"))):
-                raise ValueError(f"{field} requires date-only last_updated and no added_date; rebuild the collection")
-            selected[doc_id] = row
+        selected = _select_collection_rows(manifest["docs"], collection, field=str(path))
         selections.append((collection, selected))
     return selections

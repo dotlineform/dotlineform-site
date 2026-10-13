@@ -9,9 +9,11 @@ from docs_index_order import read_index_order, tree_parent_ids
 from docs_workspace_config import DocsStageConfig, document_source_path, load_docs_stage, resolve_workspace_path
 
 
-def publication_ignore_path(repo_root: Path) -> Path:
+def publication_ignore_path(repo_root: Path, *, config: DocsStageConfig | None = None) -> Path:
     """Resolve the exact Working policy file without creating or substituting it."""
-    config = load_docs_stage(repo_root, "working")
+    config = load_docs_stage(repo_root, "working") if config is None else config
+    if config.stage != "working":
+        raise ValueError("Publication ignore policy requires Working")
     root = resolve_workspace_path(repo_root, document_source_path(config))
     path = root / "unpublishable.json"
     if path.is_symlink() or path.resolve().parent != root.resolve():
@@ -19,9 +21,9 @@ def publication_ignore_path(repo_root: Path) -> Path:
     return path
 
 
-def read_publication_ignore_ids(repo_root: Path) -> frozenset[str]:
+def read_publication_ignore_ids(repo_root: Path, *, config: DocsStageConfig | None = None) -> frozenset[str]:
     """Read fresh exact IDs; missing, unreadable and invalid files fail visibly."""
-    path = publication_ignore_path(repo_root)
+    path = publication_ignore_path(repo_root, config=config)
     try:
         values = json.loads(path.read_text(encoding="utf-8"))
     except (json.JSONDecodeError, UnicodeError) as error:
@@ -37,7 +39,7 @@ def working_ignored_doc_ids(repo_root: Path, config: DocsStageConfig) -> frozens
     """Load once per Working operation; callers apply membership only to ordinary documents."""
     if config.stage != "working":
         return frozenset()
-    return read_publication_ignore_ids(repo_root)
+    return read_publication_ignore_ids(repo_root, config=config)
 
 
 class WorkingPublicationExclusions:

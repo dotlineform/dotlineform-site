@@ -248,6 +248,65 @@ class _DocumentRefresh:
         return len(after - before), len(before - after)
 
 
+def _write_refresh(refresh: _DocumentRefresh, *, write: bool, added: int, deleted: int) -> dict[str, Any]:
+    """Persist completed relationship updates once, retaining their live records."""
+    writes = {}
+    for key, record in sorted(refresh.records.items()):
+        if record is None or key in refresh.removals:
+            continue
+        content = json_text(relationship_payload(record))
+        if content != refresh.original[key]:
+            writes[_safe_path(refresh.output, f"{key.doc_id}.json")] = content
+    removals = [_safe_path(refresh.output, f"{key.doc_id}.json") for key in sorted(refresh.removals)]
+    if write:
+        refresh.output.mkdir(parents=True, exist_ok=True)
+        for path, content in writes.items():
+            write_text_atomic(path, content)
+        for path in removals:
+            path.unlink()
+    for key in refresh.removals:
+        refresh.records[key] = None
+    return {
+        "written": [path.name for path in writes], "removed": [path.name for path in removals],
+        "relationships_added": added, "relationships_removed": deleted,
+    }
+
+
+def build_workspace_document_links(
+    builder: DocsDataBuilder,
+    documents: dict[DocumentTarget, DocRecord],
+    deleted_targets: Collection[DocumentTarget],
+) -> tuple[dict[str, Any], dict[DocumentTarget, DocumentLinks | None]]:
+    """Complete all Working relationships before any collection renders them.
+
+    One updater shares known cross-collection metadata and saved neighbour reads.
+    Rendering and aggregation consume its final records without reopening them.
+    """
+    refresh = _DocumentRefresh(builder, {"documents": [], "document_identities": {}})
+    refresh.docs = documents
+    refresh.metadata = {target: doc.front_matter for target, doc in documents.items()}
+    current_targets = {target.doc_id: target for target in documents}
+    private = builder.repo_root / "var/docs-viewer/links-builder" / builder.config.stage
+    private.mkdir(parents=True, exist_ok=True)
+    with _safe_path(private, "build.lock").open("a") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        added = deleted = 0
+        targets = [*sorted(documents), *(target for target in sorted(deleted_targets) if target.doc_id not in current_targets)]
+        for target in targets:
+            new, removed = refresh.refresh(target, documents.get(target))
+            added += new
+            deleted += removed
+        # A collection move transfers the shared filename to its current owner.
+        # Cached old-owner endpoints cannot overwrite or remove that record.
+        for target in list(refresh.records):
+            if target.doc_id in current_targets and target != current_targets[target.doc_id]:
+                del refresh.records[target]
+        result = _write_refresh(refresh, write=True, added=added, deleted=deleted)
+    for target in documents:
+        refresh.records.setdefault(target, None)
+    return result, refresh.records
+
+
 def build_document_links(
     builder: DocsDataBuilder, plan: dict[str, Any] | None, *, write: bool,
     related_records: dict[DocumentTarget, DocumentLinks | None] | None = None,
@@ -265,28 +324,14 @@ def build_document_links(
             new, removed = refresh.refresh(key, doc)
             added += new
             deleted += removed
-        writes = {}
-        for key, record in sorted(refresh.records.items()):
-            if record is None or key in refresh.removals:
-                continue
-            content = json_text(relationship_payload(record))
-            if content != refresh.original[key]:
-                writes[_safe_path(refresh.output, f"{key.doc_id}.json")] = content
-        removals = [_safe_path(refresh.output, f"{key.doc_id}.json") for key in sorted(refresh.removals)]
-        if write:
-            for path, content in writes.items():
-                path.parent.mkdir(parents=True, exist_ok=True)
-                write_text_atomic(path, content)
-            for path in removals:
-                path.unlink()
+        result = _write_refresh(refresh, write=write, added=added, deleted=deleted)
         if related_records is not None:
             related_records.update(refresh.records)
             for key in refresh.removals:
                 related_records[key] = None
             for doc_id in plan["doc_ids"]:
                 related_records.setdefault(refresh.key(doc_id), None)
-        return {"written": [path.name for path in writes], "removed": [path.name for path in removals],
-                "relationships_added": added, "relationships_removed": deleted}
+        return result
 
     if write:
         private = builder.repo_root / "var/docs-viewer/links-builder" / builder.config.stage

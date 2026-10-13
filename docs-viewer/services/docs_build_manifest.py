@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from docs_json_files import render_json, write_text_atomic
-from docs_workspace_config import DocsStageConfig, load_docs_workspace_config, resolve_location_path
+from docs_workspace_config import DocsStageConfig, resolve_location_path
 
 
 BUILD_MANIFEST_FILENAME = "build-manifest.json"
@@ -82,15 +82,13 @@ def remove_build_manifest(repo_root: Path, config: DocsStageConfig) -> bool:
 
 
 def write_build_manifest(repo_root: Path, config: DocsStageConfig) -> dict[str, Any]:
+    """Record byte inventories required by captured Preview preparation."""
+    if config.stage != "preview":
+        raise ValueError("Build byte inventories belong to captured Preview builds")
     source_root = _safe_root(repo_root, config, role="source")
     generated_root = _safe_root(repo_root, config, role="generated")
     source_files = _managed_files(source_root)
     excluded = [BUILD_MANIFEST_FILENAME]
-    if config.stage == "working":
-        workspace = load_docs_workspace_config(repo_root, docs_base_dir=config.workspace_root.path)
-        excluded.append(workspace.catalogue.working.path.relative_to(generated_root).as_posix())
-        excluded.append(workspace.media_report_metadata.path.parent.relative_to(generated_root).as_posix())
-        excluded.append(workspace.broken_links_report.path.parent.relative_to(generated_root).as_posix())
     generated_files = _managed_files(generated_root, excluded=excluded)
     records = [
         {
@@ -117,6 +115,19 @@ def write_build_manifest(repo_root: Path, config: DocsStageConfig) -> dict[str, 
     return payload
 
 
+def write_working_build_completion(repo_root: Path, config: DocsStageConfig) -> dict[str, Any]:
+    """Record synchronous Working completion without rescanning inputs or output.
+
+    This is an operation receipt, not a freshness or publication prerequisite.
+    Preview owns its independently verified byte inventory.
+    """
+    if config.stage != "working":
+        raise ValueError("Working completion requires Working")
+    payload = {"schema_version": "docs_working_build_v1", "stage": "working", "completed_at": utc_now()}
+    write_text_atomic(build_manifest_path(repo_root, config), render_json(payload))
+    return payload
+
+
 __all__ = [
     "BUILD_MANIFEST_FILENAME",
     "BUILD_MANIFEST_SCHEMA_VERSION",
@@ -124,4 +135,5 @@ __all__ = [
     "remove_build_manifest",
     "tree_revision",
     "write_build_manifest",
+    "write_working_build_completion",
 ]

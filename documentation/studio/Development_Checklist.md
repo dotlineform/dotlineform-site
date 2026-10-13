@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260523-190651-7157ec
 title: Development Checklist
 added_date: "2026-05-23 19:06:51"
-last_updated: "2026-10-13 17:19:27"
+last_updated: "2026-10-13 17:47:14"
 parent_id: d-20260419-000000-d2e47b
 
 ---
@@ -33,6 +33,7 @@ This checklist and the durable Studio development documentation are maintained d
 
 ### User-Visible Operation Ordering
 
+- [ ] Complete Rebuild docs and Search carries one workspace/rendering configuration, canonical source set and Selected read through the existing in-process builders. Carry Markdown into registered media work, trust producer-owned byte verification, finish all relationships before rendering Related links and share one completed discovery selection between Search and Recents. Refresh Selected once and aggregate carried final Links records. Working completion is an operation receipt; retain byte inventories/verification under captured Preview publication. Keep request selectors, subprocess/stdout parsing, downstream agreement audits and source/output hash rescans out of this full action. Await browser refreshes and preserve completed-build evidence when refresh fails. [Builder](Builder.md#working-rebuild) and [User Facing Rules](data/User_Facing_Rules.md) M.20 own this boundary.
 - [ ] Draft sends one intended boolean, preserves unrelated source text/dates and hands parsed input into exact generation; publication exclusion does not disable otherwise permitted readiness changes. Star reads source only for selected metadata; Unstar consumes the exact Selected identity. Position moves the complete ordinary subtree, checks the destination/cycle once and projects saved navigation plus only the moved by-ID parent field without Markdown/Links rendering or source-date changes. Collection-host root placement belongs to the UI. Draft and Position use the common committed-record projection and surface listener/display failures. [User Facing Rules](data/User_Facing_Rules.md) M.15/M.16 and D.10/D.18 own this boundary.
 - [ ] Delete confirms from the complete loaded ordinary Index or one flat collection target and sends one `/docs/delete` request. Read canonical tree and Selected once, remove exact confined source paths, carry known deleted IDs/remaining parent map/Selected/configuration into document/Links generation and clear a deleted configured default. Keep source revisions, preview/apply routes, repeated capability requests, saved-navigation audits, unselected by-ID preflights and restoration/recovery builds out of this flow. Report target/phase and completed effects when execution stops; preserve generation errors separately from browser projection/display failures. Await surviving-caller or fallback navigation under the busy state and release deleted retained views. [Management Operations](Management_Operations.md#confirmed-document-delete) owns persistence/completion; test migration requires its own agreed specification.
 

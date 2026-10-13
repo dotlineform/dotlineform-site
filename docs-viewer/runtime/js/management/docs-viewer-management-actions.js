@@ -467,27 +467,31 @@ export function createDocsViewerManagementActionController(options) {
     }
   }
 
-  function handleRebuildDocs() {
-    var target = normalizeManagedDocumentTarget(selectedDocument.documentTarget || {
-      doc_id: context.defaultRouteDocId() || context.defaultDocId()
-    });
+  /** Await workspace generation and each required refresh, preserving completed-build evidence. */
+  async function handleRebuildDocs() {
+    var target = selectedDocument.documentTarget || null;
+    var rebuilt = false;
     setManagementBusy(true);
     setManagementMessage("Rebuilding docs and Search...", false);
-
-    rebuildManagedDocs(managementClientOptions())
-      .then(async function () {
-        await reloadDocsIndex(target);
-        await context.refreshSearch();
-        await context.refreshRecent();
-        setManagementMessage("", false);
-      })
-      .catch(function (error) {
-        setManagementMessage(error.message || "Docs and Search rebuild failed.", true);
-      })
-      .finally(function () {
-        setManagementBusy(false);
-        renderManagementUi();
+    try {
+      await rebuildManagedDocs(managementClientOptions());
+      rebuilt = true;
+      // Invalidate both discovery caches even when Index/document display fails.
+      var refreshes = await Promise.allSettled([
+        context.refreshSearch(), context.refreshRecent(), reloadDocsIndex(target)
+      ]);
+      var owners = ["Search", "Recent", "Index/document"];
+      var errors = refreshes.flatMap(function (result, index) {
+        return result.status === "rejected" ? [owners[index] + ": " + (result.reason && result.reason.message || String(result.reason))] : [];
       });
+      if (errors.length) throw new Error(errors.join("; "));
+      setManagementMessage("", false);
+    } catch (error) {
+      setManagementMessage((rebuilt ? "Docs and Search rebuilt, but refresh failed: " : "") + (error.message || "Docs and Search rebuild failed."), true);
+    } finally {
+      setManagementBusy(false);
+      renderManagementUi();
+    }
   }
 
   async function handlePublish() {

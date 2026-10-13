@@ -115,6 +115,27 @@ def refresh_selected_documents(
     return updated
 
 
+def refresh_workspace_selected(
+    config: Any, documents_by_owner: Iterable[tuple[Any, Iterable[Any]]], *, payload: dict[str, Any],
+) -> dict[str, Any]:
+    """Refresh complete Build metadata with one saved-list read and one write.
+
+    Selection membership is independent: absent targets retain their saved rows.
+    """
+    built = {
+        (getattr(owner, "collection", ""), doc.doc_id): (owner, doc)
+        for owner, documents in documents_by_owner for doc in documents
+    }
+    rows = []
+    for row in payload["docs"]:
+        known = built.get((row.get("collection", ""), row["doc_id"]))
+        rows.append(selected_row(known[1], known[0]) if known is not None else row)
+    updated = {"schema": SELECTED_SCHEMA, "docs": rows}
+    if updated != payload:
+        write_text_atomic(selected_path(config), selected_text(updated))
+    return updated
+
+
 def set_selected(repo_root: Path, body: dict[str, Any], *, dry_run: bool = False) -> dict[str, Any]:
     """Set the intended star state without changing the document source or date."""
     from docs_management_document_target import normalize_managed_document_target, resolve_managed_document_collection, resolve_managed_document_target

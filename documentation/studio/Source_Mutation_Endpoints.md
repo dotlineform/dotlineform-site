@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-ce5515
 title: Source Mutation Endpoints
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-13 17:19:27"
+last_updated: "2026-10-13 17:47:14"
 parent_id: d-20260607-222033-647b52
 ---
 # Docs Viewer Source Mutation Endpoints
@@ -15,6 +15,12 @@ Common source editing and Subject buffer changes use [Source Editor Endpoints](S
 ## `GET /docs/metadata`
 
 The read resolves the exact configured source and returns `record`, target identity and `location_parent_id`; named collections also receive their Folder Subject capability. Ordinary resolution uses Index membership/parent data and its one source, without parsing the corpus. Saved source readiness/report completion does not prevent Source correction. The response contains no source revision. Source load and candidate Save retain their separate owners.
+
+## `POST /docs/rebuild`
+
+The exact request is `{}`. Collection/document/stage selectors, extra fields and service dry-run execution are unsupported. [The complete Working owner](../../docs-viewer/services/docs_working_rebuild.py) awaits every configured document collection, required registered media, relationships, Selected metadata, Search/Recents, the Links aggregate, browser-configuration projection and its final operation receipt. It carries loaded configuration and sources through the existing builders in process; [Builder](Builder.md#working-rebuild) owns the detailed ordering. Catalogue participates by rendering saved document sources, independently of Refresh, source Regenerate and Publish.
+
+The response contains `ok`, `phase`, completed `steps`, structured `diagnostics` and a summary. Success also carries full document/Search mode, media/Links results and the completion receipt. Failure returns non-success with its reached phase, error and completed-step evidence; completed effects remain and no rollback runs. The browser needs no displayed/default target to start, stays busy through required refreshes, invalidates both discovery caches after generation and reports a refresh failure separately from a completed rebuild.
 
 ## `POST /docs/rebuild-document`
 

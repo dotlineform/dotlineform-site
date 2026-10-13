@@ -41,6 +41,7 @@ from build_docs import (  # noqa: E402
 )
 from docs_builder.common import DOCS_INDEX_TREE_SCHEMA_VERSION  # noqa: E402
 from docs_builder.semantic_tokens import replace_semantic_tokens  # noqa: E402
+from docs_builder.source import DocRecord  # noqa: E402
 from docs_builder.summary_directive import omit_summary_directives  # noqa: E402
 from docs_workspace_config import (  # noqa: E402
     DocsCollectionConfig,
@@ -51,7 +52,7 @@ from docs_workspace_config import (  # noqa: E402
     resolve_workspace_path,
 )
 from docs_discovery_selection import (  # noqa: E402
-    read_discovery_metadata, select_collection_documents, select_ordinary_documents,
+    DiscoverySelection, read_discovery_metadata, select_collection_documents, select_ordinary_documents,
 )
 from docs_document_identity import doc_updated_date, is_immutable_doc_id  # noqa: E402
 from docs_publication_ignore import read_publication_ignore_ids  # noqa: E402
@@ -107,6 +108,28 @@ def normalize_text(value: Any) -> str:
 
 def normalize(value: Any) -> str:
     return normalize_text(value).lower()
+
+
+def search_records_from_build(
+    discovery: DiscoverySelection, documents: dict[str, list[DocRecord]],
+) -> list[SearchDocRecord]:
+    """Project loaded sources using the complete Build's shared discovery selection."""
+    records = []
+    owners = [(None, discovery.ordinary), *discovery.collections]
+    for owner, selected in owners:
+        collection = "" if owner is None else owner.collection
+        source_by_id = {doc.doc_id: doc for doc in documents[collection]}
+        for doc_id, row in selected.items():
+            doc = source_by_id[doc_id]
+            records.append(SearchDocRecord(
+                doc_id=doc_id, title=row["title"] if collection == "catalogue" else normalize_text(row["title"]),
+                last_updated=doc.last_updated, parent_id=row["parent_id"] if owner is None else "",
+                summary=normalize_text(doc.front_matter.get("summary")), body_markdown=doc.body_markdown,
+                report=doc.report, collection=collection,
+                report_doc_id="" if owner is None else owner.report_host_doc_id,
+                collection_title="" if owner is None else normalize_text(owner.title),
+            ))
+    return records
 
 
 def boolean_field(row: dict[str, Any], key: str, default: bool) -> bool:
@@ -305,11 +328,12 @@ class DocsViewerSearchDataBuilder:
         repo_root: Path,
         output_path: Path | None = None,
         stage: str,
+        config: DocsStageConfig | None = None,
     ) -> None:
         if stage != "working":
             raise ValueError("Search builds require Working; Preview copies the existing index")
         self.repo_root = repo_root.resolve()
-        self.config = load_docs_stage(self.repo_root, stage)
+        self.config = load_docs_stage(self.repo_root, stage) if config is None else config
         self.content_search_enabled = bool(
             SEARCH_V2_CONTENT_FIELDS.intersection(self.config.search_fields)
         )
@@ -320,8 +344,14 @@ class DocsViewerSearchDataBuilder:
         *,
         write: bool,
         force: bool,
+        documents: list[SearchDocRecord] | None = None,
     ) -> dict[str, Any]:
-        payload = self.build_docs_v2_payload()
+        """Return the complete payload and structured write/skip diagnostics.
+
+        Prepared records come from the complete Working owner; standalone
+        execution reads and validates its required saved inputs itself.
+        """
+        payload = self.build_docs_v2_payload(documents=documents)
         return self.write_payload(payload, write=write, force=force)
 
     def resolve_path(self, path: Path | str | None) -> Path | None:
@@ -393,17 +423,18 @@ class DocsViewerSearchDataBuilder:
         self,
         *,
         generated_at_utc: str | None = None,
+        documents: list[SearchDocRecord] | None = None,
     ) -> dict[str, Any]:
-        ignored_ids = read_publication_ignore_ids(self.repo_root)
-        ordinary_selection = self.select_ordinary_docs(ignored_ids)
-        collection_selections = select_collection_documents(self.repo_root, self.config, set(ordinary_selection))
-        docs = self.load_source_docs(ordinary_selection)
-        title_by_id = {doc.doc_id: doc.title for doc in docs}
-        combined_docs = list(docs)
-        for collection, selected in collection_selections:
-            combined_docs.extend(self.load_named_collection_docs(collection, selected))
+        if documents is None:
+            ignored_ids = read_publication_ignore_ids(self.repo_root, config=self.config)
+            ordinary_selection = self.select_ordinary_docs(ignored_ids)
+            collection_selections = select_collection_documents(self.repo_root, self.config, set(ordinary_selection))
+            documents = self.load_source_docs(ordinary_selection)
+            for collection, selected in collection_selections:
+                documents.extend(self.load_named_collection_docs(collection, selected))
+        title_by_id = {doc.doc_id: doc.title for doc in documents if not doc.collection}
         records: list[dict[str, Any]] = []
-        for doc in combined_docs:
+        for doc in documents:
             parent_title = "" if not doc.parent_id else normalize_text(title_by_id.get(doc.parent_id))
             updated_date = doc_updated_date(doc.last_updated)
             record: dict[str, Any] = {
@@ -539,16 +570,16 @@ class DocsViewerSearchDataBuilder:
         payload_version = payload.get("header", {}).get("version")
         if existing_version == payload_version and not force:
             self.print_skip_message(relative_output_path, write)
-            return payload
+            return {"payload": payload, "diagnostics": {"docs": count, "wrote": 0, "skipped": 1}}
         if not write:
             self.print_dry_run_message(relative_output_path, count)
-            return payload
+            return {"payload": payload, "diagnostics": {"docs": count, "wrote": 0, "skipped": 0}}
         if self.output_path is None:
-            raise SystemExit("Generated search index output path is required")
+            raise ValueError("Generated search index output path is required")
         self.output_path.parent.mkdir(parents=True, exist_ok=True)
         self.output_path.write_text(json_text(payload), encoding="utf-8")
         self.print_write_message(relative_output_path, count)
-        return payload
+        return {"payload": payload, "diagnostics": {"docs": count, "wrote": 1, "skipped": 0}}
 
     def print_skip_message(self, relative_output_path: str, write: bool) -> None:
         if write:

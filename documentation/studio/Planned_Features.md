@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260428-000000-f5ff18
 title: Planned Features
 added_date: "2026-04-28 00:00:00"
-last_updated: "2026-10-13 13:04:18"
+last_updated: "2026-10-13 17:47:14"
 summary: This explains the delivery model and workflows to implement new repo and application features.
 ui_status: planned
 parent_id: ""
@@ -151,6 +151,7 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 Store new standalone delivery documents for bounded work that does not need a separate feature parent under `documentation/studio/deliveries/`. Parent them directly to this document and keep implementation state, decisions and completion gates in the delivery. At closeout, transfer lasting details to the durable owner and review whether the delivery and its link should be retained.
 
+- [Working Rebuild](deliveries/Working_Rebuild.md) — M.20's eight changes approved and implemented on 2026-10-13. Complete Working generation carries loaded inputs through media, relationships, rendering and shared discovery; it records a lean operation receipt and distinguishes browser refresh failure. Focused static/import checks and bounded source review passed; live Build/media and manual acceptance remain pending. Test migration and publication handoffs remain separately scoped.
 - [Incremental Document Publish](deliveries/Incremental_Document_Publish.md) — Proposed follow-on to [Incremental Updates](deliveries/Incremental_updates.md) for ordinary and non-Catalogue collection documents. [User Facing Rules](data/User_Facing_Rules.md) records targets, current UI/server behavior and entry review/implementation status. Implement agreed finishable cleanup as that review progresses; Docs Viewer entries and evidence stay there, while [Studio User Facing Rules](data/Studio_User_Facing_Rules.md) retains the Studio review and implementation record. Larger functional groups may use separate deliveries. Complete the relevant review/cleanup before this Publish delivery proceeds. Publish consumes only queued completed artifacts and exact effects, with no corpus reconciliation or data validation. Eligibility and dependencies have a distinct upstream section; media and shared discovery output are explicitly queued and empty queues are a no-op. Implementation approval and cutover decisions for Incremental Document Publish remain pending.
 - [Report Descriptor Simplification](deliveries/Report_Descriptor_Simplification.md) — Complete on 2026-10-11. Retired unused presets throughout report parsing, registries and readers, removed the empty Reports List column and omitted absent descriptor fields. Working's 19 report payloads are reconciled and the public reader projected; focused diagnostics, required checks and bounded review passed. Tests and manual report presentation remain unverified. Retained temporarily for recent evidence and restart/reload guidance.
 - [Index Option Retirement](deliveries/Index_Option_Retirement.md) — Complete on 2026-10-11. Retired obsolete Index options and their browser filtering/redirects while keeping exact document navigation and the timestamp header. Working's ordinary tree is reconciled and shared runtime projected; focused diagnostics, required checks and bounded review passed. Tests and manual navigation remain unverified. Retained temporarily for recent evidence and restart/reload guidance.

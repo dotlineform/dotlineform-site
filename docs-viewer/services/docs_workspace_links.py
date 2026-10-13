@@ -8,12 +8,17 @@ from docs_document_identity import is_document_id
 from docs_workspace_config import DocsStageConfig, generated_documents_path, resolve_workspace_path
 
 
-def write_workspace_links(repo_root: Path, config: DocsStageConfig) -> dict[str, Any]:
+def write_workspace_links(
+    repo_root: Path, config: DocsStageConfig, *,
+    prepared_records: dict[str, dict[str, Any] | None] | None = None,
+) -> dict[str, Any]:
     """Replace the Working aggregate from current per-document records.
 
     Only records with both lists empty are omitted. Read every input before
     writing so an unreadable record cannot produce a successful partial result.
     Document Build owns membership, eligibility and unique endpoint summaries.
+    A complete Build supplies its final records; only untouched saved inputs
+    require reading and envelope validation. Report Refresh reads all inputs.
     """
     if config.stage != "working":
         raise ValueError("Workspace Links aggregation is available only in Working")
@@ -28,16 +33,21 @@ def write_workspace_links(repo_root: Path, config: DocsStageConfig) -> dict[str,
     for path in sorted(directory.glob("*.json")):
         if path.is_symlink():
             raise ValueError("Workspace Links inputs must remain in their configured directory")
-        record = load_json_object(path, f"Prepared Links record {path.name}")
-        summary = record.get("self")
-        if (record.get("schema_version") != 4 or not isinstance(summary, dict)
-                or set(summary) != {"collection", "doc_id", "title"}
-                or summary["doc_id"] != path.stem
-                or not is_document_id(summary["doc_id"], collection=summary["collection"])
-                or summary["collection"] not in {"", *(child.collection for child in config.collections)}):
-            raise ValueError(f"Prepared Links record {path.name} has invalid document identity")
-        if not isinstance(record.get("incoming"), list) or not isinstance(record.get("outgoing"), list):
-            raise ValueError(f"Prepared Links record {path.name} requires incoming and outgoing lists")
+        if prepared_records is not None and path.stem in prepared_records:
+            record = prepared_records[path.stem]
+            if record is None:
+                continue
+        else:
+            record = load_json_object(path, f"Prepared Links record {path.name}")
+            summary = record.get("self")
+            if (record.get("schema_version") != 4 or not isinstance(summary, dict)
+                    or set(summary) != {"collection", "doc_id", "title"}
+                    or summary["doc_id"] != path.stem
+                    or not is_document_id(summary["doc_id"], collection=summary["collection"])
+                    or summary["collection"] not in {"", *(child.collection for child in config.collections)}):
+                raise ValueError(f"Prepared Links record {path.name} has invalid document identity")
+            if not isinstance(record.get("incoming"), list) or not isinstance(record.get("outgoing"), list):
+                raise ValueError(f"Prepared Links record {path.name} requires incoming and outgoing lists")
         if record["incoming"] or record["outgoing"]:
             documents.append(record)
     payload = {

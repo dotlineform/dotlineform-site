@@ -3,15 +3,15 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from .inline_icons import InlineIconRenderer
 from .related_links import prepare_related_links
 from .links_builder import build_document_links, prepare_document_links
+from .links_model import DocumentLinks, DocumentTarget
+from .rendering_inputs import RenderingInputs
 from .common import (
     DocsStageConfig,
     document_source_path,
     generated_documents_path,
     load_docs_workspace_config,
-    load_site_tools_config,
     monotonic_time,
     normalize_doc_ids,
     normalize_viewer_base_url,
@@ -20,7 +20,6 @@ from .common import (
 from .media_builds import build_collection_media_snapshot
 from .payloads import PayloadBuilderMixin
 from .rendering import ContentRenderingMixin
-from .semantic_token_registry import load_semantic_token_registry
 from .semantic_tokens import SemanticTokensMixin
 from .source import DocRecord, SourceLoadingMixin
 from .ordinary_metadata import targeted_document_metadata
@@ -51,6 +50,7 @@ class DocsDataBuilder(
         skip_recent: bool = False,
         related_links_dir: Path | None = None,
         workspace: DocsWorkspaceConfig | None = None,
+        rendering_inputs: RenderingInputs | None = None,
     ) -> None:
         self.repo_root = repo_root.resolve()
         self.config = config
@@ -67,9 +67,10 @@ class DocsDataBuilder(
         self.skip_media_builds = skip_media_builds is True
         self.skip_recent = skip_recent is True
         self.output_url_base = self.output_url_base_for(self.output_url_dir())
-        self.site_config = load_site_tools_config(self.repo_root)
-        self.semantic_token_registry = load_semantic_token_registry(self.repo_root)
-        self.inline_icons = InlineIconRenderer(self.repo_root)
+        rendering_inputs = RenderingInputs.load(self.repo_root) if rendering_inputs is None else rendering_inputs
+        self.site_config = rendering_inputs.site_config
+        self.semantic_token_registry = rendering_inputs.semantic_token_registry
+        self.inline_icons = rendering_inputs.inline_icons
         self._catalogue_work_cache: dict[str, dict[str, Any]] = {}
         self.related_links_dir = related_links_dir or generated_documents_path(config) / "links-by-id"
         self.source_files_scanned = 0
@@ -79,14 +80,22 @@ class DocsDataBuilder(
         self, *, write: bool, emit_diagnostics: bool = False,
         documents: list[DocRecord] | None = None, parent_ids: dict[str, str] | None = None,
         selected_payload: dict[str, Any] | None = None,
+        related_records: dict[DocumentTarget, DocumentLinks | None] | None = None,
+        stale_item_ids: list[str] | None = None,
+        update_selected: bool = True,
+        catalogue_works: dict[str, dict[str, Any]] | None = None,
     ) -> dict[str, Any]:
+        """Render sources, or carry completed workspace inputs into rendering.
+
+        Supplied relationship records and stale IDs belong to the complete
+        Working owner. That owner also refreshes Selected once across collections.
+        """
         started_at = monotonic_time()
-        self.inline_icons = InlineIconRenderer(self.repo_root)
-        self._catalogue_work_cache = {}
+        self._catalogue_work_cache = {} if catalogue_works is None else catalogue_works
         if parent_ids is None:
             parent_ids = tree_parent_ids(read_index_order(self.source_dir))
         source_ids = None if self.only_doc_ids is None else list(set(self.only_doc_ids) | set(self.links_doc_ids or []))
-        capture_media_sources = self.targeted_build and not self.skip_media_builds
+        capture_media_sources = not self.skip_media_builds
         docs = self.load_docs(source_ids, parent_ids=parent_ids, capture_source_text=capture_media_sources) if documents is None else documents
         if documents is None:
             self.validate_canonical_doc_ids(docs)
@@ -99,7 +108,7 @@ class DocsDataBuilder(
         if self.targeted_build:
             documents, previous_tree, previous_tree_text = targeted_document_metadata(self, docs, parent_ids)
         docs_by_id = {doc.doc_id: doc for doc in documents}
-        if selected_payload is None:
+        if update_selected and selected_payload is None:
             selected_payload = read_selected(self.config)
         media_snapshot = (
             None
@@ -113,15 +122,18 @@ class DocsDataBuilder(
         target_doc_ids = self.only_doc_ids if self.only_doc_ids is not None else [doc.doc_id for doc in docs]
         target_set = set(target_doc_ids)
         docs_for_item_build = [doc for doc in docs if doc.doc_id in target_set]
-        stale_item_ids = self.stale_doc_payload_ids(
-            [doc.doc_id for doc in docs_for_item_build],
-            target_doc_ids=target_doc_ids if self.targeted_build else None,
-        )
-        links_plan = prepare_document_links(
-            self, docs, target_doc_ids, stale_item_ids, document_identities=docs_by_id,
-        )
-        related_records = {}
-        links_build = build_document_links(self, links_plan, write=write, related_records=related_records)
+        if stale_item_ids is None:
+            stale_item_ids = self.stale_doc_payload_ids(
+                [doc.doc_id for doc in docs_for_item_build],
+                target_doc_ids=target_doc_ids if self.targeted_build else None,
+            )
+        links_build = None
+        if related_records is None:
+            links_plan = prepare_document_links(
+                self, docs, target_doc_ids, stale_item_ids, document_identities=docs_by_id,
+            )
+            related_records = {}
+            links_build = build_document_links(self, links_plan, write=write, related_records=related_records)
         prepare_related_links(self, docs_for_item_build, related_records)
 
         item_payloads = {
@@ -170,9 +182,9 @@ class DocsDataBuilder(
                 tree_total=len(index_tree_payload["docs"]),
                 recent_total=len(recent_payload["docs"]) if recent_payload is not None else None,
             )
-        if self.config.stage == "working":
+        if self.config.stage == "working" and update_selected:
             refresh_selected_documents(self.config, self.config, docs_for_item_build, write=write, payload=selected_payload)
-        elif write:
+        elif self.config.stage == "preview" and write:
             (self.output_dir / "selected.json").write_bytes(selected_path(self.config).read_bytes())
         diagnostics["warning_count"] = len(self.warnings)
         if emit_diagnostics:

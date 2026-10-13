@@ -13,7 +13,7 @@ from .source import DocRecord, DocumentIdentity
 from .ordinary_metadata import OrdinaryDocumentSummary
 from .related_links import render_related_links
 from docs_document_identity import doc_updated_date
-from docs_discovery_selection import select_collection_documents, select_ordinary_documents
+from docs_discovery_selection import DiscoverySelection, select_collection_documents, select_ordinary_documents
 from docs_publication_ignore import read_publication_ignore_ids
 from docs_recent_exclusions import read_recent_exclusions
 from docs_recent_payload import build_recent_payload
@@ -154,7 +154,9 @@ class PayloadBuilderMixin:
             entry["parent_title"] = title_by_id[parent_id]
         return entry
 
-    def recent_candidates(self, docs: list[DocRecord], tree: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    def recent_candidates(
+        self, docs: list[DocRecord], tree: list[dict[str, Any]], *, discovery: DiscoverySelection | None = None,
+    ) -> list[dict[str, Any]]:
         """Use current in-memory ordinary metadata and saved flat collection metadata.
 
         Only full Working builds call this. Collection bodies and the Search
@@ -162,13 +164,16 @@ class PayloadBuilderMixin:
         """
         if self.config.stage != "working":
             raise ValueError("Recents generation requires Working; Preview copies the prepared payload")
-        selected = select_ordinary_documents(
-            tree, read_publication_ignore_ids(self.repo_root), field="Working Recents tree",
+        selected = discovery.ordinary if discovery is not None else select_ordinary_documents(
+            tree, read_publication_ignore_ids(self.repo_root, config=self.config), field="Working Recents tree",
         )
         eligible_docs = [doc for doc in docs if doc.doc_id in selected]
         title_by_id = {doc.doc_id: doc.title for doc in eligible_docs}
         rows = [self.recent_entry(doc, title_by_id) for doc in eligible_docs]
-        for collection, children in select_collection_documents(self.repo_root, self.config, set(selected)):
+        collections = discovery.collections if discovery is not None else select_collection_documents(
+            self.repo_root, self.config, set(selected),
+        )
+        for collection, children in collections:
             for doc_id, child in children.items():
                 rows.append({
                     "doc_id": doc_id,

@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import json
-import re
 import subprocess
 import sys
 import time
@@ -21,10 +20,10 @@ from docs_workspace_config import (
     require_document_authoring,
     resolve_workspace_path,
     DocsWorkspaceConfig,
+    DocsStageConfig,
 )
 from docs_build_manifest import remove_build_manifest, write_build_manifest
 from docs_mermaid_preparation import prepare_stage_mermaid
-from docs_workspace_links import write_workspace_links
 from docs_source_model import SourceDoc, parse_source, write_bytes_atomic
 from docs_document_identity import doc_updated_date
 
@@ -37,7 +36,6 @@ DOCS_BUILDER_DIAGNOSTICS_PREFIX = "Docs builder diagnostics: "
 FRONT_MATTER_ERROR_PREFIX = "problem with front-matter on doc "
 PYTHON_EXECUTABLE = sys.executable
 DOCS_BUILDER_SCRIPT = "docs-viewer/build/build_docs.py"
-SEARCH_BUILDER_SCRIPT = "docs-viewer/build/build_search.py"
 
 
 class CollectionWriteRebuildFailure(RuntimeError):
@@ -85,7 +83,7 @@ def python_builder_command(script: str, *args: str) -> list[str]:
     return [PYTHON_EXECUTABLE, script, *args]
 
 
-def ordered_search_doc_ids(doc_ids: list[str]) -> list[str]:
+def ordered_docs_doc_ids(doc_ids: list[str]) -> list[str]:
     seen: set[str] = set()
     ordered: list[str] = []
     for raw_doc_id in doc_ids:
@@ -95,10 +93,6 @@ def ordered_search_doc_ids(doc_ids: list[str]) -> list[str]:
         seen.add(doc_id)
         ordered.append(doc_id)
     return ordered
-
-
-def ordered_docs_doc_ids(doc_ids: list[str]) -> list[str]:
-    return ordered_search_doc_ids(doc_ids)
 
 
 def changed_source_document_ids(paths: list[Path]) -> list[str]:
@@ -139,29 +133,6 @@ def extract_docs_builder_diagnostics(stdout: str) -> list[Dict[str, Any]]:
     return diagnostics
 
 
-def extract_search_step_diagnostics(stdout: str, search: Dict[str, Any]) -> Dict[str, Any]:
-    diagnostics: Dict[str, Any] = {
-        "mode": search.get("mode", "none"),
-        "doc_ids": list(search.get("doc_ids", [])),
-    }
-    if diagnostics["mode"] == "none":
-        return diagnostics
-
-    count_match = re.search(r"\bwith\s+(\d+)\s+\S+\s+search docs\b", stdout)
-    if count_match:
-        diagnostics["docs"] = int(count_match.group(1))
-
-    skipped_match = re.search(r"\bSkipped:\s*(\d+)\b", stdout)
-    if skipped_match:
-        diagnostics["skipped"] = int(skipped_match.group(1))
-
-    wrote_match = re.search(r"\bWrote:\s*(\d+)\b", stdout)
-    if wrote_match:
-        diagnostics["wrote"] = int(wrote_match.group(1))
-
-    return diagnostics
-
-
 def run_rebuild_command(command: list[str], repo_root: Path) -> Dict[str, Any]:
     started_at = time.perf_counter()
     completed = subprocess.run(
@@ -189,8 +160,6 @@ def rebuild_failure_message(prefix: str, detail: str) -> str:
 
 def rebuild_stage_outputs(
     repo_root: Path,
-    include_search: bool = False,
-    search_doc_ids: Optional[list[str]] = None,
     docs_doc_ids: Optional[list[str]] = None,
     skip_media_builds: bool = False,
     stage: str | None = None,
@@ -201,18 +170,17 @@ def rebuild_stage_outputs(
     copied_recent_payload: bytes | None = None,
     related_links_dir: Path | None = None,
     retained_catalogue: bool = False,
+    config: DocsStageConfig | None = None,
 ) -> Dict[str, Any]:
-    """Await document work and built/copied discovery data before completion.
+    """Await document-only follow-through or captured Preview generation.
 
-    Full Working docs-and-Search rebuilds also combine prepared Links records.
-    Individual document operations omit Search and leave that aggregate alone.
+    The complete Working docs-and-Search action has its own in-process owner.
+    Individual document operations preserve discovery and the Links aggregate.
     """
     if stage == "preview" and docs_base_dir is None:
         raise ValueError("Preview builds require an explicit temporary workspace")
     if retained_catalogue and (stage != "preview" or copied_search_index is None):
         raise ValueError("Retained Catalogue documents require a captured Preview build")
-    if include_search and stage != "working":
-        raise ValueError("Search rebuilds require Working; Preview copies the existing index")
     if (copied_search_index is None) != (copied_recent_payload is None):
         raise ValueError("Preview requires both captured Working Search and freshly prepared Recents")
     docs_target_doc_ids = ordered_docs_doc_ids(docs_doc_ids or [])
@@ -226,15 +194,14 @@ def rebuild_stage_outputs(
         _validate_prepared_index(Path("search/index.json"), copied_search_index)
         _validate_prepared_index(Path("documents/recent.json"), copied_recent_payload)
     try:
-        stage_config = load_docs_stage(repo_root, stage)
+        stage_config = load_docs_stage(repo_root, stage) if config is None else config
     except KeyError as exc:
         raise ValueError(f"stage {stage!r} is not configured") from exc
     remove_build_manifest(repo_root, stage_config)
     docs_mode = "full"
     docs_reason = "full document build requested"
     docs_command = python_builder_command(DOCS_BUILDER_SCRIPT, "--write", "--diagnostics")
-    if not include_search:
-        docs_command.append("--skip-recent")
+    docs_command.append("--skip-recent")
     if stage:
         docs_command.extend(["--stage", stage])
     if stage == "working":
@@ -249,7 +216,7 @@ def rebuild_stage_outputs(
         docs_command.append("--skip-media-builds")
     commands = [("docs", docs_command)]
     search = {"mode": "copy" if copied_search_index is not None else "none", "doc_ids": []}
-    if include_search or copied_search_index is not None:
+    if copied_search_index is not None:
         collection_commands = [
             (collection, (
                 "collection_docs",
@@ -267,39 +234,9 @@ def rebuild_stage_outputs(
             for collection in stage_config.collections
             if not (retained_catalogue and collection.collection == "catalogue")
         ]
-        if stage_config.stage == "working":
-            # Recents consumes current collection metadata inside the ordinary build.
-            commands = [
-                *(command for collection, command in collection_commands if collection.include_in_site_search),
-                *commands,
-                *(command for collection, command in collection_commands if not collection.include_in_site_search),
-            ]
-        else:
-            commands.extend(command for _collection, command in collection_commands)
-    if include_search:
-        if search_doc_ids is None:
-            search = {"mode": "full", "doc_ids": []}
-            commands.append(("search", python_builder_command(
-                SEARCH_BUILDER_SCRIPT, "--write",
-                *(["--stage", stage_config.stage] if stage_config.stage else []),
-            )))
-        else:
-            target_doc_ids = ordered_search_doc_ids(search_doc_ids)
-            search = {"mode": "full" if target_doc_ids else "none", "doc_ids": target_doc_ids}
-            if target_doc_ids:
-                commands.append(
-                    (
-                        "search",
-                        python_builder_command(
-                            SEARCH_BUILDER_SCRIPT,
-                            "--write",
-                            *(["--stage", stage_config.stage] if stage_config.stage else []),
-                        ),
-                    )
-                )
+        commands.extend(command for _collection, command in collection_commands)
     steps = []
     docs_diagnostics: Optional[Dict[str, Any]] = None
-    search_diagnostics = extract_search_step_diagnostics("", search)
     for label, command in commands:
         if docs_base_dir is not None:
             command.extend(["--docs-base-dir", str(docs_base_dir)])
@@ -314,9 +251,6 @@ def rebuild_stage_outputs(
         if label == "docs":
             docs_payloads = extract_docs_builder_diagnostics(step["stdout"])
             docs_diagnostics = docs_payloads[-1] if docs_payloads else None
-        elif label == "search":
-            search_diagnostics = extract_search_step_diagnostics(step["stdout"], search)
-            search_diagnostics["elapsed_seconds"] = step["elapsed_seconds"]
         if step["returncode"] != 0:
             detail = step["stderr"] or step["stdout"] or f"exit {step['returncode']}"
             raise RuntimeError(rebuild_failure_message(f"rebuild failed for {stage}", detail))
@@ -326,13 +260,7 @@ def rebuild_stage_outputs(
         output_path.write_bytes(copied_search_index)
         recent_path = resolve_workspace_path(repo_root, generated_documents_path(stage_config)) / "recent.json"
         recent_path.write_bytes(copied_recent_payload)
-    complete_build = search["mode"] in {"full", "copy"}
-    links = (
-        write_workspace_links(repo_root, stage_config)
-        if complete_build
-        and stage_config.stage == "working"
-        else None
-    )
+    complete_build = copied_search_index is not None
     mermaid = (
         prepare_stage_mermaid(repo_root, stage_config)
         if complete_build
@@ -348,20 +276,15 @@ def rebuild_stage_outputs(
         "steps": steps,
         "search": search,
         "docs": {"mode": docs_mode, "doc_ids": docs_target_doc_ids, "reason": docs_reason},
-        "diagnostics": {
-            "docs": docs_diagnostics,
-            "search": search_diagnostics,
-        },
+        "diagnostics": {"docs": docs_diagnostics, "search": search},
         "build_manifest": build_manifest,
         **({"mermaid": mermaid} if mermaid is not None else {}),
-        **({"links": links} if links is not None else {}),
     }
 
 
 def rebuild_working_outputs(
     repo_root: Path,
     *,
-    include_search: bool = False,
     docs_doc_ids: Optional[list[str]] = None,
     skip_media_builds: bool = False,
     links_doc_ids: Optional[list[str]] = None,
@@ -369,7 +292,7 @@ def rebuild_working_outputs(
     """Resolve the authoring owner once before invoking the internal build pipeline."""
     config = load_docs_working_config(repo_root)
     return rebuild_stage_outputs(
-        repo_root, stage=config.stage, include_search=include_search,
+        repo_root, stage=config.stage, config=config,
         docs_doc_ids=docs_doc_ids, skip_media_builds=skip_media_builds,
         links_doc_ids=links_doc_ids,
     )
@@ -448,7 +371,7 @@ def perform_source_write_and_rebuild(
     links_before = changed_source_document_ids(changed_paths)
     write_operation()
     return rebuild_working_outputs(
-        repo_root, include_search=False, docs_doc_ids=docs_doc_ids,
+        repo_root, docs_doc_ids=docs_doc_ids,
         skip_media_builds=skip_media_builds,
         **links_write_arguments(links_before, changed_paths),
     )
@@ -485,7 +408,7 @@ def perform_source_write_and_rebuild_atomic(
             )
         write_operation()
         rebuild = rebuild_working_outputs(
-            repo_root, include_search=False, docs_doc_ids=docs_doc_ids,
+            repo_root, docs_doc_ids=docs_doc_ids,
             skip_media_builds=True, **links_write_arguments(links_before, changed_paths),
         )
     except DocumentSourceSnapshotChanged:
@@ -502,7 +425,7 @@ def perform_source_write_and_rebuild_atomic(
         if not restoration_errors:
             try:
                 recovery_rebuild = rebuild_working_outputs(
-                    repo_root, include_search=False, docs_doc_ids=docs_doc_ids,
+                    repo_root, docs_doc_ids=docs_doc_ids,
                     skip_media_builds=True, links_doc_ids=links_before,
                 )
             except Exception as recovery_exc:
@@ -800,7 +723,7 @@ def perform_multi_collection_source_write_and_rebuild(
             )
         else:
             rebuilds[owner] = rebuild_working_outputs(
-                repo_root, include_search=False, docs_doc_ids=plan.get("docs_doc_ids"),
+                repo_root, docs_doc_ids=plan.get("docs_doc_ids"),
                 **links_arguments, skip_media_builds=True,
             )
     return {"ok": True, "collections": rebuilds}
