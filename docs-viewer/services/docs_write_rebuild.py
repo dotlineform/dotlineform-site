@@ -527,8 +527,6 @@ def rebuild_prepared_document_outputs(
     build_dir = Path(__file__).resolve().parents[1] / "build"
     if str(build_dir) not in sys.path:
         sys.path.insert(0, str(build_dir))
-    from docs_builder.browser_config import write_browser_config
-    from docs_builder.common import DOCS_VIEWER_BROWSER_CONFIG_PATH
     from docs_builder.pipeline import DocsDataBuilder
     from docs_builder.collection import CollectionDocsBuilder
 
@@ -541,7 +539,6 @@ def rebuild_prepared_document_outputs(
         builder = CollectionDocsBuilder(**arguments, collection=owner.document_config)
     else:
         remove_build_manifest(repo_root, owner.parent_config)
-        write_browser_config(repo_root, workspace, path=DOCS_VIEWER_BROWSER_CONFIG_PATH, label="Docs Viewer browser config")
         builder = DocsDataBuilder(**arguments, skip_recent=True)
     record = builder.document_record(
         path=document.path, front_matter=document.front_matter, body_markdown=document.body,

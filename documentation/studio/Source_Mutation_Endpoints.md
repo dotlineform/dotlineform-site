@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-ce5515
 title: Source Mutation Endpoints
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-13 15:47:31"
+last_updated: "2026-10-13 17:19:27"
 parent_id: d-20260607-222033-647b52
 ---
 # Docs Viewer Source Mutation Endpoints
@@ -15,6 +15,14 @@ Common source editing and Subject buffer changes use [Source Editor Endpoints](S
 ## `GET /docs/metadata`
 
 The read resolves the exact configured source and returns `record`, target identity and `location_parent_id`; named collections also receive their Folder Subject capability. Ordinary resolution uses Index membership/parent data and its one source, without parsing the corpus. Saved source readiness/report completion does not prevent Source correction. The response contains no source revision. Source load and candidate Save retain their separate owners.
+
+## `POST /docs/rebuild-document`
+
+The exact request is `{doc_id}`, with `collection` only for a configured named owner. Rebuild reads the saved source once, strictly parses its front matter and binds it to the confined filename/request identity. Ordinary membership and parentage come from one Index read. It checks source readiness and classifies reports from those loaded fields/body, then carries the source, report, exact IDs, configuration and parent map into the existing in-process document/Links builder. Title must be a string and is consumed as supplied, without another completeness check, coercion or heading/ID fallback. Source bytes and dates are preserved.
+
+The response carries `target`, the completed `record`, build diagnostics and a completion summary after generation and any Catalogue publication handoff finish. Ordinary records include current or empty `report_id` and status so local projection clears removed metadata. The browser projects the returned record through the common change owner and awaits a fresh exact generated-payload read/display at the existing route and reading position. No metadata GET or ordinary Index GET follows Rebuild; loaded tree/order/exclusion policy remain under their owning refresh workflows. Busy state covers generation and display, with projection/display failures reported as failures after completed generation.
+
+Rebuild updates the selected document, its navigation/collection metadata, Selected and exact Links effects. Saved inputs and required rendering media keep their existing readers; Search, Recent generation, registered media production, browser-configuration projection and Publish retain separate owners. Direct Catalogue builds queue only completed document effects, preserving current queued media selections and initialized progress without a Work/download reread; queue persistence failure reports that generation completed but its handoff failed. Ordinary/non-Catalogue publication queue contribution remains pending under [Incremental Document Publish](deliveries/Incremental_Document_Publish.md).
 
 ## `POST /docs/set-draft`
 

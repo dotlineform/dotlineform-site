@@ -5,7 +5,6 @@ import {
   createManagedDoc,
   moveManagedDoc,
   openManagedDocSource,
-  readManagedDocMetadata,
   rebuildManagedDocs,
   rebuildManagedDocument,
   updateSourceConfigSettings
@@ -453,12 +452,10 @@ export function createDocsViewerManagementActionController(options) {
       if (completedTarget.doc_id !== target.doc_id || completedTarget.collection !== target.collection) {
         throw new Error("Rebuild response does not match the displayed document.");
       }
-      if (!target.collection) await context.routeCommands.loadIndex({ preserveDocument: true });
-      var metadata = await readManagedDocMetadata(completedTarget, managementClientOptions());
-      if (!metadata || metadata.doc_id !== target.doc_id || (metadata.collection || "") !== (target.collection || "") || !metadata.record) {
-        throw new Error("Document rebuilt, but its metadata did not match the displayed target.");
+      if (!payload.record || payload.record.doc_id !== target.doc_id) {
+        throw new Error("Document rebuilt, but its record did not match the displayed target.");
       }
-      var projectionErrors = context.commitDocumentChange({ target: completedTarget, record: metadata.record }) || [];
+      var projectionErrors = context.commitDocumentChange({ target: completedTarget, record: payload.record }) || [];
       await context.routeCommands.refreshDocument(completedTarget);
       if (projectionErrors.length) throw new Error("Document rebuilt, but a retained list could not be updated: " + projectionErrors.map(function (error) { return error.message; }).join("; "));
       setManagementMessage("", false);

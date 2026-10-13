@@ -37,17 +37,28 @@ def merge_completed_shared(
     persist_pending_queue(path, pending, progress="preview_done")
 
 
-def merge_completed_works(
-    repo_root: Path, completed: Iterable[tuple[str, str, dict[str, Any], set[str]]],
+def merge_completed_document(
+    repo_root: Path, work_id: str, *, workspace: DocsWorkspaceConfig | None = None,
 ) -> None:
-    """Forward completed document work, preserving existing Publish progress.
+    """Queue document-only completion without inspecting Work or media inputs.
 
-    Regenerate never inspects an existing preview_done flag. Only a new record
-    receives false; replace/merge selections leave the initialized flag untouched.
+    Preserve current media selections and initialized Publish progress. Moving
+    a former deletion back to current starts with no media-transfer selection.
     """
-    path = pending_path(repo_root, FILENAME)
+    path = pending_path(repo_root, FILENAME, workspace=workspace)
     pending = load_pending_queue(path)
-    merge_completed_work_selections(pending, completed)
+    current = pending["current_works"].get(work_id)
+    if current is not None:
+        record = {**current, "metadata": True}
+    else:
+        existing = pending["deleted_works"].get(work_id)
+        record = {"metadata": True, "image": False, "file_names": []}
+        if existing is None:
+            record["preview_done"] = False
+        else:
+            record = {**existing, **record}
+    pending["deleted_works"].pop(work_id, None)
+    pending["current_works"][work_id] = record
     persist_pending_queue(path, pending, progress="preview_done")
 
 
