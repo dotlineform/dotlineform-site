@@ -4,55 +4,15 @@ from pathlib import Path
 from typing import Any, Iterable
 import json
 
-from docs_document_identity import doc_updated_date, is_doc_date, is_document_id
+from docs_document_identity import doc_updated_date
 from docs_document_images import has_document_thumbnail
-from docs_document_subjects import project_reader_subject, subject_key_is_canonical
+from docs_document_subjects import project_reader_subject
 from docs_source_model import write_text_atomic
-from docs_workspace_config import COLLECTION_ID_PATTERN, document_source_path
+from docs_workspace_config import document_source_path
 
 
 SELECTED_FILENAME = "selected.json"
 SELECTED_SCHEMA = "docs_selected_v1"
-
-
-def validate_selected_payload(payload: Any) -> None:
-    """Require exact identities and display metadata, without stored routes."""
-    if not isinstance(payload, dict) or set(payload) != {"schema", "docs"}:
-        raise ValueError("Selected Documents requires schema and docs")
-    if payload["schema"] != SELECTED_SCHEMA or not isinstance(payload["docs"], list):
-        raise ValueError("Selected Documents has an invalid schema or document list")
-    seen = set()
-    for row in payload["docs"]:
-        if not isinstance(row, dict):
-            raise ValueError("Selected Documents rows must be objects")
-        fields = {"doc_id", "title", "last_updated"}
-        if "has_thumbnail" in row:
-            fields.add("has_thumbnail")
-            if row["has_thumbnail"] is not True or row.get("collection") == "catalogue":
-                raise ValueError("Selected Documents requires an assigned authored thumbnail")
-        if "subject" in row:
-            fields.add("subject")
-            if (row.get("collection") != "works" or "has_thumbnail" in row
-                    or not isinstance(row["subject"], str) or not subject_key_is_canonical("work", row["subject"])):
-                raise ValueError("Selected Documents requires one Context Work thumbnail subject")
-        if "collection" in row:
-            fields |= {"collection", "report_doc_id"}
-            if not isinstance(row["collection"], str) or not COLLECTION_ID_PATTERN.fullmatch(row["collection"]):
-                raise ValueError("Selected Documents requires exact collection identity")
-        if set(row) != fields:
-            raise ValueError("Selected Documents row has invalid fields")
-        for key in ("doc_id", "report_doc_id"):
-            owner = row.get("collection", "") if key == "doc_id" else ""
-            if key in row and (not isinstance(row[key], str) or row[key] != row[key].strip()
-                               or not is_document_id(row[key], collection=owner)):
-                raise ValueError(f"Selected Documents requires an immutable {key}")
-        if (not isinstance(row["title"], str) or (row.get("collection") != "catalogue" and not row["title"].strip())
-                or not is_doc_date(row["last_updated"])):
-            raise ValueError("Selected Documents requires a title and date-only last_updated")
-        target = (row.get("collection", ""), row["doc_id"])
-        if target in seen:
-            raise ValueError("Selected Documents contains a duplicate target")
-        seen.add(target)
 
 
 def selected_path(config: Any) -> Path:

@@ -1,5 +1,3 @@
-import { classifyDocsDocumentSubject } from "./docs-document-subject.js";
-
 /**
  * Select reader thumbnail metadata from a complete committed document summary.
  * Authored assignments take precedence over Context Work subjects. Folder
@@ -9,60 +7,16 @@ import { classifyDocsDocumentSubject } from "./docs-document-subject.js";
  * @returns {Object} Optional has_thumbnail or Work subject, never both.
  */
 export function selectedDocumentThumbnailMetadata(record, collection) {
-  if (Object.hasOwn(record, "has_thumbnail") && typeof record.has_thumbnail !== "boolean") {
-    throw new Error("Selected Documents thumbnail assignment is invalid.");
-  }
   if (record.has_thumbnail === true) {
-    if (collection === "catalogue") throw new Error("Catalogue owns its Work thumbnails.");
     return { has_thumbnail: true };
   }
-  if (collection === "works") {
-    const subject = classifyDocsDocumentSubject(record, { folderSupported: true });
-    if (subject.kind === "work") return { subject: subject.key };
-  }
+  if (collection === "works" && /^[0-9]{5}$/.test(record.subject)) return { subject: record.subject };
   return {};
 }
 
-/** Validate the stage-independent selection list and order its display rows. */
-export function selectedDocumentRows(payload) {
-  if (!payload || payload.schema !== "docs_selected_v1" || !Array.isArray(payload.docs)) {
-    throw new Error("Selected Documents data is invalid.");
-  }
-  const seen = new Set();
-  const identity = /^d-\d{8}-\d{6}-[0-9a-f]{6}$/;
-  const rows = payload.docs.map(function (row) {
-    if (!row || typeof row.doc_id !== "string"
-      || !(row.collection === "catalogue" ? /^[0-9]{5}$/ : identity).test(row.doc_id)
-      || typeof row.title !== "string" || (row.collection !== "catalogue" && !row.title.trim())
-      || typeof row.last_updated !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(row.last_updated)) {
-      throw new Error("Selected Documents row is incomplete.");
-    }
-    const collection = Object.hasOwn(row, "collection");
-    const fields = collection ? ["collection", "doc_id", "last_updated", "report_doc_id", "title"] : ["doc_id", "last_updated", "title"];
-    if (Object.hasOwn(row, "has_thumbnail")) {
-      fields.push("has_thumbnail");
-      if (row.has_thumbnail !== true || row.collection === "catalogue") {
-        throw new Error("Selected Documents requires an assigned authored thumbnail.");
-      }
-    }
-    if (Object.hasOwn(row, "subject")) {
-      fields.push("subject");
-      if (row.collection !== "works" || Object.hasOwn(row, "has_thumbnail")
-        || typeof row.subject !== "string" || !/^[0-9]{5}$/.test(row.subject)) {
-        throw new Error("Selected Documents requires one Context Work thumbnail subject.");
-      }
-    }
-    if (Object.keys(row).sort().join() !== fields.sort().join()
-      || collection && (typeof row.collection !== "string" || !/^[a-z0-9][a-z0-9_-]*$/.test(row.collection)
-        || typeof row.report_doc_id !== "string" || !identity.test(row.report_doc_id))) {
-      throw new Error("Selected Documents requires exact document and collection identities.");
-    }
-    const key = (collection ? row.collection : "") + "/" + row.doc_id;
-    if (seen.has(key)) throw new Error("Selected Documents contains duplicate targets.");
-    seen.add(key);
-    return row;
-  });
-  return rows.sort(function (a, b) {
+/** Order completed selection rows for report presentation. */
+export function sortSelectedDocumentRows(rows) {
+  return rows.slice().sort(function (a, b) {
     return b.last_updated.localeCompare(a.last_updated)
       || (a.collection || "").localeCompare(b.collection || "")
       || a.doc_id.localeCompare(b.doc_id);

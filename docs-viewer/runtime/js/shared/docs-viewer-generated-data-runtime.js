@@ -3,10 +3,7 @@ import {
   fetchPreferredGeneratedJson,
   managementReloadPath
 } from "./docs-viewer-data.js";
-import {
-  normalizeDocsIndexTreePayload,
-  normalizeRecentPayload
-} from "./docs-viewer-tree-payload-adapter.js";
+import { normalizeDocsIndexTreePayload } from "./docs-viewer-tree-payload-adapter.js";
 
 export function createDocsViewerGeneratedDataRuntime(options) {
   var settings = options || {};
@@ -124,7 +121,7 @@ export function createDocsViewerGeneratedDataRuntime(options) {
       dataRequestOptions(Object.assign({}, requestSettings, {
         useSearchCapability: false
       }))
-    ).then(normalizeRecentPayload);
+    );
   }
 
   return {

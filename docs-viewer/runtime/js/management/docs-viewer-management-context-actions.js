@@ -2,7 +2,6 @@ import { DOCS_VIEWER_ACTION_IDS as ACTION_IDS } from "./docs-viewer-action-defin
 import { toggleManagedDocDraft } from "./docs-viewer-management-draft-workflow.js";
 import { readSelectedDocuments, setManagedDocSelected } from "./docs-viewer-management-client.js";
 import { managedDocumentTargetsEqual, normalizeManagedDocumentTarget } from "./docs-viewer-management-document-target.js";
-import { selectedDocumentRows } from "../shared/docs-selected-documents.js";
 
 /**
  * Own context-aware New and Edit actions' exact targets and availability.
@@ -70,7 +69,7 @@ export function createDocsViewerManagementContextActions(options) {
     selectedState = pending;
     readSelectedDocuments(options.clientOptions()).then(function (payload) {
       if (selectedState !== pending) return;
-      pending.selected = selectedDocumentRows(payload).some(function (row) {
+      pending.selected = payload.docs.some(function (row) {
         return row.doc_id === pending.target.doc_id && (row.collection || "") === (pending.target.collection || "");
       });
       pending.ready = true;

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260602-160839-6d3cbb
 title: Docs Viewer Search
 added_date: "2026-06-02 16:08:39"
-last_updated: "2026-10-08 19:10:43"
+last_updated: "2026-10-13 18:56:11"
 parent_id: d-20260331-000000-5dcf32
 
 ---
@@ -24,7 +24,7 @@ The workspace enables `title`, `heading`, `summary`, `body`, and `code`. Ordinar
 
 Parent title, identity and update time remain document-table metadata for display, navigation and deterministic ordering but emit no postings. Shared source extraction includes visible authored headings, prose, inline code, fenced code, image alt text, and visible raw-HTML text; it excludes front matter other than title and summary, report declarations, link destinations, media paths, attributes, scripts, styles, document IDs, date fragments, and 64-character hexadecimal digests.
 
-Working tree metadata selects ordinary documents, pruning draft and unpublishable roots with their descendants. Included collections contribute flat non-draft entries from their management manifests only when their configured ordinary hosts survive. All metadata selection precedes selected Markdown and collection by-ID reads. Search requires current Working document projections and fails clearly on selected inconsistencies.
+Working tree metadata selects ordinary documents, pruning draft and unpublishable roots with their descendants. Included collections contribute flat non-draft entries from their management manifests only when their configured ordinary hosts survive. Saved and completed in-memory selection use the same pruning functions without metadata row/schema/identity/title/date/readiness audits. Standalone Search reads each selected source once through confined, symlink-safe paths, retains source-filename identity and parses shared front-matter fields plus required report declarations for text extraction. It reads no collection by-ID payloads or canonical ordinary ancestry and performs no source/manifest/by-ID agreement checks or repeated Subject/readiness/thumbnail validation. Missing required inputs and actual file/parser failures remain errors.
 
 ## Site-Search Corpus
 
@@ -34,13 +34,13 @@ Collection results retain exact `{collection, doc_id}` identity plus `report_doc
 
 ## Build And Publication
 
-The builder reconstructs the complete Working index. Ordinary source saves await exact document/Links projections only. Manage Rebuild builds document outputs before Search; `build_search.py --stage working --write` uses those existing outputs directly. No path patches postings or maintains a separate collection index. The content version excludes generation time, so an identical rebuild skips its write.
+The builder reconstructs the complete Working index. Ordinary source saves await exact document/Links projections only. Manage Rebuild supplies its loaded document records and completed discovery selection; `build_search.py --stage working --write` consumes saved metadata and required selected source content. Table projection preserves supplied display metadata without coercion, title completeness, target uniqueness or collection-context audits; term normalization and postings construction retain their own behavior. No path patches postings or maintains a separate collection index. The content version excludes generation time, so an identical rebuild skips its write.
 
-The Working index lives at its configured generated-search location. Prepare Preview captures the saved file and copies its exact bytes into Preview; Deploy Repo copies that file to the public repository destination. Neither rebuilds Search nor applies a second coverage filter. Ordinary source edits may leave Search stale, and prepared document membership need not equal Search membership. Field and coverage policy changes take effect on the next complete Working Search build; rebuilding does not prepare or deploy them.
+The Working index lives at its configured generated-search location. Prepare Preview captures the saved file and copies its exact bytes into Preview; Deploy Repo copies that file to the public repository destination. Neither rebuilds Search, applies a second coverage filter or audits its copied schema/content; required-file/path handling and byte verification remain. Ordinary source edits may leave Search stale, and prepared document membership need not equal Search membership. Field and coverage policy changes take effect on the next complete Working Search build; rebuilding does not prepare or deploy them.
 
 ## Browser Query Path
 
-Generated browser config declares the Docs Viewer domain, v4 schema, index URL, and `whole_index` rebuild policy. The workspace provider checks the v4 schema once at acquisition without requiring stage identity inside that JSON. `docs-viewer-search-controller.js` caches that loaded input and owns query/loading/paging state; route commands own history writes. `docs-viewer-search.js` is the sole tokenizer, postings-intersection, ranking, and tie-breaking owner, with no repeated schema validation on query or More. Recent is acquired independently and normalized once by the generated-data adapter, then cached by the same list controller. Neither list reads destination documents or collection manifests to populate its rows.
+Generated browser config declares the Docs Viewer domain, v4 schema, index URL, and `whole_index` rebuild policy. The workspace provider checks the v4 schema once at acquisition without requiring stage identity inside that JSON. `docs-viewer-search-controller.js` caches that loaded input and owns query/loading/paging state; route commands own history writes. `docs-viewer-search.js` is the sole tokenizer, postings-intersection, ranking, and tie-breaking owner, with no repeated schema validation on query or More. Recent is acquired independently and consumed directly by the generated-data adapter, then cached by the same list controller without schema/row audits, metadata coercion, default-limit repair or silent row dropping. Neither list reads destination documents or collection manifests to populate its rows.
 
 A multi-term query requires one matching posting set per normalized term. Prefix matching begins at three characters. Generic ranking prefers exact identity, exact title, title, heading, summary, parent title, body/code, and update metadata; only enabled fields participate. The workspace therefore ranks exact title, title, heading, summary, then body/code. Ties sort by title and identity, and each exact ordinary or collection target appears at most once.
 

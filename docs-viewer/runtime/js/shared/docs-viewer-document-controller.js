@@ -577,8 +577,7 @@ export function initDocsViewerDocumentController(context) {
     if (change.deleted) { if (record) releaseRecord(record); return; }
     if (!record) return;
     record.committedRecord = change.record;
-    var policy = typeof record.doc.publication_ignored === "boolean" ? { publication_ignored: record.doc.publication_ignored } : {};
-    record.doc = Object.assign({}, policy, change.record, record.target);
+    record.doc = Object.assign({}, change.record, record.target);
     record.actionContext = Object.assign({}, record.actionContext, { documentRecord: record.doc });
     if (activeRecord === record) {
       selectedDocument.displayedRecord = record.doc;

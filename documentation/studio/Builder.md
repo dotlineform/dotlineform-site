@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260423-000000-c9f3ea
 title: Builder
 added_date: "2026-04-23 00:00:00"
-last_updated: "2026-10-13 17:47:14"
+last_updated: "2026-10-13 18:56:11"
 parent_id: d-20260424-000000-50b63f
 ---
 # Builder
@@ -224,6 +224,8 @@ Search is a stage-independent `docs_viewer_search_index_v4` artifact built only 
 Manage offers one Publish action, remains busy until preparation and distribution finish and shows complete or phase-specific failure feedback. The stage selector, separate preparation/distribution endpoints, change-review modal and intermediate confirmation are retired. Review the repository result through `bin/site-preview`. Historical lifecycle tests remain unchanged and unreviewed for the current contract; manual success and static source review do not establish exercised failure recovery or measured performance.
 
 Full Working Builds generate Recents from Search's base coverage and publication eligibility, additionally removing exact targets in `source/documents/recent-exclusions.json` before sorting and limiting. Manage Rebuild generates it once after all document owners finish, using the same in-memory discovery selection as Search without saved collection-manifest, Markdown or by-ID rereads. Direct full Working document CLI builds reuse loaded ordinary metadata and require saved current included/eligible-host collection metadata. Targeted builds and authoring follow-through preserve Recents; service document-only rebuilds pass `--skip-recent`.
+
+Discovery trusts saved or completed metadata while retaining the actual coverage, draft/subtree/host and Recent exact-target selections. Standalone Search reads selected source content through exact confined paths and the shared front-matter/report parsers, without collection by-ID reads, canonical ancestry rereads, general source-model checks or source/manifest/by-ID agreement audits. Its display table preserves supplied metadata; tokenization retains normalization. Recent row construction omits input-date and output-payload audits, and browser Recent/Selected readers consume saved rows directly. Publish capture/copy/assembly/distribution omit discovery schema/content and Selected-membership audits while retaining required files, path confinement and byte verification. The upstream eligibility move and queued Search/Recent/Selected effects remain [Incremental Document Publish](deliveries/Incremental_Document_Publish.md) work.
 
 Publish preparation refreshes the shared Recents from current eligible source titles/dates and the captured exclusion list, without another source scan or a separate full Working Build. It binds saved Search and freshly generated Recent bytes into its plan and copies both before recording temporary build completion. Snapshot assembly and Deploy Repo preserve those exact bytes; readers resolve navigation from IDs in their own context. Search is not regenerated. Recents' separate publication variant and stored content URLs remain retired. [Generated Data Contracts](Generated_Data_Contracts.md#recent-contract) owns the maintained fields and lifecycle, and [Source Organisation](Source_Organisation.md#recent-exclusions) owns the editable policy.
 

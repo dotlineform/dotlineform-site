@@ -18,8 +18,6 @@ from docs_build_manifest import (
     BUILD_MANIFEST_FILENAME,
     BUILD_MANIFEST_SCHEMA_VERSION,
 )
-from docs_recent_payload import validate_recent_payload
-from docs_selected_documents import validate_selected_payload
 from docs_public_mermaid_payload import public_mermaid_payload_requires_projection
 from docs_document_images import generated_thumbnail_filename
 from docs_workspace_config import (
@@ -192,30 +190,10 @@ def _flatten_tree(rows: Any, *, parent_id: str = "") -> list[dict[str, Any]]:
     return flattened
 
 
-def _validate_prepared_index(path: Path, data: bytes) -> None:
-    """Retain index shape and identity checks without altering the prepared set."""
+def _validate_collection_manifest(path: Path, data: bytes) -> None:
+    """Retain the collection manifest's existing parsing boundary."""
     parts = path.parts
-    child_index = len(parts) == 4 and parts[0] == "collections" and parts[2] == "documents"
-    if path == Path("search/index.json") or (
-        len(parts) == 4 and parts[0] == "collections" and parts[2:] == ("search", "index.json")
-    ):
-        payload = _read_json_bytes(data, "generated Search payload")
-        if not isinstance(payload.get("docs"), list) or not isinstance(payload.get("terms"), dict):
-            raise RuntimeError("generated Search payload has an unsupported shape")
-        if not isinstance(payload.get("header"), dict) or not isinstance(payload.get("fields"), list):
-            raise RuntimeError("generated Search payload is missing header or fields")
-        if payload["header"].get("schema") != "docs_viewer_search_index_v4":
-            raise RuntimeError("generated Search payload has an unsupported schema")
-        for postings in payload["terms"].values():
-            if not isinstance(postings, dict):
-                raise RuntimeError("generated Search term postings must be objects")
-            if any(not isinstance(indexes, list) for indexes in postings.values()):
-                raise RuntimeError("generated Search postings must be arrays")
-    elif path == Path("documents/recent.json"):
-        validate_recent_payload(_read_json_bytes(data, "saved Recents payload"))
-    elif path == Path("documents/selected.json"):
-        validate_selected_payload(_read_json_bytes(data, "Selected Documents payload"))
-    elif child_index and path.name == "manifest.json":
+    if len(parts) == 4 and parts[0] == "collections" and parts[2:] == ("documents", "manifest.json"):
         payload = _read_json_bytes(data, f"generated {path}")
         if not isinstance(payload.get("docs"), list):
             raise RuntimeError(f"generated {path} is missing docs")
@@ -308,8 +286,9 @@ def build_preview_snapshot_files(
     generated_files: Mapping[Path, bytes],
 ) -> tuple[dict[Path, bytes], dict[str, Any]]:
     index_path = Path("documents/index-tree.json")
-    if index_path not in generated_files:
-        raise FileNotFoundError("generated documents/index-tree.json is missing")
+    for required in (index_path, *sorted(COPIED_WORKING_PAYLOAD_PATHS)):
+        if required not in generated_files:
+            raise FileNotFoundError(f"generated {required.as_posix()} is missing")
     index_tree = _read_json_bytes(generated_files[index_path], "generated index tree")
     # Preparation owns selection. Project every prepared collection and its
     # indexes together, retaining only reader payloads and referenced media.
@@ -317,7 +296,7 @@ def build_preview_snapshot_files(
     files: dict[Path, bytes] = {}
     for relative_path, data in generated_files.items():
         parts = relative_path.parts
-        _validate_prepared_index(relative_path, data)
+        _validate_collection_manifest(relative_path, data)
         if parts and (parts[0] == "media" or (
             len(parts) >= 4 and parts[0] == "collections" and parts[2] == "media"
         )):
@@ -337,23 +316,10 @@ def build_preview_snapshot_files(
         else:
             files[relative_path] = data
 
-    for path, data in files.items():
-        _validate_prepared_index(path, data)
-
     tree_ids = {row["doc_id"] for row in _flatten_tree(index_tree.get("docs"))}
     ordinary_ids = {path.stem for path in files if len(path.parts) == 3 and path.parts[:2] == ("documents", "by-id") and path.suffix == ".json"}
     if tree_ids != ordinary_ids:
         raise ValueError("Prepared index tree and ordinary document set do not match")
-    selected = _read_json_bytes(files[Path("documents/selected.json")], "prepared Selected Documents")
-    hosts = {child.collection: child.report_host_doc_id for child in config.collections}
-    for row in selected["docs"]:
-        child = row.get("collection", "")
-        prefix = Path("collections") / child / "documents" if child else Path("documents")
-        if prefix / "by-id" / f"{row['doc_id']}.json" not in files:
-            raise ValueError("Selected Documents references a document outside the prepared set")
-        if child and (hosts.get(child) != row["report_doc_id"] or row["report_doc_id"] not in ordinary_ids):
-            raise ValueError("Selected Documents requires its exact prepared collection host")
-
     media_references = _referenced_media(config, files)
     bindings = _preview_media_bindings(config)
     asset_references = []

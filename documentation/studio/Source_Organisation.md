@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260423-000000-8fd731
 title: Source Organisation
 added_date: "2026-04-23 00:00:00"
-last_updated: "2026-10-13 17:47:14"
+last_updated: "2026-10-13 18:56:11"
 summary: Working source and generated storage, one read-only Preview snapshot, and exact collection and media ownership.
 parent_id: d-20260424-000000-50b63f
 ---
@@ -115,7 +115,7 @@ Normal Source Save and exact-document Rebuild use already prepared media and per
 
 ### Recent Exclusions
 
-`working/source/documents/recent-exclusions.json` controls every Recent-specific exclusion. It is an editable JSON array of exact targets: ordinary pages use `{ "doc_id": "d-20260426-164043-e14f49" }`; collection documents also name their owner, for example `{ "collection": "works", "doc_id": "d-20260801-212422-df11f3" }`. Use exact configured collection IDs, omit `collection` for ordinary pages, and use `[]` for no exclusions. Duplicate targets, extra fields, invalid identities, missing files and invalid JSON fail visibly. The list may retain valid targets for documents that no longer exist.
+`working/source/documents/recent-exclusions.json` controls every Recent-specific exclusion. It is an editable JSON array of exact targets: ordinary pages use `{ "doc_id": "d-20260426-164043-e14f49" }`; collection documents also name their owner, for example `{ "collection": "works", "doc_id": "d-20260801-212422-df11f3" }`. Use exact configured collection IDs, omit `collection` for ordinary pages, and use `[]` for no exclusions. Duplicate targets collapse into one exact exclusion. Extra fields, invalid identities, missing files and invalid JSON fail visibly. The list may retain valid targets for documents that no longer exist.
 
 Exclusions affect only the named document's Recent membership; descendants, Search, navigation and publication eligibility retain their existing rules. Collection hosts have no automatic exclusion. The initial list contains dotlineform and the Context, Concepts, Moments and Catalogue landing pages. Local Recent exposes **Open Recent exclusions in VS Code**, using an empty-body `/docs/open-recent-exclusions` action that opens only this configured file, including malformed JSON for repair. The file and control are local-only.
 

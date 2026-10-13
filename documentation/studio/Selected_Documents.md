@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260926-204821-7ba18c
 title: Selected Documents
 added_date: "2026-09-26 20:48:21"
-last_updated: "2026-09-30 13:33:18"
+last_updated: "2026-10-13 18:56:11"
 parent_id: d-20260428-000000-f5ff18
 ---
 # Selected Documents
@@ -13,6 +13,8 @@ parent_id: d-20260428-000000-f5ff18
 Every Working document, including each collection sub-document, can be selected through a star control. A selected star is filled yellow. Selection membership belongs to one canonical `working/source/documents/selected.json`; toggling it does not change document Markdown or `last_updated`. The dotlineform document (`d-20260426-164043-e14f49`) hosts a public Selected Documents report listing linked titles by `last_updated DESC`, with exact collection/host routing and deterministic identity ordering for equal dates.
 
 Document builds refresh cached titles and date-only `last_updated` values (`YYYY-MM-DD`) for selected documents. Selection writes project the same date from the document's source update value; source and by-ID document timestamps retain their original precision. Supported document deletion removes every deleted target from the selection list. Working retains drafts and unpublishable selections. Prepare Preview filters against its exact prepared ordinary/collection set, retaining inherited ordinary exclusions and excluded collection-host behavior. Publish copies the prepared `selected.json` unchanged. Search and Recents keep their current lifecycle.
+
+The saved list is parsed without full-list validation. The Star control reads exact membership directly without sorting or auditing all rows. The report consumes completed rows and sorts a copy for presentation, including after committed metadata changes; it adds no schema, identity, title, date or thumbnail/Subject audits. Authored thumbnails still precede Context Work alternatives, and Folder subjects remain omitted. Prepared public selection remains eligibility-owned; subsequent copy/assembly/distribution trust its bytes without repeating Selected-content or prepared-membership agreement checks.
 
 ## Deliverables And Process
 

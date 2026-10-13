@@ -1,4 +1,4 @@
-import { selectedDocumentRows, selectedDocumentThumbnailMetadata } from "../shared/docs-selected-documents.js";
+import { sortSelectedDocumentRows, selectedDocumentThumbnailMetadata } from "../shared/docs-selected-documents.js";
 import { appendCollectionThumbnail, loadCatalogueCollectionThumbnailSettings } from "../shared/docs-collection-browsing.js";
 import { catalogueWorkThumbnail } from "../shared/docs-viewer-catalogue-media.js";
 import { requestUrl } from "../shared/docs-viewer-asset-url.js";
@@ -21,7 +21,7 @@ export async function mountSelectedDocumentsReport(context) {
   if (!context.selectedUrl) throw new Error("Selected Documents data is not configured.");
   const response = await fetch(context.selectedUrl, { headers: { Accept: "application/json" }, cache: "no-cache" });
   if (!response.ok) throw new Error("Failed to load Selected Documents.");
-  let rows = selectedDocumentRows(await response.json());
+  let rows = sortSelectedDocumentRows((await response.json()).docs);
   const thumbnailSettings = rows.some((row) => ["works", "catalogue"].includes(row.collection))
     ? await loadCatalogueCollectionThumbnailSettings(context) : null;
   const thumbnailRevisions = new Map();
@@ -71,7 +71,7 @@ export async function mountSelectedDocumentsReport(context) {
       delete updated.subject;
       return Object.assign(updated, selectedDocumentThumbnailMetadata(change.record, collection));
     });
-    rows = selectedDocumentRows({ schema: "docs_selected_v1", docs: rows });
+    rows = sortSelectedDocumentRows(rows);
     render();
   });
   return true;

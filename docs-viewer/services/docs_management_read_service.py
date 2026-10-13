@@ -15,8 +15,7 @@ import docs_media_metadata
 from docs_management_broken_links_service import read_broken_links
 import docs_unpublishable_report
 from docs_selected_documents import read_selected
-from docs_workspace_config import document_source_path, load_docs_working_config, resolve_workspace_path
-from docs_publication_ignore import WorkingPublicationExclusions, read_publication_ignore_ids
+from docs_workspace_config import load_docs_working_config
 import docs_source_config_settings
 from docs_management_capabilities_service import capabilities_payload
 from docs_management_document_target import managed_document_metadata
@@ -32,32 +31,6 @@ def docs_api_query_value(params: dict[str, list[str]], key: str) -> str:
     return values[0]
 
 
-def read_management_docs_index_tree(repo_root: Path) -> dict[str, object]:
-    """Attach fresh inherited ignore policy to the local index response only.
-
-    Generated/public files and authored draft values remain unchanged. The
-    browser's existing index refresh also observes ignore-list and tree edits.
-    """
-    payload = docs_generated_reads.read_generated_docs_index_tree(repo_root)
-    config = load_docs_working_config(repo_root)
-    exclusions = WorkingPublicationExclusions(
-        resolve_workspace_path(repo_root, document_source_path(config)),
-        read_publication_ignore_ids(repo_root),
-    )
-
-    def project(nodes: object) -> None:
-        if not isinstance(nodes, list):
-            raise ValueError("Management index requires document arrays")
-        for node in nodes:
-            if not isinstance(node, dict):
-                raise ValueError("Management index requires document objects")
-            node["publication_ignored"] = exclusions.excludes(node.get("doc_id"))
-            project(node.get("children", []))
-
-    project(payload.get("docs"))
-    return payload
-
-
 def docs_generated_read_payload(repo_root: Path, path: str, params: dict[str, list[str]]) -> dict[str, object]:
     if "stage" in params:
         raise ValueError("stage is retired from Docs requests")
@@ -70,7 +43,7 @@ def docs_generated_read_payload(repo_root: Path, path: str, params: dict[str, li
 
 
     if path == routes.GENERATED_INDEX_TREE_PATH:
-        return read_management_docs_index_tree(repo_root)
+        return docs_generated_reads.read_generated_docs_index_tree(repo_root)
     if path == routes.GENERATED_RECENT_PATH:
         return docs_generated_reads.read_generated_recent(repo_root)
     if path == routes.GENERATED_SEARCH_PATH:

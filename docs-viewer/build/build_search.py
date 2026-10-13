@@ -14,7 +14,6 @@ import unicodedata
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping
-from urllib.parse import quote
 
 from docs_builder.runtime_bootstrap import (
     add_workspace_arguments,
@@ -39,7 +38,6 @@ from build_docs import (  # noqa: E402
     HTML_MEDIA_TOKEN_PATTERN,
     MEDIA_TOKEN_PATTERN,
 )
-from docs_builder.common import DOCS_INDEX_TREE_SCHEMA_VERSION  # noqa: E402
 from docs_builder.semantic_tokens import replace_semantic_tokens  # noqa: E402
 from docs_builder.source import DocRecord  # noqa: E402
 from docs_builder.summary_directive import omit_summary_directives  # noqa: E402
@@ -47,6 +45,7 @@ from docs_workspace_config import (  # noqa: E402
     DocsCollectionConfig,
     DocsStageConfig,
     load_docs_stage,
+    document_source_path,
     generated_documents_path,
     generated_search_path,
     resolve_workspace_path,
@@ -58,12 +57,16 @@ from docs_document_identity import doc_updated_date, is_immutable_doc_id  # noqa
 from docs_publication_ignore import read_publication_ignore_ids  # noqa: E402
 from docs_report_source import (  # noqa: E402
     ReportDescriptor,
+    ReportSourceContractRequired,
     project_report_markdown,
 )
 from docs_source_model import (  # noqa: E402
     SourceDoc,
-    load_document_collection_docs_for_config,
+    parse_document_report,
+    report_source_contract_for_collection,
 )
+from docs_front_matter import FRONT_MATTER_PATTERN, read_front_matter_fields  # noqa: E402
+from docs_management_document_target import confined_document_path  # noqa: E402
 from markdown_renderer import extract_markdown_search_fields  # noqa: E402
 
 
@@ -102,14 +105,6 @@ def utc_timestamp() -> str:
     return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
 
 
-def normalize_text(value: Any) -> str:
-    return str(value or "").strip()
-
-
-def normalize(value: Any) -> str:
-    return normalize_text(value).lower()
-
-
 def search_records_from_build(
     discovery: DiscoverySelection, documents: dict[str, list[DocRecord]],
 ) -> list[SearchDocRecord]:
@@ -122,27 +117,18 @@ def search_records_from_build(
         for doc_id, row in selected.items():
             doc = source_by_id[doc_id]
             records.append(SearchDocRecord(
-                doc_id=doc_id, title=row["title"] if collection == "catalogue" else normalize_text(row["title"]),
+                doc_id=doc_id, title=row["title"],
                 last_updated=doc.last_updated, parent_id=row["parent_id"] if owner is None else "",
-                summary=normalize_text(doc.front_matter.get("summary")), body_markdown=doc.body_markdown,
+                summary=doc.front_matter.get("summary", ""), body_markdown=doc.body_markdown,
                 report=doc.report, collection=collection,
                 report_doc_id="" if owner is None else owner.report_host_doc_id,
-                collection_title="" if owner is None else normalize_text(owner.title),
+                collection_title="" if owner is None else owner.title,
             ))
     return records
 
 
-def boolean_field(row: dict[str, Any], key: str, default: bool) -> bool:
-    if key not in row:
-        return default
-    value = row[key]
-    if value is True or value is False:
-        return value
-    return str(value or "").strip().lower() not in {"false", "0", "no", "off"}
-
-
-def compact_join(*parts: Any) -> str:
-    return " • ".join(part for part in (normalize_text(value) for value in parts) if part)
+def compact_join(*parts: str) -> str:
+    return " • ".join(part for part in parts if part)
 
 
 def normalize_search_value_v2(value: Any) -> str:
@@ -191,7 +177,7 @@ def build_search_index(
     search_fields: tuple[str, ...],
     generated_at_utc: str | None = None,
 ) -> dict[str, Any]:
-    """Build one stage-independent table/postings, preserving UI-owned Catalogue titles."""
+    """Build one stage-independent table/postings from completed display metadata."""
     doc_fields = (
         "id",
         "title",
@@ -206,48 +192,15 @@ def build_search_index(
     ordered_documents = sorted(
         documents,
         key=lambda document: (
-            normalize(document.get("id")),
-            normalize(document.get("collection")),
-            normalize(document.get("report_doc_id")),
+            document["id"],
+            document.get("collection", ""),
+            document.get("report_doc_id", ""),
         ),
     )
-    docs = []
-    for document in ordered_documents:
-        row = {}
-        for key in doc_fields:
-            if key == "title" and document.get("collection") == "catalogue":
-                title = document[key]
-                if not isinstance(title, str):
-                    raise ValueError("Catalogue Search title must be a string")
-                row[key] = title
-            else:
-                text = normalize_text(document.get(key))
-                if text:
-                    row[key] = text
-        docs.append(row)
-    document_targets = [
-        (
-            normalize_text(document.get("collection")),
-            normalize_text(document.get("id")),
-        )
-        for document in docs
+    docs = [
+        {key: document[key] for key in doc_fields if key in document and (document[key] or key == "title")}
+        for document in ordered_documents
     ]
-    if (
-        any(not doc_id for _collection, doc_id in document_targets)
-        or len(document_targets) != len(set(document_targets))
-    ):
-        raise ValueError("Search documents require unique non-empty exact targets")
-    if any(document.get("collection") != "catalogue" and not normalize_text(document.get("title")) for document in docs):
-        raise ValueError("Search documents require title")
-    for document in docs:
-        collection = normalize_text(document.get("collection"))
-        if collection and (
-            not normalize_text(document.get("report_doc_id"))
-            or not normalize_text(document.get("collection_title"))
-        ):
-            raise ValueError(
-                "Collection search documents require report_doc_id and collection_title"
-            )
 
     postings: dict[str, dict[str, set[int]]] = {}
     for position, document in enumerate(ordered_documents):
@@ -349,7 +302,7 @@ class DocsViewerSearchDataBuilder:
         """Return the complete payload and structured write/skip diagnostics.
 
         Prepared records come from the complete Working owner; standalone
-        execution reads and validates its required saved inputs itself.
+        execution consumes saved metadata and reads its required selected sources.
         """
         payload = self.build_docs_v2_payload(documents=documents)
         return self.write_payload(payload, write=write, force=force)
@@ -363,61 +316,61 @@ class DocsViewerSearchDataBuilder:
         """Read current Working tree metadata through the shared eligibility owner."""
         path = resolve_workspace_path(self.repo_root, generated_documents_path(self.config)) / "index-tree.json"
         tree = read_discovery_metadata(path)
-        if tree.get("schema") != DOCS_INDEX_TREE_SCHEMA_VERSION:
-            raise ValueError(f"Docs Viewer search requires {DOCS_INDEX_TREE_SCHEMA_VERSION}: {path}")
-        return select_ordinary_documents(tree["docs"], ignored_ids, field=str(path))
+        return select_ordinary_documents(tree["docs"], ignored_ids)
 
     def load_selected_sources(
         self, config: DocsStageConfig | DocsCollectionConfig, selected: dict[str, dict[str, Any]],
     ) -> dict[str, SourceDoc]:
-        """Load exact selected IDs and fail on missing or stale selected sources.
-
-        The shared filename loader omits deleted files. Search
-        requires every selected file and does not infer replacements or scan.
-        """
+        """Read exact selected source content without generated-data agreement audits."""
         if not selected:
             return {}
-        sources = load_document_collection_docs_for_config(
-            self.repo_root, self.config, config,
-            filenames=[f"{doc_id}.md" for doc_id in selected],
-        )
-        source_by_id = {document.doc_id: document for document in sources}
+        root = resolve_workspace_path(self.repo_root, document_source_path(config)).resolve()
+        collection = getattr(config, "collection", "")
+        sources = {}
+        report_contract = None
         for doc_id, row in selected.items():
-            document = source_by_id.get(doc_id)
-            target = f"working/{getattr(config, 'collection', 'documents')}/{doc_id}"
-            if document is None:
-                raise ValueError(f"Search selected document has no source: {target}")
-            if (
-                document.front_matter.get("doc_id") != doc_id
-                or normalize_text(document.title) != normalize_text(row["title"])
-                or (
-                    getattr(config, "collection", "") != "catalogue"
-                    and document.front_matter["draft"] is not False
+            path = confined_document_path(root, doc_id)
+            source_text = path.read_bytes().decode("utf-8")
+            header = FRONT_MATTER_PATTERN.match(source_text)
+            if header is None:
+                raise ValueError(f"Search source front matter could not be parsed in {path.name}")
+            metadata = {
+                field.key: field.value
+                for field in read_front_matter_fields(header.group(1), source_name=path.name)
+            }
+            if metadata["doc_id"] != doc_id:
+                raise ValueError(f"Search source identity does not match its selected filename: {path.name}")
+            body = source_text[header.end():]
+            try:
+                report = parse_document_report(
+                    source_text, metadata, body, source_name=path.name, contract=report_contract,
                 )
-            ):
-                raise ValueError(f"Search metadata and source identity, title or draft are stale: {target}")
-            if isinstance(config, DocsStageConfig) and document.parent_id != row["parent_id"]:
-                raise ValueError(f"Search tree and source parent_id are stale: {target}")
-        return source_by_id
+            except ReportSourceContractRequired:
+                report_contract = report_source_contract_for_collection(self.repo_root, self.config, config)
+                report = parse_document_report(
+                    source_text, metadata, body, source_name=path.name, contract=report_contract,
+                )
+            sources[doc_id] = SourceDoc(
+                path=path, source_text=source_text, front_matter=metadata, body=body,
+                doc_id=doc_id, title=row["title"], ui_status="",
+                parent_id=row["parent_id"] if not collection else "", report=report,
+            )
+        return sources
 
     def load_source_docs(self, selected: dict[str, dict[str, Any]]) -> list[SearchDocRecord]:
         source_by_id = self.load_selected_sources(self.config, selected)
         return [
             SearchDocRecord(
                 doc_id=doc_id,
-                title=normalize_text(row["title"]),
-                last_updated=normalize_text(source_by_id[doc_id].front_matter.get("last_updated")),
+                title=row["title"],
+                last_updated=source_by_id[doc_id].front_matter.get("last_updated", ""),
                 parent_id=row["parent_id"],
-                summary=normalize_text(source_by_id[doc_id].front_matter.get("summary")),
+                summary=source_by_id[doc_id].front_matter.get("summary", ""),
                 body_markdown=source_by_id[doc_id].body,
                 report=source_by_id[doc_id].report,
             )
             for doc_id, row in selected.items()
         ]
-
-    def viewer_url_for(self, doc_id: str) -> str:
-        """Resolve generated by-ID input URLs for source/output consistency checks."""
-        return f"/docs/?doc={quote(str(doc_id))}"
 
     def build_docs_v2_payload(
         self,
@@ -435,7 +388,7 @@ class DocsViewerSearchDataBuilder:
         title_by_id = {doc.doc_id: doc.title for doc in documents if not doc.collection}
         records: list[dict[str, Any]] = []
         for doc in documents:
-            parent_title = "" if not doc.parent_id else normalize_text(title_by_id.get(doc.parent_id))
+            parent_title = "" if not doc.parent_id else title_by_id.get(doc.parent_id, "")
             updated_date = doc_updated_date(doc.last_updated)
             record: dict[str, Any] = {
                 "id": doc.doc_id,
@@ -477,70 +430,21 @@ class DocsViewerSearchDataBuilder:
         )
 
     def load_named_collection_docs(
-        self,
-        collection: DocsCollectionConfig,
-        selected: dict[str, dict[str, Any]],
+        self, collection: DocsCollectionConfig, selected: dict[str, dict[str, Any]],
     ) -> list[SearchDocRecord]:
-        """Retain selected subdoc source/manifest/by-ID consistency before indexing."""
-        output_root = resolve_workspace_path(
-            self.repo_root,
-            generated_documents_path(collection),
-        )
+        """Consume selected manifest metadata and required source content."""
         source_by_id = self.load_selected_sources(collection, selected)
-        report_doc_id = collection.report_host_doc_id
-        collection_title = normalize_text(collection.title)
-        records: list[SearchDocRecord] = []
-        for doc_id, row in selected.items():
-            title = row["title"] if collection.collection == "catalogue" else normalize_text(row["title"])
-            source_doc = source_by_id[doc_id]
-            by_id_path = output_root / "by-id" / f"{doc_id}.json"
-            try:
-                by_id = json.loads(by_id_path.read_text(encoding="utf-8"))
-            except (OSError, ValueError) as exc:
-                raise ValueError(
-                    f"Docs Viewer search requires readable collection by-id payload: {by_id_path}"
-                ) from exc
-            if not isinstance(by_id, dict):
-                raise ValueError(f"collection by-id payload must be an object: {by_id_path}")
-
-            by_id_title = by_id.get("title") if collection.collection == "catalogue" else normalize_text(by_id.get("title"))
-            if title != by_id_title:
-                raise ValueError(
-                    f"collection manifest, source, and by-id titles must match for "
-                    f"{self.config.stage}/{collection.collection}/{doc_id}"
-                )
-            if (
-                by_id.get("doc_id") != doc_id
-                or "viewer_url" in by_id
-            ):
-                raise ValueError(
-                    f"collection by-id identity or location payload is stale for "
-                    f"{self.config.stage}/{collection.collection}/{doc_id}"
-                )
-            last_updated = normalize_text(by_id.get("last_updated"))
-            if (
-                last_updated != normalize_text(source_doc.front_matter.get("last_updated"))
-                or doc_updated_date(last_updated) != row["last_updated"]
-            ):
-                raise ValueError(
-                    f"source/by-id update values and projected manifest date must agree for "
-                    f"{self.config.stage}/{collection.collection}/{doc_id}"
-                )
-            records.append(
-                SearchDocRecord(
-                    doc_id=doc_id,
-                    title=title,
-                    last_updated=last_updated,
-                    parent_id="",
-                    summary=normalize_text(source_doc.front_matter.get("summary")),
-                    body_markdown=source_doc.body,
-                    report=source_doc.report,
-                    collection=collection.collection,
-                    report_doc_id=report_doc_id,
-                    collection_title=collection_title,
-                )
+        return [
+            SearchDocRecord(
+                doc_id=doc_id, title=row["title"],
+                last_updated=source_by_id[doc_id].front_matter.get("last_updated", ""),
+                parent_id="", summary=source_by_id[doc_id].front_matter.get("summary", ""),
+                body_markdown=source_by_id[doc_id].body, report=source_by_id[doc_id].report,
+                collection=collection.collection, report_doc_id=collection.report_host_doc_id,
+                collection_title=collection.title,
             )
-        return records
+            for doc_id, row in selected.items()
+        ]
 
     def searchable_markdown(self, doc: SearchDocRecord) -> str:
         markdown = project_report_markdown(
@@ -602,7 +506,7 @@ class DocsViewerSearchDataBuilder:
         except json.JSONDecodeError:
             return None
         header = payload.get("header") if isinstance(payload, dict) else None
-        return normalize_text(header.get("version")) if isinstance(header, dict) else None
+        return header.get("version") if isinstance(header, dict) else None
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build Docs Viewer search indexes.")

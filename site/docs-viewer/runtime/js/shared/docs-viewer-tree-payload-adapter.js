@@ -27,12 +27,6 @@ function normalizeTreeDoc(row, parentId, depth, treeOrder) {
   var reportId = optionalStringRecordValue(row, "report_id");
   if (parentId) doc.parent_id = parentId;
   if (typeof row.draft === "boolean") doc.draft = row.draft;
-  if (Object.prototype.hasOwnProperty.call(row, "publication_ignored")) {
-    if (typeof row.publication_ignored !== "boolean") {
-      throw new Error("Management publication exclusion must be a boolean.");
-    }
-    doc.publication_ignored = row.publication_ignored;
-  }
   if (uiStatus) doc.ui_status = uiStatus;
   if (reportId) doc.report_id = reportId;
   return doc;
@@ -49,40 +43,6 @@ function flattenTreeDocs(rows, parentId, docs, depth) {
   return docs;
 }
 
-function normalizeRecentDoc(row) {
-  if (!row || typeof row !== "object" || Array.isArray(row)) return null;
-  var docId = cleanString(row.doc_id);
-  var catalogue = row.collection === "catalogue";
-  if (catalogue && typeof row.title !== "string") throw new Error("Recent Catalogue title must be a string.");
-  var title = catalogue ? row.title : cleanString(row.title);
-  var timestamp = cleanString(row.timestamp);
-  if (!docId || (!catalogue && !title) || !timestamp) return null;
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(timestamp)) {
-    throw new Error("Recent document updates must be calendar dates.");
-  }
-  var doc = {
-    doc_id: docId,
-    title: title,
-    timestamp: timestamp
-  };
-  var parentId = optionalStringRecordValue(row, "parent_id");
-  var parentTitle = optionalStringRecordValue(row, "parent_title");
-  if (parentId) doc.parent_id = parentId;
-  if (parentTitle) doc.parent_title = parentTitle;
-  var collection = optionalStringRecordValue(row, "collection");
-  if (collection) {
-    var reportDocId = optionalStringRecordValue(row, "report_doc_id");
-    var collectionTitle = optionalStringRecordValue(row, "collection_title");
-    if (!reportDocId || !collectionTitle) {
-      throw new Error("Recent child requires report_doc_id and collection_title.");
-    }
-    doc.collection = collection;
-    doc.report_doc_id = reportDocId;
-    doc.collection_title = collectionTitle;
-  }
-  return doc;
-}
-
 export function normalizeDocsIndexTreePayload(payload) {
   if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
     throw new Error("Docs index tree payload must be a JSON object.");
@@ -97,25 +57,5 @@ export function normalizeDocsIndexTreePayload(payload) {
     schema: "docs_index_tree_v1",
     generated_at: cleanString(payload.generated_at),
     docs: flattenTreeDocs(payload.docs, "", [], 0)
-  };
-}
-
-export function normalizeRecentPayload(payload) {
-  if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
-    throw new Error("Recent docs payload must be a JSON object.");
-  }
-  if (cleanString(payload.schema) !== "docs_recent_v2"
-    || Object.keys(payload).sort().join() !== "docs,generated_at,limit,schema") {
-    throw new Error("Recent docs payload has an unsupported schema.");
-  }
-  if (!Array.isArray(payload.docs)) {
-    throw new Error("Recent docs payload requires docs array.");
-  }
-  var limit = parseInt(payload.limit, 10);
-  return {
-    schema: "docs_recent_v2",
-    generated_at: cleanString(payload.generated_at),
-    limit: limit > 0 ? limit : payload.docs.length,
-    docs: payload.docs.map(normalizeRecentDoc).filter(Boolean)
   };
 }

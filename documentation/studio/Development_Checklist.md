@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260523-190651-7157ec
 title: Development Checklist
 added_date: "2026-05-23 19:06:51"
-last_updated: "2026-10-13 18:37:00"
+last_updated: "2026-10-13 18:56:11"
 parent_id: d-20260419-000000-d2e47b
 
 ---
@@ -32,6 +32,8 @@ This checklist and the durable Studio development documentation are maintained d
 ## Ownership Gates
 
 ### User-Visible Operation Ordering
+
+- [ ] Search/Recent discovery consumes saved or completed metadata through one selector, retaining configured coverage and actual draft/subtree/host pruning without row/schema/title/date/readiness audits. Standalone Search reads only required selected source content through confined front-matter/report parsing; keep collection by-ID reads, canonical ancestry rereads, general source-model checks and source/generated agreement audits out of this path. Preserve supplied display metadata and normalize only indexed terms. Construct Recent rows without input/output audits; Recent-specific exclusions use exact-target set semantics. Index reads add no obsolete publication-policy flags. Browser Recent/Selected consume saved rows directly; Selected report ordering is presentation-only and Star reads exact membership without sorting. Publication trusts copied discovery payloads without schema/content or Selected-membership audits, retaining required files, path confinement and byte verification. [Generated Data Contracts](Generated_Data_Contracts.md) owns current payload handoffs; whole-corpus eligibility/queues remain with Incremental Document Publish.
 
 - [ ] Insert doc link makes one parameter-free lookup on opening and consumes the service's exact records for local filtering, selection and insertion. Discovery selects ordinary Index IDs and flat collection children, confines/reads each selected source once and parses front-matter fields without Subject/model/readiness validation or a preliminary recursive audit. Consume stored titles without coercion/completeness/fallback and retain source-filename agreement, canonical route identity/encoding, escaped presentation and captured-buffer guards. Keep browser response audits, unused collection-target plumbing and publication-eligibility warnings out of this picker; Broken Links owns explicit destination diagnosis. [Source Editor Endpoints](Source_Editor_Endpoints.md#get-docsdocument-link-targets) owns discovery and insertion.
 

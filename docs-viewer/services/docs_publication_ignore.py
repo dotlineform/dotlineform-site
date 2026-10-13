@@ -1,11 +1,9 @@
 """Read the workspace's exact Working ordinary-document exclusion list."""
 
 from pathlib import Path
-from collections.abc import Mapping
 import json
 
 from docs_document_identity import is_immutable_doc_id
-from docs_index_order import read_index_order, tree_parent_ids
 from docs_workspace_config import DocsStageConfig, document_source_path, load_docs_stage, resolve_workspace_path
 
 
@@ -40,28 +38,3 @@ def working_ignored_doc_ids(repo_root: Path, config: DocsStageConfig) -> frozens
     if config.stage != "working":
         return frozenset()
     return read_publication_ignore_ids(repo_root, config=config)
-
-
-class WorkingPublicationExclusions:
-    """Resolve ordinary ignore-list ancestry from the authored tree."""
-
-    def __init__(self, source_root: Path, ignored_ids: frozenset[str], parents: Mapping[str, str] | None = None):
-        self.source_root = source_root
-        self.parents = dict(parents) if parents is not None else tree_parent_ids(read_index_order(source_root))
-        self.excluded = dict.fromkeys(ignored_ids, True)
-
-    def excludes(self, doc_id: str) -> bool:
-        if not is_immutable_doc_id(doc_id):
-            raise ValueError("Working publication ancestry requires immutable document IDs")
-        ancestors: set[str] = set()
-        current = doc_id
-        while current and current not in self.excluded:
-            if not is_immutable_doc_id(current):
-                raise ValueError("Working publication ancestry requires immutable document IDs")
-            if current in ancestors:
-                raise ValueError(f"Working publication ancestry contains a cycle at {current}")
-            ancestors.add(current)
-            current = self.parents.get(current, "")
-        excluded = self.excluded.get(current, False)
-        self.excluded.update(dict.fromkeys(ancestors, excluded))
-        return excluded

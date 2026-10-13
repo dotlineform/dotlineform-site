@@ -41,8 +41,6 @@ def parse_recent_exclusions(data: bytes, config: DocsStageConfig) -> frozenset[t
         if not isinstance(doc_id, str) or not is_document_id(doc_id, collection=collection) or doc_id != doc_id.strip():
             raise ValueError("Recent exclusions require exact document identities")
         target = (collection, doc_id)
-        if target in targets:
-            raise ValueError("Recent exclusions contain a duplicate document target")
         targets.add(target)
     return frozenset(targets)
 

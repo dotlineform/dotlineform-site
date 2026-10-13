@@ -34,7 +34,7 @@ from docs_workspace_config import (
     public_documents_path,
     public_search_path,
 )
-from docs_preview_snapshot import CompletedPreview, COPIED_WORKING_PAYLOAD_PATHS, _validate_prepared_index
+from docs_preview_snapshot import CompletedPreview, COPIED_WORKING_PAYLOAD_PATHS
 from docs_publication_payloads import project_public_view
 from docs_catalogue_artifacts import load_catalogue_artifact_inventory, select_catalogue_artifacts
 
@@ -333,9 +333,7 @@ def accepted_document_collections(
             parent_prefix,
         )
     )
-    _validate_prepared_index(recent_path, published_files[recent_path])
     parent_files[Path("recent.json")] = published_files[recent_path]
-    _validate_prepared_index(selected_path, published_files[selected_path])
     parent_files[Path("selected.json")] = published_files[selected_path]
     for relative_path, data in published_files.items():
         if (
@@ -390,7 +388,6 @@ def accepted_document_collections(
             f"accepted collection manifest {collection.collection}",
         )
     search_index = published_files[search_path]
-    _validate_prepared_index(search_path, search_index)
     document_ids = _validate_complete_document_set(
         parent_doc_ids,
         collection_files,

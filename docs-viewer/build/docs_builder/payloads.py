@@ -165,7 +165,7 @@ class PayloadBuilderMixin:
         if self.config.stage != "working":
             raise ValueError("Recents generation requires Working; Preview copies the prepared payload")
         selected = discovery.ordinary if discovery is not None else select_ordinary_documents(
-            tree, read_publication_ignore_ids(self.repo_root, config=self.config), field="Working Recents tree",
+            tree, read_publication_ignore_ids(self.repo_root, config=self.config),
         )
         eligible_docs = [doc for doc in docs if doc.doc_id in selected]
         title_by_id = {doc.doc_id: doc.title for doc in eligible_docs}
@@ -177,8 +177,8 @@ class PayloadBuilderMixin:
             for doc_id, child in children.items():
                 rows.append({
                     "doc_id": doc_id,
-                    "title": child["title"] if collection.collection == "catalogue" else child["title"].strip(),
-                    "last_updated": child["last_updated"].strip(),
+                    "title": child["title"],
+                    "last_updated": child["last_updated"],
                     "collection": collection.collection,
                     "report_doc_id": collection.report_host_doc_id,
                     "collection_title": collection.title,

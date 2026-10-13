@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-d06f35
 title: Generated Read Endpoints
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-11 00:00:00"
+last_updated: "2026-10-13 18:56:11"
 parent_id: d-20260607-222033-647b52
 ---
 # Docs Viewer Generated Read Endpoints
@@ -20,7 +20,7 @@ Endpoints:
 GET /docs/index-tree
 ```
 
-Returned data: Working's generated `index-tree.json` with current server-owned `publication_ignored` values added to nodes for management controls. Root fields are `generated_at`, `schema` and `docs`. There is no `viewer_options` or browser subtree/loadability policy.
+Returned data: Working's saved generated `index-tree.json`, with root fields `generated_at`, `schema` and `docs`. The reader does not load publication policy or canonical ancestry and adds no publication-exclusion fields. Draft action availability remains frontend-owned, independently of publication eligibility.
 
 Payload shape:
 
@@ -33,8 +33,7 @@ Payload shape:
       "doc_id": "d-20260424-000000-50b63f",
       "title": "Docs Viewer",
       "content_url": "/docs/doc?doc_id=d-20260424-000000-50b63f",
-      "draft": false,
-      "publication_ignored": false
+      "draft": false
     }
   ]
 }

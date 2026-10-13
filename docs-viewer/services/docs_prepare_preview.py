@@ -17,7 +17,7 @@ from docs_workspace_config import (
 )
 from docs_preview_snapshot import (
     CompletedPreview,
-    _files_from_root, _lifecycle_root, _validate_generated_manifest, _validate_prepared_index, files_revision,
+    _files_from_root, _lifecycle_root, _validate_generated_manifest, files_revision,
     build_preview_snapshot_files, write_preview_snapshot,
 )
 from docs_source_model import SourceDoc, format_source, load_document_collection_docs_for_config, write_bytes_atomic
@@ -82,7 +82,6 @@ def _capture_inputs(repo_root: Path, catalogue_selection: dict[str, list[str]]) 
     if search_path.is_symlink() or not search_path.is_file():
         raise FileNotFoundError("Working Search index is unavailable; rebuild Search in Working before preparing Preview")
     search_index = search_path.read_bytes()
-    _validate_prepared_index(Path("search/index.json"), search_index)
     workspace = load_docs_workspace_config(repo_root)
     links_root = generated_documents_path(working) / "links-by-id"
     if links_root.is_symlink():
