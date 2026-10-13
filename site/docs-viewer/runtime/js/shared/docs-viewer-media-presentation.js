@@ -89,18 +89,11 @@ function normalizeWorkPresentation(value) {
 
   var metadata = normalizedMetadata(value.metadata);
   if (value.series !== undefined) throw new Error("Media View Series links are unsupported.");
-  var galleryIds = new Set();
   var galleries = value.galleries;
   if (!Array.isArray(galleries)) throw new Error("Media View requires an array of Gallery links.");
-  var reachedSeriesLinks = false;
   galleries = galleries.map(function (entry) {
     var target = normalizeDocsViewerCatalogueGroupTarget(entry && entry.target);
-    if (target.kind !== "catalogue-gallery" || galleryIds.has(target.id)) throw new Error("Media View Gallery links are invalid or duplicated.");
-    if (entry.relation !== "direct" && entry.relation !== "series") throw new Error("Media View Gallery relation is invalid.");
-    if (entry.relation === "direct" && reachedSeriesLinks) throw new Error("Media View direct Galleries must precede Series links.");
-    if (entry.relation === "series") reachedSeriesLinks = true;
-    galleryIds.add(target.id);
-    return Object.freeze({ target: target, label: normalizedTextField(entry.label, "a Gallery label"), relation: entry.relation });
+    return Object.freeze({ target: target, label: suppliedTextField(entry.label, "Gallery title"), relation: entry.relation });
   });
 
   var newTabTarget = docsViewerSafeMediaTarget(value.new_tab_target);
@@ -171,7 +164,6 @@ export function normalizeDocsViewerMediaPresentation(value) {
   if (!source || !Array.isArray(source.members)) {
     throw new Error("Media View requires a gallery with supplied members.");
   }
-  var ids = new Set();
   var members = source.members.map(function (entry) {
     if (!entry || typeof entry !== "object") throw new Error("Media View requires a gallery member.");
     var work = Object.prototype.hasOwnProperty.call(entry, "work") ? normalizeWorkPresentation(entry.work) : null;
@@ -180,15 +172,13 @@ export function normalizeDocsViewerMediaPresentation(value) {
     if (!target || target.kind !== "catalogue-work" || typeof target.id !== "string" || !/^\d{5}$/.test(target.id)) {
       throw new Error("Media View gallery members require an exact Catalogue Work target.");
     }
-    if (ids.has(target.id)) throw new Error("Media View gallery has a duplicate Work target.");
-    ids.add(target.id);
     return Object.freeze({ target: Object.freeze({ kind: target.kind, id: target.id }),
       label: work ? work.label : suppliedTextField(entry.label, "Work title"),
       work: work, thumbnail: normalizeThumbnail(entry.thumbnail) });
   });
   var gallery = Object.freeze({
     target: normalizeDocsViewerCatalogueGroupTarget(source.target),
-    label: normalizedTextField(source.label, "a gallery label"),
+    label: suppliedTextField(source.label, "Gallery title"),
     metadata: normalizedMetadata(source.metadata === undefined ? [] : source.metadata),
     members: Object.freeze(members),
     newTabTarget: ""

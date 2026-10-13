@@ -14,9 +14,6 @@ from urllib.parse import quote, urlsplit
 from docs_artifact_locations import ArtifactLocation
 
 from studio.services.catalogue.catalogue_output_paths import catalogue_workspace_config, catalogue_output_workspace, output_path
-from studio.services.catalogue.catalogue_compact_indexes import validate_compact_index
-from studio.services.catalogue.catalogue_gallery_records import validate_gallery_record
-from studio.services.catalogue.catalogue_series_galleries_index import validate_catalogue_series_galleries_index
 
 
 def _read_generated(repo_root: Path, relative: str, *, workspace: ArtifactLocation | None = None) -> dict[str, Any]:
@@ -103,7 +100,7 @@ def read_catalogue_work_index(repo_root: Path, *, workspace: ArtifactLocation | 
 
 def read_catalogue_series_galleries_index(repo_root: Path) -> dict[str, Any]:
     """Read the exact generated Series relevance map, including empty Series."""
-    return validate_catalogue_series_galleries_index(_read_generated(repo_root, "series-galleries-index.json"))
+    return _read_generated(repo_root, "series-galleries-index.json")
 
 
 def read_catalogue_media_targets(repo_root: Path) -> dict[str, Any]:
@@ -115,11 +112,11 @@ def read_catalogue_media_targets(repo_root: Path) -> dict[str, Any]:
             "title": work["title"],
             "meta": [],
         })
-    galleries = validate_compact_index(_read_generated(repo_root, "galleries/galleries_index.json"), family="galleries")["galleries"]
+    galleries = _read_generated(repo_root, "galleries/galleries_index.json")["galleries"]
     for gallery_id, record in galleries.items():
         targets.append({
             "family": "catalogue", "target_type": "gallery", "target_id": gallery_id,
-            "title": record["title"].strip(), "meta": [],
+            "title": record["title"], "meta": [],
         })
     return {"ok": True, "schema_version": "docs_semantic_token_target_lookup_v2", "targets": targets}
 
@@ -132,7 +129,7 @@ def read_catalogue_work(repo_root: Path, work_id: str, *, workspace: ArtifactLoc
 def read_catalogue_gallery(repo_root: Path, gallery_id: str) -> dict[str, Any]:
     """Read one exact Gallery and its ordered Work references without member reads."""
     gallery_id = _gallery_identity(gallery_id)
-    return validate_gallery_record(_read_generated(repo_root, f"galleries/index/{gallery_id}.json"), gallery_id=gallery_id)
+    return _read_generated(repo_root, f"galleries/index/{gallery_id}.json")
 
 
 def local_catalogue_media_config(repo_root: Path) -> dict[str, Any]:

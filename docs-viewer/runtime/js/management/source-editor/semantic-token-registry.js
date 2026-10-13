@@ -57,7 +57,7 @@ export function normalizeSemanticTokenRegistry(payload) {
 export function loadSemanticTokenRegistry(options = {}) {
   var fetchImpl = typeof options.fetch === "function" ? options.fetch : window.fetch.bind(window);
   var url = cleanString(options.url) || "/docs-viewer/config/semantic-tokens/registry.json";
-  return fetchImpl(url, { cache: "no-store" })
+  return fetchImpl(url, { cache: "no-cache" })
     .then(function (response) {
       if (!response || !response.ok) throw new Error("Semantic token registry is unavailable.");
       return response.json();

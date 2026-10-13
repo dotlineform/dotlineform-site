@@ -35,14 +35,12 @@ function normalizeTarget(record, registry) {
   var family = cleanString(row.family);
   var targetType = cleanString(row.target_type);
   var targetId = cleanString(row.target_id);
-  var isCatalogueWork = family === "catalogue" && targetType === "work";
-  if (isCatalogueWork && typeof row.title !== "string") throw new Error("Catalogue Work title must be a string.");
-  var title = isCatalogueWork ? row.title : cleanString(row.title);
+  if (typeof row.title !== "string") throw new Error("Catalogue target title must be a string.");
+  var title = row.title;
   var familyDefinition = registry && registry.familiesById
     ? registry.familiesById.get(family)
     : null;
-  if (!familyDefinition || !familyDefinition.targetTypesById.has(targetType) || !targetId
-    || (!isCatalogueWork && !title)) return null;
+  if (!familyDefinition || !familyDefinition.targetTypesById.has(targetType) || !targetId) return null;
   var titleNorm = normalizeSearchText(title);
   var targetIdNorm = normalizeIdentityToken(normalizeSearchText(targetId));
   var targetTypeNorm = normalizeSearchText(targetType);

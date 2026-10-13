@@ -1,4 +1,4 @@
-import { docsViewerSafeMediaTarget, normalizeDocsViewerMediaPresentation, normalizeDocsViewerCatalogueGroupTarget } from "./docs-viewer-media-presentation.js";
+import { docsViewerSafeMediaTarget, normalizeDocsViewerCatalogueGroupTarget } from "./docs-viewer-media-presentation.js";
 import { catalogueImageCandidates, catalogueThumbnailSettings } from "./docs-viewer-catalogue-media-policy.js";
 
 /** Work image targets use only the exact five-digit Catalogue Work identity. */
@@ -24,11 +24,6 @@ function workRecord(payload, workId) {
   return work;
 }
 
-function exactSeriesId(value) {
-  return typeof value === "string" && (/^\d{3,}$/.test(value)
-    || (!/^\d+$/.test(value) && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value)));
-}
-
 export function catalogueGalleryTarget(galleryId) {
   return normalizeDocsViewerCatalogueGroupTarget({ kind: "catalogue-gallery", id: galleryId });
 }
@@ -36,31 +31,9 @@ export function catalogueGalleryTarget(galleryId) {
 function galleryRecord(payload, galleryId) {
   catalogueGalleryTarget(galleryId);
   var gallery = payload && payload.gallery;
-  var header = payload && payload.header;
-  var headerKeys = header && typeof header === "object" && !Array.isArray(header) ? Object.keys(header) : [];
-  if (!gallery || gallery.gallery_id !== galleryId || headerKeys.length !== 3
-    || !headerKeys.includes("schema") || !headerKeys.includes("generated_at_utc") || !headerKeys.includes("gallery_id")
-    || header.gallery_id !== galleryId || header.schema !== "gallery_record_v3"
-    || typeof header.generated_at_utc !== "string" || !header.generated_at_utc.trim()) {
+  if (!gallery || gallery.gallery_id !== galleryId) {
     throw new Error("Catalogue data does not match the selected Gallery.");
   }
-  if (typeof gallery.title !== "string" || !gallery.title.trim()) throw new Error("Catalogue Gallery title is unavailable.");
-  if (!Array.isArray(payload.member_works)) {
-    throw new Error("Catalogue Gallery membership is unavailable.");
-  }
-  var previousId = "";
-  payload.member_works.forEach(function (member) {
-    var keys = member && typeof member === "object" && !Array.isArray(member) ? Object.keys(member) : [];
-    if (keys.length !== 2 || !keys.includes("work_id") || !keys.includes("title")) {
-      throw new Error("Catalogue Gallery member requires exactly Work ID and title.");
-    }
-    if (typeof member.title !== "string") {
-      throw new Error("Catalogue member Work title must be a string.");
-    }
-    var target = catalogueMediaTarget(member.work_id);
-    if (target.id <= previousId) throw new Error("Catalogue Gallery Works must be distinct and in ascending ID order.");
-    previousId = target.id;
-  });
   return gallery;
 }
 
@@ -94,7 +67,6 @@ function groupMediaPresentation(payload, target, title, metadata, mediaPolicy, t
           thumbnail: catalogueWorkThumbnail(member.work_id, member.title, thumbnailSettings) };
       }) }
   };
-  normalizeDocsViewerMediaPresentation(presentation);
   return presentation;
 }
 
@@ -114,20 +86,14 @@ export function catalogueWorkMediaPresentation(payload, workId, mediaPolicy, ser
     metadata.push({ label: "Dimensions", value: dimensions.join(" × ") + " cm" });
   }
   metadata.push({ label: "Catalogue number", value: workId });
-  if (!Array.isArray(work.galleries)) throw new Error("Catalogue Work Gallery memberships are unavailable.");
   var directGalleries = work.galleries.map(function (gallery) {
-    if (!gallery || typeof gallery.title !== "string" || !gallery.title.trim()) throw new Error("Catalogue Gallery title is unavailable.");
     return { target: catalogueGalleryTarget(gallery.gallery_id), label: gallery.title, relation: "direct" };
   });
   var seenGalleryIds = new Set(directGalleries.map(function (gallery) { return gallery.target.id; }));
   var seriesGalleries = [];
   if (Object.prototype.hasOwnProperty.call(work, "series_id")) {
     var seriesId = work.series_id;
-    if (!exactSeriesId(seriesId)) throw new Error("Catalogue Work Series identity is invalid.");
-    var mapping = validateCatalogueSeriesGalleriesIndex(seriesGalleriesIndex).series_galleries;
-    if (!Object.prototype.hasOwnProperty.call(mapping, seriesId)) {
-      throw new Error("Catalogue Series-Gallery index has no entry for Series " + seriesId + ".");
-    }
+    var mapping = seriesGalleriesIndex.series_galleries;
     seriesGalleries = mapping[seriesId].flatMap(function (gallery) {
       if (seenGalleryIds.has(gallery.gallery_id)) return [];
       seenGalleryIds.add(gallery.gallery_id);
@@ -144,13 +110,12 @@ export function catalogueWorkMediaPresentation(payload, workId, mediaPolicy, ser
     galleries: directGalleries.concat(seriesGalleries),
     new_tab_target: image.largest
   };
-  normalizeDocsViewerMediaPresentation(presentation);
   return presentation;
 }
 
 export async function readCatalogueWorkMediaPresentation(provider, workId) {
   var [payload, policy] = await Promise.all([provider.readCatalogueWork(workId), provider.readCatalogueMediaConfig()]);
-  var work = workRecord(payload, workId);
+  var work = payload.work;
   var index;
   if (Object.prototype.hasOwnProperty.call(work, "series_id")) {
     if (typeof provider.readCatalogueSeriesGalleries !== "function") {
@@ -167,9 +132,7 @@ export async function readPublicCatalogueWork(baseUrl, workId, fetchImpl) {
   validatePublicRecordBase(baseUrl);
   var response = await fetchImpl(baseUrl + workId + ".json", { cache: "no-cache", headers: { Accept: "application/json" } });
   if (!response.ok) throw new Error("Catalogue Work " + workId + " is unavailable (HTTP " + response.status + ").");
-  var payload = await response.json();
-  workRecord(payload, workId);
-  return payload;
+  return response.json();
 }
 
 function validatePublicRecordBase(baseUrl) {
@@ -185,44 +148,7 @@ export async function readPublicCatalogueGallery(baseUrl, galleryId, fetchImpl) 
   validatePublicRecordBase(baseUrl);
   var response = await fetchImpl(baseUrl + galleryId + ".json", { cache: "no-cache", headers: { Accept: "application/json" } });
   if (!response.ok) throw new Error("Catalogue Gallery " + galleryId + " is unavailable (HTTP " + response.status + ").");
-  var payload = await response.json();
-  galleryRecord(payload, galleryId);
-  return payload;
-}
-
-/** Validate the complete generated map before using any Series' related links. */
-export function validateCatalogueSeriesGalleriesIndex(payload) {
-  var header = payload && payload.header;
-  var mapping = payload && payload.series_galleries;
-  var payloadKeys = payload && typeof payload === "object" && !Array.isArray(payload) ? Object.keys(payload) : [];
-  var headerKeys = header && typeof header === "object" && !Array.isArray(header) ? Object.keys(header) : [];
-  if (payloadKeys.length !== 2 || !payloadKeys.includes("header") || !payloadKeys.includes("series_galleries")
-    || headerKeys.length !== 2 || !headerKeys.includes("schema") || !headerKeys.includes("generated_at_utc")
-    || header.schema !== "catalogue_series_galleries_index_v2"
-    || typeof header.generated_at_utc !== "string" || !header.generated_at_utc.trim()
-    || !mapping || typeof mapping !== "object" || Array.isArray(mapping)
-  ) {
-    throw new Error("Catalogue Series-Gallery index is unavailable.");
-  }
-  Object.keys(mapping).forEach(function (seriesId) {
-    if (!exactSeriesId(seriesId) || !Array.isArray(mapping[seriesId])) {
-      throw new Error("Catalogue Series-Gallery index has an invalid Series entry.");
-    }
-    var previousGalleryId = "";
-    mapping[seriesId].forEach(function (gallery) {
-      var keys = gallery && typeof gallery === "object" && !Array.isArray(gallery) ? Object.keys(gallery) : [];
-      if (keys.length !== 2 || !keys.includes("gallery_id") || !keys.includes("title")) {
-        throw new Error("Catalogue Series-Gallery link requires exactly Gallery ID and title.");
-      }
-      var galleryId = gallery.gallery_id;
-      catalogueGalleryTarget(galleryId);
-      if (galleryId <= previousGalleryId || typeof gallery.title !== "string" || !gallery.title.trim()) {
-        throw new Error("Catalogue Series-Gallery link is invalid or out of order.");
-      }
-      previousGalleryId = galleryId;
-    });
-  });
-  return payload;
+  return response.json();
 }
 
 /** Read the selected public index with normal browser revalidation. */
@@ -233,5 +159,5 @@ export async function readPublicCatalogueSeriesGalleries(url, fetchImpl) {
   }
   var response = await fetchImpl(url, { cache: "no-cache", headers: { Accept: "application/json" } });
   if (!response.ok) throw new Error("Catalogue Series-Gallery index is unavailable (HTTP " + response.status + ").");
-  return validateCatalogueSeriesGalleriesIndex(await response.json());
+  return response.json();
 }

@@ -2,8 +2,7 @@ import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { escapeHtml, openDocsViewerManagementModal } from "../docs-viewer-management-modal-shell.js";
 import { selectedTextForCatalogueTitle } from "./catalogue-token-contract.js";
 import {
-  catalogueDocumentSubjectTarget, catalogueMediaLinkLabel, loadCatalogueMediaSupport,
-  readCatalogueTokenPresentation
+  catalogueDocumentSubjectTarget, catalogueMediaLinkLabel, loadCatalogueMediaSupport
 } from "./catalogue-media-support.js";
 import { collectSemanticTokenTargetMatches } from "./semantic-token-targets.js";
 import { serializeCatalogueImageToken, serializeCatalogueMediaToken } from "./catalogue-token-parser.js";
@@ -52,7 +51,7 @@ export function openCatalogueMediaModal(options = {}) {
   var initialToken = action.token;
   var subjectTarget = null;
   var selectionText = initialToken ? initialToken.title : selectedTextForCatalogueTitle(capture && capture.text);
-  var state = { disposed: false, request: 0, list: null, support: null, target: null,
+  var state = { disposed: false, list: null, support: null, target: null,
     linkDefault: "", replaceDefaults: null,
     useDocumentSubject: false };
   return openDocsViewerManagementModal({
@@ -100,27 +99,17 @@ export function openCatalogueMediaModal(options = {}) {
         );
         state.linkDefault = title;
       };
-      async function selectTarget(target) {
-        var request = ++state.request;
+      function selectTarget(target) {
         state.target = target;
-        primary.disabled = true;
         search.value = target.title;
         state.list.setTargets([]);
         showResults(false);
+        state.replaceDefaults(target.title);
+        primary.disabled = false;
         message("");
-        try {
-          var presentation = await readCatalogueTokenPresentation(adapter, target);
-          if (state.disposed || request !== state.request) return;
-          state.replaceDefaults(presentation.label);
-          primary.disabled = false;
-          message("");
-        } catch (error) {
-          if (!state.disposed && request === state.request) message(error.message || "Catalogue media is unavailable.", true);
-        }
       }
       function updateMatches() {
         if (!state.support) return;
-        state.request += 1;
         state.target = null;
         primary.disabled = true;
         var targets = imageMode ? state.support.targets.filter(function (target) { return target.targetType === "work"; }) : state.support.targets;
@@ -134,7 +123,6 @@ export function openCatalogueMediaModal(options = {}) {
           return item.targetType === subjectTarget.targetType && item.targetId === subjectTarget.targetId;
         });
         if (target) return selectTarget(target);
-        state.request += 1;
         state.target = null;
         primary.disabled = true;
         message("The selected Catalogue target is unavailable.", true);
@@ -193,12 +181,9 @@ export function openCatalogueMediaModal(options = {}) {
         note.hidden = false;
       });
     },
-    onSubmit: async function (api) {
+    onSubmit: function (api) {
       if (!adapter.isCurrent()) { api.setStatus("The Source editor was replaced. Cancel and try again."); return false; }
       if (!state.target) { api.setStatus("Choose a Catalogue target."); return false; }
-      // Revalidate current media before writing source.
-      var current = await readCatalogueTokenPresentation(adapter, state.target);
-      state.replaceDefaults(current.label);
       var fields = { registry: state.support.registry, targetType: state.target.targetType, targetId: state.target.targetId };
       if (imageMode) {
         Object.assign(fields, readCatalogueImagePresentation(api.host));
@@ -216,7 +201,6 @@ export function openCatalogueMediaModal(options = {}) {
     }
   }).then(function (result) {
     state.disposed = true;
-    state.request += 1;
     if (state.list) state.list.destroy();
     if (adapter && typeof adapter.focus === "function") adapter.focus();
     return result;

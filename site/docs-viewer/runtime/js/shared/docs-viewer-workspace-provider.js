@@ -1,6 +1,6 @@
 import {
   readPublicCatalogueWork, readPublicCatalogueGallery, readPublicCatalogueSeriesGalleries,
-  validateCatalogueSeriesGalleriesIndex, catalogueGalleryMediaPresentation
+  catalogueGalleryMediaPresentation
 } from "./docs-viewer-catalogue-media.js";
 import { readPublicCatalogueMediaConfig, validateCatalogueMediaPolicy } from "./docs-viewer-catalogue-media-policy.js";
 import { documentTarget } from "./docs-viewer-document-target.js";
@@ -143,7 +143,7 @@ export function createDocsViewerWorkspaceProvider(options) {
   }
   if (source && typeof source.readCatalogueSeriesGalleries === "function") {
     provider.readCatalogueSeriesGalleries = function () {
-      return source.readCatalogueSeriesGalleries().then(validateCatalogueSeriesGalleriesIndex);
+      return source.readCatalogueSeriesGalleries();
     };
   } else if (routeContext().routeConfig && routeContext().routeConfig.appKind === "public") {
     provider.readCatalogueSeriesGalleries = function () {

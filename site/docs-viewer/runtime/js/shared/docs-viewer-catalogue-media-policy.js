@@ -32,7 +32,6 @@ export function validateCatalogueMediaPolicy(policy) {
 
 /** Resolve unchanged filenames; descriptors use actual widths because the producer never upscales. */
 export function catalogueImageCandidates(target, record, policy) {
-  validateCatalogueMediaPolicy(policy);
   if (!target || target.kind !== "catalogue-work" || typeof target.id !== "string" || !/^\d{5}$/.test(target.id)) {
     throw new Error("An exact Catalogue Work image target is required.");
   }
@@ -55,7 +54,6 @@ export function catalogueImageCandidates(target, record, policy) {
 
 /** Combine producer-owned thumbnail naming with the explicit route-owned base. */
 export function catalogueThumbnailSettings(policy, baseUrl) {
-  validateCatalogueMediaPolicy(policy);
   return { base_url: mediaBase(baseUrl), size: Math.min(...policy.thumbnails.sizes),
     suffix: policy.thumbnails.suffix, format: policy.format };
 }
@@ -67,5 +65,5 @@ export async function readPublicCatalogueMediaConfig(url, fetchImpl) {
   }
   var response = await fetchImpl(url, { cache: "no-cache", headers: { Accept: "application/json" } });
   if (!response.ok) throw new Error("Catalogue media configuration is unavailable (HTTP " + response.status + ").");
-  return validateCatalogueMediaPolicy(await response.json());
+  return response.json();
 }

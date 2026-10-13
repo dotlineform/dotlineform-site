@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-704641
 title: Source Editor Scripts
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-10 17:12:00"
+last_updated: "2026-10-13 12:36:00"
 parent_id: d-20260607-222033-2a494e
 ---
 # Docs Viewer Source Editor Scripts
@@ -96,13 +96,13 @@ The watcher observes the source write and independently invokes targeted documen
 
 ## Catalogue Media And Image Contributions
 
-The Directives menu's Catalogue items author explicit Work/Gallery Media View tokens and Work images through `catalogue-media-modal.js`, the same generated Catalogue picker and validation of the selected current media presentation; neither requires a related document. Their former standalone toolbar wrapper modules are retired.
+The Directives menu's Catalogue items author explicit Work/Gallery Media View tokens and Work images through `catalogue-media-modal.js` and the same generated Catalogue picker. Selection and Apply consume the loaded exact ID/title without requesting a Work/Gallery record, media policy, membership or Series–Gallery index. Token syntax and captured-buffer guards remain local; document Build and rendered activation own their required Catalogue reads. Neither authoring form requires a related document. Their former standalone toolbar wrapper modules are retired.
 
 Add/Edit Catalogue image, Add/Edit Media View link and Assign Subject select the shared picker's `id-title` layout: the exact Work/Gallery ID is the first column in the same light grey as the search icon and the smaller caption font size, followed by its title, with no type label or subtitle. IDs retain their leading zeroes. `catalogue-target-picker.js` keeps Work/Gallery type in selection identity while omitting its visible label in this layout; the document-link caller uses its existing presentation. The Work year remains in the shared lookup for its other consumers. Styling is local-only in `docs-viewer/static/css/docs-viewer-source-editor.css`.
 
 `semantic-token-targets.js` ignores leading zeroes in numeric ID searches: `8`, `008` and `00008` all match Work `00008`; `work:8` and `gallery:8` support type-qualified searches. Exact numeric matches rank above ID-prefix and title matches. Title matching retains its existing rules. The shared matcher also supplies Work-subject selection. Normalisation affects search comparisons only; displayed IDs, selection identity and saved tokens retain the exact canonical strings.
 
-`catalogue-token-parser.js` owns the supported explicit Catalogue `media` and `image` forms, literal-context exclusions, ranges and serializers. `catalogue-token-contribution.js` captures a corresponding occurrence only when its explicit action is used with the caret inside it or its exact range selected. Recognition is limited to the body; ranges include the current front-matter offset. The shared modal initializes every authored field and the stored target, allows target changes through its existing picker, and uses **Apply** to replace only that occurrence in the unsaved buffer. Creation keeps its insertion action. Cancellation and failed validation retain source unchanged; failed media reads retain the stored identity and entered fields.
+`catalogue-token-parser.js` owns the supported explicit Catalogue `media` and `image` forms, literal-context exclusions, ranges and serializers. `catalogue-token-contribution.js` captures a corresponding occurrence only when its explicit action is used with the caret inside it or its exact range selected. Recognition is limited to the body; ranges include the current front-matter offset. The shared modal initializes every authored field and the stored target, allows target changes through its existing picker, and uses **Apply** to replace only that occurrence in the unsaved buffer. Creation keeps its insertion action. Cancellation and failed validation retain source unchanged; unavailable picker targets cannot be selected. The token registry and generated target lookup use browser HTTP revalidation with `no-cache`, consistently with other Catalogue configuration/data reads; there is no retained payload cache in the modal.
 
 Captured text/range, buffer revision and mounted adapter guard Apply. A replaced editor cannot mutate a new session, even when its buffer and revision match. Work-derived title/alt updates do not reset stored image choices or link text. The serialized token becomes authoritative immediately; Save has no later token-draft serialization. [Semantic Tokens Source Editor UI](Semantic_Tokens_Source_Editor_UI.md) describes the interaction.
 

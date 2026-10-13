@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260331-000000-c313fd
 title: Runtime
 added_date: "2026-03-31 00:00:00"
-last_updated: "2026-10-11 00:00:00"
+last_updated: "2026-10-13 12:36:00"
 summary: Public, manage, and review execution paths; browser/server authority boundaries; extension method; rationale; and known weak spots.
 parent_id: d-20260424-000000-50b63f
 ---
@@ -141,7 +141,7 @@ The Docs Viewer service uses browser-private HTTP caching for normal browsing. `
 
 Requested-file responses use weak validators based on nanosecond modification/change times and size. Unchanged conditional reads return `304` without opening or transferring the file. Transformed HTML and JSON API responses use an ETag of their actual response bytes. They still perform the owning read and validation before comparison, so missing files and failed requests remain errors rather than cached success. API cache responses vary by Origin and retain their allowed CORS headers on `304`.
 
-Generated-data, collection refresh, Catalogue presentation and generated-report clients use browser revalidation rather than `no-store`. The browser handles `304` and supplies the cached body to the existing renderer. Initial loads, navigation and completed application actions request their required current data explicitly; an idle Working viewer makes no recurring index or document reads. Source/management clients and Studio canonical-data reports retain their own freshness boundaries. Docs Review package endpoints retain their existing policy.
+Generated-data, collection refresh, Catalogue presentation and generated-report clients use browser revalidation rather than `no-store`. Catalogue token authoring uses the same `no-cache` request policy for its repository token registry and generated target lookup. `no-cache` permits storage and requires revalidation; `no-store` bypasses storage. The browser handles `304` and supplies the cached body to the existing renderer. Initial loads, navigation and completed application actions request their required current data explicitly; an idle Working viewer makes no recurring index or document reads. Source/management clients and Studio canonical-data reports retain their own freshness boundaries. Docs Review package endpoints retain their existing policy.
 
 App code URLs currently use a fixed shell version marker, not automatic code-version invalidation. After developing JavaScript, CSS or icons, use a forced reload or clear cached files as needed. Browser history need not be removed. Do not apply the one-day app policy to generated JSON or authored media, and do not treat an arbitrary query parameter on an unversioned asset as a Catalogue media version. Public hosting keeps its own response-header policy; shared client changes reach the tracked site through the runtime projection.
 

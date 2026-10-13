@@ -1,7 +1,5 @@
 import { loadSemanticTokenRegistry } from "./semantic-token-registry.js";
 import { normalizeSemanticTokenTargets } from "./semantic-token-targets.js";
-import { normalizeDocsViewerMediaPresentation } from "../../shared/docs-viewer-media-presentation.js";
-import { readCatalogueWorkMediaPresentation } from "../../shared/docs-viewer-catalogue-media.js";
 
 /** Map the source document's Catalogue subject to the existing picker identity. */
 export function catalogueDocumentSubjectTarget(subject) {
@@ -24,30 +22,5 @@ export async function loadCatalogueMediaSupport(adapter, options = {}) {
     throw new Error("Generated Catalogue targets are unavailable.");
   }
   var targets = normalizeSemanticTokenTargets(payload, registry);
-  var identities = new Set();
-  if (targets.length !== payload.targets.length || targets.some(function (target) {
-    var valid = target.targetType === "work" ? /^\d{5}$/.test(target.targetId)
-      : target.targetType === "gallery" && /^(?:[0-9]{3}|[1-9][0-9]{3,})$/.test(target.targetId);
-    var key = target.targetType + ":" + target.targetId;
-    if (target.family !== "catalogue" || !valid || identities.has(key)) return true;
-    identities.add(key);
-    return false;
-  })) throw new Error("Generated Catalogue identities are invalid.");
   return { registry: registry, targets: targets };
-}
-
-/** Validate the exact generated Work image before insertion or token inspection. */
-export async function readCatalogueMediaPresentation(adapter, workId) {
-  return normalizeDocsViewerMediaPresentation(await readCatalogueWorkMediaPresentation(adapter, workId));
-}
-
-/** Resolve a token target through its existing provider, with no document or image fallback. */
-export async function readCatalogueTokenPresentation(adapter, target) {
-  if (target.targetType === "work") return readCatalogueMediaPresentation(adapter, target.targetId);
-  if (target.targetType !== "gallery") throw new Error("Unsupported Catalogue target.");
-  var payload = await adapter.readCatalogueGalleryPresentation(target.targetId);
-  var presentation = normalizeDocsViewerMediaPresentation(payload);
-  if (!presentation || !presentation.gallery || presentation.target.kind !== "catalogue-" + target.targetType
-    || presentation.target.id !== target.targetId) throw new Error("Generated Catalogue identity is mismatched.");
-  return presentation;
 }

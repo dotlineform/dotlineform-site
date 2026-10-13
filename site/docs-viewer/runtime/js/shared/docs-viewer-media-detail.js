@@ -109,7 +109,7 @@ function mountCatalogueReferences(context) {
     }
     function projectInlineImage(presentation) {
       if (!inlineImage || !isCurrent()) return;
-      var data = normalizeDocsViewerMediaPresentation(presentation).image;
+      var data = presentation.image;
       releaseImage();
       inlineImage.hidden = false;
       if (placeholder) placeholder.hidden = true;
@@ -132,7 +132,7 @@ function mountCatalogueReferences(context) {
       try {
         if (typeof context.loadMediaTarget !== "function") throw new Error("Catalogue media is unavailable in this view.");
         var presentation = await context.loadMediaTarget(request());
-        if (presentation && isCurrent()) { projectInlineImage(presentation); message(""); }
+        if (presentation && isCurrent()) { projectInlineImage(normalizeDocsViewerMediaPresentation(presentation)); message(""); }
       } catch (error) {
         if (isCurrent()) message(" " + (error.message || "Image unavailable.") + " Select the image to retry.");
       } finally {
@@ -338,6 +338,8 @@ export function createDocsViewerMediaDetailAdapter() {
       || !target || !cleanString(target.docId)
       || (context.isCurrentDocument && !context.isCurrentDocument())) return false;
 
+    var presentation = normalizeDocsViewerMediaPresentation(context.presentation);
+    if (typeof context.onPresentation === "function") context.onPresentation(presentation);
     state.mediaRequestGeneration += 1;
 
     var index = ++state.nextDynamicRecord;
@@ -350,7 +352,7 @@ export function createDocsViewerMediaDetailAdapter() {
         collection: cleanString(target.collection), docId: cleanString(target.docId)
       }),
       isCurrentDocument: context.isCurrentDocument,
-      presentation: normalizeDocsViewerMediaPresentation(context.presentation),
+      presentation: presentation,
       dynamic: true
     };
     state.records.set(record.id, record);
@@ -389,8 +391,6 @@ export function createDocsViewerMediaDetailAdapter() {
       throw new Error("Catalogue " + groupLabel(target) + " data is unavailable in this view.");
     }
     var payload = await provider.readCatalogueGalleryPresentation(target.id);
-    var normalized = normalizeDocsViewerMediaPresentation(payload);
-    if (!normalized.gallery || !sameMediaTarget(normalized.target, target)) throw new Error("Catalogue group identity is mismatched.");
     return payload;
   }
 
@@ -429,7 +429,6 @@ export function createDocsViewerMediaDetailAdapter() {
       var presentation = await loadTarget(context);
       if (!isCurrent() || requestGeneration !== state.mediaRequestGeneration) return false;
       if (!presentation) return false;
-      if (typeof context.onPresentation === "function") context.onPresentation(presentation);
       if (!openPresentation(Object.assign({}, context, { presentation: presentation }))) {
         throw new Error("Media View could not open this Catalogue target.");
       }

@@ -249,18 +249,6 @@ function createSourceEditorContextAdapter(context, state) {
       var target = {  };
       return state.collectionProvider.readDocumentLinkTargets(target);
     },
-    readCatalogueWork: function (workId) {
-      return state.collectionProvider.readCatalogueWork(workId);
-    },
-    readCatalogueSeriesGalleries: function () {
-      return state.collectionProvider.readCatalogueSeriesGalleries();
-    },
-    readCatalogueMediaConfig: function () {
-      return state.collectionProvider.readCatalogueMediaConfig();
-    },
-    readCatalogueGalleryPresentation: function (galleryId) {
-      return state.collectionProvider.readCatalogueGalleryPresentation(galleryId);
-    },
     getSelection: function () {
       return sourceSelection(state);
     },

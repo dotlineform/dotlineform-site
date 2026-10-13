@@ -83,7 +83,8 @@ export function readDocumentLinkTargets(target, options) {
 
 /** Read generated Catalogue targets independently of document scope and association. */
 export function readCatalogueMediaTargets( options) {
-  return fetchManagementJson("/docs/catalogue-media-targets", "GET", undefined, options);
+  return fetchManagementJson("/docs/catalogue-media-targets", "GET", undefined,
+    Object.assign({}, options, { cache: "no-cache" }));
 }
 
 /** Read the generated rendition policy shared by all Catalogue records. */
