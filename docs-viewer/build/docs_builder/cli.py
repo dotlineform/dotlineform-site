@@ -54,6 +54,7 @@ def main(argv: list[str] | None = None) -> int:
                 links_doc_ids=links_doc_ids,
                 skip_media_builds=args.skip_media_builds,
                 related_links_dir=args.related_links_dir,
+                workspace=workspace,
             )
         else:
             builder = DocsDataBuilder(
@@ -65,6 +66,7 @@ def main(argv: list[str] | None = None) -> int:
                 links_doc_ids=links_doc_ids,
                 skip_media_builds=args.skip_media_builds,
                 related_links_dir=args.related_links_dir,
+                workspace=workspace,
             )
         builder.run(write=args.write, emit_diagnostics=args.diagnostics)
     except (FrontMatterSyntaxError, InvalidDocIdError, MissingDocIdError) as exc:

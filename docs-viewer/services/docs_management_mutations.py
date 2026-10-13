@@ -228,21 +228,12 @@ def plan_create(
             str(body.get("target_doc_id") or ""), str(body.get("placement") or "inside"),
         )
     target_path = target_root / f"{doc_id}.md"
-    front_matter_seed: Dict[str, Any] = {
-        "doc_id": doc_id,
-        "title": title,
-        "added_date": timestamp,
-    }
-    if source_model.collection_supports_draft(resolved_collection.document_config):
-        front_matter_seed["draft"] = True
-    front_matter = source_model.advance_doc_front_matter(
-        front_matter_seed,
-        timestamp=timestamp,
+    document = source_model.new_document_source(
+        target_path, doc_id, title, f"# {title}\n" if body_markdown is None else body_markdown,
+        config=resolved_collection.document_config, timestamp=timestamp,
     )
-    source_text = source_model.format_source(
-        front_matter, f"# {title}\n" if body_markdown is None else body_markdown,
-        collection=collection,
-    )
+    front_matter = document.front_matter
+    source_text = document.source_text
     path = relative_path(repo_root, target_path)
     target = {**resolved_collection.request_target(), "doc_id": doc_id}
     if collection:

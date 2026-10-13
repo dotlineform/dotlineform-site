@@ -28,7 +28,6 @@ def prepare_related_links(
     """
     builder.related_documents = {}
     root = builder.related_links_dir
-    owners = {"", *(owner.collection for owner in builder.config.collections)}
     for doc in docs:
         if builder.only_doc_ids is not None and doc.doc_id not in builder.only_doc_ids:
             continue
@@ -43,13 +42,11 @@ def prepare_related_links(
                 raise ValueError("Related-links JSON must stay inside its configured directory")
             if not path.is_file():
                 continue
-            record = read_relationship_payload(json.loads(path.read_text()), target)
+            record = read_relationship_payload(json.loads(path.read_text()))
         if record is None:
             continue
         if record.document.target != target:
             raise ValueError("Related-links record identity must match its exact document")
-        if any(neighbour.collection not in owners for neighbour in record.incoming.keys() | record.outgoing.keys()):
-            raise ValueError("Related links require exact configured collection owners")
         builder.related_documents[target] = record
 
 

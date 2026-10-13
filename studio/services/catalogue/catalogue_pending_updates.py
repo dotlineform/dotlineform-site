@@ -51,9 +51,3 @@ def accumulate_work_changes(
         merge_shared_changes(pending, shared)
         write_pending_updates(repo_root, pending)
     return pending
-
-
-def remove_pending_update(repo_root: Path, pending: dict[str, Any], family: str, work_id: str) -> None:
-    """Remove one entry only after document generation and publication merge."""
-    del pending[family][work_id]
-    write_pending_updates(repo_root, pending)

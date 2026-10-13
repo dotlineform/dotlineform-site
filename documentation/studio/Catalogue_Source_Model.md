@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260519-000000-a0da45
 title: Catalogue Source Model
 added_date: "2026-05-19 00:00:00"
-last_updated: "2026-10-13 08:36:06"
+last_updated: "2026-10-13 11:40:36"
 parent_id: d-20260401-000000-a11bf3
 
 ---
@@ -40,7 +40,7 @@ The UI owns Series–Gallery authoring validation: a Series choice must resolve 
 
 ## Metadata And Ordering
 
-Work title completion belongs to the Work authoring UI; repeated titles remain valid, with IDs owning selection and mutations. Work-specific public/private projections and readers, Catalogue document regeneration, image/Entry Build and Media View consume the supplied title without another nonblank check or a fallback to an ID/default. Work-title fields retain their consumed string representation, and media/identity/operation checks retain their owners. [User Facing Rules](data/User_Facing_Rules.md) D.01 records the agreed existing behavior and D.03 records this downstream ownership boundary.
+Work title completion belongs to the Work authoring UI; repeated titles remain valid, with IDs owning selection and mutations. Work-specific public/private projections and readers, Catalogue document regeneration, image/Entry Build and Media View consume the supplied title without another nonblank check or a fallback to an ID/default. Studio projections retain their consumed structural representation, and media/identity/operation checks retain their owners. Docs Viewer Work readers and Catalogue template/Entry builds trust completed Refresh output without repeated Work identity/title/resource-shape checks; decoding, confined access, escaping and URL safety remain. [User Facing Rules](data/User_Facing_Rules.md) M.24 records that downstream simplification. [Studio User Facing Rules](data/Studio_User_Facing_Rules.md) D.01 records the agreed existing behavior and D.03 records this downstream ownership boundary.
 
 The UI also owns whole-Year, Year-display completion and optional physical-dimension numeric checks. Save serialization, live lookup, public generation, report projection/readers and rendering consume these values without repeated authoring checks, coercion, trimming, invalid-to-null repair or filtering supplied dimensions. Report payloads retain numeric/string representation checks. Optional physical dimensions may be absent/null; supplied height/width/depth values render in that order, including zero, negative or a single supplied value. Intrinsic `width_px`/`height_px` are measured from the image file during Save and persisted with prepared media; downstream generation, Build and media readers/presentation do not validate or coerce them again. Media-version and configured rendition-policy checks retain their separate scope.
 

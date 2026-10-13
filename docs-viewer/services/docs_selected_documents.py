@@ -64,13 +64,11 @@ def selected_path(config: Any) -> Path:
 
 
 def read_selected(config: Any) -> dict[str, Any]:
-    payload = json.loads(selected_path(config).read_text(encoding="utf-8"))
-    validate_selected_payload(payload)
-    return payload
+    """Parse the owned saved list without auditing unselected rows."""
+    return json.loads(selected_path(config).read_text(encoding="utf-8"))
 
 
 def selected_text(payload: dict[str, Any]) -> str:
-    validate_selected_payload(payload)
     return json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
 
 
@@ -98,9 +96,12 @@ def selected_row(document: Any, owner: Any) -> dict[str, Any]:
     return row
 
 
-def refresh_selected_documents(config: Any, owner: Any, documents: Iterable[Any], *, write: bool) -> None:
+def refresh_selected_documents(
+    config: Any, owner: Any, documents: Iterable[Any], *, write: bool,
+    payload: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     """Refresh selected metadata for built documents, preserving other selections."""
-    payload = read_selected(config)
+    payload = read_selected(config) if payload is None else payload
     collection = getattr(owner, "collection", "")
     built = {doc.doc_id: doc for doc in documents}
     rows = [
@@ -109,9 +110,9 @@ def refresh_selected_documents(config: Any, owner: Any, documents: Iterable[Any]
         for row in payload["docs"]
     ]
     updated = {"schema": SELECTED_SCHEMA, "docs": rows}
-    text = selected_text(updated)
     if write and updated != payload:
-        write_text_atomic(selected_path(config), text)
+        write_text_atomic(selected_path(config), selected_text(updated))
+    return updated
 
 
 def set_selected(repo_root: Path, body: dict[str, Any], *, dry_run: bool = False) -> dict[str, Any]:

@@ -161,17 +161,9 @@ class SourceLoadingMixin:
                 raise InvalidDocIdError(f"Selected source identity does not match its filename: {relative_path}")
             if getattr(self, "collection_id", "") == "catalogue":
                 title = front_matter["title"]
-                if not isinstance(title, str):
-                    raise ValueError(f"Catalogue document {doc_id} title must be a string")
             else:
                 title = str(front_matter.get("title") or extract_title(body_markdown) or humanize(stem)).strip()
             parent_id = parent_ids[doc_id] if ordinary else ""
-            date = str(front_matter.get("date") or "").strip()
-            date_display = str(front_matter.get("date_display") or "").strip()
-            last_updated = str(front_matter.get("last_updated") or "").strip()
-            added_date = str(front_matter.get("added_date") or last_updated).strip()
-            summary = normalize_summary(front_matter.get("summary"))
-            ui_status = str(front_matter.get("ui_status") or "").strip()
             document_config = getattr(self, "collection_config", self.config)
             try:
                 validate_document_status_front_matter(
@@ -181,51 +173,56 @@ class SourceLoadingMixin:
                 )
             except ValueError as exc:
                 raise FrontMatterSyntaxError(str(exc)) from exc
-            try:
-                try:
-                    report = parse_document_report(
-                        source_text,
-                        front_matter,
-                        body_markdown,
-                        source_name=relative_path,
-                        contract=self.report_source_contract,
-                    )
-                except ReportSourceContractRequired:
-                    self.report_source_contract = report_source_contract_for_collection(
-                        self.repo_root,
-                        self.config,
-                        getattr(self, "collection_config", self.config),
-                    )
-                    report = parse_document_report(
-                        source_text,
-                        front_matter,
-                        body_markdown,
-                        source_name=relative_path,
-                        contract=self.report_source_contract,
-                    )
-            except ValueError as exc:
-                raise FrontMatterSyntaxError(str(exc)) from exc
-            docs.append(
-                DocRecord(
-                    doc_id=doc_id,
-                    title=title,
-                    date=date,
-                    date_display=date_display,
-                    added_date=added_date,
-                    last_updated=last_updated,
-                    summary=summary,
-                    ui_status=ui_status,
-                    parent_id=parent_id,
-                    source_path=relative_path,
-                    viewer_url=self.viewer_url_for(doc_id),
-                    content_url=self.content_url_for(doc_id),
-                    report=report,
-                    body_markdown=body_markdown,
-                    source_text=source_text if capture_source_text else None,
-                    front_matter=dict(front_matter),
-                )
+            report = self.document_report(
+                source_text, front_matter, body_markdown, source_name=relative_path,
             )
+            docs.append(self.document_record(
+                path=path, front_matter=front_matter, body_markdown=body_markdown,
+                doc_id=doc_id, title=title, parent_id=parent_id, report=report,
+                source_text=source_text if capture_source_text else None,
+            ))
         return docs
+
+    def document_report(
+        self, source_text: str, front_matter: dict[str, Any], body_markdown: str, *, source_name: str,
+    ) -> ReportDescriptor | None:
+        """Classify a parsed document's report through this operation's report registry."""
+        try:
+            try:
+                return parse_document_report(
+                    source_text, front_matter, body_markdown, source_name=source_name,
+                    contract=self.report_source_contract,
+                )
+            except ReportSourceContractRequired:
+                self.report_source_contract = report_source_contract_for_collection(
+                    self.repo_root, self.config, getattr(self, "collection_config", self.config),
+                )
+                return parse_document_report(
+                    source_text, front_matter, body_markdown, source_name=source_name,
+                    contract=self.report_source_contract,
+                )
+        except ValueError as exc:
+            raise FrontMatterSyntaxError(str(exc)) from exc
+
+    def document_record(
+        self, *, path: Path, front_matter: dict[str, Any], body_markdown: str,
+        doc_id: str, title: str, parent_id: str = "", report: ReportDescriptor | None = None,
+        source_text: str | None = None,
+    ) -> DocRecord:
+        """Project already parsed source without reopening it or rechecking its identity."""
+        last_updated = str(front_matter.get("last_updated") or "").strip()
+        return DocRecord(
+            doc_id=doc_id, title=title,
+            date=str(front_matter.get("date") or "").strip(),
+            date_display=str(front_matter.get("date_display") or "").strip(),
+            added_date=str(front_matter.get("added_date") or last_updated).strip(),
+            last_updated=last_updated, summary=normalize_summary(front_matter.get("summary")),
+            ui_status=str(front_matter.get("ui_status") or "").strip(), parent_id=parent_id,
+            source_path=path.relative_to(self.source_dir).as_posix(),
+            viewer_url=self.viewer_url_for(doc_id), content_url=self.content_url_for(doc_id),
+            report=report, body_markdown=body_markdown, source_text=source_text,
+            front_matter=dict(front_matter),
+        )
 
     def validate_canonical_doc_ids(self, docs: list[DocRecord]) -> None:
         for doc in docs:

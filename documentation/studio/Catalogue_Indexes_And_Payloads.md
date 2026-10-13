@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260519-202931-b05d27
 title: Catalogue Indexes And Payloads
 added_date: "2026-05-19 20:29:31"
-last_updated: "2026-10-13 10:16:04"
+last_updated: "2026-10-13 11:40:36"
 parent_id: d-20260401-000000-a11bf3
 
 ---
@@ -29,7 +29,7 @@ Refresh Catalogue owns the complete replaceable consumer output beneath `$DOTLIN
 
 Work thumbnails and primary renditions are shared local assets under `$DOTLINEFORM_DOCS_BASE_DIR/assets/works/`, prepared by Save rather than stored in the generated JSON tree. Private Catalogue Works and Series–Gallery report metadata also live beneath Working generated Catalogue output, outside the public Catalogue artifact inventory. The retired Works collection title metadata has no current producer or consumer.
 
-Work title completeness belongs to UI authoring. Work by-ID, compact, Gallery-member and private Work projections copy the supplied title; their saved readers retain string/field representation checks without rejecting blank text or substituting the Work ID. Work consumers, including Catalogue documents, image/Entry Build and Media View, do not repeat this completion check. Series/Gallery title rules retain their separate scope. [User Facing Rules](data/User_Facing_Rules.md) D.03 owns the agreed boundary and current evidence.
+Work title completeness belongs to UI authoring. Work by-ID, compact, Gallery-member and private Work projections copy the supplied title; Studio-owned saved readers retain string/field representation checks without rejecting blank text or substituting the Work ID. Work consumers, including Catalogue documents, image/Entry Build and Media View, do not repeat this completion check. Docs Viewer shared Work readers and Catalogue template/Entry rendering consume the completed Refresh fields without identity/title/resource-shape audits, retaining parsing, confined access, escaping and URL safety under [User Facing Rules](data/User_Facing_Rules.md) M.24. Series/Gallery title rules retain their separate scope. [Studio User Facing Rules](data/Studio_User_Facing_Rules.md) D.03 owns the agreed boundary and current evidence.
 
 Work Year/Year-display and physical dimensions are copied from UI-authored data without downstream coercion, trimming, invalid-to-null repair or completeness/integer/positivity validation. Basic numeric/string report representation remains checked. Physical-dimension rendering omits only absent/null values, preserving zero, negative and independent single values. Work by-ID `width_px`/`height_px` come from Save's file measurement; generation and downstream Build/media presentation use them without validation or numeric repair. Optional null metadata retains its existing public omission rule, and media-version/configured-rendition policy retains its separate owner.
 

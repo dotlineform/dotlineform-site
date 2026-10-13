@@ -16,7 +16,6 @@ from .common import (
     write_text,
 )
 from .pipeline import DocsDataBuilder
-from .inline_icons import InlineIconRenderer
 from .related_links import prepare_related_links
 from .collection_metadata import CollectionDocumentSummary, merge_collection_manifest, read_collection_manifest
 from .links_builder import build_document_links, prepare_document_links
@@ -30,11 +29,11 @@ from docs_document_subjects import (
     FOLDER_PATH_FIELD,
     project_document_subject,
     project_reader_subject,
-    subject_from_record,
 )
-from docs_document_identity import doc_updated_date, is_doc_date, is_doc_timestamp, is_document_id
+from docs_document_identity import doc_updated_date
 from docs_selected_documents import read_selected, refresh_selected_documents
 from docs_document_images import has_document_thumbnail
+from docs_workspace_config import DocsWorkspaceConfig
 
 
 class CollectionDocsBuilder(DocsDataBuilder):
@@ -50,6 +49,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
         skip_media_builds: bool = False,
         links_doc_ids: list[str] | None = None,
         related_links_dir: Path | None = None,
+        workspace: DocsWorkspaceConfig | None = None,
     ) -> None:
         self.collection_config = collection
         super().__init__(
@@ -61,10 +61,13 @@ class CollectionDocsBuilder(DocsDataBuilder):
             skip_media_builds=skip_media_builds,
             links_doc_ids=links_doc_ids,
             related_links_dir=related_links_dir,
+            workspace=workspace,
         )
         self.collection_id = collection.collection
         self.manifest_filename = "manage-manifest.json" if config.stage == "working" else "manifest.json"
         self.output_url_base = self.output_url_base_for(self.output_url_dir())
+        self.collection_manifest: dict[str, Any] | None = None
+        self.selected_payload: dict[str, Any] | None = None
         if self.targeted_build and not self.only_doc_ids:
             raise ValueError("Targeted collection build requires at least one document ID")
 
@@ -86,11 +89,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
         return entry
 
     def manifest_row(self, doc: DocRecord) -> dict[str, Any]:
-        """Validate and project the identity, title and date shared by both readers."""
-        if self.collection_id in {"catalogue", "works"} and not is_doc_timestamp(doc.last_updated):
-            raise ValueError(f"{self.collection_id} document {doc.doc_id} requires a valid last_updated timestamp")
-        if self.collection_id == "catalogue" and not is_document_id(doc.doc_id, collection="catalogue"):
-            raise ValueError(f"Catalogue document {doc.doc_id} requires one exact Work ID")
+        """Project supplied identity, title and update metadata for both readers."""
         row = {"doc_id": doc.doc_id, "title": doc.title, "last_updated": doc_updated_date(doc.last_updated)}
         if has_document_thumbnail(doc.front_matter, collection=self.collection_id):
             row["has_thumbnail"] = True
@@ -159,31 +158,32 @@ class CollectionDocsBuilder(DocsDataBuilder):
         }
 
     def saved_collection_metadata(self) -> dict[str, Any]:
-        """Load only the current operation's list metadata for a targeted update."""
-        manifest = read_collection_manifest(self.output_dir / self.manifest_filename, collection=self.collection_id)
-        for row in manifest["docs"]:
-            subject_from_record(row, folder_supported=self.folder_subject_supported())
-            updated = row.get("last_updated")
-            undated_allowed = self.collection_id not in {"catalogue", "works"} and updated == ""
-            if "added_date" in row or not (undated_allowed or is_doc_date(updated)):
-                raise ValueError(f"{self.collection_id} manifest requires date-only last_updated and no added_date; run a complete collection Build first")
-        if self.collection_id == "catalogue":
-            for row in manifest["docs"]:
-                if set(row) != {"doc_id", "title", "last_updated"}:
-                    raise ValueError("Catalogue manifest requires doc_id, title and last_updated; run a complete Catalogue Build first")
-        return manifest
+        """Carry saved metadata between completed builds without row audits."""
+        if self.collection_manifest is None:
+            self.collection_manifest = read_collection_manifest(self.output_dir / self.manifest_filename)
+        return self.collection_manifest
 
-    def run(self, *, write: bool, emit_diagnostics: bool = False) -> dict[str, Any]:
+    def selected_documents(self) -> dict[str, Any]:
+        """Read Selected once for this operation and retain completed updates."""
+        if self.selected_payload is None:
+            self.selected_payload = read_selected(self.config)
+        return self.selected_payload
+
+    def run(
+        self, *, write: bool, emit_diagnostics: bool = False,
+        documents: list[DocRecord] | None = None,
+        catalogue_works: dict[str, dict[str, Any]] | None = None,
+    ) -> dict[str, Any]:
         """Render requested sources and update the operation's collection manifest."""
         started_at = monotonic_time()
-        self.inline_icons = InlineIconRenderer(self.repo_root)
-        self._catalogue_work_cache = {}
-        if self.config.stage == "working":
-            read_selected(self.config)
+        self.warnings = []
+        self._catalogue_work_cache = {} if catalogue_works is None else catalogue_works
         previous_manifest = self.saved_collection_metadata() if self.targeted_build else None
-        docs = self.load_docs(self.only_doc_ids)
-        self.validate_canonical_doc_ids(docs)
-        if not self.targeted_build:
+        docs = self.load_docs(self.only_doc_ids) if documents is None else documents
+        if documents is not None:
+            self.source_files_scanned = 0
+        if not self.targeted_build and documents is None:
+            self.validate_canonical_doc_ids(docs)
             self.validate_docs(docs)
         ordered_docs = sorted(docs, key=self.doc_sort_key)
         subjects_by_doc_id = None
@@ -234,10 +234,16 @@ class CollectionDocsBuilder(DocsDataBuilder):
         )
         if write:
             self.write_collection_outputs(write_plan, docs_total=len(summaries))
+            self.collection_manifest = manifest_payload
         else:
             self.print_collection_summary(write_plan, mode="dry-run", docs_total=len(summaries))
         if self.config.stage == "working":
-            refresh_selected_documents(self.config, self.collection_config, docs, write=write)
+            selected = refresh_selected_documents(
+                self.config, self.collection_config, docs, write=write,
+                payload=self.selected_documents(),
+            )
+            if write:
+                self.selected_payload = selected
         diagnostics["warning_count"] = len(self.warnings)
         if emit_diagnostics:
             self.print_diagnostics(diagnostics)
@@ -267,7 +273,10 @@ class CollectionDocsBuilder(DocsDataBuilder):
             if read_text(self.items_dir / f"{doc_id}.json") != text:
                 changed_item_ids.append(doc_id)
         return {
-            "manifest_write": read_text(self.output_dir / self.manifest_filename) != manifest_text,
+            "manifest_write": (
+                read_text(self.output_dir / self.manifest_filename) != manifest_text
+                if self.collection_manifest is None else self.collection_manifest != manifest_payload
+            ),
             "manifest_text": manifest_text,
             "changed_item_ids": sorted(changed_item_ids),
             "stale_item_ids": sorted(stale_item_ids),

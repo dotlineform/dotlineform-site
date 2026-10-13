@@ -442,7 +442,7 @@ def render_catalogue_entry(
 ) -> str:
     """Render public Work content; omit the resource section when both lists are empty.
 
-    Resources retain structural/URL safety; intrinsic pixels are consumed from Save.
+    Resources consume supplied fields with URL safety; intrinsic pixels come from Save.
     """
     width, height = work["width_px"], work["height_px"]
     title = work["title"]
@@ -454,11 +454,7 @@ def render_catalogue_entry(
     link_rows: list[str] = []
     for key in ("downloads", "links"):
         resources = work.get(key, [])
-        if not isinstance(resources, list):
-            raise ValueError(f"Catalogue Work {token.target_id} {key} list is invalid")
         for resource in resources:
-            if not isinstance(resource, dict):
-                raise ValueError(f"Catalogue Work {token.target_id} {key} entry must be an object")
             label = resource["label"]
             href = catalogue_resource_url(resource.get("url"))
             icon = icons.render("file" if key == "downloads" else "link", decorative=True)
@@ -507,12 +503,7 @@ class SemanticTokensMixin:
             payload = json.loads(path.read_text(encoding="utf-8"))
         except (OSError, ValueError) as exc:
             raise ValueError(f"Catalogue Work {work_id} generated JSON is unavailable or invalid") from exc
-        work = payload.get("work") if isinstance(payload, dict) else None
-        if not isinstance(work, dict) or work.get("work_id") != work_id:
-            raise ValueError(f"Catalogue Work {work_id} generated identity is invalid")
-        title = work.get("title")
-        if not isinstance(title, str):
-            raise ValueError(f"Catalogue Work {work_id} generated title must be a string")
+        work = payload["work"]
         cache[work_id] = work
         return work
 

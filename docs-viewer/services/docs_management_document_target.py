@@ -141,9 +141,10 @@ def resolve_managed_document_collection(
     *,
     collection: Any | None = None,
     require_existing_source_root: bool = True,
+    config: DocsStageConfig | None = None,
 ) -> ManagedDocumentCollection:
     """Resolve the configured destination; creation skips directory preflight."""
-    parent_config = load_docs_working_config(repo_root)
+    parent_config = load_docs_working_config(repo_root) if config is None else config
 
     normalized_collection = ""
     document_config: DocsStageConfig | DocsCollectionConfig = parent_config
@@ -229,8 +230,6 @@ def source_doc_from_path(
         )
     if front_matter.get("collection") == "catalogue":
         title = front_matter["title"]
-        if not isinstance(title, str):
-            raise ValueError("Catalogue document title must be a string")
     else:
         title = str(front_matter.get("title") or source_model.humanize(existing_doc_id)).strip() or existing_doc_id
     report = (

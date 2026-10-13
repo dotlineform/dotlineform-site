@@ -9,7 +9,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import Any, Callable, Dict, Mapping, Optional
+from typing import Any, Callable, Dict, Mapping, Optional, TYPE_CHECKING
 
 from docs_workspace_config import (
     document_source_path,
@@ -19,11 +19,17 @@ from docs_workspace_config import (
     load_docs_working_config,
     require_document_authoring,
     resolve_workspace_path,
+    DocsWorkspaceConfig,
 )
 from docs_build_manifest import remove_build_manifest, write_build_manifest
 from docs_mermaid_preparation import prepare_stage_mermaid
 from docs_workspace_links import write_workspace_links
 from docs_source_model import parse_source, write_bytes_atomic
+
+if TYPE_CHECKING:
+    from docs_builder.collection import CollectionDocsBuilder
+    from docs_builder.source import DocRecord
+    from docs_management_document_target import ManagedDocumentCollection
 
 DOCS_BUILDER_DIAGNOSTICS_PREFIX = "Docs builder diagnostics: "
 FRONT_MATTER_ERROR_PREFIX = "problem with front-matter on doc "
@@ -511,6 +517,22 @@ def perform_source_write_and_rebuild_atomic(
     return rebuild
 
 
+def create_collection_builder(
+    repo_root: Path, collection: ManagedDocumentCollection, workspace: DocsWorkspaceConfig,
+    *, doc_ids: list[str] | None,
+) -> CollectionDocsBuilder:
+    """Create the existing builder once for an in-process collection operation."""
+    build_dir = Path(__file__).resolve().parents[1] / "build"
+    if str(build_dir) not in sys.path:
+        sys.path.insert(0, str(build_dir))
+    from docs_builder.collection import CollectionDocsBuilder
+
+    return CollectionDocsBuilder(
+        repo_root=repo_root, config=collection.parent_config, collection=collection.document_config,
+        workspace=workspace, only_doc_ids=doc_ids, skip_media_builds=True,
+    )
+
+
 def perform_collection_source_write_and_rebuild(
     repo_root: Path,
     collection: str,
@@ -521,10 +543,19 @@ def perform_collection_source_write_and_rebuild(
     links_doc_ids: list[str] | None = None,
     build_doc_ids: list[str] | None = None,
     complete_build: bool = False,
+    builder: CollectionDocsBuilder | None = None,
+    documents: list[DocRecord] | None = None,
+    catalogue_works: dict[str, dict[str, Any]] | None = None,
 ) -> Dict[str, Any]:
     """Await a selected or complete collection build and its Links update."""
-    require_document_authoring(load_docs_working_config(repo_root))
-    root = current_collection_source_root(repo_root, collection)
+    if builder is None:
+        from docs_management_document_target import resolve_managed_document_collection
+
+        resolved = resolve_managed_document_collection(repo_root, collection=collection)
+        require_document_authoring(resolved.parent_config)
+        root = resolved.source_root
+    else:
+        root = builder.source_dir
     resolved_changed_paths = {path.resolve() for path in changed_paths}
     validate_changed_source_paths(root, changed_paths)
     normalized_snapshots: dict[Path, bytes] | None = None
@@ -534,7 +565,9 @@ def perform_collection_source_write_and_rebuild(
             raise ValueError("collection rollback snapshot must cover every changed source exactly")
         if any(not isinstance(source_bytes, bytes) for source_bytes in normalized_snapshots.values()):
             raise ValueError("collection rollback snapshot values must be bytes")
-    source_doc_ids_before = changed_source_document_ids(changed_paths)
+    supplied_ids = build_doc_ids is not None and links_doc_ids is not None
+    discover_ids = not supplied_ids and (not complete_build or normalized_snapshots is not None)
+    source_doc_ids_before = changed_source_document_ids(changed_paths) if discover_ids else []
     docs_doc_ids = source_doc_ids_before
     try:
         if normalized_snapshots is not None:
@@ -548,17 +581,30 @@ def perform_collection_source_write_and_rebuild(
                     + ", ".join(sorted(changed_before_write))
                 )
         write_operation()
-        docs_doc_ids = sorted(set(source_doc_ids_before) | set(changed_source_document_ids(changed_paths))
-                              | set(build_doc_ids or []))
-        links_arguments = links_write_arguments(source_doc_ids_before, changed_paths)
-        if links_doc_ids is not None:
-            links_arguments["links_doc_ids"] = links_doc_ids
+        if supplied_ids:
+            docs_doc_ids = build_doc_ids
+            links_arguments = {"links_doc_ids": links_doc_ids}
+        elif complete_build:
+            source_doc_ids_after = changed_source_document_ids(changed_paths) if normalized_snapshots is not None else []
+            docs_doc_ids = sorted(set(source_doc_ids_before) | set(source_doc_ids_after))
+            links_arguments = {}
+        else:
+            source_doc_ids_after = changed_source_document_ids(changed_paths)
+            docs_doc_ids = sorted(set(source_doc_ids_before) | set(source_doc_ids_after) | set(build_doc_ids or []))
+            links_arguments = {"links_doc_ids": sorted(set(source_doc_ids_before) | set(source_doc_ids_after))}
+            if links_doc_ids is not None:
+                links_arguments["links_doc_ids"] = links_doc_ids
         if complete_build:
             links_arguments.pop("links_doc_ids", None)
-        rebuild = rebuild_collection_outputs(
-            repo_root, collection, docs_doc_ids=None if complete_build else docs_doc_ids,
-            **links_arguments,
-        )
+        if builder is None:
+            rebuild = rebuild_collection_outputs(
+                repo_root, collection, docs_doc_ids=None if complete_build else docs_doc_ids,
+                **links_arguments,
+            )
+        else:
+            builder.only_doc_ids = None if complete_build else docs_doc_ids
+            builder.links_doc_ids = links_arguments.get("links_doc_ids")
+            rebuild = builder.run(write=True, documents=documents, catalogue_works=catalogue_works)
     except CollectionSourceSnapshotChanged:
         raise
     except Exception as exc:

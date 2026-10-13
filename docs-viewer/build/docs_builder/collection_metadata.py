@@ -7,8 +7,6 @@ import json
 from pathlib import Path
 from typing import Any
 
-from docs_document_identity import is_document_id
-
 
 @dataclass(frozen=True)
 class CollectionDocumentSummary:
@@ -18,26 +16,12 @@ class CollectionDocumentSummary:
     title: str
 
 
-def read_collection_manifest(path: Path, *, collection: str) -> dict[str, Any]:
-    """Require saved metadata; never recover it by scanning source documents."""
+def read_collection_manifest(path: Path) -> dict[str, Any]:
+    """Parse saved metadata; never audit rows or recover by scanning sources."""
     try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
+        return json.loads(path.read_text(encoding="utf-8"))
     except (OSError, ValueError) as exc:
         raise RuntimeError(f"Targeted collection build requires readable {path.name}; run a complete Build first") from exc
-    if not isinstance(payload, dict) or set(payload) != {"docs"} or not isinstance(payload["docs"], list):
-        raise ValueError(f"Invalid collection manifest: {path.name}; run a complete collection Build first")
-    seen: set[str] = set()
-    for row in payload["docs"]:
-        if (
-            not isinstance(row, dict)
-            or not isinstance(row.get("doc_id"), str)
-            or not is_document_id(row["doc_id"], collection=collection)
-            or not isinstance(row.get("title"), str)
-            or row["doc_id"] in seen
-        ):
-            raise ValueError(f"Invalid or duplicate document in {path.name}")
-        seen.add(row["doc_id"])
-    return payload
 
 
 def merge_collection_manifest(

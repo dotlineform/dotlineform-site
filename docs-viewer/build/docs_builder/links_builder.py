@@ -74,10 +74,6 @@ class _DocumentRefresh:
     def key(self, doc_id: str) -> DocumentTarget:
         return DocumentTarget(self.collection, doc_id)
 
-    def validate_target(self, target: DocumentTarget) -> None:
-        if target.collection not in self.owners or not is_document_id(target.doc_id, collection=target.collection):
-            raise ValueError("Links requires an exact configured document identity")
-
     def viewer_target(self, resolved: dict[str, str]) -> DocumentTarget | None:
         if resolved.get("kind") != "viewer":
             return None
@@ -107,18 +103,14 @@ class _DocumentRefresh:
             self.metadata[target] = metadata
         title = metadata.get("title")
         if target.collection == "catalogue" and metadata:
-            if not isinstance(title, str):
-                raise ValueError("Catalogue Links source title must be a string")
             return DocumentSummary(target, title)
         return DocumentSummary(target, title.strip() if isinstance(title, str) and title.strip() else label or target.doc_id)
 
     def location(self, target: DocumentTarget) -> str:
         """Derive navigation from exact identity and configured report placement."""
-        self.validate_target(target)
         return canonical_document_viewer_url(target.doc_id, collection=target.collection)
 
     def read(self, target: DocumentTarget, *, deleted: bool = False) -> DocumentLinks | None:
-        self.validate_target(target)
         if target in self.records:
             return self.records[target]
         path = _safe_path(self.output, f"{target.doc_id}.json")
@@ -127,8 +119,7 @@ class _DocumentRefresh:
         if text is not None:
             payload = json.loads(text)
             owner = DocumentTarget(payload["self"]["collection"], payload["self"]["doc_id"])
-            self.validate_target(owner)
-            record = read_relationship_payload(payload, owner)
+            record = read_relationship_payload(payload)
             if owner != target:
                 if owner.doc_id != target.doc_id:
                     raise ValueError("Links record identity does not match its exact document")
@@ -139,9 +130,6 @@ class _DocumentRefresh:
                 if target not in self.docs:
                     raise ValueError("Links record belongs to another collection")
         self.original[target] = text
-        if record is not None:
-            for neighbour in record.incoming.keys() | record.outgoing.keys():
-                self.validate_target(neighbour)
         self.records[target] = record
         return record
 

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261012-112453-211357
 title: Incremental Document Publish
 added_date: "2026-10-12 11:24:53"
-last_updated: "2026-10-12 15:18:39"
+last_updated: "2026-10-13 11:02:42"
 summary: Proposed queue-only Publish for ordinary and non-Catalogue collection documents, with completed public artifacts and eligibility, dependency, media and shared-output effects supplied upstream.
 ui_status: proposed
 parent_id: d-20260428-000000-f5ff18
@@ -16,7 +16,7 @@ This is the ordinary and non-Catalogue collection document follow-on to [Increme
 
 Status: proposed on 2026-10-12. The user requested this delivery write-up; implementation is not approved. No code, configuration, tests, external documents or generated payloads have been changed for this proposal.
 
-Prerequisite set on 2026-10-12: use [User Facing Rules](../data/User_Facing_Rules.md) as the target definition, review the relevant targets and complete required cleanup through functional delivery groups before this delivery proceeds. Each cleanup delivery records the actual implementation comparison, changes and evidence; the target index does not carry that inventory or require a separate delivery per entry. Documented design conventions and authoring preferences do not automatically require server enforcement. Candidate UI improvements, including broader bulk Work metadata editing, receive their own bounded scope. Reconcile this proposal's assumptions with the accepted targets and completed cleanup before implementation.
+Prerequisite set on 2026-10-12: use [User Facing Rules](../data/User_Facing_Rules.md) as the target definition, review the relevant targets and complete required cleanup through functional delivery groups before this delivery proceeds. Each cleanup delivery records the actual implementation comparison, changes and evidence; the target index does not carry that inventory or require a separate delivery per entry. Documented design conventions and authoring preferences do not automatically require server enforcement. [Studio User Facing Rules](../data/Studio_User_Facing_Rules.md) retains the Studio review and implementation record. The active Docs Viewer review removes redundant calls, checks and downstream validation before extending incremental Catalogue publication to the whole corpus. Reconcile this proposal's assumptions with the accepted targets and completed cleanup before implementation.
 
 Current Publish completes queued Catalogue Works, then captures ordinary and collection sources, resolves publication eligibility, rebuilds ordinary and other collection documents in temporary storage and distributes a complete prepared snapshot. Catalogue Gallery/shared selections are already explicit, but the enclosing pass still processes ordinary documents and discovery data even when those selections are empty.
 

@@ -45,7 +45,16 @@ def merge_completed_works(
     Regenerate never inspects an existing preview_done flag. Only a new record
     receives false; replace/merge selections leave the initialized flag untouched.
     """
-    pending = read_pending_publication(repo_root)
+    path = pending_path(repo_root, FILENAME)
+    pending = load_pending_queue(path)
+    merge_completed_work_selections(pending, completed)
+    persist_pending_queue(path, pending, progress="preview_done")
+
+
+def merge_completed_work_selections(
+    pending: dict[str, Any], completed: Iterable[tuple[str, str, dict[str, Any], set[str]]],
+) -> None:
+    """Merge known completed effects into carried state without rereads or audits."""
     for family, work_id, selection, download_names in completed:
         other = "deleted_works" if family == "current_works" else "current_works"
         previous = pending[family].get(work_id)
@@ -66,4 +75,3 @@ def merge_completed_works(
                 record.pop("metadata", None)
         pending[other].pop(work_id, None)
         pending[family][work_id] = record
-    write_pending_publication(repo_root, pending)

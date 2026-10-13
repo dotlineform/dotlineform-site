@@ -200,6 +200,23 @@ def rewrite_source_collection(source_text: str, collection: str) -> str:
     ) + body
 
 
+def new_document_source(
+    path: Path, doc_id: str, title: str, body: str, *,
+    config: DocsStageConfig | DocsCollectionConfig, timestamp: str,
+) -> SourceDoc:
+    """Construct source from resolved identity and fields, without planning a request."""
+    metadata = {"doc_id": doc_id, "title": title, "added_date": timestamp}
+    if collection_supports_draft(config):
+        metadata["draft"] = True
+    metadata = advance_doc_front_matter(metadata, timestamp=timestamp)
+    metadata = document_collection_front_matter(metadata, getattr(config, "collection", ""))
+    body = body if body.startswith("\n") else "\n" + body
+    return SourceDoc(
+        path=path, source_text=format_source(metadata, body), front_matter=metadata,
+        body=body, doc_id=doc_id, title=title, ui_status="", parent_id="",
+    )
+
+
 def format_source(front_matter: Dict[str, Any], body: str, *, collection: str | None = None) -> str:
     if collection is not None:
         front_matter = document_collection_front_matter(front_matter, collection)

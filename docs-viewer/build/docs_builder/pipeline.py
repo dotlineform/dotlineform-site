@@ -27,6 +27,7 @@ from .ordinary_metadata import targeted_document_metadata
 from .write_plan import WritePlanMixin
 from docs_index_order import read_index_order, tree_parent_ids
 from docs_selected_documents import read_selected, refresh_selected_documents, selected_path
+from docs_workspace_config import DocsWorkspaceConfig
 
 
 class DocsDataBuilder(
@@ -49,11 +50,12 @@ class DocsDataBuilder(
         skip_media_builds: bool = False,
         skip_recent: bool = False,
         related_links_dir: Path | None = None,
+        workspace: DocsWorkspaceConfig | None = None,
     ) -> None:
         self.repo_root = repo_root.resolve()
         self.config = config
         self.media_owner = getattr(self, "collection_config", config)
-        self.workspace = load_docs_workspace_config(self.repo_root)
+        self.workspace = load_docs_workspace_config(self.repo_root) if workspace is None else workspace
         self.report_source_contract = None
         self.source_dir = resolve_workspace_path(self.repo_root, source_dir or document_source_path(config))
         self.output_dir = resolve_workspace_path(self.repo_root, output_dir or generated_documents_path(config))

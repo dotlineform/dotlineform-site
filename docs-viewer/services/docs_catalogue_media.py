@@ -11,6 +11,7 @@ from pathlib import Path
 import re
 from typing import Any
 from urllib.parse import quote, urlsplit
+from docs_artifact_locations import ArtifactLocation
 
 from studio.services.catalogue.catalogue_output_paths import catalogue_workspace_config, catalogue_output_workspace, output_path
 from studio.services.catalogue.catalogue_compact_indexes import validate_compact_index
@@ -18,15 +19,13 @@ from studio.services.catalogue.catalogue_gallery_records import validate_gallery
 from studio.services.catalogue.catalogue_series_galleries_index import validate_catalogue_series_galleries_index
 
 
-def _read_generated(repo_root: Path, relative: str) -> dict[str, Any]:
+def _read_generated(repo_root: Path, relative: str, *, workspace: ArtifactLocation | None = None) -> dict[str, Any]:
     try:
-        location = catalogue_output_workspace(repo_root)
+        location = catalogue_output_workspace(repo_root) if workspace is None else workspace
         data = output_path(location, relative).read_bytes()
         payload = json.loads(data)
     except (OSError, ValueError) as exc:
         raise ValueError("Generated Catalogue data is unavailable") from exc
-    if not isinstance(payload, dict):
-        raise ValueError("Generated Catalogue data must be an object")
     return payload
 
 
@@ -97,9 +96,9 @@ def validate_catalogue_media_config(payload: dict[str, Any]) -> dict[str, Any]:
     return payload
 
 
-def read_catalogue_work_index(repo_root: Path) -> dict[str, dict[str, Any]]:
+def read_catalogue_work_index(repo_root: Path, *, workspace: ArtifactLocation | None = None) -> dict[str, dict[str, Any]]:
     """Read the generated Work inventory without loading Series or by-ID records."""
-    return validate_compact_index(_read_generated(repo_root, "works/works_index.json"), family="works")["works"]
+    return _read_generated(repo_root, "works/works_index.json", workspace=workspace)["works"]
 
 
 def read_catalogue_series_galleries_index(repo_root: Path) -> dict[str, Any]:
@@ -125,15 +124,9 @@ def read_catalogue_media_targets(repo_root: Path) -> dict[str, Any]:
     return {"ok": True, "schema_version": "docs_semantic_token_target_lookup_v2", "targets": targets}
 
 
-def read_catalogue_work(repo_root: Path, work_id: str) -> dict[str, Any]:
+def read_catalogue_work(repo_root: Path, work_id: str, *, workspace: ArtifactLocation | None = None) -> dict[str, Any]:
     """Return the generated consumer record; browser presentation belongs to the shared renderer."""
-    work_id = _work_identity(work_id)
-    payload = _read_generated(repo_root, f"works/index/{work_id}.json")
-    work = payload.get("work")
-    if not isinstance(work, dict) or work.get("work_id") != work_id:
-        raise ValueError(f"Generated data does not match Work {work_id}")
-    _work_title(work.get("title"))
-    return payload
+    return _read_generated(repo_root, f"works/index/{work_id}.json", workspace=workspace)
 
 
 def read_catalogue_gallery(repo_root: Path, gallery_id: str) -> dict[str, Any]:
@@ -152,6 +145,7 @@ def local_catalogue_media_config(repo_root: Path) -> dict[str, Any]:
 
 def local_catalogue_work(repo_root: Path, work_id: str) -> dict[str, Any]:
     """Resolve owned downloads locally; user-authored external links stay external."""
+    work_id = _work_identity(work_id)
     payload = read_catalogue_work(repo_root, work_id)
     assets = catalogue_workspace_config(repo_root).assets
     for download in payload["work"].get("downloads", []):
