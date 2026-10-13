@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260523-190651-7157ec
 title: Development Checklist
 added_date: "2026-05-23 19:06:51"
-last_updated: "2026-10-13 20:05:39"
+last_updated: "2026-10-13 20:33:58"
 parent_id: d-20260419-000000-d2e47b
 
 ---
@@ -11,15 +11,22 @@ parent_id: d-20260419-000000-d2e47b
 
 Apply only the sections relevant to the actual change and its credible failure modes. This is a reference for judgment, not a requirement to manufacture evidence for every checkbox on every delivery.
 
-For application operations, let explicit product requirements and demonstrated failure modes determine planning, failure handling and verification. The default is to act on the request using the inputs it needs, validate them as they are used, stop on failure, and report success when the required work completes. Do not add preview/dry-run phases, saved execution plans, freshness rechecks, rollback/retry machinery, or post-action read-backs as a general pattern. Add a specific safeguard only when its need and boundary can be shown, such as protection of irretrievable data or an explicitly required publication guarantee.
+For application operations, let explicit product requirements and demonstrated failure modes determine planning, failure handling and verification. The default is to act on the request using the inputs it needs, retain necessary checks at their owning boundaries, stop on failure and report success when the required work completes. Do not add preview/dry-run phases, saved execution plans, freshness rechecks, rollback/retry machinery or post-action read-backs as a general pattern. Add a specific safeguard only when its need and boundary can be shown, such as protection of irretrievable data or an explicitly required publication guarantee.
 
-When reviewing an existing workflow, identify planning, recovery and verification passes that repeat work or add code complexity and runtime cost. Keep each pass only if an explicit requirement or demonstrated risk justifies it; otherwise simplify the workflow without weakening input validation or its stated completion contract. A failure stops at the point reached, with completed effects left for diagnosis and a manual retry unless that workflow explicitly requires stronger recovery.
+When reviewing an existing workflow, identify planning, recovery and verification passes that repeat work or add code complexity and runtime cost. Keep each pass only if an explicit requirement or demonstrated risk justifies it; otherwise simplify the workflow while retaining necessary checks at their owning boundaries and its stated completion contract. Existing validation is subject to this review; its presence is not evidence that it is required. A failure stops at the point reached, with completed effects left for diagnosis and a manual retry unless that workflow explicitly requires stronger recovery.
+
+Implement the agreed operating model. Do not silently add assumptions about concurrent users, external mutation, corrupted application data, backward compatibility or automatic repair. Raise material extensions before implementing them. Record material safeguards in implementation notes with their purpose, authoritative owner, demonstrated failure or agreed requirement, and operational cost. Routine implementation judgment remains within the agreed boundary.
+
+Authoring/import owners establish domain validity. Downstream operations trust completed application-produced records, artifacts and handoffs rather than repeating their validation or auditing unrelated data. Retain necessary parsing, authority, confinement, sanitization and transfer checks at their actual boundaries. Reuse loaded state, resolved configuration, parsed records, supplied selections and completed effects; additional calls, reads, scans, hashes, rebuilds and refreshes need a concrete operational purpose.
+
+Choose the authoritative owner before the implementation language or existing helper. Studio and Docs Viewer are predominantly frontend apps in a single-user local operating model. Selection, authoring feedback, membership choices and view state belong in the browser when its loaded data can resolve them. Python owns required filesystem persistence, media processing, generation and transfers. Existing server code, tests or documentation do not establish ownership for a new decision. Keep routine operation interfaces narrow and consequential work visible; responsibilities can remain monolithic across many small files when shared state, mixins or broad helpers conceal their dependencies.
 
 This checklist and the durable Studio development documentation are maintained directly in repository `documentation/studio/`. Studio Markdown filenames use concise readable titles with underscores. Retain each existing `doc_id` and `title` in front matter and update file links when renaming. Read and edit these repository files in place; their updates do not use the Docs source service or Docs/Search rebuilds. Links below point to the corresponding Markdown files in this directory.
 
 ## Before Editing A Material Change
 
 - [ ] Name the outcome, broad authoritative owner, write boundary, and user-visible or generated deliverables.
+- [ ] Choose ownership from the decision and location of required data. State the frontend responsibility, concrete server work and permitted data/processing scope before choosing a language or reusing a helper.
 - [ ] Read the smallest durable doc that maps those owners; inspect only the code/config/tests needed for the next safe change.
 - [ ] Confirm this is one finishable slice and note the credible blast radius or stop condition. Put broader discussion and internal sequence in the concept or feature parent.
 - [ ] For a [Planned](Planned_Features.md) feature delivery, keep the initial readiness step read-only and concise. Exact file inventories, line estimates, frozen code, fixtures, prototypes, generated deltas, and complete test architecture are implementation work, not approval prerequisites.
@@ -30,6 +37,13 @@ This checklist and the durable Studio development documentation are maintained d
 - [ ] Identify documentation, linting, type-checking, or reference-generation follow-through only when the changed contract requires it.
 
 ## Ownership Gates
+
+### Workflow Ownership And Structure
+
+- [ ] Separate metadata discovery, selected preparation, rendering, persistence, transfer and explicit maintenance into focused responsibilities with narrow inputs/outputs. A simple action must not inherit full generation or maintenance work through a convenient general context loader.
+- [ ] Keep one visible workflow owner for the required reads, transformations, writes and completion effects. Carry resolved configuration, parsed records, selections and completed effects forward; make consequential I/O explicit at the call site.
+- [ ] Inspect reused helpers, constructors, mixins, shared mutable context and default/optional-input branches for hidden loading, scanning, validation or rendering. A missing supplied input must not silently broaden a selected operation into complete loading or generation.
+- [ ] Refactor a demonstrated ownership seam within the agreed delivery when it removes an implicit dependency, duplicated decision or unnecessary operation. Keep each extraction's inputs, output and side effects clear; splitting by file size or adding modules alone does not demonstrate improvement. Keep broader restructuring separately scoped.
 
 ### User-Visible Operation Ordering
 
@@ -222,7 +236,7 @@ This checklist and the durable Studio development documentation are maintained d
 
 ## End-Of-Delivery Review
 
-For every material code/config delivery, include a distinct code-review step after implementation and selected evidence, and before closeout. Approval of readiness and a passing test run do not replace review. For a status-only documentation closeout, mark code review not applicable with the reason, perform a bounded source/diff review, and reuse accepted implementation evidence instead of repeating delivery verification.
+For every material code/config delivery, include a distinct code-review step after implementation and selected evidence, and before closeout. That step must include the Redundancy And Defensive Behavior Review below and record its findings and resolutions. Approval of readiness and a passing test run do not replace review. For a status-only documentation closeout, mark code review not applicable with the reason, perform a bounded source/diff review, and reuse accepted implementation evidence instead of repeating delivery verification.
 
 - [ ] Review the changed contract and relevant final diff as an independent reviewer. Look for ownership drift, duplicated contracts, hidden coupling, compatibility residue, dead paths, and missing failure evidence within the delivery boundary; do not expand this into a repository audit.
 - [ ] When test changes are approved, review their diff against the agreed specification and durable coverage record for duplicated coverage, UI choreography, unnecessary fixtures, collection expansion, and unjustified cost. Resolve findings within that approved scope; otherwise propose bounded test work rather than silently editing tests.
@@ -230,6 +244,21 @@ For every material code/config delivery, include a distinct code-review step aft
 - [ ] Reconcile every completion claim with the exact evidence and inspected surface. Remove or narrow any statement that reads as broader confidence than the work can support.
 - [ ] Record a documentation, linting, type, or reference-boundary follow-up only when the delivery produced concrete evidence of a gap; do not require a speculative adoption review at every closeout.
 - [ ] Confirm remaining risks, omissions, and evidence gaps are visible before closeout.
+
+### Redundancy And Defensive Behavior Review
+
+This is a required part of each material delivery's code review across Studio and Docs Viewer. Keep it bounded to the changed operation and reused helpers on its call path; do not turn it into a repository audit, exhaustive safeguard inventory or automatic test run.
+
+- [ ] Trace the normal operation and relevant empty/unchanged paths through frontend, service and shared helpers. Identify unnecessary calls, repeated reads and work unrelated to the requested selection.
+- [ ] Confirm that frontend/server ownership follows the decision and available data. Challenge a server-owned choice whose required data is already loaded in the browser, and identify the concrete persistence/processing/transfer work that still belongs on the server.
+- [ ] Review dependencies beyond the changed lines: reused loaders/builders, constructors, mixins, shared state and default-input branches. Confirm that narrow requests retain their scope and that structural changes remove real coupling or work rather than merely redistribute it among files.
+- [ ] For each material validation or audit, identify the rule's owner, the failure it prevents and why this operation must perform it. Remove repeated checks of completed upstream handoffs.
+- [ ] Challenge full-corpus scans, agreement checks, hashes and read-backs. Distinguish necessary aggregate reading/writing from auditing every record. Keep explicit maintenance audits outside routine operations.
+- [ ] Check for silently invented operating assumptions or product behavior. Report any additional rejection, normalization, repair, fallback, concurrency or recovery policy that lacks an agreed requirement.
+- [ ] Verify that failure reporting identifies the target/phase and completed effects without concealing errors or introducing unnecessary recovery work.
+- [ ] Record the review's findings, removals and justified retained safeguards in the delivery's code-review step. Passing tests establish behavior; they do not establish that the behavior is needed.
+
+When end-to-end confirmation is agreed to accumulate through normal use, record concrete observations and failures as they arise. Unexpected slowness or rejection of valid work warrants focused inspection of that action's requests and major processing steps, followed by a fix to the demonstrated ownership problem. Distinguish those observations from static evidence and unexercised behavior; do not introduce a general monitoring framework, broad regression run or speculative defensive code to fill that evidence gap.
 
 ## Documentation And Closeout
 

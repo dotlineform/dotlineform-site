@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260428-000000-f5ff18
 title: Planned Features
 added_date: "2026-04-28 00:00:00"
-last_updated: "2026-10-13 17:47:14"
+last_updated: "2026-10-13 21:00:28"
 summary: This explains the delivery model and workflows to implement new repo and application features.
 ui_status: planned
 parent_id: ""
@@ -141,6 +141,10 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 - Feature documents are **not** durable documents. They enter the explicit closeout list when their routing or decision value is exhausted.
 - Close a delivery when the complete result works and its durable owner is current.
 - Feature documents should be updated with useful decisions and future direction without becoming long execution diaries.
+
+## Proposed Features
+
+- [Docs Viewer App Roadmap](Docs_Viewer_App_Roadmap.md) — Proposed standalone Mac/iPad reader progressing to local management through one capability release at a time. Each Swift release aligns with an agreed web behavior/resource baseline; ongoing web additions do not automatically expand it. Reuse the existing reader and native foundation, improve only the responsibility seams needed by the next capability, and treat historical native proposals as background requiring reconciliation. DVA.R1 ordinary reading is the next candidate; workspace/access, release scope and implementation approval remain open.
 
 ## Reviews
 

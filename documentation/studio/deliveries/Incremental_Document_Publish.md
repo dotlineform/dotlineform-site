@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261012-112453-211357
 title: Incremental Document Publish
 added_date: "2026-10-12 11:24:53"
-last_updated: "2026-10-13 19:25:13"
+last_updated: "2026-10-13 20:33:58"
 summary: Proposed queue-only Publish for ordinary and non-Catalogue collection documents, with completed public artifacts and eligibility, dependency, media and shared-output effects supplied upstream.
 ui_status: proposed
 parent_id: d-20260428-000000-f5ff18
@@ -23,6 +23,41 @@ Current Publish completes queued Catalogue Works, then captures ordinary and col
 Prerequisite cleanup on 2026-10-13: the user approved M.25/M.28/M.29 review groups 1–4, implemented through the existing Publish owners. They remove repeated queue/content audits, reuse Catalogue setup/media inputs and limit browser follow-through to reported Recent persistence. [User Facing Rules](../data/User_Facing_Rules.md) records implementation and evidence. Groups 5–7 remain gaps for this delivery: the unconditional full source/eligibility/build/snapshot pass, complete repository/referenced-media reconciliation including remote listings, and selected shared/document/media completion with retry from retained Preview bytes. Shared document media currently retains a common live asset root. This cleanup does not approve this delivery's implementation or satisfy its queue-only/no-op/retry gates.
 
 Complete proposed result: Save/build owners prepare exact public artifacts and record their completed writes/removals; Publish applies only those queued effects to Preview and configured repository/R2 destinations. Unselected files retain their bytes. When all publication queues are empty, Publish performs no publication work.
+
+## Review Handoff — 2026-10-13
+
+The [User Facing Rules](../data/User_Facing_Rules.md) prerequisite review has completed its agreed code cleanup. M.01–M.04 are agreed with no code changes; all six Settings/Export/package groups for M.05/M.06/M.22 are implemented with manual checks pending. Earlier source/generation, discovery, Catalogue Regenerate and Publish cleanup records remain in that document. This handoff preserves the existing Incremental Document Publish gaps and does not approve implementation or close IDP.0.
+
+Key findings to carry into the Publish delivery:
+
+- The browser owns editorial availability and choices resolvable from loaded state. Exact invoked/displayed targets and ordinary/collection identity remain separate. Settings now validates default membership against the loaded Index, projects browser configuration without a document/media build and applies its returned default without reloads. Committed state and unfinished projection remain distinct, including explicit unchanged-Save recovery. Public configuration still needs its own completed queued contribution in this delivery.
+- Export capability discovery checks configured locations without document-payload audits; subtree/workspace actions use loaded IDs and add no capability refresh. Export consumes its server response directly, retaining its separate overwrite confirmation, one Apply comparison and one output file-set/byte verification. Those guards belong to user-owned Export; they do not justify another Publish planning, confirmation or destination-reconciliation pass.
+- Package options now makes one metadata-only request for captured subtree/checked targets. Application Prepare trusts final UI IDs/formats, reads selected sources once and uses saved relationship metadata plus a lazy content renderer; tree output needs no manifest or renderer. CLI selection and returned-package validation retain their independent owners. Reuse these ownership principles when preparing public artifacts upstream, without moving package/source validation or body rendering into Publish.
+- Source/generation and Catalogue owners already carry resolved inputs and completed effects through their operations. Docs Viewer trusts Refresh-owned generated Catalogue data without Studio API/canonical reads; Catalogue queues preserve existing media selections and initialized progress. Publish cleanup removed repeated queue/content/identity/manifest/Mermaid audits and reused selected media inputs. Required parsing, exact configured artifact authority, path/symlink confinement and selected transfer/output verification remain execution concerns.
+- Busy/status flow reports actual completion and partial effects. Publish refreshes Recent only after its response reports completed Working persistence and adds no detached capability refresh. Preserve that completion-driven follow-through when Recent moves upstream; do not retain a redundant Publish-time Recent write solely to support the current marker.
+
+Ownership and structure are contributing concerns to address within this delivery. The reviews suggest that starting from existing server helpers, reusing full generation contexts and hiding dependencies in shared state can bring unnecessary preparation/audits into simple operations. Small files alone do not resolve that coupling. [Development Checklist](../Development_Checklist.md#workflow-ownership-and-structure) now owns the cross-app principles; apply them here without a blanket language migration or unrelated module-splitting delivery:
+
+- Choose the decision owner from the required data and agreed local operating model. The frontend owns loaded-state choices and awaited user-visible completion; Python owns required upstream artifact preparation and selected filesystem/media transfers. Existing server code must not pull browser-owned choices or upstream generation into Publish.
+- Separate public preparation and queue handoff from selected Preview application and destination transfer. Give each responsibility narrow inputs/outputs and explicit side effects. Reuse existing projection/rendering owners with supplied selected inputs; avoid a general builder/context loader whose defaults recapture the corpus or repeat authoring validation.
+- Keep one visible Publish workflow owner for supplied selections, Preview writes/removals, persisted progress, destination transfers and completed selection removal. Carry the resolved workspace, parsed queues and completed artifact/effect identities forward. Empty queues must return before expensive setup, and required selected work must be visible at the call site.
+- Refactor the relevant responsibility seams while implementing IDP.1–IDP.3 when that removes an implicit dependency or unnecessary pass. Do not treat file-size reduction as completion evidence or expand this delivery into repository-wide restructuring. Required maintenance/full-generation owners remain separate and explicit.
+- IDP.4 must trace reused Catalogue/shared/build/transfer helpers beyond the changed lines, including constructors, mixins and missing-input branches, for hidden reads, rendering, scans or audits. Record the removed work, clarified ownership and justified retained execution checks. Normal-use failures or surprising processing costs should guide bounded follow-up fixes; this adds no automatic tracing, benchmark or test infrastructure.
+
+The remaining gaps map to the existing delivery steps:
+
+| Review entries | Remaining Publish work | Delivery owner |
+| --- | --- | --- |
+| M.18/M.19 | Ordinary and non-Catalogue generation, including exact Rebuild, lacks a completed public-artifact/effects queue handoff. External source/policy edits can still enter publication through Publish's current source capture. Prepare and queue writes/removals upstream across application and CLI paths; deliberate external edits require explicit owning generation. | IDP.1 |
+| M.26 | Publish still calculates eligibility from current sources. Upstream owners must supply exact subtree/host withdrawal/restoration, move and affected rendered-dependency effects using sufficient saved private metadata. Missing prerequisites require explicit upstream repair, without a corpus-scan fallback in Publish. | IDP.2 |
+| M.27 | Recent and eligible Selected are still prepared during Publish; Search is copied every time without a queued transfer. Move Recent/Selected effects upstream and queue explicit Search rebuild bytes, plus finished public index/manifests/configuration. Unqueued shared output remains untouched; ordinary edits do not automatically refresh Search. | IDP.2 |
+| M.25 | Empty Catalogue selections still enter full source/eligibility/build/shared-snapshot preparation; ordinary/other collection queues do not exist. Remove the unconditional pass and consume completed selections only. All publication queues empty must produce no generation, transfer, deletion, scan or timestamp-only change. | IDP.1/IDP.3 |
+| M.28 | Shared distribution still depends on a complete snapshot, repository-tree comparison and referenced-media reconciliation, including remote family listings. Apply exact document/media/shared writes and removals through existing destination owners, verifying only selected transfers and retaining unselected bytes. | IDP.2/IDP.3 |
+| M.29 | Catalogue Works retain per-Work Preview progress, but shared retry prepares another snapshot from current Working and shared media uses a live asset root. General document/media/shared units need accurate retained progress and retry from completed Preview bytes, with successful distribution alone removing selections. | IDP.3 |
+
+Before implementation, IDP.0 must reconcile the accepted rules with the saved eligibility/dependency metadata, upstream Recent candidate maintenance, exact media/public-configuration effects and deliberate baseline/cutover approach. Resolve how interrupted publication is completed before further authoring/generation; the current UI does not enforce that rule. These decisions must not introduce automatic retry, rollback, polling, a second ledger, compatibility aliases or a normal Publish reconciliation fallback.
+
+Evidence remains focused lint, syntax/import diagnostics and distinct source/diff review recorded in User Facing Rules. Live/manual acceptance is pending; no tests or live Settings/Export/Prepare/Build/Refresh/Regenerate/Publish were run for the cleanup. Existing retired-contract tests require separately agreed review/migration, and this note adds no test scope. This handoff edit is documentation only, so code review is not applicable; bounded documentation review and whitespace checking apply. Keep the delivery proposed and all implementation/acceptance gates open until their own approval and evidence are recorded.
 
 ## Requirements
 
@@ -176,6 +211,7 @@ Gate: Publish consumes only the supplied queues, reads only selected artifacts a
 
 ### [ ] IDP.4 — Code Review And Selected Evidence
 
+- [ ] Apply the mandatory [Redundancy And Defensive Behavior Review](../Development_Checklist.md#redundancy-and-defensive-behavior-review), including frontend/server ownership, narrow interfaces and hidden dependencies/work in reused helpers.
 - [ ] Review the final bounded diff for complete handoffs, selection loss, hidden full passes, validation in reused helpers, public/private projection leaks, dependency omissions and retained-progress correctness.
 - [ ] Resolve findings and rerun only evidence affected by changes. Record exact evidence and material omissions without treating a check count as whole-workflow confidence.
 
