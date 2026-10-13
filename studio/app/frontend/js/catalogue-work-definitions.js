@@ -13,8 +13,7 @@ function applyGalleryResult(state, response) {
   const id = response.gallery_id;
   if (response.deleted) {
     state.galleriesById.delete(id);
-    // Remove only this identity from saved baselines and unsaved drafts. Other
-    // edits and stale-revision protection remain owned by ordinary Work Save.
+    // Remove only this Gallery identity from saved baselines and unsaved drafts.
     for (const record of [state.draft, state.baselineDraft, state.currentRecord, state.currentLookup,
       state.currentLookup?.work, ...state.workSearchById.values(),
       ...state.sourceWorkRecordsById.values(), ...state.bulkRecords.values()]) {
@@ -47,7 +46,7 @@ function validateResponse(kind, requestedId, response) {
     || (!requestedId && !response.created)
     || (response.deleted && kind === "Series" && response.kind !== "series")
     || (!response.deleted && (response.record?.[key] !== id
-      || typeof response.record.title !== "string" || !response.record_hash
+      || typeof response.record.title !== "string" || (kind === "Series" && !response.record_hash)
       || (kind === "Gallery" && !Array.isArray(response.related_series_ids))))) {
     throw new Error(`${kind} response is missing its exact record or revision.`);
   }

@@ -8,7 +8,6 @@ from typing import Any, Mapping
 from catalogue import catalogue_source_mutation as source_mutation
 from catalogue.catalogue_galleries import (
     MEMBERSHIPS_FILE,
-    newly_empty_gallery_ids,
     read_galleries,
     with_work_memberships,
 )
@@ -126,7 +125,6 @@ def work_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
         "record_hash": record_hash(plan.updated_record),
         "gallery_ids": sorted(updated_galleries.works.get(work_id, [])),
         "affected_gallery_ids": sorted(set(galleries.works.get(work_id, [])) | set(updated_galleries.works.get(work_id, []))),
-        "newly_empty_gallery_ids": newly_empty_gallery_ids(galleries, updated_galleries, [work_id]),
         "_shared_changes": work_shared_changes(
             works, {**works, work_id: plan.updated_record}, galleries.works, updated_galleries.works, [work_id],
         ),

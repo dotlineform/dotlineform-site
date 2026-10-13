@@ -49,12 +49,27 @@ function buildPayload(state) {
   return payload;
 }
 
-function newlyEmptyGalleryIds(response) {
-  const ids = response.newly_empty_gallery_ids;
-  if (!Array.isArray(ids) || ids.some(id => typeof id !== "string" || !id) || new Set(ids).size !== ids.length) {
-    throw new Error("Saved Work response is missing distinct newly empty Gallery IDs.");
+/** Capture removed memberships from saved records before adopting the Save response. */
+function galleryIdsRemovedBySave(state, payload) {
+  const removed = new Set();
+  if (payload.gallery_ids === undefined) return removed;
+  const retained = new Set(payload.gallery_ids);
+  for (const workId of payload.ids || [payload.work_id]) {
+    for (const galleryId of state.workSearchById.get(workId).gallery_ids) {
+      if (!retained.has(galleryId)) removed.add(galleryId);
+    }
   }
-  return ids;
+  return removed;
+}
+
+/** Find newly empty Galleries in the complete saved Work map after successful Save. */
+function newlyEmptyGalleryIds(state, removed) {
+  if (!removed.size) return [];
+  for (const work of state.workSearchById.values()) {
+    for (const galleryId of work.gallery_ids) removed.delete(galleryId);
+    if (!removed.size) return [];
+  }
+  return Array.from(removed).sort();
 }
 
 
@@ -90,8 +105,10 @@ export async function saveCurrentWork(state, context) {
   let savedResponse = null;
   let cleanupGalleryIds = [];
   try {
+    const payload = buildPayload(state);
+    const removedGalleryIds = galleryIdsRemovedBySave(state, payload);
     if (state.mode === "bulk") {
-      const response = await saveCatalogueBulkRecords(buildPayload(state));
+      const response = await saveCatalogueBulkRecords(payload);
       savedResponse = response;
       context.noteCatalogueSaved(response);
       const changedRecords = Array.isArray(response && response.records) ? response.records : [];
@@ -102,9 +119,8 @@ export async function saveCurrentWork(state, context) {
       setLoadedBulkWorks(state, state.bulkWorkIds, state.bulkRecords, state.bulkRecordHashes, context.workRouteStateOptions({keepResult: true}));
       const completionError = catalogueSaveCompletionError(response);
       setTextWithState(context, state.resultNode, completionError || "Saved " + (response.changed_count || 0) + " work records.", completionError ? "error" : "success");
-      if (!completionError) cleanupGalleryIds = newlyEmptyGalleryIds(response);
+      if (!completionError) cleanupGalleryIds = newlyEmptyGalleryIds(state, removedGalleryIds);
     } else {
-      const payload = buildPayload(state);
       const response = await saveCatalogueWork(payload, workMediaRequest(state));
       savedResponse = response;
       context.noteCatalogueSaved(response);
@@ -127,7 +143,7 @@ export async function saveCurrentWork(state, context) {
       }));
       setTextWithState(context, state.resultNode, completionError || "Saved.", completionError ? "error" : "success");
       state.currentLookup = await context.loadWorkLookupRecord(state.currentWorkId);
-      if (!completionError) cleanupGalleryIds = newlyEmptyGalleryIds(response);
+      if (!completionError) cleanupGalleryIds = newlyEmptyGalleryIds(state, removedGalleryIds);
     }
   } catch (error) {
     const message = catalogueSavedActionError(savedResponse, error)

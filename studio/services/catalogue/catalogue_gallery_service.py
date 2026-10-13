@@ -8,7 +8,6 @@ from catalogue.catalogue_galleries import (
     GALLERIES_FILE, MEMBERSHIPS_FILE, CatalogueGalleries, read_galleries,
     validate_gallery_id,
 )
-from catalogue.catalogue_revisions import CatalogueRevisionConflict, record_hash, require_record_revision
 from catalogue.catalogue_series_galleries import (
     SERIES_GALLERIES_FILE, CatalogueSeriesGalleries, read_series_galleries,
     related_series_ids, with_gallery_relation, without_gallery,
@@ -27,7 +26,7 @@ def gallery_record_payload(
         raise ValueError(f"gallery_id not found: {gallery_id}")
     record = data.galleries[gallery_id]
     return {
-        "gallery_id": gallery_id, "record": record, "record_hash": record_hash(record),
+        "gallery_id": gallery_id, "record": record,
         "member_work_ids": sorted(wid for wid, ids in data.works.items() if gallery_id in ids),
         "related_series_ids": related_series_ids(pairs, gallery_id),
     }
@@ -41,12 +40,14 @@ def mutate_gallery_payload(
     Create uses the supplied exact ID and cannot replace a saved definition.
     Save addresses an existing identity without repeating authoring validation or
     auditing the Catalogue. The UI owns title completion and Series selection.
-    Delete retains the existing definition and complete-member confirmation checks
-    without a complete canonical audit or a Series-definition lookup.
+    Delete addresses the supplied exact Gallery identity and removes its current
+    references without revision/member preconditions or a complete canonical audit.
     Work metadata is untouched; completion receives all former member identities.
     """
     if operation not in {"create", "save", "delete"}:
         raise ValueError("Unsupported Gallery operation")
+    if operation == "delete" and set(body) != {"gallery_id"}:
+        raise ValueError("Gallery Delete requires only gallery_id")
     if operation != "delete" and set(body) != {"gallery_id", "title", "series_id", "related_to_series"}:
         raise ValueError("Gallery Create/Save requires gallery_id, title, series_id and related_to_series")
     works = load_works_payload(context.works_path)["works"]
@@ -61,19 +62,12 @@ def mutate_gallery_payload(
     else:
         if gallery_id not in data.galleries:
             raise ValueError(f"gallery_id not found: {gallery_id}")
-        if operation == "delete":
-            require_record_revision(data.galleries[gallery_id], body.get("expected_record_hash"))
         members = sorted(wid for wid, ids in data.works.items() if gallery_id in ids)
 
     definitions = dict(data.galleries)
     memberships = dict(data.works)
     updated_pairs = pairs
     if operation == "delete":
-        expected = body.get("expected_member_work_ids")
-        if not isinstance(expected, list) or any(not isinstance(wid, str) for wid in expected):
-            raise ValueError("expected_member_work_ids must be an array of Work IDs")
-        if sorted(expected) != members:
-            raise CatalogueRevisionConflict("Gallery membership changed; reopen the Gallery before deleting.")
         del definitions[gallery_id]
         updated_pairs = without_gallery(pairs, gallery_id)
         for wid in members:

@@ -6,7 +6,7 @@ import json
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Iterable, Mapping
+from typing import Any, Mapping
 
 GALLERIES_FILE = "galleries.json"
 MEMBERSHIPS_FILE = "galleries-by-work.json"
@@ -89,31 +89,17 @@ def read_galleries(source_dir: Path) -> CatalogueGalleries:
 
 
 def with_work_memberships(
-    data: CatalogueGalleries, replacements: Mapping[str, Any],
+    data: CatalogueGalleries, replacements: Mapping[str, list[str]],
 ) -> CatalogueGalleries:
-    """Apply UI-authored sets without endpoint checks or a whole-Catalogue audit."""
+    """Persist Gallery sets whose representation and membership the UI validates.
+
+    The UI supplies lists of distinct existing Gallery ID strings. Empty lists
+    remove Work membership entries; explicit audits own canonical validation.
+    """
     memberships = dict(data.works)
     for work_id, gallery_ids in replacements.items():
-        if not isinstance(gallery_ids, list) or any(not isinstance(gid, str) for gid in gallery_ids):
-            raise ValueError("gallery_ids must be an array of Gallery ID strings")
         if gallery_ids:
             memberships[work_id] = sorted(gallery_ids)
         else:
             memberships.pop(work_id, None)
     return CatalogueGalleries(data.galleries, memberships)
-
-
-def newly_empty_gallery_ids(
-    before: CatalogueGalleries, after: CatalogueGalleries, work_ids: Iterable[str],
-) -> list[str]:
-    """Find Galleries emptied by the selected Works' accepted membership removals."""
-    removed: set[str] = set()
-    for work_id in work_ids:
-        removed.update(set(before.works.get(work_id, [])) - set(after.works.get(work_id, [])))
-    if not removed:
-        return []
-    for gallery_ids in after.works.values():
-        removed.difference_update(gallery_ids)
-        if not removed:
-            break
-    return sorted(removed)

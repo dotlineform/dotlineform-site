@@ -8,7 +8,7 @@ function nextGalleryId(galleriesById) {
   return String(highestId + 1).padStart(3, "0");
 }
 
-/** Load exact Gallery definitions and saved Series relevance for this Work context. */
+/** Edit saved Gallery relevance, or confirm UI-detected cleanup from the loaded definition. */
 export async function openWorkGalleryModal(state, { galleryId = "", restoreFocus, onBusyChange, deleteEmpty = false } = {}) {
   const seriesId = deleteEmpty ? null : state.draft.series_id || null;
   const series = seriesId ? state.seriesById.get(seriesId) : null;
@@ -16,20 +16,18 @@ export async function openWorkGalleryModal(state, { galleryId = "", restoreFocus
     throw new Error("The displayed Series context is unavailable. Reload the Work before editing a Gallery.");
   }
   let lookup = null;
-  if (galleryId) {
+  if (galleryId && !deleteEmpty) {
     lookup = await loadStudioServerReadJson("catalogue_gallery_record", galleryId, { cache: "no-store" });
     if (lookup.gallery_id !== galleryId || lookup.record?.gallery_id !== galleryId
-      || typeof lookup.record.title !== "string" || !lookup.record_hash
+      || typeof lookup.record.title !== "string"
       || !Array.isArray(lookup.member_work_ids) || !Array.isArray(lookup.related_series_ids)) {
       throw new Error("Gallery lookup is missing its exact record, members or Series associations.");
     }
   }
-  if (deleteEmpty && (!lookup || lookup.member_work_ids.length)) {
-    throw new Error("Only an empty Gallery can be deleted by Work Save cleanup.");
-  }
+  const gallery = deleteEmpty ? state.galleriesById.get(galleryId) : lookup?.record;
   let deleteError = null;
   const result = await openWorkDefinitionModal(state, {
-    kind: "Gallery", id: galleryId, title: lookup?.record.title || "", restoreFocus, onBusyChange,
+    kind: "Gallery", id: galleryId, title: gallery ? gallery.title : "", restoreFocus, onBusyChange,
     deleteOnly: deleteEmpty, cancelLabel: deleteEmpty ? "Keep Gallery" : "Cancel",
     checkbox: deleteEmpty ? null : {
       label: "Relates to all works in this series",
@@ -38,7 +36,7 @@ export async function openWorkGalleryModal(state, { galleryId = "", restoreFocus
       disabled: !series
     },
     deleteMessage: deleteEmpty
-      ? `Your Work changes were saved. “${lookup.record.title}” (${galleryId}) now has no Works. Delete this Gallery?`
+      ? `Your Work changes were saved. “${gallery.title}” (${galleryId}) now has no Works. Delete this Gallery?`
       : lookup
       ? `Delete “${lookup.record.title}” (${galleryId})? This removes it from ${lookup.member_work_ids.length} Works.`
       : "",
@@ -48,10 +46,7 @@ export async function openWorkGalleryModal(state, { galleryId = "", restoreFocus
         title, series_id: seriesId, related_to_series: related }),
     async remove() {
       try {
-        return await deleteCatalogueGallery({
-          gallery_id: galleryId, expected_record_hash: lookup.record_hash,
-          expected_member_work_ids: lookup.member_work_ids
-        });
+        return await deleteCatalogueGallery({ gallery_id: galleryId });
       } catch (error) {
         deleteError = error;
         throw error;

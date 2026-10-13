@@ -9,7 +9,6 @@ from catalogue.catalogue_revisions import record_hash
 from catalogue import catalogue_transactions as transactions
 from catalogue.catalogue_galleries import (
     MEMBERSHIPS_FILE,
-    newly_empty_gallery_ids,
     read_galleries,
     with_work_memberships,
 )
@@ -127,7 +126,6 @@ def bulk_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
         "affected_work_ids": affected_work_ids,
         "affected_series_ids": sorted(affected_series_ids),
         "affected_gallery_ids": sorted(affected_gallery_ids),
-        "newly_empty_gallery_ids": newly_empty_gallery_ids(galleries, updated_galleries, selected_ids),
         "_shared_changes": work_shared_changes(
             works_map, updated_works, galleries.works, updated_galleries.works, changed_ids,
         ),

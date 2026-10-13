@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260422-000000-45a776
 title: Catalogue Work Editor
 added_date: "2026-04-22 00:00:00"
-last_updated: "2026-10-12 18:45:46"
+last_updated: "2026-10-13 06:41:03"
 parent_id: d-20260423-000000-d015e6
 
 ---
@@ -87,6 +87,8 @@ New/Edit warns when another definition of the same type has a matching title, ig
 OK saves the shared definition immediately and updates the editor's live canonical views. Creating a Gallery adds its pill to the current Work draft. Creating a Series selects it in the left-panel browser and assigns it to the current new or existing Work draft; bulk Series assignment remains read-only. Work Save persists the assignment, including the existing bulk Gallery replacement semantics. Cancel before OK creates nothing. Discarding the Work draft after OK leaves the saved definition available, potentially unassigned. Title editing changes the shared definition without changing draft membership. Generated readers update on Refresh Catalogue.
 
 The Gallery pill's × only removes membership from the current draft. Delete inside Edit confirms the number of saved associated Works and removes the Gallery definition and all canonical memberships together. The list, loaded saved memberships and draft drop the deleted ID while retaining other unsaved edits. Refresh Catalogue later updates affected generated Works and indexes and removes the deleted Gallery JSON; no subsequent Work Save is required. A failure after canonical persistence is reported as incomplete local completion rather than an unsaved deletion.
+
+After successful single/bulk Work Save, the editor uses the removed Gallery IDs and its updated complete saved Work membership map to discover newly empty Galleries. It offers Delete or Keep Gallery using cached Gallery titles, without a candidate response or extra Gallery read. Unsaved pill removal, failed/incomplete Save, already-empty Galleries and Galleries with remaining members do not produce cleanup prompts. Gallery Delete sends only the exact Gallery ID; the server removes its current memberships and Series relevance pairs without definition revision or confirmed-member checks.
 
 Series Delete is disabled with an explanation while saved Works belong to the Series. The service checks membership again when applying deletion. Deleting an empty Series clears any unsaved assignment to it in the current Work draft. Other bulk fields, including Series assignment, remain read-only.
 
