@@ -8,7 +8,9 @@ from typing import Any, Iterable, Mapping
 from docs_deploy_repo import apply_deploy_repo_plan, build_deploy_repo_plan, utc_now
 from docs_prepare_preview import prepare_preview
 from docs_catalogue_publication import CataloguePublicationError, publish_catalogue_works
-from studio.services.catalogue.catalogue_pending_publication import read_pending_publication, write_pending_publication
+from docs_workspace_config import load_docs_workspace_config
+from studio.services.catalogue.catalogue_pending_publication import FILENAME as PUBLICATION_FILENAME
+from studio.services.catalogue.catalogue_pending_state import load_pending_queue, pending_path, persist_pending_queue
 from studio.services.catalogue.catalogue_shared_changes import SHARED_FIELDS, shared_changes
 
 
@@ -27,6 +29,8 @@ def publish_docs(
     earlier Work effects remain. Distribution failure retains completed Preview
     and reports incomplete publication, including non-atomic effects. No retries,
     rollback, Git actions or public-site deployment are performed here.
+    ``recent_updated`` records completed Working Recent persistence, including
+    when later Preview or distribution work fails.
     """
     if not isinstance(body, dict) or body:
         raise ValueError("Publish requires an empty request object; its workspace and destinations are configured")
@@ -36,13 +40,25 @@ def publish_docs(
         "complete": False,
         "phase": "catalogue",
         "preview_prepared": False,
+        "recent_updated": False,
     }
+
+    def recent_written() -> None:
+        result["recent_updated"] = True
+
     try:
-        result["catalogue"] = publish_catalogue_works(repo_root, client=client, env_files=env_files, environ=environ)
-        pending = read_pending_publication(repo_root)
+        workspace = load_docs_workspace_config(repo_root)
+        queue_path = pending_path(repo_root, PUBLICATION_FILENAME, workspace=workspace)
+        pending = load_pending_queue(queue_path)
+        result["catalogue"] = publish_catalogue_works(
+            repo_root, workspace=workspace, pending=pending, queue_path=queue_path,
+            client=client, env_files=env_files, environ=environ,
+        )
         selection = shared_changes(pending, publishing=True)
         result["phase"] = "shared preparation"
-        snapshot = prepare_preview(repo_root, catalogue_selection=selection)
+        snapshot = prepare_preview(
+            repo_root, workspace=workspace, catalogue_selection=selection, on_recent_written=recent_written,
+        )
         result.update(
             phase="distribution", preview_prepared=True,
             preview_revision=snapshot.manifest["preview_revision"],
@@ -66,7 +82,7 @@ def publish_docs(
         if any(selection.values()):
             for field in SHARED_FIELDS:
                 pending[field] = []
-            write_pending_publication(repo_root, pending)
+            persist_pending_queue(queue_path, pending, progress="preview_done")
     except Exception as error:
         if isinstance(error, CataloguePublicationError):
             result.update(work_id=error.work_id, phase=error.phase)

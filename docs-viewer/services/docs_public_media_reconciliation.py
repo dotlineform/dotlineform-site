@@ -24,7 +24,7 @@ from docs_artifact_locations import (
     normalize_artifact_identity,
 )
 from docs_workspace_config import (
-    DocsStageConfig, DocsPublicMediaConfig, public_media_bindings,
+    DocsStageConfig, DocsWorkspaceConfig, DocsPublicMediaConfig, public_media_bindings,
     load_docs_workspace_config, safe_relative_path,
 )
 from docs_document_images import generated_thumbnail_filename
@@ -130,13 +130,15 @@ def referenced_public_media(
     }
 
 
-def publication_media_bindings(repo_root: Path, config: DocsStageConfig) -> dict[str, tuple[ArtifactLocation, DocsPublicMediaConfig]]:
+def publication_media_bindings(
+    repo_root: Path, config: DocsStageConfig, *, workspace: DocsWorkspaceConfig | None = None,
+) -> dict[str, tuple[ArtifactLocation, DocsPublicMediaConfig]]:
     """Pair each shared family with its unchanged configured public destination."""
     bindings = {
         key: (collection.media.types[public.media_type].asset_location, public)
         for key, (collection, public) in public_media_bindings(config).items()
     }
-    workspace = load_docs_workspace_config(repo_root)
+    workspace = load_docs_workspace_config(repo_root) if workspace is None else workspace
     assets = workspace.assets.for_stage("preview")
     settings = json.loads((repo_root / "site-tools/config/site-tools.json").read_bytes())["media"]
     # Catalogue families must not collide with <collection>/<media_type> bindings.

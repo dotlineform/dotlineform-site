@@ -5,15 +5,15 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 import json
 import subprocess
 import sys
 import tempfile
 
 from docs_workspace_config import (
-    CONFIG_REL_PATH, DocsStageConfig, load_docs_stage, load_docs_workspace_config, select_workspace_stage,
-    document_source_path, generated_documents_path, generated_search_path,
+    CONFIG_REL_PATH, DocsStageConfig, DocsWorkspaceConfig, load_docs_workspace_config, select_workspace_stage,
+    document_source_path, generated_documents_path, generated_search_path, safe_relative_path,
 )
 from docs_preview_snapshot import (
     CompletedPreview,
@@ -39,6 +39,7 @@ from docs_catalogue_artifacts import (
 class PreparationInputs:
     """Inputs captured once for the synchronous preparation operation."""
 
+    workspace: DocsWorkspaceConfig
     working: DocsStageConfig
     recent_limit: int
     source_files: dict[Path, bytes]
@@ -72,17 +73,16 @@ def promoted_source(doc: SourceDoc, collection: Any) -> bytes:
     return format_source(front_matter, doc.body).encode("utf-8")
 
 
-def _capture_inputs(repo_root: Path, catalogue_selection: dict[str, list[str]]) -> PreparationInputs:
+def _capture_inputs(repo_root: Path, workspace: DocsWorkspaceConfig, catalogue_selection: dict[str, list[str]]) -> PreparationInputs:
     configuration = {
         Path("configuration"): (repo_root / CONFIG_REL_PATH).read_bytes(),
         Path("catalogue-inventory"): (repo_root / CATALOGUE_CONFIG_REL_PATH).read_bytes(),
     }
-    working = load_docs_stage(repo_root, "working")
+    working = select_workspace_stage(workspace, "working")
     search_path = generated_search_path(working)
     if search_path.is_symlink() or not search_path.is_file():
         raise FileNotFoundError("Working Search index is unavailable; rebuild Search in Working before preparing Preview")
     search_index = search_path.read_bytes()
-    workspace = load_docs_workspace_config(repo_root)
     links_root = generated_documents_path(working) / "links-by-id"
     if links_root.is_symlink():
         raise ValueError("Working related-links inputs must not be a symlink")
@@ -99,11 +99,12 @@ def _capture_inputs(repo_root: Path, catalogue_selection: dict[str, list[str]]) 
         path.relative_to(catalogue_prefix).as_posix(): data for path, data in current.items()
         if path.is_relative_to(catalogue_prefix)
     }
-    identities = {Path(name) for name in catalogue_selection["shared_outputs"]}
-    identities.update(Path("galleries/index") / f"{gid}.json" for gid in catalogue_selection["current_galleries"])
+    identities = {safe_relative_path(name, field="Catalogue shared output") for name in catalogue_selection["shared_outputs"]}
+    identities.update(safe_relative_path(f"galleries/index/{gid}.json", field="Catalogue Gallery path") for gid in catalogue_selection["current_galleries"])
     catalogue.update(read_catalogue_artifacts(workspace.catalogue, inventory, stage="working", identities=identities))
     for gallery_id in catalogue_selection["deleted_galleries"]:
-        catalogue.pop(f"galleries/index/{gallery_id}.json", None)
+        identity = safe_relative_path(f"galleries/index/{gallery_id}.json", field="Catalogue Gallery path")
+        catalogue.pop(identity.as_posix(), None)
     catalogue = select_catalogue_artifacts(catalogue, inventory)
     basis = {
         **configuration,
@@ -113,11 +114,11 @@ def _capture_inputs(repo_root: Path, catalogue_selection: dict[str, list[str]]) 
         **{Path("working-links") / path: data for path, data in related_links.items()},
         **{Path("catalogue") / path: data for path, data in catalogue.items()},
     }
-    return PreparationInputs(working, workspace.recent_limit, source_files, search_index, catalogue, related_links, current, basis)
+    return PreparationInputs(workspace, working, workspace.recent_limit, source_files, search_index, catalogue, related_links, current, basis)
 
 
-def _plan(repo_root: Path, catalogue_selection: dict[str, list[str]]) -> tuple[dict[str, Any], dict[Path, bytes], PreparationInputs, bytes]:
-    inputs = _capture_inputs(repo_root, catalogue_selection)
+def _plan(repo_root: Path, workspace: DocsWorkspaceConfig, catalogue_selection: dict[str, list[str]]) -> tuple[dict[str, Any], dict[Path, bytes], PreparationInputs, bytes]:
+    inputs = _capture_inputs(repo_root, workspace, catalogue_selection)
     working, source_files = inputs.working, inputs.source_files
     source_revision = inputs.revision_basis[Path("working")].decode()
     source_root = _lifecycle_root(repo_root, working, "source")
@@ -200,9 +201,9 @@ def build_captured_preview(
     catalogue: dict[str, bytes],
     related_links: dict[Path, bytes], eligible_doc_ids: list[str],
     retained_preview: dict[Path, bytes],
+    *, workspace: DocsWorkspaceConfig,
 ) -> tuple[dict[Path, bytes], dict[str, Any]]:
     """Build captured inputs in temporary storage without replacing live Preview."""
-    workspace = load_docs_workspace_config(repo_root)
     build_parent = repo_root / "var"
     build_parent.mkdir(exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="preview-build-", dir=build_parent) as directory:
@@ -230,8 +231,6 @@ def build_captured_preview(
                 raise FileNotFoundError(f"Catalogue {relative.stem} has no completed Preview document; Regenerate its refreshed queue or run explicit Catalogue design maintenance")
             data = retained_preview[document]
             payload = json.loads(data)
-            if payload.get("doc_id") != relative.stem:
-                raise ValueError("Retained Catalogue document identity does not match its file")
             target = generated_root / document
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(data)
@@ -243,17 +242,8 @@ def build_captured_preview(
         for relative, data in related_links.items():
             if relative.parent != Path(".") or relative.suffix != ".json":
                 raise ValueError("Related-links inputs require flat JSON records")
-            payload = json.loads(data)
-            if (not isinstance(payload, dict) or payload.get("schema_version") != 4
-                    or not isinstance(payload.get("self"), dict)
-                    or payload["self"].get("doc_id") != relative.stem
-                    or any(not isinstance(payload.get(direction), list) for direction in ("incoming", "outgoing"))):
-                raise ValueError("Captured related-links JSON requires exact version-4 document identity and lists")
-            if payload["self"]["doc_id"] not in eligible:
+            if relative.stem not in eligible:
                 continue
-            for direction in ("incoming", "outgoing"):
-                if any(not isinstance(row, dict) or not isinstance(row.get("doc_id"), str) for row in payload[direction]):
-                    raise ValueError("Captured related-links entries require document identities")
             # Body eligibility selects the owner only; linked destinations keep
             # their captured identities/titles even when their bodies are omitted.
             (captured_links / relative).write_bytes(data)
@@ -292,28 +282,36 @@ def build_captured_preview(
 def _complete_preview(
     repo_root: Path, plan: dict[str, Any], desired: dict[Path, bytes],
     inputs: PreparationInputs, recent_payload: bytes,
+    *, on_recent_written: Callable[[], None],
 ) -> CompletedPreview:
     files, build_manifest = build_captured_preview(
         repo_root, desired, inputs.search_index, recent_payload, inputs.catalogue,
         inputs.related_links, plan["eligible_doc_ids"],
-        inputs.preview_files,
+        inputs.preview_files, workspace=inputs.workspace,
     )
     recent_path = generated_documents_path(inputs.working) / "recent.json"
     if recent_path.is_symlink():
         raise ValueError("Working Recents output must not be a symlink")
     remove_build_manifest(repo_root, inputs.working)
     write_bytes_atomic(recent_path, recent_payload)
+    on_recent_written()
     return write_preview_snapshot(
         repo_root, files=files, generated_revision=build_manifest["generated_revision"],
         source_revision=plan["source_revision"], asset_references=build_manifest["asset_references"],
         current_files=inputs.preview_files,
+        config=inputs.workspace,
     )
 
 
-def prepare_preview(repo_root: Path, *, catalogue_selection: dict[str, list[str]]) -> CompletedPreview:
+def prepare_preview(
+    repo_root: Path, *, workspace: DocsWorkspaceConfig, catalogue_selection: dict[str, list[str]],
+    on_recent_written: Callable[[], None],
+) -> CompletedPreview:
     """Capture fresh eligible Working inputs and complete Preview synchronously.
 
     The synchronous workflow prevents edits while captured inputs are consumed.
     Failure prevents distribution; snapshot replacement retains its receipt semantics.
+    Notify the caller immediately after Working Recent persistence, so a later
+    failure still carries the browser's required refresh selection.
     """
-    return _complete_preview(repo_root, *_plan(repo_root, catalogue_selection))
+    return _complete_preview(repo_root, *_plan(repo_root, workspace, catalogue_selection), on_recent_written=on_recent_written)

@@ -18,7 +18,6 @@ from docs_build_manifest import (
     BUILD_MANIFEST_FILENAME,
     BUILD_MANIFEST_SCHEMA_VERSION,
 )
-from docs_public_mermaid_payload import public_mermaid_payload_requires_projection
 from docs_document_images import generated_thumbnail_filename
 from docs_workspace_config import (
     DocsStageConfig,
@@ -173,32 +172,6 @@ def _validate_generated_manifest(
     return manifest, generated_files
 
 
-def _flatten_tree(rows: Any, *, parent_id: str = "") -> list[dict[str, Any]]:
-    flattened: list[dict[str, Any]] = []
-    if not isinstance(rows, list):
-        return flattened
-    for value in rows:
-        if not isinstance(value, dict):
-            continue
-        doc_id = str(value.get("doc_id") or "").strip()
-        if not doc_id:
-            continue
-        row = dict(value)
-        row["_parent_id"] = parent_id
-        flattened.append(row)
-        flattened.extend(_flatten_tree(value.get("children"), parent_id=doc_id))
-    return flattened
-
-
-def _validate_collection_manifest(path: Path, data: bytes) -> None:
-    """Retain the collection manifest's existing parsing boundary."""
-    parts = path.parts
-    if len(parts) == 4 and parts[0] == "collections" and parts[2:] == ("documents", "manifest.json"):
-        payload = _read_json_bytes(data, f"generated {path}")
-        if not isinstance(payload.get("docs"), list):
-            raise RuntimeError(f"generated {path} is missing docs")
-
-
 def _media_identity_from_url(value: str, prefix: str) -> str:
     candidate = html.unescape(str(value or "").strip())
     normalized_prefix = prefix.rstrip("/")
@@ -285,18 +258,17 @@ def build_preview_snapshot_files(
     config: DocsStageConfig,
     generated_files: Mapping[Path, bytes],
 ) -> tuple[dict[Path, bytes], dict[str, Any]]:
+    """Assemble completed builder bytes without auditing document content or sets."""
     index_path = Path("documents/index-tree.json")
     for required in (index_path, *sorted(COPIED_WORKING_PAYLOAD_PATHS)):
         if required not in generated_files:
             raise FileNotFoundError(f"generated {required.as_posix()} is missing")
-    index_tree = _read_json_bytes(generated_files[index_path], "generated index tree")
     # Preparation owns selection. Project every prepared collection and its
     # indexes together, retaining only reader payloads and referenced media.
     document_ids: set[str] = set()
     files: dict[Path, bytes] = {}
     for relative_path, data in generated_files.items():
         parts = relative_path.parts
-        _validate_collection_manifest(relative_path, data)
         if parts and (parts[0] == "media" or (
             len(parts) >= 4 and parts[0] == "collections" and parts[2] == "media"
         )):
@@ -306,20 +278,9 @@ def build_preview_snapshot_files(
         ordinary_document = len(parts) == 3 and parts[:2] == ("documents", "by-id")
         child_document = len(parts) == 5 and parts[0] == "collections" and parts[2:4] == ("documents", "by-id")
         if relative_path.suffix == ".json" and (ordinary_document or child_document):
-            payload = _read_json_bytes(data, "prepared document")
-            if payload.get("doc_id") != relative_path.stem:
-                raise ValueError("Prepared document identity does not match its file")
-            if config.public_projection is not None and public_mermaid_payload_requires_projection(payload):
-                raise ValueError("Preview Mermaid preparation is incomplete; prepare Preview again")
             document_ids.add(relative_path.stem)
-            files[relative_path] = data
-        else:
-            files[relative_path] = data
+        files[relative_path] = data
 
-    tree_ids = {row["doc_id"] for row in _flatten_tree(index_tree.get("docs"))}
-    ordinary_ids = {path.stem for path in files if len(path.parts) == 3 and path.parts[:2] == ("documents", "by-id") and path.suffix == ".json"}
-    if tree_ids != ordinary_ids:
-        raise ValueError("Prepared index tree and ordinary document set do not match")
     media_references = _referenced_media(config, files)
     bindings = _preview_media_bindings(config)
     asset_references = []
@@ -428,6 +389,7 @@ def validate_preview_snapshot(
 def write_preview_snapshot(
     repo_root: Path, *, files: Mapping[Path, bytes], generated_revision: str, source_revision: str,
     asset_references: list[str], current_files: Mapping[Path, bytes],
+    config: DocsWorkspaceConfig,
 ) -> CompletedPreview:
     """Replace the prepared snapshot and record completion only after byte verification.
 
@@ -435,7 +397,6 @@ def write_preview_snapshot(
     current Preview bytes. Verify written files once, then verify the receipt
     separately. Failure after mutation leaves no valid completion receipt.
     """
-    config = load_docs_workspace_config(repo_root)
     _validate_asset_references(config, asset_references)
     preview_root = config.workspace_root.path / "preview"
     if preview_root.is_symlink():

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260523-190651-7157ec
 title: Development Checklist
 added_date: "2026-05-23 19:06:51"
-last_updated: "2026-10-13 18:56:11"
+last_updated: "2026-10-13 19:25:13"
 parent_id: d-20260419-000000-d2e47b
 
 ---
@@ -32,6 +32,8 @@ This checklist and the durable Studio development documentation are maintained d
 ## Ownership Gates
 
 ### User-Visible Operation Ordering
+
+- [ ] Normal Publish parses one app-produced Catalogue queue and carries its state/workspace through Work/shared preparation; persist required progress without queue-content audits. Empty Work selections skip Work setup and selected media reuses operation policy, paths and adapters. Trust completed Catalogue/Links/document artifacts without downstream content or identity/set-agreement/Mermaid-completeness audits; retain parsing needed for public projection, configured artifact authority, path/basename/symlink confinement and required output/transfer verification. Report completed Working Recent persistence even after later failure; refresh Recent only for that response marker and keep Publish's capability reload out of the browser path. Whole-corpus snapshots, destination/media reconciliation and shared retry retain their separately scoped Incremental Document Publish gaps. [Catalogue Deployment](Catalogue_Deployment.md) and [User Facing Rules](data/User_Facing_Rules.md) M.25/M.28/M.29 own this boundary.
 
 - [ ] Search/Recent discovery consumes saved or completed metadata through one selector, retaining configured coverage and actual draft/subtree/host pruning without row/schema/title/date/readiness audits. Standalone Search reads only required selected source content through confined front-matter/report parsing; keep collection by-ID reads, canonical ancestry rereads, general source-model checks and source/generated agreement audits out of this path. Preserve supplied display metadata and normalize only indexed terms. Construct Recent rows without input/output audits; Recent-specific exclusions use exact-target set semantics. Index reads add no obsolete publication-policy flags. Browser Recent/Selected consume saved rows directly; Selected report ordering is presentation-only and Star reads exact membership without sorting. Publication trusts copied discovery payloads without schema/content or Selected-membership audits, retaining required files, path confinement and byte verification. [Generated Data Contracts](Generated_Data_Contracts.md) owns current payload handoffs; whole-corpus eligibility/queues remain with Incremental Document Publish.
 

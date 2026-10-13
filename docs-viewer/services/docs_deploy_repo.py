@@ -22,7 +22,6 @@ from docs_public_media_reconciliation import (
     referenced_public_media,
     publication_asset_references,
 )
-from docs_public_mermaid_payload import public_mermaid_payload_requires_projection
 from docs_report_source import REPORT_HOST_HTML
 from docs_workspace_config import (
     DocsStageConfig,
@@ -283,19 +282,13 @@ def project_public_report_payload(payload: dict[str, Any]) -> None:
 
 
 def project_document_payload(
-    data: bytes,
-    *,
-    label: str,
+    payload: dict[str, Any],
 ) -> bytes:
-    payload = read_json_bytes(data, label)
+    """Finish report/folder presentation on a parsed public payload and serialize it."""
     project_public_report_payload(payload)
     content_html = payload.get("content_html")
     if isinstance(content_html, str):
         payload["content_html"] = project_public_local_folder_links(content_html)
-    if public_mermaid_payload_requires_projection(payload):
-        raise RuntimeError(
-            f"{label} requires a public Mermaid projection that is not present in the accepted Preview snapshot"
-        )
     return json_bytes(payload)
 
 
@@ -309,6 +302,7 @@ def accepted_document_collections(
     bytes,
     dict[str, set[str]],
 ]:
+    """Project completed snapshot files without manifest/document agreement audits."""
     workspace = load_docs_workspace_config(repo_root)
     catalogue_prefix = workspace.catalogue.preview.path.relative_to(workspace.workspace_root.path / "preview")
     published_files = {
@@ -342,14 +336,13 @@ def accepted_document_collections(
             and relative_path.suffix == ".json"
         ):
             projected = project_document_payload(
-                data,
-                label=f"accepted parent document {relative_path.stem}",
+                read_json_bytes(data, f"accepted parent document {relative_path.stem}"),
             )
             parent_files[Path("by-id") / relative_path.name] = projected
             parent_doc_ids.add(relative_path.stem)
 
     collection_files: dict[str, dict[Path, bytes]] = {}
-    collection_manifests: dict[str, dict[str, Any]] = {}
+    document_ids = {"": parent_doc_ids}
     accepted_children = {path.parts[1] for path in published_files if len(path.parts) > 2 and path.parts[0] == "collections"}
     configured_children = {child.collection: child for child in config.collections}
     if accepted_children - set(configured_children):
@@ -369,11 +362,7 @@ def accepted_document_collections(
                 and collection_relative.suffix == ".json"
             ):
                 files[collection_relative] = project_document_payload(
-                    data,
-                    label=(
-                        f"accepted document {collection.collection}/"
-                        f"{collection_relative.stem}"
-                    ),
+                    read_json_bytes(data, f"accepted document {collection.collection}/{collection_relative.stem}"),
                 )
             else:
                 files[collection_relative] = data
@@ -383,50 +372,17 @@ def accepted_document_collections(
                 f"accepted Preview snapshot is missing {prefix.as_posix()}/manifest.json"
             )
         collection_files[collection.collection] = files
-        collection_manifests[collection.collection] = read_json_bytes(
-            manifest_bytes,
-            f"accepted collection manifest {collection.collection}",
-        )
+        document_ids[collection.collection] = {
+            path.stem for path in files
+            if len(path.parts) == 2 and path.parts[0] == "by-id" and path.suffix == ".json"
+        }
     search_index = published_files[search_path]
-    document_ids = _validate_complete_document_set(
-        parent_doc_ids,
-        collection_files,
-        collection_manifests,
-    )
     return (
         parent_files,
         collection_files,
         search_index,
         document_ids,
     )
-
-
-def _validate_complete_document_set(
-    parent_doc_ids: set[str],
-    collection_files: Mapping[str, Mapping[Path, bytes]],
-    collection_manifests: Mapping[str, Mapping[str, Any]],
-) -> dict[str, set[str]]:
-    document_ids = {"": parent_doc_ids}
-    for collection, files in collection_files.items():
-        by_id_ids = {
-            path.stem
-            for path in files
-            if len(path.parts) == 2 and path.parts[0] == "by-id" and path.suffix == ".json"
-        }
-        raw_manifest_docs = collection_manifests[collection].get("docs")
-        if not isinstance(raw_manifest_docs, list):
-            raise ValueError(f"accepted collection manifest {collection} docs must be an array")
-        manifest_ids = {
-            str(row.get("doc_id") or "").strip()
-            for row in raw_manifest_docs
-            if isinstance(row, Mapping) and str(row.get("doc_id") or "").strip()
-        }
-        if by_id_ids != manifest_ids:
-            raise RuntimeError(
-                f"accepted {collection} manifest and by-ID document identities do not match"
-            )
-        document_ids[collection] = by_id_ids
-    return document_ids
 
 
 def desired_repository_projection(
