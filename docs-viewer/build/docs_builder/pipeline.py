@@ -22,7 +22,7 @@ from .payloads import PayloadBuilderMixin
 from .rendering import ContentRenderingMixin
 from .semantic_token_registry import load_semantic_token_registry
 from .semantic_tokens import SemanticTokensMixin
-from .source import SourceLoadingMixin
+from .source import DocRecord, SourceLoadingMixin
 from .ordinary_metadata import targeted_document_metadata
 from .write_plan import WritePlanMixin
 from docs_index_order import read_index_order, tree_parent_ids
@@ -75,23 +75,30 @@ class DocsDataBuilder(
         self.source_files_scanned = 0
         self.warnings: list[str] = []
 
-    def run(self, *, write: bool, emit_diagnostics: bool = False) -> dict[str, Any]:
+    def run(
+        self, *, write: bool, emit_diagnostics: bool = False,
+        documents: list[DocRecord] | None = None, parent_ids: dict[str, str] | None = None,
+    ) -> dict[str, Any]:
         started_at = monotonic_time()
         self.inline_icons = InlineIconRenderer(self.repo_root)
         self._catalogue_work_cache = {}
-        parent_ids = tree_parent_ids(read_index_order(self.source_dir))
+        if parent_ids is None:
+            parent_ids = tree_parent_ids(read_index_order(self.source_dir))
         source_ids = None if self.only_doc_ids is None else list(set(self.only_doc_ids) | set(self.links_doc_ids or []))
         capture_media_sources = self.targeted_build and not self.skip_media_builds
-        docs = self.load_docs(source_ids, parent_ids=parent_ids, capture_source_text=capture_media_sources)
-        self.validate_canonical_doc_ids(docs)
-        self.validate_docs(docs, known_doc_ids=parent_ids)
+        docs = self.load_docs(source_ids, parent_ids=parent_ids, capture_source_text=capture_media_sources) if documents is None else documents
+        if documents is None:
+            self.validate_canonical_doc_ids(docs)
+            self.validate_docs(docs, known_doc_ids=parent_ids)
+        else:
+            self.source_files_scanned = 0
         documents = docs
         previous_tree = None
         previous_tree_text = None
         if self.targeted_build:
             documents, previous_tree, previous_tree_text = targeted_document_metadata(self, docs, parent_ids)
         docs_by_id = {doc.doc_id: doc for doc in documents}
-        read_selected(self.config)
+        selected_payload = read_selected(self.config)
         media_snapshot = (
             None
             if self.skip_media_builds
@@ -162,7 +169,7 @@ class DocsDataBuilder(
                 recent_total=len(recent_payload["docs"]) if recent_payload is not None else None,
             )
         if self.config.stage == "working":
-            refresh_selected_documents(self.config, self.config, docs_for_item_build, write=write)
+            refresh_selected_documents(self.config, self.config, docs_for_item_build, write=write, payload=selected_payload)
         elif write:
             (self.output_dir / "selected.json").write_bytes(selected_path(self.config).read_bytes())
         diagnostics["warning_count"] = len(self.warnings)

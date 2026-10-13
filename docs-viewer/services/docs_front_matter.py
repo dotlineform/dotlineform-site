@@ -154,13 +154,15 @@ def format_front_matter_field(key: str, value: Any) -> str:
 
 def rewrite_front_matter_fields(
     prefix: str, updates: Mapping[str, Any], *, remove_fields: Collection[str] = (),
+    fields: list[FrontMatterField] | None = None,
 ) -> str:
     """Replace whole field spans, preserving all unrelated authored text."""
     match = STRICT_FRONT_MATTER_PATTERN.match(prefix)
     if match is None:
         raise ValueError("source front matter could not be updated")
     header = match.group(1)
-    fields = read_front_matter_fields(header, require_pairs=True)
+    if fields is None:
+        fields = read_front_matter_fields(header, require_pairs=True)
     newline = "\r\n" if prefix.startswith("---\r\n") else "\n"
     seen: set[str] = set()
     for field in reversed(fields):

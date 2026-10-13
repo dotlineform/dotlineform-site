@@ -6,7 +6,7 @@ import {
   normalizeManagedDocumentTarget
 } from "../docs-viewer-management-document-target.js";
 import { localFolderPasteReplacement } from "./local-folder-links.js";
-import { sourceBodyStart, sourceWithThumbnail } from "./source-buffer.js";
+import { sourceBodyStart, sourceTitleError, sourceWithThumbnail } from "./source-buffer.js";
 import { classifyDocsDocumentSubject } from "../../shared/docs-document-subject.js";
 
 function cleanString(value) {
@@ -340,6 +340,11 @@ function saveSource(context, state) {
   var provider = context.collectionProvider || {};
   var services = context.sourceEditorServices || {};
   if (!state.loaded || state.busy || typeof provider.writeSource !== "function") return Promise.resolve(false);
+  var titleError = sourceTitleError(state.textarea.value);
+  if (titleError) {
+    setStatus(state, titleError, true);
+    return Promise.resolve(false);
+  }
   setBusy(state, true);
   state.saving = true;
   var stopBusy = typeof services.startBusy === "function" ? services.startBusy() : null;

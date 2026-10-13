@@ -175,8 +175,9 @@ export function continueCommittedDocumentCreate(payload, options) {
       };
     })
     .catch(function (error) {
-      if (error && error.committed === true) throw error;
-      throw committedCreatePresentationError(target, error);
+      var presentationError = error && error.committed === true ? error : committedCreatePresentationError(target, error);
+      if (payload.ok === false && payload.error) presentationError.message = payload.error + " " + presentationError.message;
+      throw presentationError;
     });
 }
 
@@ -287,7 +288,8 @@ export function createDocsViewerManagementActionController(options) {
       openSource: createSettings.openSource || openCreatedDocumentSource
     })
       .then(function (result) {
-        setManagementMessage("", false);
+        var generationFailed = result.payload.ok === false;
+        setManagementMessage(generationFailed ? result.payload.error || result.payload.summary_text : "", generationFailed);
         return result;
       })
       .catch(function (error) {
@@ -308,7 +310,8 @@ export function createDocsViewerManagementActionController(options) {
       body: modalSettings.body,
       label: "title",
       initialValue: "New Doc",
-      defaultValue: "New Doc",
+      required: true,
+      requiredMessage: "Enter a nonblank Title.",
       compactLabel: Boolean(modalSettings.compactLabel),
       primaryLabel: "Create",
       cancelLabel: "Cancel"
@@ -349,7 +352,7 @@ export function createDocsViewerManagementActionController(options) {
     var titleResult = await openCreateTitleModal("New doc title");
     if (!titleResult || !titleResult.confirmed) return;
 
-    var title = String(titleResult.value || "").trim() || "New Doc";
+    var title = titleResult.value;
     setManagementBusy(true);
     setManagementMessage("Creating doc...", false);
 
@@ -373,7 +376,7 @@ export function createDocsViewerManagementActionController(options) {
     );
     if (!titleResult || !titleResult.confirmed) return;
 
-    var title = String(titleResult.value || "").trim() || "New Doc";
+    var title = titleResult.value;
     var payload = {
       title: title
     };
@@ -402,7 +405,7 @@ export function createDocsViewerManagementActionController(options) {
       { compactLabel: true }
     );
     if (!titleResult || !titleResult.confirmed) return null;
-    var fields = { title: String(titleResult.value || "").trim() || "New Doc" };
+    var fields = { title: titleResult.value };
     setManagementBusy(true);
     setManagementMessage("Creating doc...", false);
     return createDocumentAndOpenSource(

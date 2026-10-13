@@ -17,6 +17,7 @@ from docs_workspace_config import (
     generated_search_path,
     load_docs_stage,
     load_docs_working_config,
+    load_docs_workspace_config,
     require_document_authoring,
     resolve_workspace_path,
     DocsWorkspaceConfig,
@@ -24,12 +25,12 @@ from docs_workspace_config import (
 from docs_build_manifest import remove_build_manifest, write_build_manifest
 from docs_mermaid_preparation import prepare_stage_mermaid
 from docs_workspace_links import write_workspace_links
-from docs_source_model import parse_source, write_bytes_atomic
+from docs_source_model import SourceDoc, parse_source, write_bytes_atomic
 
 if TYPE_CHECKING:
     from docs_builder.collection import CollectionDocsBuilder
     from docs_builder.source import DocRecord
-    from docs_management_document_target import ManagedDocumentCollection
+    from docs_management_document_target import ManagedDocumentCollection, ManagedDocumentTarget
 
 DOCS_BUILDER_DIAGNOSTICS_PREFIX = "Docs builder diagnostics: "
 FRONT_MATTER_ERROR_PREFIX = "problem with front-matter on doc "
@@ -515,6 +516,45 @@ def perform_source_write_and_rebuild_atomic(
             },
         ) from exc
     return rebuild
+
+
+def rebuild_prepared_document_outputs(
+    repo_root: Path, owner: ManagedDocumentCollection | ManagedDocumentTarget, document: SourceDoc,
+    *, parent_ids: dict[str, str] | None = None,
+) -> Dict[str, Any]:
+    """Carry one prepared source through the existing exact document/Links builder."""
+    build_dir = Path(__file__).resolve().parents[1] / "build"
+    if str(build_dir) not in sys.path:
+        sys.path.insert(0, str(build_dir))
+    from docs_builder.browser_config import write_browser_config
+    from docs_builder.common import DOCS_VIEWER_BROWSER_CONFIG_PATH
+    from docs_builder.pipeline import DocsDataBuilder
+    from docs_builder.collection import CollectionDocsBuilder
+
+    workspace = owner.workspace if owner.workspace is not None else load_docs_workspace_config(repo_root)
+    arguments = {
+        "repo_root": repo_root, "config": owner.parent_config, "workspace": workspace,
+        "only_doc_ids": [document.doc_id], "links_doc_ids": [document.doc_id], "skip_media_builds": True,
+    }
+    if owner.collection:
+        builder = CollectionDocsBuilder(**arguments, collection=owner.document_config)
+    else:
+        remove_build_manifest(repo_root, owner.parent_config)
+        write_browser_config(repo_root, workspace, path=DOCS_VIEWER_BROWSER_CONFIG_PATH, label="Docs Viewer browser config")
+        builder = DocsDataBuilder(**arguments, skip_recent=True)
+    record = builder.document_record(
+        path=document.path, front_matter=document.front_matter, body_markdown=document.body,
+        doc_id=document.doc_id, title=document.title, parent_id=document.parent_id,
+        report=document.report, source_text=document.source_text,
+    )
+    started_at = time.perf_counter()
+    result = builder.run(write=True, documents=[record], **({"parent_ids": parent_ids} if not owner.collection else {}))
+    return {
+        "ok": True, "steps": [], "search": {"mode": "none", "doc_ids": []},
+        "docs": {"mode": "targeted", "doc_ids": [document.doc_id], "reason": "prepared source supplied"},
+        "diagnostics": {"docs": result["diagnostics"]},
+        "elapsed_seconds": round(time.perf_counter() - started_at, 3),
+    }
 
 
 def create_collection_builder(

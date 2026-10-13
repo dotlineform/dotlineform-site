@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-704641
 title: Source Editor Scripts
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-13 13:25:46"
+last_updated: "2026-10-13 14:37:06"
 parent_id: d-20260607-222033-2a494e
 ---
 # Docs Viewer Source Editor Scripts
@@ -16,15 +16,15 @@ Ownership: owns the source-editor API contract and local source-open behavior.
 
 Responsibilities:
 
-- resolves exact Working document targets through the configured workspace and collection owners
+- resolves exact Working document targets through the configured workspace and collection owners, reading ordinary Index membership/parent information and only the selected source
 - confines source paths to their configured roots and checks immutable document identity
 - reads and saves the complete Markdown through `source_text`, including front matter and body
-- uses the source model's strict splitter, required Title/readiness rules, exact collection contract and Subject customisation before one atomic write
+- parses the candidate once through the source model's strict splitter, retains field spans and applies Title/Summary string representation, readiness, exact collection, report and Subject rules before one atomic write; the frontend owns nonblank Title feedback
 - preserves unaffected authored metadata lines, normalizes Title/Summary and applies the normal source timestamp on changed writes
 - normalizes body line endings and Unicode-whitespace-only prose lines outside literal blocks
 - projects the validated unsaved buffer's Subject through a write-free context request for Catalogue modals
 - prepares Subject-only front-matter changes in that unsaved buffer through the same context endpoint, using the exact collection's registered assignment group and shared field writer
-- awaits exact document/Links generation through `docs_document_rebuild.py` after persistence, carrying saved-source and generation outcomes separately
+- carries prepared source, metadata, report, dates and ordinary parent information into the existing in-process exact document/Links builder through `docs_document_rebuild.py`, without reopening the saved source or rediscovering its ID; saved-source and generation outcomes remain separate
 - opens source docs with the configured or preferred local Markdown editor
 - logs open-source events
 
@@ -56,7 +56,9 @@ Purpose: own the exact mounted Working target and one complete Markdown buffer, 
 
 Title, Summary and other valid authored fields are edited directly in the same buffer. Save submits only that text with the fixed target; an identity conflict, malformed header, invalid collection metadata or write failure retains the full draft. Ordinary hierarchy/order stays with `index-order.json`. There is no metadata draft, pending token-field draft, Source hosted panel or **i** control. Entering Source releases the captured reader panel; returning to rendered content leaves it closed until a related-links pin is used.
 
-The exact splitter lives in `docs_source_model.py`, including the strict key/value and quoted-scalar checks used by Source and existing Import/Review consumers. It uses the maintained front-matter value grammar rather than YAML or a separate browser field parser. `source-buffer.js` locates only the body boundary for buffer contributions; it does not interpret metadata. The modal's write-free context request projects the current buffer's Subject through the service and the owning collection customisation.
+The exact splitter lives in `docs_source_model.py`, including the strict key/value and quoted-scalar checks used by Source and existing Import/Review consumers. Save retains the parsed field spans for formatting, membership and timestamp changes and supplies its completed report classification to generation. It uses the maintained front-matter value grammar rather than YAML. `source-buffer.js` locates the body boundary and gives narrow local Title feedback before Save, handling quoted text, numeric/boolean scalar forms and Summary literal-block boundaries; complete front-matter syntax remains service-owned. The modal's write-free context request projects the current buffer's Subject through the service and the owning collection customisation.
+
+New ordinary, child, sibling and non-Catalogue collection documents use the same required Title modal, initially containing `New Doc`; clearing it asks for a Title rather than restoring a default. Repeated titles are valid. The server requires a string without another completeness check or fallback, constructs a draft source and carries its known ID/source and updated ordinary tree into exact generation. Ordinary creation retains its generated Index refresh before opening Source. A committed creation whose build failed retains its exact target and generation error while attempting to open Source; later presentation failure reports both outcomes. Recovery uses Source correction or explicit Rebuild, without retrying Create.
 
 Source context uses `docs_document_subjects.py`'s complete authoring projection, including Folder and Work, with omission for None. The public Work-only projection remains separate. Source loading supplies initial Subject/capabilities or a projection error without blocking the editor. Assign Subject and Catalogue modals share context for the exact buffer revision and coalesce in-flight reads. Buffer changes and editor release invalidate it; successful Subject Apply seeds the resulting revision. Failed requests remain retryable and late responses cannot replace a newer result. Catalogue shortcuts accept Folder responses while selecting Work only.
 

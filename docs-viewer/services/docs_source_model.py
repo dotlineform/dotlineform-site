@@ -38,6 +38,7 @@ from docs_document_subjects import validate_document_subject_fields
 from docs_front_matter import (
     FRONT_MATTER_PATTERN,
     STRICT_FRONT_MATTER_PATTERN,
+    FrontMatterField,
     format_front_matter_field,
     normalize_summary,
     read_front_matter_fields,
@@ -69,6 +70,14 @@ class SourceDoc:
     report: ReportDescriptor | None = None
 
 
+@dataclass
+class SourceParts:
+    prefix: str
+    fields: list[FrontMatterField]
+    metadata: Dict[str, Any]
+    body: str
+
+
 def humanize(value: str) -> str:
     return " ".join(part.capitalize() for part in re.split(r"[_\-\s]+", value.strip()) if part)
 
@@ -85,15 +94,22 @@ def parse_source_text(raw: str, *, source_name: str = "source", strict: bool = F
             raise ValueError(f"front matter could not be parsed in {source_name}")
         return {}, raw
 
-    front_matter = {field.key: field.value for field in read_front_matter_fields(
-        match.group(1), source_name=source_name, strict=strict,
-    )}
+    parts = parse_source_parts(raw, source_name=source_name, strict=strict)
+    return parts.metadata, parts.body
+
+
+def parse_source_parts(raw: str, *, source_name: str = "source", strict: bool = False) -> SourceParts:
+    """Parse one header and retain its exact field spans for later rewriting."""
+    match = (STRICT_FRONT_MATTER_PATTERN if strict else FRONT_MATTER_PATTERN).match(raw)
+    if match is None:
+        raise ValueError(f"front matter could not be parsed in {source_name}")
+    fields = read_front_matter_fields(match.group(1), source_name=source_name, strict=strict)
+    front_matter = {field.key: field.value for field in fields}
     try:
         validate_document_subject_fields(front_matter)
     except ValueError as error:
         raise ValueError(f"{source_name}: {error}") from error
-    body = raw[match.end():]
-    return front_matter, body
+    return SourceParts(raw[:match.end()], fields, front_matter, raw[match.end():])
 
 
 def parse_source(path: Path) -> tuple[Dict[str, Any], str]:
@@ -143,23 +159,17 @@ def parse_collection_document_report(
     document_config: DocsStageConfig | DocsCollectionConfig,
     source_text: str,
     *,
+    front_matter: Mapping[str, Any],
+    body: str,
     source_name: str,
 ) -> ReportDescriptor | None:
     """Parse one complete candidate through its exact collection contract."""
 
-    front_matter, body = parse_source_text(source_text, source_name=source_name)
-    contract = report_source_contract_for_collection(
-        repo_root,
-        parent_config,
-        document_config,
-    )
-    return parse_document_report(
-        source_text,
-        front_matter,
-        body,
-        source_name=source_name,
-        contract=contract,
-    )
+    try:
+        return parse_document_report(source_text, front_matter, body, source_name=source_name, contract=None)
+    except ReportSourceContractRequired:
+        contract = report_source_contract_for_collection(repo_root, parent_config, document_config)
+        return parse_document_report(source_text, front_matter, body, source_name=source_name, contract=contract)
 
 
 def split_source_text(
@@ -170,11 +180,8 @@ def split_source_text(
 ) -> tuple[str, Dict[str, Any], str]:
     """Return exact front-matter source, parsed metadata, and body."""
 
-    match = (STRICT_FRONT_MATTER_PATTERN if strict else FRONT_MATTER_PATTERN).match(raw)
-    if not match:
-        raise ValueError(f"front matter could not be parsed in {source_name}")
-    front_matter, body = parse_source_text(raw, source_name=source_name, strict=strict)
-    return raw[: match.end()], front_matter, body
+    parts = parse_source_parts(raw, source_name=source_name, strict=strict)
+    return parts.prefix, parts.metadata, parts.body
 
 
 def document_collection_front_matter(front_matter: Mapping[str, Any], collection: str) -> Dict[str, Any]:

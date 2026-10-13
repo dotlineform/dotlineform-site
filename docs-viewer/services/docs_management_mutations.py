@@ -14,6 +14,7 @@ from docs_document_subjects import subject_key_is_canonical
 from docs_index_order import INDEX_ORDER_FILENAME, exclude_nodes, index_order_text, insert_node, move_node, read_index_order, tree_parent_ids
 from docs_management_document_target import (
     committed_document_record,
+    ManagedDocumentCollection,
     ManagedDocumentTarget,
     managed_document_target_request,
     resolve_managed_document_collection,
@@ -164,6 +165,9 @@ class ManagementMutationPlan:
     include_write_result_keys: bool = False
     restore_deletes_on_rebuild_failure: bool = False
     report_create_commit_on_rebuild_failure: bool = False
+    prepared_owner: ManagedDocumentCollection | None = None
+    prepared_document: source_model.SourceDoc | None = None
+    parent_ids: dict[str, str] | None = None
     revision_conflict_operation: str = "apply"
     revision_conflict_error: str = (
         "managed document source changed before applying changes"
@@ -202,13 +206,13 @@ def plan_create(
     )
     require_document_authoring(resolved_collection.parent_config)
     collection = resolved_collection.collection
-    title = str(body.get("title") or "New Doc").strip() or "New Doc"
+    if not isinstance(body.get("title"), str):
+        raise ValueError("New title must be a string")
+    title = body["title"].strip()
     if collection == "catalogue":
         work_id = body.get("work_id")
         if not isinstance(work_id, str) or not work_id.isascii() or not subject_key_is_canonical("work", work_id):
             raise ValueError("Catalogue New requires work_id as an exact five-digit string")
-        if not isinstance(body.get("title"), str):
-            raise ValueError("Catalogue New title must be a string")
         title = body["title"]
     elif "work_id" in body:
         raise ValueError("work_id is only accepted when creating a Catalogue collection document")
@@ -234,6 +238,11 @@ def plan_create(
     )
     front_matter = document.front_matter
     source_text = document.source_text
+    document.parent_id = parent_id
+    document.report = source_model.parse_collection_document_report(
+        repo_root, resolved_collection.parent_config, resolved_collection.document_config,
+        source_text, front_matter=front_matter, body=document.body, source_name=target_path.name,
+    )
     path = relative_path(repo_root, target_path)
     target = {**resolved_collection.request_target(), "doc_id": doc_id}
     if collection:
@@ -267,7 +276,10 @@ def plan_create(
             ),
             *((SourceWrite(target_root / INDEX_ORDER_FILENAME, index_order_text(tree)),) if not collection else ()),
         ),
-        build_doc_ids=[] if collection else [doc_id],
+        build_doc_ids=[doc_id],
+        prepared_owner=resolved_collection,
+        prepared_document=document,
+        parent_ids=tree_parent_ids(tree) if not collection else None,
         log_event_name="docs-create",
         log_details=log_details,
         include_write_result_keys=True,

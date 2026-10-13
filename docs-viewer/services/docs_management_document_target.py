@@ -10,12 +10,15 @@ from typing import Any, Mapping
 import docs_source_model as source_model
 from docs_document_images import has_document_thumbnail
 from docs_document_identity import doc_updated_date, is_document_id
+from docs_index_order import read_index_order, tree_parent_ids
 from docs_workspace_config import (
     DocsStageConfig,
     DocsCollectionConfig,
+    DocsWorkspaceConfig,
     COLLECTION_ID_PATTERN,
     document_source_path,
-    load_docs_working_config,
+    load_docs_workspace_config,
+    select_workspace_stage,
     resolve_workspace_path,
 )
 from docs_collection_customisations import (
@@ -44,6 +47,8 @@ class ManagedDocumentTarget:
     document_config: DocsStageConfig | DocsCollectionConfig
     source_root: Path
     document: source_model.SourceDoc
+    workspace: DocsWorkspaceConfig | None = None
+    parent_ids: dict[str, str] | None = None
 
     def request_target(self) -> dict[str, str]:
         target = {"doc_id": self.doc_id}
@@ -58,6 +63,7 @@ class ManagedDocumentCollection:
     parent_config: DocsStageConfig
     document_config: DocsStageConfig | DocsCollectionConfig
     source_root: Path
+    workspace: DocsWorkspaceConfig | None = None
 
     def request_target(self) -> dict[str, str]:
         target = {}
@@ -144,7 +150,8 @@ def resolve_managed_document_collection(
     config: DocsStageConfig | None = None,
 ) -> ManagedDocumentCollection:
     """Resolve the configured destination; creation skips directory preflight."""
-    parent_config = load_docs_working_config(repo_root) if config is None else config
+    workspace = load_docs_workspace_config(repo_root) if config is None else None
+    parent_config = select_workspace_stage(workspace, "working") if workspace is not None else config
 
     normalized_collection = ""
     document_config: DocsStageConfig | DocsCollectionConfig = parent_config
@@ -178,6 +185,7 @@ def resolve_managed_document_collection(
         parent_config=parent_config,
         document_config=document_config,
         source_root=source_root,
+        workspace=workspace,
     )
 
 
@@ -193,6 +201,8 @@ def resolve_managed_document_collection_target(
 
 
 def confined_source_path(source_root: Path, candidate: Path) -> Path:
+    if candidate.is_symlink():
+        raise ValueError("Document source must not be a symlink")
     resolved = candidate.resolve()
     try:
         resolved.relative_to(source_root)
@@ -218,8 +228,10 @@ def source_doc_from_path(
     report_contract: ReportSourceContract | None = None,
 ) -> source_model.SourceDoc:
     source_text = path.read_bytes().decode("utf-8")
-    front_matter, body = source_model.parse_source_text(source_text, source_name=path.name)
-    existing_doc_id = str(front_matter.get("doc_id") or "").strip()
+    front_matter, body = source_model.parse_source_text(source_text, source_name=path.name, strict=True)
+    existing_doc_id = front_matter.get("doc_id")
+    if not isinstance(existing_doc_id, str):
+        raise ValueError("managed source doc_id must be a string")
     if not existing_doc_id:
         label = requested_doc_id or path.name
         raise ValueError(f"managed source document {label!r} is missing front-matter doc_id")
@@ -265,44 +277,17 @@ def resolve_managed_document_target(
         repo_root,
         collection=normalized.get("collection"),
     )
-    report_contract = source_model.report_source_contract_for_collection(
-        repo_root,
-        collection.parent_config,
-        collection.document_config,
-    )
-    if collection.collection:
-        path = confined_document_path(collection.source_root, normalized["doc_id"])
-        document = source_doc_from_path(
-            path=path,
-            requested_doc_id=normalized["doc_id"],
-            report_contract=report_contract,
-        )
-        source_model.validate_document_status_front_matter(
-            document.front_matter,
-            collection_config=collection.document_config,
-            source_name=path.name,
-        )
-    else:
-        parent_documents = source_model.load_stage_docs_for_config(
-            repo_root, collection.parent_config,
-        )
-        document = next(
-            (
-                candidate
-                for candidate in parent_documents
-                if candidate.doc_id == normalized["doc_id"]
-            ),
-            None,
-        )
-        if document is None:
+    parent_ids = None
+    if not collection.collection:
+        parent_ids = tree_parent_ids(read_index_order(collection.source_root))
+        if normalized["doc_id"] not in parent_ids:
             raise FileNotFoundError(
                 f"managed source document {normalized['doc_id']!r} was not found"
             )
-        path = document.path.resolve()
-        try:
-            path.relative_to(collection.source_root)
-        except ValueError as exc:
-            raise ValueError("source path escapes configured document root") from exc
+    path = confined_document_path(collection.source_root, normalized["doc_id"])
+    document = source_doc_from_path(path=path, requested_doc_id=normalized["doc_id"])
+    if parent_ids is not None:
+        document.parent_id = parent_ids[normalized["doc_id"]]
     return ManagedDocumentTarget(
         collection=collection.collection,
         doc_id=document.doc_id,
@@ -310,6 +295,8 @@ def resolve_managed_document_target(
         document_config=collection.document_config,
         source_root=collection.source_root,
         document=document,
+        workspace=collection.workspace,
+        parent_ids=parent_ids,
     )
 
 
@@ -321,7 +308,7 @@ def committed_document_record(
     """Project a complete committed summary from validated in-memory source metadata."""
     record: dict[str, object] = {
         "doc_id": doc_id,
-        "title": front_matter["title"] if collection == "catalogue" else str(front_matter.get("title") or doc_id).strip(),
+        "title": front_matter["title"],
         "summary": " ".join(str(front_matter.get("summary") or "").split()),
         "date": str(front_matter.get("date") or "").strip(),
         "date_display": str(front_matter.get("date_display") or "").strip(),

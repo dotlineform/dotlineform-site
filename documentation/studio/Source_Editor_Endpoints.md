@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-4b1d77
 title: Source Editor Endpoints
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-13 13:25:46"
+last_updated: "2026-10-13 14:37:06"
 parent_id: d-20260607-222033-647b52
 ---
 # Docs Viewer Source Editor Endpoints
@@ -39,7 +39,7 @@ Validation:
 - existing front matter must parse and contain the requested `doc_id`
 - missing, unlisted, mismatched, nested, or path-escaping targets are rejected
 
-This endpoint reads canonical source and does not write files. Index rows and generated payloads do not supply the editable metadata snapshot.
+This endpoint reads canonical source and does not write files. Ordinary resolution reads `index-order.json` for exact membership/parent information and only the requested confined source; it does not parse unrelated documents. Saved readiness and report validity do not gate opening Source for correction. Strict source parsing and exact document identity remain required; Subject projection errors are returned for the loaded buffer. Index rows and generated payloads do not supply the editable metadata snapshot.
 
 ## Source session contract
 
@@ -99,16 +99,16 @@ A collection Save also includes its exact `collection`. The only accepted fields
 Actions:
 
 - resolves the fixed Working target and confines its source path before interpreting editable metadata
-- parses the complete candidate through the source model's strict front-matter splitter, rejecting missing delimiters, malformed lines, duplicate keys and invalid quoted values
+- parses the complete candidate once through the source model's strict front-matter splitter, rejecting missing delimiters, malformed lines, duplicate keys and invalid quoted values; retained field spans support later rewrites without another parse
 - requires candidate `doc_id` and any declared `collection` to match the mounted target; edited metadata cannot rename, relocate or select a different file
-- normalizes Title and Summary, rejects an empty Title and removes a blank Summary; Summary normalizes line endings and outer whitespace while preserving internal line/paragraph breaks, with `|`/`|-` literal-block support owned by [Builder](Builder.md#summary-block)
+- requires Title and any supplied Summary to be strings and keeps their existing formatting, including removal of a blank Summary; the frontend asks for a nonblank Title before making this request and the server does not repeat that completeness check or substitute a default. Summary normalizes line endings and outer whitespace while preserving internal line/paragraph breaks, with `|`/`|-` literal-block support owned by [Builder](Builder.md#summary-block)
 - validates required readiness, collection report rules and Subject customisation through their current owners; Catalogue retains fixed eligibility and rejects `draft`
 - preserves other authored metadata lines and the existing canonical membership policy; ordinary hierarchy/order remains owned by `index-order.json`
 - normalizes submitted body line endings to `\n`
 - replaces Unicode-whitespace-only lines with empty lines outside fenced code and explicit `<pre>` blocks
 - applies the normal source timestamp for changed, non-dry-run writes
-- validates the complete candidate through the source schema before one atomic source write
-- awaits the existing exact-target document/Links rebuild using prepared media, without Search, Publish or registered media production
+- carries the prepared source, metadata, report classification and timestamps through one atomic source write and the response
+- awaits the existing exact-target document/Links builder in process with that prepared source and resolved configuration/ordinary parent information, without reopening source, repeating candidate validation or rediscovering IDs; generation uses prepared media, without Search, Publish or registered media production
 
 Returned data includes `ok`, the exact target, saved complete `source_text`, provider-safe `path`, `source_changed`, `summary_text` and `dry_run`. An unchanged source skips the write but still rebuilds its exact document and loads the result. Validation or write failure leaves the complete browser draft available for correction. Non-dry-run responses also carry `source_saved`, `generation_complete`, `committed_document` and, on successful generation, `rebuild`.
 

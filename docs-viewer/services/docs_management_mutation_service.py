@@ -12,6 +12,7 @@ import docs_source_model as source_model
 import docs_write_rebuild as write_rebuild
 from docs_management_context import log_event
 from docs_selected_documents import selected_path
+from docs_document_rebuild import rebuild_prepared_document
 
 
 class CollectionDocumentDeleteApplyError(RuntimeError):
@@ -134,7 +135,8 @@ def recover_collection_document_delete(
 
 
 def execute_management_mutation_plan(repo_root: Path, plan: mutations.ManagementMutationPlan, dry_run: bool) -> Dict[str, Any]:
-    require_document_authoring(load_docs_working_config(repo_root))
+    if plan.prepared_owner is None:
+        require_document_authoring(load_docs_working_config(repo_root))
     payload = dict(plan.response)
     rebuild = None
     source_changes_applied = False
@@ -191,7 +193,13 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
             source_changes_applied = True
 
         try:
-            if plan.collection:
+            if plan.prepared_document is not None:
+                write_rebuild.validate_changed_source_paths(plan.prepared_owner.source_root, plan.changed_paths)
+                write_operation()
+                rebuild = rebuild_prepared_document(
+                    repo_root, plan.prepared_owner, plan.prepared_document, parent_ids=plan.parent_ids,
+                )["rebuild"]
+            elif plan.collection:
                 # The shared selection file is written with the mutation, but
                 # only collection-owned sources belong to its build.
                 selection_file = selected_path(load_docs_working_config(repo_root))

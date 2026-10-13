@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import subprocess
 import sys
+from dataclasses import replace
 from pathlib import Path
 from typing import Any, Dict, Optional
 
@@ -38,7 +39,7 @@ from docs_collection_customisations import (  # noqa: E402
     normalize_collection_customisation_metadata_update,
 )
 from docs_document_subjects import AUTHORING_SUBJECT_FIELDS, FOLDER_PATH_FIELD  # noqa: E402
-from docs_document_rebuild import rebuild_resolved_document  # noqa: E402
+from docs_document_rebuild import rebuild_prepared_document  # noqa: E402
 from docs_source_media_service import source_media_options  # noqa: E402
 
 
@@ -90,12 +91,7 @@ def read_source_document(repo_root: Path, params: Dict[str, list[str]]) -> Dict[
     resolved = resolve_managed_document_target(repo_root, request_target)
     target = resolved.document
     source_text = target.source_text
-    _, front_matter, _ = source_model.split_source_text(source_text, source_name=target.path.name, strict=True)
-    existing_doc_id = str(front_matter.get("doc_id") or "").strip()
-    if not existing_doc_id:
-        raise ValueError("existing source front matter is missing doc_id")
-    if existing_doc_id != target.doc_id:
-        raise ValueError(f"existing source doc_id {existing_doc_id!r} does not match requested doc {target.doc_id!r}")
+    front_matter = target.front_matter
     payload = {
         "ok": True,
         **resolved.request_target(),
@@ -118,8 +114,8 @@ def read_source_document(repo_root: Path, params: Dict[str, list[str]]) -> Dict[
     return payload
 
 
-def normalize_source_metadata(front_matter_source: str, front_matter: Dict[str, Any]) -> str:
-    """Normalize Title/Summary without rewriting unrelated authored lines."""
+def source_metadata_updates(front_matter: Dict[str, Any]) -> tuple[Dict[str, str], list[str]]:
+    """Keep existing Title/Summary formatting; Title completeness belongs to the UI."""
     updates: Dict[str, str] = {}
     removed: list[str] = []
     for key in ("title", "summary"):
@@ -130,17 +126,13 @@ def normalize_source_metadata(front_matter_source: str, front_matter: Dict[str, 
             raise ValueError(f"{key} must be a string")
         normalize = normalize_summary if key == "summary" else normalize_metadata_text
         value = normalize(raw_value)
-        if key == "title" and not value:
-            raise ValueError("title is required")
-        if value and value == raw_value:
+        if value == raw_value and (value or key == "title"):
             continue
-        if value:
+        if value or key == "title":
             updates[key] = value
         else:
             removed.append(key)
-    newline = "\r\n" if front_matter_source.startswith("---\r\n") else "\n"
-    result = rewrite_front_matter_fields(front_matter_source, updates, remove_fields=removed)
-    return result if result.endswith("\n") else result + newline
+    return updates, removed
 
 
 def source_candidate_target(body: Dict[str, Any]) -> Dict[str, str]:
@@ -157,47 +149,72 @@ def _source_candidate_parts(
     target: Dict[str, str],
     source_text: str,
     resolved: ManagedDocumentCollection | ManagedDocumentTarget,
-) -> tuple[str, Dict[str, Any], str]:
+) -> source_model.SourceParts:
     """Parse once and bind the buffer to its fixed target without Save rules."""
     source_name = f"{target['doc_id']}.md"
-    front_matter_source, front_matter, source_body = source_model.split_source_text(
+    parts = source_model.parse_source_parts(
         source_text, source_name=source_name, strict=True,
     )
-    _validate_source_identity(target, front_matter, resolved)
-    return front_matter_source, front_matter, source_body
+    _validate_source_identity(target, parts.metadata, resolved)
+    return parts
 
 
-def validate_source_candidate(
+def prepare_source_candidate(
     repo_root: Path,
     target: Dict[str, str],
     source_text: str,
-    resolved: ManagedDocumentCollection | ManagedDocumentTarget,
-) -> tuple[str, Dict[str, Any]]:
-    """Validate the buffer using already resolved identity and schema owners."""
+    resolved: ManagedDocumentTarget,
+    *, dry_run: bool,
+) -> tuple[source_model.SourceDoc, bool]:
+    """Parse and prepare one candidate for persistence, response and generation."""
     require_document_authoring(resolved.parent_config)
     source_name = f"{target['doc_id']}.md"
-    front_matter_source, front_matter, source_body = _source_candidate_parts(target, source_text, resolved)
+    parts = _source_candidate_parts(target, source_text, resolved)
+    front_matter = parts.metadata
     source_model.validate_document_status_front_matter(
         front_matter,
         collection_config=resolved.document_config,
         source_name=source_name,
     )
 
-    next_source_body = normalize_source_body_for_write(source_body)
-    next_front_matter_source = normalize_source_metadata(front_matter_source, front_matter)
-    next_source_text = source_model.rewrite_source_collection(next_front_matter_source + next_source_body, resolved.collection)
-    _, next_metadata, _ = source_model.split_source_text(next_source_text, source_name=source_name, strict=True)
+    updates, removed = source_metadata_updates(front_matter)
+    if resolved.collection:
+        if front_matter.get("collection") != resolved.collection:
+            updates["collection"] = resolved.collection
+        removed.append("ui_status")
+    else:
+        removed.append("collection")
+    next_metadata = {key: value for key, value in front_matter.items() if key not in removed}
+    next_metadata.update(updates)
+    next_source_body = normalize_source_body_for_write(parts.body)
+    header_newline = "\r\n" if resolved.document.source_text.splitlines(keepends=True)[0].endswith("\r\n") else "\n"
+
+    def assembled_source() -> str:
+        prefix = rewrite_front_matter_fields(parts.prefix, updates, remove_fields=removed, fields=parts.fields)
+        prefix = normalize_source_body(prefix).replace("\n", header_newline)
+        return (prefix if prefix.endswith("\n") else prefix + header_newline) + next_source_body
+
+    next_source_text = assembled_source()
+    source_changed = next_source_text != resolved.document.source_text
+    if source_changed and not dry_run:
+        next_metadata = source_model.advance_doc_front_matter(next_metadata)
+        updates.update({key: next_metadata[key] for key in ("added_date", "last_updated")})
+        next_source_text = assembled_source()
     # Collection customisations own Subject validity; common projection also rejects multiple declarations.
     if resolved.collection:
         collection_customisation_metadata_record(
             resolved.document_config.collection_customisation, next_metadata, doc_id=target["doc_id"],
         )
     project_document_subject(next_metadata, folder_supported=True)
-    source_model.parse_collection_document_report(
+    report = source_model.parse_collection_document_report(
         repo_root, resolved.parent_config, resolved.document_config,
-        next_source_text, source_name=source_name,
+        next_source_text, front_matter=next_metadata, body=next_source_body, source_name=source_name,
     )
-    return next_source_text, next_metadata
+    return replace(
+        resolved.document, source_text=next_source_text, front_matter=next_metadata,
+        body=next_source_body, title=next_metadata["title"],
+        ui_status=source_model.normalize_ui_status(next_metadata.get("ui_status")), report=report,
+    ), source_changed
 
 
 def read_source_context(repo_root: Path, body: Dict[str, Any]) -> Dict[str, Any]:
@@ -205,7 +222,7 @@ def read_source_context(repo_root: Path, body: Dict[str, Any]) -> Dict[str, Any]
     target = source_candidate_target({key: value for key, value in body.items() if key != "subject_fields"})
     resolved = resolve_managed_document_collection(repo_root, collection=target.get("collection"))
     require_document_authoring(resolved.parent_config)
-    prefix, metadata, source_body = _source_candidate_parts(target, body["source_text"], resolved)
+    parts = _source_candidate_parts(target, body["source_text"], resolved)
     payload: Dict[str, Any] = {
         "ok": True, **target, **_source_subject_context(resolved),
     }
@@ -223,13 +240,14 @@ def read_source_context(repo_root: Path, body: Dict[str, Any]) -> Dict[str, Any]
             raise ValueError("Subject assignment returned fields outside its declaration")
         replacements = update["front_matter_updates"]
         source_text = rewrite_front_matter_fields(
-            prefix, {key: value for key, value in replacements.items() if value is not None},
+            parts.prefix, {key: value for key, value in replacements.items() if value is not None},
             remove_fields=[key for key, value in replacements.items() if value is None],
-        ) + source_body
+            fields=parts.fields,
+        ) + parts.body
         payload["source_text"] = source_text
         subject = update["subject"]
     else:
-        subject = _project_source_subject(resolved, metadata)
+        subject = _project_source_subject(resolved, parts.metadata)
     if subject is not None:
         payload["subject"] = subject
     return payload
@@ -239,18 +257,9 @@ def save_source_document(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
     """Persist one validated buffer and await its exact document/Links generation."""
     request_target = source_candidate_target(body)
     resolved = resolve_managed_document_target(repo_root, request_target)
-    next_source_text, _ = validate_source_candidate(repo_root, request_target, body["source_text"], resolved)
+    prepared, source_changed = prepare_source_candidate(repo_root, request_target, body["source_text"], resolved, dry_run=dry_run)
     target = resolved.document
-    # Textareas normalize line endings; retain the loaded header's newline convention.
-    front_matter_source, _, source_body = source_model.split_source_text(next_source_text, strict=True)
-    original_first_line = target.source_text.splitlines(keepends=True)[0]
-    header_newline = "\r\n" if original_first_line.endswith("\r\n") else "\n"
-    next_source_text = normalize_source_body(front_matter_source).replace("\n", header_newline) + source_body
-    source_changed = next_source_text != target.source_text
-    if source_changed and not dry_run:
-        next_front_matter_source, next_metadata, next_source_body = source_model.split_source_text(next_source_text, strict=True)
-        next_front_matter_source = source_model.rewrite_front_matter_source_timestamp(next_front_matter_source, next_metadata)
-        next_source_text = next_front_matter_source + next_source_body
+    next_source_text = prepared.source_text
 
     payload = {
         "ok": True,
@@ -265,15 +274,14 @@ def save_source_document(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
         "dry_run": dry_run,
     }
     if not dry_run:
-        metadata, _ = source_model.parse_source_text(next_source_text, strict=True)
-        payload["committed_document"] = {"target": resolved.request_target(), "record": committed_document_record(metadata, target.doc_id, resolved.document_config, collection=resolved.collection, parent_id=target.parent_id)}
+        payload["committed_document"] = {"target": resolved.request_target(), "record": committed_document_record(prepared.front_matter, target.doc_id, resolved.document_config, collection=resolved.collection, parent_id=target.parent_id)}
     if source_changed and not dry_run:
         source_model.write_text_atomic(target.path, next_source_text)
     if not dry_run:
         payload["source_saved"] = True
         payload["generation_complete"] = False
         try:
-            payload["rebuild"] = rebuild_resolved_document(repo_root, resolved)["rebuild"]
+            payload["rebuild"] = rebuild_prepared_document(repo_root, resolved, prepared)["rebuild"]
         except Exception as error:
             payload.update(ok=False, error=f"Source saved, but document generation failed: {error}")
             return payload
