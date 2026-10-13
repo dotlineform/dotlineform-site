@@ -10,7 +10,7 @@ from typing import Any, Mapping, Sequence
 from catalogue import catalogue_build_media as media
 from catalogue.catalogue_media_version import finalize_catalogue_media_versions
 from catalogue.catalogue_output_paths import catalogue_workspace_config, output_path
-from catalogue.catalogue_source import CatalogueSourceRecords, slug_id, work_resource_entries
+from catalogue.catalogue_source import CatalogueSourceRecords, work_resource_entries
 from catalogue.catalogue_work_attachments import safe_download_filename
 from catalogue.catalogue_staged_media import catalogue_staging_assets
 from local_env import runtime_env
@@ -21,17 +21,19 @@ MEDIA_SOURCE_FIELDS = ("media_source_id", "project_folder", "project_subfolder",
 
 def complete_catalogue_media(
     repo_root: Path, source_dir: Path, *, records: CatalogueSourceRecords,
-    previous: CatalogueSourceRecords | None, work_ids: Sequence[str], image_work_ids: Sequence[str], write: bool,
+    previous: CatalogueSourceRecords | None, work_ids: Sequence[str], image_work_ids: Sequence[str],
+    download_names_by_work: Mapping[str, set[str]], write: bool,
     attachment_files: Mapping[str, bytes] | None = None, force_image_ids: Sequence[str] = (),
 ) -> dict[str, Any]:
-    """Prepare current images/downloads and their metadata, with no network dependency.
+    """Prepare selected images/downloads and persist metadata into the supplied map.
 
     Pending native bytes replace exact download identities; otherwise the existing
-    download stays in its flag-selected staging or Working location. Missing
-    downloads fail. Removed references leave bytes for manual cleanup.
+    selected download stays in its flag-selected staging or Working location.
+    Missing selected downloads fail; unchanged downloads are not inspected.
+    Removed references leave bytes for manual cleanup. No network dependency.
     """
-    work_ids = sorted({slug_id(wid) for wid in work_ids})
-    image_work_ids = sorted({slug_id(wid) for wid in image_work_ids})
+    work_ids = sorted(set(work_ids))
+    image_work_ids = sorted(set(image_work_ids))
     if not set(image_work_ids).issubset(work_ids):
         raise ValueError("Image work IDs must be included in media work IDs")
     if not set(force_image_ids).issubset(image_work_ids):
@@ -41,7 +43,11 @@ def complete_catalogue_media(
     working = catalogue_workspace_config(repo_root).assets
     staging = catalogue_staging_assets(repo_root)
     env = runtime_env(repo_root=repo_root)
-    downloads_by_work = {wid: work_resource_entries(records.works[wid], "downloads") for wid in work_ids}
+    downloads_by_work = {
+        wid: [item for item in work_resource_entries(records.works[wid], "downloads")
+              if item["filename"] in download_names_by_work.get(wid, set())]
+        for wid in work_ids
+    }
     downloads = {
         safe_download_filename(item["filename"]): item for wid in work_ids
         for item in downloads_by_work[wid]
@@ -97,7 +103,7 @@ def complete_catalogue_media(
             if changed:
                 changed_images.add(task["id"])
         finalized = finalize_catalogue_media_versions(
-            source_dir, tasks, changed_images=changed_images, media_files=prepared,
+            source_dir, tasks, records=records, changed_images=changed_images, media_files=prepared,
             staged_downloads_by_work={
                 wid: {item["filename"] for item in downloads_by_work[wid]} & set(attachment_files or {})
                 for wid in work_ids

@@ -7,7 +7,6 @@ const CATALOGUE_SERVER_READ_KEYS = new Set([
   "catalogue_gallery_record",
   "catalogue_lookup_work_search",
   "catalogue_lookup_series_search",
-  "catalogue_lookup_series_base",
   "catalogue_work_record"
 ]);
 

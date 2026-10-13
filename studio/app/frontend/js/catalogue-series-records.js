@@ -16,7 +16,7 @@ export function getSeriesSearchMatches(seriesById, rawQuery) {
   return matches.slice(0, 20);
 }
 
-/** Suggest the next numeric ID from a fresh lookup; creation still checks for collisions. */
+/** Suggest the next numeric ID from loaded definitions; creation still checks for collisions. */
 export function suggestNextSeriesId(seriesItems) {
   let maxNumericId = 0;
   for (const record of seriesItems) {

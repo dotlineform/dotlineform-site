@@ -89,7 +89,6 @@ export function createWorkEditorState(elements, options = {}) {
     seriesBrowser: null,
     layout: null,
     sourceWorkRecordsById: new Map(),
-    currentLookup: null,
     currentWorkId: "",
     currentRecord: null,
     currentRecordHash: "",

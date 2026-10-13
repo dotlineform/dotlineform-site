@@ -19,17 +19,21 @@ from catalogue.catalogue_service_context import (
     log_event,
     utc_now,
 )
-from catalogue.catalogue_source import WORK_FIELDS
+from catalogue.catalogue_source import CatalogueSourceRecords, WORK_FIELDS
 from catalogue.catalogue_shared_changes import work_shared_changes
 
 
-def work_create_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -> dict[str, Any]:
+def work_create_payload(
+    context: CatalogueWriteContext, body: Mapping[str, Any],
+) -> tuple[dict[str, Any], CatalogueSourceRecords, CatalogueSourceRecords]:
+    """Create from one Work read and carry before/after records into completion."""
     work_update = extract_work_update(body)
     work_id = body.get("work_id")
     if not isinstance(work_id, str) or re.fullmatch(r"[0-9]{5}", work_id) is None:
         raise ValueError("work_id must be exactly five digits")
     works_payload = load_works_payload(context.works_path)
     works = works_payload["works"]
+    previous = CatalogueSourceRecords(works=works, series={})
     if work_id in works:
         raise ValueError(f"work_id already exists: {work_id}")
 
@@ -85,16 +89,20 @@ def work_create_payload(context: CatalogueWriteContext, body: Mapping[str, Any])
             "dry_run": context.dry_run,
         },
     )
-    return payload
+    current = CatalogueSourceRecords(works=mutation_plan.payload["works"], series={})
+    return payload, previous, current
 
 
-def work_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -> dict[str, Any]:
-    """Persist UI-authored metadata; the dispatcher owns required media/effects."""
+def work_save_payload(
+    context: CatalogueWriteContext, body: Mapping[str, Any],
+) -> tuple[dict[str, Any], CatalogueSourceRecords, CatalogueSourceRecords]:
+    """Save from one Work read and carry before/after records into completion."""
     work_update = extract_work_update(body)
     work_id = body.get("work_id")
     if not isinstance(work_id, str):
         raise ValueError("work_id must identify an existing exact Work")
     works = load_works_payload(context.works_path)["works"]
+    previous = CatalogueSourceRecords(works=works, series={})
     current_record = works.get(work_id)
     if not isinstance(current_record, dict):
         raise ValueError(f"work_id not found: {work_id}")
@@ -137,7 +145,8 @@ def work_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
         "work_id": work_id, "changed": changed,
         "changed_fields": changed_fields, "dry_run": context.dry_run,
     })
-    return payload
+    current = CatalogueSourceRecords(works=plan.payload["works"], series={})
+    return payload, previous, current
 
 
 def extract_work_update(body: Mapping[str, Any]) -> dict[str, Any]:

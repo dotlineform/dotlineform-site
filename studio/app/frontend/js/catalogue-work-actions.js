@@ -142,7 +142,6 @@ export async function saveCurrentWork(state, context) {
         preserveMediaIntent: response.media?.status !== "completed"
       }));
       setTextWithState(context, state.resultNode, completionError || "Saved.", completionError ? "error" : "success");
-      state.currentLookup = await context.loadWorkLookupRecord(state.currentWorkId);
       if (!completionError) cleanupGalleryIds = newlyEmptyGalleryIds(state, removedGalleryIds);
     }
   } catch (error) {
@@ -201,7 +200,6 @@ export async function saveNewWork(state, context) {
       setTextWithState(context, state.resultNode, completionError, "error");
       setTextWithState(context, state.statusNode, "", "");
     }
-    state.currentLookup = await context.loadWorkLookupRecord(workId);
   } catch (error) {
     setTextWithState(context, state.statusNode, catalogueSavedActionError(savedResponse, error) || `Work save failed. ${normalizeText(error && error.message)}`.trim(), "error");
   } finally {

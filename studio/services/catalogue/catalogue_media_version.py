@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 from catalogue import catalogue_transactions as transactions
-from catalogue.catalogue_source import SOURCE_FILES, payload_for_map, read_source_map, work_resource_entries
+from catalogue.catalogue_source import CatalogueSourceRecords, SOURCE_FILES, payload_for_map, work_resource_entries
 
 
 @dataclass(frozen=True)
@@ -22,13 +22,17 @@ class MediaVersionFinalization:
 
 
 def finalize_catalogue_media_versions(
-    source_dir: Path, tasks: Sequence[Mapping[str, Any]], *, changed_images: set[str],
+    source_dir: Path, tasks: Sequence[Mapping[str, Any]], *, records: CatalogueSourceRecords, changed_images: set[str],
     media_files: Mapping[Path, bytes], staged_downloads_by_work: Mapping[str, set[str]],
 ) -> list[MediaVersionFinalization]:
-    """Commit prepared local bytes and their metadata together; transfers never call this."""
-    works = read_source_map(source_dir, "works")
+    """Commit prepared bytes/metadata, then update the caller's saved Work map.
+
+    Proposed record copies keep the supplied map at its persisted state if the
+    transaction fails. No canonical reread or transfer-owned update occurs here.
+    """
+    works = dict(records.works)
     finalized = []
-    changed_works = False
+    changed_records = {}
     for task in tasks:
         item_id = task["id"]
         advance = item_id in changed_images
@@ -44,18 +48,28 @@ def finalize_catalogue_media_versions(
         if task["status"] == "pending":
             updates["image_staged"] = True
         if any(record.get(key) != value for key, value in updates.items()):
-            record.update(updates)
-            changed_works = True
+            record = {**record, **updates}
+            works[item_id] = record
+            changed_records[item_id] = record
         finalized.append(MediaVersionFinalization("works", item_id, work_id, previous_version, version, advance, f"works/index/{work_id}.json"))
     for work_id, names in staged_downloads_by_work.items():
+        if not names:
+            continue
         record = works[work_id]
-        for download in work_resource_entries(record, "downloads"):
+        downloads = [dict(item) for item in work_resource_entries(record, "downloads")]
+        changed_downloads = False
+        for download in downloads:
             if download["filename"] in names and download["staged"] is not True:
                 download["staged"] = True
-                changed_works = True
+                changed_downloads = True
+        if changed_downloads:
+            record = {**record, "downloads": downloads}
+            works[work_id] = record
+            changed_records[work_id] = record
     payloads = {}
-    if changed_works:
+    if changed_records:
         payloads[source_dir / SOURCE_FILES["works"]] = payload_for_map("works", works)
     if payloads or media_files:
         transactions.atomic_write_many(payloads, media_files=media_files)
+    records.works.update(changed_records)
     return finalized

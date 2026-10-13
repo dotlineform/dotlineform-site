@@ -73,7 +73,6 @@ WORK_TEXT_FIELDS = set(WORK_FIELDS) - {
     "height_px",
     MEDIA_VERSION_FIELD,
 }
-SERIES_TEXT_FIELDS = set(SERIES_FIELDS)
 WORK_PRESERVED_VALUE_FIELDS = frozenset({
     "work_id", "series_id", "title", "medium", "duration", "storage_location",
     "year", "year_display", "height_cm", "width_cm", "depth_cm", "width_px", "height_px",
@@ -222,7 +221,7 @@ def normalize_source_record(
     """Preserve supplied Work values, omitting null optional scalars.
 
     Cleared optional UI controls arrive as request nulls; their saved keys are
-    omitted. Required fields remain explicit. Series retain their text handling.
+    omitted. Required fields remain explicit.
     """
     field_order = tuple(field_order)
     is_work = "work_id" in field_order

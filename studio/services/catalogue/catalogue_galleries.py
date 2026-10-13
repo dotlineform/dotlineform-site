@@ -19,16 +19,22 @@ class CatalogueGalleries:
     galleries: dict[str, dict[str, str]]
     works: dict[str, list[str]]
 
+    def definitions_payload(self) -> dict[str, Any]:
+        return {
+            "header": {"schema": GALLERIES_SCHEMA},
+            "galleries": dict(sorted(self.galleries.items())),
+        }
+
+    def memberships_payload(self) -> dict[str, Any]:
+        return {
+            "header": {"schema": MEMBERSHIPS_SCHEMA},
+            "works": {wid: sorted(ids) for wid, ids in sorted(self.works.items())},
+        }
+
     def payloads(self) -> dict[str, dict[str, Any]]:
         return {
-            GALLERIES_FILE: {
-                "header": {"schema": GALLERIES_SCHEMA},
-                "galleries": dict(sorted(self.galleries.items())),
-            },
-            MEMBERSHIPS_FILE: {
-                "header": {"schema": MEMBERSHIPS_SCHEMA},
-                "works": {wid: sorted(ids) for wid, ids in sorted(self.works.items())},
-            },
+            GALLERIES_FILE: self.definitions_payload(),
+            MEMBERSHIPS_FILE: self.memberships_payload(),
         }
 
 

@@ -29,7 +29,6 @@ from catalogue.catalogue_galleries import read_galleries, read_gallery_definitio
 from catalogue.catalogue_series_galleries import read_series_galleries  # noqa: E402
 from catalogue.catalogue_build_media import PIPELINE_CONFIG  # noqa: E402
 from catalogue.catalogue_lookup import (  # noqa: E402
-    build_series_lookup_payload,
     build_series_search_payload,
     build_work_lookup_payload,
     build_work_search_payload,
@@ -49,7 +48,6 @@ from catalogue_work_media_sources import (  # noqa: E402
     resolve_work_media_source_root,
 )
 from pipeline_config import default_work_media_source_id, work_media_source_ids  # noqa: E402
-from catalogue.series_ids import normalize_series_id  # noqa: E402
 from catalogue.catalogue_gallery_service import gallery_record_payload  # noqa: E402
 from catalogue.catalogue_refresh_service import catalogue_refresh_status, refresh_catalogue  # noqa: E402
 from local_env import runtime_env  # noqa: E402
@@ -64,7 +62,6 @@ CATALOGUE_READ_KEYS = {
     "catalogue_gallery_record",
     "catalogue_lookup_work_search",
     "catalogue_lookup_series_search",
-    "catalogue_lookup_series_base",
     "catalogue_work_record",
 }
 
@@ -163,11 +160,6 @@ def catalogue_read_payload(repo_root: Path, query: Mapping[str, list[str]]) -> d
         memberships = read_gallery_memberships(paths["source_dir"])
         payload["gallery_ids"] = sorted(memberships.get(work_id, []))
         return payload
-    if key == "catalogue_lookup_series_base":
-        series_id = normalize_series_id(record_id)
-        if not series_id:
-            raise ValueError("record_id is required for series lookup reads")
-        return build_series_lookup_payload(source_records, series_id)
     raise ValueError(f"unsupported catalogue read key: {key}")
 
 

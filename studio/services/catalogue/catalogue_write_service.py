@@ -10,7 +10,7 @@ from catalogue.catalogue_bulk_service import bulk_save_payload
 from catalogue.catalogue_delete_service import delete_apply_response
 from catalogue.catalogue_series_service import series_create_payload, series_save_payload
 from catalogue.catalogue_gallery_service import mutate_gallery_payload
-from catalogue.catalogue_service_context import CatalogueWriteContext, build_catalogue_write_context
+from catalogue.catalogue_service_context import build_catalogue_write_context
 from catalogue.catalogue_work_service import work_create_payload, work_save_payload
 from catalogue.catalogue_work_batch_service import work_batch_create_payload
 from catalogue.catalogue_output_service import complete_saved_catalogue_edit
@@ -50,30 +50,25 @@ def handle_catalogue_post(
     context = build_catalogue_write_context(repo_root, dry_run=dry_run)
     if api_path == "/delete-apply":
         return delete_apply_response(context, body)
-    if api_path == "/work/create-batch":
-        payload, previous, current = work_batch_create_payload(context, body)
-        complete_saved_catalogue_edit(context, payload, previous, current_records=current)
-        return HTTPStatus.OK, payload
-    previous = records_from_json_source(context.source_dir)
-    status, payload = _dispatch_mutation(context, api_path, body)
+    mutations = {
+        "/work/create": work_create_payload,
+        "/work/save": work_save_payload,
+        "/work/create-batch": work_batch_create_payload,
+        "/series/create": series_create_payload,
+        "/series/save": series_save_payload,
+    }
+    if api_path in mutations:
+        payload, previous, current = mutations[api_path](context, body)
+    elif api_path in {"/gallery/create", "/gallery/save", "/gallery/delete"}:
+        payload, previous, current = mutate_gallery_payload(context, api_path.rsplit("/", 1)[1], body)
+    elif api_path == "/bulk-save":
+        previous = records_from_json_source(context.source_dir)
+        payload = bulk_save_payload(context, body)
+        current = None
+    else:
+        raise FileNotFoundError(f"Unknown catalogue service route: {api_path}")
     complete_saved_catalogue_edit(
-        context, payload, previous, attachment_files=attachment_files,
+        context, payload, previous, current_records=current, attachment_files=attachment_files,
         regenerate_image=regenerate_image,
     )
-    return status, payload
-
-
-def _dispatch_mutation(context: CatalogueWriteContext, api_path: str, body: Mapping[str, Any]) -> tuple[HTTPStatus, dict[str, Any]]:
-    if api_path == "/work/create":
-        return HTTPStatus.OK, work_create_payload(context, body)
-    if api_path == "/bulk-save":
-        return HTTPStatus.OK, bulk_save_payload(context, body)
-    if api_path == "/work/save":
-        return HTTPStatus.OK, work_save_payload(context, body)
-    if api_path == "/series/create":
-        return HTTPStatus.OK, series_create_payload(context, body)
-    if api_path == "/series/save":
-        return HTTPStatus.OK, series_save_payload(context, body)
-    if api_path in {"/gallery/create", "/gallery/save", "/gallery/delete"}:
-        return HTTPStatus.OK, mutate_gallery_payload(context, api_path.rsplit("/", 1)[1], body)
-    raise FileNotFoundError(f"Unknown catalogue service route: {api_path}")
+    return HTTPStatus.OK, payload

@@ -14,8 +14,7 @@ function applyGalleryResult(state, response) {
   if (response.deleted) {
     state.galleriesById.delete(id);
     // Remove only this Gallery identity from saved baselines and unsaved drafts.
-    for (const record of [state.draft, state.baselineDraft, state.currentRecord, state.currentLookup,
-      state.currentLookup?.work, ...state.workSearchById.values(),
+    for (const record of [state.draft, state.baselineDraft, state.currentRecord, ...state.workSearchById.values(),
       ...state.sourceWorkRecordsById.values(), ...state.bulkRecords.values()]) {
       removeGalleryMembership(record, id);
     }

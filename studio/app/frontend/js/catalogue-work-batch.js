@@ -75,7 +75,6 @@ export async function saveNewWorkBatch(state, context) {
     const message = completionError || `Saved ${ids.length} Works.`;
     context.setTextWithState(state.resultNode, message, completionError ? "error" : "success");
     context.setTextWithState(state.statusNode, "");
-    state.currentLookup = await context.loadWorkLookupRecord(first.work_id);
   } catch (error) {
     if (savedResponse?.saved && state.mode === "new") {
       setEmptySearchMode(state, context.workRouteStateOptions({ keepResult: true }));

@@ -94,7 +94,6 @@ export function setLoadedWorkRecord(state, workId, record, options = {}) {
   state.mode = "single";
   state.currentWorkId = workId;
   state.currentRecord = record;
-  state.currentLookup = options.lookup || state.currentLookup;
   state.currentRecordHash = normalizeText(options.recordHash || state.currentRecordHash);
   resetBulkState(state);
   state.baselineDraft = buildDraftFromRecord(record);
@@ -121,7 +120,6 @@ export function setLoadedBulkWorks(state, workIds, recordsById, recordHashes, op
   state.mode = "bulk";
   state.currentWorkId = "";
   state.currentRecord = null;
-  state.currentLookup = null;
   state.currentRecordHash = "";
   state.bulkWorkIds = workIds.slice();
   state.bulkRecords = new Map(recordsById);
@@ -154,7 +152,6 @@ export function setNewWorkMode(state, options = {}) {
   state.mode = "new";
   state.currentWorkId = "";
   state.currentRecord = null;
-  state.currentLookup = null;
   state.currentRecordHash = "";
   resetBulkState(state);
   state.draft = {};
@@ -187,7 +184,6 @@ export function setEmptySearchMode(state, options = {}) {
   state.mode = "single";
   state.currentWorkId = "";
   state.currentRecord = null;
-  state.currentLookup = null;
   state.currentRecordHash = "";
   resetBulkState(state);
   state.baselineDraft = null;

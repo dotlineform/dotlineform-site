@@ -16,20 +16,29 @@ def download_filenames(record: dict[str, Any]) -> set[str]:
     return {item["filename"] for item in work_resource_entries(record, "downloads")}
 
 
-def changed_work_media_ids(
+def changed_work_media(
     previous: CatalogueSourceRecords, current: CatalogueSourceRecords, candidate_ids: set[str],
-) -> tuple[list[str], list[str]]:
-    """Select current Works with changed image sources or download references."""
+    attachment_names: set[str],
+) -> tuple[list[str], dict[str, set[str]]]:
+    """Select changed image sources, added downloads and supplied replacement bytes.
+
+    Unchanged downloads are assumed to remain available. Removed references do
+    not select remaining files for validation or media completion.
+    """
     image_ids = []
-    download_ids = []
+    file_changes = {}
     for key in sorted(candidate_ids & current.works.keys()):
         record = current.works[key]
         old = previous.works.get(key)
-        if old is None or any(old.get(field) != record.get(field) for field in MEDIA_SOURCE_FIELDS):
+        if record.get("project_filename") and (
+            old is None or any(old.get(field) != record.get(field) for field in MEDIA_SOURCE_FIELDS)
+        ):
             image_ids.append(key)
-        if old is None or download_filenames(old) != download_filenames(record):
-            download_ids.append(key)
-    return sorted(image_ids), sorted(download_ids)
+        names = download_filenames(record)
+        changed_names = (names - download_filenames(old or {})) | (names & attachment_names)
+        if changed_names:
+            file_changes[key] = changed_names
+    return image_ids, file_changes
 
 
 def complete_saved_catalogue_edit(
@@ -40,9 +49,9 @@ def complete_saved_catalogue_edit(
 ) -> None:
     """Preserve canonical success when local media or response completion fails.
 
-    Creation and deletion owners may pass validated current records to avoid an
-    initial reread. Media promotion still owns dimensions/revisions, so editor
-    completion reads their final canonical state after media has been attempted.
+    Mutation owners carry before/after records through completion. Media
+    persistence updates the supplied current map only after its write succeeds,
+    so final editor records and queues use that same completed state.
     """
     shared = response.pop("_shared_changes", None)
     if context.dry_run or not response.get("ok"):
@@ -50,10 +59,10 @@ def complete_saved_catalogue_edit(
     response["saved"] = True
     failures: list[str] = []
     current = current_records
-    media_attempted = False
     refresh_needed = False
     image_ids: list[str] = []
     candidate_ids: set[str] = set()
+    file_changes: dict[str, set[str]] = {}
     try:
         if current is None:
             current = records_from_json_source(context.source_dir)
@@ -62,38 +71,31 @@ def complete_saved_catalogue_edit(
                 response.get("work_id"), *response.get("selected_ids", ()), *response.get("changed_work_ids", ()),
             ) if key in current.works
         }
-        image_ids, download_ids = changed_work_media_ids(previous, current, candidate_ids)
+        image_ids, file_changes = changed_work_media(previous, current, candidate_ids, set(attachment_files or {}))
         if regenerate_image:
             image_ids = sorted(set(image_ids) | {response["work_id"]})
-        # Retain validation of ready downloads; pending native bytes replace exact identities.
-        download_ids = sorted(set(download_ids) | {
-            key for key in candidate_ids if download_filenames(current.works[key])
-        })
-        work_ids = sorted(set(image_ids) | set(download_ids))
+        work_ids = sorted(set(image_ids) | set(file_changes))
         if work_ids:
-            media_attempted = True
             response["media"] = complete_catalogue_media(
                 context.repo_root, context.source_dir, records=current, previous=previous,
-                work_ids=work_ids, image_work_ids=image_ids, write=True,
+                work_ids=work_ids, image_work_ids=image_ids, download_names_by_work=file_changes, write=True,
                 attachment_files=attachment_files,
                 force_image_ids=[response["work_id"]] if regenerate_image else [],
             )
     except (Exception, SystemExit) as error:
         failures.append(f"Local Save preparation: {error}")
     try:
-        # Reuse the loaded source unless media promotion may have changed revisions.
-        if current is None or media_attempted:
-            current = records_from_json_source(context.source_dir)
+        if current is None:
+            raise ValueError("Saved canonical records are unavailable for editor completion")
         if "record" in response and "gallery_id" not in response:
             record = current.series.get(response.get("series_id")) if response.get("series_id") else current.works.get(response.get("work_id"))
             if record:
                 response.update(record=record, record_hash=record_hash(record))
         # Bulk mutation responses already include every selected Work and its saved memberships.
-        for key in ("records", "work_records"):
-            for entry in response.get(key, []):
-                record = current.works.get(entry.get("work_id"))
-                if record:
-                    entry.update(record=record, record_hash=record_hash(record))
+        for entry in response.get("records", []):
+            record = current.works.get(entry.get("work_id"))
+            if record:
+                entry.update(record=record, record_hash=record_hash(record))
     except Exception as error:
         failures.append(f"Editor response: {error}")
     try:
@@ -108,12 +110,7 @@ def complete_saved_catalogue_edit(
             if response.get("work_id"):
                 changed_ids.add(response["work_id"])
         image_changes = {wid for wid in image_ids if current.works[wid].get("project_filename")}
-        file_changes = {
-            wid: (download_filenames(current.works[wid]) - download_filenames(previous.works.get(wid, {})))
-                 | (download_filenames(current.works[wid]) & set(attachment_files or {}))
-            for wid in candidate_ids
-        }
-        targets = (changed_ids | image_changes | {wid for wid, names in file_changes.items() if names}) & current.works.keys()
+        targets = (changed_ids | image_changes | set(file_changes)) & current.works.keys()
         selections = {
             wid: {"metadata": wid in changed_ids or wid in image_changes,
                   "image": wid in image_changes, "file_names": sorted(file_changes.get(wid, set()))}

@@ -220,8 +220,7 @@ export async function openWorkById(state, requestedWorkId, context) {
     throw new Error(`work source missing record for ${workId}`);
   }
   context.setLoadedWorkRecord(workId, record, {
-    recordHash: normalizeText(lookup.record_hash),
-    lookup
+    recordHash: normalizeText(lookup.record_hash)
   });
 }
 
