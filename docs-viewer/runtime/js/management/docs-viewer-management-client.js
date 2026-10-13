@@ -258,12 +258,8 @@ export function updateSourceConfigSettings(changes, options) {
   }, options), options);
 }
 
-export function previewManagedDocDelete(docIds, options) {
-  return fetchManagementJson("/docs/delete-preview", "POST", collectionPayload({ doc_ids: docIds }, options), options);
-}
-
-export function applyManagedDocDelete(docIds, options) {
-  return fetchManagementJson("/docs/delete-apply", "POST", collectionPayload({
+export function deleteManagedDoc(docIds, options) {
+  return fetchManagementJson("/docs/delete", "POST", collectionPayload({
     doc_ids: docIds,
     confirm: true
   }, options), options);
@@ -277,25 +273,11 @@ function collectionDeleteTargetPayload(target, payload) {
   return targetPayload(normalized, payload);
 }
 
-export function previewManagedCollectionDocDelete(target, options) {
+export function deleteManagedCollectionDoc(target, options) {
   return fetchManagementJson(
-    "/docs/delete-preview",
-    "POST",
-    collectionDeleteTargetPayload(target, {}),
-    options
-  );
-}
-
-export function applyManagedCollectionDocDelete(target, sourceRevision, options) {
-  var revision = String(sourceRevision || "").trim();
-  if (!/^sha256:[0-9a-f]{64}$/.test(revision)) {
-    throw new Error("Collection document delete requires a sha256 source revision.");
-  }
-  return fetchManagementJson(
-    "/docs/delete-apply",
+    "/docs/delete",
     "POST",
     collectionDeleteTargetPayload(target, {
-      source_revision: revision,
       confirm: true
     }),
     options

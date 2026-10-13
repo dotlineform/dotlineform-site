@@ -1,185 +1,49 @@
-#!/usr/bin/env python3
-"""Planning helpers for Docs Management source mutations."""
+"""Create-only source construction for Docs Management."""
 
 from __future__ import annotations
 
-import hashlib
-import re
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 import docs_source_model as source_model
 from docs_document_subjects import subject_key_is_canonical
-from docs_index_order import INDEX_ORDER_FILENAME, exclude_nodes, index_order_text, insert_node, move_node, read_index_order, tree_parent_ids
-from docs_management_document_target import (
-    committed_document_record,
-    ManagedDocumentCollection,
-    ManagedDocumentTarget,
-    managed_document_target_request,
-    resolve_managed_document_collection,
-    resolve_managed_document_target,
-)
-from docs_workspace_config import (
-    load_docs_working_config,
-    require_document_authoring,
-    generated_documents_path,
-    document_source_path,
-    resolve_external_data_root,
-    resolve_workspace_path,
-)
-
-
-COLLECTION_DELETE_PREVIEW_KEYS = frozenset({ "collection", "doc_id"})
-COLLECTION_DELETE_APPLY_KEYS = frozenset(
-    { "collection", "doc_id", "source_revision", "confirm"}
-)
-SOURCE_REVISION_PATTERN = re.compile(r"^sha256:[0-9a-f]{64}$")
-
-
-class ManagedDocumentRevisionConflict(ValueError):
-    """The confirmed source bytes no longer match the preview receipt."""
-
-    def __init__(self, payload: Dict[str, Any]) -> None:
-        super().__init__(str(payload.get("error") or "managed document source changed after preview"))
-        self.payload = payload
+from docs_index_order import INDEX_ORDER_FILENAME, index_order_text, insert_node, read_index_order, tree_parent_ids
+from docs_management_document_target import committed_document_record, ManagedDocumentCollection, resolve_managed_document_collection
+from docs_workspace_config import require_document_authoring, resolve_external_data_root
 
 
 def relative_path(repo_root: Path, path: Path) -> str:
-    resolved_path = path.resolve()
-    try:
-        return resolved_path.relative_to(repo_root.resolve()).as_posix()
-    except ValueError:
-        pass
-    try:
-        return resolved_path.relative_to(resolve_external_data_root().resolve()).as_posix()
-    except ValueError as exc:
-        raise ValueError("source path is outside the repo and external Docs Viewer root") from exc
+    resolved = path.resolve()
+    if resolved.is_relative_to(repo_root.resolve()):
+        return resolved.relative_to(repo_root.resolve()).as_posix()
+    return resolved.relative_to(resolve_external_data_root().resolve()).as_posix()
 
 
 def normalize_metadata_text(value: Any) -> str:
     return str(value or "").strip()
 
 
-def ordered_doc_ids(doc_ids: list[str]) -> list[str]:
-    seen: set[str] = set()
-    ordered: list[str] = []
-    for raw_doc_id in doc_ids:
-        doc_id = str(raw_doc_id or "").strip()
-        if not doc_id or doc_id in seen:
-            continue
-        seen.add(doc_id)
-        ordered.append(doc_id)
-    return ordered
-
-
-def require_delete_doc_ids(value: Any) -> list[str]:
-    if not isinstance(value, list):
-        raise ValueError("doc_ids is required")
-    doc_ids = ordered_doc_ids(value)
-    if not doc_ids:
-        raise ValueError("doc_ids is required")
-    return doc_ids
-
-
-def delete_selection_docs(
-    docs: list[source_model.SourceDoc],
-    requested_doc_ids: list[str],
-) -> tuple[list[str], list[source_model.SourceDoc]]:
-    docs_by_id = {doc.doc_id: doc for doc in docs}
-    missing_doc_ids = [doc_id for doc_id in requested_doc_ids if doc_id not in docs_by_id]
-    if missing_doc_ids:
-        raise FileNotFoundError(f"docs not found: {', '.join(missing_doc_ids)}")
-
-    selected = set(requested_doc_ids)
-    effective_root_doc_ids: list[str] = []
-    for doc_id in requested_doc_ids:
-        parent_id = docs_by_id[doc_id].parent_id
-        seen = {doc_id}
-        covered_by_selected_ancestor = False
-        while parent_id:
-            if parent_id in selected:
-                covered_by_selected_ancestor = True
-                break
-            if parent_id in seen:
-                raise ValueError(f"doc hierarchy contains a cycle at {parent_id!r}")
-            seen.add(parent_id)
-            parent = docs_by_id.get(parent_id)
-            if parent is None:
-                break
-            parent_id = parent.parent_id
-        if not covered_by_selected_ancestor:
-            effective_root_doc_ids.append(doc_id)
-
-    delete_docs: list[source_model.SourceDoc] = []
-    seen_delete_ids: set[str] = set()
-    for root_doc_id in effective_root_doc_ids:
-        for doc in source_model.subtree_docs_in_tree_order(docs, root_doc_id):
-            if doc.doc_id in seen_delete_ids:
-                continue
-            seen_delete_ids.add(doc.doc_id)
-            delete_docs.append(doc)
-    return effective_root_doc_ids, delete_docs
-
-
-def delete_selection_warning(requested_count: int, additional_descendant_count: int) -> str:
-    if requested_count == 1:
-        selected_text = "the selected document"
-    else:
-        selected_text = f"{requested_count} checked documents"
-    if additional_descendant_count:
-        descendant_text = (
-            f"{additional_descendant_count} additional descendant document"
-            f"{'s' if additional_descendant_count != 1 else ''}"
-        )
-        return f"This permanently deletes {selected_text} and {descendant_text}."
-    return f"This permanently deletes {selected_text}."
-
-
 @dataclass(frozen=True)
 class SourceWrite:
-    """A planned write, optionally identifying a referring document's revision."""
-
     path: Path
     text: str
-    original_bytes: Optional[bytes] = None
     create_only: bool = False
-    revision_target: Optional[dict[str, str]] = None
-
-
-@dataclass(frozen=True)
-class SourceDelete:
-    path: Path
-    original_bytes: Optional[bytes] = None
 
 
 @dataclass(frozen=True)
 class ManagementMutationPlan:
     response: Dict[str, Any]
-    collection: str = ""
-    source_writes: tuple[SourceWrite, ...] = ()
-    source_deletes: tuple[SourceDelete, ...] = ()
-    build_doc_ids: Optional[list[str]] = None
-    log_event_name: Optional[str] = None
-    log_details: Dict[str, Any] = field(default_factory=dict)
-    include_write_result_keys: bool = False
-    restore_deletes_on_rebuild_failure: bool = False
-    report_create_commit_on_rebuild_failure: bool = False
-    prepared_owner: ManagedDocumentCollection | None = None
-    prepared_document: source_model.SourceDoc | None = None
+    source_writes: tuple[SourceWrite, ...]
+    prepared_owner: ManagedDocumentCollection
+    prepared_document: source_model.SourceDoc
     parent_ids: dict[str, str] | None = None
-    revision_conflict_operation: str = "apply"
-    revision_conflict_error: str = (
-        "managed document source changed before applying changes"
-    )
+    log_event_name: str | None = None
+    log_details: Dict[str, Any] = field(default_factory=dict)
 
     @property
     def changed_paths(self) -> list[Path]:
-        return [write.path for write in self.source_writes] + [delete.path for delete in self.source_deletes]
-
-    @property
-    def has_source_changes(self) -> bool:
-        return bool(self.source_writes or self.source_deletes)
+        return [write.path for write in self.source_writes]
 
 
 def plan_create(
@@ -266,7 +130,6 @@ def plan_create(
         log_details["collection"] = collection
 
     return ManagementMutationPlan(
-        collection=collection,
         response=response,
         source_writes=(
             SourceWrite(
@@ -276,318 +139,9 @@ def plan_create(
             ),
             *((SourceWrite(target_root / INDEX_ORDER_FILENAME, index_order_text(tree)),) if not collection else ()),
         ),
-        build_doc_ids=[doc_id],
         prepared_owner=resolved_collection,
         prepared_document=document,
         parent_ids=tree_parent_ids(tree) if not collection else None,
         log_event_name="docs-create",
         log_details=log_details,
-        include_write_result_keys=True,
-        report_create_commit_on_rebuild_failure=True,
-    )
-
-
-def plan_move(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
-    """Move one ordinary subtree by editing only index-order.json."""
-    config = load_docs_working_config(repo_root)
-    require_document_authoring(config)
-    if body.get("collection") or "parent_id" in body or "scope" in body:
-        raise ValueError("Position requires an ordinary document, target_doc_id and placement")
-    doc_id = str(body.get("doc_id") or "")
-    root = document_source_path(config)
-    tree = read_index_order(root)
-    parent_id = move_node(tree, doc_id, str(body.get("target_doc_id") or ""), str(body.get("placement") or ""))
-    return ManagementMutationPlan(
-        response={
-            "ok": True, "doc_id": doc_id,
-            "record": {"doc_id": doc_id, "parent_id": parent_id},
-            "summary_text": f"Positioned {doc_id}.",
-        },
-        source_writes=(SourceWrite(root / INDEX_ORDER_FILENAME, index_order_text(tree)),),
-        build_doc_ids=[doc_id],
-        include_write_result_keys=True,
-    )
-
-
-def plan_delete_preview(repo_root: Path, doc_ids: list[str]) -> Dict[str, Any]:
-    config = load_docs_working_config(repo_root)
-    require_document_authoring(config)
-    requested_doc_ids = require_delete_doc_ids(doc_ids)
-    docs = source_model.load_stage_docs_for_config(repo_root, config)
-    effective_root_doc_ids, delete_docs = delete_selection_docs(docs, requested_doc_ids)
-    delete_documents = [
-        {
-            "doc_id": doc.doc_id,
-            "title": doc.title,
-            "path": relative_path(repo_root, doc.path),
-        }
-        for doc in delete_docs
-    ]
-    delete_doc_ids = [doc.doc_id for doc in delete_docs]
-    requested_count = len(requested_doc_ids)
-    additional_descendant_count = len(set(delete_doc_ids) - set(requested_doc_ids))
-    warnings = [delete_selection_warning(requested_count, additional_descendant_count)]
-    configured_default = config.default_doc_id
-    default_doc_id_changed = configured_default in set(delete_doc_ids)
-
-    return {
-        "ok": True,
-        "allowed": True,
-        "blockers": [],
-        "warnings": warnings,
-        "requested_doc_count": requested_count,
-        "requested_doc_ids": requested_doc_ids,
-        "effective_root_count": len(effective_root_doc_ids),
-        "effective_root_doc_ids": effective_root_doc_ids,
-        "delete_count": len(delete_docs),
-        "additional_descendant_count": additional_descendant_count,
-        "delete_doc_ids": delete_doc_ids,
-        "delete_documents": delete_documents,
-        "default_doc_id_changed": default_doc_id_changed,
-        "default_doc_id": "" if default_doc_id_changed else configured_default,
-    }
-
-
-def selected_delete_writes(config: Any, doc_ids: list[str], collection: str = "") -> tuple[SourceWrite, ...]:
-    from docs_selected_documents import read_selected, selected_path, selected_text
-
-    path = selected_path(config)
-    original = path.read_bytes()
-    payload = read_selected(config)
-    rows = [row for row in payload["docs"] if not (row.get("collection", "") == collection and row["doc_id"] in doc_ids)]
-    if rows == payload["docs"]:
-        return ()
-    return (SourceWrite(path, selected_text({**payload, "docs": rows}), original_bytes=original),)
-
-
-def plan_delete_apply(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
-    if "scope" in body:
-        raise ValueError("scope is retired; use optional collection")
-    config = load_docs_working_config(repo_root)
-    require_document_authoring(config)
-    requested_doc_ids = require_delete_doc_ids(body.get("doc_ids"))
-    if not body.get("confirm"):
-        raise ValueError("delete apply requires confirm=true")
-
-    preview = plan_delete_preview(repo_root, requested_doc_ids)
-    if not preview["allowed"]:
-        raise ValueError("; ".join(preview["blockers"]))
-
-    docs = source_model.load_stage_docs_for_config(repo_root, config)
-    effective_root_doc_ids, delete_docs = delete_selection_docs(docs, requested_doc_ids)
-    delete_doc_ids = [doc.doc_id for doc in delete_docs]
-    delete_paths = [relative_path(repo_root, doc.path) for doc in delete_docs]
-    delete_count = len(delete_docs)
-    additional_descendant_count = len(set(delete_doc_ids) - set(requested_doc_ids))
-    summary_text = f"Deleted {delete_count} document{'s' if delete_count != 1 else ''}."
-    return ManagementMutationPlan(
-        response={
-            "ok": True,
-            "paths": delete_paths,
-            "requested_doc_count": len(requested_doc_ids),
-            "requested_doc_ids": requested_doc_ids,
-            "effective_root_count": len(effective_root_doc_ids),
-            "effective_root_doc_ids": effective_root_doc_ids,
-            "delete_count": delete_count,
-            "additional_descendant_count": additional_descendant_count,
-            "deleted_doc_ids": delete_doc_ids,
-            "warnings": preview["warnings"],
-            "default_doc_id_changed": preview["default_doc_id_changed"],
-            "default_doc_id": preview["default_doc_id"],
-            "summary_text": summary_text,
-        },
-        source_deletes=tuple(SourceDelete(doc.path) for doc in delete_docs),
-        source_writes=(SourceWrite(
-            document_source_path(config) / INDEX_ORDER_FILENAME,
-            index_order_text(exclude_nodes(read_index_order(document_source_path(config)), set(delete_doc_ids))),
-        ), *selected_delete_writes(config, delete_doc_ids)),
-        build_doc_ids=delete_doc_ids,
-        log_event_name="docs-delete",
-        log_details={
-            "paths": delete_paths,
-            "requested_doc_ids": requested_doc_ids,
-            "effective_root_doc_ids": effective_root_doc_ids,
-            "deleted_doc_ids": delete_doc_ids,
-            "delete_count": delete_count,
-            "additional_descendant_count": additional_descendant_count,
-            "default_doc_id_changed": preview["default_doc_id_changed"],
-        },
-        include_write_result_keys=True,
-    )
-
-
-def require_exact_collection_delete_request(
-    body: Dict[str, Any],
-    *,
-    apply: bool,
-) -> None:
-    expected = COLLECTION_DELETE_APPLY_KEYS if apply else COLLECTION_DELETE_PREVIEW_KEYS
-    actual = frozenset(body)
-    if actual != expected:
-        required = ", ".join(sorted(expected))
-        raise ValueError(
-            "collection document delete "
-            f"{'apply' if apply else 'preview'} must contain exactly {required}"
-        )
-
-
-def source_revision(source_bytes: bytes) -> str:
-    return f"sha256:{hashlib.sha256(source_bytes).hexdigest()}"
-
-
-def collection_delete_generated_outputs(
-    repo_root: Path,
-    resolved: ManagedDocumentTarget,
-) -> list[dict[str, str]]:
-    output_root = resolve_workspace_path(
-        repo_root,
-        generated_documents_path(resolved.document_config),
-    )
-    return [
-        {
-            "kind": "collection_manifest",
-            "action": "rebuild",
-            "path": relative_path(repo_root, output_root / "manage-manifest.json"),
-        },
-        {
-            "kind": "collection_document",
-            "action": "remove",
-            "path": relative_path(
-                repo_root,
-                output_root / "by-id" / f"{resolved.doc_id}.json",
-            ),
-        },
-    ]
-
-
-def plan_collection_delete_preview(
-    repo_root: Path,
-    body: Dict[str, Any],
-) -> Dict[str, Any]:
-    """Plan a write-free delete of one exact configured child document."""
-
-    require_exact_collection_delete_request(body, apply=False)
-    resolved = resolve_managed_document_target(
-        repo_root,
-        managed_document_target_request(body),
-    )
-    require_document_authoring(resolved.parent_config)
-    if not resolved.collection:
-        raise ValueError("collection is required for collection document delete")
-
-    document = resolved.document
-    source_bytes = document.source_text.encode("utf-8")
-    target = resolved.request_target()
-    path = relative_path(repo_root, document.path)
-    return {
-        "ok": True,
-        "operation": "preview",
-        "target": target,
-        "collection": resolved.collection,
-        "doc_id": document.doc_id,
-        "title": document.title,
-        "source_revision": source_revision(source_bytes),
-        "allowed": True,
-        "blockers": [],
-        "warnings": ["This permanently deletes the displayed collection document."],
-        "delete_count": 1,
-        "delete_documents": [
-            {
-                "doc_id": document.doc_id,
-                "title": document.title,
-                "path": path,
-            }
-        ],
-        "generated_outputs": collection_delete_generated_outputs(repo_root, resolved),
-    }
-
-
-def revision_conflict_payload(
-    *,
-    target: dict[str, str],
-    requested_revision: str,
-    current_revision: str,
-    operation: str = "apply",
-    error: str = "collection document source changed after delete preview",
-) -> Dict[str, Any]:
-    payload: Dict[str, Any] = {
-        "ok": False,
-        "operation": operation,
-        "target": target,
-        "doc_id": target["doc_id"],
-        "source_revision": requested_revision,
-        "current_source_revision": current_revision,
-        "error": error,
-        "retry_safe": False,
-    }
-    if target.get("collection"):
-        payload["collection"] = target["collection"]
-    return payload
-
-
-def plan_collection_delete_apply(
-    repo_root: Path,
-    body: Dict[str, Any],
-) -> ManagementMutationPlan:
-    """Plan one confirmed child-source deletion against its preview revision."""
-
-    require_exact_collection_delete_request(body, apply=True)
-    if body.get("confirm") is not True:
-        raise ValueError("collection document delete apply requires confirm=true")
-    requested_revision = str(body.get("source_revision") or "").strip()
-    if not SOURCE_REVISION_PATTERN.fullmatch(requested_revision):
-        raise ValueError("source_revision must be a sha256 revision receipt")
-
-    resolved = resolve_managed_document_target(
-        repo_root,
-        managed_document_target_request(body),
-    )
-    require_document_authoring(resolved.parent_config)
-    if not resolved.collection:
-        raise ValueError("collection is required for collection document delete")
-
-    document = resolved.document
-    source_bytes = document.source_text.encode("utf-8")
-    current_revision = source_revision(source_bytes)
-    target = resolved.request_target()
-    if current_revision != requested_revision:
-        raise ManagedDocumentRevisionConflict(
-            revision_conflict_payload(
-                target=target,
-                requested_revision=requested_revision,
-                current_revision=current_revision,
-            )
-        )
-
-    path = relative_path(repo_root, document.path)
-    return ManagementMutationPlan(
-        collection=resolved.collection,
-        response={
-            "ok": True,
-            "operation": "apply",
-            "target": target,
-            "collection": resolved.collection,
-            "doc_id": document.doc_id,
-            "title": document.title,
-            "source_revision": requested_revision,
-            "path": path,
-            "deleted_doc_ids": [document.doc_id],
-            "delete_count": 1,
-            "generated_outputs": collection_delete_generated_outputs(repo_root, resolved),
-            "summary_text": f"Deleted {document.doc_id}.",
-        },
-        source_deletes=(SourceDelete(document.path, original_bytes=source_bytes),),
-        source_writes=selected_delete_writes(resolved.parent_config, [document.doc_id], resolved.collection),
-        revision_conflict_operation="apply",
-        revision_conflict_error="collection document source changed after delete preview",
-        log_event_name="docs-delete",
-        log_details={
-            "collection": resolved.collection,
-            "doc_id": document.doc_id,
-            "deleted_doc_ids": [document.doc_id],
-            "delete_count": 1,
-            "path": path,
-        },
-        include_write_result_keys=True,
-        restore_deletes_on_rebuild_failure=True,
     )

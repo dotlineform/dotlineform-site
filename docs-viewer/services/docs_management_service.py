@@ -28,7 +28,8 @@ import docs_import_source_service as import_source_service  # noqa: E402
 import docs_local_links  # noqa: E402
 import docs_media_actions  # noqa: E402
 import docs_media_metadata  # noqa: E402
-import docs_management_mutations as mutations  # noqa: E402
+import docs_management_position  # noqa: E402
+import docs_management_delete  # noqa: E402
 import docs_management_routes as routes  # noqa: E402
 import docs_publish  # noqa: E402
 import docs_project_state  # noqa: E402
@@ -63,11 +64,7 @@ from docs_management_context import (  # noqa: E402
 from docs_management_import_service import handle_import_source, import_source_dependencies  # noqa: E402
 from docs_management_mutation_service import (  # noqa: E402
     DocumentCreateCommittedError,
-    CollectionDocumentDeleteApplyError,
-    execute_management_mutation_plan,
     handle_create,
-    handle_delete_apply,
-    handle_move,
 )
 from docs_management_read_service import (  # noqa: E402
     docs_api_query_value,
@@ -126,11 +123,8 @@ def docs_management_post_response(
         except docs_catalogue_regeneration.CatalogueRegenerationError as error:
             return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
     if path == routes.SET_DRAFT_PATH:
-        try:
-            payload = docs_management_draft.set_draft(repo_root, body, dry_run=dry_run)
-            return (HTTPStatus.OK if payload["ok"] else HTTPStatus.INTERNAL_SERVER_ERROR), payload
-        except mutations.ManagedDocumentRevisionConflict as error:
-            return HTTPStatus.CONFLICT, error.payload
+        payload = docs_management_draft.set_draft(repo_root, body, dry_run=dry_run)
+        return (HTTPStatus.OK if payload["ok"] else HTTPStatus.INTERNAL_SERVER_ERROR), payload
     if path == routes.SET_SELECTED_PATH:
         return HTTPStatus.OK, docs_selected_documents.set_selected(repo_root, body, dry_run=dry_run)
     if path == routes.SOURCE_SAVE_PATH:
@@ -257,26 +251,11 @@ def docs_management_post_response(
         payload["summary_text"] = "Docs and docs search rebuilt."
         return HTTPStatus.OK, payload
     if path == routes.MOVE_PATH:
-        return HTTPStatus.OK, handle_move(repo_root, body, dry_run)
-    if path == routes.DELETE_PREVIEW_PATH:
-        if "collection" in body:
-            if str(body.get("collection") or "").strip().lower() == "catalogue":
-                raise ValueError("Catalogue documents are deleted through Regenerate")
-            return (
-                HTTPStatus.OK,
-                mutations.plan_collection_delete_preview(repo_root, body),
-            )
-        doc_ids = mutations.require_delete_doc_ids(body.get("doc_ids"))
-        return HTTPStatus.OK, mutations.plan_delete_preview(repo_root, doc_ids)
-    if path == routes.DELETE_APPLY_PATH:
-        if str(body.get("collection") or "").strip().lower() == "catalogue":
-            raise ValueError("Catalogue documents are deleted through Regenerate")
-        try:
-            return HTTPStatus.OK, handle_delete_apply(repo_root, body, dry_run)
-        except mutations.ManagedDocumentRevisionConflict as error:
-            return HTTPStatus.CONFLICT, error.payload
-        except CollectionDocumentDeleteApplyError as error:
-            return HTTPStatus.INTERNAL_SERVER_ERROR, error.payload
+        payload = docs_management_position.position_document(repo_root, body, dry_run=dry_run)
+        return (HTTPStatus.OK if payload["ok"] else HTTPStatus.INTERNAL_SERVER_ERROR), payload
+    if path == routes.DELETE_PATH:
+        payload = docs_management_delete.delete_documents(repo_root, body, dry_run=dry_run)
+        return (HTTPStatus.OK if payload["ok"] else HTTPStatus.INTERNAL_SERVER_ERROR), payload
     if path == routes.STATIC_HTML_EXPORT_PREVIEW_PATH:
         return HTTPStatus.OK, docs_static_html_export.preview_static_html_export(repo_root, body)
     if path == routes.STATIC_HTML_EXPORT_APPLY_PATH:

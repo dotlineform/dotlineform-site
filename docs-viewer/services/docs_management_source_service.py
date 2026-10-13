@@ -213,7 +213,7 @@ def prepare_source_candidate(
     return replace(
         resolved.document, source_text=next_source_text, front_matter=next_metadata,
         body=next_source_body, title=next_metadata["title"],
-        ui_status=source_model.normalize_ui_status(next_metadata.get("ui_status")), report=report,
+        ui_status=source_model.normalize_ui_status(next_metadata.get("ui_status")), report=report, parts=None,
     ), source_changed
 
 

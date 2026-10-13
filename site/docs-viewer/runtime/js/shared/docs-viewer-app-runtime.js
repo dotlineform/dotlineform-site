@@ -332,6 +332,7 @@ export function startDocsViewerRuntime(options) {
     mediaDetailAdapter: settings.mediaDetailAdapter,
     managementService: managementService,
     managementDocumentActions: {
+      startBusyOperation: function () { return managementRuntime.controller().startBusyOperation(); },
       resolveAction: function (actionId, target) {
         var controller = managementRuntime ? managementRuntime.controller() : null;
         return controller ? controller.resolveAction(actionId, target)
@@ -388,6 +389,7 @@ export function startDocsViewerRuntime(options) {
     captureDocument: documentController.capture,
     restoreDocument: documentController.restore,
     restoreRetainedDocument: documentController.restoreRetained,
+    retainedDocumentAvailable: documentController.hasRetained,
     retainDocuments: documentController.retainDocuments,
     scrollToHash: documentController.scrollToHash,
     prepareDocumentNavigation: documentViewCoordinator.prepareDocumentNavigation,
@@ -528,6 +530,13 @@ export function startDocsViewerRuntime(options) {
       defaultDocId: documentIndex.defaultDocId,
       defaultRouteDocId: function () { return defaultRouteDocId; },
       docsViewerConfigUrl: docsViewerConfigUrl,
+      commitDefaultDocumentChange: function (docId) {
+        defaultRouteDocId = docId;
+        routeContext.defaultRouteDocId = docId;
+        appSession.domains.workspaceConfig.activeConfig.defaultDocId = docId;
+        appSession.domains.workspaceConfig.viewerConfig.workspace.default_doc_id = docId;
+      },
+      configuredDefaultDocId: function () { return appSession.domains.workspaceConfig.activeConfig.defaultDocId; },
       escapeHtml: escapeHtml,
       getConfigValue: getConfigValue,
       isManagementContext: function () { return routeWorkflow.managementUiEnabled(); },

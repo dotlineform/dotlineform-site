@@ -730,6 +730,7 @@ export function initDocsViewerManagement(context) {
 
   actionController = createDocsViewerManagementActionController({
     root: root,
+    collectionHostDocIds: function () { return domains.workspaceConfig.activeConfig.collections.map(function (collection) { return collection.reportHostDocId; }); },
     documentIndex: documentIndex,
     management: management,
     searchRecent: searchRecent,
@@ -759,6 +760,7 @@ export function initDocsViewerManagement(context) {
     selectedDocument: selectedDocument,
     documentIndex: documentIndex,
     actions: actionController,
+    commitDocumentChange: context.commitDocumentChange,
     resolveAction: resolveAction,
     documentActionContext: context.documentActionContext,
     activeViewState: context.activeViewState,
@@ -864,6 +866,11 @@ export function initDocsViewerManagement(context) {
     applyConfig: applyConfig,
     resolveAction: resolveAction,
     regenerateCatalogue: actionController.handleRegenerateCatalogue,
+    startBusyOperation: function () {
+      setManagementBusy(true);
+      renderManagementUi();
+      return function () { setManagementBusy(false); renderManagementUi(); };
+    },
     handleDocumentKeydown: function (event) {
       return editMenuController.handleKeydown(event) || eventRouter.handleDocumentKeydown(event);
     },

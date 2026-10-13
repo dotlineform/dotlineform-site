@@ -208,6 +208,14 @@ def _write_text_atomic(path: Path, text: str) -> None:
     temp_path.replace(path)
 
 
+def clear_deleted_default_document(repo_root: Path) -> None:
+    """Persist the known empty default selected by an exact document deletion."""
+    config_path = repo_root / CONFIG_REL_PATH
+    payload = _load_json(config_path, CONFIG_REL_PATH.as_posix())
+    payload["stages"]["working"]["default_doc_id"] = ""
+    _write_text_atomic(config_path, json.dumps(payload, ensure_ascii=False, indent=2) + "\n")
+
+
 def apply_settings_change(repo_root: Path, changes: dict[str, Any], *, dry_run: bool = False) -> dict[str, Any]:
     validation = validate_settings_change(repo_root, changes)
     changed_fields = {

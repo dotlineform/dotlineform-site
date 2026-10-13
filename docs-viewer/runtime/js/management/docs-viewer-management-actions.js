@@ -1,11 +1,10 @@
 import { publishManagedDocs } from "./docs-viewer-management-client.js";
 import { openDocsViewerPositionModal } from "./docs-viewer-position-modal.js";
 import {
-  applyManagedDocDelete,
+  deleteManagedDoc,
   createManagedDoc,
   moveManagedDoc,
   openManagedDocSource,
-  previewManagedDocDelete,
   readManagedDocMetadata,
   rebuildManagedDocs,
   rebuildManagedDocument,
@@ -19,8 +18,6 @@ import {
   normalizeManagedDocumentTarget
 } from "./docs-viewer-management-document-target.js";
 import {
-  buildDocsViewerDeletePreviewBody,
-  docsViewerDeleteCompletionMessage,
   openDocsViewerConfirmModal,
   openDocsViewerTextInputModal
 } from "./docs-viewer-management-modals.js";
@@ -590,79 +587,67 @@ export function createDocsViewerManagementActionController(options) {
     handleSettingsSave();
   }
 
-  function handleDeleteDoc(targetDocId, restoreFocus) {
+  async function handleDeleteDoc(targetDocId, restoreFocus) {
     if (!targetDocId || management.managementBusy) return;
     var resolution = resolveAction(DOCS_VIEWER_ACTION_IDS.DELETE, targetDocId);
-    var docIds = resolution && resolution.enabled
-      ? resolution.targetDocIds.slice(0, 1)
-      : [];
-    if (!docIds.length) return;
-    var doc = documentIndex.docsById.get(docIds[0]);
-    if (!doc) return;
-
+    if (!resolution.enabled || !resolution.targetDocIds.length) return;
+    var doc = documentIndex.docsById.get(resolution.targetDocIds[0]);
+    var count = resolution.targetDocIds.length;
+    var label = count + " document" + (count === 1 ? "" : "s");
+    var body = [
+      "Document: " + doc.title + " (" + doc.doc_id + ").",
+      "Permanently deletes this document and all its descendants, including collapsed rows.",
+      "Documents to delete: " + count + "."
+    ];
+    if (resolution.targetDocIds.includes(context.configuredDefaultDocId())) body.push("The configured default document will be cleared.");
+    var confirmed = await openDocsViewerConfirmModal({
+      root: root, restoreFocus: restoreFocus, title: "Delete " + label + "?",
+      body: body, primaryLabel: "Delete " + label, primaryTone: "danger",
+      initialFocus: "cancel", cancelLabel: "Cancel"
+    });
+    if (!confirmed) return;
     setManagementBusy(true);
-    setManagementMessage("Checking delete impact for " + doc.title + " and its descendants...", false);
-
-    return previewManagedDocDelete(docIds, managementClientOptions())
-      .then(function (preview) {
-        if (!preview.allowed) {
-          var blockerText = (preview.blockers || []).join("; ") || "Delete is blocked.";
-          setManagementMessage(blockerText, true);
-          return null;
-        }
-        var deleteCount = Number(preview.delete_count) || 1;
-        var deleteLabel = deleteCount + " document" + (deleteCount === 1 ? "" : "s");
-        setManagementBusy(false);
-        setManagementMessage("", false);
-        return openDocsViewerConfirmModal({
-          root: root,
-          restoreFocus: restoreFocus,
-          title: "Delete " + deleteLabel + "?",
-          body: [
-            "Document: " + doc.title + " (" + doc.doc_id + ").",
-            "Deletes this document and all its descendants.",
-            ...buildDocsViewerDeletePreviewBody(preview)
-          ],
-          primaryLabel: "Delete " + deleteLabel,
-          primaryTone: "danger",
-          initialFocus: "cancel",
-          cancelLabel: "Cancel"
-        }).then(function (confirmed) {
-          if (!confirmed) {
-            setManagementMessage("", false);
-            return null;
-          }
-          setManagementBusy(true);
-          setManagementMessage("Deleting " + deleteLabel + "...", false);
-          return applyManagedDocDelete(docIds, managementClientOptions());
-        });
-      })
-      .then(function (payload) {
-        if (!payload) return;
-        var deletedDocIds = payload.deleted_doc_ids || resolution.targetDocIds;
-        var displayedRemoved = !selectedDocument.documentTarget?.collection && deletedDocIds.includes(selectedDocument.displayedDocId);
-        var displayedDocId = selectedDocument.displayedDocId;
-        setManagementMessage("", false);
-        var configReload = payload.default_doc_id_changed ? reloadViewerConfiguration() : Promise.resolve(null);
-        return configReload.then(function () {
-          deletedDocIds.forEach(function (docId) {
-            if (!displayedRemoved || docId !== displayedDocId) context.commitDocumentChange({ target: { doc_id: docId }, deleted: true });
-          });
-          if (displayedRemoved && context.commitDeletedDocument) return context.commitDeletedDocument({ doc_id: displayedDocId });
-          return callbacks.refreshIndexTree();
-        }).then(function (result) {
-          var completionMessage = docsViewerDeleteCompletionMessage(payload);
-          if (completionMessage) setManagementMessage(completionMessage, false);
-          return result;
-        });
-      })
-      .catch(function (error) {
-        setManagementMessage(error.message || "Delete failed.", true);
-      })
-      .finally(function () {
-        setManagementBusy(false);
-        renderManagementUi();
+    setManagementMessage("Deleting " + label + "...", false);
+    var completed = false;
+    function projectDefault(payload) {
+      if (payload.default_doc_id_changed) context.commitDefaultDocumentChange(payload.default_doc_id);
+    }
+    function matches(payload) {
+      return payload && payload.target && payload.target.doc_id === doc.doc_id && !payload.target.collection;
+    }
+    try {
+      var payload = await deleteManagedDoc([doc.doc_id], managementClientOptions());
+      if (!matches(payload) || payload.source_deleted !== true || payload.generation_complete !== true
+        || !Array.isArray(payload.deleted_doc_ids)) throw new Error("Delete did not return its completed exact target.");
+      completed = true;
+      projectDefault(payload);
+      var displayedId = selectedDocument.displayedDocId;
+      var displayedRemoved = !selectedDocument.documentTarget?.collection && payload.deleted_doc_ids.includes(displayedId);
+      var failures = [];
+      payload.deleted_doc_ids.forEach(function (docId) {
+        if (!displayedRemoved || docId !== displayedId) failures.push(...(context.commitDocumentChange({ target: { doc_id: docId }, deleted: true }) || []));
       });
+      if (displayedRemoved) await context.commitDeletedDocument({ doc_id: displayedId });
+      else await callbacks.refreshIndexTree();
+      if (failures.length) throw new Error(failures.map(function (error) { return error.message; }).join("; "));
+      setManagementMessage("", false);
+      return payload;
+    } catch (error) {
+      var partial = error.payload;
+      var projectionFailures = [];
+      if (matches(partial)) {
+        projectDefault(partial);
+        (Array.isArray(partial.deleted_doc_ids) ? partial.deleted_doc_ids : []).forEach(function (docId) {
+          projectionFailures.push(...(context.commitDocumentChange({ target: { doc_id: docId }, deleted: true }) || []));
+        });
+      }
+      var projectionMessage = projectionFailures.length ? " Retained views could not be updated: " + projectionFailures.map(function (failure) { return failure.message; }).join("; ") : "";
+      setManagementMessage((completed ? "Documents deleted and generated state updated, but display failed: " : "") + (error.message || "Delete failed.") + projectionMessage, true);
+      return null;
+    } finally {
+      setManagementBusy(false);
+      renderManagementUi();
+    }
   }
 
   async function handlePositionDoc(targetDocId, restoreFocus) {
@@ -674,11 +659,25 @@ export function createDocsViewerManagementActionController(options) {
       restoreFocus: restoreFocus,
       doc: doc,
       docs: documentIndex.docs,
+      collectionHostDocIds: options.collectionHostDocIds(),
       onSave: async function (targetDocId, placement) {
         setManagementBusy(true);
         try {
-          await moveManagedDoc(doc.doc_id, targetDocId, placement, managementClientOptions());
+          var payload = await moveManagedDoc(doc.doc_id, targetDocId, placement, managementClientOptions());
+          if (payload.target?.doc_id !== doc.doc_id || payload.target.collection
+            || payload.position_saved !== true || payload.generation_complete !== true || !payload.committed_document) {
+            throw new Error("Position did not return its completed exact target.");
+          }
+          var failures = context.commitDocumentChange(payload.committed_document) || [];
           await callbacks.refreshIndexTree();
+          if (failures.length) throw new Error("Position saved, but a retained view could not be updated: " + failures.map(function (error) { return error.message; }).join("; "));
+        } catch (error) {
+          var partial = error.payload;
+          if (partial?.target?.doc_id === doc.doc_id && !partial.target.collection && partial.position_saved && partial.committed_document) {
+            var partialFailures = context.commitDocumentChange(partial.committed_document) || [];
+            if (partialFailures.length) throw new Error(error.message + "; retained views could not be updated: " + partialFailures.map(function (failure) { return failure.message; }).join("; "), { cause: error });
+          }
+          throw error;
         } finally {
           setManagementBusy(false);
           renderManagementUi();

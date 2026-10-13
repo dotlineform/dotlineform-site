@@ -485,10 +485,7 @@ export function initDocsViewerDocumentController(context) {
         collectionTarget: target.collection ? { collection: target.collection } : null,
         collectionLabel: target.collection || "",
         refreshDocument: context.openDocument,
-        commitDeletedDocument: context.commitDeletedDocument,
-        commitDocumentDraft: function (draftTarget, committedRecord) {
-          context.collectionProvider.commitDocumentChange({ target: draftTarget, record: committedRecord });
-        } } });
+        commitDeletedDocument: context.commitDeletedDocument } });
     activeRecord = record;
     retained.set(key, record);
     selectedDocument.documentTarget = target;
@@ -593,6 +590,7 @@ export function initDocsViewerDocumentController(context) {
     activeMount: function () { return content; },
     actionContext: actionContext,
     capture: capture,
+    hasRetained: function (target) { return retained.has(documentTargetKey(target)); },
     restore: restore,
     restoreRetained: restoreRetained,
     retainDocuments: retainDocuments,

@@ -541,6 +541,8 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
         if (request !== deleteWorkflowRequest || !button.isConnected) return;
         activeDeleteWorkflow = module.createDocsViewerManagementCollectionDeleteWorkflow({
           resolveAction: options.resolveAction,
+          startBusyOperation: options.startBusyOperation,
+          commitDocumentChange: options.commitDocumentChange,
           button: button,
           clientOptions: options.clientOptions || {},
           commitDeletedDocument: settings.commitDeletedDocument,

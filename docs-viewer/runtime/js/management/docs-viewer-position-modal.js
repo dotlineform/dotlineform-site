@@ -7,11 +7,12 @@ export function openDocsViewerPositionModal(options) {
   var excluded = collectDescendantDocIds(docs, options.doc.doc_id);
   excluded.add(options.doc.doc_id);
   var depths = new Map();
+  var rootOnly = options.collectionHostDocIds.includes(options.doc.doc_id);
   var destinations = [{ doc_id: "", title: "Root", depth: 0 }];
   docs.forEach(function (doc) {
     var depth = doc.parent_id ? (depths.get(doc.parent_id) || 0) + 1 : 0;
     depths.set(doc.doc_id, depth);
-    if (!excluded.has(doc.doc_id)) destinations.push({ ...doc, depth: depth });
+    if (!excluded.has(doc.doc_id) && (!rootOnly || !doc.parent_id)) destinations.push({ ...doc, depth: depth });
   });
 
   return openDocsViewerManagementModal({
@@ -22,7 +23,7 @@ export function openDocsViewerPositionModal(options) {
       '<p class="docsViewer__modalNote muted small">Document: ' + escapeHtml(options.doc.title) + ' (' + escapeHtml(options.doc.doc_id) + '). Moves this document with all its descendants.</p>' +
       '<label class="docsViewer__fieldLabel" for="docsViewerPositionPlacement">Position</label>' +
       '<select class="docsViewer__fieldInput" id="docsViewerPositionPlacement">' +
-        '<option value="before">Before</option><option value="after">After</option><option value="inside">Inside (last child)</option>' +
+        '<option value="before">Before</option><option value="after">After</option><option value="inside">' + (rootOnly ? "Inside Root" : "Inside (last child)") + '</option>' +
       '</select>' +
       '<label class="docsViewer__fieldLabel" for="docsViewerPositionSearch">Find destination</label>' +
       '<input class="docsViewer__fieldInput" id="docsViewerPositionSearch" type="search" autocomplete="off">' +
@@ -43,6 +44,8 @@ export function openDocsViewerPositionModal(options) {
         var query = search.value.trim().toLowerCase();
         target.innerHTML = destinations.filter(function (doc) {
           return (!doc.doc_id || !query || doc.title.toLowerCase().includes(query));
+        }).filter(function (doc) {
+          return !rootOnly || placement.value !== "inside" || !doc.doc_id;
         }).map(function (doc) {
           var disabled = !doc.doc_id && placement.value !== "inside";
           var label = "\u00a0\u00a0".repeat(doc.depth) + doc.title;

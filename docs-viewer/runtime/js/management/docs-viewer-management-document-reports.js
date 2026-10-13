@@ -121,6 +121,8 @@ export function loadDocsViewerCollectionContribution(settings, parent, collectio
         );
       },
       resolveAction: settings.managementDocumentActions.resolveAction,
+      startBusyOperation: settings.managementDocumentActions.startBusyOperation,
+      commitDocumentChange: settings.collectionProvider.commitDocumentChange,
       onRegenerateCatalogue: settings.managementContext
         && collection === "catalogue" && cleanString(clientOptions.baseUrl)
         ? settings.managementDocumentActions?.regenerateCatalogue

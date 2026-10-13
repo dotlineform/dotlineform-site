@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import datetime as dt
 import json
-import hashlib
 import os
 import re
 import tempfile
@@ -68,6 +67,7 @@ class SourceDoc:
     ui_status: str
     parent_id: str
     report: ReportDescriptor | None = None
+    parts: SourceParts | None = None
 
 
 @dataclass
@@ -266,10 +266,6 @@ def write_text_atomic(path: Path, text: str) -> None:
                 temp_path.unlink()
             except OSError:
                 pass
-
-
-def source_revision(source_bytes: bytes) -> str:
-    return f"sha256:{hashlib.sha256(source_bytes).hexdigest()}"
 
 
 def write_bytes_atomic(path: Path, content: bytes) -> None:

@@ -54,8 +54,7 @@ REBUILD_PATH = "/docs/rebuild"
 REBUILD_DOCUMENT_PATH = "/docs/rebuild-document"
 PUBLISH_PATH = "/docs/publish"
 MOVE_PATH = "/docs/move"
-DELETE_PREVIEW_PATH = "/docs/delete-preview"
-DELETE_APPLY_PATH = "/docs/delete-apply"
+DELETE_PATH = "/docs/delete"
 STATIC_HTML_EXPORT_PREVIEW_PATH = "/docs/export/static-html/preview"
 STATIC_HTML_EXPORT_APPLY_PATH = "/docs/export/static-html/apply"
 
@@ -117,8 +116,7 @@ POST_PATHS = (
     REBUILD_DOCUMENT_PATH,
     PUBLISH_PATH,
     MOVE_PATH,
-    DELETE_PREVIEW_PATH,
-    DELETE_APPLY_PATH,
+    DELETE_PATH,
     STATIC_HTML_EXPORT_PREVIEW_PATH,
     STATIC_HTML_EXPORT_APPLY_PATH,
 )

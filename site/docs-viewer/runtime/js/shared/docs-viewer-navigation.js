@@ -37,6 +37,15 @@ export function createDocsViewerNavigation(options) {
     return { session: session, entryId: window.crypto.randomUUID(), position: position, callerId: callerId || "" };
   }
 
+  function releaseUnavailableCaller() {
+    if (!active || !active.callerId) return;
+    var caller = records.get(active.callerId);
+    if (caller && options.callerAvailable(caller)) return;
+    active = Object.assign({}, active, { callerId: "" });
+    retainPair();
+    project();
+  }
+
   async function open(destination, settings = {}) {
     if (busy) return null;
     busy = true;
@@ -120,10 +129,27 @@ export function createDocsViewerNavigation(options) {
   }
 
   return {
+    returnToCaller: async function () {
+      if (busy || !active || !active.callerId) return false;
+      releaseUnavailableCaller();
+      if (!active.callerId) return false;
+      var caller = records.get(active.callerId);
+      busy = true;
+      try {
+        await options.prepare();
+        active = Object.assign({}, active, { callerId: "" });
+        await options.restore(caller);
+        await capture();
+        return true;
+      } finally {
+        busy = false;
+        retainPair();
+        project();
+      }
+    },
     initialize: initialize,
     open: open,
-    back: function () { if (!busy && active && active.callerId && records.has(active.callerId)) window.history.back(); },
-    hasCaller: function () { return Boolean(active && active.callerId && records.has(active.callerId)); },
+    releaseUnavailableCaller: releaseUnavailableCaller,
     bind: function () { window.addEventListener("popstate", popstate); },
     replaceUrl: function (url) { if (active) window.history.replaceState(active, "", url); },
     update: function () { return busy ? Promise.resolve() : capture(); }

@@ -3,112 +3,43 @@ draft: false
 doc_id: d-20260607-222033-c0b57a
 title: Source Mutation Scripts
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-09-18 19:02:44"
+last_updated: "2026-10-13 15:47:31"
 parent_id: d-20260607-222033-2a494e
 ---
 # Docs Viewer Source Mutation Scripts
 
-Common Title/Summary editing is owned by the combined Source session and `/docs/source/save`, described in [Source Editor Scripts](Source_Editor_Scripts.md). The old metadata modal, `/docs/update-metadata` route and its planner are removed. Index placement and focused Subject/Draft mutations retain their separate owners; Source Save does not invoke their rebuild follow-through.
-
-## `docs-viewer/services/docs_management_mutation_service.py`
-
-Purpose: service wrapper for source mutation plans and scope lifecycle apply actions.
-
-Ownership: owns executing mutation plans and connecting them to rebuild/log side effects.
-
-Responsibilities:
-
-- calls planners from `docs_management_mutations.py`
-- writes planned source file changes atomically
-- deletes planned source files for confirmed deletes
-- runs single-scope or multi-scope rebuild follow-through
-- logs completed focused mutation actions when plans request it
-- attaches rebuild output and dry-run state to endpoint responses
-
-Not responsible for:
-
-- building mutation plans
-- parsing HTTP request bodies
-- serving generated read endpoints
+Common Title/Summary editing belongs to the combined Source session and `/docs/source/save`, described in [Source Editor Scripts](Source_Editor_Scripts.md). Subject changes belong to the unsaved Source buffer. [Source Mutation Endpoints](Source_Mutation_Endpoints.md) describes the exact Draft, Selected, Position and Delete request/response boundaries; [Management Operations](Management_Operations.md) owns their completion/failure behavior. Scope lifecycle, generic metadata/field planners and preview/apply Delete routes remain retired without aliases.
 
 ## `docs-viewer/services/docs_management_mutations.py`
 
-Purpose: mutation planner for source document creation, focused field actions, placement and deletion.
+Constructs create-only source, exact identity, committed metadata and updated ordinary tree for New. The plan carries prepared source/report/configuration and known IDs into completion. It does not plan Position, Draft, Subject or Delete.
 
-Ownership: owns validation rules and planned response contracts for source doc mutations.
+## `docs-viewer/services/docs_management_mutation_service.py`
 
-Responsibilities:
+Writes the create-only plan and invokes the existing in-process prepared document/Links generation, logs completion and returns diagnostics. A generation failure after source creation carries the committed New target/record so Source can open it while preserving the error. It does not restore or retry Create.
 
-- validates target scopes and doc ids
-- plans new source docs and unique ids
-- plans supported front matter updates
-- validates parent ids and rejects parent cycles
-- plans reparenting without moving files
-- plans delete previews and confirmed delete applies
-- calculates affected docs payload ids and docs-search ids
-- reports no-op requests without writes or rebuilds
+## `docs-viewer/services/docs_management_draft.py`
 
-Not responsible for:
+Resolves the exact owner/source, retains parsed field spans, rewrites only Draft and passes prepared input into generation. It preserves unrelated source text/dates, returns the committed record and distinguishes persisted source from generation failure. No revision check or metadata prefetch participates.
 
-- performing actual file writes
-- running builder commands
-- opening local editors
+## `docs-viewer/services/docs_selected_documents.py`
 
-## `docs-viewer/services/docs_scope_manifest.py`
+Owns Working Selected parsing, row projection and persistence. Star reads required source metadata; Unstar removes exact membership without a source read. Builders carry supplied Selected state when available and refresh only known selected metadata. Publish owns public eligibility filtering.
 
-Purpose: shared top-level scope ownership manifest and lifecycle policy support.
+## `docs-viewer/services/docs_management_position.py`
 
-Ownership: owns the manifest schema, backfill/loading, shared identity and publishing-mode validation, storage-path policy, and manifest/config record helpers.
+Reads canonical Index, moves the complete node through `docs_index_order.py` and completes metadata-only generation through `project_document_position`. It reports committed position/record and generation progress without changing source/body/dates or Links. Host root placement belongs to the Position UI.
 
-Responsibilities:
+## `docs-viewer/services/docs_management_delete.py`
 
-- loads or backfills `docs-viewer/config/scopes/docs_scope_manifest.json`
-- records ownership for user-created scopes
-- validates scope ids, default doc ids, publishing modes, and route paths
-- blocks deletion of system-owned scopes
+Accepts one confirmed ordinary-root selection or singular configured collection target. It resolves ownership once, reads tree/Selected once, removes exact confined source paths, updates Index/Selected and clears a deleted configured default through its Settings owner. It passes known deleted IDs, remaining parent map, configuration and Selected into `complete_document_deletion`, retaining completed effects and target/phase on failure. It has no preview, revision, restoration, recovery build or public-cleanup machinery.
 
-Not responsible for:
+## `docs-viewer/services/docs_write_rebuild.py`
 
-- general source doc mutations inside existing scopes
-- top-level scope create planning or apply
-- top-level scope rename planning or apply
-- top-level scope delete planning or apply
-- HTTP dispatch
-- browser rendering
+Hosts the existing exact/complete build orchestration and prepared in-process handoff. `project_document_position` reuses saved generated navigation/by-ID metadata without Markdown rendering. `complete_document_deletion` passes empty surviving sources and known deleted IDs into the existing ordinary/collection builders for exact generated/Links removals. Saved navigation is parsed without corpus field audits or unselected by-ID preflights. Import's separately owned rollback behavior remains independent.
 
-## `docs-viewer/services/docs_scope_create.py`
+## Browser Owners
 
-Purpose: top-level scope creation planner and apply owner.
+`docs-viewer-management-draft-workflow.js` submits the intended boolean once and projects its committed record. `docs-viewer-position-modal.js` derives ordinary/host-root destinations from loaded data; `docs-viewer-management-actions.js` projects completed Position and awaits one Index refresh.
 
-Responsibilities:
-
-- validates the requested publishing and storage contract through manifest policy helpers
-- plans source, config, generated, route, and public-publish files
-- writes the initial source/config/manifest/route records after confirmation
-- runs scoped rebuild and initial public-publish follow-through
-
-## `docs-viewer/services/docs_scope_delete.py`
-
-Purpose: top-level scope deletion planner and apply owner.
-
-Responsibilities:
-
-- validates manifest ownership and management-route protection
-- resolves manifest-recorded delete and missing paths, including scope-specific search roots implied by owned search indexes
-- plans config, manifest, and public-route record changes
-- deletes only the confirmed manifest-owned paths
-- runs all-scope rebuild follow-through after removal
-
-## `docs-viewer/services/docs_scope_rename.py`
-
-Purpose: external-local top-level scope rename planner and apply owner.
-
-Responsibilities:
-
-- limits rename eligibility to user-created, tool-owned external-local scopes
-- validates external source/media/generated target collisions
-- moves the scope-owned external roots to the new scope folder name
-- updates marker-rooted config, UI-status, nested sub-scope, and manifest records
-- rebuilds docs and search for the new scope id
-
-It does not own public-route changes, R2 operations, or link rewriting inside source documents.
+Ordinary Delete in `docs-viewer-management-actions.js` and flat Delete in `docs-viewer-management-collection-delete-workflow.js` confirm locally and call one `/docs/delete` request. They forward completed effects to retained views and keep global busy state through service/display completion. Shared route/navigation owners await surviving-caller or fallback display and release deleted retained callers. Listener/display failures remain visible separately from incomplete service work.

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-647b52
 title: Endpoint Overview
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-09-26 16:53:52"
+last_updated: "2026-10-13 15:47:31"
 parent_id: d-20260424-000000-04d75e
 ---
 # Docs Viewer Endpoint Overview
@@ -68,12 +68,10 @@ The complete independently gated contract lives in [Docs Review Endpoints](Docs_
 | `POST /docs/import-source` | [Create And Import Endpoints](Create_And_Import_Endpoints.md) | Preview or apply one ordinary staged source or one trusted complete collection. |
 | `POST /docs/rebuild` | [Rebuild And Audit Endpoints](Rebuild_And_Audit_Endpoints.md) | Rebuild generated docs and docs-search for one scope. |
 | `POST /docs/broken-links` | [Rebuild And Audit Endpoints](Rebuild_And_Audit_Endpoints.md) | Run a missing-target audit for one docs scope. |
-| `POST /docs/update-metadata` | [Source Mutation Endpoints](Source_Mutation_Endpoints.md) | Update supported front matter fields for one source doc. |
-| `POST /docs/set-publishable` | [Source Mutation Endpoints](Source_Mutation_Endpoints.md) | Set publication intent for an exact selection of ordinary Analysis Working documents through one atomic rebuild. |
-| `POST /docs/set-draft` | [Source Mutation Endpoints](Source_Mutation_Endpoints.md) | Set one Analysis Working document's draft readiness, including sub-scope documents, with a source revision and awaited rebuild. |
-| `POST /docs/move` | [Source Mutation Endpoints](Source_Mutation_Endpoints.md) | Change one doc's parent without moving the source file. |
-| `POST /docs/delete-preview` | [Source Mutation Endpoints](Source_Mutation_Endpoints.md) | Preview the exact source set plus any current public-cleanup impact. |
-| `POST /docs/delete-apply` | [Source Mutation Endpoints](Source_Mutation_Endpoints.md) | Delete the confirmed exact set, clean its public projection, and apply any matched private lineage follow-through. |
+| `POST /docs/set-draft` | [Source Mutation Endpoints](Source_Mutation_Endpoints.md) | Persist one exact Working document's intended boolean and await generation from prepared source. |
+| `POST /docs/set-selected` | [Source Mutation Endpoints](Source_Mutation_Endpoints.md) | Star/Unstar exact Working Selected membership; Unstar needs no source read. |
+| `POST /docs/move` | [Source Mutation Endpoints](Source_Mutation_Endpoints.md) | Position an ordinary subtree and project navigation/parent metadata without source rendering. |
+| `POST /docs/delete` | [Source Mutation Endpoints](Source_Mutation_Endpoints.md) | Delete a confirmed ordinary subtree or singular flat collection target and await exact generated/Links removal. |
 | `POST /docs/scopes/create-preview` | [Scope Lifecycle Endpoints](Scope_Lifecycle_Endpoints.md) | Preview files and config changes for a new scope. |
 | `POST /docs/scopes/create-apply` | [Scope Lifecycle Endpoints](Scope_Lifecycle_Endpoints.md) | Create a new manifest-owned scope after confirmation. |
 | `POST /docs/scopes/delete-preview` | [Scope Lifecycle Endpoints](Scope_Lifecycle_Endpoints.md) | Preview deletion of a manifest-owned scope. |

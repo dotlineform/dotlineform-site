@@ -71,11 +71,6 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                 "review_returned": data_sharing_workspace["available"],
                 "atomic_return": True,
             },
-            "document_delete": {
-                "preview": True,
-                "apply": True,
-                "collection_detail": True,
-            },
             "docs_import": {
                 "available": docs_import_workspace["available"],
                 "message": docs_import_workspace["message"],

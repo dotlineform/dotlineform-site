@@ -3,171 +3,45 @@ draft: false
 doc_id: d-20260607-222033-ce5515
 title: Source Mutation Endpoints
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-08 19:10:43"
+last_updated: "2026-10-13 15:47:31"
 parent_id: d-20260607-222033-647b52
 ---
 # Docs Viewer Source Mutation Endpoints
 
-Source mutation endpoints rewrite source Markdown front matter or delete source Markdown files. They do not move files on disk except when deleting a confirmed source doc. Confirmed document Delete also owns exact negative cleanup of any current public projection; it does not invoke scope-wide Publish.
+Working resolves exact ordinary `{doc_id}` or configured named-collection `{collection, doc_id}` targets from its workspace configuration. Stage/scope selectors and identity fallbacks are retired. Source paths are confined to the configured owner; required request representation, parsing, identity and actual operation failures remain checked. Editorial action availability belongs to the frontend.
 
-Returned source paths are repo-relative for repo-backed scopes and relative to the fixed external Docs Viewer root for external-local scopes. User-specific absolute workspace roots are not exposed.
+Common source editing and Subject buffer changes use [Source Editor Endpoints](Source_Editor_Endpoints.md). The old metadata, immediate Subject field-group and Set Publishable writes are retired without aliases. [Management Operations](Management_Operations.md) owns current action completion and failure behavior.
 
-Metadata editing uses one explicit managed target:
+## `GET /docs/metadata`
 
-- ordinary document: `{ stage, doc_id }`
-- configured collection document: `{ stage, collection, doc_id }`
-
-The local `GET /docs/metadata` read resolves only the configured ordinary or collection source root, verifies source front-matter identity, and rejects missing, unlisted, mismatched or path-escaping targets. Full metadata hydration stays local and does not expand public manifests or compact public by-ID payloads.
-
-For collection documents, metadata includes `folder_subject_supported`, derived from the exact collection's registered authoring-subject fields and its Working stage. Assign/change subject uses this boolean to offer Folder and preselect an existing valid `folder_path`; it does not infer availability from old scopes, collection names or an existing declaration. Working Works and Processing support Folder. Folder assignment retains the existing confined path validation and revision-checked field-group write. The capability is private metadata, not a new subject field or public projection.
-
-## `POST /docs/update-metadata`
-
-Expected data:
-
-```json
-{
-  "scope": "studio",
-  "doc_id": "docs-viewer",
-  "title": "Docs Viewer",
-  "summary": "Runtime and management docs.",
-  "date": "2026-07-27",
-  "date_display": "27 July 2026",
-  "ui_status": "done",
-  "parent_id": "docs-viewer-overview"
-}
-```
-
-For a configured sub-scope document, the request adds `sub_scope` and omits
-`parent_id`:
-
-```json
-{
-  "scope": "analysis",
-  "sub_scope": "tags",
-  "doc_id": "d-20260624-204534-e3de0b",
-  "title": "ordered",
-  "summary": "A compositional form tag.",
-  "date": "",
-  "date_display": "",
-  "ui_status": "done"
-}
-```
-
-Actions:
-
-- updates supported front matter fields only
-- preserves body content, filename, `doc_id`, and `added_date`
-- refreshes `last_updated` when a real change is written
-- removes blank `summary` and `ui_status` fields
-- validates non-blank `parent_id` in the same scope
-- rejects parent cycles and descendant-parent moves
-- rejects `parent_id` for a sub-scope target, without writing
-- rebuilds targeted docs payloads for affected docs
-- rebuilds the whole same-scope search index when search-affecting fields change
-- rejects legacy `viewable`, `publishable` and `draft`; publication fields use dedicated endpoints
-
-For a sub-scope target, the rebuild refreshes its by-ID payload, local
-management inventory, prepared public manifest, and configured child search
-projection. It does not rebuild or insert the document into the parent index,
-Recent, or global search. The browser remounts the selected parent report and
-retains the existing `subdoc` route.
-
-Returned data includes the normalized target, change flags, source path,
-rebuild diagnostics, summary text, and `dry_run`.
-
-**Edit metadata** contains no publication field. Exact checked-document publication gating uses the separate endpoint below.
-
-## `POST /docs/set-publishable`
-
-Expected data is exactly `{scope, stage, doc_ids, publishable, confirm}`, with `scope: analysis` and `stage: working`. `sub_scope` is rejected. `doc_ids` must be a non-empty duplicate-free array of exact ordinary scope document identities, `publishable` is boolean, and `confirm` must be true.
-
-The endpoint resolves every checked ordinary Working document before writing. Report hosts follow the same rule as other ordinary scope documents. `publishable: true` removes the field; false writes `publishable: false`. Already-matching documents remain unchanged. Changed sources commit through one snapshot-checked atomic Working rebuild; stale snapshots fail before mutation and rebuild failure restores the complete changed selection. Other collections, scopes and stages, extra keys, unavailable targets, and legacy publication fields are rejected. The response target retains the stage, and the client rejects a different or missing stage.
-
-The Working Index offers **Set Publishable** independently of the Publish capability. The action saves eligibility and rebuilds Working document projections synchronously; it does not update Pre-publish or Published, invoke **Publish**, or enable the separately delivered promotion actions.
+The read resolves the exact configured source and returns `record`, target identity and `location_parent_id`; named collections also receive their Folder Subject capability. Ordinary resolution uses Index membership/parent data and its one source, without parsing the corpus. Saved source readiness/report completion does not prevent Source correction. The response contains no source revision. Source load and candidate Save retain their separate owners.
 
 ## `POST /docs/set-draft`
 
-Expected data is exactly `{scope, stage, doc_id, draft, source_revision}`, with `sub_scope` added only for a configured sub-scope document. Only Analysis Working accepts the operation. `draft` must be boolean; `source_revision` must match the exact source returned by `GET /docs/metadata`. A stale revision fails before writing.
+The exact request is `{doc_id, draft}`, with `collection` only for a named owner. `draft` must be boolean. Catalogue rejects this write; other documents retain explicit readiness independent of `unpublishable.json`.
 
-The operation changes only draft readiness and awaits the exact source write and required document/collection rebuild. It preserves publication intent and visual status. The toolbar reads the current revision, submits the new boolean, validates the response target and waits for the visible document/index refresh before returning to ready. The button shows 📝 for draft or ✅ for ready. Working listings show 📝 only for drafts. New Working documents, including report hosts and supported import/copy creations, start as drafts; metadata editing does not set the boolean.
+The operation parses the exact source once, rewrites only Draft using retained field spans and preserves all unrelated text/body/dates. Prepared metadata/source/report inputs pass into the existing in-process exact document/Links builder without reopening source. Unchanged readiness still awaits exact generation. No metadata GET or source revision participates.
 
-The top Manage toolbar button targets the ordinary scope document, including a report host while its list is displayed. When a sub-scope document is displayed, that button is hidden and the report toolbar shows the child's draft button between Back and Copy Link. The report action validates the exact displayed child target and uses the same management busy state through the completed write and visible refresh.
+The response carries `target` and its complete committed `record`, plus `source_saved`, `generation_complete` and build diagnostics on a write run. Generation failure returns non-success with persisted source/record and unfinished generation; no restoration runs. The browser projects the returned record through the common owner and surfaces projection failures. Search, registered media production and Publish remain separate.
+
+## `POST /docs/set-selected`
+
+The exact request is `{doc_id, selected}`, with optional `collection` and a boolean `selected`. Star reads exact source metadata for its Selected row. Unstar resolves only its configured owner/identity and removes that row without reading source. Both persist Working `selected.json`, preserve dates/readiness and return the exact target and selected state. Public selection filtering remains Publish-owned.
 
 ## `POST /docs/move`
 
-Expected data:
+The exact ordinary request is `{doc_id, target_doc_id, placement}`, where `placement` is `before`, `after` or `inside`. An empty destination means Root and requires `inside`. Named collection placement is unsupported.
 
-```json
-{
-  "scope": "studio",
-  "doc_id": "docs-viewer",
-  "parent_id": "scripts"
-}
-```
+Position moves the complete canonical Index node with descendants, checks the destination/cycle once and projects saved generated navigation plus only the moved by-ID parent field. It preserves source bytes, rendered body, dates and Links. Collection-host root destinations are enforced by frontend choice, without a server editorial host-root validator.
 
-Actions:
+The response carries `target`, `position_saved`, `generation_complete`, `phase` and the common `committed_document: {target, record}` after the canonical tree write. A later failure reports persisted position and unfinished generation. The browser projects the record and awaits one Index refresh after successful generation.
 
-- writes only the moved doc's `parent_id` and `last_updated`
-- preserves source filename, body, title, `doc_id`, and `added_date`
-- accepts blank `parent_id` for root-level placement
-- validates non-blank parent ids inside the same scope
-- rejects moving a doc under itself or a descendant
-- skips writes and rebuilds for no-op moves
-- rebuilds the moved doc payload and updates search for the moved doc plus descendants
+## `POST /docs/delete`
 
-Returned data includes previous and next parent ids, affected search ids, rebuild diagnostics, summary text, and `dry_run`.
+The exact ordinary request is `{doc_ids: ["<root-id>"], confirm: true}`; nonempty arrays of exact subtree roots are accepted. A named collection uses exactly `{collection, doc_id, confirm: true}`. Direct Catalogue deletion is Regenerate-owned and rejected.
 
-## `POST /docs/delete-preview`
+Confirmation derives ordinary scope from the full loaded Index, including collapsed descendants, or the singular flat collection target. It performs no preview request. The service reads canonical tree and Selected once, expands requested ordinary subtrees once and unlinks exact confined source paths. It updates ordinary Index and removes exact Selected rows; a deleted configured default is cleared. Known deleted IDs, remaining parent map, Selected and resolved configuration pass into the existing in-process document/Links builders without source rereads or unrelated payload preflights.
 
-Expected data:
+The response carries `target`, `requested_doc_ids`, actual `deleted_doc_ids`, `delete_count`, `source_deleted`, `index_updated`, `selected_updated`, `generation_complete`, `phase`, build diagnostics and `dry_run`. Collection `index_updated` stays false because its ordinary tree is unchanged. A completed default clear adds `default_doc_id_changed: true` and `default_doc_id: ""`. Failures retain completed effects and report the target/phase; a source failure includes `failing_target`. No source revision, rollback, recovery build, public-cleanup or lineage receipt is produced.
 
-```json
-{
-  "scope": "studio",
-  "doc_ids": ["research-note-a", "research-note-b"]
-}
-```
-
-Actions:
-
-- requires one or more explicit checked document ids; the displayed, highlighted, or context-clicked document is never a fallback
-- reduces checked descendants beneath checked ancestors to effective roots
-- resolves the union of those roots and all descendants once, in deterministic tree order
-- returns a permanent-deletion warning, total document count, and the exact document records and source paths that would be removed
-- distinguishes checked documents from additional unselected descendants in the warning
-- reports whether the delete set contains the optional configured default
-- reports exact current public impact in `public_cleanup`, including projected IDs, removal and changed paths, removed public URLs, and affected Catalogue targets; local collections report `applicable: false`
-- does not delete files
-
-Returned data includes `allowed`, `blockers`, `warnings`, requested and effective-root ids and counts, `delete_count`, `additional_descendant_count`, `delete_doc_ids`, `delete_documents`, and `public_cleanup`.
-
-## `POST /docs/delete-apply`
-
-Expected data:
-
-```json
-{
-  "scope": "studio",
-  "doc_ids": ["research-note-a", "research-note-b"],
-  "confirm": true
-}
-```
-
-Actions:
-
-- requires `confirm: true`
-- re-runs delete preview validation
-- deletes the checked Markdown source files and all additional descendant source files in one unioned mutation
-- clears `default_doc_id` when any deleted doc was the optional configured default
-- opens the first remaining loadable root in the browser without making it the new default
-- rebuilds targeted generated docs payloads and the whole same-scope search index for deleted ids
-- after source and working rebuild commit, removes exact current public by-ID and owned Mermaid products, rewrites only affected public inventories, and requires Catalogue document-URL follow-through
-- treats a configured public collection with no current exact projection as a successful public-cleanup no-op; local collections perform no public cleanup
-- after any required public cleanup succeeds, applies exact Working-owned v3 lineage follow-through for a matched configured child collection: Working Delete removes its record, while Editorial Delete removes only exact children and drops an empty record
-- rebuilds only the exact Working collection when lineage changed; direct non-lineage and unrelated collection deletes leave the table byte-identical and add no lineage receipt
-- returns non-success with `committed: true` and `retry_delete: false` if required public or Catalogue cleanup fails after source commit
-
-Returned data includes requested and effective-root ids and counts, `deleted_doc_ids`, deletion counts and paths, rebuild diagnostics, applied `public_cleanup`, an applicable nested `lineage` receipt with status, matched role, affected Working ids, record count, and focused rebuild result, summary text, and `dry_run`.
-
-A configured child preview uses exactly `{scope, sub_scope, doc_id}`. Its apply adds the previewed `source_revision` and `confirm: true`. It removes only that child source and working output, applies the same exact public cleanup contract to the child manifest, by-ID product, locations, and Catalogue URLs, and only then applies any exact lineage follow-through. It never infers or removes its report host, sibling children, parent inventories, or independently canonical Working, Editorial, or public documents.
+The browser projects actual committed deletions/default changes and reports generation and display failures separately. Complete ordinary deletion awaits one Index refresh; displayed deletion awaits surviving-caller or fallback navigation under the busy state. Preview/public distribution, Recent/Search refresh and registered media remain with their own owners. The former `/docs/delete-preview` and `/docs/delete-apply` routes are removed without aliases.

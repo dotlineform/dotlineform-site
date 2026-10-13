@@ -228,7 +228,8 @@ def source_doc_from_path(
     report_contract: ReportSourceContract | None = None,
 ) -> source_model.SourceDoc:
     source_text = path.read_bytes().decode("utf-8")
-    front_matter, body = source_model.parse_source_text(source_text, source_name=path.name, strict=True)
+    parts = source_model.parse_source_parts(source_text, source_name=path.name, strict=True)
+    front_matter, body = parts.metadata, parts.body
     existing_doc_id = front_matter.get("doc_id")
     if not isinstance(existing_doc_id, str):
         raise ValueError("managed source doc_id must be a string")
@@ -265,6 +266,7 @@ def source_doc_from_path(
         ui_status=source_model.normalize_ui_status(front_matter.get("ui_status")),
         parent_id="",
         report=report,
+        parts=parts,
     )
 
 
@@ -341,7 +343,6 @@ def managed_document_metadata(
     document = resolved.document
     front_matter = document.front_matter
     record = committed_document_record(front_matter, document.doc_id, resolved.document_config, collection=resolved.collection, parent_id=document.parent_id)
-    payload_revision = source_model.source_revision(document.source_text.encode("utf-8"))
     if source_model.collection_supports_draft(resolved.document_config):
         record["draft"] = front_matter["draft"]
     if not resolved.collection:
@@ -352,7 +353,6 @@ def managed_document_metadata(
         "ok": True,
         **resolved.request_target(),
         "record": record,
-        "source_revision": payload_revision,
     }
     from docs_document_placement import document_location_parent_id
 

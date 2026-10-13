@@ -26,6 +26,7 @@ from docs_build_manifest import remove_build_manifest, write_build_manifest
 from docs_mermaid_preparation import prepare_stage_mermaid
 from docs_workspace_links import write_workspace_links
 from docs_source_model import SourceDoc, parse_source, write_bytes_atomic
+from docs_document_identity import doc_updated_date
 
 if TYPE_CHECKING:
     from docs_builder.collection import CollectionDocsBuilder
@@ -571,6 +572,92 @@ def create_collection_builder(
         repo_root=repo_root, config=collection.parent_config, collection=collection.document_config,
         workspace=workspace, only_doc_ids=doc_ids, skip_media_builds=True,
     )
+
+
+def _generated_path(root: Path, name: str) -> Path:
+    path = root / name
+    if root.is_symlink() or path.is_symlink() or path.resolve().parent != root.resolve():
+        raise ValueError("Generated document paths must stay in their configured directory")
+    return path
+
+
+def project_document_position(
+    repo_root: Path, owner: ManagedDocumentCollection, doc_id: str, parent_ids: dict[str, str],
+    write_position: Callable[[dict[str, Any]], None],
+) -> dict[str, Any]:
+    """Project a changed tree and one parent field without rendering source."""
+    build_dir = Path(__file__).resolve().parents[1] / "build"
+    if str(build_dir) not in sys.path:
+        sys.path.insert(0, str(build_dir))
+    from docs_builder.pipeline import DocsDataBuilder
+    from docs_builder.ordinary_metadata import OrdinaryDocumentSummary, read_saved_navigation
+    from docs_builder.common import json_text, write_text
+
+    builder = DocsDataBuilder(
+        repo_root=repo_root, config=owner.parent_config, workspace=owner.workspace,
+        only_doc_ids=[doc_id], links_doc_ids=[], skip_media_builds=True, skip_recent=True,
+    )
+    rows, previous, previous_text = read_saved_navigation(builder)
+    documents = {
+        current_id: OrdinaryDocumentSummary(current_id, rows[current_id]["title"], parent_id, rows[current_id])
+        for current_id, parent_id in parent_ids.items()
+    }
+    tree_text = json_text(builder.index_tree_payload(documents, previous_payload=previous))
+    path = _generated_path(builder.items_dir, f"{doc_id}.json")
+    previous_document_text = path.read_text(encoding="utf-8")
+    payload = json.loads(previous_document_text)
+    if parent_ids[doc_id]:
+        payload["parent_id"] = parent_ids[doc_id]
+    else:
+        payload.pop("parent_id", None)
+    document_text = json_text(payload)
+    record = {key: value for key, value in payload.items() if key != "content_html"}
+    record.update(parent_id=parent_ids[doc_id], has_thumbnail=payload.get("has_thumbnail", False))
+    for key in ("added_date", "last_updated"):
+        record[key] = doc_updated_date(payload[key])
+    committed = {"target": {"doc_id": doc_id}, "record": record}
+    write_position(committed)
+    if document_text != previous_document_text:
+        write_text(path, document_text)
+    if tree_text != previous_text:
+        write_text(_generated_path(builder.output_dir, "index-tree.json"), tree_text)
+    remove_build_manifest(repo_root, owner.parent_config)
+    return committed
+
+
+def complete_document_deletion(
+    repo_root: Path, owner: ManagedDocumentCollection, doc_ids: list[str],
+    selected_payload: dict[str, Any], *, parent_ids: dict[str, str] | None,
+) -> dict[str, Any]:
+    """Apply known document/Links removals using carried configuration and selections."""
+    build_dir = Path(__file__).resolve().parents[1] / "build"
+    if str(build_dir) not in sys.path:
+        sys.path.insert(0, str(build_dir))
+    from docs_builder.pipeline import DocsDataBuilder
+    from docs_builder.collection import CollectionDocsBuilder
+
+    arguments = {
+        "repo_root": repo_root, "config": owner.parent_config, "workspace": owner.workspace,
+        "only_doc_ids": doc_ids, "links_doc_ids": doc_ids, "skip_media_builds": True,
+    }
+    if owner.collection:
+        builder = CollectionDocsBuilder(**arguments, collection=owner.document_config)
+        builder.selected_payload = selected_payload
+        _generated_path(builder.output_dir, builder.manifest_filename)
+        for doc_id in doc_ids:
+            _generated_path(builder.items_dir, f"{doc_id}.json")
+        result = builder.run(write=True, documents=[])
+    else:
+        builder = DocsDataBuilder(**arguments, skip_recent=True)
+        _generated_path(builder.output_dir, "index-tree.json")
+        for doc_id in doc_ids:
+            _generated_path(builder.items_dir, f"{doc_id}.json")
+        remove_build_manifest(repo_root, owner.parent_config)
+        from docs_builder.browser_config import write_browser_config
+        from docs_builder.common import DOCS_VIEWER_BROWSER_CONFIG_PATH
+        write_browser_config(repo_root, owner.workspace, path=DOCS_VIEWER_BROWSER_CONFIG_PATH, label="Docs Viewer browser config")
+        result = builder.run(write=True, documents=[], parent_ids=parent_ids, selected_payload=selected_payload)
+    return {"ok": True, "diagnostics": result["diagnostics"]}
 
 
 def perform_collection_source_write_and_rebuild(

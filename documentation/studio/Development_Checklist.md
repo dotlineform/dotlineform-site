@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260523-190651-7157ec
 title: Development Checklist
 added_date: "2026-05-23 19:06:51"
-last_updated: "2026-10-13 14:37:06"
+last_updated: "2026-10-13 15:47:31"
 parent_id: d-20260419-000000-d2e47b
 
 ---
@@ -32,6 +32,9 @@ This checklist and the durable Studio development documentation are maintained d
 ## Ownership Gates
 
 ### User-Visible Operation Ordering
+
+- [ ] Draft sends one intended boolean, preserves unrelated source text/dates and hands parsed input into exact generation; publication exclusion does not disable otherwise permitted readiness changes. Star reads source only for selected metadata; Unstar consumes the exact Selected identity. Position moves the complete ordinary subtree, checks the destination/cycle once and projects saved navigation plus only the moved by-ID parent field without Markdown/Links rendering or source-date changes. Collection-host root placement belongs to the UI. Draft and Position use the common committed-record projection and surface listener/display failures. [User Facing Rules](data/User_Facing_Rules.md) M.15/M.16 and D.10/D.18 own this boundary.
+- [ ] Delete confirms from the complete loaded ordinary Index or one flat collection target and sends one `/docs/delete` request. Read canonical tree and Selected once, remove exact confined source paths, carry known deleted IDs/remaining parent map/Selected/configuration into document/Links generation and clear a deleted configured default. Keep source revisions, preview/apply routes, repeated capability requests, saved-navigation audits, unselected by-ID preflights and restoration/recovery builds out of this flow. Report target/phase and completed effects when execution stops; preserve generation errors separately from browser projection/display failures. Await surviving-caller or fallback navigation under the busy state and release deleted retained views. [Management Operations](Management_Operations.md#confirmed-document-delete) owns persistence/completion; test migration requires its own agreed specification.
 
 - [ ] Keep application workflows synchronous from the user's perspective: start A, wait for its complete outcome, then allow B. This applies across the app, including Save, Build, Refresh and the complete preparation/distribution Publish operation.
 - [ ] Local workflows are synchronous and edits are unavailable until completion. Read the inputs required by the action and carry their results through the operation. Do not add concurrency checks, repeated input/snapshot scans, hashes or file-metadata freshness checks between internal calls. Validate inputs as they are used; verify writes or transfers only where the owning contract explicitly requires it.

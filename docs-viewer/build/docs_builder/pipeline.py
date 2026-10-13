@@ -78,6 +78,7 @@ class DocsDataBuilder(
     def run(
         self, *, write: bool, emit_diagnostics: bool = False,
         documents: list[DocRecord] | None = None, parent_ids: dict[str, str] | None = None,
+        selected_payload: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         started_at = monotonic_time()
         self.inline_icons = InlineIconRenderer(self.repo_root)
@@ -98,7 +99,8 @@ class DocsDataBuilder(
         if self.targeted_build:
             documents, previous_tree, previous_tree_text = targeted_document_metadata(self, docs, parent_ids)
         docs_by_id = {doc.doc_id: doc for doc in documents}
-        selected_payload = read_selected(self.config)
+        if selected_payload is None:
+            selected_payload = read_selected(self.config)
         media_snapshot = (
             None
             if self.skip_media_builds

@@ -10,7 +10,10 @@ INDEX_ORDER_FILENAME = "index-order.json"
 
 
 def read_index_order(source_root: Path) -> list[dict[str, Any]]:
-    tree = json.loads((source_root / INDEX_ORDER_FILENAME).read_text(encoding="utf-8"))
+    path = source_root / INDEX_ORDER_FILENAME
+    if source_root.is_symlink() or path.is_symlink() or path.resolve().parent != source_root.resolve():
+        raise ValueError("index-order.json must stay in the configured document source directory")
+    tree = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(tree, list):
         raise ValueError("index-order.json must contain an array")
     return tree
@@ -70,12 +73,7 @@ def insert_node(tree: list[dict[str, Any]], node: dict[str, Any], target_id: str
 
 def move_node(tree: list[dict[str, Any]], doc_id: str, target_id: str, placement: str) -> str:
     siblings, index, _ = node_location(tree, doc_id)
-    node = siblings[index]
-    if target_id in tree_parent_ids([node]):
-        raise ValueError("Cannot position a document inside its own subtree")
-    if target_id:
-        node_location(tree, target_id)
-    siblings.pop(index)
+    node = siblings.pop(index)
     return insert_node(tree, node, target_id, placement)
 
 

@@ -100,10 +100,17 @@ export function initDocsViewerRouteWorkflow(context) {
     } finally { stop(); }
   }
   navigation = createDocsViewerNavigation({ window: window, capture: capture,
+    callerAvailable: function (record) {
+      var target = record.document && record.document.record && record.document.record.target;
+      return Boolean(target && context.retainedDocumentAvailable(target));
+    },
     prepare: context.prepareDocumentNavigation,
     retain: function (records) { context.retainDocuments(records.map(function (record) { return record.document; })); },
     confirm: context.confirmDocumentNavigation, open: open, restore: restore,
     onNavigationChange: context.onNavigationChange, reportError: function (error) { setStatus(error.message, true); } });
+  if (context.collectionProvider.subscribeDocumentChanges) context.collectionProvider.subscribeDocumentChanges(function (change) {
+    if (change.deleted) navigation.releaseUnavailableCaller();
+  });
   function loadDoc(value, options = {}) {
     var target = documentTarget(typeof value === "string" ? { doc_id: value, collection: options.collection || "" } : value, { review: currentValue(context.viewerPathname) === "/docs-review/" });
     var key = documentTargetKey(target);
@@ -232,11 +239,19 @@ export function initDocsViewerRouteWorkflow(context) {
     });
   }
   async function commitDeletedDocument(target) {
-    context.collectionProvider.commitDocumentChange({ target: target, deleted: true });
+    var failures = context.collectionProvider.commitDocumentChange({ target: target, deleted: true });
+    if (failures.length) throw new Error("Document deleted, but retained views could not be updated: " + failures.map(function (error) { return error.message; }).join("; "));
     if (!target.collection) await loadIndex({ preserveDocument: true });
-    if (navigation.hasCaller()) { navigation.back(); return; }
+    if (await navigation.returnToCaller()) return;
+    if (target.collection) {
+      if (!await openCollectionIndex()) throw new Error("The collection Index could not be displayed after Delete.");
+      return;
+    }
     var docId = context.defaultDocId();
-    if (docId) return loadDoc(docId, { historyMode: "replace", force: true });
+    if (docId) {
+      if (!await loadDoc(docId, { historyMode: "replace", force: true })) throw new Error("The surviving document could not be displayed after Delete.");
+      return;
+    }
     context.hideDocPane();
   }
   var commands = { applyCurrentRoute: applyCurrentRoute, loadDoc: loadDoc, loadIndex: loadIndex,

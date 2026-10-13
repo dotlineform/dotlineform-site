@@ -47,12 +47,6 @@ export function createDocsViewerManagementContextActions(options) {
     var documentReason = reason || (!rendered ? "Return to the document to use this action."
       : !exact ? "Wait for a valid document to finish loading." : "");
     var draftReason = documentReason || resolutions.draft.disabledReason;
-    if (!draftReason && target.collection) {
-      if (typeof context.commitDocumentDraft !== "function") draftReason = "Collection draft readiness is unavailable.";
-    } else if (!draftReason) {
-      var policy = options.documentIndex.docsById.get(target.doc_id);
-      if (!policy || policy.publication_ignored !== false) draftReason = "Excluded from Publish by unpublishable.json.";
-    }
     if (!draftReason && typeof record.draft !== "boolean") draftReason = "Draft readiness is unavailable for this document.";
     return {
       context: context, target: exact ? normalizeManagedDocumentTarget(target) : null,
@@ -133,12 +127,8 @@ export function createDocsViewerManagementContextActions(options) {
       await toggleManagedDocDraft(state.target, !state.record.draft, {
         clientOptions: options.clientOptions(),
         onSaved: function (target, response) {
-          if (state.context.commitDocumentDraft) state.context.commitDocumentDraft(target, response.record);
-          else {
-            var record = options.documentIndex.docsById.get(target.doc_id);
-            if (record) record.draft = response.record.draft;
-            options.renderSidebar();
-          }
+          var failures = options.commitDocumentChange({ target: target, record: response.record }) || [];
+          if (failures.length) throw new Error("Draft readiness saved, but a retained list could not be updated: " + failures.map(function (error) { return error.message; }).join("; "));
         }
       });
     } catch (error) {

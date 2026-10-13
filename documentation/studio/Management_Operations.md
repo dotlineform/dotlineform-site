@@ -3,27 +3,27 @@ draft: false
 doc_id: d-20260519-202931-66c794
 title: Management Operations
 added_date: "2026-05-19 20:29:31"
-last_updated: "2026-10-10 17:06:58"
+last_updated: "2026-10-13 15:47:31"
 parent_id: d-20260424-000000-04d75e
 ---
 # Docs Viewer Management Operations
 
-Current boundary, 24 September 2026: the scope-era operation descriptions and test inventory below are historical. [Builder](Builder.md) owns the current Working → Preview → Deploy Repo lifecycle. Working Delete no longer prunes Preview/public output. Public document-location JSON, its builder/picker and the legacy Catalogue document-URL refresh are retired; their historical tests have not been migrated or removed by this cleanup.
+The single configured Docs workspace owns Working source/generated operations. [Builder](Builder.md) owns Working generation and the Preview/publication lifecycle. Working Delete updates its own source/generated products; Publish owns Preview/public distribution. Public document-location JSON, its builder/picker and the legacy Catalogue document-URL refresh remain retired.
 
 ## Security Constraints
 
 - HTTP access is provided by the standalone Docs Viewer service at `DOCS_VIEWER_BASE_URL`.
 - Loopback binding, CORS, static-file routing, and request-size limits are enforced by `docs-viewer/services/docs_viewer_service.py`.
 - Endpoint constants are allowlisted by `docs-viewer/services/docs_management_routes.py`.
-- Docs source write targets are constrained by `docs-viewer/config/scopes/docs_scopes.json`.
-- Scope lifecycle ownership is recorded in `docs-viewer/config/scopes/docs_scope_manifest.json`; system-owned scopes are not delete-eligible.
+- Docs source write targets are constrained by `docs-viewer/config/workspace/docs-workspace.json` and exact configured collection ownership.
+- Direct Catalogue New/Delete remain Regenerate-owned. Ordinary editorial menu restrictions belong to the frontend; request/model integrity and confined paths belong to services.
 - Source recovery relies on Git history, host/filesystem backups, or explicit manual copies made before risky operations.
 
-Configured source roots in this repo are:
+Configured source storage beneath the existing `DOTLINEFORM_DOCS_BASE_DIR` is:
 
 ```text
-docs-viewer/scopes/studio/source/documents/*.md
-docs-viewer/scopes/analysis/source/documents/*.md
+working/source/documents/*.md
+working/source/collections/<collection>/documents/*.md
 ```
 
 Local operational write targets include:
@@ -31,8 +31,8 @@ Local operational write targets include:
 ```text
 $DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/
 var/docs/logs/
-docs-viewer/scopes/*/published/
-site/assets/data/docs/scopes/<scope>/media/<type>/
+<configured Docs root>/working/generated/
+<configured Docs root>/working/generated/collections/<collection>/
 ```
 
 ## Operational Notes
@@ -45,15 +45,21 @@ site/assets/data/docs/scopes/<scope>/media/<type>/
 
 ## Confirmed Document Delete
 
-Parent Index Delete accepts only exact checked IDs and expands their owned descendants once. Default sub-scope Delete accepts one exact `{scope, sub_scope, doc_id}` and applies only against its previewed source revision. Both existing controls use the shared `/docs/delete-preview` and `/docs/delete-apply` routes; displayed rows, titles, filenames, and current routes are never fallback identity.
+Ordinary confirmation uses the full already-loaded Index subtree, including collapsed descendants. Collection confirmation uses its singular exact flat target. Cancel performs no request or write; confirmation sends one `POST /docs/delete` with either `{doc_ids: ["<ordinary-root-id>"], confirm: true}` or `{collection: "<configured-id>", doc_id: "<id>", confirm: true}`. The service accepts exact nonempty ordinary ID arrays for subtree roots; displayed titles, filenames and current routes never supply fallback identity. Preview/apply routes, source revisions and a separate collection Delete capability request are retired without aliases.
 
-For an exact configured public collection, preview adds `public_cleanup` derived from current public products. Confirmed apply commits the canonical source deletion and existing working rebuild first, then removes exact public by-ID and owned Mermaid products, filters only affected public inventories, and performs required Catalogue document-URL follow-through before returning success. Parent Delete updates tree, Recent, search, locations, and affected Catalogue URLs. Child Delete updates its manifest, by-ID, locations, and affected Catalogue URLs without changing its host, siblings, or parent inventories. A deleted public report host loses its routes and derived child URLs while surviving child files remain independently owned. Local collections report public cleanup as not applicable.
+The service resolves its configured owner once, reads the ordinary tree and Selected list once, expands subtree scope once and unlinks only exact confined source paths. Ordinary deletion updates `index-order.json`; both forms remove exact Selected identities. Deleting the configured ordinary default clears that setting and carries the known empty value into generated browser configuration and the response. The browser applies that returned change locally without a configuration reload. There is no protected-descendant editorial guard. Collection hosts retain frontend Delete restrictions; named collection deletion leaves its host, siblings and ordinary tree unchanged. Direct Catalogue deletion is rejected through the Regenerate boundary.
 
-Only after any required public cleanup succeeds, a configured lineage child Delete applies the exact Working-owned v3 follow-through. Working Delete removes its complete record without deleting independently canonical Editorial or public documents. Editorial Delete removes only the exact child and drops the record when no children remain. A changed table rebuilds only the configured Working collection; direct non-lineage and unrelated collection deletes leave the table untouched. The response carries a nested `lineage` receipt only for a matched Working or Editorial collection.
+Known deleted IDs, the remaining parent map, updated Selected and resolved configuration feed the existing in-process document/Links builders. They remove exact by-ID/navigation or collection-manifest entries and the deleted documents' relationship records/contributions. They do not reopen sources to rediscover identities, render unrelated Markdown, audit saved navigation or preflight unrelated by-ID files. Links retains exact affected-neighbour maintenance. Saved Recent/Search and registered media production retain their separate owners; Publish later reconciles its prepared public set.
 
-Public or Catalogue cleanup failure after source commit is a non-success with `committed: true` and `retry_delete: false`; it leaves private lineage unchanged and is not reported as a safe repeat of the irreversible Delete. The browser retains its existing selection, confirmation, cancel focus, fallback/reconciliation, and refresh owners while presenting exact public impact from the server receipt.
+Execution stops at its failing phase and retains completed effects. Responses carry `target`, requested/actually deleted IDs, source/tree/Selected/generation completion flags and `phase`; a failing source target is included when applicable. Default clearing is reported only after its write completes. No restoration, recovery build, automatic retry, public-cleanup or lineage receipt is produced. Diagnose the reported target/phase and explicitly complete the owning repair or Build; success is returned only after required generation completes.
 
-Scope-wide **Publish** remains the only positive public promotion. Its negative plan removes only current explicit `publishable: false` exclusions and reports `excluded`/`excluded_count`. Public files absent from canonical source for any other reason are retained and unreported; supported document Delete has already completed its own exact negative cleanup.
+The browser forwards actual committed deletions to retained views even when later service work fails. After complete ordinary generation, it reads Index once. When the displayed document was removed, it awaits return to a surviving retained caller; otherwise it opens the collection host or surviving ordinary root, or hides an empty document pane. Deleted retained callers are released. The busy state covers service execution and display completion. Generation failures remain distinct from completed-delete projection/display failures, and listener failures are surfaced. [User Facing Rules](data/User_Facing_Rules.md) M.17 records implementation evidence and pending manual acceptance.
+
+## Draft And Position
+
+Draft submits its intended boolean with the exact ordinary or supported collection target. The service parses that source once, rewrites only its Draft field, preserves body/formatting/dates and hands prepared metadata/source/report input into exact in-process generation. The frontend uses the common committed-record projection and reports completed source writes separately from generation/projection failures. `unpublishable.json` is independent of readiness; otherwise permitted excluded documents can still change Draft. Star writes independent Selected membership; Unstar needs only the exact owner/identity and Selected list, while Star reads the metadata needed for its row.
+
+Position accepts an exact ordinary ID, destination ID and Before/After/Inside placement. It moves the complete node once, checks destination/cycle integrity and projects saved navigation plus only the moved by-ID parent metadata, preserving Markdown/body/dates and Links. Collection-host root placement belongs to the frontend: Before/After another root or Inside Root. Common metadata projection and one awaited Index refresh complete the browser action. A failure after the canonical tree write reports `position_saved: true`, its committed record and unfinished generation without restoration.
 
 ## Subject Assignment In Source
 
@@ -67,28 +73,7 @@ The separate immediate-write `POST /docs/assign-field-group` endpoint, its clien
 
 ## Verification
 
-Focused tests cover the current boundary:
-
-- `docs-viewer/tests/python/test_docs_management_metadata.py`
-- `docs-viewer/tests/python/test_docs_document_subjects.py`
-- `docs-viewer/tests/python/test_docs_dotlineform_projects_customisation.py`
-- `docs-viewer/tests/python/test_docs_management_routes.py`
-- `docs-viewer/tests/python/test_docs_public_delete_cleanup.py`
-- `docs-viewer/tests/python/test_docs_document_publication_lineage.py`
-- `docs-viewer/tests/python/test_docs_publish_gate.py`
-- `docs-viewer/tests/python/test_docs_management_mutations.py`
-- `docs-viewer/tests/python/test_docs_management_subscope_delete.py`
-- `docs-viewer/tests/python/test_docs_scope_lifecycle.py`
-- `docs-viewer/tests/python/test_build_document_locations.py`
-- `docs-viewer/tests/python/test_docs_catalogue_document_urls.py`
-- `docs-viewer/tests/python/test_docs_subscope_customisations.py`
-- `docs-viewer/tests/python/test_docs_viewer_public_runtime_boundaries.py`
-- `docs-viewer/tests/smoke/docs_viewer_service_manage.py`
-- `docs-viewer/tests/python/test_docs_import_service.py`
-- `docs-viewer/tests/python/test_docs_export.py`
-- `docs-viewer/tests/python/test_docs_import.py`
-
-The `docs` check profile runs parser and docs service checks. Use the narrowest relevant check for source-only documentation edits, and rebuild generated Docs Viewer payloads only when the task explicitly calls for that follow-through.
+Existing mutation, metadata, route and collection-delete tests include retired scope, revision, preview/apply and recovery contracts. They are unreviewed for this current boundary; migration, coverage specification and test execution require separately agreed work under [Test Contract Discipline](Test_Contract_Discipline.md). Do not use historical test names/profile membership as evidence of current behavior. Focused lint, syntax/import diagnostics and source review provide the implementation evidence recorded in [User Facing Rules](data/User_Facing_Rules.md); UI interaction and live failure behavior remain manual acceptance gates. Repository documentation edits use no Docs/Search rebuild.
 
 ## Related References
 

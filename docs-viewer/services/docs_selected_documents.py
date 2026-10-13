@@ -117,19 +117,20 @@ def refresh_selected_documents(
 
 def set_selected(repo_root: Path, body: dict[str, Any], *, dry_run: bool = False) -> dict[str, Any]:
     """Set the intended star state without changing the document source or date."""
-    from docs_management_document_target import resolve_managed_document_target
+    from docs_management_document_target import normalize_managed_document_target, resolve_managed_document_collection, resolve_managed_document_target
     from docs_workspace_config import require_document_authoring
 
     if set(body) - {"collection"} != { "doc_id", "selected"} or type(body.get("selected")) is not bool:
         raise ValueError("Set Selected requires doc_id and boolean selected, with optional collection")
-    resolved = resolve_managed_document_target(repo_root, {key: value for key, value in body.items() if key != "selected"})
+    target = normalize_managed_document_target({key: value for key, value in body.items() if key != "selected"})
+    resolved = resolve_managed_document_target(repo_root, target) if body["selected"] else resolve_managed_document_collection(repo_root, collection=target.get("collection"))
     require_document_authoring(resolved.parent_config)
     payload = read_selected(resolved.parent_config)
-    rows = [row for row in payload["docs"] if (row.get("collection", ""), row["doc_id"]) != (resolved.collection, resolved.doc_id)]
+    rows = [row for row in payload["docs"] if (row.get("collection", ""), row["doc_id"]) != (target.get("collection", ""), target["doc_id"])]
     if body["selected"]:
         rows.append(selected_row(resolved.document, resolved.document_config))
     updated = {"schema": SELECTED_SCHEMA, "docs": rows}
     text = selected_text(updated)
     if not dry_run and updated != payload:
         write_text_atomic(selected_path(resolved.parent_config), text)
-    return {"ok": True, "target": resolved.request_target(), "selected": body["selected"], "dry_run": dry_run}
+    return {"ok": True, "target": target, "selected": body["selected"], "dry_run": dry_run}
