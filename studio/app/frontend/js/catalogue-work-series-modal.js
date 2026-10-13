@@ -24,6 +24,6 @@ export async function openWorkSeriesTitleModal(state, { seriesId = "", restoreFo
       }
       return createCatalogueSeries({ series_id: suggestNextSeriesId(state.seriesById.values()), record: { title } });
     },
-    remove: () => applyCatalogueDelete({ kind: "series", series_id: seriesId, expected_record_hash: record.record_hash })
+    remove: () => applyCatalogueDelete({ kind: "series", series_id: seriesId })
   });
 }

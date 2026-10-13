@@ -14,7 +14,7 @@ import {
   WORK_LINK_FIELDS as LINK_FIELDS
 } from "./catalogue-editor-embedded-items.js";
 
-import { buildCreateWorkPayload, buildWorkRecordFromDraft, normalizeText, normalizeWorkId, suggestNextWorkId } from "./catalogue-work-fields.js";
+import { BULK_WORK_METADATA_FIELDS, buildCreateWorkPayload, buildWorkRecordFromDraft, normalizeText, normalizeWorkId, suggestNextWorkId } from "./catalogue-work-fields.js";
 import {
   applyBulkWorkRecordMutations,
   applyWorkRecordMutation
@@ -33,16 +33,23 @@ function workMediaRequest(state) {
   };
 }
 
+/** Bulk patches carry only explicit edits; control serialization remains UI-owned. */
 function buildPayload(state) {
-  const record = buildWorkRecordFromDraft(state.draft, { downloadFields: DOWNLOAD_FIELDS, linkFields: LINK_FIELDS });
   if (state.mode !== "bulk") return {
     work_id: state.currentWorkId,
-    record,
+    record: buildWorkRecordFromDraft(state.draft, { downloadFields: DOWNLOAD_FIELDS, linkFields: LINK_FIELDS }),
     gallery_ids: state.draft.gallery_ids.slice()
   };
   const payload = {
     kind: "works", ids: state.bulkWorkIds.slice()
   };
+  const setFields = {};
+  for (const field of BULK_WORK_METADATA_FIELDS) {
+    if (!state.bulkTouchedFields.has(field.key)) continue;
+    const value = normalizeText(state.draft[field.key]);
+    setFields[field.key] = value ? (field.type === "number" ? Number(value) : value) : null;
+  }
+  if (Object.keys(setFields).length) payload.set_fields = setFields;
   if (state.bulkTouchedFields.has("gallery_ids")) {
     payload.gallery_ids = state.draft.gallery_ids.slice();
   }
@@ -222,7 +229,7 @@ export async function deleteCurrentWork(state, context) {
       : `Delete these ${workIds.length} Works and their Gallery memberships?\n${workIds.join(", ")}`;
     const confirmed = await confirmCatalogueActionModal(state, {
       title: "Confirm delete",
-      message: `${summary}\nShared images and files will be kept.`,
+      message: `${summary}\nTheir Catalogue images and files will be removed. Project originals and Series/Gallery definitions will be kept.`,
       primaryLabel: workIds.length === 1 ? "Delete"
         : `Delete ${workIds.length} Works`,
       cancelLabel: "Cancel",

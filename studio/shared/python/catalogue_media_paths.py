@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Mapping
+from typing import Any, Mapping
 
 try:
     from .external_workspace_paths import (
@@ -31,8 +31,10 @@ def configured_catalogue_media_workspace(
     repo_root: Path,
     *,
     environ: Mapping[str, str] | None = None,
+    config: Mapping[str, Any] | None = None,
 ) -> ExternalWorkspaceRoot:
-    config = load_pipeline_config(repo_root=repo_root)
+    """Resolve the media root using the operation's loaded policy when supplied."""
+    config = load_pipeline_config(repo_root=repo_root) if config is None else config
     values = dict(environ) if environ is not None else runtime_env(repo_root=repo_root)
     return resolve_external_workspace_root(
         media_root_subdir(config),
@@ -45,8 +47,10 @@ def configured_catalogue_media_root(
     repo_root: Path,
     *,
     environ: Mapping[str, str] | None = None,
+    config: Mapping[str, Any] | None = None,
 ) -> Path:
-    return configured_catalogue_media_workspace(repo_root, environ=environ).root
+    """Return the checked root without rereading an explicitly supplied policy."""
+    return configured_catalogue_media_workspace(repo_root, environ=environ, config=config).root
 
 
 def resolve_catalogue_media_request_path(workspace: ExternalWorkspaceRoot, request_path: str) -> Path:

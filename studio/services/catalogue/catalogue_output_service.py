@@ -7,9 +7,9 @@ from typing import Any, Mapping
 from catalogue.catalogue_output_media import MEDIA_SOURCE_FIELDS, complete_catalogue_media
 from catalogue.catalogue_revisions import record_hash
 from catalogue.catalogue_service_context import CatalogueWriteContext
-from catalogue.catalogue_source import CatalogueSourceRecords, records_from_json_source, work_resource_entries
+from catalogue.catalogue_source import CatalogueSourceRecords, work_resource_entries
 from catalogue.catalogue_pending_updates import accumulate_work_changes
-from catalogue.catalogue_staged_media import clear_staged_work
+from catalogue.catalogue_staged_media import clear_staged_works
 
 
 def download_filenames(record: dict[str, Any]) -> set[str]:
@@ -44,14 +44,16 @@ def changed_work_media(
 def complete_saved_catalogue_edit(
     context: CatalogueWriteContext, response: dict[str, Any], previous: CatalogueSourceRecords,
     *, attachment_files: Mapping[str, bytes] | None = None, regenerate_image: bool = False,
-    current_records: CatalogueSourceRecords | None = None,
+    current_records: CatalogueSourceRecords,
     deleted_media: Mapping[str, Mapping[str, Any]] | None = None,
 ) -> None:
     """Preserve canonical success when local media or response completion fails.
 
     Mutation owners carry before/after records through completion. Media
     persistence updates the supplied current map only after its write succeeds,
-    so final editor records and queues use that same completed state.
+    so final editor records and queues use that same completed state. Bulk Save
+    supplies final records and changes no media; only single/batch Work actions
+    select media candidates and require editor-record completion after media.
     """
     shared = response.pop("_shared_changes", None)
     if context.dry_run or not response.get("ok"):
@@ -62,45 +64,44 @@ def complete_saved_catalogue_edit(
     refresh_needed = False
     image_ids: list[str] = []
     candidate_ids: set[str] = set()
+    media_work_ids: set[str] = set()
     file_changes: dict[str, set[str]] = {}
     try:
-        if current is None:
-            current = records_from_json_source(context.source_dir)
         candidate_ids = {
             key for key in (
-                response.get("work_id"), *response.get("selected_ids", ()), *response.get("changed_work_ids", ()),
+                response.get("work_id"), *response.get("changed_work_ids", ()),
             ) if key in current.works
         }
-        image_ids, file_changes = changed_work_media(previous, current, candidate_ids, set(attachment_files or {}))
+        if candidate_ids:
+            image_ids, file_changes = changed_work_media(previous, current, candidate_ids, set(attachment_files or {}))
         if regenerate_image:
             image_ids = sorted(set(image_ids) | {response["work_id"]})
-        work_ids = sorted(set(image_ids) | set(file_changes))
-        if work_ids:
+        media_work_ids = set(image_ids) | set(file_changes)
+        if media_work_ids:
             response["media"] = complete_catalogue_media(
                 context.repo_root, context.source_dir, records=current, previous=previous,
-                work_ids=work_ids, image_work_ids=image_ids, download_names_by_work=file_changes, write=True,
+                work_ids=sorted(media_work_ids), image_work_ids=image_ids, download_names_by_work=file_changes, write=True,
                 attachment_files=attachment_files,
                 force_image_ids=[response["work_id"]] if regenerate_image else [],
             )
     except (Exception, SystemExit) as error:
         failures.append(f"Local Save preparation: {error}")
     try:
-        if current is None:
-            raise ValueError("Saved canonical records are unavailable for editor completion")
-        if "record" in response and "gallery_id" not in response:
-            record = current.series.get(response.get("series_id")) if response.get("series_id") else current.works.get(response.get("work_id"))
+        # Definition records are already final; only Work media can change a record.
+        if "record" in response and response.get("work_id"):
+            record = current.works.get(response["work_id"])
             if record:
                 response.update(record=record, record_hash=record_hash(record))
-        # Bulk mutation responses already include every selected Work and its saved memberships.
+        # Reuse supplied bulk/batch records unless media completion could change them.
         for entry in response.get("records", []):
+            if entry["work_id"] not in media_work_ids:
+                continue
             record = current.works.get(entry.get("work_id"))
             if record:
                 entry.update(record=record, record_hash=record_hash(record))
     except Exception as error:
         failures.append(f"Editor response: {error}")
     try:
-        if current is None:
-            raise ValueError("Saved canonical records are unavailable for queue completion")
         if shared is None:
             raise ValueError("Canonical mutation did not supply its shared Catalogue effects")
         changed_ids = set()
@@ -122,8 +123,7 @@ def complete_saved_catalogue_edit(
             downloads_by_work={wid: download_filenames(current.works[wid]) for wid in targets},
             shared=shared,
         )
-        for wid, selection in (deleted_media or {}).items():
-            clear_staged_work(context.repo_root, wid, dict(selection))
+        clear_staged_works(context.repo_root, deleted_media or {})
     except Exception as error:
         identities = sorted(set(deleted_media or {}) | set(response.get("affected_work_ids", [])))
         failures.append(f"Catalogue queue/staging completion ({', '.join(identities)}): {error}")

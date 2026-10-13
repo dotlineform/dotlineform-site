@@ -2,7 +2,7 @@ import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { createStudioIcon } from "./studio-icon.js";
 import { createWorkGalleryPicker, renderWorkGalleryPicker, setWorkGalleryPickerAvailability } from "./catalogue-work-gallery-picker.js";
 import { bindSearchList } from "/shared/frontend/js/search-list.js";
-import { WORK_EDITABLE_FIELDS as EDITABLE_FIELDS, WORK_FIELD_DEFINITIONS, WORK_READONLY_FIELDS as READONLY_FIELDS, isWorkFieldRequired, normalizeSeriesId, normalizeText } from "./catalogue-work-fields.js";
+import { BULK_WORK_METADATA_FIELDS, WORK_EDITABLE_FIELDS as EDITABLE_FIELDS, WORK_FIELD_DEFINITIONS, WORK_READONLY_FIELDS as READONLY_FIELDS, isWorkFieldRequired, normalizeSeriesId, normalizeText } from "./catalogue-work-fields.js";
 import {
   openProjectMediaPickerForCurrentDraft,
   openProjectMediaFolderForCurrentDraft,
@@ -510,11 +510,16 @@ export function setModeFieldAvailability(state) {
     else link.href = "#";
   });
   state.fieldNodes.forEach((node, key) => {
+    const field = WORK_FIELD_DEFINITIONS[key];
+    const bulkEditable = BULK_WORK_METADATA_FIELDS.includes(field);
     const batchAssigned = Boolean(state.pendingWorkBatch) && key === "title";
-    if ("readOnly" in node) node.readOnly = isBulk || batchAssigned;
+    if ("readOnly" in node) node.readOnly = (isBulk && !bulkEditable) || batchAssigned;
     if ("disabled" in node) node.disabled = busy || (isBulk && node.tagName === "SELECT");
-    const required = !batchAssigned && isWorkFieldRequired(WORK_FIELD_DEFINITIONS[key], state.mode);
-    if (key === "title") node.placeholder = batchAssigned ? "From filenames" : "";
+    const required = !batchAssigned && isWorkFieldRequired(field, state.mode, state.bulkTouchedFields);
+    if ("placeholder" in node) {
+      const mixed = isBulk && bulkEditable && state.bulkMixedFields.has(key) && !state.bulkTouchedFields.has(key);
+      node.placeholder = batchAssigned ? "From filenames" : mixed ? "Mixed values" : "";
+    }
     const label = node.closest(".catalogueWorkForm__field")?.querySelector(":scope > .studioForm__label");
     label?.classList.toggle("studioForm__label--required", required);
     const control = key === "series_id" ? state.seriesPicker.searchInput : node;

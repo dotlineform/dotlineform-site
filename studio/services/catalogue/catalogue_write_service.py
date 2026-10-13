@@ -14,7 +14,6 @@ from catalogue.catalogue_service_context import build_catalogue_write_context
 from catalogue.catalogue_work_service import work_create_payload, work_save_payload
 from catalogue.catalogue_work_batch_service import work_batch_create_payload
 from catalogue.catalogue_output_service import complete_saved_catalogue_edit
-from catalogue.catalogue_source import records_from_json_source
 from catalogue.catalogue_work_attachments import WorkAttachment, bind_work_attachments
 
 
@@ -56,15 +55,12 @@ def handle_catalogue_post(
         "/work/create-batch": work_batch_create_payload,
         "/series/create": series_create_payload,
         "/series/save": series_save_payload,
+        "/bulk-save": bulk_save_payload,
     }
     if api_path in mutations:
         payload, previous, current = mutations[api_path](context, body)
     elif api_path in {"/gallery/create", "/gallery/save", "/gallery/delete"}:
         payload, previous, current = mutate_gallery_payload(context, api_path.rsplit("/", 1)[1], body)
-    elif api_path == "/bulk-save":
-        previous = records_from_json_source(context.source_dir)
-        payload = bulk_save_payload(context, body)
-        current = None
     else:
         raise FileNotFoundError(f"Unknown catalogue service route: {api_path}")
     complete_saved_catalogue_edit(

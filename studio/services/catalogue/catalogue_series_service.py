@@ -6,7 +6,6 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from catalogue import catalogue_source_mutation as source_mutation
-from catalogue.catalogue_revisions import record_hash
 from catalogue import catalogue_transactions as transactions
 from catalogue.catalogue_service_context import (
     CatalogueWriteContext,
@@ -52,7 +51,6 @@ def series_create_payload(
     payload: dict[str, Any] = {
         "ok": True,
         "series_id": series_id,
-        "record_hash": record_hash(mutation_plan.updated_record),
         "created": True,
         "changed": True,
         "changed_fields": mutation_plan.changed_fields,
@@ -106,7 +104,6 @@ def series_save_payload(
     payload: dict[str, Any] = {
         "ok": True, "series_id": series_id, "changed": plan.changed,
         "changed_fields": plan.changed_fields, "record": plan.updated_record,
-        "record_hash": record_hash(plan.updated_record),
         "_shared_changes": shared,
         "affected_work_ids": sorted(
             wid for wid, record in works_map.items() if record.get("series_id") == series_id

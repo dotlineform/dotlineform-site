@@ -56,17 +56,27 @@ const NEW_WORK_EDITABLE_FIELDS = Object.freeze([
 
 const WORK_READONLY_FIELDS = Object.freeze([]);
 
+const BULK_WORK_METADATA_FIELDS = Object.freeze([
+  WORK_FIELD_DEFINITIONS.title,
+  WORK_FIELD_DEFINITIONS.year,
+  WORK_FIELD_DEFINITIONS.year_display,
+  WORK_FIELD_DEFINITIONS.medium,
+  WORK_FIELD_DEFINITIONS.storage_location
+]);
+
 const WORK_SERIES_ID_RE = /^\d+$/;
 const WORK_DIMENSION_FIELD_KEYS = Object.freeze(["height_cm", "width_cm", "depth_cm"]);
 
 /**
- * Required metadata applies to editable Work modes; bulk fields retain their saved values.
- * @param {{required?: boolean | "new"}} field True requires the field in single/New mode; "new" limits it to creation.
+ * Bulk required-field feedback applies only to explicitly edited metadata.
+ * @param {{key: string, required?: boolean | "new"}} field True requires the field; "new" limits it to creation.
  * @param {"single" | "new" | "bulk"} mode Current Work editor mode.
+ * @param {Set<string>} [touchedFields] Explicit bulk edits; untouched fields retain each saved value.
  * @returns {boolean} Whether the editable field must have a value before Save.
  */
-function isWorkFieldRequired(field, mode) {
-  return mode !== "bulk" && (field.required === true || (field.required === "new" && mode === "new"));
+function isWorkFieldRequired(field, mode, touchedFields) {
+  if (mode === "bulk") return field.required === true && BULK_WORK_METADATA_FIELDS.includes(field) && Boolean(touchedFields?.has(field.key));
+  return field.required === true || (field.required === "new" && mode === "new");
 }
 
 function normalizeText(value) {
@@ -190,4 +200,4 @@ function suggestNextWorkId(workItems) {
   return String(maxNumericId + 1).padStart(5, "0");
 }
 
-export { NEW_WORK_EDITABLE_FIELDS, WORK_DIMENSION_FIELD_KEYS, WORK_EDITABLE_FIELDS, WORK_FIELD_DEFINITIONS, WORK_READONLY_FIELDS, WORK_SERIES_ID_RE, buildCreateWorkPayload, buildWorkDraftFromRecord, buildWorkRecordFromDraft, canonicalizeWorkScalar, cloneEmbeddedEntries, embeddedEntriesEqual, isWorkFieldRequired, normalizeSeriesId, normalizeText, normalizeWorkId, suggestNextWorkId };
+export { BULK_WORK_METADATA_FIELDS, NEW_WORK_EDITABLE_FIELDS, WORK_DIMENSION_FIELD_KEYS, WORK_EDITABLE_FIELDS, WORK_FIELD_DEFINITIONS, WORK_READONLY_FIELDS, WORK_SERIES_ID_RE, buildCreateWorkPayload, buildWorkDraftFromRecord, buildWorkRecordFromDraft, canonicalizeWorkScalar, cloneEmbeddedEntries, embeddedEntriesEqual, isWorkFieldRequired, normalizeSeriesId, normalizeText, normalizeWorkId, suggestNextWorkId };

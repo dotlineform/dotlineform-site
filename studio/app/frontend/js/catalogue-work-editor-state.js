@@ -97,6 +97,7 @@ export function createWorkEditorState(elements, options = {}) {
     bulkRecords: new Map(),
     bulkRecordHashes: new Map(),
     bulkTouchedFields: new Set(),
+    bulkMixedFields: new Set(),
     baselineDraft: null,
     draft: {},
     pendingAttachments: new Map(),

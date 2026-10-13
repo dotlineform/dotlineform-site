@@ -33,7 +33,7 @@ function applySeriesResult(state, response) {
     state.seriesById.delete(id);
     if (state.draft.series_id === id) state.draft.series_id = "";
   } else {
-    state.seriesById.set(id, { ...response.record, record_hash: response.record_hash });
+    state.seriesById.set(id, response.record);
     if (response.created && state.mode !== "bulk") state.draft.series_id = id;
   }
 }
@@ -45,9 +45,9 @@ function validateResponse(kind, requestedId, response) {
     || (!requestedId && !response.created)
     || (response.deleted && kind === "Series" && response.kind !== "series")
     || (!response.deleted && (response.record?.[key] !== id
-      || typeof response.record.title !== "string" || (kind === "Series" && !response.record_hash)
+      || typeof response.record.title !== "string"
       || (kind === "Gallery" && !Array.isArray(response.related_series_ids))))) {
-    throw new Error(`${kind} response is missing its exact record or revision.`);
+    throw new Error(`${kind} response is missing its exact record.`);
   }
 }
 

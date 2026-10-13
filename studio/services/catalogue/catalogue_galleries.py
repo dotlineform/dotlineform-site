@@ -26,16 +26,21 @@ class CatalogueGalleries:
         }
 
     def memberships_payload(self) -> dict[str, Any]:
-        return {
-            "header": {"schema": MEMBERSHIPS_SCHEMA},
-            "works": {wid: sorted(ids) for wid, ids in sorted(self.works.items())},
-        }
+        return gallery_memberships_payload(self.works)
 
     def payloads(self) -> dict[str, dict[str, Any]]:
         return {
             GALLERIES_FILE: self.definitions_payload(),
             MEMBERSHIPS_FILE: self.memberships_payload(),
         }
+
+
+def gallery_memberships_payload(works: Mapping[str, list[str]]) -> dict[str, Any]:
+    """Serialize Work-owned memberships independently of Gallery definitions."""
+    return {
+        "header": {"schema": MEMBERSHIPS_SCHEMA},
+        "works": {wid: sorted(ids) for wid, ids in sorted(works.items())},
+    }
 
 
 def validate_gallery_id(gallery_id: str) -> None:

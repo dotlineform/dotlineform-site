@@ -24,7 +24,6 @@ if str(STUDIO_DIR) not in sys.path:
     sys.path.insert(0, str(STUDIO_DIR))
 
 from catalogue import catalogue_write_service  # noqa: E402
-from catalogue.catalogue_revisions import CatalogueRevisionConflict  # noqa: E402
 from catalogue.catalogue_galleries import read_galleries, read_gallery_definitions, read_gallery_memberships  # noqa: E402
 from catalogue.catalogue_series_galleries import read_series_galleries  # noqa: E402
 from catalogue.catalogue_build_media import PIPELINE_CONFIG  # noqa: E402
@@ -116,12 +115,9 @@ def catalogue_post_response(
             raise ValueError("Refresh Catalogue cannot run as a dry run")
         return HTTPStatus.OK, refresh_catalogue(repo_root)
     if api_path in catalogue_write_service.SERVICE_POST_PATHS:
-        try:
-            return catalogue_write_service.handle_catalogue_post(
-                repo_root, api_path, body, dry_run=dry_run, attachments=attachments,
-            )
-        except CatalogueRevisionConflict as exc:
-            return HTTPStatus.CONFLICT, {"ok": False, "error": str(exc)}
+        return catalogue_write_service.handle_catalogue_post(
+            repo_root, api_path, body, dry_run=dry_run, attachments=attachments,
+        )
     raise FileNotFoundError(f"Unknown catalogue API route: {api_path}")
 
 

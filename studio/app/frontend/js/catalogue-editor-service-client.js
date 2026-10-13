@@ -17,7 +17,7 @@ export function saveCatalogueBulkRecords(payload) {
   return postJson(CATALOGUE_WRITE_ENDPOINTS.bulkSave, payload);
 }
 
-/** Delete exact Work IDs or one empty Series; Work deletion does not compare revisions. */
+/** Delete exact Work IDs or a UI-confirmed empty Series, without revision comparisons. */
 export function applyCatalogueDelete(payload) {
   return postJson(CATALOGUE_WRITE_ENDPOINTS.deleteApply, payload);
 }

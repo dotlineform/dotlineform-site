@@ -30,9 +30,9 @@ def build_work_search_item(work_id: str, record: Mapping[str, Any]) -> Dict[str,
 
 
 def build_series_search_item(series_id: str, record: Mapping[str, Any]) -> Dict[str, Any]:
+    """Project the saved identity/title consumed by Series authoring controls."""
     return {
         "series_id": series_id,
-        "record_hash": record_hash(record),
         "title": record["title"],
     }
 

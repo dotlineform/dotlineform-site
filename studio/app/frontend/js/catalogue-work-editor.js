@@ -60,7 +60,7 @@ import {
   openWorkSelection,
   setWorkSelectionPopupVisibility
 } from "./catalogue-work-selection.js";
-import { NEW_WORK_EDITABLE_FIELDS, WORK_DIMENSION_FIELD_KEYS, WORK_EDITABLE_FIELDS as EDITABLE_FIELDS, WORK_FIELD_DEFINITIONS, WORK_SERIES_ID_RE as SERIES_ID_RE, canonicalizeWorkScalar as canonicalizeScalar, embeddedEntriesEqual, isWorkFieldRequired, normalizeSeriesId, normalizeText, normalizeWorkId, suggestNextWorkId } from "./catalogue-work-fields.js";
+import { BULK_WORK_METADATA_FIELDS, NEW_WORK_EDITABLE_FIELDS, WORK_DIMENSION_FIELD_KEYS, WORK_EDITABLE_FIELDS as EDITABLE_FIELDS, WORK_FIELD_DEFINITIONS, WORK_SERIES_ID_RE as SERIES_ID_RE, canonicalizeWorkScalar as canonicalizeScalar, embeddedEntriesEqual, isWorkFieldRequired, normalizeSeriesId, normalizeText, normalizeWorkId, suggestNextWorkId } from "./catalogue-work-fields.js";
 import {
   bindWorkEditorEvents
 } from "./catalogue-work-editor-events.js";
@@ -152,7 +152,7 @@ function validateDraft(state) {
   const active = key => state.mode !== "bulk" || state.bulkTouchedFields.has(key);
   for (const field of Object.values(WORK_FIELD_DEFINITIONS)) {
     if (state.pendingWorkBatch && ["work_id", "title"].includes(field.key)) continue;
-    if (isWorkFieldRequired(field, state.mode) && !normalizeText(state.draft[field.key])) {
+    if (isWorkFieldRequired(field, state.mode, state.bulkTouchedFields) && !normalizeText(state.draft[field.key])) {
       // Missing required values block Save; bold labels convey the requirement.
       errors.set(field.key, "");
     }
@@ -162,7 +162,7 @@ function validateDraft(state) {
     if (!workId) errors.set("work_id", "");
     else if (state.workSearchById.has(workId)) errors.set("work_id", "Work id already exists.");
   }
-  if (active("year") && normalizeText(state.draft.year) && !/^-?\d+$/.test(state.draft.year)) errors.set("year", "Use a whole year.");
+  if (active("year") && normalizeText(state.draft.year) && (!/^-?\d+$/.test(state.draft.year) || !Number.isFinite(Number(state.draft.year)))) errors.set("year", "Use a whole year.");
   for (const key of WORK_DIMENSION_FIELD_KEYS) if (active(key) && normalizeText(state.draft[key]) && !Number.isFinite(Number(state.draft[key]))) errors.set(key, "Use a number or leave blank.");
   const series = normalizeText(state.draft.series_id);
   if (active("series_id") && series) {
@@ -326,11 +326,12 @@ function updateEditorState(state) {
 }
 
 function onFieldInput(state, fieldKey) {
-  if (state.mode === "bulk") return;
+  if (state.mode === "bulk" && !BULK_WORK_METADATA_FIELDS.some(field => field.key === fieldKey)) return;
   const node = state.fieldNodes.get(fieldKey);
   if (!node) return;
   clearActionMessages(state);
   state.draft[fieldKey] = getFieldNodeValue(node);
+  if (state.mode === "bulk") state.bulkTouchedFields.add(fieldKey);
   updateEditorState(state);
 }
 

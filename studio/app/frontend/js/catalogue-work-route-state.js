@@ -11,7 +11,6 @@ import { clearWorkMediaIntent } from "./catalogue-work-attachments.js";
 import {
   buildWorkDraftFromRecord,
   WORK_EDITABLE_FIELDS as EDITABLE_FIELDS,
-  canonicalizeWorkScalar as canonicalizeScalar,
   normalizeSeriesId,
   normalizeText,
   normalizeWorkId,
@@ -33,24 +32,26 @@ function buildDraftFromRecord(record) {
   });
 }
 
+/** Compare saved values exactly; Gallery editing starts from the membership intersection. */
 function buildBulkDraftFromRecords(records) {
   const drafts = records.map((record) => buildDraftFromRecord(record));
   const draft = {};
+  const mixedFields = new Set();
   EDITABLE_FIELDS.forEach((field) => {
     if (field.key === "gallery_ids") {
       draft.gallery_ids = (drafts[0]?.gallery_ids || []).filter(id => drafts.every(item => item.gallery_ids.includes(id)));
       return;
     }
-    const values = drafts.map((item) => canonicalizeScalar(field, item[field.key]));
-    const first = values[0] || "";
-    const allSame = values.every((value) => value === first);
+    const first = records[0]?.[field.key];
+    const allSame = records.every((record) => record[field.key] === first);
     if (allSame) {
       draft[field.key] = drafts[0][field.key];
     } else {
       draft[field.key] = "";
+      mixedFields.add(field.key);
     }
   });
-  return draft;
+  return { draft, mixedFields };
 }
 
 function syncUrl(workValue, mode = "") {
@@ -73,6 +74,7 @@ function resetBulkState(state) {
   state.bulkRecords = new Map();
   state.bulkRecordHashes = new Map();
   state.bulkTouchedFields = new Set();
+  state.bulkMixedFields = new Set();
 }
 
 const WORK_ROUTE_STATE = createCatalogueEditorRouteStateOptions({
@@ -125,10 +127,11 @@ export function setLoadedBulkWorks(state, workIds, recordsById, recordHashes, op
   state.bulkRecords = new Map(recordsById);
   state.bulkRecordHashes = new Map(recordHashes);
   const records = workIds.map((workId) => recordsById.get(workId)).filter(Boolean);
-  const bulkDraft = buildBulkDraftFromRecords(records);
+  const { draft: bulkDraft, mixedFields } = buildBulkDraftFromRecords(records);
   state.baselineDraft = { ...bulkDraft };
   state.draft = { ...bulkDraft };
   state.bulkTouchedFields = new Set();
+  state.bulkMixedFields = mixedFields;
   callback(options, "setOpenInputMode");
   callback(options, "applyDraftToInputs");
   callback(options, "clearReadonlyFields");
