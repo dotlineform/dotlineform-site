@@ -63,7 +63,7 @@ def _source_subject_context(resolved: ManagedDocumentCollection | ManagedDocumen
     """Expose only this owner's Subject authoring capabilities."""
     return {
         "subject_assignment_available": source_subject_assignment_available(resolved),
-        "folder_subject_supported": FOLDER_PATH_FIELD in collection_customisation_authoring_subject_fields(
+        "folder_subject_supported": bool(resolved.collection) and FOLDER_PATH_FIELD in collection_customisation_authoring_subject_fields(
             resolved.document_config.collection_customisation,
         ),
     }
@@ -72,7 +72,10 @@ def _source_subject_context(resolved: ManagedDocumentCollection | ManagedDocumen
 def _project_source_subject(
     resolved: ManagedDocumentCollection | ManagedDocumentTarget, front_matter: Dict[str, Any],
 ) -> str | None:
-    fields = collection_customisation_authoring_subject_fields(resolved.document_config.collection_customisation)
+    fields = (
+        collection_customisation_authoring_subject_fields(resolved.document_config.collection_customisation)
+        if resolved.collection else ()
+    )
     return project_document_subject(front_matter, folder_supported=not fields or FOLDER_PATH_FIELD in fields)
 
 

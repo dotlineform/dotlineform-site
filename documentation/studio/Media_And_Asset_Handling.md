@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260514-184303-7914e2
 title: Media And Asset Handling
 added_date: "2026-05-14 18:43:03"
-last_updated: "2026-10-13 18:25:53"
+last_updated: "2026-10-13 21:51:23"
 summary: Media intake, content interpretation, document representation, storage, link resolution, extension methods, and safety boundaries.
 parent_id: d-20260424-000000-50b63f
 
@@ -167,6 +167,8 @@ The selected file remains untouched, and Add file retains opaque bytes. Standalo
 Reimporting an image with the same normalized filename addresses the same asset in the exact configured owner and media family. Raster comparison uses converted WebP bytes, including when the selected input is already WebP. Matching stored bytes are reused without rewriting that artifact; changed bytes require the existing **Replace** confirmation before the awaited write. Mermaid compares and writes its canonical source and rendered SVG independently. Media is shared within its owner, so replacing an asset changes it for every document that references that identity. Different original source names can normalize to the same filename and receive the same collision treatment; `Photo.jpg` and `Photo.png` both address `photo.webp`. Choosing a distinct source basename is the author's way to retain both images. Thumbnail replacement remains the separately selected operation below.
 
 For raster, sanitized SVG and persistent Mermaid SVG images, the server returns one canonical `[[image:<logical-path>|...]]` token through the same preview/apply owner. The token contains required authored alt and explicit placement/fill-width choices, with optional caption and summary. Unchecked **Add caption** omits the caption while preserving independent summary and layout choices. Build creates escaped static figure/image markup; the portable stylesheet owns full-column, equal-column split and natural-width presentation. Public-composition rules own the narrow-screen image-first fallback; local readers retain the desktop presentation. The browser submits no HTML, classes or dimensions. [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md#docs-owned-images) owns the grammar, guarded reopening/editing and consumer boundaries. Existing Markdown/HTML image source remains supported without migration.
+
+The shared reader stylesheet gives in-document images 6px rounded corners through `--docs-viewer-document-image-radius`, covering Markdown/HTML images and Docs-owned or Catalogue Work image figures. Media View and Catalogue Entry full images keep square corners; their thumbnail images and collection/report thumbnails retain their existing corner styles. This is presentation-only and changes no media bytes or source markup. Set the document-image token to `0` to return document images to square corners.
 
 Collection records reuse the same inline-raster and per-document apply paths. A declared package asset without an authorized mapping remains a warning and preserves its source reference; a document overwrite decision does not grant asset overwrite authority.
 
