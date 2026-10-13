@@ -1092,16 +1092,6 @@ def validate_snapshot_files(
     for relative_path, expected_content in expected_files.items():
         if (destination_root / relative_path).read_bytes() != expected_content:
             raise ValueError(f"snapshot content validation failed: {relative_path.as_posix()}")
-    summary = load_existing_snapshot_summary(destination_root)
-    if summary is None:
-        raise ValueError("snapshot provenance validation failed")
-    expected_selection_revision = _revision({"doc_ids": plan.doc_ids})
-    if (
-        summary["selection_kind"] != plan.selection_kind
-        or summary["document_count"] != len(plan.doc_ids)
-        or summary["selection_revision"] != expected_selection_revision
-    ):
-        raise ValueError("snapshot provenance does not match the planned selection")
 
 
 def normalize_snapshot_apply_revision(value: Any, *, field: str) -> str:
@@ -1124,17 +1114,7 @@ def normalize_snapshot_export_date(value: Any) -> date:
     return parsed
 
 
-def ensure_snapshot_target_unchanged(plan: StaticHtmlSnapshotPlan) -> None:
-    state, revision, _summary = inspect_snapshot_destination(plan.destination_root)
-    if state != plan.target_state or not hmac.compare_digest(revision, plan.target_revision):
-        raise StaticHtmlSnapshotApplyConflict(
-            "Snapshot destination changed after preview; preview and confirm again.",
-            plan=plan,
-        )
-
-
 def install_snapshot_in_place(plan: StaticHtmlSnapshotPlan, files: dict[Path, bytes]) -> bool:
-    ensure_snapshot_target_unchanged(plan)
     replaced = plan.target_state != "absent"
     if plan.target_state == "absent":
         try:
@@ -1204,9 +1184,6 @@ def apply_static_html_snapshot(repo_root: Path, body: dict[str, Any]) -> dict[st
     workspace.root.mkdir(exist_ok=True)
     replaced = install_snapshot_in_place(plan, files)
 
-    target_state, target_revision, existing_snapshot = inspect_snapshot_destination(plan.destination_root)
-    if target_state != "recognized" or existing_snapshot is None:
-        raise RuntimeError("installed snapshot failed post-apply provenance validation")
     document_label = "document" if len(plan.doc_ids) == 1 else "documents"
     return {
         "ok": True,
@@ -1225,7 +1202,6 @@ def apply_static_html_snapshot(repo_root: Path, body: dict[str, Any]) -> dict[st
         "destination_label": plan.destination_label,
         "replaced": replaced,
         "plan_revision": plan.plan_revision,
-        "target_revision": target_revision,
         "summary_text": f"Exported {len(plan.doc_ids)} {document_label} to {plan.destination_label}.",
     }
 
@@ -1252,26 +1228,20 @@ def workspace_static_html_export_capability(
     *,
     workspace_available: bool,
 ) -> dict[str, Any]:
+    """Check configured input locations; the loaded Index and explicit Export own selection."""
     available = False
-    document_count = 0
     if not workspace_available:
         error = "Snapshot workspace is unavailable."
     else:
         try:
             paths = resolve_snapshot_input_paths(repo_root, config)
-            index_tree = load_index_tree(paths.index_tree_path)
-            doc_ids = collect_doc_ids_from_tree(index_tree.get("docs"))
-            for doc_id in doc_ids:
-                load_doc_payload(paths.payload_root, doc_id)
-            document_count = len(doc_ids)
-            available = document_count > 0
-            error = "" if available else "No generated documents are available in the workspace."
+            available = paths.index_tree_path.is_file() and paths.payload_root.is_dir()
+            error = "" if available else "Generated documents are unavailable in the workspace."
         except (FileNotFoundError, OSError, ValueError, json.JSONDecodeError):
             error = "Generated documents are unavailable in the workspace."
     return {
         "preview": available,
         "apply": available,
-        "document_count": document_count,
         "default_doc_id": config.default_doc_id,
         "error": error,
     }

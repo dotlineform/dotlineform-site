@@ -1,6 +1,5 @@
 import {
-  getDocumentPackageConfig,
-  getPackageDocuments,
+  readDocumentPackagePrepareOptions,
   prepareDocumentPackage
 } from "./document-package-client.js";
 import {
@@ -295,7 +294,6 @@ function openPrepareOptions(options) {
           profile,
           documents: options.documents,
           effectiveDocIds: state.projection.docIds,
-          missingSummaryOnly: state.projection.missingSummaryOnly,
           targetFormat: state.choices.targetFormat,
           contentFormat: state.choices.contentFormat
         });
@@ -346,8 +344,7 @@ export async function openDocumentPackagePrepareWorkflow(options = {}) {
   const docIds = normalizeDocIds(options.docIds);
   const callbacks = options.callbacks || {};
   const client = {
-    getConfig: getDocumentPackageConfig,
-    getDocuments: getPackageDocuments,
+    readOptions: readDocumentPackagePrepareOptions,
     prepare: prepareDocumentPackage,
     ...(options.client || {})
   };
@@ -365,16 +362,12 @@ export async function openDocumentPackagePrepareWorkflow(options = {}) {
     return { confirmed: false, error };
   }
 
-  let configPayload;
-  let documentsPayload;
+  let optionsPayload;
   let loadError = null;
   try {
     setBusy(true);
     setMessage("Loading package options...", false);
-    [configPayload, documentsPayload] = await Promise.all([
-      client.getConfig(collection),
-      client.getDocuments(collection)
-    ]);
+    optionsPayload = await client.readOptions(docIds, collection);
   } catch (error) {
     loadError = error;
   } finally {
@@ -388,28 +381,25 @@ export async function openDocumentPackagePrepareWorkflow(options = {}) {
   }
 
   try {
-    const workspace = configPayload && configPayload.workspace;
+    const workspace = optionsPayload.workspace;
     if (!workspace || workspace.available !== true) {
       throw new Error(packageText(workspace && workspace.message) || "The document-package workspace is unavailable.");
     }
     if (collection) {
       if (
-        packageText(configPayload && configPayload.collection).toLowerCase() !== collection
+        optionsPayload.collection !== collection
       ) {
         throw new Error("Package configuration did not match the active collection.");
       }
       if (
-        packageText(documentsPayload && documentsPayload.collection).toLowerCase() !== collection
-        || documentsPayload.flat_collection !== true
+        optionsPayload.flat_collection !== true
       ) {
         throw new Error("Package documents did not match the active flat collection.");
       }
     }
-    const profiles = Array.isArray(configPayload.profiles) ? configPayload.profiles : [];
+    const profiles = optionsPayload.profiles;
     if (!profiles.length) throw new Error("No document-package profiles are available.");
-    const documents = Array.isArray(documentsPayload && documentsPayload.records)
-      ? documentsPayload.records
-      : [];
+    const documents = optionsPayload.records;
     const eligibility = documentPackageSelectionEligibility(documents, docIds);
     if (eligibility.ineligibleDocIds.length) {
       throw new Error(

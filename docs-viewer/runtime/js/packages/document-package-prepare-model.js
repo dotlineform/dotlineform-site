@@ -1,6 +1,5 @@
 import {
-  packageText,
-  profileForId
+  packageText
 } from "./document-package-view.js";
 
 function normalizeIds(values) {
@@ -13,11 +12,11 @@ function normalizeIds(values) {
 }
 
 function documentId(record) {
-  return packageText(record && (record.doc_id || record.id));
+  return record.doc_id;
 }
 
 export function documentPackageProfile(profiles, profileId) {
-  return profileForId(profiles, profileId) || (Array.isArray(profiles) ? profiles[0] : null) || null;
+  return profiles.find((profile) => profile.profile_id === profileId) || null;
 }
 
 export function documentPackageTargetFormats(profile) {
@@ -72,7 +71,6 @@ export function documentPackageSelectionEligibility(documents, checkedDocIds) {
   const checked = normalizeIds(checkedDocIds);
   const selectable = new Set(
     (Array.isArray(documents) ? documents : [])
-      .filter((record) => record && record.selectable !== false)
       .map(documentId)
       .filter(Boolean)
   );
@@ -86,7 +84,6 @@ export function expandDocumentPackageSelection(documents, checkedDocIds, include
   const eligibility = documentPackageSelectionEligibility(documents, checkedDocIds);
   const allowed = new Set(
     (Array.isArray(documents) ? documents : [])
-      .filter((record) => record && record.selectable !== false)
       .map(documentId)
       .filter(Boolean)
   );
@@ -164,13 +161,6 @@ export function createDocumentPackagePrepareRequest(options = {}) {
   if (!profile || !packageText(profile.profile_id)) throw new Error("A document-package profile is required.");
   if (!effectiveDocIds.length) throw new Error("No documents remain for package preparation.");
 
-  const eligibility = documentPackageSelectionEligibility(options.documents, effectiveDocIds);
-  if (eligibility.ineligibleDocIds.length) {
-    throw new Error(
-      "Target documents are unavailable for package preparation: " + eligibility.ineligibleDocIds.join(", ")
-    );
-  }
-
   const targetFormats = documentPackageTargetFormats(profile);
   const requestedTargetFormat = packageText(options.targetFormat) || packageText(profile.target_format) || targetFormats[0];
   if (!targetFormats.includes(requestedTargetFormat)) {
@@ -186,8 +176,6 @@ export function createDocumentPackagePrepareRequest(options = {}) {
   const request = {
     profile_id: packageText(profile.profile_id),
     doc_ids: effectiveDocIds,
-    select_all: false,
-    missing_summary_only: options.missingSummaryOnly === true,
     target_format: requestedTargetFormat,
     content_format: requestedContentFormat,
     dry_run: false

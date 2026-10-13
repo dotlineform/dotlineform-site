@@ -55,11 +55,21 @@ export function createDocsViewerManagementSettingsWorkflow(options = {}) {
     refs.saveButton.disabled = Boolean(management.managementBusy) || !fieldState();
   }
 
+  function validate(changes) {
+    var docId = changes.default_doc_id;
+    if (docId && !callbacks.documentExists(docId)) {
+      modalController().setSettingsValidationError("Choose an ordinary document ID from the Index, or leave blank.");
+      return false;
+    }
+    return true;
+  }
+
   return {
     changes: changes,
     close: close,
     fieldState: fieldState,
     open: open,
-    render: render
+    render: render,
+    validate: validate
   };
 }

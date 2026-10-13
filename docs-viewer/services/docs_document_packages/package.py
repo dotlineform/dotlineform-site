@@ -6,10 +6,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Dict
 
-from docs_document_packages.export import (
-    build_export,
-    parse_doc_ids as parse_export_doc_ids,
-)
+from docs_document_packages.export import build_selected_export
 from docs_document_packages.returned_common import (
     DOCS_REVIEW_CAPABILITY,
     RETURN_IMPORT_CAPABILITY,
@@ -19,118 +16,22 @@ from docs_document_packages.returned_profiles import (
     supported_return_import_profile_ids,
 )
 from docs_document_packages.returned_parser import parse_staged_import
-from docs_document_packages import source_context
 from docs_document_packages.metadata import list_staged_files_with_metadata
 import docs_source_model as source_model
 from docs_workspace_config import load_docs_working_config
-
-
-def document_selectable_record(doc: Dict[str, Any]) -> Dict[str, Any]:
-    doc_id = str(doc.get("doc_id") or "").strip()
-    title = str(doc.get("title") or doc_id).strip()
-    selectable = bool(doc_id)
-    issues: list[Dict[str, str]] = []
-    record = {
-        "id": doc_id,
-        "name": title,
-        "doc_id": doc_id,
-        "title": title,
-        "type": "document",
-        "meta": doc_id,
-        "parent_id": str(doc.get("parent_id") or "").strip(),
-        "selectable": selectable,
-        "children": [],
-        "issues": issues,
-        "content_text_length": int(doc.get("content_text_length") or 0),
-        "summary": str(doc.get("summary") or ""),
-    }
-    return record
-
-
-def selectable_document_records(
-    repo_root: Path,
-    *,
-    selection_model: str,
-    collection: str = "",
-) -> Dict[str, Any]:
-    normalized_collection = str(collection or "").strip().lower()
-    docs = source_context.load_document_package_source_records(
-        repo_root,
-        normalized_collection,
-    )
-    records = [
-        document_selectable_record(
-            {
-                "doc_id": item.doc_id,
-                "title": item.title,
-                "parent_id": item.parent_id,
-                "content_text_length": item.content_text_length,
-                "summary": item.summary,
-            }
-        )
-        for item in docs
-    ]
-    payload: Dict[str, Any] = {
-        "ok": True,
-        "selection_model": selection_model,
-        "records": records,
-        "docs": records,
-        "source": {
-            "kind": "docs_source",
-        },
-    }
-    if normalized_collection:
-        payload.update({
-            "collection": normalized_collection,
-            "flat_collection": True,
-        })
-        payload["source"]["kind"] = "docs_collection_source"
-        payload["source"]["collection"] = normalized_collection
-    return payload
+from docs_management_document_target import ManagedDocumentCollection
 
 
 def build_document_package(
-    repo_root: Path,
-    *,
-    data_domain: str,
-    config_id: str,
-    raw_doc_ids: Any,
-    select_all: bool,
-    missing_summary_only: Any,
-    dry_run: bool,
-    config_path: str,
-    target_format: str,
-    content_format: str,
-    output_root: Path,
-    metadata_root: Path,
-    collection: str = "",
+    repo_root: Path, *, owner: ManagedDocumentCollection, config_id: str,
+    doc_ids: list[str], dry_run: bool, target_format: str, content_format: str,
+    output_root: Path, metadata_root: Path,
 ) -> Dict[str, Any]:
-    normalized_collection = str(collection or "").strip().lower()
-    if not config_id:
-        raise ValueError("config_id is required")
-    if raw_doc_ids is None:
-        raw_doc_ids = []
-    if not isinstance(raw_doc_ids, list):
-        raise ValueError("doc_ids must be a list")
-    doc_ids = parse_export_doc_ids([str(doc_id or "") for doc_id in raw_doc_ids])
-    if missing_summary_only is not None and not isinstance(missing_summary_only, bool):
-        raise ValueError("missing_summary_only must be true, false, or null")
-
-    return build_export(
-        repo_root=repo_root,
-        config_id=config_id,
-        collection=normalized_collection,
-        data_domain=data_domain,
-        selected_doc_ids=doc_ids,
-        select_all=select_all,
-        missing_summary_only=missing_summary_only,
-        expand_document_tree_descendants=False,
-        write=not dry_run,
-        config_path=config_path,
-        target_format=target_format or None,
-        content_format=content_format or None,
-        output_root=output_root,
-        metadata_root=metadata_root,
+    """Produce exactly the application's selected records through the shared exporter."""
+    return build_selected_export(
+        repo_root=repo_root, owner=owner, config_id=config_id, doc_ids=doc_ids,
+        write=not dry_run, target_format=target_format, content_format=content_format,
+        output_root=output_root, metadata_root=metadata_root,
     )
 
 

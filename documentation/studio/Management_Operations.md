@@ -3,12 +3,18 @@ draft: false
 doc_id: d-20260519-202931-66c794
 title: Management Operations
 added_date: "2026-05-19 20:29:31"
-last_updated: "2026-10-13 15:47:31"
+last_updated: "2026-10-13 20:05:39"
 parent_id: d-20260424-000000-04d75e
 ---
 # Docs Viewer Management Operations
 
 The single configured Docs workspace owns Working source/generated operations. [Builder](Builder.md) owns Working generation and the Preview/publication lifecycle. Working Delete updates its own source/generated products; Publish owns Preview/public distribution. Public document-location JSON, its builder/picker and the legacy Catalogue document-URL refresh remain retired.
+
+## Settings
+
+Settings edits the configured ordinary default document. The browser checks a nonblank ID against its already-loaded Index; blank uses the first Index root. The service retains editable-field/type/immutable-ID syntax checks, persists changed Working configuration and carries the resolved workspace directly into browser-configuration projection. It does not scan source documents or run document, Search or media generation. An explicit unchanged Save still projects browser configuration, allowing completion after a prior projection failure without rewriting source configuration.
+
+The response distinguishes committed configuration from completed projection and names the failing phase. The browser applies the supplied default locally, including after a saved-but-projection-failed response, without configuration, Index or displayed-document GETs. The displayed target and position remain unchanged. A projection failure requires correction and another explicit Settings Save; no automatic recovery build or retry runs. [User Facing Rules](data/User_Facing_Rules.md) M.05 records the implementation evidence and pending manual acceptance.
 
 ## Security Constraints
 

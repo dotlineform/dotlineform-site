@@ -64,8 +64,7 @@ def render_doc_html(context: Any, doc_id: str) -> str:
     if normalized_doc_id not in context.render_cache:
         doc = source_doc_for_id(context, normalized_doc_id)
         package_doc = replace(doc, summary=flatten_summary(doc.summary))
-        payload = context.builder.item_entry(package_doc, context.source_docs_by_id)
-        content_html = str(payload.get("content_html") or "")
+        content_html = context.render_document(package_doc)
         context.render_cache[normalized_doc_id] = content_html.replace(
             REPORT_HOST_HTML,
             "",

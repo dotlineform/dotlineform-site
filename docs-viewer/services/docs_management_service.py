@@ -199,11 +199,7 @@ def docs_management_post_response(
             changes,
             dry_run=dry_run,
         )
-        if payload.get("requires_rebuild") and not dry_run:
-            payload["rebuild"] = write_rebuild.rebuild_working_outputs(repo_root)
-        else:
-            payload["rebuild"] = None
-        if payload.get("changed") and not dry_run:
+        if payload.get("committed") and payload.get("changed") and not dry_run:
             log_event(
                 repo_root,
                 "docs_source_config_settings",
@@ -213,7 +209,7 @@ def docs_management_post_response(
                 },
             )
         payload["dry_run"] = dry_run
-        return HTTPStatus.OK, payload
+        return (HTTPStatus.OK if payload["ok"] else HTTPStatus.INTERNAL_SERVER_ERROR), payload
     if path == routes.IMPORT_SOURCE_PATH:
         payload = handle_import_source(repo_root, body, dry_run)
         return HTTPStatus.OK, payload

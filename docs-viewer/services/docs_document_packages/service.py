@@ -24,16 +24,15 @@ from docs_document_packages.returned_common import (
 from docs_document_packages.package import (
     build_document_package,
     list_returned_document_packages,
-    selectable_document_records,
 )
 from docs_document_packages.review_sources import create_review_source_folder
 from docs_document_packages.workspace import configured_workspace_paths, workspace_status
 from docs_import_document_package_content import normalize_documents_import_content
 from docs_management_context import log_event
 from docs_management_document_target import resolve_managed_document_collection
+from docs_document_packages.selected_sources import selected_ids, option_records
 
 
-DOCUMENTS_DATA_DOMAIN = "documents"
 FORBIDDEN_REQUEST_FIELDS = {
     "app",
     "adapter_id",
@@ -44,7 +43,6 @@ FORBIDDEN_REQUEST_FIELDS = {
     "scope",
     "sub_scope",
 }
-PACKAGE_COLLECTION_ALIAS_FIELDS = {"scope", "sub_scope", "parent_scope"}
 
 
 def query_value(params: dict[str, list[str]], key: str) -> str:
@@ -66,15 +64,6 @@ def dry_run_value(body: dict[str, Any]) -> bool:
     value = body.get("dry_run", False)
     if not isinstance(value, bool):
         raise ValueError("dry_run must be true or false")
-    return value
-
-
-def optional_boolean_value(body: dict[str, Any], key: str) -> bool | None:
-    if key not in body:
-        return None
-    value = body.get(key)
-    if not isinstance(value, bool):
-        raise ValueError(f"{key} must be true or false")
     return value
 
 
@@ -115,63 +104,30 @@ def profile_contract(
     return contract
 
 
-def config_payload(
-    repo_root: Path,
-    params: dict[str, list[str]] | None = None,
-) -> dict[str, Any]:
-    collection = None
-    request_params = params or {}
-    if "collection" in request_params:
-        collection = resolve_managed_document_collection(
-            repo_root,
-            collection=query_value(request_params, "collection"),
-        )
+def prepare_options(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
+    """Resolve profiles and metadata for one captured selection without rendering."""
+    if set(body) - {"collection"} != {"doc_ids"}:
+        raise ValueError("Package options require doc_ids and optional collection")
+    owner = resolve_managed_document_collection(repo_root, collection=body.get("collection"))
+    doc_ids = selected_ids(owner, body["doc_ids"])
     profile_payload = load_config_file(repo_root)
     errors, warnings = validate_full_config_payload(profile_payload)
     if errors:
         raise ValueError("document package profiles are invalid: " + "; ".join(errors))
     status = workspace_status(repo_root)
-    payload = {
-        "ok": True,
+    return {
+        "ok": True, "collection": owner.collection, "flat_collection": bool(owner.collection),
         "profiles": [
             profile_contract(
-                config,
-                return_import_enabled=(
-                    collection is None
-                    or collection.document_config.supports_return_import
-                ),
-                flat_collection=collection is not None,
+                config, return_import_enabled=not owner.collection or owner.document_config.supports_return_import,
+                flat_collection=bool(owner.collection),
             )
-            for config in profile_payload.get("configs", [])
-            if isinstance(config, dict) and config.get("enabled") is not False
+            for config in profile_payload["configs"] if config.get("enabled") is not False
         ],
-        "workspace": {
-            "available": bool(status.get("available")),
-            "message": str(status.get("message") or ""),
-        },
+        "workspace": {"available": status["available"], "message": status["message"]},
         "warnings": warnings,
+        "records": option_records(owner, doc_ids) if status["available"] else [],
     }
-    if collection is not None:
-        payload.update({
-            "collection": collection.collection,
-            "flat_collection": True,
-        })
-    return payload
-
-
-def documents_payload(repo_root: Path, params: dict[str, list[str]]) -> dict[str, Any]:
-    collection = ""
-    if "collection" in params:
-        resolved_collection = resolve_managed_document_collection(
-            repo_root,
-            collection=query_value(params, "collection"),
-        )
-        collection = resolved_collection.collection
-    return selectable_document_records(
-        repo_root,
-        collection=collection,
-        selection_model="collection_documents" if collection else "documents",
-    )
 
 
 def returned_payload(repo_root: Path, params: dict[str, list[str]]) -> dict[str, Any]:
@@ -221,29 +177,15 @@ def get_payload(
         raise ValueError("scope and stage are retired; use an optional collection")
     if "sub_scope" in params:
         raise ValueError("sub_scope is retired; use collection")
-    if path == routes.CONFIG_PATH:
-        return config_payload(repo_root, params)
-    if path == routes.DOCUMENTS_PATH:
-        return documents_payload(repo_root, params)
     if path == routes.RETURNED_PATH:
         return returned_payload(repo_root, params)
     raise FileNotFoundError("Not found")
 
 
 def prepare_package(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
-    if "include_non_viewable" in body or "include_non_publishable" in body:
-        raise ValueError(
-            "publication eligibility filters are not accepted for package preparation"
-        )
-    collection_aliases = sorted(
-        field for field in PACKAGE_COLLECTION_ALIAS_FIELDS if field in body
-    )
-    if collection_aliases:
-        raise ValueError(
-            "document package prepare accepts only optional collection "
-            "for collection identity: "
-            + ", ".join(collection_aliases)
-        )
+    required = {"profile_id", "doc_ids", "target_format", "content_format"}
+    if not required <= set(body) or set(body) - required - {"collection", "dry_run"}:
+        raise ValueError("Package Prepare requires profile_id, exact doc_ids, target_format and content_format")
     resolved_collection = resolve_managed_document_collection(
         repo_root,
         collection=body.get("collection") if "collection" in body else None,
@@ -252,27 +194,15 @@ def prepare_package(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     profile_id = str(body.get("profile_id") or "").strip()
     if not profile_id:
         raise ValueError("profile_id is required")
-    doc_ids = body.get("doc_ids", [])
-    if not isinstance(doc_ids, list):
-        raise ValueError("doc_ids must be a list")
-    select_all = body.get("select_all", False)
-    if not isinstance(select_all, bool):
-        raise ValueError("select_all must be true or false")
-    if collection and select_all:
-        raise ValueError("collection package preparation requires select_all false")
+    doc_ids = selected_ids(resolved_collection, body["doc_ids"])
     dry_run = dry_run_value(body)
-    missing_summary_only = optional_boolean_value(body, "missing_summary_only")
     roots = configured_workspace_paths(repo_root)
     payload = build_document_package(
         repo_root,
-        collection=collection,
-        data_domain=DOCUMENTS_DATA_DOMAIN,
+        owner=resolved_collection,
         config_id=profile_id,
-        raw_doc_ids=doc_ids,
-        select_all=select_all,
-        missing_summary_only=missing_summary_only,
+        doc_ids=doc_ids,
         dry_run=dry_run,
-        config_path="",
         target_format=str(body.get("target_format") or "").strip(),
         content_format=str(body.get("content_format") or "").strip(),
         output_root=roots.exports,
@@ -383,7 +313,9 @@ def post_response(
     if "stage" in body:
         raise ValueError("stage is retired from document package requests")
     require_direct_request(body)
-    if path == routes.PREPARE_PATH:
+    if path == routes.PREPARE_OPTIONS_PATH:
+        payload = prepare_options(repo_root, body)
+    elif path == routes.PREPARE_PATH:
         payload = prepare_package(repo_root, body)
     elif path == routes.RETURNED_REVIEW_PATH:
         payload = review_returned(repo_root, body)
@@ -395,4 +327,4 @@ def post_response(
     )
 
 
-__all__ = ["config_payload", "get_payload", "post_response"]
+__all__ = ["get_payload", "post_response"]

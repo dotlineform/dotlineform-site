@@ -6,6 +6,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 import sys
+from typing import Callable
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DOCS_BUILD_DIR = REPO_ROOT / "docs-viewer" / "build"
@@ -13,6 +14,7 @@ if str(DOCS_BUILD_DIR) not in sys.path:
     sys.path.insert(0, str(DOCS_BUILD_DIR))
 
 from build_docs import DocsDataBuilder, DocRecord  # noqa: E402
+from docs_builder.source import DocumentIdentity  # noqa: E402
 from docs_builder.collection import CollectionDocsBuilder  # noqa: E402
 from docs_builder.related_links import prepare_related_links  # noqa: E402
 from docs_management_document_target import resolve_managed_document_collection  # noqa: E402
@@ -36,13 +38,14 @@ class DocumentPackageSourceContext:
     return_import_enabled: bool
     workspace_config: DocsStageConfig
     source_root: Path
-    builder: DocsDataBuilder | CollectionDocsBuilder
+    builder: DocsDataBuilder | CollectionDocsBuilder | None
     source_docs: list[DocRecord]
     records: list[DocumentPackageSourceRecord]
     records_by_id: dict[str, DocumentPackageSourceRecord]
-    source_docs_by_id: dict[str, DocRecord]
+    source_docs_by_id: dict[str, DocumentIdentity]
     children_by_parent: dict[str, list[DocumentPackageSourceRecord]]
     render_cache: dict[str, str]
+    render_document: Callable[[DocRecord], str] | None
 
 
 def source_file_path(context: DocumentPackageSourceContext, doc: DocRecord) -> Path:
@@ -102,6 +105,7 @@ def load_document_package_source_context(
         source_docs_by_id=source_docs_by_id,
         children_by_parent={},
         render_cache={},
+        render_document=lambda doc: builder.item_entry(doc, source_docs_by_id)["content_html"],
     )
 
     for doc in builder.ordered_docs_for_index(source_docs):
@@ -124,10 +128,3 @@ def load_document_package_source_context(
         children_by_parent.setdefault(record.parent_id, []).append(record)
     context.children_by_parent = children_by_parent
     return context
-
-
-def load_document_package_source_records(
-    repo_root: Path,
-    collection: str = "",
-) -> list[DocumentPackageSourceRecord]:
-    return load_document_package_source_context(repo_root, collection).records

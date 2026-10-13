@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260503-141500-98fa03
 title: Package Prepare Profiles
 added_date: "2026-05-03 14:15:00"
-last_updated: "2026-08-07 22:28:08"
+last_updated: "2026-10-13 20:05:39"
 parent_id: d-20260424-000000-50b63f
 ---
 # Package Prepare Profiles
@@ -12,30 +12,23 @@ parent_id: d-20260424-000000-50b63f
 
 `docs-viewer/config/document-packages/profiles.json` defines the fixed package shapes supported by integrated Docs Viewer. The document-package engine performs semantic validation; there is no separate profile schema.
 
-The [Prepare Package](Package_Prepare.md) Action workflow receives a browser-safe projection from `GET /docs/packages/config`. It must not fetch this source file directly.
+The [Prepare Package](Package_Prepare.md) workflow receives profiles and captured-target metadata from one `POST /docs/packages/prepare-options`. It does not fetch this source file directly. The separate config/documents GET routes are retired without aliases.
 
 ## Current Profiles
 
 | Profile | Purpose | Container/content | Return path |
 | --- | --- | --- | --- |
-| `document-content` | selected document context/body rows for external review | JSONL or JSON; rendered-derived Markdown or plain text; optional missing-summary and non-publishable filters | supported for returned whole-package review and validated Docs Review projection; full Docs Viewer Import owns apply |
-| `document-tree` | complete selected hierarchy context | nested JSON tree; descendants and non-publishable documents included | export only |
+| `document-content` | selected document context/body rows for external review | JSONL or JSON; rendered-derived Markdown or plain text; optional modal missing-summary filter | supported for returned whole-package review and validated Docs Review projection when the exact collection also opts in; full Docs Viewer Import owns apply |
+| `document-tree` | complete selected hierarchy context | nested JSON tree without body rendering; ordinary subtree descendants included | export only |
 
-Profile IDs describe package shape, not Docs Viewer scope. Direct requests
-supply `scope`, optional configured `sub_scope`, and explicit `doc_ids` or
-top-level `select_all`; current source context supplies documents. Sub-scope
-requests reject `select_all`.
-
-The table's return paths apply to top-level scope preparation. A sub-scope
-projection forces every enabled profile to `supports_return_import: false`
-without mutating stored profile configuration.
+Profile IDs describe package shape, independently of configured collection identity. Application Prepare submits final explicit `doc_ids`, `profile_id`, target/content formats and optional exact `collection`; Working is resolved at the service. Scope/stage/sub-scope aliases and application `select_all`/filter flags are retired. Both the profile and exact named collection must opt in to returned Import; ordinary packages retain the profile's capability.
 
 ## What A Profile May Configure
 
 - label/description/enabled state and domain;
 - container format and record shape;
 - content format for body strings;
-- explicit/all-matching selection and descendant/non-publishable behaviour;
+- supported selection choices and descendant requirements;
 - output filename pattern below the configured export root;
 - document field mapping and supported transforms;
 - character/document limits and truncation policy;
@@ -48,18 +41,14 @@ Exact keys, mappings, transforms, and current values belong in the JSON and vali
 
 The browser-safe profile projection declares which options the compact **Prepare package** modal may show and their defaults.
 
-| Profile | Descendants | Missing summaries | Non-publishable documents |
+| Profile | Ordinary descendants | Missing summaries | Draft/publication-excluded documents |
 | --- | --- | --- | --- |
-| `document-content` | on by default, user may change | supported, off by default | supported, on by default |
-| `document-tree` | required on | unsupported | always included |
+| `document-content` | included; fixed | supported, off by default | included |
+| `document-tree` | included; fixed | unsupported | included |
 
-For the content profile, `missing_summary_only` means source `summary` metadata is empty after trimming whitespace. `include_non_publishable` is a package-composition choice, not a Publish mutation or privacy override. Local package records omit publishability, so this filter has no local rows to remove.
+For the content profile, the modal's missing-summary choice means source `summary` metadata is empty after trimming whitespace. Draft and publication eligibility do not filter package membership. Flat collection targets have no descendant expansion; filtering can subtract only from their exact checked IDs.
 
-The modal sends the final effective explicit ids plus both supported filter choices. The service revalidates those ids against current source without adding documents. Both profiles currently have `max_documents: null` and `max_total_chars: null`; only the content profile's 50,000-character per-document truncation is active.
-
-For a flat sub-scope collection, descendant selection is hidden and disabled.
-Missing-summary and non-publishable filters may only subtract from the exact
-checked child IDs.
+The modal sends final effective explicit IDs and supported formats. Application Prepare consumes that choice without reapplying filters or limits. Both profiles currently have `max_documents: null` and `max_total_chars: null`; only the content profile's 50,000-character per-document truncation is active. CLI selection retains its separate explicit/all/summary owner.
 
 ## Content Method
 
@@ -77,16 +66,12 @@ The separate full-source export delivery owns any future exact Markdown/assets p
 
 `workflow.supports_return_import` is a gate, not an implementation switch. A profile also needs a supported parser/review/action family in code. Export-only files retain provenance but are kept out of the actionable returned list.
 
-Sub-scope preparation is an additional collection-level export-only gate.
-Returned listing, Review Package, and Docs Import reject trusted child metadata
-even when the underlying stored profile is return-enabled for top-level use.
-
-The legacy default is return-enabled when the flag is absent; new/export-only profiles should set `false` explicitly so omission cannot accidentally widen intake.
+Named-collection returned Import requires the exact collection's `supports_return_import` as well as the profile's capability. Returned listing, Docs Review and Import retain trusted provenance and complete-package validation. Export-only profiles explicitly set `false`; absent flags do not opt in.
 
 ## Change Method
 
 1. Decide whether the change is an option the documents family already implements.
-2. Update config and semantic package/export tests.
+2. Update configuration. Specify any proposed semantic package/export test work separately and obtain its approval before changing tests.
 3. If a new source field, transform, selector, record shape, or return behaviour is needed, implement/validate it first.
 4. Verify safe output containment, browser projection, metadata, and return eligibility.
 5. Keep this page at the profile-method level; inspect config for the exhaustive mapping.
@@ -95,5 +80,4 @@ The legacy default is return-enabled when the flag is absent; new/export-only pr
 
 - runtime-only semantic validation makes invalid config discoverable later than a schema/editor check;
 - profile field mapping is powerful enough to become a second document schema;
-- return-enabled default exists for compatibility and is a poor default for new profiles;
 - `max_total_chars` and transform behaviour must be verified in code rather than inferred from config vocabulary.

@@ -167,7 +167,6 @@ export function initDocsViewerManagement(context) {
   context = Object.assign({}, context, {
     docsViewerConfigUrl: serviceClient.docsViewerConfigUrl || context.docsViewerConfigUrl,
     managementBaseUrl: serviceClient.managementBaseUrl || context.managementBaseUrl,
-    reloadViewerConfiguration: routeReload.reloadViewerConfiguration || context.reloadViewerConfiguration,
     routeCommands: routeReload.routeCommands || context.routeCommands
   });
   var shellRefs = context.managementShellRefs || {};
@@ -221,7 +220,6 @@ export function initDocsViewerManagement(context) {
       indexDocument: function (docId) {
         return documentIndex.docsById.get(docId) || null;
       },
-      refreshManagementCapabilities: refreshManagementCapabilities,
       renderManagementUi: renderManagementUi,
       resolveAction: function (actionId, docId) {
         return resolveAction ? resolveAction(actionId, docId) : null;
@@ -273,6 +271,7 @@ export function initDocsViewerManagement(context) {
       return await runManagedDocsExportWorkspaceWorkflow({
         root: root, restoreFocus: manageActionsButton,
         capabilities: management.managementCapabilities, clientOptions: managementClientOptions(),
+        docIds: Array.from(documentIndex.docsById.keys()),
         callbacks: { render: renderManagementUi, setBusy: setManagementBusy, setMessage: setManagementMessage }
       });
     } catch (error) {
@@ -541,7 +540,7 @@ export function initDocsViewerManagement(context) {
     }
     if (workspaceExportButton) {
       var exportCapability = staticHtmlExportCapability(management.managementCapabilities);
-      workspaceExportButton.disabled = management.managementBusy || workspaceExportActive || !exportCapability.available;
+      workspaceExportButton.disabled = management.managementBusy || workspaceExportActive || !exportCapability.available || !documentIndex.docsById.size;
       workspaceExportButton.title = exportCapability.available ? "Export workspace" : exportCapability.reason;
     }
     if (managePublishButton) {
@@ -561,20 +560,6 @@ export function initDocsViewerManagement(context) {
 
   function initializeManagement() {
     if (capabilityController) capabilityController.initialize();
-  }
-
-  function refreshManagementCapabilities() {
-    if (capabilityController) capabilityController.refresh();
-  }
-
-  function reloadViewerConfiguration() {
-    if (typeof routeReload.reloadViewerConfiguration === "function") {
-      return routeReload.reloadViewerConfiguration();
-    }
-    if (typeof context.reloadViewerConfiguration === "function") {
-      return context.reloadViewerConfiguration();
-    }
-    return Promise.resolve(null);
   }
 
   function routeCommand(name) {
@@ -747,8 +732,6 @@ export function initDocsViewerManagement(context) {
       openCreatedDocumentSource: openCreatedDocumentSource,
       reloadDocsIndex: reloadDocsIndex,
       refreshIndexTree: refreshIndexTree,
-      reloadViewerConfiguration: reloadViewerConfiguration,
-      refreshManagementCapabilities: refreshManagementCapabilities,
       renderManagementUi: renderManagementUi,
       setManagementBusy: setManagementBusy,
       setManagementMessage: setManagementMessage,
@@ -854,6 +837,7 @@ export function initDocsViewerManagement(context) {
       onImportOpen: importController.initialize,
       onSettingsSubmit: actionController.handleSettingsSubmit,
       managementClientOptions: managementClientOptions,
+      documentExists: function (docId) { return documentIndex.docsById.has(docId); },
     }
   });
   modalController = modalComposition.modalController;

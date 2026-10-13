@@ -150,13 +150,7 @@ export function createDocsViewerManagementCapabilityController(options) {
     startCapabilityCheck();
   }
 
-  function refresh() {
-    if (!routeSession.managementContext || !context.managementBaseUrl) return;
-    startCapabilityCheck();
-  }
-
   return {
-    initialize: initialize,
-    refresh: refresh
+    initialize: initialize
   };
 }

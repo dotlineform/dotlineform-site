@@ -1,13 +1,13 @@
 """Docs Viewer document-package API routes."""
 
-CONFIG_PATH = "/docs/packages/config"
-DOCUMENTS_PATH = "/docs/packages/documents"
+PREPARE_OPTIONS_PATH = "/docs/packages/prepare-options"
 RETURNED_PATH = "/docs/packages/returned"
 PREPARE_PATH = "/docs/packages/prepare"
 RETURNED_REVIEW_PATH = "/docs/packages/returned/review"
 
-GET_PATHS = (CONFIG_PATH, DOCUMENTS_PATH, RETURNED_PATH)
+GET_PATHS = (RETURNED_PATH,)
 POST_PATHS = (
+    PREPARE_OPTIONS_PATH,
     PREPARE_PATH,
     RETURNED_REVIEW_PATH,
 )

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260722-151224-7b61c4
 title: Package Prepare
 added_date: "2026-07-22 15:12:24"
-last_updated: "2026-10-07 13:50:13"
+last_updated: "2026-10-13 20:05:39"
 parent_id: d-20260424-000000-50b63f
 ---
 # Package Prepare
@@ -32,11 +32,11 @@ Collection checked documents remain selected after cancel, success, or failure. 
 - Collection preparation uses its checked IDs only; displayed, highlighted, focused, and context-menu rows do not become implicit collection targets.
 - One checked collection document and several checked collection documents use the same Action and modal.
 - Working is resolved by the package service; there is no workspace picker.
-- Collection **All** updates the checkbox-selection owner; it does not use the package service's `select_all` request mode.
+- Collection **All** updates the checkbox-selection owner. Application Prepare accepts explicit IDs only.
 - A collection request carries its exact configured `collection`; its flat records never expand descendants or borrow ordinary parent/sibling IDs.
 - Index and collection targets remain independent.
 - The modal calculates one effective target in this order: target eligibility, fixed descendant expansion for the ordinary root, missing-summary filtering, then any configured maximum document count.
-- Only that final effective id set is sent. The service revalidates it but never adds a document the modal excluded.
+- Only that final effective ID set and formats are sent. The service consumes the completed choice without summary filtering, limit filtering or descendant expansion. It retains exact owner/source identity, confined reads and required profile/output checks.
 
 ## Modal Filters And Total
 
@@ -72,13 +72,13 @@ flowchart TD
   accDescr: An invoked ordinary subtree or exact checked collection enters one compact workflow using the existing document package endpoints.
   selectDocs[Invoke an Index row or check collection documents] --> openAction[Choose Prepare package from its menu]
   openAction --> resolveTarget[Capture invoked root or checked collection ids]
-  resolveTarget --> readOptions[GET package config and package documents]
+  resolveTarget --> readOptions[POST prepare-options for profiles and target metadata]
   readOptions --> options[Choose profile, formats, and summary filter]
   options --> projectTarget[Expand descendants and apply package filters]
   projectTarget --> showTotal[Show effective total and exclusions]
   showTotal --> confirm[Confirm Prepare package]
   confirm --> prepare[POST package prepare with effective explicit doc ids]
-  prepare --> validate[Service revalidates the submitted ids, profile, paths, metadata, and output]
+  prepare --> validate[Read selected sources once and produce the exact selected package]
   validate --> result{Request result}
   result -->|Success| success[Show summary, counts, and file paths]
   result -->|Failure| failure[Show retained warnings and errors]
@@ -86,9 +86,9 @@ flowchart TD
   failure --> unchanged
 ```
 
-The calls above use the existing `/docs/packages/*` endpoints. There is no batch-specific service, preview request, duplicate document picker, or separate Prepare browser page.
+Options uses one `POST /docs/packages/prepare-options` carrying captured `doc_ids` and optional exact `collection`. It returns profiles and metadata for the invoked ordinary subtree or checked flat documents, reading no unselected bodies and doing no body rendering or Subject/readiness/model validation. The old separate config/documents endpoints and generic picker aliases are retired without aliases.
 
-The source reader uses the current Docs builder to render content, initializes Catalogue lookup state and loads saved related-links inputs before rendering. Loading package options reads source and generated reference inputs; it does not run a Docs build or update relationships.
+Confirmation sends one `POST /docs/packages/prepare` with the final `doc_ids`, `profile_id`, `target_format`, `content_format` and optional `collection`/`dry_run`. It carries no `select_all`, missing-summary or publication-eligibility flags. Selected source text is read once. Tree output needs no generated manifest or rendering owner; content output consumes saved ancestor/child/link metadata and one lazy content-only renderer/cache. It does not construct unused by-ID metadata or render unselected source bodies. Required report/token rendering, URL safety, escaping, profile/format/output/collision checks and provenance remain with their owners. CLI selection and returned-package/current-source validation retain their separate paths. No document, Search or media generation runs.
 
 ## Result Counts
 
@@ -111,7 +111,7 @@ The invariants are:
 | **selected** | The effective ids submitted from the modal. For unchanged source state, this equals **Total documents to be prepared**. |
 | **exported** | Selected documents whose package records were built successfully. |
 | **failed** | Selected documents whose records could not be built. Any failures prevent the package being written. |
-| **skipped** | Submitted documents which no longer exist or no longer satisfy an active filter when the service revalidates current source. |
+| **skipped** | Zero for application Prepare: modal exclusions happen before submission and the service does not reapply filters. CLI filtering retains its own skipped records. |
 | **truncated** | Exported documents whose content was shortened by the profile limit. It counts documents, not characters. The current content profile limits content to 50,000 characters and adds `[truncated]` at a paragraph boundary. |
 
 ### Failed
@@ -121,7 +121,6 @@ For the **failed** count, the most likely per-document causes are:
 - A required field is empty—currently `doc_id`, `title`, and rendered `content` are required.
 - The source document cannot be rendered into HTML.
 - Rendered HTML cannot be converted into the requested Markdown or plain-text content.
-- The source record and source document have drifted apart, so the selected document can no longer be resolved.
 - Less commonly, a package-profile defect: unsupported field source or transform, invalid field mapping, or blank output path. These should normally be caught by profile validation first.
 
 Each selected document either produces a record or increments `failed`; any record-building error prevents the package from being written. The error details should identify the document and cause. The implementation is in `docs-viewer/services/docs_document_packages/export_transforms.py`.
@@ -133,6 +132,7 @@ Some operation-level problems do **not** increment `failed`, because processing 
 - Unsafe output path.
 - Metadata/output filename collision.
 - Missing configured source root.
+- Missing, unreadable or malformed selected source, or source-filename/ID disagreement.
 - Service or request failure.
 
 Those appear as an overall preparation error, generally with zero document counts.
@@ -141,6 +141,10 @@ Those appear as an overall preparation error, generally with zero document count
 
 Modal exclusions occur before submission and are explained beside the total. They do not inflate `selected` or `skipped`.
 
-After submission, the service applies the same active summary choice to current source. A document changed or removed after the modal snapshot remains part of `selected` but can become `skipped`; the service does not replace it or broaden the request.
+After submission, the service reads the exact selected sources and does not reapply the modal's summary choice. A missing or unprocessable selected source fails the operation; it is not silently skipped or replaced. No freshness protocol or fallback selection is added.
 
 Both current profiles set `max_documents` and `max_total_chars` to `null`, so there is no package-wide document or character limit. The active 50,000-character content limit per **Document content** record produces `truncated`, not `skipped`.
+
+## Verification
+
+[User Facing Rules](data/User_Facing_Rules.md) M.06/M.22 records focused lint, compilation/import diagnostics and distinct source/diff review for this cleanup. These checks do not establish live behavior. No tests or live preparation ran; existing retired-contract package tests require separately agreed review/migration. Manual acceptance remains for subtree and flat selections, profiles/formats, Summary filtering, tree/content output, supported reports/tokens/relationships, unavailable or failing selected input and output/collision errors. Restart Docs Viewer and force reload before review.

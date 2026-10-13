@@ -635,6 +635,7 @@ export function createDocsViewerManagementModalController(options = {}) {
     renderSettingsWarnings: renderSettingsWarnings,
     projectImportTerminalResult: projectImportTerminalResult,
     setSettingsField: setSettingsField,
+    setSettingsValidationError: function (message) { setSettingsStatus(message, "error"); },
     setSettingsLoadError: setSettingsLoadError,
     setSettingsStatus: setSettingsStatus,
     settingsModalOpen: settingsModalOpen,

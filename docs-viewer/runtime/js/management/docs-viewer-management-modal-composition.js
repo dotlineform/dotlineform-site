@@ -55,7 +55,8 @@ export function createDocsViewerManagementModalComposition(options = {}) {
       },
       hideContextMenu: callbacks.hideContextMenu,
       hideManageActionsMenu: callbacks.hideManageActionsMenu,
-      managementClientOptions: callbacks.managementClientOptions
+      managementClientOptions: callbacks.managementClientOptions,
+      documentExists: callbacks.documentExists
     }
   });
 

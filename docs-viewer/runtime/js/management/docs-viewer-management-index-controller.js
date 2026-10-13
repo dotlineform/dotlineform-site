@@ -229,13 +229,7 @@ export function createDocsViewerManagementIndexController(options = {}) {
       callbacks: {
         setBusy: setManagementBusy,
         setMessage: setManagementMessage,
-        render: renderManagementUi,
-        onApplied: function () {
-          if (typeof callbacks.refreshManagementCapabilities === "function") {
-            return callbacks.refreshManagementCapabilities();
-          }
-          return null;
-        }
+        render: renderManagementUi
       }
     }).catch(function (error) {
       setManagementBusy(false);

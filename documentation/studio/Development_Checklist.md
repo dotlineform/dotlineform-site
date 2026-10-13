@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260523-190651-7157ec
 title: Development Checklist
 added_date: "2026-05-23 19:06:51"
-last_updated: "2026-10-13 19:25:13"
+last_updated: "2026-10-13 20:05:39"
 parent_id: d-20260419-000000-d2e47b
 
 ---
@@ -32,6 +32,8 @@ This checklist and the durable Studio development documentation are maintained d
 ## Ownership Gates
 
 ### User-Visible Operation Ordering
+
+- [ ] Settings validates default membership against the loaded Index, persists changed configuration and directly projects browser configuration with committed/projection phase reporting. Explicit unchanged Save can complete projection without a source rewrite. Apply the supplied default locally; do not scan source, rebuild documents/media/Search or reload configuration/Index/display. Export capability checks configured input locations without payload audits; workspace Export consumes loaded Index IDs and completes without a detached capability refresh. Preserve Preview/Apply replacement confirmation, one Apply plan/destination comparison, path/symlink confinement and one output file-set/byte verification; omit browser response audits and duplicate destination/provenance scans. [Management Operations](Management_Operations.md#settings) and [Export](Export.md) own these boundaries.
 
 - [ ] Normal Publish parses one app-produced Catalogue queue and carries its state/workspace through Work/shared preparation; persist required progress without queue-content audits. Empty Work selections skip Work setup and selected media reuses operation policy, paths and adapters. Trust completed Catalogue/Links/document artifacts without downstream content or identity/set-agreement/Mermaid-completeness audits; retain parsing needed for public projection, configured artifact authority, path/basename/symlink confinement and required output/transfer verification. Report completed Working Recent persistence even after later failure; refresh Recent only for that response marker and keep Publish's capability reload out of the browser path. Whole-corpus snapshots, destination/media reconciliation and shared retry retain their separately scoped Incremental Document Publish gaps. [Catalogue Deployment](Catalogue_Deployment.md) and [User Facing Rules](data/User_Facing_Rules.md) M.25/M.28/M.29 own this boundary.
 
@@ -172,6 +174,7 @@ This checklist and the durable Studio development documentation are maintained d
 - [ ] Docs Review remains read-only and passes safe package identity only—not paths, staged filenames, decisions, or write authority.
 - [ ] New formats or package shapes get one parser/profile owner, not branches in generic coordinators. Specify any proposed parser/profile test work separately and implement only after approval.
 - [ ] Export-only profiles remain explicitly non-importable until a complete review/apply contract exists.
+- [ ] Package options makes one metadata-only request for profiles and captured ordinary subtree or checked flat targets. The modal owns descendant/summary/limit choices; application Prepare consumes its final explicit IDs/formats and reads selected sources once without general source-model/readiness/Subject audits or reapplying filters. Tree output needs no generated manifest or renderer; content uses saved ancestor/child/link metadata and one lazy content renderer/cache. Keep CLI selection and returned-package validation with their existing owners; retain exact collection/source identity, path/symlink confinement, profile/format/output/collision and provenance requirements. [Package Prepare](Package_Prepare.md) and [Package Prepare Script](Package_Prepare_Script.md) own the detailed flow.
 - [ ] Collection preparation stays confined to one configured flat collection, retains the explicit Working stage and exact `collection` through provenance, and gains `supports_return_import: true` only when both the package profile and exact collection opt in. Capability projection alone is not mutation authority; returned-package planning and apply must retain the same exact target. Packages with retired scope or sub-scope provenance require re-export and a new Review package.
 
 ### Generated Data

@@ -3,13 +3,15 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 import json
 from pathlib import Path
 from typing import Any
 
-from docs_workspace_config import CONFIG_REL_PATH, document_source_path, load_docs_workspace_config, load_docs_working_config, resolve_workspace_path, require_document_authoring
-import docs_source_model as source_model
+from docs_workspace_config import CONFIG_REL_PATH, DocsStageConfig, load_docs_workspace_config, load_docs_working_config, select_workspace_stage, require_document_authoring
+from docs_document_identity import is_immutable_doc_id
+from docs_builder.browser_config import write_browser_config
+from docs_builder.common import DOCS_VIEWER_BROWSER_CONFIG_PATH
 
 
 SCHEMA_VERSION = "docs_source_config_settings_v2"
@@ -21,7 +23,6 @@ class EditableWorkspaceField:
     value_type: str
     source_path: str
     generated_path: str
-    requires_rebuild: bool
     description: str
 
 
@@ -31,7 +32,6 @@ EDITABLE_WORKSPACE_FIELDS: dict[str, EditableWorkspaceField] = {
         value_type="string",
         source_path=f"{CONFIG_REL_PATH.as_posix()} stages.working.default_doc_id",
         generated_path="docs-viewer/config/defaults/docs-viewer-config.json workspace.default_doc_id",
-        requires_rebuild=True,
         description="Default document id opened when no document is requested. Leave blank to use the first Index root.",
     ),
 }
@@ -53,8 +53,6 @@ DEFERRED_GLOBAL_FIELDS = {
 def _load_json(path: Path, label: str) -> dict[str, Any]:
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
-    except FileNotFoundError:
-        return {}
     except json.JSONDecodeError as exc:
         raise ValueError(f"{label} is invalid JSON: {exc}") from exc
     if not isinstance(payload, dict):
@@ -89,7 +87,6 @@ def _workspace_field_payload(config: Any, contract: EditableWorkspaceField) -> d
         "editable": True,
         "source_path": contract.source_path,
         "generated_path": contract.generated_path,
-        "requires_rebuild": contract.requires_rebuild,
         "description": contract.description,
         "warnings": [],
     }
@@ -105,22 +102,6 @@ def _workspace_payload(config: Any) -> dict[str, Any]:
     }
 
 
-def _validate_default_doc_id(repo_root: Path, config: Any, value: str) -> list[str]:
-    if not value:
-        return []
-    root = resolve_workspace_path(repo_root, document_source_path(config))
-    if not root.exists():
-        raise ValueError(
-            f"missing source root for the workspace: {document_source_path(config).as_posix()}"
-        )
-    docs = source_model.load_stage_docs_for_config(repo_root, config)
-    docs_by_id = {doc.doc_id: doc for doc in docs}
-    doc = docs_by_id.get(value)
-    if doc is None:
-        raise ValueError(f"default_doc_id must match a document in the workspace: {value}")
-    return []
-
-
 def build_settings_contract(repo_root: Path) -> dict[str, Any]:
     config = load_docs_working_config(repo_root)
     return {
@@ -133,7 +114,6 @@ def build_settings_contract(repo_root: Path) -> dict[str, Any]:
                 "type": contract.value_type,
                 "source_path": contract.source_path,
                 "generated_path": contract.generated_path,
-                "requires_rebuild": contract.requires_rebuild,
                 "description": contract.description,
             }
             for contract in sorted(EDITABLE_WORKSPACE_FIELDS.values(), key=lambda item: item.field)
@@ -150,10 +130,10 @@ def build_settings_contract(repo_root: Path) -> dict[str, Any]:
     }
 
 
-def validate_settings_change(repo_root: Path, changes: dict[str, Any]) -> dict[str, Any]:
+def validate_settings_change(changes: dict[str, Any], *, config: DocsStageConfig) -> dict[str, Any]:
+    """Check the editable request and identifier syntax; UI owns Index membership."""
     if not isinstance(changes, dict) or not changes:
         raise ValueError("changes must be a non-empty JSON object")
-    config = load_docs_working_config(repo_root)
     require_document_authoring(config)
     validated_changes: dict[str, Any] = {}
     rejected_fields: list[dict[str, str]] = []
@@ -170,18 +150,17 @@ def validate_settings_change(repo_root: Path, changes: dict[str, Any]) -> dict[s
         contract = EDITABLE_WORKSPACE_FIELDS.get(field)
         value = _validate_field_value(field, raw_value)
         field_warnings: list[str] = []
-        if field == "default_doc_id":
-            field_warnings = _validate_default_doc_id(repo_root, config, value)
+        if field == "default_doc_id" and value and not is_immutable_doc_id(value):
+            raise ValueError("default_doc_id must be an immutable document ID or empty")
         current_value = _field_current_value(config, contract)
         changed = current_value != value
-        if changed and contract.requires_rebuild:
+        if changed:
             affected_artifacts.add(contract.generated_path)
         warnings.extend(field_warnings)
         validated_changes[field] = {
             "current_value": current_value,
             "proposed_value": value,
             "changed": changed,
-            "requires_rebuild": changed and contract.requires_rebuild,
             "source_path": contract.source_path,
             "generated_path": contract.generated_path,
             "warnings": field_warnings,
@@ -197,7 +176,6 @@ def validate_settings_change(repo_root: Path, changes: dict[str, Any]) -> dict[s
         "source_config_path": CONFIG_REL_PATH.as_posix(),
         "changes": validated_changes,
         "warnings": warnings,
-        "requires_rebuild": any(item["requires_rebuild"] for item in validated_changes.values()),
         "affected_artifacts": sorted(affected_artifacts),
     }
 
@@ -217,25 +195,32 @@ def clear_deleted_default_document(repo_root: Path) -> None:
 
 
 def apply_settings_change(repo_root: Path, changes: dict[str, Any], *, dry_run: bool = False) -> dict[str, Any]:
-    validation = validate_settings_change(repo_root, changes)
+    """Persist settings and project only browser configuration, carrying partial completion."""
+    workspace = load_docs_workspace_config(repo_root)
+    config = select_workspace_stage(workspace, "working")
+    validation = validate_settings_change(changes, config=config)
     changed_fields = {
         field: detail["proposed_value"]
         for field, detail in validation["changes"].items()
         if detail["changed"]
     }
-    if changed_fields and not dry_run:
-        config_path = repo_root / CONFIG_REL_PATH
-        payload = _load_json(config_path, CONFIG_REL_PATH.as_posix())
-        raw_stages = payload.get("stages")
-        if not isinstance(raw_stages, dict) or not isinstance(raw_stages.get("working"), dict):
-            raise ValueError("Working storage is not configured")
-        raw_stages["working"].update(changed_fields)
-
-        rendered = json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
-        _write_text_atomic(config_path, rendered)
-        load_docs_workspace_config(repo_root)
-
-    return {
-        **validation,
-        "changed": bool(changed_fields),
-    }
+    result = {**validation, "changed": bool(changed_fields), "committed": False, "projection_complete": False, "phase": "source"}
+    if dry_run:
+        return {**result, "phase": "complete"}
+    try:
+        if changed_fields:
+            config_path = repo_root / CONFIG_REL_PATH
+            payload = _load_json(config_path, CONFIG_REL_PATH.as_posix())
+            payload["stages"]["working"].update(changed_fields)
+            _write_text_atomic(config_path, json.dumps(payload, ensure_ascii=False, indent=2) + "\n")
+        result.update(committed=True, phase="browser configuration")
+        workspace = replace(workspace, stages=tuple(
+            replace(stage, **changed_fields) if stage.stage == "working" else stage
+            for stage in workspace.stages
+        ))
+        write_browser_config(repo_root, workspace, path=DOCS_VIEWER_BROWSER_CONFIG_PATH, label="Docs Viewer browser config")
+        result.update(projection_complete=True, phase="complete")
+    except Exception as error:
+        prefix = "Settings saved, but browser configuration projection failed: " if result["committed"] else "Settings save failed: "
+        result.update(ok=False, error=prefix + str(error), summary_text=prefix + str(error))
+    return result

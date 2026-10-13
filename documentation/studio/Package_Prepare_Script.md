@@ -3,228 +3,82 @@ draft: false
 doc_id: d-20260503-150500-b0f1df
 title: Package Prepare Script
 added_date: "2026-05-03 15:05:00"
-last_updated: "2026-08-14 19:54:26"
+last_updated: "2026-10-13 20:05:39"
 parent_id: d-20260424-000000-50b63f
 ---
 # Package Prepare Script
 
-Script:
+`docs-viewer/services/docs_document_packages/export.py` owns the shared package producer and ordinary Working CLI. [Package Prepare](Package_Prepare.md) owns the Manage workflow; [Package Prepare Profiles](Package_Prepare_Profiles.md) owns the two current profiles. Preparation reads document inputs and writes disposable package artifacts, preserving source, generated documents, Search and publication state.
 
-```bash
-$HOME/miniconda3/bin/python3 docs-viewer/services/docs_document_packages/export.py --help
+## Inputs And Workspace
+
+Profiles belong to `docs-viewer/config/document-packages/profiles.json`. `docs-viewer/config/workspace/docs-workspace.json` resolves the existing Docs workspace and exact configured collections beneath `DOTLINEFORM_DOCS_BASE_DIR`. Retired scope/stage storage and request aliases are not supported.
+
+The existing absolute `DOTLINEFORM_PROJECTS_BASE_DIR` independently resolves the readable/writable `data-sharing/` workspace. There is no repository fallback or automatic replacement workspace. Package and metadata paths stay beneath its configured boundaries:
+
+```text
+$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/
+  exports/<local timestamp>-documents-<profile id>.json[l]
+  meta/<export_id>.meta.json
 ```
 
-## Scope
+Output filenames use the local runtime timezone. Metadata `generated_at` and `export_id` use UTC; the ID is `ds_YYYYMMDDTHHMMSSZ`. [Package Export Metadata](Package_Export_Metadata.md) owns `data_sharing_export_meta_v4`, exact optional collection provenance and returned Review/Import capabilities. Output and metadata collisions prevent writing.
 
-`docs_document_packages/export.py` is the read-only package-preparation engine owned by the integrated Docs Viewer document-package service.
+## Application Preparation
 
-For the manage-mode user workflow, use [Prepare Package](Package_Prepare.md). This page owns the engine, CLI, outputs, and maintainer checks.
+One `POST /docs/packages/prepare-options` receives captured `doc_ids` and optional exact `collection`. It resolves the owner once and returns profiles, workspace availability and only the ordinary subtree or checked flat metadata needed by the modal. It reads confined source fields without body rendering, general source-model/Subject/readiness validation, generated manifest/Links reads or Catalogue setup. Generic picker aliases, unused discovery content lengths and the separate config/documents routes are retired without aliases.
 
-It reads Docs Viewer source context and source-controlled document sharing profiles, then writes an ephemeral share package under `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/`.
-It does not mutate source Markdown, generated docs payloads, or config files.
+The modal owns ordinary descendant expansion, missing-summary filtering and document-count limits. One `POST /docs/packages/prepare` then receives its final `profile_id`, explicit `doc_ids`, `target_format`, `content_format` and optional `collection`/`dry_run`. Application requests carry no `select_all`, summary-filter or publication-eligibility flags. The producer does not repeat those choices, expand selection or silently skip missing selected input.
 
-Current input paths:
+Application Prepare resolves its exact owner and reads each selected source once, retaining strict front-matter parsing, exact ID/filename binding, string Title representation and configured path/symlink confinement. Tree output needs no saved manifest or renderer. Content output consumes saved ordinary Index or collection management metadata for ancestor/child/link identities, opens only required selected saved Links, and constructs one lazy content-only renderer/cache. This preserves report/token rendering, URL safety, escaping and Summary policy without building unused by-ID metadata or rendering unselected bodies.
 
-- `docs-viewer/config/document-packages/profiles.json`
-- `docs-viewer/config/scopes/docs_scopes.json`
-- `docs-viewer/scopes/<scope>/source/documents/*.md` or the configured document source root for that scope
+## CLI Selection
 
-Current output pattern:
+The CLI remains an independent ordinary Working selection owner. It uses its full source context and existing validation/rendering path, applies explicit/all and supported summary choices, and retains tree-profile descendant expansion. It delegates completed selection to the same profile/format/output producer as the application. It does not accept a scope/stage picker.
 
-- `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/<timestamp>-<data_domain>-<profile_id>.json`
-- `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/exports/<timestamp>-<data_domain>-<profile_id>.jsonl`
-- `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta/<export_id>.meta.json` for internal export provenance and review routing
-
-The filename timestamp is formatted in the local runtime timezone.
-Package metadata `generated_at` remains UTC (`YYYY-MM-DDTHH:MM:SSZ`) for stable provenance.
-The `export_id` is derived from that UTC timestamp as `ds_YYYYMMDDTHHMMSSZ`.
-The internal `.meta.json` file stores source scope, profile, format, prepared document ids, and frozen legacy identity fields required by the current schema; external package payloads carry `export_id`, but external filenames use profile id and timestamp.
-The metadata and `export_id` contract is documented in [Document Package Export Metadata](Package_Export_Metadata.md).
-
-## Runtime Contract
-
-The script is the package engine for both CLI runs and the direct Docs Viewer `POST /docs/packages/prepare` endpoint. No Analytics bridge or generic adapter dispatch remains.
-It is intentionally source-read-only: the only writes it performs are generated package artifacts when `--write` is passed or when the local service calls it in write mode.
-
-Inputs:
-
-- a sharing profile id from `docs-viewer/config/document-packages/profiles.json`
-- a configured Docs Viewer scope
-- explicit document ids or `--all`
-- an optional `--format json|jsonl` override when the selected profile declares that format in `target.supported_formats`
-- an optional `--content-format markdown|plain_text` override when the selected profile declares those values in `content_format.supported_formats`
-- optional missing-summary filtering for a supporting profile; the direct service also accepts a supported non-publishable choice
-
-Outputs:
-
-- a structured JSON report on stdout
-- no file in dry-run mode
-- one JSON or JSONL external share package in write mode
-- one internal `.meta.json` metadata file under `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta/`
-
-Export preparation is read-only with respect to docs source and generated docs/search payloads.
-It does not run `build_docs.py`, does not run `build_search.py`, and does not include rebuild diagnostics in its report.
-
-Share packages are local working files.
-They are ignored by git, may be deleted, and should be reproduced from Docs Viewer source context plus the selected profile and document selection.
-
-## Current Capability
-
-Implemented now:
-
-- loads a selected sharing profile by `id`
-- validates that the profile is enabled for the requested scope
-- loads Docs Viewer source context for the requested scope
-- resolves selected `doc_id` values
-- supports all-matching profiles
-- exports the exact selected document ids supplied by the caller
-- applies the supported missing-summary and non-publishable choices while revalidating explicit ids
-- maps supported document fields into configured output paths
-- computes parent, ancestor, and child relationship fields from source records
-- extracts heading lists from source-rendered HTML
-- extracts deterministic plain-text `content` from source-rendered HTML when a content package profile requests it
-- preserves paragraphs, headings, list items, and quoted text in `content`
-- omits code blocks when the selected field mapping includes `omit_code_blocks`
-- truncates `content` when the selected field mapping includes `truncate_chars`
-- handles image/SVG text according to field-level extraction options
-- writes JSONL document-row exports with a first-line `data_sharing_header` record containing `export_id`
-- writes JSON document-row overrides as objects containing top-level `schema_version`, `export_id`, and `records`
-- writes internal `.meta.json` files under `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/meta/`
-- keeps source timestamp provenance in internal `.meta.json` rather than in external records
-- returns a structured JSON report
-
-The `document-content` sharing profile explicitly includes `parent_id`, `parent_title`, `ancestors`, and `children` alongside `current_summary`, `summary`, and `content`.
-Relationship data is therefore controlled by config, not by a separate CLI or Studio UI option.
-
-Not implemented yet:
-
-- batching or chunking
-
-Image handling:
-
-- `image_text_mode: "omit"` omits image markers
-- `image_text_mode: "marker"` emits `[image]`
-- `image_text_mode: "extract_text"` emits `[image: ...]` when text is available
-- image text comes from `img alt`, SVG `title`, SVG `desc`, and SVG `text`
-- `empty_image_mode: "marker"` emits `[image]` when no useful text is available
-- `empty_image_mode: "omit"` omits empty images
-
-## Commands
-
-Prepare explicit documents for profiles that require selected ids:
+Inspect current flags:
 
 ```bash
-$HOME/miniconda3/bin/python3 docs-viewer/services/docs_document_packages/export.py --scope analysis --config-id document-content --doc-id d-20260426-164043-e14f49
+python3 docs-viewer/services/docs_document_packages/export.py --help
 ```
 
-Use all matching docs for an explicit-selection config:
+Prepare an explicit ordinary document without writing:
 
 ```bash
-$HOME/miniconda3/bin/python3 docs-viewer/services/docs_document_packages/export.py --scope analysis --config-id document-content --all
+python3 docs-viewer/services/docs_document_packages/export.py --config-id document-content --doc-id d-20260426-164043-e14f49
 ```
 
-Write a document-row export as JSON instead of its JSONL default when the config supports both:
+Select all ordinary documents, optionally applying the CLI summary filter:
 
 ```bash
-$HOME/miniconda3/bin/python3 docs-viewer/services/docs_document_packages/export.py --scope analysis --config-id document-content --all --format json --write
+python3 docs-viewer/services/docs_document_packages/export.py --config-id document-content --all --missing-summary-only
 ```
 
-Write `document-content` with plain-text body content instead of the profile's Markdown default:
+Write JSON content with plain-text body conversion when the profile supports both choices:
 
 ```bash
-$HOME/miniconda3/bin/python3 docs-viewer/services/docs_document_packages/export.py --scope analysis --config-id document-content --all --content-format plain_text --write
+python3 docs-viewer/services/docs_document_packages/export.py --config-id document-content --all --format json --content-format plain_text --write
 ```
 
-## Verification
+The default is dry-run. `--write` writes only package/metadata artifacts. `--include-summary-complete` disables a profile's default missing-summary choice; `--doc-id` is repeatable and `--doc-ids` accepts comma-separated IDs. Config/repository overrides remain explicit CLI flags.
 
-Focused package-preparation checks live in:
+## Producer And Output
 
-```bash
-docs-viewer/tests/python/test_docs_export.py
+The common producer validates the selected enabled profile, supported target/content formats, configured mapped fields/transforms, output paths and collisions. Mapping/rendering failures prevent output. Summary is flattened to one paragraph for package fields and expanded package-only Summary text; canonical source is unchanged. Per-record content truncation retains the profile's paragraph boundary and marker.
+
+Document-row JSONL begins with a `data_sharing_header` carrying export/profile/content identity. JSON document-row output carries top-level schema/export identity and records. The tree profile writes JSON tree structure without body content and remains export-only. Internal metadata preserves exact prepared IDs, source timestamps and Review/Import capability/provenance. Returned-package parsing, provenance and current-source validation remain with their existing full-package owners; this cleanup does not weaken them.
+
+The report includes `ok`, `dry_run`, `export_id`, CLI `config_id` or application `profile_id`, resolved formats, paths, selected/exported IDs, warnings/errors, issue counts and `output_written`. Collection reports carry their exact configured collection. Counts retain:
+
+```text
+selected = exported + failed + skipped
+truncated <= exported
 ```
 
-They cover config loading, semantic config validation, exact selected-document resolution, deterministic JSONL output, internal metadata, JSON format overrides for document-row packages, unsupported format overrides, and representative dry-runs for the v1 document sharing profiles.
-The same check runs in the `docs` profile:
+Application `skipped` is zero because modal exclusions precede submission. CLI selection retains its skipped records and warnings. Missing/unreadable/malformed selected inputs fail source-context loading before record counts; a record-mapping failure increments `failed`. The CLI exits 0 for a valid report, 1 for command/runtime failure, and 2 for reported validation errors that prevent output.
 
-```bash
-$HOME/miniconda3/bin/python3 tests/run_checks.py --profile docs
-```
+## Ownership And Verification
 
-## Report Shape
+`selected_sources.py` owns application metadata discovery and selected source handoff. `source_context.py` retains CLI/returned full context. `rendered_content.py` owns cached HTML/headings/text extraction; `export.py` separates selection owners from the common producer. Preparation runs no Build, Search, media production or source/relationship writes.
 
-The script prints a JSON report with:
-
-- `ok`
-- `dry_run`
-- `export_id`
-- `config_id`
-- `scope`
-- `target_format`
-- `supported_target_formats`
-- `output_file`
-- `metadata_file`
-- `counts`
-- `selected_doc_ids`
-- `exported_doc_ids`
-- `skipped`
-- `skipped_summary`
-- `warnings`
-- `errors`
-- `issue_counts`
-- `output_written`
-
-`counts` includes:
-
-- `selected`
-- `exported`
-- `failed`
-- `skipped`
-- `truncated`
-
-`selected = exported + failed + skipped`; `truncated` is a subset of `exported`.
-
-The command exits with:
-
-- `0` when the package is valid
-- `1` for command/runtime failures
-- `2` when the sharing profile and selection load but validation errors prevent output
-
-## Validation Boundary
-
-The engine validates runtime concerns that the static config schema cannot know:
-
-- selected config id exists
-- sharing profile is enabled for the requested scope
-- selected docs exist
-- publishability filters are applied only to records from a publish-capable collection
-- required mapped fields are present
-- source-text mappings use plain-text conversion rather than raw rendered HTML
-- truncating mappings have configured integer limits
-- output and metadata paths stay under the resolved `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/` workspace
-- `DOTLINEFORM_PROJECTS_BASE_DIR` must be an absolute path and `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/` must already exist as a readable and writable directory
-- unsupported sources, transforms, target formats, and record shapes are reported before writing
-
-Warnings report non-blocking context:
-
-- expected skipped-doc filters
-- ignored `doc_ids` when `select_all` is true
-- ignored `missing_summary_only` on unsupported profiles
-- truncation
-- deferred `max_total_chars` enforcement
-
-The documents prepare profile contract remains documented in [Documents Prepare Profiles](Package_Prepare_Profiles.md).
-
-The Docs Viewer service runs the engine directly through `POST /docs/packages/prepare`; the request uses `scope`, `profile_id`, effective explicit `doc_ids`, `select_all: false`, supported format overrides, `missing_summary_only`, `include_non_publishable`, and `dry_run`. It revalidates but does not broaden the submitted ids. It rejects the legacy option and does not accept generic app/domain/adapter/operation fields or nested selection.
-
-The former Analytics bridge and package routes were removed during the document-sharing ownership cutover. The direct Docs Viewer endpoint is the only package preparation API.
-
-## Source Context Boundary
-
-Document export uses Docs Viewer-owned document-package source helpers:
-
-- `docs-viewer/services/docs_document_packages/source_context.py` loads scope config, source Markdown, source records, parent-child indexes, and render cache.
-- `docs-viewer/services/docs_document_packages/source_records.py` owns the stable document record projection exposed to package preparation.
-- `docs-viewer/services/docs_document_packages/rendered_content.py` owns source-rendered HTML, headings, and plain-text extraction.
-
-Generated Docs Viewer publication artifacts are not metadata inputs for this script.
-Do not replace source context reads with public flat docs indexes, public tree/search/Recent payloads, generated by-id payloads, manage/local generated indexes, or generated metadata JSON.
+[User Facing Rules](data/User_Facing_Rules.md) M.06/M.22 records focused lint, compilation/import diagnostics and distinct final source/diff review. No tests or live package writes ran. Existing package tests include retired scope and discovery contracts and need separately agreed review/migration before they can serve as current evidence. Manual acceptance remains for the Manage selection/options flow, content/tree formats, Summary and relationship output, rendering/input failures and confined output/collision reporting.

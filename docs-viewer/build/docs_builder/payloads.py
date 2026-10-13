@@ -26,6 +26,17 @@ class PayloadBuilderMixin:
         doc: DocRecord,
         docs_by_id: Mapping[str, DocumentIdentity],
     ) -> dict[str, Any]:
+        content_html = self.document_content_html(doc, docs_by_id)
+        entry = self.by_id_metadata_entry(doc, docs_by_id)
+        entry["content_html"] = content_html
+        return entry
+
+    def document_content_html(self, doc: DocRecord, docs_by_id: Mapping[str, DocumentIdentity]) -> str:
+        """Render the body through its report, token, Links and URL owners.
+
+        Package content consumes HTML without constructing unused by-ID metadata.
+        Normal document generation projects that metadata through item_entry.
+        """
         try:
             projected_markdown = project_report_markdown(
                 doc.body_markdown,
@@ -51,9 +62,7 @@ class PayloadBuilderMixin:
                 current_doc=doc, docs_by_id=docs_by_id,
             )
         )
-        entry = self.by_id_metadata_entry(doc, docs_by_id)
-        entry["content_html"] = content_html
-        return entry
+        return content_html
 
     def doc_sort_key(self, doc: DocRecord) -> tuple[str, str]:
         return (doc.title.lower(), doc.doc_id)

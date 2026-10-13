@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-647b52
 title: Endpoint Overview
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-13 15:47:31"
+last_updated: "2026-10-13 20:05:39"
 parent_id: d-20260424-000000-04d75e
 ---
 # Docs Viewer Endpoint Overview
@@ -30,15 +30,12 @@ Docs Viewer local endpoints are JSON APIs served by the Docs Viewer service. Can
 
 ## Document Package GET Endpoints
 
-These management-only endpoints support **Prepare package** and the selected
-Import-row Docs Review handoff:
+These management-only endpoints support the selected Import-row Docs Review handoff. Prepare options uses the single POST below; the separate config/documents GET routes are retired without aliases.
 
 | Endpoint | Purpose |
 | --- | --- |
-| `GET /docs/packages/config` | Return fixed package profiles, scopes, actions, and external-workspace availability. |
-| `GET /docs/packages/documents?scope=<scope>` | Return selectable source documents for Prepare. |
-| `GET /docs/packages/returned?scope=<scope>` | List trusted reviewable packages for the active scope and its configured children, plus blocked and unassigned evidence. |
-| `GET /docs/packages/returned?scope=<scope>&sub_scope=<sub-scope>` | Validate one explicitly return-Import-enabled child collection and list only complete trusted import-capable packages for that exact target. |
+| `GET /docs/packages/returned` | List trusted reviewable packages for the configured workspace, plus blocked and unassigned evidence. |
+| `GET /docs/packages/returned?collection=<collection>` | Resolve one explicitly return-Import-enabled collection and list complete trusted import-capable packages for that exact target. |
 
 ## Docs Review GET Endpoints
 
@@ -58,7 +55,7 @@ The complete independently gated contract lives in [Docs Review Endpoints](Docs_
 
 | Endpoint | Child doc | Action |
 | --- | --- | --- |
-| `POST /docs/source-config-settings` | [Source Config Endpoints](Source_Config_Endpoints.md) | Apply allowlisted source-config settings and rebuild docs output when needed. |
+| `POST /docs/source-config-settings` | [Source Config Endpoints](Source_Config_Endpoints.md) | Persist changed allowlisted settings and project browser configuration, reporting committed/projection phases without document generation. |
 | `POST /docs/source/rebuild` | [Source Editor Endpoints](Source_Editor_Endpoints.md) | Replace one source doc body, preserving front matter, then rebuild affected outputs. |
 | `POST /docs/staged-media-preview` | [Source Editor Endpoints](Source_Editor_Endpoints.md) | Preview logical media identity and new/unchanged/replace collision state without writing. |
 | `POST /docs/staged-media-apply` | [Source Editor Endpoints](Source_Editor_Endpoints.md) | Publish verified staged media and return Markdown for insertion into the active buffer. |
@@ -85,7 +82,8 @@ The complete independently gated contract lives in [Docs Review Endpoints](Docs_
 
 | Endpoint | Action |
 | --- | --- |
-| `POST /docs/packages/prepare` | Validate or write one JSON/JSONL package for an explicit source-document set. |
+| `POST /docs/packages/prepare-options` | Return profiles, workspace availability and metadata for captured ordinary subtree or checked flat IDs without rendering. |
+| `POST /docs/packages/prepare` | Produce one JSON/JSONL package from final explicit IDs/formats without reapplying UI filters. |
 | `POST /docs/packages/returned/review` | Materialize the complete validated content package for read-only Docs Review. |
 
 [Prepare Package](Package_Prepare.md)

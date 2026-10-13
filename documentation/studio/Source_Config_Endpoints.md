@@ -3,98 +3,37 @@ draft: false
 doc_id: d-20260607-222033-d9b8b1
 title: Source Config Endpoints
 added_date: 2026-06-07 22:20:33
-last_updated: "2026-09-26 15:28:56"
+last_updated: "2026-10-13 20:05:39"
 parent_id: d-20260607-222033-647b52
 ---
 # Docs Viewer Source Config Endpoints
 
-`GET /docs/source-config` was removed with the Source Config Report on 2026-09-26. The settings endpoints below remain separately owned.
+`GET /docs/source-config` remains retired. The Settings endpoints below edit the single configured Working workspace; scope/stage selectors are retired without aliases.
 
 ## `GET /docs/source-config-settings`
 
-Query parameters:
+No query selector is required. `docs_source_config_settings_v2` returns `source_config_path`, `editable_fields`, `blocked_fields`, `deferred_global_fields` and `workspace.fields`. Each editable field declares its type, current value, source/generated paths and description. The sole editable field is `default_doc_id`; roots, output locations, collections and other install-time configuration remain blocked.
 
-```text
-scope=<scope>  optional; when omitted, returns all configured scopes
-```
-
-Returned data:
-
-```json
-{
-  "ok": true,
-  "schema_version": "docs_source_config_settings_v1",
-  "source_config_path": "docs-viewer/config/scopes/docs_scopes.json",
-  "editable_scope_fields": [
-    {
-      "field": "default_doc_id",
-      "type": "string",
-      "source_path": "docs-viewer/config/scopes/docs_scopes.json scopes[].default_doc_id",
-      "generated_path": "docs-viewer/config/defaults/docs-viewer-config.json scopes[].default_doc_id",
-      "requires_rebuild": true,
-      "description": "Default document id opened for this scope when no document is requested. Leave blank to use the first loadable document."
-    }
-  ],
-  "blocked_scope_fields": [],
-  "deferred_global_fields": [],
-  "scopes": [
-    {
-      "scope_id": "studio",
-      "source_config_path": "docs-viewer/config/scopes/docs_scopes.json",
-      "fields": [
-        {
-          "field": "default_doc_id",
-          "type": "string",
-          "current_value": "d-20260101-120000-a1b2c3",
-          "editable": true,
-          "source_path": "docs-viewer/config/scopes/docs_scopes.json scopes[].default_doc_id",
-          "generated_path": "docs-viewer/config/defaults/docs-viewer-config.json scopes[].default_doc_id",
-          "requires_rebuild": true,
-          "description": "Default document id opened for this scope when no document is requested. Leave blank to use the first loadable document.",
-          "warnings": []
-        }
-      ]
-    }
-  ]
-}
-```
-
-Used for:
-
-- rendering settings controls that are safe to expose in manage mode
-- explaining why install-time fields such as roots, route bases, output paths, and media prefixes are blocked
-- exposing the active scope's guarded default document setting
+The source path is `docs-viewer/config/workspace/docs-workspace.json stages.working.default_doc_id`; its local browser projection is `docs-viewer/config/defaults/docs-viewer-config.json workspace.default_doc_id`. Blank means the first ordinary Index root. No `requires_rebuild` flag is projected.
 
 ## `POST /docs/source-config-settings`
 
-Expected data:
+Expected request:
 
 ```json
 {
-  "scope": "studio",
   "changes": {
     "default_doc_id": "d-20260101-120000-a1b2c3"
   }
 }
 ```
 
-Actions:
+Optional `dry_run: true` validates the request without either write. The browser owns nonblank membership validation against its loaded ordinary Index. The server owns the editable allowlist, string type and immutable-ID syntax, preserving exact configured ownership without scanning document sources.
 
-- validates `scope` against configured docs scopes
-- validates every submitted field against the settings allowlist
-- validates nonblank `default_doc_id` values against documents in the active scope and rejects non-loadable ids
-- writes only allowlisted values to `docs-viewer/config/scopes/docs_scopes.json`
-- rebuilds generated docs output for the affected scope when a saved setting requires it
-- logs a `docs_source_config_settings` event when a real write occurs
+A real Save persists changed Working configuration, carries the resolved workspace directly into local browser-configuration projection and reports completion after that projection. Explicit unchanged Save still projects browser configuration for recovery without rewriting the source configuration. No document, Search or media build runs. A committed changed setting logs one `docs_source_config_settings` event.
 
-Returned data includes validation results, rejected fields, warnings, `changed`, `requires_rebuild`, changed field values, the source config path, rebuild diagnostics when a rebuild ran, and `dry_run`.
+Responses retain validation details, proposed/current values, warnings and `changed`, adding `committed`, `projection_complete`, `phase` and `dry_run`. Success returns HTTP 200. Write/projection failure returns HTTP 500 with `ok: false`, error/summary and completed effects: `committed: true` distinguishes saved configuration from later projection failure. No rebuild diagnostics are returned.
 
-Rejected data:
+The browser applies the supplied default once committed, including on a later projection failure. It makes no configuration, Index or displayed-document GETs and preserves the current target/position. Correct a failing projection and explicitly Save again; there is no automatic retry or recovery build.
 
-- empty changes
-- unsupported fields
-- blocked install-time fields
-- deferred global fields
-- unknown or non-loadable default document ids
-- wrong JSON types
-- missing or unsupported scopes
+Empty changes, unsupported/blocked/deferred fields, wrong value types and malformed immutable IDs are rejected. Source-model/readiness/Title/report checks and corpus membership audits are outside this operation. [Management Operations](Management_Operations.md#settings) and [User Facing Rules](data/User_Facing_Rules.md) M.05 own completion behavior and pending manual acceptance.

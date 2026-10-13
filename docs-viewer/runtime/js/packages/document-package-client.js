@@ -1,6 +1,5 @@
 export const DOCUMENT_PACKAGE_ENDPOINTS = Object.freeze({
-  config: "/docs/packages/config",
-  documents: "/docs/packages/documents",
+  prepareOptions: "/docs/packages/prepare-options",
   returned: "/docs/packages/returned",
   prepare: "/docs/packages/prepare",
   reviewReturned: "/docs/packages/returned/review"
@@ -47,17 +46,10 @@ export async function requestDocumentPackageJson(path, options = {}) {
   return payload;
 }
 
-export function getDocumentPackageConfig( collection = "") {
-  const normalizedCollection = String(collection == null ? "" : collection).trim();
-  return requestDocumentPackageJson(endpointUrl(DOCUMENT_PACKAGE_ENDPOINTS.config, {
-    collection: normalizedCollection
-  }));
-}
-
-export function getPackageDocuments( collection = "") {
-  return requestDocumentPackageJson(endpointUrl(DOCUMENT_PACKAGE_ENDPOINTS.documents, {
-    collection: collection
-  }));
+export function readDocumentPackagePrepareOptions(docIds, collection = "") {
+  const payload = { doc_ids: docIds };
+  if (collection) payload.collection = collection;
+  return postDocumentPackageJson(DOCUMENT_PACKAGE_ENDPOINTS.prepareOptions, payload);
 }
 
 export function getReturnedDocumentPackages() {

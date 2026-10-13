@@ -253,10 +253,6 @@ export function createDocsViewerManagementActionController(options) {
     return callbacks.reloadDocsIndex ? callbacks.reloadDocsIndex(target) : Promise.resolve();
   }
 
-  function reloadViewerConfiguration() {
-    return callbacks.reloadViewerConfiguration ? callbacks.reloadViewerConfiguration() : Promise.resolve(null);
-  }
-
   function openCreatedDocumentSource(target, payload) {
     if (callbacks.openCreatedDocumentSource) {
       return callbacks.openCreatedDocumentSource(target, payload);
@@ -557,27 +553,26 @@ export function createDocsViewerManagementActionController(options) {
       settingsWorkflow.close();
       return;
     }
+    if (!settingsWorkflow.validate(changes)) return;
     settingsWorkflow.close();
     setManagementBusy(true);
     setManagementMessage("Saving settings...", false);
-    updateSourceConfigSettings(changes, managementClientOptions())
+    var saved = false;
+    function applyDefault(payload) {
+      var change = payload.changes && payload.changes.default_doc_id;
+      if (change) context.commitDefaultDocumentChange(change.proposed_value);
+    }
+    return updateSourceConfigSettings(changes, managementClientOptions())
       .then(function (payload) {
+        saved = payload.committed === true;
+        applyDefault(payload);
         setManagementMessage("Settings saved.", false);
-        var defaultDocChange = payload && payload.changes ? payload.changes.default_doc_id : null;
-        var proposedDefaultDocId = defaultDocChange ? String(defaultDocChange.proposed_value || "").trim() : "";
-        var target = normalizeManagedDocumentTarget(selectedDocument.documentTarget || {
-          doc_id: proposedDefaultDocId || context.defaultDocId()
-        });
-        if (payload && payload.changed) {
-          return reloadViewerConfiguration().then(function () {
-            return reloadDocsIndex(target);
-          });
-        }
-        if (callbacks.renderManagementUi) callbacks.renderManagementUi();
-        return null;
+        return payload;
       })
       .catch(function (error) {
-        setManagementMessage(error && error.message ? error.message : "Settings save failed.", true);
+        var payload = error && error.payload;
+        if (payload && payload.committed) { saved = true; applyDefault(payload); }
+        setManagementMessage(payload && payload.summary_text || (saved ? "Settings saved, but browser projection failed: " : "Settings save failed: ") + error.message, true);
       })
       .finally(function () {
         setManagementBusy(false);

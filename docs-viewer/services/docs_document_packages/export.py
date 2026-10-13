@@ -15,7 +15,7 @@ import json
 import os
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 SERVICES_ROOT = Path(__file__).resolve().parent.parent
 if str(SERVICES_ROOT) not in sys.path:
@@ -67,6 +67,8 @@ from docs_document_packages.export_selection import (  # noqa: E402
 )
 from docs_document_packages.export_transforms import build_document_record  # noqa: E402
 from docs_document_packages.workspace import configured_workspace_paths, marker_path  # noqa: E402
+from docs_document_packages.selected_sources import prepare_selected_context  # noqa: E402
+from docs_management_document_target import ManagedDocumentCollection  # noqa: E402
 
 
 ZERO_EXPORT_COUNTS = {"selected": 0, "exported": 0, "failed": 0, "skipped": 0, "truncated": 0}
@@ -87,6 +89,17 @@ class ExportRecordBuild:
     errors: list[str]
     failed_count: int
     truncated_count: int
+
+
+@dataclasses.dataclass(frozen=True)
+class ExportSelection:
+    """Selection owned by CLI filters or completed application choices."""
+
+    context: ExportContext
+    selected: list[dict[str, Any]]
+    skipped: list[dict[str, str]]
+    errors: list[str]
+    warnings: list[str]
 
 
 def detect_repo_root(explicit_root: str | None = None) -> Path:
@@ -291,16 +304,81 @@ def write_export_outputs(
         write_json(paths.metadata_path, metadata)
 
 
+def _export_context(
+    repo_root: Path, collection: str, data_domain: str, config: dict[str, Any],
+    content_format: str, source_context: Any, docs: list[dict[str, Any]],
+) -> ExportContext:
+    return ExportContext(
+        repo_root=repo_root, collection=collection, data_domain=data_domain,
+        supports_return_import=supports_return_import(config) and source_context.return_import_enabled,
+        content_format=content_format, config=config, source_context=source_context,
+        docs=docs, docs_by_id={doc["doc_id"]: doc for doc in docs},
+        children_by_parent=build_children_by_parent(docs),
+    )
+
+
 def build_export(
+    *, repo_root: Path, config_id: str, selected_doc_ids: list[str],
+    select_all: bool, missing_summary_only: bool | None, write: bool,
+    collection: str = "", expand_document_tree_descendants: bool = True,
+    data_domain: str = "documents", config_path: str | None = None,
+    target_format: str | None = None, content_format: str | None = None,
+    output_root: Path | str | None = None, metadata_root: Path | str | None = None,
+) -> dict[str, Any]:
+    """Own CLI selection/filtering before the shared package producer runs."""
+    collection = normalize_text(collection).lower()
+
+    def select_documents(config: dict[str, Any], resolved_content_format: str) -> ExportSelection:
+        selection_config = config.get("selection", {})
+        if collection and select_all:
+            raise ValueError("collection package preparation requires explicit doc_ids")
+        if missing_summary_only is not None and not isinstance(missing_summary_only, bool):
+            raise ValueError("missing_summary_only must be true, false, or null")
+        if missing_summary_only is True and not selection_config.get("supports_missing_summary_only"):
+            raise ValueError("missing_summary_only true is not supported")
+        source_context, docs = load_source_export_context(repo_root, collection)
+        context = _export_context(repo_root, collection, data_domain, config, resolved_content_format, source_context, docs)
+        selected, skipped, errors, warnings = selected_docs(
+            context, selected_doc_ids=selected_doc_ids, select_all=select_all,
+            missing_summary_only=missing_summary_only,
+        )
+        if config["target"]["record_shape"] == "document_tree" and expand_document_tree_descendants:
+            selected = expand_selected_docs_for_document_tree(context, selected)
+        return ExportSelection(context, selected, skipped, errors, warnings)
+
+    return _build_export(
+        repo_root=repo_root, config_id=config_id, select_documents=select_documents,
+        write=write, collection=collection, data_domain=data_domain, config_path=config_path,
+        target_format=target_format, content_format=content_format,
+        output_root=output_root, metadata_root=metadata_root,
+    )
+
+
+def build_selected_export(
+    *, repo_root: Path, owner: ManagedDocumentCollection, config_id: str,
+    doc_ids: list[str], write: bool, target_format: str, content_format: str,
+    output_root: Path, metadata_root: Path,
+) -> dict[str, Any]:
+    """Prepare the application's completed selection without reapplying UI filters."""
+    def select_documents(config: dict[str, Any], resolved_content_format: str) -> ExportSelection:
+        source_context, docs, selected = prepare_selected_context(repo_root, owner, doc_ids, profile=config)
+        context = _export_context(repo_root, owner.collection, "documents", config, resolved_content_format, source_context, docs)
+        return ExportSelection(context, selected, [], [], [])
+
+    return _build_export(
+        repo_root=repo_root, config_id=config_id, select_documents=select_documents,
+        write=write, collection=owner.collection, target_format=target_format,
+        content_format=content_format, output_root=output_root, metadata_root=metadata_root,
+    )
+
+
+def _build_export(
     *,
     repo_root: Path,
     config_id: str,
-    selected_doc_ids: list[str],
-    select_all: bool,
-    missing_summary_only: bool | None,
+    select_documents: Callable[[dict[str, Any], str], ExportSelection],
     write: bool,
     collection: str = "",
-    expand_document_tree_descendants: bool = True,
     data_domain: str = "documents",
     config_path: str | None = None,
     target_format: str | None = None,
@@ -342,14 +420,6 @@ def build_export(
         errors.append(f"config {config_id}: data_domain {data_domain} is not supported")
     if not config.get("enabled", False):
         errors.append(f"config {config_id}: export config is disabled")
-    if normalized_collection and select_all:
-        errors.append("collection package preparation requires explicit doc_ids")
-    selection_config = config.get("selection") if isinstance(config.get("selection"), dict) else {}
-    if missing_summary_only is not None and not isinstance(missing_summary_only, bool):
-        errors.append(f"config {config_id}: missing_summary_only must be true, false, or null")
-    elif missing_summary_only is True and not selection_config.get("supports_missing_summary_only"):
-        errors.append(f"config {config_id}: missing_summary_only true is not supported")
-
     output_config = config.get("output") if isinstance(config.get("output"), dict) else {}
     target_config = config.get("target") if isinstance(config.get("target"), dict) else {}
     supported_formats = supported_target_formats(config)
@@ -398,51 +468,19 @@ def build_export(
         )
 
     try:
-        source_context, docs = load_source_export_context(
-            repo_root,
-            normalized_collection,
-        )
+        selection = select_documents(config, resolved_content_format)
     except (FileNotFoundError, ValueError, RuntimeError, OSError) as exc:
         return empty_export_report(
-            write=write,
-            export_id=export_id,
-            config_id=config_id,
-            collection=normalized_collection,
-            target_format=resolved_target_format,
-            paths=paths,
-            warnings=warnings,
-            errors=[f"source context: {exc}"],
+            write=write, export_id=export_id, config_id=config_id,
+            collection=normalized_collection, target_format=resolved_target_format,
+            paths=paths, warnings=warnings, errors=[f"source context: {exc}"],
             supported_formats=supported_formats,
         )
-    docs_by_id = {normalize_text(doc.get("doc_id")): doc for doc in docs}
-    context = ExportContext(
-        repo_root=repo_root,
-        collection=normalized_collection,
-        supports_return_import=(
-            supports_return_import(config)
-            and source_context.return_import_enabled
-        ),
-        data_domain=data_domain,
-        content_format=resolved_content_format,
-        config=config,
-        source_context=source_context,
-        docs=docs,
-        docs_by_id=docs_by_id,
-        children_by_parent=build_children_by_parent(docs),
-    )
-    selected, skipped, selection_errors, selection_warnings = selected_docs(
-        context,
-        selected_doc_ids=selected_doc_ids,
-        select_all=select_all,
-        missing_summary_only=missing_summary_only,
-    )
-
-    record_shape = normalize_text(target_config.get("record_shape"))
-    if record_shape == "document_tree" and expand_document_tree_descendants:
-        selected = expand_selected_docs_for_document_tree(context, selected)
-
-    warnings.extend(selection_warnings)
+    context, selected, skipped = selection.context, selection.selected, selection.skipped
+    selection_errors = selection.errors
+    warnings.extend(selection.warnings)
     warnings.extend(skipped_summary_warnings(skipped))
+    record_shape = normalize_text(target_config.get("record_shape"))
     record_build = build_records_for_export(
         context=context,
         selected=selected,
