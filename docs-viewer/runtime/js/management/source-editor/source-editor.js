@@ -247,8 +247,7 @@ function createSourceEditorContextAdapter(context, state) {
       return state.collectionProvider.readCatalogueMediaTargets();
     },
     readDocumentLinkTargets: function () {
-      var target = {  };
-      return state.collectionProvider.readDocumentLinkTargets(target);
+      return state.collectionProvider.readDocumentLinkTargets();
     },
     getSelection: function () {
       return sourceSelection(state);

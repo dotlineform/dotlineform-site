@@ -3,11 +3,12 @@
 
 from __future__ import annotations
 
+import mimetypes
 import re
 import shutil
 import tempfile
 from contextlib import contextmanager
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, Iterator
@@ -26,16 +27,11 @@ from docs_import_common import (
     slugify,
 )
 from docs_import_media import build_media_plan
-from docs_media_storage import (
-    docs_media_file,
-    docs_publish_succeeded,
-    publish_docs_media_files,
-    validate_media_filename,
-)
+from docs_media_storage import validate_media_filename
 from docs_mermaid_media import produce_mermaid_svg
 from docs_workspace_config import (
     DocsStageConfig, DocsCollectionConfig,
-    load_docs_media_owner, managed_media_config, require_document_authoring,
+    managed_media_config, require_document_authoring,
 )
 from docs_staged_media_fragments import (
     build_file_link_fragment,
@@ -76,14 +72,10 @@ class SourceMediaContract:
     label: str
     media_class: str
     media_filename: str
+    owner: DocsStageConfig | DocsCollectionConfig
     collection: str = ""
     doc_id: str = ""
     create_thumb: bool = False
-
-
-def media_owner(repo_root: Path, contract: SourceMediaContract) -> DocsStageConfig | DocsCollectionConfig:
-    """Resolve the collection validated for this insertion, with no parent fallback."""
-    return load_docs_media_owner(repo_root, contract.collection)
 
 
 def normalize_media_kind(value: Any) -> str:
@@ -131,12 +123,12 @@ def _prepared_media_source(
     source_path: Path,
     kind: str,
     media_filename: str,
-) -> Iterator[tuple[Path, Path, SanitizedSvg | None]]:
+) -> Iterator[tuple[Path, SanitizedSvg | None]]:
     is_image = normalize_media_kind(kind) == MEDIA_IMAGE
     is_svg = is_image and source_path.suffix.lower() == ".svg"
     is_raster = is_image and source_path.suffix.lower() in RASTER_IMAGE_STAGED_SUFFIXES
     if not is_svg and not is_raster and media_filename == source_path.name:
-        yield source_path, source_path.parent, None
+        yield source_path, None
         return
     sanitized = sanitize_svg_bytes(source_path.read_bytes()) if is_svg else None
     with tempfile.TemporaryDirectory(prefix="docs-source-media-publish-") as temp_dir:
@@ -148,7 +140,7 @@ def _prepared_media_source(
             prepared_path.write_bytes(sanitized.bytes)
         else:
             shutil.copyfile(source_path, prepared_path)
-        yield prepared_path, temp_root, sanitized
+        yield prepared_path, sanitized
 
 
 def source_media_options() -> dict[str, dict[str, Any]]:
@@ -166,7 +158,9 @@ def _source_media_request_contract(repo_root: Path, body: dict[str, Any], source
     kind = normalize_media_kind(body.get("media_kind"))
     if any(key in body for key in ("staged_filename", "source_directory", "source_root", "source_path", "published_filename")):
         raise ValueError("Source media accepts native file bytes, not staged paths or caller-selected destinations")
-    config = load_docs_media_owner(repo_root, body.get("collection", ""))
+    target = managed_document_target_request(body)
+    resolved = resolve_managed_document_target(repo_root, target)
+    config = resolved.document_config
     require_document_authoring(config)
     if source_path.suffix.lower() not in media_suffixes(kind):
         raise ValueError(f"Unsupported {kind} format; select one of: {', '.join(sorted(media_suffixes(kind)))}")
@@ -178,8 +172,6 @@ def _source_media_request_contract(repo_root: Path, body: dict[str, Any], source
         else "img" if kind == MEDIA_IMAGE else "files"
     )
     media_filename = published_media_filename(source_path, kind=kind)
-    target = managed_document_target_request(body)
-    resolved = resolve_managed_document_target(repo_root, target)
     create_thumb = body.get("create_thumb", False)
     if not isinstance(create_thumb, bool):
         raise ValueError("create_thumb must be a boolean")
@@ -189,7 +181,7 @@ def _source_media_request_contract(repo_root: Path, body: dict[str, Any], source
         media_filename = Path(media_filename).with_suffix(".mmd").name
     return SourceMediaContract(
         kind=kind, source_path=source_path, label=label, media_class=media_class,
-        media_filename=media_filename, collection=getattr(config, "collection", ""),
+        media_filename=media_filename, owner=config, collection=resolved.collection,
         doc_id=resolved.doc_id, create_thumb=create_thumb,
     )
 
@@ -310,7 +302,7 @@ def _mermaid_preview_payload(
         Path(prepared.published_identity),
         contract.label,
         repo_root=repo_root,
-        media_config=managed_media_config(media_owner(repo_root, contract), "svg"),
+        media_config=managed_media_config(contract.owner, "svg"),
     )
     return {
         "ok": True,
@@ -374,10 +366,11 @@ def apply_source_media(
 def _apply_source_media_contract(
     repo_root: Path, contract: SourceMediaContract, body: dict[str, Any], *, write: bool,
 ) -> dict[str, Any]:
+    config = contract.owner
     if contract.media_class == "mermaid":
         prepared = _prepared_mermaid_media(
             repo_root,
-            media_owner(repo_root, contract),
+            config,
             contract.source_path,
             contract.media_filename,
         )
@@ -449,22 +442,20 @@ def _apply_source_media_contract(
             ),
         }
 
-    config = media_owner(repo_root, contract)
     with _prepared_media_source(
         contract.source_path, contract.kind, contract.media_filename,
-    ) as (prepared_path, source_root, sanitized):
-        item = docs_media_file(
-            config, media_class=contract.media_class, local_path=prepared_path,
-            source_root=source_root, filename=contract.media_filename,
-        )
-        media_type = config.media.types[contract.media_class]
+    ) as (prepared_path, sanitized):
+        data = prepared_path.read_bytes()
+        media_type = managed_media_config(config, contract.media_class)
+        remote_client = authenticated_remote_client_for_locations(repo_root, [media_type.asset_location])
         adapter = artifact_location_adapter(
             repo_root, media_type.asset_location, served_path_prefix=media_type.served_path_prefix,
+            remote_client=remote_client,
         )
-        collision = _artifact_status(adapter, contract.media_filename, prepared_path.read_bytes())
+        collision = _artifact_status(adapter, contract.media_filename, data)
         plan = build_media_plan(
             contract.media_class, Path(contract.media_filename), contract.label,
-            repo_root=repo_root, media_config=managed_media_config(config, contract.media_class),
+            repo_root=repo_root, media_config=media_type,
         )
         preview = {
             "ok": True, "doc_id": contract.doc_id, "collection": contract.collection,
@@ -474,16 +465,28 @@ def _apply_source_media_contract(
             "media_token": plan["media_token"],
             "markdown": _source_fragment(contract.kind, contract.label, plan["media_path"], body=body),
             "collision": collision, "requires_replace_confirmation": collision == "replace",
-            "size_bytes": item.size,
+            "size_bytes": len(data),
             "svg": {"title": sanitized.title, "diagnostics": sanitized.diagnostics()} if sanitized else None,
         }
         if _needs_confirmation(preview, body):
             return {**preview, "requires_confirmation": True}
-        results = publish_docs_media_files(
-            repo_root, [item], write=write, force=body.get("confirm_replace", False),
+        if write and collision != "unchanged":
+            content_type, _encoding = mimetypes.guess_type(contract.media_filename)
+            adapter.replace(contract.media_filename, data, content_type=content_type or "application/octet-stream")
+            if not adapter.verify_bytes(contract.media_filename, data):
+                raise RuntimeError(f"Docs media insertion did not complete for {contract.media_filename}: stored bytes did not verify")
+        status = (
+            "unchanged" if collision == "unchanged"
+            else "overwritten" if write and collision == "replace"
+            else "uploaded" if write
+            else "would_overwrite" if collision == "replace"
+            else "would_upload"
         )
-        if write and not docs_publish_succeeded(results):
-            raise RuntimeError(f"Docs media insertion did not complete: {results[0].status}")
+        published = {
+            "collection": contract.collection, "media_class": contract.media_class,
+            "filename": contract.media_filename, "size": len(data), "status": status,
+            "reason": "published bytes already match" if collision == "unchanged" else "" if write else "dry-run",
+        }
     thumbnail = None
     if write and contract.create_thumb:
         try:
@@ -494,10 +497,10 @@ def _apply_source_media_contract(
             raise RuntimeError(f"Display image stored as {contract.media_filename}; thumbnail operation failed: {error}") from error
     return {
         **preview, "requires_confirmation": False, "preview_only": not write,
-        "publish": asdict(results[0]), "thumbnail": thumbnail,
+        "publish": published, "thumbnail": thumbnail,
         "summary_text": (
             f"Added {contract.source_path.name}."
-            if write and results[0].status != "unchanged"
+            if write and status != "unchanged"
             else f"Verified {contract.source_path.name}." if write
             else f"Prepared insertion preview for {contract.source_path.name}."
         ),

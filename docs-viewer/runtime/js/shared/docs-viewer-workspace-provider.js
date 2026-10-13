@@ -89,8 +89,8 @@ export function createDocsViewerWorkspaceProvider(options) {
     };
   }
   if (source && typeof source.readDocumentLinkTargets === "function") {
-    provider.readDocumentLinkTargets = function (target) {
-      return source.readDocumentLinkTargets(target);
+    provider.readDocumentLinkTargets = function () {
+      return source.readDocumentLinkTargets();
     };
   }
   if (source && typeof source.readCatalogueMediaTargets === "function") {

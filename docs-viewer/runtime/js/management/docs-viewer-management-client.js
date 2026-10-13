@@ -1,7 +1,4 @@
-import {
-  normalizeManagedDocumentCollectionTarget,
-  normalizeManagedDocumentTarget
-} from "./docs-viewer-management-document-target.js";
+import { normalizeManagedDocumentTarget } from "./docs-viewer-management-document-target.js";
 
 function defaultFetch(url, options) {
   return window.fetch(url, options);
@@ -73,11 +70,8 @@ export function setManagedDocSelected(target, selected, options) {
 }
 
 /** Read authoring targets in the authoring workspace; the response supplies ordinary hrefs. */
-export function readDocumentLinkTargets(target, options) {
-  var collection = normalizeManagedDocumentCollectionTarget(target);
-  var query = "";
-  if (collection.collection) query += "?collection=" + encodeURIComponent(collection.collection);
-  return fetchManagementJson("/docs/document-link-targets" + query, "GET", undefined,
+export function readDocumentLinkTargets(options) {
+  return fetchManagementJson("/docs/document-link-targets", "GET", undefined,
     Object.assign({}, options, { cache: "no-store" }));
 }
 

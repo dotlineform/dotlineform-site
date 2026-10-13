@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260514-184303-7914e2
 title: Media And Asset Handling
 added_date: "2026-05-14 18:43:03"
-last_updated: "2026-10-13 13:25:46"
+last_updated: "2026-10-13 18:25:53"
 summary: Media intake, content interpretation, document representation, storage, link resolution, extension methods, and safety boundaries.
 parent_id: d-20260424-000000-50b63f
 
@@ -75,6 +75,8 @@ Managed-media materialisation happens before a document import source write or s
 `docs_source_media_upload.py` owns a 64 MiB single-file limit, 1 MiB metadata limit and 1 MiB multipart overhead limit (66 MiB total envelope). Empty files and unsupported suffixes are rejected. `GET /docs/source` includes `media_options.image` and `media_options.file`, each containing `accept`, `max_file_bytes` and `max_metadata_bytes` from the intake owner. The mounted editor reuses these options for Add/Edit and releases them on exit; changing the source buffer does not invalidate chooser capabilities. The separate `/docs/source/media/options` route and its adapter/provider/client methods are retired without aliases. `/docs/source/media` accepts exactly metadata JSON and one native file through the existing local management/origin boundary. Global JSON request limits remain unchanged. Server validation owns the actual basename, format, exact document/collection capability and destination; browser filters and MIME declarations grant no write authority.
 
 Native bytes use operation-owned temporary storage, with no persistent upload stage or dependency on Projects/import-staging availability. Normal insertion completes in one request. Changed target bytes or SVG sanitizer warnings return a write-free decision; after confirmation the browser resubmits the same selected file. Original files remain untouched. The browser supplies no original folder path, and this workflow records no configured-root or Projects provenance. The retired staged listing/preview/apply routes, folder-selection branches and their request fields have no aliases; separately owned Docs Import/package staging remains available.
+
+Native intake carries the exact document target's resolved owner through media preparation, logical-reference construction and requested thumbnail storage. For raster images, SVG and opaque files, it reads the prepared bytes once and compares their configured owner/family/filename destination once per request. The resulting collision status governs reuse or the confirmed write through the same artifact adapter; the write retains byte verification. This single-asset path does not enter the generic batch-media publisher for another owner load, MD5 pass or destination preflight. Mermaid retains its paired source/SVG comparison and writes under the carried owner. Confirmed resubmission prepares the supplied file again within its own request.
 
 ### Authored Links
 

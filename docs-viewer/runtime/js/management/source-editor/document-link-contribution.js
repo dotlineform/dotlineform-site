@@ -1,7 +1,7 @@
 import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { escapeHtml, openDocsViewerManagementModal } from "../docs-viewer-management-modal-shell.js";
 import { createCatalogueTargetPickerList } from "./catalogue-target-picker.js";
-import { filterDocumentLinkTargets, insertDocumentLink, normalizeDocumentLinkTargets } from "./document-link.js";
+import { filterDocumentLinkTargets, insertDocumentLink } from "./document-link.js";
 
 /** Select one exact document using existing modal/list presentation and the mounted source adapter. */
 export function openDocumentLinkModal(options) {
@@ -68,7 +68,7 @@ export function openDocumentLinkModal(options) {
       Promise.resolve().then(function () { return adapter.readDocumentLinkTargets(); }).then(function (payload) {
         if (state.disposed) return;
         if (!options.isCurrent()) throw new Error("The source document is no longer active. Cancel and try again.");
-        state.support = normalizeDocumentLinkTargets(payload);
+        state.support = payload;
         state.support.collections.forEach(function (name) {
           collection.insertAdjacentHTML("beforeend", '<option value="sub:' + escapeHtml(name) + '">' + escapeHtml(name) + "</option>");
         });

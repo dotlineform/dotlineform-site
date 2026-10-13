@@ -102,10 +102,9 @@ class ContentRenderingMixin:
         path_part = parsed.path or ""
         if not path_part:
             return href
-        values = parse_qs(parsed.query)
-        if path_part in {"/docs/", self.workspace.public_viewer_base_url} and ({"stage", "scope", "subdoc"} & values.keys()):
-            raise RuntimeError("Stage, scope or subdoc-bearing Docs links are retired; update the source link before building")
         query_values = parse_qs(parsed.query)
+        if path_part in {"/docs/", self.workspace.public_viewer_base_url} and ({"stage", "scope", "subdoc"} & query_values.keys()):
+            raise RuntimeError("Stage, scope or subdoc-bearing Docs links are retired; update the source link before building")
         viewer_doc_id = (query_values.get("doc") or [""])[0]
         if viewer_doc_id and self.viewer_path_match(path_part, query_values):
             if self.config.stage != "review":

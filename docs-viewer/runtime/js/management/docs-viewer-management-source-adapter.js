@@ -30,8 +30,8 @@ export function createDocsViewerManagementSourceAdapter(options) {
   }
 
   return {
-    readDocumentLinkTargets: function (target) {
-      return readDocumentLinkTargets(target, clientOptions());
+    readDocumentLinkTargets: function () {
+      return readDocumentLinkTargets(clientOptions());
     },
     readCatalogueMediaTargets: function () {
       return readCatalogueMediaTargets( clientOptions());
