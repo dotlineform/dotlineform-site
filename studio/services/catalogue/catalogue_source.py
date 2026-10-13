@@ -81,7 +81,18 @@ WORK_PRESERVED_VALUE_FIELDS = frozenset({
 OMIT_EMPTY_SOURCE_FIELDS = {
     "series_id",
     MEDIA_SOURCE_FIELD,
+    "project_folder",
     "project_subfolder",
+    "project_filename",
+    MEDIA_VERSION_FIELD,
+    "medium",
+    "storage_location",
+    "duration",
+    "width_cm",
+    "height_cm",
+    "depth_cm",
+    "width_px",
+    "height_px",
 }
 
 SOURCE_FIELDS_BY_RECORD_FAMILY = {
@@ -208,7 +219,11 @@ def normalize_source_record(
     *,
     text_fields: set[str] | None = None,
 ) -> Dict[str, Any]:
-    """Serialize Work values unchanged; Series definitions retain their own text handling."""
+    """Preserve supplied Work values, omitting null optional scalars.
+
+    Cleared optional UI controls arrive as request nulls; their saved keys are
+    omitted. Required fields remain explicit. Series retain their text handling.
+    """
     field_order = tuple(field_order)
     is_work = "work_id" in field_order
     text_fields = text_fields or set()
@@ -227,16 +242,12 @@ def normalize_source_record(
             # Source path components are identities, not prose to trim or unquote.
             if value is not None and value != "":
                 out[field] = value
-            elif field not in OMIT_EMPTY_SOURCE_FIELDS:
-                out[field] = None
         elif field == MEDIA_VERSION_FIELD:
             normalized_int = normalize_optional_int(value)
             if normalized_int is not None:
                 out[field] = normalized_int
             elif not is_empty(value):
                 out[field] = normalize_text(value)
-            elif field not in OMIT_EMPTY_SOURCE_FIELDS:
-                out[field] = None
         elif is_work and field in WORK_PRESERVED_VALUE_FIELDS:
             # The UI owns authored values; Save measures intrinsic pixels from the file.
             if value is not None or field not in OMIT_EMPTY_SOURCE_FIELDS:

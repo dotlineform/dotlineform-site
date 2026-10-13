@@ -17,8 +17,8 @@ GALLERY_RECORD_SCHEMA_VERSION = "gallery_record_v3"
 
 def build_work_record_projection(work_record: Mapping[str, Any]) -> Dict[str, Any]:
     """Copy UI-authored values and Save-measured pixels without repair or validation."""
-    fm: Dict[str, Any] = {field: work_record[field] for field in ("title", "year", "year_display", "width_px", "height_px")}
-    for field in ("height_cm", "width_cm", "depth_cm"):
+    fm: Dict[str, Any] = {field: work_record[field] for field in ("title", "year", "year_display")}
+    for field in ("width_px", "height_px", "height_cm", "width_cm", "depth_cm"):
         if field in work_record:
             fm[field] = work_record[field]
     for field in ("medium", "duration"):
