@@ -240,20 +240,6 @@ export function openManagedDiagramSource(target, payload, options) {
   }, payload || {})), options);
 }
 
-/** Read server-owned native media suffixes and byte limits without filesystem listing. */
-export function readSourceMediaOptions(mediaKind, options) {
-  var settings = options || {};
-  var kind = encodeURIComponent(String(mediaKind || "").trim());
-  var query = ["media_kind=" + kind];
-  if (settings.collection) query.push("collection=" + encodeURIComponent(settings.collection));
-  return fetchManagementJson(
-    "/docs/source/media/options?" + query.join("&"),
-    "GET",
-    undefined,
-    options
-  );
-}
-
 /** Await one native media upload, returning either a write-free decision or completed media. */
 export function applySourceMedia(payload, file, options) {
   var data = new FormData();

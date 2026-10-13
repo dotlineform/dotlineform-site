@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-4b1d77
 title: Source Editor Endpoints
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-13 13:04:18"
+last_updated: "2026-10-13 13:25:46"
 parent_id: d-20260607-222033-647b52
 ---
 # Docs Viewer Source Editor Endpoints
@@ -21,6 +21,8 @@ For a configured collection document, add its explicit `collection` identity and
 `doc` is not a source-target alias. Source reads require `doc_id`.
 
 Returned data includes `ok`, `doc_id`, optional `collection`, complete `source_text`, a provider-safe `path`, `subject_assignment_available`, `folder_subject_supported` and optional scalar `subject`. These Subject fields seed the editor's loaded buffer revision. A Subject projection failure is returned as `subject_error`, leaving Source available for manual correction; Subject consumers report that error. No source revision or separate metadata/body transport is returned.
+
+`media_options` contains `image` and `file` records, each with `accept` (comma-separated native-input suffixes), `max_file_bytes` and `max_metadata_bytes`. These come from the same suffix/limit owners used by intake. The mounted editor reuses them for Add/Edit and clears them on exit, without a separate options request or source-revision invalidation. `/docs/source/media/options` is retired without an alias.
 
 Used for:
 
@@ -120,42 +122,16 @@ This write-free request accepts an exact target and complete `source_text`, plus
 
 Assign Subject and Catalogue modals share one derived context per mounted buffer revision, including an in-flight read. Source loading seeds the first context from parsed metadata; successful Subject Apply seeds the resulting revision. Buffer input, changed saved-source replacement or editor release invalidates it. Failed requests remain retryable; late responses cannot replace a newer context. The POST retains `no-store`; this is bounded editor state, not an HTTP or process payload cache. Apply uses the registered Subject normaliser and span-preserving writer without a second full candidate-validation pass or unused change comparison. It preserves unrelated front matter, body and timestamps and updates only the captured current buffer. Folder input retains Projects-root path/file-URL conversion. **Use document subject** accepts Work only; a valid Folder response disables that shortcut without an invalid-Subject error. Opening Directives makes no context request. Folder opening is available through [Projects](/docs/?doc=d-20260805-155400-4c341f); ordinary local-folder links retain their opener. This endpoint writes no source/generated output and runs no Search or Publish. [User Facing Rules](data/User_Facing_Rules.md) D.11/M.14 records the current delivery.
 
-## `GET /docs/staged-media-files`
+## `POST /docs/source/media`
 
-Query parameters:
-
-```text
-media_kind=image
-```
-
-`media_kind` must be `image` or `file`. The service lists only safe, non-symlink direct children of the shared staging root:
-
-- `image`: supported raster formats plus `.svg`
-- `file`: allowlisted opaque download formats
-
-Returned records contain safe staging identity, kind/format, suggested label, size, and modification time. Document sources are not listed here, and media is not listed by global Docs Import.
-
-## `POST /docs/staged-media-preview`
-
-Expected data:
+Multipart form data contains exactly `metadata` JSON and one native `file`. Metadata identifies the exact mounted `doc_id`, optional configured `collection`, `media_kind` (`image` or `file`) and `label`. Image intake adds its presentation and thumbnail choices:
 
 ```json
 {
   "doc_id": "d-20260918-123509-93122f",
   "media_kind": "image",
-  "staged_filename": "diagram.svg",
-  "label": "Energy wells"
-}
-```
-
-A captioned image adds the semantic presentation fields:
-
-```json
-{
-  "doc_id": "d-20260918-123509-93122f",
-  "media_kind": "image",
-  "staged_filename": "diagram.svg",
   "label": "Energy wells diagram",
+  "create_thumb": false,
   "add_caption": true,
   "caption": "Energy wells",
   "summary": "First supporting line\nSecond supporting line",
@@ -164,39 +140,13 @@ A captioned image adds the semantic presentation fields:
 }
 ```
 
-`label` remains the required image alt text. `add_caption: true` requires a
-nonblank plain-text `caption`, one allowlisted `placement` value (`full`,
-`left`, or `right`), and a JSON boolean `fill_width`. `summary` is optional
-plain text and preserves normalized line breaks. Missing or non-boolean
-`fill_width` fails validation; the service does not infer a default. When
-`add_caption` is false or absent, the presentation fields are omitted and the
-response retains the plain Markdown image fragment. File requests do not use
-image-presentation fields.
+`label` supplies image alt text. Image requests require boolean `add_caption` and `fill_width`, and allowlisted `placement` (`full`, `left` or `right`); `add_caption: true` requires nonblank plain-text `caption`. Optional `summary` preserves normalized line breaks. `create_thumb` is a boolean and can be true only for a supported raster image. File requests do not use image-presentation fields. The browser supplies no HTML, classes, dimensions, staged paths or caller-selected destinations.
 
-The write-free preview resolves the configured target media class (`img` for raster, `svg` for SVG, or `files` for downloads), sanitizes SVG when applicable, and returns:
+Intake receives no `source_text` and performs no full Source Save candidate validation. It resolves the exact existing document/collection owner and retains upload basename/type/size checks, path confinement, conversion/sanitization, presentation serialization and actual media/storage failures. Existing saved-source target parsing/checks remain. Validation and normalization of Title/Summary, readiness, Subject and reports in the unsaved buffer remain with Source Save.
 
-- stable logical media identity and token;
-- exact source fragment: a plain Markdown image, semantic figure, or file link;
-- `new`, `unchanged`, or `replace` collision state;
-- replacement-confirmation requirement;
-- sanitized-SVG title and diagnostics when applicable.
+The service prepares selected bytes in operation-owned temporary storage before comparing the owner/family/filename identity. New or unchanged media completes in one request. Changed bytes or sanitizer warnings return `requires_confirmation: true` without permanent writes, together with collision and sanitization diagnostics. Confirmed resubmission sends the same native File and metadata with `confirm_replace` and `confirm_sanitization` booleans. Required media and requested thumbnail writes and their verification finish before the response returns insertion Markdown, media identity/token and completion status. The browser edits only the captured current Source occurrence/range and leaves the buffer dirty for Save. Presentation-only token Apply uses local serialization and makes no media request.
 
-It exposes no physical provider path and does not create or identify a document.
-
-The semantic figure is image-first source with escaped attributes and text. It
-uses `docsViewerFigure` plus one fixed placement class. `fill_width: false`
-adds `docsViewerFigure--natural-width`; `true` uses the available full or split
-column. The browser never supplies source HTML, class names, or dimensions.
-
-The source editor consumes this preview internally. It proceeds directly for `new` and `unchanged`, and opens a follow-up modal only for changed-byte replacement or SVG sanitizer diagnostics that require review.
-
-## `POST /docs/staged-media-apply`
-
-Expected data is the preview request plus `confirm_replace: true` when changed bytes would replace an existing media identity.
-
-Apply repeats safe resolution and sanitization, publishes through the configured provider-neutral media boundary, byte-verifies the result, and returns the preview contract plus publication status and Markdown. It does not write document source; the browser inserts the returned Markdown at the current source-editor selection and leaves the buffer dirty for `POST /docs/source/save`.
-
-Publication precedes insertion. Staged files are retained. The action may leave unreferenced published media if the author later abandons the dirty source edit, but it cannot insert a reference after failed publication.
+Intake does not write document source, build documents or Publish. Discarding Source can leave completed shared media writes unreferenced. The separate staged listing/preview/apply routes are retired without aliases; Docs Import/package staging retains its own owner. [Media And Asset Handling](Media_And_Asset_Handling.md) owns formats, naming, storage and failure boundaries.
 
 ## `POST /docs/open-source`
 

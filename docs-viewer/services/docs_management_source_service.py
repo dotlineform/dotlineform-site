@@ -39,6 +39,7 @@ from docs_collection_customisations import (  # noqa: E402
 )
 from docs_document_subjects import AUTHORING_SUBJECT_FIELDS, FOLDER_PATH_FIELD  # noqa: E402
 from docs_document_rebuild import rebuild_resolved_document  # noqa: E402
+from docs_source_media_service import source_media_options  # noqa: E402
 
 
 def normalize_source_body(value: Any) -> str:
@@ -99,6 +100,7 @@ def read_source_document(repo_root: Path, params: Dict[str, list[str]]) -> Dict[
         "ok": True,
         **resolved.request_target(),
         "source_text": source_text,
+        "media_options": source_media_options(),
         **_source_subject_context(resolved),
         "path": path_label(repo_root, target.path),
     }

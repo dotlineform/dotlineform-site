@@ -157,7 +157,8 @@ export async function publishAndInsertSourceMedia(options = {}) {
   var provider = options.provider || {};
   var adapter = options.adapter || null;
   var kind = cleanString(options.mediaKind) === "file" ? "file" : "image";
-  if (typeof provider.readSourceMediaOptions !== "function" || typeof provider.applySourceMedia !== "function"
+  var mediaOptions = options.mediaOptions;
+  if (!mediaOptions || typeof provider.applySourceMedia !== "function"
       || !adapter || typeof adapter.insertSourceMedia !== "function" || !options.capture) {
     throw new Error("Native media intake is unavailable on this route.");
   }
@@ -175,7 +176,6 @@ export async function publishAndInsertSourceMedia(options = {}) {
   var draft = initialToken ? Object.assign({}, initialToken, {
     label: initialToken.alt, addCaption: Boolean(initialToken.caption)
   }) : null;
-  var mediaOptions = await provider.readSourceMediaOptions(kind, options.target);
   var choice = await chooseSourceMedia(root, kind, mediaOptions, draft);
   if (!choice) return null;
   if (!choice.file && choice.mediaPath) {
@@ -189,7 +189,6 @@ export async function publishAndInsertSourceMedia(options = {}) {
   }
   var request = Object.assign({}, options.target, { media_kind: kind, label: choice.label });
   if (kind === "image") {
-    request.source_text = adapter.getBufferSnapshot().value;
     request.create_thumb = choice.createThumb;
     request.add_caption = Boolean(choice.addCaption);
     request.caption = choice.addCaption ? choice.caption : "";

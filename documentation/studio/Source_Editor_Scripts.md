@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-704641
 title: Source Editor Scripts
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-13 13:04:18"
+last_updated: "2026-10-13 13:25:46"
 parent_id: d-20260607-222033-2a494e
 ---
 # Docs Viewer Source Editor Scripts
@@ -59,6 +59,8 @@ Title, Summary and other valid authored fields are edited directly in the same b
 The exact splitter lives in `docs_source_model.py`, including the strict key/value and quoted-scalar checks used by Source and existing Import/Review consumers. It uses the maintained front-matter value grammar rather than YAML or a separate browser field parser. `source-buffer.js` locates only the body boundary for buffer contributions; it does not interpret metadata. The modal's write-free context request projects the current buffer's Subject through the service and the owning collection customisation.
 
 Source context uses `docs_document_subjects.py`'s complete authoring projection, including Folder and Work, with omission for None. The public Work-only projection remains separate. Source loading supplies initial Subject/capabilities or a projection error without blocking the editor. Assign Subject and Catalogue modals share context for the exact buffer revision and coalesce in-flight reads. Buffer changes and editor release invalidate it; successful Subject Apply seeds the resulting revision. Failed requests remain retryable and late responses cannot replace a newer result. Catalogue shortcuts accept Folder responses while selecting Work only.
+
+Source load also supplies `media_options.image` and `media_options.file`, each with accepted suffixes and file/metadata byte limits from the native intake owner. The mounted editor carries them into `source-editor-media.js` and releases them with the session; buffer edits need no capability refresh. Add image, Edit image and Add file make no options request. Presentation-only image Apply serializes locally. Selected-file intake sends the fixed target, file and authored presentation without `source_text`; it validates media inputs and completes required writes independently of the unsaved buffer's Title, readiness, Subject and report validity. Existing saved-source target resolution remains; Source Save retains full candidate validation. [Media And Asset Handling](Media_And_Asset_Handling.md) and [Source Editor Endpoints](Source_Editor_Endpoints.md) own the storage and transport contracts.
 
 Source mounts beside the existing rendered DOM inside the common reader's active `.docsViewer__documentMount`. Management CSS keeps that mount and the editor visible while hiding only the mount's rendered children; inactive retained document mounts stay hidden. It does not detach the collection report or end its lifecycle. Successful Save awaits a fresh generated payload, removes the editor and refreshes the current retained mount while preserving its route, history and reading position. Persistence, generation and display failures remain distinct; persisted source is marked clean even when generation fails. [Runtime](Docs_Viewer_Runtime.md#explicit-working-refresh) owns application completion and explicit external-change refreshes; no browser timer remains.
 

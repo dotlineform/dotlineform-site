@@ -22,7 +22,6 @@ CATALOGUE_REGENERATE_PATH = "/docs/catalogue/regenerate"
 SOURCE_CONFIG_SETTINGS_PATH = "/docs/source-config-settings"
 IMPORT_SOURCE_DIRECTORIES_PATH = "/docs/import-source-directories"
 IMPORT_SOURCE_FILES_PATH = "/docs/import-source-files"
-SOURCE_MEDIA_OPTIONS_PATH = "/docs/source/media/options"
 DIAGRAM_SOURCES_PATH = "/docs/diagram-sources"
 
 SOURCE_PATH = "/docs/source"
@@ -83,7 +82,6 @@ GET_PATHS = (
     METADATA_PATH,
     IMPORT_SOURCE_DIRECTORIES_PATH,
     IMPORT_SOURCE_FILES_PATH,
-    SOURCE_MEDIA_OPTIONS_PATH,
     DIAGRAM_SOURCES_PATH,
     MEDIA_METADATA_PATH,
     BROKEN_LINKS_PATH,

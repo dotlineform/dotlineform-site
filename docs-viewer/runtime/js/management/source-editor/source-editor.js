@@ -313,6 +313,7 @@ function loadSource(context, state) {
         throw new Error("Source service did not return the complete document.");
       }
       state.lastCleanSource = normalizeSource(payload.source_text);
+      state.mediaOptions = payload.media_options;
       state.subjectAssignmentAvailable = payload.subject_assignment_available === true;
       state.loaded = true;
       if (state.textarea) {
@@ -428,6 +429,7 @@ function addSourceMedia(context, state, mediaKind, capture) {
         adapter: state.sourceEditorAdapter,
         capture: capture,
         mediaKind: mediaKind,
+        mediaOptions: state.mediaOptions && state.mediaOptions[mediaKind],
         provider: provider,
         target: Object.assign({}, state.target),
         root: context.root || document.body
@@ -520,6 +522,7 @@ function restoreRenderedContent(context, state) {
   state.root = null;
   state.textarea = null;
   state.loaded = false;
+  state.mediaOptions = null;
   state.sourceContextRead = null;
   state.sourceEditorAdapter = null;
 }
@@ -532,6 +535,7 @@ export function createDocsViewerSourceEditorMode() {
     dirtyValue: false,
     lastCleanSource: "",
     loaded: false,
+    mediaOptions: null,
     subjectAssignmentAvailable: false,
     sourceContextRead: null,
     collectionProvider: null,
@@ -554,6 +558,7 @@ export function createDocsViewerSourceEditorMode() {
       state.sourceContextRead = null;
       state.lastCleanSource = "";
       state.loaded = false;
+      state.mediaOptions = null;
       state.subjectAssignmentAvailable = false;
       state.collectionProvider = context.collectionProvider || null;
       state.renderedScrollTop = context.mount.scrollTop;

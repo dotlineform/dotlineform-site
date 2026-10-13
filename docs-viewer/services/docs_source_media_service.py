@@ -46,7 +46,6 @@ from docs_source_media_upload import MAX_MEDIA_BYTES, MAX_METADATA_BYTES, Source
 from docs_source_image_conversion import convert_source_image_to_webp
 from docs_document_images import write_document_thumbnail
 from docs_management_document_target import managed_document_target_request, resolve_managed_document_target
-from docs_management_source_service import validate_source_candidate
 
 
 MEDIA_IMAGE = "image"
@@ -152,12 +151,14 @@ def _prepared_media_source(
         yield prepared_path, temp_root, sanitized
 
 
-def media_options(repo_root: Path, kind: str, *, collection: str = "") -> dict[str, Any]:
-    """Expose only accepted suffixes and the native byte limit to the local chooser."""
-    require_document_authoring(load_docs_media_owner(repo_root, collection))
+def source_media_options() -> dict[str, dict[str, Any]]:
+    """Supply both native choosers' suffixes and byte limits with Source load."""
     return {
-        "ok": True, "accept": ",".join(sorted(media_suffixes(kind))),
-        "max_file_bytes": MAX_MEDIA_BYTES, "max_metadata_bytes": MAX_METADATA_BYTES,
+        kind: {
+            "accept": ",".join(sorted(media_suffixes(kind))),
+            "max_file_bytes": MAX_MEDIA_BYTES, "max_metadata_bytes": MAX_METADATA_BYTES,
+        }
+        for kind in (MEDIA_IMAGE, MEDIA_FILE)
     }
 
 
@@ -184,11 +185,6 @@ def _source_media_request_contract(repo_root: Path, body: dict[str, Any], source
         raise ValueError("create_thumb must be a boolean")
     if create_thumb and media_class != "img":
         raise ValueError("Create thumb requires a raster image")
-    if kind == MEDIA_IMAGE:
-        source_text = body.get("source_text")
-        if not isinstance(source_text, str):
-            raise ValueError("Add image requires the current source_text")
-        validate_source_candidate(repo_root, target, source_text, resolved)
     if media_class == "mermaid":
         media_filename = Path(media_filename).with_suffix(".mmd").name
     return SourceMediaContract(
