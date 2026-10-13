@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-4b1d77
 title: Source Editor Endpoints
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-10 17:12:00"
+last_updated: "2026-10-13 13:04:18"
 parent_id: d-20260607-222033-647b52
 ---
 # Docs Viewer Source Editor Endpoints
@@ -20,7 +20,7 @@ For a configured collection document, add its explicit `collection` identity and
 
 `doc` is not a source-target alias. Source reads require `doc_id`.
 
-Returned data includes `ok`, `doc_id`, optional `collection`, complete `source_text` and a provider-safe `path`. `source_text` contains the loaded front matter and body. No source revision or separate metadata/body transport is returned.
+Returned data includes `ok`, `doc_id`, optional `collection`, complete `source_text`, a provider-safe `path`, `subject_assignment_available`, `folder_subject_supported` and optional scalar `subject`. These Subject fields seed the editor's loaded buffer revision. A Subject projection failure is returned as `subject_error`, leaving Source available for manual correction; Subject consumers report that error. No source revision or separate metadata/body transport is returned.
 
 Used for:
 
@@ -116,9 +116,9 @@ This is a single-editor snapshot save: there is no disk revision check, external
 
 ## `POST /docs/source/context`
 
-This write-free request accepts the same exact target and complete `source_text` as Save, plus optional `subject_fields` containing exactly `folder_path` and `work_id`. The source service validates the unsaved candidate through the same parser, identity and collection owners and returns `ok`, exact `doc_id`/optional `collection`, `subject_assignment_available`, `folder_subject_supported` and optional scalar `subject`. Its private authoring projection includes both Folder and Work; omission means None. The public Work-only reader projection is separately owned and must not supply this context. It resolves the configured collection without rereading document sources; Save independently resolves the actual file before persistence.
+This write-free request accepts an exact target and complete `source_text`, plus optional `subject_fields` containing exactly `folder_path` and `work_id`. It parses front matter once, checks fixed document/collection identity and either projects the configured Subject or prepares the supplied Subject replacement. It performs no Title/Summary completion, readiness validation, body normalization or report parsing; Source Save owns those checks. The response carries `ok`, exact `doc_id`/optional `collection`, `subject_assignment_available`, `folder_subject_supported` and optional scalar `subject`; omission means None. Work Subjects need no Catalogue existence lookup, and saved Folder identities need no live target. Configured owner/root resolution and supported Subject syntax remain required; the public Work-only projection stays separate.
 
-Assign Subject initializes from that current Subject and the exact collection's capabilities. With replacement fields, the service uses the registered metadata owner and span-preserving front-matter writer to return prepared `source_text`; Apply updates only the current buffer. Folder input uses the existing Projects-root path normaliser. Open Subject folder reads this same context when Directives opens. **Use document subject** in Catalogue modals accepts only Work targets; a valid Folder response leaves that optional shortcut disabled without reporting an invalid Subject. Invalid source reports a visible error while those modals preserve their token values and Catalogue picker. The adapter rejects a late context response after the buffer or mounted editor changes. This endpoint performs no source write, timestamp advancement, generation, Search rebuild or Publish. [Assign Subject In Source Editor](deliveries/Assign_Subject_In_Source_Editor.md) records the delivery and evidence.
+Assign Subject and Catalogue modals share one derived context per mounted buffer revision, including an in-flight read. Source loading seeds the first context from parsed metadata; successful Subject Apply seeds the resulting revision. Buffer input, changed saved-source replacement or editor release invalidates it. Failed requests remain retryable; late responses cannot replace a newer context. The POST retains `no-store`; this is bounded editor state, not an HTTP or process payload cache. Apply uses the registered Subject normaliser and span-preserving writer without a second full candidate-validation pass or unused change comparison. It preserves unrelated front matter, body and timestamps and updates only the captured current buffer. Folder input retains Projects-root path/file-URL conversion. **Use document subject** accepts Work only; a valid Folder response disables that shortcut without an invalid-Subject error. Opening Directives makes no context request. Folder opening is available through [Projects](/docs/?doc=d-20260805-155400-4c341f); ordinary local-folder links retain their opener. This endpoint writes no source/generated output and runs no Search or Publish. [User Facing Rules](data/User_Facing_Rules.md) D.11/M.14 records the current delivery.
 
 ## `GET /docs/staged-media-files`
 

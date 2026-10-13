@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260331-000000-c313fd
 title: Runtime
 added_date: "2026-03-31 00:00:00"
-last_updated: "2026-10-13 12:36:00"
+last_updated: "2026-10-13 13:04:18"
 summary: Public, manage, and review execution paths; browser/server authority boundaries; extension method; rationale; and known weak spots.
 parent_id: d-20260424-000000-50b63f
 ---
@@ -189,7 +189,7 @@ If the committed record cannot be reconciled with the current browser model, the
 
 **Edit document** opens one Source session and its metadata panel for the exact Working target. An ordinary view targets its document, a collection list targets its report host, and a validated collection detail targets only that detail. Invalid or loading details do not fall back to the host. Separate Source and Subdoc Source buttons are removed; Open in VS Code remains separate.
 
-`GET /docs/source` supplies the full loaded front matter and body. The session owns Title/Summary, typed Markdown and raw pending semantic-token occurrence fields, including invalid values. Panel mounts only project that state. Switching context or closing the panel preserves the draft, and leaving Source asks for one discard decision covering all edits. The [Info Panel](Info_Panel.md) owner describes the context table.
+`GET /docs/source` supplies the complete buffer and initial Subject context from its parsed metadata. Subject projection errors leave Source available for correction. Assign Subject and Catalogue shortcuts share one context per buffer revision, coalesce in-flight reads and seed the result after Subject Apply. Buffer/editor changes invalidate it. Context reads and prepared rewrites parse the fixed target once without Title/readiness/report validation or persistence. Source Save retains complete validation and awaited generation/display. Opening Directives makes no context request; [Projects](/docs/?doc=d-20260805-155400-4c341f) retains folder opening.
 
 The single `POST /docs/source/save` validates the complete draft and performs one atomic source write, preserving non-edited metadata and exact document/collection identity. It has no disk-revision or external-merge workflow. Save reuses the exact-target document/Links rebuild owner, omitting Search, Publish and registered media production. The browser then reads the fresh exact payload and awaits rendered display before releasing busy state. A validation/write failure retains the unsaved draft. A generation failure reports that the source was saved and marks it clean; a later display failure reports completed saving and generation. Neither failure rolls back source or schedules a retry. [Source Editor Endpoints](Source_Editor_Endpoints.md) defines the request and response.
 
@@ -207,8 +207,7 @@ The filesystem watcher and browser refresh timer are retired. Application comple
 | --- | --- |
 | Source Save | Project the complete committed metadata to Index and retained lists, then read and display the fresh exact generated document. |
 | Draft/ready | Project the changed front-matter record to the menu and retained lists; do not reload the document body. |
-| Source Assign Subject | Apply its prepared front-matter changes to the unsaved editor only; Source Save owns committed metadata projection and fresh display. |
-| Source Open Subject folder | Read the current buffer's Folder subject when Directives opens and await the existing local-link opener on activation. Work, None and invalid source remain disabled. No source or generated write. |
+| Source Assign Subject | Apply prepared Subject fields to the captured unsaved buffer and seed the resulting revision's context; Source Save owns complete validation, committed metadata projection and fresh display. |
 | Create | Project the committed record, refresh the ordinary Index where required, and open the exact created target in Source through the existing ordinary or collection owner. |
 | Edit doc → Rebuild | Reload ordinary Index metadata where applicable, read exact current management metadata for retained lists, and refresh the displayed generated payload. |
 | Rebuild docs and Search / changed Settings | Reload the ordinary Index and refresh the exact displayed document/report. Rebuild also invalidates loaded Search and Recent inputs and awaits the currently visible list; the next activation reads inactive lists. Query, Index view and list scroll remain independent of the document refresh. |

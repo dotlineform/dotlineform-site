@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260623-180405-631ef4
 title: Semantic Tokens Source Editor UI
 added_date: "2026-06-23 18:04:05"
-last_updated: "2026-10-08 19:10:43"
+last_updated: "2026-10-13 13:04:18"
 summary: Create and edit supported Catalogue occurrences through their modals in one complete Markdown Source buffer.
 parent_id: d-20260725-153656-516b61
 ---
@@ -26,21 +26,21 @@ Opening a document or Catalogue selection modal captures the source selection, m
 
 The Catalogue actions use Catalogue identity and generated media independently of whether a related document exists. They do not filter candidates by document collections or Subject associations.
 
-Selecting a Catalogue target, including through **Use document subject**, validates its media without a transient loading message. Confirmation remains disabled until validation completes; failures appear in the status area.
+Selecting a Catalogue target, including through **Use document subject**, consumes its loaded exact ID/title. Selection and Apply request no media presentation; confirmation depends on the local target and authored token fields. Build and rendered activation own their required media reads.
 
 The modal starts with search status and results hidden. Results appear only when the query has matches; an empty result container contributes no padding or grid gap. Initial Catalogue loading and subject selection add no transient status row.
 
-The modal changes the ordinary dirty buffer. The session's Save owns the complete source write and awaits exact generation and fresh display. Cancellation leaves source unchanged. The generic editor owns focus, selection and dirty-state projection. **Use document subject** reads a safe projection of the captured unsaved buffer through the source service. Invalid front matter leaves that optional choice unavailable with a visible error; it does not reset existing token fields or prevent choosing a Catalogue target.
+The modal changes the ordinary dirty buffer. Save owns complete source validation/persistence and awaits exact generation and fresh display. Cancel preserves source. The editor owns focus, selection and dirty state. **Use document subject** uses shared context for the captured buffer revision, seeded on Source load or Subject Apply. After a buffer change the first consumer requests a narrow Subject projection; other consumers share that result or in-flight read. Malformed front matter, mismatched identity or invalid Subject syntax disables the optional choice with a visible error. Unrelated Title, readiness or report errors do not block it. Context errors preserve token fields and independent Catalogue selection.
 
 ## Media View Link
 
-The modal searches generated Work/Gallery targets by title or identity, lets the author choose a target and supply link text, and validates its current media presentation before insertion or Apply. The resulting token stores the exact canonical target ID and escaped occurrence text. Work IDs contain five digits; Gallery IDs retain the registry's canonical identity.
+The modal searches generated Work/Gallery targets by title or identity, lets the author choose a target and supply link text, and serializes the local chosen target and label on insertion or Apply. The resulting token stores the exact canonical target ID and escaped occurrence text. Work IDs contain five digits; Gallery IDs retain the registry's canonical identity.
 
 Activation opens that exact Work or Gallery in Media View. Series is not a token target.
 
 ## Catalogue Image
 
-The image modal uses the same generated Work target source and validates the selected primary image. **Use document subject** and the search field share one row. Search retains its accessible name without a visible Search Catalogue label. The image fields are **Title caption**, **Summary** and **Layout**; Summary remains optional authored text. The search input, summary box and layout controls share a fixed label column and left edge; the search input and summary box have equal widths. The search icon sits immediately before that shared field edge. The image modal uses a narrower 48rem card, bounded by the available window width. **Full**, **Left** and **Right** form the layout radio group, followed by **Fill available width** on the same row. The modal displays no derived-alt value or caption preview. Build still derives alt text from the current Work title and includes the title caption only when selected. The visible caption can be absent while the authored summary remains. Add and Edit expose the same fields; illustrative images have no Work-metadata option.
+The image modal uses the same generated Work target source and consumes the selected exact ID/title without a primary-image lookup. **Use document subject** and the search field share one row. Search retains its accessible name without a visible Search Catalogue label. The image fields are **Title caption**, **Summary** and **Layout**; Summary remains optional authored text. The search input, summary box and layout controls share a fixed label column and left edge; the search input and summary box have equal widths. The search icon sits immediately before that shared field edge. The image modal uses a narrower 48rem card, bounded by the available window width. **Full**, **Left** and **Right** form the layout radio group, followed by **Fill available width** on the same row. The modal displays no derived-alt value or caption preview. Build still derives alt text from the current Work title and includes the title caption only when selected. The visible caption can be absent while the authored summary remains. Add and Edit expose the same fields; illustrative images have no Work-metadata option.
 
 The stored `catalogue:image:work` token contains exact Work identity, explicit choices and presentation settings, plus any authored summary. It stores no literal Work title, alt text, caption, metadata or resolved media URL, and it does not acquire document identity. The modal validates the selected current media presentation before insertion; document Build derives the selected text from the generated Work record.
 

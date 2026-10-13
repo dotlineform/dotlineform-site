@@ -14,7 +14,6 @@ from docs_document_subjects import (
     AUTHORING_SUBJECT_FIELDS,
     FOLDER_PATH_FIELD,
     WORK_ID_FIELD,
-    subject_key_is_canonical,
     normalize_authoring_subject,
     project_reader_subject,
     SUBJECT_KIND_BY_FIELD,
@@ -79,10 +78,6 @@ def _strict_scalar_subject_fields(raw: Any, *, field: str) -> dict[str, str]:
         if value and value != value.strip():
             raise ValueError(f"{field}.{field_name} must be one exact nonblank string")
         values[field_name] = value
-    if sum(bool(value) for value in values.values()) > 1:
-        raise ValueError(f"{field} must select at most one authoring subject")
-    if values[WORK_ID_FIELD] and not subject_key_is_canonical("work", values[WORK_ID_FIELD]):
-        raise ValueError(f"{field}.{WORK_ID_FIELD} must be one canonical work id")
     return values
 
 
@@ -91,8 +86,6 @@ def normalize_metadata_update(
     raw: Any,
     *,
     repo_root: Path,
-    front_matter: Mapping[str, Any],
-    doc_id: str,
     folder_supported: bool = True,
 ) -> dict[str, Any]:
     if settings:
@@ -109,18 +102,15 @@ def normalize_metadata_update(
             )
         except ValueError as error:
             raise ValueError(f"customisation.folder_path is invalid: {error}") from error
-    normalize_authoring_subject(
+    subject = normalize_authoring_subject(
         {field: value for field, value in values.items() if value}, folder_supported=folder_supported,
     )
-    current = metadata_record(settings, front_matter, doc_id=doc_id, folder_supported=folder_supported)
-    changed = values != current
     return {
         "front_matter_updates": {
             field_name: values[field_name] or None
             for field_name in AUTHORING_SUBJECT_FIELDS
         },
-        "record": values,
-        "changes": {"authoring_subject_changed": changed},
+        "subject": subject["key"] if subject["kind"] != "none" else None,
     }
 
 

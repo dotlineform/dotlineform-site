@@ -360,8 +360,6 @@ def normalize_collection_customisation_metadata_update(
     *,
     provided: bool,
     repo_root: Path,
-    front_matter: Mapping[str, Any],
-    doc_id: str,
 ) -> dict[str, Any] | None:
     if customisation is None:
         if provided:
@@ -378,8 +376,6 @@ def normalize_collection_customisation_metadata_update(
         customisation.settings,
         raw,
         repo_root=repo_root,
-        front_matter=front_matter,
-        doc_id=doc_id,
     )
 
 

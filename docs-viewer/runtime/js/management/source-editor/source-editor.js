@@ -8,7 +8,6 @@ import {
 import { localFolderPasteReplacement } from "./local-folder-links.js";
 import { sourceBodyStart, sourceWithThumbnail } from "./source-buffer.js";
 import { classifyDocsDocumentSubject } from "../../shared/docs-document-subject.js";
-import { encodeDecodedLocalTarget } from "../docs-viewer-management-client.js";
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -161,14 +160,30 @@ function replaceCapturedRange(state, capture, value, selectionMode) {
 
 function createSourceEditorContextAdapter(context, state) {
   function isCurrent() { return state.sourceEditorAdapter === adapter && state.loaded && Boolean(state.textarea); }
-  async function readSourceContext(snapshot, fields) {
-    if (!isCurrent()) throw new Error("The Source editor was replaced.");
+  async function requestSourceContext(snapshot, fields) {
     var target = adapter.getDocumentTarget();
     var body = { source_text: snapshot.value };
     if (fields !== undefined) body.subject_fields = fields;
     var payload = await state.collectionProvider.readSourceContext(target, body);
     if (!isCurrent() || snapshot.revision !== state.bufferRevision
       || !responseMatchesTarget(payload, target)) throw new Error("The Source context changed.");
+    return payload;
+  }
+  async function readSourceContext(snapshot, fields) {
+    if (!isCurrent() || snapshot.revision !== state.bufferRevision) throw new Error("The Source context changed.");
+    if (fields !== undefined) return requestSourceContext(snapshot, fields);
+    var read = state.sourceContextRead;
+    if (!read || read.revision !== snapshot.revision) {
+      read = { revision: snapshot.revision };
+      state.sourceContextRead = read;
+      read.promise = requestSourceContext(snapshot).catch(function (error) {
+        if (state.sourceContextRead === read) state.sourceContextRead = null;
+        throw error;
+      });
+    }
+    var payload = await read.promise;
+    if (!isCurrent() || snapshot.revision !== state.bufferRevision) throw new Error("The Source context changed.");
+    if (payload.subject_error) throw new Error(payload.subject_error);
     return payload;
   }
   var adapter = {
@@ -193,6 +208,10 @@ function createSourceEditorContextAdapter(context, state) {
     getDocumentTarget: function () {
       return state.target ? Object.assign({}, state.target) : null;
     },
+    seedSourceContext: function (payload) {
+      if (!isCurrent() || !responseMatchesTarget(payload, state.target)) throw new Error("The Source context changed.");
+      state.sourceContextRead = { revision: state.bufferRevision, promise: Promise.resolve(payload) };
+    },
     readDocumentSubject: async function (snapshot) {
       return classifyDocsDocumentSubject(await readSourceContext(snapshot), { folderSupported: true });
     },
@@ -201,27 +220,8 @@ function createSourceEditorContextAdapter(context, state) {
       if (!adapter.canAssignSubject() || payload.subject_assignment_available !== true) throw new Error("Subject assignment is unavailable for this document.");
       return payload;
     },
-    readSubjectFolder: async function (snapshot) {
-      var payload = await adapter.readSubjectAssignment(snapshot);
-      var subject = classifyDocsDocumentSubject(payload, { folderSupported: true });
-      return subject.kind === "folder" ? subject.key : "";
-    },
-    openSubjectFolder: async function (snapshot, path) {
-      if (!adapter.canAssignSubject() || snapshot.revision !== state.bufferRevision) {
-        throw new Error("The Source context changed.");
-      }
-      var target = encodeDecodedLocalTarget(path);
-      if (!target || typeof state.collectionProvider.openLocalTarget !== "function") {
-        throw new Error("The Subject folder is unavailable.");
-      }
-      setBusy(state, true);
-      try {
-        await state.collectionProvider.openLocalTarget(target);
-      } finally {
-        if (isCurrent()) setBusy(state, false);
-      }
-    },
-    applySubjectSource: function (snapshot, sourceText) {
+    applySubjectSource: function (snapshot, response) {
+      var sourceText = response.source_text;
       var capture = { start: 0, end: snapshot.value.length, text: snapshot.value, revision: snapshot.revision };
       if (!isCurrent() || state.saving || typeof sourceText !== "string" || !capturedRangeIsCurrent(state, capture)) return false;
       var oldBodyStart = sourceBodyStart(snapshot.value);
@@ -238,6 +238,7 @@ function createSourceEditorContextAdapter(context, state) {
         state.textarea.setSelectionRange(start, end);
         state.textarea.dispatchEvent(new Event("input", { bubbles: true }));
       }
+      adapter.seedSourceContext(response);
       state.textarea.focus({ preventScroll: true });
       state.textarea.scrollTop = scrollTop;
       return true;
@@ -320,6 +321,7 @@ function loadSource(context, state) {
         state.textarea.focus();
       }
       state.bufferRevision = 0;
+      adapter.seedSourceContext(payload);
       setStatus(state, "", false);
       projectDirty(state);
       return payload;
@@ -349,7 +351,11 @@ function saveSource(context, state) {
       throw new Error("Source service did not return the saved document.");
     }
     state.lastCleanSource = normalizeSource(payload.source_text);
-    if (state.textarea) state.textarea.value = state.lastCleanSource;
+    if (state.textarea && state.textarea.value !== state.lastCleanSource) {
+      state.textarea.value = state.lastCleanSource;
+      state.bufferRevision += 1;
+      state.sourceContextRead = null;
+    }
     saved = true;
     projectDirty(state);
   }
@@ -449,6 +455,7 @@ function bindEvents(context, state) {
     : [];
   state.onInput = function () {
     state.bufferRevision += 1;
+    state.sourceContextRead = null;
     projectDirty(state);
   };
   state.onPaste = function (event) {
@@ -513,6 +520,7 @@ function restoreRenderedContent(context, state) {
   state.root = null;
   state.textarea = null;
   state.loaded = false;
+  state.sourceContextRead = null;
   state.sourceEditorAdapter = null;
 }
 
@@ -525,6 +533,7 @@ export function createDocsViewerSourceEditorMode() {
     lastCleanSource: "",
     loaded: false,
     subjectAssignmentAvailable: false,
+    sourceContextRead: null,
     collectionProvider: null,
     root: null,
     renderedScrollTop: 0,
@@ -542,6 +551,7 @@ export function createDocsViewerSourceEditorMode() {
       state.saving = false;
       state.bufferRevision = 0;
       state.dirtyValue = false;
+      state.sourceContextRead = null;
       state.lastCleanSource = "";
       state.loaded = false;
       state.subjectAssignmentAvailable = false;

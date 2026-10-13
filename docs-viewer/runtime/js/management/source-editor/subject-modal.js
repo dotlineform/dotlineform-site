@@ -249,7 +249,7 @@ function openSubjectModal(options, snapshot, loaded) {
       }
       return options.adapter.readSubjectAssignment(snapshot, fields).then(function (response) {
         if (typeof response.source_text !== "string") throw new Error("Subject source could not be prepared.");
-        if (!options.adapter.applySubjectSource(snapshot, response.source_text)) {
+        if (!options.adapter.applySubjectSource(snapshot, response)) {
           throw new Error("Markdown source changed while this modal was open. Cancel and try again.");
         }
         return { confirmed: true };

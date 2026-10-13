@@ -57,6 +57,32 @@ def source_subject_assignment_available(resolved: ManagedDocumentCollection | Ma
     )
 
 
+def _source_subject_context(resolved: ManagedDocumentCollection | ManagedDocumentTarget) -> Dict[str, Any]:
+    """Expose only this owner's Subject authoring capabilities."""
+    return {
+        "subject_assignment_available": source_subject_assignment_available(resolved),
+        "folder_subject_supported": FOLDER_PATH_FIELD in collection_customisation_authoring_subject_fields(
+            resolved.document_config.collection_customisation,
+        ),
+    }
+
+
+def _project_source_subject(
+    resolved: ManagedDocumentCollection | ManagedDocumentTarget, front_matter: Dict[str, Any],
+) -> str | None:
+    fields = collection_customisation_authoring_subject_fields(resolved.document_config.collection_customisation)
+    return project_document_subject(front_matter, folder_supported=not fields or FOLDER_PATH_FIELD in fields)
+
+
+def _validate_source_identity(
+    target: Dict[str, str], front_matter: Dict[str, Any], resolved: ManagedDocumentCollection | ManagedDocumentTarget,
+) -> None:
+    if front_matter.get("doc_id") != target["doc_id"]:
+        raise ValueError("source doc_id must match the mounted document")
+    if "collection" in front_matter and front_matter["collection"] != resolved.collection:
+        raise ValueError("source collection must match the mounted document collection")
+
+
 def read_source_document(repo_root: Path, params: Dict[str, list[str]]) -> Dict[str, Any]:
     """Load the complete source snapshot for one exact editor session."""
     request_target = managed_document_target_request({key: values[0] if values else "" for key, values in params.items()})
@@ -73,9 +99,18 @@ def read_source_document(repo_root: Path, params: Dict[str, list[str]]) -> Dict[
         "ok": True,
         **resolved.request_target(),
         "source_text": source_text,
-        "subject_assignment_available": source_subject_assignment_available(resolved),
+        **_source_subject_context(resolved),
         "path": path_label(repo_root, target.path),
     }
+    try:
+        _validate_source_identity(resolved.request_target(), front_matter, resolved)
+        subject = _project_source_subject(resolved, front_matter)
+        if subject is not None:
+            payload["subject"] = subject
+    except ValueError as error:
+        # Source remains available for correction; consumers report this exact
+        # snapshot's Subject error without requesting the same context again.
+        payload["subject_error"] = str(error)
     if resolved.collection:
         payload["collection"] = resolved.collection
     return payload
@@ -116,6 +151,20 @@ def source_candidate_target(body: Dict[str, Any]) -> Dict[str, str]:
     return normalize_managed_document_target(managed_document_target_request(body))
 
 
+def _source_candidate_parts(
+    target: Dict[str, str],
+    source_text: str,
+    resolved: ManagedDocumentCollection | ManagedDocumentTarget,
+) -> tuple[str, Dict[str, Any], str]:
+    """Parse once and bind the buffer to its fixed target without Save rules."""
+    source_name = f"{target['doc_id']}.md"
+    front_matter_source, front_matter, source_body = source_model.split_source_text(
+        source_text, source_name=source_name, strict=True,
+    )
+    _validate_source_identity(target, front_matter, resolved)
+    return front_matter_source, front_matter, source_body
+
+
 def validate_source_candidate(
     repo_root: Path,
     target: Dict[str, str],
@@ -125,13 +174,7 @@ def validate_source_candidate(
     """Validate the buffer using already resolved identity and schema owners."""
     require_document_authoring(resolved.parent_config)
     source_name = f"{target['doc_id']}.md"
-    front_matter_source, front_matter, source_body = source_model.split_source_text(
-        source_text, source_name=source_name, strict=True,
-    )
-    if front_matter.get("doc_id") != target["doc_id"]:
-        raise ValueError("source doc_id must match the mounted document")
-    if "collection" in front_matter and front_matter["collection"] != resolved.collection:
-        raise ValueError("source collection must match the mounted document collection")
+    front_matter_source, front_matter, source_body = _source_candidate_parts(target, source_text, resolved)
     source_model.validate_document_status_front_matter(
         front_matter,
         collection_config=resolved.document_config,
@@ -156,38 +199,35 @@ def validate_source_candidate(
 
 
 def read_source_context(repo_root: Path, body: Dict[str, Any]) -> Dict[str, Any]:
-    """Project or update an unsaved Subject buffer without persistence or a browser parser."""
+    """Read or prepare only the Subject in a fixed unsaved buffer."""
     target = source_candidate_target({key: value for key, value in body.items() if key != "subject_fields"})
     resolved = resolve_managed_document_collection(repo_root, collection=target.get("collection"))
-    _, metadata = validate_source_candidate(repo_root, target, body["source_text"], resolved)
-    available = source_subject_assignment_available(resolved)
+    require_document_authoring(resolved.parent_config)
+    prefix, metadata, source_body = _source_candidate_parts(target, body["source_text"], resolved)
     payload: Dict[str, Any] = {
-        "ok": True, **target, "subject_assignment_available": available,
-        "folder_subject_supported": FOLDER_PATH_FIELD in collection_customisation_authoring_subject_fields(
-            resolved.document_config.collection_customisation,
-        ),
+        "ok": True, **target, **_source_subject_context(resolved),
     }
     if "subject_fields" in body:
-        if not available:
+        if not payload["subject_assignment_available"]:
             raise ValueError("Subject assignment is unavailable for this document collection")
         fields = body["subject_fields"]
         if not isinstance(fields, dict) or set(fields) != set(AUTHORING_SUBJECT_FIELDS):
             raise ValueError("subject_fields must contain exactly folder_path and work_id")
         update = normalize_collection_customisation_metadata_update(
             resolved.document_config.collection_customisation, fields, provided=True,
-            repo_root=repo_root, front_matter=metadata, doc_id=target["doc_id"],
+            repo_root=repo_root,
         )
         if update is None or set(update["front_matter_updates"]) != set(AUTHORING_SUBJECT_FIELDS):
             raise ValueError("Subject assignment returned fields outside its declaration")
-        prefix, _, source_body = source_model.split_source_text(body["source_text"], strict=True)
         replacements = update["front_matter_updates"]
         source_text = rewrite_front_matter_fields(
             prefix, {key: value for key, value in replacements.items() if value is not None},
             remove_fields=[key for key, value in replacements.items() if value is None],
         ) + source_body
-        _, metadata = validate_source_candidate(repo_root, target, source_text, resolved)
         payload["source_text"] = source_text
-    subject = project_document_subject(metadata, folder_supported=True)
+        subject = update["subject"]
+    else:
+        subject = _project_source_subject(resolved, metadata)
     if subject is not None:
         payload["subject"] = subject
     return payload
