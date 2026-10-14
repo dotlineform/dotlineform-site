@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260629-152159-ac1af9
 title: Export
 added_date: "2026-06-29 15:21:59"
-last_updated: "2026-10-13 20:05:39"
+last_updated: "2026-10-14 17:52:58"
 summary: create guarded dated self-contained HTML snapshots from an invoked ordinary subtree or the workspace and its referenced media
 parent_id: d-20260424-000000-50b63f
 ---
@@ -72,7 +72,7 @@ POST /docs/export/static-html/preview
 POST /docs/export/static-html/apply
 ```
 
-Preview accepts exact `doc_ids`; the service resolves Working. It returns `docs_static_html_snapshot_preview_v2` with tree-ordered IDs, selection kind, deterministic default, local date, display-safe destination label, packaged-media count and bytes, unchanged-external-dependency count, target state, existing recognized provenance when present, and plan/target revisions. Preview writes nothing and exposes no media identities or absolute workspace path, but it reads and hashes each exact referenced owned object to make the plan truthful. The browser consumes this result directly without schema/count/ID/revision audits and retains the actual replacement-availability decision.
+Preview accepts exact `doc_ids`; the service resolves Working. It returns `docs_static_html_snapshot_preview_v2` with tree-ordered IDs, selection kind, deterministic default, local date, display-safe destination label, packaged-media count, unchanged-external-dependency count, target state, existing recognized provenance when present, and plan/target revisions. Confirmation displays the number of packaged media files without a byte count. Preview writes nothing and exposes no media identities or absolute workspace path, but it reads and hashes each exact referenced owned object to make the plan truthful. The browser consumes this result directly without schema/count/ID/revision audits and retains the actual replacement-availability decision.
 
 Apply is assembled from that preview and carries:
 
@@ -120,7 +120,7 @@ Each exact referenced workspace-owned object is copied once to `media/<media typ
 
 The snapshot does not recursively inspect copied HTML, CSS, scripts, frames, fonts, or site-shell dependencies. Inline Mermaid remains readable source in its generated code block rather than becoming a rendered dependency.
 
-`snapshot.json` uses `docs_static_html_snapshot_v2` and records exact ordered IDs, selection kind, document count, default ID, local export date, generation time and plan revision, without scope/stage fields. Each packaged media row records its media type, confined identity, provider kind, packaged path, byte size, SHA-256 digest and referencing selected document IDs; separate rows record unchanged external dependencies. Folder names are presentation labels; provenance owns snapshot identity for guarded replacement.
+`snapshot.json` uses `docs_static_html_snapshot_v2` and records exact ordered IDs, selection kind, document count, default ID, local export date, generation time and plan revision, without scope/stage fields. Each packaged media row records its media type, confined identity, provider kind, packaged path, SHA-256 digest and referencing selected document IDs; separate rows record unchanged external dependencies. Preview, Apply, saved provenance and recognized-destination summaries carry no media byte total or per-media size field. Folder names are presentation labels; provenance owns snapshot identity for guarded replacement.
 
 ## Ownership
 
@@ -162,3 +162,5 @@ docs-viewer/tests/python/test_docs_management_routes.py
 ```
 
 These selections include historical scope/capability/request contracts and are unreviewed for the current workspace boundary. Review/migration and execution require separately agreed test work; the list is not current coverage evidence. [User Facing Rules](data/User_Facing_Rules.md) M.05 records focused lint, compilation/import diagnostics and distinct source/diff review for the current cleanup. No tests or live Export ran. Manual acceptance remains for invoked subtree and workspace selection, existing/absent/blocked targets, replacement confirmation, selected media, changed Preview/Apply inputs and write/verification failure receipt removal. Restart Docs Viewer and force reload before review.
+
+The user approved removal of the export byte count on 2026-10-14 in [Artifact Listing And Export Cleanup](deliveries/Artifact_Listing_And_Export_Cleanup.md). Focused lint/compilation and distinct source/diff review confirmed removal of the formatter, total property, payload/provenance/summary fields, per-media size bookkeeping and associated size/sum checks. Media digest identity and final output file-set/byte verification remain independent of those fields. Existing summary parsing does not require removed fields, without a schema alias or compatibility branch. No tests or live Export ran; existing tests asserting media totals and per-item sizes now require separately agreed migration. Reload the local service and browser before manually reviewing Export confirmation and creation/replacement.

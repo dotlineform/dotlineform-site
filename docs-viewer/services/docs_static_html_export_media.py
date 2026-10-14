@@ -42,7 +42,6 @@ class SnapshotMediaItem:
     identity: str
     provider: str
     packaged_path: Path
-    size: int
     sha256: str
     doc_ids: tuple[str, ...]
     data: bytes
@@ -53,7 +52,6 @@ class SnapshotMediaItem:
             "identity": self.identity,
             "provider": self.provider,
             "packaged_path": self.packaged_path.as_posix(),
-            "size": self.size,
             "sha256": self.sha256,
             "doc_ids": list(self.doc_ids),
         }
@@ -80,10 +78,6 @@ class SnapshotMediaPlan:
     items: tuple[SnapshotMediaItem, ...]
     external_dependencies: tuple[SnapshotExternalDependency, ...]
     rewritten_html_by_doc: Mapping[str, str]
-
-    @property
-    def media_bytes(self) -> int:
-        return sum(item.size for item in self.items)
 
     def manifest_records(self) -> list[dict[str, Any]]:
         return [item.manifest_record() for item in self.items]
@@ -370,7 +364,6 @@ def plan_snapshot_media(
                 identity=identity,
                 provider=config.media.types[media_type].asset_location.provider,
                 packaged_path=packaged_path,
-                size=len(data),
                 sha256=hashlib.sha256(data).hexdigest(),
                 doc_ids=tuple(sorted(references[(media_type, identity)])),
                 data=data,

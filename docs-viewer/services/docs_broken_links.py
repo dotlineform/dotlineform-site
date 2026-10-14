@@ -25,12 +25,10 @@ for import_directory in (
 from docs_artifact_locations import ArtifactLocation, FilesystemArtifactLocationAdapter, filesystem_location_root  # noqa: E402
 from docs_document_identity import is_document_id  # noqa: E402
 from docs_document_location import canonical_document_viewer_url  # noqa: E402
-from docs_front_matter import FRONT_MATTER_PATTERN, read_front_matter_fields  # noqa: E402
-from docs_index_order import read_index_order, tree_groups  # noqa: E402
+from docs_source_inspection import inspection_source_paths, read_inspection_source  # noqa: E402
 
 from docs_workspace_config import (  # noqa: E402
     DocsWorkspaceConfig,
-    document_source_path,
     generated_documents_path,
     public_document_reader_paths,
     load_docs_workspace_config,
@@ -106,28 +104,6 @@ def document_payload_path(root: Path, doc_id: str) -> Path:
     return path
 
 
-def read_audit_source(root: Path, path: Path, collection: str) -> tuple[DocMeta, str, dict[str, Any], str]:
-    """Read identity, label, metadata and body without authoring/model validation."""
-    if path.parent != root or path.resolve() != path:
-        raise ValueError(f"Document source must remain within its owner without symlinks: {path.name}")
-    source = path.read_text(encoding="utf-8")
-    header = FRONT_MATTER_PATTERN.match(source)
-    if header is None:
-        raise ValueError(f"Document front matter could not be parsed in {path.name}")
-    metadata = {
-        field.key: field.value
-        for field in read_front_matter_fields(header.group(1), source_name=path.name)
-    }
-    doc_id = metadata.get("doc_id")
-    if not isinstance(doc_id, str) or doc_id != path.stem:
-        raise ValueError(f"Document source identity does not match its filename: {path.name}")
-    title = metadata.get("title")
-    if not isinstance(title, str):
-        raise ValueError(f"Document title must be a string: {path.name}")
-    meta = DocMeta(doc_id, title, canonical_document_viewer_url(doc_id, collection=collection), collection)
-    return meta, source, metadata, source[header.end():]
-
-
 def target_payload_exists(target: dict[str, str], roots: dict[str, Path]) -> bool:
     """Check the exact configured by-ID destination without reading its browse host."""
     doc_id = target["doc_id"]
@@ -177,13 +153,7 @@ def audit_docs_broken_links(repo_root: Path, workspace: DocsWorkspaceConfig) -> 
     catalogue_reasons: dict[tuple[str, str], str] = {}
     media_policy_available: bool | None = None
     for collection, owner in collections:
-        root = resolve_workspace_path(repo_root, document_source_path(owner))
-        if not root.is_dir():
-            raise FileNotFoundError(f"Document collection is unavailable: {collection or 'ordinary documents'}")
-        paths = sorted(root.glob("*.md")) if collection else [
-            root / f"{node['doc_id']}.md"
-            for siblings, _parent_id in tree_groups(read_index_order(root)) for node in siblings
-        ]
+        root, paths = inspection_source_paths(repo_root, owner)
         media_assets = {
             media_type: FilesystemArtifactLocationAdapter(
                 media.asset_location, root=filesystem_location_root(repo_root, media.asset_location),
@@ -191,10 +161,13 @@ def audit_docs_broken_links(repo_root: Path, workspace: DocsWorkspaceConfig) -> 
         }
         media_exists: dict[tuple[str, str], bool] = {}
         for path in paths:
-            meta, source, metadata, body = read_audit_source(root, path, collection)
-            tokens = parse_semantic_tokens(body, registry=registry)
+            source = read_inspection_source(root, path, collection=collection)
+            meta = DocMeta(
+                source.doc_id, source.title, canonical_document_viewer_url(source.doc_id, collection=collection), collection,
+            )
+            tokens = parse_semantic_tokens(source.body, registry=registry)
             for reference in parsed_source_media_references(
-                owner, source, metadata=metadata, semantic_tokens=tokens,
+                owner, source.source_text, metadata=source.metadata, semantic_tokens=tokens,
                 doc_id=meta.doc_id, document_collection=collection,
             ):
                 key = (reference.media_type, reference.identity)

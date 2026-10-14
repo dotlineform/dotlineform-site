@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Protocol, Sequence
 
-from docs_artifact_locations import ArtifactLocationAdapter, ArtifactStat, normalize_artifact_identity
+from docs_artifact_locations import ArtifactLocationAdapter, normalize_artifact_identity
 from docs_mermaid_renderer import (
     MERMAID_CONFIG_FILENAME,
     MERMAID_EXECUTABLE_RELATIVE_PATH,
@@ -36,21 +36,18 @@ class MermaidMediaPlan:
     published_identity: str
 
 
-def plan_mermaid_media(source_inventory: Iterable[ArtifactStat]) -> tuple[MermaidMediaPlan, ...]:
+def plan_mermaid_media(source_inventory: Iterable[str]) -> tuple[MermaidMediaPlan, ...]:
     """Map canonical Mermaid sources to deterministic same-basename SVG identities."""
 
     plans = [
         MermaidMediaPlan(
-            source_identity=normalize_artifact_identity(item.identity),
-            published_identity=normalize_artifact_identity(Path(item.identity).with_suffix(".svg")),
+            source_identity=normalize_artifact_identity(identity),
+            published_identity=normalize_artifact_identity(Path(identity).with_suffix(".svg")),
         )
-        for item in source_inventory
-        if Path(item.identity).suffix == ".mmd"
+        for identity in source_inventory
+        if Path(identity).suffix == ".mmd"
     ]
     plans.sort(key=lambda item: item.source_identity)
-    published_identities = [item.published_identity for item in plans]
-    if len(set(published_identities)) != len(published_identities):
-        raise ValueError("Mermaid sources resolve to duplicate published SVG identities")
     return tuple(plans)
 
 
@@ -145,7 +142,7 @@ def produce_mermaid_svg(
         _publish_outputs(
             rendered,
             generated=context.generated,
-            replace_existing=getattr(context, "replace_existing", True),
+            replace_existing=context.replace_existing,
         )
     return output_identities
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Provider-independent inventory of registered Docs Viewer media roles."""
+"""Registered Docs media references and local filename inventory."""
 
 from __future__ import annotations
 
@@ -9,12 +9,7 @@ import re
 import sys
 from typing import Any, Iterable, Mapping
 
-from docs_artifact_locations import (
-    ArtifactLocationAdapter,
-    artifact_location_adapter,
-    authenticated_remote_client_for_locations,
-    local_artifact_path,
-)
+from docs_artifact_locations import list_filesystem_artifact_identities
 from docs_workspace_config import DocsStageConfig, DocsCollectionConfig
 from docs_document_images import document_thumbnail_filename, has_document_thumbnail
 from docs_source_model import parse_source_text
@@ -70,32 +65,37 @@ def parsed_source_media_references(
     semantic_tokens: Iterable[SemanticTokenOccurrence],
     doc_id: str,
     document_collection: str | None = None,
+    exclude_media_types: frozenset[str] = frozenset(),
 ) -> tuple[DocsMediaReference, ...]:
     """Extract references using supplied metadata and completed token parsing."""
 
     found: set[tuple[str, str, str]] = set()
     owner_collection = getattr(config, "collection", "")
+    media_types = {
+        media_type: media for media_type, media in config.media.types.items()
+        if media_type not in exclude_media_types
+    }
     for token in semantic_tokens:
         if token.family != "image":
             continue
-        for media_type, media in config.media.types.items():
+        for media_type, media in media_types.items():
             prefix = media.reference_prefix.as_posix() + "/"
             if media_type in {"img", "svg"} and token.media_path.startswith(prefix):
                 found.add((media_type, token.media_path.removeprefix(prefix), token.media_path))
-    if document_collection is None or document_collection == owner_collection:
+    if "thumbs" in media_types and (document_collection is None or document_collection == owner_collection):
         if has_document_thumbnail(metadata, collection=owner_collection):
             identity = document_thumbnail_filename(doc_id or metadata.get("doc_id", ""), collection=owner_collection)
-            media = config.media.types["thumbs"]
+            media = media_types["thumbs"]
             found.add(("thumbs", identity, f"{media.reference_prefix.as_posix()}/{identity}"))
     # New token fields and inactive examples must not leak into legacy path scans.
     legacy_source = re.sub(r"\[\[image:.*?\]\]", "", source, flags=re.DOTALL)
     for match in MEDIA_REFERENCE_PATTERN.finditer(legacy_source):
         logical_path = match.group("path").lstrip("/")
-        for media_type, media in config.media.types.items():
+        for media_type, media in media_types.items():
             prefix = media.reference_prefix.as_posix() + "/"
             if logical_path.startswith(prefix):
                 found.add((media_type, logical_path.removeprefix(prefix), logical_path))
-    for media_type, media in config.media.types.items():
+    for media_type, media in media_types.items():
         for prefix in (media.reference_prefix.as_posix(), media.served_path_prefix):
             normalized_prefix = prefix.rstrip("/")
             pattern = re.compile(
@@ -123,48 +123,10 @@ def parsed_source_media_references(
     )
 
 
-def _location_adapters(
-    repo_root: Path,
-    config: DocsStageConfig | DocsCollectionConfig,
-    *,
-    client: object | None,
-    env_files: Iterable[Path] | None,
-    environ: Mapping[str, str] | None,
-) -> tuple[dict[str, ArtifactLocationAdapter], dict[str, ArtifactLocationAdapter]]:
-    published_locations = [media.asset_location for media in config.media.types.values()]
-    remote_client = authenticated_remote_client_for_locations(
-        repo_root,
-        published_locations,
-        client=client,  # type: ignore[arg-type]
-        env_files=env_files,
-        environ=environ,
-    )
-    published = {
-        media_type: artifact_location_adapter(
-            repo_root,
-            media.asset_location,
-            served_path_prefix=media.served_path_prefix,
-            remote_client=remote_client,
-        )
-        for media_type, media in config.media.types.items()
-    }
-    build_source = {
-        build_type: artifact_location_adapter(
-            repo_root,
-            build.location,
-        )
-        for build_type, build in config.media.build_sources.items()
-    }
-    return published, build_source
-
-
 def list_collection_media(
     repo_root: Path,
     config: DocsStageConfig | DocsCollectionConfig,
     *,
-    client: object | None = None,
-    env_files: Iterable[Path] | None = None,
-    environ: Mapping[str, str] | None = None,
     exclude_media_types: frozenset[str] = frozenset(),
 ) -> tuple[DocsMediaFile, ...]:
     """List configured ready media and build sources without reading or joining documents.
@@ -173,29 +135,21 @@ def list_collection_media(
     Storage placeholders are omitted. Display exclusions and ordering belong to
     consumers; no source bodies, paths or credentials enter the returned records.
     """
-    published_adapters, build_adapters = _location_adapters(
-        repo_root,
-        config,
-        client=client,
-        env_files=env_files,
-        environ=environ,
-    )
+    published = {
+        media_type: media.asset_location for media_type, media in config.media.types.items()
+        if media_type not in exclude_media_types
+    }
+    build_sources = {build_type: build.location for build_type, build in config.media.build_sources.items()}
     items: list[DocsMediaFile] = []
-    for role, adapters in (("source", published_adapters), ("build-source", build_adapters)):
-        for media_type, adapter in adapters.items():
-            if role == "source" and media_type in exclude_media_types:
-                continue
-            for artifact in adapter.list():
-                if Path(artifact.identity).name == ".gitkeep":
+    for role, locations in (("source", published), ("build-source", build_sources)):
+        for media_type, location in locations.items():
+            for identity in list_filesystem_artifact_identities(repo_root, location):
+                if Path(identity).name == ".gitkeep":
                     continue
-                # Preserve local confinement without issuing remote per-file metadata requests.
-                local_path = local_artifact_path(repo_root, adapter.location, artifact.identity)
-                if local_path is not None and not local_path.is_file():
-                    raise FileNotFoundError("Docs media file disappeared during inventory")
                 items.append(DocsMediaFile(
                     collection=getattr(config, "collection", ""),
                     media_type=media_type,
-                    identity=artifact.identity,
+                    identity=identity,
                     role=role,
                 ))
     return tuple(items)

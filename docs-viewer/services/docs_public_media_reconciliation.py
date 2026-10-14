@@ -223,7 +223,7 @@ def plan_public_media_reconciliation(
                 repo_root, public.location, served_path_prefix=public.served_path_prefix, remote_client=remote_client,
             )
             # One metadata LIST per remote family avoids thousands of HEAD/body reads.
-            stats = {item.identity: item for item in destination.list()} if remote else {}
+            stats = {item.identity: item for item in destination.list_stats()} if remote else {}
             setup_error = ""
         except Exception as exc:
             source_adapter = destination = None

@@ -378,21 +378,16 @@ def load_existing_snapshot_summary(destination_root: Path) -> dict[str, Any] | N
         if not isinstance(media, list) or not isinstance(external_dependencies, list):
             return None
         media_count = payload.get("media_count")
-        media_bytes = payload.get("media_bytes")
         external_dependency_count = payload.get("external_dependency_count")
         if (
             isinstance(media_count, bool)
             or not isinstance(media_count, int)
             or media_count != len(media)
-            or isinstance(media_bytes, bool)
-            or not isinstance(media_bytes, int)
-            or media_bytes < 0
             or isinstance(external_dependency_count, bool)
             or not isinstance(external_dependency_count, int)
             or external_dependency_count != len(external_dependencies)
         ):
             return None
-        media_sizes: list[int] = []
         selected_doc_ids = list(doc_ids)
         for item in media:
             if not isinstance(item, dict):
@@ -400,7 +395,6 @@ def load_existing_snapshot_summary(destination_root: Path) -> dict[str, Any] | N
             media_type = str(item.get("media_type") or "")
             identity = str(item.get("identity") or "")
             packaged_path = Path(str(item.get("packaged_path") or ""))
-            item_size = item.get("size")
             if (
                 not SAFE_DOC_ID_PATTERN.fullmatch(media_type)
                 or not identity
@@ -408,16 +402,10 @@ def load_existing_snapshot_summary(destination_root: Path) -> dict[str, Any] | N
                 or ".." in Path(identity).parts
                 or packaged_path != Path("media") / media_type / identity
                 or not str(item.get("provider") or "").strip()
-                or isinstance(item_size, bool)
-                or not isinstance(item_size, int)
-                or item_size < 0
                 or not REVISION_PATTERN.fullmatch(str(item.get("sha256") or ""))
             ):
                 return None
             normalize_snapshot_doc_ids(item.get("doc_ids"), selected_doc_ids)
-            media_sizes.append(item_size)
-        if media_bytes != sum(media_sizes):
-            return None
         for item in external_dependencies:
             if (
                 not isinstance(item, dict)
@@ -433,7 +421,6 @@ def load_existing_snapshot_summary(destination_root: Path) -> dict[str, Any] | N
         "selection_kind": selection_kind,
         "document_count": len(doc_ids),
         "media_count": media_count,
-        "media_bytes": media_bytes,
         "external_dependency_count": external_dependency_count,
         "generated_at": generated_at,
         "selection_revision": _revision({"doc_ids": doc_ids}),
@@ -561,7 +548,6 @@ def preview_static_html_export(
         "doc_ids": list(plan.doc_ids),
         "document_count": len(plan.doc_ids),
         "media_count": len(plan.media_plan.items),
-        "media_bytes": plan.media_plan.media_bytes,
         "external_dependency_count": len(plan.media_plan.external_dependencies),
         "selection_kind": plan.selection_kind,
         "default_doc_id": plan.default_doc_id,
@@ -970,7 +956,6 @@ def snapshot_provenance(plan: StaticHtmlSnapshotPlan, *, generated_at: str) -> d
         "selection_kind": plan.selection_kind,
         "document_count": len(plan.doc_ids),
         "media_count": len(plan.media_plan.items),
-        "media_bytes": plan.media_plan.media_bytes,
         "media": plan.media_plan.manifest_records(),
         "external_dependency_count": len(plan.media_plan.external_dependencies),
         "external_dependencies": plan.media_plan.external_dependency_records(),
@@ -1192,7 +1177,6 @@ def apply_static_html_snapshot(repo_root: Path, body: dict[str, Any]) -> dict[st
         "doc_ids": list(plan.doc_ids),
         "document_count": len(plan.doc_ids),
         "media_count": len(plan.media_plan.items),
-        "media_bytes": plan.media_plan.media_bytes,
         "external_dependency_count": len(plan.media_plan.external_dependencies),
         "file_count": len(files),
         "selection_kind": plan.selection_kind,

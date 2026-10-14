@@ -17,20 +17,6 @@ function normalizeIds(values) {
   });
 }
 
-function formatByteCount(value) {
-  var bytes = Number(value || 0);
-  if (bytes < 1024) return bytes + " B";
-  var units = ["KB", "MB", "GB", "TB"];
-  var amount = bytes;
-  var unit = "B";
-  for (var index = 0; index < units.length && amount >= 1024; index += 1) {
-    amount /= 1024;
-    unit = units[index];
-  }
-  var precision = amount >= 10 ? 0 : 1;
-  return amount.toFixed(precision).replace(/\.0$/, "") + " " + unit;
-}
-
 function setBusy(callbacks, busy) {
   if (typeof callbacks.setBusy === "function") callbacks.setBusy(busy);
   if (typeof callbacks.render === "function") callbacks.render();
@@ -50,8 +36,7 @@ export function buildStaticHtmlSnapshotConfirmationBody(preview) {
   var externalCount = Number(preview.external_dependency_count || 0);
   var body = [
     preview.destination_label,
-    "Includes " + mediaCount + " media file" + (mediaCount === 1 ? "" : "s")
-      + " (" + formatByteCount(preview.media_bytes) + ")."
+    "Includes " + mediaCount + " media file" + (mediaCount === 1 ? "" : "s") + "."
   ];
   if (externalCount > 0) {
     body.push(

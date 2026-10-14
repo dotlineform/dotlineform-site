@@ -57,14 +57,6 @@ function reportService(context) {
   ) ? service : null;
 }
 
-function searchableText(row) {
-  return [
-    row.collectionTitle,
-    row.identity,
-    ...row.documents.map((documentRecord) => documentRecord.title)
-  ].map(cleanString).join(" ").toLocaleLowerCase();
-}
-
 function compareDocumentSets(collator, left, right) {
   const count = Math.min(left.length, right.length);
   for (let index = 0; index < count; index += 1) {
@@ -95,18 +87,9 @@ function compareRows(collator, sortKey, sortDir, left, right) {
     || left.mediaTarget.role.localeCompare(right.mediaTarget.role);
 }
 
-export function buildDocsMediaProjection(rows, options) {
-  const settings = options && typeof options === "object" ? options : {};
-  const sortKey = SORT_KEYS.includes(settings.sortKey) ? settings.sortKey : DEFAULT_SORT_KEY;
-  const sortDir = settings.sortDir === "desc" ? "desc" : DEFAULT_SORT_DIR;
-  const searchText = cleanString(settings.searchText).toLocaleLowerCase();
-  const collectionFilter = settings.collectionFilter == null ? "*" : settings.collectionFilter;
-  const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
-  const projectedRows = (Array.isArray(rows) ? rows : [])
-    .filter((row) => collectionFilter === "*" || row.collection === collectionFilter)
-    .filter((row) => !searchText || searchableText(row).includes(searchText))
-    .sort((left, right) => compareRows(collator, sortKey, sortDir, left, right));
-  return { rows: projectedRows, searchText, sortDir, sortKey };
+function updateSort(state) {
+  state.sortedRows = (state.snapshot ? state.snapshot.rows : []).slice()
+    .sort((left, right) => compareRows(state.collator, state.sortKey, state.sortDir, left, right));
 }
 
 function sortButton(state, key) {
@@ -170,24 +153,23 @@ function appendDocumentsCell(rowNode, row) {
 }
 
 function currentProjection(state) {
-  return buildDocsMediaProjection(state.sourceRows, {
-    searchText: state.searchText,
-    collectionFilter: state.collectionFilter,
-    sortDir: state.sortDir,
-    sortKey: state.sortKey
-  });
+  const searchText = state.searchText.trim().toLocaleLowerCase();
+  return state.sortedRows.filter((row) => (
+    (state.collectionFilter === "*" || row.collection === state.collectionFilter)
+    && (!searchText || row.searchText.includes(searchText))
+  ));
 }
 
 function renderRows(state) {
-  const projection = currentProjection(state);
+  const rows = currentProjection(state);
   renderHead(state);
   clearNode(state.rowsNode);
-  state.emptyNode.hidden = projection.rows.length > 0 || state.sourceRows.length === 0;
-  if (!projection.rows.length) {
+  state.emptyNode.hidden = rows.length > 0 || state.sortedRows.length === 0;
+  if (!rows.length) {
     state.emptyNode.textContent = "No Docs Media rows match the current filters.";
     return;
   }
-  projection.rows.forEach((row) => {
+  rows.forEach((row) => {
     const rowNode = document.createElement("li");
     rowNode.className = "docsViewerReport__row";
     rowNode.dataset.docsMediaType = row.mediaType;
@@ -202,15 +184,14 @@ function renderRows(state) {
 }
 
 function resultStatus(state) {
-  const rows = state.sourceRows.filter((row) => state.collectionFilter === "*" || row.collection === state.collectionFilter);
-  const orphans = rows.filter((row) => row.documents.length === 0).length;
-  const counts = orphans + "/" + rows.length + " orphaned files.";
-  if (!state.snapshot) return counts;
+  if (!state.snapshot) return "0/0 orphaned files.";
+  const counts = state.snapshot.countsByCollection.get(state.collectionFilter);
+  const countText = counts.orphans + "/" + counts.total + " orphaned files.";
   const refreshedAt = new Date(state.snapshot.refreshedAt).toLocaleString("en-GB", {
     day: "2-digit", month: "2-digit", year: "numeric",
     hour: "2-digit", minute: "2-digit", hour12: false
   });
-  return "Last refreshed: " + refreshedAt + "\n\n" + counts;
+  return "Last refreshed: " + refreshedAt + "\n\n" + countText;
 }
 
 function renderResultStatus(state) {
@@ -258,7 +239,7 @@ function loadMedia(state, refresh = false) {
   state.statusNode.textContent = refresh ? "Refreshing Docs Media..." : "Loading saved Docs Media...";
   if (!state.snapshot) state.emptyNode.hidden = true;
   return (refresh ? service.refreshMediaMetadata() : service.readMediaMetadata())
-    .then((payload) => buildDocsMediaSnapshot(payload, state.context))
+    .then((payload) => buildDocsMediaSnapshot(payload, state.context, state.collator))
     .then((snapshot) => {
       if (!snapshot) {
         if (refresh) throw new Error("Docs Media refresh returned no saved metadata.");
@@ -268,7 +249,7 @@ function loadMedia(state, refresh = false) {
         return;
       }
       state.snapshot = snapshot;
-      state.sourceRows = snapshot.rows;
+      updateSort(state);
       if (state.collectionFilter !== "*" && !snapshot.owners.some((owner) => owner.collection === state.collectionFilter)) {
         state.collectionFilter = "*";
       }
@@ -340,6 +321,7 @@ function attachEvents(state) {
       state.sortDir = "asc";
     }
     persistSort(state);
+    updateSort(state);
     renderRows(state);
     updateControls(state);
   });
@@ -396,7 +378,8 @@ export function mountDocsMediaReport(context) {
     searchText: "",
     sortDir: routeSort.sortDir,
     sortKey: routeSort.sortKey,
-    sourceRows: []
+    sortedRows: [],
+    collator: new Intl.Collator(undefined, { numeric: true, sensitivity: "base" })
   }, nodes);
   renderHead(state);
   if (context.registerRetainedView) context.registerRetainedView({
@@ -404,7 +387,9 @@ export function mountDocsMediaReport(context) {
     capture: function () { return { query: state.searchText, collection: state.collectionFilter, key: state.sortKey, direction: state.sortDir }; },
     restore: function (saved) {
       if (state.searchText === saved.query && state.collectionFilter === saved.collection && state.sortKey === saved.key && state.sortDir === saved.direction) return;
+      const sortChanged = state.sortKey !== saved.key || state.sortDir !== saved.direction;
       state.searchText = saved.query; state.collectionFilter = saved.collection; state.sortKey = saved.key; state.sortDir = saved.direction;
+      if (sortChanged) updateSort(state);
       state.collectionFilterNode.value = saved.collection;
       state.searchInputNode.value = saved.query;
       if (!state.busy) renderResultStatus(state);

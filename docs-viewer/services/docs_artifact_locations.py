@@ -11,6 +11,7 @@ from __future__ import annotations
 import contextlib
 import hashlib
 import mimetypes
+import os
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
@@ -25,6 +26,7 @@ SUPPORTED_LOCATION_PROVIDERS = {
     R2_PROVIDER,
 }
 LIST_CAPABILITY = "list"
+LIST_STATS_CAPABILITY = "list_stats"
 READ_CAPABILITY = "read"
 WRITE_CAPABILITY = "write"
 REPLACE_CAPABILITY = "replace"
@@ -48,7 +50,7 @@ FILESYSTEM_CAPABILITIES = frozenset(
         LOCAL_STAGING_CAPABILITY,
     }
 )
-R2_CAPABILITIES = FILESYSTEM_CAPABILITIES | {AUTHENTICATE_CAPABILITY}
+R2_CAPABILITIES = FILESYSTEM_CAPABILITIES | {AUTHENTICATE_CAPABILITY, LIST_STATS_CAPABILITY}
 PROVIDER_CAPABILITIES = {
     REPOSITORY_PROVIDER: FILESYSTEM_CAPABILITIES,
     EXTERNAL_LOCAL_PROVIDER: FILESYSTEM_CAPABILITIES,
@@ -189,7 +191,12 @@ class ArtifactLocationAdapter:
     def require(self, *capabilities: str, role: str = "artifact") -> None:
         require_location_capabilities(self.location, capabilities, role=role)
 
-    def list(self, identity: str | Path = "") -> list[ArtifactStat]:
+    def list(self, identity: str | Path = "") -> tuple[str, ...]:
+        """Discover file identities without requiring size metadata."""
+        raise NotImplementedError
+
+    def list_stats(self, identity: str | Path = "") -> list[ArtifactStat]:
+        """List remote metadata used to compare transfers."""
         raise NotImplementedError
 
     def read(self, identity: str | Path) -> bytes:
@@ -247,15 +254,11 @@ class FilesystemArtifactLocationAdapter(ArtifactLocationAdapter):
             raise ValueError("artifact identity escapes its configured location")
         return candidate
 
-    def list(self, identity: str | Path = "") -> list[ArtifactStat]:
+    def list(self, identity: str | Path = "") -> tuple[str, ...]:
         root = self.resolve(identity, allow_empty=True)
-        if not root.exists():
-            return []
-        paths = [root] if root.is_file() else sorted(path for path in root.rglob("*") if path.is_file())
-        return [
-            ArtifactStat(identity=path.relative_to(self.root).as_posix(), size=path.stat().st_size)
-            for path in paths
-        ]
+        if root.is_file():
+            return (root.relative_to(self.root).as_posix(),)
+        return _filesystem_artifact_identities(self.root, root)
 
     def read(self, identity: str | Path) -> bytes:
         path = self.resolve(identity)
@@ -319,7 +322,10 @@ class R2ArtifactLocationAdapter(ArtifactLocationAdapter):
             return normalize_artifact_identity(key.removeprefix(prefix))
         return normalize_artifact_identity(key)
 
-    def list(self, identity: str | Path = "") -> list[ArtifactStat]:
+    def list(self, identity: str | Path = "") -> tuple[str, ...]:
+        return tuple(item.identity for item in self.list_stats(identity))
+
+    def list_stats(self, identity: str | Path = "") -> list[ArtifactStat]:
         normalized = normalize_artifact_identity(identity, allow_empty=True)
         prefix = self.key(normalized) if normalized else self.prefix
         rows: list[ArtifactStat] = []
@@ -389,6 +395,37 @@ def filesystem_location_root(repo_root: Path, location: ArtifactLocation) -> Pat
     raise ValueError("filesystem location root requires repository or external_local provider")
 
 
+def list_filesystem_artifact_identities(repo_root: Path, location: ArtifactLocation) -> tuple[str, ...]:
+    """List confined file names once without reading contents, sizes or following directory symlinks."""
+    root = filesystem_location_root(repo_root, location)
+    return _filesystem_artifact_identities(root, root)
+
+
+def _filesystem_artifact_identities(root: Path, directory: Path) -> tuple[str, ...]:
+    """Enumerate one directory beneath the supplied resolved family root."""
+    identities: list[str] = []
+    pending: list[Path] = []
+
+    def collect(directory: Path) -> None:
+        with os.scandir(directory) as entries:
+            for entry in entries:
+                if entry.is_dir(follow_symlinks=False):
+                    pending.append(Path(entry.path))
+                elif entry.is_file():
+                    path = Path(entry.path)
+                    if entry.is_symlink() and not path.resolve().is_relative_to(root):
+                        raise ValueError("artifact identity escapes its configured location")
+                    identities.append(path.relative_to(root).as_posix())
+
+    try:
+        collect(directory)
+    except FileNotFoundError:
+        return ()
+    while pending:
+        collect(pending.pop())
+    return tuple(sorted(identities))
+
+
 def local_artifact_path(
     repo_root: Path,
     location: ArtifactLocation,
@@ -443,6 +480,7 @@ __all__ = [
     "FILESYSTEM_CAPABILITIES",
     "FilesystemArtifactLocationAdapter",
     "LIST_CAPABILITY",
+    "LIST_STATS_CAPABILITY",
     "LOCAL_STAGING_CAPABILITY",
     "PROVIDER_CAPABILITIES",
     "R2_CAPABILITIES",
@@ -459,6 +497,7 @@ __all__ = [
     "artifact_location_adapter",
     "authenticated_remote_client_for_locations",
     "filesystem_location_root",
+    "list_filesystem_artifact_identities",
     "local_artifact_path",
     "normalize_artifact_identity",
     "provider_capabilities",

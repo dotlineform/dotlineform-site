@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260428-000000-f5ff18
 title: Planned Features
 added_date: "2026-04-28 00:00:00"
-last_updated: "2026-10-14 16:30:56"
+last_updated: "2026-10-14 17:52:58"
 summary: This explains the delivery model and workflows to implement new repo and application features.
 ui_status: planned
 parent_id: ""
@@ -155,6 +155,8 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 Store new standalone delivery documents for bounded work that does not need a separate feature parent under `documentation/studio/deliveries/`. Parent them directly to this document and keep implementation state, decisions and completion gates in the delivery. At closeout, transfer lasting details to the durable owner and review whether the delivery and its link should be retained.
 
+- [Docs Media Optimisation](deliveries/Docs_Media_Optimisation.md) — Implemented and reviewed; awaiting manual acceptance. Narrows source reads and local filename inventory, removes duplicate dataset audits and prepares browser search/count/sort data once at their owning boundaries. Focused lint/compilation, whitespace, read-only current generation/saved-read diagnostics and the shared-reader Broken Links CLI passed. No real report Refresh, browser/Finder action or test work ran.
+- [Artifact Listing And Export Cleanup](deliveries/Artifact_Listing_And_Export_Cleanup.md) — Implemented and reviewed; awaiting manual acceptance. Mermaid discovery consumes filenames, Publish uses an explicit remote metadata listing, and Export omits media byte counts and their bookkeeping. Focused lint/compilation, whitespace and source/diff review passed. No live Build, Publish, Export, browser action or test work ran.
 - [Broken Links Media Coverage](deliveries/Broken_Links_Media_Coverage.md) — Implemented and reviewed; awaiting user manual acceptance. Adds local Docs media and thumbnail diagnosis, carries one workspace and parsed source inputs through the audit, and reuses distinct target results only during the scan. Focused lint/compilation, whitespace and a read-only current Working audit passed, reporting the eleven missing Context attachments. Test migration, source cleanup and saved-report Refresh remain separate actions.
 - [Working Rebuild](deliveries/Working_Rebuild.md) — M.20's eight changes approved and implemented on 2026-10-13. Complete Working generation carries loaded inputs through media, relationships, rendering and shared discovery; it records a lean operation receipt and distinguishes browser refresh failure. Focused static/import checks and bounded source review passed; live Build/media and manual acceptance remain pending. Test migration and publication handoffs remain separately scoped.
 - [Document Media Working And Preview](deliveries/Document_Media_Working_And_Preview.md) — Proposed prerequisite to Incremental Document Publish. The user completes Publish and manually copies ready document media into Working and Preview before the code/configuration cutover. Establishes stage-owned media and Preview deployment inputs with light verification; baseline confirmation and code implementation remain pending.
