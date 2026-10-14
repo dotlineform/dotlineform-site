@@ -1,27 +1,12 @@
 import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
-import { buildViewerUrl } from "../shared/docs-viewer-router.js";
-const METADATA_SCHEMA = "catalogue_works_report_metadata_v3";
-const WORK_ID_PATTERN = /^[0-9]{5}$/;
-const SERIES_ID_PATTERN = /^[0-9]{3}$/;
+import {
+  COLUMN_MODEL, COPY_COLUMN_IDS, PRESENTATION_COLUMNS,
+  prepareCatalogueWorksRows, projectCatalogueWorks, serializeCatalogueWorksTsv
+} from "./catalogue-works-data.js";
+
 const PAGE_SIZE = 20;
 const SEARCH_DELAY_MS = 180;
-const SORT_COLLATOR = new Intl.Collator("en", { numeric: true, sensitivity: "base" });
-const COLUMN_MODEL = Object.freeze([
-  { id: "work", label: "Work", visibility: "both", sortable: true, copy: "both" },
-  { id: "year", label: "Year", visibility: "both", sortable: true, copy: "both" },
-  { id: "title", label: "Title", visibility: "both", sortable: true, copy: "both" },
-  { id: "series", label: "Series", visibility: "both", sortable: true, copy: "both" },
-  { id: "storage", label: "Storage", visibility: "both", sortable: true, copy: "both" },
-  { id: "medium", label: "Medium", visibility: "expanded", sortable: false, copy: "expanded" }
-].map((column) => Object.freeze(column)));
-const SORTABLE_COLUMN_IDS = Object.freeze(COLUMN_MODEL.filter((column) => column.sortable).map((column) => column.id));
-const COPY_COLUMNS = Object.freeze(COLUMN_MODEL.filter((column) => column.copy === "both"));
-const PRESENTATION_COLUMNS = Object.freeze(COLUMN_MODEL.map((column) => Object.freeze({
-  id: column.id,
-  label: column.label,
-  visibility: column.visibility
-})));
 
 function columnDefinition(id) {
   return COLUMN_MODEL.find((column) => column.id === id);
@@ -31,136 +16,8 @@ function cleanString(value) {
   return String(value == null ? "" : value).trim();
 }
 
-function visibleString(value) {
-  return cleanString(value).replace(/\s+/g, " ");
-}
-
-function searchString(value) {
-  return visibleString(value).normalize("NFKC").toLocaleLowerCase("en");
-}
-
-function exactKeys(value, expected) {
-  return Boolean(value && typeof value === "object" && !Array.isArray(value))
-    && Object.keys(value).sort().join(",") === expected.slice().sort().join(",");
-}
-
 function clearNode(node) {
   while (node.firstChild) node.removeChild(node.firstChild);
-}
-
-/** Validate generated metadata and prepare per-field search/sort values once per load. */
-export function normalizeCatalogueWorksMetadata(payload) {
-  if (
-    !exactKeys(payload, ["header", "works"])
-    || !exactKeys(payload.header, ["schema"])
-    || payload.header.schema !== METADATA_SCHEMA
-    || !payload.works
-    || typeof payload.works !== "object"
-    || Array.isArray(payload.works)
-  ) {
-    throw new Error("Catalogue Works metadata is invalid.");
-  }
-  return Object.entries(payload.works).map(([key, value]) => normalizeWorkRecord(key, value));
-}
-
-function normalizeWorkRecord(key, value) {
-  if (!exactKeys(value, ["work_id", "title", "year", "year_display", "storage_location", "medium", "series"])) {
-    throw new Error("Catalogue Works metadata row is invalid.");
-  }
-  const workId = cleanString(value && value.work_id);
-  const title = value.title;
-  const year = value.year;
-  const yearDisplay = value.year_display;
-  const storage = value.storage_location;
-  const medium = value.medium;
-  if (
-    !WORK_ID_PATTERN.test(key)
-    || value.work_id !== key
-    || typeof value.title !== "string"
-    || typeof year !== "number"
-    || typeof value.year_display !== "string"
-    || (value.storage_location !== null && typeof value.storage_location !== "string")
-    || (value.medium !== null && typeof value.medium !== "string")
-    || !Array.isArray(value.series)
-    || value.series.length > 1
-  ) {
-    throw new Error("Catalogue Works metadata row is invalid.");
-  }
-  const series = value.series.map((record) => {
-    if (!exactKeys(record, ["series_id", "title"])
-      || typeof record.series_id !== "string" || !SERIES_ID_PATTERN.test(record.series_id)
-      || typeof record.title !== "string" || !visibleString(record.title)) {
-      throw new Error("Catalogue Works metadata Series is invalid.");
-    }
-    return { seriesId: record.series_id, title: visibleString(record.title) };
-  });
-  const searchValues = [workId, title, ...series.flatMap((record) => [record.seriesId, record.title])].map(searchString);
-  const seriesSortValue = series.map((record) => record.title + " " + record.seriesId).join(" ");
-  return { medium, searchValues, series, seriesSortValue, storage, title, workId, year, yearDisplay };
-}
-
-function rowMatches(row, query) {
-  return row.searchValues.some((value) => value.includes(query));
-}
-
-function compareRows(left, right, key) {
-  if (key === "year") return left.year - right.year;
-  const field = key === "work" ? "workId" : key === "series" ? "seriesSortValue" : key;
-  return SORT_COLLATOR.compare(left[field], right[field]);
-}
-
-/** Filter prepared rows across the whole dataset; retain all sorted matches for paging and Copy table. */
-export function buildCatalogueWorksProjection(rows, options) {
-  const settings = options || {};
-  const query = searchString(settings.searchText);
-  const sortKey = SORTABLE_COLUMN_IDS.includes(settings.sortKey) ? settings.sortKey : "work";
-  const sortDir = settings.sortDir === "desc" ? "desc" : "asc";
-  const matching = query ? rows.filter((row) => rowMatches(row, query)) : [];
-  matching.sort((left, right) => {
-    const primary = compareRows(left, right, sortKey);
-    if (primary !== 0) return sortDir === "asc" ? primary : -primary;
-    return SORT_COLLATOR.compare(left.workId, right.workId);
-  });
-  return {
-    columns: COPY_COLUMNS.map((column) => column.id),
-    rows: matching,
-    searchText: visibleString(settings.searchText),
-    sortDir,
-    sortKey,
-    totalCount: rows.length
-  };
-}
-
-function seriesCellText(row) {
-  return row.series.length
-    ? row.series.map((record) => record.title + " [" + record.seriesId + "]").join("; ")
-    : "—";
-}
-
-function tsvCell(value) {
-  if (value === null) return "";
-  if (typeof value !== "string") throw new Error("Catalogue Works copy cell must be text or absent.");
-  return value.replace(/\r\n|[\t\r\n]/g, " ");
-}
-
-function copyCellText(row, columnId) {
-  const values = {
-    work: row.workId,
-    year: row.yearDisplay,
-    title: row.title,
-    series: seriesCellText(row),
-    storage: row.storage,
-    medium: row.medium
-  };
-  return values[columnId];
-}
-
-export function serializeCatalogueWorksTsv(projection) {
-  const lines = [projection.columns.map((key) => columnDefinition(key).label).join("\t")];
-  projection.rows.forEach((row) => {
-    lines.push(projection.columns.map((key) => copyCellText(row, key)).map(tsvCell).join("\t"));
-  });
-  return lines.join("\n");
 }
 
 function studioOrigin(context) {
@@ -199,24 +56,13 @@ function fetchJson(url, message) {
 
 function loadCatalogueWorks(context) {
   const url = new URL("/studio/catalogue-output/reports/catalogue-works/metadata.json", studioOrigin(context));
-  return fetchJson(url.toString(), "Failed to load Catalogue Works metadata.").then((payload) => {
-    const rows = normalizeCatalogueWorksMetadata(payload);
-    const workspace = context.workspaceConfig;
-    const catalogue = workspace && workspace.collections.find((entry) => entry.collection === "catalogue");
-    if (!catalogue || !/^d-[0-9]{8}-[0-9]{6}-[0-9a-f]{6}$/.test(catalogue.reportHostDocId)
-      || !workspace.viewerBaseUrl) throw new Error("Working Catalogue is not configured.");
-    const origin = new URL(context.content.ownerDocument.baseURI).origin;
-    const documentLinks = new Map(rows.map((row) => [row.workId, buildViewerUrl({
-      viewerBaseUrl: workspace.viewerBaseUrl, origin, docId: row.workId, collection: "catalogue"
-    })]));
-    return { rows, documentLinks };
-  });
+  return fetchJson(url.toString(), "Failed to load Catalogue Works metadata.");
 }
 
 function appendLink(cell, className, href, text) {
-  const link = cell.ownerDocument.createElement(href ? "a" : "span");
-  link.className = href ? className : className.replace("docsViewerReport__cellLink", "").trim();
-  if (href) link.href = href;
+  const link = cell.ownerDocument.createElement("a");
+  link.className = className;
+  link.href = href;
   link.textContent = text;
   cell.appendChild(link);
   return link;
@@ -258,6 +104,10 @@ function appendSeriesCell(rowNode, row) {
 }
 
 function appendRow(state, row) {
+  if (!state.documentLinks.has(row.workId)) {
+    state.documentLinks.set(row.workId, state.context.viewerUrlForDocument(row.workId, { collection: "catalogue" }));
+  }
+  const documentHref = state.documentLinks.get(row.workId);
   const rowNode = state.rowsNode.ownerDocument.createElement("tr");
   rowNode.dataset.workId = row.workId;
 
@@ -265,7 +115,7 @@ function appendRow(state, row) {
   appendLink(
     workCell,
     "docsViewerReport__cellLink",
-    state.documentLinks.get(row.workId),
+    documentHref,
     row.workId
   );
   rowNode.appendChild(workCell);
@@ -276,20 +126,20 @@ function appendRow(state, row) {
   appendLink(
     titleCell,
     "docsViewerReport__cellLink docsViewerReport__title",
-    state.documentLinks.get(row.workId),
+    documentHref,
     row.title
   );
   rowNode.appendChild(titleCell);
 
   appendSeriesCell(rowNode, row);
 
-  appendTextCell(rowNode, "storage", row.storage ?? "", "catalogueWorksReport__cellMeta");
-  appendTextCell(rowNode, "medium", row.medium ?? "", "catalogueWorksReport__cellMeta");
+  appendTextCell(rowNode, "storage", row.storage === null ? "" : row.storage, "catalogueWorksReport__cellMeta");
+  appendTextCell(rowNode, "medium", row.medium === null ? "" : row.medium, "catalogueWorksReport__cellMeta");
   state.rowsNode.appendChild(rowNode);
 }
 
-function renderHead(state) {
-  clearNode(state.headRowNode);
+function mountHead(state) {
+  state.sortControls = [];
   COLUMN_MODEL.forEach((column) => {
     const key = column.id;
     const cell = applyColumnPresentation(state.headRowNode.ownerDocument.createElement("th"), key);
@@ -299,9 +149,6 @@ function renderHead(state) {
       state.headRowNode.appendChild(cell);
       return;
     }
-    cell.setAttribute("aria-sort", state.sortKey === key
-      ? (state.sortDir === "asc" ? "ascending" : "descending")
-      : "none");
     const button = state.headRowNode.ownerDocument.createElement("button");
     button.type = "button";
     button.className = "docsViewerReport__sortButton";
@@ -310,39 +157,31 @@ function renderHead(state) {
     const indicator = state.headRowNode.ownerDocument.createElement("span");
     indicator.className = "docsViewerReport__sortIndicator";
     indicator.setAttribute("aria-hidden", "true");
-    indicator.textContent = state.sortKey === key ? (state.sortDir === "asc" ? "▲" : "▼") : "";
     button.appendChild(indicator);
-    button.setAttribute(
-      "aria-label",
-      "Sort by " + column.label + (state.sortKey === key
-        ? (state.sortDir === "asc" ? " descending" : " ascending")
-        : " ascending")
-    );
-    if (state.sortKey === key) button.dataset.state = "active";
-    button.disabled = state.busy;
     cell.appendChild(button);
     state.headRowNode.appendChild(cell);
+    state.sortControls.push({ column, cell, button, indicator });
   });
 }
 
+function projectionSettings(state) {
+  return { searchText: state.searchText, sortDir: state.sortDir, sortKey: state.sortKey };
+}
+
 function refreshProjection(state) {
-  state.projection = buildCatalogueWorksProjection(state.sourceRows, {
-    searchText: state.searchText,
-    sortDir: state.sortDir,
-    sortKey: state.sortKey
-  });
+  if (state.released || state.busy || state.failed) return;
+  state.projection = projectCatalogueWorks(state.sourceRows, state.projection, projectionSettings(state));
   state.pageIndex = 0;
   renderCurrent(state);
 }
 
 function renderCurrent(state) {
-  if (state.failed) return;
+  if (state.released || state.failed) return;
   const projection = state.projection;
   const pageCount = Math.max(1, Math.ceil(projection.rows.length / PAGE_SIZE));
   state.pageIndex = Math.min(state.pageIndex, pageCount - 1);
   state.pageLabelNode.textContent = (state.pageIndex + 1) + "/" + pageCount;
   state.pageLabelNode.setAttribute("aria-label", "Page " + (state.pageIndex + 1) + " of " + pageCount);
-  renderHead(state);
   clearNode(state.rowsNode);
   if (!projection.searchText) {
     state.tableNode.hidden = true;
@@ -380,7 +219,13 @@ function updateControls(state) {
   const nextLabel = pageCount > 1 && state.pageIndex + 1 >= pageCount ? "First page" : "Next page";
   state.nextPageButton.setAttribute("aria-label", nextLabel);
   state.nextPageButton.title = nextLabel;
-  state.headRowNode.querySelectorAll("[data-report-sort]").forEach((button) => {
+  state.sortControls.forEach(({ column, cell, button, indicator }) => {
+    const active = state.sortKey === column.id;
+    cell.setAttribute("aria-sort", active ? (state.sortDir === "asc" ? "ascending" : "descending") : "none");
+    indicator.textContent = active ? (state.sortDir === "asc" ? "▲" : "▼") : "";
+    button.dataset.state = active ? "active" : "";
+    button.setAttribute("aria-label", "Sort by " + column.label
+      + (active && state.sortDir === "asc" ? " descending" : " ascending"));
     button.disabled = resultsUnavailable;
   });
 }
@@ -390,6 +235,7 @@ function clipboardWindow(state) {
 }
 
 function copyCurrentTable(state) {
+  if (state.released || state.busy || state.failed || state.searchTimer !== null) return Promise.resolve();
   const windowRef = clipboardWindow(state);
   const clipboard = windowRef.navigator && windowRef.navigator.clipboard;
   if (!clipboard || typeof clipboard.writeText !== "function") {
@@ -398,17 +244,16 @@ function copyCurrentTable(state) {
   }
   const projection = state.projection;
   const expanded = Boolean(state.tableNode.closest(".docsViewerReport__expandedViewport"));
-  const copyProjection = Object.assign({}, projection, {
-    columns: COLUMN_MODEL.filter((column) => {
-      return column.copy === "both" || (expanded && column.copy === "expanded");
-    }).map((column) => column.id)
-  });
-  return Promise.resolve(clipboard.writeText(serializeCatalogueWorksTsv(copyProjection))).then(() => {
+  const columns = expanded
+    ? COLUMN_MODEL.filter((column) => column.copy === "both" || column.copy === "expanded").map((column) => column.id)
+    : projection.columns;
+  return Promise.resolve(clipboard.writeText(serializeCatalogueWorksTsv(projection.rows, columns))).then(() => {
+    if (state.released) return;
     state.statusNode.textContent = projection.rows.length === 1
       ? "Copied 1 Catalogue Work."
       : "Copied " + projection.rows.length + " Catalogue Works.";
   }).catch(() => {
-    state.statusNode.textContent = "Copy table failed.";
+    if (!state.released) state.statusNode.textContent = "Copy table failed.";
   });
 }
 
@@ -416,12 +261,13 @@ function attachEvents(state) {
   function applySearch() {
     clearTimeout(state.searchTimer);
     state.searchTimer = null;
-    if (!state.context.reportRoot.isConnected) return;
     refreshProjection(state);
   }
 
   state.searchInputNode.addEventListener("input", () => {
+    if (state.released || state.busy || state.failed) return;
     state.searchText = state.searchInputNode.value;
+    state.pageIndex = 0;
     clearTimeout(state.searchTimer);
     if (!state.searchText.trim()) {
       applySearch();
@@ -434,9 +280,8 @@ function attachEvents(state) {
     const button = event.target && typeof event.target.closest === "function"
       ? event.target.closest("[data-report-sort]")
       : null;
-    if (!button || state.busy || state.failed || state.searchTimer !== null) return;
-    const key = cleanString(button.getAttribute("data-report-sort")).toLowerCase();
-    if (!SORTABLE_COLUMN_IDS.includes(key)) return;
+    if (!button || state.released || state.busy || state.failed || state.searchTimer !== null) return;
+    const key = button.dataset.reportSort;
     if (state.sortKey === key) state.sortDir = state.sortDir === "asc" ? "desc" : "asc";
     else {
       state.sortKey = key;
@@ -445,7 +290,7 @@ function attachEvents(state) {
     refreshProjection(state);
   });
   function changePage(step) {
-    if (state.busy || state.failed || state.searchTimer !== null) return;
+    if (state.released || state.busy || state.failed || state.searchTimer !== null) return;
     const nextPage = state.pageIndex + step;
     const pageIndex = step > 0 && nextPage * PAGE_SIZE >= state.projection.rows.length ? 0 : nextPage;
     if (pageIndex < 0 || pageIndex * PAGE_SIZE >= state.projection.rows.length) return;
@@ -553,9 +398,10 @@ export function mountCatalogueWorksReport(context) {
     context,
     documentLinks: new Map(),
     failed: false,
+    released: false,
     pageIndex: 0,
     presentationListeners: new Set(),
-    projection: { columns: COPY_COLUMNS.map((column) => column.id), rows: [] },
+    projection: { columns: COPY_COLUMN_IDS, rows: [] },
     searchText: "",
     searchTimer: null,
     sortDir: "asc",
@@ -566,26 +412,39 @@ export function mountCatalogueWorksReport(context) {
     id: "catalogue-works",
     capture: function () { return { query: state.searchText, key: state.sortKey, direction: state.sortDir, page: state.pageIndex }; },
     restore: function (saved) {
-      if (state.searchText === saved.query && state.sortKey === saved.key && state.sortDir === saved.direction && state.pageIndex === saved.page) return;
+      if (state.released) return;
+      if (state.searchTimer === null && state.searchText === saved.query && state.sortKey === saved.key && state.sortDir === saved.direction && state.pageIndex === saved.page) return;
       clearTimeout(state.searchTimer); state.searchTimer = null;
       state.searchText = saved.query; state.sortKey = saved.key; state.sortDir = saved.direction;
       state.searchInputNode.value = saved.query;
-      state.projection = buildCatalogueWorksProjection(state.sourceRows, { searchText: state.searchText, sortKey: state.sortKey, sortDir: state.sortDir });
-      state.pageIndex = saved.page; renderCurrent(state);
+      state.pageIndex = saved.page;
+      if (state.busy || state.failed) return;
+      state.projection = projectCatalogueWorks(state.sourceRows, state.projection, projectionSettings(state));
+      renderCurrent(state);
+    },
+    dispose: function () {
+      state.released = true;
+      clearTimeout(state.searchTimer); state.searchTimer = null;
+      state.sourceRows = [];
+      state.projection = { columns: COPY_COLUMN_IDS, rows: [] };
+      state.documentLinks.clear();
+      state.presentationListeners.clear();
     }
   });
+  if (state.released) return Promise.resolve();
   attachEvents(state);
-  renderHead(state);
+  mountHead(state);
   state.tableNode.hidden = true;
   state.emptyNode.hidden = true;
   state.statusNode.textContent = "Loading Catalogue Works...";
   updateControls(state);
-  return loadCatalogueWorks(context).then((data) => {
-    state.sourceRows = data.rows;
-    state.documentLinks = data.documentLinks;
+  return loadCatalogueWorks(context).then((payload) => {
+    if (state.released) return undefined;
+    state.sourceRows = prepareCatalogueWorksRows(payload);
     state.busy = false;
     state.freshnessNode.hidden = false;
-    refreshProjection(state);
+    state.projection = projectCatalogueWorks(state.sourceRows, null, projectionSettings(state));
+    renderCurrent(state);
     return {
       expandedPresentation: {
         columns: PRESENTATION_COLUMNS,
@@ -593,6 +452,7 @@ export function mountCatalogueWorksReport(context) {
         label: "Catalogue Works",
         toolbar: state.toolbarNode,
         subscribe: (listener) => {
+          if (state.released) throw new Error("Catalogue Works report is unavailable.");
           if (typeof listener !== "function") {
             throw new Error("Catalogue Works presentation refresh requires a listener.");
           }
@@ -603,10 +463,12 @@ export function mountCatalogueWorksReport(context) {
       }
     };
   }).catch((error) => {
+    if (state.released) return undefined;
     state.sourceRows = [];
+    state.documentLinks.clear();
     state.busy = false;
     state.failed = true;
-    state.projection = { columns: COPY_COLUMNS.map((column) => column.id), rows: [] };
+    state.projection = { columns: COPY_COLUMN_IDS, rows: [] };
     clearNode(state.rowsNode);
     state.tableNode.hidden = true;
     state.statusNode.textContent = error && error.message

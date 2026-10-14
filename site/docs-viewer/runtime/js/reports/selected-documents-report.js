@@ -1,46 +1,58 @@
-import { sortSelectedDocumentRows, selectedDocumentThumbnailMetadata } from "../shared/docs-selected-documents.js";
+import { applySelectedDocumentChange, prepareSelectedDocuments } from "../shared/docs-selected-documents.js";
 import { appendCollectionThumbnail, loadCatalogueCollectionThumbnailSettings } from "../shared/docs-collection-browsing.js";
 import { catalogueWorkThumbnail } from "../shared/docs-viewer-catalogue-media.js";
 import { requestUrl } from "../shared/docs-viewer-asset-url.js";
 
-function documentThumbnailUrl(context, row, settings, revision) {
-  if (row.has_thumbnail === true) {
-    const mediaRoot = String(context.mediaRoot || "").replace(/\/+$/, "");
-    if (!mediaRoot) throw new Error("Selected Documents thumbnail media is not configured.");
-    const owner = row.collection ? "collections/" + encodeURIComponent(row.collection) : "workspace";
-    return requestUrl(mediaRoot + "/" + owner + "/thumbs/" + encodeURIComponent(row.doc_id + "-thumb.webp"), { reloadNonce: revision });
-  }
-  const workId = row.collection === "catalogue" ? row.doc_id : row.subject;
-  return workId ? catalogueWorkThumbnail(workId, row.title, settings).src : "";
-}
-
-/** Mount the selected list with collection thumbnail presentation and exact links. */
+/** Mount a saved selection list; disposal ends its local/public retained lifetime. */
 export async function mountSelectedDocumentsReport(context) {
   const root = context.reportRoot;
   const documentRef = root.ownerDocument;
-  if (!context.selectedUrl) throw new Error("Selected Documents data is not configured.");
-  const response = await fetch(context.selectedUrl, { headers: { Accept: "application/json" }, cache: "no-cache" });
-  if (!response.ok) throw new Error("Failed to load Selected Documents.");
-  let rows = sortSelectedDocumentRows((await response.json()).docs);
-  const thumbnailSettings = rows.some((row) => ["works", "catalogue"].includes(row.collection))
-    ? await loadCatalogueCollectionThumbnailSettings(context) : null;
-  const thumbnailRevisions = new Map();
-  if (!root.isConnected) return false;
+  const mediaRoot = context.mediaRoot?.replace(/\/+$/, "");
+  let data = null;
+  let released = false;
+  let initialLoading = true;
+  let thumbnailSettings = null;
+  let thumbnailSettingsRead = null;
+  let thumbnailUpdate = null;
+  const pendingThumbnails = new Set();
   root.dataset.reportId = "selected_documents";
   root.dataset.reportColumns = "1";
+
+  function prepareThumbnail(row, revision) {
+    pendingThumbnails.delete(row);
+    if (row.has_thumbnail === true) {
+      if (!mediaRoot) throw new Error("Selected Documents thumbnail media is not configured.");
+      const owner = row.collection ? "collections/" + encodeURIComponent(row.collection) : "workspace";
+      row.thumbnailSrc = requestUrl(mediaRoot + "/" + owner + "/thumbs/" + encodeURIComponent(row.doc_id + "-thumb.webp"), { reloadNonce: revision });
+    } else if (row.thumbnailWorkId && thumbnailSettings) {
+      row.thumbnailSrc = catalogueWorkThumbnail(row.thumbnailWorkId, row.title, thumbnailSettings).src;
+    } else {
+      row.thumbnailSrc = "";
+      if (row.thumbnailWorkId) pendingThumbnails.add(row);
+    }
+  }
+
+  async function resolvePendingThumbnails() {
+    if (!pendingThumbnails.size) return;
+    if (!thumbnailSettingsRead) thumbnailSettingsRead = loadCatalogueCollectionThumbnailSettings(context);
+    const settings = await thumbnailSettingsRead;
+    if (released) return;
+    thumbnailSettings = settings;
+    pendingThumbnails.forEach((row) => prepareThumbnail(row));
+  }
+
   function render() {
-    const thumbnails = rows.map((row) => documentThumbnailUrl(context, row, thumbnailSettings, thumbnailRevisions.get((row.collection || "") + "/" + row.doc_id)));
-    const reserveThumbnailSpace = thumbnails.some(Boolean);
+    if (released) return;
+    const reserveThumbnailSpace = data.rows.some((row) => row.thumbnailSrc);
     const list = documentRef.createElement("ul");
     list.className = "docsViewerReport__rows";
-    rows.forEach(function (row, index) {
+    data.rows.forEach(function (row) {
       const item = documentRef.createElement("li");
       item.className = "docsViewerReport__row";
       const link = documentRef.createElement("a");
       link.className = "docsViewerReport__cellLink docsViewerReport__collectionButton";
-      const url = new URL(context.viewerUrlForDocument(row.doc_id, { collection: row.collection || "" }), documentRef.baseURI);
-      link.href = url.href;
-      if (reserveThumbnailSpace) appendCollectionThumbnail(link, thumbnails[index] || undefined);
+      link.href = row.href;
+      if (reserveThumbnailSpace) appendCollectionThumbnail(link, row.thumbnailSrc || undefined);
       const title = documentRef.createElement("span");
       title.className = "docsViewerReport__title";
       title.textContent = row.title;
@@ -48,7 +60,7 @@ export async function mountSelectedDocumentsReport(context) {
       item.appendChild(link);
       list.appendChild(item);
     });
-    if (rows.length) root.replaceChildren(list);
+    if (data.rows.length) root.replaceChildren(list);
     else {
       const note = documentRef.createElement("p");
       note.className = "docsViewerReport__status";
@@ -56,23 +68,64 @@ export async function mountSelectedDocumentsReport(context) {
       root.replaceChildren(note);
     }
   }
-  render();
-  if (context.collectionProvider && context.collectionProvider.subscribeDocumentChanges) context.collectionProvider.subscribeDocumentChanges(function (change) {
-    if (!root.isConnected) return;
-    const collection = change.target.collection || "";
-    const key = collection + "/" + change.target.doc_id;
-    if (!rows.some((row) => row.doc_id === change.target.doc_id && (row.collection || "") === collection)) return;
-    if (change.deleted) thumbnailRevisions.delete(key);
-    else thumbnailRevisions.set(key, String(Date.now()));
-    rows = rows.filter(function (row) { return !change.deleted || row.doc_id !== change.target.doc_id || (row.collection || "") !== collection; }).map(function (row) {
-      if (row.doc_id !== change.target.doc_id || (row.collection || "") !== collection) return row;
-      const updated = Object.assign({}, row, { title: change.record.title, last_updated: change.record.last_updated });
-      delete updated.has_thumbnail;
-      delete updated.subject;
-      return Object.assign(updated, selectedDocumentThumbnailMetadata(change.record, collection));
+
+  function renderError(error) {
+    if (released) return;
+    const note = documentRef.createElement("p");
+    note.className = "docsViewerReport__status";
+    note.textContent = error.message;
+    root.replaceChildren(note);
+  }
+
+  function updateView() {
+    if (initialLoading || thumbnailUpdate) return;
+    if (!pendingThumbnails.size) { render(); return; }
+    thumbnailUpdate = resolvePendingThumbnails().then(render).catch(renderError).finally(() => {
+      if (!released) thumbnailUpdate = null;
     });
-    rows = sortSelectedDocumentRows(rows);
-    render();
+  }
+
+  context.registerRetainedView?.({
+    id: "selected_documents",
+    capture: () => null,
+    restore: () => {},
+    dispose: () => {
+      released = true;
+      data = null;
+      pendingThumbnails.clear();
+      thumbnailSettings = null;
+      thumbnailSettingsRead = null;
+      thumbnailUpdate = null;
+    }
   });
-  return true;
+  if (context.collectionProvider && context.collectionProvider.subscribeDocumentChanges) context.collectionProvider.subscribeDocumentChanges(function (change) {
+    if (released || !data) return;
+    const effect = applySelectedDocumentChange(data, change);
+    if (!effect) return;
+    if (effect.deleted) pendingThumbnails.delete(effect.row);
+    else if (effect.thumbnailChanged) prepareThumbnail(effect.row, String(Date.now()));
+    updateView();
+  });
+
+  try {
+    if (released) return false;
+    if (!context.selectedUrl) throw new Error("Selected Documents data is not configured.");
+    const response = await fetch(context.selectedUrl, { headers: { Accept: "application/json" }, cache: "no-cache" });
+    if (released) return false;
+    if (!response.ok) throw new Error("Failed to load Selected Documents.");
+    const payload = await response.json();
+    if (released) return false;
+    data = prepareSelectedDocuments(payload.docs, context.viewerUrlForDocument);
+    data.rows.forEach((row) => prepareThumbnail(row));
+    await resolvePendingThumbnails();
+    if (released) return false;
+    initialLoading = false;
+    render();
+    return true;
+  } catch (error) {
+    if (released) return false;
+    data = null;
+    pendingThumbnails.clear();
+    throw error;
+  }
 }

@@ -246,7 +246,7 @@ export function mountDocsViewerReport(context) {
       return true;
     }
 
-    if (reportMeta.loaderId !== "docs_collection") {
+    if (!["docs_collection", "selected_documents", "unpublishable"].includes(reportMeta.loaderId)) {
       root.innerHTML = '<p class="docsViewerReport__status">Loading report...</p>';
     }
     return loader.load().then(function (mount) {

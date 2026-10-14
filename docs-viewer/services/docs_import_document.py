@@ -46,7 +46,7 @@ from docs_source_model import (  # noqa: E402
 )
 from docs_workspace_config import require_document_authoring  # noqa: E402
 from docs_import_media import bind_import_media_owner  # noqa: E402
-from docs_index_order import INDEX_ORDER_FILENAME, index_order_text, insert_node, read_index_order  # noqa: E402
+from docs_index_order import index_order_path, index_order_text, insert_node, read_index_order  # noqa: E402
 from markdown_renderer import normalize_markdown_blank_lines  # noqa: E402
 from docs_report_source import RETIRED_REPORT_KEYS, parse_report_source  # noqa: E402
 
@@ -74,7 +74,7 @@ class ImportDocumentMediaContext:
 
 @dataclass(frozen=True)
 class ImportDocumentPlan:
-    """Validated source and asset plan for one normalized import record."""
+    """Carry one import's source/assets and exact hierarchy path through apply/rollback."""
 
     operation: str
     record: ImportContent
@@ -84,6 +84,7 @@ class ImportDocumentPlan:
     parent_id: str
     import_preview: dict[str, Any]
     committed_record: dict[str, Any]
+    index_order_path: Path | None
     collection: str = ""
     target: SourceDoc | None = None
 
@@ -102,8 +103,8 @@ class ImportDocumentPlan:
     @property
     def changed_paths(self) -> list[Path]:
         paths = [self.target_path]
-        if not self.collection and self.operation == IMPORT_DOCUMENT_CREATE:
-            paths.append(self.target_path.parent / INDEX_ORDER_FILENAME)
+        if self.index_order_path is not None:
+            paths.append(self.index_order_path)
         return paths
 
 
@@ -369,6 +370,7 @@ def plan_import_document(
         parent_id=parent_id,
         import_preview=preview,
         committed_record=committed_document_record(front_matter, record.doc_id, document_config, collection=collection_id, parent_id=parent_id),
+        index_order_path=index_order_path(parent_config) if operation == IMPORT_DOCUMENT_CREATE and not collection_id else None,
         collection=collection_id,
         target=target,
     )
@@ -430,12 +432,12 @@ def apply_import_document_source(plan: ImportDocumentPlan) -> None:
 
     if plan.operation == IMPORT_DOCUMENT_CREATE:
         tree = None
-        if not plan.collection:
-            tree = read_index_order(plan.target_path.parent)
-            insert_node(tree, {"doc_id": plan.doc_id, "children": []}, plan.parent_id, "inside")
+        if plan.index_order_path is not None:
+            tree = read_index_order(plan.index_order_path)
+            insert_node(tree, {"doc_id": plan.doc_id}, plan.parent_id, "inside")
         write_text_atomic_new(plan.target_path, plan.source_text)
         if tree is not None:
-            write_text_atomic(plan.target_path.parent / INDEX_ORDER_FILENAME, index_order_text(tree))
+            write_text_atomic(plan.index_order_path, index_order_text(tree))
     elif plan.target is not None and plan.source_text != plan.target.source_text:
         write_text_atomic(plan.target_path, plan.source_text)
 

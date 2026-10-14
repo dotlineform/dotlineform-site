@@ -8,7 +8,7 @@ from typing import Any, Dict
 
 import docs_source_model as source_model
 from docs_document_subjects import subject_key_is_canonical
-from docs_index_order import INDEX_ORDER_FILENAME, index_order_text, insert_node, read_index_order, tree_parent_ids
+from docs_index_order import index_order_path, index_order_text, insert_node, read_index_order, tree_parent_ids
 from docs_management_document_target import committed_document_record, ManagedDocumentCollection, resolve_managed_document_collection
 from docs_workspace_config import require_document_authoring, resolve_external_data_root
 
@@ -33,8 +33,11 @@ class SourceWrite:
 
 @dataclass(frozen=True)
 class ManagementMutationPlan:
+    """Carry prepared writes, exact hierarchy authority and the document build handoff."""
+
     response: Dict[str, Any]
     source_writes: tuple[SourceWrite, ...]
+    index_order_path: Path | None
     prepared_owner: ManagedDocumentCollection
     prepared_document: source_model.SourceDoc
     parent_ids: dict[str, str] | None = None
@@ -83,7 +86,8 @@ def plan_create(
     target_root = resolved_collection.source_root
     if "parent_id" in body:
         raise ValueError("Create uses target_doc_id and placement, not parent_id")
-    tree = read_index_order(target_root) if not collection else []
+    order_path = index_order_path(resolved_collection.parent_config) if not collection else None
+    tree = read_index_order(order_path) if order_path is not None else []
 
     timestamp = source_model.current_doc_timestamp()
     doc_id = work_id if collection == "catalogue" else source_model.allocate_doc_id(
@@ -92,7 +96,7 @@ def plan_create(
     parent_id = ""
     if not collection:
         parent_id = insert_node(
-            tree, {"doc_id": doc_id, "children": []},
+            tree, {"doc_id": doc_id},
             str(body.get("target_doc_id") or ""), str(body.get("placement") or "inside"),
         )
     target_path = target_root / f"{doc_id}.md"
@@ -131,13 +135,14 @@ def plan_create(
 
     return ManagementMutationPlan(
         response=response,
+        index_order_path=order_path,
         source_writes=(
             SourceWrite(
                 target_path,
                 source_text,
                 create_only=True,
             ),
-            *((SourceWrite(target_root / INDEX_ORDER_FILENAME, index_order_text(tree)),) if not collection else ()),
+            *((SourceWrite(order_path, index_order_text(tree)),) if order_path is not None else ()),
         ),
         prepared_owner=resolved_collection,
         prepared_document=document,

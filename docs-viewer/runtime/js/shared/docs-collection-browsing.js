@@ -1,7 +1,7 @@
 import { normalizeDocsCollectionFilterValue } from "./docs-collection-report-filter.js";
 import { catalogueWorkThumbnail } from "./docs-viewer-catalogue-media.js";
 import { catalogueThumbnailSettings } from "./docs-viewer-catalogue-media-policy.js";
-import { classifyDocsDocumentSubject } from "./docs-document-subject.js";
+import { requestUrl } from "./docs-viewer-asset-url.js";
 import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
 export const COLLECTION_PAGE_SIZE = 20;
 export const COLLECTION_SEARCH_DELAY_MS = 180;
@@ -10,88 +10,108 @@ function compareText(left, right) {
   return left < right ? -1 : left > right ? 1 : 0;
 }
 
-function publicWorkId(record) {
-  if (Object.hasOwn(record, "subject") || Object.hasOwn(record, "work_id")) {
-    throw new Error("Catalogue list data contains redundant Work identity. Rebuild its manifest.");
-  }
-  return record.doc_id;
-}
-
 /**
- * Prepare Works/Catalogue search values, dates and Work thumbnails once per manifest.
- * Catalogue adds Work-ID matching. Context uses scalar Subjects only when no
- * authored thumbnail is assigned; public Context rows contain one selected field.
+ * Shared presentation over completed records: exact URLs, thumbnail choices,
+ * search keys and cached ordering. Inventory and edit ownership stay with callers.
+ * Catalogue adds Work-ID matching; Context retains numeric-aware title collation.
  * @param {Object} options
- * @param {string} options.collectionId Exact works or catalogue collection.
- * @param {{base_url: string, size: number, suffix: string, format: string}} [options.thumbnailSettings]
- * @param {boolean} [options.managementContext=false] Permit Context Folder Subjects and both input assignments.
- * @param {function(Object): number} options.updatedTimestamp Validated document timestamp reader.
- * @param {function(Object): string} [options.workIdForDocument] Working-only authoring adapter.
+ * @param {string} options.collectionId Exact configured collection.
+ * @param {string} [options.mediaRoot] Configured authored-thumbnail media root.
+ * @param {function(string): string} options.documentHref Exact reader route owner.
  */
-export function createCollectionBrowsingData(options) {
-  if (!["works", "catalogue"].includes(options.collectionId)) {
-    throw new Error("Unsupported collection browsing data.");
-  }
+export function createCollectionPresentation(options) {
   const catalogue = options.collectionId === "catalogue";
-  const titleCollator = catalogue ? null : new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
-  const name = catalogue ? "Catalogue" : "Works";
-  const settings = options.thumbnailSettings;
-  const workIdForDocument = options.workIdForDocument || publicWorkId;
-  let entries = new Map();
+  const works = options.collectionId === "works";
+  const titleCollator = works ? new Intl.Collator(undefined, { numeric: true, sensitivity: "base" }) : null;
+  const mediaRoot = options.mediaRoot?.replace(/\/+$/, "");
+  const orders = new Map();
+  let projection = null;
+
+  function prepareRecord(record, href) {
+    const searchTitle = normalizeDocsCollectionFilterValue(record.title);
+    const authoredThumbnail = !catalogue && record.has_thumbnail === true;
+    const workId = catalogue ? record.doc_id : "";
+    const thumbnailWorkId = catalogue ? workId
+      : works && !authoredThumbnail && /^[0-9]{5}$/.test(record.subject) ? record.subject : "";
+    const row = {
+      docId: record.doc_id, title: record.title, record,
+      href: href === undefined ? options.documentHref(record.doc_id) : href,
+      searchTitle, workId, updated: record.last_updated || "",
+      sortTitle: catalogue ? searchTitle : record.title.trim().normalize("NFKC").toLowerCase(),
+      rawTitle: catalogue ? record.title : record.title.trim(),
+      authoredThumbnail, thumbnailWorkId,
+      hasThumbnail: authoredThumbnail || Boolean(thumbnailWorkId), thumbnailSrc: ""
+    };
+    if (row.authoredThumbnail) {
+      if (!mediaRoot) throw new Error("Document thumbnail media is not configured.");
+      row.thumbnailSrc = requestUrl(mediaRoot + "/collections/" + encodeURIComponent(options.collectionId)
+        + "/thumbs/" + encodeURIComponent(row.docId + "-thumb.webp"));
+    }
+    return row;
+  }
+
+  function compareTitle(left, right) {
+    return (titleCollator ? titleCollator.compare(left.rawTitle, right.rawTitle)
+      : compareText(left.sortTitle, right.sortTitle) || compareText(left.rawTitle, right.rawTitle))
+      || compareText(left.docId, right.docId);
+  }
+
   return {
-    prepare(documents) {
-      const next = new Map();
-      documents.forEach((doc) => {
-        const workId = catalogue ? workIdForDocument(doc.record) : "";
-        const subject = catalogue ? null : classifyDocsDocumentSubject(doc.record, {
-          folderSupported: options.managementContext === true
-        });
-        if (!catalogue && options.managementContext !== true && doc.record.has_thumbnail === true && subject.kind !== "none") {
-          throw new Error("Public Context rows must contain only the selected thumbnail field.");
-        }
-        const updated = options.updatedTimestamp(doc);
-        if (!(catalogue ? /^[0-9]{5}$/.test(doc.docId) : /^d-\d{8}-\d{6}-[a-f0-9]{6}$/.test(doc.docId))
-          || (catalogue && workId !== doc.docId)
-          || typeof doc.title !== "string" || (!catalogue && !doc.title)
-          || next.has(doc.docId) || !Number.isFinite(updated)) {
-          throw new Error(name + " list data requires distinct document IDs, titles and valid last_updated dates. Rebuild its manifest.");
-        }
-        const thumbnailWorkId = catalogue ? workId : doc.record.has_thumbnail !== true && subject.kind === "work" ? subject.key : "";
-        const thumbnail = thumbnailWorkId ? catalogueWorkThumbnail(thumbnailWorkId, doc.title, settings) : null;
-        next.set(doc.docId, {
-          workId, updated, thumbnail,
-          title: normalizeDocsCollectionFilterValue(doc.title)
-        });
-      });
-      entries = next;
+    prepareRecord,
+    workThumbnail(row, settings) {
+      return catalogueWorkThumbnail(row.thumbnailWorkId, row.title, settings).src;
     },
-    project(documents, query, sortMode) {
-      if (!["title-asc", "last-updated-desc"].includes(sortMode)) {
-        throw new Error("Unsupported collection sort mode: " + sortMode);
+    clearOrders(sortMode) {
+      if (!sortMode || projection?.ordered === orders.get(sortMode)) projection = null;
+      if (sortMode) orders.delete(sortMode);
+      else orders.clear();
+    },
+    project(rows, query, sortMode) {
+      let ordered = orders.get(sortMode);
+      if (!ordered) {
+        ordered = rows.slice().sort((left, right) =>
+          (sortMode === "last-updated-desc" ? compareText(right.updated, left.updated) : 0) || compareTitle(left, right));
+        orders.set(sortMode, ordered);
       }
       const normalized = normalizeDocsCollectionFilterValue(query);
-      return documents.filter((doc) => {
-        const entry = entries.get(doc.docId);
-        return !normalized || entry.title.includes(normalized) || entry.workId.includes(normalized);
-      }).sort((left, right) => {
-        const a = entries.get(left.docId);
-        const b = entries.get(right.docId);
-        if (titleCollator) {
-          return (sortMode === "last-updated-desc" ? b.updated - a.updated : 0)
-            || titleCollator.compare(left.title, right.title)
-            || compareText(left.docId, right.docId);
-        }
-        return (sortMode === "last-updated-desc" ? b.updated - a.updated : 0)
-          || compareText(a.title, b.title) || compareText(left.title, right.title)
-          || compareText(left.docId, right.docId);
+      if (projection?.ordered === ordered && projection.query === normalized) return projection.rows;
+      const matches = normalized ? ordered.filter(row => row.searchTitle.includes(normalized) || row.workId.includes(normalized)) : ordered;
+      projection = { ordered, query: normalized, rows: matches };
+      return matches;
+    }
+  };
+}
+
+/** Read-only inventory for public browsing; no edit index, selection IDs or revisions. */
+export function createCollectionBrowsingData(options) {
+  const presentation = createCollectionPresentation(options);
+  let rows = [];
+  let pendingThumbnails = [];
+  let hasThumbnails = false;
+  return {
+    get rows() { return rows; },
+    get hasThumbnails() { return hasThumbnails; },
+    get needsThumbnailSettings() { return pendingThumbnails.length > 0; },
+    replace(records) {
+      presentation.clearOrders();
+      pendingThumbnails = []; hasThumbnails = false;
+      rows = records.map(record => {
+        const row = presentation.prepareRecord(record);
+        if (row.thumbnailWorkId) pendingThumbnails.push(row);
+        hasThumbnails ||= row.hasThumbnail;
+        return row;
       });
     },
-    appendThumbnail(button, doc) {
-      const thumbnail = entries.get(doc.docId).thumbnail;
-      appendCollectionThumbnail(button, thumbnail ? thumbnail.src : undefined);
+    setThumbnailSettings(settings) {
+      const changed = pendingThumbnails.length > 0;
+      pendingThumbnails.forEach(row => { row.thumbnailSrc = presentation.workThumbnail(row, settings); });
+      pendingThumbnails = [];
+      return changed;
     },
-    thumbnailForDocument(doc) {
-      return entries.get(doc.docId).thumbnail;
+    project(query, sortMode) { return presentation.project(rows, query, sortMode); },
+    clear() {
+      rows = []; pendingThumbnails = []; hasThumbnails = false;
+      presentation.clearOrders();
     }
   };
 }
@@ -100,8 +120,9 @@ export function createCollectionBrowsingData(options) {
  * Append a decorative 64px thumbnail or an empty slot without an image request.
  * @param {HTMLElement} control Document navigation control.
  * @param {string} [src] Thumbnail URL; omission reserves the same layout space.
+ * @param {"eager"|"lazy"} [loading="lazy"] Eager for the bounded current page.
  */
-export function appendCollectionThumbnail(control, src) {
+export function appendCollectionThumbnail(control, src, loading = "lazy") {
   control.classList.add("docsViewerReport__collectionButton--thumbnail");
   if (!src) {
     const slot = control.ownerDocument.createElement("span");
@@ -115,7 +136,7 @@ export function appendCollectionThumbnail(control, src) {
   image.alt = "";
   image.width = 64;
   image.height = 64;
-  image.loading = "lazy";
+  image.loading = loading;
   image.decoding = "async";
   image.addEventListener("error", () => { image.style.visibility = "hidden"; }, { once: true });
   image.src = src;

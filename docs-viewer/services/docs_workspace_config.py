@@ -260,6 +260,7 @@ class DocsWorkspaceConfig:
     catalogue: DocsCatalogueConfig
     media_report_metadata: ArtifactLocation
     broken_links_report: ArtifactLocation
+    links_report: ArtifactLocation
 
 
 def default_repo_root() -> Path:
@@ -606,7 +607,7 @@ def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: 
         raise ValueError(f"invalid Docs workspace JSON: {exc}") from exc
     payload = _object(raw, field="Docs workspace", required={
         "schema_version", "public_viewer_base_url", "public_projection", "search_fields", "recent_limit", "stages", "preview",
-        "assets", "catalogue", "media_report_metadata", "broken_links_report",
+        "assets", "catalogue", "media_report_metadata", "broken_links_report", "links_report",
     })
     if payload["schema_version"] != SCHEMA_VERSION:
         raise ValueError(f"Docs workspace schema_version must be {SCHEMA_VERSION}")
@@ -633,6 +634,10 @@ def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: 
     if not broken_links_path.is_relative_to(Path("working/generated/reports")) or broken_links_path.name != "report.json":
         raise ValueError("broken_links_report must name report.json within working/generated/reports")
     broken_links_report = location_child(workspace_root, broken_links_path)
+    links_report_path = safe_relative_path(payload["links_report"], field="links_report")
+    if not links_report_path.is_relative_to(Path("working/generated/reports")) or links_report_path.name != "report.json":
+        raise ValueError("links_report must name report.json within working/generated/reports")
+    links_report = location_child(workspace_root, links_report_path)
     preview = _preview(location_child(workspace_root, Path("preview")))
     projection = _public_projection(payload["public_projection"])
     working = _object(settings["working"], field="stages.working", required={
@@ -680,6 +685,7 @@ def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: 
         _catalogue(payload["catalogue"], workspace_root=workspace_root),
         media_report_metadata,
         broken_links_report,
+        links_report,
     )
 
 
@@ -718,6 +724,16 @@ def source_container_path(config: DocsStageConfig | DocsCollectionConfig) -> Pat
 
 def document_source_path(config: DocsStageConfig | DocsCollectionConfig) -> Path:
     return source_container_path(config) / config.source.documents_path
+
+
+def source_control_path(config: DocsStageConfig, filename: str) -> Path:
+    """Resolve an owned control filename at the source root without symlink traversal.
+
+    Callers supply their fixed filename; document bodies remain in documents/.
+    Temporary Preview builders use the same layout in their isolated source root.
+    """
+    require_selected_stage(config)
+    return location_child(config.source.location, Path(filename)).path
 
 
 def generated_documents_path(config: DocsStageConfig | DocsCollectionConfig) -> Path:

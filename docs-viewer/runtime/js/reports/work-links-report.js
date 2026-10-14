@@ -1,13 +1,5 @@
 import { mountWorkResourcesReport } from "./work-resources-report.js";
 
-const REPORT_SCHEMA = "docs_work_links_report_v1";
-const WORK_ID_PATTERN = /^[0-9]{5}$/;
-
-function exactKeys(value, keys) {
-  return value && typeof value === "object" && !Array.isArray(value)
-    && Object.keys(value).sort().join(",") === keys;
-}
-
 function safeLinkUrl(value) {
   if (typeof value !== "string" || !value || value !== value.trim()
     || Array.from(value).some(character => character === "\\"
@@ -21,22 +13,11 @@ function safeLinkUrl(value) {
   }
 }
 
-/** Trust UI-authored labels; validate the response shape and safe browser navigation. */
-export function normalizeWorkLinksResponse(payload) {
-  const report = payload && payload.report;
-  if (!payload || payload.ok !== true || !exactKeys(report, "rows,schema_version")
-    || report.schema_version !== REPORT_SCHEMA || !Array.isArray(report.rows)) {
-    throw new Error("Work Links report is invalid.");
-  }
+/** Consume saved labels literally; retain URL safety at the navigation boundary. */
+export function buildWorkLinkRows(report) {
   return report.rows.map(row => {
-    if (!exactKeys(row, "link,work") || !exactKeys(row.work, "title,work_id")
-      || typeof row.work.work_id !== "string" || !WORK_ID_PATTERN.test(row.work.work_id)
-      || typeof row.work.title !== "string"
-      || !exactKeys(row.link, "label,url")
-      || !safeLinkUrl(row.link.url)) {
-      throw new Error("Work Links row is invalid.");
-    }
-    return row;
+    if (!safeLinkUrl(row.link.url)) throw new Error("Work link URL is unsafe.");
+    return { work: row.work, label: row.link.label, href: row.link.url, identity: row.link.url, external: true };
   });
 }
 
@@ -50,8 +31,6 @@ export function mountWorkLinksReport(context) {
     title: "Work Links",
     resourceHeading: "Links",
     emptyText: "No Work links were found.",
-    readRows: async () => normalizeWorkLinksResponse(await service.runWorkLinks()).map(row => ({
-      work: row.work, label: row.link.label, href: row.link.url, identity: row.link.url, external: true
-    }))
+    readRows: async () => buildWorkLinkRows((await service.runWorkLinks()).report)
   });
 }

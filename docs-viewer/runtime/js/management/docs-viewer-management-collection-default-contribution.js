@@ -15,15 +15,6 @@ function documentId(documentRecord) {
   return cleanString(documentRecord && documentRecord.doc_id);
 }
 
-function documentIds(documents) {
-  var seen = new Set();
-  return (Array.isArray(documents) ? documents : []).map(documentId).filter(function (docId) {
-    if (!docId || seen.has(docId)) return false;
-    seen.add(docId);
-    return true;
-  });
-}
-
 function writeClipboardText(documentRef, text) {
   var windowRef = documentRef && documentRef.defaultView;
   if (
@@ -79,7 +70,8 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     : null;
   var managementContext = Boolean(options.managementContext);
   var selectionOwner = options.selectionOwner || createDocsViewerCollectionSelectionOwner();
-  var currentDocuments = [];
+  var currentDocIds = [];
+  var inventoryDocIds = [];
   var listToolbar = null;
   var prepareInFlight = false;
   var rowSelections = new Map();
@@ -93,7 +85,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
   }
 
   function eligibleDocIds() {
-    return documentIds(currentDocuments);
+    return currentDocIds;
   }
 
   function reportRoot() {
@@ -180,8 +172,9 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     selectionOwner.notify(event, {
       managementContext: managementContext
     });
-    if (event && (event.type === "refresh" || event.type === "projection")) {
-      currentDocuments = Array.isArray(event.documents) ? event.documents.slice() : [];
+    if (event && event.type === "refresh") inventoryDocIds = event.docIds;
+    if (event && event.type === "projection") {
+      currentDocIds = event.docIds;
     }
     if (
       event
@@ -198,6 +191,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     if (event && event.type === "unmount") {
       clearListToolbar();
       rowSelections.clear();
+      currentDocIds = []; inventoryDocIds = [];
     }
     projectSelection();
   }
@@ -258,7 +252,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     if (!host || !settings.actionHost) return;
     clearListToolbar();
     rowSelections.clear();
-    currentDocuments = Array.isArray(settings.documents) ? settings.documents.slice() : [];
+    currentDocIds = settings.docIds;
     selectionOwner.syncContext({
       collection: settings.collection,
       managementContext: managementContext,
@@ -570,7 +564,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
 
   return {
     captureListState: selectionOwner.snapshot,
-    restoreListState: function (saved) { selectionOwner.restore(saved, currentDocuments); },
+    restoreListState: function (saved) { selectionOwner.restore(saved, inventoryDocIds); },
     id: "default",
     notify: notify,
     renderDetailToolbar: renderDetailToolbar,

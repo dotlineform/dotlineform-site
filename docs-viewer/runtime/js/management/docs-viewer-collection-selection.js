@@ -9,35 +9,10 @@ import {
   toggleDocsViewerSelection
 } from "./docs-viewer-selection-rules.js";
 
-function normalizeCollectionId(value) {
-  return String(value == null ? "" : value).trim().toLowerCase();
-}
-
-function normalizeCollection(collection) {
-  var record = collection && typeof collection === "object" ? collection : {};
-  return Object.freeze({
-    collection: normalizeCollectionId(record.collection)
-  });
-}
-
-function collectionKey(collection) {
-  var normalized = normalizeCollection(collection);
-  return normalized.collection
-    ? normalized.collection
-    : "";
-}
-
-function documentIds(documents) {
-  return (Array.isArray(documents) ? documents : []).map(function (documentRecord) {
-    if (documentRecord && typeof documentRecord === "object") return documentRecord.doc_id;
-    return documentRecord;
-  });
-}
-
 export function createDocsViewerCollectionSelectionOwner(options = {}) {
   var current = createDocsViewerSelectionState(options.initialState);
-  var owningCollection = normalizeCollection(options.collection);
-  var owningCollectionKey = collectionKey(owningCollection);
+  var owningCollection = options.collection || Object.freeze({ collection: "" });
+  var owningCollectionKey = owningCollection.collection;
   var managementContext = Boolean(options.managementContext);
   var mounted = Boolean(options.mounted);
 
@@ -58,8 +33,8 @@ export function createDocsViewerCollectionSelectionOwner(options = {}) {
   function syncContext(contextOptions) {
     var context = contextOptions && typeof contextOptions === "object" ? contextOptions : {};
     if (Object.prototype.hasOwnProperty.call(context, "collection")) {
-      var nextCollection = normalizeCollection(context.collection);
-      var nextCollectionKey = collectionKey(nextCollection);
+      var nextCollection = context.collection;
+      var nextCollectionKey = nextCollection.collection;
       if (nextCollectionKey !== owningCollectionKey) transition(exitDocsViewerSelection());
       owningCollection = nextCollection;
       owningCollectionKey = nextCollectionKey;
@@ -75,7 +50,7 @@ export function createDocsViewerCollectionSelectionOwner(options = {}) {
 
   function notify(event, contextOptions) {
     var lifecycleEvent = event && typeof event === "object" ? event : {};
-    var type = String(lifecycleEvent.type || "").trim().toLowerCase();
+    var type = lifecycleEvent.type;
     var context = Object.assign({}, contextOptions || {});
     if (Object.prototype.hasOwnProperty.call(lifecycleEvent, "collection")) {
       context.collection = lifecycleEvent.collection;
@@ -84,10 +59,10 @@ export function createDocsViewerCollectionSelectionOwner(options = {}) {
     if (type === "unmount") context.mounted = false;
     syncContext(context);
     if (!available()) return current;
-    if (type === "refresh") {
+    if (type === "refresh" && lifecycleEvent.membershipChanged) {
       return transition(reconcileDocsViewerSelection(
         current,
-        documentIds(lifecycleEvent.documents)
+        lifecycleEvent.docIds
       ));
     }
     return current;
@@ -121,9 +96,9 @@ export function createDocsViewerCollectionSelectionOwner(options = {}) {
       ));
     },
     snapshot: function () { return current; },
-    restore: function (saved, documents) {
+    restore: function (saved, docIds) {
       if (!available()) return current;
-      return transition(reconcileDocsViewerSelection(createDocsViewerSelectionState(saved), documentIds(documents)));
+      return transition(reconcileDocsViewerSelection(createDocsViewerSelectionState(saved), docIds));
     },
     syncContext: syncContext,
     toggle: function (docId, checked) {

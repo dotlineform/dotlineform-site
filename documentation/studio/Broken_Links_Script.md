@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260423-165116-c83a81
 title: Broken Links Script
 added_date: "2026-04-23 16:51:16"
-last_updated: "2026-10-14 16:30:56"
+last_updated: "2026-10-14 21:35:23"
 parent_id: d-20260424-000000-50b63f
 
 ---
@@ -34,7 +34,7 @@ The command scans the configured Working workspace and prints current results wi
 
 ## Inputs And Destination Checks
 
-Workspace configuration resolves Working storage beneath the explicit existing `$DOTLINEFORM_DOCS_BASE_DIR`. Ordinary source membership comes from `working/source/documents/index-order.json`; named collections supply their flat configured Markdown files. Draft and unpublishable documents remain within the audit; there is no repository fallback or replacement workspace.
+Workspace configuration resolves Working storage beneath the explicit existing `$DOTLINEFORM_DOCS_BASE_DIR`. Ordinary source membership comes from `working/source/index-order.json`; named collections supply their flat configured Markdown files. Draft and unpublishable documents remain within the audit; there is no repository fallback or replacement workspace.
 
 Refresh and the CLI load workspace configuration once and carry its resolved Working, public and Catalogue locations through the audit. Each source is read once through the confined source boundary. Front matter supplies exact filename-bound document identity, the stored string title and metadata needed for media diagnosis; body text supplies Catalogue/image tokens. The audit does not validate Subjects, readiness, dates, parent consistency or report declarations, and does not normalize or supply fallback titles. Each generated source payload is read directly once without an existence preflight. Missing generated payloads leave rendered links unscanned while source-based token and media diagnosis continue.
 

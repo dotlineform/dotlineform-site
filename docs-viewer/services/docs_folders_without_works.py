@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections import Counter
 import os
-from pathlib import Path, PurePosixPath
+from pathlib import Path
 import stat
 import sys
 from typing import Any, Mapping
@@ -17,98 +17,80 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths 
 
 ensure_studio_python_paths(__file__)
 
-from catalogue_work_media_sources import (  # noqa: E402
-    WorkMediaSourceRoot,
-    resolve_work_media_path,
-    resolve_work_media_source_id,
-    resolve_work_media_source_root,
-)
 from docs_local_links import encode_relative_target  # noqa: E402
 from catalogue.catalogue_report_inputs import read_work_sources  # noqa: E402
-from pipeline_config import load_pipeline_config, work_media_source_ids  # noqa: E402
+from docs_work_source_inspection import SourceRoot, WorkSourceInspection, collect_work_sources  # noqa: E402
+from pipeline_config import load_pipeline_config, work_media_source_config  # noqa: E402
+from studio.shared.python.projects_directories import configured_projects_base  # noqa: E402
 
 REPORT_SCHEMA = "docs_folders_without_works_report_v1"
 
 
-def _relative_parts(value: str, label: str, *, single: bool = False) -> tuple[str, ...]:
-    encode_relative_target(value)
-    parts = tuple(value.split("/"))
-    if single and len(parts) != 1:
-        raise ValueError(f"{label} must identify one direct name")
-    return parts
-
-
 def _registered_directories(
-    works: Mapping[str, Mapping[str, Any]], config: Mapping[str, Any],
+    works: Mapping[str, Mapping[str, Any]], source_config: Mapping[str, Any],
 ) -> Counter[tuple[str, str]]:
-    directories: Counter[tuple[str, str]] = Counter()
-    for work_id, work in works.items():
-        folder = work.get("project_folder")
-        filename = work.get("project_filename")
-        if folder in (None, "") or filename in (None, ""):
-            continue
-        parts = list(_relative_parts(folder, f"Work {work_id} project_folder", single=True))
-        subfolder = work.get("project_subfolder")
-        if subfolder not in (None, ""):
-            parts.extend(_relative_parts(subfolder, f"Work {work_id} project_subfolder"))
-        _relative_parts(filename, f"Work {work_id} project_filename", single=True)
-        source_id = resolve_work_media_source_id(config, work.get("media_source_id"))
-        directories[source_id, PurePosixPath(*parts).as_posix()] += 1
-    return directories
+    """Group saved declarations once using the prepared source map, without I/O."""
+    return Counter(
+        (source.source_id, source.directory)
+        for source in collect_work_sources(works, source_config)
+    )
 
 
 def _physical_membership(
-    directories: Counter[tuple[str, str]], roots: Mapping[str, WorkMediaSourceRoot],
+    directories: Counter[tuple[str, str]], roots: Mapping[str, SourceRoot], inspection: WorkSourceInspection,
 ) -> Counter[tuple[str, int, int]]:
+    """Reuse inspected parent/leaf metadata, ignoring missing/non-directory leaves.
+
+    The leaf reader accepts any unfollowed type, so an existing regular file at
+    the declared folder path still supplies no membership. Parent directories
+    and declared symlinks retain the shared inspector's strict confinement.
+    """
     membership: Counter[tuple[str, int, int]] = Counter()
     for (source_id, directory), count in directories.items():
-        path = resolve_work_media_path(roots[source_id], directory)
-        try:
-            record = path.lstat()
-        except FileNotFoundError:
-            continue
-        except OSError as error:
-            raise ValueError(f"Registered Work folder could not be inspected: {directory}") from error
-        if stat.S_ISDIR(record.st_mode):
+        parent, _, name = directory.rpartition("/")
+        root = roots[source_id]
+        parent_directory = inspection.directory(root, parent) if parent else root.directory
+        record = inspection.file(parent_directory, name)
+        if record is not None and stat.S_ISDIR(record.st_mode):
             membership[source_id, record.st_dev, record.st_ino] += count
     return membership
 
 
 def _folder_rows(
-    source_root: WorkMediaSourceRoot, membership: Counter[tuple[str, int, int]],
+    source_id: str, source_root: SourceRoot, membership: Counter[tuple[str, int, int]], inspection: WorkSourceInspection,
 ) -> list[dict[str, Any]]:
     # Parents enter this mapping before descendants. Reverse traversal can then
     # sum complete branches once without reopening directories or Work files.
     direct: dict[str, int] = {}
-    pending = [(source_root.root, "")]
+    pending = [(source_root.directory, "")]
     while pending:
-        path, relative = pending.pop()
+        directory, relative = pending.pop()
         try:
-            with os.scandir(path) as listing:
-                children = sorted(listing, key=lambda entry: (entry.name.casefold(), entry.name))
-            for child in children:
-                if not child.is_dir(follow_symlinks=False):
-                    continue
-                child_relative = f"{relative}/{child.name}" if relative else child.name
-                folder = (source_root.root_subdir / child_relative).as_posix()
-                encode_relative_target(folder)
-                record = child.stat(follow_symlinks=False)
-                direct[child_relative] = membership[source_root.source_id, record.st_dev, record.st_ino]
-                pending.append((Path(child.path), child_relative))
-        except OSError as error:
-            folder = (source_root.root_subdir / relative).as_posix()
+            with os.scandir(directory.path) as children:
+                for child in children:
+                    if not child.is_dir(follow_symlinks=False):
+                        continue
+                    child_relative = f"{relative}/{child.name}" if relative else child.name
+                    record = inspection.entry(directory, child)
+                    if record is None:
+                        raise FileNotFoundError(child.path)
+                    child_directory = inspection.directory(source_root, child_relative)
+                    direct[child_relative] = membership[source_id, record.st_dev, record.st_ino]
+                    pending.append((child_directory, child_relative))
+        except (OSError, ValueError) as error:
+            folder = f"{source_root.subdir}/{relative}" if relative else source_root.subdir
             raise ValueError(f"Work source folder could not be scanned: {folder}") from error
 
     totals = dict(direct)
     for relative in reversed(direct):
-        parent = PurePosixPath(relative).parent.as_posix()
+        parent = relative.rpartition("/")[0]
         if parent in totals:
             totals[parent] += totals[relative]
     rows = []
     for relative, count in direct.items():
         if count:
             continue
-        folder = (source_root.root_subdir / relative).as_posix()
+        folder = f"{source_root.subdir}/{relative}"
         rows.append({
             "folder": folder,
             "works_below": totals[relative],
@@ -127,14 +109,15 @@ def folders_without_works_report(repo_root: Path) -> dict[str, Any]:
     Any unreadable input fails the whole run. No file content or saved report is
     read or written; Finder receives only encoded paths relative to Projects.
     """
-    config = load_pipeline_config(repo_root=repo_root)
+    source_config = work_media_source_config(load_pipeline_config(repo_root=repo_root))
     works = read_work_sources(repo_root)
-    roots = {
-        source_id: resolve_work_media_source_root(config, source_id, require_exists=True)
-        for source_id in work_media_source_ids(config)
-    }
-    directories = _registered_directories(works, config)
-    membership = _physical_membership(directories, roots)
-    rows = [row for source_root in roots.values() for row in _folder_rows(source_root, membership)]
+    inspection = WorkSourceInspection(configured_projects_base())
+    roots = inspection.source_roots(source_config["roots"], source_config["roots"])
+    directories = _registered_directories(works, source_config)
+    membership = _physical_membership(directories, roots, inspection)
+    rows = [
+        row for source_id, source_root in roots.items()
+        for row in _folder_rows(source_id, source_root, membership, inspection)
+    ]
     rows.sort(key=lambda row: (row["folder"].casefold(), row["folder"]))
     return {"ok": True, "report": {"schema_version": REPORT_SCHEMA, "rows": rows}}

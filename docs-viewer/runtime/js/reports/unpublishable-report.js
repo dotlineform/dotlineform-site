@@ -1,23 +1,8 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
 const TITLE_ORDER = new Intl.Collator("en", { sensitivity: "base", numeric: true });
-/** Validate the report envelope and order documents by title for display. */
+/** Order completed service rows by title for display. */
 export function readUnpublishableDocuments(payload) {
-  if (!payload || payload.ok !== true || payload.schema_version !== "docs_unpublishable_report_v4"
-    || Object.prototype.hasOwnProperty.call(payload, "stage") || !Array.isArray(payload.documents)) {
-    throw new Error("Unpublishable report data is invalid.");
-  }
-  const seen = new Set();
-  return payload.documents.map(function (record) {
-    const docId = record && record.doc_id;
-    if (typeof docId !== "string" || !docId || docId !== docId.trim() || seen.has(docId)) {
-      throw new Error("Unpublishable document identity is invalid.");
-    }
-    seen.add(docId);
-    if (record.title !== null && typeof record.title !== "string") {
-      throw new Error("Unpublishable document title is invalid.");
-    }
-    return { doc_id: docId, title: record.title };
-  }).sort(function (left, right) {
+  return payload.documents.slice().sort(function (left, right) {
     return Number(!left.title) - Number(!right.title)
       || TITLE_ORDER.compare(left.title || "", right.title || "")
       || left.doc_id.localeCompare(right.doc_id);
@@ -67,8 +52,8 @@ export function mountUnpublishableReport(context) {
   const body = documentRef.createElement("tbody");
   table.append(head, body);
   root.replaceChildren(toolbar, status, table);
-  let requestVersion = 0;
   let busy = false;
+  let released = false;
 
   function setBusy(value) {
     busy = value;
@@ -76,21 +61,22 @@ export function mountUnpublishableReport(context) {
     open.disabled = value;
   }
 
-  function current(version) {
-    return version === requestVersion && root.isConnected !== false
-      && (typeof context.isCurrentDocument !== "function" || context.isCurrentDocument());
-  }
+  context.registerRetainedView?.({
+    id: "unpublishable",
+    capture: () => null,
+    restore: () => {},
+    dispose: () => { released = true; }
+  });
 
   async function load() {
-    if (busy) return;
-    const version = ++requestVersion;
+    if (released || busy) return;
     setBusy(true);
     body.replaceChildren();
     table.hidden = true;
-    status.textContent = "Reading unpublishable.json…";
+    status.textContent = "";
     try {
-      const payload = await service.readUnpublishable({  });
-      if (!current(version)) return;
+      const payload = await service.readUnpublishable();
+      if (released) return;
       const documents = readUnpublishableDocuments(payload);
       documents.forEach(function (record) {
         const tr = documentRef.createElement("tr");
@@ -113,23 +99,22 @@ export function mountUnpublishableReport(context) {
       table.hidden = documents.length === 0;
       status.textContent = documents.length ? `${documents.length} ${documents.length === 1 ? "document" : "documents"}` : "The ignore list is empty.";
     } catch (error) {
-      if (current(version)) status.textContent = error.message;
+      if (!released) status.textContent = error.message;
     } finally {
-      if (current(version)) setBusy(false);
+      if (!released) setBusy(false);
     }
   }
   refresh.addEventListener("click", load);
   open.addEventListener("click", async function () {
-    if (busy) return;
-    const version = ++requestVersion;
+    if (released || busy) return;
     setBusy(true);
     try {
-      await service.openPublicationIgnore({  });
-      if (current(version)) status.textContent = "Opened unpublishable.json in VS Code. Refresh after saving.";
+      await service.openPublicationIgnore();
+      if (!released) status.textContent = "Opened unpublishable.json in VS Code. Refresh after saving.";
     } catch (error) {
-      if (current(version)) status.textContent = error.message;
+      if (!released) status.textContent = error.message;
     } finally {
-      if (current(version)) setBusy(false);
+      if (!released) setBusy(false);
     }
   });
   return load().then(function () { return true; });

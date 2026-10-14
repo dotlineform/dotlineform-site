@@ -7,7 +7,7 @@ from typing import Any
 
 from docs_document_identity import is_document_id
 from docs_front_matter import STRICT_FRONT_MATTER_PATTERN, read_front_matter_fields
-from docs_index_order import read_index_order, tree_parent_ids
+from docs_index_order import index_order_path, read_index_order, tree_parent_ids
 from docs_management_document_target import ManagedDocumentCollection
 from docs_workspace_config import generated_documents_path
 from docs_document_packages.export_common import flatten_summary
@@ -83,7 +83,7 @@ def read_sources(owner: ManagedDocumentCollection, doc_ids: list[str], parents: 
 
 def option_records(owner: ManagedDocumentCollection, doc_ids: list[str]) -> list[dict[str, Any]]:
     """Read only metadata for the invoked ordinary subtree or checked flat targets."""
-    parents = {} if owner.collection else tree_parent_ids(read_index_order(owner.source_root))
+    parents = {} if owner.collection else tree_parent_ids(read_index_order(index_order_path(owner.parent_config)))
     if not owner.collection:
         for doc_id in doc_ids:
             if doc_id not in parents:
@@ -125,7 +125,7 @@ def prepare_selected_context(
     Unselected document bodies are never opened. Saved metadata supplies ancestor,
     child and link identities; tree-only profiles construct no rendering owner.
     """
-    parents = {} if owner.collection else tree_parent_ids(read_index_order(owner.source_root))
+    parents = {} if owner.collection else tree_parent_ids(read_index_order(index_order_path(owner.parent_config)))
     sources = read_sources(owner, doc_ids, parents)
     tree_only = profile["target"]["record_shape"] == "document_tree"
     render_content = not tree_only and any(mapping["source"] in {"content", "headings"} for mapping in profile["document_fields"])

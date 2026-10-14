@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260902-102745-8379ea
 title: Unified Analysis And Catalogue Presentation
 added_date: "2026-09-02 10:27:45"
-last_updated: "2026-10-03 17:35:06"
+last_updated: "2026-10-14 21:35:23"
 summary: Present accepted Analysis documents and current Catalogue data through Docs Viewer while retaining the legacy Catalogue as a frozen archive.
 ui_status: in-progress
 parent_id: d-20260428-000000-f5ff18
@@ -35,7 +35,7 @@ The current Catalogue site remains available as a frozen archive while the repla
 
 - [Deploy And Public Cutover - Delivery](Deploy_And_Public_Cutover_Delivery.md) is the next proposed deployment delivery, beginning with DPC-0 readiness. It restores Docs Deploy Repo for the current lifecycle and implements the independent current Catalogue projection, then gates the fresh accepted snapshot, public preview, explicit release and live verification. Docs-only, Catalogue-only and combined operations preserve their distinct input authorities; the metadata-separation proposal remains parked.
 
-- [Publication Ignore List](Publication_Ignore_List.md) is complete and accepted on 2026-09-13, retained for manual archive. Analysis Working `source/documents/unpublishable.json` supplies exact ordinary-document exclusions alongside draft subtree/host exclusion; sub-scope documents remain outside the ignore policy. Unpublishable shows linked titles and IDs in Title A–Z order, with Refresh and Open in VS Code. Working Links retains drafts, and the approved one-off backfill completed all 588 eligible records without changing routine creation behavior. `publishable`, per-report `access` and downstream eligibility filters are retired. Durable ownership is recorded in Analysis Documents, Builder and Reports; publication and deployment remain separate actions.
+- [Publication Ignore List](Publication_Ignore_List.md) is complete and accepted on 2026-09-13, retained for manual archive. Analysis Working `source/unpublishable.json` supplies exact ordinary-document exclusions alongside draft subtree/host exclusion; sub-scope documents remain outside the ignore policy. Unpublishable shows linked titles and IDs in Title A–Z order, with Refresh and Open in VS Code. Working Links retains drafts, and the approved one-off backfill completed all 588 eligible records without changing routine creation behavior. `publishable`, per-report `access` and downstream eligibility filters are retired. Durable ownership is recorded in Analysis Documents, Builder and Reports; publication and deployment remain separate actions.
 
 - [Document Link Strength](Document_Link_Strength.md) records numeric strength saved and shown on outgoing document links, authored through a cold-blue to hot-red slider in Insert doc link. Reciprocal strengths are independent: a future visualisation can show A → B hot and B → A cold as two directed links. Scale, persistence mechanics and detailed pill presentation remain to be designed. It is separate follow-on work to the Related/pinning delivery.
 

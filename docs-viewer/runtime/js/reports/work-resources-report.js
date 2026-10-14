@@ -1,10 +1,20 @@
-import { buildViewerUrl } from "../shared/docs-viewer-router.js";
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
 
 const SORTER = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
 
 function workTitle(row) {
   return row.work ? row.work.title : "";
+}
+
+/** Prepare each distinct Work's exact document URL once per loaded dataset. */
+export function prepareWorkResourceRows(rows, documentHref) {
+  const workHrefs = new Map();
+  return rows.map(row => {
+    if (row.work === null) return { ...row, workHref: "" };
+    const workId = row.work.work_id;
+    if (!workHrefs.has(workId)) workHrefs.set(workId, documentHref(workId));
+    return { ...row, workHref: workHrefs.get(workId) };
+  });
 }
 
 /** Sort the displayed column, keeping its blank cells last in both directions. */
@@ -54,24 +64,13 @@ function appendCell(state, rowNode, text, href, options = {}) {
 }
 
 function renderRows(state) {
-  const workspace = state.context.workspaceConfig;
-  if (state.rows.some(row => row.work) && (!workspace?.viewerBaseUrl
-    || !workspace.collections.some(entry => entry.collection === "catalogue"))) {
-    throw new Error("Working Catalogue is not configured.");
-  }
   state.rowsNode.replaceChildren();
   state.emptyNode.hidden = state.rows.length > 0;
   sortWorkResourceRows(state.rows, state.sortKey, state.sortDir).forEach(row => {
-    const workHref = row.work ? buildViewerUrl({
-      viewerBaseUrl: workspace.viewerBaseUrl,
-      origin: new URL(state.document.baseURI).origin,
-      docId: row.work.work_id,
-      collection: "catalogue"
-    }) : "";
     const rowNode = state.document.createElement("li");
     rowNode.className = "docsViewerReport__row";
     rowNode.setAttribute("role", "row");
-    appendCell(state, rowNode, workTitle(row), workHref);
+    appendCell(state, rowNode, workTitle(row), row.workHref);
     appendCell(state, rowNode, row.label, row.href, row);
     state.rowsNode.appendChild(rowNode);
   });
@@ -90,22 +89,26 @@ function setBusy(state, busy) {
 }
 
 async function runReport(state) {
+  if (state.released) return;
   setBusy(state, true);
   state.rows = [];
   state.rowsNode.replaceChildren();
   state.emptyNode.hidden = true;
   state.statusNode.textContent = `Running ${state.options.title}...`;
   try {
-    state.rows = await state.options.readRows();
+    const rows = await state.options.readRows();
+    if (state.released) return;
+    state.rows = prepareWorkResourceRows(rows, state.documentHref);
     renderRows(state);
     state.statusNode.textContent = "";
   } catch (error) {
+    if (state.released) return;
     state.rows = [];
     state.rowsNode.replaceChildren();
     state.emptyNode.hidden = true;
     state.statusNode.textContent = error.message || `${state.options.title} refresh failed.`;
   } finally {
-    setBusy(state, false);
+    if (!state.released) setBusy(state, false);
   }
 }
 
@@ -147,8 +150,9 @@ function renderShell(root, options) {
 
 /** Share local Work report presentation; producers and file actions keep their owners. */
 export function mountWorkResourcesReport(context, options) {
-  const state = { ...renderShell(context.reportRoot, options), context, options,
-    busy: false, rows: [], controls: [], sortKey: "work", sortDir: "asc" };
+  const state = { ...renderShell(context.reportRoot, options), options,
+    documentHref: workId => context.viewerUrlForDocument(workId, { collection: "catalogue" }),
+    released: false, busy: false, rows: [], controls: [], sortKey: "work", sortDir: "asc" };
   state.controls = [["work", "Work"], ["resource", options.resourceHeading]].map(([key, label]) => {
     const cell = state.document.createElement("span");
     cell.className = "docsViewerReport__headLabel";
@@ -164,7 +168,7 @@ export function mountWorkResourcesReport(context, options) {
     cell.appendChild(button);
     state.head.appendChild(cell);
     button.addEventListener("click", () => {
-      if (state.busy) return;
+      if (state.busy || state.released) return;
       state.sortDir = state.sortKey === key && state.sortDir === "asc" ? "desc" : "asc";
       state.sortKey = key;
       renderRows(state);
@@ -177,7 +181,7 @@ export function mountWorkResourcesReport(context, options) {
   state.rowsNode.addEventListener("click", async event => {
     const link = event.target instanceof Element ? event.target.closest("a") : null;
     if (!link) return;
-    if (state.busy) {
+    if (state.busy || state.released) {
       event.preventDefault();
       return;
     }
@@ -189,19 +193,24 @@ export function mountWorkResourcesReport(context, options) {
     try {
       await options.openFile(filename);
     } catch (error) {
-      state.statusNode.textContent = error.message || "Open in Finder failed.";
+      if (!state.released) state.statusNode.textContent = error.message || "Open in Finder failed.";
     } finally {
-      setBusy(state, false);
+      if (!state.released) setBusy(state, false);
     }
   });
   if (context.registerRetainedView) context.registerRetainedView({
     id: options.reportId,
     capture: () => ({ key: state.sortKey, direction: state.sortDir }),
     restore: saved => {
+      if (state.released) return;
       if (state.sortKey === saved.key && state.sortDir === saved.direction) return;
       state.sortKey = saved.key;
       state.sortDir = saved.direction;
       renderRows(state);
+    },
+    dispose: () => {
+      state.released = true;
+      state.rows = [];
     }
   });
   return runReport(state);

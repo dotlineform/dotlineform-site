@@ -8,7 +8,7 @@ from docs_document_identity import doc_updated_date
 from docs_document_images import has_document_thumbnail
 from docs_document_subjects import project_reader_subject
 from docs_source_model import write_text_atomic
-from docs_workspace_config import document_source_path
+from docs_workspace_config import source_control_path
 
 
 SELECTED_FILENAME = "selected.json"
@@ -16,11 +16,8 @@ SELECTED_SCHEMA = "docs_selected_v1"
 
 
 def selected_path(config: Any) -> Path:
-    root = document_source_path(config)
-    path = root / SELECTED_FILENAME
-    if path.is_symlink() or path.resolve().parent != root.resolve():
-        raise ValueError("selected.json must stay in the configured document source directory")
-    return path
+    """Resolve canonical membership at the source root, including isolated builds."""
+    return source_control_path(config, SELECTED_FILENAME)
 
 
 def read_selected(config: Any) -> dict[str, Any]:

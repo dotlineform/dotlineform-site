@@ -22,7 +22,7 @@
     {
       "report_id": "unpublishable",
       "title": "Unpublishable",
-      "description": "Reads ordinary document IDs from Working source/documents/unpublishable.json.",
+      "description": "Reads ordinary document IDs from Working source/unpublishable.json.",
       "loader_id": "unpublishable"
     },
     {

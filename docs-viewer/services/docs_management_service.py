@@ -73,7 +73,7 @@ from docs_management_read_service import (  # noqa: E402
     docs_management_get_payload as read_docs_management_get_payload,
 )
 from docs_management_source_service import detect_preferred_markdown_app, open_publication_ignore, open_recent_exclusions, open_source_doc, read_source_context, save_source_document  # noqa: E402
-from docs_workspace_config import load_docs_working_config, require_document_authoring  # noqa: E402
+from docs_workspace_config import load_docs_working_config, load_docs_workspace_config, require_document_authoring, select_workspace_stage  # noqa: E402
 
 
 def capabilities_payload(repo_root: Path) -> dict[str, object]:
@@ -112,10 +112,10 @@ def docs_management_post_response(
             raise ValueError("Links refresh requires an empty request object")
         if dry_run:
             raise ValueError("Links refresh does not support dry_run")
-        config = load_docs_working_config(repo_root)
+        workspace = load_docs_workspace_config(repo_root)
+        config = select_workspace_stage(workspace, "working")
         require_document_authoring(config)
-        docs_workspace_links.write_workspace_links(repo_root, config)
-        return HTTPStatus.OK, docs_generated_reads.read_generated_workspace_links(repo_root)
+        return HTTPStatus.OK, docs_workspace_links.write_workspace_links(config, report_path=workspace.links_report.path)
     if path == routes.CATALOGUE_REGENERATE_PATH:
         if dry_run:
             raise ValueError("Catalogue Regenerate does not support dry_run")

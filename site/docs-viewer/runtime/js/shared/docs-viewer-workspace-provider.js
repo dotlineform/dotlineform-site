@@ -18,18 +18,6 @@ export function createDocsViewerWorkspaceProvider(options) {
   var settings = options || {};
   var generatedData = settings.generatedData || {};
   var source = settings.source || null;
-  var changeListeners = new Set();
-  function commitDocumentChange(change) {
-    var target = documentTarget(change.target);
-    if (!change.deleted && (!change.record || change.record.doc_id !== target.doc_id)) throw new Error("Committed record did not match its target.");
-    var failures = [];
-    changeListeners.forEach(function (listener) {
-      try { listener(Object.assign({}, change, { target: target })); } catch (error) { failures.push(error); }
-    });
-    if (failures.length) console.warn("Document saved; a retained list projection failed.", failures);
-    return failures;
-  }
-
   function routeContext() {
     var routeSession = settings.routeSession || {};
     return currentValue(settings.routeContext) || routeSession.routeContext || {};
@@ -73,8 +61,6 @@ export function createDocsViewerWorkspaceProvider(options) {
   }
 
   var provider = {
-    commitDocumentChange: commitDocumentChange,
-    subscribeDocumentChanges: function (listener) { changeListeners.add(listener); return function () { changeListeners.delete(listener); }; },
     documentHref: function (target) { return docsViewerLinksDocumentHref(target, collectionConfig()); },
     readDocument: readDocument,
     readIndex: readIndex,
@@ -82,6 +68,10 @@ export function createDocsViewerWorkspaceProvider(options) {
     readSearch: readSearch
   };
 
+  if (source) {
+    provider.commitDocumentChange = source.commitDocumentChange;
+    provider.subscribeDocumentChanges = source.subscribeDocumentChanges;
+  }
   if (source && typeof source.readMetadata === "function") provider.readMetadata = source.readMetadata;
   if (source && typeof source.readSource === "function") {
     provider.readSource = function (target, optionsForRead) {
@@ -152,18 +142,8 @@ export function createDocsViewerWorkspaceProvider(options) {
     };
   }
   if (source && typeof source.writeSource === "function") {
-    function projectSavedSource(response) {
-      if (response && response.source_saved && response.committed_document) {
-        try { response.projection_errors = commitDocumentChange(response.committed_document).map(function (error) { return error.message; }); }
-        catch (error) { response.projection_errors = [error.message]; }
-      }
-      return response;
-    }
     provider.writeSource = function (target, payload, optionsForWrite) {
-      return source.writeSource(target, payload, optionsForWrite || {}).then(projectSavedSource).catch(function (error) {
-        projectSavedSource(error.payload);
-        throw error;
-      });
+      return source.writeSource(target, payload, optionsForWrite || {});
     };
   }
   if (source && typeof source.readSourceContext === "function") {

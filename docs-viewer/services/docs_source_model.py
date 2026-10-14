@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Mapping, Optional
 
-from docs_index_order import read_index_order, tree_parent_ids
+from docs_index_order import index_order_path, read_index_order, tree_parent_ids
 from docs_document_images import has_document_thumbnail
 
 from docs_document_identity import (
@@ -465,7 +465,7 @@ def load_document_collection_docs_for_config(
         resolved_collection = collection or "ordinary documents"
         raise ValueError(f"missing source root for {document_config.stage}/{resolved_collection}: {root}")
 
-    parent_ids = tree_parent_ids(read_index_order(root)) if not collection else {}
+    parent_ids = tree_parent_ids(read_index_order(index_order_path(parent_config))) if not collection else {}
     report_contract: ReportSourceContract | None = None
     docs: list[SourceDoc] = []
     if not collection:

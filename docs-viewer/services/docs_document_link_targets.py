@@ -3,7 +3,7 @@
 from pathlib import Path
 
 from docs_front_matter import FRONT_MATTER_PATTERN, read_front_matter_fields
-from docs_index_order import read_index_order, tree_parent_ids
+from docs_index_order import index_order_path, read_index_order, tree_parent_ids
 from docs_document_location import canonical_document_viewer_url
 from docs_management_document_target import confined_source_path, resolve_managed_document_collection
 from docs_workspace_config import document_source_path, resolve_workspace_path
@@ -26,7 +26,7 @@ def read_document_link_targets(repo_root: Path) -> dict[str, object]:
                 raise FileNotFoundError(f"Document collection is unavailable: {collection}")
             paths = sorted(root.glob("*.md"))
         else:
-            paths = [root / f"{doc_id}.md" for doc_id in tree_parent_ids(read_index_order(root))]
+            paths = [root / f"{doc_id}.md" for doc_id in tree_parent_ids(read_index_order(index_order_path(config)))]
         for path in paths:
             source = confined_source_path(root, path).read_text(encoding="utf-8")
             header = FRONT_MATTER_PATTERN.match(source)

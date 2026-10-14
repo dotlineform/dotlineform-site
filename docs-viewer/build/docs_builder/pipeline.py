@@ -24,7 +24,7 @@ from .semantic_tokens import SemanticTokensMixin
 from .source import DocRecord, SourceLoadingMixin
 from .ordinary_metadata import targeted_document_metadata
 from .write_plan import WritePlanMixin
-from docs_index_order import read_index_order, tree_parent_ids
+from docs_index_order import index_order_path, read_index_order, tree_parent_ids
 from docs_selected_documents import read_selected, refresh_selected_documents, selected_path
 from docs_workspace_config import DocsWorkspaceConfig
 
@@ -93,7 +93,7 @@ class DocsDataBuilder(
         started_at = monotonic_time()
         self._catalogue_work_cache = {} if catalogue_works is None else catalogue_works
         if parent_ids is None:
-            parent_ids = tree_parent_ids(read_index_order(self.source_dir))
+            parent_ids = tree_parent_ids(read_index_order(index_order_path(self.config)))
         source_ids = None if self.only_doc_ids is None else list(set(self.only_doc_ids) | set(self.links_doc_ids or []))
         capture_media_sources = not self.skip_media_builds
         docs = self.load_docs(source_ids, parent_ids=parent_ids, capture_source_text=capture_media_sources) if documents is None else documents

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260924-135214-baa9ec
 title: Collection Search And Site Search
 added_date: "2026-09-24 13:52:14"
-last_updated: "2026-10-07 17:39:42"
+last_updated: "2026-10-14 21:35:23"
 summary: Separate collection search, shared site-search and Recents coverage, and proposed editorial stars for a curated home-page report.
 parent_id: d-20260428-000000-f5ff18
 ---
@@ -72,7 +72,7 @@ Resolve all external paths through [workspace configuration](../../docs-viewer/c
 | --- | --- |
 | `docs-viewer/config/workspace/docs-workspace.json` | Exact collection IDs, configured `report_host_doc_id` values, storage locations and ordered `search_fields`. The explicit site-search inclusion policy alongside collection configuration selects ordinary documents and Works; retain one inclusion decision reused by Recents. Registration alone does not imply inclusion. |
 | `working/generated/documents/index-tree.json` | Ordinary document IDs, titles, explicit `draft` values and nested `children`. Traverse this tree to select ordinary documents and eligible collection hosts. |
-| `working/source/documents/unpublishable.json` | The separate authoritative array of excluded ordinary document IDs. Read it with `read_publication_ignore_ids` in [docs_publication_ignore.py](../../docs-viewer/services/docs_publication_ignore.py). It is not embedded in the tree or Search index. |
+| `working/source/unpublishable.json` | The separate authoritative array of excluded ordinary document IDs. Read it with `read_publication_ignore_ids` in [docs_publication_ignore.py](../../docs-viewer/services/docs_publication_ignore.py). It is not embedded in the tree or Search index. |
 | `working/generated/collections/<collection>/documents/manage-manifest.json` | Flat subdoc IDs, titles, explicit `draft` values and update metadata. Use the Works management manifest; the reader `manifest.json` does not carry `draft` and is not the eligibility input. |
 | `working/source/documents/<doc_id>.md` and `working/source/collections/<collection>/documents/<doc_id>.md` | Canonical searchable text for selected documents only. Resolve exact IDs through the configured source boundary and existing [source model](../../docs-viewer/services/docs_source_model.py). |
 | `working/generated/collections/<collection>/documents/by-id/<doc_id>.json` | Retain the current selected-subdoc consistency checks against its source and management manifest: exact identity, title, update time and configured host URL. These payloads are not the authority for searchable text. |

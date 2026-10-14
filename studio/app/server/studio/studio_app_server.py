@@ -42,7 +42,7 @@ from studio_app_config import asset_version, normalize_route_path, runtime_confi
 from studio_catalogue_api import catalogue_get_payload, catalogue_post_response  # noqa: E402
 from catalogue.catalogue_output_paths import (  # noqa: E402
     CATALOGUE_OUTPUT_ROUTE_PREFIX,
-    catalogue_output_workspace, catalogue_workspace_config, output_path,
+    catalogue_workspace_config, output_path,
 )
 from catalogue.catalogue_works_metadata import METADATA_PATH  # noqa: E402
 from catalogue.catalogue_work_attachments import MAX_WORK_SAVE_BODY_BYTES  # noqa: E402
@@ -152,8 +152,9 @@ class StudioAppRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
         return path in STATIC_FILES or any(path.startswith(prefix) for prefix in STATIC_PREFIXES)
 
     def is_catalogue_media_path(self, path: str) -> bool:
-        return path.startswith((CATALOGUE_MEDIA_ROUTE_PREFIX, CATALOGUE_OUTPUT_ROUTE_PREFIX,
-                                catalogue_workspace_config(self.repo_root).assets.served_path_prefix.rstrip("/") + "/"))
+        if path.startswith((CATALOGUE_MEDIA_ROUTE_PREFIX, CATALOGUE_OUTPUT_ROUTE_PREFIX)):
+            return True
+        return path.startswith(catalogue_workspace_config(self.repo_root).assets.served_path_prefix.rstrip("/") + "/")
 
     def is_studio_shell_route(self, path: str) -> bool:
         return normalize_route_path(path) in studio_shell_route_paths(self.repo_root)
@@ -318,15 +319,15 @@ class StudioAppRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
                 self.send_error(HTTPStatus.FORBIDDEN, "Origin not allowed")
                 return
         try:
-            assets = catalogue_workspace_config(self.repo_root).assets
+            workspace_config = catalogue_workspace_config(self.repo_root)
+            assets = workspace_config.assets
             prefix = assets.served_path_prefix.rstrip("/") + "/"
             if request_path.startswith(prefix):
                 path = assets.resolve_reference(request_path.removeprefix(prefix)).path
                 if not any(path.is_relative_to(family.path) for family in (assets.work_primary, assets.work_thumbnails, assets.work_files)):
                     raise ValueError("Studio serves only Catalogue asset families")
             elif request_path.startswith(CATALOGUE_OUTPUT_ROUTE_PREFIX):
-                workspace = catalogue_output_workspace(self.repo_root)
-                path = output_path(workspace, request_path.removeprefix(CATALOGUE_OUTPUT_ROUTE_PREFIX))
+                path = output_path(workspace_config.catalogue.working, request_path.removeprefix(CATALOGUE_OUTPUT_ROUTE_PREFIX))
             else:
                 workspace = configured_catalogue_media_workspace(self.repo_root)
                 path = resolve_catalogue_media_request_path(workspace, request_path)

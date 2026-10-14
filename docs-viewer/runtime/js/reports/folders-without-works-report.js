@@ -1,43 +1,5 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
 
-const REPORT_SCHEMA = "docs_folders_without_works_report_v1";
-
-function exactKeys(value, keys) {
-  return value && typeof value === "object" && !Array.isArray(value)
-    && Object.keys(value).sort().join(",") === keys;
-}
-
-/** Validate server-owned folder identities and nonnegative descendant counts. */
-export function normalizeFoldersWithoutWorksResponse(payload) {
-  const report = payload && payload.report;
-  if (!payload || payload.ok !== true || !exactKeys(report, "rows,schema_version")
-    || report.schema_version !== REPORT_SCHEMA || !Array.isArray(report.rows)) {
-    throw new Error("Folders Without Works report is invalid.");
-  }
-  const folders = new Set();
-  return report.rows.map(row => {
-    if (!exactKeys(row, "folder,local_target,works_below")
-      || typeof row.folder !== "string" || !row.folder
-      || row.folder.includes("\\")
-      || Array.from(row.folder).some(character => character.charCodeAt(0) < 32 || character.charCodeAt(0) === 127)
-      || row.folder.split("/").some(part => !part || part === "." || part === "..")
-      || typeof row.local_target !== "string" || !row.local_target
-      || !Number.isSafeInteger(row.works_below) || row.works_below < 0
-      || folders.has(row.folder)) {
-      throw new Error("Folders Without Works row is invalid.");
-    }
-    let target;
-    try {
-      target = decodeURIComponent(row.local_target);
-    } catch (error) {
-      throw new Error("Folders Without Works folder target is invalid.", { cause: error });
-    }
-    if (target !== row.folder) throw new Error("Folders Without Works folder target is invalid.");
-    folders.add(row.folder);
-    return row;
-  });
-}
-
 function renderRows(state, rows) {
   const fragment = state.document.createDocumentFragment();
   rows.forEach(row => {
@@ -74,30 +36,35 @@ function setBusy(state, busy) {
 }
 
 async function runReport(state) {
+  if (state.released) return;
   setBusy(state, true);
   state.statusNode.textContent = "";
   try {
-    const rows = normalizeFoldersWithoutWorksResponse(await state.service.runFoldersWithoutWorks());
+    const payload = await state.service.runFoldersWithoutWorks();
+    if (state.released) return;
+    const rows = payload.report.rows;
     renderRows(state, rows);
     state.emptyNode.textContent = "No folders without directly registered Works were found.";
     state.statusNode.textContent = `${rows.length} ${rows.length === 1 ? "folder" : "folders"}`;
   } catch (error) {
+    if (state.released) return;
     renderRows(state, []);
     state.statusNode.textContent = error.message || "Folders Without Works refresh failed.";
     state.emptyNode.textContent = "The folder scan could not complete.";
   } finally {
-    setBusy(state, false);
+    if (!state.released) setBusy(state, false);
   }
 }
 
 async function openFolder(state, target) {
+  if (state.released) return;
   setBusy(state, true);
   try {
     await state.service.openLocalTarget(target);
   } catch (error) {
-    state.statusNode.textContent = error.message || "Folder could not be opened in Finder.";
+    if (!state.released) state.statusNode.textContent = error.message || "Folder could not be opened in Finder.";
   } finally {
-    setBusy(state, false);
+    if (!state.released) setBusy(state, false);
   }
 }
 
@@ -149,7 +116,7 @@ export function mountFoldersWithoutWorksReport(context) {
   if (!service || typeof service.runFoldersWithoutWorks !== "function" || typeof service.openLocalTarget !== "function") {
     throw new Error("Local docs-management server is not configured.");
   }
-  const state = { ...renderShell(context.reportRoot), service, busy: false };
+  const state = { ...renderShell(context.reportRoot), service, busy: false, released: false };
   state.runButton.addEventListener("click", () => {
     if (!state.busy) runReport(state);
   });
@@ -158,6 +125,12 @@ export function mountFoldersWithoutWorksReport(context) {
     if (!link) return;
     event.preventDefault();
     if (!state.busy) openFolder(state, link.dataset.folderTarget);
+  });
+  context.registerRetainedView?.({
+    id: "folders_without_works",
+    capture: () => null,
+    restore: () => {},
+    dispose: () => { state.released = true; }
   });
   return runReport(state);
 }

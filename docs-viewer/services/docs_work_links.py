@@ -15,6 +15,7 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths 
 ensure_studio_python_paths(__file__)
 
 from catalogue.catalogue_report_inputs import read_work_resources  # noqa: E402
+from catalogue.catalogue_output_paths import catalogue_output_workspace  # noqa: E402
 
 REPORT_SCHEMA = "docs_work_links_report_v1"
 
@@ -22,7 +23,7 @@ REPORT_SCHEMA = "docs_work_links_report_v1"
 def work_links_report(repo_root: Path) -> dict[str, Any]:
     """Return one complete Work/label/URL row per authored link; never scan media."""
     rows = []
-    for work_id, work in read_work_resources(repo_root).items():
+    for work_id, work in read_work_resources(catalogue_output_workspace(repo_root)).items():
         for link in work["links"]:
             rows.append({"work": {"work_id": work_id, "title": work["title"]}, "link": dict(link)})
     return {"ok": True, "report": {"schema_version": REPORT_SCHEMA, "rows": rows}}

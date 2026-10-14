@@ -336,7 +336,7 @@ def open_source_path(
     if editor not in {"default", "vscode"}:
         raise ValueError("editor must be `default` or `vscode`")
 
-    preferred_app = detect_preferred_markdown_app()
+    preferred_app = detect_preferred_markdown_app() if editor == "default" else None
     if editor == "vscode":
         command = ["open", "-a", "Visual Studio Code", str(source_path)]
     elif preferred_app:

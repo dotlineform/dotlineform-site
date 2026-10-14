@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 
 from docs_document_identity import is_document_id
-from docs_workspace_config import DocsStageConfig, document_source_path
+from docs_workspace_config import DocsStageConfig, source_control_path
 
 
 RECENT_EXCLUSIONS_FILENAME = "recent-exclusions.json"
@@ -14,11 +14,7 @@ def recent_exclusions_path(config: DocsStageConfig) -> Path:
     """Resolve the Working policy file without creating or substituting it."""
     if config.stage != "working":
         raise ValueError("Recent exclusions belong to Working")
-    root = document_source_path(config)
-    path = root / RECENT_EXCLUSIONS_FILENAME
-    if path.is_symlink() or path.resolve().parent != root.resolve():
-        raise ValueError("Recent exclusions must stay in their configured source directory")
-    return path
+    return source_control_path(config, RECENT_EXCLUSIONS_FILENAME)
 
 
 def parse_recent_exclusions(data: bytes, config: DocsStageConfig) -> frozenset[tuple[str, str]]:

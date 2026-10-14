@@ -10,7 +10,7 @@ from typing import Any, Mapping
 import docs_source_model as source_model
 from docs_document_images import has_document_thumbnail
 from docs_document_identity import doc_updated_date, is_document_id
-from docs_index_order import read_index_order, tree_parent_ids
+from docs_index_order import index_order_path, read_index_order, tree_parent_ids
 from docs_workspace_config import (
     DocsStageConfig,
     DocsCollectionConfig,
@@ -281,7 +281,7 @@ def resolve_managed_document_target(
     )
     parent_ids = None
     if not collection.collection:
-        parent_ids = tree_parent_ids(read_index_order(collection.source_root))
+        parent_ids = tree_parent_ids(read_index_order(index_order_path(collection.parent_config)))
         if normalized["doc_id"] not in parent_ids:
             raise FileNotFoundError(
                 f"managed source document {normalized['doc_id']!r} was not found"

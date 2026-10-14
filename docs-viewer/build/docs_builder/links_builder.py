@@ -280,7 +280,8 @@ def build_workspace_document_links(
     """Complete all Working relationships before any collection renders them.
 
     One updater shares known cross-collection metadata and saved neighbour reads.
-    Rendering and aggregation consume its final records without reopening them.
+    Rendering consumes its final records without reopening them. The separate
+    Links report reads the saved records only on its own Refresh.
     """
     refresh = _DocumentRefresh(builder, {"documents": [], "document_identities": {}})
     refresh.docs = documents

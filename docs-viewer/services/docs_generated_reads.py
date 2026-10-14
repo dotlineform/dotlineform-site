@@ -8,10 +8,12 @@ from pathlib import Path
 from typing import Any, Dict
 
 from docs_document_identity import is_document_id, is_immutable_doc_id
+from docs_json_files import load_json_object
 from docs_workspace_config import (
     generated_documents_path,
     generated_search_path,
     load_docs_working_config,
+    load_docs_workspace_config,
     resolve_workspace_path,
 )
 
@@ -70,19 +72,9 @@ def generated_search_index_path(repo_root: Path) -> Path:
 
 
 def read_generated_workspace_links(repo_root: Path) -> Dict[str, Any]:
-    """Read the saved Working aggregate without building or scanning records."""
-    output = generated_docs_output_root(repo_root).resolve()
-    path = output / "links.json"
-    if path.is_symlink():
-        raise ValueError("Workspace Links data must remain in its configured directory")
-    payload = read_generated_json(path, "generated workspace Links")
-    if (
-        not isinstance(payload, dict) or payload.get("schema_version") != 4
-        or "scope" in payload or "stage" in payload
-        or not isinstance(payload.get("documents"), list)
-    ):
-        raise ValueError("Workspace Links data does not match Working")
-    return payload
+    """Read only the configured Links report snapshot; Refresh owns its writes."""
+    workspace = load_docs_workspace_config(repo_root)
+    return load_json_object(workspace.links_report.path, "Saved Links report")
 
 
 def read_generated_json(path: Path, label: str) -> Dict[str, Any]:

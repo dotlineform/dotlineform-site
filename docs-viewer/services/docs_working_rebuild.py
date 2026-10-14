@@ -9,11 +9,10 @@ from typing import Any, Callable
 
 from docs_build_manifest import remove_build_manifest, write_working_build_completion
 from docs_discovery_selection import select_built_discovery_documents
-from docs_index_order import read_index_order, tree_parent_ids
+from docs_index_order import index_order_path, read_index_order, tree_parent_ids
 from docs_publication_ignore import read_publication_ignore_ids
 from docs_selected_documents import read_selected, refresh_workspace_selected
 from docs_workspace_config import load_docs_workspace_config, require_document_authoring, select_workspace_stage
-from docs_workspace_links import write_workspace_links
 
 
 def rebuild_working_docs_and_search(repo_root: Path) -> dict[str, Any]:
@@ -32,7 +31,6 @@ def rebuild_working_docs_and_search(repo_root: Path) -> dict[str, Any]:
     from docs_builder.common import DOCS_VIEWER_BROWSER_CONFIG_PATH, json_text, write_text
     from docs_builder.links_builder import build_workspace_document_links
     from docs_builder.links_model import DocumentTarget
-    from docs_builder.links_schema import relationship_payload
     from docs_builder.media_builds import build_collection_media_snapshot
     from docs_builder.pipeline import DocsDataBuilder
     from docs_builder.rendering_inputs import RenderingInputs
@@ -62,7 +60,7 @@ def rebuild_working_docs_and_search(repo_root: Path) -> dict[str, Any]:
                 rendering_inputs=rendering_inputs, skip_media_builds=True,
             ) for owner in config.collections
         }}
-        parents = tree_parent_ids(read_index_order(ordinary.source_dir))
+        parents = tree_parent_ids(read_index_order(index_order_path(config)))
         selected = read_selected(config)
         documents = {}
         stale_ids = {}
@@ -85,7 +83,7 @@ def rebuild_working_docs_and_search(repo_root: Path) -> dict[str, Any]:
 
         all_documents = {DocumentTarget(name, doc.doc_id): doc for name, docs in documents.items() for doc in docs}
         deleted = [DocumentTarget(name, doc_id) for name, ids in stale_ids.items() for doc_id in ids]
-        links_build, related_records = perform("relationships", lambda: build_workspace_document_links(
+        payload["diagnostics"]["relationships"], related_records = perform("relationships", lambda: build_workspace_document_links(
             ordinary, all_documents, deleted,
         ))
         catalogue_works: dict[str, dict[str, Any]] = {}
@@ -123,13 +121,6 @@ def rebuild_working_docs_and_search(repo_root: Path) -> dict[str, Any]:
             write=True, force=False, documents=search_records_from_build(discovery, documents),
         ))
         payload["diagnostics"]["search"] = search["diagnostics"]
-        payload["links"] = perform("links", lambda: write_workspace_links(
-            repo_root, config, prepared_records={
-                target.doc_id: relationship_payload(record) if record is not None else None
-                for target, record in related_records.items()
-            },
-        ))
-        payload["links"]["build"] = links_build
         perform("browser-configuration", lambda: write_browser_config(
             repo_root, workspace, path=DOCS_VIEWER_BROWSER_CONFIG_PATH, label="Docs Viewer browser config",
         ))

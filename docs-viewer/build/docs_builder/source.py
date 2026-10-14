@@ -15,7 +15,7 @@ from docs_document_identity import is_document_id, is_immutable_doc_id
 from docs_document_images import has_document_thumbnail
 from docs_document_subjects import validate_document_subject_fields
 from docs_front_matter import normalize_summary, read_front_matter_fields
-from docs_index_order import read_index_order, tree_parent_ids
+from docs_index_order import index_order_path, read_index_order, tree_parent_ids
 from docs_report_source import ReportDescriptor, ReportSourceContractRequired
 from docs_source_model import (
     parse_document_report,
@@ -115,7 +115,7 @@ class SourceLoadingMixin:
             raise FileNotFoundError(f"Docs source directory is unavailable: {self.source_dir}")
         ordinary = getattr(self, "collection_config", None) is None
         if parent_ids is None:
-            parent_ids = tree_parent_ids(read_index_order(self.source_dir)) if ordinary else {}
+            parent_ids = tree_parent_ids(read_index_order(index_order_path(self.config))) if ordinary else {}
         selected_ids = None if doc_ids is None else set(doc_ids)
         if ordinary:
             paths = []

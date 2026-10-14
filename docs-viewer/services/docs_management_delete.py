@@ -5,7 +5,7 @@ from dataclasses import replace
 from typing import Any
 
 from docs_document_identity import is_document_id
-from docs_index_order import INDEX_ORDER_FILENAME, exclude_nodes, index_order_text, read_index_order, tree_parent_ids
+from docs_index_order import exclude_nodes, index_order_path, index_order_text, read_index_order, tree_parent_ids
 from docs_management_context import log_event
 from docs_management_document_target import normalize_managed_document_target, resolve_managed_document_collection
 from docs_selected_documents import read_selected, selected_path, selected_text
@@ -42,7 +42,8 @@ def delete_documents(repo_root: Path, body: dict[str, Any], *, dry_run: bool = F
         parents = None
         delete_ids = requested_ids
         if not collection:
-            tree = read_index_order(owner.source_root)
+            order_path = index_order_path(owner.parent_config)
+            tree = read_index_order(order_path)
             parents = tree_parent_ids(tree)
             for doc_id in requested_ids:
                 if doc_id not in parents:
@@ -55,7 +56,7 @@ def delete_documents(repo_root: Path, body: dict[str, Any], *, dry_run: bool = F
                     selected = included or node["doc_id"] in requested
                     if selected:
                         delete_ids.append(node["doc_id"])
-                    collect(node["children"], selected)
+                    collect(node.get("children", []), selected)
 
             collect(tree)
         selected = read_selected(owner.parent_config)
@@ -75,7 +76,7 @@ def delete_documents(repo_root: Path, body: dict[str, Any], *, dry_run: bool = F
         payload.pop("failing_target", None)
         if tree is not None:
             payload["phase"] = "index"
-            write_text_atomic(owner.source_root / INDEX_ORDER_FILENAME, index_order_text(exclude_nodes(tree, removed)))
+            write_text_atomic(order_path, index_order_text(exclude_nodes(tree, removed)))
             parents = {doc_id: parent for doc_id, parent in parents.items() if doc_id not in removed}
             payload["index_updated"] = True
         payload["phase"] = "selected"

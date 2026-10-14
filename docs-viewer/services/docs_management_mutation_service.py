@@ -60,7 +60,7 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
         return payload
     applied = False
     try:
-        validate_changed_source_paths(plan.prepared_owner.source_root, plan.changed_paths)
+        validate_changed_source_paths(plan.prepared_owner.source_root, plan.changed_paths, index_path=plan.index_order_path)
         for write in plan.source_writes:
             if write.create_only:
                 source_model.write_text_atomic_new(write.path, write.text)

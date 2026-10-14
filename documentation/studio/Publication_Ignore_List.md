@@ -3,8 +3,8 @@ draft: false
 doc_id: d-20260913-191339-834d6a
 title: Publication Ignore List
 added_date: "2026-09-13 19:13:39"
-last_updated: "2026-09-15 19:08:15"
-summary: Use Working source/documents/unpublishable.json for ordinary-document ID exclusions alongside draft, retire per-report access, and let Unpublishable read and open that exact JSON file in VS Code.
+last_updated: "2026-10-14 21:58:49"
+summary: Use Working source/unpublishable.json for ordinary-document ID exclusions alongside draft, retire per-report access, and let Unpublishable read and open that exact JSON file in VS Code.
 ui_status: done
 parent_id: d-20260908-171728-3c539a
 ---
@@ -24,13 +24,13 @@ The `.gitignore` analogy describes a visible, centrally edited exclusion list. I
 
 ## JSON ID List And Location
 
-Use a simple JSON array of immutable `doc_id` strings in the Analysis Working document source directory:
+Use a simple JSON array of immutable `doc_id` strings at the configured Working source root:
 
 ```text
-$DOTLINEFORM_DOCS_BASE_DIR/scopes/analysis/working/source/documents/unpublishable.json
+$DOTLINEFORM_DOCS_BASE_DIR/working/source/unpublishable.json
 ```
 
-With the current Docs workspace setting, this is the requested `$HOME/docs-viewer/scopes/analysis/working/source/documents/unpublishable.json`. Runtime resolution uses the configured Analysis Working source directory; `$HOME/docs-viewer` is not a hard-coded default or fallback.
+Runtime resolution uses the explicit Docs workspace source container. The source-control relocation moved this file alongside hierarchy, Recent exclusions and Selected membership; no old documents-directory location or historical scope path is a fallback. [Source Organisation](Source_Organisation.md#source-controls) owns current storage; the original delivery's lifecycle terminology below remains historical.
 
 Example shape:
 
@@ -95,16 +95,26 @@ An ignore-file edit is visible to a fresh target-list request and subsequent ord
 
 ## Unpublishable Report
 
-Retain the exact [Unpublishable report](/docs/?scope=analysis&stage=working&doc=d-20260909-160530-224efe), `d-20260909-160530-224efe`, as the local view of the publication ignore list.
+Retain the exact [Unpublishable report](/docs/?doc=d-20260909-160530-224efe), `d-20260909-160530-224efe`, as the local view of the publication ignore list.
 
-- Read the configured Analysis Working `source/documents/unpublishable.json` and show Title and Document ID columns. Look up each title only from that listed ID's canonical ordinary Working source, validating its front-matter identity; retain IDs with missing sources and leave their titles unavailable. Do not scan document front matter for `publishable`, derive exclusions from report blocks, enumerate sub-scope documents or turn this into a report of every draft document.
+- Read the configured Working `source/unpublishable.json` and show Title and Document ID columns. Look up each title only from that listed ID's canonical ordinary Working source header, validating its front-matter identity; retain IDs with missing sources and leave their titles unavailable. Stop reading at the closing header delimiter. Use the shared front-matter syntax parser without source-model Subject/readiness/report validation or body preparation. Carry the authored title directly without another coercion or trim. Do not scan document front matter for `publishable`, derive exclusions from report blocks, enumerate collection documents or turn this into a report of every draft document.
 - Provide an **Open in VS Code** link that opens that exact `unpublishable.json` in its configured external workspace location. The link targets the ignore file, not the Unpublishable report's Markdown source or a generated copy.
-- Reuse the local file-opening owner with an explicit configured target. Keep the file identity exact and the operation local; this does not grant the browser a generic arbitrary-path editor.
+- Reuse the local file-opening owner with an explicit configured target. Explicit VS Code opening skips preferred-Markdown-editor discovery; the default-editor action retains that discovery. Keep the file identity exact and the operation local; this does not grant the browser a generic arbitrary-path editor.
 - Edit the file in VS Code. The report is a reader, with no second editable list or publication-eligibility toggles.
 - **Refresh** rereads the same file and listed source titles so edits become visible. Report refresh does not run Pre-publish, Publish, Deploy or a scope-wide document scan.
 - Distinguish an empty list from an unavailable or unreadable file. Do not silently display an older list or read a substitute location.
 
 This replaces the previous service's ordinary-Working-source scan for explicit `publishable: false`. The report description now identifies its actual JSON input; it does not claim sub-scope or draft coverage.
+
+The server loads Working configuration once, supplies it to the shared policy reader and reads only the listed source headers. The policy reader owns JSON and immutable-ID validation and deduplicates the editable list. Its validated IDs form direct-child Markdown candidates for the existing confined-source resolver, retaining symlink/confinement and missing-file handling without another ID-shape check. Source-header parsing and the exact front-matter ID comparison belong to this filesystem read boundary. Other source-domain validity remains with authoring/import owners. There is no server display sort, generated report snapshot, Index lookup, cache or background refresh.
+
+The browser consumes completed service rows without repeating envelope/schema/stage, identity, uniqueness or title-type audits; the report service retains HTTP/JSON and success-envelope handling. One browser sort per load places available titles first in numeric-aware, case-insensitive ascending order, then exact document ID; unavailable titles follow. Literal labels use `textContent`; each row's existing exact local document URL is shared by its Title and Document ID cells. Opening and Refresh show no loading message; controls remain busy until completion, and count, empty and failure messages remain explicit. Refresh clears prior rows before reading and reports failure visibly, preserving the existing empty/error semantics.
+
+One busy state serializes Refresh and Open in VS Code. Register retained-view disposal before the initial read and use disposal alone to reject late success/error and further actions. A detached retained report remains valid and can complete while another document is displayed; returning with Back keeps that completed view and enabled controls. No request versions, DOM-connection/current-document gates, abort/retry owner or extra subscription is needed.
+
+The bounded work is one policy read, one confined header read per listed existing source and one browser sort per opening/Refresh. Open in VS Code is a separate exact-file action and does not read or validate the policy content. On 2026-10-14, focused Python/JavaScript lint and Python compilation passed. A read-only production invocation built the current 14 report rows with no missing sources and fed them directly to `readUnpublishableDocuments`, yielding title order from Broken Links to Work Links. The existing `open_publication_ignore(..., dry_run=True)` action returned the VS Code receipt without launching an editor. These diagnostics exercise real policy/header reads, module wiring and display sorting, with no synthetic inputs, assertions or test code; they do not prove HTTP/DOM behavior or editor launch. [Unpublishable Optimisation](deliveries/Unpublishable_Optimisation.md) records review and manual acceptance. Tests, fixtures, harnesses and profiles remain unchanged and unrun.
+
+The distinct Redundancy And Defensive Behavior Review covered fresh/empty/missing-source/error reads, literal titles and stable sorting, Refresh clearing, editor success/failure, immediate disposal and detached retained completion. It also traced the shared policy/parser/confinement, report-service, controller and editor helpers. Review removed the duplicate ID-shape check by supplying policy-validated IDs directly to the existing confined-source resolver; affected lint, compilation and current-data composition passed again. Necessary boundary safeguards remain shared policy parsing/ID validation, source confinement/symlink rejection, header syntax and exact source identity, HTTP/JSON/success handling, local capability and fixed editor authority. No actionable findings remained. No new audit, source-domain validation, compatibility layer, recovery, cache or background work was introduced. Live HTTP, empty/missing/error rendering, Back/disposal and real editor launch remain manual acceptance limits after service restart and page reload.
 
 ## Workflow
 

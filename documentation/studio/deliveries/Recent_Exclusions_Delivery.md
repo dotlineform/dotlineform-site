@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261006-215144-c2937e
 title: Recent Exclusions Delivery
 added_date: "2026-10-06 21:51:44"
-last_updated: "2026-10-06 21:51:44"
+last_updated: "2026-10-14 21:35:23"
 parent_id: d-20260428-000000-f5ff18
 ---
 # Recent Exclusions Delivery
@@ -15,7 +15,7 @@ Status: implementation complete; focused static checks and bounded code review p
 ## Requirements And Deliverables
 
 - Let the editable list control every Recent-specific exclusion, without automatic host rules. Exclude exact document targets only, retaining descendant, Search and publication eligibility.
-- Seed `working/source/documents/recent-exclusions.json` with dotlineform (`d-20260426-164043-e14f49`) and the Context, Concepts, Moments and Catalogue hosts. The array uses `doc_id` with optional exact collection identity; malformed or missing policy fails visibly and an empty array is valid.
+- Seed `working/source/recent-exclusions.json` with dotlineform (`d-20260426-164043-e14f49`) and the Context, Concepts, Moments and Catalogue hosts. The array uses `doc_id` with optional exact collection identity; malformed or missing policy fails visibly and an empty array is valid.
 - Expose Open Recent exclusions in VS Code in the local Recent view through the existing index-view control surface and a configured-file-only empty-body service action. Retain ability to open invalid JSON for repair.
 - Use one shared sorter, exact exclusion filter and limit for full Working Builds and Publish. Publish derives candidates from the eligible sources already loaded for its full temporary build, replenishing to the configured limit when sufficient dated documents remain.
 - Bind prepared Recent bytes into the plan, validate them in the temporary build, then remove the previous Working full-Build receipt and write identical bytes to Working before Preview replacement. Distribution copies the completed snapshot without filtering. Keep Search's existing capture/copy policy.

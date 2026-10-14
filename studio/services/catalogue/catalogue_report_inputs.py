@@ -8,7 +8,6 @@ import re
 from typing import Any, Iterable, Mapping
 
 from catalogue.catalogue_output_paths import catalogue_output_workspace, output_path
-from catalogue.catalogue_work_attachments import safe_download_filename
 from docs_artifact_locations import ArtifactLocation
 
 
@@ -101,8 +100,6 @@ def _validate_row(relative: str, key: str, row: Any) -> None:
     identity = "series_id" if relative == SERIES_PATH else "work_id"
     required = {identity, "title"}
     optional = set(SOURCE_FIELDS) if relative == WORK_SOURCES_PATH else set()
-    if relative == WORK_RESOURCES_PATH:
-        required |= {"links", "download_filenames"}
     if (not isinstance(row, dict) or row.get(identity) != key
             or not required <= set(row) or set(row) - required - optional
             or not isinstance(row["title"], str)):
@@ -117,14 +114,6 @@ def _validate_row(relative: str, key: str, row: Any) -> None:
         for field in ("project_folder", "project_subfolder", "project_filename"):
             if field in row:
                 _source_declaration(row[field], field)
-    elif relative == WORK_RESOURCES_PATH:
-        if not isinstance(row["links"], list) or not isinstance(row["download_filenames"], list):
-            raise ValueError(f"Work {key} resources must be arrays")
-        for link in row["links"]:
-            if not isinstance(link, dict) or set(link) != {"label", "url"}:
-                raise ValueError(f"Work {key} has an invalid link")
-        for filename in row["download_filenames"]:
-            safe_download_filename(filename)
 
 
 def _project_row(relative: str, key: str, source: Mapping[str, Any]) -> dict[str, Any]:
@@ -142,13 +131,13 @@ def _payload(relative: str, rows: dict[str, Any], timestamp: str) -> dict[str, A
 
 
 def validate_catalogue_report_input(relative: str, payload: Any) -> dict[str, Any]:
-    """Validate only this projection's exact identities and consumed facts.
+    """Validate source/Series identities and consumed facts for their readers.
 
     No canonical/editor record, document output or filesystem existence is a
     prerequisite. Runtime media configuration still owns source-root resolution.
     """
     family = "series" if relative == SERIES_PATH else "works"
-    if relative not in INPUT_SCHEMAS or not isinstance(payload, dict) or set(payload) != {"header", family}:
+    if relative not in {WORK_SOURCES_PATH, SERIES_PATH} or not isinstance(payload, dict) or set(payload) != {"header", family}:
         raise ValueError("Invalid private Catalogue input shape")
     header, rows = payload["header"], payload[family]
     if (not isinstance(header, dict) or set(header) != {"schema", "generated_at_utc"}
@@ -210,6 +199,19 @@ def read_work_sources(repo_root: Path) -> dict[str, dict[str, Any]]:
     return read_catalogue_report_input(catalogue_output_workspace(repo_root), WORK_SOURCES_PATH)
 
 
-def read_work_resources(repo_root: Path) -> dict[str, dict[str, Any]]:
-    """Resolve and read refreshed titles, authored links and exact download names."""
-    return read_catalogue_report_input(catalogue_output_workspace(repo_root), WORK_RESOURCES_PATH)
+def read_work_resources(workspace: ArtifactLocation) -> dict[str, dict[str, Any]]:
+    """Parse one confined saved input, trusting Refresh-owned resource facts.
+
+    Callers supply the resolved Working Catalogue owner. No schema, identity,
+    label, URL or download audit and no canonical fallback is performed here.
+    """
+    path = output_path(workspace, WORK_RESOURCES_PATH)
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, ValueError) as error:
+        raise ValueError(
+            "Catalogue Work resources are unavailable or invalid; run explicit Catalogue private report-input maintenance."
+        ) from error
+    if not isinstance(payload, dict):
+        raise ValueError("Catalogue Work resources must contain a JSON object.")
+    return payload["works"]

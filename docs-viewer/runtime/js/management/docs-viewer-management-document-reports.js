@@ -9,15 +9,6 @@ import {
 } from "./docs-viewer-management-document-target.js";
 import { DOCS_VIEWER_ACTION_IDS } from "./docs-viewer-action-definitions.js";
 
-/** Adapt the Working manifest's declared authoring field to public-safe browsing input. */
-function catalogueWorkIdForDocument(record) {
-  var docId = cleanString(record && record.doc_id);
-  if (!/^[0-9]{5}$/.test(docId) || Object.prototype.hasOwnProperty.call(record, "work_id")) {
-    throw new Error("Catalogue list document requires one exact Work ID as doc_id.");
-  }
-  return docId;
-}
-
 function cleanString(value) {
   return String(value || "").trim();
 }
@@ -59,16 +50,7 @@ function managementModalRoot(settings) {
 }
 
 function configuredCollection(settings,  collection) {
-  var normalizedCollection = cleanString(collection).toLowerCase();
-  var parentConfig = settings.workspaceConfigState.activeConfig;
-  var children = parentConfig && Array.isArray(parentConfig.collections)
-    ? parentConfig.collections
-    : [];
-  var child = children.find(function (record) {
-    return cleanString(record && record.collection).toLowerCase()
-      === normalizedCollection;
-  });
-  return child || null;
+  return settings.workspaceConfigState.activeConfig.collectionsById.get(collection);
 }
 
 function escapeMarkdownLinkText(value) {
@@ -95,15 +77,13 @@ function markdownLinkForCollectionDocument(settings, parent, collection, target,
   return "[" + title + "](" + url.pathname + url.search + url.hash + ")";
 }
 
-export function loadDocsViewerCollectionContribution(settings, parent, collection, options) {
+export function loadDocsViewerCollectionContribution(settings, parent, collectionConfig, options) {
   var contributionOptions = options || {};
   var clientOptions = managementClientOptions(settings);
-  var collectionConfig = configuredCollection(settings,  collection);
   if (!collectionConfig) {
-    return Promise.reject(new Error(
-      "Docs collection is not configured: " + collection
-    ));
+    return Promise.reject(new Error("Docs collection is not configured."));
   }
+  var collection = collectionConfig.collection;
   return Promise.all([
     import("./docs-viewer-management-collection-default-contribution.js"),
     import("./docs-viewer-management-collection-composition.js")
@@ -178,7 +158,7 @@ function openCollectionPreparePackage(settings, request, context) {
 function mountCollectionDocumentActions(settings) {
   var target = normalizeManagedDocumentTarget(settings.documentTarget);
   var parent = { doc_id: target.doc_id };
-  return loadDocsViewerCollectionContribution(settings, parent, target.collection).then(async function (contribution) {
+  return loadDocsViewerCollectionContribution(settings, parent, configuredCollection(settings, target.collection)).then(async function (contribution) {
     var metadata = settings.collectionProvider.readMetadata
       ? await settings.collectionProvider.readMetadata(target) : null;
     var record = metadata && metadata.record ? metadata.record : settings.doc;
@@ -258,12 +238,19 @@ export function mountDocsViewerManageDocumentExtras(context) {
   }
 
   var parent = parentTarget(settings);
-  var contribution = loadDocsViewerCollectionContribution(settings, parent, collection, {
-    onPreparePackage: settings.managementContext && reportManagementBaseUrl
-      ? function (request, context) {
-          return openCollectionPreparePackage(settings, request, context);
-        }
-      : null
+  var collectionConfig = configuredCollection(settings, collection);
+  var contribution = Promise.all([
+    loadDocsViewerCollectionContribution(settings, parent, collectionConfig, {
+      onPreparePackage: settings.managementContext && reportManagementBaseUrl
+        ? function (request, context) {
+            return openCollectionPreparePackage(settings, request, context);
+          }
+        : null
+    }),
+    import("./docs-viewer-management-collection-list.js")
+  ]).then(function (loaded) {
+    loaded[0].createListManagement = loaded[1].createDocsViewerManagementCollectionList;
+    return loaded[0];
   });
   return mountDocsViewerReport({
     appContext: settings.appContext,
@@ -295,11 +282,10 @@ export function mountDocsViewerManageDocumentExtras(context) {
     requestContentDetail: settings.requestContentDetail,
     setStatus: settings.setStatus,
     collectionReportContributionPromise: contribution,
+    collectionConfig: collectionConfig,
     collectionProvider: settings.collectionProvider,
     openDocument: settings.openDocument,
     routeContext: routeContext,
-    catalogueWorkIdForDocument: collection === "catalogue" && settings.managementContext
-      ? catalogueWorkIdForDocument : undefined,
     viewerUrlForDocument: settings.viewerUrlForDocument
   });
 }

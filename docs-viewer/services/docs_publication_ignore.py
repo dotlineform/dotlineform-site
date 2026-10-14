@@ -4,7 +4,7 @@ from pathlib import Path
 import json
 
 from docs_document_identity import is_immutable_doc_id
-from docs_workspace_config import DocsStageConfig, document_source_path, load_docs_stage, resolve_workspace_path
+from docs_workspace_config import DocsStageConfig, load_docs_stage, source_control_path
 
 
 def publication_ignore_path(repo_root: Path, *, config: DocsStageConfig | None = None) -> Path:
@@ -12,11 +12,7 @@ def publication_ignore_path(repo_root: Path, *, config: DocsStageConfig | None =
     config = load_docs_stage(repo_root, "working") if config is None else config
     if config.stage != "working":
         raise ValueError("Publication ignore policy requires Working")
-    root = resolve_workspace_path(repo_root, document_source_path(config))
-    path = root / "unpublishable.json"
-    if path.is_symlink() or path.resolve().parent != root.resolve():
-        raise ValueError("Publication ignore file must stay in its configured source directory")
-    return path
+    return source_control_path(config, "unpublishable.json")
 
 
 def read_publication_ignore_ids(repo_root: Path, *, config: DocsStageConfig | None = None) -> frozenset[str]:

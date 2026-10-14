@@ -13,12 +13,33 @@ import {
   readDocumentLinkTargets,
   saveManagedDocSource
 } from "./docs-viewer-management-client.js";
+import { documentTarget } from "../shared/docs-viewer-document-target.js";
 
 export function createDocsViewerManagementSourceAdapter(options) {
   var settings = options || {};
   var sourceService = settings.sourceService || null;
   var baseUrl = String(sourceService && sourceService.baseUrl || "").trim().replace(/\/+$/, "");
   if (!baseUrl) return null;
+
+  var changeListeners = new Set();
+  function commitDocumentChange(change) {
+    var target = documentTarget(change.target);
+    if (!change.deleted && (!change.record || change.record.doc_id !== target.doc_id)) throw new Error("Committed record did not match its target.");
+    var failures = [];
+    changeListeners.forEach(function (listener) {
+      try { listener(Object.assign({}, change, { target: target })); } catch (error) { failures.push(error); }
+    });
+    if (failures.length) console.warn("Document saved; a retained list projection failed.", failures);
+    return failures;
+  }
+
+  function projectSavedSource(response) {
+    if (response && response.source_saved && response.committed_document) {
+      try { response.projection_errors = commitDocumentChange(response.committed_document).map(function (error) { return error.message; }); }
+      catch (error) { response.projection_errors = [error.message]; }
+    }
+    return response;
+  }
 
   function clientOptions(overrides) {
     return Object.assign({
@@ -30,6 +51,8 @@ export function createDocsViewerManagementSourceAdapter(options) {
   }
 
   return {
+    commitDocumentChange: commitDocumentChange,
+    subscribeDocumentChanges: function (listener) { changeListeners.add(listener); return function () { changeListeners.delete(listener); }; },
     readDocumentLinkTargets: function () {
       return readDocumentLinkTargets(clientOptions());
     },
@@ -56,7 +79,10 @@ export function createDocsViewerManagementSourceAdapter(options) {
       return readManagedDocSourceContext(target, payload, clientOptions());
     },
     writeSource: function (target, payload, optionsForWrite) {
-      return saveManagedDocSource(target, payload, clientOptions(optionsForWrite));
+      return saveManagedDocSource(target, payload, clientOptions(optionsForWrite)).then(projectSavedSource).catch(function (error) {
+        projectSavedSource(error.payload);
+        throw error;
+      });
     },
     readDiagramSources: function (target, optionsForRead) {
       return readManagedDiagramSources(target, clientOptions(optionsForRead));

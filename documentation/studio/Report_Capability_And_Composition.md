@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260810-173738-703ecd
 title: Report Capability and Composition
 added_date: "2026-08-10 17:37:38"
-last_updated: "2026-10-11 00:00:00"
+last_updated: "2026-10-14 22:35:35"
 summary: durable module, data, contribution, and stylesheet boundaries for shared, public, and local Docs Viewer reports
 parent_id: d-20260513-105343-6de36b
 ---
@@ -23,15 +23,15 @@ That graph cannot be determined from a module's path alone. Public safety, publi
 
 ## Current Position
 
-The current public report registry and executable loader allowlist expose only `docs_subscope`. Its shared report reads a public manifest and exact by-ID payloads, owns collection membership and detail validation, and imports no management module.
+The current public report registry and executable loader allowlist expose `docs_collection` and `selected_documents`. The shared collection report prepares the configured public manifest for browsing without repeating producer-owned membership/metadata validation; the common reader separately owns exact by-ID document reads. Neither shared report imports management modules.
 
-Manage loads the same shared collection report and explicitly supplies its standard management contribution. It owns private inventory presentation, selection, actions and packages. Source owns Subject assignment through the server registration, independently of report composition.
+Manage loads the same shared collection presentation and explicitly supplies its standard management contribution and local list controller. It owns mutable inventory indexes, complete/filtered selection IDs, committed-record updates, thumbnail reload revisions, explicit refresh, actions and packages. Public browsing prepares one read-only manifest inventory without that bookkeeping or a collection-refresh callback. The local Source adapter owns saved-document events and forwards them through the workspace provider only locally; public providers expose no commit/subscription capability. Source owns Subject assignment through the server registration, independently of report composition.
 
 Collection customisation browser descriptors, loader registries, manifest envelopes and unused filter/heading/comparator/selection hooks are retired. Shared collection reports read only the configured `docs` inventory; public callers supply no management contribution. [Collection browsing](Sub_Scope_Index_Architecture.md) owns the current adapter and [Subject Associations](data/subject-associations.md) owns retained server capabilities.
 
 Report blocks and generated descriptors do not carry `access`. Environment-owned metadata and the explicit executable loader allowlist determine availability. Publishing the containing document does not project report metadata, install a loader, grant service access or move CSS. An unsupported report keeps its document and shows an unavailable state.
 
-Expanded Report View demonstrates the distinction directly. Its adapter has no management or service authority and remains suitable for later public-safety review, but its only current composer is Manage, so its implementation lives under `docs-viewer/runtime/js/reports/`, its selectors live in the local report stylesheet, and it is absent from the public runtime inventory and import graph. The local-only `catalogue_works` report is its first and only adopter. Manage alone supplies the separate managed-table width extension; the sole executable public report remains `docs_subscope` and has no expansion composition.
+Expanded Report View demonstrates the distinction directly. Its adapter has no management or service authority and remains suitable for later public-safety review, but its only current composer is Manage, so its implementation lives under `docs-viewer/runtime/js/reports/`, its selectors live in the local report stylesheet, and it is absent from the public runtime inventory and import graph. The local-only `catalogue_works` report is its first and only adopter. Manage alone supplies the separate managed-table width extension; the executable public reports have no expansion composition.
 
 ## Safety, Composition, And Adoption
 

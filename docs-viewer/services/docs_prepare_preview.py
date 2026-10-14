@@ -22,13 +22,13 @@ from docs_preview_snapshot import (
 )
 from docs_source_model import SourceDoc, format_source, load_document_collection_docs_for_config, write_bytes_atomic
 from docs_document_identity import doc_updated_date
-from docs_index_order import INDEX_ORDER_FILENAME, exclude_nodes, index_order_text, read_index_order
+from docs_index_order import exclude_nodes, index_order_path, index_order_text, read_index_order
 from docs_collection_customisations import prepare_collection_publication
 from docs_publication_ignore import read_publication_ignore_ids
 from docs_build_manifest import remove_build_manifest
 from docs_recent_exclusions import parse_recent_exclusions, recent_exclusions_path
 from docs_recent_payload import build_recent_payload
-from docs_selected_documents import read_selected, selected_row, selected_text
+from docs_selected_documents import read_selected, selected_path, selected_row, selected_text
 from docs_catalogue_artifacts import (
     CONFIG_REL_PATH as CATALOGUE_CONFIG_REL_PATH, load_catalogue_artifact_inventory,
     read_catalogue_artifacts, select_catalogue_artifacts,
@@ -127,12 +127,12 @@ def _plan(repo_root: Path, workspace: DocsWorkspaceConfig, catalogue_selection: 
         raise FileNotFoundError("Working recent-exclusions.json is unavailable")
     recent_exclusions = parse_recent_exclusions(source_files[exclusions_file], working)
     ordinary = load_document_collection_docs_for_config(repo_root, working, working)
-    ordinary_excluded = excluded_documents(ordinary, ignored_ids=read_publication_ignore_ids(repo_root))
+    ordinary_excluded = excluded_documents(ordinary, ignored_ids=read_publication_ignore_ids(repo_root, config=working))
     excluded = set(ordinary_excluded)
-    order_path = document_source_path(working) / INDEX_ORDER_FILENAME
+    order_path = index_order_path(working)
     desired: dict[Path, bytes] = {
         order_path.relative_to(source_root): index_order_text(
-            exclude_nodes(read_index_order(order_path.parent), ordinary_excluded)
+            exclude_nodes(read_index_order(order_path), ordinary_excluded)
         ).encode("utf-8"),
     }
     counts: dict[str, int] = {}
@@ -175,7 +175,7 @@ def _plan(repo_root: Path, workspace: DocsWorkspaceConfig, catalogue_selection: 
         prefix = Path("collections") / child / "media" if child else Path("media")
         if accepted:
             desired.update({path: data for path, data in source_files.items() if path.is_relative_to(prefix / "build-source") or path == prefix / "media-source-evidence.json"})
-    desired[Path("documents/selected.json")] = selected_text({**selected, "docs": selected_rows}).encode("utf-8")
+    desired[selected_path(working).relative_to(source_root)] = selected_text({**selected, "docs": selected_rows}).encode("utf-8")
     recent = build_recent_payload(
         recent_candidates, limit=inputs.recent_limit,
         generated_at=datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), exclusions=recent_exclusions,

@@ -1,63 +1,12 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
-import { docsViewerLinksDocumentSummary, docsViewerLinksDocumentHref } from "../shared/docs-viewer-links-presentation.js";
+import { applyWorkspaceLinksDocumentChange, prepareWorkspaceLinks, sortWorkspaceLinksRows } from "./workspace-links-data.js";
 const COLUMNS = ["from", "to"];
-const TITLE_ORDER = new Intl.Collator("en", { sensitivity: "base", numeric: true });
-function documentKey(document) {
-  return JSON.stringify([document.collection, document.doc_id]);
-}
 
-/** Project directed pairs from the saved aggregate; incoming mirrors add no rows.
- * Collection and immutable document ID own identity independently of display titles.
- */
-export function readWorkspaceLinksRows(payload) {
-  if (!payload || payload.schema_version !== 4 || Object.prototype.hasOwnProperty.call(payload, "scope")
-    || Object.prototype.hasOwnProperty.call(payload, "stage") || !Array.isArray(payload.documents)) {
-    throw new Error("Unsupported workspace Links data.");
-  }
-  const rows = [];
-  const sources = new Set();
-  payload.documents.forEach(function (record) {
-    if (!record || record.schema_version !== 4 || !Array.isArray(record.outgoing)
-      || !Array.isArray(record.incoming)) throw new Error("Invalid document Links record.");
-    const from = docsViewerLinksDocumentSummary(record.self);
-    const sourceKey = documentKey(from);
-    if (sources.has(sourceKey)) {
-      throw new Error("Workspace Links contains an invalid source identity.");
-    }
-    sources.add(sourceKey);
-    const targets = new Set();
-    record.outgoing.forEach(function (entry) {
-      const to = docsViewerLinksDocumentSummary(entry);
-      const targetKey = documentKey(to);
-      if (targets.has(targetKey)) throw new Error("Workspace Links contains a duplicate directed pair.");
-      targets.add(targetKey);
-      rows.push({ from, to });
-    });
-  });
-  return rows;
-}
-
-/** Sort by the selected title, then the other title and exact endpoint identities.
- * Icon presentation is independent of these keys. Never reorder the saved dataset.
- */
-export function sortWorkspaceLinksRows(rows, key = "from", direction = "asc") {
-  if (!COLUMNS.includes(key) || !["asc", "desc"].includes(direction)) {
-    throw new Error("Invalid Links sort selection.");
-  }
-  const other = key === "from" ? "to" : "from";
-  return rows.slice().sort(function (left, right) {
-    return TITLE_ORDER.compare(left[key].title, right[key].title) * (direction === "desc" ? -1 : 1)
-      || TITLE_ORDER.compare(left[other].title, right[other].title)
-      || documentKey(left.from).localeCompare(documentKey(right.from))
-      || documentKey(left.to).localeCompare(documentKey(right.to));
-  });
-}
-
-function documentCell(documentRef, summary, config) {
+function documentCell(documentRef, summary) {
   const cell = documentRef.createElement("td");
   const link = documentRef.createElement("a");
   link.className = "docsViewerReport__cellLink docsViewerReport__title";
-  link.href = docsViewerLinksDocumentHref(summary, config);
+  link.href = summary.href;
   // A later shared icon policy can prefix the title without changing its text/key.
   const title = documentRef.createElement("span");
   title.textContent = summary.title;
@@ -67,7 +16,7 @@ function documentCell(documentRef, summary, config) {
 }
 
 /** Mount the local Working report and await its initial snapshot read.
- * Refresh rebuilds the aggregate from current records. Late responses cannot update a departed host.
+ * Refresh rebuilds current records; only disposal ends the retained view's lifetime.
  */
 export function mountWorkspaceLinksReport(context) {
   if (!context.managementContext) {
@@ -98,10 +47,11 @@ export function mountWorkspaceLinksReport(context) {
   head.appendChild(headings);
   table.append(head, body);
   root.replaceChildren(toolbar, table);
-  let rows = [];
+  let data = null;
   let sortKey = "from";
   let sortDir = "asc";
-  let requestVersion = 0;
+  let busy = false;
+  let released = false;
   const controls = COLUMNS.map(function (key) {
     const cell = documentRef.createElement("th");
     cell.scope = "col";
@@ -116,6 +66,7 @@ export function mountWorkspaceLinksReport(context) {
     cell.appendChild(button);
     headings.appendChild(cell);
     button.addEventListener("click", function () {
+      if (released || busy) return;
       sortDir = sortKey === key && sortDir === "asc" ? "desc" : "asc";
       sortKey = key;
       render();
@@ -131,18 +82,14 @@ export function mountWorkspaceLinksReport(context) {
       control.indicator.textContent = active ? (sortDir === "asc" ? "▲" : "▼") : "";
     });
     body.replaceChildren();
-    sortWorkspaceLinksRows(rows, sortKey, sortDir).forEach(function (row) {
+    const rows = data ? sortWorkspaceLinksRows(data.rows, sortKey, sortDir) : [];
+    rows.forEach(function (row) {
       const tr = documentRef.createElement("tr");
-      tr.append(documentCell(documentRef, row.from, context.workspaceConfig), documentCell(documentRef, row.to, context.workspaceConfig));
+      tr.append(documentCell(documentRef, row.from), documentCell(documentRef, row.to));
       body.appendChild(tr);
     });
     table.hidden = rows.length === 0;
     status.textContent = rows.length ? `${rows.length} ${rows.length === 1 ? "link" : "links"}` : "No document links in the saved report.";
-  }
-
-  function current(version) {
-    return version === requestVersion && root.isConnected !== false
-      && (typeof context.isCurrentDocument !== "function" || context.isCurrentDocument());
   }
 
   if (context.registerRetainedView) context.registerRetainedView({
@@ -150,38 +97,37 @@ export function mountWorkspaceLinksReport(context) {
     capture: function () { return { key: sortKey, direction: sortDir }; },
     restore: function (saved) {
       if (sortKey === saved.key && sortDir === saved.direction) return;
-      sortKey = saved.key; sortDir = saved.direction; render();
-    }
+      sortKey = saved.key; sortDir = saved.direction;
+      if (!busy) render();
+    },
+    dispose: function () { released = true; data = null; }
   });
   if (context.collectionProvider && context.collectionProvider.subscribeDocumentChanges) context.collectionProvider.subscribeDocumentChanges(function (change) {
-    if (!root.isConnected) return;
-    var matches = function (record) { return record.doc_id === change.target.doc_id && (record.collection || "") === (change.target.collection || ""); };
-    if (!rows.some(function (row) { return [row.from, row.to].some(function (record) { return matches(record) && (change.deleted || record.title !== change.record.title); }); })) return;
-    rows = rows.filter(function (row) { return !change.deleted || (!matches(row.from) && !matches(row.to)); }).map(function (row) {
-      return { from: matches(row.from) ? Object.assign({}, row.from, { title: change.record.title }) : row.from,
-        to: matches(row.to) ? Object.assign({}, row.to, { title: change.record.title }) : row.to };
-    });
-    render();
+    if (!released && data && applyWorkspaceLinksDocumentChange(data, change)) render();
   });
 
   async function load(rebuild = false) {
-    const version = ++requestVersion;
+    if (released || busy) return;
+    busy = true;
+    data = null;
     refresh.disabled = true;
     table.hidden = true;
     body.replaceChildren();
     status.textContent = rebuild ? "Refreshing links…" : "Loading links…";
     try {
       const payload = await (rebuild ? service.refreshWorkspaceLinks() : service.readWorkspaceLinks());
-      if (!current(version)) return;
-      rows = readWorkspaceLinksRows(payload);
+      if (released) return;
+      data = prepareWorkspaceLinks(payload, context.viewerUrlForDocument);
       render();
     } catch (error) {
-      if (current(version)) {
-        rows = [];
+      if (!released) {
+        data = null;
+        body.replaceChildren();
+        table.hidden = true;
         status.textContent = `${error.message} Use Refresh to rebuild the Links report.`;
       }
     } finally {
-      if (current(version)) refresh.disabled = false;
+      if (!released) { busy = false; refresh.disabled = false; }
     }
   }
   refresh.addEventListener("click", function () { load(true); });

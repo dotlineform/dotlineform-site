@@ -3,7 +3,7 @@
 from pathlib import Path
 from typing import Any
 
-from docs_index_order import INDEX_ORDER_FILENAME, index_order_text, move_node, read_index_order, tree_parent_ids
+from docs_index_order import index_order_path, index_order_text, move_node, read_index_order, tree_parent_ids
 from docs_management_document_target import normalize_managed_document_target, resolve_managed_document_collection
 from docs_source_model import write_text_atomic
 from docs_workspace_config import require_document_authoring
@@ -22,7 +22,8 @@ def position_document(repo_root: Path, body: dict[str, Any], *, dry_run: bool = 
     require_document_authoring(owner.parent_config)
     payload = {"ok": True, "target": target, "position_saved": False, "generation_complete": False, "phase": "inputs", "dry_run": dry_run}
     try:
-        tree = read_index_order(owner.source_root)
+        order_path = index_order_path(owner.parent_config)
+        tree = read_index_order(order_path)
         move_node(tree, target["doc_id"], body["target_doc_id"], body["placement"])
         parents = tree_parent_ids(tree)
         if dry_run:
@@ -30,7 +31,7 @@ def position_document(repo_root: Path, body: dict[str, Any], *, dry_run: bool = 
 
         def write_position(committed: dict[str, Any]) -> None:
             payload["phase"] = "position"
-            write_text_atomic(owner.source_root / INDEX_ORDER_FILENAME, index_order_text(tree))
+            write_text_atomic(order_path, index_order_text(tree))
             payload["position_saved"] = True
             payload["committed_document"] = committed
             payload["phase"] = "generation"

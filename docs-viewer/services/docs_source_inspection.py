@@ -8,7 +8,7 @@ from typing import Any
 
 from docs_document_identity import is_document_id
 from docs_front_matter import FRONT_MATTER_PATTERN, read_front_matter_fields
-from docs_index_order import read_index_order, tree_groups
+from docs_index_order import index_order_path, read_index_order, tree_groups
 from docs_workspace_config import DocsCollectionConfig, DocsStageConfig, document_source_path, resolve_workspace_path
 
 
@@ -29,7 +29,7 @@ def inspection_source_paths(repo_root: Path, owner: DocsStageConfig | DocsCollec
         raise FileNotFoundError(f"Document collection is unavailable: {collection or 'ordinary documents'}")
     paths = sorted(root.glob("*.md")) if collection else [
         root / f"{node['doc_id']}.md"
-        for siblings, _parent_id in tree_groups(read_index_order(root)) for node in siblings
+        for siblings, _parent_id in tree_groups(read_index_order(index_order_path(owner))) for node in siblings
     ]
     return root, paths
 

@@ -11,18 +11,6 @@ function identity(value) {
   return {  collection: value.collection, doc_id: value.doc_id };
 }
 
-/** Validate the flat identity and title shared by all document summaries. */
-export function docsViewerLinksDocumentSummary(value) {
-  if (!value || Object.keys(value).sort().join(",") !== "collection,doc_id,title") {
-    throw new Error("Links requires a flat document summary.");
-  }
-  var target = identity({ collection: value.collection, doc_id: value.doc_id });
-  if (typeof value.title !== "string" || (target.collection !== "catalogue" && !value.title.trim())) {
-    throw new Error("Links document title has invalid representation or authoring metadata.");
-  }
-  return { ...target, title: value.title };
-}
-
 /** Resolve a link from the reader's configured route and exact collection host. */
 export function docsViewerLinksDocumentHref(value, config) {
   var target = identity({ collection: value && value.collection, doc_id: value && value.doc_id });

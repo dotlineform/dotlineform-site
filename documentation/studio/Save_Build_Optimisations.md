@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260911-232134-ec1ba8
 title: Save/Build optimisations
 added_date: "2026-09-11 23:21:34"
-last_updated: "2026-10-08 19:10:43"
+last_updated: "2026-10-14 21:01:50"
 parent_id: d-20260428-000000-f5ff18
 ---
 # Save/Build optimisations
@@ -35,7 +35,7 @@ The relevant owners are the [ordinary pipeline](../../docs-viewer/build/docs_bui
 
 Named collections already have targeted builds: [CollectionDocsBuilder](../../docs-viewer/build/docs_builder/collection.py) reads selected sources, merges their metadata into the saved management manifest and preserves unselected by-ID payloads. Working writes `manage-manifest.json`; temporary publication builds write the public manifest. Collection host associations come from configuration, and exact document routes do not require a parent Markdown scan. Targeted deletion already checks exact generated IDs instead of listing all by-ID files.
 
-Targeted and collection-only builds preserve saved Recent. Full Working Build and Publish own its refresh. Source Save omits Search; complete docs-and-Search Build also aggregates prepared Links records into the saved workspace `links.json` and records completion. Registered media work depends on the actual invocation; Source Save, exact-document Rebuild and targeted collection rebuilds skip media producers. The inspected pipeline does not produce the previously described semantic-token usage index, so usage-index maintenance is not included in this performance baseline.
+Targeted and collection-only builds preserve saved Recent. Full Working Build and Publish own its refresh. Source Save omits Search; complete docs-and-Search Build maintains required per-document relationships and records completion, but no Build aggregates or writes the separate Links report. That private snapshot now belongs to the report's explicit Refresh under configured `working/generated/reports/links/report.json`; opening reads the last saved result. [Reports](Reports.md#current-reports) owns that boundary. Registered media work depends on the actual invocation; Source Save, exact-document Rebuild and targeted collection rebuilds skip media producers. The inspected pipeline does not produce the previously described semantic-token usage index, so usage-index maintenance is not included in this performance baseline.
 
 ## Deliverables And Process
 

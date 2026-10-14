@@ -30,6 +30,10 @@ The principal layout is:
 $DOTLINEFORM_DOCS_BASE_DIR/
 ├── working/
 │   ├── source/
+│   │   ├── index-order.json
+│   │   ├── recent-exclusions.json
+│   │   ├── selected.json
+│   │   ├── unpublishable.json
 │   │   ├── documents/
 │   │   ├── media/build-source/mermaid/
 │   │   └── collections/<collection>/
@@ -56,7 +60,7 @@ $DOTLINEFORM_DOCS_BASE_DIR/
     └── collections/<collection>/
 ```
 
-Working owns authoring and generated local reads. Ordinary hierarchy and sibling order come from `working/source/documents/index-order.json`; named collections have flat document ownership and exact configured report hosts. Shared document assets contain the configured media types; registered producer inputs remain with their Working source owner. Working and Preview retain separate Work assets. Preview has no persistent source/generated tree or browser route. [Source Organisation](../documentation/studio/Source_Organisation.md) owns the exact document, collection and media boundaries.
+Working owns authoring and generated local reads. Ordinary hierarchy and sibling order come from `working/source/index-order.json`; its leaf records omit `children`, and branches carry nonempty child arrays. Named collections have flat document ownership and exact configured report hosts. Shared document assets contain the configured media types; registered producer inputs remain with their Working source owner. Working and Preview retain separate Work assets. Preview has no persistent source/generated tree or browser route. [Source Organisation](../documentation/studio/Source_Organisation.md) owns the exact document, collection and media boundaries.
 
 Unavailable external storage fails visibly without creating a replacement root. Empty standard directories may be retained. To relocate the workspace, stop the local services, move the complete workspace including shared assets, update the environment setting, verify the configured locations, and restart. Do not use generated or Preview output as canonical source.
 

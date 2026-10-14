@@ -27,6 +27,8 @@ export function mountDocsViewerPublicDocumentExtras(context) {
     managementContext: false,
     managementService: null,
     payload: payload,
+    collectionConfig: payload.report.id === "docs_collection"
+      ? settings.workspaceConfigState.activeConfig.collectionsById.get(payload.report.collection) : null,
     selectedUrl: settings.workspaceConfigState.activeConfig.selectedUrl,
     mountThemedDiagrams: settings.mountThemedDiagrams,
     mountRelatedLinks: settings.mountRelatedLinks,

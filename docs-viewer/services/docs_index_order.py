@@ -6,13 +6,18 @@ import json
 from pathlib import Path
 from typing import Any, Iterator
 
+from docs_workspace_config import DocsStageConfig, source_control_path
+
 INDEX_ORDER_FILENAME = "index-order.json"
 
 
-def read_index_order(source_root: Path) -> list[dict[str, Any]]:
-    path = source_root / INDEX_ORDER_FILENAME
-    if source_root.is_symlink() or path.is_symlink() or path.resolve().parent != source_root.resolve():
-        raise ValueError("index-order.json must stay in the configured document source directory")
+def index_order_path(config: DocsStageConfig) -> Path:
+    """Resolve the source-root hierarchy independently of the Markdown directory."""
+    return source_control_path(config, INDEX_ORDER_FILENAME)
+
+
+def read_index_order(path: Path) -> list[dict[str, Any]]:
+    """Read the exact file already confined by index_order_path."""
     tree = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(tree, list):
         raise ValueError("index-order.json must contain an array")
@@ -20,13 +25,23 @@ def read_index_order(source_root: Path) -> list[dict[str, Any]]:
 
 
 def index_order_text(tree: list[dict[str, Any]]) -> str:
-    return json.dumps(tree, ensure_ascii=False, indent=2) + "\n"
+    """Serialize hierarchy records with children only on branches."""
+    def node_payload(node: dict[str, Any]) -> dict[str, Any]:
+        payload = dict(node)
+        children = node.get("children", [])
+        if children:
+            payload["children"] = [node_payload(child) for child in children]
+        else:
+            payload.pop("children", None)
+        return payload
+
+    return json.dumps([node_payload(node) for node in tree], ensure_ascii=False, indent=2) + "\n"
 
 
 def tree_groups(tree: list[dict[str, Any]], parent_id: str = "") -> Iterator[tuple[list[dict[str, Any]], str]]:
     yield tree, parent_id
     for node in tree:
-        yield from tree_groups(node["children"], node["doc_id"])
+        yield from tree_groups(node.get("children", []), node["doc_id"])
 
 
 def tree_parent_ids(tree: list[dict[str, Any]]) -> dict[str, str]:
@@ -38,7 +53,7 @@ def tree_parent_ids(tree: list[dict[str, Any]]) -> dict[str, str]:
             if node["doc_id"] in parents:
                 raise ValueError(f"Duplicate document ID in index-order.json: {node['doc_id']}")
             parents[node["doc_id"]] = parent_id
-            visit(node["children"], node["doc_id"])
+            visit(node.get("children", []), node["doc_id"])
 
     visit(tree, "")
     return parents
@@ -65,7 +80,7 @@ def insert_node(tree: list[dict[str, Any]], node: dict[str, Any], target_id: str
         return ""
     siblings, index, parent_id = node_location(tree, target_id)
     if placement == "inside":
-        siblings[index]["children"].append(node)
+        siblings[index].setdefault("children", []).append(node)
         return target_id
     siblings.insert(index + (placement == "after"), node)
     return parent_id
@@ -80,6 +95,6 @@ def move_node(tree: list[dict[str, Any]], doc_id: str, target_id: str, placement
 def exclude_nodes(tree: list[dict[str, Any]], doc_ids: set[str]) -> list[dict[str, Any]]:
     """Omit complete branches for Delete or Preview without reordering survivors."""
     return [
-        {"doc_id": node["doc_id"], "children": exclude_nodes(node["children"], doc_ids)}
+        {"doc_id": node["doc_id"], "children": exclude_nodes(node.get("children", []), doc_ids)}
         for node in tree if node["doc_id"] not in doc_ids
     ]

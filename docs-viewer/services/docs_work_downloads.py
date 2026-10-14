@@ -1,9 +1,9 @@
-"""Join refreshed Work download references with their current shared local files."""
+"""Read refreshed Work download references and inventory their shared local files."""
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
-import stat
 import sys
 from typing import Any
 
@@ -21,7 +21,6 @@ from docs_local_files import open_in_finder  # noqa: E402
 from docs_workspace_config import safe_relative_path  # noqa: E402
 from catalogue.catalogue_report_inputs import read_work_resources  # noqa: E402
 
-REPORT_SCHEMA = "docs_work_downloads_report_v1"
 STORAGE_PLACEHOLDERS = frozenset({".DS_Store", ".gitkeep"})
 
 
@@ -34,46 +33,45 @@ def _filename(value: Any) -> str:
     return value
 
 
-def _saved_files(location: ArtifactLocation) -> set[str]:
-    filenames = set()
+def _saved_files(location: ArtifactLocation) -> list[str]:
+    """Inspect direct entries in a configuration-confined directory once.
+
+    Directory-entry metadata suffices: reject symlinks, keep exact regular-file
+    basenames and never read file contents, sizes or nested directories.
+    """
+    filenames = []
     try:
-        if not location.path.is_dir():
-            raise RuntimeError("Work download storage is unavailable")
-        for entry in location.path.iterdir():
-            if entry.name in STORAGE_PLACEHOLDERS:
-                continue
-            mode = entry.lstat().st_mode
-            if stat.S_ISLNK(mode):
-                raise ValueError("Work download storage must not contain symlinks")
-            if stat.S_ISREG(mode):
-                filename = _filename(entry.name)
-                output_path(location, filename)
-                filenames.add(filename)
+        with os.scandir(location.path) as entries:
+            for entry in entries:
+                if entry.name in STORAGE_PLACEHOLDERS:
+                    continue
+                if entry.is_symlink():
+                    raise ValueError("Work download storage must not contain symlinks")
+                if entry.is_file(follow_symlinks=False):
+                    filenames.append(_filename(entry.name))
+    except (FileNotFoundError, NotADirectoryError) as error:
+        raise RuntimeError("Work download storage is unavailable") from error
     except OSError as error:
         raise RuntimeError("Work download storage could not be read") from error
     return filenames
 
 
 def work_downloads_report(repo_root: Path) -> dict[str, Any]:
-    """Read refreshed references and scan direct files once without writing.
+    """Supply saved references and current filenames for browser-owned matching.
 
-    Each reference retains its Work; files shared by Works appear on each row.
-    Unassigned files have no Work and absent referenced files have no File.
-    Presentation and sorting belong to the browser; no paths enter the payload.
+    Resolve configuration once, read one saved resource input and list the direct
+    file family once. No paths, link facts or final report rows enter the handoff.
     """
-    works = read_work_resources(repo_root)
-    files = _saved_files(catalogue_workspace_config(repo_root).assets.work_files)
-    referenced = set()
-    rows = []
-    for work_id, work in works.items():
-        for filename in work["download_filenames"]:
-            referenced.add(filename)
-            rows.append({
-                "work": {"work_id": work_id, "title": work["title"], "filename": filename},
-                "file": filename if filename in files else None,
-            })
-    rows.extend({"work": None, "file": filename} for filename in sorted(files - referenced))
-    return {"ok": True, "report": {"schema_version": REPORT_SCHEMA, "rows": rows}}
+    workspace = catalogue_workspace_config(repo_root)
+    works = read_work_resources(workspace.catalogue.working)
+    files = _saved_files(workspace.assets.work_files)
+    return {"ok": True, "report": {
+        "works": [
+            {"work_id": work_id, "title": work["title"], "download_filenames": work["download_filenames"]}
+            for work_id, work in works.items() if work["download_filenames"]
+        ],
+        "files": files,
+    }}
 
 
 def open_work_download(repo_root: Path, body: dict[str, Any], *, dry_run: bool = False) -> dict[str, Any]:

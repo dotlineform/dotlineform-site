@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261010-184615-e471b8
 title: Catalogue Report Inputs
 added_date: "2026-10-10 18:46:15"
-last_updated: "2026-10-14 18:25:22"
+last_updated: "2026-10-14 19:06:41"
 summary: Refresh-owned Catalogue report inputs implemented, reviewed and closed; further verification continues during normal report use.
 ui_status: done
 parent_id: d-20260428-000000-f5ff18
@@ -61,7 +61,7 @@ The proposed folder, filenames and grouping are confirmed. The combined resource
 
 Store portable source declarations, resolving absolute project roots through the existing runtime configuration. Do not add private paths to public Work payloads or put unused fields back into the recently simplified Work/Gallery lookup and member rows.
 
-Validate the generated schema, exact identities and the facts each reader needs. Do not make a report require unrelated canonical Work fields such as year, medium, image dimensions or editor state. Shared producer validation belongs to the projection's owner; reports should not copy the Studio editor's full-record validator. Add header fields only for an actual consumer need, rather than default counts or content hashes.
+Authoring/import owners establish domain validity and Refresh owns projection. Source and Series readers retain their current minimal saved-schema/fact checks; Work resource readers perform a confined JSON-object read and trust completed Refresh-owned fields without schema, identity, title, link-shape or download-name audits. Do not make a report require unrelated canonical Work fields such as year, medium, image dimensions or editor state. Reports should not copy the Studio editor's full-record validator. Add header fields only for an actual consumer need, rather than default counts or content hashes.
 
 Work titles and source registrations pass through these projections and report readers literally, without repeated title-completeness checks, trimming, leading-apostrophe removal, text coercion or path repair. Genuine optional absence remains valid; it supplies no registration to inspect. Explicit media-source identities resolve exactly, while documented absence selects the configured default. Structural saved-input checks, confined paths, symlink/file inspection and URL escaping retain their owners. Missing Source Files preserves the supplied Work title and exact expected path in its browser rows. [Studio User Facing Rules](data/Studio_User_Facing_Rules.md) D.03 records this preservation boundary and the 2026-10-12 implementation evidence.
 
@@ -77,13 +77,13 @@ Replace the canonical read with refreshed Work placement facts and Catalogue-own
 
 ### Work Downloads (`work_downloads`)
 
-Work Downloads now reads refreshed Work titles and download filenames through `docs_work_downloads.py`, then scans direct regular files in the configured Working `assets.work_files` family. Catalogue Refresh owns adoption of staged attachment references and their Working files.
+Work Downloads reads refreshed Work titles and download filenames through `docs_work_downloads.py`, then scans direct regular files in the configured Working `assets.work_files` family. One resolved workspace supplies the saved resource reader and directory scan. The service returns references and filenames; the browser owns exact matching, missing/shared/unassigned rows and ordering. Configuration confines the directory once, and `scandir` types plus exact-basename checks replace per-file metadata/path rechecks. Catalogue Refresh owns adoption of staged attachment references and their Working files. [Reports](Reports.md) owns the current handoff, action safeguards and evidence limits.
 
 Read refreshed Work IDs, titles and download filenames from the Catalogue resource projection. Keep the filesystem scan live and confined to the existing Working file family. Preserve exact-filename matching, shared files appearing for each referencing Work, unassigned files, missing-file rows, placeholder exclusions and Finder actions. Do not infer ownership from Work ID prefixes or replace the live scan with a generated list of files.
 
 ### Work Links (`work_links`)
 
-Work Links reads refreshed Work IDs/titles and authored link labels/URLs through `docs_work_links.py`. The UI owns complete resource input; effect comparison, Save/Refresh projection and server/browser report readers use labels and URLs unchanged, without resource-text normalization or substitutions. Private resource-input validation does not repeat label-completeness or nonempty-URL checks. Optional canonical resource fields may be absent; explicit fields must be arrays of objects, with no malformed-array or null-to-empty repair. Structural response/input checks, file-processing basename/path checks and safe browser URL validation remain separate operation requirements. [Catalogue Source Model](Catalogue_Source_Model.md#catalogue-source-audit) owns this authoring/audit boundary. The report performs no filesystem scan or destination request. The former shared canonical resource loader is removed.
+Work Links reads refreshed Work IDs/titles and authored link labels/URLs through `docs_work_links.py`. The UI owns complete resource input; effect comparison, Save/Refresh projection and server/browser report readers use labels and URLs unchanged, without resource-text normalization or substitutions. Work Links and Work Downloads trust the saved resource projection after confined JSON-object parsing, without repeated schema/identity/resource audits or browser response agreement checks. Optional canonical resource fields may be absent; explicit fields must be arrays of objects at their authoring owner, with no malformed-array or null-to-empty repair. File-processing basename/path checks and safe browser URL validation retain their actual boundary owners. [Catalogue Source Model](Catalogue_Source_Model.md#catalogue-source-audit) owns authoring/audit behavior, and [Reports](Reports.md) owns prepared exact navigation, view disposal and evidence limits. The report performs no filesystem scan or destination request. The former shared canonical resource loader is removed.
 
 Read those same minimal facts from the refreshed Catalogue resource projection. Retain one row per authored link, exact Catalogue document navigation and the existing safe browser URL action. Do not add network link checking or a saved final-report snapshot to this migration.
 
@@ -101,7 +101,7 @@ Read Work IDs/titles and complete source declarations from the refreshed Catalog
 
 ### Folders Without Works (`folders_without_works`)
 
-Folders Without Works now reads refreshed primary-source declarations through `docs_folders_without_works.py`, then recursively scans every configured Work media source root. Zero directly registered Works determines rows; descendant Work counts are derived separately.
+Folders Without Works reads refreshed primary-source declarations through `docs_folders_without_works.py`, then recursively scans every configured Work media source root. One prepared source map/default and resolved Projects base feed a run-local source inspector; registered-folder lookup and traversal reuse directory metadata and checked parent segments. Zero directly registered Works determines rows; descendant Work counts are accumulated once in reverse discovery order, with only final rows sorted and returned targets encoded. Python owns physical membership/counts, and the browser trusts completed rows while retaining rendering, busy state and view disposal. [Reports](Reports.md) owns the current safeguards and evidence limits.
 
 Use refreshed source registrations for membership counts while retaining the live recursive scan. Preserve empty, hidden and non-image folders, exclusion of symlinks and root containers, physical folder-identity handling, and failure on unreadable roots/folders. A declared Work still counts in an existing folder when its primary image is missing. This report's scan scope differs deliberately from immediate-only Projects and represented-folder Uncataloged Images.
 
@@ -192,7 +192,7 @@ Verification budget: changed-owner lint/syntax and scoped reader/matching review
 
 Gate: neither report reads canonical Works; the download join uses refreshed references and current Working files, and no network-checking or attachment-management behavior has been added.
 
-Record: implemented. Work Links/Downloads consume the resource aggregate; the canonical loader is removed. Minimal resource validation belongs to Catalogue; live direct-file matching and Finder confinement remain with Downloads. Changed-reader lint/syntax/import diagnostics and scoped matching review passed. The input-boundary gate passed; staged attachments, physical-file changes and interactions remain manual acceptance.
+Record: implemented. Work Links/Downloads consume the resource aggregate; the canonical loader is removed. Resource validity belongs to authoring/Refresh, and readers trust the saved result after confined JSON-object parsing. Downloads' browser matches supplied references to its live direct-file inventory; Finder confinement remains a separate server action. Changed-reader lint/syntax/import diagnostics and scoped matching review passed. [Reports](Reports.md) owns current optimisation evidence and limits; staged attachments, physical-file changes and interactions remain manual acceptance.
 
 ### CRI.4 — Source Filesystem Report Migrations
 

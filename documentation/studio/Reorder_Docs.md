@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260903-195713-4c8f2a
 title: Reorder docs
 added_date: "2026-09-03 19:57:13"
-last_updated: "2026-10-08 19:10:43"
+last_updated: "2026-10-14 21:49:12"
 summary: Use one canonical nested index-order.json for ordinary document hierarchy and order, edited through a combined Position modal with Before, After and Inside placement.
 ui_status: done
 parent_id: d-20260903-220300-694ee5
@@ -24,18 +24,18 @@ Draft and unpublishable ordinary documents remain in the complete editable tree.
 
 ## Canonical Structure And Generated Output
 
-`index-order.json` belongs with canonical ordinary document source under the configured Working source boundary, not under generated output. Its nested records contain exact `doc_id` references and child arrays. Nesting determines parentage; array position determines order, including at root. The following uses illustrative IDs:
+`working/source/index-order.json` owns the canonical ordinary hierarchy. Its nested records contain exact `doc_id` references and optional child arrays. Omitted `children` means a leaf; writers omit empty arrays, including after a parent loses its final child. Nesting determines parentage; array position determines order, including at root. The following uses illustrative IDs:
 
 ```json
 [
   {
     "doc_id": "chapter-a",
     "children": [
-      { "doc_id": "page-two", "children": [] },
-      { "doc_id": "page-one", "children": [] }
+      { "doc_id": "page-two" },
+      { "doc_id": "page-one" }
     ]
   },
-  { "doc_id": "chapter-b", "children": [] }
+  { "doc_id": "chapter-b" }
 ]
 ```
 

@@ -26,6 +26,7 @@ from docs_build_manifest import remove_build_manifest, write_build_manifest
 from docs_mermaid_preparation import prepare_stage_mermaid
 from docs_source_model import SourceDoc, parse_source, write_bytes_atomic
 from docs_document_identity import doc_updated_date
+from docs_index_order import index_order_path
 
 if TYPE_CHECKING:
     from docs_builder.collection import CollectionDocsBuilder
@@ -348,9 +349,11 @@ def rebuild_collection_outputs(
     }
 
 
-def validate_changed_source_paths(root: Path, paths: list[Path]) -> None:
-    """Keep write follow-through confined to its configured source owner."""
+def validate_changed_source_paths(root: Path, paths: list[Path], *, index_path: Path | None = None) -> None:
+    """Confine writes to Markdown storage and an explicitly resolved hierarchy file."""
     for path in paths:
+        if path == index_path:
+            continue
         path.resolve().relative_to(root.resolve())
 
 
@@ -362,8 +365,9 @@ def perform_source_write_and_rebuild(
     docs_doc_ids: Optional[list[str]] = None,
     skip_media_builds: bool = True,
 ) -> Dict[str, Any]:
-    require_document_authoring(load_docs_working_config(repo_root))
-    validate_changed_source_paths(current_document_source_root(repo_root), changed_paths)
+    config = load_docs_working_config(repo_root)
+    require_document_authoring(config)
+    validate_changed_source_paths(document_source_path(config), changed_paths, index_path=index_order_path(config))
     links_before = changed_source_document_ids(changed_paths)
     write_operation()
     return rebuild_working_outputs(
@@ -382,15 +386,16 @@ def perform_source_write_and_rebuild_atomic(
     docs_doc_ids: Optional[list[str]] = None,
 ) -> Dict[str, Any]:
     """Write/rebuild one exact parent stage or restore its source snapshot there."""
-    require_document_authoring(load_docs_working_config(repo_root))
-    root = current_document_source_root(repo_root)
+    config = load_docs_working_config(repo_root)
+    require_document_authoring(config)
+    root = document_source_path(config)
     resolved_changed_paths = {path.resolve() for path in changed_paths}
     normalized_snapshots = {path.resolve(): source_bytes for path, source_bytes in source_snapshots.items()}
     if set(normalized_snapshots) != resolved_changed_paths:
         raise ValueError("document rollback snapshot must cover every changed source exactly")
     if any(not isinstance(source_bytes, bytes) for source_bytes in normalized_snapshots.values()):
         raise ValueError("document rollback snapshot values must be bytes")
-    validate_changed_source_paths(root, list(normalized_snapshots))
+    validate_changed_source_paths(root, list(normalized_snapshots), index_path=index_order_path(config))
     links_before = changed_source_document_ids(changed_paths)
     try:
         changed_before_write = [
