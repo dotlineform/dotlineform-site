@@ -10,7 +10,6 @@ from typing import Any
 from urllib.parse import urlsplit
 
 from docs_broken_links import audit_docs_broken_links
-from docs_document_identity import is_document_id
 from docs_document_location import canonical_document_viewer_url
 from docs_json_files import render_json, write_text_atomic
 from docs_management_context import log_event
@@ -52,8 +51,8 @@ def validate_broken_links_report(report: Any) -> dict[str, Any]:
         if not isinstance(row, dict) or any(not isinstance(row.get(field), str) for field in SOURCE_FIELDS):
             raise ValueError("Broken Links report has an invalid source record")
         collection = row["from_page_collection"]
-        if (collection and not COLLECTION_ID_PATTERN.fullmatch(collection)) or not is_document_id(row["from_page_doc_id"], collection=collection):
-            raise ValueError("Broken Links report has an invalid source identity")
+        if collection and not COLLECTION_ID_PATTERN.fullmatch(collection):
+            raise ValueError("Broken Links report has an invalid source collection")
         if row["from_page_url"] != canonical_document_viewer_url(row["from_page_doc_id"], collection=collection):
             raise ValueError("Broken Links report has a mismatched source URL")
     for entry in entries:
@@ -63,6 +62,10 @@ def validate_broken_links_report(report: Any) -> dict[str, Any]:
             raise ValueError("Broken Links report has an unsafe issue URL")
         if entry.get("issue_type") == "semantic_token" and any(not isinstance(entry.get(field), str) for field in ("raw", "reason")):
             raise ValueError("Broken Links report has an invalid token issue")
+        if entry.get("issue_type") == "document_media" and any(
+            not isinstance(entry.get(field), str) for field in ("reason", "media_type", "media_identity")
+        ):
+            raise ValueError("Broken Links report has an invalid document media issue")
     return report
 
 
@@ -86,15 +89,16 @@ def handle_broken_links(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]
     """Await the complete audit and save its result before returning success."""
     if not isinstance(body, dict) or body:
         raise ValueError("Broken Links refresh requires an empty request object")
-    path = load_docs_workspace_config(repo_root).broken_links_report.path
-    payload = audit_docs_broken_links(repo_root)
-    report = validate_broken_links_report({
+    workspace = load_docs_workspace_config(repo_root)
+    path = workspace.broken_links_report.path
+    payload = audit_docs_broken_links(repo_root, workspace)
+    report = {
         "schema_version": SCHEMA_VERSION,
         "scanned_at": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
         "summary": payload["summary"],
         "entries": payload["entries"],
         "unavailable_sources": payload["unavailable_sources"],
-    })
+    }
     try:
         write_text_atomic(path, render_json(report))
     except OSError as error:

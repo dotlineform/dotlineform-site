@@ -40,6 +40,8 @@ function appendSourceCell(row, entry) {
 function appendIssueCell(row, state, entry) {
   const label = entry.issue_type === "semantic_token"
     ? cleanString(entry.raw) + " — " + cleanString(entry.reason).replace(/_/g, " ")
+    : entry.issue_type === "document_media"
+    ? entry.link_text + " — " + entry.reason.replace(/_/g, " ")
     : cleanString(entry.link_text || entry.link_url);
   if (cleanString(entry.link_url)) {
     appendLinkCell(row, state, "docsViewerReport__cellLink", label, entry.link_url);
@@ -89,11 +91,15 @@ function renderHead(state) {
   state.headNode.appendChild(sortButton(state, "link", "link"));
 }
 
+function renderMessage(state) {
+  state.messageNode.textContent = state.resultMessage;
+  state.messageNode.hidden = !state.resultMessage;
+}
+
 function renderRows(state) {
   clearNode(state.rowsNode);
   renderHead(state);
-  state.messageNode.textContent = state.resultMessage;
-  state.messageNode.hidden = !state.resultMessage;
+  renderMessage(state);
   state.statusNode.hidden = !state.report;
   if (!state.report) {
     state.statusNode.textContent = "";
@@ -145,11 +151,11 @@ function loadReport(state, refresh = false) {
   const service = reportService(state.context);
   if (!service) {
     state.resultMessage = "Local docs-management server is not configured.";
-    renderRows(state);
+    renderMessage(state);
     return Promise.resolve();
   }
   state.resultMessage = "";
-  renderRows(state);
+  renderMessage(state);
   setBusy(state, true);
   return (refresh ? service.runBrokenLinksAudit() : service.readBrokenLinks())
     .then((payload) => {
@@ -157,13 +163,6 @@ function loadReport(state, refresh = false) {
         throw new Error("Broken Links returned no saved report.");
       }
       const report = payload.report;
-      if (report !== null && (
-        report.schema_version !== "docs_broken_links_report_v1"
-        || !Array.isArray(report.entries) || !Array.isArray(report.unavailable_sources)
-        || !Number.isFinite(Date.parse(report.scanned_at))
-      )) {
-        throw new Error("Saved Broken Links report is invalid.");
-      }
       if (refresh && !report) throw new Error("Broken Links refresh returned no saved report.");
       state.report = report;
       state.entries = report ? report.entries : [];
@@ -173,7 +172,7 @@ function loadReport(state, refresh = false) {
     .catch((error) => {
       const message = error && error.message ? error.message : "Broken Links could not complete the request.";
       state.resultMessage = message + (state.report ? " Showing the saved report." : "");
-      renderRows(state);
+      renderMessage(state);
     })
     .finally(() => {
       setBusy(state, false);
@@ -217,6 +216,7 @@ function renderShell(root) {
 
   const status = document.createElement("span");
   status.className = "docsViewerReport__status";
+  status.hidden = true;
   toolbar.appendChild(runButton);
   toolbar.appendChild(status);
 
@@ -275,7 +275,7 @@ export function mountDocsBrokenLinksReport(context) {
     restore: function (saved) {
       if (state.sortKey === saved.key && state.sortDir === saved.direction) return;
       state.sortKey = saved.key; state.sortDir = saved.direction;
-      renderHead(state); renderRows(state);
+      renderRows(state);
     }
   });
 

@@ -15,20 +15,29 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
-import docs_document_location as document_location
-from docs_document_identity import is_document_id
+REPO_ROOT = Path(__file__).resolve().parents[2]
+for import_directory in (
+    REPO_ROOT, REPO_ROOT / "studio/shared/python", REPO_ROOT / "studio/services", REPO_ROOT / "docs-viewer/build",
+):
+    if str(import_directory) not in sys.path:
+        sys.path.insert(0, str(import_directory))
 
-from docs_workspace_config import (
-    DocsStageConfig,
-    DocsCollectionConfig,
+from docs_artifact_locations import ArtifactLocation, FilesystemArtifactLocationAdapter, filesystem_location_root  # noqa: E402
+from docs_document_identity import is_document_id  # noqa: E402
+from docs_document_location import canonical_document_viewer_url  # noqa: E402
+from docs_front_matter import FRONT_MATTER_PATTERN, read_front_matter_fields  # noqa: E402
+from docs_index_order import read_index_order, tree_groups  # noqa: E402
+
+from docs_workspace_config import (  # noqa: E402
     DocsWorkspaceConfig,
+    document_source_path,
     generated_documents_path,
     public_document_reader_paths,
-    load_docs_working_config,
     load_docs_workspace_config,
     resolve_workspace_path,
+    select_workspace_stage,
 )
-from docs_rendered_links import (
+from docs_rendered_links import (  # noqa: E402
     collect_anchors,
     is_same_doc_fragment_link,
     normalize_text,
@@ -36,17 +45,11 @@ from docs_rendered_links import (
     resolve_href,
 )
 
-
-BUILD_DIR = Path(__file__).resolve().parents[1] / "build"
-if str(BUILD_DIR) not in sys.path:
-    sys.path.insert(0, str(BUILD_DIR))
-
 from docs_builder.semantic_token_registry import load_semantic_token_registry  # noqa: E402
 from docs_builder.semantic_tokens import (  # noqa: E402
     parse_semantic_tokens,
 )
-from docs_source_model import load_document_collection_docs_for_config  # noqa: E402
-# The workspace and builder imports initialize repository and shared Python paths.
+from docs_media_inventory import parsed_source_media_references  # noqa: E402
 from docs_catalogue_media import catalogue_media_record, read_catalogue_media_config, read_catalogue_gallery, read_catalogue_work  # noqa: E402
 from studio.services.catalogue.catalogue_gallery_records import validate_gallery_record  # noqa: E402
 
@@ -89,12 +92,40 @@ def detect_repo_root(explicit_root: str | None = None) -> Path:
 
 
 def read_json(path: Path, label: str) -> dict[str, Any]:
-    if not path.exists():
-        raise FileNotFoundError(f"Missing {label}: {path}")
     payload = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
         raise ValueError(f"Expected JSON object for {label}: {path}")
     return payload
+
+
+def document_payload_path(root: Path, doc_id: str) -> Path:
+    """Resolve one by-ID read without traversing symlinks outside its owner."""
+    path = root / "by-id" / f"{doc_id}.json"
+    if path.resolve() != path:
+        raise ValueError(f"Generated document path must not traverse symlinks: {doc_id}")
+    return path
+
+
+def read_audit_source(root: Path, path: Path, collection: str) -> tuple[DocMeta, str, dict[str, Any], str]:
+    """Read identity, label, metadata and body without authoring/model validation."""
+    if path.parent != root or path.resolve() != path:
+        raise ValueError(f"Document source must remain within its owner without symlinks: {path.name}")
+    source = path.read_text(encoding="utf-8")
+    header = FRONT_MATTER_PATTERN.match(source)
+    if header is None:
+        raise ValueError(f"Document front matter could not be parsed in {path.name}")
+    metadata = {
+        field.key: field.value
+        for field in read_front_matter_fields(header.group(1), source_name=path.name)
+    }
+    doc_id = metadata.get("doc_id")
+    if not isinstance(doc_id, str) or doc_id != path.stem:
+        raise ValueError(f"Document source identity does not match its filename: {path.name}")
+    title = metadata.get("title")
+    if not isinstance(title, str):
+        raise ValueError(f"Document title must be a string: {path.name}")
+    meta = DocMeta(doc_id, title, canonical_document_viewer_url(doc_id, collection=collection), collection)
+    return meta, source, metadata, source[header.end():]
 
 
 def target_payload_exists(target: dict[str, str], roots: dict[str, Path]) -> bool:
@@ -103,63 +134,28 @@ def target_payload_exists(target: dict[str, str], roots: dict[str, Path]) -> boo
     collection = target.get("collection", "")
     if collection not in roots or not is_document_id(doc_id, collection=collection):
         return False
-    return (roots[collection] / "by-id" / f"{doc_id}.json").is_file()
+    return document_payload_path(roots[collection], doc_id).is_file()
 
 
-def semantic_token_broken_entries(
+def catalogue_target_reason(
     repo_root: Path,
-    sources: list[tuple[DocMeta, str]],
-) -> list[dict[str, Any]]:
-    registry = load_semantic_token_registry(repo_root)
-    if registry is None:
-        raise ValueError("Semantic-token registry is unavailable.")
-    entries: list[dict[str, Any]] = []
-    media_policy_available: bool | None = None
-    for meta, body in sources:
-        for token in parse_semantic_tokens(body, registry=registry):
-            if token.family != "catalogue":
-                continue
-            reason = ""
-            if not token.supported:
-                reason = "unsupported_kind"
-            else:
-                try:
-                    if media_policy_available is None:
-                        try:
-                            read_catalogue_media_config(repo_root)
-                            media_policy_available = True
-                        except ValueError:
-                            media_policy_available = False
-                    if not media_policy_available:
-                        raise ValueError("Generated Catalogue media configuration is unavailable")
-                    if token.target_type == "gallery":
-                        validate_gallery_record(read_catalogue_gallery(repo_root, token.target_id), gallery_id=token.target_id)
-                    else:
-                        catalogue_media_record(read_catalogue_work(repo_root, token.target_id), token.target_id)
-                except ValueError:
-                    reason = "missing_gallery" if token.target_type == "gallery" else "missing_media"
-            if not reason:
-                continue
-            entries.append(
-                {
-                    "issue_type": "semantic_token",
-                    "source_collection": meta.collection,
-                    "source_doc_id": meta.doc_id,
-                    "source_range": token.source_range,
-                    "raw": token.raw,
-                    "family": token.family,
-                    "target_type": token.target_type,
-                    "target_id": token.target_id,
-                    "reason": reason,
-                    "link_text": token.title,
-                    "link_url": "",
-                    **meta.source_fields(),
-                }
-            )
-    return entries
+    target_type: str,
+    target_id: str,
+    *,
+    workspace: ArtifactLocation,
+) -> str:
+    """Diagnose one selected generated record within the supplied Catalogue owner."""
+    try:
+        if target_type == "gallery":
+            validate_gallery_record(read_catalogue_gallery(repo_root, target_id, workspace=workspace), gallery_id=target_id)
+        else:
+            catalogue_media_record(read_catalogue_work(repo_root, target_id, workspace=workspace), target_id)
+    except ValueError:
+        return "missing_gallery" if target_type == "gallery" else "missing_media"
+    return ""
 
 
-def audit_docs_broken_links(repo_root: Path) -> dict[str, Any]:
+def audit_docs_broken_links(repo_root: Path, workspace: DocsWorkspaceConfig) -> dict[str, Any]:
     """Audit authored sources without relationship/publication eligibility filters.
 
     Every configured collection in the configured workspace is audited. Rendered links
@@ -167,46 +163,100 @@ def audit_docs_broken_links(repo_root: Path) -> dict[str, Any]:
     source payloads are returned separately so partial coverage is visible.
     Destination lookup remains independent of the selected source boundary.
     """
-    workspace = load_docs_workspace_config(repo_root)
-    config = load_docs_working_config(repo_root)
+    config = select_workspace_stage(workspace, "working")
     viewer_routes = ("/docs/", workspace.public_viewer_base_url)
-    collections: list[tuple[str, DocsStageConfig | DocsCollectionConfig]] = [("", config)]
-    collections.extend((item.collection, item) for item in config.collections)
+    collections = [("", config), *((item.collection, item) for item in config.collections)]
     local_roots = {child: resolve_workspace_path(repo_root, generated_documents_path(owner)) for child, owner in collections}
     public_roots = {child: resolve_workspace_path(repo_root, path) for child, path in public_document_reader_paths(workspace).items()}
-    sources: list[tuple[DocMeta, str]] = []
+    registry = load_semantic_token_registry(repo_root)
+    if registry is None:
+        raise ValueError("Semantic-token registry is unavailable.")
     entries: list[dict[str, Any]] = []
     unavailable_sources: list[dict[str, str]] = []
-    destination_exists: dict[str, bool] = {}
-    for collection, resolved_collection in collections:
-        collection_url = document_location.management_collection_viewer_url(
-            repo_root, collection,
-        )
-        for doc in load_document_collection_docs_for_config(repo_root, config, resolved_collection):
-            meta = DocMeta(
-                collection=collection,
-                doc_id=doc.doc_id, title=doc.title,
-                viewer_url=document_location.management_document_viewer_url(
-                    collection_url, doc.doc_id, collection=bool(collection), collection_id=collection,
-                ),
-            )
-            sources.append((meta, doc.body))
-            payload_path = resolve_workspace_path(repo_root, generated_documents_path(resolved_collection)) / "by-id" / f"{doc.doc_id}.json"
-            if not payload_path.is_file():
+    destination_exists: dict[tuple[bool, str, str], bool] = {}
+    catalogue_reasons: dict[tuple[str, str], str] = {}
+    media_policy_available: bool | None = None
+    for collection, owner in collections:
+        root = resolve_workspace_path(repo_root, document_source_path(owner))
+        if not root.is_dir():
+            raise FileNotFoundError(f"Document collection is unavailable: {collection or 'ordinary documents'}")
+        paths = sorted(root.glob("*.md")) if collection else [
+            root / f"{node['doc_id']}.md"
+            for siblings, _parent_id in tree_groups(read_index_order(root)) for node in siblings
+        ]
+        media_assets = {
+            media_type: FilesystemArtifactLocationAdapter(
+                media.asset_location, root=filesystem_location_root(repo_root, media.asset_location),
+            ) for media_type, media in owner.media.types.items()
+        }
+        media_exists: dict[tuple[str, str], bool] = {}
+        for path in paths:
+            meta, source, metadata, body = read_audit_source(root, path, collection)
+            tokens = parse_semantic_tokens(body, registry=registry)
+            for reference in parsed_source_media_references(
+                owner, source, metadata=metadata, semantic_tokens=tokens,
+                doc_id=meta.doc_id, document_collection=collection,
+            ):
+                key = (reference.media_type, reference.identity)
+                if key not in media_exists:
+                    media_exists[key] = media_assets[reference.media_type].resolve(reference.identity).is_file()
+                if not media_exists[key]:
+                    entries.append({
+                        "issue_type": "document_media",
+                        "reason": "missing_media",
+                        "media_type": reference.media_type,
+                        "media_identity": reference.identity,
+                        "link_text": reference.logical_path,
+                        "link_url": "",
+                        **meta.source_fields(),
+                    })
+            for token in tokens:
+                if token.family != "catalogue":
+                    continue
+                reason = "unsupported_kind"
+                if token.supported:
+                    if media_policy_available is None:
+                        try:
+                            read_catalogue_media_config(repo_root, workspace=workspace.catalogue.working)
+                            media_policy_available = True
+                        except ValueError:
+                            media_policy_available = False
+                    key = (token.target_type, token.target_id)
+                    if key not in catalogue_reasons:
+                        catalogue_reasons[key] = catalogue_target_reason(
+                            repo_root, *key, workspace=workspace.catalogue.working,
+                        ) if media_policy_available else (
+                            "missing_gallery" if token.target_type == "gallery" else "missing_media"
+                        )
+                    reason = catalogue_reasons[key]
+                if reason:
+                    entries.append({
+                        "issue_type": "semantic_token",
+                        "source_collection": meta.collection,
+                        "source_doc_id": meta.doc_id,
+                        "source_range": token.source_range,
+                        "raw": token.raw,
+                        "family": token.family,
+                        "target_type": token.target_type,
+                        "target_id": token.target_id,
+                        "reason": reason,
+                        "link_text": token.title,
+                        "link_url": "",
+                        **meta.source_fields(),
+                    })
+            payload_path = document_payload_path(local_roots[collection], meta.doc_id)
+            try:
+                payload = read_json(payload_path, "source document payload")
+            except FileNotFoundError:
+                destination_exists[(False, collection, meta.doc_id)] = False
                 unavailable_sources.append(meta.source_fields())
                 continue
-            payload = read_json(payload_path, "source document payload")
+            destination_exists[(False, collection, meta.doc_id)] = True
             entries.extend(rendered_link_broken_entries(
-                meta, str(payload.get("content_html") or ""),
+                meta, payload["content_html"],
                 workspace, local_roots, public_roots, viewer_routes, destination_exists,
             ))
 
-    entries.extend(semantic_token_broken_entries(repo_root, sources))
-    entries.sort(key=lambda item: (
-        str(item.get("from_page_text") or "").lower(),
-        str(item.get("link_text") or item.get("raw") or "").lower(),
-        str(item.get("link_url") or item.get("reason") or "").lower(),
-    ))
     return {
         "ok": True,
         "summary": {"total": len(entries)},
@@ -219,7 +269,7 @@ def rendered_link_broken_entries(
     meta: DocMeta, content_html: str,
     workspace: DocsWorkspaceConfig, local_roots: dict[str, Path], public_roots: dict[str, Path],
     viewer_routes: tuple[str, ...],
-    destination_exists: dict[str, bool],
+    destination_exists: dict[tuple[bool, str, str], bool],
 ) -> list[dict[str, Any]]:
     """Diagnose rendered document links while retaining the owning source identity."""
     entries: list[dict[str, Any]] = []
@@ -248,12 +298,13 @@ def rendered_link_broken_entries(
             continue
 
         link_text = normalize_text(anchor.get("text")) or normalize_text(raw_href) or normalize_text(resolved_href)
-        if resolved_href not in destination_exists:
-            destination_exists[resolved_href] = bool(
-                target.get("kind") == "viewer"
-                and target_payload_exists(target, public_roots if is_public else local_roots)
-            )
-        if not destination_exists[resolved_href]:
+        available = False
+        if target["kind"] == "viewer":
+            key = (is_public, target.get("collection", ""), target["doc_id"])
+            if key not in destination_exists:
+                destination_exists[key] = target_payload_exists(target, public_roots if is_public else local_roots)
+            available = destination_exists[key]
+        if not available:
             entries.append(
                 {
                     "link_text": link_text,
@@ -295,7 +346,7 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         repo_root = detect_repo_root(args.repo_root)
-        payload = audit_docs_broken_links(repo_root)
+        payload = audit_docs_broken_links(repo_root, load_docs_workspace_config(repo_root))
     except (FileNotFoundError, ValueError) as error:
         print(str(error), file=sys.stderr)
         return 1

@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from pathlib import Path
 import re
 import sys
-from typing import Iterable, Mapping
+from typing import Any, Iterable, Mapping
 
 from docs_artifact_locations import (
     ArtifactLocationAdapter,
@@ -23,7 +23,7 @@ BUILD_DIR = Path(__file__).resolve().parents[1] / "build"
 if str(BUILD_DIR) not in sys.path:
     sys.path.insert(0, str(BUILD_DIR))
 
-from docs_builder.semantic_tokens import parse_semantic_tokens  # noqa: E402
+from docs_builder.semantic_tokens import SemanticTokenOccurrence, parse_semantic_tokens  # noqa: E402
 
 
 MEDIA_REFERENCE_PATTERN = re.compile(r"\[\[(?:media|html-media):(?P<path>[^\]\s]+)(?:[^\]]*)\]\]")
@@ -54,10 +54,28 @@ def source_media_references(
 ) -> tuple[DocsMediaReference, ...]:
     """Return configured, source-collection-owned media references from one document."""
 
+    metadata, body = parse_source_text(source)
+    return parsed_source_media_references(
+        config, source, metadata=metadata,
+        semantic_tokens=parse_semantic_tokens(body, registry=None),
+        doc_id=doc_id, document_collection=document_collection,
+    )
+
+
+def parsed_source_media_references(
+    config: DocsStageConfig | DocsCollectionConfig,
+    source: str,
+    *,
+    metadata: Mapping[str, Any],
+    semantic_tokens: Iterable[SemanticTokenOccurrence],
+    doc_id: str,
+    document_collection: str | None = None,
+) -> tuple[DocsMediaReference, ...]:
+    """Extract references using supplied metadata and completed token parsing."""
+
     found: set[tuple[str, str, str]] = set()
     owner_collection = getattr(config, "collection", "")
-    metadata, body = parse_source_text(source)
-    for token in parse_semantic_tokens(body, registry=None):
+    for token in semantic_tokens:
         if token.family != "image":
             continue
         for media_type, media in config.media.types.items():
@@ -187,5 +205,6 @@ __all__ = [
     "DocsMediaFile",
     "DocsMediaReference",
     "list_collection_media",
+    "parsed_source_media_references",
     "source_media_references",
 ]

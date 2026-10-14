@@ -65,9 +65,9 @@ def _safe_media_url(value: Any) -> str:
     return ""
 
 
-def read_catalogue_media_config(repo_root: Path) -> dict[str, Any]:
+def read_catalogue_media_config(repo_root: Path, *, workspace: ArtifactLocation | None = None) -> dict[str, Any]:
     """Read the producer's shared public policy without exposing private pipeline inputs."""
-    return validate_catalogue_media_config(_read_generated(repo_root, "media-config.json"))
+    return validate_catalogue_media_config(_read_generated(repo_root, "media-config.json", workspace=workspace))
 
 
 def validate_catalogue_media_config(payload: dict[str, Any]) -> dict[str, Any]:
@@ -126,10 +126,10 @@ def read_catalogue_work(repo_root: Path, work_id: str, *, workspace: ArtifactLoc
     return _read_generated(repo_root, f"works/index/{work_id}.json", workspace=workspace)
 
 
-def read_catalogue_gallery(repo_root: Path, gallery_id: str) -> dict[str, Any]:
+def read_catalogue_gallery(repo_root: Path, gallery_id: str, *, workspace: ArtifactLocation | None = None) -> dict[str, Any]:
     """Read one exact Gallery and its ordered Work references without member reads."""
     gallery_id = _gallery_identity(gallery_id)
-    return _read_generated(repo_root, f"galleries/index/{gallery_id}.json")
+    return _read_generated(repo_root, f"galleries/index/{gallery_id}.json", workspace=workspace)
 
 
 def local_catalogue_media_config(repo_root: Path) -> dict[str, Any]:
