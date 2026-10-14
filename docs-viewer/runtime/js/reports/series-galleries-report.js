@@ -3,7 +3,7 @@ import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.
 const SORTER = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
 
 function title(row, key) {
-  return row[key]?.title || "";
+  return row[key] === null ? "" : row[key].title;
 }
 
 /** Ascending puts missing associations first; descending puts them last. */
@@ -12,11 +12,11 @@ function sortRows(state) {
   return state.rows.slice().sort((left, right) => {
     const first = title(left, state.sortKey);
     const second = title(right, state.sortKey);
-    const primary = Number(Boolean(first)) - Number(Boolean(second)) || SORTER.compare(first, second);
+    const primary = Number(left[state.sortKey] !== null) - Number(right[state.sortKey] !== null) || SORTER.compare(first, second);
     return primary * (state.sortDir === "desc" ? -1 : 1)
       || SORTER.compare(title(left, secondary), title(right, secondary))
-      || (left.series?.series_id || "").localeCompare(right.series?.series_id || "")
-      || (left.gallery?.gallery_id || "").localeCompare(right.gallery?.gallery_id || "");
+      || (left.series === null ? "" : left.series.series_id).localeCompare(right.series === null ? "" : right.series.series_id)
+      || (left.gallery === null ? "" : left.gallery.gallery_id).localeCompare(right.gallery === null ? "" : right.gallery.gallery_id);
   });
 }
 
@@ -51,14 +51,15 @@ function renderRows(state) {
     for (const key of ["series", "gallery"]) {
       const cell = state.document.createElement("span");
       cell.setAttribute("role", "cell");
-      if (key === "gallery" && row.gallery) {
+      const record = row[key];
+      if (key === "gallery" && record !== null) {
         const button = state.document.createElement("button");
         button.type = "button";
         button.className = "docsViewerReport__collectionButton docsViewerReport__cellLink";
-        button.textContent = row.gallery.title;
-        button.dataset.galleryId = row.gallery.gallery_id;
+        button.textContent = record.title;
+        button.dataset.galleryId = record.gallery_id;
         cell.appendChild(button);
-      } else cell.textContent = title(row, key) || "—";
+      } else cell.textContent = record === null ? "—" : record.title;
       rowNode.appendChild(cell);
     }
     state.rowsNode.appendChild(rowNode);
@@ -72,14 +73,6 @@ async function readReport(state) {
   try {
     const payload = await state.context.reportService.readSeriesGalleries();
     if (!current(state)) return;
-    const header = payload?.header;
-    const headerKeys = header && typeof header === "object" && !Array.isArray(header) ? Object.keys(header) : [];
-    if (headerKeys.length !== 2 || !headerKeys.includes("schema") || !headerKeys.includes("generated_at_utc")
-      || header.schema !== "catalogue_series_galleries_report_v2"
-      || typeof header.generated_at_utc !== "string" || !header.generated_at_utc.trim()
-      || !Array.isArray(payload.rows)) {
-      throw new Error("Invalid saved Series and Galleries data.");
-    }
     state.rows = payload.rows;
     renderRows(state);
     state.statusNode.textContent = "";

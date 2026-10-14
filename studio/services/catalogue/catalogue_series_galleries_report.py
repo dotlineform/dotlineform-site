@@ -1,4 +1,4 @@
-"""Own the private saved Series–Gallery report projection and read contract."""
+"""Own the private Series–Gallery report projection saved by Refresh."""
 
 from __future__ import annotations
 
@@ -6,9 +6,8 @@ import json
 from pathlib import Path
 from typing import Any, Iterable, Mapping
 
-from studio.services.catalogue.catalogue_galleries import validate_gallery_id
 from studio.services.catalogue.catalogue_series_galleries import CatalogueSeriesGalleries
-from studio.services.catalogue.catalogue_series_galleries_index import definition_cell, exact_series_id
+from studio.services.catalogue.catalogue_series_galleries_index import definition_cell
 
 
 METADATA_PATH = "reports/series-galleries/metadata.json"
@@ -51,47 +50,6 @@ def series_galleries_report_payload(
     for gallery_id in sorted(galleries.keys() - associated_gallery_ids):
         rows.append({"series": None, "gallery": definition_cell("gallery", gallery_id, galleries)})
     return _payload({_row_key(row): row for row in rows}, timestamp)
-
-
-def _validated_rows(payload: Any) -> dict[tuple[str | None, str | None], dict[str, Any]]:
-    """Validate and key saved rows in one pass without canonical joins."""
-    if not isinstance(payload, dict) or set(payload) != {"header", "rows"}:
-        raise ValueError("Invalid saved Series–Gallery report")
-    header, rows = payload["header"], payload["rows"]
-    if (not isinstance(header, dict) or set(header) != {"schema", "generated_at_utc"}
-            or header["schema"] != REPORT_SCHEMA or not isinstance(rows, list)
-            or not isinstance(header["generated_at_utc"], str) or not header["generated_at_utc"].strip()):
-        raise ValueError("Invalid saved Series–Gallery report header")
-    indexed = {}
-    previous = None
-    for row in rows:
-        if not isinstance(row, dict) or set(row) != {"series", "gallery"} or not any(row.values()):
-            raise ValueError("Invalid saved Series–Gallery report row")
-        for kind in ("series", "gallery"):
-            cell = row[kind]
-            if cell is None:
-                continue
-            key = f"{kind}_id"
-            if (not isinstance(cell, dict) or set(cell) != {key, "title"}
-                    or not isinstance(cell["title"], str) or not cell["title"].strip()):
-                raise ValueError(f"Invalid saved Series–Gallery report {kind}")
-            if kind == "series":
-                exact_series_id(cell[key])
-            else:
-                validate_gallery_id(cell[key])
-        identity = _row_key(row)
-        order = _sort_key(identity)
-        if previous is not None and order <= previous:
-            raise ValueError("Saved Series–Gallery report rows must be distinct and ordered")
-        previous = order
-        indexed[identity] = row
-    return indexed
-
-
-def validate_series_galleries_report(payload: Any) -> dict[str, Any]:
-    """Validate only saved facts, including placeholders and deterministic order."""
-    _validated_rows(payload)
-    return payload
 
 
 def merge_series_galleries_report(
