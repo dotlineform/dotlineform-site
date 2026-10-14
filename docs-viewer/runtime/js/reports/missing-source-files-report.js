@@ -1,8 +1,5 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
 
-const REPORT_SCHEMA = "docs_missing_source_files_report_v1";
-const WORK_ID_PATTERN = /^[0-9]{5}$/;
-
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
 }
@@ -14,46 +11,6 @@ function clearNode(node) {
 function reportService(context) {
   const service = context && context.reportService;
   return service && typeof service.runMissingSourceFiles === "function" ? service : null;
-}
-
-function isCanonicalExpectedPath(value) {
-  if (!value || value.startsWith("/") || value.startsWith("projects/") || value.includes("\\")) {
-    return false;
-  }
-  return value.split("/").every((part) => part && part !== "." && part !== "..");
-}
-
-function normalizeRow(value) {
-  const keys = value && typeof value === "object" && !Array.isArray(value)
-    ? Object.keys(value).sort()
-    : [];
-  const workId = value && value.work_id;
-  const workTitle = value && value.work_title;
-  const expectedSourcePath = value && value.expected_source_path;
-  if (
-    keys.join(",") !== "expected_source_path,work_id,work_title"
-    || typeof workId !== "string" || !WORK_ID_PATTERN.test(workId)
-    || typeof workTitle !== "string"
-    || typeof expectedSourcePath !== "string" || !isCanonicalExpectedPath(expectedSourcePath)
-  ) {
-    throw new Error("Missing Source Files row is invalid.");
-  }
-  return { expectedSourcePath, workId, workTitle };
-}
-
-export function normalizeMissingSourceFilesResponse(payload) {
-  const report = payload && payload.report;
-  if (
-    !payload
-    || payload.ok !== true
-    || !report
-    || Object.keys(report).sort().join(",") !== "rows,schema_version"
-    || report.schema_version !== REPORT_SCHEMA
-    || !Array.isArray(report.rows)
-  ) {
-    throw new Error("Missing Source Files report is invalid.");
-  }
-  return report.rows.map(normalizeRow);
 }
 
 function studioWorkHref(context, workId) {
@@ -85,8 +42,8 @@ function appendWorkCell(state, rowNode, row) {
   const cell = document.createElement("span");
   const link = document.createElement("a");
   link.className = "docsViewerReport__cellLink";
-  link.href = studioWorkHref(state.context, row.workId);
-  link.textContent = row.workId;
+  link.href = studioWorkHref(state.context, row.work_id);
+  link.textContent = row.work_id;
   cell.appendChild(link);
   rowNode.appendChild(cell);
 }
@@ -108,8 +65,8 @@ function renderRows(state) {
     const rowNode = document.createElement("li");
     rowNode.className = "docsViewerReport__row";
     appendWorkCell(state, rowNode, row);
-    appendTextCell(rowNode, row.workTitle);
-    appendTextCell(rowNode, row.expectedSourcePath);
+    appendTextCell(rowNode, row.work_title);
+    appendTextCell(rowNode, row.expected_source_path);
     state.rowsNode.appendChild(rowNode);
   });
 }
@@ -134,9 +91,8 @@ function runReport(state) {
   setBusy(state, true);
   state.statusNode.textContent = "Running Missing Source Files...";
   return service.runMissingSourceFiles()
-    .then(normalizeMissingSourceFilesResponse)
-    .then((rows) => {
-      state.rows = rows;
+    .then((payload) => {
+      state.rows = payload.report.rows;
       state.statusNode.textContent = "";
       renderRows(state);
     })

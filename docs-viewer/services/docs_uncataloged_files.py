@@ -1,20 +1,16 @@
 #!/usr/bin/env python3
-"""Build the local Uncataloged Files report."""
+"""Inspect represented Work folders for unregistered primary-source images."""
 
 from __future__ import annotations
 
+import os
+from pathlib import Path
 import stat
 import sys
-from dataclasses import dataclass
-from pathlib import Path, PurePosixPath
-from typing import Any, Mapping
 
-_BOOTSTRAP_START = Path(__file__).resolve()
-for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
-    if (_candidate / "site-tools/config/site-tools.json").exists():
-        if str(_candidate) not in sys.path:
-            sys.path.insert(0, str(_candidate))
-        break
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
 from studio.shared.python.studio_python_paths import ensure_studio_python_paths  # noqa: E402
 
@@ -22,200 +18,80 @@ ensure_studio_python_paths(__file__)
 
 from catalogue.catalogue_output_paths import catalogue_output_workspace  # noqa: E402
 from catalogue.catalogue_report_inputs import WORK_SOURCES_PATH, read_catalogue_report_input  # noqa: E402
-from docs_artifact_locations import ArtifactLocation  # noqa: E402
 from catalogue.catalogue_media_files import IMAGE_EXTENSIONS  # noqa: E402
-from catalogue_work_media_sources import (  # noqa: E402
-    WorkMediaSourceRoot,
-    resolve_work_media_path,
-    resolve_work_media_source_id,
-    resolve_work_media_source_root,
-)
 from docs_local_links import encode_relative_target  # noqa: E402
-from pipeline_config import load_pipeline_config  # noqa: E402
+from docs_work_source_inspection import (  # noqa: E402
+    InspectedDirectory, WorkSourceInspection, collect_work_sources, regular_file_identity,
+)
+from pipeline_config import load_pipeline_config, work_media_source_config  # noqa: E402
 from studio.shared.python.projects_directories import configured_projects_base  # noqa: E402
 
 
 REPORT_SCHEMA_VERSION = "docs_uncataloged_files_report_v1"
-PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
 
 
-@dataclass(frozen=True)
-class UncatalogedFilesPaths:
-    projects_base_dir: Path
-    catalogue_workspace: ArtifactLocation
-
-
-@dataclass(frozen=True)
-class WorkSource:
-    work_id: str
-    media_source_id: str
-    directory: str
-    filename: str
-
-
-def default_uncataloged_files_paths(
-    repo_root: Path,
-    *,
-    environ: Mapping[str, str] | None = None,
-) -> UncatalogedFilesPaths:
-    return UncatalogedFilesPaths(
-        projects_base_dir=configured_projects_base(environ=environ),
-        catalogue_workspace=catalogue_output_workspace(repo_root, environ=environ),
-    )
-
-
-def _canonical_parts(value: Any, label: str, *, single: bool = False) -> tuple[str, ...]:
-    if not isinstance(value, str) or not value or value.startswith("/") or value.endswith("/") or "\\" in value:
-        raise ValueError(f"{label} must be a canonical relative POSIX path")
-    parts = tuple(value.split("/"))
-    if (
-        any(not part or part in {".", ".."} for part in parts)
-        or any(any(ord(character) < 32 or ord(character) == 127 for character in part) for part in parts)
-        or (single and len(parts) != 1)
-    ):
-        raise ValueError(f"{label} must be a canonical relative POSIX path")
-    return parts
-
-
-def collect_work_sources(works: Mapping[str, Mapping[str, Any]]) -> list[WorkSource]:
-    """Resolve refreshed declarations without removing registrations for absent files."""
-    sources: list[WorkSource] = []
-    for work_id, record in sorted(works.items()):
-        folder = record.get("project_folder")
-        subfolder = record.get("project_subfolder")
-        filename = record.get("project_filename")
-        if folder in (None, "") or filename in (None, ""):
-            continue
-        directory_parts = list(_canonical_parts(folder, f"work {work_id} project_folder", single=True))
-        if subfolder not in (None, ""):
-            directory_parts.extend(_canonical_parts(subfolder, f"work {work_id} project_subfolder"))
-        filename_parts = _canonical_parts(filename, f"work {work_id} project_filename", single=True)
-        media_source_id = resolve_work_media_source_id(PIPELINE_CONFIG, record.get("media_source_id"))
-        sources.append(
-            WorkSource(
-                work_id=work_id,
-                media_source_id=media_source_id,
-                directory=PurePosixPath(*directory_parts).as_posix(),
-                filename=filename_parts[0],
-            )
-        )
-    return sources
-
-
-def _source_roots(paths: UncatalogedFilesPaths, sources: list[WorkSource]) -> dict[str, WorkMediaSourceRoot]:
-    roots: dict[str, WorkMediaSourceRoot] = {}
-    environ = {"DOTLINEFORM_PROJECTS_BASE_DIR": str(paths.projects_base_dir)}
-    for source_id in sorted({source.media_source_id for source in sources}):
-        roots[source_id] = resolve_work_media_source_root(
-            PIPELINE_CONFIG,
-            source_id,
-            environ=environ,
-            require_exists=True,
-        )
-    return roots
-
-
-def _file_identity(path: Path) -> tuple[int, int] | None:
-    try:
-        record = path.stat()
-    except FileNotFoundError:
-        return None
-    except OSError as exc:
-        raise ValueError("Work source file could not be inspected") from exc
-    if not stat.S_ISREG(record.st_mode):
-        return None
-    return record.st_dev, record.st_ino
-
-
-def _catalogued_file_identities(
-    sources: list[WorkSource],
-    source_roots: Mapping[str, WorkMediaSourceRoot],
-) -> dict[str, set[tuple[int, int]]]:
-    identities: dict[str, set[tuple[int, int]]] = {}
-    for source in sources:
-        source_root = source_roots[source.media_source_id]
-        candidate = resolve_work_media_path(source_root, source.directory, source.filename)
-        identity = _file_identity(candidate)
-        if identity is None:
-            continue
-        identities.setdefault(source.media_source_id, set()).add(identity)
-    return identities
-
-
-def _uncataloged_rows(
-    sources: list[WorkSource],
-    source_roots: Mapping[str, WorkMediaSourceRoot],
-) -> list[dict[str, str]]:
-    catalogued_identities = _catalogued_file_identities(sources, source_roots)
-    represented_directories = sorted(
-        {(source.media_source_id, source.directory) for source in sources},
-        key=lambda value: (value[0].casefold(), value[0], value[1].casefold(), value[1]),
-    )
-    rows: list[dict[str, str]] = []
-    for source_id, directory in represented_directories:
-        source_root = source_roots[source_id]
+def _candidate_identity(
+    inspection: WorkSourceInspection, directory: InspectedDirectory, child: os.DirEntry[str],
+) -> tuple[int, int] | None:
+    metadata = inspection.entry(directory, child)
+    if metadata is not None and stat.S_ISLNK(metadata.st_mode):
+        # Preserve the existing candidate policy: dangling/non-file links supply
+        # no image; a link to a regular file fails rather than becoming a row.
+        # Only this exceptional classification needs a followed metadata read.
         try:
-            resolved_directory = resolve_work_media_path(source_root, directory, require_exists=True)
+            target_metadata = child.stat()
         except FileNotFoundError:
-            continue
-        except (OSError, RuntimeError) as exc:
-            raise ValueError(f"represented directory could not be inspected: {directory}") from exc
-        if not resolved_directory.is_dir():
-            continue
-        try:
-            children = sorted(
-                resolved_directory.iterdir(),
-                key=lambda path: (path.name.casefold(), path.name),
-            )
-        except OSError as exc:
-            raise ValueError(f"represented directory could not be listed: {directory}") from exc
-        for child in children:
-            if child.name.startswith(".") or child.suffix.lower() not in IMAGE_EXTENSIONS:
-                continue
-            identity = _file_identity(child)
-            if identity is None:
-                continue
-            resolve_work_media_path(source_root, directory, child.name, require_exists=True)
-            if identity in catalogued_identities.get(source_id, set()):
-                continue
-            decoded_target = PurePosixPath(source_root.root_subdir.as_posix(), directory, child.name).as_posix()
-            rows.append(
-                {
-                    "folder": PurePosixPath(source_root.root_subdir.as_posix(), directory).as_posix(),
-                    "file_name": child.name,
-                    "local_target": encode_relative_target(decoded_target),
-                }
-            )
-    return sorted(
-        rows,
-        key=lambda row: (
-            row["folder"].casefold(),
-            row["folder"],
-            row["file_name"].casefold(),
-            row["file_name"],
-        ),
-    )
+            return None
+        except OSError as error:
+            raise ValueError("Work source file could not be inspected") from error
+        if regular_file_identity(target_metadata) is not None:
+            raise ValueError("Work media path must not contain symlinks")
+        return None
+    return regular_file_identity(metadata)
 
 
-class UncatalogedFilesProducer:
-    def __init__(
-        self,
-        *,
-        repo_root: Path,
-        paths: UncatalogedFilesPaths | None = None,
-        environ: Mapping[str, str] | None = None,
-    ) -> None:
-        self.repo_root = repo_root.resolve()
-        self.paths = paths or default_uncataloged_files_paths(self.repo_root, environ=environ)
+def uncataloged_files_report(repo_root: Path) -> dict[str, object]:
+    """Read saved registrations and inspect represented directories once per run.
 
-    def run(self) -> dict[str, object]:
-        works = read_catalogue_report_input(self.paths.catalogue_workspace, WORK_SOURCES_PATH)
-        sources = collect_work_sources(works)
-        source_roots = _source_roots(self.paths, sources)
-        rows = _uncataloged_rows(sources, source_roots)
-        return {
-            "report": {
-                "schema_version": REPORT_SCHEMA_VERSION,
-                "rows": rows,
-            }
+    Reuse terminal metadata for declared and listed files. Physical identity
+    preserves case/Unicode/hard-link equivalence within each configured source.
+    No recursive inventory, media contents, canonical fallback or write occurs.
+    """
+    works = read_catalogue_report_input(catalogue_output_workspace(repo_root), WORK_SOURCES_PATH)
+    source_config = work_media_source_config(load_pipeline_config(repo_root=repo_root))
+    sources = collect_work_sources(works, source_config)
+    rows = []
+    if sources:
+        inspection = WorkSourceInspection(configured_projects_base())
+        roots = inspection.source_roots(source_config["roots"], {source.source_id for source in sources})
+        directories = {
+            (source_id, relative): inspection.directory(roots[source_id], relative)
+            for source_id, relative in dict.fromkeys((source.source_id, source.directory) for source in sources)
         }
+        registered: dict[str, set[tuple[int, int]]] = {}
+        for source in sources:
+            directory = directories[source.source_id, source.directory]
+            identity = regular_file_identity(inspection.file(directory, source.filename))
+            if identity is not None:
+                registered.setdefault(source.source_id, set()).add(identity)
+
+        for (source_id, relative), directory in directories.items():
+            if not directory.present:
+                continue
+            folder = f"{roots[source_id].subdir}/{relative}"
+            identities = registered.get(source_id, set())
+            try:
+                with os.scandir(directory.path) as children:
+                    for child in children:
+                        if child.name.startswith(".") or Path(child.name).suffix.lower() not in IMAGE_EXTENSIONS:
+                            continue
+                        identity = _candidate_identity(inspection, directory, child)
+                        if identity is None:
+                            continue
+                        local_target = encode_relative_target(f"{folder}/{child.name}")
+                        if identity not in identities:
+                            rows.append({"folder": folder, "file_name": child.name, "local_target": local_target})
+            except OSError as error:
+                raise ValueError(f"represented directory could not be listed: {relative}") from error
+    rows.sort(key=lambda row: (row["folder"].casefold(), row["folder"], row["file_name"].casefold(), row["file_name"]))
+    return {"report": {"schema_version": REPORT_SCHEMA_VERSION, "rows": rows}}

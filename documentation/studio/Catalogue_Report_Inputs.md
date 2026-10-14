@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261010-184615-e471b8
 title: Catalogue Report Inputs
 added_date: "2026-10-10 18:46:15"
-last_updated: "2026-10-14 18:06:49"
+last_updated: "2026-10-14 18:25:22"
 summary: Refresh-owned Catalogue report inputs implemented, reviewed and closed; further verification continues during normal report use.
 ui_status: done
 parent_id: d-20260428-000000-f5ff18
@@ -89,13 +89,13 @@ Read those same minimal facts from the refreshed Catalogue resource projection. 
 
 ### Uncataloged Images (`uncataloged_files`)
 
-The registry calls this report Uncataloged Files; its scope is image files. `docs_uncataloged_files.py` now reads refreshed primary-source registrations and scans the source folders represented by them. Work title is not needed by this consumer.
+The registry calls this report Uncataloged Files; its scope is image files. `docs_uncataloged_files.py` reads refreshed primary-source registrations and scans the source folders represented by them. Its shared run-local inspection owner carries resolved directories and file metadata through registered-file matching and candidate listing, preserving physical identity and confinement without repeated root walks. Work title is not needed by this consumer. [Reports](Reports.md) owns the current workflow, safeguards and evidence limits.
 
 Read registrations from the refreshed Catalogue source projection, then scan the represented source directories live. Preserve the shared supported-image extension policy, physical file-identity matching and configured path confinement. Keep its represented-folder scope: scanning every source-root descendant would be a separate scope change. Physical existence must never determine whether a registration is included in the generated input.
 
 ### Missing Source Files (`missing_source_files`)
 
-Missing Source Files now reads refreshed source declarations and Work titles through `docs_missing_source_files.py`, resolves expected paths through configured media roots and checks the current filesystem. Its Studio URL remains an independent editor navigation link.
+Missing Source Files reads refreshed source declarations and Work titles through `docs_missing_source_files.py`, resolves expected paths through one prepared media-source map and carries parent/terminal inspection results through its run. Shared expected paths are inspected once while retaining one result row per missing Work; no directory listing is needed. Its Studio URL remains an independent editor navigation link. [Reports](Reports.md) owns the current workflow, safeguards and evidence limits.
 
 Read Work IDs/titles and complete source declarations from the refreshed Catalogue source projection. Keep live source-file existence checks, current physical path-equivalence handling and the editor action. Refresh must retain declared sources even when their files are absent, or the report would lose the very rows it needs to diagnose.
 

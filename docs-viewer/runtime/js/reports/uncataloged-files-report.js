@@ -1,11 +1,5 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
 
-const REPORT_SCHEMA = "docs_uncataloged_files_report_v1";
-
-function cleanString(value) {
-  return String(value == null ? "" : value).trim();
-}
-
 function clearNode(node) {
   while (node.firstChild) node.removeChild(node.firstChild);
 }
@@ -19,43 +13,6 @@ function reportService(context) {
   ) ? service : null;
 }
 
-function normalizeRow(value) {
-  const keys = value && typeof value === "object" && !Array.isArray(value)
-    ? Object.keys(value).sort()
-    : [];
-  const folder = cleanString(value && value.folder);
-  const fileName = cleanString(value && value.file_name);
-  const localTarget = cleanString(value && value.local_target);
-  if (
-    keys.join(",") !== "file_name,folder,local_target"
-    || !folder
-    || folder.startsWith("/")
-    || !fileName
-    || fileName.includes("/")
-    || !localTarget
-    || localTarget.startsWith("/")
-  ) {
-    throw new Error("Uncataloged Files row is invalid.");
-  }
-  return { fileName, folder, localTarget };
-}
-
-/** Keep service-owned folders and encoded targets relative to the configured media base. */
-export function normalizeUncatalogedFilesResponse(payload) {
-  const report = payload && payload.report;
-  if (
-    !payload
-    || payload.ok !== true
-    || !report
-    || Object.keys(report).sort().join(",") !== "rows,schema_version"
-    || report.schema_version !== REPORT_SCHEMA
-    || !Array.isArray(report.rows)
-  ) {
-    throw new Error("Uncataloged Files report is invalid.");
-  }
-  return report.rows.map(normalizeRow);
-}
-
 function appendTextCell(rowNode, value) {
   const cell = document.createElement("span");
   cell.textContent = value;
@@ -67,8 +24,8 @@ function appendFileCell(rowNode, row) {
   const link = document.createElement("a");
   link.className = "docsViewerReport__cellLink";
   link.href = "#";
-  link.textContent = row.fileName;
-  link.dataset.uncatalogedFileTarget = row.localTarget;
+  link.textContent = row.file_name;
+  link.dataset.uncatalogedFileTarget = row.local_target;
   cell.appendChild(link);
   rowNode.appendChild(cell);
 }
@@ -109,9 +66,8 @@ function runReport(state) {
   setBusy(state, true);
   state.statusNode.textContent = "Running Uncataloged Files...";
   return service.runUncatalogedFiles()
-    .then(normalizeUncatalogedFilesResponse)
-    .then((rows) => {
-      state.rows = rows;
+    .then((payload) => {
+      state.rows = payload.report.rows;
       state.statusNode.textContent = "";
       renderRows(state);
     })
@@ -156,7 +112,7 @@ function attachEvents(state) {
       : null;
     if (!link || state.busy) return;
     event.preventDefault();
-    openFile(state, cleanString(link.dataset.uncatalogedFileTarget));
+    openFile(state, link.dataset.uncatalogedFileTarget);
   });
 }
 

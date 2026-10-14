@@ -171,7 +171,7 @@ def docs_management_post_response(
     if path == routes.UNCATALOGED_FILES_PATH:
         if body:
             raise ValueError("Uncataloged Files request must be empty")
-        payload = docs_uncataloged_files.UncatalogedFilesProducer(repo_root=repo_root).run()
+        payload = docs_uncataloged_files.uncataloged_files_report(repo_root)
         payload["ok"] = True
         payload["dry_run"] = dry_run
         payload["summary_text"] = "Uncataloged Files refreshed."
@@ -183,7 +183,7 @@ def docs_management_post_response(
     if path == routes.MISSING_SOURCE_FILES_PATH:
         if body:
             raise ValueError("Missing Source Files request must be empty")
-        payload = docs_missing_source_files.MissingSourceFilesProducer(repo_root=repo_root).run()
+        payload = docs_missing_source_files.missing_source_files_report(repo_root)
         payload["ok"] = True
         payload["dry_run"] = dry_run
         payload["summary_text"] = "Missing Source Files refreshed."

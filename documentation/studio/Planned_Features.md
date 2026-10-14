@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260428-000000-f5ff18
 title: Planned Features
 added_date: "2026-04-28 00:00:00"
-last_updated: "2026-10-14 18:11:12"
+last_updated: "2026-10-14 18:25:22"
 summary: This explains the delivery model and workflows to implement new repo and application features.
 ui_status: planned
 parent_id: ""
@@ -155,6 +155,7 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 Store new standalone delivery documents for bounded work that does not need a separate feature parent under `documentation/studio/deliveries/`. Parent them directly to this document and keep implementation state, decisions and completion gates in the delivery. At closeout, transfer lasting details to the durable owner and review whether the delivery and its link should be retained.
 
+- [Source File Report Optimisation](deliveries/Source_File_Report_Optimisation.md) — Implemented and reviewed; awaiting manual acceptance. Uncataloged Files and Missing Source Files share run-local directory/metadata inspection, prepare configuration once and consume completed rows without browser audits or the invalid `projects/…` rejection. Focused lint/compilation, whitespace and read-only production calls passed, returning 223 uncataloged images and no missing sources. Tests remain unchanged and unrun. Manual acceptance requires restarting services and reloading the viewer.
 - [Project State Optimisation](deliveries/Project_State_Optimisation.md) — Implemented and reviewed; awaiting manual acceptance. Narrows the service to one folder scan and saved-input reads, moves joins/counts to the browser, shares placement between loading and committed edits, and reuses prepared browsing data. Focused lint/compilation, whitespace and a read-only current-input call passed. Tests remain unchanged and unrun; manual acceptance requires restarting services and reloading the viewer.
 - [Docs Media Optimisation](deliveries/Docs_Media_Optimisation.md) — Implemented and reviewed; awaiting manual acceptance. Narrows source reads and local filename inventory, removes duplicate dataset audits and prepares browser search/count/sort data once at their owning boundaries. Focused lint/compilation, whitespace, read-only current generation/saved-read diagnostics and the shared-reader Broken Links CLI passed. No real report Refresh, browser/Finder action or test work ran.
 - [Artifact Listing And Export Cleanup](deliveries/Artifact_Listing_And_Export_Cleanup.md) — Implemented and reviewed; awaiting manual acceptance. Mermaid discovery consumes filenames, Publish uses an explicit remote metadata listing, and Export omits media byte counts and their bookkeeping. Focused lint/compilation, whitespace and source/diff review passed. No live Build, Publish, Export, browser action or test work ran.
