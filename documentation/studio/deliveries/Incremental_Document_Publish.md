@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261012-112453-211357
 title: Incremental Document Publish
 added_date: "2026-10-12 11:24:53"
-last_updated: "2026-10-13 20:33:58"
+last_updated: "2026-10-14 15:55:24"
 summary: Proposed queue-only Publish for ordinary and non-Catalogue collection documents, with completed public artifacts and eligibility, dependency, media and shared-output effects supplied upstream.
 ui_status: proposed
 parent_id: d-20260428-000000-f5ff18
@@ -22,6 +22,8 @@ Current Publish completes queued Catalogue Works, then captures ordinary and col
 
 Prerequisite cleanup on 2026-10-13: the user approved M.25/M.28/M.29 review groups 1–4, implemented through the existing Publish owners. They remove repeated queue/content audits, reuse Catalogue setup/media inputs and limit browser follow-through to reported Recent persistence. [User Facing Rules](../data/User_Facing_Rules.md) records implementation and evidence. Groups 5–7 remain gaps for this delivery: the unconditional full source/eligibility/build/snapshot pass, complete repository/referenced-media reconciliation including remote listings, and selected shared/document/media completion with retry from retained Preview bytes. Shared document media currently retains a common live asset root. This cleanup does not approve this delivery's implementation or satisfy its queue-only/no-op/retry gates.
 
+Prerequisite agreed on 2026-10-14: complete [Document Media Working And Preview](Document_Media_Working_And_Preview.md) before implementing this delivery. The user will Publish and manually copy the approximately 43 MB ready document-media folder into Working and Preview, then the prerequisite cuts over code/configuration with light verification. That delivery establishes media storage and the publication baseline; this delivery retains ownership of exact queue effects, retained progress and queue-only operation.
+
 Complete proposed result: Save/build owners prepare exact public artifacts and record their completed writes/removals; Publish applies only those queued effects to Preview and configured repository/R2 destinations. Unselected files retain their bytes. When all publication queues are empty, Publish performs no publication work.
 
 ## Review Handoff — 2026-10-13
@@ -33,7 +35,7 @@ Key findings to carry into the Publish delivery:
 - The browser owns editorial availability and choices resolvable from loaded state. Exact invoked/displayed targets and ordinary/collection identity remain separate. Settings now validates default membership against the loaded Index, projects browser configuration without a document/media build and applies its returned default without reloads. Committed state and unfinished projection remain distinct, including explicit unchanged-Save recovery. Public configuration still needs its own completed queued contribution in this delivery.
 - Export capability discovery checks configured locations without document-payload audits; subtree/workspace actions use loaded IDs and add no capability refresh. Export consumes its server response directly, retaining its separate overwrite confirmation, one Apply comparison and one output file-set/byte verification. Those guards belong to user-owned Export; they do not justify another Publish planning, confirmation or destination-reconciliation pass.
 - Package options now makes one metadata-only request for captured subtree/checked targets. Application Prepare trusts final UI IDs/formats, reads selected sources once and uses saved relationship metadata plus a lazy content renderer; tree output needs no manifest or renderer. CLI selection and returned-package validation retain their independent owners. Reuse these ownership principles when preparing public artifacts upstream, without moving package/source validation or body rendering into Publish.
-- Source/generation and Catalogue owners already carry resolved inputs and completed effects through their operations. Docs Viewer trusts Refresh-owned generated Catalogue data without Studio API/canonical reads; Catalogue queues preserve existing media selections and initialized progress. Publish cleanup removed repeated queue/content/identity/manifest/Mermaid audits and reused selected media inputs. Required parsing, exact configured artifact authority, path/symlink confinement and selected transfer/output verification remain execution concerns.
+- Source/generation and Catalogue owners already carry resolved inputs and completed effects through their operations. Docs Viewer trusts Refresh-owned generated Catalogue data through completed handoffs; Catalogue queues preserve existing media selections and initialized progress. Publish cleanup removed repeated queue/content/identity/manifest/Mermaid audits and reused selected media inputs. Required parsing, exact configured artifact authority, path/symlink confinement and selected transfer/output verification remain execution concerns.
 - Busy/status flow reports actual completion and partial effects. Publish refreshes Recent only after its response reports completed Working persistence and adds no detached capability refresh. Preserve that completion-driven follow-through when Recent moves upstream; do not retain a redundant Publish-time Recent write solely to support the current marker.
 
 Ownership and structure are contributing concerns to address within this delivery. The reviews suggest that starting from existing server helpers, reusing full generation contexts and hiding dependencies in shared state can bring unnecessary preparation/audits into simple operations. Small files alone do not resolve that coupling. [Development Checklist](../Development_Checklist.md#workflow-ownership-and-structure) now owns the cross-app principles; apply them here without a blanket language migration or unrelated module-splitting delivery:
@@ -66,6 +68,7 @@ Evidence remains focused lint, syntax/import diagnostics and distinct source/dif
 - Publish does not enumerate source/output directories or remote media to rediscover changes, infer deletion from absence, compare complete corpora, hash complete snapshots or establish whole-corpus consistency.
 - Every published document, media item and shared output has an explicit queued write/removal. There is no unconditional final preparation or distribution pass and no missing-queue fallback to reconciliation.
 - Preserve the single awaited empty-body `POST /docs/publish` action, configured storage/destinations and synchronous operation ordering. Working owns generation; Preview retains the last applied publication artifacts; distribution consumes those Preview bytes.
+- Publish treats prepared Working document/media artifacts as read-only. It updates publication queue metadata in Working for progress, completed selection removal and completion timestamps. Published-artifact writes and deletions target Preview and configured deployment destinations. Document-media stage ownership and its initial baseline come from the prerequisite delivery.
 - Ordinary documents use their immutable document identity. Non-Catalogue collection documents additionally carry the exact configured collection identity. Catalogue Work/Gallery/Series selections retain their existing queue owner and are not duplicated in a generic document queue.
 - Complete upstream handoffs and queue persistence before reporting generation complete. Failed queue persistence must report generated-but-incomplete publication handoff rather than silently lose the selection.
 - Keep full generation, validation, baseline population and repair in explicitly requested upstream maintenance operations. Such an operation may generate and queue a complete corpus; Publish still consumes only its supplied queue.
@@ -99,20 +102,197 @@ Dependency completion is part of the originating operation's generation handoff.
 
 ### Docs Publication Queue And Handoff
 
-Proposed file: `working/docs-publish-pending.json`, relative to the configured Docs workspace root. The exact schema and artifact locations are implementation decisions within this boundary, not frozen by this proposal.
+Proposed file: `working/docs-publish-pending.json`, relative to the configured Docs workspace root. It stays alongside `working/catalogue-updates-pending.json` and `working/catalogue-publish-pending.json` so queue state remains together. This file is private workflow metadata, not an artifact copied into Preview or deployed. Upstream owners merge completed selections; Publish writes progress, removes successfully distributed selections and records completion. Prepared Working artifacts remain read-only during Publish. The exact schema and artifact locations remain implementation decisions within this boundary, not frozen by this proposal.
 
-| Selection family | Supplied identity and effect |
-| --- | --- |
-| Current documents | Exact document/collection target and completed public artifact awaiting replacement. |
-| Removed documents | Exact document/collection target awaiting removal, including eligibility withdrawal as well as source deletion. |
-| Media | Exact configured media owner/type/relative filename and write/removal selection. |
-| Shared outputs | Explicit allowed output identity, such as the ordinary public index, a named collection manifest, Recent, Selected, Search or public configuration. |
+| Selection family | Pending writes | Pending deletions | Supplied publication identity |
+| --- | --- | --- | --- |
+| Documents | `current_documents` | `deleted_documents` | Exact document ID and optional configured collection owner. |
+| Media | `current_media` | `deleted_media` | Exact configured owner/type/relative filename. |
+| Shared outputs | `current_shared_outputs` | `deleted_shared_outputs` | Exact owner/output name, such as the ordinary public index, collection manifest, Recent, Selected, Search or public configuration. |
 
-Queue entries supply identities and actions, not absolute paths, destination providers or new publication authority. The queue owner coalesces repeated completed contributions to the latest intended state. Later removal replaces a pending document write; recreation replaces its pending removal. Independent media and shared selections remain pending until their own completion.
+**Current** means selected completed bytes awaiting Preview application and/or deployment; these maps are pending selections, not complete inventories. **Deleted** means the selected artifact must be deleted from `preview/` and its configured deployment destinations. It describes the publication effect, including eligibility withdrawal. A deleted selection retains the target identity needed to complete those deletions and requires no corresponding Working input bytes.
+
+Queue entries supply identities, with current/deleted map membership selecting the effect. They supply no absolute paths, destination providers or new publication authority. The queue owner coalesces repeated completed contributions to the latest intended state. A later deletion moves the identity into the corresponding deleted map; a later completed write moves it into the current map. An identity occurs in only one of its family's current/deleted maps. Independent document, media and shared selections remain pending until their own completion.
 
 Source Save, Create, Import, Move, Delete, exact Rebuild and CLI generation use one common generation-to-publication handoff. The generation result supplies its completed target writes/removals and affected shared artifacts; services do not each rediscover that selection. An explicitly requested Rebuild can queue replacement even when generated bytes are unchanged, so it can repair missing publication output without a Publish-time comparison.
 
 Initialize Publish progress only for new publication units. Upstream contributors preserve initialized progress; Publish owns its transitions. Finish an interrupted Publish before resuming authoring or generation, following the existing Catalogue workflow.
+
+#### Example Pending Record Shape
+
+Illustrative `working/docs-publish-pending.json`, following the JSON example and field-ownership format in [Incremental Updates](Incremental_updates.md#pending-record-shape-1). All selection families use objects keyed by their identities. The schema name, field names and shared-output labels remain proposed examples for review, not an implemented or frozen contract. The example uses the configured `concepts` collection and the `workspace` owner for ordinary media and workspace-wide outputs. Artifact locations and repository/R2 destinations come from their configured owners, not from this file.
+
+```json
+{
+  "header": {
+    "schema": "docs_publish_pending_v1",
+    "last_published_at_utc": null
+  },
+  "current_documents": {
+    "d-20261014-090000-001a2b": {
+      "preview_done": true
+    },
+    "d-20261014-091000-003c4d": {
+      "collection": "concepts",
+      "preview_done": false
+    }
+  },
+  "deleted_documents": {
+    "d-20261012-100000-005e6f": {
+      "preview_done": false
+    },
+    "d-20261012-101000-007a8b": {
+      "collection": "moments",
+      "preview_done": false
+    }
+  },
+  "current_media": {
+    "workspace": {
+      "img": {
+        "guide-overview.png": {
+          "preview_done": false
+        }
+      }
+    },
+    "concepts": {
+      "svg": {
+        "concept-map.svg": {
+          "preview_done": false
+        }
+      }
+    }
+  },
+  "deleted_media": {
+    "workspace": {
+      "files": {
+        "retired-guide.pdf": {
+          "preview_done": false
+        }
+      }
+    }
+  },
+  "current_shared_outputs": {
+    "workspace": {
+      "ordinary_index": {
+        "preview_done": false
+      },
+      "search": {
+        "preview_done": false
+      }
+    },
+    "concepts": {
+      "collection_manifest": {
+        "preview_done": false
+      }
+    }
+  },
+  "deleted_shared_outputs": {
+    "moments": {
+      "collection_manifest": {
+        "preview_done": false
+      }
+    }
+  }
+}
+```
+
+This example shows an interrupted Publish: the first ordinary document has completed Preview and still awaits distribution, so the next explicit Publish uses its retained Preview bytes. The Concepts document, current media and current shared outputs still require their Preview writes and distribution. The deleted maps select removal of an ordinary document, a Moments document and public manifest, and an ordinary download from Preview and deployment destinations. The Search selection represents a completed explicit Search rebuild; the document changes do not imply it. Recent, Selected and public configuration use the workspace shared-output shape when their owners explicitly contribute them.
+
+Document IDs are immutable and unique across the whole corpus. `current_documents` and `deleted_documents` are keyed by document ID, following the Catalogue queue pattern; the ID is not repeated inside each value. Document `collection` is routing metadata for its configured owner, not part of the queue key; ordinary documents omit it, while named collection documents supply it.
+
+Both media maps are keyed by owner, then type, then owner/type-relative filename. Both shared-output maps are keyed by owner, then output name. These families use the same owner keys: `workspace` or the exact configured non-Catalogue collection ID. The nested keys carry the complete identity without repeating it in each leaf or encoding composite keys into strings. Each document value, media filename value and shared-output value is one publication unit. The queue owner coalesces repeated contributions at that exact key to the latest intended effect. Media/shared leaves contain only `preview_done`; current/deleted membership supplies the effect. Empty objects select no work for their family. All publication queues empty retain the no-op behavior specified above. Publish owns the required item-before-shared sequencing rather than deriving it from JSON member order.
+
+#### Flag And Field Ownership
+
+| Flag or field | Meaning | What updates it | What reads it |
+| --- | --- | --- | --- |
+| `header.schema` | Identifies the proposed queue representation; it does not assert corpus validity or publication readiness. | Queue initialization establishes it; contributors and Publish preserve it. | The queue owner and Publish decode the agreed representation. |
+| `header.last_published_at_utc` | Nullable UTC time of the last completed nonempty Docs publication queue, covering its document, media and shared-output units. | Initialization sets null. Publish records completion in the same queue write that removes the final successfully distributed unit. Upstream contributors, partial failures and initially empty Publishes preserve the previous value. | Queue inspection reports completed Docs queue publication independently of Catalogue publication. |
+| `current_documents` membership | A completed public document artifact awaits selected Preview/deployment completion. Membership selects a write without a separate action flag. | Completed generation adds/coalesces entries; completed deletion replaces a write; Publish removes each successfully distributed entry. | Publish selects only the supplied document artifacts. |
+| `deleted_documents` membership | Exact owned document files await deletion from Preview and deployment destinations, including publication eligibility withdrawal. | The upstream owner contributes the exact deletion selection; a completed write replaces it; Publish removes each successfully distributed entry. | Publish deletes the selected output using the retained identity, without requiring Working input bytes or inferring deletion from absence. |
+| Document-map key | Immutable document ID, unique across the whole corpus, used directly as the key in `current_documents` or `deleted_documents`. | The originating generation/deletion owner supplies it and coalesces completed effects under that key. | Publish resolves the exact document artifact and deletion targets through the supplied owner. |
+| Document `collection` | Routing metadata naming the exact configured non-Catalogue collection owner; omitted for ordinary documents and not part of the queue key. | The collection's generation/deletion owner supplies it. | Publish resolves the configured collection owner without rediscovering membership. |
+| `current_media` membership | Selected completed media bytes await Preview writes and deployment, independently of document completion. | Media intake/production owners contribute completed writes; Publish removes each successfully distributed entry. | Publish transfers only the selected media. |
+| `deleted_media` membership | Exact selected media awaits deletion from Preview and deployment destinations. | The media owner contributes explicit deletion identities; Publish removes each successfully distributed entry. | Publish deletes only the selected owned media, without reference scans or Working input bytes. |
+| Media/shared owner key | `workspace` or the exact configured non-Catalogue collection owning the media namespace or shared output. Both families use the same owner values. | The owning upstream operation supplies it and retains exact deletion identities before configuration authority is lost. | Publish resolves the configured media or shared-output owner. |
+| Media type key | Ready-media category within that owner. | The media intake/production owner supplies it. | Publish resolves the configured media family. |
+| Media filename key | Exact filename relative to that owner's selected media type, retained for writes and deletions. Together with owner/type it identifies one asset. | The owning upstream operation supplies the known identity and coalesces effects at that key. | Publish resolves read-only current input bytes or exact Preview/deployment deletion targets. |
+| `current_shared_outputs` membership | Explicit finished shared bytes await Preview writes and deployment; an empty document queue does not clear these selections or trigger a shared build. | Index/manifest, Recent, Selected, Search and configuration owners contribute finished writes; Publish removes each successfully distributed entry. | Publish transfers shared selections after their required item work. |
+| `deleted_shared_outputs` membership | Exact shared artifacts await deletion from Preview and deployment destinations. | The owning upstream operation contributes exact deletion identities; Publish removes each successfully distributed entry. | Publish deletes the supplied owned shared outputs after their required item work. |
+| Shared output key | Allowed logical output name beneath its owner key. | The corresponding upstream output owner supplies it and coalesces effects at that key. | Publish resolves the allowed artifact through configuration; the label grants no new file authority. |
+| Entry `preview_done` | Explicit boolean progress: false requires selected Preview application; true means Preview completed and distribution remains pending. It is the only progress flag in this example. | Contributors initialize false only for new units and preserve existing progress. Publish sets true after Preview succeeds and removes the entry only after distribution succeeds. | Only Publish uses the flag to choose Preview plus distribution or distribution from retained Preview bytes. |
+
+#### Schema Values
+
+| `header.schema` value | Meaning |
+| --- | --- |
+| `docs_publish_pending_v1` | Proposed first representation of this Docs publication queue. This label does not imply that the queue has been implemented. |
+
+#### Publication Timestamp Values
+
+| `header.last_published_at_utc` value | Meaning |
+| --- | --- |
+| `null` | No completed nonempty Docs publication queue has been recorded yet. |
+| UTC timestamp string | Time when the final selected unit completed distribution and this Docs queue became empty. |
+
+This timestamp records Docs queue completion independently of Catalogue publication and makes no claim about whole-corpus freshness. An initially empty Docs queue leaves it unchanged, preserving the no-op behavior.
+
+#### Collection Values
+
+The following current values apply to document `collection` and collection-owned media/shared-output owner keys. They come from `stages.working.collections` in [Docs Workspace Configuration](../../../docs-viewer/config/workspace/docs-workspace.json). Ordinary documents omit `collection`; ordinary media and workspace-wide shared output use `workspace`. Future collection values require explicit configuration/registration through their owning delivery. Deleted selections retain their exact former identities through completion.
+
+| Collection value | Configured collection |
+| --- | --- |
+| `works` | Context documents; distinct from Catalogue Work records and Work media. |
+| `concepts` | Concepts documents. |
+| `moments` | Moments documents. |
+
+`catalogue` is also configured, but its document, Work/Gallery/Series, media and shared selections retain their existing Catalogue queue ownership and are not duplicated in this Docs queue.
+
+#### Owner Values
+
+This table applies to owner keys directly beneath `current_media`, `deleted_media`, `current_shared_outputs` and `deleted_shared_outputs`.
+
+| Owner key | Meaning |
+| --- | --- |
+| `workspace` | Shared media namespace for ordinary documents and workspace-wide shared outputs. |
+| `works` | Media and shared outputs owned by the Context collection. |
+| `concepts` | Media and shared outputs owned by the Concepts collection. |
+| `moments` | Media and shared outputs owned by the Moments collection. |
+
+#### Media Type Values
+
+These ready-media types follow the workspace's configured media families and [Media And Asset Handling](../Media_And_Asset_Handling.md#workspace-configuration-and-storage). Editable `mermaid`/`build-source` inputs are upstream preparation inputs; their completed public SVG output is queued under `svg`.
+
+| Type key beneath a media owner | Meaning |
+| --- | --- |
+| `img` | Ready raster images. |
+| `thumbs` | Document thumbnail derivatives. |
+| `svg` | Ready SVG assets, including completed Mermaid diagram output. |
+| `files` | Downloadable files. |
+| `html` | Ready HTML media and its owned companion assets. |
+
+#### Shared Output Values
+
+These are the proposed logical output names for this delivery. Their configured owners resolve the finished artifacts and exact destinations; they are not filesystem paths or destination-provider selectors.
+
+| Output key | Owner | Meaning |
+| --- | --- | --- |
+| `ordinary_index` | `workspace` | Finished public ordinary-document navigation index. |
+| `recent` | `workspace` | Finished eligible Recent output prepared upstream. |
+| `selected` | `workspace` | Finished eligible public Selected output. |
+| `search` | `workspace` | Exact bytes from an explicitly completed Search rebuild. |
+| `public_configuration` | `workspace` | Finished public browser configuration projection. |
+| `collection_manifest` | `works`, `concepts`, `moments` | Finished public manifest for that exact non-Catalogue collection. |
+
+#### Preview Progress Values
+
+| `preview_done` value | Required next work |
+| --- | --- |
+| `false` | Apply the Preview write selected by current membership or deletion selected by deleted membership, persist true after success, then distribute the effect. |
+| `true` | Distribute using retained Preview bytes or the retained deletion selection; successful distribution removes the leaf. |
+
+Document IDs and media filenames are exact supplied identities rather than enumerated options. These tables describe the proposed queue handoff; they do not add Publish-time authoring validation, content audits or configuration-discovery scans.
 
 ### Prepared Public Artifacts
 
@@ -170,6 +350,7 @@ External Markdown and policy edits require explicit owning generation before Pub
 
 ### [ ] IDP.0 — Readiness And Implementation Approval
 
+- [ ] Complete [Document Media Working And Preview](Document_Media_Working_And_Preview.md) and carry forward its user-confirmed media baseline and accepted code cutover.
 - [ ] Review the relevant User Facing Rules targets and complete required functional cleanup deliveries, then reconcile the eligibility/dependency assumptions with the accepted targets.
 - [ ] Confirm the complete queue-only boundary against the current generation, eligibility, dependency, media and publication owners, including shared Catalogue publication.
 - [ ] Confirm saved metadata prerequisites, the upstream Recent decision and a deliberate cutover/baseline approach that does not silently reconcile during Publish.
