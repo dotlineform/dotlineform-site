@@ -1,14 +1,10 @@
 import { mountSearchField } from "/shared/frontend/js/search-field.js";
-import { classifyDocsDocumentSubject } from "../shared/docs-document-subject.js";
+import { buildProjectStateSnapshot, commitProjectStateDocument } from "./project-state-data.js";
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
 import {
   appendProjectSubjectIcon
 } from "./project-subject-icons.js";
 
-const REPORT_SCHEMA = "docs_project_state_report_v5";
-const LOCAL_TARGET_PREFIX = "dlf-local:";
-const GROUP_KEYS = Object.freeze(["folder", "series"]);
-const COLUMN_KEYS = Object.freeze(["folder", "series", "docs"]);
 const COLUMN_LABELS = Object.freeze({
   folder: "Folder",
   series: "Series",
@@ -16,8 +12,7 @@ const COLUMN_LABELS = Object.freeze({
 });
 const SUBJECT_LABELS = Object.freeze({
   folder: "Folder",
-  work: "Work",
-  series: "Series"
+  work: "Work"
 });
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -43,213 +38,17 @@ function reportService(context) {
     : null;
 }
 
-function requireArray(value, label) {
-  if (!Array.isArray(value)) throw new Error("Project State " + label + " is invalid.");
-  return value;
-}
-
-function normalizeDocument(value) {
-  const target = value && value.target;
-  const declaredSubject = value && value.declared_subject;
-  const docId = cleanString(target && target.doc_id);
-  const title = cleanString(value && value.title);
-  const href = cleanString(value && value.href);
-  const subjectKind = cleanString(declaredSubject && declaredSubject.kind);
-  const subjectKey = cleanString(declaredSubject && declaredSubject.key);
-  const applicableSeriesIds = requireArray(
-    value && value.applicable_series_ids,
-    "document applicable Series"
-  ).map(cleanString);
-  if (
-    cleanString(target && target.collection) !== "works"
-    || !docId
-    || !title
-    || !href
-    || !["folder", "work"].includes(subjectKind)
-    || !subjectKey
-    || applicableSeriesIds.some((seriesId) => !seriesId)
-    || new Set(applicableSeriesIds).size !== applicableSeriesIds.length
-  ) {
-    throw new Error("Project State document target is invalid.");
-  }
-  return {
-    target,
-    title,
-    href,
-    declaredSubject: { kind: subjectKind, key: subjectKey },
-    applicableSeriesIds
-  };
-}
-
-function normalizeSeries(value) {
-  const target = value && value.target;
-  const seriesId = cleanString(target && target.target_id);
-  const title = cleanString(value && value.title);
-  const href = cleanString(value && value.href);
-  const workCount = Number(value && value.work_count);
-  if (
-    cleanString(target && target.family) !== "catalogue"
-    || cleanString(target && target.target_type) !== "series"
-    || !seriesId
-    || !title
-    || !href
-    || !Number.isInteger(workCount)
-    || workCount < 1
-  ) {
-    throw new Error("Project State Series membership is invalid.");
-  }
-  return { target, title, href, workCount, workIds: requireArray(value.work_ids, "Series Work IDs").slice() };
-}
-
-function normalizeRow(value) {
-  const folder = value && value.folder;
-  const key = cleanString(folder && folder.key);
-  const label = cleanString(folder && folder.label);
-  const href = cleanString(folder && folder.href);
-  const states = value && value.states;
-  const matchedDocumentCount = Number(value && value.matched_document_count);
-  const matchedWorkCount = Number(value && value.matched_work_count);
-  const documents = requireArray(value && value.documents, "documents").map(normalizeDocument);
-  const series = requireArray(value && value.series, "Series").map(normalizeSeries);
-  const seriesIds = new Set(series.map((record) => cleanString(record.target && record.target.target_id)));
-  if (
-    !key.startsWith("projects/")
-    || !label.startsWith("/")
-    || !href.startsWith(LOCAL_TARGET_PREFIX)
-    || !states
-    || typeof states !== "object"
-    || !Number.isInteger(matchedDocumentCount)
-    || matchedDocumentCount !== documents.length
-    || !Number.isInteger(matchedWorkCount)
-    || matchedWorkCount < 0
-    || documents.some((documentRecord) => (
-      documentRecord.applicableSeriesIds.some((seriesId) => !seriesIds.has(seriesId))
-    ))
-  ) {
-    throw new Error("Project State folder row is invalid.");
-  }
-  return {
-    folder: { key, label, href },
-    works: requireArray(value.works, "Work memberships").map(function (work) {
-      return { workId: cleanString(work.target && work.target.target_id), seriesIds: requireArray(work.series_ids, "Work Series IDs").slice() };
-    }),
-    documents,
-    series,
-    seriesIssues: requireArray(value.series_issues, "Series issues"),
-    matchedDocumentCount,
-    matchedWorkCount,
-    reconciliation: cleanString(states.reconciliation)
-  };
-}
-
-/** Accept the live folder report with exact Analysis/Working/Works document targets. */
-export function normalizeProjectStateResponse(payload) {
-  const report = payload && payload.report;
-  const generatedAt = cleanString(report && report.generated_at);
-  const inputs = report && report.inputs;
-  if (
-    !payload
-    || payload.ok !== true
-    || !report
-    || report.schema_version !== REPORT_SCHEMA
-    || cleanString(inputs && inputs.collection) !== "works"
-    || !generatedAt
-  ) {
-    throw new Error("Project State report is invalid.");
-  }
-  return {
-    generatedAt,
-    summary: report.summary && typeof report.summary === "object" ? report.summary : {},
-    rows: requireArray(report.rows, "rows").map(normalizeRow)
-  };
-}
-
-function folderLabel(row) {
-  return cleanString(row && row.folder && row.folder.label).slice(1);
-}
-
-function projectionRow(row, series, documents) {
-  return {
-    folder: row.folder,
-    documents,
-    series,
-    folderKey: row.folder.key
-  };
-}
-
-function expandedRows(rows, groupBy) {
-  const expanded = [];
-  rows.forEach((row) => {
-    if (groupBy !== "series") {
-      expanded.push(projectionRow(row, row.series, row.documents));
-      return;
-    }
-    if (!row.series.length) {
-      expanded.push(projectionRow(row, [], row.documents));
-      return;
-    }
-    row.series.forEach((series) => {
-      const seriesId = cleanString(series.target && series.target.target_id);
-      expanded.push(projectionRow(
-        row,
-        [series],
-        row.documents.filter((documentRecord) => documentRecord.applicableSeriesIds.includes(seriesId))
-      ));
-    });
-    const unroutedDocuments = row.documents.filter(
-      (documentRecord) => !documentRecord.applicableSeriesIds.length
-    );
-    if (unroutedDocuments.length) expanded.push(projectionRow(row, [], unroutedDocuments));
-  });
-  return expanded;
-}
-
 function columnText(row, key) {
-  if (key === "folder") return folderLabel(row);
-  if (key === "series") return row.series.map((series) => visibleString(series.title)).join("; ");
-  if (key === "docs") return row.documents.map((documentRecord) => visibleString(documentRecord.title)).join("; ");
-  return "";
-}
-
-function columnIdentity(row, key) {
-  if (key === "folder") return cleanString(row.folder && row.folder.key);
-  if (key === "series") {
-    return row.series.map((series) => cleanString(series.target && series.target.target_id)).join(";");
-  }
-  if (key === "docs") {
-    return row.documents.map((documentRecord) => cleanString(documentRecord.target && documentRecord.target.doc_id)).join(";");
-  }
-  return "";
-}
-
-function searchableText(row) {
-  return COLUMN_KEYS.map((key) => columnText(row, key)).join(" ").toLocaleLowerCase();
+  return row.text[key];
 }
 
 function compareProjectionRows(collator, sortKey, sortDir, left, right) {
   const direction = sortDir === "desc" ? -1 : 1;
   const visibleComparison = collator.compare(columnText(left, sortKey), columnText(right, sortKey));
   if (visibleComparison) return visibleComparison * direction;
-  const identityComparison = collator.compare(columnIdentity(left, sortKey), columnIdentity(right, sortKey));
+  const identityComparison = collator.compare(left.identities[sortKey], right.identities[sortKey]);
   if (identityComparison) return identityComparison * direction;
   return collator.compare(left.folderKey, right.folderKey);
-}
-
-export function buildProjectStateProjection(rows, options) {
-  const settings = options && typeof options === "object" ? options : {};
-  const groupBy = GROUP_KEYS.includes(settings.groupBy) ? settings.groupBy : "folder";
-  const columns = groupBy === "series"
-    ? ["series", "folder", "docs"]
-    : ["folder", "series", "docs"];
-  const sortKey = columns.includes(settings.sortKey) ? settings.sortKey : groupBy;
-  const sortDir = settings.sortDir === "desc" ? "desc" : "asc";
-  const searchText = visibleString(settings.searchText).toLocaleLowerCase();
-  const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
-  const sourceRows = Array.isArray(rows) ? rows : [];
-  const projectedRows = expandedRows(sourceRows, groupBy)
-    .filter((row) => !searchText || searchableText(row).includes(searchText))
-    .sort((left, right) => compareProjectionRows(collator, sortKey, sortDir, left, right));
-  return { columns, groupBy, rows: projectedRows, searchText, sortDir, sortKey };
 }
 
 function tsvCell(row, key) {
@@ -257,9 +56,8 @@ function tsvCell(row, key) {
 }
 
 export function serializeProjectStateTsv(projection) {
-  const columns = projection && Array.isArray(projection.columns) ? projection.columns : [];
-  const rows = projection && Array.isArray(projection.rows) ? projection.rows : [];
-  const lines = [columns.map((key) => COLUMN_LABELS[key] || key).join("\t")];
+  const { columns, rows } = projection;
+  const lines = [columns.map((key) => COLUMN_LABELS[key]).join("\t")];
   rows.forEach((row) => {
     lines.push(columns.map((key) => tsvCell(row, key)).join("\t"));
   });
@@ -278,9 +76,9 @@ function appendLink(parent, label, href) {
 function appendFolderCell(rowNode, row) {
   const cell = document.createElement("span");
   cell.className = "docsViewerReport__cellStack";
-  const link = appendLink(cell, folderLabel(row), "#");
+  const link = appendLink(cell, row.folder.label, "#");
   link.classList.add("docsViewerReport__title");
-  link.dataset.docsViewerLocalTarget = row.folder.href.slice(LOCAL_TARGET_PREFIX.length);
+  link.dataset.docsViewerLocalTarget = row.folder.localTarget;
   link.dataset.projectFolderKey = row.folder.key;
   rowNode.appendChild(cell);
 }
@@ -315,8 +113,8 @@ function appendDocumentsCell(rowNode, row) {
       documentRecord.title,
       SUBJECT_LABELS[documentRecord.declaredSubject.kind] + " subject " + documentRecord.declaredSubject.key
     ].join(", "));
-    link.dataset.docsViewerCollection = cleanString(documentRecord.target && documentRecord.target.collection);
-    link.dataset.docsViewerDocId = cleanString(documentRecord.target && documentRecord.target.doc_id);
+    link.dataset.docsViewerCollection = documentRecord.target.collection;
+    link.dataset.docsViewerDocId = documentRecord.target.doc_id;
   });
   rowNode.appendChild(cell);
 }
@@ -356,13 +154,19 @@ function renderHead(state) {
   columns.forEach((key) => state.headNode.appendChild(sortButton(state, key)));
 }
 
+function updateSort(state) {
+  const rows = state.snapshot ? state.snapshot.groups[state.groupBy] : [];
+  state.sortedRows = rows.slice().sort((left, right) => (
+    compareProjectionRows(state.collator, state.sortKey, state.sortDir, left, right)
+  ));
+}
+
 function currentProjection(state) {
-  return buildProjectStateProjection(state.sourceRows, {
-    groupBy: state.groupBy,
-    searchText: state.searchText,
-    sortDir: state.sortDir,
-    sortKey: state.sortKey
-  });
+  const searchText = visibleString(state.searchText).toLocaleLowerCase();
+  return {
+    columns: state.groupBy === "series" ? ["series", "folder", "docs"] : ["folder", "series", "docs"],
+    rows: state.sortedRows.filter((row) => !searchText || row.searchText.includes(searchText))
+  };
 }
 
 function renderRows(state) {
@@ -372,7 +176,7 @@ function renderRows(state) {
   clearNode(state.rowsNode);
   state.emptyNode.hidden = projection.rows.length > 0;
   if (!projection.rows.length) {
-    state.emptyNode.textContent = state.sourceRows.length
+    state.emptyNode.textContent = state.snapshot?.rows.length
       ? "No Project State rows match the current search."
       : "No immediate project folders were found.";
     return;
@@ -382,23 +186,18 @@ function renderRows(state) {
     rowNode.className = "docsViewerReport__row";
     rowNode.dataset.projectFolderKey = row.folderKey;
     if (row.series[0]) {
-      rowNode.dataset.projectSeriesId = cleanString(row.series[0].target && row.series[0].target.target_id);
+      rowNode.dataset.projectSeriesId = row.series[0].seriesId;
     }
     projection.columns.forEach((key) => appendColumnCell(rowNode, row, key));
     state.rowsNode.appendChild(rowNode);
   });
 }
 
-function integerSummary(summary, key) {
-  const value = Number(summary && summary[key]);
-  return Number.isInteger(value) && value >= 0 ? value : 0;
-}
-
-function runContext(report) {
-  const generated = report.generatedAt.slice(0, 16).replace("T", " ");
-  const folders = integerSummary(report.summary, "scanned_folder_count");
-  const works = integerSummary(report.summary, "matched_work_count");
-  const documents = integerSummary(report.summary, "matched_document_count");
+function runContext(snapshot) {
+  const generated = snapshot.generatedAt.slice(0, 16).replace("T", " ");
+  const folders = snapshot.rows.length;
+  const works = snapshot.workCount;
+  const documents = snapshot.placementsByDocId.size;
   const folderLabelText = folders === 1 ? "folder" : "folders";
   const workLabel = works === 1 ? "Work" : "Works";
   const documentLabel = documents === 1 ? "Doc" : "Docs";
@@ -417,7 +216,7 @@ function updateControls(state) {
     state.groupBy === "series" ? "docsViewer__icon--dlf-series" : "docsViewer__icon--folder", groupLabel);
   state.groupToggleButton.disabled = state.busy;
   state.searchInputNode.disabled = state.busy;
-  state.copyTableButton.disabled = state.busy || !state.generatedAt;
+  state.copyTableButton.disabled = state.busy || !state.snapshot;
   state.headNode.querySelectorAll("[data-report-sort]").forEach((button) => {
     button.disabled = state.busy;
   });
@@ -438,22 +237,21 @@ function runReport(state) {
   }
   setBusy(state, true);
   state.statusNode.textContent = "Running Project State...";
-  state.sourceRows = [];
-  state.generatedAt = "";
+  state.snapshot = null;
+  state.sortedRows = [];
   state.projection = currentProjection(state);
   clearNode(state.rowsNode);
   state.emptyNode.hidden = true;
   return service.runProjectState()
-    .then(normalizeProjectStateResponse)
-    .then((report) => {
-      state.sourceRows = report.rows;
-      state.generatedAt = report.generatedAt;
-      state.statusNode.textContent = runContext(report);
+    .then((inputs) => {
+      state.snapshot = buildProjectStateSnapshot(inputs, state.documentHref);
+      updateSort(state);
+      state.statusNode.textContent = runContext(state.snapshot);
       renderRows(state);
     })
     .catch((error) => {
-      state.sourceRows = [];
-      state.generatedAt = "";
+      state.snapshot = null;
+      state.sortedRows = [];
       state.projection = currentProjection(state);
       clearNode(state.rowsNode);
       renderHead(state);
@@ -468,37 +266,11 @@ function runReport(state) {
     });
 }
 
-/** Reproject committed Works metadata against the last explicit scan's memberships. */
 function commitDocumentChange(state, change) {
-  if (change.target.collection !== "works") return;
-  const subject = change.deleted ? null : classifyDocsDocumentSubject(change.record, { folderSupported: true });
-  const docId = change.target.doc_id;
-  const existing = state.sourceRows.flatMap(function (row) { return row.documents; }).filter(function (record) { return record.target.doc_id === docId; });
-  if (change.deleted && !existing.length) return;
-  if (!change.deleted && existing.length && existing.every(function (record) {
-    return subject && record.title === change.record.title && record.declaredSubject.kind === subject.kind && record.declaredSubject.key === subject.key;
-  })) return;
-  let changed = false;
-  state.sourceRows.forEach(function (row) {
-    if (row.documents.some(function (record) { return record.target.doc_id === docId; })) changed = true;
-    row.documents = row.documents.filter(function (record) { return record.target.doc_id !== docId; });
-    let seriesIds = null;
-    const available = row.series.map(function (series) { return series.target.target_id; });
-    if (!change.deleted && subject) {
-      if (subject.kind === "folder" && subject.key === row.folder.key) seriesIds = available.slice().sort();
-      if (subject.kind === "work") {
-        const work = row.works.find(function (record) { return record.workId === subject.key; });
-        if (work) seriesIds = work.seriesIds.filter(function (id) { return available.includes(id); }).sort();
-      }
-    }
-    if (seriesIds) { changed = true; row.documents.push({ target: change.target, title: change.record.title,
-      href: state.context.viewerUrlForDocument(docId, { collection: "works" }),
-      declaredSubject: { kind: subject.kind, key: subject.key }, applicableSeriesIds: seriesIds }); }
-    row.documents.sort(function (left, right) { return left.title.localeCompare(right.title) || left.target.doc_id.localeCompare(right.target.doc_id); });
-    row.matchedDocumentCount = row.documents.length;
-    row.reconciliation = row.documents.length ? (row.matchedWorkCount ? "reconciled" : "documents_only") : (row.matchedWorkCount ? "works_only" : "folder_only");
-  });
-  if (changed) renderRows(state);
+  if (!state.snapshot || !commitProjectStateDocument(state.snapshot, change, state.documentHref)) return;
+  updateSort(state);
+  state.statusNode.textContent = runContext(state.snapshot);
+  renderRows(state);
 }
 
 function clipboardWindow(state) {
@@ -518,7 +290,7 @@ function writeClipboard(state, text) {
 }
 
 function copyProjection(state) {
-  return writeClipboard(state, serializeProjectStateTsv(currentProjection(state))).catch(() => {
+  return writeClipboard(state, serializeProjectStateTsv(state.projection)).catch(() => {
     state.statusNode.textContent = "Copy table failed.";
   });
 }
@@ -532,6 +304,7 @@ function attachEvents(state) {
     state.groupBy = state.groupBy === "folder" ? "series" : "folder";
     state.sortKey = state.groupBy;
     state.sortDir = "asc";
+    updateSort(state);
     renderRows(state);
     updateControls(state);
   });
@@ -553,6 +326,7 @@ function attachEvents(state) {
       state.sortKey = key;
       state.sortDir = "asc";
     }
+    updateSort(state);
     renderRows(state);
     updateControls(state);
   });
@@ -637,19 +411,32 @@ export function mountProjectStateReport(context) {
   const state = Object.assign({
     busy: false,
     context,
-    generatedAt: "",
+    documentHref: (docId) => context.viewerUrlForDocument(docId, { collection: "works" }),
+    collator: new Intl.Collator(undefined, { numeric: true, sensitivity: "base" }),
     groupBy: "folder",
     projection: null,
     searchText: "",
     sortDir: "asc",
     sortKey: "folder",
-    sourceRows: []
+    snapshot: null,
+    sortedRows: []
   }, nodes);
   renderHead(state);
   if (context.registerRetainedView) context.registerRetainedView({
     id: "project-state",
     capture: function () { return { query: state.searchText, group: state.groupBy, key: state.sortKey, direction: state.sortDir }; },
-    restore: function (saved) { if (state.searchText === saved.query && state.groupBy === saved.group && state.sortKey === saved.key && state.sortDir === saved.direction) return; state.searchText = saved.query; state.groupBy = saved.group; state.sortKey = saved.key; state.sortDir = saved.direction; state.searchInputNode.value = saved.query; renderRows(state); updateControls(state); }
+    restore: function (saved) {
+      const orderChanged = state.groupBy !== saved.group || state.sortKey !== saved.key || state.sortDir !== saved.direction;
+      if (!orderChanged && state.searchText === saved.query) return;
+      state.searchText = saved.query;
+      state.groupBy = saved.group;
+      state.sortKey = saved.key;
+      state.sortDir = saved.direction;
+      state.searchInputNode.value = saved.query;
+      if (orderChanged) updateSort(state);
+      renderRows(state);
+      updateControls(state);
+    }
   });
   attachEvents(state);
   if (context.collectionProvider && context.collectionProvider.subscribeDocumentChanges) context.collectionProvider.subscribeDocumentChanges(function (change) {

@@ -167,11 +167,7 @@ def docs_management_post_response(
         payload = handle_broken_links(repo_root, body)
         return HTTPStatus.OK, payload
     if path == routes.PROJECT_STATE_PATH:
-        payload = docs_project_state.ProjectStateProducer(repo_root=repo_root).run()
-        payload["ok"] = True
-        payload["dry_run"] = dry_run
-        payload["summary_text"] = "Project State refreshed."
-        return HTTPStatus.OK, payload
+        return HTTPStatus.OK, docs_project_state.project_state_inputs(repo_root)
     if path == routes.UNCATALOGED_FILES_PATH:
         if body:
             raise ValueError("Uncataloged Files request must be empty")
