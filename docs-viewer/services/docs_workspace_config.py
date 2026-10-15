@@ -32,7 +32,7 @@ from docs_collection_customisations import (
 
 
 CONFIG_REL_PATH = Path("docs-viewer/config/workspace/docs-workspace.json")
-SCHEMA_VERSION = "docs_workspace_v5"
+SCHEMA_VERSION = "docs_workspace_v6"
 DOTLINEFORM_DOCS_BASE_DIR_ENV = "DOTLINEFORM_DOCS_BASE_DIR"
 EXTERNAL_DATA_ROOT_MARKER = f"${DOTLINEFORM_DOCS_BASE_DIR_ENV}"
 STAGES = ("working", "preview")
@@ -92,6 +92,7 @@ class DocsManagedMediaConfig:
 class DocsMediaConfig:
     asset_location: ArtifactLocation
     asset_root: ArtifactLocation
+    build_asset_location: ArtifactLocation
     types: Mapping[str, DocsManagedMediaConfig]
     build_sources: Mapping[str, DocsBuildMediaConfig]
 
@@ -160,9 +161,10 @@ class DocsStageConfig:
 
 @dataclass(frozen=True)
 class DocsAssetsConfig:
-    """Shared document media and independently owned Working/Preview Work media."""
+    """Stage-owned document and Work media with stable served identities."""
 
     root: ArtifactLocation
+    roots: Mapping[str, ArtifactLocation]
     work_root: ArtifactLocation
     work_roots: Mapping[str, ArtifactLocation]
     document_media: ArtifactLocation
@@ -174,22 +176,23 @@ class DocsAssetsConfig:
     media_types: tuple[str, ...]
 
     def url(self, location: ArtifactLocation) -> str:
-        """Local routes serve Working Works and shared Docs media by family identity."""
+        """Local routes serve Working media by family identity."""
         relative = self.reference_identity(location.path)
         return self.served_path_prefix.rstrip("/") + "/" + relative.as_posix()
 
     def for_stage(self, stage: str) -> DocsAssetsConfig:
-        """Select an explicit Work-media owner without changing document media."""
-        if stage not in self.work_roots:
-            raise ValueError("Work media stage must be working or preview")
-        root = self.work_roots[stage]
-        return replace(self, work_root=root, **{
-            name: location_child(root, getattr(self, name).path.relative_to(self.work_root.path))
+        """Select explicit document and Work media owners without changing URLs."""
+        if stage not in self.roots:
+            raise ValueError("Media stage must be working or preview")
+        root, work_root = self.roots[stage], self.work_roots[stage]
+        return replace(self, root=root, work_root=work_root,
+                       document_media=location_child(root, self.document_media.path.relative_to(self.root.path)), **{
+            name: location_child(work_root, getattr(self, name).path.relative_to(self.work_root.path))
             for name in ("work_primary", "work_thumbnails", "work_files")
         })
 
     def reference_identity(self, path: Path) -> Path:
-        """Keep Work-family identities stable while their physical owner advances."""
+        """Keep family identities stable while their physical owner advances."""
         owner = self.work_root if path.is_relative_to(self.work_root.path) else self.root
         return path.relative_to(owner.path)
 
@@ -425,7 +428,7 @@ def _public_projection(raw: Any) -> DocsPublicProjectionConfig:
     return DocsPublicProjectionConfig(documents, search, media)
 
 
-def _media(raw: Any, *, source_root: ArtifactLocation, assets: DocsAssetsConfig,
+def _media(raw: Any, *, source_root: ArtifactLocation, generated_root: ArtifactLocation, assets: DocsAssetsConfig,
            stage: str, collection: str = "") -> DocsMediaConfig:
     field = f"stages.{stage}.media"
     item = _object(raw, field=field, required={"types", "build_sources"})
@@ -457,7 +460,10 @@ def _media(raw: Any, *, source_root: ArtifactLocation, assets: DocsAssetsConfig,
             assets.document_media_location(collection=collection or None, media_type=media_type),
             f"{served_root}/{media_type}", inputs,
         )
-    return DocsMediaConfig(asset_media, assets.root, managed, builds)
+    # Publication reads captured Working media but produces into its isolated
+    # generated owner. Ordinary Working producers update their ready media.
+    build_assets = location_child(generated_root, Path("media")) if stage == "preview" else asset_media
+    return DocsMediaConfig(asset_media, assets.root, build_assets, managed, builds)
 
 
 def _preview(root: ArtifactLocation) -> DocsPreviewConfig:
@@ -523,7 +529,8 @@ def _collections(raw: Any, *, repo_root: Path, workspace_root: ArtifactLocation,
             collection_customisation=normalize_docs_collection_customisation(item.get("collection_customisation"), field=f"{field}.collection_customisation"),
             stage=stage,
             source=DocsSourceConfig(source_root), generated=_generated(generated_root), preview=_preview(preview_root),
-            media=_media(media_settings, source_root=source_root, assets=assets, stage=stage, collection=child),
+            media=_media(media_settings, source_root=source_root, generated_root=generated_root,
+                         assets=assets, stage=stage, collection=child),
             public_projection=child_projection,
         ))
     return tuple(result)
@@ -533,33 +540,30 @@ def _assets(raw: Any, *, workspace_root: ArtifactLocation,
             collection_ids: tuple[str, ...], media_types: tuple[str, ...], assets_base_dir: Path | None,
             work_assets_base_dir: Path | None) -> DocsAssetsConfig:
     item = _object(raw, field="assets", required={
-        "root", "work_roots", "document_media", "work_primary", "work_thumbnails", "work_files", "served_path_prefix",
+        "roots", "document_media", "work_primary", "work_thumbnails", "work_files", "served_path_prefix",
     })
-    relative_root = safe_relative_path(item["root"], field="assets.root")
-    if relative_root.parts[0] != "assets":
-        raise ValueError("assets.root must remain in the workspace assets tree")
-    root = location_child(workspace_root, relative_root)
+    raw_roots = _object(item["roots"], field="assets.roots", required=set(STAGES))
+    roots = {}
+    for stage in STAGES:
+        relative = safe_relative_path(raw_roots[stage], field=f"assets.roots.{stage}")
+        if not relative.is_relative_to(Path(stage) / "assets"):
+            raise ValueError(f"Media must stay inside {stage}/assets")
+        roots[stage] = location_child(workspace_root, relative)
+    work_roots = dict(roots)
     if assets_base_dir is not None:
         if not assets_base_dir.is_absolute() or ".." in assets_base_dir.parts or assets_base_dir.is_symlink() or not assets_base_dir.is_dir():
-            raise ValueError("Temporary build assets must name an existing absolute shared asset directory")
-        root = ArtifactLocation(EXTERNAL_LOCAL_PROVIDER, assets_base_dir)
+            raise ValueError("Temporary build inputs must name an existing absolute asset directory")
+        roots = {stage: ArtifactLocation(EXTERNAL_LOCAL_PROVIDER, assets_base_dir) for stage in STAGES}
     paths = {
         key: safe_relative_path(item[key], field=f"assets.{key}")
         for key in ("document_media", "work_primary", "work_thumbnails", "work_files")
     }
-    raw_roots = _object(item["work_roots"], field="assets.work_roots", required=set(STAGES))
-    work_roots = {}
-    for stage in STAGES:
-        relative = safe_relative_path(raw_roots[stage], field=f"assets.work_roots.{stage}")
-        if not relative.is_relative_to(Path(stage) / "assets"):
-            raise ValueError(f"Work media must stay inside {stage}/assets")
-        work_roots[stage] = location_child(workspace_root, relative)
     if work_assets_base_dir is not None:
         if (not work_assets_base_dir.is_absolute() or ".." in work_assets_base_dir.parts
                 or work_assets_base_dir.is_symlink() or not work_assets_base_dir.is_dir()):
             raise ValueError("Temporary Work media must name an existing absolute asset directory")
         work_roots = {stage: ArtifactLocation(EXTERNAL_LOCAL_PROVIDER, work_assets_base_dir) for stage in STAGES}
-    work_root = work_roots["working"]
+    root, work_root = roots["working"], work_roots["working"]
     if any(not path.is_relative_to(Path("works")) for key, path in paths.items() if key != "document_media"):
         raise ValueError("Work media families must stay inside works/")
     for key, path in paths.items():
@@ -569,7 +573,7 @@ def _assets(raw: Any, *, workspace_root: ArtifactLocation,
     if not prefix.startswith("/"):
         raise ValueError("assets.served_path_prefix must be a local URL prefix")
     return DocsAssetsConfig(
-        root=root, work_root=work_root, work_roots=work_roots,
+        root=root, roots=roots, work_root=work_root, work_roots=work_roots,
         **{key: location_child(root if key == "document_media" else work_root, path) for key, path in paths.items()},
         served_path_prefix=prefix, collection_ids=collection_ids, media_types=media_types,
     )
@@ -650,7 +654,7 @@ def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: 
         for child in working["collections"]
     )
     # CLI transport for explicitly isolated Preview builds; ordinary storage still
-    # derives from the workspace. No assets are copied into the temporary root.
+    # derives from the workspace. Inputs stay separate from temporary outputs.
     if assets_base_dir is None and os.environ.get("DOTLINEFORM_DOCS_BUILD_ASSETS_DIR"):
         assets_base_dir = Path(os.environ["DOTLINEFORM_DOCS_BUILD_ASSETS_DIR"])
     if work_assets_base_dir is None and os.environ.get("DOTLINEFORM_DOCS_BUILD_WORK_ASSETS_DIR"):
@@ -667,7 +671,9 @@ def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: 
                     "allow_unresolved_parent_ids": False}
         source_root = location_child(workspace_root, Path(stage) / "source")
         generated_root = location_child(workspace_root, Path(stage) / "generated")
-        media = _media(item["media"], source_root=source_root, assets=assets, stage=stage)
+        stage_assets = assets.for_stage(stage)
+        media = _media(item["media"], source_root=source_root, generated_root=generated_root,
+                       assets=stage_assets, stage=stage)
         if set(media.types) != set(projection.media):
             raise ValueError(f"{field}.media types must match the public projection")
         stage_projection = projection if stage == "preview" else None
@@ -677,7 +683,7 @@ def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: 
             default_doc_id=_doc_id(item["default_doc_id"], field=f"{field}.default_doc_id", allow_empty=True),
             allow_unresolved_parent_ids=_boolean(item["allow_unresolved_parent_ids"], field=f"{field}.allow_unresolved_parent_ids"),
             collections=_collections(item["collections"], repo_root=root, workspace_root=workspace_root, stage=stage,
-                                   media_settings=item["media"], assets=assets, projection=stage_projection), search_fields=fields,
+                                   media_settings=item["media"], assets=stage_assets, projection=stage_projection), search_fields=fields,
         ))
     return DocsWorkspaceConfig(
         workspace_root, public_url, projection, preview, fields, recent_limit, tuple(stages),

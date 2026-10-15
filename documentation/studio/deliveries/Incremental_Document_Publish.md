@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261012-112453-211357
 title: Incremental Document Publish
 added_date: "2026-10-12 11:24:53"
-last_updated: "2026-10-14 15:55:24"
+last_updated: "2026-10-15 00:00:00"
 summary: Proposed queue-only Publish for ordinary and non-Catalogue collection documents, with completed public artifacts and eligibility, dependency, media and shared-output effects supplied upstream.
 ui_status: proposed
 parent_id: d-20260428-000000-f5ff18
@@ -20,9 +20,9 @@ Prerequisite set on 2026-10-12: use [User Facing Rules](../data/User_Facing_Rule
 
 Current Publish completes queued Catalogue Works, then captures ordinary and collection sources, resolves publication eligibility, rebuilds ordinary and other collection documents in temporary storage and distributes a complete prepared snapshot. Catalogue Gallery/shared selections are already explicit, but the enclosing pass still processes ordinary documents and discovery data even when those selections are empty.
 
-Prerequisite cleanup on 2026-10-13: the user approved M.25/M.28/M.29 review groups 1–4, implemented through the existing Publish owners. They remove repeated queue/content audits, reuse Catalogue setup/media inputs and limit browser follow-through to reported Recent persistence. [User Facing Rules](../data/User_Facing_Rules.md) records implementation and evidence. Groups 5–7 remain gaps for this delivery: the unconditional full source/eligibility/build/snapshot pass, complete repository/referenced-media reconciliation including remote listings, and selected shared/document/media completion with retry from retained Preview bytes. Shared document media currently retains a common live asset root. This cleanup does not approve this delivery's implementation or satisfy its queue-only/no-op/retry gates.
+Prerequisite cleanup on 2026-10-13: the user approved M.25/M.28/M.29 review groups 1–4, implemented through the existing Publish owners. They remove repeated queue/content audits, reuse Catalogue setup/media inputs and limit browser follow-through to reported Recent persistence. [User Facing Rules](../data/User_Facing_Rules.md) records implementation and evidence. Groups 5–7 remain gaps for this delivery: the unconditional full source/eligibility/build/snapshot pass, complete repository/referenced-media reconciliation including remote listings, and selected shared/document/media completion with retry from retained Preview bytes. Document-media storage has subsequently been cut over by the prerequisite below. This cleanup does not approve this delivery's implementation or satisfy its queue-only/no-op/retry gates.
 
-Prerequisite agreed on 2026-10-14: complete [Document Media Working And Preview](Document_Media_Working_And_Preview.md) before implementing this delivery. The user will Publish and manually copy the approximately 43 MB ready document-media folder into Working and Preview, then the prerequisite cuts over code/configuration with light verification. That delivery establishes media storage and the publication baseline; this delivery retains ownership of exact queue effects, retained progress and queue-only operation.
+Prerequisite complete on 2026-10-15: [Document Media Working And Preview](Document_Media_Working_And_Preview.md). The user confirmed the baseline Publish and both manual media copies, accepted ordinary/collection media checks after the code cutover and retired the former shared folder. Working owns local/input document media, temporary publication output is isolated, and prepared media is copied into Preview for distribution. Static checks/path diagnostics and source review passed; no post-cutover Publish observation was supplied. This delivery inherits that established media baseline and retains ownership of exact queue effects, retained progress and queue-only operation; its implementation remains unapproved.
 
 Complete proposed result: Save/build owners prepare exact public artifacts and record their completed writes/removals; Publish applies only those queued effects to Preview and configured repository/R2 destinations. Unselected files retain their bytes. When all publication queues are empty, Publish performs no publication work.
 
@@ -55,7 +55,7 @@ The remaining gaps map to the existing delivery steps:
 | M.27 | Recent and eligible Selected are still prepared during Publish; Search is copied every time without a queued transfer. Move Recent/Selected effects upstream and queue explicit Search rebuild bytes, plus finished public index/manifests/configuration. Unqueued shared output remains untouched; ordinary edits do not automatically refresh Search. | IDP.2 |
 | M.25 | Empty Catalogue selections still enter full source/eligibility/build/shared-snapshot preparation; ordinary/other collection queues do not exist. Remove the unconditional pass and consume completed selections only. All publication queues empty must produce no generation, transfer, deletion, scan or timestamp-only change. | IDP.1/IDP.3 |
 | M.28 | Shared distribution still depends on a complete snapshot, repository-tree comparison and referenced-media reconciliation, including remote family listings. Apply exact document/media/shared writes and removals through existing destination owners, verifying only selected transfers and retaining unselected bytes. | IDP.2/IDP.3 |
-| M.29 | Catalogue Works retain per-Work Preview progress, but shared retry prepares another snapshot from current Working and shared media uses a live asset root. General document/media/shared units need accurate retained progress and retry from completed Preview bytes, with successful distribution alone removing selections. | IDP.3 |
+| M.29 | Catalogue Works retain per-Work Preview progress, but shared retry prepares another snapshot from current Working. Document media now has separate Working/Preview owners. General document/media/shared units still need accurate retained progress and retry from completed Preview bytes, with successful distribution alone removing selections. | IDP.3 |
 
 Before implementation, IDP.0 must reconcile the accepted rules with the saved eligibility/dependency metadata, upstream Recent candidate maintenance, exact media/public-configuration effects and deliberate baseline/cutover approach. Resolve how interrupted publication is completed before further authoring/generation; the current UI does not enforce that rule. These decisions must not introduce automatic retry, rollback, polling, a second ledger, compatibility aliases or a normal Publish reconciliation fallback.
 
@@ -350,7 +350,7 @@ External Markdown and policy edits require explicit owning generation before Pub
 
 ### [ ] IDP.0 — Readiness And Implementation Approval
 
-- [ ] Complete [Document Media Working And Preview](Document_Media_Working_And_Preview.md) and carry forward its user-confirmed media baseline and accepted code cutover.
+- [x] Complete [Document Media Working And Preview](Document_Media_Working_And_Preview.md) and carry forward its user-confirmed media baseline and accepted code cutover. Completed 2026-10-15, including local-media acceptance and retirement of the former shared folder.
 - [ ] Review the relevant User Facing Rules targets and complete required functional cleanup deliveries, then reconcile the eligibility/dependency assumptions with the accepted targets.
 - [ ] Confirm the complete queue-only boundary against the current generation, eligibility, dependency, media and publication owners, including shared Catalogue publication.
 - [ ] Confirm saved metadata prerequisites, the upstream Recent decision and a deliberate cutover/baseline approach that does not silently reconcile during Publish.
@@ -358,7 +358,7 @@ External Markdown and policy edits require explicit owning generation before Pub
 
 Verification budget: concise read-only owner review; no fixtures, prototype, generated writes, executable tests or live Publish. Stop if required upstream effects or cutover ownership remain unresolved.
 
-Gate: the prerequisite review/required cleanup is complete and one coherent implementation boundary and its genuine stop conditions are approved. Record: proposed; documentation only is authorized; rules review and cleanup precede this delivery.
+Gate: the prerequisite review/required cleanup is complete and one coherent implementation boundary and its genuine stop conditions are approved. Record: proposed; documentation only is authorized. The document-media prerequisite is complete; reconcile the remaining rules review/cleanup and obtain this delivery's implementation approval before proceeding.
 
 ### [ ] IDP.1 — Public Preparation And Queue Handoff
 

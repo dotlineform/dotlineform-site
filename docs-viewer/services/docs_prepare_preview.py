@@ -202,14 +202,16 @@ def build_captured_preview(
     related_links: dict[Path, bytes], eligible_doc_ids: list[str],
     retained_preview: dict[Path, bytes],
     *, workspace: DocsWorkspaceConfig,
-) -> tuple[dict[Path, bytes], dict[str, Any]]:
+) -> tuple[dict[Path, bytes], dict[str, Any], dict[str, bytes]]:
     """Build captured inputs in temporary storage without replacing live Preview."""
     build_parent = repo_root / "var"
     build_parent.mkdir(exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="preview-build-", dir=build_parent) as directory:
         build_root = Path(directory)
+        working_assets = workspace.assets.for_stage("working").root.path
         work_assets = workspace.assets.for_stage("preview").work_root.path
-        captured_workspace = load_docs_workspace_config(repo_root, docs_base_dir=build_root, assets_base_dir=workspace.assets.root.path, work_assets_base_dir=work_assets)
+        captured_workspace = load_docs_workspace_config(repo_root, docs_base_dir=build_root,
+                                                      assets_base_dir=working_assets, work_assets_base_dir=work_assets)
         config = select_workspace_stage(captured_workspace, "preview")
         source_root = config.source.location.path
         generated_root = config.generated.documents.location.path.parent
@@ -264,7 +266,7 @@ def build_captured_preview(
         result = subprocess.run(
             [sys.executable, str(repo_root / "docs-viewer/build/build_preview.py"),
              "--docs-base-dir", str(build_root), "--search-index", str(captured_search),
-             "--recent-payload", str(captured_recent), "--assets-base-dir", str(workspace.assets.root.path),
+             "--recent-payload", str(captured_recent), "--assets-base-dir", str(working_assets),
              "--work-assets-base-dir", str(work_assets),
              "--related-links-dir", str(captured_links)],
             cwd=repo_root, capture_output=True, text=True, check=False,
@@ -272,11 +274,11 @@ def build_captured_preview(
         if result.returncode:
             raise RuntimeError("Preview build failed: " + (result.stderr or result.stdout).strip())
         build_manifest, generated_files = _validate_generated_manifest(generated_root, "preview")
-        files, eligibility = build_preview_snapshot_files(repo_root, config, generated_files)
+        files, eligibility, media_files = build_preview_snapshot_files(repo_root, config, generated_files)
         catalogue_prefix = workspace.catalogue.preview.path.relative_to(workspace.workspace_root.path / "preview")
         files.update({catalogue_prefix / identity: data for identity, data in catalogue.items()})
         references = eligibility["asset_references"]
-    return files, {**build_manifest, "asset_references": references}
+    return files, {**build_manifest, "asset_references": references}, media_files
 
 
 def _complete_preview(
@@ -284,7 +286,7 @@ def _complete_preview(
     inputs: PreparationInputs, recent_payload: bytes,
     *, on_recent_written: Callable[[], None],
 ) -> CompletedPreview:
-    files, build_manifest = build_captured_preview(
+    files, build_manifest, media_files = build_captured_preview(
         repo_root, desired, inputs.search_index, recent_payload, inputs.catalogue,
         inputs.related_links, plan["eligible_doc_ids"],
         inputs.preview_files, workspace=inputs.workspace,
@@ -298,6 +300,7 @@ def _complete_preview(
     return write_preview_snapshot(
         repo_root, files=files, generated_revision=build_manifest["generated_revision"],
         source_revision=plan["source_revision"], asset_references=build_manifest["asset_references"],
+        media_files=media_files,
         current_files=inputs.preview_files,
         config=inputs.workspace,
     )

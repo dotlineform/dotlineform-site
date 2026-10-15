@@ -114,6 +114,10 @@ def synthetic_review_config(
             collections_path=Path("."),
         ),
         media=DocsMediaConfig(
+            build_asset_location=ArtifactLocation(
+                provider=EXTERNAL_LOCAL_PROVIDER,
+                path=generated_dir / "media",
+            ),
             asset_location=ArtifactLocation(
                 provider=EXTERNAL_LOCAL_PROVIDER,
                 path=source_dir / "media",

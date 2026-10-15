@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260514-184303-7914e2
 title: Media And Asset Handling
 added_date: "2026-05-14 18:43:03"
-last_updated: "2026-10-14 17:52:58"
+last_updated: "2026-10-15 00:00:00"
 summary: Media intake, content interpretation, document representation, storage, link resolution, extension methods, and safety boundaries.
 parent_id: d-20260424-000000-50b63f
 
@@ -31,7 +31,7 @@ Media support is not one capability. A useful description must answer five separ
 | Markdown package folder | Markdown plus supported local links are interpreted. | One canonical document with rewritten links. | Images become WebP; attachments are copied unchanged. |
 | Standalone SVG | SVG markup is sanitized as a self-contained image. | **Add image…** inserts an image reference into the active source buffer. | Sanitized bytes are managed through `svg`. |
 | Persistent Mermaid `.mmd` | Source is rendered by the registered, pinned Mermaid producer and then sanitized. | **Add image…** inserts a same-basename SVG reference into the active source buffer. | Canonical `.mmd` is copied to external build source; verified output is managed through `svg`. |
-| Role-marked HTML companion | Treated as a companion application asset. | No automatic document placement; the author adds an `html-media` token. | Written to the exact document/collection owner's shared `html` location. |
+| Role-marked HTML companion | Treated as a companion application asset. | No automatic document placement; the author adds an `html-media` token. | Written to the exact document/collection owner's Working `html` location. |
 
 Inline fenced Mermaid is deliberately not a media capability. Its source remains inside canonical Markdown, and the managed reader renders it in memory in the local workspace; external-local storage does not change eligibility. Inline rendering creates no `.mmd` media item, stored SVG, media token, filename, or inventory record. Public projection instead prepares validated light and dark SVG pairs, replaces the fence only in the public payload copy, and ships neither Mermaid source nor the managed Mermaid runtime. [Document Diagrams](Document_Diagrams.md) owns the complete authoring, build, managed-reader, and public-projection boundary.
 
@@ -80,7 +80,7 @@ Native intake carries the exact document target's resolved owner through media p
 
 ### Authored Links
 
-Ordinary logical tokens use `[[media:docs/<type>/<file>]]`; collection tokens use `[[media:docs/collections/<id>/<type>/<file>]]`. The builder resolves these to configured shared `/docs/assets/media/workspace/` or `/docs/assets/media/collections/<id>/` paths locally. Public projection maps the same identity to its configured public URL. Stage selects document/Catalogue JSON, not a second media copy.
+Ordinary logical tokens use `[[media:docs/<type>/<file>]]`; collection tokens use `[[media:docs/collections/<id>/<type>/<file>]]`. Local readers resolve these through `/docs/assets/media/workspace/` or `/docs/assets/media/collections/<id>/` to Working bytes. Public projection maps the same identity to its configured public URL. Working/Preview media ownership introduces no stage discriminator into tokens or served URLs.
 
 Authoring a link does not copy, publish, validate, index or establish ownership of the target asset.
 
@@ -94,9 +94,9 @@ Markdown package folders and interactive HTML companions are also classified out
 
 ## Workspace Configuration And Storage
 
-`docs-viewer/config/workspace/docs-workspace.json` uses `docs_workspace_v5`. Document media keeps shared configured `asset_location` and confined `asset_root` identities. Work media has separate configured Working/Preview roots. [Configuration And Extension Points](Configuration_And_Extension_Points.md) owns configuration; [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns staged handoff.
+`docs-viewer/config/workspace/docs-workspace.json` uses `docs_workspace_v6`. Its `assets.roots` gives document and Work media explicit Working/Preview roots. Document media keeps configured `asset_location` and confined `asset_root` identities within the selected stage. [Configuration And Extension Points](Configuration_And_Extension_Points.md) owns configuration; [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns staged Work handoff.
 
-Current managed types are `img`, `thumbs`, `svg`, `files` and `html`; `mermaid` is an editable build-source type. Ordinary ready bytes live in `assets/media/workspace/<type>/`; collection bytes live in `assets/media/collections/<id>/<type>/`. The `thumbs` type is document-owned derivative media, with configured local and public projections; it is not an input chooser or editable build-source format. Editable build inputs and private source evidence remain under Working source. There are no ready-media copies under Working source/generated or Preview.
+Current managed types are `img`, `thumbs`, `svg`, `files` and `html`; `mermaid` is an editable build-source type. Ordinary ready bytes live in `<stage>/assets/media/workspace/<type>/`; collection bytes live in `<stage>/assets/media/collections/<id>/<type>/`, for `working` and `preview`. Local reads, intake, builds, inventory and package/export input use Working. Publish copies its prepared media selection into Preview and distribution reads Preview. The `thumbs` type is document-owned derivative media, with configured local and public projections; it is not an input chooser or editable build-source format. Editable build inputs and private source evidence remain under Working source. The former workspace-level `assets/media/` tree has no runtime owner or fallback.
 
 Catalogue prepares media in Projects staging, hands selected bytes to `working/assets/works/` during Refresh and to `preview/assets/works/` during per-Work Publish. Both stage roots retain `primary/`, `thumbs/` and `media/files/` families. Studio flags independently select the image set and each download; public projections omit them. Preview snapshot replacement preserves and does not inventory/hash this media tree. Work deletion uses its retained exact descriptor through staging, Working, Preview, repository and R2; document media retains its existing separate policy.
 
@@ -112,7 +112,7 @@ Initial Work media population was a user-confirmed manual copy. Historical unref
 
 | Provider | Current use | Policy |
 | --- | --- | --- |
-| External local | Shared ready media, Working build inputs and private source evidence. | Exact configured family, collection and type; no fallback root. |
+| External local | Working/Preview ready media, Working build inputs and private source evidence. | Exact configured stage, family, collection and type; no fallback root. |
 | Repository | Configured public assets, including Catalogue thumbnails. | Public projection only; never private authoring authority. |
 | R2 | Configured public document media and Work primaries/downloads. | Transfer referenced local bytes at Publish; credentials remain server-side. |
 
@@ -144,11 +144,11 @@ Focused lint passed for `docs_artifact_locations.py`, `docs_broken_links.py`, `d
 
 ## Link Resolution And Delivery
 
-The docs builder resolves `media` and `html-media` tokens in `docs_builder/rendering.py`. Working and Preview by-ID payloads keep Docs-owned media as `docs-media:<workspace-or-collection>/<type>/<identity>`; they contain no local served URL or R2 URL for that media. Each local/public browser configuration exposes one Docs media root, and the reader resolves images, SVGs, files and HTML media before mounting content. Static Export packages referenced media under its own paths; Review resolves inventoried package assets. Canonical Markdown keeps its existing logical token. Prepare Preview records selected asset identities, and Publish transfers their current bytes without changing by-ID media identities.
+The docs builder resolves `media` and `html-media` tokens in `docs_builder/rendering.py`. Working and Preview by-ID payloads keep Docs-owned media as `docs-media:<workspace-or-collection>/<type>/<identity>`; they contain no local served URL or R2 URL for that media. Each local/public browser configuration exposes one Docs media root, and the reader resolves images, SVGs, files and HTML media before mounting content. Static Export packages referenced Working media under its own paths; Review resolves inventoried package assets. Canonical Markdown keeps its existing logical token. Prepare Preview records selected asset identities and copies their prepared bytes into Preview; distribution transfers that Preview selection without changing by-ID media identities.
 
 The builder does not contact R2 or prove that every referenced object exists. `docs_media_inventory.py` supplies provider-independent file listing and shared source-reference extraction; consumers own associations and missing-reference policy.
 
-The preparation phase of Publish captures document/Catalogue JSON and records referenced shared asset identities without copying media. Assigned document thumbnails are explicit references even when absent from body HTML: Preview capture and distribution reference collection derive `<doc_id>-thumb.webp` from each prepared by-ID payload's `has_thumbnail` flag and exact ordinary/collection owner. Excluded documents contribute no thumbnail references. Preview retains references to current shared bytes, not historical renditions. Distribution receives the same completed snapshot and transfers only its referenced current assets; it does not reread source/generated output. Missing required local bytes block reconciliation without remote fallback. Destination comparisons are carried into apply, and completed transfers are verified. Transfers do not change media versions or automatically delete shared/remote assets. Failed distribution can leave completed repository/R2 effects and retains completed Preview; fix the cause and run a fresh Publish. Review the repository result through site-preview.
+The preparation phase of Publish captures document/Catalogue JSON and selects referenced media. Assigned document thumbnails are explicit references even when absent from body HTML: Preview capture and distribution reference collection derive `<doc_id>-thumb.webp` from each prepared by-ID payload's `has_thumbnail` flag and exact ordinary/collection owner. Excluded documents contribute no thumbnail references. Temporary publication producers write into their isolated ordinary/collection `generated/media/` owner; they never update Working or live Preview. Snapshot assembly carries selected completed producer bytes and referenced Working bytes into replacement, which compares/copies and verifies only those files in Preview before recording completion. Existing Preview media survives document replacement without a media-tree scan/hash or deletion pass. Distribution receives the same completed snapshot and transfers only its referenced Preview assets; it does not reread Working source/generated/media. Missing required Working bytes fail preparation without remote fallback. Destination comparisons are carried into apply, and completed transfers are verified. Transfers do not change media versions or automatically delete unreferenced document/remote assets. Failed distribution can leave completed repository/R2 effects and retains completed Preview; fix the cause and run a fresh Publish. Review the repository result through site-preview.
 
 `docs_artifact_locations.py` owns provider resolution, confinement, authentication, I/O, byte verification, staging, and served-reference behavior. `docs_media_storage.py` applies that boundary to managed-media writes and local serving:
 

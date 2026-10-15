@@ -19,7 +19,7 @@ Normal Publish parses the app-produced publication queue once and carries that s
 
 ## Storage And Selection
 
-[Workspace configuration](../../docs-viewer/config/workspace/docs-workspace.json), schema `docs_workspace_v5`, owns storage beneath the existing Docs root. Work media has independent `assets.work_roots.working` and `assets.work_roots.preview`; ordinary document media remains shared.
+[Workspace configuration](../../docs-viewer/config/workspace/docs-workspace.json), schema `docs_workspace_v6`, owns storage beneath the existing Docs root. `assets.roots.working` and `assets.roots.preview` select independent asset roots for both Work and document media.
 
 | Material | Working/Preview owner | Public destination |
 | --- | --- | --- |
@@ -28,7 +28,7 @@ Normal Publish parses the app-produced publication queue once and carries that s
 | Primary images | `<stage>/assets/works/primary/` | Configured R2 `works/img/` |
 | Thumbnails | `<stage>/assets/works/thumbs/` | `site/assets/data/catalogue/works/thumbs/` |
 | Downloads | `<stage>/assets/works/media/files/` | Configured R2 `works/files/` |
-| Document/collection media | Shared `assets/media/workspace/<type>/` and `assets/media/collections/<id>/<type>/` | Configured document repository/R2 bindings |
+| Document/collection media | `<stage>/assets/media/workspace/<type>/` and `<stage>/assets/media/collections/<id>/<type>/` | Configured document repository/R2 bindings, transferred from Preview |
 
 Studio staging is Projects-owned `catalogue/media-staging/`; project originals retain their owner. Local readers resolve Working media through unchanged `/docs/assets/works/...` identities. Public readers use repository thumbnails and configured R2 primary/download URLs. Operational staging and queue fields are private.
 

@@ -109,7 +109,7 @@ def _managed_paths(root: Path, *, excluded: Iterable[str] = ()) -> list[Path]:
     paths: list[Path] = []
     for directory, child_dirs, names in os.walk(root):
         parent = Path(directory)
-        # Stage-local Work assets have their own per-Work publication owner.
+        # Stage-local document and Work assets have their own publication owners.
         # Prune the subtree rather than enumerating or hashing the media corpus.
         child_dirs[:] = sorted(name for name in child_dirs if not (parent == root and name == "assets"))
         for name in (*child_dirs, *sorted(names)):
@@ -198,7 +198,7 @@ def _preview_media_bindings(config: DocsStageConfig) -> dict[str, tuple[str, Pat
             key = f"{child}/{media_type}" if child else media_type
             relative = media.asset_location.path.relative_to(collection.media.asset_root.path)
             if not relative.parts or relative.parts[0] != "media":
-                raise ValueError("Docs media asset must be beneath the shared media root")
+                raise ValueError("Docs media asset must be beneath the configured media root")
             bindings[key] = (
                 "docs-media:" + Path(*relative.parts[1:]).as_posix(),
                 relative,
@@ -257,8 +257,8 @@ def build_preview_snapshot_files(
     repo_root: Path,
     config: DocsStageConfig,
     generated_files: Mapping[Path, bytes],
-) -> tuple[dict[Path, bytes], dict[str, Any]]:
-    """Assemble completed builder bytes without auditing document content or sets."""
+) -> tuple[dict[Path, bytes], dict[str, Any], dict[str, bytes]]:
+    """Assemble reader output and selected media from Working and completed producers."""
     index_path = Path("documents/index-tree.json")
     for required in (index_path, *sorted(COPIED_WORKING_PAYLOAD_PATHS)):
         if required not in generated_files:
@@ -283,17 +283,33 @@ def build_preview_snapshot_files(
 
     media_references = _referenced_media(config, files)
     bindings = _preview_media_bindings(config)
+    generated_root = config.generated.documents.location.path.parent
+    produced_roots = {}
+    for collection in (config, *config.collections):
+        child = getattr(collection, "collection", "")
+        for media_type in collection.media.types:
+            key = f"{child}/{media_type}" if child else media_type
+            produced_roots[key] = collection.media.build_asset_location.path.relative_to(generated_root) / media_type
     asset_references = []
+    media_files = {}
     for media_type, identities in sorted(media_references.items()):
         for identity in sorted(identities):
             relative_path = bindings[media_type][1] / identity
-            path = location_child(config.media.asset_root, relative_path).path
-            if not path.is_file():
-                raise FileNotFoundError(
-                    "shared media required by prepared documents is missing: "
-                    f"{relative_path.as_posix()}"
-                )
-            asset_references.append(relative_path.as_posix())
+            produced_path = produced_roots[media_type] / identity
+            if produced_path in generated_files:
+                data = generated_files[produced_path]
+            else:
+                path = location_child(config.media.asset_root, relative_path).path
+                try:
+                    data = path.read_bytes()
+                except FileNotFoundError as exc:
+                    raise FileNotFoundError(
+                        "Working media required by prepared documents is missing: "
+                        f"{relative_path.as_posix()}"
+                    ) from exc
+            reference = relative_path.as_posix()
+            asset_references.append(reference)
+            media_files[reference] = data
 
     return files, {
         "eligible_doc_ids": sorted(document_ids),
@@ -303,7 +319,7 @@ def build_preview_snapshot_files(
             media_type: sorted(identities)
             for media_type, identities in sorted(media_references.items())
         },
-    }
+    }, media_files
 
 
 def snapshot_revision(files: Mapping[Path, bytes], asset_references: list[str]) -> str:
@@ -339,8 +355,9 @@ def _validate_asset_references(config: DocsWorkspaceConfig, references: Any) -> 
         raise ValueError("Preview asset_references must be an array of identities")
     if references != sorted(set(references)):
         raise ValueError("Preview asset_references must be sorted and unique")
+    assets = config.assets.for_stage("preview")
     for identity in references:
-        config.assets.reference_path(identity)
+        assets.reference_path(identity)
 
 
 def validate_preview_snapshot(
@@ -388,16 +405,16 @@ def validate_preview_snapshot(
 
 def write_preview_snapshot(
     repo_root: Path, *, files: Mapping[Path, bytes], generated_revision: str, source_revision: str,
-    asset_references: list[str], current_files: Mapping[Path, bytes],
+    asset_references: list[str], media_files: Mapping[str, bytes], current_files: Mapping[Path, bytes],
     config: DocsWorkspaceConfig,
 ) -> CompletedPreview:
     """Replace the prepared snapshot and record completion only after byte verification.
 
     Preparation supplies the complete projected file set and captured
-    current Preview bytes. Verify written files once, then verify the receipt
-    separately. Failure after mutation leaves no valid completion receipt.
+    current Preview bytes. Copy its selected media without enumerating assets;
+    verify written files and media before the receipt. Failure after mutation
+    leaves no valid completion receipt.
     """
-    _validate_asset_references(config, asset_references)
     preview_root = config.workspace_root.path / "preview"
     if preview_root.is_symlink():
         raise ValueError("Preview root must not be a symlink")
@@ -416,6 +433,15 @@ def write_preview_snapshot(
         target.parent.mkdir(parents=True, exist_ok=True)
         if current.get(relative) != data:
             target.write_bytes(data)
+    preview_assets = config.assets.for_stage("preview")
+    for identity, data in media_files.items():
+        target = preview_assets.resolve_reference(identity).path
+        if target.is_file() and target.read_bytes() == data:
+            continue
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(data)
+        if target.read_bytes() != data:
+            raise RuntimeError(f"Preview media bytes did not verify: {identity}")
     actual = _files_from_root(preview_root, excluded=(PREVIEW_MANIFEST_FILENAME,))
     if actual != files:
         raise RuntimeError("Preview snapshot bytes did not verify")

@@ -12,7 +12,7 @@ from docs_artifact_locations import (
 )
 from docs_mermaid_media import produce_mermaid_svg
 from docs_media_inventory import source_media_references
-from docs_workspace_config import DocsStageConfig, DocsCollectionConfig, resolve_location_path
+from docs_workspace_config import DocsStageConfig, DocsCollectionConfig, location_child, resolve_location_path
 
 from .common import MEDIA_TOKEN_PATTERN
 
@@ -88,13 +88,13 @@ def run_registered_media_builds(
                 f"{', '.join(unknown_build_types)}"
             )
     available = producers if producers is not None else REGISTERED_MEDIA_PRODUCERS
-    target_locations = [
-        config.media.types[build.publishes_to].asset_location
-        for build in config.media.build_sources.values()
-    ]
+    target_locations = {
+        build_type: location_child(config.media.build_asset_location, Path(build.publishes_to))
+        for build_type, build in config.media.build_sources.items()
+    }
     remote_client = authenticated_remote_client_for_locations(
         repo_root,
-        target_locations,
+        target_locations.values(),
         client=client,  # type: ignore[arg-type]
     )
     results: list[dict[str, object]] = []
@@ -111,7 +111,7 @@ def run_registered_media_builds(
         )
         generated = artifact_location_adapter(
             repo_root,
-            generated_media.asset_location,
+            target_locations[build_type],
             served_path_prefix=generated_media.served_path_prefix,
             remote_client=remote_client,
         )
@@ -190,7 +190,7 @@ def build_collection_media_snapshot(
     producers: Mapping[str, MediaProducer] | None = None,
     markdown_sources: Iterable[str] | None = None,
 ) -> dict[str, object]:
-    """Produce referenced build outputs and record shared identities without media copies."""
+    """Produce referenced build outputs and record stage-neutral media identities."""
 
     markdown_sources = collection_markdown_sources(repo_root, config) if markdown_sources is None else tuple(markdown_sources)
     referenced = referenced_media_identities(config, markdown_sources)

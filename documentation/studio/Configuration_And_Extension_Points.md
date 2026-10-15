@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260512-142027-54b354
 title: Configuration And Extension Points
 added_date: "2026-05-12 14:20:27"
-last_updated: "2026-10-14 21:01:50"
+last_updated: "2026-10-15 00:00:00"
 summary: Map of the configuration, registries, generated projections, code definitions, and capability checks that drive Docs Viewer workflows.
 parent_id: d-20260424-000000-50b63f
 
@@ -45,7 +45,7 @@ Generated browser config sits between source-side workspace config and the runti
 
 ### Workspace And Target Contracts
 
-`docs-viewer/config/workspace/docs-workspace.json`, schema `docs_workspace_v5`, defines the existing external Docs root. Working owns source/generated output and its Work media; Preview owns the prepared snapshot and independently retained Work media. Retired scope/stage storage and fallback roots remain prohibited.
+`docs-viewer/config/workspace/docs-workspace.json`, schema `docs_workspace_v6`, defines the existing external Docs root. Working owns source/generated output and local document/Work media; Preview owns the prepared snapshot and its document/Work media. Retired scope/stage storage and fallback roots remain prohibited.
 
 `load_docs_workspace_config(repo_root)` resolves the workspace. Local readers and authoring services use `load_docs_working_config(repo_root)` at their storage boundary. Build/publication code may select explicit `working` or `preview` internally with `load_docs_stage` or `select_workspace_stage`; ordinary APIs do not accept stage selection. The loader creates no directories; unavailable configured storage, traversal and symlink escapes fail without repository or Projects-root fallback.
 
@@ -56,11 +56,11 @@ Generated browser config sits between source-side workspace config and the runti
 | Collection source and generated documents | `working/source/collections/<id>/documents/` and `working/generated/collections/<id>/documents/` |
 | Current Catalogue JSON | `working/generated/catalogue/` |
 | Prepared documents, collections, Search and Catalogue | `preview/documents/`, `preview/collections/<id>/documents/`, `preview/search/index.json` and `preview/catalogue/` |
-| Shared document ready media | `assets/media/workspace/<type>/` and `assets/media/collections/<id>/<type>/` |
-| Working/Preview Work media | Configured `assets.work_roots` select `<stage>/assets/`, with `works/{primary,thumbs,media/files}/` families. |
+| Working/Preview document ready media | `<stage>/assets/media/workspace/<type>/` and `<stage>/assets/media/collections/<id>/<type>/` |
+| Working/Preview Work media | `<stage>/assets/works/{primary,thumbs,media/files}/` |
 | Editable media build inputs and private provenance | Their Working ordinary/collection source owner, including `media/build-source/mermaid/` |
 
-Document media types retain one shared `asset_location` and confined identities. Work media resolves through an explicit stage root; local `/docs/assets/works/...` routes serve Working. Temporary Preview builds receive independent `--assets-base-dir` and `--work-assets-base-dir` bindings to existing shared document and Preview Work media; no substitute root is inferred.
+Configured `assets.roots.working` and `assets.roots.preview` select the stage asset roots for both document and Work media. Local `/docs/assets/...` routes serve Working with unchanged identities. Temporary Preview builds receive independent `--assets-base-dir` and `--work-assets-base-dir` input bindings to existing Working document media and Preview Work media. Their registered/public Mermaid output uses the explicit temporary `DocsMediaConfig.build_asset_location` beneath generated media, independently of those read bindings. Snapshot assembly carries selected completed output and Working media bytes into Preview; distribution resolves Preview. No substitute root or shared-root compatibility path is inferred.
 
 Managed document targets use immutable `doc_id` and optional exact registered `collection`; collection targets are empty objects or contain only `collection`. Retired `stage`, `scope` and `sub_scope` selectors are rejected. Ordinary and other collection source records require boolean `draft`; Catalogue source records reject that field and have fixed document eligibility. Collection documents are flat and do not inherit ordinary hierarchy. Reports use `id: docs_collection` with an exact collection selector.
 
@@ -80,15 +80,15 @@ Document Build accepts `--stage working`. Optional `--collection` selects one re
 | Local collection artifact | `/docs/generated/external/<collection>/<artifact>` |
 | Public ordinary document | `/assets/data/docs/by-id/<id>.json` |
 | Public collection artifact | `/assets/data/docs/<collection>/<artifact>` |
-| Shared current media | `/docs/assets/<configured-family>/<identity>`, independent of stage |
+| Working media | `/docs/assets/<configured-family>/<identity>`, with no stage discriminator |
 | Working aggregate Links | `/docs/workspace-links` |
 | Publish | `POST /docs/publish` with `{}` |
 
-Source/Create/metadata/placement/Delete/Draft operations resolve Working and require exact identity. Working Delete does not prune Preview or public output. Draft updates await exact-document generation and return committed readiness to the mounted reader. Media insertion writes shared local assets through the exact Working collection/type owner; the standalone tool uses `--scope docs` with optional `--docs-collection`, without a Docs stage flag.
+Source/Create/metadata/placement/Delete/Draft operations resolve Working and require exact identity. Working Delete does not prune Preview or public output. Draft updates await exact-document generation and return committed readiness to the mounted reader. Media insertion writes Working assets through the exact collection/type owner; the standalone tool uses `--scope docs` with optional `--docs-collection`, without a Docs stage flag.
 
 ### Publication And Downstream Ownership
 
-`docs_prepare_preview.py` selects eligible Working sources under boolean draft and `unpublishable.json` policy, including inherited ordinary exclusions and excluded collection hosts. Catalogue documents have fixed document eligibility and no draft field; an excluded Catalogue report host still excludes its collection. Preparation builds captured inputs in temporary storage, validates and replaces Preview, writes `docs_preview_manifest_v2` after verification, then removes temporary inputs. Preview has no persistent source/generated authoring tree.
+`docs_prepare_preview.py` selects eligible Working sources under boolean draft and `unpublishable.json` policy, including inherited ordinary exclusions and excluded collection hosts. Catalogue documents have fixed document eligibility and no draft field; an excluded Catalogue report host still excludes its collection. Preparation builds captured inputs in temporary storage, validates and replaces Preview, compares/copies and verifies its selected media, writes `docs_preview_manifest_v2` after verification, then removes temporary inputs. Snapshot replacement preserves the asset tree without a second media selection or whole-tree inventory/hash. Preview has no persistent source/generated authoring tree.
 
 `catalogue-artifacts.json` inventories Catalogue JSON independently of document eligibility. Per-Work publication advances selected Work records; final preparation retains those Preview bytes and captures shared Working indexes/Gallery records. Search copies unchanged and Recents retains its existing preparation owner. The final snapshot receipt binds document/Catalogue JSON and document-media identities; Work media completion belongs to the selected per-Work operation, without corpus hashes/history.
 
@@ -134,7 +134,7 @@ Historical scope-bearing tests and fixtures remain unreviewed against the curren
 
 | driver | controls | authority |
 | --- | --- | --- |
-| `docs-viewer/config/workspace/docs-workspace.json` | Stage defaults, hierarchy policy, build-media registration, explicit public/R2 destinations, collections, and Search fields. | Maintainer-edited workspace config. Working source/generated, Preview, shared assets and Catalogue destinations derive from the existing external root and explicit owners. |
+| `docs-viewer/config/workspace/docs-workspace.json` | Stage defaults, hierarchy policy, build-media registration, explicit public/R2 destinations, collections, and Search fields. | Maintainer-edited workspace config. Working source/generated, Preview, stage-owned assets and Catalogue destinations derive from the existing external root and explicit owners. |
 | `docs-viewer/runtime/js/shared/docs-viewer-code-config.js` | Universal metadata statuses. | Product-owned browser code, projected to `site/` through the public code inventory. Scope-type labels and badges are retired. |
 | `docs-viewer/config/routes/docs-viewer-routes.json` | App kind, route features, access intent, payload/config URLs, panel defaults, view policy, and named service surfaces. | Full local route registry. The service injects enabled loopback URLs when it serves local routes. |
 | `site/docs-viewer/config/routes/docs-viewer-public-routes.json` | Public-only route records served from the deploy root. | Checked-in public projection kept separate so local/manage and review routes are never exposed publicly. |

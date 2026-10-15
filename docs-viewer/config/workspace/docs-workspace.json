@@ -1,11 +1,10 @@
 {
-  "schema_version": "docs_workspace_v5",
+  "schema_version": "docs_workspace_v6",
   "media_report_metadata": "working/generated/reports/docs-media/metadata.json",
   "broken_links_report": "working/generated/reports/broken-links/report.json",
   "links_report": "working/generated/reports/links/report.json",
   "assets": {
-    "root": "assets",
-    "work_roots": {
+    "roots": {
       "working": "working/assets",
       "preview": "preview/assets"
     },

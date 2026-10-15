@@ -11,7 +11,7 @@ from docs_artifact_locations import ArtifactLocation, artifact_location_adapter
 from docs_public_mermaid_payload import project_mermaid_payload
 from docs_public_mermaid_producer import DOCS_VIEWER_THEME_CSS_REL_PATH, produce_public_mermaid_projection
 from docs_public_mermaid_projection import PUBLIC_MERMAID_ASSET_PREFIX, plan_public_mermaid_projection
-from docs_workspace_config import DocsStageConfig, generated_documents_path, resolve_workspace_path
+from docs_workspace_config import DocsStageConfig, generated_documents_path, location_child, resolve_workspace_path
 from docs_source_model import load_document_collection_docs_for_config
 
 
@@ -63,7 +63,7 @@ def prepare_stage_mermaid(repo_root: Path, config: DocsStageConfig) -> dict[str,
                 raise ValueError(f"Mermaid payload identity does not match {owner}/{doc_id}")
             payloads[path] = project_mermaid_payload(payload, diagrams)
 
-        generated = artifact_location_adapter(repo_root, media.asset_location)
+        generated = artifact_location_adapter(repo_root, location_child(collection.media.build_asset_location, Path("svg")))
         identities: set[str] = set()
         if plan["diagrams"]:
             with tempfile.TemporaryDirectory(prefix="docs-mermaid-preparation-") as temporary:

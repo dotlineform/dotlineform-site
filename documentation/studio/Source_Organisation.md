@@ -3,13 +3,13 @@ draft: false
 doc_id: d-20260423-000000-8fd731
 title: Source Organisation
 added_date: "2026-04-23 00:00:00"
-last_updated: "2026-10-14 21:49:12"
+last_updated: "2026-10-15 00:00:00"
 summary: Working source and generated storage, one read-only Preview snapshot, and exact collection and media ownership.
 parent_id: d-20260424-000000-50b63f
 ---
 # Docs Viewer Source Organisation
 
-`docs-viewer/config/workspace/docs-workspace.json` is the storage authority, using `docs_workspace_v5`. The loader resolves the existing root selected by `DOTLINEFORM_DOCS_BASE_DIR` without inferred or fallback storage. Work media resolves independently beneath configured Working and Preview asset roots; ordinary document media remains shared.
+`docs-viewer/config/workspace/docs-workspace.json` is the storage authority, using `docs_workspace_v6`. The loader resolves the existing root selected by `DOTLINEFORM_DOCS_BASE_DIR` without inferred or fallback storage. Document and Work media resolve beneath configured Working and Preview asset roots.
 
 `DOTLINEFORM_DOCS_BASE_DIR` selects the Docs Viewer folder directly. It is independent of `DOTLINEFORM_PROJECTS_BASE_DIR`, which owns Catalogue, Processing, Data Sharing and other project workspaces. Both settings live in `.env.local`; neither is an alias or fallback for the other. To relocate Docs storage, stop services, move the complete Working and Preview trees to the explicitly selected root, change the setting, verify the resolved locations, and restart.
 
@@ -21,6 +21,8 @@ $DOTLINEFORM_DOCS_BASE_DIR/
     catalogue-updates-pending.json
     catalogue-publish-pending.json
     assets/works/{primary,thumbs,media/files}/
+    assets/media/workspace/{img,thumbs,svg,files,html}/
+    assets/media/collections/<collection>/{img,thumbs,svg,files,html}/
     source/
       index-order.json
       recent-exclusions.json
@@ -38,14 +40,13 @@ $DOTLINEFORM_DOCS_BASE_DIR/
       catalogue/
   preview/
     assets/works/{primary,thumbs,media/files}/
+    assets/media/workspace/{img,thumbs,svg,files,html}/
+    assets/media/collections/<collection>/{img,thumbs,svg,files,html}/
     preview-manifest.json
     documents/{index-tree.json,recent.json,by-id/,...}
     search/index.json
     collections/<collection>/documents/
     catalogue/
-  assets/
-    media/workspace/{img,svg,files,html}/
-    media/collections/<collection>/{img,svg,files,html}/
 ```
 
 | Role | Ownership |
@@ -53,7 +54,8 @@ $DOTLINEFORM_DOCS_BASE_DIR/
 | Working Source | Canonical Markdown, ordinary hierarchy/order, selected membership, media provenance and registered producer input. |
 | Working Generated | Replaceable document, Search and Catalogue JSON used by the local reader. |
 | Private Catalogue queues | Persisted Working selections/readiness and completed publication progress, with owner-specific timestamps; ordinary document builds do not replace or reset them. |
-| Shared document assets | Current ordinary/collection document media. |
+| Working document assets | Current ordinary/collection media for local readers, intake, builds, inventory and package/export inputs. |
+| Preview document assets | Prepared selected document media used for publication distribution, retained between operations. |
 | Working Work assets | Refresh-owned prepared media used by local Docs readers. |
 | Preview Work assets | Per-Work Publish output retained between operations. |
 | Preview | One complete read-only prepared snapshot retained by Publish, independently inspectable on disk. |
@@ -174,7 +176,7 @@ Distinct code review covered the normal/empty/unchanged/title/date/deletion path
 
 | Operation | Docs Viewer Manage | Site-preview / public site |
 | --- | --- | --- |
-| Browse documents, media and Search | Working generated output and shared assets | Repository/public output and configured public media |
+| Browse documents, media and Search | Working generated output and assets | Repository/public output and configured public media |
 | Create, edit, Delete, placement and Import | Authoring operations | Unavailable |
 | Publish | One awaited preparation and distribution operation | Unavailable |
 | Collection reports | Configured Working owner | Published read-only output |
@@ -193,12 +195,12 @@ Distribution consumes the exact completed snapshot from preparation, without rer
 
 ## Media Ownership
 
-Ready media has one shared current asset location and configured public destinations. Editable inputs retain their source owner; registered producers build their configured outputs. Collection media and Mermaid inputs remain with the exact collection owner. Same-named assets in different collections are independent.
+Ready document media lives under `working/assets/media/` and `preview/assets/media/`, using `workspace/<type>/` and `collections/<id>/<type>/` beneath each root. Local readers, intake, ordinary generation, inventory and package/export inputs use Working. Editable inputs retain their Working source owner. Collection media and Mermaid inputs remain with the exact collection owner; same-named assets in different collections are independent. The former workspace-level `assets/media/` root is retired without a fallback or second write destination.
 
-Local media uses `/docs/assets/<configured-family>/<identity>`. Prepared content records exact shared asset identities; publication projects the configured public URLs. Authored logical identities remain unchanged. Preview contains no media copies or historical renditions.
+Local media uses `/docs/assets/<configured-family>/<identity>`, resolved to Working. Authored tokens, `docs-media:` identities, public URLs and R2 namespaces remain unchanged. Temporary publication builds read Working media and write their produced media into their isolated `generated/media/` or collection `generated/collections/<id>/media/` owner. Snapshot assembly selects those completed producer bytes and referenced Working bytes together, then copies that selection into Preview before recording completion. Temporary media is removed with the build workspace; Preview has no persistent source/generated tree.
 
 Logical identity, storage provider and served URL are separate. Location helpers confine paths/keys and own reads, writes and byte verification. A reference does not establish ownership of its bytes; Catalogue media and retained external originals have separate owners.
 
-Distribution reconciles the prepared asset selection from current shared local bytes into configured repository/R2 destinations. Missing local assets fail without remote fallback. Comparison precedes writes; transferred bytes are verified. Publish does not automatically delete shared or remote assets, advance media versions or retain backup trees. Existing public route and R2 namespaces retain their configured identities.
+Distribution reconciles the prepared asset selection from Preview into configured repository/R2 destinations. Snapshot replacement preserves `preview/assets/` without enumerating or hashing its media tree. Only selected document media is compared/copied and verified; unselected files remain in place. Missing selected Working inputs fail preparation without a remote fallback. Failure during replacement leaves no valid completion receipt; distribution failure retains completed Preview. Publish does not automatically delete unreferenced document/remote assets, advance media versions or retain backup trees.
 
 Manual review covers the principal Manage readers/actions and successful Publish feedback. Works editor, package operations, saved-state conversion, failure recovery and independent R2 verification have not been exercised as part of this workflow change; no measured speedup is claimed. Historical scope and publication tests remain unchanged and are not current integration evidence.
