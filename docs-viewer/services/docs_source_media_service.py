@@ -31,7 +31,7 @@ from docs_media_storage import validate_media_filename
 from docs_mermaid_media import produce_mermaid_svg
 from docs_workspace_config import (
     DocsStageConfig, DocsCollectionConfig,
-    managed_media_config, require_document_authoring,
+    managed_media_config, require_document_authoring, require_document_media,
 )
 from docs_staged_media_fragments import (
     build_file_link_fragment,
@@ -162,6 +162,7 @@ def _source_media_request_contract(repo_root: Path, body: dict[str, Any], source
     resolved = resolve_managed_document_target(repo_root, target)
     config = resolved.document_config
     require_document_authoring(config)
+    require_document_media(config)
     if source_path.suffix.lower() not in media_suffixes(kind):
         raise ValueError(f"Unsupported {kind} format; select one of: {', '.join(sorted(media_suffixes(kind)))}")
     fallback = humanize(source_path.stem) or ("Image" if kind == MEDIA_IMAGE else "File")

@@ -120,7 +120,7 @@ def build_media_metadata(repo_root: Path, config: DocsStageConfig) -> dict[str, 
     if config.stage != "working":
         raise ValueError("Docs Media generation requires Working")
     owners = []
-    for owner in (config, *config.collections):
+    for owner in (config, *config.media_collections):
         label = owner.title if isinstance(owner, DocsCollectionConfig) else "Ordinary docs"
         try:
             owners.append(_owner_metadata(repo_root, owner))

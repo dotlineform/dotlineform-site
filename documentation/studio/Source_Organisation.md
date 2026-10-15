@@ -9,7 +9,7 @@ parent_id: d-20260424-000000-50b63f
 ---
 # Docs Viewer Source Organisation
 
-`docs-viewer/config/workspace/docs-workspace.json` is the storage authority, using `docs_workspace_v6`. The loader resolves the existing root selected by `DOTLINEFORM_DOCS_BASE_DIR` without inferred or fallback storage. Document and Work media resolve beneath configured Working and Preview asset roots.
+`docs-viewer/config/workspace/docs-workspace.json` is the storage authority, using `docs_workspace_v7`. The loader resolves the existing root selected by `DOTLINEFORM_DOCS_BASE_DIR` without inferred or fallback storage. Document and Work media resolve beneath configured Working and Preview asset roots.
 
 `DOTLINEFORM_DOCS_BASE_DIR` selects the Docs Viewer folder directly. It is independent of `DOTLINEFORM_PROJECTS_BASE_DIR`, which owns Catalogue, Processing, Data Sharing and other project workspaces. Both settings live in `.env.local`; neither is an alias or fallback for the other. To relocate Docs storage, stop services, move the complete Working and Preview trees to the explicitly selected root, change the setting, verify the resolved locations, and restart.
 
@@ -63,6 +63,8 @@ $DOTLINEFORM_DOCS_BASE_DIR/
 | Rendered view | Presentation of document payloads and media; it is not source. |
 
 Working registers documents, collection hosts, customisations and media once. Preview derives the same owners, has no persistent source/generated tree and has no browsing route. Publish builds ordinary and other collection documents in temporary storage, retains completed Catalogue documents, then replaces the snapshot while preserving `preview/assets/`. Private incremental queues live directly in `working/`; [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) and [Catalogue Deployment](Catalogue_Deployment.md) own them.
+
+Collection document-media paths in the tree above apply only to collections declaring `document_media: true`: Context (`works`), Concepts and Moments. Catalogue declares false, so it has documents and separate Work media but no `assets/media/collections/catalogue/` owner, source-media producer or document-media publication binding. Existing empty remnants of that former namespace are not read, maintained or recreated by these owners.
 
 Both private Catalogue queue schemas are version 3 and place their header first. Updates retain the last successful Refresh time, shared pending state and per-Work readiness. Publication retains the last completed nonempty Catalogue Work queue time and per-Work Preview progress. These files are private workflow state, independent of generated-output replacement and public projection; missing or malformed queues stop their owning operation. Projects-owned `catalogue/media-staging/` remains outside the Docs root, with its current family layout mapped in [Media And Asset Handling](Media_And_Asset_Handling.md#workspace-configuration-and-storage).
 

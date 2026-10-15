@@ -192,7 +192,7 @@ def _media_identity_from_url(value: str, prefix: str) -> str:
 def _preview_media_bindings(config: DocsStageConfig) -> dict[str, tuple[str, Path]]:
     """Map each logical Docs media family to its asset-root-relative path."""
     bindings = {}
-    for collection in (config, *config.collections):
+    for collection in (config, *config.media_collections):
         child = getattr(collection, "collection", "")
         for media_type, media in collection.media.types.items():
             key = f"{child}/{media_type}" if child else media_type
@@ -285,7 +285,7 @@ def build_preview_snapshot_files(
     bindings = _preview_media_bindings(config)
     generated_root = config.generated.documents.location.path.parent
     produced_roots = {}
-    for collection in (config, *config.collections):
+    for collection in (config, *config.media_collections):
         child = getattr(collection, "collection", "")
         for media_type in collection.media.types:
             key = f"{child}/{media_type}" if child else media_type

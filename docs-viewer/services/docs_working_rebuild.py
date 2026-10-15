@@ -76,6 +76,8 @@ def rebuild_working_docs_and_search(repo_root: Path) -> dict[str, Any]:
 
         media = {}
         for name, builder in builders.items():
+            if builder.media_owner.media is None:
+                continue
             media[name or "documents"] = perform(f"media/{name or 'documents'}", lambda: build_collection_media_snapshot(
                 repo_root, builder.media_owner, write=True,
                 markdown_sources=[doc.source_text for doc in documents[name]],

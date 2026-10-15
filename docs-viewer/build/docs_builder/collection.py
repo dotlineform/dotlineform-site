@@ -214,7 +214,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
         ]
         docs_by_id = {doc.doc_id: doc for doc in summaries}
         media_snapshot = (
-            None if self.skip_media_builds or self.targeted_build
+            None if self.skip_media_builds or self.targeted_build or self.media_owner.media is None
             else build_collection_media_snapshot(
                 self.repo_root, self.media_owner, write=write,
                 markdown_sources=[doc.source_text for doc in docs if doc.source_text is not None],

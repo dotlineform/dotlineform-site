@@ -157,7 +157,7 @@ def audit_docs_broken_links(repo_root: Path, workspace: DocsWorkspaceConfig) -> 
         media_assets = {
             media_type: FilesystemArtifactLocationAdapter(
                 media.asset_location, root=filesystem_location_root(repo_root, media.asset_location),
-            ) for media_type, media in owner.media.types.items()
+            ) for media_type, media in (owner.media.types.items() if owner.media is not None else ())
         }
         media_exists: dict[tuple[str, str], bool] = {}
         for path in paths:

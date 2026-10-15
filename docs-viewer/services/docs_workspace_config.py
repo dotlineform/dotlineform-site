@@ -32,7 +32,7 @@ from docs_collection_customisations import (
 
 
 CONFIG_REL_PATH = Path("docs-viewer/config/workspace/docs-workspace.json")
-SCHEMA_VERSION = "docs_workspace_v6"
+SCHEMA_VERSION = "docs_workspace_v7"
 DOTLINEFORM_DOCS_BASE_DIR_ENV = "DOTLINEFORM_DOCS_BASE_DIR"
 EXTERNAL_DATA_ROOT_MARKER = f"${DOTLINEFORM_DOCS_BASE_DIR_ENV}"
 STAGES = ("working", "preview")
@@ -124,7 +124,7 @@ class DocsCollectionConfig:
     collection_customisation: DocsCollectionCustomisationConfig | None
     stage: str
     source: DocsSourceConfig
-    media: DocsMediaConfig
+    media: DocsMediaConfig | None
     generated: DocsGeneratedConfig
     preview: DocsPreviewConfig
     public_projection: DocsPublicProjectionConfig | None
@@ -143,6 +143,11 @@ class DocsStageConfig:
     allow_unresolved_parent_ids: bool
     collections: tuple[DocsCollectionConfig, ...]
     search_fields: tuple[str, ...]
+
+    @property
+    def media_collections(self) -> tuple[DocsCollectionConfig, ...]:
+        """Select configured document-media owners independently of document membership."""
+        return tuple(collection for collection in self.collections if collection.media is not None)
 
     @property
     def site_search_collections(self) -> tuple[DocsCollectionConfig, ...]:
@@ -172,7 +177,7 @@ class DocsAssetsConfig:
     work_thumbnails: ArtifactLocation
     work_files: ArtifactLocation
     served_path_prefix: str
-    collection_ids: tuple[str, ...]
+    document_media_collections: tuple[str, ...]
     media_types: tuple[str, ...]
 
     def url(self, location: ArtifactLocation) -> str:
@@ -202,10 +207,10 @@ class DocsAssetsConfig:
             raise ValueError("asset media_type must be registered in the workspace")
         if collection is None:
             owner = Path("workspace")
-        elif collection in self.collection_ids:
+        elif collection in self.document_media_collections:
             owner = Path("collections") / collection
         else:
-            raise ValueError("asset collection must be an exact registered collection ID")
+            raise ValueError("asset collection must be an exact configured document-media owner")
         return location_child(self.document_media, owner / media_type)
 
     def reference_path(self, identity: str) -> Path:
@@ -219,7 +224,7 @@ class DocsAssetsConfig:
         families = [self.work_primary.path, self.work_thumbnails.path, self.work_files.path]
         families.extend(
             self.document_media.path / owner / media_type
-            for owner in (Path("workspace"), *(Path("collections") / child for child in self.collection_ids))
+            for owner in (Path("workspace"), *(Path("collections") / child for child in self.document_media_collections))
             for media_type in self.media_types
         )
         if not any(path != family and path.is_relative_to(family) for family in families):
@@ -485,7 +490,7 @@ def _collections(raw: Any, *, repo_root: Path, workspace_root: ArtifactLocation,
     seen = set()
     for index, raw_item in enumerate(raw):
         field = f"stages.{stage}.collections[{index}]"
-        item = _object(raw_item, field=field, required={"collection", "title", "icon", "report_host_doc_id", "include_in_site_search"}, optional={
+        item = _object(raw_item, field=field, required={"collection", "document_media", "title", "icon", "report_host_doc_id", "include_in_site_search"}, optional={
             "public_title", "supports_return_import", "collection_customisation",
         })
         if stage == "preview":
@@ -496,6 +501,7 @@ def _collections(raw: Any, *, repo_root: Path, workspace_root: ArtifactLocation,
                         if customisation and customisation.get("id") == WORKING_WORKS_CUSTOMISATION_ID else None
                     )}
         child = normalize_collection_id(item["collection"], field=f"{field}.collection")
+        owns_media = child in assets.document_media_collections
         if child in seen:
             raise ValueError(f"{field}.collection is duplicated: {child}")
         seen.add(child)
@@ -511,7 +517,7 @@ def _collections(raw: Any, *, repo_root: Path, workspace_root: ArtifactLocation,
         child_projection = None
         if projection is not None:
             public_media = {}
-            for media_type, media in projection.media.items():
+            for media_type, media in (projection.media.items() if owns_media else ()):
                 suffix = Path("collections") / child / media_type
                 public_media[media_type] = DocsPublicMediaConfig(
                     media_type, MEDIA_REFERENCE_ROOT / "collections" / child / media_type,
@@ -530,14 +536,14 @@ def _collections(raw: Any, *, repo_root: Path, workspace_root: ArtifactLocation,
             stage=stage,
             source=DocsSourceConfig(source_root), generated=_generated(generated_root), preview=_preview(preview_root),
             media=_media(media_settings, source_root=source_root, generated_root=generated_root,
-                         assets=assets, stage=stage, collection=child),
+                         assets=assets, stage=stage, collection=child) if owns_media else None,
             public_projection=child_projection,
         ))
     return tuple(result)
 
 
 def _assets(raw: Any, *, workspace_root: ArtifactLocation,
-            collection_ids: tuple[str, ...], media_types: tuple[str, ...], assets_base_dir: Path | None,
+            document_media_collections: tuple[str, ...], media_types: tuple[str, ...], assets_base_dir: Path | None,
             work_assets_base_dir: Path | None) -> DocsAssetsConfig:
     item = _object(raw, field="assets", required={
         "roots", "document_media", "work_primary", "work_thumbnails", "work_files", "served_path_prefix",
@@ -575,7 +581,7 @@ def _assets(raw: Any, *, workspace_root: ArtifactLocation,
     return DocsAssetsConfig(
         root=root, roots=roots, work_root=work_root, work_roots=work_roots,
         **{key: location_child(root if key == "document_media" else work_root, path) for key, path in paths.items()},
-        served_path_prefix=prefix, collection_ids=collection_ids, media_types=media_types,
+        served_path_prefix=prefix, document_media_collections=document_media_collections, media_types=media_types,
     )
 
 
@@ -649,10 +655,13 @@ def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: 
     })
     if not isinstance(working["collections"], list):
         raise ValueError("stages.working.collections must be an array")
-    collection_ids = tuple(
-        normalize_collection_id(child.get("collection") if isinstance(child, dict) else None, field="collection")
-        for child in working["collections"]
-    )
+    document_media_collections = []
+    for index, child in enumerate(working["collections"]):
+        if not isinstance(child, dict):
+            raise ValueError("stages.working.collections entries must be objects")
+        collection = normalize_collection_id(child.get("collection"), field="collection")
+        if _boolean(child.get("document_media"), field=f"stages.working.collections[{index}].document_media"):
+            document_media_collections.append(collection)
     # CLI transport for explicitly isolated Preview builds; ordinary storage still
     # derives from the workspace. Inputs stay separate from temporary outputs.
     if assets_base_dir is None and os.environ.get("DOTLINEFORM_DOCS_BUILD_ASSETS_DIR"):
@@ -660,7 +669,7 @@ def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: 
     if work_assets_base_dir is None and os.environ.get("DOTLINEFORM_DOCS_BUILD_WORK_ASSETS_DIR"):
         work_assets_base_dir = Path(os.environ["DOTLINEFORM_DOCS_BUILD_WORK_ASSETS_DIR"])
     assets = _assets(payload["assets"], workspace_root=workspace_root,
-                     collection_ids=collection_ids, media_types=tuple(projection.media),
+                     document_media_collections=tuple(document_media_collections), media_types=tuple(projection.media),
                      assets_base_dir=assets_base_dir, work_assets_base_dir=work_assets_base_dir)
     stages = []
     for stage in STAGES:
@@ -782,11 +791,19 @@ def public_search_path(config: DocsWorkspaceConfig | DocsStageConfig | DocsColle
     return projection.search.location.path if projection and projection.search else None
 
 
+def require_document_media(config: DocsStageConfig | DocsCollectionConfig) -> DocsMediaConfig:
+    """Require document-media authority at an invoked media operation's boundary."""
+    if config.media is None:
+        raise ValueError(f"Collection {config.collection!r} does not own document media")
+    return config.media
+
+
 def managed_media_config(config: DocsStageConfig | DocsCollectionConfig, media_type: str) -> DocsManagedMediaConfig:
     require_selected_stage(config)
-    if media_type not in config.media.types:
+    media = require_document_media(config)
+    if media_type not in media.types:
         raise ValueError(f"unconfigured media type: {media_type}")
-    return config.media.types[media_type]
+    return media.types[media_type]
 
 
 def load_docs_media_owner(repo_root: Path, collection: str = "") -> DocsStageConfig | DocsCollectionConfig:
@@ -795,6 +812,7 @@ def load_docs_media_owner(repo_root: Path, collection: str = "") -> DocsStageCon
         return config
     for child in config.collections:
         if child.collection == collection:
+            require_document_media(child)
             return child
     raise ValueError(f"unconfigured collection: {collection}")
 
@@ -802,7 +820,7 @@ def load_docs_media_owner(repo_root: Path, collection: str = "") -> DocsStageCon
 def public_media_bindings(config: DocsStageConfig) -> dict[str, tuple[DocsStageConfig | DocsCollectionConfig, DocsPublicMediaConfig]]:
     """Bind media to its exact ordinary/collection owner for public deployment."""
     bindings = {}
-    for collection in (config, *config.collections):
+    for collection in (config, *config.media_collections):
         if collection.public_projection is not None:
             child = getattr(collection, "collection", "")
             for media_type, media in collection.public_projection.media.items():

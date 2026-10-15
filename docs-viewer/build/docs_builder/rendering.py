@@ -165,7 +165,7 @@ class ContentRenderingMixin:
         clean_path = str(raw_path or "").strip().lstrip("/")
         if not clean_path or re.match(r"\A[a-z][a-z0-9+\-.]*://", clean_path, re.IGNORECASE):
             return ""
-        for media_type, media in self.media_owner.media.types.items():
+        for media_type, media in (self.media_owner.media.types.items() if self.media_owner.media is not None else ()):
             reference_prefix = media.reference_prefix.as_posix().strip("/")
             if clean_path == reference_prefix or clean_path.startswith(f"{reference_prefix}/"):
                 return media_type
@@ -194,7 +194,7 @@ class ContentRenderingMixin:
         if re.match(r"\A[a-z][a-z0-9+\-.]*://", relative_path, re.IGNORECASE):
             return relative_path
         clean_path = relative_path.lstrip("/")
-        for media in self.media_owner.media.types.values():
+        for media in (self.media_owner.media.types.values() if self.media_owner.media is not None else ()):
             reference_prefix = media.reference_prefix.as_posix().strip("/")
             served_prefix = media.served_path_prefix
             if not served_prefix.startswith("/docs/assets/media/"):

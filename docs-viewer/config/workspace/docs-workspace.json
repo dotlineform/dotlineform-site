@@ -1,5 +1,5 @@
 {
-  "schema_version": "docs_workspace_v6",
+  "schema_version": "docs_workspace_v7",
   "media_report_metadata": "working/generated/reports/docs-media/metadata.json",
   "broken_links_report": "working/generated/reports/broken-links/report.json",
   "links_report": "working/generated/reports/links/report.json",
@@ -118,6 +118,7 @@
       "collections": [
         {
           "collection": "works",
+          "document_media": true,
           "icon": "dlf-context",
           "include_in_site_search": true,
           "title": "Context",
@@ -129,6 +130,7 @@
         },
         {
           "collection": "concepts",
+          "document_media": true,
           "icon": "dlf-concept",
           "include_in_site_search": false,
           "title": "Concepts",
@@ -137,6 +139,7 @@
         },
         {
           "collection": "moments",
+          "document_media": true,
           "icon": "dlf-moment",
           "include_in_site_search": false,
           "title": "Moments",
@@ -144,6 +147,7 @@
         },
         {
           "collection": "catalogue",
+          "document_media": false,
           "icon": "dlf-catalogue",
           "include_in_site_search": false,
           "title": "catalogue",

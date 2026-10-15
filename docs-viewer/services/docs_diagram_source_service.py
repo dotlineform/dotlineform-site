@@ -27,6 +27,8 @@ def _verified_diagram_sources(
     target: ManagedDocumentTarget,
 ) -> list[dict[str, str]]:
     config = target.document_config
+    if config.media is None:
+        return []
     build = config.media.build_sources.get("mermaid")
     published_media = config.media.types.get("svg")
     if (

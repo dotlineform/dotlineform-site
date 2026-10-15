@@ -27,7 +27,7 @@ def prepare_stage_mermaid(repo_root: Path, config: DocsStageConfig) -> dict[str,
     if config.stage != "preview" or config.public_projection is None:
         return None
     results = []
-    for collection in (config, *config.collections):
+    for collection in (config, *config.media_collections):
         if collection.public_projection is None:
             continue
         child = getattr(collection, "collection", "")

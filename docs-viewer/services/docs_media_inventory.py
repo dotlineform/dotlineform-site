@@ -49,6 +49,8 @@ def source_media_references(
 ) -> tuple[DocsMediaReference, ...]:
     """Return configured, source-collection-owned media references from one document."""
 
+    if config.media is None:
+        return ()
     metadata, body = parse_source_text(source)
     return parsed_source_media_references(
         config, source, metadata=metadata,
@@ -69,6 +71,8 @@ def parsed_source_media_references(
 ) -> tuple[DocsMediaReference, ...]:
     """Extract references using supplied metadata and completed token parsing."""
 
+    if config.media is None:
+        return ()
     found: set[tuple[str, str, str]] = set()
     owner_collection = getattr(config, "collection", "")
     media_types = {
@@ -135,6 +139,8 @@ def list_collection_media(
     Storage placeholders are omitted. Display exclusions and ordering belong to
     consumers; no source bodies, paths or credentials enter the returned records.
     """
+    if config.media is None:
+        return ()
     published = {
         media_type: media.asset_location for media_type, media in config.media.types.items()
         if media_type not in exclude_media_types

@@ -173,7 +173,7 @@ def _plan(repo_root: Path, workspace: DocsWorkspaceConfig, catalogue_selection: 
             if (child, doc.doc_id) in selected_targets:
                 selected_rows.append(selected_row(doc, collection))
         prefix = Path("collections") / child / "media" if child else Path("media")
-        if accepted:
+        if accepted and collection.media is not None:
             desired.update({path: data for path, data in source_files.items() if path.is_relative_to(prefix / "build-source") or path == prefix / "media-source-evidence.json"})
     desired[selected_path(working).relative_to(source_root)] = selected_text({**selected, "docs": selected_rows}).encode("utf-8")
     recent = build_recent_payload(
@@ -261,6 +261,7 @@ def build_captured_preview(
             documents = document_source_path(collection)
             documents.mkdir(parents=True, exist_ok=True)
             generated_documents_path(collection).mkdir(parents=True, exist_ok=True)
+        for collection in (config, *config.media_collections):
             for producer in collection.media.build_sources.values():
                 producer.location.path.mkdir(parents=True, exist_ok=True)
         result = subprocess.run(
