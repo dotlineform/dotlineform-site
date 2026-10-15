@@ -236,7 +236,7 @@ function runReport(state) {
     return Promise.resolve();
   }
   setBusy(state, true);
-  state.statusNode.textContent = "Running Project State...";
+  state.statusNode.textContent = "";
   state.snapshot = null;
   state.sortedRows = [];
   state.projection = currentProjection(state);

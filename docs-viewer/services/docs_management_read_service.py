@@ -16,7 +16,6 @@ from docs_management_broken_links_service import read_broken_links
 import docs_unpublishable_report
 from docs_selected_documents import read_selected
 from docs_workspace_config import load_docs_working_config
-import docs_source_config_settings
 from docs_management_capabilities_service import capabilities_payload
 from docs_management_document_target import managed_document_metadata
 from docs_management_source_service import read_source_document
@@ -119,10 +118,6 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         routes.GENERATED_SEARCH_PATH,
     }:
         return docs_generated_read_payload(repo_root, path, params)
-    if path == routes.SOURCE_CONFIG_SETTINGS_PATH:
-        return docs_source_config_settings.build_settings_contract(
-            repo_root,
-        )
     if path == routes.SOURCE_PATH:
         return read_source_document(repo_root, params)
     if path == routes.METADATA_PATH:

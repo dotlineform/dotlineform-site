@@ -322,7 +322,7 @@ function refreshSourceDirectory(state, sourceDirectory) {
   state.runButton.disabled = true;
   state.reviewButton.disabled = true;
   setStatus(state.statusNode, "", "");
-  setText(state.candidateNoteNode, "Loading import sources...");
+  setText(state.candidateNoteNode, "");
   state.refreshPromise = fetchImportCandidates(state, directory)
     .then((candidates) => {
       state.inventoryCurrent = true;
@@ -390,7 +390,7 @@ async function runReview(state) {
   syncImportInputControls(state);
   syncRouteBusyState(state);
   state.onBusyChange(true);
-  setStatus(state.statusNode, "busy", "Preparing the complete package for Docs Review...");
+  setStatus(state.statusNode, "", "");
   try {
     const result = await openDocsImportCandidateInReview({
       stagedFilename: candidate.filename,

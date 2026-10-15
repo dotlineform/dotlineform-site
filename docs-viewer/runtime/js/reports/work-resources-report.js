@@ -94,7 +94,7 @@ async function runReport(state) {
   state.rows = [];
   state.rowsNode.replaceChildren();
   state.emptyNode.hidden = true;
-  state.statusNode.textContent = `Running ${state.options.title}...`;
+  state.statusNode.textContent = "";
   try {
     const rows = await state.options.readRows();
     if (state.released) return;

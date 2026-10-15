@@ -197,7 +197,7 @@ config uses the public projection and receives no management inventory, state
 icons, source controls, or metadata actions.
 The durable source, payload, URL, manifest, and lifecycle contract is documented in [Embedded Detail Documents](Embedded_Detail_Documents.md).
 
-The Source Config Report (`source_config`) was retired on 2026-09-26. Its JavaScript renderer, Python report builder, `GET /docs/source-config` endpoint, capability flag, registry entry, loader, client method, dedicated styles and Working host document were removed. Configuration editing remains owned by `/docs/source-config-settings`.
+The Source Config Report (`source_config`) was retired on 2026-09-26. Its JavaScript renderer, Python report builder, `GET /docs/source-config` endpoint, capability flag, registry entry, loader, client method, dedicated styles and Working host document were removed. Settings and its dedicated API were subsequently retired; configuration editing is a design-time action described by [Configuration And Extension Points](Configuration_And_Extension_Points.md#workspace-and-target-contracts).
 
 `docs_broken_links` opens the saved Working audit through `GET /docs/broken-links`. Refresh explicitly scans ordinary and configured collection sources and saves a new private JSON snapshot through an empty-object `POST` to the same route. Last scanned time sits beside Refresh, vertically centred, without a broken-link count; unscanned sources remain explanatory rows. Missing data gives an empty report without a first-refresh prompt. Refresh retains loaded results and uses a progress cursor without running messages. [Broken Links Script](Broken_Links_Script.md) owns audit coverage, persistence, failure behavior and the local-only boundary.
 

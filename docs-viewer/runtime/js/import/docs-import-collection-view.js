@@ -55,9 +55,6 @@ function recordList(records) {
 }
 
 function confirmationPanel(phase, renderActions) {
-  if (phase === "applying") {
-    return '<section class="docsViewerImport__collectionDecision"><p>Applying the confirmed collection plan...</p></section>';
-  }
   if (phase !== "confirmation" || renderActions === false) return "";
   return [
     '<section class="docsViewerImport__collectionDecision">',

@@ -513,9 +513,6 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
   }
 
   var refs = renderShell(context, collection);
-  if (!context.managementContext) {
-    refs.statusNode.textContent = "Loading " + collectionItemsLabel(collection) + "...";
-  }
   var state = {
     root: root,
     openDocument: context.openDocument,

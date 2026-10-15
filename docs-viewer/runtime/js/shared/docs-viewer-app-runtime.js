@@ -530,13 +530,6 @@ export function startDocsViewerRuntime(options) {
       defaultDocId: documentIndex.defaultDocId,
       defaultRouteDocId: function () { return defaultRouteDocId; },
       docsViewerConfigUrl: docsViewerConfigUrl,
-      commitDefaultDocumentChange: function (docId) {
-        defaultRouteDocId = docId;
-        routeContext.defaultRouteDocId = docId;
-        appSession.domains.workspaceConfig.activeConfig.defaultDocId = docId;
-        appSession.domains.workspaceConfig.viewerConfig.workspace.default_doc_id = docId;
-      },
-      configuredDefaultDocId: function () { return appSession.domains.workspaceConfig.activeConfig.defaultDocId; },
       escapeHtml: escapeHtml,
       getConfigValue: getConfigValue,
       isManagementContext: function () { return routeWorkflow.managementUiEnabled(); },

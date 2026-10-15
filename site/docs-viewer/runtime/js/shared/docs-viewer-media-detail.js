@@ -128,7 +128,7 @@ function mountCatalogueReferences(context) {
     async function initialImage() {
       control.disabled = true;
       control.setAttribute("aria-busy", "true");
-      message(" Loading image…");
+      message("");
       try {
         if (typeof context.loadMediaTarget !== "function") throw new Error("Catalogue media is unavailable in this view.");
         var presentation = await context.loadMediaTarget(request());
@@ -144,7 +144,7 @@ function mountCatalogueReferences(context) {
       if (control.disabled || !isCurrent()) return;
       control.disabled = true;
       control.setAttribute("aria-busy", "true");
-      message(" Loading…");
+      message("");
       try {
         if (typeof context.openMediaTarget !== "function") throw new Error("Catalogue media is unavailable in this view.");
         await context.openMediaTarget(Object.assign(request(), { onPresentation: projectInlineImage }));
@@ -725,7 +725,6 @@ export function createDocsViewerMediaDetailAdapter() {
       var groupLink = groups.find(function (entry) { return sameMediaTarget(entry.target, target); });
       if (!member && !groupLink) throw new Error("Media View target is not a supplied member or group link.");
       section.setAttribute("aria-busy", "true");
-      message("Loading " + (member || groupLink).label + "…");
       try {
         if (groupLink) {
           var group = normalizeDocsViewerMediaPresentation(await readGroup(state, groupLink.target));

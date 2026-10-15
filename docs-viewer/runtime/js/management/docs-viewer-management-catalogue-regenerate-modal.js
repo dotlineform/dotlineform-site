@@ -28,7 +28,7 @@ export function openCatalogueRegenerateModal(options) {
     phase = "running";
     api.setStatus("");
     setBusy(true);
-    content.textContent = "Reconciling Catalogue documents…";
+    content.textContent = "";
     options.run().then(function (payload) {
       result = payload;
       phase = "result";

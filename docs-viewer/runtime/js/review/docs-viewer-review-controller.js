@@ -139,7 +139,7 @@ export function createDocsViewerReviewController(options) {
       var requestedPackageId = activePackageId;
       building = true;
       projectBuildButton(buildButton);
-      setStatus("Building review package...", false);
+      setStatus("", false);
       provider.build(requestedPackageId).then(function (payload) {
         setStatus(payload.summary_text || "Built review package.", false);
         windowRef.location.reload();

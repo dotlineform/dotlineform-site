@@ -13,13 +13,10 @@ import { openRecentExclusions } from "./docs-viewer-management-client.js";
 export function docsViewerPreparePackageActionControlState(options = {}) {
   var resolution = options.resolution || null;
   var disabledReason = "";
-  if (!options.managementChecked) {
-    disabledReason = "Checking Prepare package availability.";
-  } else if (!options.managementAvailable) {
+  var pending = !options.managementChecked || options.managementBusy;
+  if (options.managementChecked && !options.managementAvailable) {
     disabledReason = "Prepare package is unavailable.";
-  } else if (options.managementBusy) {
-    disabledReason = "Docs management is busy.";
-  } else {
+  } else if (!pending) {
     var capability = documentPackagePrepareCapability(options.capabilities);
     if (!capability.available) disabledReason = capability.reason;
     else if (!resolution || !resolution.enabled) {
@@ -30,7 +27,7 @@ export function docsViewerPreparePackageActionControlState(options = {}) {
   }
   return {
     hidden: Boolean(resolution && resolution.hidden),
-    disabled: Boolean(disabledReason),
+    disabled: pending || Boolean(disabledReason),
     disabledReason: disabledReason
   };
 }
@@ -38,11 +35,8 @@ export function docsViewerPreparePackageActionControlState(options = {}) {
 export function docsViewerStaticHtmlExportActionControlState(options = {}) {
   var resolution = options.resolution || null;
   var disabledReason = "";
-  if (!options.managementChecked) {
-    disabledReason = "Checking Export availability.";
-  } else if (options.managementBusy || options.workflowActive) {
-    disabledReason = "Docs management is busy.";
-  } else {
+  var pending = !options.managementChecked || options.managementBusy || options.workflowActive;
+  if (!pending) {
     var capability = staticHtmlExportCapability(options.capabilities);
     if (!capability.available) disabledReason = capability.reason;
     else if (!resolution || !resolution.enabled) {
@@ -53,7 +47,7 @@ export function docsViewerStaticHtmlExportActionControlState(options = {}) {
   }
   return {
     hidden: Boolean(resolution && resolution.hidden),
-    disabled: Boolean(disabledReason),
+    disabled: pending || Boolean(disabledReason),
     disabledReason: disabledReason
   };
 }
@@ -112,22 +106,19 @@ export function createDocsViewerManagementIndexController(options = {}) {
     var resolution = resolveAction(actionId, targetDocId);
     var label = actionId === DOCS_VIEWER_ACTION_IDS.DELETE ? "Delete" : "Position";
     var disabledReason = "";
-    if (!management.managementChecked) {
-      disabledReason = "Checking " + label + " availability.";
-    } else if (!management.managementAvailable) {
+    var pending = !management.managementChecked || management.managementBusy;
+    if (management.managementChecked && !management.managementAvailable) {
       disabledReason = label + " is unavailable.";
-    } else if (management.managementBusy) {
-      disabledReason = "Docs management is busy.";
-    } else if (activeIndexViewId() !== "index-tree") {
+    } else if (!pending && activeIndexViewId() !== "index-tree") {
       disabledReason = "Return to the Index tree.";
-    } else if (callbacks.sourceEditingActive()) {
+    } else if (!pending && callbacks.sourceEditingActive()) {
       disabledReason = "Finish source editing before changing the Index.";
-    } else if (!resolution || !resolution.enabled) {
+    } else if (!pending && (!resolution || !resolution.enabled)) {
       disabledReason = resolution ? resolution.disabledReason : "No Index target document.";
     }
     return {
       hidden: Boolean(resolution && resolution.hidden),
-      disabled: Boolean(disabledReason),
+      disabled: pending || Boolean(disabledReason),
       disabledReason: disabledReason
     };
   }

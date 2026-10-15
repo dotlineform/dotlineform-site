@@ -3,14 +3,14 @@ draft: false
 doc_id: d-20260607-222033-f2a546
 title: Read And Config Scripts
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-09-26 15:28:56"
+last_updated: "2026-10-15"
 parent_id: d-20260607-222033-2a494e
 ---
 # Docs Viewer Read And Config Scripts
 
 ## `docs-viewer/services/docs_management_read_service.py`
 
-Purpose: GET route dispatcher for generated reads, source-config settings reads, source body reads, and staged import listings.
+Purpose: GET route dispatcher for generated reads, source body reads, and staged import listings.
 
 Ownership: owns query parameter normalization and mapping GET endpoint paths to read helpers.
 
@@ -18,7 +18,6 @@ Responsibilities:
 
 - validates `scope` against configured docs scopes
 - dispatches generated tree, Recent, doc payload, search, references, and reference-target reads
-- dispatches source-config settings contract reads
 - dispatches selected Markdown body reads
 - dispatches staged import file listings
 
@@ -66,25 +65,6 @@ Not responsible for:
 
 - enforcing endpoint access
 - applying lifecycle changes
-
-## `docs-viewer/services/docs_source_config_settings.py`
-
-Purpose: settings contract, validation, and allowlisted source-config writes.
-
-Ownership: owns which source-config fields are editable through manage mode.
-
-Responsibilities:
-
-- exposes editable scope fields, blocked scope fields, and deferred global fields
-- currently exposes no editable scope fields
-- validates proposed setting changes and value types
-- writes allowlisted changes to `docs-viewer/config/scopes/docs_scopes.json`
-- reports whether a rebuild is required
-
-Not responsible for:
-
-- running rebuild commands directly
-- editing install-time fields such as source roots, published locations, or route bases
 
 ## `docs-viewer/services/docs_source_model.py`
 

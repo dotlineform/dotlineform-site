@@ -126,7 +126,7 @@ export function initDocsViewerSearchController(context) {
     setView("recent-results");
     if (recentError) { clearRows(recentError, true); return; }
     if (!searchRecent.recentLoaded) {
-      clearRows("Loading recently edited docs...", false);
+      clearRows("", false);
       if (searchRecent.recentRequestPromise) return;
       loadRecentEntries().then(function () {
         if (recentActive()) renderRecentMode();
@@ -191,7 +191,7 @@ export function initDocsViewerSearchController(context) {
   function renderSearchPendingState() {
     if (!enabled("search") || !context.hasActiveQuery()) return;
     setView("search-results");
-    clearRows("Searching...", false);
+    clearRows("", false);
     resultsView.scrollTop = 0;
   }
 
@@ -201,7 +201,7 @@ export function initDocsViewerSearchController(context) {
     setView("search-results");
     if (searchError) { clearRows(searchError, true); return; }
     if (!searchRecent.searchLoaded) {
-      clearRows("Loading search data...", false);
+      clearRows("", false);
       if (searchRecent.searchRequestPromise) return;
       loadSearchIndex().then(function () {
         if (context.hasActiveQuery()) renderSearchMode();

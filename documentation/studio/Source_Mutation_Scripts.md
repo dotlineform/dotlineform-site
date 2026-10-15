@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-c0b57a
 title: Source Mutation Scripts
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-13 15:47:31"
+last_updated: "2026-10-15"
 parent_id: d-20260607-222033-2a494e
 ---
 # Docs Viewer Source Mutation Scripts
@@ -32,7 +32,7 @@ Reads canonical Index, moves the complete node through `docs_index_order.py` and
 
 ## `docs-viewer/services/docs_management_delete.py`
 
-Accepts one confirmed ordinary-root selection or singular configured collection target. It resolves ownership once, reads tree/Selected once, removes exact confined source paths, updates Index/Selected and clears a deleted configured default through its Settings owner. It passes known deleted IDs, remaining parent map, configuration and Selected into `complete_document_deletion`, retaining completed effects and target/phase on failure. It has no preview, revision, restoration, recovery build or public-cleanup machinery.
+Accepts one confirmed ordinary-root selection or singular configured collection target. It resolves ownership once, reads tree/Selected once, removes exact confined source paths and updates Index/Selected without mutating the design-time default or projecting browser configuration. It passes known deleted IDs, remaining parent map, configuration and Selected into `complete_document_deletion`, retaining completed effects and target/phase on failure. It has no preview, revision, restoration, recovery build or public-cleanup machinery.
 
 ## `docs-viewer/services/docs_write_rebuild.py`
 

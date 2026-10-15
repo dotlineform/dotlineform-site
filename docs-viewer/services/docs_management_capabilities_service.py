@@ -57,8 +57,6 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
         "capabilities": {
             "docs_management": True,
             "generated_data_reads": True,
-            "source_config_settings_reads": True,
-            "source_config_settings_writes": True,
             "source_editor": True,
             "local_folder_links": docs_local_links.local_folder_links_capability(repo_root),
             "html_import": docs_import_workspace["available"],

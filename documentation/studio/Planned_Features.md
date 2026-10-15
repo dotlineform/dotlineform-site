@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260428-000000-f5ff18
 title: Planned Features
 added_date: "2026-04-28 00:00:00"
-last_updated: "2026-10-15 00:00:00"
+last_updated: "2026-10-15"
 summary: This explains the delivery model and workflows to implement new repo and application features.
 ui_status: planned
 parent_id: ""
@@ -156,6 +156,10 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 ## Ad-hoc Deliveries
 
 Store new standalone delivery documents for bounded work that does not need a separate feature parent under `documentation/studio/deliveries/`. Parent them directly to this document and keep implementation state, decisions and completion gates in the delivery. At closeout, transfer lasting details to the durable owner and review whether the delivery and its link should be retained.
+
+- [Quiet Loading States](deliveries/Quiet_Loading_States.md) — Implemented and reviewed; awaiting manual acceptance. Removes transient loading/progress/availability text across reports, document media, discovery lists, management and modal workflows while preserving explicit busy/disabled/readiness flags, errors and completion feedback. Lint passed for all 31 canonical JavaScript owners; four public-module projections, projection check, site validation and source/diff review passed. Tests and live operations remain unrun; force reload Manage/public preview for acceptance.
+
+- [Default Document Configuration](deliveries/Default_Document_Configuration.md) — Implemented and reviewed; awaiting manual acceptance. Preserves the existing public document as one design-time local/public default, retires Settings and deletion-time clearing, retains site-code-update ownership of public configuration and removes configuration from the proposed Publish queue. Focused lint/compilation, CLI imports, unchanged canonical configuration projection, exact public runtime projection, site validation and source/diff review passed. Tests remain unchanged and unrun; restart Docs Viewer and force reload for manual acceptance.
 
 - [Source Control Relocation](deliveries/Source_Control_Relocation.md) — Implemented and reviewed; awaiting manual acceptance. The four canonical control JSON files now live directly under `working/source/`; readers/writers and New/Import authority carry the exact hierarchy path while prepared/public outputs retain their locations. The one-time move, 21-owner lint/compilation, production readers, exact write-boundary diagnostic and one targeted ordinary dry-run passed. Tests remain unchanged and unrun. Restart Docs Viewer services before manual authoring/Build/Publish acceptance.
 - [Selected Documents Optimisation](deliveries/Selected_Documents_Optimisation.md) — Implemented and reviewed; awaiting manual acceptance. Prepares exact navigation/thumbnail choices once, indexes committed updates, reorders only changed dates and lazily loads actual Work-thumbnail policy with retained disposal. Source membership and Build/Publish ownership are unchanged; the separate Source Control Relocation moves the canonical JSON to the source root. Focused JavaScript lint, read-only preparation of two Working/public selections with exact reader links, public projection check and site validation passed. Tests remain unchanged and unrun; force reload local/public-preview readers for manual acceptance.

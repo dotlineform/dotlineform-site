@@ -159,10 +159,6 @@
   mask-image: url("../icons/refresh-cw.svg");
 }
 
-.docsViewer__icon--settings{
-  mask-image: url("../icons/settings.svg");
-}
-
 .docsViewer__icon--square-arrow-right-exit{
   mask-image: url("../icons/square-arrow-right-exit.svg");
 }
@@ -699,10 +695,6 @@ select.docsViewer__positionTargets{
   color: var(--docs-viewer-warning);
 }
 
-.docsViewer__settingsWarnings{
-  color: var(--docs-viewer-warning);
-}
-
 .docsViewerPackagePrepare__selectionSummary{
   display: grid;
   gap: 0.35rem;
@@ -761,11 +753,6 @@ select.docsViewer__positionTargets{
 
 .docsViewerPackagePrepare__resultSection > code{
   overflow-wrap: anywhere;
-}
-
-.docsViewer__settingsWarnings ul{
-  margin: 0;
-  padding-left: 1.1rem;
 }
 
 .docsViewerScopeLifecycle{

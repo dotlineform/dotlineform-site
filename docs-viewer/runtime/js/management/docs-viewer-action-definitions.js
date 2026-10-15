@@ -23,8 +23,7 @@ export const DOCS_VIEWER_ACTION_IDS = Object.freeze({
   REBUILD_DOCS: "rebuild-docs",
   REBUILD_DOCUMENT: "rebuild-document",
   SET_DRAFT: "set-draft",
-  SET_SELECTED: "set-selected",
-  SETTINGS: "settings"
+  SET_SELECTED: "set-selected"
 });
 
 export const DOCS_VIEWER_ACTION_TARGETS = Object.freeze({
@@ -94,8 +93,7 @@ export const DOCS_VIEWER_ACTION_DEFINITIONS = Object.freeze({
   [IDS.REBUILD_DOCS]: actionDefinition(IDS.REBUILD_DOCS, TARGETS.WORKSPACE),
   [IDS.REBUILD_DOCUMENT]: actionDefinition(IDS.REBUILD_DOCUMENT, TARGETS.ACTIVE_DOCUMENT),
   [IDS.SET_DRAFT]: actionDefinition(IDS.SET_DRAFT, TARGETS.ACTIVE_DOCUMENT),
-  [IDS.SET_SELECTED]: actionDefinition(IDS.SET_SELECTED, TARGETS.ACTIVE_DOCUMENT),
-  [IDS.SETTINGS]: actionDefinition(IDS.SETTINGS, TARGETS.WORKSPACE)
+  [IDS.SET_SELECTED]: actionDefinition(IDS.SET_SELECTED, TARGETS.ACTIVE_DOCUMENT)
 });
 
 function normalizeId(value) {

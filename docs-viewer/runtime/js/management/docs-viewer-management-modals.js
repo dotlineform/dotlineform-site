@@ -1,7 +1,4 @@
 import {
-  renderSettingsWarningsMarkup
-} from "./docs-viewer-management-render.js";
-import {
   normalizeText,
   openDocsViewerNoticeModal
 } from "./docs-viewer-management-modal-shell.js";
@@ -20,9 +17,7 @@ export { openDocsViewerNoticeModal };
 
 export function createDocsViewerManagementModalController(options = {}) {
   var refs = options.refs || {};
-  var management = options.management || {};
   var callbacks = options.callbacks || {};
-  var settingsFieldState = null;
   var importModalCancelButton = null;
   var importLifecycle = null;
   var importRestoreFocusTarget = null;
@@ -33,31 +28,6 @@ export function createDocsViewerManagementModalController(options = {}) {
   var importCollectionLifecycle = null;
   var importCollectionCommand = null;
   var importCollectionPhase = "idle";
-  var settingsLifecycle = refs.settingsModal ? createDocsViewerModalLifecycle({
-    cancelElements: Array.from(refs.settingsModal.querySelectorAll("[data-settings-close]"))
-      .concat(refs.settingsCancelButton || [])
-      .filter(Boolean),
-    document: document,
-    initialFocus: function () { return refs.settingsCancelButton || refs.settingsModal; },
-    modal: refs.settingsModal,
-    onRequestClose: function () { closeSettingsModal(); }
-  }) : null;
-
-  function settingsModalOpen() {
-    return Boolean(refs.settingsModal && !refs.settingsModal.hidden);
-  }
-
-  function setModalStatus(node, message, stateName) {
-    if (!node) return;
-    node.textContent = String(message || "");
-    node.hidden = !message;
-    if (stateName) {
-      node.dataset.state = stateName;
-    } else {
-      delete node.dataset.state;
-    }
-  }
-
   function focusWithoutScroll(target) {
     if (!target || typeof target.focus !== "function") return;
     try {
@@ -451,144 +421,6 @@ export function createDocsViewerManagementModalController(options = {}) {
     return true;
   }
 
-  function setSettingsStatus(message, stateName) {
-    setModalStatus(refs.settingsStatus, message, stateName);
-  }
-
-  function settingsFieldLabel(field) {
-    return normalizeText(field).replace(/_/g, " ");
-  }
-
-  function hideSettingsFields() {
-    if (refs.settingsBooleanField) refs.settingsBooleanField.hidden = true;
-    if (refs.settingsBooleanInput) {
-      refs.settingsBooleanInput.disabled = true;
-      refs.settingsBooleanInput.checked = false;
-      refs.settingsBooleanInput.name = "";
-    }
-    if (refs.settingsTextField) refs.settingsTextField.hidden = true;
-    if (refs.settingsTextInput) {
-      refs.settingsTextInput.disabled = true;
-      refs.settingsTextInput.value = "";
-      refs.settingsTextInput.name = "";
-    }
-  }
-
-  function renderSettingsDescription(field) {
-    if (!refs.settingsDescription) return;
-    refs.settingsDescription.textContent = normalizeText(field && field.description);
-    refs.settingsDescription.hidden = !refs.settingsDescription.textContent;
-  }
-
-  function renderSettingsField(field) {
-    hideSettingsFields();
-    if (!field) {
-      renderSettingsDescription(null);
-      return;
-    }
-    if (field.type === "string" && refs.settingsTextField && refs.settingsTextInput) {
-      refs.settingsTextInput.disabled = false;
-      refs.settingsTextInput.name = normalizeText(field.field);
-      refs.settingsTextInput.value = normalizeText(field.current_value);
-      if (refs.settingsTextLabel) {
-        refs.settingsTextLabel.textContent = settingsFieldLabel(field.field);
-      }
-      refs.settingsTextField.hidden = false;
-      renderSettingsDescription(field);
-      return;
-    }
-    if (!refs.settingsBooleanField || !refs.settingsBooleanInput) return;
-    refs.settingsBooleanInput.disabled = false;
-    refs.settingsBooleanInput.name = normalizeText(field.field);
-    refs.settingsBooleanInput.checked = field.current_value === true;
-    if (refs.settingsBooleanLabel) {
-      refs.settingsBooleanLabel.textContent = settingsFieldLabel(field.field);
-    }
-    refs.settingsBooleanField.hidden = false;
-    renderSettingsDescription(field);
-  }
-
-  function renderSettingsWarnings(warnings) {
-    if (!refs.settingsWarnings) return;
-    var items = Array.isArray(warnings) ? warnings.filter(Boolean) : [];
-    refs.settingsWarnings.hidden = items.length === 0;
-    refs.settingsWarnings.innerHTML = renderSettingsWarningsMarkup(items);
-  }
-
-  function openSettingsModalShell() {
-    if (!refs.settingsModal || !refs.settingsForm) return false;
-    if (typeof callbacks.hideContextMenu === "function") callbacks.hideContextMenu();
-    if (typeof callbacks.hideManageActionsMenu === "function") callbacks.hideManageActionsMenu();
-    settingsFieldState = null;
-    if (refs.settingsSaveButton) refs.settingsSaveButton.disabled = true;
-    renderSettingsField(null);
-    setSettingsStatus("Loading settings...", "busy");
-    renderSettingsWarnings([]);
-    refs.settingsModal.hidden = false;
-    if (settingsLifecycle) {
-      settingsLifecycle.open({
-        restoreFocus: isFocusableNow(refs.manageSettingsButton)
-          ? refs.manageSettingsButton
-          : refs.manageActionsButton
-      });
-    }
-    return true;
-  }
-
-  function setSettingsField(field) {
-    if (!settingsModalOpen()) return;
-    settingsFieldState = field || null;
-    if (!settingsFieldState) {
-      if (refs.settingsSaveButton) refs.settingsSaveButton.disabled = true;
-      renderSettingsField(null);
-      renderSettingsWarnings([]);
-      setSettingsStatus("No editable settings are available for this scope.", "");
-      window.requestAnimationFrame(function () {
-        focusWithoutScroll(refs.settingsCancelButton || refs.settingsModal);
-      });
-      return;
-    }
-    renderSettingsField(settingsFieldState);
-    if (refs.settingsSaveButton) refs.settingsSaveButton.disabled = management.managementBusy;
-    renderSettingsWarnings(settingsFieldState.warnings || []);
-    setSettingsStatus("", "");
-    var fieldType = settingsFieldState.type;
-    window.requestAnimationFrame(function () {
-      var primaryInput = fieldType === "string" ? refs.settingsTextInput : refs.settingsBooleanInput;
-      focusWithoutScroll(primaryInput || refs.settingsSaveButton || refs.settingsModal);
-    });
-  }
-
-  function getSettingsChanges() {
-    if (!settingsFieldState) return null;
-    var fieldName = normalizeText(settingsFieldState.field);
-    if (!fieldName) return null;
-    if (settingsFieldState.type === "string") {
-      if (!refs.settingsTextInput) return null;
-      return {
-        [fieldName]: normalizeText(refs.settingsTextInput.value)
-      };
-    }
-    if (!refs.settingsBooleanInput) return null;
-    return {
-      [fieldName]: refs.settingsBooleanInput.checked === true
-    };
-  }
-
-  function setSettingsLoadError(message) {
-    if (!settingsModalOpen()) return;
-    if (refs.settingsSaveButton) refs.settingsSaveButton.disabled = true;
-    renderSettingsWarnings([]);
-    setSettingsStatus(message || "Settings unavailable.", "error");
-  }
-
-  function closeSettingsModal() {
-    if (!refs.settingsModal) return;
-    if (settingsLifecycle) settingsLifecycle.close();
-    refs.settingsModal.hidden = true;
-    settingsFieldState = null;
-  }
-
   function wireEvents() {
     if (refs.importFolderConfirmButton) {
       refs.importFolderConfirmButton.addEventListener("click", function () {
@@ -605,40 +437,16 @@ export function createDocsViewerManagementModalController(options = {}) {
         invokeImportCollectionCommand(button.dataset.collectionCommand);
       });
     });
-    if (refs.settingsForm) {
-      refs.settingsForm.addEventListener("submit", function (event) {
-        if (typeof callbacks.onSettingsSubmit === "function") callbacks.onSettingsSubmit(event);
-      });
-      ["input", "change"].forEach(function (eventName) {
-        refs.settingsForm.addEventListener(eventName, function () {
-          if (refs.settingsStatus && refs.settingsStatus.dataset.state === "error") {
-            setSettingsStatus("", "");
-          }
-        });
-      });
-    }
   }
 
   return {
     closeImportModal: closeImportModal,
     closeImportFolderModal: closeImportFolderModal,
-    closeSettingsModal: closeSettingsModal,
-    getSettingsFieldState: function () {
-      return settingsFieldState;
-    },
-    getSettingsChanges: getSettingsChanges,
     openImportModal: openImportModal,
     openImportFolderModal: openImportFolderModal,
-    openSettingsModalShell: openSettingsModalShell,
     projectImportBusy: projectImportBusy,
     projectImportCollectionState: projectImportCollectionState,
-    renderSettingsWarnings: renderSettingsWarnings,
     projectImportTerminalResult: projectImportTerminalResult,
-    setSettingsField: setSettingsField,
-    setSettingsValidationError: function (message) { setSettingsStatus(message, "error"); },
-    setSettingsLoadError: setSettingsLoadError,
-    setSettingsStatus: setSettingsStatus,
-    settingsModalOpen: settingsModalOpen,
     wireEvents: wireEvents
   };
 }

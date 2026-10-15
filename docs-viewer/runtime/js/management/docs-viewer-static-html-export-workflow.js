@@ -84,7 +84,7 @@ export async function openStaticHtmlSnapshotExportWorkflow(options = {}) {
 
   var preview;
   setBusy(callbacks, true);
-  setMessage(callbacks, "Preparing dated snapshot…", false);
+  setMessage(callbacks, "", false);
   try {
     preview = await previewSnapshot(docIds, clientOptions);
   } finally {
@@ -99,7 +99,7 @@ export async function openStaticHtmlSnapshotExportWorkflow(options = {}) {
 
   var applied;
   setBusy(callbacks, true);
-  setMessage(callbacks, "Exporting dated snapshot…", false);
+  setMessage(callbacks, "", false);
   try {
     applied = await applySnapshot(preview, clientOptions);
   } finally {

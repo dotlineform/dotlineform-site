@@ -32,28 +32,30 @@ export function createDocsViewerManagementContextActions(options) {
     };
     var unavailable = !options.isManagementContext() || !management.managementAvailable;
     var blocked = unavailable || management.managementBusy;
-    var reason = unavailable ? "Docs management service unavailable."
-      : management.managementBusy ? "Docs management is busy." : "";
+    var reason = unavailable ? "Docs management service unavailable." : "";
     var createReason = reason || resolutions.create.disabledReason;
+    var createPending = report
+      ? !readyReport || typeof report.refreshDocument !== "function"
+      : !exact && Boolean(options.selectedDocument.selectedDocId);
     var collection = null;
-    if (!createReason && report) {
-      if (!readyReport || typeof report.refreshDocument !== "function") createReason = "Wait for the collection document to finish loading.";
-      else collection = report.collectionTarget;
-    } else if (!createReason && !exact && options.selectedDocument.selectedDocId) {
-      createReason = "Wait for the selected document to finish loading.";
+    if (!blocked && !createReason && report && !createPending) {
+      collection = report.collectionTarget;
     }
     var sourceTarget = rendered && exact ? target : null;
-    var documentReason = reason || (!rendered ? "Return to the document to use this action."
-      : !exact ? "Wait for a valid document to finish loading." : "");
+    var documentReason = reason || (!rendered ? "Return to the document to use this action." : "");
     var draftReason = documentReason || resolutions.draft.disabledReason;
-    if (!draftReason && typeof record.draft !== "boolean") draftReason = "Draft readiness is unavailable for this document.";
+    if (!draftReason && exact && typeof record.draft !== "boolean") draftReason = "Draft readiness is unavailable for this document.";
+    var vscodeReason = reason || resolutions.vscode.disabledReason || (!sourceTarget ? "Open a valid document first." : "");
+    var selectedReason = documentReason || resolutions.selected.disabledReason;
     return {
       context: context, target: exact ? normalizeManagedDocumentTarget(target) : null,
       record: record, collection: collection, resolutions: resolutions,
       newReason: createReason,
+      newDisabled: blocked || createPending || Boolean(createReason),
       vscodeTarget: sourceTarget,
-      vscodeReason: reason || resolutions.vscode.disabledReason || (!sourceTarget ? "Open a valid document first." : ""),
-      draftReason: draftReason, selectedReason: documentReason || resolutions.selected.disabledReason,
+      vscodeReason: vscodeReason, vscodeDisabled: blocked || Boolean(vscodeReason),
+      draftReason: draftReason, draftDisabled: blocked || !exact || Boolean(draftReason),
+      selectedReason: selectedReason, selectedDisabled: blocked || !exact || Boolean(selectedReason),
       canReadSelection: !unavailable && exact && rendered && !resolutions.selected.disabled,
       blocked: blocked
     };
@@ -93,28 +95,27 @@ export function createDocsViewerManagementContextActions(options) {
     var selection = selectionFor(state);
     var draft = Boolean(state.record && state.record.draft === true);
     var selected = Boolean(selection && selection.selected);
-    var selectionReason = state.selectedReason || (selection && selection.error)
-      || (!selection || !selection.ready ? "Loading document selection…" : "");
+    var selectionReason = state.selectedReason || (selection && selection.error) || "";
     options.project(ACTION_IDS.NEW, {
       hidden: state.resolutions.create.hidden,
-      label: "New", disabled: Boolean(state.newReason), reason: state.newReason
+      label: "New", disabled: state.newDisabled, reason: state.newReason
         || (state.collection ? "New document in " + state.context.collectionLabel : "New document")
     });
     options.project(ACTION_IDS.OPEN_VSCODE, {
       hidden: state.resolutions.vscode.hidden,
-      label: "Open in VS Code", disabled: Boolean(state.vscodeReason), reason: state.vscodeReason
+      label: "Open in VS Code", disabled: state.vscodeDisabled, reason: state.vscodeReason
     });
     options.project(ACTION_IDS.SET_DRAFT, {
       hidden: state.resolutions.draft.hidden,
       label: draft ? "Mark ready" : "Mark as draft", checked: draft,
       artwork: draft ? "docsViewer__icon--circle-dashed-check" : "docsViewer__icon--circle-check",
-      disabled: Boolean(state.draftReason), reason: state.draftReason
+      disabled: state.draftDisabled, reason: state.draftReason
     });
     options.project(ACTION_IDS.SET_SELECTED, {
       hidden: state.resolutions.selected.hidden,
       label: selected ? "Remove star" : "Star", checked: selected,
       artwork: selected ? "docsViewer__icon--star-filled" : "docsViewer__icon--star",
-      disabled: Boolean(selectionReason), reason: selectionReason
+      disabled: state.selectedDisabled || !selection || !selection.ready || Boolean(selectionReason), reason: selectionReason
     });
   }
 
@@ -160,18 +161,17 @@ export function createDocsViewerManagementContextActions(options) {
   function invoke(actionId) {
     var state = actionState();
     if (state.blocked) return;
-    if (actionId === ACTION_IDS.NEW && !state.newReason) {
+    if (actionId === ACTION_IDS.NEW && !state.newDisabled) {
       return state.collection
         ? options.actions.handleCreateCollectionDocument(state.collection, { refreshAndSelect: state.context.refreshDocument })
         : options.actions.handleCreateDoc(state.target);
     }
-    if (actionId === ACTION_IDS.OPEN_VSCODE && !state.vscodeReason) {
-      return options.actions.handleOpenSource("vscode", state.vscodeTarget,
-        state.record && state.record.doc_id === state.vscodeTarget.doc_id ? state.record.title : state.vscodeTarget.doc_id);
+    if (actionId === ACTION_IDS.OPEN_VSCODE && !state.vscodeDisabled) {
+      return options.actions.handleOpenSource("vscode", state.vscodeTarget);
     }
-    if (actionId === ACTION_IDS.SET_DRAFT && !state.draftReason) return saveDraft(state);
+    if (actionId === ACTION_IDS.SET_DRAFT && !state.draftDisabled) return saveDraft(state);
     var selection = selectionFor(state);
-    if (actionId === ACTION_IDS.SET_SELECTED && !state.selectedReason && selection && selection.ready) return saveSelection(selection);
+    if (actionId === ACTION_IDS.SET_SELECTED && !state.selectedDisabled && selection && selection.ready) return saveSelection(selection);
   }
 
   return { owns: function (actionId) { return ownedActions.has(actionId); }, invoke: invoke, render: render };

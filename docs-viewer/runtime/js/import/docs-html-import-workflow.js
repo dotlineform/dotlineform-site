@@ -90,16 +90,7 @@ async function requestImport(
 
 async function importFileWithPrompts(state, file, context = {}) {
   let nextOptions = {};
-  const total = Number(context.total || 1);
   while (true) {
-    const stagedFilename = normalizeText(file && file.filename);
-    if (total > 1) {
-      setStatus(
-        state.statusNode,
-        "busy",
-        `Importing ${Number(context.index || 0) + 1} of ${total}: ${stagedFilename}`
-      );
-    }
     const payload = await requestImport(file, {
       collection: context.collection,
       sourceDirectory: context.sourceDirectory,
@@ -146,18 +137,14 @@ export async function runDocsHtmlImportWorkflow(
   state.confirmButton.disabled = true;
   state.cancelButton.disabled = true;
   resetImportView(state, "");
-  setStatus(state.statusNode, "busy", "Converting and validating staged source...");
+  setStatus(state.statusNode, "", "");
   state.isRunning = true;
   onRunningChange(true);
 
   const results = [];
   try {
-    for (let index = 0; index < files.length; index += 1) {
-      const result = await importFileWithPrompts(state, files[index], {
-        index,
-        total: files.length,
-        ...workflowContext
-      });
+    for (const file of files) {
+      const result = await importFileWithPrompts(state, file, workflowContext);
       if (result.cancelled) {
         if (results.length) renderDocsHtmlImportResult(state, results);
         setStatus(

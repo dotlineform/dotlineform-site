@@ -38,7 +38,6 @@ import docs_uncataloged_files  # noqa: E402
 import docs_folders_without_works  # noqa: E402
 import docs_work_downloads  # noqa: E402
 import docs_work_links  # noqa: E402
-import docs_source_config_settings  # noqa: E402
 import docs_static_html_export  # noqa: E402
 import docs_source_media_service  # noqa: E402
 from docs_source_media_upload import SourceMediaUpload  # noqa: E402
@@ -188,24 +187,6 @@ def docs_management_post_response(
         payload["dry_run"] = dry_run
         payload["summary_text"] = "Missing Source Files refreshed."
         return HTTPStatus.OK, payload
-    if path == routes.SOURCE_CONFIG_SETTINGS_PATH:
-        changes = body.get("changes")
-        payload = docs_source_config_settings.apply_settings_change(
-            repo_root,
-            changes,
-            dry_run=dry_run,
-        )
-        if payload.get("committed") and payload.get("changed") and not dry_run:
-            log_event(
-                repo_root,
-                "docs_source_config_settings",
-                {
-                    "fields": sorted(payload.get("changes", {}).keys()),
-                    "source_config_path": payload.get("source_config_path", ""),
-                },
-            )
-        payload["dry_run"] = dry_run
-        return (HTTPStatus.OK if payload["ok"] else HTTPStatus.INTERNAL_SERVER_ERROR), payload
     if path == routes.IMPORT_SOURCE_PATH:
         payload = handle_import_source(repo_root, body, dry_run)
         return HTTPStatus.OK, payload

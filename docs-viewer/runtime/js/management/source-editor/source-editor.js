@@ -295,7 +295,7 @@ function loadSource(context, state) {
   }
 
   setBusy(state, true);
-  setStatus(state, "Loading source...", false);
+  setStatus(state, "", false);
   return provider.readSource(state.target)
     .then(function (payload) {
       if (state.sourceEditorAdapter !== adapter) return null;
@@ -347,7 +347,7 @@ function saveSource(context, state) {
   setBusy(state, true);
   state.saving = true;
   var stopBusy = typeof services.startBusy === "function" ? services.startBusy() : null;
-  setStatus(state, "Saving doc...", false);
+  setStatus(state, "", false);
   var adapter = state.sourceEditorAdapter;
   var saved = false;
   var generated = false;
@@ -426,7 +426,7 @@ function addSourceMedia(context, state, mediaKind, capture) {
   if (state.busy || !state.loaded) return Promise.resolve(null);
   var provider = context.collectionProvider || {};
   setBusy(state, true);
-  setStatus(state, mediaKind === "file" ? "Loading files..." : "Loading images...", false);
+  setStatus(state, "", false);
   return import("./source-editor-media.js")
     .then(function (module) {
       return module.publishAndInsertSourceMedia({

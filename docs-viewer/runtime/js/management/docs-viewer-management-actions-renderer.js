@@ -36,12 +36,6 @@ var MANAGEMENT_ACTION_MENU_ITEMS = [
     actionId: ACTION_IDS.PUBLISH,
     artwork: "docsViewer__icon--globe",
     label: "Publish"
-  },
-  {
-    id: "docsViewerManageSettingsButton",
-    actionId: ACTION_IDS.SETTINGS,
-    artwork: "docsViewer__icon--settings",
-    label: "Settings"
   }
 ];
 

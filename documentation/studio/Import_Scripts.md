@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-c902f6
 title: Import Scripts
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-08-14 21:18:02"
+last_updated: "2026-10-15"
 parent_id: d-20260607-222033-2a494e
 ---
 # Docs Viewer Import Scripts
@@ -55,7 +55,7 @@ Responsibilities:
 Not responsible for:
 
 - HTTP routing
-- source-config settings
+- design-time configuration editing
 - builder implementation
 
 The service resolves `configured_workspace_paths(repo_root).import_staging`,

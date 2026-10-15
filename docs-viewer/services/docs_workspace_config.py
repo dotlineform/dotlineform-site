@@ -32,7 +32,7 @@ from docs_collection_customisations import (
 
 
 CONFIG_REL_PATH = Path("docs-viewer/config/workspace/docs-workspace.json")
-SCHEMA_VERSION = "docs_workspace_v7"
+SCHEMA_VERSION = "docs_workspace_v8"
 DOTLINEFORM_DOCS_BASE_DIR_ENV = "DOTLINEFORM_DOCS_BASE_DIR"
 EXTERNAL_DATA_ROOT_MARKER = f"${DOTLINEFORM_DOCS_BASE_DIR_ENV}"
 STAGES = ("working", "preview")
@@ -616,7 +616,7 @@ def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: 
     except json.JSONDecodeError as exc:
         raise ValueError(f"invalid Docs workspace JSON: {exc}") from exc
     payload = _object(raw, field="Docs workspace", required={
-        "schema_version", "public_viewer_base_url", "public_projection", "search_fields", "recent_limit", "stages", "preview",
+        "schema_version", "public_viewer_base_url", "default_doc_id", "public_projection", "search_fields", "recent_limit", "stages",
         "assets", "catalogue", "media_report_metadata", "broken_links_report", "links_report",
     })
     if payload["schema_version"] != SCHEMA_VERSION:
@@ -635,7 +635,7 @@ def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: 
     if type(recent_limit) is not int or recent_limit < 1:
         raise ValueError("recent_limit must be a positive integer")
     settings = _object(payload["stages"], field="stages", required={"working"})
-    preview_settings = _object(payload["preview"], field="preview", required={"default_doc_id"})
+    default_doc_id = _doc_id(payload["default_doc_id"], field="default_doc_id", allow_empty=True)
     workspace_root = ArtifactLocation(EXTERNAL_LOCAL_PROVIDER, resolve_external_data_root(docs_base_dir))
     media_report_path = safe_relative_path(payload["media_report_metadata"], field="media_report_metadata")
     if not media_report_path.is_relative_to(Path("working/generated/reports")) or media_report_path.name != "metadata.json":
@@ -652,7 +652,7 @@ def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: 
     preview = _preview(location_child(workspace_root, Path("preview")))
     projection = _public_projection(payload["public_projection"])
     working = _object(settings["working"], field="stages.working", required={
-        "media", "default_doc_id", "collections", "allow_unresolved_parent_ids",
+        "media", "collections", "allow_unresolved_parent_ids",
     })
     if not isinstance(working["collections"], list):
         raise ValueError("stages.working.collections must be an array")
@@ -677,8 +677,7 @@ def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: 
         field = f"stages.{stage}"
         item = working
         if stage == "preview":
-            item = {**item, "default_doc_id": preview_settings["default_doc_id"],
-                    "allow_unresolved_parent_ids": False}
+            item = {**item, "allow_unresolved_parent_ids": False}
         source_root = location_child(workspace_root, Path(stage) / "source")
         generated_root = location_child(workspace_root, Path(stage) / "generated")
         stage_assets = assets.for_stage(stage)
@@ -690,7 +689,7 @@ def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: 
         stages.append(DocsStageConfig(
             workspace_root=workspace_root, stage=stage, source=DocsSourceConfig(source_root),
             generated=_generated(generated_root), media=media, preview=preview, public_projection=stage_projection,
-            default_doc_id=_doc_id(item["default_doc_id"], field=f"{field}.default_doc_id", allow_empty=True),
+            default_doc_id=default_doc_id,
             allow_unresolved_parent_ids=_boolean(item["allow_unresolved_parent_ids"], field=f"{field}.allow_unresolved_parent_ids"),
             collections=_collections(item["collections"], repo_root=root, workspace_root=workspace_root, stage=stage,
                                    media_settings=item["media"], assets=stage_assets, projection=stage_projection), search_fields=fields,

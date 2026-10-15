@@ -19,7 +19,7 @@ Normal Publish parses the app-produced publication queue once and carries that s
 
 ## Storage And Selection
 
-[Workspace configuration](../../docs-viewer/config/workspace/docs-workspace.json), schema `docs_workspace_v7`, owns storage beneath the existing Docs root. `assets.roots.working` and `assets.roots.preview` select independent asset roots for both Work and document media. Catalogue declares `document_media: false`: its document collection has no Docs-owned media namespace. Work primaries, thumbnails and downloads retain the separate Work-media families below.
+[Workspace configuration](../../docs-viewer/config/workspace/docs-workspace.json), schema `docs_workspace_v8`, owns storage beneath the existing Docs root. `assets.roots.working` and `assets.roots.preview` select independent asset roots for both Work and document media. Catalogue declares `document_media: false`: its document collection has no Docs-owned media namespace. Work primaries, thumbnails and downloads retain the separate Work-media families below.
 
 | Material | Working/Preview owner | Public destination |
 | --- | --- | --- |

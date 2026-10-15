@@ -574,9 +574,6 @@ def complete_document_deletion(
         for doc_id in doc_ids:
             _generated_path(builder.items_dir, f"{doc_id}.json")
         remove_build_manifest(repo_root, owner.parent_config)
-        from docs_builder.browser_config import write_browser_config
-        from docs_builder.common import DOCS_VIEWER_BROWSER_CONFIG_PATH
-        write_browser_config(repo_root, owner.workspace, path=DOCS_VIEWER_BROWSER_CONFIG_PATH, label="Docs Viewer browser config")
         result = builder.run(write=True, documents=[], parent_ids=parent_ids, selected_payload=selected_payload)
     return {"ok": True, "diagnostics": result["diagnostics"]}
 

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-71d1be
 title: Route Dispatch Scripts
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-08 19:10:43"
+last_updated: "2026-10-15"
 parent_id: d-20260607-222033-2a494e
 ---
 # Docs Viewer Route Dispatch Scripts
@@ -16,9 +16,9 @@ Ownership: owns endpoint path constants and the GET, POST, and OPTIONS allowlist
 
 Responsibilities:
 
-- defines `/health`, `/capabilities`, generated read paths, source-config paths, import paths, source-editor paths, mutation paths, rebuild/audit paths, and scope lifecycle paths
+- defines `/health`, `/capabilities`, generated read paths, import paths, source-editor paths, mutation paths and rebuild/audit paths
 - exposes `GET_PATHS`, `POST_PATHS`, and `OPTIONS_PATHS` for HTTP routing
-- keeps compatibility aliases explicit
+- retires removed paths without compatibility aliases
 
 Not responsible for:
 
@@ -36,7 +36,6 @@ Responsibilities:
 
 - dispatches source-editor rebuilds and source-open requests
 - dispatches broken-links audit requests
-- dispatches source-config settings writes and rebuild follow-through
 - dispatches source imports
 - dispatches create, metadata, move, delete, and scope lifecycle actions
 - invokes full same-scope rebuilds for `POST /docs/rebuild`

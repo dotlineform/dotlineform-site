@@ -138,11 +138,11 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
       ? "Collection package preparation is unavailable."
       : !resolution.enabled
         ? resolution.disabledReason
-        : prepareInFlight ? "Collection package preparation is in progress." : "";
+        : "";
     var label = "Prepare package…";
     var accessibleLabel = disabledReason ? label + " " + disabledReason : label;
     listToolbar.prepareButton.hidden = resolution.hidden;
-    listToolbar.prepareButton.disabled = Boolean(disabledReason);
+    listToolbar.prepareButton.disabled = prepareInFlight || Boolean(disabledReason);
     listToolbar.prepareButton.title = accessibleLabel;
     listToolbar.prepareButton.setAttribute("aria-label", accessibleLabel);
     if (disabledReason) {
@@ -526,8 +526,8 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     });
     button.disabled = true;
     button.dataset.docsCollectionDelete = "true";
-    button.setAttribute("aria-label", "Delete. Checking Delete availability.");
-    button.title = "Checking Delete availability.";
+    button.setAttribute("aria-label", "Delete");
+    button.title = "Delete";
     host.appendChild(button);
 
     import("./docs-viewer-management-collection-delete-workflow.js")

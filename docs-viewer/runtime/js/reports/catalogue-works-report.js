@@ -436,7 +436,7 @@ export function mountCatalogueWorksReport(context) {
   mountHead(state);
   state.tableNode.hidden = true;
   state.emptyNode.hidden = true;
-  state.statusNode.textContent = "Loading Catalogue Works...";
+  state.statusNode.textContent = "";
   updateControls(state);
   return loadCatalogueWorks(context).then((payload) => {
     if (state.released) return undefined;

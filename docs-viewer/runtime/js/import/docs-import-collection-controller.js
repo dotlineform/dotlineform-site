@@ -138,7 +138,7 @@ export function createDocsImportCollectionController(options = {}) {
     state.terminalDetail = detail;
     if (retry) {
       setBusy(true);
-      setStatus(statusNode, "busy", "Refreshing the imported collection report...");
+      setStatus(statusNode, "", "");
       render();
     }
     try {
@@ -219,7 +219,7 @@ export function createDocsImportCollectionController(options = {}) {
     state.plan = null;
     state.result = null;
     setBusy(true);
-    setStatus(previewStatusNode, "busy", `Planning collection ${stagedFilename}...`);
+    setStatus(previewStatusNode, "", "");
     if (previewStatusNode !== statusNode) setStatus(statusNode, "", "");
     render();
     try {
@@ -270,7 +270,7 @@ export function createDocsImportCollectionController(options = {}) {
       : {};
     state.phase = "applying";
     setBusy(true);
-    setStatus(statusNode, "busy", "Applying the confirmed collection plan...");
+    setStatus(statusNode, "", "");
     render();
     try {
       const payload = await fetchManagementJson("/docs/import-source", "POST", {

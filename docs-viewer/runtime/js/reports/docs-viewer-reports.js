@@ -239,9 +239,6 @@ export function mountDocsViewerReport(context) {
       return true;
     }
 
-    if (!["docs_collection", "selected_documents", "unpublishable"].includes(reportMeta.loaderId)) {
-      root.innerHTML = '<p class="docsViewerReport__status">Loading report...</p>';
-    }
     return loader.load().then(function (mount) {
       if (!isCurrent()) return false;
       const resolvedReportMeta = Object.assign({}, meta, { registryEntry: reportMeta });

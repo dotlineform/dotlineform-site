@@ -45,7 +45,7 @@ export function createDocsViewerManagementCollectionDeleteWorkflow(options) {
       modalAbortController = null;
       if (!active || !confirmed) return null;
       stopBusy = options.startBusyOperation();
-      options.setStatus("Deleting " + options.title + "...", false);
+      options.setStatus("", false);
       var payload = await deleteManagedCollectionDoc(target, options.clientOptions);
       if (!matches(payload) || payload.source_deleted !== true || payload.generation_complete !== true
         || !Array.isArray(payload.deleted_doc_ids) || payload.deleted_doc_ids.length !== 1 || payload.deleted_doc_ids[0] !== target.doc_id) {

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-2a494e
 title: Scripts Overview
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-08 19:10:43"
+last_updated: "2026-10-15"
 parent_id: d-20260424-000000-04d75e
 ---
 # Docs Viewer Management Script Overview
@@ -17,7 +17,7 @@ This is the ownership map for the scripts and service modules behind Docs Viewer
 
 ## Read And Config Helpers
 
-- [Read And Config Scripts](Read_And_Config_Scripts.md): generated reads, capabilities, source-config report, source-config settings, and source model helpers
+- [Read And Config Scripts](Read_And_Config_Scripts.md): generated reads, capabilities and source model helpers
 
 ## Write Workflows
 

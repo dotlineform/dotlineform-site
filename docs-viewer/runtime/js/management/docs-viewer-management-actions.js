@@ -6,8 +6,7 @@ import {
   moveManagedDoc,
   openManagedDocSource,
   rebuildManagedDocs,
-  rebuildManagedDocument,
-  updateSourceConfigSettings
+  rebuildManagedDocument
 } from "./docs-viewer-management-client.js";
 import {
   DOCS_VIEWER_ACTION_IDS
@@ -229,10 +228,6 @@ export function createDocsViewerManagementActionController(options) {
     return callbacks.managementClientOptions ? callbacks.managementClientOptions() : {};
   }
 
-  function getSettingsWorkflow() {
-    return callbacks.getSettingsWorkflow ? callbacks.getSettingsWorkflow() : null;
-  }
-
   function hideContextMenu() {
     if (callbacks.hideContextMenu) callbacks.hideContextMenu();
   }
@@ -346,7 +341,7 @@ export function createDocsViewerManagementActionController(options) {
 
     var title = titleResult.value;
     setManagementBusy(true);
-    setManagementMessage("Creating doc...", false);
+    setManagementMessage("", false);
 
     return createDocumentAndOpenSource({
       title: title,
@@ -377,7 +372,7 @@ export function createDocsViewerManagementActionController(options) {
 
     setManagementBusy(true);
     hideContextMenu();
-    setManagementMessage("Creating doc...", false);
+    setManagementMessage("", false);
 
     return createDocumentAndOpenSource(payload);
   }
@@ -399,7 +394,7 @@ export function createDocsViewerManagementActionController(options) {
     if (!titleResult || !titleResult.confirmed) return null;
     var fields = { title: titleResult.value };
     setManagementBusy(true);
-    setManagementMessage("Creating doc...", false);
+    setManagementMessage("", false);
     return createDocumentAndOpenSource(
       {
         ...fields,
@@ -441,7 +436,7 @@ export function createDocsViewerManagementActionController(options) {
     var target = normalizeManagedDocumentTarget(value);
     if (options.resolveAction(DOCS_VIEWER_ACTION_IDS.REBUILD_DOCUMENT, target).disabled) return;
     setManagementBusy(true);
-    setManagementMessage("Rebuilding document...", false);
+    setManagementMessage("", false);
     try {
       var payload = await rebuildManagedDocument(target, managementClientOptions());
       var completedTarget = normalizeManagedDocumentTarget(payload.target);
@@ -468,7 +463,7 @@ export function createDocsViewerManagementActionController(options) {
     var target = selectedDocument.documentTarget || null;
     var rebuilt = false;
     setManagementBusy(true);
-    setManagementMessage("Rebuilding docs and Search...", false);
+    setManagementMessage("", false);
     try {
       await rebuildManagedDocs(managementClientOptions());
       rebuilt = true;
@@ -493,7 +488,7 @@ export function createDocsViewerManagementActionController(options) {
   async function handlePublish() {
     var recentUpdated = false;
     setManagementBusy(true);
-    setManagementMessage("Publishing documents and referenced assets...", false);
+    setManagementMessage("", false);
     renderManagementUi();
     try {
       var result = await publishManagedDocs(managementClientOptions());
@@ -541,50 +536,6 @@ export function createDocsViewerManagementActionController(options) {
     }));
   }
 
-  function handleSettingsSave() {
-    var settingsWorkflow = getSettingsWorkflow();
-    var settingsFieldState = settingsWorkflow ? settingsWorkflow.fieldState() : null;
-    if (!settingsFieldState) {
-      if (settingsWorkflow) settingsWorkflow.close();
-      return;
-    }
-    var changes = settingsWorkflow.changes();
-    if (!changes) {
-      settingsWorkflow.close();
-      return;
-    }
-    if (!settingsWorkflow.validate(changes)) return;
-    settingsWorkflow.close();
-    setManagementBusy(true);
-    setManagementMessage("Saving settings...", false);
-    var saved = false;
-    function applyDefault(payload) {
-      var change = payload.changes && payload.changes.default_doc_id;
-      if (change) context.commitDefaultDocumentChange(change.proposed_value);
-    }
-    return updateSourceConfigSettings(changes, managementClientOptions())
-      .then(function (payload) {
-        saved = payload.committed === true;
-        applyDefault(payload);
-        setManagementMessage("Settings saved.", false);
-        return payload;
-      })
-      .catch(function (error) {
-        var payload = error && error.payload;
-        if (payload && payload.committed) { saved = true; applyDefault(payload); }
-        setManagementMessage(payload && payload.summary_text || (saved ? "Settings saved, but browser projection failed: " : "Settings save failed: ") + error.message, true);
-      })
-      .finally(function () {
-        setManagementBusy(false);
-        if (callbacks.renderManagementUi) callbacks.renderManagementUi();
-      });
-  }
-
-  function handleSettingsSubmit(event) {
-    if (event) event.preventDefault();
-    handleSettingsSave();
-  }
-
   async function handleDeleteDoc(targetDocId, restoreFocus) {
     if (!targetDocId || management.managementBusy) return;
     var resolution = resolveAction(DOCS_VIEWER_ACTION_IDS.DELETE, targetDocId);
@@ -597,7 +548,6 @@ export function createDocsViewerManagementActionController(options) {
       "Permanently deletes this document and all its descendants, including collapsed rows.",
       "Documents to delete: " + count + "."
     ];
-    if (resolution.targetDocIds.includes(context.configuredDefaultDocId())) body.push("The configured default document will be cleared.");
     var confirmed = await openDocsViewerConfirmModal({
       root: root, restoreFocus: restoreFocus, title: "Delete " + label + "?",
       body: body, primaryLabel: "Delete " + label, primaryTone: "danger",
@@ -605,11 +555,8 @@ export function createDocsViewerManagementActionController(options) {
     });
     if (!confirmed) return;
     setManagementBusy(true);
-    setManagementMessage("Deleting " + label + "...", false);
+    setManagementMessage("", false);
     var completed = false;
-    function projectDefault(payload) {
-      if (payload.default_doc_id_changed) context.commitDefaultDocumentChange(payload.default_doc_id);
-    }
     function matches(payload) {
       return payload && payload.target && payload.target.doc_id === doc.doc_id && !payload.target.collection;
     }
@@ -618,7 +565,6 @@ export function createDocsViewerManagementActionController(options) {
       if (!matches(payload) || payload.source_deleted !== true || payload.generation_complete !== true
         || !Array.isArray(payload.deleted_doc_ids)) throw new Error("Delete did not return its completed exact target.");
       completed = true;
-      projectDefault(payload);
       var displayedId = selectedDocument.displayedDocId;
       var displayedRemoved = !selectedDocument.documentTarget?.collection && payload.deleted_doc_ids.includes(displayedId);
       var failures = [];
@@ -634,7 +580,6 @@ export function createDocsViewerManagementActionController(options) {
       var partial = error.payload;
       var projectionFailures = [];
       if (matches(partial)) {
-        projectDefault(partial);
         (Array.isArray(partial.deleted_doc_ids) ? partial.deleted_doc_ids : []).forEach(function (docId) {
           projectionFailures.push(...(context.commitDocumentChange({ target: { doc_id: docId }, deleted: true }) || []));
         });
@@ -684,14 +629,12 @@ export function createDocsViewerManagementActionController(options) {
     });
   }
 
-  function handleOpenSource(editor, target, title) {
+  function handleOpenSource(editor, target) {
     var sourceTarget = normalizeManagedDocumentTarget(target);
     if (options.resolveAction(editor === "vscode" ? DOCS_VIEWER_ACTION_IDS.OPEN_VSCODE : DOCS_VIEWER_ACTION_IDS.OPEN, sourceTarget).disabled) return;
-    var targetTitle = String(title || sourceTarget.doc_id).trim() || sourceTarget.doc_id;
-
     setManagementBusy(true);
     hideContextMenu();
-    setManagementMessage("Opening source for " + targetTitle + "...", false);
+    setManagementMessage("", false);
     renderManagementUi();
 
     return openManagedDocSource(sourceTarget, editor, managementClientOptions())
@@ -734,7 +677,6 @@ export function createDocsViewerManagementActionController(options) {
     handleOpenSource: handleOpenSource,
     handlePublish: handlePublish,
     handleRebuildDocs: handleRebuildDocs,
-    handleRebuildDocument: handleRebuildDocument,
-    handleSettingsSubmit: handleSettingsSubmit
+    handleRebuildDocument: handleRebuildDocument
   };
 }

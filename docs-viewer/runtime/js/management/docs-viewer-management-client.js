@@ -242,16 +242,6 @@ export function applySourceMedia(payload, file, options) {
   return fetchManagementJson("/docs/source/media", "POST", data, options);
 }
 
-export function readSourceConfigSettings(options) {
-  return fetchManagementJson("/docs/source-config-settings", "GET", undefined, options);
-}
-
-export function updateSourceConfigSettings(changes, options) {
-  return fetchManagementJson("/docs/source-config-settings", "POST", collectionPayload({
-    changes: changes || {}
-  }, options), options);
-}
-
 export function deleteManagedDoc(docIds, options) {
   return fetchManagementJson("/docs/delete", "POST", collectionPayload({
     doc_ids: docIds,

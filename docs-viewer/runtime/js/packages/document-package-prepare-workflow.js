@@ -366,7 +366,7 @@ export async function openDocumentPackagePrepareWorkflow(options = {}) {
   let loadError = null;
   try {
     setBusy(true);
-    setMessage("Loading package options...", false);
+    setMessage("", false);
     optionsPayload = await client.readOptions(docIds, collection);
   } catch (error) {
     loadError = error;
@@ -423,7 +423,7 @@ export async function openDocumentPackagePrepareWorkflow(options = {}) {
     setBusy(true);
     let payload;
     try {
-      setMessage("Preparing document package...", false);
+      setMessage("", false);
       payload = await client.prepare(result.request);
       setMessage(packageText(payload && payload.summary_text) || "Document package prepared.", false);
     } catch (error) {

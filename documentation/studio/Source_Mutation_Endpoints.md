@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-ce5515
 title: Source Mutation Endpoints
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-13 17:47:14"
+last_updated: "2026-10-15"
 parent_id: d-20260607-222033-647b52
 ---
 # Docs Viewer Source Mutation Endpoints
@@ -54,8 +54,8 @@ The response carries `target`, `position_saved`, `generation_complete`, `phase` 
 
 The exact ordinary request is `{doc_ids: ["<root-id>"], confirm: true}`; nonempty arrays of exact subtree roots are accepted. A named collection uses exactly `{collection, doc_id, confirm: true}`. Direct Catalogue deletion is Regenerate-owned and rejected.
 
-Confirmation derives ordinary scope from the full loaded Index, including collapsed descendants, or the singular flat collection target. It performs no preview request. The service reads canonical tree and Selected once, expands requested ordinary subtrees once and unlinks exact confined source paths. It updates ordinary Index and removes exact Selected rows; a deleted configured default is cleared. Known deleted IDs, remaining parent map, Selected and resolved configuration pass into the existing in-process document/Links builders without source rereads or unrelated payload preflights.
+Confirmation derives ordinary scope from the full loaded Index, including collapsed descendants, or the singular flat collection target. It performs no preview request. The service reads canonical tree and Selected once, expands requested ordinary subtrees once and unlinks exact confined source paths. It updates ordinary Index and removes exact Selected rows without changing the design-time default or projecting browser configuration. Known deleted IDs, remaining parent map, Selected and resolved configuration pass into the existing in-process document/Links builders without source rereads or unrelated payload preflights.
 
-The response carries `target`, `requested_doc_ids`, actual `deleted_doc_ids`, `delete_count`, `source_deleted`, `index_updated`, `selected_updated`, `generation_complete`, `phase`, build diagnostics and `dry_run`. Collection `index_updated` stays false because its ordinary tree is unchanged. A completed default clear adds `default_doc_id_changed: true` and `default_doc_id: ""`. Failures retain completed effects and report the target/phase; a source failure includes `failing_target`. No source revision, rollback, recovery build, public-cleanup or lineage receipt is produced.
+The response carries `target`, `requested_doc_ids`, actual `deleted_doc_ids`, `delete_count`, `source_deleted`, `index_updated`, `selected_updated`, `generation_complete`, `phase`, build diagnostics and `dry_run`. Collection `index_updated` stays false because its ordinary tree is unchanged. Failures retain completed effects and report the target/phase; a source failure includes `failing_target`. No source revision, rollback, recovery build, public-cleanup or lineage receipt is produced.
 
-The browser projects actual committed deletions/default changes and reports generation and display failures separately. Complete ordinary deletion awaits one Index refresh; displayed deletion awaits surviving-caller or fallback navigation under the busy state. Preview/public distribution, Recent/Search refresh and registered media remain with their own owners. The former `/docs/delete-preview` and `/docs/delete-apply` routes are removed without aliases.
+The browser projects actual committed deletions and reports generation and display failures separately. Complete ordinary deletion awaits one Index refresh; displayed deletion awaits surviving-caller or fallback navigation under the busy state. Preview/public distribution, Recent/Search refresh and registered media remain with their own owners. The former `/docs/delete-preview` and `/docs/delete-apply` routes are removed without aliases.

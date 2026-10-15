@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260423-000000-c9f3ea
 title: Builder
 added_date: "2026-04-23 00:00:00"
-last_updated: "2026-10-15 00:00:00"
+last_updated: "2026-10-15"
 parent_id: d-20260424-000000-50b63f
 ---
 # Builder
@@ -33,7 +33,7 @@ Ordinary builds derive document counts from the current canonical membership and
 
 Ordinary application-write follow-through uses exact before/after document identities, including creation and deletion. A parent's title change does not select unchanged children: by-ID metadata carries `parent_id`, the ordinary builder reprojects the navigation tree, and targeted builds preserve saved Recent and Search. Links separately updates the changed/deleted documents' contributions and affected neighbours' relationship records. Selected documents render their Related Links section from those refreshed records; unselected embedded sections retain their saved snapshot until their own document build or a full Build, as defined by [Related Links freshness](Related_Links.md#generated-data-and-freshness). Renaming a parent therefore does not incidentally refresh an unchanged child's embedded section.
 
-Application writes await their own exact generation. Prepared New, Source Save and Draft inputs are rendered without reopening their source files; exact Rebuild reads/parses saved source once and supplies its readiness-checked, report-classified record to the same builder. Its supplied Title remains literal with string representation required. CLI targeted builds load only selected surviving sources. Prepared application document generation does not regenerate/compare workspace browser configuration; Settings, default-changing Delete and complete builds retain their configuration projection owners. Ordinary membership and parentage remain owned by `index-order.json`, which canonical creation, Position and Delete update through their owning operation. The filesystem watcher and suppression machinery are retired. [Source Mutation Endpoints](Source_Mutation_Endpoints.md#post-docsrebuild-document) owns exact Rebuild's response and fresh-display completion.
+Application writes await their own exact generation. Prepared New, Source Save and Draft inputs are rendered without reopening their source files; exact Rebuild reads/parses saved source once and supplies its readiness-checked, report-classified record to the same builder. Its supplied Title remains literal with string representation required. CLI targeted builds load only selected surviving sources. Prepared application document generation and Delete do not regenerate/compare workspace browser configuration. Complete builds retain local configuration projection; the explicit design-time `python3 docs-viewer/build/build_browser_config.py` command projects both readers without a document build, as described by [Configuration And Extension Points](Configuration_And_Extension_Points.md#builder-and-local-service-integration). Ordinary membership and parentage remain owned by `index-order.json`, which canonical creation, Position and Delete update through their owning operation. The filesystem watcher and suppression machinery are retired. [Source Mutation Endpoints](Source_Mutation_Endpoints.md#post-docsrebuild-document) owns exact Rebuild's response and fresh-display completion.
 
 Ordinary targeted builds read selected surviving Markdown and reuse unchanged navigation rows through [ordinary metadata](../../docs-viewer/build/docs_builder/ordinary_metadata.py). The current `index-order.json` defines complete membership, parentage and authored order, rejecting duplicate IDs. Selected sources replace their own saved metadata; unchanged titles, draft flags, status and report identifiers come from the saved tree. Current hierarchy excludes deleted or moved-out IDs and places surviving or moved-in documents; only selected absent IDs can remove by-ID payloads. A new current document without saved metadata must be selected or rebuilt through a full Build. Unselected Markdown validation and metadata freshness belong to each document's selected build or complete reconciliation.
 
@@ -57,7 +57,7 @@ Backlinks-specific assertions in `test_build_docs_payloads.py` and the dedicated
 
 `docs-viewer/config/workspace/docs-workspace.json` owns:
 
-- Working collection registration and separate Working/Preview defaults
+- Working collection registration and one design-time default document shared by both readers
 - the public section URL, public document and Search destinations, and retained R2 media addresses
 - media registration, hierarchy policy, Search fields and the Recent limit
 

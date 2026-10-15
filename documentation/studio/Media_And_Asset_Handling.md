@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260514-184303-7914e2
 title: Media And Asset Handling
 added_date: "2026-05-14 18:43:03"
-last_updated: "2026-10-15 18:02:05"
+last_updated: "2026-10-15"
 summary: Media intake, content interpretation, document representation, storage, link resolution, extension methods, and safety boundaries.
 parent_id: d-20260424-000000-50b63f
 
@@ -94,7 +94,7 @@ Markdown package folders and interactive HTML companions are also classified out
 
 ## Workspace Configuration And Storage
 
-`docs-viewer/config/workspace/docs-workspace.json` uses `docs_workspace_v7`. Its `assets.roots` gives document and Work media explicit Working/Preview roots. Document media keeps configured `asset_location` and confined `asset_root` identities within the selected stage. [Configuration And Extension Points](Configuration_And_Extension_Points.md) owns configuration; [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns staged Work handoff.
+`docs-viewer/config/workspace/docs-workspace.json` uses `docs_workspace_v8`. Its `assets.roots` gives document and Work media explicit Working/Preview roots. Document media keeps configured `asset_location` and confined `asset_root` identities within the selected stage. [Configuration And Extension Points](Configuration_And_Extension_Points.md) owns configuration; [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns staged Work handoff.
 
 Current managed types are `img`, `thumbs`, `svg`, `files` and `html`; `mermaid` is an editable build-source type. Ordinary ready bytes live in `<stage>/assets/media/workspace/<type>/`; collection bytes live in `<stage>/assets/media/collections/<id>/<type>/`, for `working` and `preview`. Local reads, intake, builds, inventory and package/export input use Working. Publish copies its prepared media selection into Preview and distribution reads Preview. The `thumbs` type is document-owned derivative media, with configured local and public projections; it is not an input chooser or editable build-source format. Editable build inputs and private source evidence remain under Working source. The former workspace-level `assets/media/` tree has no runtime owner or fallback.
 

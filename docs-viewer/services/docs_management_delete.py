@@ -1,7 +1,6 @@
 """One confirmed exact-target Delete with retained effects and no restoration."""
 
 from pathlib import Path
-from dataclasses import replace
 from typing import Any
 
 from docs_document_identity import is_document_id
@@ -10,7 +9,6 @@ from docs_management_context import log_event
 from docs_management_document_target import normalize_managed_document_target, resolve_managed_document_collection
 from docs_selected_documents import read_selected, selected_path, selected_text
 from docs_source_model import write_text_atomic
-from docs_source_config_settings import clear_deleted_default_document
 from docs_workspace_config import require_document_authoring
 from docs_write_rebuild import complete_document_deletion
 
@@ -83,13 +81,6 @@ def delete_documents(repo_root: Path, body: dict[str, Any], *, dry_run: bool = F
         if rows != selected["docs"]:
             write_text_atomic(selected_path(owner.parent_config), selected_text(updated_selected))
         payload["selected_updated"] = True
-        if not collection and owner.parent_config.default_doc_id in removed:
-            payload["phase"] = "settings"
-            clear_deleted_default_document(repo_root)
-            payload.update(default_doc_id_changed=True, default_doc_id="")
-            config = replace(owner.parent_config, default_doc_id="")
-            workspace = replace(owner.workspace, stages=tuple(config if stage.stage == "working" else stage for stage in owner.workspace.stages))
-            owner = replace(owner, parent_config=config, document_config=config, workspace=workspace)
         payload["phase"] = "generation"
         payload["rebuild"] = complete_document_deletion(repo_root, owner, delete_ids, updated_selected, parent_ids=parents)
         payload.update(generation_complete=True, phase="complete", delete_count=len(delete_ids))

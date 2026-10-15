@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-647b52
 title: Endpoint Overview
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-13 20:05:39"
+last_updated: "2026-10-15"
 parent_id: d-20260424-000000-04d75e
 ---
 # Docs Viewer Endpoint Overview
@@ -22,7 +22,6 @@ Docs Viewer local endpoints are JSON APIs served by the Docs Viewer service. Can
 | `GET /docs/media-files` | [Media And Asset Handling](Media_And_Asset_Handling.md) | List files for an exact Working media owner without document associations. |
 | `GET /docs/media-references` | [Media And Asset Handling](Media_And_Asset_Handling.md) | Read source media references and exact document/collection-host identities for an exact Working media owner. |
 | `GET /docs/search` | [Generated Read Endpoints](Generated_Read_Endpoints.md) | Return generated docs-search JSON. |
-| `GET /docs/source-config-settings` | [Source Config Endpoints](Source_Config_Endpoints.md) | Return the settings edit contract. |
 | `GET /docs/source` | [Source Editor Endpoints](Source_Editor_Endpoints.md) | Return Markdown body text and a revision token for one source doc. |
 | `GET /docs/staged-media-files` | [Source Editor Endpoints](Source_Editor_Endpoints.md) | List staged image or opaque-file choices for source-editor insertion. |
 | `GET /docs/import-source-files` | [Create And Import Endpoints](Create_And_Import_Endpoints.md) | Project the body-free global Import candidate inventory and retained compatibility file list. |
@@ -55,7 +54,6 @@ The complete independently gated contract lives in [Docs Review Endpoints](Docs_
 
 | Endpoint | Child doc | Action |
 | --- | --- | --- |
-| `POST /docs/source-config-settings` | [Source Config Endpoints](Source_Config_Endpoints.md) | Persist changed allowlisted settings and project browser configuration, reporting committed/projection phases without document generation. |
 | `POST /docs/source/rebuild` | [Source Editor Endpoints](Source_Editor_Endpoints.md) | Replace one source doc body, preserving front matter, then rebuild affected outputs. |
 | `POST /docs/staged-media-preview` | [Source Editor Endpoints](Source_Editor_Endpoints.md) | Preview logical media identity and new/unchanged/replace collision state without writing. |
 | `POST /docs/staged-media-apply` | [Source Editor Endpoints](Source_Editor_Endpoints.md) | Publish verified staged media and return Markdown for insertion into the active buffer. |

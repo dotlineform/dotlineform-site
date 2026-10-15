@@ -20,7 +20,7 @@ export function openDocumentLinkModal(options) {
       + '<div class="docsViewer__field"><label class="docsViewer__fieldLabel" for="docsViewerDocumentLinkSearch">Search documents</label>'
       + '<input class="docsViewer__fieldInput" id="docsViewerDocumentLinkSearch" type="search" role="combobox"'
       + ' aria-autocomplete="list" aria-controls="docsViewerDocumentLinkResults" aria-expanded="true" autocomplete="off" disabled></div>'
-      + '<p class="docsViewerCatalogueTokenModal__searchStatus muted small" data-document-link-status>Loading documents…</p>'
+      + '<p class="docsViewerCatalogueTokenModal__searchStatus muted small" data-document-link-status hidden></p>'
       + '<div class="docsViewerCatalogueTargetPicker__results docsViewerCatalogueTokenModal__results"'
       + ' id="docsViewerDocumentLinkResults" role="listbox" aria-label="Documents" tabindex="0"></div></div>',
     actions: [

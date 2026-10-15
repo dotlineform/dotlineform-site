@@ -113,7 +113,7 @@ export function mountWorkspaceLinksReport(context) {
     refresh.disabled = true;
     table.hidden = true;
     body.replaceChildren();
-    status.textContent = rebuild ? "Refreshing links…" : "Loading links…";
+    status.textContent = "";
     try {
       const payload = await (rebuild ? service.refreshWorkspaceLinks() : service.readWorkspaceLinks());
       if (released) return;

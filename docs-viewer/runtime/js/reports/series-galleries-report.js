@@ -69,7 +69,7 @@ function renderRows(state) {
 
 async function readReport(state) {
   setBusy(state, true);
-  state.statusNode.textContent = "Loading Series and Galleries…";
+  state.statusNode.textContent = "";
   try {
     const payload = await state.context.reportService.readSeriesGalleries();
     if (!current(state)) return;

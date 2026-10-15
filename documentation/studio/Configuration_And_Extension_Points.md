@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260512-142027-54b354
 title: Configuration And Extension Points
 added_date: "2026-05-12 14:20:27"
-last_updated: "2026-10-15 18:09:30"
+last_updated: "2026-10-15"
 summary: Map of the configuration, registries, generated projections, code definitions, and capability checks that drive Docs Viewer workflows.
 parent_id: d-20260424-000000-50b63f
 
@@ -45,7 +45,9 @@ Generated browser config sits between source-side workspace config and the runti
 
 ### Workspace And Target Contracts
 
-`docs-viewer/config/workspace/docs-workspace.json`, schema `docs_workspace_v7`, defines the existing external Docs root. Working owns source/generated output and local document/Work media; Preview owns the prepared snapshot and its document/Work media. Retired scope/stage storage and fallback roots remain prohibited.
+`docs-viewer/config/workspace/docs-workspace.json`, schema `docs_workspace_v8`, defines the existing external Docs root. Working owns source/generated output and local document/Work media; Preview owns the prepared snapshot and its document/Work media. Retired scope/stage storage and fallback roots remain prohibited.
+
+The top-level `default_doc_id` is one design-time setting shared by local and public readers. It remains `d-20260426-164043-e14f49`. There are no Working/Preview overrides, Settings UI or settings API writes. Document deletion does not rewrite this setting. Maintainers choose a document available to both readers; blank retains the existing first-Index-root behavior. Configuration loading checks identifier syntax without scanning document membership or publication eligibility.
 
 `load_docs_workspace_config(repo_root)` resolves the workspace. Local readers and authoring services use `load_docs_working_config(repo_root)` at their storage boundary. Build/publication code may select explicit `working` or `preview` internally with `load_docs_stage` or `select_workspace_stage`; ordinary APIs do not accept stage selection. The loader creates no directories; unavailable configured storage, traversal and symlink escapes fail without repository or Projects-root fallback.
 
@@ -73,6 +75,8 @@ Catalogue Regenerate creates each document with the exact five-digit Work ID as 
 ### Builder And Local Service Integration
 
 `docs_viewer_config_v4` supplies one `workspace` per local/public composition, without a stages array or default stage. Browser config contains URLs/display policy, never private paths or write authority. Its tracked projections are produced by `browser_config.py`.
+
+After editing design-time workspace configuration, run `python3 docs-viewer/build/build_browser_config.py` from the repository root to update both canonical browser JSON files, then `bin/site-code-update` to copy the public configuration through its existing inventory into `site/`. Inspect that projection and run `bin/site-code-update --check` and `bin/site-validate`. The config-only command reads one resolved workspace, writes only the two canonical browser projections and performs no document, Search, media or Publish work. Reload local readers after projection; public readers receive the change through the normal committed site release. Public browser configuration is outside the user-data publication queue.
 
 Document Build accepts `--stage working`. Optional `--collection` selects one registered owner; `--only-doc-ids` limits document rendering. Named-collection targeted builds merge selected metadata into saved manifests; the [Builder](Builder.md) owns prerequisites and output behavior. Application writes await their required Working generation; the filesystem watcher and suppression settings are retired. External edits require explicit Rebuild. Ordinary edits do not automatically rebuild Search.
 
@@ -106,7 +110,7 @@ Publication lineage requires exact configured Working collection owners. No line
 
 The local and public route registries use `docs_viewer_route_config_v5`. Neither route selects a publishing stage. Stage/scope-bearing URLs fail with a current-link message. `docs-viewer-workspace-provider.js` uses the composition's one configured workspace. `workspace-configuration` controls configuration discovery; there are no stage controls. The public composition retains read-only authority and does not probe local management services.
 
-Management capability responses expose `workspace` plus `publish` availability. Settings use `docs_source_config_settings_v2` for that fixed local owner; the Source Config Report and its dedicated read endpoint are retired. Workspace configuration's `media_report_metadata` selects private Docs Media output beneath `working/generated/reports/`. Opening reads `/docs/media-metadata`; an explicit empty-object `/docs/media-refresh` POST regenerates the saved datasets. The path is server-only and absent from browser/public configuration. The reveal action sends exact collection, role, media type and identity to `/docs/open-media-source`, which resolves an existing file through the configured Docs artifact owner and shared Finder helper. [Media And Asset Handling](Media_And_Asset_Handling.md#docs-media-inventory-report) owns the report's persisted schema, inventory and file-opening boundary. Scope and whole-collection lifecycle UI/service workflows are retired. Ordinary workspace export reads the Working ordinary document index and retains its own preview/confirmation/apply workflow.
+Management capability responses expose `workspace` plus `publish` availability. Settings and the Source Config Report, their endpoints and capability flags are retired without aliases. Workspace configuration's `media_report_metadata` selects private Docs Media output beneath `working/generated/reports/`. Opening reads `/docs/media-metadata`; an explicit empty-object `/docs/media-refresh` POST regenerates the saved datasets. The path is server-only and absent from browser/public configuration. The reveal action sends exact collection, role, media type and identity to `/docs/open-media-source`, which resolves an existing file through the configured Docs artifact owner and shared Finder helper. [Media And Asset Handling](Media_And_Asset_Handling.md#docs-media-inventory-report) owns the report's persisted schema, inventory and file-opening boundary. Scope and whole-collection lifecycle UI/service workflows are retired. Ordinary workspace export reads the Working ordinary document index and retains its own preview/confirmation/apply workflow.
 
 The same checked workspace owns `links_report`, currently `working/generated/reports/links/report.json`. It must name `report.json` within Working's generated reports boundary, with no symlink traversal; it is not projected into browser/public configuration. The existing `GET /docs/workspace-links` reads only this saved object and its empty-object POST owns Refresh/persistence. Build maintains the separate per-document relationship inputs but does not aggregate or write this report. The old generated-documents aggregate location has no alias or fallback. [Reports](Reports.md#current-reports) owns the full contract.
 
@@ -136,7 +140,7 @@ Historical scope-bearing tests and fixtures remain unreviewed against the curren
 
 | driver | controls | authority |
 | --- | --- | --- |
-| `docs-viewer/config/workspace/docs-workspace.json` | Stage defaults, hierarchy policy, build-media registration, explicit public/R2 destinations, collections, and Search fields. | Maintainer-edited workspace config. Working source/generated, Preview, stage-owned assets and Catalogue destinations derive from the existing external root and explicit owners. |
+| `docs-viewer/config/workspace/docs-workspace.json` | One shared default document, hierarchy policy, build-media registration, explicit public/R2 destinations, collections, and Search fields. | Maintainer-edited workspace config. Working source/generated, Preview, stage-owned assets and Catalogue destinations derive from the existing external root and explicit owners. |
 | `docs-viewer/runtime/js/shared/docs-viewer-code-config.js` | Universal metadata statuses. | Product-owned browser code, projected to `site/` through the public code inventory. Scope-type labels and badges are retired. |
 | `docs-viewer/config/routes/docs-viewer-routes.json` | App kind, route features, access intent, payload/config URLs, panel defaults, view policy, and named service surfaces. | Full local route registry. The service injects enabled loopback URLs when it serves local routes. |
 | `site/docs-viewer/config/routes/docs-viewer-public-routes.json` | Public-only route records served from the deploy root. | Checked-in public projection kept separate so local/manage and review routes are never exposed publicly. |
@@ -161,22 +165,22 @@ Do not edit these generated browser projections directly:
 - `docs-viewer/config/defaults/docs-viewer-public-config.json`
 - `site/docs-viewer/config/defaults/docs-viewer-public-config.json`
 
-The docs builder derives these projections from workspace config:
+The design-time config-only command uses the existing projector to derive the two canonical browser configurations. The site-code-update inventory owns their public deploy-root copy:
 
 ```text
 docs-workspace.json
       |
       v
-browser_config.py
+build_browser_config.py -> browser_config.py
       |
       +--> local browser config: Working reader URLs and collections for `/docs/`
       |
       +--> public browser config: accepted public destinations and browser-safe fields only
                    |
-                   +--> deploy-root copy under `site/`
+                   +--> site-code-update -> deploy-root copy under `site/`
 ```
 
-Use [Builder](Builder.md) for the build commands.
+Use the [config-only projection workflow](#builder-and-local-service-integration) when changing configuration. [Builder](Builder.md) owns document and Search commands.
 
 Browser Search configuration carries its reader URL in `workspace.search_index_url`. Search schema and complete-index rebuild behavior belong to the Search builder/runtime; the unused nested `workspace.search` policy block is retired. Manage preserves no snapshot query parameter; Docs Review still preserves its required `package` identity.
 
@@ -206,7 +210,7 @@ When a control is unexpectedly missing, inspect those gates in that order. [Runt
 
 ### Change Workspace Or Collection Configuration
 
-Edit `docs-workspace.json` for the existing workspace and its explicit stage settings. Public documents, Search, and per-type repository/R2 media destinations remain explicit under `public_projection`. Child public destinations derive from those configured parent destinations. Do not repeat derived local paths, add a scope registry, or restore old-schema compatibility records.
+Edit `docs-workspace.json` for the existing workspace, shared default document and explicit Working settings. Public documents, Search, and per-type repository/R2 media destinations remain explicit under `public_projection`. Child public destinations derive from those configured parent destinations. Do not repeat derived local paths, add a scope registry, restore separate stage defaults or add old-schema compatibility records.
 
 Use the retained collection creation workflow to create its Working config, report host, and local artifact roots together. Preparation, publication, and deployment remain separate owners. Top-level scope creation, rename, deletion, and cross-scope transfers are retired by the cutover.
 
@@ -248,6 +252,7 @@ Use the JSON registry when the kind can reuse an existing identifier normalizer 
 - The full and public route registries are separate checked-in files. Route edits must keep their shared public entries aligned.
 - Registries are not a single plugin system. Reports, semantic tokens, views, actions, and importers each have different data/code boundaries.
 - A configured feature can still be unavailable because its entrypoint, code definition, service capability, or filesystem precondition is missing.
-- There is no single runtime screen showing every route feature, registered definition, and capability decision. The Source Config report covers configuration projections, not the entire availability calculation.
+- There is no single runtime screen showing every route feature, registered definition and capability decision; the Source Config report and Settings are retired.
+- Historical Settings/capability/stage tests still reference retired contracts, including `docs-viewer/tests/python/test_docs_source_config_settings.py`, `test_docs_management_capabilities.py`, `test_docs_workflow_stages.py` and `test_docs_viewer_service_config.py` in that directory. Their migration needs a separately agreed test specification. The default cleanup has focused lint/compilation, config projection, CLI import and public projection/site-validation evidence; live browser and mutation acceptance remain unexercised.
 
 These are reasons to keep this map current. They are not reasons to duplicate every field and module here; the code and focused owner docs remain the detailed authority.

@@ -3,18 +3,16 @@ draft: false
 doc_id: d-20260519-202931-66c794
 title: Management Operations
 added_date: "2026-05-19 20:29:31"
-last_updated: "2026-10-13 20:05:39"
+last_updated: "2026-10-15"
 parent_id: d-20260424-000000-04d75e
 ---
 # Docs Viewer Management Operations
 
 The single configured Docs workspace owns Working source/generated operations. [Builder](Builder.md) owns Working generation and the Preview/publication lifecycle. Working Delete updates its own source/generated products; Publish owns Preview/public distribution. Public document-location JSON, its builder/picker and the legacy Catalogue document-URL refresh remain retired.
 
-## Settings
+## Default Document
 
-Settings edits the configured ordinary default document. The browser checks a nonblank ID against its already-loaded Index; blank uses the first Index root. The service retains editable-field/type/immutable-ID syntax checks, persists changed Working configuration and carries the resolved workspace directly into browser-configuration projection. It does not scan source documents or run document, Search or media generation. An explicit unchanged Save still projects browser configuration, allowing completion after a prior projection failure without rewriting source configuration.
-
-The response distinguishes committed configuration from completed projection and names the failing phase. The browser applies the supplied default locally, including after a saved-but-projection-failed response, without configuration, Index or displayed-document GETs. The displayed target and position remain unchanged. A projection failure requires correction and another explicit Settings Save; no automatic recovery build or retry runs. [User Facing Rules](data/User_Facing_Rules.md) M.05 records the implementation evidence and pending manual acceptance.
+The Settings menu action, modal and dedicated API are retired. One top-level `default_doc_id` in `docs-workspace.json` configures both local and public readers as a design-time action. [Configuration And Extension Points](Configuration_And_Extension_Points.md#workspace-and-target-contracts) owns configuration and projection. Ordinary authoring and deletion do not change this setting.
 
 ## Security Constraints
 
@@ -53,11 +51,11 @@ var/docs/logs/
 
 Ordinary confirmation uses the full already-loaded Index subtree, including collapsed descendants. Collection confirmation uses its singular exact flat target. Cancel performs no request or write; confirmation sends one `POST /docs/delete` with either `{doc_ids: ["<ordinary-root-id>"], confirm: true}` or `{collection: "<configured-id>", doc_id: "<id>", confirm: true}`. The service accepts exact nonempty ordinary ID arrays for subtree roots; displayed titles, filenames and current routes never supply fallback identity. Preview/apply routes, source revisions and a separate collection Delete capability request are retired without aliases.
 
-The service resolves its configured owner once, reads the ordinary tree and Selected list once, expands subtree scope once and unlinks only exact confined source paths. Ordinary deletion updates `index-order.json`; both forms remove exact Selected identities. Deleting the configured ordinary default clears that setting and carries the known empty value into generated browser configuration and the response. The browser applies that returned change locally without a configuration reload. There is no protected-descendant editorial guard. Collection hosts retain frontend Delete restrictions; named collection deletion leaves its host, siblings and ordinary tree unchanged. Direct Catalogue deletion is rejected through the Regenerate boundary.
+The service resolves its configured owner once, reads the ordinary tree and Selected list once, expands subtree scope once and unlinks only exact confined source paths. Ordinary deletion updates `index-order.json`; both forms remove exact Selected identities. Deletion does not mutate the design-time default or project browser configuration. There is no protected-descendant editorial guard. Collection hosts retain frontend Delete restrictions; named collection deletion leaves its host, siblings and ordinary tree unchanged. Direct Catalogue deletion is rejected through the Regenerate boundary.
 
 Known deleted IDs, the remaining parent map, updated Selected and resolved configuration feed the existing in-process document/Links builders. They remove exact by-ID/navigation or collection-manifest entries and the deleted documents' relationship records/contributions. They do not reopen sources to rediscover identities, render unrelated Markdown, audit saved navigation or preflight unrelated by-ID files. Links retains exact affected-neighbour maintenance. Saved Recent/Search and registered media production retain their separate owners; Publish later reconciles its prepared public set.
 
-Execution stops at its failing phase and retains completed effects. Responses carry `target`, requested/actually deleted IDs, source/tree/Selected/generation completion flags and `phase`; a failing source target is included when applicable. Default clearing is reported only after its write completes. No restoration, recovery build, automatic retry, public-cleanup or lineage receipt is produced. Diagnose the reported target/phase and explicitly complete the owning repair or Build; success is returned only after required generation completes.
+Execution stops at its failing phase and retains completed effects. Responses carry `target`, requested/actually deleted IDs, source/tree/Selected/generation completion flags and `phase`; a failing source target is included when applicable. No restoration, recovery build, automatic retry, public-cleanup or lineage receipt is produced. Diagnose the reported target/phase and explicitly complete the owning repair or Build; success is returned only after required generation completes.
 
 The browser forwards actual committed deletions to retained views even when later service work fails. After complete ordinary generation, it reads Index once. When the displayed document was removed, it awaits return to a surviving retained caller; otherwise it opens the collection host or surviving ordinary root, or hides an empty document pane. Deleted retained callers are released. The busy state covers service execution and display completion. Generation failures remain distinct from completed-delete projection/display failures, and listener failures are surfaced. [User Facing Rules](data/User_Facing_Rules.md) M.17 records implementation evidence and pending manual acceptance.
 

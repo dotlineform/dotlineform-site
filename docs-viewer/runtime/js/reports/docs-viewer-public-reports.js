@@ -136,9 +136,6 @@ export function mountDocsViewerPublicReport(context) {
       return true;
     }
 
-    if (reportMeta.loaderId !== "selected_documents") {
-      root.innerHTML = '<p class="docsViewer__panelStatus muted small">Loading report...</p>';
-    }
     return PUBLIC_REPORT_LOADERS[reportMeta.loaderId].load().then(function (mount) {
       if (!isCurrent()) return false;
       const resolvedReportMeta = Object.assign({}, meta, { registryEntry: reportMeta });

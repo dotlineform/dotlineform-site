@@ -64,7 +64,7 @@ function runReport(state) {
     return Promise.resolve();
   }
   setBusy(state, true);
-  state.statusNode.textContent = "Running Uncataloged Files...";
+  state.statusNode.textContent = "";
   return service.runUncatalogedFiles()
     .then((payload) => {
       state.rows = payload.report.rows;

@@ -178,7 +178,6 @@ export function initDocsViewerManagement(context) {
   var manageActionsButton = document.getElementById("docsViewerManageActionsButton");
   var manageActionsMenu = document.getElementById("docsViewerManageActionsMenu");
   var manageRebuildButton = document.getElementById("docsViewerManageRebuildButton");
-  var manageSettingsButton = document.getElementById("docsViewerManageSettingsButton");
   var managePublishButton = document.getElementById("docsViewerManagePublishButton");
   var manageImportButton = document.getElementById("docsViewerManageImportButton");
   var manageNewButton = document.getElementById("docsViewerManageNewButton");
@@ -191,7 +190,6 @@ export function initDocsViewerManagement(context) {
   var modalController = null;
   var workspaceExportActive = false;
   var workspaceExportButton = document.getElementById("docsViewerManageExportWorkspaceButton");
-  var settingsWorkflow = null;
   var actionController = null;
   var resolveAction = null;
   var projectedReportControls = null;
@@ -550,12 +548,8 @@ export function initDocsViewerManagement(context) {
     if (manageImportButton) {
       manageImportButton.disabled = management.managementBusy || !management.managementAvailable;
     }
-    if (manageSettingsButton) {
-      manageSettingsButton.disabled = management.managementBusy || !management.managementAvailable;
-    }
     var authoringAvailable = management.managementAvailable;
     projectDocumentActionButtons(!management.managementChecked || !authoringAvailable, !authoringAvailable || editDisabled);
-    if (settingsWorkflow) settingsWorkflow.render();
   }
 
   function initializeManagement() {
@@ -686,8 +680,7 @@ export function initDocsViewerManagement(context) {
           if (vscodeDoc) {
             actionController.handleOpenSource(
               "vscode",
-              sourceTargetForDoc(vscodeDoc),
-              vscodeDoc.title
+              sourceTargetForDoc(vscodeDoc)
             );
           }
           return;
@@ -697,8 +690,7 @@ export function initDocsViewerManagement(context) {
           if (defaultDoc) {
             actionController.handleOpenSource(
               "default",
-              sourceTargetForDoc(defaultDoc),
-              defaultDoc.title
+              sourceTargetForDoc(defaultDoc)
             );
           }
         }
@@ -724,9 +716,6 @@ export function initDocsViewerManagement(context) {
     refs: {},
     resolveAction: resolveAction,
     callbacks: {
-      getSettingsWorkflow: function () {
-        return settingsWorkflow;
-      },
       hideContextMenu: hideContextMenu,
       managementClientOptions: managementClientOptions,
       openCreatedDocumentSource: openCreatedDocumentSource,
@@ -783,7 +772,6 @@ export function initDocsViewerManagement(context) {
     commands: {
       exportWorkspace: openExportWorkspace,
       openImport: openAppImport,
-      openSettings: function () { settingsWorkflow.open(); },
       publish: function () { actionController.handlePublish(); },
       rebuild: function () { actionController.handleRebuildDocs(); }
     },
@@ -826,22 +814,16 @@ export function initDocsViewerManagement(context) {
   });
 
   var modalComposition = createDocsViewerManagementModalComposition({
-    domains: { management: management },
     shellRefs: shellRefs,
     manageActionsButton: manageActionsButton,
     manageImportButton: manageImportButton,
-    manageSettingsButton: manageSettingsButton,
     callbacks: {
       hideContextMenu: hideContextMenu,
       hideManageActionsMenu: eventRouter.hideManageActionsMenu,
       onImportOpen: importController.initialize,
-      onSettingsSubmit: actionController.handleSettingsSubmit,
-      managementClientOptions: managementClientOptions,
-      documentExists: function (docId) { return documentIndex.docsById.has(docId); },
     }
   });
   modalController = modalComposition.modalController;
-  settingsWorkflow = modalComposition.settingsWorkflow;
 
   eventRouter.wireEvents();
   applyConfig(context.currentViewerConfig());

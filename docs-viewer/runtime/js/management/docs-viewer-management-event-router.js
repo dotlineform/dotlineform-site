@@ -78,7 +78,6 @@ export function createDocsViewerManagementEventRouter(options = {}) {
       ["rebuild-docs", ["rebuild", { hideContextMenu: true, hideManageActionsMenu: true }]],
       ["import", ["openImport", {}]],
       ["export-workspace", ["exportWorkspace", { hideContextMenu: true, hideManageActionsMenu: true }]],
-      ["settings", ["openSettings", {}]],
       ["publish", ["publish", { hideContextMenu: true, hideManageActionsMenu: true }]]
     ]);
     var command = commandsByAction.get(actionId);

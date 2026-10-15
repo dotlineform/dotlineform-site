@@ -236,7 +236,7 @@ function loadMedia(state, refresh = false) {
     return Promise.resolve();
   }
   setBusy(state, true);
-  state.statusNode.textContent = refresh ? "Refreshing Docs Media..." : "Loading saved Docs Media...";
+  state.statusNode.textContent = "";
   if (!state.snapshot) state.emptyNode.hidden = true;
   return (refresh ? service.refreshMediaMetadata() : service.readMediaMetadata())
     .then((payload) => buildDocsMediaSnapshot(payload, state.context, state.collator))

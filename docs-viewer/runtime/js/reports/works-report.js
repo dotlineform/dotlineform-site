@@ -77,7 +77,7 @@ function loadWorksReport(state) {
   state.snapshot = null;
   clearNode(state.rowsNode);
   state.emptyNode.hidden = true;
-  state.statusNode.textContent = "Loading Works...";
+  state.statusNode.textContent = "";
   return loadWorksInputs(state.context).then((inputs) => {
     if (state.released) return;
     state.snapshot = buildWorksSnapshot(inputs[0].series, inputs[1].docs, state.documentHref);
