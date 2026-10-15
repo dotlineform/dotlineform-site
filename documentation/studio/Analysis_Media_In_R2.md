@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260907-201225-db6e8a
 title: Analysis Media In R2
 added_date: "2026-09-07 20:12:25"
-last_updated: "2026-10-15 16:55:29"
+last_updated: "2026-10-15 18:02:05"
 summary: Restore legacy Moments media to Working and make R2 mirror the accepted Analysis media structure.
 ui_status: paused
 parent_id: d-20260902-102745-8379ea
@@ -55,9 +55,9 @@ Ready for user review. Analysis promotion controls and Git/public deployment rem
 
 ## Live-Site Release Dependency
 
-Rechecked on 15 October 2026: the live site still exposes `/moments/` and the old scope configuration from the successful 13 July deployment. Its artifact contains 36 exact legacy Moments image references, and sampled live configuration/document bytes match that deployed commit. Preserve all 111 legacy Moments images until replacement public deployment and live-reference verification release them. All 111 have matching local bytes. This temporary hold adds no alternate writer or runtime fallback.
+Released on 15 October 2026 after the user's successful GitHub Pages deployment of commit `1c4432723bc39d16db972ff51018dc8a7d5aa5e2`. Live public configuration, the Moments manifest and a sampled Moments payload match that artifact. It uses `docs/media/`, contains no legacy remote media paths and the retired `/moments/` route returns 404. All 85 referenced current Docs media objects passed public byte verification. The previous legacy Moments and PDF holds are released.
 
-The follow-up audit established that the legacy Analysis PDF is not referenced by the checked deployed artifact or current local/public payloads and has identical bytes at `docs/media/collections/works/files/d-20260801-212422-df11f3-attachment-01.pdf`. Its old key is removable, as are the folder markers, which are unnecessary for serving descendant objects. The September 118-object hold is therefore superseded by the current 111-image hold. Exact current keys, replacements and evidence are recorded in `var/verification/2026-10-15-docs-r2-migration/`. The follow-up copied the 137 current media objects into `docs/media/` and updated configuration; neither migration deleted remote objects.
+The explicitly authorized follow-up deleted all 317 legacy `docs/` objects, including the 111 Moments variants, duplicate legacy Analysis PDF, old projection trees and folder markers. All 111 Moments variants remain byte-preserved in Working local media. The final authenticated inventory contains only the 137 migrated objects under `docs/media/`, with unchanged sizes and ETags. Catalogue Work media and local files were not changed. Exact deleted keys, preserved-object inventories and live/deletion evidence are recorded in `var/verification/2026-10-15-docs-r2-migration/` and summarized in [Media And Asset Handling](Media_And_Asset_Handling.md#r2-namespace-and-historical-cleanup).
 
 ## Result And Evidence
 
