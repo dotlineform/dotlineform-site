@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260512-142027-54b354
 title: Configuration And Extension Points
 added_date: "2026-05-12 14:20:27"
-last_updated: "2026-10-15 00:00:00"
+last_updated: "2026-10-15 16:55:29"
 summary: Map of the configuration, registries, generated projections, code definitions, and capability checks that drive Docs Viewer workflows.
 parent_id: d-20260424-000000-50b63f
 
@@ -96,7 +96,7 @@ Source/Create/metadata/placement/Delete/Draft operations resolve Working and req
 
 **Publish** remains one awaited empty-body `/docs/publish` operation. `docs_catalogue_publication.py` completes each queued Work's Preview and combined repository/R2 deployment before the next. The final shared pass then prepares eligible documents while retaining completed Catalogue bodies and deploys its completed snapshot. Failures preserve completed effects and queue progress with the failed Work/stage or shared step. Shared distribution still compares once and carries its plan into apply; it adds no upstream readiness scans or automatic recovery. [Catalogue Deployment](Catalogue_Deployment.md) owns exact selection and deletion.
 
-`docs_publication_payloads.py` projects public document metadata URLs without a publishing-stage field. By-ID content keeps query-only Docs links and `docs-media:` identities; the local and public readers compose their own viewer routes and media roots. Catalogue, Search and Recents bytes remain unchanged. The public section is `/analysis/`; documents use `site/assets/data/docs/`, Search uses `site/assets/data/search/analysis/index.json`, and Catalogue uses `site/assets/data/catalogue/`. Configured R2 Docs media uses `docs/analysis/media/workspace/<type>/` and `docs/analysis/media/collections/<collection>/<type>/`.
+`docs_publication_payloads.py` projects public document metadata URLs without a publishing-stage field. By-ID content keeps query-only Docs links and `docs-media:` identities; the local and public readers compose their own viewer routes and media roots. Catalogue, Search and Recents bytes remain unchanged. The public section is `/analysis/`; documents use `site/assets/data/docs/`, Search uses `site/assets/data/search/analysis/index.json`, and Catalogue uses `site/assets/data/catalogue/`. Configured R2 Docs media uses `docs/media/workspace/<type>/` and `docs/media/collections/<collection>/<type>/`.
 
 Publish preserves the independently owned `public-reports.json`. Public collections require exact `docs_collection` registry rows and generated browser configuration registration as well as prepared data. Public document-location JSON, the legacy Catalogue document-URL writer and the old publication pause remain retired. [Catalogue Deployment](Catalogue_Deployment.md) owns the JSON/media inventory and accepted R2-before-Actions timing gap. Git commit/push and public Actions deployment remain separate.
 

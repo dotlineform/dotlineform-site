@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260514-184303-7914e2
 title: Media And Asset Handling
 added_date: "2026-05-14 18:43:03"
-last_updated: "2026-10-15 00:00:00"
+last_updated: "2026-10-15 16:55:29"
 summary: Media intake, content interpretation, document representation, storage, link resolution, extension methods, and safety boundaries.
 parent_id: d-20260424-000000-50b63f
 
@@ -158,7 +158,7 @@ The preparation phase of Publish captures document/Catalogue JSON and selects re
 
 `docs_artifact_locations.py` owns provider resolution, confinement, authentication, I/O, byte verification, staging, and served-reference behavior. `docs_media_storage.py` applies that boundary to managed-media writes and local serving:
 
-- Document R2 keys use `docs/analysis/media/workspace/<type>/<identity>` and `docs/analysis/media/collections/<collection>/<type>/<identity>`, matching the suffixes beneath the local `/docs/assets/media/` served root. The configured public root is `https://media.dotlineform.com/docs/analysis/media/`.
+- Document R2 keys use `docs/media/workspace/<type>/<identity>` and `docs/media/collections/<collection>/<type>/<identity>`, matching the suffixes beneath the local `/docs/assets/media/` served root. The configured public root is `https://media.dotlineform.com/docs/media/`; Working and Preview share this stage-independent public destination. Catalogue Work media retains its separate `works/` public ownership.
 - Local paths resolve only from the configured shared asset family and exact collection/type identity.
 - Local `/docs/assets/` routes validate the registered family and safe identity, then confine the resolved filesystem target. Retired stage-media routes are not aliases.
 - Traversal and symlink escape are rejected; `files` responses remain attachments with `nosniff`.
@@ -169,6 +169,16 @@ Artifact `list()` returns sorted file identities. Its filesystem implementation 
 R2 `list_stats()` is an explicit metadata listing used by Publish reconciliation. It carries the size and ETag already returned by one remote listing per selected family so Publish can compare and skip unchanged transfers. Individual `stat()` and completed writes retain byte sizes where their actual transfer consumers require them. Upload limits and publication verification remain separate owners; file discovery does not inherit their metadata requirements. [Export](Export.md) displays a packaged-file count and carries no media byte total or per-media size fields.
 
 The distinct review for [Artifact Listing And Export Cleanup](deliveries/Artifact_Listing_And_Export_Cleanup.md) traced both Mermaid listing consumers and the single production remote metadata-list consumer, empty/prefix/exact-file paths, source-to-output mapping, existing provider confinement and transfer comparison. It removed unused local size reads, redundant Mermaid output uniqueness validation and the compatibility default for a required context field. Shared directory discovery avoids an extra location resolution and retains necessary file-type and symlink-confinement checks. Remote comparison and producer-owned render/sanitize/write verification retain their operational purposes. Focused Python/JavaScript lint, Python compilation, whitespace and source/diff review passed; real Mermaid rendering, Publish, Export and browser interaction were not exercised. Existing artifact-list and Mermaid-plan tests still use size-bearing discovery inputs and need separately agreed migration; no tests were changed or run.
+
+### R2 Namespace And Historical Cleanup
+
+The 15 October 2026 maintenance migration copied all 137 current objects (7,148,771 bytes) from `docs/analysis/media/` to `docs/media/`, verified the destination file set, sizes and ETags, and changed workspace publication and canonical/projected public browser configuration together. Seven representative public responses, one from each populated owner/type family, match the copied bytes and content types. No document Build, Publish, Search rebuild or Git/public deployment was needed; saved document media identities remain root-independent.
+
+The cleanup assessment found 206 removable old objects: the 137 migrated originals, 58 superseded `docs/analysis/sub-scopes/` objects, one legacy Analysis PDF with identical bytes at its current Works attachment key, and 10 zero-byte folder markers. The 69 objects outside the migrated source prefix comprise those last three groups. None of these old media keys occurs in the checked deployed site artifact or current Working source, Preview and tracked public payloads. This was a maintenance reference/preservation audit, not an additional Publish step. Exact keys, replacements and evidence are recorded in `var/verification/2026-10-15-docs-r2-migration/`; no remote deletion was requested or performed.
+
+Retain all 111 legacy images under `docs/moments/img/`. The live site still serves the successful 13 July 2026 deployment (`8afa84d9067d5f9c4f515e18b5380973646dd2f8`), with 36 exact legacy Moments image references. Its public configuration and two sampled document payloads match that deployed commit. All 111 image variants also have matching local bytes, but local preservation does not release the live-site dependency. Recheck the replacement public deployment before removing them; folder marker objects are not required to serve their descendants. Catalogue Work media remains independently owned and outside this migration.
+
+The distinct configuration and redundancy review confirmed one publication destination and one public reader root, projected through the existing site-code inventory. No runtime alias, fallback, automatic cleanup, queue, recovery path or additional routine scan was added. The one-time authenticated inventory, conditional server-side copies, destination metadata verification, selected public reads and deployed-reference/local-preservation audit serve the requested migration and removal assessment only. Site-code projection/check, site validation, configuration loading and whitespace/source review passed. No tests or browser interaction checks were added or run.
 
 ## Import Materialization
 

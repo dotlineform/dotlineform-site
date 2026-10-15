@@ -7,7 +7,7 @@
     "viewer_base_url": "/analysis/",
     "document_url_template": "/assets/data/docs/by-id/{doc_id}.json",
     "default_doc_id": "d-20260426-164043-e14f49",
-    "media_root": "https://media.dotlineform.com/docs/analysis/media/",
+    "media_root": "https://media.dotlineform.com/docs/media/",
     "index_tree_url": "/assets/data/docs/index-tree.json",
     "recent_url": "/assets/data/docs/recent.json",
     "selected_url": "/assets/data/docs/selected.json",

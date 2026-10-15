@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260929-201148-f1cc2f
 title: Catalogue Work IDs and Portable Docs - Proposed Delivery
 added_date: "2026-09-29 20:11:48"
-last_updated: "2026-09-30 12:20:34"
+last_updated: "2026-10-15 16:55:29"
 summary: Use each Work ID as its Catalogue document ID, link to that document directly from Media View, and make Docs viewer and media references portable across local and public roots.
 ui_status: in-progress
 parent_id: d-20260428-000000-f5ff18
@@ -32,7 +32,7 @@ The present public Catalogue `manifest.json` is 757,411 bytes for 4,616 Works; t
 
 The current Preview semantic-token usage index is 2,077,601 bytes with 4,626 occurrences: 4,616 generated Catalogue Work image tokens and 10 Work references in the `works` collection. All 4,616 Catalogue image tokens use the same presentation settings. The index is retained in Preview but the current repository publication projection does not copy it to `site/`, so its size is a Build/Preview and Working-report cost rather than a public browser download. The Working Semantic Tokens report resolves a generated source payload for each distinct indexed document. Keep the token renderer and generated Catalogue body intact; omit only self-targeting Catalogue Work tokens from the usage index. A complete Catalogue Build replaces the existing saved Catalogue self-reference rows while retaining genuine Catalogue references and other collections' occurrences.
 
-Today a local Moments image is served from `/docs/assets/media/collections/moments/img/<identity>`, while its public counterpart is served from `https://media.dotlineform.com/docs/analysis/sub-scopes/moments/media/img/<identity>`. Ordinary public media similarly lacks the local `workspace/` segment. The target public URLs are `https://media.dotlineform.com/docs/analysis/media/workspace/<type>/<identity>` and `https://media.dotlineform.com/docs/analysis/media/collections/<collection>/<type>/<identity>`. The suffix then identifies the same Docs-owned bytes under either configured root. Root-independent viewer links and media identities remove these local/public URL differences from by-ID JSON without removing Preview Build.
+Local Moments images use `/docs/assets/media/collections/moments/img/<identity>`; their configured public counterparts use `https://media.dotlineform.com/docs/media/collections/moments/img/<identity>`. Ordinary public media uses `https://media.dotlineform.com/docs/media/workspace/<type>/<identity>`. The suffix identifies the same Docs-owned bytes under either configured root. Root-independent viewer links and media identities remove these local/public URL differences from by-ID JSON without removing Preview Build. The `docs/media/` namespace supersedes the earlier `docs/analysis/media/` projection.
 
 ## Deliverables
 

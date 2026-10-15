@@ -50,37 +50,37 @@
       "img": {
         "location": {
           "provider": "r2",
-          "path": "docs/analysis/media/workspace/img"
+          "path": "docs/media/workspace/img"
         },
-        "served_path_prefix": "https://media.dotlineform.com/docs/analysis/media/workspace/img"
+        "served_path_prefix": "https://media.dotlineform.com/docs/media/workspace/img"
       },
       "thumbs": {
         "location": {
           "provider": "r2",
-          "path": "docs/analysis/media/workspace/thumbs"
+          "path": "docs/media/workspace/thumbs"
         },
-        "served_path_prefix": "https://media.dotlineform.com/docs/analysis/media/workspace/thumbs"
+        "served_path_prefix": "https://media.dotlineform.com/docs/media/workspace/thumbs"
       },
       "svg": {
         "location": {
           "provider": "r2",
-          "path": "docs/analysis/media/workspace/svg"
+          "path": "docs/media/workspace/svg"
         },
-        "served_path_prefix": "https://media.dotlineform.com/docs/analysis/media/workspace/svg"
+        "served_path_prefix": "https://media.dotlineform.com/docs/media/workspace/svg"
       },
       "files": {
         "location": {
           "provider": "r2",
-          "path": "docs/analysis/media/workspace/files"
+          "path": "docs/media/workspace/files"
         },
-        "served_path_prefix": "https://media.dotlineform.com/docs/analysis/media/workspace/files"
+        "served_path_prefix": "https://media.dotlineform.com/docs/media/workspace/files"
       },
       "html": {
         "location": {
           "provider": "r2",
-          "path": "docs/analysis/media/workspace/html"
+          "path": "docs/media/workspace/html"
         },
-        "served_path_prefix": "https://media.dotlineform.com/docs/analysis/media/workspace/html"
+        "served_path_prefix": "https://media.dotlineform.com/docs/media/workspace/html"
       }
     }
   },

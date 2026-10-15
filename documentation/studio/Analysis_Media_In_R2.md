@@ -3,12 +3,14 @@ draft: false
 doc_id: d-20260907-201225-db6e8a
 title: Analysis Media In R2
 added_date: "2026-09-07 20:12:25"
-last_updated: "2026-09-07 20:42:19"
+last_updated: "2026-10-15 16:55:29"
 summary: Restore legacy Moments media to Working and make R2 mirror the accepted Analysis media structure.
 ui_status: paused
 parent_id: d-20260902-102745-8379ea
 ---
 # Analysis Media In R2
+
+This delivery records the September migration. Current storage and publication paths are maintained in [Media And Asset Handling](Media_And_Asset_Handling.md#r2-namespace-and-historical-cleanup); the October maintenance migration superseded its R2 layout without changing its original restoration evidence.
 
 ## Requirements
 
@@ -53,9 +55,9 @@ Ready for user review. Analysis promotion controls and Git/public deployment rem
 
 ## Live-Site Release Dependency
 
-The deployed site still exposes `/moments/` and its old scope configuration. The live `13-moments-in-october` payload explicitly references the legacy Moments image URL. Preserve all 111 legacy Moments images and the legacy Analysis PDF, plus their six folder markers, until public deployment and live-reference verification release them. The PDF's absence from live use was not established. This temporary hold adds no alternate writer or runtime fallback. The new `docs/analysis/media/` and `docs/analysis/sub-scopes/` trees contain accepted Analysis media only.
+Rechecked on 15 October 2026: the live site still exposes `/moments/` and the old scope configuration from the successful 13 July deployment. Its artifact contains 36 exact legacy Moments image references, and sampled live configuration/document bytes match that deployed commit. Preserve all 111 legacy Moments images until replacement public deployment and live-reference verification release them. All 111 have matching local bytes. This temporary hold adds no alternate writer or runtime fallback.
 
-The exact 118 held keys and removal condition are recorded in `var/analysis-r2-migration/legacy-release-hold.json`. Cleanup must use that manifest after verifying the live old scope and references have gone. No R2 deletion occurred in this migration; all 125 original `docs/` objects retain their original sizes and ETags.
+The follow-up audit established that the legacy Analysis PDF is not referenced by the checked deployed artifact or current local/public payloads and has identical bytes at `docs/media/collections/works/files/d-20260801-212422-df11f3-attachment-01.pdf`. Its old key is removable, as are the folder markers, which are unnecessary for serving descendant objects. The September 118-object hold is therefore superseded by the current 111-image hold. Exact current keys, replacements and evidence are recorded in `var/verification/2026-10-15-docs-r2-migration/`. The follow-up copied the 137 current media objects into `docs/media/` and updated configuration; neither migration deleted remote objects.
 
 ## Result And Evidence
 
