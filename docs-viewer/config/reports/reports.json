@@ -26,12 +26,6 @@
       "loader_id": "unpublishable"
     },
     {
-      "report_id": "reports_list",
-      "title": "Reports List",
-      "description": "Displays the configured Docs Viewer report metadata from the report registry.",
-      "loader_id": "reports_list"
-    },
-    {
       "report_id": "docs_collection",
       "title": "Docs Collection",
       "description": "Displays a report-owned list over a configured Docs Viewer collection.",

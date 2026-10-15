@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261010-184615-e471b8
 title: Catalogue Report Inputs
 added_date: "2026-10-10 18:46:15"
-last_updated: "2026-10-14 19:06:41"
+last_updated: "2026-10-15"
 summary: Refresh-owned Catalogue report inputs implemented, reviewed and closed; further verification continues during normal report use.
 ui_status: done
 parent_id: d-20260428-000000-f5ff18
@@ -107,7 +107,7 @@ Use refreshed source registrations for membership counts while retaining the liv
 
 ## Recommendations For The Other Reports
 
-The remaining ten registered reports need no Catalogue-input migration for this proposal. Their existing read boundaries remain distinct:
+The remaining nine registered reports need no Catalogue-input migration for this proposal. Their existing read boundaries remain distinct:
 
 | Report | Current boundary and recommendation |
 | --- | --- |
@@ -119,7 +119,6 @@ The remaining ten registered reports need no Catalogue-input migration for this 
 | Selected Documents (`selected_documents`) | Uses Docs-owned generated document metadata. Keep its existing owner; no live canonical Catalogue input needs replacing. |
 | Links (`workspace_links`) | Uses the saved Docs-owned relationship aggregate. This is shared document relationship data, not the output of an unrelated report. Keep its existing build/Refresh owner. |
 | Unpublishable (`unpublishable`) | Reads the current Docs-owned publication policy and exact source titles. Keep these explicit live policy/source reads; Studio Refresh does not own them. |
-| Reports List (`reports_list`) | Uses Docs-owned report configuration/metadata. Keep its configuration boundary. |
 | Docs Collection (`docs_collection`) | Uses the configured collection's generated inventory and by-ID documents. Keep that collection's existing generation owner. |
 
 Report-specific saved audits remain appropriate when persistence is part of that report's own behavior. The restriction concerns other reports using those audits as their upstream data authority.

@@ -3,17 +3,13 @@ draft: false
 doc_id: d-20260810-211748-1f8b6f
 title: Report Block Tokens
 added_date: "2026-08-10 21:17:48"
-last_updated: "2026-09-13 21:19:16"
+last_updated: "2026-10-15"
 summary: current registered report block tokens
 parent_id: d-20260424-000000-50b63f
 ---
 # Report Block Tokens
 
-This registry-backed list is the current report-token reference. It changes with `docs-viewer/config/reports/reports.json`; there is no separate manual inventory to update.
-
-:::report
-id: reports_list
-:::
+The `report_id` values in the [report registry](../../docs-viewer/config/reports/reports.json) are the current report-token reference. There is no separate manual inventory to update. [Reports](Reports.md) documents the source contract and current implementations.
 
 example block:
 

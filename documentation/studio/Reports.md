@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260513-105343-6de36b
 title: Reports
 added_date: "2026-05-13 10:53:43"
-last_updated: "2026-10-14 22:14:23"
+last_updated: "2026-10-15"
 parent_id: d-20260424-000000-50b63f
 ---
 # Docs Viewer Reports
@@ -24,7 +24,7 @@ A source document opts into one report with one exact block in its Markdown body
 
 ```text
 :::report
-id: reports_list
+id: selected_documents
 :::
 ```
 
@@ -55,7 +55,7 @@ Only by-ID payloads receive the complete `report` descriptor. It contains requir
 
 ```json
 {
-  "id": "reports_list"
+  "id": "selected_documents"
 }
 ```
 
@@ -126,7 +126,7 @@ The browser-visible public projection is:
 
 - `site/assets/data/docs/public-reports.json`
 
-The source registry describes report ids, titles, descriptions and loader ids. The Reports List displays each report's title and ID in one column; the empty Presets column is retired.
+The source registry describes report ids, titles, descriptions and loader ids. Read the registry directly for the current report inventory.
 The public projection includes only report metadata that has been explicitly promoted for public static routes.
 The local manage route reads the source registry directly.
 Public `/analysis/` and any other public route configs reference only the public projection.
@@ -166,8 +166,9 @@ The historical scope-bearing test files have not been accepted as evidence for t
 
 The Analysis Documents report (`docs_index_table`) was retired on 2026-09-26. Its implementation, local registry entry, loader, presets, dedicated index-reader adapter and tree-indent style were removed, along with its Working host document.
 
-`reports_list` renders the report metadata registry itself.
-This document uses it so the list of configured reports stays visible from the Docs Viewer.
+The Reports List (`reports_list`) and its Working host document (`d-20260915-181648-d1e356`) were retired on 2026-10-15. This repository document remains the maintained Reports documentation; the report registry remains the authority for registered IDs.
+
+Retirement review removed the dedicated module, loader, metadata, local registry handoff, CSS and obsolete protected-document/publication-exclusion entries. The existing Delete service completed source, Index, Selected and targeted generated/relationship removal with no warnings; it scanned no source files and rebuilt no other document payloads. Source-owned report-ID validation, executable-loader allowlisting and confined deletion retain their existing boundaries. Focused JavaScript lint and registry JSON parsing passed. Tests and fixtures retain historical `reports_list` examples and remain unchanged and unrun; Search, Publish and browser verification were outside this change.
 
 `docs_collection` renders a browser-ordered list for a configured Docs Viewer collection. Its composition resolves `report.collection` once from the active workspace's collection map and carries that exact owner into the report and Manage contribution. Manage reads `manage-manifest.json`; the public reader uses `manifest.json`. Completed rows supply literal labels and metadata without another domain audit. The existing browsing data owner prepares exact URLs, thumbnail choices, search/sort keys and an identity lookup, caches title/recent ordering, filters without resorting and updates only the known committed row. Page and selection operations reuse complete filtered IDs. Work-thumbnail policy loads only for an actual choice, once per retained view. Controller-owned lifetime/subscription cleanup replaces DOM-removal/current-connection gates; tab controls and reading-position snapshots remain. [Collection List Preparation](Sub_Scope_Index_Architecture.md#collection-list-preparation) owns sorting, thumbnail, selection, safeguards and evidence limits; [Collection Report Optimisation](deliveries/Collection_Report_Optimisation.md) tracks public projection and manual acceptance.
 Selecting a row opens the selected collection document through its exact by-ID reader. Collection documents carry no `publishable` field. Working inventories retain boolean `draft`, and drafts remain visible and loadable. The shared reader exposes a validated `{collection, doc_id}` action target after payload identity checks succeed. Collection manifests contain exactly one root `docs` array. Their former customisation envelope and Subject generation hash are retired; report identity comes from the configured collection.
@@ -309,7 +310,3 @@ Poor report candidates are workflows with writes, long-running operations, broad
 - `site/docs-viewer/static/css/docs-viewer-reports.css`
 - `docs-viewer/static/css/docs-viewer-local-reports.css`
 - `docs-viewer/static/css/docs-viewer-manage.css`
-
-:::report
-id: reports_list
-:::

@@ -1,12 +1,12 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-435b6f958be1f3c5c4503e70aa2cfd27",
-    "generated_at_utc": "2026-10-10T13:12:03Z"
+    "version": "blake2b-9495b2032f478d2be4308e69cf1b445f",
+    "generated_at_utc": "2026-10-13T09:35:27Z"
   },
   "work": {
     "work_id": "04626",
-    "title": "100 hands",
+    "title": "100 hands drawing",
     "year": 2026,
     "year_display": "2026",
     "width_px": 2148,

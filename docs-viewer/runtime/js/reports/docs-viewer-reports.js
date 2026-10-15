@@ -31,13 +31,6 @@ const REPORT_LOADERS = {
       });
     }
   },
-  reports_list: {
-    load: function () {
-      return import("./reports-list-report.js").then(function (module) {
-        return module.mountReportsListReport;
-      });
-    }
-  },
   docs_collection: {
     load: function () {
       return import("../shared/docs-collection-report.js").then(function (module) {
@@ -254,8 +247,7 @@ export function mountDocsViewerReport(context) {
       const resolvedReportMeta = Object.assign({}, meta, { registryEntry: reportMeta });
       return Promise.resolve(mount(Object.assign({}, context, {
         reportRoot: root,
-        reportMeta: resolvedReportMeta,
-        reportRegistry: registry
+        reportMeta: resolvedReportMeta
       }))).then(function (mountResult) {
         if (!isCurrent()) return false;
         registerExpandedPresentation(context, root, resolvedReportMeta, mountResult);
