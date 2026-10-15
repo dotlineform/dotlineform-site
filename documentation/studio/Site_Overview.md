@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260720-161657-0f6696
 title: Site Overview
 added_date: "2026-07-20 16:16:57"
-last_updated: "2026-10-08 15:07:56"
+last_updated: "2026-10-15 18:09:30"
 summary: Public catalogue capabilities, static execution path, ownership boundaries, extension method, and known weak spots.
 parent_id: d-20260720-161656-1357d0
 
@@ -14,9 +14,9 @@ parent_id: d-20260720-161656-1357d0
 
 Site is the public dotlineform website. It is a tracked static artifact served directly from `site/`; there is no deploy-time build or copy step.
 
-The active homepage is `/analysis/`, and `/` redirects there. The legacy Catalogue experience remains beneath `/archive/`; Series organise Works, and selected Work and detail views continue through fixed query-driven route shells.
+The public Docs Viewer loads directly at `/`, with no homepage redirect. The former `/analysis/` route is retired without an alias. The legacy Catalogue experience remains beneath `/archive/`; Series organise Works, and selected Work and detail views continue through fixed query-driven route shells.
 
-Public Analysis is a Docs Viewer scope. It shares site navigation and presentation where appropriate but does not become a catalogue runtime module.
+The public Docs Viewer reads the prepared workspace document and Catalogue payloads. It shares site presentation where appropriate but does not become an archived catalogue runtime module.
 
 ## Public Catalogue Surface
 
@@ -62,7 +62,7 @@ Studio owns canonical Works, Series, details, prose, validation, generation, med
 
 ### Public Docs
 
-Docs Viewer owns the `/analysis/` reader runtime and its generated scope payloads. Site owns the shared public chrome and host presentation it consumes.
+Docs Viewer owns the `/` reader runtime and its published workspace payloads. Site owns the shared public chrome and host presentation it consumes.
 
 ## Extension Method
 

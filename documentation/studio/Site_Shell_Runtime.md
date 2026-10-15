@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260331-000000-6d51e9
 title: Site Shell Runtime
 added_date: "2026-03-31 00:00:00"
-last_updated: "2026-09-04 17:13:49"
+last_updated: "2026-10-15 18:09:30"
 summary: Shared public head, header, navigation, theme, footer, asset loading, and catalogue versus Docs Viewer shell boundary.
 parent_id: d-20260720-161656-1357d0
 ---
@@ -88,26 +88,26 @@ This is intentionally a minimal static-site mechanism, not a content-hash asset 
 
 ## Public Nav
 
-The top-left `dotlineform` link points to `/`, which redirects to the Analysis homepage at `/analysis/`. Active pages have no separate `analysis` or `works` top navigation item. The header retains the theme control.
+The top-left `dotlineform` link points to the public Docs Viewer at `/`, which loads directly. Active pages have no separate `analysis` or `works` top navigation item. The header retains the theme control.
 
-The active footer links to About and `/archive/`; the footer is the only visible archive entry on active pages. Inside the archive, the single top-level `archive` item returns to `/archive/`. Archive shells retain their own navigation markup and assets.
+Active pages have no footer or direct archive link. Archive shells retain their own navigation markup and assets.
 
 Navigation markup belongs to tracked route shells and the public-route template. `site-nav.js` does not infer the active destination.
 
 ## Docs Viewer Shell Boundary
 
-Docs routes are scope-owned shells that wrap the shared Docs Viewer runtime while using the public site chrome.
+The public Docs route is a tracked shell that mounts the shared Docs Viewer runtime while using the public site presentation.
 
 Current route shells:
 
-- `/analysis/`
-  - analysis docs
-  - loads `site/assets/data/docs/scopes/analysis/index-tree.json`
-  - enables inline analysis docs search with `site/assets/data/search/analysis/index.json`
+- `/`
+  - public workspace documents and collection documents
+  - loads `site/assets/data/docs/index-tree.json`
+  - enables Docs search with the existing `site/assets/data/search/analysis/index.json`
 
 Current shared Docs Viewer layer:
 
-- `docs-viewer/templates/public-route/index.html` for new public route shell creation
+- `site/index.html` for the installed public route shell
 - `site/docs-viewer/runtime/js/public/docs-viewer-public.js`
 
 The fork/no-fork rule for the viewer is documented in [Docs Viewer Runtime](Docs_Viewer_Runtime.md).

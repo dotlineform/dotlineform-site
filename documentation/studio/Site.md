@@ -3,14 +3,14 @@ draft: false
 doc_id: d-20260720-161656-1357d0
 title: Site
 added_date: "2026-07-20 16:16:56"
-last_updated: "2026-10-11 00:00:00"
+last_updated: "2026-10-15 18:09:30"
 summary: Entry point for understanding, changing, previewing, validating, and planning the public dotlineform site.
 parent_id: ""
 
 ---
 # Site
 
-`site/` is the tracked public website and GitHub Pages deploy root. `/` redirects to the public Docs Viewer at `/analysis/`, which reads the current Catalogue. The frozen historical catalogue remains under `/archive/`.
+`site/` is the tracked public website and GitHub Pages deploy root. `/` directly hosts the public Docs Viewer, which reads the current Catalogue. The former `/analysis/` route is retired without a redirect or alias. The frozen historical catalogue remains under `/archive/`.
 
 The current public Catalogue reader is documented under [Docs Viewer](Docs_Viewer.md). This section owns the site-wide shell and the archived catalogue experience.
 
@@ -39,7 +39,7 @@ The public browser never writes catalogue source. Studio validates and changes c
 
 ## Code Authority
 
-- `site/index.html` and `site/analysis/` for the current public entry point and Docs Viewer route shell
+- `site/index.html` for the public entry point and Docs Viewer route shell
 - `docs-viewer/` for canonical shared/public Docs Viewer runtime code, explicitly projected into `site/docs-viewer/` through `site-tools/config/site-code-update.json`
 - `site/assets/data/catalogue/` and `site/assets/data/docs/catalogue/` for published Catalogue records and documents
 - `site/archive/series/`, `site/archive/works/`, `site/archive/work-details/`, `site/archive/recent/`, and `site/archive/search/` for frozen historical catalogue route shells

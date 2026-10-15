@@ -3,7 +3,7 @@
   "docs_viewer": {
     "recent_limit": 20
   },
-  "public_viewer_base_url": "/analysis/",
+  "public_viewer_base_url": "/",
   "workspace": {
     "viewer_base_url": "/docs/",
     "document_url_template": "/docs/doc?doc_id={doc_id}",

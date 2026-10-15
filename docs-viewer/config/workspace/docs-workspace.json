@@ -24,7 +24,7 @@
       }
     }
   },
-  "public_viewer_base_url": "/analysis/",
+  "public_viewer_base_url": "/",
   "recent_limit": 20,
   "search_fields": [
     "title",

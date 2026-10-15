@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260602-192905-260208
 title: Public Route Model
 added_date: "2026-06-02 19:29:05"
-last_updated: "2026-10-08 15:07:56"
+last_updated: "2026-10-15 18:09:30"
 summary: Stable public catalogue shells, URLs, query state, URL ownership, and extension rules.
 ui_status: stable
 parent_id: d-20260720-161656-1357d0
@@ -11,7 +11,7 @@ parent_id: d-20260720-161656-1357d0
 ---
 # Public Route Model
 
-This document records the public Catalogue route contract before relocation beneath `/archive/`; [Catalogue Archive](Catalogue_Archive.md) owns current archive availability. The active homepage is `/analysis/`. Public Docs Viewer routes are a separate runtime boundary.
+This document records the public Catalogue route contract before relocation beneath `/archive/`; [Catalogue Archive](Catalogue_Archive.md) owns current archive availability. The active homepage directly hosts the public Docs Viewer at `/`. Its route and query state belong to Docs Viewer.
 
 ## Route Principles
 
@@ -19,7 +19,7 @@ This document records the public Catalogue route contract before relocation bene
 - prefer query/state-driven catalogue record views where this preserves user workflows with fewer generated HTML files
 - avoid generating per-record route stubs solely to keep URLs readable
 - do not add broad compatibility redirect tables for old per-record URLs
-- provide a clean `404.html` with simple "page unavailable" copy and a link back to `/series/`, the current public home/root experience
+- provide a clean `404.html` with simple "page unavailable" copy and a link back to `/`, the current public Docs Viewer home
 - keep URL/state contracts as small as possible; use query parameters when they are the simplest way to restore the intended view
 - dynamically derive public URLs in runtime helpers from record id plus route state
 - avoid persistent generated URL fields unless a documented non-derivable exception is required
@@ -29,7 +29,7 @@ This document records the public Catalogue route contract before relocation bene
 ## Canonical Routes
 
 ```text
-/                                  tracked redirect shell to `/series/`
+/                                  public Docs Viewer, loaded directly
 /recent/                           recent public catalogue updates
 
 /series/                           Works home grouped by Series
@@ -56,6 +56,7 @@ Do not add compatibility redirects, aliases, or broad fallback tables for retire
 Retired first-party public routes include:
 
 - `/about/`
+- `/analysis/`
 - `/works/<work_id>/`
 - `/series/<series_id>/`
 - `/work_details/<detail_uid>/`
@@ -80,7 +81,7 @@ Browser history is useful but should not be the primary mechanism for required n
 
 ## Docs Viewer Boundary
 
-`/analysis/` is the public Docs Viewer route. It may share the site shell and catalogue link helpers, but its document query state, payloads, and reader runtime belong to Docs Viewer.
+`/` is the sole public Docs Viewer route. Ordinary document URLs use `/?doc=<doc_id>`; collection document URLs add `collection=<collection>`. The tracked shell is `site/index.html`. The former `/analysis/` route is removed without a redirect or alias. Its document query state, payloads and reader runtime belong to Docs Viewer.
 
 Deprecated `/series/?mode=moments` input is ignored by the catalogue route. It is not a supported route state or compatibility alias.
 

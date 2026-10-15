@@ -624,9 +624,10 @@ def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: 
     public_url = payload["public_viewer_base_url"]
     if not isinstance(public_url, str) or not public_url.startswith("/") or public_url.startswith("//") or not public_url.endswith("/"):
         raise ValueError("public_viewer_base_url must be a site-relative directory URL")
-    safe_relative_path(public_url.strip("/"), field="public_viewer_base_url")
+    if public_url != "/":
+        safe_relative_path(public_url.strip("/"), field="public_viewer_base_url")
     if "?" in public_url or "#" in public_url or public_url == "/docs/":
-        raise ValueError("public_viewer_base_url must name a public section without query or fragment")
+        raise ValueError("public_viewer_base_url must name a public route without query or fragment")
     fields = _strings(payload["search_fields"], field="search_fields")
     if not fields or set(fields) - SEARCH_FIELDS:
         raise ValueError("search_fields must select supported fields")

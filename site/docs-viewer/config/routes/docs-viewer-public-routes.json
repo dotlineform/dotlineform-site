@@ -5,8 +5,8 @@
       "schema_version": "docs_viewer_route_config_v5",
       "app_kind": "public",
       "route_id": "analysis",
-      "route_path": "/analysis/",
-      "viewer_base_url": "/analysis/",
+      "route_path": "/",
+      "viewer_base_url": "/",
       "features": [
         "workspace-configuration",
         "search",
