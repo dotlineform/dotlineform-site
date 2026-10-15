@@ -123,7 +123,7 @@ def publish_catalogue_works(
                         if deleting:
                             _delete(target)
                         else:
-                            source = location_child(working_assets.work_root, target.relative_to(preview_assets.work_root)).path
+                            source = location_child(working_assets.work_root, target.relative_to(preview_assets.work_root.path)).path
                             _write(target, _read(source))
                     selection["preview_done"] = True
                     persist_pending_queue(queue_path, pending, progress="preview_done")

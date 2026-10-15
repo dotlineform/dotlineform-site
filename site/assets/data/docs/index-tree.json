@@ -1,9 +1,6 @@
 {
+  "generated_at": "2026-10-15T09:25:01Z",
   "schema": "docs_index_tree_v1",
-  "viewer_options": {
-    "non_loadable_doc_ids": [],
-    "manage_only_tree_root_ids": []
-  },
   "docs": [
     {
       "doc_id": "d-20260426-164043-e14f49",
@@ -112,6 +109,5 @@
       "title": "about",
       "content_url": "/assets/data/docs/by-id/d-20261008-144244-8f40af.json"
     }
-  ],
-  "generated_at": "2026-10-10T19:30:20Z"
+  ]
 }

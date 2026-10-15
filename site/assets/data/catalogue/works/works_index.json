@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_works_index_v3",
-    "generated_at_utc": "2026-10-10T19:12:44Z"
+    "generated_at_utc": "2026-10-13T07:14:39Z"
   },
   "works": {
     "00001": {
@@ -18478,7 +18478,11 @@
     },
     "04626": {
       "work_id": "04626",
-      "title": "100 hands"
+      "title": "100 hands drawing"
+    },
+    "04627": {
+      "work_id": "04627",
+      "title": "10000-1"
     }
   }
 }

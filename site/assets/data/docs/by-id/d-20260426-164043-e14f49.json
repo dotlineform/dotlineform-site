@@ -4,9 +4,7 @@
   "added_date": "2026-04-26 16:40:43",
   "last_updated": "2026-10-08 14:45:08",
   "report": {
-    "id": "selected_documents",
-    "preset": null,
-    "collection": null
+    "id": "selected_documents"
   },
   "content_html": "<section class=\"docsViewerReport\" data-docs-viewer-report-host aria-label=\"Document report\"></section>\n"
 }

@@ -1,0 +1,18 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-2a44b86460df993fc78c6772f9194e4b",
+    "generated_at_utc": "2026-10-13T07:14:39Z"
+  },
+  "work": {
+    "work_id": "04627",
+    "title": "10000-1",
+    "year": 2026,
+    "year_display": "2026",
+    "width_px": 5906,
+    "height_px": 5906,
+    "media_version": 2,
+    "series_id": "144",
+    "galleries": []
+  }
+}

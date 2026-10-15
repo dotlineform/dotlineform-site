@@ -5,7 +5,6 @@
   "last_updated": "2026-10-01 20:07:34",
   "report": {
     "id": "docs_collection",
-    "preset": null,
     "collection": "moments"
   },
   "content_html": "<section class=\"docsViewerReport\" data-docs-viewer-report-host aria-label=\"Document report\"></section>\n"

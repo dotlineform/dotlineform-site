@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260909-205938-3569d6
 title: Catalogue Deployment
 added_date: "2026-09-09 20:59:38"
-last_updated: "2026-10-13 19:25:13"
+last_updated: "2026-10-15"
 summary: Queued Work publication, separate Preview media, exact repository/R2 deployment and final shared output.
 parent_id: d-20260902-102745-8379ea
 ---
@@ -94,6 +94,8 @@ Public document payloads retain query-only Docs links and logical `docs-media:` 
 ## Failure And Timing
 
 Failures report the Work and Preview/Deploy step, or the final shared-output step. Completed effects remain. Failed/unprocessed Work entries retain their selection and progress; failed shared publication retains its Gallery/Series/output selections. No automatic retry, rollback, backup tree or separate R2 ledger is introduced. Final-pass failure can occur after all Work entries have completed; the next explicit Publish still runs the required final pass. Finish an interrupted Publish before resuming authoring, Refresh or Regenerate.
+
+On 2026-10-15, the user's Publish stopped during Work `04627` Preview media copying because `Path.relative_to` received the Preview Work root's `ArtifactLocation` rather than its `.path`. The copy now derives the relative media identity from that filesystem path and resolves it beneath the already loaded Working owner. Code review covered image/download copies, deletion and completed-Preview reuse: server-owned file copying retains existing confinement and byte verification, with no extra reads, validation or recovery. Focused Python lint, compilation and whitespace checks passed. The queue retained `04627` with `preview_done: false`; a live Publish retry remains unverified. Tests and publication were not run for this fix.
 
 The response's `recent_updated` boolean records completed Working Recent persistence, even if later Preview replacement or distribution fails. Manage awaits its Recent refresh only when that marker is true and does not reload capabilities after Publish. An early failure or unknown transport outcome supplies no completed-write marker. Busy state lasts through the request and any required Recent refresh. Whole-corpus preparation, repository/referenced-media reconciliation and shared retry from current Working/common document media remain [Incremental Document Publish](deliveries/Incremental_Document_Publish.md) gaps; this cleanup adds neither selected shared progress nor an authoring lock.
 

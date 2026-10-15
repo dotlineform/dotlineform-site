@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "docs_viewer_search_index_v4",
-    "version": "blake2b-a1c9551ef9023bacd3ca5526952423c4",
-    "generated_at_utc": "2026-10-08T13:52:29Z",
+    "version": "blake2b-272a471567a80a70eeacfe103c650e41",
+    "generated_at_utc": "2026-10-15T09:15:26Z",
     "count": 24
   },
   "fields": [
@@ -34,8 +34,8 @@
     {
       "id": "d-20260801-212422-186a69",
       "title": "a theory of happiness",
-      "last_updated": "2026-09-28",
-      "display_meta": "2026-09-28 • Context",
+      "last_updated": "2026-10-08",
+      "display_meta": "2026-10-08 • Context",
       "collection": "works",
       "report_doc_id": "d-20260801-073826-8865a8",
       "collection_title": "Context"
@@ -43,8 +43,8 @@
     {
       "id": "d-20260801-212422-43b47c",
       "title": "10,000",
-      "last_updated": "2026-10-07",
-      "display_meta": "2026-10-07 • Context",
+      "last_updated": "2026-10-08",
+      "display_meta": "2026-10-08 • Context",
       "collection": "works",
       "report_doc_id": "d-20260801-073826-8865a8",
       "collection_title": "Context"
@@ -52,8 +52,8 @@
     {
       "id": "d-20260801-212422-d91151",
       "title": "a poem divided into 4 parts",
-      "last_updated": "2026-09-28",
-      "display_meta": "2026-09-28 • Context",
+      "last_updated": "2026-10-08",
+      "display_meta": "2026-10-08 • Context",
       "collection": "works",
       "report_doc_id": "d-20260801-073826-8865a8",
       "collection_title": "Context"
@@ -61,8 +61,8 @@
     {
       "id": "d-20260801-212422-df11f3",
       "title": "3 symbols",
-      "last_updated": "2026-10-06",
-      "display_meta": "2026-10-06 • Context",
+      "last_updated": "2026-10-08",
+      "display_meta": "2026-10-08 • Context",
       "collection": "works",
       "report_doc_id": "d-20260801-073826-8865a8",
       "collection_title": "Context"
@@ -110,8 +110,8 @@
     {
       "id": "d-20260809-130120-870cc2",
       "title": "Library",
-      "last_updated": "2026-08-09",
-      "display_meta": "2026-08-09"
+      "last_updated": "2026-10-08",
+      "display_meta": "2026-10-08"
     },
     {
       "id": "d-20260809-130120-91c97f",
@@ -192,8 +192,8 @@
     {
       "id": "d-20261008-144244-8f40af",
       "title": "about",
-      "last_updated": "2026-10-08",
-      "display_meta": "2026-10-08"
+      "last_updated": "2026-10-13",
+      "display_meta": "2026-10-13"
     }
   ],
   "terms": {
@@ -1065,6 +1065,11 @@
         18
       ]
     },
+    "away": {
+      "body": [
+        4
+      ]
+    },
     "axes": {
       "body": [
         16
@@ -1080,6 +1085,7 @@
         17
       ],
       "body": [
+        4,
         10,
         17
       ]
@@ -1211,7 +1217,6 @@
         18
       ],
       "body": [
-        4,
         6,
         18
       ]
@@ -1281,12 +1286,18 @@
     },
     "belief": {
       "body": [
+        4,
         13
       ]
     },
     "beliefs": {
       "body": [
         13
+      ]
+    },
+    "believe": {
+      "body": [
+        4
       ]
     },
     "bellec": {
@@ -1492,11 +1503,6 @@
     "boly": {
       "body": [
         10
-      ]
-    },
-    "book": {
-      "body": [
-        6
       ]
     },
     "books": {
@@ -1761,6 +1767,7 @@
         18
       ],
       "body": [
+        4,
         6,
         7,
         10,
@@ -1775,6 +1782,7 @@
     },
     "cannot": {
       "body": [
+        4,
         10,
         18
       ]
@@ -1798,11 +1806,6 @@
     "captured": {
       "body": [
         10
-      ]
-    },
-    "cards": {
-      "body": [
-        6
       ]
     },
     "cares": {
@@ -2376,6 +2379,11 @@
         18
       ]
     },
+    "completeness": {
+      "body": [
+        4
+      ]
+    },
     "complex": {
       "body": [
         16,
@@ -2691,11 +2699,6 @@
         6
       ]
     },
-    "contains": {
-      "body": [
-        12
-      ]
-    },
     "contemplative": {
       "body": [
         18
@@ -2741,6 +2744,7 @@
     },
     "continue": {
       "body": [
+        4,
         9
       ]
     },
@@ -3104,12 +3108,14 @@
     },
     "davies": {
       "body": [
+        4,
         6,
         23
       ]
     },
     "day": {
       "body": [
+        4,
         15
       ]
     },
@@ -3212,6 +3218,11 @@
         19
       ]
     },
+    "degree": {
+      "body": [
+        4
+      ]
+    },
     "degrees": {
       "body": [
         16
@@ -3295,12 +3306,14 @@
     },
     "described": {
       "body": [
+        4,
         10,
         16
       ]
     },
     "describes": {
       "body": [
+        4,
         6
       ]
     },
@@ -3951,6 +3964,11 @@
         16
       ]
     },
+    "elegance": {
+      "body": [
+        4
+      ]
+    },
     "element": {
       "body": [
         6
@@ -3979,6 +3997,11 @@
     "else": {
       "body": [
         6
+      ]
+    },
+    "embedded": {
+      "body": [
+        4
       ]
     },
     "embeddings": {
@@ -4267,11 +4290,6 @@
         16
       ]
     },
-    "equal": {
-      "body": [
-        4
-      ]
-    },
     "equally": {
       "body": [
         6
@@ -4395,6 +4413,7 @@
     },
     "even": {
       "body": [
+        4,
         6,
         13,
         18
@@ -4640,6 +4659,16 @@
       ],
       "body": [
         10
+      ]
+    },
+    "exposed": {
+      "body": [
+        4
+      ]
+    },
+    "exposes": {
+      "body": [
+        4
       ]
     },
     "exposure": {
@@ -4945,6 +4974,11 @@
         11
       ]
     },
+    "fold": {
+      "body": [
+        4
+      ]
+    },
     "folders": {
       "body": [
         6
@@ -5000,6 +5034,11 @@
     "formula": {
       "heading": [
         19
+      ]
+    },
+    "formulate": {
+      "body": [
+        4
       ]
     },
     "formulating": {
@@ -5417,11 +5456,6 @@
         16
       ]
     },
-    "grid": {
-      "body": [
-        4
-      ]
-    },
     "grids": {
       "body": [
         4
@@ -5461,6 +5495,7 @@
     },
     "grows": {
       "body": [
+        4,
         13
       ]
     },
@@ -5527,11 +5562,6 @@
     "hanna": {
       "body": [
         9
-      ]
-    },
-    "happened": {
-      "body": [
-        4
       ]
     },
     "happening": {
@@ -5892,6 +5922,7 @@
         13
       ],
       "body": [
+        4,
         6,
         7,
         10,
@@ -6002,6 +6033,16 @@
         18
       ]
     },
+    "imperfection": {
+      "body": [
+        4
+      ]
+    },
+    "imperfectly": {
+      "body": [
+        4
+      ]
+    },
     "implemented": {
       "summary": [
         10
@@ -6071,11 +6112,6 @@
         11
       ]
     },
-    "includes": {
-      "body": [
-        6
-      ]
-    },
     "incoming": {
       "body": [
         7
@@ -6094,6 +6130,11 @@
     "independent": {
       "body": [
         17
+      ]
+    },
+    "indirectly": {
+      "body": [
+        4
       ]
     },
     "individual": {
@@ -6334,6 +6375,11 @@
         18
       ]
     },
+    "intrinsic": {
+      "body": [
+        4
+      ]
+    },
     "introduces": {
       "body": [
         6
@@ -6389,6 +6435,7 @@
     },
     "irreducible": {
       "body": [
+        4,
         10
       ]
     },
@@ -6414,6 +6461,7 @@
         18
       ],
       "body": [
+        4,
         6,
         7,
         11,
@@ -6682,7 +6730,13 @@
     },
     "lead": {
       "body": [
+        4,
         18
+      ]
+    },
+    "leads": {
+      "body": [
+        4
       ]
     },
     "learner": {
@@ -6711,6 +6765,7 @@
     },
     "lens": {
       "body": [
+        4,
         14
       ]
     },
@@ -6781,11 +6836,6 @@
     "life-saving": {
       "body": [
         6
-      ]
-    },
-    "light": {
-      "body": [
-        4
       ]
     },
     "like": {
@@ -6994,7 +7044,6 @@
     },
     "lost": {
       "body": [
-        4,
         6,
         11
       ]
@@ -7274,6 +7323,11 @@
         16
       ]
     },
+    "measure": {
+      "body": [
+        4
+      ]
+    },
     "measurements": {
       "body": [
         8
@@ -7448,6 +7502,7 @@
     },
     "michael": {
       "body": [
+        4,
         6,
         23
       ]
@@ -7465,6 +7520,7 @@
     },
     "might": {
       "body": [
+        4,
         6,
         8
       ]
@@ -7546,7 +7602,12 @@
         18
       ]
     },
-    "missing": {
+    "mist": {
+      "body": [
+        4
+      ]
+    },
+    "mistaken": {
       "body": [
         4
       ]
@@ -7679,6 +7740,7 @@
         16
       ],
       "body": [
+        4,
         6,
         7,
         18
@@ -7704,6 +7766,11 @@
     "motor": {
       "body": [
         9
+      ]
+    },
+    "move": {
+      "body": [
+        4
       ]
     },
     "movement": {
@@ -7802,6 +7869,9 @@
       ]
     },
     "nature": {
+      "heading": [
+        4
+      ],
       "body": [
         4,
         6,
@@ -8304,6 +8374,7 @@
     },
     "one": {
       "body": [
+        4,
         6,
         10,
         17,
@@ -8332,6 +8403,7 @@
         18
       ],
       "body": [
+        4,
         10,
         18
       ]
@@ -8414,6 +8486,7 @@
     },
     "order": {
       "body": [
+        4,
         6,
         7,
         8,
@@ -8494,6 +8567,11 @@
         18
       ]
     },
+    "out": {
+      "body": [
+        4
+      ]
+    },
     "outcome": {
       "body": [
         17,
@@ -8512,6 +8590,7 @@
     },
     "outside": {
       "body": [
+        4,
         19
       ]
     },
@@ -8578,6 +8657,7 @@
     },
     "own": {
       "body": [
+        4,
         10,
         18
       ]
@@ -8623,6 +8703,11 @@
     "papers": {
       "body": [
         16
+      ]
+    },
+    "paradoxically": {
+      "body": [
+        4
       ]
     },
     "parallel": {
@@ -8673,6 +8758,9 @@
       ]
     },
     "particles": {
+      "heading": [
+        4
+      ],
       "body": [
         4
       ]
@@ -8794,7 +8882,6 @@
     },
     "people": {
       "body": [
-        4,
         6,
         13,
         18
@@ -8813,6 +8900,11 @@
     "perceive": {
       "body": [
         6
+      ]
+    },
+    "perceived": {
+      "body": [
+        4
       ]
     },
     "perception": {
@@ -8841,13 +8933,20 @@
         17
       ]
     },
+    "perfect": {
+      "body": [
+        4
+      ]
+    },
     "perfection": {
       "body": [
+        4,
         11
       ]
     },
     "perfectly": {
       "body": [
+        4,
         18
       ]
     },
@@ -8959,11 +9058,6 @@
     "photographic": {
       "body": [
         6
-      ]
-    },
-    "photographs": {
-      "body": [
-        4
       ]
     },
     "photos": {
@@ -9088,11 +9182,6 @@
         9,
         17,
         19
-      ]
-    },
-    "points": {
-      "body": [
-        4
       ]
     },
     "polarised": {
@@ -9405,6 +9494,7 @@
         9
       ],
       "body": [
+        4,
         9,
         10,
         11,
@@ -9655,6 +9745,11 @@
         15
       ]
     },
+    "pure": {
+      "body": [
+        4
+      ]
+    },
     "purpose": {
       "body": [
         6,
@@ -9768,6 +9863,11 @@
         6
       ]
     },
+    "randomness": {
+      "body": [
+        4
+      ]
+    },
     "range": {
       "body": [
         9
@@ -9820,6 +9920,11 @@
     "re-patterning": {
       "body": [
         11
+      ]
+    },
+    "reach": {
+      "body": [
+        4
       ]
     },
     "reactivates": {
@@ -9882,6 +9987,7 @@
         4
       ],
       "body": [
+        4,
         6
       ]
     },
@@ -9903,6 +10009,11 @@
     "realized": {
       "body": [
         10
+      ]
+    },
+    "really": {
+      "body": [
+        4
       ]
     },
     "reappear": {
@@ -10116,11 +10227,6 @@
         8
       ]
     },
-    "reduced": {
-      "body": [
-        4
-      ]
-    },
     "reduces": {
       "body": [
         15
@@ -10173,6 +10279,11 @@
     "reflect": {
       "body": [
         9
+      ]
+    },
+    "reflection": {
+      "body": [
+        4
       ]
     },
     "reflects": {
@@ -11433,7 +11544,6 @@
     },
     "some": {
       "body": [
-        4,
         6,
         18
       ]
@@ -11617,6 +11727,7 @@
     },
     "state": {
       "body": [
+        4,
         8,
         9,
         16,
@@ -11658,6 +11769,7 @@
     },
     "step": {
       "body": [
+        4,
         17
       ]
     },
@@ -11678,6 +11790,7 @@
     },
     "still": {
       "body": [
+        4,
         6,
         17,
         18,
@@ -12317,6 +12430,7 @@
     },
     "them": {
       "body": [
+        4,
         18
       ]
     },
@@ -12334,6 +12448,7 @@
     },
     "themselves": {
       "body": [
+        4,
         18
       ]
     },
@@ -12353,6 +12468,7 @@
     },
     "theories": {
       "body": [
+        4,
         10,
         16,
         18,
@@ -12367,6 +12483,7 @@
         9
       ],
       "body": [
+        4,
         9,
         10,
         13,
@@ -12441,6 +12558,9 @@
     "things": {
       "summary": [
         4
+      ],
+      "body": [
+        4
       ]
     },
     "thinking": {
@@ -12484,6 +12604,7 @@
     },
     "though": {
       "body": [
+        4,
         18
       ]
     },
@@ -12774,6 +12895,7 @@
     },
     "true": {
       "body": [
+        4,
         6,
         13
       ]
@@ -12843,6 +12965,11 @@
         8
       ]
     },
+    "ultimately": {
+      "body": [
+        4
+      ]
+    },
     "unaware": {
       "body": [
         18
@@ -12855,6 +12982,7 @@
     },
     "uncertainty": {
       "body": [
+        4,
         17,
         19
       ]
@@ -12924,11 +13052,6 @@
         16
       ]
     },
-    "uniform": {
-      "body": [
-        4
-      ]
-    },
     "unitarity": {
       "body": [
         8,
@@ -12961,6 +13084,11 @@
         13,
         17,
         20
+      ]
+    },
+    "unknowable": {
+      "body": [
+        4
       ]
     },
     "unlikely": {
@@ -13174,6 +13302,11 @@
         18
       ]
     },
+    "viewed": {
+      "body": [
+        4
+      ]
+    },
     "views": {
       "body": [
         19
@@ -13382,6 +13515,7 @@
         18
       ],
       "body": [
+        4,
         6,
         7,
         9,
