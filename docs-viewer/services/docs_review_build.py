@@ -46,12 +46,6 @@ class DocsReviewDataBuilder(DocsDataBuilder):
     def rendered_viewer_target_for(self, doc_id: str, anchor: str = "") -> str:
         return self.viewer_url_for(doc_id, anchor)
 
-    def content_url_for(self, doc_id: str) -> str:
-        return (
-            f"/docs-review/packages/payload?package_id={quote(self.package_id)}"
-            f"&doc_id={quote(str(doc_id))}"
-        )
-
     def _asset_record(self, raw_path: str, *, kind: str) -> dict[str, Any] | None:
         target = str(raw_path or "").strip().lstrip("/")
         for record in self.asset_records:

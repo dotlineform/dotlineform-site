@@ -437,20 +437,12 @@ def project_document_position(
         write_text(path, document_text)
     if tree_text != previous_text:
         write_text(_generated_path(builder.output_dir, "index-tree.json"), tree_text)
-    from docs_publication_preparation import load_preparation, prepare_restored, public_document_path, write_public
+    from docs_publication_preparation import load_preparation, prepare_restored
     from docs_selected_documents import read_selected
 
     publication = load_preparation(repo_root, builder.workspace)
-    publication.state["documents"][doc_id]["parent_id"] = parent_ids[doc_id]
-    if publication.state["documents"][doc_id]["public_ready"]:
-        public_path = public_document_path(builder.workspace, "", doc_id)
-        public_payload = json.loads(public_path.read_bytes())
-        if parent_ids[doc_id]:
-            public_payload["parent_id"] = parent_ids[doc_id]
-        else:
-            public_payload.pop("parent_id", None)
-        write_public(public_path, public_payload)
-    publication.documents(builder, [], {doc_id: payload}, navigation, [], selected=read_selected(owner.parent_config))
+    publication.metadata.ordinary(navigation, previous)
+    publication.documents(builder, {doc_id: payload}, [], selected=read_selected(owner.parent_config))
     prepare_restored(builder, {}, publication)
     publication.save()
     remove_build_manifest(repo_root, owner.parent_config)

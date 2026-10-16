@@ -59,7 +59,6 @@ class DocRecord:
     parent_id: str
     source_path: str
     viewer_url: str
-    content_url: str
     report: ReportDescriptor | None
     body_markdown: str
     source_text: str | None
@@ -219,7 +218,7 @@ class SourceLoadingMixin:
             last_updated=last_updated, summary=normalize_summary(front_matter.get("summary")),
             ui_status=str(front_matter.get("ui_status") or "").strip(), parent_id=parent_id,
             source_path=path.relative_to(self.source_dir).as_posix(),
-            viewer_url=self.viewer_url_for(doc_id), content_url=self.content_url_for(doc_id),
+            viewer_url=self.viewer_url_for(doc_id),
             report=report, body_markdown=body_markdown, source_text=source_text,
             front_matter=dict(front_matter),
         )
@@ -250,17 +249,6 @@ class SourceLoadingMixin:
         pairs.append(f"doc={quote(str(doc_id))}")
         url = f"{self.viewer_base_url}?{'&'.join(pairs)}"
         return f"{url}#{anchor}" if anchor else url
-
-    def content_url_for(self, doc_id: str) -> str:
-        return f"/docs/doc?doc_id={quote(str(doc_id))}"
-
-    def output_url_dir(self) -> Path:
-        return self.output_dir
-
-    def output_url_base_for(self, output_dir: Path) -> str:
-        child = getattr(self, "collection_config", None)
-        suffix = f"/{quote(child.collection)}" if child is not None else ""
-        return f"/docs/generated/external{suffix}"
 
     def effective_parent_id(self, parent_id: str, known_doc_ids: Collection[str]) -> str:
         if not parent_id:

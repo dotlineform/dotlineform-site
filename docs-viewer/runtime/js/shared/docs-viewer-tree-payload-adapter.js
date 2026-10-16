@@ -11,15 +11,13 @@ function normalizeTreeDoc(row, parentId, depth, treeOrder) {
   if (!row || typeof row !== "object" || Array.isArray(row)) return null;
   var docId = cleanString(row.doc_id);
   var title = cleanString(row.title);
-  var contentUrl = cleanString(row.content_url);
-  if (!docId || !title || !contentUrl) return null;
+  if (!docId || !title) return null;
   if (optionalStringRecordValue(row, "parent_id")) {
     throw new Error("Docs index tree nodes must express parentage with nested children, not parent_id.");
   }
   var doc = {
     doc_id: docId,
     title: title,
-    content_url: contentUrl,
     tree_depth: depth,
     tree_order: treeOrder
   };

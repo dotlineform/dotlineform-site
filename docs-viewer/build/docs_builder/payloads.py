@@ -14,7 +14,6 @@ from .ordinary_metadata import OrdinaryDocumentSummary
 from .related_links import render_related_links
 from docs_document_identity import doc_updated_date
 from docs_discovery_selection import DiscoverySelection, select_collection_documents, select_ordinary_documents
-from docs_publication_ignore import read_publication_ignore_ids
 from docs_recent_exclusions import read_recent_exclusions
 from docs_recent_payload import build_recent_payload
 from docs_report_source import project_report_markdown
@@ -91,7 +90,6 @@ class PayloadBuilderMixin:
         entry: dict[str, Any] = {
             "doc_id": doc.doc_id,
             "title": doc.title,
-            "content_url": doc.content_url,
         }
         if self.config.stage == "working":
             entry["draft"] = doc.front_matter["draft"]
@@ -164,7 +162,7 @@ class PayloadBuilderMixin:
         return entry
 
     def recent_candidates(
-        self, docs: list[DocRecord], tree: list[dict[str, Any]], *, discovery: DiscoverySelection | None = None,
+        self, docs: list[DocRecord], tree: list[dict[str, Any]], *, ignored_ids: frozenset[str], discovery: DiscoverySelection | None = None,
     ) -> list[dict[str, Any]]:
         """Use current in-memory ordinary metadata and saved flat collection metadata.
 
@@ -174,7 +172,7 @@ class PayloadBuilderMixin:
         if self.config.stage != "working":
             raise ValueError("Recents generation requires Working; Preview copies the prepared payload")
         selected = discovery.ordinary if discovery is not None else select_ordinary_documents(
-            tree, read_publication_ignore_ids(self.repo_root, config=self.config),
+            tree, ignored_ids,
         )
         eligible_docs = [doc for doc in docs if doc.doc_id in selected]
         title_by_id = {doc.doc_id: doc.title for doc in eligible_docs}

@@ -66,7 +66,6 @@ class DocsDataBuilder(
         self.links_doc_ids = None if links_doc_ids is None else normalize_doc_ids(links_doc_ids)
         self.skip_media_builds = skip_media_builds is True
         self.skip_recent = skip_recent is True
-        self.output_url_base = self.output_url_base_for(self.output_url_dir())
         rendering_inputs = RenderingInputs.load(self.repo_root) if rendering_inputs is None else rendering_inputs
         self.site_config = rendering_inputs.site_config
         self.semantic_token_registry = rendering_inputs.semantic_token_registry
@@ -148,10 +147,17 @@ class DocsDataBuilder(
         }
 
         index_tree_payload = self.index_tree_payload(docs_by_id, previous_payload=previous_tree)
+        if self.config.stage == "working":
+            from docs_publication_preparation import prepare_generation
+
+            publication = prepare_generation(
+                self, docs_for_item_build, item_payloads, index_tree_payload,
+                previous_navigation=previous_tree, preparation=publication, write=write,
+            )
         # Preview, targeted builds and authoring follow-through preserve saved Recents.
         recent_payload = None
         if self.config.stage == "working" and not self.targeted_build and not self.skip_recent:
-            recent_candidates = self.recent_candidates(docs, index_tree_payload["docs"])
+            recent_candidates = self.recent_candidates(docs, index_tree_payload["docs"], ignored_ids=publication.ignored)
             recent_payload = self.recent_payload(
                 recent_candidates,
                 output_path=self.output_dir / "recent.json",
@@ -190,7 +196,7 @@ class DocsDataBuilder(
         if write and self.config.stage == "working":
             from docs_publication_preparation import complete_generation
 
-            complete_generation(self, docs_for_item_build, item_payloads, index_tree_payload, stale_item_ids,
+            complete_generation(self, item_payloads, stale_item_ids,
                                 selected=selected_payload, related_records=related_records,
                                 dependency_ids={Path(name).stem for name in links_build["written"]} if links_build is not None else set(),
                                 preparation=publication, expand_dependencies=expand_dependencies, recent=recent_payload)

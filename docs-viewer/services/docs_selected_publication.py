@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from docs_deploy_repo import utc_now
-from docs_publication_preparation import confined, public_document_path, public_shared_path
+from docs_publication_paths import confined, document_path, shared_path
 from docs_publication_queue import FAMILIES, has_selections, save_queue
 from docs_publication_transfer import SelectedTransfers, completed_effect, delete_path, read_bytes, write_bytes
 from docs_workspace_config import generated_search_path, preview_documents_path, preview_search_path, public_documents_path, public_search_path, select_workspace_stage
@@ -48,7 +48,7 @@ def publish_selected_documents(repo_root: Path, workspace: Any, pending: dict[st
                         # distribution holds only one selected media file.
                         media_inputs.append((kind, name, media_target))
                 result["target"] = f"{collection or 'documents'}/{doc_id}"
-                document_bytes = write_bytes(target, read_bytes(public_document_path(workspace, collection, doc_id)))
+                document_bytes = write_bytes(target, read_bytes(document_path(workspace, collection, doc_id)))
             completed_effect(result, "Preview files removed" if deleting else "Preview files applied", target)
             result.update(phase="document distribution")
             for kind, name, path in media_inputs:
@@ -79,7 +79,7 @@ def publish_selected_documents(repo_root: Path, workspace: Any, pending: dict[st
                 else:
                     _source_owner, preview_owner = owners["" if owner == "workspace" else owner]
                     filename = {"ordinary_index": "index-tree.json", "recent": "recent.json", "selected": "selected.json", "collection_manifest": "manifest.json"}[output]
-                    source = public_shared_path(workspace, owner, output)
+                    source = shared_path(workspace, owner, output)
                     target = confined(preview_documents_path(preview_owner), filename)
                     destination = confined(repo_root / public_documents_path(preview_owner), filename)
                 if deleting:

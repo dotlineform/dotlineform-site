@@ -1,22 +1,13 @@
-"""Public byte projection and configured repository capability."""
+"""Configured repository capability and publication timestamps."""
 
 from __future__ import annotations
 
 import datetime as dt
-import html
-import json
 import os
-import re
 from pathlib import Path
 from typing import Any
 
 from docs_workspace_config import DocsWorkspaceConfig, select_workspace_stage
-
-
-LOCAL_FOLDER_ANCHOR_PATTERN = re.compile(
-    r"<a\b(?P<attrs>(?:[^>\"']|\"[^\"]*\"|'[^']*')*)>(?P<label>.*?)</a\s*>",
-    re.IGNORECASE | re.DOTALL,
-)
 
 
 def utc_now() -> str:
@@ -26,10 +17,6 @@ def utc_now() -> str:
         .isoformat()
         .replace("+00:00", "Z")
     )
-
-
-def json_bytes(payload: Any) -> bytes:
-    return (json.dumps(payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
 
 
 def _writable_repository_destination(
@@ -128,26 +115,3 @@ def repository_path(repo_root: Path, path: Path) -> Path:
     except ValueError as exc:
         raise ValueError(f"repository deployment path escapes the repository: {path}") from exc
     return resolved
-
-
-def project_public_local_folder_links(content_html: str) -> str:
-    def replace(match: re.Match[str]) -> str:
-        attrs = match.group("attrs").lower()
-        if "data-docs-viewer-local-target" not in attrs and not re.search(
-            r"\bhref\s*=\s*(?:[\"']dlf-local:|dlf-local:)",
-            attrs,
-            re.IGNORECASE,
-        ):
-            return match.group(0)
-        label = html.unescape(re.sub(r"<[^>]*>", "", match.group("label"))).strip()
-        if not label or label.startswith("/") or label.lower().startswith(("file:", "dlf-local:")):
-            label = "[local file or folder]"
-        return html.escape(label)
-
-    return LOCAL_FOLDER_ANCHOR_PATTERN.sub(replace, content_html)
-
-
-def project_document_payload(payload: dict[str, Any]) -> bytes:
-    """Finish local-folder presentation on an upstream-rendered public payload."""
-    payload["content_html"] = project_public_local_folder_links(payload["content_html"])
-    return json_bytes(payload)

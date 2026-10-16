@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260423-000000-8fd731
 title: Source Organisation
 added_date: "2026-04-23 00:00:00"
-last_updated: "2026-10-15"
+last_updated: "2026-10-16"
 summary: Working source and generated storage, one read-only Preview snapshot, and exact collection and media ownership.
 parent_id: d-20260424-000000-50b63f
 ---
@@ -34,7 +34,7 @@ $DOTLINEFORM_DOCS_BASE_DIR/
         documents/<doc_id>.md
         media/build-source/mermaid/
     generated/
-      documents/{index-tree.json,recent.json,by-id/,...}
+      documents/{index-tree.json,public-index-tree.json,publication-media.json,recent.json,by-id/,...}
       search/index.json
       collections/<collection>/documents/
       catalogue/
@@ -42,7 +42,6 @@ $DOTLINEFORM_DOCS_BASE_DIR/
     assets/works/{primary,thumbs,media/files}/
     assets/media/workspace/{img,thumbs,svg,files,html}/
     assets/media/collections/<collection>/{img,thumbs,svg,files,html}/
-    preview-manifest.json
     documents/{index-tree.json,recent.json,by-id/,...}
     search/index.json
     collections/<collection>/documents/
@@ -62,7 +61,7 @@ $DOTLINEFORM_DOCS_BASE_DIR/
 | Public projection | Downstream repository/R2 output served by the website. |
 | Rendered view | Presentation of document payloads and media; it is not source. |
 
-Working registers document, collection and media owners once. Generation prepares public files/private eligibility metadata beneath `working/generated/publication/` and records exact publication effects in `working/docs-publish-pending.json`. Preview derives the configured owners and receives selected files only, without a source/generated tree or browser route. Catalogue queues remain alongside the Docs queue under `working/`; [Builder](Builder.md#publish-preparation) and [Catalogue Deployment](Catalogue_Deployment.md) own handoffs.
+Working registers document, collection and media owners once. Generation maintains one common by-ID document plus complete management and eligible public metadata under each existing generated owner, and records exact publication effects in `working/docs-publish-pending.json`. Ordinary `public-index-tree.json` sits beside `index-tree.json`; collection `manifest.json` sits beside `manage-manifest.json`. Private `publication-media.json` retains referenced-media/diagram records and the applied exclusion-policy input. The separate Working publication tree is retired. Preview receives selected finished bytes without a source/generated tree or browser route. Catalogue queues remain alongside the Docs queue under `working/`; [Builder](Builder.md#publish-preparation) and [Catalogue Deployment](Catalogue_Deployment.md) own handoffs.
 
 Collection document-media paths in the tree above apply only to collections declaring `document_media: true`: Context (`works`), Concepts and Moments. Catalogue declares false, so it has documents and separate Work media but no `assets/media/collections/catalogue/` owner, source-media producer or document-media publication binding. Existing empty remnants of that former namespace are not read, maintained or recreated by these owners.
 

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260605-125108-c68916
 title: Generated Data Contracts
 added_date: "2026-06-05 12:51:08"
-last_updated: "2026-10-15"
+last_updated: "2026-10-16"
 summary: Public and manage Docs Viewer payload schemas, registered publication roots, read authority, publishing, and builder ownership contracts.
 parent_id: d-20260331-000000-c313fd
 ---
@@ -45,11 +45,11 @@ Manage-only Catalogue target discovery is the `/docs/catalogue-media-targets` re
 
 ## Collection Manifest Ownership
 
-The [collection builder](../../docs-viewer/build/docs_builder/collection.py) produces one list manifest for the operation's existing build role. Each manifest contains exactly one root `docs` array; collection identity comes from the configured owner and route. Working full and targeted collection builds generate only `manage-manifest.json`, including requested draft documents and the existing management metadata. Subject-enabled rows retain scalar `subject`; no customisation envelope or Subject generation hash remains. Browser collection configuration supplies list/by-ID locations without customisation descriptors or loader registries. Working does not generate, read or require a public `manifest.json`. The local generated collection route serves the management manifest and exact by-ID documents; public-manifest reads through that route are retired without a fallback.
+The [collection builder](../../docs-viewer/build/docs_builder/collection.py) produces complete `manage-manifest.json` and eligible reader `manifest.json` together from the same metadata. Each manifest contains exactly one root `docs` array; collection identity comes from the configured owner and route. Management includes requested Draft documents and scalar Subject metadata; no customisation envelope or Subject generation hash remains. Browser collection configuration supplies list/by-ID locations without customisation descriptors or loader registries. The local generated collection route serves the management manifest and exact common by-ID documents; it does not serve the public manifest.
 
 Application writes pass exact changed/deleted document identities to the builder. Targeted Working builds parse the saved management manifest once without auditing its schema, rows, identities, dates or Subjects, merge selected rows and use saved membership/titles as rendering context. Unselected rows and document payloads remain intact. The manifest is written only when its projected contents change. Missing/unreadable JSON fails with a complete collection Build instruction; unavailable required fields fail where consumed. There is no public-manifest agreement check or full-source fallback. Catalogue Regenerate supplies already parsed sources and generated Work records to the same in-process builder and carries the completed manifest and Selected state between per-Work builds. Selected and Links follow-through parse saved data without complete-list/schema audits; exact configured file/owner handling, authored-reference parsing, required date projection and completed writes retain their owners.
 
-Working public preparation maintains eligible public `manifest.json` separately beneath `working/generated/publication/collections/<id>/`. It uses the existing collection projector: Context emits authored `has_thumbnail: true`, otherwise Work-only scalar `subject`, otherwise neither. Folder/private fields and management manifests remain local. Publish transfers the finished manifest to its configured Preview/public target without source reads or projection. [Subject Associations](data/subject-associations.md#subject-and-association-shape) owns the scalar/thumbnail semantics.
+Working keeps eligible public `manifest.json` beside each management manifest. Context emits authored `has_thumbnail: true`, otherwise Work-only scalar `subject`, otherwise neither. Folder/private fields and management manifests remain local. An excluded ordinary host produces an empty public collection inventory; its document withdrawals remain separate exact effects. Only a changed projected public list is written/queued. Publish copies that completed file to Preview/public destinations without source reads, eligibility filtering or projection. [Subject Associations](data/subject-associations.md#subject-and-association-shape) owns scalar/thumbnail semantics.
 
 Identity and date contracts remain unchanged. Targeted reconstruction rejects retired Subject shapes in saved metadata; a complete collection Build owns reconciliation. Collection diagnostics report the selected `manifest_filename` and one `manifest_changed` count; the former separate management-manifest count is retired.
 
@@ -85,7 +85,6 @@ Public `index-tree.json` nodes should stay as close as possible to:
 - `title`
 - `children`, only when non-empty
 - `ui_status`
-- `content_url`
 - `report_id`, only when the document hosts a registered report
 
 Fields excluded from public `index-tree.json`:
@@ -96,7 +95,7 @@ Fields excluded from public `index-tree.json`:
 - `content_text_length`
 - default or derivable values
 
-Working tree nodes additionally carry boolean `draft`, which does not filter the browser Index and is omitted from the public tree. Local reads consume the saved tree without loading publication policy or canonical ancestry; the obsolete `publication_ignored` projection and browser carry-through are removed. `ui_status` remains separate presentation metadata. `report_id` is projected directly from the document's validated report descriptor so the shared index renderer can identify exact report-host roles without loading every by-ID payload; it does not carry report configuration or grant loader access.
+Working tree nodes additionally carry boolean `draft`, which does not filter the browser Index and is omitted from the public tree. Working generates the eligible `public-index-tree.json` alongside its complete `index-tree.json`; Publish copies the former to Preview/public `index-tree.json`. Neither tree carries a transport URL, and the reader resolves exact document identity through configured owners. Local reads consume saved metadata without loading publication policy or canonical ancestry. `ui_status` remains separate presentation metadata. `report_id` comes from the validated report descriptor so the shared index renderer can identify report-host roles without loading every by-ID payload; it grants no loader access.
 
 ## By-Id Payload Contract
 
@@ -109,8 +108,7 @@ Public reader-facing by-id metadata for the info panel is:
 - summary
 - last updated
 
-Public by-id payloads should not expose source path, visibility state, UI status internals, management-only fields, or editable metadata concepts for the public info panel.
-Manage mode can keep a richer metadata surface, but it should hydrate selected-document metadata from selected by-id payloads rather than public tree/index rows.
+Local and public readers consume the same generated by-ID document. Eligible ordinary/non-Catalogue payloads retain `draft: false`; Catalogue omits it. Eligible Mermaid uses prepared light/dark SVG references in that common HTML. Private collection authoring metadata remains in management manifests; source paths and authoring controls are not part of the public info panel. Both readers hydrate selected-document information from by-ID payloads rather than tree rows.
 
 A report host carries `report` with required `id` and `collection` only for `docs_collection`. Other reports omit `collection`; no `preset` or null placeholder fields are generated. Local and public report readers select the renderer by `id` and collection storage by the configured collection identity. The full descriptor stays in by-ID payloads, while the Index projects only `report_id`. [Reports](Reports.md#build-and-payload-flow) owns source validation and registry/loader boundaries.
 

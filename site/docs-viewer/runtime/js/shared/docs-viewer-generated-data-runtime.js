@@ -89,7 +89,7 @@ export function createDocsViewerGeneratedDataRuntime(options) {
   function readDocumentPayload(doc, options) {
     var requestSettings = options || {};
     var docId = String(requestSettings.docId || doc && doc.doc_id || "").trim();
-    var contentUrl = String(requestSettings.contentUrl || doc && doc.content_url || "").trim();
+    var contentUrl = String(requestSettings.contentUrl || "").trim();
     return fetchPreferredGeneratedJson(
       contentUrl,
       "Failed to load " + contentUrl,

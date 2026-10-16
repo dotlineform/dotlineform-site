@@ -9,11 +9,11 @@ from docs_mermaid_renderer import MERMAID_EXECUTABLE_RELATIVE_PATH, MERMAID_TOOL
 from docs_public_mermaid_payload import PUBLIC_MERMAID_HTML_FENCE_PATTERN, project_mermaid_payload
 from docs_public_mermaid_projection import plan_public_mermaid_projection
 from docs_public_mermaid_producer import DOCS_VIEWER_THEME_CSS_REL_PATH, load_public_mermaid_theme_seeds, render_public_mermaid_variants
-from docs_publication_transfer import read_bytes, write_bytes
+from docs_publication_transfer import write_bytes
 from docs_workspace_config import location_child
 
 
-def prepare_document_mermaid(repo_root: Path, owner: Any, document: Any, payload: dict[str, Any], previous: dict[str, Any] | None, *, force: bool, baseline_source: Any, runtime: Any) -> tuple[dict[str, Any], list[dict[str, Any]], Any]:
+def prepare_document_mermaid(repo_root: Path, owner: Any, document: Any, payload: dict[str, Any], previous: dict[str, Any] | None, *, force: bool, runtime: Any, write: bool) -> tuple[dict[str, Any], list[dict[str, Any]], Any]:
     if owner.media is None or PUBLIC_MERMAID_HTML_FENCE_PATTERN.search(payload["content_html"]) is None:
         return payload, [], runtime
     media = owner.media.types["svg"]
@@ -28,12 +28,7 @@ def prepare_document_mermaid(repo_root: Path, owner: Any, document: Any, payload
     prior = {} if previous is None else {item["projection_id"]: item for item in previous["mermaid"]}
     planned = {item["projection_id"]: item for item in plan["manifest"]["diagrams"]}
     changed = [item for item in plan["diagrams"] if force or prior.get(item["projection"]["projection_id"]) != planned[item["projection"]["projection_id"]]]
-    if baseline_source is not None:
-        writes = {
-            variant["artifact_identity"]: read_bytes(location_child(baseline_source, Path(variant["artifact_identity"])).path)
-            for item in changed for variant in item["projection"]["variants"].values()
-        }
-    elif changed:
+    if changed and write:
         if runtime is None:
             executable = MERMAID_TOOLCHAIN_ROOT / MERMAID_EXECUTABLE_RELATIVE_PATH
             runtime = executable, load_public_mermaid_theme_seeds(repo_root / DOCS_VIEWER_THEME_CSS_REL_PATH)

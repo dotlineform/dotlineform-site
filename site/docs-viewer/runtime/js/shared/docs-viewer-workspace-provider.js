@@ -42,7 +42,7 @@ export function createDocsViewerWorkspaceProvider(options) {
     var url = owner ? owner.byIdUrlBase + "/" + encodeURIComponent(target.doc_id) + ".json"
       : config.documentUrlTemplate.replace("{doc_id}", encodeURIComponent(target.doc_id));
     if (!url) throw new Error("Document payload URL is not configured.");
-    return generatedData.readDocumentPayload({ doc_id: target.doc_id, content_url: url }, { collection: target.collection || "", docId: target.doc_id });
+    return generatedData.readDocumentPayload(target, { contentUrl: url, collection: target.collection || "", docId: target.doc_id });
   }
 
   function readSearch(optionsForRead) {

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260512-142027-54b354
 title: Configuration And Extension Points
 added_date: "2026-05-12 14:20:27"
-last_updated: "2026-10-15"
+last_updated: "2026-10-16"
 summary: Map of the configuration, registries, generated projections, code definitions, and capability checks that drive Docs Viewer workflows.
 parent_id: d-20260424-000000-50b63f
 
@@ -94,13 +94,13 @@ Source/Create/metadata/placement/Delete/Draft operations resolve Working and req
 
 ### Publication And Downstream Ownership
 
-`docs_publication_preparation.py` applies draft/subtree/host eligibility during Working generation and prepares finished public artifacts from carried payloads and saved metadata. Routine operations reuse saved exclusion policy; explicit full builds own external policy changes. Catalogue is a document collection with separate Work/media ownership. Preview receives selected artifacts without a source/generated tree or whole-snapshot receipt.
+`docs_publication_preparation.py` finishes shared by-ID documents, media and queue handoffs during Working generation. `docs_publication_metadata.py` uses loaded management metadata and prior public membership to build ordinary `public-index-tree.json` and collection `manifest.json` beside their management versions; unchanged public views are neither written nor queued. Routine operations reuse saved exclusion policy; explicit full builds own external policy changes. Catalogue is a document collection with separate Work/media ownership. Preview receives selected artifacts without a source/generated tree or whole-snapshot receipt.
 
 `catalogue-artifacts.json` inventories Catalogue JSON independently of document eligibility. Catalogue Work and Gallery/system effects retain their own queue; document/shared selections use the Docs queue. Full Working Build generates and queues Recent, while explicit Search builds queue saved bytes.
 
 **Publish** remains one awaited empty-body `/docs/publish` operation. It carries parsed queues and resolved configuration through selected Preview/distribution completion, removes successful units and returns early when all selections are empty. It performs no generation, content/schema audits, directory/remote listings or corpus reconciliation. Failures report phase/target and completed effects without persisted resume state. [Catalogue Deployment](Catalogue_Deployment.md) owns exact Catalogue selection and deletion.
 
-`docs_publication_payloads.py` projects public document metadata URLs without a publishing-stage field. By-ID content keeps query-only Docs links and `docs-media:` identities; the local and public readers compose their own viewer routes and media roots. Catalogue, Search and Recents bytes remain unchanged. The public reader loads directly at `/`; documents use `site/assets/data/docs/`, Search retains `site/assets/data/search/analysis/index.json`, and Catalogue uses `site/assets/data/catalogue/`. Configured R2 Docs media uses `docs/media/workspace/<type>/` and `docs/media/collections/<collection>/<type>/`. Moving the reader route does not require moving these payloads or media.
+`docs_publication_paths.py` resolves queued identities directly to existing generated files or saved Selected JSON without importing generation or eligibility owners. The URL/Folder publication transformations and duplicated Working publication tree are retired. By-ID content keeps query-only Docs links and `docs-media:` identities; local and public readers compose their own routes and media roots. Search and Recents copy their existing completed bytes. The public reader loads directly at `/`; documents use `site/assets/data/docs/`, Search retains `site/assets/data/search/analysis/index.json`, and Catalogue uses `site/assets/data/catalogue/`. Configured R2 Docs media uses `docs/media/workspace/<type>/` and `docs/media/collections/<collection>/<type>/`. Moving the reader route does not require moving these payloads or media.
 
 Publish preserves the independently owned `public-reports.json`. Public collections require exact `docs_collection` registry rows and generated browser configuration registration as well as prepared data. Public document-location JSON, the legacy Catalogue document-URL writer and the old publication pause remain retired. [Catalogue Deployment](Catalogue_Deployment.md) owns the JSON/media inventory and accepted R2-before-Actions timing gap. Git commit/push and public Actions deployment remain separate.
 

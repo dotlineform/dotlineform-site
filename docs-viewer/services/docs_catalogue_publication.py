@@ -8,7 +8,7 @@ from typing import Any
 from docs_catalogue_artifacts import load_catalogue_artifact_inventory
 from docs_deploy_repo import utc_now
 from docs_publication_media import publication_media_bindings
-from docs_publication_preparation import confined, public_document_path
+from docs_publication_paths import confined, document_path
 from docs_publication_transfer import SelectedTransfers, completed_effect, delete_path, read_bytes, write_bytes
 from docs_workspace_config import location_child, preview_documents_path, public_documents_path, select_workspace_stage
 from pipeline_config import load_pipeline_config
@@ -55,7 +55,7 @@ def publish_catalogue_works(repo_root: Path, workspace: Any, pending: dict[str, 
             else:
                 metadata_bytes = write_bytes(metadata, read_bytes(location_child(workspace.catalogue.working, metadata_identity).path))
                 completed_effect(result, "Preview files applied", metadata)
-                document_bytes = write_bytes(document, read_bytes(public_document_path(workspace, "catalogue", work_id)))
+                document_bytes = write_bytes(document, read_bytes(document_path(workspace, "catalogue", work_id)))
             completed_effect(result, "Preview files removed" if deleting else "Preview files applied", document)
             for _key, target in media:
                 result["target"] = f"{work_id}/{target.name}"

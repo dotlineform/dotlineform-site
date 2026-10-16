@@ -12,7 +12,6 @@ from .common import (
     json_text,
     monotonic_time,
     read_text,
-    resolve_workspace_path,
     write_text,
 )
 from .pipeline import DocsDataBuilder
@@ -69,18 +68,10 @@ class CollectionDocsBuilder(DocsDataBuilder):
         )
         self.collection_id = collection.collection
         self.manifest_filename = "manage-manifest.json" if config.stage == "working" else "manifest.json"
-        self.output_url_base = self.output_url_base_for(self.output_url_dir())
         self.collection_manifest: dict[str, Any] | None = None
         self.selected_payload: dict[str, Any] | None = None
         if self.targeted_build and not self.only_doc_ids:
             raise ValueError("Targeted collection build requires at least one document ID")
-
-    def output_url_dir(self) -> Path:
-        output = generated_documents_path(self.collection_config)
-        return resolve_workspace_path(self.repo_root, output)
-
-    def content_url_for(self, doc_id: str) -> str:
-        return f"{self.output_url_base}/by-id/{quote(doc_id)}.json"
 
     def viewer_url_for(self, doc_id: str, anchor: str = "") -> str:
         pairs = [f"collection={quote(self.collection_id)}", f"doc={quote(str(doc_id))}"]
@@ -239,6 +230,13 @@ class CollectionDocsBuilder(DocsDataBuilder):
             doc.doc_id: self.item_entry(doc, docs_by_id)
             for doc in ordered_docs
         }
+        if self.config.stage == "working":
+            from docs_publication_preparation import prepare_generation
+
+            publication = prepare_generation(
+                self, docs, item_payloads, {}, manifest=manifest_payload,
+                previous_manifest=previous_manifest, preparation=publication, write=write,
+            )
         write_plan = self.build_collection_write_plan(
             manifest_payload,
             item_payloads,
@@ -265,7 +263,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
         if write and self.config.stage == "working":
             from docs_publication_preparation import complete_generation
 
-            complete_generation(self, docs, item_payloads, {}, stale_item_ids,
+            complete_generation(self, item_payloads, stale_item_ids,
                                 selected=self.selected_payload, related_records=related_records,
                                 dependency_ids={Path(name).stem for name in links_build["written"]} if links_build is not None else set(),
                                 preparation=publication, expand_dependencies=expand_dependencies,

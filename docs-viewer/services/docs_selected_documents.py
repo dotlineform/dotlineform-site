@@ -111,10 +111,9 @@ def set_selected(repo_root: Path, body: dict[str, Any], *, dry_run: bool = False
     text = selected_text(updated)
     if not dry_run and updated != payload:
         write_text_atomic(selected_path(resolved.parent_config), text)
-        from docs_publication_preparation import load_preparation
-        from docs_publication_queue import save_queue
+        from docs_publication_queue import read_queue, save_queue, select_shared
 
-        publication = load_preparation(repo_root, resolved.workspace)
-        publication.selected(updated)
-        save_queue(resolved.workspace, publication.pending)
+        pending = read_queue(resolved.workspace)
+        select_shared(pending, "workspace", "selected")
+        save_queue(resolved.workspace, pending)
     return {"ok": True, "target": target, "selected": body["selected"], "dry_run": dry_run}

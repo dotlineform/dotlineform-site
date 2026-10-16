@@ -117,7 +117,7 @@ def rebuild_working_docs_and_search(repo_root: Path) -> dict[str, Any]:
 
         def select_discovery() -> DiscoverySelection:
             manifests = {name: result["manifest_payload"] for name, result in results.items() if name}
-            eligible = set(publication.state["eligible"])
+            eligible = publication.metadata.membership("")
             for owner in config.site_search_collections:
                 if owner.collection not in builders and owner.report_host_doc_id in eligible:
                     manifests[owner.collection] = read_discovery_metadata(generated_documents_path(owner) / "manage-manifest.json")
@@ -128,14 +128,14 @@ def rebuild_working_docs_and_search(repo_root: Path) -> dict[str, Any]:
         def rebuild_recent() -> dict[str, Any]:
             path = ordinary.output_dir / "recent.json"
             recent = ordinary.recent_payload(
-                ordinary.recent_candidates(documents[""], tree, discovery=discovery), output_path=path,
+                ordinary.recent_candidates(documents[""], tree, ignored_ids=publication.ignored, discovery=discovery), output_path=path,
             )
             write_text(path, json_text(recent))
-            publication.shared("workspace", "recent", recent)
+            publication.shared("workspace", "recent")
             return {"docs": len(recent["docs"])}
 
         payload["diagnostics"]["recent"] = perform("recent", rebuild_recent)
-        publication.selected(selected)
+        publication.selected()
         perform("publication handoff", publication.save)
         search_builder = DocsViewerSearchDataBuilder(repo_root=repo_root, stage="working", config=config)
 

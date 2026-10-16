@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260909-205938-3569d6
 title: Catalogue Deployment
 added_date: "2026-09-09 20:59:38"
-last_updated: "2026-10-15"
+last_updated: "2026-10-16"
 summary: Queued Work publication, separate Preview media, exact repository/R2 deployment and final shared output.
 parent_id: d-20260902-102745-8379ea
 ---
@@ -22,7 +22,7 @@ One empty-body `POST /docs/publish` action processes queued Catalogue Works, Doc
 | Material | Working/Preview owner | Public destination |
 | --- | --- | --- |
 | Work metadata | `working/generated/catalogue/works/index/<id>.json`, then `preview/catalogue/works/index/<id>.json` | `site/assets/data/catalogue/works/index/<id>.json` |
-| Catalogue document | Prepared public Working document, then `preview/collections/catalogue/documents/by-id/<id>.json` | `site/assets/data/docs/catalogue/by-id/<id>.json` |
+| Catalogue document | Existing `working/generated/collections/catalogue/documents/by-id/<id>.json`, then `preview/collections/catalogue/documents/by-id/<id>.json` | `site/assets/data/docs/catalogue/by-id/<id>.json` |
 | Primary images | `<stage>/assets/works/primary/` | Configured R2 `works/img/` |
 | Thumbnails | `<stage>/assets/works/thumbs/` | `site/assets/data/catalogue/works/thumbs/` |
 | Downloads | `<stage>/assets/works/media/files/` | Configured R2 `works/files/` |
