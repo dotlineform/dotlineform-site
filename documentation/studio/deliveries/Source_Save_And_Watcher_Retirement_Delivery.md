@@ -33,7 +33,7 @@ Status: complete, parented to [Planned Features](../Planned_Features.md). Implem
 
 Edit a document in Source and choose **Save**. The waiting cursor and busy controls remain until its exact generated result is displayed or a specific failure is reported. Successful Save is silent; failure messages remain visible. This removes watcher scheduling and polling delays from the Save path; build and payload-read time still belong to the awaited operation.
 
-For a deliberate external Markdown edit, use **Edit doc → Rebuild** for that document. After an infrequent edit to a registered media build source, run the explicit media-capable action selected during readiness, then rebuild/reload any affected document as required by that action. Persistent `.mmd` to SVG production is distinct from inline Mermaid content rendered as part of a document. Ordinary media intake continues through its existing owner.
+For a deliberate external Markdown edit, use **Edit doc → Rebuild** for that document. Replace externally authored media through its owning image/file workflow, then Save or explicitly rebuild affected documents. Ordinary media intake continues through its existing owner.
 
 ## Delivery Steps
 
@@ -46,7 +46,7 @@ For a deliberate external Markdown edit, use **Edit doc → Rebuild** for that d
 
 Gate: promote to planned only when watcher removal leaves application writes complete and the rare media workflow is concrete. If an operation has an unowned required result, or media support needs a broader new subsystem, resolve that boundary before implementation. Readiness is read-only and does not authorize test changes.
 
-Record: complete. Source Save and Draft were the application-write gaps; both now reuse the exact document/Links rebuild owner. Creation, deletion, assignment, imports, media intake and Regenerate retain awaited output owners. Local Studio owned watcher startup/liveness. The user selected the existing **Rebuild docs and Search** action for rare persistent-media edits: it regenerates referenced Mermaid SVGs across configured owners with producer verification, plus all documents, Links, Recents and Search. Unreferenced `.mmd` files are not rendered; total cost is unmeasured and includes all document/Search work plus one render per referenced diagram. No broader media subsystem is needed. Watcher-only code/configuration is removed; [Testing](../Testing.md#source-save-and-watcher-retirement) records untouched stale tests/profiles.
+Record: complete. Source Save and Draft were the application-write gaps; both now reuse the exact document/Links rebuild owner. Creation, deletion, assignment, imports, media intake and Regenerate retain awaited output owners. Local Studio owned watcher startup/liveness. No broader media subsystem is needed. Watcher-only code/configuration is removed; [Testing](../Testing.md#source-save-and-watcher-retirement) records untouched stale tests/profiles.
 
 ### SW-1 Awaited Source Save
 

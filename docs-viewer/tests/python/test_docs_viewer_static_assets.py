@@ -245,8 +245,6 @@ def test_static_path_policy_is_docs_viewer_scoped() -> None:
 
     assert allowed("/docs-viewer/runtime/js/public/docs-viewer-public.js") is True
     assert allowed("/docs-viewer/runtime/js/shared/docs-viewer-app-boot.js") is True
-    assert allowed("/docs-viewer/runtime/vendor/mermaid/11.16.0/mermaid.min.js") is True
-    assert allowed("/docs-viewer/runtime/vendor/mermaid/11.16.0/LICENSE") is True
     assert allowed("/docs-viewer/runtime/js/management/docs-viewer-manage.js") is True
     assert allowed("/docs-viewer/runtime/js/import/docs-html-import.js") is True
     assert allowed(
@@ -285,9 +283,6 @@ def test_static_path_policy_is_docs_viewer_scoped() -> None:
 
 
 def test_runtime_static_route_prefixes_resolve_to_owning_roots() -> None:
-    assert docs_viewer_service.runtime_static_relative_path(
-        "/docs-viewer/runtime/vendor/mermaid/11.16.0/mermaid.min.js"
-    ) == Path("docs-viewer/runtime/vendor/mermaid/11.16.0/mermaid.min.js")
     assert docs_viewer_service.runtime_static_relative_path(
         "/docs-viewer/runtime/js/public/docs-viewer-public.js"
     ) == Path("docs-viewer/runtime/js/public/docs-viewer-public.js")

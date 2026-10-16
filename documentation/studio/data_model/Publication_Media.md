@@ -42,7 +42,7 @@ For example:
 }
 ```
 
-Generation uses this same list to select eligible publication media and compare previous/current owned references for removal. It does not extract a second list from rendered HTML. There are no separate authored-media, producer-companion or Mermaid records. Diagrams imported as SVG use the ordinary `svg` list.
+Generation uses this same list to select eligible publication media and compare previous/current owned references for removal. It does not extract a second list from rendered HTML. There are no separate authored-media, producer-companion or diagram-production records. Diagrams imported as SVG use the ordinary `svg` list.
 
 The top-level `ignored` list records the publication exclusions last applied by the owning build. Ordinary Save/Rebuild uses that saved policy; explicit complete document builds read changes to the exclusion policy.
 

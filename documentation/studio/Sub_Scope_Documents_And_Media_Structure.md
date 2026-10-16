@@ -28,10 +28,10 @@ This is the local structure delivery. Do not enable Analysis promotion actions, 
 ```text
 <scope>/<stage>/source/        stage omitted for unstaged scopes
   documents/
-  media/{img,svg,files,html,build-source/mermaid}/
+  media/{img,svg,files,html}/
   sub-scopes/<collection>/
     documents/
-    media/{img,svg,files,html,build-source/mermaid}/
+    media/{img,svg,files,html}/
 
 <scope>/<stage>/generated/
   documents/

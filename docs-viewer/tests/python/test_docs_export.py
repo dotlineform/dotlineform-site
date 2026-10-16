@@ -720,17 +720,15 @@ def test_export_uses_source_context_for_markdown_document_content() -> None:
     assert rows_by_doc_id["example"]["content"] == "# Example\n\nBody text."
 
 
-def test_markdown_document_content_export_preserves_inline_mermaid_source() -> None:
-    mermaid_markdown = "\n".join(
+def test_markdown_document_content_export_preserves_fenced_source() -> None:
+    fenced_markdown = "\n".join(
         [
             "# Example",
             "",
             "Before diagram.",
             "",
-            "```mermaid",
+            "```example",
             "flowchart LR",
-            "  accTitle: Export preservation proof",
-            "  accDescr: Source remains Markdown in the package",
             "  Source --> Package",
             "```",
             "",
@@ -745,7 +743,7 @@ def test_markdown_document_content_export_preserves_inline_mermaid_source() -> N
             "example.md",
             doc_id="example",
             title="Example",
-            body=mermaid_markdown,
+            body=fenced_markdown,
         )
 
         report = docs_export.build_export(
@@ -760,7 +758,7 @@ def test_markdown_document_content_export_preserves_inline_mermaid_source() -> N
         rows = [json.loads(line) for line in artifact_path(report["output_file"]).read_text(encoding="utf-8").splitlines()]
 
     assert report["ok"] is True, report
-    assert rows[1]["content"] == mermaid_markdown
+    assert rows[1]["content"] == fenced_markdown
 
 
 def test_document_content_plain_text_override_preserves_existing_content_behavior() -> None:
@@ -860,7 +858,7 @@ def main() -> None:
         test_repo_documents_prepare_profiles_load_and_validate,
         test_repo_full_document_content_exports_relationship_fields,
         test_export_uses_source_context_for_markdown_document_content,
-        test_markdown_document_content_export_preserves_inline_mermaid_source,
+        test_markdown_document_content_export_preserves_fenced_source,
         test_document_content_plain_text_override_preserves_existing_content_behavior,
         test_document_content_json_output_declares_content_format,
         test_missing_source_context_returns_structured_export_error,

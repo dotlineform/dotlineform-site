@@ -14,11 +14,11 @@ This is the active follow-on to [Incremental Document Publish](Incremental_Docum
 
 ## Current And Next State
 
-Status: implemented and cut over on 2026-10-16; active pending RGP.5 manual acceptance. The user requested delivery, explicitly accepted shared `draft: false` and prepared light/dark Mermaid SVGs for eligible local/public reads, and authorised the concrete metadata-only cutover. No test work was authorised or performed.
+Status: implemented and cut over on 2026-10-16; active pending RGP.5 manual acceptance. The user authorised shared `draft: false` and the concrete metadata-only cutover. No test work ran within this delivery.
 
-The duplicated `working/generated/publication/` tree and its active consumers/initialiser are retired. Publish resolves selected documents directly to existing ordinary/collection by-ID files, including Catalogue, and reads Selected, Recent and Search from their existing owners. Working prepares eligible Mermaid in the common document before its write and builds public metadata beside management metadata. The reader no longer requires generated `content_url` fields.
+The duplicated `working/generated/publication/` tree and its consumers/initialiser are retired. Publish resolves selected ordinary/collection by-ID files directly and reads Selected, Recent and Search from their existing owners. Working builds public metadata beside management metadata. The reader no longer requires generated `content_url` fields.
 
-The approved real-workspace cutover wrote five public metadata files, reduced private metadata to 244 referenced-media records plus the applied exclusion input, and removed transport URLs from the complete management index. No document bodies, assets or queues were written, and no Build, Search or Publish ran. The saved preparation metadata contained no fenced-Mermaid records, so the cutover provides no live Mermaid rendering evidence. No whole-corpus document equivalence claim is made.
+The approved real-workspace cutover wrote five public metadata files, reduced private metadata to 244 referenced-media records plus the applied exclusion input, and removed transport URLs from the complete management index. No document bodies, assets or queues were written, and no Build, Search or Publish ran. No whole-corpus document equivalence claim is made.
 
 Next: the user exercises normal operations and accepts the RGP.5 cases below. Static evidence and the metadata-only cutover do not establish Source Save, Full Build, withdrawal/restoration, diagram rendering or post-cutover Publish behavior. Git commit/push and deployment remain separate actions.
 
@@ -69,13 +69,13 @@ The saved `working/source/selected.json` is an explicitly selected completed JSO
 
 Frontend ownership remains authoring choices, active-reader link/media resolution, local management presentation and one awaited Publish result. Python owns required Working generation, its public metadata projection and saved queue effects, confined filesystem writes and selected transfers. The delivery adds no authoring control, publication review modal or browser stage.
 
-### Agreed Document And Mermaid Choices
+### Shared Document Choices
 
 Agreed on 2026-10-16: retain the existing `draft` field in the common by-ID document. Eligible published documents carry `draft: false`; Catalogue continues omitting it. This explicitly changes the predecessor's public-field omission rule and avoids adding local metadata reads solely to remove one field from public JSON. Keep private collection authoring metadata in its existing management owner.
 
-Agreed on 2026-10-16: eligible generation produces its completed light/dark SVG references directly in the existing by-ID file, so local/public readers use the same image HTML. Manage already supports that prepared image format. Draft/ineligible documents can retain their managed browser-rendered authoring preview without public-production requirements; exact eligibility restoration completes the shared publishable form before queueing it. Publish performs no Mermaid transformation. Eligible local diagram presentation therefore changes from browser rendering to the prepared images.
+Diagram images now use externally authored SVG through the ordinary document-media workflow. The common by-ID payload supplies the same finished image references to local/public readers.
 
-These choices complete RGP.0; do not retain a second document representation or introduce browser-side public Mermaid rendering.
+The common by-ID representation completes RGP.0.
 
 ## Process
 
@@ -91,10 +91,10 @@ These choices complete RGP.0; do not retain a second document representation or 
 
 - [x] Confirm the shared-file and Working metadata-build boundaries against the current generated readers, builders and queued publishers, including direct document navigation and local management metadata.
 - [x] Confirm the authoring responsibilities, changed-public-metadata update rule and direct saved Selected JSON input. Publish remains copy-only.
-- [x] Resolve the common by-ID Draft field and eligible Mermaid choices above, with their public/local contract effects stated.
+- [x] Retain the common by-ID Draft field and state its local/public contract.
 - [x] Obtain implementation approval for this bounded change; test work remains separately specified and approved under [Test Contract Discipline](../Test_Contract_Discipline.md).
 
-Verification budget: concise read-only owner review. No prototypes, fixtures, generated writes or live Publish. Gate passed on 2026-10-16: configured identity-based readers already resolve exact documents independently of generated transport URLs; generation owns the duplicated form, metadata and queue handoffs, while queued publishers consume its paths. The user authorised implementation and explicitly accepted both document/Mermaid choices. No executable or real-workspace cutover evidence is claimed by readiness.
+Verification budget: concise read-only owner review. No prototypes, fixtures, generated writes or live Publish. Gate passed on 2026-10-16: configured identity-based readers already resolve exact documents independently of generated transport URLs; generation owns the duplicated form, metadata and queue handoffs, while queued publishers consume its paths. The user authorised implementation and explicitly accepted the common document choice. No executable or real-workspace cutover evidence is claimed by readiness.
 
 ### [x] RGP.1 — Shared Generated Documents And Direct Inputs
 
@@ -102,9 +102,9 @@ Verification budget: concise read-only owner review. No prototypes, fixtures, ge
 - [x] Preserve exact dependency/media/withdrawal handoffs and Regenerate ownership while changing queued publishers to read the existing generated files and direct shared inputs.
 - [x] Reuse authoritative saved metadata and retain only justified private generation information, without recreating the parallel tree.
 
-Verification budget: focused changed-source lint/syntax/import checks and bounded source/artifact inspection selected after owner review. No new/changed tests or real workspace generation without their agreed scope. Gate: queued document inputs are complete and usable by both readers and Publish, including the agreed Mermaid behavior.
+Verification budget: focused changed-source lint/syntax/import checks and bounded source/artifact inspection selected after owner review. No new/changed tests or real workspace generation without their agreed scope.
 
-Record: implemented and source-reviewed. Builders prepare eligible shared HTML before their existing write plans; publishers use a generation-independent configured path owner. Selected is a direct saved input. The approved cutover completed required metadata without rewriting document bodies. Mermaid correctness remains static/source evidence pending normal use.
+Record: implemented and source-reviewed. Builders prepare eligible shared HTML before their existing write plans; publishers use a generation-independent configured path owner. Selected is a direct saved input. The approved cutover completed required metadata without rewriting document bodies.
 
 ### [x] RGP.2 — Working Public Index And Manifests
 
@@ -135,7 +135,7 @@ Verification budget: distinct bounded final review and relevant evidence only. G
 
 Review record: traced normal/unchanged/empty paths, Position/Delete, restored/direct-dependent documents, Regenerate, Full Build and selected transfers. Removed duplicate HTML/public shared files, URL/Folder transformations, Selected filtering, obsolete transport-URL fields/helpers, initialisation and `public_ready`. Fixed host-restoration membership reuse and retained exact-operation policy reuse; unchanged management metadata now skips public reprojection. CLI full-generation Recent now consumes the already loaded exclusion input instead of reading policy again. Metadata cache records only actual media/diagram references and the applied policy input, avoiding a relocated copy of the former full state. Full Build still excludes Catalogue bulk source/render/Work selection; exact Catalogue dependencies remain Docs-only selections. Publisher imports resolve paths without loading generation or policy. No compatibility alias, fallback scan, audit, retry/progress state or recovery mechanism was added.
 
-Retained safeguards: configured path/symlink confinement and required JSON parsing belong at file boundaries; exact Mermaid fence/source-plan agreement prevents assigning another diagram's SVG; existing sanitisation and selected write/transfer verification remain with their producers/transfers. Missing exact restoration sources fail visibly. These safeguards add no corpus preflight or source reread.
+Retained safeguards: configured path/symlink confinement and required JSON parsing belong at file boundaries; existing sanitisation and selected write/transfer verification remain with their producers/transfers. Missing exact restoration sources fail visibly. These safeguards add no corpus preflight or source reread.
 
 Selected evidence: explicit-path Python lint and compilation passed for the 15 changed/new Python source files; JavaScript lint passed for the three changed canonical modules. Build CLI help and imports for Publish, Working Build, Regenerate, write follow-through and Docs Review passed without workspace generation. Repository whitespace, exact runtime-projection review, `bin/site-code-update --check` and `bin/site-validate` passed. No tests, fixtures, harnesses or profiles changed; no tests/browser checks ran. Existing tests that assume generated transport URLs, the removed preparation APIs or former document records require separately agreed test work before they establish current coverage.
 

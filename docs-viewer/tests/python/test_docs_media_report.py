@@ -79,13 +79,6 @@ def _build_fixture(root: Path) -> None:
         default_doc_id=PARENT_DOC_ID,
         sub_scopes=[docs_sub_scope_record("example", "tags", title="Tags")],
     )
-    record["media"]["build_sources"] = {  # type: ignore[index]
-        "mermaid": {
-            "producer": "mermaid",
-            "publishes_to": "svg",
-        }
-    }
-    record["media"]["types"]["svg"]["build_inputs"] = ["mermaid"]  # type: ignore[index]
     write_docs_scope_config(root, [record])
 
     used = "[[media:docs/example/img/nested/used.png]]"
@@ -130,7 +123,6 @@ def _build_fixture(root: Path) -> None:
         "img/nested/used.png": b"used",
         "img/unreferenced.png": b"unreferenced",
         "svg/diagram.svg": b"<svg></svg>",
-        "build-source/mermaid/diagram.mmd": b"graph TD; A-->B",
     }
     for relative, content in files.items():
         path = media_root / relative
@@ -154,7 +146,6 @@ def test_report_rows_join_exact_parent_and_sub_scope_documents(tmp_path: Path) -
     ] == [
         ("img", "nested/used.png"),
         ("img", "unreferenced.png"),
-        ("mermaid", "diagram.mmd"),
         ("svg", "diagram.svg"),
     ]
 
@@ -188,13 +179,6 @@ def test_report_rows_join_exact_parent_and_sub_scope_documents(tmp_path: Path) -
         },
     ]
     assert rows[("img", "unreferenced.png")]["documents"] == []
-    assert rows[("mermaid", "diagram.mmd")] == {
-        "scope": "example",
-        "media_type": "mermaid",
-        "identity": "diagram.mmd",
-        "local_target": "docs-viewer/scopes/example/source/media/build-source/mermaid/diagram.mmd",
-        "documents": [],
-    }
     assert rows[("svg", "diagram.svg")]["documents"][0]["target"]["doc_id"] == OTHER_DOC_ID
 
 
@@ -204,8 +188,6 @@ def test_report_isolates_stage_media_and_document_targets(tmp_path: Path, stage:
         "analysis", scope_type="public", viewer_base_url="/analysis/", include_scope_param=False,
         scope_root_provider="external_local",
     )
-    analysis["media"]["build_sources"] = {"mermaid": {"producer": "mermaid", "publishes_to": "svg"}}
-    analysis["media"]["types"]["svg"]["build_inputs"] = ["mermaid"]
     analysis["stages"] = {
         name: {
             "media": analysis["media"],
@@ -223,7 +205,7 @@ def test_report_isolates_stage_media_and_document_targets(tmp_path: Path, stage:
         config = load_docs_scope_stage(tmp_path, "analysis", name)
         for location, identity in (
             (config.media.types["img"].source_location, "same.png"),
-            (config.media.build_sources["mermaid"].location, "diagram.mmd"),
+            (config.media.types["svg"].source_location, "diagram.svg"),
         ):
             location.path.mkdir(parents=True, exist_ok=True)
             (location.path / identity).write_text(name, encoding="utf-8")
@@ -232,9 +214,9 @@ def test_report_isolates_stage_media_and_document_targets(tmp_path: Path, stage:
     report = build_docs_media_report(tmp_path, load_docs_scope_stage(tmp_path, "analysis", stage))
 
     assert report["stage"] == stage
-    assert {row["identity"] for row in report["rows"]} == {"same.png", "diagram.mmd", f"{stage}.png"}
+    assert {row["identity"] for row in report["rows"]} == {"same.png", "diagram.svg", f"{stage}.png"}
     for row in report["rows"]:
-        expected_role = "build-source/mermaid" if row["media_type"] == "mermaid" else "img"
+        expected_role = row["media_type"]
         assert row["local_target"] == f"docs-viewer/scopes/analysis/{stage}/source/media/{expected_role}/{row['identity']}"
         for document in row["documents"]:
             assert document["target"]["stage"] == stage

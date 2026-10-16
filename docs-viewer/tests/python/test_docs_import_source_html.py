@@ -80,10 +80,10 @@ def test_html_to_markdown_keeps_historical_inline_svg_children_out_of_paragraphs
 
 def test_html_to_markdown_preserves_safe_fenced_code_language() -> None:
     result = docs_html_markdown.html_to_markdown(
-        '<pre><code class="language-mermaid">flowchart LR\n  Source --&gt; Package\n</code></pre>'
+        '<pre><code class="language-example">flowchart LR\n  Source --&gt; Package\n</code></pre>'
     )
 
-    assert result.markdown == "```mermaid\nflowchart LR\n  Source --> Package\n```"
+    assert result.markdown == "```example\nflowchart LR\n  Source --> Package\n```"
 
 
 def test_html_to_markdown_preserves_table_cell_block_and_list_boundaries() -> None:

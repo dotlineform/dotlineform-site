@@ -46,14 +46,14 @@ tooling/lint/.venv/bin/python -m pip install -r tooling/lint/python-requirements
 npm ci --prefix tooling/lint
 ```
 
-Docs Viewer's Mermaid package, CLI and vendored browser renderer are retired. Export diagrams externally and import SVG through the normal image workflow.
+Export diagrams externally and import SVG through the normal image workflow.
 
 Do not install workflow executables globally or treat a globally available
 command as the dependency contract. `package.json` owns direct dependencies,
 `package-lock.json` owns the resolved graph, and the owning command invokes
 the package-root executable.
 
-[Document Diagrams](Document_Diagrams.md) owns the external-SVG workflow and Mermaid retirement boundary.
+[Document Diagrams](Document_Diagrams.md) owns the external-SVG workflow.
 
 ## External Tools
 

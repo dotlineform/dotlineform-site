@@ -155,15 +155,6 @@ def test_watcher_snapshot_tolerates_file_removed_after_discovery(tmp_path: Path,
     assert module.snapshot_markdown_root(tmp_path) == {}
 
 
-def test_watcher_snapshots_only_mermaid_sources_in_build_media_root(tmp_path: Path) -> None:
-    module = load_docs_live_rebuild_watcher_module()
-    (tmp_path / "nested").mkdir()
-    (tmp_path / "nested/architecture.mmd").write_text("flowchart LR\nA --> B\n", encoding="utf-8")
-    (tmp_path / "notes.md").write_text("# Notes\n", encoding="utf-8")
-
-    assert list(module.snapshot_mermaid_root(tmp_path)) == ["nested/architecture.mmd"]
-
-
 def test_watcher_pauses_and_can_resume_when_scope_root_is_temporarily_missing(tmp_path: Path) -> None:
     module = load_docs_live_rebuild_watcher_module()
     source_root = tmp_path / "source" / "research"
@@ -260,74 +251,6 @@ def test_watcher_reconciles_scope_and_sub_scope_state_from_config(tmp_path: Path
     finally:
         module.DOCS_SCOPE_CONFIGS.clear()
         module.DOCS_SCOPE_CONFIGS.update(original_configs)
-
-
-def test_watcher_registers_configured_mermaid_root_and_renders_only_changed_identity(tmp_path: Path) -> None:
-    module = load_docs_live_rebuild_watcher_module()
-    original_configs = dict(module.DOCS_SCOPE_CONFIGS)
-    build = SimpleNamespace(
-        location=SimpleNamespace(
-            provider="repository",
-            path=Path("docs-viewer/scopes/studio/working/source/media/build-source/mermaid"),
-        ),
-        producer="mermaid",
-        publishes_to="svg",
-    )
-    source = SimpleNamespace(
-        location=SimpleNamespace(provider="repository", path=Path("docs-viewer/scopes/studio/working/source")),
-        documents_path=Path("documents"),
-        build_media={"mermaid": build},
-    )
-    generated_media = SimpleNamespace(
-        generated_location=SimpleNamespace(provider="repository", path=Path("generated/svg")),
-        served_path_prefix="/docs/media/studio/svg",
-    )
-    config = SimpleNamespace(
-        scope_type="local",
-        stage="working",
-        stages=(),
-        source=source,
-        media=SimpleNamespace(
-            build_sources={"mermaid": build},
-            types={"svg": generated_media},
-        ),
-        sub_scopes=(),
-    )
-    calls: list[tuple[str, ...]] = []
-    invalidations: list[tuple[Path, object]] = []
-
-    def fake_producer(context):
-        calls.append(context.requested_generated_identities)
-        return context.requested_generated_identities
-
-    original_producer = module.produce_mermaid_svg
-    original_remove_manifest = module.remove_build_manifest
-    module.produce_mermaid_svg = fake_producer
-    module.remove_build_manifest = lambda root, scope_config: invalidations.append((root, scope_config))
-    states: dict[str, dict[str, object]] = {}
-    try:
-        changes = module.reconcile_watch_states(
-            tmp_path,
-            states,
-            {"studio": SimpleNamespace(stages=(config,))},
-            baseline=False,
-        )
-        media_state = states["studio/working/media/mermaid"]
-        assert media_state["root"] == tmp_path / "docs-viewer/scopes/studio/working/source/media/build-source/mermaid"
-        assert changes["added"] == ["studio/working", "studio/working/media/mermaid"]
-        assert module.rebuild_build_media(
-            tmp_path,
-            media_state,
-            ["architecture.mmd"],
-        )
-    finally:
-        module.produce_mermaid_svg = original_producer
-        module.remove_build_manifest = original_remove_manifest
-        module.DOCS_SCOPE_CONFIGS.clear()
-        module.DOCS_SCOPE_CONFIGS.update(original_configs)
-
-    assert calls == [("architecture.svg",)]
-    assert invalidations == [(tmp_path, config)]
 
 
 def test_watcher_formats_affected_doc_ids_for_logs() -> None:

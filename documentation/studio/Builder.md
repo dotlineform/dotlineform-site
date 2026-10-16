@@ -126,7 +126,7 @@ Complete Working Build applies this same refresh to the documents it builds and 
 
 Working generation finishes one existing ordinary/collection `by-id/` document for both local reads and selected publication, including Catalogue. Eligible ordinary/non-Catalogue documents retain `draft: false`; Catalogue omits the field. Portable document and `docs-media:` references are resolved by the active reader. Folder-link publishability is authoring-owned; generation and Publish neither scrub these links nor add Folder-specific validation.
 
-Documents retain ordinary fenced code as code. Diagrams are externally rendered SVG images handled by the normal image sanitizer, storage and reference owners; generation has no Mermaid renderer or light/dark projection step.
+Documents retain ordinary fenced code as code. Diagrams are externally rendered SVG images handled by the normal image sanitizer, storage and reference owners.
 
 Working builds `public-index-tree.json` beside its complete `index-tree.json` and eligible collection `manifest.json` beside each complete `manage-manifest.json`. The same build supplies loaded metadata to one eligibility/list owner, without another Markdown or rendering pass. Saved public lists provide prior membership; management metadata owns hierarchy, Draft and reader fields. Unchanged metadata reuses membership, and only a changed public projection is written/queued. Ordinary exclusions prune whole subtrees; collection manifests follow their host. Public navigation contains identity rather than generated transport URLs.
 

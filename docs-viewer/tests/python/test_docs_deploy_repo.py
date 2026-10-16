@@ -449,20 +449,6 @@ def test_apply_rejects_changed_destination_plan(tmp_path: Path) -> None:
         )
 
 
-def test_raw_mermaid_requires_accepted_projection_input() -> None:
-    payload = {
-        "doc_id": WORK_DOC,
-        "title": "Diagram",
-        "content_html": '<pre><code class="language-mermaid">flowchart LR; A--&gt;B</code></pre>',
-    }
-    with pytest.raises(RuntimeError, match="accepted Published snapshot"):
-        docs_deploy_repo.project_document_payload(
-            (json.dumps(payload) + "\n").encode("utf-8"),
-            label="accepted diagram",
-            media_projection={},
-        )
-
-
 def test_apply_reports_media_failure_after_repository_projection(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

@@ -249,14 +249,6 @@ def prepare_parent_repo(repo_root: Path) -> dict[str, Path]:
         parent_documents={PARENT_ID: parent_payload, SIBLING_ID: sibling_payload},
         sub_scope_manifests={},
     )
-    for theme in ("dark", "light"):
-        mermaid_path = (
-            docs_root
-            / "projection-assets/mermaid"
-            / f"{PARENT_ID}--mermaid-0001/{theme}.svg"
-        )
-        mermaid_path.parent.mkdir(parents=True, exist_ok=True)
-        mermaid_path.write_text(f"<{theme}/>", encoding="utf-8")
     work_path = repo_root / "site/assets/works/index/00042.json"
     write_json(
         work_path,
@@ -433,10 +425,6 @@ def test_parent_cleanup_updates_docs_and_leaves_catalogue_paused(
     assert result["catalogue_document_urls"]["status"] == "paused"
     assert result["status"] == "applied"
     assert not (paths["docs_root"] / f"by-id/{PARENT_ID}.json").exists()
-    assert not (
-        paths["docs_root"]
-        / f"projection-assets/mermaid/{PARENT_ID}--mermaid-0001"
-    ).exists()
     assert sibling_path.read_bytes() == sibling_before
     assert stale_path.read_bytes() == stale_before
     assert [row["doc_id"] for row in read_json(paths["docs_root"] / "index-tree.json")["docs"]] == [SIBLING_ID]

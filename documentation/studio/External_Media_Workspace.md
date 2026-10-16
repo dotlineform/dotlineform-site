@@ -101,7 +101,7 @@ A document-only build does not need to copy or publish media. When the external 
 
 ## Build Sources And Editorial Copy
 
-The Mermaid-specific pipeline is retired. Create diagrams externally and import finished SVG as ordinary document media; editable diagram source stays with its external owner. Fenced code remains code. The scope-era folder examples on this page are historical; [Source Organisation](Source_Organisation.md) and workspace configuration own current Working/Preview locations.
+Create diagrams externally and import finished SVG as ordinary document media; editable diagram source stays with its external owner. Fenced code remains code. The scope-era folder examples on this page are historical; [Source Organisation](Source_Organisation.md) and workspace configuration own current Working/Preview locations.
 
 Editorial Copy transfers exact managed media identities between the source and target scope namespaces through the existing provider-neutral media plan. It carries recorded source evidence when present, preserves an existing target evidence row, performs no filename inference, and does not publish the target scope publicly.
 

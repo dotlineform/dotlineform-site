@@ -76,7 +76,7 @@ Local scopes do not advertise a public docs/search target. Their generated JSON 
 
 ## Confirmed Document Delete
 
-For a configured public parent or child collection, Delete preview derives exact current public impact from the public snapshot. Confirmed apply commits the canonical deletion and normal working rebuild first, then removes only exact by-ID and owned Mermaid products, filters affected tree, Recent, search, manifest, and document-location products, and requires affected Catalogue document URLs to refresh before success. A report-host Delete removes its routes and derived child URLs without inferring ownership of surviving child files. Local collections have no public cleanup, and an already-unprojected public document is a no-op at this stage.
+For a configured public parent or child collection, Delete preview derives exact current public impact from the public snapshot. Confirmed apply commits canonical deletion and the Working rebuild before updating exact by-ID, navigation/search and affected Catalogue URL products. A report-host Delete removes its routes and derived child URLs without inferring ownership of surviving child files. Local collections have no public cleanup, and an already-unprojected public document is a no-op at this stage.
 
 Delete does not call Publish, copy pending Working edits, promote new documents, or remove shared media. For a configured lineage collection, exact Working or Editorial follow-through occurs only after the canonical mutation and any required public cleanup succeed: Working Delete removes its complete private record, while Editorial Delete removes only that child and any resulting empty record. A later ordinary Publish is idempotent for the completed public removal.
 

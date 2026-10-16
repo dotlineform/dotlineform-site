@@ -137,7 +137,7 @@ This is a write-free JSON identity request for a new native selection:
 
 Only the exact `doc_id`, optional configured `collection`, `media_kind` and safe native `filename` are accepted. The service resolves the configured collection/media capability, checks the basename/suffix and returns the target plus `media_identity`. It reads no document source, receives no File bytes, performs no conversion/sanitization/storage comparison and writes no media. Full candidate validity and exact existing target resolution belong to Save.
 
-The identity is `<doc_id>/<readable-filename>` beneath the configured body-media type. Raster output uses WebP and SVG retains its type; `.mmd` image input is unsupported. The browser retains the native File and serializes authored presentation/link fields locally. Presentation-only Apply and a thumbnail choice using an already pending File need no identity call. Thumbnails keep the independent flat `thumbs/<doc_id>-thumb.webp` identity.
+The identity is `<doc_id>/<readable-filename>` beneath the configured body-media type. Raster output uses WebP and SVG retains its type. The browser retains the native File and serializes authored presentation/link fields locally. Presentation-only Apply and a thumbnail choice using an already pending File need no identity call. Thumbnails keep the independent flat `thumbs/<doc_id>-thumb.webp` identity.
 
 Native bytes are uploaded only through Source Save. Replacement/sanitizer confirmation flags, the former multipart intake and immediate media writes are retired without aliases. [Media And Asset Handling](Media_And_Asset_Handling.md) owns naming, processing and storage.
 

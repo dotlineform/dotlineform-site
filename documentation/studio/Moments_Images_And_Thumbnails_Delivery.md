@@ -195,7 +195,7 @@ Record: completed on 2026-10-04. Of 57 Moments, 36 each referenced one WebP (3,0
 
 Verification budget: source/diff review and already selected evidence; additional runs need a concrete remaining risk. Gate: review findings are resolved or explicitly scoped before closeout.
 
-Record: bounded code/source/projection review completed on 2026-10-04 after selected evidence. Mermaid's proposed SVG destination is validated against its derived source identity; media apply reuses its validated insertion contract. The migration uses the existing prepared-media owner to meet basename validation. Canonical assignment and body-free public references stay explicit, Catalogue keeps its existing media policy, no compatibility aliases or deletion/rollback hooks were added, and missing artwork leaves navigation intact. Read-only reference diagnostics used the actual Preview/public configuration for distribution coverage. No unresolved code finding remains; browser interactions and public transfers remain evidence gaps.
+Record: bounded code/source/projection review completed on 2026-10-04 after selected evidence. Media apply reuses its validated insertion contract. The migration uses the existing prepared-media owner to meet basename validation. Canonical assignment and body-free public references stay explicit, Catalogue keeps its existing media policy, no compatibility aliases or deletion/rollback hooks were added, and missing artwork leaves navigation intact. Read-only reference diagnostics used the actual Preview/public configuration for distribution coverage. No unresolved code finding remains; browser interactions and public transfers remain evidence gaps.
 
 ### MIT 5 Closeout
 

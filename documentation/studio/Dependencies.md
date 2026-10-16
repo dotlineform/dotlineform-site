@@ -26,7 +26,7 @@ Portable Docs Viewer installs that copy the build scripts, Docs Viewer service, 
 
 ## Diagram Dependencies
 
-Docs Viewer has no Mermaid Node package or browser renderer. Diagrams are rendered externally and imported as ordinary SVG. The repository's ESLint package remains a separate development tool. [Document Diagrams](Document_Diagrams.md) owns the diagram workflow and [Runtime Dependencies](Runtime_Dependencies.md) owns general dependency policy.
+Diagrams are rendered externally and imported as ordinary SVG. The repository's ESLint package remains a separate development tool. [Document Diagrams](Document_Diagrams.md) owns the diagram workflow and [Runtime Dependencies](Runtime_Dependencies.md) owns general dependency policy.
 
 ## Current Python Packages
 

@@ -131,7 +131,7 @@ def test_repository_plan_reads_deduplicates_rewrites_and_records_dependencies(
                 '<a href="/docs/media/example/files/manual.pdf?download=1">Manual</a>'
                 '<img src="images/local.png?cache=2">'
                 '<a href="https://example.test/page">Ordinary link</a></p>'
-                '<pre><code class="language-mermaid">a &amp; b\nc</code></pre>'
+                '<pre><code class="language-example">a &amp; b\nc</code></pre>'
             )
         },
         "doc-b": {"content_html": '<img src="/docs/media/example/img/photo%20one.png">'},
@@ -151,7 +151,7 @@ def test_repository_plan_reads_deduplicates_rewrites_and_records_dependencies(
     assert 'href="../media/files/manual.pdf"' in rewritten
     assert 'alt="Photo &amp; view"' in rewritten
     assert 'href="https://example.test/page"' in rewritten
-    assert '<pre><code class="language-mermaid">a &amp; b\nc</code></pre>' in rewritten
+    assert '<pre><code class="language-example">a &amp; b\nc</code></pre>' in rewritten
     assert [item.manifest_record() for item in plan.external_dependencies] == [
         {
             "reference": "images/local.png",
@@ -289,7 +289,7 @@ def test_inline_and_ordinary_links_are_not_external_dependencies_and_unowned_htm
         docs_scope_record("example", media_provider="repository"),
     )
     source = (
-        '<pre><code class="language-mermaid">a &amp; b</code></pre>'
+        '<pre><code class="language-example">a &amp; b</code></pre>'
         '<img src="data:image/png;base64,AAAA">'
         '<a href="https://example.test/page?token=visible">Page</a>'
     )

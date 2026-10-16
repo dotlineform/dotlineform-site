@@ -95,7 +95,6 @@ W/
       documents/…
       collections/…                  existing collection-owned sources
       media/
-        build-source/…               editable build inputs such as Mermaid
     generated/
       documents/…
       collections/…                  document payloads and manifests
@@ -183,7 +182,7 @@ These identify the current owners and suggested new configuration, not a frozen 
 | Explicit Docs-workspace Catalogue output and shared-asset paths | [Workspace config](../../docs-viewer/config/workspace/docs-workspace.json), [workspace resolution](../../docs-viewer/services/docs_workspace_config.py), [Catalogue output paths](../../studio/services/catalogue/catalogue_output_paths.py), [Catalogue media paths](../../studio/shared/python/catalogue_media_paths.py). |
 | Design-time Catalogue copy inventory | New suggested `docs-viewer/config/workspace/catalogue-artifacts.json`; one shared interpretation for declared by-ID families and system/report files. |
 | Working Catalogue generation with locally owned media completion | [Output completion](../../studio/services/catalogue/catalogue_output_service.py), [media completion](../../studio/services/catalogue/catalogue_output_media.py), [local preparation](../../studio/services/catalogue/catalogue_build_media.py), [media version owner](../../studio/services/catalogue/catalogue_media_version.py), [Catalogue generator](../../studio/services/catalogue/generate_work_pages.py). |
-| Document media writes/builds use shared assets | [Media storage](../../docs-viewer/services/docs_media_storage.py), [media import](../../docs-viewer/services/docs_import_media.py), [Mermaid generation](../../docs-viewer/services/docs_mermaid_media.py), and their existing build/collection owners. Source build inputs remain separate. |
+| Document media writes/builds use shared assets | [Media storage](../../docs-viewer/services/docs_media_storage.py), [media import](../../docs-viewer/services/docs_import_media.py), and their existing build/collection owners. |
 | Local stage-aware Catalogue reads and shared asset resolution | [Catalogue reads](../../docs-viewer/services/docs_catalogue_media.py), [Preview reads](../../docs-viewer/services/docs_preview_reads.py), [workspace provider](../../docs-viewer/runtime/js/shared/docs-viewer-workspace-provider.js), [Catalogue media policy](../../docs-viewer/runtime/js/shared/docs-viewer-catalogue-media-policy.js), and the existing confined Studio/Docs static-serving owners. |
 | Preview JSON capture and asset-reference manifests | [Preparation](../../docs-viewer/services/docs_prepare_preview.py), [snapshot owner](../../docs-viewer/services/docs_preview_snapshot.py), and existing Working build/collection manifests. Remove asset bytes from snapshot ownership while retaining prepared JSON validation. |
 | Publish prepared files and current referenced assets | [Current distribution owner](../../docs-viewer/services/docs_deploy_repo.py), [public media reconciliation](../../docs-viewer/services/docs_public_media_reconciliation.py), [R2 transport](../../studio/services/media/publish_media_to_r2.py). Preserve useful transfer comparison; remove upload-driven Catalogue version promotion from this flow and automatic asset deletion. |

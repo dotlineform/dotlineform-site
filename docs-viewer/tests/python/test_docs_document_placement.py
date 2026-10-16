@@ -5,7 +5,6 @@ import json
 from pathlib import Path
 import sys
 from types import SimpleNamespace
-from urllib.parse import quote
 
 import pytest
 
@@ -31,8 +30,6 @@ A, B, P, X, CHILD, WORKS, CONCEPTS, DEFAULT = [f"d-20260912-160000-{number:06x}"
 @pytest.fixture
 def working(tmp_path, monkeypatch):
     record = docs_scope_record("analysis", scope_type="public", default_doc_id=DEFAULT, viewer_base_url="/analysis/", include_scope_param=False)
-    record["media"]["build_sources"]["mermaid"] = {"producer": "mermaid", "publishes_to": "svg"}
-    record["media"]["types"]["svg"]["build_inputs"] = ["mermaid"]
     record["stages"] = {
         stage: {"default_doc_id": DEFAULT, "media": deepcopy(record["media"]), "sub_scopes": [
             docs_sub_scope_record(
@@ -53,8 +50,6 @@ def working(tmp_path, monkeypatch):
         (tmp_path / document_source_path(owner)).mkdir(parents=True)
         for media in owner.media.types.values():
             resolve_location_path(tmp_path, media.source_location).mkdir(parents=True, exist_ok=True)
-        for build in owner.media.build_sources.values():
-            resolve_location_path(tmp_path, build.location).mkdir(parents=True, exist_ok=True)
 
     def source(doc_id, collection="", body="", **metadata):
         path = tmp_path / document_source_path(owners[collection]) / f"{doc_id}.md"
@@ -254,23 +249,6 @@ def test_literal_and_unrelated_references_keep_exact_source(body):
         return url.replace("doc=old", "doc=new") if "scope=analysis" in url else url
 
     assert rewrite_document_references(body, rewrite) == body
-
-
-@pytest.mark.parametrize("reference,filename", [("relative", "diagram.svg"), ("relative", "diagram name.svg"), ("logical", "diagram.svg")])
-def test_diagram_relocation_preserves_editable_source_for_each_reference_form(working, reference, filename):
-    media = working.config.media.types["svg"]
-    svg = resolve_location_path(working.root, media.source_location) / filename
-    mermaid = resolve_location_path(working.root, working.config.media.build_sources["mermaid"].location) / Path(filename).with_suffix(".mmd")
-    svg.write_bytes(b"diagram svg")
-    mermaid.write_text("flowchart LR\nA --> B\n")
-    path = f"{media.reference_prefix}/{quote(filename)}" if reference == "logical" else f"../media/svg/{quote(filename)}"
-    working.source(A, body=f"[Diagram]({path})")
-    plan = mutations.plan_move(working.root, {**target(), "parent_id": WORKS})
-    assert {copy.source for copy in plan.media_copies} == {svg, mermaid}
-    assert quote(filename) in plan.source_writes[0].text
-    for copy in plan.media_copies:
-        assert "/sub-scopes/works/" in copy.destination.as_posix()
-        assert copy.content == copy.source.read_bytes()
 
 
 def test_metadata_move_response_uses_destination_fields_without_assigning_subjects(working):

@@ -118,7 +118,7 @@ Each document page inserts its existing generated `content_html` without adding 
 
 Each exact referenced workspace-owned object is copied once to `media/<media type>/<identity>`, even when several selected documents use it. Matching `src`, `srcset`, `poster`, `data`, and configured media `href` references become document-relative packaged URLs. Cache queries are removed after the bytes are frozen and fragments are preserved. Unmatched media references remain unchanged and are recorded as external dependencies without credentials or query strings.
 
-The snapshot does not recursively inspect copied HTML, CSS, scripts, frames, fonts, or site-shell dependencies. All fenced code, including Mermaid, remains readable source; diagram images use ordinary imported SVG media.
+The snapshot does not recursively inspect copied HTML, CSS, scripts, frames, fonts, or site-shell dependencies. All fenced code remains readable source; diagram images use ordinary imported SVG media.
 
 `snapshot.json` uses `docs_static_html_snapshot_v2` and records exact ordered IDs, selection kind, document count, default ID, local export date, generation time and plan revision, without scope/stage fields. Each packaged media row records its media type, confined identity, provider kind, packaged path, SHA-256 digest and referencing selected document IDs; separate rows record unchanged external dependencies. Preview, Apply, saved provenance and recognized-destination summaries carry no media byte total or per-media size field. Folder names are presentation labels; provenance owns snapshot identity for guarded replacement.
 

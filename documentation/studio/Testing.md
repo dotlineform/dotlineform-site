@@ -152,3 +152,24 @@ The current awaited Source Save and Draft generation paths have source/diff revi
 - Some Python tests retain direct-script compatibility and process-global assumptions.
 - Profile membership is manually curated and can lag current ownership.
 - A passing broad profile is not evidence for omitted app-smoke profiles or unexercised external workspaces.
+
+## Diagram Pipeline Cleanup
+
+On 2026-10-16 the user explicitly approved removing obsolete implementation, tests, configuration and historical references while keeping documentation diagrams. This bounded test cleanup deletes the five dedicated compiler/planner/producer/preparation/source-opening modules and the associated browser smoke. It removes only retired producer/source/theme assertions, configuration and fixtures from mixed files; unrelated scope-era test migration is excluded. Removed checks establish no current coverage and are not replaced with retirement-existence assertions.
+
+The retained `docs-viewer-smoke` profile has source lint, site validation, Manage boot, Review authority and public read-only isolation. `tests/test_run_checks.py::test_runner_docs_viewer_smoke_profile_is_the_retained_boundary_set` loads runner definitions, checks that exact membership and resolves surviving script paths. It does not start services, launch a browser, generate documents or execute profile commands.
+
+Generic code preservation is independent of diagram rendering. The cleanup retains these exact cases with a neutral code-language label:
+
+| Selection | Inputs and assertion | Real boundary and limits |
+| --- | --- | --- |
+| `studio/tests/python/test_markdown_renderer.py::test_preserves_fenced_code_language` | A fenced source block retains its language class and text in rendered HTML. | Actual Python Markdown renderer; no browser or diagram engine. |
+| `docs-viewer/tests/python/test_docs_import_source_html.py::test_html_to_markdown_preserves_safe_fenced_code_language` | A safe HTML code-language class and escaped source become the same fenced Markdown language/text. | Actual HTML-to-Markdown converter; no import Apply, files or external services. |
+| `docs-viewer/tests/python/test_docs_export.py::test_markdown_document_content_export_preserves_fenced_source` | A selected Markdown document retains its fenced source in exported JSONL. | Existing temporary-repository export fixture; scope-era setup remains unreviewed and this case is not selected for the cleanup run. |
+| `docs-viewer/tests/python/test_docs_static_html_export.py::test_render_doc_page_preserves_fenced_code` | A generated code block remains present in static HTML without inline SVG/script production. | Existing static page renderer; no browser. The surrounding scope-era module remains unreviewed and is not selected. |
+
+Remaining media inventory/report/placement/storage/deletion/static-asset files lose only retired producer fixtures and assertions; ordinary ready-SVG/image/file cases remain. Scope-era imports and fixtures elsewhere in those modules are not certified or broadly repaired. The old watcher file similarly loses only its retired diagram-source cases. No new test or expanded scenario is added.
+
+Selected execution budget: the exact runner membership, shared Markdown and HTML-converter selectors above, using the configured Python and `.env.local` where service imports require it. Inspect collection/setup before running the converter selector; omit it if its old fixture imports prevent a focused run. These pure checks should take seconds locally, with pytest caches/temporary paths only and no network, loopback ports, browser, real workspace writes or credentials. Do not run a complete profile or remaining scope-era suites. Syntax, focused lint and diff/reference inspection cover the deletion-only changes; they do not establish behavioral coverage for the unrun modules.
+
+Cleanup evidence: explicit Python lint passed for all 19 changed Python files, and all 19 compiled. The exact runner-membership and shared Markdown selectors passed together (`2 passed in 0.04s`). The attempted three-selector run could not collect the HTML-converter module because its unchanged `docs_import_test_support.py` imports the removed `docs_scope_config`; no behavior in that module was exercised. The two independent selectors were then run alone. Broader fixture migration, the remaining export/media cases and browser profiles were not run or changed beyond the approved reference cleanup.

@@ -34,12 +34,11 @@ Do not add or run a smoke as routine follow-through from a UI change. Its specif
 
 Keep niche/expensive/recent-fix scripts focused rather than adding everything to a profile. A retained smoke should have a clear trigger for when to run it.
 
-The retained Docs Viewer profile contains exactly four browser boundaries:
+The retained Docs Viewer profile contains exactly three browser boundaries:
 
 - standalone Manage route boot and configured service projection;
 - Docs Review route and API authority;
-- public Analysis read-only isolation and compact payload reads;
-- external-local scope build addressability and lazy Mermaid rendering.
+- public Analysis read-only isolation and compact payload reads.
 
 Adding another boundary requires an explicit test-policy decision. Do not collect these scripts through the broad `docs` pytest profile.
 

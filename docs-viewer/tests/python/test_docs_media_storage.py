@@ -444,7 +444,6 @@ def test_configured_local_media_directories_skip_missing_external_scope(tmp_path
             (scope_root / "source/media" / media_class).is_dir()
             for media_class in ("files", "html", "img", "svg")
         )
-        assert (scope_root / "source/media/build-source/mermaid").is_dir()
         for lifecycle in ("generated", "published"):
             assert all(
                 (scope_root / lifecycle / "media" / media_class).is_dir()

@@ -71,7 +71,7 @@ flowchart TB
 
 - every scope and sub-scope registration;
 - management server endpoints, Source editor transactions, or document-selection rules;
-- Markdown parsing, sanitisation, media, Mermaid, or semantic-token internals;
+- Markdown parsing, sanitisation, media or semantic-token internals;
 - import, export, copy, move, and review-package workflows; or
 - browser boot, caching, and component-level rendering detail.
 

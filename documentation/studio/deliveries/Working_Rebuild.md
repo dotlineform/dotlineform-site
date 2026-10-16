@@ -27,7 +27,7 @@ One empty `/docs/rebuild` request loads configuration, canonical sources and Sel
 - [x] Verification — focused Python/JavaScript lint, compilation, existing CLI import diagnostics and whitespace checks passed. These checks cost seconds, require no live workspace writes or network and provide static/import evidence only. No tests or profiles ran.
 - [x] Code review — reviewed final source/diff for ownership, carried inputs, transfer/removal ordering, discovery membership, failure phases and busy completion. Corrected transferred-record ordering and the policy reader's hidden configuration reload. No compatibility alias remains in the retired full-build path.
 - [x] Implementation closeout — M.20 is implemented with manual verification pending; local management code has no public projection delta. Retain this delivery while acceptance remains open.
-- [ ] Manual acceptance — restart Docs Viewer and reload; exercise ordinary/collection and no-displayed-target rebuilds, cross-collection Related links/title changes, stale removals/transfers, referenced/unreferenced persistent Mermaid, Search/Recent coverage/exclusions, Selected metadata, partial generation failure and completed-build refresh failure.
+- [ ] Manual acceptance — restart Docs Viewer and reload; exercise ordinary/collection and no-displayed-target rebuilds, cross-collection Related links/title changes, stale removals/transfers, Search/Recent coverage/exclusions, Selected metadata, partial generation failure and completed-build refresh failure.
 
 ## Follow-on
 

@@ -25,20 +25,6 @@ def _public_runtime_manifest() -> list[str]:
     )
 
 
-def test_inline_mermaid_module_is_manage_owned_and_absent_from_public_runtime() -> None:
-    runtime_manifest = _public_runtime_manifest()
-    entry = REPO_ROOT / "docs-viewer/runtime/js/public/docs-viewer-public.js"
-    graph_paths = {
-        path.relative_to(REPO_ROOT).as_posix()
-        for path in public_entry_static_import_graph(REPO_ROOT, entry)
-    }
-
-    assert "shared/docs-viewer-inline-mermaid.js" not in runtime_manifest
-    assert (REPO_ROOT / "docs-viewer/runtime/js/management/docs-viewer-inline-mermaid.js").is_file()
-    assert not (REPO_ROOT / "site/docs-viewer/runtime/js/shared/docs-viewer-inline-mermaid.js").exists()
-    assert "docs-viewer/runtime/js/management/docs-viewer-inline-mermaid.js" not in graph_paths
-
-
 def test_public_docs_viewer_entry_static_imports_only_public_runtime_modules() -> None:
     entry = REPO_ROOT / "docs-viewer/runtime/js/public/docs-viewer-public.js"
     graph = public_entry_static_import_graph(REPO_ROOT, entry)
@@ -135,7 +121,6 @@ def test_public_docs_viewer_entry_static_graph_excludes_manage_document_actions(
         "docs-viewer-management-subscope-delete-workflow.js"
     ) not in graph_paths
     assert "docs-viewer/runtime/js/management/docs-viewer-management-shell-composition.js" not in graph_paths
-    assert "docs-viewer/runtime/js/management/docs-viewer-inline-mermaid.js" not in graph_paths
     assert "docs-viewer/runtime/js/reports/docs-viewer-report-service.js" not in graph_paths
     assert "docs-viewer/runtime/js/reports/docs-viewer-reports.js" not in graph_paths
     assert "docs-viewer/runtime/js/public/docs-viewer-public-document-reports.js" in graph_paths

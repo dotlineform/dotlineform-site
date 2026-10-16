@@ -78,7 +78,7 @@ tooling/lint/.venv/bin/python -m pip install -r tooling/lint/python-requirements
 npm ci --prefix tooling/lint
 ```
 
-Docs Viewer diagrams are imported SVG files; the Mermaid renderer package and its installation step are retired.
+Docs Viewer diagrams are imported SVG files rendered by an external tool.
 
 ## Version checks
 

@@ -533,28 +533,26 @@ def test_render_doc_page_and_rewrite_internal_links() -> None:
     assert html.index(reference) < html.index('<hr class="docsExport__documentFooterRule">')
 
 
-def test_render_doc_page_preserves_inline_mermaid_code_without_runtime() -> None:
-    mermaid_block = "\n".join(
+def test_render_doc_page_preserves_fenced_code() -> None:
+    code_block = "\n".join(
         [
-            '<pre><code class="language-mermaid">flowchart LR',
+            '<pre><code class="language-example">flowchart LR',
             "  Source --&gt; StaticExport",
             "</code></pre>",
         ]
     )
     html = exporter.render_doc_html(
         {
-            "doc_id": "inline-mermaid",
-            "title": "Inline Mermaid",
-            "content_html": f"<h1>Inline Mermaid</h1>\n{mermaid_block}",
+            "doc_id": "fenced-code",
+            "title": "Fenced code",
+            "content_html": f"<h1>Fenced code</h1>\n{code_block}",
         },
         scope="studio",
     )
 
-    assert mermaid_block in html
+    assert code_block in html
     assert "<svg" not in html
-    assert 'data-docs-viewer-diagram-kind="inline-mermaid"' not in html
-    assert "mermaid.min.js" not in html
-    assert "docs-viewer-inline-mermaid.js" not in html
+    assert "docs-viewer-fenced-code.js" not in html
     assert "<script" not in html
 
 

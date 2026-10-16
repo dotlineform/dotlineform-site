@@ -98,7 +98,7 @@ Discard releases unsaved Files without media writes. Add then remove before firs
 
 To edit an existing semantic image token, reopen it in Source. The same filename field initially shows its stored basename; select replacement bytes or edit presentation alone. **Apply** changes the captured occurrence locally. Add file over a captured authored file link also opens Edit file. Selecting replacement bytes through Edit supplies replacement intent to Save; no second Replace dialog appears. Unexpected filename conflicts are authoring errors, with the draft/Files retained. Different documents can independently use the same readable body-media basename. Existing stored images are not migrated or deleted merely by editing the draft.
 
-For a diagram, export SVG from its external authoring tool and use Add Image. Docs Viewer has no `.mmd` intake, companion-source storage or diagram-source opening action. Replacing the finished SVG uses the ordinary Edit/Save workflow.
+For a diagram, export SVG from its external authoring tool and use Add Image. Replacing the finished SVG uses the ordinary Edit/Save workflow.
 
 Save sanitizes SVG automatically and reports changes as a nonblocking note. Invalid SVG or processing failure stops Save. Preparation errors make no permanent writes; later persistence failures identify the failed phase and completed effects. Partial media writes can leave orphans for manual cleanup, and saved source is reported accurately if generation subsequently fails.
 
@@ -110,7 +110,7 @@ Markdown package imports are different: one Markdown source becomes one document
 
 Use **Add image…** for new SVG. Insertion retains the selected File; Source Save sanitizes and writes it through the document owner's configured `svg` media class. Docs Import uses the same sanitizer and class when it extracts inline SVG from imported HTML. Historical SVG tokens beneath `img` and manually authored inline SVG are not migrated automatically.
 
-Keep editable diagram source with the external tool/project that owns it. The finished SVG is ordinary document media and has one authored appearance. Studio documentation may retain Mermaid fences outside Docs Viewer; its reader leaves any such fence as code. [Document Diagrams](Document_Diagrams.md) explains the current workflow.
+Keep editable diagram source with the external tool/project that owns it. The finished SVG is ordinary document media and has one authored appearance. Repository documentation diagrams use an external Markdown viewer. [Document Diagrams](Document_Diagrams.md) explains the current workflow.
 
 HTML is stored once at the scope's configured published `html` root, regardless of whether it is interactive. Embed it with a logical token such as:
 

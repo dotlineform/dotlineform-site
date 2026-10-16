@@ -33,7 +33,7 @@ Media support is not one capability. A useful description must answer five separ
 | Externally authored diagram | Export a finished SVG from its owning tool/project. | Use the ordinary SVG Add Image and Save workflow. | SVG is stored under the document owner; editable source stays external. |
 | Role-marked HTML companion | Treated as a companion application asset. | No automatic document placement; the author adds an `html-media` token. | Written to the exact document/collection owner's Working `html` location. |
 
-Fenced code, including Mermaid, remains ordinary Markdown code in Docs Viewer. The Mermaid-specific pipeline is retired. Existing Studio repository Mermaid fences remain unchanged outside Docs Viewer. [Document Diagrams](Document_Diagrams.md) explains external rendering and ordinary SVG import.
+Fenced code remains ordinary Markdown code in Docs Viewer. Repository documentation diagrams use an external viewer. [Document Diagrams](Document_Diagrams.md) explains external rendering and ordinary SVG import.
 
 The exact document and media suffix allowlists remain in `docs_import_common.py`. “Supported format” should not be used alone: say whether a format is interpreted by global Docs Import, accepted by **Add image…**, accepted as an opaque **Add file…** download, or recognized as a trusted collection.
 
@@ -64,7 +64,7 @@ Docs Import retains its own awaited media/source Apply. Native Source insertion 
 
 `POST /docs/source/media` accepts only target, kind and basename JSON and returns the identity genuinely needed for insertion. It resolves configured capability without reading source, processing bytes, comparing storage or writing media. The browser serializes image presentation/file links and retains the File. Reusing an already pending image for a thumbnail choice needs no identity request. Source Save alone uploads metadata and selected native Files, resolves the exact saved target once and establishes candidate validity before preparation; the candidate needs no permanently stored new file to be accepted.
 
-Save prepares each selected input once. Raster validation precedes requested display/thumbnail encodings; SVG is sanitized automatically. Opaque files reuse supplied bytes, and only raster processing needs local temporary input files. Prepared outputs and diagnostics pass through selected collision comparison and verified writes under the carried configuration. Matching bytes are reused; Edit supplies replacement intent, while unexpected filename conflicts are authoring errors. Sanitizer changes return nonblocking notes; invalid SVG or processing failures stop Save. Mermaid source is rendered externally and imported as finished SVG.
+Save prepares each selected input once. Raster validation precedes requested display/thumbnail encodings; SVG is sanitized automatically. Opaque files reuse supplied bytes, and only raster processing needs local temporary input files. Prepared outputs and diagnostics pass through selected collision comparison and verified writes under the carried configuration. Matching bytes are reused; Edit supplies replacement intent, while unexpected filename conflicts are authoring errors. Sanitizer changes return nonblocking notes; invalid SVG or processing failures stop Save.
 
 One awaited Save completes selected media writes, canonical source, exact document/Links generation and queue handoff before fresh display. It performs no Search, Publish, report Refresh, unrelated media production or cross-document requeue scan. Preparation failure precedes permanent writes. Later media/source/generation failures report the exact phase and selected attempted/written/verified/unchanged effects, including saved source when applicable. Partial media writes can leave manual cleanup orphans; there is no rollback, retry marker or recovery ledger. Original selected files remain untouched, and native intake has no Projects/import-staging dependency or source-folder provenance.
 
@@ -174,11 +174,11 @@ Working generation prepares public document JSON and records its source/field me
 - Traversal and symlink escape are rejected; `files` responses remain attachments with `nosniff`.
 - `html-media` uses its registered served path and the sandboxed iframe handler rather than the ordinary download route.
 
-Artifact `list()` returns sorted identities without file contents or unused sizes. Explicit media-report inventory and export retain their existing discovery owners. The retired Mermaid pipeline has no listing consumer. Configured confinement and selected output-byte verification remain at their filesystem/transfer boundaries.
+Artifact `list()` returns sorted identities without file contents or unused sizes. Explicit media-report inventory and export retain their existing discovery owners. Configured confinement and selected output-byte verification remain at their filesystem/transfer boundaries.
 
 R2 `list_stats()` remains an explicit metadata-list API for maintenance owners. Normal Publish never calls it or lists remote families; it uses exact selected-object `stat()` size/ETag comparisons and verifies changed transfers. Upload limits and publication verification retain their own boundaries.
 
-The distinct review for [Artifact Listing And Export Cleanup](deliveries/Artifact_Listing_And_Export_Cleanup.md) traced both Mermaid listing consumers and the single production remote metadata-list consumer, empty/prefix/exact-file paths, source-to-output mapping, existing provider confinement and transfer comparison. It removed unused local size reads, redundant Mermaid output uniqueness validation and the compatibility default for a required context field. Shared directory discovery avoids an extra location resolution and retains necessary file-type and symlink-confinement checks. Remote comparison and producer-owned render/sanitize/write verification retain their operational purposes. Focused Python/JavaScript lint, Python compilation, whitespace and source/diff review passed; real Mermaid rendering, Publish, Export and browser interaction were not exercised. Existing artifact-list and Mermaid-plan tests still use size-bearing discovery inputs and need separately agreed migration; no tests were changed or run.
+The distinct review for [Artifact Listing And Export Cleanup](deliveries/Artifact_Listing_And_Export_Cleanup.md) removed unused local size reads and redundant discovery work. Shared directory discovery retains file-type and symlink-confinement checks; selected remote comparison and transfer verification retain their operational purposes. Focused lint, compilation, whitespace and source/diff review passed. Actual Publish, Export and browser behavior were not exercised, and remaining scope-era tests are unreviewed.
 
 ### R2 Namespace And Historical Cleanup
 
@@ -242,7 +242,7 @@ Extend the type allowlist, reference/location mapping, import representation, re
 
 ### Add Media Processing
 
-A new media producer requires an explicit design for its inputs, processing owner, configured destinations and completed reference handoff. The Mermaid build-source registry and its `build_inputs` configuration were retired; do not restore them as an assumed extension point.
+A new media producer requires an explicit design for its inputs, processing owner, configured destinations and completed reference handoff.
 
 ### Add Or Change A Public Projection
 

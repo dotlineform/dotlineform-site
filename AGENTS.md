@@ -89,7 +89,7 @@
 - Permanent tests should protect data flows, server responses, generated contracts, parser behavior, ownership boundaries, and route/module integration. They should not police ordinary UI choreography, modal lifecycle feel, focus timing, copy, hover styling, or layout.
 - Browser smokes are only for durable browser boundaries: route boot, module wiring, public/private asset boundaries, local API reachability, request/response agreement, or shared ready/busy state.
 - Human manual checks are used for tactile interaction, visual fit, copy tone, modal feel, and mobile ergonomics.
-- The retained Docs Viewer browser profile is intentionally limited to Manage route/service boot, Docs Review authority, public read-only isolation, and external-local Mermaid loading. Additions require an explicit policy change, not routine feature follow-through.
+- The retained Docs Viewer browser profile is intentionally limited to Manage route/service boot, Docs Review authority and public read-only isolation. Additions require an explicit policy change, not routine feature follow-through.
 - The retained Studio browser profile is intentionally limited to local Catalogue route/service boot and one representative public Catalogue route without local capability. When automation is approved, deterministic Catalogue behavior belongs in Python tests; UI behavior remains manual.
 - Command recipes for justified checks, not an automatic checklist:
   - Selected existing Python/service tests: `$HOME/miniconda3/bin/python3 -m pytest <test-path> [-k <selection>]`

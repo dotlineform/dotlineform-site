@@ -42,7 +42,6 @@ def prepare_external_studio_generated_data() -> None:
     (documents_root / f"{DOC_ID}.md").write_text(source_text(), encoding="utf-8")
     for media_type in ("files", "html", "img", "svg"):
         (scope_root / "source/media" / media_type).mkdir(parents=True, exist_ok=True)
-    (scope_root / "source/media/build-source/mermaid").mkdir(parents=True, exist_ok=True)
 
     repo_root = Path(__file__).resolve().parents[3]
     services_root = repo_root / "docs-viewer/services"

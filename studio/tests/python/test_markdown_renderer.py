@@ -114,11 +114,11 @@ def test_content_detail_default_projects_the_same_marker_only_for_one_table() ->
     assert_equal(two_tables.count('data-docs-content-detail="table"'), 0, "ambiguous default tables")
 
 
-def test_preserves_mermaid_fence_for_browser_adapter() -> None:
-    html = render_markdown_to_html("```mermaid\nflowchart LR\n    A --> B\n```\n")
+def test_preserves_fenced_code_language() -> None:
+    html = render_markdown_to_html("```example\nflowchart LR\n    A --> B\n```\n")
 
-    assert_contains(html, '<pre><code class="language-mermaid">', "Mermaid code class")
-    assert_contains(html, "flowchart LR", "Mermaid source")
+    assert_contains(html, '<pre><code class="language-example">', "fenced code class")
+    assert_contains(html, "flowchart LR", "fenced source")
 
 
 def test_raw_html_is_explicit_and_unsanitized_by_default() -> None:
@@ -239,7 +239,7 @@ def main() -> None:
     test_table_detail_directive_ignores_lookalikes_and_intervening_blocks()
     test_table_detail_directive_marks_only_its_associated_table()
     test_content_detail_default_projects_the_same_marker_only_for_one_table()
-    test_preserves_mermaid_fence_for_browser_adapter()
+    test_preserves_fenced_code_language()
     test_raw_html_is_explicit_and_unsanitized_by_default()
     test_raw_html_can_be_escaped_for_untrusted_input()
     test_contract_records_no_external_plugins()

@@ -298,15 +298,6 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Validate the checked-in static site root before browser smoke tests.",
         ),
         CheckCommand(
-            "docs-viewer-external-inline-mermaid-route-smoke",
-            (
-                sys.executable,
-                "docs-viewer/tests/smoke/docs_viewer_external_inline_mermaid_route.py",
-            ),
-            "Smoke-check external-local build addressability and lazy Mermaid browser rendering.",
-            isolated_workspaces=True,
-        ),
-        CheckCommand(
             "docs-viewer-service-manage-smoke",
             (
                 sys.executable,

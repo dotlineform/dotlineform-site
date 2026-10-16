@@ -33,13 +33,13 @@ An ERD must not show an index, manifest, or lookup as if it were a canonical dom
 2. **Trace current authority.** Confirm source, producer, consumers, access boundary, refresh trigger, focused tests, and durable contract owner in the current repository.
 3. **Choose the view.** Use an ERD for logical identity and cardinality, a directional flowchart for physical derivation and consumption, and an adjacent register for operational facts.
 4. **Partition early.** Split by concern or access boundary before labels, crossed edges, or one giant node make the reader reconstruct the graph.
-5. **Author for the intended Studio surface.** Prioritise a full-screen laptop or monitor viewport and Diagram Detail. The ordinary inline view should remain usable for orientation, but it does not need to make a dense diagram readable at narrow widths. Every Mermaid block needs an accessibility title and description.
+5. **Author for the intended Studio surface.** Prioritise a full-screen laptop or monitor viewport in the external Markdown viewer. The ordinary inline view should remain usable for orientation, but it does not need to make a dense diagram readable at narrow widths. Every Mermaid block needs an accessibility title and description.
 6. **State the limits.** Record what the diagram does not include and which enhancement ideas remain deliberately uncommitted.
-7. **Verify and hand off.** Render through the current Studio Docs Viewer, inspect full-screen and Diagram Detail presentation, then link the exact code, configuration, tests, and contract documents used as evidence. Add narrow acceptance only when the diagram is intended for a public scope that requires it.
+7. **Verify and hand off.** Render in an external Markdown/diagram viewer, inspect its full-screen presentation, then link the exact code, configuration, tests, and contract documents used as evidence. Add narrow acceptance only when the diagram is intended for a public scope that requires it.
 
 ## Viewport Priority
 
-Studio documentation diagrams target the space available on a full-screen retina-display laptop or monitor. Choose direction, partition, and label density for that surface and for Diagram Detail. Phone-width containment and readability are not Studio acceptance requirements.
+Studio documentation diagrams target the space available on a full-screen retina-display laptop or monitor. Choose direction, partition, and label density for that surface. Phone-width containment and readability are not Studio acceptance requirements.
 
 Public-scope diagrams follow the owning public scope's responsive requirements. A public delivery may therefore add its own narrow-view acceptance without turning that condition into a rule for Studio-only diagrams.
 
@@ -77,11 +77,11 @@ The Docs index tree is the available-diagram list. This parent does not duplicat
 
 ## Mermaid Mechanics
 
-- Use fenced `mermaid` blocks supported by the pinned renderer documented in [Document Diagrams](Document_Diagrams.md).
+- Use fenced `mermaid` blocks in repository documentation and render them with an external Markdown/diagram viewer. For Docs Viewer publication, export SVG and follow [Document Diagrams](Document_Diagrams.md).
 - Add `accTitle` and `accDescr` immediately after the diagram declaration.
 - Prefer short conceptual labels in nodes and put long paths in the register.
 - Use `<br/>` only where a deliberate two-line label improves scanning.
-- Inspect the full-screen Studio document and Diagram Detail before treating a Studio-only diagram as accepted. Inspect narrow readability only when an owning public scope requires it.
+- Inspect the diagram in the external viewer before treating it as accepted. Inspect narrow readability only when an owning public scope requires it.
 - Split a diagram when scaling makes text technically visible but practically difficult to follow.
 
 ### Useful Diagram Types To Consider
@@ -94,7 +94,7 @@ This is a prompt for choosing a view, not an exhaustive list of available Mermai
 - **Sequence — `sequenceDiagram`:** ordered requests, mutations, builds, refreshes, and interactions across actors or services.
 - **Architecture — `architecture-beta`:** system topology, services, stores, integrations, and their boundaries when a lineage flow alone is insufficient.
 
-Other diagram families in the pinned Mermaid renderer may be used when they answer the bounded question more clearly. Newer or beta-prefixed syntax should be checked against the pinned version and rendered through Studio before adoption.
+Other diagram families may be used when they answer the bounded question more clearly. Check newer syntax in the external renderer before adoption.
 
 ## Maintenance Model
 

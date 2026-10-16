@@ -72,7 +72,6 @@ def test_runner_docs_viewer_smoke_profile_is_the_retained_boundary_set() -> None
     assert [command.name for command in commands] == [
         "docs-viewer-source-lint",
         "site-validate",
-        "docs-viewer-external-inline-mermaid-route-smoke",
         "docs-viewer-service-manage-smoke",
         "docs-viewer-service-review-smoke",
         "public-docs-viewer-readonly-smoke",

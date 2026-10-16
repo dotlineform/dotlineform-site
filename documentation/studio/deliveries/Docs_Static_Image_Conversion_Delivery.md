@@ -20,7 +20,7 @@ Status: complete and accepted on 2026-10-06. After implementation, the user conf
 - Docs Viewer owns the converter and its settings independently of Studio. Start with Works primary encoding: FFmpeg `libwebp`, Lanczos scaling, `photo`, quality 82, compression level 6 and stripped metadata.
 - Accept JPEG, PNG, static WebP and single-frame GIF; reject animated inputs before permanent writes. Animation support is deferred until needed.
 - Store `<normalized-source-stem>.webp` and compare converted bytes for reuse or confirmed shared-asset replacement. Different raster extensions with the same normalized stem address the same managed identity.
-- Preserve the selected file. Optional 96px square thumbnails use the original upload through their existing Docs owner. SVG, Mermaid, Add file, package Import, existing media and presentation-only image edits retain their current workflows.
+- Preserve the selected file. Optional 96px square thumbnails use the original upload through their existing Docs owner. SVG, Add file, package Import, existing media and presentation-only image edits retain their current workflows.
 
 ## Deliverables And Process
 
