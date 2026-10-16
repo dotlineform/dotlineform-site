@@ -86,7 +86,7 @@ function chooseSourceMedia(root, kind, mediaOptions, draft) {
         selectedFile = file;
         filename.value = file.name;
         if (!labelEdited) label.value = file.name.replace(/\.[^.]+$/, "").trim().split(/[_\-\s]+/).map(function (part) {
-          return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
+          return kind === "image" ? part.toLowerCase() : part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
         }).join(" ");
         if (captionInput && !captionEdited) captionInput.value = label.value;
         if (thumbToggle) {

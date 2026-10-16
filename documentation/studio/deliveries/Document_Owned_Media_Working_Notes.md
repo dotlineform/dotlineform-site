@@ -1,5 +1,7 @@
 # Document Owned Media Working Notes
 
+Closed on 2026-10-16 with the user's normal-use acceptance. These notes retain evidence from each implementation/cutover step; queue snapshots and unexercised statements below describe their recorded stage, with final acceptance at the end. This is not an active handoff. Durable contracts are in [Media And Asset Handling](../Media_And_Asset_Handling.md#saved-ownership-and-exact-removals), [Builder](../Builder.md#publish-preparation) and [Publication Media](../data_model/Publication_Media.md).
+
 ## Current State
 
 Document-owned media and Source Save processing are implemented. Browser state owns pending Files, final-buffer membership and replacement choices. Python owns bounded uploads, selected raster conversion/SVG sanitization, confined persistence, exact document generation, owned-reference differences and queue handoff. Thumbnails remain independent flat `<doc_id>-thumb.webp` assignments.
@@ -18,11 +20,11 @@ The separately approved single Publish completed in 36.821 seconds: 41 eligible 
 
 Ignored evidence lives under `var/verification/2026-10-16-document-owned-media/`: `migration-plan.json`, `local-migration-result.json`, `publish-selection.json`, `publish-result.json` and `publish-inspection.json`. The operational migration script has already run and must not be rerun merely for evidence. Preserve later authoring work.
 
-## Single-List Conversion And Current Pending Work
+## Single-List Conversion Snapshot
 
 Converted all 245 saved media records directly, retaining 378 source references and the exclusion policy. One source reference is absent from rendered HTML; retaining the source list preserves ownership. No document rebuild, source/asset/queue write or Publish was needed for this metadata-only conversion.
 
-At conversion inspection, `3 symbols (cards)` retained `cards-back.webp`, `cards-face.webp`, image 03 and image 04. Its Draft withdrawal selection retained exactly `bandage-back.webp`, image 01 and image 02 as removals. Do not clear or publish these later authoring selections incidentally. The saved Docs Media report contained zero build-source rows and needed no conversion or Refresh.
+At conversion inspection, `3 symbols (cards)` retained `cards-back.webp`, `cards-face.webp`, image 03 and image 04. Its Draft withdrawal selection retained exactly `bandage-back.webp`, image 01 and image 02 as removals; conversion preserved that selection. This is a historical queue snapshot, superseded by the user's later publication workflow. The saved Docs Media report contained zero build-source rows and needed no conversion or Refresh.
 
 ## Verification And Review
 
@@ -52,6 +54,12 @@ Verification: `bin/lint-python` and `python3 -m py_compile` passed for the six c
 
 Distinct source/diff and Redundancy And Defensive Behavior Review checked exact ordinary/collection generation, Position, full Working/Catalogue callers, unchanged policy/output and dependency/restoration handoffs. Removed the private-index policy writer, policy comparison and historical-membership shortcut; current eligibility is calculated from existing metadata without another source/body pass. The review reused the current collection manifest before host-change propagation to avoid a redundant saved-manifest read. Constructors remain free of I/O, dependent generation carries the loaded policy, and the full Working owner does not read it twice. Retained JSON/immutable-ID parsing at the canonical policy read, configured path/symlink boundaries, existing missing-input failures and exact transfer safeguards. No policy cache, freshness/corpus audit, compatibility reader, automatic rebuild/cleanup, recovery ledger or new validation was introduced.
 
-## Remaining Work
+## Final Acceptance And Evidence Limits
 
-Restart the local service and reload before normal use. Manual Add/Edit/Save/discard, replacement, thumbnail independence, removal/cancellation and failure acceptance remain user-owned. Git commit/push, manual Pages deployment and deployed acceptance remain separate. Optional orphan cleanup is not a gate. Existing unrelated scope-era tests remain unreviewed; this cleanup does not migrate the full test suite or establish broad coverage.
+On 2026-10-16 the user accepted the normal-use result and requested delivery closeout. The reported Publish workflow included media removal from a Draft, additions to that Draft, copying its content/media references to the publishable `3 symbols` document and deleting the Draft document. This supplies representative real authoring/removal/deletion/publication acceptance; copying references does not establish that media folders were physically moved or that cross-document sharing was audited.
+
+The associated live-image diagnosis compared Working, Preview, tracked local site output, committed output and a cache-bypassing live document request. New local published JSON used today's references; live JSON still matched the earlier committed document. The latest successful deployment used commit `9b6f76dde3af39e8fe315fe64f9503bb9e6050fe` while the latest generated `site/` JSON was uncommitted. Exact authenticated R2 checks verified all nine added image references against Working bytes and found the six replaced old image keys absent. A representative new public image returned HTTP 200. The user recognised the missed commit and accepted the workflow. These were read-only checks; no corrective Publish, remote write, commit or deployment was performed by Codex.
+
+Same-name isolation, discard/before-first-Save removal, repeated references, same-identity replacement, thumbnail independence, replacement Import and injected failure variants were not individually exercised. Further normal-use observation and separately approved test work can address those limits without keeping this delivery open. Whole-document media, old flat files and partial-write orphans remain optional manual cleanup. The unrelated scope-era test import limitation remains outside this delivery. The delivery and these notes are retained as closed evidence pending manual archive.
+
+Closeout review was limited to the changed documentation and existing evidence. No code/config changed, so a new code/defensive review and executable checks were not applicable. No Build, Search/Recent, media/queue write, Publish, commit/push or deployment ran for closeout.

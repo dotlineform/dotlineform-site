@@ -4,25 +4,27 @@ doc_id: d-20261015-223628-f94b46
 title: Reuse Generated Files For Publish
 added_date: "2026-10-15 22:36:28"
 last_updated: "2026-10-16"
-summary: Shared generated documents, Working-owned public metadata and copy-only Publish implemented and cut over; manual normal-use acceptance remains open.
-ui_status: active
+summary: Complete and user-accepted on 2026-10-16; shared generated documents and Working-owned public metadata are used by copy-only Publish.
+ui_status: done
 parent_id: d-20260428-000000-f5ff18
 ---
 # Reuse Generated Files For Publish
 
-This is the active follow-on to [Incremental Document Publish](Incremental_Document_Publish.md), parented to [Planned Features](../Planned_Features.md). It removes the parallel prepared-public document tree while retaining selected document/media publication and the existing queue JSON.
+This is the completed follow-on to [Incremental Document Publish](Incremental_Document_Publish.md), parented to [Planned Features](../Planned_Features.md). It removes the parallel prepared-public document tree while retaining selected document/media publication and the existing queue JSON.
 
-## Current And Next State
+## Completion And Acceptance
 
-Status: implemented and cut over on 2026-10-16; active pending RGP.5 manual acceptance. The user authorised shared `draft: false` and the concrete metadata-only cutover. No test work ran within this delivery.
+Status: complete and user-accepted on 2026-10-16. The user requested closeout after the successful Publish accepted in [Document Owned Media](Document_Owned_Media.md#completion-and-acceptance). Its reported Draft media removals/additions, content/reference reuse in a publishable Context document and Draft deletion exercise publication after this shared-file cutover.
 
-The duplicated `working/generated/publication/` tree and its consumers/initialiser are retired. Publish resolves selected ordinary/collection by-ID files directly and reads Selected, Recent and Search from their existing owners. Working builds public metadata beside management metadata. The reader no longer requires generated `content_url` fields.
+The duplicated `working/generated/publication/` tree and its consumers/initialiser are retired. Publish reads existing generated ordinary/collection by-ID files and completed public index/manifests, plus saved Selected/Recent/Search when queued. Eligible shared documents retain `draft: false`; Catalogue omits the field. The reader no longer requires generated `content_url` fields.
 
-The approved real-workspace cutover wrote five public metadata files, reduced private metadata to 244 referenced-media records plus the applied exclusion input, and removed transport URLs from the complete management index. No document bodies, assets or queues were written, and no Build, Search or Publish ran. No whole-corpus document equivalence claim is made.
+The approved metadata-only cutover completed on 2026-10-16 without writing document bodies, media or queues. Later approved media migration and Publish used the shared artifacts. Document Owned Media subsequently retired the temporary media-reference file and policy snapshot: authoring comparisons stay in memory, and index generation reads current canonical `unpublishable.json` once per operation. Only changed public projections are written/queued.
 
-Next: the user exercises normal operations and accepts the RGP.5 cases below. Static evidence and the metadata-only cutover do not establish Source Save, Full Build, withdrawal/restoration, diagram rendering or post-cutover Publish behavior. Git commit/push and deployment remain separate actions.
+Acceptance combines the reported successful workflow, the real migration Publish, local Working/Preview/site comparison, exact R2 checks and the existing static/import/projection and distinct defensive reviews. The live-image diagnosis found new media already in R2 while the live document matched an earlier committed payload; the user recognised the missed commit. Publish, commit/push and manual deployment retain separate ownership.
 
-Working owns the Draft/unpublishable policy and its public metadata projection. Publish stays copy-only: it neither reads eligibility policy nor filters index/manifests. Document generation, exact dependency updates, referenced-media selection and explicit document withdrawals remain upstream. Folder-link handling and Selected eligibility belong to authoring under the responsibilities below.
+Body-only unchanged-list behavior, every public metadata/eligibility change, subtree/host restoration, exact dependencies, Selected/Recent/Search copying variants, revised Full Build/Catalogue isolation and transfer failure paths were not individually demonstrated by that Publish. The user accepts the completed result with these evidence limits; no additional production gate is left open.
+
+Durable authority is [Builder](../Builder.md#publish-preparation), [Generated Data Contracts](../Generated_Data_Contracts.md) and [Media And Asset Handling](../Media_And_Asset_Handling.md#saved-ownership-and-exact-removals). This delivery is retained as closed evidence pending manual archive.
 
 ## Requirements
 
@@ -39,9 +41,9 @@ Working owns the Draft/unpublishable policy and its public metadata projection. 
 
 ### Public Metadata Updates
 
-Draft and `unpublishable.json` are the eligibility inputs that can make public membership differ from the management view. Reuse the eligibility result when those inputs are unchanged; a document-body change alone does not require updating public index/manifests.
+Draft and `unpublishable.json` are the eligibility inputs that can make public membership differ from the management view. Generation reads the canonical policy once per operation, applies it to the loaded metadata and compares the result with saved public indexes. No policy snapshot or change record is persisted. A document-body change alone does not require writing or queueing unchanged public index/manifests.
 
-Changes to reader-visible metadata or structure, such as a title change, document creation/deletion or a move, still reach the corresponding public metadata during the same Working build. Only a changed projected result is written and queued. This keeps public lists current without redoing eligibility work or rewriting them for unrelated document changes; it does not change Full Build's general document/media queueing policy.
+Changes to reader-visible metadata or structure, such as a title change, document creation/deletion or a move, still reach the corresponding public metadata during the same Working build. Only a changed projected result is written and queued. This keeps public lists current without another source/rendering pass or rewriting unchanged projections; it does not change Full Build's general document/media queueing policy.
 
 ### Authoring Responsibilities
 
@@ -63,7 +65,7 @@ The saved `working/source/selected.json` is an explicitly selected completed JSO
 | Working public index and `manifest.json` files | Completed reader metadata produced at document build time; written and queued only when the projected contents change. No parallel document tree. |
 | Preview public index and `manifest.json` files | Byte copies of queued completed Working public files, distributed without projection or filtering. |
 | Existing Selected, Recent and Search files | Direct selected copies; no additional Working public variants. |
-| Private generation metadata | Reuse the existing index, management manifests and Links records for their authoritative fields. Retain only concretely necessary media-reference/diagram preparation metadata under the existing generation owner; do not relocate the full duplicated `state.json` unchanged. Remove the separate-public-copy `public_ready` flag. |
+| Existing metadata and in-memory preparation | Reuse index, management manifests and Links records for their authoritative fields. Carry media references and current policy in memory; persist no publication-state copy, media baseline, policy snapshot or `public_ready` flag. |
 | Queue handoffs and selected publishers | Existing JSON identities resolve the reused generated files and completed public metadata. Shared selections request copies without extending the queue schema. |
 | Code/configuration/documentation cutover | Remove retired publication-tree readers/writers and initialisation after switching consumers. Preserve pending selections and timestamps; no blanket queue clearing, fallback aliases or shadow copies. |
 
@@ -80,12 +82,14 @@ The common by-ID representation completes RGP.0.
 ## Process
 
 1. Save, Rebuild, Import, eligibility/deletion operations and Regenerate complete their existing generated documents and known media/dependency effects. The same Working build maintains management metadata and eligible public index/manifests using the available metadata and Working-owned policy.
-2. Working reuses unchanged eligibility, propagates changed public fields/structure and writes/queues only changed public index/manifests. Eligibility changes queue exact document withdrawals/restorations and affected lists together. Existing document/media queueing semantics and queue JSON remain unchanged.
+2. Working evaluates eligibility using the current in-memory policy, propagates changed public fields/structure and writes/queues only changed public index/manifests. Eligibility changes queue exact document withdrawals/restorations and affected lists together. Existing document/media queueing semantics and queue JSON remain unchanged.
 3. Publish loads the queues and returns immediately if both are empty. It copies selected existing generated documents/media and completed public metadata into Preview, then distributes those bytes. It performs no policy reads, metadata projection or document generation. A queued removal uses its retained identity.
 4. Publish removes each successful selection after its Preview/distribution unit completes. Selected, Recent and Search use their explicitly selected existing files without filtering or regeneration.
 5. The first error stops the operation and reports the target/phase and completed effects. Diagnosis, correction and whether another Publish is appropriate remain manual.
 
 ## Delivery Steps
+
+All steps are complete. Records below describe evidence at their implementation stage; RGP.5 records final acceptance. The subsequent media/policy simplifications are carried into current requirements above rather than treated as remaining work.
 
 ### [x] RGP.0 — Readiness And Implementation Approval
 
@@ -114,7 +118,7 @@ Record: implemented and source-reviewed. Builders prepare eligible shared HTML b
 
 Verification budget: focused static/source review plus agreed manual normal-use cases for body-only and public-metadata changes, ordinary/collection Draft, subtree withdrawal/restoration and collection-host design effects. Do not introduce a collection-host UI test workflow or deliberate production failure. Gate: both metadata views share one Working build, unchanged public metadata is not rewritten/requeued, and Publish only transfers completed selections.
 
-Record: implementation/source review complete; the cutover exercised the production selector over real saved management metadata. Unchanged metadata returns before reprojection; changed reader fields reuse prior membership when Draft/structure/policy are unchanged. Public projection compares completed contents before writing/queueing. Host changes select their affected collection metadata and exact document effects; Catalogue Work/media ownership remains separate. Manual operation variants remain RGP.5 acceptance work.
+Record: implementation/source review complete; the cutover exercised the production selector over real saved management metadata. Public projection compares completed contents before writing/queueing. Host changes select their affected collection metadata and exact document effects; Catalogue Work/media ownership remains separate. The initial snapshot-based membership shortcuts were later removed by Document Owned Media's DOM.10: generation now reads current policy once and evaluates loaded metadata. Final normal-use acceptance and individual unexercised variants are recorded at RGP.5.
 
 ### [x] RGP.3 — Cutover And Publication Tree Retirement
 
@@ -124,7 +128,7 @@ Record: implementation/source review complete; the cutover exercised the product
 
 Verification budget: bounded changed-owner/path review and explicitly agreed selected generation/transfer evidence. No whole-tree hashes, automatic reconciliation, empty-queue reset or recovery framework. Gate: active consumers use the existing generated owners and the retired tree is neither required nor recreated.
 
-Record: the user authorised and the one-off metadata-only cutover completed on 2026-10-16. It used the production public metadata selector, created five public metadata files and `publication-media.json`, updated the management index and removed the former tree. Document bodies/assets/queues were untouched. The one-off command was retired after use; there is no replacement initialisation API. `bin/site-code-update` changed exactly the three shared reader modules, and `--check` plus `bin/site-validate` passed. No public-data transfer or Publish was required or run.
+Record: the user authorised and the one-off metadata-only cutover completed on 2026-10-16. It used the production public metadata selector, created five public metadata files and `publication-media.json`, updated the management index and removed the former tree. Document bodies/assets/queues were untouched. The one-off command was retired after use; there is no replacement initialisation API. `bin/site-code-update` changed exactly the three shared reader modules, and `--check` plus `bin/site-validate` passed. No public-data transfer or Publish was required or run for that cutover. Document Owned Media later retired the temporary `publication-media.json`; it is not a current storage dependency.
 
 ### [x] RGP.4 — Code And Redundancy Review
 
@@ -133,22 +137,24 @@ Record: the user authorised and the one-off metadata-only cutover completed on 2
 
 Verification budget: distinct bounded final review and relevant evidence only. Gate: findings are resolved and static/manual evidence limits are recorded without claiming unexercised behavior.
 
-Review record: traced normal/unchanged/empty paths, Position/Delete, restored/direct-dependent documents, Regenerate, Full Build and selected transfers. Removed duplicate HTML/public shared files, URL/Folder transformations, Selected filtering, obsolete transport-URL fields/helpers, initialisation and `public_ready`. Fixed host-restoration membership reuse and retained exact-operation policy reuse; unchanged management metadata now skips public reprojection. CLI full-generation Recent now consumes the already loaded exclusion input instead of reading policy again. Metadata cache records only actual media/diagram references and the applied policy input, avoiding a relocated copy of the former full state. Full Build still excludes Catalogue bulk source/render/Work selection; exact Catalogue dependencies remain Docs-only selections. Publisher imports resolve paths without loading generation or policy. No compatibility alias, fallback scan, audit, retry/progress state or recovery mechanism was added.
+Review record: traced normal/unchanged/empty paths, Position/Delete, restored/direct-dependent documents, Regenerate, Full Build and selected transfers. Removed duplicate HTML/public shared files, URL/Folder transformations, Selected filtering, obsolete transport-URL fields/helpers, initialisation and `public_ready`. CLI full-generation Recent consumed the already loaded exclusion input instead of reading it again. The initial media/policy cache and membership-reuse shortcuts were subsequently removed by Document Owned Media; media comparison is in memory and generation reads the single canonical policy. Full Build excludes Catalogue bulk source/render/Work selection; exact Catalogue dependencies remain Docs-only selections. Publisher imports resolve paths without loading generation or policy. No compatibility alias, fallback scan, audit, retry/progress state or recovery mechanism was added.
 
 Retained safeguards: configured path/symlink confinement and required JSON parsing belong at file boundaries; existing sanitisation and selected write/transfer verification remain with their producers/transfers. Missing exact restoration sources fail visibly. These safeguards add no corpus preflight or source reread.
 
 Selected evidence: explicit-path Python lint and compilation passed for the 15 changed/new Python source files; JavaScript lint passed for the three changed canonical modules. Build CLI help and imports for Publish, Working Build, Regenerate, write follow-through and Docs Review passed without workspace generation. Repository whitespace, exact runtime-projection review, `bin/site-code-update --check` and `bin/site-validate` passed. No tests, fixtures, harnesses or profiles changed; no tests/browser checks ran. Existing tests that assume generated transport URLs, the removed preparation APIs or former document records require separately agreed test work before they establish current coverage.
 
-### [ ] RGP.5 — Acceptance, Durable Transfer And Closeout
+### [x] RGP.5 — Acceptance, Durable Transfer And Closeout
 
-- [ ] Record user acceptance of shared document/media reads, Working-owned public index/manifests, unchanged lists after body-only edits, propagation of public metadata/eligibility changes, exact withdrawal/dependency effects, copy-only Publish, trusted Selected copying, unchanged Recent/Search copying and empty queues. State unexercised variants.
-- [x] Transfer implemented rules to Builder, source/generated contracts, Catalogue/publication, diagrams and the Development Checklist; reconcile the predecessor and Planned Features.
-- [x] Review retention of this delivery and any temporary handoff at closeout. Retain this active delivery for acceptance; retire the one-off cutover command. Git commit/push and public deployment remain separate explicit actions.
+- [x] Accept the reported successful post-cutover document/media Publish together with the migration Publish and existing shared-artifact/read-only evidence; retain individual public-metadata, eligibility, dependency, shared-output and failure variants as evidence limits.
+- [x] Transfer shipped rules to durable build/generated/media/publication contracts and reconcile subsequent in-memory media and single-policy decisions.
+- [x] Mark this delivery and Planned Features complete, retaining this document as closed evidence pending manual archive. The one-off cutover command remains retired; no document deletion is requested.
 
-Verification budget: user normal-use observations and proportional documentation reconciliation; no automatic suites or repeat Build/Publish solely for closeout. Gate: the duplicated tree is retired, agreed behavior is accepted and durable owners describe the implemented result.
+Verification budget: user normal-use acceptance and bounded documentation/source-diff review, reusing existing implementation and real-publication evidence. Gate: complete at the user's explicit closeout request on 2026-10-16. Code/defensive review is not applicable to this documentation-only update; earlier distinct implementation reviews remain recorded. No tests, Build, Search/Recent, media/queue writes, Publish, commit/push or deployment ran for closeout.
 
-## Follow-on
+## Subsequent And Separate Work
 
-Changing Full Build's general document/media queueing to select only changed bytes, separating discovery refresh from Full Build, document-media cleanup and new publication eligibility rules remain separately scoped. This delivery limits changed-content queueing to public index/manifests and otherwise preserves the existing Full Build/Recent/Search operating choices while simplifying stored representations and selected publication.
+[Document Owned Media](Document_Owned_Media.md) is complete and accepted, including exact media removals, in-memory authoring comparison, diagram-pipeline retirement and the canonical exclusion-policy read. [Discovery Refresh And Maintenance Rebuild](Discovery_Refresh_And_Maintenance_Rebuild.md) separately owns the later discovery/complete-build refinements; its acceptance state is independent of this closeout.
+
+Automatic orphan/whole-document media cleanup, new eligibility rules and additional test coverage remain separately scoped. None is a gate for the shared generated files and copy-only Publish delivered here.
 
 [[links|related links]]

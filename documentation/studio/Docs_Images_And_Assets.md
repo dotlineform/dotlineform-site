@@ -86,7 +86,7 @@ Do not put local design documents or working references in `site/`; that tree is
 
 1. Open the target document's Markdown source editor and choose **Add image…** or **Add file…**.
 2. Click the folder-open icon beside the filename field. Select one supported file in the native chooser; its basename fills the field. Empty files and files above 64 MiB are rejected. Cancelling preserves the previous selection.
-3. Enter useful alt text or a link label. For an image, review caption, summary and layout settings; optionally select **Create thumb** for a static raster image.
+3. Review the suggested alt text or enter a useful link label. Image alt text is suggested from the filename in lowercase, with underscores and hyphens replaced by spaces and the extension removed; edit it as needed. For an image, review caption, summary and layout settings; optionally select **Create thumb** for a static raster image.
 4. Choose **Add image** or **Add file** to insert the reference and retain the selected File in this Source session. Media is stored only when you Save.
 5. Review the draft, then use **Save**. It prepares and stores the selected media, persists source, rebuilds the exact document and displays the fresh result before completing.
 
