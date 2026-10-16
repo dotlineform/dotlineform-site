@@ -546,6 +546,7 @@ def handle_import_source(
             collection,
             plan.changed_paths,
             write_import_document,
+            media_changes=plan.media_changes,
         )
     else:
         rebuild = dependencies.perform_source_write_and_rebuild(
@@ -553,6 +554,7 @@ def handle_import_source(
             plan.changed_paths,
             write_import_document,
             docs_doc_ids=plan.docs_doc_ids,
+            media_changes=plan.media_changes,
         )
     event_name, event_details = import_document_event(
         repo_root,

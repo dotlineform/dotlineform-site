@@ -100,7 +100,7 @@ class PayloadBuilderMixin:
 
     def index_tree_payload(
         self, docs_by_id: Mapping[str, DocRecord | OrdinaryDocumentSummary],
-        *, previous_payload: dict[str, Any] | None = None,
+        *, previous_payload: dict[str, Any] | None = None, unpublishable: frozenset[str] | None = None,
     ) -> dict[str, Any]:
         included_docs = list(docs_by_id.values())
         included_by_parent: dict[str, list[DocRecord | OrdinaryDocumentSummary]] = {}
@@ -134,6 +134,8 @@ class PayloadBuilderMixin:
             "schema": DOCS_INDEX_TREE_SCHEMA_VERSION,
             "docs": tree,
         }
+        if self.config.stage == "working":
+            comparable["unpublishable"] = sorted(previous_payload["unpublishable"] if unpublishable is None else unpublishable)
         return {
             "generated_at": self.effective_generated_at_for_payload(
                 self.output_dir / "index-tree.json", comparable, existing_payload=previous_payload,

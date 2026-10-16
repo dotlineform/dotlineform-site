@@ -5,6 +5,8 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import quote
 
+from docs_document_media_ownership import DocumentMediaChange
+
 from .common import (
     DocsStageConfig,
     document_source_path,
@@ -174,6 +176,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
         publication: Any = None,
         expand_dependencies: bool = True,
         catalogue_work_selection: bool = True,
+        media_changes: dict[str, DocumentMediaChange] | None = None,
     ) -> dict[str, Any]:
         """Render sources and update this operation's collection manifest.
 
@@ -235,7 +238,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
 
             publication = prepare_generation(
                 self, docs, item_payloads, {}, manifest=manifest_payload,
-                previous_manifest=previous_manifest, preparation=publication,
+                previous_manifest=previous_manifest, preparation=publication, media_changes=media_changes,
             )
         write_plan = self.build_collection_write_plan(
             manifest_payload,

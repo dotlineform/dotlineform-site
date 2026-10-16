@@ -27,6 +27,7 @@ from .write_plan import WritePlanMixin
 from docs_index_order import index_order_path, read_index_order, tree_parent_ids
 from docs_selected_documents import read_selected, refresh_selected_documents
 from docs_workspace_config import DocsWorkspaceConfig
+from docs_document_media_ownership import DocumentMediaChange
 
 
 class DocsDataBuilder(
@@ -86,6 +87,7 @@ class DocsDataBuilder(
         catalogue_works: dict[str, dict[str, Any]] | None = None,
         publication: Any = None,
         expand_dependencies: bool = True,
+        media_changes: dict[str, DocumentMediaChange] | None = None,
     ) -> dict[str, Any]:
         """Render sources, or carry completed workspace inputs into rendering.
 
@@ -145,13 +147,24 @@ class DocsDataBuilder(
             for doc in docs_for_item_build
         }
 
-        index_tree_payload = self.index_tree_payload(docs_by_id, previous_payload=previous_tree)
+        if self.config.stage == "working":
+            from docs_publication_preparation import load_generation_preparation
+
+            if publication is None:
+                publication = load_generation_preparation(self, previous_tree)
+            if previous_tree is None:
+                previous_tree = publication.metadata.read_management("")
+                previous_tree_text = publication.metadata.navigation_text
+        index_tree_payload = self.index_tree_payload(
+            docs_by_id, previous_payload=previous_tree,
+            unpublishable=publication.ignored if self.config.stage == "working" else None,
+        )
         if self.config.stage == "working":
             from docs_publication_preparation import prepare_generation
 
             publication = prepare_generation(
                 self, docs_for_item_build, item_payloads, index_tree_payload,
-                previous_navigation=previous_tree, preparation=publication,
+                previous_navigation=previous_tree, preparation=publication, media_changes=media_changes,
             )
         # Preview, targeted builds and authoring follow-through preserve saved Recents.
         recent_payload = None

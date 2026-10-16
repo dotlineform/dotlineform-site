@@ -8,6 +8,7 @@ from docs_management_document_target import ManagedDocumentCollection, ManagedDo
 from docs_source_model import SourceDoc, parse_collection_document_report, validate_document_status_front_matter
 from docs_workspace_config import require_document_authoring
 from docs_write_rebuild import rebuild_prepared_document_outputs
+from docs_document_media_ownership import DocumentMediaChange
 
 
 def rebuild_document(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
@@ -41,10 +42,11 @@ def rebuild_document(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
 def rebuild_prepared_document(
     repo_root: Path, owner: ManagedDocumentCollection | ManagedDocumentTarget, document: SourceDoc,
     *, parent_ids: dict[str, str] | None = None,
+    media_change: DocumentMediaChange | None = None,
 ) -> dict[str, Any]:
     """Generate a prepared document and finish its Catalogue queue handoff."""
     if parent_ids is None and isinstance(owner, ManagedDocumentTarget):
         parent_ids = owner.parent_ids
-    rebuild = rebuild_prepared_document_outputs(repo_root, owner, document, parent_ids=parent_ids)
+    rebuild = rebuild_prepared_document_outputs(repo_root, owner, document, parent_ids=parent_ids, media_change=media_change)
     target = {**owner.request_target(), "doc_id": document.doc_id}
     return {"ok": True, "target": target, "rebuild": rebuild, "summary_text": "Document rebuilt."}

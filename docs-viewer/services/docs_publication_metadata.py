@@ -37,17 +37,19 @@ class PublicMetadata:
     authoritative hierarchy, Draft and reader fields; no document/source reads.
     """
 
-    def __init__(self, workspace: Any, ignored: frozenset[str], *, policy_changed: bool) -> None:
+    def __init__(self, workspace: Any, ignored: frozenset[str], *, policy_changed: bool, navigation: dict[str, Any], navigation_text: str | None) -> None:
         self.workspace = workspace
         self.ignored = ignored
         self.policy_changed = policy_changed
         self.public: dict[str, dict[str, Any]] = {}
         self.public_members: dict[str, set[str]] = {}
         self.projected: dict[str, dict[str, Any]] = {}
-        self.management: dict[str, dict[str, Any]] = {}
+        self.management: dict[str, dict[str, Any]] = {"": navigation}
+        self.navigation_text = navigation_text
         self.eligible: dict[str, set[str]] = {}
         self.restored: dict[str, str] = {}
         self.withdrawn: dict[str, str] = {}
+        self.policy_index_pending = False
 
     def read_public(self, collection: str) -> dict[str, Any]:
         if collection not in self.public:
@@ -81,9 +83,11 @@ class PublicMetadata:
         self.eligible[collection] = eligible
         self.projected[collection] = payload
 
-    def ordinary(self, navigation: dict[str, Any], previous: dict[str, Any] | None) -> None:
+    def ordinary(self, navigation: dict[str, Any], previous: dict[str, Any] | None, *, index_write: bool = True) -> None:
         """Select ordinary membership once and propagate actual host changes."""
         before = self.membership("")
+        navigation["unpublishable"] = sorted(self.ignored)
+        self.policy_index_pending = self.policy_changed and not index_write
         self.management[""] = navigation
         if previous == navigation and not self.policy_changed:
             return
@@ -104,7 +108,8 @@ class PublicMetadata:
 
         rows = project(navigation["docs"])
         old = self.read_public("")
-        payload = {**navigation, "docs": rows}
+        payload = {key: value for key, value in navigation.items() if key != "unpublishable"}
+        payload["docs"] = rows
         if old["docs"] == rows:
             payload["generated_at"] = old["generated_at"]
         current = tree_ids(rows)

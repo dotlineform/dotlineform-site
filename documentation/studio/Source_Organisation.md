@@ -32,7 +32,7 @@ $DOTLINEFORM_DOCS_BASE_DIR/
       collections/<collection>/
         documents/<doc_id>.md
     generated/
-      documents/{index-tree.json,public-index-tree.json,publication-media.json,recent.json,by-id/,...}
+      documents/{index-tree.json,public-index-tree.json,recent.json,by-id/,...}
       search/index.json
       collections/<collection>/documents/
       catalogue/
@@ -59,7 +59,7 @@ $DOTLINEFORM_DOCS_BASE_DIR/
 | Public projection | Downstream repository/R2 output served by the website. |
 | Rendered view | Presentation of document payloads and media; it is not source. |
 
-Working registers document, collection and media owners once. Generation maintains one common by-ID document plus complete management and eligible public metadata under each existing generated owner, and records exact publication effects in `working/docs-publish-pending.json`. Ordinary `public-index-tree.json` sits beside `index-tree.json`; collection `manifest.json` sits beside `manage-manifest.json`. Private `publication-media.json` retains referenced-media/diagram records and the applied exclusion-policy input. The separate Working publication tree is retired. Preview receives selected finished bytes without a source/generated tree or browser route. Catalogue queues remain alongside the Docs queue under `working/`; [Builder](Builder.md#publish-preparation) and [Catalogue Deployment](Catalogue_Deployment.md) own handoffs.
+Working registers document, collection and media owners once. Generation maintains one common by-ID document plus complete management and eligible public metadata under each existing generated owner, and records exact publication effects in `working/docs-publish-pending.json`. Ordinary `public-index-tree.json` sits beside `index-tree.json`; collection `manifest.json` sits beside `manage-manifest.json`. The private ordinary index retains the applied exclusion-policy list in root `unpublishable`. Media references and authoring comparisons stay in memory; `publication-media.json` and the separate Working publication tree are retired. Preview receives selected finished bytes without a source/generated tree or browser route. Catalogue queues remain alongside the Docs queue under `working/`; [Builder](Builder.md#publish-preparation) and [Catalogue Deployment](Catalogue_Deployment.md) own handoffs.
 
 Collection document-media paths in the tree above apply only to collections declaring `document_media: true`: Context (`works`), Concepts and Moments. Catalogue declares false, so it has documents and separate Work media but no `assets/media/collections/catalogue/` owner, source-media producer or document-media publication binding. Existing empty remnants of that former namespace are not read, maintained or recreated by these owners.
 
@@ -196,7 +196,7 @@ Distribution uses each selected unit's completed Preview files, without reading 
 
 Ready document media lives under `working/assets/media/` and `preview/assets/media/`, using `workspace/<type>/` and `collections/<id>/<type>/`. Local readers, intake, generation, inventory and export use Working. Exact configured owners keep same-named assets independent. Editable diagram sources belong to their external project/tool. The former workspace-level `assets/media/` root has no fallback owner.
 
-Local media uses `/docs/assets/<configured-family>/<identity>`, resolved to Working. Authored tokens, `docs-media:` identities, public URLs and R2 namespaces remain unchanged. Generation records exact references in one `publication-media.json` list per document and supplies eligible queue selections. Publish copies only that selection into Preview and verifies selected transfers; Preview has no source/generated tree.
+Local media uses `/docs/assets/<configured-family>/<identity>`, resolved to Working. Authored tokens, `docs-media:` identities, public URLs and R2 namespaces remain unchanged. Generation derives exact current references from supplied source/fields in memory and supplies eligible queue selections. Authoring operations carry before/after owned-reference differences from their loaded sources. Publish copies only the completed queue selection into Preview and verifies selected transfers; Preview has no source/generated tree.
 
 Logical identity, storage provider and served URL are separate. Location helpers confine paths/keys and own reads, writes and byte verification. A reference does not establish ownership of its bytes; Catalogue media and retained external originals have separate owners.
 

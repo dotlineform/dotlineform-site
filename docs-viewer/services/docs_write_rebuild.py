@@ -19,9 +19,10 @@ from docs_workspace_config import (
     DocsWorkspaceConfig,
 )
 from docs_build_manifest import remove_build_manifest
-from docs_publication_preparation import PublicationHandoffError
+from docs_publication_preparation import PublicationHandoffError, complete_source_media_changes
 from docs_source_model import SourceDoc, parse_source, write_bytes_atomic
 from docs_document_identity import doc_updated_date
+from docs_document_media_ownership import DocumentMediaChange
 from docs_index_order import index_order_path
 
 if TYPE_CHECKING:
@@ -258,17 +259,20 @@ def perform_source_write_and_rebuild(
     *,
     docs_doc_ids: Optional[list[str]] = None,
     skip_media_builds: bool = True,
+    media_changes: list[tuple[str, Any, DocumentMediaChange]] | None = None,
 ) -> Dict[str, Any]:
     config = load_docs_working_config(repo_root)
     require_document_authoring(config)
     validate_changed_source_paths(document_source_path(config), changed_paths, index_path=index_order_path(config))
     links_before = changed_source_document_ids(changed_paths)
     write_operation()
-    return rebuild_working_outputs(
+    rebuild = rebuild_working_outputs(
         repo_root, docs_doc_ids=docs_doc_ids,
         skip_media_builds=skip_media_builds,
         **links_write_arguments(links_before, changed_paths),
     )
+    complete_source_media_changes(config, media_changes or [])
+    return rebuild
 
 
 def perform_source_write_and_rebuild_atomic(
@@ -278,6 +282,7 @@ def perform_source_write_and_rebuild_atomic(
     *,
     source_snapshots: Mapping[Path, bytes],
     docs_doc_ids: Optional[list[str]] = None,
+    media_changes: list[tuple[str, Any, DocumentMediaChange]] | None = None,
 ) -> Dict[str, Any]:
     """Write/rebuild one exact parent stage or restore its source snapshot there."""
     config = load_docs_working_config(repo_root)
@@ -306,6 +311,7 @@ def perform_source_write_and_rebuild_atomic(
             repo_root, docs_doc_ids=docs_doc_ids,
             skip_media_builds=True, **links_write_arguments(links_before, changed_paths),
         )
+        complete_source_media_changes(config, media_changes or [])
     except (DocumentSourceSnapshotChanged, PublicationHandoffError):
         raise
     except Exception as exc:
@@ -340,6 +346,7 @@ def perform_source_write_and_rebuild_atomic(
 def rebuild_prepared_document_outputs(
     repo_root: Path, owner: ManagedDocumentCollection | ManagedDocumentTarget, document: SourceDoc,
     *, parent_ids: dict[str, str] | None = None,
+    media_change: DocumentMediaChange | None = None,
 ) -> Dict[str, Any]:
     """Carry one prepared source through the existing exact document/Links builder."""
     build_dir = Path(__file__).resolve().parents[1] / "build"
@@ -364,7 +371,7 @@ def rebuild_prepared_document_outputs(
         report=document.report, source_text=document.source_text,
     )
     started_at = time.perf_counter()
-    result = builder.run(write=True, documents=[record],
+    result = builder.run(write=True, documents=[record], media_changes={document.doc_id: media_change} if media_change is not None else None,
                          **({"parent_ids": parent_ids} if not owner.collection else {}))
     return {
         "ok": True, "steps": [], "search": {"mode": "none", "doc_ids": []},
@@ -441,7 +448,7 @@ def project_document_position(
     from docs_publication_preparation import load_preparation, prepare_restored
     from docs_selected_documents import read_selected
 
-    publication = load_preparation(repo_root, builder.workspace)
+    publication = load_preparation(repo_root, builder.workspace, navigation=previous)
     publication.metadata.ordinary(navigation, previous)
     publication.documents(builder, {doc_id: payload}, [], selected=read_selected(owner.parent_config), changed_ids={doc_id})
     prepare_restored(builder, {}, publication)
@@ -496,6 +503,7 @@ def perform_collection_source_write_and_rebuild(
     documents: list[DocRecord] | None = None,
     catalogue_works: dict[str, dict[str, Any]] | None = None,
     publication: Any = None,
+    media_changes: list[tuple[str, Any, DocumentMediaChange]] | None = None,
 ) -> Dict[str, Any]:
     """Await a selected or complete collection build and its Links update."""
     if builder is None:
@@ -555,6 +563,7 @@ def perform_collection_source_write_and_rebuild(
             builder.only_doc_ids = None if complete_build else docs_doc_ids
             builder.links_doc_ids = links_arguments.get("links_doc_ids")
             rebuild = builder.run(write=True, documents=documents, catalogue_works=catalogue_works, publication=publication)
+        complete_source_media_changes(resolved.parent_config if builder is None else builder.config, media_changes or [])
     except (CollectionSourceSnapshotChanged, PublicationHandoffError):
         raise
     except Exception as exc:

@@ -2,13 +2,14 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Any
 
 from docs_document_images import document_thumbnail_filename
 from docs_media_inventory import parsed_source_media_references
 
 
-def document_media_references(owner: Any, document: Any) -> dict[str, list[str]]:
+def document_media_references(owner: Any, *, doc_id: str, body: str, metadata: dict[str, Any]) -> dict[str, list[str]]:
     """Use the supplied source/fields, independently of public presentation."""
     if owner.media is None:
         return {}
@@ -16,18 +17,17 @@ def document_media_references(owner: Any, document: Any) -> dict[str, list[str]]
 
     references: dict[str, set[str]] = {}
     for reference in parsed_source_media_references(
-        owner, document.body_markdown, metadata=document.front_matter,
-        semantic_tokens=parse_semantic_tokens(document.body_markdown, registry=None),
-        doc_id=document.doc_id,
+        owner, body, metadata=metadata,
+        semantic_tokens=parse_semantic_tokens(body, registry=None), doc_id=doc_id,
     ):
         references.setdefault(reference.media_type, set()).add(reference.identity)
     return {kind: sorted(names) for kind, names in references.items()}
 
 
-def owned_document_files(doc_id: str, collection: str, record: dict[str, Any]) -> dict[str, set[str]]:
+def owned_document_files(doc_id: str, collection: str, references: dict[str, list[str]]) -> dict[str, set[str]]:
     """Limit removals to this document's namespace and fixed thumbnail identity."""
     media: dict[str, set[str]] = {}
-    for kind, identities in record.get("media", {}).items():
+    for kind, identities in references.items():
         owned = {identity for identity in identities
                  if (identity == document_thumbnail_filename(doc_id, collection=collection)
                      if kind == "thumbs" else identity.startswith(doc_id + "/"))}
@@ -39,3 +39,20 @@ def owned_document_files(doc_id: str, collection: str, record: dict[str, Any]) -
 def removed_files(previous: dict[str, set[str]], current: dict[str, set[str]]) -> dict[str, list[str]]:
     return {kind: sorted(removed) for kind, identities in previous.items()
             if (removed := identities - current.get(kind, set()))}
+
+
+@dataclass(frozen=True)
+class DocumentMediaChange:
+    """One authoring operation's references and exact owned removals, in memory."""
+
+    current: dict[str, list[str]]
+    removed: dict[str, list[str]]
+
+
+def compare_document_media(owner: Any, doc_id: str, *, previous_body: str, previous_metadata: dict[str, Any], body: str, metadata: dict[str, Any]) -> DocumentMediaChange:
+    before = document_media_references(owner, doc_id=doc_id, body=previous_body, metadata=previous_metadata)
+    current = document_media_references(owner, doc_id=doc_id, body=body, metadata=metadata)
+    collection = getattr(owner, "collection", "")
+    return DocumentMediaChange(current, removed_files(
+        owned_document_files(doc_id, collection, before), owned_document_files(doc_id, collection, current),
+    ))

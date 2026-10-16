@@ -42,6 +42,7 @@ from docs_document_subjects import AUTHORING_SUBJECT_FIELDS, FOLDER_PATH_FIELD  
 from docs_document_rebuild import rebuild_prepared_document  # noqa: E402
 from docs_source_media_service import source_media_options, prepare_source_media, write_prepared_source_media  # noqa: E402
 from docs_source_media_upload import SourceMediaUpload  # noqa: E402
+from docs_document_media_ownership import compare_document_media  # noqa: E402
 
 
 def normalize_source_body(value: Any) -> str:
@@ -270,6 +271,11 @@ def save_source_document(
     writes, notes = prepare_source_media(repo_root, resolved, body["media"], media_uploads)
     target = resolved.document
     next_source_text = prepared.source_text
+    media_change = compare_document_media(
+        resolved.document_config, target.doc_id,
+        previous_body=target.body, previous_metadata=target.front_matter,
+        body=prepared.body, metadata=prepared.front_matter,
+    )
 
     payload = {
         "ok": True,
@@ -300,7 +306,7 @@ def save_source_document(
             payload["source_saved"] = True
             payload["committed_document"] = committed
             phase = "document generation"
-            payload["rebuild"] = rebuild_prepared_document(repo_root, resolved, prepared)["rebuild"]
+            payload["rebuild"] = rebuild_prepared_document(repo_root, resolved, prepared, media_change=media_change)["rebuild"]
         except Exception as error:
             from docs_publication_preparation import PublicationHandoffError
 

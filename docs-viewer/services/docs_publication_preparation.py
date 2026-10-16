@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from docs_document_media_ownership import document_media_references, owned_document_files, removed_files
+from docs_document_media_ownership import DocumentMediaChange, document_media_references, owned_document_files
 from docs_publication_ignore import read_publication_ignore_ids
 from docs_publication_metadata import PublicMetadata
 from docs_publication_paths import confined
@@ -25,31 +25,67 @@ class PublicationHandoffError(RuntimeError):
         self.removal_effects = removal_effects or []
 
 
-def media_metadata_path(workspace: Any) -> Path:
-    working = select_workspace_stage(workspace, "working")
-    return confined(generated_documents_path(working), "publication-media.json")
-
-
 def write_json(path: Path, value: Any) -> None:
     write_text_atomic(path, json.dumps(value, ensure_ascii=False, indent=2) + "\n")
+
+
+def save_media_removals(workspace: Any, pending: dict[str, Any], removals: dict[tuple[str, str, str], Path], effects: list[dict[str, str]]) -> None:
+    """Save public removals before applying their exact confined Working paths."""
+    save_queue(workspace, pending)
+    for (collection, kind, identity), path in tuple(removals.items()):
+        try:
+            delete_path(path)
+        except Exception as error:
+            raise PublicationHandoffError(
+                f"Queue saved; Working removal failed for {collection or 'workspace'}/source/{kind}/{identity}: {error}. "
+                f"Completed Working removals: {len(effects)}.",
+                phase="Working media removal", removal_effects=effects,
+            ) from error
+        effects.append({"collection": collection, "role": "source", "media_type": kind, "identity": identity})
+        del removals[(collection, kind, identity)]
+
+
+def complete_source_media_changes(workspace: Any, changes: list[tuple[str, Any, DocumentMediaChange]]) -> None:
+    """Finish imported source differences after its existing generation process.
+
+    Generation has saved current selections. Merge only the removals carried
+    from the import's loaded target and candidate; do not re-read either source.
+    """
+    changes = [(doc_id, owner, change) for doc_id, owner, change in changes if change.removed]
+    if not changes:
+        return
+    try:
+        pending = read_queue(workspace)
+        removals = {}
+        for doc_id, owner, change in changes:
+            record = pending["current_documents"][doc_id] if doc_id in pending["current_documents"] else pending["deleted_documents"][doc_id]
+            selected = record.setdefault("removed_media", {})
+            collection = getattr(owner, "collection", "")
+            for kind, names in change.removed.items():
+                selected[kind] = sorted(set(selected.get(kind, [])) | set(names))
+                for identity in names:
+                    removals[(collection, kind, identity)] = confined(owner.media.types[kind].asset_location.path, identity)
+        save_media_removals(workspace, pending, removals, [])
+    except PublicationHandoffError:
+        raise
+    except Exception as error:
+        raise PublicationHandoffError(f"Imported documents generated, but their media-removal handoff is incomplete: {error}") from error
 
 
 class PublicationPreparation:
     """Carry selected metadata, media and queue effects through generation.
 
-    Persistent private data contains only referenced-media information
-    and the last applied exclusion input. Public lists own prior membership;
-    management metadata owns hierarchy, Draft and reader fields.
+    References and authoring differences live only for this operation. Public
+    lists own prior membership; the private index owns the applied exclusions.
     """
 
-    def __init__(self, repo_root: Path, workspace: Any, media: dict[str, Any], saved_text: str, pending: dict[str, Any], ignored: frozenset[str], *, changes_only: bool = False) -> None:
+    def __init__(self, repo_root: Path, workspace: Any, pending: dict[str, Any], metadata: PublicMetadata, *, changes_only: bool = False) -> None:
         self.repo_root = repo_root
         self.workspace = workspace
-        self.media = media
-        self.saved_text = saved_text
         self.pending = pending
-        self.ignored = ignored
-        self.metadata = PublicMetadata(workspace, ignored, policy_changed=set(media["ignored"]) != ignored)
+        self.media: dict[str, dict[str, list[str]]] = {}
+        self.ignored = metadata.ignored
+        self.metadata = metadata
         self.policy_applied = False
         self.catalogue_documents: set[str] = set()
         self.changes_only = changes_only
@@ -59,11 +95,11 @@ class PublicationPreparation:
         self.working_removals: dict[tuple[str, str, str], Path] = {}
         self.removal_effects: list[dict[str, str]] = []
 
-    def prepare(self, builder: Any, docs: list[Any], payloads: dict[str, Any], navigation: dict[str, Any], *, previous_navigation: dict[str, Any] | None, manifest: dict[str, Any] | None, previous_manifest: dict[str, Any] | None) -> None:
+    def prepare(self, builder: Any, docs: list[Any], payloads: dict[str, Any], navigation: dict[str, Any], *, previous_navigation: dict[str, Any] | None, manifest: dict[str, Any] | None, previous_manifest: dict[str, Any] | None, media_changes: dict[str, DocumentMediaChange] | None) -> None:
         """Record selected references and their exact owned-file removals."""
         collection = getattr(builder, "collection_id", "")
         if self.metadata.policy_changed and not self.policy_applied and collection:
-            self.metadata.ordinary(self.metadata.read_management(""), None)
+            self.metadata.ordinary(self.metadata.read_management(""), None, index_write=False)
             self.policy_applied = True
         if collection:
             self.metadata.collection(collection, manifest, previous_manifest)
@@ -71,24 +107,19 @@ class PublicationPreparation:
             self.metadata.ordinary(navigation, previous_navigation)
             self.policy_applied = True
         self.restored_documents.update(set(payloads) & self.metadata.restored.keys())
-        records = self.media["documents"]
         for doc in docs:
-            previous = records.get(doc.doc_id)
-            media = document_media_references(builder.media_owner, doc)
-            record = {"collection": collection, "media": media}
-            before_media = owned_document_files(doc.doc_id, collection, previous or {})
-            after_media = owned_document_files(doc.doc_id, collection, record)
-            self.current_owned_media[doc.doc_id] = after_media
-            removals = removed_files(before_media, after_media)
+            change = (media_changes or {}).get(doc.doc_id)
+            media = change.current if change is not None else document_media_references(
+                builder.media_owner, doc_id=doc.doc_id, body=doc.body_markdown, metadata=doc.front_matter,
+            )
+            self.media[doc.doc_id] = media
+            self.current_owned_media[doc.doc_id] = owned_document_files(doc.doc_id, collection, media)
+            removals = change.removed if change is not None else {}
             self.media_removals[doc.doc_id] = removals
             for kind, identities in removals.items():
                 root = builder.media_owner.media.types[kind].asset_location.path
                 for identity in identities:
                     self.working_removals[(collection, kind, identity)] = confined(root, identity)
-            if media:
-                records[doc.doc_id] = record
-            else:
-                records.pop(doc.doc_id, None)
             self.metadata.restored.pop(doc.doc_id, None)
 
     def documents(self, builder: Any, payloads: dict[str, Any], deleted: list[str], *, selected: dict[str, Any] | None, changed_ids: set[str], catalogue_work_selection: bool = True) -> None:
@@ -103,7 +134,7 @@ class PublicationPreparation:
             deleting = doc_id in deleted or doc_id not in self.metadata.membership(owner)
             if owner == "catalogue" and catalogue_work_selection and not deleting:
                 continue
-            media = self.media["documents"].get(doc_id, {}).get("media", {})
+            media = self.media.get(doc_id, self.pending["current_documents"].get(doc_id, {}).get("media", {}))
             removals = self.media_removals.get(doc_id, {})
             if self.changes_only:
                 pending = doc_id in self.pending["current_documents"] or doc_id in self.pending["deleted_documents"]
@@ -116,7 +147,6 @@ class PublicationPreparation:
             select_document(self.pending, doc_id, owner, media=media, removed_media=removals, restored_media=restored, delete=deleting)
         self.restored_documents.difference_update(payloads)
         for doc_id in deleted:
-            self.media["documents"].pop(doc_id, None)
             self.metadata.restored.pop(doc_id, None)
         self.metadata.withdrawn.clear()
         self.write_metadata()
@@ -158,6 +188,10 @@ class PublicationPreparation:
         return False
 
     def write_metadata(self) -> None:
+        if self.metadata.policy_index_pending:
+            working = select_workspace_stage(self.workspace, "working")
+            write_json(confined(generated_documents_path(working), "index-tree.json"), self.metadata.management[""])
+            self.metadata.policy_index_pending = False
         for collection, path, payload in self.metadata.changes():
             write_json(path, payload)
             select_shared(self.pending, collection or "workspace", "collection_manifest" if collection else "ordinary_index")
@@ -174,26 +208,7 @@ class PublicationPreparation:
         select_shared(self.pending, owner, output)
 
     def save(self, *, catalogue_pending: dict[str, Any] | None = None) -> None:
-        # Persist exact public removals before deleting Working bytes or advancing
-        # their ownership baseline. A failure leaves the prior baseline available
-        # to the next ordinary exact generation, without another recovery ledger.
-        save_queue(self.workspace, self.pending)
-        for (collection, kind, identity), path in tuple(self.working_removals.items()):
-            try:
-                delete_path(path)
-            except Exception as error:
-                raise PublicationHandoffError(
-                    f"Queue saved; Working removal failed for {collection or 'workspace'}/source/{kind}/{identity}: {error}. "
-                    f"Completed Working removals: {len(self.removal_effects)}; prior ownership metadata retained.",
-                    phase="Working media removal", removal_effects=self.removal_effects,
-                ) from error
-            self.removal_effects.append({"collection": collection, "role": "source", "media_type": kind, "identity": identity})
-            del self.working_removals[(collection, kind, identity)]
-        self.media["ignored"] = sorted(self.ignored)
-        text = json.dumps(self.media, ensure_ascii=False, indent=2) + "\n"
-        if text != self.saved_text:
-            write_text_atomic(media_metadata_path(self.workspace), text)
-            self.saved_text = text
+        save_media_removals(self.workspace, self.pending, self.working_removals, self.removal_effects)
         if self.catalogue_documents or catalogue_pending is not None:
             from studio.services.catalogue.catalogue_pending_publication import merge_document_selections, FILENAME
             from studio.services.catalogue.catalogue_pending_state import load_pending_queue, pending_path, persist_pending_queue
@@ -205,23 +220,30 @@ class PublicationPreparation:
             self.catalogue_documents.clear()
 
 
-def load_preparation(repo_root: Path, workspace: Any, *, ignored_ids: frozenset[str] | None = None, changes_only: bool = False) -> PublicationPreparation:
-    """Read media/policy preparation state and the queue, without corpus metadata."""
-    text = media_metadata_path(workspace).read_text(encoding="utf-8")
-    media = json.loads(text)
-    ignored = frozenset(media["ignored"]) if ignored_ids is None else ignored_ids
-    return PublicationPreparation(repo_root, workspace, media, text, read_queue(workspace), ignored, changes_only=changes_only)
+def load_preparation(repo_root: Path, workspace: Any, *, ignored_ids: frozenset[str] | None = None, navigation: dict[str, Any] | None = None, changes_only: bool = False) -> PublicationPreparation:
+    """Read the queue and applied index policy, without a media ledger."""
+    navigation_text = None
+    if navigation is None:
+        working = select_workspace_stage(workspace, "working")
+        navigation_text = confined(generated_documents_path(working), "index-tree.json").read_text(encoding="utf-8")
+        navigation = json.loads(navigation_text)
+    applied = frozenset(navigation["unpublishable"])
+    ignored = applied if ignored_ids is None else ignored_ids
+    metadata = PublicMetadata(workspace, ignored, policy_changed=ignored != applied, navigation=navigation, navigation_text=navigation_text)
+    return PublicationPreparation(repo_root, workspace, read_queue(workspace), metadata, changes_only=changes_only)
 
 
-def prepare_generation(builder: Any, docs: list[Any], payloads: dict[str, Any], navigation: dict[str, Any], *, previous_navigation: dict[str, Any] | None = None, manifest: dict[str, Any] | None = None, previous_manifest: dict[str, Any] | None = None, preparation: PublicationPreparation | None = None) -> PublicationPreparation:
+def load_generation_preparation(builder: Any, previous_navigation: dict[str, Any] | None) -> PublicationPreparation:
+    """Load the selected build's queue and applied or freshly requested policy."""
+    ignored = None if builder.targeted_build else read_publication_ignore_ids(builder.repo_root, config=builder.config)
+    return load_preparation(builder.repo_root, builder.workspace, ignored_ids=ignored, navigation=previous_navigation, changes_only=not builder.targeted_build)
+
+
+def prepare_generation(builder: Any, docs: list[Any], payloads: dict[str, Any], navigation: dict[str, Any], *, previous_navigation: dict[str, Any] | None = None, manifest: dict[str, Any] | None = None, previous_manifest: dict[str, Any] | None = None, preparation: PublicationPreparation | None = None, media_changes: dict[str, DocumentMediaChange] | None = None) -> PublicationPreparation:
     """Prepare publication references from this build's completed metadata."""
-    if preparation is None:
-        ignored = None if builder.targeted_build else read_publication_ignore_ids(builder.repo_root, config=builder.config)
-        operation = load_preparation(builder.repo_root, builder.workspace, ignored_ids=ignored, changes_only=not builder.targeted_build)
-    else:
-        operation = preparation
+    operation = load_generation_preparation(builder, previous_navigation) if preparation is None else preparation
     operation.prepare(builder, docs, payloads, navigation, previous_navigation=previous_navigation,
-                      manifest=manifest, previous_manifest=previous_manifest)
+                      manifest=manifest, previous_manifest=previous_manifest, media_changes=media_changes)
     return operation
 
 

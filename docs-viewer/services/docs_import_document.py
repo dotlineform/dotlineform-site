@@ -49,6 +49,7 @@ from docs_import_media import bind_import_media_owner  # noqa: E402
 from docs_index_order import index_order_path, index_order_text, insert_node, read_index_order  # noqa: E402
 from markdown_renderer import normalize_markdown_blank_lines  # noqa: E402
 from docs_report_source import RETIRED_REPORT_KEYS, parse_report_source  # noqa: E402
+from docs_document_media_ownership import DocumentMediaChange, compare_document_media  # noqa: E402
 
 
 IMPORT_DOCUMENT_CREATE = "create"
@@ -88,6 +89,11 @@ class ImportDocumentPlan:
     document_config: DocsStageConfig | DocsCollectionConfig
     collection: str = ""
     target: SourceDoc | None = None
+    media_change: DocumentMediaChange | None = None
+
+    @property
+    def media_changes(self) -> list[tuple[str, Any, DocumentMediaChange]]:
+        return [(self.doc_id, self.document_config, self.media_change)] if self.media_change is not None else []
 
     @property
     def doc_id(self) -> str:
@@ -375,6 +381,10 @@ def plan_import_document(
         document_config=document_config,
         collection=collection_id,
         target=target,
+        media_change=compare_document_media(
+            document_config, record.doc_id, previous_body=target.body, previous_metadata=target.front_matter,
+            body=candidate_body, metadata=front_matter,
+        ) if target is not None else None,
     )
 
 
