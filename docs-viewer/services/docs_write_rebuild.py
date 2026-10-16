@@ -449,7 +449,7 @@ def project_document_position(
     from docs_selected_documents import read_selected
 
     publication = load_preparation(repo_root, builder.workspace, navigation=previous)
-    publication.metadata.ordinary(navigation, previous)
+    publication.metadata.ordinary(navigation)
     publication.documents(builder, {doc_id: payload}, [], selected=read_selected(owner.parent_config), changed_ids={doc_id})
     prepare_restored(builder, {}, publication)
     publication.save()

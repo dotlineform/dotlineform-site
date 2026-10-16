@@ -3,14 +3,20 @@ draft: false
 doc_id: d-20260913-191339-834d6a
 title: Publication Ignore List
 added_date: "2026-09-13 19:13:39"
-last_updated: "2026-10-14 21:58:49"
+last_updated: "2026-10-16"
 summary: Use Working source/unpublishable.json for ordinary-document ID exclusions alongside draft, retire per-report access, and let Unpublishable read and open that exact JSON file in VS Code.
 ui_status: done
 parent_id: d-20260908-171728-3c539a
 ---
 # Publication Ignore List
 
-## Agreed Direction
+## Current Generation Ownership
+
+`working/source/unpublishable.json` is the single exclusion-policy input. Working index generation reads it once per operation and carries the exact ID set in memory through ordinary/collection projection and required dependent generation. Exact Save/Rebuild/Position follow-through uses the current policy, as complete builds do. Editing the list therefore affects the next index generation; no saved policy copy or change record is kept in `index-tree.json` or another generated file.
+
+Saved public indexes provide previous membership for withdrawal/restoration decisions. The policy excludes ordinary roots and descendants; an excluded collection host excludes its collection. Catalogue documents retain fixed intrinsic eligibility. Generation queues completed document/manifest effects; Publish only consumes those selections and never reads the policy. Search/Recent retain their separate explicit refresh owners. [Builder](Builder.md#publish-preparation) owns the current generation handoff; the delivery terminology and evidence below are historical.
+
+## Original Delivery Direction
 
 Publication selection should be explicit and easy to inspect. For ordinary scope documents, Pre-publish excludes draft documents, documents whose exact `doc_id` is in the publication ignore list, and all their descendants. The concept of `publishable` does not apply to sub-scope documents: they are outside the ignore-list lookup and retain their separate draft and report-host handling. Documents do not carry a separate `publishable` field, and publication does not infer exclusions from report blocks, report IDs or other indirect metadata.
 

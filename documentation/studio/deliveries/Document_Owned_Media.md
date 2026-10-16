@@ -14,7 +14,7 @@ This active delivery is parented to [Planned Features](../Planned_Features.md). 
 
 ## Current And Next State
 
-On 2026-10-16 the user authorised one media reference list, removal of the retired diagram pipeline and obsolete repository references while preserving documentation diagrams. The subsequent simplification replaces persisted media ownership with an in-memory authoring comparison and retires `publication-media.json`, without adding a by-ID media field or changing exclusion-policy behavior. DOM.7–DOM.9 record these slices.
+On 2026-10-16 the user authorised one media reference list, removal of the retired diagram pipeline and obsolete repository references while preserving documentation diagrams. The subsequent simplification replaces persisted media ownership with an in-memory authoring comparison, retires `publication-media.json` without a by-ID media field, and reads the single canonical exclusion policy at index generation without storing a copy or policy-change record. DOM.7–DOM.10 record these slices.
 
 Status: active on 2026-10-16. The user authorised DOM.1–DOM.4 implementation, the concrete local migration/exact generation and then the separate Publish for the migrated documents/media. Those operations are complete. Test work, Git commit/push and deployment retain their separate authority; manual interaction and deployed acceptance remain open.
 
@@ -119,7 +119,7 @@ Apply document-owned media removals to Preview and configured public destination
 - The browser owns the captured source buffer, native File selection and token serialization; Python owns conversion/sanitization, persistence, exact generation and transfers. Pending-file selection and thumbnail choice stay in the browser; the server carries loaded saved source and the prepared candidate through one in-memory media comparison and completes their exact filesystem effects.
 - Artifact paths, image-token references, inventory traversal and selected publication already accept nested relative identities. Native intake, import/materialisation and package/return-import boundaries must stop conflating a basename with the full body-media identity; thumbnails continue deriving their exact flat document-ID filename. This is coordinated ownership work, not a need for alternate roots or compatibility aliases. Migration preserves existing basenames; imported filenames do not need an additional naming cleanup.
 - Source Save currently accepts source JSON only; native media intake accepts exactly one file with a 64 MiB file limit, 1 MiB metadata limit and approximately 66 MiB envelope. Multi-file Save needs a bounded request change at that actual upload boundary. No server staging sessions, parallel upload workflow or general JSON-limit increase is required by the proposed approach.
-- `publication-media.json` is retired by DOM.9. Save and replacement Import compare loaded before/after source in memory. Generation derives current publication references without a historical ledger. The private ordinary index retains the previously applied exclusion list, preserving existing complete/exact policy timing.
+- `publication-media.json` is retired by DOM.9. Save and replacement Import compare loaded before/after source in memory. Generation derives current publication references without a historical ledger. DOM.10 removes the policy snapshot: index generation reads current `working/source/unpublishable.json` once per operation, applies it to complete metadata and compares membership with saved public indexes.
 - A thumbnail is an independent assignment. Imported SVG and HTML use ordinary ready-media identities; no companion crawler or producer-source lifetime is introduced.
 - Save failure can leave completed media writes, as the agreed manual-recovery model permits. Retain useful pending Files and report completed effects; do not add transactional rollback or a new retry protocol. Required target/owner, upload/format, path/symlink, sanitization and selected-transfer safeguards remain at their existing authoritative boundaries. Cross-document sharing audits, routine report refreshes, repeated conversion and whole-media scans have no purpose in this flow. The distinct post-implementation defensive review remains DOM.4.
 
@@ -227,10 +227,19 @@ Verification budget: existing focused pure checks in [Testing](../Testing.md#dia
 
 - [x] Compare loaded saved source and prepared candidate in memory during Source Save and replacement Import; carry exact owned removals through generation without a persisted baseline or new by-ID media field.
 - [x] Keep Rebuild/CLI generation to current reference extraction and eligible queue selection; retain pending-removal merging/cancellation, independent thumbnails and manual whole-document/orphan cleanup.
-- [x] Retire the configured `publication-media.json` directly, retain its applied exclusion list with the private index and preserve existing unpublishable/index policy behavior and pending queue bytes.
+- [x] Retire the configured `publication-media.json` directly and preserve pending queue bytes. The initial private-index policy snapshot is superseded by DOM.10.
 - [x] Update maintained media/file/build contracts and complete focused static diagnostics and a distinct Redundancy And Defensive Behavior Review.
 
 Verification budget: focused Python lint/compilation, service/builder import and CLI diagnostics, exact local metadata cutover and bounded source/diff review. No new or modified tests, live Save/Import, document/media generation, Search/Recent refresh, Publish or deployment. Gate: implementation and local metadata retirement complete; normal-use interaction/failure acceptance remains in DOM.6. Working Notes records selected evidence and review findings.
+
+### [x] DOM.10 — Single Exclusion Policy Input
+
+- [x] Remove the policy copy from `index-tree.json`, saved policy comparison/flags and old membership-reuse shortcuts tied to that snapshot.
+- [x] Read canonical `working/source/unpublishable.json` once per index-generation operation, carry it through ordinary/collection and dependent generation, and compare resulting membership with saved public indexes.
+- [x] Retain ordinary subtree/Draft and collection-host exclusions, fixed Catalogue eligibility and queue-only Publish. Exact operations apply policy edits at the next index generation; Search/Recent retain their explicit refresh owners.
+- [x] Remove the field from the configured private index without generation, policy/queue changes or publication; update maintained contracts and complete focused static/read-only diagnostics and distinct defensive review.
+
+Verification budget: lint/compilation for six changed Python owners, service/builder imports, a read-only projection using existing real metadata and exact private-index cleanup. No test authoring or test run, live Save, document/media generation, Search/Recent refresh, Publish or deployment. Gate: code and local cleanup complete; normal-use interaction/failure acceptance remains in DOM.6. Working Notes records selected evidence and review findings.
 
 ## Follow-on
 

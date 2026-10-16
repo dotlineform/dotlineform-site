@@ -155,16 +155,13 @@ class DocsDataBuilder(
             if previous_tree is None:
                 previous_tree = publication.metadata.read_management("")
                 previous_tree_text = publication.metadata.navigation_text
-        index_tree_payload = self.index_tree_payload(
-            docs_by_id, previous_payload=previous_tree,
-            unpublishable=publication.ignored if self.config.stage == "working" else None,
-        )
+        index_tree_payload = self.index_tree_payload(docs_by_id, previous_payload=previous_tree)
         if self.config.stage == "working":
             from docs_publication_preparation import prepare_generation
 
             publication = prepare_generation(
                 self, docs_for_item_build, item_payloads, index_tree_payload,
-                previous_navigation=previous_tree, preparation=publication, media_changes=media_changes,
+                preparation=publication, media_changes=media_changes,
             )
         # Preview, targeted builds and authoring follow-through preserve saved Recents.
         recent_payload = None

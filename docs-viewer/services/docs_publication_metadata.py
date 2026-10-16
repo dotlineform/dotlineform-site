@@ -18,18 +18,6 @@ def tree_ids(rows: list[dict[str, Any]]) -> set[str]:
     return result
 
 
-def _eligibility_inputs(rows: list[dict[str, Any]]) -> dict[str, tuple[str, bool]]:
-    result = {}
-
-    def visit(nodes: list[dict[str, Any]], parent: str) -> None:
-        for row in nodes:
-            result[row["doc_id"]] = (parent, row["draft"])
-            visit(row.get("children", []), row["doc_id"])
-
-    visit(rows, "")
-    return result
-
-
 class PublicMetadata:
     """Reuse loaded metadata and public membership for one generation operation.
 
@@ -37,10 +25,9 @@ class PublicMetadata:
     authoritative hierarchy, Draft and reader fields; no document/source reads.
     """
 
-    def __init__(self, workspace: Any, ignored: frozenset[str], *, policy_changed: bool, navigation: dict[str, Any], navigation_text: str | None) -> None:
+    def __init__(self, workspace: Any, ignored: frozenset[str], *, navigation: dict[str, Any], navigation_text: str | None) -> None:
         self.workspace = workspace
         self.ignored = ignored
-        self.policy_changed = policy_changed
         self.public: dict[str, dict[str, Any]] = {}
         self.public_members: dict[str, set[str]] = {}
         self.projected: dict[str, dict[str, Any]] = {}
@@ -49,7 +36,6 @@ class PublicMetadata:
         self.eligible: dict[str, set[str]] = {}
         self.restored: dict[str, str] = {}
         self.withdrawn: dict[str, str] = {}
-        self.policy_index_pending = False
 
     def read_public(self, collection: str) -> dict[str, Any]:
         if collection not in self.public:
@@ -83,21 +69,15 @@ class PublicMetadata:
         self.eligible[collection] = eligible
         self.projected[collection] = payload
 
-    def ordinary(self, navigation: dict[str, Any], previous: dict[str, Any] | None, *, index_write: bool = True) -> None:
+    def ordinary(self, navigation: dict[str, Any]) -> None:
         """Select ordinary membership once and propagate actual host changes."""
         before = self.membership("")
-        navigation["unpublishable"] = sorted(self.ignored)
-        self.policy_index_pending = self.policy_changed and not index_write
         self.management[""] = navigation
-        if previous == navigation and not self.policy_changed:
-            return
-        reuse = previous is not None and not self.policy_changed and _eligibility_inputs(previous["docs"]) == _eligibility_inputs(navigation["docs"])
-        allowed = before if reuse else None
 
         def project(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
             result = []
             for row in rows:
-                if (row["doc_id"] not in allowed if allowed is not None else row["draft"] or row["doc_id"] in self.ignored):
+                if row["draft"] or row["doc_id"] in self.ignored:
                     continue
                 node = {key: value for key, value in row.items() if key not in {"draft", "children"}}
                 children = project(row.get("children", []))
@@ -108,8 +88,7 @@ class PublicMetadata:
 
         rows = project(navigation["docs"])
         old = self.read_public("")
-        payload = {key: value for key, value in navigation.items() if key != "unpublishable"}
-        payload["docs"] = rows
+        payload = {**navigation, "docs": rows}
         if old["docs"] == rows:
             payload["generated_at"] = old["generated_at"]
         current = tree_ids(rows)
@@ -117,29 +96,21 @@ class PublicMetadata:
         changed_hosts = before ^ current
         for owner in select_workspace_stage(self.workspace, "working").collections:
             if owner.report_host_doc_id in changed_hosts:
-                self.collection(owner.collection, self.read_management(owner.collection), None)
+                self.collection(owner.collection, self.read_management(owner.collection))
 
-    def collection(self, collection: str, manifest: dict[str, Any], previous: dict[str, Any] | None) -> None:
+    def collection(self, collection: str, manifest: dict[str, Any]) -> None:
         """Project the selected complete management manifest without source work."""
         owner = working_owner(self.workspace, collection)
-        before = self.membership(collection)
         host_eligible = owner.report_host_doc_id in self.membership("")
-        host_was_eligible = owner.report_host_doc_id in self.public_members[""]
         self.management[collection] = manifest
-        if previous == manifest and not self.policy_changed and host_eligible == host_was_eligible:
-            return
 
         def draft(row: dict[str, Any]) -> bool:
             return False if collection == "catalogue" else row["draft"]
 
-        reuse = previous is not None and not self.policy_changed and host_eligible and host_was_eligible and (
-            {row["doc_id"]: draft(row) for row in previous["docs"]}
-            == {row["doc_id"]: draft(row) for row in manifest["docs"]}
-        )
         rows = []
         if host_eligible:
             for row in manifest["docs"]:
-                if (row["doc_id"] not in before if reuse else draft(row)):
+                if draft(row):
                     continue
                 public = {key: row[key] for key in ("doc_id", "title", "last_updated", "has_thumbnail") if key in row}
                 subject = row.get("subject")

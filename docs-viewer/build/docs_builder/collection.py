@@ -238,7 +238,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
 
             publication = prepare_generation(
                 self, docs, item_payloads, {}, manifest=manifest_payload,
-                previous_manifest=previous_manifest, preparation=publication, media_changes=media_changes,
+                preparation=publication, media_changes=media_changes,
             )
         write_plan = self.build_collection_write_plan(
             manifest_payload,

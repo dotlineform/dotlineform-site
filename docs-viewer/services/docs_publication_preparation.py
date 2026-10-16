@@ -75,8 +75,8 @@ def complete_source_media_changes(workspace: Any, changes: list[tuple[str, Any, 
 class PublicationPreparation:
     """Carry selected metadata, media and queue effects through generation.
 
-    References and authoring differences live only for this operation. Public
-    lists own prior membership; the private index owns the applied exclusions.
+    References, authoring differences and the current exclusion policy live
+    only for this operation. Saved public lists supply prior membership.
     """
 
     def __init__(self, repo_root: Path, workspace: Any, pending: dict[str, Any], metadata: PublicMetadata, *, changes_only: bool = False) -> None:
@@ -86,7 +86,6 @@ class PublicationPreparation:
         self.media: dict[str, dict[str, list[str]]] = {}
         self.ignored = metadata.ignored
         self.metadata = metadata
-        self.policy_applied = False
         self.catalogue_documents: set[str] = set()
         self.changes_only = changes_only
         self.restored_documents: set[str] = set()
@@ -95,17 +94,16 @@ class PublicationPreparation:
         self.working_removals: dict[tuple[str, str, str], Path] = {}
         self.removal_effects: list[dict[str, str]] = []
 
-    def prepare(self, builder: Any, docs: list[Any], payloads: dict[str, Any], navigation: dict[str, Any], *, previous_navigation: dict[str, Any] | None, manifest: dict[str, Any] | None, previous_manifest: dict[str, Any] | None, media_changes: dict[str, DocumentMediaChange] | None) -> None:
+    def prepare(self, builder: Any, docs: list[Any], payloads: dict[str, Any], navigation: dict[str, Any], *, manifest: dict[str, Any] | None, media_changes: dict[str, DocumentMediaChange] | None) -> None:
         """Record selected references and their exact owned-file removals."""
         collection = getattr(builder, "collection_id", "")
-        if self.metadata.policy_changed and not self.policy_applied and collection:
-            self.metadata.ordinary(self.metadata.read_management(""), None, index_write=False)
-            self.policy_applied = True
         if collection:
-            self.metadata.collection(collection, manifest, previous_manifest)
+            self.metadata.management[collection] = manifest
+            if "" not in self.metadata.eligible:
+                self.metadata.ordinary(self.metadata.read_management(""))
+            self.metadata.collection(collection, manifest)
         else:
-            self.metadata.ordinary(navigation, previous_navigation)
-            self.policy_applied = True
+            self.metadata.ordinary(navigation)
         self.restored_documents.update(set(payloads) & self.metadata.restored.keys())
         for doc in docs:
             change = (media_changes or {}).get(doc.doc_id)
@@ -188,10 +186,6 @@ class PublicationPreparation:
         return False
 
     def write_metadata(self) -> None:
-        if self.metadata.policy_index_pending:
-            working = select_workspace_stage(self.workspace, "working")
-            write_json(confined(generated_documents_path(working), "index-tree.json"), self.metadata.management[""])
-            self.metadata.policy_index_pending = False
         for collection, path, payload in self.metadata.changes():
             write_json(path, payload)
             select_shared(self.pending, collection or "workspace", "collection_manifest" if collection else "ordinary_index")
@@ -221,29 +215,26 @@ class PublicationPreparation:
 
 
 def load_preparation(repo_root: Path, workspace: Any, *, ignored_ids: frozenset[str] | None = None, navigation: dict[str, Any] | None = None, changes_only: bool = False) -> PublicationPreparation:
-    """Read the queue and applied index policy, without a media ledger."""
+    """Read the queue, current policy and required saved management metadata."""
+    working = select_workspace_stage(workspace, "working")
+    ignored = read_publication_ignore_ids(repo_root, config=working) if ignored_ids is None else ignored_ids
     navigation_text = None
     if navigation is None:
-        working = select_workspace_stage(workspace, "working")
         navigation_text = confined(generated_documents_path(working), "index-tree.json").read_text(encoding="utf-8")
         navigation = json.loads(navigation_text)
-    applied = frozenset(navigation["unpublishable"])
-    ignored = applied if ignored_ids is None else ignored_ids
-    metadata = PublicMetadata(workspace, ignored, policy_changed=ignored != applied, navigation=navigation, navigation_text=navigation_text)
+    metadata = PublicMetadata(workspace, ignored, navigation=navigation, navigation_text=navigation_text)
     return PublicationPreparation(repo_root, workspace, read_queue(workspace), metadata, changes_only=changes_only)
 
 
 def load_generation_preparation(builder: Any, previous_navigation: dict[str, Any] | None) -> PublicationPreparation:
-    """Load the selected build's queue and applied or freshly requested policy."""
-    ignored = None if builder.targeted_build else read_publication_ignore_ids(builder.repo_root, config=builder.config)
-    return load_preparation(builder.repo_root, builder.workspace, ignored_ids=ignored, navigation=previous_navigation, changes_only=not builder.targeted_build)
+    """Load the selected build's queue and current exclusion policy once."""
+    return load_preparation(builder.repo_root, builder.workspace, navigation=previous_navigation, changes_only=not builder.targeted_build)
 
 
-def prepare_generation(builder: Any, docs: list[Any], payloads: dict[str, Any], navigation: dict[str, Any], *, previous_navigation: dict[str, Any] | None = None, manifest: dict[str, Any] | None = None, previous_manifest: dict[str, Any] | None = None, preparation: PublicationPreparation | None = None, media_changes: dict[str, DocumentMediaChange] | None = None) -> PublicationPreparation:
+def prepare_generation(builder: Any, docs: list[Any], payloads: dict[str, Any], navigation: dict[str, Any], *, manifest: dict[str, Any] | None = None, preparation: PublicationPreparation | None = None, media_changes: dict[str, DocumentMediaChange] | None = None) -> PublicationPreparation:
     """Prepare publication references from this build's completed metadata."""
-    operation = load_generation_preparation(builder, previous_navigation) if preparation is None else preparation
-    operation.prepare(builder, docs, payloads, navigation, previous_navigation=previous_navigation,
-                      manifest=manifest, previous_manifest=previous_manifest, media_changes=media_changes)
+    operation = load_generation_preparation(builder, None) if preparation is None else preparation
+    operation.prepare(builder, docs, payloads, navigation, manifest=manifest, media_changes=media_changes)
     return operation
 
 
