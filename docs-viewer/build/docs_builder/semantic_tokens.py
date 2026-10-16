@@ -355,7 +355,7 @@ def replace_catalogue_tokens(
 
 
 def work_metadata_text(work: dict[str, Any], work_id: str) -> str:
-    """Render supplied Year display/dimensions; only absent optional dimensions are omitted."""
+    """Render supplied metadata, displaying whole dimensions without decimal zeros."""
     lines = [work["year_display"]]
     medium = work.get("medium")
     if medium is not None:
@@ -364,7 +364,7 @@ def work_metadata_text(work: dict[str, Any], work_id: str) -> str:
         lines.append(medium)
     dimensions = [work[key] for key in ("height_cm", "width_cm", "depth_cm") if key in work and work[key] is not None]
     if dimensions:
-        lines.append(" × ".join(str(value) for value in dimensions) + " cm")
+        lines.append(" × ".join(str(int(value)) if value == int(value) else str(value) for value in dimensions) + " cm")
     lines.append(f"cat. {work_id}")
     return "\n".join(lines)
 

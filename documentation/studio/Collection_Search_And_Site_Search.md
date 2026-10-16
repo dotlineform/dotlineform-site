@@ -3,13 +3,15 @@ draft: false
 doc_id: d-20260924-135214-baa9ec
 title: Collection Search And Site Search
 added_date: "2026-09-24 13:52:14"
-last_updated: "2026-10-14 21:35:23"
+last_updated: "2026-10-15"
 summary: Separate collection search, shared site-search and Recents coverage, and proposed editorial stars for a curated home-page report.
 parent_id: d-20260428-000000-f5ff18
 ---
 # Collection Search And Site Search
 
 This feature records implemented site-search selection and Recents generation/copying, with proposed collection search and editorial curation. It is maintained under [Planned Features](Planned_Features.md). The Search and Recents slices below are implemented; the remaining candidates are separate deliveries.
+
+Current publication follow-through is queue-only: Full Working Build generates and queues Recent; explicit Search builds queue saved index bytes. Ordinary operations preserve both, and Publish transfers only queued output without generation or freshness checks. [Generated Data Contracts](Generated_Data_Contracts.md) owns the current lifecycle; earlier scope/snapshot observations below retain their historical evidence limits.
 
 Here, **site search** means the Docs Viewer main search over the selected workspace stage, including the public reader of its accepted snapshot. **Collection search** means search within one collection report. The separate Catalogue Works report and public Catalogue Search are distinct consumers.
 

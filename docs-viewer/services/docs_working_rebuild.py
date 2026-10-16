@@ -8,19 +8,20 @@ import time
 from typing import Any, Callable
 
 from docs_build_manifest import remove_build_manifest, write_working_build_completion
-from docs_discovery_selection import select_built_discovery_documents
+from docs_discovery_selection import DiscoverySelection, read_discovery_metadata, select_built_discovery_documents
 from docs_index_order import index_order_path, read_index_order, tree_parent_ids
 from docs_publication_ignore import read_publication_ignore_ids
 from docs_selected_documents import read_selected, refresh_workspace_selected
-from docs_workspace_config import load_docs_workspace_config, require_document_authoring, select_workspace_stage
+from docs_publication_preparation import load_preparation, prepare_dependencies, prepare_restored
+from docs_workspace_config import generated_documents_path, load_docs_workspace_config, require_document_authoring, select_workspace_stage
 
 
 def rebuild_working_docs_and_search(repo_root: Path) -> dict[str, Any]:
     """Carry one set of validated inputs through every required Working output.
 
-    Media and relationships finish before rendering; Search and Recents consume
-    one completed discovery selection. Failure stops at the reached phase and
-    retains completed effects, with no rollback or completion receipt.
+    Catalogue generation stays with Regenerate. Changed relationship records
+    select exact dependencies after bulk rendering; Search and Recents consume
+    one completed discovery selection. Failure retains completed effects.
     """
     build_dir = repo_root / "docs-viewer/build"
     if str(build_dir) not in sys.path:
@@ -47,6 +48,7 @@ def rebuild_working_docs_and_search(repo_root: Path) -> dict[str, Any]:
     try:
         workspace = load_docs_workspace_config(repo_root)
         config = select_workspace_stage(workspace, "working")
+        publication = load_preparation(repo_root, workspace, ignored_ids=read_publication_ignore_ids(repo_root, config=config))
         require_document_authoring(config)
         remove_build_manifest(repo_root, config)
         rendering_inputs = RenderingInputs.load(repo_root)
@@ -58,7 +60,7 @@ def rebuild_working_docs_and_search(repo_root: Path) -> dict[str, Any]:
             owner.collection: CollectionDocsBuilder(
                 repo_root=repo_root, config=config, collection=owner, workspace=workspace,
                 rendering_inputs=rendering_inputs, skip_media_builds=True,
-            ) for owner in config.collections
+            ) for owner in config.collections if owner.collection != "catalogue"
         }}
         parents = tree_parent_ids(read_index_order(index_order_path(config)))
         selected = read_selected(config)
@@ -93,21 +95,35 @@ def rebuild_working_docs_and_search(repo_root: Path) -> dict[str, Any]:
         for name, builder in builders.items():
             results[name] = perform(f"documents/{name or 'ordinary'}", lambda: builder.run(
                 write=True, documents=documents[name], related_records=related_records,
-                stale_item_ids=stale_ids[name], update_selected=False, catalogue_works=catalogue_works,
+                stale_item_ids=stale_ids[name], update_selected=False, catalogue_works=catalogue_works, publication=publication, expand_dependencies=False,
                 **({"parent_ids": parents} if not name else {}),
             ))
             diagnostics = results[name]["diagnostics"]
             diagnostics["source_files_scanned"] = len(documents[name])
             payload["diagnostics"]["collections"][name or "documents"] = diagnostics
-        perform("selected", lambda: refresh_workspace_selected(
+
+        def rebuild_dependencies() -> None:
+            changed = {Path(name).stem for name in payload["diagnostics"]["relationships"]["written"]}
+            supplied = {target.doc_id for target in all_documents} | {target.doc_id for target in deleted}
+            prepare_dependencies(ordinary, {target: record for target, record in related_records.items() if target.doc_id in changed}, supplied, publication)
+            prepare_restored(ordinary, related_records, publication)
+
+        perform("document dependencies", rebuild_dependencies)
+        selected = perform("selected", lambda: refresh_workspace_selected(
             config, [(builder.media_owner, documents[name]) for name, builder in builders.items()], payload=selected,
         ))
 
         tree = results[""]["index_tree_payload"]["docs"]
-        discovery = perform("discovery-selection", lambda: select_built_discovery_documents(
-            config, tree, {name: result["manifest_payload"] for name, result in results.items() if name},
-            read_publication_ignore_ids(repo_root, config=config),
-        ))
+
+        def select_discovery() -> DiscoverySelection:
+            manifests = {name: result["manifest_payload"] for name, result in results.items() if name}
+            eligible = set(publication.state["eligible"])
+            for owner in config.site_search_collections:
+                if owner.collection not in builders and owner.report_host_doc_id in eligible:
+                    manifests[owner.collection] = read_discovery_metadata(generated_documents_path(owner) / "manage-manifest.json")
+            return select_built_discovery_documents(config, tree, manifests, publication.ignored)
+
+        discovery = perform("discovery-selection", select_discovery)
 
         def rebuild_recent() -> dict[str, Any]:
             path = ordinary.output_dir / "recent.json"
@@ -115,13 +131,23 @@ def rebuild_working_docs_and_search(repo_root: Path) -> dict[str, Any]:
                 ordinary.recent_candidates(documents[""], tree, discovery=discovery), output_path=path,
             )
             write_text(path, json_text(recent))
+            publication.shared("workspace", "recent", recent)
             return {"docs": len(recent["docs"])}
 
         payload["diagnostics"]["recent"] = perform("recent", rebuild_recent)
+        publication.selected(selected)
+        perform("publication handoff", publication.save)
         search_builder = DocsViewerSearchDataBuilder(repo_root=repo_root, stage="working", config=config)
-        search = perform("search", lambda: search_builder.run(
-            write=True, force=False, documents=search_records_from_build(discovery, documents),
-        ))
+
+        def rebuild_search() -> dict[str, Any]:
+            built_discovery = DiscoverySelection(discovery.ordinary, [entry for entry in discovery.collections if entry[0].collection in documents])
+            search_documents = search_records_from_build(built_discovery, documents)
+            for owner, selection in discovery.collections:
+                if owner.collection not in documents:
+                    search_documents.extend(search_builder.load_named_collection_docs(owner, selection))
+            return search_builder.run(write=True, force=False, documents=search_documents)
+
+        search = perform("search", rebuild_search)
         payload["diagnostics"]["search"] = search["diagnostics"]
         perform("browser-configuration", lambda: write_browser_config(
             repo_root, workspace, path=DOCS_VIEWER_BROWSER_CONFIG_PATH, label="Docs Viewer browser config",

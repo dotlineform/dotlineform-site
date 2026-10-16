@@ -1,139 +1,35 @@
-#!/usr/bin/env python3
-"""Completion evidence for one full external Docs Viewer stage Build."""
+"""Operation completion for a full Working Build; no publication inventory."""
 
 from __future__ import annotations
 
 import datetime as dt
-import hashlib
-import json
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 from docs_json_files import render_json, write_text_atomic
-from docs_workspace_config import DocsStageConfig, resolve_location_path
+from docs_workspace_config import DocsStageConfig, generated_documents_path
 
 
 BUILD_MANIFEST_FILENAME = "build-manifest.json"
-BUILD_MANIFEST_SCHEMA_VERSION = "docs_build_manifest_v2"
-IGNORED_FILENAMES = frozenset({".DS_Store", ".gitkeep"})
-
-
-def utc_now() -> str:
-    return dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
-
-
-def _safe_root(repo_root: Path, config: DocsStageConfig, *, role: str) -> Path:
-    location = config.stage_root if role in {"source", "generated"} else config.workspace_root
-    owner_root = resolve_location_path(repo_root, location)
-    root = owner_root / role
-    if owner_root.is_symlink() or root.is_symlink():
-        raise ValueError(f"Docs stage {config.stage!r} {role} root must not be a symlink")
-    if not owner_root.is_dir() or not root.is_dir():
-        raise FileNotFoundError(f"Docs stage {config.stage!r} {role} root is unavailable")
-    return root.resolve()
-
-
-def _managed_files(root: Path, *, excluded: Iterable[str] = ()) -> list[Path]:
-    excluded_set = set(excluded)
-    paths: list[Path] = []
-    for path in sorted(root.rglob("*")):
-        if path.is_symlink():
-            raise ValueError(f"Docs lifecycle output must not contain symlinks: {path.relative_to(root)}")
-        if not path.is_file() or path.name in IGNORED_FILENAMES:
-            continue
-        relative = path.relative_to(root).as_posix()
-        if any(Path(relative).is_relative_to(entry) for entry in excluded_set):
-            continue
-        paths.append(path)
-    return paths
-
-
-def _sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as stream:
-        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
-
-
-def tree_revision(root: Path, paths: Iterable[Path]) -> str:
-    digest = hashlib.sha256()
-    for path in paths:
-        relative = path.relative_to(root).as_posix()
-        digest.update(relative.encode("utf-8"))
-        digest.update(b"\0")
-        digest.update(bytes.fromhex(_sha256(path)))
-        digest.update(b"\0")
-    return f"sha256:{digest.hexdigest()}"
 
 
 def build_manifest_path(repo_root: Path, config: DocsStageConfig) -> Path:
-    return _safe_root(repo_root, config, role="generated") / BUILD_MANIFEST_FILENAME
+    path = generated_documents_path(config).parent / BUILD_MANIFEST_FILENAME
+    if path.resolve() != path:
+        raise ValueError("Working build receipt must stay in its configured directory")
+    return path
 
 
 def remove_build_manifest(repo_root: Path, config: DocsStageConfig) -> bool:
     path = build_manifest_path(repo_root, config)
-    if not path.exists():
-        return False
-    if path.is_symlink() or not path.is_file():
-        raise ValueError(f"Docs stage {config.stage!r} build manifest must be a regular file")
-    path.unlink()
-    return True
-
-
-def write_build_manifest(repo_root: Path, config: DocsStageConfig) -> dict[str, Any]:
-    """Record byte inventories required by captured Preview preparation."""
-    if config.stage != "preview":
-        raise ValueError("Build byte inventories belong to captured Preview builds")
-    source_root = _safe_root(repo_root, config, role="source")
-    generated_root = _safe_root(repo_root, config, role="generated")
-    source_files = _managed_files(source_root)
-    excluded = [BUILD_MANIFEST_FILENAME]
-    generated_files = _managed_files(generated_root, excluded=excluded)
-    records = [
-        {
-            "path": path.relative_to(generated_root).as_posix(),
-            "size": path.stat().st_size,
-            "sha256": _sha256(path),
-        }
-        for path in generated_files
-    ]
-    payload: dict[str, Any] = {
-        "schema_version": BUILD_MANIFEST_SCHEMA_VERSION,
-        "stage": config.stage,
-        "completed_at": utc_now(),
-        "source_revision": tree_revision(source_root, source_files),
-        "generated_revision": tree_revision(generated_root, generated_files),
-        "file_count": len(records),
-        "files": records,
-    }
-    path = generated_root / BUILD_MANIFEST_FILENAME
-    write_text_atomic(path, render_json(payload))
-    persisted = json.loads(path.read_text(encoding="utf-8"))
-    if persisted != payload:
-        raise RuntimeError(f"Docs stage {config.stage!r} build manifest did not verify")
-    return payload
+    existed = path.exists()
+    path.unlink(missing_ok=True)
+    return existed
 
 
 def write_working_build_completion(repo_root: Path, config: DocsStageConfig) -> dict[str, Any]:
-    """Record synchronous Working completion without rescanning inputs or output.
-
-    This is an operation receipt, not a freshness or publication prerequisite.
-    Preview owns its independently verified byte inventory.
-    """
-    if config.stage != "working":
-        raise ValueError("Working completion requires Working")
-    payload = {"schema_version": "docs_working_build_v1", "stage": "working", "completed_at": utc_now()}
+    """Record completion without reopening sources or generated artifacts."""
+    completed = dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    payload = {"schema_version": "docs_working_build_v1", "stage": "working", "completed_at": completed}
     write_text_atomic(build_manifest_path(repo_root, config), render_json(payload))
     return payload
-
-
-__all__ = [
-    "BUILD_MANIFEST_FILENAME",
-    "BUILD_MANIFEST_SCHEMA_VERSION",
-    "build_manifest_path",
-    "remove_build_manifest",
-    "tree_revision",
-    "write_build_manifest",
-    "write_working_build_completion",
-]

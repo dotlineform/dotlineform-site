@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260422-000000-fb2894
 title: Catalogue Services
 added_date: "2026-04-22 00:00:00"
-last_updated: "2026-10-10 13:14:28"
+last_updated: "2026-10-15"
 parent_id: d-20260423-000000-d015e6
 ---
 
@@ -32,11 +32,11 @@ browser command
 | Updates accumulation | `catalogue_pending_updates.py`; mutation owners reset affected Works false and merge exact Gallery/Series/shared-output selections. `catalogue_shared_changes.py` owns dependency selection from the mutation's known candidates and already loaded relationships. |
 | Refresh and status | `catalogue_refresh_service.py`; handoff completes each selected Work before true readiness. Selected Gallery/shared output completes before publication merge and updates removal. Full completion advances the last Refresh time; status reads false Works and nonempty shared selections. |
 | Catalogue source/document generation | Docs `docs_catalogue_regeneration.py`; true-readiness entries complete before publication merge and updates removal. Normal Regenerate is queue-only. |
-| Completed publication contributions | `catalogue_pending_publication.py`; Refresh merges completed shared selections, excluding private reports. Regenerate, design maintenance and Docs exact-document Rebuild merge completed Works. Both preserve other families, initialized Work progress and timestamps. |
-| Per-Work Preview and repository/R2 Deploy | Docs `docs_catalogue_publication.py`; Publish advances `preview_done`, removes completed entries and timestamps completion of a nonempty Work queue. |
-| Final shared Publish | Docs `docs_publish.py`, `docs_prepare_preview.py` and `docs_deploy_repo.py`; one shared pass follows the Work maps, retaining unselected Preview Catalogue bytes and applying exact queued Gallery/shared operations. Shared selections clear only after distribution succeeds, including definition-only publication. |
+| Completed publication contributions | `catalogue_pending_publication.py` and Docs public preparation; completed shared/Work/document effects merge into carried queues, preserving other families, selected media and timestamps without progress flags. |
+| Per-Work Preview and repository/R2 Deploy | Docs `docs_catalogue_publication.py`; transfers selected finished Work/document/media bytes, removes successful units and records Work-queue completion. |
+| Selected shared Publish | Docs `docs_publish.py`, `docs_selected_publication.py` and `docs_catalogue_publication.py`; queued finished files/removals follow item work, with no unconditional preparation, corpus reconciliation or remote listing. |
 
-[Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns updates schema `catalogue_updates_pending_v4`, field ownership and readiness. [Catalogue Deployment](Catalogue_Deployment.md) owns publication schema `catalogue_publish_pending_v4`, Preview progress, exact media/shared selection and failure behavior. Both queue files live directly below configured Docs Working storage; their headers are written first. No separate Refresh receipt or Catalogue/configuration hash determines readiness.
+[Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns `catalogue_updates_pending_v5` and Refresh readiness. [Catalogue Deployment](Catalogue_Deployment.md) owns `catalogue_publish_pending_v5`, exact selected media/shared transfers and failure behavior. Queues live directly under Working; no Refresh receipt, content hash or Publish progress flag supplies readiness.
 
 ## Transactions And Failure
 

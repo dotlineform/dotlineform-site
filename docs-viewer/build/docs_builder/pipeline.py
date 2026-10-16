@@ -25,7 +25,7 @@ from .source import DocRecord, SourceLoadingMixin
 from .ordinary_metadata import targeted_document_metadata
 from .write_plan import WritePlanMixin
 from docs_index_order import index_order_path, read_index_order, tree_parent_ids
-from docs_selected_documents import read_selected, refresh_selected_documents, selected_path
+from docs_selected_documents import read_selected, refresh_selected_documents
 from docs_workspace_config import DocsWorkspaceConfig
 
 
@@ -71,6 +71,7 @@ class DocsDataBuilder(
         self.site_config = rendering_inputs.site_config
         self.semantic_token_registry = rendering_inputs.semantic_token_registry
         self.inline_icons = rendering_inputs.inline_icons
+        self.rendering_inputs = rendering_inputs
         self._catalogue_work_cache: dict[str, dict[str, Any]] = {}
         self.related_links_dir = related_links_dir or generated_documents_path(config) / "links-by-id"
         self.source_files_scanned = 0
@@ -84,6 +85,8 @@ class DocsDataBuilder(
         stale_item_ids: list[str] | None = None,
         update_selected: bool = True,
         catalogue_works: dict[str, dict[str, Any]] | None = None,
+        publication: Any = None,
+        expand_dependencies: bool = True,
     ) -> dict[str, Any]:
         """Render sources, or carry completed workspace inputs into rendering.
 
@@ -183,9 +186,14 @@ class DocsDataBuilder(
                 recent_total=len(recent_payload["docs"]) if recent_payload is not None else None,
             )
         if self.config.stage == "working" and update_selected:
-            refresh_selected_documents(self.config, self.config, docs_for_item_build, write=write, payload=selected_payload)
-        elif self.config.stage == "preview" and write:
-            (self.output_dir / "selected.json").write_bytes(selected_path(self.config).read_bytes())
+            selected_payload = refresh_selected_documents(self.config, self.config, docs_for_item_build, write=write, payload=selected_payload)
+        if write and self.config.stage == "working":
+            from docs_publication_preparation import complete_generation
+
+            complete_generation(self, docs_for_item_build, item_payloads, index_tree_payload, stale_item_ids,
+                                selected=selected_payload, related_records=related_records,
+                                dependency_ids={Path(name).stem for name in links_build["written"]} if links_build is not None else set(),
+                                preparation=publication, expand_dependencies=expand_dependencies, recent=recent_payload)
         diagnostics["warning_count"] = len(self.warnings)
         if emit_diagnostics:
             self.print_diagnostics(diagnostics)

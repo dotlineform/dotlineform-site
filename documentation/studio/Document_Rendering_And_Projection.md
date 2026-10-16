@@ -3,12 +3,14 @@ draft: false
 doc_id: d-20261003-000734-6cff69
 title: Document Rendering And Projection
 added_date: "2026-10-03 00:07:34"
-last_updated: "2026-10-08 19:10:43"
+last_updated: "2026-10-15"
 summary: Remove redundant Working public-manifest generation and dependencies while preserving existing rendering and field contracts.
 ui_status: done
 parent_id: d-20260428-000000-f5ff18
 ---
 # Document Rendering And Projection
+
+Current publication ownership is maintained in [Builder](Builder.md#publish-preparation). This completed slice records the former temporary Preview-build architecture. Queue-only publication now prepares eligible public artifacts in Working and transfers only selected bytes; historical commands, module pointers and evidence below do not describe or verify that new path.
 
 Status: complete on 2026-10-03. Implementation, obsolete Working output removal, selected static checks, code review and durable documentation transfer are complete. Build/Publish execution and browser verification were not part of the selected evidence. This feature and its bounded delivery are parented to [Planned Features](Planned_Features.md).
 

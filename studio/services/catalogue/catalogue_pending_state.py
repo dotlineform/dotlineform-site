@@ -33,7 +33,7 @@ def pending_path(repo_root: Path, filename: str, *, workspace: DocsWorkspaceConf
 
 def validate_pending_state(repo_root: Path, value: Any, *, schema: str, progress: str) -> dict[str, Any]:
     """Validate headers, exact Work records and shared family/output selections."""
-    publishing = progress == "preview_done"
+    publishing = progress == "published"
     selection_fields = SHARED_FIELDS if publishing else REFRESH_FIELDS
     if not isinstance(value, dict) or set(value) != {"header", "current_works", "deleted_works", *selection_fields}:
         raise ValueError(f"Catalogue queue requires {schema}")
@@ -51,7 +51,7 @@ def validate_pending_state(repo_root: Path, value: Any, *, schema: str, progress
         entries = value[family]
         if not isinstance(entries, dict):
             raise ValueError(f"Catalogue queue {family} must be an object")
-        fields = {"image", "file_names", progress} | ({"metadata"} if family == "current_works" else set())
+        fields = {"image", "file_names"} | (set() if publishing else {progress}) | ({"metadata"} if family == "current_works" else set())
         for work_id, entry in entries.items():
             if not isinstance(work_id, str) or not WORK_ID.fullmatch(work_id):
                 raise ValueError("Catalogue queue requires exact five-digit Work IDs")
@@ -93,7 +93,7 @@ def persist_pending_queue(path: Path, value: dict[str, Any], *, progress: str) -
         "header": {key: value["header"][key] for key in header_keys},
         **{family: {wid: value[family][wid] for wid in sorted(value[family])}
            for family in ("current_works", "deleted_works")},
-        **shared_changes(value, publishing=progress == "preview_done"),
+        **shared_changes(value, publishing=progress == "published"),
     }
     data = json.dumps(value, ensure_ascii=False, indent=2) + "\n"
     fd, name = tempfile.mkstemp(prefix="catalogue-pending-", suffix=".tmp", dir=path.parent)

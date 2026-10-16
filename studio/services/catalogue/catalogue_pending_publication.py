@@ -1,4 +1,4 @@
-"""Completed Catalogue changes and Publish-owned per-Work progress."""
+"""Completed Catalogue selections, removed only after distribution."""
 
 from __future__ import annotations
 
@@ -25,32 +25,15 @@ def merge_completed_shared(
     path = pending_path(repo_root, FILENAME, workspace=workspace)
     pending = load_pending_queue(path)
     merge_shared_changes(pending, selection, publishing=True)
-    persist_pending_queue(path, pending, progress="preview_done")
+    persist_pending_queue(path, pending, progress="published")
 
 
-def merge_completed_document(
-    repo_root: Path, work_id: str, *, workspace: DocsWorkspaceConfig | None = None,
-) -> None:
-    """Queue document-only completion without inspecting Work or media inputs.
-
-    Preserve current media selections and initialized Publish progress. Moving
-    a former deletion back to current starts with no media-transfer selection.
-    """
-    path = pending_path(repo_root, FILENAME, workspace=workspace)
-    pending = load_pending_queue(path)
-    current = pending["current_works"].get(work_id)
-    if current is not None:
-        record = {**current, "metadata": True}
-    else:
-        existing = pending["deleted_works"].get(work_id)
-        record = {"metadata": True, "image": False, "file_names": []}
-        if existing is None:
-            record["preview_done"] = False
-        else:
-            record = {**existing, **record}
-    pending["deleted_works"].pop(work_id, None)
-    pending["current_works"][work_id] = record
-    persist_pending_queue(path, pending, progress="preview_done")
+def merge_document_selections(pending: dict[str, Any], work_ids: Iterable[str]) -> None:
+    """Merge completed Catalogue documents into one carried publication queue."""
+    for work_id in work_ids:
+        current = pending["current_works"].get(work_id)
+        pending["deleted_works"].pop(work_id, None)
+        pending["current_works"][work_id] = {**current, "metadata": True} if current is not None else {"metadata": True, "image": False, "file_names": []}
 
 
 def merge_completed_work_selections(
@@ -60,7 +43,6 @@ def merge_completed_work_selections(
     for family, work_id, selection, download_names in completed:
         other = "deleted_works" if family == "current_works" else "current_works"
         previous = pending[family].get(work_id)
-        existing = previous if previous is not None else pending[other].get(work_id)
         record = {key: value for key, value in selection.items() if key != "refreshed"}
         if family == "current_works":
             prior = previous or {}
@@ -69,11 +51,5 @@ def merge_completed_work_selections(
                 image=record["image"] or prior.get("image", False),
                 file_names=sorted((set(record["file_names"]) | set(prior.get("file_names", []))) & download_names),
             )
-        if existing is None:
-            record["preview_done"] = False
-        else:
-            record = {**existing, **record}
-            if family == "deleted_works":
-                record.pop("metadata", None)
         pending[other].pop(work_id, None)
         pending[family][work_id] = record

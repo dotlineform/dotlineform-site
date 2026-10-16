@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260719-123719-fb7565
 title: Document Diagrams
 added_date: "2026-07-19 12:37:19"
-last_updated: "2026-10-08 19:10:43"
+last_updated: "2026-10-15"
 summary: Author, build, publish, render, inspect, and extend scope-owned Mermaid diagrams in Docs Viewer.
 parent_id: d-20260424-000000-50b63f
 
@@ -19,7 +19,7 @@ Docs Viewer uses Mermaid for authored architecture and workflow diagrams that be
 
 Studio uses the accessible fenced block as its working default for Mermaid-authored, document-owned diagrams. Choose canonical `.mmd` plus persistent SVG when the diagram needs an independently managed media identity or stable served URL. Finished SVG remains the direct-media option for authored or imported vectors, and imported local documents retain that media contract until an explicitly selected migration chooses a different canonical source.
 
-The fenced block remains canonical Markdown. Managed Working readers render it in memory. A complete public scope's Pre-publish Build derives a validated light and dark SVG pair and replaces the fence in its generated payload. Publish accepts those prepared images and HTML; Deploy distributes that accepted snapshot. Public document payloads contain prepared images and do not require the Mermaid runtime.
+Canonical Markdown and Working payloads retain Mermaid fences. Managed readers render them in memory. Eligible Working generation prepares the public light/dark SVG pairs and replaces only its public payload copy; queue-only Publish transfers those completed document/media bytes without rendering or source reads.
 
 Finished SVG and Mermaid source share the source editor's **Add image…** action but keep different contracts. A staged `.svg` is already-finished vector media; a staged `.mmd` is retained as canonical source and rendered before its SVG token is returned.
 
@@ -68,68 +68,37 @@ Studio and Analysis configure the standalone Mermaid producer in both Working an
 
 ## Author Workflow
 
-For initial intake through Docs Viewer:
+Use Source Editor **Add image…** to select a native accessible `.mmd` file. Intake renders/verifies its source and SVG through the configured owner and inserts a token into the unsaved buffer. Source Save persists the buffer and completes exact generation. Cancelling retains stored media but supplies no unsaved-document publication reference. Original files remain untouched.
 
-1. save an accessible `.mmd` as a direct child of shared import staging;
-2. open the target document's Markdown source editor and choose **Add image…**;
-3. select the Mermaid source and provide useful Markdown alt text;
-4. allow the service to render in temporary storage, publish and verify canonical source plus SVG, and insert the SVG token;
-5. review the dirty Markdown buffer and choose **Rebuild doc**.
-
-A render or publication failure inserts no token and writes no document source. Staged input remains in place after success.
-
-For later edits, view the rendered document and open Document Info. Its manage-only **Diagrams** section lists verified diagram-title links. Choosing one delegates the logical source identity to VS Code without exposing a physical path. Save the canonical `.mmd`; Docs Watcher renders only that changed identity. The Markdown token and search index do not change.
-
-Public routes never show these source links. Markdown source mode retains its semantic-token interface rather than becoming a Mermaid editor.
+Document Info's managed source links open registered persistent sources. The watcher is retired: an external persistent-source edit requires **Rebuild docs and Search**. Source Save and exact Rebuild skip registered media production.
 
 ## Repository Workflow
 
-Repository authors and Codex can work directly:
+Workspace configuration owns each ordinary/collection boundary. Ordinary persistent sources live under `working/assets/media/workspace/build-source/mermaid/` and ready SVGs under `working/assets/media/workspace/svg/`; collections use `working/assets/media/collections/<id>/`. Do not infer retired scope roots or edit generated SVG by hand.
 
-1. write canonical source to the configured Working collection's `source/media/build-source/mermaid/<diagram-name>.mmd` directory;
-2. add the same-basename SVG token to the owning Markdown document;
-3. run the targeted document build:
-
-```bash
-python3 docs-viewer/build/build_docs.py --scope <scope> --stage working --only-doc-ids <doc-id> --write
-```
-
-The producer runs before document payloads are rendered. The ordinary media snapshot builds referenced Mermaid identities and reconciles generated media. Staged intake and media-capable full builds use the same producer. Source Save and exact-document Rebuild always skip registered media work. After an external persistent `.mmd` edit, use **Rebuild docs and Search** to regenerate referenced SVGs across configured owners. Unreferenced `.mmd` files are not rendered. [Source Organisation](Source_Organisation.md#explicit-external-edit-and-media-rebuilds) owns the selected action, extra writes and cost.
+External Markdown requires exact owning generation. Persistent `.mmd` changes require the explicit full media/docs build described in [Source Organisation](Source_Organisation.md#explicit-external-edit-and-media-rebuilds). Only referenced registered sources are produced. Generation queues completed public references upstream.
 
 ## Source And Publication Contract
 
-Use lowercase kebab-case identities:
+Persistent diagrams retain their independent `.mmd` identity; fenced diagrams belong to a document/ordinal. The pinned renderer owns sanitization, accessible SVG output and responsive geometry. Persistent media retains its neutral presentation; public fences use the shared light/dark Docs palette.
 
-```text
-$DOTLINEFORM_DOCS_BASE_DIR/scopes/<scope>/working/source/media/build-source/mermaid/<diagram-name>.mmd
-$DOTLINEFORM_DOCS_BASE_DIR/scopes/<scope>/working/generated/media/svg/<diagram-name>.svg
-```
-
-Markdown uses the scope's ordinary SVG media token:
-
-<pre><code>![Useful diagram alt text](&#91;&#91;media:docs/&lt;scope&gt;/svg/&lt;diagram-name&gt;.svg&#93;&#93;)</code></pre>
-
-Each scope owns its source and derived SVG. Do not share canonical source across scopes, edit generated SVG by hand, or register an unversioned global `mmdc` executable.
-
-Pre-publish copies eligible Working document sources and their collection-owned media inputs, then builds the derivative. Publish accepts the complete prepared document set and its referenced SVG media into the scope's external `published/` snapshot. Deploy Repo distributes that accepted snapshot to the configured repository/R2 destinations. The `.mmd` source stays in source storage; it is not a published media output. Document draft state and the scope's ordinary `unpublishable.json` determine preparation eligibility.
-
-The repository-pinned persistent-media renderer uses a neutral theme, white background, strict security, `htmlLabels: false`, and an explicit 1200 by 800 browser viewport. Every persistent `.mmd` source requires non-empty Mermaid `accTitle` and `accDescr`; every Markdown reference requires useful alt text. The shared SVG sanitizer must preserve a responsive `viewBox`, accessibility metadata, and visible content before publication succeeds.
+Eligible generation supplies complete public document/media effects. Publish applies selected bytes/removals through Preview to configured destinations, leaves unselected bytes intact and never regenerates diagrams. Markdown and `.mmd` source stay private. Eligibility belongs upstream; document-media deletion remains manual.
 
 ## Code Authority And Extension
 
 - dependency and renderer settings: `docs-viewer/build/mermaid/`
 - producer implementation: `docs-viewer/services/docs_mermaid_media.py`
 - producer registry and full/targeted invocation: `docs-viewer/build/docs_builder/media_builds.py`
-- scope activation and locations: `docs-viewer/config/scopes/docs_scopes.json`
+- workspace/media locations: `docs-viewer/config/workspace/docs-workspace.json`
 - native author intake: `docs-viewer/services/docs_source_media_service.py`
 - rendered source discovery/opening: `docs-viewer/services/docs_diagram_source_service.py`
-- explicit persistent-source rebuild: Manage **Rebuild docs and Search**, through `docs-viewer/services/docs_write_rebuild.py`
-- public fence planner and manifest contract: `docs-viewer/services/docs_public_mermaid_projection.py`
-- prepared pair producer and complete-build integration: `docs-viewer/services/docs_public_mermaid_producer.py`, `docs-viewer/services/docs_mermaid_preparation.py`, and `docs-viewer/services/docs_write_rebuild.py`
-- prepared payload projection and publication boundaries: `docs-viewer/services/docs_public_mermaid_payload.py`, `docs-viewer/services/docs_scope_publish.py`, and `docs-viewer/services/docs_deploy_repo.py`
+- explicit persistent-source rebuild: Manage **Rebuild docs and Search**, through `docs-viewer/services/docs_working_rebuild.py`
+- public fence identities/source plans: `docs-viewer/services/docs_public_mermaid_projection.py`, with per-document records retained by public preparation
+- selected pair renderer/upstream integration: `docs-viewer/services/docs_public_mermaid_producer.py`, `docs_mermaid_preparation.py` and `docs_publication_preparation.py`
+- prepared payload/selected publication: `docs-viewer/services/docs_public_mermaid_payload.py`, `docs_selected_publication.py` and `docs_publish.py`
 - prepared image theme selection in Manage and Public: `docs-viewer/runtime/js/public/docs-viewer-public-themed-diagrams.js`
 - exact diagram target, presentation, and temporary-resource lifecycle: `docs-viewer/runtime/js/shared/docs-viewer-diagram-detail.js`
-- maintained publication verification: [Mermaid Publication Test Coverage](Mermaid_Publication_Test_Coverage.md)
+- historical publication selection: [Mermaid Publication Test Coverage](Mermaid_Publication_Test_Coverage.md); retired snapshot/transaction contracts require separate review before relying on those tests
 - external-local browser loading boundary: `docs_viewer_external_inline_mermaid_route.py`
 - focused contracts: `docs-viewer/tests/python/test_docs_mermaid_media.py`, `test_docs_staged_media_service.py`, `test_docs_diagram_source_service.py`, with watcher tests now unreviewed retirement residue
 
@@ -142,21 +111,17 @@ To add another build-source type, register one code-owned producer and managed t
 
 ## Fenced Document Workflow
 
-Author a fenced `mermaid` block directly in the document when the diagram belongs only to that document and does not need its own managed media identity. Authored non-empty `accTitle` and `accDescr` remain preferred and authoritative. In a managed Working reader either directive may be omitted: the adapter supplies only the missing SVG accessibility text from the exact mounted document title and diagram ordinal, retains any authored value, and emits a console warning without changing canonical Markdown. Public preparation remains strict and requires both authored directives. Canonical Markdown and Working payloads retain the fence; a public scope's prepared and accepted payloads contain the SVG image projection.
+Author a fenced `mermaid` block when the diagram belongs to that document. Managed Working rendering retains its existing document-title/ordinal accessibility fallback and warning for missing authored directives. Public preparation retains the authored `accTitle`/`accDescr` requirement at its producing owner.
 
-In an eligible managed view, the reader finds those fences after the ordinary document mount, lazily loads the checked Mermaid `11.16.0` browser asset once for the application session, and replaces each successful fence with an accessible inline SVG host. Missing authored accessibility directives do not block rendering. Several fences render sequentially. Navigation invalidates late results, and a parser, renderer, or runtime failure retains its source with a concise visible status while technical detail stays in the console.
+Eligible Working generation uses the existing source planner and shared theme/renderer/sanitizer owners. Saved per-document source plans let unchanged fences reuse completed SVG pairs; intentional full builds regenerate them. Ineligible documents do not run or validate this public projection. Restoration prepares exact saved sources whose current public form is unavailable.
 
-For Analysis, use the ordinary **Pre-publish** operation. Its complete Build renders all inline fences from the eligible prepared ordinary documents and configured sub-scopes after document generation. Both themes must pass the existing renderer, sanitizer, accessibility, geometry, and byte-verification checks. The generated fence must match the exact source document and ordinal before replacement. Failure prevents recording a completed Build; Publish also rejects any remaining raw Mermaid fence or missing referenced variant.
+Public pairs use the Working owner's SVG namespace under `projection-assets/mermaid/<doc-id>--mermaid-<ordinal>/{light,dark}.svg`, preserving exact stable identities. The producer renders complete selected pairs in temporary files, checks SVG accessibility/geometry and verifies stored bytes. It adds no namespace scan, rollback snapshot or persistent Mermaid manifest. Removed references do not delete stored pairs.
 
-Each collection owns its pairs beneath `pre-publish/generated/media/svg/projection-assets/mermaid/<doc-id>--mermaid-<ordinal>/`, with the usual `sub-scopes/<sub-scope>/media/svg/` boundary for child collections. This generated prefix is reserved for document-owned diagrams and cannot contain authored SVG or `.mmd` inputs. Temporary pair production is discarded after the verified images enter the generated snapshot. The complete Build manifest owns their accepted bytes; no separate persistent Mermaid preparation manifest or manual preparation command is needed.
+Prepared public HTML contains light/dark image URLs and no Mermaid source fence. Its document queue entry includes both variants as SVG references. Publish transfers selected bytes through Preview and compares exact remote size/ETag; neither Publish nor the public reader invokes Mermaid. Persistent `.mmd` production remains separately registered.
 
-Review Pre-publish, then use **Publish** and **Deploy Repo**. Both light and dark URLs are projected along with ordinary media URLs. These operations consume prepared/accepted bytes and never invoke Mermaid or reread Working source to produce a diagram. Manage's Pre-publish/Published reader and Public choose the appropriate prepared image for the current theme, including configured remote media URLs and images loaded through sub-scope reports.
+Local Working readers retain lazy managed inline rendering, mounted-document cancellation and visible parser/runtime errors. Public readers choose the prepared image for the active theme. There is no Preview browsing stage or managed/public stage selector.
 
-The former standalone Mermaid planning/build commands and their separate pre-publication staging workflow are retired. A complete Pre-publish Build is the sole preparation owner. Its inline payload preparation is required even when the caller skips standalone registered media builds.
-
-The document controller enables in-browser rendering for `scope_type: local` or an active Manage context at `stage: working`, with the inline adapter supplied by the Manage composition. Analysis retains `scope_type: public` while its Working documents render inline. Its Pre-publish and Published views display the prepared SVGs. External storage does not affect inline eligibility, and an eligible document without a Mermaid fence loads no browser asset.
-
-Runtime authority is `docs-viewer/runtime/js/management/docs-viewer-inline-mermaid.js`, composed only by the manage entrypoint and invoked through the ordinary document controller. The checked browser asset is owned beside other local runtime code at `docs-viewer/runtime/vendor/mermaid/11.16.0/`; the Docs Viewer service preserves its stable browser URL. Neither file lives in the public site tree or public runtime manifest. Shared content CSS owns the bounded neutral host and failure treatment.
+Cutover can copy eligible baseline pairs from completed Preview into Working without rerendering or republishing. The current baseline contains zero fenced diagrams, so static/import evidence does not establish exercised SVG production. New projection and failure scenarios remain manually unverified; no tests or browser automation were added.
 
 ## Reader Detail View
 

@@ -8,7 +8,6 @@ from docs_management_document_target import ManagedDocumentCollection, ManagedDo
 from docs_source_model import SourceDoc, parse_collection_document_report, validate_document_status_front_matter
 from docs_workspace_config import require_document_authoring
 from docs_write_rebuild import rebuild_prepared_document_outputs
-from studio.services.catalogue.catalogue_pending_publication import merge_completed_document
 
 
 def rebuild_document(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
@@ -47,19 +46,5 @@ def rebuild_prepared_document(
     if parent_ids is None and isinstance(owner, ManagedDocumentTarget):
         parent_ids = owner.parent_ids
     rebuild = rebuild_prepared_document_outputs(repo_root, owner, document, parent_ids=parent_ids)
-    queue_catalogue_document(repo_root, owner, document.doc_id)
     target = {**owner.request_target(), "doc_id": document.doc_id}
     return {"ok": True, "target": target, "rebuild": rebuild, "summary_text": "Document rebuilt."}
-
-
-def queue_catalogue_document(
-    repo_root: Path, owner: ManagedDocumentCollection | ManagedDocumentTarget, doc_id: str,
-) -> None:
-    """Keep Catalogue document-only publication with every completed exact build."""
-    if owner.collection == "catalogue":
-        try:
-            merge_completed_document(repo_root, doc_id, workspace=owner.workspace)
-        except Exception as error:
-            raise RuntimeError(
-                f"Catalogue document {doc_id} rebuilt, but its publication queue update failed: {error}"
-            ) from error

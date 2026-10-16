@@ -1,88 +1,45 @@
-"""Prepare document-owned Mermaid media inside the Preview generated snapshot."""
+"""Prepare one eligible document's public Mermaid output upstream of Publish."""
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
-import tempfile
 from typing import Any
 
-from docs_artifact_locations import ArtifactLocation, artifact_location_adapter
-from docs_public_mermaid_payload import project_mermaid_payload
-from docs_public_mermaid_producer import DOCS_VIEWER_THEME_CSS_REL_PATH, produce_public_mermaid_projection
-from docs_public_mermaid_projection import PUBLIC_MERMAID_ASSET_PREFIX, plan_public_mermaid_projection
-from docs_workspace_config import DocsStageConfig, generated_documents_path, location_child, resolve_workspace_path
-from docs_source_model import load_document_collection_docs_for_config
+from docs_mermaid_renderer import MERMAID_EXECUTABLE_RELATIVE_PATH, MERMAID_TOOLCHAIN_ROOT
+from docs_public_mermaid_payload import PUBLIC_MERMAID_HTML_FENCE_PATTERN, project_mermaid_payload
+from docs_public_mermaid_projection import plan_public_mermaid_projection
+from docs_public_mermaid_producer import DOCS_VIEWER_THEME_CSS_REL_PATH, load_public_mermaid_theme_seeds, render_public_mermaid_variants
+from docs_publication_transfer import read_bytes, write_bytes
+from docs_workspace_config import location_child
 
 
-def prepare_stage_mermaid(repo_root: Path, config: DocsStageConfig) -> dict[str, Any] | None:
-    """Render every prepared collection before its complete Build is recorded.
-
-    Working Markdown and payloads retain their fences. Only public Preview
-    collections receive SVG pairs and projected HTML. Temporary rendering must
-    succeed before that collection's generated media or payloads are replaced;
-    any failure propagates to the Build owner, leaving completion invalidated.
-    Snapshot preparation and Publish subsequently consume only these bytes.
-    """
-    if config.stage != "preview" or config.public_projection is None:
-        return None
-    results = []
-    for collection in (config, *config.media_collections):
-        if collection.public_projection is None:
-            continue
-        child = getattr(collection, "collection", "")
-        owner = f"{config.stage}/{child}" if child else config.stage
-        docs = load_document_collection_docs_for_config(repo_root, config, collection)
-        media = collection.media.types.get("svg")
-        if media is None:
-            raise ValueError(f"Mermaid preparation requires SVG media for {owner}")
-        source_locations = []
-        build = collection.media.build_sources.get("mermaid")
-        if build is not None:
-            source_locations.append(build.location)
-        for location in source_locations:
-            if artifact_location_adapter(repo_root, location).list(PUBLIC_MERMAID_ASSET_PREFIX):
-                raise ValueError(f"Mermaid preparation output conflicts with authored media in {owner}/{PUBLIC_MERMAID_ASSET_PREFIX}")
-        plan = plan_public_mermaid_projection(
-            collection=owner, documents=((doc.doc_id, doc.body) for doc in docs),
-            public_url_prefix="docs-media:" + media.served_path_prefix.removeprefix("/docs/assets/media/"),
-        )
-        if plan["failures"]:
-            raise ValueError("Mermaid preparation failed: " + "; ".join(
-                f"{owner}/{item['doc_id']}: {item['message']}" for item in plan["failures"]
-            ))
-        by_doc: dict[str, list[dict[str, Any]]] = {}
-        for diagram in plan["diagrams"]:
-            by_doc.setdefault(diagram["source"]["doc_id"], []).append(diagram)
-        payload_root = resolve_workspace_path(repo_root, generated_documents_path(collection)) / "by-id"
-        payloads = {}
-        for doc_id, diagrams in by_doc.items():
-            path = payload_root / f"{doc_id}.json"
-            payload = json.loads(path.read_text(encoding="utf-8"))
-            if payload.get("doc_id") != doc_id:
-                raise ValueError(f"Mermaid payload identity does not match {owner}/{doc_id}")
-            payloads[path] = project_mermaid_payload(payload, diagrams)
-
-        generated = artifact_location_adapter(repo_root, location_child(collection.media.build_asset_location, Path("svg")))
-        identities: set[str] = set()
-        if plan["diagrams"]:
-            with tempfile.TemporaryDirectory(prefix="docs-mermaid-preparation-") as temporary:
-                prepared = artifact_location_adapter(Path(temporary), ArtifactLocation("repository", Path("rendered")))
-                result = produce_public_mermaid_projection(
-                    plan, prepared=prepared, write=True,
-                    theme_css_path=repo_root / DOCS_VIEWER_THEME_CSS_REL_PATH,
-                )
-                if result["failures"]:
-                    raise RuntimeError("Mermaid preparation failed: " + "; ".join(
-                        f"{owner}/{item['doc_id']}: {item['message']}" for item in result["failures"]
-                    ))
-                identities = set(result["published_identities"])
-                for identity in sorted(identities):
-                    data = prepared.read(identity)
-                    generated.replace(identity, data, content_type="image/svg+xml")
-                    if not generated.verify_bytes(identity, data):
-                        raise RuntimeError(f"Mermaid generated media did not verify: {owner}/{identity}")
-        for path, payload in payloads.items():
-            path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        results.append({"collection": owner, "diagrams": len(plan["diagrams"]), "variants": len(identities)})
-    return {"collections": results}
+def prepare_document_mermaid(repo_root: Path, owner: Any, document: Any, payload: dict[str, Any], previous: dict[str, Any] | None, *, force: bool, baseline_source: Any, runtime: Any) -> tuple[dict[str, Any], list[dict[str, Any]], Any]:
+    if owner.media is None or PUBLIC_MERMAID_HTML_FENCE_PATTERN.search(payload["content_html"]) is None:
+        return payload, [], runtime
+    media = owner.media.types["svg"]
+    collection = getattr(owner, "collection", "")
+    plan = plan_public_mermaid_projection(
+        collection=f"preview/{collection}" if collection else "preview",
+        documents=[(document.doc_id, document.body_markdown)],
+        public_url_prefix="docs-media:" + media.served_path_prefix.removeprefix("/docs/assets/media/"),
+    )
+    if plan["failures"]:
+        raise ValueError(f"Document {document.doc_id} public Mermaid: " + "; ".join(item["message"] for item in plan["failures"]))
+    prior = {} if previous is None else {item["projection_id"]: item for item in previous["mermaid"]}
+    planned = {item["projection_id"]: item for item in plan["manifest"]["diagrams"]}
+    changed = [item for item in plan["diagrams"] if force or prior.get(item["projection"]["projection_id"]) != planned[item["projection"]["projection_id"]]]
+    if baseline_source is not None:
+        writes = {
+            variant["artifact_identity"]: read_bytes(location_child(baseline_source, Path(variant["artifact_identity"])).path)
+            for item in changed for variant in item["projection"]["variants"].values()
+        }
+    elif changed:
+        if runtime is None:
+            executable = MERMAID_TOOLCHAIN_ROOT / MERMAID_EXECUTABLE_RELATIVE_PATH
+            runtime = executable, load_public_mermaid_theme_seeds(repo_root / DOCS_VIEWER_THEME_CSS_REL_PATH)
+        writes = render_public_mermaid_variants(changed, executable=runtime[0], theme_seeds=runtime[1])
+    else:
+        writes = {}
+    for identity, data in writes.items():
+        write_bytes(location_child(media.asset_location, Path(identity)).path, data)
+    return project_mermaid_payload(payload, plan["diagrams"]), plan["manifest"]["diagrams"], runtime

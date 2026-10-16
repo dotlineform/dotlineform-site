@@ -180,11 +180,15 @@ class CollectionDocsBuilder(DocsDataBuilder):
         related_records: dict[DocumentTarget, DocumentLinks | None] | None = None,
         stale_item_ids: list[str] | None = None,
         update_selected: bool = True,
+        publication: Any = None,
+        expand_dependencies: bool = True,
+        catalogue_work_selection: bool = True,
     ) -> dict[str, Any]:
         """Render sources and update this operation's collection manifest.
 
         Complete Working generation supplies final relationship records and
         stale IDs, and owns the single cross-collection Selected refresh.
+        Catalogue dependency renders select a document without a Work unit.
         """
         started_at = monotonic_time()
         self.warnings = []
@@ -258,6 +262,14 @@ class CollectionDocsBuilder(DocsDataBuilder):
             )
             if write:
                 self.selected_payload = selected
+        if write and self.config.stage == "working":
+            from docs_publication_preparation import complete_generation
+
+            complete_generation(self, docs, item_payloads, {}, stale_item_ids,
+                                selected=self.selected_payload, related_records=related_records,
+                                dependency_ids={Path(name).stem for name in links_build["written"]} if links_build is not None else set(),
+                                preparation=publication, expand_dependencies=expand_dependencies,
+                                catalogue_work_selection=catalogue_work_selection)
         diagnostics["warning_count"] = len(self.warnings)
         if emit_diagnostics:
             self.print_diagnostics(diagnostics)

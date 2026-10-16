@@ -286,9 +286,15 @@ def save_source_document(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
         try:
             payload["rebuild"] = rebuild_prepared_document(repo_root, resolved, prepared)["rebuild"]
         except Exception as error:
+            from docs_publication_preparation import PublicationHandoffError
+
+            if isinstance(error, PublicationHandoffError):
+                payload.update(ok=False, generation_complete=True, publication_handoff_complete=False, error=f"Source saved and local document generated; publication handoff incomplete: {error}")
+                return payload
             payload.update(ok=False, error=f"Source saved, but document generation failed: {error}")
             return payload
         payload["generation_complete"] = True
+        payload["publication_handoff_complete"] = True
         payload["summary_text"] = "Source saved and document rebuilt."
     return payload
 

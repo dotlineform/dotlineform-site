@@ -1,98 +1,40 @@
-"""Publish queued Catalogue Works, then complete one shared Preview snapshot."""
+"""One awaited queue-only publication operation."""
 
 from __future__ import annotations
 
 from pathlib import Path
 from typing import Any, Iterable, Mapping
 
-from docs_deploy_repo import apply_deploy_repo_plan, build_deploy_repo_plan, utc_now
-from docs_prepare_preview import prepare_preview
-from docs_catalogue_publication import CataloguePublicationError, publish_catalogue_works
+from docs_catalogue_publication import publish_catalogue_shared, publish_catalogue_works
+from docs_publication_queue import has_selections, read_queue
+from docs_publication_transfer import SelectedTransfers
+from docs_selected_publication import publish_selected_documents
 from docs_workspace_config import load_docs_workspace_config
-from studio.services.catalogue.catalogue_pending_publication import FILENAME as PUBLICATION_FILENAME
-from studio.services.catalogue.catalogue_pending_state import load_pending_queue, pending_path, persist_pending_queue
-from studio.services.catalogue.catalogue_shared_changes import SHARED_FIELDS, shared_changes
+from studio.services.catalogue.catalogue_pending_publication import FILENAME
+from studio.services.catalogue.catalogue_pending_state import load_pending_queue, pending_path
+from studio.services.catalogue.catalogue_shared_changes import SHARED_FIELDS
 
 
-def publish_docs(
-    repo_root: Path,
-    body: dict[str, Any],
-    *,
-    client: object | None = None,
-    env_files: Iterable[Path] | None = None,
-    environ: Mapping[str, str] | None = None,
-) -> dict[str, Any]:
-    """Await per-Work publication and shared output without caller-selected stages.
-
-    The request is empty. Each Work finishes Preview/Deploy before shared
-    preparation starts. Shared preparation failure prevents shared distribution;
-    earlier Work effects remain. Distribution failure retains completed Preview
-    and reports incomplete publication, including non-atomic effects. No retries,
-    rollback, Git actions or public-site deployment are performed here.
-    ``recent_updated`` records completed Working Recent persistence, including
-    when later Preview or distribution work fails.
-    """
+def publish_docs(repo_root: Path, body: dict[str, Any], *, client: object | None = None, env_files: Iterable[Path] | None = None, environ: Mapping[str, str] | None = None) -> dict[str, Any]:
     if not isinstance(body, dict) or body:
         raise ValueError("Publish requires an empty request object; its workspace and destinations are configured")
-
-    result: dict[str, Any] = {
-        "ok": False,
-        "complete": False,
-        "phase": "catalogue",
-        "preview_prepared": False,
-        "recent_updated": False,
-    }
-
-    def recent_written() -> None:
-        result["recent_updated"] = True
-
+    result: dict[str, Any] = {"ok": False, "complete": False, "phase": "queues", "completed": []}
     try:
         workspace = load_docs_workspace_config(repo_root)
-        queue_path = pending_path(repo_root, PUBLICATION_FILENAME, workspace=workspace)
-        pending = load_pending_queue(queue_path)
-        result["catalogue"] = publish_catalogue_works(
-            repo_root, workspace=workspace, pending=pending, queue_path=queue_path,
-            client=client, env_files=env_files, environ=environ,
-        )
-        selection = shared_changes(pending, publishing=True)
-        result["phase"] = "shared preparation"
-        snapshot = prepare_preview(
-            repo_root, workspace=workspace, catalogue_selection=selection, on_recent_written=recent_written,
-        )
-        result.update(
-            phase="distribution", preview_prepared=True,
-            preview_revision=snapshot.manifest["preview_revision"],
-        )
-        plan = build_deploy_repo_plan(
-            repo_root, snapshot, deployment_timestamp=utc_now(),
-            catalogue_selection=selection,
-            client=client, env_files=env_files, environ=environ,
-        )
-        distribution = apply_deploy_repo_plan(repo_root, plan)
-        result["distribution"] = distribution
-        if not distribution["complete"]:
-            errors = [
-                *distribution["media"]["errors"],
-                *(item["error"] for item in distribution["publication_lineage"]["workflows"] if item["error"]),
-            ]
-            result["error"] = "; ".join(errors)
-            result["summary_text"] = "Preview prepared; publication is incomplete. " + result["error"]
+        docs = read_queue(workspace)
+        path = pending_path(repo_root, FILENAME, workspace=workspace)
+        catalogue = load_pending_queue(path)
+        if not has_selections(docs) and not any(catalogue[family] for family in ("current_works", "deleted_works", *SHARED_FIELDS)):
+            result.update(ok=True, complete=True, phase="complete", summary_text="Nothing queued for publication.")
             return result
-        result["phase"] = "shared queue completion"
-        if any(selection.values()):
-            for field in SHARED_FIELDS:
-                pending[field] = []
-            persist_pending_queue(queue_path, pending, progress="preview_done")
+        transfers = SelectedTransfers(repo_root, client=client, env_files=env_files, environ=environ)
+        publish_catalogue_works(repo_root, workspace, catalogue, path, transfers, result)
+        publish_selected_documents(repo_root, workspace, docs, transfers, result)
+        publish_catalogue_shared(repo_root, workspace, catalogue, path, result)
     except Exception as error:
-        if isinstance(error, CataloguePublicationError):
-            result.update(work_id=error.work_id, phase=error.phase)
-        result["error"] = str(error)
-        result["summary_text"] = (
-            "Preview prepared; publication is incomplete. "
-            if result["preview_prepared"]
-            else "Publish stopped; completed effects were retained. "
-        ) + str(error)
+        detail = str(error) or type(error).__name__
+        result.update(error=detail, summary_text=f"Publish stopped during {result['phase']} ({result.get('target', 'queue')}): {detail}. Completed effects were retained.")
         return result
-
     result.update(ok=True, complete=True, phase="complete", summary_text="Publish complete.")
+    result.pop("target", None)
     return result

@@ -60,7 +60,6 @@ class WritePlanMixin:
             "index_tree_text": index_tree_text,
             "recent_write": recent_payload is not None and read_text(self.output_dir / "recent.json") != recent_text,
             "recent_text": recent_text,
-            "retired_recent_remove": recent_payload is not None and (self.output_dir / ".publish/recent.json").exists(),
             "changed_item_ids": sorted(changed_item_ids),
             "stale_item_ids": stale_item_ids,
             "item_text_by_id": item_text_by_id,
@@ -83,8 +82,6 @@ class WritePlanMixin:
         self.items_dir.mkdir(parents=True, exist_ok=True)
         if write_plan["recent_write"]:
             write_text(self.output_dir / "recent.json", write_plan["recent_text"])
-        if write_plan["retired_recent_remove"]:
-            (self.output_dir / ".publish/recent.json").unlink(missing_ok=True)
         for doc_id in write_plan["changed_item_ids"]:
             write_text(self.items_dir / f"{doc_id}.json", write_plan["item_text_by_id"][doc_id])
         for doc_id in write_plan["stale_item_ids"]:

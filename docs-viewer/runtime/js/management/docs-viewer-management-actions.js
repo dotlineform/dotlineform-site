@@ -486,27 +486,19 @@ export function createDocsViewerManagementActionController(options) {
   }
 
   async function handlePublish() {
-    var recentUpdated = false;
     setManagementBusy(true);
     setManagementMessage("", false);
     renderManagementUi();
     try {
       var result = await publishManagedDocs(managementClientOptions());
-      recentUpdated = result.recent_updated === true;
       if (result.complete !== true) throw new Error(result.summary_text || "Publish is incomplete.");
       setManagementMessage("", false);
       return result;
     } catch (error) {
       var payload = error && error.payload;
-      if (payload) recentUpdated = payload.recent_updated === true;
       setManagementMessage(payload && payload.summary_text || error.message || "Publish failed.", true);
       return null;
     } finally {
-      try {
-        if (recentUpdated) await context.refreshRecent();
-      } catch (error) {
-        setManagementMessage((management.managementMessage ? management.managementMessage + " " : "") + "Recent could not refresh: " + error.message, true);
-      }
       setManagementBusy(false);
       renderManagementUi();
     }

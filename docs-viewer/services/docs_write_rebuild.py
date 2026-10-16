@@ -12,18 +12,14 @@ from typing import Any, Callable, Dict, Mapping, Optional, TYPE_CHECKING
 
 from docs_workspace_config import (
     document_source_path,
-    generated_documents_path,
-    generated_search_path,
-    load_docs_stage,
     load_docs_working_config,
     load_docs_workspace_config,
     require_document_authoring,
     resolve_workspace_path,
     DocsWorkspaceConfig,
-    DocsStageConfig,
 )
-from docs_build_manifest import remove_build_manifest, write_build_manifest
-from docs_mermaid_preparation import prepare_stage_mermaid
+from docs_build_manifest import remove_build_manifest
+from docs_publication_preparation import PublicationHandoffError
 from docs_source_model import SourceDoc, parse_source, write_bytes_atomic
 from docs_document_identity import doc_updated_date
 from docs_index_order import index_order_path
@@ -159,140 +155,36 @@ def rebuild_failure_message(prefix: str, detail: str) -> str:
     return f"{prefix}: {clean_detail}"
 
 
-def rebuild_stage_outputs(
-    repo_root: Path,
-    docs_doc_ids: Optional[list[str]] = None,
-    skip_media_builds: bool = False,
-    stage: str | None = None,
-    links_doc_ids: Optional[list[str]] = None,
-    docs_base_dir: Path | None = None,
-    assets_base_dir: Path | None = None,
-    copied_search_index: bytes | None = None,
-    copied_recent_payload: bytes | None = None,
-    related_links_dir: Path | None = None,
-    retained_catalogue: bool = False,
-    config: DocsStageConfig | None = None,
-) -> Dict[str, Any]:
-    """Await document-only follow-through or captured Preview generation.
-
-    The complete Working docs-and-Search action has its own in-process owner.
-    Individual document operations preserve discovery and the Links aggregate.
-    """
-    if stage == "preview" and docs_base_dir is None:
-        raise ValueError("Preview builds require an explicit temporary workspace")
-    if retained_catalogue and (stage != "preview" or copied_search_index is None):
-        raise ValueError("Retained Catalogue documents require a captured Preview build")
-    if (copied_search_index is None) != (copied_recent_payload is None):
-        raise ValueError("Preview requires both captured Working Search and freshly prepared Recents")
-    docs_target_doc_ids = ordered_docs_doc_ids(docs_doc_ids or [])
-    if docs_doc_ids is not None and not docs_target_doc_ids:
-        raise ValueError("Targeted docs build requires at least one document ID")
-    if copied_search_index is not None:
-        if stage != "preview":
-            raise ValueError("Only Preview copies an existing Search index")
-    try:
-        stage_config = load_docs_stage(repo_root, stage) if config is None else config
-    except KeyError as exc:
-        raise ValueError(f"stage {stage!r} is not configured") from exc
-    remove_build_manifest(repo_root, stage_config)
-    docs_mode = "full"
-    docs_reason = "full document build requested"
-    docs_command = python_builder_command(DOCS_BUILDER_SCRIPT, "--write", "--diagnostics")
-    docs_command.append("--skip-recent")
-    if stage:
-        docs_command.extend(["--stage", stage])
-    if stage == "working":
-        selected_links = links_doc_ids if links_doc_ids is not None else docs_doc_ids
-        if selected_links is not None:
-            docs_command.extend(["--links-doc-ids", ",".join(ordered_docs_doc_ids(selected_links))])
-    if docs_doc_ids is not None:
-        docs_mode = "targeted"
-        docs_reason = "targeted docs payload ids provided"
-        docs_command.extend(["--only-doc-ids", ",".join(docs_target_doc_ids)])
-    if skip_media_builds:
-        docs_command.append("--skip-media-builds")
-    commands = [("docs", docs_command)]
-    search = {"mode": "copy" if copied_search_index is not None else "none", "doc_ids": []}
-    if copied_search_index is not None:
-        collection_commands = [
-            (collection, (
-                "collection_docs",
-                python_builder_command(
-                    DOCS_BUILDER_SCRIPT,
-                    "--collection",
-                    collection.collection,
-                    "--write",
-                    "--diagnostics",
-                    "--skip-browser-config",
-                    *(["--stage", stage_config.stage] if stage_config.stage else []),
-                    *(["--skip-media-builds"] if skip_media_builds else []),
-                ),
-            ))
-            for collection in stage_config.collections
-            if not (retained_catalogue and collection.collection == "catalogue")
-        ]
-        commands.extend(command for _collection, command in collection_commands)
-    steps = []
-    docs_diagnostics: Optional[Dict[str, Any]] = None
-    for label, command in commands:
-        if docs_base_dir is not None:
-            command.extend(["--docs-base-dir", str(docs_base_dir)])
-        if assets_base_dir is not None:
-            command.extend(["--assets-base-dir", str(assets_base_dir)])
-        if related_links_dir is not None and command[1] == DOCS_BUILDER_SCRIPT:
-            command.extend(["--related-links-dir", str(related_links_dir)])
-        if stage == "preview" and command[1] == DOCS_BUILDER_SCRIPT and "--skip-browser-config" not in command:
-            command.append("--skip-browser-config")
-        step = run_rebuild_command(command, repo_root)
-        steps.append(step)
-        if label == "docs":
-            docs_payloads = extract_docs_builder_diagnostics(step["stdout"])
-            docs_diagnostics = docs_payloads[-1] if docs_payloads else None
-        if step["returncode"] != 0:
-            detail = step["stderr"] or step["stdout"] or f"exit {step['returncode']}"
-            raise RuntimeError(rebuild_failure_message(f"rebuild failed for {stage}", detail))
-    if copied_search_index is not None:
-        output_path = resolve_workspace_path(repo_root, generated_search_path(stage_config))
-        output_path.parent.mkdir(parents=True, exist_ok=True)
-        output_path.write_bytes(copied_search_index)
-        recent_path = resolve_workspace_path(repo_root, generated_documents_path(stage_config)) / "recent.json"
-        recent_path.write_bytes(copied_recent_payload)
-    complete_build = copied_search_index is not None
-    mermaid = (
-        prepare_stage_mermaid(repo_root, stage_config)
-        if complete_build
-        else None
-    )
-    build_manifest = (
-        write_build_manifest(repo_root, stage_config)
-        if complete_build
-        else None
-    )
-    return {
-        "ok": True,
-        "steps": steps,
-        "search": search,
-        "docs": {"mode": docs_mode, "doc_ids": docs_target_doc_ids, "reason": docs_reason},
-        "diagnostics": {"docs": docs_diagnostics, "search": search},
-        "build_manifest": build_manifest,
-        **({"mermaid": mermaid} if mermaid is not None else {}),
-    }
-
-
 def rebuild_working_outputs(
-    repo_root: Path,
-    *,
-    docs_doc_ids: Optional[list[str]] = None,
-    skip_media_builds: bool = False,
-    links_doc_ids: Optional[list[str]] = None,
+    repo_root: Path, *, docs_doc_ids: Optional[list[str]] = None,
+    skip_media_builds: bool = False, links_doc_ids: Optional[list[str]] = None,
 ) -> Dict[str, Any]:
-    """Resolve the authoring owner once before invoking the internal build pipeline."""
+    """Await explicit Working document generation and its publication handoff."""
     config = load_docs_working_config(repo_root)
-    return rebuild_stage_outputs(
-        repo_root, stage=config.stage, config=config,
-        docs_doc_ids=docs_doc_ids, skip_media_builds=skip_media_builds,
-        links_doc_ids=links_doc_ids,
-    )
+    remove_build_manifest(repo_root, config)
+    targets = None if docs_doc_ids is None else ordered_docs_doc_ids(docs_doc_ids)
+    if targets is not None and not targets:
+        raise ValueError("Targeted docs build requires at least one document ID")
+    command = python_builder_command(DOCS_BUILDER_SCRIPT, "--write", "--diagnostics", "--stage", "working", "--skip-recent", "--skip-browser-config")
+    if targets is not None:
+        command.extend(["--only-doc-ids", ",".join(targets)])
+    links = links_doc_ids if links_doc_ids is not None else targets
+    if links is not None:
+        command.extend(["--links-doc-ids", ",".join(ordered_docs_doc_ids(links))])
+    if skip_media_builds:
+        command.append("--skip-media-builds")
+    step = run_rebuild_command(command, repo_root)
+    if step["returncode"] != 0:
+        detail = step["stderr"] or step["stdout"] or f"exit {step['returncode']}"
+        if step["returncode"] == 3:
+            raise PublicationHandoffError(detail)
+        raise RuntimeError(rebuild_failure_message("Working document rebuild failed", detail))
+    diagnostics = extract_docs_builder_diagnostics(step["stdout"])
+    return {
+        "ok": True, "steps": [step], "search": {"mode": "none", "doc_ids": []},
+        "docs": {"mode": "full" if targets is None else "targeted", "doc_ids": targets or [], "reason": "explicit document generation"},
+        "diagnostics": {"docs": diagnostics[-1] if diagnostics else None},
+    }
 
 
 def rebuild_collection_outputs(
@@ -326,6 +218,8 @@ def rebuild_collection_outputs(
     docs_diagnostics = docs_payloads[-1] if docs_payloads else None
     if step["returncode"] != 0:
         detail = step["stderr"] or step["stdout"] or f"exit {step['returncode']}"
+        if step["returncode"] == 3:
+            raise PublicationHandoffError(detail)
         raise RuntimeError(
             rebuild_failure_message(
                 f"rebuild failed for {collection}",
@@ -412,7 +306,7 @@ def perform_source_write_and_rebuild_atomic(
             repo_root, docs_doc_ids=docs_doc_ids,
             skip_media_builds=True, **links_write_arguments(links_before, changed_paths),
         )
-    except DocumentSourceSnapshotChanged:
+    except (DocumentSourceSnapshotChanged, PublicationHandoffError):
         raise
     except Exception as exc:
         restoration_errors: list[str] = []
@@ -523,7 +417,8 @@ def project_document_position(
         current_id: OrdinaryDocumentSummary(current_id, rows[current_id]["title"], parent_id, rows[current_id])
         for current_id, parent_id in parent_ids.items()
     }
-    tree_text = json_text(builder.index_tree_payload(documents, previous_payload=previous))
+    navigation = builder.index_tree_payload(documents, previous_payload=previous)
+    tree_text = json_text(navigation)
     path = _generated_path(builder.items_dir, f"{doc_id}.json")
     previous_document_text = path.read_text(encoding="utf-8")
     payload = json.loads(previous_document_text)
@@ -542,6 +437,22 @@ def project_document_position(
         write_text(path, document_text)
     if tree_text != previous_text:
         write_text(_generated_path(builder.output_dir, "index-tree.json"), tree_text)
+    from docs_publication_preparation import load_preparation, prepare_restored, public_document_path, write_public
+    from docs_selected_documents import read_selected
+
+    publication = load_preparation(repo_root, builder.workspace)
+    publication.state["documents"][doc_id]["parent_id"] = parent_ids[doc_id]
+    if publication.state["documents"][doc_id]["public_ready"]:
+        public_path = public_document_path(builder.workspace, "", doc_id)
+        public_payload = json.loads(public_path.read_bytes())
+        if parent_ids[doc_id]:
+            public_payload["parent_id"] = parent_ids[doc_id]
+        else:
+            public_payload.pop("parent_id", None)
+        write_public(public_path, public_payload)
+    publication.documents(builder, [], {doc_id: payload}, navigation, [], selected=read_selected(owner.parent_config))
+    prepare_restored(builder, {}, publication)
+    publication.save()
     remove_build_manifest(repo_root, owner.parent_config)
     return committed
 
@@ -591,6 +502,7 @@ def perform_collection_source_write_and_rebuild(
     builder: CollectionDocsBuilder | None = None,
     documents: list[DocRecord] | None = None,
     catalogue_works: dict[str, dict[str, Any]] | None = None,
+    publication: Any = None,
 ) -> Dict[str, Any]:
     """Await a selected or complete collection build and its Links update."""
     if builder is None:
@@ -649,8 +561,8 @@ def perform_collection_source_write_and_rebuild(
         else:
             builder.only_doc_ids = None if complete_build else docs_doc_ids
             builder.links_doc_ids = links_arguments.get("links_doc_ids")
-            rebuild = builder.run(write=True, documents=documents, catalogue_works=catalogue_works)
-    except CollectionSourceSnapshotChanged:
+            rebuild = builder.run(write=True, documents=documents, catalogue_works=catalogue_works, publication=publication)
+    except (CollectionSourceSnapshotChanged, PublicationHandoffError):
         raise
     except Exception as exc:
         if normalized_snapshots is None:

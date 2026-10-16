@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260903-154141-7c9e4b
 title: Catalogue Media View
 added_date: "2026-09-03 15:41:41"
-last_updated: "2026-10-13 12:36:00"
+last_updated: "2026-10-16"
 summary: Exact Work and Gallery links, direct and Series-related Gallery navigation, responsive Work images and paginated Media View, with static-consumer and public-data limits.
 ui_status: done
 parent_id: d-20260903-222617-28475e
@@ -38,6 +38,8 @@ Gallery IDs use the exact canonical spelling: three digits, or at least four dig
 Add/Edit Catalogue image and Media View link update only the captured Source range after local token serialization and buffer/editor checks. They make no selected-record or media-policy request. Registry and generated-target reads use HTTP revalidation with `no-cache`; the optional Use document subject context request retains its separate owner. Source Save persists the full buffer, awaits exact document/Links generation and displays the fresh result. Cancellation leaves the buffer unchanged.
 
 ## Document Build And Presentation
+
+Catalogue Entry physical dimensions use compact decimal display: `21.0 × 29.7` renders as `21 × 29.7 cm`, preserving fractional values without rounding. This is generator-owned presentation of valid Catalogue numbers; authoring/import retains numeric validation, and Publish copies the finished bytes.
 
 Document Build preserves exact Catalogue references and authored presentation. For a Work image it reads the exact generated Work record and embeds the selected title-caption and optional authored summary as static, escaped figure text; it embeds no descriptive Work metadata, Catalogue record or image URL. A Work has `catalogue-work` identity and its five-digit ID; a Gallery has `catalogue-gallery` identity and its exact canonical Gallery ID. Gallery entry remains a text link in document content; thumbnail grids exist only inside Media View.
 

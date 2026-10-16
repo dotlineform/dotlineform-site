@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260930-195002-b3417e
 title: Related Links
 added_date: "2026-09-30 19:50:02"
-last_updated: "2026-10-08 20:05:36"
+last_updated: "2026-10-15"
 summary: Author-inserted related-links directive, a sorted list with collection icons, and build-time relationship snapshots in document JSON.
 ui_status: in-progress
 parent_id: d-20260428-000000-f5ff18
@@ -73,21 +73,21 @@ The Index panel now marks collection report hosts with their configured collecti
 
 The builder expands the directive into a static section in the document's generated JSON. The reader displays that prepared content without fetching a separate relationship record, collection manifest or neighbouring document to populate the list. Links retain exact document identities and follow the existing portable local/public document-routing rules.
 
-Saving a referring document can update relationship records while leaving the referred document's embedded section unchanged. Ordinary saves retain their targeted build scope; they do not rebuild neighbouring document content merely to refresh this presentation. A full Docs Build refreshes the related-links sections across the complete configured document set that can contribute relationships, including participating collections. Link additions, removals and title changes become visible in the refreshed sections.
+Saving a referring document updates its relationships and carries changed direct-neighbour records into public preparation. The same builders render those exact affected documents, including Related Links and Work-title presentation dependencies. This does not recursively expand neighbours or scan unrelated bodies. Full Build completes all relationships before rendering the configured corpus.
 
 Each Working document build first runs the existing incremental Links maintenance for its selected documents. That refresh preserves the saved incoming summaries and updates outgoing summaries from current authored links. The related section then uses the same refreshed version-4 record written to `links-by-id`, so adding or removing an outgoing link is reflected in that document's current build. A dry run uses the same refreshed records in memory without writing them. Section expansion does not discover relationships or add a source graph; the existing per-collection build orchestration remains in place.
 
 Supported Catalogue Work image, Entry and Media View tokens contribute ordinary document relationships to their Work's Catalogue subdocument. Gallery Media View tokens contribute none. Catalogue sources use the Work's Entry, a blank line and `[[links|context]]`; the self-targeting Entry is omitted from the graph. `context` supplies only the Catalogue heading for the existing directive and does not change relationship ownership or the ordinary authoring default. A Catalogue page can therefore show the documents that reference its Work through incoming links without generating outgoing relationships from the displayed list. Downloads and external `work.links` stay in Entry's combined resource list and do not supply document relationships. A directive alone creates no Links record, and an empty list produces no section. Full Docs rebuilds render Catalogue after the contributing documents and use the final document-JSON comparison to detect changes in the embedded list; no separate Links-file change detector is needed.
 
-Targeted saves rebuild only their selected document content, after refreshing its relationship record and affected neighbours. A document build includes all incoming links already recorded when it runs. Later edits to other documents can change that incoming list without rebuilding this document's content; a subsequent document build or full Docs Build refreshes its embedded section. Working relationships do not filter sources or targets by draft state, ordinary `unpublishable.json` membership or inherited publication exclusion. Removing an old filter requires an explicit complete relationship reconciliation to restore suppressed references; panel opening adds no scan or rebuild.
+Targeted operations render their selected source and exact direct dependencies whose relationship records changed, with supplied records and shared rendering inputs. Working relationships remain independent of draft/unpublishable/host eligibility; public preparation applies body eligibility separately and retains authored target summaries.
 
-Use **Edit doc → Rebuild** in the local rendered reader to refresh the displayed document's embedded Related links from current relationship records without a source edit. The action preserves source dates, rebuilds only that document, omits Search and reloads the exact ordinary or collection target after completion. It does not rebuild neighbouring document content; [Runtime](Docs_Viewer_Runtime.md#document-action-context-and-toolbar-placement) owns the action and service contract.
+Use **Edit doc → Rebuild** to rebuild the displayed saved source without editing it. It preserves source dates and the unsaved buffer, omits Search/media production, completes the public handoff and reloads the exact displayed payload. Any changed direct rendered dependencies finish through the same generation owner; the operation does not recursively rebuild a graph.
 
 Generated related-links sections must not contribute authored relationships. Otherwise an incoming-link listing could manufacture a reciprocal relationship. Literal directive examples in code remain examples and do not render a section.
 
 Related Links supersedes Documents Linking Here and its separate backlinks concept. The `docs_backlinks` report, reverse-link builder and payload, browser setting and local API are retired. Incoming and outgoing presentation continues to use the existing persisted per-document Links records and build-time section snapshot; no replacement reverse-link index is maintained.
 
-Publish captures the persisted relationship JSON alongside its existing inputs. Body eligibility selects the records whose owners are prepared, while their incoming/outgoing target rows remain intact. The temporary Preview build expands those captured records without target-readiness reads, filtering or warnings; distribution copies the completed content without deriving relationships again. A public section may retain a title/link for a destination whose body was omitted by draft or ignore policy. Following it uses the normal unavailable-document response. The author owns the decision to finish/include the destination or change the reference.
+Publish transfers completed public document bytes and reads no relationship records or source bodies. Upstream eligibility selects document bodies while Related Links may retain targets excluded by draft or ignore policy. Following an unavailable target retains the normal unavailable-document behavior; Broken Links remains a separate audit.
 
 ## Runtime And Refinement
 

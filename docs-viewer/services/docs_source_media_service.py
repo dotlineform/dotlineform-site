@@ -30,7 +30,7 @@ from docs_import_media import build_media_plan
 from docs_media_storage import validate_media_filename
 from docs_mermaid_media import produce_mermaid_svg
 from docs_workspace_config import (
-    DocsStageConfig, DocsCollectionConfig,
+    DocsStageConfig, DocsCollectionConfig, DocsWorkspaceConfig,
     managed_media_config, require_document_authoring, require_document_media,
 )
 from docs_staged_media_fragments import (
@@ -73,6 +73,7 @@ class SourceMediaContract:
     media_class: str
     media_filename: str
     owner: DocsStageConfig | DocsCollectionConfig
+    workspace: DocsWorkspaceConfig
     collection: str = ""
     doc_id: str = ""
     create_thumb: bool = False
@@ -182,7 +183,7 @@ def _source_media_request_contract(repo_root: Path, body: dict[str, Any], source
         media_filename = Path(media_filename).with_suffix(".mmd").name
     return SourceMediaContract(
         kind=kind, source_path=source_path, label=label, media_class=media_class,
-        media_filename=media_filename, owner=config, collection=resolved.collection,
+        media_filename=media_filename, owner=config, workspace=resolved.workspace, collection=resolved.collection,
         doc_id=resolved.doc_id, create_thumb=create_thumb,
     )
 
@@ -417,6 +418,10 @@ def _apply_source_media_contract(
             if prepared.published_status == "replace"
             else "would_upload"
         )
+        if write and prepared.published_status != "unchanged":
+            from docs_publication_preparation import requeue_media
+
+            requeue_media(repo_root, contract.workspace, contract.collection, "svg", prepared.published_identity)
         return {
             **preview,
             "requires_confirmation": False,
@@ -483,6 +488,10 @@ def _apply_source_media_contract(
             else "would_overwrite" if collision == "replace"
             else "would_upload"
         )
+        if write and collision != "unchanged":
+            from docs_publication_preparation import requeue_media
+
+            requeue_media(repo_root, contract.workspace, contract.collection, contract.media_class, contract.media_filename)
         published = {
             "collection": contract.collection, "media_class": contract.media_class,
             "filename": contract.media_filename, "size": len(data), "status": status,
@@ -494,6 +503,9 @@ def _apply_source_media_contract(
             thumbnail = write_document_thumbnail(
                 repo_root, config, doc_id=contract.doc_id, source_path=contract.source_path,
             )
+            from docs_publication_preparation import requeue_media
+
+            requeue_media(repo_root, contract.workspace, contract.collection, "thumbs", thumbnail["filename"])
         except (ValueError, RuntimeError, OSError) as error:
             raise RuntimeError(f"Display image stored as {contract.media_filename}; thumbnail operation failed: {error}") from error
     return {

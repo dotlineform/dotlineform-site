@@ -305,7 +305,12 @@ class DocsViewerSearchDataBuilder:
         execution consumes saved metadata and reads its required selected sources.
         """
         payload = self.build_docs_v2_payload(documents=documents)
-        return self.write_payload(payload, write=write, force=force)
+        result = self.write_payload(payload, write=write, force=force)
+        if write:
+            from docs_publication_preparation import queue_shared_file
+
+            queue_shared_file(self.config, "search")
+        return result
 
     def resolve_path(self, path: Path | str | None) -> Path | None:
         if path is None:

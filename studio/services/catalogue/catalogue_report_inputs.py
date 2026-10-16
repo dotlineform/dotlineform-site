@@ -7,7 +7,7 @@ from pathlib import Path
 import re
 from typing import Any, Iterable, Mapping
 
-from catalogue.catalogue_output_paths import catalogue_output_workspace, output_path
+from studio.services.catalogue.catalogue_output_paths import catalogue_output_workspace, output_path
 from docs_artifact_locations import ArtifactLocation
 
 
