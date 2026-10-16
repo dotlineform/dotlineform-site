@@ -34,7 +34,7 @@ for path in (BUILD_DIR, DOCS_SERVICES_DIR, SHARED_PYTHON_DIR):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
-from build_docs import (  # noqa: E402
+from docs_builder.common import (  # noqa: E402
     HTML_MEDIA_TOKEN_PATTERN,
     MEDIA_TOKEN_PATTERN,
 )
@@ -46,12 +46,11 @@ from docs_workspace_config import (  # noqa: E402
     DocsStageConfig,
     load_docs_stage,
     document_source_path,
-    generated_documents_path,
     generated_search_path,
     resolve_workspace_path,
 )
 from docs_discovery_selection import (  # noqa: E402
-    DiscoverySelection, read_discovery_metadata, select_collection_documents, select_ordinary_documents,
+    DiscoverySelection, read_discovery_selection,
 )
 from docs_document_identity import doc_updated_date, is_immutable_doc_id  # noqa: E402
 from docs_publication_ignore import read_publication_ignore_ids  # noqa: E402
@@ -298,6 +297,7 @@ class DocsViewerSearchDataBuilder:
         write: bool,
         force: bool,
         documents: list[SearchDocRecord] | None = None,
+        pending: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         """Return the complete payload and structured write/skip diagnostics.
 
@@ -306,22 +306,16 @@ class DocsViewerSearchDataBuilder:
         """
         payload = self.build_docs_v2_payload(documents=documents)
         result = self.write_payload(payload, write=write, force=force)
-        if write:
+        if write and result["diagnostics"]["wrote"]:
             from docs_publication_preparation import queue_shared_file
 
-            queue_shared_file(self.config, "search")
+            queue_shared_file(self.config, "search", pending=pending)
         return result
 
     def resolve_path(self, path: Path | str | None) -> Path | None:
         if path is None:
             return None
         return resolve_workspace_path(self.repo_root, Path(path))
-
-    def select_ordinary_docs(self, ignored_ids: frozenset[str]) -> dict[str, dict[str, Any]]:
-        """Read current Working tree metadata through the shared eligibility owner."""
-        path = resolve_workspace_path(self.repo_root, generated_documents_path(self.config)) / "index-tree.json"
-        tree = read_discovery_metadata(path)
-        return select_ordinary_documents(tree["docs"], ignored_ids)
 
     def load_selected_sources(
         self, config: DocsStageConfig | DocsCollectionConfig, selected: dict[str, dict[str, Any]],
@@ -377,6 +371,13 @@ class DocsViewerSearchDataBuilder:
             for doc_id, row in selected.items()
         ]
 
+    def load_discovery_documents(self, discovery: DiscoverySelection) -> list[SearchDocRecord]:
+        """Read only the content selected by the shared metadata owner."""
+        documents = self.load_source_docs(discovery.ordinary)
+        for collection, selected in discovery.collections:
+            documents.extend(self.load_named_collection_docs(collection, selected))
+        return documents
+
     def build_docs_v2_payload(
         self,
         *,
@@ -385,11 +386,8 @@ class DocsViewerSearchDataBuilder:
     ) -> dict[str, Any]:
         if documents is None:
             ignored_ids = read_publication_ignore_ids(self.repo_root, config=self.config)
-            ordinary_selection = self.select_ordinary_docs(ignored_ids)
-            collection_selections = select_collection_documents(self.repo_root, self.config, set(ordinary_selection))
-            documents = self.load_source_docs(ordinary_selection)
-            for collection, selected in collection_selections:
-                documents.extend(self.load_named_collection_docs(collection, selected))
+            discovery = read_discovery_selection(self.repo_root, self.config, ignored_ids)
+            documents = self.load_discovery_documents(discovery)
         title_by_id = {doc.doc_id: doc.title for doc in documents if not doc.collection}
         records: list[dict[str, Any]] = []
         for doc in documents:

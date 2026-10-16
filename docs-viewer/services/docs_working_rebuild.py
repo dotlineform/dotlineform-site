@@ -9,6 +9,7 @@ from typing import Any, Callable
 
 from docs_build_manifest import remove_build_manifest, write_working_build_completion
 from docs_discovery_selection import DiscoverySelection, read_discovery_metadata, select_built_discovery_documents
+from docs_discovery_refresh import write_recent
 from docs_index_order import index_order_path, read_index_order, tree_parent_ids
 from docs_publication_ignore import read_publication_ignore_ids
 from docs_selected_documents import read_selected, refresh_workspace_selected
@@ -29,7 +30,7 @@ def rebuild_working_docs_and_search(repo_root: Path) -> dict[str, Any]:
     from build_search import DocsViewerSearchDataBuilder, search_records_from_build
     from docs_builder.browser_config import write_browser_config
     from docs_builder.collection import CollectionDocsBuilder
-    from docs_builder.common import DOCS_VIEWER_BROWSER_CONFIG_PATH, json_text, write_text
+    from docs_builder.common import DOCS_VIEWER_BROWSER_CONFIG_PATH
     from docs_builder.links_builder import build_workspace_document_links
     from docs_builder.links_model import DocumentTarget
     from docs_builder.media_builds import build_collection_media_snapshot
@@ -48,7 +49,7 @@ def rebuild_working_docs_and_search(repo_root: Path) -> dict[str, Any]:
     try:
         workspace = load_docs_workspace_config(repo_root)
         config = select_workspace_stage(workspace, "working")
-        publication = load_preparation(repo_root, workspace, ignored_ids=read_publication_ignore_ids(repo_root, config=config))
+        publication = load_preparation(repo_root, workspace, ignored_ids=read_publication_ignore_ids(repo_root, config=config), changes_only=True)
         require_document_authoring(config)
         remove_build_manifest(repo_root, config)
         rendering_inputs = RenderingInputs.load(repo_root)
@@ -109,9 +110,12 @@ def rebuild_working_docs_and_search(repo_root: Path) -> dict[str, Any]:
             prepare_restored(ordinary, related_records, publication)
 
         perform("document dependencies", rebuild_dependencies)
-        selected = perform("selected", lambda: refresh_workspace_selected(
+        updated_selected = perform("selected", lambda: refresh_workspace_selected(
             config, [(builder.media_owner, documents[name]) for name, builder in builders.items()], payload=selected,
         ))
+        if updated_selected != selected:
+            publication.selected()
+            perform("Selected publication handoff", publication.save)
 
         tree = results[""]["index_tree_payload"]["docs"]
 
@@ -125,17 +129,9 @@ def rebuild_working_docs_and_search(repo_root: Path) -> dict[str, Any]:
 
         discovery = perform("discovery-selection", select_discovery)
 
-        def rebuild_recent() -> dict[str, Any]:
-            path = ordinary.output_dir / "recent.json"
-            recent = ordinary.recent_payload(
-                ordinary.recent_candidates(documents[""], tree, ignored_ids=publication.ignored, discovery=discovery), output_path=path,
-            )
-            write_text(path, json_text(recent))
-            publication.shared("workspace", "recent")
-            return {"docs": len(recent["docs"])}
-
-        payload["diagnostics"]["recent"] = perform("recent", rebuild_recent)
-        publication.selected()
+        payload["diagnostics"]["recent"] = perform("recent", lambda: write_recent(
+            workspace, config, discovery, {doc.doc_id: doc.last_updated for doc in documents[""]}, publication.pending,
+        ))
         perform("publication handoff", publication.save)
         search_builder = DocsViewerSearchDataBuilder(repo_root=repo_root, stage="working", config=config)
 
@@ -145,7 +141,7 @@ def rebuild_working_docs_and_search(repo_root: Path) -> dict[str, Any]:
             for owner, selection in discovery.collections:
                 if owner.collection not in documents:
                     search_documents.extend(search_builder.load_named_collection_docs(owner, selection))
-            return search_builder.run(write=True, force=False, documents=search_documents)
+            return search_builder.run(write=True, force=False, documents=search_documents, pending=publication.pending)
 
         search = perform("search", rebuild_search)
         payload["diagnostics"]["search"] = search["diagnostics"]

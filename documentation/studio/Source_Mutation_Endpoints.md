@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-ce5515
 title: Source Mutation Endpoints
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-15"
+last_updated: "2026-10-16"
 parent_id: d-20260607-222033-647b52
 ---
 # Docs Viewer Source Mutation Endpoints
@@ -16,11 +16,11 @@ Common source editing and Subject buffer changes use [Source Editor Endpoints](S
 
 The read resolves the exact configured source and returns `record`, target identity and `location_parent_id`; named collections also receive their Folder Subject capability. Ordinary resolution uses Index membership/parent data and its one source, without parsing the corpus. Saved source readiness/report completion does not prevent Source correction. The response contains no source revision. Source load and candidate Save retain their separate owners.
 
-## `POST /docs/rebuild`
+## `POST /docs/refresh-discovery`
 
-The exact request is `{}`. Collection/document/stage selectors, extra fields and service dry-run execution are unsupported. [The complete Working owner](../../docs-viewer/services/docs_working_rebuild.py) awaits every configured document collection, required registered media, relationships, Selected metadata, Search/Recents, the Links aggregate, browser-configuration projection and its final operation receipt. It carries loaded configuration and sources through the existing builders in process; [Builder](Builder.md#working-rebuild) owns the detailed ordering. Catalogue participates by rendering saved document sources, independently of Refresh, source Regenerate and Publish.
+The exact request is `{}`; extra selectors and service dry-run execution are unsupported. [The discovery owner](../../docs-viewer/services/docs_discovery_refresh.py) shares one saved metadata/eligibility selection and Search's selected source reads with Recent. It writes and queues only changed discovery files. Document rendering, registered media, relationships, Selected, browser configuration and complete-build receipts belong to other operations. [Builder](Builder.md#working-rebuild) owns the separate maintenance CLI; `/docs/rebuild` is retired without an alias.
 
-The response contains `ok`, `phase`, completed `steps`, structured `diagnostics` and a summary. Success also carries full document/Search mode, media/Links results and the completion receipt. Failure returns non-success with its reached phase, error and completed-step evidence; completed effects remain and no rollback runs. The browser needs no displayed/default target to start, stays busy through required refreshes, invalidates both discovery caches after generation and reports a refresh failure separately from a completed rebuild.
+The response contains `ok`, `phase` and completed per-output `diagnostics`; failure returns non-success with its reached phase and error, retaining completed effects. The browser needs no document target, stays busy through Search/Recent cache refresh and distinguishes saved-output success followed by display-refresh failure. It does not reload Index or the displayed document.
 
 ## `POST /docs/rebuild-document`
 

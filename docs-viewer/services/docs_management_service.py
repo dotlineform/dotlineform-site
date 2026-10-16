@@ -46,7 +46,7 @@ import docs_document_rebuild  # noqa: E402
 import docs_generated_reads  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
 import docs_write_rebuild as write_rebuild  # noqa: E402
-import docs_working_rebuild  # noqa: E402
+import docs_discovery_refresh  # noqa: E402
 import docs_workspace_links  # noqa: E402
 from docs_management_broken_links_service import handle_broken_links  # noqa: E402
 from docs_management_capabilities_service import capabilities_payload as build_capabilities_payload  # noqa: E402
@@ -217,12 +217,12 @@ def docs_management_post_response(
         if dry_run:
             raise ValueError("Rebuild document does not support dry_run")
         return HTTPStatus.OK, docs_document_rebuild.rebuild_document(repo_root, body)
-    if path == routes.REBUILD_PATH:
+    if path == routes.REFRESH_DISCOVERY_PATH:
         if body:
-            raise ValueError("Rebuild docs and Search requires an empty request object")
+            raise ValueError("Refresh Search and Recent requires an empty request object")
         if dry_run:
-            raise ValueError("Rebuild docs and Search does not support dry_run")
-        payload = docs_working_rebuild.rebuild_working_docs_and_search(repo_root)
+            raise ValueError("Refresh Search and Recent does not support dry_run")
+        payload = docs_discovery_refresh.refresh_search_and_recent(repo_root)
         return (HTTPStatus.OK if payload["ok"] else HTTPStatus.INTERNAL_SERVER_ERROR), payload
     if path == routes.MOVE_PATH:
         payload = docs_management_position.position_document(repo_root, body, dry_run=dry_run)

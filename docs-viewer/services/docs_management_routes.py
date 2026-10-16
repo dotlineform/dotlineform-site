@@ -49,7 +49,7 @@ SOURCE_MEDIA_APPLY_PATH = "/docs/source/media"
 SET_DRAFT_PATH = "/docs/set-draft"
 SET_SELECTED_PATH = "/docs/set-selected"
 CREATE_PATH = "/docs/create"
-REBUILD_PATH = "/docs/rebuild"
+REFRESH_DISCOVERY_PATH = "/docs/refresh-discovery"
 REBUILD_DOCUMENT_PATH = "/docs/rebuild-document"
 PUBLISH_PATH = "/docs/publish"
 MOVE_PATH = "/docs/move"
@@ -109,7 +109,7 @@ POST_PATHS = (
     SET_DRAFT_PATH,
     SET_SELECTED_PATH,
     CREATE_PATH,
-    REBUILD_PATH,
+    REFRESH_DISCOVERY_PATH,
     REBUILD_DOCUMENT_PATH,
     PUBLISH_PATH,
     MOVE_PATH,

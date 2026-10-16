@@ -253,18 +253,22 @@ class CollectionDocsBuilder(DocsDataBuilder):
             self.collection_manifest = manifest_payload
         else:
             self.print_collection_summary(write_plan, mode="dry-run", docs_total=len(summaries))
+        selected_changed = False
         if self.config.stage == "working" and update_selected:
+            previous_selected = self.selected_documents()
             selected = refresh_selected_documents(
                 self.config, self.collection_config, docs, write=write,
-                payload=self.selected_documents(),
+                payload=previous_selected,
             )
+            selected_changed = selected != previous_selected
             if write:
                 self.selected_payload = selected
         if write and self.config.stage == "working":
             from docs_publication_preparation import complete_generation
 
             complete_generation(self, item_payloads, stale_item_ids,
-                                selected=self.selected_payload, related_records=related_records,
+                                selected=self.selected_payload if selected_changed else None, related_records=related_records,
+                                changed_ids=set(write_plan["changed_item_ids"]),
                                 dependency_ids={Path(name).stem for name in links_build["written"]} if links_build is not None else set(),
                                 preparation=publication, expand_dependencies=expand_dependencies,
                                 catalogue_work_selection=catalogue_work_selection)

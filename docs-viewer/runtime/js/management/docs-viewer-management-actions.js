@@ -5,7 +5,7 @@ import {
   createManagedDoc,
   moveManagedDoc,
   openManagedDocSource,
-  rebuildManagedDocs,
+  refreshManagedDiscovery,
   rebuildManagedDocument
 } from "./docs-viewer-management-client.js";
 import {
@@ -244,10 +244,6 @@ export function createDocsViewerManagementActionController(options) {
     if (callbacks.renderManagementUi) callbacks.renderManagementUi();
   }
 
-  function reloadDocsIndex(target) {
-    return callbacks.reloadDocsIndex ? callbacks.reloadDocsIndex(target) : Promise.resolve();
-  }
-
   function openCreatedDocumentSource(target, payload) {
     if (callbacks.openCreatedDocumentSource) {
       return callbacks.openCreatedDocumentSource(target, payload);
@@ -458,27 +454,25 @@ export function createDocsViewerManagementActionController(options) {
     }
   }
 
-  /** Await workspace generation and each required refresh, preserving completed-build evidence. */
-  async function handleRebuildDocs() {
-    var target = selectedDocument.documentTarget || null;
-    var rebuilt = false;
+  /** Await discovery persistence and refresh only the affected browser caches. */
+  async function handleRefreshDiscovery() {
+    var refreshed = false;
     setManagementBusy(true);
     setManagementMessage("", false);
     try {
-      await rebuildManagedDocs(managementClientOptions());
-      rebuilt = true;
-      // Invalidate both discovery caches even when Index/document display fails.
+      await refreshManagedDiscovery(managementClientOptions());
+      refreshed = true;
       var refreshes = await Promise.allSettled([
-        context.refreshSearch(), context.refreshRecent(), reloadDocsIndex(target)
+        context.refreshSearch(), context.refreshRecent()
       ]);
-      var owners = ["Search", "Recent", "Index/document"];
+      var owners = ["Search", "Recent"];
       var errors = refreshes.flatMap(function (result, index) {
         return result.status === "rejected" ? [owners[index] + ": " + (result.reason && result.reason.message || String(result.reason))] : [];
       });
       if (errors.length) throw new Error(errors.join("; "));
       setManagementMessage("", false);
     } catch (error) {
-      setManagementMessage((rebuilt ? "Docs and Search rebuilt, but refresh failed: " : "") + (error.message || "Docs and Search rebuild failed."), true);
+      setManagementMessage((refreshed ? "Search and Recent saved, but display refresh failed: " : "") + (error.message || "Search and Recent refresh failed."), true);
     } finally {
       setManagementBusy(false);
       renderManagementUi();
@@ -668,7 +662,7 @@ export function createDocsViewerManagementActionController(options) {
     handlePositionDoc: handlePositionDoc,
     handleOpenSource: handleOpenSource,
     handlePublish: handlePublish,
-    handleRebuildDocs: handleRebuildDocs,
+    handleRefreshDiscovery: handleRefreshDiscovery,
     handleRebuildDocument: handleRebuildDocument
   };
 }

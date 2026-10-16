@@ -26,10 +26,10 @@ var MANAGEMENT_ACTION_MENU_ITEMS = [
     label: "Export"
   },
   {
-    id: "docsViewerManageRebuildButton",
-    actionId: ACTION_IDS.REBUILD_DOCS,
+    id: "docsViewerManageRefreshDiscoveryButton",
+    actionId: ACTION_IDS.REFRESH_DISCOVERY,
     artwork: "docsViewer__icon--refresh-cw",
-    label: "Rebuild docs and Search"
+    label: "Refresh Search and Recent"
   },
   {
     id: "docsViewerManagePublishButton",

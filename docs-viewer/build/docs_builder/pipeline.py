@@ -191,15 +191,19 @@ class DocsDataBuilder(
                 tree_total=len(index_tree_payload["docs"]),
                 recent_total=len(recent_payload["docs"]) if recent_payload is not None else None,
             )
+        selected_changed = False
         if self.config.stage == "working" and update_selected:
+            previous_selected = selected_payload
             selected_payload = refresh_selected_documents(self.config, self.config, docs_for_item_build, write=write, payload=selected_payload)
+            selected_changed = selected_payload != previous_selected
         if write and self.config.stage == "working":
             from docs_publication_preparation import complete_generation
 
             complete_generation(self, item_payloads, stale_item_ids,
-                                selected=selected_payload, related_records=related_records,
+                                selected=selected_payload if selected_changed else None, related_records=related_records,
+                                changed_ids=set(write_plan["changed_item_ids"]),
                                 dependency_ids={Path(name).stem for name in links_build["written"]} if links_build is not None else set(),
-                                preparation=publication, expand_dependencies=expand_dependencies, recent=recent_payload)
+                                preparation=publication, expand_dependencies=expand_dependencies, recent_changed=write_plan["recent_write"])
         diagnostics["warning_count"] = len(self.warnings)
         if emit_diagnostics:
             self.print_diagnostics(diagnostics)

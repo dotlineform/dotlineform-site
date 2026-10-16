@@ -1,12 +1,32 @@
 """Build the shared, stage-independent Recents artifact from completed metadata."""
 
-from typing import Any
+from typing import Any, Mapping
+
+from docs_discovery_selection import DiscoverySelection
+from docs_document_identity import doc_updated_date
 
 DOCS_RECENT_SCHEMA_VERSION = "docs_recent_v2"
 RECENT_FIELDS = frozenset({
     "doc_id", "title", "timestamp", "parent_id", "parent_title",
     "collection", "report_doc_id", "collection_title",
 })
+
+
+def recent_candidates(discovery: DiscoverySelection, ordinary_updated: Mapping[str, str]) -> list[dict[str, Any]]:
+    """Project completed discovery metadata without reading document bodies."""
+    rows = []
+    for doc_id, row in discovery.ordinary.items():
+        entry = {"doc_id": doc_id, "title": row["title"], "last_updated": doc_updated_date(ordinary_updated[doc_id])}
+        parent_id = row["parent_id"]
+        if parent_id:
+            entry.update(parent_id=parent_id, parent_title=discovery.ordinary[parent_id]["title"])
+        rows.append(entry)
+    for owner, selected in discovery.collections:
+        rows.extend({
+            "doc_id": doc_id, "title": row["title"], "last_updated": row["last_updated"],
+            "collection": owner.collection, "report_doc_id": owner.report_host_doc_id, "collection_title": owner.title,
+        } for doc_id, row in selected.items())
+    return rows
 
 
 def build_recent_payload(

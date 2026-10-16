@@ -442,7 +442,7 @@ def project_document_position(
 
     publication = load_preparation(repo_root, builder.workspace)
     publication.metadata.ordinary(navigation, previous)
-    publication.documents(builder, {doc_id: payload}, [], selected=read_selected(owner.parent_config))
+    publication.documents(builder, {doc_id: payload}, [], selected=read_selected(owner.parent_config), changed_ids={doc_id})
     prepare_restored(builder, {}, publication)
     publication.save()
     remove_build_manifest(repo_root, owner.parent_config)

@@ -75,7 +75,7 @@ export function createDocsViewerManagementEventRouter(options = {}) {
       return true;
     }
     var commandsByAction = new Map([
-      ["rebuild-docs", ["rebuild", { hideContextMenu: true, hideManageActionsMenu: true }]],
+      ["refresh-discovery", ["refreshDiscovery", { hideContextMenu: true, hideManageActionsMenu: true }]],
       ["import", ["openImport", {}]],
       ["export-workspace", ["exportWorkspace", { hideContextMenu: true, hideManageActionsMenu: true }]],
       ["publish", ["publish", { hideContextMenu: true, hideManageActionsMenu: true }]]

@@ -177,7 +177,7 @@ export function initDocsViewerManagement(context) {
   var manageActions = manageRow ? manageRow.querySelector(".docsViewer__manageActions") : null;
   var manageActionsButton = document.getElementById("docsViewerManageActionsButton");
   var manageActionsMenu = document.getElementById("docsViewerManageActionsMenu");
-  var manageRebuildButton = document.getElementById("docsViewerManageRebuildButton");
+  var manageRefreshDiscoveryButton = document.getElementById("docsViewerManageRefreshDiscoveryButton");
   var managePublishButton = document.getElementById("docsViewerManagePublishButton");
   var manageImportButton = document.getElementById("docsViewerManageImportButton");
   var manageNewButton = document.getElementById("docsViewerManageNewButton");
@@ -514,7 +514,7 @@ export function initDocsViewerManagement(context) {
       disabled: management.managementBusy || !management.managementAvailable
     });
 
-    if (!manageRebuildButton || !manageNewButton) return;
+    if (!manageRefreshDiscoveryButton || !manageNewButton) return;
 
     var editDisabled = (
       management.managementBusy ||
@@ -529,7 +529,7 @@ export function initDocsViewerManagement(context) {
       disabled: management.managementBusy || !management.managementAvailable
     });
 
-    manageRebuildButton.disabled = management.managementBusy || !management.managementAvailable;
+    manageRefreshDiscoveryButton.disabled = management.managementBusy || !management.managementAvailable;
     if (manageActionsButton) {
       manageActionsButton.disabled = management.managementBusy || !management.managementAvailable;
       if (manageActionsButton.disabled) {
@@ -570,22 +570,6 @@ export function initDocsViewerManagement(context) {
     return loadRouteIndex({ preserveDocument: true }).then(function () {
       renderManagementUi();
     });
-  }
-
-  /** Reload reader data while retaining the exact ordinary or collection owner. */
-  async function reloadDocsIndex(target) {
-    var reloadTarget = target ? normalizeManagedDocumentTarget(target) : null;
-    await context.routeCommands.loadIndex({ preserveDocument: true });
-    if (reloadTarget) {
-      if (selectedDocument.documentTarget && managedDocumentTargetsEqual(reloadTarget, selectedDocument.documentTarget)) {
-        await context.routeCommands.refreshDocument(reloadTarget);
-      } else {
-        var loaded = await context.routeCommands.loadDoc(reloadTarget, { force: true, historyMode: "replace" });
-        if (!loaded) throw new Error("Updated document could not be displayed.");
-      }
-    }
-    context.setStatus("", false);
-    renderManagementUi();
   }
 
   async function displayImportedDocument(detail) {
@@ -719,7 +703,6 @@ export function initDocsViewerManagement(context) {
       hideContextMenu: hideContextMenu,
       managementClientOptions: managementClientOptions,
       openCreatedDocumentSource: openCreatedDocumentSource,
-      reloadDocsIndex: reloadDocsIndex,
       refreshIndexTree: refreshIndexTree,
       renderManagementUi: renderManagementUi,
       setManagementBusy: setManagementBusy,
@@ -773,7 +756,7 @@ export function initDocsViewerManagement(context) {
       exportWorkspace: openExportWorkspace,
       openImport: openAppImport,
       publish: function () { actionController.handlePublish(); },
-      rebuild: function () { actionController.handleRebuildDocs(); }
+      refreshDiscovery: function () { actionController.handleRefreshDiscovery(); }
     },
     controllers: {
       interaction: function () { return interactionController; },

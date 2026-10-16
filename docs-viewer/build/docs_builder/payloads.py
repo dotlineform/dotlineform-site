@@ -12,10 +12,9 @@ from .rendering import add_missing_image_titles
 from .source import DocRecord, DocumentIdentity
 from .ordinary_metadata import OrdinaryDocumentSummary
 from .related_links import render_related_links
-from docs_document_identity import doc_updated_date
 from docs_discovery_selection import DiscoverySelection, select_collection_documents, select_ordinary_documents
 from docs_recent_exclusions import read_recent_exclusions
-from docs_recent_payload import build_recent_payload
+from docs_recent_payload import build_recent_payload, recent_candidates as discovery_recent_candidates
 from docs_report_source import project_report_markdown
 
 
@@ -145,24 +144,8 @@ class PayloadBuilderMixin:
     def recent_limit(self) -> int:
         return self.workspace.recent_limit
 
-    def recent_entry(
-        self,
-        doc: DocRecord,
-        title_by_id: dict[str, str],
-    ) -> dict[str, Any]:
-        entry: dict[str, Any] = {
-            "doc_id": doc.doc_id,
-            "title": doc.title,
-            "last_updated": doc_updated_date(doc.last_updated),
-        }
-        parent_id = self.effective_parent_id(doc.parent_id, title_by_id)
-        if parent_id and parent_id in title_by_id:
-            entry["parent_id"] = parent_id
-            entry["parent_title"] = title_by_id[parent_id]
-        return entry
-
     def recent_candidates(
-        self, docs: list[DocRecord], tree: list[dict[str, Any]], *, ignored_ids: frozenset[str], discovery: DiscoverySelection | None = None,
+        self, docs: list[DocRecord], tree: list[dict[str, Any]], *, ignored_ids: frozenset[str],
     ) -> list[dict[str, Any]]:
         """Use current in-memory ordinary metadata and saved flat collection metadata.
 
@@ -171,26 +154,9 @@ class PayloadBuilderMixin:
         """
         if self.config.stage != "working":
             raise ValueError("Recents generation requires Working; Preview copies the prepared payload")
-        selected = discovery.ordinary if discovery is not None else select_ordinary_documents(
-            tree, ignored_ids,
-        )
-        eligible_docs = [doc for doc in docs if doc.doc_id in selected]
-        title_by_id = {doc.doc_id: doc.title for doc in eligible_docs}
-        rows = [self.recent_entry(doc, title_by_id) for doc in eligible_docs]
-        collections = discovery.collections if discovery is not None else select_collection_documents(
-            self.repo_root, self.config, set(selected),
-        )
-        for collection, children in collections:
-            for doc_id, child in children.items():
-                rows.append({
-                    "doc_id": doc_id,
-                    "title": child["title"],
-                    "last_updated": child["last_updated"],
-                    "collection": collection.collection,
-                    "report_doc_id": collection.report_host_doc_id,
-                    "collection_title": collection.title,
-                })
-        return rows
+        selected = select_ordinary_documents(tree, ignored_ids)
+        collections = select_collection_documents(self.repo_root, self.config, set(selected))
+        return discovery_recent_candidates(DiscoverySelection(selected, collections), {doc.doc_id: doc.last_updated for doc in docs})
 
     def recent_payload(
         self,

@@ -91,9 +91,17 @@ Search has one explicit whole-index rebuild:
 python3 docs-viewer/build/build_search.py --stage working --write
 ```
 
-Run it only when Search is the task or a Search rebuild is explicitly requested. The Manage **Rebuild docs and Search** action handles infrequent persistent-media source changes. Recents refreshes during a full Working Build or Publish; ordinary targeted edits preserve its saved output.
+Run it only when Search is the task or a Search rebuild is explicitly requested. Manage **Refresh Search and Recent** updates both discovery files without document rendering or media production. Only changed files join the Publish queue; ordinary targeted edits preserve saved discovery output.
 
-Build commands accept independent `--docs-base-dir` and `--projects-base-dir` overrides after loading `.env.local`. Controlled Preview builds require explicit isolated temporary inputs and are normally owned by Publish. [Builder](../documentation/studio/Builder.md) owns orchestration; [Runtime](../documentation/studio/Docs_Viewer_Runtime.md#source-editing-and-save) owns awaited Save and display behavior.
+Full Working Rebuild is explicit maintenance for broad renderer/configuration/policy changes, persistent-media edits or reconciliation:
+
+```bash
+python3 docs-viewer/build/rebuild_working.py --write
+```
+
+This command requires `--write` and has no dry-run mode. It regenerates ordinary/non-Catalogue documents and referenced media, exact dependencies, Selected, Search and Recent. It queues changed output and media-only changes, preserving existing pending selections. Catalogue Regenerate retains its own generation and Work publication owner. Reload the reader after maintenance to display its results.
+
+Build commands accept independent `--docs-base-dir` and `--projects-base-dir` overrides after loading `.env.local`. Preview receives selected finished artifacts through Publish and has no document builder. [Builder](../documentation/studio/Builder.md) owns orchestration; [Runtime](../documentation/studio/Docs_Viewer_Runtime.md#source-editing-and-save) owns awaited Save and display behavior.
 
 ## Catalogue and publication
 

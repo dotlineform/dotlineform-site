@@ -15,7 +15,7 @@ from docs_workspace_config import DocsCollectionConfig, DocsStageConfig, generat
 
 @dataclass(frozen=True)
 class DiscoverySelection:
-    """One eligible candidate set shared by complete Working Search and Recents."""
+    """One eligible candidate set shared by Working Search and Recent."""
 
     ordinary: dict[str, dict[str, Any]]
     collections: list[tuple[DocsCollectionConfig, dict[str, dict[str, Any]]]]
@@ -88,3 +88,10 @@ def select_collection_documents(
         selected = _select_collection_rows(manifest["docs"], collection)
         selections.append((collection, selected))
     return selections
+
+
+def read_discovery_selection(repo_root: Path, config: DocsStageConfig, ignored_ids: frozenset[str]) -> DiscoverySelection:
+    """Read completed metadata once for an explicit discovery refresh."""
+    tree = read_discovery_metadata(resolve_workspace_path(repo_root, generated_documents_path(config)) / "index-tree.json")
+    ordinary = select_ordinary_documents(tree["docs"], ignored_ids)
+    return DiscoverySelection(ordinary, select_collection_documents(repo_root, config, set(ordinary)))
