@@ -144,6 +144,7 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 ## Proposed Features
 
+- [Document Owned Media](deliveries/Document_Owned_Media.md) — Proposed; DOM.0 read-only readiness review completed on 2026-10-16 with no architectural blocker. Ownership → Save → deletion, followed by review and one referenced-media migration, is the suggested order. Flat originals/orphans can remain for optional manual cleanup. Size limits and unexpected filename conflicts are authoring errors; the light-touch Save proposal carries explicit replacement intent and sanitizes SVG automatically without review dialogs or repeated preparation. Implementation approval remains open. Immediate Publish effects and later manual Pages deployment retain the accepted interval.
 - [Docs Viewer App Roadmap](Docs_Viewer_App_Roadmap.md) — Proposed standalone Mac/iPad reader progressing to local management through one capability release at a time. Each Swift release aligns with an agreed web behavior/resource baseline; ongoing web additions do not automatically expand it. Reuse the existing reader and native foundation, improve only the responsibility seams needed by the next capability, and treat historical native proposals as background requiring reconciliation. DVA.R1 ordinary reading is the next candidate; workspace/access, release scope and implementation approval remain open.
 
 ## Reviews

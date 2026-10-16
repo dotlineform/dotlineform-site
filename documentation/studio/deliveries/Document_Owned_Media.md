@@ -1,0 +1,204 @@
+---
+draft: false
+doc_id: d-20261016-113806-43f3db
+title: Document Owned Media
+added_date: "2026-10-16 11:38:06"
+last_updated: "2026-10-16"
+summary: DOM.0 readiness review complete; light-touch Save handling uses explicit replacement intent, authoring errors for conflicts and automatic SVG sanitization, pending implementation approval.
+ui_status: planned
+parent_id: d-20260428-000000-f5ff18
+---
+# Document Owned Media
+
+This proposed delivery is parented to [Planned Features](../Planned_Features.md). It extends [Incremental Document Publish](Incremental_Document_Publish.md) and the [Working/Preview media boundary](Document_Media_Working_And_Preview.md) with one result: each authored document owns its media, and Source Save completes its selected Working media writes/removals and publication handoff before returning the fresh document.
+
+## Current And Next State
+
+Status: proposed on 2026-10-16. The user requested this delivery document and agreed document-ID folders under each media type, media writes on Save, deletion of removed media, migration of existing referenced media and manual orphan cleanup. Implementation, test work and real-workspace/public migration are not authorised by creation of this plan.
+
+Currently, document media has collection-level filenames. Add Image/Add file writes media before inserting the source reference; Source Save generates the edited document and queues its current media but leaves removed files in place. Docs Media provides an explicitly refreshed inventory/reference report. Catalogue Work media has a separate owner and is outside this delivery.
+
+DOM.0 read-only readiness review completed on 2026-10-16. The outcome fits the existing owners; no architectural blocker or orphan-cleanup prerequisite was found. The user accepted size-limit feedback as an authoring concern and requested light-touch replacement/sanitizer handling. The refined proposal below uses explicit Edit/Save intent for replacement, reports unexpected filename conflicts and sanitizes SVG automatically without a separate review dialog. The proposed change set is concrete enough for implementation approval, with the precise request/queue representation left to implementation.
+
+Next: review the refined light-touch behavior and approve DOM.1–DOM.4 implementation. The user reconfirmed the accepted Publish-to-manual-deployment interval on 2026-10-16; public media removals complete during Publish without waiting for GitHub Pages. Optional manual orphan cleanup can happen before, during or after the delivery; it is not a readiness or migration gate. Only repository planning documents have changed; code, source documents, assets, queues and generated payloads are untouched. Live migration/Publish remains the later DOM.5 action.
+
+## Requirements
+
+### Document Ownership And Paths
+
+- Keep the existing configured workspace/collection and media-type roots. Within each document-media type, store files under `<doc_id>/<readable-filename>`. The document ID is an explicit path segment, not a filename prefix; no additional literal `by-id/` segment is needed.
+- Example Working paths, relative to the configured Docs workspace root, are `working/assets/media/workspace/img/<doc_id>/photo.webp` and `working/assets/media/collections/concepts/img/<doc_id>/photo.webp`. Preview and configured public destinations retain the same type-relative identity, `<doc_id>/photo.webp`. Source image paths correspondingly become `docs/img/<doc_id>/photo.webp` or `docs/collections/concepts/img/<doc_id>/photo.webp` inside their normal tokens.
+- Cover authored document images, SVGs, attachments, HTML media and their owned companions. Give thumbnails the same document namespace while preserving their independent front-matter assignment. Keep editable Mermaid sources with their configured Working source/build owner, adding the document namespace there and carrying the exact source/output relationship forward. Derived public fenced-Mermaid assets remain producer-owned; adapt their paths only where required by the ownership contract.
+- Preserve existing conversion, sanitizer rules and presentation policies while simplifying their author interaction. Different documents can use the same readable filename independently. Within one document, carry an explicit Edit replacement choice through Save without a second Replace dialog. An unexpected conflict from a new addition or competing pending files is reported for the author to resolve; do not silently overwrite, allocate filenames or introduce cross-document deduplication.
+- Native intake and import/materialisation derive destinations from the exact resolved document target. Import/export, return import, generation, local reads, reports and publication carry the complete relative identity instead of flattening it to a basename. Reuse prepared bytes and resolved owners through those operations.
+- Each document owns its media independently. Reuse in another document creates a copy in that document's namespace through its authoring/import operation. Handwritten references into another document's namespace remain an authoring concern; ordinary Save, generation and Publish do not scan other documents to establish sharing or protect such references from deletion.
+- Catalogue Work images/downloads, Catalogue media tokens, external media URLs, the native app and the Processing project's storage/build lifecycle remain outside this change. Apply the document-media contract to whatever named collections the Docs workspace explicitly configures, without changing their separate project owners.
+
+### Media Writes On Save
+
+- Add Image/Add file retains the selected browser `File` and the required insertion/thumbnail choices in the mounted Source session. Token insertion and presentation-only edits make no permanent media writes. Do not add persistent server staging, upload sessions or a media queue independent of the document draft.
+- The browser owns the draft, pending-file membership, authoring feedback and replacement choices. Preserve pending files through ordinary editing/Undo; select the pending files still used by the final buffer and thumbnail assignment when Save runs. Pending replacement bytes or a thumbnail choice make the session dirty even when its text is unchanged.
+- Python owns required upload parsing/limits, canonical destination construction, media decoding/conversion/sanitization, confined writes, source persistence, exact generation and publication handoff. Establish candidate validity once using the saved inputs and selected pending media; a new file must not have to exist permanently before that candidate can be accepted.
+- Save prepares selected files once and carries explicit replacement intent from the editor. Keep filename/existing-byte checks limited to the selected document identities and reuse unchanged bytes where useful. Sanitize selected SVG at its processing owner automatically; report sanitizer changes through the existing Save result without a blocking review/confirmation dialog. Invalid SVG or a processing failure stops Save normally. Do not add a sanitizer override, second upload/processing pass for confirmation or a new review workflow.
+- A write-free insertion preparation call is acceptable only for a concrete required identity/authoring result; it must not silently store media or create a second validation owner. Carry known choices and completed preparation forward rather than repeating processing without an operational reason.
+- One awaited Save completes the selected media writes, canonical source persistence, exact document/Links generation, queue effects and fresh display. It does not run Search, Publish, complete media inventories or unrelated registered media production. Media processing is limited to the supplied pending files and their explicitly requested outputs.
+- If a file or combined pending-media request exceeds the size limit, report the exceeded limit before media processing/persistence and retain the draft and pending Files. The author resolves the input. Add no automatic splitting, subset saves, batch coordinator, partial uploads or extra authoring workflow; keep request-size enforcement at the existing upload boundary.
+- Discard releases the unsaved source and pending files without permanent writes. Adding an image and removing its token before the first Save therefore stores no image, unless an independent retained thumbnail choice still requires that file.
+- Preserve useful pending files when Save fails. Report the failed target/phase and completed effects accurately, including a source that was already saved. Partial media writes can leave orphans for manual cleanup; do not add rollback, automatic backup, retry markers or a stronger recovery guarantee.
+
+### Removed Media And Publication
+
+- Compare the document's previous saved authored-media/producer ownership with its newly completed ownership. Reuse and extend the existing per-document generation/media metadata and prepared source rather than reading old source again or using the explicitly refreshed Docs Media report as Save's authority. Retain the previous references before replacing their metadata.
+- Keep this ownership independent of public eligibility and rendered presentation. In the current code, eligible fenced Mermaid is projected to light/dark SVG references, while Draft can use browser-rendered fences. That change alone is not authored-media removal. Preserve owned media on Draft/exclusion changes; removing the authored fence or assignment can select its exact producer-owned files for removal. Carry these facts in the existing generation metadata, without adding a second media inventory or ledger.
+- Treat references as a set: removing one of several occurrences of the same owned file does not delete it. A thumbnail remains while its front-matter assignment remains, independently of body-image tokens. Include companion/build-source/derived removals only through the exact relationships supplied by their owning producer; do not infer dependencies through filename guesses or directory scans.
+- Automatic removal applies to the exact document-owned namespace. Old flat files remain outside that automatic lifecycle; migrating a flat reference into a document folder queues the new bytes and document without deleting its flat original.
+- After the saved source and exact generation no longer use an owned file, remove its selected Working bytes and retain its exact identity for Preview/public removal. Order the metadata, queue and deletion effects so a partial failure does not erase the only record of a required removal. Reuse existing generation metadata and publication selections; do not introduce another ledger or transaction/recovery framework.
+- Extend the existing document-owned publication handoff to carry exact media removals as well as current media. Repeated Saves preserve removals until completed, merge further removals and cancel a pending removal when a later successful Save restores that exact identity with ready bytes. Replacing an image at the same identity selects a write, not a subsequent deletion of its replacement.
+- A removal retains its collection, document, type and relative identity even when no corresponding Working bytes or eligible current-document write remain. Publish consumes supplied removals without source reads, eligibility calculations, sharing checks, inventories, remote listings or orphan inference. Clear a successful publication unit only after its selected writes and removals have completed in Preview and the configured destinations; later GitHub Pages deployment is independent.
+- Draft/exclusion changes retain canonical Working media. Whole-document deletion cleanup remains manual in this delivery; do not silently broaden token/assignment removal into automatic deletion of every file in a document folder.
+
+### Migration And Manual Orphans
+
+- Migrate from saved canonical document references, not from filenames that appear to contain an owner. Copy each referenced file into its referencing document's namespace and rewrite that document's maintained references. A file referenced by several documents becomes one independent copy per document. Preserve ready bytes without routine image re-encoding, and carry exact companion/source relationships through the same mapping.
+- Include Draft and otherwise unpublished documents because this is canonical Working ownership. Use the established generation/eligibility handoff to select public effects only where appropriate. Reconcile affected generated references and per-document media metadata through the owning builders; do not leave a second reference baseline.
+- Leave existing collection-level files where they are. This includes current orphans and the original files from which migrated copies were made. Neither group blocks migration, and neither needs an invented document owner, orphan directory, quarantine or automatic cleanup operation.
+- After reference migration, retained originals become additional manual cleanup candidates. Keep old Preview/public files until the public references that need them have switched. Manual cleanup of Working, Preview and public storage remains explicit; deleting an old orphan locally does not implicitly select its remote deletion.
+- Docs Media continues listing remaining flat files through its existing explicit recursive Refresh. Display the readable basename and known owning document separately from reference status. Flat leftovers have no assigned document owner. A file in a document folder can also be orphaned when it is no longer referenced; folder ownership alone does not make it referenced.
+- Optional cleanup before migration reduces clutter but requires no new cleanup feature or migration prerequisite. Review candidates manually: editable Mermaid sources and companion assets can be needed without a direct body reference, and the existing report excludes thumbnails and public fenced-Mermaid derivatives. A blank reference cell alone is not an instruction to delete a producer input.
+- New writes and migrated maintained references use the document layout. Retained old bytes are cleanup residue, not a fallback reader, dual-write destination, compatibility alias or second supported ownership model. Keep report inventory of those bytes without adding legacy-path resolution branches.
+
+### Publish And Manual Deployment
+
+Publish transfers configured R2 media immediately and writes document JSON into the tracked `site/` artifact; Git commit/push and manually triggered GitHub Pages deployment happen separately. The user reconfirmed on 2026-10-16 that the resulting interval is an accepted consequence of choosing when to deploy instead of deploying on every commit. This follows the existing [Failure And Timing](../Catalogue_Deployment.md#failure-and-timing) boundary.
+
+Apply document-owned media removals to Preview and configured public destinations during Publish. A still-deployed document can temporarily reference removed media until the user runs the next deployment; this is accepted and does not require a new readiness gate, deferred deletion action, deployment detection, scheduled cleanup, publication ledger or progress/resume state. Migration still retains old flat media as optional manual cleanup residue under the requirements above. This agreement establishes the intended implementation behavior; implementation and real migration/Publish actions retain their separate approval boundaries.
+
+## Deliverables
+
+| Owner/artifact | Target result |
+| --- | --- |
+| Document media paths and configured destinations | Existing type roots with document-ID subfolders; exact relative identities survive every consumer. |
+| Mounted Source session | Pending native files/choices, draft-aware dirty state and Save/discard membership; insertion has no permanent storage effect. |
+| Source Save/media preparation | One narrow awaited operation owns supplied media processing, source persistence, exact generation and completed handoff. |
+| Generation metadata and Docs publication queue | Previous/current per-document references and durable exact pending removals, with no cross-document sharing decision or extra ledger. |
+| Preview and selected publication | Selected current media and explicit removals completed during Publish, with existing confinement and transfer-completion boundaries; manual Pages deployment remains independent. |
+| Existing-document migration | Referenced copies and rewritten canonical/generated references, preserving old flat files for optional manual cleanup. |
+| Docs Media | Readable filenames, document ownership and actual reference/orphan status from the existing explicit report refresh; flat residue remains visible. |
+| Durable documentation | Update [Media And Asset Handling](../Media_And_Asset_Handling.md) as media authority, with narrow Source endpoint, publication/generated-contract and Development Checklist changes where their contracts change. |
+
+## Process
+
+1. The author optionally reviews existing orphans and cleans selected files manually. Leaving them in place has no effect on delivery readiness.
+2. In Source, Add/Edit media retains pending files and updates the draft. Saved document/media bytes remain unchanged until Save.
+3. Save selects the pending files used by that draft/thumbnail assignment, prepares them once using the carried author choices, then persists media/source and generates the exact document. Unexpected filename conflicts or invalid inputs are authoring errors; automatic sanitizer changes can produce a nonblocking note. The owner carries previous/current references into its selected Working removals and publication handoff.
+4. The fresh document appears after Save completion. Unreferenced pending files are released; failures retain useful draft inputs and report completed effects. Search is unchanged.
+5. Publish consumes the completed selected document/media writes and exact removals, including immediate configured R2 effects. The author continues to own commit/push and manual deployment, accepting the intervening public-media/site differences.
+6. Explicit Docs Media Refresh supplies manual orphan review when wanted. It is not part of Save or Publish, and migration leftovers can remain indefinitely.
+
+## DOM.0 Readiness Findings
+
+### Workflow Changes
+
+| Action | Current behavior | Proposed behavior |
+| --- | --- | --- |
+| Add Image/Add file | Uploads, prepares and permanently writes media, then inserts its reference. | Retains the browser File and inserts the document-owned reference. Only the identity preparation genuinely needed for insertion may call the server; no permanent write or media conversion is required at insertion. |
+| Edit image presentation | Rewrites the captured token locally. | Stays a local draft edit. Selecting replacement bytes makes the draft dirty even if the resulting token text is identical. |
+| Save | Sends source JSON, persists source and awaits exact document/Links generation plus fresh display. | Carries source, needed pending files/thumbnail choice and explicit replacement intent through one bounded operation. It prepares/sanitizes selected media once, reports unexpected conflicts, writes media/source, generates the exact result and persists current/removal effects before fresh display. No additional Replace or sanitizer review dialog. |
+| Return/discard or browser exit | Discard handling observes source-text changes. | Includes pending media/thumbnail changes in that same draft decision and releases unsaved Files on discard. A reload still loses an unsaved draft; no persistent draft/upload recovery is introduced. |
+| Create thumb | Writes the document's fixed thumbnail immediately and sets its assignment in the buffer. | Defers the write to Save. Preserve the existing single-thumbnail behavior: the latest explicit Create thumb selection wins; removing the body token does not clear the independent assignment. If only the thumbnail remains wanted, Save needs the File for thumbnail generation but need not write an unreferenced body image. |
+| Remove an owned reference and Save | Leaves its stored bytes in place. | Removes the selected Working media after successful persistence/generation and queues exact Preview/public removal. Remaining occurrences or thumbnail assignments retain their own files. Restoring just the token after a completed deletion does not restore its bytes; add the file again. |
+| Exact Rebuild or replacement Import | Completes saved document generation through the common handoff; Import writes its selected media as part of Import Apply. | Uses document-owned paths and the same authored-reference/removal handoff for the completed document. Import Apply remains its own awaited commit operation; it does not acquire a second Source Save step. Unchanged authored media produces no new removal merely because Rebuild ran. |
+| Draft/exclusion, whole-document Delete | Eligibility updates publication; Delete removes source/generated documents while retaining media. | Keep those lifecycle boundaries. Eligibility never destroys canonical media; whole-document media cleanup remains manual within this delivery. Previously queued reference removals survive a later eligibility change or document deletion. |
+| Publish and deployment | Publish applies selected repository/R2 effects; Pages deployment is manually triggered later. | Adds exact media removals to the existing selected units, including immediate R2 deletions. Retains the accepted deployment interval without coordination or deferred cleanup. |
+| Migration and Docs Media | Flat media inventory is refreshed explicitly; cleanup is manual. | Copies referenced files into each document namespace, rewrites maintained references and leaves flat files untouched. Refresh continues to report leftovers; neither migration nor opening the report automatically cleans them. |
+
+### Implementation Findings And Scope
+
+- The browser already owns the captured source buffer, native File selection and token serialization; Python already owns conversion/sanitization, persistence, exact generation and transfers. Moving persistent intake into the existing Save lifetime follows those boundaries. Pending-file selection and thumbnail choice stay in the browser; the server resolves actual saved filesystem/producer effects from its prepared document and prior generation metadata.
+- Artifact paths, image-token references, inventory traversal and selected publication already accept nested relative identities. Native intake, import/materialisation, thumbnails and package/return-import boundaries must stop conflating a basename with the full media identity. This is coordinated ownership work, not a need for alternate roots or compatibility aliases. Migration preserves existing basenames; imported filenames do not need an additional naming cleanup.
+- Source Save currently accepts source JSON only; native media intake accepts exactly one file with a 64 MiB file limit, 1 MiB metadata limit and approximately 66 MiB envelope. Multi-file Save needs a bounded request change at that actual upload boundary. No server staging sessions, parallel upload workflow or general JSON-limit increase is required by the proposed approach.
+- Existing `publication-media.json` records completed ready-media references and prepared fence information. Its rendered references alone cannot distinguish authored removal from an eligibility-driven Mermaid presentation change. Extend that existing record with the necessary authored/producer ownership, carry the previous record forward and persist exact removal effects before forgetting it. The current queue selector replaces a document's record on each contribution; the new removal merge must preserve outstanding effects across further Saves, Draft/withdrawal and document Delete. Decide its exact JSON shape during implementation, not through a second ledger.
+- Editable Mermaid source and its managed SVG are one explicit producer relationship; a thumbnail is an independent assignment; eligible fenced Mermaid already has per-document producer identities. Current interactive HTML import materializes a single HTML file. Preserve exact declared companion handling where an existing owner supplies it; this delivery adds no crawler for arbitrary HTML dependencies or automatic protection for author-written cross-document paths. Keep the current thumbnail basename under its new document folder and retain the fenced producer's established namespace unless a concrete ownership conflict requires changing it.
+- Save failure can leave completed media writes, as the agreed manual-recovery model permits. Retain useful pending Files and report completed effects; do not add transactional rollback or a new retry protocol. Required target/owner, upload/format, path/symlink, sanitization and selected-transfer safeguards remain at their existing authoritative boundaries. Cross-document sharing audits, routine report refreshes, repeated conversion and whole-media scans have no purpose in this flow. The distinct post-implementation defensive review remains DOM.4.
+
+### Workflow Decisions
+
+| Choice | Recommendation | Effect |
+| --- | --- | --- |
+| Intentional replacement and unexpected filename conflicts | Selecting replacement bytes through Edit and then Save supplies replacement intent; no second Replace confirmation. Check only the selected document identity. | New/competing additions with conflicting bytes at the same identity report a clear filename conflict and retain the draft/Files for authoring to resolve. Reuse matching stored bytes where useful; do not add a review workflow, automatic renaming or shared-media scan. |
+| SVG sanitization | Apply the existing sanitizer automatically once at its processing owner and carry the resulting bytes/diagnostics forward. | Report actual changes as a nonblocking note in the existing Save result. Malformed or unprocessable input remains an ordinary Save error. Remove mandatory sanitizer confirmation and its resubmission path; no override or separate review UI. |
+| Combined pending-media limit for one Save | Retain the existing request scale: at most 64 MiB of selected pending file bytes combined, with source/metadata and multipart overhead bounded separately within the existing approximately 66 MiB envelope. | Individual files remain subject to the existing 64 MiB limit. Only new/replacement Files are submitted; already saved media is not re-uploaded. The user agreed on 2026-10-16 that an exceeded limit is reported for authoring to resolve. Keep the draft/pending Files and perform no automatic split, partial save/upload, batching or retry. |
+
+This is the refined light-touch proposal for implementation approval, following the user's request on 2026-10-16. The size-limit handling is settled without adding batch machinery. Thumbnail independence, manual orphan cleanup, manual whole-document media cleanup and immediate Publish effects are carried forward as specified above. No new test work or live-data work is implied by approving the product implementation.
+
+## Delivery Steps
+
+Recommended order: establish document ownership first, move writes into Save second, add removal effects third, then review and perform one explicit existing-data cutover. This avoids designing deletion around shared filenames or migrating the same data repeatedly. Optional orphan cleanup is outside this dependency chain.
+
+### [ ] DOM.0 — Readiness And Implementation Approval
+
+- [x] Confirm the outcome against the current broad intake/import, Source, generation, report and publication owners; reuse the shared generated-document boundary already delivered.
+- [x] Identify selected media/thumbnail/source-companion lifetimes, the bounded Save upload boundary and required pending-removal semantics without freezing a complete schema or file inventory at readiness. Record the workflow changes and two choices above.
+- [x] Review the actual replacement/sanitizer path and refine it following the user's light-touch request: carry Edit replacement intent into Save, report unexpected conflicts for authoring and sanitize SVG automatically with nonblocking diagnostics. No second Replace/sanitizer review dialog or confirmation resubmission is proposed.
+- [x] Retain bounded file/aggregate uploads and report an exceeded limit for authoring to resolve, keeping the draft/pending Files. The user explicitly rejected automatic splitting or additional batch machinery on 2026-10-16.
+- [x] Retain immediate Publish-time media writes/removals and separately triggered GitHub Pages deployment. The user reconfirmed the interval as an acceptable tradeoff on 2026-10-16; no deployment coordination or deferred deletion action is required.
+- [x] Confirm old flat files can remain indefinitely and that pre-migration orphan cleanup is optional. Stop for missing referenced inputs or unresolved producer ownership, not for the existence of orphans.
+- [ ] Obtain implementation approval and identify the later explicit authorisation required for live migration/Publish. Test work remains separately specified under [Test Contract Discipline](../Test_Contract_Discipline.md).
+
+Verification budget: concise read-only owner review, no prototype, generated writes, source/media migration or tests. Gate: the intended boundary and meaningful unresolved decisions are agreed and implementation is authorised. Record: readiness review completed on 2026-10-16 through scoped source/configuration reads covering the mounted Source/native intake, Save/exact Rebuild, Import Apply, thumbnail/Mermaid, generation metadata/queue, Docs Media and selected publisher boundaries. No executable behavior checks, real media/source reads, inventories or tests ran; only planning documents changed. No architectural blocker was found. Size-limit feedback is agreed as an authoring concern without batch machinery. The follow-up replacement/sanitizer inspection confirmed a selected-identity byte comparison, automatic sanitization with change diagnostics and a confirmation/resubmission path that can repeat preparation. The refined proposal removes that interaction and repeated work while retaining sanitizer rules. DOM.1–DOM.4 implementation approval remains outstanding, so the overall gate stays open.
+
+### [ ] DOM.1 — Document-Owned Paths
+
+- [ ] Introduce document-ID subfolders under the existing document-media types and relevant editable producer roots; carry the resolved target and relative identity through intake/import, producers, local reads, export/return import and publication.
+- [ ] Preserve readable basenames and within-document replacement choices. Remove affected basename-flattening assumptions rather than adding aliases or duplicated ownership parsing.
+- [ ] Adapt Docs Media to present filename/ownership/reference status using its loaded datasets and keep flat residue visible through existing explicit Refresh.
+
+Verification budget: focused changed-source lint/syntax and bounded path/call-chain review, expected short local static work without real asset writes or network. Run required code projection/check and site validation if public runtime files change. Inspect any proposed existing test selection and its documented coverage/cost before relying on it. Gate: every affected normal producer/consumer carries the document identity without changing Catalogue Work ownership; live data cutover waits for DOM.5. Record: pending.
+
+### [ ] DOM.2 — Media Writes On Source Save
+
+- [ ] Retain pending files/choices in the mounted browser session, including unchanged-text replacement dirty state and final-buffer/thumbnail selection. Token insertion writes no permanent files.
+- [ ] Carry selected pending inputs and explicit replacement intent through the narrow Save operation; complete required validation/preparation, automatic sanitization, writes, exact generation, queue handoff and fresh display under one busy lifetime. Report unexpected conflicts through ordinary authoring errors rather than a review/resubmission workflow.
+- [ ] Preserve useful inputs and accurate completed-effect errors on failure; discard and removed-before-first-Save inputs create no permanent media.
+
+Verification budget: focused changed-source lint/syntax and source/service ordering review, expected short local static work. Manual Add/Edit/Save/discard, same-identity replacement and thumbnail observations remain user-owned; no new browser test or temporary regression script is authorised. Gate: permanent media effects belong to Save and source/media failures are reported at their actual phase. Record: pending.
+
+### [ ] DOM.3 — Exact Removed-Media Effects
+
+- [ ] Carry previous/current per-document media references through successful Save/generation and identify only removed owned references and explicitly related outputs/sources.
+- [ ] Complete selected Working deletions and durable publication handoff without losing removal identities on partial failure. Preserve/merge/cancel pending removals across later completed Saves.
+- [ ] Apply exact Preview/public removals during Publish and retain successful-unit completion semantics; keep deployment waiting, other-document and directory/remote scans out of the path.
+
+Verification budget: focused lint/syntax and bounded reference-set, queue-merge and selected-transfer source review; no live deletions or Publish as an incidental check. Select existing service checks only after coverage, side effects and cost are understood; any test changes need separate approval. Gate: deletion follows saved owned-reference removal, protects remaining occurrences/assignments and consumes exact handoffs without new recovery machinery. Record: pending.
+
+### [ ] DOM.4 — Code And Defensive Behavior Review
+
+- [ ] Perform a distinct review of the final changed owners and reused helpers under [Development Checklist — Redundancy And Defensive Behavior Review](../Development_Checklist.md#redundancy-and-defensive-behavior-review).
+- [ ] Challenge repeated conversion, source parsing, collision comparisons, readiness probes, report refreshes, corpus scans, shared-media protection, compatibility paths, fallback roots and retry/rollback machinery. Confirm browser-owned membership decisions stay in the browser.
+- [ ] Record justified retained upload/format, exact target/configuration, path/symlink, sanitizer and selected write/transfer safeguards with their authoritative owner and operational purpose. Resolve findings and repeat only affected evidence.
+- [ ] Review migration ordering and confirm the accepted independent Publish/manual-deployment boundary has no added coordination machinery. Keep test changes outside the production approval unless separately agreed.
+
+Verification budget: bounded source/diff review plus checks justified by concrete review changes; no automatic suite, Build or live publication. Gate: material findings are resolved and the remaining data/public effects are concrete and reviewable. Record: pending.
+
+### [ ] DOM.5 — Existing Referenced-Media Migration And Cutover
+
+- [ ] Present the concrete migration scope and obtain explicit approval before changing canonical sources, real Working/Preview media or public storage. Reuse the selected mapping as execution input; no persistent migration framework is required.
+- [ ] Read each affected saved document once through the owning source boundary, map its exact referenced media and producer companions, then copy ready bytes into its document namespace. Duplicate shared inputs per referencing document and preserve document IDs, authored fields and presentation.
+- [ ] Rewrite maintained references and complete the owning exact document generation/media-metadata/queue handoff. Use a wider document reconciliation only if the changed renderer/config contract requires it; keep Search and unrelated registered media production out of the cutover.
+- [ ] Preserve unrelated queued effects and keep all old flat files, including originals and existing orphans, in place. Do not infer owners for leftovers, clear queues wholesale or delete old public keys during migration.
+- [ ] Use explicit approved Publish and the separate user-owned commit/push/deployment sequence to switch public references. Record local and deployed acceptance at the surfaces actually checked; the user can clean old media manually after the deployment when convenient.
+
+Verification budget: proportional selected-path/write/transfer diagnostics for the approved actual migration, with cost and real filesystem/network effects stated from its concrete size before execution. Avoid baseline hash inventories, whole-R2 listing and repeated builds solely for idempotence evidence. Gate: maintained documents use their document-owned media and local/public reference transitions are accepted; flat orphan cleanup is not a completion condition. Record: pending; no live data work authorised or performed.
+
+### [ ] DOM.6 — Manual Acceptance And Closeout
+
+- [ ] Record user observations of independent same-name images in different documents, Add then remove before Save, saved-reference removal, repeated occurrences, same-identity replacement, thumbnail independence and later Save before Publish. Distinguish observed behavior from source/static evidence.
+- [ ] Confirm migrated ordinary/configured collection documents and their media open at the accepted local/public surfaces, while flat leftovers remain reportable and cause no routine-operation work. Keep unresolved evidence limits visible.
+- [ ] Update durable media/Source/publication contracts and the Source Save guardrails in Development Checklist to permit supplied media processing while retaining the ban on unrelated media production/scanning. Record immediate Publish-time removals, the accepted manual-deployment interval and the manual orphan boundary.
+- [ ] Reconcile Planned Features status and recommend retaining or retiring this delivery and any temporary migration notes only when their routing/evidence value is exhausted. Do not delete documentation without approval.
+
+Verification budget: user normal-use/manual observations and focused documentation review; no automatic browser suite, Search rebuild, full Build, republish or test authoring for closeout. Gate: the agreed document-media lifecycle and migration are accepted, with orphan cleanup explicitly optional. Record: pending.
+
+## Follow-on
+
+Manual deletion/reconciliation of existing flat leftovers and partial-write orphans remains author maintenance. An automated orphan purge, cross-document media library, whole-document media deletion, deployment-aware cleanup service or new test collection requires its own explicit scope; none is implied by this delivery.
