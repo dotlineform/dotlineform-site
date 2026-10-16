@@ -219,9 +219,29 @@ export function setManagedDocDraft(target, payload, options) {
   return fetchManagementJson("/docs/set-draft", "POST", targetPayload(target, payload), options);
 }
 
-/** Persist the complete source session; the service awaits exact generation. */
-export function saveManagedDocSource(target, payload, options) {
-  return fetchManagementJson("/docs/source/save", "POST", targetPayload(target, payload), options);
+/** Submit one bounded source/media operation; no upload occurs before this Save. */
+export async function saveManagedDocSource(target, payload, options) {
+  var selections = payload.media;
+  var limits = options.mediaLimits;
+  if (selections.some(function (entry) { return entry.file.size > limits.max_file_bytes; })) {
+    throw new Error("Selected media exceeds the 64 MiB file limit.");
+  }
+  if (selections.reduce(function (total, entry) { return total + entry.file.size; }, 0) > limits.max_total_file_bytes) {
+    throw new Error("Selected pending media exceeds the combined 64 MiB limit. Reduce the pending media before Save.");
+  }
+  var metadata = JSON.stringify(targetPayload(target, {
+    source_text: payload.source_text,
+    media: selections.map(function (entry) {
+      return { media_kind: entry.media_kind, body: entry.body, thumbnail: entry.thumbnail, replace: entry.replace };
+    })
+  }));
+  if (new Blob([metadata]).size > limits.max_metadata_bytes) {
+    throw new Error("Source Save metadata exceeds the 1 MiB limit.");
+  }
+  var data = new FormData();
+  data.append("metadata", metadata);
+  selections.forEach(function (entry, index) { data.append("file_" + index, entry.file, entry.file.name); });
+  return fetchManagementJson("/docs/source/save", "POST", data, options);
 }
 
 export function readManagedDiagramSources(target, options) {
@@ -234,12 +254,9 @@ export function openManagedDiagramSource(target, payload, options) {
   }, payload || {})), options);
 }
 
-/** Await one native media upload, returning either a write-free decision or completed media. */
-export function applySourceMedia(payload, file, options) {
-  var data = new FormData();
-  data.append("metadata", JSON.stringify(collectionPayload(payload, options)));
-  data.append("file", file, file.name);
-  return fetchManagementJson("/docs/source/media", "POST", data, options);
+/** Resolve a basename into this document's identity without uploading or storing bytes. */
+export function prepareSourceMedia(payload, options) {
+  return fetchManagementJson("/docs/source/media", "POST", collectionPayload(payload, options), options);
 }
 
 export function deleteManagedDoc(docIds, options) {

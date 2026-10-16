@@ -414,7 +414,17 @@ def handle_import_source(
         retain_private_media_source=True,
     )
     preview["target"] = destination.request_target()
-    bind_import_media_owner(preview, destination.document_config)
+    source_doc_id = str(preview["proposed_doc_id"])
+    create_added_date = current_doc_timestamp()
+    create_doc_id = allocate_ordinary_import_doc_id(destination, create_added_date, docs)
+    preview["proposed_doc_id"] = create_doc_id
+    preview["proposed_doc_id_source"] = "allocated-local-identity"
+    if source_path.is_dir():
+        retarget_markdown_package_media_plans(
+            repo_root, staging_root, source_projects_base, source_path, preview,
+        )
+    retarget_inline_media_plans(repo_root, staging_root, source_projects_base, preview)
+    bind_import_media_owner(preview, destination.document_config, doc_id=create_doc_id)
     if collection:
         preview["collection"] = collection
     private_media_source_markdown = str(preview.pop("_inline_media_source_markdown", "") or "")
@@ -423,7 +433,8 @@ def handle_import_source(
         repo_root,
         staging_root,
         source_projects_base,
-        collection=destination.collection,
+        config=destination.document_config,
+        doc_id=create_doc_id,
     )
     if interactive_plans:
         preview["interactive_html_plans"] = interactive_plans
@@ -487,29 +498,6 @@ def handle_import_source(
     destination_url = management_collection_viewer_url(
         repo_root,
         collection,
-    )
-    source_doc_id = str(preview["proposed_doc_id"])
-    create_added_date = current_doc_timestamp()
-    create_doc_id = allocate_ordinary_import_doc_id(
-        destination,
-        create_added_date,
-        docs,
-    )
-    preview["proposed_doc_id"] = create_doc_id
-    preview["proposed_doc_id_source"] = "allocated-local-identity"
-    if source_path.is_dir():
-        retarget_markdown_package_media_plans(
-            repo_root,
-            staging_root,
-            source_projects_base,
-            source_path,
-            preview,
-        )
-    retarget_inline_media_plans(
-        repo_root,
-        staging_root,
-        source_projects_base,
-        preview,
     )
     title = str(preview.get("title") or "Imported Doc").strip()
     record = ImportContent(

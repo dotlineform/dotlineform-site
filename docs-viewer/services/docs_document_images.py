@@ -7,10 +7,8 @@ import subprocess
 import tempfile
 from typing import Any, Mapping
 
-from docs_artifact_locations import artifact_location_adapter
 from docs_document_identity import is_document_id
 from docs_import_common import RASTER_IMAGE_STAGED_SUFFIXES
-from docs_workspace_config import DocsCollectionConfig, DocsStageConfig, managed_media_config
 
 
 def has_document_thumbnail(metadata: Mapping[str, Any], *, collection: str = "") -> bool:
@@ -23,7 +21,7 @@ def has_document_thumbnail(metadata: Mapping[str, Any], *, collection: str = "")
 
 
 def document_thumbnail_filename(doc_id: str, *, collection: str = "") -> str:
-    """Derive an authored document's immutable thumbnail identity within its owner."""
+    """Derive the one flat thumbnail identity owned by an authored document."""
     if collection == "catalogue" or not is_document_id(doc_id, collection=collection):
         raise ValueError("thumbnail requires an exact authored document identity")
     return f"{doc_id}-thumb.webp"
@@ -38,22 +36,15 @@ def generated_thumbnail_filename(payload: Mapping[str, Any], *, doc_id: str, col
     return document_thumbnail_filename(doc_id, collection=collection) if payload["has_thumbnail"] else ""
 
 
-def write_document_thumbnail(
-    repo_root: Path, config: DocsStageConfig | DocsCollectionConfig,
-    *, doc_id: str, source_path: Path,
-) -> dict[str, Any]:
-    """Generate one 96px centred WebP and immediately replace its fixed identity.
+def prepare_document_thumbnail(source_path: Path) -> bytes:
+    """Prepare one 96px centred WebP from an already validated static raster.
 
-    Uses the Works recipe, including upscaling small inputs. No primary variants,
-    existing-thumbnail inspection, deferred commit or rollback are performed.
-    Source cancellation leaves completed media writes in place.
+    Save owns the selected write to the document's fixed flat identity.
     """
     if source_path.suffix.lower() not in RASTER_IMAGE_STAGED_SUFFIXES:
         raise ValueError("Create thumb requires a raster image")
-    filename = document_thumbnail_filename(doc_id, collection=getattr(config, "collection", ""))
-    media = managed_media_config(config, "thumbs")
     with tempfile.TemporaryDirectory(prefix="docs-thumbnail-") as temporary:
-        output = Path(temporary) / filename
+        output = Path(temporary) / "thumbnail.webp"
         try:
             result = subprocess.run([
                 "ffmpeg", "-hide_banner", "-loglevel", "error", "-nostdin", "-y",
@@ -66,9 +57,4 @@ def write_document_thumbnail(
             raise RuntimeError("Thumbnail generation requires FFmpeg") from error
         if result.returncode != 0:
             raise RuntimeError("FFmpeg thumbnail generation failed: " + result.stderr.strip())
-        data = output.read_bytes()
-    adapter = artifact_location_adapter(repo_root, media.asset_location, served_path_prefix=media.served_path_prefix)
-    adapter.replace(filename, data, content_type="image/webp")
-    if not adapter.verify_bytes(filename, data):
-        raise RuntimeError("Thumbnail media write verification failed")
-    return {"filename": filename, "size_bytes": len(data)}
+        return output.read_bytes()

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260423-155039-e36925
 title: Docs Images And Assets
 added_date: 2026-04-23 15:50:39
-last_updated: "2026-10-06 12:21:35"
+last_updated: "2026-10-16"
 summary: Link existing media, add native-selected images and downloads to an active document, or embed self-contained visuals.
 parent_id: d-20260424-000000-50b63f
 
@@ -87,26 +87,26 @@ Do not put local design documents or working references in `site/`; that tree is
 1. Open the target document's Markdown source editor and choose **Add image…** or **Add file…**.
 2. Click the folder-open icon beside the filename field. Select one supported file in the native chooser; its basename fills the field. Empty files and files above 64 MiB are rejected. Cancelling preserves the previous selection.
 3. Enter useful alt text or a link label. For an image, review caption, summary and layout settings; optionally select **Create thumb** for a static raster image.
-4. Choose **Add image** or **Add file**. Raster images are converted before comparison. New or byte-identical stored media proceeds directly; changed bytes using the same identity prompt **Replace** or **Cancel**.
-5. Review the inserted source, then use **Save** to persist the document. Watcher generation and reader refresh follow independently.
+4. Choose **Add image** or **Add file** to insert the reference and retain the selected File in this Source session. Media is stored only when you Save.
+5. Review the draft, then use **Save**. It prepares and stores the selected media, persists source, rebuilds the exact document and displays the fresh result before completing.
 
-The exact document/collection owner writes the bytes to its configured shared media namespace. Import staging is unnecessary, and the original selected file stays untouched. The editor never asks the author to choose a provider and does not mutate a public repository or R2 projection.
+Save writes body media under the exact configured document owner's `<doc_id>/<filename>` folder. Thumbnails retain one flat `thumbs/<doc_id>-thumb.webp` per document. Import staging is unnecessary, and the original selected file stays untouched. The editor never asks the author to choose a provider and does not mutate a public repository or R2 projection.
 
 JPEG, PNG, static WebP and single-frame GIF selections become one proportional WebP with an exactly 800px long edge, scaling up or down without cropping. `My Photo.JPG` becomes `my-photo.webp`; selecting `My Photo.png` addresses that same managed identity. Already-WebP selections use the same conversion. Animated inputs are rejected with a request to choose a static image. SVG and Mermaid retain their vector workflows, and downloads retain their bytes. Optional thumbnails are generated from the original upload as 96px square WebP images. Upscaling cannot recover detail, and fine text or large display areas may look softer at 800px.
 
-Managed materialisation completes and is byte-verified before the logical source reference is inserted. Cancelling or abandoning the later source edit can leave unreferenced media, including an already replaced thumbnail; it does not undo media writes. Public publication remains a separate action.
+Discard releases unsaved Files without media writes. Add then remove before first Save stores no body image; a retained thumbnail assignment can still request thumbnail-only output. Pending replacement bytes and thumbnail choices count as unsaved changes even if the text is unchanged. A file or combined pending-media selection above 64 MiB reports an error for you to resolve while retaining the draft/Files. Public publication remains a separate action.
 
-To edit an existing semantic image token, reopen it in Source. The same filename field initially shows its stored basename; use the adjacent icon to select another file, or edit presentation alone without selecting a file. **Apply** updates the captured occurrence. Selecting a raster replacement applies the 800px WebP conversion and normalized stem naming; presentation-only edits leave media alone. Changed bytes at the same media identity still require replacement confirmation and affect all documents referencing that identity. Existing stored images are not migrated or deleted when a token changes.
+To edit an existing semantic image token, reopen it in Source. The same filename field initially shows its stored basename; select replacement bytes or edit presentation alone. **Apply** changes the captured occurrence locally. Add file over a captured authored file link also opens Edit file. Selecting replacement bytes through Edit supplies replacement intent to Save; no second Replace dialog appears. Unexpected filename conflicts are authoring errors, with the draft/Files retained. Different documents can independently use the same readable body-media basename. Existing stored images are not migrated or deleted merely by editing the draft.
 
-For Mermaid `.mmd`, **Add image…** renders in temporary storage first, then writes and verifies the canonical source in the configured Mermaid build-source owner and its same-stem managed SVG. The inserted image token references the SVG. After intake, use the diagram-title link in rendered Document Info's **Diagrams** section to edit the canonical source; Docs Watcher republishes only that changed identity, so the existing token and document source do not change.
+For Mermaid `.mmd`, insertion retains the File and inserts its SVG reference. Save renders/sanitizes once, then writes the editable source and same-stem SVG under their configured document-owned locations. The diagram-title link in rendered Document Info's **Diagrams** section opens the saved editable source. Persistent external media-source changes require the explicit Rebuild docs and Search action; there is no filesystem watcher.
 
-Authors see another modal only when changed bytes require replacement confirmation or SVG sanitization produces diagnostics to review. These decisions happen before permanent writes.
+Save sanitizes SVG automatically and reports changes as a nonblocking note. Invalid SVG or processing failure stops Save. Preparation errors make no permanent writes; later persistence failures identify the failed phase and completed effects. Partial media writes can leave orphans for manual cleanup, and saved source is reported accurately if generation subsequently fails.
 
 Markdown package imports are different: one Markdown source becomes one document, package images are converted to readable WebP outputs, and supported attachments are copied and linked. HTML and Markdown imports can also extract raster data URLs written as Markdown images. [Docs Import](Docs_Import.md) owns those operator workflows.
 
 ## SVG, Mermaid, And Interactive Assets
 
-Use **Add image…** for new SVG. It sanitizes the selected SVG and writes it through the document owner's configured `svg` media class before inserting an image reference. Docs Import uses the same sanitizer and class when it extracts inline SVG from imported HTML. Historical SVG tokens beneath `img` and manually authored inline SVG remain supported; they are not migrated automatically.
+Use **Add image…** for new SVG. Insertion retains the selected File; Source Save sanitizes and writes it through the document owner's configured `svg` media class. Docs Import uses the same sanitizer and class when it extracts inline SVG from imported HTML. Historical SVG tokens beneath `img` and manually authored inline SVG are not migrated automatically.
 
 Use Mermaid when the diagram should remain reproducible and editable as source. Canonical `.mmd` is build media rather than reader media; the registered producer renders, sanitizes, publishes, and byte-verifies the SVG. Readers load only that static SVG and never receive Mermaid, Node, or Puppeteer runtime code.
 

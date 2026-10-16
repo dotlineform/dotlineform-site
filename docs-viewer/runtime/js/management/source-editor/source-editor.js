@@ -8,6 +8,7 @@ import {
 import { localFolderPasteReplacement } from "./local-folder-links.js";
 import { sourceBodyStart, sourceTitleError, sourceWithThumbnail } from "./source-buffer.js";
 import { classifyDocsDocumentSubject } from "../../shared/docs-document-subject.js";
+import { createPendingSourceMedia } from "./source-editor-pending-media.js";
 
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -86,7 +87,8 @@ function setStatus(state, message, isError) {
 }
 
 function dirtyNow(state) {
-  return normalizeSource(state.textarea ? state.textarea.value : "") !== state.lastCleanSource;
+  var source = normalizeSource(state.textarea ? state.textarea.value : "");
+  return source !== state.lastCleanSource || state.pendingMedia.selected(source).length > 0;
 }
 
 function projectDirty(state) {
@@ -152,8 +154,9 @@ function replaceCapturedRange(state, capture, value, selectionMode) {
   var mode = ["select", "start", "end", "preserve"].includes(selectionMode)
     ? selectionMode
     : "end";
+  var previous = state.textarea.value;
   state.textarea.setRangeText(String(value || ""), range.start, range.end, mode);
-  state.textarea.dispatchEvent(new Event("input", { bubbles: true }));
+  if (state.textarea.value !== previous) state.textarea.dispatchEvent(new Event("input", { bubbles: true }));
   state.textarea.focus();
   return true;
 }
@@ -208,6 +211,7 @@ function createSourceEditorContextAdapter(context, state) {
     getDocumentTarget: function () {
       return state.target ? Object.assign({}, state.target) : null;
     },
+    pendingSourceMedia: function (mediaPath) { return state.pendingMedia.get(mediaPath); },
     seedSourceContext: function (payload) {
       if (!isCurrent() || !responseMatchesTarget(payload, state.target)) throw new Error("The Source context changed.");
       state.sourceContextRead = { revision: state.bufferRevision, promise: Promise.resolve(payload) };
@@ -255,18 +259,23 @@ function createSourceEditorContextAdapter(context, state) {
     replaceCapturedSelection: function (capture, value) {
       return isCurrent() && replaceCapturedRange(state, capture, value, "end");
     },
-    insertSourceMedia: function (capture, payload) {
+    insertSourceMedia: function (capture, payload, pending) {
+      if (pending) state.pendingMedia.check(pending, pending.editedPath);
       if (!isCurrent() || !replaceCapturedRange(state, capture, payload.markdown, "end")) return false;
+      if (pending) state.pendingMedia.add(pending);
       if (payload.thumbnail) {
         var start = state.textarea.selectionStart;
         var end = state.textarea.selectionEnd;
         var previous = state.textarea.value;
         var next = sourceWithThumbnail(previous);
         var offset = next.length - previous.length;
-        state.textarea.value = next;
-        state.textarea.setSelectionRange(start + offset, end + offset);
-        state.textarea.dispatchEvent(new Event("input", { bubbles: true }));
+        if (next !== previous) {
+          state.textarea.value = next;
+          state.textarea.setSelectionRange(start + offset, end + offset);
+          state.textarea.dispatchEvent(new Event("input", { bubbles: true }));
+        }
       }
+      projectDirty(state);
       return true;
     },
     replaceCapturedRange: function (capture, value, selectionMode) {
@@ -356,6 +365,7 @@ function saveSource(context, state) {
       throw new Error("Source service did not return the saved document.");
     }
     state.lastCleanSource = normalizeSource(payload.source_text);
+    if (payload.media_complete === true) state.pendingMedia.clear();
     if (state.textarea && state.textarea.value !== state.lastCleanSource) {
       state.textarea.value = state.lastCleanSource;
       state.bufferRevision += 1;
@@ -364,7 +374,10 @@ function saveSource(context, state) {
     saved = true;
     projectDirty(state);
   }
-  return provider.writeSource(state.target, { source_text: normalizeSource(state.textarea.value) })
+  var source = normalizeSource(state.textarea.value);
+  return provider.writeSource(state.target, {
+    source_text: source, media: state.pendingMedia.selected(source)
+  }, { mediaLimits: state.mediaOptions.image })
     .then(async function (payload) {
       if (state.sourceEditorAdapter !== adapter) return true;
       if (payload.source_saved !== true) throw new Error("Source service did not confirm persistence.");
@@ -375,9 +388,11 @@ function saveSource(context, state) {
       await services.refreshDocument(state.target);
       if (services.setStatus) {
         var projectionErrors = payload.projection_errors || [];
-        services.setStatus(projectionErrors.length
-          ? "Source saved. A retained list could not be updated: " + projectionErrors.join("; ")
-          : "", projectionErrors.length > 0);
+        var notes = (payload.media_notes || []).flatMap(function (note) {
+          return note.warnings.map(function (warning) { return note.filename + ": " + warning; });
+        });
+        if (projectionErrors.length) notes.push("Source saved. A retained list could not be updated: " + projectionErrors.join("; "));
+        services.setStatus(notes.join("\n"), projectionErrors.length > 0);
       }
       return true;
     })
@@ -418,6 +433,7 @@ async function confirmNavigation(context, state) {
   var confirmed = await openLeavePrompt(context.root || document.body);
   if (!confirmed) return false;
   state.lastCleanSource = normalizeSource(state.textarea.value);
+  state.pendingMedia.clear();
   projectDirty(state);
   return true;
 }
@@ -429,7 +445,7 @@ function addSourceMedia(context, state, mediaKind, capture) {
   setStatus(state, "", false);
   return import("./source-editor-media.js")
     .then(function (module) {
-      return module.publishAndInsertSourceMedia({
+      return module.prepareAndInsertSourceMedia({
         adapter: state.sourceEditorAdapter,
         capture: capture,
         mediaKind: mediaKind,
@@ -527,6 +543,7 @@ function restoreRenderedContent(context, state) {
   state.textarea = null;
   state.loaded = false;
   state.mediaOptions = null;
+  state.pendingMedia.clear();
   state.sourceContextRead = null;
   state.sourceEditorAdapter = null;
 }
@@ -540,6 +557,7 @@ export function createDocsViewerSourceEditorMode() {
     lastCleanSource: "",
     loaded: false,
     mediaOptions: null,
+    pendingMedia: createPendingSourceMedia(),
     subjectAssignmentAvailable: false,
     sourceContextRead: null,
     collectionProvider: null,
@@ -563,6 +581,7 @@ export function createDocsViewerSourceEditorMode() {
       state.lastCleanSource = "";
       state.loaded = false;
       state.mediaOptions = null;
+      state.pendingMedia.clear();
       state.subjectAssignmentAvailable = false;
       state.collectionProvider = context.collectionProvider || null;
       state.renderedScrollTop = context.mount.scrollTop;

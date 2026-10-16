@@ -13,7 +13,7 @@ WEBP_COMPRESSION_LEVEL = 6
 RASTER_FORMATS = {"JPEG", "PNG", "WEBP", "GIF"}
 
 
-def _validate_static_raster(source_path: Path) -> None:
+def validate_static_raster(source_path: Path) -> None:
     """Inspect raster format/frame count before FFmpeg decodes and converts pixels."""
     try:
         from PIL import Image
@@ -30,12 +30,11 @@ def _validate_static_raster(source_path: Path) -> None:
 
 
 def convert_source_image_to_webp(source_path: Path, output_path: Path) -> None:
-    """Prepare one proportional 800px-long-edge image, including small-input upscaling.
+    """Encode an already validated raster at an 800px long edge, including upscaling.
 
     Encoding starts with the Works primary recipe but is owned independently by
     Docs Viewer. The operation writes only its temporary output, never the input.
     """
-    _validate_static_raster(source_path)
     scale = (
         f"scale='if(gte(iw,ih),{DISPLAY_LONG_EDGE},-1)':"
         f"'if(gte(iw,ih),-1,{DISPLAY_LONG_EDGE})':flags=lanczos"

@@ -275,18 +275,3 @@ def queue_shared_file(config: Any, output: str, *, pending: dict[str, Any] | Non
     pending = read_queue(config) if pending is None else pending
     select_shared(pending, "workspace", output)
     save_queue(config, pending)
-
-
-def requeue_media(repo_root: Path, workspace: Any, collection: str, kind: str, filename: str) -> None:
-    """Queue eligible saved references after a known selected media write."""
-    media = json.loads(media_metadata_path(workspace).read_bytes())
-    metadata = PublicMetadata(workspace, frozenset(media["ignored"]), policy_changed=False)
-    eligible = metadata.membership(collection)
-    pending = read_queue(workspace)
-    changed = False
-    for doc_id, record in media["documents"].items():
-        if record["collection"] == collection and doc_id in eligible and filename in record["media"].get(kind, []):
-            select_document(pending, doc_id, collection, media=record["media"])
-            changed = True
-    if changed:
-        save_queue(workspace, pending)

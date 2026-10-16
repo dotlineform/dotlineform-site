@@ -27,6 +27,7 @@ from docs_media_storage import (
     publish_docs_media_files,
 )
 from docs_svg_sanitizer import sanitize_svg_bytes
+from docs_artifact_locations import normalize_artifact_identity
 from studio.shared.python.projects_directories import projects_path_marker
 
 
@@ -349,7 +350,7 @@ def materialize_import_media(
     include_prompt_meta: bool,
     source_markdown: str = "",
     source_svg_markup: str = "",
-    collection: str = "",
+    config: DocsStageConfig | DocsCollectionConfig,
 ) -> list[dict[str, Any]]:
     del workspace_root
     plans: list[dict[str, Any]] = []
@@ -405,7 +406,7 @@ def materialize_import_media(
         source_path=source_path,
         plans=plans,
         inline_bytes=inline_bytes,
-        collection=collection,
+        config=config,
     )
 
 
@@ -416,11 +417,10 @@ def publish_import_media(
     source_path: Path,
     plans: list[dict[str, Any]],
     inline_bytes: dict[int, bytes],
-    collection: str = "",
+    config: DocsStageConfig | DocsCollectionConfig,
 ) -> list[dict[str, Any]]:
     """Prepare one import record's complete media set and publish before its source write."""
 
-    config = load_docs_media_owner(repo_root, collection)
     prepared: list[tuple[dict[str, Any], Path, Path, dict[str, Any]]] = []
     with tempfile.TemporaryDirectory(prefix="docs-media-publish-") as temp_dir:
         temp_root = Path(temp_dir).resolve()
@@ -467,11 +467,11 @@ def publish_import_media(
                 media_class=str(plan.get("media_class") or ""),
                 local_path=prepared_path,
                 source_root=prepared_root,
-                filename=str(plan.get("source_path") or ""),
+                filename=plan["artifact_identity"],
             )
             for plan, prepared_path, prepared_root, _conversion in prepared
         ]
-        results = publish_docs_media_files(repo_root, media_files, write=True, force=False)
+        results = publish_docs_media_files(repo_root, media_files, config=config, write=True, force=False)
         if not docs_publish_succeeded(results):
             failures = ", ".join(
                 f"{result.media_class}/{result.filename}: {result.status}"
@@ -498,7 +498,7 @@ def publish_import_media(
                 "kind": plan.get("kind", ""),
                 "conversion": conversion,
                 "publish_status": status_by_identity[
-                    (str(plan.get("media_class") or ""), str(plan.get("source_path") or ""))
+                    (str(plan.get("media_class") or ""), plan["artifact_identity"])
                 ],
             }
             for plan, prepared_path, _prepared_root, conversion in prepared
@@ -531,27 +531,29 @@ def build_media_plan(
     *,
     repo_root: Path | None = None,
     media_config: DocsManagedMediaConfig | None = None,
+    artifact_identity: str | None = None,
 ) -> dict[str, Any]:
     config = media_config if media_config is not None else media_config_for(media_class, repo_root)
-    media_path = f"{config.reference_prefix.as_posix()}/{source_path.name}"
+    identity = normalize_artifact_identity(artifact_identity if artifact_identity is not None else source_path.name)
+    media_path = f"{config.reference_prefix.as_posix()}/{identity}"
     link = f"[[media:{media_path}]]"
     return {
         "location_provider": config.asset_location.provider,
-        "artifact_identity": source_path.name,
+        "artifact_identity": identity,
         "media_class": media_class,
         "source_path": source_path.name,
         "media_path": media_path,
         "media_token": link,
         "media_link": link,
-        "served_reference": f"{config.served_path_prefix}/{source_path.name}",
+        "served_reference": f"{config.served_path_prefix}/{identity}",
         "title": title,
     }
 
 
 def bind_import_media_owner(
-    preview: dict[str, Any], config: DocsStageConfig | DocsCollectionConfig,
+    preview: dict[str, Any], config: DocsStageConfig | DocsCollectionConfig, *, doc_id: str,
 ) -> None:
-    """Bind newly imported assets and their Markdown tokens to the exact collection."""
+    """Bind imported bytes and tokens after the exact document identity is resolved."""
     plans = list(preview.get("media_plans") or [])
     if isinstance(preview.get("media_plan"), dict):
         plans.append(preview["media_plan"])
@@ -563,6 +565,7 @@ def bind_import_media_owner(
             Path(plan["source_path"]),
             str(plan.get("title") or ""),
             media_config=managed_media_config(config, plan["media_class"]),
+            artifact_identity=f"{doc_id}/{plan['source_path']}",
         )
         if old_token:
             markdown = markdown.replace(old_token, updated["media_token"])

@@ -45,7 +45,7 @@ WORK_DOWNLOADS_PATH = "/docs/work-downloads"
 WORK_LINKS_PATH = "/docs/work-links"
 OPEN_WORK_DOWNLOAD_PATH = "/docs/open-work-download"
 IMPORT_SOURCE_PATH = "/docs/import-source"
-SOURCE_MEDIA_APPLY_PATH = "/docs/source/media"
+SOURCE_MEDIA_PREPARE_PATH = "/docs/source/media"
 SET_DRAFT_PATH = "/docs/set-draft"
 SET_SELECTED_PATH = "/docs/set-selected"
 CREATE_PATH = "/docs/create"
@@ -105,7 +105,7 @@ POST_PATHS = (
     WORK_LINKS_PATH,
     OPEN_WORK_DOWNLOAD_PATH,
     IMPORT_SOURCE_PATH,
-    SOURCE_MEDIA_APPLY_PATH,
+    SOURCE_MEDIA_PREPARE_PATH,
     SET_DRAFT_PATH,
     SET_SELECTED_PATH,
     CREATE_PATH,

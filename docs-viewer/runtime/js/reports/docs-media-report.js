@@ -3,12 +3,13 @@ import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.
 import { buildDocsMediaSnapshot } from "./docs-media-data.js";
 const DEFAULT_SORT_KEY = "type";
 const DEFAULT_SORT_DIR = "asc";
-const SORT_KEYS = Object.freeze(["collection", "type", "file", "documents"]);
+const SORT_KEYS = Object.freeze(["collection", "type", "file", "owner", "documents"]);
 const COLUMN_LABELS = Object.freeze({
   collection: "Collection",
   type: "Type",
   file: "File name",
-  documents: "Documents"
+  owner: "Owner",
+  documents: "Referenced by"
 });
 
 function cleanString(value) {
@@ -73,7 +74,8 @@ function compareRows(collator, sortKey, sortDir, left, right) {
   let primary;
   if (sortKey === "collection") primary = collator.compare(left.collectionTitle, right.collectionTitle);
   else if (sortKey === "type") primary = collator.compare(left.mediaType, right.mediaType);
-  else if (sortKey === "file") primary = collator.compare(left.identity, right.identity);
+  else if (sortKey === "file") primary = collator.compare(left.filename, right.filename);
+  else if (sortKey === "owner") primary = collator.compare(left.ownerDocument?.title || left.ownerDocId, right.ownerDocument?.title || right.ownerDocId);
   else primary = compareDocumentSets(collator, left.documents, right.documents);
   if (primary) return primary * direction;
   const collection = collator.compare(left.collectionTitle, right.collectionTitle)
@@ -131,7 +133,8 @@ function appendFileCell(rowNode, row) {
   const link = document.createElement("a");
   link.className = "docsViewerReport__cellLink docsViewerReport__title";
   link.href = "#";
-  link.textContent = row.identity;
+  link.textContent = row.filename;
+  link.title = row.identity;
   link.dataset.docsMediaTarget = JSON.stringify(row.mediaTarget);
   cell.appendChild(link);
   rowNode.appendChild(cell);
@@ -149,6 +152,23 @@ function appendDocumentsCell(rowNode, row) {
     link.dataset.docsViewerDocId = documentRecord.target.docId;
     cell.appendChild(link);
   });
+  rowNode.appendChild(cell);
+}
+
+function appendOwnerCell(rowNode, row) {
+  const cell = document.createElement("span");
+  if (row.ownerDocument) {
+    const link = document.createElement("a");
+    link.className = "docsViewerReport__cellLink";
+    link.href = row.ownerDocument.href;
+    link.textContent = row.ownerDocument.title;
+    link.title = row.ownerDocId;
+    link.dataset.docsViewerCollection = row.ownerDocument.target.collection;
+    link.dataset.docsViewerDocId = row.ownerDocId;
+    cell.appendChild(link);
+  } else {
+    cell.textContent = row.ownerDocId;
+  }
   rowNode.appendChild(cell);
 }
 
@@ -178,6 +198,7 @@ function renderRows(state) {
     appendTextCell(rowNode, row.collectionTitle);
     appendTextCell(rowNode, row.mediaType);
     appendFileCell(rowNode, row);
+    appendOwnerCell(rowNode, row);
     appendDocumentsCell(rowNode, row);
     state.rowsNode.appendChild(rowNode);
   });
@@ -337,7 +358,7 @@ function attachEvents(state) {
 
 function renderShell(root) {
   root.dataset.reportId = "docs_media";
-  root.dataset.reportColumns = "4";
+  root.dataset.reportColumns = "5";
   root.innerHTML = [
     '<div class="docsViewerReport__toolbar">',
     '  <button id="docsMediaReportRun" type="button" class="docsViewer__toolbarIconButton" aria-label="Refresh" title="Refresh"></button>',

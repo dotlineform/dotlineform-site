@@ -20,6 +20,7 @@ from docs_artifact_locations import (
     ArtifactStat,
     artifact_location_adapter,
     authenticated_remote_client_for_locations,
+    normalize_artifact_identity,
 )
 from docs_workspace_config import (
     MANAGED_MEDIA_TYPES,
@@ -27,7 +28,6 @@ from docs_workspace_config import (
     DocsStageConfig,
     DocsCollectionConfig,
     load_docs_workspace_config,
-    load_docs_media_owner,
     managed_media_config,
     require_document_authoring,
 )
@@ -96,16 +96,16 @@ def docs_media_file(
     media_class: str,
     local_path: Path,
     source_root: Path,
-    filename: str | None = None,
+    filename: str,
 ) -> DocsMediaFile:
     normalized_class = validate_media_class(media_class)
     managed_media_config(config, normalized_class)
-    normalized_filename = validate_media_filename(filename or local_path.name)
+    normalized_filename = normalize_artifact_identity(filename)
     resolved_root = source_root.resolve()
     resolved_path = local_path.resolve()
     if not resolved_path.is_file() or not resolved_path.is_relative_to(resolved_root):
         raise ValueError(f"Docs media source {normalized_filename!r} is outside its allowlisted root")
-    if resolved_path.name != normalized_filename:
+    if resolved_path.name != Path(normalized_filename).name:
         raise ValueError("Docs media source filename does not match the planned filename")
     return DocsMediaFile(
         media_class=normalized_class,
@@ -252,6 +252,7 @@ def publish_docs_media_files(
     repo_root: Path,
     files: Sequence[DocsMediaFile],
     *,
+    config: DocsStageConfig | DocsCollectionConfig,
     write: bool,
     force: bool = False,
     client: object | None = None,
@@ -260,11 +261,6 @@ def publish_docs_media_files(
 ) -> list[DocsMediaPublishResult]:
     if not files:
         return []
-    targets = {item.collection for item in files}
-    if len(targets) != 1:
-        raise ValueError("One Docs media insertion may target only one exact collection")
-    collection = next(iter(targets))
-    config = load_docs_media_owner(repo_root, collection=collection)
     require_document_authoring(config)
 
     media_classes = {item.media_class for item in files}
@@ -316,6 +312,7 @@ def run_docs_staged_media_publish(
     repo_root: Path,
     *,
     collection: str = "",
+    doc_id: str,
     media_class: str,
     staged_filename: str,
     write: bool,
@@ -325,7 +322,10 @@ def run_docs_staged_media_publish(
     environ: Mapping[str, str] | None = None,
 ) -> dict[str, object]:
     normalized_filename = validate_media_filename(staged_filename)
-    config = load_docs_media_owner(repo_root, collection=collection)
+    from docs_management_document_target import resolve_managed_document_target
+
+    target = resolve_managed_document_target(repo_root, {"collection": collection, "doc_id": doc_id})
+    config = target.document_config
     workspace = configured_workspace_paths(repo_root)
     source_path = (workspace.import_staging / normalized_filename).resolve()
     item = docs_media_file(
@@ -333,11 +333,12 @@ def run_docs_staged_media_publish(
         media_class=media_class,
         local_path=source_path,
         source_root=workspace.import_staging,
-        filename=normalized_filename,
+        filename=f"{target.doc_id}/{normalized_filename}",
     )
     results = publish_docs_media_files(
         repo_root,
         [item],
+        config=config,
         write=write,
         force=force,
         client=client,

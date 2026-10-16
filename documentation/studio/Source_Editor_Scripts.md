@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-704641
 title: Source Editor Scripts
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-13 18:37:00"
+last_updated: "2026-10-16"
 parent_id: d-20260607-222033-2a494e
 ---
 # Docs Viewer Source Editor Scripts
@@ -22,6 +22,7 @@ Responsibilities:
 - parses the candidate once through the source model's strict splitter, retains field spans and applies Title/Summary string representation, readiness, exact collection, report and Subject rules before one atomic write; the frontend owns nonblank Title feedback
 - preserves unaffected authored metadata lines, normalizes Title/Summary and applies the normal source timestamp on changed writes
 - normalizes body line endings and Unicode-whitespace-only prose lines outside literal blocks
+- consumes Source Save's bounded selected uploads, prepares media once under the resolved document owner, completes selected writes before source persistence and reports exact media/source/generation effects on failure
 - projects the validated unsaved buffer's Subject through a write-free context request for Catalogue modals
 - prepares Subject-only front-matter changes in that unsaved buffer through the same context endpoint, using the exact collection's registered assignment group and shared field writer
 - carries prepared source, metadata, report, dates and ordinary parent information into the existing in-process exact document/Links builder through `docs_document_rebuild.py`, without reopening the saved source or rediscovering its ID; saved-source and generation outcomes remain separate
@@ -31,7 +32,7 @@ Responsibilities:
 Not responsible for:
 
 - source-revision checks, external-edit merging or document placement
-- Search rebuilding, media production, Publish or browser display during Save
+- Search rebuilding, unrelated registered media production, Publish or browser display during Save
 - staged import conversion
 - route path constants
 
@@ -54,7 +55,7 @@ Purpose: own the exact mounted Working target and one complete Markdown buffer, 
 
 **Source editor** in Edit opens the complete buffer without a side panel. It targets the ordinary document, the report host from a collection list, or the exact validated document from a collection detail. A detail does not offer a separate parent Source action. Source's toolbar contains Return to doc, Save Markdown source and Directives, in that order, on one row beginning at the document's left edge. VS Code remains in Edit for rendered documents and is also available inside Source's Directives menu using the adapter's immutable document target.
 
-Title, Summary and other valid authored fields are edited directly in the same buffer. Save submits only that text with the fixed target; an identity conflict, malformed header, invalid collection metadata or write failure retains the full draft. Ordinary hierarchy/order stays with `index-order.json`. There is no metadata draft, pending token-field draft, Source hosted panel or **i** control. Entering Source releases the captured reader panel; returning to rendered content leaves it closed until a related-links pin is used.
+Title, Summary and other valid authored fields are edited directly in the same buffer. Save submits that text with the fixed target and only selected pending native Files. The mounted `source-editor-pending-media.js` owner retains Files through text edits/Undo, joins them to active final-buffer references and independently selects the latest requested thumbnail while its assignment remains. Pending replacement bytes or a thumbnail choice make unchanged text dirty. Removing a pending reference before first Save submits no body image; a retained thumbnail can request thumbnail-only output. An identity conflict, malformed header, invalid collection metadata or write failure retains the draft and useful Files. Successful media/source completion clears pending Files even if later generation fails; discard and release also clear them. Ordinary hierarchy/order stays with `index-order.json`. There is no metadata draft, pending token-field draft, Source hosted panel or **i** control. Entering Source releases the captured reader panel; returning to rendered content leaves it closed until a related-links pin is used.
 
 The exact splitter lives in `docs_source_model.py`, including the strict key/value and quoted-scalar checks used by Source and existing Import/Review consumers. Save retains the parsed field spans for formatting, membership and timestamp changes and supplies its completed report classification to generation. It uses the maintained front-matter value grammar rather than YAML. `source-buffer.js` locates the body boundary and gives narrow local Title feedback before Save, handling quoted text, numeric/boolean scalar forms and Summary literal-block boundaries; complete front-matter syntax remains service-owned. The modal's write-free context request projects the current buffer's Subject through the service and the owning collection customisation.
 
@@ -62,7 +63,7 @@ New ordinary, child, sibling and non-Catalogue collection documents use the same
 
 Source context uses `docs_document_subjects.py`'s complete authoring projection, including Folder and Work, with omission for None. The public Work-only projection remains separate. Source loading supplies initial Subject/capabilities or a projection error without blocking the editor. Assign Subject and Catalogue modals share context for the exact buffer revision and coalesce in-flight reads. Buffer changes and editor release invalidate it; successful Subject Apply seeds the resulting revision. Failed requests remain retryable and late responses cannot replace a newer result. Catalogue shortcuts accept Folder responses while selecting Work only.
 
-Source load also supplies `media_options.image` and `media_options.file`, each with accepted suffixes and file/metadata byte limits from the native intake owner. The mounted editor carries them into `source-editor-media.js` and releases them with the session; buffer edits need no capability refresh. Add image, Edit image and Add file make no options request. Presentation-only image Apply serializes locally. Selected-file intake sends the fixed target, file and authored presentation without `source_text`; it validates media inputs and completes required writes independently of the unsaved buffer's Title, readiness, Subject and report validity. Existing saved-source target resolution remains; Source Save retains full candidate validation. [Media And Asset Handling](Media_And_Asset_Handling.md) and [Source Editor Endpoints](Source_Editor_Endpoints.md) own the storage and transport contracts.
+Source load also supplies `media_options.image` and `media_options.file`, each with accepted suffixes and file/aggregate/metadata byte limits. The mounted editor carries them into `source-editor-media.js` and releases them with the session; buffer edits need no capability refresh. Add/Edit makes no options request. Presentation-only Apply serializes locally. New selected files make a write-free identity request containing the fixed target, kind and basename; the browser retains the File and serializes its image/file reference locally. Add file over a captured authored file link opens Edit file and carries explicit replacement intent, like Edit image. A pending image's already selected File can supply a later thumbnail choice without another identity request. Source Save alone submits bytes, validates the full candidate, prepares and persists selected media, saves source and awaits exact generation. There is no Replace/sanitizer confirmation workflow, persistent upload staging or automatic split/retry. [Media And Asset Handling](Media_And_Asset_Handling.md) and [Source Editor Endpoints](Source_Editor_Endpoints.md) own storage and transport.
 
 Source mounts beside the existing rendered DOM inside the common reader's active `.docsViewer__documentMount`. Management CSS keeps that mount and the editor visible while hiding only the mount's rendered children; inactive retained document mounts stay hidden. It does not detach the collection report or end its lifecycle. Successful Save awaits a fresh generated payload, removes the editor and refreshes the current retained mount while preserving its route, history and reading position. Persistence, generation and display failures remain distinct; persisted source is marked clean even when generation fails. [Runtime](Docs_Viewer_Runtime.md#explicit-working-refresh) owns application completion and explicit external-change refreshes; no browser timer remains.
 

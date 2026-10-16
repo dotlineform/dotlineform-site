@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-4b1d77
 title: Source Editor Endpoints
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-13 18:37:00"
+last_updated: "2026-10-16"
 parent_id: d-20260607-222033-647b52
 ---
 # Docs Viewer Source Editor Endpoints
@@ -22,7 +22,7 @@ For a configured collection document, add its explicit `collection` identity and
 
 Returned data includes `ok`, `doc_id`, optional `collection`, complete `source_text`, a provider-safe `path`, `subject_assignment_available`, `folder_subject_supported` and optional scalar `subject`. These Subject fields seed the editor's loaded buffer revision. A Subject projection failure is returned as `subject_error`, leaving Source available for manual correction; Subject consumers report that error. No source revision or separate metadata/body transport is returned.
 
-`media_options` contains `image` and `file` records, each with `accept` (comma-separated native-input suffixes), `max_file_bytes` and `max_metadata_bytes`. These come from the same suffix/limit owners used by intake. The mounted editor reuses them for Add/Edit and clears them on exit, without a separate options request or source-revision invalidation. `/docs/source/media/options` is retired without an alias.
+`media_options` contains `image` and `file` records, each with `accept` (comma-separated native-input suffixes), `max_file_bytes`, `max_total_file_bytes` and `max_metadata_bytes`. These come from the suffix/upload-limit owners used by Source Save. The mounted editor reuses them for Add/Edit and clears them on exit, without a separate options request or source-revision invalidation. `/docs/source/media/options` is retired without an alias.
 
 Used for:
 
@@ -52,7 +52,7 @@ The editor mounts that target once and uses it for source read, Save, Open in VS
 
 One **Edit document** action opens the complete Markdown buffer without a metadata/token panel or **i** control. It targets the displayed ordinary document, the host from a collection list, or the exact validated collection detail. A detail offers no parent Source action.
 
-The session owns one complete text buffer. Title/Summary and other valid front matter are edited there; token Apply serializes directly into that buffer. One Save validates and persists the complete draft, rebuilds its exact document/Links and loads the fresh rendered result. **Return to doc** is the explicit non-save exit; one discard decision covers the whole draft, and cancellation retains it. Successful Save keeps busy state until fresh rendered display at the unchanged route and reading position. Other completed actions own their required updates explicitly; browser polling is retired. Entering Source closes the reader capture; returning leaves the reader panel closed until a pin is used.
+The session owns one complete text buffer and its pending native Files/thumbnail choice. Title/Summary and other valid front matter are edited there; token Apply serializes directly into that buffer without permanent media writes. One Save selects pending Files used by the final buffer/assignment, validates and persists the complete draft/media, rebuilds its exact document/Links and loads the fresh result. **Return to doc** is the explicit non-save exit; one discard decision covers text and pending media, and cancellation retains both. Successful Save keeps busy state until fresh rendered display at the unchanged route and reading position. Other completed actions own their required updates explicitly; browser polling is retired. Entering Source closes the reader capture; returning leaves the reader panel closed until a pin is used.
 
 ## Local folder-link paste
 
@@ -85,36 +85,36 @@ The modal consumes the service records directly, without schema/collection/dupli
 
 ## `POST /docs/source/save`
 
-Expected data:
+One multipart request contains a `metadata` JSON field and native file fields `file_0`, `file_1`, … matching the selected `media` entries in order. A text-only Save still uses multipart metadata with an empty media list and no file fields.
 
 ```json
 {
   "doc_id": "d-20260918-123509-93122f",
-  "source_text": "---\ndraft: false\ndoc_id: d-20260918-123509-93122f\ntitle: Example\nsummary: An edited summary.\n---\n# Example\n"
+  "source_text": "---\ndraft: false\ndoc_id: d-20260918-123509-93122f\ntitle: Example\n---\n# Example\n",
+  "media": []
 }
 ```
 
-A collection Save also includes its exact `collection`. The only accepted fields are required `doc_id` and string `source_text`, plus optional `collection`. The previous split `source_front_matter`, `source_body` and editable `metadata` contract is removed without aliases.
+A collection Save also includes its exact `collection`. Metadata accepts only required `doc_id`, string `source_text` and array `media`, plus optional `collection`. Each media entry contains exactly `media_kind` (`image` or `file`) and boolean `body`, `thumbnail` and `replace`. At least one output must be selected. The native file supplies its safe basename and bytes; callers cannot supply destination paths. The browser selects final-buffer membership, the latest independent thumbnail choice and explicit Edit replacement intent. Save does not repeat that membership decision through another source scan.
+
+`docs_source_media_upload.py` bounds each file and their combined bytes at 64 MiB, source/metadata JSON at 1 MiB and multipart overhead at 1 MiB, within a 66 MiB request. Size errors precede media processing/persistence and retain the draft and pending Files. There are no partial uploads, automatic splits, staging sessions or retries. Other JSON routes retain their existing limits. The former JSON-only Save and single-file media-upload contracts have no compatibility aliases.
 
 Actions:
 
-- resolves the fixed Working target and confines its source path before interpreting editable metadata
-- parses the complete candidate once through the source model's strict front-matter splitter, rejecting missing delimiters, malformed lines, duplicate keys and invalid quoted values; retained field spans support later rewrites without another parse
-- requires candidate `doc_id` and any declared `collection` to match the mounted target; edited metadata cannot rename, relocate or select a different file
-- requires Title and any supplied Summary to be strings and keeps their existing formatting, including removal of a blank Summary; the frontend asks for a nonblank Title before making this request and the server does not repeat that completeness check or substitute a default. Summary normalizes line endings and outer whitespace while preserving internal line/paragraph breaks, with `|`/`|-` literal-block support owned by [Builder](Builder.md#summary-block)
-- validates required readiness, collection report rules and Subject customisation through their current owners; Catalogue retains fixed eligibility and rejects `draft`
-- preserves other authored metadata lines and the existing canonical membership policy; ordinary hierarchy/order remains owned by `index-order.json`
-- normalizes submitted body line endings to `\n`
-- replaces Unicode-whitespace-only lines with empty lines outside fenced code and explicit `<pre>` blocks
-- applies the normal source timestamp for changed, non-dry-run writes
-- carries the prepared source, metadata, report classification and timestamps through one atomic source write and the response
-- awaits the existing exact-target document/Links builder in process with that prepared source and resolved configuration/ordinary parent information, without reopening source, repeating candidate validation or rediscovering IDs; generation uses prepared media, without Search, Publish or registered media production
+- resolves the fixed Working target and confines its one source before interpreting editable metadata
+- parses the candidate once through the strict source splitter, binds the mounted document/collection identity and retains field spans for formatting/timestamp rewrites
+- preserves the existing Title/Summary representation, body normalization, readiness, report and Subject rules; nonblank Title feedback belongs to the browser, and ordinary hierarchy/order remains owned by `index-order.json`
+- prepares only the supplied media outputs once under the resolved document configuration, including original-raster validation, requested display/thumbnail encodings and SVG/Mermaid sanitization
+- compares only selected exact destinations; matching stored bytes are reused, explicit Edit permits replacement, and unexpected new/competing filenames report authoring errors
+- sanitizes automatically and carries nonblocking change diagnostics in `media_notes`, with no confirmation/resubmission pass
+- completes verified selected media writes before the atomic source write, then carries prepared source/metadata/report/parent information into the exact document/Links builder and completed publication handoff
+- runs no Search, Publish, media inventory, cross-document requeue scan or unrelated registered media producer
 
-Returned data includes `ok`, the exact target, saved complete `source_text`, provider-safe `path`, `source_changed`, `summary_text` and `dry_run`. An unchanged source skips the write but still rebuilds its exact document and loads the result. Validation or write failure leaves the complete browser draft available for correction. Non-dry-run responses also carry `source_saved`, `generation_complete`, `committed_document` and, on successful generation, `rebuild`.
+Returned data includes the exact target, saved `source_text`, provider-safe `path`, `source_changed`, `summary_text`, `dry_run`, `media_notes`, `media_effects`, `media_complete`, `source_saved` and `generation_complete`. An unchanged buffer skips its source write while still completing selected media and exact generation. Committed metadata is returned only after source persistence; successful generation also supplies `rebuild` and `publication_handoff_complete`.
 
-This is a single-editor snapshot save: there is no disk revision check, external-edit merge or placement operation. The service completes after exact document/Links generation. The editor then awaits a fresh generated read and display before releasing busy state. A generation failure returns HTTP 500 with `ok: false`, `source_saved: true`, `generation_complete: false`, saved `source_text`, committed metadata and a specific `error`. The editor marks that persisted buffer clean and retains it for diagnosis. A display failure is reported separately as completed saving/generation with failed display. Recovery uses explicit Rebuild or reload; there is no source rollback or automatic retry. The filesystem watcher and its suppression machinery are retired.
+Preparation errors make no permanent writes. Later failures return HTTP 500 with the failed `phase`, exact target, accurate completion flags and selected media effects identified by role/type/relative identity. Effects distinguish attempted, written, verified and unchanged outputs; partial writes may leave manual cleanup orphans. A source-write failure retains useful Files and the draft. A generation failure reports saved source and completed media, so that persisted buffer is marked clean and Files are released. A completed local generation with failed publication handoff remains a distinct result. Display failure reports completed persistence/generation separately. There is no rollback, persistent recovery state or automatic retry.
 
-`POST /docs/source/rebuild` and `POST /docs/update-metadata` are removed without compatibility aliases. Title/Summary editing now uses this combined session write.
+This remains a single-editor snapshot Save without disk revision checks or external-edit merging. Its busy lifetime includes media/source/generation and the editor's awaited fresh display at the retained route/reading position. Discard releases Files without media/source writes. `POST /docs/source/rebuild` and `POST /docs/update-metadata` remain retired without aliases.
 
 ## `POST /docs/source/context`
 
@@ -124,29 +124,21 @@ Assign Subject and Catalogue modals share one derived context per mounted buffer
 
 ## `POST /docs/source/media`
 
-Multipart form data contains exactly `metadata` JSON and one native `file`. Metadata identifies the exact mounted `doc_id`, optional configured `collection`, `media_kind` (`image` or `file`) and `label`. Image intake adds its presentation and thumbnail choices:
+This is a write-free JSON identity request for a new native selection:
 
 ```json
 {
   "doc_id": "d-20260918-123509-93122f",
   "media_kind": "image",
-  "label": "Energy wells diagram",
-  "create_thumb": false,
-  "add_caption": true,
-  "caption": "Energy wells",
-  "summary": "First supporting line\nSecond supporting line",
-  "placement": "right",
-  "fill_width": false
+  "filename": "Energy wells.png"
 }
 ```
 
-`label` supplies image alt text. Image requests require boolean `add_caption` and `fill_width`, and allowlisted `placement` (`full`, `left` or `right`); `add_caption: true` requires nonblank plain-text `caption`. Optional `summary` preserves normalized line breaks. `create_thumb` is a boolean and can be true only for a supported raster image. File requests do not use image-presentation fields. The browser supplies no HTML, classes, dimensions, staged paths or caller-selected destinations.
+Only the exact `doc_id`, optional configured `collection`, `media_kind` and safe native `filename` are accepted. The service resolves the configured collection/media capability, checks the basename/suffix and returns the target plus `media_identity`. It reads no document source, receives no File bytes, performs no conversion/sanitization/storage comparison and writes no media. Full candidate validity and exact existing target resolution belong to Save.
 
-Intake receives no `source_text` and performs no full Source Save candidate validation. It resolves the exact existing document/collection owner and retains upload basename/type/size checks, path confinement, conversion/sanitization, presentation serialization and actual media/storage failures. Existing saved-source target parsing/checks remain. Validation and normalization of Title/Summary, readiness, Subject and reports in the unsaved buffer remain with Source Save.
+The identity is `<doc_id>/<readable-filename>` beneath the configured body-media type. Raster output uses WebP, SVG retains its type and Mermaid maps its editable source to the corresponding SVG identity. The browser retains the native File and serializes authored presentation/link fields locally. Presentation-only Apply and a thumbnail choice using an already pending File need no identity call. Thumbnails keep the independent flat `thumbs/<doc_id>-thumb.webp` identity.
 
-The service carries the exact target's resolved owner through preparation, reference construction and requested thumbnail storage. It prepares selected bytes in operation-owned temporary storage, then compares the owner/family/filename identity once per request and carries that result into reuse or confirmed storage through the same adapter. Raster/SVG/file intake omits the generic batch publisher's owner reload, MD5 work and repeated destination preflight. New or unchanged media completes in one request. Changed bytes or sanitizer warnings return `requires_confirmation: true` without permanent writes, together with collision and sanitization diagnostics. Confirmed resubmission sends the same native File and metadata with `confirm_replace` and `confirm_sanitization` booleans and prepares those bytes within the new request. Required media and requested thumbnail writes and their verification finish before the response returns insertion Markdown, media identity/token and completion status. The browser edits only the captured current Source occurrence/range and leaves the buffer dirty for Save. Presentation-only token Apply uses local serialization and makes no media request.
-
-Intake does not write document source, build documents or Publish. Discarding Source can leave completed shared media writes unreferenced. The separate staged listing/preview/apply routes are retired without aliases; Docs Import/package staging retains its own owner. [Media And Asset Handling](Media_And_Asset_Handling.md) owns formats, naming, storage and failure boundaries.
+Native bytes are uploaded only through Source Save. Replacement/sanitizer confirmation flags, the former multipart intake and immediate media writes are retired without aliases. [Media And Asset Handling](Media_And_Asset_Handling.md) owns naming, processing and storage.
 
 ## `POST /docs/open-source`
 

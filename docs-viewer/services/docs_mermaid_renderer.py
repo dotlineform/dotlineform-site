@@ -11,7 +11,7 @@ from typing import Callable
 from lxml import etree
 
 from docs_mermaid_accessibility import mermaid_accessibility_metadata
-from docs_svg_sanitizer import sanitize_svg_bytes
+from docs_svg_sanitizer import SanitizedSvg, sanitize_svg_bytes
 
 
 MERMAID_TOOLCHAIN_ROOT = Path(__file__).resolve().parents[1] / "build" / "mermaid"
@@ -33,6 +33,7 @@ class RenderedMermaidSvg:
     title: str
     description: str
     view_box: tuple[float, float, float, float]
+    sanitization: SanitizedSvg
 
 
 def _local_name(value: str) -> str:
@@ -76,7 +77,8 @@ def mermaid_render_command(
     ]
 
 
-def inspect_sanitized_mermaid_svg(identity: str, data: bytes) -> RenderedMermaidSvg:
+def inspect_sanitized_mermaid_svg(identity: str, sanitized: SanitizedSvg) -> RenderedMermaidSvg:
+    data = sanitized.bytes
     try:
         root = etree.fromstring(data)
     except etree.XMLSyntaxError as exc:  # pragma: no cover - the sanitizer parses first
@@ -114,6 +116,7 @@ def inspect_sanitized_mermaid_svg(identity: str, data: bytes) -> RenderedMermaid
         title=title,
         description=description,
         view_box=(view_box[0], view_box[1], view_box[2], view_box[3]),
+        sanitization=sanitized,
     )
 
 
@@ -160,7 +163,7 @@ def render_mermaid_path(
         sanitized = sanitize_svg_bytes(output_path.read_bytes())
     except ValueError as exc:
         raise RuntimeError(f"Mermaid renderer produced invalid SVG for {identity!r}: {exc}") from exc
-    rendered = inspect_sanitized_mermaid_svg(identity, sanitized.bytes)
+    rendered = inspect_sanitized_mermaid_svg(identity, sanitized)
     if require_matching_accessibility and (
         rendered.title != accessibility.title
         or rendered.description != accessibility.description

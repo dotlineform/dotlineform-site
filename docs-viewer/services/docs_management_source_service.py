@@ -40,7 +40,8 @@ from docs_collection_customisations import (  # noqa: E402
 )
 from docs_document_subjects import AUTHORING_SUBJECT_FIELDS, FOLDER_PATH_FIELD  # noqa: E402
 from docs_document_rebuild import rebuild_prepared_document  # noqa: E402
-from docs_source_media_service import source_media_options  # noqa: E402
+from docs_source_media_service import source_media_options, prepare_source_media, write_prepared_source_media  # noqa: E402
+from docs_source_media_upload import SourceMediaUpload  # noqa: E402
 
 
 def normalize_source_body(value: Any) -> str:
@@ -256,11 +257,17 @@ def read_source_context(repo_root: Path, body: Dict[str, Any]) -> Dict[str, Any]
     return payload
 
 
-def save_source_document(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    """Persist one validated buffer and await its exact document/Links generation."""
-    request_target = source_candidate_target(body)
+def save_source_document(
+    repo_root: Path, body: Dict[str, Any], dry_run: bool, *, media_uploads: list[SourceMediaUpload],
+) -> Dict[str, Any]:
+    """Prepare selected media, persist one candidate and await exact generation."""
+    request_target = source_candidate_target({key: value for key, value in body.items() if key != "media"})
     resolved = resolve_managed_document_target(repo_root, request_target)
-    prepared, source_changed = prepare_source_candidate(repo_root, request_target, body["source_text"], resolved, dry_run=dry_run)
+    try:
+        prepared, source_changed = prepare_source_candidate(repo_root, request_target, body["source_text"], resolved, dry_run=dry_run)
+    except (ValueError, OSError, RuntimeError) as error:
+        raise ValueError(f"Source {resolved.doc_id} candidate preparation failed: {error}") from error
+    writes, notes = prepare_source_media(repo_root, resolved, body["media"], media_uploads)
     target = resolved.document
     next_source_text = prepared.source_text
 
@@ -275,23 +282,35 @@ def save_source_document(repo_root: Path, body: Dict[str, Any], dry_run: bool) -
         ),
         "source_changed": source_changed,
         "dry_run": dry_run,
+        "media_notes": notes,
+        "media_effects": [],
+        "media_complete": False,
+        "source_saved": False,
+        "generation_complete": False,
     }
     if not dry_run:
-        payload["committed_document"] = {"target": resolved.request_target(), "record": committed_document_record(prepared.front_matter, target.doc_id, resolved.document_config, collection=resolved.collection, parent_id=target.parent_id)}
-    if source_changed and not dry_run:
-        source_model.write_text_atomic(target.path, next_source_text)
-    if not dry_run:
-        payload["source_saved"] = True
-        payload["generation_complete"] = False
+        committed = {"target": resolved.request_target(), "record": committed_document_record(prepared.front_matter, target.doc_id, resolved.document_config, collection=resolved.collection, parent_id=target.parent_id)}
+        phase = "media persistence"
         try:
+            write_prepared_source_media(writes, payload["media_effects"])
+            payload["media_complete"] = True
+            phase = "source persistence"
+            if source_changed:
+                source_model.write_text_atomic(target.path, next_source_text)
+            payload["source_saved"] = True
+            payload["committed_document"] = committed
+            phase = "document generation"
             payload["rebuild"] = rebuild_prepared_document(repo_root, resolved, prepared)["rebuild"]
         except Exception as error:
             from docs_publication_preparation import PublicationHandoffError
 
             if isinstance(error, PublicationHandoffError):
-                payload.update(ok=False, generation_complete=True, publication_handoff_complete=False, error=f"Source saved and local document generated; publication handoff incomplete: {error}")
+                payload.update(ok=False, phase="publication handoff", generation_complete=True, publication_handoff_complete=False, error=f"{target.doc_id}: source saved and local document generated; publication handoff incomplete: {error}")
                 return payload
-            payload.update(ok=False, error=f"Source saved, but document generation failed: {error}")
+            completed = [f"{item['media_type']}/{item['identity']} ({item['status']})" for item in payload["media_effects"] if item["status"] in {"written", "verified"}]
+            effects = "; completed media writes: " + ", ".join(completed) if completed else ""
+            saved = "Source saved; " if payload["source_saved"] else "Source not saved; "
+            payload.update(ok=False, phase=phase, error=f"{target.doc_id}: {saved}{phase} failed: {error}{effects}")
             return payload
         payload["generation_complete"] = True
         payload["publication_handoff_complete"] = True

@@ -159,9 +159,9 @@ export function createDocsViewerWorkspaceProvider(options) {
       return source.openDiagramSource(target, payload, optionsForOpen || {});
     };
   }
-  if (source && typeof source.applySourceMedia === "function") {
-    provider.applySourceMedia = function (payload, file, optionsForApply) {
-      return source.applySourceMedia(payload, file, optionsForApply || {});
+  if (source && typeof source.prepareSourceMedia === "function") {
+    provider.prepareSourceMedia = function (payload, optionsForPrepare) {
+      return source.prepareSourceMedia(payload, optionsForPrepare || {});
     };
   }
 

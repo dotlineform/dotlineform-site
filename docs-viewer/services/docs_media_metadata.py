@@ -105,12 +105,11 @@ def _owner_metadata(repo_root: Path, owner: DocsStageConfig | DocsCollectionConf
                 exclude_media_types=frozenset({"thumbs"}),
             )
         ]
-        if references:
-            documents.append({
-                "target": {"collection": collection, "doc_id": document.doc_id},
-                "title": document.title,
-                "references": references,
-            })
+        documents.append({
+            "target": {"collection": collection, "doc_id": document.doc_id},
+            "title": document.title,
+            "references": references,
+        })
     return {
         "collection": collection,
         "title": owner.title if isinstance(owner, DocsCollectionConfig) else "Ordinary docs",

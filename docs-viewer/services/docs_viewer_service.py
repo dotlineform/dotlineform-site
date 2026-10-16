@@ -41,7 +41,7 @@ import docs_document_package_routes as package_routes  # noqa: E402
 from docs_document_packages import service as package_service  # noqa: E402
 import docs_generated_reads as generated_reads  # noqa: E402
 import docs_media_storage as media_storage  # noqa: E402
-from docs_source_media_upload import MAX_REQUEST_BYTES, SourceMediaUpload, parse_media_upload  # noqa: E402
+from docs_source_media_upload import MAX_REQUEST_BYTES, SourceMediaUpload, parse_source_save  # noqa: E402
 import docs_http_cache as http_cache  # noqa: E402
 import docs_review_routes as review_routes  # noqa: E402
 import docs_review_service as review_service  # noqa: E402
@@ -600,13 +600,13 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
 
     def send_docs_api_post_json(self, api_path: str) -> None:
         try:
-            upload = None
-            if api_path == routes.SOURCE_MEDIA_APPLY_PATH:
-                body, upload = self.read_media_upload()
+            uploads = None
+            if api_path == routes.SOURCE_SAVE_PATH:
+                body, uploads = self.read_source_save()
             else:
                 body = self.read_json_body()
             status, payload = docs_service.docs_management_post_response(
-                self.repo_root, api_path, body, media_upload=upload,
+                self.repo_root, api_path, body, media_uploads=uploads,
             )
             self.send_json(payload, status)
         except FileNotFoundError as error:
@@ -721,18 +721,18 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
 
 
-    def read_media_upload(self) -> tuple[dict[str, object], SourceMediaUpload]:
-        """Bound the native media envelope before MIME parsing; retain normal JSON limits."""
+    def read_source_save(self) -> tuple[dict[str, object], list[SourceMediaUpload]]:
+        """Bound one Save envelope before parsing; retain other routes' JSON limits."""
         try:
             length = int(self.headers.get("Content-Length", ""))
         except ValueError as error:
-            raise ValueError("Invalid media upload Content-Length") from error
+            raise ValueError("Invalid Source Save Content-Length") from error
         if length <= 0 or length > MAX_REQUEST_BYTES:
-            raise ValueError("Media upload request is empty or too large")
+            raise ValueError("Source Save request is empty or exceeds the 66 MiB limit")
         raw = self.rfile.read(length)
         if len(raw) != length:
-            raise ValueError("Incomplete media upload request")
-        return parse_media_upload(self.headers.get("Content-Type", ""), raw)
+            raise ValueError("Incomplete Source Save request")
+        return parse_source_save(self.headers.get("Content-Type", ""), raw)
 
     def read_json_body(self) -> dict[str, object]:
         content_length = self.headers.get("Content-Length", "").strip()

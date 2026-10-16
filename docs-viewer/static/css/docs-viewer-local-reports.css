@@ -12,7 +12,7 @@
 
 .docsViewerReport[data-report-id="docs_media"] .docsViewerReport__head,
 .docsViewerReport[data-report-id="docs_media"] .docsViewerReport__row{
-  grid-template-columns: minmax(7rem, 10rem) minmax(4rem, 6rem) minmax(16rem, 1fr) minmax(12rem, 20rem);
+  grid-template-columns: minmax(7rem, 10rem) minmax(4rem, 6rem) minmax(12rem, 1fr) minmax(12rem, 18rem) minmax(12rem, 20rem);
 }
 
 .docsViewerReport[data-report-id="docs_media"] .docsViewerReport__table{

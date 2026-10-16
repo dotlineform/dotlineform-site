@@ -15,8 +15,10 @@ function documentSummary(record, context) {
 
 function buildOwnerRows(owner, context, collator) {
   const documentsByMedia = new Map();
+  const documentsById = new Map();
   owner.documents.forEach((record) => {
     const document = documentSummary(record, context);
+    documentsById.set(record.target.doc_id, document);
     const documentKey = JSON.stringify([document.target.collection, document.target.docId]);
     record.references.forEach((reference) => {
       const key = mediaKey(reference);
@@ -28,6 +30,10 @@ function buildOwnerRows(owner, context, collator) {
   owner.files.forEach((file) => {
     if ([".DS_Store", ".gitkeep"].includes(file.identity.split("/").at(-1))) return;
     const documents = Array.from(documentsByMedia.get(mediaKey(file))?.values() || []);
+    const parts = file.identity.split("/");
+    const filename = parts.at(-1);
+    const ownerDocId = parts.length > 1 && /^d-\d{8}-\d{6}-[0-9a-f]{6}$/.test(parts[0]) ? parts[0] : "";
+    const ownerDocument = documentsById.get(ownerDocId) || null;
     documents.sort((left, right) => collator.compare(left.title, right.title)
       || left.title.localeCompare(right.title) || left.href.localeCompare(right.href));
     rows.push({
@@ -35,9 +41,12 @@ function buildOwnerRows(owner, context, collator) {
       collectionTitle: owner.title,
       mediaType: file.media_type,
       identity: file.identity,
+      filename,
+      ownerDocId,
+      ownerDocument,
       mediaTarget: file,
       documents,
-      searchText: [owner.title, file.identity, ...documents.map((document) => document.title)]
+      searchText: [owner.title, file.identity, ownerDocument?.title || "", ...documents.map((document) => document.title)]
         .map((value) => value.trim()).join(" ").toLocaleLowerCase()
     });
   });

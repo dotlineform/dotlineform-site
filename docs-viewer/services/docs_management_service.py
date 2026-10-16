@@ -93,7 +93,7 @@ def docs_management_post_response(
     body: dict[str, Any],
     *,
     dry_run: bool = False,
-    media_upload: SourceMediaUpload | None = None,
+    media_uploads: list[SourceMediaUpload] | None = None,
 ) -> tuple[HTTPStatus, dict[str, object]]:
     if path == routes.PUBLISH_PATH:
         if dry_run:
@@ -128,7 +128,9 @@ def docs_management_post_response(
     if path == routes.SET_SELECTED_PATH:
         return HTTPStatus.OK, docs_selected_documents.set_selected(repo_root, body, dry_run=dry_run)
     if path == routes.SOURCE_SAVE_PATH:
-        payload = save_source_document(repo_root, body, dry_run)
+        if media_uploads is None:
+            raise ValueError("Source Save requires its multipart upload envelope")
+        payload = save_source_document(repo_root, body, dry_run, media_uploads=media_uploads)
         return (HTTPStatus.OK if payload["ok"] else HTTPStatus.INTERNAL_SERVER_ERROR), payload
     if path == routes.SOURCE_CONTEXT_PATH:
         return HTTPStatus.OK, read_source_context(repo_root, body)
@@ -190,22 +192,8 @@ def docs_management_post_response(
     if path == routes.IMPORT_SOURCE_PATH:
         payload = handle_import_source(repo_root, body, dry_run)
         return HTTPStatus.OK, payload
-    if path == routes.SOURCE_MEDIA_APPLY_PATH:
-        if media_upload is None:
-            raise ValueError("Source media requires a native file upload")
-        payload = docs_source_media_service.apply_source_media(repo_root, body, media_upload, write=not dry_run)
-        if not dry_run and not payload["requires_confirmation"]:
-            log_event(
-                repo_root,
-                "docs-source-media-publish",
-                {
-                    "media_kind": payload["media_kind"],
-                    "source_filename": payload["source_filename"],
-                    "media_identity": payload["media_identity"],
-                    "publish_status": payload["publish"]["status"],
-                },
-            )
-        return HTTPStatus.OK, payload
+    if path == routes.SOURCE_MEDIA_PREPARE_PATH:
+        return HTTPStatus.OK, docs_source_media_service.prepare_source_media_identity(repo_root, body)
     if path == routes.CREATE_PATH:
         if str(body.get("collection") or "").strip().lower() == "catalogue":
             raise ValueError("Catalogue documents are created through Regenerate")

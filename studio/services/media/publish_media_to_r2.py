@@ -164,6 +164,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     )
     ap.add_argument("--id", dest="item_id", help="Specific Work ID")
     ap.add_argument("--docs-collection", help="Optional configured Docs collection for --scope docs")
+    ap.add_argument("--docs-doc-id", help="Exact owning document ID for --scope docs")
     ap.add_argument(
         "--staged-filename",
         help="One direct-child filename under the shared import-staging drop-zone for --scope docs",
@@ -194,6 +195,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             raise SystemExit("Error: Docs media publishing requires --kind img or --kind files.")
         if not args.staged_filename:
             raise SystemExit("Error: Docs media publishing requires --staged-filename <filename>.")
+        if not args.docs_doc_id:
+            raise SystemExit("Error: Docs media publishing requires --docs-doc-id <doc_id>.")
         from docs_media_storage import run_docs_staged_media_publish
 
         env_files = [repo_root / path for path in DEFAULT_ENV_FILES]
@@ -202,6 +205,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             report = run_docs_staged_media_publish(
                 repo_root,
                 collection=args.docs_collection or "",
+                doc_id=args.docs_doc_id,
                 media_class=args.kind,
                 staged_filename=args.staged_filename,
                 write=args.write,
@@ -214,8 +218,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         write_report(repo_root=repo_root, report=report, report_json=args.report_json)
         failed_statuses = {"blocked_changed", "failed", "not_attempted"}
         return 1 if any(report["counts"].get(status, 0) for status in failed_statuses) else 0
-    if args.docs_collection or args.staged_filename:
-        raise SystemExit("Error: --docs-collection and --staged-filename require --scope docs.")
+    if args.docs_collection or args.docs_doc_id or args.staged_filename:
+        raise SystemExit("Error: --docs-collection, --docs-doc-id and --staged-filename require --scope docs.")
     if args.kind in {"files", "img"}:
         raise SystemExit("Error: catalogue publishing requires --kind works.")
     if args.delete and not args.item_id:

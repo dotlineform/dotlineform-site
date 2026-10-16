@@ -1,5 +1,5 @@
 import {
-  applySourceMedia,
+  prepareSourceMedia,
   openManagedDiagramSource,
   readManagedDiagramSources,
   readManagedDocSource,
@@ -90,8 +90,8 @@ export function createDocsViewerManagementSourceAdapter(options) {
     openDiagramSource: function (target, payload, optionsForOpen) {
       return openManagedDiagramSource(target, payload, clientOptions(optionsForOpen));
     },
-    applySourceMedia: function (payload, file, optionsForApply) {
-      return applySourceMedia(payload, file, clientOptions(optionsForApply));
+    prepareSourceMedia: function (payload, optionsForPrepare) {
+      return prepareSourceMedia(payload, clientOptions(optionsForPrepare));
     }
   };
 }

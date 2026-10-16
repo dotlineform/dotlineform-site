@@ -9,7 +9,7 @@ import {
   readImagePresentation
 } from "./source-editor-image-presentation.js";
 import { parseImageTokens, serializeImageToken } from "./image-token-parser.js";
-import { sourceTokenAtSelection } from "./catalogue-token-parser.js";
+import { parseSourceTokens, sourceTokenAtSelection } from "./catalogue-token-parser.js";
 import { sourceBodyStart } from "./source-buffer.js";
 
 function cleanString(value) {
@@ -24,8 +24,8 @@ function actionCopy(kind) {
 
 function chooseSourceMedia(root, kind, mediaOptions, draft) {
   var copy = actionCopy(kind);
-  var editing = kind === "image" && Boolean(draft && draft.mediaPath);
-  if (editing) copy = Object.assign({}, copy, { title: "Edit image", primary: "Apply" });
+  var editing = Boolean(draft && draft.mediaPath);
+  if (editing) copy = Object.assign({}, copy, { title: "Edit " + kind, primary: "Apply" });
   var selectedFile = null;
   return openDocsViewerManagementModal({
     root: root, title: copy.title, size: "compact",
@@ -56,6 +56,9 @@ function chooseSourceMedia(root, kind, mediaOptions, draft) {
       var label = api.host.querySelector('[data-role="media-label"]');
       var captionInput = api.host.querySelector('[data-role="media-caption-text"]');
       var thumbToggle = api.host.querySelector('[data-role="create-thumb"]');
+      if (thumbToggle && draft && draft.pendingFile) {
+        thumbToggle.disabled = !/\.(jpg|jpeg|png|webp|gif)$/i.test(draft.pendingFile.name);
+      }
       var labelEdited = editing;
       var captionEdited = editing;
       filename.value = editing ? draft.mediaPath.split("/").pop() : "";
@@ -115,7 +118,7 @@ function chooseSourceMedia(root, kind, mediaOptions, draft) {
         return false;
       }
       return Object.assign({}, presentation, {
-        confirmed: true, file: selectedFile, label: label,
+        confirmed: true, file: selectedFile || (thumbToggle && thumbToggle.checked && draft ? draft.pendingFile : null), label: label,
         mediaPath: editing ? draft.mediaPath : "",
         createThumb: Boolean(thumbToggle && !thumbToggle.disabled && thumbToggle.checked)
       });
@@ -123,92 +126,90 @@ function chooseSourceMedia(root, kind, mediaOptions, draft) {
   }).then(function (result) { return result && result.confirmed ? result : null; });
 }
 
-function confirmSourceMedia(root, kind, preview) {
-  var copy = actionCopy(kind);
-  var collision = cleanString(preview && preview.collision);
-  var diagnostics = preview && preview.svg && preview.svg.diagnostics;
-  var warnings = diagnostics && Array.isArray(diagnostics.warnings) ? diagnostics.warnings : [];
-  if (collision !== "replace" && !warnings.length) return Promise.resolve(true);
-  var reviewHtml = collision === "replace"
-    ? ""
-    : '<p class="docsViewer__modalNote muted small">SVG sanitization changed the selected source. Review the diagnostics before adding it.</p>';
-  var warningHtml = warnings.map(function (warning) {
-    return '<p class="docsViewer__modalNote muted small">' + escapeHtml(warning) + "</p>";
-  }).join("");
-  return openDocsViewerManagementModal({
-    root: root,
-    title: collision === "replace" ? "Replace " + kind : "Review " + kind,
-    size: "compact",
-    bodyHtml: "" +
-      '<p class="docsViewer__modalNote muted small"><strong>Media:</strong> ' + escapeHtml(preview.media_identity) + "</p>" +
-      reviewHtml +
-      warningHtml,
-    actions: [
-      { role: "modal-primary", label: collision === "replace" ? "Replace" : copy.primary },
-      { role: "modal-cancel", label: "Cancel" }
-    ]
-  }).then(function (result) {
-    return Boolean(result && result.confirmed);
+function sourceFileTokens(body) {
+  var links = new Map();
+  var pattern = /\[((?:\\.|[^\]\\])*)\]\(\[\[media:[^\]\r\n]+\]\]\)/g;
+  for (var link of body.matchAll(pattern)) {
+    links.set(link.index + link[0].indexOf("[[media:"), link);
+  }
+  return parseSourceTokens(body, function (raw, location) {
+    var match = /^\[\[media:(docs\/(?:collections\/[a-z0-9-]+\/)?files\/[^\]\s]+)\]\]$/.exec(raw);
+    if (!match) return null;
+    var token = { raw: raw, mediaPath: match[1], label: "", start: location.start, end: location.start + raw.length,
+      tokenStart: location.start, tokenEnd: location.start + raw.length, activatable: true };
+    var link = links.get(location.start);
+    if (link) {
+      token.raw = link[0];
+      token.start = link.index;
+      token.end = link.index + link[0].length;
+      token.label = link[1].replace(/\\(.)/g, "$1");
+    }
+    return token;
   });
 }
 
-/** Await native media writes before insertion, or apply presentation to the captured token. */
-export async function publishAndInsertSourceMedia(options = {}) {
+/** Retain a native File for Save, or apply presentation to the captured token locally. */
+export async function prepareAndInsertSourceMedia(options = {}) {
   var provider = options.provider || {};
   var adapter = options.adapter || null;
   var kind = cleanString(options.mediaKind) === "file" ? "file" : "image";
   var mediaOptions = options.mediaOptions;
-  if (!mediaOptions || typeof provider.applySourceMedia !== "function"
+  if (!mediaOptions || typeof provider.prepareSourceMedia !== "function"
       || !adapter || typeof adapter.insertSourceMedia !== "function" || !options.capture) {
     throw new Error("Native media intake is unavailable on this route.");
   }
   var root = options.root || document.body;
   var snapshot = adapter.getBufferSnapshot();
   var bodyStart = sourceBodyStart(snapshot.value);
-  var initialToken = kind === "image" ? sourceTokenAtSelection(
-    parseImageTokens(snapshot.value.slice(bodyStart)).map(function (token) {
-      return Object.assign({}, token, { start: token.start + bodyStart, end: token.end + bodyStart });
-    }), options.capture
-  ) : null;
+  var occurrences = (kind === "image" ? parseImageTokens(snapshot.value.slice(bodyStart)) : sourceFileTokens(snapshot.value.slice(bodyStart)))
+    .map(function (token) {
+      var positioned = Object.assign({}, token, { start: token.start + bodyStart, end: token.end + bodyStart });
+      if (kind === "file") Object.assign(positioned, { tokenStart: token.tokenStart + bodyStart, tokenEnd: token.tokenEnd + bodyStart });
+      return positioned;
+    });
+  var initialToken = sourceTokenAtSelection(occurrences, options.capture);
+  if (!initialToken && kind === "file") initialToken = occurrences.find(function (token) {
+    return token.tokenStart === options.capture.start && token.tokenEnd === options.capture.end;
+  });
   var capture = initialToken
     ? { start: initialToken.start, end: initialToken.end, text: initialToken.raw, revision: snapshot.revision }
     : options.capture;
   var draft = initialToken ? Object.assign({}, initialToken, {
-    label: initialToken.alt, addCaption: Boolean(initialToken.caption)
+    label: kind === "image" ? initialToken.alt : initialToken.label, addCaption: Boolean(initialToken.caption)
   }) : null;
+  var existing = initialToken && adapter.pendingSourceMedia(initialToken.mediaPath);
+  if (draft && existing) draft.pendingFile = existing.file;
   var choice = await chooseSourceMedia(root, kind, mediaOptions, draft);
   if (!choice) return null;
   if (!choice.file && choice.mediaPath) {
-    var token = serializeImageToken({ mediaPath: choice.mediaPath, alt: choice.label,
+    var token = kind === "image" ? serializeImageToken({ mediaPath: choice.mediaPath, alt: choice.label,
       caption: choice.addCaption ? choice.caption : "", summary: choice.summary,
-      placement: choice.placement, fillWidth: choice.fillWidth });
+      placement: choice.placement, fillWidth: choice.fillWidth }) : fileLink(choice.label, choice.mediaPath);
     if (!token) throw new Error("Image fields are invalid.");
-    var updated = { markdown: token, summary_text: "Image token updated." };
-    if (!adapter.insertSourceMedia(capture, updated)) throw new Error("The Source image occurrence changed.");
+    var updated = { markdown: token, summary_text: "Media reference updated." };
+    if (!adapter.insertSourceMedia(capture, updated)) throw new Error("The Source occurrence changed.");
     return updated;
   }
-  var request = Object.assign({}, options.target, { media_kind: kind, label: choice.label });
-  if (kind === "image") {
-    request.create_thumb = choice.createThumb;
-    request.add_caption = Boolean(choice.addCaption);
-    request.caption = choice.addCaption ? choice.caption : "";
-    request.summary = choice.summary;
-    request.placement = choice.placement;
-    request.fill_width = choice.fillWidth;
-  }
-  if (new Blob([JSON.stringify(request)]).size > mediaOptions.max_metadata_bytes) {
-    throw new Error("Media metadata exceeds the 1 MiB limit.");
-  }
-  var payload = await provider.applySourceMedia(request, choice.file);
-  if (payload.requires_confirmation) {
-    if (!await confirmSourceMedia(root, kind, payload)) return null;
-    payload = await provider.applySourceMedia(Object.assign({}, request, {
-      confirm_replace: Boolean(payload.requires_replace_confirmation), confirm_sanitization: true
-    }), choice.file);
-  }
-  if (payload.requires_confirmation) throw new Error("Media confirmation did not complete.");
-  if (!adapter.insertSourceMedia(capture, payload)) {
-    throw new Error("Media was stored, but its source reference could not be inserted.");
-  }
+  var reuse = existing && existing.file === choice.file;
+  var identity = reuse ? { media_identity: existing.mediaPath } : await provider.prepareSourceMedia(Object.assign({}, options.target, {
+    media_kind: kind, filename: choice.file.name
+  }));
+  var mediaPath = identity.media_identity;
+  var markdown = kind === "image" ? serializeImageToken({
+    mediaPath: mediaPath, alt: choice.label, caption: choice.addCaption ? choice.caption : "",
+    summary: choice.summary, placement: choice.placement, fillWidth: choice.fillWidth
+  }) : fileLink(choice.label, mediaPath);
+  if (!markdown) throw new Error("Image fields are invalid.");
+  var payload = { markdown: markdown, thumbnail: choice.createThumb, summary_text: "Media reference inserted. Save to store the selected file." };
+  if (!adapter.insertSourceMedia(capture, payload, {
+    file: choice.file, mediaKind: kind, mediaPath: mediaPath,
+    replace: reuse ? existing.replace : Boolean(initialToken), createThumb: choice.createThumb,
+    editedPath: initialToken && initialToken.mediaPath
+  })) throw new Error("The Source occurrence changed; no media was stored.");
   return payload;
+}
+
+function fileLink(label, mediaPath) {
+  return "[" + label.replace(/\\/g, "\\\\").replace(/\[/g, "\\[").replace(/\]/g, "\\]")
+    + "]([[media:" + mediaPath + "]])";
 }

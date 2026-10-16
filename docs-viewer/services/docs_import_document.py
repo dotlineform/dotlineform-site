@@ -44,7 +44,7 @@ from docs_source_model import (  # noqa: E402
     write_text_atomic,
     write_text_atomic_new,
 )
-from docs_workspace_config import require_document_authoring  # noqa: E402
+from docs_workspace_config import DocsStageConfig, DocsCollectionConfig, require_document_authoring  # noqa: E402
 from docs_import_media import bind_import_media_owner  # noqa: E402
 from docs_index_order import index_order_path, index_order_text, insert_node, read_index_order  # noqa: E402
 from markdown_renderer import normalize_markdown_blank_lines  # noqa: E402
@@ -85,6 +85,7 @@ class ImportDocumentPlan:
     import_preview: dict[str, Any]
     committed_record: dict[str, Any]
     index_order_path: Path | None
+    document_config: DocsStageConfig | DocsCollectionConfig
     collection: str = ""
     target: SourceDoc | None = None
 
@@ -273,7 +274,6 @@ def plan_import_document(
         raise ValueError("replace content requires a normalized import preview")
 
     preview = copy.deepcopy(import_preview or {})
-    bind_import_media_owner(preview, document_config)
     if record.content_intent == CONTENT_INTENT_REPLACE:
         incoming_body = _replacement_body(preview, record.title)
         report_contract = report_source_contract_for_collection(
@@ -313,6 +313,7 @@ def plan_import_document(
     else:
         added_date = ""
 
+    bind_import_media_owner(preview, document_config, doc_id=record.doc_id)
     explicit_front_matter = _explicit_front_matter(record)
     normalized_custom_front_matter: dict[str, Any] = {}
     if custom_front_matter is not None:
@@ -371,6 +372,7 @@ def plan_import_document(
         import_preview=preview,
         committed_record=committed_document_record(front_matter, record.doc_id, document_config, collection=collection_id, parent_id=parent_id),
         index_order_path=index_order_path(parent_config) if operation == IMPORT_DOCUMENT_CREATE and not collection_id else None,
+        document_config=document_config,
         collection=collection_id,
         target=target,
     )
@@ -413,12 +415,13 @@ def materialize_import_document_media(
             include_prompt_meta=media_context.include_prompt_meta,
             source_markdown=media_context.source_markdown,
             source_svg_markup=media_context.source_svg_markup,
-            collection=plan.collection,
+            config=plan.document_config,
         )
         interactive_html_written = materialize_interactive_html_assets(
             repo_root,
             media_context.staging_root,
             list(media_context.interactive_html_plans),
+            config=plan.document_config,
             allow_overwrite=media_context.allow_interactive_html_overwrite,
         )
     return ImportDocumentApplyResult(
