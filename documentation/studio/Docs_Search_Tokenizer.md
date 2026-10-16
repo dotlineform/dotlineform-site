@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260813-214351-98d3f0
 title: Docs Viewer Search Tokenizer
 added_date: "2026-08-13 21:43:51"
-last_updated: "2026-08-14 16:09:56"
+last_updated: "2026-10-16"
 summary: Durable normalization and term-recognition contract shared by Docs Viewer index generation and browser queries.
 parent_id: d-20260602-160839-6d3cbb
 ---
@@ -41,10 +41,10 @@ The fixed stop words are `a`, `an`, `and`, `are`, `as`, `at`, `be`, `by`, `for`,
 
 ## Query Semantics
 
-Queries use the same term derivation as indexed content. A query reduced entirely to excluded or stop-word terms returns no result. At three or more characters, a query term also matches indexed terms beginning with that term. Multi-term queries require every normalized query term to match the same document.
+Queries use the same term derivation as indexed content. A query reduced entirely to excluded or stop-word terms returns no result. At two or more characters, a query term also matches indexed terms beginning with that term; for example, `sy` matches `symbol` and `symmetry`. Multi-term queries require every normalized query term to match the same document.
 
 Exact structural fields are separate from ordinary term derivation. A metadata-only scope can explicitly enable exact `identity` or `last_updated`; Studio does not enable either field.
 
 ## Change Rule
 
-Tokenizer behavior is intentionally small: no stemming, synonyms, spelling correction, language detection, or corpus-derived stop words. A change must update Python generation, browser JavaScript, and the shared tokenizer fixture together, then rebuild affected indexes. Scope-specific vocabulary rules or a second tokenizer are not allowed. Corpus frequency may inform the shared relevance score without removing terms or changing their tokenisation.
+Tokenizer behavior is intentionally small: no stemming, synonyms, spelling correction, language detection, or corpus-derived stop words. Term-derivation changes require matching Python generation/browser behavior and rebuilding affected indexes; fixture changes require their own agreed test specification. Browser-only query matching changes, such as the prefix threshold, require runtime projection without index regeneration. Scope-specific vocabulary rules or a second tokenizer are not allowed. Corpus frequency may inform the shared relevance score without removing terms or changing their tokenisation.

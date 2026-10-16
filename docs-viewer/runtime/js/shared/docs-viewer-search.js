@@ -56,7 +56,7 @@ function searchConstraintMatchesV2(index, queryTerm, fields) {
   var allowedFields = new Set(fields);
   var matches = new Map();
   Object.keys(index.terms).forEach(function (indexedTerm) {
-    if (indexedTerm !== queryTerm && !(queryTerm.length >= 3 && indexedTerm.indexOf(queryTerm) === 0)) return;
+    if (indexedTerm !== queryTerm && !(queryTerm.length >= 2 && indexedTerm.indexOf(queryTerm) === 0)) return;
     Object.keys(index.terms[indexedTerm]).forEach(function (field) {
       if (!allowedFields.has(field)) return;
       index.terms[indexedTerm][field].forEach(function (position) {

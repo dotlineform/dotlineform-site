@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260602-160839-6d3cbb
 title: Docs Viewer Search
 added_date: "2026-06-02 16:08:39"
-last_updated: "2026-10-13 18:56:11"
+last_updated: "2026-10-16"
 parent_id: d-20260331-000000-5dcf32
 
 ---
@@ -42,7 +42,7 @@ The Working index lives at its configured generated-search location. Prepare Pre
 
 Generated browser config declares the Docs Viewer domain, v4 schema, index URL, and `whole_index` rebuild policy. The workspace provider checks the v4 schema once at acquisition without requiring stage identity inside that JSON. `docs-viewer-search-controller.js` caches that loaded input and owns query/loading/paging state; route commands own history writes. `docs-viewer-search.js` is the sole tokenizer, postings-intersection, ranking, and tie-breaking owner, with no repeated schema validation on query or More. Recent is acquired independently and consumed directly by the generated-data adapter, then cached by the same list controller without schema/row audits, metadata coercion, default-limit repair or silent row dropping. Neither list reads destination documents or collection manifests to populate its rows.
 
-A multi-term query requires one matching posting set per normalized term. Prefix matching begins at three characters. Generic ranking prefers exact identity, exact title, title, heading, summary, parent title, body/code, and update metadata; only enabled fields participate. The workspace therefore ranks exact title, title, heading, summary, then body/code. Ties sort by title and identity, and each exact ordinary or collection target appears at most once.
+A multi-term query requires one matching posting set per normalized term. Prefix matching begins at two characters. Generic ranking prefers exact identity, exact title, title, heading, summary, parent title, body/code, and update metadata; only enabled fields participate. The workspace therefore ranks exact title, title, heading, summary, then body/code. Ties sort by title and identity, and each exact ordinary or collection target appears at most once.
 
 ## Index Results And Navigation
 
