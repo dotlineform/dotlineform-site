@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "docs_viewer_search_index_v4",
-    "version": "blake2b-272a471567a80a70eeacfe103c650e41",
-    "generated_at_utc": "2026-10-15T09:15:26Z",
+    "version": "blake2b-c8f48a1a0dd7759af206bdadc322dbec",
+    "generated_at_utc": "2026-10-16T19:52:49Z",
     "count": 24
   },
   "fields": [
@@ -61,8 +61,8 @@
     {
       "id": "d-20260801-212422-df11f3",
       "title": "3 symbols",
-      "last_updated": "2026-10-08",
-      "display_meta": "2026-10-08 • Context",
+      "last_updated": "2026-10-16",
+      "display_meta": "2026-10-16 • Context",
       "collection": "works",
       "report_doc_id": "d-20260801-073826-8865a8",
       "collection_title": "Context"
@@ -287,6 +287,11 @@
         19
       ]
     },
+    "above": {
+      "body": [
+        6
+      ]
+    },
     "absence": {
       "body": [
         10
@@ -295,6 +300,11 @@
     "absent": {
       "body": [
         19
+      ]
+    },
+    "absolute": {
+      "body": [
+        6
       ]
     },
     "abstract": {
@@ -416,11 +426,6 @@
         17
       ]
     },
-    "acting": {
-      "body": [
-        6
-      ]
-    },
     "action": {
       "body": [
         10,
@@ -531,16 +536,6 @@
         6
       ]
     },
-    "addition": {
-      "body": [
-        6
-      ]
-    },
-    "additive": {
-      "body": [
-        6
-      ]
-    },
     "addressed": {
       "body": [
         4
@@ -596,7 +591,6 @@
     },
     "affects": {
       "body": [
-        6,
         13
       ]
     },
@@ -840,6 +834,7 @@
     },
     "appear": {
       "body": [
+        6,
         7
       ]
     },
@@ -963,6 +958,16 @@
     "arousal": {
       "body": [
         17
+      ]
+    },
+    "arrange": {
+      "body": [
+        6
+      ]
+    },
+    "arranged": {
+      "body": [
+        6
       ]
     },
     "arrangements": {
@@ -1107,6 +1112,11 @@
         6
       ]
     },
+    "bandage": {
+      "body": [
+        6
+      ]
+    },
     "bandcamp": {
       "body": [
         23
@@ -1115,6 +1125,11 @@
     "bang": {
       "body": [
         8
+      ]
+    },
+    "bar": {
+      "body": [
+        6
       ]
     },
     "basal": {
@@ -1469,8 +1484,14 @@
         6
       ]
     },
+    "blessing": {
+      "body": [
+        6
+      ]
+    },
     "blindness": {
       "body": [
+        6,
         18
       ]
     },
@@ -1631,6 +1652,11 @@
         6
       ]
     },
+    "bridge": {
+      "body": [
+        6
+      ]
+    },
     "briefly": {
       "body": [
         7
@@ -1689,12 +1715,23 @@
     },
     "built": {
       "body": [
+        6,
         18
       ]
     },
     "bulk": {
       "body": [
         16
+      ]
+    },
+    "burma": {
+      "body": [
+        6
+      ]
+    },
+    "burn": {
+      "body": [
+        6
       ]
     },
     "buss": {
@@ -1808,6 +1845,14 @@
         10
       ]
     },
+    "cards": {
+      "heading": [
+        6
+      ],
+      "body": [
+        6
+      ]
+    },
     "cares": {
       "body": [
         19
@@ -1844,6 +1889,11 @@
       ]
     },
     "catalogues": {
+      "body": [
+        6
+      ]
+    },
+    "catalyst": {
       "body": [
         6
       ]
@@ -1887,6 +1937,11 @@
     "ccc": {
       "body": [
         8
+      ]
+    },
+    "ceasing": {
+      "body": [
+        6
       ]
     },
     "cell": {
@@ -2089,10 +2144,20 @@
         10
       ]
     },
+    "clicks": {
+      "body": [
+        6
+      ]
+    },
     "clinical": {
       "body": [
         10,
         18
+      ]
+    },
+    "clock": {
+      "body": [
+        6
       ]
     },
     "closed": {
@@ -2269,11 +2334,6 @@
         17
       ]
     },
-    "combined": {
-      "body": [
-        6
-      ]
-    },
     "combines": {
       "body": [
         9,
@@ -2291,6 +2351,11 @@
       ]
     },
     "comes": {
+      "body": [
+        6
+      ]
+    },
+    "coming": {
       "body": [
         6
       ]
@@ -2419,11 +2484,6 @@
     "composites": {
       "body": [
         3
-      ]
-    },
-    "compositing": {
-      "body": [
-        6
       ]
     },
     "comprehend": {
@@ -2649,6 +2709,7 @@
     },
     "constant": {
       "body": [
+        6,
         8
       ]
     },
@@ -2690,7 +2751,6 @@
     },
     "contain": {
       "body": [
-        6,
         17
       ]
     },
@@ -2917,6 +2977,7 @@
     },
     "create": {
       "body": [
+        6,
         14,
         17
       ]
@@ -3176,6 +3237,11 @@
         15
       ]
     },
+    "deconstructed": {
+      "body": [
+        6
+      ]
+    },
     "decoration": {
       "body": [
         11
@@ -3259,6 +3325,7 @@
     },
     "dependent": {
       "body": [
+        6,
         15
       ]
     },
@@ -3341,6 +3408,11 @@
         18
       ]
     },
+    "designed": {
+      "body": [
+        6
+      ]
+    },
     "designing": {
       "body": [
         14
@@ -3415,11 +3487,6 @@
     "device": {
       "body": [
         17
-      ]
-    },
-    "df11f3": {
-      "body": [
-        6
       ]
     },
     "diagram": {
@@ -3947,6 +4014,11 @@
     "einstein": {
       "body": [
         16
+      ]
+    },
+    "either": {
+      "body": [
+        6
       ]
     },
     "ekpyrotic": {
@@ -4682,11 +4754,6 @@
         4
       ]
     },
-    "extended": {
-      "body": [
-        6
-      ]
-    },
     "extension": {
       "heading": [
         7
@@ -4709,6 +4776,11 @@
     "extract": {
       "body": [
         19
+      ]
+    },
+    "eyes": {
+      "body": [
+        6
       ]
     },
     "face": {
@@ -4974,17 +5046,22 @@
         11
       ]
     },
+    "fluid": {
+      "body": [
+        6
+      ]
+    },
+    "flux": {
+      "body": [
+        6
+      ]
+    },
     "fold": {
       "body": [
         4
       ]
     },
     "folders": {
-      "body": [
-        6
-      ]
-    },
-    "follows": {
       "body": [
         6
       ]
@@ -5241,6 +5318,7 @@
     },
     "future": {
       "body": [
+        6,
         11,
         14,
         15
@@ -5326,6 +5404,11 @@
         16
       ]
     },
+    "gesture": {
+      "body": [
+        6
+      ]
+    },
     "ghostlike": {
       "body": [
         6
@@ -5339,6 +5422,11 @@
     "gist": {
       "body": [
         18
+      ]
+    },
+    "give": {
+      "body": [
+        6
       ]
     },
     "given": {
@@ -5441,6 +5529,11 @@
         18
       ]
     },
+    "grave": {
+      "body": [
+        6
+      ]
+    },
     "gravity": {
       "body": [
         16
@@ -5459,6 +5552,11 @@
     "grids": {
       "body": [
         4
+      ]
+    },
+    "grieve": {
+      "body": [
+        6
       ]
     },
     "griffiths": {
@@ -5524,6 +5622,11 @@
         20
       ]
     },
+    "guilt": {
+      "body": [
+        6
+      ]
+    },
     "gujar": {
       "body": [
         15
@@ -5566,7 +5669,13 @@
     },
     "happening": {
       "body": [
+        6,
         18
+      ]
+    },
+    "happens": {
+      "body": [
+        6
       ]
     },
     "happiness": {
@@ -5663,6 +5772,11 @@
         15
       ]
     },
+    "help": {
+      "body": [
+        6
+      ]
+    },
     "hence": {
       "body": [
         6
@@ -5690,6 +5804,9 @@
       ]
     },
     "hidden": {
+      "heading": [
+        6
+      ],
       "body": [
         6,
         17
@@ -6043,6 +6160,16 @@
         4
       ]
     },
+    "impermanence": {
+      "body": [
+        6
+      ]
+    },
+    "impermanent": {
+      "body": [
+        6
+      ]
+    },
     "implemented": {
       "summary": [
         10
@@ -6059,6 +6186,11 @@
     "implicit": {
       "body": [
         9
+      ]
+    },
+    "implied": {
+      "body": [
+        6
       ]
     },
     "imply": {
@@ -6310,12 +6442,18 @@
     },
     "intention": {
       "body": [
+        6,
         18
       ]
     },
     "interacting": {
       "body": [
         9
+      ]
+    },
+    "interaction": {
+      "body": [
+        6
       ]
     },
     "interacts": {
@@ -6332,6 +6470,11 @@
     "interference": {
       "body": [
         11
+      ]
+    },
+    "intermediate": {
+      "body": [
+        6
       ]
     },
     "internal": {
@@ -6403,7 +6546,7 @@
         13
       ]
     },
-    "intuitive": {
+    "intuitively": {
       "body": [
         6
       ]
@@ -6420,6 +6563,7 @@
     },
     "invisible": {
       "body": [
+        6,
         16
       ]
     },
@@ -6713,6 +6857,11 @@
         20
       ]
     },
+    "layer": {
+      "body": [
+        6
+      ]
+    },
     "layered": {
       "heading": [
         9
@@ -6843,6 +6992,7 @@
         10
       ],
       "body": [
+        6,
         7,
         8,
         13
@@ -6896,11 +7046,6 @@
         6
       ]
     },
-    "linear": {
-      "body": [
-        6
-      ]
-    },
     "lines": {
       "body": [
         6
@@ -6908,6 +7053,7 @@
     },
     "link": {
       "body": [
+        6,
         15
       ]
     },
@@ -6998,6 +7144,7 @@
     },
     "logic": {
       "body": [
+        6,
         13
       ]
     },
@@ -7084,6 +7231,7 @@
     "made": {
       "body": [
         5,
+        6,
         10
       ]
     },
@@ -7232,11 +7380,6 @@
         14
       ]
     },
-    "matrix": {
-      "body": [
-        6
-      ]
-    },
     "matter": {
       "body": [
         6,
@@ -7309,6 +7452,7 @@
     "meanings": {
       "body": [
         4,
+        6,
         19
       ]
     },
@@ -7339,6 +7483,11 @@
       ]
     },
     "mechanical": {
+      "body": [
+        6
+      ]
+    },
+    "mechanism": {
       "body": [
         6
       ]
@@ -7397,6 +7546,11 @@
     "memorable": {
       "body": [
         7
+      ]
+    },
+    "memories": {
+      "body": [
+        6
       ]
     },
     "memory": {
@@ -7585,6 +7739,11 @@
         20
       ]
     },
+    "mirror": {
+      "body": [
+        6
+      ]
+    },
     "mirrors": {
       "body": [
         10
@@ -7604,7 +7763,8 @@
     },
     "mist": {
       "body": [
-        4
+        4,
+        6
       ]
     },
     "mistaken": {
@@ -7706,6 +7866,7 @@
         21
       ],
       "body": [
+        6,
         7,
         19
       ]
@@ -7771,6 +7932,11 @@
     "move": {
       "body": [
         4
+      ]
+    },
+    "moved": {
+      "body": [
+        6
       ]
     },
     "movement": {
@@ -7866,6 +8032,11 @@
     "naturalistic": {
       "body": [
         10
+      ]
+    },
+    "naturally": {
+      "body": [
+        6
       ]
     },
     "nature": {
@@ -8147,7 +8318,7 @@
         19
       ]
     },
-    "non-linear": {
+    "non-self": {
       "body": [
         6
       ]
@@ -8322,11 +8493,6 @@
         17
       ]
     },
-    "oct": {
-      "body": [
-        6
-      ]
-    },
     "odds": {
       "body": [
         18
@@ -8427,6 +8593,9 @@
     "open": {
       "heading": [
         8
+      ],
+      "body": [
+        6
       ]
     },
     "opening": {
@@ -8447,11 +8616,6 @@
     "operating": {
       "body": [
         18
-      ]
-    },
-    "operation": {
-      "body": [
-        6
       ]
     },
     "operational": {
@@ -8487,7 +8651,6 @@
     "order": {
       "body": [
         4,
-        6,
         7,
         8,
         11,
@@ -8524,6 +8687,11 @@
       "body": [
         3,
         13
+      ]
+    },
+    "origination": {
+      "body": [
+        6
       ]
     },
     "oscillations": {
@@ -8685,6 +8853,11 @@
         6
       ]
     },
+    "painting": {
+      "body": [
+        6
+      ]
+    },
     "panel": {
       "heading": [
         19
@@ -8737,11 +8910,6 @@
       "body": [
         4,
         18
-      ]
-    },
-    "partially": {
-      "body": [
-        6
       ]
     },
     "participates": {
@@ -8997,6 +9165,11 @@
         9
       ]
     },
+    "personal": {
+      "body": [
+        6
+      ]
+    },
     "pfc": {
       "body": [
         15
@@ -9015,6 +9188,7 @@
     },
     "phenomena": {
       "body": [
+        6,
         10,
         18
       ]
@@ -9307,6 +9481,11 @@
     "practices": {
       "body": [
         18
+      ]
+    },
+    "pratītyasamutpāda": {
+      "body": [
+        6
       ]
     },
     "prayer": {
@@ -9671,11 +9850,6 @@
         11
       ]
     },
-    "proposal": {
-      "body": [
-        6
-      ]
-    },
     "propose": {
       "body": [
         16
@@ -9799,6 +9973,11 @@
         9
       ]
     },
+    "question": {
+      "body": [
+        6
+      ]
+    },
     "questions": {
       "body": [
         14
@@ -9836,6 +10015,11 @@
         19
       ]
     },
+    "radius": {
+      "body": [
+        6
+      ]
+    },
     "rain": {
       "body": [
         13
@@ -9855,6 +10039,7 @@
     "random": {
       "body": [
         5,
+        6,
         17
       ]
     },
@@ -9878,6 +10063,11 @@
         9
       ]
     },
+    "rarefied": {
+      "body": [
+        6
+      ]
+    },
     "rarely": {
       "body": [
         19
@@ -9897,14 +10087,24 @@
     },
     "rather": {
       "body": [
-        6,
         9
       ]
     },
     "re": {
       "body": [
+        6,
         7,
         11
+      ]
+    },
+    "re-arrange": {
+      "body": [
+        6
+      ]
+    },
+    "re-arranged": {
+      "body": [
+        6
       ]
     },
     "re-enter": {
@@ -9970,6 +10170,11 @@
     "real-time": {
       "body": [
         18
+      ]
+    },
+    "realise": {
+      "body": [
+        6
       ]
     },
     "realising": {
@@ -10336,6 +10541,11 @@
         15
       ]
     },
+    "reincarnation": {
+      "body": [
+        6
+      ]
+    },
     "reinforced": {
       "body": [
         18
@@ -10367,6 +10577,11 @@
     "relativity": {
       "body": [
         16
+      ]
+    },
+    "released": {
+      "body": [
+        6
       ]
     },
     "relevance": {
@@ -10408,11 +10623,6 @@
     "remain": {
       "body": [
         7
-      ]
-    },
-    "remaining": {
-      "body": [
-        6
       ]
     },
     "remains": {
@@ -10496,6 +10706,11 @@
     "replay": {
       "body": [
         15
+      ]
+    },
+    "replenish": {
+      "body": [
+        6
       ]
     },
     "replies": {
@@ -10634,6 +10849,11 @@
         19
       ]
     },
+    "restrict": {
+      "body": [
+        6
+      ]
+    },
     "result": {
       "body": [
         13,
@@ -10678,6 +10898,11 @@
         11
       ]
     },
+    "reversed": {
+      "body": [
+        6
+      ]
+    },
     "reversible": {
       "body": [
         17
@@ -10716,11 +10941,6 @@
       "body": [
         7,
         11
-      ]
-    },
-    "rgb": {
-      "body": [
-        6
       ]
     },
     "rhythm": {
@@ -10818,6 +11038,11 @@
         13
       ]
     },
+    "ruin": {
+      "body": [
+        6
+      ]
+    },
     "rules": {
       "body": [
         10
@@ -10827,6 +11052,11 @@
       "body": [
         13,
         15
+      ]
+    },
+    "rwanda": {
+      "body": [
+        6
       ]
     },
     "sackur": {
@@ -11094,6 +11324,7 @@
       ],
       "body": [
         4,
+        6,
         9,
         11,
         18
@@ -11387,6 +11618,7 @@
     },
     "signs": {
       "body": [
+        6,
         18
       ]
     },
@@ -11446,6 +11678,11 @@
         15
       ]
     },
+    "since": {
+      "body": [
+        6
+      ]
+    },
     "single": {
       "body": [
         6
@@ -11489,6 +11726,7 @@
     "so": {
       "body": [
         4,
+        6,
         10,
         13,
         14,
@@ -11564,6 +11802,11 @@
         4
       ]
     },
+    "sound": {
+      "body": [
+        6
+      ]
+    },
     "source": {
       "body": [
         11,
@@ -11577,11 +11820,6 @@
       ],
       "summary": [
         18
-      ]
-    },
-    "south": {
-      "body": [
-        6
       ]
     },
     "space": {
@@ -11675,11 +11913,6 @@
         11
       ]
     },
-    "square": {
-      "body": [
-        6
-      ]
-    },
     "stabilisation": {
       "body": [
         11
@@ -11736,6 +11969,7 @@
     },
     "states": {
       "body": [
+        6,
         9,
         10,
         16,
@@ -11744,6 +11978,7 @@
     },
     "static": {
       "body": [
+        6,
         11
       ]
     },
@@ -11909,6 +12144,7 @@
     },
     "structure": {
       "body": [
+        6,
         7,
         10,
         11,
@@ -11952,6 +12188,11 @@
     "subcortical": {
       "body": [
         10
+      ]
+    },
+    "subject": {
+      "body": [
+        6
       ]
     },
     "subjective": {
@@ -12167,6 +12408,9 @@
       "title": [
         6
       ],
+      "heading": [
+        6
+      ],
       "body": [
         4,
         6
@@ -12221,6 +12465,7 @@
     },
     "system": {
       "body": [
+        6,
         11,
         17,
         18,
@@ -12259,6 +12504,7 @@
     },
     "take": {
       "body": [
+        6,
         17,
         18,
         19
@@ -12292,11 +12538,6 @@
     "te": {
       "summary": [
         4
-      ]
-    },
-    "technique": {
-      "body": [
-        6
       ]
     },
     "telling": {
@@ -12431,6 +12672,7 @@
     "them": {
       "body": [
         4,
+        6,
         18
       ]
     },
@@ -12563,6 +12805,11 @@
         4
       ]
     },
+    "think": {
+      "body": [
+        6
+      ]
+    },
     "thinking": {
       "body": [
         4
@@ -12626,6 +12873,7 @@
         10
       ],
       "body": [
+        6,
         10
       ]
     },
@@ -12651,6 +12899,7 @@
     },
     "through": {
       "body": [
+        6,
         11,
         15,
         17
@@ -12666,6 +12915,7 @@
         7
       ],
       "body": [
+        6,
         7,
         8,
         11,
@@ -12750,6 +13000,16 @@
         11
       ]
     },
+    "touched": {
+      "body": [
+        6
+      ]
+    },
+    "touching": {
+      "body": [
+        6
+      ]
+    },
     "towards": {
       "body": [
         6,
@@ -12799,7 +13059,7 @@
         11
       ]
     },
-    "transformative": {
+    "transformations": {
       "body": [
         6
       ]
@@ -12809,8 +13069,14 @@
         10
       ]
     },
+    "transforms": {
+      "body": [
+        6
+      ]
+    },
     "transient": {
       "body": [
+        6,
         8
       ]
     },
@@ -12992,6 +13258,11 @@
         9
       ]
     },
+    "uncovering": {
+      "body": [
+        6
+      ]
+    },
     "under": {
       "title": [
         8
@@ -13033,6 +13304,16 @@
         14
       ]
     },
+    "unending": {
+      "body": [
+        6
+      ]
+    },
+    "unformed": {
+      "body": [
+        6
+      ]
+    },
     "unification": {
       "body": [
         16
@@ -13061,6 +13342,11 @@
     "units": {
       "body": [
         19
+      ]
+    },
+    "universal": {
+      "body": [
+        6
       ]
     },
     "universe": {
@@ -13167,6 +13453,7 @@
         18
       ],
       "body": [
+        6,
         7,
         16,
         19,
@@ -13198,6 +13485,7 @@
     },
     "using": {
       "body": [
+        6,
         13,
         17
       ]
@@ -13289,6 +13577,9 @@
       ]
     },
     "victims": {
+      "heading": [
+        6
+      ],
       "body": [
         6
       ]
@@ -13672,6 +13963,7 @@
     },
     "work": {
       "body": [
+        6,
         7,
         8,
         10,
