@@ -145,19 +145,17 @@ def list_collection_media(
         media_type: media.asset_location for media_type, media in config.media.types.items()
         if media_type not in exclude_media_types
     }
-    build_sources = {build_type: build.location for build_type, build in config.media.build_sources.items()}
     items: list[DocsMediaFile] = []
-    for role, locations in (("source", published), ("build-source", build_sources)):
-        for media_type, location in locations.items():
-            for identity in list_filesystem_artifact_identities(repo_root, location):
-                if Path(identity).name == ".gitkeep":
-                    continue
-                items.append(DocsMediaFile(
-                    collection=getattr(config, "collection", ""),
-                    media_type=media_type,
-                    identity=identity,
-                    role=role,
-                ))
+    for media_type, location in published.items():
+        for identity in list_filesystem_artifact_identities(repo_root, location):
+            if Path(identity).name == ".gitkeep":
+                continue
+            items.append(DocsMediaFile(
+                collection=getattr(config, "collection", ""),
+                media_type=media_type,
+                identity=identity,
+                role="source",
+            ))
     return tuple(items)
 
 

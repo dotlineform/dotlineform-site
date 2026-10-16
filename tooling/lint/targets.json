@@ -8,7 +8,6 @@
     "**/__pycache__/**",
     "**/node_modules/**",
     "**/vendor/**",
-    "docs-viewer/build/mermaid/**",
     "docs-viewer/data/generated/**",
     "docs-viewer/scopes/*/published/**",
     "logs/**",

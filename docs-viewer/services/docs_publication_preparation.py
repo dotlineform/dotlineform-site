@@ -6,18 +6,23 @@ import json
 from pathlib import Path
 from typing import Any
 
-from docs_document_images import generated_thumbnail_filename
+from docs_document_media_ownership import document_media_references, owned_document_files, removed_files
 from docs_publication_ignore import read_publication_ignore_ids
 from docs_publication_metadata import PublicMetadata
 from docs_publication_paths import confined
 from docs_publication_queue import read_queue, save_queue, select_document, select_shared
-from docs_publication_media import HTML_START_TAG_PATTERN, MEDIA_URL_ATTRIBUTE_PATTERN, _media_identity_from_url
+from docs_publication_transfer import delete_path
 from docs_source_model import write_text_atomic
 from docs_workspace_config import generated_documents_path, select_workspace_stage
 
 
 class PublicationHandoffError(RuntimeError):
     """Local generation completed, but its publication handoff is incomplete."""
+
+    def __init__(self, message: str, *, phase: str = "publication handoff", removal_effects: list[dict[str, str]] | None = None) -> None:
+        super().__init__(message)
+        self.phase = phase
+        self.removal_effects = removal_effects or []
 
 
 def media_metadata_path(workspace: Any) -> Path:
@@ -29,31 +34,10 @@ def write_json(path: Path, value: Any) -> None:
     write_text_atomic(path, json.dumps(value, ensure_ascii=False, indent=2) + "\n")
 
 
-def document_media(owner: Any, payload: dict[str, Any]) -> dict[str, list[str]]:
-    """Extract exact references from completed HTML without media reads."""
-    if owner.media is None:
-        return {}
-    collection = getattr(owner, "collection", "")
-    prefix = f"collections/{collection}" if collection else "workspace"
-    references: dict[str, set[str]] = {}
-    thumbnail = generated_thumbnail_filename(payload, doc_id=payload["doc_id"], collection=collection)
-    if thumbnail:
-        references["thumbs"] = {thumbnail}
-    for tag in HTML_START_TAG_PATTERN.finditer(payload["content_html"]):
-        for attribute in MEDIA_URL_ATTRIBUTE_PATTERN.finditer(tag["body"]):
-            value = attribute["quoted_value"] if attribute["quote"] else attribute["unquoted_value"]
-            for kind in owner.media.types:
-                identity = _media_identity_from_url(value, f"docs-media:{prefix}/{kind}")
-                if identity:
-                    references.setdefault(kind, set()).add(identity)
-                    break
-    return {kind: sorted(names) for kind, names in references.items()}
-
-
 class PublicationPreparation:
     """Carry selected metadata, media and queue effects through generation.
 
-    Persistent private data contains only referenced-media/diagram information
+    Persistent private data contains only referenced-media information
     and the last applied exclusion input. Public lists own prior membership;
     management metadata owns hierarchy, Draft and reader fields.
     """
@@ -68,12 +52,15 @@ class PublicationPreparation:
         self.metadata = PublicMetadata(workspace, ignored, policy_changed=set(media["ignored"]) != ignored)
         self.policy_applied = False
         self.catalogue_documents: set[str] = set()
-        self.mermaid_runtime: Any = None
         self.changes_only = changes_only
         self.restored_documents: set[str] = set()
+        self.media_removals: dict[str, dict[str, list[str]]] = {}
+        self.current_owned_media: dict[str, dict[str, set[str]]] = {}
+        self.working_removals: dict[tuple[str, str, str], Path] = {}
+        self.removal_effects: list[dict[str, str]] = []
 
-    def prepare(self, builder: Any, docs: list[Any], payloads: dict[str, Any], navigation: dict[str, Any], *, previous_navigation: dict[str, Any] | None, manifest: dict[str, Any] | None, previous_manifest: dict[str, Any] | None, write: bool) -> None:
-        """Finish eligible shared HTML before the builder compares/writes it."""
+    def prepare(self, builder: Any, docs: list[Any], payloads: dict[str, Any], navigation: dict[str, Any], *, previous_navigation: dict[str, Any] | None, manifest: dict[str, Any] | None, previous_manifest: dict[str, Any] | None) -> None:
+        """Record selected references and their exact owned-file removals."""
         collection = getattr(builder, "collection_id", "")
         if self.metadata.policy_changed and not self.policy_applied and collection:
             self.metadata.ordinary(self.metadata.read_management(""), None)
@@ -83,24 +70,23 @@ class PublicationPreparation:
         else:
             self.metadata.ordinary(navigation, previous_navigation)
             self.policy_applied = True
-        eligible = self.metadata.membership(collection)
         self.restored_documents.update(set(payloads) & self.metadata.restored.keys())
         records = self.media["documents"]
         for doc in docs:
             previous = records.get(doc.doc_id)
-            payload = payloads[doc.doc_id]
-            diagrams = []
-            if doc.doc_id in eligible:
-                from docs_mermaid_preparation import prepare_document_mermaid
-
-                payload, diagrams, self.mermaid_runtime = prepare_document_mermaid(
-                    self.repo_root, builder.media_owner, doc, payload, previous,
-                    force=not builder.targeted_build, runtime=self.mermaid_runtime, write=write,
-                )
-                payloads[doc.doc_id] = payload
-            media = document_media(builder.media_owner, payload)
-            if media or diagrams:
-                records[doc.doc_id] = {"collection": collection, "media": media, "mermaid": diagrams}
+            media = document_media_references(builder.media_owner, doc)
+            record = {"collection": collection, "media": media}
+            before_media = owned_document_files(doc.doc_id, collection, previous or {})
+            after_media = owned_document_files(doc.doc_id, collection, record)
+            self.current_owned_media[doc.doc_id] = after_media
+            removals = removed_files(before_media, after_media)
+            self.media_removals[doc.doc_id] = removals
+            for kind, identities in removals.items():
+                root = builder.media_owner.media.types[kind].asset_location.path
+                for identity in identities:
+                    self.working_removals[(collection, kind, identity)] = confined(root, identity)
+            if media:
+                records[doc.doc_id] = record
             else:
                 records.pop(doc.doc_id, None)
             self.metadata.restored.pop(doc.doc_id, None)
@@ -118,14 +104,16 @@ class PublicationPreparation:
             if owner == "catalogue" and catalogue_work_selection and not deleting:
                 continue
             media = self.media["documents"].get(doc_id, {}).get("media", {})
+            removals = self.media_removals.get(doc_id, {})
             if self.changes_only:
                 pending = doc_id in self.pending["current_documents"] or doc_id in self.pending["deleted_documents"]
                 if deleting:
-                    if doc_id not in self.metadata.withdrawn and not pending:
+                    if doc_id not in self.metadata.withdrawn and not pending and not removals:
                         continue
-                elif doc_id not in changed_ids and doc_id not in self.restored_documents and not pending and not self.media_changed(builder.media_owner, media):
+                elif doc_id not in changed_ids and doc_id not in self.restored_documents and not pending and not removals and not self.media_changed(builder.media_owner, media):
                     continue
-            select_document(self.pending, doc_id, owner, media=media, delete=deleting)
+            restored = self.restored_media(builder, doc_id, owner) if doc_id not in deleted else {}
+            select_document(self.pending, doc_id, owner, media=media, removed_media=removals, restored_media=restored, delete=deleting)
         self.restored_documents.difference_update(payloads)
         for doc_id in deleted:
             self.media["documents"].pop(doc_id, None)
@@ -134,6 +122,16 @@ class PublicationPreparation:
         self.write_metadata()
         if selected is not None:
             self.selected()
+
+    def restored_media(self, builder: Any, doc_id: str, collection: str) -> dict[str, list[str]]:
+        """Cancel only exact pending removals restored with ready Working bytes."""
+        pending = (self.pending["current_documents"].get(doc_id) or self.pending["deleted_documents"].get(doc_id) or {}).get("removed_media", {})
+        if not pending or doc_id not in self.current_owned_media:
+            return {}
+        owned = self.current_owned_media[doc_id]
+        owner = next(item for item in builder.config.collections if item.collection == collection) if collection else builder.config
+        return {kind: [name for name in names if name in owned.get(kind, set()) and confined(owner.media.types[kind].asset_location.path, name).is_file()]
+                for kind, names in pending.items()}
 
     def media_changed(self, owner: Any, media: dict[str, list[str]]) -> bool:
         """Maintenance compares exact referenced local bytes, without a hash ledger."""
@@ -176,12 +174,26 @@ class PublicationPreparation:
         select_shared(self.pending, owner, output)
 
     def save(self, *, catalogue_pending: dict[str, Any] | None = None) -> None:
+        # Persist exact public removals before deleting Working bytes or advancing
+        # their ownership baseline. A failure leaves the prior baseline available
+        # to the next ordinary exact generation, without another recovery ledger.
+        save_queue(self.workspace, self.pending)
+        for (collection, kind, identity), path in tuple(self.working_removals.items()):
+            try:
+                delete_path(path)
+            except Exception as error:
+                raise PublicationHandoffError(
+                    f"Queue saved; Working removal failed for {collection or 'workspace'}/source/{kind}/{identity}: {error}. "
+                    f"Completed Working removals: {len(self.removal_effects)}; prior ownership metadata retained.",
+                    phase="Working media removal", removal_effects=self.removal_effects,
+                ) from error
+            self.removal_effects.append({"collection": collection, "role": "source", "media_type": kind, "identity": identity})
+            del self.working_removals[(collection, kind, identity)]
         self.media["ignored"] = sorted(self.ignored)
         text = json.dumps(self.media, ensure_ascii=False, indent=2) + "\n"
         if text != self.saved_text:
             write_text_atomic(media_metadata_path(self.workspace), text)
             self.saved_text = text
-        save_queue(self.workspace, self.pending)
         if self.catalogue_documents or catalogue_pending is not None:
             from studio.services.catalogue.catalogue_pending_publication import merge_document_selections, FILENAME
             from studio.services.catalogue.catalogue_pending_state import load_pending_queue, pending_path, persist_pending_queue
@@ -201,15 +213,15 @@ def load_preparation(repo_root: Path, workspace: Any, *, ignored_ids: frozenset[
     return PublicationPreparation(repo_root, workspace, media, text, read_queue(workspace), ignored, changes_only=changes_only)
 
 
-def prepare_generation(builder: Any, docs: list[Any], payloads: dict[str, Any], navigation: dict[str, Any], *, previous_navigation: dict[str, Any] | None = None, manifest: dict[str, Any] | None = None, previous_manifest: dict[str, Any] | None = None, preparation: PublicationPreparation | None = None, write: bool) -> PublicationPreparation:
-    """Prepare one common document form from this build's completed metadata."""
+def prepare_generation(builder: Any, docs: list[Any], payloads: dict[str, Any], navigation: dict[str, Any], *, previous_navigation: dict[str, Any] | None = None, manifest: dict[str, Any] | None = None, previous_manifest: dict[str, Any] | None = None, preparation: PublicationPreparation | None = None) -> PublicationPreparation:
+    """Prepare publication references from this build's completed metadata."""
     if preparation is None:
         ignored = None if builder.targeted_build else read_publication_ignore_ids(builder.repo_root, config=builder.config)
         operation = load_preparation(builder.repo_root, builder.workspace, ignored_ids=ignored, changes_only=not builder.targeted_build)
     else:
         operation = preparation
     operation.prepare(builder, docs, payloads, navigation, previous_navigation=previous_navigation,
-                      manifest=manifest, previous_manifest=previous_manifest, write=write)
+                      manifest=manifest, previous_manifest=previous_manifest)
     return operation
 
 
@@ -223,8 +235,14 @@ def complete_generation(builder: Any, payloads: dict[str, Any], deleted: list[st
             prepare_dependencies(builder, {target: record for target, record in related_records.items() if target.doc_id in dependency_ids}, set(payloads) | set(deleted), preparation)
             prepare_restored(builder, related_records, preparation)
         preparation.save()
+    except PublicationHandoffError:
+        raise
     except Exception as error:
-        raise PublicationHandoffError(f"Selected local documents were generated, but their publication handoff is incomplete: {error}") from error
+        raise PublicationHandoffError(
+            f"Selected local documents were generated, but their publication handoff is incomplete: {error}. "
+            f"Completed Working removals: {len(preparation.removal_effects)}.",
+            removal_effects=preparation.removal_effects,
+        ) from error
 
 
 def prepare_dependencies(builder: Any, related_records: dict[Any, Any], supplied: set[str], operation: PublicationPreparation) -> None:

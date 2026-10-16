@@ -244,16 +244,6 @@ export async function saveManagedDocSource(target, payload, options) {
   return fetchManagementJson("/docs/source/save", "POST", data, options);
 }
 
-export function readManagedDiagramSources(target, options) {
-  return fetchManagementJson("/docs/diagram-sources?" + targetQuery(target), "GET", undefined, options);
-}
-
-export function openManagedDiagramSource(target, payload, options) {
-  return fetchManagementJson("/docs/open-diagram-source", "POST", targetPayload(target, Object.assign({
-    editor: "vscode"
-  }, payload || {})), options);
-}
-
 /** Resolve a basename into this document's identity without uploading or storing bytes. */
 export function prepareSourceMedia(payload, options) {
   return fetchManagementJson("/docs/source/media", "POST", collectionPayload(payload, options), options);

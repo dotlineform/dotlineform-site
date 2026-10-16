@@ -63,7 +63,6 @@ STATIC_PREFIXES = (
     "/docs-viewer/static/",
 )
 RUNTIME_STATIC_ROUTES = (
-    ("/docs-viewer/runtime/vendor/", Path("docs-viewer/runtime/vendor")),
     ("/docs-viewer/runtime/js/public/", Path("docs-viewer/runtime/js/public")),
     ("/docs-viewer/runtime/js/shared/", Path("docs-viewer/runtime/js/shared")),
     ("/docs-viewer/runtime/js/management/", Path("docs-viewer/runtime/js/management")),

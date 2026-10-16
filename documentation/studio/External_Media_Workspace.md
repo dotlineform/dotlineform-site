@@ -36,8 +36,6 @@ $DOTLINEFORM_PROJECTS_BASE_DIR/
         svg/
         files/
         html/
-        build-source/
-          mermaid/
         media-source-evidence.json
 ```
 
@@ -99,11 +97,11 @@ external Docs Viewer media/analysis/img/algorithm.jpeg
 
 Scopes without a configured retained-original root may continue to select from import staging, but their successful Add result still enters the same external managed workspace. Document and package Import follow the same destination rule for materialised media.
 
-A document-only build does not need to copy or publish media. When the external workspace is unavailable, media Add, inventory, serving, Copy, build-source work, and public Publish fail or report unavailable at their own boundary rather than silently falling back to repository or public bytes.
+A document-only build does not need to copy or publish media. When the external workspace is unavailable, media Add, inventory, serving, Copy and public Publish fail or report unavailable at their own boundary rather than silently falling back to repository or public bytes.
 
 ## Build Sources And Editorial Copy
 
-Standalone Mermaid `.mmd` is a registered media build source, not a document. It lives in the external namespace's `build-source/mermaid/`; its consumer-ready SVG lives in `svg/`. Inline Mermaid fenced inside Markdown remains document source and keeps its separate public projection contract.
+The Mermaid-specific pipeline is retired. Create diagrams externally and import finished SVG as ordinary document media; editable diagram source stays with its external owner. Fenced code remains code. The scope-era folder examples on this page are historical; [Source Organisation](Source_Organisation.md) and workspace configuration own current Working/Preview locations.
 
 Editorial Copy transfers exact managed media identities between the source and target scope namespaces through the existing provider-neutral media plan. It carries recorded source evidence when present, preserves an existing target evidence row, performs no filename inference, and does not publish the target scope publicly.
 
@@ -151,4 +149,4 @@ Ordinary document Delete likewise has no authority to delete managed media. Imme
 - No nested identity migration, asset registry, checksum catalogue, content-addressing, CDN cache invalidation, or background publication worker.
 - No change to public document eligibility, lineage, or the meaning of `publishable`.
 
-[Media And Asset Handling](Media_And_Asset_Handling.md) owns intake and serving, [Source Organisation](Source_Organisation.md) owns topology and adapters, [Public Scopes](Public_Scopes.md) owns Publish, and [Document Diagrams](Document_Diagrams.md) owns registered Mermaid sources and derived SVG.
+[Media And Asset Handling](Media_And_Asset_Handling.md) owns intake and serving, [Source Organisation](Source_Organisation.md) owns topology and adapters, [Public Scopes](Public_Scopes.md) owns Publish, and [Document Diagrams](Document_Diagrams.md) owns external diagram authoring and SVG import.

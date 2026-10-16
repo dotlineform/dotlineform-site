@@ -120,7 +120,6 @@ class DocsDataBuilder(
                 markdown_sources=[doc.source_text for doc in docs if doc.source_text is not None] if capture_media_sources else None,
             )
         )
-        media_builds = [] if media_snapshot is None else media_snapshot["producer_builds"]
         target_doc_ids = self.only_doc_ids if self.only_doc_ids is not None else [doc.doc_id for doc in docs]
         target_set = set(target_doc_ids)
         docs_for_item_build = [doc for doc in docs if doc.doc_id in target_set]
@@ -152,7 +151,7 @@ class DocsDataBuilder(
 
             publication = prepare_generation(
                 self, docs_for_item_build, item_payloads, index_tree_payload,
-                previous_navigation=previous_tree, preparation=publication, write=write,
+                previous_navigation=previous_tree, preparation=publication,
             )
         # Preview, targeted builds and authoring follow-through preserve saved Recents.
         recent_payload = None
@@ -213,7 +212,6 @@ class DocsDataBuilder(
             "item_payloads": item_payloads,
             "write_plan": write_plan,
             "diagnostics": diagnostics,
-            "media_builds": media_builds,
             "media_snapshot": media_snapshot,
             "links_build": links_build,
         }

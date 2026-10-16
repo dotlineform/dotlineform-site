@@ -21,7 +21,6 @@ WORK_DOCUMENT_COVERAGE_PATH = "/docs/work-document-coverage"
 CATALOGUE_REGENERATE_PATH = "/docs/catalogue/regenerate"
 IMPORT_SOURCE_DIRECTORIES_PATH = "/docs/import-source-directories"
 IMPORT_SOURCE_FILES_PATH = "/docs/import-source-files"
-DIAGRAM_SOURCES_PATH = "/docs/diagram-sources"
 
 SOURCE_PATH = "/docs/source"
 SOURCE_CONTEXT_PATH = "/docs/source/context"
@@ -31,7 +30,6 @@ SOURCE_SAVE_PATH = "/docs/source/save"
 OPEN_SOURCE_PATH = "/docs/open-source"
 OPEN_PUBLICATION_IGNORE_PATH = "/docs/open-publication-ignore"
 OPEN_RECENT_EXCLUSIONS_PATH = "/docs/open-recent-exclusions"
-OPEN_DIAGRAM_SOURCE_PATH = "/docs/open-diagram-source"
 OPEN_LOCAL_TARGET_PATH = "/docs/open-local-target"
 BROKEN_LINKS_PATH = "/docs/broken-links"
 PROJECT_STATE_PATH = "/docs/project-state"
@@ -79,7 +77,6 @@ GET_PATHS = (
     METADATA_PATH,
     IMPORT_SOURCE_DIRECTORIES_PATH,
     IMPORT_SOURCE_FILES_PATH,
-    DIAGRAM_SOURCES_PATH,
     MEDIA_METADATA_PATH,
     BROKEN_LINKS_PATH,
 )
@@ -92,7 +89,6 @@ POST_PATHS = (
     OPEN_SOURCE_PATH,
     OPEN_PUBLICATION_IGNORE_PATH,
     OPEN_RECENT_EXCLUSIONS_PATH,
-    OPEN_DIAGRAM_SOURCE_PATH,
     OPEN_LOCAL_TARGET_PATH,
     BROKEN_LINKS_PATH,
     PROJECT_STATE_PATH,

@@ -32,7 +32,7 @@ from docs_collection_customisations import (
 
 
 CONFIG_REL_PATH = Path("docs-viewer/config/workspace/docs-workspace.json")
-SCHEMA_VERSION = "docs_workspace_v8"
+SCHEMA_VERSION = "docs_workspace_v9"
 DOTLINEFORM_DOCS_BASE_DIR_ENV = "DOTLINEFORM_DOCS_BASE_DIR"
 EXTERNAL_DATA_ROOT_MARKER = f"${DOTLINEFORM_DOCS_BASE_DIR_ENV}"
 STAGES = ("working", "preview")
@@ -42,7 +42,6 @@ PUBLIC_DOCS_OUTPUT_ROOT = Path("site/assets/data/docs")
 PUBLIC_SEARCH_OUTPUT_ROOT = Path("site/assets/data/search")
 MEDIA_REFERENCE_ROOT = Path("docs")
 MANAGED_MEDIA_TYPES = frozenset({"files", "html", "img", "svg", "thumbs"})
-BUILD_MEDIA_TYPES = frozenset({"mermaid"})
 COLLECTION_ID_PATTERN = re.compile(r"\A[a-z0-9][a-z0-9_-]*\Z")
 SEARCH_FIELDS = frozenset({"body", "code", "heading", "identity", "last_updated", "parent_title", "summary", "title"})
 DEFAULT_DOCS_SEARCH_FIELDS = ("title", "heading", "summary", "body", "code")
@@ -73,28 +72,18 @@ class DocsPreviewConfig:
 
 
 @dataclass(frozen=True)
-class DocsBuildMediaConfig:
-    location: ArtifactLocation
-    producer: str
-    publishes_to: str
-
-
-@dataclass(frozen=True)
 class DocsManagedMediaConfig:
     media_type: str
     reference_prefix: Path
     asset_location: ArtifactLocation
     served_path_prefix: str
-    build_inputs: tuple[str, ...]
 
 
 @dataclass(frozen=True)
 class DocsMediaConfig:
     asset_location: ArtifactLocation
     asset_root: ArtifactLocation
-    build_asset_location: ArtifactLocation
     types: Mapping[str, DocsManagedMediaConfig]
-    build_sources: Mapping[str, DocsBuildMediaConfig]
 
 
 @dataclass(frozen=True)
@@ -433,42 +422,24 @@ def _public_projection(raw: Any) -> DocsPublicProjectionConfig:
     return DocsPublicProjectionConfig(documents, search, media)
 
 
-def _media(raw: Any, *, source_root: ArtifactLocation, generated_root: ArtifactLocation, assets: DocsAssetsConfig,
-           stage: str, collection: str = "") -> DocsMediaConfig:
+def _media(raw: Any, *, assets: DocsAssetsConfig, stage: str, collection: str = "") -> DocsMediaConfig:
     field = f"stages.{stage}.media"
-    item = _object(raw, field=field, required={"types", "build_sources"})
-    types = item["types"]
-    if not isinstance(types, dict) or not types or set(types) - MANAGED_MEDIA_TYPES:
+    item = _object(raw, field=field, required={"types"})
+    types = _strings(item["types"], field=f"{field}.types")
+    if not types or set(types) - MANAGED_MEDIA_TYPES:
         raise ValueError(f"{field}.types must configure supported media types")
-    source_media = location_child(source_root, Path("media"))
     owner = Path("collections") / collection if collection else Path("workspace")
     asset_media = location_child(assets.document_media, owner)
     reference_root = MEDIA_REFERENCE_ROOT / "collections" / collection if collection else MEDIA_REFERENCE_ROOT
     served_root = assets.url(asset_media)
-    raw_builds = item["build_sources"]
-    if not isinstance(raw_builds, dict) or set(raw_builds) - BUILD_MEDIA_TYPES:
-        raise ValueError(f"{field}.build_sources contains unsupported producers")
-    builds = {}
-    for name, raw_build in raw_builds.items():
-        build = _object(raw_build, field=f"{field}.build_sources.{name}", required={"producer", "publishes_to"})
-        if build["producer"] != "mermaid" or build["publishes_to"] != "svg" or "svg" not in types:
-            raise ValueError(f"{field}.build_sources.{name} must use the Mermaid SVG producer")
-        builds[name] = DocsBuildMediaConfig(location_child(source_media, Path("build-source") / name), "mermaid", "svg")
-    managed = {}
-    for media_type, raw_type in types.items():
-        record = _object(raw_type, field=f"{field}.types.{media_type}", required={"build_inputs"})
-        inputs = _strings(record["build_inputs"], field=f"{field}.types.{media_type}.build_inputs")
-        if any(name not in builds or builds[name].publishes_to != media_type for name in inputs):
-            raise ValueError(f"{field}.types.{media_type}.build_inputs must name a matching configured producer")
-        managed[media_type] = DocsManagedMediaConfig(
+    managed = {
+        media_type: DocsManagedMediaConfig(
             media_type, reference_root / media_type,
             assets.document_media_location(collection=collection or None, media_type=media_type),
-            f"{served_root}/{media_type}", inputs,
-        )
-    # Publication reads captured Working media but produces into its isolated
-    # generated owner. Ordinary Working producers update their ready media.
-    build_assets = location_child(generated_root, Path("media")) if stage == "preview" else asset_media
-    return DocsMediaConfig(asset_media, assets.root, build_assets, managed, builds)
+            f"{served_root}/{media_type}",
+        ) for media_type in types
+    }
+    return DocsMediaConfig(asset_media, assets.root, managed)
 
 
 def _preview(root: ArtifactLocation) -> DocsPreviewConfig:
@@ -535,8 +506,7 @@ def _collections(raw: Any, *, repo_root: Path, workspace_root: ArtifactLocation,
             collection_customisation=normalize_docs_collection_customisation(item.get("collection_customisation"), field=f"{field}.collection_customisation"),
             stage=stage,
             source=DocsSourceConfig(source_root), generated=_generated(generated_root), preview=_preview(preview_root),
-            media=_media(media_settings, source_root=source_root, generated_root=generated_root,
-                         assets=assets, stage=stage, collection=child) if owns_media else None,
+            media=_media(media_settings, assets=assets, stage=stage, collection=child) if owns_media else None,
             public_projection=child_projection,
         ))
     return tuple(result)
@@ -681,8 +651,7 @@ def load_docs_workspace_config(repo_root: Path | None = None, *, docs_base_dir: 
         source_root = location_child(workspace_root, Path(stage) / "source")
         generated_root = location_child(workspace_root, Path(stage) / "generated")
         stage_assets = assets.for_stage(stage)
-        media = _media(item["media"], source_root=source_root, generated_root=generated_root,
-                       assets=stage_assets, stage=stage)
+        media = _media(item["media"], assets=stage_assets, stage=stage)
         if set(media.types) != set(projection.media):
             raise ValueError(f"{field}.media types must match the public projection")
         stage_projection = projection if stage == "preview" else None

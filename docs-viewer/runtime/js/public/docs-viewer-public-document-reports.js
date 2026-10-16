@@ -30,7 +30,6 @@ export function mountDocsViewerPublicDocumentExtras(context) {
     collectionConfig: payload.report.id === "docs_collection"
       ? settings.workspaceConfigState.activeConfig.collectionsById.get(payload.report.collection) : null,
     selectedUrl: settings.workspaceConfigState.activeConfig.selectedUrl,
-    mountThemedDiagrams: settings.mountThemedDiagrams,
     mountRelatedLinks: settings.mountRelatedLinks,
     openMediaPresentation: settings.openMediaPresentation,
     openMediaTarget: settings.openMediaTarget,

@@ -12,14 +12,10 @@ def _source_path(
     repo_root: Path, config: DocsStageConfig | DocsCollectionConfig,
     role: str, media_type: str, identity: str,
 ) -> Path:
-    if role == "build-source":
-        media = config.media.build_sources.get(media_type)
-        location = media.location if media is not None else None
-    elif role == "source":
-        media = config.media.types.get(media_type)
-        location = media.asset_location if media is not None else None
-    else:
+    if role != "source":
         raise ValueError(f"unsupported Docs media inventory role: {role}")
+    media = config.media.types.get(media_type)
+    location = media.asset_location if media is not None else None
     if location is None:
         raise ValueError("Docs media type is not configured for this collection and role")
     path = local_artifact_path(repo_root, location, identity)

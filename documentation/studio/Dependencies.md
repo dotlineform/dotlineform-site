@@ -4,13 +4,13 @@ doc_id: d-20260514-180120-b23811
 title: Dependencies
 added_date: "2026-05-14 18:01:20"
 last_updated: "2026-10-08 22:39:42"
-summary: Docs Viewer-specific Python and Node dependency boundaries, including import parsers and repository-side diagram rendering.
+summary: Docs Viewer Python parsing/rendering and native media-processing dependencies; diagrams are imported as finished SVG.
 parent_id: d-20260424-000000-50b63f
 
 ---
 # Docs Viewer Dependencies
 
-This document records Docs Viewer-specific dependency boundaries. Python packages support document parsing and rendering; feature-local Node packages support repository-side build workflows without becoming browser dependencies.
+This document records Docs Viewer dependency boundaries. Python packages support parsing, document rendering and required media processing. Diagrams need no Docs Viewer-specific Node dependency.
 
 For the site-wide dependency register, see [Runtime Dependencies](Runtime_Dependencies.md).
 
@@ -24,22 +24,9 @@ Python package dependencies for repo scripts are pinned in:
 
 Portable Docs Viewer installs that copy the build scripts, Docs Viewer service, or Docs Import should also copy `requirements.txt` or an equivalent pinned dependency file.
 
-## Node Build Package
+## Diagram Dependencies
 
-Mermaid rendering is the current Docs Viewer Node package root:
-
-- manifest and direct dependency: `docs-viewer/build/mermaid/package.json`
-- resolved dependency graph: `docs-viewer/build/mermaid/package-lock.json`
-- shared render settings: `docs-viewer/build/mermaid/mermaid-config.json`
-- ignored local installation: `docs-viewer/build/mermaid/node_modules/`
-
-Install it from the repository root with:
-
-```bash
-npm ci --prefix docs-viewer/build/mermaid
-```
-
-This package is invoked by the repository-side media producer; it is not shipped to Docs Viewer readers. [Document Diagrams](Document_Diagrams.md) owns the Mermaid-specific producer, scope registration, author workflow, and reader boundary. [Runtime Dependencies](Runtime_Dependencies.md) owns the general feature-local Node package policy.
+Docs Viewer has no Mermaid Node package or browser renderer. Diagrams are rendered externally and imported as ordinary SVG. The repository's ESLint package remains a separate development tool. [Document Diagrams](Document_Diagrams.md) owns the diagram workflow and [Runtime Dependencies](Runtime_Dependencies.md) owns general dependency policy.
 
 ## Current Python Packages
 

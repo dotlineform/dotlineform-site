@@ -5,7 +5,6 @@ export default [
   {
     name: "Repository source exclusions",
     ignores: [
-      "docs-viewer/build/mermaid/**",
       "docs-viewer/data/generated/**",
       "docs-viewer/runtime/vendor/**",
       "docs-viewer/scopes/**/published/**",

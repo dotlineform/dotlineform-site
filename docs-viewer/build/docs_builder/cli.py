@@ -25,7 +25,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--related-links-dir", type=Path, help="Use captured persisted relationship JSON during a controlled build.")
     parser.add_argument("--only-doc-ids", help="Comma-separated doc ids for a targeted docs payload rebuild.")
     parser.add_argument("--links-doc-ids", help="Exact changed/deleted document ids for Links, independently of ordinary rendering; an empty value selects none.")
-    parser.add_argument("--skip-media-builds", action="store_true", help="Skip registered media producers during a controlled rebuild.")
+    parser.add_argument("--skip-media-builds", action="store_true", help="Skip referenced ready-media checks during a document-only rebuild.")
     parser.add_argument("--skip-recent", action="store_true", help="Preserve saved Recents during authoring follow-through.")
     parser.add_argument("--skip-browser-config", action="store_true", help="Skip browser-config writes during a controlled rebuild.")
     parser.add_argument("--diagnostics", action="store_true", help="Print machine-readable diagnostics for automation.")

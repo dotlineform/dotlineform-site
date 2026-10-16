@@ -27,7 +27,7 @@ The runtime boundary is not “which controls are hidden.” It is the combinati
 | Manage `/docs/` | Service shell, manage entrypoint, shared reader, and manage-owned views, controls, reports, imports, and scope workflows. | Independent generated-data, source, and management service surfaces, constrained by live capabilities and server validation. |
 | Review `/docs-review/` | Review shell, shared reader, returned-package provider, and package toolbar/workflow. | Independently gated reads over validated package previews. No canonical source write or general management authority. |
 
-Public and Manage share the top-row renderer and theme control. The `dotlineform` home link opens the configured default document at `/` publicly or `/docs/` in Manage. Document and management controls occupy the shared top row; Recent and Search occupy the first row inside the Index panel. The shared toolbar has no breadcrumb trail. Theme changes retain the public themed-diagram event and the local inline-Mermaid callback.
+Public and Manage share the top-row renderer and theme control. The `dotlineform` home link opens the configured default document at `/` publicly or `/docs/` in Manage. Document and management controls occupy the shared top row; Recent and Search occupy the first row inside the Index panel. The shared toolbar has no breadcrumb trail. Theme changes apply shared reader colours and retain the public theme event; imported SVG keeps its authored appearance.
 
 The shared Docs Viewer stylesheet owns the page inset and reader-control sizing across the public and local shells. The archive header is the spacing reference: 18px top padding and 2rem controls in the top row and Index header. Modal controls retain their own dimensions.
 

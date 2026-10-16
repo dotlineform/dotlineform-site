@@ -11,10 +11,9 @@ from typing import Any
 
 from docs_document_identity import is_document_id
 from docs_media_inventory import list_collection_media, parsed_source_media_references
-from docs_public_mermaid_projection import PUBLIC_MERMAID_ASSET_PREFIX
 from docs_source_inspection import inspection_source_paths, read_inspection_source
 from docs_workspace_config import (
-    BUILD_MEDIA_TYPES, COLLECTION_ID_PATTERN, MANAGED_MEDIA_TYPES,
+    COLLECTION_ID_PATTERN, MANAGED_MEDIA_TYPES,
     DocsCollectionConfig, DocsStageConfig, load_docs_workspace_config,
     select_workspace_stage,
 )
@@ -36,7 +35,7 @@ def _text(value: Any, *, allow_empty: bool = False) -> bool:
 
 def _validate_media_target(record: dict[str, Any]) -> None:
     role, media_type, identity = (record.get(key) for key in ("role", "media_type", "identity"))
-    allowed = REPORT_MEDIA_TYPES if role == "source" else BUILD_MEDIA_TYPES if role == "build-source" else ()
+    allowed = REPORT_MEDIA_TYPES if role == "source" else ()
     if not isinstance(media_type, str) or media_type not in allowed or not _text(identity):
         raise ValueError("Docs Media metadata has an invalid media target")
     if "\\" in identity or any(ord(character) < 32 or ord(character) == 127 for character in identity):
@@ -89,9 +88,6 @@ def validate_media_metadata(metadata: Any) -> dict[str, Any]:
 def _owner_metadata(repo_root: Path, owner: DocsStageConfig | DocsCollectionConfig) -> dict[str, Any]:
     collection = getattr(owner, "collection", "")
     files = list_collection_media(repo_root, owner, exclude_media_types=frozenset({"thumbs"}))
-    # Public fence SVGs are derived presentation, like generated thumbnails;
-    # they are not authored files awaiting a source-media reference.
-    files = [file for file in files if not (file.media_type == "svg" and Path(file.identity).is_relative_to(PUBLIC_MERMAID_ASSET_PREFIX))]
     documents = []
     root, paths = inspection_source_paths(repo_root, owner)
     for path in paths:

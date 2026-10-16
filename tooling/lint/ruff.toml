@@ -2,7 +2,6 @@ target-version = "py312"
 force-exclude = true
 cache-dir = "tooling/lint/.ruff_cache"
 extend-exclude = [
-    "docs-viewer/build/mermaid/**",
     "docs-viewer/data/generated/**",
     "docs-viewer/runtime/vendor/**",
     "docs-viewer/scopes/**/published/**",

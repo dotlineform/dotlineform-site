@@ -328,7 +328,6 @@ export function startDocsViewerRuntime(options) {
     content: content,
     collectionProvider: collectionProvider,
     diagramDetailAdapter: settings.diagramDetailAdapter,
-    inlineMermaidAdapter: settings.inlineMermaidAdapter,
     mediaDetailAdapter: settings.mediaDetailAdapter,
     managementService: managementService,
     managementDocumentActions: {
@@ -380,7 +379,6 @@ export function startDocsViewerRuntime(options) {
       setStatus: statusController.setStatus
     },
     tableDetailAdapter: settings.tableDetailAdapter,
-    themedDiagramAdapter: settings.themedDiagramAdapter,
     toolbar: mainViewToolbar,
     viewerUrlForDocument: viewerUrlForDocument
   });

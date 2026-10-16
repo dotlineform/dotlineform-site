@@ -8,7 +8,11 @@ parent_id: d-20260501-174746-efd581
 ---
 # Mermaid Publication Test Coverage
 
-## Approved Scope
+## Retirement Status
+
+The production Mermaid pipeline was retired on 2026-10-16. The selections below describe historical contracts and are unreviewed residue, not supported current coverage. Their modules/fixtures/profile entries were not changed or run during retirement; test maintenance requires its own agreed scope. [Document Diagrams](Document_Diagrams.md) owns the current external-SVG workflow.
+
+## Historical Approved Scope
 
 The user approved focused tests on 15 September 2026 for ordinary and sub-scope Mermaid identity, both prepared SVG variants surviving Publish/Deploy URL projection, and failures preventing a completed generated snapshot. The same approval covers removing the obsolete standalone preparation CLI test and those commands from the existing CLI workspace-override selection. Product authority is [Document Diagrams](Document_Diagrams.md).
 

@@ -78,14 +78,7 @@ tooling/lint/.venv/bin/python -m pip install -r tooling/lint/python-requirements
 npm ci --prefix tooling/lint
 ```
 
-7. Install the locked Mermaid renderer dependency when diagram production is
-required:
-
-```bash
-npm ci --prefix docs-viewer/build/mermaid
-```
-
-This installs only beneath that package root. Do not install `mmdc` globally.
+Docs Viewer diagrams are imported SVG files; the Mermaid renderer package and its installation step are retired.
 
 ## Version checks
 
@@ -116,11 +109,10 @@ node --version
 npm --version
 npm ls --prefix tooling/lint eslint @eslint/js globals
 tooling/lint/.venv/bin/ruff --version
-npm ls --prefix docs-viewer/build/mermaid @mermaid-js/mermaid-cli
 ```
 
 The lint package pins its exact ESLint dependency graph and Ruff version in
-checked manifests. The Mermaid package independently pins its renderer.
+checked manifests. Diagram rendering belongs to the external authoring tool.
 
 Check the public static site validator:
 

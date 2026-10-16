@@ -7,7 +7,6 @@
       "destination_root": "site/docs-viewer/runtime/js/public",
       "files": [
         "docs-viewer-public-document-reports.js",
-        "docs-viewer-public-themed-diagrams.js",
         "docs-viewer-public.js"
       ]
     },

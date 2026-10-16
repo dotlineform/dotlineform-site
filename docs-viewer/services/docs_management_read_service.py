@@ -8,7 +8,6 @@ import docs_generated_reads
 import docs_catalogue_media
 from docs_series_galleries_report import read_series_galleries_report
 from docs_work_document_coverage import read_work_document_coverage_manifest
-import docs_diagram_source_service
 import docs_import_source_service as import_source_service
 import docs_management_routes as routes
 import docs_media_metadata
@@ -140,6 +139,4 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
             repo_root,
             source_directory=source_directory,
         )
-    if path == routes.DIAGRAM_SOURCES_PATH:
-        return docs_diagram_source_service.list_diagram_sources(repo_root, params)
     raise FileNotFoundError("Not found")

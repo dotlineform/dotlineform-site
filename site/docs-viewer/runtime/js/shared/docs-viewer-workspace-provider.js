@@ -149,21 +149,10 @@ export function createDocsViewerWorkspaceProvider(options) {
   if (source && typeof source.readSourceContext === "function") {
     provider.readSourceContext = function (target, payload) { return source.readSourceContext(target, payload); };
   }
-  if (source && typeof source.readDiagramSources === "function") {
-    provider.readDiagramSources = function (target, optionsForRead) {
-      return source.readDiagramSources(target, optionsForRead || {});
-    };
-  }
-  if (source && typeof source.openDiagramSource === "function") {
-    provider.openDiagramSource = function (target, payload, optionsForOpen) {
-      return source.openDiagramSource(target, payload, optionsForOpen || {});
-    };
-  }
   if (source && typeof source.prepareSourceMedia === "function") {
     provider.prepareSourceMedia = function (payload, optionsForPrepare) {
       return source.prepareSourceMedia(payload, optionsForPrepare || {});
     };
   }
-
   return provider;
 }

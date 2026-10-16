@@ -364,7 +364,8 @@ def rebuild_prepared_document_outputs(
         report=document.report, source_text=document.source_text,
     )
     started_at = time.perf_counter()
-    result = builder.run(write=True, documents=[record], **({"parent_ids": parent_ids} if not owner.collection else {}))
+    result = builder.run(write=True, documents=[record],
+                         **({"parent_ids": parent_ids} if not owner.collection else {}))
     return {
         "ok": True, "steps": [], "search": {"mode": "none", "doc_ids": []},
         "docs": {"mode": "targeted", "doc_ids": [document.doc_id], "reason": "prepared source supplied"},

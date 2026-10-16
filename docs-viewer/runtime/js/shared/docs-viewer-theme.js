@@ -58,25 +58,7 @@ function renderToggle(button, theme) {
     isDark ? "docsViewer__icon--moon" : "docsViewer__icon--sun"));
 }
 
-function reportThemeCallbackFailure(error) {
-  if (typeof console !== "undefined" && typeof console.warn === "function") {
-    console.warn("docs_viewer: theme change callback unavailable", error);
-  }
-}
-
-function notifyThemeChange(callback, theme) {
-  if (typeof callback !== "function") return;
-  try {
-    var result = callback(theme);
-    if (result && typeof result.catch === "function") {
-      result.catch(reportThemeCallbackFailure);
-    }
-  } catch (error) {
-    reportThemeCallbackFailure(error);
-  }
-}
-
-/** Bind reader theme changes, retaining the public event and local diagram callback. */
+/** Bind reader theme changes and publish the applied theme event. */
 export function initDocsViewerThemeToggle(options) {
   var settings = options || {};
   var root = settings.root;
@@ -89,7 +71,6 @@ export function initDocsViewerThemeToggle(options) {
       storage = null;
     }
   }
-  var onThemeChange = typeof settings.onThemeChange === "function" ? settings.onThemeChange : null;
   var documentElement = documentRef.documentElement;
   if (!root || !documentElement) return null;
 
@@ -109,7 +90,6 @@ export function initDocsViewerThemeToggle(options) {
         detail: { theme: nextTheme }
       }));
     }
-    notifyThemeChange(onThemeChange, nextTheme);
   }
 
   buttons.forEach(function (button) {

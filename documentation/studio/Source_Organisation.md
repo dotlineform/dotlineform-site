@@ -29,10 +29,8 @@ $DOTLINEFORM_DOCS_BASE_DIR/
       selected.json
       unpublishable.json
       documents/<doc_id>.md
-      media/build-source/mermaid/
       collections/<collection>/
         documents/<doc_id>.md
-        media/build-source/mermaid/
     generated/
       documents/{index-tree.json,public-index-tree.json,publication-media.json,recent.json,by-id/,...}
       search/index.json
@@ -139,9 +137,9 @@ Document-level New, Edit and Delete operate within an existing configured collec
 
 The filesystem watcher is retired. Application writes await their required document/Links output. For a deliberate external Markdown edit, supply the intended full `last_updated` timestamp for a qualifying body, Title or Summary change, then open the exact document and choose **Edit doc → Rebuild**, reloading if needed. Rebuild does not rewrite source or capture filesystem edit time; [Document Identity](Document_Identity.md#date-provenance) owns timestamp evidence. A CLI author can run `python3 docs-viewer/build/build_docs.py --stage working --write --only-doc-ids <ids> --skip-media-builds`; add `--collection <id>` for a configured named collection. Use a complete document Build only when global changes or missing targeted prerequisites require reconciliation. Search remains separately requested.
 
-After an infrequent edit to persistent `working/source/media/build-source/mermaid/*.mmd` or the corresponding configured collection source, run `python3 docs-viewer/build/rebuild_working.py --write`. This explicit maintenance command carries loaded ordinary/non-Catalogue sources through referenced media production, relationships, rendering, Selected and shared Search/Recent discovery. Changed relationship records can select exact Catalogue dependencies through the Docs queue; Catalogue Regenerate retains generation and Work publication ownership. Unreferenced persistent sources remain untouched. Complete builds queue changed output and media-only differences against local Preview, preserving pending selections; Publish is separate. Cost includes built sources, exact dependencies, Search, referenced diagrams and selected media comparisons. Working completion remains an operation receipt. [Builder](Builder.md#working-rebuild) owns ordering and discovery reads. Reload the reader after maintenance.
+External document edits require the exact generation command above. An intentional complete docs/Search reconciliation uses `python3 docs-viewer/build/rebuild_working.py --write`, carrying loaded sources through ready-media checks, document relationships, rendering, Selected and shared Search/Recent discovery. Exact Catalogue dependencies use the Docs queue; Catalogue Regenerate retains Work generation/publication ownership. This command performs no Mermaid or other registered diagram production. Publish remains separate; reload the reader after maintenance.
 
-Normal Source Save and exact-document Rebuild use already prepared registered media and perform no media inventory, hashing or registered-producer readiness/generation work. Eligible public inline Mermaid fences are projected upstream, rendering changed SVG theme pairs before publication handoff; Working retains browser rendering. Media intake continues to prepare its own required ready bytes before inserting a dirty source reference. [Document Diagrams](Document_Diagrams.md) owns persistent and public Mermaid production and [Media And Asset Handling](Media_And_Asset_Handling.md) owns storage.
+Normal Source Save processes only supplied pending media, and exact-document Rebuild reuses ready files. Neither scans media directories or invokes a diagram producer. Diagrams are rendered externally and imported as ordinary SVG. [Document Diagrams](Document_Diagrams.md) owns that workflow and [Media And Asset Handling](Media_And_Asset_Handling.md) owns storage.
 
 ### Recent Exclusions
 
@@ -196,9 +194,9 @@ Distribution uses each selected unit's completed Preview files, without reading 
 
 ## Media Ownership
 
-Ready document media lives under `working/assets/media/` and `preview/assets/media/`, using `workspace/<type>/` and `collections/<id>/<type>/` beneath each root. Local readers, intake, ordinary generation, inventory and package/export inputs use Working. Editable inputs retain their Working source owner. Collection media and Mermaid inputs remain with the exact collection owner; same-named assets in different collections are independent. The former workspace-level `assets/media/` root is retired without a fallback or second write destination.
+Ready document media lives under `working/assets/media/` and `preview/assets/media/`, using `workspace/<type>/` and `collections/<id>/<type>/`. Local readers, intake, generation, inventory and export use Working. Exact configured owners keep same-named assets independent. Editable diagram sources belong to their external project/tool. The former workspace-level `assets/media/` root has no fallback owner.
 
-Local media uses `/docs/assets/<configured-family>/<identity>`, resolved to Working. Authored tokens, `docs-media:` identities, public URLs and R2 namespaces remain unchanged. Working generation completes registered/public Mermaid production at the owning ready-media location and records exact document references in the queue. Publish copies only that supplied selection into Preview and verifies completed writes/transfers; Preview has no build workspace or persistent source/generated tree.
+Local media uses `/docs/assets/<configured-family>/<identity>`, resolved to Working. Authored tokens, `docs-media:` identities, public URLs and R2 namespaces remain unchanged. Generation records exact references in one `publication-media.json` list per document and supplies eligible queue selections. Publish copies only that selection into Preview and verifies selected transfers; Preview has no source/generated tree.
 
 Logical identity, storage provider and served URL are separate. Location helpers confine paths/keys and own reads, writes and byte verification. A reference does not establish ownership of its bytes; Catalogue media and retained external originals have separate owners.
 

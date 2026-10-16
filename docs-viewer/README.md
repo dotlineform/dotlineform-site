@@ -22,7 +22,7 @@ The configuration owners are explained in [Configuration And Extension Points](.
 
 ## Workspace and local surfaces
 
-[config/workspace/docs-workspace.json](config/workspace/docs-workspace.json), using `docs_workspace_v5`, is the storage authority. Set `DOTLINEFORM_DOCS_BASE_DIR` in `.env.local` to the existing Docs workspace root directly. `DOTLINEFORM_PROJECTS_BASE_DIR` independently selects project/media and document-package storage; neither setting is an alias or fallback for the other.
+[config/workspace/docs-workspace.json](config/workspace/docs-workspace.json), using `docs_workspace_v9`, is the storage authority. Set `DOTLINEFORM_DOCS_BASE_DIR` in `.env.local` to the existing Docs workspace root directly. `DOTLINEFORM_PROJECTS_BASE_DIR` independently selects project/media and document-package storage; neither setting is an alias or fallback for the other.
 
 The principal layout is:
 
@@ -35,10 +35,8 @@ $DOTLINEFORM_DOCS_BASE_DIR/
 │   │   ├── selected.json
 │   │   ├── unpublishable.json
 │   │   ├── documents/
-│   │   ├── media/build-source/mermaid/
 │   │   └── collections/<collection>/
-│   │       ├── documents/
-│   │       └── media/build-source/mermaid/
+│   │       └── documents/
 │   ├── generated/
 │   │   ├── documents/
 │   │   ├── search/index.json

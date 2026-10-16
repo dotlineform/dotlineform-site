@@ -305,7 +305,9 @@ def save_source_document(
             from docs_publication_preparation import PublicationHandoffError
 
             if isinstance(error, PublicationHandoffError):
-                payload.update(ok=False, phase="publication handoff", generation_complete=True, publication_handoff_complete=False, error=f"{target.doc_id}: source saved and local document generated; publication handoff incomplete: {error}")
+                payload.update(ok=False, phase=error.phase, generation_complete=True, publication_handoff_complete=False,
+                               media_removal_effects=error.removal_effects,
+                               error=f"{target.doc_id}: source saved and local document generated; {error.phase} incomplete: {error}")
                 return payload
             completed = [f"{item['media_type']}/{item['identity']} ({item['status']})" for item in payload["media_effects"] if item["status"] in {"written", "verified"}]
             effects = "; completed media writes: " + ", ".join(completed) if completed else ""

@@ -46,20 +46,14 @@ tooling/lint/.venv/bin/python -m pip install -r tooling/lint/python-requirements
 npm ci --prefix tooling/lint
 ```
 
-`docs-viewer/build/mermaid/` remains an independent feature-local package. It
-pins `@mermaid-js/mermaid-cli` for repository-side SVG generation and is not a
-browser or public-route dependency:
-
-```bash
-npm ci --prefix docs-viewer/build/mermaid
-```
+Docs Viewer's Mermaid package, CLI and vendored browser renderer are retired. Export diagrams externally and import SVG through the normal image workflow.
 
 Do not install workflow executables globally or treat a globally available
 command as the dependency contract. `package.json` owns direct dependencies,
 `package-lock.json` owns the resolved graph, and the owning command invokes
 the package-root executable.
 
-[Document Diagrams](Document_Diagrams.md) owns Mermaid's producer registration, scope opt-in, and reader boundary.
+[Document Diagrams](Document_Diagrams.md) owns the external-SVG workflow and Mermaid retirement boundary.
 
 ## External Tools
 
@@ -78,9 +72,7 @@ Public preview, Studio, and Docs Viewer are separate Python-backed services/runn
 - Local commands follow the configured Miniconda interpreter convention.
 - Cloud/Codespaces bootstrap creates/reuses `.venv` and installs `requirements.txt`.
 - Cloud/Codespaces bootstrap installs the repository lint environments.
-- The bootstrap does not install unrelated feature-local Node package roots;
-  an environment that renders Mermaid must run that package root's `npm ci`
-  command explicitly.
+- The bootstrap installs only supported package roots; Docs Viewer diagram authoring has no Node installation step.
 - Codespaces includes media tools in the image; Codex setup installs them only when requested.
 - Private/external source roots and publishing credentials remain environment/secret-store concerns, not dependency setup.
 

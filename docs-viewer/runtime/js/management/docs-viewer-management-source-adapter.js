@@ -1,7 +1,5 @@
 import {
   prepareSourceMedia,
-  openManagedDiagramSource,
-  readManagedDiagramSources,
   readManagedDocSource,
   readManagedDocMetadata,
   readManagedDocSourceContext,
@@ -83,12 +81,6 @@ export function createDocsViewerManagementSourceAdapter(options) {
         projectSavedSource(error.payload);
         throw error;
       });
-    },
-    readDiagramSources: function (target, optionsForRead) {
-      return readManagedDiagramSources(target, clientOptions(optionsForRead));
-    },
-    openDiagramSource: function (target, payload, optionsForOpen) {
-      return openManagedDiagramSource(target, payload, clientOptions(optionsForOpen));
     },
     prepareSourceMedia: function (payload, optionsForPrepare) {
       return prepareSourceMedia(payload, clientOptions(optionsForPrepare));

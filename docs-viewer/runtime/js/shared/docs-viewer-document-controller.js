@@ -173,7 +173,6 @@ export function initDocsViewerDocumentController(context) {
       managementDocumentActions: context.managementDocumentActions || null,
       managementService: context.managementService || null,
       managementContext: managementContextActive(),
-      mountThemedDiagrams: function () { if (lifetime.active) mountThemedDiagrams(doc, payload, mountContent); },
       mountRelatedLinks: context.mountRelatedLinks,
       payload: payload,
       mediaRoot: workspaceConfigState.activeConfig && workspaceConfigState.activeConfig.mediaRoot,
@@ -316,30 +315,6 @@ export function initDocsViewerDocumentController(context) {
   }
 
   function releaseDiagramDetails(mount = content) {
-    var inlineAdapter = context.inlineMermaidAdapter;
-    if (inlineAdapter && typeof inlineAdapter.releaseDocument === "function") {
-      try {
-        inlineAdapter.releaseDocument({
-          content: mount,
-          document: mount ? mount.ownerDocument : null,
-          window: mount && mount.ownerDocument ? mount.ownerDocument.defaultView : null
-        });
-      } catch (error) {
-        console.warn("docs_viewer: inline Mermaid registry cleanup unavailable", error);
-      }
-    }
-    var themedAdapter = context.themedDiagramAdapter;
-    if (themedAdapter && typeof themedAdapter.releaseDocument === "function") {
-      try {
-        themedAdapter.releaseDocument({
-          content: mount,
-          document: mount ? mount.ownerDocument : null,
-          window: mount && mount.ownerDocument ? mount.ownerDocument.defaultView : null
-        });
-      } catch (error) {
-        console.warn("docs_viewer: themed diagram registry cleanup unavailable", error);
-      }
-    }
     var adapter = context.diagramDetailAdapter;
     if (!adapter || typeof adapter.releaseDocument !== "function") return;
     try {
@@ -351,43 +326,6 @@ export function initDocsViewerDocumentController(context) {
     } catch (error) {
       console.warn("docs_viewer: diagram detail resource cleanup unavailable", error);
     }
-  }
-
-  function mountThemedDiagrams(doc, payload, mountRoot) {
-    var mountedContent = mountRoot || content;
-    var adapter = context.themedDiagramAdapter;
-    if (!adapter || typeof adapter.mountDocument !== "function") return;
-    try {
-      adapter.mountDocument({
-        content: mountedContent,
-        doc: doc,
-        document: mountedContent ? mountedContent.ownerDocument : null,
-        payload: payload,
-        window: mountedContent && mountedContent.ownerDocument ? mountedContent.ownerDocument.defaultView : null
-      });
-    } catch (error) {
-      console.warn("docs_viewer: themed diagram adapter unavailable", error);
-    }
-  }
-
-  function mountInlineMermaid(doc, payload, mountGeneration) {
-    var adapter = context.inlineMermaidAdapter;
-    var inlineRenderingEnabled = managementContextActive();
-    if (!inlineRenderingEnabled || !adapter || typeof adapter.mountDocument !== "function") return;
-    Promise.resolve(adapter.mountDocument({
-      content: content,
-      diagramDetailAdapter: context.diagramDetailAdapter,
-      doc: doc,
-      document: content ? content.ownerDocument : null,
-      isCurrentMount: function () {
-        return mountGeneration === documentMountGeneration;
-      },
-      mountGeneration: mountGeneration,
-      payload: payload,
-      window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
-    })).catch(function (error) {
-      console.warn("docs_viewer: inline Mermaid adapter unavailable", error);
-    });
   }
 
   function scrollToHash(hash) {
@@ -517,9 +455,7 @@ export function initDocsViewerDocumentController(context) {
     }
     mountTableDetails(doc, payload, mountGeneration);
     mountMediaDetails(doc, payload, mountGeneration);
-    mountThemedDiagrams(doc, payload);
     mountDiagramDetails(doc, payload, mountGeneration);
-    mountInlineMermaid(doc, payload, mountGeneration);
     mountDocumentExtras(doc, payload, mountGeneration);
     document.title = payload.title + " | dotlineform";
     setStatus("", false);

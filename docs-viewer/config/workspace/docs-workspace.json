@@ -1,5 +1,5 @@
 {
-  "schema_version": "docs_workspace_v8",
+  "schema_version": "docs_workspace_v9",
   "media_report_metadata": "working/generated/reports/docs-media/metadata.json",
   "broken_links_report": "working/generated/reports/broken-links/report.json",
   "links_report": "working/generated/reports/links/report.json",
@@ -88,31 +88,13 @@
   "stages": {
     "working": {
       "media": {
-        "types": {
-          "img": {
-            "build_inputs": []
-          },
-          "thumbs": {
-            "build_inputs": []
-          },
-          "svg": {
-            "build_inputs": [
-              "mermaid"
-            ]
-          },
-          "files": {
-            "build_inputs": []
-          },
-          "html": {
-            "build_inputs": []
-          }
-        },
-        "build_sources": {
-          "mermaid": {
-            "producer": "mermaid",
-            "publishes_to": "svg"
-          }
-        }
+        "types": [
+          "img",
+          "thumbs",
+          "svg",
+          "files",
+          "html"
+        ]
       },
       "allow_unresolved_parent_ids": false,
       "collections": [

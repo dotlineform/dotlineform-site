@@ -41,11 +41,19 @@ def has_selections(pending: dict[str, Any]) -> bool:
     return any(pending[family] for family in FAMILIES)
 
 
-def select_document(pending: dict[str, Any], doc_id: str, collection: str, *, media: dict[str, list[str]] | None = None, delete: bool = False) -> None:
+def select_document(pending: dict[str, Any], doc_id: str, collection: str, *, media: dict[str, list[str]] | None = None, removed_media: dict[str, list[str]] | None = None, restored_media: dict[str, list[str]] | None = None, delete: bool = False) -> None:
     current, opposite = ("deleted_documents", "current_documents") if delete else ("current_documents", "deleted_documents")
     record: dict[str, Any] = {"collection": collection} if collection else {}
     if not delete and media:
         record["media"] = media
+    removals: dict[str, set[str]] = {}
+    for selection in (pending[current].get(doc_id, {}), pending[opposite].get(doc_id, {}), {"removed_media": removed_media or {}}):
+        for kind, names in selection.get("removed_media", {}).items():
+            removals.setdefault(kind, set()).update(names)
+    remaining = {kind: sorted(names - set((restored_media or {}).get(kind, []))) for kind, names in removals.items()}
+    remaining = {kind: names for kind, names in remaining.items() if names}
+    if remaining:
+        record["removed_media"] = remaining
     pending[opposite].pop(doc_id, None)
     pending[current][doc_id] = record
 

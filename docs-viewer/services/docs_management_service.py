@@ -20,7 +20,6 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 REPO_ROOT = ensure_studio_python_paths(__file__)
 SCRIPTS_DIR = REPO_ROOT / "scripts"
 
-import docs_diagram_source_service  # noqa: E402
 import docs_management_document_target  # noqa: E402
 import docs_management_draft  # noqa: E402
 import docs_selected_documents  # noqa: E402
@@ -140,8 +139,6 @@ def docs_management_post_response(
         return HTTPStatus.OK, open_publication_ignore(repo_root, body, dry_run)
     if path == routes.OPEN_RECENT_EXCLUSIONS_PATH:
         return HTTPStatus.OK, open_recent_exclusions(repo_root, body, dry_run)
-    if path == routes.OPEN_DIAGRAM_SOURCE_PATH:
-        return HTTPStatus.OK, docs_diagram_source_service.open_diagram_source(repo_root, body, dry_run)
     if path == routes.OPEN_LOCAL_TARGET_PATH:
         return docs_local_links.open_local_target_response(repo_root, body, dry_run=dry_run)
     if path == routes.OPEN_MEDIA_SOURCE_PATH:

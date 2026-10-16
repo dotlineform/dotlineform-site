@@ -26,7 +26,7 @@ This page is a task router. [Overview](Docs_Viewer_Overview.md) gives the short 
 - [Source Organisation](Source_Organisation.md) — source roots, front matter, hierarchy, and generated ordering.
 - [Document Identity](Document_Identity.md) — immutable document codes, date provenance, and create-versus-update rules.
 - [Builder](Builder.md) — build and publish generated document and search payloads.
-- [Document Diagrams](Document_Diagrams.md) — author, build, publish, edit, and extend scope-owned Mermaid diagrams.
+- [Document Diagrams](Document_Diagrams.md) — create diagrams externally and import finished SVG images.
 - [Scope Lifecycle](Scope_Lifecycle.md) — create, rename, and delete configured scopes through previewed local-service plans.
 - [Testing](Testing.md) — choose the appropriate repository check.
 

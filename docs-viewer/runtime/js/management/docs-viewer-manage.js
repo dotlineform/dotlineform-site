@@ -18,13 +18,6 @@ import {
   createDocsViewerReportPresentationAdapter
 } from "../reports/docs-viewer-report-presentation.js";
 import {
-  docsViewerInlineMermaidAdapter
-} from "./docs-viewer-inline-mermaid.js";
-import {
-  connectDocsViewerPublicThemeOwner,
-  createDocsViewerPublicThemedDiagramAdapter
-} from "../public/docs-viewer-public-themed-diagrams.js";
-import {
   mountDocsViewerManageDocumentExtras
 } from "./docs-viewer-management-document-reports.js";
 import {
@@ -98,11 +91,6 @@ const reportPresentationAdapter = createDocsViewerReportPresentationAdapter({
   presentationExtension: managedTableTools.reportPresentationExtension
 });
 
-const themedDiagramAdapter = createDocsViewerPublicThemedDiagramAdapter({
-  diagramDetailAdapter: docsViewerDiagramDetailAdapter
-});
-connectDocsViewerPublicThemeOwner({ adapter: themedDiagramAdapter, document: document });
-
 startDocsViewerManageApp({
   contentDetailBackControlId: CONTENT_DETAIL_BACK_CONTROL_ID,
   controlRendererContributions: Object.assign(
@@ -128,8 +116,6 @@ startDocsViewerManageApp({
       }
     )
   ),
-  inlineMermaidAdapter: docsViewerInlineMermaidAdapter,
-  themedDiagramAdapter: themedDiagramAdapter,
   mainViewControlHandlerContributions: Object.assign(
     {},
     createDirectiveActionsMainViewControlHandlers(),

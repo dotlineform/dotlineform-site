@@ -50,6 +50,13 @@ def publish_selected_documents(repo_root: Path, workspace: Any, pending: dict[st
                 result["target"] = f"{collection or 'documents'}/{doc_id}"
                 document_bytes = write_bytes(target, read_bytes(document_path(workspace, collection, doc_id)))
             completed_effect(result, "Preview files removed" if deleting else "Preview files applied", target)
+            result["phase"] = "document media removal in Preview"
+            for kind, names in selection.get("removed_media", {}).items():
+                for name in names:
+                    result["target"] = f"{collection or 'documents'}/{kind}/{name}"
+                    media_target = confined(preview_owner.media.types[kind].asset_location.path, name)
+                    delete_path(media_target)
+                    completed_effect(result, "Preview media removed", media_target)
             result.update(phase="document distribution")
             for kind, name, path in media_inputs:
                 result["target"] = f"{collection or 'documents'}/{kind}/{name}"
@@ -63,6 +70,12 @@ def publish_selected_documents(repo_root: Path, workspace: Any, pending: dict[st
             else:
                 write_bytes(deployed, document_bytes)
             completed_effect(result, "destination files removed" if deleting else "destination files applied", deployed)
+            result["phase"] = "document media removal at destination"
+            for kind, names in selection.get("removed_media", {}).items():
+                for name in names:
+                    result["target"] = f"{collection or 'documents'}/{kind}/{name}"
+                    transfers.transfer(preview_owner.public_projection.media[kind].location, name, data=None)
+                    completed_effect(result, "destination media removed", name)
             del pending[family][doc_id]
             complete()
             result["completed"].append({"family": family, "doc_id": doc_id})

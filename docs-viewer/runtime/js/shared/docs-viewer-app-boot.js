@@ -193,13 +193,11 @@ export function resolveDocsViewerAppBootContext(options) {
         mediaDetailAdapter: settings.mediaDetailAdapter,
         routeContext: routeContext,
         viewRegistry: viewRegistry,
-        inlineMermaidAdapter: settings.inlineMermaidAdapter,
         mainViewControlHandlerContributions: settings.mainViewControlHandlerContributions || {},
         mountDocumentExtras: settings.mountDocumentExtras,
         reportPresentationAdapter: settings.reportPresentationAdapter,
         sourceEditorActionControlIds: settings.sourceEditorActionControlIds || [],
         tableDetailAdapter: settings.tableDetailAdapter,
-        themedDiagramAdapter: settings.themedDiagramAdapter,
         appShellReady: Promise.resolve(appShellResult),
         appShellResult: appShellResult,
         appShellRefs: getDocsViewerAppShellRefs({
@@ -215,12 +213,6 @@ export function initDocsViewerBootThemeToggle(bootContext) {
   var context = bootContext || {};
   var routeContext = context.routeContext || {};
   var appContext = routeContext.appContext || {};
-  var inlineMermaidAdapter = context.inlineMermaidAdapter;
-  var onThemeChange = inlineMermaidAdapter && typeof inlineMermaidAdapter.handleThemeChange === "function"
-    ? function (theme) {
-        return inlineMermaidAdapter.handleThemeChange(theme);
-      }
-    : null;
   if (appContext.kind !== "public" && appContext.kind !== "manage") {
     return Promise.resolve(null);
   }
@@ -231,8 +223,7 @@ export function initDocsViewerBootThemeToggle(bootContext) {
       if (module && typeof module.initDocsViewerThemeToggle === "function") {
         return module.initDocsViewerThemeToggle({
           root: context.root,
-          document: context.document,
-          onThemeChange: onThemeChange
+          document: context.document
         });
       }
       return null;
