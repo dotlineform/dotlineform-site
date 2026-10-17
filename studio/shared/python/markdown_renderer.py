@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from html import unescape
 from html.parser import HTMLParser
 import re
 from typing import Any, Dict, List
@@ -28,24 +29,24 @@ PRE_OPEN_PATTERN = re.compile(r"<pre(?:\s[^>]*)?>", re.IGNORECASE)
 PRE_CLOSE_PATTERN = re.compile(r"</pre\s*>", re.IGNORECASE)
 MARKDOWN_LINE_ENDING_PATTERN = re.compile(r"(\r\n|\r|\n|\u2028|\u2029)")
 TABLE_DETAIL_DIRECTIVE = "<!-- dotlineform:table-detail -->"
+TABLE_DETAIL_DIRECTIVE_PATTERN = re.compile(
+    r'<!-- dotlineform:table-detail(?: title="(?P<title>[^"\r\n]*)")? -->(?:\r\n|\r|\n)?'
+)
 TABLE_DETAIL_ATTRIBUTE = "data-docs-content-detail"
+TABLE_DETAIL_TITLE_ATTRIBUTE = "data-docs-content-detail-title"
 
 
 def _source_lines(markdown: str) -> List[str]:
     return markdown.splitlines(keepends=True)
 
 
-def _exact_table_detail_directive(token: Any, lines: List[str]) -> bool:
+def _table_detail_directive_title(token: Any, lines: List[str]) -> str | None:
     if token.type != "html_block" or not token.map or len(token.map) != 2:
-        return False
+        return None
     start, end = token.map
     source = "".join(lines[start:end])
-    return source in {
-        TABLE_DETAIL_DIRECTIVE,
-        f"{TABLE_DETAIL_DIRECTIVE}\n",
-        f"{TABLE_DETAIL_DIRECTIVE}\r\n",
-        f"{TABLE_DETAIL_DIRECTIVE}\r",
-    }
+    match = TABLE_DETAIL_DIRECTIVE_PATTERN.fullmatch(source)
+    return unescape(match.group("title") or "") if match else None
 
 
 def _blank_source_range(lines: List[str], start: int, end: int) -> bool:
@@ -60,7 +61,8 @@ def project_table_detail_eligibility(state: StateCore) -> None:
     lines = _source_lines(state.src)
     table_tokens = [token for token in state.tokens if token.type == "table_open"]
     for index, token in enumerate(state.tokens[:-1]):
-        if not _exact_table_detail_directive(token, lines):
+        title = _table_detail_directive_title(token, lines)
+        if title is None:
             continue
         table = state.tokens[index + 1]
         if table.type != "table_open" or table.level != token.level or not table.map:
@@ -68,6 +70,8 @@ def project_table_detail_eligibility(state: StateCore) -> None:
         if not _blank_source_range(lines, token.map[1], table.map[0]):
             continue
         table.attrSet(TABLE_DETAIL_ATTRIBUTE, "table")
+        if title:
+            table.attrSet(TABLE_DETAIL_TITLE_ATTRIBUTE, title)
 
     if state.md.options.get("content_detail_default_table") and len(table_tokens) == 1:
         table_tokens[0].attrSet(TABLE_DETAIL_ATTRIBUTE, "table")

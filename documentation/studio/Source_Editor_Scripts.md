@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-704641
 title: Source Editor Scripts
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-16"
+last_updated: "2026-10-17"
 parent_id: d-20260607-222033-2a494e
 ---
 # Docs Viewer Source Editor Scripts
@@ -79,7 +79,9 @@ Folder opening is available through [Projects](/docs/?doc=d-20260805-155400-4c34
 
 `directive-actions.js` owns the Source action menu, its disclosure, keyboard navigation and captured adapter/range. Opening the menu captures the current selection before moving focus; choosing an action closes it before opening a modal or invoking a workflow. Catalogue image/Media View and document-link items reuse their existing modal owners with that capture. Add image/file calls the mounted adapter's `addStagedMedia` operation, which keeps Source busy through the existing media workflow and inserts using the captured range and revision. VS Code invokes the existing management source-opening workflow with the captured adapter's exact target; it does not save the buffer. The old standalone insertion-control definitions/renderers and image/file dispatch events are retired.
 
-The final menu group contains Table detail, Insert related links, Insert icon and **Summary**, in that order. **Insert icon** inserts `[[icon:refresh-cw]]` inline and selects `refresh-cw` for manual filename-stem editing. It adds no line breaks and preserves any selected source text after the new token. The existing Table detail directive retains its block insertion.
+The final menu group contains Table detail, Insert related links, Insert icon and **Summary**, in that order. **Insert icon** inserts `[[icon:refresh-cw]]` inline and selects `refresh-cw` for manual filename-stem editing. It adds no line breaks and preserves any selected source text after the new token.
+
+**Table detail** inserts `<!-- dotlineform:table-detail title="Table" -->` as a block and selects `Table` for editing. Place the directive immediately before its Markdown table, with optional blank lines between them. The optional double-quoted title is plain text; use `&quot;` for a quote within it. The shared Markdown renderer decodes HTML entities and carries the title in `data-docs-content-detail-title`, using its existing escaped attribute rendering. The browser displays the authored title, preserving capitalisation, in the expanded view, Open tooltip and accessible labels. An empty `title=""` or a directive without a title displays `Table`. There is no automatic numbering or required-title validation; internal table identifiers distinguish tables independently of their titles. Normal Source Save owns persistence and exact generation. [Table Detail Titles](deliveries/Table_Detail_Titles.md) records the delivery and evidence limits.
 
 **Insert related links** inserts `[[links|]]` as a block directive with an empty heading and places the caret between `|` and `]]` for optional heading text. It preserves selected source text after the token. [Related Links](Related_Links.md) owns the generated sorted list, icons, empty-section suppression and full-build freshness.
 

@@ -8,6 +8,7 @@ export const DIRECTIVE_ACTIONS_CONTROL_ID = "source-directives";
 
 const ICON_DIRECTIVE_SOURCE = "[[icon:refresh-cw]]";
 const LINKS_DIRECTIVE_SOURCE = "[[links|]]";
+const TABLE_DETAIL_DIRECTIVE_SOURCE = '<!-- dotlineform:table-detail title="Table" -->';
 
 const SOURCE_ACTIONS = [
   { actionId: ACTION_IDS.SOURCE_ADD_IMAGE, artwork: "docsViewer__icon--image", label: "Add image" },
@@ -24,7 +25,11 @@ export const DIRECTIVE_ACTIONS = Object.freeze([
     artwork: "docsViewer__icon--table",
     id: "table-detail",
     label: "Table detail",
-    source: "<!-- dotlineform:table-detail -->"
+    source: TABLE_DETAIL_DIRECTIVE_SOURCE,
+    placeholder: Object.freeze({
+      start: '<!-- dotlineform:table-detail title="'.length,
+      end: TABLE_DETAIL_DIRECTIVE_SOURCE.length - '" -->'.length
+    })
   }),
   Object.freeze({
     artwork: "docsViewer__icon--waypoints",

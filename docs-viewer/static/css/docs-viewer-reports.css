@@ -6,13 +6,13 @@
   gap: var(--docs-viewer-space-3);
   max-width: min(100%, 98ch);
   margin-top: var(--docs-viewer-space-4);
-  font-size: var(--text-sm, var(--docs-viewer-font-small));
+  font-size: var(--docs-viewer-font-small);
   line-height: var(--docs-viewer-line-snug);
 }
 
-/* Match the Index search's inset from shell mount through list loading. */
-.docsViewer__content > .docsViewerReport[data-report-collection]:not([data-report-state="detail"]):first-child{
-  margin-top: calc(var(--docs-viewer-space-3) + 1px);
+/* The main pane supplies the shared inset for an opening collection search. */
+.docsViewer__documentMount > .docsViewerReport[data-report-collection]:not([data-report-state="detail"]):first-child{
+  margin-top: 0;
 }
 
 .docsViewerReport__toolbar{
@@ -217,7 +217,7 @@
 .docsViewerReport[data-report-state="detail"]{
   max-width: var(--docs-viewer-measure);
   font-size: 1rem;
-  line-height: var(--line-loose, 1.7);
+  line-height: var(--docs-viewer-line-loose);
 }
 
 .docsReportDetail__body{
@@ -225,7 +225,7 @@
   max-width: 100%;
   margin: 0;
   font-size: 1rem;
-  line-height: var(--line-loose, 1.7);
+  line-height: var(--docs-viewer-line-loose);
 }
 
 @media (max-width: 820px){

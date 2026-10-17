@@ -3,49 +3,52 @@ draft: false
 doc_id: d-20260511-200845-2a03a0
 title: CSS Ownership
 added_date: "2026-05-11 20:08:45"
-last_updated: "2026-10-01 17:27:38"
+last_updated: "2026-10-17"
 parent_id: d-20260424-000000-50b63f
 
 ---
 # Docs Viewer CSS Ownership
 
-Docs Viewer is portable but intentionally inherits the prose language of its host site. The cascade has four owners.
+Docs Viewer owns the active site's reader presentation across Public, Manage and Review. The public root loads the same canonical viewer styles through their tracked projection; there is no active site-wide `main.css`. The frozen archive owns independent stylesheet copies and is outside this boundary.
 
 ## Owners
 
-- **host CSS** owns site chrome, layout, baseline typography, theme tokens, and generic `.content` prose/media rules.
-- **portable Docs Viewer CSS** at `docs-viewer/static/css/docs-viewer.css`, projected to `site/docs-viewer/static/css/docs-viewer.css`, owns the reader shell, navigation, panels, search, status, and shared viewer controls.
-- **scope CSS**, when installed by an owning route, owns presentation meaningful to one content scope. No current public scope installs a scope-specific stylesheet.
-- **manage feature CSS** under `docs-viewer/static/css/` owns the manage shell, source editor, import, and other local-only surfaces.
+- **shared palette** at `docs-viewer/static/css/docs-viewer-theme.css` owns light/dark colour roles for Public, Manage, Review and the public 404 page.
+- **shared viewer CSS** at `docs-viewer/static/css/docs-viewer.css` owns reader typography and tokens, prose, the page shell, navigation, panels, search, status and shared controls. Its tracked public copy is `site/docs-viewer/static/css/docs-viewer.css`.
+- **feature CSS** under `docs-viewer/static/css/` owns shared reports and focused management, Source, Import and Review surfaces. Only explicitly public files are projected under `site/`.
+- **404 CSS** at `site/assets/css/error.css` owns that standalone page's minimal layout, typography and theme-button appearance. It consumes the shared palette and loads no viewer runtime or report styles.
 
-Rendered document HTML uses both `docsViewer__content` and `content`. This is deliberate: the viewer owns its container while the host owns ordinary document typography.
+Rendered documents use `docsViewer__content`; the former generic `content` host-style hook is removed. The public root and route template use `docs-viewer-shell` and `docsViewerShell__container`, while local routes use their service shell. Shared shell rules supply page background, body defaults and wrapper spacing without a host stylesheet. The main pane has the same top inset as the Index panel's padding and border, so ordinary headings and reports share one content offset. An opening collection report inside its document mount omits its own top margin to avoid doubling that inset.
 
-The shared viewer stylesheet explicitly owns document body font/line height, paragraph margins, H1 sizing, Related Links heading typography and list spacing, and Info panel line and row spacing. Public and Manage use the same token-based rules without relying on public host styles or browser defaults for those details. Specialised document presentation, including Moments, retains its more specific rules.
+The shared viewer stylesheet owns document body font/line height, paragraph and list spacing, inline/fenced code presentation, horizontal-rule spacing, generic captions, H1–H4 typography, table layout/cells, links, blockquotes, images, Related Links and Info presentation. Standard prose rules are scoped to document content; low-specificity list defaults allow report and gallery owners to retain their own spacing. Specialised presentation retains its more specific rules: Moments uses shared H1 typography with compact title/date spacing and its poetry layout; modern figure captions, expanded tables and Catalogue records retain their established presentation.
+
+For heading-size edits, change the four `--docs-viewer-font-heading-*` values near the top of [docs-viewer.css](../../docs-viewer/static/css/docs-viewer.css). Viewer typography and spacing use their own tokens rather than generic host-token fallbacks. Reload the local viewer to use saved CSS; public preview/deployment uses the tracked projection maintained by `bin/site-code-update`. These style edits require no document generation, Search rebuild or Publish. [Heading Typography](deliveries/Docs_Viewer_Heading_Typography.md) and [Retire Main CSS](deliveries/Retire_Main_CSS.md) record the changes and evidence limits.
+
+Document H2 headings have a bottom divider with the same 1px strong-border role as a normal horizontal rule, separated from the heading text by the smallest shared spacing token. Both use `--docs-viewer-border-strong` for a more visible thin line. This section cue does not change the heading font scale.
 
 ## Load Boundary
 
-Public routes load host CSS, the portable viewer stylesheet, and an explicit scope stylesheet when needed. They do not load management CSS.
+The public root and maintained public-route template load the shared palette, viewer stylesheet and public report styles. They do not load management CSS. The 404 page loads the palette, its dedicated stylesheet and its existing theme-toggle script. Active routes no longer load `main.css`; archive routes keep their frozen copies.
 
-The local manage shell loads the portable viewer stylesheet, shared report styles, applicable scope styles, and focused management feature styles. Management controls must not depend on Studio CSS even when Studio is the local host.
+The local Manage shell loads the palette, viewer stylesheet, shared report styles and focused management styles. Review loads the palette, viewer stylesheet and its own stylesheet. Neither depends on public-site or Studio CSS.
 
 Local apps serve canonical reader styles under `docs-viewer/`; public preview and GitHub Pages serve their tracked projection under `site/docs-viewer/`. `bin/site-code-update` maintains that projection, so public and Manage do not maintain separate reader styles.
 
 ## Extension Method
 
-- host-wide prose or theme rule: host stylesheet
-- reader behaviour used across scopes/surfaces: portable Docs Viewer stylesheet
-- content presentation tied to a scope: scope stylesheet keyed by active scope
-- local workflow control: owning manage feature stylesheet
+- shared colour role: palette stylesheet
+- reader prose, layout or shared control: shared viewer stylesheet
+- report or local workflow control: its owning feature stylesheet
+- 404-only presentation: public `error.css`
 
-Do not place a rule in the portable layer merely because a public route needs it. Ask whether it describes the reader or that route's content.
+Keep a rule with the presentation it owns. Do not copy legacy site components into the reader stylesheet without a current reader responsibility.
 
-Components should consume Docs Viewer custom properties with host-token fallbacks. Exact variables and selectors live in CSS; do not mirror their inventory here.
+Components consume Docs Viewer custom properties. Exact variables and selectors live in CSS; do not mirror their inventory here. The archive's stylesheet copies are frozen site assets and are never updated by active runtime projection.
 
 ## Weak Spots
 
-- host prose inheritance is intentional, so portable installs must provide reasonable token and content fallbacks
-- scope styles are loaded explicitly rather than through a general plugin loader
 - raw HTML documents can introduce local presentation that bypasses the normal Markdown shape
 - stylesheet order is part of the contract but is expressed in route shells rather than a central manifest
+- visual changes to prose defaults need manual checks of reports, Moments and detailed content alongside ordinary Markdown
 
 Verify representative public and manage routes after moving ownership between layers. Use visual/manual checks for cascade and layout; use public-boundary checks to confirm management assets do not leak into public shells.

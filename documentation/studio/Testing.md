@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260501-174746-efd581
 title: Testing
 added_date: 2026-05-01 17:47:46
-last_updated: "2026-10-11 00:00:00"
+last_updated: "2026-10-17"
 parent_id: ""
 ---
 # Testing
@@ -152,6 +152,14 @@ The current awaited Source Save and Draft generation paths have source/diff revi
 - Some Python tests retain direct-script compatibility and process-global assumptions.
 - Profile membership is manually curated and can lag current ownership.
 - A passing broad profile is not evidence for omitted app-smoke profiles or unexercised external workspaces.
+
+## Shared Docs Viewer Palette Ownership
+
+The user approved the narrow 2026-10-17 cleanup of `docs-viewer/tests/python/test_docs_viewer_static_assets.py::test_docs_viewer_theme_has_one_shared_palette_owner`: remove only the read of retired active `site/assets/css/main.css` and its associated assertion, keeping every other existing assertion. No fixture, helper, selector, harness or profile membership change is included.
+
+The selected test reads the real canonical palette, base viewer CSS and management CSS. It checks explicit light/dark selectors, two declarations for each of its twenty existing colour roles, use of palette-role names in base viewer CSS and absence of palette-role definitions and the existing `data-allow-management` marker in management CSS. It uses no mocks or declared fixtures and makes no application writes or network calls. It does not prove computed styles, reader layout, theme interaction, the 404 stylesheet or browser boot.
+
+Run the exact selector with `.env.local` exported before imports: `python3 -m pytest docs-viewer/tests/python/test_docs_viewer_static_assets.py::test_docs_viewer_theme_has_one_shared_palette_owner -q`. The unchanged repository pytest setup and test-support imports still load Docs services, create isolated temporary Docs/Projects workspaces and reference retired scope-era modules. That setup may prevent this file-reading test from running; fixture migration is outside the approved edit. Expected cost is seconds, with ignored pytest/bytecode caches and temporary directories only; no real Docs workspace mutation, generation, service startup or transfer is selected. The result belongs to [Retire Main CSS](deliveries/Retire_Main_CSS.md).
 
 ## Diagram Pipeline Cleanup
 

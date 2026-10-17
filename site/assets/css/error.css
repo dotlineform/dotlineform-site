@@ -1,0 +1,94 @@
+/* The standalone 404 page shares the viewer palette without its runtime. */
+body{
+  margin: 0;
+  color: var(--docs-viewer-theme-text);
+  background: var(--docs-viewer-theme-canvas);
+  font: 1rem/1.7 system-ui, sans-serif;
+}
+
+[hidden]{
+  display: none !important;
+}
+
+.container{
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 28px 18px 60px;
+}
+
+.site-header{
+  border-bottom: 1px solid var(--docs-viewer-theme-border);
+}
+
+.site-header .container{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  max-width: none;
+  padding: 18px;
+}
+
+.site-title a,
+.site-title a:visited{
+  color: var(--docs-viewer-theme-text);
+  font-weight: 700;
+}
+
+h1{
+  margin: 0 0 0.625rem;
+  font-size: 1.75rem;
+  line-height: 1.25;
+}
+
+p{
+  margin: 0 0 0.875rem;
+}
+
+a{
+  color: var(--docs-viewer-theme-link);
+  text-decoration: none;
+}
+
+a:visited{
+  color: var(--docs-viewer-theme-link-visited);
+}
+
+a:hover{
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+a:focus-visible,
+.siteThemeToggle:focus-visible{
+  outline: 2px solid var(--docs-viewer-theme-focus-ring);
+  outline-offset: 2px;
+}
+
+.siteThemeToggle{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  color: var(--docs-viewer-theme-text);
+  background: transparent;
+  cursor: pointer;
+}
+
+.siteThemeToggle:hover{
+  background: var(--docs-viewer-theme-surface-subtle);
+}
+
+.siteThemeToggle__icon{
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

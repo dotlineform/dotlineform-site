@@ -77,6 +77,8 @@ Library is a named collection with `collection_type: book-collection`, host `d-2
 
 The shared report separates search-delay and sort-control capabilities from current pagination state. Context and Catalogue retain paginated browsing and other collections retain their current behavior. Library is paginated publicly; its explicit Manage-only contribution defaults pagination off and supplies a toggle using `dlf-paginate-on.svg` or `dlf-paginate-off.svg` to show the current mode. The existing toolbar mask supplies theme tint and sizing, with both icon mappings owned by the management stylesheet. A toggle clears checked/range selection, exits selection mode and resets the page to the start, keeping query and sort. The tab-scoped report snapshot remembers the chosen pagination mode. Rendering reuses the loaded inventory; the toggle performs no request, source write or generation and adds no search-pending guard. Public composition imports none of the local control or selection implementation.
 
+The collection report supplies its current pagination mode with the match count and page position to the shared pager. The pager alone owns its navigation visibility: controls appear only when pagination is enabled and more than one page exists. Unpaged lists show every matching row and no page controls, including when they exceed the normal 20-document page size.
+
 ## Reachability Is Not Ownership
 
 A configured collection, a parent document that loads `docs_collection`, and the registered report module are independent records:

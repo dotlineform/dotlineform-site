@@ -159,6 +159,7 @@ export async function loadCatalogueCollectionThumbnailSettings(context) {
 /**
  * Compact controls over cached results. Next wraps to the first of multiple pages;
  * Previous stops at the first page. The collection owner supplies navigation.
+ * Updates supply the current pagination mode; only enabled multi-page results show controls.
  * @param {Document} documentRef
  * @param {string} collectionTitle Accessible name of the collection.
  * @param {function(number): void} onPage Receives a zero-based page index.
@@ -190,10 +191,10 @@ export function createCollectionPager(documentRef, collectionTitle, onPage) {
   root.append(previous, label, next);
   return {
     root,
-    update(count, page, pending) {
+    update(count, page, pending, enabled) {
       pageIndex = page;
       pageCount = Math.ceil(count / COLLECTION_PAGE_SIZE);
-      root.hidden = pageCount <= 1;
+      root.hidden = !enabled || pageCount <= 1;
       label.textContent = (page + 1) + "/" + pageCount;
       previous.disabled = pending || page === 0;
       next.disabled = pending || pageCount <= 1;

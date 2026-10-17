@@ -307,8 +307,7 @@ function updateCollectionControls(state) {
     button.setAttribute("aria-label", button.title);
   }
   if (state.pager) {
-    state.pager.root.hidden = !state.pagedBrowsing;
-    state.pager.update(state.matches.length, state.pageIndex, pending);
+    state.pager.update(state.matches.length, state.pageIndex, pending, state.pagedBrowsing);
   }
 }
 

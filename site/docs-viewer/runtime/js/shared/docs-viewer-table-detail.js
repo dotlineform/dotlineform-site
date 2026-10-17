@@ -1,5 +1,6 @@
 const TABLE_DETAIL_SELECTOR = 'table[data-docs-content-detail="table"]';
 const TABLE_DETAIL_MARKER = "data-docs-content-detail";
+const TABLE_DETAIL_TITLE_ATTRIBUTE = "data-docs-content-detail-title";
 const REFERENCE_ATTRIBUTES = ["headers", "aria-labelledby", "aria-describedby", "aria-controls", "aria-owns"];
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -22,8 +23,7 @@ function immutableTargetContext(state, record) {
     documentTarget: Object.freeze(Object.assign({}, state.documentTarget)),
     documentMountGeneration: state.documentMountGeneration,
     kind: "table",
-    adapterTargetId: record.id,
-    occurrence: record.occurrence
+    adapterTargetId: record.id
   });
 }
 
@@ -32,15 +32,15 @@ function createOpenControl(documentRef, label) {
   row.className = "docsViewer__tableDetailControlRow";
   row.setAttribute("data-docs-content-detail-control", "table");
   var button = documentRef.createElement("button");
-  button.className = "docsViewer__tableDetailOpen";
+  button.className = "docsViewer__toolbarIconButton docsViewer__tableDetailOpen";
   button.type = "button";
   button.innerHTML = [
     '<svg class="docsViewer__diagramDetailIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">',
     '  <path d="M14 5h5v5M19 5l-8 8M19 13v6H5V5h6"></path>',
     "</svg>"
   ].join("");
-  button.setAttribute("aria-label", "Open " + label.toLowerCase());
-  button.title = "Open " + label.toLowerCase();
+  button.setAttribute("aria-label", "Open " + label);
+  button.title = "Open " + label;
   row.appendChild(button);
   return { button: button, row: row };
 }
@@ -178,9 +178,8 @@ export function createDocsViewerTableDetailAdapter(options) {
         : function () { return false; }
     };
     tables.forEach(function (table, index) {
-      var occurrence = index + 1;
       var id = "table-" + index;
-      var label = "Table " + occurrence;
+      var label = table.getAttribute(TABLE_DETAIL_TITLE_ATTRIBUTE) || "Table";
       var control = createOpenControl(documentRef, label);
       var record = {
         button: control.button,
@@ -188,7 +187,6 @@ export function createDocsViewerTableDetailAdapter(options) {
         handleClick: null,
         id: id,
         label: label,
-        occurrence: occurrence,
         table: table
       };
       record.handleClick = function () {

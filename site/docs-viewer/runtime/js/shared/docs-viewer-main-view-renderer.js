@@ -58,7 +58,7 @@ export function renderDocsViewerMainView(options = {}) {
   }
 
   const content = documentRef.createElement("div");
-  content.className = "docsViewer__content content";
+  content.className = "docsViewer__content";
   content.id = "docsViewerContent";
 
   if (!toolbarMount && toolbar) {

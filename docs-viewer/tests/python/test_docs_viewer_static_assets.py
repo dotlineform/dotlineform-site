@@ -59,7 +59,6 @@ def test_docs_viewer_theme_has_one_shared_palette_owner() -> None:
     manage_css = (
         REPO_ROOT / "docs-viewer/static/css/docs-viewer-manage.css"
     ).read_text(encoding="utf-8")
-    public_host_css = (REPO_ROOT / "site/assets/css/main.css").read_text(encoding="utf-8")
     theme_roles = (
         "canvas",
         "surface",
@@ -90,7 +89,6 @@ def test_docs_viewer_theme_has_one_shared_palette_owner() -> None:
         assert theme_css.count(token) == 2
     assert "--docs-viewer-theme-" in base_css
     assert "--docs-viewer-theme-" not in manage_css
-    assert "--docs-viewer-theme-" not in public_host_css
     assert "data-allow-management" not in manage_css
 
 
