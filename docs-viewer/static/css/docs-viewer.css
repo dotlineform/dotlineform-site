@@ -1043,6 +1043,11 @@ main.container:has(> .docsViewer){
   text-underline-offset: 2px;
 }
 
+.docsViewer__content hr{
+  border: 0;
+  border-top: 1px solid var(--docs-viewer-border);
+}
+
 .docsViewer__content pre{
   max-width: 100%;
   overflow-x: auto;

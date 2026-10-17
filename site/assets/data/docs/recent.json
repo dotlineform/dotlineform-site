@@ -1,7 +1,7 @@
 {
   "schema": "docs_recent_v2",
   "limit": 20,
-  "generated_at": "2026-10-17T14:19:27Z",
+  "generated_at": "2026-10-17T15:21:12Z",
   "docs": [
     {
       "collection": "library",
@@ -17,6 +17,14 @@
       "doc_id": "d-20261017-112353-93c738",
       "report_doc_id": "d-20260809-130120-870cc2",
       "title": "100 Words Related to Reflection & Memory",
+      "timestamp": "2026-10-17"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261017-160051-1a6829",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Abstract Art as Evolutionary Mechanism",
       "timestamp": "2026-10-17"
     },
     {
@@ -150,14 +158,6 @@
       "doc_id": "d-20260809-130120-e6793d",
       "report_doc_id": "d-20260809-130120-870cc2",
       "title": "Defining \"Information\" for Cross‑Boundary Comparisons",
-      "timestamp": "2026-08-09"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20260809-130120-afeb4d",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Dreaming is Active",
       "timestamp": "2026-08-09"
     }
   ]

@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "docs_viewer_search_index_v4",
-    "version": "blake2b-f766aa434836d082f3d43a3ef1cfe68d",
-    "generated_at_utc": "2026-10-17T14:19:28Z",
-    "count": 28
+    "version": "blake2b-c3050cf1bdd14ebe8b88ae65cd3d03cf",
+    "generated_at_utc": "2026-10-17T15:21:12Z",
+    "count": 29
   },
   "fields": [
     "title",
@@ -243,9 +243,23 @@
       "collection": "library",
       "report_doc_id": "d-20260809-130120-870cc2",
       "collection_title": "Library"
+    },
+    {
+      "id": "d-20261017-160051-1a6829",
+      "title": "Abstract Art as Evolutionary Mechanism",
+      "last_updated": "2026-10-17",
+      "display_meta": "2026-10-17 • Library",
+      "collection": "library",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "collection_title": "Library"
     }
   ],
   "terms": {
+    "000-year-old": {
+      "body": [
+        28
+      ]
+    },
     "10d": {
       "body": [
         16
@@ -277,6 +291,9 @@
       ]
     },
     "19th": {
+      "heading": [
+        28
+      ],
       "body": [
         16
       ]
@@ -286,9 +303,14 @@
         16
       ]
     },
-    "2025-09-27t15": {
-      "body": [
-        27
+    "20th": {
+      "heading": [
+        28
+      ]
+    },
+    "21st": {
+      "heading": [
+        28
       ]
     },
     "2nd": {
@@ -336,14 +358,29 @@
         17
       ]
     },
+    "73k": {
+      "body": [
+        28
+      ]
+    },
     "a021667": {
       "body": [
         24
       ]
     },
+    "aaron": {
+      "body": [
+        28
+      ]
+    },
     "abelson": {
       "body": [
         25
+      ]
+    },
+    "aboriginal": {
+      "body": [
+        28
       ]
     },
     "about": {
@@ -358,7 +395,8 @@
         17,
         19,
         24,
-        26
+        26,
+        28
       ]
     },
     "above": {
@@ -388,10 +426,12 @@
     },
     "abstract": {
       "title": [
-        10
+        10,
+        28
       ],
       "heading": [
-        10
+        10,
+        28
       ],
       "summary": [
         10,
@@ -403,7 +443,8 @@
         10,
         18,
         25,
-        26
+        26,
+        28
       ]
     },
     "abstracted": {
@@ -411,11 +452,20 @@
         4
       ]
     },
+    "abstracting": {
+      "body": [
+        28
+      ]
+    },
     "abstraction": {
+      "heading": [
+        28
+      ],
       "body": [
         10,
         13,
-        15
+        15,
+        28
       ]
     },
     "academic": {
@@ -533,7 +583,8 @@
         15,
         19,
         24,
-        26
+        26,
+        28
       ]
     },
     "act": {
@@ -541,7 +592,13 @@
         6,
         11,
         17,
-        26
+        26,
+        28
+      ]
+    },
+    "acting": {
+      "body": [
+        28
       ]
     },
     "action": {
@@ -595,7 +652,8 @@
     "acts": {
       "body": [
         6,
-        7
+        7,
+        28
       ]
     },
     "actually": {
@@ -608,6 +666,11 @@
     "ad": {
       "body": [
         16
+      ]
+    },
+    "adapt": {
+      "body": [
+        28
       ]
     },
     "adaptability": {
@@ -669,6 +732,11 @@
         6
       ]
     },
+    "addis": {
+      "body": [
+        28
+      ]
+    },
     "addressed": {
       "body": [
         4
@@ -694,6 +762,11 @@
         16
       ]
     },
+    "adults": {
+      "body": [
+        28
+      ]
+    },
     "advance": {
       "summary": [
         25
@@ -716,25 +789,33 @@
     "aesthetics": {
       "body": [
         7,
-        11
+        11,
+        28
       ]
     },
     "affect": {
       "body": [
         7,
         9,
-        15
+        15,
+        28
       ]
     },
     "affective": {
       "body": [
         9,
-        15
+        15,
+        28
       ]
     },
     "affects": {
       "body": [
         13
+      ]
+    },
+    "africa": {
+      "body": [
+        28
       ]
     },
     "after": {
@@ -751,9 +832,24 @@
         26
       ]
     },
+    "age": {
+      "body": [
+        28
+      ]
+    },
     "agents": {
       "body": [
         27
+      ]
+    },
+    "ages": {
+      "heading": [
+        28
+      ]
+    },
+    "ago": {
+      "heading": [
+        28
       ]
     },
     "agreement": {
@@ -799,6 +895,11 @@
         25
       ]
     },
+    "albert": {
+      "body": [
+        28
+      ]
+    },
     "algorithm": {
       "body": [
         11
@@ -806,13 +907,15 @@
     },
     "algorithmic": {
       "body": [
-        10
+        10,
+        28
       ]
     },
     "align": {
       "body": [
         11,
-        25
+        25,
+        28
       ]
     },
     "aligning": {
@@ -824,6 +927,11 @@
     "alignment": {
       "heading": [
         25
+      ]
+    },
+    "aligns": {
+      "body": [
+        28
       ]
     },
     "alike": {
@@ -844,12 +952,24 @@
         4,
         6,
         9,
-        18
+        18,
+        28
+      ]
+    },
+    "allow": {
+      "body": [
+        28
       ]
     },
     "allowing": {
       "body": [
-        26
+        26,
+        28
+      ]
+    },
+    "allows": {
+      "body": [
+        28
       ]
     },
     "almost": {
@@ -864,7 +984,8 @@
     },
     "alongside": {
       "body": [
-        20
+        20,
+        28
       ]
     },
     "aloud": {
@@ -886,7 +1007,8 @@
         6,
         24,
         26,
-        27
+        27,
+        28
       ]
     },
     "alteration": {
@@ -909,6 +1031,11 @@
     "am": {
       "body": [
         18
+      ]
+    },
+    "american": {
+      "body": [
+        28
       ]
     },
     "amsel": {
@@ -946,6 +1073,11 @@
         4
       ]
     },
+    "anchor": {
+      "body": [
+        28
+      ]
+    },
     "anchors": {
       "body": [
         8,
@@ -970,6 +1102,11 @@
     "angle": {
       "body": [
         26
+      ]
+    },
+    "aniconic": {
+      "body": [
+        28
       ]
     },
     "animal": {
@@ -1012,6 +1149,11 @@
     "anterior": {
       "body": [
         9
+      ]
+    },
+    "antiquity": {
+      "heading": [
+        28
       ]
     },
     "any": {
@@ -1067,6 +1209,11 @@
       "body": [
         7,
         11
+      ]
+    },
+    "apple": {
+      "body": [
+        28
       ]
     },
     "application": {
@@ -1126,6 +1273,11 @@
         7
       ]
     },
+    "archetypal": {
+      "body": [
+        28
+      ]
+    },
     "archetype": {
       "body": [
         4
@@ -1142,7 +1294,8 @@
     "archive": {
       "body": [
         24,
-        26
+        26,
+        28
       ]
     },
     "arcs": {
@@ -1175,7 +1328,8 @@
     },
     "arise": {
       "body": [
-        18
+        18,
+        28
       ]
     },
     "arises": {
@@ -1216,11 +1370,18 @@
       ]
     },
     "art": {
+      "title": [
+        28
+      ],
+      "heading": [
+        28
+      ],
       "body": [
         4,
         6,
         7,
-        11
+        11,
+        28
       ]
     },
     "arthur": {
@@ -1243,6 +1404,16 @@
         24
       ]
     },
+    "artist": {
+      "body": [
+        28
+      ]
+    },
+    "artworks": {
+      "body": [
+        28
+      ]
+    },
     "arxiv": {
       "body": [
         19
@@ -1260,6 +1431,11 @@
       "body": [
         18,
         24
+      ]
+    },
+    "asserting": {
+      "body": [
+        28
       ]
     },
     "assertion": {
@@ -1345,6 +1521,16 @@
         26
       ]
     },
+    "audiences": {
+      "body": [
+        28
+      ]
+    },
+    "authorship": {
+      "body": [
+        28
+      ]
+    },
     "autobiographical": {
       "body": [
         7,
@@ -1354,6 +1540,11 @@
     "automatic": {
       "body": [
         9
+      ]
+    },
+    "autonomy": {
+      "body": [
+        28
       ]
     },
     "available": {
@@ -1524,6 +1715,9 @@
       ]
     },
     "bce": {
+      "heading": [
+        28
+      ],
       "body": [
         16
       ]
@@ -1550,7 +1744,8 @@
     },
     "became": {
       "body": [
-        11
+        11,
+        28
       ]
     },
     "because": {
@@ -1560,7 +1755,8 @@
         7,
         11,
         13,
-        18
+        18,
+        28
       ]
     },
     "become": {
@@ -1598,6 +1794,11 @@
         26
       ]
     },
+    "began": {
+      "body": [
+        28
+      ]
+    },
     "beginning": {
       "body": [
         6
@@ -1627,7 +1828,8 @@
     },
     "behaviour": {
       "body": [
-        18
+        18,
+        28
       ]
     },
     "being": {
@@ -1635,7 +1837,8 @@
         6,
         10,
         18,
-        26
+        26,
+        28
       ]
     },
     "beings": {
@@ -1653,7 +1856,8 @@
       "body": [
         4,
         13,
-        26
+        26,
+        28
       ]
     },
     "beliefs": {
@@ -1713,7 +1917,8 @@
         18,
         19,
         24,
-        26
+        26,
+        28
       ]
     },
     "beyond": {
@@ -1726,7 +1931,8 @@
       "body": [
         18,
         24,
-        26
+        26,
+        28
       ]
     },
     "bh": {
@@ -1790,9 +1996,19 @@
         19
       ]
     },
+    "bio": {
+      "body": [
+        28
+      ]
+    },
     "biochemistry": {
       "body": [
         10
+      ]
+    },
+    "biography": {
+      "body": [
+        28
       ]
     },
     "biology": {
@@ -1844,7 +2060,8 @@
       "body": [
         6,
         8,
-        19
+        19,
+        28
       ]
     },
     "blackwell": {
@@ -1886,10 +2103,25 @@
         26
       ]
     },
+    "blombos": {
+      "body": [
+        28
+      ]
+    },
     "bloom": {
       "body": [
         25,
         26
+      ]
+    },
+    "blueprint": {
+      "body": [
+        28
+      ]
+    },
+    "blueprints": {
+      "body": [
+        28
       ]
     },
     "blur": {
@@ -2024,7 +2256,8 @@
         19,
         20,
         26,
-        27
+        27,
+        28
       ]
     },
     "brains": {
@@ -2032,7 +2265,8 @@
         7
       ],
       "body": [
-        27
+        27,
+        28
       ]
     },
     "branches": {
@@ -2053,6 +2287,11 @@
     "braneworlds": {
       "body": [
         16
+      ]
+    },
+    "break": {
+      "body": [
+        28
       ]
     },
     "breakdown": {
@@ -2171,6 +2410,11 @@
         25
       ]
     },
+    "builds": {
+      "body": [
+        28
+      ]
+    },
     "built": {
       "body": [
         6,
@@ -2219,12 +2463,18 @@
         18,
         19,
         24,
-        27
+        27,
+        28
       ]
     },
     "bybee": {
       "body": [
         25
+      ]
+    },
+    "bypass": {
+      "body": [
+        28
       ]
     },
     "byproducts": {
@@ -2255,6 +2505,11 @@
     "called": {
       "body": [
         14
+      ]
+    },
+    "calligraphy": {
+      "body": [
+        28
       ]
     },
     "calm": {
@@ -2294,7 +2549,8 @@
         19,
         20,
         24,
-        26
+        26,
+        28
       ]
     },
     "cannot": {
@@ -2302,6 +2558,11 @@
         4,
         10,
         18
+      ]
+    },
+    "capacities": {
+      "body": [
+        28
       ]
     },
     "capacity": {
@@ -2345,14 +2606,25 @@
         13
       ]
     },
+    "carried": {
+      "body": [
+        28
+      ]
+    },
     "carrier": {
       "body": [
         9
       ]
     },
+    "carries": {
+      "body": [
+        28
+      ]
+    },
     "carry": {
       "body": [
-        18
+        18,
+        28
       ]
     },
     "case": {
@@ -2432,6 +2704,11 @@
         18
       ]
     },
+    "cave": {
+      "body": [
+        28
+      ]
+    },
     "cb": {
       "body": [
         15
@@ -2467,9 +2744,19 @@
         10
       ]
     },
+    "celtic": {
+      "body": [
+        28
+      ]
+    },
     "centering": {
       "body": [
         25
+      ]
+    },
+    "central": {
+      "body": [
+        28
       ]
     },
     "centre": {
@@ -2478,6 +2765,9 @@
       ]
     },
     "century": {
+      "heading": [
+        28
+      ],
       "body": [
         16,
         24
@@ -2502,7 +2792,8 @@
     "chance": {
       "body": [
         13,
-        17
+        17,
+        28
       ]
     },
     "chances": {
@@ -2516,7 +2807,8 @@
         8,
         10,
         14,
-        24
+        24,
+        28
       ]
     },
     "changes": {
@@ -2549,7 +2841,13 @@
     },
     "chaos": {
       "body": [
-        11
+        11,
+        28
+      ]
+    },
+    "characteristics": {
+      "body": [
+        28
       ]
     },
     "chatterjee": {
@@ -2716,6 +3014,11 @@
         6
       ]
     },
+    "close": {
+      "body": [
+        28
+      ]
+    },
     "closed": {
       "heading": [
         8
@@ -2769,6 +3072,11 @@
         25
       ]
     },
+    "co": {
+      "body": [
+        28
+      ]
+    },
     "coarse": {
       "body": [
         18
@@ -2776,12 +3084,14 @@
     },
     "code": {
       "body": [
-        7
+        7,
+        28
       ]
     },
     "codes": {
       "body": [
-        10
+        10,
+        28
       ]
     },
     "coding": {
@@ -2798,7 +3108,8 @@
         9,
         11,
         14,
-        25
+        25,
+        28
       ]
     },
     "cognitive": {
@@ -2814,7 +3125,13 @@
         15,
         18,
         25,
-        27
+        27,
+        28
+      ]
+    },
+    "cohen": {
+      "body": [
+        28
       ]
     },
     "cohere": {
@@ -2883,7 +3200,8 @@
     },
     "collective": {
       "body": [
-        4
+        4,
+        28
       ]
     },
     "collectively": {
@@ -2899,7 +3217,8 @@
     "colour": {
       "body": [
         4,
-        6
+        6,
+        28
       ]
     },
     "colourless": {
@@ -2978,6 +3297,11 @@
         4,
         17,
         27
+      ]
+    },
+    "communal": {
+      "body": [
+        28
       ]
     },
     "communication": {
@@ -3067,7 +3391,8 @@
       "body": [
         16,
         17,
-        18
+        18,
+        28
       ]
     },
     "complexity": {
@@ -3118,18 +3443,33 @@
     },
     "compressed": {
       "body": [
-        4
+        4,
+        28
+      ]
+    },
+    "compresses": {
+      "body": [
+        28
       ]
     },
     "compression": {
+      "heading": [
+        28
+      ],
       "body": [
         7,
-        11
+        11,
+        28
       ]
     },
     "comprises": {
       "body": [
         14
+      ]
+    },
+    "computation": {
+      "body": [
+        28
       ]
     },
     "computational": {
@@ -3140,6 +3480,11 @@
     "computer": {
       "body": [
         10
+      ]
+    },
+    "computers": {
+      "body": [
+        28
       ]
     },
     "concept": {
@@ -3226,7 +3571,8 @@
     },
     "conditions": {
       "body": [
-        8
+        8,
+        28
       ]
     },
     "confabulating": {
@@ -3281,6 +3627,11 @@
       ],
       "body": [
         7
+      ]
+    },
+    "connection": {
+      "body": [
+        28
       ]
     },
     "connects": {
@@ -3427,7 +3778,8 @@
         5,
         6,
         18,
-        27
+        27,
+        28
       ]
     },
     "construction": {
@@ -3439,6 +3791,11 @@
     "constructions": {
       "body": [
         25
+      ]
+    },
+    "constructive": {
+      "body": [
+        28
       ]
     },
     "constructs": {
@@ -3498,7 +3855,8 @@
         14,
         19,
         24,
-        25
+        25,
+        28
       ]
     },
     "context-sensitive": {
@@ -3539,6 +3897,11 @@
         18
       ]
     },
+    "contrasts": {
+      "body": [
+        28
+      ]
+    },
     "contributed": {
       "body": [
         6
@@ -3560,7 +3923,8 @@
         9,
         18,
         25,
-        26
+        26,
+        28
       ]
     },
     "controlled": {
@@ -3577,6 +3941,11 @@
     "cooperation": {
       "body": [
         14
+      ]
+    },
+    "coordination": {
+      "body": [
+        28
       ]
     },
     "core": {
@@ -3669,12 +4038,23 @@
     },
     "cosmology": {
       "body": [
-        8
+        8,
+        28
+      ]
+    },
+    "cosmos": {
+      "body": [
+        28
       ]
     },
     "cost": {
       "body": [
         19
+      ]
+    },
+    "costly": {
+      "heading": [
+        28
       ]
     },
     "costs": {
@@ -3688,7 +4068,8 @@
         4,
         6,
         10,
-        11
+        11,
+        28
       ]
     },
     "counterpart": {
@@ -3781,12 +4162,18 @@
       "body": [
         14,
         17,
-        19
+        19,
+        28
       ]
     },
     "cross-cultural": {
       "body": [
         14
+      ]
+    },
+    "cross-hatch": {
+      "body": [
+        28
       ]
     },
     "cruse": {
@@ -3813,7 +4200,8 @@
     "cue": {
       "body": [
         15,
-        26
+        26,
+        28
       ]
     },
     "cue-dependent": {
@@ -3831,7 +4219,8 @@
     "cultural": {
       "body": [
         8,
-        14
+        14,
+        28
       ]
     },
     "culturally": {
@@ -3844,7 +4233,13 @@
         8,
         14,
         17,
-        27
+        27,
+        28
+      ]
+    },
+    "cultures": {
+      "body": [
+        28
       ]
     },
     "curled": {
@@ -3937,7 +4332,13 @@
       "body": [
         7,
         13,
-        26
+        26,
+        28
+      ]
+    },
+    "datasets": {
+      "body": [
+        28
       ]
     },
     "date": {
@@ -3956,6 +4357,11 @@
       "body": [
         4,
         15
+      ]
+    },
+    "dayet": {
+      "body": [
+        28
       ]
     },
     "dd": {
@@ -4028,6 +4434,16 @@
     "decoration": {
       "body": [
         11
+      ]
+    },
+    "decorative": {
+      "heading": [
+        28
+      ]
+    },
+    "decoupled": {
+      "body": [
+        28
       ]
     },
     "dede": {
@@ -4106,6 +4522,11 @@
         27
       ]
     },
+    "demonstrates": {
+      "body": [
+        28
+      ]
+    },
     "dense": {
       "body": [
         17
@@ -4140,6 +4561,16 @@
     "depersonalisation": {
       "body": [
         18
+      ]
+    },
+    "depict": {
+      "body": [
+        28
+      ]
+    },
+    "depiction": {
+      "body": [
+        28
       ]
     },
     "depotentiates": {
@@ -4191,6 +4622,11 @@
         6
       ]
     },
+    "describing": {
+      "body": [
+        28
+      ]
+    },
     "description": {
       "heading": [
         10
@@ -4215,7 +4651,8 @@
         7,
         18,
         25,
-        26
+        26,
+        28
       ]
     },
     "designed": {
@@ -4251,12 +4688,14 @@
     },
     "detail": {
       "body": [
-        18
+        18,
+        28
       ]
     },
     "detailed": {
       "body": [
-        18
+        18,
+        28
       ]
     },
     "details": {
@@ -4303,7 +4742,8 @@
     "device": {
       "body": [
         17,
-        26
+        26,
+        28
       ]
     },
     "devices": {
@@ -4316,6 +4756,11 @@
         13,
         17,
         27
+      ]
+    },
+    "diagrams": {
+      "body": [
+        28
       ]
     },
     "dialogue": {
@@ -4367,8 +4812,12 @@
       ]
     },
     "digital": {
+      "heading": [
+        28
+      ],
       "body": [
-        3
+        3,
+        28
       ]
     },
     "diluted": {
@@ -4435,7 +4884,8 @@
     },
     "directly": {
       "body": [
-        6
+        6,
+        28
       ]
     },
     "discourse": {
@@ -4477,6 +4927,11 @@
         11
       ]
     },
+    "display": {
+      "body": [
+        28
+      ]
+    },
     "displaying": {
       "body": [
         26
@@ -4492,9 +4947,19 @@
         8
       ]
     },
+    "dissociable": {
+      "body": [
+        28
+      ]
+    },
     "distance": {
       "body": [
         26
+      ]
+    },
+    "distilling": {
+      "body": [
+        28
       ]
     },
     "distinct": {
@@ -4524,7 +4989,8 @@
     },
     "distortion": {
       "body": [
-        26
+        26,
+        28
       ]
     },
     "distress": {
@@ -4537,8 +5003,12 @@
       ]
     },
     "distributed": {
+      "heading": [
+        28
+      ],
       "body": [
-        10
+        10,
+        28
       ]
     },
     "distribution": {
@@ -4579,6 +5049,11 @@
         9
       ]
     },
+    "dna": {
+      "body": [
+        28
+      ]
+    },
     "do": {
       "body": [
         6,
@@ -4593,6 +5068,11 @@
     "document": {
       "body": [
         6
+      ]
+    },
+    "documentation": {
+      "body": [
+        28
       ]
     },
     "documented": {
@@ -4611,9 +5091,15 @@
         19
       ]
     },
+    "doesn": {
+      "body": [
+        28
+      ]
+    },
     "doing": {
       "body": [
-        18
+        18,
+        28
       ]
     },
     "domain": {
@@ -4671,6 +5157,11 @@
         26
       ]
     },
+    "dot": {
+      "body": [
+        28
+      ]
+    },
     "dotlineform": {
       "title": [
         0
@@ -4679,7 +5170,8 @@
     "dots": {
       "body": [
         4,
-        6
+        6,
+        28
       ]
     },
     "double": {
@@ -4694,7 +5186,8 @@
     },
     "down": {
       "body": [
-        15
+        15,
+        28
       ]
     },
     "downloaded": {
@@ -4705,6 +5198,11 @@
     "doyon": {
       "body": [
         9
+      ]
+    },
+    "drawing": {
+      "body": [
+        28
       ]
     },
     "drawings": {
@@ -4747,6 +5245,11 @@
       "body": [
         15,
         27
+      ]
+    },
+    "dreamscapes": {
+      "body": [
+        28
       ]
     },
     "drop": {
@@ -4808,6 +5311,11 @@
       "body": [
         9,
         25
+      ]
+    },
+    "dynamically": {
+      "body": [
+        28
       ]
     },
     "dynamics": {
@@ -4873,6 +5381,16 @@
         26
       ]
     },
+    "earliest": {
+      "body": [
+        28
+      ]
+    },
+    "early": {
+      "body": [
+        28
+      ]
+    },
     "easily": {
       "body": [
         26
@@ -4893,6 +5411,11 @@
         26
       ]
     },
+    "echoing": {
+      "body": [
+        28
+      ]
+    },
     "ecological": {
       "heading": [
         7
@@ -4906,6 +5429,11 @@
     "ecology": {
       "body": [
         11
+      ]
+    },
+    "ecosystems": {
+      "body": [
+        28
       ]
     },
     "ed": {
@@ -4952,6 +5480,11 @@
         8,
         18,
         19
+      ]
+    },
+    "effects": {
+      "body": [
+        28
       ]
     },
     "efficiency": {
@@ -5069,7 +5602,8 @@
     },
     "emerge": {
       "body": [
-        16
+        16,
+        28
       ]
     },
     "emergence": {
@@ -5078,7 +5612,8 @@
       ],
       "body": [
         10,
-        16
+        16,
+        28
       ]
     },
     "emergent": {
@@ -5093,7 +5628,8 @@
     "emerges": {
       "body": [
         7,
-        11
+        11,
+        28
       ]
     },
     "emotion": {
@@ -5103,7 +5639,8 @@
         14,
         15,
         17,
-        24
+        24,
+        28
       ]
     },
     "emotion-tagging": {
@@ -5114,12 +5651,18 @@
     "emotional": {
       "body": [
         11,
-        15
+        15,
+        28
       ]
     },
     "emotions": {
       "body": [
         15
+      ]
+    },
+    "emphasis": {
+      "body": [
+        28
       ]
     },
     "emphasise": {
@@ -5164,19 +5707,22 @@
         16,
         24,
         25,
-        26
+        26,
+        28
       ]
     },
     "encoded": {
       "body": [
         19,
-        24
+        24,
+        28
       ]
     },
     "encodes": {
       "body": [
         7,
-        16
+        16,
+        28
       ]
     },
     "encoding": {
@@ -5218,6 +5764,11 @@
       "body": [
         4,
         8
+      ]
+    },
+    "ended": {
+      "body": [
+        28
       ]
     },
     "endgame": {
@@ -5277,6 +5828,11 @@
         17
       ]
     },
+    "engaging": {
+      "body": [
+        28
+      ]
+    },
     "engine": {
       "body": [
         15,
@@ -5293,6 +5849,11 @@
         26
       ]
     },
+    "engravings": {
+      "body": [
+        28
+      ]
+    },
     "enjoyment": {
       "body": [
         6
@@ -5307,6 +5868,16 @@
         11,
         17,
         18
+      ]
+    },
+    "ensures": {
+      "body": [
+        28
+      ]
+    },
+    "ensuring": {
+      "body": [
+        28
       ]
     },
     "entanglement": {
@@ -5364,7 +5935,8 @@
     "environments": {
       "body": [
         17,
-        18
+        18,
+        28
       ]
     },
     "ep": {
@@ -5381,7 +5953,8 @@
       "body": [
         14,
         24,
-        26
+        26,
+        28
       ]
     },
     "epistemically": {
@@ -5425,9 +5998,19 @@
         16
       ]
     },
+    "eras": {
+      "body": [
+        28
+      ]
+    },
     "erlbaum": {
       "body": [
         25
+      ]
+    },
+    "errico": {
+      "body": [
+        28
       ]
     },
     "error": {
@@ -5445,6 +6028,11 @@
         27
       ]
     },
+    "escape": {
+      "body": [
+        28
+      ]
+    },
     "especially": {
       "body": [
         15
@@ -5452,7 +6040,8 @@
     },
     "essay": {
       "body": [
-        13
+        13,
+        28
       ]
     },
     "essence": {
@@ -5628,13 +6217,15 @@
     },
     "evolutionary": {
       "title": [
-        14
+        14,
+        28
       ],
       "summary": [
         14
       ],
       "body": [
-        14
+        14,
+        28
       ]
     },
     "evolve": {
@@ -5644,12 +6235,19 @@
     },
     "evolved": {
       "body": [
-        14
+        14,
+        28
+      ]
+    },
+    "evolves": {
+      "body": [
+        28
       ]
     },
     "evolving": {
       "body": [
-        15
+        15,
+        28
       ]
     },
     "exact": {
@@ -5682,6 +6280,11 @@
         11
       ]
     },
+    "exercises": {
+      "body": [
+        28
+      ]
+    },
     "exhausted": {
       "body": [
         10
@@ -5707,7 +6310,8 @@
     "exists": {
       "body": [
         6,
-        11
+        11,
+        28
       ]
     },
     "expand": {
@@ -5758,7 +6362,8 @@
         20,
         24,
         26,
-        27
+        27,
+        28
       ]
     },
     "experienced": {
@@ -5788,7 +6393,8 @@
     "experimental": {
       "body": [
         9,
-        16
+        16,
+        28
       ]
     },
     "experimenters": {
@@ -5831,9 +6437,19 @@
         26
       ]
     },
+    "explicit": {
+      "body": [
+        28
+      ]
+    },
     "explicity": {
       "body": [
         24
+      ]
+    },
+    "explore": {
+      "body": [
+        28
       ]
     },
     "exposed": {
@@ -5875,6 +6491,16 @@
       "body": [
         17,
         20
+      ]
+    },
+    "externalisation": {
+      "body": [
+        28
+      ]
+    },
+    "externalises": {
+      "body": [
+        28
       ]
     },
     "extra": {
@@ -5979,6 +6605,11 @@
     "fantasy": {
       "body": [
         26
+      ]
+    },
+    "farther": {
+      "body": [
+        28
       ]
     },
     "fauconnier": {
@@ -6119,7 +6750,8 @@
     },
     "filters": {
       "body": [
-        17
+        17,
+        28
       ]
     },
     "final": {
@@ -6216,12 +6848,14 @@
     },
     "five": {
       "body": [
-        24
+        24,
+        28
       ]
     },
     "fixed": {
       "body": [
-        26
+        26,
+        28
       ]
     },
     "flags": {
@@ -6345,7 +6979,8 @@
         7,
         11,
         24,
-        26
+        26,
+        28
       ]
     },
     "formal": {
@@ -6379,7 +7014,8 @@
         6,
         7,
         11,
-        18
+        18,
+        28
       ]
     },
     "formula": {
@@ -6399,12 +7035,18 @@
     },
     "forward": {
       "body": [
-        14
+        14,
+        28
       ]
     },
     "foundations": {
       "body": [
         25
+      ]
+    },
+    "fractals": {
+      "body": [
+        28
       ]
     },
     "fragile": {
@@ -6453,7 +7095,8 @@
         10,
         16,
         25,
-        26
+        26,
+        28
       ]
     },
     "frameworks": {
@@ -6489,7 +7132,8 @@
         11,
         13,
         17,
-        20
+        20,
+        28
       ]
     },
     "free-energy": {
@@ -6503,9 +7147,15 @@
         20
       ]
     },
+    "freed": {
+      "body": [
+        28
+      ]
+    },
     "freedom": {
       "body": [
-        16
+        16,
+        28
       ]
     },
     "freely": {
@@ -6592,7 +7242,8 @@
       "body": [
         9,
         10,
-        11
+        11,
+        28
       ]
     },
     "functional": {
@@ -6631,12 +7282,26 @@
       ]
     },
     "future": {
+      "heading": [
+        28
+      ],
       "body": [
         6,
         11,
         14,
         15,
-        27
+        27,
+        28
+      ]
+    },
+    "futures": {
+      "body": [
+        28
+      ]
+    },
+    "gaesser": {
+      "body": [
+        28
       ]
     },
     "gain": {
@@ -6715,7 +7380,8 @@
         9,
         15,
         26,
-        27
+        27,
+        28
       ]
     },
     "genes": {
@@ -6730,17 +7396,24 @@
     },
     "geometric": {
       "body": [
-        16
+        16,
+        28
       ]
     },
     "geometry": {
       "body": [
-        16
+        16,
+        28
       ]
     },
     "gesture": {
       "body": [
         6
+      ]
+    },
+    "gestures": {
+      "body": [
+        28
       ]
     },
     "gets": {
@@ -6768,6 +7441,16 @@
         18
       ]
     },
+    "git": {
+      "body": [
+        28
+      ]
+    },
+    "github": {
+      "body": [
+        28
+      ]
+    },
     "give": {
       "body": [
         6
@@ -6786,6 +7469,11 @@
         20
       ]
     },
+    "glass": {
+      "body": [
+        28
+      ]
+    },
     "glimmer": {
       "body": [
         26
@@ -6794,6 +7482,11 @@
     "glint": {
       "body": [
         26
+      ]
+    },
+    "glitch": {
+      "body": [
+        28
       ]
     },
     "global": {
@@ -6819,7 +7512,8 @@
     },
     "go": {
       "body": [
-        18
+        18,
+        28
       ]
     },
     "goal": {
@@ -6927,6 +7621,11 @@
         18
       ]
     },
+    "greek": {
+      "body": [
+        28
+      ]
+    },
     "green": {
       "body": [
         16
@@ -6944,7 +7643,8 @@
     },
     "grids": {
       "body": [
-        4
+        4,
+        28
       ]
     },
     "grieve": {
@@ -6976,7 +7676,8 @@
       "body": [
         4,
         6,
-        25
+        25,
+        28
       ]
     },
     "grouped": {
@@ -7088,6 +7789,11 @@
         25
       ]
     },
+    "handprints": {
+      "body": [
+        28
+      ]
+    },
     "hanna": {
       "body": [
         9
@@ -7101,7 +7807,8 @@
     },
     "happens": {
       "body": [
-        6
+        6,
+        28
       ]
     },
     "happiness": {
@@ -7125,7 +7832,13 @@
     },
     "harmony": {
       "body": [
-        11
+        11,
+        28
+      ]
+    },
+    "harold": {
+      "body": [
+        28
       ]
     },
     "harris": {
@@ -7153,6 +7866,16 @@
     "hastens": {
       "body": [
         8
+      ]
+    },
+    "hatch": {
+      "body": [
+        28
+      ]
+    },
+    "hatchings": {
+      "body": [
+        28
       ]
     },
     "have": {
@@ -7223,6 +7946,11 @@
     "hence": {
       "body": [
         6
+      ]
+    },
+    "henshilwood": {
+      "body": [
+        28
       ]
     },
     "henson": {
@@ -7334,6 +8062,11 @@
         11
       ]
     },
+    "history": {
+      "body": [
+        28
+      ]
+    },
     "hitch": {
       "body": [
         25
@@ -7438,7 +8171,13 @@
         20,
         24,
         25,
-        26
+        26,
+        28
+      ]
+    },
+    "hub": {
+      "body": [
+        28
       ]
     },
     "human": {
@@ -7452,12 +8191,18 @@
         11,
         14,
         15,
-        18
+        18,
+        28
       ]
     },
     "humanity": {
       "body": [
         6
+      ]
+    },
+    "humans": {
+      "body": [
+        28
       ]
     },
     "humble": {
@@ -7576,6 +8321,11 @@
         26
       ]
     },
+    "identity": {
+      "body": [
+        28
+      ]
+    },
     "if": {
       "body": [
         4,
@@ -7632,7 +8382,8 @@
         4,
         6,
         7,
-        26
+        26,
+        28
       ]
     },
     "imagination": {
@@ -7640,12 +8391,19 @@
         7,
         11,
         25,
-        26
+        26,
+        28
       ]
     },
     "imaginative": {
       "body": [
-        26
+        26,
+        28
+      ]
+    },
+    "imagining": {
+      "body": [
+        28
       ]
     },
     "imitating": {
@@ -7656,7 +8414,8 @@
     "immediate": {
       "body": [
         18,
-        26
+        26,
+        28
       ]
     },
     "impair": {
@@ -7837,12 +8596,19 @@
     },
     "individuals": {
       "body": [
-        4
+        4,
+        28
+      ]
+    },
+    "induction": {
+      "body": [
+        28
       ]
     },
     "ineffable": {
       "body": [
-        11
+        11,
+        28
       ]
     },
     "inevitability": {
@@ -7871,7 +8637,13 @@
         16
       ],
       "body": [
-        16
+        16,
+        28
+      ]
+    },
+    "infinity": {
+      "body": [
+        28
       ]
     },
     "inflate": {
@@ -7969,6 +8741,11 @@
         18
       ]
     },
+    "innovation": {
+      "body": [
+        28
+      ]
+    },
     "input": {
       "body": [
         11,
@@ -7999,6 +8776,11 @@
         18,
         25,
         26
+      ]
+    },
+    "instead": {
+      "body": [
+        28
       ]
     },
     "instinct": {
@@ -8047,6 +8829,11 @@
         18
       ]
     },
+    "intended": {
+      "body": [
+        28
+      ]
+    },
     "intention": {
       "body": [
         6,
@@ -8060,7 +8847,8 @@
     },
     "interaction": {
       "body": [
-        6
+        6,
+        28
       ]
     },
     "interacts": {
@@ -8108,7 +8896,8 @@
     "interpretation": {
       "body": [
         11,
-        19
+        19,
+        28
       ]
     },
     "interpreted": {
@@ -8146,7 +8935,8 @@
         18,
         24,
         25,
-        26
+        26,
+        28
       ]
     },
     "intrinsic": {
@@ -8204,6 +8994,11 @@
         16
       ]
     },
+    "invoke": {
+      "body": [
+        28
+      ]
+    },
     "involves": {
       "body": [
         10
@@ -8228,6 +9023,11 @@
     "irreversibility": {
       "body": [
         19
+      ]
+    },
+    "islamic": {
+      "body": [
+        28
       ]
     },
     "isn": {
@@ -8261,7 +9061,8 @@
       "body": [
         10,
         11,
-        18
+        18,
+        28
       ]
     },
     "itself": {
@@ -8275,7 +9076,8 @@
         11,
         18,
         24,
-        26
+        26,
+        28
       ]
     },
     "jaynes": {
@@ -8318,7 +9120,8 @@
         7,
         9,
         10,
-        11
+        11,
+        28
       ]
     },
     "journey": {
@@ -8357,7 +9160,8 @@
         16,
         18,
         19,
-        24
+        24,
+        28
       ]
     },
     "just-so": {
@@ -8395,6 +9199,11 @@
         24
       ]
     },
+    "kandinsky": {
+      "body": [
+        28
+      ]
+    },
     "kant": {
       "body": [
         7,
@@ -8406,13 +9215,20 @@
       "body": [
         13,
         15,
-        25
+        25,
+        28
       ]
     },
     "keeping": {
       "body": [
         7,
-        26
+        26,
+        28
+      ]
+    },
+    "keeps": {
+      "body": [
+        28
       ]
     },
     "keepsake": {
@@ -8485,6 +9301,11 @@
         7
       ]
     },
+    "knotwork": {
+      "body": [
+        28
+      ]
+    },
     "know": {
       "body": [
         18
@@ -8503,13 +9324,15 @@
         8,
         18,
         25,
-        26
+        26,
+        28
       ]
     },
     "known": {
       "body": [
         7,
-        11
+        11,
+        28
       ]
     },
     "koch": {
@@ -8530,6 +9353,11 @@
     "lab": {
       "body": [
         24
+      ]
+    },
+    "label": {
+      "body": [
+        28
       ]
     },
     "laboratory": {
@@ -8576,7 +9404,8 @@
       "body": [
         10,
         11,
-        17
+        17,
+        28
       ]
     },
     "lao": {
@@ -8605,6 +9434,9 @@
       ]
     },
     "late": {
+      "heading": [
+        28
+      ],
       "body": [
         8
       ]
@@ -8692,7 +9524,8 @@
         11,
         13,
         14,
-        25
+        25,
+        28
       ]
     },
     "leaves": {
@@ -8718,6 +9551,11 @@
     "legend": {
       "heading": [
         26
+      ]
+    },
+    "legible": {
+      "body": [
+        28
       ]
     },
     "lehericy": {
@@ -8777,7 +9615,8 @@
       ],
       "body": [
         10,
-        25
+        25,
+        28
       ]
     },
     "lexical": {
@@ -8848,7 +9687,8 @@
         13,
         24,
         25,
-        26
+        26,
+        28
       ]
     },
     "likelihood": {
@@ -8864,7 +9704,8 @@
     "likely": {
       "body": [
         13,
-        20
+        20,
+        28
       ]
     },
     "limit": {
@@ -8892,7 +9733,8 @@
       ],
       "body": [
         18,
-        24
+        24,
+        28
       ]
     },
     "linde": {
@@ -8969,6 +9811,16 @@
     "lists": {
       "body": [
         24
+      ]
+    },
+    "literally": {
+      "body": [
+        28
+      ]
+    },
+    "literalness": {
+      "body": [
+        28
       ]
     },
     "little": {
@@ -9084,9 +9936,15 @@
         24
       ]
     },
+    "longer": {
+      "body": [
+        28
+      ]
+    },
     "look": {
       "body": [
-        26
+        26,
+        28
       ]
     },
     "loop": {
@@ -9157,9 +10015,15 @@
         15
       ]
     },
+    "machine": {
+      "body": [
+        28
+      ]
+    },
     "machinery": {
       "body": [
-        18
+        18,
+        28
       ]
     },
     "macro": {
@@ -9177,7 +10041,13 @@
         5,
         6,
         10,
-        26
+        26,
+        28
+      ]
+    },
+    "madore": {
+      "body": [
+        28
       ]
     },
     "magazines": {
@@ -9226,25 +10096,38 @@
         16,
         17,
         18,
-        19
+        19,
+        28
       ]
     },
     "makes": {
       "body": [
         10,
         11,
-        17
+        17,
+        28
       ]
     },
     "making": {
       "body": [
         7,
-        10
+        10,
+        28
       ]
     },
     "maldacena": {
       "body": [
         16
+      ]
+    },
+    "malevich": {
+      "body": [
+        28
+      ]
+    },
+    "mandalas": {
+      "body": [
+        28
       ]
     },
     "manifolds": {
@@ -9277,7 +10160,8 @@
         9,
         10,
         14,
-        24
+        24,
+        28
       ]
     },
     "map": {
@@ -9313,12 +10197,19 @@
     },
     "mark": {
       "body": [
-        26
+        26,
+        28
+      ]
+    },
+    "markings": {
+      "body": [
+        28
       ]
     },
     "marks": {
       "body": [
-        5
+        5,
+        28
       ]
     },
     "marr": {
@@ -9383,6 +10274,9 @@
     "matters": {
       "heading": [
         19
+      ],
+      "body": [
+        28
       ]
     },
     "may": {
@@ -9430,6 +10324,11 @@
         6
       ]
     },
+    "meanders": {
+      "body": [
+        28
+      ]
+    },
     "meaning": {
       "title": [
         7
@@ -9452,7 +10351,13 @@
         19,
         24,
         25,
-        26
+        26,
+        28
+      ]
+    },
+    "meaning-making": {
+      "body": [
+        28
       ]
     },
     "meanings": {
@@ -9460,7 +10365,8 @@
         4,
         6,
         19,
-        26
+        26,
+        28
       ]
     },
     "means": {
@@ -9506,6 +10412,9 @@
       ]
     },
     "mechanism": {
+      "title": [
+        28
+      ],
       "body": [
         6
       ]
@@ -9524,10 +10433,16 @@
         18
       ]
     },
+    "med": {
+      "body": [
+        28
+      ]
+    },
     "media": {
       "body": [
         10,
-        26
+        26,
+        28
       ]
     },
     "mediated": {
@@ -9541,9 +10456,15 @@
         13
       ]
     },
+    "medieval": {
+      "body": [
+        28
+      ]
+    },
     "meditation": {
       "body": [
-        26
+        26,
+        28
       ]
     },
     "meet": {
@@ -9561,6 +10482,11 @@
       "heading": [
         13,
         17
+      ]
+    },
+    "megalithic": {
+      "body": [
+        28
       ]
     },
     "membranes": {
@@ -9597,7 +10523,8 @@
         9,
         15,
         19,
-        24
+        24,
+        28
       ],
       "summary": [
         15,
@@ -9617,7 +10544,8 @@
         24,
         25,
         26,
-        27
+        27,
+        28
       ]
     },
     "memory-group": {
@@ -9656,6 +10584,11 @@
     "meronymy": {
       "body": [
         25
+      ]
+    },
+    "met": {
+      "body": [
+        28
       ]
     },
     "meta": {
@@ -9734,6 +10667,11 @@
         19
       ]
     },
+    "metropolitan": {
+      "body": [
+        28
+      ]
+    },
     "metzinger": {
       "body": [
         18
@@ -9765,6 +10703,21 @@
         10
       ]
     },
+    "mid": {
+      "heading": [
+        28
+      ]
+    },
+    "mid-20th": {
+      "heading": [
+        28
+      ]
+    },
+    "middle": {
+      "heading": [
+        28
+      ]
+    },
     "might": {
       "body": [
         4,
@@ -9783,6 +10736,11 @@
         17
       ]
     },
+    "milwaukee": {
+      "body": [
+        28
+      ]
+    },
     "mind": {
       "heading": [
         9
@@ -9797,7 +10755,8 @@
         17,
         25,
         26,
-        27
+        27,
+        28
       ]
     },
     "mind-independent": {
@@ -9857,7 +10816,13 @@
         6,
         24,
         25,
-        26
+        26,
+        28
+      ]
+    },
+    "mirrored": {
+      "body": [
+        28
       ]
     },
     "mirroring": {
@@ -9868,7 +10833,8 @@
     "mirrors": {
       "body": [
         10,
-        25
+        25,
+        28
       ]
     },
     "miscellany": {
@@ -9913,7 +10879,13 @@
       "body": [
         11,
         25,
-        26
+        26,
+        28
+      ]
+    },
+    "mnemonics": {
+      "body": [
+        28
       ]
     },
     "mode": {
@@ -9965,7 +10937,16 @@
       "body": [
         9,
         14,
-        19
+        19,
+        28
+      ]
+    },
+    "modernist": {
+      "heading": [
+        28
+      ],
+      "body": [
+        28
       ]
     },
     "modifies": {
@@ -10023,6 +11004,11 @@
         9
       ]
     },
+    "mondrian": {
+      "body": [
+        28
+      ]
+    },
     "monotone": {
       "body": [
         6
@@ -10057,7 +11043,8 @@
         6,
         7,
         18,
-        24
+        24,
+        28
       ]
     },
     "morning": {
@@ -10078,6 +11065,11 @@
     "motif": {
       "body": [
         7
+      ]
+    },
+    "motifs": {
+      "body": [
+        28
       ]
     },
     "motion": {
@@ -10136,7 +11128,8 @@
     "much": {
       "body": [
         7,
-        18
+        18,
+        28
       ]
     },
     "multiple": {
@@ -10159,14 +11152,21 @@
         25
       ]
     },
+    "museum": {
+      "body": [
+        28
+      ]
+    },
     "music": {
       "body": [
-        11
+        11,
+        28
       ]
     },
     "must": {
       "body": [
-        18
+        18,
+        28
       ]
     },
     "mutual": {
@@ -10180,11 +11180,17 @@
         6
       ]
     },
+    "myth": {
+      "body": [
+        28
+      ]
+    },
     "n.d": {
       "body": [
         17,
         20,
-        27
+        27,
+        28
       ]
     },
     "naccache": {
@@ -10230,7 +11236,8 @@
       ],
       "body": [
         6,
-        14
+        14,
+        28
       ]
     },
     "naturalistic": {
@@ -10260,7 +11267,8 @@
         17,
         20,
         24,
-        26
+        26,
+        28
       ]
     },
     "nature.com": {
@@ -10312,11 +11320,17 @@
         26
       ]
     },
+    "needing": {
+      "body": [
+        28
+      ]
+    },
     "needs": {
       "body": [
         6,
         11,
-        19
+        19,
+        28
       ]
     },
     "negative": {
@@ -10342,6 +11356,11 @@
         26
       ]
     },
+    "neolithic": {
+      "body": [
+        28
+      ]
+    },
     "network": {
       "body": [
         7,
@@ -10361,7 +11380,8 @@
         11,
         15,
         16,
-        24
+        24,
+        28
       ]
     },
     "neural": {
@@ -10372,7 +11392,8 @@
         9,
         10,
         15,
-        24
+        24,
+        28
       ]
     },
     "neuroaesthetics": {
@@ -10444,7 +11465,8 @@
         13,
         15,
         17,
-        20
+        20,
+        28
       ]
     },
     "neurosciences": {
@@ -10464,7 +11486,8 @@
     },
     "never": {
       "body": [
-        18
+        18,
+        28
       ]
     },
     "new": {
@@ -10477,7 +11500,13 @@
         13,
         14,
         17,
-        20
+        20,
+        28
+      ]
+    },
+    "newgrange": {
+      "body": [
+        28
       ]
     },
     "next": {
@@ -10485,6 +11514,11 @@
         15,
         19,
         27
+      ]
+    },
+    "niekerk": {
+      "body": [
+        28
       ]
     },
     "nielsen": {
@@ -10528,7 +11562,8 @@
         13,
         18,
         19,
-        27
+        27,
+        28
       ]
     },
     "no-hair": {
@@ -10559,7 +11594,8 @@
       "body": [
         6,
         16,
-        19
+        19,
+        28
       ]
     },
     "non-self": {
@@ -10641,13 +11677,15 @@
         20,
         24,
         26,
-        27
+        27,
+        28
       ]
     },
     "note": {
       "body": [
         19,
-        26
+        26,
+        28
       ]
     },
     "notes": {
@@ -10660,7 +11698,8 @@
         14,
         17,
         20,
-        24
+        24,
+        28
       ]
     },
     "notion": {
@@ -10697,7 +11736,8 @@
     },
     "now": {
       "body": [
-        9
+        9,
+        28
       ]
     },
     "nrem": {
@@ -10739,7 +11779,8 @@
     },
     "object": {
       "body": [
-        26
+        26,
+        28
       ]
     },
     "objective": {
@@ -10757,7 +11798,8 @@
     },
     "objects": {
       "body": [
-        16
+        16,
+        28
       ]
     },
     "obscurity": {
@@ -10825,6 +11867,11 @@
         25
       ]
     },
+    "ochre": {
+      "body": [
+        28
+      ]
+    },
     "odds": {
       "body": [
         18
@@ -10860,12 +11907,28 @@
         18,
         24,
         25,
-        26
+        26,
+        28
+      ]
+    },
+    "old": {
+      "body": [
+        28
+      ]
+    },
+    "older": {
+      "body": [
+        28
       ]
     },
     "olsson": {
       "body": [
         18
+      ]
+    },
+    "omission": {
+      "body": [
+        28
       ]
     },
     "once": {
@@ -10881,7 +11944,8 @@
         10,
         17,
         18,
-        26
+        26,
+        28
       ]
     },
     "ones": {
@@ -10910,7 +11974,8 @@
         4,
         10,
         18,
-        27
+        27,
+        28
       ]
     },
     "onto": {
@@ -10936,7 +12001,13 @@
         8
       ],
       "body": [
-        6
+        6,
+        28
+      ]
+    },
+    "open-ended": {
+      "body": [
+        28
       ]
     },
     "opening": {
@@ -10946,12 +12017,14 @@
     },
     "openness": {
       "body": [
-        26
+        26,
+        28
       ]
     },
     "operate": {
       "body": [
-        9
+        9,
+        28
       ]
     },
     "operates": {
@@ -11023,7 +12096,8 @@
         11,
         19,
         25,
-        26
+        26,
+        28
       ]
     },
     "ordered": {
@@ -11051,9 +12125,24 @@
         27
       ]
     },
+    "organisation": {
+      "body": [
+        28
+      ]
+    },
+    "organise": {
+      "body": [
+        28
+      ]
+    },
     "organising": {
       "summary": [
         25
+      ]
+    },
+    "organism": {
+      "body": [
+        28
       ]
     },
     "organization": {
@@ -11091,6 +12180,11 @@
     "origination": {
       "body": [
         6
+      ]
+    },
+    "ornaments": {
+      "body": [
+        28
       ]
     },
     "oscillations": {
@@ -11236,7 +12330,8 @@
         7,
         14,
         16,
-        19
+        19,
+        28
       ]
     },
     "overviews": {
@@ -11276,6 +12371,11 @@
         26
       ]
     },
+    "pages": {
+      "body": [
+        28
+      ]
+    },
     "pain": {
       "body": [
         6
@@ -11288,7 +12388,13 @@
     },
     "painting": {
       "body": [
-        6
+        6,
+        28
+      ]
+    },
+    "paintings": {
+      "body": [
+        28
       ]
     },
     "paired": {
@@ -11328,7 +12434,8 @@
     },
     "parallel": {
       "body": [
-        9
+        9,
+        28
       ]
     },
     "parental": {
@@ -11343,7 +12450,8 @@
     },
     "part": {
       "body": [
-        4
+        4,
+        28
       ]
     },
     "partial": {
@@ -11387,7 +12495,8 @@
       ],
       "body": [
         5,
-        26
+        26,
+        28
       ]
     },
     "pass": {
@@ -11425,7 +12534,13 @@
         11,
         19,
         24,
-        26
+        26,
+        28
+      ]
+    },
+    "pasted": {
+      "body": [
+        28
       ]
     },
     "path": {
@@ -11451,7 +12566,8 @@
       "body": [
         7,
         11,
-        17
+        17,
+        28
       ]
     },
     "patterning": {
@@ -11468,7 +12584,8 @@
         11,
         16,
         24,
-        26
+        26,
+        28
       ]
     },
     "pause": {
@@ -11491,6 +12608,11 @@
     "peace": {
       "body": [
         4
+      ]
+    },
+    "peacock": {
+      "body": [
+        28
       ]
     },
     "peaks": {
@@ -11561,7 +12683,8 @@
         19,
         25,
         26,
-        27
+        27,
+        28
       ]
     },
     "percepts": {
@@ -11573,7 +12696,8 @@
       "body": [
         11,
         17,
-        25
+        25,
+        28
       ]
     },
     "perfect": {
@@ -11591,7 +12715,8 @@
     "perfectly": {
       "body": [
         4,
-        18
+        18,
+        28
       ]
     },
     "performs": {
@@ -11601,7 +12726,8 @@
     },
     "perhaps": {
       "body": [
-        4
+        4,
+        28
       ]
     },
     "periodically": {
@@ -11660,7 +12786,8 @@
         6,
         9,
         26,
-        27
+        27,
+        28
       ]
     },
     "personal": {
@@ -11740,7 +12867,8 @@
     },
     "philosophical": {
       "heading": [
-        7
+        7,
+        28
       ],
       "body": [
         10
@@ -11837,6 +12965,11 @@
     "pipeline": {
       "body": [
         26
+      ]
+    },
+    "pivot": {
+      "body": [
+        28
       ]
     },
     "pixels": {
@@ -11966,6 +13099,11 @@
         6
       ]
     },
+    "pollarolo": {
+      "body": [
+        28
+      ]
+    },
     "population": {
       "body": [
         10
@@ -11999,7 +13137,8 @@
         8
       ],
       "body": [
-        17
+        17,
+        28
       ]
     },
     "possible": {
@@ -12035,6 +13174,11 @@
         10
       ]
     },
+    "postmodern": {
+      "heading": [
+        28
+      ]
+    },
     "potential": {
       "body": [
         4
@@ -12054,6 +13198,11 @@
     "powered": {
       "body": [
         8
+      ]
+    },
+    "powerful": {
+      "body": [
+        28
       ]
     },
     "powers": {
@@ -12200,6 +13349,9 @@
       ]
     },
     "prehistoric": {
+      "heading": [
+        28
+      ],
       "body": [
         14
       ]
@@ -12221,7 +13373,8 @@
     },
     "presence": {
       "body": [
-        10
+        10,
+        28
       ]
     },
     "present": {
@@ -12360,6 +13513,11 @@
         20
       ]
     },
+    "probes": {
+      "body": [
+        28
+      ]
+    },
     "problem": {
       "body": [
         4,
@@ -12402,7 +13560,8 @@
         4,
         6,
         24,
-        26
+        26,
+        28
       ]
     },
     "processes": {
@@ -12443,7 +13602,8 @@
         15,
         17,
         25,
-        27
+        27,
+        28
       ]
     },
     "processors": {
@@ -12511,7 +13671,8 @@
         14
       ],
       "body": [
-        16
+        16,
+        28
       ]
     },
     "projection": {
@@ -12534,7 +13695,8 @@
     "proportion": {
       "body": [
         7,
-        11
+        11,
+        28
       ]
     },
     "propose": {
@@ -12550,6 +13712,16 @@
     "protein": {
       "body": [
         24
+      ]
+    },
+    "proto": {
+      "body": [
+        28
+      ]
+    },
+    "proto-language": {
+      "body": [
+        28
       ]
     },
     "protoconsciousness": {
@@ -12620,7 +13792,8 @@
         14,
         18,
         24,
-        25
+        25,
+        28
       ]
     },
     "psychotic": {
@@ -12628,14 +13801,21 @@
         18
       ]
     },
+    "pub": {
+      "body": [
+        28
+      ]
+    },
     "published": {
       "body": [
-        13
+        13,
+        28
       ]
     },
     "pubmed": {
       "body": [
-        15
+        15,
+        28
       ]
     },
     "purchased": {
@@ -12645,7 +13825,8 @@
     },
     "pure": {
       "body": [
-        4
+        4,
+        28
       ]
     },
     "purpose": {
@@ -12708,9 +13889,15 @@
         9
       ]
     },
+    "queffelec": {
+      "body": [
+        28
+      ]
+    },
     "question": {
       "body": [
-        6
+        6,
+        28
       ]
     },
     "questions": {
@@ -12775,6 +13962,11 @@
         13
       ]
     },
+    "raises": {
+      "body": [
+        28
+      ]
+    },
     "ramachandran": {
       "body": [
         7,
@@ -12801,7 +13993,8 @@
     },
     "randomness": {
       "body": [
-        4
+        4,
+        28
       ]
     },
     "range": {
@@ -12821,7 +14014,8 @@
     },
     "rarely": {
       "body": [
-        19
+        19,
+        28
       ]
     },
     "rasch": {
@@ -12843,7 +14037,8 @@
     },
     "rather": {
       "body": [
-        9
+        9,
+        28
       ]
     },
     "re": {
@@ -12923,7 +14118,8 @@
         6,
         15,
         18,
-        24
+        24,
+        28
       ]
     },
     "real-life": {
@@ -12969,7 +14165,8 @@
         6,
         24,
         26,
-        27
+        27,
+        28
       ]
     },
     "realizability": {
@@ -13041,7 +14238,8 @@
         14,
         15,
         24,
-        26
+        26,
+        28
       ]
     },
     "recalled": {
@@ -13085,7 +14283,8 @@
       "body": [
         7,
         11,
-        26
+        26,
+        28
       ]
     },
     "recollection": {
@@ -13124,6 +14323,11 @@
         11
       ]
     },
+    "reconfigure": {
+      "body": [
+        28
+      ]
+    },
     "reconsolidation": {
       "body": [
         7,
@@ -13137,17 +14341,25 @@
         7,
         8,
         14,
-        24
+        24,
+        28
       ]
     },
     "reconstructed": {
       "body": [
-        27
+        27,
+        28
+      ]
+    },
+    "reconstructible": {
+      "body": [
+        28
       ]
     },
     "reconstruction": {
       "heading": [
-        15
+        15,
+        28
       ],
       "summary": [
         15
@@ -13155,7 +14367,8 @@
       "body": [
         8,
         15,
-        24
+        24,
+        28
       ]
     },
     "reconstructive": {
@@ -13165,7 +14378,8 @@
     },
     "reconstructs": {
       "body": [
-        7
+        7,
+        28
       ]
     },
     "record": {
@@ -13205,7 +14419,8 @@
     "recur": {
       "body": [
         8,
-        11
+        11,
+        28
       ]
     },
     "recurrent": {
@@ -13280,7 +14495,8 @@
         20,
         24,
         25,
-        27
+        27,
+        28
       ]
     },
     "referential": {
@@ -13316,7 +14532,8 @@
         25
       ],
       "body": [
-        26
+        26,
+        28
       ]
     },
     "reflection": {
@@ -13444,18 +14661,34 @@
         10
       ]
     },
+    "relation": {
+      "body": [
+        28
+      ]
+    },
+    "relational": {
+      "body": [
+        28
+      ]
+    },
     "relations": {
       "heading": [
         25
       ],
       "body": [
-        25
+        25,
+        28
       ]
     },
     "relationship": {
       "body": [
         10,
         18
+      ]
+    },
+    "relationships": {
+      "body": [
+        28
       ]
     },
     "relativity": {
@@ -13546,7 +14779,8 @@
         14,
         24,
         25,
-        26
+        26,
+        28
       ]
     },
     "remembrance": {
@@ -13573,6 +14807,11 @@
     "removal": {
       "body": [
         26
+      ]
+    },
+    "removing": {
+      "body": [
+        28
       ]
     },
     "renewal": {
@@ -13612,7 +14851,8 @@
     },
     "repeated": {
       "body": [
-        26
+        26,
+        28
       ]
     },
     "repeating": {
@@ -13623,7 +14863,8 @@
     },
     "repetition": {
       "body": [
-        24
+        24,
+        28
       ]
     },
     "repetitive": {
@@ -13640,6 +14881,11 @@
     "replenish": {
       "body": [
         6
+      ]
+    },
+    "replicating": {
+      "body": [
+        28
       ]
     },
     "replication": {
@@ -13695,12 +14941,14 @@
       ],
       "body": [
         10,
-        18
+        18,
+        28
       ]
     },
     "representational": {
       "body": [
-        10
+        10,
+        28
       ]
     },
     "representations": {
@@ -13737,7 +14985,8 @@
     "requires": {
       "body": [
         7,
-        16
+        16,
+        28
       ]
     },
     "research": {
@@ -13786,6 +15035,11 @@
         24
       ]
     },
+    "resides": {
+      "body": [
+        28
+      ]
+    },
     "residual": {
       "body": [
         26
@@ -13793,7 +15047,8 @@
     },
     "resilience": {
       "body": [
-        24
+        24,
+        28
       ]
     },
     "resonance": {
@@ -13802,7 +15057,8 @@
       ],
       "body": [
         7,
-        11
+        11,
+        28
       ]
     },
     "resonate": {
@@ -13819,6 +15075,11 @@
     "resources": {
       "body": [
         18
+      ]
+    },
+    "respond": {
+      "body": [
+        28
       ]
     },
     "response": {
@@ -13886,6 +15147,11 @@
         25
       ]
     },
+    "retrospective": {
+      "body": [
+        28
+      ]
+    },
     "return": {
       "body": [
         11,
@@ -13948,7 +15214,8 @@
         20,
         25,
         26,
-        27
+        27,
+        28
       ]
     },
     "reviews": {
@@ -13991,6 +15258,11 @@
         11
       ]
     },
+    "rhythms": {
+      "body": [
+        28
+      ]
+    },
     "riess": {
       "body": [
         8
@@ -14028,6 +15300,14 @@
         24
       ]
     },
+    "ritual": {
+      "heading": [
+        28
+      ],
+      "body": [
+        28
+      ]
+    },
     "robust": {
       "summary": [
         27
@@ -14039,7 +15319,8 @@
         11,
         15,
         24,
-        27
+        27,
+        28
       ]
     },
     "roles": {
@@ -14061,6 +15342,11 @@
     "rosch": {
       "body": [
         25
+      ]
+    },
+    "rothko": {
+      "body": [
+        28
       ]
     },
     "routine": {
@@ -14110,7 +15396,8 @@
     },
     "rules": {
       "body": [
-        10
+        10,
+        28
       ]
     },
     "rumination": {
@@ -14202,7 +15489,8 @@
     },
     "scaffold": {
       "body": [
-        7
+        7,
+        28
       ]
     },
     "scaffolding": {
@@ -14214,7 +15502,8 @@
       "body": [
         6,
         7,
-        17
+        17,
+        28
       ]
     },
     "scales": {
@@ -14235,7 +15524,8 @@
     },
     "schacter": {
       "body": [
-        9
+        9,
+        28
       ]
     },
     "schafe": {
@@ -14260,7 +15550,8 @@
       ],
       "body": [
         15,
-        25
+        25,
+        28
       ]
     },
     "schematic": {
@@ -14428,7 +15719,8 @@
         8,
         14,
         15,
-        24
+        24,
+        28
       ]
     },
     "selected": {
@@ -14475,7 +15767,8 @@
         9,
         11,
         18,
-        26
+        26,
+        28
       ]
     },
     "self-examination": {
@@ -14514,6 +15807,16 @@
         18
       ]
     },
+    "self-organisation": {
+      "body": [
+        28
+      ]
+    },
+    "self-organise": {
+      "body": [
+        28
+      ]
+    },
     "self-projection": {
       "body": [
         9
@@ -14527,6 +15830,11 @@
     "self-referential": {
       "body": [
         11
+      ]
+    },
+    "self-replicating": {
+      "body": [
+        28
       ]
     },
     "self-representation": {
@@ -14603,7 +15911,8 @@
         13,
         15,
         24,
-        26
+        26,
+        28
       ]
     },
     "sentient": {
@@ -14669,6 +15978,11 @@
         11
       ]
     },
+    "serving": {
+      "body": [
+        28
+      ]
+    },
     "set": {
       "body": [
         6
@@ -14719,7 +16033,8 @@
       "body": [
         14,
         25,
-        26
+        26,
+        28
       ]
     },
     "shaped": {
@@ -14738,14 +16053,21 @@
     "share": {
       "body": [
         4,
-        17
+        17,
+        28
       ]
     },
     "shared": {
       "body": [
         4,
         17,
-        27
+        27,
+        28
+      ]
+    },
+    "shares": {
+      "body": [
+        28
       ]
     },
     "sheets": {
@@ -14761,7 +16083,8 @@
     },
     "shifts": {
       "body": [
-        25
+        25,
+        28
       ]
     },
     "shimmer": {
@@ -14805,6 +16128,16 @@
         17
       ]
     },
+    "showcases": {
+      "body": [
+        28
+      ]
+    },
+    "showing": {
+      "body": [
+        28
+      ]
+    },
     "shown": {
       "body": [
         10
@@ -14812,7 +16145,8 @@
     },
     "shows": {
       "body": [
-        18
+        18,
+        28
       ]
     },
     "sick": {
@@ -14836,19 +16170,25 @@
         10,
         11,
         19,
-        26
+        26,
+        28
       ]
     },
     "signaling": {
       "body": [
-        10
+        10,
+        28
       ]
     },
     "signals": {
+      "heading": [
+        28
+      ],
       "body": [
         11,
         14,
-        19
+        19,
+        28
       ]
     },
     "signatures": {
@@ -14865,7 +16205,8 @@
     "signs": {
       "body": [
         6,
-        18
+        18,
+        28
       ]
     },
     "sikström": {
@@ -14902,7 +16243,8 @@
         6,
         10,
         17,
-        18
+        18,
+        28
       ]
     },
     "simpler": {
@@ -14938,7 +16280,8 @@
       "body": [
         14,
         18,
-        27
+        27,
+        28
       ]
     },
     "simulations": {
@@ -14959,7 +16302,8 @@
     },
     "single": {
       "body": [
-        6
+        6,
+        28
       ]
     },
     "sit": {
@@ -14986,6 +16330,11 @@
     "size": {
       "body": [
         6
+      ]
+    },
+    "skilled": {
+      "body": [
+        28
       ]
     },
     "skills": {
@@ -15031,6 +16380,16 @@
         14,
         17,
         24
+      ]
+    },
+    "social": {
+      "body": [
+        28
+      ]
+    },
+    "societies": {
+      "body": [
+        28
       ]
     },
     "society": {
@@ -15095,7 +16454,8 @@
       "body": [
         4,
         6,
-        26
+        26,
+        28
       ]
     },
     "somewhere": {
@@ -15134,12 +16494,18 @@
         11,
         15,
         25,
-        27
+        27,
+        28
       ]
     },
     "sources": {
       "summary": [
         18
+      ]
+    },
+    "south": {
+      "body": [
+        28
       ]
     },
     "souvenir": {
@@ -15159,7 +16525,8 @@
         6,
         10,
         16,
-        26
+        26,
+        28
       ]
     },
     "spaces": {
@@ -15215,13 +16582,20 @@
         10,
         13,
         14,
-        15
+        15,
+        28
       ]
     },
     "specificity": {
       "body": [
         20,
-        25
+        25,
+        28
+      ]
+    },
+    "speculative": {
+      "heading": [
+        28
       ]
     },
     "spikes": {
@@ -15232,7 +16606,13 @@
     "spirals": {
       "body": [
         7,
-        11
+        11,
+        28
+      ]
+    },
+    "spiritual": {
+      "body": [
+        28
       ]
     },
     "split": {
@@ -15265,6 +16645,11 @@
         24
       ]
     },
+    "square": {
+      "body": [
+        28
+      ]
+    },
     "squire": {
       "body": [
         24
@@ -15273,6 +16658,11 @@
     "stabilisation": {
       "body": [
         11
+      ]
+    },
+    "stabilise": {
+      "body": [
+        28
       ]
     },
     "stabilised": {
@@ -15319,6 +16709,11 @@
     "stages": {
       "body": [
         26
+      ]
+    },
+    "stained": {
+      "body": [
+        28
       ]
     },
     "stance": {
@@ -15382,7 +16777,8 @@
       "body": [
         6,
         11,
-        24
+        24,
+        28
       ]
     },
     "statistics": {
@@ -15444,7 +16840,8 @@
         17,
         18,
         19,
-        24
+        24,
+        28
       ]
     },
     "stillness": {
@@ -15506,12 +16903,19 @@
         7,
         11,
         24,
-        26
+        26,
+        28
+      ]
+    },
+    "stores": {
+      "body": [
+        28
       ]
     },
     "stories": {
       "body": [
-        18
+        18,
+        28
       ]
     },
     "storing": {
@@ -15582,6 +16986,11 @@
         16
       ]
     },
+    "strokes": {
+      "body": [
+        28
+      ]
+    },
     "strong": {
       "body": [
         6,
@@ -15619,7 +17028,8 @@
         13,
         17,
         19,
-        25
+        25,
+        28
       ]
     },
     "structured": {
@@ -15634,7 +17044,8 @@
         9,
         10,
         25,
-        26
+        26,
+        28
       ]
     },
     "structuring": {
@@ -15746,6 +17157,11 @@
         19
       ]
     },
+    "suggesting": {
+      "body": [
+        28
+      ]
+    },
     "sum": {
       "body": [
         13
@@ -15841,6 +17257,11 @@
         17
       ]
     },
+    "surplus": {
+      "body": [
+        28
+      ]
+    },
     "surprise": {
       "body": [
         7,
@@ -15856,6 +17277,24 @@
       "body": [
         7,
         11
+      ]
+    },
+    "survival": {
+      "heading": [
+        28
+      ],
+      "body": [
+        28
+      ]
+    },
+    "survive": {
+      "body": [
+        28
+      ]
+    },
+    "survives": {
+      "body": [
+        28
       ]
     },
     "suspension": {
@@ -15890,7 +17329,16 @@
     },
     "symbol": {
       "body": [
-        6
+        6,
+        28
+      ]
+    },
+    "symbolic": {
+      "heading": [
+        28
+      ],
+      "body": [
+        28
       ]
     },
     "symbolise": {
@@ -15912,7 +17360,8 @@
       ],
       "body": [
         4,
-        6
+        6,
+        28
       ]
     },
     "symmetric": {
@@ -15930,7 +17379,8 @@
         7,
         11,
         16,
-        26
+        26,
+        28
       ]
     },
     "synapses": {
@@ -15989,7 +17439,8 @@
         18,
         19,
         24,
-        26
+        26,
+        28
       ]
     },
     "systematic": {
@@ -15999,6 +17450,9 @@
       ]
     },
     "systems": {
+      "heading": [
+        28
+      ],
       "body": [
         7,
         9,
@@ -16007,12 +17461,8 @@
         17,
         18,
         24,
-        26
-      ]
-    },
-    "t15": {
-      "body": [
-        27
+        26,
+        28
       ]
     },
     "tag": {
@@ -16027,7 +17477,13 @@
     },
     "tags": {
       "body": [
-        17
+        17,
+        28
+      ]
+    },
+    "tail": {
+      "body": [
+        28
       ]
     },
     "take": {
@@ -16066,6 +17522,11 @@
         24
       ]
     },
+    "taps": {
+      "body": [
+        28
+      ]
+    },
     "target": {
       "body": [
         19
@@ -16081,6 +17542,11 @@
         24
       ]
     },
+    "tate": {
+      "body": [
+        28
+      ]
+    },
     "taught": {
       "body": [
         25
@@ -16094,6 +17560,11 @@
     "te": {
       "summary": [
         4
+      ]
+    },
+    "technology": {
+      "body": [
+        28
       ]
     },
     "telling": {
@@ -16115,7 +17586,8 @@
     "temporal": {
       "body": [
         7,
-        11
+        11,
+        28
       ]
     },
     "temporary": {
@@ -16181,6 +17653,11 @@
         26
       ]
     },
+    "tessellations": {
+      "body": [
+        28
+      ]
+    },
     "test": {
       "heading": [
         13
@@ -16233,7 +17710,8 @@
         6,
         8,
         9,
-        18
+        18,
+        28
       ]
     },
     "their": {
@@ -16336,7 +17814,8 @@
     "therefore": {
       "body": [
         6,
-        11
+        11,
+        28
       ]
     },
     "thermo": {
@@ -16363,7 +17842,8 @@
         11,
         15,
         18,
-        24
+        24,
+        28
       ]
     },
     "they": {
@@ -16378,7 +17858,8 @@
         10,
         11,
         17,
-        18
+        18,
+        28
       ]
     },
     "thin": {
@@ -16398,7 +17879,8 @@
       "body": [
         6,
         25,
-        27
+        27,
+        28
       ]
     },
     "thinking": {
@@ -16428,7 +17910,8 @@
         18,
         19,
         20,
-        27
+        27,
+        28
       ]
     },
     "thompson": {
@@ -16449,7 +17932,8 @@
         6,
         10,
         17,
-        18
+        18,
+        28
       ]
     },
     "though": {
@@ -16469,7 +17953,8 @@
         6,
         10,
         11,
-        26
+        26,
+        28
       ]
     },
     "thoughtful": {
@@ -16514,6 +17999,11 @@
         24
       ]
     },
+    "thrive": {
+      "body": [
+        28
+      ]
+    },
     "through": {
       "body": [
         6,
@@ -16523,7 +18013,8 @@
         24,
         25,
         26,
-        27
+        27,
+        28
       ]
     },
     "tibetan": {
@@ -16544,12 +18035,17 @@
         16,
         18,
         24,
-        26
+        26,
+        28
       ]
     },
     "timeline": {
+      "heading": [
+        28
+      ],
       "body": [
-        26
+        26,
+        28
       ]
     },
     "timescale": {
@@ -16591,6 +18087,11 @@
         26
       ]
     },
+    "tombs": {
+      "body": [
+        28
+      ]
+    },
     "tone": {
       "body": [
         15
@@ -16614,9 +18115,17 @@
         14
       ]
     },
+    "tool": {
+      "body": [
+        28
+      ]
+    },
     "tools": {
       "summary": [
         10
+      ],
+      "body": [
+        28
       ]
     },
     "topic": {
@@ -16689,6 +18198,11 @@
         20
       ]
     },
+    "traditions": {
+      "body": [
+        28
+      ]
+    },
     "traits": {
       "body": [
         14
@@ -16704,6 +18218,11 @@
         8
       ]
     },
+    "trance": {
+      "body": [
+        28
+      ]
+    },
     "transfer": {
       "body": [
         24
@@ -16716,7 +18235,8 @@
     },
     "transformation": {
       "body": [
-        11
+        11,
+        28
       ]
     },
     "transformations": {
@@ -16802,6 +18322,11 @@
         18
       ]
     },
+    "travels": {
+      "body": [
+        28
+      ]
+    },
     "treat": {
       "body": [
         19
@@ -16842,7 +18367,8 @@
     },
     "triggers": {
       "body": [
-        26
+        26,
+        28
       ]
     },
     "trivers": {
@@ -16934,6 +18460,11 @@
         7
       ]
     },
+    "tyranny": {
+      "body": [
+        28
+      ]
+    },
     "ultimate": {
       "body": [
         8
@@ -16952,6 +18483,11 @@
     "uncanny": {
       "body": [
         17
+      ]
+    },
+    "uncertain": {
+      "body": [
+        28
       ]
     },
     "uncertainty": {
@@ -17080,7 +18616,8 @@
         8
       ],
       "body": [
-        8
+        8,
+        28
       ]
     },
     "universes": {
@@ -17113,6 +18650,11 @@
     "unlimited": {
       "body": [
         24
+      ]
+    },
+    "unnecessary": {
+      "body": [
+        28
       ]
     },
     "unreal": {
@@ -17174,7 +18716,8 @@
       "body": [
         4,
         7,
-        11
+        11,
+        28
       ]
     },
     "usable": {
@@ -17211,7 +18754,8 @@
         7,
         19,
         20,
-        24
+        24,
+        28
       ]
     },
     "used": {
@@ -17245,6 +18789,11 @@
         26
       ]
     },
+    "utility": {
+      "body": [
+        28
+      ]
+    },
     "validating": {
       "body": [
         26
@@ -17264,7 +18813,8 @@
       "body": [
         7,
         11,
-        15
+        15,
+        28
       ]
     },
     "vander": {
@@ -17343,7 +18893,8 @@
         7,
         16,
         19,
-        27
+        27,
+        28
       ]
     },
     "victim": {
@@ -17364,6 +18915,11 @@
         6
       ]
     },
+    "victoria": {
+      "body": [
+        28
+      ]
+    },
     "view": {
       "heading": [
         9
@@ -17376,6 +18932,11 @@
     "viewed": {
       "body": [
         4
+      ]
+    },
+    "viewer": {
+      "body": [
+        28
       ]
     },
     "viewpoint": {
@@ -17411,7 +18972,8 @@
     "vision": {
       "body": [
         10,
-        25
+        25,
+        28
       ]
     },
     "visual": {
@@ -17429,6 +18991,11 @@
     "volume": {
       "body": [
         17
+      ]
+    },
+    "vr": {
+      "body": [
+        28
       ]
     },
     "vs": {
@@ -17533,11 +19100,22 @@
         26
       ]
     },
+    "waves": {
+      "body": [
+        28
+      ]
+    },
     "way": {
       "body": [
         6,
         15,
-        25
+        25,
+        28
+      ]
+    },
+    "ways": {
+      "body": [
+        28
       ]
     },
     "we": {
@@ -17554,7 +19132,8 @@
         18,
         24,
         25,
-        27
+        27,
+        28
       ]
     },
     "weak": {
@@ -17576,6 +19155,11 @@
     "weather": {
       "heading": [
         13
+      ]
+    },
+    "weaving": {
+      "body": [
+        28
       ]
     },
     "weekly": {
@@ -17651,7 +19235,8 @@
         17,
         18,
         19,
-        24
+        24,
+        28
       ]
     },
     "whatever": {
@@ -17677,7 +19262,8 @@
         18,
         19,
         24,
-        26
+        26,
+        28
       ]
     },
     "where": {
@@ -17693,7 +19279,8 @@
         10,
         11,
         18,
-        19
+        19,
+        28
       ]
     },
     "whether": {
@@ -17717,7 +19304,8 @@
         15,
         17,
         18,
-        24
+        24,
+        28
       ]
     },
     "whilst": {
@@ -17730,6 +19318,11 @@
         6
       ]
     },
+    "whitney": {
+      "body": [
+        28
+      ]
+    },
     "who": {
       "body": [
         6,
@@ -17739,7 +19332,8 @@
     "whole": {
       "body": [
         7,
-        25
+        25,
+        28
       ]
     },
     "whose": {
@@ -17760,7 +19354,8 @@
       "body": [
         8,
         11,
-        18
+        18,
+        28
       ]
     },
     "widely": {
@@ -17821,7 +19416,8 @@
       "body": [
         7,
         10,
-        11
+        11,
+        28
       ]
     },
     "witness": {
@@ -17868,7 +19464,8 @@
         11,
         13,
         18,
-        23
+        23,
+        28
       ]
     },
     "working": {
@@ -17888,7 +19485,8 @@
       ],
       "body": [
         18,
-        24
+        24,
+        28
       ]
     },
     "worksheet": {
@@ -17964,9 +19562,19 @@
         16
       ]
     },
+    "year": {
+      "body": [
+        28
+      ]
+    },
     "yearning": {
       "body": [
         26
+      ]
+    },
+    "years": {
+      "heading": [
+        28
       ]
     },
     "yet": {
@@ -18002,11 +19610,17 @@
         17
       ]
     },
+    "young": {
+      "body": [
+        28
+      ]
+    },
     "your": {
       "body": [
         7,
         13,
-        14
+        14,
+        28
       ]
     },
     "youtube": {
@@ -18027,7 +19641,8 @@
     "zero": {
       "body": [
         11,
-        19
+        19,
+        28
       ]
     },
     "zi": {
