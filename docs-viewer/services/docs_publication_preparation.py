@@ -134,13 +134,15 @@ class PublicationPreparation:
                 continue
             media = self.media.get(doc_id, self.pending["current_documents"].get(doc_id, {}).get("media", {}))
             removals = self.media_removals.get(doc_id, {})
-            if self.changes_only:
-                pending = doc_id in self.pending["current_documents"] or doc_id in self.pending["deleted_documents"]
-                if deleting:
-                    if doc_id not in self.metadata.withdrawn and not pending and not removals:
-                        continue
-                elif doc_id not in changed_ids and doc_id not in self.restored_documents and not pending and not removals and not self.media_changed(builder.media_owner, media):
+            pending = doc_id in self.pending["current_documents"] or doc_id in self.pending["deleted_documents"]
+            if deleting:
+                # An already-excluded Save has no new withdrawal. Preserve
+                # explicit Delete and all pending document/media effects.
+                if (doc_id not in self.metadata.withdrawn and not pending and not removals
+                        and (self.changes_only or doc_id not in deleted)):
                     continue
+            elif self.changes_only and doc_id not in changed_ids and doc_id not in self.restored_documents and not pending and not removals and not self.media_changed(builder.media_owner, media):
+                continue
             restored = self.restored_media(builder, doc_id, owner) if doc_id not in deleted else {}
             select_document(self.pending, doc_id, owner, media=media, removed_media=removals, restored_media=restored, delete=deleting)
         self.restored_documents.difference_update(payloads)
