@@ -22,6 +22,10 @@
   text-underline-offset: 0.15em;
 }
 
+.sharedFolderPicker__up{
+  margin-right: 0.3rem;
+}
+
 button.sharedFolderPicker__breadcrumb,
 .sharedFolderPicker__option{
   cursor: pointer;

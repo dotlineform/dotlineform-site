@@ -209,6 +209,7 @@ export function createDocsViewerManagementModalController(options = {}) {
     try {
       importFolderPicker = settings.createFolderPicker(refs.importFolderPicker, {
         initialDirectory: settings.initialDirectory,
+        rootDirectory: settings.rootDirectory,
         loadDirectory: settings.loadDirectory,
         onError: showImportFolderError,
         onSubmit: settings.onSubmit

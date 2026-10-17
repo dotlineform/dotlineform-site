@@ -408,7 +408,7 @@ def project_document_position(
     repo_root: Path, owner: ManagedDocumentCollection, doc_id: str, parent_ids: dict[str, str],
     write_position: Callable[[dict[str, Any]], None],
 ) -> dict[str, Any]:
-    """Project a changed tree and one parent field without rendering source."""
+    """Project reparenting and its document/publication eligibility effects."""
     build_dir = Path(__file__).resolve().parents[1] / "build"
     if str(build_dir) not in sys.path:
         sys.path.insert(0, str(build_dir))
@@ -446,11 +446,9 @@ def project_document_position(
     if tree_text != previous_text:
         write_text(_generated_path(builder.output_dir, "index-tree.json"), tree_text)
     from docs_publication_preparation import load_preparation, prepare_restored
-    from docs_selected_documents import read_selected
-
     publication = load_preparation(repo_root, builder.workspace, navigation=previous)
     publication.metadata.ordinary(navigation)
-    publication.documents(builder, {doc_id: payload}, [], selected=read_selected(owner.parent_config), changed_ids={doc_id})
+    publication.documents(builder, {doc_id: payload}, [], selected=None, changed_ids={doc_id})
     prepare_restored(builder, {}, publication)
     publication.save()
     remove_build_manifest(repo_root, owner.parent_config)

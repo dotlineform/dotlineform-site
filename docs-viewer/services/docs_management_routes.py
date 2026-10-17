@@ -43,6 +43,7 @@ WORK_DOWNLOADS_PATH = "/docs/work-downloads"
 WORK_LINKS_PATH = "/docs/work-links"
 OPEN_WORK_DOWNLOAD_PATH = "/docs/open-work-download"
 IMPORT_SOURCE_PATH = "/docs/import-source"
+IMPORT_DOC_PATH = "/docs/import-doc"
 SOURCE_MEDIA_PREPARE_PATH = "/docs/source/media"
 SET_DRAFT_PATH = "/docs/set-draft"
 SET_SELECTED_PATH = "/docs/set-selected"
@@ -51,6 +52,7 @@ REFRESH_DISCOVERY_PATH = "/docs/refresh-discovery"
 REBUILD_DOCUMENT_PATH = "/docs/rebuild-document"
 PUBLISH_PATH = "/docs/publish"
 MOVE_PATH = "/docs/move"
+ORDER_CHILDREN_PATH = "/docs/order-children"
 DELETE_PATH = "/docs/delete"
 STATIC_HTML_EXPORT_PREVIEW_PATH = "/docs/export/static-html/preview"
 STATIC_HTML_EXPORT_APPLY_PATH = "/docs/export/static-html/apply"
@@ -101,6 +103,7 @@ POST_PATHS = (
     WORK_LINKS_PATH,
     OPEN_WORK_DOWNLOAD_PATH,
     IMPORT_SOURCE_PATH,
+    IMPORT_DOC_PATH,
     SOURCE_MEDIA_PREPARE_PATH,
     SET_DRAFT_PATH,
     SET_SELECTED_PATH,
@@ -109,6 +112,7 @@ POST_PATHS = (
     REBUILD_DOCUMENT_PATH,
     PUBLISH_PATH,
     MOVE_PATH,
+    ORDER_CHILDREN_PATH,
     DELETE_PATH,
     STATIC_HTML_EXPORT_PREVIEW_PATH,
     STATIC_HTML_EXPORT_APPLY_PATH,

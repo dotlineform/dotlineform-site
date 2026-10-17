@@ -13,6 +13,7 @@ import sys
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from typing import Any, Callable
 from urllib.parse import parse_qs, quote, unquote, urlparse, urlsplit
 
 _BOOTSTRAP_START = Path(__file__).resolve()
@@ -41,7 +42,8 @@ import docs_document_package_routes as package_routes  # noqa: E402
 from docs_document_packages import service as package_service  # noqa: E402
 import docs_generated_reads as generated_reads  # noqa: E402
 import docs_media_storage as media_storage  # noqa: E402
-from docs_source_media_upload import MAX_REQUEST_BYTES, SourceMediaUpload, parse_source_save  # noqa: E402
+from docs_source_media_upload import MAX_REQUEST_BYTES, parse_source_save  # noqa: E402
+from docs_import_doc import parse_import_doc  # noqa: E402
 import docs_http_cache as http_cache  # noqa: E402
 import docs_review_routes as review_routes  # noqa: E402
 import docs_review_service as review_service  # noqa: E402
@@ -600,12 +602,15 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
     def send_docs_api_post_json(self, api_path: str) -> None:
         try:
             uploads = None
+            document_upload = None
             if api_path == routes.SOURCE_SAVE_PATH:
-                body, uploads = self.read_source_save()
+                body, uploads = self.read_native_upload(parse_source_save, "Source Save")
+            elif api_path == routes.IMPORT_DOC_PATH:
+                body, document_upload = self.read_native_upload(parse_import_doc, "Import doc")
             else:
                 body = self.read_json_body()
             status, payload = docs_service.docs_management_post_response(
-                self.repo_root, api_path, body, media_uploads=uploads,
+                self.repo_root, api_path, body, media_uploads=uploads, document_upload=document_upload,
             )
             self.send_json(payload, status)
         except FileNotFoundError as error:
@@ -720,18 +725,20 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
 
 
-    def read_source_save(self) -> tuple[dict[str, object], list[SourceMediaUpload]]:
-        """Bound one Save envelope before parsing; retain other routes' JSON limits."""
+    def read_native_upload(
+        self, parse_upload: Callable[[str, bytes], tuple[dict[str, Any], Any]], label: str,
+    ) -> tuple[dict[str, Any], Any]:
+        """Bound a native upload before its owning parser; JSON routes stay separate."""
         try:
             length = int(self.headers.get("Content-Length", ""))
         except ValueError as error:
-            raise ValueError("Invalid Source Save Content-Length") from error
+            raise ValueError(f"Invalid {label} Content-Length") from error
         if length <= 0 or length > MAX_REQUEST_BYTES:
-            raise ValueError("Source Save request is empty or exceeds the 66 MiB limit")
+            raise ValueError(f"{label} request is empty or exceeds the 66 MiB limit")
         raw = self.rfile.read(length)
         if len(raw) != length:
-            raise ValueError("Incomplete Source Save request")
-        return parse_source_save(self.headers.get("Content-Type", ""), raw)
+            raise ValueError(f"Incomplete {label} request")
+        return parse_upload(self.headers.get("Content-Type", ""), raw)
 
     def read_json_body(self) -> dict[str, object]:
         content_length = self.headers.get("Content-Length", "").strip()

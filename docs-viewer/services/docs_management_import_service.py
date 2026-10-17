@@ -25,6 +25,7 @@ def import_source_dependencies() -> import_source_service.ImportSourceDependenci
         perform_collection_source_write_and_rebuild=(
             write_rebuild.perform_collection_source_write_and_rebuild
         ),
+        rebuild_prepared_document=write_rebuild.rebuild_prepared_document_outputs,
     )
 
 

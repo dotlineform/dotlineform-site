@@ -5,6 +5,7 @@ export const DOCS_VIEWER_ACTION_IDS = Object.freeze({
   EXPORT_DOCS: "export-docs",
   EXPORT_WORKSPACE: "export-workspace",
   IMPORT: "import",
+  IMPORT_DOC: "import-doc",
   MARKDOWN_SAVE: "markdown-save",
   SOURCE_ADD_CATALOGUE_IMAGE: "source-add-catalogue-image",
   SOURCE_ADD_MEDIA_VIEW_LINK: "source-add-media-view-link",
@@ -23,7 +24,8 @@ export const DOCS_VIEWER_ACTION_IDS = Object.freeze({
   REFRESH_DISCOVERY: "refresh-discovery",
   REBUILD_DOCUMENT: "rebuild-document",
   SET_DRAFT: "set-draft",
-  SET_SELECTED: "set-selected"
+  SET_SELECTED: "set-selected",
+  SORT_CHILDREN: "sort-children"
 });
 
 export const DOCS_VIEWER_ACTION_TARGETS = Object.freeze({
@@ -75,6 +77,7 @@ export const DOCS_VIEWER_ACTION_DEFINITIONS = Object.freeze({
   [IDS.EXPORT_WORKSPACE]: actionDefinition(IDS.EXPORT_WORKSPACE, TARGETS.WORKSPACE),
   [IDS.EXPORT_DOCS]: actionDefinition(IDS.EXPORT_DOCS, TARGETS.DOCUMENT_SUBTREE),
   [IDS.IMPORT]: actionDefinition(IDS.IMPORT, TARGETS.WORKSPACE),
+  [IDS.IMPORT_DOC]: actionDefinition(IDS.IMPORT_DOC, TARGETS.WORKSPACE),
   [IDS.MARKDOWN_SAVE]: actionDefinition(IDS.MARKDOWN_SAVE, TARGETS.ACTIVE_DOCUMENT),
   [IDS.SOURCE_ADD_CATALOGUE_IMAGE]: actionDefinition(IDS.SOURCE_ADD_CATALOGUE_IMAGE, TARGETS.ACTIVE_DOCUMENT),
   [IDS.SOURCE_ADD_MEDIA_VIEW_LINK]: actionDefinition(IDS.SOURCE_ADD_MEDIA_VIEW_LINK, TARGETS.ACTIVE_DOCUMENT),
@@ -93,7 +96,8 @@ export const DOCS_VIEWER_ACTION_DEFINITIONS = Object.freeze({
   [IDS.REFRESH_DISCOVERY]: actionDefinition(IDS.REFRESH_DISCOVERY, TARGETS.WORKSPACE),
   [IDS.REBUILD_DOCUMENT]: actionDefinition(IDS.REBUILD_DOCUMENT, TARGETS.ACTIVE_DOCUMENT),
   [IDS.SET_DRAFT]: actionDefinition(IDS.SET_DRAFT, TARGETS.ACTIVE_DOCUMENT),
-  [IDS.SET_SELECTED]: actionDefinition(IDS.SET_SELECTED, TARGETS.ACTIVE_DOCUMENT)
+  [IDS.SET_SELECTED]: actionDefinition(IDS.SET_SELECTED, TARGETS.ACTIVE_DOCUMENT),
+  [IDS.SORT_CHILDREN]: actionDefinition(IDS.SORT_CHILDREN, TARGETS.DOCUMENT)
 });
 
 function normalizeId(value) {
@@ -154,7 +158,7 @@ export function resolveDocsViewerAction(actionId, context = {}) {
     } else targetDocIds = subtreeDocIds;
   }
 
-  var restriction = definition.target !== TARGETS.WORKSPACE || definition.id === IDS.NEW
+  var restriction = definition.target !== TARGETS.WORKSPACE || [IDS.NEW, IDS.IMPORT_DOC].includes(definition.id)
     ? documentActionRestriction(definition.id, documentTarget, normalizeIds(context.collectionHostDocIds)) : "";
   if (restriction) disabledReason = restriction;
   return {

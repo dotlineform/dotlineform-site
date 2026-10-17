@@ -3,21 +3,21 @@ draft: false
 doc_id: d-20260514-164722-3de65e
 title: Docs Import Architecture
 added_date: "2026-05-14 16:47:22"
-last_updated: "2026-09-16 07:51:41"
+last_updated: "2026-10-17"
 summary: Configuration, registries, source confinement, execution paths, extension methods, and weak spots for Docs Viewer imports.
 parent_id: d-20260424-000000-50b63f
 
 ---
 # Docs Import Architecture
 
-Docs Import is a management workflow that reads user-selected material beneath the configured Projects base, normalizes it into document intent, and writes canonical Docs Viewer source through the local service.
+Docs Viewer has two management intake workflows: Import doc receives one browser-selected ordinary file, while Import reads selected sources and complete packages beneath the configured Projects base's `data-sharing` directory. Both normalize ordinary sources through the same converters and document planning, media, source persistence and targeted generation owners.
 
 This document owns the stable architecture and extension method. [Docs Import](Docs_Import.md) owns the operator workflow. [HTML Import Mapping](HTML_Import_Mapping.md) owns the intended semantic-HTML conversion rules, and [Word Import Style Mapping](Word_Import_Style_Mapping.md) owns Word-style semantics. Exact fields, endpoint payloads, and tests remain code-owned.
 
 ## Execution Paths
 
 ```text
-Projects-relative source directory
+data-sharing source directory
     (default: data-sharing/import-staging)
           |
           v
@@ -63,13 +63,21 @@ server listing + source classification
                                  one rebuild -> result
 ```
 
-The app-level browser workflow consumes a body-free server candidate projection, retains one server-accepted Projects-relative source marker, freezes one validated display collection for ordinary sources, and confirms complete collection plans. Trusted collection candidates carry their server-resolved manifest target instead. The browser never receives a physical path and does not own confinement, classification, converted source, hierarchy plans, media plans, collection target inference, or write authority.
+Existing Import consumes a body-free server candidate projection, retains one accepted Projects-relative marker within `data-sharing`, freezes one display collection for ordinary sources and confirms complete collection plans. Trusted collection candidates carry their server-resolved manifest target. The browser does not receive a physical source path; confinement, package classification, conversion, hierarchy/media plans and write authority remain with their server owners.
+
+Import doc invokes `<input type="file">` synchronously from its action, with one pending File and a frozen destination owned by `docs-viewer-import-doc-workflow.js`. Confirmation sends one `POST /docs/import-doc` multipart request containing UTF-8 metadata and an opaque document part. The HTTP reader bounds the request before `docs_import_doc.py` parses the exact two-field envelope, accepted ordinary suffix and safe filename. It reuses the existing 64 MiB native file, 1 MiB metadata and 1 MiB overhead limits. The completed response carries only `ok`, exact `target`, committed `record` and converter `warnings`; converted bodies, media plans, temporary paths and staged-source fields are not returned. The frontend owns filename/type/size feedback and Cancel; the server owns the untrusted upload boundary and actual conversion.
+
+Native confirmation shows only the filename and complete-folder guidance. HTML supplies `include_prompt_meta: true` without an option; existing Import retains its checked-by-default checkbox. Management busy state starts at submission, remains through committed/display completion and clears on request failure before the modal permits retry. The shared modal still owns submission controls and Cancel blocking; an idle confirmation has no waiting cursor.
+
+For an ordinary destination, the frontend captures the mounted document action context when Import doc opens and supplies its ordinary identity as optional `after_doc_id`; Index focus does not select this anchor. The upload parser owns identity syntax and excludes sibling placement from flat named collections. The shared import source writer reads the canonical hierarchy once and reuses Position's `docs_index_order.insert_node(..., after_doc_id, "after")`. The returned completed parent map supplies the imported document's parent to its prepared SourceDoc and committed record before exact generation and response projection. The browser does not supply a redundant parent value, and no membership audit, source read, navigation read-back or follow-up Position request is added. With no anchor, ordinary creation retains root append; staged and collection imports retain their existing placement.
+
+The native owner writes one request-local temporary converter input, then calls `import_ordinary_source` with that source root and companion discovery explicitly disabled. It does not use Data Sharing configuration, package recognition, a source listing, persistent staging or an OS picker. Reviewed Markdown and role-marked interactive companions are directed to existing Import. Both intake paths share `generate_import_preview`, `plan_import_document`, media materialisation and source writes. The plan retains its prepared SourceDoc; apply returns completed ordinary parentage, and the existing `rebuild_prepared_document_outputs` owner consumes both alongside the resolved destination. Final document generation avoids the former wrapper's target-source reread, ID rediscovery, workspace reload and subprocess build. Existing converter/media projection configuration remains with its media owner. Collection/package orchestration retains its separate flow. Ordinary create allocation carries one new identity without reading every target document; exact destination collision checks and the exclusive new-source writer retain their authority. Converted Markdown/SVG inputs are carried into media processing instead of rereading the selected HTML. Temporary converter input is removed only after awaited completion and is not an alternative Docs/Projects workspace.
 
 ## Configuration And Registries
 
 ### Source Directory And Staging Gate
 
-`source_directory` is the canonical POSIX marker for one real directory beneath `$DOTLINEFORM_PROJECTS_BASE_DIR`. `studio/shared/python/projects_directories.py` validates every requested segment without following symlinks, confirms final containment, and lists only safe direct-child directories. The exact root marker `.` is navigable but not selectable; nested accepted directories are selectable. Responses and diagnostics use only relative markers.
+`source_directory` is the canonical POSIX marker for one real directory beneath `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing`. Existing Import uses `lower_root="data-sharing"` for navigation and source resolution, with the browser picker rooted at the same marker. `studio/shared/python/projects_directories.py` validates requested path segments without following symlinks, confirms containment and lists safe direct-child directories. `data-sharing` is navigable/selectable with no parent; `.` and outside-root markers are unavailable to Import. Responses and diagnostics use relative markers.
 
 Import staging remains the default:
 
@@ -77,9 +85,9 @@ Import staging remains the default:
 $DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/
 ```
 
-This is a shared user drop-zone, not a Docs Import inbox. Ordinary document sources may be selected from another accepted nested Projects directory. Candidate inventory and every preview/apply request bind the same validated `{source_directory, staged_filename}` pair, and the service resolves the direct child again on each request. Nested filenames, stale or moved entries, traversal, symlinks, and changed classification fail before import.
+This is a shared user drop-zone. Ordinary sources and Markdown packages may be selected from another accepted directory inside `data-sharing`. Candidate inventory and every preview/apply request bind the same `{source_directory, staged_filename}` pair, and the service resolves the exact direct child at its filesystem boundary. Native Import doc supplies bytes independently of this directory authority.
 
-Trusted returned packages and edited review-source folders remain staging-only. A registered recognizer sees the untouched direct child first; outside staging, a recognized trusted source is projected as blocked and cannot fall through to ordinary handling. The browser-local remembered marker is convenience state only: Import revalidates it on every session, clears an invalid value before validating staging, and never derives a source from UI context.
+Trusted returned packages and edited review-source folders remain staging-only. A registered recognizer sees the untouched direct child first; outside staging, a recognized trusted source is projected as blocked and cannot fall through to ordinary handling. A remembered outside-root marker is cleared in the browser before opening staging; existing validation/fallback handles unavailable remembered directories inside the root. The source marker never supplies destination authority.
 
 ### Source Classification
 
@@ -91,7 +99,7 @@ Classification is code-owned and deliberately closed:
 - A complete edited Docs Review source folder is classified as `edited_review_sources` by strict provenance, retained-manifest, and trusted metadata validation before Markdown-package classification.
 - `generate_import_preview()` in `docs_import_preview.py` performs explicit format dispatch.
 
-The browser receives the resulting `source_format`; it does not recreate suffix or package rules. Registered collection recognizers receive untouched candidates before generic Markdown front-matter stripping. This registry is an allowlist, not a plugin loader.
+Existing Import receives the resulting `source_format`; it does not recreate package classification. Native Import doc uses ordinary suffixes for picker/feedback, while its upload boundary accepts only the ordinary document allowlist. Registered collection recognizers retain existing Import and receive untouched candidates before generic Markdown front-matter stripping. This registry is an allowlist, not a plugin loader.
 
 ### Target Collection And Media Policy
 
@@ -113,6 +121,8 @@ Analysis/Tags is the first opted-in collection.
 | --- | --- | --- |
 | confined Projects directory navigation | `studio/shared/python/projects_directories.py` | Validate canonical relative markers and list safe direct-child directories without import policy. |
 | document-source allowlist and format mapping | `docs_import_common.py` | Classify ordinary document sources. |
+| native document request and intake | `docs_import_doc.py` | Bound one ordinary upload and supply request-local converter input without directory/package discovery. |
+| shared ordinary conversion and completion | `docs_import_source_service.py` | Carry the selected input, conversion, media and create plan through existing source/write/generation owners. |
 | exact source inventory and dispatch | `docs_import_source_service.py` | Resolve the selected directory/direct-child pair, run recognizers first, and keep trusted sources staging-only. |
 | conversion and preview validation | `docs_import_preview.py` | Produce Markdown and media intent without a source write. |
 | body-free candidate projection | `docs_import_candidate_projection.py` | Project candidate kind, action state, exact target mode, safe diagnostics, and display label after recognizer-first classification. |
@@ -125,7 +135,7 @@ Analysis/Tags is the first opted-in collection.
 | write-free collection plan | `docs_import_collection_plan.py` | Resolve all records, collisions, parents, warnings, and blockers. |
 | whole-package confirmation, ordered apply, and result | `docs_import_collection_apply.py`, `docs_import_collection_result.py` | Revalidate the server-issued package plan, mutate, rebuild, and return the grouped result. |
 | HTTP-facing request adoption | `docs_management_import_service.py` | Require the explicit source identity and exact managed destination before service dispatch. |
-| app Import lifecycle and exact result refresh | `docs-viewer-management-import-controller.js`, `docs-viewer-management-import-result.js`, `docs-viewer-management.js` | Own the single entrypoint, frozen ordinary context, validated result route, and exact mounted-owner refresh. |
+| app Import lifecycle and exact result refresh | `docs-viewer-management-import-controller.js`, `docs-viewer-import-doc-workflow.js`, `docs-viewer-management.js` | Own each intake action, frozen ordinary context, shared committed-record adoption and exact result display. |
 | shared folder navigation | `shared/frontend/js/folder-picker.js` | Render app-neutral lazy breadcrumb, parent, direct-child, keyboard, and selectable-marker behavior through injected load/submit callbacks. |
 | Docs Import source preference and fallback | `docs-viewer/runtime/js/import/docs-import-source-selection.js` | Revalidate the local marker, clear invalid state before staging fallback, and refresh exact candidates without owning destination. |
 | browser candidate, Review, confirmation, and result UI | `docs-viewer/runtime/js/import/` | Validate the candidate projection, dispatch existing ordinary/collection owners, hand off one reviewable row, and present explicit destination links. |

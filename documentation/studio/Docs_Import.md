@@ -3,16 +3,26 @@ draft: false
 doc_id: d-20260424-000000-fc8b5d
 title: Docs Import
 added_date: "2026-04-24 00:00:00"
-last_updated: "2026-08-07 22:27:41"
-summary: Choose confined source material, review the import decisions, and write it into a configured Docs Viewer collection.
+last_updated: "2026-10-17"
+summary: Import one native document or select Data Sharing sources and packages for a configured Docs Viewer collection.
 parent_id: d-20260424-000000-50b63f
 
 ---
 # Docs Import
 
-Docs Import turns source material beneath the configured Projects base into canonical Markdown documents and associated media. It runs inside Docs Viewer management and can target a top-level scope or a configured one-level sub-scope collection.
+Docs Viewer Manage offers two intake actions that share document conversion, media processing and persistence. **Import doc** selects one ordinary file through the browser's native chooser. **Import** selects existing sources and packages beneath the configured Projects base's `data-sharing` directory. Both target ordinary documents or a configured named collection; Catalogue Work authoring remains owned by Studio and Regenerate.
 
-Choose the app-level **Import** action from any local Manage Docs Viewer state. The same modal lists every recognized document candidate in the accepted source folder. Ordinary sources use the validated parent or sub-scope collection displayed when the modal opened; trusted packages and edited review-source folders use their manifest-owned collection even when another context is displayed.
+The **Import** modal lists recognized document candidates in the accepted source folder. Ordinary sources in either action use the configured collection displayed when the action opened; trusted packages and edited review-source folders use their manifest-owned collection even when another context is displayed.
+
+## Import One Native File
+
+Choose **Import doc** from Manage Actions. Its browser-native single-file picker accepts Word `.docx`, HTML `.html`/`.htm`, Markdown `.md`/`.markdown` and plain text `.txt` from any user-selected folder. The browser holds the selected File and shows only its filename and “For separate local images or attachments, use Import with the complete folder.” in confirmation. HTML automatically includes obvious prompt/meta blocks, matching existing Import's checked default. **Cancel** releases the selection without an upload or document write. The waiting cursor starts when Import is submitted, covering persistence and display completion; a request failure clears it while confirmation remains open for retry or Cancel.
+
+For ordinary Index documents, Import doc inserts immediately after the document displayed when the picker opened, sharing its parent. A root document gets a new root sibling; a document with children keeps its subtree, and the import becomes its next sibling. With no current ordinary document, the import appends at the root. Named collections retain their flat collection placement. Index focus alone does not change the captured displayed document.
+
+**Import** in that confirmation uploads the single file, awaits conversion, embedded-media materialisation, new canonical source persistence and exact generation, then opens the imported document through the existing result owner. Every invocation creates a new document; selecting a previously imported file does not overwrite it. Browser selection and feedback belong to the frontend. Python owns bounded upload parsing, conversion, media and filesystem writes; it never opens an OS picker. A selected file may be at most 64 MiB, using the existing native upload budget.
+
+Only the selected file is supplied. Embedded media follows the existing converters, while local companion files, Markdown packages, returned JSON/JSONL collections and complete edited Review folders retain **Import**. No sibling-directory scan or persistent staging takes place for Import doc; request-local converter input is removed after the awaited operation. Import failures remain in the confirmation; a completed import followed by retained-view or display failure is reported separately after closing it.
 
 ## Workflow
 
@@ -22,6 +32,7 @@ flowchart TD
     accDescr: Staged document sources and standalone media take separate workflows, but both publish required media before canonical source is written and rebuilt.
 
     staging["Shared staging"]
+    native["Import doc: native single file"]
     classify{"Owning workflow"}
     import["Docs Import convert and plan"]
     embedded["Embedded-media plan"]
@@ -33,6 +44,7 @@ flowchart TD
 
     staging --> classify
     classify -- "Document source" --> import
+    native --> import
     import --> embedded
     embedded -- "Assets present" --> publish
     import -- "No assets" --> source
@@ -44,7 +56,7 @@ flowchart TD
     source --> rebuild
 ```
 
-The browser presents choices. The local Docs Viewer service resolves the exact source directory and direct child, validates targets, creates the authoritative plan, performs writes, and rebuilds published payloads.
+The browser presents choices. Import doc supplies selected bytes; Import supplies the exact source directory/direct child. The local Docs Viewer service resolves the configured destination, converts the selected input, creates the authoritative plan, performs writes and completes generated payloads.
 
 ## Choose The Source Folder
 
@@ -54,7 +66,7 @@ Import staging is the default source:
 $DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/
 ```
 
-The modal shows the current Projects-relative source. **Choose folder…** opens a dedicated browser for real directories beneath the Projects base; confirming one folder refreshes its direct-child candidates without changing the destination. The accepted relative folder is remembered locally and revalidated whenever Import opens. If it is no longer accepted, Import clears it and falls back to staging. **Use import staging** validates the default again and clears the preference.
+The modal shows the current Projects-relative source. **Choose folder…** browses only `data-sharing` and its descendants; its breadcrumb has no synthetic Projects prefix and cannot navigate above `data-sharing`. The same lower root is enforced by directory listing, candidate inventory and import execution. Confirming one folder refreshes its direct-child candidates without changing the destination. Accepted folders inside the root remain remembered locally. A remembered location outside `data-sharing` is cleared before using the default staging location; an unavailable remembered folder follows the existing staging fallback. **Use import staging** selects the default again and clears the preference. Import doc has no source-folder preference.
 
 Ordinary document sources may be direct children of any accepted nested source folder. A Markdown package is a direct-child folder containing one Markdown file plus its local images or attachments. Returned packages and complete edited Docs Review `source/` folders are trusted collection formats and remain importable only from staging. Recognizers inspect each untouched direct child before generic format handling; a recognized trusted source outside staging stays visible but blocked rather than falling through as an ordinary document.
 
@@ -68,11 +80,11 @@ The single-select list contains ordinary Word `.docx`, HTML, Markdown, text, and
 
 1. Select one source candidate.
 2. Check its read-only kind, destination, and any disabled reason.
-3. For HTML, decide whether obvious prompt/meta sections belong in the document.
+3. For HTML, **Include obvious prompt/meta blocks** starts checked. Uncheck it to omit those blocks. The choice is retained while selecting candidates or folders in the open app, including when the option is hidden for another source type.
 4. Import an ordinary source, or preview and confirm a complete collection.
 5. Inspect the result and use its explicit destination link.
 
-Opening the modal freezes one validated `{ scope }` or `{ scope, sub_scope }` destination for ordinary sources. Source choice is independent: every candidate request, preview, and apply carries the exact accepted source directory beside the direct-child name. Checked rows, selected parents, titles, URL text, prior destinations, and the displayed document are not target inputs. Package rows retain their trusted manifest destination and are never filtered or rerouted by the current display.
+Opening either action freezes `{}` for ordinary documents or `{collection}` for a named-collection destination. Import doc additionally captures the displayed ordinary document as `after_doc_id` for sibling placement. Source choice is independent: existing Import candidate requests, preview and apply carry the accepted source directory beside the direct-child name; Import doc sends the frozen destination and placement with selected file bytes. Package rows retain their trusted manifest destination and are never filtered or rerouted by the current display.
 
 HTML can supply the title; Markdown uses its first H1 when present. Word uses the mapped `Title` style and falls back to the humanized source filename without promoting its first section heading. [Word Import Style Mapping](Word_Import_Style_Mapping.md) owns the exact Word heading rules. The source name remains conversion context. A genuinely new document receives an immutable local `doc_id` and matching Markdown filename when the service plans the write.
 

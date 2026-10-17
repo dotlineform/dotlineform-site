@@ -73,7 +73,9 @@ function breadcrumbMarkup(directory, rootDirectory, rootLabel) {
   const segments = directory === rootDirectory
     ? []
     : directory.split("/").slice(rootSegments.length);
-  const locations = [{ directory: rootDirectory, label: rootLabel }];
+  const locations = rootDirectory === "." && segments.length
+    ? []
+    : [{ directory: rootDirectory, label: rootLabel }];
   segments.forEach((label, index) => {
     const relative = segments.slice(0, index + 1);
     locations.push({
@@ -83,7 +85,10 @@ function breadcrumbMarkup(directory, rootDirectory, rootLabel) {
       label
     });
   });
-  return locations.map((location, index) => {
+  const up = rootDirectory === "." && directory !== "."
+    ? `<button class="sharedFolderPicker__breadcrumb sharedFolderPicker__up" type="button" data-nav="${escapeHtml(parentMarker(directory))}" aria-label="Parent folder" title="Parent folder">↑</button>`
+    : "";
+  return up + locations.map((location, index) => {
     const separator = index
       ? '<span class="sharedFolderPicker__separator" aria-hidden="true">/</span>'
       : "";
@@ -98,7 +103,7 @@ export function createFolderPicker(root, options = {}) {
   const rootDirectory = directoryMarker(options.rootDirectory || ".");
   const initialDirectory = directoryMarker(options.initialDirectory);
   const rootLabel = text(options.rootLabel)
-    || (rootDirectory === "." ? "Projects" : rootDirectory.split("/").slice(-1)[0]);
+    || (rootDirectory === "." ? "Base directory" : rootDirectory.split("/").slice(-1)[0]);
   if (!root || !initialDirectory || typeof options.loadDirectory !== "function" || typeof options.onSubmit !== "function") {
     throw new Error("Folder picker configuration is incomplete.");
   }
@@ -206,7 +211,7 @@ export function createFolderPicker(root, options = {}) {
     if (!current || !current.selectable) {
       throw new Error(
         rootDirectory === "."
-          ? "Choose a folder below the Projects root."
+          ? "Choose a folder below the base directory."
           : "Choose an available folder."
       );
     }

@@ -4,6 +4,7 @@ import {
   deleteManagedDoc,
   createManagedDoc,
   moveManagedDoc,
+  orderManagedDocChildren,
   openManagedDocSource,
   refreshManagedDiscovery,
   rebuildManagedDocument
@@ -19,6 +20,8 @@ import {
   openDocsViewerConfirmModal,
   openDocsViewerTextInputModal
 } from "./docs-viewer-management-modals.js";
+
+const CHILD_TITLE_ORDER = new Intl.Collator("en", { sensitivity: "base", numeric: true });
 
 export function committedDocumentCreateTarget(payload) {
   var response = payload && typeof payload === "object" ? payload : {};
@@ -593,11 +596,7 @@ export function createDocsViewerManagementActionController(options) {
         setManagementBusy(true);
         try {
           var payload = await moveManagedDoc(doc.doc_id, targetDocId, placement, managementClientOptions());
-          if (payload.target?.doc_id !== doc.doc_id || payload.target.collection
-            || payload.position_saved !== true || payload.generation_complete !== true || !payload.committed_document) {
-            throw new Error("Position did not return its completed exact target.");
-          }
-          var failures = context.commitDocumentChange(payload.committed_document) || [];
+          var failures = payload.committed_document ? context.commitDocumentChange(payload.committed_document) || [] : [];
           await callbacks.refreshIndexTree();
           if (failures.length) throw new Error("Position saved, but a retained view could not be updated: " + failures.map(function (error) { return error.message; }).join("; "));
         } catch (error) {
@@ -613,6 +612,34 @@ export function createDocsViewerManagementActionController(options) {
         }
       }
     });
+  }
+
+  /** Sort loaded immediate children once; saved navigation owns the resulting order. */
+  async function handleSortChildren(targetDocId, restoreFocus) {
+    var doc = actionTargetDoc(DOCS_VIEWER_ACTION_IDS.SORT_CHILDREN, targetDocId);
+    if (!doc || management.managementBusy) return;
+    hideContextMenu();
+    var children = documentIndex.childrenByParent.get(doc.doc_id) || [];
+    var ordered = children.slice().sort(function (left, right) {
+      return CHILD_TITLE_ORDER.compare(left.title, right.title);
+    });
+    if (ordered.every(function (child, index) { return child === children[index]; })) return;
+    setManagementBusy(true);
+    setManagementMessage("", false);
+    renderManagementUi();
+    var completed = false;
+    try {
+      await orderManagedDocChildren(doc.doc_id, ordered.map(function (child) { return child.doc_id; }), managementClientOptions());
+      completed = true;
+      await callbacks.refreshIndexTree();
+    } catch (error) {
+      setManagementMessage((completed ? "Child order saved, but display failed: " : "") + (error.message || "Sort Children A–Z failed."), true);
+    } finally {
+      setManagementBusy(false);
+      renderManagementUi();
+      var focusTarget = restoreFocus && restoreFocus();
+      if (focusTarget) focusTarget.focus({ preventScroll: true });
+    }
   }
 
   function handleOpenSource(editor, target) {
@@ -660,6 +687,7 @@ export function createDocsViewerManagementActionController(options) {
     handleMarkdownSave: handleMarkdownSave,
     handleReturnToDoc: handleReturnToDoc,
     handlePositionDoc: handlePositionDoc,
+    handleSortChildren: handleSortChildren,
     handleOpenSource: handleOpenSource,
     handlePublish: handlePublish,
     handleRefreshDiscovery: handleRefreshDiscovery,

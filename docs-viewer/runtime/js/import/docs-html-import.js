@@ -269,7 +269,6 @@ function syncImportInputControls(state) {
   state.sourceStagingButton.disabled = state.isRunning || !state.serviceAvailable;
   state.includePromptMetaWrap.hidden = !supportsPromptMeta;
   state.includePromptMeta.disabled = state.isRunning || !actionable || !supportsPromptMeta;
-  if (!supportsPromptMeta) state.includePromptMeta.checked = false;
   state.runButton.textContent = collection
     ? "Preview collection"
     : "Import";
@@ -672,7 +671,7 @@ export async function initDocsHtmlImport(options = {}) {
     setText(state.includePromptMetaLabelNode, "Include obvious prompt/meta blocks");
     setText(state.confirmButton, "Confirm overwrite");
     setText(state.cancelButton, "Cancel");
-    state.includePromptMeta.checked = false;
+    state.includePromptMeta.checked = true;
     bindImportEvents(state);
 
     root.hidden = false;

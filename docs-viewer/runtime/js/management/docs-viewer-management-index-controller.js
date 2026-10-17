@@ -104,7 +104,8 @@ export function createDocsViewerManagementIndexController(options = {}) {
 
   function mutationActionControlState(actionId, targetDocId) {
     var resolution = resolveAction(actionId, targetDocId);
-    var label = actionId === DOCS_VIEWER_ACTION_IDS.DELETE ? "Delete" : "Position";
+    var label = actionId === DOCS_VIEWER_ACTION_IDS.DELETE ? "Delete"
+      : actionId === DOCS_VIEWER_ACTION_IDS.SORT_CHILDREN ? "Sort Children A–Z" : "Position";
     var disabledReason = "";
     var pending = !management.managementChecked || management.managementBusy;
     if (management.managementChecked && !management.managementAvailable) {
@@ -115,6 +116,8 @@ export function createDocsViewerManagementIndexController(options = {}) {
       disabledReason = "Finish source editing before changing the Index.";
     } else if (!pending && (!resolution || !resolution.enabled)) {
       disabledReason = resolution ? resolution.disabledReason : "No Index target document.";
+    } else if (!pending && actionId === DOCS_VIEWER_ACTION_IDS.SORT_CHILDREN && callbacks.indexChildren(targetDocId).length < 2) {
+      disabledReason = "This document has fewer than two children.";
     }
     return {
       hidden: Boolean(resolution && resolution.hidden),
@@ -136,7 +139,7 @@ export function createDocsViewerManagementIndexController(options = {}) {
   function actionControlState(actionId, targetDocId) {
     if (actionId === DOCS_VIEWER_ACTION_IDS.EXPORT_DOCS) return snapshotExportActionControlState(targetDocId);
     if (actionId === DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE) return preparePackageActionControlState(targetDocId);
-    if (actionId === DOCS_VIEWER_ACTION_IDS.DELETE || actionId === DOCS_VIEWER_ACTION_IDS.POSITION) {
+    if ([DOCS_VIEWER_ACTION_IDS.DELETE, DOCS_VIEWER_ACTION_IDS.POSITION, DOCS_VIEWER_ACTION_IDS.SORT_CHILDREN].includes(actionId)) {
       return mutationActionControlState(actionId, targetDocId);
     }
     return null;
@@ -147,7 +150,8 @@ export function createDocsViewerManagementIndexController(options = {}) {
       [DOCS_VIEWER_ACTION_IDS.EXPORT_DOCS]: snapshotExportActionControlState(targetDocId),
       [DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE]: preparePackageActionControlState(targetDocId),
       [DOCS_VIEWER_ACTION_IDS.DELETE]: mutationActionControlState(DOCS_VIEWER_ACTION_IDS.DELETE, targetDocId),
-      [DOCS_VIEWER_ACTION_IDS.POSITION]: mutationActionControlState(DOCS_VIEWER_ACTION_IDS.POSITION, targetDocId)
+      [DOCS_VIEWER_ACTION_IDS.POSITION]: mutationActionControlState(DOCS_VIEWER_ACTION_IDS.POSITION, targetDocId),
+      [DOCS_VIEWER_ACTION_IDS.SORT_CHILDREN]: mutationActionControlState(DOCS_VIEWER_ACTION_IDS.SORT_CHILDREN, targetDocId)
     };
     Object.values(DOCS_VIEWER_ACTION_IDS).forEach(function (actionId) {
       if (states[actionId]) return;
@@ -272,6 +276,8 @@ export function createDocsViewerManagementIndexController(options = {}) {
       callbacks.handleDeleteDoc(targetDocId, restoreFocus);
     } else if (actionId === DOCS_VIEWER_ACTION_IDS.POSITION) {
       callbacks.handlePositionDoc(targetDocId, restoreFocus);
+    } else if (actionId === DOCS_VIEWER_ACTION_IDS.SORT_CHILDREN) {
+      callbacks.handleSortChildren(targetDocId, restoreFocus);
     } else {
       return false;
     }

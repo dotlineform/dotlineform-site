@@ -134,7 +134,7 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         if not source_directory:
             raise ValueError("source_directory is required")
         if path == routes.IMPORT_SOURCE_DIRECTORIES_PATH:
-            return list_projects_directory(source_directory)
+            return list_projects_directory(source_directory, lower_root=import_source_service.IMPORT_SOURCE_ROOT)
         return import_source_service.handle_import_source_files(
             repo_root,
             source_directory=source_directory,

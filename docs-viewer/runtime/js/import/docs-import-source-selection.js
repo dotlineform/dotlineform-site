@@ -1,4 +1,5 @@
 export const DOCS_IMPORT_DEFAULT_SOURCE_DIRECTORY = "data-sharing/import-staging";
+export const DOCS_IMPORT_SOURCE_ROOT_DIRECTORY = "data-sharing";
 export const DOCS_IMPORT_SOURCE_DIRECTORY_STORAGE_KEY = "dotlineform-docs-import-source-directory";
 
 function text(value) {
@@ -54,7 +55,11 @@ export function createDocsImportSourceSelection(options = {}) {
   }
 
   async function initialize() {
-    const remembered = storageValue("read");
+    let remembered = storageValue("read");
+    if (remembered && remembered !== DOCS_IMPORT_SOURCE_ROOT_DIRECTORY && !remembered.startsWith(DOCS_IMPORT_SOURCE_ROOT_DIRECTORY + "/")) {
+      storageValue("remove");
+      remembered = "";
+    }
     let accepted;
     try {
       accepted = await validate(remembered || DOCS_IMPORT_DEFAULT_SOURCE_DIRECTORY);
@@ -82,6 +87,7 @@ export function createDocsImportSourceSelection(options = {}) {
     }
     return Promise.resolve(options.openFolderPicker({
       initialDirectory: current,
+      rootDirectory: DOCS_IMPORT_SOURCE_ROOT_DIRECTORY,
       loadDirectory,
       onSubmit: acceptDirectory,
       restoreFocus: restoreFocus || null

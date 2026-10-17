@@ -86,12 +86,6 @@ def insert_node(tree: list[dict[str, Any]], node: dict[str, Any], target_id: str
     return parent_id
 
 
-def move_node(tree: list[dict[str, Any]], doc_id: str, target_id: str, placement: str) -> str:
-    siblings, index, _ = node_location(tree, doc_id)
-    node = siblings.pop(index)
-    return insert_node(tree, node, target_id, placement)
-
-
 def exclude_nodes(tree: list[dict[str, Any]], doc_ids: set[str]) -> list[dict[str, Any]]:
     """Omit complete branches for Delete or Preview without reordering survivors."""
     return [

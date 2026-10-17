@@ -46,7 +46,7 @@ from docs_source_model import (  # noqa: E402
 )
 from docs_workspace_config import DocsStageConfig, DocsCollectionConfig, require_document_authoring  # noqa: E402
 from docs_import_media import bind_import_media_owner  # noqa: E402
-from docs_index_order import index_order_path, index_order_text, insert_node, read_index_order  # noqa: E402
+from docs_index_order import index_order_path, index_order_text, insert_node, read_index_order, tree_parent_ids  # noqa: E402
 from markdown_renderer import normalize_markdown_blank_lines  # noqa: E402
 from docs_report_source import RETIRED_REPORT_KEYS, parse_report_source  # noqa: E402
 from docs_document_media_ownership import DocumentMediaChange, compare_document_media  # noqa: E402
@@ -75,7 +75,7 @@ class ImportDocumentMediaContext:
 
 @dataclass(frozen=True)
 class ImportDocumentPlan:
-    """Carry one import's source/assets and exact hierarchy path through apply/rollback."""
+    """Carry validated content, prepared source and exact hierarchy through apply."""
 
     operation: str
     record: ImportContent
@@ -87,6 +87,7 @@ class ImportDocumentPlan:
     committed_record: dict[str, Any]
     index_order_path: Path | None
     document_config: DocsStageConfig | DocsCollectionConfig
+    prepared_document: SourceDoc
     collection: str = ""
     target: SourceDoc | None = None
     media_change: DocumentMediaChange | None = None
@@ -119,6 +120,7 @@ class ImportDocumentPlan:
 class ImportDocumentApplyResult:
     inline_media_written: tuple[dict[str, Any], ...] = ()
     interactive_html_written: tuple[dict[str, Any], ...] = ()
+    parent_ids: dict[str, str] | None = None
 
 
 def _clean_text(value: Any) -> str:
@@ -379,6 +381,11 @@ def plan_import_document(
         committed_record=committed_document_record(front_matter, record.doc_id, document_config, collection=collection_id, parent_id=parent_id),
         index_order_path=index_order_path(parent_config) if operation == IMPORT_DOCUMENT_CREATE and not collection_id else None,
         document_config=document_config,
+        prepared_document=SourceDoc(
+            path=target_path, source_text=source_text, front_matter=front_matter,
+            body=candidate_body, doc_id=record.doc_id, title=title,
+            ui_status=front_matter.get("ui_status", ""), parent_id=parent_id,
+        ),
         collection=collection_id,
         target=target,
         media_change=compare_document_media(
@@ -393,6 +400,7 @@ def apply_import_document(
     plan: ImportDocumentPlan,
     *,
     media_context: ImportDocumentMediaContext | None = None,
+    after_doc_id: str = "",
 ) -> ImportDocumentApplyResult:
     """Materialize planned media and atomically write one planned source file."""
 
@@ -401,8 +409,8 @@ def apply_import_document(
         plan,
         media_context=media_context,
     )
-    apply_import_document_source(plan)
-    return apply_result
+    tree = apply_import_document_source(plan, after_doc_id=after_doc_id)
+    return replace(apply_result, parent_ids=tree_parent_ids(tree) if tree is not None else None)
 
 
 def materialize_import_document_media(
@@ -440,19 +448,21 @@ def materialize_import_document_media(
     )
 
 
-def apply_import_document_source(plan: ImportDocumentPlan) -> None:
-    """Write the source and append newly imported ordinary documents to their parent."""
+def apply_import_document_source(plan: ImportDocumentPlan, *, after_doc_id: str = "") -> list[dict[str, Any]] | None:
+    """Write exact source and return its completed ordinary tree when inserted."""
 
     if plan.operation == IMPORT_DOCUMENT_CREATE:
         tree = None
         if plan.index_order_path is not None:
             tree = read_index_order(plan.index_order_path)
-            insert_node(tree, {"doc_id": plan.doc_id}, plan.parent_id, "inside")
+            insert_node(tree, {"doc_id": plan.doc_id}, after_doc_id or plan.parent_id, "after" if after_doc_id else "inside")
         write_text_atomic_new(plan.target_path, plan.source_text)
         if tree is not None:
             write_text_atomic(plan.index_order_path, index_order_text(tree))
+            return tree
     elif plan.target is not None and plan.source_text != plan.target.source_text:
         write_text_atomic(plan.target_path, plan.source_text)
+    return None
 
 
 def import_document_event(

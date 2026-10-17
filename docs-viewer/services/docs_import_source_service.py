@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Service helpers for Docs Management staged source imports."""
+"""Data Sharing discovery and shared ordinary-document import completion."""
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any, Callable, Dict
 
@@ -19,7 +19,6 @@ from docs_document_location import (
 )
 from docs_import_document import (
     IMPORT_DOCUMENT_CREATE,
-    ImportDocumentApplyResult,
     ImportDocumentMediaContext,
     apply_import_document,
     import_document_event,
@@ -62,14 +61,12 @@ from docs_import_source_interactive import (
 from docs_management_document_target import (
     ManagedDocumentCollection,
 )
-import docs_source_model as source_model
 from docs_source_model import (
     allocate_doc_id,
     current_doc_timestamp,
 )
 from docs_document_packages.workspace import configured_workspace_paths
 from studio.shared.python.projects_directories import (
-    PROJECTS_ROOT_MARKER,
     ProjectsDirectory,
     resolve_projects_directory,
 )
@@ -77,6 +74,7 @@ from studio.shared.python.projects_directories import (
 
 LogEvent = Callable[[Path, str, Dict[str, Any]], None]
 PerformSourceWriteAndRebuild = Callable[..., Dict[str, Any]]
+IMPORT_SOURCE_ROOT = "data-sharing"
 
 
 @dataclass(frozen=True)
@@ -85,56 +83,11 @@ class ImportSourceDependencies:
     perform_source_write_and_rebuild: PerformSourceWriteAndRebuild
     perform_source_write_and_rebuild_atomic: PerformSourceWriteAndRebuild
     perform_collection_source_write_and_rebuild: PerformSourceWriteAndRebuild
-
-
-def load_ordinary_import_collection_docs(
-    repo_root: Path,
-    collection: ManagedDocumentCollection,
-) -> list[source_model.SourceDoc]:
-    if not collection.collection:
-        return []
-    return source_model.load_document_collection_docs_for_config(
-        repo_root,
-        collection.parent_config,
-        collection.document_config,
-    )
-
-
-def allocate_ordinary_import_doc_id(
-    collection: ManagedDocumentCollection,
-    added_date: str,
-    docs: list[source_model.SourceDoc],
-) -> str:
-    documents_root = collection.source_root
-    if not documents_root.is_dir():
-        raise ValueError(
-            f"missing source root for import target "
-            f"{collection.collection or '(parent)'}: "
-            f"{documents_root}",
-        )
-    unavailable = {
-        identity
-        for document in docs
-        for identity in (document.doc_id, document.path.stem)
-    }
-    for _attempt in range(100):
-        doc_id = allocate_doc_id(added_date)
-        if (
-            doc_id not in unavailable
-            and not (documents_root / f"{doc_id}.md").exists()
-        ):
-            return doc_id
-    raise RuntimeError("could not allocate an available ordinary import document identity")
+    rebuild_prepared_document: PerformSourceWriteAndRebuild
 
 
 def resolve_import_source_directory(source_directory: str) -> ProjectsDirectory:
-    source = resolve_projects_directory(source_directory)
-    if source.marker == PROJECTS_ROOT_MARKER:
-        raise ValueError(
-            "source_directory must identify a selectable directory below the "
-            "Projects base",
-        )
-    return source
+    return resolve_projects_directory(source_directory, lower_root=IMPORT_SOURCE_ROOT)
 
 
 def handle_import_source_files(
@@ -227,8 +180,6 @@ def handle_import_source(
     if collection == "catalogue":
         raise ValueError("Catalogue documents are owned by Work Regenerate")
     staged_filename = str(body.get("staged_filename") or "").strip()
-    include_prompt_meta = bool(body.get("include_prompt_meta"))
-    confirm_interactive_html_overwrite = bool(body.get("confirm_interactive_html_overwrite"))
     preview_only = bool(body.get("preview_only"))
     source_projects_base = projects_base.resolve()
     accepted_source_directory = source_directory
@@ -404,11 +355,37 @@ def handle_import_source(
         return payload
     if is_interactive_html_import_asset(source_path):
         raise ValueError("interactive HTML script files cannot be selected as the primary import source")
-    docs = load_ordinary_import_collection_docs(repo_root, destination)
+    return import_ordinary_source(
+        repo_root, body, dry_run, dependencies, destination=destination,
+        staging_root=staging_root, source_root=source_projects_base,
+        source_path=source_path, source_directory=accepted_source_directory,
+        include_companion_assets=True,
+    )
+
+
+def import_ordinary_source(
+    repo_root: Path, body: Dict[str, Any], dry_run: bool, dependencies: ImportSourceDependencies,
+    *, destination: ManagedDocumentCollection, staging_root: Path, source_root: Path,
+    source_path: Path, source_directory: str, include_companion_assets: bool,
+    after_doc_id: str = "",
+) -> Dict[str, Any]:
+    """Convert one supplied ordinary source and complete its create/media/generation.
+
+    Staged intake owns source/package recognition and may select companion assets.
+    Native intake supplies one temporary file with no neighbouring-file authority.
+    Both reuse the same converters, exact document planner and persistence owners;
+    create identity allocation needs no target-collection source scan.
+    """
+    collection = destination.collection
+    staged_filename = source_path.name
+    include_prompt_meta = bool(body.get("include_prompt_meta"))
+    confirm_interactive_html_overwrite = bool(body.get("confirm_interactive_html_overwrite"))
+    preview_only = bool(body.get("preview_only"))
+    accepted_source_directory = source_directory
     preview = generate_import_preview(
         repo_root,
         staging_root=staging_root,
-        workspace_root=source_projects_base,
+        workspace_root=source_root,
         source_path=source_path,
         include_prompt_meta=include_prompt_meta,
         retain_private_media_source=True,
@@ -416,26 +393,26 @@ def handle_import_source(
     preview["target"] = destination.request_target()
     source_doc_id = str(preview["proposed_doc_id"])
     create_added_date = current_doc_timestamp()
-    create_doc_id = allocate_ordinary_import_doc_id(destination, create_added_date, docs)
+    create_doc_id = allocate_doc_id(create_added_date)
     preview["proposed_doc_id"] = create_doc_id
     preview["proposed_doc_id_source"] = "allocated-local-identity"
     if source_path.is_dir():
         retarget_markdown_package_media_plans(
-            repo_root, staging_root, source_projects_base, source_path, preview,
+            repo_root, staging_root, source_root, source_path, preview,
         )
-    retarget_inline_media_plans(repo_root, staging_root, source_projects_base, preview)
+    retarget_inline_media_plans(repo_root, staging_root, source_root, preview)
     bind_import_media_owner(preview, destination.document_config, doc_id=create_doc_id)
     if collection:
         preview["collection"] = collection
     private_media_source_markdown = str(preview.pop("_inline_media_source_markdown", "") or "")
-    preview.pop("_inline_svg_source_markup", None)
+    private_media_source_svg = str(preview.pop("_inline_svg_source_markup", "") or "")
     interactive_plans = interactive_html_asset_plans(
         repo_root,
         staging_root,
-        source_projects_base,
+        source_root,
         config=destination.document_config,
         doc_id=create_doc_id,
-    )
+    ) if include_companion_assets else []
     if interactive_plans:
         preview["interactive_html_plans"] = interactive_plans
         for interactive_plan in interactive_plans:
@@ -501,7 +478,7 @@ def handle_import_source(
     )
     title = str(preview.get("title") or "Imported Doc").strip()
     record = ImportContent(
-        source_kind="staged-source",
+        source_kind="staged-source" if source_directory else "native-file",
         source_identity=staged_filename,
         record_identity=staged_filename,
         doc_id=source_doc_id,
@@ -515,7 +492,7 @@ def handle_import_source(
         repo_root,
         record,
         operation=IMPORT_DOCUMENT_CREATE,
-        docs=docs,
+        docs=[],
         import_preview=preview,
         create_doc_id=create_doc_id,
         create_added_date=create_added_date,
@@ -523,39 +500,26 @@ def handle_import_source(
     )
     media_context = ImportDocumentMediaContext(
         staging_root=staging_root,
-        workspace_root=source_projects_base,
+        workspace_root=source_root,
         source_path=source_path,
         include_prompt_meta=include_prompt_meta,
         interactive_html_plans=tuple(interactive_plans),
         allow_interactive_html_overwrite=confirm_interactive_html_overwrite,
         source_markdown=private_media_source_markdown,
+        source_svg_markup=private_media_source_svg,
     )
-    apply_result = ImportDocumentApplyResult()
-
-    def write_import_document() -> None:
-        nonlocal apply_result
-        apply_result = apply_import_document(
-            repo_root,
-            plan,
-            media_context=media_context,
+    apply_result = apply_import_document(repo_root, plan, media_context=media_context, after_doc_id=after_doc_id)
+    if after_doc_id:
+        parent_id = apply_result.parent_ids[plan.doc_id]
+        plan = replace(
+            plan, parent_id=parent_id,
+            committed_record={**plan.committed_record, "parent_id": parent_id},
+            prepared_document=replace(plan.prepared_document, parent_id=parent_id),
         )
-
-    if collection:
-        rebuild = dependencies.perform_collection_source_write_and_rebuild(
-            repo_root,
-            collection,
-            plan.changed_paths,
-            write_import_document,
-            media_changes=plan.media_changes,
-        )
-    else:
-        rebuild = dependencies.perform_source_write_and_rebuild(
-            repo_root,
-            plan.changed_paths,
-            write_import_document,
-            docs_doc_ids=plan.docs_doc_ids,
-            media_changes=plan.media_changes,
-        )
+    rebuild = dependencies.rebuild_prepared_document(
+        repo_root, destination, plan.prepared_document,
+        parent_ids=apply_result.parent_ids, media_change=plan.media_change,
+    )
     event_name, event_details = import_document_event(
         repo_root,
         plan,

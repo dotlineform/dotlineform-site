@@ -24,6 +24,7 @@ import docs_management_document_target  # noqa: E402
 import docs_management_draft  # noqa: E402
 import docs_selected_documents  # noqa: E402
 import docs_import_source_service as import_source_service  # noqa: E402
+import docs_import_doc  # noqa: E402
 import docs_local_links  # noqa: E402
 import docs_media_actions  # noqa: E402
 import docs_media_metadata  # noqa: E402
@@ -93,6 +94,7 @@ def docs_management_post_response(
     *,
     dry_run: bool = False,
     media_uploads: list[SourceMediaUpload] | None = None,
+    document_upload: docs_import_doc.ImportDocUpload | None = None,
 ) -> tuple[HTTPStatus, dict[str, object]]:
     if path == routes.PUBLISH_PATH:
         if dry_run:
@@ -189,6 +191,10 @@ def docs_management_post_response(
     if path == routes.IMPORT_SOURCE_PATH:
         payload = handle_import_source(repo_root, body, dry_run)
         return HTTPStatus.OK, payload
+    if path == routes.IMPORT_DOC_PATH:
+        if dry_run or document_upload is None:
+            raise ValueError("Import doc requires its native upload envelope and does not support dry_run")
+        return HTTPStatus.OK, docs_import_doc.import_doc(repo_root, body, document_upload)
     if path == routes.SOURCE_MEDIA_PREPARE_PATH:
         return HTTPStatus.OK, docs_source_media_service.prepare_source_media_identity(repo_root, body)
     if path == routes.CREATE_PATH:
@@ -211,6 +217,9 @@ def docs_management_post_response(
         return (HTTPStatus.OK if payload["ok"] else HTTPStatus.INTERNAL_SERVER_ERROR), payload
     if path == routes.MOVE_PATH:
         payload = docs_management_position.position_document(repo_root, body, dry_run=dry_run)
+        return (HTTPStatus.OK if payload["ok"] else HTTPStatus.INTERNAL_SERVER_ERROR), payload
+    if path == routes.ORDER_CHILDREN_PATH:
+        payload = docs_management_position.order_document_children(repo_root, body, dry_run=dry_run)
         return (HTTPStatus.OK if payload["ok"] else HTTPStatus.INTERNAL_SERVER_ERROR), payload
     if path == routes.DELETE_PATH:
         payload = docs_management_delete.delete_documents(repo_root, body, dry_run=dry_run)

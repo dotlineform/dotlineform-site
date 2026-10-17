@@ -46,6 +46,7 @@ export function createDocsViewerManagementImportController(options = {}) {
       return modalController.openImportFolderModal({
         createFolderPicker: module.createFolderPicker,
         initialDirectory: request.initialDirectory,
+        rootDirectory: request.rootDirectory,
         loadDirectory: request.loadDirectory,
         onSubmit: request.onSubmit,
         restoreFocus: request.restoreFocus

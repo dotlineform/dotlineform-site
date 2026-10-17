@@ -1,4 +1,5 @@
 import { runManagedDocsExportWorkspaceWorkflow } from "./docs-viewer-export-workspace-workflow.js";
+import { createDocsViewerImportDocWorkflow } from "./docs-viewer-import-doc-workflow.js";
 import { staticHtmlExportCapability } from "./docs-viewer-management-capabilities.js";
 import { createDocsViewerEditMenuController } from "./docs-viewer-management-edit-menu.js";
 import { createDocsViewerManagementContextActions } from "./docs-viewer-management-context-actions.js";
@@ -180,12 +181,14 @@ export function initDocsViewerManagement(context) {
   var manageRefreshDiscoveryButton = document.getElementById("docsViewerManageRefreshDiscoveryButton");
   var managePublishButton = document.getElementById("docsViewerManagePublishButton");
   var manageImportButton = document.getElementById("docsViewerManageImportButton");
+  var manageImportDocButton = document.getElementById("docsViewerManageImportDocButton");
   var manageNewButton = document.getElementById("docsViewerManageNewButton");
   var importRoot = shellRef("importRoot", "docsHtmlImportRoot");
   var importBootStatus = shellRef("importBootStatus", "docsHtmlImportBootStatus");
   var capabilityController = null;
   var eventRouter = null;
   var importController = null;
+  var importDocWorkflow = null;
   var interactionController = null;
   var modalController = null;
   var workspaceExportActive = false;
@@ -206,6 +209,9 @@ export function initDocsViewerManagement(context) {
       handlePositionDoc: function (docId, restoreFocus) {
         if (actionController) return actionController.handlePositionDoc(docId, restoreFocus);
       },
+      handleSortChildren: function (docId, restoreFocus) {
+        if (actionController) return actionController.handleSortChildren(docId, restoreFocus);
+      },
       activeIndexViewId: function () {
         return typeof context.activeIndexViewId === "function"
           ? context.activeIndexViewId()
@@ -217,6 +223,9 @@ export function initDocsViewerManagement(context) {
       managementClientOptions: managementClientOptions,
       indexDocument: function (docId) {
         return documentIndex.docsById.get(docId) || null;
+      },
+      indexChildren: function (docId) {
+        return documentIndex.childrenByParent.get(docId) || [];
       },
       renderManagementUi: renderManagementUi,
       resolveAction: function (actionId, docId) {
@@ -258,6 +267,19 @@ export function initDocsViewerManagement(context) {
       destination: currentImportDisplayContext(),
       destinationLabel: currentImportDisplayContextLabel(),
       restoreFocus: eventDetail.actionTarget || eventDetail.target || null
+    });
+  }
+
+  function openAppImportDoc() {
+    var destination = currentImportDisplayContext();
+    if (management.managementBusy || !management.managementAvailable || resolveAction(DOCS_VIEWER_ACTION_IDS.IMPORT_DOC, destination).disabled) return;
+    var currentDocument = context.documentActionContext();
+    var currentTarget = currentDocument.documentTarget;
+    var afterDocId = !destination.collection && currentTarget && !currentTarget.collection ? currentTarget.doc_id : "";
+    importDocWorkflow.open({
+      destination: destination,
+      afterDocId: afterDocId,
+      restoreFocus: manageActionsButton
     });
   }
 
@@ -548,6 +570,11 @@ export function initDocsViewerManagement(context) {
     if (manageImportButton) {
       manageImportButton.disabled = management.managementBusy || !management.managementAvailable;
     }
+    if (manageImportDocButton) {
+      var importDoc = resolveAction(DOCS_VIEWER_ACTION_IDS.IMPORT_DOC, currentImportDisplayContext());
+      manageImportDocButton.disabled = management.managementBusy || !management.managementAvailable || importDoc.disabled;
+      manageImportDocButton.title = importDoc.disabledReason || "Import doc";
+    }
     var authoringAvailable = management.managementAvailable;
     projectDocumentActionButtons(!management.managementChecked || !authoringAvailable, !authoringAvailable || editDisabled);
   }
@@ -570,6 +597,19 @@ export function initDocsViewerManagement(context) {
     return loadRouteIndex({ preserveDocument: true }).then(function () {
       renderManagementUi();
     });
+  }
+
+  async function adoptImportResult(result) {
+    if (result.dry_run || result.preview_only || !result.target || !result.record) return;
+    var projectionErrors = context.commitDocumentChange({ target: result.target, record: result.record }) || [];
+    if (selectedDocument.documentTarget && managedDocumentTargetsEqual(result.target, selectedDocument.documentTarget)) {
+      try {
+        await context.routeCommands.refreshDocument(result.target);
+      } catch (error) {
+        throw new Error("Document imported, but reader refresh failed: " + error.message, { cause: error });
+      }
+    }
+    if (projectionErrors.length) throw new Error("Document imported, but a retained list could not be updated: " + projectionErrors.map(function (error) { return error.message; }).join("; "));
   }
 
   async function displayImportedDocument(detail) {
@@ -755,6 +795,7 @@ export function initDocsViewerManagement(context) {
     commands: {
       exportWorkspace: openExportWorkspace,
       openImport: openAppImport,
+      openImportDoc: openAppImportDoc,
       publish: function () { actionController.handlePublish(); },
       refreshDiscovery: function () { actionController.handleRefreshDiscovery(); }
     },
@@ -780,20 +821,19 @@ export function initDocsViewerManagement(context) {
       },
       hideContextMenu: hideContextMenu,
       hideManageActionsMenu: eventRouter.hideManageActionsMenu,
-      onCommittedResult: async function (result) {
-        if (result.dry_run || result.preview_only || !result.target || !result.record) return;
-        var projectionErrors = context.commitDocumentChange({ target: result.target, record: result.record }) || [];
-        if (selectedDocument.documentTarget && managedDocumentTargetsEqual(result.target, selectedDocument.documentTarget)) {
-          try {
-            await context.routeCommands.refreshDocument(result.target);
-          } catch (error) {
-            throw new Error("Document imported, but reader refresh failed: " + error.message, { cause: error });
-          }
-        }
-        if (projectionErrors.length) throw new Error("Document imported, but a retained list could not be updated: " + projectionErrors.map(function (error) { return error.message; }).join("; "));
-      },
+      onCommittedResult: adoptImportResult,
       onImportComplete: displayImportedDocument,
     }
+  });
+
+  importDocWorkflow = createDocsViewerImportDocWorkflow({
+    root: root,
+    clientOptions: managementClientOptions,
+    setBusy: setManagementBusy,
+    setMessage: setManagementMessage,
+    render: renderManagementUi,
+    onCommittedResult: adoptImportResult,
+    onComplete: function (result) { return displayImportedDocument({ result: result }); }
   });
 
   var modalComposition = createDocsViewerManagementModalComposition({

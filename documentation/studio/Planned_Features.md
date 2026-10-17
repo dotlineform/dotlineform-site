@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260428-000000-f5ff18
 title: Planned Features
 added_date: "2026-04-28 00:00:00"
-last_updated: "2026-10-16"
+last_updated: "2026-10-17"
 summary: This explains the delivery model and workflows to implement new repo and application features.
 ui_status: planned
 parent_id: ""
@@ -156,6 +156,10 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 ## Ad-hoc Deliveries
 
 Store new standalone delivery documents for bounded work that does not need a separate feature parent under `documentation/studio/deliveries/`. Parent them directly to this document and keep implementation state, decisions and completion gates in the delivery. At closeout, transfer lasting details to the durable owner and review whether the delivery and its link should be retained.
+
+- [Import Doc And Data Sharing](deliveries/Import_Doc_And_Data_Sharing.md) — Implemented and reviewed on 2026-10-17; awaiting manual normal-use acceptance. Adds browser-native single-file Import doc immediately after the current ordinary document with the same parent, using Position's shared insertion helper, and confines existing Import to `data-sharing`, defaulting to `import-staging`. Both reuse ordinary converters, source/media writers and prepared exact generation. Changed-path lint, compilation, service import and whitespace checks passed; tests and live imports remain unexercised. Restart the Docs Viewer service and reload Manage for acceptance.
+
+- [Index Child Sorting](deliveries/Index_Child_Sorting.md) — Implemented and reviewed on 2026-10-17; awaiting manual normal-use acceptance. Adds Sort Children A–Z and shares navigation-only persistence with same-parent Position; reparenting retains parent-field and eligibility effects. Child membership is trusted from the browser. Focused lint, compilation, service CLI import and whitespace checks passed; tests and live actions remain unexercised. Restart the Docs Viewer service and reload Manage for acceptance.
 
 - [Document Owned Media](deliveries/Document_Owned_Media.md) — Complete and user-accepted on 2026-10-16 after Draft media removals/additions, content/reference reuse in a publishable document, Draft deletion and publication. Migration, in-memory media comparison, single canonical exclusion-policy input and diagram-pipeline cleanup are complete. [Media And Asset Handling](Media_And_Asset_Handling.md#saved-ownership-and-exact-removals) owns the durable lifecycle and commit/push-before-deployment boundary. Individual replacement/thumbnail/failure variants remain unexercised; optional orphan cleanup and unrelated test migration are separate. Delivery and Working Notes are retained as closed evidence pending manual archive.
 

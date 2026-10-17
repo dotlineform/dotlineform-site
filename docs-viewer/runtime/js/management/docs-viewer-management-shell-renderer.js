@@ -14,6 +14,7 @@ var MANAGEMENT_SHELL_MARKUP = [
   '  <button class="docsViewer__contextAction" type="button" data-docs-viewer-action="' + ACTION_IDS.NEW_SIBLING + '">New Sibling</button>',
   '  <button class="docsViewer__contextAction" type="button" data-docs-viewer-action="' + ACTION_IDS.NEW_CHILD + '">New Child</button>',
   '  <button class="docsViewer__contextAction" type="button" data-docs-viewer-action="' + ACTION_IDS.POSITION + '">Position…</button>',
+  '  <button class="docsViewer__contextAction" type="button" data-docs-viewer-action="' + ACTION_IDS.SORT_CHILDREN + '">Sort Children A–Z</button>',
   '  <div class="docsViewer__contextDivider" aria-hidden="true"></div>',
   '  <button class="docsViewer__contextAction" type="button" data-docs-viewer-action="' + ACTION_IDS.EXPORT_DOCS + '">Export…</button>',
   '  <button class="docsViewer__contextAction" type="button" data-docs-viewer-action="' + ACTION_IDS.PREPARE_DOCUMENT_PACKAGE + '">Prepare package…</button>',

@@ -249,6 +249,7 @@ def generate_import_preview(
         workspace_root=workspace_root,
         source_path=source_path,
         include_prompt_meta=include_prompt_meta,
+        retain_private_media_source=retain_private_media_source,
     )
 
 
@@ -288,6 +289,7 @@ def generate_html_import_preview(
     workspace_root: Path,
     source_path: Path,
     include_prompt_meta: bool,
+    retain_private_media_source: bool = False,
 ) -> dict[str, Any]:
     source_html = source_path.read_text(encoding="utf-8", errors="replace")
     summary = generate_html_content_import_preview(
@@ -298,8 +300,9 @@ def generate_html_import_preview(
         staging_root=staging_root,
         workspace_root=workspace_root,
     )
-    summary.pop("_inline_media_source_markdown", None)
-    summary.pop("_inline_svg_source_markup", None)
+    if not retain_private_media_source:
+        summary.pop("_inline_media_source_markdown", None)
+        summary.pop("_inline_svg_source_markup", None)
     summary["source_path"] = import_artifact_path(repo_root, source_path, workspace_root)
     summary["source_html"] = summary["source_path"]
     return summary
