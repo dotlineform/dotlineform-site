@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "docs_viewer_search_index_v4",
-    "version": "blake2b-2b4288ef23cab40388be52a4dc8ebf46",
-    "generated_at_utc": "2026-10-17T14:11:42Z",
+    "version": "blake2b-f766aa434836d082f3d43a3ef1cfe68d",
+    "generated_at_utc": "2026-10-17T14:19:28Z",
     "count": 28
   },
   "fields": [
@@ -97,8 +97,8 @@
     {
       "id": "d-20260809-130120-461754",
       "title": "Abstract Thought and Physical Processes",
-      "last_updated": "2026-10-06",
-      "display_meta": "2026-10-06 • Library",
+      "last_updated": "2026-10-17",
+      "display_meta": "2026-10-17 • Library",
       "collection": "library",
       "report_doc_id": "d-20260809-130120-870cc2",
       "collection_title": "Library"
@@ -8953,6 +8953,7 @@
       "body": [
         4,
         7,
+        10,
         19
       ]
     },

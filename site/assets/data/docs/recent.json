@@ -1,7 +1,7 @@
 {
   "schema": "docs_recent_v2",
   "limit": 20,
-  "generated_at": "2026-10-17T14:11:42Z",
+  "generated_at": "2026-10-17T14:19:27Z",
   "docs": [
     {
       "collection": "library",
@@ -17,6 +17,14 @@
       "doc_id": "d-20261017-112353-93c738",
       "report_doc_id": "d-20260809-130120-870cc2",
       "title": "100 Words Related to Reflection & Memory",
+      "timestamp": "2026-10-17"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20260809-130120-461754",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Abstract Thought and Physical Processes",
       "timestamp": "2026-10-17"
     },
     {
@@ -79,14 +87,6 @@
       "report_doc_id": "d-20260801-073826-8865a8",
       "title": "a theory of happiness",
       "timestamp": "2026-10-08"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20260809-130120-461754",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Abstract Thought and Physical Processes",
-      "timestamp": "2026-10-06"
     },
     {
       "collection": "library",

@@ -2,7 +2,7 @@
 doc_id: d-20260919-100234-038395
 title: "Shared Icons: Toolbar Mapping"
 added_date: "2026-09-19 10:02:34"
-last_updated: "2026-10-10 16:57:25"
+last_updated: "2026-10-17"
 summary: Editable mappings for Docs Viewer toolbars, report toolbars and report list icons, including code identifiers, state variants and replacement artwork choices.
 ui_status: planned
 parent_id: d-20260910-223116-9a1011
@@ -111,6 +111,7 @@ Identifiers marked `DOM` are element IDs; `selector` entries are exact attribute
 | Collection selection: clear | selector `[data-docs-collection-selection-command="clear"]` | Clears selection | Text `Clear` | Text `Clear` | — | Keep |
 | Collection selection: done | selector `[data-docs-collection-selection-command="done"]` | Ends selection mode | Text `Done` | Text `Done` | — | Keep |
 | Collection list: clear search | `docs_collection`; selector `[data-docs-collection-filters] .sharedSearchField__clear` | Clears search; hidden while empty or uneditable | × | x.svg | 1rem artwork; 1.75rem button | Shared Search Fields; review pending |
+| Library Manage: pagination | `mountPaginationControl`; `.docsViewer__icon--dlf-paginate-on` / `.docsViewer__icon--dlf-paginate-off` | Toggles paged/all-document browsing; artwork shows current mode | list.svg | dlf-paginate-on.svg / dlf-paginate-off.svg | Existing toolbar mask and button sizing; currentColor tint | Manage only; user-accepted at Delivery 1 closeout on 2026-10-17; accessible label/pressed state follows current pagination |
 | Collection detail: return | selector `.docsReportDetail__back` | Returns to the collection list and its saved position | ← | arrow-left.svg | — | Implemented; review pending |
 | Edit menu: collection Copy link | selector `[data-docs-collection-copy-link]`; action `copy-link` | Copies the exact detail document's Markdown link | 🔗 | link.svg | Icon and text `Copy link` | Moved from detail toolbar; review pending |
 | Edit menu: collection Delete | selector `[data-docs-collection-delete]`; action `delete` | Deletes the validated detail when available; Catalogue disabled | 🗑️ | trash.svg | Icon and text `Delete` | Moved from detail toolbar; same artwork while checking/disabled; review pending |

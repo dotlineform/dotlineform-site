@@ -39,6 +39,14 @@
   mask-image: url("../icons/arrow-up-down.svg");
 }
 
+.docsViewer__icon--dlf-paginate-on{
+  mask-image: url("../icons/dlf-paginate-on.svg");
+}
+
+.docsViewer__icon--dlf-paginate-off{
+  mask-image: url("../icons/dlf-paginate-off.svg");
+}
+
 .docsViewer__icon--copy{
   mask-image: url("../icons/copy.svg");
 }
