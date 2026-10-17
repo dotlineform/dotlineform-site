@@ -1,7 +1,7 @@
 {
   "schema": "docs_recent_v2",
   "limit": 20,
-  "generated_at": "2026-10-17T15:21:12Z",
+  "generated_at": "2026-10-17T18:37:51Z",
   "docs": [
     {
       "collection": "library",
@@ -33,6 +33,38 @@
       "doc_id": "d-20260809-130120-461754",
       "report_doc_id": "d-20260809-130120-870cc2",
       "title": "Abstract Thought and Physical Processes",
+      "timestamp": "2026-10-17"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261017-162603-c45f6b",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Acceleration vs Entropy",
+      "timestamp": "2026-10-17"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261017-172422-3921c8",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Aliveness of Images",
+      "timestamp": "2026-10-17"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261017-174644-6d7f78",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Archetypal Patterns",
+      "timestamp": "2026-10-17"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261017-182310-3b3ecb",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Are Information and Entropy Consciously Accessible",
       "timestamp": "2026-10-17"
     },
     {
@@ -126,38 +158,6 @@
       "doc_id": "d-20260809-130120-28fb85",
       "report_doc_id": "d-20260809-130120-870cc2",
       "title": "Beauty × Memory × Meaning",
-      "timestamp": "2026-08-09"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20260809-130120-d66e0b",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Can the Brain Comprehend How It Works?",
-      "timestamp": "2026-08-09"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20260809-130120-c5c511",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Coincidence Inevitability",
-      "timestamp": "2026-08-09"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20260809-130120-ed5b30",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Coincidence Salience Worksheet",
-      "timestamp": "2026-08-09"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20260809-130120-e6793d",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Defining \"Information\" for Cross‑Boundary Comparisons",
       "timestamp": "2026-08-09"
     }
   ]
