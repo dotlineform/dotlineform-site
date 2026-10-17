@@ -46,6 +46,11 @@
       "last_updated": "2026-10-17"
     },
     {
+      "doc_id": "d-20261017-220135-4d19fc",
+      "title": "Attractor-network Memory",
+      "last_updated": "2026-10-17"
+    },
+    {
       "doc_id": "d-20260809-130120-91c97f",
       "title": "Bayesian Reasoning",
       "last_updated": "2026-08-09"
@@ -104,6 +109,16 @@
       "doc_id": "d-20260809-130120-b96ba9",
       "title": "From 3D Space to Many Dimensions",
       "last_updated": "2026-10-16"
+    },
+    {
+      "doc_id": "d-20261017-221439-845822",
+      "title": "Hopfield Attractor Networks — Resilience & Failure Adaptation",
+      "last_updated": "2026-10-17"
+    },
+    {
+      "doc_id": "d-20261017-220718-82b513",
+      "title": "Hopfield Attractor-Network Memory",
+      "last_updated": "2026-10-17"
     },
     {
       "doc_id": "d-20261017-112923-e02f33",

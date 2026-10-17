@@ -197,7 +197,7 @@ The distinct configuration and redundancy review confirmed one publication desti
 `docs_import_media.py` creates logical links and materializes embedded document-import media. `docs_source_media_service.py` owns native source-editor media validation, naming, decisions and materialisation; `docs_source_image_conversion.py` prepares native raster display images, while the existing storage, sanitizer and document-thumbnail owners perform the required writes.
 
 - Inline raster data URLs are decoded to deterministic `<doc_id>-image-NN.<ext>` names.
-- HTML-inline SVG is sanitized from its original fragment to deterministic `<doc_id>-image-NN.svg` names, preserving case-sensitive SVG names and safe stylesheet text rather than reusing HTML-parser serialization.
+- HTML-inline SVG is sanitized from its original fragment to deterministic `<doc_id>-image-NN.svg` names, preserving case-sensitive SVG names and safe stylesheet text rather than reusing HTML-parser serialization. Preview and Apply share import-owned escaping of bare ampersands before strict SVG XML parsing, so text such as `marks & RNAs` imports without a source edit. Existing entity references and literal CDATA, comments and processing instructions pass through unchanged to the sanitizer. Other XML errors and unsafe content remain owned by the strict shared sanitizer; standalone SVG intake retains that same strict boundary without HTML escaping.
 - Markdown package images are converted to WebP, limited to 800px width without upscaling, and rejected if animation would be flattened.
 - Package attachments retain their bytes and receive readable `<doc_id>-attachment-NN.<ext>` names.
 - A replacement `doc_id` retargets generated filenames and source links before write.

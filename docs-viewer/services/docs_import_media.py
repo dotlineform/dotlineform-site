@@ -26,13 +26,28 @@ from docs_media_storage import (
     docs_publish_succeeded,
     publish_docs_media_files,
 )
-from docs_svg_sanitizer import sanitize_svg_bytes
+from docs_svg_sanitizer import SanitizedSvg, sanitize_svg_bytes
 from docs_artifact_locations import normalize_artifact_identity
 from studio.shared.python.projects_directories import projects_path_marker
 
 
 INLINE_SVG_PATTERN = re.compile(r"<svg\b[^>]*>.*?</svg>", re.IGNORECASE | re.DOTALL)
+INLINE_SVG_XML_ESCAPE_PATTERN = re.compile(
+    r"<!\[CDATA\[.*?\]\]>|<!--.*?-->|<\?.*?\?>|&(?!(?:#\w+|[\w:][\w.:-]*);)",
+    re.DOTALL,
+)
 INLINE_MEDIA_SOURCE_KINDS = {"inline_data_url", "inline_svg"}
+
+
+def sanitize_inline_svg_markup(markup: str) -> SanitizedSvg:
+    """Escape HTML's bare ampersands before the strict SVG XML boundary."""
+    # Preserve literal XML sections and entity-shaped references. The sanitizer
+    # still owns XML validity, including unsupported or malformed references.
+    escaped = INLINE_SVG_XML_ESCAPE_PATTERN.sub(
+        lambda match: "&amp;" if match.group(0) == "&" else match.group(0),
+        markup,
+    )
+    return sanitize_svg_bytes(escaped)
 
 
 def media_config_for(media_class: str, repo_root: Path | None):
@@ -168,7 +183,7 @@ def apply_inline_svg_media_plans(
 
     def replace(match: re.Match[str]) -> str:
         nonlocal source_index
-        sanitized = sanitize_svg_bytes(source_fragments[source_index])
+        sanitized = sanitize_inline_svg_markup(source_fragments[source_index])
         source_index += 1
         filename = next_inline_media_filename(staging_root, proposed_doc_id, "svg", used_filenames)
         title = sanitized.title or f"Inline image {len(inline_plans) + 1:02d}"
@@ -393,7 +408,7 @@ def materialize_import_media(
             except ValueError:
                 pass
         svg_bytes = [
-            sanitize_svg_bytes(match.group(0)).bytes
+            sanitize_inline_svg_markup(match.group(0)).bytes
             for match in INLINE_SVG_PATTERN.finditer(raw_svg_markup or raw_markdown)
         ]
         if len(svg_bytes) != len(svg_plans):
