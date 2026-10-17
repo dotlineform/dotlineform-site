@@ -43,10 +43,12 @@ def rebuild_prepared_document(
     repo_root: Path, owner: ManagedDocumentCollection | ManagedDocumentTarget, document: SourceDoc,
     *, parent_ids: dict[str, str] | None = None,
     media_change: DocumentMediaChange | None = None,
+    media_writes: dict[str, list[str]] | None = None,
 ) -> dict[str, Any]:
     """Generate a prepared document and finish its Catalogue queue handoff."""
     if parent_ids is None and isinstance(owner, ManagedDocumentTarget):
         parent_ids = owner.parent_ids
-    rebuild = rebuild_prepared_document_outputs(repo_root, owner, document, parent_ids=parent_ids, media_change=media_change)
+    rebuild = rebuild_prepared_document_outputs(repo_root, owner, document, parent_ids=parent_ids,
+                                               media_change=media_change, media_writes=media_writes)
     target = {**owner.request_target(), "doc_id": document.doc_id}
     return {"ok": True, "target": target, "rebuild": rebuild, "summary_text": "Document rebuilt."}

@@ -1,19 +1,16 @@
 from __future__ import annotations
 
 import html
-import json
 import re
 from uuid import uuid4
 from urllib.parse import urlsplit
 from dataclasses import dataclass, replace
-from pathlib import Path
 from typing import Any, Callable, Iterable
 
 from markdown_it import MarkdownIt
 
 from .semantic_token_registry import SemanticTokenRegistry
 from .inline_icons import InlineIconRenderer
-from docs_workspace_config import location_child
 from docs_image_tokens import (
     FIGURE_NATURAL_WIDTH_CLASS,
     FIGURE_PLACEMENT_CLASSES,
@@ -494,18 +491,7 @@ def render_image_reference(token: SemanticTokenOccurrence, src: str, *, svg: boo
 
 class SemanticTokensMixin:
     def catalogue_work_for_token(self, work_id: str) -> dict[str, Any]:
-        cache = self._catalogue_work_cache
-        if work_id in cache:
-            return cache[work_id]
-        root = self.workspace.catalogue.stage_location(self.config.stage)
-        path = location_child(root, Path("works/index") / f"{work_id}.json").path
-        try:
-            payload = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, ValueError) as exc:
-            raise ValueError(f"Catalogue Work {work_id} generated JSON is unavailable or invalid") from exc
-        work = payload["work"]
-        cache[work_id] = work
-        return work
+        return self._catalogue_work_cache[work_id]
 
     def restore_semantic_media_html(self, content_html: str) -> str:
         """Restore built fragments after Markdown so authored labels stay literal."""

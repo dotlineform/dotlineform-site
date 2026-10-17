@@ -21,12 +21,11 @@ class OrdinaryDocumentSummary:
 
 
 def targeted_document_metadata(
-    builder: DocsDataBuilder,
     docs: list[DocRecord],
     parent_ids: dict[str, str],
-) -> tuple[list[DocRecord | OrdinaryDocumentSummary], dict[str, Any], str]:
-    """Merge required source records in canonical order; never recover by scanning."""
-    rows, previous, previous_text = read_saved_navigation(builder)
+    rows: dict[str, dict[str, Any]],
+) -> list[DocRecord | OrdinaryDocumentSummary]:
+    """Merge supplied source records and saved navigation in canonical order."""
     selected_by_id = {doc.doc_id: doc for doc in docs}
     documents: list[DocRecord | OrdinaryDocumentSummary] = []
     for doc_id, parent_id in parent_ids.items():
@@ -35,7 +34,7 @@ def targeted_document_metadata(
         else:
             row = rows[doc_id]
             documents.append(OrdinaryDocumentSummary(doc_id, row["title"], parent_id, row))
-    return documents, previous, previous_text
+    return documents
 
 
 def read_saved_navigation(
@@ -47,6 +46,10 @@ def read_saved_navigation(
         raise ValueError("Generated navigation must stay in its configured directory")
     previous_text = path.read_text(encoding="utf-8")
     previous = json.loads(previous_text)
+    return navigation_rows(previous), previous, previous_text
+
+
+def navigation_rows(previous: dict[str, Any]) -> dict[str, dict[str, Any]]:
     rows: dict[str, dict[str, Any]] = {}
 
     def visit(nodes: list[dict[str, Any]]) -> None:
@@ -55,4 +58,4 @@ def read_saved_navigation(
             visit(node.get("children", []))
 
     visit(previous["docs"])
-    return rows, previous, previous_text
+    return rows

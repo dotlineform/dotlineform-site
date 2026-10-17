@@ -19,14 +19,14 @@ if TYPE_CHECKING:
 def prepare_related_links(
     builder: DocsDataBuilder, docs: list[DocRecord],
     current_records: dict[DocumentTarget, DocumentLinks | None],
-) -> None:
+) -> dict[DocumentTarget, DocumentLinks]:
     """Use this build's refreshed records or exact saved inputs for its sections.
 
     The existing Working Links updater owns relationship maintenance. Reuse its
     results for write and dry-run rendering, without a second refresh or read.
     Publish captures selected documents' records with their target rows intact.
     """
-    builder.related_documents = {}
+    related_documents = {}
     root = builder.related_links_dir
     for doc in docs:
         if builder.only_doc_ids is not None and doc.doc_id not in builder.only_doc_ids:
@@ -43,11 +43,12 @@ def prepare_related_links(
             if not path.is_file():
                 continue
             record = read_relationship_payload(json.loads(path.read_text()))
+            if record is not None and record.document.target != target:
+                raise ValueError("Related-links record identity must match its exact document")
         if record is None:
             continue
-        if record.document.target != target:
-            raise ValueError("Related-links record identity must match its exact document")
-        builder.related_documents[target] = record
+        related_documents[target] = record
+    return related_documents
 
 
 def render_related_links(builder: DocsDataBuilder, doc: DocRecord, heading: str) -> str:

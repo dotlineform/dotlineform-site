@@ -7,7 +7,7 @@ from typing import Any
 
 from docs_deploy_repo import utc_now
 from docs_publication_paths import confined, document_path, shared_path
-from docs_publication_queue import FAMILIES, has_selections, save_queue
+from docs_publication_queue import FAMILIES, has_selections, complete_publication
 from docs_publication_transfer import SelectedTransfers, completed_effect, delete_path, read_bytes, write_bytes
 from docs_workspace_config import generated_search_path, preview_documents_path, preview_search_path, public_documents_path, public_search_path, select_workspace_stage
 
@@ -20,9 +20,7 @@ def publish_selected_documents(repo_root: Path, workspace: Any, pending: dict[st
     owners = {"": (working, preview), **{left.collection: (left, right) for left, right in zip(working.collections, preview.collections, strict=True)}}
 
     def complete() -> None:
-        if not has_selections(pending):
-            pending["header"]["last_published_at_utc"] = utc_now()
-        save_queue(workspace, pending)
+        complete_publication(workspace, pending, utc_now())
 
     for family in FAMILIES[:2]:
         deleting = family == "deleted_documents"

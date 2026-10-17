@@ -4,18 +4,18 @@ doc_id: d-20261017-195107-8e0b46
 title: Explicit Publication Queue Handoff
 added_date: "2026-10-17 19:51:07"
 last_updated: "2026-10-17"
-summary: Ready for implementation approval; explicit Save, Import and Build orchestration, one shared Docs publication queue owner, and Save media selection from known completed effects.
+summary: Complete and user-accepted; explicit generation and queue handoff with Save media selection from completed effects.
 parent_id: d-20260428-000000-f5ff18
 ---
 # Explicit Publication Queue Handoff
 
-Parent: [Planned Features](../Planned_Features.md). Current behavior is maintained in [Builder](../Builder.md#publish-preparation), [Source Editor Endpoints](../Source_Editor_Endpoints.md) and [Media And Asset Handling](../Media_And_Asset_Handling.md#saved-ownership-and-exact-removals). This delivery describes the proposed replacement boundary; those durable documents remain current until implementation.
+Parent: [Planned Features](../Planned_Features.md). Current behavior is maintained in [Builder](../Builder.md#publish-preparation), [Source Editor Endpoints](../Source_Editor_Endpoints.md) and [Media And Asset Handling](../Media_And_Asset_Handling.md#saved-ownership-and-exact-removals). This delivery is retained for acceptance/evidence lookup.
 
-Status: planned; readiness review complete on 2026-10-17, ready for implementation approval. Only documentation and read-only investigation are authorized so far. No runtime, source, generated output or publication queue has been changed by this review.
+Status: complete; user accepted closeout on 2026-10-17. QH.0–QH.4 are complete. Changed-path Python lint/compilation, whitespace checks and code review passed. The Codex implementation run performed no live Save, Import, Build, queue mutation, Publish, service/browser run, test execution or test change. No specific manual scenarios were reported with acceptance. Commit, push and deployment remain separate actions.
 
 ## Requirements
 
-Source Save currently persists selected media and source, then invokes exact document generation. The ordinary and collection builders invoke publication preparation themselves. That preparation resolves publication membership, expands exact dependencies/restorations, selects complete current media references, saves publication queues and completes owned Working-media removals. Save awaits this chain, but its consequential publication work is hidden inside the builder call. The previous incremental-publication delivery deliberately used this boundary; it does not implement Save-owned media selection from known additions/replacements.
+Before this refactor, Source Save persisted selected media and source, then invoked exact document generation. The ordinary and collection builders invoked publication preparation themselves. That preparation resolved publication membership, expanded exact dependencies/restorations, selected complete current media references, saved publication queues and completed owned Working-media removals. Save awaited this chain, but its consequential publication work was hidden inside the builder call. The previous incremental-publication delivery deliberately used that boundary without Save-owned media selection from known additions/replacements.
 
 The result of this refactor is one explicit workflow: Save, Import and Build orchestrate their required input preparation, persistence, generation and publication handoff. The builder executes supplied build work and returns completed output facts. One shared Docs publication queue owner merges and persists completed selections. A text-only Save with unchanged media references and no media writes contributes no new media writes to the queue.
 
@@ -116,33 +116,45 @@ Stop conditions: raise a need for another ledger, new queue schema migration, co
 
 ### QH.1 — Make Generation And Queue Ownership Explicit
 
-- [ ] Move operation scope, eligibility, dependencies/restorations and completion sequencing into explicit shared workflow preparation/orchestration; keep executor inputs/results narrow.
-- [ ] Route Save, Import, application/CLI Build and the required existing callers through explicit queue completion using one merge/persistence owner. Preserve existing Catalogue and discovery contribution boundaries.
-- [ ] Remove hidden executor queue access and source-media cleanup, nested publication-driven render calls and obsolete arguments/branches. Do not add a flag that leaves the old hidden handoff available.
+- [x] Move operation scope, eligibility, dependencies/restorations and completion sequencing into explicit shared workflow preparation/orchestration; keep executor inputs/results narrow.
+- [x] Route Save, Import, application/CLI Build and the required existing callers through explicit queue completion using one merge/persistence owner. Preserve existing Catalogue and discovery contribution boundaries.
+- [x] Remove hidden executor queue access and source-media cleanup, nested publication-driven render calls and obsolete arguments/branches. Do not add a flag that leaves the old hidden handoff available.
+
+Implementation result: `docs_generation.py` owns selected input preparation, relationships, explicit artifact execution, Selected/public metadata completion, bounded dependent/restored generation and queue persistence before Working unlink. Ordinary/collection executor `run()` methods require supplied records, metadata, relationship/Catalogue presentation inputs and output/deletion selections; they do not invoke publication preparation. Import passes prepared records and media differences in process, removing its second queue/removal pass. CLI, New, Draft, Delete, reparenting, collection moves, maintenance and Catalogue call paths use the explicit workflow; navigation-only operations retain their existing narrow queue writer. Search/Recent writers return completed write facts for explicit caller handoff. Catalogue retains its Work queue, and dependency-only Catalogue rendering selects documents without Work/media contributions.
 
 Verification budget: focused changed-path Python lint/compilation and bounded call-path review for all affected entrypoints, required inputs, output completion, queue invocation and failure ordering. Expected cost is minutes with local caches only and no live workspace writes or network. Inspect any relevant existing test selection and its coverage before proposing a run; new/changed tests, fixtures or harnesses require separate approval. No broad suite or live Build/Publish is automatically authorized by this plan. Gate: every retained entrypoint visibly owns its completed queue handoff and a direct executor call cannot modify the queue.
 
 ### QH.2 — Select Save Media From Known Effects
 
-- [ ] Carry actual selected media-write results and loaded before/after references into the shared publication preparation/queue handoff.
-- [ ] Implement the Save selection cases above, preserving still-required queued writes/removals across later Saves and retaining complete selection for newly eligible documents.
-- [ ] Preserve durable public-removal selection before owned Working unlink and accurate completed-phase/error reporting; introduce no Preview/remote reads on Save.
+- [x] Carry actual selected media-write results and loaded before/after references into the shared publication preparation/queue handoff.
+- [x] Implement the Save selection cases above, preserving still-required queued writes/removals across later Saves and retaining complete selection for newly eligible documents.
+- [x] Preserve durable public-removal selection before owned Working unlink and accurate completed-phase/error reporting; introduce no Preview/remote reads on Save.
+
+Implementation result: Save supplies newly referenced identities plus actual verified changed writes, including thumbnails, and carries selected-media readiness into exact restoration. The queue owner intersects earlier selected writes with current references, merges new writes/removals and cancels only ready exact restorations. Existing complete queued lists remain valid and are not rebaselined. Source review covered unchanged/text-only Save, same-identity writes, unchanged prepared bytes, pasted stored media, repeated Saves, independent thumbnails, owned removals/restoration, excluded edits and newly eligible documents. These are static findings; live behavior remains unobserved in this run.
 
 Verification budget: changed-path lint/compilation plus focused source review against heading-only Save, same-identity replacement, unchanged prepared bytes, newly referenced stored media, repeated Saves, thumbnails, removals/restoration and draft-to-eligible handoff. These are contract cases for review/manual acceptance, not approval to author temporary regression scripts or tests. Separate test work can be specified against the durable [Testing](../Testing.md) policy if justified. User normal-use acceptance should confirm the queue after a heading-only Save and an image replacement followed by a text Save; live media/source/queue writes or Publish require their own concrete authorized action. Gate: Save contributes only required media effects and preserves previously selected effects without publication-state discovery.
 
 ### QH.3 — Code Review
 
-- [ ] Review the complete bounded change and affected callers against the mandatory [Redundancy And Defensive Behavior Review](../Development_Checklist.md#redundancy-and-defensive-behavior-review).
-- [ ] Challenge repeated configuration/policy/queue/source reads, hidden work in reused helpers, snapshot/rollback remnants, normalization, scans, fallbacks, compatibility flags and duplicated publication decisions. Record removed behavior and justified retained safeguards with their owners and operational purpose.
-- [ ] Confirm the builder cannot choose publication work or write the queue, workflows invoke the same queue authority explicitly, and Publish remains a consumer of supplied completed effects.
+- [x] Review the complete bounded change and affected callers against the mandatory [Redundancy And Defensive Behavior Review](../Development_Checklist.md#redundancy-and-defensive-behavior-review).
+- [x] Challenge repeated configuration/policy/queue/source reads, hidden work in reused helpers, snapshot/rollback remnants, normalization, scans, fallbacks, compatibility flags and duplicated publication decisions. Record removed behavior and justified retained safeguards with their owners and operational purpose.
+- [x] Confirm the builder cannot choose publication work or write the queue, workflows invoke the same queue authority explicitly, and Publish remains a consumer of supplied completed effects.
+
+Review result: no unresolved finding within the implemented boundary. Removed executor publication/dependency branches, hidden Search queue persistence, Import subprocess diagnostics/reparsing and its second queue load, repeated internal package freshness/snapshot audits and their dead exception paths, and repeated workspace/queue loads across collection-move completion. Required saved navigation text/rows, prepared Import records, rendering configuration, Catalogue records and queue selections are carried forward. Exact Work reads were moved from token execution into selected rendering preparation; document-package rendering explicitly uses that preparation too. No compatibility mode, new schema, baseline, freshness tracking, full-corpus/remote scan or automatic fallback was added.
+
+Retained safeguards: upload/candidate/media validity remains at authoring and upload owners; configured source/generated/media confinement remains at selected read/write/unlink boundaries; stored relationship parsing/identity checks remain only for disk-loaded records, trusting supplied completed records. Exact removal restoration reuses supplied readiness and otherwise checks only the intersecting Working identity. Transfer comparison/verification remains at Publish's existing transfer owners. The existing confirmed exact-package Import rollback boundary and its one owning Apply target comparison remain isolated from shared generation; a broader recovery redesign was not undertaken. These safeguards serve existing input, authority and failure contracts without new routine inventories or remote work.
+
+Verification result: changed-path Python lint and compilation passed for all 23 changed/new Python files; `git diff --check` passed. A distinct final source/diff review traced every active generation entrypoint and the listed Save media cases. No tests/fixtures/harnesses were changed or executed, and static evidence does not establish runtime, failure-injection or browser acceptance.
 
 Verification budget: a distinct focused source/diff review after implementation and selected evidence; repeat only checks affected by review changes. Gate: no unresolved ownership or lost-selection finding; static evidence and unexercised live scenarios are stated separately.
 
 ### QH.4 — Closeout
 
-- [ ] Update durable current-state ownership and link any separately approved test coverage record from this delivery.
-- [ ] Record actual manual normal-use observations and remaining omissions without treating lint/source review as behavioral proof.
-- [ ] Retain this delivery for acceptance/evidence lookup or recommend its retirement after transfer to durable owners; do not delete it without approval. Commit, push, Publish and deployment remain separate actions.
+- [x] Update durable current-state ownership and link any separately approved test coverage record from this delivery.
+- [x] Record user acceptance and remaining evidence limits without treating lint/source review as behavioral proof.
+- [x] Retain this delivery for acceptance/evidence lookup or recommend its retirement after transfer to durable owners; do not delete it without approval. Commit, push, Publish and deployment remain separate actions.
+
+Acceptance: the user approved closeout on 2026-10-17. No specific manual outcomes were supplied, so heading-only Save, image replacement followed by text Save, Import, explicit/maintenance Build, eligibility/dependency changes, thumbnail/removal/restoration and queue/unlink failure variants remain outside the recorded behavioral evidence. Further observations can accumulate during normal use. Runtime sources changed only in Python, so no public runtime projection or generated-document/Search build was needed. Durable ownership is current in Builder with targeted endpoint/media/data-model/checklist corrections; no new test coverage record was adopted. Closeout reused completed implementation evidence and changed documentation only.
 
 Verification budget: bounded documentation/status review using completed evidence; no repeat generation or test run solely for closeout. Gate: agreed operation/queue behavior is implemented, reviewed and accepted, with durable ownership current.
 

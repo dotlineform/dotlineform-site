@@ -12,6 +12,7 @@ from .source import FrontMatterSyntaxError, InvalidDocIdError, MissingDocIdError
 from .collection import CollectionDocsBuilder, selected_collection
 from docs_workspace_config import select_workspace_stage
 from docs_publication_preparation import PublicationHandoffError
+from docs_generation import generate_documents
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
@@ -67,7 +68,7 @@ def main(argv: list[str] | None = None) -> int:
                 related_links_dir=args.related_links_dir,
                 workspace=workspace,
             )
-        builder.run(write=args.write, emit_diagnostics=args.diagnostics)
+        generate_documents(builder, write=args.write, emit_diagnostics=args.diagnostics)
     except PublicationHandoffError as exc:
         print(exc, file=sys.stderr)
         return 3

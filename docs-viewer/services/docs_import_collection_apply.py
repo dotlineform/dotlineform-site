@@ -24,9 +24,7 @@ from docs_import_document import (
 )
 from docs_management_document_target import ManagedDocumentCollection
 from docs_write_rebuild import (
-    DocumentSourceSnapshotChanged,
     DocumentWriteRebuildFailure,
-    CollectionSourceSnapshotChanged,
     CollectionWriteRebuildFailure,
 )
 
@@ -255,6 +253,7 @@ def apply_import_content_collection(
     write_order = sorted(enumerate(plan.document_plans), key=parent_depth)
     docs_doc_ids: list[str] = []
     media_changes = []
+    prepared_documents = []
     source_failed = False
     def write_collection_documents() -> None:
         nonlocal source_failed
@@ -301,6 +300,7 @@ def apply_import_content_collection(
             result["committed_document"] = {"target": {"doc_id": document_plan.doc_id, **({"collection": document_plan.collection} if document_plan.collection else {})}, "record": dict(document_plan.committed_record)}
             docs_doc_ids.extend(document_plan.docs_doc_ids)
             media_changes.extend(document_plan.media_changes)
+            prepared_documents.append(document_plan.prepared_document)
             event_name, event_details = import_document_event(
                 repo_root,
                 document_plan,
@@ -332,6 +332,7 @@ def apply_import_content_collection(
                 write_collection_documents,
                 docs_doc_ids=docs_doc_ids,
                 media_changes=media_changes,
+                prepared_documents=prepared_documents,
             )
             generation = {"status": "completed", "rebuild": rebuild, "error": ""}
         except NoAppliedCollectionWrites:
@@ -428,7 +429,6 @@ def _apply_import_content_collection_atomic(
         [list[Path], Callable[[], None], dict[Path, bytes]],
         dict[str, Any],
     ],
-    snapshot_changed_type: type[Exception],
     write_rebuild_failure_type: type[Exception],
     event_name: str,
     target_label: str,
@@ -504,17 +504,6 @@ def _apply_import_content_collection_atomic(
             changed_paths,
             write_atomic_collection,
             snapshots,
-        )
-    except snapshot_changed_type:
-        return _refreshed_collection_plan(
-            plan,
-            [
-                collection_issue(
-                    "warning",
-                    "target_state_changed",
-                    "canonical sources changed immediately before apply; review a refreshed plan",
-                )
-            ],
         )
     except write_rebuild_failure_type as exc:
         apply_error = _safe_error_message(exc, repo_root, workspace_root)
@@ -616,6 +605,7 @@ def apply_import_content_collection_atomic(
             write_operation,
             source_snapshots=snapshots,
             media_changes=[change for document_plan in plan.document_plans if document_plan is not None for change in document_plan.media_changes],
+            prepared_documents=[document_plan.prepared_document for document_plan in plan.document_plans if document_plan is not None],
         )
 
     return _apply_import_content_collection_atomic(
@@ -626,7 +616,6 @@ def apply_import_content_collection_atomic(
         log_event=log_event,
         collection=collection,
         perform_atomic_boundary=perform_boundary,
-        snapshot_changed_type=CollectionSourceSnapshotChanged,
         write_rebuild_failure_type=CollectionWriteRebuildFailure,
         event_name="docs-import-collection-collection-apply",
         target_label="collection",
@@ -667,6 +656,7 @@ def apply_import_content_collection_document_atomic(
             source_snapshots=snapshots,
             docs_doc_ids=docs_doc_ids,
             media_changes=[change for document_plan in plan.document_plans if document_plan is not None for change in document_plan.media_changes],
+            prepared_documents=[document_plan.prepared_document for document_plan in plan.document_plans if document_plan is not None],
         )
 
     return _apply_import_content_collection_atomic(
@@ -677,7 +667,6 @@ def apply_import_content_collection_document_atomic(
         log_event=log_event,
         collection=collection,
         perform_atomic_boundary=perform_boundary,
-        snapshot_changed_type=DocumentSourceSnapshotChanged,
         write_rebuild_failure_type=DocumentWriteRebuildFailure,
         event_name="docs-import-reviewed-stage-collection-apply",
         target_label="stage",

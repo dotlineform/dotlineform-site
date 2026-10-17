@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-4b1d77
 title: Source Editor Endpoints
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-16"
+last_updated: "2026-10-17"
 parent_id: d-20260607-222033-647b52
 ---
 # Docs Viewer Source Editor Endpoints
@@ -107,8 +107,9 @@ Actions:
 - prepares only the supplied media outputs once under the resolved document configuration, including original-raster validation, requested display/thumbnail encodings and SVG sanitization
 - compares only selected exact destinations; matching stored bytes are reused, explicit Edit permits replacement, and unexpected new/competing filenames report authoring errors
 - sanitizes automatically and carries nonblocking change diagnostics in `media_notes`, with no confirmation/resubmission pass
-- completes verified selected media writes before the atomic source write, then carries prepared source/metadata/report/parent information into the exact document/Links builder and completed publication handoff
-- compares the already loaded saved body/fields with the prepared candidate in memory, carries current references/removals into generation, durably queues exact public removals and completes confined Working removals without a persisted media baseline or extra by-ID field
+- completes verified selected media writes before the atomic source write, then carries prepared source/metadata/report/parent information and actual media-write results into explicit exact document/Links generation and queue handoff
+- compares the already loaded saved body/fields with the candidate in memory, selecting newly referenced identities and changed media writes for eligible documents while retaining earlier queued writes still required by current references; unchanged prepared bytes and text-only edits add no unchanged media
+- selects complete current media on eligibility restoration, durably queues exact public removals before explicit confined Working unlink, and cancels exact restored removals using supplied ready results or a required exact Working-input check; there is no persisted media baseline or extra by-ID field
 - runs no Search, Publish, media inventory, cross-document requeue scan or unrelated registered media producer
 
 Returned data includes the exact target, saved `source_text`, provider-safe `path`, `source_changed`, `summary_text`, `dry_run`, `media_notes`, `media_effects`, `media_complete`, `source_saved` and `generation_complete`. An unchanged buffer skips its source write while still completing selected media and exact generation. Committed metadata is returned only after source persistence; successful generation also supplies `rebuild` and `publication_handoff_complete`.

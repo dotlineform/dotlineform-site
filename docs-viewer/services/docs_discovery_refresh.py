@@ -18,8 +18,8 @@ from docs_source_model import write_text_atomic
 from docs_workspace_config import load_docs_workspace_config, select_workspace_stage
 
 
-def write_recent(workspace: Any, config: Any, discovery: DiscoverySelection, ordinary_updated: Mapping[str, str], pending: dict[str, Any]) -> dict[str, int]:
-    """Write and select only changed Recent output; the caller persists the queue."""
+def write_recent(workspace: Any, config: Any, discovery: DiscoverySelection, ordinary_updated: Mapping[str, str]) -> dict[str, int]:
+    """Write changed Recent output; return completed facts for the caller."""
     path = shared_path(workspace, "workspace", "recent")
     try:
         previous = json.loads(path.read_bytes())
@@ -33,7 +33,6 @@ def write_recent(workspace: Any, config: Any, discovery: DiscoverySelection, ord
     changed = previous is None or {key: value for key, value in previous.items() if key != "generated_at"} != comparable
     if changed:
         write_text_atomic(path, json.dumps(payload, ensure_ascii=False, indent=2) + "\n")
-        select_shared(pending, "workspace", "recent")
     return {"docs": len(payload["docs"]), "wrote": int(changed), "skipped": int(not changed)}
 
 
@@ -54,12 +53,16 @@ def refresh_search_and_recent(repo_root: Path) -> dict[str, Any]:
         search = DocsViewerSearchDataBuilder(repo_root=repo_root, stage="working", config=config)
         documents = search.load_discovery_documents(selection)
         result["phase"] = "Recent"
-        recent = write_recent(workspace, config, selection, {doc.doc_id: doc.last_updated for doc in documents if not doc.collection}, pending)
+        recent = write_recent(workspace, config, selection, {doc.doc_id: doc.last_updated for doc in documents if not doc.collection})
         result["diagnostics"]["recent"] = recent
         if recent["wrote"]:
+            select_shared(pending, "workspace", "recent")
             save_queue(workspace, pending)
         result["phase"] = "Search"
-        result["diagnostics"]["search"] = search.run(write=True, force=False, documents=documents, pending=pending)["diagnostics"]
+        result["diagnostics"]["search"] = search.run(write=True, force=False, documents=documents)["diagnostics"]
+        if result["diagnostics"]["search"]["wrote"]:
+            select_shared(pending, "workspace", "search")
+            save_queue(workspace, pending)
         result.update(ok=True, phase="complete")
     except Exception as error:
         result["error"] = f"Search and Recent refresh failed during {result['phase']}: {error}. Completed effects were retained."

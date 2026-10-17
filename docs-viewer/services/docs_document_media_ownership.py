@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
 from docs_document_images import document_thumbnail_filename
@@ -47,6 +47,8 @@ class DocumentMediaChange:
 
     current: dict[str, list[str]]
     removed: dict[str, list[str]]
+    added: dict[str, list[str]]
+    ready: dict[str, list[str]] = field(default_factory=dict)
 
 
 def compare_document_media(owner: Any, doc_id: str, *, previous_body: str, previous_metadata: dict[str, Any], body: str, metadata: dict[str, Any]) -> DocumentMediaChange:
@@ -55,4 +57,4 @@ def compare_document_media(owner: Any, doc_id: str, *, previous_body: str, previ
     collection = getattr(owner, "collection", "")
     return DocumentMediaChange(current, removed_files(
         owned_document_files(doc_id, collection, before), owned_document_files(doc_id, collection, current),
-    ))
+    ), {kind: sorted(added) for kind, names in current.items() if (added := set(names) - set(before.get(kind, [])))})

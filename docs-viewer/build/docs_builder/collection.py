@@ -5,7 +5,6 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import quote
 
-from docs_document_media_ownership import DocumentMediaChange
 
 from .common import (
     DocsStageConfig,
@@ -17,11 +16,8 @@ from .common import (
     write_text,
 )
 from .pipeline import DocsDataBuilder
-from .related_links import prepare_related_links
-from .collection_metadata import CollectionDocumentSummary, merge_collection_manifest, read_collection_manifest
-from .links_builder import build_document_links, prepare_document_links
-from .media_builds import build_collection_media_snapshot
-from .links_model import DocumentLinks, DocumentTarget
+from .collection_metadata import read_collection_manifest
+from docs_selected_documents import read_selected
 from .rendering_inputs import RenderingInputs
 from .source import DocRecord, DocumentIdentity
 from docs_collection_customisations import (
@@ -34,7 +30,6 @@ from docs_document_subjects import (
     project_reader_subject,
 )
 from docs_document_identity import doc_updated_date
-from docs_selected_documents import read_selected, refresh_selected_documents
 from docs_document_images import has_document_thumbnail
 from docs_workspace_config import DocsWorkspaceConfig
 
@@ -167,124 +162,31 @@ class CollectionDocsBuilder(DocsDataBuilder):
         return self.selected_payload
 
     def run(
-        self, *, write: bool, emit_diagnostics: bool = False,
-        documents: list[DocRecord] | None = None,
-        catalogue_works: dict[str, dict[str, Any]] | None = None,
-        related_records: dict[DocumentTarget, DocumentLinks | None] | None = None,
-        stale_item_ids: list[str] | None = None,
-        update_selected: bool = True,
-        publication: Any = None,
-        expand_dependencies: bool = True,
-        catalogue_work_selection: bool = True,
-        media_changes: dict[str, DocumentMediaChange] | None = None,
+        self, *, write: bool, documents: list[DocRecord],
+        document_identities: dict[str, Any], manifest_payload: dict[str, Any],
+        stale_item_ids: list[str],
+        related_documents: dict[Any, Any],
+        catalogue_works: dict[str, dict[str, Any]],
     ) -> dict[str, Any]:
-        """Render sources and update this operation's collection manifest.
-
-        Complete Working generation supplies final relationship records and
-        stale IDs, and owns the single cross-collection Selected refresh.
-        Catalogue dependency renders select a document without a Work unit.
-        """
+        """Render and write the supplied collection artifacts; return completed facts."""
         started_at = monotonic_time()
-        self.warnings = []
-        self._catalogue_work_cache = {} if catalogue_works is None else catalogue_works
-        previous_manifest = self.saved_collection_metadata() if self.targeted_build else None
-        docs = self.load_docs(self.only_doc_ids, capture_source_text=not self.skip_media_builds) if documents is None else documents
-        if documents is not None:
-            self.source_files_scanned = 0
-        if not self.targeted_build and documents is None:
-            self.validate_canonical_doc_ids(docs)
-            self.validate_docs(docs)
-        ordered_docs = sorted(docs, key=self.doc_sort_key)
-        subjects_by_doc_id = None
-        if self.config.stage == "working":
-            subjects_by_doc_id = self.private_authoring_subjects(ordered_docs)
-            manifest_payload = self.manage_manifest_payload(
-                ordered_docs,
-                subjects_by_doc_id=subjects_by_doc_id,
-            )
-        else:
-            manifest_payload = self.public_manifest_payload(ordered_docs)
-        if self.targeted_build:
-            manifest_payload = merge_collection_manifest(previous_manifest, manifest_payload, self.only_doc_ids)
-        summaries = [
-            CollectionDocumentSummary(row["doc_id"], row["title"])
-            for row in manifest_payload["docs"]
-        ]
-        docs_by_id = {doc.doc_id: doc for doc in summaries}
-        media_snapshot = (
-            None if self.skip_media_builds or self.targeted_build or self.media_owner.media is None
-            else build_collection_media_snapshot(
-                self.repo_root, self.media_owner, write=write,
-                markdown_sources=[doc.source_text for doc in docs if doc.source_text is not None],
-            )
-        )
-        built_doc_ids = [doc.doc_id for doc in ordered_docs]
-        if stale_item_ids is None:
-            stale_item_ids = self.stale_doc_payload_ids(built_doc_ids, target_doc_ids=self.only_doc_ids)
-        links_build = None
-        if related_records is None:
-            links_plan = prepare_document_links(
-                self, docs, built_doc_ids, stale_item_ids, document_identities=docs_by_id,
-            )
-            related_records = {}
-            links_build = build_document_links(self, links_plan, write=write, related_records=related_records)
-        prepare_related_links(self, docs, related_records)
-        item_payloads = {
-            doc.doc_id: self.item_entry(doc, docs_by_id)
-            for doc in ordered_docs
-        }
-        if self.config.stage == "working":
-            from docs_publication_preparation import prepare_generation
-
-            publication = prepare_generation(
-                self, docs, item_payloads, {}, manifest=manifest_payload,
-                preparation=publication, media_changes=media_changes,
-            )
-        write_plan = self.build_collection_write_plan(
-            manifest_payload,
-            item_payloads,
-            stale_item_ids=stale_item_ids,
-        )
+        self.related_documents = related_documents
+        self._catalogue_work_cache = catalogue_works
+        item_payloads = {doc.doc_id: self.item_entry(doc, document_identities) for doc in documents}
+        write_plan = self.build_collection_write_plan(manifest_payload, item_payloads, stale_item_ids=stale_item_ids)
         diagnostics = self.collection_diagnostics_payload(
-            docs_total=len(summaries),
-            docs_emitted=len(item_payloads),
-            write_plan=write_plan,
+            docs_total=len(document_identities), docs_emitted=len(item_payloads), write_plan=write_plan,
             elapsed_seconds=round(monotonic_time() - started_at, 3),
         )
         if write:
-            self.write_collection_outputs(write_plan, docs_total=len(summaries))
+            self.write_collection_outputs(write_plan, docs_total=len(document_identities))
             self.collection_manifest = manifest_payload
         else:
-            self.print_collection_summary(write_plan, mode="dry-run", docs_total=len(summaries))
-        selected_changed = False
-        if self.config.stage == "working" and update_selected:
-            previous_selected = self.selected_documents()
-            selected = refresh_selected_documents(
-                self.config, self.collection_config, docs, write=write,
-                payload=previous_selected,
-            )
-            selected_changed = selected != previous_selected
-            if write:
-                self.selected_payload = selected
-        if write and self.config.stage == "working":
-            from docs_publication_preparation import complete_generation
-
-            complete_generation(self, item_payloads, stale_item_ids,
-                                selected=self.selected_payload if selected_changed else None, related_records=related_records,
-                                changed_ids=set(write_plan["changed_item_ids"]),
-                                dependency_ids={Path(name).stem for name in links_build["written"]} if links_build is not None else set(),
-                                preparation=publication, expand_dependencies=expand_dependencies,
-                                catalogue_work_selection=catalogue_work_selection)
+            self.print_collection_summary(write_plan, mode="dry-run", docs_total=len(document_identities))
         diagnostics["warning_count"] = len(self.warnings)
-        if emit_diagnostics:
-            self.print_diagnostics(diagnostics)
         return {
-            "manifest_payload": manifest_payload,
-            "item_payloads": item_payloads,
-            "media_snapshot": media_snapshot,
-            "write_plan": write_plan,
-            "diagnostics": diagnostics,
-            "links_build": links_build,
+            "manifest_payload": manifest_payload, "item_payloads": item_payloads,
+            "write_plan": write_plan, "diagnostics": diagnostics,
         }
 
     def build_collection_write_plan(

@@ -13,6 +13,7 @@ from docs_management_context import log_event
 from docs_management_document_target import resolve_managed_document_collection
 from docs_selected_documents import selected_path, selected_text
 from docs_publication_preparation import load_preparation
+from docs_generation import complete_catalogue_handoff
 import docs_source_model as source_model
 from docs_workspace_config import load_docs_workspace_config, require_document_authoring, select_workspace_stage
 from docs_write_rebuild import create_collection_builder, perform_collection_source_write_and_rebuild, validate_changed_source_paths
@@ -197,11 +198,11 @@ def _regenerate(repo_root: Path, *, design_maintenance: bool) -> dict[str, Any]:
                     repo_root, "catalogue", paths, write_operation,
                     links_doc_ids=[work_id], build_doc_ids=[work_id], builder=builder,
                     documents=build_documents, catalogue_works=work_records,
-                    publication=document_publication,
+                    publication=document_publication, catalogue_pending=publication,
                 )
                 phase = "publication queue"
                 merge_completed_work_selections(publication, [completed])
-                document_publication.save(catalogue_pending=publication)
+                complete_catalogue_handoff(document_publication, pending=publication)
                 phase = "updates queue"
                 del pending[family][work_id]
                 persist_pending_queue(updates_path, pending, progress="refreshed")
@@ -212,11 +213,11 @@ def _regenerate(repo_root: Path, *, design_maintenance: bool) -> dict[str, Any]:
             perform_collection_source_write_and_rebuild(
                 repo_root, "catalogue", maintenance_paths, lambda: None, complete_build=True, builder=builder,
                 documents=[build_record(document) for document in documents.values()], catalogue_works=work_records,
-                publication=document_publication,
+                publication=document_publication, catalogue_pending=publication,
             )
             phase = "publication queue"
             merge_completed_work_selections(publication, maintenance_completed)
-            document_publication.save(catalogue_pending=publication)
+            complete_catalogue_handoff(document_publication, pending=publication)
             phase = "updates queue"
             for family, wid, _selection, _names in maintenance_completed:
                 pending[family].pop(wid, None)

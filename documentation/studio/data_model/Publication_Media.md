@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261016-184501-3117db
 title: Publication Media
 added_date: "2026-10-16 18:45:01"
-last_updated: "2026-10-16"
+last_updated: "2026-10-17"
 summary: How document media references become pending publication effects, without a persisted media baseline.
 parent_id: d-20260911-152718-b21705
 ---
@@ -14,11 +14,14 @@ parent_id: d-20260911-152718-b21705
 ## What Happens On Save
 
 1. Compare media references in the loaded saved body/fields and prepared candidate, including the independent thumbnail assignment.
-2. Carry current references and exact owned removals through the same operation.
+2. Carry current/new references, exact owned removals and selected-media byte results through the same operation.
 3. Write selected new/replacement media, persist source and complete exact document generation.
-4. Save the publication selections in `working/docs-publish-pending.json`, then remove the selected owned Working files.
+4. Select newly referenced identities and actual changed byte writes for eligible documents, preserving earlier queued writes still required by current references. Unchanged prepared bytes and text-only edits add no unchanged media.
+5. Save the publication selections in `working/docs-publish-pending.json`, then explicitly remove the selected owned Working files.
 
 References are sets: a remaining occurrence keeps its file. Automatic removal covers the document's `<doc_id>/` body-media namespace and exact flat thumbnail identity. Replacement Import also compares its loaded target and candidate in memory and completes removals after its generation step.
+
+The queue's document `media` lists are selected writes and may be subsets of current references. Already queued complete lists remain valid. Exact removals supersede writes; restored identities cancel only their exact removals and select required ready bytes. Save reuses readiness established by selected media processing, with an exact Working-input check only where restoration still requires it. New eligibility selects complete current media. There is no Preview/remote existence lookup or media-byte comparison on Save.
 
 ## What Is Persisted
 

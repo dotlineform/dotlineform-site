@@ -297,7 +297,6 @@ class DocsViewerSearchDataBuilder:
         write: bool,
         force: bool,
         documents: list[SearchDocRecord] | None = None,
-        pending: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         """Return the complete payload and structured write/skip diagnostics.
 
@@ -305,12 +304,7 @@ class DocsViewerSearchDataBuilder:
         execution consumes saved metadata and reads its required selected sources.
         """
         payload = self.build_docs_v2_payload(documents=documents)
-        result = self.write_payload(payload, write=write, force=force)
-        if write and result["diagnostics"]["wrote"]:
-            from docs_publication_preparation import queue_shared_file
-
-            queue_shared_file(self.config, "search", pending=pending)
-        return result
+        return self.write_payload(payload, write=write, force=force)
 
     def resolve_path(self, path: Path | str | None) -> Path | None:
         if path is None:
@@ -531,10 +525,16 @@ def main(argv: list[str] | None = None) -> int:
             stage=args.stage,
             output_path=Path(args.output) if args.output else None,
         )
-        builder.run(
+        result = builder.run(
             write=args.write,
             force=args.force,
         )
+        if args.write and result["diagnostics"]["wrote"]:
+            from docs_publication_queue import read_queue, select_shared, save_queue
+
+            pending = read_queue(builder.config)
+            select_shared(pending, "workspace", "search")
+            save_queue(builder.config, pending)
     except (OSError, ValueError) as exc:
         raise SystemExit(f"Search build failed: {exc}") from exc
     return 0

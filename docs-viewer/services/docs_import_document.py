@@ -34,6 +34,7 @@ from docs_source_model import (  # noqa: E402
     allocate_doc_id,
     collection_supports_draft,
     parse_source_text,
+    parse_collection_document_report,
     validate_document_status_front_matter,
     current_doc_timestamp,
     doc_id_matches_added_date,
@@ -385,6 +386,10 @@ def plan_import_document(
             path=target_path, source_text=source_text, front_matter=front_matter,
             body=candidate_body, doc_id=record.doc_id, title=title,
             ui_status=front_matter.get("ui_status", ""), parent_id=parent_id,
+            report=parse_collection_document_report(
+                repo_root, parent_config, document_config, source_text,
+                front_matter=front_matter, body=candidate_body, source_name=target_path.name,
+            ),
         ),
         collection=collection_id,
         target=target,

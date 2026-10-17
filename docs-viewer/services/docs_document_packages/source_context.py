@@ -88,7 +88,10 @@ def load_document_package_source_context(
         builder = DocsDataBuilder(repo_root=root, config=config)
     source_docs = builder.load_docs()
     builder.validate_docs(source_docs)
-    prepare_related_links(builder, source_docs, {})
+    builder.related_documents = prepare_related_links(builder, source_docs, {})
+    from docs_builder.rendering_inputs import prepare_catalogue_works
+
+    builder._catalogue_work_cache = prepare_catalogue_works(builder, source_docs, {})
 
     source_docs_by_id = {doc.doc_id: doc for doc in source_docs}
     records: list[DocumentPackageSourceRecord] = []

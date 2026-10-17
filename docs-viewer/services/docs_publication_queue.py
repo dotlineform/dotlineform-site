@@ -41,11 +41,9 @@ def has_selections(pending: dict[str, Any]) -> bool:
     return any(pending[family] for family in FAMILIES)
 
 
-def select_document(pending: dict[str, Any], doc_id: str, collection: str, *, media: dict[str, list[str]] | None = None, removed_media: dict[str, list[str]] | None = None, restored_media: dict[str, list[str]] | None = None, delete: bool = False) -> None:
+def select_document(pending: dict[str, Any], doc_id: str, collection: str, *, media: dict[str, list[str]], current_media: dict[str, list[str]], removed_media: dict[str, list[str]] | None = None, restored_media: dict[str, list[str]] | None = None, delete: bool = False) -> None:
     current, opposite = ("deleted_documents", "current_documents") if delete else ("current_documents", "deleted_documents")
     record: dict[str, Any] = {"collection": collection} if collection else {}
-    if not delete and media:
-        record["media"] = media
     # A completed ownership cutover carries the old by-ID removals with the
     # document unit, including through later Save or Delete before Publish.
     removed_collections = {
@@ -62,8 +60,28 @@ def select_document(pending: dict[str, Any], doc_id: str, collection: str, *, me
     remaining = {kind: names for kind, names in remaining.items() if names}
     if remaining:
         record["removed_media"] = remaining
+    if not delete:
+        previous = pending["current_documents"].get(doc_id, {})
+        writes: dict[str, set[str]] = {}
+        if previous.get("collection", "") == collection:
+            for kind, names in previous.get("media", {}).items():
+                writes[kind] = set(names) & set(current_media.get(kind, []))
+        for selection in (media, restored_media or {}):
+            for kind, names in selection.items():
+                writes.setdefault(kind, set()).update(names)
+        selected = {kind: sorted(names - set(remaining.get(kind, []))) for kind, names in writes.items()}
+        selected = {kind: names for kind, names in selected.items() if names}
+        if selected:
+            record["media"] = selected
     pending[opposite].pop(doc_id, None)
     pending[current][doc_id] = record
+
+
+def complete_publication(workspace: DocsWorkspaceConfig | DocsStageConfig, pending: dict[str, Any], completed_at: str) -> None:
+    """Persist completed selections and the existing empty-queue receipt."""
+    if not has_selections(pending):
+        pending["header"]["last_published_at_utc"] = completed_at
+    save_queue(workspace, pending)
 
 
 def select_shared(pending: dict[str, Any], owner: str, output: str, *, delete: bool = False) -> None:

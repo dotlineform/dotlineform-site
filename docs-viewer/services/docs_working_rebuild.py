@@ -13,7 +13,8 @@ from docs_discovery_refresh import write_recent
 from docs_index_order import index_order_path, read_index_order, tree_parent_ids
 from docs_publication_ignore import read_publication_ignore_ids
 from docs_selected_documents import read_selected, refresh_workspace_selected
-from docs_publication_preparation import load_preparation, prepare_dependencies, prepare_restored
+from docs_publication_preparation import load_preparation
+from docs_generation import generate_documents, prepare_dependencies, prepare_restored
 from docs_workspace_config import generated_documents_path, load_docs_workspace_config, require_document_authoring, select_workspace_stage
 
 
@@ -94,7 +95,7 @@ def rebuild_working_docs_and_search(repo_root: Path) -> dict[str, Any]:
         catalogue_works: dict[str, dict[str, Any]] = {}
         results = {}
         for name, builder in builders.items():
-            results[name] = perform(f"documents/{name or 'ordinary'}", lambda: builder.run(
+            results[name] = perform(f"documents/{name or 'ordinary'}", lambda: generate_documents(builder,
                 write=True, documents=documents[name], related_records=related_records,
                 stale_item_ids=stale_ids[name], update_selected=False, catalogue_works=catalogue_works, publication=publication, expand_dependencies=False,
                 **({"parent_ids": parents} if not name else {}),
@@ -130,8 +131,10 @@ def rebuild_working_docs_and_search(repo_root: Path) -> dict[str, Any]:
         discovery = perform("discovery-selection", select_discovery)
 
         payload["diagnostics"]["recent"] = perform("recent", lambda: write_recent(
-            workspace, config, discovery, {doc.doc_id: doc.last_updated for doc in documents[""]}, publication.pending,
+            workspace, config, discovery, {doc.doc_id: doc.last_updated for doc in documents[""]},
         ))
+        if payload["diagnostics"]["recent"]["wrote"]:
+            publication.shared("workspace", "recent")
         perform("publication handoff", publication.save)
         search_builder = DocsViewerSearchDataBuilder(repo_root=repo_root, stage="working", config=config)
 
@@ -141,10 +144,13 @@ def rebuild_working_docs_and_search(repo_root: Path) -> dict[str, Any]:
             for owner, selection in discovery.collections:
                 if owner.collection not in documents:
                     search_documents.extend(search_builder.load_named_collection_docs(owner, selection))
-            return search_builder.run(write=True, force=False, documents=search_documents, pending=publication.pending)
+            return search_builder.run(write=True, force=False, documents=search_documents)
 
         search = perform("search", rebuild_search)
         payload["diagnostics"]["search"] = search["diagnostics"]
+        if search["diagnostics"]["wrote"]:
+            publication.shared("workspace", "search")
+            perform("Search publication handoff", publication.save)
         perform("browser-configuration", lambda: write_browser_config(
             repo_root, workspace, path=DOCS_VIEWER_BROWSER_CONFIG_PATH, label="Docs Viewer browser config",
         ))

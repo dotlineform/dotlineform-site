@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import json
-import subprocess
 import sys
 import time
 from pathlib import Path
@@ -12,14 +11,14 @@ from typing import Any, Callable, Dict, Mapping, Optional, TYPE_CHECKING
 
 from docs_workspace_config import (
     document_source_path,
-    load_docs_working_config,
     load_docs_workspace_config,
     require_document_authoring,
-    resolve_workspace_path,
     DocsWorkspaceConfig,
+    select_workspace_stage,
 )
 from docs_build_manifest import remove_build_manifest
-from docs_publication_preparation import PublicationHandoffError, complete_source_media_changes
+from docs_publication_preparation import PublicationHandoffError
+from docs_generation import generate_documents
 from docs_source_model import SourceDoc, parse_source, write_bytes_atomic
 from docs_document_identity import doc_updated_date
 from docs_document_media_ownership import DocumentMediaChange
@@ -30,11 +29,6 @@ if TYPE_CHECKING:
     from docs_builder.source import DocRecord
     from docs_management_document_target import ManagedDocumentCollection, ManagedDocumentTarget
 
-DOCS_BUILDER_DIAGNOSTICS_PREFIX = "Docs builder diagnostics: "
-FRONT_MATTER_ERROR_PREFIX = "problem with front-matter on doc "
-PYTHON_EXECUTABLE = sys.executable
-DOCS_BUILDER_SCRIPT = "docs-viewer/build/build_docs.py"
-
 
 class CollectionWriteRebuildFailure(RuntimeError):
     """Report one failed child write/rebuild after its owned rollback attempt."""
@@ -44,41 +38,12 @@ class CollectionWriteRebuildFailure(RuntimeError):
         self.rollback = rollback
 
 
-class CollectionSourceSnapshotChanged(RuntimeError):
-    """Stop one child write boundary before mutation when its snapshot changed."""
-
-
 class DocumentWriteRebuildFailure(RuntimeError):
     """Report one failed top-level write/rebuild after its owned rollback attempt."""
 
     def __init__(self, message: str, *, rollback: dict[str, Any]):
         super().__init__(message)
         self.rollback = rollback
-
-
-class DocumentSourceSnapshotChanged(RuntimeError):
-    """Stop one top-level write boundary before mutation when its snapshot changed."""
-
-
-def current_document_source_root(repo_root: Path) -> Path:
-    config = load_docs_working_config(repo_root)
-    return resolve_workspace_path(repo_root, document_source_path(config))
-
-
-def current_collection_source_root(repo_root: Path, collection: str) -> Path:
-    config = load_docs_working_config(repo_root)
-    matching = [
-        candidate
-        for candidate in config.collections
-        if candidate.collection == collection
-    ]
-    if not matching:
-        raise ValueError(f"collection {collection} is not configured")
-    return resolve_workspace_path(repo_root, document_source_path(matching[0]))
-
-
-def python_builder_command(script: str, *args: str) -> list[str]:
-    return [PYTHON_EXECUTABLE, script, *args]
 
 
 def ordered_docs_doc_ids(doc_ids: list[str]) -> list[str]:
@@ -115,133 +80,80 @@ def links_write_arguments(before: list[str] | None, paths: list[Path]) -> dict[s
     return {"links_doc_ids": sorted(set(before) | after)}
 
 
-def extract_docs_builder_diagnostics(stdout: str) -> list[Dict[str, Any]]:
-    diagnostics: list[Dict[str, Any]] = []
-    for line in stdout.splitlines():
-        text = line.strip()
-        if not text.startswith(DOCS_BUILDER_DIAGNOSTICS_PREFIX):
-            continue
-        raw_payload = text[len(DOCS_BUILDER_DIAGNOSTICS_PREFIX) :].strip()
-        try:
-            payload = json.loads(raw_payload)
-        except json.JSONDecodeError:
-            continue
-        if isinstance(payload, dict):
-            diagnostics.append(payload)
-    return diagnostics
-
-
-def run_rebuild_command(command: list[str], repo_root: Path) -> Dict[str, Any]:
-    started_at = time.perf_counter()
-    completed = subprocess.run(
-        command,
-        cwd=str(repo_root),
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    return {
-        "command": " ".join(command),
-        "returncode": completed.returncode,
-        "stdout": completed.stdout.strip(),
-        "stderr": completed.stderr.strip(),
-        "elapsed_seconds": round(time.perf_counter() - started_at, 3),
-    }
-
-
-def rebuild_failure_message(prefix: str, detail: str) -> str:
-    clean_detail = str(detail or "").strip()
-    if clean_detail.startswith(FRONT_MATTER_ERROR_PREFIX):
-        return clean_detail
-    return f"{prefix}: {clean_detail}"
-
-
 def rebuild_working_outputs(
     repo_root: Path, *, docs_doc_ids: Optional[list[str]] = None,
     skip_media_builds: bool = False, links_doc_ids: Optional[list[str]] = None,
+    media_changes: list[tuple[str, Any, DocumentMediaChange]] | None = None,
+    prepared_documents: list[SourceDoc] | None = None,
+    workspace: DocsWorkspaceConfig | None = None,
+    publication: Any = None,
 ) -> Dict[str, Any]:
-    """Await explicit Working document generation and its publication handoff."""
-    config = load_docs_working_config(repo_root)
-    remove_build_manifest(repo_root, config)
-    targets = None if docs_doc_ids is None else ordered_docs_doc_ids(docs_doc_ids)
-    if targets is not None and not targets:
-        raise ValueError("Targeted docs build requires at least one document ID")
-    command = python_builder_command(DOCS_BUILDER_SCRIPT, "--write", "--diagnostics", "--stage", "working", "--skip-recent", "--skip-browser-config")
-    if targets is not None:
-        command.extend(["--only-doc-ids", ",".join(targets)])
-    links = links_doc_ids if links_doc_ids is not None else targets
-    if links is not None:
-        command.extend(["--links-doc-ids", ",".join(ordered_docs_doc_ids(links))])
-    if skip_media_builds:
-        command.append("--skip-media-builds")
-    step = run_rebuild_command(command, repo_root)
-    if step["returncode"] != 0:
-        detail = step["stderr"] or step["stdout"] or f"exit {step['returncode']}"
-        if step["returncode"] == 3:
-            raise PublicationHandoffError(detail)
-        raise RuntimeError(rebuild_failure_message("Working document rebuild failed", detail))
-    diagnostics = extract_docs_builder_diagnostics(step["stdout"])
-    return {
-        "ok": True, "steps": [step], "search": {"mode": "none", "doc_ids": []},
-        "docs": {"mode": "full" if targets is None else "targeted", "doc_ids": targets or [], "reason": "explicit document generation"},
-        "diagnostics": {"docs": diagnostics[-1] if diagnostics else None},
-    }
+    """Await explicit Working generation with carried authoring inputs."""
+    return _rebuild_outputs(repo_root, "", docs_doc_ids=docs_doc_ids, links_doc_ids=links_doc_ids,
+                            skip_media_builds=skip_media_builds, media_changes=media_changes,
+                            prepared_documents=prepared_documents, workspace=workspace, publication=publication)
 
 
 def rebuild_collection_outputs(
-    repo_root: Path,
-    collection: str,
-    links_doc_ids: Optional[list[str]] = None,
-    docs_doc_ids: Optional[list[str]] = None,
+    repo_root: Path, collection: str, links_doc_ids: Optional[list[str]] = None,
+    docs_doc_ids: Optional[list[str]] = None, *,
+    media_changes: list[tuple[str, Any, DocumentMediaChange]] | None = None,
+    prepared_documents: list[SourceDoc] | None = None,
+    workspace: DocsWorkspaceConfig | None = None,
+    publication: Any = None,
 ) -> Dict[str, Any]:
-    """Build a complete collection or render only its exact changed/deleted IDs."""
-    docs_command = python_builder_command(
-        DOCS_BUILDER_SCRIPT,
-        "--collection",
-        collection,
-        "--write",
-        "--diagnostics",
-        "--skip-browser-config",
-        "--skip-media-builds",
-    )
-    config = load_docs_working_config(repo_root)
-    docs_command.extend(["--stage", config.stage])
-    target_doc_ids = None if docs_doc_ids is None else ordered_docs_doc_ids(docs_doc_ids)
-    if target_doc_ids is not None:
-        docs_command.extend(["--only-doc-ids", ",".join(target_doc_ids)])
-    if links_doc_ids is not None:
-        docs_command.extend(["--links-doc-ids", ",".join(ordered_docs_doc_ids(links_doc_ids))])
-    steps = []
-    docs_diagnostics: Optional[Dict[str, Any]] = None
-    step = run_rebuild_command(docs_command, repo_root)
-    steps.append(step)
-    docs_payloads = extract_docs_builder_diagnostics(step["stdout"])
-    docs_diagnostics = docs_payloads[-1] if docs_payloads else None
-    if step["returncode"] != 0:
-        detail = step["stderr"] or step["stdout"] or f"exit {step['returncode']}"
-        if step["returncode"] == 3:
-            raise PublicationHandoffError(detail)
-        raise RuntimeError(
-            rebuild_failure_message(
-                f"rebuild failed for {collection}",
-                detail,
-            )
-        )
+    """Await a selected/complete collection and its explicit queue completion."""
+    return _rebuild_outputs(repo_root, collection, docs_doc_ids=docs_doc_ids, links_doc_ids=links_doc_ids,
+                            skip_media_builds=True, media_changes=media_changes,
+                            prepared_documents=prepared_documents, workspace=workspace, publication=publication)
+
+
+def _rebuild_outputs(
+    repo_root: Path, collection: str, *, docs_doc_ids: list[str] | None,
+    links_doc_ids: list[str] | None, skip_media_builds: bool,
+    media_changes: list[tuple[str, Any, DocumentMediaChange]] | None,
+    prepared_documents: list[SourceDoc] | None, workspace: DocsWorkspaceConfig | None,
+    publication: Any,
+) -> dict[str, Any]:
+    build_dir = str(repo_root / "docs-viewer/build")
+    if build_dir not in sys.path:
+        sys.path.insert(0, build_dir)
+    from docs_builder.pipeline import DocsDataBuilder
+    from docs_builder.collection import CollectionDocsBuilder, selected_collection
+
+    workspace = load_docs_workspace_config(repo_root) if workspace is None else workspace
+    config = select_workspace_stage(workspace, "working")
+    targets = None if docs_doc_ids is None else ordered_docs_doc_ids(docs_doc_ids)
+    if targets is not None and not targets:
+        raise ValueError("Targeted docs build requires at least one document ID")
+    arguments = {"repo_root": repo_root, "config": config, "workspace": workspace,
+                 "only_doc_ids": targets, "links_doc_ids": links_doc_ids if links_doc_ids is not None else targets,
+                 "skip_media_builds": skip_media_builds}
+    if collection:
+        builder = CollectionDocsBuilder(**arguments, collection=selected_collection(config, collection))
+    else:
+        remove_build_manifest(repo_root, config)
+        builder = DocsDataBuilder(**arguments, skip_recent=True)
+    records = None if prepared_documents is None else [prepared_build_record(builder, doc) for doc in prepared_documents]
+    result = generate_documents(builder, write=True, documents=records,
+                                publication=publication,
+                                media_changes={doc_id: change for doc_id, _owner, change in media_changes or []})
     return {
-        "ok": True,
-        "steps": steps,
-        "search": {"mode": "none", "doc_ids": []},
-        "docs": {
-            "mode": "targeted" if target_doc_ids is not None else "collection",
-            "doc_ids": target_doc_ids or [],
-            "collection": collection,
-            "reason": "targeted collection document ids provided" if target_doc_ids is not None else "configured collection rebuild",
-        },
-        "diagnostics": {
-            "docs": docs_diagnostics,
-            "search": {"mode": "none", "doc_ids": []},
-        },
+        "ok": True, "steps": [], "search": {"mode": "none", "doc_ids": []},
+        "docs": {"mode": "targeted" if targets is not None else "collection" if collection else "full",
+                 "doc_ids": targets or [], "reason": "explicit document generation",
+                 **({"collection": collection} if collection else {})},
+        "diagnostics": {"docs": result["diagnostics"]},
     }
+
+
+def prepared_build_record(builder: Any, document: SourceDoc) -> Any:
+    """Project an already parsed authoring/import record without reading it again."""
+    return builder.document_record(
+        path=document.path, front_matter=document.front_matter, body_markdown=document.body,
+        doc_id=document.doc_id, title=document.title, parent_id=document.parent_id,
+        report=document.report, source_text=document.source_text,
+    )
 
 
 def validate_changed_source_paths(root: Path, paths: list[Path], *, index_path: Path | None = None) -> None:
@@ -260,18 +172,20 @@ def perform_source_write_and_rebuild(
     docs_doc_ids: Optional[list[str]] = None,
     skip_media_builds: bool = True,
     media_changes: list[tuple[str, Any, DocumentMediaChange]] | None = None,
+    prepared_documents: list[SourceDoc] | None = None,
 ) -> Dict[str, Any]:
-    config = load_docs_working_config(repo_root)
+    workspace = load_docs_workspace_config(repo_root)
+    config = select_workspace_stage(workspace, "working")
     require_document_authoring(config)
     validate_changed_source_paths(document_source_path(config), changed_paths, index_path=index_order_path(config))
-    links_before = changed_source_document_ids(changed_paths)
+    links_before = changed_source_document_ids(changed_paths) if prepared_documents is None else None
     write_operation()
     rebuild = rebuild_working_outputs(
         repo_root, docs_doc_ids=docs_doc_ids,
         skip_media_builds=skip_media_builds,
-        **links_write_arguments(links_before, changed_paths),
+        **(links_write_arguments(links_before, changed_paths) if prepared_documents is None else {"links_doc_ids": docs_doc_ids}),
+        media_changes=media_changes, prepared_documents=prepared_documents, workspace=workspace,
     )
-    complete_source_media_changes(config, media_changes or [])
     return rebuild
 
 
@@ -283,36 +197,25 @@ def perform_source_write_and_rebuild_atomic(
     source_snapshots: Mapping[Path, bytes],
     docs_doc_ids: Optional[list[str]] = None,
     media_changes: list[tuple[str, Any, DocumentMediaChange]] | None = None,
+    prepared_documents: list[SourceDoc] | None = None,
 ) -> Dict[str, Any]:
     """Write/rebuild one exact parent stage or restore its source snapshot there."""
-    config = load_docs_working_config(repo_root)
+    workspace = load_docs_workspace_config(repo_root)
+    config = select_workspace_stage(workspace, "working")
     require_document_authoring(config)
     root = document_source_path(config)
-    resolved_changed_paths = {path.resolve() for path in changed_paths}
     normalized_snapshots = {path.resolve(): source_bytes for path, source_bytes in source_snapshots.items()}
-    if set(normalized_snapshots) != resolved_changed_paths:
-        raise ValueError("document rollback snapshot must cover every changed source exactly")
-    if any(not isinstance(source_bytes, bytes) for source_bytes in normalized_snapshots.values()):
-        raise ValueError("document rollback snapshot values must be bytes")
     validate_changed_source_paths(root, list(normalized_snapshots), index_path=index_order_path(config))
-    links_before = changed_source_document_ids(changed_paths)
+    links_before = changed_source_document_ids(changed_paths) if prepared_documents is None else [doc.doc_id for doc in prepared_documents]
     try:
-        changed_before_write = [
-            path.name for path, source_bytes in normalized_snapshots.items()
-            if path.read_bytes() != source_bytes
-        ]
-        if changed_before_write:
-            raise DocumentSourceSnapshotChanged(
-                "document sources changed immediately before apply: "
-                + ", ".join(sorted(changed_before_write)),
-            )
         write_operation()
         rebuild = rebuild_working_outputs(
             repo_root, docs_doc_ids=docs_doc_ids,
-            skip_media_builds=True, **links_write_arguments(links_before, changed_paths),
+            skip_media_builds=True,
+            **(links_write_arguments(links_before, changed_paths) if prepared_documents is None else {"links_doc_ids": links_before}),
+            media_changes=media_changes, prepared_documents=prepared_documents, workspace=workspace,
         )
-        complete_source_media_changes(config, media_changes or [])
-    except (DocumentSourceSnapshotChanged, PublicationHandoffError):
+    except PublicationHandoffError:
         raise
     except Exception as exc:
         restoration_errors: list[str] = []
@@ -347,6 +250,7 @@ def rebuild_prepared_document_outputs(
     repo_root: Path, owner: ManagedDocumentCollection | ManagedDocumentTarget, document: SourceDoc,
     *, parent_ids: dict[str, str] | None = None,
     media_change: DocumentMediaChange | None = None,
+    media_writes: dict[str, list[str]] | None = None,
 ) -> Dict[str, Any]:
     """Carry one prepared source through the existing exact document/Links builder."""
     build_dir = Path(__file__).resolve().parents[1] / "build"
@@ -365,13 +269,10 @@ def rebuild_prepared_document_outputs(
     else:
         remove_build_manifest(repo_root, owner.parent_config)
         builder = DocsDataBuilder(**arguments, skip_recent=True)
-    record = builder.document_record(
-        path=document.path, front_matter=document.front_matter, body_markdown=document.body,
-        doc_id=document.doc_id, title=document.title, parent_id=document.parent_id,
-        report=document.report, source_text=document.source_text,
-    )
+    record = prepared_build_record(builder, document)
     started_at = time.perf_counter()
-    result = builder.run(write=True, documents=[record], media_changes={document.doc_id: media_change} if media_change is not None else None,
+    result = generate_documents(builder, write=True, documents=[record], media_changes={document.doc_id: media_change} if media_change is not None else None,
+                         media_writes={document.doc_id: media_writes} if media_writes is not None else None,
                          **({"parent_ids": parent_ids} if not owner.collection else {}))
     return {
         "ok": True, "steps": [], "search": {"mode": "none", "doc_ids": []},
@@ -445,10 +346,12 @@ def project_document_position(
         write_text(path, document_text)
     if tree_text != previous_text:
         write_text(_generated_path(builder.output_dir, "index-tree.json"), tree_text)
-    from docs_publication_preparation import load_preparation, prepare_restored
-    publication = load_preparation(repo_root, builder.workspace, navigation=previous)
+    from docs_publication_preparation import load_preparation
+    from docs_generation import prepare_restored
+    publication = load_preparation(repo_root, builder.workspace, navigation=previous, navigation_text=tree_text)
     publication.metadata.ordinary(navigation)
-    publication.documents(builder, {doc_id: payload}, [], selected=None, changed_ids={doc_id})
+    publication.documents(builder, {doc_id}, [], changed_ids={doc_id})
+    publication.write_metadata()
     prepare_restored(builder, {}, publication)
     publication.save()
     remove_build_manifest(repo_root, owner.parent_config)
@@ -476,14 +379,14 @@ def complete_document_deletion(
         _generated_path(builder.output_dir, builder.manifest_filename)
         for doc_id in doc_ids:
             _generated_path(builder.items_dir, f"{doc_id}.json")
-        result = builder.run(write=True, documents=[])
+        result = generate_documents(builder, write=True, documents=[])
     else:
         builder = DocsDataBuilder(**arguments, skip_recent=True)
         _generated_path(builder.output_dir, "index-tree.json")
         for doc_id in doc_ids:
             _generated_path(builder.items_dir, f"{doc_id}.json")
         remove_build_manifest(repo_root, owner.parent_config)
-        result = builder.run(write=True, documents=[], parent_ids=parent_ids, selected_payload=selected_payload)
+        result = generate_documents(builder, write=True, documents=[], parent_ids=parent_ids, selected_payload=selected_payload)
     return {"ok": True, "diagnostics": result["diagnostics"]}
 
 
@@ -501,6 +404,8 @@ def perform_collection_source_write_and_rebuild(
     documents: list[DocRecord] | None = None,
     catalogue_works: dict[str, dict[str, Any]] | None = None,
     publication: Any = None,
+    catalogue_pending: dict[str, Any] | None = None,
+    prepared_documents: list[SourceDoc] | None = None,
     media_changes: list[tuple[str, Any, DocumentMediaChange]] | None = None,
 ) -> Dict[str, Any]:
     """Await a selected or complete collection build and its Links update."""
@@ -512,30 +417,18 @@ def perform_collection_source_write_and_rebuild(
         root = resolved.source_root
     else:
         root = builder.source_dir
-    resolved_changed_paths = {path.resolve() for path in changed_paths}
     validate_changed_source_paths(root, changed_paths)
     normalized_snapshots: dict[Path, bytes] | None = None
     if source_snapshots is not None:
         normalized_snapshots = {path.resolve(): source_bytes for path, source_bytes in source_snapshots.items()}
-        if set(normalized_snapshots) != resolved_changed_paths:
-            raise ValueError("collection rollback snapshot must cover every changed source exactly")
-        if any(not isinstance(source_bytes, bytes) for source_bytes in normalized_snapshots.values()):
-            raise ValueError("collection rollback snapshot values must be bytes")
+    if prepared_documents is not None:
+        build_doc_ids = [doc.doc_id for doc in prepared_documents]
+        links_doc_ids = build_doc_ids
     supplied_ids = build_doc_ids is not None and links_doc_ids is not None
     discover_ids = not supplied_ids and (not complete_build or normalized_snapshots is not None)
     source_doc_ids_before = changed_source_document_ids(changed_paths) if discover_ids else []
     docs_doc_ids = source_doc_ids_before
     try:
-        if normalized_snapshots is not None:
-            changed_before_write = [
-                path.name for path, source_bytes in normalized_snapshots.items()
-                if path.read_bytes() != source_bytes
-            ]
-            if changed_before_write:
-                raise CollectionSourceSnapshotChanged(
-                    "collection sources changed immediately before apply: "
-                    + ", ".join(sorted(changed_before_write))
-                )
         write_operation()
         if supplied_ids:
             docs_doc_ids = build_doc_ids
@@ -555,14 +448,15 @@ def perform_collection_source_write_and_rebuild(
         if builder is None:
             rebuild = rebuild_collection_outputs(
                 repo_root, collection, docs_doc_ids=None if complete_build else docs_doc_ids,
-                **links_arguments,
+                **links_arguments, media_changes=media_changes, prepared_documents=prepared_documents, workspace=resolved.workspace,
             )
         else:
             builder.only_doc_ids = None if complete_build else docs_doc_ids
             builder.links_doc_ids = links_arguments.get("links_doc_ids")
-            rebuild = builder.run(write=True, documents=documents, catalogue_works=catalogue_works, publication=publication)
-        complete_source_media_changes(resolved.parent_config if builder is None else builder.config, media_changes or [])
-    except (CollectionSourceSnapshotChanged, PublicationHandoffError):
+            rebuild = generate_documents(builder, write=True, documents=documents, catalogue_works=catalogue_works, publication=publication,
+                                         catalogue_pending=catalogue_pending,
+                                         media_changes={doc_id: change for doc_id, _owner, change in media_changes or []})
+    except PublicationHandoffError:
         raise
     except Exception as exc:
         if normalized_snapshots is None:
@@ -601,15 +495,21 @@ def perform_multi_collection_source_write_and_rebuild(
     write_operation: Callable[[], Any],
 ) -> Dict[str, Any]:
     """Write once and await each exact collection's document/Links rebuild."""
-    require_document_authoring(load_docs_working_config(repo_root))
+    from docs_publication_preparation import load_preparation
+
+    workspace = load_docs_workspace_config(repo_root)
+    config = select_workspace_stage(workspace, "working")
+    require_document_authoring(config)
+    owners = {"": config, **{owner.collection: owner for owner in config.collections}}
     links_before: dict[str, list[str]] = {}
     for plan in rebuild_plans:
         collection = str(plan.get("collection") or "")
-        root = current_collection_source_root(repo_root, collection) if collection else current_document_source_root(repo_root)
+        root = document_source_path(owners[collection])
         changed_paths = plan.get("changed_paths", [])
         validate_changed_source_paths(root, changed_paths)
         links_before[collection] = changed_source_document_ids(changed_paths)
     write_operation()
+    publication = load_preparation(repo_root, workspace)
     rebuilds: Dict[str, Any] = {}
     prepared_rebuilds = []
     for plan in rebuild_plans:
@@ -630,10 +530,12 @@ def perform_multi_collection_source_write_and_rebuild(
         if collection:
             rebuilds[owner] = rebuild_collection_outputs(
                 repo_root, collection, docs_doc_ids=docs_doc_ids, **links_arguments,
+                workspace=workspace, publication=publication,
             )
         else:
             rebuilds[owner] = rebuild_working_outputs(
                 repo_root, docs_doc_ids=plan.get("docs_doc_ids"),
                 **links_arguments, skip_media_builds=True,
+                workspace=workspace, publication=publication,
             )
     return {"ok": True, "collections": rebuilds}

@@ -306,7 +306,18 @@ def save_source_document(
             payload["source_saved"] = True
             payload["committed_document"] = committed
             phase = "document generation"
-            payload["rebuild"] = rebuild_prepared_document(repo_root, resolved, prepared, media_change=media_change)["rebuild"]
+            media_writes = {kind: set(names) for kind, names in media_change.added.items()}
+            ready_media: dict[str, list[str]] = {}
+            for effect in payload["media_effects"]:
+                if effect["status"] in {"verified", "unchanged"}:
+                    ready_media.setdefault(effect["media_type"], []).append(effect["identity"])
+                if effect["status"] == "verified" and effect["identity"] in media_change.current.get(effect["media_type"], []):
+                    media_writes.setdefault(effect["media_type"], set()).add(effect["identity"])
+            media_change = replace(media_change, ready=ready_media)
+            payload["rebuild"] = rebuild_prepared_document(
+                repo_root, resolved, prepared, media_change=media_change,
+                media_writes={kind: sorted(names) for kind, names in media_writes.items()},
+            )["rebuild"]
         except Exception as error:
             from docs_publication_preparation import PublicationHandoffError
 
