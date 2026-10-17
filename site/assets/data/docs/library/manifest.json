@@ -53,22 +53,37 @@
     {
       "doc_id": "d-20260809-130120-91c97f",
       "title": "Bayesian Reasoning",
-      "last_updated": "2026-08-09"
+      "last_updated": "2026-10-17"
     },
     {
       "doc_id": "d-20260809-130120-837891",
       "title": "Beauty",
-      "last_updated": "2026-10-03"
+      "last_updated": "2026-10-17"
     },
     {
       "doc_id": "d-20260809-130120-28fb85",
       "title": "Beauty × Memory × Meaning",
-      "last_updated": "2026-08-09"
+      "last_updated": "2026-10-17"
+    },
+    {
+      "doc_id": "d-20261017-223524-f16e89",
+      "title": "Bergson",
+      "last_updated": "2026-10-17"
     },
     {
       "doc_id": "d-20260809-130120-44384d",
       "title": "Beyond Conscious vs. Subconscious",
-      "last_updated": "2026-10-04"
+      "last_updated": "2026-10-17"
+    },
+    {
+      "doc_id": "d-20261017-223804-cc24e4",
+      "title": "Biological and physical memories",
+      "last_updated": "2026-10-17"
+    },
+    {
+      "doc_id": "d-20261017-231122-eeaf16",
+      "title": "Biological vs Non‑Organic Memory",
+      "last_updated": "2026-10-17"
     },
     {
       "doc_id": "d-20260809-130120-d66e0b",
@@ -118,6 +133,11 @@
     {
       "doc_id": "d-20261017-220718-82b513",
       "title": "Hopfield Attractor-Network Memory",
+      "last_updated": "2026-10-17"
+    },
+    {
+      "doc_id": "d-20261017-233803-9f11b8",
+      "title": "Neuromorphic Computing",
       "last_updated": "2026-10-17"
     },
     {
