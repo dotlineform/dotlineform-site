@@ -76,6 +76,17 @@ def publish_selected_documents(repo_root: Path, workspace: Any, pending: dict[st
                     result["target"] = f"{collection or 'documents'}/{kind}/{name}"
                     transfers.transfer(preview_owner.public_projection.media[kind].location, name, data=None)
                     completed_effect(result, "destination media removed", name)
+            # Generation/migration supplies exact former owners; Publish does
+            # no discovery or reconciliation to infer these removals.
+            for former_collection in selection.get("removed_document_collections", []):
+                result.update(phase="former document owner removal", target=f"{former_collection or 'documents'}/{doc_id}")
+                _, former_preview = owners[former_collection]
+                old_preview = confined(preview_documents_path(former_preview), identity)
+                old_public = confined(repo_root / public_documents_path(former_preview), identity)
+                delete_path(old_preview)
+                completed_effect(result, "Preview files removed", old_preview)
+                delete_path(old_public)
+                completed_effect(result, "destination files removed", old_public)
             del pending[family][doc_id]
             complete()
             result["completed"].append({"family": family, "doc_id": doc_id})

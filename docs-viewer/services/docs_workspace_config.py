@@ -117,6 +117,7 @@ class DocsCollectionConfig:
     generated: DocsGeneratedConfig
     preview: DocsPreviewConfig
     public_projection: DocsPublicProjectionConfig | None
+    collection_type: str = ""
 
 
 @dataclass(frozen=True)
@@ -462,7 +463,7 @@ def _collections(raw: Any, *, repo_root: Path, workspace_root: ArtifactLocation,
     for index, raw_item in enumerate(raw):
         field = f"stages.{stage}.collections[{index}]"
         item = _object(raw_item, field=field, required={"collection", "document_media", "title", "icon", "report_host_doc_id", "include_in_site_search"}, optional={
-            "public_title", "supports_return_import", "collection_customisation",
+            "public_title", "supports_return_import", "collection_customisation", "collection_type",
         })
         if stage == "preview":
             customisation = item.get("collection_customisation")
@@ -472,6 +473,9 @@ def _collections(raw: Any, *, repo_root: Path, workspace_root: ArtifactLocation,
                         if customisation and customisation.get("id") == WORKING_WORKS_CUSTOMISATION_ID else None
                     )}
         child = normalize_collection_id(item["collection"], field=f"{field}.collection")
+        collection_type = item.get("collection_type", "")
+        if collection_type not in {"", "book-collection"}:
+            raise ValueError(f"{field}.collection_type is unsupported: {collection_type!r}")
         owns_media = child in assets.document_media_collections
         if child in seen:
             raise ValueError(f"{field}.collection is duplicated: {child}")
@@ -508,6 +512,7 @@ def _collections(raw: Any, *, repo_root: Path, workspace_root: ArtifactLocation,
             source=DocsSourceConfig(source_root), generated=_generated(generated_root), preview=_preview(preview_root),
             media=_media(media_settings, assets=assets, stage=stage, collection=child) if owns_media else None,
             public_projection=child_projection,
+            collection_type=collection_type,
         ))
     return tuple(result)
 

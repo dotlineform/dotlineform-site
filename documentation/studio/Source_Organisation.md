@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260423-000000-8fd731
 title: Source Organisation
 added_date: "2026-04-23 00:00:00"
-last_updated: "2026-10-16"
+last_updated: "2026-10-17"
 summary: Working source and generated storage, one read-only Preview snapshot, and exact collection and media ownership.
 parent_id: d-20260424-000000-50b63f
 ---
@@ -61,7 +61,7 @@ $DOTLINEFORM_DOCS_BASE_DIR/
 
 Working registers document, collection and media owners once. Generation maintains one common by-ID document plus complete management and eligible public metadata under each existing generated owner, and records exact publication effects in `working/docs-publish-pending.json`. Ordinary `public-index-tree.json` sits beside `index-tree.json`; collection `manifest.json` sits beside `manage-manifest.json`. Index generation reads the single `working/source/unpublishable.json` policy once per operation, without storing a policy copy in generated indexes. Media references and authoring comparisons stay in memory; `publication-media.json` and the separate Working publication tree are retired. Preview receives selected finished bytes without a source/generated tree or browser route. Catalogue queues remain alongside the Docs queue under `working/`; [Builder](Builder.md#publish-preparation) and [Catalogue Deployment](Catalogue_Deployment.md) own handoffs.
 
-Collection document-media paths in the tree above apply only to collections declaring `document_media: true`: Context (`works`), Concepts and Moments. Catalogue declares false, so it has documents and separate Work media but no `assets/media/collections/catalogue/` owner, source-media producer or document-media publication binding. Existing empty remnants of that former namespace are not read, maintained or recreated by these owners.
+Collection document-media paths in the tree above apply only to collections declaring `document_media: true`: Library, Context (`works`), Concepts and Moments. Catalogue declares false, so it has documents and separate Work media but no `assets/media/collections/catalogue/` owner, source-media producer or document-media publication binding. Existing empty remnants of that former namespace are not read, maintained or recreated by these owners.
 
 Both private Catalogue queue schemas are version 5 and place their header first. Updates retain the last successful Refresh time, shared pending state and per-Work readiness. Publication retains the last completed nonempty Catalogue Work queue time and exact pending selections, without Preview progress flags. The Docs queue uses `docs_publish_pending_v1`. These files are private workflow state, independent of generated-output replacement and public projection; missing or malformed queues stop their owning operation. Projects-owned `catalogue/media-staging/` remains outside the Docs root, with its current family layout mapped in [Media And Asset Handling](Media_And_Asset_Handling.md#workspace-configuration-and-storage).
 

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-17T11:43:19Z",
+  "generated_at": "2026-10-17T14:04:14Z",
   "schema": "docs_index_tree_v1",
   "docs": [
     {
@@ -30,76 +30,7 @@
     {
       "doc_id": "d-20260809-130120-870cc2",
       "title": "Library",
-      "children": [
-        {
-          "doc_id": "d-20261016-235314-073b44",
-          "title": "5 aspects of memory"
-        },
-        {
-          "doc_id": "d-20261017-111531-f1b36a",
-          "title": "100 words - Linguistic theories"
-        },
-        {
-          "doc_id": "d-20261017-112353-93c738",
-          "title": "100 Words Related to Reflection & Memory"
-        },
-        {
-          "doc_id": "d-20260809-130120-461754",
-          "title": "Abstract Thought and Physical Processes"
-        },
-        {
-          "doc_id": "d-20260809-130120-91c97f",
-          "title": "Bayesian Reasoning"
-        },
-        {
-          "doc_id": "d-20260809-130120-837891",
-          "title": "Beauty"
-        },
-        {
-          "doc_id": "d-20260809-130120-28fb85",
-          "title": "Beauty × Memory × Meaning"
-        },
-        {
-          "doc_id": "d-20260809-130120-44384d",
-          "title": "Beyond Conscious vs. Subconscious"
-        },
-        {
-          "doc_id": "d-20260809-130120-d66e0b",
-          "title": "Can the Brain Comprehend How It Works?"
-        },
-        {
-          "doc_id": "d-20260809-130120-c5c511",
-          "title": "Coincidence Inevitability"
-        },
-        {
-          "doc_id": "d-20260809-130120-ed5b30",
-          "title": "Coincidence Salience Worksheet"
-        },
-        {
-          "doc_id": "d-20260809-130120-e6793d",
-          "title": "Defining \"Information\" for Cross‑Boundary Comparisons"
-        },
-        {
-          "doc_id": "d-20260809-130120-afeb4d",
-          "title": "Dreaming is Active"
-        },
-        {
-          "doc_id": "d-20260809-130120-3054b0",
-          "title": "Entropy & Evolution Under Two Cosmologies"
-        },
-        {
-          "doc_id": "d-20260809-130120-a7bc91",
-          "title": "Evolutionary Psychology — Overview"
-        },
-        {
-          "doc_id": "d-20260809-130120-b96ba9",
-          "title": "From 3D Space to Many Dimensions"
-        },
-        {
-          "doc_id": "d-20261017-112923-e02f33",
-          "title": "Reality Layers — Absolute • Intersubjective • Subjective"
-        }
-      ]
+      "report_id": "docs_collection"
     },
     {
       "doc_id": "d-20261008-144244-8f40af",

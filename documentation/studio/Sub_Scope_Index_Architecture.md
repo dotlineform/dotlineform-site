@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260728-113139-763354
 title: Sub-Scope Index Architecture
 added_date: "2026-07-28 11:31:39"
-last_updated: "2026-10-14 22:47:16"
+last_updated: "2026-10-17"
 summary: Collection-list ownership, exact document identity, standard management controls, retained selection and explicit management adoption.
 parent_id: d-20260801-084127-752d7e
 ---
@@ -70,6 +70,12 @@ Default title search, including Moments and Concepts, matches the query anywhere
 The server-only `collection_customisation: {id, settings}` selects one known authoring registration. It owns Subject validation, assignment, import and publication preparation, independently of report composition. Browser configuration and manifests carry no customisation identity or data.
 
 Manage uses one standard adapter for selection, row status and supported actions against exact supplied targets. Collection-specific filter, heading, comparator and selection extension hooks are retired. Subject assignment and Folder opening live in Source, rather than the list or detail contribution. Public routes retain the shared reader without management controls.
+
+## Flat Book Collections
+
+Library is a named collection with `collection_type: book-collection`, host `d-20260809-130120-870cc2` and icon `library`. The optional type is projected into browser configuration and selects shared collection browsing capabilities. It has the standard collection inventory, authored thumbnails, title search, title/recent sorting, selection, Import, Prepare Package and common document reader. It has no book data or tree renderer yet. Its documents participate in site Search and Recent through the explicit `include_in_site_search` policy and retain ordinary non-Catalogue draft exclusion.
+
+The shared report separates search-delay and sort-control capabilities from current pagination state. Context and Catalogue retain paginated browsing and other collections retain their current behavior. Library is paginated publicly; its explicit Manage-only contribution defaults pagination off and supplies a toggle using the existing list icon. A toggle clears checked/range selection, exits selection mode and resets the page to the start, keeping query and sort. The tab-scoped report snapshot remembers the chosen pagination mode. Rendering reuses the loaded inventory; the toggle performs no request, source write or generation and adds no search-pending guard. Public composition imports none of the local control or selection implementation.
 
 ## Reachability Is Not Ownership
 

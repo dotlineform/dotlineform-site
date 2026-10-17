@@ -563,6 +563,27 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
   }
 
   return {
+    ...(options.paginationToggle ? {
+      paginationDefault: false,
+      resetSelection: selectionOwner.done,
+      mountPaginationControl: function ({ host, change }) {
+        var button = host.ownerDocument.createElement("button");
+        button.type = "button";
+        button.className = "docsViewer__toolbarIconButton";
+        button.appendChild(createDocsViewerToolbarIcon(host.ownerDocument, "docsViewer__icon--list"));
+        host.appendChild(button);
+        var pagination = false;
+        button.addEventListener("click", function () { change(!pagination); });
+        return {
+          update: function (enabled) {
+            pagination = enabled;
+            button.setAttribute("aria-pressed", String(enabled));
+            button.title = enabled ? "Pagination on. Show all documents." : "Pagination off. Show pages.";
+            button.setAttribute("aria-label", button.title);
+          }
+        };
+      }
+    } : {}),
     captureListState: selectionOwner.snapshot,
     restoreListState: function (saved) { selectionOwner.restore(saved, inventoryDocIds); },
     id: "default",

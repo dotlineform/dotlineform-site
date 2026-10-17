@@ -51,6 +51,8 @@ def browser_collection_records(repo_root: Path, config: DocsStageConfig, *, publ
             "manifest_url": f"{base}/manifest.json" if published else f"{base}/manage-manifest.json",
             "by_id_url_base": f"{base}/by-id",
         }
+        if child.collection_type:
+            record["collection_type"] = child.collection_type
         records.append(record)
     return records
 

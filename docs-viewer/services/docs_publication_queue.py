@@ -46,6 +46,14 @@ def select_document(pending: dict[str, Any], doc_id: str, collection: str, *, me
     record: dict[str, Any] = {"collection": collection} if collection else {}
     if not delete and media:
         record["media"] = media
+    # A completed ownership cutover carries the old by-ID removals with the
+    # document unit, including through later Save or Delete before Publish.
+    removed_collections = {
+        owner for selection in (pending[current].get(doc_id, {}), pending[opposite].get(doc_id, {}))
+        for owner in selection.get("removed_document_collections", [])
+    }
+    if removed_collections:
+        record["removed_document_collections"] = sorted(removed_collections)
     removals: dict[str, set[str]] = {}
     for selection in (pending[current].get(doc_id, {}), pending[opposite].get(doc_id, {}), {"removed_media": removed_media or {}}):
         for kind, names in selection.get("removed_media", {}).items():

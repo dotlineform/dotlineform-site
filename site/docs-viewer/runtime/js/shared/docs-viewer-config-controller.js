@@ -48,6 +48,7 @@ export function initDocsViewerConfigController(context) {
     }
     var record = {
       collection: collection,
+      collectionType: rawCollection.collection_type || "",
       title: String(rawCollection.title || "").trim(),
       icon: icon,
       iconUrl: new URL("../../../static/icons/" + icon + ".svg", import.meta.url).href,

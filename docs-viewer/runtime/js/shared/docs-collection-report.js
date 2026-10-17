@@ -28,6 +28,9 @@ import {
  * @property {function(): *} [captureListState] Optional JSON-safe list restoration state.
  * @property {function(*): void} [restoreListState] Restore a previously captured caller state.
  * @property {function(Object): Object} createListManagement Manage-owned data, updates and refresh.
+ * @property {boolean} [paginationDefault] Caller-owned initial pagination choice.
+ * @property {function(Object): Object} [mountPaginationControl] Local control over shared pagination state.
+ * @property {function(): void} [resetSelection] Clear selection when the pagination control changes mode.
  */
 
 var filterIdSequence = 0;
@@ -62,6 +65,13 @@ function collectionId(record) {
 
 function collectionTitle(record) {
   return record.title;
+}
+
+/** Select shared capabilities independently of the current page-display choice. */
+function collectionBrowsingFeatures(collection) {
+  var boundedBrowsing = ["catalogue", "works"].includes(collection.collection)
+    || collection.collectionType === "book-collection";
+  return { pagination: boundedBrowsing, delayedSearch: boundedBrowsing, filterToolbarSort: boundedBrowsing };
 }
 
 function collectionItemsLabel(collection) {
@@ -182,7 +192,7 @@ function renderFilterShell(context, collection) {
   };
 }
 
-function renderShell(context, collection) {
+function renderShell(context, collection, features) {
   var root = context.reportRoot;
   clearNode(root);
   root.dataset.reportColumns = "1";
@@ -209,7 +219,7 @@ function renderShell(context, collection) {
 
   if (collectionId(collection) === "catalogue") status.classList.remove("visually-hidden");
   var collectionSort = null;
-  if (context.managementContext && ["catalogue", "works"].includes(collectionId(collection))) {
+  if (context.managementContext && features.filterToolbarSort) {
     collectionSort = document.createElement("button");
     collectionSort.type = "button";
     collectionSort.className = "docsViewer__toolbarIconButton docsViewerReport__collectionSortButton";
@@ -234,7 +244,7 @@ function updateFilterControls(state) {
   state.filterClearNode.setAttribute(
     "aria-label",
     state.collectionId === "works" ? "Clear document search"
-      : "Clear " + collectionItemsLabel(state.collection) + (state.pagedBrowsing ? " search" : " title filter")
+      : "Clear " + collectionItemsLabel(state.collection) + (state.features.delayedSearch ? " search" : " title filter")
   );
   state.filterClearNode.title = state.filterClearNode.getAttribute("aria-label");
 }
@@ -247,7 +257,7 @@ function bindFilterControls(state) {
   state.filterInputNode.addEventListener("input", function () {
     if (!state.mounted) return;
     state.query = state.filterInputNode.value;
-    if (state.pagedBrowsing) {
+    if (state.features.delayedSearch) {
       cancelCollectionSearch(state);
       state.listNeedsRender = true;
       if (!normalizeDocsCollectionFilterValue(state.query)) {
@@ -279,8 +289,8 @@ function cancelCollectionSearch(state) {
 }
 
 function updateCollectionControls(state) {
-  if (!state.pagedBrowsing) return;
   var pending = state.searchTimer !== null || !state.manifestLoaded;
+  state.paginationControl?.update(state.pagedBrowsing);
   var button = state.collectionSortNode;
   if (button) {
     var recentMode = state.sortMode === "last-updated-desc";
@@ -296,14 +306,17 @@ function updateCollectionControls(state) {
       + (recentMode ? "title A–Z." : "recently updated.");
     button.setAttribute("aria-label", button.title);
   }
-  state.pager.update(state.matches.length, state.pageIndex, pending);
+  if (state.pager) {
+    state.pager.root.hidden = !state.pagedBrowsing;
+    state.pager.update(state.matches.length, state.pageIndex, pending);
+  }
 }
 
 function listSortContext(state) {
   return {
     mode: state.sortMode,
     setMode: function (mode) {
-      if (!state.mounted || state.pagedBrowsing && (state.searchTimer !== null || !state.manifestLoaded)) return state.sortMode;
+      if (!state.mounted || state.features.delayedSearch && (state.searchTimer !== null || !state.manifestLoaded)) return state.sortMode;
       var nextMode = cleanString(mode);
       if (!["title-asc", "last-updated-desc"].includes(nextMode)) {
         throw new Error("Docs collection sort mode is invalid: " + nextMode);
@@ -337,7 +350,7 @@ function renderListToolbar(state) {
       return state.openDocument(target);
     },
     refreshCollection: state.management.refreshCollection,
-    sort: state.pagedBrowsing ? null : listSortContext(state)
+    sort: state.features.filterToolbarSort ? null : listSortContext(state)
   });
   if (!host.childNodes.length) return;
   state.filterToolbarNode.appendChild(host);
@@ -438,6 +451,7 @@ function captureListControls(state) {
   var captureContribution = contributionCallback(state.contribution, "captureListState");
   return { query: state.query, sort: state.sortMode,
     page: state.searchTimer !== null ? 0 : state.pageIndex,
+    ...(typeof state.contribution?.paginationDefault === "boolean" ? { pagination: state.pagedBrowsing } : {}),
     contribution: captureContribution ? captureContribution.call(state.contribution) : null };
 }
 
@@ -447,6 +461,9 @@ function restoreListControls(state, saved) {
   cancelCollectionSearch(state);
   if (typeof saved.query === "string") state.query = saved.query;
   if (["title-asc", "last-updated-desc"].includes(saved.sort)) state.sortMode = saved.sort;
+  if (typeof state.contribution?.paginationDefault === "boolean" && typeof saved.pagination === "boolean") {
+    state.pagedBrowsing = saved.pagination;
+  }
   state.pageIndex = Number.isInteger(saved.page) && saved.page >= 0 ? saved.page : 0;
   var restoreContribution = contributionCallback(state.contribution, "restoreListState");
   if (restoreContribution) restoreContribution.call(state.contribution, saved.contribution);
@@ -512,7 +529,8 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
     return Promise.resolve(true);
   }
 
-  var refs = renderShell(context, collection);
+  var features = collectionBrowsingFeatures(collection);
+  var refs = renderShell(context, collection, features);
   var state = {
     root: root,
     openDocument: context.openDocument,
@@ -529,7 +547,9 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
     manifestLoaded: false,
     query: "",
     sortMode: collectionIdValue === "catalogue" ? "last-updated-desc" : "title-asc",
-    pagedBrowsing: ["catalogue", "works"].includes(collectionIdValue),
+    features: features,
+    pagedBrowsing: contribution?.paginationDefault ?? features.pagination,
+    paginationControl: null,
     thumbnailSettingsRead: null,
     collectionSortNode: refs.collectionSortNode,
     matches: [],
@@ -569,7 +589,7 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
   }) : null;
   state.browsingData = state.management ? state.management.data : createCollectionBrowsingData(browsingOptions);
   if (state.listActionHost) state.listActionHost.className = "docsViewer__collectionActions";
-  if (state.pagedBrowsing) {
+  if (features.pagination) {
     state.filterInputNode.disabled = true;
     state.pager = createCollectionPager(root.ownerDocument,
       state.collectionId === "works" ? "document" : collectionItemsLabel(state.collection), function (pageIndex) {
@@ -584,13 +604,27 @@ function mountResolvedDocsCollectionReport(context, contribution, lifetime) {
       }
     });
     root.appendChild(state.pager.root);
-    if (state.collectionSortNode) {
-      state.collectionSortNode.addEventListener("click", function () {
-        listSortContext(state).setMode(state.sortMode === "last-updated-desc" ? "title-asc" : "last-updated-desc");
-      });
-    }
-    updateCollectionControls(state);
   }
+  if (state.collectionSortNode) {
+    state.collectionSortNode.addEventListener("click", function () {
+      listSortContext(state).setMode(state.sortMode === "last-updated-desc" ? "title-asc" : "last-updated-desc");
+    });
+  }
+  var mountPaginationControl = contributionCallback(contribution, "mountPaginationControl");
+  if (mountPaginationControl) {
+    state.paginationControl = mountPaginationControl({
+      host: state.filterToolbarNode,
+      change: function (enabled) {
+        cancelCollectionSearch(state);
+        state.pagedBrowsing = enabled;
+        state.pageIndex = 0;
+        contribution.resetSelection();
+        renderListProjectionContained(state, "pagination-change");
+        remembered.save();
+      }
+    });
+  }
+  updateCollectionControls(state);
   bindFilterControls(state);
   updateFilterControls(state);
 

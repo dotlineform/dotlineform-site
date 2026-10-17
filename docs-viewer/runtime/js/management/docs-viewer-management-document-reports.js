@@ -91,6 +91,7 @@ export function loadDocsViewerCollectionContribution(settings, parent, collectio
     var defaultContribution = modules[0].createDocsViewerManagementCollectionDefaultContribution({
       clientOptions: clientOptions,
       managementContext: Boolean(settings.managementContext),
+      paginationToggle: collectionConfig.collectionType === "book-collection",
       markdownLinkForDocument: function (target, documentRecord) {
         return markdownLinkForCollectionDocument(
           settings,

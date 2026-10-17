@@ -99,6 +99,15 @@
       "allow_unresolved_parent_ids": false,
       "collections": [
         {
+          "collection": "library",
+          "collection_type": "book-collection",
+          "document_media": true,
+          "icon": "library",
+          "include_in_site_search": true,
+          "title": "Library",
+          "report_host_doc_id": "d-20260809-130120-870cc2"
+        },
+        {
           "collection": "works",
           "document_media": true,
           "icon": "dlf-context",

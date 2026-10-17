@@ -174,6 +174,11 @@ export function createDocsViewerManagementCollectionContribution(options) {
   }
 
   return {
+    ...(typeof defaultContribution.paginationDefault === "boolean" ? {
+      paginationDefault: defaultContribution.paginationDefault,
+      resetSelection: defaultContribution.resetSelection,
+      mountPaginationControl: defaultContribution.mountPaginationControl
+    } : {}),
     captureListState: defaultContribution.captureListState,
     restoreListState: defaultContribution.restoreListState,
     notify: defaultContribution.notify,
