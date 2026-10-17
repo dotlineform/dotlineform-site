@@ -1,14 +1,49 @@
 {
   "schema": "docs_recent_v2",
   "limit": 20,
-  "generated_at": "2026-10-16T19:52:49Z",
+  "generated_at": "2026-10-17T13:58:38Z",
   "docs": [
+    {
+      "doc_id": "d-20261017-111531-f1b36a",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library",
+      "title": "100 words - Linguistic theories",
+      "timestamp": "2026-10-17"
+    },
+    {
+      "doc_id": "d-20261017-112353-93c738",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library",
+      "title": "100 Words Related to Reflection & Memory",
+      "timestamp": "2026-10-17"
+    },
+    {
+      "doc_id": "d-20261017-112923-e02f33",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library",
+      "title": "Reality Layers — Absolute • Intersubjective • Subjective",
+      "timestamp": "2026-10-17"
+    },
     {
       "collection": "works",
       "collection_title": "Context",
       "doc_id": "d-20260801-212422-df11f3",
       "report_doc_id": "d-20260801-073826-8865a8",
       "title": "3 symbols",
+      "timestamp": "2026-10-16"
+    },
+    {
+      "doc_id": "d-20261016-235314-073b44",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library",
+      "title": "5 aspects of memory",
+      "timestamp": "2026-10-16"
+    },
+    {
+      "doc_id": "d-20260809-130120-b96ba9",
+      "parent_id": "d-20260809-130120-870cc2",
+      "parent_title": "Library",
+      "title": "From 3D Space to Many Dimensions",
       "timestamp": "2026-10-16"
     },
     {
@@ -108,27 +143,6 @@
       "parent_id": "d-20260809-130120-870cc2",
       "parent_title": "Library",
       "title": "Dreaming is Active",
-      "timestamp": "2026-08-09"
-    },
-    {
-      "doc_id": "d-20260809-130120-3054b0",
-      "parent_id": "d-20260809-130120-870cc2",
-      "parent_title": "Library",
-      "title": "Entropy & Evolution Under Two Cosmologies",
-      "timestamp": "2026-08-09"
-    },
-    {
-      "doc_id": "d-20260809-130120-a7bc91",
-      "parent_id": "d-20260809-130120-870cc2",
-      "parent_title": "Library",
-      "title": "Evolutionary Psychology — Overview",
-      "timestamp": "2026-08-09"
-    },
-    {
-      "doc_id": "d-20260809-130120-b96ba9",
-      "parent_id": "d-20260809-130120-870cc2",
-      "parent_title": "Library",
-      "title": "From 3D Space to Many Dimensions",
       "timestamp": "2026-08-09"
     }
   ]
