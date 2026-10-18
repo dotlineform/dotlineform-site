@@ -611,7 +611,7 @@
   padding-left: 0.25rem;
 }
 
-.docsViewer__publishOperationChoice > .docsViewer__checkboxInput:disabled + .docsViewer__fieldLabel{
+.docsViewer__field--checkbox > .docsViewer__checkboxInput:disabled + .docsViewer__fieldLabel{
   color: var(--docs-viewer-disabled);
 }
 

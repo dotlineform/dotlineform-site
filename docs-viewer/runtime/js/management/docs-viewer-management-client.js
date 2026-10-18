@@ -232,7 +232,8 @@ export async function saveManagedDocSource(target, payload, options) {
   var metadata = JSON.stringify(targetPayload(target, {
     source_text: payload.source_text,
     media: selections.map(function (entry) {
-      return { media_kind: entry.media_kind, body: entry.body, thumbnail: entry.thumbnail, replace: entry.replace };
+      return { media_kind: entry.media_kind, body: entry.body, thumbnail: entry.thumbnail,
+        replace: entry.replace, preserve_resolution: entry.preserve_resolution };
     })
   }));
   if (new Blob([metadata]).size > limits.max_metadata_bytes) {

@@ -144,8 +144,9 @@ def prepare_source_media(
         root = Path(temporary)
         for index, (selection, upload) in enumerate(zip(selections, uploads)):
             try:
-                if (not isinstance(selection, dict) or set(selection) != {"media_kind", "body", "thumbnail", "replace"}
-                        or any(type(selection[key]) is not bool for key in ("body", "thumbnail", "replace"))
+                if (not isinstance(selection, dict)
+                        or set(selection) != {"media_kind", "body", "thumbnail", "replace", "preserve_resolution"}
+                        or any(type(selection[key]) is not bool for key in ("body", "thumbnail", "replace", "preserve_resolution"))
                         or not (selection["body"] or selection["thumbnail"])):
                     raise ValueError("Invalid selected media outputs or replacement intent")
                 identity = source_media_identity(config, resolved.doc_id, upload.filename, selection["media_kind"])
@@ -159,7 +160,7 @@ def prepare_source_media(
                     validate_static_raster(source)
                     if selection["body"]:
                         converted = root / f"{index}-display.webp"
-                        convert_source_image_to_webp(source, converted)
+                        convert_source_image_to_webp(source, converted, preserve_resolution=selection["preserve_resolution"])
                         output("img", identity.identity, converted.read_bytes(), selection["replace"])
                 elif identity.media_type == "svg" and selection["media_kind"] == "image":
                     sanitized = sanitize_svg_bytes(upload.data)

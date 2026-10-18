@@ -41,6 +41,8 @@ export function createPendingSourceMedia() {
       }
     },
     add(entry) {
+      const existing = files.get(entry.mediaPath);
+      if (thumbnail === existing && existing && existing.file === entry.file) thumbnail = entry;
       files.set(entry.mediaPath, entry);
       if (entry.createThumb) thumbnail = entry;
       cachedSelection = null;
@@ -55,6 +57,7 @@ export function createPendingSourceMedia() {
       cachedSelection = Array.from(candidates, (entry) => ({
         file: entry.file,
         media_kind: entry.mediaKind,
+        preserve_resolution: entry.preserveResolution,
         replace: entry.replace,
         body: files.get(entry.mediaPath) === entry && paths.has(entry.mediaPath),
         thumbnail: wantedThumbnail === entry

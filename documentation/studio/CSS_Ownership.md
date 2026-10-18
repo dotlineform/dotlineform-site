@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260511-200845-2a03a0
 title: CSS Ownership
 added_date: "2026-05-11 20:08:45"
-last_updated: "2026-10-17"
+last_updated: "2026-10-18"
 parent_id: d-20260424-000000-50b63f
 
 ---
@@ -31,6 +31,8 @@ Document H2 headings have a bottom divider with the same 1px strong-border role 
 The public root and maintained public-route template load the shared palette, viewer stylesheet and public report styles. They do not load management CSS. The 404 page loads the palette, its dedicated stylesheet and its existing theme-toggle script. Active routes no longer load `main.css`; archive routes keep their frozen copies.
 
 The local Manage shell loads the palette, viewer stylesheet, shared report styles and focused management styles. Review loads the palette, viewer stylesheet and its own stylesheet. Neither depends on public-site or Studio CSS.
+
+Management checkbox rows use the shared checkbox-field layout, with a sibling label for consistent spacing. The management stylesheet gives disabled checkboxes' labels the existing disabled-text colour directly from the input's disabled state; Add/Edit image uses this for Preserve original resolution and Create thumb without separate JavaScript styling state.
 
 Local apps serve canonical reader styles under `docs-viewer/`; public preview and GitHub Pages serve their tracked projection under `site/docs-viewer/`. `bin/site-code-update` maintains that projection, so public and Manage do not maintain separate reader styles.
 

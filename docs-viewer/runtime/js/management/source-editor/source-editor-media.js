@@ -47,7 +47,14 @@ function chooseSourceMedia(root, kind, mediaOptions, draft) {
       '</div>' +
       (kind === "image" ? imagePresentationHtml() : "") +
       (kind === "image"
-        ? '<label class="docsViewer__field"><span><input class="docsViewer__checkboxInput" data-role="create-thumb" type="checkbox" disabled> Create thumb</span></label>'
+        ? '<label class="docsViewer__field docsViewer__field--checkbox">' +
+            '<input class="docsViewer__checkboxInput" data-role="preserve-resolution" type="checkbox" disabled>' +
+            '<span class="docsViewer__fieldLabel">Preserve original resolution</span>' +
+          '</label>' +
+          '<label class="docsViewer__field docsViewer__field--checkbox">' +
+            '<input class="docsViewer__checkboxInput" data-role="create-thumb" type="checkbox" disabled>' +
+            '<span class="docsViewer__fieldLabel">Create thumb</span>' +
+          '</label>'
         : ""),
     actions: [{ role: "modal-primary", label: copy.primary }, { role: "modal-cancel", label: "Cancel" }],
     onOpen: function (api) {
@@ -56,9 +63,17 @@ function chooseSourceMedia(root, kind, mediaOptions, draft) {
       var label = api.host.querySelector('[data-role="media-label"]');
       var captionInput = api.host.querySelector('[data-role="media-caption-text"]');
       var thumbToggle = api.host.querySelector('[data-role="create-thumb"]');
-      if (thumbToggle && draft && draft.pendingFile) {
-        thumbToggle.disabled = !/\.(jpg|jpeg|png|webp|gif)$/i.test(draft.pendingFile.name);
+      var preserveToggle = api.host.querySelector('[data-role="preserve-resolution"]');
+      function setRasterControls(file) {
+        var raster = Boolean(file && /\.(jpg|jpeg|png|webp|gif)$/i.test(file.name));
+        [thumbToggle, preserveToggle].forEach(function (toggle) {
+          if (!toggle) return;
+          toggle.disabled = !raster;
+          if (!raster) toggle.checked = false;
+        });
       }
+      if (preserveToggle && draft) preserveToggle.checked = draft.preserveResolution;
+      setRasterControls(draft && draft.pendingFile);
       var labelEdited = editing;
       var captionEdited = editing;
       filename.value = editing ? draft.mediaPath.split("/").pop() : "";
@@ -89,10 +104,7 @@ function chooseSourceMedia(root, kind, mediaOptions, draft) {
           return kind === "image" ? part.toLowerCase() : part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
         }).join(" ");
         if (captionInput && !captionEdited) captionInput.value = label.value;
-        if (thumbToggle) {
-          thumbToggle.disabled = !/\.(jpg|jpeg|png|webp|gif)$/i.test(file.name);
-          if (thumbToggle.disabled) thumbToggle.checked = false;
-        }
+        setRasterControls(file);
         api.setStatus("");
       });
       label.addEventListener("input", function () {
@@ -105,6 +117,11 @@ function chooseSourceMedia(root, kind, mediaOptions, draft) {
       var label = cleanString(api.host.querySelector('[data-role="media-label"]').value);
       var presentation = readImagePresentation(api.host);
       var thumbToggle = api.host.querySelector('[data-role="create-thumb"]');
+      var preserveToggle = api.host.querySelector('[data-role="preserve-resolution"]');
+      var preserveResolution = Boolean(preserveToggle && !preserveToggle.disabled && preserveToggle.checked);
+      var createThumb = Boolean(thumbToggle && !thumbToggle.disabled && thumbToggle.checked);
+      var pendingFile = draft && draft.pendingFile
+        && (createThumb || preserveResolution !== draft.preserveResolution) ? draft.pendingFile : null;
       if ((!editing && !selectedFile) || !label) {
         api.setStatus("Choose a file and enter " + copy.fieldLabel.toLowerCase() + ".");
         return false;
@@ -118,9 +135,9 @@ function chooseSourceMedia(root, kind, mediaOptions, draft) {
         return false;
       }
       return Object.assign({}, presentation, {
-        confirmed: true, file: selectedFile || (thumbToggle && thumbToggle.checked && draft ? draft.pendingFile : null), label: label,
+        confirmed: true, file: selectedFile || pendingFile, label: label,
         mediaPath: editing ? draft.mediaPath : "",
-        createThumb: Boolean(thumbToggle && !thumbToggle.disabled && thumbToggle.checked)
+        createThumb: createThumb, preserveResolution: preserveResolution
       });
     }
   }).then(function (result) { return result && result.confirmed ? result : null; });
@@ -178,7 +195,10 @@ export async function prepareAndInsertSourceMedia(options = {}) {
     label: kind === "image" ? initialToken.alt : initialToken.label, addCaption: Boolean(initialToken.caption)
   }) : null;
   var existing = initialToken && adapter.pendingSourceMedia(initialToken.mediaPath);
-  if (draft && existing) draft.pendingFile = existing.file;
+  if (draft && existing) {
+    draft.pendingFile = existing.file;
+    draft.preserveResolution = existing.preserveResolution;
+  }
   var choice = await chooseSourceMedia(root, kind, mediaOptions, draft);
   if (!choice) return null;
   if (!choice.file && choice.mediaPath) {
@@ -203,7 +223,8 @@ export async function prepareAndInsertSourceMedia(options = {}) {
   var payload = { markdown: markdown, thumbnail: choice.createThumb, summary_text: "Media reference inserted. Save to store the selected file." };
   if (!adapter.insertSourceMedia(capture, payload, {
     file: choice.file, mediaKind: kind, mediaPath: mediaPath,
-    replace: reuse ? existing.replace : Boolean(initialToken), createThumb: choice.createThumb,
+    replace: kind === "image" || (reuse ? existing.replace : Boolean(initialToken)), createThumb: choice.createThumb,
+    preserveResolution: choice.preserveResolution,
     editedPath: initialToken && initialToken.mediaPath
   })) throw new Error("The Source occurrence changed; no media was stored.");
   return payload;

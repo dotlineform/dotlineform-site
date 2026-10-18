@@ -29,24 +29,29 @@ def validate_static_raster(source_path: Path) -> None:
         raise ValueError("Selected raster image could not be read") from error
 
 
-def convert_source_image_to_webp(source_path: Path, output_path: Path) -> None:
-    """Encode an already validated raster at an 800px long edge, including upscaling.
+def convert_source_image_to_webp(source_path: Path, output_path: Path, *, preserve_resolution: bool) -> None:
+    """Encode a validated raster at its original resolution or an 800px long edge.
 
     Encoding starts with the Works primary recipe but is owned independently by
     Docs Viewer. The operation writes only its temporary output, never the input.
     """
-    scale = (
-        f"scale='if(gte(iw,ih),{DISPLAY_LONG_EDGE},-1)':"
-        f"'if(gte(iw,ih),-1,{DISPLAY_LONG_EDGE})':flags=lanczos"
-    )
+    command = [
+        "ffmpeg", "-hide_banner", "-loglevel", "error", "-nostdin", "-y",
+        "-i", str(source_path), "-map_metadata", "-1",
+    ]
+    if not preserve_resolution:
+        scale = (
+            f"scale='if(gte(iw,ih),{DISPLAY_LONG_EDGE},-1)':"
+            f"'if(gte(iw,ih),-1,{DISPLAY_LONG_EDGE})':flags=lanczos"
+        )
+        command.extend(["-vf", scale])
+    command.extend([
+        "-frames:v", "1", "-c:v", "libwebp", "-preset", WEBP_PRESET,
+        "-q:v", str(DISPLAY_QUALITY), "-compression_level", str(WEBP_COMPRESSION_LEVEL),
+        str(output_path),
+    ])
     try:
-        result = subprocess.run([
-            "ffmpeg", "-hide_banner", "-loglevel", "error", "-nostdin", "-y",
-            "-i", str(source_path), "-map_metadata", "-1", "-vf", scale,
-            "-frames:v", "1", "-c:v", "libwebp", "-preset", WEBP_PRESET,
-            "-q:v", str(DISPLAY_QUALITY), "-compression_level", str(WEBP_COMPRESSION_LEVEL),
-            str(output_path),
-        ], capture_output=True, text=True, check=False)
+        result = subprocess.run(command, capture_output=True, text=True, check=False)
     except FileNotFoundError as error:
         raise RuntimeError("Docs image conversion requires FFmpeg") from error
     if result.returncode != 0:
