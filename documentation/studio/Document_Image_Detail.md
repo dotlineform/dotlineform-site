@@ -19,6 +19,8 @@ Use Source **Directives → Image detail** immediately before an image to add a 
 
 The same directive works before a canonical `[[image:…]]` token, including its caption and summary. The displayed image stays in its document position until the button is activated. Its alt text supplies the detail title, with its HTML title or `Image N` used when alt text is empty. The button's tooltip and accessible label are **Open image**.
 
+For a new image, **Add image → Image detail** includes the directive immediately before the inserted image token. The checkbox starts unselected each time and works for both raster images and SVGs. It changes only the source text, without a new media-processing option or saved token field. Edit image preserves any existing directive outside the edited token; add or remove that directive directly in Source for an existing image.
+
 ## Scope And Association
 
 The directive selects the immediately following standalone image, allowing whitespace/blank lines between them. The reader accepts a direct image, a Markdown paragraph containing only one image, or the builder's Docs-owned image figure. A paragraph containing prose, multiple images, a linked image, a heading or other intervening content does not select a later image. Catalogue images retain their separate Media View owner. Unmatched directives remain invisible HTML comments and produce no control.

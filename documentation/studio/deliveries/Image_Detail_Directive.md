@@ -15,6 +15,7 @@ Implemented and reviewed on 2026-10-18; awaiting normal-use confirmation of opti
 
 ## Requirements And Deliverables
 
+- **Add image** offers an unchecked **Image detail** checkbox for new SVG/raster insertions. Selecting it adds the directive before the image token in the same guarded buffer edit; editing an existing token preserves any separate authored directive.
 - `<!-- dotlineform:image-detail -->` adds one small Open image control above the immediately following standalone Markdown image or Docs-owned image token, allowing blank lines. Prose/other intervening blocks do not acquire a control or cause a later image to be selected.
 - Reuse the SVG panel, Back, Open in new tab and the existing image element; derive the displayed title from alt text. SVG and raster images both require the directive; neither receives an automatic overlay. Preserve Public/Manage ownership.
 - Keep selection and view state in the browser using the rendered comment/image and supplied document target. Python has no new persistence, parsing, processing or transfer work. Do not add a new endpoint, renderer, panel, image variants or fallback original.
@@ -34,6 +35,7 @@ Insert Image detail from Source Directives immediately before an existing image 
 
 ## Verification Record
 
+- The Add image checkbox follow-up passed explicit JavaScript lint for `docs-viewer/runtime/js/management/source-editor/source-editor-media.js` and `git diff --check`. This local Manage module is excluded from public projection; no shared/public runtime file changed. No tests, browser actions or live authoring ran for this follow-up.
 - Maintained JavaScript lint passed for the ten changed owners: shared `docs-viewer-image-detail.js`, `docs-viewer-content-detail-view.js`, `docs-viewer-document-controller.js`, `docs-viewer-app-boot.js`, `docs-viewer-app-runtime.js`, `docs-viewer-table-detail.js`, `docs-viewer-asset-url.js`; Public `docs-viewer-public.js`; Manage `docs-viewer-manage.js`; and Source `source-editor/directive-actions.js`. The project Miniconda Python invoked `tooling/lint/run_lint.py --language javascript --paths ...`. Only the subsequently changed image and asset helpers were relinted after their review changes.
 - The optional-SVG follow-up passed JavaScript lint for `docs-viewer-image-detail.js`, Python lint and `py_compile` for `docs_builder/rendering.py` and `docs_builder/semantic_tokens.py`. Active runtime/build/service reference inspection found no remaining automatic-SVG marker, kind or explicit-versus-overlay class consumers/producers. Old generated HTML may retain an unused marker; the reader does not inspect it, so no complete document rebuild is required. `git diff --check` passed.
 - `bin/site-code-update` projected the module rename, seven changed JavaScript files and the shared CSS: one new module, eight changed files and one retired module in total. The tracked delta was inspected. `bin/site-code-update --check` reports all 104 projected files current; `bin/site-validate` passes with 60 required files, 7 required directories, 104 projected files, 71 runtime modules and the maintained public route.
@@ -41,5 +43,7 @@ Insert Image detail from Source Directives immediately before an existing image 
 - No tests, browser automation, live source/media writes, document generation, Search rebuild, Publish, commit, push or deployment ran. Source insertion and the actual control/Back/new-tab/focus/caption behaviors remain normal-use confirmation; static evidence does not establish them.
 
 ## Follow-On
+
+The Add image checkbox follow-up is implemented and awaits normal-use confirmation of unchecked/default insertion and selected SVG/raster insertion. Code review traced new Add, Edit, file selection/cancellation, caption/resolution/thumbnail independence, the existing guarded buffer insertion and pending-File retention. The Redundancy And Defensive Behavior Review confirmed that the browser owns this source-text choice using the captured buffer; no new service request, validation, media option, persisted field or pending-File state is added. Block spacing separates the directive/image from adjacent prose. Edit omits the new-insertion checkbox and leaves existing directives outside the captured token unchanged. Lint and whitespace checks provide static evidence; modal appearance and actual insertion remain manual confirmation.
 
 Linked-image directives, arbitrary HTML wrappers, zoom/pan controls, higher-resolution source recovery and test migration/expansion require their own scope. Durable syntax, ownership and extension behavior live in [Document Image Detail](../Document_Image_Detail.md).

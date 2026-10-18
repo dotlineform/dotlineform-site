@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260903-154141-7c9e4b
 title: Catalogue Media View
 added_date: "2026-09-03 15:41:41"
-last_updated: "2026-10-16"
+last_updated: "2026-10-18"
 summary: Exact Work and Gallery links, direct and Series-related Gallery navigation, responsive Work images and paginated Media View, with static-consumer and public-data limits.
 ui_status: done
 parent_id: d-20260903-222617-28475e
@@ -48,6 +48,8 @@ Text links preserve surrounding Markdown even at the start of a paragraph or lis
 Opening a document resolves inline images through current Catalogue consumer data. Selecting a text link reads the exact Work or Gallery and opens Media View. Selecting an image reads its Work again, updates the inline image and opens Media View from that record. Retired Detail and Series markers do not open Media View.
 
 Work Media View shows the selected image, title, `cat. <work_id>` reference and Gallery links. Direct Gallery links precede a separate related group from Series–Gallery relationships. `cat.` is plain text and only the five-digit Work ID links to the definitive Catalogue document at `?collection=catalogue&doc=<work-id>`, opened in a new tab. The current presentation contract still constructs and validates descriptive metadata, but the Work view does not display it; retiring that unused contract remains separate work in [Public Work JSON Review](Public_Work_JSON_Review.md). Open in new tab targets the supplied selected image. Back to document restores the invoking document, scroll and focus through Content Detail.
+
+Media View centers Back and Open in new tab together in the top row, using the same shared CSS grid as image detail. Home stays on the left; Manage Actions and the theme control stay on the right. This layout applies to local and public views, including narrow public screens, without positioning Open against the image/metadata columns.
 
 Build retains valid text-link references when Catalogue data is unavailable, allowing later runtime recovery. A Work image requires its generated Work record at Build for baked title/alt/caption presentation. It consumes the UI-completed Work title without another nonblank check or fallback title. Runtime loading and failure feedback for the image and Media View still appears beside the opener and permits retry. Replaced documents, released mounts, changed child selections and superseded requests cannot apply a late response.
 

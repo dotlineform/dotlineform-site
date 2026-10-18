@@ -89,6 +89,8 @@ The final menu group contains Table detail, Image detail, Insert related links, 
 
 **Image detail** inserts `<!-- dotlineform:image-detail -->` with block spacing and preserves any selected source text after it. Place it immediately before a standalone Markdown image or `[[image:…]]` token. The shared browser image adapter adds Open image above that occurrence and uses the existing SVG Content Detail panel; the alt text supplies its title. [Document Image Detail](Document_Image_Detail.md) owns association, literal examples, scope and lifecycle.
 
+The **Add image** modal also offers an unchecked **Image detail** checkbox for new raster/SVG insertions. When selected, `source-editor-media.js` prepends the same directive to the serialized token with block spacing, using the captured buffer and the existing guarded insertion. This source-text choice is independent of caption, resolution and thumbnail controls and is not submitted as media metadata. Edit image replaces its captured token while preserving an existing adjacent directive.
+
 **Insert related links** inserts `[[links|]]` as a block directive with an empty heading and places the caret between `|` and `]]` for optional heading text. It preserves selected source text after the token. [Related Links](Related_Links.md) owns the generated sorted list, icons, empty-section suppression and full-build freshness.
 
 **Summary** uses the local `summary.svg` toolbar mask and inserts `[[summary]]` as a standalone block, supplying the blank-line separation needed around surrounding prose and preserving selected text after the token. It opens no modal and changes no front matter. [Builder](Builder.md#summary-block) owns expansion of the document's current Summary, empty-block suppression and presentation.

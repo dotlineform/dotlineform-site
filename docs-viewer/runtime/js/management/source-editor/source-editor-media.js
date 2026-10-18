@@ -46,6 +46,12 @@ function chooseSourceMedia(root, kind, mediaOptions, draft) {
         '<input class="docsViewer__fieldInput" id="docsViewerMediaLabel" data-role="media-label" type="text" required>' +
       '</div>' +
       (kind === "image" ? imagePresentationHtml() : "") +
+      (kind === "image" && !editing
+        ? '<label class="docsViewer__field docsViewer__field--checkbox">' +
+            '<input class="docsViewer__checkboxInput" data-role="image-detail" type="checkbox">' +
+            '<span class="docsViewer__fieldLabel">Image detail</span>' +
+          '</label>'
+        : "") +
       (kind === "image"
         ? '<label class="docsViewer__field docsViewer__field--checkbox">' +
             '<input class="docsViewer__checkboxInput" data-role="preserve-resolution" type="checkbox" disabled>' +
@@ -118,6 +124,7 @@ function chooseSourceMedia(root, kind, mediaOptions, draft) {
       var presentation = readImagePresentation(api.host);
       var thumbToggle = api.host.querySelector('[data-role="create-thumb"]');
       var preserveToggle = api.host.querySelector('[data-role="preserve-resolution"]');
+      var imageDetailToggle = api.host.querySelector('[data-role="image-detail"]');
       var preserveResolution = Boolean(preserveToggle && !preserveToggle.disabled && preserveToggle.checked);
       var createThumb = Boolean(thumbToggle && !thumbToggle.disabled && thumbToggle.checked);
       var pendingFile = draft && draft.pendingFile
@@ -137,7 +144,8 @@ function chooseSourceMedia(root, kind, mediaOptions, draft) {
       return Object.assign({}, presentation, {
         confirmed: true, file: selectedFile || pendingFile, label: label,
         mediaPath: editing ? draft.mediaPath : "",
-        createThumb: createThumb, preserveResolution: preserveResolution
+        createThumb: createThumb, preserveResolution: preserveResolution,
+        imageDetail: Boolean(imageDetailToggle && imageDetailToggle.checked)
       });
     }
   }).then(function (result) { return result && result.confirmed ? result : null; });
@@ -220,6 +228,13 @@ export async function prepareAndInsertSourceMedia(options = {}) {
     summary: choice.summary, placement: choice.placement, fillWidth: choice.fillWidth
   }) : fileLink(choice.label, mediaPath);
   if (!markdown) throw new Error("Image fields are invalid.");
+  if (choice.imageDetail) {
+    var leadingNewlines = snapshot.value.slice(0, capture.start).match(/\n*$/)[0].length;
+    var trailingNewlines = snapshot.value.slice(capture.end).match(/^\n*/)[0].length;
+    markdown = "\n".repeat(capture.start ? Math.max(0, 2 - leadingNewlines) : 0)
+      + "<!-- dotlineform:image-detail -->\n\n" + markdown
+      + "\n".repeat(Math.max(0, 2 - trailingNewlines));
+  }
   var payload = { markdown: markdown, thumbnail: choice.createThumb, summary_text: "Media reference inserted. Save to store the selected file." };
   if (!adapter.insertSourceMedia(capture, payload, {
     file: choice.file, mediaKind: kind, mediaPath: mediaPath,
