@@ -71,6 +71,12 @@ function renderEditorShell(context, state) {
 
   editor.append(textarea);
   root.append(dirty, status, editor);
+  // CSS hides rendered elements, but direct text nodes need their own session state.
+  mount.childNodes.forEach(function (node) {
+    if (node.nodeType !== Node.TEXT_NODE) return;
+    state.renderedTextNodes.push({ node: node, text: node.data });
+    node.data = "";
+  });
   mount.appendChild(root);
 
   state.root = root;
@@ -538,6 +544,8 @@ function unbindEvents(context, state) {
 function restoreRenderedContent(context, state) {
   if (!context.mount || !state.root) return;
   state.root.remove();
+  state.renderedTextNodes.forEach(function (saved) { saved.node.data = saved.text; });
+  state.renderedTextNodes = [];
   context.mount.scrollTop = state.renderedScrollTop;
   state.root = null;
   state.textarea = null;
@@ -563,6 +571,7 @@ export function createDocsViewerSourceEditorMode() {
     collectionProvider: null,
     root: null,
     renderedScrollTop: 0,
+    renderedTextNodes: [],
     sourceActionControlIds: [],
     status: null,
     target: null,

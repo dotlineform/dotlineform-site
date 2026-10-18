@@ -1,14 +1,38 @@
 {
   "schema": "docs_recent_v2",
   "limit": 20,
-  "generated_at": "2026-10-18T09:45:41Z",
+  "generated_at": "2026-10-18T11:44:41Z",
   "docs": [
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261018-122554-80436e",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Brain Diagrams",
+      "timestamp": "2026-10-18"
+    },
     {
       "collection": "library",
       "collection_title": "Library",
       "doc_id": "d-20261017-231636-6bdc1b",
       "report_doc_id": "d-20260809-130120-870cc2",
       "title": "Brain machines",
+      "timestamp": "2026-10-18"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261018-105902-482d5b",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Brain signals",
+      "timestamp": "2026-10-18"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261018-113347-fc1318",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Brain Structure — Illustrated Overview",
       "timestamp": "2026-10-18"
     },
     {
@@ -137,30 +161,6 @@
       "doc_id": "d-20260809-130120-837891",
       "report_doc_id": "d-20260809-130120-870cc2",
       "title": "Beauty",
-      "timestamp": "2026-10-17"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20260809-130120-28fb85",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Beauty × Memory × Meaning",
-      "timestamp": "2026-10-17"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261017-223524-f16e89",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Bergson",
-      "timestamp": "2026-10-17"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20260809-130120-44384d",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Beyond Conscious vs. Subconscious",
       "timestamp": "2026-10-17"
     }
   ]
