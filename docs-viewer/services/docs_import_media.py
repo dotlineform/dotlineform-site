@@ -15,7 +15,6 @@ from docs_import_common import (
     INLINE_RASTER_EXTENSIONS,
     MARKDOWN_INLINE_RASTER_IMAGE_PATTERN,
     normalize_space,
-    slugify,
 )
 from docs_workspace_config import (
     DocsManagedMediaConfig, DocsStageConfig, DocsCollectionConfig,
@@ -72,12 +71,11 @@ def sanitize_inline_svg_markup(markup: str) -> SanitizedSvg:
     return sanitize_svg_bytes(escaped)
 
 
-def next_inline_media_filename(staging_root: Path, doc_id: str, extension: str, used_filenames: set[str]) -> str:
-    safe_doc_id = slugify(doc_id or "imported-doc")
+def next_inline_media_filename(staging_root: Path, extension: str, used_filenames: set[str]) -> str:
     safe_extension = INLINE_RASTER_EXTENSIONS.get(extension.lower(), extension.lower()).lstrip(".")
     index = 1
     while True:
-        filename = f"{safe_doc_id}-image-{index:02d}.{safe_extension}"
+        filename = f"image-{index:02d}.{safe_extension}"
         if filename not in used_filenames and not (staging_root / filename).exists():
             used_filenames.add(filename)
             return filename
@@ -123,7 +121,6 @@ def apply_inline_raster_media_plans(
     if "data:image/" not in markdown:
         return
 
-    proposed_doc_id = str(summary.get("proposed_doc_id") or summary.get("title") or "imported-doc")
     existing_plans = summary.get("media_plans")
     plans: list[dict[str, Any]] = list(existing_plans) if isinstance(existing_plans, list) else []
     used_filenames: set[str] = {
@@ -147,7 +144,7 @@ def apply_inline_raster_media_plans(
             warnings.append(f"Could not decode inline image data for {alt or 'an imported image'}; left the data URL inline.")
             return match.group(0)
 
-        filename = next_inline_media_filename(staging_root, proposed_doc_id, extension, used_filenames)
+        filename = next_inline_media_filename(staging_root, extension, used_filenames)
         title = alt or f"Inline image {len(inline_plans) + 1:02d}"
         plan = inline_media_plan(
             filename,
@@ -190,7 +187,6 @@ def apply_inline_svg_media_plans(
     if len(source_fragments) != len(markdown_matches):
         raise ValueError("HTML inline SVG extraction no longer matches the structured document conversion")
 
-    proposed_doc_id = str(summary.get("proposed_doc_id") or summary.get("title") or "imported-doc")
     existing_plans = summary.get("media_plans")
     plans: list[dict[str, Any]] = list(existing_plans) if isinstance(existing_plans, list) else []
     used_filenames: set[str] = {
@@ -206,7 +202,7 @@ def apply_inline_svg_media_plans(
         nonlocal source_index
         sanitized = sanitize_inline_svg_markup(source_fragments[source_index])
         source_index += 1
-        filename = next_inline_media_filename(staging_root, proposed_doc_id, "svg", used_filenames)
+        filename = next_inline_media_filename(staging_root, "svg", used_filenames)
         title = sanitized.title or f"Inline image {len(inline_plans) + 1:02d}"
         plan = inline_media_plan(
             filename,

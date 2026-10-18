@@ -105,20 +105,18 @@ def next_package_media_filename(
     repo_root: Path,
     preparation: ImportMediaPreparation,
     staging_root: Path,
-    doc_id: str,
     media_class: str,
     suffix: str,
     extension: str,
     used_filenames: set[str],
 ) -> str:
-    safe_doc_id = slugify(doc_id or "imported-doc")
     safe_extension = extension.lower().lstrip(".")
     staging_root = staging_root.resolve()
     media = managed_media_config(preparation.config, media_class)
     index = 1
     while True:
-        filename = f"{safe_doc_id}-{suffix}-{index:02d}.{safe_extension}"
-        local_asset_path = local_artifact_path(repo_root, media.asset_location, f"{doc_id}/{filename}")
+        filename = f"{suffix}-{index:02d}.{safe_extension}"
+        local_asset_path = local_artifact_path(repo_root, media.asset_location, f"{preparation.doc_id}/{filename}")
         if (
             filename not in used_filenames
             and not (staging_root / filename).exists()
@@ -206,7 +204,6 @@ def rewrite_markdown_package_media_links(
     provenance_label: str = "",
 ) -> None:
     markdown = str(summary.get("markdown_preview") or "")
-    doc_id = str(summary.get("proposed_doc_id") or package_root.name or "imported-doc")
     plans: list[dict[str, Any]] = []
     warnings = summary.setdefault("warnings", [])
     used_filenames: set[str] = set()
@@ -232,7 +229,7 @@ def rewrite_markdown_package_media_links(
             warnings.append(f"Unsupported package image type {suffix or '(none)'} for {target}; left the link unchanged.")
             return None
         image_index = len([plan for plan in plans if plan.get("kind") == "image"]) + 1
-        filename = next_package_media_filename(repo_root, preparation, staging_root, doc_id, "img", "image", "webp", used_filenames)
+        filename = next_package_media_filename(repo_root, preparation, staging_root, "img", "image", "webp", used_filenames)
         title = readable_package_image_title(summary["source_doc_id"], image_index)
         plan = build_package_media_plan(
             preparation,
@@ -268,7 +265,7 @@ def rewrite_markdown_package_media_links(
             unsupported_count += 1
             warnings.append(f"Unsupported package attachment type {suffix or '(none)'} for {target}; left the link unchanged.")
             return None
-        filename = next_package_media_filename(repo_root, preparation, staging_root, doc_id, "files", "attachment", suffix, used_filenames)
+        filename = next_package_media_filename(repo_root, preparation, staging_root, "files", "attachment", suffix, used_filenames)
         title = normalize_space(label) or humanize(source.stem) or f"Attachment {len([plan for plan in plans if plan.get('kind') == 'attachment']) + 1:02d}"
         plan = build_package_media_plan(
             preparation,
