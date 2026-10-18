@@ -1413,14 +1413,16 @@ body.docs-viewer-service{
   min-width: 0;
 }
 
-.docsViewer__mediaDetailCaption--simple{
+.docsViewer__content .docsViewer__mediaDetailCaption--simple{
   font-size: var(--docs-viewer-font-small);
   font-style: normal;
   color: var(--docs-viewer-text);
 }
 
-.docsViewer__mediaDetailTitle{
+.docsViewer__content .docsViewer__mediaDetailTitle{
   margin: 0 0 var(--docs-viewer-space-3);
+  padding: 0;
+  border: 0;
 }
 
 .docsViewer__mediaDetailCaption--simple .docsViewer__mediaDetailTitle{
@@ -1926,6 +1928,8 @@ body.docs-viewer-service{
   font-size: var(--docs-viewer-font-small);
   font-weight: 600;
   line-height: var(--docs-viewer-line-normal);
+  padding-block-end: 0;
+  border-block-end: 0;
 }
 
 .docsViewer__content .docsViewerCatalogueEntry + [data-docs-related-links]{

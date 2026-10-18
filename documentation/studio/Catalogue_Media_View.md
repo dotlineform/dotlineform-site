@@ -51,6 +51,8 @@ Work Media View shows the selected image, title, `cat. <work_id>` reference and 
 
 Media View centers Back and Open in new tab together in the top row, using the same shared CSS grid as image detail. Home stays on the left; Manage Actions and the theme control stay on the right. This layout applies to local and public views, including narrow public screens, without positioning Open against the image/metadata columns.
 
+Work and Gallery information uses `font-small`, normal upright text and the standard text colour. Its title retains the established bold `font-body` size, without the document H2 divider or padding. Component rules are scoped within `docsViewer__content` so generic figure-caption and heading styles do not override this presentation.
+
 Build retains valid text-link references when Catalogue data is unavailable, allowing later runtime recovery. A Work image requires its generated Work record at Build for baked title/alt/caption presentation. It consumes the UI-completed Work title without another nonblank check or fallback title. Runtime loading and failure feedback for the image and Media View still appears beside the opener and permits retry. Replaced documents, released mounts, changed child selections and superseded requests cannot apply a late response.
 
 ## Current Catalogue Data

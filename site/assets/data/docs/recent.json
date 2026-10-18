@@ -1,7 +1,7 @@
 {
   "schema": "docs_recent_v2",
   "limit": 20,
-  "generated_at": "2026-10-18T20:25:48Z",
+  "generated_at": "2026-10-18T20:46:51Z",
   "docs": [
     {
       "collection": "works",
@@ -9,6 +9,14 @@
       "doc_id": "d-20260801-212422-43b47c",
       "report_doc_id": "d-20260801-073826-8865a8",
       "title": "10,000",
+      "timestamp": "2026-10-18"
+    },
+    {
+      "collection": "works",
+      "collection_title": "Context",
+      "doc_id": "d-20260801-212422-d91151",
+      "report_doc_id": "d-20260801-073826-8865a8",
+      "title": "a poem divided into 4 parts",
       "timestamp": "2026-10-18"
     },
     {
@@ -153,14 +161,6 @@
       "doc_id": "d-20260809-130120-c5c511",
       "report_doc_id": "d-20260809-130120-870cc2",
       "title": "Coincidence Inevitability",
-      "timestamp": "2026-10-18"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261018-174455-98f8ad",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Complexity ↔ Simplicity",
       "timestamp": "2026-10-18"
     }
   ]
