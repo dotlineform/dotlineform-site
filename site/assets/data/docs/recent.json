@@ -1,8 +1,40 @@
 {
   "schema": "docs_recent_v2",
   "limit": 20,
-  "generated_at": "2026-10-18T11:44:41Z",
+  "generated_at": "2026-10-18T20:25:48Z",
   "docs": [
+    {
+      "collection": "works",
+      "collection_title": "Context",
+      "doc_id": "d-20260801-212422-43b47c",
+      "report_doc_id": "d-20260801-073826-8865a8",
+      "title": "10,000",
+      "timestamp": "2026-10-18"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261018-163650-ef5305",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Awe",
+      "timestamp": "2026-10-18"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261017-231122-eeaf16",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Biological vs Non‑Organic Memory",
+      "timestamp": "2026-10-18"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261018-153132-bdf76b",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Brain Connectivity",
+      "timestamp": "2026-10-18"
+    },
     {
       "collection": "library",
       "collection_title": "Library",
@@ -30,6 +62,14 @@
     {
       "collection": "library",
       "collection_title": "Library",
+      "doc_id": "d-20261018-111445-823b77",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Brain Structure",
+      "timestamp": "2026-10-18"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
       "doc_id": "d-20261018-113347-fc1318",
       "report_doc_id": "d-20260809-130120-870cc2",
       "title": "Brain Structure — Illustrated Overview",
@@ -38,130 +78,90 @@
     {
       "collection": "library",
       "collection_title": "Library",
-      "doc_id": "d-20261018-101404-0c91f3",
+      "doc_id": "d-20261018-162318-a42409",
       "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Neuromorphic Continuity vs State Saving",
+      "title": "Brain ⇄ Mind Dynamic in Evolution",
       "timestamp": "2026-10-18"
     },
     {
       "collection": "library",
       "collection_title": "Library",
-      "doc_id": "d-20261018-103357-e62ff8",
+      "doc_id": "d-20261018-161532-ad1a8a",
       "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Problems SpiNNaker is used to Solve",
+      "title": "Brain ⇄ Mind in Memory",
       "timestamp": "2026-10-18"
     },
     {
       "collection": "library",
       "collection_title": "Library",
-      "doc_id": "d-20261017-232727-55cf60",
+      "doc_id": "d-20261018-154315-4f5ade",
       "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "PyNN",
+      "title": "Brain ⇄ Mind: Emergence and Feedback",
       "timestamp": "2026-10-18"
     },
     {
       "collection": "library",
       "collection_title": "Library",
-      "doc_id": "d-20261017-232312-733b50",
+      "doc_id": "d-20261018-163309-a8c088",
       "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "SpiNNaker",
+      "title": "Brains & Organisms Inside a Mathematical Universe",
       "timestamp": "2026-10-18"
     },
     {
       "collection": "library",
       "collection_title": "Library",
-      "doc_id": "d-20261018-104047-10bc42",
+      "doc_id": "d-20261018-164432-3924d1",
       "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "SpiNNaker State & Outputs",
+      "title": "Bridging Systems",
       "timestamp": "2026-10-18"
     },
     {
       "collection": "library",
       "collection_title": "Library",
-      "doc_id": "d-20261017-111531-f1b36a",
+      "doc_id": "d-20261018-172349-eb5ad1",
       "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "100 words - Linguistic theories",
-      "timestamp": "2026-10-17"
+      "title": "Buddhism ↔ Neuroscience ↔ Bridging Metaphors",
+      "timestamp": "2026-10-18"
     },
     {
       "collection": "library",
       "collection_title": "Library",
-      "doc_id": "d-20261017-112353-93c738",
+      "doc_id": "d-20261018-170327-aa729d",
       "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "100 Words Related to Reflection & Memory",
-      "timestamp": "2026-10-17"
+      "title": "Buddhism, Kant, Science",
+      "timestamp": "2026-10-18"
     },
     {
       "collection": "library",
       "collection_title": "Library",
-      "doc_id": "d-20261017-160051-1a6829",
+      "doc_id": "d-20261018-171054-0e8f96",
       "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Abstract Art as Evolutionary Mechanism",
-      "timestamp": "2026-10-17"
+      "title": "Buddhism, Neuroscience",
+      "timestamp": "2026-10-18"
     },
     {
       "collection": "library",
       "collection_title": "Library",
-      "doc_id": "d-20260809-130120-461754",
+      "doc_id": "d-20260809-130120-d66e0b",
       "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Abstract Thought and Physical Processes",
-      "timestamp": "2026-10-17"
+      "title": "Can the Brain Comprehend How It Works?",
+      "timestamp": "2026-10-18"
     },
     {
       "collection": "library",
       "collection_title": "Library",
-      "doc_id": "d-20261017-162603-c45f6b",
+      "doc_id": "d-20260809-130120-c5c511",
       "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Acceleration vs Entropy",
-      "timestamp": "2026-10-17"
+      "title": "Coincidence Inevitability",
+      "timestamp": "2026-10-18"
     },
     {
       "collection": "library",
       "collection_title": "Library",
-      "doc_id": "d-20261017-172422-3921c8",
+      "doc_id": "d-20261018-174455-98f8ad",
       "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Aliveness of Images",
-      "timestamp": "2026-10-17"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261017-174644-6d7f78",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Archetypal Patterns",
-      "timestamp": "2026-10-17"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261017-182310-3b3ecb",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Are Information and Entropy Consciously Accessible",
-      "timestamp": "2026-10-17"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261017-220135-4d19fc",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Attractor-network Memory",
-      "timestamp": "2026-10-17"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20260809-130120-91c97f",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Bayesian Reasoning",
-      "timestamp": "2026-10-17"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20260809-130120-837891",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Beauty",
-      "timestamp": "2026-10-17"
+      "title": "Complexity ↔ Simplicity",
+      "timestamp": "2026-10-18"
     }
   ]
 }
