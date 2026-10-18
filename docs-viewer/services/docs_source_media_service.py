@@ -42,6 +42,19 @@ class PreparedSourceMediaWrite:
     status: str
 
 
+def prepare_source_media_write(
+    adapter: ArtifactLocationAdapter, media_type: str, identity: str, data: bytes, *, replace: bool,
+) -> PreparedSourceMediaWrite:
+    """Compare one selected destination and carry its bytes into persistence."""
+    existing = adapter.stat(identity)
+    matches = existing is not None and existing.size == len(data) and adapter.read(identity) == data
+    status = "new" if existing is None else "unchanged" if matches else "replace"
+    if status == "replace" and not replace:
+        raise FileExistsError(f"Filename conflict at {media_type}/{identity}; use Edit to replace that file or choose another filename")
+    content_type = mimetypes.guess_type(identity)[0] or "application/octet-stream"
+    return PreparedSourceMediaWrite(media_type, identity, data, content_type, adapter, status)
+
+
 def media_suffixes(kind: str) -> set[str]:
     if kind == "image":
         return RASTER_IMAGE_STAGED_SUFFIXES | SVG_STAGED_SUFFIXES
@@ -125,14 +138,7 @@ def prepare_source_media(
         if media_type not in adapters:
             location = managed_media_config(config, media_type).asset_location
             adapters[media_type] = artifact_location_adapter(repo_root, location)
-        adapter = adapters[media_type]
-        existing = adapter.stat(identity)
-        matches = existing is not None and existing.size == len(data) and adapter.verify_bytes(identity, data)
-        status = "new" if existing is None else "unchanged" if matches else "replace"
-        if status == "replace" and not replace:
-            raise FileExistsError(f"Filename conflict at {media_type}/{identity}; use Edit to replace that file or choose another filename")
-        content_type = mimetypes.guess_type(identity)[0] or "application/octet-stream"
-        writes.append(PreparedSourceMediaWrite(media_type, identity, data, content_type, adapter, status))
+        writes.append(prepare_source_media_write(adapters[media_type], media_type, identity, data, replace=replace))
 
     with tempfile.TemporaryDirectory(prefix="docs-source-save-media-") as temporary:
         root = Path(temporary)
@@ -183,7 +189,7 @@ def write_prepared_source_media(writes: list[PreparedSourceMediaWrite], effects:
         try:
             item.adapter.replace(item.identity, item.data, content_type=item.content_type)
             effect["status"] = "written"
-            if not item.adapter.verify_bytes(item.identity, item.data):
+            if item.adapter.read(item.identity) != item.data:
                 raise RuntimeError("stored bytes did not verify")
             effect["status"] = "verified"
         except (ValueError, OSError, RuntimeError) as error:

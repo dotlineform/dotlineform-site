@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import subprocess
 import sys
-from dataclasses import replace
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any, Dict, Optional
 
@@ -43,6 +43,8 @@ from docs_document_rebuild import rebuild_prepared_document  # noqa: E402
 from docs_source_media_service import source_media_options, prepare_source_media, write_prepared_source_media  # noqa: E402
 from docs_source_media_upload import SourceMediaUpload  # noqa: E402
 from docs_document_media_ownership import compare_document_media  # noqa: E402
+from docs_source_media_adoption import prepare_source_media_adoption  # noqa: E402
+from docs_report_source import ReportDescriptor  # noqa: E402
 
 
 def normalize_source_body(value: Any) -> str:
@@ -164,14 +166,23 @@ def _source_candidate_parts(
     return parts
 
 
+@dataclass(frozen=True)
+class SourceCandidate:
+    parts: source_model.SourceParts
+    metadata: Dict[str, Any]
+    body: str
+    updates: Dict[str, str]
+    removed: list[str]
+    report: ReportDescriptor | None
+
+
 def prepare_source_candidate(
     repo_root: Path,
     target: Dict[str, str],
     source_text: str,
     resolved: ManagedDocumentTarget,
-    *, dry_run: bool,
-) -> tuple[source_model.SourceDoc, bool]:
-    """Parse and prepare one candidate for persistence, response and generation."""
+) -> SourceCandidate:
+    """Establish candidate validity once before selected media preparation."""
     require_document_authoring(resolved.parent_config)
     source_name = f"{target['doc_id']}.md"
     parts = _source_candidate_parts(target, source_text, resolved)
@@ -192,19 +203,6 @@ def prepare_source_candidate(
     next_metadata = {key: value for key, value in front_matter.items() if key not in removed}
     next_metadata.update(updates)
     next_source_body = normalize_source_body_for_write(parts.body)
-    header_newline = "\r\n" if resolved.document.source_text.splitlines(keepends=True)[0].endswith("\r\n") else "\n"
-
-    def assembled_source() -> str:
-        prefix = rewrite_front_matter_fields(parts.prefix, updates, remove_fields=removed, fields=parts.fields)
-        prefix = normalize_source_body(prefix).replace("\n", header_newline)
-        return (prefix if prefix.endswith("\n") else prefix + header_newline) + next_source_body
-
-    next_source_text = assembled_source()
-    source_changed = next_source_text != resolved.document.source_text
-    if source_changed and not dry_run:
-        next_metadata = source_model.advance_doc_front_matter(next_metadata)
-        updates.update({key: next_metadata[key] for key in ("added_date", "last_updated")})
-        next_source_text = assembled_source()
     # Collection customisations own Subject validity; common projection also rejects multiple declarations.
     if resolved.collection:
         collection_customisation_metadata_record(
@@ -213,12 +211,36 @@ def prepare_source_candidate(
     project_document_subject(next_metadata, folder_supported=True)
     report = source_model.parse_collection_document_report(
         repo_root, resolved.parent_config, resolved.document_config,
-        next_source_text, front_matter=next_metadata, body=next_source_body, source_name=source_name,
+        parts.prefix + next_source_body, front_matter=next_metadata, body=next_source_body, source_name=source_name,
     )
+    return SourceCandidate(parts, next_metadata, next_source_body, updates, removed, report)
+
+
+def finish_source_candidate(
+    resolved: ManagedDocumentTarget, candidate: SourceCandidate, body: str, *, dry_run: bool,
+) -> tuple[source_model.SourceDoc, bool]:
+    """Assemble validated fields and the adopted body without parsing them again."""
+    updates = dict(candidate.updates)
+    next_metadata = candidate.metadata
+    header_newline = "\r\n" if resolved.document.source_text.splitlines(keepends=True)[0].endswith("\r\n") else "\n"
+
+    def assembled_source() -> str:
+        prefix = rewrite_front_matter_fields(
+            candidate.parts.prefix, updates, remove_fields=candidate.removed, fields=candidate.parts.fields,
+        )
+        prefix = normalize_source_body(prefix).replace("\n", header_newline)
+        return (prefix if prefix.endswith("\n") else prefix + header_newline) + body
+
+    next_source_text = assembled_source()
+    source_changed = next_source_text != resolved.document.source_text
+    if source_changed and not dry_run:
+        next_metadata = source_model.advance_doc_front_matter(next_metadata)
+        updates.update({key: next_metadata[key] for key in ("added_date", "last_updated")})
+        next_source_text = assembled_source()
     return replace(
         resolved.document, source_text=next_source_text, front_matter=next_metadata,
-        body=next_source_body, title=next_metadata["title"],
-        ui_status=source_model.normalize_ui_status(next_metadata.get("ui_status")), report=report, parts=None,
+        body=body, title=next_metadata["title"],
+        ui_status=source_model.normalize_ui_status(next_metadata.get("ui_status")), report=candidate.report, parts=None,
     ), source_changed
 
 
@@ -265,10 +287,13 @@ def save_source_document(
     request_target = source_candidate_target({key: value for key, value in body.items() if key != "media"})
     resolved = resolve_managed_document_target(repo_root, request_target)
     try:
-        prepared, source_changed = prepare_source_candidate(repo_root, request_target, body["source_text"], resolved, dry_run=dry_run)
+        candidate = prepare_source_candidate(repo_root, request_target, body["source_text"], resolved)
     except (ValueError, OSError, RuntimeError) as error:
         raise ValueError(f"Source {resolved.doc_id} candidate preparation failed: {error}") from error
     writes, notes = prepare_source_media(repo_root, resolved, body["media"], media_uploads)
+    adopted_body, adopted_writes = prepare_source_media_adoption(repo_root, resolved, candidate.body, writes)
+    writes.extend(adopted_writes)
+    prepared, source_changed = finish_source_candidate(resolved, candidate, adopted_body, dry_run=dry_run)
     target = resolved.document
     next_source_text = prepared.source_text
     media_change = compare_document_media(

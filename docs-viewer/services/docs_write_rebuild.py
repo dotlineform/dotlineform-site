@@ -17,7 +17,7 @@ from docs_workspace_config import (
     select_workspace_stage,
 )
 from docs_build_manifest import remove_build_manifest
-from docs_publication_preparation import PublicationHandoffError
+from docs_publication_preparation import PublicationHandoffError, PublicationPreparation
 from docs_generation import generate_documents
 from docs_source_model import SourceDoc, parse_source, write_bytes_atomic
 from docs_document_identity import doc_updated_date
@@ -361,6 +361,7 @@ def project_document_position(
 def complete_document_deletion(
     repo_root: Path, owner: ManagedDocumentCollection, doc_ids: list[str],
     selected_payload: dict[str, Any], *, parent_ids: dict[str, str] | None,
+    publication: PublicationPreparation,
 ) -> dict[str, Any]:
     """Apply known document/Links removals using carried configuration and selections."""
     build_dir = Path(__file__).resolve().parents[1] / "build"
@@ -379,14 +380,16 @@ def complete_document_deletion(
         _generated_path(builder.output_dir, builder.manifest_filename)
         for doc_id in doc_ids:
             _generated_path(builder.items_dir, f"{doc_id}.json")
-        result = generate_documents(builder, write=True, documents=[])
     else:
         builder = DocsDataBuilder(**arguments, skip_recent=True)
         _generated_path(builder.output_dir, "index-tree.json")
         for doc_id in doc_ids:
             _generated_path(builder.items_dir, f"{doc_id}.json")
         remove_build_manifest(repo_root, owner.parent_config)
-        result = generate_documents(builder, write=True, documents=[], parent_ids=parent_ids, selected_payload=selected_payload)
+    result = generate_documents(
+        builder, write=True, documents=[], stale_item_ids=doc_ids, parent_ids=parent_ids,
+        selected_payload=selected_payload, update_selected=False, publication=publication,
+    )
     return {"ok": True, "diagnostics": result["diagnostics"]}
 
 

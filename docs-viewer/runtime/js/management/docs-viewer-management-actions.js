@@ -535,6 +535,7 @@ export function createDocsViewerManagementActionController(options) {
     var body = [
       "Document: " + doc.title + " (" + doc.doc_id + ").",
       "Permanently deletes this document and all its descendants, including collapsed rows.",
+      "Also deletes their document-owned media and thumbnails, including unused files.",
       "Documents to delete: " + count + "."
     ];
     var confirmed = await openDocsViewerConfirmModal({

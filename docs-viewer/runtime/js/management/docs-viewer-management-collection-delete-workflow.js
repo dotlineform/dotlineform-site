@@ -38,7 +38,7 @@ export function createDocsViewerManagementCollectionDeleteWorkflow(options) {
       var confirmed = await openDocsViewerConfirmModal({
         root: options.root, restoreFocus: options.restoreFocus || button,
         title: "Delete " + options.title + "?",
-        body: ["Document: " + options.title + " (" + target.doc_id + ").", "Collection: " + target.collection, "Permanently deletes this one collection document."],
+        body: ["Document: " + options.title + " (" + target.doc_id + ").", "Collection: " + target.collection, "Permanently deletes this one collection document and its document-owned media and thumbnail, including unused files."],
         primaryLabel: "Delete document", primaryTone: "danger", initialFocus: "cancel",
         cancelLabel: "Cancel", signal: modalAbortController.signal
       });

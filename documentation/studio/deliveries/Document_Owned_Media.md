@@ -245,4 +245,4 @@ Verification budget: lint/compilation for six changed Python owners, service/bui
 
 ## Follow-on
 
-Manual deletion/reconciliation of existing flat leftovers and partial-write orphans remains author maintenance. An automated orphan purge, cross-document media library, whole-document media deletion, deployment-aware cleanup service or new test collection requires its own explicit scope; none is implied by this delivery.
+Manual deletion/reconciliation of existing flat leftovers and partial-write orphans remains author maintenance. The separately approved 18 October 2026 extensions are maintained under [Source Save Media Adoption](../Media_And_Asset_Handling.md#source-save-media-adoption) and [Document Delete Media Cleanup](../Media_And_Asset_Handling.md#document-delete-media-cleanup). An automated orphan purge, cross-document media library, deployment-aware cleanup service or new test collection requires its own explicit scope; none is implied by this delivery.

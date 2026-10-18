@@ -1,16 +1,60 @@
 """One confirmed exact-target Delete with retained effects and no restoration."""
 
+import os
 from pathlib import Path
 from typing import Any
 
 from docs_document_identity import is_document_id
+from docs_document_images import document_thumbnail_filename
 from docs_index_order import exclude_nodes, index_order_path, index_order_text, read_index_order, tree_parent_ids
 from docs_management_context import log_event
-from docs_management_document_target import normalize_managed_document_target, resolve_managed_document_collection
+from docs_management_document_target import ManagedDocumentCollection, normalize_managed_document_target, resolve_managed_document_collection
+from docs_publication_paths import confined
+from docs_publication_preparation import PublicationHandoffError, PublicationPreparation, load_preparation
 from docs_selected_documents import read_selected, selected_path, selected_text
 from docs_source_model import write_text_atomic
 from docs_workspace_config import require_document_authoring
 from docs_write_rebuild import complete_document_deletion
+
+
+def collect_deleted_media(owner: ManagedDocumentCollection, doc_ids: list[str], publication: PublicationPreparation) -> list[Path]:
+    """Select files beneath only the deleted namespaces and their fixed thumbnails."""
+    media = owner.document_config.media
+    directories: list[Path] = []
+    if media is None:
+        return directories
+    for doc_id in doc_ids:
+        removals: dict[str, list[str]] = {}
+        for kind, config in media.types.items():
+            root = config.asset_location.path
+            identities: list[str] = []
+
+            def collect(directory: Path) -> None:
+                with os.scandir(directory) as entries:
+                    for entry in entries:
+                        identity = Path(entry.path).relative_to(root).as_posix()
+                        path = confined(root, identity)
+                        if entry.is_dir(follow_symlinks=False):
+                            collect(path)
+                        else:
+                            identities.append(identity)
+                            publication.working_removals[(owner.collection, kind, identity)] = path
+                directories.append(directory)
+
+            if kind == "thumbs":
+                identity = document_thumbnail_filename(doc_id, collection=owner.collection)
+                path = confined(root, identity)
+                if path.exists():
+                    identities.append(identity)
+                    publication.working_removals[(owner.collection, kind, identity)] = path
+            else:
+                directory = confined(root, doc_id)
+                if directory.exists():
+                    collect(directory)
+            if identities:
+                removals[kind] = identities
+        publication.media_removals[doc_id] = removals
+    return directories
 
 
 def delete_documents(repo_root: Path, body: dict[str, Any], *, dry_run: bool = False) -> dict[str, Any]:
@@ -33,6 +77,7 @@ def delete_documents(repo_root: Path, body: dict[str, Any], *, dry_run: bool = F
     payload = {
         "ok": True, "target": target, "requested_doc_ids": requested_ids,
         "deleted_doc_ids": [], "source_deleted": False, "generation_complete": False,
+        "media_deleted": False, "media_removal_effects": [], "publication_handoff_complete": False,
         "index_updated": False, "selected_updated": False, "phase": "inputs", "dry_run": dry_run,
     }
     try:
@@ -63,6 +108,10 @@ def delete_documents(repo_root: Path, body: dict[str, Any], *, dry_run: bool = F
         updated_selected = {**selected, "docs": rows}
         if dry_run:
             return {**payload, "delete_doc_ids": delete_ids}
+        payload["phase"] = "media selection"
+        publication = load_preparation(repo_root, owner.workspace)
+        payload["media_removal_effects"] = publication.removal_effects
+        media_directories = collect_deleted_media(owner, delete_ids, publication)
         for doc_id in delete_ids:
             payload.update(phase="source", failing_target={**owner.request_target(), "doc_id": doc_id})
             path = owner.source_root / f"{doc_id}.md"
@@ -80,12 +129,19 @@ def delete_documents(repo_root: Path, body: dict[str, Any], *, dry_run: bool = F
         payload["phase"] = "selected"
         if rows != selected["docs"]:
             write_text_atomic(selected_path(owner.parent_config), selected_text(updated_selected))
+            publication.selected()
         payload["selected_updated"] = True
         payload["phase"] = "generation"
-        payload["rebuild"] = complete_document_deletion(repo_root, owner, delete_ids, updated_selected, parent_ids=parents)
-        payload.update(generation_complete=True, phase="complete", delete_count=len(delete_ids))
+        payload["rebuild"] = complete_document_deletion(repo_root, owner, delete_ids, updated_selected, parent_ids=parents, publication=publication)
+        payload.update(generation_complete=True, publication_handoff_complete=True, phase="Working media folder removal")
+        for directory in media_directories:
+            directory.rmdir()
+        payload["media_deleted"] = True
+        payload.update(phase="complete", delete_count=len(delete_ids))
         payload.pop("failing_target", None)
         log_event(repo_root, "docs-delete", {"collection": owner.collection, "deleted_doc_ids": delete_ids})
     except Exception as error:
+        if isinstance(error, PublicationHandoffError):
+            payload.update(phase=error.phase, generation_complete=True, media_removal_effects=error.removal_effects)
         payload.update(ok=False, delete_count=len(payload["deleted_doc_ids"]), error=f"Delete {owner.collection or 'ordinary documents'} {requested_ids} failed during {payload['phase']}: {error}")
     return payload

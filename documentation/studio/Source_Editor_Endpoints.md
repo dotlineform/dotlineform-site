@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-4b1d77
 title: Source Editor Endpoints
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-17"
+last_updated: "2026-10-18"
 parent_id: d-20260607-222033-647b52
 ---
 # Docs Viewer Source Editor Endpoints
@@ -104,7 +104,8 @@ Actions:
 - resolves the fixed Working target and confines its one source before interpreting editable metadata
 - parses the candidate once through the strict source splitter, binds the mounted document/collection identity and retains field spans for formatting/timestamp rewrites
 - preserves the existing Title/Summary representation, body normalization, readiness, report and Subject rules; nonblank Title feedback belongs to the browser, and ordinary hierarchy/order remains owned by `index-order.json`
-- prepares only the supplied media outputs once under the resolved document configuration, including original-raster validation, requested display/thumbnail encodings and SVG sanitization
+- prepares supplied native media outputs once under the resolved document configuration, including original-raster validation, requested display/thumbnail encodings and SVG sanitization
+- adopts active references to other document-owned Working media by copying exact completed bytes into the current document's namespace and rewriting their source paths; it uses configured owners without reading the originating document or rescanning directories, and leaves original files in place
 - compares only selected exact destinations; matching stored bytes are reused, explicit Edit permits replacement, and unexpected new/competing filenames report authoring errors
 - sanitizes automatically and carries nonblocking change diagnostics in `media_notes`, with no confirmation/resubmission pass
 - completes verified selected media writes before the atomic source write, then carries prepared source/metadata/report/parent information and actual media-write results into explicit exact document/Links generation and queue handoff
@@ -113,6 +114,8 @@ Actions:
 - runs no Search, Publish, media inventory, cross-document requeue scan or unrelated registered media producer
 
 Returned data includes the exact target, saved `source_text`, provider-safe `path`, `source_changed`, `summary_text`, `dry_run`, `media_notes`, `media_effects`, `media_complete`, `source_saved` and `generation_complete`. An unchanged buffer skips its source write while still completing selected media and exact generation. Committed metadata is returned only after source persistence; successful generation also supplies `rebuild` and `publication_handoff_complete`.
+
+The returned `source_text` includes adopted media paths. Ownership rewriting counts as a source change even when the submitted text matched the saved source. Existing managed bytes are copied without re-encoding or re-sanitizing; missing sources and different-content destination conflicts fail before persistence, while identical stored/prepared bytes are reused. Filename allocation, foreign-file deletion and remote recovery are excluded. [Source Save Media Adoption](Media_And_Asset_Handling.md#source-save-media-adoption) defines reference forms, literal boundaries, scope and save-order behavior.
 
 Preparation errors make no permanent writes. Later failures return HTTP 500 with the failed `phase`, exact target, accurate completion flags and selected media effects identified by role/type/relative identity. Effects distinguish attempted, written, verified and unchanged outputs; partial writes may leave manual cleanup orphans. A source-write failure retains useful Files and the draft. A generation failure reports saved source and completed media, so that persisted buffer is marked clean and Files are released. A completed local generation with failed publication handoff remains a distinct result. Working removal failures identify `phase: "Working media removal"`, the exact failed identity and completed `media_removal_effects`, while preserving queued public removals. Any remaining Working orphan is cleaned manually; Rebuild does not replay an earlier in-memory comparison. Later handoff failures also carry completed removal effects. Display failure reports completed persistence/generation separately. There is no rollback, persistent recovery state or automatic retry.
 
