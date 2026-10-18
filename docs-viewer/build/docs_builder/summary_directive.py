@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import html
-import re
 from typing import Any
 
 from markdown_it.rules_block import StateBlock
@@ -14,11 +12,11 @@ from markdown_renderer import build_markdown_renderer, normalize_markdown_blank_
 SUMMARY_DIRECTIVE = "[[summary]]"
 
 
-def install_summary_rule(renderer: Any, *, summary: str) -> None:
+def install_summary_rule(renderer: Any, *, summary_html: str) -> None:
     """Expand exact standalone blocks after parsing, preserving literal contexts.
 
-    The caller supplies the document's normalized metadata text. Summary content
-    is escaped directly into HTML and never parsed as Markdown or more tokens.
+    The caller supplies completed restricted Summary markup. This rule wraps it
+    without reparsing the authored text or interpreting more semantic tokens.
     """
     def parse(state: StateBlock, start_line: int, end_line: int, silent: bool) -> bool:
         del end_line
@@ -35,14 +33,9 @@ def install_summary_rule(renderer: Any, *, summary: str) -> None:
 
     def render(tokens: Any, index: int, options: Any, env: Any) -> str:
         del tokens, index, options, env
-        if not summary:
+        if not summary_html:
             return ""
-        paragraphs = re.split(r"\n[ \t]*\n+", summary)
-        content = "".join(
-            "<p>" + "<br>\n".join(html.escape(line) for line in paragraph.split("\n")) + "</p>"
-            for paragraph in paragraphs
-        )
-        return f'<div class="docsViewer__summary">{content}</div>\n'
+        return f'<div class="docsViewer__summary">{summary_html}</div>\n'
 
     # Do not interrupt a paragraph: its inline code may span this entire line.
     renderer.block.ruler.before("paragraph", "docs_summary", parse, {"alt": ["reference", "blockquote", "list"]})
@@ -55,7 +48,7 @@ def omit_summary_directives(markdown: str) -> str:
         return markdown
     normalized = normalize_markdown_blank_lines(markdown)
     renderer = build_markdown_renderer()
-    install_summary_rule(renderer, summary="")
+    install_summary_rule(renderer, summary_html="")
     lines = normalized.splitlines(keepends=True)
     for token in renderer.parse(normalized):
         if token.type == "docs_summary":

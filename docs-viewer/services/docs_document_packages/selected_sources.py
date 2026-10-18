@@ -142,6 +142,7 @@ def prepare_selected_context(
         from docs_builder.collection import CollectionDocsBuilder
         from docs_builder.related_links import prepare_related_links
         from docs_builder.rendering_inputs import prepare_catalogue_works
+        from docs_builder.summary_formatting import render_summary_paragraphs
 
         arguments = {"repo_root": repo_root, "config": owner.parent_config, "workspace": owner.workspace}
         builder = CollectionDocsBuilder(**arguments, collection=owner.document_config) if owner.collection else DocsDataBuilder(**arguments)
@@ -161,6 +162,8 @@ def prepare_selected_context(
         workspace_config=owner.parent_config, source_root=owner.source_root, builder=builder,
         source_docs=source_docs, records=[], records_by_id={}, source_docs_by_id=identities,
         children_by_parent={}, render_cache={},
-        render_document=(lambda doc: builder.document_content_html(doc, identities)) if render_content else None,
+        render_document=(lambda doc: builder.document_content_html(
+            doc, identities, summary_html=render_summary_paragraphs(doc.summary),
+        )) if render_content else None,
     )
     return context, docs, selected

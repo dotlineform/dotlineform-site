@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260629-152159-ac1af9
 title: Export
 added_date: "2026-06-29 15:21:59"
-last_updated: "2026-10-14 17:52:58"
+last_updated: "2026-10-18"
 summary: create guarded dated self-contained HTML snapshots from an invoked ordinary subtree or the workspace and its referenced media
 parent_id: d-20260424-000000-50b63f
 ---
@@ -42,7 +42,7 @@ Capability discovery checks configured input locations without parsing the Index
 
 Export reads generated hierarchy, titles, and `content_html`. It does not parse canonical Markdown, rebuild documents, or apply a second publishability filter.
 
-An expanded `[[summary]]` remains escaped plain text with explicit `<br>` and paragraph elements. Both the browseable snapshot and `portable.html` retain those breaks and include Summary panel/paragraph styling; YAML syntax is not part of either HTML output. Export does not place a metadata-only Summary into the body automatically. Rebuild the owning generated documents to obtain changed rendering before creating a new snapshot. Existing exported folders are unchanged until explicitly exported/replaced. [Package Prepare](Package_Prepare.md#package-output) separately flattens Summary for its text-oriented packages.
+An expanded `[[summary]]` contains the builder's restricted bold/italic markup, escaped literal HTML and explicit `<br>`/paragraph elements. Both the browseable snapshot and `portable.html` retain that formatting and include Summary panel/paragraph styling; YAML syntax is not part of either HTML output. Export does not place a metadata-only Summary into the body automatically. Rebuild the owning generated documents to obtain changed rendering before creating a new snapshot. Existing exported folders are unchanged until explicitly exported/replaced. [Package Prepare](Package_Prepare.md#package-output) separately flattens Summary for its text-oriented packages.
 
 From the exact selected generated HTML, Export recognizes media only when a supported URL attribute maps beneath an exact configured served prefix for the workspace and media type. It then reads the confined identity through that media type's configured repository, external-local, or R2 artifact location. Missing, invalid, escaping, or unreadable owned media blocks preview. Unmatched media references remain external and unchanged; Export does not fetch their served URLs or inventory unrelated media.
 

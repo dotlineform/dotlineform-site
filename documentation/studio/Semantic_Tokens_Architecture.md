@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260714-234030-434069
 title: Semantic Tokens Architecture
 added_date: "2026-07-14 23:40:30"
-last_updated: "2026-10-11 00:00:00"
+last_updated: "2026-10-18"
 summary: Describe Docs-owned image and explicit Catalogue tokens, source editing, document relationships, and local/public media resolution.
 parent_id: d-20260725-153656-516b61
 ---
@@ -87,7 +87,7 @@ For each Work image, the shared document builder reads `works/index/<work_id>.js
 
 Docs-owned and Catalogue image tokens share the viewer's `figcaption` styling. Caption and summary text use Small (14px at the default root size); captions and bold summary spans are semibold (600), while other summary text retains normal weight. The shared CSS controls this presentation on public and Manage readers.
 
-Both image-token Summary fields accept inline Markdown emphasis: `*italic*`, `**bold**` and `***bold italic***`, with the equivalent underscore forms and normal nesting. Backslash escapes such as `\*` preserve literal punctuation. The unchanged token format stores the authored summary as canonical percent-encoded text. `render_image_summary` in `docs_builder/semantic_tokens.py` uses a separate `MarkdownIt("zero")` instance with only `emphasis` and `escape` enabled, rendering the decoded summary inline before constructing the figure fragment. Line breaks are retained. HTML, links, images, code, headings and other Markdown features remain ordinary escaped text; captions, alt text and Media View labels retain their literal-text rendering. Source modals remain plain textareas without formatting hints or controls. Source Save, an exact document Rebuild or a later full Build renders the current summary; existing generated content keeps its previous rendering until rebuilt. The normal document Markdown renderer and Search exclusion policy are unchanged.
+Both image-token Summary fields accept inline Markdown emphasis: `*italic*`, `**bold**` and `***bold italic***`, with the equivalent underscore forms and normal nesting. Backslash escapes such as `\*` preserve literal punctuation. The unchanged token format stores the authored summary as canonical percent-encoded text. `render_summary_inline` in `docs_builder/summary_formatting.py` uses a separate `MarkdownIt("zero")` instance with only `emphasis` and `escape` enabled, rendering the decoded summary inline before constructing the figure fragment. This owner also prepares document Summary paragraphs with their separate line-break handling. Image line breaks are retained. HTML, links, images, code, headings and other Markdown features remain ordinary escaped text; captions, alt text and Media View labels retain their literal-text rendering. Source modals remain plain textareas without formatting hints or controls. Source Save, an exact document Rebuild or a later full Build renders the current summary; existing generated content keeps its previous rendering until rebuilt. The normal document Markdown renderer and Search exclusion policy are unchanged.
 
 The browser resolves those markers using generated Catalogue data and the shared [Media View](Catalogue_Media_View.md) presentation. This is also the public path: it requires public generated Catalogue data, not local authoring endpoints or document existence.
 

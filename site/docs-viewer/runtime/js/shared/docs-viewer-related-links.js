@@ -4,7 +4,7 @@ import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
  * @typedef {Object} RelatedLinksCapture
  * @property {{collection: string, doc_id: string}} target Exact loaded document identity.
  * @property {string} title Captured payload title, used by the panel shell.
- * @property {string} summary Optional plain-text payload summary.
+ * @property {string} [summaryHtml] Optional builder-rendered Summary paragraphs.
  * @property {HTMLElement} [list] Detached copy of the generated list, with resolved routes and icons.
  */
 
@@ -47,7 +47,7 @@ export function mountDocsViewerRelatedLinks(options) {
       settings.onPin(Object.freeze({
         target: Object.freeze({ collection: target.collection || "", doc_id: target.doc_id }),
         title: String(payload.title || ""),
-        summary: String(payload.summary || "").replace(/\r\n?/g, "\n").trim(),
+        summaryHtml: payload.summary_html,
         list: list.cloneNode(true)
       }));
     });
@@ -70,16 +70,7 @@ export function createDocsViewerRelatedLinksView() {
     if (!capture) return;
     var body = mount.ownerDocument.createElement("div");
     body.className = "docsViewer__relatedLinksBody";
-    if (capture.summary) {
-      capture.summary.split(/\n[ \t]*\n+/).forEach(function (paragraph) {
-        var summary = mount.ownerDocument.createElement("p");
-        paragraph.split("\n").forEach(function (line, index) {
-          if (index) summary.appendChild(mount.ownerDocument.createElement("br"));
-          summary.appendChild(mount.ownerDocument.createTextNode(line));
-        });
-        body.appendChild(summary);
-      });
-    }
+    if (capture.summaryHtml) body.innerHTML = capture.summaryHtml;
     if (capture.list) body.appendChild(capture.list.cloneNode(true));
     if (body.childNodes.length) mount.appendChild(body);
   }

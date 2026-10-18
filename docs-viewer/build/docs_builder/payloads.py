@@ -12,6 +12,7 @@ from .rendering import add_missing_image_titles
 from .source import DocRecord, DocumentIdentity
 from .ordinary_metadata import OrdinaryDocumentSummary
 from .related_links import render_related_links
+from .summary_formatting import render_summary_paragraphs
 from docs_discovery_selection import DiscoverySelection, select_collection_documents, select_ordinary_documents
 from docs_recent_exclusions import read_recent_exclusions
 from docs_recent_payload import build_recent_payload, recent_candidates as discovery_recent_candidates
@@ -24,16 +25,20 @@ class PayloadBuilderMixin:
         doc: DocRecord,
         docs_by_id: Mapping[str, DocumentIdentity],
     ) -> dict[str, Any]:
-        content_html = self.document_content_html(doc, docs_by_id)
+        summary_html = render_summary_paragraphs(doc.summary)
+        content_html = self.document_content_html(doc, docs_by_id, summary_html=summary_html)
         entry = self.by_id_metadata_entry(doc, docs_by_id)
+        if summary_html:
+            entry["summary_html"] = summary_html
         entry["content_html"] = content_html
         return entry
 
-    def document_content_html(self, doc: DocRecord, docs_by_id: Mapping[str, DocumentIdentity]) -> str:
+    def document_content_html(self, doc: DocRecord, docs_by_id: Mapping[str, DocumentIdentity], *, summary_html: str) -> str:
         """Render the body through its report, token, Links and URL owners.
 
         Package content consumes HTML without constructing unused by-ID metadata.
         Normal document generation projects that metadata through item_entry.
+        Both callers supply their prepared Summary, preserving package flattening.
         """
         try:
             projected_markdown = project_report_markdown(
@@ -46,7 +51,7 @@ class PayloadBuilderMixin:
                 document_id=doc.doc_id,
             )
             rendered = self.inline_icons.render_markdown(
-                resolved, related_links=lambda heading: render_related_links(self, doc, heading), summary=doc.summary,
+                resolved, related_links=lambda heading: render_related_links(self, doc, heading), summary_html=summary_html,
             )
         except ValueError as exc:
             collection = getattr(self, "collection_id", "")

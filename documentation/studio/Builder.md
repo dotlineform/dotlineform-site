@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260423-000000-c9f3ea
 title: Builder
 added_date: "2026-04-23 00:00:00"
-last_updated: "2026-10-17"
+last_updated: "2026-10-18"
 parent_id: d-20260424-000000-50b63f
 ---
 # Builder
@@ -230,9 +230,13 @@ In Source, type two spaces at the start of each Summary content line; Tab is not
 
 Summary normalization converts CRLF/CR to LF and trims outer whitespace, retaining internal text, newlines and blank lines. General source serialization writes multiline Summary using `|-`; targeted Source normalization leaves an already normalized authored representation intact. Source rewrites operate on complete field spans, so indented `#`, colons, field-looking lines and `---` inside a literal block remain text instead of becoming metadata or delimiters. Metadata changes and timestamp updates do not rewrite Summary content inadvertently.
 
-The shared ordinary/collection payload builder supplies this string to `summary_directive.py` through the Markdown renderer. Each standalone occurrence becomes escaped paragraphs inside `.docsViewer__summary`; a newline within a paragraph becomes `<br>`, and blank-line runs separate paragraphs. The panel retains the quote style's theme-aware background, spacing and padding without its border. Markdown, HTML and tokens inside Summary are displayed literally. A missing or blank Summary produces no block. Inline occurrences, escaped tokens, fenced/indented code, comments and raw HTML retain normal literal behavior. No token options or automatic placement are supported. The Info panel displays the same paragraph/line-break meaning from its captured metadata string using safe text nodes.
+Summary accepts restricted inline Markdown emphasis: `*italic*`, `**bold**`, `***bold italic***`, equivalent underscore forms and normal nesting. Backslash escapes retain literal punctuation. For example, `summary: "A **bold** point with *italic* emphasis."` uses the existing scalar syntax; the same formatting works in multiline Summary. Raw HTML, links, images, code and semantic tokens remain escaped literal text. Front matter and metadata retain the authored string.
+
+The shared ordinary/collection payload builder uses `summary_formatting.py` to prepare Summary paragraphs once. It shares image summaries' restricted `markdown-it-py` emphasis/escape rules; document paragraphs additionally enable newline handling with explicit `<br>` output, and blank-line runs separate paragraphs. The optional by-ID `summary_html` field holds this completed fragment. `summary_directive.py` wraps the same fragment for each standalone occurrence inside `.docsViewer__summary`, without parsing again. The panel retains the quote style's theme-aware background, spacing and padding without its border. A missing or blank Summary produces neither a fragment nor a block. Inline occurrences, escaped tokens, fenced/indented code, comments and raw HTML retain normal literal behavior. No token options or automatic placement are supported. The pinned Info panel captures the completed fragment with its generated Related Links list and mounts it unchanged; it has no Markdown parser, source lookup or fallback rendering path.
 
 Source retains the token and front matter. Working generation expands Summary and prepares the same public content upstream; readers need no runtime lookup. Static Export consumes expanded by-ID content. [Package Prepare](Package_Prepare.md) retains its separate flattened Summary policy. Search remains explicitly rebuilt, and ordinary Summary edits follow awaited Source Save without rebuilding Search.
+
+The emphasis extension requires regeneration of existing Working summaries before reloading the updated Info reader, followed by the separate Publish operation for public document data. Source Save or an exact Rebuild prepares the new representation for later edits. [Summary Emphasis](deliveries/Summary_Emphasis.md) records implementation evidence and manual acceptance limits.
 
 The multiline extension on 2026-10-07 has focused Python/JavaScript lint, Python syntax/import diagnostics, shared runtime projection/site validation, Working docs-only reconciliation and bounded source-review evidence. The user accepted the delivery on 2026-10-07 after spaces-based authoring guidance. No behavior tests, browser checks, real package preparation/Import or Export actions were run by Codex, and detailed manual outcomes were not recorded; acceptance does not add behavioral evidence. Public document data awaits separately authorized Publish.
 
