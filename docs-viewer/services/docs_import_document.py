@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import copy
 import sys
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Any
 
@@ -20,7 +20,7 @@ from docs_import_content import (  # noqa: E402
     CONTENT_INTENT_REPLACE,
     ImportContent,
 )
-from docs_import_media import materialize_import_media  # noqa: E402
+from docs_import_media import ImportMediaPreparation, materialize_import_media  # noqa: E402
 from docs_import_source_helpers import import_summary_text, relative_path, viewer_url_for  # noqa: E402
 from docs_import_source_interactive import materialize_interactive_html_assets  # noqa: E402
 from docs_management_document_target import ManagedDocumentCollection, committed_document_record  # noqa: E402
@@ -46,7 +46,6 @@ from docs_source_model import (  # noqa: E402
     write_text_atomic_new,
 )
 from docs_workspace_config import DocsStageConfig, DocsCollectionConfig, require_document_authoring  # noqa: E402
-from docs_import_media import bind_import_media_owner  # noqa: E402
 from docs_index_order import index_order_path, index_order_text, insert_node, read_index_order, tree_parent_ids  # noqa: E402
 from markdown_renderer import normalize_markdown_blank_lines  # noqa: E402
 from docs_report_source import RETIRED_REPORT_KEYS, parse_report_source  # noqa: E402
@@ -65,13 +64,9 @@ class ImportDocumentMediaContext:
     """Staged-source inputs required to materialize one document's media."""
 
     staging_root: Path
-    workspace_root: Path
     source_path: Path
-    include_prompt_meta: bool = False
     interactive_html_plans: tuple[dict[str, Any], ...] = ()
     allow_interactive_html_overwrite: bool = False
-    source_markdown: str = ""
-    source_svg_markup: str = ""
 
 
 @dataclass(frozen=True)
@@ -92,6 +87,7 @@ class ImportDocumentPlan:
     collection: str = ""
     target: SourceDoc | None = None
     media_change: DocumentMediaChange | None = None
+    inline_media_bytes: dict[tuple[str, str], bytes] = field(default_factory=dict)
 
     @property
     def media_changes(self) -> list[tuple[str, Any, DocumentMediaChange]]:
@@ -143,9 +139,9 @@ def _explicit_front_matter(record: ImportContent) -> dict[str, Any]:
         for field in ALLOWED_IMPORT_FRONT_MATTER_FIELDS
         if field in record.front_matter
     }
-    for field in ("title", "parent_id", "summary"):
-        if field in front_matter and not isinstance(front_matter[field], str):
-            raise ValueError(f"ImportContent front_matter {field} must be a string")
+    for field_name in ("title", "parent_id", "summary"):
+        if field_name in front_matter and not isinstance(front_matter[field_name], str):
+            raise ValueError(f"ImportContent front_matter {field_name} must be a string")
     if "title" in front_matter and _clean_text(front_matter["title"]) != _clean_text(record.title):
         raise ValueError("ImportContent title must match front_matter title")
     declared_parent_id = _clean_text(front_matter.get("parent_id"))
@@ -254,6 +250,7 @@ def plan_import_document(
     import_preview: dict[str, Any] | None = None,
     create_doc_id: str = "",
     create_added_date: str = "",
+    media_preparation: ImportMediaPreparation | None = None,
     collection: ManagedDocumentCollection | None = None,
     preserve_collection_metadata: bool = False,
     custom_front_matter: dict[str, Any] | None = None,
@@ -322,7 +319,6 @@ def plan_import_document(
     else:
         added_date = ""
 
-    bind_import_media_owner(preview, document_config, doc_id=record.doc_id)
     explicit_front_matter = _explicit_front_matter(record)
     normalized_custom_front_matter: dict[str, Any] = {}
     if custom_front_matter is not None:
@@ -379,6 +375,7 @@ def plan_import_document(
         title=title,
         parent_id=parent_id,
         import_preview=preview,
+        inline_media_bytes=media_preparation.inline_bytes if media_preparation is not None else {},
         committed_record=committed_document_record(front_matter, record.doc_id, document_config, collection=collection_id, parent_id=parent_id),
         index_order_path=index_order_path(parent_config) if operation == IMPORT_DOCUMENT_CREATE and not collection_id else None,
         document_config=document_config,
@@ -432,12 +429,9 @@ def materialize_import_document_media(
         inline_media_written = materialize_import_media(
             repo_root,
             staging_root=media_context.staging_root,
-            workspace_root=media_context.workspace_root,
             source_path=media_context.source_path,
             import_preview=plan.import_preview,
-            include_prompt_meta=media_context.include_prompt_meta,
-            source_markdown=media_context.source_markdown,
-            source_svg_markup=media_context.source_svg_markup,
+            inline_bytes=plan.inline_media_bytes,
             config=plan.document_config,
         )
         interactive_html_written = materialize_interactive_html_assets(

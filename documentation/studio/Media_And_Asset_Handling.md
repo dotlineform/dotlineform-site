@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260514-184303-7914e2
 title: Media And Asset Handling
 added_date: "2026-05-14 18:43:03"
-last_updated: "2026-10-16"
+last_updated: "2026-10-18"
 summary: Media intake, content interpretation, document representation, storage, link resolution, extension methods, and safety boundaries.
 parent_id: d-20260424-000000-50b63f
 
@@ -196,11 +196,13 @@ The distinct configuration and redundancy review confirmed one publication desti
 
 `docs_import_media.py` creates logical links and materializes embedded document-import media. `docs_source_media_service.py` owns native source-editor media validation, naming, decisions and materialisation; `docs_source_image_conversion.py` prepares native raster display images, while the existing storage, sanitizer and document-thumbnail owners perform the required writes.
 
-- Inline raster data URLs are decoded to deterministic `<doc_id>-image-NN.<ext>` names.
-- HTML-inline SVG is sanitized from its original fragment to deterministic `<doc_id>-image-NN.svg` names, preserving case-sensitive SVG names and safe stylesheet text rather than reusing HTML-parser serialization. Preview and Apply share import-owned escaping of bare ampersands before strict SVG XML parsing, so text such as `marks & RNAs` imports without a source edit. Existing entity references and literal CDATA, comments and processing instructions pass through unchanged to the sanitizer. Other XML errors and unsafe content remain owned by the strict shared sanitizer; standalone SVG intake retains that same strict boundary without HTML escaping.
+- Inline raster data URLs are decoded once to deterministic `<doc_id>-image-NN.<ext>` names; prepared bytes pass through the internal document plan to the media writer.
+- HTML-inline SVG is sanitized from its original fragment to deterministic `<doc_id>-image-NN.svg` names, preserving case-sensitive SVG names and safe stylesheet text rather than reusing HTML-parser serialization. Preview and Apply share import-owned escaping of bare ampersands and supply the standard `xmlns:xlink="http://www.w3.org/1999/xlink"` declaration on the extracted SVG root when an `xlink:` prefix is used without a root declaration. Text such as `marks & RNAs` and HTML's implicitly namespaced `xlink:href` attributes therefore import without a source edit. Existing root namespace declarations, entity references and literal CDATA, comments and processing instructions pass through unchanged to the sanitizer. Other XML errors and unsafe content remain owned by the strict shared sanitizer; standalone SVG intake retains that same strict boundary without HTML conversion.
 - Markdown package images are converted to WebP, limited to 800px width without upscaling, and rejected if animation would be flattened.
 - Package attachments retain their bytes and receive readable `<doc_id>-attachment-NN.<ext>` names.
-- A replacement `doc_id` retargets generated filenames and source links before write.
+- The resolved destination and final document identity are supplied before media planning. Plans contain their complete document-owned artifact identities and tokens immediately; no later filename retargeting or owner rebinding runs. The standalone preview CLI derives its preview identity from the source.
+
+Inline SVG sanitization also runs once per conversion. Prepared bytes remain outside JSON preview metadata and are reused during materialisation without re-reading or re-extracting the source. [Docs Import Architecture](Docs_Import_Architecture.md#import-media-preparation) owns this internal handoff and its retained safety boundaries.
 
 Native source-editor raster additions and selected-file replacements produce one static WebP with an exactly 800px long edge, scaling up or down proportionally without cropping. `docs_source_image_conversion.py` uses the pinned Pillow decoder to validate JPEG, PNG, static WebP and single-frame GIF contents, rejecting animated inputs before permanent writes. FFmpeg performs Lanczos scaling and uses `libwebp`, `photo`, quality 82, compression level 6 and stripped metadata. These initial encoding settings match Works primary images but are explicitly Docs-owned; native sizing does not use Works' width-based/no-upscale rule or import Studio pipeline code/configuration. Conversion happens in operation-owned temporary storage before collision comparison. No srcset or additional display variants are generated. Small-input upscaling standardizes dimensions without recovering detail; large or text-heavy images may need author review at 800px. Missing dependencies, invalid images and conversion failures stop the operation without storing display media or a thumbnail.
 

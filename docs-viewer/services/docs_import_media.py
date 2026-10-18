@@ -7,6 +7,7 @@ import base64
 import binascii
 import re
 import tempfile
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -15,11 +16,10 @@ from docs_import_common import (
     MARKDOWN_INLINE_RASTER_IMAGE_PATTERN,
     normalize_space,
     slugify,
-    source_format_for_path,
 )
 from docs_workspace_config import (
     DocsManagedMediaConfig, DocsStageConfig, DocsCollectionConfig,
-    load_docs_media_owner, managed_media_config,
+    managed_media_config,
 )
 from docs_media_storage import (
     docs_media_file,
@@ -36,24 +36,40 @@ INLINE_SVG_XML_ESCAPE_PATTERN = re.compile(
     r"<!\[CDATA\[.*?\]\]>|<!--.*?-->|<\?.*?\?>|&(?!(?:#\w+|[\w:][\w.:-]*);)",
     re.DOTALL,
 )
+INLINE_SVG_XLINK_DECLARATION_PATTERN = re.compile(
+    r"""<(?i:svg)\b(?:[^>"']|"[^"]*"|'[^']*')*?\sxmlns:xlink\s*=""",
+)
 INLINE_MEDIA_SOURCE_KINDS = {"inline_data_url", "inline_svg"}
 
 
+@dataclass
+class ImportMediaPreparation:
+    """One conversion's resolved owner, identity and prepared inline bytes."""
+
+    config: DocsStageConfig | DocsCollectionConfig
+    doc_id: str = ""
+    inline_bytes: dict[tuple[str, str], bytes] = field(default_factory=dict)
+
+
 def sanitize_inline_svg_markup(markup: str) -> SanitizedSvg:
-    """Escape HTML's bare ampersands before the strict SVG XML boundary."""
+    """Make HTML's ampersands and implicit XLink binding explicit for SVG XML."""
     # Preserve literal XML sections and entity-shaped references. The sanitizer
     # still owns XML validity, including unsupported or malformed references.
     escaped = INLINE_SVG_XML_ESCAPE_PATTERN.sub(
         lambda match: "&amp;" if match.group(0) == "&" else match.group(0),
         markup,
     )
+    # HTML supplies the XLink namespace implicitly; an extracted XML root must
+    # declare it. Skip quoted attribute values when looking for an existing binding.
+    if "xlink:" in escaped and not INLINE_SVG_XLINK_DECLARATION_PATTERN.match(escaped):
+        escaped = re.sub(
+            r"^<svg\b",
+            r'\g<0> xmlns:xlink="http://www.w3.org/1999/xlink"',
+            escaped,
+            count=1,
+            flags=re.IGNORECASE,
+        )
     return sanitize_svg_bytes(escaped)
-
-
-def media_config_for(media_class: str, repo_root: Path | None):
-    if repo_root is None:
-        raise ValueError("repo_root is required to resolve the media owner")
-    return managed_media_config(load_docs_media_owner(repo_root), media_class)
 
 
 def next_inline_media_filename(staging_root: Path, doc_id: str, extension: str, used_filenames: set[str]) -> str:
@@ -73,7 +89,7 @@ def inline_media_plan(
     title: str,
     *,
     media_class: str = "img",
-    repo_root: Path | None = None,
+    preparation: ImportMediaPreparation,
     staging_root: Path,
     workspace_root: Path,
     mime_type: str,
@@ -81,7 +97,11 @@ def inline_media_plan(
     source: str,
 ) -> dict[str, Any]:
     source_path = Path(filename)
-    plan = build_media_plan(media_class, source_path, title, repo_root=repo_root)
+    plan = build_media_plan(
+        media_class, source_path, title,
+        media_config=managed_media_config(preparation.config, media_class),
+        artifact_identity=f"{preparation.doc_id}/{filename}",
+    )
     plan.update(
         {
             "source": source,
@@ -94,7 +114,7 @@ def inline_media_plan(
 
 
 def apply_inline_raster_media_plans(
-    repo_root: Path,
+    preparation: ImportMediaPreparation,
     staging_root: Path,
     workspace_root: Path,
     summary: dict[str, Any],
@@ -132,7 +152,7 @@ def apply_inline_raster_media_plans(
         plan = inline_media_plan(
             filename,
             title,
-            repo_root=repo_root,
+            preparation=preparation,
             staging_root=staging_root,
             workspace_root=workspace_root,
             mime_type=f"image/{'jpeg' if extension == 'jpg' else extension}",
@@ -140,6 +160,7 @@ def apply_inline_raster_media_plans(
             source="inline_data_url",
         )
         plans.append(plan)
+        preparation.inline_bytes[("img", filename)] = decoded
         inline_plans.append(plan)
         return f"![{match.group('alt')}]({plan['media_token']})"
 
@@ -150,12 +171,12 @@ def apply_inline_raster_media_plans(
 
 
 def apply_inline_svg_media_plans(
-    repo_root: Path,
+    preparation: ImportMediaPreparation,
     staging_root: Path,
     workspace_root: Path,
     summary: dict[str, Any],
     *,
-    source_svg_markup: str = "",
+    source_svg_markup: str,
 ) -> None:
     markdown = str(summary.get("markdown_preview") or "")
     if "<svg" not in markdown.lower():
@@ -164,7 +185,7 @@ def apply_inline_svg_media_plans(
     markdown_matches = list(INLINE_SVG_PATTERN.finditer(markdown))
     source_fragments = [
         match.group(0)
-        for match in INLINE_SVG_PATTERN.finditer(source_svg_markup or markdown)
+        for match in INLINE_SVG_PATTERN.finditer(source_svg_markup)
     ]
     if len(source_fragments) != len(markdown_matches):
         raise ValueError("HTML inline SVG extraction no longer matches the structured document conversion")
@@ -191,7 +212,7 @@ def apply_inline_svg_media_plans(
             filename,
             title,
             media_class="svg",
-            repo_root=repo_root,
+            preparation=preparation,
             staging_root=staging_root,
             workspace_root=workspace_root,
             mime_type="image/svg+xml",
@@ -199,6 +220,7 @@ def apply_inline_svg_media_plans(
             source="inline_svg",
         )
         plans.append(plan)
+        preparation.inline_bytes[("svg", filename)] = sanitized.bytes
         inline_plans.append(plan)
         warnings.extend(sanitized.warnings)
         safe_alt = title.replace("[", r"\[").replace("]", r"\]")
@@ -208,104 +230,6 @@ def apply_inline_svg_media_plans(
     if inline_plans:
         summary["markdown_preview"] = normalized
         summary["media_plans"] = plans
-
-
-def retarget_inline_media_plans(
-    repo_root: Path,
-    staging_root: Path,
-    workspace_root: Path,
-    summary: dict[str, Any],
-) -> None:
-    plans = summary.get("media_plans")
-    if not isinstance(plans, list) or not plans:
-        return
-
-    proposed_doc_id = str(summary.get("proposed_doc_id") or summary.get("title") or "imported-doc")
-    used_filenames: set[str] = {
-        str(plan.get("source_path") or "")
-        for plan in plans
-        if isinstance(plan, dict)
-        and plan.get("source") not in INLINE_MEDIA_SOURCE_KINDS
-        and str(plan.get("source_path") or "")
-    }
-    markdown = str(summary.get("markdown_preview") or "")
-    warnings = summary.get("warnings") if isinstance(summary.get("warnings"), list) else []
-
-    for index, plan in enumerate(plans):
-        if not isinstance(plan, dict):
-            continue
-        if plan.get("source") not in INLINE_MEDIA_SOURCE_KINDS:
-            continue
-        old_token = str(plan.get("media_token") or "")
-        old_filename = str(plan.get("source_path") or "")
-        extension = Path(old_filename).suffix.lstrip(".") or "png"
-        source_kind = str(plan.get("source") or "")
-        media_class = "svg" if source_kind == "inline_svg" else "img"
-        new_filename = next_inline_media_filename(staging_root, proposed_doc_id, extension, used_filenames)
-        new_plan = inline_media_plan(
-            new_filename,
-            str(plan.get("title") or f"Inline image {index + 1:02d}"),
-            media_class=media_class,
-            repo_root=repo_root,
-            staging_root=staging_root,
-            workspace_root=workspace_root,
-            mime_type=str(plan.get("mime_type") or f"image/{'jpeg' if extension == 'jpg' else extension}"),
-            size_bytes=int(plan.get("size_bytes") or 0),
-            source=source_kind,
-        )
-        if old_token:
-            markdown = markdown.replace(old_token, new_plan["media_token"], 1)
-        if old_filename != new_filename:
-            old_media_path = media_path_for(media_class, old_filename, repo_root=repo_root)
-            for warning_index, warning in enumerate(warnings):
-                if isinstance(warning, str) and old_filename in warning:
-                    warnings[warning_index] = warning.replace(old_filename, new_filename).replace(
-                        old_media_path,
-                        new_plan["media_path"],
-                    )
-        plans[index] = new_plan
-    summary["markdown_preview"] = markdown
-
-def raw_markdown_for_inline_media(source_path: Path, *, include_prompt_meta: bool) -> str:
-    source_format = source_format_for_path(source_path)
-    if source_format == "html":
-        from docs_html_markdown import html_to_markdown
-
-        source_html = source_path.read_text(encoding="utf-8", errors="replace")
-        return html_to_markdown(source_html, include_prompt_meta=include_prompt_meta).markdown
-    if source_format == "markdown":
-        from docs_import_preview import (
-            build_markdown_summary,
-            normalize_ordinary_markdown_front_matter,
-        )
-
-        markdown, front_matter_title, _diagnostics, _warnings = (
-            normalize_ordinary_markdown_front_matter(
-                source_path.read_text(encoding="utf-8", errors="replace"),
-                source_name=source_path.name,
-            )
-        )
-        summary = build_markdown_summary(
-            markdown,
-            source_path.stem,
-            front_matter_title=front_matter_title,
-        )
-        return str(summary.get("markdown_preview") or "")
-    if source_format == "markdown_package":
-        from docs_import_markdown_package import find_package_markdown_file, normalize_apple_notes_caption_spans
-        from docs_import_preview import normalize_ordinary_markdown_front_matter
-
-        markdown_path = find_package_markdown_file(source_path)
-        markdown, _title, _diagnostics, _warnings = (
-            normalize_ordinary_markdown_front_matter(
-                normalize_apple_notes_caption_spans(
-                    markdown_path.read_text(encoding="utf-8", errors="replace"),
-                ),
-                source_name=markdown_path.relative_to(source_path).as_posix(),
-            )
-        )
-        return markdown
-    return ""
 
 
 def package_media_source_path(package_root: Path, plan: dict[str, Any]) -> Path:
@@ -359,15 +283,11 @@ def materialize_import_media(
     repo_root: Path,
     *,
     staging_root: Path,
-    workspace_root: Path,
     source_path: Path,
     import_preview: dict[str, Any],
-    include_prompt_meta: bool,
-    source_markdown: str = "",
-    source_svg_markup: str = "",
+    inline_bytes: dict[tuple[str, str], bytes],
     config: DocsStageConfig | DocsCollectionConfig,
 ) -> list[dict[str, Any]]:
-    del workspace_root
     plans: list[dict[str, Any]] = []
     raw_plans = import_preview.get("media_plans")
     if isinstance(raw_plans, list):
@@ -377,43 +297,6 @@ def materialize_import_media(
         plans.append(raw_plan)
     if not plans:
         return []
-
-    if "scope" in import_preview:
-        raise ValueError("scope-bearing import previews are retired; recreate the preview")
-    inline_plans = [plan for plan in plans if plan.get("source") in INLINE_MEDIA_SOURCE_KINDS]
-    inline_bytes: dict[int, bytes] = {}
-    if inline_plans:
-        raw_markdown = source_markdown or raw_markdown_for_inline_media(
-            source_path,
-            include_prompt_meta=include_prompt_meta,
-        )
-        raster_plans = [plan for plan in inline_plans if plan.get("source") == "inline_data_url"]
-        raster_bytes: list[bytes] = []
-        for match in MARKDOWN_INLINE_RASTER_IMAGE_PATTERN.finditer(raw_markdown):
-            try:
-                decoded = base64.b64decode(match.group("data"), validate=True)
-            except (binascii.Error, ValueError):
-                continue
-            raster_bytes.append(decoded)
-        if len(raster_bytes) != len(raster_plans):
-            raise RuntimeError("Inline raster media extraction plan no longer matches the staged source.")
-        inline_bytes.update({id(plan): data for plan, data in zip(raster_plans, raster_bytes)})
-
-        svg_plans = [plan for plan in inline_plans if plan.get("source") == "inline_svg"]
-        raw_svg_markup = source_svg_markup
-        if not raw_svg_markup and source_path.is_file():
-            try:
-                if source_format_for_path(source_path) == "html":
-                    raw_svg_markup = source_path.read_text(encoding="utf-8", errors="replace")
-            except ValueError:
-                pass
-        svg_bytes = [
-            sanitize_inline_svg_markup(match.group(0)).bytes
-            for match in INLINE_SVG_PATTERN.finditer(raw_svg_markup or raw_markdown)
-        ]
-        if len(svg_bytes) != len(svg_plans):
-            raise RuntimeError("Inline SVG media extraction plan no longer matches the staged source.")
-        inline_bytes.update({id(plan): data for plan, data in zip(svg_plans, svg_bytes)})
 
     return publish_import_media(
         repo_root,
@@ -431,7 +314,7 @@ def publish_import_media(
     staging_root: Path,
     source_path: Path,
     plans: list[dict[str, Any]],
-    inline_bytes: dict[int, bytes],
+    inline_bytes: dict[tuple[str, str], bytes],
     config: DocsStageConfig | DocsCollectionConfig,
 ) -> list[dict[str, Any]]:
     """Prepare one import record's complete media set and publish before its source write."""
@@ -447,9 +330,7 @@ def publish_import_media(
             conversion_result: dict[str, Any] = {}
             source_kind = str(plan.get("source") or "")
             if source_kind in INLINE_MEDIA_SOURCE_KINDS:
-                decoded = inline_bytes.get(id(plan))
-                if decoded is None:
-                    raise RuntimeError("Inline media extraction plan no longer matches the staged source.")
+                decoded = inline_bytes[(media_class, filename)]
                 prepared_path = temp_root / media_class / filename
                 prepared_path.parent.mkdir(parents=True, exist_ok=True)
                 prepared_path.write_bytes(decoded)
@@ -520,36 +401,16 @@ def publish_import_media(
         ]
 
 
-def media_token(media_class: str, filename: str, *, repo_root: Path | None = None) -> str:
-    media_path = media_path_for(media_class, filename, repo_root=repo_root)
-    return f"[[media:{media_path}]]"
-
-
-def media_path_for(media_class: str, filename: str, *, repo_root: Path | None = None) -> str:
-    config = media_config_for(media_class, repo_root)
-    return f"{config.reference_prefix.as_posix().strip('/')}/{filename}"
-
-
-def media_link_for(
-    media_class: str,
-    filename: str,
-    *,
-    repo_root: Path | None = None,
-) -> str:
-    return media_token(media_class, filename, repo_root=repo_root)
-
-
 def build_media_plan(
     media_class: str,
     source_path: Path,
     title: str,
     *,
-    repo_root: Path | None = None,
-    media_config: DocsManagedMediaConfig | None = None,
-    artifact_identity: str | None = None,
+    media_config: DocsManagedMediaConfig,
+    artifact_identity: str,
 ) -> dict[str, Any]:
-    config = media_config if media_config is not None else media_config_for(media_class, repo_root)
-    identity = normalize_artifact_identity(artifact_identity if artifact_identity is not None else source_path.name)
+    config = media_config
+    identity = normalize_artifact_identity(artifact_identity)
     media_path = f"{config.reference_prefix.as_posix()}/{identity}"
     link = f"[[media:{media_path}]]"
     return {
@@ -563,27 +424,3 @@ def build_media_plan(
         "served_reference": f"{config.served_path_prefix}/{identity}",
         "title": title,
     }
-
-
-def bind_import_media_owner(
-    preview: dict[str, Any], config: DocsStageConfig | DocsCollectionConfig, *, doc_id: str,
-) -> None:
-    """Bind imported bytes and tokens after the exact document identity is resolved."""
-    plans = list(preview.get("media_plans") or [])
-    if isinstance(preview.get("media_plan"), dict):
-        plans.append(preview["media_plan"])
-    markdown = str(preview.get("markdown_preview") or "")
-    for plan in plans:
-        old_token = plan.get("media_token")
-        updated = build_media_plan(
-            plan["media_class"],
-            Path(plan["source_path"]),
-            str(plan.get("title") or ""),
-            media_config=managed_media_config(config, plan["media_class"]),
-            artifact_identity=f"{doc_id}/{plan['source_path']}",
-        )
-        if old_token:
-            markdown = markdown.replace(old_token, updated["media_token"])
-        plan.update(updated)
-    if plans:
-        preview["markdown_preview"] = markdown

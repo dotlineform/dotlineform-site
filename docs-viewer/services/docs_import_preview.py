@@ -51,9 +51,11 @@ from docs_import_markdown_package import (  # noqa: E402
     rewrite_markdown_package_media_links,
 )
 from docs_import_media import (  # noqa: E402
+    ImportMediaPreparation,
     apply_inline_raster_media_plans,
     apply_inline_svg_media_plans,
 )
+from docs_workspace_config import load_docs_media_owner  # noqa: E402
 from docs_front_matter import STRICT_FRONT_MATTER_PATTERN, read_front_matter_fields  # noqa: E402
 from docs_document_packages.workspace import configured_workspace_paths  # noqa: E402
 from studio.shared.python.projects_directories import projects_path_marker  # noqa: E402
@@ -207,9 +209,9 @@ def generate_import_preview(
     *,
     staging_root: Path,
     workspace_root: Path,
+    preparation: ImportMediaPreparation,
     source_path: Path,
     include_prompt_meta: bool,
-    retain_private_media_source: bool = False,
 ) -> dict[str, Any]:
     source_format = source_format_for_path(source_path)
     if source_format == "markdown_package":
@@ -217,22 +219,23 @@ def generate_import_preview(
             repo_root,
             staging_root=staging_root,
             workspace_root=workspace_root,
+            preparation=preparation,
             package_path=source_path,
-            retain_private_media_source=retain_private_media_source,
         )
     if source_format == "markdown":
         return generate_markdown_import_preview(
             repo_root,
             staging_root=staging_root,
             workspace_root=workspace_root,
+            preparation=preparation,
             source_path=source_path,
-            retain_private_media_source=retain_private_media_source,
         )
     if source_format == "text":
         return generate_text_import_preview(
             repo_root,
             staging_root=staging_root,
             workspace_root=workspace_root,
+            preparation=preparation,
             source_path=source_path,
         )
     if source_format == "docx":
@@ -240,16 +243,16 @@ def generate_import_preview(
             repo_root,
             staging_root=staging_root,
             workspace_root=workspace_root,
+            preparation=preparation,
             source_path=source_path,
-            retain_private_media_source=retain_private_media_source,
         )
     return generate_html_import_preview(
         repo_root,
         staging_root=staging_root,
         workspace_root=workspace_root,
+        preparation=preparation,
         source_path=source_path,
         include_prompt_meta=include_prompt_meta,
-        retain_private_media_source=retain_private_media_source,
     )
 
 
@@ -258,23 +261,20 @@ def generate_docx_import_preview(
     *,
     staging_root: Path,
     workspace_root: Path,
+    preparation: ImportMediaPreparation,
     source_path: Path,
-    retain_private_media_source: bool = False,
 ) -> dict[str, Any]:
     conversion = convert_docx_to_html(source_path)
     title = conversion.title or humanize(source_path.stem) or "Imported Doc"
     summary = generate_html_content_import_preview(
-        repo_root=repo_root,
         source_html=conversion.html,
         source_identity=source_path.stem,
         include_prompt_meta=False,
         staging_root=staging_root,
         workspace_root=workspace_root,
+        preparation=preparation,
         title=title,
     )
-    if not retain_private_media_source:
-        summary.pop("_inline_media_source_markdown", None)
-    summary.pop("_inline_svg_source_markup", None)
     summary["title_source"] = "docx-title" if conversion.title else "filename"
     summary["source_format"] = "docx"
     summary["source_path"] = import_artifact_path(repo_root, source_path, workspace_root)
@@ -287,22 +287,19 @@ def generate_html_import_preview(
     *,
     staging_root: Path,
     workspace_root: Path,
+    preparation: ImportMediaPreparation,
     source_path: Path,
     include_prompt_meta: bool,
-    retain_private_media_source: bool = False,
 ) -> dict[str, Any]:
     source_html = source_path.read_text(encoding="utf-8", errors="replace")
     summary = generate_html_content_import_preview(
-        repo_root=repo_root,
         source_html=source_html,
         source_identity=source_path.stem,
         include_prompt_meta=include_prompt_meta,
         staging_root=staging_root,
         workspace_root=workspace_root,
+        preparation=preparation,
     )
-    if not retain_private_media_source:
-        summary.pop("_inline_media_source_markdown", None)
-        summary.pop("_inline_svg_source_markup", None)
     summary["source_path"] = import_artifact_path(repo_root, source_path, workspace_root)
     summary["source_html"] = summary["source_path"]
     return summary
@@ -311,29 +308,30 @@ def generate_html_import_preview(
 def apply_content_identity_hints(
     summary: dict[str, Any],
     *,
+    preparation: ImportMediaPreparation,
     title: str = "",
-    doc_id: str = "",
 ) -> None:
     normalized_title = normalize_space(title)
-    normalized_doc_id = str(doc_id or "").strip()
     if normalized_title:
         summary["title"] = normalized_title
         summary["title_source"] = "record"
-    if normalized_doc_id:
-        summary["proposed_doc_id"] = normalized_doc_id
+    summary["source_doc_id"] = summary["proposed_doc_id"]
+    if preparation.doc_id:
+        summary["proposed_doc_id"] = preparation.doc_id
         summary["proposed_doc_id_source"] = "record"
+    else:
+        preparation.doc_id = summary["proposed_doc_id"]
 
 
 def generate_html_content_import_preview(
     *,
-    repo_root: Path | None = None,
     source_html: str,
     source_identity: str,
     include_prompt_meta: bool,
     staging_root: Path,
     workspace_root: Path,
+    preparation: ImportMediaPreparation,
     title: str = "",
-    doc_id: str = "",
 ) -> dict[str, Any]:
     parsed = parse_html_document(source_html)
     parsed_title = extract_html_title(parsed.root)
@@ -345,20 +343,14 @@ def generate_html_content_import_preview(
         include_prompt_meta=include_prompt_meta,
         parsed=parsed,
     )
-    apply_content_identity_hints(summary, title=title, doc_id=doc_id)
+    apply_content_identity_hints(summary, preparation=preparation, title=title)
     summary["source_format"] = "html"
     summary["staging_root"] = projects_path_marker(staging_root, workspace_root)
     summary["tag_counts"] = dict(parsed.tag_counts.most_common())
     summary["comment_count"] = parsed.comment_count
-    summary["_inline_media_source_markdown"] = str(summary.get("markdown_preview") or "")
-    summary["_inline_svg_source_markup"] = source_html
-    if repo_root is None:
-        from docs_workspace_config import default_repo_root
-
-        repo_root = default_repo_root()
-    apply_inline_raster_media_plans(repo_root, staging_root, workspace_root, summary)
+    apply_inline_raster_media_plans(preparation, staging_root, workspace_root, summary)
     apply_inline_svg_media_plans(
-        repo_root,
+        preparation,
         staging_root,
         workspace_root,
         summary,
@@ -532,20 +524,18 @@ def generate_markdown_import_preview(
     *,
     staging_root: Path,
     workspace_root: Path,
+    preparation: ImportMediaPreparation,
     source_path: Path,
-    retain_private_media_source: bool = False,
 ) -> dict[str, Any]:
     source_markdown = source_path.read_text(encoding="utf-8", errors="replace")
     summary = generate_markdown_content_import_preview(
-        repo_root=repo_root,
         source_markdown=source_markdown,
         source_identity=source_path.stem,
         staging_root=staging_root,
         workspace_root=workspace_root,
+        preparation=preparation,
         normalize_ordinary_front_matter=True,
     )
-    if not retain_private_media_source:
-        summary.pop("_inline_media_source_markdown", None)
     summary["source_path"] = import_artifact_path(repo_root, source_path, workspace_root)
     summary["source_markdown"] = summary["source_path"]
     return summary
@@ -553,13 +543,12 @@ def generate_markdown_import_preview(
 
 def generate_markdown_content_import_preview(
     *,
-    repo_root: Path | None = None,
     source_markdown: str,
     source_identity: str,
     staging_root: Path,
     workspace_root: Path,
+    preparation: ImportMediaPreparation,
     title: str = "",
-    doc_id: str = "",
     normalize_ordinary_front_matter: bool = False,
 ) -> dict[str, Any]:
     ordinary_front_matter = None
@@ -590,17 +579,12 @@ def generate_markdown_content_import_preview(
             )
         summary["ordinary_front_matter"] = ordinary_front_matter
         summary["warnings"] = front_matter_warnings + summary["warnings"]
-    apply_content_identity_hints(summary, title=title, doc_id=doc_id)
+    apply_content_identity_hints(summary, preparation=preparation, title=title)
     summary["source_format"] = "markdown"
     summary["staging_root"] = projects_path_marker(staging_root, workspace_root)
     summary["tag_counts"] = {}
     summary["comment_count"] = 0
-    summary["_inline_media_source_markdown"] = str(summary.get("markdown_preview") or "")
-    if repo_root is None:
-        from docs_workspace_config import default_repo_root
-
-        repo_root = default_repo_root()
-    apply_inline_raster_media_plans(repo_root, staging_root, workspace_root, summary)
+    apply_inline_raster_media_plans(preparation, staging_root, workspace_root, summary)
     summary["markdown_validation"] = validate_markdown_preview(summary["markdown_preview"], title=summary["title"])
     return summary
 
@@ -610,8 +594,8 @@ def generate_markdown_package_import_preview(
     *,
     staging_root: Path,
     workspace_root: Path,
+    preparation: ImportMediaPreparation,
     package_path: Path,
-    retain_private_media_source: bool = False,
 ) -> dict[str, Any]:
     package_root = package_path.resolve()
     markdown_path = find_package_markdown_file(package_root)
@@ -640,6 +624,7 @@ def generate_markdown_package_import_preview(
             )
         summary["ordinary_front_matter"] = ordinary_front_matter
         summary["warnings"] = front_matter_warnings + summary["warnings"]
+    apply_content_identity_hints(summary, preparation=preparation)
     summary["source_format"] = "markdown_package"
     summary["source_path"] = projects_path_marker(package_root, workspace_root)
     summary["source_markdown"] = projects_path_marker(markdown_path, workspace_root)
@@ -652,13 +637,12 @@ def generate_markdown_package_import_preview(
         repo_root,
         staging_root=staging_root,
         workspace_root=workspace_root,
+        preparation=preparation,
         package_root=package_root,
         markdown_path=markdown_path,
         summary=summary,
     )
-    apply_inline_raster_media_plans(repo_root, staging_root, workspace_root, summary)
-    if retain_private_media_source:
-        summary["_inline_media_source_markdown"] = package_markdown
+    apply_inline_raster_media_plans(preparation, staging_root, workspace_root, summary)
     summary["markdown_validation"] = validate_markdown_preview(summary["markdown_preview"], title=summary["title"])
     return summary
 
@@ -668,15 +652,16 @@ def generate_text_import_preview(
     *,
     staging_root: Path,
     workspace_root: Path,
+    preparation: ImportMediaPreparation,
     source_path: Path,
 ) -> dict[str, Any]:
     source_text = source_path.read_text(encoding="utf-8", errors="replace")
     summary = generate_plain_text_content_import_preview(
-        repo_root=repo_root,
         source_text=source_text,
         source_identity=source_path.stem,
         staging_root=staging_root,
         workspace_root=workspace_root,
+        preparation=preparation,
     )
     summary["source_path"] = import_artifact_path(repo_root, source_path, workspace_root)
     summary["source_text"] = summary["source_path"]
@@ -685,16 +670,15 @@ def generate_text_import_preview(
 
 def generate_plain_text_content_import_preview(
     *,
-    repo_root: Path | None = None,
     source_text: str,
     source_identity: str,
     staging_root: Path,
     workspace_root: Path,
+    preparation: ImportMediaPreparation,
     title: str = "",
-    doc_id: str = "",
 ) -> dict[str, Any]:
     summary = build_text_summary(source_text, source_identity)
-    apply_content_identity_hints(summary, title=title, doc_id=doc_id)
+    apply_content_identity_hints(summary, preparation=preparation, title=title)
     summary["source_format"] = "text"
     summary["staging_root"] = projects_path_marker(staging_root, workspace_root)
     summary["tag_counts"] = {}
@@ -705,45 +689,41 @@ def generate_plain_text_content_import_preview(
 
 def generate_content_import_preview(
     *,
-    repo_root: Path | None = None,
     content: str,
     content_format: str,
     source_identity: str,
     staging_root: Path,
     workspace_root: Path,
+    preparation: ImportMediaPreparation,
     title: str = "",
-    doc_id: str = "",
 ) -> dict[str, Any]:
     if content_format == "markdown":
         return generate_markdown_content_import_preview(
-            repo_root=repo_root,
             source_markdown=content,
             source_identity=source_identity,
             staging_root=staging_root,
             workspace_root=workspace_root,
+            preparation=preparation,
             title=title,
-            doc_id=doc_id,
         )
     if content_format == "html":
         return generate_html_content_import_preview(
-            repo_root=repo_root,
             source_html=content,
             source_identity=source_identity,
             include_prompt_meta=False,
             staging_root=staging_root,
             workspace_root=workspace_root,
+            preparation=preparation,
             title=title,
-            doc_id=doc_id,
         )
     if content_format == "plain_text":
         return generate_plain_text_content_import_preview(
-            repo_root=repo_root,
             source_text=content,
             source_identity=source_identity,
             staging_root=staging_root,
             workspace_root=workspace_root,
+            preparation=preparation,
             title=title,
-            doc_id=doc_id,
         )
     raise ValueError("content_format must be one of: html, markdown, plain_text")
 
@@ -751,21 +731,20 @@ def generate_content_import_preview(
 def generate_normalized_import_content_preview(
     record: ImportContent,
     *,
-    repo_root: Path | None = None,
     staging_root: Path,
     workspace_root: Path,
+    preparation: ImportMediaPreparation,
 ) -> dict[str, Any]:
     if record.content_intent != CONTENT_INTENT_REPLACE or not isinstance(record.content, str):
         raise ValueError("only replace ImportContent records have body content to preview")
     return generate_content_import_preview(
-        repo_root=repo_root,
         content=record.content,
         content_format=record.content_format,
         source_identity=record.record_identity,
         staging_root=staging_root,
         workspace_root=workspace_root,
+        preparation=preparation,
         title=record.title,
-        doc_id=record.doc_id,
     )
 
 
@@ -816,6 +795,7 @@ def main(argv: list[str] | None = None) -> int:
         repo_root,
         staging_root=workspace_paths.import_staging,
         workspace_root=workspace_paths.root,
+        preparation=ImportMediaPreparation(load_docs_media_owner(repo_root)),
         source_path=source_path,
         include_prompt_meta=bool(args.include_prompt_meta),
     )

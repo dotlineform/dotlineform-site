@@ -44,7 +44,7 @@ function diagramLabel(surface, occurrence) {
 
 function createDetailControl(documentRef, kind) {
   var control = documentRef.createElement("button");
-  control.className = "docsViewer__diagramDetailControl";
+  control.className = "docsViewer__toolbarIconButton docsViewer__diagramDetailControl";
   control.type = "button";
   control.dataset.docsViewerDiagramDetailKind = kind;
   control.setAttribute("aria-label", DETAIL_CONTROL_LABEL);

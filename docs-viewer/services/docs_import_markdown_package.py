@@ -22,92 +22,9 @@ from docs_import_common import (
     normalize_space,
     slugify,
 )
-from docs_import_media import build_media_plan
-from docs_workspace_config import load_docs_working_config, managed_media_config
+from docs_import_media import ImportMediaPreparation, build_media_plan
+from docs_workspace_config import managed_media_config
 from studio.shared.python.projects_directories import projects_path_marker
-
-def retarget_markdown_package_media_plans(
-    repo_root: Path,
-    staging_root: Path,
-    workspace_root: Path,
-    package_root: Path,
-    summary: dict[str, Any],
-) -> None:
-    plans = summary.get("media_plans")
-    if not isinstance(plans, list) or not plans:
-        return
-    package_indices = [
-        index
-        for index, plan in enumerate(plans)
-        if isinstance(plan, dict) and plan.get("source") in {"markdown_package_image", "markdown_package_attachment"}
-    ]
-    if not package_indices:
-        return
-
-    package_root = package_root.resolve()
-    proposed_doc_id = str(summary.get("proposed_doc_id") or summary.get("title") or "imported-doc")
-    used_filenames: set[str] = set()
-    markdown = str(summary.get("markdown_preview") or "")
-    warnings = summary.get("warnings") if isinstance(summary.get("warnings"), list) else []
-    image_index = 0
-
-    for index in package_indices:
-        plan = plans[index]
-        assert isinstance(plan, dict)
-        old_token = str(plan.get("media_token") or "")
-        old_filename = str(plan.get("source_path") or "")
-        old_title = str(plan.get("title") or "")
-        kind = str(plan.get("kind") or "")
-        source_relative = str(plan.get("package_relative_source_path") or "")
-        source_path = (package_root / source_relative).resolve()
-        if not source_path.is_relative_to(package_root):
-            raise ValueError("Package media source escapes package root.")
-        media_class = "img" if kind == "image" else "files"
-        suffix = "image" if kind == "image" else "attachment"
-        extension = "webp" if kind == "image" else Path(old_filename).suffix.lstrip(".")
-        if kind == "image":
-            image_index += 1
-            new_title = old_title or readable_package_image_title(proposed_doc_id, image_index)
-        else:
-            new_title = str(plan.get("title") or humanize(source_path.stem) or old_filename)
-        new_filename = next_package_media_filename(
-            repo_root,
-            staging_root,
-            proposed_doc_id,
-            media_class,
-            suffix,
-            extension,
-            used_filenames,
-        )
-        new_plan = build_package_media_plan(
-            repo_root,
-            staging_root,
-            workspace_root,
-            package_root=package_root,
-            source_path=source_path,
-            filename=new_filename,
-            title=new_title,
-            kind=kind,
-        )
-        if old_token:
-            if kind == "image" and old_title:
-                old_markdown = f'![{old_title}]({old_token} "{old_title}")'
-                new_markdown = f'![{new_title}]({new_plan["media_token"]} "{new_title}")'
-                if old_markdown in markdown:
-                    markdown = markdown.replace(old_markdown, new_markdown, 1)
-                else:
-                    markdown = markdown.replace(old_token, new_plan["media_token"], 1)
-            else:
-                markdown = markdown.replace(old_token, new_plan["media_token"], 1)
-        if old_filename != new_filename:
-            for warning_index, warning in enumerate(warnings):
-                if isinstance(warning, str) and old_filename in warning:
-                    warnings[warning_index] = warning.replace(old_filename, new_filename).replace(
-                        str(plan.get("media_path") or ""),
-                        new_plan["media_path"],
-                    )
-        plans[index] = new_plan
-    summary["markdown_preview"] = markdown
 
 def normalize_apple_notes_caption_spans(markdown: str) -> str:
     def replace(match: re.Match[str]) -> str:
@@ -186,6 +103,7 @@ def package_source_original_path(
 
 def next_package_media_filename(
     repo_root: Path,
+    preparation: ImportMediaPreparation,
     staging_root: Path,
     doc_id: str,
     media_class: str,
@@ -196,12 +114,11 @@ def next_package_media_filename(
     safe_doc_id = slugify(doc_id or "imported-doc")
     safe_extension = extension.lower().lstrip(".")
     staging_root = staging_root.resolve()
-    stage_config = load_docs_working_config(repo_root)
-    media = managed_media_config(stage_config, media_class)
+    media = managed_media_config(preparation.config, media_class)
     index = 1
     while True:
         filename = f"{safe_doc_id}-{suffix}-{index:02d}.{safe_extension}"
-        local_asset_path = local_artifact_path(repo_root, media.asset_location, filename)
+        local_asset_path = local_artifact_path(repo_root, media.asset_location, f"{doc_id}/{filename}")
         if (
             filename not in used_filenames
             and not (staging_root / filename).exists()
@@ -213,7 +130,7 @@ def next_package_media_filename(
 
 
 def build_package_media_plan(
-    repo_root: Path,
+    preparation: ImportMediaPreparation,
     staging_root: Path,
     workspace_root: Path,
     *,
@@ -225,7 +142,11 @@ def build_package_media_plan(
     provenance_label: str = "",
 ) -> dict[str, Any]:
     media_class = "img" if kind == "image" else "files"
-    plan = build_media_plan(media_class, Path(filename), title, repo_root=repo_root)
+    plan = build_media_plan(
+        media_class, Path(filename), title,
+        media_config=managed_media_config(preparation.config, media_class),
+        artifact_identity=f"{preparation.doc_id}/{filename}",
+    )
     source_rel = package_source_original_path(
         source_path,
         workspace_root,
@@ -281,6 +202,7 @@ def rewrite_markdown_package_media_links(
     package_root: Path,
     markdown_path: Path,
     summary: dict[str, Any],
+    preparation: ImportMediaPreparation,
     provenance_label: str = "",
 ) -> None:
     markdown = str(summary.get("markdown_preview") or "")
@@ -310,10 +232,10 @@ def rewrite_markdown_package_media_links(
             warnings.append(f"Unsupported package image type {suffix or '(none)'} for {target}; left the link unchanged.")
             return None
         image_index = len([plan for plan in plans if plan.get("kind") == "image"]) + 1
-        filename = next_package_media_filename(repo_root, staging_root, doc_id, "img", "image", "webp", used_filenames)
-        title = readable_package_image_title(doc_id, image_index)
+        filename = next_package_media_filename(repo_root, preparation, staging_root, doc_id, "img", "image", "webp", used_filenames)
+        title = readable_package_image_title(summary["source_doc_id"], image_index)
         plan = build_package_media_plan(
-            repo_root,
+            preparation,
             staging_root,
             workspace_root,
             package_root=package_root,
@@ -346,10 +268,10 @@ def rewrite_markdown_package_media_links(
             unsupported_count += 1
             warnings.append(f"Unsupported package attachment type {suffix or '(none)'} for {target}; left the link unchanged.")
             return None
-        filename = next_package_media_filename(repo_root, staging_root, doc_id, "files", "attachment", suffix, used_filenames)
+        filename = next_package_media_filename(repo_root, preparation, staging_root, doc_id, "files", "attachment", suffix, used_filenames)
         title = normalize_space(label) or humanize(source.stem) or f"Attachment {len([plan for plan in plans if plan.get('kind') == 'attachment']) + 1:02d}"
         plan = build_package_media_plan(
-            repo_root,
+            preparation,
             staging_root,
             workspace_root,
             package_root=package_root,

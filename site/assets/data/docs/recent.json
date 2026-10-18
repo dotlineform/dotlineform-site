@@ -1,8 +1,56 @@
 {
   "schema": "docs_recent_v2",
   "limit": 20,
-  "generated_at": "2026-10-17T22:56:48Z",
+  "generated_at": "2026-10-18T09:45:41Z",
   "docs": [
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261017-231636-6bdc1b",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Brain machines",
+      "timestamp": "2026-10-18"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261018-101404-0c91f3",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Neuromorphic Continuity vs State Saving",
+      "timestamp": "2026-10-18"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261018-103357-e62ff8",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Problems SpiNNaker is used to Solve",
+      "timestamp": "2026-10-18"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261017-232727-55cf60",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "PyNN",
+      "timestamp": "2026-10-18"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261017-232312-733b50",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "SpiNNaker",
+      "timestamp": "2026-10-18"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261018-104047-10bc42",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "SpiNNaker State & Outputs",
+      "timestamp": "2026-10-18"
+    },
     {
       "collection": "library",
       "collection_title": "Library",
@@ -113,51 +161,6 @@
       "doc_id": "d-20260809-130120-44384d",
       "report_doc_id": "d-20260809-130120-870cc2",
       "title": "Beyond Conscious vs. Subconscious",
-      "timestamp": "2026-10-17"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261017-223804-cc24e4",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Biological and physical memories",
-      "timestamp": "2026-10-17"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261017-231122-eeaf16",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Biological vs Non‑Organic Memory",
-      "timestamp": "2026-10-17"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261017-221439-845822",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Hopfield Attractor Networks — Resilience & Failure Adaptation",
-      "timestamp": "2026-10-17"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261017-220718-82b513",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Hopfield Attractor-Network Memory",
-      "timestamp": "2026-10-17"
-    },
-    {
-      "doc_id": "d-20260809-130120-870cc2",
-      "title": "Library",
-      "timestamp": "2026-10-17"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261017-233803-9f11b8",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Neuromorphic Computing",
       "timestamp": "2026-10-17"
     }
   ]

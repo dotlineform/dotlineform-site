@@ -16,6 +16,7 @@ from docs_import_document import (
     plan_import_document,
 )
 from docs_import_preview import generate_normalized_import_content_preview
+from docs_import_media import ImportMediaPreparation
 from docs_import_source_helpers import relative_path
 from docs_management_document_target import ManagedDocumentCollection
 from docs_source_model import (
@@ -287,7 +288,7 @@ def _plan_document_candidates(
     *,
     staging_root: Path,
     workspace_root: Path,
-    collection: ManagedDocumentCollection | None = None,
+    collection: ManagedDocumentCollection,
     preserve_collection_metadata: bool = False,
     allow_media_plans: bool = True,
 ) -> list[dict[str, Any]]:
@@ -313,13 +314,14 @@ def _plan_document_candidates(
             )
             continue
         preview: dict[str, Any] = {}
+        media_preparation = ImportMediaPreparation(collection.document_config, record.doc_id)
         if record.content_intent == CONTENT_INTENT_REPLACE:
             try:
                 preview = generate_normalized_import_content_preview(
                     record,
-                    repo_root=repo_root,
                     staging_root=staging_root,
                     workspace_root=workspace_root,
+                    preparation=media_preparation,
                 )
             except (RuntimeError, ValueError) as exc:
                 state.errors.append(
@@ -368,6 +370,7 @@ def _plan_document_candidates(
                 import_preview=preview if record.content_intent == CONTENT_INTENT_REPLACE else None,
                 create_doc_id=record.doc_id if collision is None else "",
                 create_added_date=state.create_added_date if collision is None else "",
+                media_preparation=media_preparation,
                 collection=collection,
                 preserve_collection_metadata=preserve_collection_metadata,
             )
@@ -591,7 +594,7 @@ def plan_import_content_collection(
     package_projection: dict[str, Any],
     blockers: list[dict[str, Any]],
     planned_identities: list[dict[str, Any]] | None = None,
-    collection: ManagedDocumentCollection | None = None,
+    collection: ManagedDocumentCollection,
     overwrite_only: bool = False,
     warnings: list[dict[str, Any]] | None = None,
 ) -> DocumentsCollectionPlan:

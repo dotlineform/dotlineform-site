@@ -34,8 +34,7 @@ from docs_import_document_package import (
     EXPORT_ONLY_COLLECTION_SOURCE_FORMAT,
     document_package_source_format,
 )
-from docs_import_markdown_package import retarget_markdown_package_media_plans
-from docs_import_media import bind_import_media_owner, retarget_inline_media_plans
+from docs_import_media import ImportMediaPreparation
 from docs_import_preview import (
     generate_import_preview,
     list_staged_import_source_files,
@@ -382,30 +381,22 @@ def import_ordinary_source(
     confirm_interactive_html_overwrite = bool(body.get("confirm_interactive_html_overwrite"))
     preview_only = bool(body.get("preview_only"))
     accepted_source_directory = source_directory
+    create_added_date = current_doc_timestamp()
+    create_doc_id = allocate_doc_id(create_added_date)
+    media_preparation = ImportMediaPreparation(destination.document_config, create_doc_id)
     preview = generate_import_preview(
         repo_root,
         staging_root=staging_root,
         workspace_root=source_root,
         source_path=source_path,
         include_prompt_meta=include_prompt_meta,
-        retain_private_media_source=True,
+        preparation=media_preparation,
     )
     preview["target"] = destination.request_target()
-    source_doc_id = str(preview["proposed_doc_id"])
-    create_added_date = current_doc_timestamp()
-    create_doc_id = allocate_doc_id(create_added_date)
-    preview["proposed_doc_id"] = create_doc_id
+    source_doc_id = preview["source_doc_id"]
     preview["proposed_doc_id_source"] = "allocated-local-identity"
-    if source_path.is_dir():
-        retarget_markdown_package_media_plans(
-            repo_root, staging_root, source_root, source_path, preview,
-        )
-    retarget_inline_media_plans(repo_root, staging_root, source_root, preview)
-    bind_import_media_owner(preview, destination.document_config, doc_id=create_doc_id)
     if collection:
         preview["collection"] = collection
-    private_media_source_markdown = str(preview.pop("_inline_media_source_markdown", "") or "")
-    private_media_source_svg = str(preview.pop("_inline_svg_source_markup", "") or "")
     interactive_plans = interactive_html_asset_plans(
         repo_root,
         staging_root,
@@ -496,17 +487,14 @@ def import_ordinary_source(
         import_preview=preview,
         create_doc_id=create_doc_id,
         create_added_date=create_added_date,
+        media_preparation=media_preparation,
         collection=destination,
     )
     media_context = ImportDocumentMediaContext(
         staging_root=staging_root,
-        workspace_root=source_root,
         source_path=source_path,
-        include_prompt_meta=include_prompt_meta,
         interactive_html_plans=tuple(interactive_plans),
         allow_interactive_html_overwrite=confirm_interactive_html_overwrite,
-        source_markdown=private_media_source_markdown,
-        source_svg_markup=private_media_source_svg,
     )
     apply_result = apply_import_document(repo_root, plan, media_context=media_context, after_doc_id=after_doc_id)
     if after_doc_id:

@@ -86,6 +86,11 @@
       "last_updated": "2026-10-17"
     },
     {
+      "doc_id": "d-20261017-231636-6bdc1b",
+      "title": "Brain machines",
+      "last_updated": "2026-10-18"
+    },
+    {
       "doc_id": "d-20260809-130120-d66e0b",
       "title": "Can the Brain Comprehend How It Works?",
       "last_updated": "2026-08-09"
@@ -141,9 +146,34 @@
       "last_updated": "2026-10-17"
     },
     {
+      "doc_id": "d-20261018-101404-0c91f3",
+      "title": "Neuromorphic Continuity vs State Saving",
+      "last_updated": "2026-10-18"
+    },
+    {
+      "doc_id": "d-20261018-103357-e62ff8",
+      "title": "Problems SpiNNaker is used to Solve",
+      "last_updated": "2026-10-18"
+    },
+    {
+      "doc_id": "d-20261017-232727-55cf60",
+      "title": "PyNN",
+      "last_updated": "2026-10-18"
+    },
+    {
       "doc_id": "d-20261017-112923-e02f33",
       "title": "Reality Layers — Absolute • Intersubjective • Subjective",
       "last_updated": "2026-10-17"
+    },
+    {
+      "doc_id": "d-20261017-232312-733b50",
+      "title": "SpiNNaker",
+      "last_updated": "2026-10-18"
+    },
+    {
+      "doc_id": "d-20261018-104047-10bc42",
+      "title": "SpiNNaker State & Outputs",
+      "last_updated": "2026-10-18"
     }
   ]
 }

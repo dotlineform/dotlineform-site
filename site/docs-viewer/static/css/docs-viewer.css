@@ -1245,33 +1245,12 @@ body.docs-viewer-service{
   margin: 0;
 }
 
-.docsViewer__diagramDetailControl,
-.docsViewer__diagramDetailControl:visited{
-  box-sizing: border-box;
+.docsViewer__diagramDetailControl{
+  --docs-viewer-control-height: 2rem;
   position: absolute;
   inset-block-start: var(--docs-viewer-space-2);
   inset-inline-end: var(--docs-viewer-space-2);
   z-index: 2;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  padding: 0;
-  border: 1px solid var(--docs-viewer-border-strong);
-  border-radius: 0.375rem;
-  background: var(--docs-viewer-panel);
-  box-shadow: 0 1px 4px color-mix(in srgb, var(--docs-viewer-text) 12%, transparent);
-  color: var(--docs-viewer-link);
-  opacity: 1;
-  text-decoration: none;
-  font: inherit;
-  cursor: pointer;
-}
-
-.docsViewer__diagramDetailControl:focus-visible{
-  outline: 2px solid var(--docs-viewer-focus-ring);
-  outline-offset: 2px;
 }
 
 .docsViewer__diagramDetailIcon{

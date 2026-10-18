@@ -18,7 +18,9 @@ from docs_import_content import (
     CONTENT_INTENT_REPLACE,
 )
 from docs_import_preview import generate_normalized_import_content_preview
+from docs_import_media import ImportMediaPreparation
 from docs_management_document_target import (
+    ManagedDocumentCollection,
     resolve_managed_document_collection,
     source_doc_from_path,
 )
@@ -285,21 +287,15 @@ def project_flat_package_rows(
 def load_current_collection_docs(
     repo_root: Path,
     *,
-    collection: str,
+    collection: ManagedDocumentCollection,
 ) -> list[source_model.SourceDoc]:
-    from docs_workspace_config import load_docs_working_config
-    config = load_docs_working_config(repo_root)
-    if not collection:
-        return source_model.load_stage_docs_for_config(repo_root, config)
-    resolved_collection = resolve_managed_document_collection(
-        repo_root,
-        collection=collection,
-    )
+    if not collection.collection:
+        return source_model.load_stage_docs_for_config(repo_root, collection.document_config)
     docs = [
         source_doc_from_path(
             path=path,
         )
-        for path in source_model.document_markdown_paths(resolved_collection.source_root)
+        for path in source_model.document_markdown_paths(collection.source_root)
     ]
     return docs
 
@@ -509,12 +505,17 @@ def create_review_source_folder(
     source_profile_id = clean_text(metadata.get("profile_id")) if metadata else ""
     full_source_package = source_profile_id == "document-full-source"
     generated_at = clean_text(metadata.get("generated_at")) if metadata else ""
+    review_collection = (
+        resolve_managed_document_collection(repo_root, collection=source_collection or None)
+        if not any(item.get("level") == "error" for item in issues)
+        else None
+    )
     current_docs = (
         load_current_collection_docs(
             repo_root,
-            collection=source_collection,
+            collection=review_collection,
         )
-        if not any(item.get("level") == "error" for item in issues)
+        if review_collection is not None
         else []
     )
     current_docs_by_id = {doc.doc_id: doc for doc in current_docs}
@@ -574,9 +575,9 @@ def create_review_source_folder(
             if record.content_intent == CONTENT_INTENT_REPLACE:
                 preview = generate_normalized_import_content_preview(
                     record,
-                    repo_root=repo_root,
                     staging_root=staging_root,
                     workspace_root=workspace_paths.root,
+                    preparation=ImportMediaPreparation(review_collection.document_config, record.doc_id),
                 )
                 body = str(preview.get("markdown_preview") or "")
             elif record.content_intent == CONTENT_INTENT_PRESERVE_EXISTING:

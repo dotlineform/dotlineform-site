@@ -22,7 +22,7 @@ var MANAGEMENT_ACTION_MENU_ITEMS = [
   {
     id: "docsViewerManageImportButton",
     actionId: ACTION_IDS.IMPORT,
-    artwork: "docsViewer__icon--import",
+    artwork: "docsViewer__icon--package",
     label: "Import"
   },
   {

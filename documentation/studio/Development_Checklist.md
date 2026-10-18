@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260523-190651-7157ec
 title: Development Checklist
 added_date: "2026-05-23 19:06:51"
-last_updated: "2026-10-17"
+last_updated: "2026-10-18"
 parent_id: d-20260419-000000-d2e47b
 
 ---
@@ -37,6 +37,8 @@ This checklist and the durable Studio development documentation are maintained d
 - [ ] Identify documentation, linting, type-checking, or reference-generation follow-through only when the changed contract requires it.
 
 ## Ownership Gates
+
+- [ ] Import conversion receives its resolved media owner and final create/overwrite identity before constructing media plans. Keep prepared SVG/raster bytes outside JSON preview metadata and carry them into the internal document plan and media writer. Do not re-read source, decode or sanitize again, retarget completed filenames/tokens, reload workspace configuration per media item or add fallback conversion at materialisation. Keep source-derived labels independent of storage identity and retain selected filesystem/storage checks at their owners. [Docs Import Architecture](Docs_Import_Architecture.md#import-media-preparation) owns this handoff.
 
 ### Workflow Ownership And Structure
 

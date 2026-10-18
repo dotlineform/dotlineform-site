@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260514-164722-3de65e
 title: Docs Import Architecture
 added_date: "2026-05-14 16:47:22"
-last_updated: "2026-10-17"
+last_updated: "2026-10-18"
 summary: Configuration, registries, source confinement, execution paths, extension methods, and weak spots for Docs Viewer imports.
 parent_id: d-20260424-000000-50b63f
 
@@ -71,7 +71,17 @@ Native confirmation shows only the filename and complete-folder guidance. HTML s
 
 For an ordinary destination, the frontend captures the mounted document action context when Import doc opens and supplies its ordinary identity as optional `after_doc_id`; Index focus does not select this anchor. The upload parser owns identity syntax and excludes sibling placement from flat named collections. The shared import source writer reads the canonical hierarchy once and reuses Position's `docs_index_order.insert_node(..., after_doc_id, "after")`. The returned completed parent map supplies the imported document's parent to its prepared SourceDoc and committed record before exact generation and response projection. The browser does not supply a redundant parent value, and no membership audit, source read, navigation read-back or follow-up Position request is added. With no anchor, ordinary creation retains root append; staged and collection imports retain their existing placement.
 
-The native owner writes one request-local temporary converter input, then calls `import_ordinary_source` with that source root and companion discovery explicitly disabled. It does not use Data Sharing configuration, package recognition, a source listing, persistent staging or an OS picker. Reviewed Markdown and role-marked interactive companions are directed to existing Import. Both intake paths share `generate_import_preview`, `plan_import_document`, media materialisation and source writes. The plan retains its prepared SourceDoc; apply returns completed ordinary parentage, and the existing `rebuild_prepared_document_outputs` owner consumes both alongside the resolved destination. Final document generation avoids the former wrapper's target-source reread, ID rediscovery, workspace reload and subprocess build. Existing converter/media projection configuration remains with its media owner. Collection/package orchestration retains its separate flow. Ordinary create allocation carries one new identity without reading every target document; exact destination collision checks and the exclusive new-source writer retain their authority. Converted Markdown/SVG inputs are carried into media processing instead of rereading the selected HTML. Temporary converter input is removed only after awaited completion and is not an alternative Docs/Projects workspace.
+The native owner writes one request-local temporary converter input, then calls `import_ordinary_source` with that source root and companion discovery explicitly disabled. It does not use Data Sharing configuration, package recognition, a source listing, persistent staging or an OS picker. Reviewed Markdown and role-marked interactive companions are directed to existing Import. Both intake paths share `generate_import_preview`, `plan_import_document`, media materialisation and source writes. The plan retains its prepared SourceDoc; apply returns completed ordinary parentage, and the existing `rebuild_prepared_document_outputs` owner consumes both alongside the resolved destination. Final document generation avoids the former wrapper's target-source reread, ID rediscovery, workspace reload and subprocess build. Collection/package orchestration retains its separate flow. Ordinary create allocation carries one new identity before conversion without reading every target document; exact destination collision checks and the exclusive new-source writer retain their authority. Prepared SVG/raster bytes pass directly into media materialisation. Temporary converter input is removed only after awaited completion and is not an alternative Docs/Projects workspace.
+
+## Import Media Preparation
+
+The browser owns source selection, the destination and normal confirmation state. Python owns format conversion, SVG sanitization or raster decoding, exact configured media paths, writes and generation. One `ImportMediaPreparation` carries the resolved document-media owner, final document identity and prepared inline bytes through each conversion. Ordinary creation allocates its ID before conversion; collection planning supplies its already resolved create/overwrite ID. The standalone preview CLI resolves one media owner and lets conversion derive its preview identity from the source.
+
+Converters construct media filenames, document-owned artifact identities and Markdown tokens once using that supplied owner and identity. Markdown-package image labels retain their source-derived wording independently of storage identity. Package filename collision checks use the exact configured document folder. Media planners perform no workspace reloads, and document planning does not rebuild media plans or rewrite their tokens.
+
+Each inline raster data URL is decoded once and each HTML-inline SVG is sanitized once per operation. Prepared immutable bytes are held separately from JSON preview metadata, keyed by media family and filename, and passed through the internal document plan to materialisation. The original HTML and base64 Markdown are no longer retained for re-extraction. Materialisation consumes those exact bytes without another source read, decode, SVG parse, positional count audit or fallback conversion. The preparation object remains in memory until its operation completes; there is no saved cache or cross-request handoff. A separate confirmed request still performs its own conversion.
+
+The import helper performs the ampersand and XLink namespace conversion described in [Media And Asset Handling](Media_And_Asset_Handling.md#import-materialization) before the strict shared sanitizer, which remains the authoring owner for XML validity and SVG safety. Existing selected source/package confinement, document collision authority and media-write/transfer verification remain with their filesystem and storage owners. They prevent unsafe paths, unintended replacement and incomplete selected writes; this refactor adds no recovery, freshness checks or corpus inventory. Obsolete retargeting, media-link helper aliases and raw-source fallback interfaces have been removed without compatibility aliases.
 
 ## Configuration And Registries
 
@@ -175,9 +185,9 @@ retired physical names, and unsafe provenance fail closed.
 An ordinary source follows one-document orchestration:
 
 1. Resolve and classify one exact `{source_directory, staged_filename}` direct child, then adopt one validated Working target with optional `sub_scope`.
-2. Convert it to Markdown and validate it through the shared Python renderer.
-3. Plan media and any role-marked interactive companions.
-4. Allocate a fresh immutable local identity by checking only its candidate source path; do not load or parse the ordinary target collection.
+2. Allocate a fresh immutable local identity without loading or parsing the ordinary target collection, and carry the resolved destination into conversion.
+3. Convert to Markdown, prepare inline media bytes and final media plans, and validate the Markdown through the shared Python renderer.
+4. Plan any role-marked interactive companions; retain their existing replacement confirmation and exact write checks.
 5. Convert the accepted preview to `ImportContent`, plan the new document, materialize media, atomically create source, and invoke the owning parent or confined child rebuild boundary.
 
 The format converter never writes source or performs a rebuild. The Word adapter passes Mammoth's semantic HTML unchanged into the shared HTML converter; temporary HTML and base64 image bodies remain server-side while the public preview contains canonical Markdown and safe media-plan metadata. Interactive-companion replacement confirmation and endpoint authorization stay outside the converter.
