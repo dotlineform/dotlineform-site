@@ -189,7 +189,7 @@ export function resolveDocsViewerAppBootContext(options) {
         createSourceAdapter: settings.createSourceAdapter,
         contentDetailBackControlId: settings.contentDetailBackControlId,
         controlRendererContributions: settings.controlRendererContributions || {},
-        diagramDetailAdapter: settings.diagramDetailAdapter,
+        imageDetailAdapter: settings.imageDetailAdapter,
         mediaDetailAdapter: settings.mediaDetailAdapter,
         routeContext: routeContext,
         viewRegistry: viewRegistry,

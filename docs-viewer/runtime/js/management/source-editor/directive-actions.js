@@ -32,6 +32,13 @@ export const DIRECTIVE_ACTIONS = Object.freeze([
     })
   }),
   Object.freeze({
+    artwork: "docsViewer__icon--image",
+    id: "image-detail",
+    label: "Image detail",
+    source: "<!-- dotlineform:image-detail -->",
+    blankLines: true
+  }),
+  Object.freeze({
     artwork: "docsViewer__icon--waypoints",
     id: "insert-related-links",
     label: "Insert related links",

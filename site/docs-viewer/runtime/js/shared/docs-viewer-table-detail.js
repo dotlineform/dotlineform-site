@@ -35,7 +35,7 @@ function createOpenControl(documentRef, label) {
   button.className = "docsViewer__toolbarIconButton docsViewer__tableDetailOpen";
   button.type = "button";
   button.innerHTML = [
-    '<svg class="docsViewer__diagramDetailIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">',
+    '<svg class="docsViewer__contentDetailIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">',
     '  <path d="M14 5h5v5M19 5l-8 8M19 13v6H5V5h6"></path>',
     "</svg>"
   ].join("");

@@ -37,8 +37,8 @@ export function mountDocsContentHtml(node, htmlText, options) {
   var viewerBaseUrl = String(settings.viewerBaseUrl || "");
   var template = node.ownerDocument.createElement("template");
   template.innerHTML = String(htmlText || "");
-  template.content.querySelectorAll("[src], [href], [data-docs-viewer-diagram-light-src], [data-docs-viewer-diagram-dark-src]").forEach(function (element) {
-    ["src", "href", "data-docs-viewer-diagram-light-src", "data-docs-viewer-diagram-dark-src"].forEach(function (attribute) {
+  template.content.querySelectorAll("[src], [href]").forEach(function (element) {
+    ["src", "href"].forEach(function (attribute) {
       var value = element.getAttribute(attribute);
       if (!value) return;
       if (value.startsWith("docs-media:")) {

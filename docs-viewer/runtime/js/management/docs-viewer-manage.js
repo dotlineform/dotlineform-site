@@ -2,8 +2,8 @@ import {
   startDocsViewerManageApp
 } from "../shared/docs-viewer-app-boot.js";
 import {
-  docsViewerDiagramDetailAdapter
-} from "../shared/docs-viewer-diagram-detail.js";
+  docsViewerImageDetailAdapter
+} from "../shared/docs-viewer-image-detail.js";
 import {
   CONTENT_DETAIL_BACK_CONTROL_ID,
   withDocsViewerContentDetailDefinitions
@@ -103,13 +103,13 @@ startDocsViewerManageApp({
     }
   ),
   createSourceAdapter: createDocsViewerManagementSourceAdapter,
-  diagramDetailAdapter: docsViewerDiagramDetailAdapter,
+  imageDetailAdapter: docsViewerImageDetailAdapter,
   mediaDetailAdapter: docsViewerMediaDetailAdapter,
   viewRegistryContributions: withDocsViewerManagedTableToolDefinitions(
     withDocsViewerContentDetailDefinitions(
       createDocsViewerManagementViewDefinitions(),
       {
-        diagramDetailAdapter: docsViewerDiagramDetailAdapter,
+        imageDetailAdapter: docsViewerImageDetailAdapter,
         mediaDetailAdapter: docsViewerMediaDetailAdapter,
         reportPresentationAdapter: reportPresentationAdapter,
         tableDetailAdapter: managedTableDetailAdapter

@@ -156,8 +156,6 @@ class ContentRenderingMixin:
             "src": self.resolve_media_url(media_path),
             "alt": self.unescape_markdown_label(match.group("alt")),
         }
-        if self.published_media_type_for_reference(media_path) == "svg":
-            attrs["data-docs-viewer-diagram-kind"] = "persistent-svg"
         attrs.update(media_attrs)
         return f"<img {self.html_attrs(attrs)}>"
 

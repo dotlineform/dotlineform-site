@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260719-123719-fb7565
 title: Document Diagrams
 added_date: "2026-07-19 12:37:19"
-last_updated: "2026-10-16"
+last_updated: "2026-10-18"
 summary: Create diagrams externally and import finished SVG images through the ordinary document-media workflow.
 parent_id: d-20260424-000000-50b63f
 
@@ -20,7 +20,7 @@ An SVG has one authored appearance. Set its colours and background in the extern
 
 ## Reader Detail View
 
-Imported SVG images retain the shared **Open diagram** detail view and **Open in new tab** action. The detail view uses the stored SVG's stable media URL and returns the same image presentation to the document when closed. Raster image, file and interactive HTML workflows retain their existing owners.
+Place `<!-- dotlineform:image-detail -->` immediately before the SVG image or its `[[image:…]]` token to add an **Open image** button above it. SVGs without the directive display without an expand control. The shared Content Detail view exposes **Open in new tab**, uses the stored SVG's stable media URL and returns the same image presentation to the document when closed. [Document Image Detail](Document_Image_Detail.md) owns this optional behavior for SVG and raster images. File and interactive HTML workflows retain their existing owners.
 
 ## Repository Documentation
 

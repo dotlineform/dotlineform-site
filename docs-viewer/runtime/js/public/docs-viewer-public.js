@@ -2,8 +2,8 @@ import {
   appendAssetVersion
 } from "../shared/docs-viewer-asset-url.js";
 import {
-  docsViewerDiagramDetailAdapter
-} from "../shared/docs-viewer-diagram-detail.js";
+  docsViewerImageDetailAdapter
+} from "../shared/docs-viewer-image-detail.js";
 import {
   CONTENT_DETAIL_BACK_CONTROL_ID,
   withDocsViewerContentDetailDefinitions
@@ -21,12 +21,12 @@ import(appendAssetVersion("../shared/docs-viewer-app-boot.js"))
   .then(function (module) {
     module.startDocsViewerPublicApp({
       contentDetailBackControlId: CONTENT_DETAIL_BACK_CONTROL_ID,
-      diagramDetailAdapter: docsViewerDiagramDetailAdapter,
+      imageDetailAdapter: docsViewerImageDetailAdapter,
       mediaDetailAdapter: docsViewerMediaDetailAdapter,
       mountDocumentExtras: mountDocsViewerPublicDocumentExtras,
       tableDetailAdapter: docsViewerTableDetailAdapter,
       viewRegistryContributions: withDocsViewerContentDetailDefinitions(null, {
-        diagramDetailAdapter: docsViewerDiagramDetailAdapter,
+        imageDetailAdapter: docsViewerImageDetailAdapter,
         mediaDetailAdapter: docsViewerMediaDetailAdapter,
         tableDetailAdapter: docsViewerTableDetailAdapter
       })

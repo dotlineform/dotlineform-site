@@ -71,7 +71,7 @@ export function initDocsViewerDocumentController(context) {
     releaseReportPresentation(record.root);
     releaseMediaDetails(record.root);
     releaseTableDetails(record.root);
-    releaseDiagramDetails(record.root);
+    releaseImageDetails(record.root);
   }
 
   function releaseRecord(record) {
@@ -216,13 +216,14 @@ export function initDocsViewerDocumentController(context) {
     });
   }
 
-  function mountDiagramDetails(doc, payload, mountGeneration) {
-    var adapter = context.diagramDetailAdapter;
+  function mountImageDetails(doc, payload, mountGeneration) {
+    var adapter = context.imageDetailAdapter;
     if (!adapter || typeof adapter.mountDocument !== "function") return;
     try {
       adapter.mountDocument({
         content: content,
         doc: doc,
+        documentTarget: activeRecord.target,
         document: content ? content.ownerDocument : null,
         documentMountGeneration: mountGeneration,
         payload: payload,
@@ -230,7 +231,7 @@ export function initDocsViewerDocumentController(context) {
         window: content && content.ownerDocument ? content.ownerDocument.defaultView : null
       });
     } catch (error) {
-      console.warn("docs_viewer: diagram detail adapter unavailable", error);
+      console.warn("docs_viewer: image detail adapter unavailable", error);
     }
   }
 
@@ -314,8 +315,8 @@ export function initDocsViewerDocumentController(context) {
     }
   }
 
-  function releaseDiagramDetails(mount = content) {
-    var adapter = context.diagramDetailAdapter;
+  function releaseImageDetails(mount = content) {
+    var adapter = context.imageDetailAdapter;
     if (!adapter || typeof adapter.releaseDocument !== "function") return;
     try {
       adapter.releaseDocument({
@@ -324,7 +325,7 @@ export function initDocsViewerDocumentController(context) {
         window: mount && mount.ownerDocument ? mount.ownerDocument.defaultView : null
       });
     } catch (error) {
-      console.warn("docs_viewer: diagram detail resource cleanup unavailable", error);
+      console.warn("docs_viewer: image detail resource cleanup unavailable", error);
     }
   }
 
@@ -381,7 +382,7 @@ export function initDocsViewerDocumentController(context) {
     releaseReportPresentation();
     releaseMediaDetails();
     releaseTableDetails();
-    releaseDiagramDetails();
+    releaseImageDetails();
     content.textContent = "";
     var status = document.createElement("p");
     status.className = "docsViewer__panelStatus muted small";
@@ -440,7 +441,7 @@ export function initDocsViewerDocumentController(context) {
     releaseReportPresentation();
     releaseMediaDetails();
     releaseTableDetails();
-    releaseDiagramDetails();
+    releaseImageDetails();
     mountDocsContentHtml(content, payload.content_html, {
       mediaRoot: workspaceConfigState.activeConfig && workspaceConfigState.activeConfig.mediaRoot,
       viewerBaseUrl: workspaceConfigState.activeConfig && workspaceConfigState.activeConfig.viewerBaseUrl
@@ -455,7 +456,7 @@ export function initDocsViewerDocumentController(context) {
     }
     mountTableDetails(doc, payload, mountGeneration);
     mountMediaDetails(doc, payload, mountGeneration);
-    mountDiagramDetails(doc, payload, mountGeneration);
+    mountImageDetails(doc, payload, mountGeneration);
     mountDocumentExtras(doc, payload, mountGeneration);
     document.title = payload.title + " | dotlineform";
     setStatus("", false);

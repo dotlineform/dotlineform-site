@@ -327,7 +327,7 @@ export function startDocsViewerRuntime(options) {
     checkGeneratedDataReadCapability: checkGeneratedDataReadCapability,
     content: content,
     collectionProvider: collectionProvider,
-    diagramDetailAdapter: settings.diagramDetailAdapter,
+    imageDetailAdapter: settings.imageDetailAdapter,
     mediaDetailAdapter: settings.mediaDetailAdapter,
     managementService: managementService,
     managementDocumentActions: {

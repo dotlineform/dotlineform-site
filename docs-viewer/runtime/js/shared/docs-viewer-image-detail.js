@@ -1,6 +1,30 @@
-const PERSISTENT_DIAGRAM_SELECTOR = 'img[data-docs-viewer-diagram-kind="persistent-svg"]';
-const DIAGRAM_FRAME_SELECTOR = ".docsViewer__diagramFrame";
-const DETAIL_CONTROL_LABEL = "Open diagram";
+const IMAGE_DETAIL_DIRECTIVE = "dotlineform:image-detail";
+const IMAGE_FRAME_SELECTOR = ".docsViewer__imageFrame";
+
+function followingImage(marker) {
+  var next = marker.nextSibling;
+  while (next && next.nodeType === 3 && !next.textContent.trim()) next = next.nextSibling;
+  if (!next || next.nodeType !== 1) return null;
+  if (next.tagName === "IMG") return next;
+  if (next.tagName === "P" && next.children.length === 1 && !next.textContent.trim()) {
+    return next.firstElementChild.tagName === "IMG" ? next.firstElementChild : null;
+  }
+  if (next.matches("figure.docsViewerFigure")) return next.querySelector(":scope > img");
+  return null;
+}
+
+function directiveImages(root, documentRef) {
+  var images = new Set();
+  var comments = documentRef.createTreeWalker(root, 128 /* SHOW_COMMENT */);
+  for (var marker = comments.nextNode(); marker; marker = comments.nextNode()) {
+    if (marker.data.trim() !== IMAGE_DETAIL_DIRECTIVE
+      || marker.parentElement.closest("pre, code, script, style, textarea, svg")) continue;
+    var image = followingImage(marker);
+    if (image) images.add(image);
+  }
+  return images;
+}
+
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
 }
@@ -21,7 +45,7 @@ function immutableTargetContext(state, record) {
   return Object.freeze({
     documentTarget: Object.freeze(Object.assign({}, state.documentTarget)),
     documentMountGeneration: state.documentMountGeneration,
-    kind: "diagram",
+    kind: "image",
     adapterTargetId: record.id,
     occurrence: record.occurrence
   });
@@ -33,69 +57,61 @@ function defaultWarning(message, error) {
   }
 }
 
-function persistentDiagramTarget(diagram) {
-  return cleanString(diagram && diagram.getAttribute ? diagram.getAttribute("src") : "");
+function imageTarget(image) {
+  return cleanString(image.currentSrc || image.getAttribute("src"));
 }
 
-function diagramLabel(surface, occurrence) {
+function imageLabel(surface, occurrence) {
   var label = cleanString(surface.getAttribute("alt")) || cleanString(surface.getAttribute("title"));
-  return label || "Diagram " + occurrence;
+  return label || "Image " + occurrence;
 }
 
-function createDetailControl(documentRef, kind) {
+function createDetailControl(documentRef) {
   var control = documentRef.createElement("button");
-  control.className = "docsViewer__toolbarIconButton docsViewer__diagramDetailControl";
+  control.className = "docsViewer__toolbarIconButton docsViewer__imageDetailControl";
   control.type = "button";
-  control.dataset.docsViewerDiagramDetailKind = kind;
-  control.setAttribute("aria-label", DETAIL_CONTROL_LABEL);
-  control.setAttribute("title", DETAIL_CONTROL_LABEL);
+  control.setAttribute("aria-label", "Open image");
+  control.setAttribute("title", "Open image");
   control.innerHTML = [
-    '<svg class="docsViewer__diagramDetailIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">',
+    '<svg class="docsViewer__contentDetailIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">',
     '  <path d="M14 5h5v5M19 5l-8 8M19 13v6H5V5h6"></path>',
     "</svg>"
   ].join("");
   return control;
 }
 
-function decorateDiagramSurface(documentRef, surface, kind) {
-  if (surface.closest(DIAGRAM_FRAME_SELECTOR)) return null;
+function decorateImageSurface(documentRef, surface) {
+  if (surface.closest(IMAGE_FRAME_SELECTOR)) return null;
   var frame = documentRef.createElement("span");
-  frame.className = "docsViewer__diagramFrame";
-  frame.dataset.docsViewerDiagramFrame = kind;
+  frame.className = "docsViewer__imageFrame";
 
   var viewport = documentRef.createElement("span");
-  viewport.className = "docsViewer__diagramViewport";
+  viewport.className = "docsViewer__imageViewport";
 
   surface.before(frame);
   viewport.appendChild(surface);
-  frame.appendChild(viewport);
-  var control = createDetailControl(documentRef, kind);
-  frame.appendChild(control);
+  var control = createDetailControl(documentRef);
+  frame.append(control, viewport);
   return { control: control, frame: frame, viewport: viewport };
 }
 
-/** Own imported SVG targets for one document mount. */
-export function createDocsViewerDiagramDetailAdapter(options) {
+/** Own directive-selected raster and SVG images for one document mount. */
+export function createDocsViewerImageDetailAdapter(options) {
   var settings = options || {};
   var warn = typeof settings.warn === "function" ? settings.warn : defaultWarning;
   var stateByRoot = new WeakMap();
 
   function createState(root, context) {
-    var doc = context.doc || {};
     var state = {
-      documentMountGeneration: positiveInteger(
-        context.documentMountGeneration || context.mountGeneration
-      ),
+      documentMountGeneration: context.documentMountGeneration,
       documentTarget: {
-          collection: "",
-        docId: cleanString(doc.doc_id)
+        collection: context.documentTarget.collection,
+        docId: context.documentTarget.doc_id
       },
       nextOccurrence: 0,
       presentations: new Set(),
       records: new Map(),
-      requestContentDetail: typeof context.requestContentDetail === "function"
-        ? context.requestContentDetail
-        : function () { return false; },
+      requestContentDetail: context.requestContentDetail,
       root: root
     };
     stateByRoot.set(root, state);
@@ -112,7 +128,7 @@ export function createDocsViewerDiagramDetailAdapter(options) {
     try {
       presentation.projectNewTabTarget(target);
     } catch (error) {
-      warn("docs_viewer: diagram detail toolbar target refresh unavailable", error);
+      warn("docs_viewer: image detail toolbar target refresh unavailable", error);
     }
   }
 
@@ -123,7 +139,7 @@ export function createDocsViewerDiagramDetailAdapter(options) {
       !state
       || !state.documentMountGeneration
       || !state.documentTarget.docId
-      || cleanString(target.kind) !== "diagram"
+      || cleanString(target.kind) !== "image"
       || positiveInteger(target.documentMountGeneration) !== state.documentMountGeneration
       || !sameDocumentTarget(target.documentTarget, state.documentTarget)
     ) {
@@ -139,8 +155,8 @@ export function createDocsViewerDiagramDetailAdapter(options) {
     var record = {
       control: decoration.control,
       handleClick: null,
-      id: "diagram-" + (occurrence - 1),
-      label: diagramLabel(surface, occurrence),
+      id: "image-" + (occurrence - 1),
+      label: imageLabel(surface, occurrence),
       occurrence: occurrence,
       presentations: new Set(),
       sourceViewport: decoration.viewport,
@@ -183,7 +199,7 @@ export function createDocsViewerDiagramDetailAdapter(options) {
   function mountDocument(mountContext) {
     var context = mountContext || {};
     var root = context.content;
-    if (!root || typeof root.querySelectorAll !== "function") {
+    if (!root) {
       return { found: 0, decorated: 0, skipped: 0 };
     }
 
@@ -193,25 +209,19 @@ export function createDocsViewerDiagramDetailAdapter(options) {
     }
 
     var state = stateFor(root, context);
-    var diagrams = Array.from(root.querySelectorAll(PERSISTENT_DIAGRAM_SELECTOR));
-    var decorated = diagrams.reduce(function (count, diagram) {
-      var target = persistentDiagramTarget(diagram);
-      var kind = cleanString(diagram.dataset ? diagram.dataset.docsViewerDiagramKind : "");
+    var images = Array.from(directiveImages(root, documentRef));
+    var decorated = images.reduce(function (count, image) {
+      var target = imageTarget(image);
       if (!target) return count;
-      var decoration = decorateDiagramSurface(documentRef, diagram, kind);
+      var decoration = decorateImageSurface(documentRef, image);
       if (!decoration) return count;
-      registerRecord(
-        state,
-        diagram,
-        decoration,
-        target
-      );
+      registerRecord(state, image, decoration, target);
       return count + 1;
     }, 0);
     return {
-      found: diagrams.length,
+      found: images.length,
       decorated: decorated,
-      skipped: diagrams.length - decorated
+      skipped: images.length - decorated
     };
   }
 
@@ -219,20 +229,20 @@ export function createDocsViewerDiagramDetailAdapter(options) {
     var context = presentationContext || {};
     var root = context.content;
     var resolved = resolveRecord(root, context.targetContext);
-    if (!resolved) throw new Error("Diagram detail target is stale or unavailable.");
+    if (!resolved) throw new Error("Image detail target is stale or unavailable.");
 
     var record = resolved.record;
     var state = resolved.state;
     if (record.presentations.size || record.surface.parentElement !== record.sourceViewport) {
-      throw new Error("Diagram detail target is already active or unavailable.");
+      throw new Error("Image detail target is already active or unavailable.");
     }
     var documentRef = context.document || root.ownerDocument;
     var section = documentRef.createElement("section");
-    section.className = "docsViewer__contentDetail docsViewer__contentDetail--diagram";
-    section.setAttribute("data-docs-content-detail-view", "diagram");
+    section.className = "docsViewer__contentDetail docsViewer__contentDetail--image";
+    section.setAttribute("data-docs-content-detail-view", "image");
 
     var viewport = documentRef.createElement("div");
-    viewport.className = "docsViewer__diagramDetailViewport";
+    viewport.className = "docsViewer__imageDetailViewport";
     viewport.tabIndex = 0;
     viewport.setAttribute("role", "region");
     viewport.setAttribute("aria-label", record.label);
@@ -276,4 +286,4 @@ export function createDocsViewerDiagramDetailAdapter(options) {
   };
 }
 
-export const docsViewerDiagramDetailAdapter = createDocsViewerDiagramDetailAdapter();
+export const docsViewerImageDetailAdapter = createDocsViewerImageDetailAdapter();

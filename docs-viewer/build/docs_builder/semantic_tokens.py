@@ -463,12 +463,11 @@ def render_catalogue_entry(
     )
 
 
-def render_image_reference(token: SemanticTokenOccurrence, src: str, *, svg: bool) -> str:
+def render_image_reference(token: SemanticTokenOccurrence, src: str) -> str:
     """Render static Docs-owned image presentation without media writes or lookups."""
     modifiers = [FIGURE_PLACEMENT_CLASSES[token.placement]]
     if not token.fill_width:
         modifiers.append(FIGURE_NATURAL_WIDTH_CLASS)
-    diagram = ' data-docs-viewer-diagram-kind="persistent-svg"' if svg else ""
     blocks = []
     if token.caption:
         blocks.append(f'<span class="docsViewerFigure__caption">{html.escape(token.caption)}</span>')
@@ -477,7 +476,7 @@ def render_image_reference(token: SemanticTokenOccurrence, src: str, *, svg: boo
     caption = f'<figcaption>{"".join(blocks)}</figcaption>' if blocks else ""
     return (
         f'<figure class="docsViewerFigure {" ".join(modifiers)}">'
-        f'<img src="{html.escape(src, quote=True)}" alt="{html.escape(token.alt, quote=True)}"{diagram}>'
+        f'<img src="{html.escape(src, quote=True)}" alt="{html.escape(token.alt, quote=True)}">'
         f'{caption}</figure>'
     )
 
@@ -508,7 +507,6 @@ class SemanticTokensMixin:
             if token.family == "image":
                 fragment = render_image_reference(
                     token, self.image_token_media_url(token.media_path),
-                    svg=token.target_type == "svg",
                 )
             elif token.presentation == "entry":
                 if getattr(self, "collection_id", "") != "catalogue" or token.target_id != document_id or entry_seen:
