@@ -3,8 +3,8 @@ draft: false
 doc_id: d-20261007-221414-48ff3f
 title: Public Work JSON Review
 added_date: "2026-10-07 22:14:14"
-last_updated: "2026-10-09 20:38:00"
-summary: Review the Studio Refresh handoff, complete rendered Work media, consistent updates and shared Full Rebuild optimisation.
+last_updated: "2026-10-19"
+summary: Live Work resolution in Manage, shared browser rendering, and ordered delivery of one static preparation owner for queued Publish and collection Export.
 ui_status: proposed
 parent_id: d-20260428-000000-f5ff18
 ---
@@ -12,225 +12,212 @@ parent_id: d-20260428-000000-f5ff18
 
 ## Purpose And Status
 
-Review whether readers or generation need separate Work by-ID JSON in either Working or public output when Catalogue documents already contain rendered Work content. The intended improvement is simpler loading and a clear, consistent point at which Catalogue changes appear in document text, images and Media View. The agreed presentation direction follows the current representation of Work `00008`, nerve: full descriptive Work metadata in the Catalogue document, title/`cat.`/Gallery links in Media View, and title with optional authored summary in an illustrative Catalogue Image token.
+Manage resolves all Work-derived presentation from current Working Work records, configured media policy/relationships and ready Working media. Working Build retains Work references and document-authored choices; it bakes no Work metadata. Work changes do not require rebuilding referring Working documents merely to display current Work data.
 
-Full Rebuild performance is a shared concern regardless of what calls it. Regenerate would reconcile Catalogue sources and invoke that same operation. Optimising Full Rebuild therefore benefits both direct rebuilds and Catalogue regeneration; this review does not require a separate Regenerate-specific rendering strategy.
+Publish and Export share one static preparation owner. It resolves selected generated documents against current Working inputs and returns complete static presentation plus exact required media. Publish prepares only queued documents and transfers the resulting artifacts through Preview. Export prepares only its checked collection documents and packages their referenced media.
 
-The broader Work-payload and full-rebuild proposals remain a review, not implementation authority. [Incremental Updates](deliveries/Incremental_updates.md) now implements staged media, queue-only normal Regenerate and per-Work Publish followed by shared output. Its explicit referring-document Rebuild decision supersedes the automatic full-workspace Regenerate direction below. By-ID Work JSON remains in use; aggregate handoff/presentation changes and shared Full Rebuild optimisation remain separately scoped. The earlier Catalogue Image metadata removal was delivered independently. Current owners are [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) and [Catalogue Deployment](Catalogue_Deployment.md).
+Manage and public retain shared browser rendering components with separate live and prepared providers. Public renders its own document and opens its embedded Work Media View without fetching Work JSON, media policy or Series–Gallery metadata. Normal image requests, responsive selection and navigation remain browser responsibilities.
 
-## Agreed Studio And Docs Boundary
+The design below resolves the runtime contracts, shared-code boundary, navigation and transfer handoffs. **Open issue OP-1 gates payload conversion and public activation:** the user must agree the initial conversion/publication selection and accept the Working snapshot it will publish. Implementation may proceed locally against the resolved design, but no conversion, publication or deployment is authorized by this document update. Existing lifecycle documentation still describes shipped behavior; [Builder](Builder.md), [Catalogue Deployment](Catalogue_Deployment.md), [Export](Export.md) and the [Development Checklist](Development_Checklist.md) change with implementation.
 
-Retain explicit Studio Refresh as the handoff to Docs. Individual Work editing must not incur complete report JSON generation or the aggregate handoff. Studio owns canonical Catalogue authoring; Docs owns consumption of the refreshed inputs and rendering its documents. Docs Build, Regenerate, authoring/validation providers and Publish consume supplied Working data without reading Studio canonical files directly.
+## Operating Model And Fixed Boundaries
 
-| Operation | Target responsibility |
+| Owner | Responsibility |
 | --- | --- |
-| Studio Save | Persist the Work edit, complete required local media and update editor records. Keep full report generation and the Docs handoff outside this operation. |
-| Studio Refresh | Copy `works.json` into the private Docs Working input boundary, provide accompanying Catalogue relationship/media data and regenerate the existing report manifests/metadata. This replaces the proposed generated Work by-ID handoff. |
-| Catalogue Regenerate | Reconcile Catalogue source documents from the refreshed input, then call the shared Full Rebuild operation across ordinary documents and every configured collection. |
-| Full Rebuild | Own complete workspace rebuild orchestration and its shared performance improvements, whether invoked directly or by Regenerate. |
-| Document Rebuild | Apply document-only source changes using the existing refreshed Catalogue input, then produce the selected document's complete presentation. |
-| Docs Publish | Capture the supplied Working inputs and prepare/distribute the finished document snapshot through its existing owner. Refresh remains a separate explicit action. |
+| Studio Save / Refresh | Save canonical records and staged media, then explicitly hand selected ready inputs to Working through Refresh. Preserve the implemented [Save/Refresh boundary](Catalogue_Save_And_Refresh.md). |
+| Working Build / Catalogue Regenerate | Build document-authored structure and Catalogue reference slots. Preserve required source generation, normal queue-only Regenerate and existing generation-to-queue handoffs. |
+| Manage live provider | Resolve all Work-derived fields from available Working inputs on document activation or Media View activation; supply presentation to shared components. |
+| Shared browser components | Display Entry, image, caption and Media View presentation; own responsive image behavior, interaction, navigation and disposal. |
+| Shared static preparer | Read the selected generated documents and exact required Working Catalogue inputs; produce static payloads and required media identities for Publish or Export. |
+| Publish | Read the existing queues once, prepare each selected current document/Work unit, persist prepared artifacts/media in Preview, transfer them and complete successful units under existing rules. |
+| Export | Capture checked collection IDs, invoke static preparation, and use the existing Preview/Apply snapshot planner and writer. |
+| Git / Deploy Public | Remain separate explicit actions over the committed `site/` artifact; there is no deploy-time document build. |
 
-This separation remains valuable if the Studio editor is later hosted within Docs Viewer. App placement and server composition do not change which operation owns expensive generation or which data Docs consumes. The existing report-manifest direction is part of this boundary, rather than a reason for Docs to reach back into Studio's source storage.
+The queue is the complete authority for publication scope. Preserve its producers, schemas, selection rules, processing order, success removal and failure retention. Do not discover affected documents, queue referring documents automatically, rebuild during Publish or add another queue/ledger. Unqueued documents receive no preparation or publication work. Empty queues return before preparation or transfer setup.
 
-### Optional Studio-Owned Media Handoff
+The existing `PublicationPreparation` in [docs_publication_preparation.py](../../docs-viewer/services/docs_publication_preparation.py) owns Build-to-queue effects. It remains that owner. The new static presentation preparer is a separate responsibility, invoked by Publish and Export; its name must not conceal generation, eligibility calculation or queue mutation.
 
-For complete Studio/Docs data separation, Studio could also own its prepared Work media in an explicitly configured external location outside the repository. Studio Save would update the editor's own ready renditions, thumbnails and managed downloads there. Refresh would then copy the required media into the Docs-owned ready-media boundary alongside the aggregate Catalogue input and report JSON. Project originals retain their existing Projects owner; this proposal concerns the prepared media and managed files consumed by the editor and Docs.
+An already mounted Manage view retains the existing activation/refresh behavior. Reuse concurrent reads and loaded values within one resolution operation; a later activation resolves current Working inputs again. Do not retain a completed Work presentation as a freshness cache across activations or add mutation subscriptions.
 
-| Owner or operation | Optional media boundary |
+Document-authored front matter, summary, link labels and layout remain document-owned. An authored document title remains source metadata even where Catalogue Regenerate originally supplied it; Work-derived Entry headings and captions resolve live. This delivery does not retitle navigation, Search or Recent independently of their existing owners.
+
+## Resolved Design Contracts
+
+These are the implementation contracts. Internal helper names and module layout may follow the existing owners; they must not change the behavior or handoffs specified here.
+
+### 1. Working Reference Contract
+
+Add an optional `catalogue` envelope to by-ID document JSON, omitted when the document contains no supported Catalogue references. It carries `schema: "docs_catalogue_presentation_v1"` and an ordered `references` array. Each reference has:
+
+| Field | Meaning |
 | --- | --- |
-| Studio | Canonical authoring and an external editor-owned prepared-media set. Save changes these without changing Docs' supplied media. |
-| Docs | Refreshed Catalogue/report inputs and its own matching ready-media set. Readers, Builds and Publish consume only this supplied set. |
-| Refresh | The sole Studio → Docs data bridge, transferring JSON and its required media in one awaited operation. This bridge remains explicit if the Studio UI moves into Docs Viewer. |
+| `reference_id` | `c1`, `c2`, etc. in source occurrence order within the document, shared by the record and an HTML slot's `data-docs-catalogue-ref` attribute. Repeated references to the same Work retain separate authored options. |
+| `target` | Existing exact Catalogue target: `kind` and `id`, using `catalogue-work` or `catalogue-gallery`. |
+| `presentation` | `entry`, `image` or `media`, following the current semantic-token restrictions. Gallery remains a Media View target, not a Work Entry or image. |
+| `options` | Only applicable authored fields: `use_work_title_caption`, `summary_html` (already rendered restricted HTML), `placement`, `fill_width` and `label` (authored Media View link text). Omit inapplicable fields. |
 
-This would remove the current timing gap where Save changes shared media before Refresh advances the generated JSON's media version. A successful Refresh would leave the supplied Catalogue JSON and media aligned. It does not by itself rebuild previously rendered documents; Catalogue Regenerate advances their baked text, versioned image references and Media View presentations under the target workflow below.
+Build emits the slots and these records without opening Work records to fill them. It renders authored summary formatting once and preserves the existing token grammar/authoring authority. Work titles, alt text, intrinsic image dimensions, URLs, Entry metadata/resources and Gallery relationships are absent from the Working reference values. A Work ID is an identity, not baked metadata.
 
-Incremental media transfer is a requirement if this optional handoff is implemented. The user reports approximately 1.7 GB of media; a quick Refresh must not recopy that corpus. Copy the required rendition/thumbnail set only for changed or new images, and supply any required media missing from the Docs destination. Skip unchanged images. A metadata-only Refresh must transfer no image bytes. Managed downloads also need an explicit changed/new-file transfer rule.
+Build no longer calls Work presentation preparation for semantic rendering. Existing subject, relationship, discovery and queue owners retain their separately required work; this change does not remove a Work read needed by another demonstrated responsibility.
 
-Identify transfer candidates from image identity/version or explicit change information; do not replace the avoided bulk copy with a mandatory read/hash of every media file on each quick Refresh. The proposed change-selection approach is described below; exact missing-file handling remains design work. Initial population necessarily copies the required media once; that does not justify a full recopy during routine Refresh.
+### 2. Resolved Presentation And Public Payload
 
-The cost is maintaining two current media sets, extra storage and transfer work for changed media. Exact storage configuration, transfer selection, completion/failure behaviour and migration of the currently shared assets would need a bounded delivery. The transfers are not inherently atomic merely because one button awaits them.
+Manage's live provider and the public prepared provider expose the same Work presentation contract, `schema_version: "docs_media_view_v2"`: `target`, `label` (Work title), `image`, `new_tab_target` and `galleries`, retaining the existing image-candidate, navigation-target and Gallery-link shapes. An Entry adds `entry` with `metadata_lines` and ordered `resources`; each resource carries `kind` (`download` or `link`), `label` and `url`. The unused top-level descriptive `metadata` array is removed. It contains no canonical source paths or authoring state. There is no v1 compatibility branch.
 
-This is an optional extension, not a prerequisite for replacing Work by-ID JSON or baking document media. Keeping the current shared-media boundary remains acceptable for the initial work. No external location has been chosen or created and no media migration is approved.
+Entry formatting preserves the current display: title; year-display text; optional medium; non-null height/width/depth in that order joined by ` × ` with `cm`, omitting a trailing decimal zero; Catalogue number, separated from the preceding descriptive rows by the existing blank line; downloads followed by links in supplied order, with their supplied labels. Work Media View shows title, `cat.` and Gallery links, without the unused descriptive `metadata` array. Image-title captions/alt text use the resolved Work title. Authored summary, caption enablement, placement and fill-width remain independent options.
 
-#### Pending Changes And Media Selection
+Static preparation adds a `presentations` map to the `catalogue` envelope, keyed as `<target.kind>:<target.id>` (for example `catalogue-work:00008`), and replaces each Work reference slot in `content_html` with complete visible markup. Working omits this map. A prepared document has one resolved presentation per distinct Work, with Entry fields included when its references require them. Preserve reference records so shared browser components can bind each occurrence without parsing its visible caption. Gallery-only references need no embedded Work presentation.
 
-Reuse the existing per-Work change-tracking approach, while keeping the completion owners distinct. Today's `updates-pending.json` accumulates changed/deleted Work IDs from Refresh's generated-file writes/deletions and clears them only after the required Catalogue Regenerate source/Build work completes. A title, descriptive-field, resource or direct Gallery change can queue a Work without any image change. An unchanged image would therefore be recopied unnecessarily if every pending Work were treated as pending media, including on repeated Refreshes before Regenerate.
+A prepared Catalogue Work document always includes its own resolved Work presentation, including the Media View fields needed when that Work is selected from a Gallery. A Work Media View link also has an embedded presentation even if no image appears inline. Gallery links retain their target and authored label; they do not embed an entire Gallery or its member Works.
 
-For the aggregate handoff, calculate one Refresh change set against the previous supplied Working data. Use meaningful Work/relationship changes to accumulate the existing document pending list. Derive the image-transfer subset from new Work images or a changed `media_version`, and include required destination files that are missing. Studio's existing media completion advances `media_version` when rendition bytes change; metadata-only edits do not require image transfer. Relationship changes can require a rebuilt presentation without requiring new pixels.
+Public uses only embedded Work presentations. It does not fall back to old Work JSON when a presentation is absent. Missing required selected input stops preparation under the existing error/completion model; it does not cause a source rebuild or another reader path. Documents without Catalogue references preserve their existing payload bytes when no other transformation is required.
 
-The refreshed aggregate can provide the comparison baseline, so a second persistent media pending queue is not inherently required. Compare the new Studio data with the previous supplied aggregate before replacing it, and advance the media comparison baseline only after the required transfers succeed. A successful Refresh satisfies media transfer, while document changes remain queued until Regenerate succeeds. Repeated Refresh without another image change must transfer no image bytes even if document regeneration is still pending.
+### 3. Shared Rendering And Language Boundary
 
-Exact completion ordering and partial-failure handling must preserve that distinction without adding automatic retry markers or a second recovery ledger. Image `media_version` does not track download content or every rendition-policy change; those require their own transfer-selection rules. This is a proposed selection design, not an approved schema or implementation change. [Pending updates](../../studio/services/catalogue/catalogue_pending_updates.py) and [image version completion](../../studio/services/catalogue/catalogue_media_version.py) are the current owners inspected for this review.
+Keep the shared browser renderer and Media View components in canonical `docs-viewer/` runtime modules. Inject a presentation provider rather than letting those components perform Catalogue metadata reads. Manage's provider resolves live Working records; public's provider returns embedded presentation and reads another prepared document only on navigation.
 
-## Agreed Presentation Direction
+Use one Python static preparation service for both Publish and Export. It performs selected filesystem reads, resolves current Work data and serializes complete HTML/presentation. It has no queue or destination writes. Existing Python workflows call it directly; this design adds no Node service, browser automation, server DOM engine or general template engine.
 
-| Surface | Work information to display |
+There are two required serialization adapters: browser JavaScript mounts live presentation, and Python emits static markup. They follow the same field/formatting contract, HTML slot/class contract, canonical media policy and icon assets. Share browser rendering between Manage/public and Python preparation between Publish/Export; do not claim executable code is shared across Python and JavaScript. This bounded duplication of serialization is deliberate. Do not create separate field-selection or formatting rules for Publish and Export, duplicate policy constants, or move Manage reads to Python merely to reuse a helper.
+
+The shared browser mount binds prepared public markup and Media View data without another metadata lookup or an unnecessary replacement of complete static content. Manage fills the same presentation structure from its live provider. Preserve shared styles, image layout, event/disposal handling and new-tab behavior.
+
+### 4. Preparation Inputs, Outputs And Media Handoff
+
+The static preparation interface accepts an exact document target and already loaded generated payload, resolved Working/media configuration, and operation-local Catalogue input reuse. Its caller owns selection. Resolve each distinct required Work, policy and relationship input once within the operation and carry those values forward. Load nothing for unrelated Works or documents without relevant references.
+
+Return a prepared payload object, including final `content_html` and embedded presentation, plus distinct media descriptors. Each descriptor identifies the configured owner/type and exact object identity; it contains no byte totals or persistent provenance. Publish serializes the payload once, writes those JSON bytes to Preview and transfers the same bytes. Export uses the carried payload directly, with no JSON reparse or second Work resolver.
+
+Catalogue media retains its Work owner and `document_media: false` boundary. Ordinary document media retains its existing owner and queue selection. Do not copy Work images into document-media folders, restore the retired by-ID media list, or infer media through remote URL requests.
+
+For a Docs-queue document referencing a Work, preparation supplies its required ready rendition/file objects as part of that document's transfer unit, even if there is no pending Catalogue Work image selection. These operation-local inputs do not enqueue another Work or change the saved queue schema. For an existing Catalogue Work unit, preserve its queued image/file selection facts: unchanged images/downloads do not gain a blanket transfer merely because metadata was prepared. Merge actual required transfers and deduplicate exact owner/object identities across the operation, reusing completed transfer effects.
+
+Prepare and complete units in the existing order: Catalogue Work units, Docs document/deletion/shared units, then Catalogue shared output. Resolve/prep a current unit before its required Preview writes/transfers; do not prepare every queued unit in advance. Remove only the fully successful unit. A failure leaves that unit pending and retains prior completed effects. Deletion/shared-only units keep their existing paths and do not invoke Work baking. Empty queues do no preparation.
+
+Retain selected input parsing, escaping/URL safety, configured ownership, path/symlink confinement, actual missing-input errors and selected transfer verification. Domain validation stays upstream. No content audits, freshness scans, canonical source reads, full inventories, additional hashes or retry/rollback machinery belong in preparation/transfer. Export's existing exact-bytes confirmation remains intentional.
+
+### 5. Public Navigation And Inventory
+
+Resolve a Work selected from a public Gallery by reading its prepared Catalogue document through the existing exact document target `collection: catalogue, doc_id: <work_id>`, then selecting its embedded Work presentation. This is navigation to another prepared target, not a Work JSON lookup or a rebuild. Share the existing Gallery paging/navigation UI.
+
+Retain existing Gallery membership JSON and its policy-based thumbnail path for Gallery browsing. That navigation may load its Gallery record and required thumbnail policy; opening a document's own embedded Work presentation does not. Do not eagerly read every Gallery member's document or embed all member presentations in each referring document.
+
+Remove the public provider's Work-record and Series–Gallery resolution paths from document/Work presentation. Retain those paths in Manage's live provider. Public media policy remains available for Gallery and other active thumbnail consumers, so it is not removed wholesale.
+
+**Inventory decision:** keep the existing physical Catalogue JSON distribution and its queue selections in this delivery. Working Work JSON remains required by Manage; public Work/Series–Gallery files cease to be dependencies of the new document renderer, but their physical publication/removal is a separate cleanup after cutover and consumer review. No legacy reader fallback or alias is retained. Cleanup removal criteria are: new reader and prepared payload cutover accepted, all remaining public consumers mapped, and explicit output-removal scope agreed. Do not turn that cleanup into queue schema or selection changes during this delivery.
+
+### 6. Export Adapter And Confirmation
+
+Export invokes the same static preparer once for each checked generated document, sharing operation-local inputs across the selection. Its existing media pass maps the returned Work-media descriptors and document-owned references to deterministic package paths. Read each distinct selected object once per request, package only emitted candidates/linked files, and retain existing behavior for unrelated external dependencies.
+
+The browseable snapshot contains visible images, captions and summaries without Docs Viewer JavaScript. Convert Work image/text Media View openers to ordinary links to their packaged largest-image target while retaining the image or authored label. Gallery Media View controls retain their authored text without interactive Gallery browsing; Export does not fetch/package every Gallery member. The text-first `portable.html` retains its existing intentional image-placeholder contract.
+
+Preview remains write-free. Apply reruns preparation once against the same selected targets, and the existing plan revision covers prepared titles/HTML and packaged media bytes so a meaningful Work change invalidates the earlier confirmation. Carry prepared values through that request's writing and final verification. Preserve replacement decisions, destination checks, final file-set/byte verification and all six accepted Export cleanups.
+
+## Open Issue OP-1: Initial Conversion And Public Activation
+
+Existing Working payloads may lack authored reference options, and existing public payloads lack embedded presentations. The new providers must not infer lost options from old HTML or keep an old-payload Work lookup fallback. Explicit selected generation is needed to introduce the Working contract, and queued preparation is needed before affected public payloads can use the new reader.
+
+**Recommendation:** agree one explicit conversion selection, generate those Working targets under the new contract through ordinary owners, and use the resulting existing queues for a one-time publication of the affected approved public documents. Ship the prepared repository payloads and projected public reader together through the ordinary explicit Git/deployment workflow. After cutover, every Publish again consumes only its normal current queues.
+
+**Decision required:** which exact Working targets may be regenerated and which public targets may be republished from current Working content/data, including any unpublished edits already present, and when public activation is authorized. The selection must cover affected existing public targets before switching their reader. This document does not authorize or silently insert a bulk conversion, queue expansion, publication or deployment.
+
+Publish continues to consume both complete existing queues. The cutover decision must therefore account for entries already pending and the ordinary queue effects of approved generation; it cannot pick a migration subset at Publish time. Do not filter, clear or rewrite existing selections to manufacture a separate cutover batch. If their combined publication is not approved, defer activation until that scope is agreed.
+
+OP-1 blocks the conversion/public-activation step, not local code delivery. If the full affected public selection is not yet approved, keep the new reader local/unactivated; do not introduce a compatibility mode or partially activate it against unsupported payloads. Existing current media locations remain in use; this is not an immutable historical snapshot/version-store project.
+
+## Delivery Summary
+
+- Live Work resolution in Manage.
+- Shared rendering with separate data providers.
+- One static preparation owner for Publish and Export.
+- **Build:** retains Work references and authored choices; bakes no Work metadata.
+- **Manage:** resolves all Work-derived presentation through the live provider.
+- **Publish Preparation:** bakes current Working data into static output for queued documents. Export invokes the same preparation for its snapshots.
+- **Queues:** retain their current selection and completion behavior. Only queued documents are prepared and published.
+
+## Workflow Changes
+
+- **Build:** replace Work metadata lookups/rendered values with explicit reference slots and authored options.
+- **Manage:** resolve Work titles, captions, Entry metadata/resources, images and Media View relationships through the live provider.
+- **Shared runtime:** inject live/prepared providers into the shared renderer and keep public Work resolution out of its import path.
+- **Publish:** call static preparation inside each existing current unit before Preview persistence/transfer, carrying exact prepared values through completion.
+- **Export:** call that same preparer, package configured Work media and make static Work openers ordinary image links.
+- **Public navigation:** read a selected Work's prepared Catalogue document; retain Gallery membership/thumbnail inputs and existing physical Catalogue JSON distribution.
+- **Cutover:** perform only an explicitly agreed conversion/queued publication and activate the public reader with its prepared payloads.
+
+## Implementation Sequence And Completion Gates
+
+Each unchecked step is a delivery with named inputs, outputs and completion criteria. These are ordered implementation results, not further product-design tasks. No implementation, generation or publication has occurred in this documentation revision.
+
+### 1. Confirm The Contract And Owner Map
+
+- [ ] **Inputs:** the resolved contracts above and current Build, provider, publication and Export owners.
+- **Delivers:** a concise mapping of those contracts to the existing owners, an explicit new static-preparer boundary separate from Build-to-queue `PublicationPreparation`, and confirmation that OP-1 is the only outstanding release decision.
+- **Done when:** each input read, output write, reference/presentation field and queue completion effect has one owner; no queue, full-build, discovery or runtime dependency expansion has been introduced. Stop and raise any material contradiction rather than resolving it through a hidden fallback.
+
+### 2. Deliver Reference-Only Working Build
+
+- [ ] **Inputs:** selected Markdown documents, validated semantic tokens and their authored options.
+- **Delivers:** `catalogue.references`, deterministic HTML slots and document-authored markup; removal of Work presentation reads/values from semantic Build output.
+- **Done when:** Entry, image, Work Media View link, repeated Work references and Gallery link references retain all applicable authored choices; no Work title, caption value, Entry metadata/resources, image dimensions/URLs or relationship labels are resolved by Build. Unrelated document metadata, generation and queue producers retain current behavior. OP-1 controls writes to existing Working documents.
+
+### 3. Deliver Live Manage And Shared Browser Rendering
+
+- [ ] **Inputs:** new Working reference records, current Working Work/policy/relationship inputs and the existing shared document/Media View components.
+- **Delivers:** the Manage-only live provider, provider-driven shared Entry/image/Media View rendering, and the public provider interface for embedded presentation; removal of the unused Media View descriptive metadata array.
+- **Done when:** Work-derived fields resolve at each ordinary document/media activation without rebuilding the referring document, each operation reuses its loaded inputs, authored choices remain intact, and shared rendering performs no Work metadata reads. Preserve error/disposal/activation behavior and the Entry/Image/Media View presentation distinctions.
+
+### 4. Deliver The Shared Static Preparer
+
+- [ ] **Inputs:** explicit selected targets and already loaded payloads, resolved Working/media configuration and operation-local Catalogue inputs.
+- **Delivers:** one Python entry point returning complete static payloads plus exact configured media descriptors, including visible image markup and embedded Work presentation.
+- **Done when:** Entry, image and Work-link output uses the same field/formatting contract as Manage; distinct Work reads are reused; image candidates and linked files have exact owners; no input payload, queue or destination is mutated. A document without references needs no Work/policy read. Both Publish and Export can consume the same result without another resolver.
+
+### 5. Deliver Queue-Preserving Publish Integration
+
+- [ ] **Inputs:** the unchanged Docs/Catalogue queues, existing current/deleted/shared selections, the static preparer and configured Preview/public destinations.
+- **Delivers:** per-current-unit preparation followed by existing Preview/transfer/completion paths, with operation-local media merging/deduplication.
+- **Done when:** both Catalogue Work and Docs document units receive the correct prepared output; a referring document can carry required Work media without another Work queue entry; metadata-only Work selections do not acquire blanket media uploads; deletes/shared-only units bypass baking; empty queues remain a no-op. Preparation/transfer failure retains the current unit and prior successful effects. Queue schemas, producers, selected document sets, processing order and completion rules are unchanged; no unqueued document is opened or built.
+
+### 6. Deliver Export Preparation And Work-Media Packaging
+
+- [ ] **Inputs:** the existing checked collection selection, generated metadata/payloads, shared preparation results and snapshot Preview/Apply machinery.
+- **Delivers:** static Catalogue images/Entry content and usable Work image links in browseable snapshots, exact Work/document media packaging and confirmation based on prepared output.
+- **Done when:** snapshots need no viewer runtime or public image download; repeated references share packaged objects; a Work presentation/media change between Preview and Apply changes the confirmed plan; replacement and final verification retain current behavior. `portable.html`, unrelated external dependencies and queue state retain their stated contracts.
+
+### 7. Deliver Public Prepared Navigation And Runtime Projection
+
+- [ ] **Inputs:** prepared document payloads, the shared browser renderer, configured Catalogue document/Gallery roots and the site-code projection inventory.
+- **Delivers:** the public embedded-presentation provider, Gallery-to-prepared-Work loading, public import separation and the tracked runtime/config projection.
+- **Done when:** initial document/own Work Media View requires no Work JSON, policy or Series–Gallery read; selecting another Work reads only its prepared Catalogue payload; Gallery browsing stays lazy and retains required membership/thumbnail data. Public has no management/live Work capability, Working inputs remain available to Manage, and physical Catalogue JSON distribution remains unchanged. Projection/check/site validation pass; public activation remains gated by OP-1.
+
+### 8. Complete Review, Cutover Readiness And Acceptance
+
+- [ ] **Inputs:** completed steps 1–7, the acceptance/evidence plan below and an explicit OP-1 decision for any existing-payload conversion or public activation.
+- **Delivers:** a distinct redundancy/defensive review, updated durable contracts, selected verification results, and an explicit code-ready versus activated/accepted status. If OP-1 remains open, record local code readiness and leave activation pending.
+- **Done when:** review covers normal/empty/failed selected-unit paths and reused helpers, resolves duplicated reads/rendering/validation, and justifies retained safeguards. Update Generated Data Contracts, media/Media View, Builder, Catalogue Save/Refresh/Deployment, Export and Development Checklist ownership; run applicable source lint/syntax and runtime projection checks. Perform only approved conversion/queued publication/deployment and record actual user acceptance separately. Do not mark the whole delivery complete while required cutover/acceptance remains pending.
+
+## Acceptance And Evidence Plan
+
+No new or changed tests, fixtures, temporary regression scripts or browser automation are authorized by this plan. Implementation uses focused source/diff review, changed-file Python/JavaScript lint, applicable syntax/import diagnostics and the existing site-code projection/site validation commands. Choose any existing documented test selection separately by demonstrated need and cost; test additions/changes require their own approved specification.
+
+Manual acceptance covers these distinct boundaries using agreed representative documents, with Work `00008`, nerve, and Context document `d-20260801-073846-e0a9ec` available as presentation references:
+
+| Boundary | Required observation |
 | --- | --- |
-| Catalogue document | Full agreed descriptive metadata and resources, through its principal Catalogue Entry. |
-| Work Media View | Title, `cat.` link and Gallery links; no year, medium or physical-dimension metadata. |
-| Illustrative Catalogue Image token | Work-title caption and optional authored summary text; no full Work metadata or additional `cat.` display. |
-| Work Media View link token | Its authored link label opens the Media View described above; no full metadata expansion. |
+| Manage live resolution | After an ordinary saved Work change and Refresh, reopen an unchanged referring document: Entry/title caption/image/Media View use the available current Work data without its Build. Authored summary/layout remain unchanged. |
+| Public snapshot | A queued Publish embeds the current Work data. Later Working changes do not trigger a Work metadata lookup from that published document. Image bytes retain the existing publication/location model. |
+| Queue scope/completion | With one selected current unit, unqueued documents are not read, prepared, built or written; empty queues perform no preparation. A failure retains its unit and previously completed effects under existing rules. |
+| Media ownership | A queued referring document can publish/export its actual Work rendition/file references without a separate Work image selection; an unchanged Catalogue Work image selection causes no blanket transfer. |
+| Export | Browseable output shows Catalogue images/Entry content and packaged Work links without viewer JavaScript. Preview/Apply detects changes to prepared content/media; portable output keeps its text-first behavior. |
+| Public navigation | Open embedded Work Media View, then a Gallery and another Work: lazy Gallery browsing and prepared Catalogue-target loading work without a public Work-record reader. |
+| Cutover | Every approved affected public target has the prepared contract before the new reader activates. Conversion/publication selections and actual Git/deployment actions match the OP-1 decision. |
 
-Gallery links remain navigation rather than descriptive Work metadata. Catalogue Entry is the principal-record token inside a Catalogue document and remains the explicit owner of full metadata; the restricted token display applies to illustrative images and Work media references. Keep the current title-caption, authored-summary and placement controls. The clarified reference design retains `cat.` in Media View and does not propose a new optional `cat.` control for Catalogue Image tokens. Existing Working image tokens have received the one-time metadata-field removal recorded below.
-
-### Reference Work: 00008, nerve
-
-The user identified these existing local presentations as the target design:
-
-| Reference | Local route | Target presentation |
-| --- | --- | --- |
-| Catalogue document, nerve | `/docs/?collection=catalogue&doc=00008` | Full descriptive metadata and resources in the principal Catalogue Entry. |
-| Media View for Work 00008 | Open the Work image or its Media View link | Title, `cat. 00008` link and Gallery links. |
-| Context document, nerve | `/docs/?collection=works&doc=d-20260801-073846-e0a9ec` | Catalogue Image with title and optional authored summary; no descriptive Work metadata. |
-
-At the 2026-10-07 review, the Context source had `use_work_title_caption=true`, `include_work_metadata=false` and populated summary text. The 2026-10-08 migration removed the retired metadata field and retained its caption and summary. Its Working rendered figure contains the title and summary without a Work-metadata block. This is an existing Working reference, not a claim that the draft Context document is published. The completed image simplification generalises this example; baking and update consistency remain separate architectural decisions.
-
-## Current Public Data And Consumers
-
-Two public files exist for each Work, for example:
-
-| File | Current purpose |
-| --- | --- |
-| `site/assets/data/catalogue/works/index/00001.json` | Structured generated Work record used by the shared Catalogue media reader. It is already a selected projection, rather than the entire canonical authoring record. |
-| `site/assets/data/docs/catalogue/by-id/00001.json` | Rendered Catalogue document, including its Entry heading, metadata, resources and separate document relationships. Its main image is currently an identity-marked placeholder without a baked image URL. |
-
-The public Work reader supports initial image loading in Catalogue entries and embedded Catalogue images, opening Work Media View links, and selecting Works while browsing a Gallery. Inline image loading reads the Work record and media policy; a Work with `series_id` also causes a Series–Gallery index read, even though initial image display only needs image data. Clicking an inline image reads the presentation again. Reads retain only in-flight requests, rather than a document-lifetime Work cache. Gallery entry loads its membership record without reading every member Work; selecting a member loads that Work.
-
-The runtime derives versioned rendition URLs from Work identity, intrinsic dimensions, `media_version` and media policy. It combines direct Gallery memberships with the Series–Gallery map. No other active public consumer of the Work by-ID record was found in the scoped reader inspection. This does not establish that every other published Catalogue index is needed; the final public inventory remains a review decision.
-
-### Media View Actually Displays
-
-The current Work Media View renderer shows the Work title, a `cat.` link opening the Catalogue document, direct Gallery links and Series-related Gallery links. It does not render year, medium or physical dimensions. This matches the user's current observation.
-
-The presentation adapter nevertheless constructs year, medium, dimensions and Catalogue number in a `metadata` array, and the presentation normalizer requires and validates that array. These descriptive fields are processed without being displayed. The agreed presentation boundary supports retiring that unused work; the validator and presentation contract would need to change together. It does not imply removing descriptive metadata from canonical Catalogue records or Catalogue Entry documents.
-
-Numeric `year`, `duration`, Work `links`, Work `downloads` and the Work header are not used by this browser media presentation. Links and downloads are already rendered into the Catalogue document. Downloads still have a separate publication role: captured Work records identify the managed files that Publish must distribute.
-
-Source evidence: [media reads and inline loading](../../docs-viewer/runtime/js/shared/docs-viewer-media-detail.js), [Work presentation construction](../../docs-viewer/runtime/js/shared/docs-viewer-catalogue-media.js), [presentation validation](../../docs-viewer/runtime/js/shared/docs-viewer-media-presentation.js) and [publication asset selection](../../docs-viewer/services/docs_catalogue_artifacts.py).
-
-## Current Update Timing
-
-| Operation or reader event | What becomes current |
-| --- | --- |
-| Catalogue Save | Canonical records, required shared local media and editor records. Generated reader JSON and rendered Docs are not rebuilt. |
-| Refresh Catalogue | Working Work/Gallery JSON, related Gallery data and private Catalogue report metadata. It queues changed/deleted Work IDs for Catalogue Regenerate. |
-| Next document load or fresh mount after Refresh | The inline image resolves current generated Work data without requiring that document to be rebuilt. A retained document mount may still hold its prior image. |
-| Opening a Work Media View or selecting a Gallery member after Refresh | A new media read uses current generated data. Clicking an inline image also updates its inline presentation. Already displayed media does not automatically subscribe to Refresh. |
-| Build of a referring document | Work-title captions and optional embedded metadata are resolved from generated Catalogue data again. They can remain older than the image until this Build occurs. |
-| Regenerate Catalogue | Pending mode reconciles the queued Catalogue documents and runs their required Build; Full reconciliation covers the complete Catalogue collection. It does not rebuild every ordinary document that refers to a Work. |
-| Docs Publish | Captures current Working inputs, rebuilds eligible documents in temporary storage and distributes the completed snapshot to configured destinations. It does not run Catalogue Refresh or Regenerate. |
-| Public deployment and next reader fetch | The deployed static document and Catalogue data become available to public readers. Publish, Git actions and public deployment remain distinct operations. |
-
-This permits mixed local presentation: an embedded Work-title caption or metadata can still reflect the last document Build while its image and Media View use a later Catalogue Refresh. Refresh alone does not live-update an already mounted document or Media View. Shared image bytes can also change during Save before generated JSON carries the new image version; the current versioned cache policy makes Refresh and the next media read significant.
-
-The target workflow below coordinates title, caption, versioned image references, descriptive metadata, resources and Gallery membership through rendered document updates. This changes the current independent media-read behaviour. Complete alignment of image bytes with the supplied Catalogue input also requires the optional media ownership change described above.
-
-## Baking Media Into Rendered Documents
-
-The proposed reader contract is that displaying a rendered document and opening its own Media View requires no additional Catalogue data requests. The document carries its complete prepared presentation. Image-file and app-asset loading still happen normally, and browser layout still determines responsive rendition selection. Opening a Gallery or selecting another Work is navigation to different content and may fetch that target's prepared presentation.
-
-Image URL construction can happen during Build or Publish preparation. Emit `src`, rendition candidates or `srcset`, intrinsic dimensions, alternative text and the largest-image new-tab URL from the captured Work and media policy. Responsive selection still belongs to the browser: the current runtime measures the displayed slot to set `sizes`, and the browser selects a rendition for layout and screen density. This does not require a Work-record request.
-
-A rendered document could also carry a structured Media View presentation containing identity, title and resolved Gallery links. The same prepared data should serve inline image loading and opening Media View, avoiding another lookup or parsing visible caption HTML. Whether the presentation is a document JSON field or an embedded structured block remains open; keep one generation owner and explicit payload validation.
-
-| Approach | Benefit | Cost or unresolved boundary |
-| --- | --- | --- |
-| Retain current Work records and runtime construction | Local media follows Refresh independently of document Build; Gallery selection reads a small exact record. | Extra requests, policy/membership resolution in the browser, and different update timing for document text and media. |
-| Publish a smaller dedicated media record | Removes unrelated fields and unused descriptive metadata while retaining direct Gallery-member loading. | A second public record family and runtime construction remain; it does not by itself resolve mixed update timing. |
-| Bake image and Media View data into rendered documents | Initial document images and their Media View use one built state and need no additional Catalogue metadata requests. The public Work record family may become unnecessary. | Embedded presentations repeat some generated data across referring documents. Local updates require an explicit rebuild policy; Gallery selection still needs a source for the selected Work's presentation. |
-
-The preferred direction to investigate is baked public document media. For Gallery selection, consider reading the selected Catalogue document's structured media presentation directly by ID, or retaining a compact media record if fetching rendered document content proves unnecessarily expensive. Do not fetch every Gallery member's document up front. Removing the Work record family requires resolving Work text links and Gallery-member navigation as well as initial inline images.
-
-## Does Working Need Work By-ID JSON?
-
-The old site used Work records to render pages dynamically from URL-query selection. Docs now resolves URL identity to a rendered document by ID. That removes the original browser-page-rendering reason for a second Work record family, and brings the persisted Working intermediate into this review as well as its public copy.
-
-Working `generated/catalogue/works/index/<work_id>.json` currently remains an input to newer code. These are dependencies to redesign, rather than proof that a per-Work generated file is intrinsically needed:
-
-| Current consumer | Requirement to preserve if the files are removed |
-| --- | --- |
-| Catalogue Entry and Catalogue Image builders | Resolve an exact Work's title, descriptive fields, resources and media from validated Catalogue inputs. |
-| Working media reads and authoring previews | Supply the agreed presentation and safe exact target/image validation. Built readers can use document presentations; authoring needs an explicit provider and must not become circular with document creation. |
-| Regenerate Catalogue | Obtain current Work identities and titles to create, retitle, rebuild and delete Catalogue documents. |
-| Broken Links | Validate Work references and available media without relying on the existence of the retired generated record. |
-| Refresh and pending updates | Preserve exact changed/deleted Work tracking. The current pending list derives IDs from generated Work-file writes and deletions, so that signal needs an explicit replacement. |
-| Publish preparation and asset selection | Capture coherent Work data and derive exact image/download references, without requiring it to be distributed as public Work JSON. |
-
-A possible simpler flow is Studio-owned canonical Catalogue data → explicit Studio Refresh → one private aggregate Catalogue input plus report/relationship data in Working → rendered Catalogue documents and embedded presentations. A shared Work projection can remain as code or in-memory build data without becoming a persistent by-ID file family. Canonical records remain the editable authority; rendered document HTML must not become the source for generating its own Catalogue Entry or for reconstructing Work metadata.
-
-### Aggregate Catalogue Input Through Refresh
-
-The agreed direction is for Studio Refresh to copy the complete `works.json` across as a private Docs input alongside report JSON, replacing thousands of generated Work files. The file already contains a map keyed by exact Work ID. Load and validate the supplied input once for an operation, retain that parsed map through its selected renderers, and resolve requested IDs directly. Regenerate can reconcile selected Work documents; targeted Builds can render selected document IDs and resolve only the Work presentations they use. A targeted run still reads/parses the whole aggregate; it does not have to regenerate every Work or document.
-
-`works.json` alone does not contain Gallery definitions, Work–Gallery membership, Series–Gallery relationships or rendition policy. Refresh must supply the accompanying data coherently, including Series identities needed to validate relationships. Studio owns loading/validating its canonical source and producing the handoff. Docs validates the supplied data contract and exact identities without loading Studio source paths or substituting live canonical data when supplied inputs are missing. Public rendering continues to select its agreed fields; the aggregate remains a private input.
-
-The Refresh handoff is selected. Its stored aggregate is a replaceable, read-only input from Docs' perspective, not another editable authority. Save changes Studio data; a successful Refresh advances the Catalogue/report inputs available to Docs; Build/Regenerate advances rendered document content. Exact storage, payload contracts and Refresh completion details remain to be specified. Moving Studio's UI into Docs Viewer must preserve this producer/consumer separation rather than make Docs operations read current Studio source directly.
-
-Regenerate and its required Build should consume the same supplied Catalogue input. Separate builder processes may each parse the captured file once; that differs from repeatedly reading Work files or reloading the source for every token. Do not add a stale process-lifetime cache to make “loaded once” span unrelated operations. Publish captures the refreshed Working inputs before preparing one coherent snapshot and distributes only finished output, without reading Studio canonical data during preparation or distribution.
-
-The current by-ID files make selected Work reads small. Replacing them with the aggregate trades that selected-file read cost for one larger parse and fewer generated files, per-file versions and freshness boundaries. No performance improvement is claimed without evidence, and canonical storage migration is not required by this proposal. Exact changed/deleted Work tracking still needs an explicit replacement for source reconciliation and pending updates. The full document rebuild proposed below covers referring documents without a new dependency index.
-
-Source evidence: [builder Work lookup](../../docs-viewer/build/docs_builder/semantic_tokens.py), [Regenerate](../../docs-viewer/services/docs_catalogue_regeneration.py), [authoring media support](../../docs-viewer/runtime/js/management/source-editor/catalogue-media-support.js), [Broken Links](../../docs-viewer/services/docs_broken_links.py), [Refresh](../../studio/services/catalogue/catalogue_refresh_service.py) and [pending updates](../../studio/services/catalogue/catalogue_pending_updates.py).
-
-### Consistent Local Updates
-
-The agreed target separates Catalogue input freshness from rendered document freshness:
-
-1. **Studio Refresh brings the Docs copy of Catalogue source data up to date.** Studio Save already owns canonical authoring changes. Refresh supplies the saved aggregate, relationships/policy and reports; the optional media handoff would supply changed media here too. Refresh does not rebuild document content.
-2. **Catalogue Regenerate brings all documents up to date with that supplied data.** Reconcile Catalogue source documents, then run one full document rebuild across ordinary documents and every configured collection. This includes Context documents and any other referring documents automatically, without dependency discovery or affected-document selection. Clear pending Catalogue changes only after the complete rebuild succeeds.
-3. **Document Rebuild applies document-only updates.** Use the existing refreshed Catalogue input when rebuilding changed Markdown or token content. A document-only edit does not require another Studio Refresh or Catalogue Regenerate. The existing watcher may perform this Build automatically; the explicit Rebuild action remains available.
-
-Working and public readers should consume the same complete built presentation contract. Refresh alone therefore no longer advances an existing document's Media View or inline presentation through independent Catalogue data reads. Regenerate owns advancing Catalogue-dependent rendered content; Rebuild owns document-only changes. Publish retains its existing capture, preparation and distribution responsibilities, and public deployment remains separate. Search freshness remains separately scoped.
-
-Regenerate should reconcile its sources and call the shared Full Rebuild owner once, avoiding a separate Catalogue build followed by another build of Catalogue within the workspace operation. Pending versus Full reconciliation can still determine which Catalogue sources are created, updated or removed; that source selection is separate from the full rendering scope. Referring documents are covered by Full Rebuild without adding dependency discovery to Regenerate.
-
-This is the proposed lifecycle, not current Regenerate behaviour: today's Regenerate only reconciles/builds the Catalogue collection and does not update referring Context/ordinary documents. Its Full mode is a complete Catalogue collection build, not a workspace-wide rebuild. The current workspace Rebuild service combines ordinary/collection document builds with Search and registered media work, while its `include_search=False` path only builds ordinary documents. Review that orchestration and any scope changes as part of the shared Full Rebuild contract. Calling it from Regenerate does not itself justify excluding Search or media work; those responsibilities and their optimisation belong to the shared operation. [Rebuild orchestration](../../docs-viewer/services/docs_write_rebuild.py) and [Manage Rebuild](../../docs-viewer/services/docs_management_service.py) are the current owners.
-
-The delivery must specify Regenerate completion/pending handling and how already mounted readers adopt newly built payloads; rebuilding stored JSON alone does not replace a displayed document. A complete Docs Build must not be folded into Refresh.
-
-### Shared Full Rebuild Optimisation
-
-Optimise Full Rebuild independently of its caller while preserving complete workspace coverage and successful completion semantics. A full operation should bring all documents up to date; its implementation can avoid repeated input reads, parsing, validation and production of unchanged output where correctness is established. Do not make Regenerate own a second rebuild pipeline or its own performance cache.
-
-The refreshed aggregate offers one opportunity: load and validate Catalogue inputs once for the rebuild operation, share the parsed map and resolved media/relationship data across renderers, and reuse prepared Work presentations when several documents reference the same Work. Current collection subprocesses may each parse the aggregate once, so operation-wide reuse needs a deliberate shared execution design rather than assuming a per-process cache achieves it. Other candidates include repeated source/manifest reads, duplicate collection work, output writes and registered media processing. These are investigation areas, not measured bottlenecks or approved implementation changes. Search and media costs must be considered within their shared responsibilities.
-
-Keep any reusable data bounded to the operation so a subsequent Refresh or source edit is visible to the next rebuild. The performance review should establish the actual costs and a bounded change set before implementation; no benchmark or test work is authorised by this documentation review. Direct Full Rebuild and Regenerate then receive the same improvements.
-
-### Publication And Ownership
-
-Preserve the validated Work inputs needed by document rendering and asset selection internally, without assuming they must remain generated by-ID JSON. In particular, removing public `downloads` must not stop download distribution. If Working records are retired, replace preparation's captured Work input and asset-selection contract explicitly. Construct any new public projection during preparation, then distribute the same completed bytes through the existing Publish owner; do not add a second transformation or source read during distribution.
-
-Public inventory, route configuration, shared runtime projection and generated payloads must change together before removal. Resolve local versus public image URL ownership and exact identity validation. Retire displaced paths and unused presentation fields rather than introducing compatibility aliases or a shadow public copy.
-
-## Catalogue Image Metadata Change
-
-Implemented on 2026-10-08 as a self-contained simplification. Add and Edit Catalogue image no longer expose **Include Work metadata**. Python and JavaScript parsing/serialization no longer accept or emit `include_work_metadata`, and the illustrative-image renderer no longer builds its metadata block. Title-derived alt text, the optional Work-title caption, authored static summary, placement and fill-width controls remain.
-
-The one-time source migration removed the field from 19 tokens in 15 Working documents: one ordinary document and 14 Context documents. Eleven occurrences previously selected metadata and eight omitted it. Exact Work identities, caption choices, authored summaries and layout fields were preserved. The existing watcher rebuilt their document projections; no manual document or Search rebuild was invoked. Tokens containing the retired field are unsupported literal source if reintroduced, without a compatibility alias.
-
-Illustrative figures now follow the nerve Context example: image, optional Work-title caption and optional authored static summary. Full descriptive information remains in Catalogue Entry, reached through the existing `cat.` link in Media View. Existing Preview and published snapshots retain their previously generated HTML until a separate Publish. The broader Work JSON, media baking, Media View contract and rebuild proposals remain open.
-
-Catalogue Entry has its own fixed principal-record purpose and retains its metadata/resources and canonical fields. [Semantic Tokens Architecture](Semantic_Tokens_Architecture.md) owns the reduced grammar and rendering; [Semantic Tokens Source Editor UI](Semantic_Tokens_Source_Editor_UI.md) owns Add/Edit controls; [Catalogue Documents And Metadata](Catalogue_Documents_And_Metadata.md) records the Entry/Image distinction. The historical [Catalogue Image Token Metadata delivery](Catalogue_Image_Token_Metadata_Delivery.md) is superseded for its metadata choice.
-
-Verification: lint passed for the changed Python builder module and three management JavaScript modules. Read-only inspection found no retired fields in Working Markdown or active code and no metadata blocks in the 15 rebuilt payloads. The inspected formerly metadata-enabled figures retain title captions; nerve retains its authored summary; the captionless ordinary example omits figcaption. Code review covered parser/serializer agreement, shared Add/Edit hydration and insertion, source migration and the retained Catalogue Entry helper; no unresolved code finding remains. Management-only JavaScript and Python builder changes require no public runtime projection. Tests, browser interaction, Publish, commit and push were not performed. Existing Python/JavaScript token tests inspected during this change still describe older literal-alt/Detail grammar and were left unchanged under the separate test-work policy. Restart Local Studio and hard-refresh Docs Viewer before manual Add/Edit review.
-
-## Decisions Before A Delivery
-
-- [x] Agree the presentation boundary using Work `00008`, nerve: full metadata in the Catalogue document; title, `cat.` and Gallery links in Media View; title and optional summary in the Context Catalogue Image token.
-- [x] Preserve explicit Studio Refresh as the aggregate Catalogue/report handoff, keeping complete generation outside individual Work Save and Docs consumption separate from Studio canonical storage even if the editor moves into Docs Viewer.
-- [x] Agree the target update workflow: Studio Refresh supplies current Catalogue inputs; Catalogue Regenerate reconciles Catalogue sources and invokes a full document rebuild, including referring documents; Rebuild applies document-only changes using the supplied inputs.
-- [x] Use the same complete built presentation contract for Working and public readers.
-- [x] Treat Full Rebuild optimisation as shared work independent of its caller; Regenerate invokes that operation after Catalogue source reconciliation.
-- [ ] Review shared Full Rebuild costs and specify a bounded optimisation while preserving its complete coverage and agreed Search/media responsibilities.
-- [ ] Specify reuse of shared Full Rebuild orchestration, Regenerate completion/pending handling and how already mounted readers adopt newly built content. Regenerate needs no separate referring-document dependency index.
-- [ ] Choose the baked document media representation and the Gallery-member loading path.
-- [ ] Specify replacement of Working Work by-ID JSON with the Refresh-supplied private aggregate input, its storage and accompanying relationships/policy, authoring/validation providers, exact change tracking and completion timing.
-- [ ] Specify retirement of the unused descriptive Media View metadata contract while preserving its title, `cat.` link and Gallery navigation.
-- [x] Remove Include Work metadata from Add/Edit Catalogue image and its token/build contract; migrate existing Working tokens while preserving title-caption, optional summary and layout behaviour.
-- [ ] Establish the smallest public Catalogue inventory that still supports all approved readers and publication asset selection.
-- [ ] Define a bounded implementation outcome, migration, durable documentation updates and proportionate verification. Test changes require their own agreed specification; ordinary UI presentation remains a user manual-review gate.
+These are acceptance outcomes, not permission to run live Save, Refresh, Build, Export, Publish or deployment in this documentation task. Future verification must state exact targets, costs and write/network effects before execution. Keep static diagnostics, manual product observations and publication/deployment evidence distinct.
 
 ## Review Evidence
 
-The review is based on scoped source/configuration, representative published-payload inspection, Working Work-record consumer inspection and the exact Working Context source/rendered figure for nerve on 2026-10-07, plus the user's observation of Media View, selection of Work `00008` as the target example and explanation of the old site's Work-record purpose. The renderer confirms the title, Catalogue link and Gallery presentation and its omission of descriptive metadata. No browser automation, tests, performance measurements, actual Save/Refresh/Build/Publish operation or product changes were performed for this review. Request reduction is an architectural expectation, not a measured latency improvement.
+The original review established the nerve presentation reference. The 2026-10-19 discussion settled live Manage resolution of all Work presentation, no Work metadata baking in Build, shared browser rendering and shared static Publish/Export preparation with unchanged queue behavior. Scoped source review checked semantic rendering/selected inputs, workspace/media providers, Build-to-queue handoffs, both publication unit owners and Export planning.
+
+This revision changes documentation only. It resolves the design contracts and replaces the former workstream checklist with ordered input/output/completion deliveries. OP-1 is explicitly open. No product code, generated payloads, media, queues, snapshots or public destinations are changed. Code review is not applicable; bounded documentation/source review and whitespace checking apply. No tests or live workflow/deployment operations ran.
