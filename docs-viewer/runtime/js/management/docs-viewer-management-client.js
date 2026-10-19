@@ -170,6 +170,7 @@ export function applyManagedDocsStaticHtmlExport(preview, options) {
   var plan = preview && typeof preview === "object" ? preview : {};
   var replaceExisting = plan.target_state === "recognized" || plan.target_state === "unrecognized";
   return fetchManagementJson("/docs/export/static-html/apply", "POST", {
+    ...(plan.collection ? { collection: plan.collection } : {}),
     doc_ids: Array.isArray(plan.doc_ids) ? plan.doc_ids.slice() : [],
     export_date: String(plan.export_date || "").trim(),
     plan_revision: String(plan.plan_revision || "").trim(),

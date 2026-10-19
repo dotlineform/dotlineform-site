@@ -19,7 +19,7 @@ from docs_artifact_locations import (
     authenticated_remote_client_for_locations,
     normalize_artifact_identity,
 )
-from docs_workspace_config import DocsManagedMediaConfig, DocsStageConfig
+from docs_workspace_config import DocsManagedMediaConfig
 
 
 SIMPLE_URL_ATTRIBUTES = frozenset({"src", "poster", "data"})
@@ -283,7 +283,7 @@ def _packaged_media_url(item: SnapshotMediaItem, fragment: str) -> str:
 
 def _media_adapters(
     repo_root: Path,
-    config: DocsStageConfig,
+    media_config: Mapping[str, DocsManagedMediaConfig],
     media_types: Iterable[str],
     *,
     remote_client: RemoteArtifactClient | None,
@@ -291,7 +291,7 @@ def _media_adapters(
     environ: Mapping[str, str] | None,
 ) -> dict[str, ArtifactLocationAdapter]:
     selected = {
-        media_type: config.media.types[media_type]
+        media_type: media_config[media_type]
         for media_type in sorted(set(media_types))
     }
     client = authenticated_remote_client_for_locations(
@@ -314,7 +314,7 @@ def _media_adapters(
 
 def plan_snapshot_media(
     repo_root: Path,
-    config: DocsStageConfig,
+    media_config: Mapping[str, DocsManagedMediaConfig],
     doc_payloads: Mapping[str, Mapping[str, Any]],
     *,
     remote_client: RemoteArtifactClient | None = None,
@@ -326,7 +326,7 @@ def plan_snapshot_media(
 
     for doc_id, payload in doc_payloads.items():
         def collect(element: str, attribute: str, value: str) -> str:
-            owned = owned_media_reference(value, config.media.types)
+            owned = owned_media_reference(value, media_config)
             if owned is not None:
                 references.setdefault((owned.media_type, owned.identity), set()).add(doc_id)
             elif _is_external_dependency(element, attribute, value):
@@ -339,7 +339,7 @@ def plan_snapshot_media(
 
     adapters = _media_adapters(
         repo_root,
-        config,
+        media_config,
         (media_type for media_type, _identity in references),
         remote_client=remote_client,
         env_files=env_files,
@@ -362,7 +362,7 @@ def plan_snapshot_media(
             SnapshotMediaItem(
                 media_type=media_type,
                 identity=identity,
-                provider=config.media.types[media_type].asset_location.provider,
+                provider=media_config[media_type].asset_location.provider,
                 packaged_path=packaged_path,
                 sha256=hashlib.sha256(data).hexdigest(),
                 doc_ids=tuple(sorted(references[(media_type, identity)])),
@@ -380,7 +380,7 @@ def plan_snapshot_media(
             continue
 
         def rewrite(_element: str, _attribute: str, value: str) -> str:
-            owned = owned_media_reference(value, config.media.types)
+            owned = owned_media_reference(value, media_config)
             if owned is None:
                 return value
             return _packaged_media_url(items_by_identity[(owned.media_type, owned.identity)], owned.fragment)

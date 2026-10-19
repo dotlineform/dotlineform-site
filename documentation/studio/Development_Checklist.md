@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260523-190651-7157ec
 title: Development Checklist
 added_date: "2026-05-23 19:06:51"
-last_updated: "2026-10-18"
+last_updated: "2026-10-19"
 parent_id: d-20260419-000000-d2e47b
 
 ---
@@ -50,7 +50,7 @@ This checklist and the durable Studio development documentation are maintained d
 
 ### User-Visible Operation Ordering
 
-- [ ] Export capability checks configured input locations without payload audits; workspace Export consumes loaded Index IDs and completes without a detached capability refresh. Preserve Preview/Apply replacement confirmation, one Apply plan/destination comparison, path/symlink confinement and one output file-set/byte verification; omit browser response audits and duplicate destination/provenance scans. [Export](Export.md) owns this boundary.
+- [ ] Export capability checks configured input locations without payload audits; workspace Export consumes loaded Index IDs and collection Export captures existing checked IDs with their exact collection identity. Selection stays in the browser, independently of Prepare Package availability. Read only the owning generated metadata and selected payloads, carry the resolved media-type map and collection/public route through rendering and Apply, and complete without a detached capability or manifest refresh. Preserve Preview/Apply replacement confirmation, one Apply plan/destination comparison, path/symlink confinement and one output file-set/byte verification; omit source reads, builds, browser response audits and duplicate destination/provenance scans. [Export](Export.md) owns this boundary.
 
 - [ ] Publish reads Docs and Catalogue queues once and returns before artifact/media setup when both are empty. Working generation owns public projection, eligibility, dependencies and queue handoffs; explicit discovery refresh and maintenance Build own Search/Recent. Complete each document/media or Catalogue Work unit, then required shared output; remove only successful selections. Keep source reads, rendering, content/schema audits, full inventories, remote listings, reconciliation, resume flags, failure-specific queue rewrites and browser Recent/capability refreshes out of Publish. Retain configured artifact authority, confined paths, required inputs and selected transfer verification. [Builder](Builder.md#publish-preparation) and [Catalogue Deployment](Catalogue_Deployment.md) own the lifecycle.
 

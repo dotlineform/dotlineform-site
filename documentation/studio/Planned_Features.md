@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260428-000000-f5ff18
 title: Planned Features
 added_date: "2026-04-28 00:00:00"
-last_updated: "2026-10-18"
+last_updated: "2026-10-19"
 summary: This explains the delivery model and workflows to implement new repo and application features.
 ui_status: planned
 parent_id: ""
@@ -147,6 +147,8 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 - [Docs Viewer App Roadmap](Docs_Viewer_App_Roadmap.md) — Proposed standalone Mac/iPad reader progressing to local management through one capability release at a time. Each Swift release aligns with an agreed web behavior/resource baseline; ongoing web additions do not automatically expand it. Reuse the existing reader and native foundation, improve only the responsibility seams needed by the next capability, and treat historical native proposals as background requiring reconciliation. DVA.R1 ordinary reading is the next candidate; workspace/access, release scope and implementation approval remain open.
 
 ## Reviews
+
+- [Collection Export](deliveries/Collection_Export.md) — Implemented and reviewed on 2026-10-19; awaiting manual acceptance. Each Collection Actions menu exports its checked documents through the existing snapshot flow, preserving collection identity, media ownership and links. Focused lint/compilation/import diagnostics, metadata inspection, whitespace and bounded code review passed. Tests and live Export remain unrun; restart Docs Viewer and reload Manage before review. [Export](Export.md) owns shipped behavior and the Catalogue external-media limit.
 
 - [Source Save Media Adoption](Media_And_Asset_Handling.md#source-save-media-adoption) and [Document Delete Media Cleanup](Media_And_Asset_Handling.md#document-delete-media-cleanup) — User-approved, implemented and reviewed on 2026-10-18; awaiting normal-use acceptance after a Docs Viewer service restart and Manage reload. Save copies selected foreign document-owned media and rewrites active references through its existing handoff. Delete removes selected documents' owned folders and thumbnails, including unused files, after saving exact public removals. The agreed workflow saves the destination before deleting the original. Focused Python/JavaScript lint, Python compilation, service imports and whitespace checks passed. No tests, live Save/Delete, Build or Publish ran.
 

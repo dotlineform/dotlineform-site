@@ -59,9 +59,18 @@ function writeClipboardText(documentRef, text) {
  * @returns {Object}
  */
 export function createDocsViewerManagementCollectionDefaultContribution(options = {}) {
-  var onPreparePackage = typeof options.onPreparePackage === "function"
-    ? options.onPreparePackage
-    : null;
+  var selectionActions = [
+    {
+      id: DOCS_VIEWER_ACTION_IDS.EXPORT_DOCS, label: "Export…",
+      buttonId: "docsViewerCollectionExportButton", artwork: "docsViewer__icon--square-arrow-right-exit",
+      invoke: options.onExport, unavailableReason: "Collection Export is unavailable."
+    },
+    {
+      id: DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE, label: "Prepare package…",
+      buttonId: "docsViewerCollectionPreparePackageButton", artwork: "docsViewer__icon--package",
+      invoke: options.onPreparePackage, unavailableReason: "Collection package preparation is unavailable."
+    }
+  ];
   var onRegenerateCatalogue = typeof options.onRegenerateCatalogue === "function"
     ? options.onRegenerateCatalogue
     : null;
@@ -73,13 +82,13 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
   var currentDocIds = [];
   var inventoryDocIds = [];
   var listToolbar = null;
-  var prepareInFlight = false;
+  var selectionWorkflowActive = false;
   var rowSelections = new Map();
   var activeDeleteWorkflow = null;
   var deleteWorkflowRequest = 0;
 
-  function prepareResolution() {
-    return options.resolveAction(DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE, {
+  function selectionResolution(actionId) {
+    return options.resolveAction(actionId, {
       ...selectionOwner.collection(), doc_ids: selectionOwner.selectedDocIds()
     });
   }
@@ -111,8 +120,9 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
   function projectSelection() {
     var snapshot = selectionOwner.snapshot();
     var available = selectionOwner.available();
-    var resolution = prepareResolution();
-    var active = available && snapshot.selectionModeActive && !resolution.hidden;
+    var resolutions = selectionActions.map(function (action) { return selectionResolution(action.id); });
+    var hidden = resolutions.every(function (resolution) { return resolution.hidden; });
+    var active = available && snapshot.selectionModeActive && !hidden;
     var eligible = eligibleDocIds();
     var selected = new Set(snapshot.selectedDocIds);
     var allSelected = eligible.length > 0 && eligible.every(function (docId) {
@@ -127,29 +137,24 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     if (root) root.dataset.reportCollectionSelection = active ? "active" : "inactive";
     if (!listToolbar) return snapshot;
 
-    listToolbar.actionsHost.hidden = resolution.hidden;
-    listToolbar.actionsButton.disabled = !available || resolution.hidden;
+    listToolbar.actionsHost.hidden = hidden;
+    listToolbar.actionsButton.disabled = !available || hidden || selectionWorkflowActive;
     listToolbar.selectionControl.hidden = !active;
     listToolbar.selectAllButton.disabled = !active || allSelected || eligible.length === 0;
     listToolbar.clearButton.disabled = !active || selected.size === 0;
     listToolbar.doneButton.disabled = !active;
 
-    var disabledReason = !onPreparePackage
-      ? "Collection package preparation is unavailable."
-      : !resolution.enabled
-        ? resolution.disabledReason
-        : "";
-    var label = "Prepare package…";
-    var accessibleLabel = disabledReason ? label + " " + disabledReason : label;
-    listToolbar.prepareButton.hidden = resolution.hidden;
-    listToolbar.prepareButton.disabled = prepareInFlight || Boolean(disabledReason);
-    listToolbar.prepareButton.title = accessibleLabel;
-    listToolbar.prepareButton.setAttribute("aria-label", accessibleLabel);
-    if (disabledReason) {
-      listToolbar.prepareButton.dataset.docsViewerDisabledReason = disabledReason;
-    } else {
-      delete listToolbar.prepareButton.dataset.docsViewerDisabledReason;
-    }
+    listToolbar.selectionActions.forEach(function (action, index) {
+      var resolution = resolutions[index];
+      var disabledReason = typeof action.invoke !== "function" ? action.unavailableReason : resolution.disabledReason;
+      var accessibleLabel = disabledReason ? action.label + " " + disabledReason : action.label;
+      action.button.hidden = resolution.hidden;
+      action.button.disabled = selectionWorkflowActive || Boolean(disabledReason);
+      action.button.title = accessibleLabel;
+      action.button.setAttribute("aria-label", accessibleLabel);
+      if (disabledReason) action.button.dataset.docsViewerDisabledReason = disabledReason;
+      else delete action.button.dataset.docsViewerDisabledReason;
+    });
     return snapshot;
   }
 
@@ -330,18 +335,14 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     menu.className = "docsViewer__actionsMenu docsViewerReport__collectionActionsMenu";
     menu.setAttribute("role", "menu");
     menu.hidden = true;
-    var prepareButton = documentRef.createElement("button");
-    prepareButton.className = "docsViewer__actionMenuItem";
-    prepareButton.type = "button";
-    prepareButton.id = "docsViewerCollectionPreparePackageButton";
-    prepareButton.setAttribute("role", "menuitem");
-    prepareButton.dataset.docsViewerAction = DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE;
-    var prepareIcon = createDocsViewerToolbarIcon(documentRef, "docsViewer__icon--package");
-    var prepareLabel = documentRef.createElement("span");
-    prepareLabel.className = "docsViewer__actionMenuLabel";
-    prepareLabel.textContent = "Prepare package…";
-    prepareButton.replaceChildren(prepareIcon, prepareLabel);
-    menu.replaceChildren(prepareButton);
+    var menuActions = selectionActions.map(function (action) {
+      var button = createDocsViewerEditMenuItem(documentRef, {
+        actionId: action.id, label: action.label, artwork: action.artwork
+      });
+      button.id = action.buttonId;
+      return { ...action, button: button };
+    });
+    menu.replaceChildren(...menuActions.map(function (action) { return action.button; }));
     actionsHost.replaceChildren(actionsButton, menu);
 
     var selectionControl = documentRef.createElement("div");
@@ -377,7 +378,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
       handleDocumentClick: handleDocumentClick,
       handleDocumentKeydown: handleDocumentKeydown,
       menu: menu,
-      prepareButton: prepareButton,
+      selectionActions: menuActions,
       root: root,
       selectAllButton: selectAllButton,
       selectionControl: selectionControl
@@ -397,41 +398,44 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
       menu.hidden = false;
       actionsButton.setAttribute("aria-expanded", "true");
     });
-    prepareButton.addEventListener("click", function () {
-      if (prepareButton.disabled || !onPreparePackage) return;
-      var resolution = prepareResolution();
+    function runSelectionAction(action) {
+      if (action.button.disabled) return;
+      var resolution = selectionResolution(action.id);
       if (!resolution.enabled) return;
       hideActionsMenu(true);
-      prepareInFlight = true;
+      selectionWorkflowActive = true;
       projectSelection();
-      var prepareRequest = settings.registerSelectionAction({
-        id: DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE,
+      var request = settings.registerSelectionAction({
+        id: action.id,
         placement: "selection",
         targetKind: "selection",
-        capability: Boolean(onPreparePackage),
+        capability: true,
         emptyState: "disabled",
         refreshEffect: "none",
         handler: function (target) {
-          return onPreparePackage(target, { restoreFocus: actionsButton });
+          return action.invoke(target, { restoreFocus: actionsButton });
         }
       }, {
         active: selectionOwner.snapshot().selectionModeActive,
         checkedDocIds: resolution.targetDocIds,
         eligibleDocIds: eligibleDocIds()
       }).invoke();
-      Promise.resolve(prepareRequest).catch(function (error) {
+      Promise.resolve(request).catch(function (error) {
         if (typeof options.setStatus === "function") {
           options.setStatus(
             error && error.message
               ? error.message
-              : "Collection package preparation failed.",
+              : "Collection action failed.",
             true
           );
         }
       }).finally(function () {
-        prepareInFlight = false;
+        selectionWorkflowActive = false;
         projectSelection();
       });
+    }
+    menuActions.forEach(function (action) {
+      action.button.addEventListener("click", function () { runSelectionAction(action); });
     });
     selectAllButton.addEventListener("click", function () {
       selectionOwner.selectAll(eligibleDocIds());

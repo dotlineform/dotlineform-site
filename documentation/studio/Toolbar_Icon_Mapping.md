@@ -2,7 +2,7 @@
 doc_id: d-20260919-100234-038395
 title: "Shared Icons: Toolbar Mapping"
 added_date: "2026-09-19 10:02:34"
-last_updated: "2026-10-17"
+last_updated: "2026-10-19"
 summary: Editable mappings for Docs Viewer toolbars, report toolbars and report list icons, including code identifiers, state variants and replacement artwork choices.
 ui_status: planned
 parent_id: d-20260910-223116-9a1011
@@ -85,6 +85,7 @@ Code identifiers below are exact **renderer keys**, except entries explicitly ma
 | Edit menu: Star | action `set-selected` | Set (`aria-checked=true`); Remove star | Filled star | star-filled.svg and text | Yellow when enabled; disabled colour otherwise | Implemented; manual review pending |
 | Actions menu: Import | action `import` | Opens Import | 📥 and text | import.svg and text | — | Implemented; review pending |
 | Actions menu: Export | action `export-workspace` | Exports workspace | ⬇️ and text | square-arrow-right-exit.svg and text | — | Implemented; review pending |
+| Collection Actions menu: Export | action `export-docs` | Exports checked documents in the owning collection | ⬇️ and text | square-arrow-right-exit.svg and text | Disabled with no checked documents | Implemented; manual review pending |
 | Actions menu: Rebuild | action `rebuild-docs` | Rebuilds docs and Search | 🔄 and text | refresh-cw.svg and text | — | Implemented; manual review pending |
 | Actions menu: Publish | action `publish` | Publishes the workspace | 🌍 and text | globe.svg and text | — | Implemented; manual review pending |
 | Actions menu: Settings | action `settings` | Opens Settings | ⚙️ and text | settings.svg and text | — | Implemented; review pending |

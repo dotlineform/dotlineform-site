@@ -60,6 +60,7 @@ export function staticHtmlSnapshotConfirmationOptions(preview, options = {}) {
     restoreFocus: options.restoreFocus,
     title: staticHtmlSnapshotConfirmationTitle(preview),
     body: [
+      ...(preview.collection ? ["Collection: " + preview.collection] : []),
       ...(options.targetDocument ? [
         "Document: " + options.targetDocument.title + " (" + options.targetDocument.doc_id + "). Includes this document and all its descendants."
       ] : []),
