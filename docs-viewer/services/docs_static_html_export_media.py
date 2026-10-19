@@ -197,7 +197,7 @@ def _transform_attribute_value(tag: str, name: str, value: str, transform: UrlTr
 
 def rewrite_html_url_attributes(html_text: str, transform: UrlTransform) -> str:
     parser = _HtmlUrlAttributeRewriter(transform)
-    parser.feed(str(html_text or ""))
+    parser.feed(html_text)
     parser.close()
     return "".join(parser.parts)
 
@@ -226,19 +226,25 @@ def _prefix_match(candidate: SplitResult, prefix: SplitResult) -> str | None:
     return _strict_path_identity(candidate.path, prefix.path)
 
 
+def _media_prefixes(
+    media_configs: Mapping[str, DocsManagedMediaConfig],
+) -> tuple[tuple[str, SplitResult], ...]:
+    """Prepare configured logical prefixes once for this selected operation."""
+    return tuple(
+        (media_type, urlsplit("docs-media:" + media.served_path_prefix.removeprefix("/docs/assets/media/")))
+        for media_type, media in sorted(media_configs.items())
+    )
+
+
 def owned_media_reference(
     value: str,
-    media_configs: Mapping[str, DocsManagedMediaConfig],
+    prefixes: tuple[tuple[str, SplitResult], ...],
 ) -> OwnedMediaReference | None:
     raw = html.unescape(str(value or "").strip())
     if not raw or raw.startswith("#"):
         return None
     candidate = urlsplit(raw)
-    for media_type, media in sorted(media_configs.items()):
-        local_prefix = media.served_path_prefix.removeprefix("/docs/assets/media/")
-        prefix = urlsplit("docs-media:" + local_prefix)
-        if prefix.query or prefix.fragment:
-            raise ValueError(f"configured served media prefix for {media_type} must not contain query or fragment")
+    for media_type, prefix in prefixes:
         identity = _prefix_match(candidate, prefix)
         if identity is not None:
             return OwnedMediaReference(
@@ -276,8 +282,8 @@ def _portable_path_key(path: Path) -> str:
     return unicodedata.normalize("NFC", path.as_posix()).casefold()
 
 
-def _packaged_media_url(item: SnapshotMediaItem, fragment: str) -> str:
-    encoded_path = quote(item.packaged_path.as_posix(), safe="/-._~")
+def _packaged_media_url(packaged_path: Path, fragment: str) -> str:
+    encoded_path = quote(packaged_path.as_posix(), safe="/-._~")
     return f"../{encoded_path}{f'#{fragment}' if fragment else ''}"
 
 
@@ -321,21 +327,41 @@ def plan_snapshot_media(
     env_files: Iterable[Path] | None = None,
     environ: Mapping[str, str] | None = None,
 ) -> SnapshotMediaPlan:
+    prefixes = _media_prefixes(media_config)
     references: dict[tuple[str, str], set[str]] = {}
     dependencies: dict[tuple[str, str, str], set[str]] = {}
+    packaged_paths: dict[tuple[str, str], Path] = {}
+    packaged_keys: dict[str, tuple[str, str]] = {}
+    rewritten_html: dict[str, str] = {}
 
     for doc_id, payload in doc_payloads.items():
-        def collect(element: str, attribute: str, value: str) -> str:
-            owned = owned_media_reference(value, media_config)
+        owned_in_document = False
+
+        def collect_and_rewrite(element: str, attribute: str, value: str) -> str:
+            nonlocal owned_in_document
+            owned = owned_media_reference(value, prefixes)
             if owned is not None:
-                references.setdefault((owned.media_type, owned.identity), set()).add(doc_id)
+                owned_in_document = True
+                key = (owned.media_type, owned.identity)
+                references.setdefault(key, set()).add(doc_id)
+                if key not in packaged_paths:
+                    packaged_path = Path("media") / owned.media_type / Path(owned.identity)
+                    path_key = _portable_path_key(packaged_path)
+                    existing = packaged_keys.get(path_key)
+                    if existing is not None and existing != key:
+                        raise ValueError("stage-owned media paths collide in the snapshot package")
+                    packaged_keys[path_key] = key
+                    packaged_paths[key] = packaged_path
+                return _packaged_media_url(packaged_paths[key], owned.fragment)
             elif _is_external_dependency(element, attribute, value):
                 reference = _dependency_reference(value)
                 if reference:
                     dependencies.setdefault((reference, element, attribute), set()).add(doc_id)
             return value
 
-        rewrite_html_url_attributes(str(payload.get("content_html") or ""), collect)
+        original_html = payload["content_html"]
+        transformed_html = rewrite_html_url_attributes(original_html, collect_and_rewrite)
+        rewritten_html[doc_id] = transformed_html if owned_in_document else original_html
 
     adapters = _media_adapters(
         repo_root,
@@ -346,50 +372,22 @@ def plan_snapshot_media(
         environ=environ,
     )
     items: list[SnapshotMediaItem] = []
-    packaged_keys: dict[str, tuple[str, str]] = {}
     for media_type, identity in sorted(references):
         try:
             data = adapters[media_type].read(identity)
         except Exception as exc:
             raise ValueError(f"stage-owned media is unavailable: {media_type}/{identity}") from exc
-        packaged_path = Path("media") / media_type / Path(identity)
-        path_key = _portable_path_key(packaged_path)
-        existing = packaged_keys.get(path_key)
-        if existing is not None and existing != (media_type, identity):
-            raise ValueError("stage-owned media paths collide in the snapshot package")
-        packaged_keys[path_key] = (media_type, identity)
         items.append(
             SnapshotMediaItem(
                 media_type=media_type,
                 identity=identity,
                 provider=media_config[media_type].asset_location.provider,
-                packaged_path=packaged_path,
+                packaged_path=packaged_paths[(media_type, identity)],
                 sha256=hashlib.sha256(data).hexdigest(),
                 doc_ids=tuple(sorted(references[(media_type, identity)])),
                 data=data,
             )
         )
-    items_by_identity = {(item.media_type, item.identity): item for item in items}
-    owned_doc_ids = {doc_id for doc_ids in references.values() for doc_id in doc_ids}
-
-    rewritten_html: dict[str, str] = {}
-    for doc_id, payload in doc_payloads.items():
-        original_html = str(payload.get("content_html") or "")
-        if doc_id not in owned_doc_ids:
-            rewritten_html[doc_id] = original_html
-            continue
-
-        def rewrite(_element: str, _attribute: str, value: str) -> str:
-            owned = owned_media_reference(value, media_config)
-            if owned is None:
-                return value
-            return _packaged_media_url(items_by_identity[(owned.media_type, owned.identity)], owned.fragment)
-
-        rewritten_html[doc_id] = rewrite_html_url_attributes(
-            original_html,
-            rewrite,
-        )
-
     external_dependencies = tuple(
         SnapshotExternalDependency(
             reference=reference,

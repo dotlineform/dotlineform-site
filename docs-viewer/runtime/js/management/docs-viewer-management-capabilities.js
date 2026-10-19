@@ -43,29 +43,6 @@ export function publishSupported(capabilities) {
   return publishCapability(capabilities).available;
 }
 
-export function staticHtmlExportCapability(capabilities) {
-  var workspaceCaps = workspaceManagementCapabilities(capabilities);
-  var exportCapabilities = capabilities && capabilities.static_html_export && typeof capabilities.static_html_export === "object"
-    ? capabilities.static_html_export
-    : null;
-  var workspaceExport = workspaceCaps && workspaceCaps.static_html_export && typeof workspaceCaps.static_html_export === "object"
-    ? workspaceCaps.static_html_export
-    : null;
-  if (!exportCapabilities || exportCapabilities.preview !== true || exportCapabilities.apply !== true) {
-    return {
-      available: false,
-      reason: String(exportCapabilities && exportCapabilities.error || "Snapshot Export is unavailable.").trim()
-    };
-  }
-  if (!workspaceExport || workspaceExport.preview !== true || workspaceExport.apply !== true) {
-    return {
-      available: false,
-      reason: String(workspaceExport && workspaceExport.error || "Snapshot Export is unavailable in this workspace.").trim()
-    };
-  }
-  return { available: true, reason: "" };
-}
-
 export function createDocsViewerManagementCapabilityController(options) {
   var management = options.management || {};
   var routeSession = options.routeSession || {};

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Export generated Docs Viewer payloads as standalone static HTML."""
+"""Export selected generated collection documents as standalone static HTML."""
 
 from __future__ import annotations
 
@@ -20,8 +20,6 @@ from urllib.parse import parse_qs, urlencode, urlsplit
 
 from docs_static_html_export_media import SnapshotMediaPlan, plan_snapshot_media
 from docs_workspace_config import (
-    DocsCollectionConfig,
-    DocsStageConfig,
     load_docs_workspace_config,
     normalize_collection_id,
     resolve_location_path,
@@ -52,12 +50,6 @@ IGNORED_HOST_METADATA_FILENAMES = frozenset({".DS_Store"})
 
 
 @dataclass(frozen=True)
-class StaticHtmlSnapshotInputPaths:
-    metadata_path: Path
-    payload_root: Path
-
-
-@dataclass(frozen=True)
 class StaticHtmlSnapshotPlan:
     collection: str
     title: str
@@ -67,15 +59,15 @@ class StaticHtmlSnapshotPlan:
     default_doc_id: str
     export_date: str
     folder_name: str
+    export_root: Path
     destination_root: Path
     destination_label: str
-    index_tree: dict[str, Any]
+    documents: list[dict[str, Any]]
     doc_payloads: dict[str, dict[str, Any]]
     media_plan: SnapshotMediaPlan
     plan_revision: str
     target_state: str
     target_revision: str
-    existing_snapshot: dict[str, Any] | None
 
 
 class StaticHtmlSnapshotApplyConflict(ValueError):
@@ -111,30 +103,10 @@ def resolve_docs_export_workspace() -> ExternalWorkspaceRoot:
         raise
 
 
-def resolve_snapshot_input_paths(
-    repo_root: Path,
-    config: DocsStageConfig | DocsCollectionConfig,
-) -> StaticHtmlSnapshotInputPaths:
-    """Resolve the exact generated metadata and payload owner without source reads."""
-
-    generated_root = resolve_location_path(repo_root, config.generated.documents.location)
-    metadata_path = generated_root / ("manage-manifest.json" if isinstance(config, DocsCollectionConfig) else "index-tree.json")
-    payload_root = generated_root / "by-id"
-    if not metadata_path.is_file():
-        raise FileNotFoundError(f"generated document metadata not found: {metadata_path}")
-    if not payload_root.is_dir():
-        raise FileNotFoundError(f"by-id payload root not found for the workspace: {payload_root}")
-    return StaticHtmlSnapshotInputPaths(
-        metadata_path=metadata_path,
-        payload_root=payload_root,
-    )
-
-
-def validate_destination_path(path: Path) -> None:
-    base = resolve_docs_export_workspace().root.resolve()
+def validate_destination_path(path: Path, *, export_root: Path) -> None:
     resolved_parent = path.parent.resolve()
-    if resolved_parent != base:
-        raise ValueError(f"export destination must be under {base}")
+    if resolved_parent != export_root:
+        raise ValueError(f"export destination must be under {export_root}")
     if path.name in {"", ".", ".."}:
         raise ValueError("export destination must include a snapshot folder")
 
@@ -155,47 +127,13 @@ def validate_doc_id_for_html_filename(doc_id: str) -> str:
     return value
 
 
-def collect_doc_ids_from_tree(rows: Any) -> list[str]:
-    doc_ids: list[str] = []
-
-    def walk(items: Any) -> None:
-        if not isinstance(items, list):
-            return
-        for item in items:
-            if not isinstance(item, dict):
-                continue
-            doc_id = str(item.get("doc_id") or "").strip()
-            if doc_id:
-                doc_ids.append(validate_doc_id_for_html_filename(doc_id))
-            walk(item.get("children"))
-
-    walk(rows)
-    seen: set[str] = set()
-    ordered: list[str] = []
-    for doc_id in doc_ids:
-        if doc_id in seen:
-            raise ValueError(f"duplicate doc_id in index tree: {doc_id}")
-        seen.add(doc_id)
-        ordered.append(doc_id)
-    return ordered
-
-
 def load_doc_payload(payload_root: Path, doc_id: str) -> dict[str, Any]:
-    safe_doc_id = validate_doc_id_for_html_filename(doc_id)
-    path = payload_root / f"{safe_doc_id}.json"
-    if not path.is_file():
-        raise FileNotFoundError(f"doc payload not found: {path}")
-    payload = json.loads(path.read_text(encoding="utf-8"))
-    if not isinstance(payload, dict):
-        raise ValueError(f"doc payload must contain a JSON object: {safe_doc_id}")
-    payload_doc_id = str(payload.get("doc_id") or safe_doc_id).strip()
-    if payload_doc_id != safe_doc_id:
-        raise ValueError(f"doc payload id mismatch for {safe_doc_id}: {payload_doc_id}")
-    return {**payload, "doc_id": safe_doc_id}
+    """Read a generated payload for an ID already accepted at the request boundary."""
+    return json.loads((payload_root / f"{doc_id}.json").read_text(encoding="utf-8"))
 
 
 def normalize_snapshot_doc_ids(value: Any, available_doc_ids: list[str]) -> tuple[str, ...]:
-    """Validate exact checked IDs and return them in generated tree order."""
+    """Validate exact checked IDs and return them in generated manifest order."""
 
     if not isinstance(value, list) or not value:
         raise ValueError("doc_ids must be a non-empty array")
@@ -210,30 +148,9 @@ def normalize_snapshot_doc_ids(value: Any, available_doc_ids: list[str]) -> tupl
     available = set(available_doc_ids)
     unknown = sorted(set(requested) - available)
     if unknown:
-        raise ValueError(f"doc_ids are not in the active generated stage: {', '.join(unknown)}")
+        raise ValueError(f"doc_ids are not in the selected generated collection: {', '.join(unknown)}")
     requested_set = set(requested)
     return tuple(doc_id for doc_id in available_doc_ids if doc_id in requested_set)
-
-
-def filter_index_tree_rows(rows: Any, included_doc_ids: set[str]) -> list[dict[str, Any]]:
-    """Keep exact selected rows, promoting selected children of omitted parents."""
-
-    result: list[dict[str, Any]] = []
-    if not isinstance(rows, list):
-        return result
-    for row in rows:
-        if not isinstance(row, dict):
-            continue
-        selected_children = filter_index_tree_rows(row.get("children"), included_doc_ids)
-        doc_id = str(row.get("doc_id") or "").strip()
-        if doc_id in included_doc_ids:
-            selected_row = {key: item for key, item in row.items() if key != "children"}
-            if selected_children:
-                selected_row["children"] = selected_children
-            result.append(selected_row)
-        else:
-            result.extend(selected_children)
-    return result
 
 
 def _truncate_utf8(value: str, byte_limit: int) -> str:
@@ -351,98 +268,14 @@ def snapshot_target_revision(path: Path, state: str) -> str:
     return _revision({"state": state, "entries": normalized_entries})
 
 
-def load_existing_snapshot_summary(destination_root: Path) -> dict[str, Any] | None:
-    provenance_path = destination_root / SNAPSHOT_PROVENANCE_FILENAME
-    if provenance_path.is_symlink() or not provenance_path.is_file():
-        return None
-    try:
-        payload = json.loads(provenance_path.read_text(encoding="utf-8"))
-        if not isinstance(payload, dict) or payload.get("schema_version") != SNAPSHOT_SCHEMA_VERSION:
-            return None
-        if "scope" in payload or "stage" in payload:
-            return None
-        doc_ids = normalize_snapshot_doc_ids(payload.get("doc_ids"), list(payload.get("doc_ids") or []))
-        selection_kind = str(payload.get("selection_kind") or "").strip()
-        if selection_kind not in {"single", "partial", "complete"}:
-            return None
-        if selection_kind == "single" and len(doc_ids) != 1:
-            return None
-        if selection_kind == "partial" and len(doc_ids) < 2:
-            return None
-        document_count = payload.get("document_count")
-        if isinstance(document_count, bool) or not isinstance(document_count, int) or document_count != len(doc_ids):
-            return None
-        generated_at = str(payload.get("generated_at") or "").strip()
-        if not generated_at:
-            return None
-        generated_time = datetime.fromisoformat(generated_at)
-        if generated_time.tzinfo is None or generated_time.utcoffset() is None:
-            return None
-        media = payload.get("media")
-        external_dependencies = payload.get("external_dependencies")
-        if not isinstance(media, list) or not isinstance(external_dependencies, list):
-            return None
-        media_count = payload.get("media_count")
-        external_dependency_count = payload.get("external_dependency_count")
-        if (
-            isinstance(media_count, bool)
-            or not isinstance(media_count, int)
-            or media_count != len(media)
-            or isinstance(external_dependency_count, bool)
-            or not isinstance(external_dependency_count, int)
-            or external_dependency_count != len(external_dependencies)
-        ):
-            return None
-        selected_doc_ids = list(doc_ids)
-        for item in media:
-            if not isinstance(item, dict):
-                return None
-            media_type = str(item.get("media_type") or "")
-            identity = str(item.get("identity") or "")
-            packaged_path = Path(str(item.get("packaged_path") or ""))
-            if (
-                not SAFE_DOC_ID_PATTERN.fullmatch(media_type)
-                or not identity
-                or Path(identity).is_absolute()
-                or ".." in Path(identity).parts
-                or packaged_path != Path("media") / media_type / identity
-                or not str(item.get("provider") or "").strip()
-                or not REVISION_PATTERN.fullmatch(str(item.get("sha256") or ""))
-            ):
-                return None
-            normalize_snapshot_doc_ids(item.get("doc_ids"), selected_doc_ids)
-        for item in external_dependencies:
-            if (
-                not isinstance(item, dict)
-                or not str(item.get("reference") or "").strip()
-                or not str(item.get("element") or "").strip()
-                or not str(item.get("attribute") or "").strip()
-            ):
-                return None
-            normalize_snapshot_doc_ids(item.get("doc_ids"), selected_doc_ids)
-    except (OSError, ValueError, json.JSONDecodeError, TypeError):
-        return None
-    return {
-        "selection_kind": selection_kind,
-        "document_count": len(doc_ids),
-        "media_count": media_count,
-        "external_dependency_count": external_dependency_count,
-        "generated_at": generated_at,
-        "collection": payload.get("collection", ""),
-        "selection_revision": _revision({"collection": payload.get("collection", ""), "doc_ids": doc_ids}),
-    }
-
-
-def inspect_snapshot_destination(destination_root: Path) -> tuple[str, str, dict[str, Any] | None]:
+def inspect_snapshot_destination(destination_root: Path) -> tuple[str, str]:
     if not os.path.lexists(destination_root):
         state = "absent"
-        return state, snapshot_target_revision(destination_root, state), None
-    if destination_root.is_symlink() or not destination_root.is_dir():
+    elif destination_root.is_symlink() or not destination_root.is_dir():
         state = "non_directory"
-        return state, snapshot_target_revision(destination_root, state), None
-    existing_snapshot = load_existing_snapshot_summary(destination_root)
-    state = "recognized" if existing_snapshot is not None else "unrecognized"
-    return state, snapshot_target_revision(destination_root, state), existing_snapshot
+    else:
+        state = "directory"
+    return state, snapshot_target_revision(destination_root, state)
 
 
 def _snapshot_plan_revision(
@@ -454,7 +287,7 @@ def _snapshot_plan_revision(
     export_date: str,
     folder_name: str,
     default_doc_id: str,
-    index_tree: dict[str, Any],
+    documents: list[dict[str, Any]],
     doc_payloads: dict[str, dict[str, Any]],
     media_plan: SnapshotMediaPlan,
 ) -> str:
@@ -467,10 +300,10 @@ def _snapshot_plan_revision(
             "export_date": export_date,
             "folder_name": folder_name,
             "default_doc_id": default_doc_id,
-            "tree": index_tree.get("docs", []),
-            "titles": {doc_id: str(doc_payloads[doc_id].get("title") or doc_id) for doc_id in doc_ids},
+            "documents": documents,
+            "titles": {doc_id: doc_payloads[doc_id]["title"] for doc_id in doc_ids},
             "content_sha256": {
-                doc_id: hashlib.sha256(str(doc_payloads[doc_id].get("content_html") or "").encode("utf-8")).hexdigest()
+                doc_id: hashlib.sha256(doc_payloads[doc_id]["content_html"].encode("utf-8")).hexdigest()
                 for doc_id in doc_ids
             },
             "media": media_plan.manifest_records(),
@@ -492,25 +325,22 @@ def plan_static_html_snapshot(
             raise ValueError(f"{unsupported_field} is not supported for static HTML snapshots")
     workspace = load_docs_workspace_config(repo_root)
     config = select_workspace_stage(workspace, "working")
-    collection = normalize_collection_id(body["collection"], field="collection") if "collection" in body else ""
-    owner: DocsStageConfig | DocsCollectionConfig = config
-    title = "Docs"
-    if collection:
-        owner = next((candidate for candidate in config.collections if candidate.collection == collection), None)
-        if owner is None:
-            raise ValueError(f"unknown collection {collection!r}")
-        title = owner.title
-    paths = resolve_snapshot_input_paths(repo_root, owner)
-    index_tree = load_snapshot_metadata(paths.metadata_path)
-    available_doc_ids = collect_doc_ids_from_tree(index_tree.get("docs"))
+    collection = normalize_collection_id(body.get("collection"), field="collection")
+    owner = next((candidate for candidate in config.collections if candidate.collection == collection), None)
+    if owner is None:
+        raise ValueError(f"unknown collection {collection!r}")
+    title = owner.title
+    generated_root = resolve_location_path(repo_root, owner.generated.documents.location)
+    manifest = load_snapshot_metadata(generated_root / "manage-manifest.json")
+    available_doc_ids = [row["doc_id"] for row in manifest["docs"]]
     doc_ids = normalize_snapshot_doc_ids(body.get("doc_ids"), available_doc_ids)
     try:
-        doc_payloads = {doc_id: load_doc_payload(paths.payload_root, doc_id) for doc_id in doc_ids}
+        doc_payloads = {doc_id: load_doc_payload(generated_root / "by-id", doc_id) for doc_id in doc_ids}
     except FileNotFoundError as exc:
-        raise FileNotFoundError(f"selected document payload not found for {collection or 'ordinary documents'}") from exc
+        raise FileNotFoundError(f"selected document payload not found for {collection}") from exc
     included_doc_ids = set(doc_ids)
     media_plan = plan_snapshot_media(repo_root, owner.media.types if owner.media is not None else {}, doc_payloads)
-    selected_tree = {**index_tree, "docs": filter_index_tree_rows(index_tree.get("docs"), included_doc_ids)}
+    documents = [{"doc_id": row["doc_id"], "title": row["title"]} for row in manifest["docs"] if row["doc_id"] in included_doc_ids]
     selection_kind = snapshot_selection_kind(doc_ids, available_doc_ids)
     selected_date = export_date or datetime.now().astimezone().date()
     if type(selected_date) is not date:
@@ -520,11 +350,12 @@ def plan_static_html_snapshot(
     else:
         base_label = f"{title} selection"
     folder_name = snapshot_folder_name(base_label, selected_date)
-    destination_root = resolve_docs_export_workspace().root / folder_name
-    validate_destination_path(destination_root)
-    default_doc_id = config.default_doc_id if config.default_doc_id in included_doc_ids else doc_ids[0]
+    export_root = resolve_docs_export_workspace().root
+    destination_root = export_root / folder_name
+    validate_destination_path(destination_root, export_root=export_root)
+    default_doc_id = doc_ids[0]
     destination_label_value = f"/docs-export/{folder_name}/"
-    target_state, target_revision, existing_snapshot = inspect_snapshot_destination(destination_root)
+    target_state, target_revision = inspect_snapshot_destination(destination_root)
     plan_revision = _snapshot_plan_revision(
         collection=collection,
         title=title,
@@ -533,7 +364,7 @@ def plan_static_html_snapshot(
         export_date=selected_date.isoformat(),
         folder_name=folder_name,
         default_doc_id=default_doc_id,
-        index_tree=selected_tree,
+        documents=documents,
         doc_payloads=doc_payloads,
         media_plan=media_plan,
     )
@@ -546,15 +377,15 @@ def plan_static_html_snapshot(
         default_doc_id=default_doc_id,
         export_date=selected_date.isoformat(),
         folder_name=folder_name,
+        export_root=export_root,
         destination_root=destination_root,
         destination_label=destination_label_value,
-        index_tree=selected_tree,
+        documents=documents,
         doc_payloads=doc_payloads,
         media_plan=media_plan,
         plan_revision=plan_revision,
         target_state=target_state,
         target_revision=target_revision,
-        existing_snapshot=existing_snapshot,
     )
 
 
@@ -580,9 +411,8 @@ def preview_static_html_export(
         "export_date": plan.export_date,
         "destination_label": plan.destination_label,
         "target_state": plan.target_state,
-        "replacement_required": plan.target_state in {"recognized", "unrecognized"},
+        "replacement_required": plan.target_state == "directory",
         "replace_allowed": plan.target_state != "non_directory",
-        "existing_snapshot": plan.existing_snapshot,
         "plan_revision": plan.plan_revision,
         "target_revision": plan.target_revision,
         "summary_text": f"Prepared a {len(plan.doc_ids)}-document snapshot preview for {plan.destination_label}.",
@@ -596,7 +426,7 @@ def rewrite_internal_docs_viewer_links(
     viewer_base_url: str,
     link_prefix: str,
     link_suffix: str = ".html",
-    included_doc_ids: set[str] | None = None,
+    included_doc_ids: set[str],
     preserve_fragment: bool = True,
 ) -> str:
     def replacement(match: re.Match[str]) -> str:
@@ -614,9 +444,8 @@ def rewrite_internal_docs_viewer_links(
         doc_id = (params.get("doc") or [""])[0]
         if not doc_id:
             return match.group(0)
-        validate_doc_id_for_html_filename(doc_id)
         target_collection = (params.get("collection") or [""])[0]
-        if target_collection != collection or (included_doc_ids is not None and doc_id not in included_doc_ids):
+        if target_collection != collection or doc_id not in included_doc_ids:
             if split.path:
                 return match.group(0)
             rewritten = f"{viewer_base_url}{raw_url}"
@@ -690,10 +519,10 @@ def replace_images_with_placeholders(html_text: str) -> str:
 
 
 def markdown_document_link(payload: dict[str, Any], *, collection: str, viewer_base_url: str) -> str:
-    doc_id = validate_doc_id_for_html_filename(str(payload.get("doc_id") or ""))
-    title = str(payload.get("title") or doc_id).strip() or doc_id
+    doc_id = payload["doc_id"]
+    title = payload["title"]
     escaped_title = title.replace("\\", "\\\\").replace("[", "\\[").replace("]", "\\]")
-    query = urlencode({**({"collection": collection} if collection else {}), "doc": doc_id})
+    query = urlencode({"collection": collection, "doc": doc_id})
     return f"[{escaped_title}]({viewer_base_url}?{query})"
 
 
@@ -824,37 +653,25 @@ def render_portable_styles_css() -> str:
 """
 
 
-def render_tree_rows(
-    rows: Any,
+def render_document_rows(
+    rows: list[dict[str, Any]],
     *,
     link_prefix: str = "docs/",
     link_suffix: str = ".html",
 ) -> str:
-    if not isinstance(rows, list) or not rows:
-        return ""
     parts = ['<ul class="docsExport__tree">']
     for row in rows:
-        if not isinstance(row, dict):
-            continue
-        doc_id = validate_doc_id_for_html_filename(str(row.get("doc_id") or ""))
-        title = str(row.get("title") or doc_id).strip() or doc_id
+        doc_id = row["doc_id"]
+        title = row["title"]
         target = f"{link_prefix}{doc_id}{link_suffix}"
         parts.append(
-            f'<li><a href="{html.escape(target, quote=True)}">{html.escape(title)}</a>'
+            f'<li><a href="{html.escape(target, quote=True)}">{html.escape(title)}</a></li>'
         )
-        child_html = render_tree_rows(
-            row.get("children"),
-            link_prefix=link_prefix,
-            link_suffix=link_suffix,
-        )
-        if child_html:
-            parts.append(child_html)
-        parts.append("</li>")
     parts.append("</ul>")
     return "".join(parts)
 
 
-def render_index_html(index_tree: dict[str, Any], *, document_count: int, title: str) -> str:
+def render_index_html(documents: list[dict[str, Any]], *, document_count: int, title: str) -> str:
     document_label = "document" if document_count == 1 else "documents"
     return "\n".join(
         [
@@ -870,7 +687,7 @@ def render_index_html(index_tree: dict[str, Any], *, document_count: int, title:
             "  <main>",
             f"    <h1>{html.escape(title)}</h1>",
             f'    <p class="docsExport__meta">{document_count} {document_label} exported from generated Docs Viewer payloads.</p>',
-            f"    {render_tree_rows(index_tree.get('docs'))}",
+            f"    {render_document_rows(documents)}",
             "  </main>",
             "</body>",
             "</html>",
@@ -884,16 +701,10 @@ def render_doc_html(
     *,
     collection: str,
     viewer_base_url: str,
-    included_doc_ids: set[str] | None = None,
-    content_html_override: str | None = None,
+    included_doc_ids: set[str],
+    content_html: str,
 ) -> str:
-    doc_id = validate_doc_id_for_html_filename(str(payload.get("doc_id") or ""))
-    title = str(payload.get("title") or doc_id).strip() or doc_id
-    content_html = (
-        str(payload.get("content_html") or "")
-        if content_html_override is None
-        else content_html_override
-    )
+    title = payload["title"]
     content_html = rewrite_internal_docs_viewer_links(
         content_html,
         collection=collection,
@@ -928,8 +739,8 @@ def render_doc_html(
 
 def render_portable_html(plan: StaticHtmlSnapshotPlan) -> str:
     included_doc_ids = set(plan.doc_ids)
-    tree_html = render_tree_rows(
-        plan.index_tree.get("docs"),
+    index_html = render_document_rows(
+        plan.documents,
         link_prefix="#doc-",
         link_suffix="",
     )
@@ -937,7 +748,7 @@ def render_portable_html(plan: StaticHtmlSnapshotPlan) -> str:
     for doc_id in plan.doc_ids:
         payload = plan.doc_payloads[doc_id]
         content_html = rewrite_internal_docs_viewer_links(
-            str(payload.get("content_html") or ""),
+            payload["content_html"],
             collection=plan.collection,
             viewer_base_url=plan.viewer_base_url,
             link_prefix="#doc-",
@@ -972,7 +783,7 @@ def render_portable_html(plan: StaticHtmlSnapshotPlan) -> str:
             '    <section class="docsExport__portableIndex">',
             f"      <h1>{html.escape(plan.title)}</h1>",
             f'      <p class="docsExport__meta">{len(plan.doc_ids)} {document_label} exported from generated Docs Viewer payloads.</p>',
-            f"      {tree_html}",
+            f"      {index_html}",
             "    </section>",
             *document_html,
             "  </main>",
@@ -1005,7 +816,7 @@ def compute_snapshot_files(plan: StaticHtmlSnapshotPlan, *, generated_at: str) -
     included_doc_ids = set(plan.doc_ids)
     files: dict[Path, bytes] = {
         Path("index.html"): render_index_html(
-            plan.index_tree,
+            plan.documents,
             document_count=len(plan.doc_ids),
             title=plan.title,
         ).encode("utf-8"),
@@ -1021,7 +832,7 @@ def compute_snapshot_files(plan: StaticHtmlSnapshotPlan, *, generated_at: str) -
             collection=plan.collection,
             viewer_base_url=plan.viewer_base_url,
             included_doc_ids=included_doc_ids,
-            content_html_override=plan.media_plan.rewritten_html_by_doc[doc_id],
+            content_html=plan.media_plan.rewritten_html_by_doc[doc_id],
         ).encode("utf-8")
     for item in plan.media_plan.items:
         files[item.packaged_path] = item.data
@@ -1070,17 +881,15 @@ def write_snapshot_files(destination_root: Path, files: dict[Path, bytes]) -> No
         if relative_path.is_absolute() or ".." in relative_path.parts:
             raise ValueError(f"unsafe snapshot output path: {relative_path}")
         target_path = destination_root / relative_path
-        target_path.parent.mkdir(parents=True, exist_ok=True)
         target_path.write_bytes(content)
 
 
 def validate_snapshot_files(
-    plan: StaticHtmlSnapshotPlan,
     destination_root: Path,
     expected_files: dict[Path, bytes],
+    expected_directories: set[Path],
 ) -> None:
     expected_paths = set(expected_files)
-    expected_dirs = {parent for path in expected_paths for parent in path.parents if parent.parts}
     actual_files: set[Path] = set()
     actual_dirs: set[Path] = set()
     for path in destination_root.rglob("*"):
@@ -1095,13 +904,13 @@ def validate_snapshot_files(
             actual_files.add(relative_path)
         else:
             raise ValueError(f"snapshot contains a special entry: {relative_path.as_posix()}")
-    if actual_files != expected_paths or actual_dirs != expected_dirs:
+    if actual_files != expected_paths or actual_dirs != expected_directories:
         differences: list[str] = []
         for label, paths in (
             ("missing files", expected_paths - actual_files),
             ("unexpected files", actual_files - expected_paths),
-            ("missing directories", expected_dirs - actual_dirs),
-            ("unexpected directories", actual_dirs - expected_dirs),
+            ("missing directories", expected_directories - actual_dirs),
+            ("unexpected directories", actual_dirs - expected_directories),
         ):
             ordered = sorted(path.as_posix() for path in paths)
             if ordered:
@@ -1163,9 +972,9 @@ def install_snapshot_in_place(plan: StaticHtmlSnapshotPlan, files: dict[Path, by
             expected_directories,
             key=lambda path: (len(path.parts), path.as_posix()),
         ):
-            (plan.destination_root / relative_path).mkdir(parents=True, exist_ok=True)
+            (plan.destination_root / relative_path).mkdir(exist_ok=True)
         write_snapshot_files(plan.destination_root, files)
-        validate_snapshot_files(plan, plan.destination_root, files)
+        validate_snapshot_files(plan.destination_root, files, expected_directories)
     except Exception:
         if completion_path.is_symlink() or completion_path.is_file():
             completion_path.unlink(missing_ok=True)
@@ -1196,15 +1005,14 @@ def apply_static_html_snapshot(repo_root: Path, body: dict[str, Any]) -> dict[st
             plan=plan,
         )
     replace_existing = body.get("replace_existing") is True
-    if plan.target_state in {"recognized", "unrecognized"} and not replace_existing:
+    if plan.target_state == "directory" and not replace_existing:
         raise ValueError("replace_existing must be true to replace the confirmed snapshot destination")
     if plan.target_state == "absent" and replace_existing:
         raise ValueError("replace_existing must be false when the confirmed snapshot destination is absent")
 
     generated_at = datetime.now().astimezone().isoformat(timespec="seconds")
     files = compute_snapshot_files(plan, generated_at=generated_at)
-    workspace = resolve_docs_export_workspace()
-    workspace.root.mkdir(exist_ok=True)
+    plan.export_root.mkdir(exist_ok=True)
     replaced = install_snapshot_in_place(plan, files)
 
     document_label = "document" if len(plan.doc_ids) == 1 else "documents"
@@ -1226,45 +1034,4 @@ def apply_static_html_snapshot(repo_root: Path, body: dict[str, Any]) -> dict[st
         "replaced": replaced,
         "plan_revision": plan.plan_revision,
         "summary_text": f"Exported {len(plan.doc_ids)} {document_label} to {plan.destination_label}.",
-    }
-
-
-def static_html_export_capability() -> dict[str, Any]:
-    try:
-        resolve_docs_export_workspace()
-    except ValueError:
-        return {
-            "preview": False,
-            "apply": False,
-            "error": f"Snapshot workspace is unavailable. Configure {PROJECTS_BASE_DIR_ENV}.",
-        }
-    return {
-        "preview": True,
-        "apply": True,
-        "error": "",
-    }
-
-
-def workspace_static_html_export_capability(
-    repo_root: Path,
-    config: DocsStageConfig,
-    *,
-    workspace_available: bool,
-) -> dict[str, Any]:
-    """Check configured input locations; the loaded Index and explicit Export own selection."""
-    available = False
-    if not workspace_available:
-        error = "Snapshot workspace is unavailable."
-    else:
-        try:
-            resolve_snapshot_input_paths(repo_root, config)
-            available = True
-            error = ""
-        except (FileNotFoundError, OSError, ValueError, json.JSONDecodeError):
-            error = "Generated documents are unavailable in the workspace."
-    return {
-        "preview": available,
-        "apply": available,
-        "default_doc_id": config.default_doc_id,
-        "error": error,
     }

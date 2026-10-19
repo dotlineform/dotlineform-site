@@ -8,7 +8,7 @@ import {
   normalizeManagedDocumentTarget
 } from "./docs-viewer-management-document-target.js";
 import { DOCS_VIEWER_ACTION_IDS } from "./docs-viewer-action-definitions.js";
-import { openStaticHtmlSnapshotExportWorkflow } from "./docs-viewer-static-html-export-workflow.js";
+import { openCollectionExportWorkflow } from "./docs-viewer-collection-export-workflow.js";
 
 function cleanString(value) {
   return String(value || "").trim();
@@ -111,7 +111,14 @@ export function loadDocsViewerCollectionContribution(settings, parent, collectio
         : null,
       onPreparePackage: contributionOptions.onPreparePackage,
       onExport: settings.managementContext && clientOptions.baseUrl
-        ? function (target, context) { return openCollectionExport(settings, target, context); }
+        ? function (target, context) {
+            return openCollectionExportWorkflow({
+              target: target, root: managementModalRoot(settings), restoreFocus: context.restoreFocus,
+              clientOptions: clientOptions,
+              startBusyOperation: settings.managementDocumentActions.startBusyOperation,
+              setStatus: settings.setStatus
+            });
+          }
         : null,
       root: managementModalRoot(settings),
       setStatus: settings.setStatus
@@ -156,23 +163,6 @@ function openCollectionPreparePackage(settings, request, context) {
         setMessage: settings.setStatus
       }
     });
-  });
-}
-
-function openCollectionExport(settings, target, context) {
-  var stopBusy;
-  return openStaticHtmlSnapshotExportWorkflow({
-    root: managementModalRoot(settings),
-    restoreFocus: context.restoreFocus,
-    docIds: target.doc_ids,
-    clientOptions: { ...managementClientOptions(settings), collection: target.collection },
-    callbacks: {
-      setMessage: settings.setStatus,
-      setBusy: function (busy) {
-        if (busy) stopBusy = settings.managementDocumentActions.startBusyOperation();
-        else if (stopBusy) { stopBusy(); stopBusy = null; }
-      }
-    }
   });
 }
 

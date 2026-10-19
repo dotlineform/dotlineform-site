@@ -1,6 +1,4 @@
-import { runManagedDocsExportWorkspaceWorkflow } from "./docs-viewer-export-workspace-workflow.js";
 import { createDocsViewerImportDocWorkflow } from "./docs-viewer-import-doc-workflow.js";
-import { staticHtmlExportCapability } from "./docs-viewer-management-capabilities.js";
 import { createDocsViewerEditMenuController } from "./docs-viewer-management-edit-menu.js";
 import { createDocsViewerManagementContextActions } from "./docs-viewer-management-context-actions.js";
 import { projectDocsViewerManagementActionMenuItem } from "./docs-viewer-management-actions-renderer.js";
@@ -191,8 +189,6 @@ export function initDocsViewerManagement(context) {
   var importDocWorkflow = null;
   var interactionController = null;
   var modalController = null;
-  var workspaceExportActive = false;
-  var workspaceExportButton = document.getElementById("docsViewerManageExportWorkspaceButton");
   var actionController = null;
   var resolveAction = null;
   var projectedReportControls = null;
@@ -281,27 +277,6 @@ export function initDocsViewerManagement(context) {
       afterDocId: afterDocId,
       restoreFocus: manageActionsButton
     });
-  }
-
-  async function openExportWorkspace() {
-    if (workspaceExportActive || management.managementBusy) return null;
-    workspaceExportActive = true;
-    renderManagementUi();
-    try {
-      return await runManagedDocsExportWorkspaceWorkflow({
-        root: root, restoreFocus: manageActionsButton,
-        capabilities: management.managementCapabilities, clientOptions: managementClientOptions(),
-        docIds: Array.from(documentIndex.docsById.keys()),
-        callbacks: { render: renderManagementUi, setBusy: setManagementBusy, setMessage: setManagementMessage }
-      });
-    } catch (error) {
-      setManagementMessage(error.message || "Workspace export failed.", true);
-      return null;
-    } finally {
-      workspaceExportActive = false;
-      setManagementBusy(false);
-      renderManagementUi();
-    }
   }
 
   function managementClientOptions() {
@@ -558,11 +533,6 @@ export function initDocsViewerManagement(context) {
         eventRouter.hideManageActionsMenu();
       }
     }
-    if (workspaceExportButton) {
-      var exportCapability = staticHtmlExportCapability(management.managementCapabilities);
-      workspaceExportButton.disabled = management.managementBusy || workspaceExportActive || !exportCapability.available || !documentIndex.docsById.size;
-      workspaceExportButton.title = exportCapability.available ? "Export workspace" : exportCapability.reason;
-    }
     if (managePublishButton) {
       managePublishButton.disabled = management.managementBusy || !publishAvailable;
       managePublishButton.title = publishAvailable ? "Publish" : "Publish is unavailable for this workspace.";
@@ -793,7 +763,6 @@ export function initDocsViewerManagement(context) {
       manageActionsMenu: manageActionsMenu
     },
     commands: {
-      exportWorkspace: openExportWorkspace,
       openImport: openAppImport,
       openImportDoc: openAppImportDoc,
       publish: function () { actionController.handlePublish(); },

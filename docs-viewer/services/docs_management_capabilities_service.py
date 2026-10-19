@@ -7,7 +7,6 @@ from typing import Any, Dict
 
 import docs_deploy_repo
 import docs_local_links
-import docs_static_html_export
 from docs_workspace_config import (
     load_docs_workspace_config,
     select_workspace_stage,
@@ -20,7 +19,7 @@ from docs_workspace_config import (
 from docs_document_packages.workspace import workspace_status
 
 
-def workspace_capabilities(repo_root: Path, config: Any, static_html_export: dict[str, Any]) -> dict[str, Any]:
+def workspace_capabilities(repo_root: Path, config: Any) -> dict[str, Any]:
     """Project the configured authoring workspace's capabilities through the owning services."""
     root = resolve_workspace_path(repo_root, document_source_path(config))
     generated_data_path = resolve_workspace_path(repo_root, generated_documents_path(config)) / "index-tree.json"
@@ -29,11 +28,6 @@ def workspace_capabilities(repo_root: Path, config: Any, static_html_export: dic
         "root": path_label(repo_root, document_source_path(config)),
         "generated_data_reads": generated_data_path.exists(),
         "generated_search_reads": resolve_workspace_path(repo_root, generated_search_path(config)).exists(),
-        "static_html_export": docs_static_html_export.workspace_static_html_export_capability(
-            repo_root,
-            config,
-            workspace_available=static_html_export["preview"] and static_html_export["apply"],
-        ),
     }
 
     record["document_authoring"] = record["available"]
@@ -43,10 +37,9 @@ def workspace_capabilities(repo_root: Path, config: Any, static_html_export: dic
 def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
     data_sharing_workspace = workspace_status(repo_root)
     docs_import_workspace = workspace_status(repo_root, required_paths=("import_staging",))
-    static_html_export = docs_static_html_export.static_html_export_capability()
     workspace = load_docs_workspace_config(repo_root)
     selected = select_workspace_stage(workspace, "working")
-    local = workspace_capabilities(repo_root, selected, static_html_export)
+    local = workspace_capabilities(repo_root, selected)
     destination = docs_deploy_repo.deploy_repo_capability(repo_root, workspace)
     publication = {
         "available": bool(local["available"] and destination["available"]),
@@ -60,7 +53,6 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
             "source_editor": True,
             "local_folder_links": docs_local_links.local_folder_links_capability(repo_root),
             "html_import": docs_import_workspace["available"],
-            "docs_export": True,
             "document_packages": {
                 "available": data_sharing_workspace["available"],
                 "message": data_sharing_workspace["message"],
@@ -84,7 +76,6 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                 "workspace_root": data_sharing_workspace["root"],
             },
             "publish": publication,
-            "static_html_export": static_html_export,
             "workspace": local,
         },
     }

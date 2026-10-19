@@ -3,7 +3,6 @@ export const DOCS_VIEWER_ACTION_IDS = Object.freeze({
   DELETE: "delete",
   EDIT_DOCUMENT: "edit-document",
   EXPORT_DOCS: "export-docs",
-  EXPORT_WORKSPACE: "export-workspace",
   IMPORT: "import",
   IMPORT_DOC: "import-doc",
   MARKDOWN_SAVE: "markdown-save",
@@ -30,6 +29,7 @@ export const DOCS_VIEWER_ACTION_IDS = Object.freeze({
 
 export const DOCS_VIEWER_ACTION_TARGETS = Object.freeze({
   ACTIVE_DOCUMENT: "active-document",
+  COLLECTION_SELECTION: "collection-selection",
   DOCUMENT_SUBTREE: "document-subtree",
   DOCUMENT: "document",
   WORKSPACE: "workspace"
@@ -74,8 +74,7 @@ export const DOCS_VIEWER_ACTION_DEFINITIONS = Object.freeze({
   [IDS.COPY_LINK]: actionDefinition(IDS.COPY_LINK, TARGETS.DOCUMENT),
   [IDS.DELETE]: actionDefinition(IDS.DELETE, TARGETS.DOCUMENT_SUBTREE),
   [IDS.EDIT_DOCUMENT]: actionDefinition(IDS.EDIT_DOCUMENT, TARGETS.ACTIVE_DOCUMENT),
-  [IDS.EXPORT_WORKSPACE]: actionDefinition(IDS.EXPORT_WORKSPACE, TARGETS.WORKSPACE),
-  [IDS.EXPORT_DOCS]: actionDefinition(IDS.EXPORT_DOCS, TARGETS.DOCUMENT_SUBTREE),
+  [IDS.EXPORT_DOCS]: actionDefinition(IDS.EXPORT_DOCS, TARGETS.COLLECTION_SELECTION),
   [IDS.IMPORT]: actionDefinition(IDS.IMPORT, TARGETS.WORKSPACE),
   [IDS.IMPORT_DOC]: actionDefinition(IDS.IMPORT_DOC, TARGETS.WORKSPACE),
   [IDS.MARKDOWN_SAVE]: actionDefinition(IDS.MARKDOWN_SAVE, TARGETS.ACTIVE_DOCUMENT),
@@ -156,6 +155,9 @@ export function resolveDocsViewerAction(actionId, context = {}) {
     } else if (!documentId || subtreeDocIds.indexOf(documentId) === -1) {
       disabledReason = "No Index target document.";
     } else targetDocIds = subtreeDocIds;
+  } else if (definition.target === TARGETS.COLLECTION_SELECTION) {
+    if (documentTarget && documentTarget.collection) targetDocIds = normalizeIds(documentTarget.doc_ids);
+    if (!targetDocIds.length) disabledReason = "Select one or more collection documents.";
   }
 
   var restriction = definition.target !== TARGETS.WORKSPACE || [IDS.NEW, IDS.IMPORT_DOC].includes(definition.id)
@@ -166,7 +168,7 @@ export function resolveDocsViewerAction(actionId, context = {}) {
     disabledReason: disabledReason,
     disabled: Boolean(disabledReason),
     enabled: !disabledReason,
-    hidden: Boolean(restriction),
+    hidden: Boolean(restriction) || (definition.target === TARGETS.COLLECTION_SELECTION && !(documentTarget && documentTarget.collection)),
     target: definition.target,
     targetDocIds: targetDocIds
   };

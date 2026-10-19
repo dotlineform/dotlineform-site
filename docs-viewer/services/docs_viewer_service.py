@@ -374,7 +374,6 @@ def apply_capability_flags(payload: dict[str, object], config: DocsViewerService
         for key in (
             "source_editor",
             "html_import",
-            "docs_export",
         ):
             capabilities[key] = False
         document_packages = capabilities.get("document_packages")
@@ -386,7 +385,6 @@ def apply_capability_flags(payload: dict[str, object], config: DocsViewerService
         workspace = capabilities.get("workspace")
         if isinstance(workspace, dict):
             workspace["document_authoring"] = False
-            workspace["static_html_export"] = {"preview": False, "apply": False}
     if not config.generated_reads_enabled:
         workspace = capabilities.get("workspace")
         if isinstance(workspace, dict):

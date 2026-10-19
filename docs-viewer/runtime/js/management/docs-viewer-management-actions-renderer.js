@@ -26,12 +26,6 @@ var MANAGEMENT_ACTION_MENU_ITEMS = [
     label: "Import"
   },
   {
-    id: "docsViewerManageExportWorkspaceButton",
-    actionId: ACTION_IDS.EXPORT_WORKSPACE,
-    artwork: "docsViewer__icon--square-arrow-right-exit",
-    label: "Export"
-  },
-  {
     id: "docsViewerManageRefreshDiscoveryButton",
     actionId: ACTION_IDS.REFRESH_DISCOVERY,
     artwork: "docsViewer__icon--refresh-cw",

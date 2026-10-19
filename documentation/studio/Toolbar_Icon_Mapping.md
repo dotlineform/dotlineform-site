@@ -84,13 +84,11 @@ Code identifiers below are exact **renderer keys**, except entries explicitly ma
 | Edit menu: Star | action `set-selected` | Unset (`aria-checked=false`); Star | Outline star | star.svg and text | Theme text tint | Implemented; manual review pending |
 | Edit menu: Star | action `set-selected` | Set (`aria-checked=true`); Remove star | Filled star | star-filled.svg and text | Yellow when enabled; disabled colour otherwise | Implemented; manual review pending |
 | Actions menu: Import | action `import` | Opens Import | 📥 and text | import.svg and text | — | Implemented; review pending |
-| Actions menu: Export | action `export-workspace` | Exports workspace | ⬇️ and text | square-arrow-right-exit.svg and text | — | Implemented; review pending |
 | Collection Actions menu: Export | action `export-docs` | Exports checked documents in the owning collection | ⬇️ and text | square-arrow-right-exit.svg and text | Disabled with no checked documents | Implemented; manual review pending |
 | Actions menu: Rebuild | action `rebuild-docs` | Rebuilds docs and Search | 🔄 and text | refresh-cw.svg and text | — | Implemented; manual review pending |
 | Actions menu: Publish | action `publish` | Publishes the workspace | 🌍 and text | globe.svg and text | — | Implemented; manual review pending |
 | Actions menu: Settings | action `settings` | Opens Settings | ⚙️ and text | settings.svg and text | — | Implemented; review pending |
 | Index header: actions | `manage-index-actions` | Opens Index actions menu | 🛠️ | wrench.svg | — | Implemented; review pending; wrench.svg replaces the missing spanner.svg by agreement |
-| Index actions menu: Export | action `export-docs` | Exports selected documents | ⬇️ and text | square-arrow-right-exit.svg and text | — | Implemented; review pending |
 | Index actions menu: package | action `prepare-document-package` | Prepares a document package | 📦 and text | package.svg and text | — | Implemented; review pending |
 | Index actions menu: Delete | action `delete` | Deletes selected documents | 🗑️ and text | trash.svg and text | — | Implemented; review pending |
 | Info header: close | DOM `docsViewerInfoPanelClose` | Hides Info panel | × | x.svg | 1rem artwork; existing 1.8rem button | Implemented; review pending |
