@@ -3,5 +3,110 @@
   "title": "home 3",
   "added_date": "2026-09-17 21:55:40",
   "last_updated": "2026-10-01 13:15:09",
-  "content_html": "<article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>home 3</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"01369\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 8268 / 8268;\" data-docs-media-open aria-label=\"Open home 3 in Media View\"><img data-docs-media-image alt=\"home 3\" width=\"8268\" height=\"8268\" hidden title=\"home 3\"><span data-docs-media-placeholder>home 3</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2023<br>digital c-type print<br>70 × 70 cm<br><br>cat. 01369</p></div></article>\n"
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>home 3</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"01369\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 8268 / 8268;\" data-docs-media-open aria-label=\"Open home 3\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/01369-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/01369-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/01369-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/01369-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"home 3\" width=\"8268\" height=\"8268\" decoding=\"async\"><span data-docs-media-placeholder hidden>home 3</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2023<br>digital c-type print<br>70 × 70 cm<br><br>cat. 01369</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "01369"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:01369": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "01369"
+        },
+        "label": "home 3",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/01369-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/01369-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/01369-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/01369-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "home 3",
+          "width_px": 8268,
+          "height_px": 8268
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/01369-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "077"
+            },
+            "label": "home",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "261"
+            },
+            "label": "home 1 (details)",
+            "relation": "series"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "262"
+            },
+            "label": "home 2 (details)",
+            "relation": "series"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "263"
+            },
+            "label": "home 3 (details)",
+            "relation": "series"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "264"
+            },
+            "label": "home 4 (details)",
+            "relation": "series"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "265"
+            },
+            "label": "home 5 (details)",
+            "relation": "series"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "2023",
+            "digital c-type print",
+            "70 × 70 cm",
+            "",
+            "cat. 01369"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
 }

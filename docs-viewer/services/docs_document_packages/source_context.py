@@ -6,7 +6,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 import sys
-from typing import Callable
+from typing import Any, Callable
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DOCS_BUILD_DIR = REPO_ROOT / "docs-viewer" / "build"
@@ -46,6 +46,7 @@ class DocumentPackageSourceContext:
     children_by_parent: dict[str, list[DocumentPackageSourceRecord]]
     render_cache: dict[str, str]
     render_document: Callable[[DocRecord], str] | None
+    static_inputs: Any = None
 
 
 def source_file_path(context: DocumentPackageSourceContext, doc: DocRecord) -> Path:
@@ -89,9 +90,6 @@ def load_document_package_source_context(
     source_docs = builder.load_docs()
     builder.validate_docs(source_docs)
     builder.related_documents = prepare_related_links(builder, source_docs, {})
-    from docs_builder.rendering_inputs import prepare_catalogue_works
-
-    builder._catalogue_work_cache = prepare_catalogue_works(builder, source_docs, {})
 
     source_docs_by_id = {doc.doc_id: doc for doc in source_docs}
     records: list[DocumentPackageSourceRecord] = []

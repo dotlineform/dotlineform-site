@@ -3,5 +3,86 @@
   "title": "dotlineform - monoprint 5",
   "added_date": "2026-09-17 21:55:37",
   "last_updated": "2026-10-01 13:15:09",
-  "content_html": "<article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>dotlineform - monoprint 5</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00988\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 2480 / 3508;\" data-docs-media-open aria-label=\"Open dotlineform - monoprint 5 in Media View\"><img data-docs-media-image alt=\"dotlineform - monoprint 5\" width=\"2480\" height=\"3508\" hidden title=\"dotlineform - monoprint 5\"><span data-docs-media-placeholder>dotlineform - monoprint 5</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2023<br>ink on paper<br>29.7 × 21 cm<br><br>cat. 00988</p></div></article>\n"
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>dotlineform - monoprint 5</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00988\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 2480 / 3508;\" data-docs-media-open aria-label=\"Open dotlineform - monoprint 5\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/00988-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/00988-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/00988-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/00988-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"dotlineform - monoprint 5\" width=\"2480\" height=\"3508\" decoding=\"async\"><span data-docs-media-placeholder hidden>dotlineform - monoprint 5</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2023<br>ink on paper<br>29.7 × 21 cm<br><br>cat. 00988</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00988"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:00988": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00988"
+        },
+        "label": "dotlineform - monoprint 5",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/00988-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/00988-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00988-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00988-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "dotlineform - monoprint 5",
+          "width_px": 2480,
+          "height_px": 3508
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/00988-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "043"
+            },
+            "label": "dotlineform (2023)",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "156"
+            },
+            "label": "dotlineform (2023) [details]",
+            "relation": "series"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "157"
+            },
+            "label": "dotlineform (2023) [work in progress]",
+            "relation": "series"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "2023",
+            "ink on paper",
+            "29.7 × 21 cm",
+            "",
+            "cat. 00988"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
 }

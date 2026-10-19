@@ -3,5 +3,86 @@
   "title": "Michelle Pfeiffer",
   "added_date": "2026-09-17 21:55:29",
   "last_updated": "2026-10-01 13:15:09",
-  "content_html": "<article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>Michelle Pfeiffer</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00159\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 4038 / 5712;\" data-docs-media-open aria-label=\"Open Michelle Pfeiffer in Media View\"><img data-docs-media-image alt=\"Michelle Pfeiffer\" width=\"4038\" height=\"5712\" hidden title=\"Michelle Pfeiffer\"><span data-docs-media-placeholder>Michelle Pfeiffer</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">c. 1989-98<br>colour photographs mounted in A4 booklet<br>29.7 × 21 cm<br><br>cat. 00159</p></div></article>\n"
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>Michelle Pfeiffer</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00159\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 4038 / 5712;\" data-docs-media-open aria-label=\"Open Michelle Pfeiffer\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/00159-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/00159-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/00159-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/00159-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"Michelle Pfeiffer\" width=\"4038\" height=\"5712\" decoding=\"async\"><span data-docs-media-placeholder hidden>Michelle Pfeiffer</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">c. 1989-98<br>colour photographs mounted in A4 booklet<br>29.7 × 21 cm<br><br>cat. 00159</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00159"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:00159": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00159"
+        },
+        "label": "Michelle Pfeiffer",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/00159-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/00159-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00159-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00159-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "Michelle Pfeiffer",
+          "width_px": 4038,
+          "height_px": 5712
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/00159-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "026"
+            },
+            "label": "collected 1989-1998",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "145"
+            },
+            "label": "grid dissection (details)",
+            "relation": "series"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "146"
+            },
+            "label": "Michelle Pfeiffer (details)",
+            "relation": "series"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "c. 1989-98",
+            "colour photographs mounted in A4 booklet",
+            "29.7 × 21 cm",
+            "",
+            "cat. 00159"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
 }

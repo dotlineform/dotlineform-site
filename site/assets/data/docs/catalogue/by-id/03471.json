@@ -3,5 +3,73 @@
   "title": "book dna 50",
   "added_date": "2026-09-23 10:11:44",
   "last_updated": "2026-10-01 13:15:09",
-  "content_html": "<article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>book dna 50</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"03471\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 1200 / 1200;\" data-docs-media-open aria-label=\"Open book dna 50 in Media View\"><img data-docs-media-image alt=\"book dna 50\" width=\"1200\" height=\"1200\" hidden title=\"book dna 50\"><span data-docs-media-placeholder>book dna 50</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2010<br>digital c-type print<br><br>cat. 03471</p></div></article>\n"
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>book dna 50</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"03471\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 1200 / 1200;\" data-docs-media-open aria-label=\"Open book dna 50\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/03471-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/03471-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/03471-primary-1200.webp?v=1 1200w\" sizes=\"100vw\" alt=\"book dna 50\" width=\"1200\" height=\"1200\" decoding=\"async\"><span data-docs-media-placeholder hidden>book dna 50</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2010<br>digital c-type print<br><br>cat. 03471</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "03471"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:03471": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "03471"
+        },
+        "label": "book dna 50",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/03471-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/03471-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/03471-primary-1200.webp?v=1",
+              "width_px": 1200
+            }
+          ],
+          "alt": "book dna 50",
+          "width_px": 1200,
+          "height_px": 1200
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/03471-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "220"
+            },
+            "label": "book dna sequence (dna)",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "021"
+            },
+            "label": "book dna",
+            "relation": "series"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "2010",
+            "digital c-type print",
+            "",
+            "cat. 03471"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
 }

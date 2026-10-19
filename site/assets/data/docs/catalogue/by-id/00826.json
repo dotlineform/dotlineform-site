@@ -3,5 +3,70 @@
   "title": "concrete [9]",
   "added_date": "2026-09-17 21:55:35",
   "last_updated": "2026-10-01 13:15:09",
-  "content_html": "<article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>concrete [9]</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00826\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 3543 / 4960;\" data-docs-media-open aria-label=\"Open concrete [9] in Media View\"><img data-docs-media-image alt=\"concrete [9]\" width=\"3543\" height=\"4960\" hidden title=\"concrete [9]\"><span data-docs-media-placeholder>concrete [9]</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2012<br>giclée print<br>42 × 30 cm<br><br>cat. 00826</p></div></article>\n"
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>concrete [9]</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00826\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 3543 / 4960;\" data-docs-media-open aria-label=\"Open concrete [9]\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/00826-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/00826-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/00826-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/00826-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"concrete [9]\" width=\"3543\" height=\"4960\" decoding=\"async\"><span data-docs-media-placeholder hidden>concrete [9]</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2012<br>giclée print<br>42 × 30 cm<br><br>cat. 00826</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00826"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:00826": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00826"
+        },
+        "label": "concrete [9]",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/00826-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/00826-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00826-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00826-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "concrete [9]",
+          "width_px": 3543,
+          "height_px": 4960
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/00826-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "031"
+            },
+            "label": "concrete",
+            "relation": "direct"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "2012",
+            "giclée print",
+            "42 × 30 cm",
+            "",
+            "cat. 00826"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
 }

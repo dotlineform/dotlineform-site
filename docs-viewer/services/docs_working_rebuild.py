@@ -92,12 +92,11 @@ def rebuild_working_docs_and_search(repo_root: Path) -> dict[str, Any]:
         payload["diagnostics"]["relationships"], related_records = perform("relationships", lambda: build_workspace_document_links(
             ordinary, all_documents, deleted,
         ))
-        catalogue_works: dict[str, dict[str, Any]] = {}
         results = {}
         for name, builder in builders.items():
             results[name] = perform(f"documents/{name or 'ordinary'}", lambda: generate_documents(builder,
                 write=True, documents=documents[name], related_records=related_records,
-                stale_item_ids=stale_ids[name], update_selected=False, catalogue_works=catalogue_works, publication=publication, expand_dependencies=False,
+                stale_item_ids=stale_ids[name], update_selected=False, publication=publication, expand_dependencies=False,
                 **({"parent_ids": parents} if not name else {}),
             ))
             diagnostics = results[name]["diagnostics"]

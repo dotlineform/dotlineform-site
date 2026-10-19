@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260930-195002-b3417e
 title: Related Links
 added_date: "2026-09-30 19:50:02"
-last_updated: "2026-10-18"
+last_updated: "2026-10-19"
 summary: Author-inserted related-links directive, a sorted list with collection icons, and build-time relationship snapshots in document JSON.
 ui_status: in-progress
 parent_id: d-20260428-000000-f5ff18
@@ -28,7 +28,7 @@ Without the directive, the document has no related-links section. If the directi
 
 Use the document's normal content width and section heading, with a collection icon beside each link and no bullet markers or list indentation. Combine incoming and outgoing document relationships into one plain list, sorted A–Z by case-folded displayed title, with exact collection/document identity providing a stable tie-break. Repeated and reciprocal links to the same target appear once; distinct documents with the same title remain distinct. Omit the document itself.
 
-Catalogue's related-links heading, normally `context`, uses compact `font-small` semibold text without the document H2 divider or its bottom padding. The heading and reader pin remain visible when the section has qualifying links.
+Catalogue's related-links heading, normally `context`, uses compact `font-small` semibold text without the document H2 divider or its bottom padding; its list also uses `font-small`. The heading and reader pin remain visible when the section has qualifying links. Shared viewer CSS selects the section following the Catalogue reference wrapper containing an Entry, matching both live Manage and prepared public markup. The user confirmed this restored presentation on 2026-10-19 after the wrapper-related regression was corrected.
 
 All participating collections use the same list. The presentation has no collection groups, direction labels, counts, cards or enclosing panel. Relationships come from supported authored document links; sharing a Subject or a Catalogue association does not add entries by itself. The original mock-up below remains a plain sorted list; the selected icon refinement is recorded separately.
 

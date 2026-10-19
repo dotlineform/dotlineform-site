@@ -3,5 +3,85 @@
   "title": "grid dissection - detail 8",
   "added_date": "2026-09-23 10:11:30",
   "last_updated": "2026-10-01 13:15:09",
-  "content_html": "<article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>grid dissection - detail 8</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"01968\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 4038 / 5712;\" data-docs-media-open aria-label=\"Open grid dissection - detail 8 in Media View\"><img data-docs-media-image alt=\"grid dissection - detail 8\" width=\"4038\" height=\"5712\" hidden title=\"grid dissection - detail 8\"><span data-docs-media-placeholder>grid dissection - detail 8</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">1990<br>photocopy, booklet<br><br>cat. 01968</p></div></article>\n"
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>grid dissection - detail 8</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"01968\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 4038 / 5712;\" data-docs-media-open aria-label=\"Open grid dissection - detail 8\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/01968-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/01968-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/01968-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/01968-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"grid dissection - detail 8\" width=\"4038\" height=\"5712\" decoding=\"async\"><span data-docs-media-placeholder hidden>grid dissection - detail 8</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">1990<br>photocopy, booklet<br><br>cat. 01968</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "01968"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:01968": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "01968"
+        },
+        "label": "grid dissection - detail 8",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/01968-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/01968-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/01968-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/01968-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "grid dissection - detail 8",
+          "width_px": 4038,
+          "height_px": 5712
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/01968-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "145"
+            },
+            "label": "grid dissection (details)",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "026"
+            },
+            "label": "collected 1989-1998",
+            "relation": "series"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "146"
+            },
+            "label": "Michelle Pfeiffer (details)",
+            "relation": "series"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "1990",
+            "photocopy, booklet",
+            "",
+            "cat. 01968"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
 }

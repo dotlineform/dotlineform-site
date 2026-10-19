@@ -3,5 +3,70 @@
   "title": "grid field 48",
   "added_date": "2026-09-17 21:55:40",
   "last_updated": "2026-10-01 13:15:09",
-  "content_html": "<article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>grid field 48</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"01311\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 9449 / 9449;\" data-docs-media-open aria-label=\"Open grid field 48 in Media View\"><img data-docs-media-image alt=\"grid field 48\" width=\"9449\" height=\"9449\" hidden title=\"grid field 48\"><span data-docs-media-placeholder>grid field 48</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2018<br>digital c-type print<br>80 × 80 cm<br><br>cat. 01311</p></div></article>\n"
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>grid field 48</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"01311\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 9449 / 9449;\" data-docs-media-open aria-label=\"Open grid field 48\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/01311-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/01311-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/01311-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/01311-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"grid field 48\" width=\"9449\" height=\"9449\" decoding=\"async\"><span data-docs-media-placeholder hidden>grid field 48</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2018<br>digital c-type print<br>80 × 80 cm<br><br>cat. 01311</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "01311"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:01311": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "01311"
+        },
+        "label": "grid field 48",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/01311-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/01311-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/01311-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/01311-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "grid field 48",
+          "width_px": 9449,
+          "height_px": 9449
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/01311-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "073"
+            },
+            "label": "grid fields",
+            "relation": "direct"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "2018",
+            "digital c-type print",
+            "80 × 80 cm",
+            "",
+            "cat. 01311"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
 }

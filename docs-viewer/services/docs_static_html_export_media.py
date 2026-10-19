@@ -98,12 +98,32 @@ UrlTransform = Callable[[str, str, str], str]
 class _HtmlUrlAttributeRewriter(HTMLParser):
     """Rewrite URL attributes while preserving text and non-tag HTML events."""
 
-    def __init__(self, transform: UrlTransform) -> None:
+    def __init__(self, transform: UrlTransform, catalogue: Mapping[str, Any] | None = None) -> None:
         super().__init__(convert_charrefs=False)
         self.transform = transform
         self.parts: list[str] = []
+        self.catalogue = catalogue
+        self.elements: list[tuple[str, str, str]] = []
 
     def _start_tag(self, tag: str, attrs: list[tuple[str, str | None]], *, closed: bool) -> None:
+        source_tag = tag
+        if self.catalogue is not None:
+            fields = dict(attrs)
+            target = self.elements[-1][1] if self.elements else ""
+            if "data-docs-media-kind" in fields:
+                target = f'{fields["data-docs-media-kind"]}:{fields["data-docs-media-id"]}'
+            if tag == "button" and "data-docs-media-open" in fields:
+                attrs = [(name, value) for name, value in attrs if name not in {"type", "data-docs-media-open"}]
+                if target.startswith("catalogue-work:"):
+                    tag = "a"
+                    attrs = [(name, value) for name, value in attrs if name != "style"]
+                    attrs.append(("href", self.catalogue[target]["image"]["src"]))
+                else:
+                    tag = "span"
+            if tag == "img" and target.startswith("catalogue-work:") and "data-docs-media-image" in fields:
+                attrs = [(name, value) for name, value in attrs if name not in {"srcset", "sizes", "width", "height"}]
+            if not closed and source_tag not in {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}:
+                self.elements.append((source_tag, target, tag))
         self.parts.append(f"<{tag}")
         for name, value in attrs:
             self.parts.append(f" {name}")
@@ -120,6 +140,8 @@ class _HtmlUrlAttributeRewriter(HTMLParser):
         self._start_tag(tag, attrs, closed=True)
 
     def handle_endtag(self, tag: str) -> None:
+        if self.catalogue is not None and self.elements and self.elements[-1][0] == tag:
+            _source_tag, _target, tag = self.elements.pop()
         self.parts.append(f"</{tag}>")
 
     def handle_data(self, data: str) -> None:
@@ -195,8 +217,8 @@ def _transform_attribute_value(tag: str, name: str, value: str, transform: UrlTr
     return value
 
 
-def rewrite_html_url_attributes(html_text: str, transform: UrlTransform) -> str:
-    parser = _HtmlUrlAttributeRewriter(transform)
+def rewrite_html_url_attributes(html_text: str, transform: UrlTransform, *, catalogue: Mapping[str, Any] | None = None) -> str:
+    parser = _HtmlUrlAttributeRewriter(transform, catalogue)
     parser.feed(html_text)
     parser.close()
     return "".join(parser.parts)
@@ -326,6 +348,8 @@ def plan_snapshot_media(
     remote_client: RemoteArtifactClient | None = None,
     env_files: Iterable[Path] | None = None,
     environ: Mapping[str, str] | None = None,
+    work_media: Mapping[str, Any] | None = None,
+    work_assets: Any = None,
 ) -> SnapshotMediaPlan:
     prefixes = _media_prefixes(media_config)
     references: dict[tuple[str, str], set[str]] = {}
@@ -333,6 +357,7 @@ def plan_snapshot_media(
     packaged_paths: dict[tuple[str, str], Path] = {}
     packaged_keys: dict[str, tuple[str, str]] = {}
     rewritten_html: dict[str, str] = {}
+    work_urls = {item.url: (item.binding, item.identity) for items in (work_media or {}).values() for item in items}
 
     for doc_id, payload in doc_payloads.items():
         owned_in_document = False
@@ -340,6 +365,9 @@ def plan_snapshot_media(
         def collect_and_rewrite(element: str, attribute: str, value: str) -> str:
             nonlocal owned_in_document
             owned = owned_media_reference(value, prefixes)
+            if value in work_urls:
+                media_type, identity = work_urls[value]
+                owned = OwnedMediaReference(media_type, identity, "")
             if owned is not None:
                 owned_in_document = True
                 key = (owned.media_type, owned.identity)
@@ -360,17 +388,23 @@ def plan_snapshot_media(
             return value
 
         original_html = payload["content_html"]
-        transformed_html = rewrite_html_url_attributes(original_html, collect_and_rewrite)
-        rewritten_html[doc_id] = transformed_html if owned_in_document else original_html
+        envelope = payload.get("catalogue")
+        transformed_html = rewrite_html_url_attributes(original_html, collect_and_rewrite,
+                                                       catalogue=envelope.get("presentations", {}) if envelope else None)
+        rewritten_html[doc_id] = transformed_html if owned_in_document or envelope else original_html
 
     adapters = _media_adapters(
         repo_root,
         media_config,
-        (media_type for media_type, _identity in references),
+        (media_type for media_type, _identity in references if media_type in media_config),
         remote_client=remote_client,
         env_files=env_files,
         environ=environ,
     )
+    for media_type, location in (("catalogue/works/primary", work_assets.work_primary),
+                                 ("catalogue/works/files", work_assets.work_files)) if work_assets else ():
+        if any(kind == media_type for kind, _identity in references):
+            adapters[media_type] = artifact_location_adapter(repo_root, location)
     items: list[SnapshotMediaItem] = []
     for media_type, identity in sorted(references):
         try:
@@ -381,7 +415,7 @@ def plan_snapshot_media(
             SnapshotMediaItem(
                 media_type=media_type,
                 identity=identity,
-                provider=media_config[media_type].asset_location.provider,
+                provider=adapters[media_type].location.provider,
                 packaged_path=packaged_paths[(media_type, identity)],
                 sha256=hashlib.sha256(data).hexdigest(),
                 doc_ids=tuple(sorted(references[(media_type, identity)])),

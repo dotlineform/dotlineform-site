@@ -3,5 +3,85 @@
   "title": "living surface (version 4) detail",
   "added_date": "2026-09-23 10:11:38",
   "last_updated": "2026-10-01 13:15:09",
-  "content_html": "<article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>living surface (version 4) detail</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"02885\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 1400 / 1400;\" data-docs-media-open aria-label=\"Open living surface (version 4) detail in Media View\"><img data-docs-media-image alt=\"living surface (version 4) detail\" width=\"1400\" height=\"1400\" hidden title=\"living surface (version 4) detail\"><span data-docs-media-placeholder>living surface (version 4) detail</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">1989, 2004<br>digital c-type print<br><br>cat. 02885</p></div></article>\n"
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>living surface (version 4) detail</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"02885\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 1400 / 1400;\" data-docs-media-open aria-label=\"Open living surface (version 4) detail\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/02885-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/02885-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/02885-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/02885-primary-1600.webp?v=1 1400w\" sizes=\"100vw\" alt=\"living surface (version 4) detail\" width=\"1400\" height=\"1400\" decoding=\"async\"><span data-docs-media-placeholder hidden>living surface (version 4) detail</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">1989, 2004<br>digital c-type print<br><br>cat. 02885</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "02885"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:02885": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "02885"
+        },
+        "label": "living surface (version 4) detail",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/02885-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/02885-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/02885-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/02885-primary-1600.webp?v=1",
+              "width_px": 1400
+            }
+          ],
+          "alt": "living surface (version 4) detail",
+          "width_px": 1400,
+          "height_px": 1400
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/02885-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "163"
+            },
+            "label": "living surface hand form (versions)",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "092"
+            },
+            "label": "living surface hand form",
+            "relation": "series"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "162"
+            },
+            "label": "living surface hand form (original painting)",
+            "relation": "series"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "1989, 2004",
+            "digital c-type print",
+            "",
+            "cat. 02885"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
 }

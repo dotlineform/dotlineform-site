@@ -51,8 +51,8 @@ function normalizeWorkPresentation(value) {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     throw new Error("Media View requires an object payload.");
   }
-  if (cleanString(value.schema_version) !== "docs_media_view_v1") {
-    throw new Error("Media View requires schema docs_media_view_v1.");
+  if (cleanString(value.schema_version) !== "docs_media_view_v2") {
+    throw new Error("Media View requires schema docs_media_view_v2.");
   }
 
   var targetSource = value.target;
@@ -87,7 +87,6 @@ function normalizeWorkPresentation(value) {
     }).join(", ");
   }
 
-  var metadata = normalizedMetadata(value.metadata);
   if (value.series !== undefined) throw new Error("Media View Series links are unsupported.");
   var galleries = value.galleries;
   if (!Array.isArray(galleries)) throw new Error("Media View requires an array of Gallery links.");
@@ -100,7 +99,7 @@ function normalizeWorkPresentation(value) {
   if (!newTabTarget) throw new Error("Media View new-tab target is unsupported.");
 
   return Object.freeze({
-    schemaVersion: "docs_media_view_v1",
+    schemaVersion: "docs_media_view_v2",
     target: Object.freeze({ kind: targetKind, id: targetId }),
     label: suppliedTextField(value.label, "Work title"),
     image: Object.freeze({
@@ -110,7 +109,6 @@ function normalizeWorkPresentation(value) {
       widthPx: imageWidth,
       heightPx: imageHeight
     }),
-    metadata: metadata,
     galleries: Object.freeze(galleries),
     newTabTarget: newTabTarget
   });

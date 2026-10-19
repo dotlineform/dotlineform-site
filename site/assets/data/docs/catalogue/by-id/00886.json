@@ -3,5 +3,102 @@
   "title": "doll forest",
   "added_date": "2026-09-17 21:55:36",
   "last_updated": "2026-10-01 13:15:09",
-  "content_html": "<article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>doll forest</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00886\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 4724 / 6614;\" data-docs-media-open aria-label=\"Open doll forest in Media View\"><img data-docs-media-image alt=\"doll forest\" width=\"4724\" height=\"6614\" hidden title=\"doll forest\"><span data-docs-media-placeholder>doll forest</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2007<br>digital c-type print<br>56 × 40 cm<br><br>cat. 00886</p></div></article>\n"
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>doll forest</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00886\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 4724 / 6614;\" data-docs-media-open aria-label=\"Open doll forest\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/00886-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/00886-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/00886-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/00886-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"doll forest\" width=\"4724\" height=\"6614\" decoding=\"async\"><span data-docs-media-placeholder hidden>doll forest</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2007<br>digital c-type print<br>56 × 40 cm<br><br>cat. 00886</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00886"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:00886": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00886"
+        },
+        "label": "doll forest",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/00886-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/00886-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00886-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00886-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "doll forest",
+          "width_px": 4724,
+          "height_px": 6614
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/00886-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "037"
+            },
+            "label": "doll",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "228"
+            },
+            "label": "doll cell (cell)",
+            "relation": "series"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "229"
+            },
+            "label": "doll moiré (versions (2022))",
+            "relation": "series"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "230"
+            },
+            "label": "doll moiré reduced (versions (2022))",
+            "relation": "series"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "231"
+            },
+            "label": "doll still life 1 (versions (2022))",
+            "relation": "series"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "2007",
+            "digital c-type print",
+            "56 × 40 cm",
+            "",
+            "cat. 00886"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
 }

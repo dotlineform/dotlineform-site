@@ -405,7 +405,6 @@ def perform_collection_source_write_and_rebuild(
     complete_build: bool = False,
     builder: CollectionDocsBuilder | None = None,
     documents: list[DocRecord] | None = None,
-    catalogue_works: dict[str, dict[str, Any]] | None = None,
     publication: Any = None,
     catalogue_pending: dict[str, Any] | None = None,
     prepared_documents: list[SourceDoc] | None = None,
@@ -456,7 +455,7 @@ def perform_collection_source_write_and_rebuild(
         else:
             builder.only_doc_ids = None if complete_build else docs_doc_ids
             builder.links_doc_ids = links_arguments.get("links_doc_ids")
-            rebuild = generate_documents(builder, write=True, documents=documents, catalogue_works=catalogue_works, publication=publication,
+            rebuild = generate_documents(builder, write=True, documents=documents, publication=publication,
                                          catalogue_pending=catalogue_pending,
                                          media_changes={doc_id: change for doc_id, _owner, change in media_changes or []})
     except PublicationHandoffError:

@@ -4,5 +4,65 @@
   "added_date": "2026-08-01 21:24:22",
   "last_updated": "2026-10-19 17:34:37",
   "draft": false,
-  "content_html": "<h1>a doll story</h1>\n<figure class=\"docsViewerFigure docsViewerFigure--image-right\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00641\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open a doll story - doll 1 in Media View\"><img data-docs-media-image alt=\"a doll story - doll 1\" hidden title=\"a doll story - doll 1\"><span data-docs-media-placeholder>a doll story - doll 1</span></button><figcaption><span class=\"docsViewerFigure__caption\">a doll story - doll 1</span><span class=\"docsViewerFigure__summary\">photographs\n2024\n\nphotos of doll on shelf, doll shattered with glass\nall that remains are photographs</span></figcaption></figure>\n"
+  "content_html": "<h1>a doll story</h1>\n<div data-docs-catalogue-ref=\"c1\"><figure class=\"docsViewerFigure docsViewerFigure--image-right\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00641\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open a doll story - doll 1\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/00641-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/00641-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/00641-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/00641-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"a doll story - doll 1\" width=\"3543\" height=\"4960\" decoding=\"async\"><span data-docs-media-placeholder hidden>a doll story - doll 1</span></button><figcaption><span class=\"docsViewerFigure__caption\">a doll story - doll 1</span><span class=\"docsViewerFigure__summary\">photographs\n2024\n\nphotos of doll on shelf, doll shattered with glass\nall that remains are photographs</span></figcaption></figure></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00641"
+        },
+        "presentation": "image",
+        "options": {
+          "use_work_title_caption": true,
+          "summary_html": "photographs\n2024\n\nphotos of doll on shelf, doll shattered with glass\nall that remains are photographs",
+          "placement": "right",
+          "fill_width": true
+        }
+      }
+    ],
+    "presentations": {
+      "catalogue-work:00641": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00641"
+        },
+        "label": "a doll story - doll 1",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/00641-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/00641-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00641-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00641-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "a doll story - doll 1",
+          "width_px": 3543,
+          "height_px": 4960
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/00641-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "006"
+            },
+            "label": "a doll story",
+            "relation": "direct"
+          }
+        ]
+      }
+    }
+  }
 }

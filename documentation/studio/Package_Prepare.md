@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260722-151224-7b61c4
 title: Package Prepare
 added_date: "2026-07-22 15:12:24"
-last_updated: "2026-10-18"
+last_updated: "2026-10-19"
 parent_id: d-20260424-000000-50b63f
 ---
 # Package Prepare
@@ -63,6 +63,8 @@ Summary metadata fields retain authored emphasis markers as text, preserving ret
 Supported returned Import applies the supplied Summary string. Returning the prepared single-paragraph value can therefore remove source line/paragraph breaks; they are not reconstructed. An externally supplied multiline Summary remains a multiline string and is written using `|-` when source is serialized. Docs Review retains the returned value under its existing read-only authority. [Builder](Builder.md#summary-block) owns source syntax and newline-preserving reader/HTML Export behavior. Existing prepared files are not rewritten by this policy; prepare a new package to obtain current output.
 
 Configured collection packages are export-only unless both the collection and profile enable returned-package import. Requests retain the exact optional `collection`; the owning service resolves Working.
+
+Content-bearing preparation carries selected rendered HTML and its Catalogue reference envelope into the shared `docs_catalogue_static.py` preparer before HTML/Markdown/plain-text and heading transformations. One request reuses selected Work/policy/relationship inputs and its existing rendered-content cache. This preserves current Work titles/captions and Catalogue Entry content after Build became reference-only. It adds no media packaging, document generation, queue work or private source lookup; tree-only profiles construct no presentation owner. [Generated Data Contracts](Generated_Data_Contracts.md#catalogue-reference-and-presentation) owns the shared reference/presentation fields.
 
 For engine commands, output fields, validation details, and workspace requirements, use [Documents Package Preparation Script](Package_Prepare_Script.md). Returned packages remain a separate whole-package workflow.
 
@@ -148,5 +150,7 @@ After submission, the service reads the exact selected sources and does not reap
 Both current profiles set `max_documents` and `max_total_chars` to `null`, so there is no package-wide document or character limit. The active 50,000-character content limit per **Document content** record produces `truncated`, not `skipped`.
 
 ## Verification
+
+On 2026-10-19 the existing application preparation service completed `document-content` dry-runs for Catalogue `00008` and Works `d-20260801-073846-e0a9ec`, using JSON output and Markdown content. Each selected/exported one record with zero failures, skips, truncation, warnings or errors. No package output was written; the normal operation log was appended. These representative Entry and image/summary paths exercise the shared static adapter but do not establish actual package-file writing, all output formats, returned-package behavior or browser acceptance. No tests ran.
 
 [User Facing Rules](data/User_Facing_Rules.md) M.06/M.22 records focused lint, compilation/import diagnostics and distinct source/diff review for this cleanup. These checks do not establish live behavior. No tests or live preparation ran; existing retired-contract package tests require separately agreed review/migration. Manual acceptance remains for subtree and flat selections, profiles/formats, Summary filtering, tree/content output, supported reports/tokens/relationships, unavailable or failing selected input and output/collision errors. Restart Docs Viewer and force reload before review.

@@ -3,5 +3,101 @@
   "title": "composite - grave",
   "added_date": "2026-09-23 10:11:41",
   "last_updated": "2026-10-01 13:15:09",
-  "content_html": "<article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>composite - grave</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"03230\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 3000 / 3000;\" data-docs-media-open aria-label=\"Open composite - grave in Media View\"><img data-docs-media-image alt=\"composite - grave\" width=\"3000\" height=\"3000\" hidden title=\"composite - grave\"><span data-docs-media-placeholder>composite - grave</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2007<br>enamel paint on c-type print, aluminium mount<br><br>cat. 03230</p></div></article>\n"
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>composite - grave</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"03230\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 3000 / 3000;\" data-docs-media-open aria-label=\"Open composite - grave\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/03230-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/03230-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/03230-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/03230-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"composite - grave\" width=\"3000\" height=\"3000\" decoding=\"async\"><span data-docs-media-placeholder hidden>composite - grave</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2007<br>enamel paint on c-type print, aluminium mount<br><br>cat. 03230</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "03230"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:03230": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "03230"
+        },
+        "label": "composite - grave",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/03230-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/03230-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/03230-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/03230-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "composite - grave",
+          "width_px": 3000,
+          "height_px": 3000
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/03230-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "207"
+            },
+            "label": "3 symbols (composites)",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "005"
+            },
+            "label": "3 symbols",
+            "relation": "series"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "204"
+            },
+            "label": "3 symbols (versions)",
+            "relation": "series"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "205"
+            },
+            "label": "3 symbols (details)",
+            "relation": "series"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "206"
+            },
+            "label": "3 symbols (source)",
+            "relation": "series"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "2007",
+            "enamel paint on c-type print, aluminium mount",
+            "",
+            "cat. 03230"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
 }

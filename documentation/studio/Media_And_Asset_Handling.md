@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260514-184303-7914e2
 title: Media And Asset Handling
 added_date: "2026-05-14 18:43:03"
-last_updated: "2026-10-18"
+last_updated: "2026-10-19"
 summary: Media intake, content interpretation, document representation, storage, link resolution, extension methods, and safety boundaries.
 parent_id: d-20260424-000000-50b63f
 
@@ -189,6 +189,8 @@ Catalogue document-media retirement on 2026-10-15 has focused lint/compilation f
 The Redundancy And Defensive Behavior Review traced media-owner resolution, extraction/inventory, local media authority, ordinary/Catalogue rendering, complete Working and temporary Preview producers, source-input capture and deployment. It removed the implicit all-collections media grant and excludes non-owners before source/media scans, producer setup or publication binding. Catalogue documents still use their normal document-generation owner. Required boolean parsing belongs to configuration; the invoked media boundary requires a real owner, and existing type/identity/path/symlink checks confine actual operations. No additional corpus audit, compatibility alias, fallback owner, automatic migration or recovery layer was added. Work-media configuration and transfer code retain their existing execution/verification boundaries. Remaining presentation and real operation behavior require normal manual use; static evidence does not establish them.
 
 ## Link Resolution And Delivery
+
+Catalogue references have a separate presentation boundary from Docs-owned media. Working Build carries identity/options only; Manage resolves current Working data, and `docs_catalogue_static.py` returns complete selected public presentation plus exact Work rendition/file descriptors to Publish, Export and Prepare package. Publish can carry those required objects with a referring Docs unit, deduplicating completed exact Work transfers across the operation. Catalogue Work units retain queued image/file selections. Export packages only emitted candidates/linked files, while Prepare package performs its existing content transformations without packaging media. Work objects never move into a document namespace or restore a by-ID media inventory. [Generated Data Contracts](Generated_Data_Contracts.md#catalogue-reference-and-presentation) owns the payload handoff.
 
 The docs builder resolves `media` and `html-media` tokens in `docs_builder/rendering.py`. Working and Preview by-ID payloads keep Docs-owned media as `docs-media:<workspace-or-collection>/<type>/<identity>`; they contain no local served URL or R2 URL for that media. Each local/public browser configuration exposes one Docs media root, and the reader resolves images, SVGs, files and HTML media before mounting content. Static Export packages referenced Working media under its own paths; Review resolves inventoried package assets. Canonical Markdown keeps its existing logical token. Working generation records complete media references inside each queued eligible document. Publish applies those selected bytes to Preview and distributes them without changing by-ID media identities.
 

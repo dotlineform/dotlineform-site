@@ -33,6 +33,7 @@ export function initDocsViewerDocumentController(context) {
     context.publishCollectionReportState(record.actionContext);
     document.title = (record.doc.title || record.target.doc_id) + " | dotlineform";
     context.renderManagementUi();
+    mountMediaDetails(record.doc, record.payload, record.generation);
   }
   function restore(snapshot) {
     var record = snapshot && snapshot.record;
@@ -259,6 +260,7 @@ export function initDocsViewerDocumentController(context) {
     try {
       adapter.mountDocument({
         collectionProvider: context.collectionProvider,
+        documentTarget: activeRecord.target,
         content: content,
         doc: doc,
         document: content ? content.ownerDocument : null,

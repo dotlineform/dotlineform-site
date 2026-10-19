@@ -3,5 +3,78 @@
   "title": "entangled form",
   "added_date": "2026-09-17 21:55:37",
   "last_updated": "2026-10-01 13:15:09",
-  "content_html": "<article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>entangled form</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"01044\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 1855 / 1855;\" data-docs-media-open aria-label=\"Open entangled form in Media View\"><img data-docs-media-image alt=\"entangled form\" width=\"1855\" height=\"1855\" hidden title=\"entangled form\"><span data-docs-media-placeholder>entangled form</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2023<br>ink and paint on paper<br>60 × 42 cm<br><br>cat. 01044</p></div></article>\n"
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>entangled form</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"01044\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 1855 / 1855;\" data-docs-media-open aria-label=\"Open entangled form\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/01044-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/01044-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/01044-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/01044-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"entangled form\" width=\"1855\" height=\"1855\" decoding=\"async\"><span data-docs-media-placeholder hidden>entangled form</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2023<br>ink and paint on paper<br>60 × 42 cm<br><br>cat. 01044</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "01044"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:01044": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "01044"
+        },
+        "label": "entangled form",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/01044-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/01044-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/01044-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/01044-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "entangled form",
+          "width_px": 1855,
+          "height_px": 1855
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/01044-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "048"
+            },
+            "label": "entangled form",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "241"
+            },
+            "label": "entangled form' (details)",
+            "relation": "series"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "2023",
+            "ink and paint on paper",
+            "60 × 42 cm",
+            "",
+            "cat. 01044"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
 }

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260605-125108-c68916
 title: Generated Data Contracts
 added_date: "2026-06-05 12:51:08"
-last_updated: "2026-10-18"
+last_updated: "2026-10-19"
 summary: Public and manage Docs Viewer payload schemas, registered publication roots, read authority, publishing, and builder ownership contracts.
 parent_id: d-20260331-000000-c313fd
 ---
@@ -30,6 +30,16 @@ Public and Manage routes use one workspace-provider implementation. Each composi
 `readLinks` opens the exact document's separate relationship record through its configured URL base. `docs-viewer-generated-data-runtime.js` owns static-versus-local reads, generated-read capability checks, retry delays, reload paths and payload normalization.
 
 Docs Review retains its separate package owner. No Preview browser provider or fallback to another workspace is available.
+
+### Catalogue Reference And Presentation
+
+Working by-ID payloads optionally carry `catalogue: {schema: "docs_catalogue_presentation_v1", references: [...]}`. Each ordered occurrence has `reference_id` (`c1`, `c2`, ...), exact `target: {kind, id}`, `presentation` (`entry`, `image` or `media`) and applicable authored `options`. Image options are `use_work_title_caption`, restricted `summary_html`, `placement` and `fill_width`; Media View links carry `label`; Entry has no authored options. Each occurrence binds to `data-docs-catalogue-ref` in `content_html`. Build emits no Work-derived title, alt text, dimensions, URLs, resources or Gallery relationships. Documents without Catalogue references omit the envelope.
+
+Manage creates an operation-local live presentation provider on document or Media View activation. Public reads `catalogue.presentations`, keyed by `<kind>:<id>`, from prepared by-ID payloads. Each distinct Work has `schema_version: "docs_media_view_v2"`, exact `target`, `label`, `image` with intrinsic pixels and candidates, `new_tab_target` and ordered `galleries`. Entry occurrences add `entry: {metadata_lines, resources}`; resource rows carry `kind` (`download` or `link`), `label` and `url`. There is no unused top-level Work `metadata` array or v1 reader branch. Prepared Catalogue documents always include their own Work presentation. Gallery references retain authored labels without embedding all member Works.
+
+The shared browser renderer fills live slots and binds complete public markup without replacing it. Public initial document and own Work Media View need no Work-record, media-policy or Series–Gallery lookup. Gallery browsing retains its exact membership/policy inputs; selecting a Work navigates through the prepared `collection: catalogue, doc_id: <work_id>` payload. Physical Work/relationship JSON distribution remains independently maintained.
+
+`docs_catalogue_static.py` owns selected static preparation for Publish, collection Export and content-bearing Prepare package. It consumes supplied payload/reference values and operation-local Working Catalogue inputs, returns a prepared payload plus exact Work-media descriptors, and writes no files or queues. Publish callers serialize once and carry those bytes through Preview/distribution. Export carries the payload and maps only emitted/linked media into its existing snapshot planner. Prepare package supplies its selected renderer output/reference envelope before existing content transformations and adds no media packaging. Tree-only packages need no presentation preparation. Work media retains its configured Work owner and does not become document media or a by-ID media list.
 
 ## Current Payload Roots
 

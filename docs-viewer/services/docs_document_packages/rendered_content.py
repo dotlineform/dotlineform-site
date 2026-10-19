@@ -65,6 +65,15 @@ def render_doc_html(context: Any, doc_id: str) -> str:
         doc = source_doc_for_id(context, normalized_doc_id)
         package_doc = replace(doc, summary=flatten_summary(doc.summary))
         content_html = context.render_document(package_doc)
+        if context.builder.catalogue_references or context.collection == "catalogue":
+            from docs_catalogue_static import CatalogueStaticInputs, prepare_catalogue_document
+
+            if context.static_inputs is None:
+                context.static_inputs = CatalogueStaticInputs(context.repo_root, context.builder.workspace)
+            payload = {"content_html": content_html, "catalogue": context.builder.catalogue_reference_envelope()}
+            content_html = prepare_catalogue_document(
+                {"collection": context.collection, "doc_id": doc.doc_id}, payload, context.static_inputs,
+            ).payload["content_html"]
         context.render_cache[normalized_doc_id] = content_html.replace(
             REPORT_HOST_HTML,
             "",

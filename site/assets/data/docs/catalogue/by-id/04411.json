@@ -3,5 +3,85 @@
   "title": "messy small chatterbox",
   "added_date": "2026-09-23 10:11:52",
   "last_updated": "2026-10-01 13:15:09",
-  "content_html": "<article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>messy small chatterbox</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04411\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 1600 / 1501;\" data-docs-media-open aria-label=\"Open messy small chatterbox in Media View\"><img data-docs-media-image alt=\"messy small chatterbox\" width=\"1600\" height=\"1501\" hidden title=\"messy small chatterbox\"><span data-docs-media-placeholder>messy small chatterbox</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2008<br>giclée print<br><br>cat. 04411</p></div></article>\n"
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>messy small chatterbox</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04411\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 1600 / 1501;\" data-docs-media-open aria-label=\"Open messy small chatterbox\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04411-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04411-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04411-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04411-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"messy small chatterbox\" width=\"1600\" height=\"1501\" decoding=\"async\"><span data-docs-media-placeholder hidden>messy small chatterbox</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2008<br>giclée print<br><br>cat. 04411</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04411"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:04411": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04411"
+        },
+        "label": "messy small chatterbox",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/04411-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/04411-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04411-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04411-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "messy small chatterbox",
+          "width_px": 1600,
+          "height_px": 1501
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/04411-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "287"
+            },
+            "label": "spine symbols (symbols)",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "126"
+            },
+            "label": "spine symbols",
+            "relation": "series"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "288"
+            },
+            "label": "spine symbols (source)",
+            "relation": "series"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "2008",
+            "giclée print",
+            "",
+            "cat. 04411"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
 }

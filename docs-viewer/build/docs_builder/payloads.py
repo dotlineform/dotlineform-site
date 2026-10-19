@@ -31,7 +31,12 @@ class PayloadBuilderMixin:
         if summary_html:
             entry["summary_html"] = summary_html
         entry["content_html"] = content_html
+        if self.catalogue_references:
+            entry["catalogue"] = self.catalogue_reference_envelope()
         return entry
+
+    def catalogue_reference_envelope(self) -> dict[str, Any]:
+        return {"schema": "docs_catalogue_presentation_v1", "references": self.catalogue_references}
 
     def document_content_html(self, doc: DocRecord, docs_by_id: Mapping[str, DocumentIdentity], *, summary_html: str) -> str:
         """Render the body through its report, token, Links and URL owners.

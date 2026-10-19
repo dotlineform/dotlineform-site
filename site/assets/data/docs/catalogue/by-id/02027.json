@@ -3,5 +3,69 @@
   "title": "2003-09-11 22꞉01",
   "added_date": "2026-09-23 10:11:30",
   "last_updated": "2026-10-01 13:15:09",
-  "content_html": "<article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>2003-09-11 22꞉01</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"02027\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 600 / 440;\" data-docs-media-open aria-label=\"Open 2003-09-11 22꞉01 in Media View\"><img data-docs-media-image alt=\"2003-09-11 22꞉01\" width=\"600\" height=\"440\" hidden title=\"2003-09-11 22꞉01\"><span data-docs-media-placeholder>2003-09-11 22꞉01</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2001-26<br>digital c-type print<br><br>cat. 02027</p></div></article>\n"
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>2003-09-11 22꞉01</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"02027\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 600 / 440;\" data-docs-media-open aria-label=\"Open 2003-09-11 22꞉01\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/02027-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/02027-primary-800.webp?v=1 600w\" sizes=\"100vw\" alt=\"2003-09-11 22꞉01\" width=\"600\" height=\"440\" decoding=\"async\"><span data-docs-media-placeholder hidden>2003-09-11 22꞉01</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2001-26<br>digital c-type print<br><br>cat. 02027</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "02027"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:02027": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "02027"
+        },
+        "label": "2003-09-11 22꞉01",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/02027-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/02027-primary-800.webp?v=1",
+              "width_px": 600
+            }
+          ],
+          "alt": "2003-09-11 22꞉01",
+          "width_px": 600,
+          "height_px": 440
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/02027-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "154"
+            },
+            "label": "certainty (photos)",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "023"
+            },
+            "label": "certainty",
+            "relation": "series"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "2001-26",
+            "digital c-type print",
+            "",
+            "cat. 02027"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
 }

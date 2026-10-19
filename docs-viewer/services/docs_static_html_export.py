@@ -19,6 +19,7 @@ from typing import Any
 from urllib.parse import parse_qs, urlencode, urlsplit
 
 from docs_static_html_export_media import SnapshotMediaPlan, plan_snapshot_media
+from docs_catalogue_static import CatalogueStaticInputs, prepare_catalogue_document
 from docs_workspace_config import (
     load_docs_workspace_config,
     normalize_collection_id,
@@ -338,8 +339,15 @@ def plan_static_html_snapshot(
         doc_payloads = {doc_id: load_doc_payload(generated_root / "by-id", doc_id) for doc_id in doc_ids}
     except FileNotFoundError as exc:
         raise FileNotFoundError(f"selected document payload not found for {collection}") from exc
+    inputs = CatalogueStaticInputs(repo_root, workspace)
+    work_media = {}
+    for doc_id, payload in doc_payloads.items():
+        prepared = prepare_catalogue_document({"collection": collection, "doc_id": doc_id}, payload, inputs)
+        doc_payloads[doc_id] = prepared.payload
+        work_media[doc_id] = prepared.media
     included_doc_ids = set(doc_ids)
-    media_plan = plan_snapshot_media(repo_root, owner.media.types if owner.media is not None else {}, doc_payloads)
+    media_plan = plan_snapshot_media(repo_root, owner.media.types if owner.media is not None else {}, doc_payloads,
+                                    work_media=work_media, work_assets=workspace.assets)
     documents = [{"doc_id": row["doc_id"], "title": row["title"]} for row in manifest["docs"] if row["doc_id"] in included_doc_ids]
     selection_kind = snapshot_selection_kind(doc_ids, available_doc_ids)
     selected_date = export_date or datetime.now().astimezone().date()
@@ -562,6 +570,11 @@ main {
 
 a {
   color: var(--link);
+}
+
+main img {
+  max-width: 100%;
+  height: auto;
 }
 
 h1,

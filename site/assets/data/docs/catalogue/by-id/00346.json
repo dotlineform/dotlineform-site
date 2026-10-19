@@ -3,5 +3,70 @@
   "title": "for David Lynch",
   "added_date": "2026-09-17 21:55:31",
   "last_updated": "2026-10-01 13:15:09",
-  "content_html": "<article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>for David Lynch</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00346\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 6972 / 4930;\" data-docs-media-open aria-label=\"Open for David Lynch in Media View\"><img data-docs-media-image alt=\"for David Lynch\" width=\"6972\" height=\"4930\" hidden title=\"for David Lynch\"><span data-docs-media-placeholder>for David Lynch</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2025<br>ink on paper<br>42 × 59.4 cm<br><br>cat. 00346</p></div></article>\n"
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>for David Lynch</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00346\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 6972 / 4930;\" data-docs-media-open aria-label=\"Open for David Lynch\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/00346-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/00346-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/00346-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/00346-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"for David Lynch\" width=\"6972\" height=\"4930\" decoding=\"async\"><span data-docs-media-placeholder hidden>for David Lynch</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2025<br>ink on paper<br>42 × 59.4 cm<br><br>cat. 00346</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00346"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:00346": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00346"
+        },
+        "label": "for David Lynch",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/00346-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/00346-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00346-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00346-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "for David Lynch",
+          "width_px": 6972,
+          "height_px": 4930
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/00346-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "058"
+            },
+            "label": "for David Lynch (2025)",
+            "relation": "direct"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "2025",
+            "ink on paper",
+            "42 × 59.4 cm",
+            "",
+            "cat. 00346"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
 }

@@ -141,7 +141,6 @@ def prepare_selected_context(
         from docs_builder.pipeline import DocsDataBuilder
         from docs_builder.collection import CollectionDocsBuilder
         from docs_builder.related_links import prepare_related_links
-        from docs_builder.rendering_inputs import prepare_catalogue_works
         from docs_builder.summary_formatting import render_summary_paragraphs
 
         arguments = {"repo_root": repo_root, "config": owner.parent_config, "workspace": owner.workspace}
@@ -155,7 +154,6 @@ def prepare_selected_context(
             ))
         identities.update({doc.doc_id: doc for doc in source_docs})
         builder.related_documents = prepare_related_links(builder, source_docs, {})
-        builder._catalogue_work_cache = prepare_catalogue_works(builder, source_docs, {})
     context = DocumentPackageSourceContext(
         repo_root=repo_root, collection=owner.collection,
         return_import_enabled=not owner.collection or owner.document_config.supports_return_import,

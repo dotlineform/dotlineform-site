@@ -3,5 +3,85 @@
   "title": "molecules (detail 3)",
   "added_date": "2026-09-23 10:11:38",
   "last_updated": "2026-10-01 13:15:09",
-  "content_html": "<article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>molecules (detail 3)</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"02865\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 3543 / 3543;\" data-docs-media-open aria-label=\"Open molecules (detail 3) in Media View\"><img data-docs-media-image alt=\"molecules (detail 3)\" width=\"3543\" height=\"3543\" hidden title=\"molecules (detail 3)\"><span data-docs-media-placeholder>molecules (detail 3)</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2013<br>digital c-type print<br><br>cat. 02865</p></div></article>\n"
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>molecules (detail 3)</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"02865\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 3543 / 3543;\" data-docs-media-open aria-label=\"Open molecules (detail 3)\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/02865-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/02865-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/02865-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/02865-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"molecules (detail 3)\" width=\"3543\" height=\"3543\" decoding=\"async\"><span data-docs-media-placeholder hidden>molecules (detail 3)</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2013<br>digital c-type print<br><br>cat. 02865</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "02865"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:02865": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "02865"
+        },
+        "label": "molecules (detail 3)",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/02865-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/02865-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/02865-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/02865-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "molecules (detail 3)",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/02865-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "161"
+            },
+            "label": "molecules (details)",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "101"
+            },
+            "label": "molecules",
+            "relation": "series"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "160"
+            },
+            "label": "molecules (versions)",
+            "relation": "series"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "2013",
+            "digital c-type print",
+            "",
+            "cat. 02865"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
 }

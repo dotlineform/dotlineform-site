@@ -3,5 +3,77 @@
   "title": "olive tree - detail 1",
   "added_date": "2026-09-23 10:11:51",
   "last_updated": "2026-10-01 13:15:09",
-  "content_html": "<article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>olive tree - detail 1</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04309\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 4000 / 4000;\" data-docs-media-open aria-label=\"Open olive tree - detail 1 in Media View\"><img data-docs-media-image alt=\"olive tree - detail 1\" width=\"4000\" height=\"4000\" hidden title=\"olive tree - detail 1\"><span data-docs-media-placeholder>olive tree - detail 1</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2012<br>giclée print<br><br>cat. 04309</p></div></article>\n"
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>olive tree - detail 1</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04309\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 4000 / 4000;\" data-docs-media-open aria-label=\"Open olive tree - detail 1\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04309-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04309-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04309-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04309-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"olive tree - detail 1\" width=\"4000\" height=\"4000\" decoding=\"async\"><span data-docs-media-placeholder hidden>olive tree - detail 1</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2012<br>giclée print<br><br>cat. 04309</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04309"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:04309": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04309"
+        },
+        "label": "olive tree - detail 1",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/04309-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/04309-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04309-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04309-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "olive tree - detail 1",
+          "width_px": 4000,
+          "height_px": 4000
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/04309-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "275"
+            },
+            "label": "olive tree (details)",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "108"
+            },
+            "label": "olive tree",
+            "relation": "series"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "2012",
+            "giclée print",
+            "",
+            "cat. 04309"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
 }

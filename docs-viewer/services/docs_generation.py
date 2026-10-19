@@ -15,7 +15,7 @@ def generate_documents(
     documents: list[Any] | None = None, parent_ids: dict[str, str] | None = None,
     selected_payload: dict[str, Any] | None = None,
     related_records: dict[Any, Any] | None = None, stale_item_ids: list[str] | None = None,
-    update_selected: bool = True, catalogue_works: dict[str, Any] | None = None,
+    update_selected: bool = True,
     publication: Any = None, expand_dependencies: bool = True,
     catalogue_work_selection: bool = True,
     catalogue_pending: dict[str, Any] | None = None,
@@ -33,11 +33,9 @@ def generate_documents(
     from docs_builder.media_builds import build_collection_media_snapshot
     from docs_builder.ordinary_metadata import navigation_rows, read_saved_navigation, targeted_document_metadata
     from docs_builder.related_links import prepare_related_links
-    from docs_builder.rendering_inputs import prepare_catalogue_works
 
     collection = getattr(builder, "collection_id", "")
     builder.warnings = []
-    catalogue_works = {} if catalogue_works is None else catalogue_works
     if not collection and parent_ids is None:
         parent_ids = tree_parent_ids(read_index_order(index_order_path(builder.config)))
     if documents is None:
@@ -110,7 +108,6 @@ def generate_documents(
         related_records = {}
         links_build = build_document_links(builder, links_plan, write=write, related_records=related_records)
     related_documents = prepare_related_links(builder, selected_docs, related_records)
-    prepare_catalogue_works(builder, selected_docs, catalogue_works)
 
     if publication is not None:
         publication.prepare(builder, selected_docs, navigation,
@@ -123,7 +120,6 @@ def generate_documents(
     result = builder.run(
         write=write, documents=selected_docs, document_identities=identities, stale_item_ids=stale_item_ids,
         related_documents=related_documents,
-        catalogue_works=catalogue_works,
         **({"manifest_payload": manifest} if collection else {
             "index_tree_payload": navigation, "recent_payload": recent, "previous_tree_text": previous_tree_text,
         }),
@@ -236,5 +232,5 @@ def render_targets(builder: Any, targets: list[Any], related_records: dict[Any, 
         # selects complete media for an actual eligibility restoration.
         generate_documents(neighbour, write=True, documents=docs, related_records=related_records,
                            publication=operation, expand_dependencies=False, update_selected=False,
-                           media_writes={target.doc_id: {}}, catalogue_works=builder._catalogue_work_cache,
+                           media_writes={target.doc_id: {}},
                            catalogue_work_selection=False, **hierarchy)

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260909-205938-3569d6
 title: Catalogue Deployment
 added_date: "2026-09-09 20:59:38"
-last_updated: "2026-10-16"
+last_updated: "2026-10-19"
 summary: Queued Work publication, separate Preview media, exact repository/R2 deployment and final shared output.
 parent_id: d-20260902-102745-8379ea
 ---
@@ -59,7 +59,9 @@ The [Catalogue artifact inventory](../../docs-viewer/config/workspace/catalogue-
 
 The common generation handoff prepares public Catalogue documents upstream and merges completed Regenerate/design-maintenance or explicit Catalogue CLI IDs into one carried Catalogue queue, preserving existing media selections. Regenerate carries its preparation state and publication queue through the operation rather than reloading them for each Work. Full Working Build excludes Catalogue from bulk generation and does not add Work selections. Exact Catalogue dependency renders use the Docs queue for document-only publication, without selecting Work JSON or media.
 
-`docs_catalogue_publication.py` applies one Work's refreshed metadata, prepared public document and selected image/download bytes to Preview, then distributes those Preview bytes. Deletion uses retained exact identities and requires no Working input. It never means deletion of canonical Work records or project originals. Removing a download reference cancels its pending transfer but does not automatically remove previously stored unreferenced bytes.
+`docs_catalogue_publication.py` invokes the shared `docs_catalogue_static.py` preparer for the current Work document before applying refreshed metadata, prepared document and selected image/download bytes to Preview/distribution. Working Work metadata bytes are reused between preparation and physical JSON publication. Preparation alone adds no blanket image/download transfer to a Work unit; its queue selection remains authoritative. Deletion uses retained exact identities and requires no Working input. It never means deletion of canonical Work records or project originals. Removing a download reference cancels its pending transfer but does not automatically remove previously stored unreferenced bytes.
+
+Queued Docs documents may independently require Work renditions/files returned by static preparation. These remain Work-owned transfer inputs within that document unit, without a second queue entry. `docs_catalogue_media_transfer.py` applies exact selected objects and reuses completed owner/object effects across both unit families. A missing input or failed transfer retains the current unit; successful earlier effects remain complete. Prepared Catalogue documents include their own embedded Media View presentation. Physical Work/Series–Gallery JSON distribution remains in place even though the public document renderer no longer reads it.
 
 Selected remote media uses exact-object size/ETag comparison to skip matching uploads and verifies changed transfers/removals. No remote listing or ownership scan runs. Only successful document/metadata/media completion removes that Work entry, before the next Work begins.
 
@@ -71,7 +73,7 @@ Refresh forwards completed Gallery/Series effects and only public system files f
 
 Document generation separately prepares and queues ordinary navigation, eligible Selected and public collection manifests, including the Catalogue document manifest. Catalogue Work/media selections retain their domain queue. Exact dependency and collection-host eligibility effects are document-only Docs selections; they never imply Work JSON/media publication or canonical Work deletion. Host Draft/Delete changes remain design-time-owned.
 
-Full Working Build generates and queues Recent; explicit Search builds queue their existing exact bytes. Publish only transfers queued shared output and does not run an unconditional final pass, rebuild discovery, parse document content, produce media or verify a whole snapshot. [Builder](Builder.md#publish-preparation) owns the upstream document handoff.
+Full Working Build generates and queues Recent; explicit Search builds queue their existing exact bytes. Publish only transfers queued shared output and does not run an unconditional final pass, rebuild discovery, parse canonical source, produce media or verify a whole snapshot. Selected current document JSON is parsed for static Catalogue preparation; deletes/shared-only units bypass it. [Builder](Builder.md#publish-preparation) owns the upstream document handoff.
 
 ## Failure And Timing
 

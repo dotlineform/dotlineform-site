@@ -3,5 +3,86 @@
   "title": "untitled forms",
   "added_date": "2026-09-17 21:35:01",
   "last_updated": "2026-10-01 13:15:09",
-  "content_html": "<article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>untitled forms</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00005\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 2074 / 2262;\" data-docs-media-open aria-label=\"Open untitled forms in Media View\"><img data-docs-media-image alt=\"untitled forms\" width=\"2074\" height=\"2262\" hidden title=\"untitled forms\"><span data-docs-media-placeholder>untitled forms</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">c. 1989-98<br>pencil, ink and acrylic on paper<br>18 × 16.5 cm<br><br>cat. 00005</p></div></article>\n"
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>untitled forms</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00005\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 2074 / 2262;\" data-docs-media-open aria-label=\"Open untitled forms\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/00005-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/00005-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/00005-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/00005-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"untitled forms\" width=\"2074\" height=\"2262\" decoding=\"async\"><span data-docs-media-placeholder hidden>untitled forms</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">c. 1989-98<br>pencil, ink and acrylic on paper<br>18 × 16.5 cm<br><br>cat. 00005</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00005"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:00005": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00005"
+        },
+        "label": "untitled forms",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/00005-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/00005-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00005-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00005-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "untitled forms",
+          "width_px": 2074,
+          "height_px": 2262
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/00005-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "026"
+            },
+            "label": "collected 1989-1998",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "145"
+            },
+            "label": "grid dissection (details)",
+            "relation": "series"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "146"
+            },
+            "label": "Michelle Pfeiffer (details)",
+            "relation": "series"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "c. 1989-98",
+            "pencil, ink and acrylic on paper",
+            "18 × 16.5 cm",
+            "",
+            "cat. 00005"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
 }

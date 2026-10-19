@@ -4,8 +4,8 @@ doc_id: d-20261007-221414-48ff3f
 title: Public Work JSON Review
 added_date: "2026-10-07 22:14:14"
 last_updated: "2026-10-19"
-summary: Live Work resolution in Manage, shared browser rendering, and ordered delivery of one static preparation owner for queued Publish and collection Export.
-ui_status: proposed
+summary: Complete and user-accepted; live Manage Work resolution and shared static preparation for Publish, Export and Prepare package.
+ui_status: done
 parent_id: d-20260428-000000-f5ff18
 ---
 # Public Work JSON Review
@@ -18,7 +18,9 @@ Publish and Export share one static preparation owner. It resolves selected gene
 
 Manage and public retain shared browser rendering components with separate live and prepared providers. Public renders its own document and opens its embedded Work Media View without fetching Work JSON, media policy or Series–Gallery metadata. Normal image requests, responsive selection and navigation remain browser responsibilities.
 
-The design below resolves the runtime contracts, shared-code boundary, navigation and transfer handoffs. **Open issue OP-1 gates payload conversion and public activation:** the user must agree the initial conversion/publication selection and accept the Working snapshot it will publish. Implementation may proceed locally against the resolved design, but no conversion, publication or deployment is authorized by this document update. Existing lifecycle documentation still describes shipped behavior; [Builder](Builder.md), [Catalogue Deployment](Catalogue_Deployment.md), [Export](Export.md) and the [Development Checklist](Development_Checklist.md) change with implementation.
+Status: complete and user-accepted on 2026-10-19. Implementation, distinct source review, Working payload conversion, normal Publish, Export creation/replacement and the approved Prepare package adapter are complete. The user accepted the 800px Export correction, confirmed the restored compact Catalogue Related Links styling and requested closeout, with remaining checks continuing through normal use. Commit, push and deployment remain separate explicit actions and were not performed.
+
+Current contracts are maintained in [Generated Data Contracts](Generated_Data_Contracts.md#catalogue-reference-and-presentation), [Catalogue Media View](Catalogue_Media_View.md), [Builder](Builder.md#publish-preparation), [Catalogue Deployment](Catalogue_Deployment.md), [Export](Export.md), [Package Prepare](Package_Prepare.md) and [Related Links](Related_Links.md). This closed delivery and its [retired handoff](Public_Work_JSON_Handoff.md) are retained for evidence lookup pending manual archive.
 
 ## Operating Model And Fixed Boundaries
 
@@ -110,21 +112,21 @@ Remove the public provider's Work-record and Series–Gallery resolution paths f
 
 Export invokes the same static preparer once for each checked generated document, sharing operation-local inputs across the selection. Its existing media pass maps the returned Work-media descriptors and document-owned references to deterministic package paths. Read each distinct selected object once per request, package only emitted candidates/linked files, and retain existing behavior for unrelated external dependencies.
 
-The browseable snapshot contains visible images, captions and summaries without Docs Viewer JavaScript. Convert Work image/text Media View openers to ordinary links to their packaged largest-image target while retaining the image or authored label. Gallery Media View controls retain their authored text without interactive Gallery browsing; Export does not fetch/package every Gallery member. The text-first `portable.html` retains its existing intentional image-placeholder contract.
+The browseable snapshot contains visible images, captions and summaries without Docs Viewer JavaScript. Convert Work image/text Media View openers to ordinary links to the packaged standard `image.src` rendition, currently 800px, while retaining the image or authored label. Export omits larger responsive candidates, original dimensions and the viewer's fixed frame ratio; images retain their natural size and shrink proportionally to the available page width. Gallery Media View controls retain their authored text without interactive Gallery browsing; Export does not fetch/package every Gallery member. The text-first `portable.html` retains its existing intentional image-placeholder contract.
 
 Preview remains write-free. Apply reruns preparation once against the same selected targets, and the existing plan revision covers prepared titles/HTML and packaged media bytes so a meaningful Work change invalidates the earlier confirmation. Carry prepared values through that request's writing and final verification. Preserve replacement decisions, destination checks, final file-set/byte verification and all six accepted Export cleanups.
 
-## Open Issue OP-1: Initial Conversion And Public Activation
+## Initial Payload Conversion And Public Activation
 
-Existing Working payloads may lack authored reference options, and existing public payloads lack embedded presentations. The new providers must not infer lost options from old HTML or keep an old-payload Work lookup fallback. Explicit selected generation is needed to introduce the Working contract, and queued preparation is needed before affected public payloads can use the new reader.
+The user-confirmed empty queues supplied the cutover baseline. Affected Working payloads were converted to the new reference/options contract and normal Publish produced the prepared public payloads. Conversion and publication are complete; Git/deployment remain separate explicit release actions.
 
-**Recommendation:** agree one explicit conversion selection, generate those Working targets under the new contract through ordinary owners, and use the resulting existing queues for a one-time publication of the affected approved public documents. Ship the prepared repository payloads and projected public reader together through the ordinary explicit Git/deployment workflow. After cutover, every Publish again consumes only its normal current queues.
+Conversion used existing generation owners, including Catalogue's explicit design-maintenance owner, with current Working sources/data. It preserved draft/exclusion policy and ordinary generation-to-queue effects, without inferring authored options from old HTML, adding a legacy lookup fallback or running media production.
 
-**Decision required:** which exact Working targets may be regenerated and which public targets may be republished from current Working content/data, including any unpublished edits already present, and when public activation is authorized. The selection must cover affected existing public targets before switching their reader. This document does not authorize or silently insert a bulk conversion, queue expansion, publication or deployment.
+Normal Publish consumed the resulting queues, preparing only selected documents with its existing selection/completion behavior. The one-time generation belonged to contract conversion; ordinary Publish never discovers or rebuilds referring documents. No migration queue, queue filtering, forced selection or queue reset was added.
 
-Publish continues to consume both complete existing queues. The cutover decision must therefore account for entries already pending and the ordinary queue effects of approved generation; it cannot pick a migration subset at Publish time. Do not filter, clear or rewrite existing selections to manufacture a separate cutover batch. If their combined publication is not approved, defer activation until that scope is agreed.
+The prepared repository payloads and projected public reader must ship together through the ordinary explicit Git/deployment workflow. No commit, push or deployment ran during this delivery. There is no additional cutover approval mechanism or freshness audit; Build, Publish and deployment retain their ordinary explicit execution boundaries.
 
-OP-1 blocks the conversion/public-activation step, not local code delivery. If the full affected public selection is not yet approved, keep the new reader local/unactivated; do not introduce a compatibility mode or partially activate it against unsupported payloads. Existing current media locations remain in use; this is not an immutable historical snapshot/version-store project.
+Existing current media locations remain in use; this is not an immutable historical snapshot/version-store project. New queues populated by subsequent ordinary work continue to be handled normally.
 
 ## Delivery Summary
 
@@ -144,67 +146,73 @@ OP-1 blocks the conversion/public-activation step, not local code delivery. If t
 - **Publish:** call static preparation inside each existing current unit before Preview persistence/transfer, carrying exact prepared values through completion.
 - **Export:** call that same preparer, package configured Work media and make static Work openers ordinary image links.
 - **Public navigation:** read a selected Work's prepared Catalogue document; retain Gallery membership/thumbnail inputs and existing physical Catalogue JSON distribution.
-- **Cutover:** perform only an explicitly agreed conversion/queued publication and activate the public reader with its prepared payloads.
+- **Cutover:** convert affected Working payloads from the clean baseline, publish through the normal queues and deploy the public reader with its prepared payloads.
 
 ## Implementation Sequence And Completion Gates
 
-Each unchecked step is a delivery with named inputs, outputs and completion criteria. These are ordered implementation results, not further product-design tasks. No implementation, generation or publication has occurred in this documentation revision.
+All eight implementation and closeout steps are complete. The user approved the Prepare package adapter through the shared static preparer and accepted delivery closeout on 2026-10-19. Remaining behavioral checks will accumulate through normal use; explicit Git/deployment is separate from this completed delivery.
+
+Checkmarks record completed implementation, review and accepted closeout, rather than claiming every acceptance scenario was exercised. Conversion, normal Publish, Export creation/replacement and two Prepare package dry-runs completed. The shared `Open <Work title>` label, 800px Export image/fitting styles and wrapper-aware compact Related Links styling are delivered. The nerve snapshot contains eight files/three media objects. Recorded evidence and the remaining normal-use observations are below.
 
 ### 1. Confirm The Contract And Owner Map
 
-- [ ] **Inputs:** the resolved contracts above and current Build, provider, publication and Export owners.
-- **Delivers:** a concise mapping of those contracts to the existing owners, an explicit new static-preparer boundary separate from Build-to-queue `PublicationPreparation`, and confirmation that OP-1 is the only outstanding release decision.
+- [x] **Inputs:** the resolved contracts above and current Build, provider, publication and Export owners.
+- **Delivers:** a concise mapping of those contracts to the existing owners and an explicit new static-preparer boundary separate from Build-to-queue `PublicationPreparation`. Use the user-confirmed empty-queue baseline for planned conversion.
 - **Done when:** each input read, output write, reference/presentation field and queue completion effect has one owner; no queue, full-build, discovery or runtime dependency expansion has been introduced. Stop and raise any material contradiction rather than resolving it through a hidden fallback.
+
+**Owner map:** `docs_builder.semantic_tokens` and `payloads` own reference records/slots and authored markup; `docs_generation` and `PublicationPreparation` retain generation-to-queue effects. The workspace provider supplies data to shared browser rendering/Media View; Manage resolves Working inputs and public consumes embedded presentations. A separate static presentation service will return prepared payloads/media to `docs_catalogue_publication`, `docs_selected_publication` and `docs_static_html_export`; these callers retain their existing persistence, transfer and completion responsibilities. The empty-queue conversion baseline remains the user-confirmed baseline; no queue read or live operation was needed for readiness.
+
+**Agreed Prepare package boundary:** content-bearing Prepare package requests use the same static preparer before their existing output transformations, preserving Work titles/captions and Catalogue Entry content. The adapter carries selected renderer output and its reference envelope into preparation, reuses operation-local inputs, and adds no media packaging, generation, queue changes or separate Work formatter. Tree-only output retains its existing metadata owner. The user approved this addition on 2026-10-19.
 
 ### 2. Deliver Reference-Only Working Build
 
-- [ ] **Inputs:** selected Markdown documents, validated semantic tokens and their authored options.
+- [x] **Inputs:** selected Markdown documents, validated semantic tokens and their authored options.
 - **Delivers:** `catalogue.references`, deterministic HTML slots and document-authored markup; removal of Work presentation reads/values from semantic Build output.
-- **Done when:** Entry, image, Work Media View link, repeated Work references and Gallery link references retain all applicable authored choices; no Work title, caption value, Entry metadata/resources, image dimensions/URLs or relationship labels are resolved by Build. Unrelated document metadata, generation and queue producers retain current behavior. OP-1 controls writes to existing Working documents.
+- **Done when:** Entry, image, Work Media View link, repeated Work references and Gallery link references retain all applicable authored choices; no Work title, caption value, Entry metadata/resources, image dimensions/URLs or relationship labels are resolved by Build. Unrelated document metadata, generation and queue producers retain current behavior. Existing payload conversion is completed in step 8.
 
 ### 3. Deliver Live Manage And Shared Browser Rendering
 
-- [ ] **Inputs:** new Working reference records, current Working Work/policy/relationship inputs and the existing shared document/Media View components.
+- [x] **Inputs:** new Working reference records, current Working Work/policy/relationship inputs and the existing shared document/Media View components.
 - **Delivers:** the Manage-only live provider, provider-driven shared Entry/image/Media View rendering, and the public provider interface for embedded presentation; removal of the unused Media View descriptive metadata array.
 - **Done when:** Work-derived fields resolve at each ordinary document/media activation without rebuilding the referring document, each operation reuses its loaded inputs, authored choices remain intact, and shared rendering performs no Work metadata reads. Preserve error/disposal/activation behavior and the Entry/Image/Media View presentation distinctions.
 
 ### 4. Deliver The Shared Static Preparer
 
-- [ ] **Inputs:** explicit selected targets and already loaded payloads, resolved Working/media configuration and operation-local Catalogue inputs.
+- [x] **Inputs:** explicit selected targets and already loaded payloads, resolved Working/media configuration and operation-local Catalogue inputs.
 - **Delivers:** one Python entry point returning complete static payloads plus exact configured media descriptors, including visible image markup and embedded Work presentation.
 - **Done when:** Entry, image and Work-link output uses the same field/formatting contract as Manage; distinct Work reads are reused; image candidates and linked files have exact owners; no input payload, queue or destination is mutated. A document without references needs no Work/policy read. Both Publish and Export can consume the same result without another resolver.
 
 ### 5. Deliver Queue-Preserving Publish Integration
 
-- [ ] **Inputs:** the unchanged Docs/Catalogue queues, existing current/deleted/shared selections, the static preparer and configured Preview/public destinations.
+- [x] **Inputs:** the unchanged Docs/Catalogue queues, existing current/deleted/shared selections, the static preparer and configured Preview/public destinations.
 - **Delivers:** per-current-unit preparation followed by existing Preview/transfer/completion paths, with operation-local media merging/deduplication.
 - **Done when:** both Catalogue Work and Docs document units receive the correct prepared output; a referring document can carry required Work media without another Work queue entry; metadata-only Work selections do not acquire blanket media uploads; deletes/shared-only units bypass baking; empty queues remain a no-op. Preparation/transfer failure retains the current unit and prior successful effects. Queue schemas, producers, selected document sets, processing order and completion rules are unchanged; no unqueued document is opened or built.
 
 ### 6. Deliver Export Preparation And Work-Media Packaging
 
-- [ ] **Inputs:** the existing checked collection selection, generated metadata/payloads, shared preparation results and snapshot Preview/Apply machinery.
+- [x] **Inputs:** the existing checked collection selection, generated metadata/payloads, shared preparation results and snapshot Preview/Apply machinery.
 - **Delivers:** static Catalogue images/Entry content and usable Work image links in browseable snapshots, exact Work/document media packaging and confirmation based on prepared output.
 - **Done when:** snapshots need no viewer runtime or public image download; repeated references share packaged objects; a Work presentation/media change between Preview and Apply changes the confirmed plan; replacement and final verification retain current behavior. `portable.html`, unrelated external dependencies and queue state retain their stated contracts.
 
 ### 7. Deliver Public Prepared Navigation And Runtime Projection
 
-- [ ] **Inputs:** prepared document payloads, the shared browser renderer, configured Catalogue document/Gallery roots and the site-code projection inventory.
+- [x] **Inputs:** prepared document payloads, the shared browser renderer, configured Catalogue document/Gallery roots and the site-code projection inventory.
 - **Delivers:** the public embedded-presentation provider, Gallery-to-prepared-Work loading, public import separation and the tracked runtime/config projection.
-- **Done when:** initial document/own Work Media View requires no Work JSON, policy or Series–Gallery read; selecting another Work reads only its prepared Catalogue payload; Gallery browsing stays lazy and retains required membership/thumbnail data. Public has no management/live Work capability, Working inputs remain available to Manage, and physical Catalogue JSON distribution remains unchanged. Projection/check/site validation pass; public activation remains gated by OP-1.
+- **Done when:** initial document/own Work Media View requires no Work JSON, policy or Series–Gallery read; selecting another Work reads only its prepared Catalogue payload; Gallery browsing stays lazy and retains required membership/thumbnail data. Public has no management/live Work capability, Working inputs remain available to Manage, and physical Catalogue JSON distribution remains unchanged. Projection/check/site validation pass. Runtime and prepared payloads must ship together through the separate explicit Git/deployment workflow.
 
-### 8. Complete Review, Cutover Readiness And Acceptance
+### 8. Complete Review, Payload Conversion And Acceptance
 
-- [ ] **Inputs:** completed steps 1–7, the acceptance/evidence plan below and an explicit OP-1 decision for any existing-payload conversion or public activation.
-- **Delivers:** a distinct redundancy/defensive review, updated durable contracts, selected verification results, and an explicit code-ready versus activated/accepted status. If OP-1 remains open, record local code readiness and leave activation pending.
-- **Done when:** review covers normal/empty/failed selected-unit paths and reused helpers, resolves duplicated reads/rendering/validation, and justifies retained safeguards. Update Generated Data Contracts, media/Media View, Builder, Catalogue Save/Refresh/Deployment, Export and Development Checklist ownership; run applicable source lint/syntax and runtime projection checks. Perform only approved conversion/queued publication/deployment and record actual user acceptance separately. Do not mark the whole delivery complete while required cutover/acceptance remains pending.
+- [x] **Inputs:** completed steps 1–7, current Working sources/data from the clean baseline, affected Catalogue-reference targets and the acceptance/evidence plan below.
+- **Delivers:** a distinct redundancy/defensive review, updated durable contracts, converted Working payloads, normally queued/prepared public payloads and recorded acceptance. Keep code, conversion, Publish and Git/deployment completion distinguishable.
+- **Done when:** review covers normal/empty/failed selected-unit paths and reused helpers, resolves duplicated reads/rendering/validation, and justifies retained safeguards. Durable ownership, applicable source diagnostics, runtime projection checks, affected-document conversion and ordinary queued Publish are complete. Record the user's accepted closeout with remaining checks continuing through normal use. Commit, push and deployment remain separate explicit actions. No queue selection/schema/completion changes or special approval gate are introduced.
 
 ## Acceptance And Evidence Plan
 
 No new or changed tests, fixtures, temporary regression scripts or browser automation are authorized by this plan. Implementation uses focused source/diff review, changed-file Python/JavaScript lint, applicable syntax/import diagnostics and the existing site-code projection/site validation commands. Choose any existing documented test selection separately by demonstrated need and cost; test additions/changes require their own approved specification.
 
-Manual acceptance covers these distinct boundaries using agreed representative documents, with Work `00008`, nerve, and Context document `d-20260801-073846-e0a9ec` available as presentation references:
+The user accepted closeout and will cover remaining behavioral observations through normal use. These boundaries remain the evidence map, with Work `00008`, nerve, and Context document `d-20260801-073846-e0a9ec` available as presentation references:
 
-| Boundary | Required observation |
+| Boundary | Normal-use observation |
 | --- | --- |
 | Manage live resolution | After an ordinary saved Work change and Refresh, reopen an unchanged referring document: Entry/title caption/image/Media View use the available current Work data without its Build. Authored summary/layout remain unchanged. |
 | Public snapshot | A queued Publish embeds the current Work data. Later Working changes do not trigger a Work metadata lookup from that published document. Image bytes retain the existing publication/location model. |
@@ -212,12 +220,44 @@ Manual acceptance covers these distinct boundaries using agreed representative d
 | Media ownership | A queued referring document can publish/export its actual Work rendition/file references without a separate Work image selection; an unchanged Catalogue Work image selection causes no blanket transfer. |
 | Export | Browseable output shows Catalogue images/Entry content and packaged Work links without viewer JavaScript. Preview/Apply detects changes to prepared content/media; portable output keeps its text-first behavior. |
 | Public navigation | Open embedded Work Media View, then a Gallery and another Work: lazy Gallery browsing and prepared Catalogue-target loading work without a public Work-record reader. |
-| Cutover | Every approved affected public target has the prepared contract before the new reader activates. Conversion/publication selections and actual Git/deployment actions match the OP-1 decision. |
+| Cutover | Affected Working documents have the new reference contract, their ordinary queued publication produces prepared public payloads, and the new public reader deploys with those payloads. Queue behavior is unchanged. |
 
-These are acceptance outcomes, not permission to run live Save, Refresh, Build, Export, Publish or deployment in this documentation task. Future verification must state exact targets, costs and write/network effects before execution. Keep static diagnostics, manual product observations and publication/deployment evidence distinct.
+The accepted closeout does not establish unexercised outcomes. Keep static diagnostics, manual product observations and publication/deployment evidence distinct. Any future Codex-run verification must have a proportionate stated purpose, selection, cost and effects; no additional test work or live operation was performed solely for closeout.
 
 ## Review Evidence
 
 The original review established the nerve presentation reference. The 2026-10-19 discussion settled live Manage resolution of all Work presentation, no Work metadata baking in Build, shared browser rendering and shared static Publish/Export preparation with unchanged queue behavior. Scoped source review checked semantic rendering/selected inputs, workspace/media providers, Build-to-queue handoffs, both publication unit owners and Export planning.
 
-This revision changes documentation only. It resolves the design contracts and replaces the former workstream checklist with ordered input/output/completion deliveries. OP-1 is explicitly open. No product code, generated payloads, media, queues, snapshots or public destinations are changed. Code review is not applicable; bounded documentation/source review and whitespace checking apply. No tests or live workflow/deployment operations ran.
+Implementation now covers reference-only Build, live Manage/prepared public providers, shared browser rendering, one static preparer, queued Publish, collection Export and the approved Prepare package adapter. Work-record/Series–Gallery public reader paths and v1 Work presentation handling are removed; physical Catalogue JSON distribution remains. Lint passed for 21 changed Python and nine canonical JavaScript owners; compilation/import diagnostics, distinct source review, runtime projection and site validation passed. Tests remain unchanged and unrun.
+
+The existing builder's read-only selections for Catalogue `00008` and Works `d-20260801-073846-e0a9ec` passed without warnings. Conversion then wrote 4,618 Catalogue, nine exact Works and one ordinary Working payload through existing Build owners with media builds skipped; all three operations reported zero warnings/removals. Normal Publish completed 4,623 units with 40 media transfers and no removals: all Catalogue documents and five eligible referring documents. The five other converted Works documents remain drafts. Representative output inspection confirmed Working reference-only slots and the public nerve payload's complete visible Entry, embedded v2 presentation, compact dimensions and ordered resources.
+
+The initial write-free Catalogue `00008` Export preview failed the existing readable/writable check for the configured export workspace outside this session's writable roots. The user authorized a retry with broader filesystem access; it succeeded with one document, five packaged media objects, zero external dependencies and an absent destination. No fallback or configuration change was needed. Existing `document-content` Prepare package dry-runs for Catalogue `00008` and Works `d-20260801-073846-e0a9ec`, using JSON/Markdown, each exported one record with no warnings, errors, skips or truncation. They wrote no package files; the service appended its normal local operation log.
+
+The user then confirmed creating the previewed nerve snapshot. Ordinary Apply consumed the exact preview revisions and created `$DOTLINEFORM_PROJECTS_BASE_DIR/docs-export/catalogue selection - 2026-10-19/`: one document, five media objects, ten files, no external dependencies and no replacement. Its existing final file-set/byte verification passed. Required output inspection confirmed relative packaged image/srcset/download links and a largest-image opener, and found that the anchor retained its Media View accessibility label. The user approved the simpler `Open <Work title>` form for both main code and Export. The browser renderer and Python preparer now emit that shared form, retaining existing title escaping without an Export-specific formatter. Focused lint/compilation, source review and runtime projection/site validation passed. The same affected document selections were handed through normal Build/Publish to refresh prepared markup: Working bytes remained unchanged, all builds reported zero warnings/removals, and Publish completed 4,623 units with its existing 40 selected-media completion effects. No source or queue contract changed.
+
+A fresh ordinary replacement preview for the nerve snapshot reported the same one document/five media objects/zero external dependencies and the existing directory target. The user's requested label correction was completed through ordinary Apply with those exact revisions and replacement enabled; the ten-file snapshot passed final file-set/byte verification. Inspection confirmed `aria-label="Open nerve"` in both prepared public output and exported HTML. Live Work mutation/Refresh, broader browser interactions, stale-preview rejection/failure variants and actual package-file creation remain outside the recorded evidence and will continue through normal use. No commit, push or deployment ran; runtime and prepared payloads must ship together through those separate explicit actions.
+
+The user then reported the Export image choosing 1600px and overflowing the page, and requested the standard 800px image. The Export adapter now links to the already supplied `image.src`, omits Work image responsive candidates/original dimensions and the generated frame ratio, and applies proportional maximum-width CSS. Focused lint/compilation passed. Fresh ordinary Preview/Apply replaced the same snapshot with one document, three media objects, eight files and zero external dependencies; final file-set/byte verification passed. Output inspection confirmed the image and opener both use the packaged 800px rendition, with no fixed image dimensions and the width-limit rule present. This Export-only correction required no document Build, Publish or public runtime projection. The user accepted the correction and authorized continuation, later accepting closeout with the other behavioral checks continuing through normal use. Explicit Git/deployment remains separate.
+
+The user subsequently reported that Catalogue Related Links had regained the large `context` heading/divider and body-size links. The new reference wrapper separated the Entry from its related-links sibling, so the two existing compact-style selectors no longer matched. Shared CSS now selects the reference wrapper containing the Entry before its related-links sibling. The original font, divider and padding rules are retained; no document markup/data or pin behavior changed. The exact tracked public CSS projection was inspected, and projection check, site validation and scoped whitespace checks passed. No document rebuild, Publish or tests ran. The user confirmed the styling fix and requested delivery closeout.
+
+### Code Review And Defensive Behavior
+
+The distinct source/diff review traced reference generation, live activation/disposal, static serialization, package transformations, current/deleted/shared/empty publication paths and snapshot media planning. It removed Build's Work-cache plumbing, repeated Work metadata reads during physical Catalogue JSON publication, unused public route readers/configuration and static policy revalidation of producer-owned fields. Icon artwork was extracted from Markdown parsing so selected static preparation does not inherit a builder/bootstrap dependency. Public prepared markup binds once; Gallery navigation reads the selected prepared Catalogue target, and retained Manage activation creates a fresh live operation.
+
+Retained safeguards are selected JSON parsing and actual missing-input errors, confined configured paths and selected object identities, HTML escaping/resource URL safety, existing icon sanitization, responsive-image/Media View disposal and selected Preview/transfer verification. These protect concrete filesystem, markup and transfer boundaries; there are no new corpus audits, fallback readers, queue ledgers, automatic repair or recovery policies. Export retains its agreed exact-bytes Preview/Apply confirmation and reads each emitted object once. Static checks do not establish live Work mutation, UI presentation, real failure retention or deployed cutover behavior.
+
+The label follow-up received a separate bounded source review after focused diagnostics. Both changes are serialization expressions using the already escaped Work title; Export inherits the result through the existing shared preparer. No additional lookup, markup rewrite rule, fallback or validation was added. Public refresh used existing queue producers and normal Publish, and snapshot replacement used the existing Preview/Apply comparison and verification.
+
+The Export sizing follow-up received a distinct bounded source/diff and redundancy/defensive review after its diagnostics and actual replacement. The existing HTML pass selects the carried standard image URL before collecting media, so unused larger renditions are neither read nor packaged. Generated Work controls alone lose viewer dimensions/frame styling; ordinary image URLs retain their existing handling and the shared snapshot CSS constrains image width. No second Work resolution, image-policy constant, image-byte processing, extra validation, compatibility path or rebuild was added. Existing confined object reads, exact-byte confirmation and final verification remain justified at the export filesystem boundary.
+
+The continuation update records the user's acceptance of the Export correction and reconciles current delivery status. Code review is not applicable to this status-only update because no code changed; bounded documentation review reuses the implementation evidence above. No repeat generation, Publish, test run or deployment was performed.
+
+The Related Links follow-up received a distinct bounded CSS/source review after projection and diagnostics. Both live and prepared renderers retain the same reference wrapper around Entry; the revised selectors follow that current structure, including the reader-inserted heading/pin wrapper, and override the generic H2 rules with the existing compact styles. The obsolete direct-Entry sibling selectors were replaced without compatibility alternatives. Presentation remains CSS-owned, with no added browser/server calls, validation, scanning, fallback or generated-data work. Ordinary related-links sections, pin behavior and empty-section omission retain their existing owners.
+
+## Accepted Closeout
+
+The user confirmed the restored Catalogue Related Links presentation and explicitly requested closeout on 2026-10-19, with remaining checks continuing through normal use. No unresolved implementation issue remains. Live Work mutation/Refresh, repeated references, lazy Gallery navigation/public prepared reads, changed-preview and failure/empty-unit variants, and actual package-file output remain outside the recorded behavioral evidence; these omissions do not hold the accepted delivery open.
+
+This closeout changes documentation only. Code review is not applicable because no implementation changed; bounded source/status/link review reuses the completed implementation and projection evidence. No test, generator, Publish, commit, push or deployment was repeated or performed for closeout. The closed delivery and retired temporary handoff remain available pending manual archive; durable owners linked above maintain current behavior.

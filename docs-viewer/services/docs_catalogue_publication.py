@@ -3,13 +3,14 @@
 from __future__ import annotations
 
 from pathlib import Path
+import json
 from typing import Any
 
 from docs_catalogue_artifacts import load_catalogue_artifact_inventory
 from docs_deploy_repo import utc_now
-from docs_publication_media import publication_media_bindings
+from docs_catalogue_static import prepare_catalogue_document
 from docs_publication_paths import confined, document_path
-from docs_publication_transfer import SelectedTransfers, completed_effect, delete_path, read_bytes, write_bytes
+from docs_publication_transfer import completed_effect, delete_path, read_bytes, write_bytes
 from docs_workspace_config import location_child, preview_documents_path, public_documents_path, select_workspace_stage
 from pipeline_config import load_pipeline_config
 from studio.services.catalogue.catalogue_pending_state import persist_pending_queue
@@ -24,13 +25,12 @@ def _save(path: Path, pending: dict[str, Any], *, work_completed: bool = False) 
     persist_pending_queue(path, pending, progress="published")
 
 
-def publish_catalogue_works(repo_root: Path, workspace: Any, pending: dict[str, Any], queue_path: Path, transfers: SelectedTransfers, result: dict[str, Any]) -> None:
+def publish_catalogue_works(repo_root: Path, workspace: Any, pending: dict[str, Any], queue_path: Path, work_media: Any, inputs: Any, result: dict[str, Any]) -> None:
     if not pending["current_works"] and not pending["deleted_works"]:
         return
     preview = select_workspace_stage(workspace, "preview")
     owner = next(child for child in preview.collections if child.collection == "catalogue")
     assets = workspace.assets.for_stage("preview")
-    bindings = None
     policy = None
     for family in ("current_works", "deleted_works"):
         deleting = family == "deleted_works"
@@ -48,32 +48,24 @@ def publish_catalogue_works(repo_root: Path, workspace: Any, pending: dict[str, 
                     key = "primary" if target.parent == assets.work_primary.path else "thumbs"
                     media.append((f"catalogue/works/{key}", target))
             media.extend(("catalogue/works/files", location_child(assets.work_files, Path(safe_download_filename(name))).path) for name in selection["file_names"])
+            if not deleting:
+                result.update(phase="Catalogue Work preparation", target=work_id)
+                payload = json.loads(read_bytes(document_path(workspace, "catalogue", work_id)))
+                prepared = prepare_catalogue_document({"collection": "catalogue", "doc_id": work_id}, payload, inputs)
+                document_bytes = (json.dumps(prepared.payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+                result["phase"] = "Catalogue Work Preview"
             if deleting:
                 delete_path(metadata)
                 completed_effect(result, "Preview files removed", metadata)
                 delete_path(document)
             else:
-                metadata_bytes = write_bytes(metadata, read_bytes(location_child(workspace.catalogue.working, metadata_identity).path))
+                metadata_bytes = write_bytes(metadata, inputs.bytes(metadata_identity.as_posix()))
                 completed_effect(result, "Preview files applied", metadata)
-                document_bytes = write_bytes(document, read_bytes(document_path(workspace, "catalogue", work_id)))
+                write_bytes(document, document_bytes)
             completed_effect(result, "Preview files removed" if deleting else "Preview files applied", document)
-            for _key, target in media:
-                result["target"] = f"{work_id}/{target.name}"
-                if deleting:
-                    delete_path(target)
-                else:
-                    source = location_child(workspace.assets.work_root, target.relative_to(assets.work_root.path)).path
-                    write_bytes(target, read_bytes(source))
-                completed_effect(result, "Preview files removed" if deleting else "Preview files applied", target)
+            work_media.apply(((key, target.name) for key, target in media), deleting=deleting)
             result["phase"] = "Catalogue Work distribution"
-            if media and bindings is None:
-                bindings = publication_media_bindings(repo_root, preview, workspace=workspace)
-            for key, source in media:
-                result["target"] = f"{work_id}/{source.name}"
-                # Read each completed Preview file at transfer time rather
-                # than retaining every selected download in memory.
-                transfers.transfer(bindings[key][1].location, source.name, data=None if deleting else read_bytes(source))
-                completed_effect(result, "media files removed" if deleting else "media files distributed", source.name)
+            result["target"] = work_id
             for data, target in ((None if deleting else metadata_bytes, confined(repo_root / workspace.catalogue.public_projection.location.path, metadata_identity)), (None if deleting else document_bytes, confined(repo_root / public_documents_path(owner), document_identity))):
                 if deleting:
                     delete_path(target)

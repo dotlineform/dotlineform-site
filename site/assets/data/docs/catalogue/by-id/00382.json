@@ -3,5 +3,78 @@
   "title": "harmony 2 residue",
   "added_date": "2026-09-17 21:55:31",
   "last_updated": "2026-10-01 13:15:09",
-  "content_html": "<article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>harmony 2 residue</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00382\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 3508 / 2480;\" data-docs-media-open aria-label=\"Open harmony 2 residue in Media View\"><img data-docs-media-image alt=\"harmony 2 residue\" width=\"3508\" height=\"2480\" hidden title=\"harmony 2 residue\"><span data-docs-media-placeholder>harmony 2 residue</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2009<br>pen on paper<br>21 × 29.7 cm<br><br>cat. 00382</p></div></article>\n"
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>harmony 2 residue</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00382\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 3508 / 2480;\" data-docs-media-open aria-label=\"Open harmony 2 residue\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/00382-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/00382-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/00382-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/00382-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"harmony 2 residue\" width=\"3508\" height=\"2480\" decoding=\"async\"><span data-docs-media-placeholder hidden>harmony 2 residue</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2009<br>pen on paper<br>21 × 29.7 cm<br><br>cat. 00382</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00382"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:00382": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00382"
+        },
+        "label": "harmony 2 residue",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/00382-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/00382-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00382-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00382-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "harmony 2 residue",
+          "width_px": 3508,
+          "height_px": 2480
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/00382-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "075"
+            },
+            "label": "harmony",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "191"
+            },
+            "label": "harmony 3 (version) (details)",
+            "relation": "series"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "2009",
+            "pen on paper",
+            "21 × 29.7 cm",
+            "",
+            "cat. 00382"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
 }

@@ -3,5 +3,78 @@
   "title": "dot theory (edge line)",
   "added_date": "2026-09-17 21:55:36",
   "last_updated": "2026-10-01 13:15:09",
-  "content_html": "<article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>dot theory (edge line)</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00945\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 8268 / 4961;\" data-docs-media-open aria-label=\"Open dot theory (edge line) in Media View\"><img data-docs-media-image alt=\"dot theory (edge line)\" width=\"8268\" height=\"4961\" hidden title=\"dot theory (edge line)\"><span data-docs-media-placeholder>dot theory (edge line)</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2009<br>giclée print<br>21 × 35 cm<br><br>cat. 00945</p></div></article>\n"
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>dot theory (edge line)</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00945\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 8268 / 4961;\" data-docs-media-open aria-label=\"Open dot theory (edge line)\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/00945-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/00945-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/00945-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/00945-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"dot theory (edge line)\" width=\"8268\" height=\"4961\" decoding=\"async\"><span data-docs-media-placeholder hidden>dot theory (edge line)</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2009<br>giclée print<br>21 × 35 cm<br><br>cat. 00945</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00945"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:00945": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00945"
+        },
+        "label": "dot theory (edge line)",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/00945-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/00945-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00945-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00945-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "dot theory (edge line)",
+          "width_px": 8268,
+          "height_px": 4961
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/00945-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "041"
+            },
+            "label": "dot theory",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "232"
+            },
+            "label": "dot theory (dots edges) (edges)",
+            "relation": "series"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "2009",
+            "giclée print",
+            "21 × 35 cm",
+            "",
+            "cat. 00945"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
 }

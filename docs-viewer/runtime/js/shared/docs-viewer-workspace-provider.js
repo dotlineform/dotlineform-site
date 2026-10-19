@@ -1,5 +1,5 @@
 import {
-  readPublicCatalogueWork, readPublicCatalogueGallery, readPublicCatalogueSeriesGalleries,
+  readPublicCatalogueGallery,
   catalogueGalleryMediaPresentation
 } from "./docs-viewer-catalogue-media.js";
 import { readPublicCatalogueMediaConfig, validateCatalogueMediaPolicy } from "./docs-viewer-catalogue-media-policy.js";
@@ -104,15 +104,22 @@ export function createDocsViewerWorkspaceProvider(options) {
       return mediaPolicyRead;
     };
   }
-  if (source && typeof source.readCatalogueWork === "function") {
-    provider.readCatalogueWork = function (workId) {
-      return source.readCatalogueWork(workId);
-    };
+  if (source && typeof source.createCataloguePresentationOperation === "function") {
+    provider.createCataloguePresentationOperation = source.createCataloguePresentationOperation;
   } else if (routeContext().routeConfig && routeContext().routeConfig.appKind === "public") {
-    provider.readCatalogueWork = function (workId) {
-      return readPublicCatalogueWork(routeContext().routeConfig.catalogueWorkRecordsBaseUrl, workId, function (url, optionsForFetch) {
-        return settings.window.fetch(url, optionsForFetch);
-      });
+    provider.createCataloguePresentationOperation = function (payload) {
+      var embedded = payload && payload.catalogue && payload.catalogue.presentations || {};
+      return { live: false, readWork: async function (workId, optionsForRead) {
+        var key = "catalogue-work:" + workId;
+        if (!optionsForRead || !optionsForRead.navigation) {
+          if (!embedded[key]) throw new Error("Embedded Work presentation is unavailable: " + workId);
+          return embedded[key];
+        }
+        var selected = await readDocument({ collection: "catalogue", doc_id: workId });
+        var presentation = selected.catalogue && selected.catalogue.presentations && selected.catalogue.presentations[key];
+        if (!presentation) throw new Error("Prepared Catalogue Work presentation is unavailable: " + workId);
+        return presentation;
+      } };
     };
   }
   if (source && typeof source.readCatalogueGallery === "function") {
@@ -129,16 +136,6 @@ export function createDocsViewerWorkspaceProvider(options) {
       var [payload, policy] = await Promise.all([provider.readCatalogueGallery(galleryId), provider.readCatalogueMediaConfig()]);
       var config = routeContext().routeConfig || {};
       return catalogueGalleryMediaPresentation(payload, galleryId, policy, config.catalogueWorkThumbnailsBaseUrl);
-    };
-  }
-  if (source && typeof source.readCatalogueSeriesGalleries === "function") {
-    provider.readCatalogueSeriesGalleries = function () {
-      return source.readCatalogueSeriesGalleries();
-    };
-  } else if (routeContext().routeConfig && routeContext().routeConfig.appKind === "public") {
-    provider.readCatalogueSeriesGalleries = function () {
-      return readPublicCatalogueSeriesGalleries(routeContext().routeConfig.catalogueSeriesGalleriesIndexUrl,
-        function (url, optionsForFetch) { return settings.window.fetch(url, optionsForFetch); });
     };
   }
   if (source && typeof source.writeSource === "function") {

@@ -3,5 +3,86 @@
   "title": "nude frame 5",
   "added_date": "2026-09-17 21:35:02",
   "last_updated": "2026-10-01 13:15:09",
-  "content_html": "<article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>nude frame 5</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00070\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 7016 / 4961;\" data-docs-media-open aria-label=\"Open nude frame 5 in Media View\"><img data-docs-media-image alt=\"nude frame 5\" width=\"7016\" height=\"4961\" hidden title=\"nude frame 5\"><span data-docs-media-placeholder>nude frame 5</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">c. 1989-98<br>photocopy<br>21 × 29.7 cm<br><br>cat. 00070</p></div></article>\n"
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>nude frame 5</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00070\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 7016 / 4961;\" data-docs-media-open aria-label=\"Open nude frame 5\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/00070-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/00070-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/00070-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/00070-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"nude frame 5\" width=\"7016\" height=\"4961\" decoding=\"async\"><span data-docs-media-placeholder hidden>nude frame 5</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">c. 1989-98<br>photocopy<br>21 × 29.7 cm<br><br>cat. 00070</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00070"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:00070": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00070"
+        },
+        "label": "nude frame 5",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/00070-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/00070-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00070-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00070-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "nude frame 5",
+          "width_px": 7016,
+          "height_px": 4961
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/00070-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "026"
+            },
+            "label": "collected 1989-1998",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "145"
+            },
+            "label": "grid dissection (details)",
+            "relation": "series"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "146"
+            },
+            "label": "Michelle Pfeiffer (details)",
+            "relation": "series"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "c. 1989-98",
+            "photocopy",
+            "21 × 29.7 cm",
+            "",
+            "cat. 00070"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
 }

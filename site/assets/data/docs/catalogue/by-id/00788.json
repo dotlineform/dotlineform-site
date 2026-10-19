@@ -3,5 +3,70 @@
   "title": "body space (boundary condition 1)",
   "added_date": "2026-09-17 21:55:35",
   "last_updated": "2026-10-01 13:15:09",
-  "content_html": "<article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>body space (boundary condition 1)</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00788\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 3543 / 4724;\" data-docs-media-open aria-label=\"Open body space (boundary condition 1) in Media View\"><img data-docs-media-image alt=\"body space (boundary condition 1)\" width=\"3543\" height=\"4724\" hidden title=\"body space (boundary condition 1)\"><span data-docs-media-placeholder>body space (boundary condition 1)</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2007<br>digital c-type print<br>40 × 30 cm<br><br>cat. 00788</p></div></article>\n"
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>body space (boundary condition 1)</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00788\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 3543 / 4724;\" data-docs-media-open aria-label=\"Open body space (boundary condition 1)\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/00788-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/00788-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/00788-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/00788-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"body space (boundary condition 1)\" width=\"3543\" height=\"4724\" decoding=\"async\"><span data-docs-media-placeholder hidden>body space (boundary condition 1)</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2007<br>digital c-type print<br>40 × 30 cm<br><br>cat. 00788</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00788"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:00788": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00788"
+        },
+        "label": "body space (boundary condition 1)",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/00788-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/00788-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00788-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00788-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "body space (boundary condition 1)",
+          "width_px": 3543,
+          "height_px": 4724
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/00788-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "019"
+            },
+            "label": "body space",
+            "relation": "direct"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "2007",
+            "digital c-type print",
+            "40 × 30 cm",
+            "",
+            "cat. 00788"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
 }

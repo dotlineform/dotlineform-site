@@ -3,12 +3,10 @@ from __future__ import annotations
 import html
 import re
 from uuid import uuid4
-from urllib.parse import urlsplit
 from dataclasses import dataclass, replace
 from typing import Any, Callable, Iterable
 
 from .semantic_token_registry import SemanticTokenRegistry
-from .inline_icons import InlineIconRenderer
 from .summary_formatting import render_summary_inline
 from docs_image_tokens import (
     FIGURE_NATURAL_WIDTH_CLASS,
@@ -349,118 +347,30 @@ def replace_catalogue_tokens(
     return "".join(output)
 
 
-def work_metadata_text(work: dict[str, Any], work_id: str) -> str:
-    """Render supplied metadata, displaying whole dimensions without decimal zeros."""
-    lines = [work["year_display"]]
-    medium = work.get("medium")
-    if medium is not None:
-        if not isinstance(medium, str):
-            raise ValueError("Catalogue Work medium must be a string or absent")
-        lines.append(medium)
-    dimensions = [work[key] for key in ("height_cm", "width_cm", "depth_cm") if key in work and work[key] is not None]
-    if dimensions:
-        lines.append(" × ".join(str(int(value)) if value == int(value) else str(value) for value in dimensions) + " cm")
-    lines.append(f"cat. {work_id}")
-    return "\n".join(lines)
+def catalogue_reference(token: SemanticTokenOccurrence, reference_id: str) -> dict[str, Any]:
+    """Carry only the occurrence's authored choices into Working output."""
+    options: dict[str, Any] = {}
+    if token.presentation == "image":
+        options = {
+            "use_work_title_caption": token.use_work_title_caption,
+            "summary_html": render_summary_inline(token.summary),
+            "placement": token.placement,
+            "fill_width": token.fill_width,
+        }
+    elif token.presentation == "media":
+        options["label"] = token.title
+    return {
+        "reference_id": reference_id,
+        "target": {"kind": f"catalogue-{token.target_type}", "id": token.target_id},
+        "presentation": token.presentation,
+        "options": options,
+    }
 
 
-def render_catalogue_media_reference(
-    token: SemanticTokenOccurrence, *, alt: str = "", caption: str = "",
-) -> str:
-    """Render a Work figure with title/summary or an authored Media View link."""
-    kind = f"catalogue-{token.target_type}"
-    identity = token.target_id
-    attrs = (
-        f'data-docs-content-detail="media" data-docs-media-kind="{kind}" '
-        f'data-docs-media-id="{html.escape(identity, quote=True)}"'
-    )
-    if token.presentation == "media":
-        return (
-            f'<span {attrs}><button type="button" class="docsViewer__mediaTextLink" data-docs-media-open>'
-            f'{html.escape(token.title)}</button></span>'
-        )
-    opener = catalogue_image_control(alt)
-    modifiers = [FIGURE_PLACEMENT_CLASSES[token.placement]]
-    if not token.fill_width:
-        modifiers.append(FIGURE_NATURAL_WIDTH_CLASS)
-    blocks = []
-    if caption:
-        blocks.append(f'<span class="docsViewerFigure__caption">{html.escape(caption)}</span>')
-    if token.summary:
-        blocks.append(f'<span class="docsViewerFigure__summary">{render_summary_inline(token.summary)}</span>')
-    figcaption = f'<figcaption>{"".join(blocks)}</figcaption>' if blocks else ""
-    return (
-        f'<figure class="docsViewerFigure {" ".join(modifiers)}" {attrs}>{opener}'
-        f'{figcaption}</figure>'
-    )
-
-
-def catalogue_image_control(alt: str, *, width: int | None = None, height: int | None = None) -> str:
-    """Reuse Media View activation; Entry supplies Save-measured intrinsic dimensions."""
-    supplied_dimensions = width is not None and height is not None
-    width_attr = html.escape(str(width), quote=True)
-    height_attr = html.escape(str(height), quote=True)
-    frame = ' docsViewerCatalogueEntry__frame' if supplied_dimensions else ""
-    ratio = f' style="aspect-ratio: {width_attr} / {height_attr};"' if supplied_dimensions else ""
-    dimensions = f' width="{width_attr}" height="{height_attr}"' if supplied_dimensions else ""
-    return (
-        f'<button type="button" class="docsViewer__mediaImageLink docsViewerFigure__imageLink{frame}"{ratio} data-docs-media-open '
-        f'aria-label="{html.escape("Open " + alt + " in Media View", quote=True)}">'
-        f'<img data-docs-media-image alt="{html.escape(alt, quote=True)}"{dimensions} hidden>'
-        f'<span data-docs-media-placeholder>{html.escape(alt)}</span></button>'
-    )
-
-
-def catalogue_resource_url(value: Any) -> str:
-    """Require absolute HTTP(S) reader resources without credentials or controls."""
-    if not isinstance(value, str) or not value or re.search(r"[\s\x00-\x1f\x7f\\]", value):
-        raise ValueError("Catalogue resource URL is invalid")
-    try:
-        target = urlsplit(value)
-        port = target.port
-        if (target.scheme not in {"http", "https"} or not target.hostname
-                or target.username is not None or target.password is not None
-                or (port is not None and port <= 0)):
-            raise ValueError("Catalogue resource URL requires an absolute HTTP(S) target")
-    except ValueError as error:
-        raise ValueError("Catalogue resource URL is invalid") from error
-    return value
-
-
-def render_catalogue_entry(
-    token: SemanticTokenOccurrence, work: dict[str, Any], *, icons: InlineIconRenderer,
-) -> str:
-    """Render public Work content; omit the resource section when both lists are empty.
-
-    Resources consume supplied fields with URL safety; intrinsic pixels come from Save.
-    """
-    width, height = work["width_px"], work["height_px"]
-    title = work["title"]
-    image = catalogue_image_control(title, width=width, height=height)
-    metadata_lines = work_metadata_text(work, token.target_id).splitlines()
-    if len(metadata_lines) > 1:
-        metadata_lines.insert(-1, "")
-    metadata = "<br>".join(html.escape(line) for line in metadata_lines)
-    link_rows: list[str] = []
-    for key in ("downloads", "links"):
-        resources = work.get(key, [])
-        for resource in resources:
-            label = resource["label"]
-            href = catalogue_resource_url(resource.get("url"))
-            icon = icons.render("file" if key == "downloads" else "link", decorative=True)
-            link = f'{icon} <a href="{html.escape(href, quote=True)}" target="_blank" rel="noopener noreferrer">{html.escape(label)}</a>'
-            link_rows.append(f"<li>{link}</li>")
-    resources_html = (
-        '<div class="docsViewerCatalogueEntry__resources"><section data-catalogue-resource="links">'
-        f'<ul>{"".join(link_rows)}</ul></section></div>'
-    ) if link_rows else ""
-    return (
-        '<article class="docsViewerCatalogueEntry"><div class="docsViewerCatalogueEntry__record">'
-        f'<h1>{html.escape(title)}</h1>'
-        f'<figure class="docsViewerCatalogueEntry__image" data-docs-content-detail="media" '
-        f'data-docs-media-kind="catalogue-work" data-docs-media-id="{token.target_id}">{image}</figure>'
-        f'<p class="docsViewerCatalogueEntry__metadata">{metadata}</p></div>{resources_html}</article>'
-    )
+def catalogue_reference_slot(reference: dict[str, Any]) -> str:
+    """The same explicit slot is filled by live or static presentation owners."""
+    tag = "span" if reference["presentation"] == "media" else "div"
+    return f'<{tag} data-docs-catalogue-ref="{reference["reference_id"]}"></{tag}>'
 
 
 def render_image_reference(token: SemanticTokenOccurrence, src: str) -> str:
@@ -482,9 +392,6 @@ def render_image_reference(token: SemanticTokenOccurrence, src: str) -> str:
 
 
 class SemanticTokensMixin:
-    def catalogue_work_for_token(self, work_id: str) -> dict[str, Any]:
-        return self._catalogue_work_cache[work_id]
-
     def restore_semantic_media_html(self, content_html: str) -> str:
         """Restore built fragments after Markdown so authored labels stay literal."""
         for marker, fragment in self._semantic_media_html.items():
@@ -498,6 +405,7 @@ class SemanticTokensMixin:
     ) -> str:
         """Render media without writes; Entry needs its exact Catalogue document ID."""
         self._semantic_media_html: dict[str, str] = {}
+        self.catalogue_references: list[dict[str, Any]] = []
         entry_seen = False
 
         def replace(token: SemanticTokenOccurrence) -> str:
@@ -508,20 +416,14 @@ class SemanticTokensMixin:
                 fragment = render_image_reference(
                     token, self.image_token_media_url(token.media_path),
                 )
-            elif token.presentation == "entry":
-                if getattr(self, "collection_id", "") != "catalogue" or token.target_id != document_id or entry_seen:
-                    raise ValueError("Catalogue Entry requires one token matching its Catalogue document identity")
-                entry_seen = True
-                fragment = render_catalogue_entry(
-                    token, self.catalogue_work_for_token(token.target_id), icons=self.inline_icons,
-                )
             else:
-                alt = caption = ""
-                if token.presentation == "image":
-                    work = self.catalogue_work_for_token(token.target_id)
-                    alt = work["title"]
-                    caption = alt if token.use_work_title_caption else ""
-                fragment = render_catalogue_media_reference(token, alt=alt, caption=caption)
+                if token.presentation == "entry":
+                    if getattr(self, "collection_id", "") != "catalogue" or token.target_id != document_id or entry_seen:
+                        raise ValueError("Catalogue Entry requires one token matching its Catalogue document identity")
+                    entry_seen = True
+                reference = catalogue_reference(token, f"c{len(self.catalogue_references) + 1}")
+                self.catalogue_references.append(reference)
+                fragment = catalogue_reference_slot(reference)
             marker_id = uuid4().hex
             # Comments start HTML blocks at line beginnings; inline references must not.
             marker = (

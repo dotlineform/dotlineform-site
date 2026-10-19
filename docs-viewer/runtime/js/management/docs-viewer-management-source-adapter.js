@@ -12,6 +12,7 @@ import {
   saveManagedDocSource
 } from "./docs-viewer-management-client.js";
 import { documentTarget } from "../shared/docs-viewer-document-target.js";
+import { createLiveCataloguePresentations } from "./docs-viewer-catalogue-live.js";
 
 export function createDocsViewerManagementSourceAdapter(options) {
   var settings = options || {};
@@ -48,7 +49,8 @@ export function createDocsViewerManagementSourceAdapter(options) {
     }, overrides || {});
   }
 
-  return {
+  var adapter = {
+    createCataloguePresentationOperation: function (payload) { return createLiveCataloguePresentations(adapter, payload); },
     commitDocumentChange: commitDocumentChange,
     subscribeDocumentChanges: function (listener) { changeListeners.add(listener); return function () { changeListeners.delete(listener); }; },
     readDocumentLinkTargets: function () {
@@ -86,4 +88,5 @@ export function createDocsViewerManagementSourceAdapter(options) {
       return prepareSourceMedia(payload, clientOptions(optionsForPrepare));
     }
   };
+  return adapter;
 }

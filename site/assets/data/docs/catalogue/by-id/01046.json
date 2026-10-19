@@ -3,5 +3,78 @@
   "title": "espresso",
   "added_date": "2026-09-17 21:55:37",
   "last_updated": "2026-10-01 13:15:09",
-  "content_html": "<article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>espresso</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"01046\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 5433 / 5433;\" data-docs-media-open aria-label=\"Open espresso in Media View\"><img data-docs-media-image alt=\"espresso\" width=\"5433\" height=\"5433\" hidden title=\"espresso\"><span data-docs-media-placeholder>espresso</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2012<br>digital c-type print<br>46 × 46 cm<br><br>cat. 01046</p></div></article>\n"
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>espresso</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"01046\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 5433 / 5433;\" data-docs-media-open aria-label=\"Open espresso\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/01046-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/01046-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/01046-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/01046-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"espresso\" width=\"5433\" height=\"5433\" decoding=\"async\"><span data-docs-media-placeholder hidden>espresso</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2012<br>digital c-type print<br>46 × 46 cm<br><br>cat. 01046</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "01046"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:01046": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "01046"
+        },
+        "label": "espresso",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/01046-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/01046-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/01046-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/01046-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "espresso",
+          "width_px": 5433,
+          "height_px": 5433
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/01046-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "049"
+            },
+            "label": "espresso",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "242"
+            },
+            "label": "espresso (espressos)",
+            "relation": "series"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "2012",
+            "digital c-type print",
+            "46 × 46 cm",
+            "",
+            "cat. 01046"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
 }

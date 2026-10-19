@@ -3,5 +3,151 @@
   "title": "a theory of happiness",
   "added_date": "2026-08-01 21:24:22",
   "last_updated": "2026-10-08 17:14:19",
-  "content_html": "<h1>a theory of happiness</h1>\n<p>digital composites\n2008</p>\n<p>original composite 2008\n64° added 2010</p>\n<figure class=\"docsViewerFigure docsViewerFigure--full-column\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00734\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open a theory of happiness is a theory of everything in Media View\"><img data-docs-media-image alt=\"a theory of happiness is a theory of everything\" hidden title=\"a theory of happiness is a theory of everything\"><span data-docs-media-placeholder>a theory of happiness is a theory of everything</span></button><figcaption><span class=\"docsViewerFigure__caption\">a theory of happiness is a theory of everything</span></figcaption></figure>\n<figure class=\"docsViewerFigure docsViewerFigure--full-column\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00735\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open a theory of happiness is a theory of everything (64°) in Media View\"><img data-docs-media-image alt=\"a theory of happiness is a theory of everything (64°)\" hidden title=\"a theory of happiness is a theory of everything (64°)\"><span data-docs-media-placeholder>a theory of happiness is a theory of everything (64°)</span></button><figcaption><span class=\"docsViewerFigure__caption\">a theory of happiness is a theory of everything (64°)</span></figcaption></figure>\n"
+  "draft": false,
+  "content_html": "<h1>a theory of happiness</h1>\n<p>digital composites\n2008</p>\n<p>original composite 2008\n64° added 2010</p>\n<div data-docs-catalogue-ref=\"c1\"><figure class=\"docsViewerFigure docsViewerFigure--full-column\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00734\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open a theory of happiness is a theory of everything\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/00734-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/00734-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/00734-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/00734-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"a theory of happiness is a theory of everything\" width=\"8858\" height=\"8858\" decoding=\"async\"><span data-docs-media-placeholder hidden>a theory of happiness is a theory of everything</span></button><figcaption><span class=\"docsViewerFigure__caption\">a theory of happiness is a theory of everything</span></figcaption></figure></div>\n<div data-docs-catalogue-ref=\"c2\"><figure class=\"docsViewerFigure docsViewerFigure--full-column\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00735\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open a theory of happiness is a theory of everything (64°)\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/00735-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/00735-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/00735-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/00735-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"a theory of happiness is a theory of everything (64°)\" width=\"8858\" height=\"8858\" decoding=\"async\"><span data-docs-media-placeholder hidden>a theory of happiness is a theory of everything (64°)</span></button><figcaption><span class=\"docsViewerFigure__caption\">a theory of happiness is a theory of everything (64°)</span></figcaption></figure></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00734"
+        },
+        "presentation": "image",
+        "options": {
+          "use_work_title_caption": true,
+          "summary_html": "",
+          "placement": "full",
+          "fill_width": true
+        }
+      },
+      {
+        "reference_id": "c2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00735"
+        },
+        "presentation": "image",
+        "options": {
+          "use_work_title_caption": true,
+          "summary_html": "",
+          "placement": "full",
+          "fill_width": true
+        }
+      }
+    ],
+    "presentations": {
+      "catalogue-work:00734": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00734"
+        },
+        "label": "a theory of happiness is a theory of everything",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/00734-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/00734-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00734-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00734-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "a theory of happiness is a theory of everything",
+          "width_px": 8858,
+          "height_px": 8858
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/00734-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "010"
+            },
+            "label": "a theory of happiness is a theory of everything",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "211"
+            },
+            "label": "a theory of happiness is a theory of everything (layers)",
+            "relation": "series"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "212"
+            },
+            "label": "a theory of happiness is a theory of everything (64°) (64 degrees)",
+            "relation": "series"
+          }
+        ]
+      },
+      "catalogue-work:00735": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00735"
+        },
+        "label": "a theory of happiness is a theory of everything (64°)",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/00735-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/00735-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00735-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00735-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "a theory of happiness is a theory of everything (64°)",
+          "width_px": 8858,
+          "height_px": 8858
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/00735-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "010"
+            },
+            "label": "a theory of happiness is a theory of everything",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "211"
+            },
+            "label": "a theory of happiness is a theory of everything (layers)",
+            "relation": "series"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "212"
+            },
+            "label": "a theory of happiness is a theory of everything (64°) (64 degrees)",
+            "relation": "series"
+          }
+        ]
+      }
+    }
+  }
 }

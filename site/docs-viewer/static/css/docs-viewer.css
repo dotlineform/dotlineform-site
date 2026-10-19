@@ -1924,7 +1924,7 @@ body.docs-viewer-service{
   line-height: var(--docs-viewer-line-normal);
 }
 
-.docsViewer__content .docsViewerCatalogueEntry + [data-docs-related-links] h2{
+.docsViewer__content [data-docs-catalogue-ref]:has(> .docsViewerCatalogueEntry) + [data-docs-related-links] h2{
   font-size: var(--docs-viewer-font-small);
   font-weight: 600;
   line-height: var(--docs-viewer-line-normal);
@@ -1932,7 +1932,7 @@ body.docs-viewer-service{
   border-block-end: 0;
 }
 
-.docsViewer__content .docsViewerCatalogueEntry + [data-docs-related-links]{
+.docsViewer__content [data-docs-catalogue-ref]:has(> .docsViewerCatalogueEntry) + [data-docs-related-links]{
   font-size: var(--docs-viewer-font-small);
 }
 

@@ -3,7 +3,8 @@ import {
   normalizeDocsViewerMediaPresentation,
   normalizeDocsViewerCatalogueGroupTarget
 } from "./docs-viewer-media-presentation.js";
-import { catalogueMediaTargetWorkId, readCatalogueWorkMediaPresentation } from "./docs-viewer-catalogue-media.js";
+import { catalogueMediaTargetWorkId } from "./docs-viewer-catalogue-media.js";
+import { mountCatalogueDocument } from "./docs-viewer-catalogue-rendering.js";
 import { mountDocsViewerResponsiveImage } from "./docs-viewer-responsive-image.js";
 import { createDocsViewerToolbarIcon } from "./docs-viewer-toolbar-icon.js";
 import { buildViewerUrl } from "./docs-viewer-router.js";
@@ -82,6 +83,8 @@ export function mountDocsViewerMediaLinks(context) {
 function mountCatalogueReferences(context) {
   var cleanups = [];
   context.content.querySelectorAll(MEDIA_DETAIL_SELECTOR).forEach(function (marker) {
+    var slot = marker.closest("[data-docs-catalogue-ref]");
+    if (slot && slot !== context.content) return;
     var kind = marker.getAttribute("data-docs-media-kind");
     var id = marker.getAttribute("data-docs-media-id");
     var target = { kind: kind, id: id };
@@ -111,6 +114,7 @@ function mountCatalogueReferences(context) {
       if (!inlineImage || !isCurrent()) return;
       var data = presentation.image;
       releaseImage();
+      inlineImage.alt = data.alt;
       inlineImage.hidden = false;
       if (placeholder) placeholder.hidden = true;
       releaseImage = mountDocsViewerResponsiveImage(inlineImage, data);
@@ -274,8 +278,8 @@ export function createDocsViewerMediaDetailAdapter() {
     var markers = Array.from(root.querySelectorAll(MEDIA_DETAIL_SELECTOR));
     var documentMountGeneration = positiveInteger(context.documentMountGeneration);
     var documentTarget = {
-      collection: "",
-      docId: cleanString(context.doc && context.doc.doc_id)
+      collection: cleanString(context.documentTarget && context.documentTarget.collection),
+      docId: cleanString(context.documentTarget && context.documentTarget.doc_id || context.doc && context.doc.doc_id)
     };
     if (!documentMountGeneration || !documentTarget.docId) {
       return { found: markers.length, decorated: 0, skipped: markers.length };
@@ -289,6 +293,7 @@ export function createDocsViewerMediaDetailAdapter() {
       nextDynamicRecord: 0,
       mediaRequestGeneration: 0,
       collectionProvider: context.collectionProvider,
+      payload: context.payload,
       viewerConfig: context.viewerConfig,
       workReads: new Map(),
       referenceCleanups: [],
@@ -310,16 +315,28 @@ export function createDocsViewerMediaDetailAdapter() {
       state.records.set(record.id, record);
     });
     stateByRoot.set(root, state);
-    state.referenceCleanups = mountCatalogueReferences({
-      content: root, documentTarget: Object.freeze(Object.assign({}, documentTarget)),
-      isCurrentDocument: function () { return stateByRoot.get(root) === state; },
-      loadMediaTarget: function (request) {
-        return loadTarget(Object.assign({}, request, { content: root, documentMountGeneration: documentMountGeneration }));
-      },
-      openMediaTarget: function (request) {
-        return openTarget(Object.assign({}, request, { content: root, documentMountGeneration: documentMountGeneration }));
-      }
-    });
+    function bindReferences(content, initialPresentation) {
+      state.referenceCleanups.push(...mountCatalogueReferences({
+        content: content, documentTarget: Object.freeze(Object.assign({}, documentTarget)),
+        isCurrentDocument: function () { return stateByRoot.get(root) === state; },
+        loadMediaTarget: function (request) {
+          if (initialPresentation) return Promise.resolve(initialPresentation);
+          return loadTarget(Object.assign({}, request, { content: root, documentMountGeneration: documentMountGeneration }));
+        },
+        openMediaTarget: function (request) {
+          return openTarget(Object.assign({}, request, { content: root, documentMountGeneration: documentMountGeneration }));
+        }
+      }));
+    }
+    bindReferences(root, null);
+    if (context.payload && context.payload.catalogue && context.collectionProvider.createCataloguePresentationOperation) {
+      state.referenceCleanups.push(mountCatalogueDocument({
+        content: root, payload: context.payload,
+        createOperation: function () { return context.collectionProvider.createCataloguePresentationOperation(context.payload); },
+        isCurrent: function () { return stateByRoot.get(root) === state; },
+        bind: bindReferences
+      }));
+    }
     return {
       found: markers.length,
       decorated: state.records.size + state.referenceCleanups.length,
@@ -371,13 +388,14 @@ export function createDocsViewerMediaDetailAdapter() {
   }
 
   /** Retain only in-flight reads under the existing provider lifecycle. */
-  function readWork(state, workId) {
+  function readWork(state, workId, navigation) {
     if (!state.workReads.has(workId)) {
       var provider = state.collectionProvider;
-      if (!provider || typeof provider.readCatalogueWork !== "function" || typeof provider.readCatalogueMediaConfig !== "function") {
+      if (!provider || typeof provider.createCataloguePresentationOperation !== "function") {
         throw new Error("Catalogue media is unavailable in this view.");
       }
-      var read = readCatalogueWorkMediaPresentation(provider, workId)
+      var operation = provider.createCataloguePresentationOperation(state.payload);
+      var read = operation.readWork(workId, { navigation: Boolean(navigation) })
         .finally(function () { state.workReads.delete(workId); });
       state.workReads.set(workId, read);
     }
@@ -733,7 +751,7 @@ export function createDocsViewerMediaDetailAdapter() {
           galleryPage = 0;
           renderPresentation(group.gallery);
         } else {
-          var presentation = await readWork(state, member.target.id);
+          var presentation = await readWork(state, member.target.id, true);
           if (!isCurrent() || request !== selectionRequest) return;
           var work = normalizeDocsViewerMediaPresentation(presentation);
           renderPresentation(work);

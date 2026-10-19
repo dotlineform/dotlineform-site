@@ -3,5 +3,77 @@
   "title": "version dall-e - 5.1",
   "added_date": "2026-09-23 10:11:39",
   "last_updated": "2026-10-01 13:15:09",
-  "content_html": "<article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>version dall-e - 5.1</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"03004\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 3543 / 3543;\" data-docs-media-open aria-label=\"Open version dall-e - 5.1 in Media View\"><img data-docs-media-image alt=\"version dall-e - 5.1\" width=\"3543\" height=\"3543\" hidden title=\"version dall-e - 5.1\"><span data-docs-media-placeholder>version dall-e - 5.1</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">c. 2022?<br>digital c-type print<br><br>cat. 03004</p></div></article>\n"
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>version dall-e - 5.1</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"03004\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 3543 / 3543;\" data-docs-media-open aria-label=\"Open version dall-e - 5.1\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/03004-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/03004-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/03004-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/03004-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"version dall-e - 5.1\" width=\"3543\" height=\"3543\" decoding=\"async\"><span data-docs-media-placeholder hidden>version dall-e - 5.1</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">c. 2022?<br>digital c-type print<br><br>cat. 03004</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "03004"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:03004": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "03004"
+        },
+        "label": "version dall-e - 5.1",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/03004-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/03004-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/03004-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/03004-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "version dall-e - 5.1",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/03004-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "175"
+            },
+            "label": "learning to draw landscapes (versions) (versions)",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "089"
+            },
+            "label": "learning to draw landscapes",
+            "relation": "series"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "c. 2022?",
+            "digital c-type print",
+            "",
+            "cat. 03004"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
 }

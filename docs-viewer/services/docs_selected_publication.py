@@ -3,16 +3,18 @@
 from __future__ import annotations
 
 from pathlib import Path
+import json
 from typing import Any
 
 from docs_deploy_repo import utc_now
+from docs_catalogue_static import prepare_catalogue_document
 from docs_publication_paths import confined, document_path, shared_path
 from docs_publication_queue import FAMILIES, has_selections, complete_publication
 from docs_publication_transfer import SelectedTransfers, completed_effect, delete_path, read_bytes, write_bytes
 from docs_workspace_config import generated_search_path, preview_documents_path, preview_search_path, public_documents_path, public_search_path, select_workspace_stage
 
 
-def publish_selected_documents(repo_root: Path, workspace: Any, pending: dict[str, Any], transfers: SelectedTransfers, result: dict[str, Any]) -> None:
+def publish_selected_documents(repo_root: Path, workspace: Any, pending: dict[str, Any], transfers: SelectedTransfers, work_media: Any, inputs: Any, result: dict[str, Any]) -> None:
     if not has_selections(pending):
         return
     working = select_workspace_stage(workspace, "working")
@@ -34,6 +36,12 @@ def publish_selected_documents(repo_root: Path, workspace: Any, pending: dict[st
             if deleting:
                 delete_path(target)
             else:
+                result["phase"] = "document preparation"
+                original_bytes = read_bytes(document_path(workspace, collection, doc_id))
+                payload = json.loads(original_bytes)
+                prepared = prepare_catalogue_document({"collection": collection, "doc_id": doc_id}, payload, inputs)
+                document_bytes = original_bytes if prepared.payload is payload else (json.dumps(prepared.payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+                result["phase"] = "document Preview"
                 for kind, names in selection.get("media", {}).items():
                     source = source_owner.media.types[kind].asset_location.path
                     destination = preview_owner.media.types[kind].asset_location.path
@@ -46,7 +54,7 @@ def publish_selected_documents(repo_root: Path, workspace: Any, pending: dict[st
                         # distribution holds only one selected media file.
                         media_inputs.append((kind, name, media_target))
                 result["target"] = f"{collection or 'documents'}/{doc_id}"
-                document_bytes = write_bytes(target, read_bytes(document_path(workspace, collection, doc_id)))
+                write_bytes(target, document_bytes)
             completed_effect(result, "Preview files removed" if deleting else "Preview files applied", target)
             result["phase"] = "document media removal in Preview"
             for kind, names in selection.get("removed_media", {}).items():
@@ -61,7 +69,9 @@ def publish_selected_documents(repo_root: Path, workspace: Any, pending: dict[st
                 public = preview_owner.public_projection.media[kind]
                 transfers.transfer(public.location, name, data=read_bytes(path))
                 completed_effect(result, "media files distributed", name)
-            result["target"] = f"{collection or 'documents'}/{doc_id}"
+            if not deleting:
+                work_media.apply((item.binding, item.identity) for item in prepared.media)
+            result.update(phase="document distribution", target=f"{collection or 'documents'}/{doc_id}")
             deployed = confined(repo_root / public_documents_path(preview_owner), identity)
             if deleting:
                 delete_path(deployed)

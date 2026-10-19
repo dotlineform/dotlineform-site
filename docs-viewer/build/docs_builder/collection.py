@@ -166,12 +166,10 @@ class CollectionDocsBuilder(DocsDataBuilder):
         document_identities: dict[str, Any], manifest_payload: dict[str, Any],
         stale_item_ids: list[str],
         related_documents: dict[Any, Any],
-        catalogue_works: dict[str, dict[str, Any]],
     ) -> dict[str, Any]:
         """Render and write the supplied collection artifacts; return completed facts."""
         started_at = monotonic_time()
         self.related_documents = related_documents
-        self._catalogue_work_cache = catalogue_works
         item_payloads = {doc.doc_id: self.item_entry(doc, document_identities) for doc in documents}
         write_plan = self.build_collection_write_plan(manifest_payload, item_payloads, stale_item_ids=stale_item_ids)
         diagnostics = self.collection_diagnostics_payload(

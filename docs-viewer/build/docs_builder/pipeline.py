@@ -64,7 +64,6 @@ class DocsDataBuilder(
         self.semantic_token_registry = rendering_inputs.semantic_token_registry
         self.inline_icons = rendering_inputs.inline_icons
         self.rendering_inputs = rendering_inputs
-        self._catalogue_work_cache: dict[str, dict[str, Any]] = {}
         self.related_links_dir = related_links_dir or generated_documents_path(config) / "links-by-id"
         self.source_files_scanned = 0
         self.warnings: list[str] = []
@@ -75,12 +74,10 @@ class DocsDataBuilder(
         recent_payload: dict[str, Any] | None, stale_item_ids: list[str],
         previous_tree_text: str | None,
         related_documents: dict[Any, Any],
-        catalogue_works: dict[str, dict[str, Any]],
     ) -> dict[str, Any]:
         """Render and write the supplied ordinary artifacts; return completed facts."""
         started_at = monotonic_time()
         self.related_documents = related_documents
-        self._catalogue_work_cache = catalogue_works
         item_payloads = {doc.doc_id: self.item_entry(doc, document_identities) for doc in documents}
         write_plan = self.build_write_plan(
             index_tree_payload, recent_payload, item_payloads,
