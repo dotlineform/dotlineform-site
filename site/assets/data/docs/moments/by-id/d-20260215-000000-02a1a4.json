@@ -2,9 +2,61 @@
   "doc_id": "d-20260215-000000-02a1a4",
   "title": "13 moments in october",
   "added_date": "2026-02-15 00:00:00",
-  "last_updated": "2026-09-07 20:40:56",
+  "last_updated": "2026-10-20 19:26:14",
   "date": "2024-10-23",
   "date_display": "23 Oct 2024",
   "draft": false,
-  "content_html": "<h1>13 moments in october</h1>\n<p class=\"momentDate\">23 Oct 2024</p>\n<img src=\"docs-media:collections/moments/img/d-20260215-000000-02a1a4/13-moments-in-october.webp\" alt=\"13 moments in october\" width=\"800\" height=\"800\" title=\"13 moments in october\">\n<pre class=\"moment-text\">\nwe should be sleeping\nallow the winter to heal\nbut instead we see everything falling apart in clear sight\n \nthere is an internal swell\nwhen everything on the outside is turning cold\nshivers\n \nalways fighting doubt until the light goes out\n</pre>\n"
+  "content_html": "<h1>13 moments in october</h1>\n<p class=\"momentDate\">23 Oct 2024</p>\n<img src=\"docs-media:collections/moments/img/d-20260215-000000-02a1a4/13-moments-in-october.webp\" alt=\"13 moments in october\" width=\"800\" height=\"800\" title=\"13 moments in october\">\n<div data-docs-catalogue-ref=\"c1\"><figure class=\"docsViewerFigure docsViewerFigure--full-column\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04626\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open 13 moments in october\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04626-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04626-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04626-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04626-primary-1600.webp?v=1 1430w\" sizes=\"100vw\" alt=\"13 moments in october\" width=\"1430\" height=\"1430\" decoding=\"async\"><span data-docs-media-placeholder hidden>13 moments in october</span></button></figure></div>\n<pre class=\"moment-text\">\nwe should be sleeping\nallow the winter to heal\nbut instead we see everything falling apart in clear sight\n \nthere is an internal swell\nwhen everything on the outside is turning cold\nshivers\n \nalways fighting doubt until the light goes out\n</pre>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04626"
+        },
+        "presentation": "image",
+        "options": {
+          "use_work_title_caption": false,
+          "summary_html": "",
+          "placement": "full",
+          "fill_width": true
+        }
+      }
+    ],
+    "presentations": {
+      "catalogue-work:04626": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04626"
+        },
+        "label": "13 moments in october",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/04626-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/04626-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04626-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04626-primary-1600.webp?v=1",
+              "width_px": 1430
+            }
+          ],
+          "alt": "13 moments in october",
+          "width_px": 1430,
+          "height_px": 1430
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/04626-primary-1600.webp?v=1",
+        "galleries": []
+      }
+    }
+  },
+  "has_thumbnail": true
 }

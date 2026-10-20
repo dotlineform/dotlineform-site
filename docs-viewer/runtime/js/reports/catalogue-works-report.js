@@ -12,51 +12,8 @@ function columnDefinition(id) {
   return COLUMN_MODEL.find((column) => column.id === id);
 }
 
-function cleanString(value) {
-  return String(value == null ? "" : value).trim();
-}
-
 function clearNode(node) {
   while (node.firstChild) node.removeChild(node.firstChild);
-}
-
-function studioOrigin(context) {
-  const base = cleanString(context && context.studioBaseUrl).replace(/\/+$/, "");
-  let studio;
-  try {
-    studio = new URL(base);
-  } catch (error) {
-    throw new Error("Local Studio is not configured.", { cause: error });
-  }
-  if (
-    studio.protocol !== "http:"
-    || !["127.0.0.1", "localhost", "::1", "[::1]"].includes(studio.hostname)
-    || studio.username
-    || studio.password
-    || studio.pathname !== "/"
-    || studio.search
-    || studio.hash
-  ) {
-    throw new Error("Local Studio is not configured.");
-  }
-  return studio.origin;
-}
-
-function fetchJson(url, message) {
-  return fetch(url, {
-    cache: "no-store",
-    headers: { Accept: "application/json" }
-  }).then((response) => {
-    if (!response.ok) throw new Error(message);
-    return response.json();
-  }).catch((error) => {
-    throw new Error(error && error.message ? error.message : message, { cause: error });
-  });
-}
-
-function loadCatalogueWorks(context) {
-  const url = new URL("/studio/catalogue-output/reports/catalogue-works/metadata.json", studioOrigin(context));
-  return fetchJson(url.toString(), "Failed to load Catalogue Works metadata.");
 }
 
 function appendLink(cell, className, href, text) {
@@ -392,6 +349,9 @@ function renderShell(root) {
 }
 
 export function mountCatalogueWorksReport(context) {
+  if (typeof context.reportService?.readCatalogueWorks !== "function") {
+    throw new Error("Local Catalogue Works services are unavailable.");
+  }
   const nodes = renderShell(context.reportRoot);
   const state = Object.assign({
     busy: true,
@@ -438,7 +398,7 @@ export function mountCatalogueWorksReport(context) {
   state.emptyNode.hidden = true;
   state.statusNode.textContent = "";
   updateControls(state);
-  return loadCatalogueWorks(context).then((payload) => {
+  return context.reportService.readCatalogueWorks().then((payload) => {
     if (state.released) return undefined;
     state.sourceRows = prepareCatalogueWorksRows(payload);
     state.busy = false;

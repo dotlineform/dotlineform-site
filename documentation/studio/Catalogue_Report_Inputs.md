@@ -111,7 +111,7 @@ The remaining nine registered reports need no Catalogue-input migration for this
 
 | Report | Current boundary and recommendation |
 | --- | --- |
-| Catalogue Works (`catalogue_works`) | Reads private Refresh-generated `reports/catalogue-works/metadata.json`, served through Studio. Keep that saved input; serving through Studio is not a canonical read. Other reports should not borrow its metadata. |
+| Catalogue Works (`catalogue_works`) | Reads private Refresh-generated `reports/catalogue-works/metadata.json` through Docs Viewer's parameter-free `GET /docs/catalogue-works-report`, without a running Studio server. Keep that saved input; other reports should not borrow its metadata. |
 | Series and Galleries (`series_galleries`) | Reads private Refresh-generated `reports/series-galleries/metadata.json`. Keep its dedicated association rows; do not use them as a shared Series-definition lookup. |
 | Work Document Coverage / Works (`works`) | Reads private Refresh-generated `reports/work-document-coverage/manifest.json` and generated Context metadata. Keep this independent input and join. |
 | Docs Broken Links (`docs_broken_links`) | Opens its saved audit; explicit Refresh scans document/source/media inputs. Catalogue token checks already use generated Catalogue readers. Keep live inspection within that report operation. |

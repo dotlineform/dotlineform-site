@@ -449,7 +449,10 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
         if path in GENERATED_READ_PATHS and not self.config.generated_reads_enabled:
             self.send_json({"ok": False, "error": "Generated reads are disabled"}, HTTPStatus.FORBIDDEN)
             return
-        if path in {routes.SOURCE_PATH, routes.METADATA_PATH, routes.DOCUMENT_LINK_TARGETS_PATH, routes.SELECTED_PATH}:
+        if path in {
+            routes.SOURCE_PATH, routes.METADATA_PATH, routes.DOCUMENT_LINK_TARGETS_PATH,
+            routes.SELECTED_PATH, routes.CATALOGUE_WORKS_REPORT_PATH,
+        }:
             if not self.config.management_enabled:
                 self.send_json({"ok": False, "error": "Docs Viewer management is disabled"}, HTTPStatus.FORBIDDEN)
                 return
@@ -478,6 +481,9 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
         if self.is_allowed_static_path(path):
             self.send_static(path)
             return
+        if path in routes.GET_PATHS:
+            self.send_docs_api_json(path, query)
+            return
         assets = load_docs_workspace_config(self.repo_root).assets
         if path.startswith(assets.served_path_prefix.rstrip("/") + "/"):
             if not self.config.generated_reads_enabled:
@@ -491,10 +497,6 @@ class DocsViewerRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
                 return
             self.send_external_collection_payload(path)
             return
-        if path in routes.GET_PATHS:
-            self.send_docs_api_json(path, query)
-            return
-
         self.send_error(HTTPStatus.NOT_FOUND, "Not found")
 
     def do_POST(self) -> None:

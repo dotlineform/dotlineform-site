@@ -6,6 +6,7 @@ from pathlib import Path
 
 import docs_generated_reads
 import docs_catalogue_media
+from docs_catalogue_works_report import read_catalogue_works_report
 from docs_series_galleries_report import read_series_galleries_report
 import docs_import_source_service as import_source_service
 import docs_management_routes as routes
@@ -101,6 +102,10 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         )
     if path == routes.CATALOGUE_SERIES_GALLERIES_PATH:
         return docs_catalogue_media.read_catalogue_series_galleries_index(repo_root)
+    if path == routes.CATALOGUE_WORKS_REPORT_PATH:
+        if params:
+            raise ValueError("Catalogue Works report reads do not accept parameters")
+        return read_catalogue_works_report(repo_root)
     if path == routes.SERIES_GALLERIES_REPORT_PATH:
         if params:
             raise ValueError("Series and Galleries report reads do not accept parameters")

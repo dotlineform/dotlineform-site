@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_series_galleries_index_v2",
-    "generated_at_utc": "2026-10-18T20:30:08Z"
+    "generated_at_utc": "2026-10-20T18:23:51Z"
   },
   "series_galleries": {
     "001": [
@@ -1477,6 +1477,7 @@
         "gallery_id": "143",
         "title": "simultaneous equations"
       }
-    ]
+    ],
+    "144": []
   }
 }

@@ -1,0 +1,18 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-2c3bf428685b85407a135ff1037c12d8",
+    "generated_at_utc": "2026-10-20T18:23:51Z"
+  },
+  "work": {
+    "work_id": "04626",
+    "title": "13 moments in october",
+    "year": 2024,
+    "year_display": "2024",
+    "width_px": 1430,
+    "height_px": 1430,
+    "media_version": 1,
+    "series_id": "144",
+    "galleries": []
+  }
+}
