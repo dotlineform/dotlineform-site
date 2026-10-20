@@ -11,6 +11,7 @@ import {
   buildWorkPrimaryPreview
 } from "./catalogue-media-preview.js";
 import { normalizeText } from "./catalogue-work-fields.js";
+import { workPixelsToCm } from "./catalogue-work-image-preview.js";
 
 const BULK_PREVIEW_LIMIT = 12;
 
@@ -48,7 +49,7 @@ export function buildWorkRecordSummary(record) {
 }
 
 function buildWorkImageDimensionSummary(record) {
-  return `${record.height_px} x ${record.width_px} px`;
+  return `${record.height_px} × ${record.width_px} px`;
 }
 
 
@@ -60,24 +61,36 @@ export function formatWorkSelectionList(ids) {
 
 export function renderWorkCurrentPreview(state) {
   if (!state.previewNode) return;
-  if (state.mode === "bulk" || !state.currentRecord) {
+  const transient = state.imagePreview;
+  if (state.mode === "bulk" || (!state.currentRecord && !transient)) {
     state.previewNode.innerHTML = "";
     return;
   }
   const record = state.currentRecord;
-  const preview = buildWorkPrimaryPreview(state.mediaConfig, record.work_id, {
+  const preview = transient ? {
+    src: transient.url, srcset: "", width: 512, fullSrc: ""
+  } : buildWorkPrimaryPreview(state.mediaConfig, record.work_id, {
     mediaVersion: record.media_version, imageStaged: record.image_staged
   });
   const fallback = {
-    fallbackState: preview.src ? "unavailable" : "not-configured",
-    fallbackText: preview.src
-      ? "Preview image unavailable."
-      : "Preview not configured."
+    fallbackState: transient || preview.src ? "unavailable" : "not-configured",
+    fallbackText: transient
+      ? transient.status === "pending"
+        ? `Preparing preview for ${transient.filename}…`
+        : transient.error || "Preview image unavailable."
+      : preview.src
+        ? "Preview image unavailable."
+        : "Preview not configured."
   };
-  const caption = buildWorkRecordSummary(record);
-  const dimensionCaption = buildWorkImageDimensionSummary(record);
+  const caption = transient ? transient.filename : buildWorkRecordSummary(record);
+  const dimensions = transient ? (transient.status === "ready" ? transient : null) : record;
+  const hasDimensions = dimensions?.width_px != null && dimensions?.height_px != null;
+  const dimensionCaption = hasDimensions ? buildWorkImageDimensionSummary(dimensions) : "";
+  const cmCaption = hasDimensions
+    ? `${workPixelsToCm(dimensions.height_px).toFixed(1)} × ${workPixelsToCm(dimensions.width_px).toFixed(1)} cm at 300 dpi`
+    : "";
   const canShowGenerated = Boolean(preview.src);
-  const previewState = canShowGenerated ? "loading" : fallback.fallbackState;
+  const previewState = canShowGenerated || transient?.status === "pending" ? "loading" : fallback.fallbackState;
   const previewHref = normalizeText(preview.fullSrc);
   const previewTarget = "_blank";
   const previewRel = "noopener";
@@ -93,6 +106,7 @@ export function renderWorkCurrentPreview(state) {
       <figcaption class="catalogueRecordPreview__caption">
         <span>${escapeHtml(caption)}</span>
         ${dimensionCaption ? `<span class="catalogueRecordPreview__captionMeta">${escapeHtml(dimensionCaption)}</span>` : ""}
+        ${cmCaption ? `<span class="catalogueRecordPreview__captionMeta">${escapeHtml(cmCaption)}</span>` : ""}
       </figcaption>
     </figure>
   `;

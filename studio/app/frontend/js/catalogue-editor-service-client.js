@@ -55,6 +55,30 @@ export function openWorkProjectMedia(payload) {
   return postJson(CATALOGUE_WRITE_ENDPOINTS.openProjectMedia, payload);
 }
 
+/** Receive one disposable WebP and its original source measurements. */
+export async function previewWorkProjectMedia(selection, { signal } = {}) {
+  const response = await fetch(CATALOGUE_WRITE_ENDPOINTS.previewProjectMedia, {
+    method: "POST",
+    cache: "no-store",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      media_source_id: selection.media_source_id,
+      project_folder: selection.project_folder,
+      project_subfolder: selection.project_subfolder,
+      project_filename: selection.project_filename
+    }),
+    signal
+  });
+  if (!response.ok) {
+    const payload = await response.json();
+    throw new Error(payload.error || `HTTP ${response.status}`);
+  }
+  const width = Number(response.headers.get("X-Source-Width-Px"));
+  const height = Number(response.headers.get("X-Source-Height-Px"));
+  const blob = await response.blob();
+  return { blob, width_px: width, height_px: height };
+}
+
 export function createCatalogueSeries(payload) {
   return postJson(CATALOGUE_WRITE_ENDPOINTS.createSeries, payload);
 }

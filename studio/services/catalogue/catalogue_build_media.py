@@ -109,14 +109,17 @@ def parse_sips_pixel_dims(output: str) -> tuple[int | None, int | None]:
         height_match = re.search(r"pixelHeight:\s*([0-9]+)", line)
         if height_match:
             height = int(height_match.group(1))
+    # Match ffmpeg's default autorotation, including transposed EXIF orientations.
+    if re.search(r"orientation:\s*[5678]\b", output):
+        width, height = height, width
     return width, height
 
 
 def read_image_dims_px(path: Path | None) -> tuple[int | None, int | None]:
-    if path is None or not path.exists() or shutil.which("sips") is None:
+    if path is None or shutil.which("sips") is None:
         return None, None
     proc = subprocess.run(
-        ["sips", "-g", "pixelWidth", "-g", "pixelHeight", str(path)],
+        ["sips", "-g", "pixelWidth", "-g", "pixelHeight", "-g", "orientation", str(path)],
         capture_output=True,
         text=True,
         check=False,

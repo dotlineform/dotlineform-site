@@ -13,6 +13,7 @@ const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
   refreshStatus: "/studio/api/catalogue/refresh-status",
   projectMedia: "/studio/api/catalogue/project-media",
   openProjectMedia: "/studio/api/catalogue/project-media/open",
+  previewProjectMedia: "/studio/api/catalogue/project-media/preview",
   read: "/studio/api/catalogue/read",
   health: "/studio/api/catalogue/health"
 });

@@ -3,6 +3,7 @@ import { createStudioIcon } from "./studio-icon.js";
 import { createWorkGalleryPicker, renderWorkGalleryPicker, setWorkGalleryPickerAvailability } from "./catalogue-work-gallery-picker.js";
 import { bindSearchList } from "/shared/frontend/js/search-list.js";
 import { renderWorkMediumField } from "./catalogue-work-medium.js";
+import { clearAutomaticWorkDimensions, clearWorkImagePreview } from "./catalogue-work-image-preview.js";
 import { BULK_WORK_METADATA_FIELDS, WORK_EDITABLE_FIELDS as EDITABLE_FIELDS, WORK_FIELD_DEFINITIONS, WORK_READONLY_FIELDS as READONLY_FIELDS, isWorkFieldRequired, normalizeSeriesId, normalizeText } from "./catalogue-work-fields.js";
 import {
   openProjectMediaPickerForCurrentDraft,
@@ -242,6 +243,8 @@ function renderMediaSourceField(field, fieldsNode, state, options) {
     const nextSourceId = config.sourceIds[(currentIndex + 1) % config.sourceIds.length];
     const storedSourceId = nextSourceId === config.defaultSourceId ? "" : nextSourceId;
     state.draft.media_source_id = storedSourceId;
+    clearWorkImagePreview(state);
+    clearAutomaticWorkDimensions(state);
     state.regenerateImage = false;
     if (state.pendingWorkBatch) {
       state.pendingWorkBatch = null;

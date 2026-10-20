@@ -4,6 +4,7 @@ import { createWorkEditorLayout } from "./catalogue-work-layout.js";
 import { editWorkDefinition, offerEmptyGalleryCleanup } from "./catalogue-work-definitions.js";
 import { applyWorkRecordMutation } from "./catalogue-work-action-records.js";
 import { prepareWorkMediumSuggestions } from "./catalogue-work-medium-data.js";
+import { clearWorkImagePreview, noteManualWorkDimension, prepareWorkImagePreview } from "./catalogue-work-image-preview.js";
 import {
   applyCatalogueEditorMediaAttrs
 } from "./catalogue-editor-shell-media.js";
@@ -40,6 +41,7 @@ import {
   readProjectMediaFolders,
   readWorkMediaSources,
   openWorkProjectMedia,
+  previewWorkProjectMedia,
   refreshCatalogue as requestCatalogueRefresh
 } from "./catalogue-editor-service-client.js";
 import { openNativeWorkAttachment, syncPendingAttachmentNames } from "./catalogue-work-attachments.js";
@@ -312,7 +314,7 @@ function updateEditorState(state) {
 
   state.saveButton.disabled = catalogueSaveDisabled({
     hasRecord,
-    isSaving: state.isSaving || state.isBuilding || state.isDeleting,
+    isSaving: state.isSaving || state.isBuilding || state.isDeleting || state.imagePreview?.status === "pending",
     hasErrors: errors.size > 0,
     dirty,
     serverAvailable: state.serverAvailable
@@ -333,6 +335,7 @@ function onFieldInput(state, fieldKey) {
   if (!node) return;
   clearActionMessages(state);
   state.draft[fieldKey] = getFieldNodeValue(node);
+  noteManualWorkDimension(state, fieldKey);
   if (state.mode === "bulk") state.bulkTouchedFields.add(fieldKey);
   updateEditorState(state);
 }
@@ -361,6 +364,10 @@ function workFormOptions(state) {
     getMediaSourceId: () => resolvedWorkMediaSourceId(state),
     loadProjectFolders: (sourceId, query) => readProjectMediaFolders(sourceId, query),
     loadProjectFiles: (request) => readProjectMediaFiles(request),
+    onImageSelected: selection => prepareWorkImagePreview(state, selection, {
+      requestPreview: previewWorkProjectMedia,
+      onStateChange: () => updateEditorState(state)
+    }),
     onOpenSourceTarget: target => openDraftSourceTarget(state, target)
   };
 }
@@ -531,6 +538,13 @@ async function init() {
 
   initializeWorkRouteState(elements.root);
   const state = createWorkEditorState(elements);
+  window.addEventListener("pagehide", () => {
+    clearWorkImagePreview(state);
+    state.previewNode.replaceChildren();
+  });
+  window.addEventListener("pageshow", event => {
+    if (event.persisted) updateEditorState(state);
+  });
   state.layout = createWorkEditorLayout(elements, change => {
     if (state.seriesBrowser) state.seriesBrowser.preserveScrollAnchor(change);
     else change();

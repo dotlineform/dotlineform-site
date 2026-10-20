@@ -93,6 +93,12 @@ export function syncWorkRouteBusyState(state) {
 
 export function setLoadedWorkRecord(state, workId, record, options = {}) {
   if (!options.preserveMediaIntent) clearWorkMediaIntent(state);
+  else {
+    // Canonical Save succeeded: returned dimensions are now saved values,
+    // even when incomplete media processing retains the temporary preview.
+    state.automaticDimensionFields.clear();
+    state.manualDimensionFields.clear();
+  }
   state.mode = "single";
   state.currentWorkId = workId;
   state.currentRecord = record;

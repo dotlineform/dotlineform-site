@@ -7,6 +7,7 @@ import {
   createFilePickerConfig,
   filePickerText
 } from "/shared/frontend/js/file-picker.js";
+import { clearAutomaticWorkDimensions, clearWorkImagePreview } from "./catalogue-work-image-preview.js";
 
 function projectMediaState(state) {
   if (!state.projectMediaPicker) {
@@ -194,6 +195,7 @@ export async function openProjectMediaPickerForCurrentDraft(state, options = {})
   const result = await openProjectMediaModal(state, options);
   if (result && result.confirmed) {
     applyProjectMediaSelection(state, result.selection, options);
+    await options.onImageSelected(result.selection);
   }
   return result;
 }
@@ -204,6 +206,8 @@ export async function openProjectMediaFolderForCurrentDraft(state, options = {})
   const result = await openProjectMediaModal(state, { ...options, selectionMode: "folder" });
   if (!result?.confirmed) return result;
   const selection = result.selection;
+  clearWorkImagePreview(state);
+  clearAutomaticWorkDimensions(state);
   state.pendingWorkBatch = {
     media_source_id: selection.media_source_id,
     project_folder: selection.project_folder,

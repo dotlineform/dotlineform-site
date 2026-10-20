@@ -81,6 +81,7 @@ function newlyEmptyGalleryIds(state, removed) {
 
 
 export async function saveCurrentWork(state, context) {
+  if (state.imagePreview?.status === "pending") return;
   if (!context.draftHasChanges()) return;
   if (state.mode === "new") {
     await saveNewWork(state, context);

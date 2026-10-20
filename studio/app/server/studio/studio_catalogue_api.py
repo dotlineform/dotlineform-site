@@ -83,6 +83,7 @@ def catalogue_get_payload(repo_root: Path, api_path: str, query: Mapping[str, li
                 "gallery/delete",
                 "project-media",
                 "project-media/open",
+                "project-media/preview",
                 "refresh",
                 "refresh-status",
             ],

@@ -71769,11 +71769,29 @@
       "media_version": 1,
       "image_staged": false,
       "title": "13 moments in october",
+      "width_cm": 12,
+      "height_cm": 12,
       "year": 2024,
       "year_display": "2024",
       "medium": "digital c-type print",
       "width_px": 1430,
       "height_px": 1430
+    },
+    "04627": {
+      "work_id": "04627",
+      "series_id": "144",
+      "project_folder": "moments",
+      "project_filename": "4-stories.jpg",
+      "media_version": 1,
+      "image_staged": false,
+      "title": "4 stories",
+      "width_cm": 13.5,
+      "height_cm": 13.5,
+      "year": 2020,
+      "year_display": "c. 2020?",
+      "medium": "digital c-type print",
+      "width_px": 1600,
+      "height_px": 1600
     }
   }
 }

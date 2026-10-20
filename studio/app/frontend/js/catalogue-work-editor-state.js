@@ -104,6 +104,9 @@ export function createWorkEditorState(elements, options = {}) {
     draft: {},
     pendingAttachments: new Map(),
     regenerateImage: false,
+    imagePreview: null,
+    automaticDimensionFields: new Set(),
+    manualDimensionFields: new Set(),
     /** @type {import("./catalogue-work-batch.js").PendingWorkBatch | null} */
     pendingWorkBatch: null,
     attachmentLimits: null,

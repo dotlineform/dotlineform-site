@@ -46,6 +46,7 @@ from catalogue.catalogue_output_paths import (  # noqa: E402
 )
 from catalogue.catalogue_work_attachments import MAX_WORK_SAVE_BODY_BYTES  # noqa: E402
 from studio_catalogue_upload import parse_work_save_upload  # noqa: E402
+from catalogue.catalogue_work_image_preview import prepare_work_image_preview  # noqa: E402
 
 
 STATIC_PREFIXES = (
@@ -122,6 +123,9 @@ class StudioAppRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
         if path.startswith("/studio/api/catalogue/"):
             if not self.origin_allowed_for_local_api():
                 self.send_json({"ok": False, "error": "Origin not allowed"}, HTTPStatus.FORBIDDEN)
+                return
+            if path == "/studio/api/catalogue/project-media/preview":
+                self.send_work_image_preview()
                 return
             self.send_catalogue_api_post_json(path.removeprefix("/studio/api/catalogue"))
             return
@@ -229,6 +233,32 @@ class StudioAppRequestHandler(QuietErrorLoggingMixin, BaseHTTPRequestHandler):
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
         except RuntimeError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
+
+    def send_work_image_preview(self) -> None:
+        try:
+            data, width, height = prepare_work_image_preview(self.repo_root, self.read_json_body())
+        except FileNotFoundError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
+            return
+        except ValueError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
+            return
+        except RuntimeError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
+            return
+        try:
+            self.send_response(HTTPStatus.OK)
+            self.send_cors_headers()
+            self.send_header("Content-Type", "image/webp")
+            self.send_header("Cache-Control", "no-store")
+            self.send_header("X-Source-Width-Px", str(width))
+            self.send_header("X-Source-Height-Px", str(height))
+            self.send_header("Content-Length", str(len(data)))
+            self.end_headers()
+            self.wfile.write(data)
+        except (BrokenPipeError, ConnectionResetError):
+            # Replacement/discard can abort the browser request during conversion.
+            return
 
     def read_body(self, limit: int) -> bytes:
         content_length = self.headers.get("Content-Length", "").strip()

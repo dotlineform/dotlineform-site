@@ -1,5 +1,6 @@
 /** Hold native files only in the current Work draft; Save owns every permanent write. */
 import { normalizeWorkId } from "./catalogue-work-fields.js";
+import { clearWorkImagePreview } from "./catalogue-work-image-preview.js";
 
 function safeFilename(filename) {
   if (!filename || filename !== filename.trim() || /[/\\]/.test(filename)
@@ -78,6 +79,9 @@ export function syncPendingAttachmentNames(state) {
 
 /** Discard transient media operation state when the draft is released or Save completes. */
 export function clearWorkMediaIntent(state) {
+  clearWorkImagePreview(state);
+  state.automaticDimensionFields.clear();
+  state.manualDimensionFields.clear();
   state.pendingAttachments = new Map();
   state.regenerateImage = false;
   state.pendingWorkBatch = null;
