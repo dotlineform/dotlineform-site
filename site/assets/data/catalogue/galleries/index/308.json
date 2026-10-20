@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "gallery_record_v3",
+    "generated_at_utc": "2026-10-20T21:35:47Z",
+    "gallery_id": "308"
+  },
+  "gallery": {
+    "gallery_id": "308",
+    "title": "moments"
+  },
+  "member_works": [
+    {
+      "work_id": "00690",
+      "title": "a doll story - doll glass 23"
+    },
+    {
+      "work_id": "04626",
+      "title": "13 moments in october"
+    },
+    {
+      "work_id": "04627",
+      "title": "4 stories"
+    },
+    {
+      "work_id": "04628",
+      "title": "a beautiful route"
+    }
+  ]
+}

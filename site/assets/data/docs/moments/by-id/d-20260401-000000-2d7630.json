@@ -2,9 +2,70 @@
   "doc_id": "d-20260401-000000-2d7630",
   "title": "4 stories",
   "added_date": "2026-04-01 00:00:00",
-  "last_updated": "2026-09-07 20:40:56",
+  "last_updated": "2026-10-20 21:40:49",
   "date": "2020-01-01",
   "date_display": "c. 2020?",
   "draft": false,
-  "content_html": "<h1>4 stories</h1>\n<p class=\"momentDate\">c. 2020?</p>\n<img src=\"docs-media:collections/moments/img/d-20260401-000000-2d7630/4-stories.webp\" alt=\"4 stories\" width=\"800\" height=\"800\" title=\"4 stories\">\n<pre class=\"moment-text\">\nThere is a form\nit exists in a field of immeasurable emptiness\nwhich is its friend\nit has no idea of its size\nit could be the size of an atom\nit could be our size\nor the size of a galaxy\nit just knows that the emptiness extends forever\nand so it is in peace\n \nThere are 4 forms\nthey sense each other’s existence\nor extrapolate from each of their own equally vast mathematical theories\nbut they know that they will never meet\nthe distances are beyond comprehension\nand so they drift in this immeasurable emptiness\n \nThere are 3 forms\nthey ride the gentle currents near the bottom\nof this immeasurably deep ocean\nthey sense that there are others like them\nand this gives them comfort\nand brings them happy dreams\n \nThere are 2 forms\nthey may have been, a long time ago\na single idea\nbut they have no memory of that\neven by their own standards of measuring time\n(which are immeasurably more capable than our own)\nthe beginning of the universe was too long ago to comprehend\n \nBut they feel  \na feeling that there is something in the vast emptiness between them\nthat will heal them\n</pre>\n"
+  "content_html": "<h1>4 stories</h1>\n<p class=\"momentDate\">c. 2020?</p>\n<div data-docs-catalogue-ref=\"c1\"><figure class=\"docsViewerFigure docsViewerFigure--full-column\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04627\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open 4 stories\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04627-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04627-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04627-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04627-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"4 stories\" width=\"1600\" height=\"1600\" decoding=\"async\"><span data-docs-media-placeholder hidden>4 stories</span></button></figure></div>\n<pre class=\"moment-text\">\nThere is a form\nit exists in a field of immeasurable emptiness\nwhich is its friend\nit has no idea of its size\nit could be the size of an atom\nit could be our size\nor the size of a galaxy\nit just knows that the emptiness extends forever\nand so it is in peace\n \nThere are 4 forms\nthey sense each other’s existence\nor extrapolate from each of their own equally vast mathematical theories\nbut they know that they will never meet\nthe distances are beyond comprehension\nand so they drift in this immeasurable emptiness\n \nThere are 3 forms\nthey ride the gentle currents near the bottom\nof this immeasurably deep ocean\nthey sense that there are others like them\nand this gives them comfort\nand brings them happy dreams\n \nThere are 2 forms\nthey may have been, a long time ago\na single idea\nbut they have no memory of that\neven by their own standards of measuring time\n(which are immeasurably more capable than our own)\nthe beginning of the universe was too long ago to comprehend\n \nBut they feel  \na feeling that there is something in the vast emptiness between them\nthat will heal them\n</pre>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04627"
+        },
+        "presentation": "image",
+        "options": {
+          "use_work_title_caption": false,
+          "summary_html": "",
+          "placement": "full",
+          "fill_width": true
+        }
+      }
+    ],
+    "presentations": {
+      "catalogue-work:04627": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04627"
+        },
+        "label": "4 stories",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/04627-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/04627-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04627-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04627-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "4 stories",
+          "width_px": 1600,
+          "height_px": 1600
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/04627-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "308"
+            },
+            "label": "moments",
+            "relation": "direct"
+          }
+        ]
+      }
+    }
+  },
+  "has_thumbnail": true
 }

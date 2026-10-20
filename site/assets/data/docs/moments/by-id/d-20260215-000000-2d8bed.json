@@ -2,9 +2,70 @@
   "doc_id": "d-20260215-000000-2d8bed",
   "title": "a beautiful route",
   "added_date": "2026-02-15 00:00:00",
-  "last_updated": "2026-09-07 20:40:56",
+  "last_updated": "2026-10-20 22:12:28",
   "date": "2015-02-19",
   "date_display": "19 Feb 2015",
   "draft": false,
-  "content_html": "<h1>a beautiful route</h1>\n<p class=\"momentDate\">19 Feb 2015</p>\n<img src=\"docs-media:collections/moments/img/d-20260215-000000-2d8bed/a-beautiful-route.webp\" alt=\"a beautiful route\" width=\"800\" height=\"800\" title=\"a beautiful route\">\n<pre class=\"moment-text\">\nthis picture is before the heron\nbut he is here still\nbecause this is his home\n \nwhere is the heron going\nan arrow across the surface\nleaving no ripples\n \nhis wings are beating like sun beams\nin harmony with all around\ngliding through moments\n \ni’m walking along the river\nand my moments are like dust\nfalling through an hourglass\n \ni gaze in wonder at the heron\ni try to slow my thoughts so i can really see him\nbut he’s already passed by\n \nbeautiful moments\nwhere we feel connected\n</pre>\n"
+  "content_html": "<h1>a beautiful route</h1>\n<p class=\"momentDate\">19 Feb 2015</p>\n<div data-docs-catalogue-ref=\"c1\"><figure class=\"docsViewerFigure docsViewerFigure--full-column\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04628\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open a beautiful route\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04628-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04628-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04628-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04628-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"a beautiful route\" width=\"3024\" height=\"3024\" decoding=\"async\"><span data-docs-media-placeholder hidden>a beautiful route</span></button><figcaption><span class=\"docsViewerFigure__caption\">a beautiful route</span></figcaption></figure></div>\n<pre class=\"moment-text\">\nthis picture is before the heron\nbut he is here still\nbecause this is his home\n \nwhere is the heron going\nan arrow across the surface\nleaving no ripples\n \nhis wings are beating like sun beams\nin harmony with all around\ngliding through moments\n \ni’m walking along the river\nand my moments are like dust\nfalling through an hourglass\n \ni gaze in wonder at the heron\ni try to slow my thoughts so i can really see him\nbut he’s already passed by\n \nbeautiful moments\nwhere we feel connected\n</pre>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04628"
+        },
+        "presentation": "image",
+        "options": {
+          "use_work_title_caption": true,
+          "summary_html": "",
+          "placement": "full",
+          "fill_width": true
+        }
+      }
+    ],
+    "presentations": {
+      "catalogue-work:04628": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04628"
+        },
+        "label": "a beautiful route",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/04628-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/04628-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04628-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04628-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "a beautiful route",
+          "width_px": 3024,
+          "height_px": 3024
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/04628-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "308"
+            },
+            "label": "moments",
+            "relation": "direct"
+          }
+        ]
+      }
+    }
+  },
+  "has_thumbnail": true
 }

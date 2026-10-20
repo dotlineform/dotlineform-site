@@ -62,12 +62,13 @@ export function mountCatalogueDocument(context) {
   var listeners = [];
   var references = context.payload && context.payload.catalogue && context.payload.catalogue.references || [];
   var operation = context.createOperation();
-  references.forEach(function (reference) {
+  var mounts = references.map(function (reference) {
     var slot = context.content.querySelector('[data-docs-catalogue-ref="' + reference.reference_id + '"]');
     if (!slot) return;
     async function mount(selectedOperation) {
       try {
-        var presentation = reference.target.kind === "catalogue-work" ? await selectedOperation.readWork(reference.target.id) : null;
+        var presentation = reference.presentation !== "media" && reference.target.kind === "catalogue-work"
+          ? await selectedOperation.readWork(reference.target.id) : null;
         if (released || !context.isCurrent()) return;
         if (selectedOperation.live) slot.innerHTML = catalogueReferenceMarkup(reference, presentation);
         context.bind(slot, presentation);
@@ -86,7 +87,10 @@ export function mountCatalogueDocument(context) {
         slot.appendChild(status);
       }
     }
-    mount(operation);
+    return mount(operation);
   });
-  return function () { released = true; listeners.forEach(function (release) { release(); }); };
+  return {
+    ready: Promise.all(mounts),
+    release: function () { released = true; listeners.forEach(function (release) { release(); }); }
+  };
 }

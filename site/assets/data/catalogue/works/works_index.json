@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_works_index_v3",
-    "generated_at_utc": "2026-10-20T18:23:51Z"
+    "generated_at_utc": "2026-10-20T21:35:47Z"
   },
   "works": {
     "00001": {
@@ -18479,6 +18479,14 @@
     "04626": {
       "work_id": "04626",
       "title": "13 moments in october"
+    },
+    "04627": {
+      "work_id": "04627",
+      "title": "4 stories"
+    },
+    "04628": {
+      "work_id": "04628",
+      "title": "a beautiful route"
     }
   }
 }

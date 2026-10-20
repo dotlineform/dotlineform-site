@@ -558,6 +558,7 @@ export function setModeFieldAvailability(state) {
     state.projectMediaFolderButton.disabled = busy || !state.serverAvailable;
   }
   if (state.mediaSourceButton) {
+    updateMediaSourceButton(state);
     state.mediaSourceButton.disabled = state.mode === "bulk"
       || state.isSaving
       || state.isBuilding

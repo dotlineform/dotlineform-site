@@ -16,7 +16,21 @@ export function initDocsViewerDocumentController(context) {
 
   function actionContext() { return activeRecord && activeRecord.actionContext || {}; }
   function capture() { return { record: activeRecord, owners: (activeRecord && activeRecord.viewOwners || []).map(function (owner) { return { id: owner.id, state: owner.capture() }; }) }; }
-  function activate(record) {
+  function waitsForCatalogueLayout(payload) {
+    return context.appContext.kind === "manage" && (payload.catalogue && payload.catalogue.references || []).some(function (reference) {
+      return reference.presentation === "image" || reference.presentation === "entry";
+    });
+  }
+
+  async function revealCatalogueLayout(record, mediaMount, mountGeneration) {
+    if (!mediaMount) throw new Error("Catalogue image rendering is unavailable.");
+    if (!await mediaMount.ready || activeRecord !== record || documentMountGeneration !== mountGeneration) return false;
+    record.root.hidden = false;
+    return true;
+  }
+
+  async function activate(record) {
+    var waitForLayout = waitsForCatalogueLayout(record.payload);
     if (transientContent) { transientContent.remove(); transientContent = null; }
     retained.forEach(function (item) { item.root.hidden = item !== record; });
     if (content === outerContent) outerContent.replaceChildren();
@@ -28,29 +42,31 @@ export function initDocsViewerDocumentController(context) {
     selectedDocument.displayedDocId = record.target.doc_id;
     selectedDocument.displayedRecord = record.doc;
     selectedDocument.displayedPayload = record.payload;
-    content.hidden = false;
+    content.hidden = waitForLayout;
     showDocPane();
     context.publishCollectionReportState(record.actionContext);
     document.title = (record.doc.title || record.target.doc_id) + " | dotlineform";
     context.renderManagementUi();
-    mountMediaDetails(record.doc, record.payload, record.generation);
+    var mediaMount = mountMediaDetails(record.doc, record.payload, record.generation);
+    if (waitForLayout && !await revealCatalogueLayout(record, mediaMount, record.generation)) return false;
+    return true;
   }
-  function restore(snapshot) {
+  async function restore(snapshot) {
     var record = snapshot && snapshot.record;
     if (record) selectedDocument.documentTarget = record.target;
     if (record && record.error) renderDocumentStatus(record.error, true);
     else if (record && retained.get(documentTargetKey(record.target)) === record) {
-      activate(record);
+      if (!await activate(record)) return;
       record.restorationStates = new Map((snapshot.owners || []).map(function (saved) { return [saved.id, saved.state]; }));
       record.viewOwners.forEach(function (owner) {
         if (record.restorationStates.has(owner.id)) owner.restore(record.restorationStates.get(owner.id));
       });
     } else handleMissingDoc();
   }
-  function restoreRetained(target, hash) {
+  async function restoreRetained(target, hash) {
     var record = retained.get(documentTargetKey(target));
     if (!record) return false;
-    activate(record);
+    if (!await activate(record)) return false;
     // A list owner may resume its last visible state independently of this entry.
     var resumed = false;
     record.viewOwners.forEach(function (owner) { if (owner.resume) { owner.resume(); resumed = true; } });
@@ -258,7 +274,7 @@ export function initDocsViewerDocumentController(context) {
     var adapter = context.mediaDetailAdapter;
     if (!adapter || typeof adapter.mountDocument !== "function") return;
     try {
-      adapter.mountDocument({
+      return adapter.mountDocument({
         collectionProvider: context.collectionProvider,
         documentTarget: activeRecord.target,
         content: content,
@@ -394,7 +410,8 @@ export function initDocsViewerDocumentController(context) {
     activeRecord.root = content;
   }
 
-  function renderPayload(doc, payload, hash, options = {}) {
+  async function renderPayload(doc, payload, hash, options = {}) {
+    var waitForLayout = waitsForCatalogueLayout(payload);
     var scrollPositions = [];
     for (var node = content; options.preservePosition && node; node = node.parentElement) {
       scrollPositions.push({ node: node, top: node.scrollTop, left: node.scrollLeft });
@@ -419,7 +436,7 @@ export function initDocsViewerDocumentController(context) {
       if (target.collection) content.dataset.docsCollection = target.collection;
       outerContent.appendChild(content);
     }
-    content.hidden = false;
+    content.hidden = waitForLayout;
     var record = Object.assign(previous || {}, { target: target, doc: doc, payload: payload, root: content, generation: mountGeneration, viewOwners: [], restorationStates: null,
       lifetime: { active: true, unsubscribers: [] },
       committedRecord: committedRecord,
@@ -458,7 +475,8 @@ export function initDocsViewerDocumentController(context) {
       });
     }
     mountTableDetails(doc, payload, mountGeneration);
-    mountMediaDetails(doc, payload, mountGeneration);
+    var mediaMount = mountMediaDetails(doc, payload, mountGeneration);
+    if (waitForLayout && !await revealCatalogueLayout(record, mediaMount, mountGeneration)) return;
     mountImageDetails(doc, payload, mountGeneration);
     mountDocumentExtras(doc, payload, mountGeneration);
     document.title = payload.title + " | dotlineform";

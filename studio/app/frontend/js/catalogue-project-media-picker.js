@@ -20,11 +20,31 @@ function projectMediaState(state) {
   return state.projectMediaPicker;
 }
 
-function selectedMediaSourceId(state, options = {}) {
-  if (typeof options.getMediaSourceId === "function") {
-    return options.getMediaSourceId();
+/** Seed only single-image picking, using saved records already held by this editor. */
+function initialProjectMediaSelection(state, options) {
+  const selection = {
+    scope: options.getMediaSourceId(),
+    folder: state.draft.project_folder,
+    subfolder: state.draft.project_subfolder,
+    filename: state.draft.project_filename
+  };
+  if (options.selectionMode === "folder" || selection.folder) return selection;
+  const seriesId = options.getDisplayedSeriesId();
+  if (!seriesId) return selection;
+  let highestId = "";
+  let highestWork = null;
+  for (const [workId, record] of state.sourceWorkRecordsById) {
+    if (record.series_id === seriesId && record.project_folder && workId > highestId) {
+      highestId = workId;
+      highestWork = record;
+    }
   }
-  return options.mediaSourceId ?? state.draft.media_source_id;
+  return highestWork ? {
+    scope: highestWork.media_source_id ?? state.workMediaSourceConfig.defaultMediaSourceId,
+    folder: highestWork.project_folder,
+    subfolder: highestWork.project_subfolder,
+    filename: ""
+  } : selection;
 }
 
 export function resetProjectMediaFolders(state) {
@@ -34,23 +54,18 @@ export function resetProjectMediaFolders(state) {
   picker.mediaSourceId = "";
 }
 
-async function loadProjectFolders(state, options = {}) {
+async function loadProjectFolders(state, mediaSourceId, options) {
   const picker = projectMediaState(state);
-  const mediaSourceId = selectedMediaSourceId(state, options);
   if (picker.mediaSourceId !== mediaSourceId) {
     picker.folders = [];
     picker.folderLoadPromise = null;
     picker.mediaSourceId = mediaSourceId;
   }
   if (picker.folderLoadPromise) return picker.folderLoadPromise;
-  if (Array.isArray(picker.folders) && picker.folders.length) return picker.folders;
-  if (!options || typeof options.loadProjectFolders !== "function") return [];
+  if (picker.folders.length) return picker.folders;
   const loadPromise = options.loadProjectFolders(mediaSourceId, "")
     .then((payload) => {
-      const records = Array.isArray(payload && payload.project_folders) ? payload.project_folders : [];
-      const folders = records
-        .map(record => record.project_folder)
-        .filter(Boolean);
+      const folders = payload.project_folders.map(record => record.project_folder);
       if (picker.mediaSourceId === mediaSourceId) picker.folders = folders;
       return folders;
     })
@@ -87,6 +102,7 @@ function applyProjectMediaSelection(state, selection, options = {}) {
     state.draft.work_id = state.nextSuggestedWorkId;
     state.searchNode.value = state.draft.work_id;
   }
+  setDraftField(state, "media_source_id", selection.media_source_id === state.workMediaSourceConfig.defaultMediaSourceId ? "" : selection.media_source_id, options);
   setDraftField(state, "project_folder", selection.project_folder, options);
   setDraftField(state, "project_subfolder", selection.project_subfolder, options);
   setDraftField(state, "project_filename", selection.project_filename, options);
@@ -111,7 +127,8 @@ export async function openProjectMediaModal(state, options = {}) {
   const host = state.modalHost;
   if (!host || typeof options.loadProjectFiles !== "function" || typeof options.loadProjectFolders !== "function") return null;
   const pickerConfig = createProjectMediaPickerConfig(options.filePickerConfig);
-  const mediaSourceId = selectedMediaSourceId(state, options);
+  const initialSelection = initialProjectMediaSelection(state, options);
+  const mediaSourceId = initialSelection.scope;
   const folderMode = options.selectionMode === "folder";
   host.innerHTML = renderStudioModalFrame({
     hidden: false,
@@ -137,12 +154,8 @@ export async function openProjectMediaModal(state, options = {}) {
     config: pickerConfig,
     selectionMode: folderMode ? "folder" : "single",
     requireSubfolder: folderMode,
-    initialSelection: {
-      folder: state.draft && state.draft.project_folder,
-      subfolder: state.draft && state.draft.project_subfolder,
-      filename: state.draft && state.draft.project_filename
-    },
-    loadFolders: () => loadProjectFolders(state, options),
+    initialSelection,
+    loadFolders: () => loadProjectFolders(state, mediaSourceId, options),
     loadFiles: async request => {
       const payload = await options.loadProjectFiles({
         mediaSourceId,

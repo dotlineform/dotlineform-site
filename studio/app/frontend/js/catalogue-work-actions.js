@@ -196,6 +196,7 @@ export async function saveNewWork(state, context) {
       throw new Error("create response does not match the new Work");
     }
     applyWorkRecordMutation(state, { workId, record, recordHash: response.record_hash });
+    state.nextSuggestedWorkId = suggestNextWorkId([...state.workSearchById.values()]);
     const completionError = catalogueSaveCompletionError(response);
     setLoadedWorkRecord(state, workId, record, context.workRouteStateOptions({
       recordHash: response.record_hash,

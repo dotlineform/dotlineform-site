@@ -58,7 +58,7 @@ export function initDocsViewerRouteWorkflow(context) {
   }
   async function restore(record) {
     if (!record) throw new Error("This navigation entry is unavailable.");
-    context.restoreDocument(record.document);
+    await context.restoreDocument(record.document);
     displayedHash = record.hash;
     // Index state belongs to the panel; align the restored route with its current query.
     var target = selected.documentTarget;
@@ -78,7 +78,7 @@ export function initDocsViewerRouteWorkflow(context) {
       index.indexSelectedDocId = destination.indexDocId;
       context.trackSidebarSelection();
     }
-    if (!destination.force && context.restoreRetainedDocument(target, displayedHash)) return target;
+    if (!destination.force && await context.restoreRetainedDocument(target, displayedHash)) return target;
     selected.documentTarget = target;
     selected.displayedRecord = null;
     selected.displayedPayload = null;
@@ -126,7 +126,7 @@ export function initDocsViewerRouteWorkflow(context) {
         if (!hash && selected.displayedPayload && selected.displayedPayload.report
           && selected.displayedPayload.report.id === "docs_collection") {
           await navigation.update();
-          context.restoreRetainedDocument(target, "");
+          await context.restoreRetainedDocument(target, "");
         } else {
           context.scrollToHash(hash);
           await navigation.update();

@@ -1,25 +1,29 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-19cdf9f5bee7a3fb4990227576ec76c1",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-2626fa57fc059459bea8b0eff759cafd",
+    "generated_at_utc": "2026-10-20T21:34:41Z"
   },
   "work": {
     "work_id": "00690",
     "title": "a doll story - doll glass 23",
     "year": 2024,
     "year_display": "2024",
-    "medium": "digital c-type print",
-    "height_cm": 30.0,
-    "width_cm": 30.0,
     "width_px": 3543,
     "height_px": 3543,
+    "height_cm": 30,
+    "width_cm": 30,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "006",
     "galleries": [
       {
         "gallery_id": "006",
         "title": "a doll story"
+      },
+      {
+        "gallery_id": "308",
+        "title": "moments"
       }
     ]
   }

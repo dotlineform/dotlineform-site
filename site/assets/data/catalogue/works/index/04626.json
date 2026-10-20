@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-2c3bf428685b85407a135ff1037c12d8",
-    "generated_at_utc": "2026-10-20T18:23:51Z"
+    "version": "blake2b-42b2f594a756afb7054ce0b9927b142f",
+    "generated_at_utc": "2026-10-20T21:34:41Z"
   },
   "work": {
     "work_id": "04626",
@@ -11,8 +11,16 @@
     "year_display": "2024",
     "width_px": 1430,
     "height_px": 1430,
+    "height_cm": 12,
+    "width_cm": 12,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "144",
-    "galleries": []
+    "galleries": [
+      {
+        "gallery_id": "308",
+        "title": "moments"
+      }
+    ]
   }
 }

@@ -329,15 +329,19 @@ export function createDocsViewerMediaDetailAdapter() {
       }));
     }
     bindReferences(root, null);
+    var ready = Promise.resolve(true);
     if (context.payload && context.payload.catalogue && context.collectionProvider.createCataloguePresentationOperation) {
-      state.referenceCleanups.push(mountCatalogueDocument({
+      var catalogueMount = mountCatalogueDocument({
         content: root, payload: context.payload,
         createOperation: function () { return context.collectionProvider.createCataloguePresentationOperation(context.payload); },
         isCurrent: function () { return stateByRoot.get(root) === state; },
         bind: bindReferences
-      }));
+      });
+      state.referenceCleanups.push(catalogueMount.release);
+      ready = catalogueMount.ready.then(function () { return stateByRoot.get(root) === state; });
     }
     return {
+      ready: ready,
       found: markers.length,
       decorated: state.records.size + state.referenceCleanups.length,
       skipped: markers.length - state.records.size - state.referenceCleanups.length

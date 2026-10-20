@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_galleries_index_v3",
-    "generated_at_utc": "2026-10-10T19:12:44Z"
+    "generated_at_utc": "2026-10-20T21:34:41Z"
   },
   "galleries": {
     "001": {
@@ -1203,6 +1203,10 @@
     "307": {
       "gallery_id": "307",
       "title": "100 hands"
+    },
+    "308": {
+      "gallery_id": "308",
+      "title": "moments"
     }
   }
 }

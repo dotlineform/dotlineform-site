@@ -2,9 +2,78 @@
   "doc_id": "d-20260215-000000-7f201c",
   "title": "a doll story",
   "added_date": "2026-02-15 00:00:00",
-  "last_updated": "2026-09-07 20:40:56",
+  "last_updated": "2026-10-20 22:32:35",
   "date": "2025-06-14",
   "date_display": "14 Jun 2025",
   "draft": false,
-  "content_html": "<h1>a doll story</h1>\n<p class=\"momentDate\">14 Jun 2025</p>\n<img src=\"docs-media:collections/moments/img/d-20260215-000000-7f201c/a-doll-story.webp\" alt=\"a doll story\" width=\"800\" height=\"800\" title=\"a doll story\">\n<pre class=\"moment-text\">\ndoll was created many years before she came into my care\nbut we don’t know why or by whom\n\nshe rested for many years amongst glass vessels\na bird wing on a shelf above\nand stones on a shelf below  \n  \nperhaps some of this is true\nwe would like to believe so  \n  \ndoll is now no more (nor less)\nthan photographs which document her last glancing acts\nand her destruction, along with the glass vessels she had unblinkingly watched over for so long  \n  \nno particle of falling dust escaped her gaze\nno ticking clock counted her time  \n  \n(as it was for the dolls that came before and the dolls that will come after)  \n  \ndoll lives and dies in a constant unbreakable cycle\nher alchemy has no beginning nor ending\nshe does not know when the end will come\nshe does not feel pain, grief, anxiety\nnor happiness, love, peace\n(she is an inanimate doll)  \n  \nif a hammer hadn’t broken her,\neventually she would have crumbled into dust,\nperhaps hundreds or thousands of years from now\n</pre>\n"
+  "content_html": "<h1>a doll story</h1>\n<p class=\"momentDate\">14 Jun 2025</p>\n<div data-docs-catalogue-ref=\"c1\"><figure class=\"docsViewerFigure docsViewerFigure--full-column\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00690\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open a doll story - doll glass 23\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/00690-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/00690-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/00690-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/00690-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"a doll story - doll glass 23\" width=\"3543\" height=\"3543\" decoding=\"async\"><span data-docs-media-placeholder hidden>a doll story - doll glass 23</span></button></figure></div>\n<pre class=\"moment-text\">\ndoll was created many years before she came into my care\nbut we don’t know why or by whom\n\nshe rested for many years amongst glass vessels\na bird wing on a shelf above\nand stones on a shelf below  \n  \nperhaps some of this is true\nwe would like to believe so  \n  \ndoll is now no more (nor less)\nthan photographs which document her last glancing acts\nand her destruction, along with the glass vessels she had unblinkingly watched over for so long  \n  \nno particle of falling dust escaped her gaze\nno ticking clock counted her time  \n  \n(as it was for the dolls that came before and the dolls that will come after)  \n  \ndoll lives and dies in a constant unbreakable cycle\nher alchemy has no beginning nor ending\nshe does not know when the end will come\nshe does not feel pain, grief, anxiety\nnor happiness, love, peace\n(she is an inanimate doll)  \n  \nif a hammer hadn’t broken her,\neventually she would have crumbled into dust,\nperhaps hundreds or thousands of years from now\n</pre>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00690"
+        },
+        "presentation": "image",
+        "options": {
+          "use_work_title_caption": false,
+          "summary_html": "",
+          "placement": "full",
+          "fill_width": true
+        }
+      }
+    ],
+    "presentations": {
+      "catalogue-work:00690": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00690"
+        },
+        "label": "a doll story - doll glass 23",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/00690-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/00690-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00690-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00690-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "a doll story - doll glass 23",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/00690-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "006"
+            },
+            "label": "a doll story",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "308"
+            },
+            "label": "moments",
+            "relation": "direct"
+          }
+        ]
+      }
+    }
+  },
+  "has_thumbnail": true
 }

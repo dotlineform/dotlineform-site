@@ -362,6 +362,7 @@ function workFormOptions(state) {
     },
     draftHasChanges: () => draftHasChanges(state),
     getMediaSourceId: () => resolvedWorkMediaSourceId(state),
+    getDisplayedSeriesId: () => state.seriesBrowser?.getSelectedSeriesId() || "",
     loadProjectFolders: (sourceId, query) => readProjectMediaFolders(sourceId, query),
     loadProjectFiles: (request) => readProjectMediaFiles(request),
     onImageSelected: selection => prepareWorkImagePreview(state, selection, {
