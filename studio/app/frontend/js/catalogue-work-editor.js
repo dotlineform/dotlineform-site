@@ -3,6 +3,7 @@ import { createWorkSeriesBrowser } from "./catalogue-work-series-browser.js";
 import { createWorkEditorLayout } from "./catalogue-work-layout.js";
 import { editWorkDefinition, offerEmptyGalleryCleanup } from "./catalogue-work-definitions.js";
 import { applyWorkRecordMutation } from "./catalogue-work-action-records.js";
+import { prepareWorkMediumSuggestions } from "./catalogue-work-medium-data.js";
 import {
   applyCatalogueEditorMediaAttrs
 } from "./catalogue-editor-shell-media.js";
@@ -222,6 +223,7 @@ function renderCatalogueRefreshStatus(state) {
 }
 
 function noteCatalogueSaved(state, response) {
+  if (response?.medium_values) state.mediumOptions = prepareWorkMediumSuggestions(response.medium_values);
   if (response?.refresh_needed) {
     state.refreshStatus = { ok: true, needed: true };
     renderCatalogueRefreshStatus(state);
@@ -485,8 +487,9 @@ async function loadInitialWorkEditorData(state) {
       readKey: "catalogue_lookup_work_search",
       target: state.workSearchById,
       normalizeKey: (record) => normalizeWorkId(record.work_id),
-      afterItems: (items) => {
+      afterItems: (items, payload) => {
         state.nextSuggestedWorkId = suggestNextWorkId(items);
+        state.mediumOptions = prepareWorkMediumSuggestions(payload.medium_values);
       }
     },
     {

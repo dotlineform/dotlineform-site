@@ -2,6 +2,7 @@ import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { createStudioIcon } from "./studio-icon.js";
 import { createWorkGalleryPicker, renderWorkGalleryPicker, setWorkGalleryPickerAvailability } from "./catalogue-work-gallery-picker.js";
 import { bindSearchList } from "/shared/frontend/js/search-list.js";
+import { renderWorkMediumField } from "./catalogue-work-medium.js";
 import { BULK_WORK_METADATA_FIELDS, WORK_EDITABLE_FIELDS as EDITABLE_FIELDS, WORK_FIELD_DEFINITIONS, WORK_READONLY_FIELDS as READONLY_FIELDS, isWorkFieldRequired, normalizeSeriesId, normalizeText } from "./catalogue-work-fields.js";
 import {
   openProjectMediaPickerForCurrentDraft,
@@ -126,6 +127,10 @@ export function renderSeriesPicker(state) {
 }
 
 function renderField(field, fieldsNode, state, options) {
+  if (field.key === "medium") {
+    renderWorkMediumField(field, fieldsNode, state, options);
+    return;
+  }
   if (field.key === "gallery_ids") {
     createWorkGalleryPicker(field, fieldsNode, state, options);
     return;
@@ -468,6 +473,7 @@ export function getFieldNodeValue(node) {
 }
 
 export function applyDraftToInputs(state) {
+  state.mediumSearch?.close();
   renderWorkGalleryPicker(state);
   EDITABLE_FIELDS.forEach((field) => {
     const node = state.fieldNodes.get(field.key);
@@ -526,6 +532,7 @@ export function setModeFieldAvailability(state) {
     if (required) control.setAttribute("aria-required", "true");
     else control.removeAttribute("aria-required");
   });
+  if (state.fieldNodes.get("medium").disabled) state.mediumSearch?.close();
   const workIdRequired = !state.pendingWorkBatch && isWorkFieldRequired(WORK_FIELD_DEFINITIONS.work_id, state.mode);
   state.searchNode.readOnly = Boolean(state.pendingWorkBatch);
   if (state.mode === "new") state.searchNode.placeholder = state.pendingWorkBatch ? "Assigned on Save" : "new work id";

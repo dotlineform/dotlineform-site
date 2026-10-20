@@ -83,6 +83,8 @@ export function createWorkEditorState(elements, options = {}) {
     config: null,
     mode: "single",
     workSearchById: new Map(),
+    mediumOptions: [],
+    mediumSearch: null,
     seriesById: new Map(),
     galleriesById: new Map(),
     galleryPicker: null,

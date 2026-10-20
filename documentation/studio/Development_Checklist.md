@@ -156,6 +156,7 @@ This checklist and the durable Studio development documentation are maintained d
 
 ### Browser JavaScript
 
+- [ ] Medium suggestions preserve unrestricted free text with a two-character local substring match, exact inserted values and alphabetical prepared candidates. Carry the compact vocabulary through existing Work startup and Medium-affecting completion responses using already loaded records; omit per-keystroke requests, source rereads, unrelated vocabulary projection, generated indexes and new validation. Use explicit Search List free-entry behavior so Tab/Escape preserve typing and Enter requires an active suggestion; retain ordinary draft/bulk feedback and disabled/blur lifetimes. [Catalogue Work Editor](Catalogue_Work_Editor.md) and [Search List](Search_List.md) own the contract.
 - [ ] Keep Docs Viewer in-flight work textually quiet across public/manage/shared review readers and modals. Remove loading/running/preparing and temporary availability-check messages at their rendering owners, without hiding errors or completion/empty-state feedback. Keep disabled/busy/readiness/selection flags and awaited operation lifetimes independent of status/tooltip strings; retain existing `aria-busy`, busy cursors, action labels and request/error behavior. [Runtime](Docs_Viewer_Runtime.md#three-surfaces) owns this presentation rule.
 - [ ] Name the complete responsibility and its owner after the change.
 - [ ] Keep route shells/controllers to boot, state handoff, required event wiring, ready/busy projection, and calls to focused owners.

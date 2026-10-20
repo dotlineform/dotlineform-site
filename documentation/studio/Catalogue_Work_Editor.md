@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260422-000000-45a776
 title: Catalogue Work Editor
 added_date: "2026-04-22 00:00:00"
-last_updated: "2026-10-13 07:44:53"
+last_updated: "2026-10-20"
 parent_id: d-20260423-000000-d015e6
 
 ---
@@ -20,6 +20,12 @@ Use `/studio/catalogue-work/` to create, find, edit or delete canonical Works, i
 The [Catalogue Source Model](Catalogue_Source_Model.md) owns the data boundary. Ordinary Save completes the canonical edit and required local media; [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns the separate generated-reader boundary.
 
 Medium is one descriptive text field for materials, process and support. It saves as `medium`; the former `medium_caption` name and separate `medium_type` field are retired.
+
+Medium remains optional unrestricted text and offers saved-value suggestions after two query characters in single, New, bulk and batch creation modes. Matching is case-insensitive substring search over a browser-prepared vocabulary; results are alphabetical in the shared scrollable popup, with exact authored spellings preserved. Click a suggestion or use Arrow keys then Enter to select it. Tab keeps typed free text and moves to the next field; the clickable clear button is outside this field's Tab order. Escape closes the list without resetting text, and Enter without an active suggestion does not force the first result. No matching suggestion is required to save. Shared search-field clearing uses the ordinary draft input handler; bulk input remains an explicit replacement and retains existing mixed-value behavior.
+
+The existing Work-search startup response (`studio_catalogue_lookup_work_search_v3`) supplies `medium_values`, a distinct list of nonempty saved strings projected from its already loaded canonical Work records. This is a response field, not another generated index or per-Work lookup field. [Candidate preparation and matching](../../studio/app/frontend/js/catalogue-work-medium-data.js) belong to the browser, and [the Medium field](../../studio/app/frontend/js/catalogue-work-medium.js) owns its popup/draft integration. Python performs no matching, authoring validation or additional filesystem read. The existing completion owner returns a replacement vocabulary for Work create/batch create, delete and Medium-changing single/bulk Save using its supplied completed Work map. Title/media-only and definition edits skip that projection; unchanged vocabulary remains in the mounted editor. The shared saved-response hook adopts replacements without a follow-up request. Saved choices therefore follow canonical edits without Refresh Catalogue. Typing performs no request, file read or generation.
+
+The 2026-10-20 implementation passed focused lint for both Python owners and six JavaScript owners, Python compilation/imports and whitespace checks. A read-only production Work-search projection and browser matching invocation consumed 4,619 canonical Works and returned 61 values occupying 1,562 UTF-8 JSON bytes: one-character `p` returned no matches, `pa` returned 36, and uppercase `PAP` returned paper values. Distinct source review covered shared default/free-entry behavior, all mutation response owners, already-loaded source reuse, literal escaping and disabled/blur/draft-replacement lifetimes. Tests, browser interaction and live Save/create/delete/bulk/batch flows remain unexercised; no canonical/generated/public data, Build, Search, Refresh or Publish ran. Restart Local Studio and force-reload the editor to adopt the producer/client together; manually confirm typing, pointer/keyboard selection, Tab/Escape, unmatched text, mixed values and saved vocabulary updates. [Medium Suggestions delivery](deliveries/Medium_Suggestions.md) retains the bounded evidence and acceptance state.
 
 ## Catalogue Update Sequence
 

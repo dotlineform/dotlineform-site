@@ -6,7 +6,7 @@ from catalogue.catalogue_revisions import record_hash
 from catalogue.catalogue_source import CatalogueSourceRecords, normalize_text, work_resource_entries
 
 SCHEMAS = {
-    "work_search": "studio_catalogue_lookup_work_search_v2",
+    "work_search": "studio_catalogue_lookup_work_search_v3",
     "series_search": "studio_catalogue_lookup_series_search_v2",
     "work_record": "studio_catalogue_work_record_v3",
 }
@@ -67,6 +67,11 @@ def build_work_lookup_payload(records: CatalogueSourceRecords, work_id: str) -> 
     }
 
 
+def work_medium_values(works: Mapping[str, Mapping[str, Any]]) -> list[str]:
+    """Project distinct nonempty authored values from supplied records without reads."""
+    return list(dict.fromkeys(record["medium"] for record in works.values() if record.get("medium")))
+
+
 def build_work_search_payload(records: CatalogueSourceRecords) -> Dict[str, Any]:
     items = []
     for work_id, record in records.works.items():
@@ -78,6 +83,7 @@ def build_work_search_payload(records: CatalogueSourceRecords) -> Dict[str, Any]
             "count": len(items),
         },
         "items": items,
+        "medium_values": work_medium_values(records.works),
     }
 
 

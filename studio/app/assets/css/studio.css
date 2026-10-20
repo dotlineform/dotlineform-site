@@ -1444,6 +1444,7 @@ button.studioList__cellLink {
 }
 
 .catalogueWorkForm__field > .studioUi__input,
+.catalogueWorkForm__field > .sharedSearchList__control,
 .catalogueWorkForm__field > .catalogueWorkMediaSource__button,
 .catalogueWorkForm__field > .catalogueWorkSeriesPicker__control,
 .catalogueWorkForm__field > .catalogueProjectMediaPicker__displayControl,

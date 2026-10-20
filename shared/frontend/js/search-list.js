@@ -45,7 +45,10 @@ function noResultsHtml(options = {}) {
 }
 
 function optionValue(options, option) {
-  if (typeof options.getOptionValue === "function") return normalizeText(options.getOptionValue(option));
+  if (typeof options.getOptionValue === "function") {
+    const value = options.getOptionValue(option);
+    return options.freeEntry ? value : normalizeText(value);
+  }
   return defaultValueForOption(option);
 }
 
@@ -81,6 +84,11 @@ function scrollActiveOption(controller) {
   }
 }
 
+function setPopupHidden(controller, hidden, options) {
+  controller.popupNode.hidden = hidden;
+  if (options.freeEntry) controller.inputNode.setAttribute("aria-expanded", String(!hidden));
+}
+
 function renderOptions(controller, options = {}) {
   const inputNode = controller.inputNode;
   const popupNode = controller.popupNode;
@@ -90,7 +98,7 @@ function renderOptions(controller, options = {}) {
     controller.activeIndex = -1;
     inputNode.removeAttribute("aria-activedescendant");
     popupNode.innerHTML = noResultsHtml(options);
-    popupNode.hidden = false;
+    setPopupHidden(controller, false, options);
     return;
   }
 
@@ -110,7 +118,7 @@ function renderOptions(controller, options = {}) {
   } else {
     inputNode.removeAttribute("aria-activedescendant");
   }
-  popupNode.hidden = false;
+  setPopupHidden(controller, false, options);
   scrollActiveOption(controller);
 }
 
@@ -132,7 +140,7 @@ async function refreshOptions(controller, options = {}) {
   controller.activeIndex = -1;
   controller.matches = [];
   controller.inputNode.removeAttribute("aria-activedescendant");
-  controller.popupNode.hidden = true;
+  setPopupHidden(controller, true, options);
   try {
     const loaded = typeof options.loadOptions === "function" ? await options.loadOptions(controller.inputNode.value) : [];
     if (loadRevision !== controller.loadRevision) return;
@@ -147,7 +155,7 @@ async function refreshOptions(controller, options = {}) {
     } else {
       controller.popupNode.innerHTML = `<p class="sharedSearchList__empty">${escapeHtml(normalizeText(error && error.message) || "Results could not be loaded.")}</p>`;
     }
-    controller.popupNode.hidden = false;
+    setPopupHidden(controller, false, options);
   }
 }
 
@@ -159,7 +167,7 @@ function closeSearchList(controller, { reset = false } = {}, options = {}) {
     if (typeof options.onCancel === "function") options.onCancel({ value: controller.inputNode.value });
   }
   controller.inputNode.removeAttribute("aria-activedescendant");
-  controller.popupNode.hidden = true;
+  setPopupHidden(controller, true, options);
 }
 
 async function commitOption(controller, option, options = {}) {
@@ -175,7 +183,7 @@ async function commitOption(controller, option, options = {}) {
   } else {
     controller.activeIndex = -1;
     controller.inputNode.removeAttribute("aria-activedescendant");
-    controller.popupNode.hidden = true;
+    setPopupHidden(controller, true, options);
   }
   if (typeof options.onCommit === "function") {
     await options.onCommit(option, { value });
@@ -192,6 +200,7 @@ function commitSelectedOption(controller, option, options = {}) {
   });
 }
 
+/** Free entry preserves typing on Tab/Escape and commits Enter only after explicit navigation. */
 export function bindSearchList(inputNode, popupNode, options = {}) {
   if (!inputNode || !popupNode) {
     throw new Error("bindSearchList requires input and popup nodes");
@@ -219,6 +228,10 @@ export function bindSearchList(inputNode, popupNode, options = {}) {
 
   inputNode.setAttribute("aria-autocomplete", "list");
   inputNode.setAttribute("aria-controls", id);
+  if (options.freeEntry) {
+    inputNode.setAttribute("role", "combobox");
+    inputNode.setAttribute("aria-expanded", "false");
+  }
   popupNode.id = id;
   popupNode.setAttribute("role", "listbox");
   popupNode.classList.add("sharedSearchList__popup");
@@ -227,13 +240,14 @@ export function bindSearchList(inputNode, popupNode, options = {}) {
   function onFocus() {
     controller.startValue = inputNode.value;
     controller.activeIndex = -1;
-    inputNode.select();
+    if (!options.freeEntry) inputNode.select();
     if (options.openOnFocus !== false && shouldOpen(controller, options)) {
       refreshOptions(controller, options);
     }
   }
 
   function onMouseUp(event) {
+    if (options.freeEntry) return;
     if (document.activeElement === inputNode && inputNode.selectionStart === 0 && inputNode.selectionEnd === inputNode.value.length) {
       event.preventDefault();
     }
@@ -259,7 +273,7 @@ export function bindSearchList(inputNode, popupNode, options = {}) {
     const matches = controller.matches || [];
     if (event.key === "Tab") {
       if (!options.persistent) {
-        closeSearchList(controller, { reset: true }, options);
+        closeSearchList(controller, { reset: !options.freeEntry }, options);
       }
       return;
     }
@@ -267,7 +281,7 @@ export function bindSearchList(inputNode, popupNode, options = {}) {
       if (options.persistent) return;
       event.preventDefault();
       event.stopPropagation();
-      closeSearchList(controller, { reset: true }, options);
+      closeSearchList(controller, { reset: !options.freeEntry }, options);
       return;
     }
     if (event.key === "ArrowDown") {
@@ -287,7 +301,7 @@ export function bindSearchList(inputNode, popupNode, options = {}) {
       return;
     }
     if (event.key === "Enter") {
-      if (!matches.length) return;
+      if (!matches.length || (options.freeEntry && controller.activeIndex < 0)) return;
       event.preventDefault();
       event.stopPropagation();
       popupNode.dataset.navigation = "keyboard";
@@ -298,6 +312,14 @@ export function bindSearchList(inputNode, popupNode, options = {}) {
 
   function onPointerMove() {
     popupNode.dataset.navigation = "pointer";
+  }
+
+  function onBlur() {
+    closeSearchList(controller, {}, options);
+  }
+
+  function onPopupMouseDown(event) {
+    if (event.button === 0 && event.target.closest("[data-search-list-index]")) event.preventDefault();
   }
 
   function onPopupClick(event) {
@@ -319,6 +341,10 @@ export function bindSearchList(inputNode, popupNode, options = {}) {
   inputNode.addEventListener("mouseup", onMouseUp);
   inputNode.addEventListener("input", onInput);
   inputNode.addEventListener("keydown", onKeyDown);
+  if (options.freeEntry) {
+    inputNode.addEventListener("blur", onBlur);
+    popupNode.addEventListener("mousedown", onPopupMouseDown);
+  }
   popupNode.addEventListener("mousemove", onPointerMove);
   popupNode.addEventListener("click", onPopupClick);
   document.addEventListener("click", onDocumentClick);
@@ -329,6 +355,8 @@ export function bindSearchList(inputNode, popupNode, options = {}) {
     inputNode.removeEventListener("mouseup", onMouseUp);
     inputNode.removeEventListener("input", onInput);
     inputNode.removeEventListener("keydown", onKeyDown);
+    inputNode.removeEventListener("blur", onBlur);
+    popupNode.removeEventListener("mousedown", onPopupMouseDown);
     popupNode.removeEventListener("mousemove", onPointerMove);
     popupNode.removeEventListener("click", onPopupClick);
     document.removeEventListener("click", onDocumentClick);

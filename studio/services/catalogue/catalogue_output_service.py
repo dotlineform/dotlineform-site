@@ -10,6 +10,7 @@ from catalogue.catalogue_service_context import CatalogueWriteContext
 from catalogue.catalogue_source import CatalogueSourceRecords, work_resource_entries
 from catalogue.catalogue_pending_updates import accumulate_work_changes
 from catalogue.catalogue_staged_media import clear_staged_works
+from catalogue.catalogue_lookup import work_medium_values
 
 
 def download_filenames(record: dict[str, Any]) -> set[str]:
@@ -99,6 +100,12 @@ def complete_saved_catalogue_edit(
             record = current.works.get(entry.get("work_id"))
             if record:
                 entry.update(record=record, record_hash=record_hash(record))
+        work_response = "work_id" in response or "records" in response or response.get("kind") == "works"
+        if work_response and (
+            response.get("created") or response.get("created_ids") or response.get("deleted")
+            or "medium" in response.get("changed_fields", ())
+        ):
+            response["medium_values"] = work_medium_values(current.works)
     except Exception as error:
         failures.append(f"Editor response: {error}")
     try:
