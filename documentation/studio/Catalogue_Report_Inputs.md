@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261010-184615-e471b8
 title: Catalogue Report Inputs
 added_date: "2026-10-10 18:46:15"
-last_updated: "2026-10-15"
+last_updated: "2026-10-20"
 summary: Refresh-owned Catalogue report inputs implemented, reviewed and closed; further verification continues during normal report use.
 ui_status: done
 parent_id: d-20260428-000000-f5ff18
@@ -71,7 +71,7 @@ Work Document Coverage's dedicated manifest remains a valid independent input. P
 
 ### Projects / Project State (`project_state`)
 
-Projects reads refreshed Work placement and Series definitions through `docs_project_state.py`, alongside live immediate project folders and the separately generated Context management manifest. The service reads these inputs once and projects only required facts; `project-state-data.js` owns the browser joins and shares document placement between initial loading and committed edits. It uses Work IDs, declared first-level project folders, Work-to-Series membership and Series IDs/titles. [Reports](Reports.md) owns the current handoff, browsing lifecycle and evidence limits.
+Projects Run/Refresh reads refreshed Work placement and Series definitions through `docs_project_state.py`, alongside live immediate project folders and the separately generated Context management manifest. The service reads these inputs once and saves only consumed facts in its own `working/generated/reports/projects/metadata.json`; opening Projects reads that saved snapshot without input reads or a folder scan. `project-state-data.js` owns browser joins and Subject placement. It uses Work IDs, declared first-level project folders, Work-to-Series membership and Series IDs/titles. Changes appear after the next explicit Projects Refresh, without committed-edit updates. [Reports](Reports.md) owns the snapshot lifecycle and evidence limits.
 
 Replace the canonical read with refreshed Work placement facts and Catalogue-owned Series definitions. Retain every Series definition, including empty Series, so relationship diagnostics do not depend on which Series happen to have Works. Keep the live immediate-folder scan, generated Context input, unmatched physical folders, current placement rules and document associations. Changing the source must not silently change how `project_folder` is interpreted across configured media sources; any correction to that behavior is a separate requirement.
 

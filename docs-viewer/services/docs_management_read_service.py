@@ -11,6 +11,7 @@ from docs_work_document_coverage import read_work_document_coverage_manifest
 import docs_import_source_service as import_source_service
 import docs_management_routes as routes
 import docs_media_metadata
+import docs_project_state
 from docs_management_broken_links_service import read_broken_links
 import docs_unpublishable_report
 from docs_selected_documents import read_selected
@@ -79,6 +80,10 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         if params:
             raise ValueError("Broken Links reads do not accept parameters")
         return read_broken_links(repo_root)
+    if path == routes.PROJECT_STATE_PATH:
+        if params:
+            raise ValueError("Projects metadata reads do not accept parameters")
+        return docs_project_state.read_project_state_metadata(repo_root)
     if path == routes.DOCUMENT_LINK_TARGETS_PATH:
         return read_document_link_targets(
             repo_root,

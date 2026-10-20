@@ -1,6 +1,7 @@
 {
   "schema_version": "docs_workspace_v9",
   "media_report_metadata": "working/generated/reports/docs-media/metadata.json",
+  "projects_report_metadata": "working/generated/reports/projects/metadata.json",
   "broken_links_report": "working/generated/reports/broken-links/report.json",
   "links_report": "working/generated/reports/links/report.json",
   "assets": {

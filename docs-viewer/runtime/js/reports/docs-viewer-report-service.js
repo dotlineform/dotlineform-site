@@ -90,7 +90,10 @@ export function createDocsViewerReportService(options) {
         requireOkEnvelope: true
       }));
     },
-    runProjectState: function () {
+    readProjectState: function () {
+      return fetchReportJson("/docs/project-state", Object.assign({}, serviceOptions, { requireOkEnvelope: true }));
+    },
+    refreshProjectState: function () {
       return fetchReportJson("/docs/project-state", Object.assign({}, serviceOptions, {
         method: "POST",
         payload: {},

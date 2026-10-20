@@ -1,5 +1,5 @@
 import { mountSearchField } from "/shared/frontend/js/search-field.js";
-import { buildProjectStateSnapshot, commitProjectStateDocument } from "./project-state-data.js";
+import { buildProjectStateSnapshot } from "./project-state-data.js";
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
 import {
   appendProjectSubjectIcon
@@ -33,7 +33,8 @@ function setIconButton(button, icon, label) {
 }
 
 function reportService(context) {
-  return context && context.reportService && typeof context.reportService.runProjectState === "function"
+  return context && context.reportService && typeof context.reportService.readProjectState === "function"
+    && typeof context.reportService.refreshProjectState === "function"
     ? context.reportService
     : null;
 }
@@ -176,9 +177,11 @@ function renderRows(state) {
   clearNode(state.rowsNode);
   state.emptyNode.hidden = projection.rows.length > 0;
   if (!projection.rows.length) {
-    state.emptyNode.textContent = state.snapshot?.rows.length
-      ? "No Project State rows match the current search."
-      : "No immediate project folders were found.";
+    state.emptyNode.textContent = !state.snapshot
+      ? "No saved Projects metadata. Use Run/Refresh to create it."
+      : state.snapshot.rows.length
+        ? "No Project State rows match the current search."
+        : "No immediate project folders were found.";
     return;
   }
   projection.rows.forEach((row) => {
@@ -197,11 +200,11 @@ function runContext(snapshot) {
   const generated = snapshot.generatedAt.slice(0, 16).replace("T", " ");
   const folders = snapshot.rows.length;
   const works = snapshot.workCount;
-  const documents = snapshot.placementsByDocId.size;
+  const documents = snapshot.documentCount;
   const folderLabelText = folders === 1 ? "folder" : "folders";
   const workLabel = works === 1 ? "Work" : "Works";
   const documentLabel = documents === 1 ? "Doc" : "Docs";
-  return generated + " · " + folders + " " + folderLabelText + " · " + works + " " + workLabel + " · " + documents + " " + documentLabel;
+  return "Last refreshed " + generated + " UTC · " + folders + " " + folderLabelText + " · " + works + " " + workLabel + " · " + documents + " " + documentLabel;
 }
 
 function updateControls(state) {
@@ -227,7 +230,7 @@ function setBusy(state, busy) {
   updateControls(state);
 }
 
-function runReport(state) {
+function loadReport(state, refresh) {
   const service = reportService(state.context);
   if (!service) {
     state.statusNode.textContent = "Local docs-management server is not configured.";
@@ -237,40 +240,29 @@ function runReport(state) {
   }
   setBusy(state, true);
   state.statusNode.textContent = "";
-  state.snapshot = null;
-  state.sortedRows = [];
-  state.projection = currentProjection(state);
-  clearNode(state.rowsNode);
-  state.emptyNode.hidden = true;
-  return service.runProjectState()
-    .then((inputs) => {
-      state.snapshot = buildProjectStateSnapshot(inputs, state.documentHref);
+  return (refresh ? service.refreshProjectState() : service.readProjectState())
+    .then((payload) => {
+      if (state.released) return;
+      const snapshot = payload.metadata === null ? null : buildProjectStateSnapshot(payload.metadata, state.documentHref);
+      state.snapshot = snapshot;
       updateSort(state);
-      state.statusNode.textContent = runContext(state.snapshot);
+      state.statusNode.textContent = snapshot ? runContext(snapshot) : "";
       renderRows(state);
     })
     .catch((error) => {
-      state.snapshot = null;
-      state.sortedRows = [];
-      state.projection = currentProjection(state);
-      clearNode(state.rowsNode);
-      renderHead(state);
-      state.statusNode.textContent = error && error.message
+      if (state.released) return;
+      const message = error && error.message
         ? error.message
-        : "Project State refresh failed.";
-      state.emptyNode.hidden = false;
-      state.emptyNode.textContent = "The current Project State run could not complete.";
+        : "Projects metadata could not load.";
+      state.statusNode.textContent = state.snapshot ? runContext(state.snapshot) + " · " + message : message;
+      if (!state.snapshot) {
+        state.emptyNode.hidden = false;
+        state.emptyNode.textContent = "Projects metadata could not load. Use Run/Refresh to try again.";
+      }
     })
     .finally(() => {
-      setBusy(state, false);
+      if (!state.released) setBusy(state, false);
     });
-}
-
-function commitDocumentChange(state, change) {
-  if (!state.snapshot || !commitProjectStateDocument(state.snapshot, change, state.documentHref)) return;
-  updateSort(state);
-  state.statusNode.textContent = runContext(state.snapshot);
-  renderRows(state);
 }
 
 function clipboardWindow(state) {
@@ -297,7 +289,7 @@ function copyProjection(state) {
 
 function attachEvents(state) {
   state.runButton.addEventListener("click", () => {
-    if (!state.busy) runReport(state);
+    if (!state.busy) loadReport(state, true);
   });
   state.groupToggleButton.addEventListener("click", () => {
     if (state.busy) return;
@@ -415,6 +407,7 @@ export function mountProjectStateReport(context) {
     collator: new Intl.Collator(undefined, { numeric: true, sensitivity: "base" }),
     groupBy: "folder",
     projection: null,
+    released: false,
     searchText: "",
     sortDir: "asc",
     sortKey: "folder",
@@ -436,12 +429,15 @@ export function mountProjectStateReport(context) {
       if (orderChanged) updateSort(state);
       renderRows(state);
       updateControls(state);
+    },
+    dispose: function () {
+      state.released = true;
+      state.snapshot = null;
+      state.sortedRows = [];
+      state.projection = null;
     }
   });
   attachEvents(state);
-  if (context.collectionProvider && context.collectionProvider.subscribeDocumentChanges) context.collectionProvider.subscribeDocumentChanges(function (change) {
-    if (context.reportRoot.isConnected) commitDocumentChange(state, change);
-  });
   updateControls(state);
-  return runReport(state);
+  return loadReport(state, false);
 }

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read the local filesystem and saved inputs for the Projects report."""
+"""Own the Projects report's saved metadata and explicit Refresh operation."""
 
 from __future__ import annotations
 
@@ -17,22 +17,34 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths 
 
 ensure_studio_python_paths(__file__)
 
-from catalogue.catalogue_output_paths import catalogue_workspace_config  # noqa: E402
 from catalogue.catalogue_report_inputs import WORK_SOURCES_PATH, SERIES_PATH, read_catalogue_report_input  # noqa: E402
+from docs_json_files import load_json_object, render_json  # noqa: E402
 from docs_local_links import encode_relative_target  # noqa: E402
-from docs_workspace_config import location_child, select_workspace_stage  # noqa: E402
+from docs_workspace_config import load_docs_workspace_config, location_child, select_workspace_stage  # noqa: E402
 from studio.shared.python.projects_directories import list_projects_directory  # noqa: E402
 
 
-def project_state_inputs(repo_root: Path) -> dict[str, Any]:
-    """Scan immediate project folders and read each saved input once.
+def read_project_state_metadata(repo_root: Path) -> dict[str, Any]:
+    """Read only the saved snapshot; a first use requires explicit Refresh."""
+    path = load_docs_workspace_config(repo_root).projects_report_metadata.path
+    try:
+        metadata = load_json_object(path, "Projects metadata")
+    except FileNotFoundError:
+        return {"ok": True, "metadata": None}
+    except (OSError, UnicodeError, ValueError) as error:
+        raise ValueError("Projects metadata is unreadable or invalid. Use Run/Refresh to regenerate it.") from error
+    return {"ok": True, "metadata": metadata}
+
+
+def refresh_project_state_metadata(repo_root: Path) -> dict[str, Any]:
+    """Gather the current inputs once, then save and return the same snapshot.
 
     The browser owns placement, counts, viewer links and presentation. This
-    handoff contains only consumed facts, without source paths or a saved report.
+    snapshot contains only consumed facts, without absolute source paths.
     Catalogue's reader owns its saved representation; document authoring/build
     owns manifest records. Missing inputs fail without repair or live fallbacks.
     """
-    workspace = catalogue_workspace_config(repo_root)
+    workspace = load_docs_workspace_config(repo_root)
     working = select_workspace_stage(workspace, "working")
     collection = next((item for item in working.collections if item.collection == "works"), None)
     if collection is None:
@@ -55,8 +67,7 @@ def project_state_inputs(repo_root: Path) -> dict[str, Any]:
             folders.append({"key": key, "local_target": encode_relative_target(key)})
     works = read_catalogue_report_input(workspace.catalogue.working, WORK_SOURCES_PATH)
     series = read_catalogue_report_input(workspace.catalogue.working, SERIES_PATH)
-    return {
-        "ok": True,
+    metadata = {
         "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
         "folders": folders,
         "documents": [
@@ -71,3 +82,10 @@ def project_state_inputs(repo_root: Path) -> dict[str, Any]:
         ],
         "series": [{"series_id": series_id, "title": record["title"]} for series_id, record in series.items()],
     }
+    path = workspace.projects_report_metadata.path
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(render_json(metadata), encoding="utf-8")
+    except OSError as error:
+        raise ValueError("Projects metadata could not be saved. Use Run/Refresh to retry.") from error
+    return {"ok": True, "metadata": metadata}

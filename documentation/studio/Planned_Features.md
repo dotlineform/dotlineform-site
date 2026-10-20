@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260428-000000-f5ff18
 title: Planned Features
 added_date: "2026-04-28 00:00:00"
-last_updated: "2026-10-19"
+last_updated: "2026-10-20"
 summary: This explains the delivery model and workflows to implement new repo and application features.
 ui_status: planned
 parent_id: ""
@@ -144,6 +144,8 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 
 ## Proposed Features
 
+- [Subject Retirement](Subject_Retirement.md) — Proposed follow-on to Projects' persisted snapshot. Retire Folder subjects as planning placeholders are gradually deleted, reserving draft for active authoring. Replace Projects' Subject placement with outbound Work/Gallery associations and resolve Work Document Coverage, Context thumbnails and remaining authoring/source changes before complete retirement. The proposal explains the document Links/typed Catalogue-reference gap; placeholder coverage does not require migration. Implementation is not yet approved.
+
 - [Docs Viewer App Roadmap](Docs_Viewer_App_Roadmap.md) — Proposed standalone Mac/iPad reader progressing to local management through one capability release at a time. Each Swift release aligns with an agreed web behavior/resource baseline; ongoing web additions do not automatically expand it. Reuse the existing reader and native foundation, improve only the responsibility seams needed by the next capability, and treat historical native proposals as background requiring reconciliation. DVA.R1 ordinary reading is the next candidate; workspace/access, release scope and implementation approval remain open.
 
 ## Reviews
@@ -162,6 +164,8 @@ Delivery closeout uses evidence proportional to the change. A status-only docume
 ## Ad-hoc Deliveries
 
 Store new standalone delivery documents for bounded work that does not need a separate feature parent under `documentation/studio/deliveries/`. Parent them directly to this document and keep implementation state, decisions and completion gates in the delivery. At closeout, transfer lasting details to the durable owner and review whether the delivery and its link should be retained.
+
+- [Projects Metadata Snapshot](deliveries/Projects_Metadata_Snapshot.md) — Implemented, statically verified and reviewed on 2026-10-20; awaiting manual acceptance after a Docs Viewer service restart and Manage reload. Projects opens its private saved snapshot and updates it only through Run/Refresh, retaining Subject associations and browser-owned placement. The initial normal Refresh saved 208 folders, 159 Context documents, 4,618 Works and 139 Series. Shared manifests/indexes and publication remain unchanged; tests and HTTP/browser interaction remain unexercised. Outbound Work/Gallery associations and Subject retirement are a separate delivery. [Reports](Reports.md) owns the lasting behavior.
 
 - [Collection Document Intake And Packages](deliveries/Collection_Document_Intake_And_Packages.md) — Implemented, statically verified and reviewed on 2026-10-20; awaiting normal-use confirmation. Collections reports own Export, Prepare package, Import doc and Import docs, with both imports available in empty collections without checked IDs. Ordinary Index targeting, workspace import controls and redundant legacy discovery are removed; the independent CLI and returned-package formats remain. Changed-owner lint, compilation/import diagnostics, exact public projection/check, site validation and whitespace review passed. Tests and live imports/package writes remain unexercised; restart Docs Viewer services and reload Manage for confirmation.
 

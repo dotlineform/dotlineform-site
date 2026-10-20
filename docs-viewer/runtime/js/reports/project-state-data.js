@@ -5,10 +5,7 @@ import { classifyDocsDocumentSubject } from "../shared/docs-document-subject.js"
  * href: string, declaredSubject: {kind: string, key: string}, applicableSeriesIds: string[]}} ProjectDocument
  * @typedef {{folder: {key: string, label: string, localTarget: string}, seriesIds: string[],
  * series: {seriesId: string, title: string}[], documents: ProjectDocument[]}} ProjectFolder
- * @typedef {{row: ProjectFolder, document: ProjectDocument}} DocumentPlacement
- * @typedef {{generatedAt: string, rows: ProjectFolder[], foldersByKey: Map<string, ProjectFolder>,
- * worksById: Map<string, {row: ProjectFolder, seriesIds: string[]}>,
- * placementsByDocId: Map<string, DocumentPlacement>, workCount: number,
+ * @typedef {{generatedAt: string, rows: ProjectFolder[], workCount: number, documentCount: number,
  * groups: {folder: Object[], series: Object[]}}} ProjectStateSnapshot
  */
 
@@ -22,10 +19,10 @@ function compareDocuments(left, right) {
     || compareText(left.target.doc_id, right.target.doc_id);
 }
 
-function placeDocument(snapshot, record, documentHref) {
+function placeDocument(record, foldersByKey, worksById, documentHref) {
   const subject = classifyDocsDocumentSubject(record, { folderSupported: true });
-  const work = subject.kind === "work" ? snapshot.worksById.get(subject.key) : null;
-  const row = subject.kind === "folder" ? snapshot.foldersByKey.get(subject.key) : work?.row;
+  const work = subject.kind === "work" ? worksById.get(subject.key) : null;
+  const row = subject.kind === "folder" ? foldersByKey.get(subject.key) : work?.row;
   if (!row) return null;
   return {
     row,
@@ -82,7 +79,7 @@ function prepareGroups(rows) {
   return groups;
 }
 
-/** Compose one mounted dataset from the service's completed, read-only handoff.
+/** Compose one mounted dataset from the service's saved metadata snapshot.
  * Keep every scanned folder and place Folder/Work subjects against saved Work
  * membership. No additional requests, response audits or persistent caches.
  * @param {Object} inputs Completed folders, document metadata, Works and Series.
@@ -103,17 +100,17 @@ export function buildProjectStateSnapshot(inputs, documentHref) {
   const snapshot = {
     generatedAt: inputs.generated_at,
     rows,
-    foldersByKey: new Map(rows.map((row) => [row.folder.key, row])),
-    worksById: new Map(),
-    placementsByDocId: new Map(),
-    workCount: 0
+    workCount: 0,
+    documentCount: 0
   };
+  const foldersByKey = new Map(rows.map((row) => [row.folder.key, row]));
+  const worksById = new Map();
   inputs.works.forEach((work) => {
     if (!work.project_folder) return;
-    const row = snapshot.foldersByKey.get("projects/" + work.project_folder);
+    const row = foldersByKey.get("projects/" + work.project_folder);
     if (!row) return;
     const seriesIds = seriesById.has(work.series_id) ? [work.series_id] : [];
-    snapshot.worksById.set(work.work_id, { row, seriesIds });
+    worksById.set(work.work_id, { row, seriesIds });
     snapshot.workCount += 1;
     if (seriesIds.length && !row.seriesIds.includes(work.series_id)) row.seriesIds.push(work.series_id);
   });
@@ -122,41 +119,12 @@ export function buildProjectStateSnapshot(inputs, documentHref) {
     row.series = row.seriesIds.map((seriesId) => ({ seriesId, title: seriesById.get(seriesId) }));
   });
   inputs.documents.forEach((record) => {
-    const placement = placeDocument(snapshot, record, documentHref);
+    const placement = placeDocument(record, foldersByKey, worksById, documentHref);
     if (!placement) return;
     placement.row.documents.push(placement.document);
-    snapshot.placementsByDocId.set(record.doc_id, placement);
+    snapshot.documentCount += 1;
   });
   rows.forEach((row) => row.documents.sort(compareDocuments));
   snapshot.groups = prepareGroups(rows);
   return snapshot;
-}
-
-/** Apply committed metadata using the same placement owner and last scan's Works.
- * Removal preserves document order; only an insertion's folder needs sorting.
- * @param {ProjectStateSnapshot} snapshot Mounted dataset updated in place.
- * @param {Object} change Provider-owned committed document metadata or deletion.
- * @param {(docId: string) => string} documentHref Exact Works viewer URL owner.
- * @returns {boolean} Whether displayed document membership or titles changed.
- */
-export function commitProjectStateDocument(snapshot, change, documentHref) {
-  if (change.target.collection !== "works") return false;
-  const docId = change.target.doc_id;
-  const previous = snapshot.placementsByDocId.get(docId);
-  const next = change.deleted ? null : placeDocument(snapshot, change.record, documentHref);
-  if (!previous && !next) return false;
-  if (previous && next && previous.document.title === next.document.title
-    && previous.document.declaredSubject.kind === next.document.declaredSubject.kind
-    && previous.document.declaredSubject.key === next.document.declaredSubject.key) return false;
-  if (previous) {
-    previous.row.documents = previous.row.documents.filter((record) => record.target.doc_id !== docId);
-    snapshot.placementsByDocId.delete(docId);
-  }
-  if (next) {
-    next.row.documents.push(next.document);
-    next.row.documents.sort(compareDocuments);
-    snapshot.placementsByDocId.set(docId, next);
-  }
-  snapshot.groups = prepareGroups(snapshot.rows);
-  return true;
 }
