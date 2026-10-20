@@ -69,6 +69,11 @@ export function setManagedDocSelected(target, selected, options) {
   return fetchManagementJson("/docs/set-selected", "POST", targetPayload(target, { selected: selected }), options);
 }
 
+/** Copy a Work thumbnail, or remove the document's independent copy with null. */
+export function setManagedDocThumbnail(target, workId, options) {
+  return fetchManagementJson("/docs/thumbnail", "POST", targetPayload(target, { work_id: workId }), options);
+}
+
 /** Read authoring targets in the authoring workspace; the response supplies ordinary hrefs. */
 export function readDocumentLinkTargets(options) {
   return fetchManagementJson("/docs/document-link-targets", "GET", undefined,
@@ -187,9 +192,6 @@ export function readManagedDocSource(target, options) {
   return fetchManagementJson("/docs/source?" + targetQuery(target), "GET", undefined, options);
 }
 
-export function readManagedDocSourceContext(target, payload, options) {
-  return fetchManagementJson("/docs/source/context", "POST", targetPayload(target, payload), options);
-}
 
 export function readManagedDocMetadata(target, options) {
   return fetchManagementJson("/docs/metadata?" + targetQuery(target), "GET", undefined, options);
@@ -213,7 +215,7 @@ export async function saveManagedDocSource(target, payload, options) {
   var metadata = JSON.stringify(targetPayload(target, {
     source_text: payload.source_text,
     media: selections.map(function (entry) {
-      return { media_kind: entry.media_kind, body: entry.body, thumbnail: entry.thumbnail,
+      return { media_kind: entry.media_kind,
         replace: entry.replace, preserve_resolution: entry.preserve_resolution };
     })
   }));

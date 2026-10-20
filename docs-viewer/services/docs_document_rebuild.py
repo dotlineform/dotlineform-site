@@ -34,6 +34,7 @@ def rebuild_document(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     )
     if not resolved.collection:
         record["report_id"] = report.id if report is not None else ""
+    prepared.has_thumbnail = record.get("has_thumbnail", False)
     payload = rebuild_prepared_document(repo_root, resolved, prepared)
     payload["record"] = record
     return payload

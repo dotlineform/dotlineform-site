@@ -19,7 +19,6 @@ from catalogue.series_ids import normalize_series_id
 from catalogue.catalogue_report_inputs import SERIES_PATH
 from catalogue.catalogue_shared_changes import (
     empty_shared_changes, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT,
-    WORK_DOCUMENT_COVERAGE_MANIFEST,
 )
 
 
@@ -34,7 +33,7 @@ def series_create_payload(
     mutation_plan = source_mutation.plan_series_create(series_map, series_id, series_update)
     shared = {
         **empty_shared_changes(), "current_series": [series_id],
-        "shared_outputs": sorted([RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, WORK_DOCUMENT_COVERAGE_MANIFEST, SERIES_PATH]),
+        "shared_outputs": sorted([RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, SERIES_PATH]),
     }
     target_payloads: dict[Path, dict[str, Any]] = {
         context.series_path.resolve(): mutation_plan.payload,
@@ -92,7 +91,7 @@ def series_save_payload(
     if plan.changed_fields:
         outputs = {RELATIONSHIP_REPORT}
         if "title" in plan.changed_fields:
-            outputs.update({WORK_DOCUMENT_COVERAGE_MANIFEST, SERIES_PATH})
+            outputs.add(SERIES_PATH)
         shared.update(current_series=[series_id], shared_outputs=sorted(outputs))
     payloads: dict[Path, Any] = {}
     if plan.changed_fields:

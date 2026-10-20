@@ -266,5 +266,6 @@
         ]
       }
     }
-  }
+  },
+  "has_thumbnail": true
 }

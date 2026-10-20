@@ -31,8 +31,7 @@ export function createCollectionPresentation(options) {
     const searchTitle = normalizeDocsCollectionFilterValue(record.title);
     const authoredThumbnail = !catalogue && record.has_thumbnail === true;
     const workId = catalogue ? record.doc_id : "";
-    const thumbnailWorkId = catalogue ? workId
-      : works && !authoredThumbnail && /^[0-9]{5}$/.test(record.subject) ? record.subject : "";
+    const thumbnailWorkId = workId;
     const row = {
       docId: record.doc_id, title: record.title, record,
       href: href === undefined ? options.documentHref(record.doc_id) : href,

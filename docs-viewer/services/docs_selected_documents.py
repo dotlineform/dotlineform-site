@@ -6,7 +6,6 @@ import json
 
 from docs_document_identity import doc_updated_date
 from docs_document_images import has_document_thumbnail
-from docs_document_subjects import project_reader_subject
 from docs_source_model import write_text_atomic
 from docs_workspace_config import source_control_path
 
@@ -30,12 +29,7 @@ def selected_text(payload: dict[str, Any]) -> str:
 
 
 def selected_row(document: Any, owner: Any) -> dict[str, Any]:
-    """Project one thumbnail choice from source for Working and prepared readers.
-
-    Assigned authored thumbnails take precedence. Context otherwise exposes only
-    its exact Work subject; Folder subjects and private authoring data are omitted.
-    Catalogue thumbnails derive directly from document identity in the reader.
-    """
+    """Project stored collection artwork; Catalogue artwork derives from identity."""
     row = {
         "doc_id": document.doc_id,
         "title": document.title,
@@ -44,12 +38,11 @@ def selected_row(document: Any, owner: Any) -> dict[str, Any]:
     collection = getattr(owner, "collection", "")
     if collection:
         row.update(collection=collection, report_doc_id=owner.report_host_doc_id)
-    if has_document_thumbnail(document.front_matter, collection=collection):
+    thumbnail = getattr(document, "has_thumbnail", None)
+    if thumbnail is None:
+        thumbnail = has_document_thumbnail(owner, document.doc_id)
+    if thumbnail:
         row["has_thumbnail"] = True
-    elif collection == "works":
-        subject = project_reader_subject(document.front_matter)
-        if subject is not None:
-            row["subject"] = subject
     return row
 
 

@@ -1,16 +1,14 @@
 /**
  * Select reader thumbnail metadata from a complete committed document summary.
- * Authored assignments take precedence over Context Work subjects. Folder
- * subjects are omitted; Catalogue thumbnails use the selected document ID.
+ * Stored artwork belongs to authored collections; Catalogue uses the document ID.
  * @param {Object} record Committed source metadata.
  * @param {string} collection Exact collection identity, or empty for ordinary docs.
- * @returns {Object} Optional has_thumbnail or Work subject, never both.
+ * @returns {Object} Optional has_thumbnail for authored collections.
  */
 function selectedDocumentThumbnailMetadata(record, collection) {
-  if (record.has_thumbnail === true) {
+  if (collection && collection !== "catalogue" && record.has_thumbnail === true) {
     return { has_thumbnail: true };
   }
-  if (collection === "works" && /^[0-9]{5}$/.test(record.subject)) return { subject: record.subject };
   return {};
 }
 
@@ -24,7 +22,7 @@ function sortSelectedDocumentRows(rows) {
 }
 
 /**
- * @typedef {{doc_id: string, title: string, last_updated: string, collection?: string, has_thumbnail?: boolean, subject?: string}} SelectedDocumentRow
+ * @typedef {{doc_id: string, title: string, last_updated: string, collection?: string, has_thumbnail?: boolean}} SelectedDocumentRow
  * @typedef {SelectedDocumentRow & {key: string, href: string, thumbnailWorkId: string, thumbnailSrc: string}} PreparedSelectedDocumentRow
  * @typedef {{rows: PreparedSelectedDocumentRow[], byKey: Map<string, PreparedSelectedDocumentRow>}} SelectedDocumentsData
  */
@@ -35,7 +33,7 @@ function selectedKey(collection, docId) {
 
 function thumbnailWorkId(row) {
   if (row.has_thumbnail === true) return "";
-  return row.collection === "catalogue" ? row.doc_id : row.subject || "";
+  return row.collection === "catalogue" ? row.doc_id : "";
 }
 
 /** Prepare completed rows once; exact route ownership remains with the reader.
@@ -70,12 +68,11 @@ export function applySelectedDocumentChange(data, change) {
   const metadata = selectedDocumentThumbnailMetadata(change.record, change.target.collection || "");
   const orderChanged = row.last_updated !== change.record.last_updated;
   const thumbnailChanged = metadata.has_thumbnail === true
-    || row.has_thumbnail !== metadata.has_thumbnail || row.subject !== metadata.subject;
+    || row.has_thumbnail !== metadata.has_thumbnail;
   if (!orderChanged && !thumbnailChanged && row.title === change.record.title) return null;
   row.title = change.record.title;
   row.last_updated = change.record.last_updated;
   delete row.has_thumbnail;
-  delete row.subject;
   Object.assign(row, metadata);
   row.thumbnailWorkId = thumbnailWorkId(row);
   if (orderChanged) data.rows = sortSelectedDocumentRows(data.rows);

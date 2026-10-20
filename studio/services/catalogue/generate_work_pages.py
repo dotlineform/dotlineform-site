@@ -17,8 +17,7 @@ from catalogue.catalogue_series_galleries import CatalogueSeriesGalleries
 from catalogue.catalogue_series_galleries_index import series_gallery_links, series_galleries_index_payload
 from catalogue.catalogue_series_galleries_report import METADATA_PATH as SERIES_GALLERIES_REPORT_PATH, series_galleries_report_payload
 from catalogue.catalogue_source import CatalogueSourceRecords
-from catalogue.catalogue_shared_changes import WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, WORK_DOCUMENT_COVERAGE_MANIFEST
-from catalogue.catalogue_work_document_coverage import work_document_coverage_manifest
+from catalogue.catalogue_shared_changes import WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT
 from catalogue.catalogue_report_inputs import INPUT_SCHEMAS, catalogue_report_input_payloads
 
 
@@ -33,7 +32,7 @@ def catalogue_payloads(
     Resource projections consume UI-authored labels unchanged, without label
     completeness checks, coercion or substitute display text.
     """
-    supported_shared = {"media-config.json", WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, WORK_DOCUMENT_COVERAGE_MANIFEST, *INPUT_SCHEMAS}
+    supported_shared = {"media-config.json", WORK_INDEX, GALLERY_INDEX, RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, *INPUT_SCHEMAS}
     shared = supported_shared if shared_outputs is None else shared_outputs
     if shared - supported_shared:
         raise ValueError("Catalogue generation selected an output without a builder")
@@ -90,10 +89,6 @@ def catalogue_payloads(
     if RELATIONSHIP_REPORT in shared:
         payloads[SERIES_GALLERIES_REPORT_PATH] = series_galleries_report_payload(
             records.series, galleries.galleries, series_galleries, timestamp=timestamp,
-        )
-    if WORK_DOCUMENT_COVERAGE_MANIFEST in shared:
-        payloads[WORK_DOCUMENT_COVERAGE_MANIFEST] = work_document_coverage_manifest(
-            records.series, records.works, timestamp=timestamp,
         )
     payloads.update(catalogue_report_input_payloads(
         records.works, records.series, timestamp=timestamp, selected=shared & INPUT_SCHEMAS.keys(),

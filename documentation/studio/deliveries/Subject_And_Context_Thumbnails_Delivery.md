@@ -3,12 +3,14 @@ draft: false
 doc_id: d-20261004-225006-3e9736
 title: Subject And Context Thumbnails Delivery
 added_date: "2026-10-04 22:50:06"
-last_updated: "2026-10-05 10:00:12"
+last_updated: "2026-10-20"
 summary: Replace generated authoring-subject objects with one optional scalar subject field and display Work thumbnails in local and public Context lists.
-ui_status: complete
+ui_status: retired
 parent_id: d-20260428-000000-f5ff18
 ---
 # Subject And Context Thumbnails Delivery
+
+Historical record: this behavior was retired or replaced by [Subject Retirement](Subject_Retirement.md) on 2026-10-20. Current report and artwork behavior belongs to [Reports](Reports.md) and [Media And Asset Handling](Media_And_Asset_Handling.md#assigned-document-thumbnails). Retained pending an explicit repository-document retirement decision.
 
 ## Current And Next State
 

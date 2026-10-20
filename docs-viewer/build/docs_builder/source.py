@@ -13,7 +13,6 @@ from .common import (
 )
 from docs_document_identity import is_document_id, is_immutable_doc_id
 from docs_document_images import has_document_thumbnail
-from docs_document_subjects import validate_document_subject_fields
 from docs_front_matter import normalize_summary, read_front_matter_fields
 from docs_index_order import index_order_path, read_index_order, tree_parent_ids
 from docs_report_source import ReportDescriptor, ReportSourceContractRequired
@@ -62,6 +61,7 @@ class DocRecord:
     report: ReportDescriptor | None
     body_markdown: str
     source_text: str | None
+    has_thumbnail: bool = False
     front_matter: dict[str, Any] = field(default_factory=dict)
 
 
@@ -74,7 +74,6 @@ def parse_source_text(raw: str, *, source_name: str) -> tuple[dict[str, Any], st
         front_matter = {field.key: field.value for field in read_front_matter_fields(
             match.group(1), source_name=source_name, require_pairs=True,
         )}
-        validate_document_subject_fields(front_matter)
     except ValueError as error:
         raise FrontMatterSyntaxError(f"problem with front-matter on doc {source_name}: {error}") from error
     return front_matter, raw[match.end() :]
@@ -207,6 +206,7 @@ class SourceLoadingMixin:
         self, *, path: Path, front_matter: dict[str, Any], body_markdown: str,
         doc_id: str, title: str, parent_id: str = "", report: ReportDescriptor | None = None,
         source_text: str | None = None,
+        thumbnail: bool | None = None,
     ) -> DocRecord:
         """Project already parsed source without reopening it or rechecking its identity."""
         last_updated = str(front_matter.get("last_updated") or "").strip()
@@ -220,6 +220,7 @@ class SourceLoadingMixin:
             source_path=path.relative_to(self.source_dir).as_posix(),
             viewer_url=self.viewer_url_for(doc_id),
             report=report, body_markdown=body_markdown, source_text=source_text,
+            has_thumbnail=has_document_thumbnail(self.media_owner, doc_id) if thumbnail is None else thumbnail,
             front_matter=dict(front_matter),
         )
 
@@ -296,7 +297,7 @@ class SourceLoadingMixin:
     def by_id_metadata_entry(self, doc: DocRecord, docs_by_id: Mapping[str, DocumentIdentity]) -> dict[str, Any]:
         entry = self.metadata_entry(doc, docs_by_id)
         del entry["viewer_url"]
-        if has_document_thumbnail(doc.front_matter, collection=getattr(self, "collection_id", "")):
+        if doc.has_thumbnail:
             entry["has_thumbnail"] = True
         if doc.report is not None:
             entry["report"] = dict(doc.report.as_payload())

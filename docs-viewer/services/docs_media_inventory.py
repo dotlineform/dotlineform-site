@@ -7,11 +7,10 @@ from dataclasses import dataclass
 from pathlib import Path
 import re
 import sys
-from typing import Any, Iterable, Mapping
+from typing import Iterable
 
 from docs_artifact_locations import list_filesystem_artifact_identities
 from docs_workspace_config import DocsStageConfig, DocsCollectionConfig
-from docs_document_images import document_thumbnail_filename, has_document_thumbnail
 from docs_source_model import parse_source_text
 
 BUILD_DIR = Path(__file__).resolve().parents[1] / "build"
@@ -45,17 +44,16 @@ def source_media_references(
     source: str,
     *,
     doc_id: str,
-    document_collection: str | None = None,
 ) -> tuple[DocsMediaReference, ...]:
     """Return configured, source-collection-owned media references from one document."""
 
     if config.media is None:
         return ()
-    metadata, body = parse_source_text(source)
+    _metadata, body = parse_source_text(source)
     return parsed_source_media_references(
-        config, source, metadata=metadata,
+        config, source,
         semantic_tokens=parse_semantic_tokens(body, registry=None),
-        doc_id=doc_id, document_collection=document_collection,
+        doc_id=doc_id,
     )
 
 
@@ -63,21 +61,17 @@ def parsed_source_media_references(
     config: DocsStageConfig | DocsCollectionConfig,
     source: str,
     *,
-    metadata: Mapping[str, Any],
     semantic_tokens: Iterable[SemanticTokenOccurrence],
     doc_id: str,
-    document_collection: str | None = None,
-    exclude_media_types: frozenset[str] = frozenset(),
 ) -> tuple[DocsMediaReference, ...]:
-    """Extract references using supplied metadata and completed token parsing."""
+    """Extract body media using completed token parsing; artwork is independent."""
 
     if config.media is None:
         return ()
     found: set[tuple[str, str, str]] = set()
-    owner_collection = getattr(config, "collection", "")
     media_types = {
         media_type: media for media_type, media in config.media.types.items()
-        if media_type not in exclude_media_types
+        if media_type != "thumbs"
     }
     for token in semantic_tokens:
         if token.family != "image":
@@ -86,11 +80,6 @@ def parsed_source_media_references(
             prefix = media.reference_prefix.as_posix() + "/"
             if media_type in {"img", "svg"} and token.media_path.startswith(prefix):
                 found.add((media_type, token.media_path.removeprefix(prefix), token.media_path))
-    if "thumbs" in media_types and (document_collection is None or document_collection == owner_collection):
-        if has_document_thumbnail(metadata, collection=owner_collection):
-            identity = document_thumbnail_filename(doc_id or metadata.get("doc_id", ""), collection=owner_collection)
-            media = media_types["thumbs"]
-            found.add(("thumbs", identity, f"{media.reference_prefix.as_posix()}/{identity}"))
     # New token fields and inactive examples must not leak into legacy path scans.
     legacy_source = re.sub(r"\[\[image:.*?\]\]", "", source, flags=re.DOTALL)
     for match in MEDIA_REFERENCE_PATTERN.finditer(legacy_source):

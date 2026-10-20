@@ -59,13 +59,6 @@ const REPORT_LOADERS = {
       });
     }
   },
-  works: {
-    load: function () {
-      return import("./works-report.js").then(function (module) {
-        return module.mountWorksReport;
-      });
-    }
-  },
   catalogue_works: {
     load: function () {
       return import("./catalogue-works-report.js").then(function (module) {

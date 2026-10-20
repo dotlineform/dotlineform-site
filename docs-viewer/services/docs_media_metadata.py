@@ -95,10 +95,9 @@ def _owner_metadata(repo_root: Path, owner: DocsStageConfig | DocsCollectionConf
         references = [
             {"role": "source", "media_type": reference.media_type, "identity": reference.identity}
             for reference in parsed_source_media_references(
-                owner, document.source_text, metadata=document.metadata,
+                owner, document.source_text,
                 semantic_tokens=parse_semantic_tokens(document.body, registry=None),
-                doc_id=document.doc_id, document_collection=collection,
-                exclude_media_types=frozenset({"thumbs"}),
+                doc_id=document.doc_id,
             )
         ]
         documents.append({

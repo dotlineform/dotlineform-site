@@ -56,10 +56,6 @@ function chooseSourceMedia(root, kind, mediaOptions, draft) {
         ? '<label class="docsViewer__field docsViewer__field--checkbox">' +
             '<input class="docsViewer__checkboxInput" data-role="preserve-resolution" type="checkbox" disabled>' +
             '<span class="docsViewer__fieldLabel">Preserve original resolution</span>' +
-          '</label>' +
-          '<label class="docsViewer__field docsViewer__field--checkbox">' +
-            '<input class="docsViewer__checkboxInput" data-role="create-thumb" type="checkbox" disabled>' +
-            '<span class="docsViewer__fieldLabel">Create thumb</span>' +
           '</label>'
         : ""),
     actions: [{ role: "modal-primary", label: copy.primary }, { role: "modal-cancel", label: "Cancel" }],
@@ -68,11 +64,10 @@ function chooseSourceMedia(root, kind, mediaOptions, draft) {
       var filename = api.host.querySelector('[data-role="media-filename"]');
       var label = api.host.querySelector('[data-role="media-label"]');
       var captionInput = api.host.querySelector('[data-role="media-caption-text"]');
-      var thumbToggle = api.host.querySelector('[data-role="create-thumb"]');
       var preserveToggle = api.host.querySelector('[data-role="preserve-resolution"]');
       function setRasterControls(file) {
         var raster = Boolean(file && /\.(jpg|jpeg|png|webp|gif)$/i.test(file.name));
-        [thumbToggle, preserveToggle].forEach(function (toggle) {
+        [preserveToggle].forEach(function (toggle) {
           if (!toggle) return;
           toggle.disabled = !raster;
           if (!raster) toggle.checked = false;
@@ -122,13 +117,11 @@ function chooseSourceMedia(root, kind, mediaOptions, draft) {
     onSubmit: function (api) {
       var label = cleanString(api.host.querySelector('[data-role="media-label"]').value);
       var presentation = readImagePresentation(api.host);
-      var thumbToggle = api.host.querySelector('[data-role="create-thumb"]');
       var preserveToggle = api.host.querySelector('[data-role="preserve-resolution"]');
       var imageDetailToggle = api.host.querySelector('[data-role="image-detail"]');
       var preserveResolution = Boolean(preserveToggle && !preserveToggle.disabled && preserveToggle.checked);
-      var createThumb = Boolean(thumbToggle && !thumbToggle.disabled && thumbToggle.checked);
       var pendingFile = draft && draft.pendingFile
-        && (createThumb || preserveResolution !== draft.preserveResolution) ? draft.pendingFile : null;
+        && (preserveResolution !== draft.preserveResolution) ? draft.pendingFile : null;
       if ((!editing && !selectedFile) || !label) {
         api.setStatus("Choose a file and enter " + copy.fieldLabel.toLowerCase() + ".");
         return false;
@@ -144,7 +137,7 @@ function chooseSourceMedia(root, kind, mediaOptions, draft) {
       return Object.assign({}, presentation, {
         confirmed: true, file: selectedFile || pendingFile, label: label,
         mediaPath: editing ? draft.mediaPath : "",
-        createThumb: createThumb, preserveResolution: preserveResolution,
+        preserveResolution: preserveResolution,
         imageDetail: Boolean(imageDetailToggle && imageDetailToggle.checked)
       });
     }
@@ -235,10 +228,10 @@ export async function prepareAndInsertSourceMedia(options = {}) {
       + "<!-- dotlineform:image-detail -->\n\n" + markdown
       + "\n".repeat(Math.max(0, 2 - trailingNewlines));
   }
-  var payload = { markdown: markdown, thumbnail: choice.createThumb, summary_text: "Media reference inserted. Save to store the selected file." };
+  var payload = { markdown: markdown, summary_text: "Media reference inserted. Save to store the selected file." };
   if (!adapter.insertSourceMedia(capture, payload, {
     file: choice.file, mediaKind: kind, mediaPath: mediaPath,
-    replace: kind === "image" || (reuse ? existing.replace : Boolean(initialToken)), createThumb: choice.createThumb,
+    replace: kind === "image" || (reuse ? existing.replace : Boolean(initialToken)),
     preserveResolution: choice.preserveResolution,
     editedPath: initialToken && initialToken.mediaPath
   })) throw new Error("The Source occurrence changed; no media was stored.");

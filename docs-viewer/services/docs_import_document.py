@@ -24,9 +24,6 @@ from docs_import_media import ImportMediaPreparation, materialize_import_media  
 from docs_import_source_helpers import import_summary_text, relative_path, viewer_url_for  # noqa: E402
 from docs_import_source_interactive import materialize_interactive_html_assets  # noqa: E402
 from docs_management_document_target import ManagedDocumentCollection, committed_document_record  # noqa: E402
-from docs_collection_customisations import (  # noqa: E402
-    normalize_collection_customisation_import_front_matter,
-)
 from docs_source_model import (  # noqa: E402
     SourceDoc,
     advance_doc_front_matter,
@@ -174,7 +171,6 @@ def _create_source(
     collection: str,
     import_preview: dict[str, Any],
     explicit_front_matter: dict[str, Any],
-    custom_front_matter: dict[str, Any],
     added_date: str,
 ) -> tuple[str, str]:
     if record.content_intent == CONTENT_INTENT_PRESERVE_EXISTING:
@@ -193,7 +189,6 @@ def _create_source(
         timestamp=added_date,
     )
     _apply_explicit_front_matter(front_matter, explicit_front_matter)
-    front_matter.update(custom_front_matter)
     body = (
         _replacement_body(import_preview, record.title)
         if record.content_intent == CONTENT_INTENT_REPLACE
@@ -253,7 +248,6 @@ def plan_import_document(
     media_preparation: ImportMediaPreparation | None = None,
     collection: ManagedDocumentCollection | None = None,
     preserve_collection_metadata: bool = False,
-    custom_front_matter: dict[str, Any] | None = None,
 ) -> ImportDocumentPlan:
     """Validate and plan one create or overwrite without writing."""
 
@@ -320,19 +314,6 @@ def plan_import_document(
         added_date = ""
 
     explicit_front_matter = _explicit_front_matter(record)
-    normalized_custom_front_matter: dict[str, Any] = {}
-    if custom_front_matter is not None:
-        if operation != IMPORT_DOCUMENT_CREATE or collection is None or not collection_id:
-            raise ValueError(
-                "custom import front matter requires a configured collection create"
-            )
-        normalized_custom_front_matter = (
-            normalize_collection_customisation_import_front_matter(
-                collection.document_config.collection_customisation,
-                custom_front_matter,
-                doc_id=record.doc_id,
-            )
-        )
     title = _clean_text(record.title)
     if operation == IMPORT_DOCUMENT_CREATE:
         target_path = create_root / f"{record.doc_id}.md"
@@ -345,7 +326,6 @@ def plan_import_document(
             collection_id,
             preview,
             explicit_front_matter,
-            normalized_custom_front_matter,
             added_date,
         )
     else:
@@ -367,6 +347,7 @@ def plan_import_document(
     validate_document_status_front_matter(
         front_matter, collection_config=document_config, source_name=target_path.name,
     )
+    committed = committed_document_record(front_matter, record.doc_id, document_config, collection=collection_id, parent_id=parent_id)
     return ImportDocumentPlan(
         operation=operation,
         record=record,
@@ -376,13 +357,14 @@ def plan_import_document(
         parent_id=parent_id,
         import_preview=preview,
         inline_media_bytes=media_preparation.inline_bytes if media_preparation is not None else {},
-        committed_record=committed_document_record(front_matter, record.doc_id, document_config, collection=collection_id, parent_id=parent_id),
+        committed_record=committed,
         index_order_path=index_order_path(parent_config) if operation == IMPORT_DOCUMENT_CREATE and not collection_id else None,
         document_config=document_config,
         prepared_document=SourceDoc(
             path=target_path, source_text=source_text, front_matter=front_matter,
             body=candidate_body, doc_id=record.doc_id, title=title,
             ui_status=front_matter.get("ui_status", ""), parent_id=parent_id,
+            has_thumbnail=committed.get("has_thumbnail", False),
             report=parse_collection_document_report(
                 repo_root, parent_config, document_config, source_text,
                 front_matter=front_matter, body=candidate_body, source_name=target_path.name,
@@ -391,8 +373,7 @@ def plan_import_document(
         collection=collection_id,
         target=target,
         media_change=compare_document_media(
-            document_config, record.doc_id, previous_body=target.body, previous_metadata=target.front_matter,
-            body=candidate_body, metadata=front_matter,
+            document_config, record.doc_id, previous_body=target.body, body=candidate_body,
         ) if target is not None else None,
     )
 

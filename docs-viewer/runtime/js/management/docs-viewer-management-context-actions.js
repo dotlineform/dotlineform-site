@@ -2,6 +2,7 @@ import { DOCS_VIEWER_ACTION_IDS as ACTION_IDS } from "./docs-viewer-action-defin
 import { toggleManagedDocDraft } from "./docs-viewer-management-draft-workflow.js";
 import { readSelectedDocuments, setManagedDocSelected } from "./docs-viewer-management-client.js";
 import { managedDocumentTargetsEqual, normalizeManagedDocumentTarget } from "./docs-viewer-management-document-target.js";
+import { openDocumentThumbModal } from "./docs-viewer-management-thumb-modal.js";
 
 /**
  * Own context-aware New and Edit actions' exact targets and availability.
@@ -13,7 +14,7 @@ import { managedDocumentTargetsEqual, normalizeManagedDocumentTarget } from "./d
 export function createDocsViewerManagementContextActions(options) {
   var management = options.management;
   var selectedState = null;
-  var ownedActions = new Set([ACTION_IDS.NEW, ACTION_IDS.OPEN_VSCODE, ACTION_IDS.SET_DRAFT, ACTION_IDS.SET_SELECTED]);
+  var ownedActions = new Set([ACTION_IDS.NEW, ACTION_IDS.OPEN_VSCODE, ACTION_IDS.SET_DRAFT, ACTION_IDS.SET_SELECTED, ACTION_IDS.THUMB]);
 
   function actionState() {
     var context = options.documentActionContext() || {};
@@ -28,7 +29,8 @@ export function createDocsViewerManagementContextActions(options) {
       create: options.resolveAction(ACTION_IDS.NEW, report ? context.collectionTarget : target || {}),
       vscode: options.resolveAction(ACTION_IDS.OPEN_VSCODE, target),
       draft: options.resolveAction(ACTION_IDS.SET_DRAFT, target),
-      selected: options.resolveAction(ACTION_IDS.SET_SELECTED, target)
+      selected: options.resolveAction(ACTION_IDS.SET_SELECTED, target),
+      thumb: options.resolveAction(ACTION_IDS.THUMB, target)
     };
     var unavailable = !options.isManagementContext() || !management.managementAvailable;
     var blocked = unavailable || management.managementBusy;
@@ -117,6 +119,12 @@ export function createDocsViewerManagementContextActions(options) {
       artwork: selected ? "docsViewer__icon--star-filled" : "docsViewer__icon--star",
       disabled: state.selectedDisabled || !selection || !selection.ready || Boolean(selectionReason), reason: selectionReason
     });
+    options.project(ACTION_IDS.THUMB, {
+      hidden: state.resolutions.thumb.hidden,
+      label: "Thumb", disabled: state.blocked || !state.target || Boolean(state.resolutions.thumb.disabledReason)
+        || options.activeViewState().activeModeId !== "rendered-document",
+      reason: state.resolutions.thumb.disabledReason
+    });
   }
 
   async function saveDraft(state) {
@@ -161,6 +169,13 @@ export function createDocsViewerManagementContextActions(options) {
   function invoke(actionId) {
     var state = actionState();
     if (state.blocked) return;
+    if (actionId === ACTION_IDS.THUMB && !state.resolutions.thumb.disabled) {
+      return openDocumentThumbModal({
+        root: options.root, target: state.target, record: state.record,
+        mediaRoot: options.mediaRoot(), clientOptions: options.clientOptions(),
+        commitDocumentChange: options.commitDocumentChange
+      });
+    }
     if (actionId === ACTION_IDS.NEW && !state.newDisabled) {
       return state.collection
         ? options.actions.handleCreateCollectionDocument(state.collection, { refreshAndSelect: state.context.refreshDocument })

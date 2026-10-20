@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any
 
 from docs_document_identity import is_document_id
-from docs_document_images import document_thumbnail_filename
+from docs_document_images import THUMBNAIL_COLLECTIONS, document_thumbnail_filename
 from docs_index_order import exclude_nodes, index_order_path, index_order_text, read_index_order, tree_parent_ids
 from docs_management_context import log_event
 from docs_management_document_target import ManagedDocumentCollection, normalize_managed_document_target, resolve_managed_document_collection
@@ -42,6 +42,8 @@ def collect_deleted_media(owner: ManagedDocumentCollection, doc_ids: list[str], 
                 directories.append(directory)
 
             if kind == "thumbs":
+                if owner.collection not in THUMBNAIL_COLLECTIONS:
+                    continue
                 identity = document_thumbnail_filename(doc_id, collection=owner.collection)
                 path = confined(root, identity)
                 if path.exists():

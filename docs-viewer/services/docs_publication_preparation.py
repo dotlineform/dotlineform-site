@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from docs_document_media_ownership import DocumentMediaChange, document_media_references, owned_document_files
+from docs_document_images import document_thumbnail_filename
 from docs_publication_ignore import read_publication_ignore_ids
 from docs_publication_metadata import PublicMetadata
 from docs_publication_paths import confined
@@ -81,9 +82,11 @@ class PublicationPreparation:
         self.restored_documents.update({doc.doc_id for doc in docs} & self.metadata.restored.keys())
         for doc in docs:
             change = (media_changes or {}).get(doc.doc_id)
-            media = change.current if change is not None else document_media_references(
-                builder.media_owner, doc_id=doc.doc_id, body=doc.body_markdown, metadata=doc.front_matter,
+            media = dict(change.current) if change is not None else document_media_references(
+                builder.media_owner, doc_id=doc.doc_id, body=doc.body_markdown,
             )
+            if doc.has_thumbnail:
+                media["thumbs"] = [document_thumbnail_filename(doc.doc_id, collection=collection)]
             self.media[doc.doc_id] = media
             if media_writes is not None and doc.doc_id in media_writes:
                 self.media_writes[doc.doc_id] = media_writes[doc.doc_id]

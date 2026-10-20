@@ -143,9 +143,6 @@ export function createDocsViewerWorkspaceProvider(options) {
       return source.writeSource(target, payload, optionsForWrite || {});
     };
   }
-  if (source && typeof source.readSourceContext === "function") {
-    provider.readSourceContext = function (target, payload) { return source.readSourceContext(target, payload); };
-  }
   if (source && typeof source.prepareSourceMedia === "function") {
     provider.prepareSourceMedia = function (payload, optionsForPrepare) {
       return source.prepareSourceMedia(payload, optionsForPrepare || {});

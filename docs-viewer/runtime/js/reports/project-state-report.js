@@ -1,18 +1,11 @@
 import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { buildProjectStateSnapshot } from "./project-state-data.js";
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
-import {
-  appendProjectSubjectIcon
-} from "./project-subject-icons.js";
 
 const COLUMN_LABELS = Object.freeze({
   folder: "Folder",
   series: "Series",
   docs: "Docs"
-});
-const SUBJECT_LABELS = Object.freeze({
-  folder: "Folder",
-  work: "Work"
 });
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
@@ -95,25 +88,16 @@ function appendSeriesCell(rowNode, row) {
   rowNode.appendChild(cell);
 }
 
-function appendDocumentSubjectCue(link, documentRecord) {
-  appendProjectSubjectIcon(link, documentRecord.declaredSubject.kind);
-}
-
 function appendDocumentsCell(rowNode, row) {
   const cell = document.createElement("span");
   cell.className = "docsViewerReport__cellStack";
   row.documents.forEach((documentRecord) => {
     const link = appendLink(cell, "", documentRecord.href);
     link.classList.add("docsViewerReport__projectStateDocumentLink");
-    appendDocumentSubjectCue(link, documentRecord);
     const title = document.createElement("span");
     title.dataset.projectStateDocumentTitle = "true";
     title.textContent = documentRecord.title;
     link.appendChild(title);
-    link.setAttribute("aria-label", [
-      documentRecord.title,
-      SUBJECT_LABELS[documentRecord.declaredSubject.kind] + " subject " + documentRecord.declaredSubject.key
-    ].join(", "));
     link.dataset.docsViewerCollection = documentRecord.target.collection;
     link.dataset.docsViewerDocId = documentRecord.target.doc_id;
   });

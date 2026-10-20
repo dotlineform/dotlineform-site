@@ -3,11 +3,13 @@ draft: false
 doc_id: d-20260916-195211-4a3203
 title: Catalogue Subject Selection Shortcut
 added_date: "2026-09-16 19:52:11"
-last_updated: "2026-09-28 15:14:52"
-ui_status: active
+last_updated: "2026-10-20"
+ui_status: retired
 parent_id: d-20260428-000000-f5ff18
 ---
 # Catalogue Subject Selection Shortcut
+
+Historical record: this behavior was retired or replaced by [Subject Retirement](Subject_Retirement.md) on 2026-10-20. Current report and artwork behavior belongs to [Reports](Reports.md) and [Media And Asset Handling](Media_And_Asset_Handling.md#assigned-document-thumbnails). Retained pending an explicit repository-document retirement decision.
 
 ## Requirements
 

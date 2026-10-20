@@ -113,9 +113,6 @@ class PublicMetadata:
                 if draft(row):
                     continue
                 public = {key: row[key] for key in ("doc_id", "title", "last_updated", "has_thumbnail") if key in row}
-                subject = row.get("subject")
-                if collection == "works" and not row.get("has_thumbnail", False) and subject is not None and len(subject) == 5 and subject.isascii() and subject.isdecimal():
-                    public["subject"] = subject
                 rows.append(public)
         self._complete(collection, {"docs": rows}, {row["doc_id"] for row in rows})
 

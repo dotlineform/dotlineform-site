@@ -5,24 +5,24 @@ title: Subject Retirement
 added_date: "2026-10-20 15:20:27"
 last_updated: "2026-10-20"
 summary: Retire Folder placeholders, reserve draft for active authoring, and derive Projects associations from Catalogue references.
-ui_status: planned
+ui_status: done
 parent_id: d-20260428-000000-f5ff18
 ---
 # Subject Retirement
 
-Status: delivery proposal with the token-only Projects boundary, Work Document Coverage retirement and separate Thumb workflow agreed. The Thumb workflow applies consistently to every authored collection, with all existing document-owned thumbnails removed at cutover. Retirement implementation has not started. The [Projects Metadata Snapshot](deliveries/Projects_Metadata_Snapshot.md) first delivery is implemented and retains Subject-based associations. [Subject Associations](data_model/subject-associations.md) records the current contract.
+Status: complete; the user accepted closeout on 2026-10-20. Source cleanup, thumbnail reset and Projects snapshot cutover are complete. Manual Projects/Thumb interactions remain unverified in the recorded evidence and continue through normal use. [Reports](Reports.md), [Media And Asset Handling](Media_And_Asset_Handling.md#assigned-document-thumbnails) and [Generated Data Contracts](Generated_Data_Contracts.md) own shipped behavior. This document retains the authoring rationale and reference examples pending manual archive.
 
-The [Subject Retirement Delivery](deliveries/Subject_Retirement_Delivery.md) contains the ordered implementation steps, verification budgets, cutover/reset and completion gates. Readiness is complete and the delivery is planned and ready for implementation. Ordinary Index documents retain their SVG icons, without a Thumb action or thumbnail reset. This overview retains the rationale, examples and agreed behavior.
+Ordinary Index documents retain SVG icons; Catalogue retains its separate media owner. Publish, commit and push were not performed by Codex as part of this delivery.
 
 ## Intended Result
 
 The authoring aim is for `draft: true` to mean **this document is actively being authored**. Most Folder-subject documents instead represent **a document might be needed here**. The user is gradually deleting those placeholders and saving useful notes in the physical project folders. Those notes do not need a placeholder in the Docs collection.
 
-Retiring Folder subjects is therefore expected to have little lasting impact on the retained collection. Preserving their current report coverage or converting every placeholder into Catalogue references is not a migration requirement. Cleanup remains the user's gradual editorial process; this proposal does not automate it or change `draft` publication behavior.
+Retiring Folder subjects is therefore expected to have little lasting impact on the retained collection. Preserving their current report coverage or converting every placeholder into Catalogue references is not a migration requirement. Cleanup remains the user's gradual editorial process; this delivery does not automate it or change `draft` publication behavior.
 
-Projects should show documents related to the Series represented in physical project folders, using authored outbound Catalogue token references. Both Work relationships and Gallery mentions establish an association; the report does not classify the relationship type. A Work reference reaches its Series; a Gallery reference reaches explicitly associated Series. Those Series reach folders through their member Works' project-folder assignments. Show each document once per relevant row and retain unmatched physical folders.
+Projects shows documents related to the Series represented in physical project folders, using authored outbound Catalogue token references. Both Work relationships and Gallery mentions establish an association; the report does not classify the relationship type. A Work reference reaches its Series; a Gallery reference reaches explicitly associated Series. Those Series reach folders through their member Works' project-folder assignments. Show each document once per relevant row and retain unmatched physical folders.
 
-Subject currently means source `work_id` or `folder_path`, projected as scalar `subject` in management metadata. Replacing Projects' placement is one part of retiring that mechanism; the remaining consumers below must also be resolved.
+Document `work_id`/`folder_path` declarations and generated scalar `subject` are retired. Canonical Catalogue Work identity and Work-to-Series membership retain their existing meaning.
 
 ## Existing Reference Inputs For Projects
 
@@ -74,9 +74,9 @@ For a **real saved Work example**, [10,000](/docs/?collection=works&doc=d-202608
 - Payload: `working/generated/collections/works/documents/by-id/d-20260801-212422-43b47c.json`.
 - Links: `working/generated/documents/links-by-id/d-20260801-212422-43b47c.json`.
 
-## Proposed Next Delivery
+## Projects Association Boundary
 
-Projects Refresh should use the existing Context manifest for document discovery, read each selected by-ID payload once and collect distinct `catalogue.references[].target` identities: `catalogue-work` and `catalogue-gallery`. An omitted `catalogue` envelope supplies no references. Keep only the consumed identity facts in Projects' own snapshot, without extending shared manifests/indexes. Python owns gathering and persistence; the browser retains the relationship joins and report presentation. Continue with Context documents unless broader collection coverage is agreed.
+Projects Refresh uses the Context manifest for discovery, reads each selected by-ID payload once and collects distinct `catalogue.references[].target` identities: `catalogue-work` and `catalogue-gallery`. An omitted envelope supplies no references. Consumed facts live only in Projects' snapshot; shared manifests/indexes are not extended. Python gathers/persists facts, while the browser owns joins and presentation. Context-only coverage remains the accepted boundary.
 
 Studio Refresh already produces the other inputs: `working/generated/catalogue/private/work-sources.json` supplies Work → Series/folder facts, and `working/generated/catalogue/series-galleries-index.json` supplies explicit Series → Gallery pairs. The latter currently includes Gallery `001` under Series `001`. Use those explicit pairs rather than infer Series from Gallery member Works. Reverse the pairs for Gallery → Series lookup. [Catalogue Report Inputs](Catalogue_Report_Inputs.md) and [Series and Galleries](Reports.md#current-reports) describe the owners.
 
@@ -84,9 +84,9 @@ This is a token-based association rule: plain Markdown links to Catalogue docume
 
 ## Retirement Scope
 
-- **Work Document Coverage — retirement agreed:** remove the report and its private generated input/producer and maintenance wiring as part of this delivery. It measures Series-level coverage, not individual Work gaps. Projects retains its physical-folder boundary; the former report's all-Series audit, including empty Series and those without a matching folder, will not be recreated. See [coverage rules](Works_Report_Concept_And_Architecture.md#coverage-rule) and [`works-report-data.js`](../../docs-viewer/runtime/js/reports/works-report-data.js).
-- **Authored collection thumbnails — shared manual approach agreed:** apply the same document-level Thumb action to Library, Context (`works`), Concepts and Moments. Exclude Catalogue, whose documents and thumbnails are Catalogue-owned rather than authored through this workflow. Remove Context's Subject-based Catalogue-thumbnail fallback in [`docs-collection-browsing.js`, `prepareRecord()`](../../docs-viewer/runtime/js/shared/docs-collection-browsing.js). It currently reuses Catalogue Work thumbnails and creates no separate Context thumbnail files.
-- **Authoring and generated metadata:** after those consumers are replaced, retire Assign Subject, its source fields, validation and management/public Subject projections through their [documented owners](data_model/subject-associations.md#active-consumer-owners). Source migration and removal require an agreed delivery.
+- **Work Document Coverage — retired:** registry, loader, endpoint, private producer/artifact/maintenance and host are removed. Projects retains its physical-folder boundary and does not recreate an all-Series audit. The [historical report design](Works_Report_Concept_And_Architecture.md) remains a retirement reference.
+- **Authored collection thumbnails — implemented:** Library, Context, Concepts and Moments share the independent Thumb action. Context has no Subject-derived Catalogue-thumbnail alternative. Catalogue and ordinary Index artwork keep their separate owners.
+- **Authoring and metadata — retired:** Assign Subject, source Subject/thumbnail declarations, validation/customisation/context paths, scalar projections, image-token thumbnail controls and thumbnail-only Source Save uploads are removed.
 
 ### Manual Thumbnail Authoring
 
@@ -98,14 +98,14 @@ Thumbnail ownership is completely separate from tokens. Agreed workflow for all 
 
 The browser owns search, selection and modal state. Python owns the selected thumbnail copy/removal, affected generated metadata and normal exact publication effects. Apply/Delete complete as document actions; they do not wait for Source Save or edit Markdown. Choosing a Work here selects image bytes only: persist no source Work ID, relationship or dependency, and create no Projects or Related Links association. The modal shows the stored document thumbnail without needing to identify its original Work. Changing or deleting the source Work or its thumbnail has no effect on the independent document copy; that copy remains until its document's thumbnail is explicitly replaced/deleted or the document itself is deleted.
 
-Retire the authored `thumbnail:` field. The saved `<doc_id>-thumb.webp` asset owns thumbnail presence; keep generated `has_thumbnail` metadata for readers. The action carries its completed effects, and explicit Build reads exact owned thumbnail presence when regenerating metadata/media references. Browsers and Publish consume the prepared handoff without file probes or freshness checks. This is a shared document-owned thumbnail model across authored collections; Catalogue thumbnails keep their existing independent lifecycle.
+The authored `thumbnail:` field is retired. The saved `<doc_id>-thumb.webp` asset owns thumbnail presence; keep generated `has_thumbnail` metadata for readers. The action carries its completed effects, and explicit Build reads exact owned thumbnail presence when regenerating metadata/media references. Browsers and Publish consume the prepared handoff without file probes or freshness checks. This is a shared document-owned thumbnail model across authored collections; Catalogue thumbnails keep their existing independent lifecycle.
 
-Remove Create thumb from [Add/Edit image](../../docs-viewer/runtime/js/management/source-editor/source-editor-media.js) and retire its thumbnail-only [pending-upload](../../docs-viewer/runtime/js/management/source-editor/source-editor-pending-media.js) and [Source Save](../../docs-viewer/services/docs_source_media_service.py) plumbing. Add/Edit Catalogue image needs no thumbnail control. Image insertion, editing, replacement and deletion affect only their normal media; tokens neither own nor report the document thumbnail.
+Create thumb is removed from [Add/Edit image](../../docs-viewer/runtime/js/management/source-editor/source-editor-media.js) along with its thumbnail-only [pending-upload](../../docs-viewer/runtime/js/management/source-editor/source-editor-pending-media.js) and [Source Save](../../docs-viewer/services/docs_source_media_service.py) plumbing. Add/Edit Catalogue image needs no thumbnail control. Image insertion, editing, replacement and deletion affect only their normal media; tokens neither own nor report the document thumbnail.
 
 ### Existing Thumbnail Reset
 
-Delete all existing document-owned thumbnails in the four authored collections as part of the delivery, including previously manually created thumbnails. Remove obsolete `thumbnail:` declarations and reconcile affected generated thumbnail metadata/media references. Use configured media owners and the ordinary publication handoff to queue exact Preview/public thumbnail removals; Publish remains a separate action. Catalogue Work thumbnails and body images are outside this reset.
+Cutover deleted all 40 existing document-owned thumbnails in the four authored collections, including manually created files: two Context and 38 Moments. Library/Concepts had none. It removed 39 `thumbnail:` declarations and reconciled generated metadata, with exact public removals queued for separate Publish. Catalogue thumbnails and body images were preserved.
 
 Do not preserve or automatically recreate existing authored thumbnails from Subjects, tokens or previous choices. The user will manually create Moments and Context thumbnails with the new Thumb action after delivery; the same action is available consistently in Library and Concepts.
 
-This proposal changes no runtime behavior or existing Subjects.
+Implementation and data cutover are complete; manual Projects and Thumb interaction remain unverified. No tests or browser automation were created, changed or run.

@@ -10,7 +10,6 @@ import tempfile
 from typing import Any
 
 from docs_artifact_locations import ArtifactLocationAdapter, artifact_location_adapter
-from docs_document_images import document_thumbnail_filename, prepare_document_thumbnail
 from docs_import_common import FILE_MEDIA_STAGED_SUFFIXES, RASTER_IMAGE_STAGED_SUFFIXES, SVG_STAGED_SUFFIXES, slugify
 from docs_management_document_target import (
     ManagedDocumentTarget, managed_document_target_request, normalize_managed_document_target,
@@ -145,23 +144,19 @@ def prepare_source_media(
         for index, (selection, upload) in enumerate(zip(selections, uploads)):
             try:
                 if (not isinstance(selection, dict)
-                        or set(selection) != {"media_kind", "body", "thumbnail", "replace", "preserve_resolution"}
-                        or any(type(selection[key]) is not bool for key in ("body", "thumbnail", "replace", "preserve_resolution"))
-                        or not (selection["body"] or selection["thumbnail"])):
+                        or set(selection) != {"media_kind", "replace", "preserve_resolution"}
+                        or any(type(selection[key]) is not bool for key in ("replace", "preserve_resolution"))):
                     raise ValueError("Invalid selected media outputs or replacement intent")
                 identity = source_media_identity(config, resolved.doc_id, upload.filename, selection["media_kind"])
-                if selection["thumbnail"] and identity.media_type != "img":
-                    raise ValueError("Create thumb requires a raster image")
                 if identity.media_type == "img":
                     source = root / str(index) / upload.filename
                     source.parent.mkdir()
                     source.write_bytes(upload.data)
                 if identity.media_type == "img":
                     validate_static_raster(source)
-                    if selection["body"]:
-                        converted = root / f"{index}-display.webp"
-                        convert_source_image_to_webp(source, converted, preserve_resolution=selection["preserve_resolution"])
-                        output("img", identity.identity, converted.read_bytes(), selection["replace"])
+                    converted = root / f"{index}-display.webp"
+                    convert_source_image_to_webp(source, converted, preserve_resolution=selection["preserve_resolution"])
+                    output("img", identity.identity, converted.read_bytes(), selection["replace"])
                 elif identity.media_type == "svg" and selection["media_kind"] == "image":
                     sanitized = sanitize_svg_bytes(upload.data)
                     output("svg", identity.identity, sanitized.bytes, selection["replace"])
@@ -169,11 +164,6 @@ def prepare_source_media(
                         notes.append({"filename": upload.filename, **sanitized.diagnostics()})
                 else:
                     output(identity.media_type, identity.identity, upload.data, selection["replace"])
-                if selection["thumbnail"]:
-                    output(
-                        "thumbs", document_thumbnail_filename(resolved.doc_id, collection=resolved.collection),
-                        prepare_document_thumbnail(source), True,
-                    )
             except (ValueError, OSError, RuntimeError) as error:
                 raise ValueError(f"Media preparation for {upload.filename} failed: {error}") from error
     return writes, notes

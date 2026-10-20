@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260714-234030-434069
 title: Semantic Tokens Architecture
 added_date: "2026-07-14 23:40:30"
-last_updated: "2026-10-18"
+last_updated: "2026-10-20"
 summary: Describe Docs-owned image and explicit Catalogue tokens, source editing, document relationships, and local/public media resolution.
 parent_id: d-20260725-153656-516b61
 ---
@@ -28,7 +28,7 @@ The **Include Work metadata** choice and `include_work_metadata` field were reti
 
 Catalogue Entry is Regenerate-owned and accepts only an exact five-digit Work identity, without fields or presentation options. It has no insertion action, editing modal or browser authoring parser. Build permits one Entry only in the Catalogue document with the same identity; a mismatched, repeated or ordinary-document Entry fails rendering. Catalogue Image retains its independent illustration and caption controls.
 
-Tokens always include their Work or Gallery identity, including Work tokens inserted through Use document subject. Gallery selection is independent of document Subjects. Media View link labels are authored literal text; image summaries support the restricted emphasis described below. The image choices instruct Build to resolve the exact generated Work record. The experimental omitted-identity forms are retired without compatibility aliases.
+Tokens always include their Work or Gallery identity. Document Subjects and the Use document subject shortcut are retired. Media View link labels are authored literal text; image summaries support the restricted emphasis described below. The image choices instruct Build to resolve the exact generated Work record. The experimental omitted-identity forms are retired without compatibility aliases.
 
 The old three-part Catalogue text form and Concept tokens are retired. They have no parser, renderer, authoring control or compatibility alias. Ordinary document references use Markdown links through [Insert doc link](Source_Editor_Scripts.md).
 
@@ -45,7 +45,7 @@ The identity is the exact configured `img` or `svg` logical path. Slash separato
 
 Field order is required `alt`, optional `caption`, optional `summary`, required `placement`, required `fill_width`. Alt and caption normalize whitespace to single-line literal text; summary normalizes line endings and whitespace within each line while retaining line breaks. Empty optional fields are omitted. Placement is `full`, `left` or `right`; fill width is explicitly `true` or `false`. Parsing accepts only the serializer's canonical form, rejecting unknown/duplicate fields, noncanonical order/encoding, missing required fields and invalid values without supplying defaults. Python grammar lives in `docs_image_tokens.py` and integrates through `docs_builder/semantic_tokens.py`; browser grammar lives in `image-token-parser.js` and reuses the existing semantic source scanner and encoding helpers.
 
-New insertion defaults to caption enabled with suggested alt/caption, empty summary, full-column placement and fill width enabled. Caption and summary are independently optional, and layout controls stay available without a caption. With the caret inside a supported image token, or that exact token selected, Add image opens Edit image using its stored fields. Apply replaces only the captured occurrence in the dirty buffer. Presentation-only editing performs no media operation or source save. Choose replacement image preserves pending text/layout fields and continues through the existing awaited media operation. Create thumb is unchecked by default and available only while selecting raster media; it is absent from the body token. [Media And Asset Handling](Media_And_Asset_Handling.md#assigned-document-thumbnails) owns the independent thumbnail assignment and write boundary.
+New insertion defaults to caption enabled with suggested alt/caption, empty summary, full-column placement and fill width enabled. Caption and summary are independently optional, and layout controls stay available without a caption. With the caret inside a supported image token, or that exact token selected, Add image opens Edit image using its stored fields. Apply replaces only the captured occurrence in the dirty buffer. Presentation-only editing performs no media operation or source save. Choose replacement image preserves pending text/layout fields and continues through the existing awaited media operation. Tokens have no thumbnail control; Edit → Thumb independently copies Catalogue artwork for supported collection documents. [Media And Asset Handling](Media_And_Asset_Handling.md#assigned-document-thumbnails) owns the independent thumbnail assignment and write boundary.
 
 Build creates an escaped static figure/image with the existing placement and natural-width classes. It omits `figcaption` when both caption and summary are empty. Raster bytes and sanitized SVG dimensions/viewBox supply intrinsic sizing in the browser; the token has no authored dimensions or Build-time dimension scan. Generated images use the existing `docs-media:` identity and SVG diagram marker. Build creates no media, thumbnail or srcset. Existing Markdown images and HTML figures remain normal document content, with their original dimension attributes and no source conversion or editing alias.
 
@@ -59,13 +59,11 @@ Python Build and browser Source parsing recognize Docs-owned images and the expl
 
 Source remains directly editable. Malformed or unsupported strings remain ordinary literal source and do not activate a Catalogue Info view. Parser, source-range and retained media/image behavior have focused Python and JavaScript checks. The old frozen text-token fixture is retired.
 
-The generic Source adapter owns the mounted target, current buffer revision, captured selection and guarded replacement. The source-read response includes the safe Catalogue `subject` projection from that exact document's front matter; the adapter exposes it to the Catalogue modal for selection. Shared Add actions capture supported occurrences and hydrate their modal fields; a modal supplies a serialized insertion or occurrence replacement into the complete dirty source buffer. The single Source Save validates and writes combined metadata/body once. The editor rejects a stale range or a different mounted target before changing the buffer. Modals do not save or rebuild independently; Source Save awaits exact document/Links generation and fresh rendered display.
+The generic Source adapter owns the mounted target, current buffer revision, captured selection and guarded replacement. Shared Add actions capture supported occurrences and hydrate their modal fields; a modal supplies a serialized insertion or occurrence replacement into the complete dirty source buffer. The single Source Save validates and writes combined metadata/body once. The editor rejects a stale range or a different mounted target before changing the buffer. Modals do not save or rebuild independently; Source Save awaits exact document/Links generation and fresh rendered display.
 
-## Identity And Subject
+## Catalogue Identity And Document Associations
 
-A token records an occurrence in body content. It does not establish that the document is about that Work or Gallery. Document Subject metadata retains its independent association. Supported subjects are Work, Series and, where the collection enables it, Folder; None clears the declaration. Series is not a token or Media View target. Work tokens create direct document relationships to Catalogue; they do not create Subject metadata or transitive relationships.
-
-Catalogue owns canonical identities and media. Tokens select Catalogue media independently of document Subject. Use document subject supplies the exact selection once during insertion. Changing the document's subject later does not retarget existing tokens; Build, Info and audits use the identity stored in the token.
+Catalogue owns canonical Work/Gallery identities and media. Tokens record exact authored occurrences; Build and Info use their stored identity. Work tokens contribute document relationships to Catalogue documents. Gallery tokens are mentions that open Media View and create no Related Link. Projects uses both target kinds from by-ID JSON to find related Series/folders. Subject declarations and the Use document subject shortcut are retired; tokens do not assign Subject metadata. The separate Thumb action copies bytes without creating either relationship.
 
 ## Registry And Lookups
 
@@ -73,11 +71,11 @@ The shared checked definition registry is `docs-viewer/config/semantic-tokens/re
 
 The registry does not control which Source buttons a scope exposes. That proposed layer belongs to [Scope-configured Authoring Controls](Scope_Configured_Authoring_Controls.md). Parser, resolver and presentation implementations remain code-owned.
 
-The private generated `docs-viewer/data/generated/semantic-tokens/target-lookup.json`, its standalone builder/CLI and browser file loader are retired. Authoring, Subject choices, Info, Build and Broken Links use generated Catalogue data through their existing owners, with no persisted lookup fallback or separate refresh operation. The current `/docs/catalogue-media-targets` response retains `docs_semantic_token_target_lookup_v2`; its browser normalization and matching helpers remain active. [Target Lookup](Target_Lookup.md) records the current discovery boundary and approved test cleanup.
+The private generated `docs-viewer/data/generated/semantic-tokens/target-lookup.json`, its standalone builder/CLI and browser file loader are retired. Authoring, Thumb selection, Info, Build and Broken Links use generated Catalogue data through their existing owners, with no persisted lookup fallback or separate refresh operation. The current `/docs/catalogue-media-targets` response retains `docs_semantic_token_target_lookup_v2`; its browser normalization and matching helpers remain active. [Target Lookup](Target_Lookup.md) records the current discovery boundary and approved test cleanup.
 
 Media authoring and Info use generated Catalogue Work/Gallery data through the configured media provider. The shared Catalogue media modal offers Works for images and Work/Gallery selection for text links. Gallery search reads Studio's generated `galleries/galleries_index.json` through `/docs/catalogue-media-targets`; Gallery resolution reads the selected `galleries/index/<gallery_id>.json` through `/docs/catalogue-gallery`. Neither needs the private target lookup or a Gallery document. Current media validation precedes guarded insertion or Info updates; provider failures remain visible and Source Save revalidates pending token edits.
 
-Both Add Catalogue image and Add Media View link offer Use document subject, initially unchecked. Checking it selects the subject in the modal and disables manual Catalogue selection until unchecked. The checkbox is enabled only for a Work subject from `work_id`; Series, Folder and absent subjects leave manual selection available. Both actions serialize the normal explicit Work identity form. Token Info reads the stored identity and preserves it when updating presentation.
+Add Catalogue image and Add Media View link use manual Catalogue selection and serialize explicit identities. Token Info preserves the stored identity when updating presentation. Neither action sets a document thumbnail; [Media And Asset Handling](Media_And_Asset_Handling.md#assigned-document-thumbnails) owns the separate Thumb action.
 
 ## Build And Runtime Resolution
 

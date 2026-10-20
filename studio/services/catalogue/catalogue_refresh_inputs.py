@@ -9,7 +9,7 @@ from typing import Any
 from catalogue.catalogue_galleries import CatalogueGalleries, GALLERIES_FILE, MEMBERSHIPS_FILE
 from catalogue.catalogue_report_inputs import SERIES_PATH, WORK_RESOURCES_PATH, WORK_SOURCES_PATH
 from catalogue.catalogue_series_galleries import CatalogueSeriesGalleries, SERIES_GALLERIES_FILE
-from catalogue.catalogue_shared_changes import RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, WORK_DOCUMENT_COVERAGE_MANIFEST, WORK_INDEX
+from catalogue.catalogue_shared_changes import RELATIONSHIP_INDEX, RELATIONSHIP_REPORT, WORK_INDEX
 from catalogue.catalogue_source import CatalogueSourceRecords, SOURCE_FILES
 
 
@@ -36,12 +36,12 @@ def read_refresh_inputs(
     ))
     metadata_rows = any(entry["metadata"] for entry in pending["current_works"].values())
     works_needed = current_works or member_rows or (metadata_rows and bool(outputs & {
-        WORK_INDEX, WORK_SOURCES_PATH, WORK_RESOURCES_PATH, WORK_DOCUMENT_COVERAGE_MANIFEST,
+        WORK_INDEX, WORK_SOURCES_PATH, WORK_RESOURCES_PATH,
     }))
     works = _read_map(source_dir, SOURCE_FILES["works"], "works") if works_needed else {}
     work_series = any("series_id" in works[wid] for wid, entry in pending["current_works"].items() if not entry["refreshed"])
     series_needed = work_series or (RELATIONSHIP_REPORT in outputs and (current_series or current_galleries)) or (current_series and bool(outputs & {
-        WORK_DOCUMENT_COVERAGE_MANIFEST, SERIES_PATH,
+        SERIES_PATH,
     }))
     galleries_needed = current_works or relationships or current_galleries
     records = CatalogueSourceRecords(

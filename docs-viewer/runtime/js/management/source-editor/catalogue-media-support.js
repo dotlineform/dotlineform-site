@@ -1,12 +1,6 @@
 import { loadSemanticTokenRegistry } from "./semantic-token-registry.js";
 import { normalizeSemanticTokenTargets } from "./semantic-token-targets.js";
 
-/** Map the source document's Catalogue subject to the existing picker identity. */
-export function catalogueDocumentSubjectTarget(subject) {
-  if (!subject || subject.kind !== "work") return null;
-  return { targetType: "work", targetId: subject.key };
-}
-
 /** Preserve authored labels while allowing an untouched default to follow selection. */
 export function catalogueMediaLinkLabel(target, current, previous, preserveLabel = false) {
   if (preserveLabel && current) return current;

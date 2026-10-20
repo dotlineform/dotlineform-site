@@ -13,7 +13,6 @@ from pathlib import Path
 from typing import Any, Dict, Mapping, Optional
 
 from docs_index_order import index_order_path, read_index_order, tree_parent_ids
-from docs_document_images import has_document_thumbnail
 
 from docs_document_identity import (
     DOC_TIMESTAMP_FORMAT,
@@ -33,7 +32,6 @@ from docs_workspace_config import (
     path_label,
     resolve_workspace_path,
 )
-from docs_document_subjects import validate_document_subject_fields
 from docs_front_matter import (
     FRONT_MATTER_PATTERN,
     STRICT_FRONT_MATTER_PATTERN,
@@ -68,6 +66,8 @@ class SourceDoc:
     parent_id: str
     report: ReportDescriptor | None = None
     parts: SourceParts | None = None
+    # Authoring may supply completed artwork discovery to exact generation.
+    has_thumbnail: bool | None = None
 
 
 @dataclass
@@ -105,10 +105,6 @@ def parse_source_parts(raw: str, *, source_name: str = "source", strict: bool = 
         raise ValueError(f"front matter could not be parsed in {source_name}")
     fields = read_front_matter_fields(match.group(1), source_name=source_name, strict=strict)
     front_matter = {field.key: field.value for field in fields}
-    try:
-        validate_document_subject_fields(front_matter)
-    except ValueError as error:
-        raise ValueError(f"{source_name}: {error}") from error
     return SourceParts(raw[:match.end()], fields, front_matter, raw[match.end():])
 
 
@@ -416,7 +412,6 @@ def validate_document_status_front_matter(
 ) -> None:
     """Require explicit source readiness independently of free-text visual status."""
 
-    has_document_thumbnail(front_matter, collection=getattr(collection_config, "collection", ""))
     if "sub-scope" in front_matter or "sub_scope" in front_matter:
         raise ValueError(f"sub-scope front matter is retired; use collection: {source_name}")
     if collection_config.stage not in {"working", "preview"}:

@@ -7,7 +7,6 @@ from pathlib import Path
 from typing import Any, Dict
 
 import docs_source_model as source_model
-from docs_document_subjects import subject_key_is_canonical
 from docs_index_order import index_order_path, index_order_text, insert_node, read_index_order, tree_parent_ids
 from docs_management_document_target import committed_document_record, ManagedDocumentCollection, resolve_managed_document_collection
 from docs_workspace_config import require_document_authoring, resolve_external_data_root
@@ -78,7 +77,7 @@ def plan_create(
     title = body["title"].strip()
     if collection == "catalogue":
         work_id = body.get("work_id")
-        if not isinstance(work_id, str) or not work_id.isascii() or not subject_key_is_canonical("work", work_id):
+        if not isinstance(work_id, str) or not source_model.is_document_id(work_id, collection="catalogue"):
             raise ValueError("Catalogue New requires work_id as an exact five-digit string")
         title = body["title"]
     elif "work_id" in body:
@@ -115,7 +114,8 @@ def plan_create(
     target = {**resolved_collection.request_target(), "doc_id": doc_id}
     if collection:
         target["collection"] = collection
-    record = committed_document_record(front_matter, doc_id, resolved_collection.document_config, collection=collection, parent_id=parent_id)
+    record = committed_document_record(front_matter, doc_id, resolved_collection.document_config, collection=collection, parent_id=parent_id, thumbnail=False)
+    document.has_thumbnail = False
     response: Dict[str, Any] = {
         "ok": True,
         "doc_id": doc_id,

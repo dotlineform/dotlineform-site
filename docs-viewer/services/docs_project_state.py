@@ -67,13 +67,28 @@ def refresh_project_state_metadata(repo_root: Path) -> dict[str, Any]:
             folders.append({"key": key, "local_target": encode_relative_target(key)})
     works = read_catalogue_report_input(workspace.catalogue.working, WORK_SOURCES_PATH)
     series = read_catalogue_report_input(workspace.catalogue.working, SERIES_PATH)
+    relationships = load_json_object(
+        location_child(workspace.catalogue.working, Path("series-galleries-index.json")).path,
+        "Series–Gallery index",
+    )
+    documents = []
+    for record in manifest["docs"]:
+        payload = load_json_object(location_child(
+            collection.generated.documents.location, Path("by-id") / f"{record['doc_id']}.json",
+        ).path, "Context document")
+        targets = {
+            (target["kind"], target["id"])
+            for reference in payload.get("catalogue", {}).get("references", [])
+            if (target := reference["target"])["kind"] in {"catalogue-work", "catalogue-gallery"}
+        }
+        documents.append({
+            "doc_id": record["doc_id"], "title": record["title"],
+            "targets": [{"kind": kind, "id": identity} for kind, identity in sorted(targets)],
+        })
     metadata = {
         "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
         "folders": folders,
-        "documents": [
-            {key: record[key] for key in ("doc_id", "title", "subject") if key in record}
-            for record in manifest["docs"]
-        ],
+        "documents": documents,
         "works": [
             {"work_id": work_id, **{
                 key: record[key] for key in ("project_folder", "series_id") if key in record
@@ -81,6 +96,10 @@ def refresh_project_state_metadata(repo_root: Path) -> dict[str, Any]:
             for work_id, record in works.items()
         ],
         "series": [{"series_id": series_id, "title": record["title"]} for series_id, record in series.items()],
+        "series_galleries": {
+            series_id: [link["gallery_id"] for link in links]
+            for series_id, links in relationships["series_galleries"].items()
+        },
     }
     path = workspace.projects_report_metadata.path
     try:

@@ -23,7 +23,6 @@ from docs_management_document_target import (  # noqa: E402
     ManagedDocumentTarget,
     managed_document_target_request,
     normalize_managed_document_target,
-    resolve_managed_document_collection,
     resolve_managed_document_target,
 )
 from docs_workspace_config import load_docs_stage, path_label, require_document_authoring  # noqa: E402
@@ -31,14 +30,6 @@ from local_env import runtime_env  # noqa: E402
 from markdown_renderer import normalize_markdown_blank_lines  # noqa: E402
 from docs_publication_ignore import publication_ignore_path  # noqa: E402
 from docs_recent_exclusions import recent_exclusions_path  # noqa: E402
-from docs_document_subjects import project_document_subject  # noqa: E402
-from docs_collection_customisations import (  # noqa: E402
-    collection_customisation_assignable_field_groups,
-    collection_customisation_authoring_subject_fields,
-    collection_customisation_metadata_record,
-    normalize_collection_customisation_metadata_update,
-)
-from docs_document_subjects import AUTHORING_SUBJECT_FIELDS, FOLDER_PATH_FIELD  # noqa: E402
 from docs_document_rebuild import rebuild_prepared_document  # noqa: E402
 from docs_source_media_service import source_media_options, prepare_source_media, write_prepared_source_media  # noqa: E402
 from docs_source_media_upload import SourceMediaUpload  # noqa: E402
@@ -53,34 +44,6 @@ def normalize_source_body(value: Any) -> str:
 
 def normalize_source_body_for_write(value: Any) -> str:
     return normalize_markdown_blank_lines(normalize_source_body(value))
-
-
-def source_subject_assignment_available(resolved: ManagedDocumentCollection | ManagedDocumentTarget) -> bool:
-    """Use the exact collection's registered Subject assignment capability."""
-    return bool(resolved.collection) and any(
-        group.group_id == "authoring_subject"
-        for group in collection_customisation_assignable_field_groups(resolved.document_config.collection_customisation)
-    )
-
-
-def _source_subject_context(resolved: ManagedDocumentCollection | ManagedDocumentTarget) -> Dict[str, Any]:
-    """Expose only this owner's Subject authoring capabilities."""
-    return {
-        "subject_assignment_available": source_subject_assignment_available(resolved),
-        "folder_subject_supported": bool(resolved.collection) and FOLDER_PATH_FIELD in collection_customisation_authoring_subject_fields(
-            resolved.document_config.collection_customisation,
-        ),
-    }
-
-
-def _project_source_subject(
-    resolved: ManagedDocumentCollection | ManagedDocumentTarget, front_matter: Dict[str, Any],
-) -> str | None:
-    fields = (
-        collection_customisation_authoring_subject_fields(resolved.document_config.collection_customisation)
-        if resolved.collection else ()
-    )
-    return project_document_subject(front_matter, folder_supported=not fields or FOLDER_PATH_FIELD in fields)
 
 
 def _validate_source_identity(
@@ -98,24 +61,13 @@ def read_source_document(repo_root: Path, params: Dict[str, list[str]]) -> Dict[
     resolved = resolve_managed_document_target(repo_root, request_target)
     target = resolved.document
     source_text = target.source_text
-    front_matter = target.front_matter
     payload = {
         "ok": True,
         **resolved.request_target(),
         "source_text": source_text,
         "media_options": source_media_options(),
-        **_source_subject_context(resolved),
         "path": path_label(repo_root, target.path),
     }
-    try:
-        _validate_source_identity(resolved.request_target(), front_matter, resolved)
-        subject = _project_source_subject(resolved, front_matter)
-        if subject is not None:
-            payload["subject"] = subject
-    except ValueError as error:
-        # Source remains available for correction; consumers report this exact
-        # snapshot's Subject error without requesting the same context again.
-        payload["subject_error"] = str(error)
     if resolved.collection:
         payload["collection"] = resolved.collection
     return payload
@@ -203,12 +155,6 @@ def prepare_source_candidate(
     next_metadata = {key: value for key, value in front_matter.items() if key not in removed}
     next_metadata.update(updates)
     next_source_body = normalize_source_body_for_write(parts.body)
-    # Collection customisations own Subject validity; common projection also rejects multiple declarations.
-    if resolved.collection:
-        collection_customisation_metadata_record(
-            resolved.document_config.collection_customisation, next_metadata, doc_id=target["doc_id"],
-        )
-    project_document_subject(next_metadata, folder_supported=True)
     report = source_model.parse_collection_document_report(
         repo_root, resolved.parent_config, resolved.document_config,
         parts.prefix + next_source_body, front_matter=next_metadata, body=next_source_body, source_name=source_name,
@@ -244,42 +190,6 @@ def finish_source_candidate(
     ), source_changed
 
 
-def read_source_context(repo_root: Path, body: Dict[str, Any]) -> Dict[str, Any]:
-    """Read or prepare only the Subject in a fixed unsaved buffer."""
-    target = source_candidate_target({key: value for key, value in body.items() if key != "subject_fields"})
-    resolved = resolve_managed_document_collection(repo_root, collection=target.get("collection"))
-    require_document_authoring(resolved.parent_config)
-    parts = _source_candidate_parts(target, body["source_text"], resolved)
-    payload: Dict[str, Any] = {
-        "ok": True, **target, **_source_subject_context(resolved),
-    }
-    if "subject_fields" in body:
-        if not payload["subject_assignment_available"]:
-            raise ValueError("Subject assignment is unavailable for this document collection")
-        fields = body["subject_fields"]
-        if not isinstance(fields, dict) or set(fields) != set(AUTHORING_SUBJECT_FIELDS):
-            raise ValueError("subject_fields must contain exactly folder_path and work_id")
-        update = normalize_collection_customisation_metadata_update(
-            resolved.document_config.collection_customisation, fields, provided=True,
-            repo_root=repo_root,
-        )
-        if update is None or set(update["front_matter_updates"]) != set(AUTHORING_SUBJECT_FIELDS):
-            raise ValueError("Subject assignment returned fields outside its declaration")
-        replacements = update["front_matter_updates"]
-        source_text = rewrite_front_matter_fields(
-            parts.prefix, {key: value for key, value in replacements.items() if value is not None},
-            remove_fields=[key for key, value in replacements.items() if value is None],
-            fields=parts.fields,
-        ) + parts.body
-        payload["source_text"] = source_text
-        subject = update["subject"]
-    else:
-        subject = _project_source_subject(resolved, parts.metadata)
-    if subject is not None:
-        payload["subject"] = subject
-    return payload
-
-
 def save_source_document(
     repo_root: Path, body: Dict[str, Any], dry_run: bool, *, media_uploads: list[SourceMediaUpload],
 ) -> Dict[str, Any]:
@@ -298,8 +208,8 @@ def save_source_document(
     next_source_text = prepared.source_text
     media_change = compare_document_media(
         resolved.document_config, target.doc_id,
-        previous_body=target.body, previous_metadata=target.front_matter,
-        body=prepared.body, metadata=prepared.front_matter,
+        previous_body=target.body,
+        body=prepared.body,
     )
 
     payload = {
@@ -321,6 +231,7 @@ def save_source_document(
     }
     if not dry_run:
         committed = {"target": resolved.request_target(), "record": committed_document_record(prepared.front_matter, target.doc_id, resolved.document_config, collection=resolved.collection, parent_id=target.parent_id)}
+        prepared.has_thumbnail = committed["record"].get("has_thumbnail", False)
         phase = "media persistence"
         try:
             write_prepared_source_media(writes, payload["media_effects"])

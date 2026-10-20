@@ -167,8 +167,8 @@ def audit_docs_broken_links(repo_root: Path, workspace: DocsWorkspaceConfig) -> 
             )
             tokens = parse_semantic_tokens(source.body, registry=registry)
             for reference in parsed_source_media_references(
-                owner, source.source_text, metadata=source.metadata, semantic_tokens=tokens,
-                doc_id=meta.doc_id, document_collection=collection,
+                owner, source.source_text, semantic_tokens=tokens,
+                doc_id=meta.doc_id,
             ):
                 key = (reference.media_type, reference.identity)
                 if key not in media_exists:

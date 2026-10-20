@@ -145,6 +145,7 @@ export function openDocsViewerManagementModal(options = {}) {
 
     var api = {
       host: host,
+      close: close,
       setBusy: setBusy,
       setStatus: setStatus
     };

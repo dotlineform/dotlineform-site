@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-4b1d77
 title: Source Editor Endpoints
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-18"
+last_updated: "2026-10-20"
 parent_id: d-20260607-222033-647b52
 ---
 # Docs Viewer Source Editor Endpoints
@@ -20,7 +20,7 @@ For a configured collection document, add its explicit `collection` identity and
 
 `doc` is not a source-target alias. Source reads require `doc_id`.
 
-Returned data includes `ok`, `doc_id`, optional `collection`, complete `source_text`, a provider-safe `path`, `subject_assignment_available`, `folder_subject_supported` and optional scalar `subject`. These Subject fields seed the editor's loaded buffer revision. A Subject projection failure is returned as `subject_error`, leaving Source available for manual correction; Subject consumers report that error. No source revision or separate metadata/body transport is returned.
+Returned data includes `ok`, `doc_id`, optional `collection`, complete `source_text`, provider-safe `path` and native `media_options`. Subject projection/capability/error fields and the derived context request are retired. No source revision or separate metadata/body transport is returned.
 
 `media_options` contains `image` and `file` records, each with `accept` (comma-separated native-input suffixes), `max_file_bytes`, `max_total_file_bytes` and `max_metadata_bytes`. These come from the suffix/upload-limit owners used by Source Save. The mounted editor reuses them for Add/Edit and clears them on exit, without a separate options request or source-revision invalidation. `/docs/source/media/options` is retired without an alias.
 
@@ -39,7 +39,7 @@ Validation:
 - existing front matter must parse and contain the requested `doc_id`
 - missing, unlisted, mismatched, nested, or path-escaping targets are rejected
 
-This endpoint reads canonical source and does not write files. Ordinary resolution reads `index-order.json` for exact membership/parent information and only the requested confined source; it does not parse unrelated documents. Saved readiness and report validity do not gate opening Source for correction. Strict source parsing and exact document identity remain required; Subject projection errors are returned for the loaded buffer. Index rows and generated payloads do not supply the editable metadata snapshot.
+This endpoint reads canonical source and does not write files. Ordinary resolution reads `index-order.json` for exact membership/parent information and only the requested confined source; it does not parse unrelated documents. Saved readiness and report validity do not gate opening Source for correction. Strict source parsing and exact document identity remain required. Index rows and generated payloads do not supply the editable metadata snapshot.
 
 ## Source session contract
 
@@ -52,7 +52,7 @@ The editor mounts that target once and uses it for source read, Save, Open in VS
 
 One **Edit document** action opens the complete Markdown buffer without a metadata/token panel or **i** control. It targets the displayed ordinary document, the host from a collection list, or the exact validated collection detail. A detail offers no parent Source action.
 
-The session owns one complete text buffer and its pending native Files/thumbnail choice. Title/Summary and other valid front matter are edited there; token Apply serializes directly into that buffer without permanent media writes. One Save selects pending Files used by the final buffer/assignment, validates and persists the complete draft/media, rebuilds its exact document/Links and loads the fresh result. **Return to doc** is the explicit non-save exit; one discard decision covers text and pending media, and cancellation retains both. Successful Save keeps busy state until fresh rendered display at the unchanged route and reading position. Other completed actions own their required updates explicitly; browser polling is retired. Entering Source closes the reader capture; returning leaves the reader panel closed until a pin is used.
+The session owns one complete text buffer and its pending native Files. Title/Summary and other valid front matter are edited there; token Apply serializes directly into that buffer without permanent media writes. One Save selects pending Files used by the final buffer, validates and persists the complete draft/media, rebuilds its exact document/Links and loads the fresh result. **Return to doc** is the explicit non-save exit; one discard decision covers text and pending media, and cancellation retains both. Successful Save keeps busy state until fresh rendered display at the unchanged route and reading position. Other completed actions own their required updates explicitly; browser polling is retired. Entering Source closes the reader capture; returning leaves the reader panel closed until a pin is used.
 
 ## Local folder-link paste
 
@@ -81,7 +81,7 @@ The `docs_document_link_targets_v2` response contains configured `collections` a
 
 The modal consumes the service records directly, without schema/collection/duplicate/target/href-agreement audits or another Title completeness gate. Filtering all documents, ordinary documents or one exact collection, title/ID search, selection and Insert use the loaded response and make no further lookup. The picker performs no publication-eligibility read or public-omission warning. Confirmation inserts the selected title as escaped literal link text and the supplied href through captured, revision-guarded buffer replacement. This guard concerns the mounted buffer, not a disk revision. Insertion does not save, rebuild, change front matter or generate relationships. Public providers expose no local target-lookup capability.
 
-**Insert Subject Link** and its exclusive `POST /docs/validate-local-target` endpoint are retired. Subject metadata reads and assignment remain supported by their own consumers. Local-folder paste and `POST /docs/open-local-target` activation retain their existing confinement owner.
+**Insert Subject Link**, its exclusive validation endpoint, Subject assignment and `/docs/source/context` are retired. Local-folder paste and `/docs/open-local-target` activation retain their existing confinement owner.
 
 ## `POST /docs/source/save`
 
@@ -95,7 +95,7 @@ One multipart request contains a `metadata` JSON field and native file fields `f
 }
 ```
 
-A collection Save also includes its exact `collection`. Metadata accepts only required `doc_id`, string `source_text` and array `media`, plus optional `collection`. Each media entry contains exactly `media_kind` (`image` or `file`) and boolean `body`, `thumbnail` and `replace`. At least one output must be selected. The native file supplies its safe basename and bytes; callers cannot supply destination paths. The browser selects final-buffer membership, the latest independent thumbnail choice and explicit Edit replacement intent. Save does not repeat that membership decision through another source scan.
+A collection Save includes its exact `collection`. Multipart metadata accepts required `doc_id`, string `source_text` and array `media`, plus optional `collection`. Each media entry contains exactly `media_kind` (`image` or `file`) and boolean `replace`/`preserve_resolution`. Native files supply safe basenames/bytes; callers cannot supply destination paths. The browser selects final-buffer references and replacement intent. Save does not repeat membership selection through another source scan and has no thumbnail-only output.
 
 `docs_source_media_upload.py` bounds each file and their combined bytes at 64 MiB, source/metadata JSON at 1 MiB and multipart overhead at 1 MiB, within a 66 MiB request. Size errors precede media processing/persistence and retain the draft and pending Files. There are no partial uploads, automatic splits, staging sessions or retries. Other JSON routes retain their existing limits. The former JSON-only Save and single-file media-upload contracts have no compatibility aliases.
 
@@ -103,8 +103,8 @@ Actions:
 
 - resolves the fixed Working target and confines its one source before interpreting editable metadata
 - parses the candidate once through the strict source splitter, binds the mounted document/collection identity and retains field spans for formatting/timestamp rewrites
-- preserves the existing Title/Summary representation, body normalization, readiness, report and Subject rules; nonblank Title feedback belongs to the browser, and ordinary hierarchy/order remains owned by `index-order.json`
-- prepares supplied native media outputs once under the resolved document configuration, including original-raster validation, requested display/thumbnail encodings and SVG sanitization
+- preserves the existing Title/Summary representation, body normalization, readiness and report rules; nonblank Title feedback belongs to the browser, and ordinary hierarchy/order remains owned by `index-order.json`
+- prepares supplied native media outputs once under the resolved document configuration, including original-raster validation, requested display encoding and SVG sanitization
 - adopts active references to other document-owned Working media by copying exact completed bytes into the current document's namespace and rewriting their source paths; it uses configured owners without reading the originating document or rescanning directories, and leaves original files in place
 - compares only selected exact destinations; matching stored bytes are reused, explicit Edit permits replacement, and unexpected new/competing filenames report authoring errors
 - sanitizes automatically and carries nonblocking change diagnostics in `media_notes`, with no confirmation/resubmission pass
@@ -121,11 +121,11 @@ Preparation errors make no permanent writes. Later failures return HTTP 500 with
 
 This remains a single-editor snapshot Save without disk revision checks or external-edit merging. Its busy lifetime includes media/source/generation and the editor's awaited fresh display at the retained route/reading position. Discard releases Files without media/source writes. `POST /docs/source/rebuild` and `POST /docs/update-metadata` remain retired without aliases.
 
-## `POST /docs/source/context`
+## `POST /docs/thumbnail`
 
-This write-free request accepts an exact target and complete `source_text`, plus optional `subject_fields` containing exactly `folder_path` and `work_id`. It parses front matter once, checks fixed document/collection identity and either projects the configured Subject or prepares the supplied Subject replacement. It performs no Title/Summary completion, readiness validation, body normalization or report parsing; Source Save owns those checks. The response carries `ok`, exact `doc_id`/optional `collection`, `subject_assignment_available`, `folder_subject_supported` and optional scalar `subject`; omission means None. Work Subjects need no Catalogue existence lookup, and saved Folder identities need no live target. Configured owner/root resolution and supported Subject syntax remain required; the public Work-only projection stays separate.
+Thumb accepts exactly `{collection, doc_id, work_id}` for Library, Context (`works`), Concepts or Moments. A five-digit Work ID copies that Work's existing Catalogue thumbnail; `work_id: null` deletes the document copy. Catalogue and ordinary Index targets and dry-run requests are unsupported. The response contains `ok`, exact `target` and complete committed `record` for mounted list/document updates.
 
-Assign Subject and Catalogue modals share one derived context per mounted buffer revision, including an in-flight read. Source loading seeds the first context from parsed metadata; successful Subject Apply seeds the resulting revision. Buffer input, changed saved-source replacement or editor release invalidates it. Failed requests remain retryable; late responses cannot replace a newer context. The POST retains `no-store`; this is bounded editor state, not an HTTP or process payload cache. Apply uses the registered Subject normaliser and span-preserving writer without a second full candidate-validation pass or unused change comparison. It preserves unrelated front matter, body and timestamps and updates only the captured current buffer. Folder input retains Projects-root path/file-URL conversion. **Use document subject** accepts Work only; a valid Folder response disables that shortcut without an invalid-Subject error. Opening Directives makes no context request. Folder opening is available through [Projects](/docs/?doc=d-20260805-155400-4c341f); ordinary local-folder links retain their opener. This endpoint writes no source/generated output and runs no Search or Publish. [User Facing Rules](data/User_Facing_Rules.md) D.11/M.14 records the current delivery.
+Python resolves configured owners once, reads the exact saved document/collection/Selected/queue metadata and applies the fixed `<doc_id>-thumb.webp` copy/removal. It persists no Work identity and changes no Markdown, dates, tokens, body rendering or Links. Exact publication selections preserve pending body-media writes; deletion saves the removal before unlink. [Media And Asset Handling](Media_And_Asset_Handling.md#assigned-document-thumbnails) owns failure and publication effects. The former Subject context endpoint is retired without an alias.
 
 ## `POST /docs/source/media`
 
@@ -141,7 +141,7 @@ This is a write-free JSON identity request for a new native selection:
 
 Only the exact `doc_id`, optional configured `collection`, `media_kind` and safe native `filename` are accepted. The service resolves the configured collection/media capability, checks the basename/suffix and returns the target plus `media_identity`. It reads no document source, receives no File bytes, performs no conversion/sanitization/storage comparison and writes no media. Full candidate validity and exact existing target resolution belong to Save.
 
-The identity is `<doc_id>/<readable-filename>` beneath the configured body-media type. Raster output uses WebP and SVG retains its type. The browser retains the native File and serializes authored presentation/link fields locally. Presentation-only Apply and a thumbnail choice using an already pending File need no identity call. Thumbnails keep the independent flat `thumbs/<doc_id>-thumb.webp` identity.
+The identity is `<doc_id>/<readable-filename>` beneath the configured body-media type. Raster output uses WebP and SVG retains its type. The browser retains the native File and serializes image/file reference fields locally. Presentation-only Apply needs no identity request. This endpoint has no thumbnail behavior; Thumb owns independent artwork.
 
 Native bytes are uploaded only through Source Save. Replacement/sanitizer confirmation flags, the former multipart intake and immediate media writes are retired without aliases. [Media And Asset Handling](Media_And_Asset_Handling.md) owns naming, processing and storage.
 

@@ -20,9 +20,9 @@ export async function mountSelectedDocumentsReport(context) {
 
   function prepareThumbnail(row, revision) {
     pendingThumbnails.delete(row);
-    if (row.has_thumbnail === true) {
+    if (row.collection && row.has_thumbnail === true) {
       if (!mediaRoot) throw new Error("Selected Documents thumbnail media is not configured.");
-      const owner = row.collection ? "collections/" + encodeURIComponent(row.collection) : "workspace";
+      const owner = "collections/" + encodeURIComponent(row.collection);
       row.thumbnailSrc = requestUrl(mediaRoot + "/" + owner + "/thumbs/" + encodeURIComponent(row.doc_id + "-thumb.webp"), { reloadNonce: revision });
     } else if (row.thumbnailWorkId && thumbnailSettings) {
       row.thumbnailSrc = catalogueWorkThumbnail(row.thumbnailWorkId, row.title, thumbnailSettings).src;

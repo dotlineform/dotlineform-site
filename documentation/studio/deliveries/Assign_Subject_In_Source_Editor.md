@@ -3,12 +3,14 @@ draft: false
 doc_id: d-20261010-162449-393004
 title: Assign Subject In Source Editor
 added_date: "2026-10-10 16:24:49"
-last_updated: "2026-10-10 17:12:00"
+last_updated: "2026-10-20"
 summary: Move Subject assignment and Folder opening into Source, use its current buffer and retire unused Document Info metadata plumbing.
-ui_status: in_progress
+ui_status: retired
 parent_id: d-20260428-000000-f5ff18
 ---
 # Assign Subject In Source Editor
+
+Historical record: this behavior was retired or replaced by [Subject Retirement](Subject_Retirement.md) on 2026-10-20. Current report and artwork behavior belongs to [Reports](Reports.md) and [Media And Asset Handling](Media_And_Asset_Handling.md#assigned-document-thumbnails). Retained pending an explicit repository-document retirement decision.
 
 ## Outcome And Status
 

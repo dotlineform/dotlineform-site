@@ -149,11 +149,13 @@ def _rebuild_outputs(
 
 def prepared_build_record(builder: Any, document: SourceDoc) -> Any:
     """Project an already parsed authoring/import record without reading it again."""
-    return builder.document_record(
+    record = builder.document_record(
         path=document.path, front_matter=document.front_matter, body_markdown=document.body,
         doc_id=document.doc_id, title=document.title, parent_id=document.parent_id,
-        report=document.report, source_text=document.source_text,
+        report=document.report, source_text=document.source_text, thumbnail=document.has_thumbnail,
     )
+    document.has_thumbnail = record.has_thumbnail
+    return record
 
 
 def validate_changed_source_paths(root: Path, paths: list[Path], *, index_path: Path | None = None) -> None:
@@ -337,7 +339,7 @@ def project_document_position(
         payload.pop("parent_id", None)
     document_text = json_text(payload)
     record = {key: value for key, value in payload.items() if key != "content_html"}
-    record.update(parent_id=parent_ids[doc_id], has_thumbnail=payload.get("has_thumbnail", False))
+    record.update(parent_id=parent_ids[doc_id])
     for key in ("added_date", "last_updated"):
         record[key] = doc_updated_date(payload[key])
     committed = {"target": {"doc_id": doc_id}, "record": record}

@@ -7,6 +7,7 @@ var EDIT_ITEMS = [
   { actionId: ACTION_IDS.OPEN_VSCODE, label: "Open in VS Code", artwork: "docsViewer__icon--file-code-corner", contextAction: true },
   { actionId: ACTION_IDS.SET_DRAFT, label: "Mark as draft", artwork: "docsViewer__icon--circle-check", checked: false, contextAction: true },
   { actionId: ACTION_IDS.SET_SELECTED, label: "Star", artwork: "docsViewer__icon--star", checked: false, contextAction: true },
+  { actionId: ACTION_IDS.THUMB, label: "Thumb", artwork: "docsViewer__icon--image", contextAction: true },
   { actionId: ACTION_IDS.COPY_LINK, label: "Copy link", artwork: "docsViewer__icon--link", fallback: true },
   { actionId: ACTION_IDS.DELETE, label: "Delete", artwork: "docsViewer__icon--trash", fallback: true }
 ];

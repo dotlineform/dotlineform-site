@@ -3,11 +3,13 @@ draft: false
 doc_id: d-20260810-115737-741620
 title: Works Report Concept And Architecture
 added_date: "2026-08-10 11:57:37"
-last_updated: "2026-10-14 18:40:51"
+last_updated: "2026-10-20"
 summary: Refresh-owned Series membership and generated Context documents supply local Work Document Coverage.
 parent_id: d-20260424-000000-50b63f
 ---
 # Works Report Concept And Architecture
+
+Historical record: this behavior was retired or replaced by [Subject Retirement](Subject_Retirement.md) on 2026-10-20. Current report and artwork behavior belongs to [Reports](Reports.md) and [Media And Asset Handling](Media_And_Asset_Handling.md#assigned-document-thumbnails). Retained pending an explicit repository-document retirement decision.
 
 ## Purpose
 

@@ -58,9 +58,6 @@ export function createDocsViewerReportService(options) {
     readSeriesGalleries: function () {
       return fetchReportJson("/docs/series-galleries-report", serviceOptions);
     },
-    readWorkDocumentCoverage: function () {
-      return fetchReportJson("/docs/work-document-coverage", serviceOptions);
-    },
     readWorkspaceLinks: function () {
       return fetchReportJson("/docs/workspace-links", serviceOptions);
     },

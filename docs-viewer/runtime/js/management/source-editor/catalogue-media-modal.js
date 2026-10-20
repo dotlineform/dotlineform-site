@@ -2,7 +2,7 @@ import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { escapeHtml, openDocsViewerManagementModal } from "../docs-viewer-management-modal-shell.js";
 import { selectedTextForCatalogueTitle } from "./catalogue-token-contract.js";
 import {
-  catalogueDocumentSubjectTarget, catalogueMediaLinkLabel, loadCatalogueMediaSupport
+  catalogueMediaLinkLabel, loadCatalogueMediaSupport
 } from "./catalogue-media-support.js";
 import { collectSemanticTokenTargetMatches } from "./semantic-token-targets.js";
 import { serializeCatalogueImageToken, serializeCatalogueMediaToken } from "./catalogue-token-parser.js";
@@ -16,21 +16,15 @@ import {
 var SEARCH_INPUT_ID = "docsViewerCatalogueImageSearch";
 var RESULTS_ID = "docsViewerCatalogueImageResults";
 var LINK_INPUT_ID = "docsViewerCatalogueLinkText";
-var SUBJECT_INPUT_ID = "docsViewerCatalogueUseDocumentSubject";
 
 function modalBody(searchQuery, linkText, imageMode) {
   return (
     '<div class="docsViewerCatalogueTokenModal' + (imageMode ? ' docsViewerCatalogueImageModal' : '') + '">' +
       (imageMode ? '<div class="docsViewerCatalogueTokenModal__selection">' : '') +
-      '<label class="docsViewer__field docsViewer__field--checkbox" for="' + SUBJECT_INPUT_ID + '">' +
-        '<input class="docsViewer__checkboxInput" id="' + SUBJECT_INPUT_ID + '" type="checkbox" disabled>' +
-        '<span class="docsViewer__fieldLabel">Use document subject</span>' +
-      '</label>' +
       (imageMode ? '' : '<div class="docsViewer__field">' +
         '<label class="docsViewer__fieldLabel" for="' + SEARCH_INPUT_ID + '">Search Catalogue</label>') +
         '<input class="docsViewer__fieldInput" id="' + SEARCH_INPUT_ID + '" type="search" role="combobox" aria-label="Search Catalogue" aria-autocomplete="list" aria-controls="' + RESULTS_ID + '" aria-expanded="false" autocomplete="off" spellcheck="false" value="' + escapeHtml(searchQuery) + '" disabled>' +
       "</div>" +
-      '<p class="muted small" data-role="document-subject-status" hidden></p>' +
       '<p class="docsViewerCatalogueTokenModal__searchStatus muted small" data-role="catalogue-search-status" hidden></p>' +
       '<div class="docsViewerCatalogueTargetPicker__results docsViewerCatalogueTokenModal__results" id="' + RESULTS_ID + '" role="listbox" aria-label="' + (imageMode ? "Catalogue Works" : "Catalogue Works and Galleries") + '" data-role="catalogue-results" tabindex="0" hidden></div>' +
       (imageMode ? catalogueImagePresentationHtml({ idPrefix: "docsViewerCatalogueImage" }) :
@@ -49,11 +43,9 @@ export function openCatalogueMediaModal(options = {}) {
   var action = captureCatalogueTokenAction(adapter, options.capture, imageMode ? "image" : "media");
   var capture = action.capture;
   var initialToken = action.token;
-  var subjectTarget = null;
   var selectionText = initialToken ? initialToken.title : selectedTextForCatalogueTitle(capture && capture.text);
   var state = { disposed: false, list: null, support: null, target: null,
-    linkDefault: "", replaceDefaults: null,
-    useDocumentSubject: false };
+    linkDefault: "", replaceDefaults: null };
   return openDocsViewerManagementModal({
     root: options.root,
     restoreFocus: adapter && typeof adapter.focus === "function" ? { focus: function () { adapter.focus(); } } : null,
@@ -74,8 +66,6 @@ export function openCatalogueMediaModal(options = {}) {
       var results = api.host.querySelector('[data-role="catalogue-results"]');
       var status = api.host.querySelector('[data-role="catalogue-search-status"]');
       var primary = api.host.querySelector('[data-role="modal-primary"]');
-      var subjectCheckbox = api.host.querySelector("#" + SUBJECT_INPUT_ID);
-      subjectCheckbox.checked = state.useDocumentSubject;
       if (modalRoot) modalRoot.id = imageMode ? "catalogue-image-add-modal" : "catalogue-media-link-modal";
       if (imageMode) {
         hydrateCatalogueImagePresentation(api.host, initialToken || {
@@ -118,15 +108,6 @@ export function openCatalogueMediaModal(options = {}) {
         showResults(matches.length > 0);
         message(search.value.trim() && !matches.length ? (imageMode ? "No matching Catalogue Works." : "No matching Catalogue Works or Galleries.") : "");
       }
-      function selectSubject() {
-        var target = state.support.targets.find(function (item) {
-          return item.targetType === subjectTarget.targetType && item.targetId === subjectTarget.targetId;
-        });
-        if (target) return selectTarget(target);
-        state.target = null;
-        primary.disabled = true;
-        message("The selected Catalogue target is unavailable.", true);
-      }
       state.list = createCatalogueTargetPickerList(results, {
         layout: "id-title",
         onActiveChange: function (_target, optionId) {
@@ -144,19 +125,9 @@ export function openCatalogueMediaModal(options = {}) {
       [search, results].forEach(function (owner) {
         owner.addEventListener("keydown", function (event) { state.list.handleKeydown(event); });
       });
-      subjectCheckbox.addEventListener("change", function () {
-        state.useDocumentSubject = subjectCheckbox.checked;
-        search.disabled = state.useDocumentSubject;
-        if (state.useDocumentSubject) {
-          selectSubject();
-        } else {
-          search.focus();
-        }
-      });
       loadCatalogueMediaSupport(adapter, { fetch: options.fetch }).then(function (support) {
         if (state.disposed) return;
         state.support = support;
-        subjectCheckbox.disabled = !subjectTarget;
         search.disabled = false;
         updateMatches();
         if (initialToken) {
@@ -169,16 +140,6 @@ export function openCatalogueMediaModal(options = {}) {
         search.focus();
       }).catch(function (error) {
         if (!state.disposed) message(error.message || "Catalogue images are unavailable.", true);
-      });
-      adapter.readDocumentSubject(action.snapshot).then(function (subject) {
-        if (state.disposed) return;
-        subjectTarget = catalogueDocumentSubjectTarget(subject);
-        subjectCheckbox.disabled = !subjectTarget || !state.support;
-      }).catch(function (error) {
-        if (state.disposed) return;
-        var note = api.host.querySelector('[data-role="document-subject-status"]');
-        note.textContent = "Document subject unavailable: " + error.message;
-        note.hidden = false;
       });
     },
     onSubmit: function (api) {

@@ -22,14 +22,9 @@ function sourceMediaPaths(source) {
   return paths;
 }
 
-function hasThumbnailAssignment(source) {
-  return /^thumbnail[ \t]*:[ \t]*true[ \t]*$/mi.test(source.slice(0, sourceBodyStart(source)));
-}
-
-/** Mounted Files survive text edits/Undo; only final references/assignment select Save inputs. */
+/** Mounted Files survive text edits/Undo; only final references select Save inputs. */
 export function createPendingSourceMedia() {
   const files = new Map();
-  let thumbnail = null;
   let cachedSource = null;
   let cachedSelection = null;
   return {
@@ -41,33 +36,26 @@ export function createPendingSourceMedia() {
       }
     },
     add(entry) {
-      const existing = files.get(entry.mediaPath);
-      if (thumbnail === existing && existing && existing.file === entry.file) thumbnail = entry;
       files.set(entry.mediaPath, entry);
-      if (entry.createThumb) thumbnail = entry;
       cachedSelection = null;
     },
     selected(source) {
       if (cachedSelection && cachedSource === source) return cachedSelection;
-      if (!files.size && !thumbnail) return [];
+      if (!files.size) return [];
       const paths = sourceMediaPaths(source);
-      const wantedThumbnail = thumbnail && hasThumbnailAssignment(source) ? thumbnail : null;
       const candidates = new Set(files.values());
-      if (wantedThumbnail) candidates.add(wantedThumbnail);
       cachedSelection = Array.from(candidates, (entry) => ({
         file: entry.file,
         media_kind: entry.mediaKind,
         preserve_resolution: entry.preserveResolution,
         replace: entry.replace,
-        body: files.get(entry.mediaPath) === entry && paths.has(entry.mediaPath),
-        thumbnail: wantedThumbnail === entry
-      })).filter((entry) => entry.body || entry.thumbnail);
+        mediaPath: entry.mediaPath
+      })).filter((entry) => paths.has(entry.mediaPath));
       cachedSource = source;
       return cachedSelection;
     },
     clear() {
       files.clear();
-      thumbnail = null;
       cachedSource = null;
       cachedSelection = null;
     }

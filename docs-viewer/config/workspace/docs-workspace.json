@@ -114,11 +114,7 @@
           "icon": "dlf-context",
           "include_in_site_search": true,
           "title": "Context",
-          "report_host_doc_id": "d-20260801-073826-8865a8",
-          "collection_customisation": {
-            "id": "working_works",
-            "settings": {}
-          }
+          "report_host_doc_id": "d-20260801-073826-8865a8"
         },
         {
           "collection": "concepts",

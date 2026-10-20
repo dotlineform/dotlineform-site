@@ -10,7 +10,6 @@ export const DOCS_VIEWER_ACTION_IDS = Object.freeze({
   SOURCE_ADD_MEDIA_VIEW_LINK: "source-add-media-view-link",
   SOURCE_ADD_FILE: "source-add-file",
   SOURCE_ADD_IMAGE: "source-add-image",
-  SOURCE_ASSIGN_SUBJECT: "source-assign-subject",
   SOURCE_INSERT_DOC_LINK: "source-insert-doc-link",
   NEW: "new",
   NEW_CHILD: "new-child",
@@ -24,6 +23,7 @@ export const DOCS_VIEWER_ACTION_IDS = Object.freeze({
   REBUILD_DOCUMENT: "rebuild-document",
   SET_DRAFT: "set-draft",
   SET_SELECTED: "set-selected",
+  THUMB: "thumb",
   SORT_CHILDREN: "sort-children"
 });
 
@@ -48,7 +48,7 @@ var IDS = DOCS_VIEWER_ACTION_IDS;
 var PRIVATE_REPORT_DOC_IDS = new Set([
   "d-20260426-164043-e14f49", "d-20260810-222148-99daec", "d-20261006-160017-e6589d",
   "d-20260812-212735-6d9cf3", "d-20261004-202223-1e2205", "d-20261005-153252-541ac3",
-  "d-20260910-214604-f9e841", "d-20260805-155400-4c341f", "d-20260810-150346-bc7cdc",
+  "d-20260910-214604-f9e841", "d-20260805-155400-4c341f",
   "d-20260807-175649-62020b", "d-20260909-140121-53c381", "d-20260807-163356-b376d7",
   "d-20261005-234748-d69c84", "d-20260909-160530-224efe"
 ]);
@@ -57,6 +57,9 @@ var STRUCTURAL_DOCUMENT_ACTION_IDS = new Set([IDS.DELETE, IDS.SET_SELECTED, IDS.
 
 function documentActionRestriction(actionId, target, collectionHostDocIds) {
   if (!target) return "";
+  if (actionId === IDS.THUMB && !["library", "works", "concepts", "moments"].includes(target.collection)) {
+    return "Thumb is available for authored collection documents.";
+  }
   if (target.collection === "catalogue" && !CATALOGUE_ACTION_IDS.has(actionId)) {
     return "Catalogue Work documents are managed through Work edits and Regenerate.";
   }
@@ -83,7 +86,6 @@ export const DOCS_VIEWER_ACTION_DEFINITIONS = Object.freeze({
   [IDS.SOURCE_ADD_MEDIA_VIEW_LINK]: actionDefinition(IDS.SOURCE_ADD_MEDIA_VIEW_LINK, TARGETS.ACTIVE_DOCUMENT),
   [IDS.SOURCE_ADD_FILE]: actionDefinition(IDS.SOURCE_ADD_FILE, TARGETS.ACTIVE_DOCUMENT),
   [IDS.SOURCE_ADD_IMAGE]: actionDefinition(IDS.SOURCE_ADD_IMAGE, TARGETS.ACTIVE_DOCUMENT),
-  [IDS.SOURCE_ASSIGN_SUBJECT]: actionDefinition(IDS.SOURCE_ASSIGN_SUBJECT, TARGETS.ACTIVE_DOCUMENT),
   [IDS.SOURCE_INSERT_DOC_LINK]: actionDefinition(IDS.SOURCE_INSERT_DOC_LINK, TARGETS.ACTIVE_DOCUMENT),
   [IDS.NEW]: actionDefinition(IDS.NEW, TARGETS.WORKSPACE),
   [IDS.NEW_CHILD]: actionDefinition(IDS.NEW_CHILD, TARGETS.DOCUMENT),
@@ -97,6 +99,7 @@ export const DOCS_VIEWER_ACTION_DEFINITIONS = Object.freeze({
   [IDS.REBUILD_DOCUMENT]: actionDefinition(IDS.REBUILD_DOCUMENT, TARGETS.ACTIVE_DOCUMENT),
   [IDS.SET_DRAFT]: actionDefinition(IDS.SET_DRAFT, TARGETS.ACTIVE_DOCUMENT),
   [IDS.SET_SELECTED]: actionDefinition(IDS.SET_SELECTED, TARGETS.ACTIVE_DOCUMENT),
+  [IDS.THUMB]: actionDefinition(IDS.THUMB, TARGETS.ACTIVE_DOCUMENT),
   [IDS.SORT_CHILDREN]: actionDefinition(IDS.SORT_CHILDREN, TARGETS.DOCUMENT)
 });
 

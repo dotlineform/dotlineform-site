@@ -2,7 +2,6 @@ import {
   prepareSourceMedia,
   readManagedDocSource,
   readManagedDocMetadata,
-  readManagedDocSourceContext,
   readCatalogueMediaTargets,
   readCatalogueMediaConfig,
   readCatalogueWork,
@@ -74,9 +73,6 @@ export function createDocsViewerManagementSourceAdapter(options) {
     readMetadata: function (target) { return readManagedDocMetadata(target, clientOptions()); },
     readSource: function (target, optionsForRead) {
       return readManagedDocSource(target, clientOptions(optionsForRead));
-    },
-    readSourceContext: function (target, payload) {
-      return readManagedDocSourceContext(target, payload, clientOptions());
     },
     writeSource: function (target, payload, optionsForWrite) {
       return saveManagedDocSource(target, payload, clientOptions(optionsForWrite)).then(projectSavedSource).catch(function (error) {

@@ -26,8 +26,6 @@ from docs_icon_assets import icon_asset_path
 from docs_collection_customisations import (
     DocsCollectionCustomisationConfig,
     normalize_docs_collection_customisation,
-    PREVIEW_WORKS_CUSTOMISATION_ID,
-    WORKING_WORKS_CUSTOMISATION_ID,
 )
 
 
@@ -467,12 +465,7 @@ def _collections(raw: Any, *, repo_root: Path, workspace_root: ArtifactLocation,
             "public_title", "supports_return_import", "collection_customisation", "collection_type",
         })
         if stage == "preview":
-            customisation = item.get("collection_customisation")
-            item = {**item, "supports_return_import": False,
-                    "collection_customisation": (
-                        {"id": PREVIEW_WORKS_CUSTOMISATION_ID, "settings": {}}
-                        if customisation and customisation.get("id") == WORKING_WORKS_CUSTOMISATION_ID else None
-                    )}
+            item = {**item, "supports_return_import": False}
         child = normalize_collection_id(item["collection"], field=f"{field}.collection")
         collection_type = item.get("collection_type", "")
         if collection_type not in {"", "book-collection"}:

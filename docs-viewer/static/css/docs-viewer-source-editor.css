@@ -376,13 +376,3 @@
   font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
   overflow-wrap: anywhere;
 }
-
-.docsViewerProjectSubjectModal__catalogue{
-  display: grid;
-  gap: 0.5rem;
-  min-height: 0;
-}
-
-.docsViewerProjectSubjectModal__warning{
-  color: var(--docs-viewer-danger);
-}

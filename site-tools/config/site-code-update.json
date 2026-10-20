@@ -19,7 +19,6 @@
         "docs-collection-report-filter.js",
         "docs-collection-report-state.js",
         "docs-collection-report.js",
-        "docs-document-subject.js",
         "docs-selected-documents.js",
         "docs-viewer-access.js",
         "docs-viewer-app-boot.js",

@@ -57,7 +57,7 @@ def generate_documents(
     previous_tree_text = None
     if collection:
         ordered_docs = sorted(docs, key=builder.doc_sort_key)
-        manifest = (builder.manage_manifest_payload(ordered_docs, subjects_by_doc_id=builder.private_authoring_subjects(ordered_docs))
+        manifest = (builder.manage_manifest_payload(ordered_docs)
                     if builder.config.stage == "working" else builder.public_manifest_payload(ordered_docs))
         if builder.targeted_build:
             manifest = merge_collection_manifest(builder.saved_collection_metadata(), manifest, builder.only_doc_ids)

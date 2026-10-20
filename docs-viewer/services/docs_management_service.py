@@ -23,6 +23,7 @@ SCRIPTS_DIR = REPO_ROOT / "scripts"
 import docs_management_document_target  # noqa: E402
 import docs_management_draft  # noqa: E402
 import docs_selected_documents  # noqa: E402
+import docs_document_thumbnails  # noqa: E402
 import docs_import_source_service as import_source_service  # noqa: E402
 import docs_import_doc  # noqa: E402
 import docs_local_links  # noqa: E402
@@ -71,7 +72,7 @@ from docs_management_read_service import (  # noqa: E402
     docs_generated_read_payload,
     docs_management_get_payload as read_docs_management_get_payload,
 )
-from docs_management_source_service import detect_preferred_markdown_app, open_publication_ignore, open_recent_exclusions, open_source_doc, read_source_context, save_source_document  # noqa: E402
+from docs_management_source_service import detect_preferred_markdown_app, open_publication_ignore, open_recent_exclusions, open_source_doc, save_source_document  # noqa: E402
 from docs_workspace_config import load_docs_working_config, load_docs_workspace_config, require_document_authoring, select_workspace_stage  # noqa: E402
 
 
@@ -128,13 +129,15 @@ def docs_management_post_response(
         return (HTTPStatus.OK if payload["ok"] else HTTPStatus.INTERNAL_SERVER_ERROR), payload
     if path == routes.SET_SELECTED_PATH:
         return HTTPStatus.OK, docs_selected_documents.set_selected(repo_root, body, dry_run=dry_run)
+    if path == routes.THUMBNAIL_PATH:
+        if dry_run:
+            raise ValueError("Thumb does not support dry_run")
+        return HTTPStatus.OK, docs_document_thumbnails.set_document_thumbnail(repo_root, body)
     if path == routes.SOURCE_SAVE_PATH:
         if media_uploads is None:
             raise ValueError("Source Save requires its multipart upload envelope")
         payload = save_source_document(repo_root, body, dry_run, media_uploads=media_uploads)
         return (HTTPStatus.OK if payload["ok"] else HTTPStatus.INTERNAL_SERVER_ERROR), payload
-    if path == routes.SOURCE_CONTEXT_PATH:
-        return HTTPStatus.OK, read_source_context(repo_root, body)
     if path == routes.OPEN_SOURCE_PATH:
         return HTTPStatus.OK, open_source_doc(repo_root, body, dry_run)
     if path == routes.OPEN_PUBLICATION_IGNORE_PATH:

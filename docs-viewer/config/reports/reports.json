@@ -50,12 +50,6 @@
       "loader_id": "docs_media"
     },
     {
-      "report_id": "works",
-      "title": "Works",
-      "description": "Shows documentation coverage for every Series.",
-      "loader_id": "works"
-    },
-    {
       "report_id": "catalogue_works",
       "title": "Catalogue Works",
       "description": "Searches every canonical Work with exact Series and storage context.",

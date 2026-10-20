@@ -20,17 +20,7 @@ from .collection_metadata import read_collection_manifest
 from docs_selected_documents import read_selected
 from .rendering_inputs import RenderingInputs
 from .source import DocRecord, DocumentIdentity
-from docs_collection_customisations import (
-    collection_customisation_authoring_subject_fields,
-)
-from docs_document_subjects import (
-    AUTHORING_SUBJECT_FIELDS,
-    FOLDER_PATH_FIELD,
-    project_document_subject,
-    project_reader_subject,
-)
 from docs_document_identity import doc_updated_date
-from docs_document_images import has_document_thumbnail
 from docs_workspace_config import DocsWorkspaceConfig
 
 
@@ -83,27 +73,20 @@ class CollectionDocsBuilder(DocsDataBuilder):
     def manifest_row(self, doc: DocRecord) -> dict[str, Any]:
         """Project supplied identity, title and update metadata for both readers."""
         row = {"doc_id": doc.doc_id, "title": doc.title, "last_updated": doc_updated_date(doc.last_updated)}
-        if has_document_thumbnail(doc.front_matter, collection=self.collection_id):
+        if doc.has_thumbnail:
             row["has_thumbnail"] = True
         return row
 
     def public_manifest_payload(self, ordered_docs: list[DocRecord]) -> dict[str, Any]:
-        """Select authored-first Context thumbnail fields without private Subject data."""
+        """Project reader metadata with file-owned thumbnail presence."""
         payload: dict[str, Any] = {
             "docs": [self.manifest_row(doc) for doc in ordered_docs]
         }
-        if self.collection_id == "works":
-            for doc, row in zip(ordered_docs, payload["docs"], strict=True):
-                subject = project_reader_subject(doc.front_matter)
-                if row.get("has_thumbnail") is not True and subject is not None:
-                    row["subject"] = subject
         return payload
 
     def manage_manifest_payload(
         self,
         ordered_docs: list[DocRecord],
-        *,
-        subjects_by_doc_id: dict[str, str | None] | None = None,
     ) -> dict[str, Any]:
         """Project private list metadata without filtering requested documents."""
         rows: list[dict[str, Any]] = []
@@ -113,41 +96,7 @@ class CollectionDocsBuilder(DocsDataBuilder):
                 row["draft"] = doc.front_matter["draft"]
             rows.append(row)
         payload: dict[str, Any] = {"docs": rows}
-        if subjects_by_doc_id is not None:
-            for row in payload["docs"]:
-                subject = subjects_by_doc_id[row["doc_id"]]
-                if subject is not None:
-                    row["subject"] = subject
         return payload
-
-    def folder_subject_supported(self) -> bool:
-        return self.config.stage == "working" and FOLDER_PATH_FIELD in collection_customisation_authoring_subject_fields(
-            self.collection_config.collection_customisation
-        )
-
-    def private_authoring_subjects(
-        self,
-        ordered_docs: list[DocRecord],
-    ) -> dict[str, str | None] | None:
-        """Preserve existing projection opt-in and exact Folder capability for scalar rows."""
-        if self.collection_id == "catalogue":
-            return None
-        folder_supported = self.folder_subject_supported()
-        configured_fields = collection_customisation_authoring_subject_fields(
-            self.collection_config.collection_customisation
-        )
-        if self.collection_id != "works" and not configured_fields and not any(
-            any(field_name in doc.front_matter for field_name in AUTHORING_SUBJECT_FIELDS)
-            for doc in ordered_docs
-        ):
-            return None
-        return {
-            doc.doc_id: project_document_subject(
-                doc.front_matter,
-                folder_supported=folder_supported,
-            )
-            for doc in ordered_docs
-        }
 
     def saved_collection_metadata(self) -> dict[str, Any]:
         """Carry saved metadata between completed builds without row audits."""

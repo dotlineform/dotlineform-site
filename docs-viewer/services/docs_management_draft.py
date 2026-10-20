@@ -38,6 +38,7 @@ def set_draft(repo_root: Path, body: dict[str, Any], *, dry_run: bool = False) -
     )
     prepared = replace(document, source_text=source, front_matter=front_matter, report=report, parts=None)
     record = committed_document_record(front_matter, document.doc_id, resolved.document_config, collection=resolved.collection, parent_id=document.parent_id)
+    prepared.has_thumbnail = record.get("has_thumbnail", False)
     if changed and not dry_run:
         source_model.write_text_atomic(document.path, source)
     payload = {

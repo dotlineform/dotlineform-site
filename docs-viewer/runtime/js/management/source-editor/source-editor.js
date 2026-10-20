@@ -6,8 +6,7 @@ import {
   normalizeManagedDocumentTarget
 } from "../docs-viewer-management-document-target.js";
 import { localFolderPasteReplacement } from "./local-folder-links.js";
-import { sourceBodyStart, sourceTitleError, sourceWithThumbnail } from "./source-buffer.js";
-import { classifyDocsDocumentSubject } from "../../shared/docs-document-subject.js";
+import { sourceBodyStart, sourceTitleError } from "./source-buffer.js";
 import { createPendingSourceMedia } from "./source-editor-pending-media.js";
 
 function cleanString(value) {
@@ -169,35 +168,8 @@ function replaceCapturedRange(state, capture, value, selectionMode) {
 
 function createSourceEditorContextAdapter(context, state) {
   function isCurrent() { return state.sourceEditorAdapter === adapter && state.loaded && Boolean(state.textarea); }
-  async function requestSourceContext(snapshot, fields) {
-    var target = adapter.getDocumentTarget();
-    var body = { source_text: snapshot.value };
-    if (fields !== undefined) body.subject_fields = fields;
-    var payload = await state.collectionProvider.readSourceContext(target, body);
-    if (!isCurrent() || snapshot.revision !== state.bufferRevision
-      || !responseMatchesTarget(payload, target)) throw new Error("The Source context changed.");
-    return payload;
-  }
-  async function readSourceContext(snapshot, fields) {
-    if (!isCurrent() || snapshot.revision !== state.bufferRevision) throw new Error("The Source context changed.");
-    if (fields !== undefined) return requestSourceContext(snapshot, fields);
-    var read = state.sourceContextRead;
-    if (!read || read.revision !== snapshot.revision) {
-      read = { revision: snapshot.revision };
-      state.sourceContextRead = read;
-      read.promise = requestSourceContext(snapshot).catch(function (error) {
-        if (state.sourceContextRead === read) state.sourceContextRead = null;
-        throw error;
-      });
-    }
-    var payload = await read.promise;
-    if (!isCurrent() || snapshot.revision !== state.bufferRevision) throw new Error("The Source context changed.");
-    if (payload.subject_error) throw new Error(payload.subject_error);
-    return payload;
-  }
   var adapter = {
     isCurrent: isCurrent,
-    canAssignSubject: function () { return isCurrent() && !state.busy && state.subjectAssignmentAvailable; },
     captureSelection: function () {
       return Object.assign(sourceSelection(state), { revision: state.bufferRevision });
     },
@@ -218,41 +190,6 @@ function createSourceEditorContextAdapter(context, state) {
       return state.target ? Object.assign({}, state.target) : null;
     },
     pendingSourceMedia: function (mediaPath) { return state.pendingMedia.get(mediaPath); },
-    seedSourceContext: function (payload) {
-      if (!isCurrent() || !responseMatchesTarget(payload, state.target)) throw new Error("The Source context changed.");
-      state.sourceContextRead = { revision: state.bufferRevision, promise: Promise.resolve(payload) };
-    },
-    readDocumentSubject: async function (snapshot) {
-      return classifyDocsDocumentSubject(await readSourceContext(snapshot), { folderSupported: true });
-    },
-    readSubjectAssignment: async function (snapshot, fields) {
-      var payload = await readSourceContext(snapshot, fields);
-      if (!adapter.canAssignSubject() || payload.subject_assignment_available !== true) throw new Error("Subject assignment is unavailable for this document.");
-      return payload;
-    },
-    applySubjectSource: function (snapshot, response) {
-      var sourceText = response.source_text;
-      var capture = { start: 0, end: snapshot.value.length, text: snapshot.value, revision: snapshot.revision };
-      if (!isCurrent() || state.saving || typeof sourceText !== "string" || !capturedRangeIsCurrent(state, capture)) return false;
-      var oldBodyStart = sourceBodyStart(snapshot.value);
-      var newBodyStart = sourceBodyStart(sourceText);
-      var offset = newBodyStart - oldBodyStart;
-      function nextPosition(position) {
-        return position >= oldBodyStart ? position + offset : Math.min(position, newBodyStart);
-      }
-      var start = nextPosition(state.textarea.selectionStart);
-      var end = nextPosition(state.textarea.selectionEnd);
-      var scrollTop = state.textarea.scrollTop;
-      if (sourceText !== snapshot.value) {
-        state.textarea.value = sourceText;
-        state.textarea.setSelectionRange(start, end);
-        state.textarea.dispatchEvent(new Event("input", { bubbles: true }));
-      }
-      adapter.seedSourceContext(response);
-      state.textarea.focus({ preventScroll: true });
-      state.textarea.scrollTop = scrollTop;
-      return true;
-    },
     readCatalogueMediaTargets: function () {
       return state.collectionProvider.readCatalogueMediaTargets();
     },
@@ -269,18 +206,6 @@ function createSourceEditorContextAdapter(context, state) {
       if (pending) state.pendingMedia.check(pending, pending.editedPath);
       if (!isCurrent() || !replaceCapturedRange(state, capture, payload.markdown, "end")) return false;
       if (pending) state.pendingMedia.add(pending);
-      if (payload.thumbnail) {
-        var start = state.textarea.selectionStart;
-        var end = state.textarea.selectionEnd;
-        var previous = state.textarea.value;
-        var next = sourceWithThumbnail(previous);
-        var offset = next.length - previous.length;
-        if (next !== previous) {
-          state.textarea.value = next;
-          state.textarea.setSelectionRange(start + offset, end + offset);
-          state.textarea.dispatchEvent(new Event("input", { bubbles: true }));
-        }
-      }
       projectDirty(state);
       return true;
     },
@@ -328,7 +253,6 @@ function loadSource(context, state) {
       }
       state.lastCleanSource = normalizeSource(payload.source_text);
       state.mediaOptions = payload.media_options;
-      state.subjectAssignmentAvailable = payload.subject_assignment_available === true;
       state.loaded = true;
       if (state.textarea) {
         state.textarea.value = state.lastCleanSource;
@@ -336,7 +260,6 @@ function loadSource(context, state) {
         state.textarea.focus();
       }
       state.bufferRevision = 0;
-      adapter.seedSourceContext(payload);
       setStatus(state, "", false);
       projectDirty(state);
       return payload;
@@ -375,7 +298,6 @@ function saveSource(context, state) {
     if (state.textarea && state.textarea.value !== state.lastCleanSource) {
       state.textarea.value = state.lastCleanSource;
       state.bufferRevision += 1;
-      state.sourceContextRead = null;
     }
     saved = true;
     projectDirty(state);
@@ -483,7 +405,6 @@ function bindEvents(context, state) {
     : [];
   state.onInput = function () {
     state.bufferRevision += 1;
-    state.sourceContextRead = null;
     projectDirty(state);
   };
   state.onPaste = function (event) {
@@ -552,7 +473,6 @@ function restoreRenderedContent(context, state) {
   state.loaded = false;
   state.mediaOptions = null;
   state.pendingMedia.clear();
-  state.sourceContextRead = null;
   state.sourceEditorAdapter = null;
 }
 
@@ -566,8 +486,6 @@ export function createDocsViewerSourceEditorMode() {
     loaded: false,
     mediaOptions: null,
     pendingMedia: createPendingSourceMedia(),
-    subjectAssignmentAvailable: false,
-    sourceContextRead: null,
     collectionProvider: null,
     root: null,
     renderedScrollTop: 0,
@@ -586,12 +504,10 @@ export function createDocsViewerSourceEditorMode() {
       state.saving = false;
       state.bufferRevision = 0;
       state.dirtyValue = false;
-      state.sourceContextRead = null;
       state.lastCleanSource = "";
       state.loaded = false;
       state.mediaOptions = null;
       state.pendingMedia.clear();
-      state.subjectAssignmentAvailable = false;
       state.collectionProvider = context.collectionProvider || null;
       state.renderedScrollTop = context.mount.scrollTop;
       // Keep the rendered report mounted so its collection target survives Source.

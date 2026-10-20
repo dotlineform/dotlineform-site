@@ -21,15 +21,6 @@ from docs_workspace_config import (
     select_workspace_stage,
     resolve_workspace_path,
 )
-from docs_collection_customisations import (
-    collection_customisation_authoring_subject_fields,
-    collection_customisation_metadata_record,
-)
-from docs_document_subjects import (
-    AUTHORING_SUBJECT_FIELDS,
-    FOLDER_PATH_FIELD,
-    project_document_subject,
-)
 from docs_report_source import ReportSourceContract
 
 
@@ -305,7 +296,7 @@ def resolve_managed_document_target(
 def committed_document_record(
     front_matter: Mapping[str, Any], doc_id: str,
     document_config: DocsStageConfig | DocsCollectionConfig,
-    *, collection: str = "", parent_id: str = "",
+    *, collection: str = "", parent_id: str = "", thumbnail: bool | None = None,
 ) -> dict[str, object]:
     """Project a complete committed summary from validated in-memory source metadata."""
     record: dict[str, object] = {
@@ -317,21 +308,12 @@ def committed_document_record(
         "added_date": doc_updated_date(front_matter.get("added_date")),
         "last_updated": doc_updated_date(front_matter.get("last_updated")),
     }
-    if collection != "catalogue":
-        record["has_thumbnail"] = has_document_thumbnail(front_matter, collection=collection)
+    if collection and collection != "catalogue":
+        record["has_thumbnail"] = has_document_thumbnail(document_config, doc_id) if thumbnail is None else thumbnail
     if source_model.collection_supports_draft(document_config):
         record["draft"] = front_matter["draft"]
     if not collection:
         record.update(ui_status=str(front_matter.get("ui_status") or ""), parent_id=parent_id)
-    else:
-        fields = collection_customisation_authoring_subject_fields(document_config.collection_customisation)
-        if collection != "catalogue" and (fields or collection == "works" or any(field in front_matter for field in AUTHORING_SUBJECT_FIELDS)):
-            subject = project_document_subject(front_matter, folder_supported=FOLDER_PATH_FIELD in fields)
-            if subject is not None:
-                record["subject"] = subject
-        customisation = collection_customisation_metadata_record(document_config.collection_customisation, front_matter, doc_id=doc_id)
-        if customisation is not None:
-            record["customisation"] = customisation
     return record
 
 
@@ -358,6 +340,5 @@ def managed_document_metadata(
 
     payload["location_parent_id"] = document_location_parent_id(repo_root, resolved)
     if resolved.collection:
-        payload["folder_subject_supported"] = FOLDER_PATH_FIELD in collection_customisation_authoring_subject_fields(resolved.document_config.collection_customisation)
         payload["collection"] = resolved.collection
     return payload

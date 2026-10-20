@@ -2,7 +2,6 @@ import { createDocsViewerToolbarIcon } from "../../shared/docs-viewer-toolbar-ic
 import { DOCS_VIEWER_ACTION_IDS as ACTION_IDS } from "../docs-viewer-action-definitions.js";
 import { openCatalogueMediaModal } from "./catalogue-media-modal.js";
 import { openDocumentLinkModal } from "./document-link-contribution.js";
-import { openSourceSubjectModal } from "./subject-modal.js";
 
 export const DIRECTIVE_ACTIONS_CONTROL_ID = "source-directives";
 
@@ -16,7 +15,6 @@ const SOURCE_ACTIONS = [
   { actionId: ACTION_IDS.SOURCE_ADD_FILE, artwork: "docsViewer__icon--paperclip", label: "Add file" },
   { actionId: ACTION_IDS.SOURCE_ADD_MEDIA_VIEW_LINK, artwork: "docsViewer__icon--image-plus", label: "Add Media View link" },
   { actionId: ACTION_IDS.SOURCE_INSERT_DOC_LINK, artwork: "docsViewer__icon--file-plus-corner", label: "Insert doc link" },
-  { actionId: ACTION_IDS.SOURCE_ASSIGN_SUBJECT, artwork: "docsViewer__icon--dlf-subject", label: "Assign Subject" },
   { actionId: ACTION_IDS.OPEN_VSCODE, artwork: "docsViewer__icon--file-code-corner", label: "Open in VS Code" }
 ];
 
@@ -257,8 +255,7 @@ export function directiveActionsControlRenderer(context) {
     root.querySelector("#docsViewerManageSourceDirectivesMenu")
   );
   controller.menu.querySelectorAll('[role="menuitem"]').forEach(function (item) {
-    item.disabled = Boolean(context.control.state.disabled || context.control.state.hidden
-      || (item.dataset.docsViewerAction === ACTION_IDS.SOURCE_ASSIGN_SUBJECT && !controller.adapter?.canAssignSubject()));
+    item.disabled = Boolean(context.control.state.disabled || context.control.state.hidden);
   });
   if (context.control.state.disabled || context.control.state.hidden) closeMenu(controller);
   return { root: root, interactive: controller.button };
@@ -301,9 +298,6 @@ function runSourceAction(context, controller, actionId) {
         adapter: adapter, capture: capture, root: context.root,
         isCurrent: function () { return activeAdapter(context) === adapter && adapter.isCurrent(); }
       });
-    }
-    if (actionId === ACTION_IDS.SOURCE_ASSIGN_SUBJECT) {
-      return openSourceSubjectModal({ adapter: adapter, root: context.root });
     }
     if (actionId === ACTION_IDS.OPEN_VSCODE) return context.openSourceInVsCode(adapter.getDocumentTarget());
   }).catch(function (error) {
@@ -377,8 +371,6 @@ export function createDirectiveActionsMainViewControlHandlers() {
       if (!adapter || typeof adapter.captureSelection !== "function") return false;
       controller.adapter = adapter;
       controller.capture = adapter.captureSelection();
-      var subjectItem = controller.menu.querySelector('[data-docs-viewer-action="' + ACTION_IDS.SOURCE_ASSIGN_SUBJECT + '"]');
-      subjectItem.disabled = !adapter.canAssignSubject();
       controller.menu.hidden = false;
       controller.button.setAttribute("aria-expanded", "true");
       enabledMenuItems(controller)[0]?.focus({ preventScroll: true });

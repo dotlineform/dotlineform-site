@@ -17,13 +17,11 @@ CATALOGUE_WORK_PATH = "/docs/catalogue-work"
 CATALOGUE_GALLERY_PATH = "/docs/catalogue-gallery"
 CATALOGUE_SERIES_GALLERIES_PATH = "/docs/catalogue-series-galleries"
 SERIES_GALLERIES_REPORT_PATH = "/docs/series-galleries-report"
-WORK_DOCUMENT_COVERAGE_PATH = "/docs/work-document-coverage"
 CATALOGUE_REGENERATE_PATH = "/docs/catalogue/regenerate"
 IMPORT_SOURCE_DIRECTORIES_PATH = "/docs/import-source-directories"
 IMPORT_SOURCE_FILES_PATH = "/docs/import-source-files"
 
 SOURCE_PATH = "/docs/source"
-SOURCE_CONTEXT_PATH = "/docs/source/context"
 DOCUMENT_LINK_TARGETS_PATH = "/docs/document-link-targets"
 METADATA_PATH = "/docs/metadata"
 SOURCE_SAVE_PATH = "/docs/source/save"
@@ -47,6 +45,7 @@ IMPORT_DOC_PATH = "/docs/import-doc"
 SOURCE_MEDIA_PREPARE_PATH = "/docs/source/media"
 SET_DRAFT_PATH = "/docs/set-draft"
 SET_SELECTED_PATH = "/docs/set-selected"
+THUMBNAIL_PATH = "/docs/thumbnail"
 CREATE_PATH = "/docs/create"
 REFRESH_DISCOVERY_PATH = "/docs/refresh-discovery"
 REBUILD_DOCUMENT_PATH = "/docs/rebuild-document"
@@ -73,7 +72,6 @@ GET_PATHS = (
     CATALOGUE_GALLERY_PATH,
     CATALOGUE_SERIES_GALLERIES_PATH,
     SERIES_GALLERIES_REPORT_PATH,
-    WORK_DOCUMENT_COVERAGE_PATH,
     SOURCE_PATH,
     DOCUMENT_LINK_TARGETS_PATH,
     METADATA_PATH,
@@ -88,7 +86,6 @@ POST_PATHS = (
     GENERATED_WORKSPACE_LINKS_PATH,
     CATALOGUE_REGENERATE_PATH,
     SOURCE_SAVE_PATH,
-    SOURCE_CONTEXT_PATH,
     OPEN_SOURCE_PATH,
     OPEN_PUBLICATION_IGNORE_PATH,
     OPEN_RECENT_EXCLUSIONS_PATH,
@@ -108,6 +105,7 @@ POST_PATHS = (
     SOURCE_MEDIA_PREPARE_PATH,
     SET_DRAFT_PATH,
     SET_SELECTED_PATH,
+    THUMBNAIL_PATH,
     CREATE_PATH,
     REFRESH_DISCOVERY_PATH,
     REBUILD_DOCUMENT_PATH,
