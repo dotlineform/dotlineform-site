@@ -1,7 +1,9 @@
 /* Local-only Docs Viewer report implementations and controls. */
 
 .docsViewerReport[data-report-id="folders_without_works"] .docsViewerReport__head,
-.docsViewerReport[data-report-id="folders_without_works"] .docsViewerReport__row{
+.docsViewerReport[data-report-id="folders_without_works"] .docsViewerReport__row,
+.docsViewerReport[data-report-id="catalogue_medium"] .docsViewerReport__head,
+.docsViewerReport[data-report-id="catalogue_medium"] .docsViewerReport__row{
   grid-template-columns: minmax(0, 1fr) 7rem;
 }
 
@@ -31,18 +33,23 @@
 .docsViewerReport[data-report-id="work_links"] .docsViewerReport__sortButton,
 .docsViewerReport[data-report-id="series_galleries"] .docsViewerReport__headLabel,
 .docsViewerReport[data-report-id="series_galleries"] .docsViewerReport__cellLink,
-.docsViewerReport[data-report-id="series_galleries"] .docsViewerReport__sortButton{
+.docsViewerReport[data-report-id="series_galleries"] .docsViewerReport__sortButton,
+.docsViewerReport[data-report-id="catalogue_medium"] .docsViewerReport__headLabel,
+.docsViewerReport[data-report-id="catalogue_medium"] .docsViewerReport__sortButton{
   color: var(--docs-viewer-text);
 }
 
 .docsViewerReport[data-report-id="work_downloads"] .docsViewerReport__sortButton,
 .docsViewerReport[data-report-id="work_links"] .docsViewerReport__sortButton,
-.docsViewerReport[data-report-id="series_galleries"] .docsViewerReport__sortButton{
+.docsViewerReport[data-report-id="series_galleries"] .docsViewerReport__sortButton,
+.docsViewerReport[data-report-id="catalogue_medium"] .docsViewerReport__sortButton{
   text-transform: none;
 }
 
 .docsViewerReport[data-report-id="series_galleries"][aria-busy="true"],
-.docsViewerReport[data-report-id="series_galleries"][aria-busy="true"] *{
+.docsViewerReport[data-report-id="series_galleries"][aria-busy="true"] *,
+.docsViewerReport[data-report-id="catalogue_medium"][aria-busy="true"],
+.docsViewerReport[data-report-id="catalogue_medium"][aria-busy="true"] *{
   cursor: progress;
 }
 

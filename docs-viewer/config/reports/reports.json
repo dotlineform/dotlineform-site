@@ -56,6 +56,12 @@
       "loader_id": "catalogue_works"
     },
     {
+      "report_id": "catalogue_medium",
+      "title": "Catalogue Medium",
+      "description": "Counts Works using each exact saved Medium value, including Works with no medium.",
+      "loader_id": "catalogue_medium"
+    },
+    {
       "report_id": "uncataloged_files",
       "title": "Uncataloged Files",
       "description": "Lists live images in represented source folders that are absent from refreshed Work source registrations.",
