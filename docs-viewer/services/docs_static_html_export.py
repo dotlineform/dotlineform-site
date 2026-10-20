@@ -655,6 +655,90 @@ pre code {
 .docsViewer__summary > p + p {
   margin-top: 0.75rem;
 }
+
+body[data-docs-collection="moments"] :is(nav, main) {
+  width: min(50ch, calc(100% - 32px));
+}
+
+.docsExport__document:has(> pre.moment-text) {
+  --moment-axis: 47%;
+}
+
+.docsExport__document:has(> pre.moment-text) > h1:first-child {
+  margin: 0 0 0.375rem;
+  font-size: 1.25rem;
+  line-height: 1.25;
+}
+
+.docsExport__document .momentDate {
+  margin: 0 0 1.5rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.25;
+}
+
+.docsExport__document pre.moment-text {
+  margin-block-end: 1.5rem;
+  padding: 0;
+  overflow-x: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  font-family: inherit;
+  white-space: pre-wrap;
+}
+
+.docsExport__document pre.moment-text--axis {
+  white-space: normal;
+}
+
+.docsExport__document .moment-text--axis .axis-group {
+  display: block;
+  margin-block-end: 1.65rem;
+}
+
+.docsExport__document .moment-text--axis .axis-group:last-child {
+  margin-block-end: 0;
+}
+
+.docsExport__document :is(.moment-axis-line, .moment-text--axis .axis-line) {
+  display: grid;
+  grid-template-columns: minmax(0, var(--moment-axis)) minmax(0, calc(100% - var(--moment-axis)));
+  white-space: nowrap;
+}
+
+.docsExport__document :is(.moment-axis-line, .moment-text--axis .axis-line) > :is(.axis-before, .axis-after) {
+  min-width: 0;
+}
+
+.docsExport__document :is(.moment-axis-line, .moment-text--axis .axis-line) > .axis-before {
+  justify-self: end;
+  width: max-content;
+  padding-right: 0.28em;
+  text-align: right;
+}
+
+.docsExport__document :is(.moment-axis-line, .moment-text--axis .axis-line) > .axis-after {
+  text-align: left;
+}
+
+@media (max-width: 40rem) {
+  .docsExport__document :is(.moment-axis-line, .moment-text--axis .axis-line) {
+    display: inline;
+    white-space: normal;
+  }
+
+  .docsExport__document :is(.moment-axis-line, .moment-text--axis .axis-line) > :is(.axis-before, .axis-after) {
+    display: inline;
+    padding: 0;
+    text-align: left;
+  }
+
+  .docsExport__document :is(.moment-axis-line, .moment-text--axis .axis-line) > .axis-before::after,
+  .docsExport__document .moment-text--axis .axis-line:not(:last-child)::after {
+    content: " ";
+  }
+}
 """
 
 
@@ -702,7 +786,8 @@ def render_document_rows(
     return "".join(parts)
 
 
-def render_index_html(documents: list[dict[str, Any]], *, document_count: int, title: str) -> str:
+def render_index_html(documents: list[dict[str, Any]], *, document_count: int, title: str, collection: str) -> str:
+    """Render the ordered index with its collection identity for snapshot styling."""
     document_label = "document" if document_count == 1 else "documents"
     return "\n".join(
         [
@@ -714,7 +799,7 @@ def render_index_html(documents: list[dict[str, Any]], *, document_count: int, t
             f"  <title>{html.escape(title)}</title>",
             '  <link rel="stylesheet" href="styles.css">',
             "</head>",
-            "<body>",
+            f'<body data-docs-collection="{html.escape(collection, quote=True)}">',
             "  <main>",
             f"    <h1>{html.escape(title)}</h1>",
             f'    <p class="docsExport__meta">{document_count} {document_label} exported from generated Docs Viewer payloads.</p>',
@@ -756,9 +841,9 @@ def render_doc_html(
             f"  <title>{html.escape(title)}</title>",
             f'  <link rel="stylesheet" href="{root_prefix}styles.css">',
             "</head>",
-            "<body>",
+            f'<body data-docs-collection="{html.escape(collection, quote=True)}">',
             *([f'  <nav><a href="{root_prefix}index.html">Index</a></nav>'] if has_index else []),
-            "  <main>",
+            '  <main class="docsExport__document">',
             f"    {content_html}",
             *([f'    <p class="docsExport__meta"><a href="{root_prefix}index.html">Back to index</a></p>'] if has_index else []),
             f'    <p class="docsExport__referenceToken"><code>{html.escape(markdown_document_link(payload, collection=collection, viewer_base_url=viewer_base_url))}</code></p>',
@@ -772,12 +857,17 @@ def render_doc_html(
 
 
 def render_portable_html(plan: StaticHtmlSnapshotPlan) -> str:
+    has_index = len(plan.doc_ids) > 1
     document_links = {doc_id: f"#doc-{doc_id}" for doc_id in plan.doc_ids}
-    index_html = render_document_rows(
-        plan.documents,
-        link_prefix="#doc-",
-        link_suffix="",
-    )
+    index_section = []
+    if has_index:
+        index_section = [
+            '    <section class="docsExport__portableIndex">',
+            f"      <h1>{html.escape(plan.title)}</h1>",
+            f'      <p class="docsExport__meta">{len(plan.doc_ids)} documents exported from generated Docs Viewer payloads.</p>',
+            f'      {render_document_rows(plan.documents, link_prefix="#doc-", link_suffix="")}',
+            "    </section>",
+        ]
     document_html: list[str] = []
     for doc_id in plan.doc_ids:
         payload = plan.doc_payloads[doc_id]
@@ -790,14 +880,13 @@ def render_portable_html(plan: StaticHtmlSnapshotPlan) -> str:
         )
         document_html.extend(
             [
-                f'    <article class="docsExport__portableDocument" id="doc-{html.escape(doc_id, quote=True)}">',
+                f'    <article class="docsExport__portableDocument docsExport__document" id="doc-{html.escape(doc_id, quote=True)}">',
                 f"      {replace_images_with_placeholders(content_html)}",
-                '      <p class="docsExport__meta"><a href="#index">Back to index</a></p>',
+                *(['      <p class="docsExport__meta"><a href="#index">Back to index</a></p>'] if has_index else []),
                 f'      <p class="docsExport__referenceToken"><code>{html.escape(markdown_document_link(payload, collection=plan.collection, viewer_base_url=plan.viewer_base_url))}</code></p>',
                 "    </article>",
             ]
         )
-    document_label = "document" if len(plan.doc_ids) == 1 else "documents"
     return "\n".join(
         [
             "<!doctype html>",
@@ -810,13 +899,9 @@ def render_portable_html(plan: StaticHtmlSnapshotPlan) -> str:
             render_portable_styles_css(),
             "  </style>",
             "</head>",
-            "<body>",
-            '  <main id="index">',
-            '    <section class="docsExport__portableIndex">',
-            f"      <h1>{html.escape(plan.title)}</h1>",
-            f'      <p class="docsExport__meta">{len(plan.doc_ids)} {document_label} exported from generated Docs Viewer payloads.</p>',
-            f"      {index_html}",
-            "    </section>",
+            f'<body data-docs-collection="{html.escape(plan.collection, quote=True)}">',
+            '  <main id="index">' if has_index else "  <main>",
+            *index_section,
             *document_html,
             "  </main>",
             "</body>",
@@ -859,6 +944,7 @@ def compute_snapshot_files(plan: StaticHtmlSnapshotPlan, *, generated_at: str) -
             plan.documents,
             document_count=len(plan.doc_ids),
             title=plan.title,
+            collection=plan.collection,
         ).encode("utf-8")
     for doc_id in plan.doc_ids:
         files[plan.document_paths[doc_id]] = render_doc_html(

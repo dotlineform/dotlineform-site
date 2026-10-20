@@ -1096,12 +1096,16 @@ body.docs-viewer-service{
 }
 
 /* Poetry presentation follows the document's explicit Moments markup. */
-.docsViewer:has(.docsViewer__content:not([hidden] *) > pre.moment-text){
+.docsViewer__documentMount:has(> pre.moment-text){
   --moment-axis: 47%;
-  --docs-viewer-doc-width: 50ch;
 }
 
-.docsViewer__content:has(> pre.moment-text) > h1:first-child{
+.docsViewer__documentMount[data-docs-collection="moments"]:not([data-docs-content-detail-active="true"]){
+  max-width: 50ch;
+  margin-inline: auto;
+}
+
+.docsViewer__documentMount:has(> pre.moment-text) > h1:first-child{
   margin: 0 0 0.375rem;
 }
 

@@ -416,6 +416,7 @@ export function initDocsViewerDocumentController(context) {
       if (content === outerContent) outerContent.replaceChildren();
       content = document.createElement("div");
       content.className = "docsViewer__documentMount";
+      if (target.collection) content.dataset.docsCollection = target.collection;
       outerContent.appendChild(content);
     }
     content.hidden = false;
