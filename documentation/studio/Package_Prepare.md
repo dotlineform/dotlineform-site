@@ -14,7 +14,7 @@ Use **Prepare package** in a Collections report to create one JSON or JSONL work
 
 ## Prepare A Package
 
-1. Open a Collections report in Docs Viewer Manage and check documents through Collection Actions.
+1. Open a Collections report in Docs Viewer Manage, choose **Select** before Actions and check documents.
 2. Choose **Collection Actions → Prepare package**; **All** remains local to that collection.
 3. The action captures the collection and exact checked IDs before loading package options.
 4. Choose the profile, package format, and content format when the profile supports a choice.

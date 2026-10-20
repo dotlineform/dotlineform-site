@@ -151,6 +151,8 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
 
     listToolbar.actionsHost.hidden = hidden;
     listToolbar.actionsButton.disabled = !available || hidden || selectionWorkflowActive;
+    listToolbar.selectButton.hidden = hidden || active;
+    listToolbar.selectButton.disabled = !available || selectionWorkflowActive;
     listToolbar.selectionControl.hidden = !active;
     listToolbar.selectAllButton.disabled = !active || allSelected || eligible.length === 0;
     listToolbar.clearButton.disabled = !active || selected.size === 0;
@@ -332,6 +334,14 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
       });
     }
 
+    var selectButton = documentRef.createElement("button");
+    selectButton.className = "docsViewer__toolbarIconButton";
+    selectButton.type = "button";
+    selectButton.dataset.docsCollectionSelect = "true";
+    selectButton.setAttribute("aria-label", "Select");
+    selectButton.title = "Select";
+    selectButton.appendChild(createDocsViewerToolbarIcon(documentRef, "docsViewer__icon--list-check"));
+
     var actionsHost = documentRef.createElement("div");
     actionsHost.className = "docsViewer__actionsMenuHost docsViewerReport__collectionActionsHost";
     var actionsButton = documentRef.createElement("button");
@@ -367,8 +377,9 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     selectionControl.replaceChildren(selectAllButton, clearButton, doneButton);
     settings.actionHost.replaceChildren(...(regenerateButton ? [regenerateButton] : []));
     if (sortButton) root.appendChild(sortButton);
-    root.appendChild(actionsHost);
+    root.appendChild(selectButton);
     root.appendChild(selectionControl);
+    root.appendChild(actionsHost);
     host.appendChild(root);
 
     function handleDocumentClick(event) {
@@ -393,11 +404,19 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
       menuActions: renderedActions,
       root: root,
       selectAllButton: selectAllButton,
+      selectButton: selectButton,
       selectionControl: selectionControl
     };
     documentRef.addEventListener("click", handleDocumentClick);
     documentRef.addEventListener("keydown", handleDocumentKeydown);
 
+    selectButton.addEventListener("click", function () {
+      if (selectButton.disabled) return;
+      hideActionsMenu(false);
+      selectionOwner.enter();
+      projectSelection();
+      (selectAllButton.disabled ? doneButton : selectAllButton).focus();
+    });
     actionsButton.addEventListener("click", function (event) {
       event.stopPropagation();
       if (actionsButton.disabled) return;
@@ -405,7 +424,6 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
         hideActionsMenu(false);
         return;
       }
-      if (!selectionOwner.snapshot().selectionModeActive) selectionOwner.enter();
       projectSelection();
       menu.hidden = false;
       actionsButton.setAttribute("aria-expanded", "true");
@@ -461,8 +479,9 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     });
     doneButton.addEventListener("click", function () {
       selectionOwner.done();
-      hideActionsMenu(true);
+      hideActionsMenu(false);
       projectSelection();
+      selectButton.focus();
     });
     projectSelection();
   }

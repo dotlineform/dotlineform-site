@@ -1,8 +1,56 @@
 {
   "schema": "docs_recent_v2",
   "limit": 20,
-  "generated_at": "2026-10-19T20:53:46Z",
+  "generated_at": "2026-10-20T08:48:11Z",
   "docs": [
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261020-093513-7a4a30",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Cyclical Universe — Information Across a Bounce or Singularity",
+      "timestamp": "2026-10-20"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261020-093023-c3f7e4",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Existentialism’s 21st‑Century Continuations - Cultural & Artistic Discourse",
+      "timestamp": "2026-10-20"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261020-091237-191db7",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Existentialism’s 21st‑Century Continuations - Environmental Philosophy & Eco‑Existentialism",
+      "timestamp": "2026-10-20"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261018-211837-04a4c0",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Existentialism’s 21st‑Century Continuations - Philosophy & Continental Thought",
+      "timestamp": "2026-10-20"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261020-082510-8fac65",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Existentialism’s 21st‑Century Continuations - Psychology & Therapy",
+      "timestamp": "2026-10-20"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261020-092527-9a002c",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Existentialism’s 21st‑Century Continuations - Technology & AI Ethics",
+      "timestamp": "2026-10-20"
+    },
     {
       "collection": "works",
       "collection_title": "Context",
@@ -113,54 +161,6 @@
       "doc_id": "d-20261018-163309-a8c088",
       "report_doc_id": "d-20260809-130120-870cc2",
       "title": "Brains & Organisms Inside a Mathematical Universe",
-      "timestamp": "2026-10-18"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261018-164432-3924d1",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Bridging Systems",
-      "timestamp": "2026-10-18"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261018-172349-eb5ad1",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Buddhism ↔ Neuroscience ↔ Bridging Metaphors",
-      "timestamp": "2026-10-18"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261018-170327-aa729d",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Buddhism, Kant, Science",
-      "timestamp": "2026-10-18"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261018-171054-0e8f96",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Buddhism, Neuroscience",
-      "timestamp": "2026-10-18"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20260809-130120-d66e0b",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Can the Brain Comprehend How It Works?",
-      "timestamp": "2026-10-18"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20260809-130120-c5c511",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Coincidence Inevitability",
       "timestamp": "2026-10-18"
     }
   ]

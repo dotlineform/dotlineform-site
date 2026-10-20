@@ -147,6 +147,10 @@
   mask-image: url("../icons/import.svg");
 }
 
+.docsViewer__icon--list-check{
+  mask-image: url("../icons/list-check.svg");
+}
+
 .docsViewer__icon--package{
   mask-image: url("../icons/package.svg");
 }
@@ -189,6 +193,7 @@
 
 .docsViewer__draftIndicator{
   display: inline-block;
+  color: var(--docs-viewer-danger);
   margin-right: 0.35rem;
   line-height: 1;
 }

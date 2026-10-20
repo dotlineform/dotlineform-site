@@ -78,6 +78,8 @@ Collection-specific list controls stay in the report. The shared report owns tit
 
 The collection Actions menu stays in the report's filter toolbar alongside sort and selection commands. It does not mount beside Home in the top row. The Index and workspace expose no import, Export or Prepare package actions; application requests require a configured collection.
 
+The **Select** icon button (`list-check.svg`) sits immediately before Actions. It enters selection mode, hides itself and reveals row checkboxes plus All/Clear/Done in the same position before Actions. Done clears checked IDs and the range anchor, hides the selection controls and restores Select. Opening Actions never enters selection mode. Export and Prepare package remain disabled until documents are checked; both imports remain independent of selection. The existing browser selection owner retains filtering, paging and restoration behavior.
+
 A configured collection may select one registered customisation. Its controls
 render only in the composition positions supplied for that collection; they
 do not insert DOM into the default toolbar or become app controls. Any added

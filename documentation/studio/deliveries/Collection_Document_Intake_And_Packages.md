@@ -18,6 +18,8 @@ The browser owns the invoking collection, checked IDs, summary/limit choices, sy
 
 The independent ordinary Working CLI and returned-package formats remain as previously scoped. Ordinary CLI packages have no application Import entry point. A trusted collection package or edited Review folder keeps its recorded collection; mismatches remain visible but unavailable from another collection. Existing server provenance checks retain mutation authority.
 
+The user-approved follow-up separates selection from Actions: Select (`list-check.svg`) appears before Actions and is replaced by All/Clear/Done while checkboxes are visible. Done clears selection and restores Select. Opening Actions has no selection effect, preserving direct access to both imports.
+
 ## Completion Gates
 
 - [x] Implement the clarified collection-only application boundary for both imports, Export and Prepare package.
@@ -28,6 +30,7 @@ The independent ordinary Working CLI and returned-package formats remain as prev
 - [x] Update current workflow, architecture, endpoint, placement and durable checklist owners.
 - [x] Complete focused lint/syntax/import diagnostics, whitespace review and required public-runtime projection/check/site validation.
 - [x] Complete distinct source/diff review and the mandatory Redundancy And Defensive Behavior Review.
+- [x] Separate selection entry from Actions with the approved Select icon button and existing Done behavior.
 - [ ] User normal-use confirmation after restarting Docs Viewer services and reloading Manage: all four menu items, both imports in an empty collection, checked package preparation, cancellation/completion, destination-matching packages and Catalogue restrictions.
 
 ## Verification Budget And Limits
@@ -51,3 +54,11 @@ Review found and fixed the mismatched-candidate label dependency and removed the
 - With `.env.local` exported and project service/build paths supplied, direct imports passed for package service, native import, staged source import, management import and the management service. These diagnostics made no operation request or source/package write.
 - `bin/site-code-update` changed exactly three tracked shared runtime projections: app composition, app context and app runtime. The inspected delta removes unscoped import startup and forwards collection import callbacks; no private management module enters the public graph. `bin/site-code-update --check` and `bin/site-validate` passed, covering the configured 105 projected files and required static boundaries.
 - `git diff --check` passed. No tests, browser automation, live imports, package output, document/Search generation, Publish, commit, push or deployment ran.
+
+## Separate Select Control Follow-Up
+
+Implemented on 2026-10-20 in the existing management collection contribution and local management stylesheet. Select enters the existing browser selection owner; the existing projection swaps Select for checkboxes and All/Clear/Done before Actions. Actions no longer calls selection entry. Done uses the existing owner to clear checked IDs/range state, restores Select and returns focus to it; entering selection focuses All, or Done if All is unavailable. The existing `list-check.svg` receives one local CSS mask rule. No new selection state, persistence, service request, validation or recovery path is added.
+
+Verification budget: one changed-owner JavaScript lint, whitespace check and bounded source/diff review, expected to take seconds with no application writes or network. `bin/lint-js docs-viewer/runtime/js/management/docs-viewer-management-collection-default-contribution.js` and `git diff --check` passed. The two changed runtime owners are local-only and outside the public projection inventory; no public projection or site build ran. Tests and browser automation remain unchanged and unrun. Manual confirmation covers icon placement, the controls/checkbox swap, Actions independence, Done clearing/restoration and direct import access.
+
+Distinct source/diff review and Redundancy And Defensive Behavior Review traced idle/active/Done projection, empty-list focus, existing busy availability, checked-ID clearing and independent import/selection action dispatch. One existing selection owner remains authoritative. The change removes Actions' implicit state transition and adds only the local Select control, mask and projection; it adds no server work, duplicate validation, inventory read, persisted flag or compatibility branch. Shared hidden-button styling already handles Select, and existing collection-control styling handles All/Clear/Done. No unresolved source-review finding remains; tactile/visual behavior remains for user confirmation.

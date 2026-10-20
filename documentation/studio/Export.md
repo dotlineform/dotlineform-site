@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260629-152159-ac1af9
 title: Export
 added_date: "2026-06-29 15:21:59"
-last_updated: "2026-10-19"
+last_updated: "2026-10-20"
 summary: create guarded dated HTML snapshots from checked collection documents and their referenced media
 parent_id: d-20260424-000000-50b63f
 ---
@@ -15,7 +15,7 @@ Docs Viewer Export creates a browseable dated static HTML snapshot from existing
 
 Export is available in each Collection Actions menu while Manage is active. Collection selection is its only entry point and input contract.
 
-Collection **Export…** uses the existing collection checkboxes and All/Clear/Done controls shared with Prepare Package. Opening Actions enters selection mode; Export is disabled until at least one document is checked. All retains the existing filtered collection selection scope. Export captures the checked IDs and exact collection when invoked, including checks retained across page/filter changes, and uses the common confirmation and snapshot writer. Catalogue offers Export while its authoring and Prepare Package restrictions remain unchanged. No manifest reload, document build, Search refresh or publication work follows an export.
+Collection **Export…** uses the existing collection checkboxes and All/Clear/Done controls shared with Prepare Package. Choose **Select** (`list-check.svg`) before Actions to enter selection mode; Select is replaced by All/Clear/Done until Done clears selection and restores it. Opening Actions does not change selection mode; Export is disabled until at least one document is checked. All retains the existing filtered collection selection scope. Export captures the checked IDs and exact collection when invoked, including checks retained across page/filter changes, and uses the common confirmation and snapshot writer. Catalogue offers Export while its authoring and Prepare Package restrictions remain unchanged. No manifest reload, document build, Search refresh or publication work follows an export.
 
 The confirmation identifies the collection, destination and media plan:
 

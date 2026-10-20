@@ -196,6 +196,8 @@ The shared list loads the configured manifest and accepts the standard managemen
 
 Collection checkbox selection belongs to its list owner. Collection Actions owns Export and Prepare package for checked IDs and Import doc/Import docs for the exact collection, including an empty collection with no checks. The Index has explicit row targeting and no checkbox selection; it retains subtree Delete but has no import, Export or Prepare package entry point.
 
+Select (`list-check.svg`) sits before Actions and explicitly enters selection mode. While active, it is replaced by All/Clear/Done and the row checkboxes are visible. Done clears selection and restores Select. Opening Actions has no selection effect, so imports require no checkbox interaction.
+
 The collection selection owner is keyed by `{ collection }` and owns:
 
 - selection mode;
