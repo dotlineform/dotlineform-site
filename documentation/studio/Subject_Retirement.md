@@ -12,7 +12,7 @@ parent_id: d-20260428-000000-f5ff18
 
 Status: delivery proposal with the token-only Projects boundary, Work Document Coverage retirement and separate Thumb workflow agreed. The Thumb workflow applies consistently to every authored collection, with all existing document-owned thumbnails removed at cutover. Retirement implementation has not started. The [Projects Metadata Snapshot](deliveries/Projects_Metadata_Snapshot.md) first delivery is implemented and retains Subject-based associations. [Subject Associations](data_model/subject-associations.md) records the current contract.
 
-The [Subject Retirement Delivery](deliveries/Subject_Retirement_Delivery.md) contains the ordered implementation steps, verification budgets, cutover/reset and completion gates. This overview retains the rationale, examples and agreed behavior.
+The [Subject Retirement Delivery](deliveries/Subject_Retirement_Delivery.md) contains the ordered implementation steps, verification budgets, cutover/reset and completion gates. Readiness is complete and the delivery is planned and ready for implementation. Ordinary Index documents retain their SVG icons, without a Thumb action or thumbnail reset. This overview retains the rationale, examples and agreed behavior.
 
 ## Intended Result
 

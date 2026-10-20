@@ -10,13 +10,15 @@ parent_id: d-20261020-152027-c9f3a8
 ---
 # Subject Retirement Delivery
 
-Status: proposed delivery; this document adds the implementation sequence, not approval to start it. Parent: [Subject Retirement](../Subject_Retirement.md), which owns the agreed requirements, reference examples and exclusions. The [Projects Metadata Snapshot](Projects_Metadata_Snapshot.md) first delivery is already implemented.
+Status: readiness complete; planned and ready for implementation. Implementation has not started and was not part of the readiness request. Parent: [Subject Retirement](../Subject_Retirement.md), which owns the agreed requirements, reference examples and exclusions. The [Projects Metadata Snapshot](Projects_Metadata_Snapshot.md) first delivery is already implemented.
 
 ## Requirements
 
 Replace document Subjects with the agreed token-based Projects associations, retire Work Document Coverage and give all four authored collections one independent Thumb action. Reset existing authored thumbnails so the user can recreate them manually. The source Work supplies copied bytes only; no Work ID, relationship or dependency is retained with a document thumbnail.
 
 Python owns configured filesystem reads/writes, generation and publication handoffs. The browser owns Work search/selection, modal state, Projects joins and report presentation. Keep Catalogue Work/Series identities, Catalogue thumbnails, body media, Related Links, draft publication rules and the user's gradual placeholder cleanup outside the change. Projects remains Context-only and folder-based; its all-Series coverage is not expanded.
+
+Ordinary documents in the Index retain SVG icons. They have no existing thumbnail use to migrate and do not gain the Thumb action or join the reset. Generic thumbnail handling in shared code does not establish a requirement to preserve an unused ordinary-document thumbnail feature; remove obsolete field/upload dependencies through their shared owners while preserving ordinary document and image behavior.
 
 ## Deliverables
 
@@ -36,10 +38,16 @@ The steps below are one coordinated delivery, not independently released migrati
 
 ### 0 — Readiness
 
-- [ ] Confirm the broad owners, the implemented snapshot prerequisite, the four collection write boundaries and the remaining Subject/thumbnail consumers with read-only inspection.
-- [ ] Resolve any affected owner outside the agreed collections before expanding the write scope; check the report-host removal and existing publication handoffs without building an inventory or prototype merely for approval.
+- [x] Confirm the broad owners, the implemented snapshot prerequisite, the four collection write boundaries and the remaining Subject/thumbnail consumers with read-only inspection.
+- [x] Resolve any affected owner outside the agreed collections before expanding the write scope; check the report-host removal and existing publication handoffs without building an inventory or prototype merely for approval.
 
-Evidence/budget: bounded source/configuration review only, minutes rather than an executable run. Gate: one coherent implementation/cutover is safe; stop for scope changes such as additional collection writes or a replacement all-Series audit. Record: not started.
+Evidence/budget: bounded source/configuration review only, minutes rather than an executable run. Gate: one coherent implementation/cutover is safe; stop for scope changes such as additional collection writes or a replacement all-Series audit.
+
+Record (2026-10-20): confirmed Projects' saved GET/explicit Refresh prerequisite, existing typed document references and Refresh-owned Catalogue inputs; browser placement and Work selection remain frontend decisions. The four named authored collections have configured document-media owners, and Catalogue retains its separate owner. Work Document Coverage has an independently removable private pipeline and maintained report host. Existing exact-target deletion, generated metadata/media-reference and publication handoffs cover the required effects; the cutover must also clear the retired coverage queue selector and project affected shared runtime code. No data inventory, prototype, build, test, service action or live write was performed.
+
+Boundary resolved: ordinary Index documents use SVG icons and the user confirmed they have never had thumbnails. Shared metadata/media helpers' generic thumbnail capability is not evidence of a product feature requiring migration or a second model. Keep the Thumb action and thumbnail reset scoped to Library, Context, Concepts and Moments, preserve ordinary Index icon presentation, and do not add ordinary thumbnail writes or migration. Readiness gate passed with no outstanding scope blocker; implementation remains the next step.
+
+Code distinction: `has_document_thumbnail()` reads the authored thumbnail flag, and ordinary by-ID/committed/Selected/media-reference paths propagate it; Selected's reader even has an ordinary-workspace thumbnail URL branch. This is real but unused ordinary-document thumbnail plumbing, not SVG icon support. Retire those obsolete thumbnail paths rather than preserving them as icons. Keep the separate sidebar/result SVG icon rendering, and retain/adapt shared filename, generated `has_thumbnail` and collection-thumbnail rendering needed by the four supported collections.
 
 ### 1 — Projects Reference Associations
 
@@ -51,9 +59,10 @@ Evidence/budget: focused static checks in step 4 and source review of the two jo
 
 ### 2 — Independent Thumb Action
 
-- [ ] Add the shared document-level Thumb modal for the four authored collections, showing the current stored thumbnail and reusing existing Work lookup/search. Apply copies the selected Work thumbnail; Delete removes the document copy without a Work selection and is unavailable when none exists.
+- [ ] Add the shared document-level Thumb modal for the four authored collections, showing the current stored thumbnail and reusing existing Work lookup/search. Apply copies the selected Work thumbnail; Delete removes the document copy without a Work selection and is unavailable when none exists. Do not expose this action on Catalogue or ordinary Index documents.
 - [ ] Keep browser selection and Python persistence separate. Resolve the exact source/destination once, carry the completed copy/removal into affected generated metadata/media references and normal publication effects, and update the mounted document/collection state without broad reloads.
 - [ ] Make the saved thumbnail asset authoritative and retain generated `has_thumbnail`. Remove the source `thumbnail:` dependency, Create thumb controls and thumbnail-only pending-upload/Source Save paths; leave normal image uploads and tokens intact.
+- [ ] Remove unused ordinary-document thumbnail projection/rendering branches and retire upload-thumbnail generation helpers when their callers are removed. Retain the shared document-thumbnail filename rule and supported collection metadata/rendering; preserve the separate ordinary Index/result SVG icon paths.
 
 Evidence/budget: step 4's changed-owner diagnostics; manual modal/thumbnail interaction at closeout. Gate: no saved Work ID or dependency, no token/source-buffer coupling, no new relationship and no Catalogue-media mutation. Record: not started.
 
@@ -68,7 +77,7 @@ Evidence/budget: bounded call-site/retired-reference inspection and step 4 diagn
 ### 4 — Focused Verification And Public Code Projection
 
 - [ ] Run changed-path JavaScript/Python lint, Python compilation and relevant read-only import/configuration diagnostics. Select no automatic test suite or browser automation; any test work needs its own agreed specification under [Test Contract Discipline](../Test_Contract_Discipline.md).
-- [ ] For changed runtime files in the public inventory, run `bin/site-code-update`, inspect the exact tracked projection, then run `bin/site-code-update --check` and `bin/site-validate`. Complete whitespace review.
+- [ ] Update the explicit public inventory for runtime removals/status changes where required, run `bin/site-code-update`, inspect the exact tracked projection, then run `bin/site-code-update --check` and `bin/site-validate`. Complete whitespace review.
 
 Evidence/budget: seconds to a few minutes, with lint/bytecode outputs and required tracked runtime projection writes; no network, browser startup, media production or live reset. Gate: the selected static evidence passes before cutover; it is not browser or lifecycle acceptance. Record: not started.
 
@@ -76,7 +85,7 @@ Evidence/budget: seconds to a few minutes, with lint/bytecode outputs and requir
 
 - [ ] Remove obsolete document Subject/thumbnail declarations through their canonical authored-source owners. Preserve identities, content, dates and draft values; do not convert or delete the user's placeholder documents. Resolve any source-owner scope discovered in readiness before writing it.
 - [ ] Delete every existing document-owned thumbnail in Library, Context, Concepts and Moments, including manually created ones, through configured owners. Leave Catalogue thumbnails and body images intact; do not regenerate replacements.
-- [ ] Retire Work Document Coverage's live host/navigation and private generated artifact through their owning operations. Capture the exact required public document/media removals and preserve unrelated pending queue selections.
+- [ ] Retire Work Document Coverage's live host/navigation and private generated artifact through their owning operations. Remove only its retired private-output selector from the existing updates queue before adopting the new allowlist, preserving unrelated Work/Series/Gallery and publication selections. Capture the exact required public document/media removals.
 - [ ] Regenerate affected document/manifest/Selected thumbnail and Subject metadata using exact document selections. Use a complete collection docs-only reconciliation only where the changed generator contract requires it, with media builds skipped. Preserve Search/Recent; do not run a complete Working Build or Catalogue Refresh as incidental cleanup.
 - [ ] Queue exact finished document/thumbnail effects through the normal handoff, then run Projects Refresh once to adopt its new snapshot contract. Record completed operations, counts and any failure; do not rerun merely to demonstrate idempotence.
 
