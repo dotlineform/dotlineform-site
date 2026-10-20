@@ -169,7 +169,7 @@ function candidateRowHtml(state, candidate, index, selectedFilename) {
     state.importDestination,
     state.importDestinationLabel
   );
-  const blocked = candidate.validationState === "blocked";
+  const blocked = candidate.validationState === "blocked" || !docsImportCandidateTarget(candidate, state.importDestination);
   const selected = candidate.filename === selectedFilename;
   return [
     `<span class="docsViewerImport__candidateRow" id="docsHtmlImportCandidate-${index + 1}"`,
@@ -193,6 +193,9 @@ function resetImportView(state, statusMessage = "") {
 
 function candidateNote(state, candidate, target) {
   if (!candidate) return "Select one staged source.";
+  if (candidate.target && candidate.target.collection !== state.importDestination.collection) {
+    return `Open ${docsImportCandidateDestinationLabel(candidate, state.importDestination)} to import or review this source.`;
+  }
   if (!candidate.importEnabled || !target) {
     return `Import unavailable: ${docsImportCandidateDisabledMessage(candidate, "import")}`;
   }

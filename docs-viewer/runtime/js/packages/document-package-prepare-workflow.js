@@ -7,7 +7,6 @@ import {
   documentPackageContentFormats,
   documentPackageProfile,
   documentPackageProfileLabel,
-  documentPackageSelectionEligibility,
   documentPackageTargetFormats,
   projectDocumentPackageSelection
 } from "./document-package-prepare-model.js";
@@ -35,15 +34,6 @@ function formatLabel(value) {
   return normalized.replace(/_/g, " ").replace(/\b\w/g, (character) => character.toUpperCase());
 }
 
-function normalizeDocIds(values) {
-  const seen = new Set();
-  return (Array.isArray(values) ? values : []).map(packageText).filter((value) => {
-    if (!value || seen.has(value)) return false;
-    seen.add(value);
-    return true;
-  });
-}
-
 function writeSelectOptions(select, values, selectedValue, labelForValue = formatLabel) {
   if (!select) return;
   select.replaceChildren(...values.map((value) => {
@@ -55,15 +45,8 @@ function writeSelectOptions(select, values, selectedValue, labelForValue = forma
   }));
 }
 
-function targetDocumentHtml(targetDocument) {
-  if (!targetDocument) return "";
-  return '<p class="docsViewer__modalNote muted small">Document: ' + escapeHtml(targetDocument.title)
-    + ' (' + escapeHtml(targetDocument.doc_id) + '). Includes descendants, subject to the package profile and filters.</p>';
-}
-
-function optionsBodyHtml(targetDocument) {
+function optionsBodyHtml() {
   return [
-    targetDocumentHtml(targetDocument),
     '<label class="docsViewer__field" for="docsViewerPackageProfile">',
     '  <span class="docsViewer__fieldLabel">Profile</span>',
     '  <select class="docsViewer__fieldInput" id="docsViewerPackageProfile" data-package-profile></select>',
@@ -182,7 +165,7 @@ function openPrepareOptions(options) {
     restoreFocus: options.restoreFocus,
     title: "Prepare package",
     size: "standard",
-    bodyHtml: optionsBodyHtml(options.targetDocument),
+    bodyHtml: optionsBodyHtml(),
     focusSelector: "[data-package-profile]",
     actions: [
       { role: "modal-primary", label: "Prepare package" },
@@ -214,8 +197,6 @@ function openPrepareOptions(options) {
           profile,
           documents: options.documents,
           checkedDocIds: options.docIds,
-          flatCollection: options.flatCollection === true,
-          includeDescendants: options.flatCollection !== true,
           missingSummaryOnly: Boolean(missingSummaryInput && missingSummaryInput.checked),
         });
         writeSelectionProjection(api.host, currentProjection);
@@ -292,7 +273,6 @@ function openPrepareOptions(options) {
         const request = createDocumentPackagePrepareRequest({
           collection: options.collection,
           profile,
-          documents: options.documents,
           effectiveDocIds: state.projection.docIds,
           targetFormat: state.choices.targetFormat,
           contentFormat: state.choices.contentFormat
@@ -333,7 +313,7 @@ function showPrepareResult(options) {
     restoreFocus: options.restoreFocus,
     title: payload.ok === false ? "Document package was not prepared" : "Document package prepared",
     size: "compact",
-    bodyHtml: targetDocumentHtml(options.targetDocument) + documentPackagePrepareResultHtml(payload),
+    bodyHtml: documentPackagePrepareResultHtml(payload),
     actions: [{ role: "modal-primary", label: "Close" }]
   });
 }
@@ -341,7 +321,7 @@ function showPrepareResult(options) {
 export async function openDocumentPackagePrepareWorkflow(options = {}) {
   const root = options.root || document.body;
   const collection = packageText(options.collection).toLowerCase();
-  const docIds = normalizeDocIds(options.docIds);
+  const docIds = options.docIds;
   const callbacks = options.callbacks || {};
   const client = {
     readOptions: readDocumentPackagePrepareOptions,
@@ -355,7 +335,6 @@ export async function openDocumentPackagePrepareWorkflow(options = {}) {
     if (typeof callbacks.setMessage === "function") callbacks.setMessage(message, Boolean(isError));
   };
 
-  if (typeof callbacks.hideManageActionsMenu === "function") callbacks.hideManageActionsMenu();
   if (!docIds.length) {
     const error = new Error("No documents are available for package preparation.");
     setMessage(error.message, true);
@@ -376,7 +355,7 @@ export async function openDocumentPackagePrepareWorkflow(options = {}) {
   if (loadError) {
     const payload = resultPayloadForError(loadError);
     setMessage(payload.summary_text, true);
-    await showPrepareResult({ root, restoreFocus: options.restoreFocus, targetDocument: options.targetDocument, payload });
+    await showPrepareResult({ root, restoreFocus: options.restoreFocus, payload });
     return { confirmed: false, error: loadError, payload };
   }
 
@@ -385,27 +364,9 @@ export async function openDocumentPackagePrepareWorkflow(options = {}) {
     if (!workspace || workspace.available !== true) {
       throw new Error(packageText(workspace && workspace.message) || "The document-package workspace is unavailable.");
     }
-    if (collection) {
-      if (
-        optionsPayload.collection !== collection
-      ) {
-        throw new Error("Package configuration did not match the active collection.");
-      }
-      if (
-        optionsPayload.flat_collection !== true
-      ) {
-        throw new Error("Package documents did not match the active flat collection.");
-      }
-    }
     const profiles = optionsPayload.profiles;
     if (!profiles.length) throw new Error("No document-package profiles are available.");
     const documents = optionsPayload.records;
-    const eligibility = documentPackageSelectionEligibility(documents, docIds);
-    if (eligibility.ineligibleDocIds.length) {
-      throw new Error(
-        "Target documents are unavailable for package preparation: " + eligibility.ineligibleDocIds.join(", ")
-      );
-    }
 
     setMessage("", false);
     const result = await openPrepareOptions({
@@ -413,10 +374,8 @@ export async function openDocumentPackagePrepareWorkflow(options = {}) {
       restoreFocus: options.restoreFocus,
       collection,
       docIds,
-      targetDocument: options.targetDocument,
       profiles,
-      documents,
-      flatCollection: Boolean(collection)
+      documents
     });
     if (!result || !result.confirmed) return { confirmed: false };
 
@@ -432,12 +391,12 @@ export async function openDocumentPackagePrepareWorkflow(options = {}) {
     } finally {
       setBusy(false);
     }
-    await showPrepareResult({ root, restoreFocus: options.restoreFocus, targetDocument: options.targetDocument, payload });
+    await showPrepareResult({ root, restoreFocus: options.restoreFocus, payload });
     return { confirmed: true, ok: payload.ok !== false, payload, request: result.request };
   } catch (error) {
     const payload = resultPayloadForError(error);
     setMessage(payload.summary_text, true);
-    await showPrepareResult({ root, restoreFocus: options.restoreFocus, targetDocument: options.targetDocument, payload });
+    await showPrepareResult({ root, restoreFocus: options.restoreFocus, payload });
     return { confirmed: false, error, payload };
   }
 }

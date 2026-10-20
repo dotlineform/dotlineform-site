@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-78a47c
 title: Create And Import Endpoints
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-08 19:10:43"
+last_updated: "2026-10-20"
 parent_id: d-20260607-222033-647b52
 ---
 # Docs Viewer Create And Import Endpoints
@@ -145,7 +145,7 @@ For a lineage-enabled child Copy, New or Replace writes the small Markdown set w
 
 ## `GET /docs/import-source-files`
 
-Query parameters: none.
+Required query parameter: `source_directory`, a Projects-relative directory beneath `data-sharing`.
 
 Returned data:
 
@@ -192,13 +192,11 @@ Returned data:
 
 Used for:
 
-- rendering the context-independent app-level Import candidate list
+- rendering the Collection Import docs candidate list
 - projecting candidate kind, exact target mode, effective Review/Import
   actions, safe disabled reasons, and display-only destination labels
 
-The retained `files` array remains a compatibility projection; the
-consolidated browser consumes `candidates`. Neither projection exposes source
-bodies, returned records, trusted metadata payloads, or arbitrary paths.
+The browser consumes only `candidates`. The unused compatibility `files` array and its duplicate recognition/listing pass are removed. Candidates expose no source bodies, returned records, trusted metadata payloads or arbitrary paths. The browser combines ordinary candidates with its captured collection and disables trusted candidates whose manifest destination differs from that collection.
 
 Supported staged source formats:
 
@@ -223,14 +221,18 @@ Trusted returned document packages are classified directly from their staged
 header and internal export metadata. Preparing Docs Review never preselects an
 Import source.
 
+## `POST /docs/import-doc`
+
+Collection Actions invokes the native file picker synchronously and confirms one pending File. The endpoint receives exactly multipart `metadata` JSON and one opaque `document` part. Metadata requires safe `filename` and configured `collection`, with optional boolean `include_prompt_meta`. Ordinary Index placement and `after_doc_id` are unsupported. The HTTP/parser boundary retains the existing 64 MiB file, 1 MiB metadata and 1 MiB overhead limits. Conversion, embedded media, exclusive new-source persistence and exact generation finish before the response returns `ok`, exact `target`, committed `record` and `warnings`. Catalogue remains owned by Work Regenerate. No folder listing, companion discovery or persistent staging runs.
+
 ## `POST /docs/import-source`
 
 Expected data:
 
 ```json
 {
-  "scope": "studio",
-  "sub_scope": "tags",
+  "collection": "concepts",
+  "source_directory": "data-sharing/import-staging",
   "staged_filename": "example.md",
   "include_prompt_meta": false,
   "confirm_interactive_html_overwrite": false,
@@ -238,12 +240,11 @@ Expected data:
 }
 ```
 
-`sub_scope` is omitted for a parent-scope run and required for one fixed
-configured child destination.
+`collection` is required and captured from the Collection Actions invocation. Scope/sub-scope aliases and an ordinary Index destination are unsupported. Trusted returned packages and edited Review folders must match that exact collection and remain staging-only.
 
 Actions:
 
-- validates `scope` and resolves `staged_filename` as a direct child of the W0-configured shared import drop-zone
+- resolves the configured collection and confines `staged_filename` as a direct child of the accepted `source_directory` beneath `data-sharing`
 - parses staged HTML, Markdown, Markdown packages, text, and trusted document collections
 - converts import output to Markdown source
 - validates generated Markdown with the shared Docs Viewer Markdown renderer
@@ -254,7 +255,7 @@ Actions:
 - sets `last_updated` when the new document is created
 - materializes inline raster or sanitized SVG media, package media, and interactive HTML assets only during write operations
 - supports `preview_only: true` for non-writing preview responses
-- rebuilds targeted generated docs payloads and targeted docs search after successful writes
+- completes exact document generation and its publication-queue handoff after successful writes; ordinary imports preserve Search and Recent
 - logs an import-source operation event when a create actually writes
 - dispatches trusted returned packages and edited review-source folders to
   their complete collection planner/apply owners before ordinary formats
@@ -262,14 +263,11 @@ Actions:
 Returned data can include preview Markdown, allocated document identity,
 operation type, media plans, interactive HTML plans, written media records,
 created source path, rebuild diagnostics, summary text, `dry_run`, exact
-`target`, and a validated local `viewer_url`. Ordinary results link to the
-exact parent or child document. Collection results link to the exact owning
-scope or sub-scope report. The browser must not synthesize or broaden that
-route.
+`target`, and a validated local `viewer_url`. Single-document results link to the exact collection document; complete-package results link to its owning collection report. The browser must not synthesize or broaden that route.
 
 ## Returned-Package Collection Import
 
-Schema-aware Data Sharing JSON/JSONL collection planning and synchronous apply reuse `POST /docs/import-source`. The user selects the trusted server-listed staged package from the normal Docs Viewer Import Action.
+Schema-aware Data Sharing JSON/JSONL collection planning and synchronous apply reuse `POST /docs/import-source`. The user selects the trusted server-listed staged package from its owning Collection Actions → Import docs. Both the collection and profile must support returned Import.
 
 The endpoints now use the shared `$DOTLINEFORM_PROJECTS_BASE_DIR/data-sharing/import-staging/` drop-zone. Endpoint services resolve it through `configured_workspace_paths(repo_root).import_staging`, return marker-rooted paths, and report import unavailable through the W0 workspace capability contract when the root cannot be used. They do not fall back to repo-local staging.
 
@@ -283,7 +281,8 @@ Collection planning uses the ordinary request identity with `preview_only: true`
 
 ```json
 {
-  "scope": "analysis",
+  "collection": "concepts",
+  "source_directory": "data-sharing/import-staging",
   "staged_filename": "returned-documents.jsonl",
   "preview_only": true
 }
@@ -295,7 +294,8 @@ Confirmed apply uses `preview_only: false`, explicit confirmation, and the packa
 
 ```json
 {
-  "scope": "analysis",
+  "collection": "concepts",
+  "source_directory": "data-sharing/import-staging",
   "staged_filename": "returned-documents.jsonl",
   "preview_only": false,
   "confirm": true,
@@ -333,8 +333,8 @@ Preview uses the normal collection request:
 
 ```json
 {
-  "scope": "analysis",
-  "sub_scope": "tags",
+  "collection": "concepts",
+  "source_directory": "data-sharing/import-staging",
   "staged_filename": "edited-tags-review",
   "preview_only": true
 }
@@ -343,7 +343,7 @@ Preview uses the normal collection request:
 The recognizer validates direct Markdown membership, strict review provenance,
 the retained `docs_review_validated_package_v1` manifest, trusted export
 metadata, `supports_return_import: true`, exact prepared `doc_id` membership,
-scope/sub-scope routing, and complete prepared `source_last_updated` evidence.
+exact collection routing, and complete prepared `source_last_updated` evidence.
 The browser-visible `display_name` is presentation only and is never accepted
 as `staged_filename`.
 

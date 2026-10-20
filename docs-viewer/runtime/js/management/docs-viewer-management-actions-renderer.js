@@ -13,19 +13,6 @@ var MANAGEMENT_ACTION_MENU_ITEMS = [
     label: "New"
   },
   {
-    id: "docsViewerManageImportDocButton",
-    actionId: ACTION_IDS.IMPORT_DOC,
-    artwork: "docsViewer__icon--import",
-    label: "Import doc",
-    separatorBefore: true
-  },
-  {
-    id: "docsViewerManageImportButton",
-    actionId: ACTION_IDS.IMPORT,
-    artwork: "docsViewer__icon--package",
-    label: "Import"
-  },
-  {
     id: "docsViewerManageRefreshDiscoveryButton",
     actionId: ACTION_IDS.REFRESH_DISCOVERY,
     artwork: "docsViewer__icon--refresh-cw",

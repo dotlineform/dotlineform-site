@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260605-125108-1d1ef3
 title: Runtime Module Ownership
 added_date: 2026-06-05 12:51:08
-last_updated: "2026-10-02 13:52:21"
+last_updated: "2026-10-20"
 summary: Grouped browser-code owners and a practical trace order for Docs Viewer runtime changes.
 parent_id: d-20260331-000000-c313fd
 ---
@@ -61,14 +61,10 @@ Manage-only browser code lives under `docs-viewer/runtime/js/management/`.
 - `docs-viewer-management-edit-menu.js` owns the stable Edit dropdown, Source editor dispatch, ordinary Copy link/Delete dispatch and disabled fallback items. Collection detail contributions retain their exact registrations, async state and existing Copy/Delete/Subject/Finder handlers; their retained action host mounts inside Edit rather than a second toolbar. The shared main-view runtime keeps this host connected in its hidden collection-action mount during Source and expanded views. The menu never infers a detail from a route or substitutes its collection host.
 - `source-editor/directive-actions.js` owns Source's flat action menu, disclosure, keyboard navigation and captured adapter/selection. It calls existing Catalogue/document-link modal owners and the Source adapter's staged-media operation; VS Code reuses the existing management source-opening workflow with the adapter's immutable target. Source mode contributes only Return, Save and Directives to `main-view`. The former standalone insertion-control wrappers, definitions and image/file dispatch events are retired.
 - `docs-viewer-runtime-lazy-controller.js` is the neutral shared-side lazy boundary that prevents public startup from importing management orchestration.
-- `docs-viewer-action-definitions.js` owns action ids and workspace/document/active-document/document-subtree target policy. It does not own handlers, placement, or mutations. Management resolves a subtree from the validated displayed ordinary-document target and the complete loaded hierarchy; context-menu invocation never changes that target.
-- `docs-viewer-management-index-controller.js` owns the Index Actions menu and Export/Prepare package/Delete dispatch. The Index has no checkbox-selection owner, gutter, commands, or reload reconciliation. Export receives the explicit subtree IDs; Prepare package and Delete receive the captured displayed root and expand descendants through their existing source owners. Collection selection remains independently owned by `docs-viewer-collection-selection.js` and the default collection contribution.
-- `packages/document-package-prepare-model.js` owns pure Prepare profile, format, context, descendant, eligibility, and request composition. `packages/document-package-prepare-workflow.js` owns the compact modal and result projection. `packages/document-package-client.js` owns the existing `/docs/packages/*` transport; the Python package service remains authoritative for validation and writes.
-- `docs-viewer-management-import-controller.js` owns the one app-level Import
-  entrypoint, frozen ordinary display context, lazy modal lifecycle, busy
-  projection, and terminal handoff. `docs-viewer-management-import-result.js`
-  validates exact server result routes; `docs-viewer-management.js` refreshes
-  only the matching parent or mounted child owner.
+- `docs-viewer-action-definitions.js` owns action ids and workspace/collection/collection-selection/document/active-document/document-subtree target policy. It does not own handlers, placement, or mutations. Management resolves a subtree from an explicit ordinary row target and the complete loaded hierarchy without changing the displayed document.
+- `docs-viewer-management-index-controller.js` owns Index Delete, Position and Sort Children dispatch plus Recent exclusions. The Index has no import, Export or Prepare package bridge, checkbox selection or selection commands. `docs-viewer-collection-selection.js` and the default collection contribution own checked targets; Collection Actions supplies Export/Prepare package with those exact IDs and both imports with the explicit collection, including empty lists.
+- `packages/document-package-prepare-model.js` owns pure Prepare profile, format, checked-ID summary/limit filtering and request composition. `packages/document-package-prepare-workflow.js` owns the single collection modal and result projection; `docs-viewer-management-document-reports.js` owns its lazy bridge. `packages/document-package-client.js` owns `/docs/packages/*` transport; Python requires a configured collection and owns selected-source reads, rendering and package writes without ordinary Index traversal.
+- `docs-viewer-management-import-controller.js` owns the shared Import docs modal, frozen invoking collection, lazy lifecycle, busy projection and terminal handoff. `docs-viewer-import-doc-workflow.js` owns synchronous native single-file selection and confirmation. Collection menu callbacks invoke both through `docs-viewer-management.js`; the shared runtime only forwards these callbacks and imports no management module. `docs-viewer-management-import-result.js` validates exact result routes, while committed records and terminal completion update retained collection views. Workspace dispatch, ordinary displayed-context/sibling placement and `?import=1` startup are removed.
 - `docs-viewer/runtime/js/import/` owns candidate validation and presentation,
   ordinary or collection dispatch, confirmation, selected-row Docs Review
   handoff, and explicit result links. It does not classify staging files or

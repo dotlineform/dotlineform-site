@@ -11,8 +11,7 @@ from typing import Any
 from docs_import_common import DOCUMENT_STAGED_SUFFIXES, is_interactive_html_import_asset
 from docs_import_review_source_folder import is_review_source_markdown
 from docs_import_source_service import import_ordinary_source
-from docs_management_document_target import normalize_managed_document_target
-from docs_management_import_service import import_source_dependencies, ordinary_import_target_request, resolve_ordinary_import_target
+from docs_management_import_service import import_source_dependencies, resolve_import_collection
 from docs_source_media_upload import MAX_MEDIA_BYTES, MAX_METADATA_BYTES, MAX_MULTIPART_OVERHEAD_BYTES, MAX_REQUEST_BYTES, validate_upload_filename
 
 
@@ -53,8 +52,8 @@ def parse_import_doc(content_type: str, raw: bytes) -> tuple[dict[str, Any], Imp
         body = json.loads(metadata.decode("utf-8"))
     except (ValueError, UnicodeError) as error:
         raise ValueError("Import doc metadata must be valid UTF-8 JSON") from error
-    if not isinstance(body, dict) or set(body) - {"collection", "include_prompt_meta", "after_doc_id"} != {"filename"}:
-        raise ValueError("Import doc requires filename, with optional collection, include_prompt_meta and after_doc_id")
+    if not isinstance(body, dict) or set(body) - {"include_prompt_meta"} != {"filename", "collection"}:
+        raise ValueError("Import doc requires filename and collection, with optional include_prompt_meta")
     filename = body.pop("filename")
     if not isinstance(filename, str):
         raise ValueError("Import doc filename must be a string")
@@ -63,10 +62,6 @@ def parse_import_doc(content_type: str, raw: bytes) -> tuple[dict[str, Any], Imp
         raise ValueError("Import doc accepts Word, HTML, Markdown or text files")
     if "include_prompt_meta" in body and type(body["include_prompt_meta"]) is not bool:
         raise ValueError("include_prompt_meta must be a boolean")
-    if "after_doc_id" in body:
-        if "collection" in body:
-            raise ValueError("Sibling placement requires an ordinary Index document")
-        body["after_doc_id"] = normalize_managed_document_target({"doc_id": body["after_doc_id"]})["doc_id"]
     data = fields["document"].get_payload(decode=True)
     if not isinstance(data, bytes) or not data or len(data) > MAX_MEDIA_BYTES:
         raise ValueError("Import doc requires one nonempty file of at most 64 MiB")
@@ -82,7 +77,7 @@ def import_doc(repo_root: Path, body: dict[str, Any], upload: ImportDocUpload) -
     awaited document/media generation. No persistent staging, directory inventory
     or package/companion discovery participates in native document intake.
     """
-    destination = resolve_ordinary_import_target(repo_root, ordinary_import_target_request(body))
+    destination = resolve_import_collection(repo_root, body)
     if destination.collection == "catalogue":
         raise ValueError("Catalogue documents are owned by Work Regenerate")
     with tempfile.TemporaryDirectory(prefix="docs-import-doc-") as directory:
@@ -97,7 +92,6 @@ def import_doc(repo_root: Path, body: dict[str, Any], upload: ImportDocUpload) -
             repo_root, body, False, import_source_dependencies(), destination=destination,
             staging_root=root, source_root=root, source_path=source_path,
             source_directory="", include_companion_assets=False,
-            after_doc_id=body.get("after_doc_id", ""),
         )
         return {
             "ok": True, "target": result["target"], "record": result["record"],

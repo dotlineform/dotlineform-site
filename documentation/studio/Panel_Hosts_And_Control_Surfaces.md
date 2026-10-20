@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260528-224754-964108
 title: Panel Hosts and Control Surfaces
 added_date: "2026-05-28 22:47:54"
-last_updated: "2026-10-02 13:52:21"
+last_updated: "2026-10-20"
 summary: Stable panel, view, mode, control-surface, context, lifecycle, and extension model for Docs Viewer browser modules.
 parent_id: d-20260424-000000-50b63f
 
@@ -93,7 +93,7 @@ Each mounted collection retains its own checkbox-selection owner and supplies im
 
 ### Index
 
-The index panel renders the document tree at its normal width. Collapse/expand controls, index layout capabilities, saved panel sizing and the old Working-to-Manage setting conversion are retired. Previously saved collapse/expand values are no longer read. The header is hidden when its index-view control surface is empty. The manage Index owns Actions and Position; Export, Prepare package and Delete operate on the displayed document and descendants without checkboxes or selection commands. Tree-node disclosure remains independent of action targeting and panel presentation.
+The index panel renders the document tree at its normal width. Collapse/expand controls, index layout capabilities, saved panel sizing and the old Working-to-Manage setting conversion are retired. Previously saved collapse/expand values are no longer read. The header is hidden when its index-view control surface is empty. Manage retains the Index row context menu, Position, Sort Children and subtree Delete without checkboxes or selection commands. Export, Prepare package and both import actions belong only to Collections reports. Tree-node disclosure remains independent of action targeting and panel presentation.
 
 Public narrow-screen presentation retains its current stacked index/document layout. A future mobile show/hide index control belongs in the main site header and requires separate implementation; it is not part of the panel chrome. Content Detail still temporarily hides the index through its `expanded-main` layout and restores it on return.
 

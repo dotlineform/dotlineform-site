@@ -331,6 +331,8 @@ export function startDocsViewerRuntime(options) {
     mediaDetailAdapter: settings.mediaDetailAdapter,
     managementService: managementService,
     managementDocumentActions: {
+      importDoc: function (target, options) { return managementRuntime.controller().importDoc(target, options); },
+      importDocs: function (target, options) { return managementRuntime.controller().importDocs(target, options); },
       startBusyOperation: function () { return managementRuntime.controller().startBusyOperation(); },
       resolveAction: function (actionId, target) {
         var controller = managementRuntime ? managementRuntime.controller() : null;
@@ -914,11 +916,6 @@ export function startDocsViewerRuntime(options) {
     loadViewerSettings: loadViewerSettings,
     initializeManagement: initializeManagement,
     loadIndex: routeWorkflowCommands.loadIndex,
-    openImportOnLoad: function () {
-      loadManagementController().then(function (controller) {
-        if (controller) controller.openImportModal();
-      });
-    },
     setStatus: statusController.setStatus,
     hideDocPane: hideDocPane,
     content: content,

@@ -11,10 +11,6 @@ function normalizeIds(values) {
   });
 }
 
-function documentId(record) {
-  return record.doc_id;
-}
-
 export function documentPackageProfile(profiles, profileId) {
   return profiles.find((profile) => profile.profile_id === profileId) || null;
 }
@@ -35,101 +31,25 @@ export function documentPackageContentFormats(profile) {
   return formats.length ? formats : [fallback].filter(Boolean);
 }
 
-export function documentPackageProfileRequiresDescendants(profile) {
-  return packageText(profile && profile.record_shape) === "document_tree";
-}
-
-export function documentPackageProfileIncludesDescendants(profile) {
-  if (documentPackageProfileRequiresDescendants(profile)) return true;
-  const selection = profile && typeof profile.selection === "object" ? profile.selection : {};
-  return selection.include_descendants !== false;
-}
-
-export function documentPackageDescendantIds(documents, docId) {
-  const childrenByParent = new Map();
-  (Array.isArray(documents) ? documents : []).forEach((record) => {
-    const parentId = packageText(record && record.parent_id);
-    const childId = documentId(record);
-    if (!parentId || !childId) return;
-    if (!childrenByParent.has(parentId)) childrenByParent.set(parentId, []);
-    childrenByParent.get(parentId).push(childId);
-  });
-  const descendants = [];
-  const pending = [...(childrenByParent.get(packageText(docId)) || [])];
-  const seen = new Set();
-  while (pending.length) {
-    const childId = pending.shift();
-    if (!childId || seen.has(childId)) continue;
-    seen.add(childId);
-    descendants.push(childId);
-    pending.push(...(childrenByParent.get(childId) || []));
-  }
-  return descendants;
-}
-
-export function documentPackageSelectionEligibility(documents, checkedDocIds) {
-  const checked = normalizeIds(checkedDocIds);
-  const selectable = new Set(
-    (Array.isArray(documents) ? documents : [])
-      .map(documentId)
-      .filter(Boolean)
-  );
-  return {
-    eligibleDocIds: checked.filter((docId) => selectable.has(docId)),
-    ineligibleDocIds: checked.filter((docId) => !selectable.has(docId))
-  };
-}
-
-export function expandDocumentPackageSelection(documents, checkedDocIds, includeDescendants) {
-  const eligibility = documentPackageSelectionEligibility(documents, checkedDocIds);
-  const allowed = new Set(
-    (Array.isArray(documents) ? documents : [])
-      .map(documentId)
-      .filter(Boolean)
-  );
-  const expanded = [];
-  const seen = new Set();
-  eligibility.eligibleDocIds.forEach((docId) => {
-    const affected = includeDescendants
-      ? [docId, ...documentPackageDescendantIds(documents, docId)]
-      : [docId];
-    affected.forEach((affectedId) => {
-      if (!allowed.has(affectedId) || seen.has(affectedId)) return;
-      seen.add(affectedId);
-      expanded.push(affectedId);
-    });
-  });
-  return expanded;
-}
-
 export function projectDocumentPackageSelection(options = {}) {
   const profile = options.profile || null;
   const selection = profile && typeof profile.selection === "object" ? profile.selection : {};
   const documents = Array.isArray(options.documents) ? options.documents : [];
   const documentsById = new Map(
-    documents.map((record) => [documentId(record), record]).filter(([docId]) => Boolean(docId))
+    documents.map((record) => [record.doc_id, record])
   );
-  const includeDescendants = options.flatCollection === true
-    ? false
-    : documentPackageProfileRequiresDescendants(profile)
-      ? true
-      : options.includeDescendants === true;
   const supportsMissingSummaryOnly = selection.supports_missing_summary_only === true;
   const missingSummaryOnly = supportsMissingSummaryOnly
     ? Object.prototype.hasOwnProperty.call(options, "missingSummaryOnly")
       ? options.missingSummaryOnly === true
       : selection.default_missing_summary_only === true
     : false;
-  const expandedDocIds = expandDocumentPackageSelection(
-    documents,
-    options.checkedDocIds,
-    includeDescendants
-  );
-  const afterSummary = expandedDocIds.filter((docId) => {
+  const checkedDocIds = options.checkedDocIds;
+  const afterSummary = checkedDocIds.filter((docId) => {
     const record = documentsById.get(docId);
     return !missingSummaryOnly || !packageText(record && record.summary);
   });
-  const excludedWithSummaryCount = expandedDocIds.length - afterSummary.length;
+  const excludedWithSummaryCount = checkedDocIds.length - afterSummary.length;
   const rawMaxDocuments = profile && profile.limits && profile.limits.max_documents;
   const maxDocuments = Number.isInteger(rawMaxDocuments) && rawMaxDocuments > 0
     ? rawMaxDocuments
@@ -138,7 +58,6 @@ export function projectDocumentPackageSelection(options = {}) {
   const excludedByLimitCount = afterSummary.length - docIds.length;
   return {
     docIds,
-    includeDescendants,
     missingSummaryOnly,
     supportsMissingSummaryOnly,
     total: docIds.length,
@@ -173,13 +92,12 @@ export function createDocumentPackagePrepareRequest(options = {}) {
     throw new Error("The selected content format is not supported by this profile.");
   }
 
-  const request = {
+  return {
+    collection,
     profile_id: packageText(profile.profile_id),
     doc_ids: effectiveDocIds,
     target_format: requestedTargetFormat,
     content_format: requestedContentFormat,
     dry_run: false
   };
-  if (collection) request.collection = collection;
-  return request;
 }

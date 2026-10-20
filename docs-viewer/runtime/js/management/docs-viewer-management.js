@@ -27,12 +27,8 @@ import {
 } from "./docs-viewer-management-actions.js";
 import {
   managedDocumentTargetsEqual,
-  normalizeManagedDocumentCollectionTarget,
   normalizeManagedDocumentTarget
 } from "./docs-viewer-management-document-target.js";
-import {
-  docsImportResultDestination
-} from "./docs-viewer-management-import-result.js";
 import {
   projectDocsViewerReportControlState
 } from "./docs-viewer-management-report-controls.js";
@@ -96,61 +92,6 @@ export function createDocsViewerManagementActionResolver(options = {}) {
   };
 }
 
-export function refreshDocsImportTerminalDestination(detail, options = {}) {
-  var result = detail && detail.result;
-  var isCollection = Boolean(result && result.collection === true);
-  var destination = docsImportResultDestination(
-    result,
-    { collection: isCollection }
-  );
-  if (String(detail && detail.destinationUrl || "").trim() !== destination.href) {
-    throw new Error("Docs Import terminal destination URL does not match its result.");
-  }
-  var target = destination.target;
-  var targetCollection = normalizeManagedDocumentCollectionTarget({
-    ...(target.collection ? { collection: target.collection } : {})
-  });
-  var displayedCollection = normalizeManagedDocumentCollectionTarget(
-    options.currentCollection
-  );
-  var destinationIsDisplayed = (
-    String(displayedCollection.collection || "")
-      === String(targetCollection.collection || "")
-  );
-  if (!destinationIsDisplayed) {
-    return Promise.resolve({
-      refreshed: false,
-      target: target
-    });
-  }
-
-  if (targetCollection.collection) {
-    var reportState = options.reportState || {};
-    var refresh = isCollection
-      ? reportState.refreshCollection
-      : reportState.refreshDocument;
-    if (typeof refresh !== "function") {
-      return Promise.reject(new Error(
-        "The exact imported collection destination is no longer mounted."
-      ));
-    }
-    return Promise.resolve(refresh(target)).then(function () {
-      return { refreshed: true, target: target };
-    });
-  }
-
-  if (typeof options.reloadParent !== "function") {
-    return Promise.reject(new Error(
-      "The exact imported parent-scope destination cannot be refreshed."
-    ));
-  }
-  return Promise.resolve(
-    options.reloadParent(isCollection ? "" : target.doc_id)
-  ).then(function () {
-    return { refreshed: true, target: target };
-  });
-}
-
 export function initDocsViewerManagement(context) {
   var root = context.root;
   var nav = context.nav;
@@ -178,8 +119,6 @@ export function initDocsViewerManagement(context) {
   var manageActionsMenu = document.getElementById("docsViewerManageActionsMenu");
   var manageRefreshDiscoveryButton = document.getElementById("docsViewerManageRefreshDiscoveryButton");
   var managePublishButton = document.getElementById("docsViewerManagePublishButton");
-  var manageImportButton = document.getElementById("docsViewerManageImportButton");
-  var manageImportDocButton = document.getElementById("docsViewerManageImportDocButton");
   var manageNewButton = document.getElementById("docsViewerManageNewButton");
   var importRoot = shellRef("importRoot", "docsHtmlImportRoot");
   var importBootStatus = shellRef("importBootStatus", "docsHtmlImportBootStatus");
@@ -192,11 +131,9 @@ export function initDocsViewerManagement(context) {
   var actionController = null;
   var resolveAction = null;
   var projectedReportControls = null;
-  var collectionReportState = null;
   var contextActions = null;
   var editMenuController = null;
   var indexController = createDocsViewerManagementIndexController({
-    root: root,
     management: management,
     callbacks: {
       sourceEditingActive: function () {
@@ -240,42 +177,22 @@ export function initDocsViewerManagement(context) {
     }
   });
 
-  function currentImportDisplayContext() {
-    if (collectionReportState && collectionReportState.collectionTarget) {
-      return normalizeManagedDocumentCollectionTarget(
-        collectionReportState.collectionTarget
-      );
-    }
-    return normalizeManagedDocumentCollectionTarget({
-    });
-  }
-
-  function currentImportDisplayContextLabel() {
-    if (collectionReportState && collectionReportState.collectionTarget) {
-      return String(collectionReportState.collectionLabel || "").trim();
-    }
-    return "Documents";
-  }
-
-  function openAppImport(detail) {
-    var eventDetail = detail && typeof detail === "object" ? detail : {};
+  function openCollectionImport(destination, options = {}) {
+    if (management.managementBusy || !management.managementAvailable || resolveAction(DOCS_VIEWER_ACTION_IDS.IMPORT, destination).disabled) return;
     return importController.open({
-      destination: currentImportDisplayContext(),
-      destinationLabel: currentImportDisplayContextLabel(),
-      restoreFocus: eventDetail.actionTarget || eventDetail.target || null
+      destination: destination,
+      destinationLabel: domains.workspaceConfig.activeConfig.collectionsById.get(destination.collection).title,
+      restoreFocus: options.restoreFocus
     });
   }
 
-  function openAppImportDoc() {
-    var destination = currentImportDisplayContext();
+  function openCollectionImportDoc(destination, options = {}) {
     if (management.managementBusy || !management.managementAvailable || resolveAction(DOCS_VIEWER_ACTION_IDS.IMPORT_DOC, destination).disabled) return;
-    var currentDocument = context.documentActionContext();
-    var currentTarget = currentDocument.documentTarget;
-    var afterDocId = !destination.collection && currentTarget && !currentTarget.collection ? currentTarget.doc_id : "";
+    hideContextMenu();
+    eventRouter.hideManageActionsMenu();
     importDocWorkflow.open({
       destination: destination,
-      afterDocId: afterDocId,
-      restoreFocus: manageActionsButton
+      restoreFocus: options.restoreFocus
     });
   }
 
@@ -295,8 +212,7 @@ export function initDocsViewerManagement(context) {
     });
   }
 
-  function publishCollectionReportState(value) {
-    collectionReportState = value && value.collectionTarget ? value : null;
+  function publishCollectionReportState() {
     renderManagementUi();
   }
 
@@ -537,14 +453,6 @@ export function initDocsViewerManagement(context) {
       managePublishButton.disabled = management.managementBusy || !publishAvailable;
       managePublishButton.title = publishAvailable ? "Publish" : "Publish is unavailable for this workspace.";
     }
-    if (manageImportButton) {
-      manageImportButton.disabled = management.managementBusy || !management.managementAvailable;
-    }
-    if (manageImportDocButton) {
-      var importDoc = resolveAction(DOCS_VIEWER_ACTION_IDS.IMPORT_DOC, currentImportDisplayContext());
-      manageImportDocButton.disabled = management.managementBusy || !management.managementAvailable || importDoc.disabled;
-      manageImportDocButton.title = importDoc.disabledReason || "Import doc";
-    }
     var authoringAvailable = management.managementAvailable;
     projectDocumentActionButtons(!management.managementChecked || !authoringAvailable, !authoringAvailable || editDisabled);
   }
@@ -597,9 +505,6 @@ export function initDocsViewerManagement(context) {
         });
       }
     });
-    if (results.some(function (result) { return result && !result.target?.collection; })) {
-      await context.routeCommands.loadIndex({ preserveDocument: true });
-    }
     var result = detail.result;
     var loaded;
     if (result && result.collection !== true && result.target) {
@@ -763,8 +668,6 @@ export function initDocsViewerManagement(context) {
       manageActionsMenu: manageActionsMenu
     },
     commands: {
-      openImport: openAppImport,
-      openImportDoc: openAppImportDoc,
       publish: function () { actionController.handlePublish(); },
       refreshDiscovery: function () { actionController.handleRefreshDiscovery(); }
     },
@@ -808,7 +711,6 @@ export function initDocsViewerManagement(context) {
   var modalComposition = createDocsViewerManagementModalComposition({
     shellRefs: shellRefs,
     manageActionsButton: manageActionsButton,
-    manageImportButton: manageImportButton,
     callbacks: {
       hideContextMenu: hideContextMenu,
       hideManageActionsMenu: eventRouter.hideManageActionsMenu,
@@ -844,7 +746,8 @@ export function initDocsViewerManagement(context) {
     },
     hideContextMenu: hideContextMenu,
     initialize: initializeManagement,
-    openImportModal: importController.open,
+    importDocs: openCollectionImport,
+    importDoc: openCollectionImportDoc,
     publishCollectionReportState: publishCollectionReportState,
     render: renderManagementUi,
   };

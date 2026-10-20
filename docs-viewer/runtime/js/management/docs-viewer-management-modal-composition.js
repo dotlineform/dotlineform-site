@@ -21,8 +21,7 @@ export function createDocsViewerManagementModalComposition(options = {}) {
     importCollectionConfirmButton: shellRef(shellRefs, "importCollectionConfirmButton", "docsImportCollectionConfirm"),
     importCollectionRetryButton: shellRef(shellRefs, "importCollectionRetryButton", "docsImportCollectionRetry"),
     importCollectionCloseButton: shellRef(shellRefs, "importCollectionCloseButton", "docsImportCollectionClose"),
-    manageActionsButton: options.manageActionsButton || null,
-    manageImportButton: options.manageImportButton || null
+    manageActionsButton: options.manageActionsButton || null
   };
   var modalController = createDocsViewerManagementModalController({
     refs: refs,

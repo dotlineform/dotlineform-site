@@ -193,9 +193,8 @@ export function docsImportCandidateTarget(candidate, ordinaryDestination) {
       : null;
   }
   if (candidate.targetMode === DOCS_IMPORT_TARGET_MANIFEST_COLLECTION) {
-    return candidate.target
-      ? normalizeManagedDocumentCollectionTarget(candidate.target)
-      : null;
+    return candidate.target && candidate.target.collection === ordinaryDestination?.collection
+      ? candidate.target : null;
   }
   return null;
 }
@@ -211,7 +210,8 @@ export function docsImportCandidateDestinationLabel(
   ordinaryDestination,
   ordinaryDestinationLabel = ""
 ) {
-  const target = docsImportCandidateTarget(candidate, ordinaryDestination);
+  const target = candidate && candidate.targetMode === DOCS_IMPORT_TARGET_MANIFEST_COLLECTION
+    ? candidate.target : docsImportCandidateTarget(candidate, ordinaryDestination);
   if (!target) return "Unavailable";
   if (candidate.targetMode === DOCS_IMPORT_TARGET_ORDINARY_CONTEXT) {
     return cleanText(ordinaryDestinationLabel) || docsImportCollectionLabel(target);

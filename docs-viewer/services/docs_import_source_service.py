@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, replace
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Dict
 
@@ -37,7 +37,6 @@ from docs_import_document_package import (
 from docs_import_media import ImportMediaPreparation
 from docs_import_preview import (
     generate_import_preview,
-    list_staged_import_source_files,
     resolve_staged_import_source,
 )
 from docs_import_review_source_folder import (
@@ -99,40 +98,6 @@ def handle_import_source_files(
     trusted_sources_allowed = (
         source.path == workspace_paths.import_staging.resolve()
     )
-    registered_source_formats: dict[str, str] = {}
-    blocked_package_filenames: set[str] = set()
-    edited_review_sources: dict[str, dict[str, Any]] = {}
-    for path in source.path.iterdir():
-        try:
-            edited_review_source = recognize_edited_review_source_folder(
-                repo_root,
-                candidate=path,
-                staging_root=source.path,
-                metadata_root=workspace_paths.meta,
-            )
-        except (FileNotFoundError, OSError, ValueError):
-            blocked_package_filenames.add(path.name)
-            continue
-        if edited_review_source is not None:
-            registered_source_formats[path.name] = EDITED_REVIEW_SOURCE_FORMAT
-            edited_review_sources[path.name] = (
-                edited_review_source.listing_projection()
-            )
-            continue
-        source_format = document_package_source_format(
-            repo_root,
-            path,
-            metadata_root=workspace_paths.meta,
-        )
-        if source_format == EXPORT_ONLY_COLLECTION_SOURCE_FORMAT:
-            blocked_package_filenames.add(path.name)
-        elif source_format:
-            registered_source_formats[path.name] = source_format
-    files = list_staged_import_source_files(
-        source.path,
-        source.projects_base,
-        registered_source_formats=registered_source_formats,
-    )
     return {
         "ok": True,
         "available": True,
@@ -147,17 +112,6 @@ def handle_import_source_files(
             projects_base=source.projects_base,
             trusted_sources_allowed=trusted_sources_allowed,
         ),
-        "files": [
-            {
-                **record,
-                **edited_review_sources.get(
-                    str(record.get("filename") or ""),
-                    {},
-                ),
-            }
-            for record in files
-            if str(record.get("filename") or "") not in blocked_package_filenames
-        ],
     }
 
 
@@ -197,7 +151,7 @@ def handle_import_source(
     if edited_review_source is not None:
         if not trusted_sources_allowed:
             raise ValueError(TRUSTED_SOURCE_STAGING_MESSAGE)
-        if collection and not getattr(
+        if not getattr(
             destination.document_config,
             "supports_return_import",
             False,
@@ -241,13 +195,9 @@ def handle_import_source(
         payload["target"] = destination.request_target()
         dependencies.log_event(
             repo_root,
-            (
-                "docs-import-reviewed-collection-collection-preview"
-                if collection
-                else "docs-import-reviewed-stage-collection-preview"
-            ),
+            "docs-import-reviewed-collection-collection-preview",
             {
-                **({"collection": collection} if collection else {}),
+                "collection": collection,
                 "staged_filename": staged_filename,
                 "source_directory": accepted_source_directory,
                 "source_format": EDITED_REVIEW_SOURCE_FORMAT,
@@ -273,8 +223,7 @@ def handle_import_source(
         source_path,
         metadata_root=metadata_root,
         allow_collection_return_import=bool(
-            collection
-            and getattr(destination.document_config, "supports_return_import", False)
+            getattr(destination.document_config, "supports_return_import", False)
         ),
     )
     if (
@@ -290,7 +239,7 @@ def handle_import_source(
             "Export-only document packages cannot enter Docs Import."
         )
     if source_format == COLLECTION_SOURCE_FORMAT:
-        if collection and not getattr(
+        if not getattr(
             destination.document_config,
             "supports_return_import",
             False,
@@ -314,11 +263,7 @@ def handle_import_source(
                 log_event=dependencies.log_event,
                 perform_source_write_and_rebuild=dependencies.perform_source_write_and_rebuild,
                 collection=destination,
-                perform_collection_source_write_and_rebuild=(
-                    dependencies.perform_collection_source_write_and_rebuild
-                    if collection
-                    else None
-                ),
+                perform_collection_source_write_and_rebuild=dependencies.perform_collection_source_write_and_rebuild,
             )
             result["target"] = destination.request_target()
             result["viewer_url"] = destination_url
@@ -346,7 +291,7 @@ def handle_import_source(
                 "record_errors": payload["counts"]["record_errors"],
                 "blockers": payload["counts"]["blockers"],
                 "ready_for_confirmation": payload["ready_for_confirmation"],
-                **({"collection": collection} if collection else {}),
+                "collection": collection,
             },
         )
         payload["dry_run"] = dry_run
@@ -366,7 +311,6 @@ def import_ordinary_source(
     repo_root: Path, body: Dict[str, Any], dry_run: bool, dependencies: ImportSourceDependencies,
     *, destination: ManagedDocumentCollection, staging_root: Path, source_root: Path,
     source_path: Path, source_directory: str, include_companion_assets: bool,
-    after_doc_id: str = "",
 ) -> Dict[str, Any]:
     """Convert one supplied ordinary source and complete its create/media/generation.
 
@@ -395,8 +339,7 @@ def import_ordinary_source(
     preview["target"] = destination.request_target()
     source_doc_id = preview["source_doc_id"]
     preview["proposed_doc_id_source"] = "allocated-local-identity"
-    if collection:
-        preview["collection"] = collection
+    preview["collection"] = collection
     interactive_plans = interactive_html_asset_plans(
         repo_root,
         staging_root,
@@ -433,8 +376,7 @@ def import_ordinary_source(
             "interactive_html_asset_count": len(interactive_plans),
             "requires_interactive_html_confirmation": requires_interactive_html_confirmation,
         }
-        if collection:
-            preview_event["collection"] = collection
+        preview_event["collection"] = collection
         dependencies.log_event(
             repo_root,
             "docs-import-source-preview",
@@ -455,8 +397,7 @@ def import_ordinary_source(
             ),
             "dry_run": dry_run,
         }
-        if collection:
-            response["collection"] = collection
+        response["collection"] = collection
         return response
 
     ensure_interactive_html_targets_available(
@@ -496,14 +437,7 @@ def import_ordinary_source(
         interactive_html_plans=tuple(interactive_plans),
         allow_interactive_html_overwrite=confirm_interactive_html_overwrite,
     )
-    apply_result = apply_import_document(repo_root, plan, media_context=media_context, after_doc_id=after_doc_id)
-    if after_doc_id:
-        parent_id = apply_result.parent_ids[plan.doc_id]
-        plan = replace(
-            plan, parent_id=parent_id,
-            committed_record={**plan.committed_record, "parent_id": parent_id},
-            prepared_document=replace(plan.prepared_document, parent_id=parent_id),
-        )
+    apply_result = apply_import_document(repo_root, plan, media_context=media_context)
     rebuild = dependencies.rebuild_prepared_document(
         repo_root, destination, plan.prepared_document,
         parent_ids=apply_result.parent_ids, media_change=plan.media_change,
@@ -527,7 +461,7 @@ def import_ordinary_source(
     result["viewer_url"] = management_document_viewer_url(
         destination_url,
         plan.doc_id,
-        collection=bool(collection),
+        collection=True,
         collection_id=collection,
     )
     response = {
@@ -540,6 +474,5 @@ def import_ordinary_source(
         "import_preview": plan.import_preview,
         **result,
     }
-    if collection:
-        response["collection"] = collection
+    response["collection"] = collection
     return response

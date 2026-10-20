@@ -2,7 +2,7 @@
 doc_id: d-20260919-100234-038395
 title: "Shared Icons: Toolbar Mapping"
 added_date: "2026-09-19 10:02:34"
-last_updated: "2026-10-19"
+last_updated: "2026-10-20"
 summary: Editable mappings for Docs Viewer toolbars, report toolbars and report list icons, including code identifiers, state variants and replacement artwork choices.
 ui_status: planned
 parent_id: d-20260910-223116-9a1011
@@ -83,13 +83,11 @@ Code identifiers below are exact **renderer keys**, except entries explicitly ma
 | Edit menu: draft readiness | action `set-draft` | Ready (`aria-checked=false`); Mark as draft | ✅ | circle-check.svg and text | — | Implemented; disabled for Catalogue subdocuments; manual review pending |
 | Edit menu: Star | action `set-selected` | Unset (`aria-checked=false`); Star | Outline star | star.svg and text | Theme text tint | Implemented; manual review pending |
 | Edit menu: Star | action `set-selected` | Set (`aria-checked=true`); Remove star | Filled star | star-filled.svg and text | Yellow when enabled; disabled colour otherwise | Implemented; manual review pending |
-| Actions menu: Import | action `import` | Opens Import | 📥 and text | import.svg and text | — | Implemented; review pending |
 | Collection Actions menu: Export | action `export-docs` | Exports checked documents in the owning collection | ⬇️ and text | square-arrow-right-exit.svg and text | Disabled with no checked documents | Implemented; manual review pending |
 | Actions menu: Rebuild | action `rebuild-docs` | Rebuilds docs and Search | 🔄 and text | refresh-cw.svg and text | — | Implemented; manual review pending |
 | Actions menu: Publish | action `publish` | Publishes the workspace | 🌍 and text | globe.svg and text | — | Implemented; manual review pending |
 | Actions menu: Settings | action `settings` | Opens Settings | ⚙️ and text | settings.svg and text | — | Implemented; review pending |
 | Index header: actions | `manage-index-actions` | Opens Index actions menu | 🛠️ | wrench.svg | — | Implemented; review pending; wrench.svg replaces the missing spanner.svg by agreement |
-| Index actions menu: package | action `prepare-document-package` | Prepares a document package | 📦 and text | package.svg and text | — | Implemented; review pending |
 | Index actions menu: Delete | action `delete` | Deletes selected documents | 🗑️ and text | trash.svg and text | — | Implemented; review pending |
 | Info header: close | DOM `docsViewerInfoPanelClose` | Hides Info panel | × | x.svg | 1rem artwork; existing 1.8rem button | Implemented; review pending |
 
@@ -106,6 +104,8 @@ Identifiers marked `DOM` are element IDs; `selector` entries are exact attribute
 | Collection list: Regenerate | selector `[data-docs-collection-regenerate]`; action `catalogue-regenerate` | Runs Catalogue regeneration when that contribution is available | 🔄 | refresh-cw.svg | — | Implemented; review pending |
 | Collection list: Actions | selector `[data-docs-collection-actions]` | Opens collection Actions menu | 🔧 | wrench.svg | — | Implemented; review pending |
 | Collection Actions menu: package | DOM `docsViewerCollectionPreparePackageButton`; action `prepare-document-package` | Prepares a package for the selected documents | 📦 and text `Prepare package…` | package.svg and text | — | Implemented; review pending |
+| Collection Actions menu: native import | DOM `docsViewerCollectionImportDocButton`; action `import-doc` | Opens one native file for this collection | import.svg and text | import.svg and text `Import doc…` | Available without checked documents, including empty collections; hidden in Catalogue | Implemented; manual review pending |
+| Collection Actions menu: staged import | DOM `docsViewerCollectionImportButton`; action `import` | Opens Data Sharing sources/packages for this collection | package.svg and text | package.svg and text `Import docs…` | Available without checked documents, including empty collections; hidden in Catalogue | Implemented; manual review pending |
 | Collection selection: select all | selector `[data-docs-collection-selection-command="select-all"]` | Selects all eligible documents | Text `Select all` | Text `All` | — | Implemented; review pending |
 | Collection selection: clear | selector `[data-docs-collection-selection-command="clear"]` | Clears selection | Text `Clear` | Text `Clear` | — | Keep |
 | Collection selection: done | selector `[data-docs-collection-selection-command="done"]` | Ends selection mode | Text `Done` | Text `Done` | — | Keep |

@@ -29,6 +29,7 @@ export const DOCS_VIEWER_ACTION_IDS = Object.freeze({
 
 export const DOCS_VIEWER_ACTION_TARGETS = Object.freeze({
   ACTIVE_DOCUMENT: "active-document",
+  COLLECTION: "collection",
   COLLECTION_SELECTION: "collection-selection",
   DOCUMENT_SUBTREE: "document-subtree",
   DOCUMENT: "document",
@@ -75,8 +76,8 @@ export const DOCS_VIEWER_ACTION_DEFINITIONS = Object.freeze({
   [IDS.DELETE]: actionDefinition(IDS.DELETE, TARGETS.DOCUMENT_SUBTREE),
   [IDS.EDIT_DOCUMENT]: actionDefinition(IDS.EDIT_DOCUMENT, TARGETS.ACTIVE_DOCUMENT),
   [IDS.EXPORT_DOCS]: actionDefinition(IDS.EXPORT_DOCS, TARGETS.COLLECTION_SELECTION),
-  [IDS.IMPORT]: actionDefinition(IDS.IMPORT, TARGETS.WORKSPACE),
-  [IDS.IMPORT_DOC]: actionDefinition(IDS.IMPORT_DOC, TARGETS.WORKSPACE),
+  [IDS.IMPORT]: actionDefinition(IDS.IMPORT, TARGETS.COLLECTION),
+  [IDS.IMPORT_DOC]: actionDefinition(IDS.IMPORT_DOC, TARGETS.COLLECTION),
   [IDS.MARKDOWN_SAVE]: actionDefinition(IDS.MARKDOWN_SAVE, TARGETS.ACTIVE_DOCUMENT),
   [IDS.SOURCE_ADD_CATALOGUE_IMAGE]: actionDefinition(IDS.SOURCE_ADD_CATALOGUE_IMAGE, TARGETS.ACTIVE_DOCUMENT),
   [IDS.SOURCE_ADD_MEDIA_VIEW_LINK]: actionDefinition(IDS.SOURCE_ADD_MEDIA_VIEW_LINK, TARGETS.ACTIVE_DOCUMENT),
@@ -90,7 +91,7 @@ export const DOCS_VIEWER_ACTION_DEFINITIONS = Object.freeze({
   [IDS.OPEN]: actionDefinition(IDS.OPEN, TARGETS.DOCUMENT),
   [IDS.OPEN_VSCODE]: actionDefinition(IDS.OPEN_VSCODE, TARGETS.DOCUMENT),
   [IDS.POSITION]: actionDefinition(IDS.POSITION, TARGETS.DOCUMENT),
-  [IDS.PREPARE_DOCUMENT_PACKAGE]: actionDefinition(IDS.PREPARE_DOCUMENT_PACKAGE, TARGETS.DOCUMENT_SUBTREE),
+  [IDS.PREPARE_DOCUMENT_PACKAGE]: actionDefinition(IDS.PREPARE_DOCUMENT_PACKAGE, TARGETS.COLLECTION_SELECTION),
   [IDS.PUBLISH]: actionDefinition(IDS.PUBLISH, TARGETS.WORKSPACE),
   [IDS.REFRESH_DISCOVERY]: actionDefinition(IDS.REFRESH_DISCOVERY, TARGETS.WORKSPACE),
   [IDS.REBUILD_DOCUMENT]: actionDefinition(IDS.REBUILD_DOCUMENT, TARGETS.ACTIVE_DOCUMENT),
@@ -155,6 +156,8 @@ export function resolveDocsViewerAction(actionId, context = {}) {
     } else if (!documentId || subtreeDocIds.indexOf(documentId) === -1) {
       disabledReason = "No Index target document.";
     } else targetDocIds = subtreeDocIds;
+  } else if (definition.target === TARGETS.COLLECTION) {
+    if (!(documentTarget && documentTarget.collection)) disabledReason = "Open a collection.";
   } else if (definition.target === TARGETS.COLLECTION_SELECTION) {
     if (documentTarget && documentTarget.collection) targetDocIds = normalizeIds(documentTarget.doc_ids);
     if (!targetDocIds.length) disabledReason = "Select one or more collection documents.";
@@ -168,7 +171,7 @@ export function resolveDocsViewerAction(actionId, context = {}) {
     disabledReason: disabledReason,
     disabled: Boolean(disabledReason),
     enabled: !disabledReason,
-    hidden: Boolean(restriction) || (definition.target === TARGETS.COLLECTION_SELECTION && !(documentTarget && documentTarget.collection)),
+    hidden: Boolean(restriction) || ([TARGETS.COLLECTION, TARGETS.COLLECTION_SELECTION].includes(definition.target) && !(documentTarget && documentTarget.collection)),
     target: definition.target,
     targetDocIds: targetDocIds
   };

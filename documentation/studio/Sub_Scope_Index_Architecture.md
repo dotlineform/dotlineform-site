@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260728-113139-763354
 title: Sub-Scope Index Architecture
 added_date: "2026-07-28 11:31:39"
-last_updated: "2026-10-17"
+last_updated: "2026-10-20"
 summary: Collection-list ownership, exact document identity, standard management controls, retained selection and explicit management adoption.
 parent_id: d-20260801-084127-752d7e
 ---
@@ -190,11 +190,11 @@ The list and common reader pass explicit hosts, records and validated targets to
 Presentation for these controls belongs in the manage stylesheet. Public CSS
 may retain only the shared report layout required for public reading.
 
-The shared list loads the configured manifest and accepts the standard management contribution supplied by its caller. It receives leading, title-prefix, trailing and list hosts plus collection-scoped mount, state, refresh and unmount events. It publishes the mounted collection and explicit collection refresh callback to the app-level Import owner. The common reader separately supplies exact document actions, metadata and refresh callbacks after by-ID identity validation. Empty hosts are not mounted. Registered actions consume only an explicit collection, checked IDs or validated document target and declare their empty-state and refresh effects. Selection stays with the default owner; no collection customisation selection callbacks remain.
+The shared list loads the configured manifest and accepts the standard management contribution supplied by its caller. It receives leading, title-prefix, trailing and list hosts plus collection-scoped mount, state, refresh and unmount events. Its action registrar captures the exact collection for both import callbacks; committed records and explicit completion callbacks update retained collection views. The common reader separately supplies exact document actions, metadata and refresh callbacks after by-ID identity validation. Empty hosts are not mounted. Registered actions consume only an explicit collection, checked IDs or validated document target and declare their empty-state and refresh effects. Selection stays with the default owner; no collection customisation selection callbacks remain.
 
 ## Selection Lifecycle
 
-Collection checkbox selection belongs to its list owner. The Index has independent explicit row selection and no checkbox selection. Index Export, Prepare package and Delete use the displayed ordinary document subtree under their own action owner.
+Collection checkbox selection belongs to its list owner. Collection Actions owns Export and Prepare package for checked IDs and Import doc/Import docs for the exact collection, including an empty collection with no checks. The Index has explicit row targeting and no checkbox selection; it retains subtree Delete but has no import, Export or Prepare package entry point.
 
 The collection selection owner is keyed by `{ collection }` and owns:
 

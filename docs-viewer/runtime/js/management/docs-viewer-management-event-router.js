@@ -76,8 +76,6 @@ export function createDocsViewerManagementEventRouter(options = {}) {
     }
     var commandsByAction = new Map([
       ["refresh-discovery", ["refreshDiscovery", { hideContextMenu: true, hideManageActionsMenu: true }]],
-      ["import", ["openImport", {}]],
-      ["import-doc", ["openImportDoc", { hideContextMenu: true, hideManageActionsMenu: true }]],
       ["publish", ["publish", { hideContextMenu: true, hideManageActionsMenu: true }]]
     ]);
     var command = commandsByAction.get(actionId);

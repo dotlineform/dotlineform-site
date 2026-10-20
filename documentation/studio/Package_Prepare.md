@@ -3,39 +3,37 @@ draft: false
 doc_id: d-20260722-151224-7b61c4
 title: Package Prepare
 added_date: "2026-07-22 15:12:24"
-last_updated: "2026-10-19"
+last_updated: "2026-10-20"
 parent_id: d-20260424-000000-50b63f
 ---
 # Package Prepare
 
 ## Purpose
 
-Use **Prepare package** to create one JSON or JSONL working package from an invoked ordinary Index document and all its descendants, or from checked documents in one configured collection. Preparation reads the exact owning source collection and writes package artifacts; it does not change document source, metadata, or publication state.
+Use **Prepare package** in a Collections report to create one JSON or JSONL working package from checked documents in that configured collection. Preparation reads the exact owning source collection and writes package artifacts; it does not change document source, metadata, or publication state. The Index and workspace Actions have no package entry point.
 
 ## Prepare A Package
 
-1. Open Docs Viewer in Manage and find the ordinary document in the Index, or open the collection list and check its documents through Collection Actions.
-2. For an ordinary document, right-click its Index row and choose **Prepare package**. The invoked document and every descendant are included automatically. Shift+F10/the context-menu key opens the same menu from a focused row. For a collection, choose **Collection Actions → Prepare package**; **All** remains local to that collection.
-3. The action captures its document target before loading package options. The modal identifies the Index target by title and ID; the displayed document remains independent.
+1. Open a Collections report in Docs Viewer Manage and check documents through Collection Actions.
+2. Choose **Collection Actions → Prepare package**; **All** remains local to that collection.
+3. The action captures the collection and exact checked IDs before loading package options.
 4. Choose the profile, package format, and content format when the profile supports a choice.
-5. Descendant inclusion is fixed for Index preparation. Flat collections have no descendant expansion; neither workflow offers a descendant checkbox.
+5. Flat collections have no descendant expansion or descendant option.
 6. For **Document content**, optionally select **Only documents missing summaries**.
 7. Review **Total documents to be prepared** and any included or excluded counts.
 8. Choose **Prepare package** to confirm once.
 9. Review the result summary, counts, file paths, warnings, or errors.
 
-Collection checked documents remain selected after cancel, success, or failure. Choose **Clear** or **Done** to change or leave collection selection mode. The Index has no checkbox selection or All/Clear/Done controls.
+Checked documents remain selected after cancel, success, or failure. Choose **Clear** or **Done** to change or leave collection selection mode.
 
 ## Selection Rules
 
-- Index preparation starts from the explicitly invoked ordinary tree node and includes eligible descendants from the source hierarchy, including collapsed Index branches. The main pane may display another document or a collection detail; neither changes the captured tree target.
 - Collection preparation uses its checked IDs only; displayed, highlighted, focused, and context-menu rows do not become implicit collection targets.
 - One checked collection document and several checked collection documents use the same Action and modal.
 - Working is resolved by the package service; there is no workspace picker.
 - Collection **All** updates the checkbox-selection owner. Application Prepare accepts explicit IDs only.
 - A collection request carries its exact configured `collection`; its flat records never expand descendants or borrow ordinary parent/sibling IDs.
-- Index and collection targets remain independent.
-- The modal calculates one effective target in this order: target eligibility, fixed descendant expansion for the ordinary root, missing-summary filtering, then any configured maximum document count.
+- The modal starts with the captured checked IDs, applies missing-summary filtering, then any configured maximum document count. It trusts the options service's exact selected-source metadata without another membership audit.
 - Only that final effective ID set and formats are sent. The service consumes the completed choice without summary filtering, limit filtering or descendant expansion. It retains exact owner/source identity, confined reads and required profile/output checks.
 
 ## Modal Filters And Total
@@ -44,17 +42,17 @@ Collection checked documents remain selected after cancel, success, or failure. 
 
 - **Only documents missing summaries** is off by default. A missing summary is empty or whitespace-only source `summary` metadata.
 
-**Document tree** keeps the complete subtree included and does not offer the missing-summary filter. Draft and Publish exclusion state do not filter package membership.
+**Document tree** includes the checked flat records without body content and does not offer the missing-summary filter. Draft and Publish exclusion state do not filter package membership.
 
 The displayed total is the final effective target for the loaded source snapshot. The modal reports documents deliberately excluded by the filter or profile limit. Those pre-submit exclusions are not result `skipped` documents. When no document remains, the modal reports why and disables **Prepare package**.
 
 ## When The Action Is Unavailable
 
-**Prepare package** is disabled when there is no invoked ordinary Index document or no checked collection document, document packages are unavailable, the package workspace is unavailable, or Docs Viewer management is busy. The menu reports the current reason. Resolve that condition and use the same action again.
+**Prepare package** requires checked collection documents and is disabled with no selection. Existing collection restrictions remain, including Catalogue's package restriction. An unavailable package workspace or preparation failure is reported by the workflow. Resolve the condition and use the same action again.
 
 ## Package Output
 
-A successful request reports the generated package and metadata paths. The selected profile determines JSON or JSONL shape, included fields, supported format choices, and descendant requirements. [Documents Prepare Profiles](Package_Prepare_Profiles.md) records those profile contracts.
+A successful request reports the generated package and metadata paths. The selected profile determines JSON or JSONL shape, included fields and supported format choices. [Documents Prepare Profiles](Package_Prepare_Profiles.md) records those profile contracts.
 
 Package Summary is consistently one paragraph: whitespace, including line and paragraph breaks, is collapsed to spaces in `summary`, `current_summary` and any expanded `[[summary]]` body text. Preparation renders a package-only flattened Summary value; it does not alter canonical source or flatten the document's unrelated body paragraphs. Structured fields contain normal JSON strings without YAML markers, and each JSONL record remains one physical line. Missing-summary filtering still treats whitespace-only source values as empty. Returned-package comparison flattens both the staged `current_summary` and current source value, so presentation-only breaks do not create a mismatch.
 
@@ -62,7 +60,7 @@ Summary metadata fields retain authored emphasis markers as text, preserving ret
 
 Supported returned Import applies the supplied Summary string. Returning the prepared single-paragraph value can therefore remove source line/paragraph breaks; they are not reconstructed. An externally supplied multiline Summary remains a multiline string and is written using `|-` when source is serialized. Docs Review retains the returned value under its existing read-only authority. [Builder](Builder.md#summary-block) owns source syntax and newline-preserving reader/HTML Export behavior. Existing prepared files are not rewritten by this policy; prepare a new package to obtain current output.
 
-Configured collection packages are export-only unless both the collection and profile enable returned-package import. Requests retain the exact optional `collection`; the owning service resolves Working.
+Configured collection packages are export-only unless both the collection and profile enable returned-package import. Application requests require the exact `collection`; the owning service resolves Working.
 
 Content-bearing preparation carries selected rendered HTML and its Catalogue reference envelope into the shared `docs_catalogue_static.py` preparer before HTML/Markdown/plain-text and heading transformations. One request reuses selected Work/policy/relationship inputs and its existing rendered-content cache. This preserves current Work titles/captions and Catalogue Entry content after Build became reference-only. It adds no media packaging, document generation, queue work or private source lookup; tree-only profiles construct no presentation owner. [Generated Data Contracts](Generated_Data_Contracts.md#catalogue-reference-and-presentation) owns the shared reference/presentation fields.
 
@@ -73,12 +71,12 @@ For engine commands, output fields, validation details, and workspace requiremen
 ```mermaid
 flowchart TD
   accTitle: Prepare package user and service workflow
-  accDescr: An invoked ordinary subtree or exact checked collection enters one compact workflow using the existing document package endpoints.
-  selectDocs[Invoke an Index row or check collection documents] --> openAction[Choose Prepare package from its menu]
-  openAction --> resolveTarget[Capture invoked root or checked collection ids]
+  accDescr: Exact checked collection documents enter one compact workflow using the existing document package endpoints.
+  selectDocs[Check collection documents] --> openAction[Choose Collection Actions Prepare package]
+  openAction --> resolveTarget[Capture collection and checked ids]
   resolveTarget --> readOptions[POST prepare-options for profiles and target metadata]
   readOptions --> options[Choose profile, formats, and summary filter]
-  options --> projectTarget[Expand descendants and apply package filters]
+  options --> projectTarget[Apply package filters]
   projectTarget --> showTotal[Show effective total and exclusions]
   showTotal --> confirm[Confirm Prepare package]
   confirm --> prepare[POST package prepare with effective explicit doc ids]
@@ -86,13 +84,13 @@ flowchart TD
   validate --> result{Request result}
   result -->|Success| success[Show summary, counts, and file paths]
   result -->|Failure| failure[Show retained warnings and errors]
-  success --> unchanged[Keep displayed document or collection selection]
+  success --> unchanged[Keep collection selection]
   failure --> unchanged
 ```
 
-Options uses one `POST /docs/packages/prepare-options` carrying captured `doc_ids` and optional exact `collection`. It returns profiles and metadata for the invoked ordinary subtree or checked flat documents, reading no unselected bodies and doing no body rendering or Subject/readiness/model validation. The old separate config/documents endpoints and generic picker aliases are retired without aliases.
+Options uses one `POST /docs/packages/prepare-options` carrying captured `doc_ids` and required exact `collection`. It returns profiles and metadata for only the checked flat documents, reading no unselected bodies and doing no body rendering or Subject/readiness/model validation. There is one collection-report lazy bridge and one modal workflow. The Index bridge, subtree discovery/expansion and flat-versus-tree mode flag are removed without aliases.
 
-Confirmation sends one `POST /docs/packages/prepare` with the final `doc_ids`, `profile_id`, `target_format`, `content_format` and optional `collection`/`dry_run`. It carries no `select_all`, missing-summary or publication-eligibility flags. Selected source text is read once. Tree output needs no generated manifest or rendering owner; content output consumes saved ancestor/child/link metadata and one lazy content-only renderer/cache. It does not construct unused by-ID metadata or render unselected source bodies. Required report/token rendering, URL safety, escaping, profile/format/output/collision checks and provenance remain with their owners. CLI selection and returned-package/current-source validation retain their separate paths. No document, Search or media generation runs.
+Confirmation sends one `POST /docs/packages/prepare` with required `collection`, final `doc_ids`, `profile_id`, `target_format`, `content_format` and optional `dry_run`. It carries no `select_all`, missing-summary or publication-eligibility flags. Selected source text is read once. Tree output needs no generated manifest or rendering owner; content output consumes saved collection/link metadata and one lazy collection content renderer/cache. It does not read the ordinary Index, construct unused by-ID metadata or render unselected source bodies. Required report/token rendering, URL safety, escaping, profile/format/output/collision checks and provenance remain with their owners. The independent CLI and returned-package/current-source formats retain their separate paths; ordinary CLI packages have no application Import entry point. No document, Search or media generation runs.
 
 ## Result Counts
 

@@ -402,7 +402,6 @@ def apply_import_document(
     plan: ImportDocumentPlan,
     *,
     media_context: ImportDocumentMediaContext | None = None,
-    after_doc_id: str = "",
 ) -> ImportDocumentApplyResult:
     """Materialize planned media and atomically write one planned source file."""
 
@@ -411,7 +410,7 @@ def apply_import_document(
         plan,
         media_context=media_context,
     )
-    tree = apply_import_document_source(plan, after_doc_id=after_doc_id)
+    tree = apply_import_document_source(plan)
     return replace(apply_result, parent_ids=tree_parent_ids(tree) if tree is not None else None)
 
 
@@ -447,14 +446,14 @@ def materialize_import_document_media(
     )
 
 
-def apply_import_document_source(plan: ImportDocumentPlan, *, after_doc_id: str = "") -> list[dict[str, Any]] | None:
+def apply_import_document_source(plan: ImportDocumentPlan) -> list[dict[str, Any]] | None:
     """Write exact source and return its completed ordinary tree when inserted."""
 
     if plan.operation == IMPORT_DOCUMENT_CREATE:
         tree = None
         if plan.index_order_path is not None:
             tree = read_index_order(plan.index_order_path)
-            insert_node(tree, {"doc_id": plan.doc_id}, after_doc_id or plan.parent_id, "after" if after_doc_id else "inside")
+            insert_node(tree, {"doc_id": plan.doc_id}, plan.parent_id, "inside")
         write_text_atomic_new(plan.target_path, plan.source_text)
         if tree is not None:
             write_text_atomic(plan.index_order_path, index_order_text(tree))

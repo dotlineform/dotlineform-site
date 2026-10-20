@@ -29,7 +29,7 @@ from docs_document_packages.review_sources import create_review_source_folder
 from docs_document_packages.workspace import configured_workspace_paths, workspace_status
 from docs_import_document_package_content import normalize_documents_import_content
 from docs_management_context import log_event
-from docs_management_document_target import resolve_managed_document_collection
+from docs_management_document_target import resolve_managed_document_collection, resolve_managed_document_collection_target
 from docs_document_packages.selected_sources import selected_ids, option_records
 
 
@@ -71,7 +71,6 @@ def profile_contract(
     config: dict[str, Any],
     *,
     return_import_enabled: bool,
-    flat_collection: bool = False,
 ) -> dict[str, Any]:
     target = config.get("target") if isinstance(config.get("target"), dict) else {}
     selection = config.get("selection") if isinstance(config.get("selection"), dict) else {}
@@ -90,8 +89,6 @@ def profile_contract(
             return_import_enabled and supports_return_import(config)
         ),
         "selection": {
-            "mode": str(selection.get("mode") or "").strip(),
-            "include_descendants": selection.get("include_descendants") is not False,
             "supports_missing_summary_only": selection.get("supports_missing_summary_only") is True,
             "default_missing_summary_only": selection.get("default_missing_summary_only") is True,
         },
@@ -99,16 +96,14 @@ def profile_contract(
             "max_documents": limits.get("max_documents") if isinstance(limits.get("max_documents"), int) else None,
         },
     }
-    if flat_collection:
-        contract["selection"]["include_descendants"] = False
     return contract
 
 
 def prepare_options(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
     """Resolve profiles and metadata for one captured selection without rendering."""
-    if set(body) - {"collection"} != {"doc_ids"}:
-        raise ValueError("Package options require doc_ids and optional collection")
-    owner = resolve_managed_document_collection(repo_root, collection=body.get("collection"))
+    if set(body) != {"collection", "doc_ids"}:
+        raise ValueError("Package options require collection and doc_ids")
+    owner = resolve_managed_document_collection_target(repo_root, {"collection": body["collection"]})
     doc_ids = selected_ids(owner, body["doc_ids"])
     profile_payload = load_config_file(repo_root)
     errors, warnings = validate_full_config_payload(profile_payload)
@@ -116,11 +111,10 @@ def prepare_options(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
         raise ValueError("document package profiles are invalid: " + "; ".join(errors))
     status = workspace_status(repo_root)
     return {
-        "ok": True, "collection": owner.collection, "flat_collection": bool(owner.collection),
+        "ok": True, "collection": owner.collection,
         "profiles": [
             profile_contract(
-                config, return_import_enabled=not owner.collection or owner.document_config.supports_return_import,
-                flat_collection=bool(owner.collection),
+                config, return_import_enabled=owner.document_config.supports_return_import,
             )
             for config in profile_payload["configs"] if config.get("enabled") is not False
         ],
@@ -183,13 +177,10 @@ def get_payload(
 
 
 def prepare_package(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
-    required = {"profile_id", "doc_ids", "target_format", "content_format"}
-    if not required <= set(body) or set(body) - required - {"collection", "dry_run"}:
-        raise ValueError("Package Prepare requires profile_id, exact doc_ids, target_format and content_format")
-    resolved_collection = resolve_managed_document_collection(
-        repo_root,
-        collection=body.get("collection") if "collection" in body else None,
-    )
+    required = {"collection", "profile_id", "doc_ids", "target_format", "content_format"}
+    if not required <= set(body) or set(body) - required - {"dry_run"}:
+        raise ValueError("Package Prepare requires collection, profile_id, exact doc_ids, target_format and content_format")
+    resolved_collection = resolve_managed_document_collection_target(repo_root, {"collection": body["collection"]})
     collection = resolved_collection.collection
     profile_id = str(body.get("profile_id") or "").strip()
     if not profile_id:
@@ -222,14 +213,8 @@ def prepare_package(repo_root: Path, body: dict[str, Any]) -> dict[str, Any]:
             "dry_run": dry_run,
             "output_written": bool(payload.get("output_written")),
             "exported": int(payload.get("counts", {}).get("exported") or 0),
-            **(
-                {
-                    "collection": collection,
-                    "doc_ids": list(payload.get("selected_doc_ids") or []),
-                }
-                if collection
-                else {}
-            ),
+            "collection": collection,
+            "doc_ids": list(payload.get("selected_doc_ids") or []),
         },
     )
     return payload

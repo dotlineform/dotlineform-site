@@ -17,10 +17,6 @@ function cleanString(value) {
   return String(value || "").trim();
 }
 
-function locationSearch(windowRef) {
-  return windowRef && windowRef.location ? windowRef.location.search : "";
-}
-
 function locationPathname(windowRef) {
   return windowRef && windowRef.location ? windowRef.location.pathname : "";
 }
@@ -81,8 +77,6 @@ export function createDocsViewerRouteContext(options) {
     collectionsById: new Map(),
     reportRegistryUrl: routeConfig.reportRegistryUrl
   };
-  var routeParams = new URLSearchParams(locationSearch(windowRef));
-  context.openImportOnLoad = context.isDocsManagementRoute && routeParams.get("import") === "1";
   return context;
 }
 

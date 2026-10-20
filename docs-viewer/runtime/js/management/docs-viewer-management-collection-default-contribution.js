@@ -59,16 +59,28 @@ function writeClipboardText(documentRef, text) {
  * @returns {Object}
  */
 export function createDocsViewerManagementCollectionDefaultContribution(options = {}) {
-  var selectionActions = [
+  var menuActions = [
     {
       id: DOCS_VIEWER_ACTION_IDS.EXPORT_DOCS, label: "Export…",
+      requiresSelection: true,
       buttonId: "docsViewerCollectionExportButton", artwork: "docsViewer__icon--square-arrow-right-exit",
       invoke: options.onExport, unavailableReason: "Collection Export is unavailable."
     },
     {
       id: DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE, label: "Prepare package…",
+      requiresSelection: true,
       buttonId: "docsViewerCollectionPreparePackageButton", artwork: "docsViewer__icon--package",
       invoke: options.onPreparePackage, unavailableReason: "Collection package preparation is unavailable."
+    },
+    {
+      id: DOCS_VIEWER_ACTION_IDS.IMPORT_DOC, label: "Import doc…",
+      buttonId: "docsViewerCollectionImportDocButton", artwork: "docsViewer__icon--import",
+      invoke: options.onImportDoc, unavailableReason: "Collection document import is unavailable."
+    },
+    {
+      id: DOCS_VIEWER_ACTION_IDS.IMPORT, label: "Import docs…",
+      buttonId: "docsViewerCollectionImportButton", artwork: "docsViewer__icon--package",
+      invoke: options.onImport, unavailableReason: "Collection import is unavailable."
     }
   ];
   var onRegenerateCatalogue = typeof options.onRegenerateCatalogue === "function"
@@ -120,7 +132,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
   function projectSelection() {
     var snapshot = selectionOwner.snapshot();
     var available = selectionOwner.available();
-    var resolutions = selectionActions.map(function (action) { return selectionResolution(action.id); });
+    var resolutions = menuActions.map(function (action) { return selectionResolution(action.id); });
     var hidden = resolutions.every(function (resolution) { return resolution.hidden; });
     var active = available && snapshot.selectionModeActive && !hidden;
     var eligible = eligibleDocIds();
@@ -144,7 +156,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     listToolbar.clearButton.disabled = !active || selected.size === 0;
     listToolbar.doneButton.disabled = !active;
 
-    listToolbar.selectionActions.forEach(function (action, index) {
+    listToolbar.menuActions.forEach(function (action, index) {
       var resolution = resolutions[index];
       var disabledReason = typeof action.invoke !== "function" ? action.unavailableReason : resolution.disabledReason;
       var accessibleLabel = disabledReason ? action.label + " " + disabledReason : action.label;
@@ -335,14 +347,14 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
     menu.className = "docsViewer__actionsMenu docsViewerReport__collectionActionsMenu";
     menu.setAttribute("role", "menu");
     menu.hidden = true;
-    var menuActions = selectionActions.map(function (action) {
+    var renderedActions = menuActions.map(function (action) {
       var button = createDocsViewerEditMenuItem(documentRef, {
         actionId: action.id, label: action.label, artwork: action.artwork
       });
       button.id = action.buttonId;
       return { ...action, button: button };
     });
-    menu.replaceChildren(...menuActions.map(function (action) { return action.button; }));
+    menu.replaceChildren(...renderedActions.map(function (action) { return action.button; }));
     actionsHost.replaceChildren(actionsButton, menu);
 
     var selectionControl = documentRef.createElement("div");
@@ -378,7 +390,7 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
       handleDocumentClick: handleDocumentClick,
       handleDocumentKeydown: handleDocumentKeydown,
       menu: menu,
-      selectionActions: menuActions,
+      menuActions: renderedActions,
       root: root,
       selectAllButton: selectAllButton,
       selectionControl: selectionControl
@@ -398,28 +410,30 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
       menu.hidden = false;
       actionsButton.setAttribute("aria-expanded", "true");
     });
-    function runSelectionAction(action) {
+    function runMenuAction(action) {
       if (action.button.disabled) return;
       var resolution = selectionResolution(action.id);
       if (!resolution.enabled) return;
       hideActionsMenu(true);
       selectionWorkflowActive = true;
       projectSelection();
-      var request = settings.registerSelectionAction({
+      var definition = {
         id: action.id,
-        placement: "selection",
-        targetKind: "selection",
+        placement: action.requiresSelection ? "selection" : "list-toolbar",
+        targetKind: action.requiresSelection ? "selection" : "collection",
         capability: true,
-        emptyState: "disabled",
+        emptyState: action.requiresSelection ? "disabled" : "enabled",
         refreshEffect: "none",
         handler: function (target) {
           return action.invoke(target, { restoreFocus: actionsButton });
         }
-      }, {
+      };
+      var registration = action.requiresSelection ? settings.registerSelectionAction(definition, {
         active: selectionOwner.snapshot().selectionModeActive,
         checkedDocIds: resolution.targetDocIds,
         eligibleDocIds: eligibleDocIds()
-      }).invoke();
+      }) : settings.registerAction(definition);
+      var request = registration.invoke();
       Promise.resolve(request).catch(function (error) {
         if (typeof options.setStatus === "function") {
           options.setStatus(
@@ -434,8 +448,8 @@ export function createDocsViewerManagementCollectionDefaultContribution(options 
         projectSelection();
       });
     }
-    menuActions.forEach(function (action) {
-      action.button.addEventListener("click", function () { runSelectionAction(action); });
+    renderedActions.forEach(function (action) {
+      action.button.addEventListener("click", function () { runMenuAction(action); });
     });
     selectAllButton.addEventListener("click", function () {
       selectionOwner.selectAll(eligibleDocIds());

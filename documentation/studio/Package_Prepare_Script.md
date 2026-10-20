@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260503-150500-b0f1df
 title: Package Prepare Script
 added_date: "2026-05-03 15:05:00"
-last_updated: "2026-10-13 20:05:39"
+last_updated: "2026-10-20"
 parent_id: d-20260424-000000-50b63f
 ---
 # Package Prepare Script
@@ -26,15 +26,15 @@ Output filenames use the local runtime timezone. Metadata `generated_at` and `ex
 
 ## Application Preparation
 
-One `POST /docs/packages/prepare-options` receives captured `doc_ids` and optional exact `collection`. It resolves the owner once and returns profiles, workspace availability and only the ordinary subtree or checked flat metadata needed by the modal. It reads confined source fields without body rendering, general source-model/Subject/readiness validation, generated manifest/Links reads or Catalogue setup. Generic picker aliases, unused discovery content lengths and the separate config/documents routes are retired without aliases.
+One `POST /docs/packages/prepare-options` receives captured `doc_ids` and required exact `collection`. It resolves the owner once and returns profiles, workspace availability and only the checked flat metadata needed by the modal. It reads confined source fields without ordinary Index traversal, body rendering, general source-model/Subject/readiness validation, generated manifest/Links reads or Catalogue setup. The Index package entry point and flat-versus-tree request mode are retired without aliases.
 
-The modal owns ordinary descendant expansion, missing-summary filtering and document-count limits. One `POST /docs/packages/prepare` then receives its final `profile_id`, explicit `doc_ids`, `target_format`, `content_format` and optional `collection`/`dry_run`. Application requests carry no `select_all`, summary-filter or publication-eligibility flags. The producer does not repeat those choices, expand selection or silently skip missing selected input.
+The modal owns missing-summary filtering and document-count limits over the captured checked IDs. One `POST /docs/packages/prepare` then receives required `collection`, final `profile_id`, explicit `doc_ids`, `target_format`, `content_format` and optional `dry_run`. Application requests carry no `select_all`, summary-filter or publication-eligibility flags. The producer does not repeat those choices, expand selection or silently skip missing selected input.
 
-Application Prepare resolves its exact owner and reads each selected source once, retaining strict front-matter parsing, exact ID/filename binding, string Title representation and configured path/symlink confinement. Tree output needs no saved manifest or renderer. Content output consumes saved ordinary Index or collection management metadata for ancestor/child/link identities, opens only required selected saved Links, and constructs one lazy content-only renderer/cache. This preserves report/token rendering, URL safety, escaping and Summary policy without building unused by-ID metadata or rendering unselected bodies.
+Application Prepare resolves its exact collection owner and reads each selected source once, retaining strict front-matter parsing, exact ID/filename binding, string Title representation and configured path/symlink confinement. Tree output needs no saved manifest or renderer. Content output consumes saved collection management metadata for link identities, opens only required selected saved Links, and constructs one lazy collection content renderer/cache. This preserves report/token rendering, URL safety, escaping and Summary policy without building unused by-ID metadata or rendering unselected bodies.
 
 ## CLI Selection
 
-The CLI remains an independent ordinary Working selection owner. It uses its full source context and existing validation/rendering path, applies explicit/all and supported summary choices, and retains tree-profile descendant expansion. It delegates completed selection to the same profile/format/output producer as the application. It does not accept a scope/stage picker.
+The CLI remains an independent ordinary Working selection owner. It uses its full source context and existing validation/rendering path, applies explicit/all and supported summary choices, and retains tree-profile descendant expansion. It delegates completed selection to the same profile/format/output producer as the application. It does not accept a scope/stage picker. Its ordinary packages have no application Import entry point now that both application intake actions require a configured collection.
 
 Inspect current flags:
 

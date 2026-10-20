@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260716-204013-3be4e1
 title: Button Placement
 added_date: "2026-07-16 20:40:13"
-last_updated: "2026-10-10 16:57:25"
+last_updated: "2026-10-20"
 parent_id: d-20260424-000000-50b63f
 ---
 # Button Placement
@@ -53,9 +53,9 @@ In user-facing discussion, **index toolbar** means the toolbar belonging to the 
 
 ### Index Document Actions
 
-The **🛠️ Index Actions** menu operates on the currently displayed ordinary document and all its descendants. **Export…**, **Prepare package…**, and **Delete…** share that target, including children hidden within collapsed branches. Opening the menu does not create selection state, and the Index has no checkboxes or All/Clear/Done controls.
+The Index context menu operates on its explicitly invoked ordinary row. It retains navigation/source actions, structural creation, Position, Sort Children and Delete. Delete includes descendants hidden within collapsed branches. The Index has no import, Export, Prepare package, checkbox selection or All/Clear/Done controls.
 
-Collection Actions retain their own checked-document workflow. The app-level **Actions** menu contains New, then a workspace group for Import, Export, Rebuild docs and Search, Publish and Settings. Open in VS Code, Draft/Ready and Star belong to Edit. Unavailable items remain visible and disabled. [Toolbar Model](Toolbar_Model.md#manage-toolbar) owns exact targets and Catalogue exceptions.
+Collection Actions owns Export and Prepare package for checked documents, plus Import doc and Import docs for the exact collection without a checked-selection requirement, including empty collections. The workspace **Actions** menu contains New, Refresh Search and Recent, and Publish. Open in VS Code, Draft/Ready and Star belong to Edit. [Toolbar Model](Toolbar_Model.md#manage-toolbar) owns exact targets and Catalogue exceptions.
 
 [Create And Import Endpoints](Create_And_Import_Endpoints.md) owns the server contract.
 

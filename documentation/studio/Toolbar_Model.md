@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260531-152622-ed2451
 title: Toolbar Model
 added_date: 2026-05-31 15:26:22
-last_updated: "2026-10-10 16:57:25"
+last_updated: "2026-10-20"
 summary: Placement and ownership rules for app, active-view, docs_subscope, management, and context-panel controls.
 parent_id: d-20260424-000000-50b63f
 
@@ -51,7 +51,7 @@ Owners: `site/docs-viewer/runtime/js/shared/docs-viewer-main-view-renderer.js`, 
 
 ## Manage Toolbar
 
-The Manage toolbar exposes one **Actions** menu. Its first group contains context-aware New. Its second group contains Import, Export, Rebuild docs and Search, Publish and Settings. Open in VS Code, Draft/Ready and Star appear only in Edit for the displayed document. These actions have no duplicate main-view or collection-toolbar buttons. Unavailable menu items remain visible and disabled; their tooltips explain the reason. The Actions entrypoint retains route, service and busy gating.
+The Manage toolbar exposes one **Actions** menu containing context-aware New, Refresh Search and Recent, and Publish. Export, Prepare package, Import doc and Import docs belong to Collections reports' Actions menus. Open in VS Code, Draft/Ready and Star appear only in Edit for the displayed document. Unavailable menu items remain disabled with explanatory tooltips, subject to action-policy visibility. The Actions entrypoint retains route, service and busy gating.
 
 Context-aware targets across Actions and Edit:
 
@@ -74,9 +74,9 @@ Surface: `app-management`. Manage definitions, renderer contributions, focused c
 
 ## Sub-Scope Report Controls
 
-Collection-specific list controls stay in the report. The shared report owns title search and Back. Its standard Manage contribution owns the title/recency sort toggle, collection Actions and selection commands, Prepare Package, Copy Link, and validated-detail Delete. Copy Link and Delete are contributed to Edit. Assign Subject and Open Subject folder belong to Source's Directives menu. New uses Actions; Draft/Ready uses Edit. Both consume the report's published context, and Import consumes its explicitly published collection.
+Collection-specific list controls stay in the report. The shared report owns title search and Back. Its standard Manage contribution owns the title/recency sort toggle, collection Actions and selection commands, Export, Prepare package, Import doc and Import docs. Export and Prepare package consume exact checked IDs; both imports receive the menu's explicit collection and remain available without checks or members. Catalogue retains Export and its Studio/Regenerate authoring boundary. Copy Link and validated-detail Delete are contributed to Edit. Assign Subject and Open Subject folder belong to Source's Directives menu. New uses workspace Actions; Draft/Ready uses Edit.
 
-The collection list's package-selection Actions menu stays in the report's filter toolbar alongside sort and selection commands. It does not mount beside Home in the top row. Its checkbox-based subdocument package preparation remains separate from the Index right-click menu's ordinary-document package preparation.
+The collection Actions menu stays in the report's filter toolbar alongside sort and selection commands. It does not mount beside Home in the top row. The Index and workspace expose no import, Export or Prepare package actions; application requests require a configured collection.
 
 A configured collection may select one registered customisation. Its controls
 render only in the composition positions supplied for that collection; they

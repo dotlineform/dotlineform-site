@@ -3,26 +3,26 @@ draft: false
 doc_id: d-20260424-000000-fc8b5d
 title: Docs Import
 added_date: "2026-04-24 00:00:00"
-last_updated: "2026-10-17"
+last_updated: "2026-10-20"
 summary: Import one native document or select Data Sharing sources and packages for a configured Docs Viewer collection.
 parent_id: d-20260424-000000-50b63f
 
 ---
 # Docs Import
 
-Docs Viewer Manage offers two intake actions that share document conversion, media processing and persistence. **Import doc** selects one ordinary file through the browser's native chooser. **Import** selects existing sources and packages beneath the configured Projects base's `data-sharing` directory. Both target ordinary documents or a configured named collection; Catalogue Work authoring remains owned by Studio and Regenerate.
+Collections reports in Docs Viewer Manage offer two intake actions that share document conversion, media processing and persistence. **Import doc** selects one ordinary file through the browser's native chooser. **Import docs** selects existing sources and packages beneath the configured Projects base's `data-sharing` directory. Both require the invoking configured collection. They need no checked documents and remain available in empty collections. Catalogue Work authoring remains owned by Studio and Regenerate; neither import action is offered there. Workspace Actions and the Index have no import entry point.
 
-The **Import** modal lists recognized document candidates in the accepted source folder. Ordinary sources in either action use the configured collection displayed when the action opened; trusted packages and edited review-source folders use their manifest-owned collection even when another context is displayed.
+The **Import docs** modal lists recognized document candidates in the accepted source folder. Ordinary sources in either action use the collection captured from the menu invocation. Trusted packages and edited review-source folders retain their manifest-owned destination and are unavailable when it differs from that collection; the modal identifies the collection to open. A package is never redirected to another collection.
 
 ## Import One Native File
 
-Choose **Import doc** from Manage Actions. Its browser-native single-file picker accepts Word `.docx`, HTML `.html`/`.htm`, Markdown `.md`/`.markdown` and plain text `.txt` from any user-selected folder. The browser holds the selected File and shows only its filename and “For separate local images or attachments, use Import with the complete folder.” in confirmation. HTML automatically includes obvious prompt/meta blocks, matching existing Import's checked default. **Cancel** releases the selection without an upload or document write. The waiting cursor starts when Import is submitted, covering persistence and display completion; a request failure clears it while confirmation remains open for retry or Cancel.
+Choose **Collection Actions → Import doc**. Its browser-native single-file picker accepts Word `.docx`, HTML `.html`/`.htm`, Markdown `.md`/`.markdown` and plain text `.txt` from any user-selected folder. The browser holds the selected File and shows its filename and guidance to use Import docs with the complete folder for separate images or attachments. HTML automatically includes obvious prompt/meta blocks, matching Import docs' checked default. **Cancel** releases the selection without an upload or document write. The waiting cursor starts when Import is submitted, covering persistence and display completion; a request failure clears it while confirmation remains open for retry or Cancel.
 
-For ordinary Index documents, Import doc inserts immediately after the document displayed when the picker opened, sharing its parent. A root document gets a new root sibling; a document with children keeps its subtree, and the import becomes its next sibling. With no current ordinary document, the import appends at the root. Named collections retain their flat collection placement. Index focus alone does not change the captured displayed document.
+The action captures `{collection}` before opening the native picker. Imports create flat collection members; displayed documents, Index focus and checked rows do not supply placement or membership. The ordinary Index sibling-placement request and `after_doc_id` field are retired without aliases.
 
 **Import** in that confirmation uploads the single file, awaits conversion, embedded-media materialisation, new canonical source persistence and exact generation, then opens the imported document through the existing result owner. Every invocation creates a new document; selecting a previously imported file does not overwrite it. Browser selection and feedback belong to the frontend. Python owns bounded upload parsing, conversion, media and filesystem writes; it never opens an OS picker. A selected file may be at most 64 MiB, using the existing native upload budget.
 
-Only the selected file is supplied. Embedded media follows the existing converters, while local companion files, Markdown packages, returned JSON/JSONL collections and complete edited Review folders retain **Import**. No sibling-directory scan or persistent staging takes place for Import doc; request-local converter input is removed after the awaited operation. Import failures remain in the confirmation; a completed import followed by retained-view or display failure is reported separately after closing it.
+Only the selected file is supplied. Embedded media follows the existing converters, while local companion files, Markdown packages, returned JSON/JSONL collections and complete edited Review folders use **Import docs**. No sibling-directory scan or persistent staging takes place for Import doc; request-local converter input is removed after the awaited operation. Import failures remain in the confirmation; a completed import followed by retained-view or display failure is reported separately after closing it.
 
 ## Workflow
 
@@ -84,7 +84,7 @@ The single-select list contains ordinary Word `.docx`, HTML, Markdown, text, and
 4. Import an ordinary source, or preview and confirm a complete collection.
 5. Inspect the result and use its explicit destination link.
 
-Opening either action freezes `{}` for ordinary documents or `{collection}` for a named-collection destination. Import doc additionally captures the displayed ordinary document as `after_doc_id` for sibling placement. Source choice is independent: existing Import candidate requests, preview and apply carry the accepted source directory beside the direct-child name; Import doc sends the frozen destination and placement with selected file bytes. Package rows retain their trusted manifest destination and are never filtered or rerouted by the current display.
+Opening either action freezes the menu's exact `{collection}` destination. Source choice is independent: Import docs candidate requests, preview and apply carry the accepted source directory beside the direct-child name; Import doc sends the frozen collection with selected file bytes. Package rows retain their trusted manifest destination and remain visible but blocked from a different collection. The server enforces the exact destination through the existing package/review-folder provenance owner.
 
 HTML can supply the title; Markdown uses its first H1 when present. Word uses the mapped `Title` style and falls back to the humanized source filename without promoting its first section heading. [Word Import Style Mapping](Word_Import_Style_Mapping.md) owns the exact Word heading rules. The source name remains conversion context. A genuinely new document receives an immutable local `doc_id` and matching Markdown filename when the service plans the write.
 
@@ -98,7 +98,7 @@ This create-only rule does not remove collision handling from returned collectio
 
 ## Import A Trusted Collection
 
-With import staging selected, choose either a trusted returned documents package or a complete edited Docs Review source folder in the same app-level chooser. A reviewable returned package also enables **Open in Docs Review** on that selected row. Review prepares or reuses the separate read-only projection in a new tab; it neither confirms Import nor changes the package's manifest-owned destination.
+With import staging selected, choose either a trusted returned documents package or a complete edited Docs Review source folder in that collection's Import docs chooser. A matching reviewable returned package also enables **Open in Docs Review** on that selected row. Review prepares or reuses the separate read-only projection in a new tab; it neither confirms Import nor changes the package's manifest-owned destination. Ordinary Index packages produced by the independent CLI no longer have an application import entry point.
 
 The server recognizes both collection formats before ordinary Markdown or
 generic JSON/JSONL handling. A standalone reviewed Markdown file is rejected

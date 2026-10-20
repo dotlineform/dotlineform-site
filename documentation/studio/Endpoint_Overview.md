@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260607-222033-647b52
 title: Endpoint Overview
 added_date: "2026-06-07 22:20:33"
-last_updated: "2026-10-15"
+last_updated: "2026-10-20"
 parent_id: d-20260424-000000-04d75e
 ---
 # Docs Viewer Endpoint Overview
@@ -80,14 +80,14 @@ The complete independently gated contract lives in [Docs Review Endpoints](Docs_
 
 | Endpoint | Action |
 | --- | --- |
-| `POST /docs/packages/prepare-options` | Return profiles, workspace availability and metadata for captured ordinary subtree or checked flat IDs without rendering. |
-| `POST /docs/packages/prepare` | Produce one JSON/JSONL package from final explicit IDs/formats without reapplying UI filters. |
+| `POST /docs/packages/prepare-options` | Require a configured collection; return profiles, workspace availability and metadata for only its checked IDs without rendering. |
+| `POST /docs/packages/prepare` | Require a configured collection; produce one JSON/JSONL package from final explicit IDs/formats without reapplying UI filters. |
 | `POST /docs/packages/returned/review` | Materialize the complete validated content package for read-only Docs Review. |
 
 [Prepare Package](Package_Prepare.md)
 documents its checked-document Action on `GET /docs/`.
 `POST /docs/packages/returned/review` is invoked only by **Open in Docs
-Review** for the exact selected app-level Import candidate. The retired
+Review** for the exact selected, destination-matching Collection Import docs candidate. The retired
 scope-level **Review package** action has no compatibility owner. There is no
 separate package browser route or inspect endpoint. Requests reject generic
 adapter fields and `record_indices`; the returned workflow has no

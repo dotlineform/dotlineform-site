@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260503-141500-98fa03
 title: Package Prepare Profiles
 added_date: "2026-05-03 14:15:00"
-last_updated: "2026-10-13 20:05:39"
+last_updated: "2026-10-20"
 parent_id: d-20260424-000000-50b63f
 ---
 # Package Prepare Profiles
@@ -19,9 +19,9 @@ The [Prepare Package](Package_Prepare.md) workflow receives profiles and capture
 | Profile | Purpose | Container/content | Return path |
 | --- | --- | --- | --- |
 | `document-content` | selected document context/body rows for external review | JSONL or JSON; rendered-derived Markdown or plain text; optional modal missing-summary filter | supported for returned whole-package review and validated Docs Review projection when the exact collection also opts in; full Docs Viewer Import owns apply |
-| `document-tree` | complete selected hierarchy context | nested JSON tree without body rendering; ordinary subtree descendants included | export only |
+| `document-tree` | selected document metadata without body content | JSON tree container; application records are flat checked collection members, while the independent CLI retains ordinary subtree expansion | export only |
 
-Profile IDs describe package shape, independently of configured collection identity. Application Prepare submits final explicit `doc_ids`, `profile_id`, target/content formats and optional exact `collection`; Working is resolved at the service. Scope/stage/sub-scope aliases and application `select_all`/filter flags are retired. Both the profile and exact named collection must opt in to returned Import; ordinary packages retain the profile's capability.
+Profile IDs describe package shape, independently of configured collection identity. Application Prepare submits required exact `collection`, final explicit `doc_ids`, `profile_id` and target/content formats; Working is resolved at the service. Scope/stage/sub-scope aliases and application `select_all`/filter flags are retired. Both the profile and exact named collection must opt in to returned Import. The independent CLI retains ordinary package formats/capabilities, but ordinary packages have no application Import entry point.
 
 ## What A Profile May Configure
 
@@ -41,10 +41,10 @@ Exact keys, mappings, transforms, and current values belong in the JSON and vali
 
 The browser-safe profile projection declares which options the compact **Prepare package** modal may show and their defaults.
 
-| Profile | Ordinary descendants | Missing summaries | Draft/publication-excluded documents |
+| Profile | Application selection | Missing summaries | Draft/publication-excluded documents |
 | --- | --- | --- | --- |
-| `document-content` | included; fixed | supported, off by default | included |
-| `document-tree` | included; fixed | unsupported | included |
+| `document-content` | exact checked collection IDs | supported, off by default | included |
+| `document-tree` | exact checked collection IDs | unsupported | included |
 
 For the content profile, the modal's missing-summary choice means source `summary` metadata is empty after trimming whitespace. Draft and publication eligibility do not filter package membership. Flat collection targets have no descendant expansion; filtering can subtract only from their exact checked IDs.
 

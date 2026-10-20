@@ -1,36 +1,11 @@
-import { documentPackagePrepareCapability } from "./docs-viewer-management-capabilities.js";
 import {
   DOCS_VIEWER_ACTION_IDS
 } from "./docs-viewer-action-definitions.js";
 import { openRecentExclusions } from "./docs-viewer-management-client.js";
 
-export function docsViewerPreparePackageActionControlState(options = {}) {
-  var resolution = options.resolution || null;
-  var disabledReason = "";
-  var pending = !options.managementChecked || options.managementBusy;
-  if (options.managementChecked && !options.managementAvailable) {
-    disabledReason = "Prepare package is unavailable.";
-  } else if (!pending) {
-    var capability = documentPackagePrepareCapability(options.capabilities);
-    if (!capability.available) disabledReason = capability.reason;
-    else if (!resolution || !resolution.enabled) {
-      disabledReason = resolution && resolution.disabledReason
-        ? resolution.disabledReason
-        : "No Index target document.";
-    }
-  }
-  return {
-    hidden: Boolean(resolution && resolution.hidden),
-    disabled: pending || Boolean(disabledReason),
-    disabledReason: disabledReason
-  };
-}
-
 export function createDocsViewerManagementIndexController(options = {}) {
-  var root = options.root || null;
   var management = options.management || {};
   var callbacks = options.callbacks || {};
-  var preparePackageWorkflowRequest = null;
 
   function activeIndexViewId() {
     return typeof callbacks.activeIndexViewId === "function"
@@ -64,16 +39,6 @@ export function createDocsViewerManagementIndexController(options = {}) {
     }
   }
 
-  function preparePackageActionControlState(targetDocId) {
-    return docsViewerPreparePackageActionControlState({
-      capabilities: management.managementCapabilities,
-      managementAvailable: management.managementAvailable,
-      managementBusy: management.managementBusy,
-      managementChecked: management.managementChecked,
-      resolution: resolveAction(DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE, targetDocId)
-    });
-  }
-
   function mutationActionControlState(actionId, targetDocId) {
     var resolution = resolveAction(actionId, targetDocId);
     var label = actionId === DOCS_VIEWER_ACTION_IDS.DELETE ? "Delete"
@@ -99,7 +64,6 @@ export function createDocsViewerManagementIndexController(options = {}) {
   }
 
   function actionControlState(actionId, targetDocId) {
-    if (actionId === DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE) return preparePackageActionControlState(targetDocId);
     if ([DOCS_VIEWER_ACTION_IDS.DELETE, DOCS_VIEWER_ACTION_IDS.POSITION, DOCS_VIEWER_ACTION_IDS.SORT_CHILDREN].includes(actionId)) {
       return mutationActionControlState(actionId, targetDocId);
     }
@@ -108,7 +72,6 @@ export function createDocsViewerManagementIndexController(options = {}) {
 
   function actionStates(targetDocId) {
     var states = {
-      [DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE]: preparePackageActionControlState(targetDocId),
       [DOCS_VIEWER_ACTION_IDS.DELETE]: mutationActionControlState(DOCS_VIEWER_ACTION_IDS.DELETE, targetDocId),
       [DOCS_VIEWER_ACTION_IDS.POSITION]: mutationActionControlState(DOCS_VIEWER_ACTION_IDS.POSITION, targetDocId),
       [DOCS_VIEWER_ACTION_IDS.SORT_CHILDREN]: mutationActionControlState(DOCS_VIEWER_ACTION_IDS.SORT_CHILDREN, targetDocId)
@@ -123,52 +86,6 @@ export function createDocsViewerManagementIndexController(options = {}) {
       };
     });
     return states;
-  }
-
-  function loadPreparePackageWorkflow() {
-    if (preparePackageWorkflowRequest) return preparePackageWorkflowRequest;
-    preparePackageWorkflowRequest = import("../packages/document-package-prepare-workflow.js")
-      .then(function (module) {
-        if (!module || typeof module.openDocumentPackagePrepareWorkflow !== "function") {
-          throw new Error("Prepare package workflow is unavailable.");
-        }
-        return module;
-      })
-      .catch(function (error) {
-        preparePackageWorkflowRequest = null;
-        throw error;
-      });
-    return preparePackageWorkflowRequest;
-  }
-
-  function handlePreparePackage(resolution, targetDocument, restoreFocus) {
-    var docIds = resolution.targetDocIds.slice(0, 1);
-    setManagementBusy(true);
-    renderManagementUi();
-    return loadPreparePackageWorkflow()
-      .then(function (module) {
-        return module.openDocumentPackagePrepareWorkflow({
-          root: root,
-          docIds: docIds,
-          targetDocument: targetDocument,
-          restoreFocus: restoreFocus,
-          callbacks: {
-            setBusy: function (busy) {
-              setManagementBusy(busy);
-              renderManagementUi();
-            },
-            setMessage: setManagementMessage
-          }
-        });
-      })
-      .catch(function (error) {
-        setManagementBusy(false);
-        setManagementMessage(
-          error && error.message ? error.message : "Prepare package workflow is unavailable.",
-          true
-        );
-        return null;
-      });
   }
 
   async function handleOpenRecentExclusions() {
@@ -200,9 +117,7 @@ export function createDocsViewerManagementIndexController(options = {}) {
     var resolution = resolveAction(actionId, targetDocId);
     var targetDocument = callbacks.indexDocument(targetDocId);
     if (!targetDocument || !resolution || !resolution.enabled) return false;
-    if (actionId === DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE) {
-      handlePreparePackage(resolution, targetDocument, restoreFocus);
-    } else if (actionId === DOCS_VIEWER_ACTION_IDS.DELETE) {
+    if (actionId === DOCS_VIEWER_ACTION_IDS.DELETE) {
       callbacks.handleDeleteDoc(targetDocId, restoreFocus);
     } else if (actionId === DOCS_VIEWER_ACTION_IDS.POSITION) {
       callbacks.handlePositionDoc(targetDocId, restoreFocus);

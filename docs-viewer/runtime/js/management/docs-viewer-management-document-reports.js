@@ -110,6 +110,10 @@ export function loadDocsViewerCollectionContribution(settings, parent, collectio
         ? settings.managementDocumentActions?.regenerateCatalogue
         : null,
       onPreparePackage: contributionOptions.onPreparePackage,
+      onImportDoc: settings.managementContext && clientOptions.baseUrl
+        ? settings.managementDocumentActions.importDoc : null,
+      onImport: settings.managementContext && clientOptions.baseUrl
+        ? settings.managementDocumentActions.importDocs : null,
       onExport: settings.managementContext && clientOptions.baseUrl
         ? function (target, context) {
             return openCollectionExportWorkflow({
@@ -129,29 +133,11 @@ export function loadDocsViewerCollectionContribution(settings, parent, collectio
   });
 }
 
-var preparePackageWorkflowRequest = null;
-
-function loadPreparePackageWorkflow() {
-  if (preparePackageWorkflowRequest) return preparePackageWorkflowRequest;
-  preparePackageWorkflowRequest = import("../packages/document-package-prepare-workflow.js")
-    .then(function (module) {
-      if (!module || typeof module.openDocumentPackagePrepareWorkflow !== "function") {
-        throw new Error("Prepare package workflow is unavailable.");
-      }
-      return module;
-    })
-    .catch(function (error) {
-      preparePackageWorkflowRequest = null;
-      throw error;
-    });
-  return preparePackageWorkflowRequest;
-}
-
 function openCollectionPreparePackage(settings, request, context) {
   var actionContext = context || {};
   var resolution = settings.managementDocumentActions.resolveAction(DOCS_VIEWER_ACTION_IDS.PREPARE_DOCUMENT_PACKAGE, request);
   if (resolution.disabled) return Promise.reject(new Error(resolution.disabledReason));
-  return loadPreparePackageWorkflow().then(function (module) {
+  return import("../packages/document-package-prepare-workflow.js").then(function (module) {
     return module.openDocumentPackagePrepareWorkflow({
       root: managementModalRoot(settings),
       collection: cleanString(request && request.collection).toLowerCase(),

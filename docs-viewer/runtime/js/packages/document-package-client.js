@@ -1,18 +1,8 @@
 export const DOCUMENT_PACKAGE_ENDPOINTS = Object.freeze({
   prepareOptions: "/docs/packages/prepare-options",
-  returned: "/docs/packages/returned",
   prepare: "/docs/packages/prepare",
   reviewReturned: "/docs/packages/returned/review"
 });
-
-function endpointUrl(path, query = {}) {
-  const url = new URL(path, window.location.origin);
-  Object.entries(query).forEach(([key, value]) => {
-    const text = String(value == null ? "" : value).trim();
-    if (text) url.searchParams.set(key, text);
-  });
-  return url.href;
-}
 
 async function responsePayload(response) {
   const text = await response.text();
@@ -46,14 +36,8 @@ export async function requestDocumentPackageJson(path, options = {}) {
   return payload;
 }
 
-export function readDocumentPackagePrepareOptions(docIds, collection = "") {
-  const payload = { doc_ids: docIds };
-  if (collection) payload.collection = collection;
-  return postDocumentPackageJson(DOCUMENT_PACKAGE_ENDPOINTS.prepareOptions, payload);
-}
-
-export function getReturnedDocumentPackages() {
-  return requestDocumentPackageJson(endpointUrl(DOCUMENT_PACKAGE_ENDPOINTS.returned, {  }));
+export function readDocumentPackagePrepareOptions(docIds, collection) {
+  return postDocumentPackageJson(DOCUMENT_PACKAGE_ENDPOINTS.prepareOptions, { doc_ids: docIds, collection });
 }
 
 export function postDocumentPackageJson(path, payload) {

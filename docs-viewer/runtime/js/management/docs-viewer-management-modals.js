@@ -396,9 +396,7 @@ export function createDocsViewerManagementModalController(options = {}) {
       var requestedRestoreFocus = settings.restoreFocus;
       importRestoreFocusTarget = isFocusableNow(requestedRestoreFocus)
         ? requestedRestoreFocus
-        : isFocusableNow(refs.manageImportButton)
-          ? refs.manageImportButton
-          : refs.manageActionsButton;
+        : refs.manageActionsButton;
       lifecycle.open({
         restoreFocus: importRestoreFocusTarget
       });

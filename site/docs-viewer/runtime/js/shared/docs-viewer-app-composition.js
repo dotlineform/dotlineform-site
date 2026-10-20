@@ -314,10 +314,6 @@ export function createDocsViewerAppComposition(options) {
     );
   }
 
-  function shouldOpenImportOnLoad() {
-    return Boolean(routeContext.openImportOnLoad && shouldInitializeManagement());
-  }
-
   return {
     constants: constants,
     serviceContext: serviceContext,
@@ -331,8 +327,7 @@ export function createDocsViewerAppComposition(options) {
     generatedDataRuntime: generatedDataRuntime,
     startupPhases: startupPhaseRecords(appContext, serviceContext),
     startupAuthorities: startupAuthorityRecords(routeContext, serviceContext),
-    shouldInitializeManagement: shouldInitializeManagement,
-    shouldOpenImportOnLoad: shouldOpenImportOnLoad
+    shouldInitializeManagement: shouldInitializeManagement
   };
 }
 
@@ -382,13 +377,6 @@ export function startDocsViewerStartupPhases(options) {
         : true;
       if (shouldInitializeManagement && typeof settings.initializeManagement === "function") settings.initializeManagement();
       return callPhase("loadIndex");
-    })
-    .then(function () {
-      var shouldOpenImport = typeof composition.shouldOpenImportOnLoad === "function"
-        ? composition.shouldOpenImportOnLoad()
-        : false;
-      if (!shouldOpenImport) return null;
-      return callPhase("openImportOnLoad");
     })
     .catch(function (error) {
       if (typeof settings.setStatus === "function") {

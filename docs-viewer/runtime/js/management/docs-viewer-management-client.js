@@ -274,11 +274,10 @@ export function orderManagedDocChildren(parentDocId, childDocIds, options) {
 }
 
 /** Send one confirmed native document; original filenames remain UTF-8 metadata. */
-export function importNativeDoc(file, destination, afterDocId, includePromptMeta, options) {
+export function importNativeDoc(file, destination, includePromptMeta, options) {
   var form = new FormData();
   form.append("metadata", JSON.stringify(Object.assign({}, destination, {
-    filename: file.name, include_prompt_meta: includePromptMeta,
-    ...(afterDocId ? { after_doc_id: afterDocId } : {})
+    filename: file.name, include_prompt_meta: includePromptMeta
   })));
   form.append("document", file.slice(0, file.size, "application/octet-stream"), "document");
   return fetchManagementJson("/docs/import-doc", "POST", form, options);

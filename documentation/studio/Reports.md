@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260513-105343-6de36b
 title: Reports
 added_date: "2026-05-13 10:53:43"
-last_updated: "2026-10-15"
+last_updated: "2026-10-20"
 parent_id: d-20260424-000000-50b63f
 ---
 # Docs Viewer Reports
@@ -175,7 +175,7 @@ Selecting a row opens the selected collection document through its exact by-ID r
 
 The shared report accepts an optional caller-owned contribution with detached leading-cell/title-prefix row hosts, list/detail toolbar hosts and collection-owned mount, state, refresh and unmount events. It inserts only populated hosts and offers the detail toolbar only after by-ID identity is valid. The Manage contribution renders shared visual status and an additional 📝 indicator only for `draft: true`. It owns collection-keyed checkbox selection, the compact 🔧 Actions and Select all/Clear/Done controls and the lazy Prepare Package bridge. That bridge supplies exact checked IDs plus `{collection}`, never a selected parent or displayed child fallback. Public callers import no management module.
 
-The local sub-scope Actions menu remains available in every configured collection, including empty lists. Copy and Prepare package remain visible when unavailable, with disabled controls and explanatory tooltips. Set Publishable and its sub-scope callbacks, request handling and service support are removed. Missing workflow support takes precedence over selection prompts; exposing the menu does not enable an unsupported operation.
+The local Collection Actions menu remains available in every configured collection, including empty lists. Export and Prepare package require checked IDs; Import doc and Import docs receive the exact collection and require no selection. Missing workflow support takes precedence over selection prompts. Existing action policy hides unsupported Catalogue package/import actions; Catalogue retains Export. Set Publishable and its callbacks, request handling and service support are removed. [Docs Import](Docs_Import.md) owns both intake workflows and package destination matching.
 
 Manage supplies the standard collection controls directly, without collection customisation loaders, root data, custom filters/headings/comparators or selection callbacks. Source owns Subject assignment and Folder opening through the current buffer and server-owned authoring capability. Project State reads completed Works metadata directly and composes its report in the browser from a narrow local service handoff; its report envelope and generation hashes are retired. The empty Processing Docs collection was retired on 2026-09-27: its registration, report host, dedicated customisation and collection storage were removed. The separate repository `processing/` project and Projects-owned Processing media remain independent owners.
 

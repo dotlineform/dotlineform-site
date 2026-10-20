@@ -23,13 +23,13 @@ export function createDocsViewerImportDocWorkflow(options) {
         title: "Import doc",
         bodyHtml:
           '<p class="docsViewer__modalNote">' + escapeHtml(file.name) + '</p>' +
-          '<p class="docsViewer__modalNote muted small">For separate local images or attachments, use Import with the complete folder.</p>',
+          '<p class="docsViewer__modalNote muted small">For separate local images or attachments, use Import docs with the complete folder.</p>',
         actions: [{ role: "modal-cancel", label: "Cancel" }, { role: "modal-primary", label: "Import" }],
         onSubmit: async function () {
           options.setBusy(true);
           options.render();
           try {
-            var result = await importNativeDoc(file, settings.destination, settings.afterDocId, kind === "HTML", options.clientOptions());
+            var result = await importNativeDoc(file, settings.destination, kind === "HTML", options.clientOptions());
             return { confirmed: true, result: result };
           } catch (error) {
             options.setBusy(false);

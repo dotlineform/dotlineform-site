@@ -29,32 +29,20 @@ def import_source_dependencies() -> import_source_service.ImportSourceDependenci
     )
 
 
-def ordinary_import_target_request(body: Dict[str, Any]) -> Dict[str, Any]:
-    target = {}
+def resolve_import_collection(repo_root: Path, body: Dict[str, Any]) -> ManagedDocumentCollection:
+    """Resolve the request's required collection at the import write boundary."""
     if "scope" in body:
-        raise ValueError("scope is retired; use an optional collection")
+        raise ValueError("scope is retired; use collection")
     if "sub_scope" in body:
         raise ValueError("sub_scope is retired; use collection")
-    if "collection" in body:
-        target["collection"] = body.get("collection")
-    return target
-
-
-def resolve_ordinary_import_target(
-    repo_root: Path,
-    target: Dict[str, Any],
-) -> ManagedDocumentCollection:
     from docs_workspace_config import require_document_authoring
-    collection = resolve_managed_document_collection_target(repo_root, target)
+    collection = resolve_managed_document_collection_target(repo_root, {"collection": body.get("collection")})
     require_document_authoring(collection.parent_config)
     return collection
 
 
 def handle_import_source(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    target = resolve_ordinary_import_target(
-        repo_root,
-        ordinary_import_target_request(body),
-    )
+    target = resolve_import_collection(repo_root, body)
     source_directory = str(body.get("source_directory") or "")
     if not source_directory.strip():
         raise ValueError("source_directory is required")
