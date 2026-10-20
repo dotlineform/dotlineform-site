@@ -45,7 +45,7 @@ export async function openCollectionExportWorkflow(options) {
   var confirmed = await openDocsViewerConfirmModal(confirmationOptions(preview, options));
   if (!confirmed) return null;
 
-  var applied = await requestSnapshot("apply", {
+  return requestSnapshot("apply", {
     collection: preview.collection,
     doc_ids: preview.doc_ids,
     export_date: preview.export_date,
@@ -54,6 +54,4 @@ export async function openCollectionExportWorkflow(options) {
     confirm: true,
     replace_existing: preview.replacement_required
   }, options);
-  options.setStatus(applied.summary_text, false);
-  return applied;
 }

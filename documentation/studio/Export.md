@@ -60,10 +60,11 @@ $DOTLINEFORM_PROJECTS_BASE_DIR/docs-export/
 
 The server derives the folder from its local export date:
 
-- a complete collection uses `<collection title> - YYYY-MM-DD`;
-- a partial collection, including one document with unselected peers, uses `<collection title> selection - YYYY-MM-DD`.
+- one selected document uses `<document title> - YYYY-MM-DD`;
+- a complete collection with multiple documents uses `<collection title> - YYYY-MM-DD`;
+- a partial collection with multiple selected documents uses `<collection title> selection - YYYY-MM-DD`.
 
-Complete-set classification takes precedence for a one-document collection. Labels receive only bounded filesystem-safe normalization. There is no **Save As**, arbitrary destination, or background scheduling.
+Single-document naming also applies when the collection contains only that document; its selection kind remains complete. Labels receive only bounded filesystem-safe normalization. There is no **Save As**, arbitrary destination, or background scheduling.
 
 One equivalent label and local date names one destination. Preview classifies it as `absent`, `directory`, or `non_directory`. Every existing directory requires explicit replacement confirmation; a non-directory target is blocked. Export does not parse or audit a prior `snapshot.json`, distinguish recognized/unrecognized snapshots, or return an unused prior-snapshot summary. The existing exact destination-byte revision still guards replacement.
 
@@ -106,22 +107,23 @@ Each snapshot’s managed artifact contains exactly:
 
 ```text
 <dated folder>/
-  index.html
+  <document title>.html (single document only)
+  index.html (multiple documents only)
   portable.html
   styles.css
   snapshot.json
-  docs/
+  docs/ (multiple documents only)
     <selected doc_id>.html
   media/
     <media type>/
       <confined relative identity>
 ```
 
-`index.html` preserves the selected flat collection manifest order and uses the owning collection title. The first selected document in that order is the default.
+Snapshots containing multiple documents include `index.html`, which preserves the selected flat collection manifest order and uses the owning collection title. The first selected document in that order is the default. A single-document snapshot writes `<document title>.html` directly in the snapshot folder and omits the `docs/` directory, index and document page's Index/Back to index links. Its filename uses the same bounded filesystem-safe title normalization as folder naming; the title `portable` uses `portable - document.html` to avoid the companion `portable.html`, including case-insensitive collisions. Open the title-named page directly or use `portable.html`.
 
 `portable.html` is an additive single-file view for platforms such as iPadOS where local `file` navigation between exported files is unreliable. It inlines the export stylesheet, renders one article per selected document, and uses in-page fragments for its index and selected document links within the same collection identity. Deep links to a selected document heading resolve to that document article in the portable view. Images are represented as `[image: alt text]`, or `[image]` without alt text; the existing multi-file pages and packaged media remain unchanged. Beneath each **Back to index** link, a caption-style code line shows a literal Markdown reference token using the configured public viewer route and the exact collection/document identity, such as `[document title](/?collection=library&doc=<doc_id>)`, for direct reuse in notes.
 
-Each document page inserts its existing generated `content_html` without adding another heading. Docs Viewer links become local only when the target's collection identity matches the exported owner and its document is included. Links to unselected documents and other collections retain their viewer target; query-only links receive the configured public viewer route so they do not resolve within the exported folder. External locations retain their original targets. Fragments are preserved in the multi-file pages.
+Each document page inserts its existing generated `content_html` without adding another heading. The planner resolves document output paths once and carries them into media rewriting, plan revision and file writing. Stylesheet/media URLs are relative to each page's planned location, and local document links use URL-encoded output filenames. Docs Viewer links become local only when the target's collection identity matches the exported owner and its document is included. Links to unselected documents and other collections retain their viewer target; query-only links receive the configured public viewer route so they do not resolve within the exported folder. External locations retain their original targets. Fragments are preserved in the document pages.
 
 Each exact referenced workspace-owned object is copied once to `media/<media type>/<identity>`, even when several selected documents use it. Matching `src`, `srcset`, `poster`, `data`, and configured media `href` references become document-relative packaged URLs. Cache queries are removed after the bytes are frozen and fragments are preserved. Unmatched media references remain unchanged and are recorded as external dependencies without credentials or query strings.
 
@@ -155,6 +157,8 @@ docs-viewer/runtime/js/management/docs-viewer-collection-export-workflow.js
 The collection contribution owns checked-row presentation, the action resolver owns its `collection-selection` target and `docs-viewer-management-document-reports.js` supplies the exact target and shared management services to the workflow. Generic HTTP transport remains in `docs-viewer-management-client.js`. Python's snapshot service owns planning/rendering/writing and delegates referenced-media preparation to its media helper; there is no duplicated workspace or Index export workflow.
 
 ## Verification
+
+The single-document root layout passed focused Python lint, compilation and whitespace checks. Source review traced planned paths through media rewriting, URL-encoded document links, rendering and writing. The change reuses loaded generated titles and the existing media pass without extra reads, scans or compatibility aliases. Existing safe-label normalization confines title-derived filenames; reserving `portable.html` prevents overwriting the companion view. Tests and live Export were outside this change's verification scope.
 
 On 2026-10-19 Catalogue `00008` Preview succeeded with broader filesystem access to the configured export root, and user-confirmed Apply created its ten-file snapshot with five media objects and zero external dependencies. The user subsequently approved the shared `Open <Work title>` image label; both serialization owners and the snapshot were updated through ordinary replacement Preview/Apply. The user then reported an oversized image and requested the 800px rendition. Export now uses the carried standard image URL, removes larger candidates/fixed dimensions/frame ratio and supplies proportional width-limit CSS. Focused Python lint/compilation passed. Fresh Preview/Apply replaced the same snapshot with eight files and three media objects: the 800px image, PDF and DOCX. Final file-set/byte verification passed; output inspection confirmed both image and opener use the packaged 800px file and `Open nerve` remains. Bounded redundancy/defensive review confirmed the existing single HTML/media pass and selected reads are retained, without another resolver, policy constant or validation layer. The user accepted the corrected Export presentation and authorized continuation. Stale-confirmation rejection and failure handling remain unconfirmed. No tests ran.
 

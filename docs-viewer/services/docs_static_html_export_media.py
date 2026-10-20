@@ -304,9 +304,10 @@ def _portable_path_key(path: Path) -> str:
     return unicodedata.normalize("NFC", path.as_posix()).casefold()
 
 
-def _packaged_media_url(packaged_path: Path, fragment: str) -> str:
+def _packaged_media_url(packaged_path: Path, fragment: str, document_path: Path) -> str:
     encoded_path = quote(packaged_path.as_posix(), safe="/-._~")
-    return f"../{encoded_path}{f'#{fragment}' if fragment else ''}"
+    root_prefix = "../" * len(document_path.parent.parts)
+    return f"{root_prefix}{encoded_path}{f'#{fragment}' if fragment else ''}"
 
 
 def _media_adapters(
@@ -345,12 +346,14 @@ def plan_snapshot_media(
     media_config: Mapping[str, DocsManagedMediaConfig],
     doc_payloads: Mapping[str, Mapping[str, Any]],
     *,
+    document_paths: Mapping[str, Path],
     remote_client: RemoteArtifactClient | None = None,
     env_files: Iterable[Path] | None = None,
     environ: Mapping[str, str] | None = None,
     work_media: Mapping[str, Any] | None = None,
     work_assets: Any = None,
 ) -> SnapshotMediaPlan:
+    """Collect owned objects once and rewrite URLs relative to supplied page paths."""
     prefixes = _media_prefixes(media_config)
     references: dict[tuple[str, str], set[str]] = {}
     dependencies: dict[tuple[str, str, str], set[str]] = {}
@@ -380,7 +383,7 @@ def plan_snapshot_media(
                         raise ValueError("stage-owned media paths collide in the snapshot package")
                     packaged_keys[path_key] = key
                     packaged_paths[key] = packaged_path
-                return _packaged_media_url(packaged_paths[key], owned.fragment)
+                return _packaged_media_url(packaged_paths[key], owned.fragment, document_paths[doc_id])
             elif _is_external_dependency(element, attribute, value):
                 reference = _dependency_reference(value)
                 if reference:

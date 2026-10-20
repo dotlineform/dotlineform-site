@@ -15,8 +15,8 @@ import unicodedata
 from dataclasses import dataclass
 from datetime import date, datetime
 from pathlib import Path
-from typing import Any
-from urllib.parse import parse_qs, urlencode, urlsplit
+from typing import Any, Mapping
+from urllib.parse import parse_qs, quote as quote_url_path, urlencode, urlsplit
 
 from docs_static_html_export_media import SnapshotMediaPlan, plan_snapshot_media
 from docs_catalogue_static import CatalogueStaticInputs, prepare_catalogue_document
@@ -65,6 +65,7 @@ class StaticHtmlSnapshotPlan:
     destination_label: str
     documents: list[dict[str, Any]]
     doc_payloads: dict[str, dict[str, Any]]
+    document_paths: dict[str, Path]
     media_plan: SnapshotMediaPlan
     plan_revision: str
     target_state: str
@@ -186,6 +187,17 @@ def snapshot_selection_kind(doc_ids: tuple[str, ...], available_doc_ids: list[st
     return "partial"
 
 
+def snapshot_document_paths(doc_payloads: Mapping[str, Mapping[str, Any]]) -> dict[str, Path]:
+    """Place a single title-named page at the root, reserving portable.html."""
+    if len(doc_payloads) == 1:
+        doc_id, payload = next(iter(doc_payloads.items()))
+        label = normalize_snapshot_folder_label(payload["title"])
+        if label.casefold() == "portable":
+            label += " - document"
+        return {doc_id: Path(f"{label}.html")}
+    return {doc_id: Path("docs") / f"{doc_id}.html" for doc_id in doc_payloads}
+
+
 def _revision(payload: Any) -> str:
     encoded = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
     return hashlib.sha256(encoded).hexdigest()
@@ -290,6 +302,7 @@ def _snapshot_plan_revision(
     default_doc_id: str,
     documents: list[dict[str, Any]],
     doc_payloads: dict[str, dict[str, Any]],
+    document_paths: dict[str, Path],
     media_plan: SnapshotMediaPlan,
 ) -> str:
     return _revision(
@@ -302,6 +315,7 @@ def _snapshot_plan_revision(
             "folder_name": folder_name,
             "default_doc_id": default_doc_id,
             "documents": documents,
+            "document_paths": {doc_id: path.as_posix() for doc_id, path in document_paths.items()},
             "titles": {doc_id: doc_payloads[doc_id]["title"] for doc_id in doc_ids},
             "content_sha256": {
                 doc_id: hashlib.sha256(doc_payloads[doc_id]["content_html"].encode("utf-8")).hexdigest()
@@ -346,14 +360,17 @@ def plan_static_html_snapshot(
         doc_payloads[doc_id] = prepared.payload
         work_media[doc_id] = prepared.media
     included_doc_ids = set(doc_ids)
+    document_paths = snapshot_document_paths(doc_payloads)
     media_plan = plan_snapshot_media(repo_root, owner.media.types if owner.media is not None else {}, doc_payloads,
-                                    work_media=work_media, work_assets=workspace.assets)
+                                    document_paths=document_paths, work_media=work_media, work_assets=workspace.assets)
     documents = [{"doc_id": row["doc_id"], "title": row["title"]} for row in manifest["docs"] if row["doc_id"] in included_doc_ids]
     selection_kind = snapshot_selection_kind(doc_ids, available_doc_ids)
     selected_date = export_date or datetime.now().astimezone().date()
     if type(selected_date) is not date:
         raise ValueError("export_date must be a date")
-    if selection_kind == "complete":
+    if len(doc_ids) == 1:
+        base_label = doc_payloads[doc_ids[0]]["title"]
+    elif selection_kind == "complete":
         base_label = title
     else:
         base_label = f"{title} selection"
@@ -374,6 +391,7 @@ def plan_static_html_snapshot(
         default_doc_id=default_doc_id,
         documents=documents,
         doc_payloads=doc_payloads,
+        document_paths=document_paths,
         media_plan=media_plan,
     )
     return StaticHtmlSnapshotPlan(
@@ -390,6 +408,7 @@ def plan_static_html_snapshot(
         destination_label=destination_label_value,
         documents=documents,
         doc_payloads=doc_payloads,
+        document_paths=document_paths,
         media_plan=media_plan,
         plan_revision=plan_revision,
         target_state=target_state,
@@ -432,11 +451,10 @@ def rewrite_internal_docs_viewer_links(
     *,
     collection: str,
     viewer_base_url: str,
-    link_prefix: str,
-    link_suffix: str = ".html",
-    included_doc_ids: set[str],
+    document_links: Mapping[str, str],
     preserve_fragment: bool = True,
 ) -> str:
+    """Resolve selected document links to supplied page or fragment URLs."""
     def replacement(match: re.Match[str]) -> str:
         raw_url = html.unescape(match.group("url"))
         split = urlsplit(raw_url)
@@ -453,13 +471,13 @@ def rewrite_internal_docs_viewer_links(
         if not doc_id:
             return match.group(0)
         target_collection = (params.get("collection") or [""])[0]
-        if target_collection != collection or doc_id not in included_doc_ids:
+        if target_collection != collection or doc_id not in document_links:
             if split.path:
                 return match.group(0)
             rewritten = f"{viewer_base_url}{raw_url}"
             quote = match.group("quote")
             return f"{match.group('prefix')}{quote}{html.escape(rewritten, quote=True)}{quote}"
-        rewritten = f"{link_prefix}{doc_id}{link_suffix}"
+        rewritten = document_links[doc_id]
         if split.fragment and preserve_fragment:
             rewritten += f"#{split.fragment}"
         quote = match.group("quote")
@@ -714,16 +732,19 @@ def render_doc_html(
     *,
     collection: str,
     viewer_base_url: str,
-    included_doc_ids: set[str],
+    document_path: Path,
+    document_links: Mapping[str, str],
     content_html: str,
 ) -> str:
+    """Render a planned page with snapshot-relative assets and sibling links."""
     title = payload["title"]
+    has_index = len(document_links) > 1
+    root_prefix = "../" * len(document_path.parent.parts)
     content_html = rewrite_internal_docs_viewer_links(
         content_html,
         collection=collection,
         viewer_base_url=viewer_base_url,
-        link_prefix="",
-        included_doc_ids=included_doc_ids,
+        document_links=document_links,
     )
     return "\n".join(
         [
@@ -733,13 +754,13 @@ def render_doc_html(
             '  <meta charset="utf-8">',
             '  <meta name="viewport" content="width=device-width, initial-scale=1">',
             f"  <title>{html.escape(title)}</title>",
-            '  <link rel="stylesheet" href="../styles.css">',
+            f'  <link rel="stylesheet" href="{root_prefix}styles.css">',
             "</head>",
             "<body>",
-            '  <nav><a href="../index.html">Index</a></nav>',
+            *([f'  <nav><a href="{root_prefix}index.html">Index</a></nav>'] if has_index else []),
             "  <main>",
             f"    {content_html}",
-            '    <p class="docsExport__meta"><a href="../index.html">Back to index</a></p>',
+            *([f'    <p class="docsExport__meta"><a href="{root_prefix}index.html">Back to index</a></p>'] if has_index else []),
             f'    <p class="docsExport__referenceToken"><code>{html.escape(markdown_document_link(payload, collection=collection, viewer_base_url=viewer_base_url))}</code></p>',
             '    <hr class="docsExport__documentFooterRule">',
             "  </main>",
@@ -751,7 +772,7 @@ def render_doc_html(
 
 
 def render_portable_html(plan: StaticHtmlSnapshotPlan) -> str:
-    included_doc_ids = set(plan.doc_ids)
+    document_links = {doc_id: f"#doc-{doc_id}" for doc_id in plan.doc_ids}
     index_html = render_document_rows(
         plan.documents,
         link_prefix="#doc-",
@@ -764,9 +785,7 @@ def render_portable_html(plan: StaticHtmlSnapshotPlan) -> str:
             payload["content_html"],
             collection=plan.collection,
             viewer_base_url=plan.viewer_base_url,
-            link_prefix="#doc-",
-            link_suffix="",
-            included_doc_ids=included_doc_ids,
+            document_links=document_links,
             preserve_fragment=False,
         )
         document_html.extend(
@@ -826,25 +845,28 @@ def snapshot_provenance(plan: StaticHtmlSnapshotPlan, *, generated_at: str) -> d
 
 
 def compute_snapshot_files(plan: StaticHtmlSnapshotPlan, *, generated_at: str) -> dict[Path, bytes]:
-    included_doc_ids = set(plan.doc_ids)
+    """Render planned pages and shared snapshot files without filesystem writes."""
+    document_links = {doc_id: quote_url_path(path.name, safe="-._~") for doc_id, path in plan.document_paths.items()}
     files: dict[Path, bytes] = {
-        Path("index.html"): render_index_html(
-            plan.documents,
-            document_count=len(plan.doc_ids),
-            title=plan.title,
-        ).encode("utf-8"),
         Path("styles.css"): render_styles_css().encode("utf-8"),
         Path("portable.html"): render_portable_html(plan).encode("utf-8"),
         Path(SNAPSHOT_PROVENANCE_FILENAME): (
             json.dumps(snapshot_provenance(plan, generated_at=generated_at), ensure_ascii=False, indent=2) + "\n"
         ).encode("utf-8"),
     }
+    if len(plan.doc_ids) > 1:
+        files[Path("index.html")] = render_index_html(
+            plan.documents,
+            document_count=len(plan.doc_ids),
+            title=plan.title,
+        ).encode("utf-8")
     for doc_id in plan.doc_ids:
-        files[Path("docs") / f"{doc_id}.html"] = render_doc_html(
+        files[plan.document_paths[doc_id]] = render_doc_html(
             plan.doc_payloads[doc_id],
             collection=plan.collection,
             viewer_base_url=plan.viewer_base_url,
-            included_doc_ids=included_doc_ids,
+            document_path=plan.document_paths[doc_id],
+            document_links=document_links,
             content_html=plan.media_plan.rewritten_html_by_doc[doc_id],
         ).encode("utf-8")
     for item in plan.media_plan.items:
