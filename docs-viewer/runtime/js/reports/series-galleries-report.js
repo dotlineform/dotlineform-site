@@ -1,4 +1,6 @@
+import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
+import { createStudioWorkEditorLinks } from "./studio-work-editor-links.js";
 
 const SORTER = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
 
@@ -27,6 +29,7 @@ function current(state) {
 function setBusy(state, busy) {
   state.busy = busy;
   state.root.setAttribute("aria-busy", String(busy));
+  state.searchInput.disabled = busy;
   state.refreshButton.disabled = busy;
   state.refreshButton.setAttribute("aria-busy", String(busy));
   state.controls.forEach(({ button, cell, indicator, key, label }) => {
@@ -38,13 +41,24 @@ function setBusy(state, busy) {
     button.setAttribute("aria-label", `Sort by ${label} ${active && state.sortDir === "asc" ? "descending" : "ascending"}`);
   });
   state.rowsNode.querySelectorAll("button").forEach(button => { button.disabled = busy; });
+  state.rowsNode.querySelectorAll("a").forEach(link => {
+    link.inert = busy;
+    if (busy) link.setAttribute("aria-disabled", "true");
+    else link.removeAttribute("aria-disabled");
+  });
 }
 
 function renderRows(state) {
+  const query = state.searchText.trim().toLocaleLowerCase();
+  const rows = query ? state.rows.filter(row =>
+    title(row, "series").toLocaleLowerCase().includes(query)
+    || title(row, "gallery").toLocaleLowerCase().includes(query)) : state.rows;
   state.rowsNode.replaceChildren();
-  state.emptyNode.hidden = state.rows.length > 0;
-  state.tableNode.hidden = state.rows.length === 0;
-  sortRows(state).forEach(row => {
+  state.emptyNode.textContent = state.rows.length && query
+    ? "No Series or Galleries match the current search." : "No saved Series or Galleries.";
+  state.emptyNode.hidden = rows.length > 0;
+  state.tableNode.hidden = rows.length === 0;
+  rows.forEach(row => {
     const rowNode = state.document.createElement("li");
     rowNode.className = "docsViewerReport__row";
     rowNode.setAttribute("role", "row");
@@ -59,7 +73,16 @@ function renderRows(state) {
         button.textContent = record.title;
         button.dataset.galleryId = record.gallery_id;
         cell.appendChild(button);
-      } else cell.textContent = record === null ? "—" : record.title;
+      } else if (record !== null) {
+        const link = state.document.createElement("a");
+        link.className = "docsViewerReport__cellLink";
+        link.textContent = record.title;
+        link.href = state.studioLinks.forSeries(record.series_id);
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.title = "Open Series in Studio (new tab)";
+        cell.appendChild(link);
+      } else cell.textContent = "—";
       rowNode.appendChild(cell);
     }
     state.rowsNode.appendChild(rowNode);
@@ -74,6 +97,7 @@ async function readReport(state) {
     const payload = await state.context.reportService.readSeriesGalleries();
     if (!current(state)) return;
     state.rows = payload.rows;
+    state.rows = sortRows(state);
     renderRows(state);
     state.statusNode.textContent = "";
   } catch (error) {
@@ -102,7 +126,7 @@ async function openGallery(state, button) {
   }
 }
 
-/** Read a saved private snapshot and open exact Galleries through the existing Media View. */
+/** Read saved associations; Series open local Studio, Galleries use the retained Media View. */
 export function mountSeriesGalleriesReport(context) {
   if (!context.reportService?.readSeriesGalleries || typeof context.openMediaTarget !== "function") {
     throw new Error("Local Series and Galleries services are unavailable.");
@@ -113,6 +137,15 @@ export function mountSeriesGalleriesReport(context) {
   root.dataset.reportColumns = "2";
   const toolbar = document.createElement("div");
   toolbar.className = "docsViewerReport__toolbar";
+  const search = document.createElement("span");
+  search.className = "docsViewerReport__search";
+  const searchInput = document.createElement("input");
+  searchInput.className = "docsViewerReport__searchInput";
+  searchInput.type = "search";
+  searchInput.placeholder = "Search";
+  searchInput.setAttribute("aria-label", "Search Series and Galleries");
+  search.appendChild(searchInput);
+  mountSearchField(searchInput, { clearLabel: "Clear Series and Galleries search" });
   const refreshButton = document.createElement("button");
   refreshButton.type = "button";
   refreshButton.className = "docsViewer__toolbarIconButton";
@@ -122,7 +155,7 @@ export function mountSeriesGalleriesReport(context) {
   const statusNode = document.createElement("p");
   statusNode.className = "docsViewerReport__status";
   statusNode.setAttribute("aria-live", "polite");
-  toolbar.append(refreshButton, statusNode);
+  toolbar.append(search, refreshButton, statusNode);
   const tableNode = document.createElement("div");
   tableNode.className = "docsViewerReport__table";
   tableNode.setAttribute("role", "table");
@@ -139,8 +172,9 @@ export function mountSeriesGalleriesReport(context) {
   emptyNode.textContent = "No saved Series or Galleries.";
   emptyNode.hidden = true;
   root.append(toolbar, tableNode, emptyNode);
-  const state = { root, document, context, refreshButton, statusNode, tableNode, rowsNode, emptyNode,
-    busy: false, released: false, rows: [], sortKey: "series", sortDir: "asc", controls: [] };
+  const state = { root, document, context, searchInput, refreshButton, statusNode, tableNode, rowsNode, emptyNode,
+    studioLinks: createStudioWorkEditorLinks(context.studioBaseUrl),
+    busy: false, released: false, rows: [], searchText: "", sortKey: "series", sortDir: "asc", controls: [] };
   state.controls = [["series", "Series"], ["gallery", "Gallery"]].map(([key, label]) => {
     const cell = document.createElement("span");
     cell.className = "docsViewerReport__headLabel";
@@ -159,9 +193,14 @@ export function mountSeriesGalleriesReport(context) {
       if (state.busy) return;
       state.sortDir = state.sortKey === key && state.sortDir === "asc" ? "desc" : "asc";
       state.sortKey = key;
+      state.rows = sortRows(state);
       renderRows(state);
     });
     return { key, label, cell, button, indicator };
+  });
+  searchInput.addEventListener("input", () => {
+    state.searchText = searchInput.value;
+    renderRows(state);
   });
   refreshButton.addEventListener("click", () => { if (!state.busy) void readReport(state); });
   rowsNode.addEventListener("click", event => {
@@ -170,11 +209,15 @@ export function mountSeriesGalleriesReport(context) {
   });
   context.registerRetainedView?.({
     id: "series-galleries",
-    capture: () => ({ key: state.sortKey, direction: state.sortDir }),
+    capture: () => ({ query: state.searchText, key: state.sortKey, direction: state.sortDir }),
     restore: saved => {
-      if (state.sortKey === saved.key && state.sortDir === saved.direction) return;
+      const orderChanged = state.sortKey !== saved.key || state.sortDir !== saved.direction;
+      if (!orderChanged && state.searchText === saved.query) return;
+      state.searchText = saved.query;
+      searchInput.value = saved.query;
       state.sortKey = saved.key;
       state.sortDir = saved.direction;
+      if (orderChanged) state.rows = sortRows(state);
       renderRows(state);
     },
     dispose: () => { state.released = true; }

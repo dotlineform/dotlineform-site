@@ -420,6 +420,7 @@ function workSelectionOptions(state) {
     },
     updateEditorState: () => updateEditorState(state),
     saveCurrentWork: () => saveCurrentWork(state, workActionOptions(state)),
+    selectSeries: seriesId => state.seriesBrowser.selectSeries(seriesId),
     setTextWithState: (node, text, tone) => state.messageController.setActionTextWithState(node, text, tone),
     setEmptySearchMode: (overrides = {}) => setEmptySearchMode(state, workRouteStateOptions(state, overrides)),
     setNewWorkMode: (overrides = {}) => setNewWorkMode(state, workRouteStateOptions(state, overrides))

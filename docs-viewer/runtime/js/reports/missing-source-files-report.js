@@ -1,8 +1,5 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
-
-function cleanString(value) {
-  return String(value == null ? "" : value).trim();
-}
+import { createStudioWorkEditorLinks } from "./studio-work-editor-links.js";
 
 function clearNode(node) {
   while (node.firstChild) node.removeChild(node.firstChild);
@@ -13,36 +10,11 @@ function reportService(context) {
   return service && typeof service.runMissingSourceFiles === "function" ? service : null;
 }
 
-function studioWorkHref(context, workId) {
-  const base = cleanString(context && context.studioBaseUrl).replace(/\/+$/, "");
-  let studio;
-  try {
-    studio = new URL(base);
-  } catch (error) {
-    throw new Error("Local Studio is not configured.", { cause: error });
-  }
-  if (
-    studio.protocol !== "http:"
-    || !["127.0.0.1", "localhost", "::1", "[::1]"].includes(studio.hostname)
-    || studio.username
-    || studio.password
-    || studio.pathname !== "/"
-    || studio.search
-    || studio.hash
-  ) {
-    throw new Error("Local Studio is not configured.");
-  }
-  return new URL(
-    "/studio/catalogue-work/?work=" + encodeURIComponent(workId),
-    studio.origin
-  ).toString();
-}
-
 function appendWorkCell(state, rowNode, row) {
   const cell = document.createElement("span");
   const link = document.createElement("a");
   link.className = "docsViewerReport__cellLink";
-  link.href = studioWorkHref(state.context, row.work_id);
+  link.href = state.studioLinks.forWork(row.work_id);
   link.textContent = row.work_id;
   cell.appendChild(link);
   rowNode.appendChild(cell);
@@ -93,6 +65,7 @@ function runReport(state) {
   return service.runMissingSourceFiles()
     .then((payload) => {
       state.rows = payload.report.rows;
+      if (state.rows.length) state.studioLinks = createStudioWorkEditorLinks(state.context.studioBaseUrl);
       state.statusNode.textContent = "";
       renderRows(state);
     })

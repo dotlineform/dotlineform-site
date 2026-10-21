@@ -150,7 +150,7 @@ export function createWorkSeriesBrowser(state, elements, options) {
   }
 
   function selectSeries(id) {
-    if (busy() || !state.seriesById.has(id)) return;
+    if (busy()) return;
     seriesId = id;
     status.textContent = "";
     delete status.dataset.state;
@@ -226,6 +226,8 @@ export function createWorkSeriesBrowser(state, elements, options) {
   sync();
   return {
     sync,
+    /** Select a known Series for browsing without opening a Work or changing its draft. */
+    selectSeries,
     /** Return the displayed Series independently of the loaded Work or draft. */
     getSelectedSeriesId: () => seriesId,
     refresh() {

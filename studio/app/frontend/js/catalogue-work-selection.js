@@ -293,6 +293,7 @@ export function bindWorkSelectionControls(state, context) {
   });
 }
 
+/** Apply Work, new-Work or Series-only entry using the already loaded editor lookups. */
 export async function applyInitialWorkRouteSelection(state, context) {
   const params = new URLSearchParams(window.location.search);
   const requestedMode = normalizeText(params.get("mode")).toLowerCase();
@@ -311,10 +312,15 @@ export async function applyInitialWorkRouteSelection(state, context) {
         "error"
       );
     }
-  } else if (requestedMode === "new") {
+  } else {
     const hasSeriesParam = Boolean(requestedSeriesRaw);
     const seriesIsValid = Boolean(requestedSeriesId && state.seriesById.has(requestedSeriesId));
-    context.setNewWorkMode({ seriesId: seriesIsValid ? requestedSeriesId : "" });
+    if (requestedMode === "new") {
+      context.setNewWorkMode({ seriesId: seriesIsValid ? requestedSeriesId : "" });
+    } else {
+      context.setEmptySearchMode();
+      if (seriesIsValid) context.selectSeries(requestedSeriesId);
+    }
     if (hasSeriesParam && !seriesIsValid) {
       context.setTextWithState(
         state.statusNode,
@@ -324,7 +330,5 @@ export async function applyInitialWorkRouteSelection(state, context) {
         "error"
       );
     }
-  } else {
-    context.setEmptySearchMode();
   }
 }

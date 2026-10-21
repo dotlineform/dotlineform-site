@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260422-000000-45a776
 title: Catalogue Work Editor
 added_date: "2026-04-22 00:00:00"
-last_updated: "2026-10-20"
+last_updated: "2026-10-21"
 parent_id: d-20260423-000000-d015e6
 
 ---
@@ -14,8 +14,11 @@ parent_id: d-20260423-000000-d015e6
 Use `/studio/catalogue-work/` to create, find, edit or delete canonical Works, including a batch from one project subfolder and images converted from former Details. Work downloads, links and project-media selection belong to this editor. The Detail browser and section-entry workflow are retired. The retired `provenance` and `artist` fields have no editor controls or create/save payload entries.
 
 - `?work=<work_id>` opens one Work.
-- `?mode=new` starts a new canonical record; optional `?series=<series_id>` preselects a Series.
+- `?series=<series_id>` selects the left-panel Series browser and lists its member Works, leaving the Work editor empty. Empty Series remain selectable; this entry does not open a definition modal or create a Work draft.
+- `?mode=new` starts a new canonical record; optional `&series=<series_id>` preselects a Series.
 - Explicit IDs, numeric ranges or a mixture open bulk edit mode.
+
+Work selection takes precedence when a URL supplies both `work` and `series`. Initial Series selection resolves the incoming ID against the already loaded canonical Series registry; invalid or unknown IDs display an error. The browser owns this entry behavior and reuses its loaded Work search projection for membership, without an additional request. Series titles in Docs Viewer's [Series and Galleries](Reports.md) report open this entry in a new tab.
 
 The [Catalogue Source Model](Catalogue_Source_Model.md) owns the data boundary. Ordinary Save completes the canonical edit and required local media; [Catalogue Save And Refresh](Catalogue_Save_And_Refresh.md) owns the separate generated-reader boundary.
 
