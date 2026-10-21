@@ -210,7 +210,13 @@ function renderField(field, fieldsNode, state, options) {
 
   if (!field.readonly) {
     input.addEventListener("input", () => notifyFieldInput(options, field.key));
-    input.addEventListener("change", () => notifyFieldInput(options, field.key));
+    input.addEventListener("change", () => {
+      if (field.key === "year" && state.mode !== "bulk" && input.value && !state.draft.year_display) {
+        state.fieldNodes.get("year_display").value = input.value;
+        notifyFieldInput(options, "year_display");
+      }
+      notifyFieldInput(options, field.key);
+    });
   }
   fieldsNode.appendChild(wrapper);
   state.fieldNodes.set(field.key, input);

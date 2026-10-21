@@ -106,6 +106,9 @@ function applyProjectMediaSelection(state, selection, options = {}) {
   setDraftField(state, "project_folder", selection.project_folder, options);
   setDraftField(state, "project_subfolder", selection.project_subfolder, options);
   setDraftField(state, "project_filename", selection.project_filename, options);
+  if (state.mode === "new" && !state.draft.title) {
+    setDraftField(state, "title", selection.project_filename.replace(/\.[^.]+$/, ""), options);
+  }
 }
 
 function renderPickerBody() {
