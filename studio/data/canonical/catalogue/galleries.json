@@ -579,13 +579,9 @@
       "gallery_id": "148",
       "title": "mouse story (details)"
     },
-    "149": {
-      "gallery_id": "149",
-      "title": "nerve (abattoir) (pages)"
-    },
     "150": {
       "gallery_id": "150",
-      "title": "nerve (formaldehyde form) (pages)"
+      "title": "nerve (formaldehyde form)"
     },
     "151": {
       "gallery_id": "151",
@@ -1206,6 +1202,10 @@
     "308": {
       "gallery_id": "308",
       "title": "moments"
+    },
+    "309": {
+      "gallery_id": "309",
+      "title": "nerve abattoir"
     }
   }
 }

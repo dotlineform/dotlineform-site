@@ -1,17 +1,17 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
+    "generated_at_utc": "2026-10-21T20:31:26Z",
     "gallery_id": "150"
   },
   "gallery": {
     "gallery_id": "150",
-    "title": "nerve (formaldehyde form) (pages)"
+    "title": "nerve (formaldehyde form)"
   },
   "member_works": [
     {
-      "work_id": "01991",
-      "title": "nerve (formaldehyde form) - front cover"
+      "work_id": "00166",
+      "title": "nerve (formaldehyde form)"
     },
     {
       "work_id": "01992",

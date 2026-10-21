@@ -1,21 +1,12 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
+    "generated_at_utc": "2026-10-21T14:55:32Z",
     "gallery_id": "143"
   },
   "gallery": {
     "gallery_id": "143",
     "title": "simultaneous equations"
   },
-  "member_works": [
-    {
-      "work_id": "01941",
-      "title": "se1"
-    },
-    {
-      "work_id": "01942",
-      "title": "se2"
-    }
-  ]
+  "member_works": []
 }

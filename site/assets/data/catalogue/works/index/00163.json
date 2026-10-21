@@ -1,20 +1,20 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-1f56dcdeb46b053cf060b6aa5888e09e",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-6c1716737a74bd76640eb4d890f99cc8",
+    "generated_at_utc": "2026-10-21T20:31:26Z"
   },
   "work": {
     "work_id": "00163",
     "title": "nerve (abattoir)",
     "year": 1995,
     "year_display": "1990-95",
-    "medium": "bound photocopied printed pages, canvas cover",
+    "width_px": 2242,
+    "height_px": 2242,
     "height_cm": 30.5,
     "width_cm": 21.5,
-    "width_px": 1545,
-    "height_px": 2193,
-    "media_version": 1,
+    "medium": "bound photocopied printed pages, canvas cover",
+    "media_version": 2,
     "series_id": "105",
     "downloads": [
       {
@@ -27,6 +27,10 @@
       {
         "gallery_id": "105",
         "title": "nerve"
+      },
+      {
+        "gallery_id": "309",
+        "title": "nerve abattoir"
       }
     ]
   }

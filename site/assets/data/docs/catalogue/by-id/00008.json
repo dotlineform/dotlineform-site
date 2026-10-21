@@ -58,17 +58,9 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "149"
-            },
-            "label": "nerve (abattoir) (pages)",
-            "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "150"
             },
-            "label": "nerve (formaldehyde form) (pages)",
+            "label": "nerve (formaldehyde form)",
             "relation": "series"
           }
         ],

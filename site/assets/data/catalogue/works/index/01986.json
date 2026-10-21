@@ -1,23 +1,25 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-a20a96b6f6435b1e21d514eeeb5c9e42",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-76d6e9722bb915e41273b2e4a2719845",
+    "generated_at_utc": "2026-10-21T20:31:26Z"
   },
   "work": {
     "work_id": "01986",
     "title": "nerve (abattoir) - 4",
     "year": 1995,
     "year_display": "1990-95",
-    "medium": "bound photocopied printed pages, canvas cover",
     "width_px": 2971,
     "height_px": 2080,
+    "height_cm": 17.6,
+    "width_cm": 25.2,
+    "medium": "bound photocopied printed pages, canvas cover",
     "media_version": 1,
     "series_id": "105",
     "galleries": [
       {
-        "gallery_id": "149",
-        "title": "nerve (abattoir) (pages)"
+        "gallery_id": "309",
+        "title": "nerve abattoir"
       }
     ]
   }

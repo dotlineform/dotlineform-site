@@ -3,7 +3,7 @@
   "title": "nerve (formaldehyde form) - 10",
   "added_date": "2026-09-23 10:11:30",
   "last_updated": "2026-10-01 13:15:09",
-  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>nerve (formaldehyde form) - 10</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"02001\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 3566 / 2594;\" data-docs-media-open aria-label=\"Open nerve (formaldehyde form) - 10\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/02001-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/02001-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/02001-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/02001-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"nerve (formaldehyde form) - 10\" width=\"3566\" height=\"2594\" decoding=\"async\"><span data-docs-media-placeholder hidden>nerve (formaldehyde form) - 10</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">1993<br>bound printed pages, edition 9 [extant]<br><br>cat. 02001</p></div></article></div>\n",
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>nerve (formaldehyde form) - 10</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"02001\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 3566 / 2594;\" data-docs-media-open aria-label=\"Open nerve (formaldehyde form) - 10\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/02001-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/02001-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/02001-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/02001-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"nerve (formaldehyde form) - 10\" width=\"3566\" height=\"2594\" decoding=\"async\"><span data-docs-media-placeholder hidden>nerve (formaldehyde form) - 10</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">1993<br>bound printed pages, edition 9 [extant]<br>22 × 30.2 cm<br><br>cat. 02001</p></div></article></div>\n",
   "catalogue": {
     "schema": "docs_catalogue_presentation_v1",
     "references": [
@@ -52,7 +52,7 @@
               "kind": "catalogue-gallery",
               "id": "150"
             },
-            "label": "nerve (formaldehyde form) (pages)",
+            "label": "nerve (formaldehyde form)",
             "relation": "direct"
           },
           {
@@ -62,20 +62,13 @@
             },
             "label": "nerve",
             "relation": "series"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "149"
-            },
-            "label": "nerve (abattoir) (pages)",
-            "relation": "series"
           }
         ],
         "entry": {
           "metadata_lines": [
             "1993",
             "bound printed pages, edition 9 [extant]",
+            "22 × 30.2 cm",
             "",
             "cat. 02001"
           ],

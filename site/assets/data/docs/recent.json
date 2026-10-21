@@ -1,8 +1,48 @@
 {
   "schema": "docs_recent_v2",
   "limit": 20,
-  "generated_at": "2026-10-20T08:48:11Z",
+  "generated_at": "2026-10-21T21:18:09Z",
   "docs": [
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261021-215030-5d65bf",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Deceit and the Ethics of Remembering",
+      "timestamp": "2026-10-21"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261021-215701-5f389c",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Default Mode Network — Hubs, Discovery, Timeline",
+      "timestamp": "2026-10-21"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261021-220354-62bf68",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Dependable truth",
+      "timestamp": "2026-10-21"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261021-220722-8f21a0",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Dependent Origination, Brain, and Evolution",
+      "timestamp": "2026-10-21"
+    },
+    {
+      "collection": "library",
+      "collection_title": "Library",
+      "doc_id": "d-20261021-221403-8ee297",
+      "report_doc_id": "d-20260809-130120-870cc2",
+      "title": "Diffusion of Innovations",
+      "timestamp": "2026-10-21"
+    },
     {
       "collection": "library",
       "collection_title": "Library",
@@ -121,46 +161,6 @@
       "doc_id": "d-20261018-111445-823b77",
       "report_doc_id": "d-20260809-130120-870cc2",
       "title": "Brain Structure",
-      "timestamp": "2026-10-18"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261018-113347-fc1318",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Brain Structure — Illustrated Overview",
-      "timestamp": "2026-10-18"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261018-162318-a42409",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Brain ⇄ Mind Dynamic in Evolution",
-      "timestamp": "2026-10-18"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261018-161532-ad1a8a",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Brain ⇄ Mind in Memory",
-      "timestamp": "2026-10-18"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261018-154315-4f5ade",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Brain ⇄ Mind: Emergence and Feedback",
-      "timestamp": "2026-10-18"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261018-163309-a8c088",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Brains & Organisms Inside a Mathematical Universe",
       "timestamp": "2026-10-18"
     }
   ]

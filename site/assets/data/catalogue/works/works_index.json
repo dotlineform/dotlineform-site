@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_works_index_v3",
-    "generated_at_utc": "2026-10-20T21:35:47Z"
+    "generated_at_utc": "2026-10-21T20:31:26Z"
   },
   "works": {
     "00001": {
@@ -7736,14 +7736,6 @@
       "work_id": "01940",
       "title": "pond"
     },
-    "01941": {
-      "work_id": "01941",
-      "title": "se1"
-    },
-    "01942": {
-      "work_id": "01942",
-      "title": "se2"
-    },
     "01943": {
       "work_id": "01943",
       "title": "a poem divided into 4 parts - end 1"
@@ -7935,10 +7927,6 @@
     "01990": {
       "work_id": "01990",
       "title": "nerve (abattoir) - back cover"
-    },
-    "01991": {
-      "work_id": "01991",
-      "title": "nerve (formaldehyde form) - front cover"
     },
     "01992": {
       "work_id": "01992",

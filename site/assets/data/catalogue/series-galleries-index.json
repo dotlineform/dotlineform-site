@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_series_galleries_index_v2",
-    "generated_at_utc": "2026-10-20T21:34:41Z"
+    "generated_at_utc": "2026-10-21T20:31:26Z"
   },
   "series_galleries": {
     "001": [
@@ -1090,12 +1090,8 @@
         "title": "nerve"
       },
       {
-        "gallery_id": "149",
-        "title": "nerve (abattoir) (pages)"
-      },
-      {
         "gallery_id": "150",
-        "title": "nerve (formaldehyde form) (pages)"
+        "title": "nerve (formaldehyde form)"
       }
     ],
     "106": [
@@ -1470,12 +1466,6 @@
       {
         "gallery_id": "306",
         "title": "pond (details)"
-      }
-    ],
-    "143": [
-      {
-        "gallery_id": "143",
-        "title": "simultaneous equations"
       }
     ],
     "144": [

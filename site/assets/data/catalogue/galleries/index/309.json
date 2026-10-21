@@ -1,14 +1,18 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
-    "gallery_id": "149"
+    "generated_at_utc": "2026-10-21T20:31:26Z",
+    "gallery_id": "309"
   },
   "gallery": {
-    "gallery_id": "149",
-    "title": "nerve (abattoir) (pages)"
+    "gallery_id": "309",
+    "title": "nerve abattoir"
   },
   "member_works": [
+    {
+      "work_id": "00163",
+      "title": "nerve (abattoir)"
+    },
     {
       "work_id": "01981",
       "title": "nerve (abattoir) - front cover"
