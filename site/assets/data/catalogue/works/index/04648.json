@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-b9315c3fcaa6a834c032a0d4e8910afb",
+    "generated_at_utc": "2026-10-22T14:50:07Z"
+  },
+  "work": {
+    "work_id": "04648",
+    "title": "angels",
+    "year": 1998,
+    "year_display": "1998",
+    "width_px": 1654,
+    "height_px": 1689,
+    "height_cm": 14.3,
+    "width_cm": 14,
+    "medium": "digital c-type print",
+    "media_version": 1,
+    "series_id": "144",
+    "galleries": [
+      {
+        "gallery_id": "308",
+        "title": "moments"
+      }
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-d65164bba52f33e653e5868a24096411",
+    "generated_at_utc": "2026-10-22T15:10:52Z"
+  },
+  "work": {
+    "work_id": "04660",
+    "title": "perfection of flowers",
+    "year": 2010,
+    "year_display": "c. 2010",
+    "width_px": 1600,
+    "height_px": 1309,
+    "height_cm": 11.1,
+    "width_cm": 13.5,
+    "medium": "digital c-type print",
+    "media_version": 1,
+    "series_id": "144",
+    "galleries": [
+      {
+        "gallery_id": "308",
+        "title": "moments"
+      }
+    ]
+  }
+}

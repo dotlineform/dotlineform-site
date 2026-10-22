@@ -895,10 +895,6 @@
       "gallery_id": "231",
       "title": "doll still life 1 (versions (2022))"
     },
-    "232": {
-      "gallery_id": "232",
-      "title": "dot theory (dots edges) (edges)"
-    },
     "233": {
       "gallery_id": "233",
       "title": "dotlineform (2021) [details]"
@@ -1206,6 +1202,10 @@
     "309": {
       "gallery_id": "309",
       "title": "nerve abattoir"
+    },
+    "310": {
+      "gallery_id": "310",
+      "title": "particle signals"
     }
   }
 }

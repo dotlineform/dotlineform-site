@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-28641d4c2153fe61ae59c390bb5f6405",
+    "generated_at_utc": "2026-10-22T14:50:07Z"
+  },
+  "work": {
+    "work_id": "04653",
+    "title": "hi honey",
+    "year": 2024,
+    "year_display": "2024",
+    "width_px": 1600,
+    "height_px": 3299,
+    "height_cm": 27.9,
+    "width_cm": 13.5,
+    "medium": "digital c-type print",
+    "media_version": 1,
+    "series_id": "144",
+    "galleries": [
+      {
+        "gallery_id": "308",
+        "title": "moments"
+      }
+    ]
+  }
+}

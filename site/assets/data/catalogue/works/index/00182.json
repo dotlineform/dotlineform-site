@@ -1,25 +1,29 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-9afd9502a123211b721beb2c8be7a08a",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-927d9d12722a65c19fc3a0ba9b2c3143",
+    "generated_at_utc": "2026-10-22T14:34:08Z"
   },
   "work": {
     "work_id": "00182",
     "title": "drunken vultures",
     "year": 1989,
     "year_display": "c. 1989-98",
-    "medium": "photocopy",
-    "height_cm": 29.7,
-    "width_cm": 21.0,
     "width_px": 2460,
     "height_px": 3478,
+    "height_cm": 29.7,
+    "width_cm": 21,
+    "medium": "photocopy",
     "media_version": 1,
     "series_id": "026",
     "galleries": [
       {
         "gallery_id": "026",
         "title": "collected 1989-1998"
+      },
+      {
+        "gallery_id": "308",
+        "title": "moments"
       }
     ]
   }

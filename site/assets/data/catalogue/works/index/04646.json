@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-6ef789265b2f7b40a487f308941409bf",
+    "generated_at_utc": "2026-10-22T14:50:07Z"
+  },
+  "work": {
+    "work_id": "04646",
+    "title": "a light inside a flower",
+    "year": 2019,
+    "year_display": "2019",
+    "width_px": 3024,
+    "height_px": 3024,
+    "height_cm": 25.6,
+    "width_cm": 25.6,
+    "medium": "digital c-type print",
+    "media_version": 1,
+    "series_id": "144",
+    "galleries": [
+      {
+        "gallery_id": "308",
+        "title": "moments"
+      }
+    ]
+  }
+}

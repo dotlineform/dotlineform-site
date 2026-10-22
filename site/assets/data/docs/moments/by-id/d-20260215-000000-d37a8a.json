@@ -2,9 +2,78 @@
   "doc_id": "d-20260215-000000-d37a8a",
   "title": "a poem about purity",
   "added_date": "2026-02-15 00:00:00",
-  "last_updated": "2026-09-07 20:40:56",
+  "last_updated": "2026-10-22 14:30:36",
   "date": "2017-12-20",
   "date_display": "20 Dec 2017",
   "draft": false,
-  "content_html": "<h1>a poem about purity</h1>\n<p class=\"momentDate\">20 Dec 2017</p>\n<img src=\"docs-media:collections/moments/img/d-20260215-000000-d37a8a/a-poem-about-purity.webp\" alt=\"a poem about purity\" width=\"800\" height=\"800\" title=\"a poem about purity\">\n<pre class=\"moment-text\">\ni only write this poem\nbecause she asked me to\nand when she reads it\nshe is knowing the purity of her heart\n \ni only love her because\nthat is all i can do\nin the same way that an acorn\ncan only grow into a beautiful tree\n \ntoday i was asked about the true nature of kisses\nthose strange and wonderful moments\nand the answer didn’t come in words\nsimply a slow and tender kiss\n \n~\n \ndo i wonder where my path will lead?\ndo i wish so much to be with someone?\nwho can follow me and i follow her\ni haven’t even taken a small step, yet\n \nevery moment comes crashing down\nlike waves, like sand dunes\nlike petals floating in the calm breeze\nand still i miss them\n \nmy sculpture is not made of stone\nit’s purely caresses and warm kisses\nwhat is there really\nbetter than that to create?\n \n~\n \ni only wrote this poem\nbecause as my fingers move over the keyboard\nwords appear and disappear\nas if they are translucent and glowing\n \nWe can all find peace\nour dreams and sighs are a mystery\nthe source of our purity\na secret waiting to be unlocked\n \nthere are many things under the stars\nmore than can be imagined\nand they are all connected\nwith a truth that has no words\n</pre>\n"
+  "content_html": "<h1>a poem about purity</h1>\n<p class=\"momentDate\">20 Dec 2017</p>\n<div data-docs-catalogue-ref=\"c1\"><figure class=\"docsViewerFigure docsViewerFigure--full-column\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"03562\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open edges 1.1\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/03562-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/03562-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/03562-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/03562-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"edges 1.1\" width=\"4724\" height=\"4724\" decoding=\"async\"><span data-docs-media-placeholder hidden>edges 1.1</span></button></figure></div>\n<pre class=\"moment-text\">\ni only write this poem\nbecause she asked me to\nand when she reads it\nshe is knowing the purity of her heart\n \ni only love her because\nthat is all i can do\nin the same way that an acorn\ncan only grow into a beautiful tree\n \ntoday i was asked about the true nature of kisses\nthose strange and wonderful moments\nand the answer didn’t come in words\nsimply a slow and tender kiss\n \n~\n \ndo i wonder where my path will lead?\ndo i wish so much to be with someone?\nwho can follow me and i follow her\ni haven’t even taken a small step, yet\n \nevery moment comes crashing down\nlike waves, like sand dunes\nlike petals floating in the calm breeze\nand still i miss them\n \nmy sculpture is not made of stone\nit’s purely caresses and warm kisses\nwhat is there really\nbetter than that to create?\n \n~\n \ni only wrote this poem\nbecause as my fingers move over the keyboard\nwords appear and disappear\nas if they are translucent and glowing\n \nWe can all find peace\nour dreams and sighs are a mystery\nthe source of our purity\na secret waiting to be unlocked\n \nthere are many things under the stars\nmore than can be imagined\nand they are all connected\nwith a truth that has no words\n</pre>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "03562"
+        },
+        "presentation": "image",
+        "options": {
+          "use_work_title_caption": false,
+          "summary_html": "",
+          "placement": "full",
+          "fill_width": true
+        }
+      }
+    ],
+    "presentations": {
+      "catalogue-work:03562": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "03562"
+        },
+        "label": "edges 1.1",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/03562-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/03562-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/03562-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/03562-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "edges 1.1",
+          "width_px": 4724,
+          "height_px": 4724
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/03562-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "041"
+            },
+            "label": "dot theory",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "308"
+            },
+            "label": "moments",
+            "relation": "direct"
+          }
+        ]
+      }
+    }
+  },
+  "has_thumbnail": true
 }

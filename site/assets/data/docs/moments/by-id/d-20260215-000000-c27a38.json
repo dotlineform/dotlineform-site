@@ -2,9 +2,70 @@
   "doc_id": "d-20260215-000000-c27a38",
   "title": "we are the vessel",
   "added_date": "2026-02-15 00:00:00",
-  "last_updated": "2026-09-07 20:40:56",
+  "last_updated": "2026-10-22 16:49:18",
   "date": "2018-05-12",
   "date_display": "12 May 2018",
   "draft": false,
-  "content_html": "<h1>we are the vessel</h1>\n<p class=\"momentDate\">12 May 2018</p>\n<img src=\"docs-media:collections/moments/img/d-20260215-000000-c27a38/we-are-the-vessel.webp\" alt=\"we are the vessel\" width=\"800\" height=\"800\" title=\"we are the vessel\">\n<pre class=\"moment-text\">\ni don’t draw lines without any reason\nand that is what I tried to describe to you\n \nthe fundamental relationship between loneliness and longing and art\nsearching and reaching for Plato’s Forms\n \nis not really about actually finding them\njust simply trying to communicate that when we look for purity\n \nwe are really only looking for love\n(or really just the shared experience of exploring)\n \nlove is not a thing, it can’t be made in a factory\nit’s the sharing of special moments\n \nit’s creating such moments, as if out of nothing\nemptiness is the source and we are the vessel\n \n(so very easily\nwe didn’t care about anything apart from the beautiful joy of creating lovely funny moments)\n \ni will find art when it is needed\ni trust my soul to say when\n \nI don’t worry about not finding it again\nits always there under the skin\n \nhidden protected jewel\nand given away to friends who will keep it warm\n \neven when the artifacts are lost or decay\nbecause it’s always always about the moment\n \nbeautiful curves\na whole world of memories in a single droplet\n</pre>\n"
+  "content_html": "<h1>we are the vessel</h1>\n<p class=\"momentDate\">12 May 2018</p>\n<div data-docs-catalogue-ref=\"c1\"><figure class=\"docsViewerFigure docsViewerFigure--full-column\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04666\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open we are the vessel\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04666-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04666-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04666-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04666-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"we are the vessel\" width=\"1600\" height=\"1600\" decoding=\"async\"><span data-docs-media-placeholder hidden>we are the vessel</span></button></figure></div>\n<pre class=\"moment-text\">\ni don’t draw lines without any reason\nand that is what I tried to describe to you\n \nthe fundamental relationship between loneliness and longing and art\nsearching and reaching for Plato’s Forms\n \nis not really about actually finding them\njust simply trying to communicate that when we look for purity\n \nwe are really only looking for love\n(or really just the shared experience of exploring)\n \nlove is not a thing, it can’t be made in a factory\nit’s the sharing of special moments\n \nit’s creating such moments, as if out of nothing\nemptiness is the source and we are the vessel\n \n(so very easily\nwe didn’t care about anything apart from the beautiful joy of creating lovely funny moments)\n \ni will find art when it is needed\ni trust my soul to say when\n \nI don’t worry about not finding it again\nits always there under the skin\n \nhidden protected jewel\nand given away to friends who will keep it warm\n \neven when the artifacts are lost or decay\nbecause it’s always always about the moment\n \nbeautiful curves\na whole world of memories in a single droplet\n</pre>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04666"
+        },
+        "presentation": "image",
+        "options": {
+          "use_work_title_caption": false,
+          "summary_html": "",
+          "placement": "full",
+          "fill_width": true
+        }
+      }
+    ],
+    "presentations": {
+      "catalogue-work:04666": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04666"
+        },
+        "label": "we are the vessel",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/04666-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/04666-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04666-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04666-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "we are the vessel",
+          "width_px": 1600,
+          "height_px": 1600
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/04666-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "308"
+            },
+            "label": "moments",
+            "relation": "direct"
+          }
+        ]
+      }
+    }
+  },
+  "has_thumbnail": true
 }

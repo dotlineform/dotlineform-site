@@ -2,9 +2,70 @@
   "doc_id": "d-20260215-000000-1de7e9",
   "title": "dream sleep",
   "added_date": "2026-02-15 00:00:00",
-  "last_updated": "2026-09-07 20:40:56",
+  "last_updated": "2026-10-22 15:27:16",
   "date": "2018-04-29",
   "date_display": "29 Apr 2018",
   "draft": false,
-  "content_html": "<h1>dream sleep</h1>\n<p class=\"momentDate\">29 Apr 2018</p>\n<img src=\"docs-media:collections/moments/img/d-20260215-000000-1de7e9/dream-sleep.webp\" alt=\"dream sleep\" width=\"450\" height=\"800\" title=\"dream sleep\">\n<pre class=\"moment-text\">\ni believe in Angels\nso don’t assume that these words\ndescribe today or any other day\nthey are just words\n \nI never really had any dreams or aspirations\nof doing anything in any way\nor of achieving anything as a thing\n \nmy dad gave me a huge shiny marble\na ball bearing from huge machines\nand within a couple of days\nI lost it in a game of marbles\n \nI wonder where it is now 43 years later\nI wonder what stories it’s been part of\nif someone will discover it again\n \nI remember the movements of your legs\nin the half-light sleeping eyes closed\nwarmth and tenderness, wanting to be close\n \nI remember my hand resting on your breast\nand your hand resting upon mine\nI felt your heart beat as we fell asleep\n \nin and out of sleep\nfloating in warmth\nwaking up to lips and eyes\nso beautiful loving smiling\n \nmy eyelids close\n \nwe can help life\n</pre>\n"
+  "content_html": "<h1>dream sleep</h1>\n<p class=\"momentDate\">29 Apr 2018</p>\n<div data-docs-catalogue-ref=\"c1\"><figure class=\"docsViewerFigure docsViewerFigure--full-column\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04652\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open dream-sleep\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04652-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04652-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04652-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04652-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"dream-sleep\" width=\"1600\" height=\"2844\" decoding=\"async\"><span data-docs-media-placeholder hidden>dream-sleep</span></button></figure></div>\n<pre class=\"moment-text\">\ni believe in Angels\nso don’t assume that these words\ndescribe today or any other day\nthey are just words\n \nI never really had any dreams or aspirations\nof doing anything in any way\nor of achieving anything as a thing\n \nmy dad gave me a huge shiny marble\na ball bearing from huge machines\nand within a couple of days\nI lost it in a game of marbles\n \nI wonder where it is now 43 years later\nI wonder what stories it’s been part of\nif someone will discover it again\n \nI remember the movements of your legs\nin the half-light sleeping eyes closed\nwarmth and tenderness, wanting to be close\n \nI remember my hand resting on your breast\nand your hand resting upon mine\nI felt your heart beat as we fell asleep\n \nin and out of sleep\nfloating in warmth\nwaking up to lips and eyes\nso beautiful loving smiling\n \nmy eyelids close\n \nwe can help life\n</pre>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04652"
+        },
+        "presentation": "image",
+        "options": {
+          "use_work_title_caption": false,
+          "summary_html": "",
+          "placement": "full",
+          "fill_width": true
+        }
+      }
+    ],
+    "presentations": {
+      "catalogue-work:04652": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04652"
+        },
+        "label": "dream-sleep",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/04652-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/04652-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04652-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04652-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "dream-sleep",
+          "width_px": 1600,
+          "height_px": 2844
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/04652-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "308"
+            },
+            "label": "moments",
+            "relation": "direct"
+          }
+        ]
+      }
+    }
+  },
+  "has_thumbnail": true
 }

@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260903-154141-7c9e4b
 title: Catalogue Media View
 added_date: "2026-09-03 15:41:41"
-last_updated: "2026-10-20"
+last_updated: "2026-10-22"
 summary: Exact Work and Gallery links, direct and Series-related Gallery navigation, responsive Work images and paginated Media View, with static-consumer and public-data limits.
 ui_status: done
 parent_id: d-20260903-222617-28475e
@@ -94,6 +94,8 @@ The implementation owners are `docs-viewer/services/docs_catalogue_media.py` for
 
 ## Gallery Presentations
 
+Gallery pages show their own title, ordered Work thumbnails and pagination. Gallery links appear only beside a selected Work, including its return link to the active Gallery. Opening a Gallery does not carry forward the last Work's Gallery links, so its presentation is independent of the route taken to it.
+
 Exact Gallery entry uses `galleries/index/<gallery_id>.json` under `gallery_record_v3`, read locally through `/docs/catalogue-gallery?gallery_id=<gallery_id>`. Its metadata and supplied ordered Work references drive the grid, pagination and selected-Work loading. The generated header contains schema, generation time and Gallery ID; each member contains `work_id` and `title`. Readers consume this completed handoff without another header/schema/member/order/uniqueness audit or an older-schema fallback. Exact request/response identity and safe thumbnail URLs remain required. Selecting a Work resolves its complete presentation through the active live/prepared provider. Empty Galleries display an empty state without pagination, and display/pagination totals derive from the loaded member list. Public readers use the explicit `catalogue_paths.gallery_records_base_url`, currently `/assets/data/catalogue/galleries/index/`; public Catalogue distribution remains separately owned.
 
 Work presentations show **Related galleries**. Direct `work.galleries` links come first and carry **Contains this Work**; distinct links from the Work's exact Series–Gallery index entry follow with **Related to this Series**. The projector removes duplicates by exact Gallery ID, so a Gallery that contains the Work appears once as direct. A Work without a Series shows only direct links and does not request the index. A Work reached from a Gallery retains a return link to that Gallery. The Work reader does not fetch a Series by-ID record or supply a Series link. Selecting a Gallery link then reads its exact by-ID presentation in the same Content Detail mount. Previous/next follows that Gallery's complete Work order; returning to it restores the page containing the selected Work. Failed or superseded Gallery reads preserve the current presentation.
@@ -111,6 +113,8 @@ Gallery membership, bounded rendering and selected-record loading do not establi
 [Export](Export.md) and content-bearing [Prepare package](Package_Prepare.md) invoke the shared static preparer on selected reference-bearing content. Export packages emitted Work images and linked files from their configured Working owners; it uses the standard 800px image and fits it to the page without fetching served image URLs. Prepare package retains its existing transformations without media packaging. [Docs Review](Docs_Review.md) retains its separate read-only package/profile contract; no live Catalogue provider was added there. Portable export remains text-first.
 
 ## Status
+
+The 2026-10-22 Gallery simplification removed inherited Work links, their cross-view state and the selection fallback. Source/redundancy review confirmed that return targets resolve from the supplied Gallery before Work-link lookup. Existing supplied-target checks prevent unrelated loads, and stale/released-request guards prevent late rendering; no reads, validation or caches were added. Focused JavaScript lint, tracked projection/check, site validation and whitespace review passed. Tests and browser interaction were not run; manual confirmation remains through ordinary use.
 
 The live/prepared Work presentation delivery was accepted and closed on 2026-10-19. Working conversion, normal Publish, representative Export creation/replacement and Prepare package dry-runs completed. The user accepted the 800px Export correction and confirmed the restored compact Catalogue Related Links styling. Remaining live activation/mutation, repeated-reference, Gallery navigation, failure/empty-unit and actual package-output observations will accumulate through normal use; historical v1 tests remain unchanged and unrun. Commit, push and deployment remain separate explicit actions, with the projected runtime and prepared public payloads shipped together.
 

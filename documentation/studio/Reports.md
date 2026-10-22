@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260513-105343-6de36b
 title: Reports
 added_date: "2026-05-13 10:53:43"
-last_updated: "2026-10-21"
+last_updated: "2026-10-22"
 parent_id: d-20260424-000000-50b63f
 ---
 # Docs Viewer Reports
@@ -219,7 +219,9 @@ Report construction and browser consumption trust completed upstream data. An om
 
 The 2026-10-20 cutover replaced Subject placement and refreshed 208 folders, 159 Context documents, 4,618 Works and 139 Series; eight documents had Work/Gallery targets. Changed-owner lint/compilation, management imports, public projection/check and site validation passed. Legacy Subject/scope/report tests remain unchanged and unrun; their migration needs separate approval. Browser association/grouping/navigation and Thumb interactions remain unverified in the recorded manual evidence; further confirmation continues through normal use after restarting local services and force-reloading Manage.
 
-The Projects report's Series column displays each exact response-owned Series title as plain text in both Folder and Series grouping modes. It does not open a Series Media View. Folder links, document links, search, sorting and copied TSV retain their existing behavior.
+The Projects report's Series column links each exact response-owned Series title to that Series in local Studio in both Folder and Series grouping modes. It uses the same `studio-work-editor-links.js` owner as Series and Galleries, resolving the configured loopback Studio base once per mount and encoding the supplied Series ID into `/studio/catalogue-work/?series=<series_id>`. Native links open in a new tab with `noopener noreferrer`. Link construction requires no extra request or report refresh; text-node labels and the shared Studio-base safety check retain their existing owners. Folder links, document links, search, sorting and copied TSV retain their existing behavior.
+
+The 2026-10-22 link change passed focused JavaScript lint and whitespace checks. Source/redundancy review confirmed both grouping projections reuse the same cells and shared URL safety owner, with no new reads, duplicate validation or route handler. Browser/new-tab confirmation remains manual; no tests were changed or run.
 
 `docs_media` is the local media-to-document inspection report hosted by [Docs Media](/docs/?doc=d-20260812-212735-6d9cf3). Opening reads saved metadata; Run/Refresh explicitly regenerates it across ordinary and configured collection owners, excluding derived thumbnails. The browser owns joins, exact document links and sortable Collection, Type, File name and Documents columns, with a collection filter and immediate search. File names retain the confined Finder action. The report remains absent from public metadata and executable loaders. [Media And Asset Handling](Media_And_Asset_Handling.md#docs-media-inventory-report) owns the saved-data, freshness and storage boundary.
 

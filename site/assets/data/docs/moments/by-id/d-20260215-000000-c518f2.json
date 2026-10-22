@@ -2,9 +2,70 @@
   "doc_id": "d-20260215-000000-c518f2",
   "title": "winter",
   "added_date": "2026-02-15 00:00:00",
-  "last_updated": "2026-09-07 20:40:56",
+  "last_updated": "2026-10-22 16:57:23",
   "date": "2018-05-16",
   "date_display": "16 May 2018",
   "draft": false,
-  "content_html": "<h1>winter</h1>\n<p class=\"momentDate\">16 May 2018</p>\n<img src=\"docs-media:collections/moments/img/d-20260215-000000-c518f2/winter.webp\" alt=\"winter\" width=\"800\" height=\"800\" title=\"winter\">\n<pre class=\"moment-text\">\nbefore you know it\nyears will pass\n \nand all the daily decisions\nthat seem so important at the time\nwill be forgotten\n \nwe’ll see that ‘living in the present’\nwas like watching grains of salt\n \nas they melt and then crystallise\nonly to dissolve again\n \ncold has arrived\nmany winter months ahead\n \nthe sunlight is so beautiful even when grey\nit never stops, even in the darkest nights\n \nall the flowers and animals are prepared\nas is in their nature\n</pre>\n"
+  "content_html": "<h1>winter</h1>\n<p class=\"momentDate\">16 May 2018</p>\n<div data-docs-catalogue-ref=\"c1\"><figure class=\"docsViewerFigure docsViewerFigure--full-column\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04668\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open winter\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04668-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04668-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04668-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04668-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"winter\" width=\"1600\" height=\"1600\" decoding=\"async\"><span data-docs-media-placeholder hidden>winter</span></button></figure></div>\n<pre class=\"moment-text\">\nbefore you know it\nyears will pass\n \nand all the daily decisions\nthat seem so important at the time\nwill be forgotten\n \nwe’ll see that ‘living in the present’\nwas like watching grains of salt\n \nas they melt and then crystallise\nonly to dissolve again\n \ncold has arrived\nmany winter months ahead\n \nthe sunlight is so beautiful even when grey\nit never stops, even in the darkest nights\n \nall the flowers and animals are prepared\nas is in their nature\n</pre>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04668"
+        },
+        "presentation": "image",
+        "options": {
+          "use_work_title_caption": false,
+          "summary_html": "",
+          "placement": "full",
+          "fill_width": true
+        }
+      }
+    ],
+    "presentations": {
+      "catalogue-work:04668": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04668"
+        },
+        "label": "winter",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/04668-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/04668-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04668-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04668-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "winter",
+          "width_px": 1600,
+          "height_px": 1600
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/04668-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "308"
+            },
+            "label": "moments",
+            "relation": "direct"
+          }
+        ]
+      }
+    }
+  },
+  "has_thumbnail": true
 }

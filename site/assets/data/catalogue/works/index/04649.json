@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-dfd807ca42e642036f632442b1d10cf6",
+    "generated_at_utc": "2026-10-22T15:07:14Z"
+  },
+  "work": {
+    "work_id": "04649",
+    "title": "blue sky",
+    "year": 2012,
+    "year_display": "c. 2012",
+    "width_px": 3264,
+    "height_px": 1628,
+    "height_cm": 13.8,
+    "width_cm": 27.6,
+    "medium": "digital c-type print",
+    "media_version": 1,
+    "series_id": "144",
+    "galleries": [
+      {
+        "gallery_id": "308",
+        "title": "moments"
+      }
+    ]
+  }
+}

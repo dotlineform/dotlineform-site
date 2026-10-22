@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_works_index_v3",
-    "generated_at_utc": "2026-10-21T20:31:26Z"
+    "generated_at_utc": "2026-10-22T15:56:47Z"
   },
   "works": {
     "00001": {
@@ -651,10 +651,6 @@
     "00162": {
       "work_id": "00162",
       "title": "mouse story (fragment)"
-    },
-    "00163": {
-      "work_id": "00163",
-      "title": "nerve (abattoir)"
     },
     "00164": {
       "work_id": "00164",
@@ -18468,13 +18464,169 @@
       "work_id": "04626",
       "title": "13 moments in october"
     },
-    "04627": {
-      "work_id": "04627",
-      "title": "4 stories"
-    },
     "04628": {
       "work_id": "04628",
       "title": "a beautiful route"
+    },
+    "04629": {
+      "work_id": "04629",
+      "title": "particle signals 1 a"
+    },
+    "04630": {
+      "work_id": "04630",
+      "title": "particle signals 1 b"
+    },
+    "04631": {
+      "work_id": "04631",
+      "title": "particle signals 1 c"
+    },
+    "04632": {
+      "work_id": "04632",
+      "title": "particle signals 1 d"
+    },
+    "04633": {
+      "work_id": "04633",
+      "title": "particle signals 2 a"
+    },
+    "04634": {
+      "work_id": "04634",
+      "title": "particle signals 2 b"
+    },
+    "04635": {
+      "work_id": "04635",
+      "title": "particle signals 3 a"
+    },
+    "04636": {
+      "work_id": "04636",
+      "title": "particle signals 4 a"
+    },
+    "04637": {
+      "work_id": "04637",
+      "title": "particle signals 4 b"
+    },
+    "04638": {
+      "work_id": "04638",
+      "title": "particle signals 4 c"
+    },
+    "04639": {
+      "work_id": "04639",
+      "title": "particle signals stories 1"
+    },
+    "04640": {
+      "work_id": "04640",
+      "title": "particle signals stories 2"
+    },
+    "04641": {
+      "work_id": "04641",
+      "title": "particle signals stories 3"
+    },
+    "04642": {
+      "work_id": "04642",
+      "title": "particle signals stories 4"
+    },
+    "04643": {
+      "work_id": "04643",
+      "title": "particle signals"
+    },
+    "04644": {
+      "work_id": "04644",
+      "title": "a feeling of free will"
+    },
+    "04645": {
+      "work_id": "04645",
+      "title": "a lemon tart poem"
+    },
+    "04646": {
+      "work_id": "04646",
+      "title": "a light inside a flower"
+    },
+    "04647": {
+      "work_id": "04647",
+      "title": "a poem about love"
+    },
+    "04648": {
+      "work_id": "04648",
+      "title": "angels"
+    },
+    "04649": {
+      "work_id": "04649",
+      "title": "blue sky"
+    },
+    "04650": {
+      "work_id": "04650",
+      "title": "creatures of light"
+    },
+    "04651": {
+      "work_id": "04651",
+      "title": "creatures who understand light"
+    },
+    "04652": {
+      "work_id": "04652",
+      "title": "dream-sleep"
+    },
+    "04653": {
+      "work_id": "04653",
+      "title": "hi honey"
+    },
+    "04654": {
+      "work_id": "04654",
+      "title": "I felt my self sinking"
+    },
+    "04655": {
+      "work_id": "04655",
+      "title": "impenetrable"
+    },
+    "04656": {
+      "work_id": "04656",
+      "title": "keys"
+    },
+    "04657": {
+      "work_id": "04657",
+      "title": "leaves"
+    },
+    "04658": {
+      "work_id": "04658",
+      "title": "occasionally"
+    },
+    "04659": {
+      "work_id": "04659",
+      "title": "peace of mind"
+    },
+    "04660": {
+      "work_id": "04660",
+      "title": "perfection of flowers"
+    },
+    "04661": {
+      "work_id": "04661",
+      "title": "sadness-love"
+    },
+    "04662": {
+      "work_id": "04662",
+      "title": "samuel beckett"
+    },
+    "04663": {
+      "work_id": "04663",
+      "title": "the moment collector"
+    },
+    "04664": {
+      "work_id": "04664",
+      "title": "the watch keeper"
+    },
+    "04665": {
+      "work_id": "04665",
+      "title": "landscape for symbols 2021-01-08 00꞉25 detail"
+    },
+    "04666": {
+      "work_id": "04666",
+      "title": "we are the vessel"
+    },
+    "04667": {
+      "work_id": "04667",
+      "title": "we make ghosts"
+    },
+    "04668": {
+      "work_id": "04668",
+      "title": "winter"
     }
   }
 }

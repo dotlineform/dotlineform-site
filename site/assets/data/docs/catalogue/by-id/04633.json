@@ -1,0 +1,71 @@
+{
+  "doc_id": "04633",
+  "title": "particle signals 2 a",
+  "added_date": "2026-10-22 13:36:36",
+  "last_updated": "2026-10-22 13:36:36",
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>particle signals 2 a</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04633\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 3543 / 3543;\" data-docs-media-open aria-label=\"Open particle signals 2 a\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04633-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04633-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04633-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04633-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"particle signals 2 a\" width=\"3543\" height=\"3543\" decoding=\"async\"><span data-docs-media-placeholder hidden>particle signals 2 a</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2024<br>30 × 30 cm<br><br>cat. 04633</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04633"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:04633": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04633"
+        },
+        "label": "particle signals 2 a",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/04633-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/04633-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04633-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04633-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "particle signals 2 a",
+          "width_px": 3543,
+          "height_px": 3543
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/04633-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "310"
+            },
+            "label": "particle signals",
+            "relation": "direct"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "2024",
+            "30 × 30 cm",
+            "",
+            "cat. 04633"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
+}

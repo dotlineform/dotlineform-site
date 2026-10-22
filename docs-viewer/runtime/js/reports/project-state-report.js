@@ -1,5 +1,6 @@
 import { mountSearchField } from "/shared/frontend/js/search-field.js";
 import { buildProjectStateSnapshot } from "./project-state-data.js";
+import { createStudioWorkEditorLinks } from "./studio-work-editor-links.js";
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
 
 const COLUMN_LABELS = Object.freeze({
@@ -77,13 +78,14 @@ function appendFolderCell(rowNode, row) {
   rowNode.appendChild(cell);
 }
 
-function appendSeriesCell(rowNode, row) {
+function appendSeriesCell(rowNode, row, studioLinks) {
   const cell = document.createElement("span");
   cell.className = "docsViewerReport__cellStack";
   row.series.forEach((series) => {
-    const label = document.createElement("span");
-    label.textContent = series.title;
-    cell.appendChild(label);
+    const link = appendLink(cell, series.title, studioLinks.forSeries(series.seriesId));
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.title = "Open Series in Studio (new tab)";
   });
   rowNode.appendChild(cell);
 }
@@ -104,9 +106,9 @@ function appendDocumentsCell(rowNode, row) {
   rowNode.appendChild(cell);
 }
 
-function appendColumnCell(rowNode, row, key) {
+function appendColumnCell(rowNode, row, key, studioLinks) {
   if (key === "folder") appendFolderCell(rowNode, row);
-  else if (key === "series") appendSeriesCell(rowNode, row);
+  else if (key === "series") appendSeriesCell(rowNode, row, studioLinks);
   else appendDocumentsCell(rowNode, row);
 }
 
@@ -175,7 +177,7 @@ function renderRows(state) {
     if (row.series[0]) {
       rowNode.dataset.projectSeriesId = row.series[0].seriesId;
     }
-    projection.columns.forEach((key) => appendColumnCell(rowNode, row, key));
+    projection.columns.forEach((key) => appendColumnCell(rowNode, row, key, state.studioLinks));
     state.rowsNode.appendChild(rowNode);
   });
 }
@@ -388,6 +390,7 @@ export function mountProjectStateReport(context) {
     busy: false,
     context,
     documentHref: (docId) => context.viewerUrlForDocument(docId, { collection: "works" }),
+    studioLinks: createStudioWorkEditorLinks(context.studioBaseUrl),
     collator: new Intl.Collator(undefined, { numeric: true, sensitivity: "base" }),
     groupBy: "folder",
     projection: null,

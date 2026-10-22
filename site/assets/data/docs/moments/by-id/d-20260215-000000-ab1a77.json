@@ -2,9 +2,78 @@
   "doc_id": "d-20260215-000000-ab1a77",
   "title": "snow",
   "added_date": "2026-02-15 00:00:00",
-  "last_updated": "2026-09-07 20:40:56",
+  "last_updated": "2026-10-22 16:19:45",
   "date": "2018-01-01",
   "date_display": "2018-20",
   "draft": false,
-  "content_html": "<h1>snow</h1>\n<p class=\"momentDate\">2018-20</p>\n<img src=\"docs-media:collections/moments/img/d-20260215-000000-ab1a77/snow.webp\" alt=\"snow\" width=\"800\" height=\"800\" title=\"snow\">\n<pre class=\"moment-text\">\nsnow is pure my love\nbut it’s frozen when it reaches us\n \nour warmth is impure\nbut our love is from a warm place\n \npurity exists\nbut it’s an emptiness\n \nour feelings are real\n \n~\n \nthank you for showing me\nhow lovely it is\nto aspire\nto being like an angel\n \nit’s you that’s the angel\nmy simple mission\nis only to help you understand\nthis simple truth\n \nand in the process\nI fall in love, a peaceful falling\na misty dream of strange floating symbols\nand smiles and green eyes\n \n~\n \nhappiness is an embrace\na smile from a stranger\na tune playing in a shop\n“if I saw you on the street,\nwould I have you in my dreams tonight?”\n \nhappiness is being awake at night\nand writing about the heart\nand all the uncountable moments\nthat flow with us\n \nhappiness is about closeness\nhappiness is sharing warmth\nhhappiness is having strength\n \neven when I feel I’m falling apart\nI will always believe in happiness\n \n~\n \ndon’t doubt my love for you\ndon’t doubt who i love\ndon’t doubt love\ndon’t doubt\n \naccept moments of unconditional love\naccept moments of love\naccept moments\n \nlove can’t be made, bought nor sold\nit just happens\nbecause it’s in the air\nand even if we just catch it briefly\nbreathe in, breathe in\n \n~\n \nif we only see light\nhow can we help people in darkness\n \nto see inside\nto see where there is no light\n \n~\n \ni remember as we were walking through the woods\ni kept on taking photos on my phone of the ground\nand you probably wondered what i was seeing\na luminous green sweet dropped in the snow,\na leaf that makes me think of your lips,\ntiny bits of trees that form beautiful lines\nsnow covers and uncovers\ncurves and symbols everywhere\n</pre>\n"
+  "content_html": "<h1>snow</h1>\n<p class=\"momentDate\">2018-20</p>\n<div data-docs-catalogue-ref=\"c1\"><figure class=\"docsViewerFigure docsViewerFigure--full-column\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"01666\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open snow\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/01666-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/01666-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/01666-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/01666-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"snow\" width=\"5906\" height=\"5906\" decoding=\"async\"><span data-docs-media-placeholder hidden>snow</span></button></figure></div>\n<pre class=\"moment-text\">\nsnow is pure my love\nbut it’s frozen when it reaches us\n \nour warmth is impure\nbut our love is from a warm place\n \npurity exists\nbut it’s an emptiness\n \nour feelings are real\n \n~\n \nthank you for showing me\nhow lovely it is\nto aspire\nto being like an angel\n \nit’s you that’s the angel\nmy simple mission\nis only to help you understand\nthis simple truth\n \nand in the process\nI fall in love, a peaceful falling\na misty dream of strange floating symbols\nand smiles and green eyes\n \n~\n \nhappiness is an embrace\na smile from a stranger\na tune playing in a shop\n“if I saw you on the street,\nwould I have you in my dreams tonight?”\n \nhappiness is being awake at night\nand writing about the heart\nand all the uncountable moments\nthat flow with us\n \nhappiness is about closeness\nhappiness is sharing warmth\nhhappiness is having strength\n \neven when I feel I’m falling apart\nI will always believe in happiness\n \n~\n \ndon’t doubt my love for you\ndon’t doubt who i love\ndon’t doubt love\ndon’t doubt\n \naccept moments of unconditional love\naccept moments of love\naccept moments\n \nlove can’t be made, bought nor sold\nit just happens\nbecause it’s in the air\nand even if we just catch it briefly\nbreathe in, breathe in\n \n~\n \nif we only see light\nhow can we help people in darkness\n \nto see inside\nto see where there is no light\n \n~\n \ni remember as we were walking through the woods\ni kept on taking photos on my phone of the ground\nand you probably wondered what i was seeing\na luminous green sweet dropped in the snow,\na leaf that makes me think of your lips,\ntiny bits of trees that form beautiful lines\nsnow covers and uncovers\ncurves and symbols everywhere\n</pre>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "01666"
+        },
+        "presentation": "image",
+        "options": {
+          "use_work_title_caption": false,
+          "summary_html": "",
+          "placement": "full",
+          "fill_width": true
+        }
+      }
+    ],
+    "presentations": {
+      "catalogue-work:01666": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "01666"
+        },
+        "label": "snow",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/01666-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/01666-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/01666-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/01666-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "snow",
+          "width_px": 5906,
+          "height_px": 5906
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/01666-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "123"
+            },
+            "label": "snow",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "308"
+            },
+            "label": "moments",
+            "relation": "direct"
+          }
+        ]
+      }
+    }
+  },
+  "has_thumbnail": true
 }

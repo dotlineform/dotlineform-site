@@ -2,9 +2,70 @@
   "doc_id": "d-20260215-000000-b16a4f",
   "title": "warmth",
   "added_date": "2026-02-15 00:00:00",
-  "last_updated": "2026-09-07 20:40:56",
+  "last_updated": "2026-10-22 16:46:15",
   "date": "2018-11-25",
   "date_display": "25 Nov 2018",
   "draft": false,
-  "content_html": "<h1>warmth</h1>\n<p class=\"momentDate\">25 Nov 2018</p>\n<img src=\"docs-media:collections/moments/img/d-20260215-000000-b16a4f/warmth.webp\" alt=\"warmth\" width=\"800\" height=\"800\" title=\"warmth\">\n<pre class=\"moment-text\">\nher smile is a heart\nand everyone who knows her feels it\n \nwhen she is sleeping eyes closed\nand I can feel her warm breath\n \nher lips naturally relax into a smile\nthat makes me feel so at peace and in love\n \nand I feel her beautiful heart\nwith every embrace\n \nshe couldn’t possibly know\n(like the sun doesn’t know)\n \nhow it’s warmth keeps us alive\n</pre>\n"
+  "content_html": "<h1>warmth</h1>\n<p class=\"momentDate\">25 Nov 2018</p>\n<div data-docs-catalogue-ref=\"c1\"><figure class=\"docsViewerFigure docsViewerFigure--full-column\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04665\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open landscape for symbols 2021-01-08 00꞉25 detail\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04665-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04665-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04665-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04665-primary-1600.webp?v=1 1400w\" sizes=\"100vw\" alt=\"landscape for symbols 2021-01-08 00꞉25 detail\" width=\"1400\" height=\"1001\" decoding=\"async\"><span data-docs-media-placeholder hidden>landscape for symbols 2021-01-08 00꞉25 detail</span></button></figure></div>\n<pre class=\"moment-text\">\nher smile is a heart\nand everyone who knows her feels it\n \nwhen she is sleeping eyes closed\nand I can feel her warm breath\n \nher lips naturally relax into a smile\nthat makes me feel so at peace and in love\n \nand I feel her beautiful heart\nwith every embrace\n \nshe couldn’t possibly know\n(like the sun doesn’t know)\n \nhow it’s warmth keeps us alive\n</pre>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04665"
+        },
+        "presentation": "image",
+        "options": {
+          "use_work_title_caption": false,
+          "summary_html": "",
+          "placement": "full",
+          "fill_width": true
+        }
+      }
+    ],
+    "presentations": {
+      "catalogue-work:04665": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04665"
+        },
+        "label": "landscape for symbols 2021-01-08 00꞉25 detail",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/04665-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/04665-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04665-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04665-primary-1600.webp?v=1",
+              "width_px": 1400
+            }
+          ],
+          "alt": "landscape for symbols 2021-01-08 00꞉25 detail",
+          "width_px": 1400,
+          "height_px": 1001
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/04665-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "308"
+            },
+            "label": "moments",
+            "relation": "direct"
+          }
+        ]
+      }
+    }
+  },
+  "has_thumbnail": true
 }

@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-02a774f4a50434a87ebc040de0585d58",
+    "generated_at_utc": "2026-10-22T15:50:49Z"
+  },
+  "work": {
+    "work_id": "04667",
+    "title": "we make ghosts",
+    "year": 2014,
+    "year_display": "2014",
+    "width_px": 2448,
+    "height_px": 3264,
+    "height_cm": 27.6,
+    "width_cm": 20.7,
+    "medium": "digital c-type print",
+    "media_version": 1,
+    "series_id": "144",
+    "galleries": [
+      {
+        "gallery_id": "308",
+        "title": "moments"
+      }
+    ]
+  }
+}

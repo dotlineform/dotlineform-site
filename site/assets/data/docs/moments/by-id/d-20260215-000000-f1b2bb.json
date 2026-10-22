@@ -2,9 +2,70 @@
   "doc_id": "d-20260215-000000-f1b2bb",
   "title": "the moment collector",
   "added_date": "2026-02-15 00:00:00",
-  "last_updated": "2026-09-07 20:40:56",
+  "last_updated": "2026-10-22 16:21:41",
   "date": "2018-01-07",
   "date_display": "7 Jan 2018",
   "draft": false,
-  "content_html": "<h1>the moment collector</h1>\n<p class=\"momentDate\">7 Jan 2018</p>\n<img src=\"docs-media:collections/moments/img/d-20260215-000000-f1b2bb/the-moment-collector.webp\" alt=\"the moment collector\" width=\"800\" height=\"800\" title=\"the moment collector\">\n<pre class=\"moment-text\">\ndeep in a warm cellar\nmany steps below\nwhere it’s quiet enough to hear dust settle\nlit only by particles that form from emptiness\n \nI carefully put the last moment\ninto a small vessel\nwhose antiquity predates this room\nand most probably the universe\n \ni would like to describe this vessel for you\nit’s simple and scarred\nit embraces form\n \nit will keep the moment safe\nfor eternity, however long that might be\n \nmy friend the clock maker would know\nbut he has been quiet for a long time\nand i don’t want to disturb him whilst he works\n \ni gently put the jar on a shelf\nnext to all the others\n \nthe light dims…\nyes, it is time to go\ni slowly wish all the moments peace\nand they fall asleep\nknowing that i will never forget them\n</pre>\n"
+  "content_html": "<h1>the moment collector</h1>\n<p class=\"momentDate\">7 Jan 2018</p>\n<div data-docs-catalogue-ref=\"c1\"><figure class=\"docsViewerFigure docsViewerFigure--full-column\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04663\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open the moment collector\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04663-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04663-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04663-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04663-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"the moment collector\" width=\"4724\" height=\"4724\" decoding=\"async\"><span data-docs-media-placeholder hidden>the moment collector</span></button></figure></div>\n<pre class=\"moment-text\">\ndeep in a warm cellar\nmany steps below\nwhere it’s quiet enough to hear dust settle\nlit only by particles that form from emptiness\n \nI carefully put the last moment\ninto a small vessel\nwhose antiquity predates this room\nand most probably the universe\n \ni would like to describe this vessel for you\nit’s simple and scarred\nit embraces form\n \nit will keep the moment safe\nfor eternity, however long that might be\n \nmy friend the clock maker would know\nbut he has been quiet for a long time\nand i don’t want to disturb him whilst he works\n \ni gently put the jar on a shelf\nnext to all the others\n \nthe light dims…\nyes, it is time to go\ni slowly wish all the moments peace\nand they fall asleep\nknowing that i will never forget them\n</pre>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04663"
+        },
+        "presentation": "image",
+        "options": {
+          "use_work_title_caption": false,
+          "summary_html": "",
+          "placement": "full",
+          "fill_width": true
+        }
+      }
+    ],
+    "presentations": {
+      "catalogue-work:04663": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04663"
+        },
+        "label": "the moment collector",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/04663-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/04663-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04663-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04663-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "the moment collector",
+          "width_px": 4724,
+          "height_px": 4724
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/04663-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "308"
+            },
+            "label": "moments",
+            "relation": "direct"
+          }
+        ]
+      }
+    }
+  },
+  "has_thumbnail": true
 }

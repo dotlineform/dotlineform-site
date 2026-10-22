@@ -2,9 +2,70 @@
   "doc_id": "d-20260215-000000-a56da5",
   "title": "the watch keeper",
   "added_date": "2026-02-15 00:00:00",
-  "last_updated": "2026-09-07 20:40:56",
+  "last_updated": "2026-10-22 16:24:29",
   "date": "2014-01-28",
   "date_display": "28 Jan 2014",
   "draft": false,
-  "content_html": "<h1>the watch keeper</h1>\n<p class=\"momentDate\">28 Jan 2014</p>\n<img src=\"docs-media:collections/moments/img/d-20260215-000000-a56da5/the-watch-keeper.webp\" alt=\"the watch keeper\" width=\"800\" height=\"800\" title=\"the watch keeper\">\n<pre class=\"moment-text\">\nthe watch keeper’s watches keep time\nbut whose time are they watching? not ours\nhis clock only goes from zero to one\n \nit’s been a very long time since his clock struck zero\nstill, he knows exactly what time it is\nnot yet one!\n \nour own clocks have in the meantime passed through\nmany hours, generations, all of history (most of which we had forgotten anyway)\n \nbillions of years and billions of memories\nbillions of lives and billions of hopes\n \ntick tick tick\n \nthe hourglass trembles, as if a slight breeze passed through this dusty basement\n(which lies uncountable levels below the surface, in peace and quiet)\n \na grain of sand drops\nthe watch keeper looks up\n \nin his eyes there only seems to be emptiness\nhe caresses the grain of sand as it falls\n \nbirth and death happen as he reaches for the moment\n \nnot distracted by the impact, the grain of sand bounces off his hand\nand continues on its path\n</pre>\n"
+  "content_html": "<h1>the watch keeper</h1>\n<p class=\"momentDate\">28 Jan 2014</p>\n<div data-docs-catalogue-ref=\"c1\"><figure class=\"docsViewerFigure docsViewerFigure--full-column\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04664\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open the watch keeper\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04664-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04664-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04664-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04664-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"the watch keeper\" width=\"2448\" height=\"2448\" decoding=\"async\"><span data-docs-media-placeholder hidden>the watch keeper</span></button></figure></div>\n<pre class=\"moment-text\">\nthe watch keeper’s watches keep time\nbut whose time are they watching? not ours\nhis clock only goes from zero to one\n \nit’s been a very long time since his clock struck zero\nstill, he knows exactly what time it is\nnot yet one!\n \nour own clocks have in the meantime passed through\nmany hours, generations, all of history (most of which we had forgotten anyway)\n \nbillions of years and billions of memories\nbillions of lives and billions of hopes\n \ntick tick tick\n \nthe hourglass trembles, as if a slight breeze passed through this dusty basement\n(which lies uncountable levels below the surface, in peace and quiet)\n \na grain of sand drops\nthe watch keeper looks up\n \nin his eyes there only seems to be emptiness\nhe caresses the grain of sand as it falls\n \nbirth and death happen as he reaches for the moment\n \nnot distracted by the impact, the grain of sand bounces off his hand\nand continues on its path\n</pre>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04664"
+        },
+        "presentation": "image",
+        "options": {
+          "use_work_title_caption": false,
+          "summary_html": "",
+          "placement": "full",
+          "fill_width": true
+        }
+      }
+    ],
+    "presentations": {
+      "catalogue-work:04664": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04664"
+        },
+        "label": "the watch keeper",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/04664-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/04664-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04664-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04664-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "the watch keeper",
+          "width_px": 2448,
+          "height_px": 2448
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/04664-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "308"
+            },
+            "label": "moments",
+            "relation": "direct"
+          }
+        ]
+      }
+    }
+  },
+  "has_thumbnail": true
 }

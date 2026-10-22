@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
+    "generated_at_utc": "2026-10-22T11:31:30Z",
     "gallery_id": "105"
   },
   "gallery": {
@@ -12,14 +12,6 @@
     {
       "work_id": "00008",
       "title": "nerve"
-    },
-    {
-      "work_id": "00163",
-      "title": "nerve (abattoir)"
-    },
-    {
-      "work_id": "00166",
-      "title": "nerve (formaldehyde form)"
     }
   ]
 }

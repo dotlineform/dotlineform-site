@@ -50,18 +50,10 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "232"
-            },
-            "label": "dot theory (dots edges) (edges)",
-            "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
               "id": "041"
             },
             "label": "dot theory",
-            "relation": "series"
+            "relation": "direct"
           }
         ],
         "entry": {

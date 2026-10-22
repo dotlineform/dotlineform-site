@@ -2,8 +2,94 @@
   "doc_id": "d-20260215-000000-f5f727",
   "title": "all the little cracks",
   "added_date": "2026-02-15 00:00:00",
-  "last_updated": "2026-09-07 21:10:32",
+  "last_updated": "2026-10-22 14:58:40",
   "date": "2015-01-01",
   "date_display": "c. 2015",
-  "content_html": "<h1 class=\"moment-axis-line\">\n<span class=\"axis-before\">all the</span><span class=\"axis-after\">little cracks</span>\n</h1>\n<p class=\"momentDate moment-axis-line\">\n<span class=\"axis-before\">c.</span><span class=\"axis-after\">2015</span>\n</p>\n<pre class=\"moment-text moment-text--axis\">\n<span class=\"axis-group\">\n<span class=\"axis-line\"><span class=\"axis-before\">all these little</span><span class=\"axis-after\">cracks</span></span>\n<span class=\"axis-line\"><span class=\"axis-before\">they seem to</span><span class=\"axis-after\">come from nowhere</span></span>\n<span class=\"axis-line\"><span class=\"axis-before\">i can see</span><span class=\"axis-after\">them coming</span></span>\n</span>\n\n<span class=\"axis-group\">\n<span class=\"axis-line\"><span class=\"axis-before\">these cracks</span><span class=\"axis-after\">aren’t the world falling apart</span></span>\n<span class=\"axis-line\"><span class=\"axis-before\">all the little cracks</span><span class=\"axis-after\">are inside</span></span>\n</span>\n\n<span class=\"axis-group\">\n<span class=\"axis-line\"><span class=\"axis-before\">they are just showing</span><span class=\"axis-after\">little patterns</span></span>\n<span class=\"axis-line\"><span class=\"axis-before\">which if we could</span><span class=\"axis-after\">read them</span></span>\n<span class=\"axis-line\"><span class=\"axis-before\">would</span><span class=\"axis-after\">tell our stories</span></span>\n</span>\n</pre>\n"
+  "draft": false,
+  "content_html": "<h1 class=\"moment-axis-line\">\n<span class=\"axis-before\">all the</span><span class=\"axis-after\">little cracks</span>\n</h1>\n<p class=\"momentDate moment-axis-line\">\n<span class=\"axis-before\">c.</span><span class=\"axis-after\">2015</span>\n</p>\n<div data-docs-catalogue-ref=\"c1\"><figure class=\"docsViewerFigure docsViewerFigure--full-column\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00751\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open all the little cracks\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/00751-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/00751-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/00751-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/00751-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"all the little cracks\" width=\"5906\" height=\"5906\" decoding=\"async\"><span data-docs-media-placeholder hidden>all the little cracks</span></button></figure></div>\n<pre class=\"moment-text moment-text--axis\">\n<span class=\"axis-group\">\n<span class=\"axis-line\"><span class=\"axis-before\">all these little</span><span class=\"axis-after\">cracks</span></span>\n<span class=\"axis-line\"><span class=\"axis-before\">they seem to</span><span class=\"axis-after\">come from nowhere</span></span>\n<span class=\"axis-line\"><span class=\"axis-before\">i can see</span><span class=\"axis-after\">them coming</span></span>\n</span>\n\n<span class=\"axis-group\">\n<span class=\"axis-line\"><span class=\"axis-before\">these cracks</span><span class=\"axis-after\">aren’t the world falling apart</span></span>\n<span class=\"axis-line\"><span class=\"axis-before\">all the little cracks</span><span class=\"axis-after\">are inside</span></span>\n</span>\n\n<span class=\"axis-group\">\n<span class=\"axis-line\"><span class=\"axis-before\">they are just showing</span><span class=\"axis-after\">little patterns</span></span>\n<span class=\"axis-line\"><span class=\"axis-before\">which if we could</span><span class=\"axis-after\">read them</span></span>\n<span class=\"axis-line\"><span class=\"axis-before\">would</span><span class=\"axis-after\">tell our stories</span></span>\n</span>\n</pre>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00751"
+        },
+        "presentation": "image",
+        "options": {
+          "use_work_title_caption": false,
+          "summary_html": "",
+          "placement": "full",
+          "fill_width": true
+        }
+      }
+    ],
+    "presentations": {
+      "catalogue-work:00751": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00751"
+        },
+        "label": "all the little cracks",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/00751-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/00751-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00751-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00751-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "all the little cracks",
+          "width_px": 5906,
+          "height_px": 5906
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/00751-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "012"
+            },
+            "label": "all the little cracks",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "308"
+            },
+            "label": "moments",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "213"
+            },
+            "label": "all the little cracks (details)",
+            "relation": "series"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "214"
+            },
+            "label": "all the little cracks again (details)",
+            "relation": "series"
+          }
+        ]
+      }
+    }
+  },
+  "has_thumbnail": true
 }

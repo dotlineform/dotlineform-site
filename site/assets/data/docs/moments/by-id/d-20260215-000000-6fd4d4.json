@@ -2,9 +2,70 @@
   "doc_id": "d-20260215-000000-6fd4d4",
   "title": "blue sky",
   "added_date": "2026-02-15 00:00:00",
-  "last_updated": "2026-09-07 20:40:56",
+  "last_updated": "2026-10-22 15:11:54",
   "date": "2012-01-01",
   "date_display": "c. 2012?",
   "draft": false,
-  "content_html": "<h1>blue sky</h1>\n<p class=\"momentDate\">c. 2012?</p>\n<img src=\"docs-media:collections/moments/img/d-20260215-000000-6fd4d4/blue-sky.webp\" alt=\"blue sky\" width=\"800\" height=\"399\" title=\"blue sky\">\n<pre class=\"moment-text\">\nperhaps it is an alchemical truth\nthat the sky is always blue\nbut most of the time purity is hidden from us\n \nand then when we find the blue\nit is only gas molecules scattering the sun\nthe atmosphere thins to a layer\nbeyond which there is only emptiness\n \nwhich is not really empty\nno matter how far you look or travel\nthere is no emptiness to be found\n</pre>\n"
+  "has_thumbnail": true,
+  "content_html": "<h1>blue sky</h1>\n<p class=\"momentDate\">c. 2012?</p>\n<div data-docs-catalogue-ref=\"c1\"><figure class=\"docsViewerFigure docsViewerFigure--full-column\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04649\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open blue sky\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04649-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04649-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04649-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04649-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"blue sky\" width=\"3264\" height=\"1628\" decoding=\"async\"><span data-docs-media-placeholder hidden>blue sky</span></button></figure></div>\n<pre class=\"moment-text\">\nperhaps it is an alchemical truth\nthat the sky is always blue\nbut most of the time purity is hidden from us\n \nand then when we find the blue\nit is only gas molecules scattering the sun\nthe atmosphere thins to a layer\nbeyond which there is only emptiness\n \nwhich is not really empty\nno matter how far you look or travel\nthere is no emptiness to be found\n</pre>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04649"
+        },
+        "presentation": "image",
+        "options": {
+          "use_work_title_caption": false,
+          "summary_html": "",
+          "placement": "full",
+          "fill_width": true
+        }
+      }
+    ],
+    "presentations": {
+      "catalogue-work:04649": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04649"
+        },
+        "label": "blue sky",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/04649-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/04649-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04649-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04649-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "blue sky",
+          "width_px": 3264,
+          "height_px": 1628
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/04649-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "308"
+            },
+            "label": "moments",
+            "relation": "direct"
+          }
+        ]
+      }
+    }
+  }
 }

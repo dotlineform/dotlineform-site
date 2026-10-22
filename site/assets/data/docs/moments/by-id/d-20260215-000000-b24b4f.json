@@ -2,9 +2,86 @@
   "doc_id": "d-20260215-000000-b24b4f",
   "title": "will we leave residues",
   "added_date": "2026-02-15 00:00:00",
-  "last_updated": "2026-09-07 20:40:56",
+  "last_updated": "2026-10-22 16:54:59",
   "date": "2022-01-01",
   "date_display": "c. 2022",
   "draft": false,
-  "content_html": "<h1>will we leave residues</h1>\n<p class=\"momentDate\">c. 2022</p>\n<img src=\"docs-media:collections/moments/img/d-20260215-000000-b24b4f/will-we-leave-residues.webp\" alt=\"will we leave residues\" width=\"800\" height=\"330\" title=\"will we leave residues\">\n<pre class=\"moment-text\">\nwill we leave residues\nlike the plants do\ntiny particles of soil in water\npresence on a little plate\n \nwill we forget\nand others too\nour life\nwhen we go\n \nwhat records will we leave\nwill they be patterns\nor just evidence with no meaning\nthat someone was here\nalive and colourful\n \nthere is mist\nit’s not a fog\nbut it’s purpose is the same\nto hide and protect\n \ncolours are like ghosts\nwe think they’re real and have substance\nlike all the things we can touch\n \nand so with painting\nlayers upon layers\nalways looking for a truth\n \nwaiting\n</pre>\n"
+  "content_html": "<h1>will we leave residues</h1>\n<p class=\"momentDate\">c. 2022</p>\n<div data-docs-catalogue-ref=\"c1\"><figure class=\"docsViewerFigure docsViewerFigure--full-column\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00983\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open dotlineform surface (34)\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/00983-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/00983-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/00983-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/00983-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"dotlineform surface (34)\" width=\"8031\" height=\"3307\" decoding=\"async\"><span data-docs-media-placeholder hidden>dotlineform surface (34)</span></button></figure></div>\n<pre class=\"moment-text\">\nwill we leave residues\nlike the plants do\ntiny particles of soil in water\npresence on a little plate\n \nwill we forget\nand others too\nour life\nwhen we go\n \nwhat records will we leave\nwill they be patterns\nor just evidence with no meaning\nthat someone was here\nalive and colourful\n \nthere is mist\nit’s not a fog\nbut it’s purpose is the same\nto hide and protect\n \ncolours are like ghosts\nwe think they’re real and have substance\nlike all the things we can touch\n \nand so with painting\nlayers upon layers\nalways looking for a truth\n \nwaiting\n</pre>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00983"
+        },
+        "presentation": "image",
+        "options": {
+          "use_work_title_caption": false,
+          "summary_html": "",
+          "placement": "full",
+          "fill_width": true
+        }
+      }
+    ],
+    "presentations": {
+      "catalogue-work:00983": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00983"
+        },
+        "label": "dotlineform surface (34)",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/00983-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/00983-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00983-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00983-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "dotlineform surface (34)",
+          "width_px": 8031,
+          "height_px": 3307
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/00983-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "042"
+            },
+            "label": "dotlineform (2021)",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "308"
+            },
+            "label": "moments",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "233"
+            },
+            "label": "dotlineform (2021) [details]",
+            "relation": "series"
+          }
+        ]
+      }
+    }
+  },
+  "has_thumbnail": true
 }

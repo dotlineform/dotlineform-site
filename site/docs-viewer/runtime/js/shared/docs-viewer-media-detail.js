@@ -489,7 +489,6 @@ export function createDocsViewerMediaDetailAdapter() {
     var current = null;
     var selectionRequest = 0;
     var galleryPage = 0;
-    var galleryBrowseLinks = null;
     var failedImage = null;
     var imageCleanups = [];
     var feedback = documentRef.createElement("p");
@@ -631,7 +630,6 @@ export function createDocsViewerMediaDetailAdapter() {
         groups.splice(firstSeriesLink < 0 ? groups.length : firstSeriesLink, 0,
           { target: supplied.gallery.target, label: supplied.gallery.label, relation: "context" });
       }
-      galleryBrowseLinks = groups;
       appendGalleryLinks(caption, groups.filter(function (entry) { return entry.relation !== "series"; }));
       var relatedGalleries = groups.filter(function (entry) { return entry.relation === "series"; });
       if (relatedGalleries.length) {
@@ -684,11 +682,6 @@ export function createDocsViewerMediaDetailAdapter() {
       var information = documentRef.createElement("div");
       information.className = "docsViewer__mediaDetailCaption docsViewer__mediaDetailCaption--simple";
       information.appendChild(titleElement(gallery.label));
-      if (galleryBrowseLinks) {
-        appendGalleryLinks(information, galleryBrowseLinks.filter(function (entry) {
-          return !sameMediaTarget(entry.target, gallery.target);
-        }));
-      }
       if (page.pageCount > 1) {
         var pagination = navigationControls("page", page.pageIndex + 1, page.pageCount,
           function () { selectGalleryPage(page.pageIndex - 1); },
@@ -743,7 +736,7 @@ export function createDocsViewerMediaDetailAdapter() {
       var member = supplied.gallery && supplied.gallery.members.find(function (entry) {
         return sameMediaTarget(entry.target, target);
       });
-      var groups = current.galleries || galleryBrowseLinks || [];
+      var groups = current.galleries || [];
       var groupLink = groups.find(function (entry) { return sameMediaTarget(entry.target, target); });
       if (!member && !groupLink) throw new Error("Media View target is not a supplied member or group link.");
       section.setAttribute("aria-busy", "true");

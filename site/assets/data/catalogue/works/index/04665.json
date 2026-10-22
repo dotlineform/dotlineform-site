@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-16d3a1b29c4215df6abf9b8885955fa5",
+    "generated_at_utc": "2026-10-22T15:45:31Z"
+  },
+  "work": {
+    "work_id": "04665",
+    "title": "landscape for symbols 2021-01-08 00꞉25 detail",
+    "year": 2021,
+    "year_display": "2021",
+    "width_px": 1400,
+    "height_px": 1001,
+    "height_cm": 8.5,
+    "width_cm": 11.9,
+    "medium": "digital c-type print",
+    "media_version": 1,
+    "series_id": "144",
+    "galleries": [
+      {
+        "gallery_id": "308",
+        "title": "moments"
+      }
+    ]
+  }
+}

@@ -1,25 +1,29 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-51645c775b6585fb70c66ed634b869bb",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-01694c1809699f35acdc0835a144e57b",
+    "generated_at_utc": "2026-10-22T15:54:32Z"
   },
   "work": {
     "work_id": "00983",
     "title": "dotlineform surface (34)",
     "year": 2021,
     "year_display": "2021",
-    "medium": "acrylic on canvas",
-    "height_cm": 28.0,
-    "width_cm": 68.0,
     "width_px": 8031,
     "height_px": 3307,
+    "height_cm": 28,
+    "width_cm": 68,
+    "medium": "acrylic on canvas",
     "media_version": 1,
     "series_id": "042",
     "galleries": [
       {
         "gallery_id": "042",
         "title": "dotlineform (2021)"
+      },
+      {
+        "gallery_id": "308",
+        "title": "moments"
       }
     ]
   }

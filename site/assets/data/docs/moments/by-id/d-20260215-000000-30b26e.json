@@ -2,9 +2,70 @@
   "doc_id": "d-20260215-000000-30b26e",
   "title": "occasionally",
   "added_date": "2026-02-15 00:00:00",
-  "last_updated": "2026-09-07 20:40:56",
+  "last_updated": "2026-10-22 16:03:37",
   "date": "2019-07-07",
   "date_display": "7 Jul 2019",
   "draft": false,
-  "content_html": "<h1>occasionally</h1>\n<p class=\"momentDate\">7 Jul 2019</p>\n<img src=\"docs-media:collections/moments/img/d-20260215-000000-30b26e/occasionally.webp\" alt=\"occasionally\" width=\"800\" height=\"800\" title=\"occasionally\">\n<pre class=\"moment-text\">\noccasionally I find myself\nthinking about loss\nit’s a strange feeling, preparing for moments that are inevitable\n \ni almost imagine the numbness\nit’s like hardening molten metal in a furnace\nmoments on the verge of collapse\n \nlife is so short\nbut would it be different if it was longer?\n \nif we were a piece of string\ncoiled up\n \nwould we see ourselves unfold?\ninto a straight line, with a beginning and an end?\n \nor are we really a knot\nnever to be untied\n \nalways blissfully unaware\nof how we started\n \nand where the end might be\n</pre>\n"
+  "content_html": "<h1>occasionally</h1>\n<p class=\"momentDate\">7 Jul 2019</p>\n<div data-docs-catalogue-ref=\"c1\"><figure class=\"docsViewerFigure docsViewerFigure--full-column\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04658\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open occasionally\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04658-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04658-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04658-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04658-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"occasionally\" width=\"2448\" height=\"2448\" decoding=\"async\"><span data-docs-media-placeholder hidden>occasionally</span></button></figure></div>\n<pre class=\"moment-text\">\noccasionally I find myself\nthinking about loss\nit’s a strange feeling, preparing for moments that are inevitable\n \ni almost imagine the numbness\nit’s like hardening molten metal in a furnace\nmoments on the verge of collapse\n \nlife is so short\nbut would it be different if it was longer?\n \nif we were a piece of string\ncoiled up\n \nwould we see ourselves unfold?\ninto a straight line, with a beginning and an end?\n \nor are we really a knot\nnever to be untied\n \nalways blissfully unaware\nof how we started\n \nand where the end might be\n</pre>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04658"
+        },
+        "presentation": "image",
+        "options": {
+          "use_work_title_caption": false,
+          "summary_html": "",
+          "placement": "full",
+          "fill_width": true
+        }
+      }
+    ],
+    "presentations": {
+      "catalogue-work:04658": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04658"
+        },
+        "label": "occasionally",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/04658-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/04658-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04658-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04658-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "occasionally",
+          "width_px": 2448,
+          "height_px": 2448
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/04658-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "308"
+            },
+            "label": "moments",
+            "relation": "direct"
+          }
+        ]
+      }
+    }
+  },
+  "has_thumbnail": true
 }

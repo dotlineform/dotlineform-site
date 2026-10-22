@@ -2,9 +2,123 @@
   "doc_id": "d-20260215-000000-2f1eb6",
   "title": "creatures who understand light",
   "added_date": "2026-02-15 00:00:00",
-  "last_updated": "2026-09-07 20:40:56",
+  "last_updated": "2026-10-22 15:23:49",
   "date": "2019-01-01",
   "date_display": "c. 2019",
   "draft": false,
-  "content_html": "<h1>creatures who understand light</h1>\n<p class=\"momentDate\">c. 2019</p>\n<img src=\"docs-media:collections/moments/img/d-20260215-000000-2f1eb6/creatures-who-understand-light.webp\" alt=\"creatures who understand light\" width=\"800\" height=\"600\" title=\"creatures who understand light\">\n<pre class=\"moment-text\">\n(perhaps somewhere…)\n \nthere are creatures who understand light\n \nit streams up from their heads\n \nas if their minds are the mist and the mist is their thoughts\n \nand where their hands might be\n \nis a beautiful waterfall of light\n \nand their bodies don’t have legs\n \nthey simply glide like clouds\n \nthese creatures don’t have hearts\n \nbecause their whole bodies are infused with love\n \nand they touch each other\n \nwith sleepy breaths\n \ntheir kisses are slower than the drift of mountains\n \nembraces curved in marble\n \nwe feel their gentle ripples\n</pre>\n"
+  "has_thumbnail": true,
+  "content_html": "<h1>creatures who understand light</h1>\n<p class=\"momentDate\">c. 2019</p>\n<div data-docs-catalogue-ref=\"c1\"><figure class=\"docsViewerFigure docsViewerFigure--full-column\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04650\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open creatures of light\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04650-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04650-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04650-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04650-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"creatures of light\" width=\"2283\" height=\"2283\" decoding=\"async\"><span data-docs-media-placeholder hidden>creatures of light</span></button></figure></div>\n<pre class=\"moment-text\">\n(perhaps somewhere…)\n \nthere are creatures who understand light\n \nit streams up from their heads\n \nas if their minds are the mist and the mist is their thoughts\n \nand where their hands might be\n \nis a beautiful waterfall of light\n \nand their bodies don’t have legs\n \nthey simply glide like clouds\n \nthese creatures don’t have hearts\n \nbecause their whole bodies are infused with love\n \nand they touch each other\n \nwith sleepy breaths\n \ntheir kisses are slower than the drift of mountains\n \nembraces curved in marble\n \nwe feel their gentle ripples\n</pre>\n<div data-docs-catalogue-ref=\"c2\"><figure class=\"docsViewerFigure docsViewerFigure--full-column\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04651\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open creatures who understand light\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04651-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04651-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04651-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04651-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"creatures who understand light\" width=\"4032\" height=\"3024\" decoding=\"async\"><span data-docs-media-placeholder hidden>creatures who understand light</span></button></figure></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04650"
+        },
+        "presentation": "image",
+        "options": {
+          "use_work_title_caption": false,
+          "summary_html": "",
+          "placement": "full",
+          "fill_width": true
+        }
+      },
+      {
+        "reference_id": "c2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04651"
+        },
+        "presentation": "image",
+        "options": {
+          "use_work_title_caption": false,
+          "summary_html": "",
+          "placement": "full",
+          "fill_width": true
+        }
+      }
+    ],
+    "presentations": {
+      "catalogue-work:04650": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04650"
+        },
+        "label": "creatures of light",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/04650-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/04650-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04650-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04650-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "creatures of light",
+          "width_px": 2283,
+          "height_px": 2283
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/04650-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "308"
+            },
+            "label": "moments",
+            "relation": "direct"
+          }
+        ]
+      },
+      "catalogue-work:04651": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04651"
+        },
+        "label": "creatures who understand light",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/04651-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/04651-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04651-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04651-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "creatures who understand light",
+          "width_px": 4032,
+          "height_px": 3024
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/04651-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "308"
+            },
+            "label": "moments",
+            "relation": "direct"
+          }
+        ]
+      }
+    }
+  }
 }

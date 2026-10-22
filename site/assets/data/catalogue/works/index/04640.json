@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-db193d8793e19a62e47e22f5d8238db2",
+    "generated_at_utc": "2026-10-22T12:36:22Z"
+  },
+  "work": {
+    "work_id": "04640",
+    "title": "particle signals stories 2",
+    "year": 2024,
+    "year_display": "2024",
+    "width_px": 5906,
+    "height_px": 5906,
+    "height_cm": 50,
+    "width_cm": 50,
+    "media_version": 1,
+    "series_id": "145",
+    "galleries": [
+      {
+        "gallery_id": "308",
+        "title": "moments"
+      },
+      {
+        "gallery_id": "310",
+        "title": "particle signals"
+      }
+    ]
+  }
+}

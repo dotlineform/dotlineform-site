@@ -2,9 +2,70 @@
   "doc_id": "d-20260215-000000-22de5f",
   "title": "peace of mind",
   "added_date": "2026-02-15 00:00:00",
-  "last_updated": "2026-09-07 20:40:56",
+  "last_updated": "2026-10-22 16:07:50",
   "date": "2019-08-27",
   "date_display": "27 Aug 2019",
   "draft": false,
-  "content_html": "<h1>peace of mind</h1>\n<p class=\"momentDate\">27 Aug 2019</p>\n<img src=\"docs-media:collections/moments/img/d-20260215-000000-22de5f/peace-of-mind.webp\" alt=\"peace of mind\" width=\"800\" height=\"400\" title=\"peace of mind\">\n<pre class=\"moment-text\">\nkeep me close to you honey\nlet me know what’s going on\ntell me things without me asking\n \nhold me caress me\nwrap yourself around me\nbreathe with me\njust tell me what you’re feeling\n \nwe all have our journeys\nsome are secret, hidden to all\n(perhaps even to ourselves)\n \nthe special moments are those we share\nand every moment is so important\nall are connected\n \nI’m feeling that I don’t want to chase shadows\nI feel alone but this feeling has been with me for a long time, almost forever\nI just want some peace of mind\n</pre>\n"
+  "content_html": "<h1>peace of mind</h1>\n<p class=\"momentDate\">27 Aug 2019</p>\n<div data-docs-catalogue-ref=\"c1\"><figure class=\"docsViewerFigure docsViewerFigure--full-column\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04659\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open peace of mind\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04659-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04659-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04659-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04659-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"peace of mind\" width=\"6047\" height=\"3024\" decoding=\"async\"><span data-docs-media-placeholder hidden>peace of mind</span></button></figure></div>\n<pre class=\"moment-text\">\nkeep me close to you honey\nlet me know what’s going on\ntell me things without me asking\n \nhold me caress me\nwrap yourself around me\nbreathe with me\njust tell me what you’re feeling\n \nwe all have our journeys\nsome are secret, hidden to all\n(perhaps even to ourselves)\n \nthe special moments are those we share\nand every moment is so important\nall are connected\n \nI’m feeling that I don’t want to chase shadows\nI feel alone but this feeling has been with me for a long time, almost forever\nI just want some peace of mind\n</pre>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04659"
+        },
+        "presentation": "image",
+        "options": {
+          "use_work_title_caption": false,
+          "summary_html": "",
+          "placement": "full",
+          "fill_width": true
+        }
+      }
+    ],
+    "presentations": {
+      "catalogue-work:04659": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04659"
+        },
+        "label": "peace of mind",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/04659-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/04659-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04659-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04659-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "peace of mind",
+          "width_px": 6047,
+          "height_px": 3024
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/04659-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "308"
+            },
+            "label": "moments",
+            "relation": "direct"
+          }
+        ]
+      }
+    }
+  },
+  "has_thumbnail": true
 }

@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-6fd2617be72f3d8d039ffdbb06dba8c2",
-    "generated_at_utc": "2026-10-21T20:31:26Z"
+    "version": "blake2b-c346950428fd409b808d45540b565e45",
+    "generated_at_utc": "2026-10-22T11:31:30Z"
   },
   "work": {
     "work_id": "00166",
@@ -17,10 +17,6 @@
     "media_version": 2,
     "series_id": "105",
     "galleries": [
-      {
-        "gallery_id": "105",
-        "title": "nerve"
-      },
       {
         "gallery_id": "150",
         "title": "nerve (formaldehyde form)"

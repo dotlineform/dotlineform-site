@@ -2,9 +2,78 @@
   "doc_id": "d-20260215-000000-09861a",
   "title": "droplets",
   "added_date": "2026-02-15 00:00:00",
-  "last_updated": "2026-09-07 20:40:56",
+  "last_updated": "2026-10-22 15:29:33",
   "date": "2016-11-19",
   "date_display": "19 Nov 2016",
   "draft": false,
-  "content_html": "<h1>droplets</h1>\n<p class=\"momentDate\">19 Nov 2016</p>\n<img src=\"docs-media:collections/moments/img/d-20260215-000000-09861a/droplets.webp\" alt=\"droplets\" width=\"800\" height=\"800\" title=\"droplets\">\n<pre class=\"moment-text\">\nlove flows through our bodies like molten hands\non her skin curves flow in invisible warm lines\ni breathe in silky colours of perfume and kisses\nher whole body is a blissful smile\n \nit isn’t sleep that swallows us\nlike a bird swooping down to catch prey just below the swelling water\ninstead we are engulfed in a closeness\nfeeling that we won’t ever really wake up from our lovely dream\nit will bless us because we made it with love\n \nlooking at people walk past me\nthey seem to be moving in slow motion, they don’t seem real\nmy hands are very cold in the rain\nmy core is still lost in your warmth\nglowing coals of closeness touched in our sleepy depths\n \ni often cry because it seems so overwhelming\nas if nature has so suddenly accepted me into her forest\nand all our faults and dreams and desires\nnone of which i can explain, where do these tears come from?\nperhaps they are simply condensation, soul droplets on a window\nslowly forming as if from nothing\n \nperhaps it’s simply our turn\nin amongst all these billions of years in which we find ourselves, now\nto enjoy the simple wish we’ve been nurturing in ourselves\nwhich even when we are gone leaves traces of happy memories that will last forever\nand give hope to all the doubt that such a thing could even be possible\n</pre>\n"
+  "content_html": "<h1>droplets</h1>\n<p class=\"momentDate\">19 Nov 2016</p>\n<div data-docs-catalogue-ref=\"c1\"><figure class=\"docsViewerFigure docsViewerFigure--full-column\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"01026\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open droplets (2015-07-13 - 12-46-24)\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/01026-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/01026-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/01026-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/01026-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"droplets (2015-07-13 - 12-46-24)\" width=\"7087\" height=\"7087\" decoding=\"async\"><span data-docs-media-placeholder hidden>droplets (2015-07-13 - 12-46-24)</span></button></figure></div>\n<pre class=\"moment-text\">\nlove flows through our bodies like molten hands\non her skin curves flow in invisible warm lines\ni breathe in silky colours of perfume and kisses\nher whole body is a blissful smile\n \nit isn’t sleep that swallows us\nlike a bird swooping down to catch prey just below the swelling water\ninstead we are engulfed in a closeness\nfeeling that we won’t ever really wake up from our lovely dream\nit will bless us because we made it with love\n \nlooking at people walk past me\nthey seem to be moving in slow motion, they don’t seem real\nmy hands are very cold in the rain\nmy core is still lost in your warmth\nglowing coals of closeness touched in our sleepy depths\n \ni often cry because it seems so overwhelming\nas if nature has so suddenly accepted me into her forest\nand all our faults and dreams and desires\nnone of which i can explain, where do these tears come from?\nperhaps they are simply condensation, soul droplets on a window\nslowly forming as if from nothing\n \nperhaps it’s simply our turn\nin amongst all these billions of years in which we find ourselves, now\nto enjoy the simple wish we’ve been nurturing in ourselves\nwhich even when we are gone leaves traces of happy memories that will last forever\nand give hope to all the doubt that such a thing could even be possible\n</pre>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "01026"
+        },
+        "presentation": "image",
+        "options": {
+          "use_work_title_caption": false,
+          "summary_html": "",
+          "placement": "full",
+          "fill_width": true
+        }
+      }
+    ],
+    "presentations": {
+      "catalogue-work:01026": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "01026"
+        },
+        "label": "droplets (2015-07-13 - 12-46-24)",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/01026-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/01026-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/01026-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/01026-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "droplets (2015-07-13 - 12-46-24)",
+          "width_px": 7087,
+          "height_px": 7087
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/01026-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "045"
+            },
+            "label": "droplets",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "308"
+            },
+            "label": "moments",
+            "relation": "direct"
+          }
+        ]
+      }
+    }
+  },
+  "has_thumbnail": true
 }

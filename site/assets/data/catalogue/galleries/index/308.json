@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-20T21:35:47Z",
+    "generated_at_utc": "2026-10-22T15:56:47Z",
     "gallery_id": "308"
   },
   "gallery": {
@@ -10,20 +10,152 @@
   },
   "member_works": [
     {
+      "work_id": "00182",
+      "title": "drunken vultures"
+    },
+    {
+      "work_id": "00183",
+      "title": "little clear vessel"
+    },
+    {
       "work_id": "00690",
       "title": "a doll story - doll glass 23"
+    },
+    {
+      "work_id": "00751",
+      "title": "all the little cracks"
+    },
+    {
+      "work_id": "00983",
+      "title": "dotlineform surface (34)"
+    },
+    {
+      "work_id": "01026",
+      "title": "droplets (2015-07-13 - 12-46-24)"
+    },
+    {
+      "work_id": "01491",
+      "title": "particles 1"
+    },
+    {
+      "work_id": "01666",
+      "title": "snow"
+    },
+    {
+      "work_id": "03562",
+      "title": "edges 1.1"
     },
     {
       "work_id": "04626",
       "title": "13 moments in october"
     },
     {
-      "work_id": "04627",
-      "title": "4 stories"
-    },
-    {
       "work_id": "04628",
       "title": "a beautiful route"
+    },
+    {
+      "work_id": "04640",
+      "title": "particle signals stories 2"
+    },
+    {
+      "work_id": "04644",
+      "title": "a feeling of free will"
+    },
+    {
+      "work_id": "04645",
+      "title": "a lemon tart poem"
+    },
+    {
+      "work_id": "04646",
+      "title": "a light inside a flower"
+    },
+    {
+      "work_id": "04647",
+      "title": "a poem about love"
+    },
+    {
+      "work_id": "04648",
+      "title": "angels"
+    },
+    {
+      "work_id": "04649",
+      "title": "blue sky"
+    },
+    {
+      "work_id": "04650",
+      "title": "creatures of light"
+    },
+    {
+      "work_id": "04651",
+      "title": "creatures who understand light"
+    },
+    {
+      "work_id": "04652",
+      "title": "dream-sleep"
+    },
+    {
+      "work_id": "04653",
+      "title": "hi honey"
+    },
+    {
+      "work_id": "04654",
+      "title": "I felt my self sinking"
+    },
+    {
+      "work_id": "04655",
+      "title": "impenetrable"
+    },
+    {
+      "work_id": "04656",
+      "title": "keys"
+    },
+    {
+      "work_id": "04657",
+      "title": "leaves"
+    },
+    {
+      "work_id": "04658",
+      "title": "occasionally"
+    },
+    {
+      "work_id": "04659",
+      "title": "peace of mind"
+    },
+    {
+      "work_id": "04660",
+      "title": "perfection of flowers"
+    },
+    {
+      "work_id": "04661",
+      "title": "sadness-love"
+    },
+    {
+      "work_id": "04662",
+      "title": "samuel beckett"
+    },
+    {
+      "work_id": "04663",
+      "title": "the moment collector"
+    },
+    {
+      "work_id": "04664",
+      "title": "the watch keeper"
+    },
+    {
+      "work_id": "04665",
+      "title": "landscape for symbols 2021-01-08 00꞉25 detail"
+    },
+    {
+      "work_id": "04666",
+      "title": "we are the vessel"
+    },
+    {
+      "work_id": "04667",
+      "title": "we make ghosts"
+    },
+    {
+      "work_id": "04668",
+      "title": "winter"
     }
   ]
 }

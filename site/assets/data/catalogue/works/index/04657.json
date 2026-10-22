@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-a4871aafdabf978931b38ebb020d15df",
+    "generated_at_utc": "2026-10-22T14:57:47Z"
+  },
+  "work": {
+    "work_id": "04657",
+    "title": "leaves",
+    "year": 2019,
+    "year_display": "2019",
+    "width_px": 4032,
+    "height_px": 3024,
+    "height_cm": 25.6,
+    "width_cm": 34.1,
+    "media_version": 1,
+    "series_id": "144",
+    "galleries": [
+      {
+        "gallery_id": "308",
+        "title": "moments"
+      }
+    ]
+  }
+}

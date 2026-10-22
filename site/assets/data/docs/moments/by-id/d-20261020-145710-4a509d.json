@@ -2,7 +2,92 @@
   "doc_id": "d-20261020-145710-4a509d",
   "title": "drunken vultures",
   "added_date": "2026-10-20 14:57:10",
-  "last_updated": "2026-10-20 15:18:43",
+  "last_updated": "2026-10-22 15:34:29",
   "draft": false,
-  "content_html": "<h1>drunken vultures</h1>\n<p class=\"momentDate\">c. 1990?</p>\n<figure class=\"docsViewerFigure docsViewerFigure--full-column\"><img src=\"docs-media:collections/moments/img/d-20261020-145710-4a509d/drunken-vultures.webp\" alt=\"drunken vultures\" title=\"drunken vultures\"><figcaption><span class=\"docsViewerFigure__caption\">drunken vultures</span></figcaption></figure>\n<p>something is amiss in our chemicals inside our cells, because the stomach is twisting in its sleep, our fluids are diluted and impotent.\nand we are full of love and horror</p>\n<p>tomorrow our thoughts and actions show our hard-won insights to be worthless, the stomach still hungers, the wish is still inside. I saw a dog run over, the dog is dead</p>\n<p>inside of each memory there are remains of other memories, our thoughts coagulate around them and we are unable to separate the internal from the external. in a last weakening grasp, reaching out to the cold tools we have created, we place our trust in analytical methods because they are separate from the dead dog, and through the comfort this separation brings we are temporarily able to bear the closeness of our thoughts</p>\n<p>in believing the validity of our logics we place our trust in reference points that have no meaning, our sight is blurred and our routes implied but never found, never understood. if there is not a dead dog inside you, why are you still not always happy? dead dog wanted to share some happy moments, which we cannot describe without regret</p>\n<p>inside of us there are reservoirs of chemicals of loss. fear of loss is what sustains our chaotic structure building. We build and build, in layers which crumble underneath their own weight, through this space around us that seems cold and empty, yet we understand nothing still, our every thought and action only seems to compound the strange sense of unattributable loss</p>\n<p>there is blood in my hand, and soil. In these things there are symbols which appear inside closed eyes, like mirages.</p>\n<p>look upon these elements constantly forming and grouping together then breaking apart, in forms and circular series, without end.</p>\n"
+  "content_html": "<h1>drunken vultures</h1>\n<p class=\"momentDate\">c. 1990?</p>\n<div data-docs-catalogue-ref=\"c1\"><figure class=\"docsViewerFigure docsViewerFigure--full-column\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"00182\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open drunken vultures\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/00182-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/00182-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/00182-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/00182-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"drunken vultures\" width=\"2460\" height=\"3478\" decoding=\"async\"><span data-docs-media-placeholder hidden>drunken vultures</span></button></figure></div>\n<p>something is amiss in our chemicals inside our cells, because the stomach is twisting in its sleep, our fluids are diluted and impotent.\nand we are full of love and horror</p>\n<p>tomorrow our thoughts and actions show our hard-won insights to be worthless, the stomach still hungers, the wish is still inside. I saw a dog run over, the dog is dead</p>\n<p>inside of each memory there are remains of other memories, our thoughts coagulate around them and we are unable to separate the internal from the external. in a last weakening grasp, reaching out to the cold tools we have created, we place our trust in analytical methods because they are separate from the dead dog, and through the comfort this separation brings we are temporarily able to bear the closeness of our thoughts</p>\n<p>in believing the validity of our logics we place our trust in reference points that have no meaning, our sight is blurred and our routes implied but never found, never understood. if there is not a dead dog inside you, why are you still not always happy? dead dog wanted to share some happy moments, which we cannot describe without regret</p>\n<p>inside of us there are reservoirs of chemicals of loss. fear of loss is what sustains our chaotic structure building. We build and build, in layers which crumble underneath their own weight, through this space around us that seems cold and empty, yet we understand nothing still, our every thought and action only seems to compound the strange sense of unattributable loss</p>\n<p>there is blood in my hand, and soil. In these things there are symbols which appear inside closed eyes, like mirages.</p>\n<p>look upon these elements constantly forming and grouping together then breaking apart, in forms and circular series, without end.</p>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00182"
+        },
+        "presentation": "image",
+        "options": {
+          "use_work_title_caption": false,
+          "summary_html": "",
+          "placement": "full",
+          "fill_width": true
+        }
+      }
+    ],
+    "presentations": {
+      "catalogue-work:00182": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "00182"
+        },
+        "label": "drunken vultures",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/00182-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/00182-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00182-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/00182-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "drunken vultures",
+          "width_px": 2460,
+          "height_px": 3478
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/00182-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "026"
+            },
+            "label": "collected 1989-1998",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "308"
+            },
+            "label": "moments",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "145"
+            },
+            "label": "grid dissection (details)",
+            "relation": "series"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "146"
+            },
+            "label": "Michelle Pfeiffer (details)",
+            "relation": "series"
+          }
+        ]
+      }
+    }
+  },
+  "has_thumbnail": true
 }

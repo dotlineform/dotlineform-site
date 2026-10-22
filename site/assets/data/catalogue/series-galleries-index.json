@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_series_galleries_index_v2",
-    "generated_at_utc": "2026-10-21T20:31:26Z"
+    "generated_at_utc": "2026-10-22T13:29:16Z"
   },
   "series_galleries": {
     "001": [
@@ -408,10 +408,6 @@
       {
         "gallery_id": "041",
         "title": "dot theory"
-      },
-      {
-        "gallery_id": "232",
-        "title": "dot theory (dots edges) (edges)"
       }
     ],
     "042": [
@@ -1472,6 +1468,12 @@
       {
         "gallery_id": "308",
         "title": "moments"
+      }
+    ],
+    "145": [
+      {
+        "gallery_id": "310",
+        "title": "particle signals"
       }
     ]
   }

@@ -1,0 +1,72 @@
+{
+  "doc_id": "04654",
+  "title": "I felt my self sinking",
+  "added_date": "2026-10-22 15:50:41",
+  "last_updated": "2026-10-22 15:50:41",
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>I felt my self sinking</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04654\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 1600 / 2133;\" data-docs-media-open aria-label=\"Open I felt my self sinking\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04654-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04654-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04654-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04654-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"I felt my self sinking\" width=\"1600\" height=\"2133\" decoding=\"async\"><span data-docs-media-placeholder hidden>I felt my self sinking</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2015<br>digital c-type print<br>18.1 × 13.5 cm<br><br>cat. 04654</p></div></article></div>\n<section data-docs-related-links=\"true\"><h2>context</h2>\n<ul>\n<li><span class=\"docsViewer__inlineIcon\" data-docs-icon=\"dlf-moment\" aria-hidden=\"true\" style=\"display:inline-block;width:1em;height:1em;vertical-align:-0.125em;background-color:currentColor;mask-position:center;mask-size:contain;mask-repeat:no-repeat;mask-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWRyb3BsZXQgcHJldmlldy1pY29uIj48cGF0aCBkPSJNMTIgMjJhNyA3IDAgMCAwIDctN2MwLTItMS0zLjktMy01LjVzLTMuNS00LTQtNi41Yy0uNSAyLjUtMiA0LjktNCA2LjVDNiAxMS4xIDUgMTMgNSAxNWE3IDcgMCAwIDAgNyA3eiIvPjwvc3ZnPg==);\"><span aria-hidden=\"true\" style=\"position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;\">[[icon:dlf-moment]]</span></span> <a data-docs-related-link=\"true\" href=\"?collection=moments&amp;doc=d-20260215-000000-382817\">i felt my self sinking</a></li>\n</ul></section>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04654"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:04654": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04654"
+        },
+        "label": "I felt my self sinking",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/04654-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/04654-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04654-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04654-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "I felt my self sinking",
+          "width_px": 1600,
+          "height_px": 2133
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/04654-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "308"
+            },
+            "label": "moments",
+            "relation": "direct"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "2015",
+            "digital c-type print",
+            "18.1 × 13.5 cm",
+            "",
+            "cat. 04654"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
+}

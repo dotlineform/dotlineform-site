@@ -54,14 +54,6 @@
             },
             "label": "dot theory",
             "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "232"
-            },
-            "label": "dot theory (dots edges) (edges)",
-            "relation": "series"
           }
         ],
         "entry": {

@@ -2,9 +2,70 @@
   "doc_id": "d-20260215-000000-c53845",
   "title": "a poem about love",
   "added_date": "2026-02-15 00:00:00",
-  "last_updated": "2026-09-07 20:40:56",
+  "last_updated": "2026-10-22 14:25:21",
   "date": "2018-01-01",
   "date_display": "c. 2018?",
   "draft": false,
-  "content_html": "<h1>a poem about love</h1>\n<p class=\"momentDate\">c. 2018?</p>\n<img src=\"docs-media:collections/moments/img/d-20260215-000000-c53845/a-poem-about-love.webp\" alt=\"a poem about love\" width=\"800\" height=\"800\" title=\"a poem about love\">\n<pre class=\"moment-text\">\nthis is going to be\n(when the words come to me)\na poem about love\n \nit will be a simple collage of words\nthat exist only to let other people\nsee that which makes us glow\n \nit is what we’re designed for\nto live and love\nsleep and dream\n \nif only everyone knew\nthat no matter how flawed we are\nall we need is to have moments\nlike i have with you\n \nwhere our eyes become transparent\nand our thoughts disappear\nlike mist in the morning sun\n \n~\n \nisto vai ser\n(quando as palavras comigo vierem ter)\num poema sobre amor\n \nvai ser uma simples colagem de palavras\nque existem apenas para que as outras pessoas vejam que o que nos faz resplandecer\n \né o que para o qual fomos designados\npara viver e amar\n \nse ao menos todos soubessem\nque não importa o quanto falíveis nós sejamos\ntudo o que nós precisamos\né de ter momentos\ntais como os que eu tenho contigo\nem que os nossos olhos se tornam transparentes\ne os nossos pensamentos desaparecem\ntal como névoa no sol da manhã\n</pre>\n"
+  "content_html": "<h1>a poem about love</h1>\n<p class=\"momentDate\">c. 2018?</p>\n<div data-docs-catalogue-ref=\"c1\"><figure class=\"docsViewerFigure docsViewerFigure--full-column\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04647\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open a poem about love\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04647-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04647-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04647-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04647-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"a poem about love\" width=\"1600\" height=\"1600\" decoding=\"async\"><span data-docs-media-placeholder hidden>a poem about love</span></button></figure></div>\n<pre class=\"moment-text\">\nthis is going to be\n(when the words come to me)\na poem about love\n \nit will be a simple collage of words\nthat exist only to let other people\nsee that which makes us glow\n \nit is what we’re designed for\nto live and love\nsleep and dream\n \nif only everyone knew\nthat no matter how flawed we are\nall we need is to have moments\nlike i have with you\n \nwhere our eyes become transparent\nand our thoughts disappear\nlike mist in the morning sun\n \n~\n \nisto vai ser\n(quando as palavras comigo vierem ter)\num poema sobre amor\n \nvai ser uma simples colagem de palavras\nque existem apenas para que as outras pessoas vejam que o que nos faz resplandecer\n \né o que para o qual fomos designados\npara viver e amar\n \nse ao menos todos soubessem\nque não importa o quanto falíveis nós sejamos\ntudo o que nós precisamos\né de ter momentos\ntais como os que eu tenho contigo\nem que os nossos olhos se tornam transparentes\ne os nossos pensamentos desaparecem\ntal como névoa no sol da manhã\n</pre>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04647"
+        },
+        "presentation": "image",
+        "options": {
+          "use_work_title_caption": false,
+          "summary_html": "",
+          "placement": "full",
+          "fill_width": true
+        }
+      }
+    ],
+    "presentations": {
+      "catalogue-work:04647": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04647"
+        },
+        "label": "a poem about love",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/04647-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/04647-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04647-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04647-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "a poem about love",
+          "width_px": 1600,
+          "height_px": 1600
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/04647-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "308"
+            },
+            "label": "moments",
+            "relation": "direct"
+          }
+        ]
+      }
+    }
+  },
+  "has_thumbnail": true
 }

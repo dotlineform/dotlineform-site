@@ -2,9 +2,70 @@
   "doc_id": "d-20260215-000000-c04e75",
   "title": "hi honey",
   "added_date": "2026-02-15 00:00:00",
-  "last_updated": "2026-09-07 20:40:56",
+  "last_updated": "2026-10-22 15:42:22",
   "date": "2024-10-23",
   "date_display": "c. 2024",
   "draft": false,
-  "content_html": "<h1>hi honey</h1>\n<p class=\"momentDate\">c. 2024</p>\n<img src=\"docs-media:collections/moments/img/d-20260215-000000-c04e75/hi-honey.webp\" alt=\"hi honey\" width=\"800\" height=\"552\" title=\"hi honey\">\n<pre class=\"moment-text\">\nHi honey\ni’m home\nhope all is well\n \ndoes being lonely\nmean that I’m alone?\n \nis this the right way?\ndoes anyone here\nknow how to read a map?\n \ni see meaning\nin the slightest things\ni have no idea what they mean\n \nthen I realise…\ni’m staring at random dots\n</pre>\n"
+  "content_html": "<h1>hi honey</h1>\n<p class=\"momentDate\">c. 2024</p>\n<div data-docs-catalogue-ref=\"c1\"><figure class=\"docsViewerFigure docsViewerFigure--full-column\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04653\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink\" data-docs-media-open aria-label=\"Open hi honey\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04653-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04653-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04653-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04653-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"hi honey\" width=\"1600\" height=\"3299\" decoding=\"async\"><span data-docs-media-placeholder hidden>hi honey</span></button></figure></div>\n<pre class=\"moment-text\">\nHi honey\ni’m home\nhope all is well\n \ndoes being lonely\nmean that I’m alone?\n \nis this the right way?\ndoes anyone here\nknow how to read a map?\n \ni see meaning\nin the slightest things\ni have no idea what they mean\n \nthen I realise…\ni’m staring at random dots\n</pre>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04653"
+        },
+        "presentation": "image",
+        "options": {
+          "use_work_title_caption": false,
+          "summary_html": "",
+          "placement": "full",
+          "fill_width": true
+        }
+      }
+    ],
+    "presentations": {
+      "catalogue-work:04653": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04653"
+        },
+        "label": "hi honey",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/04653-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/04653-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04653-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04653-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "hi honey",
+          "width_px": 1600,
+          "height_px": 3299
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/04653-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "308"
+            },
+            "label": "moments",
+            "relation": "direct"
+          }
+        ]
+      }
+    }
+  },
+  "has_thumbnail": true
 }

@@ -1,17 +1,17 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-3e3164cbf0a0cd398209f1e57353d639",
-    "generated_at_utc": "2026-10-20T21:34:41Z"
+    "version": "blake2b-db186c8d21f9e5f44fa5c8c7633ca63d",
+    "generated_at_utc": "2026-10-22T14:50:07Z"
   },
   "work": {
-    "work_id": "04627",
-    "title": "4 stories",
-    "year": 2020,
-    "year_display": "c. 2020?",
+    "work_id": "04652",
+    "title": "dream-sleep",
+    "year": 2018,
+    "year_display": "2018",
     "width_px": 1600,
-    "height_px": 1600,
-    "height_cm": 13.5,
+    "height_px": 2844,
+    "height_cm": 24.1,
     "width_cm": 13.5,
     "medium": "digital c-type print",
     "media_version": 1,
