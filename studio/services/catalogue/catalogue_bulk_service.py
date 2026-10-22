@@ -26,6 +26,8 @@ BULK_WORK_EDITABLE_FIELDS = {
     "year",
     "year_display",
     "medium",
+    "height_cm",
+    "width_cm",
     "storage_location",
 }
 
@@ -35,7 +37,7 @@ def bulk_save_payload(
 ) -> tuple[dict[str, Any], CatalogueSourceRecords, CatalogueSourceRecords]:
     """Patch UI-selected metadata/memberships and carry the saved maps into completion.
 
-    Only the five bulk metadata fields are accepted. Untouched fields, media
+    Only the allowed bulk metadata fields are accepted. Untouched fields, media
     references and server-owned staging values remain exactly as saved.
     """
     request = extract_bulk_save_request(body)
@@ -67,7 +69,7 @@ def bulk_save_payload(
             raise ValueError(f"work_id not found: {work_id}")
         updated_record = dict(current_record)
         for field, value in set_fields.items():
-            if value is None and field in {"medium", "storage_location"}:
+            if value is None and field in {"medium", "height_cm", "width_cm", "storage_location"}:
                 updated_record.pop(field, None)
             else:
                 updated_record[field] = value

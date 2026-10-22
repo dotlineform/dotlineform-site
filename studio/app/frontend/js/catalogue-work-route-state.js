@@ -32,7 +32,7 @@ function buildDraftFromRecord(record) {
   });
 }
 
-/** Compare saved values exactly; Gallery editing starts from the membership intersection. */
+/** Compare saved values exactly, with blank dimensions sharing their prepared control value. */
 function buildBulkDraftFromRecords(records) {
   const drafts = records.map((record) => buildDraftFromRecord(record));
   const draft = {};
@@ -42,8 +42,9 @@ function buildBulkDraftFromRecords(records) {
       draft.gallery_ids = (drafts[0]?.gallery_ids || []).filter(id => drafts.every(item => item.gallery_ids.includes(id)));
       return;
     }
-    const first = records[0]?.[field.key];
-    const allSame = records.every((record) => record[field.key] === first);
+    const compared = field.key === "height_cm" || field.key === "width_cm" ? drafts : records;
+    const first = compared[0]?.[field.key];
+    const allSame = compared.every((record) => record[field.key] === first);
     if (allSame) {
       draft[field.key] = drafts[0][field.key];
     } else {

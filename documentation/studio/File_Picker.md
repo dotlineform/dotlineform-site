@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20260614-155753-e87844
 title: File Picker
 added_date: "2026-06-14 15:57:53"
-last_updated: "2026-10-06 15:11:00"
+last_updated: "2026-10-22"
 parent_id: d-20260505-181739-bb5223
 
 ---
@@ -44,6 +44,8 @@ The caller owns:
 
 Typing in folder search is transient. It must not mark a route dirty; only a confirmed selection should update durable draft state.
 
+Initial preferred focus keeps folder suggestions closed when a folder is already selected, including a seeded folder with no selected file. The folder text remains selected for replacement, and typing opens matching results normally. With no selected folder, the configured open-on-focus search remains available. The search controller's existing close operation also cancels its pending result display, so an asynchronous focus-triggered result cannot reopen the popup.
+
 ## Returned Boundary
 
 The selection identifies `scope`, `folder`, `subfolder`, and either a single filename or a filename list. Exact options, status text keys and controller methods live in the two JavaScript modules above. Loaders return strings or direct `folder`, `subfolder` and `filename` records; initial selection uses those same names. Adapters map service-owned field names explicitly. Historical record and initial-selection aliases are removed.
@@ -78,3 +80,5 @@ Protect:
 - server-side path and source-root validation
 
 Use manual browser checks for listbox keyboard behaviour, wheel interaction, focus flow, and modal fit.
+
+The 2026-10-22 initial-focus fix passed focused lint for `shared/frontend/js/file-picker.js` and whitespace checks. Source and redundancy review confirmed the existing search close operation cancels late focus results without changing the selected folder, input text, loaders or server boundaries; no additional validation, read, fallback or timer was added. This local-only module is outside the public projection inventory. Tests and browser checks were not run; force-reload the Work editor for manual confirmation of seeded-folder opening and subsequent typing.

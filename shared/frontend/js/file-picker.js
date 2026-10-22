@@ -700,6 +700,7 @@ export function createFilePicker(rootNode, options = {}) {
       }
       if (folderInput) {
         folderInput.focus();
+        if (selected.folder) searchController.close();
         if (typeof folderInput.select === "function") folderInput.select();
       }
     },
