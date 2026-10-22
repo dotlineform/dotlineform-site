@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-01e80710efc23175d4df027189fb6092",
+    "generated_at_utc": "2026-10-22T20:27:49Z"
+  },
+  "work": {
+    "work_id": "04699",
+    "title": "abstract painting III (2024-01-10)",
+    "year": 2024,
+    "year_display": "2024",
+    "width_px": 3024,
+    "height_px": 3024,
+    "height_cm": 50,
+    "width_cm": 50,
+    "media_version": 1,
+    "series_id": "147",
+    "galleries": [
+      {
+        "gallery_id": "312",
+        "title": "abstract paintings (2024)"
+      }
+    ]
+  }
+}

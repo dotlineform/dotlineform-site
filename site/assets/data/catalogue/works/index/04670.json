@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-57a562d1e1b1b1f0fd413372500b2b38",
+    "generated_at_utc": "2026-10-22T19:14:18Z"
+  },
+  "work": {
+    "work_id": "04670",
+    "title": "alkine symbols",
+    "year": 1990,
+    "year_display": "1990 (original)",
+    "width_px": 7087,
+    "height_px": 7087,
+    "height_cm": 60,
+    "width_cm": 60,
+    "medium": "digital c-type print",
+    "media_version": 1,
+    "series_id": "146",
+    "galleries": [
+      {
+        "gallery_id": "311",
+        "title": "alkine symbols"
+      }
+    ]
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "doc_id": "04778",
+  "title": "all the colours (2024-08-22) 2",
+  "added_date": "2026-10-22 22:21:03",
+  "last_updated": "2026-10-22 22:21:03",
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>all the colours (2024-08-22) 2</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04778\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 5906 / 5906;\" data-docs-media-open aria-label=\"Open all the colours (2024-08-22) 2\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04778-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04778-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04778-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04778-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"all the colours (2024-08-22) 2\" width=\"5906\" height=\"5906\" decoding=\"async\"><span data-docs-media-placeholder hidden>all the colours (2024-08-22) 2</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2024<br>digital c-type print<br>50 × 50 cm<br><br>cat. 04778</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04778"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:04778": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04778"
+        },
+        "label": "all the colours (2024-08-22) 2",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/04778-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/04778-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04778-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04778-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "all the colours (2024-08-22) 2",
+          "width_px": 5906,
+          "height_px": 5906
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/04778-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "314"
+            },
+            "label": "all the colours forms",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "315"
+            },
+            "label": "all the colours",
+            "relation": "series"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "2024",
+            "digital c-type print",
+            "50 × 50 cm",
+            "",
+            "cat. 04778"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
+}

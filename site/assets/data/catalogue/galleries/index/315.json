@@ -1,0 +1,17 @@
+{
+  "header": {
+    "schema": "gallery_record_v3",
+    "generated_at_utc": "2026-10-22T21:20:54Z",
+    "gallery_id": "315"
+  },
+  "gallery": {
+    "gallery_id": "315",
+    "title": "all the colours"
+  },
+  "member_works": [
+    {
+      "work_id": "04769",
+      "title": "all the colours"
+    }
+  ]
+}

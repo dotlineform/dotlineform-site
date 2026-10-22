@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "gallery_record_v3",
+    "generated_at_utc": "2026-10-22T20:27:49Z",
+    "gallery_id": "312"
+  },
+  "gallery": {
+    "gallery_id": "312",
+    "title": "abstract paintings (2024)"
+  },
+  "member_works": [
+    {
+      "work_id": "04697",
+      "title": "abstract painting I (2024-02-07)"
+    },
+    {
+      "work_id": "04698",
+      "title": "abstract painting II (2024-03-08)"
+    },
+    {
+      "work_id": "04699",
+      "title": "abstract painting III (2024-01-10)"
+    }
+  ]
+}

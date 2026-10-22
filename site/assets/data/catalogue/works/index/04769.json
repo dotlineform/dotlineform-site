@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-7e4b6b7e3dc4e22ad83f226cbad203b0",
+    "generated_at_utc": "2026-10-22T21:20:54Z"
+  },
+  "work": {
+    "work_id": "04769",
+    "title": "all the colours",
+    "year": 2022,
+    "year_display": "2022",
+    "width_px": 5906,
+    "height_px": 3937,
+    "height_cm": 30,
+    "width_cm": 40,
+    "medium": "acrylic on board",
+    "media_version": 2,
+    "series_id": "148",
+    "galleries": [
+      {
+        "gallery_id": "315",
+        "title": "all the colours"
+      }
+    ]
+  }
+}

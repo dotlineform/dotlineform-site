@@ -1,0 +1,79 @@
+{
+  "doc_id": "04727",
+  "title": "abstract painting I (2024-03-05) 7",
+  "added_date": "2026-10-22 21:28:02",
+  "last_updated": "2026-10-22 21:28:02",
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>abstract painting I (2024-03-05) 7</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04727\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 4032 / 2688;\" data-docs-media-open aria-label=\"Open abstract painting I (2024-03-05) 7\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04727-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04727-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04727-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04727-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"abstract painting I (2024-03-05) 7\" width=\"4032\" height=\"2688\" decoding=\"async\"><span data-docs-media-placeholder hidden>abstract painting I (2024-03-05) 7</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2024<br>digital c-type print<br><br>cat. 04727</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04727"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:04727": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04727"
+        },
+        "label": "abstract painting I (2024-03-05) 7",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/04727-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/04727-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04727-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04727-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "abstract painting I (2024-03-05) 7",
+          "width_px": 4032,
+          "height_px": 2688
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/04727-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "313"
+            },
+            "label": "abstract paintings (2024) details",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "312"
+            },
+            "label": "abstract paintings (2024)",
+            "relation": "series"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "2024",
+            "digital c-type print",
+            "",
+            "cat. 04727"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
+}

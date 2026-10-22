@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-5a9f57c07ddd188fef87b8d853e4edf0",
+    "generated_at_utc": "2026-10-22T19:14:18Z"
+  },
+  "work": {
+    "work_id": "04676",
+    "title": "alkine - f",
+    "year": 1990,
+    "year_display": "1990 (original)",
+    "width_px": 1200,
+    "height_px": 1799,
+    "height_cm": 15.2,
+    "width_cm": 10.2,
+    "medium": "digital c-type print",
+    "media_version": 1,
+    "series_id": "146",
+    "galleries": [
+      {
+        "gallery_id": "311",
+        "title": "alkine symbols"
+      }
+    ]
+  }
+}

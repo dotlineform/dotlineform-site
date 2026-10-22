@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-cb394339ee2f0644326e45777c8d4884",
+    "generated_at_utc": "2026-10-22T21:20:54Z"
+  },
+  "work": {
+    "work_id": "04774",
+    "title": "all the colours (2022-03-23) 2",
+    "year": 2022,
+    "year_display": "2022",
+    "width_px": 3543,
+    "height_px": 2482,
+    "height_cm": 21,
+    "width_cm": 30,
+    "medium": "digital c-type print",
+    "media_version": 1,
+    "series_id": "148",
+    "galleries": [
+      {
+        "gallery_id": "314",
+        "title": "all the colours forms"
+      }
+    ]
+  }
+}

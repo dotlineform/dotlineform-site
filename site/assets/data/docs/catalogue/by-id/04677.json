@@ -1,0 +1,68 @@
+{
+  "doc_id": "04677",
+  "title": "alkine - g",
+  "added_date": "2026-10-22 20:14:26",
+  "last_updated": "2026-10-22 20:14:26",
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>alkine - g</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04677\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 1200 / 1799;\" data-docs-media-open aria-label=\"Open alkine - g\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04677-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04677-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04677-primary-1200.webp?v=1 1200w\" sizes=\"100vw\" alt=\"alkine - g\" width=\"1200\" height=\"1799\" decoding=\"async\"><span data-docs-media-placeholder hidden>alkine - g</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">1990 (original)<br>digital c-type print<br>15.2 × 10.2 cm<br><br>cat. 04677</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04677"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:04677": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04677"
+        },
+        "label": "alkine - g",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/04677-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/04677-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04677-primary-1200.webp?v=1",
+              "width_px": 1200
+            }
+          ],
+          "alt": "alkine - g",
+          "width_px": 1200,
+          "height_px": 1799
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/04677-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "311"
+            },
+            "label": "alkine symbols",
+            "relation": "direct"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "1990 (original)",
+            "digital c-type print",
+            "15.2 × 10.2 cm",
+            "",
+            "cat. 04677"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
+}

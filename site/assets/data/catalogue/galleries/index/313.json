@@ -1,0 +1,289 @@
+{
+  "header": {
+    "schema": "gallery_record_v3",
+    "generated_at_utc": "2026-10-22T20:27:49Z",
+    "gallery_id": "313"
+  },
+  "gallery": {
+    "gallery_id": "313",
+    "title": "abstract paintings (2024) details"
+  },
+  "member_works": [
+    {
+      "work_id": "04700",
+      "title": "abstract painting I (2024-02-05) 1"
+    },
+    {
+      "work_id": "04701",
+      "title": "abstract painting I (2024-02-05) 2"
+    },
+    {
+      "work_id": "04702",
+      "title": "abstract painting I (2024-02-05) 3"
+    },
+    {
+      "work_id": "04703",
+      "title": "abstract painting I (2024-02-05) 4"
+    },
+    {
+      "work_id": "04704",
+      "title": "abstract painting I (2024-02-05) 5"
+    },
+    {
+      "work_id": "04705",
+      "title": "abstract painting I (2024-02-05) 6"
+    },
+    {
+      "work_id": "04706",
+      "title": "abstract painting I (2024-02-07) 1"
+    },
+    {
+      "work_id": "04707",
+      "title": "abstract painting I (2024-02-07) 2"
+    },
+    {
+      "work_id": "04708",
+      "title": "abstract painting I (2024-02-07) 3"
+    },
+    {
+      "work_id": "04709",
+      "title": "abstract painting I (2024-02-07) 4"
+    },
+    {
+      "work_id": "04710",
+      "title": "abstract painting I (2024-02-07) 5"
+    },
+    {
+      "work_id": "04711",
+      "title": "abstract painting I (2024-02-07) 6"
+    },
+    {
+      "work_id": "04712",
+      "title": "abstract painting I (2024-02-07) 7"
+    },
+    {
+      "work_id": "04713",
+      "title": "abstract painting I (2024-02-07) 8"
+    },
+    {
+      "work_id": "04714",
+      "title": "abstract painting I (2024-03-04) 1"
+    },
+    {
+      "work_id": "04715",
+      "title": "abstract painting I (2024-03-04) 2"
+    },
+    {
+      "work_id": "04716",
+      "title": "abstract painting I (2024-03-04) 3"
+    },
+    {
+      "work_id": "04717",
+      "title": "abstract painting I (2024-03-04) 4"
+    },
+    {
+      "work_id": "04718",
+      "title": "abstract painting I (2024-03-04) 5"
+    },
+    {
+      "work_id": "04719",
+      "title": "abstract painting I (2024-03-04) 6"
+    },
+    {
+      "work_id": "04720",
+      "title": "abstract painting I (2024-03-04) 7"
+    },
+    {
+      "work_id": "04721",
+      "title": "abstract painting I (2024-03-05) 1"
+    },
+    {
+      "work_id": "04722",
+      "title": "abstract painting I (2024-03-05) 2"
+    },
+    {
+      "work_id": "04723",
+      "title": "abstract painting I (2024-03-05) 3"
+    },
+    {
+      "work_id": "04724",
+      "title": "abstract painting I (2024-03-05) 4"
+    },
+    {
+      "work_id": "04725",
+      "title": "abstract painting I (2024-03-05) 5"
+    },
+    {
+      "work_id": "04726",
+      "title": "abstract painting I (2024-03-05) 6"
+    },
+    {
+      "work_id": "04727",
+      "title": "abstract painting I (2024-03-05) 7"
+    },
+    {
+      "work_id": "04728",
+      "title": "abstract painting I (2024-03-05) 8"
+    },
+    {
+      "work_id": "04729",
+      "title": "abstract painting I (2024-03-10) 1"
+    },
+    {
+      "work_id": "04730",
+      "title": "abstract painting I (2024-03-10) 2"
+    },
+    {
+      "work_id": "04731",
+      "title": "abstract painting I (2024-03-10) 3"
+    },
+    {
+      "work_id": "04732",
+      "title": "abstract painting I (2024-03-11) 1"
+    },
+    {
+      "work_id": "04733",
+      "title": "abstract painting I (2024-03-11) 2"
+    },
+    {
+      "work_id": "04734",
+      "title": "abstract painting I (2024-03-11) 3"
+    },
+    {
+      "work_id": "04735",
+      "title": "abstract painting II (2024-03-08) 1"
+    },
+    {
+      "work_id": "04736",
+      "title": "abstract painting II (2024-03-08) 10"
+    },
+    {
+      "work_id": "04737",
+      "title": "abstract painting II (2024-03-08) 11"
+    },
+    {
+      "work_id": "04738",
+      "title": "abstract painting II (2024-03-08) 2"
+    },
+    {
+      "work_id": "04739",
+      "title": "abstract painting II (2024-03-08) 3"
+    },
+    {
+      "work_id": "04740",
+      "title": "abstract painting II (2024-03-08) 4"
+    },
+    {
+      "work_id": "04741",
+      "title": "abstract painting II (2024-03-08) 5"
+    },
+    {
+      "work_id": "04742",
+      "title": "abstract painting II (2024-03-08) 6"
+    },
+    {
+      "work_id": "04743",
+      "title": "abstract painting II (2024-03-08) 7"
+    },
+    {
+      "work_id": "04744",
+      "title": "abstract painting II (2024-03-08) 8"
+    },
+    {
+      "work_id": "04745",
+      "title": "abstract painting II (2024-03-08) 9"
+    },
+    {
+      "work_id": "04746",
+      "title": "abstract painting II (2024-05-13) 1"
+    },
+    {
+      "work_id": "04747",
+      "title": "abstract painting II (2024-05-13) 10"
+    },
+    {
+      "work_id": "04748",
+      "title": "abstract painting II (2024-05-13) 11"
+    },
+    {
+      "work_id": "04749",
+      "title": "abstract painting II (2024-05-13) 12"
+    },
+    {
+      "work_id": "04750",
+      "title": "abstract painting II (2024-05-13) 13"
+    },
+    {
+      "work_id": "04751",
+      "title": "abstract painting II (2024-05-13) 2"
+    },
+    {
+      "work_id": "04752",
+      "title": "abstract painting II (2024-05-13) 3"
+    },
+    {
+      "work_id": "04753",
+      "title": "abstract painting II (2024-05-13) 4"
+    },
+    {
+      "work_id": "04754",
+      "title": "abstract painting II (2024-05-13) 5"
+    },
+    {
+      "work_id": "04755",
+      "title": "abstract painting II (2024-05-13) 6"
+    },
+    {
+      "work_id": "04756",
+      "title": "abstract painting II (2024-05-13) 7"
+    },
+    {
+      "work_id": "04757",
+      "title": "abstract painting II (2024-05-13) 8"
+    },
+    {
+      "work_id": "04758",
+      "title": "abstract painting II (2024-05-13) 9"
+    },
+    {
+      "work_id": "04759",
+      "title": "abstract painting III (2024-01-10) 1"
+    },
+    {
+      "work_id": "04760",
+      "title": "abstract painting III (2024-01-10) 10"
+    },
+    {
+      "work_id": "04761",
+      "title": "abstract painting III (2024-01-10) 2"
+    },
+    {
+      "work_id": "04762",
+      "title": "abstract painting III (2024-01-10) 3"
+    },
+    {
+      "work_id": "04763",
+      "title": "abstract painting III (2024-01-10) 4"
+    },
+    {
+      "work_id": "04764",
+      "title": "abstract painting III (2024-01-10) 5"
+    },
+    {
+      "work_id": "04765",
+      "title": "abstract painting III (2024-01-10) 6"
+    },
+    {
+      "work_id": "04766",
+      "title": "abstract painting III (2024-01-10) 7"
+    },
+    {
+      "work_id": "04767",
+      "title": "abstract painting III (2024-01-10) 8"
+    },
+    {
+      "work_id": "04768",
+      "title": "abstract painting III (2024-01-10) 9"
+    }
+  ]
+}

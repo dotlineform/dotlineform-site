@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_galleries_index_v3",
-    "generated_at_utc": "2026-10-22T13:29:16Z"
+    "generated_at_utc": "2026-10-22T21:20:54Z"
   },
   "galleries": {
     "001": {
@@ -1207,6 +1207,26 @@
     "310": {
       "gallery_id": "310",
       "title": "particle signals"
+    },
+    "311": {
+      "gallery_id": "311",
+      "title": "alkine symbols"
+    },
+    "312": {
+      "gallery_id": "312",
+      "title": "abstract paintings (2024)"
+    },
+    "313": {
+      "gallery_id": "313",
+      "title": "abstract paintings (2024) details"
+    },
+    "314": {
+      "gallery_id": "314",
+      "title": "all the colours forms"
+    },
+    "315": {
+      "gallery_id": "315",
+      "title": "all the colours"
     }
   }
 }

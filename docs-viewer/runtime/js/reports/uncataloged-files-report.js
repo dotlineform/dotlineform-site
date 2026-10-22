@@ -40,7 +40,7 @@ function renderRows(state) {
   state.rows.forEach((row) => {
     const rowNode = document.createElement("li");
     rowNode.className = "docsViewerReport__row";
-    appendTextCell(rowNode, row.folder);
+    appendTextCell(rowNode, row.folder.replace(/^projects\//, ""));
     appendFileCell(rowNode, row);
     state.rowsNode.appendChild(rowNode);
   });
