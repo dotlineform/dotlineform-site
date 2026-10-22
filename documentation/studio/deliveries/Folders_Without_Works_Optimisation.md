@@ -3,10 +3,12 @@ draft: false
 doc_id: d-20261014-190641-8e450d
 title: Folders Without Works Optimisation
 added_date: "2026-10-14 19:06:41"
-last_updated: "2026-10-14 19:06:41"
+last_updated: "2026-10-22"
 parent_id: d-20260428-000000-f5ff18
 ---
 # Folders Without Works Optimisation
+
+Retired on 2026-10-22 with the Uncatalogued Folders report. The implementation and manual-acceptance gates below are historical; no further acceptance is required. [Retirement](Folders_Without_Works_Report_Delivery.md#retirement) records removal, and [Reports](../Reports.md) owns the current inventory. Retain this document for historical evidence pending manual archive.
 
 Parent: [Planned Features](../Planned_Features.md). Durable owners: [Reports](../Reports.md) and [Catalogue Report Inputs](../Catalogue_Report_Inputs.md). The user approved the reviewed scope on 2026-10-14, including documentation updates and leaving tests unchanged.
 

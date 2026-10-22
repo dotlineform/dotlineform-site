@@ -42,7 +42,7 @@ The implemented inputs are three private Catalogue aggregates produced from the 
 
 | Catalogue-owned facts | Minimum content needed by these consumers | Consumers |
 | --- | --- | --- |
-| Work placement and source registrations | Exact Work ID; title where needed; optional Series ID; declared `media_source_id`, `project_folder`, `project_subfolder` and `project_filename`, preserving absence where valid | Projects, Uncataloged Images, Missing Source Files, Folders Without Works |
+| Work placement and source registrations | Exact Work ID; title where needed; optional Series ID; declared `media_source_id`, `project_folder`, `project_subfolder` and `project_filename`, preserving absence where valid | Projects, Uncataloged Images, Missing Source Files |
 | Work resource references | Exact Work ID and title; authored link labels/URLs; exact download filenames | Work Links, Work Downloads |
 | Series definitions | Every exact Series ID and title, including definitions with no Works | Projects |
 
@@ -101,9 +101,7 @@ Read Work IDs/titles and complete source declarations from the refreshed Catalog
 
 ### Folders Without Works (`folders_without_works`)
 
-Folders Without Works reads refreshed primary-source declarations through `docs_folders_without_works.py`, then recursively scans every configured Work media source root. One prepared source map/default and resolved Projects base feed a run-local source inspector; registered-folder lookup and traversal reuse directory metadata and checked parent segments. Zero directly registered Works determines rows; descendant Work counts are accumulated once in reverse discovery order, with only final rows sorted and returned targets encoded. Python owns physical membership/counts, and the browser trusts completed rows while retaining rendering, busy state and view disposal. [Reports](Reports.md) owns the current safeguards and evidence limits.
-
-Use refreshed source registrations for membership counts while retaining the live recursive scan. Preserve empty, hidden and non-image folders, exclusion of symlinks and root containers, physical folder-identity handling, and failure on unreadable roots/folders. A declared Work still counts in an existing folder when its primary image is missing. This report's scan scope differs deliberately from immediate-only Projects and represented-folder Uncataloged Images.
+Retired on 2026-10-22 as Uncatalogued Folders, including its host, browser module and recursive scan service. The historical six-reader migration below includes this former consumer; five remain active. `private/work-sources.json` retains its existing contract and Refresh lifecycle for Projects, Uncataloged Images and Missing Source Files. [Reports](Reports.md) owns the current inventory.
 
 ## Recommendations For The Other Reports
 

@@ -1,15 +1,8 @@
 /* Local-only Docs Viewer report implementations and controls. */
 
-.docsViewerReport[data-report-id="folders_without_works"] .docsViewerReport__head,
-.docsViewerReport[data-report-id="folders_without_works"] .docsViewerReport__row,
 .docsViewerReport[data-report-id="catalogue_medium"] .docsViewerReport__head,
 .docsViewerReport[data-report-id="catalogue_medium"] .docsViewerReport__row{
   grid-template-columns: minmax(0, 1fr) 7rem;
-}
-
-.docsViewerReport[data-report-id="folders_without_works"][aria-busy="true"],
-.docsViewerReport[data-report-id="folders_without_works"][aria-busy="true"] *{
-  cursor: progress;
 }
 
 .docsViewerReport[data-report-id="docs_media"] .docsViewerReport__head,

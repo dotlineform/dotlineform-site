@@ -48,7 +48,7 @@ Work Document Coverage and its private manifest were retired on 2026-10-20, incl
 
 | Input/schema | Record contract | Consumers |
 | --- | --- | --- |
-| `work-sources.json` / `catalogue_work_sources_v1` | `works` map; required `work_id` and `title`; optional `series_id`, `media_source_id`, `project_folder`, `project_subfolder` and `project_filename`, preserving authored declarations and their absence/null values where valid | Projects, Uncataloged Images, Missing Source Files, Folders Without Works |
+| `work-sources.json` / `catalogue_work_sources_v1` | `works` map; required `work_id` and `title`; optional `series_id`, `media_source_id`, `project_folder`, `project_subfolder` and `project_filename`, preserving authored declarations and their absence/null values where valid | Projects, Uncataloged Images, Missing Source Files |
 | `work-resources.json` / `catalogue_work_resources_v1` | `works` map; `work_id`, `title`, `links: [{label, url}]` and `download_filenames: [filename]`; arrays retain authored order and may be empty | Work Links, Work Downloads |
 | `series.json` / `catalogue_series_definitions_v1` | `series` map; `series_id` and `title` for every definition, including Series without Works | Projects |
 

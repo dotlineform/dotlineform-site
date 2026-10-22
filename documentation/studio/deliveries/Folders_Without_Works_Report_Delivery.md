@@ -3,7 +3,7 @@ draft: false
 doc_id: d-20261005-234748-f80b29
 title: Folders Without Works Report Delivery
 added_date: "2026-10-05 23:47:48"
-last_updated: "2026-10-05 23:52:42"
+last_updated: "2026-10-22"
 summary: Recursive local inspection of folders with no directly registered Work primary source.
 ui_status: done
 parent_id: d-20260428-000000-f5ff18
@@ -12,7 +12,24 @@ parent_id: d-20260428-000000-f5ff18
 
 ## Current And Next State
 
-Status: implemented and reviewed; awaiting user manual review and acceptance. The user approved implementation on 2026-10-05 to review the resulting list and refine its usefulness. [Folders Without Works](/docs/?doc=d-20261005-234748-d69c84) is registered immediately after Uncataloged Images and its watcher-generated payload is present. The live read-only producer returned 249 folders, all with zero Works below, in about 0.3 seconds. Restart the local Docs Viewer service and reload its browser page: the pre-existing process returned 404 for the newly added endpoint. Review the list's usefulness, presentation and Finder interactions before acceptance.
+Status: retired at the user's request on 2026-10-22. The original implementation and verification below are historical. [Reports](../Reports.md) owns the current inventory. Retain this document and [the optimisation delivery](Folders_Without_Works_Optimisation.md) for historical evidence pending manual archive.
+
+## Retirement
+
+The user authorized retirement of Uncatalogued Folders while retaining shared `private/work-sources.json`. Browser ownership ends with removal of the loader, renderer, request method, report styles and private-action identity. Server ownership ends with removal of the scan producer, route/dispatch and its unused private-reader convenience wrapper. Projects, Uncataloged Images and Missing Source Files continue to use the existing saved input reader and shared filesystem inspector; Catalogue Refresh production and the saved input contract are unchanged. No alias or replacement is introduced.
+
+The existing confirmed document-deletion owner removed only host `d-20261005-234748-d69c84`, its Index entry and generated payload, completing its ordinary publication handoff with zero warnings. Its explicit publication exclusion was removed directly. Search and Recent were not rebuilt; no Publish, commit, push or deployment ran. Restart Docs Viewer services and force-reload Manage to adopt the removed route and browser registration.
+
+Verification budget: changed-path Python/JavaScript lint, Python compilation/import diagnostics, registry JSON parsing, whitespace and scoped reference/diff review. These checks address dangling imports/registrations and accidental shared-reader changes, cost seconds with no network or report scans, and create only normal compiler/lint caches. Tests remain unchanged and unrun under [Testing](../Testing.md). Browser interaction remains manual. The changed browser/CSS/config files are local-only and outside the public projection inventory.
+
+- [x] Remove dedicated report runtime, configuration and host through the owning boundaries.
+- [x] Complete focused verification and distinct code review, including the mandatory Redundancy And Defensive Behavior Review.
+
+Evidence: Python lint passed for the route constants, dispatcher and private-input owner; JavaScript lint passed for the loader, request service and action definitions. The three changed Python files compiled, the management service and all three surviving source-report modules imported, and report registry JSON parsed. Whitespace and scoped reference review passed; no runtime or test caller references the retired producer, route, renderer, service method or reader wrapper. The host deletion wrote no documents, removed one generated payload and wrote one index with zero warnings. No tests or browser checks ran.
+
+Distinct code and redundancy review: the remaining reports pass resolved Working locations to `read_catalogue_report_input` and still consume `WORK_SOURCES_PATH`; the removed wrapper had only the retired report as a caller. All shared inspector methods retain callers in Uncataloged Images or Missing Source Files. Removing the report eliminates its recursive scan and response/presentation lifecycle without adding validation, freshness work, fallback, compatibility or recovery behavior. Existing saved-input parsing, configured path/symlink confinement and Finder authority retain their original owners and costs. Host removal reused the ordinary exact-target/confined-path Delete and completed generation/publication handoff, with no new deletion machinery. No actionable findings remain within this boundary.
+
+## Historical Implementation
 
 Complete result: Folders Without Works lists every physical folder below the configured Work source roots with no directly registered canonical Work primary source, including empty and non-image folders. Works below distinguishes unused branches from containers with catalogued descendants.
 

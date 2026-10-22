@@ -7,7 +7,7 @@ from pathlib import Path
 import re
 from typing import Any, Iterable, Mapping
 
-from studio.services.catalogue.catalogue_output_paths import catalogue_output_workspace, output_path
+from studio.services.catalogue.catalogue_output_paths import output_path
 from docs_artifact_locations import ArtifactLocation
 
 
@@ -192,11 +192,6 @@ def read_catalogue_report_input(workspace: ArtifactLocation, relative: str) -> d
             f"Catalogue report input {relative} is unavailable or invalid; run explicit Catalogue private report-input maintenance."
         ) from error
     return payload["series" if relative == SERIES_PATH else "works"]
-
-
-def read_work_sources(repo_root: Path) -> dict[str, dict[str, Any]]:
-    """Resolve and read the Catalogue-owned Working source/placement aggregate."""
-    return read_catalogue_report_input(catalogue_output_workspace(repo_root), WORK_SOURCES_PATH)
 
 
 def read_work_resources(workspace: ArtifactLocation) -> dict[str, dict[str, Any]]:

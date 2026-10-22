@@ -87,13 +87,6 @@ const REPORT_LOADERS = {
       });
     }
   },
-  folders_without_works: {
-    load: function () {
-      return import("./folders-without-works-report.js").then(function (module) {
-        return module.mountFoldersWithoutWorksReport;
-      });
-    }
-  },
   work_downloads: {
     load: function () {
       return import("./work-downloads-report.js").then(function (module) {

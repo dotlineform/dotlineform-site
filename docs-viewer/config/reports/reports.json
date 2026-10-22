@@ -68,12 +68,6 @@
       "loader_id": "uncataloged_files"
     },
     {
-      "report_id": "folders_without_works",
-      "title": "Folders Without Works",
-      "description": "Recursively scans live folders without directly registered refreshed Works, with descendant Work counts.",
-      "loader_id": "folders_without_works"
-    },
-    {
       "report_id": "missing_source_files",
       "title": "Missing Source Files",
       "description": "Lists refreshed Work source registrations whose complete expected path currently has no file.",
