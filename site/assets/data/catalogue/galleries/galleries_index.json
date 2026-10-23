@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_galleries_index_v3",
-    "generated_at_utc": "2026-10-23T17:41:13Z"
+    "generated_at_utc": "2026-10-23T18:40:36Z"
   },
   "galleries": {
     "001": {
@@ -1263,6 +1263,14 @@
     "325": {
       "gallery_id": "325",
       "title": "boundary conditions (by the river) - versions"
+    },
+    "326": {
+      "gallery_id": "326",
+      "title": "bridge"
+    },
+    "327": {
+      "gallery_id": "327",
+      "title": "burma"
     }
   }
 }

@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-3b6d6d35a0b570ad92e8ec1a2cd332c9",
+    "generated_at_utc": "2026-10-23T18:40:36Z"
+  },
+  "work": {
+    "work_id": "05054",
+    "title": "burma",
+    "year": 2018,
+    "year_display": "2018",
+    "width_px": 2362,
+    "height_px": 5243,
+    "height_cm": 44.4,
+    "width_cm": 20,
+    "medium": "digital c-type print",
+    "media_version": 1,
+    "series_id": "155",
+    "galleries": [
+      {
+        "gallery_id": "327",
+        "title": "burma"
+      }
+    ]
+  }
+}

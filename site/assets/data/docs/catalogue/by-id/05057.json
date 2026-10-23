@@ -1,0 +1,72 @@
+{
+  "doc_id": "05057",
+  "title": "burma detail 3",
+  "added_date": "2026-10-23 19:40:44",
+  "last_updated": "2026-10-23 19:40:44",
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>burma detail 3</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"05057\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 5421 / 5421;\" data-docs-media-open aria-label=\"Open burma detail 3\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/05057-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/05057-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/05057-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/05057-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"burma detail 3\" width=\"5421\" height=\"5421\" decoding=\"async\"><span data-docs-media-placeholder hidden>burma detail 3</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2018<br>digital c-type print<br>45.9 × 45.9 cm<br><br>cat. 05057</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "05057"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:05057": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "05057"
+        },
+        "label": "burma detail 3",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/05057-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/05057-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/05057-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/05057-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "burma detail 3",
+          "width_px": 5421,
+          "height_px": 5421
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/05057-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "327"
+            },
+            "label": "burma",
+            "relation": "direct"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "2018",
+            "digital c-type print",
+            "45.9 × 45.9 cm",
+            "",
+            "cat. 05057"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
+}

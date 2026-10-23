@@ -1,0 +1,137 @@
+{
+  "header": {
+    "schema": "gallery_record_v3",
+    "generated_at_utc": "2026-10-23T18:32:46Z",
+    "gallery_id": "326"
+  },
+  "gallery": {
+    "gallery_id": "326",
+    "title": "bridge"
+  },
+  "member_works": [
+    {
+      "work_id": "05023",
+      "title": "bridge (2020-04-11 16꞉31) 1"
+    },
+    {
+      "work_id": "05024",
+      "title": "bridge (2020-04-11 16꞉31) 2"
+    },
+    {
+      "work_id": "05025",
+      "title": "bridge (2020-04-11 16꞉31) 3"
+    },
+    {
+      "work_id": "05026",
+      "title": "bridge (2020-04-11 16꞉31) 4"
+    },
+    {
+      "work_id": "05027",
+      "title": "bridge (2020-04-11 16꞉31) 5"
+    },
+    {
+      "work_id": "05028",
+      "title": "bridge (2020-04-11 16꞉32) 1"
+    },
+    {
+      "work_id": "05029",
+      "title": "bridge (2020-04-11 16꞉32) 2"
+    },
+    {
+      "work_id": "05030",
+      "title": "bridge (2020-04-11 16꞉32) 3"
+    },
+    {
+      "work_id": "05031",
+      "title": "bridge (2020-04-11 16꞉32) 4"
+    },
+    {
+      "work_id": "05032",
+      "title": "bridge (2020-04-11 16꞉32) 5"
+    },
+    {
+      "work_id": "05033",
+      "title": "bridge (2020-04-11 16꞉32) 6"
+    },
+    {
+      "work_id": "05034",
+      "title": "bridge (2020-04-11 16꞉32) 7"
+    },
+    {
+      "work_id": "05035",
+      "title": "bridge (2020-04-11 16꞉32) 8"
+    },
+    {
+      "work_id": "05036",
+      "title": "bridge (2020-04-11 16꞉33) 1"
+    },
+    {
+      "work_id": "05037",
+      "title": "bridge (2020-04-11 16꞉33) 2"
+    },
+    {
+      "work_id": "05038",
+      "title": "bridge (2020-04-11 16꞉33) 3"
+    },
+    {
+      "work_id": "05039",
+      "title": "bridge (2020-04-11 16꞉33) 4"
+    },
+    {
+      "work_id": "05040",
+      "title": "bridge (2020-04-11 16꞉33) 5"
+    },
+    {
+      "work_id": "05041",
+      "title": "bridge (2020-04-11 16꞉33) 6"
+    },
+    {
+      "work_id": "05042",
+      "title": "bridge (2020-04-11 16꞉33) 7"
+    },
+    {
+      "work_id": "05043",
+      "title": "bridge (2020-04-11 16꞉34) 1"
+    },
+    {
+      "work_id": "05044",
+      "title": "bridge (2020-04-11 16꞉34) 2"
+    },
+    {
+      "work_id": "05045",
+      "title": "bridge (2020-04-11 16꞉34) 3"
+    },
+    {
+      "work_id": "05046",
+      "title": "bridge (2020-04-11 16꞉34) 4"
+    },
+    {
+      "work_id": "05047",
+      "title": "bridge (2020-04-11 16꞉34) 5"
+    },
+    {
+      "work_id": "05048",
+      "title": "bridge (2020-04-11 16꞉34) 6"
+    },
+    {
+      "work_id": "05049",
+      "title": "bridge (2020-04-11 16꞉34) 7"
+    },
+    {
+      "work_id": "05050",
+      "title": "bridge (2020-04-11 16꞉34) 8"
+    },
+    {
+      "work_id": "05051",
+      "title": "bridge (2020-04-11 16꞉34) 9"
+    },
+    {
+      "work_id": "05052",
+      "title": "bridge (2020-04-11 16꞉35) 1"
+    },
+    {
+      "work_id": "05053",
+      "title": "bridge (2020-04-11 16꞉35) 2"
+    }
+  ]
+}

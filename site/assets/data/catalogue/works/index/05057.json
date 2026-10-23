@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-b431a602a1ba46e57c3a330f870b8b68",
+    "generated_at_utc": "2026-10-23T18:40:36Z"
+  },
+  "work": {
+    "work_id": "05057",
+    "title": "burma detail 3",
+    "year": 2018,
+    "year_display": "2018",
+    "width_px": 5421,
+    "height_px": 5421,
+    "height_cm": 45.9,
+    "width_cm": 45.9,
+    "medium": "digital c-type print",
+    "media_version": 1,
+    "series_id": "155",
+    "galleries": [
+      {
+        "gallery_id": "327",
+        "title": "burma"
+      }
+    ]
+  }
+}

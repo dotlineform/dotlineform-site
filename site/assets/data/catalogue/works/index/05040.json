@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-9987b513eeb2ebbf1ea794c1be2ca833",
+    "generated_at_utc": "2026-10-23T18:32:46Z"
+  },
+  "work": {
+    "work_id": "05040",
+    "title": "bridge (2020-04-11 16꞉33) 5",
+    "year": 2020,
+    "year_display": "2020",
+    "width_px": 3543,
+    "height_px": 3543,
+    "height_cm": 30,
+    "width_cm": 30,
+    "medium": "digital c-type print",
+    "media_version": 1,
+    "series_id": "154",
+    "galleries": [
+      {
+        "gallery_id": "326",
+        "title": "bridge"
+      }
+    ]
+  }
+}

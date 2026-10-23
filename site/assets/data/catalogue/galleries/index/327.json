@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "gallery_record_v3",
+    "generated_at_utc": "2026-10-23T18:40:36Z",
+    "gallery_id": "327"
+  },
+  "gallery": {
+    "gallery_id": "327",
+    "title": "burma"
+  },
+  "member_works": [
+    {
+      "work_id": "05054",
+      "title": "burma"
+    },
+    {
+      "work_id": "05055",
+      "title": "burma detail 1"
+    },
+    {
+      "work_id": "05056",
+      "title": "burma detail 2"
+    },
+    {
+      "work_id": "05057",
+      "title": "burma detail 3"
+    }
+  ]
+}
