@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-a353034521665cb3d7d795a5abebd58a",
+    "generated_at_utc": "2026-10-23T17:41:13Z"
+  },
+  "work": {
+    "work_id": "05011",
+    "title": "boundary condition (by the river) version 18",
+    "year": 2022,
+    "year_display": "2022",
+    "width_px": 3543,
+    "height_px": 3543,
+    "height_cm": 30,
+    "width_cm": 30,
+    "medium": "digital c-type print",
+    "media_version": 1,
+    "series_id": "153",
+    "galleries": [
+      {
+        "gallery_id": "325",
+        "title": "boundary conditions (by the river) - versions"
+      }
+    ]
+  }
+}

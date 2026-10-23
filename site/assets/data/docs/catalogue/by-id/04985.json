@@ -1,0 +1,86 @@
+{
+  "doc_id": "04985",
+  "title": "boundary conditions (by the river)",
+  "added_date": "2026-10-23 18:41:30",
+  "last_updated": "2026-10-23 18:41:30",
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>boundary conditions (by the river)</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04985\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 3543 / 2000;\" data-docs-media-open aria-label=\"Open boundary conditions (by the river)\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04985-primary-800.webp?v=3\" srcset=\"https://media.dotlineform.com/works/img/04985-primary-800.webp?v=3 800w, https://media.dotlineform.com/works/img/04985-primary-1200.webp?v=3 1200w, https://media.dotlineform.com/works/img/04985-primary-1600.webp?v=3 1600w\" sizes=\"100vw\" alt=\"boundary conditions (by the river)\" width=\"3543\" height=\"2000\" decoding=\"async\"><span data-docs-media-placeholder hidden>boundary conditions (by the river)</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2024<br>video<br>06:37<br><br>cat. 04985</p></div><div class=\"docsViewerCatalogueEntry__resources\"><section data-catalogue-resource=\"links\"><ul><li><span class=\"docsViewer__inlineIcon\" data-docs-icon=\"link\" aria-hidden=\"true\" style=\"display:inline-block;width:1em;height:1em;vertical-align:-0.125em;background-color:currentColor;mask-position:center;mask-size:contain;mask-repeat:no-repeat;mask-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxpbmsgcHJldmlldy1pY29uIj48cGF0aCBkPSJNMTAgMTNhNSA1IDAgMCAwIDcuNTQuNTRsMy0zYTUgNSAwIDAgMC03LjA3LTcuMDdsLTEuNzIgMS43MSIvPjxwYXRoIGQ9Ik0xNCAxMWE1IDUgMCAwIDAtNy41NC0uNTRsLTMgM2E1IDUgMCAwIDAgNy4wNyA3LjA3bDEuNzEtMS43MSIvPjwvc3ZnPg==);\"><span aria-hidden=\"true\" style=\"position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;\">[[icon:link]]</span></span> <a href=\"https://vimeo.com/962164687\" target=\"_blank\" rel=\"noopener noreferrer\">boundary conditions (by the river), 06:37 [Vimeo]</a></li></ul></section></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04985"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:04985": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04985"
+        },
+        "label": "boundary conditions (by the river)",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/04985-primary-800.webp?v=3",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/04985-primary-800.webp?v=3",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04985-primary-1200.webp?v=3",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04985-primary-1600.webp?v=3",
+              "width_px": 1600
+            }
+          ],
+          "alt": "boundary conditions (by the river)",
+          "width_px": 3543,
+          "height_px": 2000
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/04985-primary-1600.webp?v=3",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "323"
+            },
+            "label": "boundary conditions (by the river)",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "325"
+            },
+            "label": "boundary conditions (by the river) - versions",
+            "relation": "series"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "2024",
+            "video",
+            "06:37",
+            "",
+            "cat. 04985"
+          ],
+          "resources": [
+            {
+              "kind": "link",
+              "label": "boundary conditions (by the river), 06:37 [Vimeo]",
+              "url": "https://vimeo.com/962164687"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

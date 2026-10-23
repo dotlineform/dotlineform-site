@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-ad366be35924971370f63c4e17dfe9b3",
+    "generated_at_utc": "2026-10-23T17:43:05Z"
+  },
+  "work": {
+    "work_id": "04985",
+    "title": "boundary conditions (by the river)",
+    "year": 2024,
+    "year_display": "2024",
+    "width_px": 3543,
+    "height_px": 2000,
+    "medium": "video",
+    "duration": "06:37",
+    "media_version": 3,
+    "series_id": "153",
+    "links": [
+      {
+        "url": "https://vimeo.com/962164687",
+        "label": "boundary conditions (by the river), 06:37 [Vimeo]"
+      }
+    ],
+    "galleries": [
+      {
+        "gallery_id": "323",
+        "title": "boundary conditions (by the river)"
+      }
+    ]
+  }
+}

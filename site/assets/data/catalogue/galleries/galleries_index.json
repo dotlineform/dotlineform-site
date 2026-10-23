@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_galleries_index_v3",
-    "generated_at_utc": "2026-10-23T14:05:51Z"
+    "generated_at_utc": "2026-10-23T17:41:13Z"
   },
   "galleries": {
     "001": {
@@ -1255,6 +1255,14 @@
     "322": {
       "gallery_id": "322",
       "title": "a world of non-linearity (moments)"
+    },
+    "323": {
+      "gallery_id": "323",
+      "title": "boundary conditions (by the river)"
+    },
+    "325": {
+      "gallery_id": "325",
+      "title": "boundary conditions (by the river) - versions"
     }
   }
 }

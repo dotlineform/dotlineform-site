@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-ba7cd42fe1cbf797d55730e592c6cdb5",
+    "generated_at_utc": "2026-10-23T17:41:13Z"
+  },
+  "work": {
+    "work_id": "04981",
+    "title": "boundary conditions (by the river) form 1",
+    "year": 2022,
+    "year_display": "2022",
+    "width_px": 2627,
+    "height_px": 2627,
+    "height_cm": 25.3,
+    "width_cm": 25.3,
+    "medium": "pencil, ink and acrylic on board",
+    "media_version": 1,
+    "series_id": "153",
+    "galleries": [
+      {
+        "gallery_id": "323",
+        "title": "boundary conditions (by the river)"
+      }
+    ]
+  }
+}

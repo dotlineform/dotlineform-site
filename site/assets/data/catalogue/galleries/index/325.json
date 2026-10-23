@@ -1,0 +1,129 @@
+{
+  "header": {
+    "schema": "gallery_record_v3",
+    "generated_at_utc": "2026-10-23T17:41:13Z",
+    "gallery_id": "325"
+  },
+  "gallery": {
+    "gallery_id": "325",
+    "title": "boundary conditions (by the river) - versions"
+  },
+  "member_works": [
+    {
+      "work_id": "04994",
+      "title": "boundary condition (by the river) version 01"
+    },
+    {
+      "work_id": "04995",
+      "title": "boundary condition (by the river) version 02"
+    },
+    {
+      "work_id": "04996",
+      "title": "boundary condition (by the river) version 03"
+    },
+    {
+      "work_id": "04997",
+      "title": "boundary condition (by the river) version 04"
+    },
+    {
+      "work_id": "04998",
+      "title": "boundary condition (by the river) version 05"
+    },
+    {
+      "work_id": "04999",
+      "title": "boundary condition (by the river) version 06"
+    },
+    {
+      "work_id": "05000",
+      "title": "boundary condition (by the river) version 07"
+    },
+    {
+      "work_id": "05001",
+      "title": "boundary condition (by the river) version 08"
+    },
+    {
+      "work_id": "05002",
+      "title": "boundary condition (by the river) version 09"
+    },
+    {
+      "work_id": "05003",
+      "title": "boundary condition (by the river) version 10"
+    },
+    {
+      "work_id": "05004",
+      "title": "boundary condition (by the river) version 11"
+    },
+    {
+      "work_id": "05005",
+      "title": "boundary condition (by the river) version 12"
+    },
+    {
+      "work_id": "05006",
+      "title": "boundary condition (by the river) version 13"
+    },
+    {
+      "work_id": "05007",
+      "title": "boundary condition (by the river) version 14"
+    },
+    {
+      "work_id": "05008",
+      "title": "boundary condition (by the river) version 15"
+    },
+    {
+      "work_id": "05009",
+      "title": "boundary condition (by the river) version 16"
+    },
+    {
+      "work_id": "05010",
+      "title": "boundary condition (by the river) version 17"
+    },
+    {
+      "work_id": "05011",
+      "title": "boundary condition (by the river) version 18"
+    },
+    {
+      "work_id": "05012",
+      "title": "boundary condition (by the river) version 19"
+    },
+    {
+      "work_id": "05013",
+      "title": "boundary condition (by the river) version 20"
+    },
+    {
+      "work_id": "05014",
+      "title": "boundary condition (by the river) version 21"
+    },
+    {
+      "work_id": "05015",
+      "title": "boundary condition (by the river) version 22"
+    },
+    {
+      "work_id": "05016",
+      "title": "boundary condition (by the river) version 23"
+    },
+    {
+      "work_id": "05017",
+      "title": "boundary condition (by the river) version 24"
+    },
+    {
+      "work_id": "05018",
+      "title": "boundary condition (by the river) version 25"
+    },
+    {
+      "work_id": "05019",
+      "title": "boundary condition (by the river) version 26"
+    },
+    {
+      "work_id": "05020",
+      "title": "boundary condition (by the river) version 27"
+    },
+    {
+      "work_id": "05021",
+      "title": "boundary condition (by the river) version 28"
+    },
+    {
+      "work_id": "05022",
+      "title": "boundary condition (by the river) version 29"
+    }
+  ]
+}
