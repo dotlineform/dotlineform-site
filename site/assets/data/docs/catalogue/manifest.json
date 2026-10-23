@@ -15631,69 +15631,9 @@
       "last_updated": "2026-10-01"
     },
     {
-      "doc_id": "00481",
+      "doc_id": "05064",
       "title": "mm negative future",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "02961",
-      "title": "mm negative future .1",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "02962",
-      "title": "mm negative future .2",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "02963",
-      "title": "mm negative future .3",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "02972",
-      "title": "mm negative future .4",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "02964",
-      "title": "mm negative future .4.1",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "02965",
-      "title": "mm negative future .4.2",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "02966",
-      "title": "mm negative future .4.3",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "02971",
-      "title": "mm negative future .4.4",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "02967",
-      "title": "mm negative future .4.4.1",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "02968",
-      "title": "mm negative future .4.4.2",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "02969",
-      "title": "mm negative future .4.4.3",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "02970",
-      "title": "mm negative future .4.4.4",
-      "last_updated": "2026-10-01"
+      "last_updated": "2026-10-23"
     },
     {
       "doc_id": "00482",
@@ -15869,6 +15809,676 @@
       "doc_id": "00511",
       "title": "mm quantum 2.9",
       "last_updated": "2026-10-01"
+    },
+    {
+      "doc_id": "05066",
+      "title": "mm version 1.01",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05067",
+      "title": "mm version 1.02",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05068",
+      "title": "mm version 1.03",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05069",
+      "title": "mm version 1.04",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05070",
+      "title": "mm version 1.06",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05071",
+      "title": "mm version 1.07",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05072",
+      "title": "mm version 1.08",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05073",
+      "title": "mm version 1.09",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05074",
+      "title": "mm version 1.12",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05075",
+      "title": "mm version 1.14",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05076",
+      "title": "mm version 1.16",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05077",
+      "title": "mm version 1.17",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05078",
+      "title": "mm version 1.18",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05079",
+      "title": "mm version 1.20",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05080",
+      "title": "mm version 1.21",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05081",
+      "title": "mm version 1.22",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05082",
+      "title": "mm version 1.23",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05083",
+      "title": "mm version 1.24",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05084",
+      "title": "mm version 1.25",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05085",
+      "title": "mm version 2.02",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05086",
+      "title": "mm version 2.03",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05087",
+      "title": "mm version 2.04",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05088",
+      "title": "mm version 2.05",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05089",
+      "title": "mm version 2.08",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05090",
+      "title": "mm version 2.10",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05091",
+      "title": "mm version 2.11",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05092",
+      "title": "mm version 2.13",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05093",
+      "title": "mm version 2.17",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05094",
+      "title": "mm version 2.18",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05095",
+      "title": "mm version 2.19",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05096",
+      "title": "mm version 2.20",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05097",
+      "title": "mm version 2.21",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05098",
+      "title": "mm version 2.22",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05099",
+      "title": "mm version 2.23",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05100",
+      "title": "mm version 2.24",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05101",
+      "title": "mm version 2.25",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05102",
+      "title": "mm version 2.26",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05103",
+      "title": "mm version 2.27",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05104",
+      "title": "mm version 2.28",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05105",
+      "title": "mm version 2.29",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05106",
+      "title": "mm version 3.01",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05107",
+      "title": "mm version 3.03",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05108",
+      "title": "mm version 3.05",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05109",
+      "title": "mm version 3.06",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05110",
+      "title": "mm version 3.07",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05111",
+      "title": "mm version 3.08",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05112",
+      "title": "mm version 3.10",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05113",
+      "title": "mm version 3.12",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05114",
+      "title": "mm version 3.13",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05115",
+      "title": "mm version 3.16",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05116",
+      "title": "mm version 3.17",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05117",
+      "title": "mm version 3.18",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05118",
+      "title": "mm version 3.19",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05119",
+      "title": "mm version 3.20",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05120",
+      "title": "mm version 3.21",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05121",
+      "title": "mm version 3.22",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05122",
+      "title": "mm version 3.23",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05123",
+      "title": "mm version 4.01",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05124",
+      "title": "mm version 4.02",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05125",
+      "title": "mm version 4.03",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05126",
+      "title": "mm version 4.04",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05127",
+      "title": "mm version 4.05",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05128",
+      "title": "mm version 4.07",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05129",
+      "title": "mm version 4.08",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05130",
+      "title": "mm version 4.1.01",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05131",
+      "title": "mm version 4.1.02",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05132",
+      "title": "mm version 4.1.03",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05133",
+      "title": "mm version 4.1.04",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05134",
+      "title": "mm version 4.1.06",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05135",
+      "title": "mm version 4.1.08",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05136",
+      "title": "mm version 4.1.09",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05137",
+      "title": "mm version 4.1.10",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05138",
+      "title": "mm version 4.1.13",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05139",
+      "title": "mm version 4.1.14",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05140",
+      "title": "mm version 4.1.18",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05141",
+      "title": "mm version 4.1.19",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05142",
+      "title": "mm version 4.1.22",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05143",
+      "title": "mm version 4.1.24",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05144",
+      "title": "mm version 4.1.25",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05145",
+      "title": "mm version 4.1.26",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05146",
+      "title": "mm version 4.1.28",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05147",
+      "title": "mm version 4.11",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05148",
+      "title": "mm version 4.12",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05149",
+      "title": "mm version 4.13",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05150",
+      "title": "mm version 4.15",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05151",
+      "title": "mm version 4.16",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05152",
+      "title": "mm version 4.17",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05153",
+      "title": "mm version 4.18",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05154",
+      "title": "mm version 4.19",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05155",
+      "title": "mm version 4.2.01",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05156",
+      "title": "mm version 4.2.05",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05157",
+      "title": "mm version 4.2.06",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05158",
+      "title": "mm version 4.2.07",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05159",
+      "title": "mm version 4.2.09",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05160",
+      "title": "mm version 4.2.11",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05161",
+      "title": "mm version 4.2.12",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05162",
+      "title": "mm version 4.2.14",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05163",
+      "title": "mm version 4.2.15",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05164",
+      "title": "mm version 4.2.16",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05165",
+      "title": "mm version 4.2.18",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05166",
+      "title": "mm version 4.2.19",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05167",
+      "title": "mm version 4.2.20",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05168",
+      "title": "mm version 4.2.21",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05169",
+      "title": "mm version 4.2.22",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05170",
+      "title": "mm version 4.2.23",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05171",
+      "title": "mm version 4.2.24",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05172",
+      "title": "mm version 4.2.25",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05173",
+      "title": "mm version 4.20",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05174",
+      "title": "mm version 4.21",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05175",
+      "title": "mm version 4.22",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05176",
+      "title": "mm version 4.23",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05177",
+      "title": "mm version 4.24",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05178",
+      "title": "mm version 4.25",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05179",
+      "title": "mm version 4.26",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05180",
+      "title": "mm version 4.27",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05181",
+      "title": "mm version 4.28",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05182",
+      "title": "mm version 4.3.01",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05183",
+      "title": "mm version 4.3.02",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05184",
+      "title": "mm version 4.3.04",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05185",
+      "title": "mm version 4.3.05",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05186",
+      "title": "mm version 4.3.08",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05187",
+      "title": "mm version 4.3.09",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05188",
+      "title": "mm version 4.3.10",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05189",
+      "title": "mm version 4.3.11",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05190",
+      "title": "mm version 4.3.12",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05191",
+      "title": "mm version 4.3.14",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05192",
+      "title": "mm version 4.3.15",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05193",
+      "title": "mm version 4.3.16",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05194",
+      "title": "mm version 4.3.17",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05195",
+      "title": "mm version 4.3.18",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05196",
+      "title": "mm version 4.4.01",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05197",
+      "title": "mm version 4.4.04",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05198",
+      "title": "mm version 4.4.05",
+      "last_updated": "2026-10-23"
+    },
+    {
+      "doc_id": "05065",
+      "title": "mm versions",
+      "last_updated": "2026-10-23"
     },
     {
       "doc_id": "00130",
@@ -24593,11 +25203,6 @@
     {
       "doc_id": "03027",
       "title": "version dall-e - 9.4",
-      "last_updated": "2026-10-01"
-    },
-    {
-      "doc_id": "02973",
-      "title": "versions II (mm)",
       "last_updated": "2026-10-01"
     },
     {

@@ -54,14 +54,6 @@
             },
             "label": "mm",
             "relation": "direct"
-          },
-          {
-            "target": {
-              "kind": "catalogue-gallery",
-              "id": "171"
-            },
-            "label": "mm negative future (versions)",
-            "relation": "series"
           }
         ],
         "entry": {

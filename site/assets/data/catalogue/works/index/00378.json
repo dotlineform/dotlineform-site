@@ -2,18 +2,18 @@
   "header": {
     "schema": "work_record_v11",
     "version": "blake2b-ab7d45d56674d4baf0e1e153dbfd85aa",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "generated_at_utc": "2026-10-23T19:47:19Z"
   },
   "work": {
     "work_id": "00378",
     "title": "mm quantum",
     "year": 2009,
     "year_display": "2009",
-    "medium": "paper collage",
-    "height_cm": 29.7,
-    "width_cm": 42.0,
     "width_px": 4961,
     "height_px": 3508,
+    "height_cm": 29.7,
+    "width_cm": 42,
+    "medium": "paper collage",
     "media_version": 1,
     "series_id": "098",
     "galleries": [

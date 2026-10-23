@@ -2,18 +2,18 @@
   "header": {
     "schema": "work_record_v11",
     "version": "blake2b-4f6a02ffdb48c6116f6893b005c40855",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "generated_at_utc": "2026-10-23T19:47:19Z"
   },
   "work": {
     "work_id": "00473",
     "title": "mm 2015-08-24 - 19-14-50",
     "year": 2015,
     "year_display": "2015",
-    "medium": "digital c-type print",
-    "height_cm": 40.0,
-    "width_cm": 40.0,
     "width_px": 4724,
     "height_px": 4724,
+    "height_cm": 40,
+    "width_cm": 40,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "098",
     "galleries": [

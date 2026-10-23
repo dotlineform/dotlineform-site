@@ -1,0 +1,21 @@
+{
+  "header": {
+    "schema": "gallery_record_v3",
+    "generated_at_utc": "2026-10-23T22:31:45Z",
+    "gallery_id": "330"
+  },
+  "gallery": {
+    "gallery_id": "330",
+    "title": "mm negative future"
+  },
+  "member_works": [
+    {
+      "work_id": "05064",
+      "title": "mm negative future"
+    },
+    {
+      "work_id": "05065",
+      "title": "mm versions"
+    }
+  ]
+}

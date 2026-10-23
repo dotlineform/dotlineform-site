@@ -2,18 +2,18 @@
   "header": {
     "schema": "work_record_v11",
     "version": "blake2b-9ec1485f83858192fa84e495d4549cec",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "generated_at_utc": "2026-10-23T19:47:19Z"
   },
   "work": {
     "work_id": "00496",
     "title": "mm quantum 1.8",
     "year": 2009,
     "year_display": "2009",
-    "medium": "digital c-type print",
-    "height_cm": 30.0,
-    "width_cm": 50.0,
     "width_px": 5906,
     "height_px": 3543,
+    "height_cm": 30,
+    "width_cm": 50,
+    "medium": "digital c-type print",
     "media_version": 1,
     "series_id": "098",
     "galleries": [

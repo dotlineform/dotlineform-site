@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
+    "generated_at_utc": "2026-10-23T19:47:19Z",
     "gallery_id": "098"
   },
   "gallery": {
@@ -56,10 +56,6 @@
     {
       "work_id": "00480",
       "title": "mm creased 7"
-    },
-    {
-      "work_id": "00481",
-      "title": "mm negative future"
     },
     {
       "work_id": "00482",

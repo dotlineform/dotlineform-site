@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-66fa687c5594f6b866254a77035b4d94",
+    "generated_at_utc": "2026-10-23T22:31:45Z"
+  },
+  "work": {
+    "work_id": "05065",
+    "title": "mm versions",
+    "year": 2004,
+    "year_display": "2004, 2026",
+    "width_px": 4725,
+    "height_px": 2362,
+    "height_cm": 20,
+    "width_cm": 40,
+    "medium": "digital c-type print",
+    "media_version": 1,
+    "series_id": "157",
+    "galleries": [
+      {
+        "gallery_id": "330",
+        "title": "mm negative future"
+      }
+    ]
+  }
+}

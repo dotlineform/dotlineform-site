@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_works_index_v3",
-    "generated_at_utc": "2026-10-23T19:29:05Z"
+    "generated_at_utc": "2026-10-23T22:31:45Z"
   },
   "works": {
     "00001": {
@@ -1899,10 +1899,6 @@
     "00480": {
       "work_id": "00480",
       "title": "mm creased 7"
-    },
-    "00481": {
-      "work_id": "00481",
-      "title": "mm negative future"
     },
     "00482": {
       "work_id": "00482",
@@ -11800,58 +11796,6 @@
       "work_id": "02960",
       "title": "forest 4 - detail 6"
     },
-    "02961": {
-      "work_id": "02961",
-      "title": "mm negative future .1"
-    },
-    "02962": {
-      "work_id": "02962",
-      "title": "mm negative future .2"
-    },
-    "02963": {
-      "work_id": "02963",
-      "title": "mm negative future .3"
-    },
-    "02964": {
-      "work_id": "02964",
-      "title": "mm negative future .4.1"
-    },
-    "02965": {
-      "work_id": "02965",
-      "title": "mm negative future .4.2"
-    },
-    "02966": {
-      "work_id": "02966",
-      "title": "mm negative future .4.3"
-    },
-    "02967": {
-      "work_id": "02967",
-      "title": "mm negative future .4.4.1"
-    },
-    "02968": {
-      "work_id": "02968",
-      "title": "mm negative future .4.4.2"
-    },
-    "02969": {
-      "work_id": "02969",
-      "title": "mm negative future .4.4.3"
-    },
-    "02970": {
-      "work_id": "02970",
-      "title": "mm negative future .4.4.4"
-    },
-    "02971": {
-      "work_id": "02971",
-      "title": "mm negative future .4.4"
-    },
-    "02972": {
-      "work_id": "02972",
-      "title": "mm negative future .4"
-    },
-    "02973": {
-      "work_id": "02973",
-      "title": "versions II (mm)"
-    },
     "02974": {
       "work_id": "02974",
       "title": "landscape 1 - detail 1"
@@ -20207,6 +20151,546 @@
     "05063": {
       "work_id": "05063",
       "title": "by the river symbols poles"
+    },
+    "05064": {
+      "work_id": "05064",
+      "title": "mm negative future"
+    },
+    "05065": {
+      "work_id": "05065",
+      "title": "mm versions"
+    },
+    "05066": {
+      "work_id": "05066",
+      "title": "mm version 1.01"
+    },
+    "05067": {
+      "work_id": "05067",
+      "title": "mm version 1.02"
+    },
+    "05068": {
+      "work_id": "05068",
+      "title": "mm version 1.03"
+    },
+    "05069": {
+      "work_id": "05069",
+      "title": "mm version 1.04"
+    },
+    "05070": {
+      "work_id": "05070",
+      "title": "mm version 1.06"
+    },
+    "05071": {
+      "work_id": "05071",
+      "title": "mm version 1.07"
+    },
+    "05072": {
+      "work_id": "05072",
+      "title": "mm version 1.08"
+    },
+    "05073": {
+      "work_id": "05073",
+      "title": "mm version 1.09"
+    },
+    "05074": {
+      "work_id": "05074",
+      "title": "mm version 1.12"
+    },
+    "05075": {
+      "work_id": "05075",
+      "title": "mm version 1.14"
+    },
+    "05076": {
+      "work_id": "05076",
+      "title": "mm version 1.16"
+    },
+    "05077": {
+      "work_id": "05077",
+      "title": "mm version 1.17"
+    },
+    "05078": {
+      "work_id": "05078",
+      "title": "mm version 1.18"
+    },
+    "05079": {
+      "work_id": "05079",
+      "title": "mm version 1.20"
+    },
+    "05080": {
+      "work_id": "05080",
+      "title": "mm version 1.21"
+    },
+    "05081": {
+      "work_id": "05081",
+      "title": "mm version 1.22"
+    },
+    "05082": {
+      "work_id": "05082",
+      "title": "mm version 1.23"
+    },
+    "05083": {
+      "work_id": "05083",
+      "title": "mm version 1.24"
+    },
+    "05084": {
+      "work_id": "05084",
+      "title": "mm version 1.25"
+    },
+    "05085": {
+      "work_id": "05085",
+      "title": "mm version 2.02"
+    },
+    "05086": {
+      "work_id": "05086",
+      "title": "mm version 2.03"
+    },
+    "05087": {
+      "work_id": "05087",
+      "title": "mm version 2.04"
+    },
+    "05088": {
+      "work_id": "05088",
+      "title": "mm version 2.05"
+    },
+    "05089": {
+      "work_id": "05089",
+      "title": "mm version 2.08"
+    },
+    "05090": {
+      "work_id": "05090",
+      "title": "mm version 2.10"
+    },
+    "05091": {
+      "work_id": "05091",
+      "title": "mm version 2.11"
+    },
+    "05092": {
+      "work_id": "05092",
+      "title": "mm version 2.13"
+    },
+    "05093": {
+      "work_id": "05093",
+      "title": "mm version 2.17"
+    },
+    "05094": {
+      "work_id": "05094",
+      "title": "mm version 2.18"
+    },
+    "05095": {
+      "work_id": "05095",
+      "title": "mm version 2.19"
+    },
+    "05096": {
+      "work_id": "05096",
+      "title": "mm version 2.20"
+    },
+    "05097": {
+      "work_id": "05097",
+      "title": "mm version 2.21"
+    },
+    "05098": {
+      "work_id": "05098",
+      "title": "mm version 2.22"
+    },
+    "05099": {
+      "work_id": "05099",
+      "title": "mm version 2.23"
+    },
+    "05100": {
+      "work_id": "05100",
+      "title": "mm version 2.24"
+    },
+    "05101": {
+      "work_id": "05101",
+      "title": "mm version 2.25"
+    },
+    "05102": {
+      "work_id": "05102",
+      "title": "mm version 2.26"
+    },
+    "05103": {
+      "work_id": "05103",
+      "title": "mm version 2.27"
+    },
+    "05104": {
+      "work_id": "05104",
+      "title": "mm version 2.28"
+    },
+    "05105": {
+      "work_id": "05105",
+      "title": "mm version 2.29"
+    },
+    "05106": {
+      "work_id": "05106",
+      "title": "mm version 3.01"
+    },
+    "05107": {
+      "work_id": "05107",
+      "title": "mm version 3.03"
+    },
+    "05108": {
+      "work_id": "05108",
+      "title": "mm version 3.05"
+    },
+    "05109": {
+      "work_id": "05109",
+      "title": "mm version 3.06"
+    },
+    "05110": {
+      "work_id": "05110",
+      "title": "mm version 3.07"
+    },
+    "05111": {
+      "work_id": "05111",
+      "title": "mm version 3.08"
+    },
+    "05112": {
+      "work_id": "05112",
+      "title": "mm version 3.10"
+    },
+    "05113": {
+      "work_id": "05113",
+      "title": "mm version 3.12"
+    },
+    "05114": {
+      "work_id": "05114",
+      "title": "mm version 3.13"
+    },
+    "05115": {
+      "work_id": "05115",
+      "title": "mm version 3.16"
+    },
+    "05116": {
+      "work_id": "05116",
+      "title": "mm version 3.17"
+    },
+    "05117": {
+      "work_id": "05117",
+      "title": "mm version 3.18"
+    },
+    "05118": {
+      "work_id": "05118",
+      "title": "mm version 3.19"
+    },
+    "05119": {
+      "work_id": "05119",
+      "title": "mm version 3.20"
+    },
+    "05120": {
+      "work_id": "05120",
+      "title": "mm version 3.21"
+    },
+    "05121": {
+      "work_id": "05121",
+      "title": "mm version 3.22"
+    },
+    "05122": {
+      "work_id": "05122",
+      "title": "mm version 3.23"
+    },
+    "05123": {
+      "work_id": "05123",
+      "title": "mm version 4.01"
+    },
+    "05124": {
+      "work_id": "05124",
+      "title": "mm version 4.02"
+    },
+    "05125": {
+      "work_id": "05125",
+      "title": "mm version 4.03"
+    },
+    "05126": {
+      "work_id": "05126",
+      "title": "mm version 4.04"
+    },
+    "05127": {
+      "work_id": "05127",
+      "title": "mm version 4.05"
+    },
+    "05128": {
+      "work_id": "05128",
+      "title": "mm version 4.07"
+    },
+    "05129": {
+      "work_id": "05129",
+      "title": "mm version 4.08"
+    },
+    "05130": {
+      "work_id": "05130",
+      "title": "mm version 4.1.01"
+    },
+    "05131": {
+      "work_id": "05131",
+      "title": "mm version 4.1.02"
+    },
+    "05132": {
+      "work_id": "05132",
+      "title": "mm version 4.1.03"
+    },
+    "05133": {
+      "work_id": "05133",
+      "title": "mm version 4.1.04"
+    },
+    "05134": {
+      "work_id": "05134",
+      "title": "mm version 4.1.06"
+    },
+    "05135": {
+      "work_id": "05135",
+      "title": "mm version 4.1.08"
+    },
+    "05136": {
+      "work_id": "05136",
+      "title": "mm version 4.1.09"
+    },
+    "05137": {
+      "work_id": "05137",
+      "title": "mm version 4.1.10"
+    },
+    "05138": {
+      "work_id": "05138",
+      "title": "mm version 4.1.13"
+    },
+    "05139": {
+      "work_id": "05139",
+      "title": "mm version 4.1.14"
+    },
+    "05140": {
+      "work_id": "05140",
+      "title": "mm version 4.1.18"
+    },
+    "05141": {
+      "work_id": "05141",
+      "title": "mm version 4.1.19"
+    },
+    "05142": {
+      "work_id": "05142",
+      "title": "mm version 4.1.22"
+    },
+    "05143": {
+      "work_id": "05143",
+      "title": "mm version 4.1.24"
+    },
+    "05144": {
+      "work_id": "05144",
+      "title": "mm version 4.1.25"
+    },
+    "05145": {
+      "work_id": "05145",
+      "title": "mm version 4.1.26"
+    },
+    "05146": {
+      "work_id": "05146",
+      "title": "mm version 4.1.28"
+    },
+    "05147": {
+      "work_id": "05147",
+      "title": "mm version 4.11"
+    },
+    "05148": {
+      "work_id": "05148",
+      "title": "mm version 4.12"
+    },
+    "05149": {
+      "work_id": "05149",
+      "title": "mm version 4.13"
+    },
+    "05150": {
+      "work_id": "05150",
+      "title": "mm version 4.15"
+    },
+    "05151": {
+      "work_id": "05151",
+      "title": "mm version 4.16"
+    },
+    "05152": {
+      "work_id": "05152",
+      "title": "mm version 4.17"
+    },
+    "05153": {
+      "work_id": "05153",
+      "title": "mm version 4.18"
+    },
+    "05154": {
+      "work_id": "05154",
+      "title": "mm version 4.19"
+    },
+    "05155": {
+      "work_id": "05155",
+      "title": "mm version 4.2.01"
+    },
+    "05156": {
+      "work_id": "05156",
+      "title": "mm version 4.2.05"
+    },
+    "05157": {
+      "work_id": "05157",
+      "title": "mm version 4.2.06"
+    },
+    "05158": {
+      "work_id": "05158",
+      "title": "mm version 4.2.07"
+    },
+    "05159": {
+      "work_id": "05159",
+      "title": "mm version 4.2.09"
+    },
+    "05160": {
+      "work_id": "05160",
+      "title": "mm version 4.2.11"
+    },
+    "05161": {
+      "work_id": "05161",
+      "title": "mm version 4.2.12"
+    },
+    "05162": {
+      "work_id": "05162",
+      "title": "mm version 4.2.14"
+    },
+    "05163": {
+      "work_id": "05163",
+      "title": "mm version 4.2.15"
+    },
+    "05164": {
+      "work_id": "05164",
+      "title": "mm version 4.2.16"
+    },
+    "05165": {
+      "work_id": "05165",
+      "title": "mm version 4.2.18"
+    },
+    "05166": {
+      "work_id": "05166",
+      "title": "mm version 4.2.19"
+    },
+    "05167": {
+      "work_id": "05167",
+      "title": "mm version 4.2.20"
+    },
+    "05168": {
+      "work_id": "05168",
+      "title": "mm version 4.2.21"
+    },
+    "05169": {
+      "work_id": "05169",
+      "title": "mm version 4.2.22"
+    },
+    "05170": {
+      "work_id": "05170",
+      "title": "mm version 4.2.23"
+    },
+    "05171": {
+      "work_id": "05171",
+      "title": "mm version 4.2.24"
+    },
+    "05172": {
+      "work_id": "05172",
+      "title": "mm version 4.2.25"
+    },
+    "05173": {
+      "work_id": "05173",
+      "title": "mm version 4.20"
+    },
+    "05174": {
+      "work_id": "05174",
+      "title": "mm version 4.21"
+    },
+    "05175": {
+      "work_id": "05175",
+      "title": "mm version 4.22"
+    },
+    "05176": {
+      "work_id": "05176",
+      "title": "mm version 4.23"
+    },
+    "05177": {
+      "work_id": "05177",
+      "title": "mm version 4.24"
+    },
+    "05178": {
+      "work_id": "05178",
+      "title": "mm version 4.25"
+    },
+    "05179": {
+      "work_id": "05179",
+      "title": "mm version 4.26"
+    },
+    "05180": {
+      "work_id": "05180",
+      "title": "mm version 4.27"
+    },
+    "05181": {
+      "work_id": "05181",
+      "title": "mm version 4.28"
+    },
+    "05182": {
+      "work_id": "05182",
+      "title": "mm version 4.3.01"
+    },
+    "05183": {
+      "work_id": "05183",
+      "title": "mm version 4.3.02"
+    },
+    "05184": {
+      "work_id": "05184",
+      "title": "mm version 4.3.04"
+    },
+    "05185": {
+      "work_id": "05185",
+      "title": "mm version 4.3.05"
+    },
+    "05186": {
+      "work_id": "05186",
+      "title": "mm version 4.3.08"
+    },
+    "05187": {
+      "work_id": "05187",
+      "title": "mm version 4.3.09"
+    },
+    "05188": {
+      "work_id": "05188",
+      "title": "mm version 4.3.10"
+    },
+    "05189": {
+      "work_id": "05189",
+      "title": "mm version 4.3.11"
+    },
+    "05190": {
+      "work_id": "05190",
+      "title": "mm version 4.3.12"
+    },
+    "05191": {
+      "work_id": "05191",
+      "title": "mm version 4.3.14"
+    },
+    "05192": {
+      "work_id": "05192",
+      "title": "mm version 4.3.15"
+    },
+    "05193": {
+      "work_id": "05193",
+      "title": "mm version 4.3.16"
+    },
+    "05194": {
+      "work_id": "05194",
+      "title": "mm version 4.3.17"
+    },
+    "05195": {
+      "work_id": "05195",
+      "title": "mm version 4.3.18"
+    },
+    "05196": {
+      "work_id": "05196",
+      "title": "mm version 4.4.01"
+    },
+    "05197": {
+      "work_id": "05197",
+      "title": "mm version 4.4.04"
+    },
+    "05198": {
+      "work_id": "05198",
+      "title": "mm version 4.4.05"
     }
   }
 }
