@@ -1,19 +1,26 @@
 /** Prepare Build-owned directed pairs and share each exact endpoint across rows. */
 
 const TITLE_ORDER = new Intl.Collator("en", { sensitivity: "base", numeric: true });
+/** Ordinary Index documents use the empty collection identity and fixed document artwork. */
+export const INDEX_COLLECTION = {
+  collection: "",
+  title: "Index",
+  iconUrl: new URL("../../../static/icons/dlf-doc.svg", import.meta.url).href
+};
 
 /**
- * @typedef {{collection: string, doc_id: string, title: string, key: string, href: string, uses: number}} LinkEndpoint
+ * @typedef {{collection: string, doc_id: string, title: string, collectionTitle: string, iconUrl: string, key: string, href: string, uses: number}} LinkEndpoint
  * @typedef {{from: LinkEndpoint, to: LinkEndpoint}} LinkRow
  * @typedef {{rows: LinkRow[], endpoints: Map<string, Map<string, LinkEndpoint>>}} WorkspaceLinksData
  */
 
-/** Incoming mirrors add no rows. Resolve keys and routes once per used endpoint.
+/** Incoming mirrors add no rows. Resolve keys, routes and collection presentation once per used endpoint.
  * @param {object} payload Completed saved aggregate.
  * @param {function(string, {collection: string}): string} viewerUrlForDocument Active reader's exact route owner.
+ * @param {Map<string, {title: string, iconUrl: string}>} collectionsById Loaded configured collection presentation.
  * @returns {WorkspaceLinksData} View-owned rows and shared endpoints; rebuild on Refresh.
  */
-export function prepareWorkspaceLinks(payload, viewerUrlForDocument) {
+export function prepareWorkspaceLinks(payload, viewerUrlForDocument, collectionsById) {
   const data = { rows: [], endpoints: new Map() };
   function endpoint(summary) {
     let collection = data.endpoints.get(summary.collection);
@@ -23,8 +30,10 @@ export function prepareWorkspaceLinks(payload, viewerUrlForDocument) {
     }
     let prepared = collection.get(summary.doc_id);
     if (!prepared) {
+      const presentation = summary.collection ? collectionsById.get(summary.collection) : INDEX_COLLECTION;
       prepared = {
         ...summary, key: JSON.stringify([summary.collection, summary.doc_id]), uses: 0,
+        collectionTitle: presentation.title, iconUrl: presentation.iconUrl,
         href: viewerUrlForDocument(summary.doc_id, { collection: summary.collection })
       };
       collection.set(summary.doc_id, prepared);
@@ -44,11 +53,15 @@ export function prepareWorkspaceLinks(payload, viewerUrlForDocument) {
   return data;
 }
 
-/** Sort titles and prepared exact-identity ties without reordering saved rows. */
+/** Sort a title or collection title without reordering saved rows. Collection ties use document titles ascending. */
 export function sortWorkspaceLinksRows(rows, key, direction) {
-  const other = key === "from" ? "to" : "from";
+  const collectionSort = key === "fromCollection" || key === "toCollection";
+  const side = key === "from" || key === "fromCollection" ? "from" : "to";
+  const other = side === "from" ? "to" : "from";
+  const field = collectionSort ? "collectionTitle" : "title";
   return rows.slice().sort((left, right) => (
-    TITLE_ORDER.compare(left[key].title, right[key].title) * (direction === "desc" ? -1 : 1)
+    TITLE_ORDER.compare(left[side][field], right[side][field]) * (direction === "desc" ? -1 : 1)
+    || (collectionSort ? TITLE_ORDER.compare(left[side].title, right[side].title) : 0)
     || TITLE_ORDER.compare(left[other].title, right[other].title)
     || left.from.key.localeCompare(right.from.key)
     || left.to.key.localeCompare(right.to.key)

@@ -1,5 +1,45 @@
 /* Local-only Docs Viewer report implementations and controls. */
 
+.docsViewerReport[data-report-id="workspace_links"] .docsViewerReport__toolbar{
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+}
+
+.docsViewerReport__refreshGroup,
+.docsViewerReport__collectionFilters{
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.docsViewerReport__collectionFilters{
+  justify-self: center;
+}
+
+.docsViewerReport[data-report-id="workspace_links"] .docsViewerReport__filter{
+  border: 0;
+}
+
+.docsViewerReport[data-report-id="workspace_links"] .docsViewerReport__title,
+.docsViewerReport[data-report-id="workspace_links"] th{
+  font-weight: normal;
+}
+
+.docsViewerReport[data-report-id="workspace_links"] .docsViewerReport__collectionCell{
+  width: 2.5rem;
+  white-space: nowrap;
+}
+
+.docsViewerReport[data-report-id="workspace_links"] .docsViewerReport__collectionCell .docsViewerReport__sortButton{
+  display: inline-flex;
+  align-items: center;
+}
+
+.docsViewerReport__collectionHeaderIcon{
+  mask-image: url("../icons/library-big.svg");
+}
+
 .docsViewerReport[data-report-id="catalogue_medium"] .docsViewerReport__head,
 .docsViewerReport[data-report-id="catalogue_medium"] .docsViewerReport__row{
   grid-template-columns: minmax(0, 1fr) 7rem;

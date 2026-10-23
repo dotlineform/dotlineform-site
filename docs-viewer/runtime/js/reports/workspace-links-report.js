@@ -1,13 +1,30 @@
 import { createDocsViewerToolbarIcon } from "../shared/docs-viewer-toolbar-icon.js";
-import { applyWorkspaceLinksDocumentChange, prepareWorkspaceLinks, sortWorkspaceLinksRows } from "./workspace-links-data.js";
-const COLUMNS = ["from", "to"];
+import { INDEX_COLLECTION, applyWorkspaceLinksDocumentChange, prepareWorkspaceLinks, sortWorkspaceLinksRows } from "./workspace-links-data.js";
+const COLUMNS = [
+  { key: "fromCollection", label: "From collection", collection: true },
+  { key: "from", label: "from" },
+  { key: "toCollection", label: "To collection", collection: true },
+  { key: "to", label: "to" }
+];
+
+function collectionCell(documentRef, summary) {
+  const cell = documentRef.createElement("td");
+  cell.className = "docsViewerReport__collectionCell";
+  const icon = documentRef.createElement("span");
+  icon.className = "docsViewer__listIcon";
+  icon.style.maskImage = `url("${summary.iconUrl}")`;
+  icon.setAttribute("role", "img");
+  icon.setAttribute("aria-label", summary.collectionTitle);
+  icon.title = summary.collectionTitle;
+  cell.appendChild(icon);
+  return cell;
+}
 
 function documentCell(documentRef, summary) {
   const cell = documentRef.createElement("td");
   const link = documentRef.createElement("a");
   link.className = "docsViewerReport__cellLink docsViewerReport__title";
   link.href = summary.href;
-  // A later shared icon policy can prefix the title without changing its text/key.
   const title = documentRef.createElement("span");
   title.textContent = summary.title;
   link.appendChild(title);
@@ -39,7 +56,14 @@ export function mountWorkspaceLinksReport(context) {
   const status = documentRef.createElement("p");
   status.className = "docsViewerReport__status";
   status.setAttribute("aria-live", "polite");
-  toolbar.append(refresh, status);
+  const refreshGroup = documentRef.createElement("div");
+  refreshGroup.className = "docsViewerReport__refreshGroup";
+  refreshGroup.append(refresh, status);
+  const filters = documentRef.createElement("div");
+  filters.className = "docsViewerReport__collectionFilters";
+  filters.setAttribute("role", "group");
+  filters.setAttribute("aria-label", "Filter links by collection");
+  toolbar.append(refreshGroup, filters);
   const table = documentRef.createElement("table");
   const head = documentRef.createElement("thead");
   const headings = documentRef.createElement("tr");
@@ -50,15 +74,52 @@ export function mountWorkspaceLinksReport(context) {
   let data = null;
   let sortKey = "from";
   let sortDir = "asc";
+  let selectedCollection = null;
   let busy = false;
   let released = false;
-  const controls = COLUMNS.map(function (key) {
+  const filterControls = [
+    { collection: null, title: "All" }, INDEX_COLLECTION,
+    ...context.workspaceConfig.collectionsById.values()
+  ].map(function (collection) {
+    const button = documentRef.createElement("button");
+    button.type = "button";
+    button.className = "docsViewerReport__filter";
+    button.title = collection.title;
+    button.setAttribute("aria-pressed", String(collection.collection === selectedCollection));
+    if (collection.collection === null) {
+      button.textContent = collection.title;
+      button.setAttribute("aria-label", "Show all links");
+    } else {
+      button.setAttribute("aria-label", `Show links involving ${collection.title}`);
+      const icon = documentRef.createElement("span");
+      icon.className = "docsViewer__toolbarIcon";
+      icon.setAttribute("aria-hidden", "true");
+      icon.style.maskImage = `url("${collection.iconUrl}")`;
+      button.appendChild(icon);
+    }
+    button.addEventListener("click", function () {
+      if (released || busy || selectedCollection === collection.collection) return;
+      selectedCollection = collection.collection;
+      render();
+    });
+    filters.appendChild(button);
+    return { collection: collection.collection, button };
+  });
+  const controls = COLUMNS.map(function (column) {
+    const key = column.key;
     const cell = documentRef.createElement("th");
     cell.scope = "col";
     const button = documentRef.createElement("button");
     button.type = "button";
     button.className = "docsViewerReport__sortButton";
-    button.textContent = key;
+    if (column.collection) {
+      cell.className = "docsViewerReport__collectionCell";
+      button.setAttribute("aria-label", `Sort by ${column.label.toLowerCase()}`);
+      button.title = column.label;
+      button.appendChild(createDocsViewerToolbarIcon(documentRef, "docsViewerReport__collectionHeaderIcon"));
+    } else {
+      button.textContent = column.label;
+    }
     const indicator = documentRef.createElement("span");
     indicator.className = "docsViewerReport__sortIndicator";
     indicator.setAttribute("aria-hidden", "true");
@@ -75,6 +136,9 @@ export function mountWorkspaceLinksReport(context) {
   });
 
   function render() {
+    filterControls.forEach(function (control) {
+      control.button.setAttribute("aria-pressed", String(control.collection === selectedCollection));
+    });
     controls.forEach(function (control) {
       const active = control.key === sortKey;
       control.cell.setAttribute("aria-sort", active ? (sortDir === "asc" ? "ascending" : "descending") : "none");
@@ -82,23 +146,29 @@ export function mountWorkspaceLinksReport(context) {
       control.indicator.textContent = active ? (sortDir === "asc" ? "▲" : "▼") : "";
     });
     body.replaceChildren();
-    const rows = data ? sortWorkspaceLinksRows(data.rows, sortKey, sortDir) : [];
+    const matching = !data ? [] : selectedCollection === null ? data.rows : data.rows.filter(function (row) {
+      return row.from.collection === selectedCollection || row.to.collection === selectedCollection;
+    });
+    const rows = sortWorkspaceLinksRows(matching, sortKey, sortDir);
     rows.forEach(function (row) {
       const tr = documentRef.createElement("tr");
-      tr.append(documentCell(documentRef, row.from), documentCell(documentRef, row.to));
+      tr.append(
+        collectionCell(documentRef, row.from), documentCell(documentRef, row.from),
+        collectionCell(documentRef, row.to), documentCell(documentRef, row.to)
+      );
       body.appendChild(tr);
     });
     table.hidden = rows.length === 0;
-    status.textContent = rows.length ? `${rows.length} ${rows.length === 1 ? "link" : "links"}` : "No document links in the saved report.";
+    status.textContent = `${rows.length} ${rows.length === 1 ? "link" : "links"}`;
   }
 
   if (context.registerRetainedView) context.registerRetainedView({
     id: "workspace-links",
-    capture: function () { return { key: sortKey, direction: sortDir }; },
+    capture: function () { return { key: sortKey, direction: sortDir, collection: selectedCollection }; },
     restore: function (saved) {
-      if (sortKey === saved.key && sortDir === saved.direction) return;
-      sortKey = saved.key; sortDir = saved.direction;
-      if (!busy) render();
+      if (sortKey === saved.key && sortDir === saved.direction && selectedCollection === saved.collection) return;
+      sortKey = saved.key; sortDir = saved.direction; selectedCollection = saved.collection;
+      if (!busy && data) render();
     },
     dispose: function () { released = true; data = null; }
   });
@@ -111,13 +181,14 @@ export function mountWorkspaceLinksReport(context) {
     busy = true;
     data = null;
     refresh.disabled = true;
+    filterControls.forEach(function (control) { control.button.disabled = true; });
     table.hidden = true;
     body.replaceChildren();
     status.textContent = "";
     try {
       const payload = await (rebuild ? service.refreshWorkspaceLinks() : service.readWorkspaceLinks());
       if (released) return;
-      data = prepareWorkspaceLinks(payload, context.viewerUrlForDocument);
+      data = prepareWorkspaceLinks(payload, context.viewerUrlForDocument, context.workspaceConfig.collectionsById);
       render();
     } catch (error) {
       if (!released) {
@@ -127,7 +198,11 @@ export function mountWorkspaceLinksReport(context) {
         status.textContent = `${error.message} Use Refresh to rebuild the Links report.`;
       }
     } finally {
-      if (!released) { busy = false; refresh.disabled = false; }
+      if (!released) {
+        busy = false;
+        refresh.disabled = false;
+        filterControls.forEach(function (control) { control.button.disabled = !data; });
+      }
     }
   }
   refresh.addEventListener("click", function () { load(true); });
