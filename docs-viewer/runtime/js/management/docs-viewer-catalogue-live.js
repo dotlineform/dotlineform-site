@@ -13,6 +13,7 @@ export function createLiveCataloguePresentations(source, payload) {
   function entryFields(work, workId) {
     var lines = [work.year_display];
     if (work.medium !== undefined && work.medium !== null) lines.push(work.medium);
+    if (work.duration) lines.push(work.duration);
     var dimensions = [work.height_cm, work.width_cm, work.depth_cm].filter(function (value) { return value !== undefined && value !== null; });
     if (dimensions.length) lines.push(dimensions.join(" × ") + " cm");
     lines.push("", "cat. " + workId);

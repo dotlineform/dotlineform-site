@@ -3,14 +3,14 @@ draft: false
 doc_id: d-20261002-214356-1ea4a2
 title: Catalogue Documents And Metadata
 added_date: "2026-10-02 21:43:56"
-last_updated: "2026-10-08 19:10:43"
+last_updated: "2026-10-23"
 summary: Define a Regenerate-owned Catalogue Entry token with a Work H1, metadata and resource list, followed by the separate Related links directive.
 ui_status: done
 parent_id: d-20260428-000000-f5ff18
 ---
 # Catalogue Documents And Metadata
 
-Status: complete and accepted on 2026-10-07, parented to [Planned Features](Planned_Features.md). The user accepted the refined `00008` pilot and authorized continuation; final code review and Full reconciliation are complete. All 4,618 Working Catalogue documents use `[[catalogue:entry:work:<work_id>]]` followed by `[[links|context]]`. Catalogue Entry is Regenerate-owned, without an authoring UI or modal. It retains the current visible metadata, private storage context and technical image dimensions; duration and depth remain supported fields for future use. Series and Gallery navigation stays with reports and Media View. The separately requested `provenance` and `artist` retirement, single `medium` migration and unused generated Work `documents` retirement are complete. Duration presentation and EPUB/export mappings remain follow-on work; Rebuild document is implemented in its separate delivery. Publish and Git actions were not run.
+Status: initial delivery complete and accepted on 2026-10-07, parented to [Planned Features](Planned_Features.md). The user accepted the refined `00008` pilot and authorized continuation; final code review and Full reconciliation are complete. All 4,618 Working Catalogue documents at that cutover use `[[catalogue:entry:work:<work_id>]]` followed by `[[links|context]]`. Catalogue Entry is Regenerate-owned, without an authoring UI or modal. It retains the visible metadata, private storage context and technical image dimensions; duration and depth remain supported fields. Series and Gallery navigation stays with reports and Media View. The separately requested `provenance` and `artist` retirement, single `medium` migration and unused generated Work `documents` retirement are complete. Duration presentation was added on 2026-10-23 as described below; EPUB/export mappings remain follow-on work. Rebuild document is implemented in its separate delivery. Publish and Git actions were not run.
 
 ## Intended Outcome
 
@@ -19,6 +19,14 @@ A Catalogue document is the definitive document for a Work. Its title defines th
 The initial public Catalogue metadata keeps the current selection: displayed year/date, Medium, supported physical dimensions and Catalogue number. The Work title is the document H1. Downloads and external resources share `links`, followed by the independent document relationships under `context`. Gallery navigation stays with Media View through the Context document's media links. Storage location remains private inventory context in the local Manage report and is excluded from the public Work projection and Entry. Pixel dimensions remain technical image-layout inputs rather than visible metadata. Duration and depth are retained for future use; an empty field is not a reason to remove an agreed capability. On 2026-10-07 the user requested retirement of `provenance` and `artist`, then migration of corrected `medium_caption` descriptions to `medium` and retirement of the separate `medium_type` category. No further canonical field removal is agreed.
 
 The generation and rendering model expresses this purpose explicitly through a separate **Catalogue Entry** token. Regenerate inserts it into Catalogue documents; it is not an ordinary authoring tool. **Catalogue Image** remains an image inserted into body content, with an optional figure caption and selected metadata. The builder executes each token's declared meaning without changing an image token's semantics according to the collection hosting the document.
+
+## Duration Presentation
+
+From 2026-10-23, a populated Work `duration` appears on its own metadata line immediately after Medium, for example `10:15` for Work `04968`. Display the saved text without a label, parsing, unit conversion or an inferred suffix; omit the line when the field is absent, null or empty. This supersedes the initial deferral of visible duration.
+
+The Manage-only live provider formats duration from its already-loaded Work. The existing static preparer applies the same selection for Publish, collection Export and content-bearing Prepare package. The shared browser and static markup renderers escape the completed metadata lines. No document generation or Search rebuild is needed for this presentation change; existing public artifacts receive it when selected for their ordinary preparation/publication workflow.
+
+The bounded redundancy and defensive-behavior review retained existing text escaping at the markup boundary and selected Work reads at their existing owners. Duration adds no reads, validation, normalization, fallback or recovery behavior; its optional-field check only controls whether a line is shown. Existing image-policy validation and resource-URL safety remain with their separate media/markup boundaries.
 
 ## Baseline Findings
 
@@ -44,7 +52,7 @@ This inventory was checked against the canonical Work fields, active editor defi
 | `medium_type` | Retired | Omitted | Separate category removed on 2026-10-07. |
 | `medium` | Present when populated | Medium description | Corrected `medium_caption` values migrated exactly on 2026-10-07. Use **Medium** as the label; the old field name is retired without an alias. |
 | `height_cm`, `width_cm`, `depth_cm` | Present when populated | Height × width, with depth when supplied; requires height and width | Retain all three fields, including depth for future use. Preserve the current display: height × width × optional depth in cm when height and width are available; do not add a new partial-dimension presentation in this delivery. |
-| `duration` | Present when populated | Omitted | Retain for future time-based Works. Keep it out of the initial visible metadata selection; define units/format and presentation when duration is introduced. |
+| `duration` | Present when populated | Omitted before the 2026-10-23 follow-up | Show populated saved text on its own line immediately after Medium, without adding a label, interpreting units or changing format. |
 | `artist` | Retired | Omitted | Removed from canonical data, editor and public projection on 2026-10-07. |
 | `provenance` | Retired | Omitted | Removed from canonical data and editor on 2026-10-07, including its one populated value. |
 | `storage_location` | Omitted | Omitted; available as Storage in Manage report | Retain as private inventory context in canonical data, the editor and local report. Keep it out of the public Work JSON and Catalogue Entry. |
@@ -163,7 +171,7 @@ The current interactive media reader and Build-time image-space reservation do n
 - [x] Migrate corrected `medium_caption` descriptions to one `medium` field labelled Medium and retire `medium_type` throughout active source, editor, generated projections and readers.
 - [x] Retire the unused generated Work `documents` array and URL/title normalization; retain document relationships under the existing Links owner.
 - [x] Preserve `year_display` without repeating numeric year, and preserve the current physical-dimension display with optional depth and no new partial-measurement format.
-- [x] Defer duration units/format and visible presentation until the field is needed; retain the field and keep this future work outside the initial Entry.
+- [x] Initially defer visible duration; the 2026-10-23 follow-up displays populated saved text after Medium without introducing duration parsing or unit conversion.
 - [x] Use Catalogue Entry only in generated Catalogue documents, inserted by Regenerate, with one principal Entry per document and no authoring UI, modal or token presentation controls.
 - [x] Render the Work title as H1 and the `context` heading as H2; use Catalogue CSS to preserve the image/title/metadata arrangement and place the combined resource list below the image.
 - [x] Present downloads and external links in one icon-prefixed list without a heading, retaining a blank-line-sized gap above it and omitting the section when both lists are empty; keep Gallery navigation in Media View through Context documents.

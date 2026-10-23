@@ -53,6 +53,8 @@ def entry_fields(work: dict[str, Any], work_id: str) -> dict[str, Any]:
     lines = [work["year_display"]]
     if work.get("medium") is not None:
         lines.append(work["medium"])
+    if work.get("duration"):
+        lines.append(work["duration"])
     dimensions = [work[key] for key in ("height_cm", "width_cm", "depth_cm") if work.get(key) is not None]
     if dimensions:
         lines.append(" × ".join(str(int(value)) if value == int(value) else str(value) for value in dimensions) + " cm")
