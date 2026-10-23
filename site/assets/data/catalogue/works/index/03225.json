@@ -2,16 +2,16 @@
   "header": {
     "schema": "work_record_v11",
     "version": "blake2b-308d9ab29c67b492bfccfe477a9fab0d",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "generated_at_utc": "2026-10-23T08:31:29Z"
   },
   "work": {
     "work_id": "03225",
     "title": "composite - burma",
     "year": 2007,
     "year_display": "2007",
-    "medium": "enamel paint on c-type print, aluminium mount",
     "width_px": 3000,
     "height_px": 3000,
+    "medium": "enamel paint on c-type print, aluminium mount",
     "media_version": 1,
     "series_id": "005",
     "galleries": [

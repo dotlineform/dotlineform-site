@@ -50,17 +50,17 @@
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "204"
+              "id": "005"
             },
-            "label": "3 symbols (versions)",
+            "label": "3 symbols",
             "relation": "direct"
           },
           {
             "target": {
               "kind": "catalogue-gallery",
-              "id": "005"
+              "id": "204"
             },
-            "label": "3 symbols",
+            "label": "3 symbols (versions)",
             "relation": "series"
           },
           {
@@ -85,6 +85,14 @@
               "id": "207"
             },
             "label": "3 symbols (composites)",
+            "relation": "series"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "319"
+            },
+            "label": "3 symbols - cards",
             "relation": "series"
           }
         ],

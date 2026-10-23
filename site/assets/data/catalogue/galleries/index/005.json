@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
+    "generated_at_utc": "2026-10-23T08:31:29Z",
     "gallery_id": "005"
   },
   "gallery": {
@@ -12,6 +12,22 @@
     {
       "work_id": "00638",
       "title": "3 symbols"
+    },
+    {
+      "work_id": "03188",
+      "title": "3 symbols (composite)"
+    },
+    {
+      "work_id": "03189",
+      "title": "3 symbols (untreated)"
+    },
+    {
+      "work_id": "04913",
+      "title": "3 symbols cards - face"
+    },
+    {
+      "work_id": "04914",
+      "title": "3 symbols cards - back"
     }
   ]
 }

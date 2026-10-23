@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-a8ba68b272d11b78d0f5374ea1139175",
+    "generated_at_utc": "2026-10-23T08:31:29Z"
+  },
+  "work": {
+    "work_id": "04924",
+    "title": "blindness - face",
+    "year": 2008,
+    "year_display": "2008",
+    "width_px": 1220,
+    "height_px": 1220,
+    "height_cm": 10.3,
+    "width_cm": 10.3,
+    "medium": "digital c-type print",
+    "media_version": 1,
+    "series_id": "005",
+    "galleries": [
+      {
+        "gallery_id": "319",
+        "title": "3 symbols - cards"
+      }
+    ]
+  }
+}

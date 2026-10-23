@@ -1,8 +1,16 @@
 {
   "schema": "docs_recent_v2",
   "limit": 20,
-  "generated_at": "2026-10-21T21:18:09Z",
+  "generated_at": "2026-10-23T08:39:17Z",
   "docs": [
+    {
+      "collection": "works",
+      "collection_title": "Context",
+      "doc_id": "d-20260801-212422-df11f3",
+      "report_doc_id": "d-20260801-073826-8865a8",
+      "title": "3 symbols",
+      "timestamp": "2026-10-23"
+    },
     {
       "collection": "library",
       "collection_title": "Library",
@@ -153,14 +161,6 @@
       "doc_id": "d-20261018-105902-482d5b",
       "report_doc_id": "d-20260809-130120-870cc2",
       "title": "Brain signals",
-      "timestamp": "2026-10-18"
-    },
-    {
-      "collection": "library",
-      "collection_title": "Library",
-      "doc_id": "d-20261018-111445-823b77",
-      "report_doc_id": "d-20260809-130120-870cc2",
-      "title": "Brain Structure",
       "timestamp": "2026-10-18"
     }
   ]

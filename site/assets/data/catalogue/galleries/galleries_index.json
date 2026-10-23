@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_galleries_index_v3",
-    "generated_at_utc": "2026-10-23T08:04:38Z"
+    "generated_at_utc": "2026-10-23T08:31:29Z"
   },
   "galleries": {
     "001": {
@@ -1239,6 +1239,10 @@
     "318": {
       "gallery_id": "318",
       "title": "balance machine - video stills"
+    },
+    "319": {
+      "gallery_id": "319",
+      "title": "3 symbols - cards"
     }
   }
 }

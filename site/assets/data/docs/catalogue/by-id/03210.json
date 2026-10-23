@@ -86,6 +86,14 @@
             },
             "label": "3 symbols (composites)",
             "relation": "series"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "319"
+            },
+            "label": "3 symbols - cards",
+            "relation": "series"
           }
         ],
         "entry": {

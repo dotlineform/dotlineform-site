@@ -1,0 +1,112 @@
+{
+  "doc_id": "04918",
+  "title": "bandage - face",
+  "added_date": "2026-10-23 09:31:44",
+  "last_updated": "2026-10-23 09:31:44",
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>bandage - face</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04918\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 1220 / 1220;\" data-docs-media-open aria-label=\"Open bandage - face\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04918-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04918-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04918-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04918-primary-1600.webp?v=1 1220w\" sizes=\"100vw\" alt=\"bandage - face\" width=\"1220\" height=\"1220\" decoding=\"async\"><span data-docs-media-placeholder hidden>bandage - face</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2008<br>digital c-type print<br>10.3 × 10.3 cm<br><br>cat. 04918</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04918"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:04918": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04918"
+        },
+        "label": "bandage - face",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/04918-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/04918-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04918-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04918-primary-1600.webp?v=1",
+              "width_px": 1220
+            }
+          ],
+          "alt": "bandage - face",
+          "width_px": 1220,
+          "height_px": 1220
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/04918-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "319"
+            },
+            "label": "3 symbols - cards",
+            "relation": "direct"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "005"
+            },
+            "label": "3 symbols",
+            "relation": "series"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "204"
+            },
+            "label": "3 symbols (versions)",
+            "relation": "series"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "205"
+            },
+            "label": "3 symbols (details)",
+            "relation": "series"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "206"
+            },
+            "label": "3 symbols (source)",
+            "relation": "series"
+          },
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "207"
+            },
+            "label": "3 symbols (composites)",
+            "relation": "series"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "2008",
+            "digital c-type print",
+            "10.3 × 10.3 cm",
+            "",
+            "cat. 04918"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
+}

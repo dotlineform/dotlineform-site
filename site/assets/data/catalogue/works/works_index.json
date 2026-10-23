@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_works_index_v3",
-    "generated_at_utc": "2026-10-23T07:58:31Z"
+    "generated_at_utc": "2026-10-23T08:31:29Z"
   },
   "works": {
     "00001": {
@@ -19603,6 +19603,198 @@
     "04912": {
       "work_id": "04912",
       "title": "video stills - balance_3 - 2011-11-06 at 20.43.24"
+    },
+    "04913": {
+      "work_id": "04913",
+      "title": "3 symbols cards - face"
+    },
+    "04914": {
+      "work_id": "04914",
+      "title": "3 symbols cards - back"
+    },
+    "04915": {
+      "work_id": "04915",
+      "title": "_system - back"
+    },
+    "04916": {
+      "work_id": "04916",
+      "title": "_system - face"
+    },
+    "04917": {
+      "work_id": "04917",
+      "title": "bandage - back"
+    },
+    "04918": {
+      "work_id": "04918",
+      "title": "bandage - face"
+    },
+    "04919": {
+      "work_id": "04919",
+      "title": "before - back"
+    },
+    "04920": {
+      "work_id": "04920",
+      "title": "before - face"
+    },
+    "04921": {
+      "work_id": "04921",
+      "title": "blessing - back"
+    },
+    "04922": {
+      "work_id": "04922",
+      "title": "blessing - face"
+    },
+    "04923": {
+      "work_id": "04923",
+      "title": "blindness - back"
+    },
+    "04924": {
+      "work_id": "04924",
+      "title": "blindness - face"
+    },
+    "04925": {
+      "work_id": "04925",
+      "title": "bridge - back"
+    },
+    "04926": {
+      "work_id": "04926",
+      "title": "bridge - face"
+    },
+    "04927": {
+      "work_id": "04927",
+      "title": "burma - back"
+    },
+    "04928": {
+      "work_id": "04928",
+      "title": "burma - face"
+    },
+    "04929": {
+      "work_id": "04929",
+      "title": "burn - back"
+    },
+    "04930": {
+      "work_id": "04930",
+      "title": "burn - face"
+    },
+    "04931": {
+      "work_id": "04931",
+      "title": "genocide - back"
+    },
+    "04932": {
+      "work_id": "04932",
+      "title": "genocide - face"
+    },
+    "04933": {
+      "work_id": "04933",
+      "title": "gesture - back"
+    },
+    "04934": {
+      "work_id": "04934",
+      "title": "gesture - face"
+    },
+    "04935": {
+      "work_id": "04935",
+      "title": "give - back"
+    },
+    "04936": {
+      "work_id": "04936",
+      "title": "give - face"
+    },
+    "04937": {
+      "work_id": "04937",
+      "title": "grave - back"
+    },
+    "04938": {
+      "work_id": "04938",
+      "title": "grave - face"
+    },
+    "04939": {
+      "work_id": "04939",
+      "title": "grieve - back"
+    },
+    "04940": {
+      "work_id": "04940",
+      "title": "grieve - face"
+    },
+    "04941": {
+      "work_id": "04941",
+      "title": "grow - back"
+    },
+    "04942": {
+      "work_id": "04942",
+      "title": "grow - face"
+    },
+    "04943": {
+      "work_id": "04943",
+      "title": "guilt - back"
+    },
+    "04944": {
+      "work_id": "04944",
+      "title": "radius - back"
+    },
+    "04945": {
+      "work_id": "04945",
+      "title": "radius - face"
+    },
+    "04946": {
+      "work_id": "04946",
+      "title": "rarefied - back"
+    },
+    "04947": {
+      "work_id": "04947",
+      "title": "rarefied - face"
+    },
+    "04948": {
+      "work_id": "04948",
+      "title": "reincarnation - back"
+    },
+    "04949": {
+      "work_id": "04949",
+      "title": "reincarnation - face"
+    },
+    "04950": {
+      "work_id": "04950",
+      "title": "replenish - back"
+    },
+    "04951": {
+      "work_id": "04951",
+      "title": "restrict - back"
+    },
+    "04952": {
+      "work_id": "04952",
+      "title": "restrict - face"
+    },
+    "04953": {
+      "work_id": "04953",
+      "title": "ruin - back"
+    },
+    "04954": {
+      "work_id": "04954",
+      "title": "ruin - face"
+    },
+    "04955": {
+      "work_id": "04955",
+      "title": "rwanda - back"
+    },
+    "04956": {
+      "work_id": "04956",
+      "title": "rwanda - face"
+    },
+    "04957": {
+      "work_id": "04957",
+      "title": "world (negative) - back"
+    },
+    "04958": {
+      "work_id": "04958",
+      "title": "world (negative) - face"
+    },
+    "04959": {
+      "work_id": "04959",
+      "title": "world - back"
+    },
+    "04960": {
+      "work_id": "04960",
+      "title": "world - face"
     }
   }
 }

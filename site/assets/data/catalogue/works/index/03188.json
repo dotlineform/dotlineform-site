@@ -1,17 +1,17 @@
 {
   "header": {
     "schema": "work_record_v11",
-    "version": "blake2b-4d5e910a21da37a246535b5f320327fe",
-    "generated_at_utc": "2026-10-07T17:29:05Z"
+    "version": "blake2b-649208f17c9545de9feb8908bd501834",
+    "generated_at_utc": "2026-10-23T08:31:29Z"
   },
   "work": {
     "work_id": "03188",
     "title": "3 symbols (composite)",
     "year": 2007,
     "year_display": "2007",
-    "medium": "enamel paint on c-type print, aluminium mount",
     "width_px": 3000,
     "height_px": 3000,
+    "medium": "enamel paint on c-type print, aluminium mount",
     "media_version": 1,
     "series_id": "005",
     "downloads": [
@@ -23,8 +23,8 @@
     ],
     "galleries": [
       {
-        "gallery_id": "204",
-        "title": "3 symbols (versions)"
+        "gallery_id": "005",
+        "title": "3 symbols"
       }
     ]
   }

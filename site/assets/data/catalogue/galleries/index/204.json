@@ -1,21 +1,12 @@
 {
   "header": {
     "schema": "gallery_record_v3",
-    "generated_at_utc": "2026-10-10T17:00:02Z",
+    "generated_at_utc": "2026-10-23T08:31:29Z",
     "gallery_id": "204"
   },
   "gallery": {
     "gallery_id": "204",
     "title": "3 symbols (versions)"
   },
-  "member_works": [
-    {
-      "work_id": "03188",
-      "title": "3 symbols (composite)"
-    },
-    {
-      "work_id": "03189",
-      "title": "3 symbols (untreated)"
-    }
-  ]
+  "member_works": []
 }
