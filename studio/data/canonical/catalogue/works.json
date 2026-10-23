@@ -77337,7 +77337,13 @@
       "medium": "video",
       "duration": "10:15",
       "width_px": 3543,
-      "height_px": 1993
+      "height_px": 1993,
+      "links": [
+        {
+          "url": "https://vimeo.com/dotlineform/a-world-of-non-linearity",
+          "label": "a world of non-linearity, 10:15 [Vimeo]"
+        }
+      ]
     },
     "04969": {
       "work_id": "04969",
@@ -77525,6 +77531,27 @@
       "height_px": 1993,
       "height_cm": 16.9,
       "width_cm": 30
+    },
+    "04980": {
+      "work_id": "04980",
+      "series_id": "152",
+      "project_folder": "a world of non-linearity",
+      "project_filename": "a world of non-linearity (nerve).jpg",
+      "media_version": 1,
+      "image_staged": false,
+      "title": "a world of non-linearity (nerve)",
+      "year": 2011,
+      "year_display": "2011",
+      "medium": "video",
+      "duration": "10:19",
+      "width_px": 3544,
+      "height_px": 1998,
+      "links": [
+        {
+          "url": "https://vimeo.com/26130177",
+          "label": "a world of non-linearity (nerve), 10:19 [Vimeo]"
+        }
+      ]
     }
   }
 }

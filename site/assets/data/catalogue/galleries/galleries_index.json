@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_galleries_index_v3",
-    "generated_at_utc": "2026-10-23T12:16:55Z"
+    "generated_at_utc": "2026-10-23T14:05:51Z"
   },
   "galleries": {
     "001": {
@@ -1247,6 +1247,14 @@
     "320": {
       "gallery_id": "320",
       "title": "all the little things"
+    },
+    "321": {
+      "gallery_id": "321",
+      "title": "a world of non-linearity"
+    },
+    "322": {
+      "gallery_id": "322",
+      "title": "a world of non-linearity (moments)"
     }
   }
 }

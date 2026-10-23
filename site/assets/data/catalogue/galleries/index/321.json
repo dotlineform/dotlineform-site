@@ -1,0 +1,21 @@
+{
+  "header": {
+    "schema": "gallery_record_v3",
+    "generated_at_utc": "2026-10-23T14:05:51Z",
+    "gallery_id": "321"
+  },
+  "gallery": {
+    "gallery_id": "321",
+    "title": "a world of non-linearity"
+  },
+  "member_works": [
+    {
+      "work_id": "04968",
+      "title": "a world of non-linearity"
+    },
+    {
+      "work_id": "04980",
+      "title": "a world of non-linearity (nerve)"
+    }
+  ]
+}

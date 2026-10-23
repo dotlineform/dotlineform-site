@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-319624113712c2bfdd2523dc1602542b",
+    "generated_at_utc": "2026-10-23T14:05:51Z"
+  },
+  "work": {
+    "work_id": "04979",
+    "title": "a world of non-linearity (the exact location of yesterday)",
+    "year": 2011,
+    "year_display": "2011",
+    "width_px": 3543,
+    "height_px": 1993,
+    "height_cm": 16.9,
+    "width_cm": 30,
+    "medium": "digital c-type print",
+    "media_version": 1,
+    "series_id": "152",
+    "galleries": [
+      {
+        "gallery_id": "322",
+        "title": "a world of non-linearity (moments)"
+      }
+    ]
+  }
+}

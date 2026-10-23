@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_works_index_v3",
-    "generated_at_utc": "2026-10-23T12:16:55Z"
+    "generated_at_utc": "2026-10-23T14:05:51Z"
   },
   "works": {
     "00001": {
@@ -19823,6 +19823,58 @@
     "04967": {
       "work_id": "04967",
       "title": "all the little things (detail 5)"
+    },
+    "04968": {
+      "work_id": "04968",
+      "title": "a world of non-linearity"
+    },
+    "04969": {
+      "work_id": "04969",
+      "title": "a world of non-linearity (dream 1)"
+    },
+    "04970": {
+      "work_id": "04970",
+      "title": "a world of non-linearity (droplets)"
+    },
+    "04971": {
+      "work_id": "04971",
+      "title": "a world of non-linearity (genetic b)"
+    },
+    "04972": {
+      "work_id": "04972",
+      "title": "a world of non-linearity (nerve) above the wasteland (nerve theme)"
+    },
+    "04973": {
+      "work_id": "04973",
+      "title": "a world of non-linearity (nerve) cave scene"
+    },
+    "04974": {
+      "work_id": "04974",
+      "title": "a world of non-linearity (nerve) crystals melting"
+    },
+    "04975": {
+      "work_id": "04975",
+      "title": "a world of non-linearity (nerve) finding stones in mist"
+    },
+    "04976": {
+      "work_id": "04976",
+      "title": "a world of non-linearity (nerve) there are whispers at the door"
+    },
+    "04977": {
+      "work_id": "04977",
+      "title": "a world of non-linearity (residue)"
+    },
+    "04978": {
+      "work_id": "04978",
+      "title": "a world of non-linearity (returning to nerve)"
+    },
+    "04979": {
+      "work_id": "04979",
+      "title": "a world of non-linearity (the exact location of yesterday)"
+    },
+    "04980": {
+      "work_id": "04980",
+      "title": "a world of non-linearity (nerve)"
     }
   }
 }
