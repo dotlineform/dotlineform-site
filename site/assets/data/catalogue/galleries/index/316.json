@@ -1,0 +1,113 @@
+{
+  "header": {
+    "schema": "gallery_record_v3",
+    "generated_at_utc": "2026-10-23T07:10:13Z",
+    "gallery_id": "316"
+  },
+  "gallery": {
+    "gallery_id": "316",
+    "title": "architecture"
+  },
+  "member_works": [
+    {
+      "work_id": "04788",
+      "title": "architecture"
+    },
+    {
+      "work_id": "04789",
+      "title": "architecture 1.13"
+    },
+    {
+      "work_id": "04790",
+      "title": "architecture 1.15"
+    },
+    {
+      "work_id": "04791",
+      "title": "architecture 1.18"
+    },
+    {
+      "work_id": "04792",
+      "title": "architecture 1.24"
+    },
+    {
+      "work_id": "04793",
+      "title": "architecture 1.32"
+    },
+    {
+      "work_id": "04794",
+      "title": "architecture 1.4"
+    },
+    {
+      "work_id": "04795",
+      "title": "architecture 1.8"
+    },
+    {
+      "work_id": "04796",
+      "title": "architecture 1a"
+    },
+    {
+      "work_id": "04797",
+      "title": "architecture 1b"
+    },
+    {
+      "work_id": "04798",
+      "title": "architecture 1c"
+    },
+    {
+      "work_id": "04799",
+      "title": "architecture 2"
+    },
+    {
+      "work_id": "04800",
+      "title": "architecture 3.117"
+    },
+    {
+      "work_id": "04801",
+      "title": "architecture 3.138"
+    },
+    {
+      "work_id": "04802",
+      "title": "architecture 3.172"
+    },
+    {
+      "work_id": "04803",
+      "title": "architecture 3.19"
+    },
+    {
+      "work_id": "04804",
+      "title": "architecture 3.200"
+    },
+    {
+      "work_id": "04805",
+      "title": "architecture 3.305"
+    },
+    {
+      "work_id": "04806",
+      "title": "architecture 3.37"
+    },
+    {
+      "work_id": "04807",
+      "title": "architecture 3.395"
+    },
+    {
+      "work_id": "04808",
+      "title": "architecture 3.493"
+    },
+    {
+      "work_id": "04809",
+      "title": "architecture 3.538"
+    },
+    {
+      "work_id": "04810",
+      "title": "architecture 3.540"
+    },
+    {
+      "work_id": "04811",
+      "title": "architecture 3.79"
+    },
+    {
+      "work_id": "04812",
+      "title": "architecture source"
+    }
+  ]
+}

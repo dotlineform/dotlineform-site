@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_galleries_index_v3",
-    "generated_at_utc": "2026-10-22T21:20:54Z"
+    "generated_at_utc": "2026-10-23T07:10:13Z"
   },
   "galleries": {
     "001": {
@@ -1227,6 +1227,10 @@
     "315": {
       "gallery_id": "315",
       "title": "all the colours"
+    },
+    "316": {
+      "gallery_id": "316",
+      "title": "architecture"
     }
   }
 }

@@ -1,0 +1,72 @@
+{
+  "doc_id": "04796",
+  "title": "architecture 1a",
+  "added_date": "2026-10-23 08:10:21",
+  "last_updated": "2026-10-23 08:10:21",
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>architecture 1a</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04796\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 5315 / 3543;\" data-docs-media-open aria-label=\"Open architecture 1a\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04796-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04796-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04796-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04796-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"architecture 1a\" width=\"5315\" height=\"3543\" decoding=\"async\"><span data-docs-media-placeholder hidden>architecture 1a</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2000, 20111<br>digital c-type print<br>30 × 45 cm<br><br>cat. 04796</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04796"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:04796": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04796"
+        },
+        "label": "architecture 1a",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/04796-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/04796-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04796-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04796-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "architecture 1a",
+          "width_px": 5315,
+          "height_px": 3543
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/04796-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "316"
+            },
+            "label": "architecture",
+            "relation": "direct"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "2000, 20111",
+            "digital c-type print",
+            "30 × 45 cm",
+            "",
+            "cat. 04796"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
+}
