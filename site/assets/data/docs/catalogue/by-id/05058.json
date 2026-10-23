@@ -1,0 +1,83 @@
+{
+  "doc_id": "05058",
+  "title": "by the river",
+  "added_date": "2026-10-23 20:29:14",
+  "last_updated": "2026-10-23 20:29:14",
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>by the river</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"05058\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 3544 / 1507;\" data-docs-media-open aria-label=\"Open by the river\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/05058-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/05058-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/05058-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/05058-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"by the river\" width=\"3544\" height=\"1507\" decoding=\"async\"><span data-docs-media-placeholder hidden>by the river</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2020<br>video<br>06:52<br><br>cat. 05058</p></div><div class=\"docsViewerCatalogueEntry__resources\"><section data-catalogue-resource=\"links\"><ul><li><span class=\"docsViewer__inlineIcon\" data-docs-icon=\"link\" aria-hidden=\"true\" style=\"display:inline-block;width:1em;height:1em;vertical-align:-0.125em;background-color:currentColor;mask-position:center;mask-size:contain;mask-repeat:no-repeat;mask-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxpbmsgcHJldmlldy1pY29uIj48cGF0aCBkPSJNMTAgMTNhNSA1IDAgMCAwIDcuNTQuNTRsMy0zYTUgNSAwIDAgMC03LjA3LTcuMDdsLTEuNzIgMS43MSIvPjxwYXRoIGQ9Ik0xNCAxMWE1IDUgMCAwIDAtNy41NC0uNTRsLTMgM2E1IDUgMCAwIDAgNy4wNyA3LjA3bDEuNzEtMS43MSIvPjwvc3ZnPg==);\"><span aria-hidden=\"true\" style=\"position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;\">[[icon:link]]</span></span> <a href=\"https://vimeo.com/428614196\" target=\"_blank\" rel=\"noopener noreferrer\">by the river, 06:43 [Vimeo]</a></li><li><span class=\"docsViewer__inlineIcon\" data-docs-icon=\"link\" aria-hidden=\"true\" style=\"display:inline-block;width:1em;height:1em;vertical-align:-0.125em;background-color:currentColor;mask-position:center;mask-size:contain;mask-repeat:no-repeat;mask-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxpbmsgcHJldmlldy1pY29uIj48cGF0aCBkPSJNMTAgMTNhNSA1IDAgMCAwIDcuNTQuNTRsMy0zYTUgNSAwIDAgMC03LjA3LTcuMDdsLTEuNzIgMS43MSIvPjxwYXRoIGQ9Ik0xNCAxMWE1IDUgMCAwIDAtNy41NC0uNTRsLTMgM2E1IDUgMCAwIDAgNy4wNyA3LjA3bDEuNzEtMS43MSIvPjwvc3ZnPg==);\"><span aria-hidden=\"true\" style=\"position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;\">[[icon:link]]</span></span> <a href=\"https://dotlineform.bandcamp.com/album/by-the-river\" target=\"_blank\" rel=\"noopener noreferrer\">by the river (soundtrack), 06:43 [Bandcamp]</a></li></ul></section></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "05058"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:05058": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "05058"
+        },
+        "label": "by the river",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/05058-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/05058-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/05058-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/05058-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "by the river",
+          "width_px": 3544,
+          "height_px": 1507
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/05058-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "328"
+            },
+            "label": "by the river",
+            "relation": "direct"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "2020",
+            "video",
+            "06:52",
+            "",
+            "cat. 05058"
+          ],
+          "resources": [
+            {
+              "kind": "link",
+              "label": "by the river, 06:43 [Vimeo]",
+              "url": "https://vimeo.com/428614196"
+            },
+            {
+              "kind": "link",
+              "label": "by the river (soundtrack), 06:43 [Bandcamp]",
+              "url": "https://dotlineform.bandcamp.com/album/by-the-river"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

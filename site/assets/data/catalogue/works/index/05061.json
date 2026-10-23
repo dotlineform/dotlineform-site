@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-d3aba40774ea26a0d35181064b8787ab",
+    "generated_at_utc": "2026-10-23T19:29:05Z"
+  },
+  "work": {
+    "work_id": "05061",
+    "title": "by the river equals version",
+    "year": 2020,
+    "year_display": "2020",
+    "width_px": 4724,
+    "height_px": 2657,
+    "height_cm": 22.5,
+    "width_cm": 40,
+    "medium": "digital c-type print",
+    "media_version": 1,
+    "series_id": "156",
+    "galleries": [
+      {
+        "gallery_id": "328",
+        "title": "by the river"
+      }
+    ]
+  }
+}

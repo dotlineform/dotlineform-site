@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_galleries_index_v3",
-    "generated_at_utc": "2026-10-23T18:40:36Z"
+    "generated_at_utc": "2026-10-23T19:29:05Z"
   },
   "galleries": {
     "001": {
@@ -1271,6 +1271,10 @@
     "327": {
       "gallery_id": "327",
       "title": "burma"
+    },
+    "328": {
+      "gallery_id": "328",
+      "title": "by the river"
     }
   }
 }

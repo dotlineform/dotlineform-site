@@ -78860,6 +78860,111 @@
       "medium": "digital c-type print",
       "width_px": 5421,
       "height_px": 5421
+    },
+    "05058": {
+      "work_id": "05058",
+      "series_id": "156",
+      "project_folder": "by the river",
+      "project_filename": "by the river.jpg",
+      "media_version": 1,
+      "image_staged": false,
+      "title": "by the river",
+      "year": 2020,
+      "year_display": "2020",
+      "medium": "video",
+      "duration": "06:52",
+      "width_px": 3544,
+      "height_px": 1507,
+      "links": [
+        {
+          "url": "https://vimeo.com/428614196",
+          "label": "by the river, 06:43 [Vimeo]"
+        },
+        {
+          "url": "https://dotlineform.bandcamp.com/album/by-the-river",
+          "label": "by the river (soundtrack), 06:43 [Bandcamp]"
+        }
+      ]
+    },
+    "05059": {
+      "work_id": "05059",
+      "series_id": "156",
+      "project_folder": "by the river",
+      "project_filename": "by the river form.jpg",
+      "media_version": 1,
+      "image_staged": false,
+      "title": "by the river form",
+      "width_cm": 25.4,
+      "height_cm": 25.4,
+      "year": 2020,
+      "year_display": "2020",
+      "medium": "digital c-type print",
+      "width_px": 3000,
+      "height_px": 3000
+    },
+    "05060": {
+      "work_id": "05060",
+      "series_id": "156",
+      "project_folder": "by the river",
+      "project_filename": "by the river equals.jpg",
+      "media_version": 1,
+      "image_staged": false,
+      "title": "by the river equals",
+      "width_cm": 30,
+      "height_cm": 30,
+      "year": 2020,
+      "year_display": "2020",
+      "medium": "digital c-type print",
+      "width_px": 3543,
+      "height_px": 3543
+    },
+    "05061": {
+      "work_id": "05061",
+      "series_id": "156",
+      "project_folder": "by the river",
+      "project_filename": "by the river equals version.jpg",
+      "media_version": 1,
+      "image_staged": false,
+      "title": "by the river equals version",
+      "width_cm": 40,
+      "height_cm": 22.5,
+      "year": 2020,
+      "year_display": "2020",
+      "medium": "digital c-type print",
+      "width_px": 4724,
+      "height_px": 2657
+    },
+    "05062": {
+      "work_id": "05062",
+      "series_id": "156",
+      "project_folder": "by the river",
+      "project_filename": "by the river symbol pair.jpg",
+      "media_version": 1,
+      "image_staged": false,
+      "title": "by the river symbol pair",
+      "width_cm": 30,
+      "height_cm": 30,
+      "year": 2020,
+      "year_display": "2020",
+      "medium": "digital c-type print",
+      "width_px": 3543,
+      "height_px": 3543
+    },
+    "05063": {
+      "work_id": "05063",
+      "series_id": "156",
+      "project_folder": "by the river",
+      "project_filename": "by the river symbols poles.jpg",
+      "media_version": 1,
+      "image_staged": false,
+      "title": "by the river symbols poles",
+      "width_cm": 22.1,
+      "height_cm": 40,
+      "year": 2020,
+      "year_display": "2020",
+      "medium": "digital c-type print",
+      "width_px": 2615,
+      "height_px": 4724
     }
   }
 }

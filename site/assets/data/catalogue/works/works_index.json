@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_works_index_v3",
-    "generated_at_utc": "2026-10-23T18:40:36Z"
+    "generated_at_utc": "2026-10-23T19:29:05Z"
   },
   "works": {
     "00001": {
@@ -20183,6 +20183,30 @@
     "05057": {
       "work_id": "05057",
       "title": "burma detail 3"
+    },
+    "05058": {
+      "work_id": "05058",
+      "title": "by the river"
+    },
+    "05059": {
+      "work_id": "05059",
+      "title": "by the river form"
+    },
+    "05060": {
+      "work_id": "05060",
+      "title": "by the river equals"
+    },
+    "05061": {
+      "work_id": "05061",
+      "title": "by the river equals version"
+    },
+    "05062": {
+      "work_id": "05062",
+      "title": "by the river symbol pair"
+    },
+    "05063": {
+      "work_id": "05063",
+      "title": "by the river symbols poles"
     }
   }
 }

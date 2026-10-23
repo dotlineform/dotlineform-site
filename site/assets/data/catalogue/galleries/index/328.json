@@ -1,0 +1,37 @@
+{
+  "header": {
+    "schema": "gallery_record_v3",
+    "generated_at_utc": "2026-10-23T19:29:05Z",
+    "gallery_id": "328"
+  },
+  "gallery": {
+    "gallery_id": "328",
+    "title": "by the river"
+  },
+  "member_works": [
+    {
+      "work_id": "05058",
+      "title": "by the river"
+    },
+    {
+      "work_id": "05059",
+      "title": "by the river form"
+    },
+    {
+      "work_id": "05060",
+      "title": "by the river equals"
+    },
+    {
+      "work_id": "05061",
+      "title": "by the river equals version"
+    },
+    {
+      "work_id": "05062",
+      "title": "by the river symbol pair"
+    },
+    {
+      "work_id": "05063",
+      "title": "by the river symbols poles"
+    }
+  ]
+}
