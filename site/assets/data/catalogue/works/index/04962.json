@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-7c33cdf034fe3274a6552053609b89c8",
+    "generated_at_utc": "2026-10-23T12:16:55Z"
+  },
+  "work": {
+    "work_id": "04962",
+    "title": "all the little things (framed)",
+    "year": 2024,
+    "year_display": "2024",
+    "width_px": 4032,
+    "height_px": 2688,
+    "height_cm": 42.8,
+    "width_cm": 30.5,
+    "medium": "pencil on paper",
+    "media_version": 1,
+    "series_id": "151",
+    "galleries": [
+      {
+        "gallery_id": "320",
+        "title": "all the little things"
+      }
+    ]
+  }
+}

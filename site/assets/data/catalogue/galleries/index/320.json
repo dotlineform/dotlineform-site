@@ -1,0 +1,41 @@
+{
+  "header": {
+    "schema": "gallery_record_v3",
+    "generated_at_utc": "2026-10-23T12:16:55Z",
+    "gallery_id": "320"
+  },
+  "gallery": {
+    "gallery_id": "320",
+    "title": "all the little things"
+  },
+  "member_works": [
+    {
+      "work_id": "04961",
+      "title": "all the little things"
+    },
+    {
+      "work_id": "04962",
+      "title": "all the little things (framed)"
+    },
+    {
+      "work_id": "04963",
+      "title": "all the little things (detail 1)"
+    },
+    {
+      "work_id": "04964",
+      "title": "all the little things (detail 2)"
+    },
+    {
+      "work_id": "04965",
+      "title": "all the little things (detail 3)"
+    },
+    {
+      "work_id": "04966",
+      "title": "all the little things (detail 4)"
+    },
+    {
+      "work_id": "04967",
+      "title": "all the little things (detail 5)"
+    }
+  ]
+}

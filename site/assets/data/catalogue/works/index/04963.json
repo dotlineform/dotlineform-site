@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-352e63aa68da1da5a8a6cba30ff5eb47",
+    "generated_at_utc": "2026-10-23T12:16:55Z"
+  },
+  "work": {
+    "work_id": "04963",
+    "title": "all the little things (detail 1)",
+    "year": 2024,
+    "year_display": "2024",
+    "width_px": 2000,
+    "height_px": 2000,
+    "height_cm": 17,
+    "width_cm": 17,
+    "medium": "digital c-type print",
+    "media_version": 1,
+    "series_id": "151",
+    "galleries": [
+      {
+        "gallery_id": "320",
+        "title": "all the little things"
+      }
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "work_record_v11",
+    "version": "blake2b-763d9b7d3cc0ec57a89e8de520688df3",
+    "generated_at_utc": "2026-10-23T12:16:55Z"
+  },
+  "work": {
+    "work_id": "04961",
+    "title": "all the little things",
+    "year": 2024,
+    "year_display": "2024",
+    "width_px": 3627,
+    "height_px": 2660,
+    "height_cm": 21,
+    "width_cm": 29.7,
+    "medium": "pencil on paper",
+    "media_version": 1,
+    "series_id": "151",
+    "galleries": [
+      {
+        "gallery_id": "320",
+        "title": "all the little things"
+      }
+    ]
+  }
+}

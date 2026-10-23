@@ -1,0 +1,72 @@
+{
+  "doc_id": "04961",
+  "title": "all the little things",
+  "added_date": "2026-10-23 13:17:02",
+  "last_updated": "2026-10-23 13:17:02",
+  "content_html": "<div data-docs-catalogue-ref=\"c1\"><article class=\"docsViewerCatalogueEntry\"><div class=\"docsViewerCatalogueEntry__record\"><h1>all the little things</h1><figure class=\"docsViewerCatalogueEntry__image\" data-docs-content-detail=\"media\" data-docs-media-kind=\"catalogue-work\" data-docs-media-id=\"04961\"><button type=\"button\" class=\"docsViewer__mediaImageLink docsViewerFigure__imageLink docsViewerCatalogueEntry__frame\" style=\"aspect-ratio: 3627 / 2660;\" data-docs-media-open aria-label=\"Open all the little things\"><img data-docs-media-image src=\"https://media.dotlineform.com/works/img/04961-primary-800.webp?v=1\" srcset=\"https://media.dotlineform.com/works/img/04961-primary-800.webp?v=1 800w, https://media.dotlineform.com/works/img/04961-primary-1200.webp?v=1 1200w, https://media.dotlineform.com/works/img/04961-primary-1600.webp?v=1 1600w\" sizes=\"100vw\" alt=\"all the little things\" width=\"3627\" height=\"2660\" decoding=\"async\"><span data-docs-media-placeholder hidden>all the little things</span></button></figure><p class=\"docsViewerCatalogueEntry__metadata\">2024<br>pencil on paper<br>21 × 29.7 cm<br><br>cat. 04961</p></div></article></div>\n",
+  "catalogue": {
+    "schema": "docs_catalogue_presentation_v1",
+    "references": [
+      {
+        "reference_id": "c1",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04961"
+        },
+        "presentation": "entry",
+        "options": {}
+      }
+    ],
+    "presentations": {
+      "catalogue-work:04961": {
+        "schema_version": "docs_media_view_v2",
+        "target": {
+          "kind": "catalogue-work",
+          "id": "04961"
+        },
+        "label": "all the little things",
+        "image": {
+          "src": "https://media.dotlineform.com/works/img/04961-primary-800.webp?v=1",
+          "candidates": [
+            {
+              "src": "https://media.dotlineform.com/works/img/04961-primary-800.webp?v=1",
+              "width_px": 800
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04961-primary-1200.webp?v=1",
+              "width_px": 1200
+            },
+            {
+              "src": "https://media.dotlineform.com/works/img/04961-primary-1600.webp?v=1",
+              "width_px": 1600
+            }
+          ],
+          "alt": "all the little things",
+          "width_px": 3627,
+          "height_px": 2660
+        },
+        "new_tab_target": "https://media.dotlineform.com/works/img/04961-primary-1600.webp?v=1",
+        "galleries": [
+          {
+            "target": {
+              "kind": "catalogue-gallery",
+              "id": "320"
+            },
+            "label": "all the little things",
+            "relation": "direct"
+          }
+        ],
+        "entry": {
+          "metadata_lines": [
+            "2024",
+            "pencil on paper",
+            "21 × 29.7 cm",
+            "",
+            "cat. 04961"
+          ],
+          "resources": []
+        }
+      }
+    }
+  }
+}

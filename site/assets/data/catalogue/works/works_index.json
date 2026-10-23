@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "catalogue_works_index_v3",
-    "generated_at_utc": "2026-10-23T08:31:29Z"
+    "generated_at_utc": "2026-10-23T12:16:55Z"
   },
   "works": {
     "00001": {
@@ -19795,6 +19795,34 @@
     "04960": {
       "work_id": "04960",
       "title": "world - face"
+    },
+    "04961": {
+      "work_id": "04961",
+      "title": "all the little things"
+    },
+    "04962": {
+      "work_id": "04962",
+      "title": "all the little things (framed)"
+    },
+    "04963": {
+      "work_id": "04963",
+      "title": "all the little things (detail 1)"
+    },
+    "04964": {
+      "work_id": "04964",
+      "title": "all the little things (detail 2)"
+    },
+    "04965": {
+      "work_id": "04965",
+      "title": "all the little things (detail 3)"
+    },
+    "04966": {
+      "work_id": "04966",
+      "title": "all the little things (detail 4)"
+    },
+    "04967": {
+      "work_id": "04967",
+      "title": "all the little things (detail 5)"
     }
   }
 }
